@@ -28,14 +28,14 @@ is
    --  Generate command stream to assign given logical memory and device
    --  memory to specified root object.
    procedure Assign_Memory
-     (Stream_Doc    : XML_Utils.Stream_Document_Type;
-      Physical_Mem  : DOM.Core.Node_List;
-      Physical_Devs : DOM.Core.Node_List;
-      Logical_Mem   : DOM.Core.Node_List;
-      Logical_Devs  : DOM.Core.Node_List;
-      Object_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
-      Object_Kind   : String;
-      Entity_Name   : String;
-      Paging_Levels : Paging.Paging_Level);
+     (Stream_Doc    : in out XML_Utils.Stream_Document_Type;
+      Physical_Mem  :        DOM.Core.Node_List;
+      Physical_Devs :        DOM.Core.Node_List;
+      Logical_Mem   :        DOM.Core.Node_List;
+      Logical_Devs  :        DOM.Core.Node_List;
+      Object_Attr   :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Object_Kind   :        String;
+      Entity_Name   :        String;
+      Paging_Levels :        Paging.Paging_Level);
 
 end Cmd_Stream.Roots.Utils;

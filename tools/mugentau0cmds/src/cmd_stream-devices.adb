@@ -43,26 +43,26 @@ is
 
    --  Assign I/O ports to given device.
    procedure Assign_IO_Ports
-     (Stream_Doc : XML_Utils.Stream_Document_Type;
-      Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
-      Dev_Node   : DOM.Core.Node);
+     (Stream_Doc : in out XML_Utils.Stream_Document_Type;
+      Dev_Attr   :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Dev_Node   :        DOM.Core.Node);
 
    --  Assign IRQs to given device.
    procedure Assign_IRQs
-     (Stream_Doc : XML_Utils.Stream_Document_Type;
-      Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
-      Dev_Node   : DOM.Core.Node);
+     (Stream_Doc : in out XML_Utils.Stream_Document_Type;
+      Dev_Attr   :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Dev_Node   :        DOM.Core.Node);
 
    --  Assign device memory to given device.
    procedure Assign_Memory
-     (Stream_Doc : XML_Utils.Stream_Document_Type;
-      Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
-      Dev_Node   : DOM.Core.Node);
+     (Stream_Doc : in out XML_Utils.Stream_Document_Type;
+      Dev_Attr   :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Dev_Node   :        DOM.Core.Node);
 
    --  Generate commands to create given VTd context table.
    procedure Add_VTd_Context_Table
-     (Stream_Doc   : XML_Utils.Stream_Document_Type;
-      Context_Node : DOM.Core.Node);
+     (Stream_Doc   : in out XML_Utils.Stream_Document_Type;
+      Context_Node :        DOM.Core.Node);
 
    --  Match function to find assigned devices.
    function Is_Valid_Dev_Ref (Left, Right : DOM.Core.Node) return Boolean;
@@ -70,8 +70,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Add_VTd_Context_Table
-     (Stream_Doc   : XML_Utils.Stream_Document_Type;
-      Context_Node : DOM.Core.Node)
+     (Stream_Doc   : in out XML_Utils.Stream_Document_Type;
+      Context_Node :        DOM.Core.Node)
    is
       Name : constant String
         := DOM.Core.Elements.Get_Attribute
@@ -107,9 +107,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_IO_Ports
-     (Stream_Doc : XML_Utils.Stream_Document_Type;
-      Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
-      Dev_Node   : DOM.Core.Node)
+     (Stream_Doc : in out XML_Utils.Stream_Document_Type;
+      Dev_Attr   :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Dev_Node   :        DOM.Core.Node)
    is
       Ports : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -144,9 +144,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_IRQs
-     (Stream_Doc : XML_Utils.Stream_Document_Type;
-      Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
-      Dev_Node   : DOM.Core.Node)
+     (Stream_Doc : in out XML_Utils.Stream_Document_Type;
+      Dev_Attr   :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Dev_Node   :        DOM.Core.Node)
    is
       IRQs : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -171,9 +171,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_Memory
-     (Stream_Doc : XML_Utils.Stream_Document_Type;
-      Dev_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
-      Dev_Node   : DOM.Core.Node)
+     (Stream_Doc : in out XML_Utils.Stream_Document_Type;
+      Dev_Attr   :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Dev_Node   :        DOM.Core.Node)
    is
       Memory : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query

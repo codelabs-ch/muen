@@ -39,9 +39,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Append_Command
-     (Stream_Doc : Stream_Document_Type;
-      Name       : String;
-      Attrs      : Attribute_Array := Null_Attrs)
+     (Stream_Doc : in out Stream_Document_Type;
+      Name       :        String;
+      Attrs      :        Attribute_Array := Null_Attrs)
    is
    begin
       Muxml.Utils.Append_Child
@@ -74,8 +74,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Append_Commands
-     (Stream_Doc : Stream_Document_Type;
-      Buffer     : Command_Buffer_Type)
+     (Stream_Doc : in out Stream_Document_Type;
+      Buffer     :        Command_Buffer_Type)
    is
       Cmds_Node : constant DOM.Core.Node
         := Muxml.Utils.Get_Element (Doc   => Stream_Doc.Doc,
@@ -95,9 +95,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Clear_Region
-     (Stream_Doc   : Stream_Document_Type;
-      Base_Address : Interfaces.Unsigned_64;
-      Size         : Interfaces.Unsigned_64)
+     (Stream_Doc   : in out Stream_Document_Type;
+      Base_Address :        Interfaces.Unsigned_64;
+      Size         :        Interfaces.Unsigned_64)
    is
       use type Interfaces.Unsigned_64;
 

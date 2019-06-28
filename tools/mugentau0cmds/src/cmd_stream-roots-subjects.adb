@@ -36,40 +36,40 @@ is
 
    --  Assign devices to given subject.
    procedure Assign_Devices
-     (Stream_Doc : XML_Utils.Stream_Document_Type;
-      Subj_Attr  : Cmd_Stream.XML_Utils.Attribute_Type;
-      Subj_Node  : DOM.Core.Node;
-      Phys_Devs  : DOM.Core.Node_List);
+     (Stream_Doc : in out XML_Utils.Stream_Document_Type;
+      Subj_Attr  :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Subj_Node  :        DOM.Core.Node;
+      Phys_Devs  :        DOM.Core.Node_List);
 
    --  Assign MSRs to given subject.
    procedure Assign_MSRs
-     (Stream_Doc : XML_Utils.Stream_Document_Type;
-      Subj_Attr  : Cmd_Stream.XML_Utils.Attribute_Type;
-      Subj_Node  : DOM.Core.Node);
+     (Stream_Doc : in out XML_Utils.Stream_Document_Type;
+      Subj_Attr  :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Subj_Node  :        DOM.Core.Node);
 
    --  Assign I/O ports of device to given subject.
    procedure Assign_IO_Ports
-     (Stream_Doc   : XML_Utils.Stream_Document_Type;
-      Subj_Attr    : Cmd_Stream.XML_Utils.Attribute_Type;
-      Dev_Attr     : Cmd_Stream.XML_Utils.Attribute_Type;
-      Logical_Dev  : DOM.Core.Node;
-      Physical_Dev : DOM.Core.Node);
+     (Stream_Doc   : in out XML_Utils.Stream_Document_Type;
+      Subj_Attr    :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Dev_Attr     :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Logical_Dev  :        DOM.Core.Node;
+      Physical_Dev :        DOM.Core.Node);
 
    --  Assign IRQs of device to given subject.
    procedure Assign_IRQs
-     (Stream_Doc   : XML_Utils.Stream_Document_Type;
-      Subj_Attr    : Cmd_Stream.XML_Utils.Attribute_Type;
-      Dev_Attr     : Cmd_Stream.XML_Utils.Attribute_Type;
-      Logical_Dev  : DOM.Core.Node;
-      Physical_Dev : DOM.Core.Node);
+     (Stream_Doc   : in out XML_Utils.Stream_Document_Type;
+      Subj_Attr    :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Dev_Attr     :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Logical_Dev  :        DOM.Core.Node;
+      Physical_Dev :        DOM.Core.Node);
 
    -------------------------------------------------------------------------
 
    procedure Assign_Devices
-     (Stream_Doc : XML_Utils.Stream_Document_Type;
-      Subj_Attr  : Cmd_Stream.XML_Utils.Attribute_Type;
-      Subj_Node  : DOM.Core.Node;
-      Phys_Devs  : DOM.Core.Node_List)
+     (Stream_Doc : in out XML_Utils.Stream_Document_Type;
+      Subj_Attr  :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Subj_Node  :        DOM.Core.Node;
+      Phys_Devs  :        DOM.Core.Node_List)
    is
       Devices : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -118,11 +118,11 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_IO_Ports
-     (Stream_Doc   : XML_Utils.Stream_Document_Type;
-      Subj_Attr    : Cmd_Stream.XML_Utils.Attribute_Type;
-      Dev_Attr     : Cmd_Stream.XML_Utils.Attribute_Type;
-      Logical_Dev  : DOM.Core.Node;
-      Physical_Dev : DOM.Core.Node)
+     (Stream_Doc   : in out XML_Utils.Stream_Document_Type;
+      Subj_Attr    :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Dev_Attr     :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Logical_Dev  :        DOM.Core.Node;
+      Physical_Dev :        DOM.Core.Node)
    is
       Ports : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -173,11 +173,11 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_IRQs
-     (Stream_Doc   : XML_Utils.Stream_Document_Type;
-      Subj_Attr    : Cmd_Stream.XML_Utils.Attribute_Type;
-      Dev_Attr     : Cmd_Stream.XML_Utils.Attribute_Type;
-      Logical_Dev  : DOM.Core.Node;
-      Physical_Dev : DOM.Core.Node)
+     (Stream_Doc   : in out XML_Utils.Stream_Document_Type;
+      Subj_Attr    :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Dev_Attr     :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Logical_Dev  :        DOM.Core.Node;
+      Physical_Dev :        DOM.Core.Node)
    is
       IRQs : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -219,9 +219,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_MSRs
-     (Stream_Doc : XML_Utils.Stream_Document_Type;
-      Subj_Attr  : Cmd_Stream.XML_Utils.Attribute_Type;
-      Subj_Node  : DOM.Core.Node)
+     (Stream_Doc : in out XML_Utils.Stream_Document_Type;
+      Subj_Attr  :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Subj_Node  :        DOM.Core.Node)
    is
       MSRs : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query

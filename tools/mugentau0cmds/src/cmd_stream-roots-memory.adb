@@ -38,35 +38,34 @@ is
    --  Generate command stream for page tables of memory region specified by
    --  ID, base address and size.
    procedure Create_PTs
-     (Stream_Doc   : XML_Utils.Stream_Document_Type;
-      Region_Attr  : XML_Utils.Attribute_Type;
-      Last_Level   : Natural;
-      Base_Address : Interfaces.Unsigned_64;
-      Size         : Interfaces.Unsigned_64);
+     (Stream_Doc   : in out XML_Utils.Stream_Document_Type;
+      Region_Attr  :        XML_Utils.Attribute_Type;
+      Last_Level   :        Natural;
+      Base_Address :        Interfaces.Unsigned_64;
+      Size         :        Interfaces.Unsigned_64);
 
    --  Generate command stream for file or fill content of memory region.
    procedure Add_Content
-     (Stream_Doc   : XML_Utils.Stream_Document_Type;
-      Content_Node : DOM.Core.Node;
-      Region_Attr  : XML_Utils.Attribute_Type;
-      Base_Address : Interfaces.Unsigned_64;
-      Size         : Interfaces.Unsigned_64);
+     (Stream_Doc   : in out XML_Utils.Stream_Document_Type;
+      Content_Node :        DOM.Core.Node;
+      Region_Attr  :        XML_Utils.Attribute_Type;
+      Base_Address :        Interfaces.Unsigned_64;
+      Size         :        Interfaces.Unsigned_64);
 
    --  Generate command stream for vacuous pages of specified memory region.
    procedure Add_Vacuous_Pages
-     (Stream_Doc   : XML_Utils.Stream_Document_Type;
-      Region_Attr  : XML_Utils.Attribute_Type;
-      Base_Address : Interfaces.Unsigned_64;
-      Size         : Interfaces.Unsigned_64);
-
+     (Stream_Doc   : in out XML_Utils.Stream_Document_Type;
+      Region_Attr  :        XML_Utils.Attribute_Type;
+      Base_Address :        Interfaces.Unsigned_64;
+      Size         :        Interfaces.Unsigned_64);
    -------------------------------------------------------------------------
 
    procedure Add_Content
-     (Stream_Doc   : XML_Utils.Stream_Document_Type;
-      Content_Node : DOM.Core.Node;
-      Region_Attr  : XML_Utils.Attribute_Type;
-      Base_Address : Interfaces.Unsigned_64;
-      Size         : Interfaces.Unsigned_64)
+     (Stream_Doc   : in out XML_Utils.Stream_Document_Type;
+      Content_Node :        DOM.Core.Node;
+      Region_Attr  :        XML_Utils.Attribute_Type;
+      Base_Address :        Interfaces.Unsigned_64;
+      Size         :        Interfaces.Unsigned_64)
    is
       use type Interfaces.Unsigned_64;
 
@@ -187,10 +186,10 @@ is
    -------------------------------------------------------------------------
 
    procedure Add_Vacuous_Pages
-     (Stream_Doc   : XML_Utils.Stream_Document_Type;
-      Region_Attr  : XML_Utils.Attribute_Type;
-      Base_Address : Interfaces.Unsigned_64;
-      Size         : Interfaces.Unsigned_64)
+     (Stream_Doc   : in out XML_Utils.Stream_Document_Type;
+      Region_Attr  :        XML_Utils.Attribute_Type;
+      Base_Address :        Interfaces.Unsigned_64;
+      Size         :        Interfaces.Unsigned_64)
    is
       use type Interfaces.Unsigned_64;
 
@@ -378,11 +377,11 @@ is
    -------------------------------------------------------------------------
 
    procedure Create_PTs
-     (Stream_Doc   : XML_Utils.Stream_Document_Type;
-      Region_Attr  : XML_Utils.Attribute_Type;
-      Last_Level   : Natural;
-      Base_Address : Interfaces.Unsigned_64;
-      Size         : Interfaces.Unsigned_64)
+     (Stream_Doc   : in out XML_Utils.Stream_Document_Type;
+      Region_Attr  :        XML_Utils.Attribute_Type;
+      Last_Level   :        Natural;
+      Base_Address :        Interfaces.Unsigned_64;
+      Size         :        Interfaces.Unsigned_64)
    is
       pragma Unreferenced (Base_Address);
       use type Interfaces.Unsigned_64;

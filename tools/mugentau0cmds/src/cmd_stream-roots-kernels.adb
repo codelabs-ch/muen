@@ -29,18 +29,18 @@ package body Cmd_Stream.Roots.Kernels
 is
 
    procedure Assign_Devices
-     (Stream_Doc    : XML_Utils.Stream_Document_Type;
-      Physical_Devs : DOM.Core.Node_List;
-      Logical_Devs  : DOM.Core.Node_List;
-      Kernel_Attr   : Cmd_Stream.XML_Utils.Attribute_Type);
+     (Stream_Doc    : in out XML_Utils.Stream_Document_Type;
+      Physical_Devs :        DOM.Core.Node_List;
+      Logical_Devs  :        DOM.Core.Node_List;
+      Kernel_Attr   :        Cmd_Stream.XML_Utils.Attribute_Type);
 
    -------------------------------------------------------------------------
 
    procedure Assign_Devices
-     (Stream_Doc    : XML_Utils.Stream_Document_Type;
-      Physical_Devs : DOM.Core.Node_List;
-      Logical_Devs  : DOM.Core.Node_List;
-      Kernel_Attr   : Cmd_Stream.XML_Utils.Attribute_Type)
+     (Stream_Doc    : in out XML_Utils.Stream_Document_Type;
+      Physical_Devs :        DOM.Core.Node_List;
+      Logical_Devs  :        DOM.Core.Node_List;
+      Kernel_Attr   :        Cmd_Stream.XML_Utils.Attribute_Type)
    is
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Logical_Devs) - 1 loop

@@ -51,13 +51,13 @@ is
    --  Generate object page table commands and return activation commands in
    --  given command buffer.
    procedure Create_Object_PTs
-     (Stream_Doc    :     XML_Utils.Stream_Document_Type;
-      Activate_Cmds : out XML_Utils.Command_Buffer_Type;
-      Object_Attr   :     Cmd_Stream.XML_Utils.Attribute_Type;
-      Object_Kind   :     String;
-      Mem_Layout    :     Paging.Layouts.Memory_Layout_Type;
-      PT_Address    :     Interfaces.Unsigned_64;
-      PT_Size       :     Interfaces.Unsigned_64);
+     (Stream_Doc    : in out XML_Utils.Stream_Document_Type;
+      Activate_Cmds :    out XML_Utils.Command_Buffer_Type;
+      Object_Attr   :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Object_Kind   :        String;
+      Mem_Layout    :        Paging.Layouts.Memory_Layout_Type;
+      PT_Address    :        Interfaces.Unsigned_64;
+      PT_Size       :        Interfaces.Unsigned_64);
 
    -------------------------------------------------------------------------
 
@@ -187,15 +187,15 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_Memory
-     (Stream_Doc    : XML_Utils.Stream_Document_Type;
-      Physical_Mem  : DOM.Core.Node_List;
-      Physical_Devs : DOM.Core.Node_List;
-      Logical_Mem   : DOM.Core.Node_List;
-      Logical_Devs  : DOM.Core.Node_List;
-      Object_Attr   : Cmd_Stream.XML_Utils.Attribute_Type;
-      Object_Kind   : String;
-      Entity_Name   : String;
-      Paging_Levels : Paging.Paging_Level)
+     (Stream_Doc    : in out XML_Utils.Stream_Document_Type;
+      Physical_Mem  :        DOM.Core.Node_List;
+      Physical_Devs :        DOM.Core.Node_List;
+      Logical_Mem   :        DOM.Core.Node_List;
+      Logical_Devs  :        DOM.Core.Node_List;
+      Object_Attr   :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Object_Kind   :        String;
+      Entity_Name   :        String;
+      Paging_Levels :        Paging.Paging_Level)
    is
       PT_Node : constant DOM.Core.Node
         := Muxml.Utils.Get_Element
@@ -361,13 +361,13 @@ is
    -------------------------------------------------------------------------
 
    procedure Create_Object_PTs
-     (Stream_Doc    :     XML_Utils.Stream_Document_Type;
-      Activate_Cmds : out XML_Utils.Command_Buffer_Type;
-      Object_Attr   :     Cmd_Stream.XML_Utils.Attribute_Type;
-      Object_Kind   :     String;
-      Mem_Layout    :     Paging.Layouts.Memory_Layout_Type;
-      PT_Address    :     Interfaces.Unsigned_64;
-      PT_Size       :     Interfaces.Unsigned_64)
+     (Stream_Doc    : in out XML_Utils.Stream_Document_Type;
+      Activate_Cmds :    out XML_Utils.Command_Buffer_Type;
+      Object_Attr   :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Object_Kind   :        String;
+      Mem_Layout    :        Paging.Layouts.Memory_Layout_Type;
+      PT_Address    :        Interfaces.Unsigned_64;
+      PT_Size       :        Interfaces.Unsigned_64)
    is
       use type Interfaces.Unsigned_64;
 

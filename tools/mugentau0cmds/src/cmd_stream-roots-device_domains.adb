@@ -36,18 +36,18 @@ is
 
    --  Assign devices to given device domain.
    procedure Assign_Devices
-     (Stream_Doc    : XML_Utils.Stream_Document_Type;
-      Dom_Attr      : Cmd_Stream.XML_Utils.Attribute_Type;
-      Physical_Devs : DOM.Core.Node_List;
-      Logical_Devs  : DOM.Core.Node_List);
+     (Stream_Doc    : in out XML_Utils.Stream_Document_Type;
+      Dom_Attr      :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Physical_Devs :        DOM.Core.Node_List;
+      Logical_Devs  :        DOM.Core.Node_List);
 
    -------------------------------------------------------------------------
 
    procedure Assign_Devices
-     (Stream_Doc    : XML_Utils.Stream_Document_Type;
-      Dom_Attr      : Cmd_Stream.XML_Utils.Attribute_Type;
-      Physical_Devs : DOM.Core.Node_List;
-      Logical_Devs  : DOM.Core.Node_List)
+     (Stream_Doc    : in out XML_Utils.Stream_Document_Type;
+      Dom_Attr      :        Cmd_Stream.XML_Utils.Attribute_Type;
+      Physical_Devs :        DOM.Core.Node_List;
+      Logical_Devs  :        DOM.Core.Node_List)
    is
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Logical_Devs) - 1 loop

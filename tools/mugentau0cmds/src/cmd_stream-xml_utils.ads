@@ -54,9 +54,9 @@ is
    --  Append command with given name and attributes to the specified command
    --  stream document.
    procedure Append_Command
-     (Stream_Doc : Stream_Document_Type;
-      Name       : String;
-      Attrs      : Attribute_Array := Null_Attrs);
+     (Stream_Doc : in out Stream_Document_Type;
+      Name       :        String;
+      Attrs      :        Attribute_Array := Null_Attrs);
 
    --  Append command with given name and attributes to the specified command
    --  buffer which is part of the designated stream document.
@@ -69,15 +69,15 @@ is
    --  Append commands from given buffer to the specified command stream
    --  document.
    procedure Append_Commands
-     (Stream_Doc : Stream_Document_Type;
-      Buffer     : Command_Buffer_Type);
+     (Stream_Doc : in out Stream_Document_Type;
+      Buffer     :        Command_Buffer_Type);
 
    --  Generate command stream to clear memory region specified by base address
    --  and size.
    procedure Clear_Region
-     (Stream_Doc   : Stream_Document_Type;
-      Base_Address : Interfaces.Unsigned_64;
-      Size         : Interfaces.Unsigned_64);
+     (Stream_Doc   : in out Stream_Document_Type;
+      Base_Address :        Interfaces.Unsigned_64;
+      Size         :        Interfaces.Unsigned_64);
 
    --  Write given commando stream to file specified by name.
    procedure Write

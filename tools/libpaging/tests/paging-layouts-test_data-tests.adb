@@ -876,6 +876,238 @@ package body Paging.Layouts.Test_Data.Tests is
    end Test_Serialize;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Traverse_Tables (Gnattest_T : in out Test);
+   procedure Test_Traverse_Tables_50c255 (Gnattest_T : in out Test) renames Test_Traverse_Tables;
+--  id:2.2/50c255f6c595e683/Traverse_Tables/1/0/
+   procedure Test_Traverse_Tables (Gnattest_T : in out Test) is
+   --  paging-layouts.ads:94:4:Traverse_Tables
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+       type Traverse_Entry_Type is record
+            Level : Paging_Level;
+            Index : Table_Range;
+         end record;
+
+      type Traversal_Log is array (Natural range <>) of Traverse_Entry_Type;
+
+      ----------------------------------------------------------------------
+
+      procedure Traverse_Empty_Layout
+      is
+         Count : Natural := 0;
+
+         -------------------------------------------------------------------
+
+         procedure Process
+           (Level       : Paging_Level;
+            Table_Index : Table_Range;
+            Table       : Tables.Page_Table_Type)
+         is
+         begin
+            Count := Count + 1;
+         end Process;
+      begin
+         Traverse_Tables (Mem_Layout  => Null_Layout,
+                          Process     => Process'Access);
+
+         Assert (Condition => Count = 0,
+                 Message   => "Process called" & Count'Img & " times while "
+                 & "traversing empty layout");
+      end Traverse_Empty_Layout;
+
+      ----------------------------------------------------------------------
+
+      procedure Traverse_Large_Pages
+      is
+         Layout : Memory_Layout_Type (Levels => 4);
+
+         Ref_Log : constant Traversal_Log
+           := ((Level => 1,
+                Index => 0),
+               (Level => 4,
+                Index => 2049),
+               (Level => 4,
+                Index => 3449),
+               (Level => 3,
+                Index => 4),
+               (Level => 3,
+                Index => 6),
+               (Level => 2,
+                Index => 0));
+
+         Cur_Idx : Natural := Ref_Log'First;
+
+         -------------------------------------------------------------------
+
+         procedure Process
+           (Level       : Paging_Level;
+            Table_Index : Table_Range;
+            Table       : Tables.Page_Table_Type)
+         is
+         begin
+            Assert (Condition => Cur_Idx in Ref_Log'Range,
+                    Message   => "Unexpected traversal entry with no."
+                    & Cur_Idx'Img & ": Level" & Level'Img & ", table index"
+                    & Table_Index'Img);
+
+            Assert (Condition => Ref_Log (Cur_Idx).Level = Level,
+                    Message   => "Unexpected level of traversed entry no."
+                    & Cur_Idx'Img & ":" & Level'Img & " /="
+                    & Ref_Log (Cur_Idx).Level'Img);
+            Assert (Condition => Ref_Log (Cur_Idx).Index = Table_Index,
+                    Message   => "Unexpected table index of traversed entry "
+                    & "no." & Cur_Idx'Img & ":" & Table_Index'Img & " /="
+                    & Ref_Log (Cur_Idx).Index'Img);
+            Cur_Idx := Cur_Idx + 1;
+         end Process;
+      begin
+         Set_Large_Page_Support (Mem_Layout => Layout,
+                                 State      => True);
+         Add_Memory_Region (Mem_Layout       => Layout,
+                            Physical_Address => 16#0020_5000#,
+                            Virtual_Address  => 16#0001_0020_5000#,
+                            Size             => 16#af00_1000#,
+                            Caching          => WC,
+                            Writable         => True,
+                            Executable       => False);
+         Traverse_Tables (Mem_Layout  => Layout,
+                          Process     => Process'Access);
+      end Traverse_Large_Pages;
+
+      ----------------------------------------------------------------------
+
+      procedure Traverse_Layout
+      is
+         Layout : Memory_Layout_Type (Levels => 4);
+
+         Ref_Log : constant Traversal_Log
+           := ((Level => 1,
+                Index => 0),
+               (Level => 4,
+                Index => 0),
+               (Level => 4,
+                Index => 1),
+               (Level => 4,
+                Index => 2048),
+               (Level => 3,
+                Index => 0),
+               (Level => 3,
+                Index => 4),
+               (Level => 2,
+                Index => 0));
+
+         Cur_Idx : Natural := Ref_Log'First;
+
+         -------------------------------------------------------------------
+
+         procedure Process
+           (Level       : Paging_Level;
+            Table_Index : Table_Range;
+            Table       : Tables.Page_Table_Type)
+         is
+         begin
+            Assert (Condition => Cur_Idx in Ref_Log'Range,
+                    Message   => "Unexpected traversal entry with no."
+                    & Cur_Idx'Img & ": Level" & Level'Img & ", table index"
+                    & Table_Index'Img);
+
+            Assert (Condition => Ref_Log (Cur_Idx).Level = Level,
+                    Message   => "Unexpected level of traversed entry no."
+                    & Cur_Idx'Img & ":" & Level'Img & " /="
+                    & Ref_Log (Cur_Idx).Level'Img);
+            Assert (Condition => Ref_Log (Cur_Idx).Index = Table_Index,
+                    Message   => "Unexpected table index of traversed entry "
+                    & "no." & Cur_Idx'Img & ":" & Table_Index'Img & " /="
+                    & Ref_Log (Cur_Idx).Index'Img);
+            Cur_Idx := Cur_Idx + 1;
+         end Process;
+      begin
+         Add_Memory_Region (Mem_Layout       => Layout,
+                            Physical_Address => 16#001f_f000#,
+                            Virtual_Address  => 16#001f_f000#,
+                            Size             => 16#3000#,
+                            Caching          => WB,
+                            Writable         => False,
+                            Executable       => True);
+         Add_Memory_Region (Mem_Layout       => Layout,
+                            Physical_Address => 16#0001_0000_0000#,
+                            Virtual_Address  => 16#0001_0000_0000#,
+                            Size             => 16#1000#,
+                            Caching          => WB,
+                            Writable         => False,
+                            Executable       => True);
+         Traverse_Tables (Mem_Layout  => Layout,
+                          Process     => Process'Access);
+      end Traverse_Layout;
+
+      ----------------------------------------------------------------------
+
+      procedure Traverse_Three_Levels
+      is
+         Layout : Memory_Layout_Type (Levels => 3);
+
+         Ref_Log : constant Traversal_Log
+           := ((Level => 1,
+                Index => 0),
+               (Level => 3,
+                Index => 513),
+               (Level => 2,
+                Index => 0),
+               (Level => 2,
+                Index => 1));
+
+         Cur_Idx : Natural := Ref_Log'First;
+
+         -------------------------------------------------------------------
+
+         procedure Process
+           (Level       : Paging_Level;
+            Table_Index : Table_Range;
+            Table       : Tables.Page_Table_Type)
+         is
+         begin
+            Assert (Condition => Level <= 3,
+                    Message   => "Level of table with index" & Table_Index'Img
+                    & " too large:" & Level'Img);
+            Assert (Condition => Cur_Idx in Ref_Log'Range,
+                    Message   => "Unexpected traversal entry with no."
+                    & Cur_Idx'Img & ": Level" & Level'Img & ", table index"
+                    & Table_Index'Img);
+
+            Assert (Condition => Ref_Log (Cur_Idx).Level = Level,
+                    Message   => "Unexpected level of traversed entry no."
+                    & Cur_Idx'Img & ":" & Level'Img & " /="
+                    & Ref_Log (Cur_Idx).Level'Img);
+            Assert (Condition => Ref_Log (Cur_Idx).Index = Table_Index,
+                    Message   => "Unexpected table index of traversed entry "
+                    & "no." & Cur_Idx'Img & ":" & Table_Index'Img & " /="
+                    & Ref_Log (Cur_Idx).Index'Img);
+            Cur_Idx := Cur_Idx + 1;
+         end Process;
+      begin
+         Add_Memory_Region (Mem_Layout       => Layout,
+                            Physical_Address => 0,
+                            Virtual_Address  => 0,
+                            Size             => 16#4020_1000#,
+                            Caching          => UC,
+                            Writable         => True,
+                            Executable       => False);
+         Traverse_Tables (Mem_Layout  => Layout,
+                          Process     => Process'Access);
+      end Traverse_Three_Levels;
+   begin
+      Traverse_Layout;
+      Traverse_Large_Pages;
+      Traverse_Three_Levels;
+      Traverse_Empty_Layout;
+--  begin read only
+   end Test_Traverse_Tables;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

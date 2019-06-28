@@ -30,5 +30,8 @@ package Paging.Layouts.Test_Data.Tests is
    procedure Test_Serialize_129d4a (Gnattest_T : in out Test);
    --  paging-layouts.ads:85:4:Serialize
 
+   procedure Test_Traverse_Tables_50c255 (Gnattest_T : in out Test);
+   --  paging-layouts.ads:94:4:Traverse_Tables
+
 end Paging.Layouts.Test_Data.Tests;
 --  end read only

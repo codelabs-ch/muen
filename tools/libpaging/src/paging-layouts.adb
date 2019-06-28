@@ -138,6 +138,8 @@ is
       Writable         :        Boolean;
       Executable       :        Boolean)
    is
+      use type Entries.Table_Entry_Type;
+
       Indexes : Table_Index_Array (1 .. Mem_Layout.Levels) := (others => 0);
 
       Table_Idx : Table_Range := 0;
@@ -166,42 +168,47 @@ is
       for I in Paging_Level range 2 .. Level loop
          Table_Idx := Table_Idx * 512 + Table_Range (Indexes (I - 1));
 
-         declare
-            use type Entries.Table_Entry_Type;
-
-            New_Entry : constant Entries.Table_Entry_Type
-              := Entries.Create
-                (Dst_Index   =>
-                   (if I /= Level then
-                           Table_Idx * 512 + Table_Range (Indexes (I))
-                    else 0),
-                 Dst_Address => (if Level = I then Physical_Address else 0),
-                 Readable    => True,
-                 Writable    => Level /= I or Writable,
-                 Executable  => Level /= I or Executable,
-                 Maps_Page   => Level = I,
-                 Global      => False,
-                 Caching     => (if Level = I then Caching else WB));
-         begin
-            if not Maps.Contains (Map          => Mem_Layout.Structures (I),
-                                  Table_Number => Table_Idx,
-                                  Entry_Index  => Indexes (I))
-            then
-               Maps.Add_Entry
-                 (Map          => Mem_Layout.Structures (I),
-                  Table_Number => Table_Idx,
-                  Entry_Index  => Indexes (I),
-                  Table_Entry  => New_Entry);
-            elsif Level = I and then New_Entry /= Maps.Get_Entry
+         if not Maps.Contains (Map          => Mem_Layout.Structures (I),
+                               Table_Number => Table_Idx,
+                               Entry_Index  => Indexes (I))
+         then
+            Maps.Add_Entry
               (Map          => Mem_Layout.Structures (I),
                Table_Number => Table_Idx,
-               Entry_Index  => Indexes (I))
-            then
-               raise Mapping_Present with "Multiple mappings of VMA "
-                 & Mutools.Utils.To_Hex (Number => Virtual_Address)
-                 & " with different attributes present";
-            end if;
-         end;
+               Entry_Index  => Indexes (I),
+               Table_Entry  => Entries.Create
+                 (Dst_Index   =>
+                      (if I /= Level then
+                            Table_Idx * 512 + Table_Range (Indexes (I))
+                       else 0),
+                  Dst_Address => (if Level = I then Physical_Address else 0),
+                  Readable    => True,
+                  Writable    => Level /= I or Writable,
+                  Executable  => Level /= I or Executable,
+                  Maps_Page   => Level = I,
+                  Global      => False,
+                  Caching     => (if Level = I then Caching else WB)));
+         elsif Level = I and then Entries.Create
+           (Dst_Index   =>
+              (if I /= Level then
+                    Table_Idx * 512 + Table_Range (Indexes (I))
+               else 0),
+            Dst_Address => (if Level = I then Physical_Address else 0),
+            Readable    => True,
+            Writable    => Level /= I or Writable,
+            Executable  => Level /= I or Executable,
+            Maps_Page   => Level = I,
+            Global      => False,
+            Caching     => (if Level = I then Caching else WB))
+             /= Maps.Get_Entry
+               (Map          => Mem_Layout.Structures (I),
+                Table_Number => Table_Idx,
+                Entry_Index  => Indexes (I))
+         then
+            raise Mapping_Present with "Multiple mappings of VMA "
+              & Mutools.Utils.To_Hex (Number => Virtual_Address)
+              & " with different attributes present";
+         end if;
       end loop;
    end Map_Page;
 

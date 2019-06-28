@@ -40,8 +40,7 @@ is
 
    --  Assign device memory to given object.
    procedure Assign_Device_Memory
-     (Stream_Doc     :        XML_Utils.Stream_Document_Type;
-      Map_Cmd_Buffer : in out XML_Utils.Command_Buffer_Type;
+     (Map_Cmd_Buffer : in out XML_Utils.Command_Buffer_Type;
       Mem_Layout     : in out Paging.Layouts.Memory_Layout_Type;
       Physical_Devs  :        DOM.Core.Node_List;
       Logical_Devs   :        DOM.Core.Node_List;
@@ -62,8 +61,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Assign_Device_Memory
-     (Stream_Doc     :        XML_Utils.Stream_Document_Type;
-      Map_Cmd_Buffer : in out XML_Utils.Command_Buffer_Type;
+     (Map_Cmd_Buffer : in out XML_Utils.Command_Buffer_Type;
       Mem_Layout     : in out Paging.Layouts.Memory_Layout_Type;
       Physical_Devs  :        DOM.Core.Node_List;
       Logical_Devs   :        DOM.Core.Node_List;
@@ -150,25 +148,24 @@ is
                     := Size / MC.Page_Size;
                begin
                   XML_Utils.Append_Command
-                    (Stream_Doc => Stream_Doc,
-                     Buffer     => Map_Cmd_Buffer,
-                     Name       => "mapDevicePages" & Object_Kind,
-                     Attrs      => (Object_Attr,
-                                    Dev_Attr,
-                                    (Attr  => U ("basePage"),
-                                     Value => U (Mutools.Utils.To_Hex
-                                       (Number => Phys_Addr))),
-                                    (Attr  => U ("baseVirtualAddress"),
-                                     Value => U (Mutools.Utils.To_Hex
-                                       (Number => Virt_Addr))),
-                                    (Attr  => U ("count"),
-                                     Value => U
-                                       (Trim (Interfaces.Unsigned_64'Image
-                                        (Page_Count)))),
-                                    (Attr  => U ("writable"),
-                                     Value => U (Writable)),
-                                    (Attr  => U ("executable"),
-                                     Value => U (Executable))));
+                    (Buffer => Map_Cmd_Buffer,
+                     Name   => "mapDevicePages" & Object_Kind,
+                     Attrs  => (Object_Attr,
+                                Dev_Attr,
+                                (Attr  => U ("basePage"),
+                                 Value => U (Mutools.Utils.To_Hex
+                                   (Number => Phys_Addr))),
+                                (Attr  => U ("baseVirtualAddress"),
+                                 Value => U (Mutools.Utils.To_Hex
+                                   (Number => Virt_Addr))),
+                                (Attr  => U ("count"),
+                                 Value => U
+                                   (Trim (Interfaces.Unsigned_64'Image
+                                    (Page_Count)))),
+                                (Attr  => U ("writable"),
+                                 Value => U (Writable)),
+                                (Attr  => U ("executable"),
+                                 Value => U (Executable))));
 
                   Paging.Layouts.Add_Memory_Region
                     (Mem_Layout       => Mem_Layout,
@@ -299,20 +296,19 @@ is
                  := Size / MC.Page_Size;
             begin
                XML_Utils.Append_Command
-                 (Buffer     => Map_Cmd_Buf,
-                  Stream_Doc => Stream_Doc,
-                  Name       => "mapPages" & Object_Kind,
-                  Attrs      => (Object_Attr,
-                                 Table_Idx_Attr,
-                                 (Attr  => U ("baseVirtualAddress"),
-                                  Value => U (Mutools.Utils.To_Hex
-                                    (Number => Virt_Addr))),
-                                 (Attr  => U ("baseOffset"),
-                                  Value => U ("0")),
-                                 (Attr  => U ("count"),
-                                  Value => U
-                                    (Trim (Interfaces.Unsigned_64'Image
-                                     (Page_Count))))));
+                 (Buffer  => Map_Cmd_Buf,
+                  Name    => "mapPages" & Object_Kind,
+                  Attrs   => (Object_Attr,
+                              Table_Idx_Attr,
+                              (Attr  => U ("baseVirtualAddress"),
+                               Value => U (Mutools.Utils.To_Hex
+                                 (Number => Virt_Addr))),
+                              (Attr  => U ("baseOffset"),
+                               Value => U ("0")),
+                              (Attr  => U ("count"),
+                               Value => U
+                                 (Trim (Interfaces.Unsigned_64'Image
+                                  (Page_Count))))));
             end;
 
             Paging.Layouts.Add_Memory_Region
@@ -327,8 +323,7 @@ is
       end loop;
 
       Assign_Device_Memory
-        (Stream_Doc     => Stream_Doc,
-         Map_Cmd_Buffer => Map_Cmd_Buf,
+        (Map_Cmd_Buffer => Map_Cmd_Buf,
          Mem_Layout     => Mem_Layout,
          Physical_Devs  => Physical_Devs,
          Logical_Devs   => Logical_Devs,
@@ -401,34 +396,32 @@ is
       begin
          if Level > 1 then
             XML_Utils.Append_Command
-              (Buffer     => Create_Cmds,
-               Stream_Doc => Stream_Doc,
-               Name       => "createPageTable" & Object_Kind,
-               Attrs      => (Object_Attr,
-                              (Attr  => U ("page"),
-                               Value => U (Phys_Add_Str)),
-                              (Attr  => U ("level"),
-                               Value => U (Level_Str)),
-                              (Attr  => U ("virtualAddress"),
-                               Value => U (Mutools.Utils.To_Hex
-                                 (Number => Virtual_Address))),
-                              (Attr  => U ("readable"),
-                               Value => U ("true")),
-                              (Attr  => U ("writable"),
-                               Value => U ("true")),
-                              (Attr  => U ("executable"),
-                               Value => U ("true"))));
+              (Buffer => Create_Cmds,
+               Name   => "createPageTable" & Object_Kind,
+               Attrs  => (Object_Attr,
+                          (Attr  => U ("page"),
+                           Value => U (Phys_Add_Str)),
+                          (Attr  => U ("level"),
+                           Value => U (Level_Str)),
+                          (Attr  => U ("virtualAddress"),
+                           Value => U (Mutools.Utils.To_Hex
+                             (Number => Virtual_Address))),
+                          (Attr  => U ("readable"),
+                           Value => U ("true")),
+                          (Attr  => U ("writable"),
+                           Value => U ("true")),
+                          (Attr  => U ("executable"),
+                           Value => U ("true"))));
 
             XML_Utils.Append_Command
-              (Buffer     => Activate_Cmds,
-               Stream_Doc => Stream_Doc,
-               Name       => "activatePageTable" & Object_Kind,
-               Attrs      => (Object_Attr,
-                              (Attr  => U ("level"),
-                               Value => U (Level_Str)),
-                              (Attr  => U ("virtualAddress"),
-                               Value => U (Mutools.Utils.To_Hex
-                                 (Number => Virtual_Address)))));
+              (Buffer => Activate_Cmds,
+               Name   => "activatePageTable" & Object_Kind,
+               Attrs  => (Object_Attr,
+                          (Attr  => U ("level"),
+                           Value => U (Level_Str)),
+                          (Attr  => U ("virtualAddress"),
+                           Value => U (Mutools.Utils.To_Hex
+                             (Number => Virtual_Address)))));
          end if;
          Cur_PT_Addr := Cur_PT_Addr + MC.Page_Size;
       end Process_Table;
@@ -464,14 +457,13 @@ is
          Buffer     => Create_Cmds);
 
       XML_Utils.Append_Command
-        (Buffer     => Activate_Cmds,
-         Stream_Doc => Stream_Doc,
-         Name       => "activatePageTable" & Object_Kind,
-         Attrs      => (Object_Attr,
-                        (Attr  => U ("level"),
-                         Value => U (Trim (Mem_Layout.Levels'Img))),
-                        (Attr  => U ("virtualAddress"),
-                         Value => U ("16#0000#"))));
+        (Buffer => Activate_Cmds,
+         Name   => "activatePageTable" & Object_Kind,
+         Attrs  => (Object_Attr,
+                    (Attr  => U ("level"),
+                     Value => U (Trim (Mem_Layout.Levels'Img))),
+                    (Attr  => U ("virtualAddress"),
+                     Value => U ("16#0000#"))));
    end Create_Object_PTs;
 
 end Cmd_Stream.Roots.Utils;

@@ -16,8 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with McKae.XML.XPath.XIA;
 with DOM.Core;
+with McKae.XML.XPath.XIA;
 
 with Cmd_Stream.XML_Utils;
 with Cmd_Stream.Memblocks;
@@ -98,8 +98,7 @@ is
         (Stream_Doc => Stream_Doc,
          Name       => "writeImage");
 
-      XML_Utils.Write (Stream_Doc => Stream_Doc,
-                       Filename   => Output_File);
+      XML_Utils.Write (Stream_Doc => Stream_Doc);
    end Run;
 
 end Cmd_Stream;

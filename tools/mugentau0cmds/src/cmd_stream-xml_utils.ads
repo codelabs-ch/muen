@@ -16,19 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+private with Ada.Containers.Doubly_Linked_Lists;
+private with Ada.Text_IO;
 with Ada.Strings.Unbounded;
 
 with Interfaces;
-
-with Muxml;
-
-private with DOM.Core;
 
 package Cmd_Stream.XML_Utils
 is
 
    --  Command stream document type
-   type Stream_Document_Type is new Muxml.XML_Data_Type with null record;
+   type Stream_Document_Type is limited private;
 
    --  Create command stream document with given filename.
    procedure Create
@@ -61,10 +59,9 @@ is
    --  Append command with given name and attributes to the specified command
    --  buffer which is part of the designated stream document.
    procedure Append_Command
-     (Buffer     : in out Command_Buffer_Type;
-      Stream_Doc :        Stream_Document_Type;
-      Name       :        String;
-      Attrs      :        Attribute_Array := Null_Attrs);
+     (Buffer : in out Command_Buffer_Type;
+      Name   :        String;
+      Attrs  :        Attribute_Array := Null_Attrs);
 
    --  Append commands from given buffer to the specified command stream
    --  document.
@@ -81,12 +78,20 @@ is
 
    --  Write given commando stream to file specified by name.
    procedure Write
-     (Stream_Doc : in out Stream_Document_Type;
-      Filename   :        String);
+     (Stream_Doc : in out Stream_Document_Type);
+
+   IO_Error : exception;
 
 private
 
-   type Command_Buffer_Type is new DOM.Core.Node_List;
+   use type Ada.Strings.Unbounded.Unbounded_String;
+
+   package Cmd_List is new Ada.Containers.Doubly_Linked_Lists
+     (Element_Type => Ada.Strings.Unbounded.Unbounded_String);
+
+   type Command_Buffer_Type is record
+      Cmds : Cmd_List.List;
+   end record;
 
    Null_Attr : constant Attribute_Type
      := (Attr  => Ada.Strings.Unbounded.Null_Unbounded_String,
@@ -94,5 +99,9 @@ private
 
    Null_Attrs : constant Attribute_Array (1 .. 0)
      := (others => Null_Attr);
+
+   type Stream_Document_Type is limited record
+      File : Ada.Text_IO.File_Type;
+   end record;
 
 end Cmd_Stream.XML_Utils;

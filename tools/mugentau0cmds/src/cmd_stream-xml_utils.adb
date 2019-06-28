@@ -16,12 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with DOM.Core.Append_Node;
-with DOM.Core.Nodes;
-with DOM.Core.Elements;
-with DOM.Core.Documents;
-
-with Muxml.Utils;
+with Ada.Exceptions;
 
 with Mutools.Constants;
 with Mutools.Utils;
@@ -29,12 +24,13 @@ with Mutools.Utils;
 package body Cmd_Stream.XML_Utils
 is
 
+   use Ada.Strings.Unbounded;
+
    --  Create command node with specified name and attributes.
    function Create_Command
-     (Stream_Doc : Stream_Document_Type;
-      Name       : String;
-      Attrs      : Attribute_Array := Null_Attrs)
-      return DOM.Core.Node;
+     (Name  : String;
+      Attrs : Attribute_Array := Null_Attrs)
+      return Unbounded_String;
 
    -------------------------------------------------------------------------
 
@@ -44,31 +40,23 @@ is
       Attrs      :        Attribute_Array := Null_Attrs)
    is
    begin
-      Muxml.Utils.Append_Child
-        (Node      => Muxml.Utils.Get_Element
-           (Doc   => Stream_Doc.Doc,
-            XPath => "/tau0/commands"),
-         New_Child => Create_Command
-           (Stream_Doc => Stream_Doc,
-            Name       => Name,
-            Attrs      => Attrs));
+      Ada.Text_IO.Put_Line (File => Stream_Doc.File,
+                            Item => S (Create_Command
+                              (Name  => Name,
+                               Attrs => Attrs)));
    end Append_Command;
 
    -------------------------------------------------------------------------
 
    procedure Append_Command
-     (Buffer     : in out Command_Buffer_Type;
-      Stream_Doc :        Stream_Document_Type;
-      Name       :        String;
-      Attrs      :        Attribute_Array := Null_Attrs)
+     (Buffer : in out Command_Buffer_Type;
+      Name   :        String;
+      Attrs  :        Attribute_Array := Null_Attrs)
    is
    begin
-      DOM.Core.Append_Node
-        (List => DOM.Core.Node_List (Buffer),
-         N    => Create_Command
-           (Stream_Doc => Stream_Doc,
-            Name       => Name,
-            Attrs      => Attrs));
+      Buffer.Cmds.Append (New_Item => Create_Command
+        (Name  => Name,
+         Attrs => Attrs));
    end Append_Command;
 
    -------------------------------------------------------------------------
@@ -77,18 +65,11 @@ is
      (Stream_Doc : in out Stream_Document_Type;
       Buffer     :        Command_Buffer_Type)
    is
-      Cmds_Node : constant DOM.Core.Node
-        := Muxml.Utils.Get_Element (Doc   => Stream_Doc.Doc,
-                                    XPath => "/tau0/commands");
    begin
-      for I in 0 .. DOM.Core.Nodes.Length
-        (List => DOM.Core.Node_List (Buffer)) - 1
-      loop
-         Muxml.Utils.Append_Child
-           (Node      => Cmds_Node,
-            New_Child => DOM.Core.Nodes.Item
-              (List  => DOM.Core.Node_List (Buffer),
-               Index => I));
+      Ada.Text_IO.New_Line (File => Stream_Doc.File);
+      for Cmd of Buffer.Cmds loop
+         Ada.Text_IO.Put_Line (File => Stream_Doc.File,
+                               Item => S (Cmd));
       end loop;
    end Append_Commands;
 
@@ -120,47 +101,37 @@ is
      (Stream_Doc : out Stream_Document_Type;
       Filename   :     String)
    is
-      pragma Unreferenced (Filename);
-
-      Dom_Impl : DOM.Core.DOM_Implementation;
-      Node     : DOM.Core.Node;
    begin
-      Stream_Doc.Doc := DOM.Core.Create_Document (Implementation => Dom_Impl);
+      Ada.Text_IO.Create
+        (File => Stream_Doc.File,
+         Mode => Ada.Text_IO.Out_File,
+         Name => Filename);
+      Ada.Text_IO.Put_Line (File => Stream_Doc.File,
+                            Item => "<tau0>" & ASCII.LF & " <commands>");
 
-      Node := DOM.Core.Nodes.Append_Child
-        (N         => Stream_Doc.Doc,
-         New_Child => DOM.Core.Documents.Create_Element
-           (Doc      => Stream_Doc.Doc,
-            Tag_Name => "tau0"));
-      Muxml.Utils.Append_Child
-        (Node      => Node,
-         New_Child => DOM.Core.Documents.Create_Element
-           (Doc      => Stream_Doc.Doc,
-            Tag_Name => "commands"));
+   exception
+      when E : others =>
+         raise IO_Error with "Unable to open file '" & Filename & "' - "
+           & Ada.Exceptions.Exception_Message (X => E);
    end Create;
 
    -------------------------------------------------------------------------
 
    function Create_Command
-     (Stream_Doc : Stream_Document_Type;
-      Name       : String;
-      Attrs      : Attribute_Array := Null_Attrs)
-      return DOM.Core.Node
+     (Name  : String;
+      Attrs : Attribute_Array := Null_Attrs)
+      return Ada.Strings.Unbounded.Unbounded_String
    is
    begin
-      return Node : DOM.Core.Node do
-         Node := DOM.Core.Documents.Create_Element
-           (Doc      => Stream_Doc.Doc,
-            Tag_Name => Name);
+      return Result : Ada.Strings.Unbounded.Unbounded_String do
+         Result := "  <" & U (Name);
 
          for A of Attrs loop
             if A /= Null_Attr then
-               DOM.Core.Elements.Set_Attribute
-                 (Elem  => Node,
-                  Name  => S (A.Attr),
-                  Value => S (A.Value));
+               Result := Result & " " & A.Attr & "=""" & A.Value & """";
             end if;
          end loop;
+         Result := Result & "/>";
       end return;
    end Create_Command;
 
@@ -168,30 +139,19 @@ is
 
    procedure Reverse_Commands (Buffer : in out Command_Buffer_Type)
    is
-      Rev : Command_Buffer_Type;
    begin
-      for I in reverse 0 .. DOM.Core.Nodes.Length
-        (List => DOM.Core.Node_List (Buffer)) - 1
-      loop
-         DOM.Core.Append_Node
-           (List => DOM.Core.Node_List (Rev),
-            N    => DOM.Core.Nodes.Item
-              (List  => DOM.Core.Node_List (Buffer),
-               Index => I));
-      end loop;
-      Buffer := Rev;
+      Buffer.Cmds.Reverse_Elements;
    end Reverse_Commands;
 
    -------------------------------------------------------------------------
 
-   procedure Write
-     (Stream_Doc : in out Stream_Document_Type;
-      Filename   :        String)
+   procedure Write (Stream_Doc : in out Stream_Document_Type)
    is
    begin
-      Muxml.Write (Data => Muxml.XML_Data_Type (Stream_Doc),
-                   Kind => Muxml.None,
-                   File => Filename);
+      Ada.Text_IO.Put_Line (File => Stream_Doc.File,
+                            Item => " </commands>" & ASCII.LF
+                            & "</tau0>" & ASCII.LF);
+      Ada.Text_IO.Close (File => Stream_Doc.File);
    end Write;
 
 end Cmd_Stream.XML_Utils;

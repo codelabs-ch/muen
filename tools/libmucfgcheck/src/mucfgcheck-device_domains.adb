@@ -208,6 +208,10 @@ is
 
    procedure Memory_Mapping_Address_Equality (XML_Data : Muxml.XML_Data_Type)
    is
+      Subj_Mem : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/memory/memory");
       Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
@@ -230,10 +234,10 @@ is
                 (Elem => Dom_Mem,
                  Name => "virtualAddress");
             Mem_Refs     : constant DOM.Core.Node_List
-              := McKae.XML.XPath.XIA.XPath_Query
-                (N     => XML_Data.Doc,
-                 XPath => "/system/subjects/subject/memory/memory[@physical='"
-                 & Phys_Name & "']");
+              := Muxml.Utils.Get_Elements
+                (Nodes     => Subj_Mem,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Phys_Name);
          begin
             for J in 0 .. DOM.Core.Nodes.Length (List => Mem_Refs) - 1 loop
                declare
@@ -343,6 +347,10 @@ is
          return L_Phys = R_Phys;
       end Match_Physical;
 
+      Ctx_Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory[@type='system_vtd_context']/file");
       Devs : constant Muxml.Utils.Matching_Pairs_Type
         := Muxml.Utils.Get_Matching
           (XML_Data    => XML_Data,
@@ -378,10 +386,9 @@ is
                   Normalize => False);
                Ctx_Node   : constant DOM.Core.Node
                  := Muxml.Utils.Get_Element
-                   (Doc   => XML_Data.Doc,
-                    XPath => "/system/memory/memory"
-                    & "[@type='system_vtd_context']"
-                    & "/file[@filename='vtd_context_bus_" & Bus_Nr_Hex & "']");
+                   (Nodes     => Ctx_Nodes,
+                    Ref_Attr  => "filename",
+                    Ref_Value => "vtd_context_bus_" & Bus_Nr_Hex);
             begin
                if Ctx_Node = null then
                   raise Validation_Error with "No file-backed VT-d context "

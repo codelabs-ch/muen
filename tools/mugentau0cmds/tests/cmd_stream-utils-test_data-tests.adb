@@ -221,12 +221,22 @@ package body Cmd_Stream.Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Stream : Stream_Document_Type;
+      Fn     : constant String := "clear_region.xml";
+      Fn_Obj : constant String := "obj/" & Fn;
    begin
+      Create (Stream_Doc => Stream,
+              Filename   => Fn_Obj);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Clear_Region (Stream_Doc   => Stream,
+                    Base_Address => 16#2000#,
+                    Size         => 16#9000#);
+      Close (Stream_Doc => Stream);
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/" & Fn,
+               Filename2 => Fn_Obj),
+              Message   => "Files differ");
+      Ada.Directories.Delete_File (Name => Fn_Obj);
 --  begin read only
    end Test_Clear_Region;
 --  end read only

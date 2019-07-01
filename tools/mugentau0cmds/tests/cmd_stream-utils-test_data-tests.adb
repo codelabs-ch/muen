@@ -14,7 +14,11 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
+with Ada.Directories;
 
+with GNAT.OS_Lib;
+
+with Test_Utils;
 --  begin read only
 --  end read only
 package body Cmd_Stream.Utils.Test_Data.Tests is
@@ -39,12 +43,48 @@ package body Cmd_Stream.Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      ----------------------------------------------------------------------
+
+      procedure Positive
+      is
+         Stream : Stream_Document_Type;
+         Fn     : constant String := "create_stream.xml";
+         Fn_Obj : constant String := "obj/" & Fn;
+      begin
+         Create (Stream_Doc => Stream,
+                 Filename   => Fn_Obj);
+         Close (Stream_Doc => Stream);
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/" & Fn,
+                  Filename2 => Fn_Obj),
+                 Message   => "Files differ");
+         Ada.Directories.Delete_File (Name => Fn_Obj);
+      end Positive;
+
+      ----------------------------------------------------------------------
+
+      procedure No_Access
+      is
+         Stream : Stream_Document_Type;
+         Fn     : constant String := "/stream_no_access.xml";
+      begin
+         Assert (Condition => not GNAT.OS_Lib.Is_Owner_Writable_File
+                 (Name => Fn),
+                 Message   => "Unexpected access");
+
+         begin
+            Create (Stream_Doc => Stream,
+                    Filename   => Fn);
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+
+         exception
+            when IO_Error => null;
+         end;
+      end No_Access;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Positive;
+      No_Access;
 --  begin read only
    end Test_Create;
 --  end read only

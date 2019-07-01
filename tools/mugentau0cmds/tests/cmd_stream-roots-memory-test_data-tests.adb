@@ -14,7 +14,13 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
+with Ada.Directories;
 
+with McKae.XML.XPath.XIA;
+
+with Muxml.Utils;
+
+with Test_Utils;
 --  begin read only
 --  end read only
 package body Cmd_Stream.Roots.Memory.Test_Data.Tests is
@@ -39,12 +45,74 @@ package body Cmd_Stream.Roots.Memory.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      ----------------------------------------------------------------------
+
+      procedure Positive
+      is
+         Policy : Muxml.XML_Data_Type;
+         Fn     : constant String := "create_memory_regions.xml";
+         Fn_Obj : constant String := "obj/" & Fn;
+         Stream : Utils.Stream_Document_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Utils.Create (Stream_Doc => Stream,
+                       Filename   => Fn_Obj);
+
+         Create_Memory_Regions
+           (Stream_Doc  => Stream,
+            Phys_Memory => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Policy.Doc,
+               XPath => "/system/memory/memory"));
+         Utils.Close (Stream_Doc => Stream);
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/" & Fn,
+                  Filename2 => Fn_Obj),
+                 Message   => "Files differ");
+         Ada.Directories.Delete_File (Name => Fn_Obj);
+      end;
+
+      ----------------------------------------------------------------------
+
+      procedure No_Size_Attribute
+      is
+         Policy : Muxml.XML_Data_Type;
+         Fn     : constant String := "create_memory_region_nosize.xml";
+         Fn_Obj : constant String := "obj/" & Fn;
+         Stream : Utils.Stream_Document_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Attribute
+           (Doc   => Policy.Doc,
+            XPath => "/system/memory/memory/file[@size]",
+            Name  => "size",
+            Value => "");
+         Utils.Create (Stream_Doc => Stream,
+                       Filename   => Fn_Obj);
+
+         begin
+            Create_Memory_Regions
+              (Stream_Doc  => Stream,
+               Phys_Memory => McKae.XML.XPath.XIA.XPath_Query
+                 (N     => Policy.Doc,
+                  XPath => "/system/memory/memory"));
+            Utils.Close (Stream_Doc => Stream);
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+            Utils.Close (Stream_Doc => Stream);
+
+         exception
+            when Missing_Filesize =>
+               Utils.Close (Stream_Doc => Stream);
+               Ada.Directories.Delete_File (Name => Fn_Obj);
+         end;
+      end;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Positive;
+      No_Size_Attribute;
 --  begin read only
    end Test_Create_Memory_Regions;
 --  end read only

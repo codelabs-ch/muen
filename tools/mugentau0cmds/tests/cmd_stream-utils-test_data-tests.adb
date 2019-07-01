@@ -74,12 +74,12 @@ package body Cmd_Stream.Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Buffer : Command_Buffer_Type;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Append_Command (Buffer => Buffer,
+                      Name   => "first");
+      Assert (Condition => Buffer.Cmds.First_Element = "  <first/>",
+              Message   => "Command mismatch");
 --  begin read only
    end Test_2_Append_Command;
 --  end read only

@@ -9,16 +9,16 @@ package Cmd_Stream.Utils.Test_Data.Tests is
    type Test is new GNATtest_Generated.GNATtest_Standard.Cmd_Stream.Utils.Test_Data.Test
    with null record;
 
-   procedure Test_Create_930d48 (Gnattest_T : in out Test);
-   --  cmd_stream-utils.ads:32:4:Create
-
    procedure Test_Reverse_Commands_0f416b (Gnattest_T : in out Test);
-   --  cmd_stream-utils.ads:50:4:Reverse_Commands
-
-   procedure Test_Append_Command_093943 (Gnattest_T : in out Test);
-   --  cmd_stream-utils.ads:54:4:Append_Command
+   --  cmd_stream-utils.ads:42:4:Reverse_Commands
 
    procedure Test_Append_Command_287f11 (Gnattest_T : in out Test);
+   --  cmd_stream-utils.ads:46:4:Append_Command
+
+   procedure Test_Create_930d48 (Gnattest_T : in out Test);
+   --  cmd_stream-utils.ads:55:4:Create
+
+   procedure Test_Append_Command_093943 (Gnattest_T : in out Test);
    --  cmd_stream-utils.ads:61:4:Append_Command
 
    procedure Test_Append_Commands_e32107 (Gnattest_T : in out Test);

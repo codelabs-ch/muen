@@ -25,14 +25,6 @@ with Interfaces;
 package Cmd_Stream.Utils
 is
 
-   --  Command stream document type
-   type Stream_Document_Type is limited private;
-
-   --  Create command stream document with given filename.
-   procedure Create
-     (Stream_Doc : out Stream_Document_Type;
-      Filename   :     String);
-
    --  Command stream command attribute, value pair.
    type Attribute_Type is record
       Attr, Value : Ada.Strings.Unbounded.Unbounded_String;
@@ -50,18 +42,26 @@ is
    procedure Reverse_Commands (Buffer : in out Command_Buffer_Type);
 
    --  Append command with given name and attributes to the specified command
-   --  stream document.
-   procedure Append_Command
-     (Stream_Doc : in out Stream_Document_Type;
-      Name       :        String;
-      Attrs      :        Attribute_Array := Null_Attrs);
-
-   --  Append command with given name and attributes to the specified command
    --  buffer which is part of the designated stream document.
    procedure Append_Command
      (Buffer : in out Command_Buffer_Type;
       Name   :        String;
       Attrs  :        Attribute_Array := Null_Attrs);
+
+   --  Command stream document type
+   type Stream_Document_Type is limited private;
+
+   --  Create command stream document with given filename.
+   procedure Create
+     (Stream_Doc : out Stream_Document_Type;
+      Filename   :     String);
+
+   --  Append command with given name and attributes to the specified command
+   --  stream document.
+   procedure Append_Command
+     (Stream_Doc : in out Stream_Document_Type;
+      Name       :        String;
+      Attrs      :        Attribute_Array := Null_Attrs);
 
    --  Append commands from given buffer to the specified command stream
    --  document.

@@ -34,11 +34,53 @@ package body Cmd_Stream.Utils.Test_Data.Tests is
 --  end read only
 
 --  begin read only
+   procedure Test_Reverse_Commands (Gnattest_T : in out Test);
+   procedure Test_Reverse_Commands_0f416b (Gnattest_T : in out Test) renames Test_Reverse_Commands;
+--  id:2.2/0f416b8b19a9b0d8/Reverse_Commands/1/0/
+   procedure Test_Reverse_Commands (Gnattest_T : in out Test) is
+   --  cmd_stream-utils.ads:42:4:Reverse_Commands
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+
+      AUnit.Assertions.Assert
+        (Gnattest_Generated.Default_Assert_Value,
+         "Test not implemented.");
+
+--  begin read only
+   end Test_Reverse_Commands;
+--  end read only
+
+
+--  begin read only
+   procedure Test_2_Append_Command (Gnattest_T : in out Test);
+   procedure Test_Append_Command_287f11 (Gnattest_T : in out Test) renames Test_2_Append_Command;
+--  id:2.2/287f117437a4f034/Append_Command/0/0/
+   procedure Test_2_Append_Command (Gnattest_T : in out Test) is
+   --  cmd_stream-utils.ads:46:4:Append_Command
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+
+      AUnit.Assertions.Assert
+        (Gnattest_Generated.Default_Assert_Value,
+         "Test not implemented.");
+
+--  begin read only
+   end Test_2_Append_Command;
+--  end read only
+
+
+--  begin read only
    procedure Test_Create (Gnattest_T : in out Test);
    procedure Test_Create_930d48 (Gnattest_T : in out Test) renames Test_Create;
 --  id:2.2/930d482a1a8a8261/Create/1/0/
    procedure Test_Create (Gnattest_T : in out Test) is
-   --  cmd_stream-utils.ads:32:4:Create
+   --  cmd_stream-utils.ads:55:4:Create
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -91,52 +133,10 @@ package body Cmd_Stream.Utils.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Reverse_Commands (Gnattest_T : in out Test);
-   procedure Test_Reverse_Commands_0f416b (Gnattest_T : in out Test) renames Test_Reverse_Commands;
---  id:2.2/0f416b8b19a9b0d8/Reverse_Commands/1/0/
-   procedure Test_Reverse_Commands (Gnattest_T : in out Test) is
-   --  cmd_stream-utils.ads:50:4:Reverse_Commands
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-   begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
---  begin read only
-   end Test_Reverse_Commands;
---  end read only
-
-
---  begin read only
    procedure Test_1_Append_Command (Gnattest_T : in out Test);
    procedure Test_Append_Command_093943 (Gnattest_T : in out Test) renames Test_1_Append_Command;
 --  id:2.2/093943b5361f4e05/Append_Command/1/0/
    procedure Test_1_Append_Command (Gnattest_T : in out Test) is
-   --  cmd_stream-utils.ads:54:4:Append_Command
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-   begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
---  begin read only
-   end Test_1_Append_Command;
---  end read only
-
-
---  begin read only
-   procedure Test_2_Append_Command (Gnattest_T : in out Test);
-   procedure Test_Append_Command_287f11 (Gnattest_T : in out Test) renames Test_2_Append_Command;
---  id:2.2/287f117437a4f034/Append_Command/0/0/
-   procedure Test_2_Append_Command (Gnattest_T : in out Test) is
    --  cmd_stream-utils.ads:61:4:Append_Command
 --  end read only
 
@@ -149,7 +149,7 @@ package body Cmd_Stream.Utils.Test_Data.Tests is
          "Test not implemented.");
 
 --  begin read only
-   end Test_2_Append_Command;
+   end Test_1_Append_Command;
 --  end read only
 
 

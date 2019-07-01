@@ -1,0 +1,13 @@
+<tau0>
+ <commands>
+  <addMemoryBlock address="16#0000#" size="157"/>
+  <addMemoryBlock address="16#0010_0000#" size="439773"/>
+  <addMemoryBlock address="16#7057_d000#" size="1"/>
+  <addMemoryBlock address="16#7b53_6000#" size="100"/>
+  <addMemoryBlock address="16#7b59_a000#" size="101"/>
+  <addMemoryBlock address="16#0001_0000_0000#" size="3663872"/>
+  <addMemoryBlock address="16#7aa9_f000#" size="32"/>
+  <addMemoryBlock address="16#7d00_0000#" size="10240"/>
+ </commands>
+</tau0>
+

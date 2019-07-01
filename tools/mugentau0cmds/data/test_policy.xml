@@ -358,9 +358,9 @@
    <file filename="initramfs.cpio.gz" offset="none" size="16#00a2_add2#"/>
    <hash value="16#1c51a6571bdb54bd5c6634bfac116e2840a3486b968e100fbe9d85a3c514d3ba#"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="nic_linux|ram" physicalAddress="16#01e4_c000#" size="16#1000_0000#" type="subject"/>
+  <memory alignment="16#1000#" caching="WB" name="nic_linux|ram" physicalAddress="16#01e4_c000#" size="16#0000_9000#" type="subject"/>
   <memory alignment="16#1000#" caching="WB" name="nic_linux|lowmem" physicalAddress="16#223a_c000#" size="16#0008_0000#" type="subject"/>
-  <memory alignment="16#1000#" caching="WB" name="storage_linux|ram" physicalAddress="16#11e4_c000#" size="16#1000_0000#" type="subject"/>
+  <memory alignment="16#1000#" caching="WB" name="storage_linux|ram" physicalAddress="16#11e4_c000#" size="16#0000_8000#" type="subject"/>
   <memory alignment="16#1000#" caching="WB" name="storage_linux|lowmem" physicalAddress="16#2242_c000#" size="16#0008_0000#" type="subject"/>
   <memory alignment="16#1000#" caching="UC" name="crash_audit" physicalAddress="16#0001_0000_0000#" size="16#1000#" type="subject_crash_audit"/>
   <memory alignment="16#1000#" caching="WB" name="xhci_dma" physicalAddress="16#224a_c000#" size="16#0004_1000#" type="subject_device"/>

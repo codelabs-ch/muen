@@ -16,14 +16,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Direct_IO;
+with Ada.Streams.Stream_IO;
 with Ada.Text_IO;
 with Ada.Strings.Unbounded;
 
 package body Test_Utils
 is
-
-   package D_IO is new Ada.Direct_IO (Element_Type => Character);
 
    -------------------------------------------------------------------------
 
@@ -32,20 +30,23 @@ is
       Filename2 : String)
       return Boolean
    is
-      use type D_IO.Count;
+      package S_IO renames Ada.Streams.Stream_IO;
+      use type S_IO.Count;
 
-      procedure Open_File
-        (Filename :     String;
-         File     : out D_IO.File_Type);
       --  Open file specified by filename.
+      procedure Open_File
+        (Filename :     String;
+         File     : out S_IO.File_Type);
+
+      ----------------------------------------------------------------------
 
       procedure Open_File
         (Filename :     String;
-         File     : out D_IO.File_Type)
+         File     : out S_IO.File_Type)
       is
       begin
-         D_IO.Open (File => File,
-                    Mode => D_IO.In_File,
+         S_IO.Open (File => File,
+                    Mode => S_IO.In_File,
                     Name => Filename,
                     Form => "shared=no");
 
@@ -55,8 +56,7 @@ is
               "Unable to open file '" & Filename & "'";
       end Open_File;
 
-      File1, File2 : D_IO.File_Type;
-      Char1, Char2 : Character;
+      File1, File2 : S_IO.File_Type;
       Result       : Boolean := True;
    begin
       Open_File (Filename => Filename1,
@@ -64,28 +64,36 @@ is
       Open_File (Filename => Filename2,
                  File     => File2);
 
-      if D_IO.Size (File1) /= D_IO.Size (File2) then
-         D_IO.Close (File => File1);
-         D_IO.Close (File => File2);
+      if S_IO.Size (File1) /= S_IO.Size (File2) then
+         S_IO.Close (File => File1);
+         S_IO.Close (File => File2);
          return False;
       end if;
 
-      while not D_IO.End_Of_File (File => File1) loop
+      while Result and not S_IO.End_Of_File (File => File1) loop
+         declare
+            use type Ada.Streams.Stream_Element_Array;
 
-         --  Read one byte from both files.
+            Buffer_F1, Buffer_F2 : Ada.Streams.Stream_Element_Array (1 .. 8);
+            Last_1, Last_2       : Ada.Streams.Stream_Element_Offset;
+         begin
+            S_IO.Read (File => File1,
+                       Item => Buffer_F1,
+                       Last => Last_1);
+            S_IO.Read (File => File2,
+                       Item => Buffer_F2,
+                       Last => Last_2);
 
-         D_IO.Read (File => File1,
-                    Item => Char1);
-         D_IO.Read (File => File2,
-                    Item => Char2);
-
-         if Char1 /= Char2 then
-            Result := False;
-         end if;
+            if Buffer_F1 (Buffer_F1'First .. Last_1)
+              /= Buffer_F2 (Buffer_F2'First .. Last_2)
+            then
+               Result := False;
+            end if;
+         end;
       end loop;
 
-      D_IO.Close (File => File1);
-      D_IO.Close (File => File2);
+      S_IO.Close (File => File1);
+      S_IO.Close (File => File2);
 
       return Result;
    end Equal_Files;

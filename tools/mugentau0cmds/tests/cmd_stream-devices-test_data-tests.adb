@@ -16,7 +16,7 @@ with System.Assertions;
 --  end read only
 with Ada.Directories;
 
-with Muxml;
+with Muxml.Utils;
 
 with Test_Utils;
 --  begin read only
@@ -113,12 +113,65 @@ package body Cmd_Stream.Devices.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      ----------------------------------------------------------------------
+
+      procedure VTd_Enabled
+      is
+         Policy : Muxml.XML_Data_Type;
+         Fn     : constant String := "create_vtd_tables_enabled.xml";
+         Fn_Obj : constant String := "obj/" & Fn;
+         Stream : Utils.Stream_Document_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Utils.Create (Stream_Doc => Stream,
+                       Filename   => Fn_Obj);
+
+         Create_VTd_Tables
+           (Policy     => Policy,
+            Stream_Doc => Stream);
+         Utils.Close (Stream_Doc => Stream);
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/" & Fn,
+                  Filename2 => Fn_Obj),
+                 Message   => "Files differ (1)");
+         Ada.Directories.Delete_File (Name => Fn_Obj);
+      end;
+
+      ----------------------------------------------------------------------
+
+      procedure VTd_Disabled
+      is
+         Policy : Muxml.XML_Data_Type;
+         Fn     : constant String := "create_vtd_tables_disabled.xml";
+         Fn_Obj : constant String := "obj/" & Fn;
+         Stream : Utils.Stream_Document_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Attribute
+           (Doc   => Policy.Doc,
+            XPath => "/system/config/boolean[@name='iommu_enabled']",
+            Name  => "value",
+            Value => "false");
+         Utils.Create (Stream_Doc => Stream,
+                       Filename   => Fn_Obj);
+
+         Create_VTd_Tables
+           (Policy     => Policy,
+            Stream_Doc => Stream);
+         Utils.Close (Stream_Doc => Stream);
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/" & Fn,
+                  Filename2 => Fn_Obj),
+                 Message   => "Files differ (2)");
+         Ada.Directories.Delete_File (Name => Fn_Obj);
+      end;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      VTd_Enabled;
+      VTd_Disabled;
 --  begin read only
    end Test_Create_VTd_Tables;
 --  end read only

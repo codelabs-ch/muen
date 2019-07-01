@@ -156,11 +156,11 @@ package body Cmd_Stream.Utils.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Write (Gnattest_T : in out Test);
-   procedure Test_Write_6ad061 (Gnattest_T : in out Test) renames Test_Write;
---  id:2.2/6ad061e7d051a887/Write/1/0/
-   procedure Test_Write (Gnattest_T : in out Test) is
-   --  cmd_stream-utils.ads:80:4:Write
+   procedure Test_Close (Gnattest_T : in out Test);
+   procedure Test_Close_fb1398 (Gnattest_T : in out Test) renames Test_Close;
+--  id:2.2/fb13981e576aa0cb/Close/1/0/
+   procedure Test_Close (Gnattest_T : in out Test) is
+   --  cmd_stream-utils.ads:80:4:Close
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -172,7 +172,7 @@ package body Cmd_Stream.Utils.Test_Data.Tests is
          "Test not implemented.");
 
 --  begin read only
-   end Test_Write;
+   end Test_Close;
 --  end read only
 
 --  begin read only

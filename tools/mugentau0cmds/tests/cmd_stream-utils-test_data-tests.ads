@@ -27,8 +27,8 @@ package Cmd_Stream.Utils.Test_Data.Tests is
    procedure Test_Clear_Region_8a06f5 (Gnattest_T : in out Test);
    --  cmd_stream-utils.ads:74:4:Clear_Region
 
-   procedure Test_Write_6ad061 (Gnattest_T : in out Test);
-   --  cmd_stream-utils.ads:80:4:Write
+   procedure Test_Close_fb1398 (Gnattest_T : in out Test);
+   --  cmd_stream-utils.ads:80:4:Close
 
 end Cmd_Stream.Utils.Test_Data.Tests;
 --  end read only

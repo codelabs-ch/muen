@@ -98,7 +98,7 @@ is
         (Stream_Doc => Stream_Doc,
          Name       => "writeImage");
 
-      Utils.Write (Stream_Doc => Stream_Doc);
+      Utils.Close (Stream_Doc => Stream_Doc);
    end Run;
 
 end Cmd_Stream;

@@ -76,9 +76,8 @@ is
       Base_Address :        Interfaces.Unsigned_64;
       Size         :        Interfaces.Unsigned_64);
 
-   --  Write given commando stream to file specified by name.
-   procedure Write
-     (Stream_Doc : in out Stream_Document_Type);
+   --  Write closing tags to given command stream and close file descriptor.
+   procedure Close (Stream_Doc : in out Stream_Document_Type);
 
    IO_Error : exception;
 

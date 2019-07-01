@@ -97,6 +97,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Close (Stream_Doc : in out Stream_Document_Type)
+   is
+   begin
+      Ada.Text_IO.Put_Line (File => Stream_Doc.File,
+                            Item => " </commands>" & ASCII.LF
+                            & "</tau0>" & ASCII.LF);
+      Ada.Text_IO.Close (File => Stream_Doc.File);
+   end Close;
+
+   -------------------------------------------------------------------------
+
    procedure Create
      (Stream_Doc : out Stream_Document_Type;
       Filename   :     String)
@@ -142,16 +153,5 @@ is
    begin
       Buffer.Cmds.Reverse_Elements;
    end Reverse_Commands;
-
-   -------------------------------------------------------------------------
-
-   procedure Write (Stream_Doc : in out Stream_Document_Type)
-   is
-   begin
-      Ada.Text_IO.Put_Line (File => Stream_Doc.File,
-                            Item => " </commands>" & ASCII.LF
-                            & "</tau0>" & ASCII.LF);
-      Ada.Text_IO.Close (File => Stream_Doc.File);
-   end Write;
 
 end Cmd_Stream.Utils;

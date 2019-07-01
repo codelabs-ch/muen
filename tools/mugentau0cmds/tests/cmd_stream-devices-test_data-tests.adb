@@ -57,7 +57,7 @@ package body Cmd_Stream.Devices.Test_Data.Tests is
       Create_Physical_PCI_Devices
         (Policy     => Policy,
          Stream_Doc => Stream);
-      Utils.Write (Stream_Doc => Stream);
+      Utils.Close (Stream_Doc => Stream);
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "data/" & Fn,
                Filename2 => Fn_Obj),
@@ -92,7 +92,7 @@ package body Cmd_Stream.Devices.Test_Data.Tests is
       Create_Physical_Legacy_Devices
         (Policy     => Policy,
          Stream_Doc => Stream);
-      Utils.Write (Stream_Doc => Stream);
+      Utils.Close (Stream_Doc => Stream);
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "data/" & Fn,
                Filename2 => Fn_Obj),

@@ -2,8 +2,6 @@
  <commands>
   <addProcessor id="0" apicId="0"/>
   <addProcessor id="1" apicId="2"/>
-  <addProcessor id="2" apicId="4"/>
-  <addProcessor id="3" apicId="6"/>
  </commands>
 </tau0>
 

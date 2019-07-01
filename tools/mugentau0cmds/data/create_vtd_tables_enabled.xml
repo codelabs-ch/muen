@@ -1,13 +1,13 @@
 <tau0>
  <commands>
-  <clearPage page="16#01ae_1000#"/>
-  <createVTdRootTable page="16#01ae_1000#"/>
-  <clearPage page="16#01ae_0000#"/>
-  <createVTdIRQRemapTable page="16#01ae_0000#"/>
-  <clearPage page="16#01ad_e000#"/>
-  <createVTdContextTable page="16#01ad_e000#" bus="16#0#"/>
-  <clearPage page="16#01ad_f000#"/>
-  <createVTdContextTable page="16#01ad_f000#" bus="16#3e#"/>
+  <clearPage page="16#01a6_b000#"/>
+  <createVTdRootTable page="16#01a6_b000#"/>
+  <clearPage page="16#01a6_a000#"/>
+  <createVTdIRQRemapTable page="16#01a6_a000#"/>
+  <clearPage page="16#01a6_8000#"/>
+  <createVTdContextTable page="16#01a6_8000#" bus="16#0#"/>
+  <clearPage page="16#01a6_9000#"/>
+  <createVTdContextTable page="16#01a6_9000#" bus="16#3e#"/>
  </commands>
 </tau0>
 

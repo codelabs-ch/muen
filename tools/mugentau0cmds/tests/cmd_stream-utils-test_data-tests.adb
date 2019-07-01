@@ -184,12 +184,28 @@ package body Cmd_Stream.Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Buffer : Command_Buffer_Type;
+      Stream : Stream_Document_Type;
+      Fn     : constant String := "append_commands.xml";
+      Fn_Obj : constant String := "obj/" & Fn;
    begin
+      Append_Command (Buffer => Buffer,
+                      Name   => "first");
+      Append_Command (Buffer => Buffer,
+                      Name   => "seconds");
+      Append_Command (Buffer => Buffer,
+                      Name   => "third");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Create (Stream_Doc => Stream,
+              Filename   => Fn_Obj);
+      Append_Commands (Stream_Doc => Stream,
+                       Buffer     => Buffer);
+      Close (Stream_Doc => Stream);
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/" & Fn,
+               Filename2 => Fn_Obj),
+              Message   => "Files differ");
+      Ada.Directories.Delete_File (Name => Fn_Obj);
 --  begin read only
    end Test_Append_Commands;
 --  end read only

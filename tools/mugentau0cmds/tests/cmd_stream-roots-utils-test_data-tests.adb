@@ -40,11 +40,8 @@ package body Cmd_Stream.Roots.Utils.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => True,
+              Message   => "Tested in Subject/Kernels/... tests");
 --  begin read only
    end Test_Assign_Memory;
 --  end read only

@@ -39,12 +39,20 @@ package body Cmd_Stream.Roots.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      State : constant Positive := Allocate_Root;
    begin
+      Current_Root := 0;
+      Assert (Condition => Allocate_Root = 0,
+              Message   => "Root not 0");
+      Assert (Condition => Allocate_Root = 1,
+              Message   => "Root not 1");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Current_Root := State;
 
+   exception
+      when others =>
+         Current_Root := State;
+         raise;
 --  begin read only
    end Test_Allocate_Root;
 --  end read only

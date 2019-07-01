@@ -68,12 +68,20 @@ package body Cmd_Stream.Roots.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      State : constant Positive := Allocate_Page_Table;
    begin
+      Current_PT := 0;
+      Assert (Condition => Allocate_Page_Table = 0,
+              Message   => "PT not 0");
+      Assert (Condition => Allocate_Page_Table = 1,
+              Message   => "PT not 1");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Current_PT := State;
 
+   exception
+      when others =>
+         Current_PT := State;
+         raise;
 --  begin read only
    end Test_Allocate_Page_Table;
 --  end read only

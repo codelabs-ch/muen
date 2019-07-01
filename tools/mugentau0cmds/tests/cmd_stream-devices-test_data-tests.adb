@@ -78,12 +78,26 @@ package body Cmd_Stream.Devices.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Policy : Muxml.XML_Data_Type;
+      Fn     : constant String := "create_phyiscal_legacy_devices.xml";
+      Fn_Obj : constant String := "obj/" & Fn;
+      Stream : Utils.Stream_Document_Type;
    begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Utils.Create (Stream_Doc => Stream,
+                    Filename   => Fn_Obj);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Create_Physical_Legacy_Devices
+        (Policy     => Policy,
+         Stream_Doc => Stream);
+      Utils.Write (Stream_Doc => Stream);
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/" & Fn,
+               Filename2 => Fn_Obj),
+              Message   => "Files differ");
+      Ada.Directories.Delete_File (Name => Fn_Obj);
 --  begin read only
    end Test_Create_Physical_Legacy_Devices;
 --  end read only

@@ -43,12 +43,22 @@ package body Cmd_Stream.Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Buffer : Command_Buffer_Type;
    begin
+      Append_Command (Buffer => Buffer,
+                      Name   => "first");
+      Append_Command (Buffer => Buffer,
+                      Name   => "second");
+      Assert (Condition => Buffer.Cmds.First_Element = "  <first/>",
+              Message   => "First mismatch (1)");
+      Assert (Condition => Buffer.Cmds.Last_Element = "  <second/>",
+              Message   => "Last mismatch (1)");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Reverse_Commands (Buffer => Buffer);
+      Assert (Condition => Buffer.Cmds.First_Element = "  <second/>",
+              Message   => "First mismatch (2)");
+      Assert (Condition => Buffer.Cmds.Last_Element = "  <first/>",
+              Message   => "Last mismatch (2)");
 --  begin read only
    end Test_Reverse_Commands;
 --  end read only

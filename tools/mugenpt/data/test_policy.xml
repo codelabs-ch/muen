@@ -464,7 +464,7 @@
 			</vcpu>
 			<bootparams/>
 			<memory>
-				<memory logical="mem" physical="subject1" virtualAddress="16#0000#" writable="true" executable="true"/>
+				<memory logical="mem" physical="subject1" virtualAddress="16#8000_0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>
 				<device logical="vga" physical="vga">

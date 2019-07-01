@@ -253,11 +253,8 @@ package body Cmd_Stream.Utils.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => True,
+              Message   => "Implicitly tested");
 --  begin read only
    end Test_Close;
 --  end read only

@@ -11,8 +11,7 @@ SCHEMA_FILES = \
 	$(GEN_DIR)/muxml-component_schema.ads
 SCHEMA_FILE = schema/`echo $* | sed -e 's/_a//g;s/_b//g;s/_src//g'`.xsd
 
-XSD_FILES   = $(shell find schema/ -name '*.xsd')
-RESOLVE_XSL = schema/resolve.xsl
+XSD_FILES = $(shell find schema/ -name '*.xsd')
 
 COMPONENT_TARGETS = $(SCHEMA_FILES)
 TEST_TARGETS      = $(COMPONENT_TARGETS)

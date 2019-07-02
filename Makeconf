@@ -59,7 +59,8 @@ MUGENZP        ?= $(TOP_DIR)/tools/mugenzp/bin/mugenzp
 MUPACK         ?= $(TOP_DIR)/tools/mupack/bin/mupack
 MULNXBZPATCH   ?= $(TOP_DIR)/tools/mulnxbzpatch/bin/mulnxbzpatch
 
-XML2ADA ?= $(TOP_DIR)/tools/scripts/xml2ada
+XML2ADA     ?= $(TOP_DIR)/tools/scripts/xml2ada
+RESOLVE_XSL ?= $(TOP_DIR)/tools/libmuxml/schema/resolve.xsl
 
 TO_RAW_OPTS = -O binary \
 	--set-section-flags .bss=alloc,load,contents \

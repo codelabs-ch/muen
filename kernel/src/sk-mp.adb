@@ -66,7 +66,9 @@ is
       Refined_Depends => (Global_Minor_Frame_Barriers => Config)
    is
    begin
+      pragma Warnings (Off);
       for I in Config'Range loop
+         pragma Warnings (On);
          Barriers.Initialize (Barrier => Global_Minor_Frame_Barriers (I),
                               Size    => Byte (Config (I)));
       end loop;

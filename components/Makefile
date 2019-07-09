@@ -73,7 +73,7 @@ $(OBJ_DIR)/build.gpr:
 tau0_static:
 	$(MAKE) -C tau0-static
 
-build: $(OBJ_DIR)/build.gpr $(COMPONENTS_PREPARE) tau0_static
+build: $(OBJ_DIR)/build.gpr $(COMPONENTS_PREPARE)
 	@$(E) components "Build SPARK (debug)" \
 		"gprbuild $(BUILD_OPTS) -P$< -Xbuild=debug -Xstacksize=$(STACK_SIZE) $(PROOF_OPTS)" \
 		$(LOG)

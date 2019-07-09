@@ -90,8 +90,8 @@ is
       Cur_Offset : Interfaces.Unsigned_64;
    begin
       CU.Clear_Region (Stream_Doc   => Stream_Doc,
-                              Base_Address => Base_Address,
-                              Size         => Size);
+                       Base_Address => Base_Address,
+                       Size         => Size);
 
       Content_Attrs (1) := Region_Attr;
       Content_Attrs (2) := (Attr  => U ("basePage"),

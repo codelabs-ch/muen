@@ -61,6 +61,7 @@ clean:
 	$(MAKE) clean -C policy
 	$(MAKE) clean -C components
 	$(MAKE) clean -C rts
+	$(MAKE) clean -C emulate
 	rm -rf contrib/obj
 
 distclean: clean

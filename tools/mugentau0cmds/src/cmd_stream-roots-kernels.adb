@@ -23,6 +23,7 @@ with McKae.XML.XPath.XIA;
 
 with Muxml.Utils;
 
+with Cmd_Stream.Constants;
 with Cmd_Stream.Roots.Utils;
 
 package body Cmd_Stream.Roots.Kernels
@@ -62,7 +63,7 @@ is
               := (Attr  => U ("device"),
                   Value => U (DOM.Core.Elements.Get_Attribute
                     (Elem => Physical_Dev,
-                     Name => "tau0DeviceId")));
+                     Name => Constants.Dev_ID_Attr_Name)));
          begin
             CU.Append_Command
               (Stream_Doc => Stream_Doc,

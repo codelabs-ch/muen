@@ -95,7 +95,7 @@ is
               := (Attr  => U ("device"),
                   Value => U (DOM.Core.Elements.Get_Attribute
                     (Elem => Phys_Dev,
-                     Name => "tau0DeviceId")));
+                     Name => Constants.Dev_ID_Attr_Name)));
          begin
             for J in 0 .. DOM.Core.Nodes.Length (List => Log_Dev_Memory) - 1
             loop

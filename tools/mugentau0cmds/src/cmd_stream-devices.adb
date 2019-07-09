@@ -28,6 +28,8 @@ with Muxml.Utils;
 with Mutools.Constants;
 with Mutools.System_Config;
 
+with Cmd_Stream.Constants;
+
 package body Cmd_Stream.Devices
 is
 
@@ -252,7 +254,7 @@ is
 
       DOM.Core.Elements.Set_Attribute
         (Elem  => Dev_Node,
-         Name  => "tau0DeviceId",
+         Name  => Constants.Dev_ID_Attr_Name,
          Value => Trim (Current_Device'Img));
       Current_Device := Current_Device + 1;
    end Create_Physical_Device;

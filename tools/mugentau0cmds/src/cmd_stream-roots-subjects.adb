@@ -27,6 +27,7 @@ with Muxml.Utils;
 with Mutools.Constants;
 with Mutools.Utils;
 
+with Cmd_Stream.Constants;
 with Cmd_Stream.Roots.Utils;
 
 package body Cmd_Stream.Roots.Subjects
@@ -94,7 +95,7 @@ is
               := (Attr  => U ("device"),
                   Value => U (DOM.Core.Elements.Get_Attribute
                     (Elem => Physical_Dev,
-                     Name => "tau0DeviceId")));
+                     Name => Constants.Dev_ID_Attr_Name)));
          begin
             CU.Append_Command
               (Stream_Doc => Stream_Doc,

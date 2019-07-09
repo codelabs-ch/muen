@@ -19,6 +19,7 @@
 package Cmd_Stream.Constants
 is
 
-   MR_ID_Attr_Name : constant String := "tau0RootId";
+   MR_ID_Attr_Name  : constant String := "tau0RootId";
+   Dev_ID_Attr_Name : constant String := "tau0DeviceId";
 
 end Cmd_Stream.Constants;

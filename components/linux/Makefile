@@ -9,9 +9,6 @@ INITRAMFS_URL  := $(INITRAMFS_BASE)-smp
 INITRAMFS      ?= $(OBJ_DIR)/$(INITRAMFS_BASE)
 SITE           ?= https://codelabs-ch.github.io/buildroot-muen
 
-CSPEC_XML     = spec/linux.xml
-CSPEC_INSTALL = $(POLICY_CSPEC_DIR)/linux.xml
-
 LOG = $(OBJ_DIR)/log.obj
 
 all: $(OBJ_DIR)/.built $(INITRAMFS)
@@ -39,6 +36,10 @@ $(INITRAMFS): | $(OBJ_DIR)
 $(POLICY_OBJ_DIR) $(OBJ_DIR):
 	mkdir -p $@
 
+# use cspecs install mechanism
+COMPONENT = linux
+include ../cspecs.mk
+
 $(POLICY_OBJ_DIR)/linux: $(POLICY_OBJ_DIR)/bzImage install_initramfs
 $(POLICY_OBJ_DIR)/bzImage: $(OBJ_DIR)/.built $(CSPEC_INSTALL) | $(POLICY_OBJ_DIR)
 	@$(E) linux "Patch and install" "$(MULNXBZPATCH) src/arch/x86/boot/bzImage $@" $(LOG)
@@ -46,9 +47,6 @@ $(POLICY_OBJ_DIR)/bzImage: $(OBJ_DIR)/.built $(CSPEC_INSTALL) | $(POLICY_OBJ_DIR
 install_initramfs: $(POLICY_OBJ_DIR)/$(INITRAMFS_BASE) $(INITRAMFS)
 $(POLICY_OBJ_DIR)/$(INITRAMFS_BASE): $(INITRAMFS) | $(POLICY_OBJ_DIR)
 	@$(E) linux "Install initramfs" "cp $< $@" $(LOG)
-
-$(CSPEC_INSTALL): $(CSPEC_XML)
-	@$(E) linux "Install cspecs" "cp $< $@" $(LOG)
 
 prepare:
 

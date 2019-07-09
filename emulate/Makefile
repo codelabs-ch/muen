@@ -27,6 +27,6 @@ stop:
 
 clean: stop
 	rm -f $(ISOFILE) bochsout.txt *.out
-	rm -f .emulate
+	rm -rf .emulate obj
 
 .PHONY: .emulate

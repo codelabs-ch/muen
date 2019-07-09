@@ -27,7 +27,10 @@ kernel: policy-compile rts
 tau0: policy-compile rts
 	$(MAKE) -C components install-$@
 
-pack: kernel tau0 components
+tau0_static:
+	$(MAKE) -C components $@
+
+pack: kernel tau0 tau0_static components
 	$(MAKE) -C $@
 
 tools: $(CONTRIB)
@@ -61,6 +64,7 @@ clean:
 	$(MAKE) clean -C policy
 	$(MAKE) clean -C components
 	$(MAKE) clean -C rts
+	$(MAKE) clean -C emulate
 	rm -rf contrib/obj
 
 distclean: clean

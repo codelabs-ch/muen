@@ -2,8 +2,6 @@ CSPEC_XML     = $(wildcard spec/$(COMPONENT).xml)
 CSPEC_INSTALL = $(POLICY_CSPEC_DIR)/$(COMPONENT).xml
 COMP_HAS_BIN  = $(wildcard $(COMP_BIN))
 
-DUMMY := $(shell mkdir -p $(POLICY_CSPEC_DIR))
-
 ifneq ($(CSPEC_XML),)
 INSTALL_TARGETS += $(CSPEC_INSTALL)
 CSPEC_XML_GEN    = $(wildcard $(GEN_DIR)/$(COMPONENT).xml)
@@ -23,7 +21,10 @@ $(GEN_DIR)/$(COMPONENT).xml: spec/$(COMPONENT).xml $(GEN_DIR) $(MUCGENSPEC) $(CS
 	@$(E) $(COMPONENT) "Generate cspecs" \
 		"$(MUCGENSPEC) -i $< -o $@ -I $(GEN_DIR) $(GEN_DIR)"
 
-$(CSPEC_INSTALL): $(CSPEC_INST_DEPS)
+$(POLICY_CSPEC_DIR):
+	@mkdir -p $@
+
+$(CSPEC_INSTALL): $(CSPEC_INST_DEPS) | $(POLICY_CSPEC_DIR)
 	@$(E) $(COMPONENT) "Install cspecs" "$(CSPEC_INST_CMD)"
 
 $(GEN_DIR):

@@ -24,6 +24,7 @@ with Muxml;
 
 with Mutools.Cmd_Line.Infile_Outfile;
 
+with Cmd_Stream.Utils;
 with Cmd_Stream.Roots.Memory;
 
 procedure Mugentau0cmds
@@ -40,6 +41,7 @@ exception
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : Muxml.XML_Input_Error
       | Muxml.Validation_Error
+      | Cmd_Stream.Utils.IO_Error
       | Cmd_Stream.Roots.Memory.Missing_Filesize =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "Command stream creation failed, aborting");

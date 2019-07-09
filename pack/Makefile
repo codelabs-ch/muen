@@ -3,10 +3,12 @@ IMAGE_TAU0 = $(OBJ_DIR)/muen.img.tau0
 
 include ../Makeconf
 
+ifneq (,$(wildcard $(POLICY_B)))
 IOMMU := $(shell xmllint --xpath 'string(/system/config/boolean[@name="iommu_enabled"]/@value)' $(POLICY_B))
 FILES := $(shell xmllint --xpath '//file/@filename' $(POLICY_B) | sed -rn 's/filename="([^"]+)"/\1/pg')
 FILES := $(filter-out %_sinfo, $(FILES))
 FILES := $(addprefix $(POLICY_OBJ_DIR)/, $(FILES))
+endif
 
 DUMMY := $(shell mkdir -p $(OBJ_DIR))
 

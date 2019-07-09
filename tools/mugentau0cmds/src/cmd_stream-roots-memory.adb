@@ -38,13 +38,12 @@ is
    Next_Priv_Page : Interfaces.Unsigned_64 := 16#4000_0000_0000#;
 
    --  Generate command stream for page tables of memory region specified by
-   --  ID, base address, size and level.
+   --  ID, size and level.
    procedure Create_PTs
-     (Stream_Doc   : in out CU.Stream_Document_Type;
-      Region_Attr  :        CU.Attribute_Type;
-      Last_Level   :        Natural;
-      Base_Address :        Interfaces.Unsigned_64;
-      Size         :        Interfaces.Unsigned_64);
+     (Stream_Doc  : in out CU.Stream_Document_Type;
+      Region_Attr :        CU.Attribute_Type;
+      Last_Level  :        Natural;
+      Size        :        Interfaces.Unsigned_64);
 
    --  Generate command stream for file or fill content of memory region.
    procedure Add_Content
@@ -310,11 +309,10 @@ is
                   --  Create page tables for memory region larger than 4K.
 
                   if Size > Mutools.Constants.Page_Size then
-                     Create_PTs (Stream_Doc   => Stream_Doc,
-                                 Region_Attr  => Region_Attr,
-                                 Last_Level   => Level,
-                                 Base_Address => Phys_Addr,
-                                 Size         => Size);
+                     Create_PTs (Stream_Doc  => Stream_Doc,
+                                 Region_Attr => Region_Attr,
+                                 Last_Level  => Level,
+                                 Size        => Size);
                   end if;
 
                   if Has_Content then
@@ -380,13 +378,11 @@ is
    -------------------------------------------------------------------------
 
    procedure Create_PTs
-     (Stream_Doc   : in out CU.Stream_Document_Type;
-      Region_Attr  :        CU.Attribute_Type;
-      Last_Level   :        Natural;
-      Base_Address :        Interfaces.Unsigned_64;
-      Size         :        Interfaces.Unsigned_64)
+     (Stream_Doc  : in out CU.Stream_Document_Type;
+      Region_Attr :        CU.Attribute_Type;
+      Last_Level  :        Natural;
+      Size        :        Interfaces.Unsigned_64)
    is
-      pragma Unreferenced (Base_Address);
       use type Interfaces.Unsigned_64;
 
       Cur_Map_Size : Interfaces.Unsigned_64

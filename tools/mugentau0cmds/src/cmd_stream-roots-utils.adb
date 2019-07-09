@@ -38,7 +38,7 @@ is
 
    package MC renames Mutools.Constants;
 
-   --  Assign device memory to given object.
+   --  Assign device memory to object of given kind.
    procedure Assign_Device_Memory
      (Map_Cmd_Buffer : in out Cmd_Stream.Utils.Command_Buffer_Type;
       Mem_Layout     : in out Paging.Layouts.Memory_Layout_Type;

@@ -38,7 +38,7 @@ is
    Next_Priv_Page : Interfaces.Unsigned_64 := 16#4000_0000_0000#;
 
    --  Generate command stream for page tables of memory region specified by
-   --  ID, base address and size.
+   --  ID, base address, size and level.
    procedure Create_PTs
      (Stream_Doc   : in out CU.Stream_Document_Type;
       Region_Attr  :        CU.Attribute_Type;
@@ -268,7 +268,8 @@ is
                   | Mutools.Types.System_Vtd_Context
                   | Mutools.Types.System_Vtd_IR =>
 
-                  --  Skip creation of memory region.
+                  --  Skip creation of memory region, handled either explicitly
+                  --  or implicitly when creating a subject.
 
                   null;
 

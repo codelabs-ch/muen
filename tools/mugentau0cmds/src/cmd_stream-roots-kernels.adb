@@ -31,6 +31,7 @@ is
 
    package CU renames Cmd_Stream.Utils;
 
+   --  Assign given logical devices to specified kernel.
    procedure Assign_Devices
      (Stream_Doc    : in out CU.Stream_Document_Type;
       Physical_Devs :        DOM.Core.Node_List;

@@ -42,7 +42,7 @@ is
    procedure Reverse_Commands (Buffer : in out Command_Buffer_Type);
 
    --  Append command with given name and attributes to the specified command
-   --  buffer which is part of the designated stream document.
+   --  buffer.
    procedure Append_Command
      (Buffer : in out Command_Buffer_Type;
       Name   :        String;

@@ -51,8 +51,6 @@ else
 JOIN = cp '$<' '$@'
 endif
 
-DUMMY := $(shell mkdir -p $(OBJ_DIR))
-
 ifneq ($(CUR_CFG),$(LAST_CFG))
 	CFG_DEPS = cfgchange
 endif
@@ -68,7 +66,10 @@ compile: .validated $(OUTPUT) $(POLICY_A) $(POLICY_B)
 
 merge: $(POLICY_SRC)
 
-cfgchange:
+$(OBJ_DIR):
+	@mkdir -p $@
+
+cfgchange: | $(OBJ_DIR)
 	rm -rf $(OBJ_DIR)/*
 	echo $(CUR_CFG) > $(OBJ_DIR)/.cfg
 
@@ -94,11 +95,11 @@ $(POLICY_B): $(SYSTEM_POLICY_B)
 $(SCHED_PLAN_PDF): $(SCHED_PLAN_XML)
 	(cd $(POLICY_OBJ_DIR) && gnuplot -e "outfile='$@'" $(MUGENSCHEDCFG_DIR)/plot.gnuplot)
 
-$(SCHED_PLAN_XML): $(SCHED_CONFIG) $(CFG_DEPS) $(MUGENSCHEDCFG)
+$(SCHED_PLAN_XML): $(SCHED_CONFIG) $(CFG_DEPS) $(MUGENSCHEDCFG) | $(OBJ_DIR)
 	@$(E) policy "Generate scheduling plans" \
 		"$(MUGENSCHEDCFG) -c $(SCHED_CPUS) -r $(SCHED_PLAN_RAW) -d $(SCHED_PLAN_DBG) $^"
 
-$(SYSTEM_POLICY_SRC): $(SYSTEM_CONFIG) $(SCHED_GEN) $(MUCFGMERGE) $(SOURCES)
+$(SYSTEM_POLICY_SRC): $(SYSTEM_CONFIG) $(SCHED_GEN) $(MUCFGMERGE) $(SOURCES) | $(OBJ_DIR)
 	@$(E) policy Merge "$(MUCFGMERGE) $< $@ -I $(POLICY_OBJ_DIR)"
 
 $(SYSTEM_POLICY_WCOMP): $(SYSTEM_POLICY_SRC) $(MUCFGCJOIN) $(CSPECS_XML)

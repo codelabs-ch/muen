@@ -32,6 +32,7 @@ with Mulog;
 with Muxml.Utils;
 with Mutools.Utils;
 with Mutools.XML_Utils;
+with Mutools.System_Config;
 
 with Expanders.XML_Utils;
 
@@ -265,35 +266,69 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/deviceDomains/domain");
+      IOMMU : constant Boolean
+        := Mutools.System_Config.Get_Value
+          (Data => Data,
+           Name => "iommu_enabled");
    begin
 
       --  DMAR root table.
 
       Mulog.Log (Msg => "Adding VT-d DMAR root table");
-      Mutools.XML_Utils.Add_Memory_Region
-        (Policy      => Data,
-         Name        => "vtd_root",
-         Address     => "",
-         Size        => "16#1000#",
-         Caching     => "WB",
-         Alignment   => "16#1000#",
-         Memory_Type => "system_vtd_root",
-         File_Name   => "vtd_root",
-         File_Offset => "none");
+      if IOMMU then
+         Mutools.XML_Utils.Add_Memory_Region
+           (Policy      => Data,
+            Name        => "vtd_root",
+            Address     => "",
+            Size        => "16#1000#",
+            Caching     => "WB",
+            Alignment   => "16#1000#",
+            Memory_Type => "system_vtd_root",
+            File_Name   => "vtd_root",
+            File_Offset => "none");
+      else
+
+         --  The filled region guarantees allocation in lower memory.
+
+         Mutools.XML_Utils.Add_Memory_Region
+           (Policy      => Data,
+            Name        => "vtd_root",
+            Address     => "",
+            Size        => "16#1000#",
+            Caching     => "WB",
+            Alignment   => "16#1000#",
+            Memory_Type => "system_vtd_root",
+            Fill_Pattern => "16#00#");
+      end if;
 
       --  Interrupt Remapping (IR) table.
 
       Mulog.Log (Msg => "Adding VT-d IR table");
-      Mutools.XML_Utils.Add_Memory_Region
-        (Policy      => Data,
-         Name        => "vtd_ir",
-         Address     => "",
-         Size        => "16#1000#",
-         Caching     => "WB",
-         Alignment   => "16#1000#",
-         Memory_Type => "system_vtd_ir",
-         File_Name   => "vtd_ir",
-         File_Offset => "none");
+      if IOMMU then
+         Mutools.XML_Utils.Add_Memory_Region
+           (Policy      => Data,
+            Name        => "vtd_ir",
+            Address     => "",
+            Size        => "16#1000#",
+            Caching     => "WB",
+            Alignment   => "16#1000#",
+            Memory_Type => "system_vtd_ir",
+            File_Name   => "vtd_ir",
+            File_Offset => "none");
+      else
+
+         --  The filled region guarantees allocation in lower memory.
+
+         Mutools.XML_Utils.Add_Memory_Region
+           (Policy       => Data,
+            Name         => "vtd_ir",
+            Address      => "",
+            Size         => "16#1000#",
+            Caching      => "WB",
+            Alignment    => "16#1000#",
+            Memory_Type  => "system_vtd_ir",
+            Fill_Pattern => "16#00#");
+      end if;
 
       --  Do not expand regions used for context and address translation tables
       --  if no device domains are specified in the policy.

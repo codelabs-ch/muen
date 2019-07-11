@@ -1,0 +1,36 @@
+<system>                                                                                                                                                <system>
+ <config>                                                                                                                                                <config>
+  <boolean name="iommu_enabled" value="true"/>                                                                                                       |    <boolean name="iommu_enabled" value="false"/>
+ </config>                                                                                                                                               </config>
+ <hardware>                                                                                                                                              <hardware>
+--
+  </memory>                                                                                                                                               </memory>
+  <memory caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>                                    <memory caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="vtd_root" size="16#1000#" type="system_vtd_root">
+                                                                                                                                                     >     <fill pattern="16#00#"/>
+                                                                                                                                                     >    </memory>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="vtd_ir" size="16#1000#" type="system_vtd_ir">
+                                                                                                                                                     >     <fill pattern="16#00#"/>
+                                                                                                                                                     >    </memory>
+ </memory>                                                                                                                                               </memory>
+ <deviceDomains>                                                                                                                                     <
+  <domain name="nic1_domain">                                                                                                                        <
+   <memory>                                                                                                                                          <
+    <memory executable="false" logical="dma1" physical="nic1|dma" virtualAddress="16#1000#" writable="true"/>                                        <
+   </memory>                                                                                                                                         <
+   <devices>                                                                                                                                         <
+    <device logical="nic1" mapReservedMemory="true" physical="nic1"/>                                                                                <
+    <device logical="wlan" physical="wireless"/>                                                                                                     <
+   </devices>                                                                                                                                        <
+  </domain>                                                                                                                                          <
+  <domain name="xhci_domain">                                                                                                                        <
+   <memory>                                                                                                                                          <
+    <memory executable="false" logical="dma2" physical="xhci|dma" virtualAddress="16#2000#" writable="true"/>                                        <
+   </memory>                                                                                                                                         <
+   <devices>                                                                                                                                         <
+    <device logical="xhci" physical="xhci"/>                                                                                                         <
+   </devices>                                                                                                                                        <
+  </domain>                                                                                                                                          <
+ </deviceDomains>                                                                                                                                    <
+ <events>                                                                                                                                                <events>
+  <event mode="asap" name="ping_subject2"/>                                                                                                               <event mode="asap" name="ping_subject2"/>

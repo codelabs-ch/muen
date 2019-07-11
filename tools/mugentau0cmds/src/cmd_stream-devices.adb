@@ -23,10 +23,8 @@ with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
-with Mulog;
 with Muxml.Utils;
 with Mutools.Constants;
-with Mutools.System_Config;
 
 with Cmd_Stream.Constants;
 
@@ -351,15 +349,6 @@ is
       Stream_Doc : in out Utils.Stream_Document_Type)
    is
    begin
-      if not Mutools.System_Config.Get_Value
-        (Data => Policy,
-         Name => "iommu_enabled")
-      then
-         Mulog.Log
-           (Msg => "IOMMU disabled, skipping VTd table creation commands");
-         return;
-      end if;
-
       declare
          VTd_Root_Addr : constant String
            := Muxml.Utils.Get_Attribute

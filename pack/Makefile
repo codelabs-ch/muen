@@ -12,15 +12,16 @@ FILES := $(filter-out %_sinfo, $(FILES))
 FILES := $(addprefix $(POLICY_OBJ_DIR)/, $(FILES))
 endif
 
-DUMMY := $(shell mkdir -p $(OBJ_DIR))
-
 ifeq ($(IOMMU),true)
 all: $(OBJ_DIR)/.diffok
 else
 all: $(IMG_TAU0)
 endif
 
-$(POLICY_B_HASH): $(POLICY_B) $(MUCFGMEMHASHES) $(MUGENSINFO) $(FILES)
+$(OBJ_DIR):
+	@mkdir -p $(OBJ_DIR)
+
+$(POLICY_B_HASH): $(POLICY_B) $(MUCFGMEMHASHES) $(MUGENSINFO) $(FILES) | $(OBJ_DIR)
 	@$(E) pack "Generate hashes" \
 		"$(MUCFGMEMHASHES) -i $(POLICY_OBJ_DIR) $(POLICY_B) $(POLICY_B_HASH)"
 	@$(E) pack "Generate sinfo" \

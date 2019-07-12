@@ -3,6 +3,8 @@
 --  automatically. Contents of this package can be modified in any way
 --  except for sections surrounded by a 'read only' marker.
 
+with Mutools.System_Config;
+
 with Expanders.Kernel;
 with Expanders.Memory;
 
@@ -42,6 +44,18 @@ package body Expanders.Device_Domains.Test_Data is
       Memory.Add_Reserved_Memory_Regions (Data => Data);
       Add_Section_Skeleton (Data => Data);
    end Add_Section_Skeleton_And_RMRRs;
+
+   -------------------------------------------------------------------------
+
+   procedure Disable_IOMMU (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Remove_Device_Domains (Data);
+      Mutools.System_Config.Set_Value
+        (Data  => Data,
+         Name  => "iommu_enabled",
+         Value => False);
+   end Disable_IOMMU;
 
    -------------------------------------------------------------------------
 

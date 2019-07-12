@@ -87,6 +87,12 @@ package body Expanders.Device_Domains.Test_Data.Tests is
          Ref_Diff => "data/device_domains_tables.xml.diff",
          Pre      => Add_Section_Skeleton_And_Kernel'Access,
          Expander => Add_Tables'Access);
+
+      Test_Utils.Expander.Run_Test
+        (Filename => "obj/device_domains_tables_noiommu.xml",
+         Ref_Diff => "data/device_domains_tables_noiommu.xml.diff",
+         Pre      => Disable_IOMMU'Access,
+         Expander => Add_Tables'Access);
 --  begin read only
    end Test_Add_Tables;
 --  end read only

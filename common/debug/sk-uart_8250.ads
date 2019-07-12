@@ -24,6 +24,8 @@ generic
 package SK.UART_8250
 is
 
+   FIFO_Size : constant := 16;
+
    --  Initialize serial port.
    procedure Init;
 

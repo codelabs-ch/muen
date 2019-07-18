@@ -24,6 +24,8 @@ is
 
    use SK.UART;
 
+   Send_Char_Count : Natural := FIFO_Size;
+
    -------------------------------------------------------------------------
 
    procedure Init
@@ -103,12 +105,17 @@ is
    procedure Put_Char (Item : Character)
    is
    begin
-      while not Is_Send_Buffer_Empty loop
-         null;
-      end loop;
+      if Send_Char_Count = FIFO_Size then
+         while not Is_Send_Buffer_Empty loop
+            null;
+         end loop;
+         Send_Char_Count := 0;
+      end if;
 
       IO.Outb (Port  => Base_Address,
                Value => Character'Pos (Item));
+
+      Send_Char_Count := Send_Char_Count + 1;
    end Put_Char;
 
    -------------------------------------------------------------------------

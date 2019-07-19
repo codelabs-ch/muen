@@ -1081,6 +1081,21 @@ package body Mutools.XML_Utils.Test_Data.Tests is
               Message   => "First bus not 16#02#");
       Assert (Condition => Buses.Last_Element = 16#23#,
               Message   => "Last bus not 16#23#");
+
+      --  PCI bus of devices only referenced by device domain must also be
+      --  occupied.
+
+      Muxml.Utils.Remove_Elements
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/devices/device[@physical='xhci']");
+
+      Buses := Get_Occupied_PCI_Buses (Data => Policy);
+      Assert (Condition => Buses.Length = 2,
+              Message   => "Bus count not 2 (2)");
+      Assert (Condition => Buses.First_Element = 16#02#,
+              Message   => "First bus not 16#02# (2)");
+      Assert (Condition => Buses.Last_Element = 16#23#,
+              Message   => "Last bus not 16#23# (2)");
 --  begin read only
    end Test_Get_Occupied_PCI_Buses;
 --  end read only

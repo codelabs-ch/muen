@@ -56,6 +56,24 @@
    <fill pattern="16#fe#"/>
   </memory>
  </memory>
+ <deviceDomains>
+  <domain name="nic_domain">
+   <memory>
+    <memory executable="false" logical="dma1" physical="dummy" virtualAddress="16#0002_0000#" writable="true"/>
+   </memory>
+   <devices>
+    <device logical="nic" physical="ethernet"/>
+   </devices>
+  </domain>
+  <domain name="usb_domain">
+   <memory>
+    <memory executable="false" logical="dma1" physical="dummy" virtualAddress="16#0002_0000#" writable="true"/>
+   </memory>
+   <devices>
+    <device logical="xhci" physical="xhci"/>
+   </devices>
+  </domain>
+ </deviceDomains>
  <events/>
  <components>
   <component name="lnx" profile="linux">

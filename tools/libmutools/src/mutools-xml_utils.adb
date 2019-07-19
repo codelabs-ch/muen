@@ -960,10 +960,14 @@ is
      (Data : Muxml.XML_Data_Type)
       return PCI_Bus_Set.Set
    is
-      Dev_Refs  : constant DOM.Core.Node_List
+      Subj_Dev_Refs : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/subjects/subject/devices/device");
+      Dom_Dev_Refs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/deviceDomains/domain/devices/device");
       PCI_Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -986,13 +990,19 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => DOM.Core.Nodes.Parent_Node (N => PCI),
                  Name => "name");
-            Assigned : constant DOM.Core.Node
+            Subj_Assigned : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Nodes     => Dev_Refs,
+                (Nodes     => Subj_Dev_Refs,
                  Ref_Attr  => "physical",
                  Ref_Value => Dev_Name);
          begin
-            if Assigned /= null then
+            if Subj_Assigned /= null
+              or else
+                Muxml.Utils.Get_Element
+                  (Nodes     => Dom_Dev_Refs,
+                   Ref_Attr  => "physical",
+                   Ref_Value => Dev_Name) /= null
+            then
                Result.Insert
                  (New_Item => PCI_Bus_Range'Value (Bus));
             end if;

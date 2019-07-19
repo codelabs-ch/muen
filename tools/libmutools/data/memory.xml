@@ -55,6 +55,24 @@
   <memory alignment="16#1000#" caching="UC" name="test" physicalAddress="16#9000_1000#" size="16#3000#"/>
   <memory alignment="16#0020_0000#" caching="WC" name="noaddress" size="16#8000#"/>
  </memory>
+ <deviceDomains>
+  <domain name="nic_domain">
+   <memory>
+    <memory executable="false" logical="dma1" physical="dummy" virtualAddress="16#0002_0000#" writable="true"/>
+   </memory>
+   <devices>
+    <device logical="nic" physical="ethernet"/>
+   </devices>
+  </domain>
+  <domain name="usb_domain">
+   <memory>
+    <memory executable="false" logical="dma1" physical="dummy" virtualAddress="16#0002_0000#" writable="true"/>
+   </memory>
+   <devices>
+    <device logical="xhci" physical="xhci"/>
+   </devices>
+  </domain>
+ </deviceDomains>
  <events/>
  <components>
   <component name="lnx" profile="linux">

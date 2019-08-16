@@ -1,0 +1,8 @@
+<subject name="crypter">
+	<events/>
+	<component ref="crypter">
+		<map logical="request" physical="crypter_request"/>
+		<map logical="response" physical="crypter_response"/>
+		<map logical="debuglog" physical="debuglog_subject7"/>
+	</component>
+</subject>

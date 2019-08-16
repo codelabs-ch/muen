@@ -22,15 +22,10 @@ package Interrupt_Handler
 is
 
    --  Interrupt handler.
-   pragma Warnings
-     (GNATprove, Off, "subprogram ""Handle_Interrupt"" has no effect",
-      Reason => "Only used to wakeup subject");
-   procedure Handle_Interrupt (Unused_Vector : SK.Byte)
+   procedure Handle_Interrupt (Vector : SK.Byte)
    with
       Export,
       Convention => C,
       Link_Name  => "dispatch_interrupt";
-   pragma Warnings
-     (GNATprove, On, "subprogram ""Handle_Interrupt"" has no effect");
 
 end Interrupt_Handler;

@@ -22,15 +22,7 @@ with "../libmusinfo/libmusinfo";
 project Example extends "../component_spark" is
 
    Extra_Dirs := Component_Spark.Src_Dirs;
-
-   case Component_Spark.Build_Mode is
-      when "debug"   => Extra_Dirs := Extra_Dirs & Component_Spark.Build_Mode
-           & "../../common/strings/impl";
-      when "release" => Extra_Dirs := Extra_Dirs & Component_Spark.Build_Mode
-           & "../../common/strings/empty";
-      when "prove"   => Extra_Dirs := Extra_Dirs & "release"
-           & "../../common/strings/empty";
-   end case;
+   Extra_Dirs := Extra_Dirs & "../../common/strings/impl";
 
    for Languages use ("Ada", "Asm");
    for Source_Dirs use ("generated", "src") & Extra_Dirs;

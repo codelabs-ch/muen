@@ -16,55 +16,68 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with X86_64;
-
 with SK.CPU;
 with SK.Interrupt_Tables;
+with SK.Strings;
+
+with Musinfo.Instance;
 
 with Component_Constants;
 
 with Foo.Receiver;
 with Foo.Sender;
 
-with Foo.Debug;
+with Debuglog.Client;
 
 with Interrupt_Handler;
 pragma Unreferenced (Interrupt_Handler);
 
+with Example_Component.Config;
+
 procedure Example
-with
-   Global =>
-     (Input  => Foo.Receiver.State,
-      Output => Foo.Sender.State,
-      In_Out => (X86_64.State, SK.Interrupt_Tables.State))
 is
    Request_Valid : Boolean;
    Request       : Foo.Message_Type;
    Response      : Foo.Message_Type := Foo.Null_Message;
 begin
-   pragma Debug (Foo.Debug.Put_Greeter);
    SK.Interrupt_Tables.Initialize
      (Stack_Addr => Component_Constants.Interrupt_Stack_Address);
+
+   Debuglog.Client.Put (Item => Example_Component.Config.Greeter);
+
+   if not Musinfo.Instance.Is_Valid then
+      Debuglog.Client.Put_Line
+        (Item => "Error: Muen subject info (sinfo) not valid -> HLT");
+      SK.CPU.Stop;
+   end if;
+
+   pragma Debug (Example_Component.Config.Print_Serial,
+                 Debuglog.Client.Put_Line
+                   (Item => "Serial " & SK.Strings.Img
+                      (SK.Word64 (Example_Component.Config.Serial))));
+   pragma Debug (Example_Component.Config.Print_Vcpu_Speed,
+                 Debuglog.Client.Put_Line
+                   (Item => "VCPU running with " & SK.Strings.Img
+                      (Musinfo.Instance.TSC_Khz) & " Khz"));
 
    SK.CPU.Sti;
 
    loop
+      Debuglog.Client.Put_Line (Item => "Waiting for event...");
       SK.CPU.Hlt;
-      pragma Debug (Foo.Debug.Put_Process_Message);
 
       Foo.Receiver.Receive (Req => Request);
       Request_Valid := Foo.Is_Valid (Msg => Request);
 
       if Request_Valid then
-         pragma Debug (Foo.Debug.Put_Word16
-                       (Message => " Size",
-                        Value   => Request.Size));
+         Debuglog.Client.Put_Line (Item => "Copying response...");
          Response := Request;
+      else
+         Debuglog.Client.Put_Line
+           (Item => "Invalid request message size "
+            & SK.Strings.Img (Request.Size));
+         Response := Foo.Null_Message;
       end if;
-      pragma Debug (not Request_Valid,
-                    Foo.Debug.Put_Word16
-                      (Message => "Invalid request message size",
-                       Value   => Request.Size));
 
       Foo.Sender.Send (Res => Response);
    end loop;

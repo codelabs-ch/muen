@@ -16,22 +16,20 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Foo.Debug;
+with SK.Strings;
+
+with Debuglog.Client;
 
 package body Interrupt_Handler
 is
 
    -------------------------------------------------------------------------
 
-   procedure Handle_Interrupt (Unused_Vector : SK.Byte)
+   procedure Handle_Interrupt (Vector : SK.Byte)
    is
    begin
-
-      --  The interrupt wakes up the crypter moving it past the Hlt
-      --  instruction, so there is nothing else left to do.
-
-      null;
-      pragma Debug (Foo.Debug.Put_Vector (Vector => Unused_Vector));
+      Debuglog.Client.Put_Line (Item => "Received vector "
+                                & SK.Strings.Img (Item => Vector));
    end Handle_Interrupt;
 
 end Interrupt_Handler;

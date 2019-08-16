@@ -1,0 +1,8 @@
+<subject name="example">
+	<events/>
+	<component ref="example">
+		<map logical="example_request" physical="example_request"/>
+		<map logical="example_response" physical="example_response"/>
+		<map logical="debuglog" physical="debuglog_example"/>
+	</component>
+</subject>

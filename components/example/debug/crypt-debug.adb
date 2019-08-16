@@ -22,7 +22,7 @@ with SK.Strings;
 
 with Musinfo.Instance;
 
-with Crypter_Component.Config;
+with Example_Component.Config;
 
 package body Crypt.Debug
 is
@@ -34,15 +34,15 @@ is
    procedure Put_Greeter
    is
    begin
-      Debuglog.Client.Put (Item => Crypter_Component.Config.Greeter);
+      Debuglog.Client.Put (Item => Example_Component.Config.Greeter);
       pragma Debug
-        (Crypter_Component.Config.Print_Serial,
+        (Example_Component.Config.Print_Serial,
          Debuglog.Client.Put
            (Item => "Serial " & Img
-                (SK.Word64 (Crypter_Component.Config.Serial))));
+                (SK.Word64 (Example_Component.Config.Serial))));
       pragma Debug
         (Musinfo.Instance.Is_Valid and then
-         Crypter_Component.Config.Print_Vcpu_Speed,
+         Example_Component.Config.Print_Vcpu_Speed,
          Debuglog.Client.Put
            (Item => "VCPU running with " & Img
                 (Musinfo.Instance.TSC_Khz) & " Khz"));

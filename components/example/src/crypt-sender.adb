@@ -20,7 +20,7 @@ with System;
 
 with SK.Hypercall;
 
-with Crypter_Component.Channels;
+with Example_Component.Channels;
 
 package body Crypt.Sender
 with
@@ -32,7 +32,7 @@ is
        Volatile,
        Async_Readers,
        Address => System'To_Address
-         (Crypter_Component.Channels.Response_Address);
+         (Example_Component.Channels.Response_Address);
 
    -------------------------------------------------------------------------
 
@@ -45,7 +45,7 @@ is
       Response := Res;
 
       SK.Hypercall.Trigger_Event
-        (Number => Crypter_Component.Channels.Response_Event);
+        (Number => Example_Component.Channels.Response_Event);
    end Send;
 
 begin

@@ -1,4 +1,4 @@
-COMPONENT = crypter
+COMPONENT = example
 
 COMPONENT_TARGETS = cspecs
 

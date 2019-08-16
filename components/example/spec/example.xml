@@ -1,4 +1,4 @@
-<component name="crypter" profile="native">
+<component name="example" profile="native">
 	<config>
 		<boolean name="print_serial" value="false"/>
 		<boolean name="print_vcpu_speed" value="true"/>

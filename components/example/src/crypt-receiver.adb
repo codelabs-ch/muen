@@ -18,7 +18,7 @@
 
 with System;
 
-with Crypter_Component.Channels;
+with Example_Component.Channels;
 
 package body Crypt.Receiver
 with
@@ -30,7 +30,7 @@ is
        Volatile,
        Async_Writers,
        Address => System'To_Address
-         (Crypter_Component.Channels.Request_Address);
+         (Example_Component.Channels.Request_Address);
 
    -------------------------------------------------------------------------
 

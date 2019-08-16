@@ -32,7 +32,7 @@ is
        Volatile,
        Async_Readers,
        Address => System'To_Address
-         (Example_Component.Channels.Response_Address);
+         (Example_Component.Channels.Example_Response_Address);
 
    -------------------------------------------------------------------------
 
@@ -45,7 +45,7 @@ is
       Response := Res;
 
       SK.Hypercall.Trigger_Event
-        (Number => Example_Component.Channels.Response_Event);
+        (Number => Example_Component.Channels.Example_Response_Event);
    end Send;
 
 begin

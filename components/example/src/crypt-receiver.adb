@@ -30,7 +30,7 @@ is
        Volatile,
        Async_Writers,
        Address => System'To_Address
-         (Example_Component.Channels.Request_Address);
+         (Example_Component.Channels.Example_Request_Address);
 
    -------------------------------------------------------------------------
 

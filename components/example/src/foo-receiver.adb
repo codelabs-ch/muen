@@ -20,12 +20,12 @@ with System;
 
 with Example_Component.Channels;
 
-package body Crypt.Receiver
+package body Foo.Receiver
 with
    Refined_State => (State => Request)
 is
 
-   Request : Crypt.Message_Type
+   Request : Foo.Message_Type
      with
        Volatile,
        Async_Writers,
@@ -34,7 +34,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Receive (Req : out Crypt.Message_Type)
+   procedure Receive (Req : out Foo.Message_Type)
    with
       Refined_Global  => (Input => Request),
       Refined_Depends => (Req => Request)
@@ -43,4 +43,4 @@ is
       Req := Request;
    end Receive;
 
-end Crypt.Receiver;
+end Foo.Receiver;

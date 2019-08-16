@@ -23,11 +23,11 @@ with SK.Interrupt_Tables;
 
 with Component_Constants;
 
-with Crypt.Receiver;
-with Crypt.Sender;
-with Crypt.Hasher;
+with Foo.Receiver;
+with Foo.Sender;
+with Foo.Hasher;
 
-with Crypt.Debug;
+with Foo.Debug;
 
 with Interrupt_Handler;
 pragma Unreferenced (Interrupt_Handler);
@@ -35,15 +35,15 @@ pragma Unreferenced (Interrupt_Handler);
 procedure Example
 with
    Global =>
-     (Input  => Crypt.Receiver.State,
-      Output => Crypt.Sender.State,
+     (Input  => Foo.Receiver.State,
+      Output => Foo.Sender.State,
       In_Out => (X86_64.State, SK.Interrupt_Tables.State))
 is
    Request_Valid : Boolean;
-   Request       : Crypt.Message_Type;
-   Response      : Crypt.Message_Type := Crypt.Null_Message;
+   Request       : Foo.Message_Type;
+   Response      : Foo.Message_Type := Foo.Null_Message;
 begin
-   pragma Debug (Crypt.Debug.Put_Greeter);
+   pragma Debug (Foo.Debug.Put_Greeter);
    SK.Interrupt_Tables.Initialize
      (Stack_Addr => Component_Constants.Interrupt_Stack_Address);
 
@@ -51,24 +51,24 @@ begin
 
    loop
       SK.CPU.Hlt;
-      pragma Debug (Crypt.Debug.Put_Process_Message);
+      pragma Debug (Foo.Debug.Put_Process_Message);
 
-      Crypt.Receiver.Receive (Req => Request);
-      Request_Valid := Crypt.Is_Valid (Msg => Request);
+      Foo.Receiver.Receive (Req => Request);
+      Request_Valid := Foo.Is_Valid (Msg => Request);
 
       if Request_Valid then
-         pragma Debug (Crypt.Debug.Put_Word16
+         pragma Debug (Foo.Debug.Put_Word16
                        (Message => " Size",
                         Value   => Request.Size));
-         Crypt.Hasher.SHA256_Hash (Input  => Request,
+         Foo.Hasher.SHA256_Hash (Input  => Request,
                                    Output => Response);
-         pragma Debug (Crypt.Debug.Put_Hash (Item => Response));
+         pragma Debug (Foo.Debug.Put_Hash (Item => Response));
       end if;
       pragma Debug (not Request_Valid,
-                    Crypt.Debug.Put_Word16
+                    Foo.Debug.Put_Word16
                       (Message => "Invalid request message size",
                        Value   => Request.Size));
 
-      Crypt.Sender.Send (Res => Response);
+      Foo.Sender.Send (Res => Response);
    end loop;
 end Example;

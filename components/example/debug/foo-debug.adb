@@ -24,7 +24,7 @@ with Musinfo.Instance;
 
 with Example_Component.Config;
 
-package body Crypt.Debug
+package body Foo.Debug
 is
 
    use SK.Strings;
@@ -56,11 +56,11 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Put_Hash (Item : Crypt.Message_Type)
+   procedure Put_Hash (Item : Foo.Message_Type)
    is
    begin
       Debuglog.Client.Put (Item => " Hash: ");
-      for I in Crypt.Data_Range range 1 .. Item.Size loop
+      for I in Foo.Data_Range range 1 .. Item.Size loop
          Debuglog.Client.Put (Item => Img (Item.Data (I)));
       end loop;
       Debuglog.Client.New_Line;
@@ -94,4 +94,4 @@ is
       Debuglog.Client.Put_Line (Item => " " & Img (Value));
    end Put_Word16;
 
-end Crypt.Debug;
+end Foo.Debug;

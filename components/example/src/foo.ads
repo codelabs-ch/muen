@@ -16,22 +16,39 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Foo.Debug;
+with SK;
 
-package body Interrupt_Handler
+package Foo
 is
 
-   -------------------------------------------------------------------------
+   use type SK.Word16;
 
-   procedure Handle_Interrupt (Unused_Vector : SK.Byte)
-   is
-   begin
+   subtype Data_Range is SK.Word16 range 1 .. 2048;
 
-      --  The interrupt wakes up the crypter moving it past the Hlt
-      --  instruction, so there is nothing else left to do.
+   type Data_Array is array (Data_Range) of SK.Byte
+     with
+       Size => Data_Range'Last * 8;
 
-      null;
-      pragma Debug (Foo.Debug.Put_Vector (Vector => Unused_Vector));
-   end Handle_Interrupt;
+   Null_Data : constant Data_Array;
 
-end Interrupt_Handler;
+   type Message_Type is record
+      Size : SK.Word16;
+      Data : Data_Array;
+   end record
+     with
+       Size => (2 + 2048) * 8;
+
+   Null_Message : constant Message_Type;
+
+   function Is_Valid (Msg : Message_Type) return Boolean;
+
+private
+
+   Null_Data    : constant Data_Array   := Data_Array'(others => 0);
+   Null_Message : constant Message_Type := Message_Type'(Size => 0,
+                                                         Data => Null_Data);
+
+   function Is_Valid (Msg : Message_Type) return Boolean
+   is (Msg.Size in Data_Range);
+
+end Foo;

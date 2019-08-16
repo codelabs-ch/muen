@@ -22,12 +22,12 @@ with SK.Hypercall;
 
 with Example_Component.Channels;
 
-package body Crypt.Sender
+package body Foo.Sender
 with
    Refined_State => (State => Response)
 is
 
-   Response : Crypt.Message_Type
+   Response : Foo.Message_Type
      with
        Volatile,
        Async_Readers,
@@ -36,7 +36,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Send (Res : Crypt.Message_Type)
+   procedure Send (Res : Foo.Message_Type)
    with
       Refined_Global  => (Output => Response, In_Out => X86_64.State),
       Refined_Depends => (Response => Res, X86_64.State =>+ null)
@@ -49,5 +49,5 @@ is
    end Send;
 
 begin
-   Response := Crypt.Null_Message;
-end Crypt.Sender;
+   Response := Foo.Null_Message;
+end Foo.Sender;

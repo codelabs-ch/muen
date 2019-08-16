@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,16 +16,18 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package Crypt.Receiver
+with X86_64;
+
+package Foo.Sender
 with
-   Abstract_State => (State with External => Async_Writers),
+   Abstract_State => (State with External => Async_Readers),
    Initializes    => State
 is
 
-   --  Fills the current crypter request into the given req parameter.
-   procedure Receive (Req : out Crypt.Message_Type)
+   --  Copies the given response message into the crypter response page.
+   procedure Send (Res : Foo.Message_Type)
    with
-      Global  => (Input => State),
-      Depends => (Req => State);
+      Global  => (Output => State, In_Out => X86_64.State),
+      Depends => (State => Res, X86_64.State =>+ null);
 
-end Crypt.Receiver;
+end Foo.Sender;

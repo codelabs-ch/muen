@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,18 +16,24 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with X86_64;
-
-package Crypt.Sender
-with
-   Abstract_State => (State with External => Async_Readers),
-   Initializes    => State
+package Foo.Debug
 is
 
-   --  Copies the given response message into the crypter response page.
-   procedure Send (Res : Crypt.Message_Type)
-   with
-      Global  => (Output => State, In_Out => X86_64.State),
-      Depends => (State => Res, X86_64.State =>+ null);
+   --  Output subject greeter.
+   procedure Put_Greeter;
 
-end Crypt.Sender;
+   --  Output processing message.
+   procedure Put_Process_Message;
+
+   --  Output hash data as hex string.
+   procedure Put_Hash (Item : Foo.Message_Type);
+
+   --  Output given message and Word16 value.
+   procedure Put_Word16
+     (Message : String;
+      Value   : SK.Word16);
+
+   --  Output interrupt message for given vector.
+   procedure Put_Vector (Vector : SK.Byte);
+
+end Foo.Debug;

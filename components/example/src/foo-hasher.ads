@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,24 +16,22 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package Crypt.Debug
+with LSC.SHA256;
+with LSC.Types;
+
+use type LSC.SHA256.Message_Index;
+use type LSC.SHA256.SHA256_Hash_Index;
+use type LSC.Types.Word32;
+
+package Foo.Hasher
 is
 
-   --  Output subject greeter.
-   procedure Put_Greeter;
+   --  Calculate SHA256 hash of given input message and store in output.
+   procedure SHA256_Hash
+     (Input  :     Foo.Message_Type;
+      Output : out Foo.Message_Type)
+   with
+      Global  => null,
+      Depends => (Output => Input);
 
-   --  Output processing message.
-   procedure Put_Process_Message;
-
-   --  Output hash data as hex string.
-   procedure Put_Hash (Item : Crypt.Message_Type);
-
-   --  Output given message and Word16 value.
-   procedure Put_Word16
-     (Message : String;
-      Value   : SK.Word16);
-
-   --  Output interrupt message for given vector.
-   procedure Put_Vector (Vector : SK.Byte);
-
-end Crypt.Debug;
+end Foo.Hasher;

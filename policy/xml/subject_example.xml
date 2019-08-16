@@ -1,5 +1,11 @@
 <subject name="example">
-	<events/>
+	<events>
+		<source>
+			<group name="vmcall">
+				<event id="2" logical="yield" physical="example_yield"/>
+			</group>
+		</source>
+	</events>
 	<component ref="example">
 		<map logical="example_request" physical="example_request"/>
 		<map logical="example_response" physical="example_response"/>

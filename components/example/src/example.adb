@@ -19,6 +19,7 @@
 with SK.CPU;
 with SK.Interrupt_Tables;
 with SK.Strings;
+with SK.Hypercall;
 
 with Musinfo.Instance;
 
@@ -61,6 +62,9 @@ begin
                       (Musinfo.Instance.TSC_Khz) & " Khz"));
 
    SK.CPU.Sti;
+
+   Debuglog.Client.Put_Line (Item => "Yielding CPU");
+   SK.Hypercall.Trigger_Event (Number => 2);
 
    loop
       Debuglog.Client.Put_Line (Item => "Waiting for event...");

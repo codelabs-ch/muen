@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,22 +16,21 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Crypt.Debug;
+with SK;
 
-package body Handler
+package Interrupt_Handler
 is
 
-   -------------------------------------------------------------------------
-
+   --  Interrupt handler.
+   pragma Warnings
+     (GNATprove, Off, "subprogram ""Handle_Interrupt"" has no effect",
+      Reason => "Only used to wakeup subject");
    procedure Handle_Interrupt (Unused_Vector : SK.Byte)
-   is
-   begin
+   with
+      Export,
+      Convention => C,
+      Link_Name  => "dispatch_interrupt";
+   pragma Warnings
+     (GNATprove, On, "subprogram ""Handle_Interrupt"" has no effect");
 
-      --  The interrupt wakes up the crypter moving it past the Hlt
-      --  instruction, so there is nothing else left to do.
-
-      null;
-      pragma Debug (Crypt.Debug.Put_Vector (Vector => Unused_Vector));
-   end Handle_Interrupt;
-
-end Handler;
+end Interrupt_Handler;

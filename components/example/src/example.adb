@@ -29,8 +29,8 @@ with Crypt.Hasher;
 
 with Crypt.Debug;
 
-with Handler;
-pragma Unreferenced (Handler);
+with Interrupt_Handler;
+pragma Unreferenced (Interrupt_Handler);
 
 procedure Example
 with

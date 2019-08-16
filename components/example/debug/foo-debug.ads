@@ -25,9 +25,6 @@ is
    --  Output processing message.
    procedure Put_Process_Message;
 
-   --  Output hash data as hex string.
-   procedure Put_Hash (Item : Foo.Message_Type);
-
    --  Output given message and Word16 value.
    procedure Put_Word16
      (Message : String;

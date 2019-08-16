@@ -16,7 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "libsparkcrypto";
 with "../libdebuglog/libdebuglog";
 with "../libmusinfo/libmusinfo";
 

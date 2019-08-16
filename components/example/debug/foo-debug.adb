@@ -56,18 +56,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Put_Hash (Item : Foo.Message_Type)
-   is
-   begin
-      Debuglog.Client.Put (Item => " Hash: ");
-      for I in Foo.Data_Range range 1 .. Item.Size loop
-         Debuglog.Client.Put (Item => Img (Item.Data (I)));
-      end loop;
-      Debuglog.Client.New_Line;
-   end Put_Hash;
-
-   -------------------------------------------------------------------------
-
    procedure Put_Process_Message
    is
    begin

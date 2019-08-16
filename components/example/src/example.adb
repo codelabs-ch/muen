@@ -25,7 +25,6 @@ with Component_Constants;
 
 with Foo.Receiver;
 with Foo.Sender;
-with Foo.Hasher;
 
 with Foo.Debug;
 
@@ -60,9 +59,7 @@ begin
          pragma Debug (Foo.Debug.Put_Word16
                        (Message => " Size",
                         Value   => Request.Size));
-         Foo.Hasher.SHA256_Hash (Input  => Request,
-                                   Output => Response);
-         pragma Debug (Foo.Debug.Put_Hash (Item => Response));
+         Response := Request;
       end if;
       pragma Debug (not Request_Valid,
                     Foo.Debug.Put_Word16

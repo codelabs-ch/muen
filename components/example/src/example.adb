@@ -32,7 +32,7 @@ with Crypt.Debug;
 with Handler;
 pragma Unreferenced (Handler);
 
-procedure Crypter
+procedure Example
 with
    Global =>
      (Input  => Crypt.Receiver.State,
@@ -71,4 +71,4 @@ begin
 
       Crypt.Sender.Send (Res => Response);
    end loop;
-end Crypter;
+end Example;

@@ -36,6 +36,6 @@ project Example extends "../component_spark" is
    for Languages use ("Ada", "Asm");
    for Source_Dirs use ("generated", "src") & Extra_Dirs;
    for Object_Dir use "obj/" & Component_Spark.Build_Mode;
-   for Main use ("crypter");
+   for Main use ("example");
 
 end Example;

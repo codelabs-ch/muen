@@ -21,7 +21,7 @@ with
    Refined_State => (State => Subject_Events)
 is
 
-   Null_Event : constant Timed_Event_Interface_Type
+   Null_Event : constant Mutimedevents.Timed_Event_Interface_Type
      := (TSC_Trigger_Value => SK.Word64'Last,
          Event_Nr          => 0);
 
@@ -49,7 +49,8 @@ is
    is
    begin
       TSC_Trigger_Value := Subject_Events (Subject).TSC_Trigger_Value;
-      Event_Nr          := Subject_Events (Subject).Event_Nr;
+      Event_Nr          := Skp.Events.Event_Range
+        (Subject_Events (Subject).Event_Nr);
    end Get_Event;
 
    -------------------------------------------------------------------------

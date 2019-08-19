@@ -20,6 +20,8 @@ private with System;
 
 private with Skp.Kernel;
 
+private with Mutimedevents;
+
 with Skp.Events;
 
 package SK.Timed_Events
@@ -51,19 +53,9 @@ is
 
 private
 
-   type Timed_Event_Interface_Type is record
-      TSC_Trigger_Value : SK.Word64;
-      Event_Nr          : Skp.Events.Event_Range;
-   end record;
-
-   for Timed_Event_Interface_Type use record
-      TSC_Trigger_Value at 0 range 0 .. 63;
-      Event_Nr          at 8 range 0 ..  Skp.Events.Event_Bits - 1;
-   end record;
-
    pragma Warnings (GNAT, Off, "*padded by * bits");
    type Subject_Event_Array is array
-     (Skp.Global_Subject_ID_Type) of Timed_Event_Interface_Type
+     (Skp.Global_Subject_ID_Type) of Mutimedevents.Timed_Event_Interface_Type
    with
       Independent_Components,
       Component_Size => Page_Size * 8,

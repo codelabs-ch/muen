@@ -43,7 +43,10 @@ is
       (Input_Queue  : in out Byte_Queue.Queue_Type;
        Output_Queue : in out Byte_Queue.Queue_Type)
    is
-      Data   : Byte_Arrays.Single_Byte_Array := (1 => 0);
+      subtype Data_Range is Positive range 1 .. UART.FIFO_Size;
+      subtype Data_Array is Byte_Arrays.Byte_Array (Data_Range);
+
+      Data   : Data_Array := (others => 0);
       Length : Natural;
    begin
       while Byte_Queue.Bytes_Free (Queue => Input_Queue) > 0 loop
@@ -63,8 +66,10 @@ is
                           Buffer => Data,
                           Length => Length);
 
-         if Length = 1 then
-            UART.Put_Char (Item => Character'Val (Data (1)));
+         if Length > 0 then
+            for I in Data_Range'First .. Length loop
+               UART.Put_Char (Item => Character'Val (Data (I)));
+            end loop;
             Byte_Queue.Drop_Bytes (Queue  => Output_Queue,
                                    Length => Length);
          end if;

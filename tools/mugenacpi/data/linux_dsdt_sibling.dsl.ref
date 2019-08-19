@@ -104,6 +104,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
             }
             Device (ISA)
             {
+                Name (_HID, EisaId ("PNP0A00"))
                 Device (SER0)
                 {
                     Name (_HID, EisaId ("PNP0501"))

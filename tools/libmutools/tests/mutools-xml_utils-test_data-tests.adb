@@ -1894,6 +1894,67 @@ package body Mutools.XML_Utils.Test_Data.Tests is
       Assert (Condition => Get_Subject_To_Scheduling_Group_Map
               (Data => Policy) = Ref_Mapping,
               Message   => "Subject to scheduling group ID mapping mismatch");
+
+      --  Verify that cyclic switch events are handled correctly, i.e. do not
+      --  lead to infinite recursion.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/scheduling/majorFrame/cpu/"
+         & "minorFrame[@subject='nic_linux']",
+         Name  => "subject",
+         Value => "example");
+
+      declare
+         task Worker
+         is
+            entry Start;
+            entry Done (Match : out Boolean);
+         end Worker;
+
+         task body Worker
+         is
+            Map_Match : Boolean;
+         begin
+            select
+               accept Start;
+            or
+               terminate;
+            end select;
+
+            begin
+               Map_Match := Get_Subject_To_Scheduling_Group_Map
+                 (Data => Policy) = Ref_Mapping;
+
+            exception
+               when others =>
+                  Map_Match := False;
+            end;
+
+            accept Done (Match : out Boolean) do
+               Match := Map_Match;
+            end Done;
+         end Worker;
+
+         Result : Boolean;
+      begin
+
+         Worker.Start;
+
+         select
+            Worker.Done (Match => Result);
+         or
+            delay 0.1;
+            abort Worker;
+            Assert (Condition => False,
+                    Message   => "Unable to determine subject to scheduling "
+                    & "group ID mapping with cyclic events");
+         end select;
+
+         Assert (Condition => Result,
+                 Message   => "Subject to scheduling group ID mapping with"
+                 & "cyclic events mismatch");
+      end;
 --  begin read only
    end Test_Get_Subject_To_Scheduling_Group_Map;
 --  end read only

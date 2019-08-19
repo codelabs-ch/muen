@@ -1840,6 +1840,9 @@ package body Mutools.XML_Utils.Test_Data.Tests is
          Muxml.Utils.Remove_Elements
            (Doc   => Policy.Doc,
             XPath => "/system/subjects/subject[@name='nic_sm']");
+         Muxml.Utils.Remove_Elements
+           (Doc   => Policy.Doc,
+            XPath => "/system/subjects/subject[@name='example']");
 
          declare
             Unused : constant ID_Map_Array
@@ -1881,7 +1884,8 @@ package body Mutools.XML_Utils.Test_Data.Tests is
             4 => 4,
             5 => 5,
             6 => 3,
-            7 => 6);
+            7 => 6,
+            8 => 3);
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,

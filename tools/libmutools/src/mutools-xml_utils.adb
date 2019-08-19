@@ -1033,6 +1033,9 @@ is
       Subject_To_Group_ID : ID_Map_Array (0 .. Subject_Count - 1)
         := (others => No_Group);
 
+      Visited_Subjects : array (0 .. Subject_Count - 1) of Boolean
+        := (others => False);
+
       --  Determine scheduling group for given subject and set corresponding
       --  entry in subject to group ID array.
       procedure Determine_Sched_Group (Subject : DOM.Core.Node);
@@ -1051,6 +1054,10 @@ is
             return;
          end if;
 
+         if Visited_Subjects (Subject_ID) then
+            return;
+         end if;
+
          --  Backtrack through all switch source subjects.
 
          declare
@@ -1058,6 +1065,7 @@ is
               := Get_Switch_Sources (Data   => Data,
                                      Target => Subject);
          begin
+            Visited_Subjects (Subject_ID) := True;
             for I in 0 .. DOM.Core.Nodes.Length (List => Switch_Srcs) - 1 loop
                declare
                   Switch_Src  : constant DOM.Core.Node
@@ -1077,10 +1085,12 @@ is
                   if Subject_To_Group_ID (Src_Subj_ID) /= No_Group then
                      Subject_To_Group_ID (Subject_ID)
                        := Subject_To_Group_ID (Src_Subj_ID);
+                     Visited_Subjects (Subject_ID) := False;
                      return;
                   end if;
                end;
             end loop;
+            Visited_Subjects (Subject_ID) := False;
          end;
       end Determine_Sched_Group;
    begin

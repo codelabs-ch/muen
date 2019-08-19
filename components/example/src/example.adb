@@ -43,7 +43,7 @@ begin
    SK.Interrupt_Tables.Initialize
      (Stack_Addr => Component_Constants.Interrupt_Stack_Address);
 
-   Debuglog.Client.Put (Item => Example_Component.Config.Greeter);
+   Debuglog.Client.Put_Line (Item => Example_Component.Config.Greeter);
 
    if not Musinfo.Instance.Is_Valid then
       Debuglog.Client.Put_Line

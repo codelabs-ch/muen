@@ -3,7 +3,7 @@
 		<boolean name="print_serial" value="false"/>
 		<boolean name="print_vcpu_speed" value="true"/>
 		<integer name="serial" value="123456789"/>
-		<string name="greeter" value="Crypter subject running"/>
+		<string name="greeter" value="Muen example subject running"/>
 	</config>
 	<depends>
 		<library ref="libdebuglog"/>

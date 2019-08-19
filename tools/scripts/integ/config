@@ -34,5 +34,5 @@ TARGETS+=('192.168.254.2;xml/integration_tests.xml;hardware/lenovo-t430s.xml;int
 #TARGETS+=(';xml/integration_tests.xml;hardware/intel-nuc-6cayh.xml;integtest')
 
 # log capture commands
-LOG_CMD_AMT="amtterm"
+LOG_CMD_AMT="/usr/bin/amtterm"
 LOG_CMD_XHCI="components/libxhcidbg/misc/xhcidbg-log"

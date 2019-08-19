@@ -53,6 +53,7 @@ cleanup()
 		kill -kill $pid >>$LOGFILE 2>&1 || true
 	done
 	release_file_lock
+	screen -wipe >>$LOGFILE 2>&1
 }
 
 save_artifacts()
@@ -160,9 +161,12 @@ capture_output()
 	local target_logdir=$1
 	local cmd=$2
 
-	cat >(sh -c "$cmd" > $target_logdir/serial.out 2>&1) &
+	screen -S integ -m -D -L $target_logdir/serial.out $cmd &
 	log_pid=$!
 	KILL_ON_EXIT_PIDS+=$log_pid
+	# manual forking needs some time for screen to see the socket.
+	for i in `seq 4`; do screen -ls && break || sleep 0.5; done >>$LOGFILE 2>&1
+	screen -S $log_pid.integ -X colon "logfile flush 0^M"
 }
 
 hw_deploy()

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2019  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2019  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,20 +16,14 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK.Strings;
+with Musinfo.Instance;
 
-with Log;
-
-package body Interrupt_Handler
+package Log
 is
 
-   -------------------------------------------------------------------------
+   --  Output given message and start newline.
+   procedure Put_Line (Item : String)
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
-   procedure Handle_Interrupt (Vector : SK.Byte)
-   is
-   begin
-      Log.Put_Line (Item => "Received vector " & SK.Strings.Img
-                    (Item => Vector));
-   end Handle_Interrupt;
-
-end Interrupt_Handler;
+end Log;

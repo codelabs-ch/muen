@@ -30,6 +30,7 @@ with Foo.Sender;
 
 with Debuglog.Client;
 
+with Log;
 with Subject_Info;
 with Timed_Events;
 with Interrupt_Handler;
@@ -49,10 +50,6 @@ begin
    SK.Interrupt_Tables.Initialize
      (Stack_Addr => Component_Constants.Interrupt_Stack_Address);
 
-   --  Say hello via dbglog.
-
-   Debuglog.Client.Put_Line (Item => Example_Component.Config.Greeter);
-
    --  Check sinfo validity.
 
    if not Musinfo.Instance.Is_Valid then
@@ -61,14 +58,16 @@ begin
       SK.CPU.Stop;
    end if;
 
+   --  Say hello via dbglog.
+
+   Log.Put_Line (Item => Example_Component.Config.Greeter);
+
    pragma Debug (Example_Component.Config.Print_Serial,
-                 Debuglog.Client.Put_Line
-                   (Item => "Serial " & SK.Strings.Img
-                      (SK.Word64 (Example_Component.Config.Serial))));
+                 Log.Put_Line (Item => "Serial " & SK.Strings.Img
+                               (SK.Word64 (Example_Component.Config.Serial))));
    pragma Debug (Example_Component.Config.Print_Vcpu_Speed,
-                 Debuglog.Client.Put_Line
-                   (Item => "VCPU running with " & SK.Strings.Img
-                      (Musinfo.Instance.TSC_Khz) & " Khz"));
+                 Log.Put_Line (Item => "VCPU running with " & SK.Strings.Img
+                               (Musinfo.Instance.TSC_Khz) & " Khz"));
 
    --  Enable interrupts.
 
@@ -83,23 +82,22 @@ begin
       Minor_End   : constant SK.Word64 := Musinfo.Instance.TSC_Schedule_End;
       Trigger     : constant SK.Word64 := Minor_End + 1000;
    begin
-      Debuglog.Client.Put_Line
+      Log.Put_Line
         (Item => "Current minor frame ticks " &
            SK.Strings.Img (Minor_Start) & " .. " & SK.Strings.Img (Minor_End));
-      Debuglog.Client.Put_Line
-        (Item => "Triggering self-event");
+      Log.Put_Line (Item => "Triggering self-event");
       Timed_Events.Timed_Evt.Event_Nr          := 3;
       Timed_Events.Timed_Evt.TSC_Trigger_Value := Trigger;
    end;
 
-   Debuglog.Client.Put_Line (Item => "Halting");
+   Log.Put_Line (Item => "Halting");
    SK.CPU.Hlt;
 
    declare
       Minor_Start : constant SK.Word64 := Musinfo.Instance.TSC_Schedule_Start;
       Minor_End   : constant SK.Word64 := Musinfo.Instance.TSC_Schedule_End;
    begin
-      Debuglog.Client.Put_Line
+      Log.Put_Line
         (Item => "Wakeup in frame "
          & SK.Strings.Img (Minor_Start) & " .. " & SK.Strings.Img (Minor_End));
    end;
@@ -110,13 +108,12 @@ begin
 
       --  Print some register values of monitored subject.
 
-      Debuglog.Client.Put_Line (Item => "Monitored subject RIP "
-                                & SK.Strings.Img (RIP));
+      Log.Put_Line (Item => "Monitored subject RIP " & SK.Strings.Img (RIP));
    end;
 
    --  Give up CPU.
 
-   Debuglog.Client.Put_Line (Item => "Yielding CPU");
+   Log.Put_Line (Item => "Yielding CPU");
    SK.Hypercall.Trigger_Event (Number => 2);
 
    --  Act as a service: process events from associated subject.
@@ -126,12 +123,11 @@ begin
       Request_Valid := Foo.Is_Valid (Msg => Request);
 
       if Request_Valid then
-         Debuglog.Client.Put_Line (Item => "Copying response");
+         Log.Put_Line (Item => "Copying response");
          Response := Request;
       else
-         Debuglog.Client.Put_Line
-           (Item => "Invalid request message size "
-            & SK.Strings.Img (Request.Size));
+         Log.Put_Line (Item => "Invalid request message size " & SK.Strings.Img
+                       (Request.Size));
          Response := Foo.Null_Message;
       end if;
 

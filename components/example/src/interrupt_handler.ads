@@ -18,6 +18,8 @@
 
 with SK;
 
+with Musinfo.Instance;
+
 package Interrupt_Handler
 is
 
@@ -26,6 +28,7 @@ is
    with
       Export,
       Convention => C,
-      Link_Name  => "dispatch_interrupt";
+      Link_Name  => "dispatch_interrupt",
+      Pre        => Musinfo.Instance.Is_Valid;
 
 end Interrupt_Handler;

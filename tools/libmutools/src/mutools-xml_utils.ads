@@ -280,7 +280,8 @@ is
    Invalid_Subject_ID : exception;
 
    --  Returns an array that represent the mapping of subject to scheduling
-   --  group ID.
+   --  group ID. Subjects that cannot be mapped to a scheduling group are
+   --  assigned the No_Group ID.
    function Get_Subject_To_Scheduling_Group_Map
      (Data : Muxml.XML_Data_Type)
       return ID_Map_Array;

@@ -1869,7 +1869,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_Subject_To_Scheduling_Group_Map_8b4c66 (Gnattest_T : in out Test) renames Test_Get_Subject_To_Scheduling_Group_Map;
 --  id:2.2/8b4c661263f9c87d/Get_Subject_To_Scheduling_Group_Map/1/0/
    procedure Test_Get_Subject_To_Scheduling_Group_Map (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:284:4:Get_Subject_To_Scheduling_Group_Map
+   --  mutools-xml_utils.ads:285:4:Get_Subject_To_Scheduling_Group_Map
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1955,6 +1955,43 @@ package body Mutools.XML_Utils.Test_Data.Tests is
                  Message   => "Subject to scheduling group ID mapping with"
                  & "cyclic events mismatch");
       end;
+
+      --  Check that non-schedulable subjects are mapped to the No_Group ID.
+
+      Muxml.Utils.Remove_Elements
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/events/source/group/"
+         & "event[@physical='example_request']");
+      Muxml.Utils.Remove_Elements
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/events/source/group/"
+         & "event[@physical='example_response']");
+      Muxml.Utils.Remove_Elements
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/events/target/"
+         & "event[@physical='example_request']");
+      Muxml.Utils.Remove_Elements
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/events/target/"
+         & "event[@physical='example_response']");
+
+      declare
+         Ref_Non_Sched_Mapping : constant ID_Map_Array
+        := (0 => 1,
+            1 => 2,
+            2 => 0,  -- nic_linux
+            3 => 6,
+            4 => 4,
+            5 => 5,
+            6 => 0,  -- nic_sm
+            7 => 6,
+            8 => 3);
+      begin
+         Assert (Condition => Get_Subject_To_Scheduling_Group_Map
+                 (Data => Policy) = Ref_Non_Sched_Mapping,
+                 Message   => "Subject to scheduling group ID mapping with "
+                 & "non-schedulable subjects mismatch");
+      end;
 --  begin read only
    end Test_Get_Subject_To_Scheduling_Group_Map;
 --  end read only
@@ -1965,7 +2002,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Merge_XIncludes_504615 (Gnattest_T : in out Test) renames Test_Merge_XIncludes;
 --  id:2.2/50461583a452b67a/Merge_XIncludes/1/0/
    procedure Test_Merge_XIncludes (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:290:4:Merge_XIncludes
+   --  mutools-xml_utils.ads:291:4:Merge_XIncludes
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -2056,7 +2093,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_Image_Size_046aa6 (Gnattest_T : in out Test) renames Test_Get_Image_Size;
 --  id:2.2/046aa68f3a717a5c/Get_Image_Size/1/0/
    procedure Test_Get_Image_Size (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:295:4:Get_Image_Size
+   --  mutools-xml_utils.ads:296:4:Get_Image_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -2092,7 +2129,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Calculate_PCI_Cfg_Address_d974d1 (Gnattest_T : in out Test) renames Test_Calculate_PCI_Cfg_Address;
 --  id:2.2/d974d1c05b67ac28/Calculate_PCI_Cfg_Address/1/0/
    procedure Test_Calculate_PCI_Cfg_Address (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:301:4:Calculate_PCI_Cfg_Address
+   --  mutools-xml_utils.ads:302:4:Calculate_PCI_Cfg_Address
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -2132,7 +2169,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Is_Physical_Mmconf_Region_a81275 (Gnattest_T : in out Test) renames Test_Is_Physical_Mmconf_Region;
 --  id:2.2/a812758853ed6f2d/Is_Physical_Mmconf_Region/1/0/
    procedure Test_Is_Physical_Mmconf_Region (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:310:4:Is_Physical_Mmconf_Region
+   --  mutools-xml_utils.ads:311:4:Is_Physical_Mmconf_Region
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -2173,7 +2210,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_To_APIC_ID_13d079 (Gnattest_T : in out Test) renames Test_To_APIC_ID;
 --  id:2.2/13d079c1c944d680/To_APIC_ID/1/0/
    procedure Test_To_APIC_ID (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:317:4:To_APIC_ID
+   --  mutools-xml_utils.ads:318:4:To_APIC_ID
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

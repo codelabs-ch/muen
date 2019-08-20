@@ -50,8 +50,10 @@ RUN apt-get update && apt-get install -y \
 		make \
 		openssh-client \
 		patch \
+		picocom \
 		python \
 		rsync \
+		screen \
 		tidy \
 		unzip \
 		vim \

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2019  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,19 +16,19 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libdebuglog/libdebuglog";
-with "../libmusinfo/libmusinfo";
+with System;
 
-project Example extends "../component_spark" is
+with Mutimedevents;
 
-   Extra_Dirs := Component_Spark.Src_Dirs;
-   Extra_Dirs := Extra_Dirs
-     & "../../common/strings/impl"
-     & "../../common/mutimedevents";
+package Timed_Events
+is
 
-   for Languages use ("Ada", "Asm");
-   for Source_Dirs use ("generated", "src") & Extra_Dirs;
-   for Object_Dir use "obj/" & Component_Spark.Build_Mode;
-   for Main use ("example");
+   Timed_Evt_Addr : constant := 16#000e_0001_0000#;
 
-end Example;
+   Timed_Evt : Mutimedevents.Timed_Event_Interface_Type
+     with
+       Import,
+       Volatile,
+       Address => System'To_Address (Timed_Evt_Addr);
+
+end Timed_Events;

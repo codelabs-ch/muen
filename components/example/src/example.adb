@@ -30,6 +30,7 @@ with Foo.Sender;
 
 with Debuglog.Client;
 
+with Timed_Events;
 with Interrupt_Handler;
 pragma Unreferenced (Interrupt_Handler);
 
@@ -72,6 +73,35 @@ begin
 
    SK.CPU.Sti;
 
+   --  Trigger a self-event to wakeup from hlt.
+
+   declare
+      use type SK.Word64;
+
+      Minor_Start : constant SK.Word64 := Musinfo.Instance.TSC_Schedule_Start;
+      Minor_End   : constant SK.Word64 := Musinfo.Instance.TSC_Schedule_End;
+      Trigger     : constant SK.Word64 := Minor_End + 1000;
+   begin
+      Debuglog.Client.Put_Line
+        (Item => "Current minor frame ticks " &
+           SK.Strings.Img (Minor_Start) & " .. " & SK.Strings.Img (Minor_End));
+      Debuglog.Client.Put_Line
+        (Item => "Triggering self-event");
+      Timed_Events.Timed_Evt.Event_Nr          := 3;
+      Timed_Events.Timed_Evt.TSC_Trigger_Value := Trigger;
+   end;
+
+   Debuglog.Client.Put_Line (Item => "Halting");
+   SK.CPU.Hlt;
+
+   declare
+      Minor_Start : constant SK.Word64 := Musinfo.Instance.TSC_Schedule_Start;
+      Minor_End   : constant SK.Word64 := Musinfo.Instance.TSC_Schedule_End;
+   begin
+      Debuglog.Client.Put_Line
+        (Item => "Wakeup in frame "
+         & SK.Strings.Img (Minor_Start) & " .. " & SK.Strings.Img (Minor_End));
+   end;
 
    --  Give up CPU.
 

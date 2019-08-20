@@ -161,7 +161,7 @@ capture_output()
 	local target_logdir=$1
 	local cmd=$2
 
-	screen -S integ -m -D -L $target_logdir/serial.out $cmd &
+	screen -S integ -m -D -L -Logfile $target_logdir/serial.out $cmd &
 	log_pid=$!
 	KILL_ON_EXIT_PIDS+=$log_pid
 	# manual forking needs some time for screen to see the socket.

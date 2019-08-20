@@ -30,6 +30,6 @@ is
        Volatile,
        Async_Writers,
        Async_Readers,
-       Address => System'To_Address (16#1e0000#);
+       Address => System'To_Address (16#1e_0000#);
 
 end Subject_Info;

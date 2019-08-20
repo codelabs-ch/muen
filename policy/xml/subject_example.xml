@@ -12,6 +12,9 @@
 			</event>
 		</target>
 	</events>
+	<monitor>
+		<state subject="storage_linux" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
+	</monitor>
 	<component ref="example">
 		<map logical="example_request" physical="example_request"/>
 		<map logical="example_response" physical="example_response"/>

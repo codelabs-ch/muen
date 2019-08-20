@@ -3,8 +3,14 @@
 		<source>
 			<group name="vmcall">
 				<event id="2" logical="yield" physical="example_yield"/>
+				<event id="3" logical="timer" physical="example_self"/>
 			</group>
 		</source>
+		<target>
+			<event logical="timer" physical="example_self">
+				<inject_interrupt vector="37"/>
+			</event>
+		</target>
 	</events>
 	<component ref="example">
 		<map logical="example_request" physical="example_request"/>

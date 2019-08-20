@@ -30,6 +30,7 @@ with Foo.Sender;
 
 with Debuglog.Client;
 
+with Subject_Info;
 with Timed_Events;
 with Interrupt_Handler;
 pragma Unreferenced (Interrupt_Handler);
@@ -101,6 +102,16 @@ begin
       Debuglog.Client.Put_Line
         (Item => "Wakeup in frame "
          & SK.Strings.Img (Minor_Start) & " .. " & SK.Strings.Img (Minor_End));
+   end;
+
+   declare
+      RIP : constant SK.Word64 := Subject_Info.State.RIP;
+   begin
+
+      --  Print some register values of monitored subject.
+
+      Debuglog.Client.Put_Line (Item => "Monitored subject RIP "
+                                & SK.Strings.Img (RIP));
    end;
 
    --  Give up CPU.

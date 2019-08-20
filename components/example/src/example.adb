@@ -41,10 +41,17 @@ is
    Request       : Foo.Message_Type;
    Response      : Foo.Message_Type := Foo.Null_Message;
 begin
+
+   --  Initialize interrupt handling.
+
    SK.Interrupt_Tables.Initialize
      (Stack_Addr => Component_Constants.Interrupt_Stack_Address);
 
+   --  Say hello via dbglog.
+
    Debuglog.Client.Put_Line (Item => Example_Component.Config.Greeter);
+
+   --  Check sinfo validity.
 
    if not Musinfo.Instance.Is_Valid then
       Debuglog.Client.Put_Line
@@ -61,20 +68,24 @@ begin
                    (Item => "VCPU running with " & SK.Strings.Img
                       (Musinfo.Instance.TSC_Khz) & " Khz"));
 
+   --  Enable interrupts.
+
    SK.CPU.Sti;
+
+
+   --  Give up CPU.
 
    Debuglog.Client.Put_Line (Item => "Yielding CPU");
    SK.Hypercall.Trigger_Event (Number => 2);
 
-   loop
-      Debuglog.Client.Put_Line (Item => "Waiting for event...");
-      SK.CPU.Hlt;
+   --  Act as a service: process events from associated subject.
 
+   loop
       Foo.Receiver.Receive (Req => Request);
       Request_Valid := Foo.Is_Valid (Msg => Request);
 
       if Request_Valid then
-         Debuglog.Client.Put_Line (Item => "Copying response...");
+         Debuglog.Client.Put_Line (Item => "Copying response");
          Response := Request;
       else
          Debuglog.Client.Put_Line
@@ -82,6 +93,8 @@ begin
             & SK.Strings.Img (Request.Size));
          Response := Foo.Null_Message;
       end if;
+
+      --  Send response and switch back to requester.
 
       Foo.Sender.Send (Res => Response);
    end loop;

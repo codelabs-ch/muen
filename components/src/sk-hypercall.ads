@@ -18,10 +18,15 @@
 
 with X86_64;
 
+--D @Section Id => interfaces_hypercall, Label => Hypercalls, Parent => interface_section, Priority => 0
+--D @Text Section => interfaces_hypercall, Priority => 0
+--D The SK.Hypercall package is used to trigger hypercalls into the Muen SK. Components are only able to trigger events which are defined in the system policy.
 package SK.Hypercall
 is
 
-   --  Trigger event with given number.
+   --D @Text Section => interfaces_hypercall, Priority => 10
+   --D The Trigger\_Event procedure triggers a hypercall given by the Number
+   --D argument.
    procedure Trigger_Event (Number : SK.Byte)
    with
       Global  => (In_Out => X86_64.State),

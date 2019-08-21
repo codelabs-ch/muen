@@ -29,12 +29,16 @@ is
      (GNATprove, Off,
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "This global variable is effectively read-only.");
+   --D @Lst Reqbegin
+   --D @Interface
+   --D Incoming request to process.
    Request : Foo.Message_Type
      with
        Volatile,
        Async_Writers,
        Address => System'To_Address
          (Example_Component.Channels.Example_Request_Address);
+   --D @Lst Reqend
    pragma Warnings
      (GNATprove, On,
       "writing * is assumed to have no effects on other non-volatile objects");

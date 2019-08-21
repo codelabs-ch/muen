@@ -33,10 +33,15 @@ is
 
    Scheduling_Info_Size : constant := 2 * 8;
 
-   --  Scheduling info records provide scheduling information to subjects at
-   --  runtime.
+   --D @Interface
+   --D Scheduling info records provide scheduling information to subjects at
+   --D runtime.
    type Scheduling_Info_Type is record
+      --D @Interface
+      --D Tick value of minor frame start
       TSC_Schedule_Start : Interfaces.Unsigned_64;
+      --D @Interface
+      --D Tick value of minor frame end
       TSC_Schedule_End   : Interfaces.Unsigned_64;
    end record
    with

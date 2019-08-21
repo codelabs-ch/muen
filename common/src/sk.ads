@@ -139,6 +139,8 @@ is
      (CPU_Regs_Size + Segment_Regs_Size + 2 * Seg_Type_Size + 4 * 4 + 13 * 8);
 
    type Subject_State_Type is record
+      --D @Interface
+      --D General purpose registers (GPRs).
       Regs               : CPU_Registers_Type;
       Exit_Reason        : Word32;
       Intr_State         : Word32;

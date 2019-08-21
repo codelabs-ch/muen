@@ -30,6 +30,8 @@ is
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
+   --D @Interface
+   --D Access to the subject register state of a monitored subject.
    State : SK.Subject_State_Type
      with
        Volatile,

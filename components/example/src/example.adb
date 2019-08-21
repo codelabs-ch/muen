@@ -77,12 +77,14 @@ begin
 
    Log.Put_Line (Item => Example_Component.Config.Greeter);
 
+   --D @Lst Configbegin
    pragma Debug (Example_Component.Config.Print_Serial,
                  Log.Put_Line (Item => "Serial " & SK.Strings.Img
                                (SK.Word64 (Example_Component.Config.Serial))));
    pragma Debug (Example_Component.Config.Print_Vcpu_Speed,
                  Log.Put_Line (Item => "VCPU running with " & SK.Strings.Img
                                (Musinfo.Instance.TSC_Khz) & " Khz"));
+   --D @Lst Configend
 
    Log.Put_Line (Item => "Current Status: " & SK.Strings.Img
                  (Item => SK.Word64 (Mucontrol.Status.Instance.Get)));
@@ -101,8 +103,10 @@ begin
    declare
       use type SK.Word64;
 
+      --D @Lst Sinfobegin
       Minor_Start : constant SK.Word64 := Musinfo.Instance.TSC_Schedule_Start;
       Minor_End   : constant SK.Word64 := Musinfo.Instance.TSC_Schedule_End;
+      --D @Lst Sinfoend
       Trigger     : constant SK.Word64 := Minor_End + 1000;
    begin
       Log.Put_Line

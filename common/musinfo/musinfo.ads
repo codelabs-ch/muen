@@ -26,18 +26,10 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
+--  Subject Information (sinfo) API.
+
 with Interfaces;
 
---  Muen subject information (sinfo) data structures.
---
---  An sinfo record is mapped into the address space of each running subject
---  and provides means to retrieve information about the execution environment.
---
---  Subject resources are exported as variant records, which are all explicitly
---  padded in order to guarantee an exact layout and proper initialization of
---  unused space in smaller variants.
---  The padding size of each variant is determined by the size of the largest
---  variant (see the Largest_Variant_Size constant below).
 package Musinfo
 is
 
@@ -73,13 +65,20 @@ is
 
    Name_Type_Size : constant := 1 + Name_Index_Type'Last + 1;
 
-   --  A name is a string with an explicit length field and maximum size of 63
-   --  characters. The data field is null-terminated via Null_Term and can be
-   --  safely used in C/C++ string operations as is.
+   --D @Interface
+   --D A name is a string with an explicit length field and maximum size of 63
+   --D characters. The data field is null-terminated via Null_Term and can be
+   --D safely used in C/C++ string operations as is.
    type Name_Type is record
+      --D @Interface
+      --D Length of the name.
       Length    : Name_Size_Type;
       Padding   : Unsigned_2;
+      --D @Interface
+      --D Name octets.
       Data      : Name_Data_Type;
+      --D @Interface
+      --D Ensures NULL termination.
       Null_Term : Character;
    end record
      with
@@ -190,6 +189,7 @@ is
       Subject_Crash_Audit     => 17,
       Kernel_Interface        => 18);
 
+   --  @Interface
    --  A memory region is described by its kind, content, memory address, size,
    --  and flags. Regions of type fill and file may optionally provide a hash
    --  of the content.
@@ -417,14 +417,25 @@ is
    Subject_Info_Type_Size : constant := 8 + 4 + Name_Type_Size
      + Resource_Array_Size + 3;
 
-   --  Subject info records enable subjects to determine what resources are
-   --  provided to them at runtime.
+   --D @Interface
+   --D Subject info records enable subjects to determine what resources are
+   --D provided to them at runtime.
    type Subject_Info_Type is record
+      --D @Interface
+      --D Sinfo magic, used to check validity of memory region
       Magic          : Interfaces.Unsigned_64;
+      --D @Interface
+      --D Tick rate of VCPU in Khz
       TSC_Khz        : TSC_Tick_Rate_Khz_Type;
+      --D @Interface
+      --D Subject name
       Name           : Name_Type;
+      --D @Interface
+      --D Number of active sinfo records
       Resource_Count : Interfaces.Unsigned_16;
       Padding        : Interfaces.Unsigned_8;
+      --D @Interface
+      --D Array of sinfo records.
       Resources      : Resource_Array;
    end record
      with

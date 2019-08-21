@@ -102,19 +102,60 @@
  </section>
 
  <section id="datamodel" label="Data Model" priority="0">
-  <text priority="0">
-   Each CPU executes a distinct instance of the Muen kernel. By default, all
-   kernel data is CPU-local, meaning it is not shared between the kernels
-   running on different CPUs. Global data is shared explicitly and is designated
-   as such by placing it in a dedicated section (.globaldata).
+  <section id="datamodel_multicore" label="Multicore Support" priority="0">
+   <text priority="0">
+    Modern computers have an increasing number of CPU cores per processor. To
+    utilize the hardware to its full potential, the Muen SK provides Multicore
+    support.
 
-   Kernel data can be categorized as follows:
-   \begin{itemize}
-    \item CPU-local data
-    \item CPU-local, subject-related data
-    \item Global data, shared by all CPUs
-   \end{itemize}
-  </text>
+    In a multicore system, a physical CPU package provides more than one
+    processor core in a single package. Additionally, systems equipped with
+    Intel's Hyper-Threading Technology (HTT) have two or more \emph{logical
+    CPUs} per core. A logical CPU is an execution unit of the processor that
+    runs an application or a kernel process.
+
+    Since HyperThreads located on the same CPU core share big parts of the
+    micro-architectural state without effective means of isolation, Muen does
+    not use HTT. It effectively disables HTT by only executing one Hyper-Thread
+    per physical CPU core.
+
+    In MP systems, one processor termed \emph{bootstrap processor}(BSP) is
+    responsible for system initialization, while the other processors, called
+    \emph{application processors} (APs), wait for an initialization sequence as
+    specified by Intel \cite{intelsdm}.
+
+    At the basis of the multicore design is the symmetric execution of the
+    kernel on each CPU core. This means that all cores execute an instance of
+    exactly the same Muen kernel code. The only difference being, that the
+    system bring up code is run exclusively by the BSP.
+
+    An important aspect of Muen's multicore design is that subjects are pinned
+    to a specific logical CPU. Subjects do not migrate between cores and are
+    exclusively executed on the core defined by the associated subject
+    specification in the system policy. This removes complexity from the kernel
+    and the overall system by thwarting potential isolation issues which could
+    be caused by the transfer of subjects and their state between cores. This
+    design decision further simplifies the kernel implementation since no
+    complex cross-core synchronization and migration algorithm has to be devised
+    and implemented. Furthermore, each core can be restricted to only have
+    access the data structures associated with subjects it is designated to
+    execute.
+
+    Since each CPU executes a distinct instance of the Muen kernel, by default,
+    all kernel data is CPU-local, meaning it is not shared between the kernels
+    running on different CPUs. Global data is shared explicitly and is
+    designated as such by placing it in a dedicated section (.globaldata).
+
+    Kernel data can be categorized as follows:
+    \begin{itemize}
+     \item CPU-local data
+     \item CPU-local, subject-related data
+     \item Global data, shared by all CPUs
+    \end{itemize}
+
+    The following sections provide explanations for each of the categories.
+   </text>
+  </section>
   <section id="datamodel_cpulocal" label="CPU-local data" priority="0">
    <text priority="0">
     Library level data structures without special aspects (e.g. address clauses)

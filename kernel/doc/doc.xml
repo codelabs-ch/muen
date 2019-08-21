@@ -33,8 +33,8 @@
 
  <section id="overview" label="Overview" priority="0">
   <text priority="0">
-   This section gives a short overview of the design and architecture of the
-   Muen Separation Kernel.
+   This section gives an overview of the design and architecture of the Muen
+   Separation Kernel.
   </text>
   <section id="overview_architecture" label="System Architecture" priority="0">
    <text priority="0">
@@ -44,24 +44,60 @@
     programming language, which has been shown to be free from certain bug
     classes through the application of formal methods. It leverages the
     virtualization extensions provided by the hardware platform to securely
-    isolate components and devices. Virtualization events such as traps are not
-    handled by the SK but instead by components which enables the realisation of
-    a kernel with low complexity.
+    isolate components and devices.
 
     \begin{figure}[ht]
      \centering
      \input{graph_arch}
      \label{fig-muenarch}
-     \caption{Execution of VMs and nativ Subjects on top of the Muen SK. The Kernel runs in privileged Intel VT-x root mode, all Subjects in unprivileged non-root mode.}
+     \caption{Execution of VMs and native Subjects on top of the Muen SK. The
+      Kernel is the only software running in the privileged Intel VT-x root mode
+       while all Subjects execute in unprivileged non-root mode.}
     \end{figure}
+
+    The static configuration allows for the definition of information flows
+    between components and frees the kernel from any policy decisions: the
+    runtime behavior is precisely specified in the system policy which, in turn,
+    enables detailed analysis of the system prior to its execution.
 
     The formally proven Muen SK is the only part of the system running in VMX
     root mode: all components, be it fully-fledged VMs or small, native
     subjects, execute with lower privileges in non-root mode. By design, no code
-    is executed in userspace (ring 3) of VMX root mode. This enables Muen to
+    is executed in user-space (ring 3) of VMX root mode. This enables Muen to
     completely forgo code for handling Syscalls/Ring-3-to-Ring-0 transitions,
-    further reducing the code size and complexity.
+    significantly reducing the code size and complexity.
+
+    Deterministic runtime behavior of the SK is achieved by avoiding
+    long-running code paths and no preemption of kernel code. While executing
+    kernel code, external interrupts are disabled and the proof of absence
+    of runtime errors assures that no exceptions occur. Furthermore, the
+    absence of any kind of dynamic resource management and the fixed, cyclic
+    scheduler contribute to highly deterministic runtime behavior of the kernel.
+
+    Virtualization events such as traps are not handled by the SK but instead
+    reflected to components which enables the realization of a kernel with low
+    complexity.
    </text>
+   <section id="overview_policy" label="Configuration" priority="0">
+    <text priority="0">
+     This section gives a short description of a Muen system policy and its elements
+     as well as how it relates to the kernel. A detailed description of the Muen
+     System Specification can be found in the corresponding document
+     \cite{muen:system-spec}.
+    </text>
+   </section>
+   <section id="overview_scheduling" label="Scheduling" priority="0">
+    <text priority="0">
+     This section gives an overview of the scheduler and how Muen supports
+     Multicore processors.
+    </text>
+   </section>
+   <section id="overview_events" label="Event handling" priority="0">
+    <text priority="0">
+     This section gives a description of the event mechanism and how the kernel
+     handles them.
+    </text>
+   </section>
   </section>
  </section>
 

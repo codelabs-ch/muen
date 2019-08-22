@@ -35,7 +35,7 @@ is
    --D switches. They are configured according to the scheduling plans
    --D specified in the system policy.
    --D They are located in the global data section and thus accessible to all
-   --D CPU cores.
+   --D CPU cores. Data consistency is established via atomic access.
    Global_Minor_Frame_Barriers : Minor_Frame_Barriers_Array
    with
       Volatile,
@@ -46,7 +46,8 @@ is
    --D @Interface
    --D The all CPU barrier is used to synchronize all CPU cores, i.e. during
    --D boot and on major frame switches. It is located in the global data
-   --D section and thus globally accessible to all CPU cores.
+   --D section and thus globally accessible to all CPU cores. Data consistency
+   --D is established via atomic access.
    Global_All_Barrier : Barriers.Sense_Barrier_Type
    with
       Async_Readers,

@@ -40,7 +40,7 @@ is
 
    --D @Interface
    --D Index of next free crash audit dump slot. It can be read and written by
-   --D all CPUs. It is accessed atomically.
+   --D all CPUs. Data consistency is established via atomic access.
    Global_Next_Slot : Positive := Positive'First
    with
       Volatile,

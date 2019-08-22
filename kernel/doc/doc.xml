@@ -4,6 +4,7 @@
 
  <latex_preamble>
   \usepackage{acronym}
+  \usepackage{pgfgantt}
 
   \begin{tikzfadingfrompicture}[name=flow fade]
    \shade[left color=transparent!0,
@@ -88,8 +89,94 @@
    </section>
    <section id="overview_scheduling" label="Scheduling" priority="0">
     <text priority="0">
-     This section gives an overview of the scheduler and how Muen supports
-     Multicore processors.
+     This section presents the design and operation of the Muen kernel scheduler
+     and the chosen scheduling algorithm.
+
+     Scheduling is defined as the process of selecting a subject and giving it
+     access to system resources for a certain amount of time.  The main resource
+     is processor time, which enables a subject to execute instructions and
+     perform its task.
+
+     A key objective of the scheduler is to provide temporal isolation by
+     preventing any interference between subjects. To achieve this, scheduling
+     is done in a fixed, cyclic and preemptive manner according to a plan
+     specified in the system policy.
+
+     Subjects are executed for a fixed amount of time, before being forcefully
+     preempted by the scheduler. Preemption means that regardless of what
+     operations a subject is currently performing, its execution is suspended
+     when the allotted time quantum has been consumed. After a subject has been
+     suspended, the scheduler executes the next subject for a given amount of
+     time.
+
+     Scheduling information is declared in a \emph{scheduling plan}. Such a plan
+     is part of the policy and specifies in what order subjects are executed on
+     which logical CPU and for how long (see \ref{Skp.Scheduling}). The task of
+     the scheduler is to enforce a given scheduling regime.
+
+     A scheduling plan is specified in terms of frames. A \emph{major frame}
+     consists of a sequence of minor frames. When the end of a major frame is
+     reached, the scheduler starts over from the beginning and uses the first
+     minor frame in a cyclic fashion. This means that major frames are
+     repetitive. A \emph{minor frame} specifies a subject and a precise amount
+     of time. This information is directly applied and enforced by the scheduler.
+
+     Figure \ref{fig:example-major-frame} illustrates the structure of a major
+     frame.  The major frame consists of four minor frames. Minor frame 2 has
+     twice the amount of ticks than the other minor frames, which have identical
+     length. Time progresses on the horizontal axis from left to right.
+
+     When the major frame starts, subject 1 is scheduled for the length of minor
+     frame 1, followed by a switch to subject 2. After that the two subjects are
+     again scheduled in alternating fashion.
+
+     \begin{figure}[ht]
+      \centering
+      \input{graph_major_frame}
+      \caption{Example major frame}
+      \label{fig:example-major-frame}
+     \end{figure}
+
+     On systems with multiple logical CPUs, a scheduling plan must specify a
+     sequence of minor frames for each processor core. For any given major
+     frame, the sum of all minor frame time slices of a major frame must amount
+     to the same time duration. In order for the cores to not run out of sync,
+     all CPUs synchronize by means of a barrier prior to starting a new major
+     frame. Additionally, CPUs that switch minor frames at the same time also
+     synchronize the execution of the next minor frame.
+
+     An example of a scheduling plan for multiple logical CPUs is depicted in
+     figure \ref{fig:example-scheduling-plan}. It illustrates a system with two
+     logical CPUs that execute various subjects indicated by different colors.
+
+     \begin{figure}[ht]
+      \centering
+      \input{graph_scheduling_plan}
+      \caption{Example scheduling plan}
+      \label{fig:example-scheduling-plan}
+     \end{figure}
+
+     CPU0 is executing the same subject for the whole duration of the major
+     frame. This could for example be the $\tau$0 subject executing on the
+     bootstrap processor (BSP). The second CPU is executing two subjects (blue
+     and green) in alternating order. As can be seen, subject green is granted
+     more CPU cycles than subject blue. All CPUs of the system wait on a barrier
+     at the beginning of a new major frame.  This guarantees that all logical
+     CPUs of a system are in-sync when major frames change.
+
+     Since a system performs diverse tasks with different resource requirements,
+     there is a need for some flexibility with regards to scheduling. To provide
+     this degree of freedom while keeping the kernel complexity low, multiple
+     scheduling plans can be specified in the system policy. By defining a
+     distinct plan for each anticipated workload in the policy, the scheduling
+     regimes are fixed at integration time.
+
+     The privileged subject $\tau$0 is allowed to elect and activate one of the
+     scheduling plans. A global variable termed \emph{major frame index}
+     designates the currently active scheduling plan (see
+     \ref{SK.Tau0_Interface.New_Major}). Its value is exclusively written by
+     the BSP while it is used by all cores to determine the currently active
+     major frame.
     </text>
    </section>
    <section id="overview_events" label="Event handling" priority="0">

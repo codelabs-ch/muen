@@ -87,6 +87,25 @@
      \cite{muen:system-spec}.
     </text>
    </section>
+   <section id="overview_operation" label="Kernel Operation" priority="0">
+    <text priority="0">
+     The Muen kernel has two main entry points: system initialization and the
+     scheduler loop. Upon start of a system the kernel enables IA32-e paging and
+     transitions into VMX root-mode. After setting up the interrupt controllers
+     and IOMMU, the execution of the initial subject is performed via VM-entry.
+     On VM-Exit the hardware invokes the scheduler subprogram since it has been
+     set in the subject VMCS data structure. After handling the exit condition,
+     execution of the next subject is started by performing a VM-entry. The
+     kernel control-flow is illustrated by figure \ref{fig:kernel-operation}.
+
+     \begin{figure}[h]
+      \centering
+      \input{graph_operation}
+      \caption{Kernel control-flow}
+      \label{fig:kernel-operation}
+     \end{figure}
+    </text>
+   </section>
    <section id="overview_scheduling" label="Scheduling" priority="0">
     <text priority="0">
      This section presents the design and operation of the Muen kernel scheduler

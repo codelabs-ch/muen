@@ -317,6 +317,17 @@
     isolation, DMA and Interrupt remapping.
    </text>
   </section>
+  <section id="kernel_devs_timer" label="Timer" priority="0">
+   <text priority="0">
+    Muen uses the VMX-preemption timer as the timing source to realize
+    preemption of subjects when a minor frame expires. It is a per-CPU timer,
+    which is programmed by writing a countdown value in the corresponding VMCS
+    field. In VMX non-root mode, the VMX-preemption timer counts down at a rate
+    proportional to the TSC and causes a VM-exit when the counter reaches zero.
+    For further documentation see Intel SDM Volume 3C, "25.5.1 VMX-Preemption
+    Timer".
+   </text>
+  </section>
   <section id="kernel_devs_debug" label="Diagnostics" priority="0">
    <text priority="0">
     This section describes how the kernel debug build uses a serial I/O device

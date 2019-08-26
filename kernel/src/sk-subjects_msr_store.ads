@@ -37,7 +37,8 @@ is
 
 private
 
-   --  MSR-store area entry type, see Intel SDM Vol. 3C, table 24-11.
+   --  MSR-store area entry type, see Intel SDM Vol. 3C, "24.7.2
+   --  VM-Exit Controls for MSRs".
    type MSR_Entry_Type is record
       Index    : SK.Word32;
       Reserved : SK.Word32;
@@ -53,7 +54,7 @@ private
    end record;
 
    --  Maximum number of MSR entries is currently 32, see Intel SDM Vol. 3C,
-   --  section 24.7.8.
+   --  "24.7.2 VM-Exit Controls for MSRs".
    type MSR_Entry_Range is range 1 .. 32;
 
    type MSR_Storage_Table is array (MSR_Entry_Range) of MSR_Entry_Type;

@@ -37,7 +37,8 @@ is
    SEL_KERN_DATA : constant := 16#10#;
    SEL_TSS       : constant := 16#18#;
 
-   --  VMCS region format, see Intel SDM Vol. 3C, section 24.2.
+   --  VMCS region format, see Intel SDM Vol. 3C, "24.2 Format of the VMCS
+   --  Region".
    type VMCS_Header_Type is record
       Revision_ID     : SK.Word32;
       Abort_Indicator : SK.Word32;
@@ -511,7 +512,8 @@ is
 
       Clear (VMCS_Address => VMCS_Address);
 
-      --  MSR IA32_VMX_BASIC definition, see Intel SDM Vol. 3C, appendix A.1.
+      --  MSR IA32_VMX_BASIC definition, see Intel SDM Vol. 3D, "A.1 Basic VMX
+      --  Information".
 
       CPU.Get_MSR (Register => Constants.IA32_VMX_BASIC,
                    Low      => Rev_ID,

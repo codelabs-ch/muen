@@ -31,10 +31,10 @@ is
    MSR_X2APIC_SVR : constant := 16#80f#;
    MSR_X2APIC_ICR : constant := 16#830#;
 
-   --  See Intel SDM, Vol. 3A, section 10.4.4.
+   --  See Intel SDM Vol. 3A, "10.4.4 Local APIC Status and Location"
    APIC_BSP_FLAG : constant := 8;
 
-   --  See Intel SDM, Vol. 3A, section 10.6.1.
+   --  See Intel SDM Vol. 3A, "10.6.1 Interrupt Command Register (ICR)"
    Ipi_Init  : constant := 16#0500#;
    Ipi_Start : constant := 16#4601#;
 

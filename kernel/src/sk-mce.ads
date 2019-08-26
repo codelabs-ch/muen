@@ -37,7 +37,7 @@ is
       Post   => (if Is_Valid then Valid_State);
 
    --  The procedure implements the machine-check initialization as described
-   --  in Intel SDM Vol. 3B, section 15.8.
+   --  in Intel SDM Vol. 3B, "15.8 Machine-Check Initialization".
    procedure Enable
    with
       Global  => (Input  => State,

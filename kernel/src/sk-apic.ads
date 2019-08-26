@@ -31,7 +31,7 @@ is
       Depends => (X86_64.State =>+ null);
 
    --  Startup AP processors by sending INIT-SIPI-SIPI IPI sequence, see Intel
-   --  SDM 3A chapter 8.4.4.
+   --  SDM Vol. 3A, "8.4.4 MP Initialization Example".
    procedure Start_AP_Processors
    with
       Global  => (In_Out => X86_64.State),

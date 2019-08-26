@@ -19,7 +19,8 @@
 package SK.Task_State
 is
 
-   --  Task-State Segment (TSS), see Intel SDM Vol. 3A, chapter 7.7.
+   --  Task-State Segment (TSS), see Intel SDM Vol. 3A, "7.7
+   --  Task Management in 64-bit Mode".
    type TSS_Type is private;
 
    Null_TSS : constant TSS_Type;

@@ -19,7 +19,8 @@
 package SK.Descriptors
 is
 
-   --  Interrupt/Trap gate descriptor, see Intel SDM Vol. 3A, chapter 6.14.1.
+   --  Interrupt/Trap gate descriptor, see Intel SDM Vol. 3A, "6.14.1 64-Bit
+   --  Mode IDT".
    type Gate_Type is record
       Offset_15_00     : SK.Word16;
       Segment_Selector : SK.Word16;
@@ -36,7 +37,8 @@ is
    --  The ISR array type stores addresses of Interrupt Service Routines.
    type ISR_Array is array (Vector_Range range <>) of SK.Word64;
 
-   --  Interrupt descriptor table, see Intel SDM Vol. 3A, chapter 6.10.
+   --  Interrupt descriptor table, see Intel SDM Vol. 3A, "6.10 Interrupt
+   --  Descriptor Table (IDT)".
    type IDT_Type is array (Vector_Range range <>) of Gate_Type;
 
    --  Setup IDT using the given ISR addresses and IST index. The IST

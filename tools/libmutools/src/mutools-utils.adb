@@ -131,7 +131,9 @@ is
       Result : Boolean;
    begin
 
-      --  Reference: Intel SDM Vol. 3C, section 26.3.2.1 and section 27.3.1.
+      --  Reference: Intel SDM Vol. 3C, "26.3.2.1 Loading Guest Control
+      --  Registers, Debug Registers, and MSRs" and Intel SDM Vol. 3C, "27.3.1
+      --  Saving Control Registers, Debug Registers, and MSRs".
 
       case MSR is
          when IA32_SYSENTER_CS

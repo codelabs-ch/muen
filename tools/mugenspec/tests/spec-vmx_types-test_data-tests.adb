@@ -34,7 +34,7 @@ package body Spec.VMX_Types.Test_Data.Tests is
    procedure Test_Get_Pin_Controls_725b92 (Gnattest_T : in out Test) renames Test_Get_Pin_Controls;
 --  id:2.2/725b929d399e5a1c/Get_Pin_Controls/1/0/
    procedure Test_Get_Pin_Controls (Gnattest_T : in out Test) is
-   --  spec-vmx_types.ads:37:4:Get_Pin_Controls
+   --  spec-vmx_types.ads:38:4:Get_Pin_Controls
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -78,7 +78,7 @@ package body Spec.VMX_Types.Test_Data.Tests is
    procedure Test_Get_Proc_Controls_4f4761 (Gnattest_T : in out Test) renames Test_Get_Proc_Controls;
 --  id:2.2/4f4761031b17916f/Get_Proc_Controls/1/0/
    procedure Test_Get_Proc_Controls (Gnattest_T : in out Test) is
-   --  spec-vmx_types.ads:75:4:Get_Proc_Controls
+   --  spec-vmx_types.ads:76:4:Get_Proc_Controls
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -124,7 +124,7 @@ package body Spec.VMX_Types.Test_Data.Tests is
    procedure Test_Get_Proc2_Controls_d0b89f (Gnattest_T : in out Test) renames Test_Get_Proc2_Controls;
 --  id:2.2/d0b89fb21b402084/Get_Proc2_Controls/1/0/
    procedure Test_Get_Proc2_Controls (Gnattest_T : in out Test) is
-   --  spec-vmx_types.ads:122:4:Get_Proc2_Controls
+   --  spec-vmx_types.ads:123:4:Get_Proc2_Controls
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -162,7 +162,7 @@ package body Spec.VMX_Types.Test_Data.Tests is
    procedure Test_Get_Entry_Controls_bde183 (Gnattest_T : in out Test) renames Test_Get_Entry_Controls;
 --  id:2.2/bde1831ce58d7fe3/Get_Entry_Controls/1/0/
    procedure Test_Get_Entry_Controls (Gnattest_T : in out Test) is
-   --  spec-vmx_types.ads:155:4:Get_Entry_Controls
+   --  spec-vmx_types.ads:156:4:Get_Entry_Controls
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -200,7 +200,7 @@ package body Spec.VMX_Types.Test_Data.Tests is
    procedure Test_Get_Exit_Controls_779aa6 (Gnattest_T : in out Test) renames Test_Get_Exit_Controls;
 --  id:2.2/779aa60f8679631c/Get_Exit_Controls/1/0/
    procedure Test_Get_Exit_Controls (Gnattest_T : in out Test) is
-   --  spec-vmx_types.ads:183:4:Get_Exit_Controls
+   --  spec-vmx_types.ads:184:4:Get_Exit_Controls
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -238,7 +238,7 @@ package body Spec.VMX_Types.Test_Data.Tests is
    procedure Test_Get_CR0_a27155 (Gnattest_T : in out Test) renames Test_Get_CR0;
 --  id:2.2/a2715543face5b96/Get_CR0/1/0/
    procedure Test_Get_CR0 (Gnattest_T : in out Test) is
-   --  spec-vmx_types.ads:213:4:Get_CR0
+   --  spec-vmx_types.ads:216:4:Get_CR0
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -276,7 +276,7 @@ package body Spec.VMX_Types.Test_Data.Tests is
    procedure Test_Get_CR4_5f36b7 (Gnattest_T : in out Test) renames Test_Get_CR4;
 --  id:2.2/5f36b7a10eb73457/Get_CR4/1/0/
    procedure Test_Get_CR4 (Gnattest_T : in out Test) is
-   --  spec-vmx_types.ads:255:4:Get_CR4
+   --  spec-vmx_types.ads:259:4:Get_CR4
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -314,7 +314,7 @@ package body Spec.VMX_Types.Test_Data.Tests is
    procedure Test_Get_Exceptions_fe16dd (Gnattest_T : in out Test) renames Test_Get_Exceptions;
 --  id:2.2/fe16dd3e82a9e7f0/Get_Exceptions/1/0/
    procedure Test_Get_Exceptions (Gnattest_T : in out Test) is
-   --  spec-vmx_types.ads:304:4:Get_Exceptions
+   --  spec-vmx_types.ads:309:4:Get_Exceptions
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

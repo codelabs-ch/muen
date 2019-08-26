@@ -34,7 +34,7 @@ package body Msrbm.MSRs.Test_Data.Tests is
    procedure Test_Allow_MSRs_e209a8 (Gnattest_T : in out Test) renames Test_Allow_MSRs;
 --  id:2.2/e209a8771f6aa99f/Allow_MSRs/1/0/
    procedure Test_Allow_MSRs (Gnattest_T : in out Test) is
-   --  msrbm-msrs.ads:42:4:Allow_MSRs
+   --  msrbm-msrs.ads:43:4:Allow_MSRs
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -83,7 +83,7 @@ package body Msrbm.MSRs.Test_Data.Tests is
    procedure Test_To_Stream_a9353e (Gnattest_T : in out Test) renames Test_To_Stream;
 --  id:2.2/a9353e0af3662022/To_Stream/1/0/
    procedure Test_To_Stream (Gnattest_T : in out Test) is
-   --  msrbm-msrs.ads:54:4:To_Stream
+   --  msrbm-msrs.ads:55:4:To_Stream
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

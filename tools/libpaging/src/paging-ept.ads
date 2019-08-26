@@ -25,7 +25,7 @@ package Paging.EPT
 is
 
    --  Implementation of EPT paging structures, as specified by Intel SDM
-   --  Vol. 3C, section 28.3.
+   --  Vol. 3C, "28.2 The Extended Page Table Mechanism (EPT)".
 
    procedure Serialize_PML4
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;

@@ -21,7 +21,8 @@ with Interfaces;
 package Paging
 is
 
-   --  Memory caching type, see Intel SDM Vol. 3A, section 11.3.
+   --  Memory caching type, see Intel SDM Vol. 3A, "11.3 Methods of Caching
+   --  Available".
    type Caching_Type is (UC, WC, WT, WP, WB);
 
    --  Supported paging modes.
@@ -50,7 +51,7 @@ is
    Page_Size      : constant := 2 ** 12;
 
    --  Return the paging structure indexes for a given linear address. see
-   --  Intel SDM Vol. 3A, page 4-22:
+   --  Intel SDM Vol. 3A, "4.5 4-Level Paging", Page 4-22.
    --   * PML4 index is formed by bits 39 .. 47
    --   * PDPT index is formed by bits 30 .. 38
    --   * PD   index is formed by bits 21 .. 29

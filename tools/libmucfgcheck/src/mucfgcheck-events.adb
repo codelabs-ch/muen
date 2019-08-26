@@ -153,7 +153,8 @@ is
 
       type Reserved_IDs_Access is access constant Reserved_IDs_Type;
 
-      --  Reserved VMX exit IDs, see Intel SDM Vol. 3C, appendix C.
+      --  Reserved VMX exit IDs, see Intel SDM Vol. 3D, "Appendix C VMX Basic
+      --  Exit Reasons".
       Vmx_Exit_Reserved : aliased constant Reserved_IDs_Type := (35, 38, 42);
 
       Reserved_IDs : constant array (Mutools.Types.Event_Group_Type)

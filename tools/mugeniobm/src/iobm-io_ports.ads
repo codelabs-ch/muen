@@ -25,8 +25,9 @@ with Mutools.Constants;
 package Iobm.IO_Ports
 is
 
-   --  I/O bitmap as specified by Intel SDM Vol. 3C, section 24.6.4. This type
-   --  encompasses the whole IO port range (bitmap A & B).
+   --  I/O bitmap as specified by Intel SDM Vol. 3C, "24.6.4 I/O-Bitmap
+   --  Addresses". This type encompasses the whole IO port range
+   --  (bitmap A & B).
    type IO_Bitmap_Type is private;
 
    Null_IO_Bitmap : constant IO_Bitmap_Type;

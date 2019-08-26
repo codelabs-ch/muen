@@ -34,7 +34,6 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
    procedure Test_CPU_Element_Count_9baa01 (Gnattest_T : in out Test) renames Test_CPU_Element_Count;
 --  id:2.2/9baa01b30bb837f8/CPU_Element_Count/1/0/
    procedure Test_CPU_Element_Count (Gnattest_T : in out Test) is
-   --  mucfgcheck-scheduling.ads:25:4:CPU_Element_Count
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -76,7 +75,6 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
    procedure Test_Subject_References_8828a8 (Gnattest_T : in out Test) renames Test_Subject_References;
 --  id:2.2/8828a835f8aeaa87/Subject_References/1/0/
    procedure Test_Subject_References (Gnattest_T : in out Test) is
-   --  mucfgcheck-scheduling.ads:28:4:Subject_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -115,7 +113,6 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
    procedure Test_Subject_CPU_Affinity_49d212 (Gnattest_T : in out Test) renames Test_Subject_CPU_Affinity;
 --  id:2.2/49d2127dae4039ab/Subject_CPU_Affinity/1/0/
    procedure Test_Subject_CPU_Affinity (Gnattest_T : in out Test) is
-   --  mucfgcheck-scheduling.ads:31:4:Subject_CPU_Affinity
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -154,7 +151,6 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
    procedure Test_Major_Frame_Ticks_88421f (Gnattest_T : in out Test) renames Test_Major_Frame_Ticks;
 --  id:2.2/88421f8587a3f303/Major_Frame_Ticks/1/0/
    procedure Test_Major_Frame_Ticks (Gnattest_T : in out Test) is
-   --  mucfgcheck-scheduling.ads:34:4:Major_Frame_Ticks
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -198,7 +194,6 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
    procedure Test_Barrier_ID_f855f1 (Gnattest_T : in out Test) renames Test_Barrier_ID;
 --  id:2.2/f855f1f17e2f5819/Barrier_ID/1/0/
    procedure Test_Barrier_ID (Gnattest_T : in out Test) is
-   --  mucfgcheck-scheduling.ads:37:4:Barrier_ID
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -263,7 +258,6 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
    procedure Test_Barrier_Size_dba514 (Gnattest_T : in out Test) renames Test_Barrier_Size;
 --  id:2.2/dba514408c2c4e9a/Barrier_Size/1/0/
    procedure Test_Barrier_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-scheduling.ads:40:4:Barrier_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -308,7 +302,6 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
    procedure Test_Minor_Frame_Sync_Points_cb28c8 (Gnattest_T : in out Test) renames Test_Minor_Frame_Sync_Points;
 --  id:2.2/cb28c86f203faa1a/Minor_Frame_Sync_Points/1/0/
    procedure Test_Minor_Frame_Sync_Points (Gnattest_T : in out Test) is
-   --  mucfgcheck-scheduling.ads:44:4:Minor_Frame_Sync_Points
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -376,7 +369,6 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
    procedure Test_Minor_Frame_Barrier_Refs_7035a5 (Gnattest_T : in out Test) renames Test_Minor_Frame_Barrier_Refs;
 --  id:2.2/7035a54e1ad8b7e4/Minor_Frame_Barrier_Refs/1/0/
    procedure Test_Minor_Frame_Barrier_Refs (Gnattest_T : in out Test) is
-   --  mucfgcheck-scheduling.ads:47:4:Minor_Frame_Barrier_Refs
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

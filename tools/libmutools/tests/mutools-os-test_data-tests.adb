@@ -34,7 +34,6 @@ package body Mutools.OS.Test_Data.Tests is
    procedure Test_Execute_be370a (Gnattest_T : in out Test) renames Test_Execute;
 --  id:2.2/be370a9becf523af/Execute/1/0/
    procedure Test_Execute (Gnattest_T : in out Test) is
-   --  mutools-os.ads:24:4:Execute
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

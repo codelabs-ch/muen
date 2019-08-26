@@ -34,7 +34,6 @@ package body VTd.Generator.Test_Data.Tests is
    procedure Test_Write_23ab15 (Gnattest_T : in out Test) renames Test_Write;
 --  id:2.2/23ab1562ae4604fa/Write/1/0/
    procedure Test_Write (Gnattest_T : in out Test) is
-   --  vtd-generator.ads:25:4:Write
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -97,7 +96,6 @@ package body VTd.Generator.Test_Data.Tests is
    procedure Test_Write_Root_Table_f7d782 (Gnattest_T : in out Test) renames Test_Write_Root_Table;
 --  id:2.2/f7d782ff599d6081/Write_Root_Table/1/0/
    procedure Test_Write_Root_Table (Gnattest_T : in out Test) is
-   --  vtd-generator.ads:33:4:Write_Root_Table
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -126,7 +124,6 @@ package body VTd.Generator.Test_Data.Tests is
    procedure Test_Write_Context_Tables_129b9c (Gnattest_T : in out Test) renames Test_Write_Context_Tables;
 --  id:2.2/129b9c48fba5232a/Write_Context_Tables/1/0/
    procedure Test_Write_Context_Tables (Gnattest_T : in out Test) is
-   --  vtd-generator.ads:39:4:Write_Context_Tables
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -160,7 +157,6 @@ package body VTd.Generator.Test_Data.Tests is
    procedure Test_Write_Domain_Pagetables_9a4dfd (Gnattest_T : in out Test) renames Test_Write_Domain_Pagetables;
 --  id:2.2/9a4dfd4af316ec97/Write_Domain_Pagetables/1/0/
    procedure Test_Write_Domain_Pagetables (Gnattest_T : in out Test) is
-   --  vtd-generator.ads:45:4:Write_Domain_Pagetables
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -194,7 +190,6 @@ package body VTd.Generator.Test_Data.Tests is
    procedure Test_Write_IR_Table_ddfa42 (Gnattest_T : in out Test) renames Test_Write_IR_Table;
 --  id:2.2/ddfa42fd934de5cb/Write_IR_Table/1/0/
    procedure Test_Write_IR_Table (Gnattest_T : in out Test) is
-   --  vtd-generator.ads:51:4:Write_IR_Table
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -34,7 +34,6 @@ package body Merge.Checks.Test_Data.Tests is
    procedure Test_Required_Config_Values_4d8830 (Gnattest_T : in out Test) renames Test_Required_Config_Values;
 --  id:2.2/4d883036bb1806e5/Required_Config_Values/1/0/
    procedure Test_Required_Config_Values (Gnattest_T : in out Test) is
-   --  merge-checks.ads:25:4:Required_Config_Values
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

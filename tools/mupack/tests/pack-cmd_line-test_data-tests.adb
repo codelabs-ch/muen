@@ -34,7 +34,6 @@ package body Pack.Cmd_Line.Test_Data.Tests is
    procedure Test_Init_a69a58 (Gnattest_T : in out Test) renames Test_Init;
 --  id:2.2/a69a5871ab5eef40/Init/1/0/
    procedure Test_Init (Gnattest_T : in out Test) is
-   --  pack-cmd_line.ads:27:4:Init
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -154,7 +153,6 @@ package body Pack.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Policy_aac0d6 (Gnattest_T : in out Test) renames Test_Get_Policy;
 --  id:2.2/aac0d695aae58756/Get_Policy/1/0/
    procedure Test_Get_Policy (Gnattest_T : in out Test) is
-   --  pack-cmd_line.ads:30:4:Get_Policy
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -177,7 +175,6 @@ package body Pack.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Output_Dir_c3e9c8 (Gnattest_T : in out Test) renames Test_Get_Output_Dir;
 --  id:2.2/c3e9c87208c742d1/Get_Output_Dir/1/0/
    procedure Test_Get_Output_Dir (Gnattest_T : in out Test) is
-   --  pack-cmd_line.ads:33:4:Get_Output_Dir
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -200,7 +197,6 @@ package body Pack.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Output_Imgname_1df5ca (Gnattest_T : in out Test) renames Test_Get_Output_Imgname;
 --  id:2.2/1df5cafd876b765b/Get_Output_Imgname/1/0/
    procedure Test_Get_Output_Imgname (Gnattest_T : in out Test) is
-   --  pack-cmd_line.ads:36:4:Get_Output_Imgname
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -223,7 +219,6 @@ package body Pack.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Input_Dir_da1404 (Gnattest_T : in out Test) renames Test_Get_Input_Dir;
 --  id:2.2/da14045cb4f1843e/Get_Input_Dir/1/0/
    procedure Test_Get_Input_Dir (Gnattest_T : in out Test) is
-   --  pack-cmd_line.ads:39:4:Get_Input_Dir
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -246,7 +241,6 @@ package body Pack.Cmd_Line.Test_Data.Tests is
    procedure Test_Is_Dry_Run_7c64fe (Gnattest_T : in out Test) renames Test_Is_Dry_Run;
 --  id:2.2/7c64fe6245c86269/Is_Dry_Run/1/0/
    procedure Test_Is_Dry_Run (Gnattest_T : in out Test) is
-   --  pack-cmd_line.ads:42:4:Is_Dry_Run
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

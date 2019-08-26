@@ -34,7 +34,6 @@ package body Mutools.System_Config.Test_Data.Tests is
    procedure Test_Has_Boolean_89c551 (Gnattest_T : in out Test) renames Test_Has_Boolean;
 --  id:2.2/89c551e2c6b63d90/Has_Boolean/1/0/
    procedure Test_Has_Boolean (Gnattest_T : in out Test) is
-   --  mutools-system_config.ads:25:4:Has_Boolean
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -64,7 +63,6 @@ package body Mutools.System_Config.Test_Data.Tests is
    procedure Test_Has_Integer_0bbd6e (Gnattest_T : in out Test) renames Test_Has_Integer;
 --  id:2.2/0bbd6e7b6d7c7489/Has_Integer/1/0/
    procedure Test_Has_Integer (Gnattest_T : in out Test) is
-   --  mutools-system_config.ads:31:4:Has_Integer
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -94,7 +92,6 @@ package body Mutools.System_Config.Test_Data.Tests is
    procedure Test_Has_String_06e83f (Gnattest_T : in out Test) renames Test_Has_String;
 --  id:2.2/06e83fa4dda1248c/Has_String/1/0/
    procedure Test_Has_String (Gnattest_T : in out Test) is
-   --  mutools-system_config.ads:37:4:Has_String
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -124,7 +121,6 @@ package body Mutools.System_Config.Test_Data.Tests is
    procedure Test_Has_Value_b8a40a (Gnattest_T : in out Test) renames Test_Has_Value;
 --  id:2.2/b8a40a3e1649e5a6/Has_Value/1/0/
    procedure Test_Has_Value (Gnattest_T : in out Test) is
-   --  mutools-system_config.ads:43:4:Has_Value
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -157,7 +153,6 @@ package body Mutools.System_Config.Test_Data.Tests is
    procedure Test_Get_Value_d13e21 (Gnattest_T : in out Test) renames Test_1_Get_Value;
 --  id:2.2/d13e2143a0c1f788/Get_Value/1/0/
    procedure Test_1_Get_Value (Gnattest_T : in out Test) is
-   --  mutools-system_config.ads:50:4:Get_Value
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -206,7 +201,6 @@ package body Mutools.System_Config.Test_Data.Tests is
    procedure Test_Get_Value_2afad1 (Gnattest_T : in out Test) renames Test_2_Get_Value;
 --  id:2.2/2afad142bea106b4/Get_Value/0/0/
    procedure Test_2_Get_Value (Gnattest_T : in out Test) is
-   --  mutools-system_config.ads:57:4:Get_Value
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -246,7 +240,6 @@ package body Mutools.System_Config.Test_Data.Tests is
    procedure Test_Get_Value_4f8a85 (Gnattest_T : in out Test) renames Test_3_Get_Value;
 --  id:2.2/4f8a8505e36090b7/Get_Value/0/0/
    procedure Test_3_Get_Value (Gnattest_T : in out Test) is
-   --  mutools-system_config.ads:64:4:Get_Value
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -295,7 +288,6 @@ package body Mutools.System_Config.Test_Data.Tests is
    procedure Test_Get_Raw_Value_e1d557 (Gnattest_T : in out Test) renames Test_Get_Raw_Value;
 --  id:2.2/e1d557913a4e751b/Get_Raw_Value/1/0/
    procedure Test_Get_Raw_Value (Gnattest_T : in out Test) is
-   --  mutools-system_config.ads:71:4:Get_Raw_Value
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -345,7 +337,6 @@ package body Mutools.System_Config.Test_Data.Tests is
    procedure Test_Set_Value_ae6688 (Gnattest_T : in out Test) renames Test_Set_Value;
 --  id:2.2/ae6688d2e29689e0/Set_Value/1/0/
    procedure Test_Set_Value (Gnattest_T : in out Test) is
-   --  mutools-system_config.ads:78:4:Set_Value
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

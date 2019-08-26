@@ -34,7 +34,6 @@ package body Mutools.Match.Test_Data.Tests is
    procedure Test_Is_Valid_Reference_f00842 (Gnattest_T : in out Test) renames Test_Is_Valid_Reference;
 --  id:2.2/f008425ad8c5c86b/Is_Valid_Reference/1/0/
    procedure Test_Is_Valid_Reference (Gnattest_T : in out Test) is
-   --  mutools-match.ads:26:4:Is_Valid_Reference
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -83,7 +82,6 @@ package body Mutools.Match.Test_Data.Tests is
    procedure Test_Is_Valid_Reference_Lparent_f5dc41 (Gnattest_T : in out Test) renames Test_Is_Valid_Reference_Lparent;
 --  id:2.2/f5dc4151d251e127/Is_Valid_Reference_Lparent/1/0/
    procedure Test_Is_Valid_Reference_Lparent (Gnattest_T : in out Test) is
-   --  mutools-match.ads:30:4:Is_Valid_Reference_Lparent
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -138,7 +136,6 @@ package body Mutools.Match.Test_Data.Tests is
    procedure Test_Is_Valid_Resource_Ref_8f959a (Gnattest_T : in out Test) renames Test_Is_Valid_Resource_Ref;
 --  id:2.2/8f959a1058e36438/Is_Valid_Resource_Ref/1/0/
    procedure Test_Is_Valid_Resource_Ref (Gnattest_T : in out Test) is
-   --  mutools-match.ads:37:4:Is_Valid_Resource_Ref
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

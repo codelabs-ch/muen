@@ -34,7 +34,6 @@ package body Mutools.Image.Test_Data.Tests is
    procedure Test_Add_File_ceb1f8 (Gnattest_T : in out Test) renames Test_Add_File;
 --  id:2.2/ceb1f8e14e3cc341/Add_File/1/0/
    procedure Test_Add_File (Gnattest_T : in out Test) is
-   --  mutools-image.ads:35:4:Add_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -136,7 +135,6 @@ package body Mutools.Image.Test_Data.Tests is
    procedure Test_Add_Pattern_e88c40 (Gnattest_T : in out Test) renames Test_Add_Pattern;
 --  id:2.2/e88c400cccfdc2ae/Add_Pattern/1/0/
    procedure Test_Add_Pattern (Gnattest_T : in out Test) is
-   --  mutools-image.ads:46:4:Add_Pattern
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -201,7 +199,6 @@ package body Mutools.Image.Test_Data.Tests is
    procedure Test_Get_Buffer_1ca9e7 (Gnattest_T : in out Test) renames Test_Get_Buffer;
 --  id:2.2/1ca9e7ea86ae2644/Get_Buffer/1/0/
    procedure Test_Get_Buffer (Gnattest_T : in out Test) is
-   --  mutools-image.ads:53:4:Get_Buffer
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -250,7 +247,6 @@ package body Mutools.Image.Test_Data.Tests is
    procedure Test_Write_3e3fc4 (Gnattest_T : in out Test) renames Test_Write;
 --  id:2.2/3e3fc46e9015a480/Write/1/0/
    procedure Test_Write (Gnattest_T : in out Test) is
-   --  mutools-image.ads:60:4:Write
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -272,7 +268,6 @@ package body Mutools.Image.Test_Data.Tests is
    procedure Test_Initialize_a0814a (Gnattest_T : in out Test) renames Test_Initialize;
 --  id:2.2/a0814a40b9f21c19/Initialize/1/0/
    procedure Test_Initialize (Gnattest_T : in out Test) is
-   --  mutools-image.ads:79:4:Initialize
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -298,7 +293,6 @@ package body Mutools.Image.Test_Data.Tests is
    procedure Test_Finalize_bc5f62 (Gnattest_T : in out Test) renames Test_Finalize;
 --  id:2.2/bc5f62846c8aef4a/Finalize/1/0/
    procedure Test_Finalize (Gnattest_T : in out Test) is
-   --  mutools-image.ads:82:4:Finalize
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

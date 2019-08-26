@@ -34,7 +34,6 @@ package body Expanders.Utils.Test_Data.Tests is
    procedure Test_Allocate_ceb92c (Gnattest_T : in out Test) renames Test_Allocate;
 --  id:2.2/ceb92c0fcf2b5351/Allocate/1/0/
    procedure Test_Allocate (Gnattest_T : in out Test) is
-   --  expanders-utils.ads:30:4:Allocate
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -76,7 +75,6 @@ package body Expanders.Utils.Test_Data.Tests is
    procedure Test_Allocate_Range_3f3623 (Gnattest_T : in out Test) renames Test_Allocate_Range;
 --  id:2.2/3f3623cda56b09d3/Allocate_Range/1/0/
    procedure Test_Allocate_Range (Gnattest_T : in out Test) is
-   --  expanders-utils.ads:38:4:Allocate_Range
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -166,7 +164,6 @@ package body Expanders.Utils.Test_Data.Tests is
    procedure Test_Reserve_Number_29180f (Gnattest_T : in out Test) renames Test_Reserve_Number;
 --  id:2.2/29180f23996359d7/Reserve_Number/1/0/
    procedure Test_Reserve_Number (Gnattest_T : in out Test) is
-   --  expanders-utils.ads:45:4:Reserve_Number
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -200,7 +197,6 @@ package body Expanders.Utils.Test_Data.Tests is
    procedure Test_Reserve_Numbers_a46fcf (Gnattest_T : in out Test) renames Test_Reserve_Numbers;
 --  id:2.2/a46fcff52807a761/Reserve_Numbers/1/0/
    procedure Test_Reserve_Numbers (Gnattest_T : in out Test) is
-   --  expanders-utils.ads:53:4:Reserve_Numbers
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

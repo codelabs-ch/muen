@@ -34,7 +34,6 @@ package body Alloc.Map.Map_Type_Test_Data.Map_Type_Tests is
    procedure Test_Insert_Device_Region_ec5f2d (Gnattest_T : in out Test_Map_Type) renames Test_Insert_Device_Region;
 --  id:2.2/ec5f2dabfa11e2ac/Insert_Device_Region/1/0/
    procedure Test_Insert_Device_Region (Gnattest_T : in out Test_Map_Type) is
-   --  alloc-map.ads:42:4:Insert_Device_Region
 --  end read only
 
       ----------------------------------------------------------------------
@@ -101,7 +100,6 @@ package body Alloc.Map.Map_Type_Test_Data.Map_Type_Tests is
    procedure Test_Insert_Empty_Region_67dfce (Gnattest_T : in out Test_Map_Type) renames Test_Insert_Empty_Region;
 --  id:2.2/67dfce28e061906f/Insert_Empty_Region/1/0/
    procedure Test_Insert_Empty_Region (Gnattest_T : in out Test_Map_Type) is
-   --  alloc-map.ads:50:4:Insert_Empty_Region
 --  end read only
 
       ----------------------------------------------------------------------
@@ -374,7 +372,6 @@ package body Alloc.Map.Map_Type_Test_Data.Map_Type_Tests is
    procedure Test_Allocate_Fixed_0265c4 (Gnattest_T : in out Test_Map_Type) renames Test_Allocate_Fixed;
 --  id:2.2/0265c4a1c3332ce9/Allocate_Fixed/1/0/
    procedure Test_Allocate_Fixed (Gnattest_T : in out Test_Map_Type) is
-   --  alloc-map.ads:59:4:Allocate_Fixed
 --  end read only
 
       ----------------------------------------------------------------------
@@ -661,7 +658,6 @@ package body Alloc.Map.Map_Type_Test_Data.Map_Type_Tests is
    procedure Test_Allocate_Variable_40ab71 (Gnattest_T : in out Test_Map_Type) renames Test_Allocate_Variable;
 --  id:2.2/40ab713e6fee4266/Allocate_Variable/1/0/
    procedure Test_Allocate_Variable (Gnattest_T : in out Test_Map_Type) is
-   --  alloc-map.ads:67:4:Allocate_Variable
 --  end read only
 
       ----------------------------------------------------------------------
@@ -822,7 +818,6 @@ package body Alloc.Map.Map_Type_Test_Data.Map_Type_Tests is
    procedure Test_Iterate_d75863 (Gnattest_T : in out Test_Map_Type) renames Test_Iterate;
 --  id:2.2/d7586358d3b827a9/Iterate/1/0/
    procedure Test_Iterate (Gnattest_T : in out Test_Map_Type) is
-   --  alloc-map.ads:77:4:Iterate
 --  end read only
    begin
       Assert (Condition => True,
@@ -837,7 +832,6 @@ package body Alloc.Map.Map_Type_Test_Data.Map_Type_Tests is
    procedure Test_Get_Region_33413c (Gnattest_T : in out Test_Map_Type) renames Test_Get_Region;
 --  id:2.2/33413c38c45924da/Get_Region/1/0/
    procedure Test_Get_Region (Gnattest_T : in out Test_Map_Type) is
-   --  alloc-map.ads:84:4:Get_Region
 --  end read only
       use type Ada.Strings.Unbounded.Unbounded_String;
       use type Interfaces.Unsigned_64;
@@ -887,7 +881,6 @@ package body Alloc.Map.Map_Type_Test_Data.Map_Type_Tests is
    procedure Test_Clear_88711b (Gnattest_T : in out Test_Map_Type) renames Test_Clear;
 --  id:2.2/88711b92a83fb6bc/Clear/1/0/
    procedure Test_Clear (Gnattest_T : in out Test_Map_Type) is
-   --  alloc-map.ads:90:4:Clear
 --  end read only
       use type Ada.Containers.Count_Type;
    begin
@@ -909,7 +902,6 @@ package body Alloc.Map.Map_Type_Test_Data.Map_Type_Tests is
    procedure Test_Reserve_5363d1 (Gnattest_T : in out Test_Map_Type) renames Test_Reserve;
 --  id:2.2/5363d11762bb0842/Reserve/1/0/
    procedure Test_Reserve (Gnattest_T : in out Test_Map_Type) is
-   --  alloc-map.ads:107:4:Reserve
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -927,7 +919,6 @@ package body Alloc.Map.Map_Type_Test_Data.Map_Type_Tests is
    procedure Test_Insert_New_Region_c95170 (Gnattest_T : in out Test_Map_Type) renames Test_Insert_New_Region;
 --  id:2.2/c9517067c2201e8a/Insert_New_Region/1/0/
    procedure Test_Insert_New_Region (Gnattest_T : in out Test_Map_Type) is
-   --  alloc-map.ads:115:4:Insert_New_Region
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

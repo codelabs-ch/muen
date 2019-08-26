@@ -34,7 +34,6 @@ package body Mucfgcheck.Files.Test_Data.Tests is
    procedure Test_Set_Input_Directory_400f2c (Gnattest_T : in out Test) renames Test_Set_Input_Directory;
 --  id:2.2/400f2c005681d9c3/Set_Input_Directory/1/0/
    procedure Test_Set_Input_Directory (Gnattest_T : in out Test) is
-   --  mucfgcheck-files.ads:27:4:Set_Input_Directory
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -55,7 +54,6 @@ package body Mucfgcheck.Files.Test_Data.Tests is
    procedure Test_Get_Input_Directory_e68eb2 (Gnattest_T : in out Test) renames Test_Get_Input_Directory;
 --  id:2.2/e68eb225be5fe66d/Get_Input_Directory/1/0/
    procedure Test_Get_Input_Directory (Gnattest_T : in out Test) is
-   --  mucfgcheck-files.ads:30:4:Get_Input_Directory
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -74,7 +72,6 @@ package body Mucfgcheck.Files.Test_Data.Tests is
    procedure Test_Files_Exist_00e851 (Gnattest_T : in out Test) renames Test_Files_Exist;
 --  id:2.2/00e8516a56d54bdf/Files_Exist/1/0/
    procedure Test_Files_Exist (Gnattest_T : in out Test) is
-   --  mucfgcheck-files.ads:33:4:Files_Exist
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -151,7 +148,6 @@ package body Mucfgcheck.Files.Test_Data.Tests is
    procedure Test_Files_Size_d33017 (Gnattest_T : in out Test) renames Test_Files_Size;
 --  id:2.2/d3301771bce21920/Files_Size/1/0/
    procedure Test_Files_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-files.ads:36:4:Files_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

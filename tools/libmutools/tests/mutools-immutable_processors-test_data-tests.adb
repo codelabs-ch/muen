@@ -34,7 +34,6 @@ package body Mutools.Immutable_Processors.Test_Data.Tests is
    procedure Test_Register_d8bf1e (Gnattest_T : in out Test) renames Test_Register;
 --  id:2.2/d8bf1e669c1b2aa4/Register/1/0/
    procedure Test_Register (Gnattest_T : in out Test) is
-   --  mutools-immutable_processors.ads:30:4:Register
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -53,7 +52,6 @@ package body Mutools.Immutable_Processors.Test_Data.Tests is
    procedure Test_Run_bf79dd (Gnattest_T : in out Test) renames Test_Run;
 --  id:2.2/bf79dde4c949577b/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
-   --  mutools-immutable_processors.ads:33:4:Run
 --  end read only
    begin
       Run (Data => Gnattest_T.Param.all);
@@ -70,7 +68,6 @@ package body Mutools.Immutable_Processors.Test_Data.Tests is
    procedure Test_Get_Count_1fbd7c (Gnattest_T : in out Test) renames Test_Get_Count;
 --  id:2.2/1fbd7c784b3d55c2/Get_Count/1/0/
    procedure Test_Get_Count (Gnattest_T : in out Test) is
-   --  mutools-immutable_processors.ads:36:4:Get_Count
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -88,7 +85,6 @@ package body Mutools.Immutable_Processors.Test_Data.Tests is
    procedure Test_Clear_4b4f85 (Gnattest_T : in out Test) renames Test_Clear;
 --  id:2.2/4b4f85da05a9b689/Clear/1/0/
    procedure Test_Clear (Gnattest_T : in out Test) is
-   --  mutools-immutable_processors.ads:39:4:Clear
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

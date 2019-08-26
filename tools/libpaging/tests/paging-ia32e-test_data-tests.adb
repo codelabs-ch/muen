@@ -34,7 +34,6 @@ package body Paging.IA32e.Test_Data.Tests is
    procedure Test_Serialize_PML4_2c71ff (Gnattest_T : in out Test) renames Test_Serialize_PML4;
 --  id:2.2/2c71ff1918c64f4a/Serialize_PML4/1/0/
    procedure Test_Serialize_PML4 (Gnattest_T : in out Test) is
-   --  paging-ia32e.ads:31:4:Serialize_PML4
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -73,7 +72,6 @@ package body Paging.IA32e.Test_Data.Tests is
    procedure Test_Serialize_PDPT_94a8de (Gnattest_T : in out Test) renames Test_Serialize_PDPT;
 --  id:2.2/94a8de34a628967f/Serialize_PDPT/1/0/
    procedure Test_Serialize_PDPT (Gnattest_T : in out Test) is
-   --  paging-ia32e.ads:36:4:Serialize_PDPT
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -113,7 +111,6 @@ package body Paging.IA32e.Test_Data.Tests is
    procedure Test_Serialize_PD_8965c8 (Gnattest_T : in out Test) renames Test_Serialize_PD;
 --  id:2.2/8965c843086bc1ea/Serialize_PD/1/0/
    procedure Test_Serialize_PD (Gnattest_T : in out Test) is
-   --  paging-ia32e.ads:41:4:Serialize_PD
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -153,7 +150,6 @@ package body Paging.IA32e.Test_Data.Tests is
    procedure Test_Serialize_PT_21f341 (Gnattest_T : in out Test) renames Test_Serialize_PT;
 --  id:2.2/21f3412381d84015/Serialize_PT/1/0/
    procedure Test_Serialize_PT (Gnattest_T : in out Test) is
-   --  paging-ia32e.ads:46:4:Serialize_PT
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -196,7 +192,6 @@ package body Paging.IA32e.Test_Data.Tests is
    procedure Test_Deserialze_PML4_Entry_9da287 (Gnattest_T : in out Test) renames Test_Deserialze_PML4_Entry;
 --  id:2.2/9da2878c857c6e24/Deserialze_PML4_Entry/1/0/
    procedure Test_Deserialze_PML4_Entry (Gnattest_T : in out Test) is
-   --  paging-ia32e.ads:51:4:Deserialze_PML4_Entry
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -239,7 +234,6 @@ package body Paging.IA32e.Test_Data.Tests is
    procedure Test_Deserialze_PDPT_Entry_f53807 (Gnattest_T : in out Test) renames Test_Deserialze_PDPT_Entry;
 --  id:2.2/f5380744c07dff21/Deserialze_PDPT_Entry/1/0/
    procedure Test_Deserialze_PDPT_Entry (Gnattest_T : in out Test) is
-   --  paging-ia32e.ads:56:4:Deserialze_PDPT_Entry
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -282,7 +276,6 @@ package body Paging.IA32e.Test_Data.Tests is
    procedure Test_Deserialze_PD_Entry_cdf777 (Gnattest_T : in out Test) renames Test_Deserialze_PD_Entry;
 --  id:2.2/cdf7771059204699/Deserialze_PD_Entry/1/0/
    procedure Test_Deserialze_PD_Entry (Gnattest_T : in out Test) is
-   --  paging-ia32e.ads:61:4:Deserialze_PD_Entry
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -325,7 +318,6 @@ package body Paging.IA32e.Test_Data.Tests is
    procedure Test_Deserialze_PT_Entry_3a3c51 (Gnattest_T : in out Test) renames Test_Deserialze_PT_Entry;
 --  id:2.2/3a3c5176bca7d21e/Deserialze_PT_Entry/1/0/
    procedure Test_Deserialze_PT_Entry (Gnattest_T : in out Test) is
-   --  paging-ia32e.ads:66:4:Deserialze_PT_Entry
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -374,7 +366,6 @@ package body Paging.IA32e.Test_Data.Tests is
    procedure Test_Cache_Mapping_c80d4a (Gnattest_T : in out Test) renames Test_Cache_Mapping;
 --  id:2.2/c80d4a6401bc7d6a/Cache_Mapping/1/0/
    procedure Test_Cache_Mapping (Gnattest_T : in out Test) is
-   --  paging-ia32e.ads:74:4:Cache_Mapping
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

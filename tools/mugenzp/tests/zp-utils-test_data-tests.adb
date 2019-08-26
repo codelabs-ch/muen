@@ -34,7 +34,6 @@ package body Zp.Utils.Test_Data.Tests is
    procedure Test_Create_e820_Map_f36a26 (Gnattest_T : in out Test) renames Test_Create_e820_Map;
 --  id:2.2/f36a2614086ebbe1/Create_e820_Map/1/0/
    procedure Test_Create_e820_Map (Gnattest_T : in out Test) is
-   --  zp-utils.ads:27:4:Create_e820_Map
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

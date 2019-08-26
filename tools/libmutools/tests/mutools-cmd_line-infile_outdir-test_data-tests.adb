@@ -34,7 +34,6 @@ package body Mutools.Cmd_Line.Infile_Outdir.Test_Data.Tests is
    procedure Test_Init_a69a58 (Gnattest_T : in out Test) renames Test_Init;
 --  id:2.2/a69a5871ab5eef40/Init/1/0/
    procedure Test_Init (Gnattest_T : in out Test) is
-   --  mutools-cmd_line-infile_outdir.ads:28:4:Init
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -147,7 +146,6 @@ package body Mutools.Cmd_Line.Infile_Outdir.Test_Data.Tests is
    procedure Test_Run_ae009b (Gnattest_T : in out Test) renames Test_Run;
 --  id:2.2/ae009b814d7f9e88/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
-   --  mutools-cmd_line-infile_outdir.ads:33:4:Run
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -34,7 +34,6 @@ package body Bzpatch.Test_Data.Tests is
    procedure Test_Patch_4c544e (Gnattest_T : in out Test) renames Test_Patch;
 --  id:2.2/4c544ef13505f519/Patch/1/0/
    procedure Test_Patch (Gnattest_T : in out Test) is
-   --  bzpatch.ads:24:4:Patch
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

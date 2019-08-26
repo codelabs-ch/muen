@@ -38,7 +38,6 @@ package body Cmd_Stream.Test_Data.Tests is
    procedure Test_Run_aabd4c (Gnattest_T : in out Test) renames Test_Run;
 --  id:2.2/aabd4c81c4d5a23a/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
-   --  cmd_stream.ads:28:4:Run
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -67,7 +66,6 @@ package body Cmd_Stream.Test_Data.Tests is
    procedure Test_S_e42122 (Gnattest_T : in out Test) renames Test_S;
 --  id:2.2/e42122b64eb45b09/S/1/0/
    procedure Test_S (Gnattest_T : in out Test) is
-   --  cmd_stream.ads:34:4:S
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -85,7 +83,6 @@ package body Cmd_Stream.Test_Data.Tests is
    procedure Test_U_0031f0 (Gnattest_T : in out Test) renames Test_U;
 --  id:2.2/0031f06ca01d7683/U/1/0/
    procedure Test_U (Gnattest_T : in out Test) is
-   --  cmd_stream.ads:39:4:U
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -103,7 +100,6 @@ package body Cmd_Stream.Test_Data.Tests is
    procedure Test_Trim_94bfac (Gnattest_T : in out Test) renames Test_Trim;
 --  id:2.2/94bfac163d7308cf/Trim/1/0/
    procedure Test_Trim (Gnattest_T : in out Test) is
-   --  cmd_stream.ads:44:4:Trim
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -34,7 +34,6 @@ package body Spec.Skp_Interrupts.Test_Data.Tests is
    procedure Test_Write_23ab15 (Gnattest_T : in out Test) renames Test_Write;
 --  id:2.2/23ab1562ae4604fa/Write/1/0/
    procedure Test_Write (Gnattest_T : in out Test) is
-   --  spec-skp_interrupts.ads:25:4:Write
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

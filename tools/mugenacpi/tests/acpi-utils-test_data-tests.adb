@@ -34,7 +34,6 @@ package body Acpi.Utils.Test_Data.Tests is
    procedure Test_Indent_399a7a (Gnattest_T : in out Test) renames Test_Indent;
 --  id:2.2/399a7ad24f629c80/Indent/1/0/
    procedure Test_Indent (Gnattest_T : in out Test) is
-   --  acpi-utils.ads:28:4:Indent
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -52,7 +51,6 @@ package body Acpi.Utils.Test_Data.Tests is
    procedure Test_Add_Dev_IRQ_Resource_386422 (Gnattest_T : in out Test) renames Test_Add_Dev_IRQ_Resource;
 --  id:2.2/386422a502039cf0/Add_Dev_IRQ_Resource/1/0/
    procedure Test_Add_Dev_IRQ_Resource (Gnattest_T : in out Test) is
-   --  acpi-utils.ads:35:4:Add_Dev_IRQ_Resource
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

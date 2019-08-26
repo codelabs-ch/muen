@@ -34,7 +34,6 @@ package body Mutools.Cmd_Line.Config_Type_Test_Data.Config_Type_Tests is
    procedure Test_Finalize_1d29f1 (Gnattest_T : in out Test_Config_Type) renames Test_Finalize;
 --  id:2.2/1d29f15228a8f8f4/Finalize/1/0/
    procedure Test_Finalize (Gnattest_T : in out Test_Config_Type) is
-   --  mutools-cmd_line.ads:31:4:Finalize
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

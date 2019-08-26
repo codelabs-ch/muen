@@ -34,7 +34,6 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Create_649a54 (Gnattest_T : in out Test) renames Test_Create;
 --  id:2.2/649a54a5f4f87611/Create/1/0/
    procedure Test_Create (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:32:4:Create
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -65,7 +64,6 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Get_Name_1246db (Gnattest_T : in out Test) renames Test_Get_Name;
 --  id:2.2/1246db8c9e62419c/Get_Name/1/0/
    procedure Test_Get_Name (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:38:4:Get_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -88,7 +86,6 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Get_Own_Stack_Usage_a6f81c (Gnattest_T : in out Test) renames Test_Get_Own_Stack_Usage;
 --  id:2.2/a6f81cdc1ab4cbde/Get_Own_Stack_Usage/1/0/
    procedure Test_Get_Own_Stack_Usage (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:41:4:Get_Own_Stack_Usage
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -109,7 +106,6 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Get_Max_Stack_Usage_1f4ad5 (Gnattest_T : in out Test) renames Test_1_Get_Max_Stack_Usage;
 --  id:2.2/1f4ad51d300fa87e/Get_Max_Stack_Usage/1/0/
    procedure Test_1_Get_Max_Stack_Usage (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:45:4:Get_Max_Stack_Usage
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -130,7 +126,6 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Set_Max_Stack_Usage_e177c6 (Gnattest_T : in out Test) renames Test_Set_Max_Stack_Usage;
 --  id:2.2/e177c61f3cc7dbf1/Set_Max_Stack_Usage/1/0/
    procedure Test_Set_Max_Stack_Usage (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:48:4:Set_Max_Stack_Usage
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -152,7 +147,6 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Add_Call_a1b7c6 (Gnattest_T : in out Test) renames Test_1_Add_Call;
 --  id:2.2/a1b7c683ae6ce6da/Add_Call/1/0/
    procedure Test_1_Add_Call (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:53:4:Add_Call
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -178,7 +172,6 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Get_Call_Count_14636b (Gnattest_T : in out Test) renames Test_Get_Call_Count;
 --  id:2.2/14636bd05cca5c71/Get_Call_Count/1/0/
    procedure Test_Get_Call_Count (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:58:4:Get_Call_Count
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -202,7 +195,6 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Iterate_Calls_3d8be5 (Gnattest_T : in out Test) renames Test_Iterate_Calls;
 --  id:2.2/3d8be55f76392d1e/Iterate_Calls/1/0/
    procedure Test_Iterate_Calls (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:62:4:Iterate_Calls
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -245,7 +237,6 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Is_Active_3f2f51 (Gnattest_T : in out Test) renames Test_Is_Active;
 --  id:2.2/3f2f51c93bb32d4b/Is_Active/1/0/
    procedure Test_Is_Active (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:67:4:Is_Active
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -269,7 +260,6 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Set_Active_31acca (Gnattest_T : in out Test) renames Test_Set_Active;
 --  id:2.2/31accace91bb6116/Set_Active/1/0/
    procedure Test_Set_Active (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:70:4:Set_Active
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -295,7 +285,6 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Is_Done_e074a1 (Gnattest_T : in out Test) renames Test_Is_Done;
 --  id:2.2/e074a165e6bec162/Is_Done/1/0/
    procedure Test_Is_Done (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:75:4:Is_Done
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -319,7 +308,6 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Set_Done_969bfa (Gnattest_T : in out Test) renames Test_Set_Done;
 --  id:2.2/969bfab24aa66da3/Set_Done/1/0/
    procedure Test_Set_Done (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:78:4:Set_Done
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -345,7 +333,6 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Add_Node_e8151f (Gnattest_T : in out Test) renames Test_Add_Node;
 --  id:2.2/e8151fee1de82d38/Add_Node/1/0/
    procedure Test_Add_Node (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:87:4:Add_Node
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -385,7 +372,6 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Update_Node_6c7c3f (Gnattest_T : in out Test) renames Test_Update_Node;
 --  id:2.2/6c7c3f12242211fa/Update_Node/1/0/
    procedure Test_Update_Node (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:94:4:Update_Node
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -441,7 +427,6 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Iterate_a24a0d (Gnattest_T : in out Test) renames Test_Iterate;
 --  id:2.2/a24a0d6e322f61f6/Iterate/1/0/
    procedure Test_Iterate (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:101:4:Iterate
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -493,7 +478,6 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Add_Call_32d494 (Gnattest_T : in out Test) renames Test_2_Add_Call;
 --  id:2.2/32d494f093650e37/Add_Call/0/0/
    procedure Test_2_Add_Call (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:107:4:Add_Call
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -549,7 +533,6 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Get_Max_Stack_Usage_4e2158 (Gnattest_T : in out Test) renames Test_2_Get_Max_Stack_Usage;
 --  id:2.2/4e21586547e37cc6/Get_Max_Stack_Usage/0/0/
    procedure Test_2_Get_Max_Stack_Usage (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:115:4:Get_Max_Stack_Usage
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -595,7 +578,6 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Calculate_Stack_Usage_ebf2ac (Gnattest_T : in out Test) renames Test_Calculate_Stack_Usage;
 --  id:2.2/ebf2ac75be8ffb9e/Calculate_Stack_Usage/1/0/
    procedure Test_Calculate_Stack_Usage (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:122:4:Calculate_Stack_Usage
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -692,7 +674,6 @@ package body Stackcheck.Types.Test_Data.Tests is
    procedure Test_Equal_Name_85b0c9 (Gnattest_T : in out Test) renames Test_Equal_Name;
 --  id:2.2/85b0c9397ba7bfe7/Equal_Name/1/0/
    procedure Test_Equal_Name (Gnattest_T : in out Test) is
-   --  stackcheck-types.ads:153:4:Equal_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

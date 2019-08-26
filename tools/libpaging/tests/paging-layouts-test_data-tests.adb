@@ -34,7 +34,6 @@ package body Paging.Layouts.Test_Data.Tests is
    procedure Test_Set_Address_9d0225 (Gnattest_T : in out Test) renames Test_Set_Address;
 --  id:2.2/9d0225d7a0c1251e/Set_Address/1/0/
    procedure Test_Set_Address (Gnattest_T : in out Test) is
-   --  paging-layouts.ads:37:4:Set_Address
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -60,7 +59,6 @@ package body Paging.Layouts.Test_Data.Tests is
    procedure Test_Get_Address_963b67 (Gnattest_T : in out Test) renames Test_Get_Address;
 --  id:2.2/963b678c82b80686/Get_Address/1/0/
    procedure Test_Get_Address (Gnattest_T : in out Test) is
-   --  paging-layouts.ads:42:4:Get_Address
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -85,7 +83,6 @@ package body Paging.Layouts.Test_Data.Tests is
    procedure Test_Set_Large_Page_Support_ade5cf (Gnattest_T : in out Test) renames Test_Set_Large_Page_Support;
 --  id:2.2/ade5cfaf8657f33e/Set_Large_Page_Support/1/0/
    procedure Test_Set_Large_Page_Support (Gnattest_T : in out Test) is
-   --  paging-layouts.ads:47:4:Set_Large_Page_Support
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -114,7 +111,6 @@ package body Paging.Layouts.Test_Data.Tests is
    procedure Test_Add_Memory_Region_9a2b02 (Gnattest_T : in out Test) renames Test_Add_Memory_Region;
 --  id:2.2/9a2b0204b5616592/Add_Memory_Region/1/0/
    procedure Test_Add_Memory_Region (Gnattest_T : in out Test) is
-   --  paging-layouts.ads:52:4:Add_Memory_Region
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -400,7 +396,6 @@ package body Paging.Layouts.Test_Data.Tests is
    procedure Test_Update_References_e977e1 (Gnattest_T : in out Test) renames Test_Update_References;
 --  id:2.2/e977e15fcefa86bd/Update_References/1/0/
    procedure Test_Update_References (Gnattest_T : in out Test) is
-   --  paging-layouts.ads:63:4:Update_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -456,7 +451,6 @@ package body Paging.Layouts.Test_Data.Tests is
    procedure Test_Get_Table_Count_035af5 (Gnattest_T : in out Test) renames Test_Get_Table_Count;
 --  id:2.2/035af58847312281/Get_Table_Count/1/0/
    procedure Test_Get_Table_Count (Gnattest_T : in out Test) is
-   --  paging-layouts.ads:69:4:Get_Table_Count
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -505,7 +499,6 @@ package body Paging.Layouts.Test_Data.Tests is
    procedure Test_Serialize_129d4a (Gnattest_T : in out Test) renames Test_Serialize;
 --  id:2.2/129d4a279ba3ac99/Serialize/1/0/
    procedure Test_Serialize (Gnattest_T : in out Test) is
-   --  paging-layouts.ads:85:4:Serialize
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -882,7 +875,6 @@ package body Paging.Layouts.Test_Data.Tests is
    procedure Test_Traverse_Tables_50c255 (Gnattest_T : in out Test) renames Test_Traverse_Tables;
 --  id:2.2/50c255f6c595e683/Traverse_Tables/1/0/
    procedure Test_Traverse_Tables (Gnattest_T : in out Test) is
-   --  paging-layouts.ads:94:4:Traverse_Tables
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

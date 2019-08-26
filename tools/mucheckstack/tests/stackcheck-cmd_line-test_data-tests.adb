@@ -34,7 +34,6 @@ package body Stackcheck.Cmd_Line.Test_Data.Tests is
    procedure Test_Init_a69a58 (Gnattest_T : in out Test) renames Test_Init;
 --  id:2.2/a69a5871ab5eef40/Init/1/0/
    procedure Test_Init (Gnattest_T : in out Test) is
-   --  stackcheck-cmd_line.ads:27:4:Init
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -211,7 +210,6 @@ package body Stackcheck.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_GPR_File_d99656 (Gnattest_T : in out Test) renames Test_Get_GPR_File;
 --  id:2.2/d996562a3a51c290/Get_GPR_File/1/0/
    procedure Test_Get_GPR_File (Gnattest_T : in out Test) is
-   --  stackcheck-cmd_line.ads:30:4:Get_GPR_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -234,7 +232,6 @@ package body Stackcheck.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Stack_Limit_b164ad (Gnattest_T : in out Test) renames Test_Get_Stack_Limit;
 --  id:2.2/b164adda84d281df/Get_Stack_Limit/1/0/
    procedure Test_Get_Stack_Limit (Gnattest_T : in out Test) is
-   --  stackcheck-cmd_line.ads:33:4:Get_Stack_Limit
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

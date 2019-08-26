@@ -34,7 +34,6 @@ package body Spec.Utils.Test_Data.Tests is
    procedure Test_Get_IRQ_Count_6a25e1 (Gnattest_T : in out Test) renames Test_Get_IRQ_Count;
 --  id:2.2/6a25e10d4be9c4b3/Get_IRQ_Count/1/0/
    procedure Test_Get_IRQ_Count (Gnattest_T : in out Test) is
-   --  spec-utils.ads:47:4:Get_IRQ_Count
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -74,7 +73,6 @@ package body Spec.Utils.Test_Data.Tests is
    procedure Test_Get_APIC_CPU_ID_Map_ec024a (Gnattest_T : in out Test) renames Test_Get_APIC_CPU_ID_Map;
 --  id:2.2/ec024aad4bc486f6/Get_APIC_CPU_ID_Map/1/0/
    procedure Test_Get_APIC_CPU_ID_Map (Gnattest_T : in out Test) is
-   --  spec-utils.ads:57:4:Get_APIC_CPU_ID_Map
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

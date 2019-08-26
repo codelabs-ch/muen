@@ -34,7 +34,6 @@ package body Pack.Test_Data.Tests is
    procedure Test_Run_b41e7b (Gnattest_T : in out Test) renames Test_Run;
 --  id:2.2/b41e7ba747ab173c/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
-   --  pack.ads:26:4:Run
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

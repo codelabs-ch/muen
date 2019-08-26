@@ -34,7 +34,6 @@ package body Mutools.PCI.Test_Data.Tests is
    procedure Test_Create_4ce129 (Gnattest_T : in out Test) renames Test_Create;
 --  id:2.2/4ce1290887f9b694/Create/1/0/
    procedure Test_Create (Gnattest_T : in out Test) is
-   --  mutools-pci.ads:38:4:Create
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -60,7 +59,6 @@ package body Mutools.PCI.Test_Data.Tests is
    procedure Test_To_SID_183549 (Gnattest_T : in out Test) renames Test_To_SID;
 --  id:2.2/183549c092b1579a/To_SID/1/0/
    procedure Test_To_SID (Gnattest_T : in out Test) is
-   --  mutools-pci.ads:48:4:To_SID
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -83,7 +81,6 @@ package body Mutools.PCI.Test_Data.Tests is
    procedure Test_Get_BDF_a2731a (Gnattest_T : in out Test) renames Test_Get_BDF;
 --  id:2.2/a2731a173049c762/Get_BDF/1/0/
    procedure Test_Get_BDF (Gnattest_T : in out Test) is
-   --  mutools-pci.ads:52:4:Get_BDF
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -140,7 +137,6 @@ package body Mutools.PCI.Test_Data.Tests is
    procedure Test_Create_PCI_Node_473719 (Gnattest_T : in out Test) renames Test_Create_PCI_Node;
 --  id:2.2/473719b6e307609f/Create_PCI_Node/1/0/
    procedure Test_Create_PCI_Node (Gnattest_T : in out Test) is
-   --  mutools-pci.ads:55:4:Create_PCI_Node
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -34,7 +34,6 @@ package body Mergers.Test_Data.Tests is
    procedure Test_Merge_Config_1826ea (Gnattest_T : in out Test) renames Test_Merge_Config;
 --  id:2.2/1826ea57aed699b2/Merge_Config/1/0/
    procedure Test_Merge_Config (Gnattest_T : in out Test) is
-   --  mergers.ads:25:4:Merge_Config
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -155,7 +154,6 @@ package body Mergers.Test_Data.Tests is
    procedure Test_Merge_Hardware_1be979 (Gnattest_T : in out Test) renames Test_Merge_Hardware;
 --  id:2.2/1be9794c0d96dee0/Merge_Hardware/1/0/
    procedure Test_Merge_Hardware (Gnattest_T : in out Test) is
-   --  mergers.ads:30:4:Merge_Hardware
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -228,7 +226,6 @@ package body Mergers.Test_Data.Tests is
    procedure Test_Merge_Platform_0cd3e6 (Gnattest_T : in out Test) renames Test_Merge_Platform;
 --  id:2.2/0cd3e620cc856c4c/Merge_Platform/1/0/
    procedure Test_Merge_Platform (Gnattest_T : in out Test) is
-   --  mergers.ads:35:4:Merge_Platform
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -301,7 +298,6 @@ package body Mergers.Test_Data.Tests is
    procedure Test_Merge_Platform_Config_7575a0 (Gnattest_T : in out Test) renames Test_Merge_Platform_Config;
 --  id:2.2/7575a0b480cdf7ec/Merge_Platform_Config/1/0/
    procedure Test_Merge_Platform_Config (Gnattest_T : in out Test) is
-   --  mergers.ads:41:4:Merge_Platform_Config
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

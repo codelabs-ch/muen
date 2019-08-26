@@ -34,7 +34,6 @@ package body Cspec.Cmd_Line.Test_Data.Tests is
    procedure Test_Init_a69a58 (Gnattest_T : in out Test) renames Test_Init;
 --  id:2.2/a69a5871ab5eef40/Init/1/0/
    procedure Test_Init (Gnattest_T : in out Test) is
-   --  cspec-cmd_line.ads:27:4:Init
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -186,7 +185,6 @@ package body Cspec.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Input_Spec_b3e784 (Gnattest_T : in out Test) renames Test_Get_Input_Spec;
 --  id:2.2/b3e784f1773d203f/Get_Input_Spec/1/0/
    procedure Test_Get_Input_Spec (Gnattest_T : in out Test) is
-   --  cspec-cmd_line.ads:30:4:Get_Input_Spec
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -209,7 +207,6 @@ package body Cspec.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Output_Dir_c3e9c8 (Gnattest_T : in out Test) renames Test_Get_Output_Dir;
 --  id:2.2/c3e9c87208c742d1/Get_Output_Dir/1/0/
    procedure Test_Get_Output_Dir (Gnattest_T : in out Test) is
-   --  cspec-cmd_line.ads:33:4:Get_Output_Dir
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -232,7 +229,6 @@ package body Cspec.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Output_Spec_faaf96 (Gnattest_T : in out Test) renames Test_Get_Output_Spec;
 --  id:2.2/faaf964f54641d5e/Get_Output_Spec/1/0/
    procedure Test_Get_Output_Spec (Gnattest_T : in out Test) is
-   --  cspec-cmd_line.ads:36:4:Get_Output_Spec
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -255,7 +251,6 @@ package body Cspec.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Include_Path_a61f46 (Gnattest_T : in out Test) renames Test_Get_Include_Path;
 --  id:2.2/a61f46d53b52eaa1/Get_Include_Path/1/0/
    procedure Test_Get_Include_Path (Gnattest_T : in out Test) is
-   --  cspec-cmd_line.ads:39:4:Get_Include_Path
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -278,7 +273,6 @@ package body Cspec.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Package_Name_a709c7 (Gnattest_T : in out Test) renames Test_Get_Package_Name;
 --  id:2.2/a709c76161253f85/Get_Package_Name/1/0/
    procedure Test_Get_Package_Name (Gnattest_T : in out Test) is
-   --  cspec-cmd_line.ads:43:4:Get_Package_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -34,7 +34,6 @@ package body Expand.Test_Data.Tests is
    procedure Test_Run_aabd4c (Gnattest_T : in out Test) renames Test_Run;
 --  id:2.2/aabd4c81c4d5a23a/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
-   --  expand.ads:25:4:Run
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

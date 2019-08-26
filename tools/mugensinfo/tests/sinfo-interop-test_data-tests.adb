@@ -34,7 +34,6 @@ package body Sinfo.Interop.Test_Data.Tests is
    procedure Test_Name_To_C_52e1d1 (Gnattest_T : in out Test) renames Test_Name_To_C;
 --  id:2.2/52e1d1e1b9ecb40f/Name_To_C/1/0/
    procedure Test_Name_To_C (Gnattest_T : in out Test) is
-   --  sinfo-interop.ads:24:4:Name_To_C
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -54,7 +53,6 @@ package body Sinfo.Interop.Test_Data.Tests is
    procedure Test_Memregion_To_C_0eef56 (Gnattest_T : in out Test) renames Test_Memregion_To_C;
 --  id:2.2/0eef565aa0cc57a2/Memregion_To_C/1/0/
    procedure Test_Memregion_To_C (Gnattest_T : in out Test) is
-   --  sinfo-interop.ads:27:4:Memregion_To_C
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -84,7 +82,6 @@ package body Sinfo.Interop.Test_Data.Tests is
    procedure Test_Device_To_C_3846bf (Gnattest_T : in out Test) renames Test_Device_To_C;
 --  id:2.2/3846bf9a817bff99/Device_To_C/1/0/
    procedure Test_Device_To_C (Gnattest_T : in out Test) is
-   --  sinfo-interop.ads:30:4:Device_To_C
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -103,7 +100,6 @@ package body Sinfo.Interop.Test_Data.Tests is
    procedure Test_Resource_To_C_c62103 (Gnattest_T : in out Test) renames Test_Resource_To_C;
 --  id:2.2/c6210377fb6885ae/Resource_To_C/1/0/
    procedure Test_Resource_To_C (Gnattest_T : in out Test) is
-   --  sinfo-interop.ads:33:4:Resource_To_C
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -122,7 +118,6 @@ package body Sinfo.Interop.Test_Data.Tests is
    procedure Test_Subject_Info_To_C_3471da (Gnattest_T : in out Test) renames Test_Subject_Info_To_C;
 --  id:2.2/3471dabca4420d92/Subject_Info_To_C/1/0/
    procedure Test_Subject_Info_To_C (Gnattest_T : in out Test) is
-   --  sinfo-interop.ads:36:4:Subject_Info_To_C
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -152,7 +147,6 @@ package body Sinfo.Interop.Test_Data.Tests is
    procedure Test_Check_Name_Type_3e54f1 (Gnattest_T : in out Test) renames Test_Check_Name_Type;
 --  id:2.2/3e54f1454c3de673/Check_Name_Type/1/0/
    procedure Test_Check_Name_Type (Gnattest_T : in out Test) is
-   --  sinfo-interop.ads:39:4:Check_Name_Type
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -175,7 +169,6 @@ package body Sinfo.Interop.Test_Data.Tests is
    procedure Test_Check_Memregion_Type_0f8f2f (Gnattest_T : in out Test) renames Test_Check_Memregion_Type;
 --  id:2.2/0f8f2f7565e4b586/Check_Memregion_Type/1/0/
    procedure Test_Check_Memregion_Type (Gnattest_T : in out Test) is
-   --  sinfo-interop.ads:42:4:Check_Memregion_Type
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -201,7 +194,6 @@ package body Sinfo.Interop.Test_Data.Tests is
    procedure Test_Check_Resource_Type_35d4af (Gnattest_T : in out Test) renames Test_Check_Resource_Type;
 --  id:2.2/35d4afdd5e3ed28f/Check_Resource_Type/1/0/
    procedure Test_Check_Resource_Type (Gnattest_T : in out Test) is
-   --  sinfo-interop.ads:45:4:Check_Resource_Type
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -224,7 +216,6 @@ package body Sinfo.Interop.Test_Data.Tests is
    procedure Test_Check_Device_Type_c9d3d2 (Gnattest_T : in out Test) renames Test_Check_Device_Type;
 --  id:2.2/c9d3d2e7098a4233/Check_Device_Type/1/0/
    procedure Test_Check_Device_Type (Gnattest_T : in out Test) is
-   --  sinfo-interop.ads:48:4:Check_Device_Type
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -248,7 +239,6 @@ package body Sinfo.Interop.Test_Data.Tests is
    procedure Test_Check_Subject_Info_Type_659906 (Gnattest_T : in out Test) renames Test_Check_Subject_Info_Type;
 --  id:2.2/659906a031093bd7/Check_Subject_Info_Type/1/0/
    procedure Test_Check_Subject_Info_Type (Gnattest_T : in out Test) is
-   --  sinfo-interop.ads:51:4:Check_Subject_Info_Type
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

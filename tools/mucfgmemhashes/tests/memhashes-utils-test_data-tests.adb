@@ -34,7 +34,6 @@ package body Memhashes.Utils.Test_Data.Tests is
    procedure Test_To_Stream_ef1605 (Gnattest_T : in out Test) renames Test_To_Stream;
 --  id:2.2/ef16057605ed9e8d/To_Stream/1/0/
    procedure Test_To_Stream (Gnattest_T : in out Test) is
-   --  memhashes-utils.ads:28:4:To_Stream
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

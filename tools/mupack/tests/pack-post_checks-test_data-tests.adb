@@ -34,7 +34,6 @@ package body Pack.Post_Checks.Test_Data.Tests is
    procedure Test_Multiboot_Header_a1691f (Gnattest_T : in out Test) renames Test_Multiboot_Header;
 --  id:2.2/a1691fde93ca7ba7/Multiboot_Header/1/0/
    procedure Test_Multiboot_Header (Gnattest_T : in out Test) is
-   --  pack-post_checks.ads:27:4:Multiboot_Header
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -78,7 +77,6 @@ package body Pack.Post_Checks.Test_Data.Tests is
    procedure Test_Register_All_3f90ea (Gnattest_T : in out Test) renames Test_Register_All;
 --  id:2.2/3f90ea30314141bf/Register_All/1/0/
    procedure Test_Register_All (Gnattest_T : in out Test) is
-   --  pack-post_checks.ads:30:4:Register_All
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -97,7 +95,6 @@ package body Pack.Post_Checks.Test_Data.Tests is
    procedure Test_Run_ca760b (Gnattest_T : in out Test) renames Test_Run;
 --  id:2.2/ca760b43164ae370/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
-   --  pack-post_checks.ads:33:4:Run
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -122,7 +119,6 @@ package body Pack.Post_Checks.Test_Data.Tests is
    procedure Test_Get_Count_1fbd7c (Gnattest_T : in out Test) renames Test_Get_Count;
 --  id:2.2/1fbd7c784b3d55c2/Get_Count/1/0/
    procedure Test_Get_Count (Gnattest_T : in out Test) is
-   --  pack-post_checks.ads:36:4:Get_Count
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -141,7 +137,6 @@ package body Pack.Post_Checks.Test_Data.Tests is
    procedure Test_Clear_4b4f85 (Gnattest_T : in out Test) renames Test_Clear;
 --  id:2.2/4b4f85da05a9b689/Clear/1/0/
    procedure Test_Clear (Gnattest_T : in out Test) is
-   --  pack-post_checks.ads:39:4:Clear
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

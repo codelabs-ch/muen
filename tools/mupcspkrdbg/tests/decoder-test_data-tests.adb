@@ -34,7 +34,6 @@ package body Decoder.Test_Data.Tests is
    procedure Test_Decode_7b4784 (Gnattest_T : in out Test) renames Test_Decode;
 --  id:2.2/7b4784d82b59bab0/Decode/1/0/
    procedure Test_Decode (Gnattest_T : in out Test) is
-   --  decoder.ads:27:4:Decode
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -88,7 +87,6 @@ package body Decoder.Test_Data.Tests is
    procedure Test_Next_Frequency_88f9f3 (Gnattest_T : in out Test) renames Test_Next_Frequency;
 --  id:2.2/88f9f3df3cba5b0a/Next_Frequency/1/0/
    procedure Test_Next_Frequency (Gnattest_T : in out Test) is
-   --  decoder.ads:45:4:Next_Frequency
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -128,7 +126,6 @@ package body Decoder.Test_Data.Tests is
    procedure Test_Is_Byte_Sep_d147f2 (Gnattest_T : in out Test) renames Test_Is_Byte_Sep;
 --  id:2.2/d147f2d97b24e95b/Is_Byte_Sep/1/0/
    procedure Test_Is_Byte_Sep (Gnattest_T : in out Test) is
-   --  decoder.ads:47:4:Is_Byte_Sep
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -158,7 +155,6 @@ package body Decoder.Test_Data.Tests is
    procedure Test_Is_Nearly_d0f5b1 (Gnattest_T : in out Test) renames Test_Is_Nearly;
 --  id:2.2/d0f5b150d681e91b/Is_Nearly/1/0/
    procedure Test_Is_Nearly (Gnattest_T : in out Test) is
-   --  decoder.ads:49:4:Is_Nearly
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -208,7 +204,6 @@ package body Decoder.Test_Data.Tests is
    procedure Test_Symbol_From_Freq_bfab97 (Gnattest_T : in out Test) renames Test_Symbol_From_Freq;
 --  id:2.2/bfab9736b4ff8e09/Symbol_From_Freq/1/0/
    procedure Test_Symbol_From_Freq (Gnattest_T : in out Test) is
-   --  decoder.ads:51:4:Symbol_From_Freq
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

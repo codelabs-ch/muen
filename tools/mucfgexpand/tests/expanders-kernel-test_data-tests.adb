@@ -34,7 +34,6 @@ package body Expanders.Kernel.Test_Data.Tests is
    procedure Test_Add_Section_Skeleton_797fa9 (Gnattest_T : in out Test) renames Test_Add_Section_Skeleton;
 --  id:2.2/797fa93bd19d8580/Add_Section_Skeleton/1/0/
    procedure Test_Add_Section_Skeleton (Gnattest_T : in out Test) is
-   --  expanders-kernel.ads:25:4:Add_Section_Skeleton
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -52,7 +51,6 @@ package body Expanders.Kernel.Test_Data.Tests is
    procedure Test_Add_Binary_Mappings_234898 (Gnattest_T : in out Test) renames Test_Add_Binary_Mappings;
 --  id:2.2/2348981df527cc4e/Add_Binary_Mappings/1/0/
    procedure Test_Add_Binary_Mappings (Gnattest_T : in out Test) is
-   --  expanders-kernel.ads:28:4:Add_Binary_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -73,7 +71,6 @@ package body Expanders.Kernel.Test_Data.Tests is
    procedure Test_Add_Subj_VMCS_Mappings_0bc5b2 (Gnattest_T : in out Test) renames Test_Add_Subj_VMCS_Mappings;
 --  id:2.2/0bc5b2fe24f65063/Add_Subj_VMCS_Mappings/1/0/
    procedure Test_Add_Subj_VMCS_Mappings (Gnattest_T : in out Test) is
-   --  expanders-kernel.ads:31:4:Add_Subj_VMCS_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -94,7 +91,6 @@ package body Expanders.Kernel.Test_Data.Tests is
    procedure Test_Add_Subj_State_Mappings_5c5e62 (Gnattest_T : in out Test) renames Test_Add_Subj_State_Mappings;
 --  id:2.2/5c5e62317bc08193/Add_Subj_State_Mappings/1/0/
    procedure Test_Add_Subj_State_Mappings (Gnattest_T : in out Test) is
-   --  expanders-kernel.ads:34:4:Add_Subj_State_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -115,7 +111,6 @@ package body Expanders.Kernel.Test_Data.Tests is
    procedure Test_Add_Subj_Timed_Event_Mappings_a6660d (Gnattest_T : in out Test) renames Test_Add_Subj_Timed_Event_Mappings;
 --  id:2.2/a6660ddc7571829d/Add_Subj_Timed_Event_Mappings/1/0/
    procedure Test_Add_Subj_Timed_Event_Mappings (Gnattest_T : in out Test) is
-   --  expanders-kernel.ads:37:4:Add_Subj_Timed_Event_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -136,7 +131,6 @@ package body Expanders.Kernel.Test_Data.Tests is
    procedure Test_Add_Subj_Interrupts_Mappings_4c7af6 (Gnattest_T : in out Test) renames Test_Add_Subj_Interrupts_Mappings;
 --  id:2.2/4c7af612e6d2d482/Add_Subj_Interrupts_Mappings/1/0/
    procedure Test_Add_Subj_Interrupts_Mappings (Gnattest_T : in out Test) is
-   --  expanders-kernel.ads:40:4:Add_Subj_Interrupts_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -157,7 +151,6 @@ package body Expanders.Kernel.Test_Data.Tests is
    procedure Test_Add_Subj_MSR_Store_Mappings_09dcb8 (Gnattest_T : in out Test) renames Test_Add_Subj_MSR_Store_Mappings;
 --  id:2.2/09dcb888659f5bdd/Add_Subj_MSR_Store_Mappings/1/0/
    procedure Test_Add_Subj_MSR_Store_Mappings (Gnattest_T : in out Test) is
-   --  expanders-kernel.ads:43:4:Add_Subj_MSR_Store_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -178,7 +171,6 @@ package body Expanders.Kernel.Test_Data.Tests is
    procedure Test_Add_Subj_FPU_State_Mappings_ade765 (Gnattest_T : in out Test) renames Test_Add_Subj_FPU_State_Mappings;
 --  id:2.2/ade765db964e8bfd/Add_Subj_FPU_State_Mappings/1/0/
    procedure Test_Add_Subj_FPU_State_Mappings (Gnattest_T : in out Test) is
-   --  expanders-kernel.ads:46:4:Add_Subj_FPU_State_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -199,7 +191,6 @@ package body Expanders.Kernel.Test_Data.Tests is
    procedure Test_Add_Sched_Group_Info_Mappings_a6ca47 (Gnattest_T : in out Test) renames Test_Add_Sched_Group_Info_Mappings;
 --  id:2.2/a6ca47d1783a39bf/Add_Sched_Group_Info_Mappings/1/0/
    procedure Test_Add_Sched_Group_Info_Mappings (Gnattest_T : in out Test) is
-   --  expanders-kernel.ads:49:4:Add_Sched_Group_Info_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -220,7 +211,6 @@ package body Expanders.Kernel.Test_Data.Tests is
    procedure Test_Map_Tau0_Interface_1c6595 (Gnattest_T : in out Test) renames Test_Map_Tau0_Interface;
 --  id:2.2/1c659557f0d945b9/Map_Tau0_Interface/1/0/
    procedure Test_Map_Tau0_Interface (Gnattest_T : in out Test) is
-   --  expanders-kernel.ads:52:4:Map_Tau0_Interface
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -241,7 +231,6 @@ package body Expanders.Kernel.Test_Data.Tests is
    procedure Test_Add_Devices_52dbbf (Gnattest_T : in out Test) renames Test_Add_Devices;
 --  id:2.2/52dbbf91ae5d4040/Add_Devices/1/0/
    procedure Test_Add_Devices (Gnattest_T : in out Test) is
-   --  expanders-kernel.ads:55:4:Add_Devices
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -262,7 +251,6 @@ package body Expanders.Kernel.Test_Data.Tests is
    procedure Test_Add_Crash_Audit_Mappings_2bfbc6 (Gnattest_T : in out Test) renames Test_Add_Crash_Audit_Mappings;
 --  id:2.2/2bfbc6ab4ff54717/Add_Crash_Audit_Mappings/1/0/
    procedure Test_Add_Crash_Audit_Mappings (Gnattest_T : in out Test) is
-   --  expanders-kernel.ads:58:4:Add_Crash_Audit_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -283,7 +271,6 @@ package body Expanders.Kernel.Test_Data.Tests is
    procedure Test_Remove_Diagnostics_Device_b093e6 (Gnattest_T : in out Test) renames Test_Remove_Diagnostics_Device;
 --  id:2.2/b093e6fd6844d691/Remove_Diagnostics_Device/1/0/
    procedure Test_Remove_Diagnostics_Device (Gnattest_T : in out Test) is
-   --  expanders-kernel.ads:61:4:Remove_Diagnostics_Device
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

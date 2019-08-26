@@ -34,7 +34,6 @@ package body Pack.Manifest.Test_Data.Tests is
    procedure Test_Add_Entry_9e43d3 (Gnattest_T : in out Test) renames Test_Add_Entry;
 --  id:2.2/9e43d3fe4c2d98ca/Add_Entry/1/0/
    procedure Test_Add_Entry (Gnattest_T : in out Test) is
-   --  pack-manifest.ads:33:4:Add_Entry
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -52,7 +51,6 @@ package body Pack.Manifest.Test_Data.Tests is
    procedure Test_Write_afa96b (Gnattest_T : in out Test) renames Test_Write;
 --  id:2.2/afa96b009f0d8d47/Write/1/0/
    procedure Test_Write (Gnattest_T : in out Test) is
-   --  pack-manifest.ads:46:4:Write
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -96,7 +94,6 @@ package body Pack.Manifest.Test_Data.Tests is
    procedure Test_Less_Than_9753a0 (Gnattest_T : in out Test) renames Test_Less_Than;
 --  id:2.2/9753a0e035a23c69/Less_Than/1/0/
    procedure Test_Less_Than (Gnattest_T : in out Test) is
-   --  pack-manifest.ads:63:4:"<"
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

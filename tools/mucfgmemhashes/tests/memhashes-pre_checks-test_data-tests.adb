@@ -34,7 +34,6 @@ package body Memhashes.Pre_Checks.Test_Data.Tests is
    procedure Test_Hash_References_3a68ae (Gnattest_T : in out Test) renames Test_Hash_References;
 --  id:2.2/3a68ae38770d6a85/Hash_References/1/0/
    procedure Test_Hash_References (Gnattest_T : in out Test) is
-   --  memhashes-pre_checks.ads:27:4:Hash_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -75,7 +74,6 @@ package body Memhashes.Pre_Checks.Test_Data.Tests is
    procedure Test_Register_All_3f90ea (Gnattest_T : in out Test) renames Test_Register_All;
 --  id:2.2/3f90ea30314141bf/Register_All/1/0/
    procedure Test_Register_All (Gnattest_T : in out Test) is
-   --  memhashes-pre_checks.ads:30:4:Register_All
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -103,7 +101,6 @@ package body Memhashes.Pre_Checks.Test_Data.Tests is
    procedure Test_Run_aabd4c (Gnattest_T : in out Test) renames Test_Run;
 --  id:2.2/aabd4c81c4d5a23a/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
-   --  memhashes-pre_checks.ads:33:4:Run
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -132,7 +129,6 @@ package body Memhashes.Pre_Checks.Test_Data.Tests is
    procedure Test_Get_Count_1fbd7c (Gnattest_T : in out Test) renames Test_Get_Count;
 --  id:2.2/1fbd7c784b3d55c2/Get_Count/1/0/
    procedure Test_Get_Count (Gnattest_T : in out Test) is
-   --  memhashes-pre_checks.ads:38:4:Get_Count
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -157,7 +153,6 @@ package body Memhashes.Pre_Checks.Test_Data.Tests is
    procedure Test_Clear_4b4f85 (Gnattest_T : in out Test) renames Test_Clear;
 --  id:2.2/4b4f85da05a9b689/Clear/1/0/
    procedure Test_Clear (Gnattest_T : in out Test) is
-   --  memhashes-pre_checks.ads:41:4:Clear
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

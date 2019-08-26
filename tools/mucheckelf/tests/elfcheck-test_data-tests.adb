@@ -34,7 +34,6 @@ package body Elfcheck.Test_Data.Tests is
    procedure Test_Run_fe87e3 (Gnattest_T : in out Test) renames Test_Run;
 --  id:2.2/fe87e30211bf9f21/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
-   --  elfcheck.ads:23:4:Run
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

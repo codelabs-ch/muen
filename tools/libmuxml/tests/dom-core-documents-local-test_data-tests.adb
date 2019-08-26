@@ -34,7 +34,6 @@ package body DOM.Core.Documents.Local.Test_Data.Tests is
    procedure Test_Adopt_Node_6a4a84 (Gnattest_T : in out Test) renames Test_Adopt_Node;
 --  id:2.2/6a4a8407a73d6d53/Adopt_Node/1/0/
    procedure Test_Adopt_Node (Gnattest_T : in out Test) is
-   --  dom-core-documents-local.ads:32:4:Adopt_Node
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -68,7 +67,6 @@ package body DOM.Core.Documents.Local.Test_Data.Tests is
    procedure Test_Clone_Node_891724 (Gnattest_T : in out Test) renames Test_Clone_Node;
 --  id:2.2/8917241662f94bd7/Clone_Node/1/0/
    procedure Test_Clone_Node (Gnattest_T : in out Test) is
-   --  dom-core-documents-local.ads:34:4:Clone_Node
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -38,7 +38,6 @@ package body Cmd_Stream.Memblocks.Test_Data.Tests is
    procedure Test_Create_Memory_Blocks_0b4e17 (Gnattest_T : in out Test) renames Test_Create_Memory_Blocks;
 --  id:2.2/0b4e17c39cdb7a2d/Create_Memory_Blocks/1/0/
    procedure Test_Create_Memory_Blocks (Gnattest_T : in out Test) is
-   --  cmd_stream-memblocks.ads:26:4:Create_Memory_Blocks
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

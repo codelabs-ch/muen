@@ -34,7 +34,6 @@ package body Memhashes.Cmd_Line.Test_Data.Tests is
    procedure Test_Init_a69a58 (Gnattest_T : in out Test) renames Test_Init;
 --  id:2.2/a69a5871ab5eef40/Init/1/0/
    procedure Test_Init (Gnattest_T : in out Test) is
-   --  memhashes-cmd_line.ads:27:4:Init
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -181,7 +180,6 @@ package body Memhashes.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Policy_Input_4a0d5a (Gnattest_T : in out Test) renames Test_Get_Policy_Input;
 --  id:2.2/4a0d5a4e86e5bc6b/Get_Policy_Input/1/0/
    procedure Test_Get_Policy_Input (Gnattest_T : in out Test) is
-   --  memhashes-cmd_line.ads:30:4:Get_Policy_Input
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -204,7 +202,6 @@ package body Memhashes.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Policy_Output_39909f (Gnattest_T : in out Test) renames Test_Get_Policy_Output;
 --  id:2.2/39909f751c4aca3b/Get_Policy_Output/1/0/
    procedure Test_Get_Policy_Output (Gnattest_T : in out Test) is
-   --  memhashes-cmd_line.ads:33:4:Get_Policy_Output
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -227,7 +224,6 @@ package body Memhashes.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Input_Dir_da1404 (Gnattest_T : in out Test) renames Test_Get_Input_Dir;
 --  id:2.2/da14045cb4f1843e/Get_Input_Dir/1/0/
    procedure Test_Get_Input_Dir (Gnattest_T : in out Test) is
-   --  memhashes-cmd_line.ads:36:4:Get_Input_Dir
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

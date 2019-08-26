@@ -34,7 +34,6 @@ package body Mutime.Info.Test_Data.Tests is
    procedure Test_Update_Validity_8a415a (Gnattest_T : in out Test) renames Test_Update_Validity;
 --  id:2.2/8a415a2498577666/Update_Validity/1/0/
    procedure Test_Update_Validity (Gnattest_T : in out Test) is
-   --  mutime-info.ads:51:4:Update_Validity
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -53,7 +52,6 @@ package body Mutime.Info.Test_Data.Tests is
    procedure Test_Is_Valid_f361e9 (Gnattest_T : in out Test) renames Test_Is_Valid;
 --  id:2.2/f361e911d85a7ba5/Is_Valid/1/0/
    procedure Test_Is_Valid (Gnattest_T : in out Test) is
-   --  mutime-info.ads:58:4:Is_Valid
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -77,7 +75,6 @@ package body Mutime.Info.Test_Data.Tests is
    procedure Test_Get_Current_Time_201366 (Gnattest_T : in out Test) renames Test_2_Get_Current_Time;
 --  id:2.2/201366884977c714/Get_Current_Time/0/0/
    procedure Test_2_Get_Current_Time (Gnattest_T : in out Test) is
-   --  mutime-info.ads:64:4:Get_Current_Time
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -95,7 +92,6 @@ package body Mutime.Info.Test_Data.Tests is
    procedure Test_Get_Current_Time_cea631 (Gnattest_T : in out Test) renames Test_1_Get_Current_Time;
 --  id:2.2/cea6319c99ce0b67/Get_Current_Time/1/0/
    procedure Test_1_Get_Current_Time (Gnattest_T : in out Test) is
-   --  mutime-info.ads:82:4:Get_Current_Time
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

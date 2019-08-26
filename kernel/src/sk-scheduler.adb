@@ -743,7 +743,8 @@ is
 
    procedure Handle_Vmx_Exit (Subject_Registers : in out SK.CPU_Registers_Type)
    is
-      --  See Intel SDM Vol. 3C, 27.2.2.
+      --  See Intel SDM Vol. 3C, "27.2.2 Information for VM Exits Due to
+      --  Vectored Events".
       Exception_Mask : constant := 16#07ff#;
       Exception_NMI  : constant := 16#0202#;
       Exception_MCE  : constant := 16#0312#;

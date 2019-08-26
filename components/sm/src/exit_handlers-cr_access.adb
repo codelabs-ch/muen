@@ -78,7 +78,7 @@ is
    -------------------------------------------------------------------------
 
    --  Return CR access information from exit qualification, as specified by
-   --  Intel SDM Vol. 3C, section 27.2.1, table 27-3.
+   --  Intel SDM Vol. 3C, "27.2.1 Basic VM-Exit Information", table 27-3.
    function To_CR_Info (Qualification : SK.Word64) return CR_Info_Type
    is
       function To_CR_Information is new Ada.Unchecked_Conversion

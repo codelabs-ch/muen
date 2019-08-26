@@ -34,7 +34,7 @@ package body Iobm.IO_Ports.Test_Data.Tests is
    procedure Test_Allow_Ports_744e03 (Gnattest_T : in out Test) renames Test_Allow_Ports;
 --  id:2.2/744e03448184dde7/Allow_Ports/1/0/
    procedure Test_Allow_Ports (Gnattest_T : in out Test) is
-   --  iobm-io_ports.ads:36:4:Allow_Ports
+   --  iobm-io_ports.ads:37:4:Allow_Ports
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -71,7 +71,7 @@ package body Iobm.IO_Ports.Test_Data.Tests is
    procedure Test_To_Stream_0b7ee3 (Gnattest_T : in out Test) renames Test_To_Stream;
 --  id:2.2/0b7ee3b84c90fcd1/To_Stream/1/0/
    procedure Test_To_Stream (Gnattest_T : in out Test) is
-   --  iobm-io_ports.ads:47:4:To_Stream
+   --  iobm-io_ports.ads:48:4:To_Stream
 --  end read only
 
       use type Ada.Streams.Stream_Element_Array;

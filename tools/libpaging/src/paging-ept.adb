@@ -23,7 +23,9 @@ is
 
    type Raw_Table_Type is array (Entry_Range) of Interfaces.Unsigned_64;
 
-   --  EPT paging structure entry layout, see Intel SDM Vol. 3C, figure 28-1.
+   --  EPT paging structure entry layout, see Intel SDM Vol. 3C, "28.2.2
+   --  EPT Translation Mechanism", Figure "28-1 Formats of EPTP and EPT
+   --  Paging-Structure Entries".
 
    Read_Flag       : constant := 0;
    Write_Flag      : constant := 1;
@@ -33,7 +35,7 @@ is
    Active_Flag     : constant := 52;
 
    --  Mapping of memory type to EPT memory type bits, see Intel SDM Vol. 3C,
-   --  chapter 28.2.5.
+   --  "28.2.7 EPT and Memory Typing".
    EPT_MT_Mapping : constant array (Caching_Type) of Interfaces.Unsigned_64
      := (UC => 16#00#,
          WC => 16#08#,

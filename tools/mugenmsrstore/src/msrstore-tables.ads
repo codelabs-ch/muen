@@ -27,7 +27,8 @@ is
 
    type MSR_Store_Size is range 1 .. 512;
 
-   --  MSR store table as specified by Intel SDM Vol. 3C, section 24.7.2.
+   --  MSR store table as specified by Intel SDM Vol. 3C, "24.7.2 VM-Exit
+   --  Controls for MSRs".
    type MSR_Store_Type (Size : MSR_Store_Size) is private;
 
    --  Returns True if the given MSR store is full.
@@ -53,7 +54,8 @@ is
 
 private
 
-   --  MSR table entry format as specified by Intel SDM Vol. 3C, table 24-11.
+   --  MSR table entry format as specified by Intel SDM Vol. 3C, "24.7.2
+   --  VM-Exit Controls for MSRs".
    type Store_Entry_Type is record
       Index    : Interfaces.Unsigned_32;
       Reserved : Interfaces.Unsigned_32;

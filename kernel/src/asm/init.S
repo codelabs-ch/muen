@@ -52,7 +52,8 @@
 .text
 .code32
 
-// see "Initializing IA-32e Mode" in the Intel SDM, Volume 3A, Chapter 9.8.5
+// see "Initializing IA-32e Mode" in the Intel SDM Vol. 3A,
+// "9.8.5 Initializing IA-32e Mode"
 
 _start:
 
@@ -183,7 +184,8 @@ start64:
 .data
 cpu_id: .byte 0
 
-// Global Descriptor Table: See Intel SDM Vol. 3A, section 3.5.1
+// Global Descriptor Table: See Intel SDM Vol. 3A,
+// "3.5.1 Segment Descriptor Tables"
 	.align 4
 	.space 2
 boot_gdt64_descr:

@@ -71,7 +71,7 @@ is
    Page_Size : constant := 4096;
 
    --  Size of XSAVE storage area in bytes. Must be at least as large as
-   --  described in Intel SDM Vol. 1 (December 2015 edition), section 13.5.
+   --  described in Intel SDM Vol. 1, "13.4 XSAVE Area".
    XSAVE_Area_Size : constant := Page_Size;
 
    type XSAVE_Area_Range is range 0 .. XSAVE_Area_Size - 1;
@@ -131,7 +131,8 @@ is
 
    Null_Subject_State : constant Subject_State_Type;
 
-   --  Pseudo Descriptor type, see Intel SDM Vol. 3A, chapter 3.5.1.
+   --  Pseudo Descriptor type, see Intel SDM Vol. 3A, "3.5.1 Segment Descriptor
+   --  Tables"
    type Pseudo_Descriptor_Type is record
       Limit : SK.Word16;
       Base  : SK.Word64;

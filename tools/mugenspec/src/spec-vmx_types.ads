@@ -33,7 +33,8 @@ is
    type Pin_Ctrl_Map_Type is array (Pin_Ctrl_Type)
      of Mutools.Utils.Unsigned_64_Pos;
 
-   --  Pin control bit positions as specified by Intel SDM Vol. 3C, table 24-5.
+   --  Pin control bit positions as specified by Intel SDM Vol. 3C, "24.6.1
+   --  Pin-Based VM-Execution Controls".
    function Get_Pin_Controls is new Utils.To_Number
      (Bitfield_Type => Pin_Ctrl_Type,
       Mapping_Type  => Pin_Ctrl_Map_Type,
@@ -70,8 +71,8 @@ is
    type Proc_Ctrl_Map_Type is array (Proc_Ctrl_Type)
      of Mutools.Utils.Unsigned_64_Pos;
 
-   --  Proc control bit positions as specified by Intel SDM Vol. 3C, table
-   --  24-6.
+   --  Proc control bit positions as specified by Intel SDM Vol. 3C, "24.6.2
+   --  Processor-Based VM-Execution Controls".
    function Get_Proc_Controls is new Utils.To_Number
      (Bitfield_Type => Proc_Ctrl_Type,
       Mapping_Type  => Proc_Ctrl_Map_Type,
@@ -118,7 +119,7 @@ is
      of Mutools.Utils.Unsigned_64_Pos;
 
    --  Secondary proc control bit positions as specified by Intel SDM Vol. 3C,
-   --  table 24-7.
+   --  "24.6.2 Processor-Based VM-Execution Controls".
    function Get_Proc2_Controls is new Utils.To_Number
      (Bitfield_Type => Proc2_Ctrl_Type,
       Mapping_Type  => Proc2_Ctrl_Map_Type,
@@ -151,7 +152,7 @@ is
      of Mutools.Utils.Unsigned_64_Pos;
 
    --  VM-Entry control bit positions as specified by Intel SDM Vol. 3C,
-   --  table 24-12.
+   --  "24.8.1 VM-Entry Controls".
    function Get_Entry_Controls is new Utils.To_Number
      (Bitfield_Type => Entry_Ctrl_Type,
       Mapping_Type  => Entry_Ctrl_Map_Type,
@@ -178,8 +179,8 @@ is
    type Exit_Ctrl_Map_Type is array (Exit_Ctrl_Type)
      of Mutools.Utils.Unsigned_64_Pos;
 
-   --  VM-Exit control bit positions as specified by Intel SDM Vol. 3C,
-   --  table 24-10.
+   --  VM-Exit control bit positions as specified by Intel SDM Vol. 3C, "24.7.1
+   --  VM-Exit Controls".
    function Get_Exit_Controls is new Utils.To_Number
      (Bitfield_Type => Exit_Ctrl_Type,
       Mapping_Type  => Exit_Ctrl_Map_Type,
@@ -209,7 +210,9 @@ is
 
    type CR0_Flags_Map_Type is array (CR0_Flags_Type)
      of Mutools.Utils.Unsigned_64_Pos;
-   --  CR0 flag bit positions as specified by Intel SDM Vol. 3A, section 2.5.
+
+   --  CR0 flag bit positions as specified by Intel SDM Vol. 3A, "2.5 Control
+   --  Registers".
    function Get_CR0 is new Utils.To_Number
      (Bitfield_Type => CR0_Flags_Type,
       Mapping_Type  => CR0_Flags_Map_Type,
@@ -251,7 +254,8 @@ is
    type CR4_Flags_Map_Type is array (CR4_Flags_Type)
      of Mutools.Utils.Unsigned_64_Pos;
 
-   --  CR4 flag bit positions as specified by Intel SDM Vol. 3A, section 2.5.
+   --  CR4 flag bit positions as specified by Intel SDM Vol. 3A, "2.5 Control
+   --  Registers".
    function Get_CR4 is new Utils.To_Number
      (Bitfield_Type => CR4_Flags_Type,
       Mapping_Type  => CR4_Flags_Map_Type,
@@ -300,7 +304,8 @@ is
    type Exceptions_Map_Type is array (Exceptions_Type)
      of Mutools.Utils.Unsigned_64_Pos;
 
-   --  Exceptions bit positions as specified by Intel SDM Vol. 3A, table 6-1.
+   --  Exceptions bit positions as specified by Intel SDM Vol. 3A, "6.3.1
+   --  External Interrupts".
    function Get_Exceptions is new Utils.To_Number
      (Bitfield_Type => Exceptions_Type,
       Mapping_Type  => Exceptions_Map_Type,

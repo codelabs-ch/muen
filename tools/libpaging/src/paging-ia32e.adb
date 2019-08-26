@@ -174,7 +174,9 @@ is
       PAT_Index : Natural := 0;
    begin
 
-      --  For PAT index calculation see Intel SDM Vol. 3A, section 4.9.2.
+      --  For PAT index calculation see Intel SDM Vol. 3A, "4.9.2 Paging and
+      --  Memory Typing When the PAT is Supported (Pentium III and More Recent
+      --  Processor Families)".
 
       PAT_Index :=
         (if PAT_Bit and Maps_Page then 4 else 0) +

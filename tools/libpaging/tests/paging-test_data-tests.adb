@@ -36,7 +36,7 @@ package body Paging.Test_Data.Tests is
    procedure Test_Get_Indexes_9d42e6 (Gnattest_T : in out Test) renames Test_Get_Indexes;
 --  id:2.2/9d42e63e2adac92c/Get_Indexes/0/0/
    procedure Test_Get_Indexes (Gnattest_T : in out Test) is
-   --  paging.ads:62:4:Get_Indexes
+   --  paging.ads:63:4:Get_Indexes
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -97,7 +97,7 @@ package body Paging.Test_Data.Tests is
    procedure Test_Get_Index_085052 (Gnattest_T : in out Test) renames Test_Get_Index;
 --  id:2.2/0850521be1519b4e/Get_Index/1/0/
    procedure Test_Get_Index (Gnattest_T : in out Test) is
-   --  paging.ads:68:4:Get_Index
+   --  paging.ads:69:4:Get_Index
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -124,7 +124,7 @@ package body Paging.Test_Data.Tests is
    procedure Test_Get_Offset_64b49e (Gnattest_T : in out Test) renames Test_Get_Offset;
 --  id:2.2/64b49e6ebf507313/Get_Offset/1/0/
    procedure Test_Get_Offset (Gnattest_T : in out Test) is
-   --  paging.ads:75:4:Get_Offset
+   --  paging.ads:76:4:Get_Offset
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -171,7 +171,7 @@ package body Paging.Test_Data.Tests is
    procedure Test_Get_Base_Address_1012f0 (Gnattest_T : in out Test) renames Test_Get_Base_Address;
 --  id:2.2/1012f03cf9caba81/Get_Base_Address/1/0/
    procedure Test_Get_Base_Address (Gnattest_T : in out Test) is
-   --  paging.ads:82:4:Get_Base_Address
+   --  paging.ads:83:4:Get_Base_Address
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -367,7 +367,8 @@ is
    begin
 
       --  Restore mask in EDX:EAX specifies to restore x87, SSE and AVX
-      --  registers, see Intel SDM Vol. 3A, chapter 2.6.
+      --  registers, see Intel SDM Vol. 3A, "2.6 Extended Control Registers
+      --  (Including XCR0)".
 
       System.Machine_Code.Asm
         (Template => "xrstor64 %2",
@@ -386,7 +387,8 @@ is
    begin
 
       --  Save mask in EDX:EAX specifies to save x87, SSE and AVX registers,
-      --  see Intel SDM Vol. 3A, chapter 2.6.
+      --  see Intel SDM Vol. 3A, "2.6 Extended Control Registers (Including
+      --  XCR0)".
 
       System.Machine_Code.Asm
         (Template => "xsave64 %0",

@@ -10,10 +10,10 @@ package Iobm.IO_Ports.Test_Data.Tests is
    with null record;
 
    procedure Test_Allow_Ports_744e03 (Gnattest_T : in out Test);
-   --  iobm-io_ports.ads:36:4:Allow_Ports
+   --  iobm-io_ports.ads:37:4:Allow_Ports
 
    procedure Test_To_Stream_0b7ee3 (Gnattest_T : in out Test);
-   --  iobm-io_ports.ads:47:4:To_Stream
+   --  iobm-io_ports.ads:48:4:To_Stream
 
 end Iobm.IO_Ports.Test_Data.Tests;
 --  end read only

@@ -112,8 +112,9 @@ is
       return Pseudo_Descriptor_Type;
 
    --  Returns a TSS Descriptor for given TSS address and limit, split in two
-   --  64 bit words as specified by Intel SDM Vol. 3A, section 7.2.3. The high
-   --  and low values can be used as consecutive entries in the GDT.
+   --  64 bit words as specified by Intel SDM Vol. 3A, "7.2.3 TSS Descriptor in
+   --  64-bit mode". The high and low values can be used as consecutive entries
+   --  in the GDT.
    procedure Get_TSS_Descriptor
      (TSS_Address, TSS_Limit :     Word64;
       Low, High              : out Word64);

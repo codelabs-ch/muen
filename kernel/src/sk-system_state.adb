@@ -63,8 +63,9 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Check required VMX-fixed bits of given register, see Intel SDM 3C,
-   --  appendix A.7 & A.8.
+   --  Check required VMX-fixed bits of given register, see Intel SDM Vol. 3D,
+   --  "A.7 VMX-Fixed Bits in CR0" and Intel SDM Vol. 3D, "A.8 VMX-Fixed Bits
+   --  in CR4".
    function Fixed_Valid
      (Register : SK.Word64;
       Fixed0   : SK.Word64;
@@ -80,7 +81,7 @@ is
    -------------------------------------------------------------------------
 
    --  Returns True if an invariant TSC is present, see Intel SDM Vol. 3B,
-   --  chapter 17.13.1.
+   --  "17.17.1 Invariant TSC".
    function Has_Invariant_TSC return Boolean
    with
       Volatile_Function,
@@ -105,7 +106,8 @@ is
    -------------------------------------------------------------------------
 
    --  Returns True if local APIC is present and supports x2APIC mode, see
-   --  Intel SDM 3A, chapters 10.4.2 and 10.12.1.
+   --  Intel SDM Vol. 3A, "10.4.2 Presence of the Local APIC" and Intel SDM
+   --  Vol. 3A, "10.12.1 Detecting and Enabling x2APIC Mode".
    function Has_X2_Apic return Boolean
    with
       Volatile_Function,

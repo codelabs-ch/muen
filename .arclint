@@ -2,6 +2,18 @@
 	"linters": {
 		"spelling": {
 			"type": "spelling"
+		},
+
+		"sdmref": {
+			"type": "script-and-regex",
+				"exclude": "(^doc/report/)",
+				"include": [
+					"(\\.ad[bs]$)",
+					"(\\.[chS]$)",
+					"(\\.xml$)",
+					"(\\.xsd$)"],
+				"script-and-regex.script": "/opt/sdmref/sdmref -i",
+				"script-and-regex.regex": "/^(?P<message>.*)$/m"
 		}
 	}
 }

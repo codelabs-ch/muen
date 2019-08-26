@@ -31,8 +31,9 @@ is
    subtype MSR_High_Range is Interfaces.Unsigned_32 range
      16#c0000000# .. 16#c0001fff#;
 
-   --  MSR bitmap as specified by Intel SDM Vol. 3C, section 24.6.9. This type
-   --  encompasses the whole MSR bitmap range (read & write, low & high).
+   --  MSR bitmap as specified by Intel SDM Vol. 3C, "24.6.9 MSR-Bitmap
+   --  Address". This type encompasses the whole MSR bitmap range
+   --  (read & write, low & high).
    type MSR_Bitmap_Type is private;
 
    Null_MSR_Bitmap : constant MSR_Bitmap_Type;

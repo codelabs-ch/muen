@@ -22,7 +22,8 @@ is
    --  Size of one memory page in bytes.
    Page_Size : constant := 4096;
 
-   --  Model-Specific Registers, see Intel SDM Vol. 3C, chapter 35.
+   --  Model-Specific Registers, see Intel SDM Vol. 4, "Chapter 2
+   --  Model-Specific Registers (MSRs)".
    IA32_SYSENTER_CS      : constant := 16#0000_0174#;
    IA32_SYSENTER_ESP     : constant := 16#0000_0175#;
    IA32_SYSENTER_EIP     : constant := 16#0000_0176#;
@@ -38,7 +39,7 @@ is
    IA32_KERNEL_GS_BASE   : constant := 16#c000_0102#;
 
    --  Size of a single MSR-Store entry in bytes, see Intel SDM Vol. 3C,
-   --  table 24-11.
+   --  "24.7.2 VM-Exit Controls for MSRs".
    MSR_Store_Entry_Size : constant := 16;
 
    --  Device IRQ to host vector remapping offset.

@@ -10,10 +10,10 @@ package Msrbm.MSRs.Test_Data.Tests is
    with null record;
 
    procedure Test_Allow_MSRs_e209a8 (Gnattest_T : in out Test);
-   --  msrbm-msrs.ads:42:4:Allow_MSRs
+   --  msrbm-msrs.ads:43:4:Allow_MSRs
 
    procedure Test_To_Stream_a9353e (Gnattest_T : in out Test);
-   --  msrbm-msrs.ads:54:4:To_Stream
+   --  msrbm-msrs.ads:55:4:To_Stream
 
 end Msrbm.MSRs.Test_Data.Tests;
 --  end read only

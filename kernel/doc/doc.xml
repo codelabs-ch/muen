@@ -79,12 +79,49 @@
     reflected to components which enables the realization of a kernel with low
     complexity.
    </text>
-   <section id="overview_policy" label="Configuration" priority="0">
+   <section id="overview_policy" label="Policy / Configuration" priority="0">
     <text priority="0">
-     This section gives a short description of a Muen system policy and its elements
-     as well as how it relates to the kernel. A detailed description of the Muen
-     System Specification can be found in the corresponding document
+     This section gives a short description of the Muen system policy and  how
+     it relates to the kernel. A detailed description of the Muen System
+     Specification can be found in the corresponding document
      \cite{muen:system-spec}.
+
+     In the context of Muen, integration of a system is defined as the process
+     of assembling an executable system image out of constituent parts, such as
+     compiled kernel and subject code, generated data structures (e.g.
+     page tables), etc following a system description.
+
+     The configuration of a Muen system takes place during the integration by
+     means of a \emph{policy} in XML format. The policy includes a declaration
+     of the existing hardware resource of the target platform, the subjects to
+     be executed with their assigned resources as well as the scheduling plan.
+     The plan specifies exactly when a subject should run on which CPU and for
+     how long.
+
+     Information flows between subjects are defined in their entirety in the
+     policy. So-called memory channels define directional writer/reader
+     relationships and assignment of physical memory or devices for shared
+     usage is possible. Unassigned resources are not available during runtime.
+
+     From the information specified in the policy, the Muen toolchain in
+     conjunction with $\tau$0 generates the actual configuration of the
+     hardware, which is merely applied by the kernel at runtime. For example,
+     the page tables for a subject are generated, which the kernel applies
+     accordingly, when the associated subject is executed. The SK has no
+     knowledge of the exact layout of the page tables and which memory areas are
+     accessible to a subject. In fact, these data structures are not even mapped
+     into the address space of the kernel since they remain static and do not
+     need to be accessed.
+
+     As part of the integration, numerous validations are carried out. Each
+     check ensures a specific functional or security-relevant system property,
+     such as for example accessibility of sensitive system memory to subjects.
+     These properties can, where desirable, be manually audited or visualized.
+
+     The kernel implements the communication policy by separating subjects
+     spatially and temporally. It does not have to perform any policy decisions
+     because it is static and does not change. Thus, the Muen SK can be seen as
+     a policy enforcement engine.
     </text>
    </section>
    <section id="overview_operation" label="Kernel Operation" priority="0">

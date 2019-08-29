@@ -80,9 +80,36 @@
     absence of any kind of dynamic resource management and the fixed, cyclic
     scheduler contribute to highly deterministic runtime behavior of the kernel.
 
+    The sole purpose of the kernel is to provide temporal and spatial
+    isolation for subjects running on top of it. By design, all non-essential
+    functionality has been removed from the kernel. This results in a
+    significant reduction of code size and complexity. Figure \ref{fig:sksubs}
+    illustrates parts that usually make up an Operating System and the subset
+    that is implemented by the Muen SK.
+
+    \begin{figure}[ht]
+     \centering
+     \input{graph_sk0}
+     \caption{Complexity reduction of Muen SK compared to a classical, monolithical Kernel.}
+     \label{fig:sksubs}
+    \end{figure}
+
+    Since resource allocation is static and defined in the system policy, there
+    is no need for resource management at runtime. Additionally, Muen does not
+    provide a complex hypercall API as is almost always the case. Subjects can
+    only trigger events, such as sending a signal to a specific subject, that
+    have been defined in their entirety in the policy at integration time.
     Virtualization events such as traps are not handled by the SK but instead
-    reflected to components which enables the realization of a kernel with low
-    complexity.
+    reflected to components as specified by in the policy.
+
+    Further functionality must be implemented in unprivileged subjects. Complex,
+    abstracted IPC mechanism, which are usually provided by classical
+    microkernels, are not part of the Muen kernel.
+
+    In addition to minimization of kernel functionality, care is also taken to
+    ensure that the implementation is made comprehensible and understandable as
+    possible. In particular, the use of complicated algorithms or complex
+    language constructs is deliberately avoided.
    </text>
    <section id="overview_policy" label="Policy / Configuration" priority="0">
     <text priority="0">

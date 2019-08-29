@@ -1,3 +1,4 @@
+\definecolor{dark-gray}   {RGB}{73,73,73}
 \definecolor{usercolor}   {rgb}{0.6,0.7,0.9}
 \definecolor{kernelcolor} {rgb}{0.9,0.7,0.6}
 \definecolor{guestcolor}  {rgb}{0.7,0.9,0.6}
@@ -18,3 +19,6 @@
                         rounded corners=1, minimum width=14ex,
                         minimum height=5ex]
 \tikzstyle{commonnode} = [basenode, dropshadow]
+
+\tikzstyle{dashbox}=[basenode, densely dashed, fill=white, text=dark-gray, draw=dark-gray, minimum height=1cm]
+\tikzstyle{greenbox}=[commonnode, bottom color=guestcolor, minimum height=1cm]

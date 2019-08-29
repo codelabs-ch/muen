@@ -16,7 +16,8 @@
  <xs:simpleType name="cachingType">
   <xs:annotation>
    <xs:documentation>
-    Memory caching type, see Intel SDM Vol. 3A, section 11.3.
+    Memory caching type, see Intel SDM Vol. 3A, "11.3 Methods of Caching
+    Available".
 
     \begin{itemize}
     \item Strong Uncacheable (UC)

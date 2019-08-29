@@ -278,43 +278,6 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_VMCS_Consecutiveness (Gnattest_T : in out Test);
-   procedure Test_VMCS_Consecutiveness_8a8f58 (Gnattest_T : in out Test) renames Test_VMCS_Consecutiveness;
---  id:2.2/8a8f58d2d992eec8/VMCS_Consecutiveness/1/0/
-   procedure Test_VMCS_Consecutiveness (Gnattest_T : in out Test) is
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      Data : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => "data/test_policy.xml");
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/memory/memory[@name='linux|vmcs']",
-         Name  => "physicalAddress",
-         Value => "16#a000#");
-
-      begin
-         VMCS_Consecutiveness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Memory region 'linux|vmcs' not adjacent to other"
-                    & " VMCS regions",
-                    Message   => "Exception mismatch");
-      end;
---  begin read only
-   end Test_VMCS_Consecutiveness;
---  end read only
-
-
---  begin read only
    procedure Test_Physical_Memory_Name_Uniqueness (Gnattest_T : in out Test);
    procedure Test_Physical_Memory_Name_Uniqueness_460dc7 (Gnattest_T : in out Test) renames Test_Physical_Memory_Name_Uniqueness;
 --  id:2.2/460dc72313ab5aa8/Physical_Memory_Name_Uniqueness/1/0/

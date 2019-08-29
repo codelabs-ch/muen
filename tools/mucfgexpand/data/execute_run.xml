@@ -276,11 +276,11 @@
   <memory alignment="16#1000#" caching="WB" name="trampoline" physicalAddress="16#1000#" size="16#1000#" type="system"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_0|vmxon" physicalAddress="16#8000#" size="16#1000#" type="system_vmxon"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_1|vmxon" physicalAddress="16#9000#" size="16#1000#" type="system_vmxon"/>
-  <memory alignment="16#1000#" caching="WB" name="tau0|vmcs" physicalAddress="16#a000#" size="16#1000#" type="kernel_vmcs"/>
-  <memory alignment="16#1000#" caching="WB" name="lnx|vmcs" physicalAddress="16#b000#" size="16#1000#" type="kernel_vmcs"/>
-  <memory alignment="16#1000#" caching="WB" name="subject1|vmcs" physicalAddress="16#c000#" size="16#1000#" type="kernel_vmcs"/>
-  <memory alignment="16#1000#" caching="WB" name="subject2|vmcs" physicalAddress="16#d000#" size="16#1000#" type="kernel_vmcs"/>
-  <memory alignment="16#1000#" caching="WB" name="lnx_core_1|vmcs" physicalAddress="16#e000#" size="16#1000#" type="kernel_vmcs"/>
+  <memory alignment="16#1000#" caching="WB" name="tau0|vmcs" size="16#1000#" type="kernel_vmcs"/>
+  <memory alignment="16#1000#" caching="WB" name="lnx|vmcs" size="16#1000#" type="kernel_vmcs"/>
+  <memory alignment="16#1000#" caching="WB" name="subject1|vmcs" size="16#1000#" type="kernel_vmcs"/>
+  <memory alignment="16#1000#" caching="WB" name="subject2|vmcs" size="16#1000#" type="kernel_vmcs"/>
+  <memory alignment="16#1000#" caching="WB" name="lnx_core_1|vmcs" size="16#1000#" type="kernel_vmcs"/>
   <memory alignment="16#1000#" caching="WB" name="tau0|iobm" size="16#2000#" type="system_iobm">
    <file filename="tau0_iobm" offset="none"/>
   </memory>

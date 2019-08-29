@@ -6,7 +6,8 @@
    <xs:documentation>
     A device domain allows referenced devices access to the specified memory
     regions. It also provides handling for reserved memory region reporting
-    (RMRR), see Intel VT-d specification section 8.4.
+    (RMRR), see Intel VT-d Specification, "8.4 Reserved Memory Region Reporting
+    Structure".
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>

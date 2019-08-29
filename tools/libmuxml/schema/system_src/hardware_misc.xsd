@@ -2,6 +2,13 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:complexType name="physicalMemoryType">
+  <xs:annotation>
+   <xs:documentation>
+    Specifies the available physical memory blocks including reserved memory
+    regions (RMRR, see Intel VT-d Specification, "8.4 Reserved Memory Region
+    Reporting Structure").
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="memoryBlock"    type="memoryBlockType"       minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="reservedMemory" type="reservedMemRegionType" minOccurs="0" maxOccurs="unbounded"/>

@@ -12,7 +12,7 @@
     The \texttt{hardwareType} element is the top-level element of the hardware
     specification in the system policy.  Data required by a hardware description
     includes the amount of available physical memory blocks including reserved
-    memory regions (RMRR), the number of logical CPUs and hardware device
+    memory regions (RMRR), the number of physical CPU cores and hardware device
     resources.
 
     The Muen toolchain provides a handy tool to automate the cumbersome process

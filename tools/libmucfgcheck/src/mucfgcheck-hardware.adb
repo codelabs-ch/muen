@@ -149,12 +149,24 @@ is
    begin
       Mulog.Log (Msg => "Checking CPU configuration and BSP presence");
 
+      --D @Text Section => system_src.xsd:processorType, Priority => 0
+      --D The \texttt{cpu} elements must fulfill the following constraints to
+      --D be valid:
+      --D @UL Id => cpu_subs_checks, Section => system_src.xsd:processorType, Priority => 0
+
+      --D @Item List => cpu_subs_checks, Priority => 0
+      --D A node exists for every physical core of the system
+
       if Sub_Node_Count /= Physical_CPUs then
          Validation_Errors.Insert
            (Msg => "Hardware processor element requires"
             & Physical_CPUs'Img & " CPU sub-elements, but" & Sub_Node_Count'Img
             & " given");
       end if;
+
+      --D @Item List => cpu_subs_checks, Priority => 0
+      --D The optional \texttt{cpuId} attribute of all elements must be
+      --D consecutive
 
       Consecutive_CPU_IDs :
       declare
@@ -203,6 +215,9 @@ is
          end if;
       end Consecutive_CPU_IDs;
 
+      --D @Item List => cpu_subs_checks, Priority => 0
+      --D If specified, a node with \texttt{cpuId} value \texttt{0} must exist
+
       CPU_ID_0 :
       declare
          use type DOM.Core.Node;
@@ -217,6 +232,11 @@ is
               (Msg => "CPU sub-element with CPU ID 0 not found");
          end if;
       end CPU_ID_0;
+
+      --D @Item List => cpu_subs_checks, Priority => 0
+      --D A node with \texttt{apicId} value \texttt{0} must exist and, if
+      --D specified, it must have a \texttt{cpuId} value within the active CPU
+      --D range, i.e. the BSP is part of the system scheduling plan
 
       BSP_Presence :
       declare
@@ -235,6 +255,9 @@ is
               (Msg => "CPU with APIC ID 0 not present in active CPU set");
          end if;
       end BSP_Presence;
+
+      --D @Item List => cpu_subs_checks, Priority => 0
+      --D All \texttt{apicId} attributes must have even numbers
 
       Even_APIC_ID :
       for I in 0 .. Sub_Node_Count - 1 loop

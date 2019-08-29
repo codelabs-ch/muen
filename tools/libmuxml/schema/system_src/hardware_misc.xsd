@@ -30,8 +30,25 @@
  </xs:complexType>
 
  <xs:complexType name="cpuCoreType">
-  <xs:attribute name="apicId" type="xs:unsignedByte" use="required"/>
-  <xs:attribute name="cpuId"  type="xs:unsignedByte" use="optional"/>
+  <xs:annotation>
+   <xs:documentation>
+    Specification of one physical CPU core.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="apicId" type="xs:unsignedByte" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     CPU local APIC ID, see Intel SDM Vol. 3A, "10.4.6 Local APIC ID".
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="cpuId"  type="xs:unsignedByte" use="optional">
+   <xs:annotation>
+    <xs:documentation>
+     Unique CPU ID.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
 </xs:schema>

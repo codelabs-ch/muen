@@ -61,15 +61,52 @@
  </xs:complexType>
 
  <xs:complexType name="processorType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{processorType} element specifies the system processor
+    configuration. The example \ref{code-hw-cpus} below declares a system with
+    four physical CPU cores, running at 2100 MHz speed with a VMX-preemption
+    timer tick rate of 7.
+
+    \lstinputlisting[label=code-hw-cpus,caption=System CPU Configuration,language=XML,linerange=22-27]{../../../policy/hardware/lenovo-t480s.xml}
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="cpu" type="cpuCoreType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>
-  <xs:attribute name="cpuCores"     type="xs:positiveInteger" use="required"/>
-  <xs:attribute name="speed"        type="xs:positiveInteger" use="required"/>
-  <xs:attribute name="vmxTimerRate" type="vmxTimerRateType"   use="required"/>
+  <xs:attribute name="cpuCores" type="xs:positiveInteger" use="required">
+  <xs:annotation>
+   <xs:documentation>
+    Number of available CPU cores. Note that this value designates physical,
+    hardware cores, not Hyper-Threading (HT) \emph{threads}. HT is disabled on
+    Muen.
+   </xs:documentation>
+  </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="speed" type="xs:positiveInteger" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Tick rate of CPU cores in MHz.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="vmxTimerRate" type="vmxTimerRateType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     The VMX-premption timer counts down at a rate proportional to that of the
+     timestamp counter (TSC). This value specifies this proportion, see Intel
+     SDM Vol. 3C, "25.5.1 VMX-Preemption Timer" for more details.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:simpleType name="vmxTimerRateType">
+  <xs:annotation>
+   <xs:documentation>
+    VMX-preemption timer count down rate.
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="xs:nonNegativeInteger">
    <xs:maxInclusive value="31"/>
   </xs:restriction>

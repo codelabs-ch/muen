@@ -386,8 +386,16 @@
   </section>
   <section id="kernel_devs_debug" label="Diagnostics" priority="0">
    <text priority="0">
-    This section describes how the kernel debug build uses a serial I/O device
-    for diagnostics output.
+    The debug build of the Muen SK provides additional debug information at
+    runtime via a serial I/O device. This output can provide system integrators
+    and developers with additional information, e.g. in an unexpected error case
+    as the crash audit information is output via the I/O device on top of
+    writing it to the audit memory region. Which hardware device the kernel
+    uses for diagnostics is specified in the system policy.
+
+    All debug output statements in the kernel are enclosed in \texttt{pragma
+    Debug}. This has the effect that none of them are present in the release
+    version of the kernel.
    </text>
   </section>
  </section>

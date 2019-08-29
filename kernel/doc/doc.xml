@@ -16,17 +16,22 @@
  <section id="introduction" label="Introduction" priority="0">
   <text priority="0">
    This document describes the Muen Separation Kernel (SK). It is intended to
-   give the reader a better understanding of the SK design and its
-   implementation. Documentation is generated based on annotations in the SK
+   provide information and ultimately give a better understanding of the SK
+   design and its implementation. Additionally a short overview of related
+   topics such as system policy and integration is given. References for
+   further reading are included as well.
+
+   The reader is expected to be familiar with concepts related to system-level
+   software such as Operating Systems/Microkernels, component-based systems as
+   well as software development.
+
+   The majority of this document is generated based on annotations in the SK
    source code\footnote{Version: //{str:SK.Version.Version_String}}.
   </text>
-  <section id="intro_scope" label="Scope" priority="0">
-   <text priority="0">
-    Scope and objectives of this document.
-   </text>
-  </section>
   <section id="intro_structure" label="Document structure" priority="0">
    <text priority="0">
+    First, a high-level overview of the design, architecture and basic operation
+    of the Muen Separation Kernel is provided.
     Description of the document structure.
    </text>
   </section>

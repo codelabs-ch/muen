@@ -7,6 +7,10 @@
     Specifies the available physical memory blocks including reserved memory
     regions (RMRR, see Intel VT-d Specification, "8.4 Reserved Memory Region
     Reporting Structure").
+
+    Only memory block reported by the BIOS E820 map as non-\emph{reserved} must
+    be configured in this section, e.g. \emph{usable} or \emph{ACPI NVS},
+    \emph{ACPI data}.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>

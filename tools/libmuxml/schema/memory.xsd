@@ -80,7 +80,7 @@
   <xs:attribute name="name" type="nameType" use="required">
    <xs:annotation>
     <xs:documentation>
-     Name of memory block, e.g. \texttt{System RAM}.
+     Name of memory block.
     </xs:documentation>
    </xs:annotation>
   </xs:attribute>

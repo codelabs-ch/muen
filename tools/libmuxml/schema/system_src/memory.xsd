@@ -68,6 +68,17 @@
  </xs:complexType>
 
  <xs:complexType name="reservedMemRegionType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{reservedMemRegionType} is a special memory block declaration
+    (see \nameref{system_src.xsd:memoryBlockType}). It specifies a reserved
+    memory region as outlined in the Intel VT-d Specification, "8.4 Reserved
+    Memory Region Reporting Structure" (RMRR).
+
+    Reserved memory regions are BIOS allocated memory ranges that may be DMA
+    targets for certain legacy device use-cases.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="memoryBlockBaseType"/>
   </xs:complexContent>

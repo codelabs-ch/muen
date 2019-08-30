@@ -72,9 +72,27 @@
  </xs:simpleType>
 
  <xs:complexType name="memoryBlockBaseType" abstract="true">
-  <xs:attribute name="name"            type="nameType"       use="required"/>
-  <xs:attribute name="physicalAddress" type="word64Type"     use="required"/>
-  <xs:attribute name="size"            type="memorySizeType" use="required"/>
+  <xs:attribute name="name" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of memory block, e.g. \texttt{System RAM}.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="physicalAddress" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Start address of memory block.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="size" type="memorySizeType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Size of memory block.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="deviceMemoryType">

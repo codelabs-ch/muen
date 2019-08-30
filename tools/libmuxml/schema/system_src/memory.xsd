@@ -41,9 +41,28 @@
  </xs:complexType>
 
  <xs:complexType name="memoryBlockType">
+  <xs:annotation>
+   <xs:documentation>
+    Consecutive block of memory provided by the hardware.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="memoryBlockBaseType">
-    <xs:attribute name="allocatable" type="booleanType" use="optional"/>
+    <xs:attribute name="allocatable" type="booleanType" use="optional">
+     <xs:annotation>
+      <xs:documentation>
+       Indication to a physical memory allocator that this block allows
+       allocation of physical memory regions. If this attribute is false, an
+       allocator should only place fixed memory regions in this range, i.e.
+       memory regions with the \texttt{physicalAddress} attribute set by the
+       integrator.
+
+       Note that host physical memory below 1 MiB is considered special, the
+       attribute must be set to false. Only unmapped memory of type
+       \emph{system} is allowed in that special zone.
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>

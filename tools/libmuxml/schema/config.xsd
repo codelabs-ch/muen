@@ -81,6 +81,10 @@
     \item Component
     \end{itemize}
 
+    During the build process, configuration values provided by the platform are
+    merged into the global system configuration. Component configuration values
+    allow the parameterization of component-local functionality.
+
     The following listing shows example configuration options for all three
     variants.
 
@@ -94,9 +98,27 @@
     \end{lstlisting}
     ]]>
 
-    During the build process, configuration values provided by the platform are
-    merged into the global system configuration. Component configuration values
-    allow the parameterization of component-local functionality.
+    Besides component parameterization, configuration options are used in
+    \texttt{if} conditionals, as shown in the following example.
+
+    <![CDATA[
+    \begin{lstlisting}[language=XML]
+    <if variable="xhcidbg_enabled" value="true">
+     ...
+    </if>
+    \end{lstlisting}
+    ]]>
+
+    A second use case is XML attribute value expansion as follows:
+
+    <![CDATA[
+    \begin{lstlisting}[language=XML]
+    <channel name="debuglog" size="$logchannel_size"/>
+    \end{lstlisting}
+    ]]>
+
+    The \texttt{size} attribute value is not specified directly, but parameterized via
+    an integer configuration option.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>

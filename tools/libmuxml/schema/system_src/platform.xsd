@@ -15,7 +15,7 @@
 
     The following XML-snipped shows an example platform specification.
 
-    \lstinputlisting[label=code-platform,caption=Example Platform Specification,language=XML]{../../../policy/platform/lenovo-t430s.xml}
+    \lstinputlisting[label=code-platform,caption=Example Platform Specification,language=XML]{../../../policy/platform/lenovo-t480s.xml}
 
     The \texttt{config} section defines platform-specific configuration options,
     while the \texttt{mappings/aliases} section defines aliases for certain

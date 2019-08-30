@@ -2,6 +2,11 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:simpleType name="memorySizeType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{memorySizeType} is used to declare memory sizes.
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="word64Type"/>
  </xs:simpleType>
 

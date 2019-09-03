@@ -6,14 +6,6 @@
   <xs:attribute name="virtualAddress" type="word64Type" use="required"/>
  </xs:complexType>
 
- <xs:complexType name="memoryBlockType">
-  <xs:complexContent>
-   <xs:extension base="memoryBlockBaseType">
-    <xs:attribute name="allocatable" type="booleanType" use="required"/>
-   </xs:extension>
-  </xs:complexContent>
- </xs:complexType>
-
  <xs:complexType name="fileContentType">
   <xs:attribute name="filename" type="xs:string"          use="required"/>
   <xs:attribute name="offset"   type="optionalOffsetType" use="required"/>

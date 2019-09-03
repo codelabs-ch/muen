@@ -14,8 +14,12 @@ SCHEMA_FILE = schema/`echo $* | sed -e 's/_a//g;s/_b//g;s/_src//g'`.xsd
 XSD_FILES = $(shell find schema/ -name '*.xsd')
 
 COMPONENT_TARGETS = $(SCHEMA_FILES)
-TEST_TARGETS      = $(COMPONENT_TARGETS)
+TEST_TARGETS      = $(COMPONENT_TARGETS) xmllint
 COV_TARGETS       = $(COMPONENT_TARGETS)
+
+LINT_XML   = $(wildcard data/format_*.xml)
+LINT_FILES = $(notdir $(LINT_XML))
+LINT_OK    = $(LINT_FILES:%=$(OBJ_DIR)/%.lintok)
 
 ADDITIONAL_CLEAN = $(GEN_DIR)
 
@@ -24,10 +28,17 @@ include ../coverage.mk
 
 include ../../projects/tests.mk
 
-DUMMY := $(shell mkdir -p $(GEN_DIR))
+$(OBJ_DIR) $(GEN_DIR):
+	@mkdir $@
 
-$(GEN_DIR)/muxml-%_schema.ads: $(XSD_FILES) $(RESOLVE_XSL)
+$(GEN_DIR)/muxml-%_schema.ads: $(XSD_FILES) $(RESOLVE_XSL) | $(GEN_DIR)
 	@$(E) $(COMPONENT) "XSLT $*" \
 		"xsltproc --stringparam format $* $(RESOLVE_XSL) $(SCHEMA_FILE) > $(GEN_DIR)/$*.xsd"
 	@$(E) $(COMPONENT) "Xml2Ada $*" \
 		"$(XML2ADA) Muxml.$*_schema $(GEN_DIR)/$*.xsd $@"
+
+xmllint: $(LINT_OK)
+$(OBJ_DIR)/%.lintok: $(COMPONENT_TARGETS) $(LINT_XML) | $(OBJ_DIR)
+	@$(E) $(COMPONENT) "Xmllint $*" \
+		"xmllint --noout --schema generated/system_$(*:format_%.xml=%).xsd data/$*"
+	@touch $@

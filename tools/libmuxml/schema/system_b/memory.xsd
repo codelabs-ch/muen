@@ -12,11 +12,6 @@
   </xs:complexContent>
  </xs:complexType>
 
- <xs:complexType name="memRefType">
-  <xs:attributeGroup ref="memRefBaseAttrs"/>
-  <xs:attribute name="virtualAddress" type="word64Type" use="required"/>
- </xs:complexType>
-
  <xs:complexType name="memoryBlockType">
   <xs:complexContent>
    <xs:extension base="memoryBlockBaseType">

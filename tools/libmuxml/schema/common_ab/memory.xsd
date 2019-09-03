@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
- <xs:complexType name="memoryType">
-  <xs:complexContent>
-   <xs:extension base="physicalMemBaseType">
-    <xs:attribute name="type"            type="memoryKindType" use="required"/>
-    <xs:attribute name="alignment"       type="alignmentType"  use="required"/>
-    <xs:attribute name="physicalAddress" type="word64Type"     use="required"/>
-   </xs:extension>
-  </xs:complexContent>
- </xs:complexType>
-
  <xs:complexType name="memRefType">
   <xs:attributeGroup ref="memRefBaseAttrs"/>
   <xs:attribute name="virtualAddress" type="word64Type" use="required"/>

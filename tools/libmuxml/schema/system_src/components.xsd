@@ -59,7 +59,6 @@
   <xs:complexContent>
    <xs:extension base="memoryBaseType">
     <xs:attributeGroup ref="memBaseAttrs"/>
-    <xs:attribute name="size"           type="word64Type"            use="required"/>
     <xs:attribute name="virtualAddress" type="word64Type"            use="required"/>
     <xs:attribute name="type"           type="subjectMemoryKindType" use="optional"/>
    </xs:extension>

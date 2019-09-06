@@ -6,13 +6,20 @@
  <xs:complexType name="systemType">
   <xs:annotation>
    <xs:documentation>
-    The \texttt{systemType} is the top-level element in the Muen system policy.
-    It contains various sub-elements which specify certain aspects of a concrete
-    system.
+    A Muen system policy specifies all hardware resources such as physical
+    memory, devices, CPU time, etc and how these resources are accessed by the
+    separation kernel, the subjects and devices.
 
-    See the systems in the Muen repository \texttt{policy/xml} directory for
-    examples on how to instantiate this XML-element in a concrete Muen system
-    policy.
+    The \texttt{system} section is the top-level element in the Muen system
+    policy.  It contains various sub-elements which specify all aspects of a
+    concrete system.
+
+    This is the \emph{source format} of the Muen system policy. It allows for
+    abstractions, such as channels, which are broken down into their constituent
+    parts by the toolchain into format A and B accordingly.
+
+    See line \ref{lst:af-lineref-system} and following in listing
+    \ref{lst:annotated-policy} for an annotated system policy example.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>

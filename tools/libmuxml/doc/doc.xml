@@ -342,9 +342,16 @@
     \texttt{mucfgvalidate} and the other Muen build tools in the toolchain.
    </text>
   </section>
-
  </section>
 
  <section id="schema" label="Schema" priority="0"/>
+
+ <section id="appendix" label="Appendix" priority="1000">
+  <section id="appendix-ap" label="Annotated Example Policy" priority="0">
+   <text priority="0">
+    \lstinputlisting[caption=Demo System (VT-d),label={lst:annotated-policy},language=XML,escapeinside={(*}{*)}]{annotated_policy.xml}
+   </text>
+  </section>
+ </section>
 
 </doc>

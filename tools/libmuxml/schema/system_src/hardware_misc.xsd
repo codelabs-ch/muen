@@ -4,13 +4,16 @@
  <xs:complexType name="physicalMemoryType">
   <xs:annotation>
    <xs:documentation>
-    Specifies the available physical memory blocks including reserved memory
-    regions (RMRR, see Intel VT-d Specification, "8.4 Reserved Memory Region
-    Reporting Structure").
+    The hardware \texttt{memory} element specifies the available physical memory
+    blocks including reserved memory regions (RMRR, see Intel VT-d Specification,
+    "8.4 Reserved Memory Region Reporting Structure").
 
-    Only memory block reported by the BIOS E820 map as non-\emph{reserved} must
+    Only memory blocks reported by the BIOS E820 map as non-\emph{reserved} must
     be configured in this section, e.g. \emph{usable} or \emph{ACPI NVS},
     \emph{ACPI data}.
+
+    See line \ref{lst:af-lineref-hw-memory} in listing \ref{lst:annotated-policy}
+    for an example memory element.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>

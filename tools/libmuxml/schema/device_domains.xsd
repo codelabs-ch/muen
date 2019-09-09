@@ -5,17 +5,21 @@
   <xs:annotation>
    <xs:documentation>
     The physical memory accessible by PCI devices is specified by so called
-    device domains. Such domains define virtual mappings of physical memory
+    device domains. Such domains define memory mappings of physical memory
     regions for one or multiple devices. Device references select a subset of
-    hardware devices provided by the platform.
+    hardware devices provided by the hardware/platform. Devices may be
+    referenced by device name, alias or device class.
 
-    Device domains are isolated from each other by the use of Intel VT-d. Thus they
-    can only be specified and enforced on systems that provide at least one
-    IOMMU\footnote{Input/Output Memory Management Unit}.
+    Device references can optionally set the \texttt{mapReservedMemory}
+    attribute so RMRR regions referenced by the device are also mapped into
+    the device domain.
 
-    Listing \ref{code-devdomains} shows a device domain configuration example.
+    Device domains are isolated from each other by the use of Intel VT-d. Thus
+    they can only be specified and enforced on systems that provide at least one
+    IOMMU.
 
-    \lstinputlisting[label=code-devdomains,caption=Device Domains,language=XML,linerange=devDomBegin-devDomEnd]{../../../policy/xml/common_device_domains.xml}
+    See line \ref{lst:af-lineref-devdom} in listing \ref{lst:annotated-policy}
+    for a device domain example.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>

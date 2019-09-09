@@ -10,17 +10,8 @@
     and the rest of the system policy. This allows to build a Muen system for
     different physical target machines using the same system policy.
 
-    The platform config section enables the declaration of platform-specific
-    properties.
-
-    The following XML-snipped shows an example platform specification.
-
-    \lstinputlisting[label=code-platform,caption=Example Platform Specification,language=XML]{../../../policy/platform/lenovo-t480s.xml}
-
-    The \texttt{config} section defines platform-specific configuration options,
-    while the \texttt{mappings/aliases} section defines aliases for certain
-    hardware devices. Device \texttt{classes} allow the grouping of (multiple)
-    device(s) under a common name.
+    See line \ref{lst:af-lineref-platform} in listing \ref{lst:annotated-policy}
+    for an example platform section.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>

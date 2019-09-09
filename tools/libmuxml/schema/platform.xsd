@@ -29,6 +29,19 @@
  </xs:complexType>
 
  <xs:complexType name="devClassesType">
+  <xs:annotation>
+   <xs:documentation>
+    Device classes enable the grouping of devices and allow referencing all
+    devices by a single name. This simplifies the process of assigning multiple
+    devices to a subject.
+
+    Note: A device class may contain an arbitrary number of devices, including
+    zero.
+
+    See line \ref{lst:af-lineref-devclass} in listing \ref{lst:annotated-policy}
+    for a device class example.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="class" type="devClassType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>

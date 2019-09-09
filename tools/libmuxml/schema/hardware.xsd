@@ -45,7 +45,22 @@
  <xs:complexType name="devicesType">
   <xs:annotation>
    <xs:documentation>
-    The \texttt{devicesType} specifies all hardware devices in a system policy.
+    The \texttt{devices} element enumerates all devices provided by the hardware platform.
+    Different kinds of devices, be it PCI(e) or legacy (non-PCI), can be
+    declared in this section. There are three main device resource types:
+
+    \begin{itemize}
+    \item IRQ
+    \item I/O port range
+    \item Memory
+    \end{itemize}
+
+    Capabilities can be used to convey additional device-specific information.
+    The base address of the memory mapped PCI config space is defined by the
+    \texttt{pciConfigAddress} attribute.
+
+    See line \ref{lst:af-lineref-hw-devices} in listing \ref{lst:annotated-policy}
+    for an example section.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>

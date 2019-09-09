@@ -6,7 +6,8 @@
    <xs:documentation>
     Events are an activity caused by a subject (source) that impacts a second
     subject (target) or is directed at the kernel. Events are declared globally
-    and have a unique name to be unambiguous.
+    and have a unique name to be unambiguous. An event must have a single source
+    and one target.
 
     Subjects can use events to either deliver an interrupt, hand over execution to
     or reset the state of a target subject. The first kind of event provides a
@@ -17,20 +18,18 @@
     subject if an error occurs in the source subject. The third kind is used to
     faciliate the restart of subjects.
 
-    An event can also have the same source and target, a so called \emph{self}
-    event. Such events are useful to implement para-virtualized timers in VM
-    subjects for example.
+    An event can also have the same source and target, which is called
+    \emph{self} event. Such events are useful to implement para-virtualized
+    timers in VM subjects for example.
 
     Kernel events are special in that they are targeted at the kernel. The
     currently supported events are system reboot and shutdown.
 
-    Listing \ref{code-events} shows the declartion of physical events in the
-    system policy.
-
-    \lstinputlisting[label=code-events,caption=Physical Events,language=XML,linerange=2-18]{../../../policy/xml/common_events.xml}
-
     For documentation about linking physical events to source- and
     target-subjects, see section \ref{system_src.xsd:subjectEventsType}.
+
+    See line \ref{lst:af-lineref-events} in listing \ref{lst:annotated-policy}
+    for an example events section.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>

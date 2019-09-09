@@ -85,19 +85,6 @@
     merged into the global system configuration. Component configuration values
     allow the parameterization of component-local functionality.
 
-    The following listing shows example configuration options for all three
-    variants.
-
-    <![CDATA[
-    \begin{lstlisting}[language=XML]
-    <config>
-     <boolean name="print_vcpu_speed" value="true"/>
-     <integer name="serial" value="123456789"/>
-     <string name="greeter" value="Crypter subject running"/>
-    </config>
-    \end{lstlisting}
-    ]]>
-
     Besides component parameterization, configuration options are used in
     \texttt{if} conditionals, as shown in the following example.
 
@@ -119,6 +106,9 @@
 
     The \texttt{size} attribute value is not specified directly, but parameterized via
     an integer configuration option.
+
+    See line \ref{lst:af-lineref-config-global} in listing for an example config
+    section.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>

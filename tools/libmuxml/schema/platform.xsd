@@ -4,15 +4,15 @@
  <xs:complexType name="aliasesType">
   <xs:annotation>
    <xs:documentation>
-    Aliases in the platform section are used to give alternative names to
-    certain devices in the hardware section. This is required to create a
-    unified view of devices over multiple hardware targets.
+    Aliases are a renaming mechanism for physical hardware devices and their
+    resources. By using alias names in the system policy references to
+    concrete hardware resources can be avoided.
+    Additionally, aliases may be used to define a device which only contains a
+    subset of the resources of the physical device. This can be achieved by
+    only renaming the resources that the device alias should export.
 
-    For example, the alias \texttt{upstream} could be mapped to
-    \texttt{ethernet\_controller\_1} on one hardware platform, and on the other
-    \texttt{ethernet\_controller\_2}. If the controller is referenced via the
-    alias in the system policy, this difference is transparent from the system
-    policy's point of view.
+    See line \ref{lst:af-lineref-aliases} in listing \ref{lst:annotated-policy}
+    for an example aliases section.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>

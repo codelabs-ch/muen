@@ -63,12 +63,15 @@
  <xs:complexType name="processorType">
   <xs:annotation>
    <xs:documentation>
-    The \texttt{processorType} element specifies the system processor
-    configuration. The example \ref{code-hw-cpus} below declares a system with
-    four physical CPU cores, running at 2100 MHz speed with a VMX-preemption
-    timer tick rate of 7.
+    The \texttt{processor} element specifies the number of CPU cores, the
+    processor speed in MHz and the Intel VMX preemption timer rate.
 
-    \lstinputlisting[label=code-hw-cpus,caption=System CPU Configuration,language=XML,linerange=22-27]{../../../policy/hardware/lenovo-t480s.xml}
+    Since Intel CPUs can have arbitrary APIC identifiers, the APIC IDs of all
+    physical CPUs are enumerated here. The APIC ID is required for interrupt and
+    IPI routing.
+
+    See line \ref{lst:af-lineref-processor} in listing \ref{lst:annotated-policy}
+    for an example processor element.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>

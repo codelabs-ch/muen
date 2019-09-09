@@ -119,14 +119,35 @@
  <xs:complexType name="memRegionsType">
   <xs:annotation>
    <xs:documentation>
-    The \texttt{memRegionsType} specifies the physical memory layout of the
-    system.  Memory regions are defined by their size, caching, type and are
-    placed by specifying a physical address. Additionally the content of the
-    region can be declared as backed by a file or filled with a pattern.
+    This section declares all physical memory regions (RAM) and thus the
+    physical memory layout of the system. Regions declared in this section can
+    be assigned to subjects and device domains.
 
-    Listing \ref{code-physmem} shows example memory regions.
+    Memory regions are defined by the following attributes:
+    \begin{itemize}
+    \item Name
+    \item Caching type
+    \item Size
+    \item Physical address*
+    \item Alignment*
+    \item Memory type*
+    \end{itemize}
 
-    \lstinputlisting[label=code-physmem,caption=Physical Memory Regions,language=XML,linerange=2-9]{../../../policy/xml/common_memory.xml}
+    Attributes with an asterisk are optional. While alignment and memory type
+    are set to a default value if not specified, the physical address is filled
+    in by the allocator tool, which allocates all memory regions and fixes the
+    physical memory layout.
+
+    Additionally, the content of a region can be declared as backed by a file or
+    filled with a pattern.
+
+    Note: The caching type is an attribute of the physical memory region by
+    design to avoid inconsistent typing, even though the Intel Page Attribute
+    Table (PAT) mechanism allows to set it for each memory mapping, see Intel
+    SDM Vol. 3A, "11.12.4 Programming the PAT".
+
+    See line \ref{lst:af-lineref-physmem} in listing \ref{lst:annotated-policy}
+    for an example memory region section.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>

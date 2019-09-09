@@ -9,7 +9,7 @@
     target machine must be defined in the system policy in order for these
     resources to be allocated to subjects.
 
-    The \texttt{hardwareType} element is the top-level element of the hardware
+    The \texttt{hardware} element is the top-level element of the hardware
     specification in the system policy.  Data required by a hardware description
     includes the amount of available physical memory blocks including reserved
     memory regions (RMRR), the number of physical CPU cores and hardware device
@@ -18,6 +18,9 @@
     The Muen toolchain provides a handy tool to automate the cumbersome process
     of gathering hardware resource data from a running Linux system:
     \texttt{mugenhwcfg}\footnote{https://git.codelabs.ch/?p=muen/mugenhwcfg.git}.
+
+    See line \ref{lst:af-lineref-hw} in listing \ref{lst:annotated-policy} for
+    an example hardware section.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>

@@ -49,7 +49,13 @@
   </xs:annotation>
   <xs:complexContent>
    <xs:extension base="libraryType">
-    <xs:attribute name="profile" type="componentProfileType" use="required"/>
+    <xs:attribute name="profile" type="componentProfileType" use="required">
+     <xs:annotation>
+      <xs:documentation>
+       Component profile.
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>
@@ -92,7 +98,7 @@
   <xs:attribute name="name" type="nameType" use="required">
    <xs:annotation>
     <xs:documentation>
-     Library name.
+     Component/library name.
     </xs:documentation>
    </xs:annotation>
   </xs:attribute>
@@ -141,9 +147,27 @@
  </xs:complexType>
 
  <xs:complexType name="binaryType">
-  <xs:attribute name="filename"       type="xs:string"      use="required"/>
-  <xs:attribute name="size"           type="memorySizeType" use="required"/>
-  <xs:attribute name="virtualAddress" type="word64Type"     use="required"/>
+  <xs:attribute name="filename" type="xs:string" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Binary filename.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="size" type="memorySizeType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Binary size.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="virtualAddress" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Virtual base address of binary in component address space.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="providedMemType">
@@ -158,6 +182,15 @@
 
  <xs:complexType name="logicalChannelsType">
   <xs:choice minOccurs="0" maxOccurs="unbounded">
+  <xs:annotation>
+   <xs:documentation>
+    Components and libraries use the \texttt{channels} sub-section of
+    \texttt{requires} to specify expected channels.
+
+    See line \ref{lst:af-lineref-compreq-chan} in listing
+    \ref{lst:annotated-policy} an example specification.
+   </xs:documentation>
+  </xs:annotation>
    <xs:element name="reader" type="logicalChannelReaderType"/>
    <xs:element name="writer" type="logicalChannelWriterType"/>
    <xs:element name="array"  type="channelArrayType"/>
@@ -189,6 +222,15 @@
  </xs:complexType>
 
  <xs:complexType name="logicalDevicesType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{devices} sub-section of the \texttt{requires} section is used to
+    specify expected devices with their associated resources.
+
+    See line \ref{lst:af-lineref-compreq-dev} in listing
+    \ref{lst:annotated-policy} an example specification.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="device" type="logicalDeviceType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
@@ -200,7 +242,13 @@
    <xs:element name="memory" type="logicalMemType"    minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="ioPort" type="logicalIoPortType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
-  <xs:attribute name="logical" type="nameType" use="required"/>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical device name.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="logicalIrqType">
@@ -245,6 +293,14 @@
  </xs:complexType>
 
  <xs:complexType name="memoryArrayType">
+  <xs:annotation>
+   <xs:documentation>
+    The memory array abstraction simplifies the declaration of consecutive
+    memory mappings with a given base address, region size and
+    \texttt{executable} and \texttt{writable} attributes. The child elements
+    declare the number of expected regions.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="memory" type="arrayEntryType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>
@@ -253,6 +309,17 @@
  </xs:complexType>
 
  <xs:complexType name="channelArrayType">
+  <xs:annotation>
+   <xs:documentation>
+    The channel array abstraction simplifies the declaration of consecutive
+    channel mappings with a given base address, channel size and optional
+    event/vector bases. The child elements declare the number of expected
+    channels and either the \texttt{reader} or \texttt{writer} role.
+
+    See line \ref{lst:af-lineref-compreq-chanarr} in listing
+    \ref{lst:annotated-policy} an example specification.
+   </xs:documentation>
+  </xs:annotation>
   <xs:choice>
    <xs:element name="reader" type="arrayEntryType" minOccurs="1" maxOccurs="unbounded"/>
    <xs:element name="writer" type="arrayEntryType" minOccurs="1" maxOccurs="unbounded"/>

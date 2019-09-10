@@ -12,6 +12,16 @@
  </xs:attributeGroup>
 
  <xs:complexType name="subjectEventsType">
+  <xs:annotation>
+   <xs:documentation>
+    The subject \texttt{events} element specifies all events originating from or
+    directed at this subject. The physical attribute is the name of a event
+    defined in the global events section.
+
+    See line \ref{lst:af-lineref-subject-evt} in listing
+    \ref{lst:annotated-policy} for an example subject events section.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="source" type="eventSourceType" minOccurs="0" maxOccurs="1"/>
    <xs:element name="target" type="eventTargetType" minOccurs="0" maxOccurs="1"/>

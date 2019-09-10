@@ -38,6 +38,25 @@
  </xs:complexType>
 
  <xs:complexType name="eventSourceType">
+  <xs:annotation>
+   <xs:documentation>
+    The event \texttt{source} element specifies events that are allowed to be
+    triggered by the associated subject.
+
+    Source events are divided into two groups: \texttt{vmx\_exit} and
+    \texttt{vmcall}.  For event group \texttt{vmx\_exit} the id attribute
+    specifies the trap number while in the \texttt{vmcall} group it designates
+    the hypercall number.
+
+    The \texttt{vmx\_exit} group is translated to a lookup table for handling
+    VMX exit traps as defined by Intel SDM Vol. 3D, "Appendix C VMX Basic Exit
+    Reasons".  The \texttt{vmcall} group on the other hand is translated into a
+    lookup table to handle hypercalls.
+
+    See line \ref{lst:af-lineref-events-source} in listing
+    \ref{lst:annotated-policy} for an example event source section.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="group" type="eventGroupType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>
@@ -71,6 +90,11 @@
  </xs:complexType>
 
  <xs:simpleType name="eventGroupNameType">
+  <xs:annotation>
+   <xs:documentation>
+    Supported event groups.
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="xs:string">
    <xs:enumeration value="vmx_exit"/>
    <xs:enumeration value="vmcall"/>

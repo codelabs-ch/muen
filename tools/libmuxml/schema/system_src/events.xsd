@@ -2,6 +2,13 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:complexType name="eventGroupType">
+  <xs:annotation>
+   <xs:documentation>
+    Source event group element. Currently, two groups are supported:
+    \texttt{vmcall} for hypercalls and \texttt{vmx\_exit} for all other supported
+    traps.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="default" type="defaultEventEntryType" minOccurs="0" maxOccurs="1"/>
    <xs:element name="event"   type="sourceEventEntryType"  minOccurs="0" maxOccurs="unbounded"/>
@@ -14,6 +21,15 @@
  </xs:complexType>
 
  <xs:complexType name="defaultEventEntryType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{default} element entry can be used to specify an event which
+    should be added for all event ids that have not been explicitly specified.
+
+    See line \ref{lst:af-lineref-events-source-default} in listing
+    \ref{lst:annotated-policy} for a default source event example.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="baseDefaultEventType">
     <xs:group ref="sourceEventActionsGroup" minOccurs="0" maxOccurs="1"/>

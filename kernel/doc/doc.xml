@@ -505,13 +505,44 @@
   </text>
   <section id="kernel_devs_apic" label="Interrupt Controllers" priority="0">
    <text priority="0">
-    This section describes how the kernel programs the PIC, APIC and I/O APIC.
+    The kernel controls and programs all interrupt controllers since it must
+    ensure that only IRQs according to the policy are generated and route to the
+    assigned subject, and thus CPU. On x86, there are three different interrupt
+    controllers that must be considered: PIC, APIC and I/O APIC.
+
+    The legacy PIC is disabled since only the APIC and I/O APIC are used. The
+    APIC is CPU-local and is setup during system initialization by each CPU
+    core. The I/O APIC and its interrupt routing table is programmed by the BSP
+    according to the system policy.
+
+    During normal operation, only the APIC is accessed to acknowledge
+    End-Of-Interrupt (EOI) to unblock processing of other interrupts.
+
+    Enforcement that only the configured interrupts are raised is done by the
+    IOMMU Interrupt Remapping, see section \ref{kernel_devs_iommu}
    </text>
   </section>
   <section id="kernel_devs_iommu" label="IOMMU" priority="0">
    <text priority="0">
-    This section describes how the kernel programs the IOMMU for device
-    isolation, DMA and Interrupt remapping.
+    The IOMMU performs two critical functions to constrain devices to only
+    access resources and raise interrupts as defined in the system policy: DMA
+    Remapping and Interrupt Remapping.
+
+    DMA Remapping (DMAR) performs address translation for device memory access,
+    analogous how the MMU operates for subjects. Each DMA request is identified
+    by the device source ID which is associated with the VT-d page tables
+    generated for the given device. During startup, the kernel installs the
+    necessary and pre-generated data structure, activating DMAR by programming
+    the IOMMU. For further information see Intel VT-d specification, "3 DMA
+    Remapping" \cite{intelvtd}.
+
+    The IOMMU Interrupt Remapping (IR) feature with the remapping table
+    generated during intergration, assure that the correct interrupt vectors are
+    raised according to the policy for all assigned IRQs and that all other,
+    non-assigned IRQs are blocked. During setup, the kernel installs the
+    remapping table and enables IR. For further information see Intel VT-d
+    specification, "5 Interrupt Remapping and Interrupt Posting"
+    \cite{intelvtd}.
    </text>
   </section>
   <section id="kernel_devs_timer" label="Timer" priority="0">

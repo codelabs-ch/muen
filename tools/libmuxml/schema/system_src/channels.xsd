@@ -11,17 +11,19 @@
 
     Channels are declared globally and have an unique name to be unambiguous.
 
-    Listing \ref{code-channels} shows the declartion of physical channels in the
-    system policy.
-
-    \lstinputlisting[label=code-channels,caption=Physical Channels,language=XML,linerange=2-12]{../../../policy/xml/common_channels.xml}
-
     For documentation about linking physical channels to subjects and
     components, see sections \ref{system_src.xsd:channelReferencesType} and
     \ref{system_src.xsd:logicalChannelsType}.
 
     For information how to map a physical channel with a logical component
     channel at subject level, see section \ref{system_src.xsd:resourceMappingType}.
+
+    Note that channels are a policy source format abstraction. The toolchain
+    resolves this concept into subjects by adding the appropriate memory
+    regions and events.
+
+    See line \ref{lst:af-lineref-channels} in listing \ref{lst:annotated-policy}
+    for an example channel section.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>

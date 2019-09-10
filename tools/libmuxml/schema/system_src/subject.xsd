@@ -55,6 +55,18 @@
  </xs:complexType>
 
  <xs:complexType name="componentReferenceType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{component} reference element specifies which component this
+    subject instantiates. All logical resources required by the component must
+    be mapped to physical resources of the appropriate type. Validators make
+    sure that all requirements are satisfied and that no mapping has been
+    omitted.
+
+    See line \ref{lst:af-lineref-subject-comp} in listing
+    \ref{lst:annotated-policy} for an example component reference.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="map" type="resourceMappingType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>

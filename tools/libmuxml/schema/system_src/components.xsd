@@ -141,6 +141,28 @@
  </xs:complexType>
 
  <xs:complexType name="providedResourcesType">
+  <xs:annotation>
+   <xs:documentation>
+    Components usually come in the form of an executable file. To this end, the
+    \texttt{provides} section specifies the memory regions of the component
+    binary executable with their content.
+
+    From a security perspective, it is often desirable to provide the different
+    binary section as separate memory regions with the appropriate access
+    rights, i.e. only the text section is executable, rodata is not writable and
+    so on.
+
+    Memory specified in this sections are expanded to physical regions for each
+    subject that instantiates this component.
+
+    Note: the Mucbinsplit tool can be used to extract these section from an ELF
+    binary into separate files and automatically add the corresponding memory
+    elements to the component specification.
+
+    See line \ref{lst:af-lineref-compprov} in listing \ref{lst:annotated-policy}
+    for example \texttt{provides} section.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="memory" type="providedMemType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>

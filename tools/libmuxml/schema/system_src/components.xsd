@@ -4,26 +4,8 @@
  <xs:complexType name="componentsType">
   <xs:annotation>
    <xs:documentation>
-    A component is a piece of software which shall be executed by the SK. They
-    represent the building blocks of a component-based system and can be
-    regarded as templates for executable entities instantiated by subjects.
-
-    The specification of a component declares the binary program file including
-    the virtual memory location as well as the view of the expected execution
-    environment. The component environment is therefore defined by the following
-    resources:
-
-    \begin{itemize}
-    \item Binary file
-    \item Logical channels
-    \item Logical memory regions
-    \item Logical devices
-    \end{itemize}
-
-    While a \texttt{component} can be instantiated by a subject to make it
-    runnable on the SK, a \texttt{component library} can only be referenced by
-    an actual component, by declaring it as a dependency in the component
-    specification. This way components inherit the resources of libraries.
+    The \texttt{components} element holds a list of components and component
+    libraries.
 
     Note that components are a policy source format abstraction. The toolchain
     resolves this concept into subjects by adding the appropriate memory
@@ -40,6 +22,31 @@
  </xs:complexType>
 
  <xs:complexType name="componentType">
+  <xs:annotation>
+   <xs:documentation>
+    A component is a piece of software which shall be executed by the SK. They
+    represent the building blocks of a component-based system and can be
+    regarded as templates for executable entities instantiated by subjects.
+
+    The specification of a component declares the binary program file including
+    the virtual memory location as well as the view of the expected execution
+    environment. The component environment is therefore defined by the following
+    resources:
+
+    \begin{itemize}
+    \item Binary file
+    \item Logical channels
+    \item Logical memory regions
+    \item Logical devices
+    \end{itemize}
+
+    Components are identified by name and specify a profile. The profile
+    controls the settings of the virtual CPU (vCPU).
+
+    See line \ref{lst:af-lineref-component} in listing \ref{lst:annotated-policy}
+    for an example component.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="libraryType">
     <xs:attribute name="profile" type="componentProfileType" use="required"/>
@@ -59,11 +66,13 @@
 
     A component specification declares library dependencies to request the
     library resources from the system through the inclusion of the library
-    specification in the \texttt{depends} section. On the source code level, a
-    library is included by mechanisms provided by the respective programming
-    language. Note that the component library code is \emph{not} shared between
-    components but lives in the isolated execution environment of a subject
-    instantiating the component.
+    specification in the \texttt{depends} section. This way components inherit
+    the resources of libraries.
+
+    On the source code level, a library is included by mechanisms provided by
+    the respective programming language. Note that the component library code is
+    \emph{not} shared between components but lives in the isolated execution
+    environment of a subject instantiating the component.
 
     Libraries can request the same resources as ordinary components, but the
     binary element is omitted in the specification. A subject instantiating the
@@ -90,12 +99,32 @@
  </xs:complexType>
 
  <xs:complexType name="libraryDepsType">
+  <xs:annotation>
+   <xs:documentation>
+    Components and libraries are allowed to declare dependencies to other
+    libraries. All resources required by the included library are merged with
+    the ones specified by the component or library. Libraries can depend on
+    other libraries.
+
+    A subject realizing this component must then correctly map all component and
+    library resource requirements to physical resources in order to fulfill the
+    expectations.
+
+    See line \ref{lst:af-lineref-compdeps} in listing \ref{lst:annotated-policy}
+    for example dependency section.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="library" type="namedRefType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>
  </xs:complexType>
 
  <xs:complexType name="requiredResourcesType">
+  <xs:annotation>
+   <xs:documentation>
+    Declaration of resources a component or library requires to operate.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="vcpu"     type="vcpuType"            minOccurs="0" maxOccurs="1"/>
    <xs:element name="memory"   type="logicalMemoryType"   minOccurs="0" maxOccurs="1"/>
@@ -136,6 +165,15 @@
  </xs:complexType>
 
  <xs:complexType name="logicalMemoryType">
+  <xs:annotation>
+   <xs:documentation>
+    In this section, components can specify expected memory mappings with given
+    access rights and region size.
+
+    See line \ref{lst:af-lineref-compreq-mem} in listing
+    \ref{lst:annotated-policy} an example specification.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:choice minOccurs="0" maxOccurs="unbounded">
     <xs:element name="memory" type="logicalMemType"/>

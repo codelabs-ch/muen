@@ -2,6 +2,37 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:complexType name="componentsType">
+  <xs:annotation>
+   <xs:documentation>
+    A component is a piece of software which shall be executed by the SK. They
+    represent the building blocks of a component-based system and can be
+    regarded as templates for executable entities instantiated by subjects.
+
+    The specification of a component declares the binary program file including
+    the virtual memory location as well as the view of the expected execution
+    environment. The component environment is therefore defined by the following
+    resources:
+
+    \begin{itemize}
+    \item Binary file
+    \item Logical channels
+    \item Logical memory regions
+    \item Logical devices
+    \end{itemize}
+
+    While a \texttt{component} can be instantiated by a subject to make it
+    runnable on the SK, a \texttt{component library} can only be referenced by
+    an actual component, by declaring it as a dependency in the component
+    specification. This way components inherit the resources of libraries.
+
+    Note that components are a policy source format abstraction. The toolchain
+    resolves this concept into subjects by adding the appropriate memory
+    regions, events and devices.
+
+    See line \ref{lst:af-lineref-components} in listing \ref{lst:annotated-policy}
+    for an example components section.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="library"   type="libraryType"   minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="component" type="componentType" minOccurs="1" maxOccurs="unbounded"/>

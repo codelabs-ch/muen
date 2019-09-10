@@ -2,7 +2,13 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:attributeGroup name="subjectBaseAttrs">
-  <xs:attribute name="name" type="nameType" use="required"/>
+  <xs:attribute name="name" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Unique subject name.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:attributeGroup>
 
  <xs:complexType name="subjectEventsType">
@@ -13,6 +19,14 @@
  </xs:complexType>
 
  <xs:complexType name="subjectsType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{subjects} element holds a list of subjects.
+
+    See line \ref{lst:af-lineref-subjects} in listing \ref{lst:annotated-policy}
+    for an example subjects section.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="subject" type="subjectType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>

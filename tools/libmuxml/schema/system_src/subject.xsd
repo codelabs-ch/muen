@@ -2,6 +2,19 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:complexType name="subjectType">
+  <xs:annotation>
+   <xs:documentation>
+    A subject is an instance of a component, i.e. an active component in the
+    system policy that may be scheduled. Its specification references a
+    component and maps all requested logical resources to physical resources
+    provided by the system.  Additional resources to the ones requested by the
+    component can be specified here. This enables specialization of the base
+    component specification.
+
+    See line \ref{lst:af-lineref-subject} in listing \ref{lst:annotated-policy}
+    for an example subject declaration.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="vcpu"       type="vcpuType"               minOccurs="0" maxOccurs="1"/>
    <xs:element name="bootparams" type="xs:string"              minOccurs="0" maxOccurs="unbounded"/>

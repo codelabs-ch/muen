@@ -48,13 +48,45 @@
  </xs:complexType>
 
  <xs:complexType name="libraryType">
+  <xs:annotation>
+   <xs:documentation>
+    A component library is a specialized component specification which is used
+    to share common resources required for library code to operate. Component
+    libraries can be included by multiple components in order to share
+    functionality. An example is a logging service provided by a dedicated
+    component, whereas the logging client is provided as a library with a shared
+    memory channel for the actual log messages.
+
+    A component specification declares library dependencies to request the
+    library resources from the system through the inclusion of the library
+    specification in the \texttt{depends} section. On the source code level, a
+    library is included by mechanisms provided by the respective programming
+    language. Note that the component library code is \emph{not} shared between
+    components but lives in the isolated execution environment of a subject
+    instantiating the component.
+
+    Libraries can request the same resources as ordinary components, but the
+    binary element is omitted in the specification. A subject instantiating the
+    component must also map the resources requested by libraries the component
+    depends on.
+
+    See line \ref{lst:af-lineref-complib} in listing \ref{lst:annotated-policy}
+    for example library specifications.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="config"   type="configType"            minOccurs="0" maxOccurs="1"/>
    <xs:element name="depends"  type="libraryDepsType"       minOccurs="0" maxOccurs="1"/>
    <xs:element name="requires" type="requiredResourcesType" minOccurs="0" maxOccurs="1"/>
    <xs:element name="provides" type="providedResourcesType" minOccurs="0" maxOccurs="1"/>
   </xs:sequence>
-  <xs:attribute name="name" type="nameType" use="required"/>
+  <xs:attribute name="name" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Library name.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="libraryDepsType">

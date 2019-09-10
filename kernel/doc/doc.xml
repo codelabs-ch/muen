@@ -173,6 +173,29 @@
      \end{figure}
     </text>
    </section>
+   <section id="overview_separation" label="Separation of Subjects" priority="0">
+    <text priority="0">
+     Spatial separation of main memory is through the use of hardware memory
+     protection (MMU and IOMMU). The corresponding pagetables are made active
+     whenever a subject is executed. As a consequence, subjects have only
+     access to the memory resources assigned to them.
+     Architectural state, such as processor and FPU registers, is saved to an
+     associated memory region when subjects change. The state of the subject to
+     be executed is completely restored.
+
+     Access rights to model-specific registers (MSRs) as well as I/O ports of
+     devices are determined via MSR and I/O bitmaps. Unauthorized access is
+     intercepted by the processor and the execution of the subject is
+     interrupted.
+
+     Device interrupts are also protected by hardware: by using interrupt
+     remapping, devices can only generate the interrupt vectors assigned in the
+     policy.
+
+     Temporal isolation is implemented by the scheduler, described in section
+     \ref{overview_scheduling}.
+    </text>
+   </section>
    <section id="overview_scheduling" label="Scheduling" priority="0">
     <text priority="0">
      This section presents the design and operation of the Muen kernel scheduler

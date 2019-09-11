@@ -2,6 +2,43 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:complexType name="schedulingType">
+  <xs:annotation>
+   <xs:documentation>
+    The Muen SK implements a static, cyclic scheduler. The \texttt{scheduling}
+    element is used to specify such a stastic plan by means of a major frame. A
+    major frame consist of an arbitrary number of minor frames.  Minor frames in
+    turn specify a duration in number of ticks a subject is scheduled before
+    preemption in terms of the tick rate.
+
+    The tickRate attribute has the unit Hertz ([Hz and specifies the number of
+    clock ticks per second. The ticks attribute of minor frames is expressed in
+    terms of this tick rate. As an example: if we want to declare the minor
+    frame duration in terms of microseconds ($10^{-6}$) then a tick rate of
+    1000000 must be used.
+
+    The duration of a major frame must be the same on each CPU, meaning the sum
+    of all minor frame ticks for any given CPU must be identical. However,
+    different major frames can have arbitrary length.
+
+    The Tau0 subject designates to the kernel which major frame is the currently
+    active one. At the end of each major frame, the kernel determines the active
+    major frame and switches to that scheduling plan for the duration of the
+    major frame.  All subjects which can hand over execution to another subject
+    via a switch event form a so called scheduling group. Membership to a
+    scheduling group is determined by the specified switch events and how they
+    link subjects together.  Minor frames designate the subject that is to be
+    executed for the given amount of ticks. The subject name identifies the
+    \emph{initial} subject of a minor frame but any member of the scheduling
+    group of the given subject may be executed during that minor frame.
+
+    Note: The current Tau0 algorithm to switch major frames is very simple. It
+    just switches to the next frame if a counter reaches the constant number
+    $2^{20}$.
+
+    See line \ref{lst:af-lineref-scheduling} in listing
+    \ref{lst:annotated-policy} for an example scheduling plan.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="majorFrame" type="majorFrameType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>

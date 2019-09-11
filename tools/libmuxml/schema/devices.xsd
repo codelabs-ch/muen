@@ -32,6 +32,24 @@
  </xs:complexType>
 
  <xs:complexType name="devicesRefType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{devices} element is used to grant a subject access to devices
+    and their resources.
+
+    For PCI devices only a single virtual bus is provided (bus 0).  The
+    \texttt{pci} element may be used to place the device at a specific location
+    (BDF).  If no other logical device resources of the device are specified,
+    then the expander tool will map all physical devices resources into the
+    subject.  When logical device resources are explicitly specified, then only
+    access to those are actually granted.  The physical attribute must be either
+    a reference to an existing physical device, device alias or device class.
+    Validators check that this is the case.
+
+    See line \ref{lst:af-lineref-devicerefs} in listing \ref{lst:annotated-policy}
+    for example device references.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="device" type="deviceRefType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>

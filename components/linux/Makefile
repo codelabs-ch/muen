@@ -29,7 +29,7 @@ $(INITRAMFS): | $(OBJ_DIR)
 	cd $(OBJ_DIR)
 	@$(E) linux "Download initramfs" "wget -c $(SITE)/$(INITRAMFS_URL)-$(CONFIG)" $(LOG)
 	@$(E) linux "Download initramfs.sha256" "wget -c $(SITE)/$(INITRAMFS_URL)-$(CONFIG).sha256" $(LOG)
-	@$(E) linux "Check initramds.sha256" "sha256sum -c $(INITRAMFS_URL)-$(CONFIG).sha256" $(LOG)
+	@$(E) linux "Check initramfs.sha256" "sha256sum -c $(INITRAMFS_URL)-$(CONFIG).sha256" $(LOG)
 	mv $(INITRAMFS_URL)-$(CONFIG) $@
 	rm $(INITRAMFS_URL)-$(CONFIG).sha256
 

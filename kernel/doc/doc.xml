@@ -44,8 +44,6 @@
   </text>
   <section id="overview_architecture" label="System Architecture" priority="0">
    <text priority="0">
-    This section describes the architecture of systems running on the Muen SK.
-
     Muen is an open-source Separation Kernel implemented in the SPARK
     programming language, which has been shown to be free from certain bug
     classes through the application of formal methods. It leverages the
@@ -60,11 +58,6 @@
       Kernel is the only software running in the privileged Intel VT-x root mode
        while all Subjects execute in unprivileged non-root mode.}
     \end{figure}
-
-    The static configuration allows for the definition of information flows
-    between components and frees the kernel from any policy decisions: the
-    runtime behavior is precisely specified in the system policy which, in turn,
-    enables detailed analysis of the system prior to its execution.
 
     The formally proven Muen SK is the only part of the system running in VMX
     root mode: all components, be it fully-fledged VMs or small, native
@@ -94,21 +87,26 @@
      \label{fig:sksubs}
     \end{figure}
 
-    Since resource allocation is static and defined in the system policy, there
-    is no need for resource management at runtime. Additionally, Muen does not
-    provide a complex hypercall API as is almost always the case. Subjects can
-    only trigger events, such as sending a signal to a specific subject, that
-    have been defined in their entirety in the policy at integration time.
-    Virtualization events such as traps are not handled by the SK but instead
-    reflected to components as specified by in the policy.
+    The static configuration allows for the definition of information flows
+    between components and frees the kernel from any policy decisions: the
+    runtime behavior is precisely specified in the system policy which, in turn,
+    enables detailed analysis of the system prior to its execution.
+
+    Since resource allocation is static, there is no need for resource
+    management at runtime. Additionally, Muen does not provide a complex
+    hypercall API as is almost always the case. Subjects can only trigger
+    events, such as sending a signal to a specific subject, that have been
+    defined in their entirety in the policy at integration time.  Virtualization
+    events such as traps are not handled by the SK but instead reflected to
+    components as specified in the policy.
 
     Further functionality must be implemented in unprivileged subjects. Complex,
     abstracted IPC mechanism, which are usually provided by classical
     microkernels, are not part of the Muen kernel.
 
     In addition to minimization of kernel functionality, care is also taken to
-    ensure that the implementation is made comprehensible and understandable as
-    possible. In particular, the use of complicated algorithms or complex
+    ensure that the implementation is made as comprehensible and understandable
+    as possible. In particular, the use of complicated algorithms or complex
     language constructs is deliberately avoided.
    </text>
    <section id="overview_policy" label="Policy / Configuration" priority="0">
@@ -193,9 +191,11 @@
      Subjects are executed for a fixed amount of time, before being forcefully
      preempted by the scheduler. Preemption means that regardless of what
      operations a subject is currently performing, its execution is suspended
-     when the allotted time quantum has been consumed. After a subject has been
-     suspended, the scheduler executes the next subject for a given amount of
-     time.
+     when the allotted time quantum has been consumed. Suspension means the
+     current state like CPU register contents is saved to the data structure
+     associated with the subject. After a subject has been suspended, the
+     scheduler restores the state and executes the next subject for a given
+     amount of time.
 
      Scheduling information is declared in a \emph{scheduling plan}. Such a plan
      is part of the policy and specifies in what order subjects are executed on

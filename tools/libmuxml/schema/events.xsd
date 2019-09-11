@@ -63,6 +63,15 @@
  </xs:complexType>
 
  <xs:complexType name="eventTargetType">
+  <xs:annotation>
+   <xs:documentation>
+    The event \texttt{target} element specifies events that the subject is an
+    endpoint, i.e. the subject is the \emph{target} of these events.
+
+    See line \ref{lst:af-lineref-events-target} in listing
+    \ref{lst:annotated-policy} for an example event target section.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="event" type="targetEventEntryType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>

@@ -48,7 +48,7 @@
     programming language, which has been shown to be free from certain bug
     classes through the application of formal methods. It leverages the
     virtualization extensions provided by the hardware platform to securely
-    isolate components and devices.
+    isolate subjects and devices.
 
     \begin{figure}[ht]
      \centering
@@ -60,18 +60,18 @@
     \end{figure}
 
     The formally proven Muen SK is the only part of the system running in VMX
-    root mode: all components, be it fully-fledged VMs or small, native
-    subjects, execute with lower privileges in non-root mode. By design, no code
-    is executed in user-space (ring 3) of VMX root mode. This enables Muen to
+    root mode: all subjects, be it fully-fledged VMs or small, native subjects,
+    execute with lower privileges in non-root mode. By design, no code is
+    executed in user-space (ring 3) of VMX root mode. This enables Muen to
     completely forgo code for handling Syscalls/Ring-3-to-Ring-0 transitions,
     significantly reducing the code size and complexity.
 
     Deterministic runtime behavior of the SK is achieved by avoiding
-    long-running code paths and no preemption of kernel code. While executing
-    kernel code, external interrupts are disabled and the proof of absence
-    of runtime errors assures that no exceptions occur. Furthermore, the
-    absence of any kind of dynamic resource management and the fixed, cyclic
-    scheduler contribute to highly deterministic runtime behavior of the kernel.
+    long-running code paths and no preemption of kernel code. During kernel
+    execution, external interrupts are disabled and the proof of absence of
+    runtime errors assures that no exceptions occur. Furthermore, the absence of
+    any kind of dynamic resource management and the fixed, cyclic scheduler
+    contribute to highly deterministic runtime behavior of the kernel.
 
     The sole purpose of the kernel is to provide temporal and spatial
     isolation for subjects running on top of it. By design, all non-essential
@@ -87,11 +87,6 @@
      \label{fig:sksubs}
     \end{figure}
 
-    The static configuration allows for the definition of information flows
-    between components and frees the kernel from any policy decisions: the
-    runtime behavior is precisely specified in the system policy which, in turn,
-    enables detailed analysis of the system prior to its execution.
-
     Since resource allocation is static, there is no need for resource
     management at runtime. Additionally, Muen does not provide a complex
     hypercall API as is almost always the case. Subjects can only trigger
@@ -99,6 +94,10 @@
     defined in their entirety in the policy at integration time.  Virtualization
     events such as traps are not handled by the SK but instead reflected to
     components as specified in the policy.
+
+    Static configuration also frees the kernel from any policy decisions: the
+    runtime behavior is precisely specified in the system policy which, in turn,
+    enables detailed analysis of the system prior to its execution.
 
     Further functionality must be implemented in unprivileged subjects. Complex,
     abstracted IPC mechanism, which are usually provided by classical
@@ -109,6 +108,7 @@
     as possible. In particular, the use of complicated algorithms or complex
     language constructs is deliberately avoided.
    </text>
+  </section>
    <section id="overview_policy" label="Policy / Configuration" priority="0">
     <text priority="0">
      This section gives a short description of the Muen system policy and  how
@@ -123,15 +123,16 @@
 
      The configuration of a Muen system takes place during the integration by
      means of a \emph{policy} in XML format. The policy includes a declaration
-     of the existing hardware resource of the target platform, the subjects to
+     of all existing hardware resources of the target platform, the subjects to
      be executed with their assigned resources as well as the scheduling plan.
      The plan specifies exactly when a subject should run on which CPU and for
      how long.
 
      Information flows between subjects are defined in their entirety in the
-     policy. So-called memory channels define directional writer/reader
+     policy. So-called memory channels declare directional writer/reader
      relationships and assignment of physical memory or devices for shared
-     usage is possible. Unassigned resources are not available during runtime.
+     usage is also possible. Unassigned resources are not available during
+     runtime.
 
      From the information specified in the policy, the Muen toolchain in
      conjunction with $\tau$0 generates the actual configuration of the
@@ -148,18 +149,18 @@
      such as for example accessibility of sensitive system memory to subjects.
      These properties can, where desirable, be manually audited or visualized.
 
-     The kernel implements the communication policy by separating subjects
-     spatially and temporally. It does not have to perform any policy decisions
-     because it is static and does not change. Thus, the Muen SK can be seen as
-     a policy enforcement engine.
     </text>
    </section>
    <section id="overview_operation" label="Kernel Operation" priority="0">
     <text priority="0">
      The Muen kernel has two main entry points: system initialization and the
-     scheduler loop. Upon start of a system the kernel enables IA32-e paging and
-     transitions into VMX root-mode. After setting up the interrupt controllers
-     and IOMMU, the execution of the initial subject is performed via VM-entry.
+     scheduler loop. Upon start of a system the kernel puts the CPU in the
+     appropriate state by setting up the MMU and transitioning into VMX
+     root-mode. After setting up the interrupt controllers and IOMMU, the
+     initial subject is executed via VM-Entry after all CPU cores have setup
+     everything and are ready. Detailed description of kernel initialization is
+     given in section \ref{impl_kernel_init}.
+
      On VM-Exit the hardware invokes the scheduler subprogram since it has been
      set in the subject VMCS data structure. After handling the exit condition,
      execution of the next subject is started by performing a VM-entry. The
@@ -175,18 +176,24 @@
    </section>
    <section id="overview_separation" label="Separation of Subjects" priority="0">
     <text priority="0">
-     Spatial separation of main memory is through the use of hardware memory
-     protection (MMU and IOMMU). The corresponding pagetables are made active
-     whenever a subject is executed. As a consequence, subjects have only
+     The kernel implements the communication policy by separating subjects
+     spatially and temporally. It does not have to perform any policy decisions
+     because it is static and does not change. Thus, the Muen SK can be seen as
+     a policy enforcement engine.
+
+     Spatial separation of main memory is enforced through the use of hardware
+     memory protection (MMU and IOMMU). The corresponding page tables are made
+     active whenever a subject is executed. As a consequence, subjects have only
      access to the memory resources assigned to them.
      Architectural state, such as processor and FPU registers, is saved to an
      associated memory region when subjects change. The state of the subject to
      be executed is completely restored.
 
      Access rights to model-specific registers (MSRs) as well as I/O ports of
-     devices are determined via MSR and I/O bitmaps. Unauthorized access is
-     intercepted by the processor and the execution of the subject is
-     interrupted.
+     devices are determined via MSR and I/O bitmaps, see Intel SDM Vol. 3C,
+     "24.6 VM-Execution Control Fields" \cite{intelsdm}.
+     Unauthorized access is intercepted by the processor and the execution of
+     the subject is interrupted.
 
      Device interrupts are also protected by hardware: by using interrupt
      remapping, devices can only generate the interrupt vectors assigned in the
@@ -294,20 +301,20 @@
     <text priority="0">
      Compared to applications or virtual machines running on classical kernels
      (e.g. monolithic or microkernel), subjects have very limited means to
-     influence the overal system. Only the ressources assigned in the policy are
+     influence the overall system. Only the resources assigned in the policy are
      accessible and the interaction with the SK is limited to the following
      mechanisms. Subjects can trigger static events defined in the policy. If
      there is a valid event number, the kernel executes the action defined by
      the event. Invalid event numbers are ignored.
 
      When so-called \emph{traps} occur, e.g. access to an unauthorized memory
-     region, a trap table alsp specified in the policy is consulted. Similar to
+     region, a trap table also specified in the policy is consulted. Similar to
      handling of events, the defined action is executed.
 
      The last interaction option is the timer mechanism. Each subject can
      define an event number and a time at which the event should be triggered. At
      the beginning of each time slice, the kernel checks whether the timer
-     belonging to the subject to be executed has expired. In this case, the vent
+     belonging to the subject to be executed has expired. In this case, the event
      designated by the event number is treated in the same way as the regular
      event mechanism. The timer can thus be regarded as a delayed triggering of
      events.
@@ -330,7 +337,7 @@
    </section>
    <section id="overview_covert_channels" label="Avoidance of Covert Channels" priority="0">
     <text priority="0">
-     The simplicity of SKs enables the explicit consideration of the proble of
+     The simplicity of SKs enables the explicit consideration of the problem of
      cover channels. Such channels allow a collaborating sender/receiver pair to
      transfer information past the system's security mechanisms. Covert channels
      are classified as data or timing channels.
@@ -352,12 +359,13 @@
      structure.
 
      Muen offers the possibility to provide subjects with an inaccurate time
-     source. Due to the low temporal resolution, observing a side channel is
-     made significantly more difficult and thus the achievable transmission rate
-     in practice is greatly reduced. In addition, subject are preferably only
-     assigned a single CPU, which prevents them from easily constructing a high
-     resolution time source. The timer mechanism also offers only limited
-     accuracy, as timers are only evaluated at the beginning of a minor frame.
+     source, i.e. removing direct access to the Time-Stamp Counter (TSC). Due to
+     the low temporal resolution, observing a side channel is made significantly
+     more difficult and thus the achievable transmission rate in practice is
+     greatly reduced. In addition, subjects are preferably only assigned a
+     single CPU, which prevents them from easily constructing a high resolution
+     time source. The timer mechanism also offers only limited accuracy, as
+     timers are only evaluated at the beginning of a minor frame.
 
      Deterministic scheduling can be leveraged to ensure that the amount of
      shared hardware (e.g. L1 cache, Branch Predictor Cache, Translation
@@ -365,7 +373,7 @@
      be guaranteed that two subjects are not running on the same physical CPU
      and/or not at the same time. If subjects are executed at different times,
      the observability of side channels and their bandwidth is limited since the
-     sender and receiver must always alternate encoding and decoding data.
+     sender and receiver must always alternate encoding and decoding of data.
 
      Furthermore, on Muen systems, Hyper-Threading is generally disabled because
      hardware threads share much more (micro-)architectural state than physical
@@ -377,7 +385,6 @@
     </text>
    </section>
   </section>
- </section>
 
  <section id="datamodel" label="Data Model" priority="0">
   <section id="datamodel_multicore" label="Multicore Support" priority="0">
@@ -394,8 +401,8 @@
 
     Since HyperThreads located on the same CPU core share big parts of the
     micro-architectural state without effective means of isolation, Muen does
-    not use HTT. It effectively disables HTT by only executing one Hyper-Thread
-    per physical CPU core.
+    not use HTT. It effectively disables HTT by only executing one hardware
+    thread per physical CPU core.
 
     In MP systems, one processor termed \emph{bootstrap processor}(BSP) is
     responsible for system initialization, while the other processors, called
@@ -416,11 +423,11 @@
     design decision further simplifies the kernel implementation since no
     complex cross-core synchronization and migration algorithm has to be devised
     and implemented. Furthermore, each core can be restricted to only have
-    access the data structures associated with subjects it is designated to
+    access to the data structures associated with subjects it is designated to
     execute.
 
     Since each CPU executes a distinct instance of the Muen kernel, by default,
-    all kernel data is CPU-local, meaning it is not shared between the kernels
+    all kernel data is CPU-local, meaning it is not shared between kernels
     running on different CPUs. Global data is shared explicitly and is
     designated as such by placing it in a dedicated section (.globaldata).
 
@@ -474,10 +481,9 @@
    <text priority="0">
     Some data is accessed by all CPUs. This data is located in a separate,
     distinct ELF section (\texttt{.globaldata}) which is backed by a single
-    physical memory region which is shared across all CPUs. Each kernel has a
-    mapping of this region at the same memory location.
+    physical memory region, shared across all CPUs. Each kernel has a mapping of
+    this region at the same memory location.
 
-    \paragraph{Aspect Linker\_Section}
     Variable instances that are shared globally are placed in the ELF section
     \texttt{.globaldata} via use of the Ada \texttt{Linker\_Section} aspect.
 
@@ -517,6 +523,9 @@
     proportional to the TSC and causes a VM-exit when the counter reaches zero.
     For further documentation see Intel SDM Volume 3C, "25.5.1 VMX-Preemption
     Timer".
+
+    Note that Muen only supports systems that have the "Invariant TSC" feature,
+    see Intel SDM Vol. 3B "17.17.1 Invariant TSC".
    </text>
   </section>
   <section id="kernel_devs_debug" label="Diagnostics" priority="0">
@@ -530,7 +539,7 @@
 
     All debug output statements in the kernel are enclosed in \texttt{pragma
     Debug}. This has the effect that none of them are present in the release
-    version of the kernel.
+    version of the kernel as they are automatically removed by the compiler.
    </text>
   </section>
  </section>

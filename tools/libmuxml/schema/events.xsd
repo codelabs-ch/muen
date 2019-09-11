@@ -66,7 +66,7 @@
   <xs:annotation>
    <xs:documentation>
     The event \texttt{target} element specifies events that the subject is an
-    endpoint, i.e. the subject is the \emph{target} of these events.
+    \emph{endpoint} of.
 
     See line \ref{lst:af-lineref-events-target} in listing
     \ref{lst:annotated-policy} for an example event target section.
@@ -78,6 +78,20 @@
  </xs:complexType>
 
  <xs:complexType name="sourceEventEntryType">
+  <xs:annotation>
+   <xs:documentation>
+    A source \texttt{event} entry specifies a source event node, i.e. it
+    registers a handler for the given event \texttt{id}. These IDs, depending on
+    the event group, are either hypercall numbers or VMX basic exit reasons.
+
+    It is possible to assign event actions to event source entries. Currently
+    supported source event actions are \texttt{system\_reboot} and
+    \texttt{system\_poweroff}, which both have the kernel itself as endpoint.
+
+    See line \ref{lst:af-lineref-events-source-entry} in listing
+    \ref{lst:annotated-policy} for a source event entry example.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="baseEventWithIDType">
     <xs:group ref="sourceEventActionsGroup" minOccurs="0" maxOccurs="1"/>
@@ -140,7 +154,13 @@
   <xs:attribute name="number" type="irqNumberType" use="required"/>
  </xs:complexType>
 
- <xs:complexType name="eventActionNoParamType"/>
+ <xs:complexType name="eventActionNoParamType">
+  <xs:annotation>
+   <xs:documentation>
+    Source/target event action without parameters.
+   </xs:documentation>
+  </xs:annotation>
+ </xs:complexType>
 
  <xs:group name="sourceEventActionsGroup">
   <xs:choice>

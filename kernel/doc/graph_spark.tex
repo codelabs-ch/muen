@@ -1,0 +1,27 @@
+\begin{tikzpicture}
+	\tikzstyle{box}=[whitebox, draw, dropshadow, fill=white, text width=2.5cm, text centered]
+	\tikzstyle{rbox}=[whitebox, draw, dropshadow, fill=white, rounded corners, minimum height=1cm]
+	\tikzstyle{colorbox}=[commonnode, bottom color=guestcolor, text width=2.5cm, text centered]
+
+	\node[colorbox] (src) at (0,0) {Source Files (\texttt{*.ads, *.adb})};
+	\node[rbox] (gnat) at (3,0) {GNATprove};
+	\node[box] (mlw) at (6,0) {Why3 Files \\ (\texttt{*.mlw})};
+	\node[rbox] (why) at (9,0) {Why3};
+	\node[box] (iwhyf) at (9,-1.5) {Isabelle-Why3 \\ Files (\texttt{*.xml})};
+	\node[box] (altf) at (9,1.5) {SMT Files};
+	\node[rbox, text width=2.25cm, text centered] (iwhyw) at (6,-1.5) {Isabelle-Why3 \\ Wrapper};
+	\node[rbox] (alt) at (6,1.5) {SMT Solver};
+	\node[colorbox, text width=2.25cm] (thy) at (3,-1.5) {Theory Files \\ (\texttt{*.thy})};
+	\node[rbox] (iwhy) at (0,-1.5) {Isabelle-Why3};
+
+	\draw[-latex] (src) -- (gnat);
+	\draw[-latex] (gnat) -- (mlw);
+	\draw[-latex] (mlw) -- (why);
+	\draw[-latex] (why) -- (iwhyf);
+	\draw[-latex] (why) -- (altf);
+	\draw[-latex] (iwhyf) -- (iwhyw);
+	\draw[-latex] (altf) -- (alt);
+	\draw[-latex] (iwhyw) -- (thy);
+	\draw[-latex] (thy) -- (iwhy);
+	\draw[-latex] (iwhyf) .. controls (7,-3) and (2,-3) .. (iwhy);
+\end{tikzpicture}

@@ -434,11 +434,39 @@
 
  <section id="verification_and_validation" label="Verification" priority="20">
   <text priority="0">
-   This section describes the methodology and techniques applied to the verification of Muen.
+   This section describes the formal methods and techniques applied to the
+   verification of Muen.
   </text>
   <section id="verification_spark" label="SPARK" priority="-10">
    <text priority="0">
-    This section gives a short description of SPARK and its use in the context of Muen.
+    SPARK is the primary technology used for the formal verification of Muen and
+    particularly trustworthy components such as $\tau$0. It enables data and
+    information flow analysis as well as the proof of absence of runtime errors.
+    The necessary proofs are produced by the SPARK GNATprove tools which in turn
+    use automated theorem provers, like the Z3 SMT
+    solver\footnote{\url{https://github.com/Z3Prover/z3}} for example.
+    Application of the GNATprove tools guarantees that the SPARK language rules
+    are adhered to at all time and that the analyzed source code is valid.
+
+    The proof of advanced functional features is realized with the help of the
+    interactive theorem prover
+    Isabelle\footnote{\url{https://isabelle.in.tum.de}}. Abstract properties
+    are formalized in Isabelle/HOL. These possibly complex, external
+    specifications are linked to the SPARK implementation by so-called
+    \emph{Ghost Code}. The GNATprove tool generates verification conditions in
+    the Why3 language, which are imported into Isabelle by means of a driver.
+    This way, the correspondence of the SPARK source code to an abstract, formal
+    specification can be shown.
+
+    The interaction of the tools used for the verification is shown
+    schematically in figure \ref{fig:spark-toolchain}.
+
+    \begin{figure}[ht]
+     \centering
+     \input{graph_spark}
+     \caption{Toolchain for the verification of SPARK programs.}
+     \label{fig:spark-toolchain}
+    \end{figure}
    </text>
   </section>
  </section>

@@ -26,7 +26,7 @@
     The \texttt{default} element entry can be used to specify an event which
     should be added for all event ids that have not been explicitly specified.
 
-    See line \ref{lst:af-lineref-events-source-default} in listing
+    See line \ref{lst:af-lineref-subj-events-source-default} in listing
     \ref{lst:annotated-policy} for a default source event example.
    </xs:documentation>
   </xs:annotation>
@@ -47,6 +47,13 @@
  </xs:complexType>
 
  <xs:simpleType name="eventModeType">
+  <xs:annotation>
+   <xs:documentation>
+    Event mode.
+
+    See \ref{system_src.xsd:eventType} for details about the supported event modes.
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="xs:string">
    <xs:enumeration value="asap"/>
    <xs:enumeration value="async"/>

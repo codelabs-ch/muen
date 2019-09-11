@@ -53,7 +53,7 @@
     Reasons".  The \texttt{vmcall} group on the other hand is translated into a
     lookup table to handle hypercalls.
 
-    See line \ref{lst:af-lineref-events-source} in listing
+    See line \ref{lst:af-lineref-subj-events-source} in listing
     \ref{lst:annotated-policy} for an example event source section.
    </xs:documentation>
   </xs:annotation>
@@ -68,7 +68,7 @@
     The event \texttt{target} element specifies events that the subject is an
     \emph{endpoint} of.
 
-    See line \ref{lst:af-lineref-events-target} in listing
+    See line \ref{lst:af-lineref-subj-events-target} in listing
     \ref{lst:annotated-policy} for an example event target section.
    </xs:documentation>
   </xs:annotation>
@@ -128,6 +128,41 @@
   <xs:annotation>
    <xs:documentation>
     The \texttt{eventType} specifies an event by name and mode.
+
+    The following event modes are currently supported:
+    \begin{itemize}
+    \item asap~\\
+    The asap event is an abstraction to state that the event should be delivered
+    as soon as possible, depending on the CPU of the target subject. If the
+    target runs on another CPU core, this mode is expanded to mode \emph{ipi},
+    which is only available in policy formats A and B, instructing the kernel to
+    preempt the kernel running the target subject and inject the event
+    immediately. If the target subject runs on the same core as the source
+    subject, the mode is expanded to mode \emph{async}.
+    \item async~\\
+    Async events trigger no preemption at the target subject. The event is
+    marked as pending in the target subject's pending event table and inserted
+    on the next VM exit/entry cycle of the target subject.
+    \item self~\\
+    An event can also have the same source and target, which is called a self
+    event. Such events are useful to implement para-virtualized timers in VM
+    subjects for example. A subject sends itself a delayed event, using the
+    timed event mechanism (muen-component-spec:4.3). Note that a self event must
+    always have a target action assigned, checked by validator.
+    \item switch~\\
+    The switch mode facilitates suspension of execution of the source subject
+    and switching to the target. This can only happen between subjects running
+    on the same core. Such a construct is used to pass the thread of execution
+    on to a different subject, e.g. invocation of a debugger subject if an error
+    occurs in the source subject.
+    \item kernel~\\
+    These kinds of events are directed at the kernel an thus only specify a
+    source since the target is the kernel. They are used to enable specific
+    subjects to trigger a system reboot or poweroff.
+    \end{itemize}
+
+    See line \ref{lst:af-lineref-events-entry} in listing
+    \ref{lst:annotated-policy} for an example global event declaration.
    </xs:documentation>
   </xs:annotation>
   <xs:attribute name="name" type="nameType" use="required">

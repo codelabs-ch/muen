@@ -711,6 +711,10 @@
   </section>
  </section>
 
+ <section id="interface_section" label="Kernel State" priority="0"/>
+
+ <section id="cpu_global_variables_section" label="CPU-Global State" priority="0"/>
+
  <section id="kernel_devices" label="Devices" priority="0">
   <text priority="0">
    This section describes what I/O devices the kernel uses and for what purpose.
@@ -825,6 +829,8 @@
      \label{fig:spark-toolchain}
     \end{figure}
    </text>
+  </section>
+  <section id="verification_conditions_spark2014" label="SPARK 2014">
   </section>
  </section>
 

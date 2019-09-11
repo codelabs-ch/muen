@@ -32,6 +32,25 @@
  </xs:complexType>
 
  <xs:complexType name="monitorType">
+  <xs:annotation>
+   <xs:documentation>
+    The monitor abstraction enables subjects to request access to certain data
+    of another subject specified by name. Possible child elements are:
+
+    \begin{itemize}
+    \item State
+    \item Timed\_Events
+    \item Interrupts
+    \item Loader
+    \end{itemize}
+
+    See the Muen Component Specification document for details about these
+    subject monitor interfaces.
+
+    See line \ref{lst:af-lineref-subject-monitor} in listing
+    \ref{lst:annotated-policy} for an example monitor section.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="state"       type="monitorSubjectRefType" minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="timed_event" type="monitorSubjectRefType" minOccurs="0" maxOccurs="unbounded"/>

@@ -10,36 +10,128 @@
    <xs:element name="ioPort"       type="ioPortType"       minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="capabilities" type="capabilitiesType" minOccurs="0" maxOccurs="1"/>
   </xs:sequence>
-  <xs:attribute name="name" type="nameType" use="required"/>
+  <xs:attribute name="name" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Unique device name.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="pciAddressType">
-  <xs:attribute name="bus"      type="byteType"              use="required"/>
-  <xs:attribute name="device"   type="pciDeviceNumberType"   use="required"/>
-  <xs:attribute name="function" type="pciFunctionNumberType" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    PCI Bus, Device, Function triplet (BDF).
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="bus" type="byteType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     PCI Bus number.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="device" type="pciDeviceNumberType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     PCI Device number.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="function" type="pciFunctionNumberType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     PCI Function number.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:simpleType name="pciDeviceNumberType">
+  <xs:annotation>
+   <xs:documentation>
+    PCI Device number.
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="xs:string">
    <xs:pattern value="16#[0|1][0-9a-fA-F]#"/>
   </xs:restriction>
  </xs:simpleType>
 
  <xs:simpleType name="pciFunctionNumberType">
+  <xs:annotation>
+   <xs:documentation>
+    PCI Function number.
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="xs:nonNegativeInteger">
    <xs:maxInclusive value="7"/>
   </xs:restriction>
  </xs:simpleType>
 
  <xs:complexType name="deviceIdentificationType">
-  <xs:attribute name="classcode"  type="word16Type" use="required"/>
-  <xs:attribute name="vendorId"   type="word16Type" use="required"/>
-  <xs:attribute name="deviceId"   type="word16Type" use="required"/>
-  <xs:attribute name="revisionId" type="byteType"   use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{identification} element specifies the PCI device class, device,
+    revision and vendor ID.
+
+    See line \ref{lst:af-lineref-hw-device-pci-id} in listing
+    \ref{lst:annotated-policy} for an example PCI identification.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="classcode"  type="word16Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     PCI device class.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="vendorId"   type="word16Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     PCI vendor ID.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="deviceId"   type="word16Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     PCI device ID.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="revisionId" type="byteType"   use="required">
+   <xs:annotation>
+    <xs:documentation>
+     PCI device revison ID.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="iommuGroupType">
-  <xs:attribute name="id"  type="xs:nonNegativeInteger" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    Devices in the same IOMMU group cannot be properly isolated from each other
+    because they may perform inter-device transactions directly, without going
+    through the IOMMU.
+
+    Note that this information is currently not used by the toolchain. It is a
+    hint to the system integrator whether two devices can be properly isolated
+    from each other or not.
+
+    See line \ref{lst:af-lineref-hw-device-iommugroup} in listing
+    \ref{lst:annotated-policy} for an example IOMMU group declaration.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="id"  type="xs:nonNegativeInteger" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     IOMMU group number.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="devicesType">
@@ -47,20 +139,10 @@
    <xs:documentation>
     The \texttt{devices} element enumerates all devices provided by the hardware platform.
     Different kinds of devices, be it PCI(e) or legacy (non-PCI), can be
-    declared in this section. There are three main device resource types:
-
-    \begin{itemize}
-    \item IRQ
-    \item I/O port range
-    \item Memory
-    \end{itemize}
-
-    Capabilities can be used to convey additional device-specific information.
-    The base address of the memory mapped PCI config space is defined by the
-    \texttt{pciConfigAddress} attribute.
+    declared in this section.
 
     See line \ref{lst:af-lineref-hw-devices} in listing \ref{lst:annotated-policy}
-    for an example section.
+    for an example devices enumeration.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>

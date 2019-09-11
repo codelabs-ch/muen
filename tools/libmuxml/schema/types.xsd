@@ -75,7 +75,13 @@
     The \texttt{namedRefType} is used to reference a named element in the policy.
    </xs:documentation>
   </xs:annotation>
-  <xs:attribute name="ref" type="nameType" use="required"/>
+  <xs:attribute name="ref" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of referenced element.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:simpleType name="noneType">

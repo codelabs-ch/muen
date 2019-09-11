@@ -23,6 +23,28 @@
  </xs:complexType>
 
  <xs:complexType name="deviceType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{device} element specifies a physical device and its associated
+    resources. There are three main device resource types:
+
+    \begin{itemize}
+    \item IRQ
+    \item I/O port range
+    \item Memory
+    \end{itemize}
+
+    The presence of a PCI element indicates whether the device is a PCI or a
+    legacy device.
+
+    Capabilities can be used to convey additional device-specific information.
+    The base address of the memory mapped PCI config space is defined by the
+    \texttt{pciConfigAddress} attribute.
+
+    See line \ref{lst:af-lineref-hw-device} in listing \ref{lst:annotated-policy}
+    for an example device declaration.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="deviceBaseType">
     <xs:sequence>
@@ -33,6 +55,24 @@
  </xs:complexType>
 
  <xs:complexType name="pciType">
+  <xs:annotation>
+   <xs:documentation>
+    PCI(e) devices are specified using the \texttt{pci} element.
+
+    The element provides the following information:
+    \begin{itemize}
+    \item PCI device address (BDF)
+    \item Identification
+    \item IOMMU group information
+    \end{itemize}
+
+    The location of the PCI device in the PCI topology is specified by the Bus,
+    Device, Function triplet (BDF).
+
+    See line \ref{lst:af-lineref-hw-device-pci} in listing
+    \ref{lst:annotated-policy} for an example PCI element declaration.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="pciAddressType">
     <xs:sequence>

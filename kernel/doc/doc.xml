@@ -267,10 +267,42 @@
      major frame.
     </text>
    </section>
-   <section id="overview_events" label="Event handling" priority="0">
+   <section id="overview_interaction" label="Subject Interaction" priority="0">
     <text priority="0">
-     This section gives a description of the event mechanism and how the kernel
-     handles them.
+     Compared to applications or virtual machines running on classical kernels
+     (e.g. monolithic or microkernel), subjects have very limited means to
+     influence the overal system. Only the ressources assigned in the policy are
+     accessible and the interaction with the SK is limited to the following
+     mechanisms. Subjects can trigger static events defined in the policy. If
+     there is a valid event number, the kernel executes the action defined by
+     the event. Invalid event numbers are ignored.
+
+     When so-called \emph{traps} occur, e.g. access to an unauthorized memory
+     region, a trap table alsp specified in the policy is consulted. Similar to
+     handling of events, the defined action is executed.
+
+     The last interaction option is the timer mechanism. Each subject can
+     define an event number and a time at which the event should be triggered. At
+     the beginning of each time slice, the kernel checks whether the timer
+     belonging to the subject to be executed has expired. In this case, the vent
+     designated by the event number is treated in the same way as the regular
+     event mechanism. The timer can thus be regarded as a delayed triggering of
+     events.
+
+     An important use case is running a subject that depends on a monitor
+     subject for emulation of certain operations, e.g. serial device emulation.
+     In this scenario, whenever a subject performs an operation that triggers a
+     trap the policy specifies an event of mode \emph{switch} with the target
+     being the monitor subject. This instructs the kernel to hand over execution
+     to the monitor, in effect reflecting the trap. The monitor subject can then
+     determine the cause for the trap based on the information available in the
+     subject state that is mapped into the monitor's address space. It can then
+     emulate the appropriate action by changing the subject's state and finally
+     hand over execution back by triggering an event that has been specified in
+     the policy to resume the origin subject.
+
+     Through the use of the event mechanism, the vast majority of traps is
+     handed over to a second subject to process.
     </text>
    </section>
   </section>

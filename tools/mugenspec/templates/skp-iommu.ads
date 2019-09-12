@@ -576,9 +576,16 @@ __iommu_type_sizes__
 
 __iommu_x_types__
 
+   --  Disable potential "no warnings suppressed" warning as this is only
+   --  relevant for certain hardware targets (e.g. X260, NUC 6CAYH).
+   pragma Warnings (Off);
+   pragma Warnings (Off, "memory layout out of order");
+   pragma Warnings (On);
+
    pragma Warnings (Off, "*-bit gap before component *");
 __iommu_x_types_repr__
    pragma Warnings (On, "*-bit gap before component *");
+   pragma Warnings (On, "memory layout out of order");
 
    type IOMMUs_Type is record
 __iommu_record_fields__

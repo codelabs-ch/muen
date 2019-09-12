@@ -586,6 +586,12 @@ private
    type IOMMU_1_Type is new IOMMU_X_Type with Size => IOMMU_1_Type_Size;
    type IOMMU_2_Type is new IOMMU_X_Type with Size => IOMMU_2_Type_Size;
 
+   --  Disable potential "no warnings suppressed" warning as this is only
+   --  relevant for certain hardware targets (e.g. X260, NUC 6CAYH).
+   pragma Warnings (Off);
+   pragma Warnings (Off, "memory layout out of order");
+   pragma Warnings (On);
+
    pragma Warnings (Off, "*-bit gap before component *");
    for IOMMU_1_Type use record
       Common at 0 range 0 .. IOMMU_Common_Size - 1;
@@ -599,6 +605,7 @@ private
       Fault_Recording at FR_Offset_2 range 0 .. 127;
    end record;
    pragma Warnings (On, "*-bit gap before component *");
+   pragma Warnings (On, "memory layout out of order");
 
    type IOMMUs_Type is record
       IOMMU_1 : IOMMU_1_Type;

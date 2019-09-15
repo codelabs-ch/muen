@@ -13,8 +13,8 @@
   <map logical="time_info" physical="time_info"/>
   <map logical="debuglog"  physical="debuglog_subject8"/>
   <if variable="unikernel_net" value="true">
-   <map logical="net_in"  physical="unikernel_in"/>
-   <map logical="net_out" physical="unikernel_out"/>
+   <map logical="service0|in"  physical="unikernel_in"/>
+   <map logical="service0|out" physical="unikernel_out"/>
   </if>
  </component>
 </subject>

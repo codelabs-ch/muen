@@ -40,8 +40,8 @@
   </vcpu>
   <if variable="unikernel_net" value="true">
    <channels>
-    <reader logical="net_in"  virtualAddress="16#e000_0000#" size="16#0010_0000#"/>
-    <writer logical="net_out" virtualAddress="16#e010_0000#" size="16#0010_0000#"/>
+    <reader logical="service0|in"  virtualAddress="16#e000_0000#" size="16#0010_0000#"/>
+    <writer logical="service0|out" virtualAddress="16#e010_0000#" size="16#0010_0000#"/>
    </channels>
   </if>
  </requires>

@@ -8,6 +8,11 @@
  </xs:simpleType>
 
  <xs:simpleType name="irqNumberType">
+  <xs:annotation>
+   <xs:documentation>
+    IRQ number. High IRQs are reserved for kernel usage.
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="xs:nonNegativeInteger">
    <xs:maxInclusive value="220"/>
   </xs:restriction>
@@ -56,7 +61,7 @@
   <xs:attribute name="number" type="irqNumberType" use="required">
    <xs:annotation>
     <xs:documentation>
-     Legacy or LSI IRQ.
+     Legacy or PCI line-based IRQ.
     </xs:documentation>
    </xs:annotation>
   </xs:attribute>

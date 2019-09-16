@@ -107,8 +107,8 @@
     The \texttt{size} attribute value is not specified directly, but parameterized via
     an integer configuration option.
 
-    See line \ref{lst:af-lineref-config-global} in listing for an example config
-    section.
+    See line \ref{lst:af-lineref-config-global} in listing
+    \ref{lst:annotated-policy} for an example config section.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>

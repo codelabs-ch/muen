@@ -63,7 +63,25 @@
  </xs:complexType>
 
  <xs:complexType name="msiIrqType">
-  <xs:attribute name="name" type="nameType" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    There are two different interrupt types which devices may trigger:
+    legacy/PCI LSI IRQs and Message Signaled Interrupts (MSI). The legacy/PCI
+    LSI IRQ is specified by the number attribute of the \texttt{irq} element.
+    For MSIs, each \texttt{msi} element defines an MSI IRQ that may be assigned
+    to subjects. Each MSI may be individually routed.
+
+    See line \ref{lst:af-lineref-device-irq-msi} in listing
+    \ref{lst:annotated-policy} for example device MSI elements.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="name" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of MSI resource.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="devicesRefType">

@@ -20,11 +20,46 @@
  </xs:complexType>
 
  <xs:complexType name="irqType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{irq} element specifies a device IRQ resource.
+
+    The specified IRQ number is one of:
+    \begin{itemize}
+    \item Legacy IRQ (ISA)~\\
+    Range \texttt{0 .. 15}.
+    \item PCI INTx IRQ, line-signaled~\\
+    Range \texttt{0 .. Max\_LSI\_IRQ}, whereas \texttt{Max\_LSI\_IRQ} is defined
+    by the hardware I/O APIC configuration \texttt{gsi\_base} +
+    \texttt{max\_redirection\_entry} of I/O APIC with \texttt{max(gsi\_base)}.
+    \texttt{gsi\_base} and \texttt{max\_redirection\_entry} are I/O APIC device
+    capabilities.
+    \end{itemize}
+
+    \texttt{msi} sub-elements are present if the device supports MSI interrupts.
+    The element count designates the number of supported MSI interrrupts.
+
+    See line \ref{lst:af-lineref-device-irq} in listing
+    \ref{lst:annotated-policy} for an example device IRQ declaration.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="msi" type="msiIrqType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
-  <xs:attribute name="name"   type="nameType"      use="required"/>
-  <xs:attribute name="number" type="irqNumberType" use="required"/>
+  <xs:attribute name="name" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of device IRQ resource.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="number" type="irqNumberType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Legacy or LSI IRQ.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="msiIrqType">

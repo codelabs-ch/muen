@@ -21,13 +21,14 @@ with Interfaces;
 package Ukvm.Types
 is
 
-   --  struct ukvm_boot_info
-   --  https://github.com/Solo5/solo5/blob/master/ukvm/ukvm_guest.h
+   --  struct hvt_boot_info
+   --  https://github.com/Solo5/solo5/blob/master/include/solo5/hvt_abi.h
    type UKVM_Boot_Info_Type is record
       Mem_Size   : Interfaces.Unsigned_64;
       Kernel_End : Interfaces.Unsigned_64;
-      Cmdline    : Interfaces.Unsigned_64;
       Tsc_Freq   : Interfaces.Unsigned_64;
+      Cmdline    : Interfaces.Unsigned_64;
+      Mft        : Interfaces.Unsigned_64;
    end record;
 
 end Ukvm.Types;

@@ -3,12 +3,12 @@
 
  <xs:complexType name="deviceBaseType">
   <xs:sequence>
-   <xs:element name="description"  type="xs:string"        minOccurs="0" maxOccurs="1"/>
-   <xs:element name="pci"          type="pciType"          minOccurs="0" maxOccurs="1"/>
-   <xs:element name="irq"          type="irqType"          minOccurs="0" maxOccurs="unbounded"/>
-   <xs:element name="memory"       type="deviceMemoryType" minOccurs="0" maxOccurs="unbounded"/>
-   <xs:element name="ioPort"       type="ioPortType"       minOccurs="0" maxOccurs="unbounded"/>
-   <xs:element name="capabilities" type="capabilitiesType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="description"  type="deviceDescriptionType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="pci"          type="pciType"               minOccurs="0" maxOccurs="1"/>
+   <xs:element name="irq"          type="irqType"               minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="memory"       type="deviceMemoryType"      minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="ioPort"       type="ioPortType"            minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="capabilities" type="capabilitiesType"      minOccurs="0" maxOccurs="1"/>
   </xs:sequence>
   <xs:attribute name="name" type="nameType" use="required">
    <xs:annotation>
@@ -225,5 +225,14 @@
    </xs:extension>
   </xs:simpleContent>
  </xs:complexType>
+
+ <xs:simpleType name="deviceDescriptionType">
+  <xs:annotation>
+   <xs:documentation>
+    Device description (freetext).
+   </xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string"/>
+ </xs:simpleType>
 
 </xs:schema>

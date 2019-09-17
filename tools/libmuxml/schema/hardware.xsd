@@ -213,15 +213,40 @@
  </xs:simpleType>
 
  <xs:complexType name="capabilitiesType">
+  <xs:annotation>
+   <xs:documentation>
+    List of device capabilities.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="capability" type="capabilityType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>
  </xs:complexType>
 
  <xs:complexType name="capabilityType">
+  <xs:annotation>
+   <xs:documentation>
+    A device \texttt{capability} is used to assign additional information to a
+    device. Such a capability might be used by the Muen toolchain to perform
+    certain actions on devices with a given capability (e.g. \texttt{ioapic}). A
+    system integrator might use this facility to define its own capabilities
+    used by custom tools.
+
+    A capability element can have an optional value.
+
+    See line \ref{lst:af-lineref-dev-cap} in listing \ref{lst:annotated-policy}
+    for example capabilities.
+   </xs:documentation>
+  </xs:annotation>
   <xs:simpleContent>
    <xs:extension base="xs:string">
-    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="name" type="xs:string" use="required">
+     <xs:annotation>
+      <xs:documentation>
+       Capability name (free text).
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
    </xs:extension>
   </xs:simpleContent>
  </xs:complexType>

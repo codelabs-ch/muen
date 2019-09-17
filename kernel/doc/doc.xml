@@ -329,6 +329,33 @@
      mapping are ignored by the kernel.
     </text>
    </section>
+   <section id="overview_exceptions" label="Exceptions" priority="0">
+    <text priority="0">
+     We distinguish hardware exceptions that occur in VMX non-root mode, while
+     executing a subject, and in VMX root mode when the kernel is operating.
+
+     As the kernel is implemented in the SPARK programming language
+     (see section \ref{verification_spark}) with a prove of absence of runtime
+     errors, exceptions during regular operation in VMX root-mode are not
+     expected. If for some unforeseen reason (e.g.  non-maskable interrupt NMI)
+     an exception occurs, it indicates a serious error. In that case, a crash
+     audit record is filled with the appropriate error information and the
+     system is halted.
+
+     In the case of an exception being caused by the execution of a subject, the
+     kind of exception handling depends on the vCPU profile, specified in the
+     system policy, of the running subject. If the subject is not allowed to
+     handle a particular exception itself, then a VM exit occurs with the exit
+     reason indicating the cause. The kernel handles the trap like any other
+     exit and consults the subject's trap table to determine the appropriate
+     action as specified in the policy, e.g. switching to a monitor subject.
+
+     Subjects may be allowed to process exceptions themselves, e.g. VM subject
+     performing it's own page fault handling.  In this case, an exception is
+     directly delivered to the subject's exception handler via the subject's
+     IDT. The kernel is not involved at all in this case.
+    </text>
+   </section>
    <section id="overview_interaction" label="Subject Interaction" priority="0">
     <text priority="0">
      Compared to applications or virtual machines running on classical kernels

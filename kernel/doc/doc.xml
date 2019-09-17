@@ -109,7 +109,7 @@
     language constructs is deliberately avoided.
    </text>
   </section>
-   <section id="overview_policy" label="Policy / Configuration" priority="0">
+   <section id="overview_policy" label="Policy" priority="0">
     <text priority="0">
      This section gives a short description of the Muen system policy and  how
      it relates to the kernel. A detailed description of the Muen System
@@ -148,7 +148,24 @@
      check ensures a specific functional or security-relevant system property,
      such as for example accessibility of sensitive system memory to subjects.
      These properties can, where desirable, be manually audited or visualized.
+    </text>
+   </section>
+   <section id="overview_config" label="Configuration" priority="0">
+    <text priority="0">
+     Relevant aspects of the system are transformed by the Mugenspec tool to
+     data structures in the form of SPARK source files, which are represented by
+     the package hierarchy \texttt{Skp}. These include for example IRQ routing
+     information, scheduling plans, initial subject state etc, see section
+     \ref{Skp} for detailed documentation.
 
+     Whenever the kernel needs to perform a policy decision, it simply consults
+     the corresponding table, which contains the necessary information. For
+     example when a hardware interrupt is raised, the kernel performs a lookup
+     in the \texttt{Skp.Interrupts.Vector\_Routing} array using the IRQ number as
+     index. The entry specifies which subject is the recipient of the interrupt
+     as well as the vector number to inject. With this information, the kernel
+     can mark the corresponding interrupt as pending and resume normal
+     operation.
     </text>
    </section>
    <section id="overview_operation" label="Kernel Operation" priority="0">

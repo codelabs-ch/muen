@@ -19,9 +19,38 @@
  </xs:simpleType>
 
  <xs:complexType name="ioPortType">
-  <xs:attribute name="name"  type="nameType"   use="required"/>
-  <xs:attribute name="start" type="word16Type" use="required"/>
-  <xs:attribute name="end"   type="word16Type" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{ioPort} element specifies a device I/O port resource from
+    \texttt{start} octet up to and including \texttt{end} octet. A single
+    byte-accessed port is designated by specifying the same \texttt{start} and
+    \texttt{end} values.
+
+    See line \ref{lst:af-lineref-device-ioport} in listing
+    \ref{lst:annotated-policy} for an example device IRQ declaration.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="name" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of I/O port resource.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="start" type="word16Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Start port of this resource.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="end" type="word16Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     End port of this resource.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="irqType">

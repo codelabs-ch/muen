@@ -162,9 +162,12 @@
      given in section \ref{impl_kernel_init}.
 
      On VM-Exit the hardware invokes the scheduler subprogram since it has been
-     set in the subject VMCS data structure. After handling the exit condition,
-     execution of the next subject is started by performing a VM-entry. The
-     kernel control-flow is illustrated by figure \ref{fig:kernel-operation}.
+     set in the subject VMCS data structure. The kernel synchronizes data from
+     the VMCS to the subject state data structure in memory. After handling the
+     exit condition, the next subject is prepared by synchronizing the VMCS with
+     values from the subject state and execution is started by performing a
+     VM-entry. The kernel control-flow is illustrated by figure
+     \ref{fig:kernel-operation}.
 
      \begin{figure}[h]
       \centering

@@ -297,6 +297,38 @@
      major frame.
     </text>
    </section>
+   <section id="overview_interrupts" label="Interrupts" priority="0">
+    <text priority="0">
+     Devices can generate hardware interrupts that must be delivered to the
+     subject that controls the device. The system policy defines which hardware
+     interrupt is assigned to what subject and what vector should be injected if
+     such an interrupt occurs.
+
+     Since resource allocation is static, a global mapping of hardware interrupt
+     to destination subject including the interrupt vector to deliver, is
+     generated at integration time, see \texttt{Skp.Interrupts} package. The
+     kernel uses the {Vector\_Routing} array at runtime to determine the
+     destination subject that constitutes the final recipient of the interrupt.
+
+     Each subject has a bitmap of 256 pending interrupts, each entry
+     corresponding to the vector number of the interrupt. An interrupt is
+     forwarded to a subject by atomically setting the correct bit in the data
+     structure associated with the destination subject. Once execution of a
+     subject is resumed, the kernel checks the pending interrupts and injects
+     it, which completes the delivery of the interrupt.
+
+     To simplify the kernel control flow, the VMX External-interrupt exiting
+     feature is used, see Intel SDM Vol. 3C, "24.6.1 Pin-Based VM-Execution
+     Controls". With this control set, an external interrupt results in a VM
+     exit. This means that instead of a separate interrupt handler routine, the
+     same kernel entry point as any other VM exit is invoked by the hardware.
+     The appropriate VM exit reason set by the hardware designates that the
+     cause was an external interrupt and the handler routine can be executed.
+
+     Spurious or invalid interrupts that have no valid interrupt to subject
+     mapping are ignored by the kernel.
+    </text>
+   </section>
    <section id="overview_interaction" label="Subject Interaction" priority="0">
     <text priority="0">
      Compared to applications or virtual machines running on classical kernels

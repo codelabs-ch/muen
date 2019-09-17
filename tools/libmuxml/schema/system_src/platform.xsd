@@ -22,6 +22,15 @@
  </xs:complexType>
 
  <xs:complexType name="mappingsType">
+  <xs:annotation>
+   <xs:documentation>
+    Platform device alias and class mappings section. Used to assign a stable
+    name to a hardware device or to group (multiple) devices under a given name.
+
+    See line \ref{lst:af-lineref-platform-mappings} in listing
+    \ref{lst:annotated-policy} for an example platform mappings section.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="aliases" type="aliasesType"    minOccurs="0" maxOccurs="1"/>
    <xs:element name="classes" type="devClassesType" minOccurs="0" maxOccurs="1"/>

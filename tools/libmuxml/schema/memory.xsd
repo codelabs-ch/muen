@@ -101,9 +101,28 @@
  </xs:complexType>
 
  <xs:complexType name="deviceMemoryType">
+  <xs:annotation>
+   <xs:documentation>
+    A device \texttt{memory} element specifies a memory region which is used to
+    interact with the associated device.
+
+    For PCI devices, the specified region is programmed into one device BAR
+    (Base Address Register) by system firmware. See the PCI Local Bus
+    Specification or the PCI Express Base Specification for more details.
+
+    See line \ref{lst:af-lineref-devmem} in listing \ref{lst:annotated-policy}
+    for an example device memory declaration.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="memoryBlockBaseType">
-    <xs:attribute name="caching" type="cachingType" use="required"/>
+    <xs:attribute name="caching" type="cachingType" use="required">
+     <xs:annotation>
+      <xs:documentation>
+       Device memory caching type.
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>

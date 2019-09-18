@@ -34,7 +34,6 @@ package body Expanders.Scheduling.Test_Data.Tests is
    procedure Test_Add_Barrier_Configs_057525 (Gnattest_T : in out Test) renames Test_Add_Barrier_Configs;
 --  id:2.2/057525ba5aaf3024/Add_Barrier_Configs/1/0/
    procedure Test_Add_Barrier_Configs (Gnattest_T : in out Test) is
-   --  expanders-scheduling.ads:25:4:Add_Barrier_Configs
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

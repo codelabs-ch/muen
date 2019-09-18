@@ -34,7 +34,6 @@ package body Mutools.Substitutions.Test_Data.Tests is
    procedure Test_Process_Attributes_b56a16 (Gnattest_T : in out Test) renames Test_Process_Attributes;
 --  id:2.2/b56a16e5501c94a3/Process_Attributes/1/0/
    procedure Test_Process_Attributes (Gnattest_T : in out Test) is
-   --  mutools-substitutions.ads:26:4:Process_Attributes
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

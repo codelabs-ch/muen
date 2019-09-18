@@ -34,7 +34,6 @@ package body Cmd_Stream.Roots.Test_Data.Tests is
    procedure Test_Allocate_Root_1cdab9 (Gnattest_T : in out Test) renames Test_Allocate_Root;
 --  id:2.2/1cdab91416646933/Allocate_Root/1/0/
    procedure Test_Allocate_Root (Gnattest_T : in out Test) is
-   --  cmd_stream-roots.ads:23:4:Allocate_Root
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -63,7 +62,6 @@ package body Cmd_Stream.Roots.Test_Data.Tests is
    procedure Test_Allocate_Page_Table_264bea (Gnattest_T : in out Test) renames Test_Allocate_Page_Table;
 --  id:2.2/264beaf765ac2410/Allocate_Page_Table/1/0/
    procedure Test_Allocate_Page_Table (Gnattest_T : in out Test) is
-   --  cmd_stream-roots.ads:26:4:Allocate_Page_Table
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

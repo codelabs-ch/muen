@@ -34,7 +34,6 @@ package body Expanders.Hardware.Test_Data.Tests is
    procedure Test_Add_IOMMU_Default_Caps_44ac7d (Gnattest_T : in out Test) renames Test_Add_IOMMU_Default_Caps;
 --  id:2.2/44ac7dcb3bcef9b3/Add_IOMMU_Default_Caps/1/0/
    procedure Test_Add_IOMMU_Default_Caps (Gnattest_T : in out Test) is
-   --  expanders-hardware.ads:25:4:Add_IOMMU_Default_Caps
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -54,7 +53,6 @@ package body Expanders.Hardware.Test_Data.Tests is
    procedure Test_Add_MSI_IRQ_Numbers_27d5e8 (Gnattest_T : in out Test) renames Test_Add_MSI_IRQ_Numbers;
 --  id:2.2/27d5e822b86e188e/Add_MSI_IRQ_Numbers/1/0/
    procedure Test_Add_MSI_IRQ_Numbers (Gnattest_T : in out Test) is
-   --  expanders-hardware.ads:28:4:Add_MSI_IRQ_Numbers
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -74,7 +72,6 @@ package body Expanders.Hardware.Test_Data.Tests is
    procedure Test_Add_PCI_Device_MSI_IRQs_52e298 (Gnattest_T : in out Test) renames Test_Add_PCI_Device_MSI_IRQs;
 --  id:2.2/52e298aa73e29584/Add_PCI_Device_MSI_IRQs/1/0/
    procedure Test_Add_PCI_Device_MSI_IRQs (Gnattest_T : in out Test) is
-   --  expanders-hardware.ads:31:4:Add_PCI_Device_MSI_IRQs
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -95,7 +92,6 @@ package body Expanders.Hardware.Test_Data.Tests is
    procedure Test_Add_Reserved_Memory_Blocks_ea03f6 (Gnattest_T : in out Test) renames Test_Add_Reserved_Memory_Blocks;
 --  id:2.2/ea03f6c6ec01e163/Add_Reserved_Memory_Blocks/1/0/
    procedure Test_Add_Reserved_Memory_Blocks (Gnattest_T : in out Test) is
-   --  expanders-hardware.ads:34:4:Add_Reserved_Memory_Blocks
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -115,7 +111,6 @@ package body Expanders.Hardware.Test_Data.Tests is
    procedure Test_Add_Processor_CPU_IDs_d44965 (Gnattest_T : in out Test) renames Test_Add_Processor_CPU_IDs;
 --  id:2.2/d449658550ed6525/Add_Processor_CPU_IDs/1/0/
    procedure Test_Add_Processor_CPU_IDs (Gnattest_T : in out Test) is
-   --  expanders-hardware.ads:37:4:Add_Processor_CPU_IDs
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -135,7 +130,6 @@ package body Expanders.Hardware.Test_Data.Tests is
    procedure Test_Remove_Reserved_Mem_Regions_30c1ec (Gnattest_T : in out Test) renames Test_Remove_Reserved_Mem_Regions;
 --  id:2.2/30c1ec4a7af39fe3/Remove_Reserved_Mem_Regions/1/0/
    procedure Test_Remove_Reserved_Mem_Regions (Gnattest_T : in out Test) is
-   --  expanders-hardware.ads:40:4:Remove_Reserved_Mem_Regions
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -155,7 +149,6 @@ package body Expanders.Hardware.Test_Data.Tests is
    procedure Test_Remove_Reserved_Mem_References_6529e6 (Gnattest_T : in out Test) renames Test_Remove_Reserved_Mem_References;
 --  id:2.2/6529e6a3b72406a9/Remove_Reserved_Mem_References/1/0/
    procedure Test_Remove_Reserved_Mem_References (Gnattest_T : in out Test) is
-   --  expanders-hardware.ads:43:4:Remove_Reserved_Mem_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

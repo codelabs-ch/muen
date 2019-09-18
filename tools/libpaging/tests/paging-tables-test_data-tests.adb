@@ -36,7 +36,6 @@ package body Paging.Tables.Test_Data.Tests is
    procedure Test_Add_Entry_e4a533 (Gnattest_T : in out Test) renames Test_Add_Entry;
 --  id:2.2/e4a533e0a4731676/Add_Entry/1/0/
    procedure Test_Add_Entry (Gnattest_T : in out Test) is
-   --  paging-tables.ads:33:4:Add_Entry
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -78,7 +77,6 @@ package body Paging.Tables.Test_Data.Tests is
    procedure Test_Get_Entry_e3f7ba (Gnattest_T : in out Test) renames Test_Get_Entry;
 --  id:2.2/e3f7bab7ca565b5b/Get_Entry/1/0/
    procedure Test_Get_Entry (Gnattest_T : in out Test) is
-   --  paging-tables.ads:41:4:Get_Entry
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -122,7 +120,6 @@ package body Paging.Tables.Test_Data.Tests is
    procedure Test_Count_165b07 (Gnattest_T : in out Test) renames Test_Count;
 --  id:2.2/165b0799cddc8fab/Count/1/0/
    procedure Test_Count (Gnattest_T : in out Test) is
-   --  paging-tables.ads:47:4:Count
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -147,7 +144,6 @@ package body Paging.Tables.Test_Data.Tests is
    procedure Test_Contains_790fb8 (Gnattest_T : in out Test) renames Test_Contains;
 --  id:2.2/790fb83d2013d298/Contains/1/0/
    procedure Test_Contains (Gnattest_T : in out Test) is
-   --  paging-tables.ads:50:4:Contains
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -185,7 +181,6 @@ package body Paging.Tables.Test_Data.Tests is
    procedure Test_Get_Physical_Address_696158 (Gnattest_T : in out Test) renames Test_Get_Physical_Address;
 --  id:2.2/69615859ff9354ca/Get_Physical_Address/1/0/
    procedure Test_Get_Physical_Address (Gnattest_T : in out Test) is
-   --  paging-tables.ads:56:4:Get_Physical_Address
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -210,7 +205,6 @@ package body Paging.Tables.Test_Data.Tests is
    procedure Test_Set_Physical_Address_8a6f74 (Gnattest_T : in out Test) renames Test_Set_Physical_Address;
 --  id:2.2/8a6f7428d81aac8e/Set_Physical_Address/1/0/
    procedure Test_Set_Physical_Address (Gnattest_T : in out Test) is
-   --  paging-tables.ads:61:4:Set_Physical_Address
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -233,7 +227,6 @@ package body Paging.Tables.Test_Data.Tests is
    procedure Test_Iterate_a130ac (Gnattest_T : in out Test) renames Test_Iterate;
 --  id:2.2/a130ac86f3412004/Iterate/1/0/
    procedure Test_Iterate (Gnattest_T : in out Test) is
-   --  paging-tables.ads:67:4:Iterate
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -273,7 +266,6 @@ package body Paging.Tables.Test_Data.Tests is
    procedure Test_Update_c7a83f (Gnattest_T : in out Test) renames Test_Update;
 --  id:2.2/c7a83fd5009ccda3/Update/1/0/
    procedure Test_Update (Gnattest_T : in out Test) is
-   --  paging-tables.ads:75:4:Update
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -313,7 +305,6 @@ package body Paging.Tables.Test_Data.Tests is
    procedure Test_Clear_5b2240 (Gnattest_T : in out Test) renames Test_Clear;
 --  id:2.2/5b2240cb4b547858/Clear/1/0/
    procedure Test_Clear (Gnattest_T : in out Test) is
-   --  paging-tables.ads:82:4:Clear
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

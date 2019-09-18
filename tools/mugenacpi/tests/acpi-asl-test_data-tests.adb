@@ -34,7 +34,6 @@ package body Acpi.Asl.Test_Data.Tests is
    procedure Test_DWordMemory_9a4014 (Gnattest_T : in out Test) renames Test_DWordMemory;
 --  id:2.2/9a4014f56644c4de/DWordMemory/1/0/
    procedure Test_DWordMemory (Gnattest_T : in out Test) is
-   --  acpi-asl.ads:24:4:DWordMemory
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -66,7 +65,6 @@ package body Acpi.Asl.Test_Data.Tests is
    procedure Test_IO_93fe76 (Gnattest_T : in out Test) renames Test_IO;
 --  id:2.2/93fe76d2e3938c77/IO/1/0/
    procedure Test_IO (Gnattest_T : in out Test) is
-   --  acpi-asl.ads:32:4:IO
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -92,7 +90,6 @@ package body Acpi.Asl.Test_Data.Tests is
    procedure Test_IRQNoFlags_e0e5e6 (Gnattest_T : in out Test) renames Test_IRQNoFlags;
 --  id:2.2/e0e5e6d17d473863/IRQNoFlags/1/0/
    procedure Test_IRQNoFlags (Gnattest_T : in out Test) is
-   --  acpi-asl.ads:40:4:IRQNoFlags
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

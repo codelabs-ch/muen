@@ -34,7 +34,6 @@ package body Muxml.Grammar.Test_Data.Tests is
    procedure Test_Get_Grammar_aa2e3c (Gnattest_T : in out Test) renames Test_Get_Grammar;
 --  id:2.2/aa2e3cc2b342fb63/Get_Grammar/1/0/
    procedure Test_Get_Grammar (Gnattest_T : in out Test) is
-   --  muxml-grammar.ads:25:4:Get_Grammar
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -34,7 +34,6 @@ package body Mutools.Templates.Test_Data.Tests is
    procedure Test_Create_4652d7 (Gnattest_T : in out Test) renames Test_Create;
 --  id:2.2/4652d7f723cf959d/Create/1/0/
    procedure Test_Create (Gnattest_T : in out Test) is
-   --  mutools-templates.ads:27:4:Create
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -55,7 +54,6 @@ package body Mutools.Templates.Test_Data.Tests is
    procedure Test_Replace_a74ecb (Gnattest_T : in out Test) renames Test_Replace;
 --  id:2.2/a74ecbbbacf1d1be/Replace/1/0/
    procedure Test_Replace (Gnattest_T : in out Test) is
-   --  mutools-templates.ads:30:4:Replace
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -101,7 +99,6 @@ package body Mutools.Templates.Test_Data.Tests is
    procedure Test_Write_53091d (Gnattest_T : in out Test) renames Test_Write;
 --  id:2.2/53091d21d5c910db/Write/1/0/
    procedure Test_Write (Gnattest_T : in out Test) is
-   --  mutools-templates.ads:36:4:Write
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

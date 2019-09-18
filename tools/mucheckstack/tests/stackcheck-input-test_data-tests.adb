@@ -34,7 +34,6 @@ package body Stackcheck.Input.Test_Data.Tests is
    procedure Test_Parse_Line_5eadc0 (Gnattest_T : in out Test) renames Test_Parse_Line;
 --  id:2.2/5eadc032fb5b1330/Parse_Line/1/0/
    procedure Test_Parse_Line (Gnattest_T : in out Test) is
-   --  stackcheck-input.ads:28:4:Parse_Line
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -122,7 +121,6 @@ package body Stackcheck.Input.Test_Data.Tests is
    procedure Test_Parse_Node_1ffc37 (Gnattest_T : in out Test) renames Test_Parse_Node;
 --  id:2.2/1ffc37158ef08213/Parse_Node/1/0/
    procedure Test_Parse_Node (Gnattest_T : in out Test) is
-   --  stackcheck-input.ads:36:4:Parse_Node
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -211,7 +209,6 @@ package body Stackcheck.Input.Test_Data.Tests is
    procedure Test_Parse_Edge_7217b5 (Gnattest_T : in out Test) renames Test_Parse_Edge;
 --  id:2.2/7217b5a7fcf74232/Parse_Edge/1/0/
    procedure Test_Parse_Edge (Gnattest_T : in out Test) is
-   --  stackcheck-input.ads:43:4:Parse_Edge
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

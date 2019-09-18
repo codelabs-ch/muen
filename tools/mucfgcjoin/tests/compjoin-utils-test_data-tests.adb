@@ -34,7 +34,6 @@ package body Compjoin.Utils.Test_Data.Tests is
    procedure Test_Add_Component_19aeb6 (Gnattest_T : in out Test) renames Test_Add_Component;
 --  id:2.2/19aeb62704f48800/Add_Component/1/0/
    procedure Test_Add_Component (Gnattest_T : in out Test) is
-   --  compjoin-utils.ads:26:4:Add_Component
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

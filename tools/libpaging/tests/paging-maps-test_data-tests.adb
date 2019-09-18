@@ -44,7 +44,6 @@ package body Paging.Maps.Test_Data.Tests is
    procedure Test_Contains_300f40 (Gnattest_T : in out Test) renames Test_Contains;
 --  id:2.2/300f4034d9b459b2/Contains/1/0/
    procedure Test_Contains (Gnattest_T : in out Test) is
-   --  paging-maps.ads:34:4:Contains
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -76,7 +75,6 @@ package body Paging.Maps.Test_Data.Tests is
    procedure Test_Add_Entry_b86e7b (Gnattest_T : in out Test) renames Test_Add_Entry;
 --  id:2.2/b86e7b2eeb5eeb34/Add_Entry/1/0/
    procedure Test_Add_Entry (Gnattest_T : in out Test) is
-   --  paging-maps.ads:42:4:Add_Entry
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -101,7 +99,6 @@ package body Paging.Maps.Test_Data.Tests is
    procedure Test_Get_Entry_359f73 (Gnattest_T : in out Test) renames Test_Get_Entry;
 --  id:2.2/359f73bad9810504/Get_Entry/1/0/
    procedure Test_Get_Entry (Gnattest_T : in out Test) is
-   --  paging-maps.ads:50:4:Get_Entry
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -142,7 +139,6 @@ package body Paging.Maps.Test_Data.Tests is
    procedure Test_Get_Table_Address_8b3274 (Gnattest_T : in out Test) renames Test_Get_Table_Address;
 --  id:2.2/8b3274220cfac2b3/Get_Table_Address/1/0/
    procedure Test_Get_Table_Address (Gnattest_T : in out Test) is
-   --  paging-maps.ads:57:4:Get_Table_Address
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -182,7 +178,6 @@ package body Paging.Maps.Test_Data.Tests is
    procedure Test_Length_f363cb (Gnattest_T : in out Test) renames Test_Length;
 --  id:2.2/f363cb6cb38c39e2/Length/1/0/
    procedure Test_Length (Gnattest_T : in out Test) is
-   --  paging-maps.ads:63:4:Length
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -209,7 +204,6 @@ package body Paging.Maps.Test_Data.Tests is
    procedure Test_Update_91c512 (Gnattest_T : in out Test) renames Test_Update;
 --  id:2.2/91c512879b519688/Update/1/0/
    procedure Test_Update (Gnattest_T : in out Test) is
-   --  paging-maps.ads:67:4:Update
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -245,7 +239,6 @@ package body Paging.Maps.Test_Data.Tests is
    procedure Test_Iterate_869b21 (Gnattest_T : in out Test) renames Test_Iterate;
 --  id:2.2/869b215615633eeb/Iterate/1/0/
    procedure Test_Iterate (Gnattest_T : in out Test) is
-   --  paging-maps.ads:75:4:Iterate
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -285,7 +278,6 @@ package body Paging.Maps.Test_Data.Tests is
    procedure Test_Clear_ed2306 (Gnattest_T : in out Test) renames Test_Clear;
 --  id:2.2/ed2306f05183c90b/Clear/1/0/
    procedure Test_Clear (Gnattest_T : in out Test) is
-   --  paging-maps.ads:82:4:Clear
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

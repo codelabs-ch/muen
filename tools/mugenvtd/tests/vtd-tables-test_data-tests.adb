@@ -34,7 +34,6 @@ package body VTd.Tables.Test_Data.Tests is
    procedure Test_Write_6bf94d (Gnattest_T : in out Test) renames Test_Write;
 --  id:2.2/6bf94dcde86c129b/Write/1/0/
    procedure Test_Write (Gnattest_T : in out Test) is
-   --  vtd-tables.ads:38:4:Write
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -34,7 +34,6 @@ package body Elfcheck.Cmd_Line.Test_Data.Tests is
    procedure Test_Init_a69a58 (Gnattest_T : in out Test) renames Test_Init;
 --  id:2.2/a69a5871ab5eef40/Init/1/0/
    procedure Test_Init (Gnattest_T : in out Test) is
-   --  elfcheck-cmd_line.ads:27:4:Init
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -145,7 +144,6 @@ package body Elfcheck.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Policy_aac0d6 (Gnattest_T : in out Test) renames Test_Get_Policy;
 --  id:2.2/aac0d695aae58756/Get_Policy/1/0/
    procedure Test_Get_Policy (Gnattest_T : in out Test) is
-   --  elfcheck-cmd_line.ads:30:4:Get_Policy
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -168,7 +166,6 @@ package body Elfcheck.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_ELF_Binary_bbfe6b (Gnattest_T : in out Test) renames Test_Get_ELF_Binary;
 --  id:2.2/bbfe6be737e0de8d/Get_ELF_Binary/1/0/
    procedure Test_Get_ELF_Binary (Gnattest_T : in out Test) is
-   --  elfcheck-cmd_line.ads:33:4:Get_ELF_Binary
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

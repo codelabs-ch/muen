@@ -40,7 +40,6 @@ package body Cmd_Stream.Roots.Device_Domains.Test_Data.Tests is
    procedure Test_Create_0bfa77 (Gnattest_T : in out Test) renames Test_Create;
 --  id:2.2/0bfa77680384f42a/Create/1/0/
    procedure Test_Create (Gnattest_T : in out Test) is
-   --  cmd_stream-roots-device_domains.ads:27:4:Create
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -38,7 +38,6 @@ package body Cmd_Stream.Processors.Test_Data.Tests is
    procedure Test_Create_Processors_c0ff68 (Gnattest_T : in out Test) renames Test_Create_Processors;
 --  id:2.2/c0ff689aadee4c34/Create_Processors/1/0/
    procedure Test_Create_Processors (Gnattest_T : in out Test) is
-   --  cmd_stream-processors.ads:25:4:Create_Processors
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -39,9 +39,6 @@ is
    --  Validate size of VMCS regions.
    procedure VMCS_Region_Size (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that all VMCS regions are consecutive.
-   procedure VMCS_Consecutiveness (XML_Data : Muxml.XML_Data_Type);
-
    --  Validate that physical memory region names are unique.
    procedure Physical_Memory_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 

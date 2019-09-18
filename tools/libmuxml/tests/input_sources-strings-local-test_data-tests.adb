@@ -34,7 +34,6 @@ package body Input_Sources.Strings.Local.Test_Data.Tests is
    procedure Test_Open_36083b (Gnattest_T : in out Test) renames Test_Open;
 --  id:2.2/36083bb42c6d59cb/Open/1/0/
    procedure Test_Open (Gnattest_T : in out Test) is
-   --  input_sources-strings-local.ads:24:4:Open
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -34,7 +34,6 @@ package body Merge.Cmd_Line.Test_Data.Tests is
    procedure Test_Init_a69a58 (Gnattest_T : in out Test) renames Test_Init;
 --  id:2.2/a69a5871ab5eef40/Init/1/0/
    procedure Test_Init (Gnattest_T : in out Test) is
-   --  merge-cmd_line.ads:27:4:Init
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -178,7 +177,6 @@ package body Merge.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Config_File_86576e (Gnattest_T : in out Test) renames Test_Get_Config_File;
 --  id:2.2/86576e84aef15e99/Get_Config_File/1/0/
    procedure Test_Get_Config_File (Gnattest_T : in out Test) is
-   --  merge-cmd_line.ads:30:4:Get_Config_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -201,7 +199,6 @@ package body Merge.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Output_File_762f34 (Gnattest_T : in out Test) renames Test_Get_Output_File;
 --  id:2.2/762f34e807656cc2/Get_Output_File/1/0/
    procedure Test_Get_Output_File (Gnattest_T : in out Test) is
-   --  merge-cmd_line.ads:33:4:Get_Output_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -224,7 +221,6 @@ package body Merge.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Include_Path_a61f46 (Gnattest_T : in out Test) renames Test_Get_Include_Path;
 --  id:2.2/a61f46d53b52eaa1/Get_Include_Path/1/0/
    procedure Test_Get_Include_Path (Gnattest_T : in out Test) is
-   --  merge-cmd_line.ads:36:4:Get_Include_Path
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

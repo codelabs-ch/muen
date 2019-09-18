@@ -40,7 +40,6 @@ package body Cmd_Stream.Roots.Subjects.Test_Data.Tests is
    procedure Test_Create_Subjects_49dafb (Gnattest_T : in out Test) renames Test_Create_Subjects;
 --  id:2.2/49dafb0e453ecc22/Create_Subjects/1/0/
    procedure Test_Create_Subjects (Gnattest_T : in out Test) is
-   --  cmd_stream-roots-subjects.ads:27:4:Create_Subjects
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

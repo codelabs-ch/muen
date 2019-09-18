@@ -38,7 +38,6 @@ package body Cmd_Stream.Devices.Test_Data.Tests is
    procedure Test_Create_Physical_PCI_Devices_cdc2a2 (Gnattest_T : in out Test) renames Test_Create_Physical_PCI_Devices;
 --  id:2.2/cdc2a255188579c0/Create_Physical_PCI_Devices/1/0/
    procedure Test_Create_Physical_PCI_Devices (Gnattest_T : in out Test) is
-   --  cmd_stream-devices.ads:26:4:Create_Physical_PCI_Devices
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -73,7 +72,6 @@ package body Cmd_Stream.Devices.Test_Data.Tests is
    procedure Test_Create_Physical_Legacy_Devices_d247f0 (Gnattest_T : in out Test) renames Test_Create_Physical_Legacy_Devices;
 --  id:2.2/d247f04b4bc16b6d/Create_Physical_Legacy_Devices/1/0/
    procedure Test_Create_Physical_Legacy_Devices (Gnattest_T : in out Test) is
-   --  cmd_stream-devices.ads:32:4:Create_Physical_Legacy_Devices
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -108,7 +106,6 @@ package body Cmd_Stream.Devices.Test_Data.Tests is
    procedure Test_Create_VTd_Tables_c4767f (Gnattest_T : in out Test) renames Test_Create_VTd_Tables;
 --  id:2.2/c4767f64bf48dc38/Create_VTd_Tables/1/0/
    procedure Test_Create_VTd_Tables (Gnattest_T : in out Test) is
-   --  cmd_stream-devices.ads:38:4:Create_VTd_Tables
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

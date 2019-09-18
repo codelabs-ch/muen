@@ -34,7 +34,6 @@ package body Mutime.Utils.Test_Data.Tests is
    procedure Test_To_BCD_561e95 (Gnattest_T : in out Test) renames Test_To_BCD;
 --  id:2.2/561e95eda3cdb2e0/To_BCD/1/0/
    procedure Test_To_BCD (Gnattest_T : in out Test) is
-   --  mutime-utils.ads:37:4:To_BCD
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

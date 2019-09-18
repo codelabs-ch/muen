@@ -34,7 +34,6 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
    procedure Test_Device_Reference_Uniqueness_a4b310 (Gnattest_T : in out Test) renames Test_Device_Reference_Uniqueness;
 --  id:2.2/a4b31016bf911e13/Device_Reference_Uniqueness/1/0/
    procedure Test_Device_Reference_Uniqueness (Gnattest_T : in out Test) is
-   --  mucfgcheck-device_domains.ads:25:4:Device_Reference_Uniqueness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -73,7 +72,6 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
    procedure Test_Domain_Memory_Overlap_99bf8c (Gnattest_T : in out Test) renames Test_Domain_Memory_Overlap;
 --  id:2.2/99bf8c89fba72094/Domain_Memory_Overlap/1/0/
    procedure Test_Domain_Memory_Overlap (Gnattest_T : in out Test) is
-   --  mucfgcheck-device_domains.ads:28:4:Domain_Memory_Overlap
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -121,7 +119,6 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
    procedure Test_Memory_Reference_Uniqueness_8ea57c (Gnattest_T : in out Test) renames Test_Memory_Reference_Uniqueness;
 --  id:2.2/8ea57cd45d32c239/Memory_Reference_Uniqueness/1/0/
    procedure Test_Memory_Reference_Uniqueness (Gnattest_T : in out Test) is
-   --  mucfgcheck-device_domains.ads:31:4:Memory_Reference_Uniqueness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -161,7 +158,6 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
    procedure Test_Memory_Mapping_Address_Equality_7d613d (Gnattest_T : in out Test) renames Test_Memory_Mapping_Address_Equality;
 --  id:2.2/7d613d8e75d60137/Memory_Mapping_Address_Equality/1/0/
    procedure Test_Memory_Mapping_Address_Equality (Gnattest_T : in out Test) is
-   --  mucfgcheck-device_domains.ads:35:4:Memory_Mapping_Address_Equality
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -202,7 +198,6 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
    procedure Test_Domain_Memory_Type_4a5128 (Gnattest_T : in out Test) renames Test_Domain_Memory_Type;
 --  id:2.2/4a5128dd3c649f3f/Domain_Memory_Type/1/0/
    procedure Test_Domain_Memory_Type (Gnattest_T : in out Test) is
-   --  mucfgcheck-device_domains.ads:38:4:Domain_Memory_Type
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -241,7 +236,6 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
    procedure Test_PCI_Device_References_76ba6c (Gnattest_T : in out Test) renames Test_PCI_Device_References;
 --  id:2.2/76ba6cac9424ec00/PCI_Device_References/1/0/
    procedure Test_PCI_Device_References (Gnattest_T : in out Test) is
-   --  mucfgcheck-device_domains.ads:41:4:PCI_Device_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -281,7 +275,6 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
    procedure Test_Domain_PT_Region_Presence_393bd6 (Gnattest_T : in out Test) renames Test_Domain_PT_Region_Presence;
 --  id:2.2/393bd68fe235e762/Domain_PT_Region_Presence/1/0/
    procedure Test_Domain_PT_Region_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-device_domains.ads:44:4:Domain_PT_Region_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -320,7 +313,6 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
    procedure Test_PCI_Bus_Context_Region_Presence_aa1427 (Gnattest_T : in out Test) renames Test_PCI_Bus_Context_Region_Presence;
 --  id:2.2/aa142726d91f9ac7/PCI_Bus_Context_Region_Presence/1/0/
    procedure Test_PCI_Bus_Context_Region_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-device_domains.ads:47:4:PCI_Bus_Context_Region_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -34,7 +34,6 @@ package body Compjoin.Cmd_Line.Test_Data.Tests is
    procedure Test_Init_a69a58 (Gnattest_T : in out Test) renames Test_Init;
 --  id:2.2/a69a5871ab5eef40/Init/1/0/
    procedure Test_Init (Gnattest_T : in out Test) is
-   --  compjoin-cmd_line.ads:27:4:Init
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -299,7 +298,6 @@ package body Compjoin.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Input_File_01e3dc (Gnattest_T : in out Test) renames Test_Get_Input_File;
 --  id:2.2/01e3dc0b95283e09/Get_Input_File/1/0/
    procedure Test_Get_Input_File (Gnattest_T : in out Test) is
-   --  compjoin-cmd_line.ads:30:4:Get_Input_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -322,7 +320,6 @@ package body Compjoin.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Output_File_762f34 (Gnattest_T : in out Test) renames Test_Get_Output_File;
 --  id:2.2/762f34e807656cc2/Get_Output_File/1/0/
    procedure Test_Get_Output_File (Gnattest_T : in out Test) is
-   --  compjoin-cmd_line.ads:33:4:Get_Output_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -345,7 +342,6 @@ package body Compjoin.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Component_List_78c74e (Gnattest_T : in out Test) renames Test_Get_Component_List;
 --  id:2.2/78c74e89cdecbfa8/Get_Component_List/1/0/
    procedure Test_Get_Component_List (Gnattest_T : in out Test) is
-   --  compjoin-cmd_line.ads:36:4:Get_Component_List
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

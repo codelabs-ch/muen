@@ -34,7 +34,6 @@ package body Expanders.Events.Test_Data.Tests is
    procedure Test_Handle_Asap_Events_be9a1d (Gnattest_T : in out Test) renames Test_Handle_Asap_Events;
 --  id:2.2/be9a1d5e3f1ca349/Handle_Asap_Events/1/0/
    procedure Test_Handle_Asap_Events (Gnattest_T : in out Test) is
-   --  expanders-events.ads:26:4:Handle_Asap_Events
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -34,7 +34,6 @@ package body Merge.Utils.Test_Data.Tests is
    procedure Test_Lookup_File_fc67f1 (Gnattest_T : in out Test) renames Test_Lookup_File;
 --  id:2.2/fc67f18c520e0b64/Lookup_File/1/0/
    procedure Test_Lookup_File (Gnattest_T : in out Test) is
-   --  merge-utils.ads:25:4:Lookup_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

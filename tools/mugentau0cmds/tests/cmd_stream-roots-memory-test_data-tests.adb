@@ -40,7 +40,6 @@ package body Cmd_Stream.Roots.Memory.Test_Data.Tests is
    procedure Test_Create_Memory_Regions_1f09d8 (Gnattest_T : in out Test) renames Test_Create_Memory_Regions;
 --  id:2.2/1f09d8c1f760ab5e/Create_Memory_Regions/1/0/
    procedure Test_Create_Memory_Regions (Gnattest_T : in out Test) is
-   --  cmd_stream-roots-memory.ads:28:4:Create_Memory_Regions
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

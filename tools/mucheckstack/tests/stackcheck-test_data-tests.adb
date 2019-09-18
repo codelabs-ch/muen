@@ -34,7 +34,6 @@ package body Stackcheck.Test_Data.Tests is
    procedure Test_Run_81ffbb (Gnattest_T : in out Test) renames Test_Run;
 --  id:2.2/81ffbb75b0753062/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
-   --  stackcheck.ads:27:4:Run
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

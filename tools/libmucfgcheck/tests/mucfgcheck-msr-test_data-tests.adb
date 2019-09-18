@@ -34,7 +34,6 @@ package body Mucfgcheck.MSR.Test_Data.Tests is
    procedure Test_Start_Smaller_End_3ff191 (Gnattest_T : in out Test) renames Test_Start_Smaller_End;
 --  id:2.2/3ff19145334275c7/Start_Smaller_End/1/0/
    procedure Test_Start_Smaller_End (Gnattest_T : in out Test) is
-   --  mucfgcheck-msr.ads:25:4:Start_Smaller_End
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -73,7 +72,6 @@ package body Mucfgcheck.MSR.Test_Data.Tests is
    procedure Test_Low_Or_High_2e4f48 (Gnattest_T : in out Test) renames Test_Low_Or_High;
 --  id:2.2/2e4f4877eabfbdff/Low_Or_High/1/0/
    procedure Test_Low_Or_High (Gnattest_T : in out Test) is
-   --  mucfgcheck-msr.ads:28:4:Low_Or_High
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

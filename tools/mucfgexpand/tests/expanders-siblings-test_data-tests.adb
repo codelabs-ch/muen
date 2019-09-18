@@ -34,7 +34,6 @@ package body Expanders.Siblings.Test_Data.Tests is
    procedure Test_Add_Subject_Profile_VCPU_8ab93c (Gnattest_T : in out Test) renames Test_Add_Subject_Profile_VCPU;
 --  id:2.2/8ab93cbcf52e18f0/Add_Subject_Profile_VCPU/1/0/
    procedure Test_Add_Subject_Profile_VCPU (Gnattest_T : in out Test) is
-   --  expanders-siblings.ads:26:4:Add_Subject_Profile_VCPU
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -34,7 +34,6 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
    procedure Test_Alias_Physical_Device_References_8eb8d9 (Gnattest_T : in out Test) renames Test_Alias_Physical_Device_References;
 --  id:2.2/8eb8d957391a24d8/Alias_Physical_Device_References/1/0/
    procedure Test_Alias_Physical_Device_References (Gnattest_T : in out Test) is
-   --  mucfgcheck-platform.ads:25:4:Alias_Physical_Device_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -77,7 +76,6 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
    procedure Test_Alias_Physical_Device_Resource_References_7db453 (Gnattest_T : in out Test) renames Test_Alias_Physical_Device_Resource_References;
 --  id:2.2/7db453008dc7a438/Alias_Physical_Device_Resource_References/1/0/
    procedure Test_Alias_Physical_Device_Resource_References (Gnattest_T : in out Test) is
-   --  mucfgcheck-platform.ads:29:4:Alias_Physical_Device_Resource_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -121,7 +119,6 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
    procedure Test_Class_Physical_Device_References_5e6f8d (Gnattest_T : in out Test) renames Test_Class_Physical_Device_References;
 --  id:2.2/5e6f8d2d67e06d2f/Class_Physical_Device_References/1/0/
    procedure Test_Class_Physical_Device_References (Gnattest_T : in out Test) is
-   --  mucfgcheck-platform.ads:33:4:Class_Physical_Device_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -165,7 +162,6 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
    procedure Test_Subject_Alias_Resource_References_643b2b (Gnattest_T : in out Test) renames Test_Subject_Alias_Resource_References;
 --  id:2.2/643b2b83e1c6c4a9/Subject_Alias_Resource_References/1/0/
    procedure Test_Subject_Alias_Resource_References (Gnattest_T : in out Test) is
-   --  mucfgcheck-platform.ads:37:4:Subject_Alias_Resource_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

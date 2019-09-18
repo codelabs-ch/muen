@@ -34,7 +34,6 @@ package body Sinfo.Utils.Test_Data.Tests is
    procedure Test_Create_Name_3d4022 (Gnattest_T : in out Test) renames Test_Create_Name;
 --  id:2.2/3d402238b556bfe4/Create_Name/1/0/
    procedure Test_Create_Name (Gnattest_T : in out Test) is
-   --  sinfo-utils.ads:27:4:Create_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -59,7 +58,6 @@ package body Sinfo.Utils.Test_Data.Tests is
    procedure Test_Append_Resource_1d327f (Gnattest_T : in out Test) renames Test_Append_Resource;
 --  id:2.2/1d327faf104b58ed/Append_Resource/1/0/
    procedure Test_Append_Resource (Gnattest_T : in out Test) is
-   --  sinfo-utils.ads:33:4:Append_Resource
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -154,7 +152,6 @@ package body Sinfo.Utils.Test_Data.Tests is
    procedure Test_To_Hash_96113d (Gnattest_T : in out Test) renames Test_To_Hash;
 --  id:2.2/96113d1af88939fd/To_Hash/1/0/
    procedure Test_To_Hash (Gnattest_T : in out Test) is
-   --  sinfo-utils.ads:40:4:To_Hash
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -175,7 +172,6 @@ package body Sinfo.Utils.Test_Data.Tests is
    procedure Test_Get_Memory_Info_f5dae6 (Gnattest_T : in out Test) renames Test_Get_Memory_Info;
 --  id:2.2/f5dae60bb4749254/Get_Memory_Info/1/0/
    procedure Test_Get_Memory_Info (Gnattest_T : in out Test) is
-   --  sinfo-utils.ads:48:4:Get_Memory_Info
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

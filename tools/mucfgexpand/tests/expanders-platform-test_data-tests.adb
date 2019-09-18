@@ -34,7 +34,6 @@ package body Expanders.Platform.Test_Data.Tests is
    procedure Test_Add_Section_Skeleton_797fa9 (Gnattest_T : in out Test) renames Test_Add_Section_Skeleton;
 --  id:2.2/797fa93bd19d8580/Add_Section_Skeleton/1/0/
    procedure Test_Add_Section_Skeleton (Gnattest_T : in out Test) is
-   --  expanders-platform.ads:25:4:Add_Section_Skeleton
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -55,7 +54,6 @@ package body Expanders.Platform.Test_Data.Tests is
    procedure Test_Resolve_Device_Aliases_2c46de (Gnattest_T : in out Test) renames Test_Resolve_Device_Aliases;
 --  id:2.2/2c46dec9d926880c/Resolve_Device_Aliases/1/0/
    procedure Test_Resolve_Device_Aliases (Gnattest_T : in out Test) is
-   --  expanders-platform.ads:28:4:Resolve_Device_Aliases
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -75,7 +73,6 @@ package body Expanders.Platform.Test_Data.Tests is
    procedure Test_Resolve_Device_Classes_0ae48e (Gnattest_T : in out Test) renames Test_Resolve_Device_Classes;
 --  id:2.2/0ae48e2c82d97dec/Resolve_Device_Classes/1/0/
    procedure Test_Resolve_Device_Classes (Gnattest_T : in out Test) is
-   --  expanders-platform.ads:32:4:Resolve_Device_Classes
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -111,7 +108,6 @@ package body Expanders.Platform.Test_Data.Tests is
    procedure Test_Add_Subject_Device_Resources_9f99c3 (Gnattest_T : in out Test) renames Test_Add_Subject_Device_Resources;
 --  id:2.2/9f99c3b0f972885f/Add_Subject_Device_Resources/1/0/
    procedure Test_Add_Subject_Device_Resources (Gnattest_T : in out Test) is
-   --  expanders-platform.ads:36:4:Add_Subject_Device_Resources
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

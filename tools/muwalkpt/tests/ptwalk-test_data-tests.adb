@@ -34,7 +34,6 @@ package body Ptwalk.Test_Data.Tests is
    procedure Test_Run_faf985 (Gnattest_T : in out Test) renames Test_Run;
 --  id:2.2/faf985e08b0a661e/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
-   --  ptwalk.ads:30:4:Run
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -58,7 +57,6 @@ package body Ptwalk.Test_Data.Tests is
    procedure Test_Do_Walk_597330 (Gnattest_T : in out Test) renames Test_Do_Walk;
 --  id:2.2/597330b7b94744c8/Do_Walk/1/0/
    procedure Test_Do_Walk (Gnattest_T : in out Test) is
-   --  ptwalk.ads:44:4:Do_Walk
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

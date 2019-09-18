@@ -34,7 +34,6 @@ package body Ptwalk.Utils.Test_Data.Tests is
    procedure Test_To_Number_48f364 (Gnattest_T : in out Test) renames Test_To_Number;
 --  id:2.2/48f364dbae9e251d/To_Number/1/0/
    procedure Test_To_Number (Gnattest_T : in out Test) is
-   --  ptwalk-utils.ads:25:4:To_Number
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

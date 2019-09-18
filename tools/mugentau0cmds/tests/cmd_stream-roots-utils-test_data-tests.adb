@@ -34,7 +34,6 @@ package body Cmd_Stream.Roots.Utils.Test_Data.Tests is
    procedure Test_Assign_Memory_d278fe (Gnattest_T : in out Test) renames Test_Assign_Memory;
 --  id:2.2/d278fe6cd5952945/Assign_Memory/1/0/
    procedure Test_Assign_Memory (Gnattest_T : in out Test) is
-   --  cmd_stream-roots-utils.ads:30:4:Assign_Memory
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

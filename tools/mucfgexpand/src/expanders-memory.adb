@@ -658,15 +658,7 @@ is
 
    procedure Add_VMCS_Regions (Data : in out Muxml.XML_Data_Type)
    is
-      use type Interfaces.Unsigned_64;
-
-      CPU_Count : constant Interfaces.Unsigned_64
-        := Interfaces.Unsigned_64
-          (Mutools.XML_Utils.Get_Active_CPU_Count
-             (Data => Data));
-      Curr_Addr : Interfaces.Unsigned_64 := VMX_Start_Address +
-        CPU_Count * Mutools.Constants.Page_Size;
-      Nodes     : constant DOM.Core.Node_List
+      Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/subjects/subject");
@@ -682,17 +674,15 @@ is
                  Name => "name");
          begin
             Mulog.Log (Msg => "Adding VMCS region for subject '"
-                       & Subj_Name & "' at address "
-                       & Mutools.Utils.To_Hex (Number => Curr_Addr));
+                       & Subj_Name & "'");
             Mutools.XML_Utils.Add_Memory_Region
               (Policy      => Data,
                Name        => Subj_Name & "|vmcs",
-               Address     => Mutools.Utils.To_Hex (Number => Curr_Addr),
+               Address     => "",
                Size        => "16#1000#",
                Caching     => "WB",
                Alignment   => "16#1000#",
                Memory_Type => "kernel_vmcs");
-            Curr_Addr := Curr_Addr + Mutools.Constants.Page_Size;
          end;
       end loop;
    end Add_VMCS_Regions;

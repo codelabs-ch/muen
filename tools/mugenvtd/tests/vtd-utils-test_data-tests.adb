@@ -34,7 +34,6 @@ package body VTd.Utils.Test_Data.Tests is
    procedure Test_Get_IR_TM_SID_db1b39 (Gnattest_T : in out Test) renames Test_Get_IR_TM_SID;
 --  id:2.2/db1b3998c0f5a7dc/Get_IR_TM_SID/1/0/
    procedure Test_Get_IR_TM_SID (Gnattest_T : in out Test) is
-   --  vtd-utils.ads:31:4:Get_IR_TM_SID
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

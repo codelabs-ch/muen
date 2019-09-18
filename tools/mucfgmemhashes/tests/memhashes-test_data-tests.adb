@@ -34,7 +34,6 @@ package body Memhashes.Test_Data.Tests is
    procedure Test_Run_e84213 (Gnattest_T : in out Test) renames Test_Run;
 --  id:2.2/e84213e130018c54/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
-   --  memhashes.ads:27:4:Run
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -59,7 +58,6 @@ package body Memhashes.Test_Data.Tests is
    procedure Test_Resolve_Refs_eb1e6d (Gnattest_T : in out Test) renames Test_Resolve_Refs;
 --  id:2.2/eb1e6dac99bddea5/Resolve_Refs/1/0/
    procedure Test_Resolve_Refs (Gnattest_T : in out Test) is
-   --  memhashes.ads:35:4:Resolve_Refs
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

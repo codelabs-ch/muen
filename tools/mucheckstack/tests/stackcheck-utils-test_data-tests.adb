@@ -34,7 +34,6 @@ package body Stackcheck.Utils.Test_Data.Tests is
    procedure Test_Entity_To_Ada_Name_557e0f (Gnattest_T : in out Test) renames Test_Entity_To_Ada_Name;
 --  id:2.2/557e0fbc48f38a65/Entity_To_Ada_Name/1/0/
    procedure Test_Entity_To_Ada_Name (Gnattest_T : in out Test) is
-   --  stackcheck-utils.ads:23:4:Entity_To_Ada_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

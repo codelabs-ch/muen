@@ -34,7 +34,6 @@ package body Msrstore.Tables.Test_Data.Tests is
    procedure Test_Is_Full_aaff6f (Gnattest_T : in out Test) renames Test_Is_Full;
 --  id:2.2/aaff6f63df362f53/Is_Full/1/0/
    procedure Test_Is_Full (Gnattest_T : in out Test) is
-   --  msrstore-tables.ads:35:4:Is_Full
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -66,7 +65,6 @@ package body Msrstore.Tables.Test_Data.Tests is
    procedure Test_Is_Empty_7c576a (Gnattest_T : in out Test) renames Test_Is_Empty;
 --  id:2.2/7c576a03a21b9e2d/Is_Empty/1/0/
    procedure Test_Is_Empty (Gnattest_T : in out Test) is
-   --  msrstore-tables.ads:38:4:Is_Empty
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -92,7 +90,6 @@ package body Msrstore.Tables.Test_Data.Tests is
    procedure Test_Append_Entry_ce511a (Gnattest_T : in out Test) renames Test_Append_Entry;
 --  id:2.2/ce511a06b30ed5cd/Append_Entry/1/0/
    procedure Test_Append_Entry (Gnattest_T : in out Test) is
-   --  msrstore-tables.ads:41:4:Append_Entry
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -135,7 +132,6 @@ package body Msrstore.Tables.Test_Data.Tests is
    procedure Test_To_Stream_45df0e (Gnattest_T : in out Test) renames Test_To_Stream;
 --  id:2.2/45df0e704318cdb4/To_Stream/1/0/
    procedure Test_To_Stream (Gnattest_T : in out Test) is
-   --  msrstore-tables.ads:49:4:To_Stream
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

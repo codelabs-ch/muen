@@ -34,7 +34,6 @@ package body Pack.Pre_Checks.Test_Data.Tests is
    procedure Test_Unresolved_Hash_References_0f3dc3 (Gnattest_T : in out Test) renames Test_Unresolved_Hash_References;
 --  id:2.2/0f3dc38b88516469/Unresolved_Hash_References/1/0/
    procedure Test_Unresolved_Hash_References (Gnattest_T : in out Test) is
-   --  pack-pre_checks.ads:26:4:Unresolved_Hash_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -79,7 +78,6 @@ package body Pack.Pre_Checks.Test_Data.Tests is
    procedure Test_Register_All_3f90ea (Gnattest_T : in out Test) renames Test_Register_All;
 --  id:2.2/3f90ea30314141bf/Register_All/1/0/
    procedure Test_Register_All (Gnattest_T : in out Test) is
-   --  pack-pre_checks.ads:29:4:Register_All
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -98,7 +96,6 @@ package body Pack.Pre_Checks.Test_Data.Tests is
    procedure Test_Run_aabd4c (Gnattest_T : in out Test) renames Test_Run;
 --  id:2.2/aabd4c81c4d5a23a/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
-   --  pack-pre_checks.ads:32:4:Run
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -121,7 +118,6 @@ package body Pack.Pre_Checks.Test_Data.Tests is
    procedure Test_Get_Count_1fbd7c (Gnattest_T : in out Test) renames Test_Get_Count;
 --  id:2.2/1fbd7c784b3d55c2/Get_Count/1/0/
    procedure Test_Get_Count (Gnattest_T : in out Test) is
-   --  pack-pre_checks.ads:37:4:Get_Count
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -140,7 +136,6 @@ package body Pack.Pre_Checks.Test_Data.Tests is
    procedure Test_Clear_4b4f85 (Gnattest_T : in out Test) renames Test_Clear;
 --  id:2.2/4b4f85da05a9b689/Clear/1/0/
    procedure Test_Clear (Gnattest_T : in out Test) is
-   --  pack-pre_checks.ads:40:4:Clear
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

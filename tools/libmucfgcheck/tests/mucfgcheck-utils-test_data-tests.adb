@@ -34,7 +34,6 @@ package body Mucfgcheck.Utils.Test_Data.Tests is
    procedure Test_Is_Adjacent_Number_5c515c (Gnattest_T : in out Test) renames Test_Is_Adjacent_Number;
 --  id:2.2/5c515cc24f6f732d/Is_Adjacent_Number/1/0/
    procedure Test_Is_Adjacent_Number (Gnattest_T : in out Test) is
-   --  mucfgcheck-utils.ads:24:4:Is_Adjacent_Number
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -86,7 +85,6 @@ package body Mucfgcheck.Utils.Test_Data.Tests is
    procedure Test_Is_Adjacent_Region_92660e (Gnattest_T : in out Test) renames Test_Is_Adjacent_Region;
 --  id:2.2/92660ec30d470fcc/Is_Adjacent_Region/1/0/
    procedure Test_Is_Adjacent_Region (Gnattest_T : in out Test) is
-   --  mucfgcheck-utils.ads:33:4:Is_Adjacent_Region
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

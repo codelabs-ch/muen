@@ -34,7 +34,6 @@ package body Spec.Test_Data.Tests is
    procedure Test_Indent_399a7a (Gnattest_T : in out Test) renames Test_Indent;
 --  id:2.2/399a7ad24f629c80/Indent/1/0/
    procedure Test_Indent (Gnattest_T : in out Test) is
-   --  spec.ads:26:4:Indent
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

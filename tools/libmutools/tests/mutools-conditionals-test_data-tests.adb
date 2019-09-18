@@ -34,7 +34,6 @@ package body Mutools.Conditionals.Test_Data.Tests is
    procedure Test_Expand_150aa9 (Gnattest_T : in out Test) renames Test_Expand;
 --  id:2.2/150aa91f5cdabaeb/Expand/1/0/
    procedure Test_Expand (Gnattest_T : in out Test) is
-   --  mutools-conditionals.ads:27:4:Expand
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -104,7 +103,6 @@ package body Mutools.Conditionals.Test_Data.Tests is
    procedure Test_Evaluate_6dd7a2 (Gnattest_T : in out Test) renames Test_Evaluate;
 --  id:2.2/6dd7a238e46c8db9/Evaluate/1/0/
    procedure Test_Evaluate (Gnattest_T : in out Test) is
-   --  mutools-conditionals.ads:32:4:Evaluate
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

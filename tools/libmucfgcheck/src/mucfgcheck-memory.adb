@@ -1288,44 +1288,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure VMCS_Consecutiveness (XML_Data : Muxml.XML_Data_Type)
-   is
-      XPath : constant String
-        := "/system/memory/memory[@type='kernel_vmcs']";
-
-      Nodes : constant DOM.Core.Node_List := XPath_Query
-        (N     => XML_Data.Doc,
-         XPath => XPath);
-
-      --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
-
-      ----------------------------------------------------------------------
-
-      function Error_Msg (Node : DOM.Core.Node) return String
-      is
-         Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Node,
-            Name => "name");
-      begin
-         return "Memory region '" & Name & "' not adjacent to other VMCS"
-           & " regions";
-      end Error_Msg;
-   begin
-      if DOM.Core.Nodes.Length (List => Nodes) < 2 then
-         return;
-      end if;
-
-      For_Each_Match (XML_Data     => XML_Data,
-                      Source_XPath => XPath,
-                      Ref_XPath    => XPath,
-                      Log_Message  => "VMCS region(s) for consecutiveness",
-                      Error        => Error_Msg'Access,
-                      Match        => Is_Adjacent_Region'Access);
-   end VMCS_Consecutiveness;
-
-   -------------------------------------------------------------------------
-
    procedure VMCS_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.

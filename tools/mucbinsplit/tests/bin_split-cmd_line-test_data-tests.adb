@@ -34,7 +34,6 @@ package body Bin_Split.Cmd_Line.Test_Data.Tests is
    procedure Test_Init_a69a58 (Gnattest_T : in out Test) renames Test_Init;
 --  id:2.2/a69a5871ab5eef40/Init/1/0/
    procedure Test_Init (Gnattest_T : in out Test) is
-   --  bin_split-cmd_line.ads:28:4:Init
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -189,7 +188,6 @@ package body Bin_Split.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Spec_03d696 (Gnattest_T : in out Test) renames Test_Get_Spec;
 --  id:2.2/03d6960e256007fe/Get_Spec/1/0/
    procedure Test_Get_Spec (Gnattest_T : in out Test) is
-   --  bin_split-cmd_line.ads:31:4:Get_Spec
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -212,7 +210,6 @@ package body Bin_Split.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Binary_3b9c4e (Gnattest_T : in out Test) renames Test_Get_Binary;
 --  id:2.2/3b9c4e52a1e6a791/Get_Binary/1/0/
    procedure Test_Get_Binary (Gnattest_T : in out Test) is
-   --  bin_split-cmd_line.ads:34:4:Get_Binary
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -235,7 +232,6 @@ package body Bin_Split.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Output_Spec_faaf96 (Gnattest_T : in out Test) renames Test_Get_Output_Spec;
 --  id:2.2/faaf964f54641d5e/Get_Output_Spec/1/0/
    procedure Test_Get_Output_Spec (Gnattest_T : in out Test) is
-   --  bin_split-cmd_line.ads:37:4:Get_Output_Spec
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -258,7 +254,6 @@ package body Bin_Split.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Output_Dir_c3e9c8 (Gnattest_T : in out Test) renames Test_Get_Output_Dir;
 --  id:2.2/c3e9c87208c742d1/Get_Output_Dir/1/0/
    procedure Test_Get_Output_Dir (Gnattest_T : in out Test) is
-   --  bin_split-cmd_line.ads:40:4:Get_Output_Dir
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

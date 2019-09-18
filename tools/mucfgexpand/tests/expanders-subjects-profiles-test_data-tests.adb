@@ -34,7 +34,6 @@ package body Expanders.Subjects.Profiles.Test_Data.Tests is
    procedure Test_Handle_Linux_Profile_71d669 (Gnattest_T : in out Test) renames Test_Handle_Linux_Profile;
 --  id:2.2/71d6693a77e1ae5b/Handle_Linux_Profile/1/0/
    procedure Test_Handle_Linux_Profile (Gnattest_T : in out Test) is
-   --  expanders-subjects-profiles.ads:28:4:Handle_Linux_Profile
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

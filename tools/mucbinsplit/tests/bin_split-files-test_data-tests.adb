@@ -34,7 +34,6 @@ package body Bin_Split.Files.Test_Data.Tests is
    procedure Test_Write_Section_6af65c (Gnattest_T : in out Test) renames Test_Write_Section;
 --  id:2.2/6af65ca91ddd2c4b/Write_Section/1/0/
    procedure Test_Write_Section (Gnattest_T : in out Test) is
-   --  bin_split-files.ads:27:4:Write_Section
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

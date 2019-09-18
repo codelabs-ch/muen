@@ -34,7 +34,6 @@ package body Mucfgcheck.Config.Test_Data.Tests is
    procedure Test_Name_Uniqueness_7f1559 (Gnattest_T : in out Test) renames Test_Name_Uniqueness;
 --  id:2.2/7f15594730cfb6f0/Name_Uniqueness/1/0/
    procedure Test_Name_Uniqueness (Gnattest_T : in out Test) is
-   --  mucfgcheck-config.ads:25:4:Name_Uniqueness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -78,7 +77,6 @@ package body Mucfgcheck.Config.Test_Data.Tests is
    procedure Test_Required_Presence_f1ac2c (Gnattest_T : in out Test) renames Test_Required_Presence;
 --  id:2.2/f1ac2c1e35edbd55/Required_Presence/1/0/
    procedure Test_Required_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-config.ads:28:4:Required_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -126,7 +124,6 @@ package body Mucfgcheck.Config.Test_Data.Tests is
    procedure Test_Expression_Config_Var_Refs_ea351f (Gnattest_T : in out Test) renames Test_Expression_Config_Var_Refs;
 --  id:2.2/ea351faa18a7216f/Expression_Config_Var_Refs/1/0/
    procedure Test_Expression_Config_Var_Refs (Gnattest_T : in out Test) is
-   --  mucfgcheck-config.ads:31:4:Expression_Config_Var_Refs
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -194,7 +191,6 @@ package body Mucfgcheck.Config.Test_Data.Tests is
    procedure Test_Expression_Integer_Values_8910e7 (Gnattest_T : in out Test) renames Test_Expression_Integer_Values;
 --  id:2.2/8910e7ea682924bf/Expression_Integer_Values/1/0/
    procedure Test_Expression_Integer_Values (Gnattest_T : in out Test) is
-   --  mucfgcheck-config.ads:34:4:Expression_Integer_Values
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -262,7 +258,6 @@ package body Mucfgcheck.Config.Test_Data.Tests is
    procedure Test_Expression_Boolean_Values_6cb38d (Gnattest_T : in out Test) renames Test_Expression_Boolean_Values;
 --  id:2.2/6cb38df1a49f5220/Expression_Boolean_Values/1/0/
    procedure Test_Expression_Boolean_Values (Gnattest_T : in out Test) is
-   --  mucfgcheck-config.ads:37:4:Expression_Boolean_Values
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -330,7 +325,6 @@ package body Mucfgcheck.Config.Test_Data.Tests is
    procedure Test_Conditional_Config_Var_Refs_628dfb (Gnattest_T : in out Test) renames Test_Conditional_Config_Var_Refs;
 --  id:2.2/628dfbb40f272bc7/Conditional_Config_Var_Refs/1/0/
    procedure Test_Conditional_Config_Var_Refs (Gnattest_T : in out Test) is
-   --  mucfgcheck-config.ads:40:4:Conditional_Config_Var_Refs
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -34,7 +34,6 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
    procedure Test_Memory_Space_20d775 (Gnattest_T : in out Test) renames Test_Memory_Space;
 --  id:2.2/20d775fbae27b871/Memory_Space/1/0/
    procedure Test_Memory_Space (Gnattest_T : in out Test) is
-   --  mucfgcheck-hardware.ads:25:4:Memory_Space
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -73,7 +72,6 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
    procedure Test_Memory_Block_Overlap_12597b (Gnattest_T : in out Test) renames Test_Memory_Block_Overlap;
 --  id:2.2/12597bd947918ca6/Memory_Block_Overlap/1/0/
    procedure Test_Memory_Block_Overlap (Gnattest_T : in out Test) is
-   --  mucfgcheck-hardware.ads:28:4:Memory_Block_Overlap
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -111,7 +109,6 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
    procedure Test_Memory_Block_Size_2aa436 (Gnattest_T : in out Test) renames Test_Memory_Block_Size;
 --  id:2.2/2aa436e73a56a43f/Memory_Block_Size/1/0/
    procedure Test_Memory_Block_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-hardware.ads:31:4:Memory_Block_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -156,7 +153,6 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
    procedure Test_PCI_Config_Space_Address_4663d9 (Gnattest_T : in out Test) renames Test_PCI_Config_Space_Address;
 --  id:2.2/4663d97b4d1f43a4/PCI_Config_Space_Address/1/0/
    procedure Test_PCI_Config_Space_Address (Gnattest_T : in out Test) is
-   --  mucfgcheck-hardware.ads:35:4:PCI_Config_Space_Address
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -194,7 +190,6 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
    procedure Test_CPU_Count_07d30c (Gnattest_T : in out Test) renames Test_CPU_Count;
 --  id:2.2/07d30c7e1521c027/CPU_Count/1/0/
    procedure Test_CPU_Count (Gnattest_T : in out Test) is
-   --  mucfgcheck-hardware.ads:38:4:CPU_Count
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -231,7 +226,6 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
    procedure Test_CPU_Sub_Elements_986048 (Gnattest_T : in out Test) renames Test_CPU_Sub_Elements;
 --  id:2.2/9860488403fe8fc6/CPU_Sub_Elements/1/0/
    procedure Test_CPU_Sub_Elements (Gnattest_T : in out Test) is
-   --  mucfgcheck-hardware.ads:41:4:CPU_Sub_Elements
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -367,7 +361,6 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
    procedure Test_IOAPIC_Presence_a2d33d (Gnattest_T : in out Test) renames Test_IOAPIC_Presence;
 --  id:2.2/a2d33d83826a54a5/IOAPIC_Presence/1/0/
    procedure Test_IOAPIC_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-hardware.ads:44:4:IOAPIC_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -429,7 +422,6 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
    procedure Test_IOMMU_Presence_6c934e (Gnattest_T : in out Test) renames Test_IOMMU_Presence;
 --  id:2.2/6c934e0540bf7353/IOMMU_Presence/1/0/
    procedure Test_IOMMU_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-hardware.ads:47:4:IOMMU_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -544,7 +536,6 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
    procedure Test_IOMMU_Cap_Agaw_f3e91e (Gnattest_T : in out Test) renames Test_IOMMU_Cap_Agaw;
 --  id:2.2/f3e91eeb5d9a71cb/IOMMU_Cap_Agaw/1/0/
    procedure Test_IOMMU_Cap_Agaw (Gnattest_T : in out Test) is
-   --  mucfgcheck-hardware.ads:51:4:IOMMU_Cap_Agaw
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -624,7 +615,6 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
    procedure Test_IOMMU_Cap_Register_Offsets_8d8dd2 (Gnattest_T : in out Test) renames Test_IOMMU_Cap_Register_Offsets;
 --  id:2.2/8d8dd224a6cf5960/IOMMU_Cap_Register_Offsets/1/0/
    procedure Test_IOMMU_Cap_Register_Offsets (Gnattest_T : in out Test) is
-   --  mucfgcheck-hardware.ads:54:4:IOMMU_Cap_Register_Offsets
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -734,7 +724,6 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
    procedure Test_System_Board_Presence_06a6c3 (Gnattest_T : in out Test) renames Test_System_Board_Presence;
 --  id:2.2/06a6c3de430e8a9f/System_Board_Presence/1/0/
    procedure Test_System_Board_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-hardware.ads:58:4:System_Board_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

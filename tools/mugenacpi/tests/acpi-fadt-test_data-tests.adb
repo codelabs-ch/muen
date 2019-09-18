@@ -34,7 +34,6 @@ package body Acpi.FADT.Test_Data.Tests is
    procedure Test_Write_c33834 (Gnattest_T : in out Test) renames Test_Write;
 --  id:2.2/c3383472bb920369/Write/1/0/
    procedure Test_Write (Gnattest_T : in out Test) is
-   --  acpi-fadt.ads:20:4:Write
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

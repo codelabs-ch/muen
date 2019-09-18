@@ -34,7 +34,6 @@ package body Mutools.Strings.Test_Data.Tests is
    procedure Test_Concatenate_59d0be (Gnattest_T : in out Test) renames Test_Concatenate;
 --  id:2.2/59d0bec9a90312aa/Concatenate/1/0/
    procedure Test_Concatenate (Gnattest_T : in out Test) is
-   --  mutools-strings.ads:28:4:"&"
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -61,7 +60,6 @@ package body Mutools.Strings.Test_Data.Tests is
    procedure Test_Tokenize_5cd120 (Gnattest_T : in out Test) renames Test_Tokenize;
 --  id:2.2/5cd120e012aef233/Tokenize/1/0/
    procedure Test_Tokenize (Gnattest_T : in out Test) is
-   --  mutools-strings.ads:35:4:Tokenize
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

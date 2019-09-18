@@ -34,7 +34,6 @@ package body Mutools.Files.Test_Data.Tests is
    procedure Test_Open_5f87e4 (Gnattest_T : in out Test) renames Test_Open;
 --  id:2.2/5f87e4bf73c87401/Open/1/0/
    procedure Test_Open (Gnattest_T : in out Test) is
-   --  mutools-files.ads:28:4:Open
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

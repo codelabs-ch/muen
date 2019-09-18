@@ -34,7 +34,6 @@ package body Ptwalk.Cmd_Line.Test_Data.Tests is
    procedure Test_Init_a69a58 (Gnattest_T : in out Test) renames Test_Init;
 --  id:2.2/a69a5871ab5eef40/Init/1/0/
    procedure Test_Init (Gnattest_T : in out Test) is
-   --  ptwalk-cmd_line.ads:31:4:Init
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -296,7 +295,6 @@ package body Ptwalk.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_PT_File_cc58d5 (Gnattest_T : in out Test) renames Test_Get_PT_File;
 --  id:2.2/cc58d55863766133/Get_PT_File/1/0/
    procedure Test_Get_PT_File (Gnattest_T : in out Test) is
-   --  ptwalk-cmd_line.ads:34:4:Get_PT_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -318,7 +316,6 @@ package body Ptwalk.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_PT_Type_83606b (Gnattest_T : in out Test) renames Test_Get_PT_Type;
 --  id:2.2/83606b3462ba8697/Get_PT_Type/1/0/
    procedure Test_Get_PT_Type (Gnattest_T : in out Test) is
-   --  ptwalk-cmd_line.ads:37:4:Get_PT_Type
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -340,7 +337,6 @@ package body Ptwalk.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_PT_Pointer_1f0725 (Gnattest_T : in out Test) renames Test_Get_PT_Pointer;
 --  id:2.2/1f072507c5f8d014/Get_PT_Pointer/1/0/
    procedure Test_Get_PT_Pointer (Gnattest_T : in out Test) is
-   --  ptwalk-cmd_line.ads:40:4:Get_PT_Pointer
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -362,7 +358,6 @@ package body Ptwalk.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Virtual_Address_73d105 (Gnattest_T : in out Test) renames Test_Get_Virtual_Address;
 --  id:2.2/73d1052dbac5c7aa/Get_Virtual_Address/1/0/
    procedure Test_Get_Virtual_Address (Gnattest_T : in out Test) is
-   --  ptwalk-cmd_line.ads:43:4:Get_Virtual_Address
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

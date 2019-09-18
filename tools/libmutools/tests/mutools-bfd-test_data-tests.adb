@@ -34,7 +34,6 @@ package body Mutools.Bfd.Test_Data.Tests is
    procedure Test_Open_fd83b4 (Gnattest_T : in out Test) renames Test_Open;
 --  id:2.2/fd83b40ddcdb3d67/Open/1/0/
    procedure Test_Open (Gnattest_T : in out Test) is
-   --  mutools-bfd.ads:28:4:Open
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

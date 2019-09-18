@@ -38,7 +38,6 @@ package body Cmd_Stream.Roots.Kernels.Test_Data.Tests is
    procedure Test_Create_Per_CPU_Kernel_886fd9 (Gnattest_T : in out Test) renames Test_Create_Per_CPU_Kernel;
 --  id:2.2/886fd9d7e43af236/Create_Per_CPU_Kernel/1/0/
    procedure Test_Create_Per_CPU_Kernel (Gnattest_T : in out Test) is
-   --  cmd_stream-roots-kernels.ads:25:4:Create_Per_CPU_Kernel
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

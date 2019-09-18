@@ -34,7 +34,6 @@ package body Expanders.Device_Domains.Test_Data.Tests is
    procedure Test_Add_Section_Skeleton_797fa9 (Gnattest_T : in out Test) renames Test_Add_Section_Skeleton;
 --  id:2.2/797fa93bd19d8580/Add_Section_Skeleton/1/0/
    procedure Test_Add_Section_Skeleton (Gnattest_T : in out Test) is
-   --  expanders-device_domains.ads:25:4:Add_Section_Skeleton
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -55,7 +54,6 @@ package body Expanders.Device_Domains.Test_Data.Tests is
    procedure Test_Add_Domain_IDs_acdb9f (Gnattest_T : in out Test) renames Test_Add_Domain_IDs;
 --  id:2.2/acdb9ff1b910151d/Add_Domain_IDs/1/0/
    procedure Test_Add_Domain_IDs (Gnattest_T : in out Test) is
-   --  expanders-device_domains.ads:28:4:Add_Domain_IDs
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -76,7 +74,6 @@ package body Expanders.Device_Domains.Test_Data.Tests is
    procedure Test_Add_Tables_17f65c (Gnattest_T : in out Test) renames Test_Add_Tables;
 --  id:2.2/17f65ca27fa9a88d/Add_Tables/1/0/
    procedure Test_Add_Tables (Gnattest_T : in out Test) is
-   --  expanders-device_domains.ads:31:4:Add_Tables
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -103,7 +100,6 @@ package body Expanders.Device_Domains.Test_Data.Tests is
    procedure Test_Add_Reserved_Memory_Region_Mappings_48a720 (Gnattest_T : in out Test) renames Test_Add_Reserved_Memory_Region_Mappings;
 --  id:2.2/48a720bc6d127fd2/Add_Reserved_Memory_Region_Mappings/1/0/
    procedure Test_Add_Reserved_Memory_Region_Mappings (Gnattest_T : in out Test) is
-   --  expanders-device_domains.ads:34:4:Add_Reserved_Memory_Region_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -131,7 +127,6 @@ package body Expanders.Device_Domains.Test_Data.Tests is
    procedure Test_Remove_Map_Reserved_Mem_Attribute_7d25a8 (Gnattest_T : in out Test) renames Test_Remove_Map_Reserved_Mem_Attribute;
 --  id:2.2/7d25a82518ed9200/Remove_Map_Reserved_Mem_Attribute/1/0/
    procedure Test_Remove_Map_Reserved_Mem_Attribute (Gnattest_T : in out Test) is
-   --  expanders-device_domains.ads:38:4:Remove_Map_Reserved_Mem_Attribute
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

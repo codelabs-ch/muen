@@ -19,6 +19,8 @@ include ../../projects/tests.mk
 $(OBJ_DIR)/gnatprove/gnatprove.out: $(SPECS) $(STATIC_SPECS)
 	gnatprove -q --prover=$(SPARK_PROVERS) --level=2 -Pgnatprove_mugenspec
 
-$(OBJ_DIR)/prove/%: templates/%
-	mkdir -p $(OBJ_DIR)/prove
+$(OBJ_DIR)/prove/%: templates/% | $(OBJ_DIR)/prove
 	cp $< $@
+
+$(OBJ_DIR)/prove:
+	mkdir -p $@

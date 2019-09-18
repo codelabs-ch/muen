@@ -11,6 +11,12 @@
  </xs:simpleType>
 
  <xs:simpleType name="alignmentType">
+  <xs:annotation>
+   <xs:documentation>
+    Memory alignment constraint for memory region. Taken into account by
+    allocator tool and checked by validator.
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="word64Type">
    <xs:enumeration value="16#1000#"/>
    <xs:enumeration value="16#0020_0000#"/>

@@ -21,11 +21,29 @@
  </xs:complexType>
 
  <xs:complexType name="namePhysRefType">
+  <xs:annotation>
+   <xs:documentation>
+    Named resource reference. Used for device aliases and device alias resource
+    references.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="resource" type="namePhysRefType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
-  <xs:attribute name="name"     type="nameType" use="required"/>
-  <xs:attribute name="physical" type="nameType" use="required"/>
+  <xs:attribute name="name" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Alias name.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="physical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Reference to physical device or device resource.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="devClassesType">

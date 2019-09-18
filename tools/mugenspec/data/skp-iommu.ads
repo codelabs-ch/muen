@@ -531,11 +531,11 @@ private
      (Index : IOMMU_Device_Range)
       return SK.Word16 is (FR_Offsets (Index));
 
-   --  NOTE: The Intel VT-d spec section 10.2 mentions that software is
-   --  expected to access registers as a whole. To avoid side-effects from
-   --  partial/wider reads always read the entire record field/register, modify
-   --  the appropriate values and write back the new data (see also GNATtracker
-   --  ticket N307-023).
+   --  NOTE: The Intel VT-d Specification, "10.2 Software Access to Registers"
+   --  mentions that software is expected to access registers as a whole. To
+   --  avoid side-effects from partial/wider reads always read the entire
+   --  record field/register, modify the appropriate values and write back the
+   --  new data (see also GNATtracker ticket N307-023).
 
    IOMMU_Common_Size : constant := 192 * 8;
 

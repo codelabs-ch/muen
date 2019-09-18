@@ -134,6 +134,11 @@
  </xs:complexType>
 
  <xs:simpleType name="optionalOffsetType">
+  <xs:annotation>
+   <xs:documentation>
+    Optional file offset value in bytes.
+   </xs:documentation>
+  </xs:annotation>
   <xs:union memberTypes="word64Type noneType"/>
  </xs:simpleType>
 

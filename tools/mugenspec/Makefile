@@ -17,7 +17,7 @@ include ../templates.mk
 include ../../projects/tests.mk
 
 $(OBJ_DIR)/gnatprove/gnatprove.out: $(SPECS) $(STATIC_SPECS)
-	gnatprove -q --prover=$(SPARK_PROVERS) --level=2 -Pgnatprove_mugenspec
+	gnatprove $(SPARK_OPTS) -q --report=fail -Pgnatprove_mugenspec
 
 $(OBJ_DIR)/prove/%: templates/% | $(OBJ_DIR)/prove
 	cp $< $@

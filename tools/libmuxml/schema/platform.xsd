@@ -49,6 +49,17 @@
  <xs:complexType name="devClassesType">
   <xs:annotation>
    <xs:documentation>
+    The \texttt{classes} element specifies a list of device classes.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:sequence>
+   <xs:element name="class" type="devClassType" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
+
+ <xs:complexType name="devClassType">
+  <xs:annotation>
+   <xs:documentation>
     Device classes enable the grouping of devices and allow referencing all
     devices by a single name. This simplifies the process of assigning multiple
     devices to a subject.
@@ -61,15 +72,15 @@
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>
-   <xs:element name="class" type="devClassType" minOccurs="0" maxOccurs="unbounded"/>
-  </xs:sequence>
- </xs:complexType>
-
- <xs:complexType name="devClassType">
-  <xs:sequence>
    <xs:element name="device" type="physRefType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
-  <xs:attribute name="name" type="nameType" use="required"/>
+  <xs:attribute name="name" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Device class name.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="physRefType">

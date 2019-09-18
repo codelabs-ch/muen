@@ -1,20 +1,20 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- ==========================================
-     Generated with mugenhwcfg (commit v0.5-104-gd2306d9)
+     Generated with mugenhwcfg (commit v0.5-104-ga9b83af)
      Linux kernel version: 4.13.0+
      Distribution: Mugenhwcfg stick/1.0
      Product information:
        Vendor: LENOVO
-       Name: 20L8S05A00
+       Name: 20L8S05900
        Product Version: ThinkPad T480s
      Board information:
        Vendor: LENOVO
-       Name: 20L8S05A00
-       Version: Not Defined
+       Name: 20L8S05900
+       Version: SDK0J40697 WIN
      BIOS information:
        Vendor: LENOVO
-       Version: N22ET49W (1.26 )
-       Date: 09/13/2018
+       Version: N22ET56W (1.33 )
+       Date: 07/18/2019
      ========================================== -->
 
 
@@ -27,9 +27,10 @@
   </processor>
   <memory>
     <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#0000#" size="16#0009_d000#"/>
-    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0010_0000#" size="16#6b5d_d000#"/>
-    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#7057_d000#" size="16#1000#"/>
-    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#7b53_6000#" size="16#0006_4000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0010_0000#" size="16#3ff0_0000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#4040_0000#" size="16#2b2d_1000#"/>
+    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#7056_d000#" size="16#1000#"/>
+    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#7b52_c000#" size="16#0006_e000#"/>
     <memoryBlock allocatable="false" name="ACPI Tables" physicalAddress="16#7b59_a000#" size="16#0006_5000#"/>
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0001_0000_0000#" size="16#0003_7e80_0000#"/>
     <reservedMemory name="rmrr1" physicalAddress="16#7aa9_f000#" size="16#0002_0000#"/>

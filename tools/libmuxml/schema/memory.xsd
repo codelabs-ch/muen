@@ -143,7 +143,22 @@
  </xs:simpleType>
 
  <xs:complexType name="fillContentType">
-  <xs:attribute name="pattern" type="byteType" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{fill} element designates a memory region which is initialized
+    with the given pattern.
+
+    See line \ref{lst:af-lineref-memory-fill} in listing
+    \ref{lst:annotated-policy} for a file-backed memory region example.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="pattern" type="byteType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Fill pattern (hex).
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="memRegionsType">

@@ -88,8 +88,34 @@
  </xs:complexType>
 
  <xs:complexType name="fileContentType">
-  <xs:attribute name="filename" type="xs:string"          use="required"/>
-  <xs:attribute name="offset"   type="optionalOffsetType" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{file} child element designates a file-backed memory region.
+
+    The \texttt{filename} attribute specifies the filename to use as content for
+    the physical memory region, the \texttt{offset} attribute is \texttt{none}
+    by default but can be customized to include a partial file.
+
+    See line \ref{lst:af-lineref-memory-file} in listing
+    \ref{lst:annotated-policy} for a file-backed memory region example.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="filename" type="xs:string" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Filename of file to (partially) include. Note that the actual file
+     processed by the toolchain also depends on the working directory passed as
+     command line option to the specific tool.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="offset" type="optionalOffsetType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Read file offset in bytes.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:simpleType name="subjectMemoryKindType">

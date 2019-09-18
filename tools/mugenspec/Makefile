@@ -5,7 +5,7 @@ SPECS        = $(wildcard data/*.ad*)
 STATIC_SPECS = $(OBJ_DIR)/prove/skp-subjects.ads $(OBJ_DIR)/prove/skp-events.ads
 
 COMPONENT_TARGETS = $(TEMPLATES)
-TEST_TARGETS      = $(COMPONENT_TARGETS) prove-specs
+TEST_TARGETS      = $(COMPONENT_TARGETS) $(OBJ_DIR)/gnatprove/gnatprove.out
 COV_TARGETS       = $(COMPONENT_TARGETS)
 
 ADDITIONAL_CLEAN = $(GEN_DIR)
@@ -16,7 +16,7 @@ include ../templates.mk
 
 include ../../projects/tests.mk
 
-prove-specs: $(SPECS) $(STATIC_SPECS)
+$(OBJ_DIR)/gnatprove/gnatprove.out: $(SPECS) $(STATIC_SPECS)
 	gnatprove -q --prover=$(SPARK_PROVERS) --level=2 -Pgnatprove_mugenspec
 
 $(OBJ_DIR)/prove/%: templates/%

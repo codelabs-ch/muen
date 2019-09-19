@@ -2,7 +2,7 @@
 
 BLKDEV=sdc
 
-echo noop > /sys/class/block/${BLKDEV}/queue/scheduler
+echo none > /sys/class/block/${BLKDEV}/queue/scheduler
 
 modprobe muenblock-server \
 	req_shm_name=blockdev_request1 \

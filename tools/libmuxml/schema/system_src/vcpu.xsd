@@ -139,6 +139,16 @@
  </xs:complexType>
 
  <xs:complexType name="vcpuType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{vpu} element controls the execution behavior of the virtual CPU
+    (vCPU). A default vCPU profile is selected by the component profile, but CPU
+    execution settings can be customized both at component and subject level.
+
+    See line \ref{lst:af-lineref-vcpu} in listing \ref{lst:annotated-policy}
+    for an example on how to customize a vCPU profile.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="vmx"       type="vmxType"       minOccurs="0" maxOccurs="1"/>
    <xs:element name="msrs"      type="msrsType"      minOccurs="0" maxOccurs="1"/>

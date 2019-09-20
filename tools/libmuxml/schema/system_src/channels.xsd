@@ -11,16 +11,16 @@
 
     Channels are declared globally and have an unique name to be unambiguous.
 
-    For documentation about linking physical channels to subjects and
-    components, see sections \ref{system_src.xsd:channelReferencesType} and
-    \ref{system_src.xsd:logicalChannelsType}.
-
-    For information how to map a physical channel with a logical component
-    channel at subject level, see section \ref{system_src.xsd:resourceMappingType}.
-
     Note that channels are a policy source format abstraction. The toolchain
     resolves this concept into subjects by adding the appropriate memory
     regions and events.
+
+    For documentation about linking physical channels to subjects see section
+    \ref{system_src.xsd:channelReferencesType}. For documentation about
+    declaring requested channels in components see secion
+    \ref{system_src.xsd:logicalChannelsType}. For information how to map a
+    physical channel with a logical component channel at subject level, see
+    section \ref{system_src.xsd:resourceMappingType}.
 
     See line \ref{lst:af-lineref-channels} in listing \ref{lst:annotated-policy}
     for an example channel section.
@@ -32,9 +32,41 @@
  </xs:complexType>
 
  <xs:complexType name="channelType">
-  <xs:attribute name="name"     type="nameType"       use="required"/>
-  <xs:attribute name="size"     type="memorySizeType" use="required"/>
-  <xs:attribute name="hasEvent" type="eventModeType"  use="optional"/>
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{channel} element declares a physical channel.
+
+    Besides the \texttt{name} and \texttt{size} of the channel, the optional
+    \texttt{hasEvent} attribute can be set to declare that the given channel
+    requests an associated event. The expander tool will then automatically
+    create a global event with the requested event type.
+
+    See line \ref{lst:af-lineref-channel} in listing \ref{lst:annotated-policy}
+    for an example channel declaration.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="name" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Channel name.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="size" type="memorySizeType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Size of the channel in bytes. Must be a multiple of page size (4K).
+     Enforced by validator.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="hasEvent" type="eventModeType" use="optional">
+   <xs:annotation>
+    <xs:documentation>
+     Associated event type (if any).
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="channelReferencesType">

@@ -201,25 +201,71 @@
  </xs:complexType>
 
  <xs:complexType name="memRefType">
+  <xs:annotation>
+   <xs:documentation>
+    A \texttt{memory} element maps a physical memory region into the address
+    space of a device domain or subject entity. The region will be accessible
+    for the entity at the specified \texttt{virtualAdress} with permissions
+    defined by the \texttt{executable} and \texttt{writable} attributes.
+
+    See line \ref{lst:af-lineref-memref} in listing \ref{lst:annotated-policy}
+    for an example of such a mapping.
+   </xs:documentation>
+  </xs:annotation>
   <xs:attributeGroup ref="memRefBaseAttrs"/>
-  <xs:attribute name="virtualAddress" type="word64Type" use="required"/>
+  <xs:attribute name="virtualAddress" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Address in entity address space where the physical memory region is mapped.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="memoryRefsType">
+  <xs:annotation>
+   <xs:documentation>
+    List of physical memory region references.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="memory" type="memRefType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
  </xs:complexType>
 
  <xs:attributeGroup name="memBaseAttrs">
-  <xs:attribute name="logical"    type="nameType"    use="required"/>
-  <xs:attribute name="writable"   type="booleanType" use="required"/>
-  <xs:attribute name="executable" type="booleanType" use="required"/>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical name of mapping.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="writable" type="booleanType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Defines if the mapped memory is writable.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="executable" type="booleanType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Defines if the memory region contents are executable by the processor.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:attributeGroup>
 
  <xs:attributeGroup name="memRefBaseAttrs">
   <xs:attributeGroup ref="memBaseAttrs"/>
-  <xs:attribute name="physical" type="nameType" use="required"/>
+  <xs:attribute name="physical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of referenced physical memory region.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:attributeGroup>
 
  <xs:complexType name="memoryBaseType" abstract="true">

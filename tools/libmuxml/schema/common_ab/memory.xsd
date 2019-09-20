@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
- <xs:complexType name="memRefType">
-  <xs:attributeGroup ref="memRefBaseAttrs"/>
-  <xs:attribute name="virtualAddress" type="word64Type" use="required"/>
- </xs:complexType>
 
  <xs:complexType name="fileContentType">
   <xs:attribute name="filename" type="xs:string"          use="required"/>

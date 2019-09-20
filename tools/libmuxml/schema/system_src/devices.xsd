@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
+ <xs:complexType name="devMemRefType">
+  <xs:attributeGroup ref="memRefBaseAttrs"/>
+  <xs:attribute name="virtualAddress" type="word64Type" use="optional"/>
+ </xs:complexType>
+
  <xs:complexType name="irqRefType">
   <xs:sequence>
    <xs:element name="msi" type="physicalRefType" minOccurs="0" maxOccurs="unbounded"/>

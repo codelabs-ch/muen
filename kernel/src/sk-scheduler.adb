@@ -314,8 +314,11 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Clear all state associated with the subject specified by ID and
-   --  initialize to the values of the subject policy.
+   --D @Section Id => impl_subject_init, Label => Subject initialization, Parent => impl_kernel_init_sched, Priority => 20
+   --D @Text Section => impl_subject_init, Priority => 0
+   --D Clear all state associated with the subject specified by ID and
+   --D initialize to the values of the subject policy.
+   --D @OL Id => subject_init_steps, Section => impl_subject_init, Priority => 10
    procedure Init_Subject (ID : Skp.Global_Subject_ID_Type)
    with
       Global =>
@@ -333,18 +336,32 @@ is
       MSR_Count : constant SK.Word32
         := Skp.Subjects.Get_MSR_Count (Subject_ID => ID);
    begin
+      --D @Item List => subject_init_steps, Priority => 0
+      --D Reset FPU state for subject with given ID
       FPU.Reset_State (ID => ID);
+      --D @Item List => subject_init_steps, Priority => 0
+      --D Clear pending events of subject with given ID
       Subjects_Events.Clear_Events (Subject => ID);
+      --D @Item List => subject_init_steps, Priority => 0
+      --D Initialize pending interrupts of subject with given ID
       Subjects_Interrupts.Init_Interrupts (Subject => ID);
+      --D @Item List => subject_init_steps, Priority => 0
+      --D Initialize timed event of subject with given ID
       Timed_Events.Init_Event (Subject => ID);
 
       if MSR_Count > 0 then
+         --D @Item List => subject_init_steps, Priority => 0
+         --D Clear all MSRs in MSR storage area if subject has access to MSRs
          Subjects_MSR_Store.Clear_MSRs (Subject => ID);
       end if;
 
+      --D @Item List => subject_init_steps, Priority => 0
+      --D Reset VMCS of subject and make it active by loading it.
       VMX.Reset (VMCS_Address => VMCS_Addr,
                  Subject_ID   => ID);
       VMX.Load  (VMCS_Address => VMCS_Addr);
+      --D @Item List => subject_init_steps, Priority => 0
+      --D Set VMCS control fields according to policy.
       VMX.VMCS_Setup_Control_Fields
         (IO_Bitmap_Address  => Skp.Subjects.Get_IO_Bitmap_Address
            (Subject_ID => ID),
@@ -364,10 +381,16 @@ is
            (Subject_ID => ID),
          Exception_Bitmap   => Skp.Subjects.Get_Exception_Bitmap
            (Subject_ID => ID));
+      --D @Item List => subject_init_steps, Priority => 0
+      --D Setup VMCS host fields.
       VMX.VMCS_Setup_Host_Fields;
+      --D @Item List => subject_init_steps, Priority => 0
+      --D Setup VMCS guest fields according to policy.
       VMX.VMCS_Setup_Guest_Fields
         (PML4_Address => Skp.Subjects.Get_PML4_Address (Subject_ID => ID),
          EPT_Pointer  => Skp.Subjects.Get_EPT_Pointer (Subject_ID => ID));
+      --D @Item List => subject_init_steps, Priority => 0
+      --D Reset CPU state of subject according to policy.
       Subjects.Reset_State
         (ID       => ID,
          GPRs     => Skp.Subjects.Get_GPRs (Subject_ID => ID),

@@ -157,7 +157,7 @@
        <PerfCounterEnable>1</PerfCounterEnable>
        <OSSupportFXSAVE>1</OSSupportFXSAVE>
        <OSSupportSIMDExceptions>1</OSSupportSIMDExceptions>
-	   <UMInstructionPrevention>1</UMInstructionPrevention>
+       <UMInstructionPrevention>1</UMInstructionPrevention>
        <VMXEnable>1</VMXEnable>
        <SMXEnable>1</SMXEnable>
        <FSGSBASEEnable>1</FSGSBASEEnable>
@@ -165,16 +165,15 @@
        <XSAVEEnable>1</XSAVEEnable>
        <SMEPEnable>1</SMEPEnable>
        <SMAPEnable>1</SMAPEnable>
-	   <ProtectionKeyEnable>1</ProtectionKeyEnable>
+       <ProtectionKeyEnable>1</ProtectionKeyEnable>
       </cr4>
      </masks>
     </vmx>
+    <msrs/>
     <registers>
      <gpr>
       <rip>16#0000#</rip>
       <rsp>16#5000#</rsp>
-
-      <!-- All GPRs have a value -->
      </gpr>
      <cr0>
       <ProtectionEnable>1</ProtectionEnable>
@@ -211,14 +210,11 @@
       <SMAPEnable>0</SMAPEnable>
       <ProtectionKeyEnable>0</ProtectionKeyEnable>
      </cr4>
-     <msrs/>
+     <segments>
+      <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
+      <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+     </segments>
     </registers>
-    <segments>
-     <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
-     <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
-
-     <!-- All segments must be specified -->
-    </segments>
    </vcpu>
    <bootparams/>
    <memory>

@@ -376,6 +376,37 @@
      IDT. The kernel is not involved at all in this case.
     </text>
    </section>
+   <section id="overview_crash_audit" label="Crash Audit" priority="0">
+    <text priority="0">
+     The crash audit mechanism is in charge of handling fatal, unrecoverable
+     errors which lead to immediate halting of execution and subsequent system
+     reset. Its main purpose is to record information regarding the error
+     condition and the current system state to enable administrators to identify
+     and determine the cause of the issue.
+
+     Audit information is stored in a dedicated, uncached memory region which
+     retains its contents across system reboots. This region is mapped by all
+     kernel instances on each CPU. Read access may be granted to a subject to
+     enable audit readout for further processing, e.g. debug server outputing
+     the information via serial log. Note that processing of the audit
+     information may also be done outside of a Muen system, e.g. by the boot
+     loader.
+
+     When a fatal crash occurs, the kernel allocates a free audit entry, sets
+     the appropriate reason for the current cause and fills the remaining
+     context fields with relevant data. Multiple cores may experience a fatal
+     failure condition at the same time (e.g. faulty hardware resulting in
+     Machine-Check Exceptions). Since each kernel instance performs audit
+     entry reservation atomically, this scenario is supported.
+
+     After a reboot, the crash audit entries may be inspected. Entries are
+     identified as current, when the boot count of the header and the generation
+     in the given entry match. Otherwise, the audit entry contains stale
+     information from a previous crash which has already been processed. This
+     enables reliable identification of current audit entries to avoid duplicate
+     processing.
+    </text>
+   </section>
    <section id="overview_interaction" label="Subject Interaction" priority="0">
     <text priority="0">
      Compared to applications or virtual machines running on classical kernels

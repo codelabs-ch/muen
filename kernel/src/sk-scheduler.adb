@@ -403,20 +403,22 @@ is
 
    -------------------------------------------------------------------------
 
+   --D @Section Id => impl_kernel_init_sched, Label => Scheduler Initialization, Parent => impl_kernel_init, Priority => 10
+   --D @Text Section => impl_kernel_init_sched, Priority => 0
+   --D Scheduler initialization is performed by each CPU.
    procedure Init
    is
       use type Skp.CPU_Range;
    begin
 
-      --  Setup VMCS and state of subjects running on this logical CPU.
-
+      --D @Text Section => impl_kernel_init_sched, Priority => 0
+      --D Setup VMCS and state of each subject running on this logical CPU,
+      --D see \ref{impl_subject_init}.
       for I in Skp.Global_Subject_ID_Type loop
          if Skp.Subjects.Get_CPU_ID (Subject_ID => I) = CPU_Info.CPU_ID then
             Init_Subject (ID => I);
          end if;
       end loop;
-
-      --  Load first subject and set preemption timer ticks.
 
       declare
          Now               : constant SK.Word64 := CPU.RDTSC;
@@ -425,7 +427,14 @@ is
          Current_VMCS_Addr : constant SK.Word64
            := Skp.Subjects.Get_VMCS_Address (Subject_ID => Current_Subject);
       begin
+         --D @Text Section => impl_kernel_init_sched, Priority => 0
+         --D Load VMCS of initial subject.
          VMX.Load (VMCS_Address => Current_VMCS_Addr);
+
+         --D @Text Section => impl_kernel_init_sched, Priority => 0
+         --D Set start and end timestamp of initial minor frame for
+         --D the scheduling group of the first subject based on current
+         --D TSC.
          Scheduling_Info.Set_Scheduling_Info
            (ID                 => Skp.Scheduling.Get_Scheduling_Group_ID
               (Subject_ID => Current_Subject),
@@ -437,14 +446,14 @@ is
 
          if CPU_Info.Is_BSP then
 
-            --  Set minor frame barriers config.
-
+            --D @Text Section => impl_kernel_init_sched, Priority => 0
+            --D Set global minor frame barriers config (BSP-only).
             MP.Set_Minor_Frame_Barrier_Config
               (Config => Skp.Scheduling.Major_Frames
                  (Skp.Scheduling.Major_Frame_Range'First).Barrier_Config);
 
-            --  Set initial major frame start time to now.
-
+            --D @Text Section => impl_kernel_init_sched, Priority => 0
+            --D Set initial major frame start time to now.
             Global_Current_Major_Start_Cycles := Now;
          end if;
       end;

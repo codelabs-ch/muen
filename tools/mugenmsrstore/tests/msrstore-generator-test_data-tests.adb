@@ -60,7 +60,7 @@ package body Msrstore.Generator.Test_Data.Tests is
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Policy.Doc,
                  XPath => "/system/subjects/subject/"
-                 & "vcpu/registers/msrs/msr");
+                 & "vcpu/msrs/msr");
          begin
             for I in 1 .. DOM.Core.Nodes.Length (List => MSRs) loop
                DOM.Core.Elements.Set_Attribute

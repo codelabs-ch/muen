@@ -183,11 +183,13 @@
       </cr4>
      </masks>
     </vmx>
+    <msrs>
+     <msr start="16#0802#" end="16#0802#" mode="r"/>
+    </msrs>
     <registers>
      <gpr>
       <rip>16#0000#</rip>
       <rsp>16#9000#</rsp>
-       <!-- All GPRs have a value -->
      </gpr>
      <cr0>
       <ProtectionEnable>1</ProtectionEnable>
@@ -224,15 +226,11 @@
       <SMAPEnable>0</SMAPEnable>
       <ProtectionKeyEnable>0</ProtectionKeyEnable>
      </cr4>
-     <msrs>
-      <msr start="16#0802#" end="16#0802#" mode="r"/>
-     </msrs>
+     <segments>
+      <cs selector="16#0008#" base="16#0000#" limit="16#ffff#" access="16#a09b#"/>
+      <ds selector="16#0010#" base="16#0000#" limit="16#ffff#" access="16#c093#"/>
+     </segments>
     </registers>
-    <segments>
-     <cs selector="16#0008#" base="16#0000#" limit="16#ffff#" access="16#a09b#"/>
-     <ds selector="16#0010#" base="16#0000#" limit="16#ffff#" access="16#c093#"/>
-      <!-- All segments must be specified -->
-    </segments>
    </vcpu>
    <bootparams>lpj=10000 console=ttyS12</bootparams>
    <memory>

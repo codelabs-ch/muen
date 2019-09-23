@@ -124,10 +124,17 @@ is
 
    -------------------------------------------------------------------------
 
+   --D @Section Id => impl_crash_audit, Label => Crash Audit, Parent => implementation, Priority => 0
+   --D @Section Id => impl_crash_audit_init, Label => Initialization, Parent => impl_crash_audit, Priority => 0
    procedure Init
    is
       H : constant Header_Type := Instance.Crash_Info.Header;
    begin
+      --D @Text Section => impl_crash_audit_init, Priority => 0
+      --D Check if the crash audit has as matching version number set. If not,
+      --D initialize the audit instance to the well-known empty state.
+      --D If it is already initialized, increase the boot counter but retain
+      --D current audit data.
       if H.Version_Magic /= Crash_Magic then
          Instance.Crash_Info := Null_Dump;
          pragma Debug (Dump.Print_Message
@@ -149,12 +156,22 @@ is
 
    -------------------------------------------------------------------------
 
+   --D @Section Id => impl_crash_audit_alloc, Label => Allocation, Parent => impl_crash_audit, Priority => 10
+   --D @Text Section => impl_crash_audit_alloc, Priority => 0
+   --D Allocate a global crash audit entry termed \emph{slot}. For a full
+   --D description of the crash audit entry data structure see section
+   --D \ref{SK.Crash_Audit_Types}.
    procedure Allocate (Audit : out Entry_Type)
    is
       S : Positive;
    begin
+      --D @Text Section => impl_crash_audit_alloc, Priority => 0
+      --D Initialize the audit entry.
       Audit := Null_Entry;
 
+      --D @Text Section => impl_crash_audit_alloc, Priority => 0
+      --D Atomically get and increment the audit slot index. If no free audit
+      --D slot is available, halt execution.
       Get_And_Inc (Slot => S);
       if S > Max_Dumps then
          pragma Debug
@@ -164,6 +181,8 @@ is
          CPU.Stop;
       end if;
 
+      --D @Text Section => impl_crash_audit_alloc, Priority => 0
+      --D Set index of current audit slot and clear crash dump fields.
       Audit.Slot := Dumpdata_Index (S);
       pragma Debug (Dump.Print_Message
                     (Msg => "Crash audit: CPU APIC ID "
@@ -173,12 +192,17 @@ is
 
       Instance.Crash_Info.Data (Audit.Slot) := Null_Dumpdata;
 
+      --D @Text Section => impl_crash_audit_alloc, Priority => 0
+      --D Set APIC ID of this CPU and set timestamp to the current TSC value.
       Instance.Crash_Info.Data (Audit.Slot).APIC_ID := Byte (CPU_Info.APIC_ID);
       Instance.Crash_Info.Data (Audit.Slot).TSC_Value := CPU.RDTSC;
    end Allocate;
 
    -------------------------------------------------------------------------
 
+   --D @Section Id => impl_crash_audit_final, Label => Finalization, Parent => impl_crash_audit, Priority => 10
+   --D @Text Section => impl_crash_audit_final, Priority => 0
+   --D Finalize the given audit slot.
    procedure Finalize (Audit : Entry_Type)
    is
       pragma Unreferenced (Audit);
@@ -188,20 +212,31 @@ is
       Boots : constant Interfaces.Unsigned_64
         := Instance.Crash_Info.Header.Boot_Count;
    begin
+      --D @Text Section => impl_crash_audit_final, Priority => 0
+      --D Set active crash dump count to the current slot index. If the next
+      --D slot index is too larger, set it to the last index.
       if Next > Positive (Dumpdata_Length'Last) then
          Instance.Crash_Info.Header.Dump_Count := Dumpdata_Length'Last;
       else
          Instance.Crash_Info.Header.Dump_Count := Dumpdata_Length (Next - 1);
       end if;
 
+      --D @Text Section => impl_crash_audit_final, Priority => 0
+      --D Set the version string in the header to the current magic value.
       for I in Version.Version_String'Range loop
          Instance.Crash_Info.Header.Version_String (I)
            := Version.Version_String (I);
       end loop;
 
+      --D @Text Section => impl_crash_audit_final, Priority => 0
+      --D Increase the generation and crash counters.
       Instance.Crash_Info.Header.Generation := Boots + 1;
       Atomic_Inc_Crash_Count;
 
+      --D @Text Section => impl_crash_audit_final, Priority => 0
+      --D Pause for a given amount before rebooting the system to enable
+      --D potentially simultaneously faulting cores to finish writing their
+      --D crash audit entries.
       Delays.U_Delay (US => Reset_Delay);
       pragma Debug (Dump.Print_Message
                     (Msg => "Crash audit: CPU APIC ID "

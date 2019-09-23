@@ -127,6 +127,10 @@
    </cr4>
   </masks>
  </vmx>
+ <msrs>
+  <msr end="16#0802#" mode="r" start="16#0802#"/>
+  <msr end="16#0000_0804#" mode="r" start="16#0000_0804#"/>
+ </msrs>
  <registers>
   <gpr>
    <rip>16#0000#</rip>
@@ -167,10 +171,6 @@
    <SMAPEnable>0</SMAPEnable>
    <ProtectionKeyEnable>0</ProtectionKeyEnable>
   </cr4>
-  <msrs>
-   <msr end="16#0802#" mode="r" start="16#0802#"/>
-   <msr end="16#0000_0804#" mode="r" start="16#0000_0804#"/>
-  </msrs>
  </registers>
  <segments>
   <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>

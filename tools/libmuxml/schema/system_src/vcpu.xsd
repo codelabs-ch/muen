@@ -141,6 +141,7 @@
  <xs:complexType name="vcpuType">
   <xs:sequence>
    <xs:element name="vmx"       type="vmxType"       minOccurs="0" maxOccurs="1"/>
+   <xs:element name="msrs"      type="msrsType"      minOccurs="0" maxOccurs="1"/>
    <xs:element name="registers" type="registersType" minOccurs="0" maxOccurs="1"/>
    <xs:element name="segments"  type="segmentsType"  minOccurs="0" maxOccurs="1"/>
   </xs:sequence>
@@ -176,7 +177,6 @@
    <xs:element name="gpr"  type="gprType"  minOccurs="0" maxOccurs="1"/>
    <xs:element name="cr0"  type="cr0Type"  minOccurs="0" maxOccurs="1"/>
    <xs:element name="cr4"  type="cr4Type"  minOccurs="0" maxOccurs="1"/>
-   <xs:element name="msrs" type="msrsType" minOccurs="0" maxOccurs="1"/>
   </xs:sequence>
  </xs:complexType>
 

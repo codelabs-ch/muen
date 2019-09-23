@@ -1086,7 +1086,7 @@ package body Muxml.Utils.Test_Data.Tests is
          MSRs_Node := DOM.Core.Nodes.Item
            (List  => McKae.XML.XPath.XIA.XPath_Query
               (N     => Data.Doc,
-               XPath => "/vcpu/registers/msrs"),
+               XPath => "/vcpu/msrs"),
             Index => 0);
 
          --  Construct the following XML structure:
@@ -1131,12 +1131,12 @@ package body Muxml.Utils.Test_Data.Tests is
             MSR_Count : constant Natural := DOM.Core.Nodes.Length
               (List => McKae.XML.XPath.XIA.XPath_Query
                  (N     => Data.Doc,
-                  XPath => "/vcpu/registers/msrs/msr"));
+                  XPath => "/vcpu/msrs/msr"));
             Last_Child : constant DOM.Core.Node
               := DOM.Core.Nodes.Last_Child
                 (N => Get_Element
                    (Doc   => Data.Doc,
-                    XPath => "/vcpu/registers/msrs"));
+                    XPath => "/vcpu/msrs"));
          begin
             Assert (Condition => MSR_Count = 4,
                     Message   => "Error merging child element list");

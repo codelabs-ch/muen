@@ -1317,6 +1317,7 @@
       </cr4>
      </masks>
     </vmx>
+    <msrs/>
     <registers>
      <gpr>
       <rip>16#5000#</rip>
@@ -1357,12 +1358,11 @@
       <SMAPEnable>0</SMAPEnable>
       <ProtectionKeyEnable>0</ProtectionKeyEnable>
      </cr4>
-     <msrs/>
+     <segments>
+      <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
+      <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+     </segments>
     </registers>
-    <segments>
-     <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
-     <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
-    </segments>
    </vcpu>
    <bootparams/>
    <memory>
@@ -1504,6 +1504,7 @@
       </cr4>
      </masks>
     </vmx>
+    <msrs/>
     <registers>
      <gpr>
       <rip>16#5000#</rip>
@@ -1544,12 +1545,11 @@
       <SMAPEnable>0</SMAPEnable>
       <ProtectionKeyEnable>0</ProtectionKeyEnable>
      </cr4>
-     <msrs/>
+     <segments>
+      <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
+      <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+     </segments>
     </registers>
-    <segments>
-     <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
-     <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
-    </segments>
    </vcpu>
    <bootparams/>
    <memory>
@@ -1730,6 +1730,7 @@
       </cr4>
      </masks>
     </vmx>
+    <msrs/>
     <registers>
      <gpr>
       <rip>16#5000#</rip>
@@ -1770,12 +1771,11 @@
       <SMAPEnable>0</SMAPEnable>
       <ProtectionKeyEnable>0</ProtectionKeyEnable>
      </cr4>
-     <msrs/>
+     <segments>
+      <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
+      <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+     </segments>
     </registers>
-    <segments>
-     <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
-     <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
-    </segments>
    </vcpu>
    <bootparams/>
    <memory>
@@ -1946,6 +1946,7 @@
       </cr4>
      </masks>
     </vmx>
+    <msrs/>
     <registers>
      <gpr>
       <rip>16#5000#</rip>
@@ -1986,12 +1987,11 @@
       <SMAPEnable>0</SMAPEnable>
       <ProtectionKeyEnable>0</ProtectionKeyEnable>
      </cr4>
-     <msrs/>
+     <segments>
+      <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
+      <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+     </segments>
     </registers>
-    <segments>
-     <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
-     <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
-    </segments>
    </vcpu>
    <bootparams/>
    <memory>
@@ -2156,6 +2156,7 @@
       </cr4>
      </masks>
     </vmx>
+    <msrs/>
     <registers>
      <gpr>
       <rip>16#5000#</rip>
@@ -2196,12 +2197,11 @@
       <SMAPEnable>0</SMAPEnable>
       <ProtectionKeyEnable>0</ProtectionKeyEnable>
      </cr4>
-     <msrs/>
+     <segments>
+      <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
+      <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+     </segments>
     </registers>
-    <segments>
-     <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
-     <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
-    </segments>
    </vcpu>
    <bootparams/>
    <memory>
@@ -2352,6 +2352,7 @@
       </cr4>
      </masks>
     </vmx>
+    <msrs/>
     <registers>
      <gpr>
       <rip>16#5000#</rip>
@@ -2392,12 +2393,11 @@
       <SMAPEnable>0</SMAPEnable>
       <ProtectionKeyEnable>0</ProtectionKeyEnable>
      </cr4>
-     <msrs/>
+     <segments>
+      <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
+      <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+     </segments>
     </registers>
-    <segments>
-     <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
-     <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
-    </segments>
    </vcpu>
    <bootparams/>
    <memory>
@@ -2590,6 +2590,7 @@
       </cr4>
      </masks>
     </vmx>
+    <msrs/>
     <registers>
      <gpr>
       <rip>16#5000#</rip>
@@ -2630,12 +2631,11 @@
       <SMAPEnable>0</SMAPEnable>
       <ProtectionKeyEnable>0</ProtectionKeyEnable>
      </cr4>
-     <msrs/>
+     <segments>
+      <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
+      <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+     </segments>
     </registers>
-    <segments>
-     <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
-     <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
-    </segments>
    </vcpu>
    <bootparams/>
    <memory>
@@ -2799,6 +2799,7 @@
       </cr4>
      </masks>
     </vmx>
+    <msrs/>
     <registers>
      <gpr>
       <rip>16#5000#</rip>
@@ -2839,12 +2840,11 @@
       <SMAPEnable>0</SMAPEnable>
       <ProtectionKeyEnable>0</ProtectionKeyEnable>
      </cr4>
-     <msrs/>
+     <segments>
+      <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
+      <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+     </segments>
     </registers>
-    <segments>
-     <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
-     <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
-    </segments>
    </vcpu>
    <bootparams/>
    <memory>
@@ -3004,6 +3004,7 @@
       </cr4>
      </masks>
     </vmx>
+    <msrs/>
     <registers>
      <gpr>
       <rip>16#5000#</rip>
@@ -3044,12 +3045,11 @@
       <SMAPEnable>0</SMAPEnable>
       <ProtectionKeyEnable>0</ProtectionKeyEnable>
      </cr4>
-     <msrs/>
+     <segments>
+      <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
+      <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+     </segments>
     </registers>
-    <segments>
-     <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
-     <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
-    </segments>
    </vcpu>
    <bootparams/>
    <memory>
@@ -3210,6 +3210,7 @@
       </cr4>
      </masks>
     </vmx>
+    <msrs/>
     <registers>
      <gpr>
       <rip>16#5000#</rip>
@@ -3250,12 +3251,11 @@
       <SMAPEnable>0</SMAPEnable>
       <ProtectionKeyEnable>0</ProtectionKeyEnable>
      </cr4>
-     <msrs/>
+     <segments>
+      <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
+      <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+     </segments>
     </registers>
-    <segments>
-     <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
-     <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
-    </segments>
    </vcpu>
    <bootparams/>
    <memory>
@@ -3411,6 +3411,11 @@
       </cr4>
      </masks>
     </vmx>
+    <msrs>
+     <msr end="16#0176#" mode="rw" start="16#0174#"/>
+     <msr end="16#c000_0084#" mode="rw" start="16#c000_0080#"/>
+     <msr end="16#c000_0102#" mode="rw" start="16#c000_0100#"/>
+    </msrs>
     <registers>
      <gpr>
       <rip>16#0040_0000#</rip>
@@ -3451,16 +3456,11 @@
       <SMAPEnable>0</SMAPEnable>
       <ProtectionKeyEnable>0</ProtectionKeyEnable>
      </cr4>
-     <msrs>
-      <msr end="16#0176#" mode="rw" start="16#0174#"/>
-      <msr end="16#c000_0084#" mode="rw" start="16#c000_0080#"/>
-      <msr end="16#c000_0102#" mode="rw" start="16#c000_0100#"/>
-     </msrs>
+     <segments>
+      <cs access="16#c09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
+      <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+     </segments>
     </registers>
-    <segments>
-     <cs access="16#c09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
-     <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
-    </segments>
    </vcpu>
    <bootparams>console=hvc console=ttyS0 pci=noearly hostname=nic_linux muen_sinfo=0xe00000000</bootparams>
    <memory>
@@ -3713,6 +3713,11 @@
       </cr4>
      </masks>
     </vmx>
+    <msrs>
+     <msr end="16#0176#" mode="rw" start="16#0174#"/>
+     <msr end="16#c000_0084#" mode="rw" start="16#c000_0080#"/>
+     <msr end="16#c000_0102#" mode="rw" start="16#c000_0100#"/>
+    </msrs>
     <registers>
      <gpr>
       <rip>16#0040_0000#</rip>
@@ -3753,16 +3758,11 @@
       <SMAPEnable>0</SMAPEnable>
       <ProtectionKeyEnable>0</ProtectionKeyEnable>
      </cr4>
-     <msrs>
-      <msr end="16#0176#" mode="rw" start="16#0174#"/>
-      <msr end="16#c000_0084#" mode="rw" start="16#c000_0080#"/>
-      <msr end="16#c000_0102#" mode="rw" start="16#c000_0100#"/>
-     </msrs>
+     <segments>
+      <cs access="16#c09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
+      <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+     </segments>
     </registers>
-    <segments>
-     <cs access="16#c09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
-     <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
-    </segments>
    </vcpu>
    <bootparams>console=hvc console=ttyS0 pci=noearly hostname=storage_linux muen_sinfo=0xe00000000</bootparams>
    <memory>

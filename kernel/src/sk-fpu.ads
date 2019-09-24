@@ -103,9 +103,12 @@ private
       & "interfaces. Non-overlap is checked during system build.");
 
    --D @Interface
-   --D The FPU state array stores the hardware FPU state of each subject in a separate save area.
-   --D Prior to the execution of a subject its FPU state is loaded from the associated storage area into the FPU.
-   --D On exit from a subjec the hardware FPU state is stored to the same area.
+   --D The FPU state array stores the hardware FPU state of each subject in a
+   --D separate save area.
+   --D Prior to the execution of a subject its FPU state is loaded from the
+   --D associated storage area into the FPU.
+   --D On exit from a subject the hardware FPU state is stored to the same area.
+   --D Note that Muen performs \emph{eager} FPU state switching.
    Subject_FPU_States : Subject_FPU_State_Array
    with
       Part_Of => State,

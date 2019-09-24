@@ -234,11 +234,11 @@
      <cr0>
       <ProtectionEnable>0</ProtectionEnable>
      </cr0>
+     <segments>
+      <cs access="16#809b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
+      <ds access="16#8093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+     </segments>
     </registers>
-    <segments>
-     <cs access="16#809b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
-     <ds access="16#8093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
-    </segments>
    </vcpu>
    <devices>
     <device logical="nic2" physical="$pciconf_emulation_nic_physdev">
@@ -328,11 +328,11 @@
      <cr0>
       <ProtectionEnable>0</ProtectionEnable>
      </cr0>
+     <segments>
+      <cs access="16#809b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
+      <ds access="16#8093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+     </segments>
     </registers>
-    <segments>
-     <cs access="16#809b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
-     <ds access="16#8093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
-    </segments>
    </vcpu>
    <devices>
     <device logical="nic2" physical="$pciconf_emulation_nic_physdev">

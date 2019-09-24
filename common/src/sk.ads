@@ -138,29 +138,111 @@ is
    Subj_State_Size : constant :=
      (CPU_Regs_Size + Segment_Regs_Size + 2 * Seg_Type_Size + 4 * 4 + 13 * 8);
 
+   --D @Interface
+   --D Subject state storage.
+   --D TODO: Note about "segments":
+   --D Contain "visible" and "hidden" parts; Intel SDM Vol. 3A, "3.4.3 Segment
+   --D Registers".
    type Subject_State_Type is record
       --D @Interface
       --D General purpose registers (GPRs).
-      Regs               : CPU_Registers_Type;
+      Regs                : CPU_Registers_Type;
+      --D @Interface
+      --D Exit reason; Intel SDM Vol. 3C, "24.9.1 Basic VM-Exit Information".
+      --D This field encodes the reason for the VM exit.
       Exit_Reason        : Word32;
+      --D @Interface
+      --D Interruptibility state; Intel SDM Vol. 3C, "24.4.2 Guest Non-Register
+      --D State". The IA-32 architecture includes features that permit certain
+      --D events to be blocked for a period of time. This field contains
+      --D information about such blocking.
       Intr_State         : Word32;
+      --D @Interface
+      --D Guest IA32\_SYSENTER\_CS MSR; Intel SDM Vol. 3C, "24.4.1 Guest
+      --D Register State".
       SYSENTER_CS        : Word32;
+      --D @Interface
+      --D Exit instruction length; Intel SDM Vol. 3C, "24.9.4 Information for
+      --D VM Exits Due to Instruction Execution". This field receives the
+      --D length in bytes of the instruction whose execution led to the VM
+      --D exit. Also used in the context of software interrupts or software
+      --D exceptions.
       Instruction_Len    : Word32;
+      --D @Interface
+      --D Exit qualification; Intel SDM Vol. 3C, "24.9.1 Basic VM-Exit
+      --D Information". This field contains additional information about the
+      --D cause of VM exits.
       Exit_Qualification : Word64;
+      --D @Interface
+      --D Guest-physical address of exit due to EPT violations and EPT
+      --D misconfigurations; Intel SDM Vol. 3C, "24.9.1 Basic VM-Exit
+      --D Information".
       Guest_Phys_Addr    : Word64;
+      --D @Interface
+      --D Guest RIP register; Intel SDM Vol. 3C, "24.4.1 Guest Register State".
       RIP                : Word64;
+      --D @Interface
+      --D Guest RSP register. ; Intel SDM Vol. 3C, "24.4.1 Guest Register
+      --D State".
       RSP                : Word64;
+      --D @Interface
+      --D Guest CR0 control register; Intel SDM Vol. 3C, "24.4.1 Guest Register
+      --D State".
       CR0                : Word64;
+      --D @Interface
+      --D CR0 control register read shadow; Intel SDM Vol. 3C, "24.6.6
+      --D Guest/Host Masks and Read Shadows for CR0 and CR4".
       SHADOW_CR0         : Word64;
+      --D @Interface
+      --D Guest CR3 control register.
       CR3                : Word64;
+      --D @Interface
+      --D Guest CR4 control register; Intel SDM Vol. 3C, "24.4.1 Guest Register
+      --D State".
       CR4                : Word64;
+      --D @Interface
+      --D CR4 control register read shadow; Intel SDM Vol. 3C, "24.6.6
+      --D Guest/Host Masks and Read Shadows for CR0 and CR4".
       SHADOW_CR4         : Word64;
+      --D @Interface
+      --D Guest RFLAGS register; Intel SDM Vol. 3C, "24.4.1 Guest Register
+      --D State".
       RFLAGS             : Word64;
+      --D @Interface
+      --D Guest IA32\_EFER MSR; Intel SDM Vol. 3C, "24.4.1 Guest Register
+      --D State".
       IA32_EFER          : Word64;
+      --D @Interface
+      --D Guest IA32\_SYSENTER\_ESP MSR; Intel SDM Vol. 3C, "24.4.1 Guest
+      --D Register State".
       SYSENTER_ESP       : Word64;
+      --D @Interface
+      --D Guest IA32\_SYSENTER\_EIP MSR; Intel SDM Vol. 3C, "24.4.1 Guest
+      --D Register State".
       SYSENTER_EIP       : Word64;
+      --D TODO: manually specify via Notes
+      --D @Interface
+      --D Guest CS segment register.
+      --D @Interface
+      --D Guest SS segment register.
+      --D @Interface
+      --D Guest DS segment register.
+      --D @Interface
+      --D Guest ES segment register.
+      --D @Interface
+      --D Guest FS segment register.
+      --D @Interface
+      --D Guest GS segment register.
+      --D @Interface
+      --D Guest task register (TR).
+      --D @Interface
+      --D Guest local descriptor table register (LDTR).
       Segment_Regs       : Segment_Registers_Type;
+      --D @Interface
+      --D Guest global descriptor table register (GDDTR).
       GDTR               : Segment_Type;
+      --D @Interface
+      --D Guest interrupt descriptor table register (IDTR).
       IDTR               : Segment_Type;
    end record
    with

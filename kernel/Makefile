@@ -43,7 +43,9 @@ SLOC_DIRS = $(SRC_DIR) $(TOP_DIR)/common/src $(TOP_DIR)/rts/src
 	fi
 
 $(VERSION_SPEC): .git-rev
-	@echo "package SK.Version is"                   > $@
+	@echo "--D @Interface"                          > $@
+	@echo "--D Muen version information."          >> $@
+	@echo "package SK.Version is"                  >> $@
 	@echo "   Version_String : constant String :=" >> $@
 	@echo "     \"$(VERSION)\";"                   >> $@
 	@echo "end SK.Version;"                        >> $@

@@ -67,7 +67,12 @@ is
 
 private
 
+   --D @Interface
+   --D 64-bit atomic type, where each bit represents a pending event with the
+   --D event number corresponding to the bit position.
    type Atomic64_Type is record
+      --D @Interface
+      --D 64-bits accessible atomically to enable concurrent access.
       Bits : Word64 with Atomic;
    end record
    with

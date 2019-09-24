@@ -18,8 +18,6 @@
   captionpos=b,
   commentstyle=\color{mygreen},
   extendedchars=true,
-  rangeprefix=&lt;!--D\ @Lst\ ,
-  rangesuffix=\ -->,
   includerangemarker=false,
   frame=single,
   keepspaces=true,

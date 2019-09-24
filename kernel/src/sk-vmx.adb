@@ -46,8 +46,15 @@ is
    with
       Size => (Page_Size - VMCS_Header_Size) * 8;
 
+   --D @Interface
+   --D Virtual-Machine Control Structure as specified in Intel SDM Vol. 3C,
+   --D "24 Virtual Machine Control Structures".
    type VMCS_Region_Type is record
+      --D @Interface
+      --D Header comprised of VMCS revision identifier and VMX-abort indicator.
       Header : VMCS_Header_Type;
+      --D @Interface
+      --D VMCS data which is declared as implementation-specific by Intel.
       Data   : VMCS_Data;
    end record
    with

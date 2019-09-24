@@ -1,533 +1,533 @@
 <?xml version="1.0"?>
 <system>
-	<config>
-		<boolean name="iommu_enabled" value="true"/>
-		<boolean name="dbgserver_sink_pcspkr" value="false"/>
-		<boolean name="dbgserver_sink_serial" value="true"/>
-		<boolean name="dbgserver_sink_shmem" value="false"/>
-		<boolean name="dbgserver_sink_xhcidbg" value="false"/>
-		<boolean name="pciconf_emulation_enabled" value="true"/>
-		<boolean name="pciconf_emulation_xhci_enabled" value="true"/>
-		<string name="pciconf_emulation_nic_devid" value="16#1f#"/>
-		<string name="pciconf_emulation_nic_physdev" value="ethernet_controller_2"/>
-		<string name="pciconf_emulation_xhci_devid" value="16#01#"/>
-		<string name="pciconf_emulation_xhci_physdev" value="usb_controller_1"/>
-		<string name="logchannel_size" value="16#0004_0000#"/>
-	</config>
+ <config>
+  <boolean name="iommu_enabled" value="true"/>
+  <boolean name="dbgserver_sink_pcspkr" value="false"/>
+  <boolean name="dbgserver_sink_serial" value="true"/>
+  <boolean name="dbgserver_sink_shmem" value="false"/>
+  <boolean name="dbgserver_sink_xhcidbg" value="false"/>
+  <boolean name="pciconf_emulation_enabled" value="true"/>
+  <boolean name="pciconf_emulation_xhci_enabled" value="true"/>
+  <string name="pciconf_emulation_nic_devid" value="16#1f#"/>
+  <string name="pciconf_emulation_nic_physdev" value="ethernet_controller_2"/>
+  <string name="pciconf_emulation_xhci_devid" value="16#01#"/>
+  <string name="pciconf_emulation_xhci_physdev" value="usb_controller_1"/>
+  <string name="logchannel_size" value="16#0004_0000#"/>
+ </config>
 
-	<include href="kernel_diagnostics.xml"/>
+ <include href="kernel_diagnostics.xml"/>
 
-	<memory>
-		<include href="common_memory.xml"/>
-		<include href="memory_xhci_dma.xml"/>
-	</memory>
+ <memory>
+  <include href="common_memory.xml"/>
+  <include href="memory_xhci_dma.xml"/>
+ </memory>
 
-	<deviceDomains>
-		<domain name="nic_domain">
-			<memory>
-				<memory logical="dma1" physical="nic_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
-				<memory logical="dma2" physical="nic_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
-			</memory>
-			<devices>
-				<device logical="nic1" physical="ethernet_controller_1"/>
-				<device logical="nic2" physical="ethernet_controller_2"/>
-			</devices>
-		</domain>
-		<domain name="storage_domain">
-			<memory>
-				<memory logical="dma1" physical="storage_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
-				<memory logical="dma2" physical="storage_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
-			</memory>
-			<devices>
-				<device logical="xhci" physical="usb_controller_1"/>
-				<device logical="sata" physical="sata_controller_1"/>
-				<device logical="nic3" physical="ethernet_controller_3"/>
-			</devices>
-		</domain>
-	</deviceDomains>
+ <deviceDomains>
+  <domain name="nic_domain">
+   <memory>
+    <memory logical="dma1" physical="nic_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
+    <memory logical="dma2" physical="nic_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
+   </memory>
+   <devices>
+    <device logical="nic1" physical="ethernet_controller_1"/>
+    <device logical="nic2" physical="ethernet_controller_2"/>
+   </devices>
+  </domain>
+  <domain name="storage_domain">
+   <memory>
+    <memory logical="dma1" physical="storage_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
+    <memory logical="dma2" physical="storage_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
+   </memory>
+   <devices>
+    <device logical="xhci" physical="usb_controller_1"/>
+    <device logical="sata" physical="sata_controller_1"/>
+    <device logical="nic3" physical="ethernet_controller_3"/>
+   </devices>
+  </domain>
+ </deviceDomains>
 
-	<events>
-		<include href="common_events.xml"/>
-		<event name="resume_linux_3" mode="switch"/>
-		<event name="resume_linux_4" mode="switch"/>
-		<event name="trap_to_sm_3" mode="switch"/>
-		<event name="trap_to_sm_4" mode="switch"/>
-		<event name="serial_irq4_linux_3" mode="async"/>
-		<event name="serial_irq4_linux_4" mode="async"/>
-		<event name="timer_linux_3" mode="self"/>
-		<event name="timer_linux_4" mode="self"/>
-		<event name="nic_linux_smp_signal_sm_01" mode="asap"/>
-		<event name="nic_linux_smp_signal_sm_02" mode="asap"/>
-		<event name="virtual_console_3" mode="asap"/>
-		<event name="virtual_console_4" mode="asap"/>
-	</events>
+ <events>
+  <include href="common_events.xml"/>
+  <event name="resume_linux_3" mode="switch"/>
+  <event name="resume_linux_4" mode="switch"/>
+  <event name="trap_to_sm_3" mode="switch"/>
+  <event name="trap_to_sm_4" mode="switch"/>
+  <event name="serial_irq4_linux_3" mode="async"/>
+  <event name="serial_irq4_linux_4" mode="async"/>
+  <event name="timer_linux_3" mode="self"/>
+  <event name="timer_linux_4" mode="self"/>
+  <event name="nic_linux_smp_signal_sm_01" mode="asap"/>
+  <event name="nic_linux_smp_signal_sm_02" mode="asap"/>
+  <event name="virtual_console_3" mode="asap"/>
+  <event name="virtual_console_4" mode="asap"/>
+ </events>
 
-	<channels>
-		<include href="common_channels.xml"/>
-		<channel name="debuglog_subject9" size="$logchannel_size"/>
-		<channel name="debuglog_subject10" size="$logchannel_size"/>
-		<channel name="debuglog_subject11" size="$logchannel_size"/>
-		<channel name="debuglog_subject12" size="$logchannel_size"/>
-		<channel name="nic_dm_request_1" size="16#1000#" hasEvent="switch"/>
-		<channel name="nic_dm_request_2" size="16#1000#" hasEvent="switch"/>
-		<channel name="nic_dm_response_1" size="16#1000#" hasEvent="switch"/>
-		<channel name="nic_dm_response_2" size="16#1000#" hasEvent="switch"/>
-		<channel name="blockdev_request1" size="16#0010_0000#"/>
-		<channel name="blockdev_response1" size="16#0010_0000#"/>
-		<channel name="blockdev_request2" size="16#0010_0000#"/>
-		<channel name="blockdev_response2" size="16#0010_0000#"/>
-	</channels>
+ <channels>
+  <include href="common_channels.xml"/>
+  <channel name="debuglog_subject9" size="$logchannel_size"/>
+  <channel name="debuglog_subject10" size="$logchannel_size"/>
+  <channel name="debuglog_subject11" size="$logchannel_size"/>
+  <channel name="debuglog_subject12" size="$logchannel_size"/>
+  <channel name="nic_dm_request_1" size="16#1000#" hasEvent="switch"/>
+  <channel name="nic_dm_request_2" size="16#1000#" hasEvent="switch"/>
+  <channel name="nic_dm_response_1" size="16#1000#" hasEvent="switch"/>
+  <channel name="nic_dm_response_2" size="16#1000#" hasEvent="switch"/>
+  <channel name="blockdev_request1" size="16#0010_0000#"/>
+  <channel name="blockdev_response1" size="16#0010_0000#"/>
+  <channel name="blockdev_request2" size="16#0010_0000#"/>
+  <channel name="blockdev_response2" size="16#0010_0000#"/>
+ </channels>
 
-	<subjects>
-		<include href="subject_nic_sm.xml"/>
-		<include href="subject_storage_sm.xml"/>
-		<include href="subject_time.xml"/>
-		<include href="subject_nic_sl.xml"/>
-		<include href="subject_ps2.xml"/>
+ <subjects>
+  <include href="subject_nic_sm.xml"/>
+  <include href="subject_storage_sm.xml"/>
+  <include href="subject_time.xml"/>
+  <include href="subject_nic_sl.xml"/>
+  <include href="subject_ps2.xml"/>
 
-		<subject name="dbgserver">
-			<events/>
-			<component ref="dbgserver">
-				<map logical="log_channel1" physical="debuglog_subject1"/>
-				<map logical="log_channel2" physical="debuglog_subject2"/>
-				<map logical="log_channel3" physical="debuglog_subject3"/>
-				<map logical="log_channel4" physical="debuglog_subject4"/>
-				<map logical="log_channel5" physical="debuglog_subject5"/>
-				<map logical="log_channel6" physical="debuglog_subject6"/>
-				<map logical="log_channel7" physical="debuglog_subject7"/>
-				<map logical="log_channel8" physical="debuglog_subject8"/>
-				<map logical="log_channel9" physical="debuglog_subject9"/>
-				<map logical="log_channel10" physical="debuglog_subject10"/>
-				<map logical="log_channel11" physical="debuglog_subject11"/>
-				<map logical="log_channel12" physical="debuglog_subject12"/>
-				<include href="subject_dbgserver_common.xml"/>
-			</component>
-		</subject>
+  <subject name="dbgserver">
+   <events/>
+   <component ref="dbgserver">
+    <map logical="log_channel1" physical="debuglog_subject1"/>
+    <map logical="log_channel2" physical="debuglog_subject2"/>
+    <map logical="log_channel3" physical="debuglog_subject3"/>
+    <map logical="log_channel4" physical="debuglog_subject4"/>
+    <map logical="log_channel5" physical="debuglog_subject5"/>
+    <map logical="log_channel6" physical="debuglog_subject6"/>
+    <map logical="log_channel7" physical="debuglog_subject7"/>
+    <map logical="log_channel8" physical="debuglog_subject8"/>
+    <map logical="log_channel9" physical="debuglog_subject9"/>
+    <map logical="log_channel10" physical="debuglog_subject10"/>
+    <map logical="log_channel11" physical="debuglog_subject11"/>
+    <map logical="log_channel12" physical="debuglog_subject12"/>
+    <include href="subject_dbgserver_common.xml"/>
+   </component>
+  </subject>
 
-		<subject name="vt">
-			<events>
-				<source>
-					<group name="vmcall">
-						<event id="0" logical="reset_slot_1" physical="reset_slot_1"/>
-						<event id="30" logical="system_poweroff" physical="system_poweroff">
-							<system_poweroff/>
-						</event>
-						<event id="31" logical="system_reboot" physical="system_reboot">
-							<system_reboot/>
-						</event>
-					</group>
-				</source>
-				<target>
-					<event logical="nic_linux_core_1" physical="virtual_console_3">
-						<inject_interrupt vector="34"/>
-					</event>
-					<event logical="nic_linux_core_2" physical="virtual_console_4">
-						<inject_interrupt vector="34"/>
-					</event>
-				</target>
-			</events>
-			<component ref="vt">
-				<map logical="NIC Linux" physical="virtual_console_1"/>
-				<map logical="Storage Linux" physical="virtual_console_2"/>
-				<map logical="input_events" physical="input_events"/>
-				<map logical="input_device_1" physical="virtual_input_1"/>
-				<map logical="input_device_2" physical="virtual_input_2"/>
-				<map logical="debuglog" physical="debuglog_subject1"/>
-				<map logical="vga" physical="vga">
-					<map logical="buffer" physical="buffer"/>
-					<map logical="ports" physical="ports"/>
-				</map>
-			</component>
-		</subject>
+  <subject name="vt">
+   <events>
+    <source>
+     <group name="vmcall">
+      <event id="0" logical="reset_slot_1" physical="reset_slot_1"/>
+      <event id="30" logical="system_poweroff" physical="system_poweroff">
+       <system_poweroff/>
+      </event>
+      <event id="31" logical="system_reboot" physical="system_reboot">
+       <system_reboot/>
+      </event>
+     </group>
+    </source>
+    <target>
+     <event logical="nic_linux_core_1" physical="virtual_console_3">
+      <inject_interrupt vector="34"/>
+     </event>
+     <event logical="nic_linux_core_2" physical="virtual_console_4">
+      <inject_interrupt vector="34"/>
+     </event>
+    </target>
+   </events>
+   <component ref="vt">
+    <map logical="NIC Linux" physical="virtual_console_1"/>
+    <map logical="Storage Linux" physical="virtual_console_2"/>
+    <map logical="input_events" physical="input_events"/>
+    <map logical="input_device_1" physical="virtual_input_1"/>
+    <map logical="input_device_2" physical="virtual_input_2"/>
+    <map logical="debuglog" physical="debuglog_subject1"/>
+    <map logical="vga" physical="vga">
+     <map logical="buffer" physical="buffer"/>
+     <map logical="ports" physical="ports"/>
+    </map>
+   </component>
+  </subject>
 
-		<if variable="pciconf_emulation_enabled" value="true">
-			<include href="subject_nic_dm.xml"/>
-			<include href="subject_storage_dm.xml"/>
-		</if>
+  <if variable="pciconf_emulation_enabled" value="true">
+   <include href="subject_nic_dm.xml"/>
+   <include href="subject_storage_dm.xml"/>
+  </if>
 
-		<subject name="nic_linux">
-			<vcpu>
-				<vmx>
-					<controls>
-						<proc>
-							<!-- Required for pingpong cycles measurement -->
-							<RDTSCExiting>0</RDTSCExiting>
-						</proc>
-					</controls>
-				</vmx>
-			</vcpu>
-			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=nic_linux muen-input.channel=virtual_keyboard debug</bootparams>
-			<memory>
-				<memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
-			</memory>
-			<devices>
-				<device logical="serial" physical="com_2"/>
-				<device logical="nic1" physical="ethernet_controller_1">
-					<pci bus="16#00#" device="16#19#" function="0"/>
-					<irq logical="nic1_irq" physical="irq1" vector="59">
-						<msi logical="nic1_msi" physical="msi1"/>
-					</irq>
-					<memory logical="mmio1" physical="mem1" writable="true" executable="false"/>
-					<memory logical="mmio2" physical="mem2" writable="true" executable="false"/>
-					<memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
-				</device>
-			</devices>
-			<events>
-				<source>
-					<group name="vmx_exit">
-						<default physical="trap_to_sm_1"/>
-						<event id="33" logical="reset" physical="reset_sm_1"/>
-					</group>
-					<group name="vmcall">
-						<event id="0" logical="smp_signal_sm_01" physical="nic_linux_smp_signal_sm_01"/>
-						<event id="2" logical="smp_signal_sm_02" physical="nic_linux_smp_signal_sm_02"/>
-						<event id="30" logical="reboot" physical="reboot_linux_1"/>
-						<event id="31" logical="timer" physical="timer_linux_1"/>
-					</group>
-				</source>
-				<target>
-					<event logical="resume_after_trap" physical="resume_linux_1"/>
-					<event logical="resume_after_reset" physical="start_linux_1"/>
-					<event logical="reset" physical="reset_linux_1">
-						<reset/>
-					</event>
-					<event logical="reset_from_vt" physical="reset_slot_1">
-						<reset/>
-					</event>
-					<event logical="reboot" physical="reboot_linux_1">
-						<reset/>
-					</event>
-					<event logical="serial_irq4" physical="serial_irq4_linux_1">
-						<inject_interrupt vector="52"/>
-					</event>
-					<event logical="timer" physical="timer_linux_1">
-						<inject_interrupt vector="236"/>
-					</event>
-				</target>
-			</events>
-			<channels>
-				<reader logical="virtual_keyboard" physical="virtual_input_1" virtualAddress="16#3000#" vector="49"/>
-				<writer logical="virtual_console" physical="virtual_console_1" virtualAddress="16#4000#" event="1"/>
+  <subject name="nic_linux">
+   <vcpu>
+    <vmx>
+     <controls>
+      <proc>
+       <!-- Required for pingpong cycles measurement -->
+       <RDTSCExiting>0</RDTSCExiting>
+      </proc>
+     </controls>
+    </vmx>
+   </vcpu>
+   <bootparams>console=hvc console=ttyS0 pci=noearly hostname=nic_linux muen-input.channel=virtual_keyboard debug</bootparams>
+   <memory>
+    <memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
+   </memory>
+   <devices>
+    <device logical="serial" physical="com_2"/>
+    <device logical="nic1" physical="ethernet_controller_1">
+     <pci bus="16#00#" device="16#19#" function="0"/>
+     <irq logical="nic1_irq" physical="irq1" vector="59">
+      <msi logical="nic1_msi" physical="msi1"/>
+     </irq>
+     <memory logical="mmio1" physical="mem1" writable="true" executable="false"/>
+     <memory logical="mmio2" physical="mem2" writable="true" executable="false"/>
+     <memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
+    </device>
+   </devices>
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <default physical="trap_to_sm_1"/>
+      <event id="33" logical="reset" physical="reset_sm_1"/>
+     </group>
+     <group name="vmcall">
+      <event id="0" logical="smp_signal_sm_01" physical="nic_linux_smp_signal_sm_01"/>
+      <event id="2" logical="smp_signal_sm_02" physical="nic_linux_smp_signal_sm_02"/>
+      <event id="30" logical="reboot" physical="reboot_linux_1"/>
+      <event id="31" logical="timer" physical="timer_linux_1"/>
+     </group>
+    </source>
+    <target>
+     <event logical="resume_after_trap" physical="resume_linux_1"/>
+     <event logical="resume_after_reset" physical="start_linux_1"/>
+     <event logical="reset" physical="reset_linux_1">
+      <reset/>
+     </event>
+     <event logical="reset_from_vt" physical="reset_slot_1">
+      <reset/>
+     </event>
+     <event logical="reboot" physical="reboot_linux_1">
+      <reset/>
+     </event>
+     <event logical="serial_irq4" physical="serial_irq4_linux_1">
+      <inject_interrupt vector="52"/>
+     </event>
+     <event logical="timer" physical="timer_linux_1">
+      <inject_interrupt vector="236"/>
+     </event>
+    </target>
+   </events>
+   <channels>
+    <reader logical="virtual_keyboard" physical="virtual_input_1" virtualAddress="16#3000#" vector="49"/>
+    <writer logical="virtual_console" physical="virtual_console_1" virtualAddress="16#4000#" event="1"/>
 
-				<reader logical="testchannel_2" physical="testchannel_2" virtualAddress="16#000e_00f0_0000#"/>
-				<writer logical="testchannel_1" physical="testchannel_1" virtualAddress="16#000e_00f0_1000#"/>
-				<reader logical="testchannel_4" physical="testchannel_4" virtualAddress="16#000e_00f0_2000#"/>
-				<writer logical="testchannel_3" physical="testchannel_3" virtualAddress="16#000e_0100_2000#"/>
-				<writer logical="blockdev_request1" physical="blockdev_request1" virtualAddress="16#000e_01f0_0000#"/>
-				<reader logical="blockdev_response1" physical="blockdev_response1" virtualAddress="16#000e_0200_0000#"/>
-				<writer logical="blockdev_request2" physical="blockdev_request2" virtualAddress="16#000e_0210_0000#"/>
-				<reader logical="blockdev_response2" physical="blockdev_response2" virtualAddress="16#000e_0220_0000#"/>
-			</channels>
-			<component ref="linux">
-				<map logical="lowmem" physical="nic_linux|lowmem"/>
-				<map logical="ram" physical="nic_linux|ram"/>
-			</component>
-		</subject>
+    <reader logical="testchannel_2" physical="testchannel_2" virtualAddress="16#000e_00f0_0000#"/>
+    <writer logical="testchannel_1" physical="testchannel_1" virtualAddress="16#000e_00f0_1000#"/>
+    <reader logical="testchannel_4" physical="testchannel_4" virtualAddress="16#000e_00f0_2000#"/>
+    <writer logical="testchannel_3" physical="testchannel_3" virtualAddress="16#000e_0100_2000#"/>
+    <writer logical="blockdev_request1" physical="blockdev_request1" virtualAddress="16#000e_01f0_0000#"/>
+    <reader logical="blockdev_response1" physical="blockdev_response1" virtualAddress="16#000e_0200_0000#"/>
+    <writer logical="blockdev_request2" physical="blockdev_request2" virtualAddress="16#000e_0210_0000#"/>
+    <reader logical="blockdev_response2" physical="blockdev_response2" virtualAddress="16#000e_0220_0000#"/>
+   </channels>
+   <component ref="linux">
+    <map logical="lowmem" physical="nic_linux|lowmem"/>
+    <map logical="ram" physical="nic_linux|ram"/>
+   </component>
+  </subject>
 
-		<subject name="nic_linux_1">
-			<vcpu>
-				<registers>
-					<gpr>
-						<rip>16#0009_a000#</rip>
-						<rsp>16#0000#</rsp>
-					</gpr>
-					<cr0>
-						<ProtectionEnable>0</ProtectionEnable>
-					</cr0>
-				</registers>
-				<segments>
-					<cs access="16#809b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
-					<ds access="16#8093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
-				</segments>
-			</vcpu>
-			<devices>
-				<device logical="nic2" physical="$pciconf_emulation_nic_physdev">
-					<pci bus="16#00#" device="$pciconf_emulation_nic_devid" function="0"/>
-					<irq logical="nic_irq" physical="irq1" vector="90">
-						<msi logical="nic2_msi1" physical="msi1"/>
-					</irq>
-					<memory logical="mmio1" physical="mem1" writable="true" executable="false"/>
-					<memory logical="mmio2" physical="mem2" writable="true" executable="false"/>
-				</device>
-			</devices>
-			<events>
-				<source>
-					<group name="vmx_exit">
-						<default physical="trap_to_sm_3"/>
-					</group>
-					<group name="vmcall">
-						<event id="1" logical="virtual_console" physical="virtual_console_3"/>
-						<event id="31" logical="timer" physical="timer_linux_3"/>
-					</group>
-				</source>
-				<target>
-					<event logical="resume_after_trap" physical="resume_linux_3"/>
-					<event logical="serial_irq4" physical="serial_irq4_linux_3">
-						<inject_interrupt vector="52"/>
-					</event>
-					<event logical="timer" physical="timer_linux_3">
-						<inject_interrupt vector="236"/>
-					</event>
-				</target>
-			</events>
-			<sibling ref="nic_linux"/>
-		</subject>
+  <subject name="nic_linux_1">
+   <vcpu>
+    <registers>
+     <gpr>
+      <rip>16#0009_a000#</rip>
+      <rsp>16#0000#</rsp>
+     </gpr>
+     <cr0>
+      <ProtectionEnable>0</ProtectionEnable>
+     </cr0>
+    </registers>
+    <segments>
+     <cs access="16#809b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
+     <ds access="16#8093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+    </segments>
+   </vcpu>
+   <devices>
+    <device logical="nic2" physical="$pciconf_emulation_nic_physdev">
+     <pci bus="16#00#" device="$pciconf_emulation_nic_devid" function="0"/>
+     <irq logical="nic_irq" physical="irq1" vector="90">
+      <msi logical="nic2_msi1" physical="msi1"/>
+     </irq>
+     <memory logical="mmio1" physical="mem1" writable="true" executable="false"/>
+     <memory logical="mmio2" physical="mem2" writable="true" executable="false"/>
+    </device>
+   </devices>
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <default physical="trap_to_sm_3"/>
+     </group>
+     <group name="vmcall">
+      <event id="1" logical="virtual_console" physical="virtual_console_3"/>
+      <event id="31" logical="timer" physical="timer_linux_3"/>
+     </group>
+    </source>
+    <target>
+     <event logical="resume_after_trap" physical="resume_linux_3"/>
+     <event logical="serial_irq4" physical="serial_irq4_linux_3">
+      <inject_interrupt vector="52"/>
+     </event>
+     <event logical="timer" physical="timer_linux_3">
+      <inject_interrupt vector="236"/>
+     </event>
+    </target>
+   </events>
+   <sibling ref="nic_linux"/>
+  </subject>
 
-		<subject name="nic_sm_1">
-			<events>
-				<source>
-					<group name="vmcall">
-						<event id="0" logical="serial_irq4" physical="serial_irq4_linux_3"/>
-						<event id="4" logical="resume_linux" physical="resume_linux_3"/>
-					</group>
-				</source>
-				<target>
-					<event physical="trap_to_sm_3" logical="handle_linux_trap">
-						<inject_interrupt vector="36"/>
-					</event>
-					<event physical="nic_linux_smp_signal_sm_01" logical="start_ap">
-						<inject_interrupt vector="36"/>
-					</event>
-				</target>
-			</events>
-			<monitor>
-				<state subject="nic_linux_1" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
-			</monitor>
-			<component ref="sm">
-				<map logical="time_info" physical="time_info"/>
-				<map logical="debuglog" physical="debuglog_subject9"/>
-				<if variable="pciconf_emulation_enabled" value="true">
-					<map logical="dm_pciconf_req" physical="nic_dm_request_1"/>
-					<map logical="dm_pciconf_res" physical="nic_dm_response_1"/>
-				</if>
-			</component>
-		</subject>
+  <subject name="nic_sm_1">
+   <events>
+    <source>
+     <group name="vmcall">
+      <event id="0" logical="serial_irq4" physical="serial_irq4_linux_3"/>
+      <event id="4" logical="resume_linux" physical="resume_linux_3"/>
+     </group>
+    </source>
+    <target>
+     <event physical="trap_to_sm_3" logical="handle_linux_trap">
+      <inject_interrupt vector="36"/>
+     </event>
+     <event physical="nic_linux_smp_signal_sm_01" logical="start_ap">
+      <inject_interrupt vector="36"/>
+     </event>
+    </target>
+   </events>
+   <monitor>
+    <state subject="nic_linux_1" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
+   </monitor>
+   <component ref="sm">
+    <map logical="time_info" physical="time_info"/>
+    <map logical="debuglog" physical="debuglog_subject9"/>
+    <if variable="pciconf_emulation_enabled" value="true">
+     <map logical="dm_pciconf_req" physical="nic_dm_request_1"/>
+     <map logical="dm_pciconf_res" physical="nic_dm_response_1"/>
+    </if>
+   </component>
+  </subject>
 
-		<subject name="nic_dm_1">
-			<devices>
-				<device logical="nic" physical="$pciconf_emulation_nic_physdev">
-					<pci bus="16#00#" device="$pciconf_emulation_nic_devid" function="0"/>
-					<memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
-				</device>
-			</devices>
-			<events/>
-			<component ref="dm">
-				<map logical="debuglog" physical="debuglog_subject11"/>
-				<map logical="request" physical="nic_dm_request_1"/>
-				<map logical="response" physical="nic_dm_response_1"/>
-			</component>
-		</subject>
+  <subject name="nic_dm_1">
+   <devices>
+    <device logical="nic" physical="$pciconf_emulation_nic_physdev">
+     <pci bus="16#00#" device="$pciconf_emulation_nic_devid" function="0"/>
+     <memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
+    </device>
+   </devices>
+   <events/>
+   <component ref="dm">
+    <map logical="debuglog" physical="debuglog_subject11"/>
+    <map logical="request" physical="nic_dm_request_1"/>
+    <map logical="response" physical="nic_dm_response_1"/>
+   </component>
+  </subject>
 
-		<subject name="nic_linux_2">
-			<vcpu>
-				<registers>
-					<gpr>
-						<rip>16#0009_a000#</rip>
-						<rsp>16#0000#</rsp>
-					</gpr>
-					<cr0>
-						<ProtectionEnable>0</ProtectionEnable>
-					</cr0>
-				</registers>
-				<segments>
-					<cs access="16#809b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
-					<ds access="16#8093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
-				</segments>
-			</vcpu>
-			<devices>
-				<device logical="nic2" physical="$pciconf_emulation_nic_physdev">
-					<pci bus="16#00#" device="$pciconf_emulation_nic_devid" function="0"/>
-					<irq logical="nic_irq" physical="irq1" vector="91">
-						<msi logical="nic2_msi2" physical="msi2"/>
-						<msi logical="nic2_msi3" physical="msi3"/>
-						<msi logical="nic2_msi4" physical="msi4"/>
-						<msi logical="nic2_msi5" physical="msi5"/>
-					</irq>
-					<memory logical="mmio1" physical="mem1" writable="true" executable="false"/>
-					<memory logical="mmio2" physical="mem2" writable="true" executable="false"/>
-				</device>
-			</devices>
-			<events>
-				<source>
-					<group name="vmx_exit">
-						<default physical="trap_to_sm_4"/>
-					</group>
-					<group name="vmcall">
-						<event id="1" logical="virtual_console" physical="virtual_console_4"/>
-						<event id="31" logical="timer" physical="timer_linux_4"/>
-					</group>
-				</source>
-				<target>
-					<event logical="resume_after_trap" physical="resume_linux_4"/>
-					<event logical="serial_irq4" physical="serial_irq4_linux_4">
-						<inject_interrupt vector="52"/>
-					</event>
-					<event logical="timer" physical="timer_linux_4">
-						<inject_interrupt vector="236"/>
-					</event>
-				</target>
-			</events>
-			<sibling ref="nic_linux"/>
-		</subject>
+  <subject name="nic_linux_2">
+   <vcpu>
+    <registers>
+     <gpr>
+      <rip>16#0009_a000#</rip>
+      <rsp>16#0000#</rsp>
+     </gpr>
+     <cr0>
+      <ProtectionEnable>0</ProtectionEnable>
+     </cr0>
+    </registers>
+    <segments>
+     <cs access="16#809b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
+     <ds access="16#8093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+    </segments>
+   </vcpu>
+   <devices>
+    <device logical="nic2" physical="$pciconf_emulation_nic_physdev">
+     <pci bus="16#00#" device="$pciconf_emulation_nic_devid" function="0"/>
+     <irq logical="nic_irq" physical="irq1" vector="91">
+      <msi logical="nic2_msi2" physical="msi2"/>
+      <msi logical="nic2_msi3" physical="msi3"/>
+      <msi logical="nic2_msi4" physical="msi4"/>
+      <msi logical="nic2_msi5" physical="msi5"/>
+     </irq>
+     <memory logical="mmio1" physical="mem1" writable="true" executable="false"/>
+     <memory logical="mmio2" physical="mem2" writable="true" executable="false"/>
+    </device>
+   </devices>
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <default physical="trap_to_sm_4"/>
+     </group>
+     <group name="vmcall">
+      <event id="1" logical="virtual_console" physical="virtual_console_4"/>
+      <event id="31" logical="timer" physical="timer_linux_4"/>
+     </group>
+    </source>
+    <target>
+     <event logical="resume_after_trap" physical="resume_linux_4"/>
+     <event logical="serial_irq4" physical="serial_irq4_linux_4">
+      <inject_interrupt vector="52"/>
+     </event>
+     <event logical="timer" physical="timer_linux_4">
+      <inject_interrupt vector="236"/>
+     </event>
+    </target>
+   </events>
+   <sibling ref="nic_linux"/>
+  </subject>
 
-		<subject name="nic_sm_2">
-			<events>
-				<source>
-					<group name="vmcall">
-						<event id="0" logical="serial_irq4" physical="serial_irq4_linux_4"/>
-						<event id="4" logical="resume_linux" physical="resume_linux_4"/>
-					</group>
-				</source>
-				<target>
-					<event physical="trap_to_sm_4" logical="handle_linux_trap">
-						<inject_interrupt vector="36"/>
-					</event>
-					<event physical="nic_linux_smp_signal_sm_02" logical="start_ap">
-						<inject_interrupt vector="36"/>
-					</event>
-				</target>
-			</events>
-			<monitor>
-				<state subject="nic_linux_2" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
-			</monitor>
-			<component ref="sm">
-				<map logical="time_info" physical="time_info"/>
-				<map logical="debuglog" physical="debuglog_subject10"/>
-				<if variable="pciconf_emulation_enabled" value="true">
-					<map logical="dm_pciconf_req" physical="nic_dm_request_2"/>
-					<map logical="dm_pciconf_res" physical="nic_dm_response_2"/>
-				</if>
-			</component>
-		</subject>
+  <subject name="nic_sm_2">
+   <events>
+    <source>
+     <group name="vmcall">
+      <event id="0" logical="serial_irq4" physical="serial_irq4_linux_4"/>
+      <event id="4" logical="resume_linux" physical="resume_linux_4"/>
+     </group>
+    </source>
+    <target>
+     <event physical="trap_to_sm_4" logical="handle_linux_trap">
+      <inject_interrupt vector="36"/>
+     </event>
+     <event physical="nic_linux_smp_signal_sm_02" logical="start_ap">
+      <inject_interrupt vector="36"/>
+     </event>
+    </target>
+   </events>
+   <monitor>
+    <state subject="nic_linux_2" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
+   </monitor>
+   <component ref="sm">
+    <map logical="time_info" physical="time_info"/>
+    <map logical="debuglog" physical="debuglog_subject10"/>
+    <if variable="pciconf_emulation_enabled" value="true">
+     <map logical="dm_pciconf_req" physical="nic_dm_request_2"/>
+     <map logical="dm_pciconf_res" physical="nic_dm_response_2"/>
+    </if>
+   </component>
+  </subject>
 
-		<subject name="nic_dm_2">
-			<devices>
-				<device logical="nic" physical="$pciconf_emulation_nic_physdev">
-					<pci bus="16#00#" device="$pciconf_emulation_nic_devid" function="0"/>
-					<memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
-				</device>
-			</devices>
-			<events/>
-			<component ref="dm">
-				<map logical="debuglog" physical="debuglog_subject12"/>
-				<map logical="request" physical="nic_dm_request_2"/>
-				<map logical="response" physical="nic_dm_response_2"/>
-			</component>
-		</subject>
+  <subject name="nic_dm_2">
+   <devices>
+    <device logical="nic" physical="$pciconf_emulation_nic_physdev">
+     <pci bus="16#00#" device="$pciconf_emulation_nic_devid" function="0"/>
+     <memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
+    </device>
+   </devices>
+   <events/>
+   <component ref="dm">
+    <map logical="debuglog" physical="debuglog_subject12"/>
+    <map logical="request" physical="nic_dm_request_2"/>
+    <map logical="response" physical="nic_dm_response_2"/>
+   </component>
+  </subject>
 
-		<subject name="storage_linux">
-			<bootparams>console=hvc console=ttyS0 pci=noearly hostname=storage_linux debug</bootparams>
-			<memory>
-				<memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
-			</memory>
-			<devices>
-				<device logical="xhci" physical="$pciconf_emulation_xhci_physdev">
-					<pci bus="16#00#" device="$pciconf_emulation_xhci_devid" function="0"/>
-					<irq logical="xhci_irq" physical="irq1" vector="55">
-						<msi logical="xhci_msi1" physical="msi1"/>
-					</irq>
-					<memory logical="mmio" physical="mem1" writable="true" executable="false"/>
-				</device>
-				<device logical="ahci" physical="sata_controller_1">
-					<pci bus="16#00#" device="16#1f#" function="0"/>
-					<irq logical="irq" physical="irq1" vector="59">
-						<msi logical="ahci_msi1" physical="msi1"/>
-					</irq>
-					<memory logical="mmio" physical="mem1" writable="true" executable="false"/>
-					<memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
-					<ioPort logical="port1" physical="ioport1"/>
-					<ioPort logical="port2" physical="ioport2"/>
-					<ioPort logical="port3" physical="ioport3"/>
-					<ioPort logical="port4" physical="ioport4"/>
-					<ioPort logical="port5" physical="ioport5"/>
-				</device>
-				<device logical="nic" physical="ethernet_controller_3">
-					<pci bus="16#00#" device="16#1e#" function="0"/>
-				</device>
-			</devices>
-			<events>
-				<source>
-					<group name="vmx_exit">
-						<default physical="trap_to_sm_2"/>
-					</group>
-					<group name="vmcall">
-						<event id="31" logical="timer" physical="timer_linux_2"/>
-					</group>
-				</source>
-				<target>
-					<event logical="resume_after_trap" physical="resume_linux_2"/>
-					<event logical="reset" physical="reset_linux_2">
-						<reset/>
-					</event>
-					<event logical="serial_irq4" physical="serial_irq4_linux_2">
-						<inject_interrupt vector="52"/>
-					</event>
-					<event logical="timer" physical="timer_linux_2">
-						<inject_interrupt vector="236"/>
-					</event>
-				</target>
-			</events>
-			<channels>
-				<reader logical="virtual_input" physical="virtual_input_2" virtualAddress="16#3000#" vector="49"/>
-				<writer logical="virtual_console" physical="virtual_console_2" virtualAddress="16#4000#" event="1"/>
+  <subject name="storage_linux">
+   <bootparams>console=hvc console=ttyS0 pci=noearly hostname=storage_linux debug</bootparams>
+   <memory>
+    <memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
+   </memory>
+   <devices>
+    <device logical="xhci" physical="$pciconf_emulation_xhci_physdev">
+     <pci bus="16#00#" device="$pciconf_emulation_xhci_devid" function="0"/>
+     <irq logical="xhci_irq" physical="irq1" vector="55">
+      <msi logical="xhci_msi1" physical="msi1"/>
+     </irq>
+     <memory logical="mmio" physical="mem1" writable="true" executable="false"/>
+    </device>
+    <device logical="ahci" physical="sata_controller_1">
+     <pci bus="16#00#" device="16#1f#" function="0"/>
+     <irq logical="irq" physical="irq1" vector="59">
+      <msi logical="ahci_msi1" physical="msi1"/>
+     </irq>
+     <memory logical="mmio" physical="mem1" writable="true" executable="false"/>
+     <memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
+     <ioPort logical="port1" physical="ioport1"/>
+     <ioPort logical="port2" physical="ioport2"/>
+     <ioPort logical="port3" physical="ioport3"/>
+     <ioPort logical="port4" physical="ioport4"/>
+     <ioPort logical="port5" physical="ioport5"/>
+    </device>
+    <device logical="nic" physical="ethernet_controller_3">
+     <pci bus="16#00#" device="16#1e#" function="0"/>
+    </device>
+   </devices>
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <default physical="trap_to_sm_2"/>
+     </group>
+     <group name="vmcall">
+      <event id="31" logical="timer" physical="timer_linux_2"/>
+     </group>
+    </source>
+    <target>
+     <event logical="resume_after_trap" physical="resume_linux_2"/>
+     <event logical="reset" physical="reset_linux_2">
+      <reset/>
+     </event>
+     <event logical="serial_irq4" physical="serial_irq4_linux_2">
+      <inject_interrupt vector="52"/>
+     </event>
+     <event logical="timer" physical="timer_linux_2">
+      <inject_interrupt vector="236"/>
+     </event>
+    </target>
+   </events>
+   <channels>
+    <reader logical="virtual_input" physical="virtual_input_2" virtualAddress="16#3000#" vector="49"/>
+    <writer logical="virtual_console" physical="virtual_console_2" virtualAddress="16#4000#" event="1"/>
 
-				<reader logical="testchannel_1" physical="testchannel_1" virtualAddress="16#000e_00f0_0000#"/>
-				<writer logical="testchannel_2" physical="testchannel_2" virtualAddress="16#000e_00f0_1000#"/>
-				<reader logical="testchannel_3" physical="testchannel_3" virtualAddress="16#000e_00f0_2000#"/>
-				<writer logical="testchannel_4" physical="testchannel_4" virtualAddress="16#000e_0100_2000#"/>
-				<reader logical="blockdev_request1" physical="blockdev_request1" virtualAddress="16#000e_01f0_0000#"/>
-				<writer logical="blockdev_response1" physical="blockdev_response1" virtualAddress="16#000e_0200_0000#"/>
-				<reader logical="blockdev_request2" physical="blockdev_request2" virtualAddress="16#000e_0210_0000#"/>
-				<writer logical="blockdev_response2" physical="blockdev_response2" virtualAddress="16#000e_0220_0000#"/>
-			</channels>
-			<component ref="linux">
-				<map logical="lowmem" physical="storage_linux|lowmem"/>
-				<map logical="ram" physical="storage_linux|ram"/>
-			</component>
-		</subject>
-	</subjects>
+    <reader logical="testchannel_1" physical="testchannel_1" virtualAddress="16#000e_00f0_0000#"/>
+    <writer logical="testchannel_2" physical="testchannel_2" virtualAddress="16#000e_00f0_1000#"/>
+    <reader logical="testchannel_3" physical="testchannel_3" virtualAddress="16#000e_00f0_2000#"/>
+    <writer logical="testchannel_4" physical="testchannel_4" virtualAddress="16#000e_0100_2000#"/>
+    <reader logical="blockdev_request1" physical="blockdev_request1" virtualAddress="16#000e_01f0_0000#"/>
+    <writer logical="blockdev_response1" physical="blockdev_response1" virtualAddress="16#000e_0200_0000#"/>
+    <reader logical="blockdev_request2" physical="blockdev_request2" virtualAddress="16#000e_0210_0000#"/>
+    <writer logical="blockdev_response2" physical="blockdev_response2" virtualAddress="16#000e_0220_0000#"/>
+   </channels>
+   <component ref="linux">
+    <map logical="lowmem" physical="storage_linux|lowmem"/>
+    <map logical="ram" physical="storage_linux|ram"/>
+   </component>
+  </subject>
+ </subjects>
 
-	<scheduling tickRate="100000">
-		<majorFrame>
-			<cpu id="0">
-				<minorFrame subject="nic_linux" ticks="120"/>
-				<minorFrame subject="tau0" ticks="20"/>
-				<minorFrame subject="ps2" ticks="10"/>
-			</cpu>
-			<cpu id="1">
-				<minorFrame subject="time" ticks="1"/>
-				<minorFrame subject="dbgserver" ticks="30"/>
-				<minorFrame subject="vt" ticks="19"/>
-				<minorFrame subject="storage_linux" ticks="100"/>
-			</cpu>
-			<cpu id="2">
-				<minorFrame subject="nic_linux_1" ticks="75"/>
-				<minorFrame subject="nic_linux_1" ticks="75"/>
-			</cpu>
-			<cpu id="3">
-				<minorFrame subject="nic_linux_2" ticks="75"/>
-				<minorFrame subject="nic_linux_2" ticks="75"/>
-			</cpu>
-		</majorFrame>
-		<majorFrame>
-			<cpu id="0">
-				<minorFrame subject="nic_linux" ticks="140"/>
-				<minorFrame subject="ps2" ticks="5"/>
-				<minorFrame subject="tau0" ticks="5"/>
-			</cpu>
-			<cpu id="1">
-				<minorFrame subject="storage_linux" ticks="130"/>
-				<minorFrame subject="vt" ticks="10"/>
-				<minorFrame subject="dbgserver" ticks="10"/>
-			</cpu>
-			<cpu id="2">
-				<minorFrame subject="nic_linux_1" ticks="75"/>
-				<minorFrame subject="nic_linux_1" ticks="75"/>
-			</cpu>
-			<cpu id="3">
-				<minorFrame subject="nic_linux_2" ticks="75"/>
-				<minorFrame subject="nic_linux_2" ticks="75"/>
-			</cpu>
-		</majorFrame>
-	</scheduling>
+ <scheduling tickRate="100000">
+  <majorFrame>
+   <cpu id="0">
+    <minorFrame subject="nic_linux" ticks="120"/>
+    <minorFrame subject="tau0" ticks="20"/>
+    <minorFrame subject="ps2" ticks="10"/>
+   </cpu>
+   <cpu id="1">
+    <minorFrame subject="time" ticks="1"/>
+    <minorFrame subject="dbgserver" ticks="30"/>
+    <minorFrame subject="vt" ticks="19"/>
+    <minorFrame subject="storage_linux" ticks="100"/>
+   </cpu>
+   <cpu id="2">
+    <minorFrame subject="nic_linux_1" ticks="75"/>
+    <minorFrame subject="nic_linux_1" ticks="75"/>
+   </cpu>
+   <cpu id="3">
+    <minorFrame subject="nic_linux_2" ticks="75"/>
+    <minorFrame subject="nic_linux_2" ticks="75"/>
+   </cpu>
+  </majorFrame>
+  <majorFrame>
+   <cpu id="0">
+    <minorFrame subject="nic_linux" ticks="140"/>
+    <minorFrame subject="ps2" ticks="5"/>
+    <minorFrame subject="tau0" ticks="5"/>
+   </cpu>
+   <cpu id="1">
+    <minorFrame subject="storage_linux" ticks="130"/>
+    <minorFrame subject="vt" ticks="10"/>
+    <minorFrame subject="dbgserver" ticks="10"/>
+   </cpu>
+   <cpu id="2">
+    <minorFrame subject="nic_linux_1" ticks="75"/>
+    <minorFrame subject="nic_linux_1" ticks="75"/>
+   </cpu>
+   <cpu id="3">
+    <minorFrame subject="nic_linux_2" ticks="75"/>
+    <minorFrame subject="nic_linux_2" ticks="75"/>
+   </cpu>
+  </majorFrame>
+ </scheduling>
 </system>

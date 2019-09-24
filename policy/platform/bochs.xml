@@ -1,12 +1,12 @@
 <platform>
-	<config>
-		<boolean name="xhcidbg_supported" value="false"/>
-	</config>
-	<mappings>
-		<aliases>
-			<alias name="serial_device_1" physical="com_1">
-				<resource name="ioport1" physical="ioport1"/>
-			</alias>
-		</aliases>
-	</mappings>
+ <config>
+  <boolean name="xhcidbg_supported" value="false"/>
+ </config>
+ <mappings>
+  <aliases>
+   <alias name="serial_device_1" physical="com_1">
+    <resource name="ioport1" physical="ioport1"/>
+   </alias>
+  </aliases>
+ </mappings>
 </platform>

@@ -1,14 +1,14 @@
 <subject name="nic_dm">
-	<devices>
-		<device logical="nic" physical="$pciconf_emulation_nic_physdev">
-			<pci bus="16#00#" device="$pciconf_emulation_nic_devid" function="0"/>
-			<memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
-		</device>
-	</devices>
-	<events/>
-	<component ref="dm">
-		<map logical="debuglog" physical="debuglog_subject7"/>
-		<map logical="request" physical="nic_dm_request"/>
-		<map logical="response" physical="nic_dm_response"/>
-	</component>
+ <devices>
+  <device logical="nic" physical="$pciconf_emulation_nic_physdev">
+   <pci bus="16#00#" device="$pciconf_emulation_nic_devid" function="0"/>
+   <memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
+  </device>
+ </devices>
+ <events/>
+ <component ref="dm">
+  <map logical="debuglog" physical="debuglog_subject7"/>
+  <map logical="request" physical="nic_dm_request"/>
+  <map logical="response" physical="nic_dm_response"/>
+ </component>
 </subject>

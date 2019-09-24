@@ -1,36 +1,36 @@
 <include>
-	<channel name="input_events" size="16#1000#" hasEvent="asap"/>
+ <channel name="input_events" size="16#1000#" hasEvent="asap"/>
 
-	<channel name="virtual_input_1" size="16#1000#" hasEvent="asap"/>
-	<channel name="virtual_input_2" size="16#1000#" hasEvent="asap"/>
-	<channel name="virtual_console_1" size="16#0001_0000#" hasEvent="asap"/>
-	<channel name="virtual_console_2" size="16#0001_0000#" hasEvent="asap"/>
+ <channel name="virtual_input_1" size="16#1000#" hasEvent="asap"/>
+ <channel name="virtual_input_2" size="16#1000#" hasEvent="asap"/>
+ <channel name="virtual_console_1" size="16#0001_0000#" hasEvent="asap"/>
+ <channel name="virtual_console_2" size="16#0001_0000#" hasEvent="asap"/>
 
-	<channel name="time_info" size="16#1000#"/>
+ <channel name="time_info" size="16#1000#"/>
 
-	<channel name="debuglog_subject1" size="$logchannel_size"/>
-	<channel name="debuglog_subject2" size="$logchannel_size"/>
-	<channel name="debuglog_subject3" size="$logchannel_size"/>
-	<channel name="debuglog_subject4" size="$logchannel_size"/>
-	<channel name="debuglog_subject5" size="$logchannel_size"/>
-	<channel name="debuglog_subject6" size="$logchannel_size"/>
+ <channel name="debuglog_subject1" size="$logchannel_size"/>
+ <channel name="debuglog_subject2" size="$logchannel_size"/>
+ <channel name="debuglog_subject3" size="$logchannel_size"/>
+ <channel name="debuglog_subject4" size="$logchannel_size"/>
+ <channel name="debuglog_subject5" size="$logchannel_size"/>
+ <channel name="debuglog_subject6" size="$logchannel_size"/>
 
-	<if variable="pciconf_emulation_enabled" value="true">
-		<channel name="debuglog_subject7" size="$logchannel_size"/>
-		<channel name="debuglog_subject8" size="$logchannel_size"/>
+ <if variable="pciconf_emulation_enabled" value="true">
+  <channel name="debuglog_subject7" size="$logchannel_size"/>
+  <channel name="debuglog_subject8" size="$logchannel_size"/>
 
-		<channel name="nic_dm_request" size="16#1000#" hasEvent="switch"/>
-		<channel name="nic_dm_response" size="16#1000#" hasEvent="switch"/>
-		<channel name="storage_dm_request" size="16#1000#" hasEvent="switch"/>
-		<channel name="storage_dm_response" size="16#1000#" hasEvent="switch"/>
-	</if>
+  <channel name="nic_dm_request" size="16#1000#" hasEvent="switch"/>
+  <channel name="nic_dm_response" size="16#1000#" hasEvent="switch"/>
+  <channel name="storage_dm_request" size="16#1000#" hasEvent="switch"/>
+  <channel name="storage_dm_response" size="16#1000#" hasEvent="switch"/>
+ </if>
 
-	<channel name="testchannel_1" size="16#1000#"/>
-	<channel name="testchannel_2" size="16#1000#"/>
-	<channel name="testchannel_3" size="16#0010_0000#"/>
-	<channel name="testchannel_4" size="16#0010_0000#"/>
+ <channel name="testchannel_1" size="16#1000#"/>
+ <channel name="testchannel_2" size="16#1000#"/>
+ <channel name="testchannel_3" size="16#0010_0000#"/>
+ <channel name="testchannel_4" size="16#0010_0000#"/>
 
-	<if variable="dbgserver_sink_shmem" value="true">
-		<channel name="debug_shm_sink_memory" size="16#0002_0000#"/>
-	</if>
+ <if variable="dbgserver_sink_shmem" value="true">
+  <channel name="debug_shm_sink_memory" size="16#0002_0000#"/>
+ </if>
 </include>

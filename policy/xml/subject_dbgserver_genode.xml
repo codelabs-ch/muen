@@ -1,8 +1,8 @@
 <subject name="dbgserver">
-	<events/>
-	<component ref="dbgserver">
-		<map logical="log_channel1" physical="debuglog_subject1"/>
-		<map logical="log_channel2" physical="debuglog_subject4"/>
-		<include href="subject_dbgserver_common.xml"/>
-	</component>
+ <events/>
+ <component ref="dbgserver">
+  <map logical="log_channel1" physical="debuglog_subject1"/>
+  <map logical="log_channel2" physical="debuglog_subject4"/>
+  <include href="subject_dbgserver_common.xml"/>
+ </component>
 </subject>

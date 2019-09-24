@@ -1,57 +1,57 @@
 <component name="unikernel" profile="native">
-	<depends>
-		<library ref="libdebuglog"/>
-		<library ref="libmutime"/>
-	</depends>
-	<requires>
-		<vcpu>
-			<vmx>
-				<masks>
-					<exception>
-						<DivideError>0</DivideError>
-						<Debug>0</Debug>
-						<Breakpoint>0</Breakpoint>
-						<Overflow>0</Overflow>
-						<BOUNDRangeExceeded>0</BOUNDRangeExceeded>
-						<InvalidOpcode>0</InvalidOpcode>
-						<DeviceNotAvailable>0</DeviceNotAvailable>
-						<DoubleFault>0</DoubleFault>
-						<CoprocessorSegmentOverrun>0</CoprocessorSegmentOverrun>
-						<InvalidTSS>0</InvalidTSS>
-						<SegmentNotPresent>0</SegmentNotPresent>
-						<StackSegmentFault>0</StackSegmentFault>
-						<GeneralProtection>0</GeneralProtection>
-						<PageFault>0</PageFault>
-						<x87FPUFloatingPointError>0</x87FPUFloatingPointError>
-						<AlignmentCheck>0</AlignmentCheck>
-						<SIMDFloatingPointException>0</SIMDFloatingPointException>
-					</exception>
-				</masks>
-			</vmx>
-			<registers>
-				<gpr>
-					<rip>16#0010_0000#</rip>
-					<rsp>16#1fff_fff8#</rsp>
-				</gpr>
-				<cr4>
-					<OSSupportSIMDExceptions>1</OSSupportSIMDExceptions>
-				</cr4>
-			</registers>
-		</vcpu>
-		<if variable="unikernel_net" value="true">
-			<channels>
-				<reader logical="net_in"  virtualAddress="16#e000_0000#" size="16#0010_0000#"/>
-				<writer logical="net_out" virtualAddress="16#e010_0000#" size="16#0010_0000#"/>
-			</channels>
-		</if>
-	</requires>
-	<provides>
-		<memory executable="true" logical="ram" size="16#1f60_0000#" virtualAddress="16#00c0_0000#" writable="true"/>
-		<memory executable="true" logical="binary" size="16#00b0_0000#" type="subject_binary" virtualAddress="16#0010_0000#" writable="true">
-			<file filename="unikernel" offset="none"/>
-		</memory>
-		<memory executable="false" logical="boot_info" size="16#1000#" type="subject_ukvm_boot_info" virtualAddress="16#0000#" writable="false">
-			<file filename="unikernel_ukvmbi" offset="none"/>
-		</memory>
-	</provides>
+ <depends>
+  <library ref="libdebuglog"/>
+  <library ref="libmutime"/>
+ </depends>
+ <requires>
+  <vcpu>
+   <vmx>
+    <masks>
+     <exception>
+      <DivideError>0</DivideError>
+      <Debug>0</Debug>
+      <Breakpoint>0</Breakpoint>
+      <Overflow>0</Overflow>
+      <BOUNDRangeExceeded>0</BOUNDRangeExceeded>
+      <InvalidOpcode>0</InvalidOpcode>
+      <DeviceNotAvailable>0</DeviceNotAvailable>
+      <DoubleFault>0</DoubleFault>
+      <CoprocessorSegmentOverrun>0</CoprocessorSegmentOverrun>
+      <InvalidTSS>0</InvalidTSS>
+      <SegmentNotPresent>0</SegmentNotPresent>
+      <StackSegmentFault>0</StackSegmentFault>
+      <GeneralProtection>0</GeneralProtection>
+      <PageFault>0</PageFault>
+      <x87FPUFloatingPointError>0</x87FPUFloatingPointError>
+      <AlignmentCheck>0</AlignmentCheck>
+      <SIMDFloatingPointException>0</SIMDFloatingPointException>
+     </exception>
+    </masks>
+   </vmx>
+   <registers>
+    <gpr>
+     <rip>16#0010_0000#</rip>
+     <rsp>16#1fff_fff8#</rsp>
+    </gpr>
+    <cr4>
+     <OSSupportSIMDExceptions>1</OSSupportSIMDExceptions>
+    </cr4>
+   </registers>
+  </vcpu>
+  <if variable="unikernel_net" value="true">
+   <channels>
+    <reader logical="net_in"  virtualAddress="16#e000_0000#" size="16#0010_0000#"/>
+    <writer logical="net_out" virtualAddress="16#e010_0000#" size="16#0010_0000#"/>
+   </channels>
+  </if>
+ </requires>
+ <provides>
+  <memory executable="true" logical="ram" size="16#1f60_0000#" virtualAddress="16#00c0_0000#" writable="true"/>
+  <memory executable="true" logical="binary" size="16#00b0_0000#" type="subject_binary" virtualAddress="16#0010_0000#" writable="true">
+   <file filename="unikernel" offset="none"/>
+  </memory>
+  <memory executable="false" logical="boot_info" size="16#1000#" type="subject_ukvm_boot_info" virtualAddress="16#0000#" writable="false">
+   <file filename="unikernel_ukvmbi" offset="none"/>
+  </memory>
+ </provides>
 </component>

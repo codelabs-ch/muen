@@ -1,21 +1,21 @@
 <subject name="unikernel_sm">
-	<events>
-		<source>
-			<group name="vmcall">
-				<event id="4" logical="resume_unikernel" physical="resume_unikernel_1"/>
-			</group>
-		</source>
-		<target>
-			<event physical="trap_to_sm_3" logical="handle_unikernel_trap">
-				<inject_interrupt vector="36"/>
-			</event>
-		</target>
-	</events>
-	<monitor>
-		<state subject="unikernel" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
-	</monitor>
-	<component ref="sm">
-		<map logical="time_info" physical="time_info"/>
-		<map logical="debuglog" physical="debuglog_subject7"/>
-	</component>
+ <events>
+  <source>
+   <group name="vmcall">
+    <event id="4" logical="resume_unikernel" physical="resume_unikernel_1"/>
+   </group>
+  </source>
+  <target>
+   <event physical="trap_to_sm_3" logical="handle_unikernel_trap">
+    <inject_interrupt vector="36"/>
+   </event>
+  </target>
+ </events>
+ <monitor>
+  <state subject="unikernel" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
+ </monitor>
+ <component ref="sm">
+  <map logical="time_info" physical="time_info"/>
+  <map logical="debuglog" physical="debuglog_subject7"/>
+ </component>
 </subject>

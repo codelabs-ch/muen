@@ -1,16 +1,16 @@
 <subject name="storage_dm">
-	<if variable="pciconf_emulation_xhci_enabled" value="true">
-		<devices>
-			<device logical="xhci" physical="$pciconf_emulation_xhci_physdev">
-				<pci bus="16#00#" device="$pciconf_emulation_xhci_devid" function="0"/>
-				<memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
-			</device>
-		</devices>
-	</if>
-	<events/>
-	<component ref="dm">
-		<map logical="debuglog" physical="debuglog_subject8"/>
-		<map logical="request" physical="storage_dm_request"/>
-		<map logical="response" physical="storage_dm_response"/>
-	</component>
+ <if variable="pciconf_emulation_xhci_enabled" value="true">
+  <devices>
+   <device logical="xhci" physical="$pciconf_emulation_xhci_physdev">
+    <pci bus="16#00#" device="$pciconf_emulation_xhci_devid" function="0"/>
+    <memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
+   </device>
+  </devices>
+ </if>
+ <events/>
+ <component ref="dm">
+  <map logical="debuglog" physical="debuglog_subject8"/>
+  <map logical="request" physical="storage_dm_request"/>
+  <map logical="response" physical="storage_dm_response"/>
+ </component>
 </subject>

@@ -18,6 +18,9 @@
 
 with SK.IO_Apic;
 
+--D @Interface
+--D This package provides a procedure to setup I/O APIC IRQ routing when IOMMU
+--D Interrupt Remapping is enabled.
 package SK.VTd.Interrupts
 is
 

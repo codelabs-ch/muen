@@ -16,6 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+--D @Interface
+--D Utility package providing helper functions for bit operations on 64-bit
+--D numeric types.
 package SK.Bitops
 is
 

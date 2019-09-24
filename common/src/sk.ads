@@ -18,6 +18,8 @@
 
 with Interfaces;
 
+--D @Interface
+--D Top-level package defining common types.
 package SK
 is
 

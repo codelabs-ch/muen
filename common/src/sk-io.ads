@@ -18,6 +18,9 @@
 
 with X86_64;
 
+--D @Interface
+--D This package provides low-level input and output operations for interacting
+--D with I/O ports.
 package SK.IO
 is
 

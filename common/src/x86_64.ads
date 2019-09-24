@@ -16,6 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+--D @Interface
+--D Package declaring abstract x86/64 system state.
+--D Note: only used for proofs.
 package X86_64
 with
    Abstract_State =>

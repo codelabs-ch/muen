@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+--D @Interface
+--D Package containing constant declarations for various numeric values.
 package SK.Constants
 is
 

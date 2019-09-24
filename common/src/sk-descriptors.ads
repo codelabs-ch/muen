@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+--D @Interface
+--D Package providing types and subprograms to setup Interrupt Descriptor Table.
 package SK.Descriptors
 is
 

@@ -18,6 +18,9 @@
 
 with X86_64;
 
+--D @Interface
+--D Package providing subprograms to setup interrupt handling by means of Global
+--D Descriptor and Interrupt Descriptor Tables as well as Task-State Segment.
 package SK.Interrupt_Tables
 with
    Abstract_State => State,

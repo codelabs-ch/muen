@@ -140,6 +140,7 @@ is
 
    --D @Interface
    --D Subject state storage.
+   --D TODO: Expand CPU regs.
    --D TODO: Note about "segments":
    --D Contain "visible" and "hidden" parts; Intel SDM Vol. 3A, "3.4.3 Segment
    --D Registers".

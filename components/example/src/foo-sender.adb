@@ -38,8 +38,7 @@ is
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
    --D @Interface
-   --D Response channel. After processing the request, the resulting message
-   --D containing the hash is written to this volatile variable.
+   --D Example response channel. Used to illustrate a service component.
    Response : Foo.Message_Type
      with
        Volatile,

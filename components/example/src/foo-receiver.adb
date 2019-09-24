@@ -31,7 +31,7 @@ is
       Reason => "This global variable is effectively read-only.");
    --D @Lst Reqbegin
    --D @Interface
-   --D Incoming request to process.
+   --D Example request channel. Used to illustrate a service component.
    Request : Foo.Message_Type
      with
        Volatile,

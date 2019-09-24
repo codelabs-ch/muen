@@ -58,14 +58,11 @@
    In a component-based software architecture (\emph{CBA}), system functionality
    is realized by small, unprivileged applications, so called \emph{components}.
 
-   Components are isolated from one another as much as possible, shared
-   resources are kept to a minimum. The underlying kernel guarantees isolation,
-   complex tasks must be realized by components on top of the kernel.
-
    The Muen Separation Kernel (SK) is a specialized microkernel, which allows
-   the controlled execution of such software components.  Communication among
-   them, and also between a component and the kernel itself is strictly
-   regulated by a system policy, which is enforced by the Muen SK.
+   the controlled execution of a software component as a \emph{subject}.
+   Communication among subjects, and also between a subject and the kernel
+   itself is strictly regulated by a system policy, which is enforced by the
+   Muen SK.
 
    This document defines the foundation of Muen components, the interfaces,
    parameterization, documentation and verification. To illustrate these topics,
@@ -75,15 +72,16 @@
    the example component and related sources, using repository version TODO:ref
    git describe.
 
-   The following subsections explain the term component and subjects, before the
-   actual component VCPU profiles, interfaces and implementation are explained.
+   The following subsections first define the terms \emph{component},
+   \emph{subject} and \emph{library}, before the actual component mechanisms are
+   explained.
   </text>
 
   <section id="intro-component" label="Components" priority="0">
    <text priority="0">
-    A component is a piece of software executed by the Muen separation kernel
-    within a well-defined system partition. Similar terms are partition or
-    container. A Muen component consists of the following parts:
+    A component is a piece of software to be executed by the Muen separation
+    kernel within a well-defined system partition. A Muen component consists of
+    the following parts:
 
     \begin{itemize}
     \item Source code which is compiled into an executable binary
@@ -113,10 +111,14 @@
 
     \lstinputlisting[label=code-xml-cspec,caption=Crypter Component Specification XML,language=XML]{../spec/example.xml}
 
-    The example component expects shared memory channels
-    \texttt{example\_request} and \texttt{example\_response} which are used to
-    retrieve requests from a client, and to send a response (section
-    \ref{interface_section}).
+    The example component expects the following shared memory channels:
+    \begin{itemize}
+    \item \texttt{example\_request}
+    \item \texttt{example\_response}
+    \end{itemize}
+
+    These are used to retrieve requests from a client, and to send a response
+    (section \ref{interface_section}).
 
     An integrator must link the logical resources of a component specification
     file with the actual system policy. How this is done is specified in the Muen
@@ -124,20 +126,45 @@
    </text>
   </section>
 
+  <section id="intro-subjects" label="Subjects" priority="0">
+   <text priority="0">
+    A subject is an instance of a component, i.e. an active entity that is
+    executed by the Muen kernel during runtime. Its specification references a
+    component and maps the requested logical resources to physical resources
+    provided by the system.
+
+    \lstinputlisting[label=code-subject-comp-map,caption=Mapping of component resources,language=XML]{../../../policy/xml/subject_example.xml}
+
+    In listing \ref{code-subject-comp-map}, the three logical channels
+    \texttt{example\_request}, \texttt{example\_reponse} and \texttt{debuglog}
+    of the example component are mapped to physical channels of the system
+    policy. Validators enforce that all requested resources of a component are
+    properly mapped by the subject.
+
+    Note that subjects do not need to have all resources specified in their
+    component description. Instead, extra resources such as device and/or memory
+    mappings can be implicitly assigned to a subject. This is useful for
+    components which are able to enumerate the available resources at runtime by
+    using configuration mechanism like PCI configuration space enumeration, ACPI
+    or the Muen subject information page API specified in section
+    \ref{Musinfo.Instance.Objectexample}.
+   </text>
+  </section>
+
   <section id="intro-libraries" label="Libraries" priority="0">
    <text priority="0">
     Generic parts of a software system are usually provided as software
-    libraries. These libraries are used by multiple components together.
+    libraries. These libraries might be shared among multple components.
 
-    In contrast to ordinary libraries, a Muen \emph{component library} also
-    provides a library specification as seen in Listing
+    In contrast to common software libraries, a Muen \emph{component library}
+    also provides a library specification as seen in Listing
     \ref{code-libdebuglog-cspec}. Muen components declare a dependency to a
-    library in its own XML specification as shown in section
-    \ref{intro-component}. If it is an SPARK/Ada library, they also declare the
-    dependency in the GNAT project file. After that, the library is ready to be
-    used in the component source code.
+    library in the XML specification as shown in section \ref{intro-component}.
+    If it is an SPARK/Ada library, they also declare the dependency in the GNAT
+    project file. After that, the library is ready to be used in the component
+    source code.
 
-    \lstinputlisting[label=code-libdebuglog-cspec,caption=Libdebuglog Library Specification XML,language=XML]{../../libdebuglog/spec/libdebuglog.xml}
+    \lstinputlisting[label=code-libdebuglog-cspec,caption=Libdebuglog library specification XML,language=XML]{../../libdebuglog/spec/libdebuglog.xml}
 
     The example XML specification also contains an \texttt{include} directive
     for another XML file: \texttt{config.xml}. This mechanism is used to
@@ -153,37 +180,6 @@
     \ref{code-libdebuglog-cspec}.
 
     \lstinputlisting[label=code-libdebuglog-config-cspec,caption=Libdebuglog generated config.xml,language=XML]{../../libdebuglog/generated/config.xml}
-
-    The specification is translated by the CSPECS Mechanism described in section
-    \ref{cspecs}, to generate SPARK/Ada constants from the configuration
-    options. These constant can then be referenced in the component source code.
-
-    See section \ref{implementation_libraries} for a concrete example on how to
-    use a software library in the component source code.
-   </text>
-  </section>
-
-  <section id="intro-subjects" label="Subjects" priority="0">
-   <text priority="0">
-    A subject is an instance of a component, i.e. an active component in the
-    system policy. Its specification references a component and maps the
-    requested logical resources to physical resources provided by the system.
-
-    \lstinputlisting[label=code-subject-comp-map,caption=Mapping of component resources,language=XML]{../../../policy/xml/subject_example.xml}
-
-    In listing \ref{code-subject-comp-map}, the three logical channels
-    \texttt{Request}, \texttt{Reponse} and \texttt{debuglog} of the example
-    component using the libdebuglog library are mapped to physical channels of
-    the system policy. Validators enforce that all requested resources of a
-    component are properly mapped.
-
-    Note that subjects do not need to have all resources specified in their
-    component description. Instead, extra resources such as device and/or memory
-    mappings can be implicitly assigned to a subject. This is useful for
-    components which are able to enumerate the available resources at runtime by
-    using configuration mechanism like PCI configuration space enumeration, ACPI
-    or the Muen subject information page API specified in section
-    \ref{Musinfo.Instance.Objectexample}.
    </text>
   </section>
  </section>
@@ -283,7 +279,7 @@
     information mapped into its address space. These tasks are performed by
     \texttt{mugensinfo} and \texttt{mucfgexpand} respectively.
 
-    Similar methods might be employed by other guest operating systems on
+    Similar methods might be employed by other guest operating systems when
     porting them to Muen.
   </text>
   </section>
@@ -291,7 +287,9 @@
 
  <section id="vm-vs-native" label="VCPU Profiles" priority="0">
   <text priority="0">
-   A VCPU profile allows the specification of:
+   A virtual CPU (vCPU) profile controls the execution behavior of the
+   component's virtual CPU. It allows the specification of:
+
    \begin{itemize}
    \item Virtualization controls
    \begin{itemize}
@@ -300,15 +298,15 @@
    \item CR0 host/guest ownership
    \item CR4 host/guest ownership
    \end{itemize}
+   \item Direct MSR access
    \item Initial register values
    \begin{itemize}
    \item RIP
    \item RSP
    \item CR0
    \item CR4
+   \item CS, DS segment register values
    \end{itemize}
-   \item Direct MSR access
-   \item CS, DS segment descriptor values
    \end{itemize}
 
    VCPU profiles are assigned in the component specification at integration time
@@ -362,7 +360,7 @@
 
  <section id="subject-monitoring" label="Subject Monitoring" priority="0">
   <text priority="0">
-   The subject monitoring concept is used to have designated subjects to handle
+   The subject monitoring concept is used to have a designated subject to handle
    traps of another subject. This is useful for example to implement a
    trap-and-emulate approach for (VM) subjects or a debugger.
 
@@ -454,9 +452,10 @@
 
  <section id="verification_conditions_spark2014" label="Verification" priority="0">
   <text priority="-10">
-   Muen is very well suited to work with verified SPARK/Ada subjects. The native
-   VCPU profile is used to run such components as guest on top of the kernel.
-   The table below shows the verification results for the example component.
+   Muen is very well suited to work with verified SPARK/Ada components. The
+   native VCPU profile is used to run such components as guest on top of the
+   kernel.  The table below shows the verification results for the example
+   component.
   </text>
  </section>
 
@@ -475,7 +474,7 @@
    \item Timed Events (\ref{Timed_Events.Timed_Evtexample})
    \item Traps (VM Exits)
    \item Hypercalls
-   \item Subject Monitoring and Emulation
+   \item Subject Monitoring (\ref{Subject_Info.Stateexample})
    \end{itemize}
 
    Of course, it depends on the system policy of the actual system whether a

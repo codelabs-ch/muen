@@ -45,7 +45,7 @@ package body Mucfgcheck.MSR.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/subjects/subject/vcpu/registers/msrs/"
+         XPath => "/system/subjects/subject/vcpu/msrs/"
          & "msr[@end='16#0176#']",
          Name  => "end",
          Value => "16#0170#");
@@ -83,7 +83,7 @@ package body Mucfgcheck.MSR.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/subjects/subject/vcpu/registers/msrs/"
+         XPath => "/system/subjects/subject/vcpu/msrs/"
          & "msr[@end='16#0176#']",
          Name  => "end",
          Value => "16#c000_0800#");

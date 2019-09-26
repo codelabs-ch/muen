@@ -142,7 +142,7 @@ is
 
          CS_Access : constant String := Muxml.Utils.Get_Attribute
            (Doc   => Subject,
-            XPath => "vcpu/segments/cs",
+            XPath => "vcpu/registers/segments/cs",
             Name  => "access");
 
          Pin_Ctrls   : constant DOM.Core.Node_List
@@ -211,8 +211,7 @@ is
                MSR_Count := Mutools.XML_Utils.Calculate_MSR_Count
                  (MSRs                   => McKae.XML.XPath.XIA.XPath_Query
                     (N     => Subject,
-                     XPath => "vcpu/registers/msrs/msr"
-                     & "[@mode='w' or @mode='rw']"),
+                     XPath => "vcpu/msrs/msr[@mode='w' or @mode='rw']"),
                   DEBUGCTL_Control       => Debug_Ctrl,
                   PAT_Control            => PAT_Ctrl,
                   PERFGLOBALCTRL_Control => PERF_Ctrl,

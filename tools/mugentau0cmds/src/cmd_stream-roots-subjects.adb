@@ -228,7 +228,7 @@ is
       MSRs : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Subj_Node,
-           XPath => "vcpu/registers/msrs/msr");
+           XPath => "vcpu/msrs/msr");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => MSRs) - 1 loop
          declare

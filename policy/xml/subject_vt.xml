@@ -1,27 +1,27 @@
 <subject name="vt">
-	<events>
-		<source>
-			<group name="vmcall">
-				<event id="0" logical="reset_slot_1" physical="reset_slot_1"/>
-				<event id="30" logical="system_poweroff" physical="system_poweroff">
-					<system_poweroff/>
-				</event>
-				<event id="31" logical="system_reboot" physical="system_reboot">
-					<system_reboot/>
-				</event>
-			</group>
-		</source>
-	</events>
-	<component ref="vt">
-		<map logical="NIC Linux" physical="virtual_console_1"/>
-		<map logical="Storage Linux" physical="virtual_console_2"/>
-		<map logical="input_events" physical="input_events"/>
-		<map logical="input_device_1" physical="virtual_input_1"/>
-		<map logical="input_device_2" physical="virtual_input_2"/>
-		<map logical="debuglog" physical="debuglog_subject1"/>
-		<map logical="vga" physical="vga">
-			<map logical="buffer" physical="buffer"/>
-			<map logical="ports" physical="ports"/>
-		</map>
-	</component>
+ <events>
+  <source>
+   <group name="vmcall">
+    <event id="0" logical="reset_slot_1" physical="reset_slot_1"/>
+    <event id="30" logical="system_poweroff" physical="system_poweroff">
+     <system_poweroff/>
+    </event>
+    <event id="31" logical="system_reboot" physical="system_reboot">
+     <system_reboot/>
+    </event>
+   </group>
+  </source>
+ </events>
+ <component ref="vt">
+  <map logical="NIC Linux" physical="virtual_console_1"/>
+  <map logical="Storage Linux" physical="virtual_console_2"/>
+  <map logical="input_events" physical="input_events"/>
+  <map logical="input_device_1" physical="virtual_input_1"/>
+  <map logical="input_device_2" physical="virtual_input_2"/>
+  <map logical="debuglog" physical="debuglog_subject1"/>
+  <map logical="vga" physical="vga">
+   <map logical="buffer" physical="buffer"/>
+   <map logical="ports" physical="ports"/>
+  </map>
+ </component>
 </subject>

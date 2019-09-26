@@ -308,11 +308,9 @@
        </proc>
       </controls>
      </vmx>
-     <registers>
-      <msrs>
-       <msr end="16#00ff#" mode="rw" start="16#00f0#"/>
-      </msrs>
-     </registers>
+     <msrs>
+      <msr end="16#00ff#" mode="rw" start="16#00f0#"/>
+     </msrs>
     </vcpu>
     <memory>
      <array elementSize="16#2000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
@@ -464,11 +462,9 @@
   </subject>
   <subject name="subject2">
    <vcpu>
-    <registers>
-     <msrs>
-      <msr end="16#00ce#" mode="r" start="16#00ce#"/>
-     </msrs>
-    </registers>
+    <msrs>
+     <msr end="16#00ce#" mode="r" start="16#00ce#"/>
+    </msrs>
    </vcpu>
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
@@ -509,11 +505,11 @@
      <cr0>
       <ProtectionEnable>0</ProtectionEnable>
      </cr0>
+     <segments>
+      <cs access="16#809b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
+      <ds access="16#8093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+     </segments>
     </registers>
-    <segments>
-     <cs access="16#809b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
-     <ds access="16#8093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
-    </segments>
    </vcpu>
    <memory>
     <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>

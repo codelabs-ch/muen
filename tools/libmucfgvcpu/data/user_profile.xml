@@ -29,6 +29,9 @@
    </cr0>
   </masks>
  </vmx>
+ <msrs>
+  <msr end="16#0376#" mode="rw" start="16#0378#"/>
+ </msrs>
  <registers>
   <gpr>
    <rsp>16#7000#</rsp>
@@ -37,11 +40,8 @@
    <PerfCounterEnable>1</PerfCounterEnable>
    <VMXEnable>0</VMXEnable>
   </cr4>
-  <msrs>
-   <msr end="16#0376#" mode="rw" start="16#0378#"/>
-  </msrs>
+  <segments>
+   <ds access="16#d093#" base="16#0000#" limit="16#abcd#" selector="16#0018#"/>
+  </segments>
  </registers>
- <segments>
-  <ds access="16#d093#" base="16#0000#" limit="16#abcd#" selector="16#0018#"/>
- </segments>
 </vcpu>

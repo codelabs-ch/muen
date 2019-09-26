@@ -1,44 +1,44 @@
 <platform>
-	<config>
-		<boolean name="xhcidbg_supported" value="false"/>
-	</config>
-	<mappings>
-		<aliases>
-			<alias name="serial_device_1" physical="serial_controller_1">
-				<resource name="ioport1" physical="ioport1"/>
-			</alias>
-			<alias name="serial_device_2" physical="com_1">
-				<resource name="ioport1" physical="ioport1"/>
-			</alias>
-			<alias name="serial_device_3" physical="com_2">
-				<resource name="ioport1" physical="ioport1"/>
-			</alias>
-			<alias name="serial_device_4" physical="com_3">
-				<resource name="ioport1" physical="ioport1"/>
-			</alias>
-			<alias name="serial_device_5" physical="com_4">
-				<resource name="ioport1" physical="ioport1"/>
-			</alias>
-			<alias name="nic_1" physical="ethernet_controller_1">
-				<resource name="irq1" physical="irq1">
-					<resource name="msi1" physical="msi1"/>
-				</resource>
-				<resource name="mem1" physical="mem1"/>
-				<resource name="mem2" physical="mem2"/>
-				<if variable="pciconf_emulation_enabled" value="false">
-					<resource name="mmconf" physical="mmconf"/>
-				</if>
-			</alias>
-			<alias name="storage_controller" physical="sata_controller_1"/>
-		</aliases>
-		<classes>
-			<class name="desktop_devices">
-				<device physical="audio_device_1"/>
-				<device physical="ethernet_controller_1"/>
-				<device physical="ethernet_controller_2"/>
-				<device physical="ethernet_controller_3"/>
-				<device physical="sata_controller_1"/>
-			</class>
-		</classes>
-	</mappings>
+ <config>
+  <boolean name="xhcidbg_supported" value="false"/>
+ </config>
+ <mappings>
+  <aliases>
+   <alias name="serial_device_1" physical="serial_controller_1">
+    <resource name="ioport1" physical="ioport1"/>
+   </alias>
+   <alias name="serial_device_2" physical="com_1">
+    <resource name="ioport1" physical="ioport1"/>
+   </alias>
+   <alias name="serial_device_3" physical="com_2">
+    <resource name="ioport1" physical="ioport1"/>
+   </alias>
+   <alias name="serial_device_4" physical="com_3">
+    <resource name="ioport1" physical="ioport1"/>
+   </alias>
+   <alias name="serial_device_5" physical="com_4">
+    <resource name="ioport1" physical="ioport1"/>
+   </alias>
+   <alias name="nic_1" physical="ethernet_controller_1">
+    <resource name="irq1" physical="irq1">
+     <resource name="msi1" physical="msi1"/>
+    </resource>
+    <resource name="mem1" physical="mem1"/>
+    <resource name="mem2" physical="mem2"/>
+    <if variable="pciconf_emulation_enabled" value="false">
+     <resource name="mmconf" physical="mmconf"/>
+    </if>
+   </alias>
+   <alias name="storage_controller" physical="sata_controller_1"/>
+  </aliases>
+  <classes>
+   <class name="desktop_devices">
+    <device physical="audio_device_1"/>
+    <device physical="ethernet_controller_1"/>
+    <device physical="ethernet_controller_2"/>
+    <device physical="ethernet_controller_3"/>
+    <device physical="sata_controller_1"/>
+   </class>
+  </classes>
+ </mappings>
 </platform>

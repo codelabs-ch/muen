@@ -28,7 +28,7 @@
   </subject>                                                                                                                                              </subject>
   <subject name="subject2">                                                                                                                          |    <subject cpu="1" globalId="3" name="subject2">
    <vcpu>                                                                                                                                                  <vcpu>
-    <registers>                                                                                                                                             <registers>
+    <msrs>                                                                                                                                                  <msrs>
 --
    </component>                                                                                                                                            </component>
   </subject>                                                                                                                                              </subject>

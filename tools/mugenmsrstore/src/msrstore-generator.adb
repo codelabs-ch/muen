@@ -66,7 +66,7 @@ is
       Subjects : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
-           XPath => "/system/subjects/subject[vcpu/registers/msrs/msr]");
+           XPath => "/system/subjects/subject[vcpu/msrs/msr]");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
@@ -81,7 +81,7 @@ is
             Registers  : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Cur_Subj,
-                 XPath => "vcpu/registers/msrs/msr[@mode='w' or @mode='rw']");
+                 XPath => "vcpu/msrs/msr[@mode='w' or @mode='rw']");
             Ctrls_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Cur_Subj,

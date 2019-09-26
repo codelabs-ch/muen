@@ -71,7 +71,7 @@ is
             Registers : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Cur_Subj,
-                 XPath => "vcpu/registers/msrs/msr");
+                 XPath => "vcpu/msrs/msr");
             Msrbm_Mem : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Nodes => Phys_Mem,

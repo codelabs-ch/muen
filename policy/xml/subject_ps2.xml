@@ -1,13 +1,13 @@
 <subject name="ps2">
-	<events/>
-	<component ref="ps2_drv">
-		<map logical="input_events" physical="input_events"/>
-		<map logical="debuglog" physical="debuglog_subject6"/>
-		<map logical="ps2" physical="ps2">
-			<map logical="kbd_irq" physical="kbd_irq"/>
-			<map logical="mouse_irq" physical="mouse_irq"/>
-			<map logical="port_60" physical="port_60"/>
-			<map logical="port_64" physical="port_64"/>
-		</map>
-	</component>
+ <events/>
+ <component ref="ps2_drv">
+  <map logical="input_events" physical="input_events"/>
+  <map logical="debuglog" physical="debuglog_subject6"/>
+  <map logical="ps2" physical="ps2">
+   <map logical="kbd_irq" physical="kbd_irq"/>
+   <map logical="mouse_irq" physical="mouse_irq"/>
+   <map logical="port_60" physical="port_60"/>
+   <map logical="port_64" physical="port_64"/>
+  </map>
+ </component>
 </subject>

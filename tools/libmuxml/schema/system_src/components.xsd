@@ -238,9 +238,31 @@
  </xs:complexType>
 
  <xs:complexType name="logicalMemType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{memory} element requests a memory region with the specified
+    \texttt{size} and permissions from the system. The region is expected to be
+    placed at the address given via the \texttt{virtualAddress} attribute.
+
+    See line \ref{lst:af-lineref-compreq-mem} in listing
+    \ref{lst:annotated-policy} an example specification.
+   </xs:documentation>
+  </xs:annotation>
   <xs:attributeGroup ref="memBaseAttrs"/>
-  <xs:attribute name="size"           type="word64Type" use="required"/>
-  <xs:attribute name="virtualAddress" type="word64Type" use="required"/>
+  <xs:attribute name="size" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Size of memory in bytes. Must be a multiple of page size (4K).
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="virtualAddress" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Expected address of memory mapping.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="logicalDevicesType">

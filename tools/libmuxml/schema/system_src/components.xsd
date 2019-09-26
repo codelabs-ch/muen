@@ -328,8 +328,20 @@
  </xs:complexType>
 
  <xs:attributeGroup name="arrayBaseAttrs">
-  <xs:attribute name="virtualAddressBase" type="word64Type" use="required"/>
-  <xs:attribute name="elementSize"        type="word64Type" use="required"/>
+  <xs:attribute name="virtualAddressBase" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Expected address of memory mapping.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="elementSize" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Size of one array element in bytes. Must be a multiple of page size (4K).
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:attributeGroup>
 
  <xs:complexType name="arrayEntryType">

@@ -345,7 +345,22 @@
  </xs:attributeGroup>
 
  <xs:complexType name="arrayEntryType">
-  <xs:attribute name="logical" type="nameType" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    Array entries specify the number of array elements and assign a logical name
+    to each element.
+
+    See line \ref{lst:af-lineref-compreq-array-entry} in listing
+    \ref{lst:annotated-policy} an example array entry declaration.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical name of array entry.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="memoryArrayType">

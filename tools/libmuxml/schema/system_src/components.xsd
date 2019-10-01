@@ -248,7 +248,7 @@
     In this section, components can specify expected memory mappings with given
     access rights and region size.
 
-    See line \ref{lst:af-lineref-compreq-mem} in listing
+    See line \ref{lst:af-lineref-compreq-memarray} in listing
     \ref{lst:annotated-policy} an example specification.
    </xs:documentation>
   </xs:annotation>

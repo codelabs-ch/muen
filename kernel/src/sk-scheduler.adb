@@ -774,7 +774,7 @@ is
       end Panic_Unknown_Trap;
    begin
       --D @Text Section => impl_handle_trap, Priority => 0
-      --D First the trap number is is checked. If it is outside the valid trap
+      --D First the trap number is checked. If it is outside the valid trap
       --D range an appropriate crash audit record is written and an error
       --D condition is signaled.
 

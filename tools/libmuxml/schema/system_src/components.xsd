@@ -117,7 +117,7 @@
     expectations.
 
     See line \ref{lst:af-lineref-compdeps} in listing \ref{lst:annotated-policy}
-    for example dependency section.
+    for an example dependency section.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>
@@ -152,15 +152,15 @@
     rights, i.e. only the text section is executable, rodata is not writable and
     so on.
 
-    Memory specified in this sections are expanded to physical regions for each
-    subject that instantiates this component.
+    Memory specified in this sections are expanded to mapped physical regions
+    for each subject that instantiates this component.
 
     Note: the Mucbinsplit tool can be used to extract these section from an ELF
     binary into separate files and automatically add the corresponding memory
     elements to the component specification.
 
     See line \ref{lst:af-lineref-compprov} in listing \ref{lst:annotated-policy}
-    for example \texttt{provides} section.
+    for an example \texttt{provides} section.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>
@@ -193,11 +193,34 @@
  </xs:complexType>
 
  <xs:complexType name="providedMemType">
+  <xs:annotation>
+   <xs:documentation>
+    A \texttt{memory} element in the \texttt{provides} section declares memory
+    region provided by the component. Mostly used to provide (a part) of the
+    component binary.
+
+    See line \ref{lst:af-lineref-compprov-mem} in listing
+    \ref{lst:annotated-policy} for an example specification.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="memoryBaseType">
     <xs:attributeGroup ref="memBaseAttrs"/>
-    <xs:attribute name="virtualAddress" type="word64Type"            use="required"/>
-    <xs:attribute name="type"           type="subjectMemoryKindType" use="optional"/>
+    <xs:attribute name="virtualAddress" type="word64Type" use="required">
+     <xs:annotation>
+      <xs:documentation>
+       Virtual address in component address space.
+       Binary filename.
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="type" type="subjectMemoryKindType" use="optional">
+     <xs:annotation>
+      <xs:documentation>
+       Memory type (e.g. \texttt{subject_binary}).
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>

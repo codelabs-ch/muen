@@ -354,11 +354,44 @@
  </xs:complexType>
 
  <xs:complexType name="logicalChannelWriterType">
-  <xs:attribute name="logical"        type="nameType"              use="required"/>
-  <xs:attribute name="virtualAddress" type="word64Type"            use="required"/>
-  <xs:attribute name="size"           type="word64Type"            use="required"/>
-  <xs:attribute name="event"          type="xs:nonNegativeInteger" use="optional"/>
- </xs:complexType>
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{writer} element requests a channel with write permissions of the
+    specified size, address and optional notification event number.
+
+    See line \ref{lst:af-lineref-compreq-channel-writer} in listing
+    \ref{lst:annotated-policy} an example channel writer specification.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical name of writer channel.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="virtualAddress" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Expected address of channel memory mapping.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="size" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Expected size of channel. Must be a multiple of page sizeyy (4K).
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="event" type="xs:nonNegativeInteger" use="optional">
+  <xs:annotation>
+   <xs:documentation>
+    Notification event number.
+   </xs:documentation>
+  </xs:annotation>
+ </xs:attribute>
+</xs:complexType>
 
  <xs:attributeGroup name="arrayBaseAttrs">
   <xs:attribute name="virtualAddressBase" type="word64Type" use="required">

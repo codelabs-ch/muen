@@ -180,8 +180,26 @@
  </xs:complexType>
 
  <xs:complexType name="physicalRefType">
-  <xs:attribute name="logical"  type="nameType" use="required"/>
-  <xs:attribute name="physical" type="nameType" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    References a physical resource given by the \texttt{physical} attribute, and
+    assigns a \texttt{logical} name to it.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical name for resource reference.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="physical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of physical resource.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
 </xs:schema>

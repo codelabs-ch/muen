@@ -271,7 +271,7 @@
     The \texttt{devices} sub-section of the \texttt{requires} section is used to
     specify expected devices with their associated resources.
 
-    See line \ref{lst:af-lineref-compreq-dev} in listing
+    See line \ref{lst:af-lineref-compreq-devs} in listing
     \ref{lst:annotated-policy} an example specification.
    </xs:documentation>
   </xs:annotation>
@@ -281,6 +281,16 @@
  </xs:complexType>
 
  <xs:complexType name="logicalDeviceType">
+  <xs:annotation>
+   <xs:documentation>
+    A \texttt{device} element specifies an expected logical device with its
+    resources. Possible ressources are \texttt{irq}, \texttt{memory} and
+    \texttt{ioPort}.
+
+    See line \ref{lst:af-lineref-compreq-dev} in listing
+    \ref{lst:annotated-policy} an example specification.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="irq"    type="logicalIrqType"    minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="memory" type="logicalMemType"    minOccurs="0" maxOccurs="unbounded"/>

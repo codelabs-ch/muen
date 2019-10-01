@@ -462,10 +462,38 @@
    <xs:element name="writer" type="arrayEntryType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:choice>
   <xs:attributeGroup ref="arrayBaseAttrs"/>
-  <xs:attribute name="logical"    type="nameType"              use="required"/>
-  <xs:attribute name="eventBase"  type="xs:nonNegativeInteger" use="optional"/>
-  <xs:attribute name="vectorBase" type="vectorType"            use="optional"/>
- </xs:complexType>
+  <xs:attribute name="logical" type="nameType" use="required">
+  <xs:annotation>
+   <xs:documentation>
+    Logical channel array name.
+   </xs:documentation>
+  </xs:annotation>
+ </xs:attribute>
+ <xs:attribute name="eventBase" type="xs:nonNegativeInteger" use="optional">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{eventBase} attribute specifies the event number of the first
+    element in the array. This number is incremented for all further elements
+    in the array (\texttt{eventBase + 1}).
+
+    Note that this attribute is only taken into consideration for a writer
+    array.
+   </xs:documentation>
+  </xs:annotation>
+ </xs:attribute>
+ <xs:attribute name="vectorBase" type="vectorType" use="optional">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{vectorBase} attribute specifies the vector number of the first
+    element in the array. This number is incremented for all further elements
+    in the array (\texttt{vectorBase + 1}).
+
+    Note that this attribute is only taken into consideration for a reader
+    array.
+   </xs:documentation>
+  </xs:annotation>
+ </xs:attribute>
+</xs:complexType>
 
  <xs:complexType name="logicalEventsType">
   <xs:sequence>

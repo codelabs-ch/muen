@@ -336,7 +336,21 @@
  </xs:complexType>
 
  <xs:complexType name="logicalMsiIrqType">
-  <xs:attribute name="logical" type="nameType" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    The presence of \texttt{msi} child elements of an \texttt{irq} device
+    resource specifies that the component expects the device to be operated in
+    MSI mode. The number of elements defines the expected MSI vector number
+    count to be provided by the referenced device.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of MSI resource.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="logicalIoPortType">

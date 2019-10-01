@@ -340,9 +340,36 @@
  </xs:complexType>
 
  <xs:complexType name="logicalIoPortType">
-  <xs:attribute name="logical" type="nameType"   use="required"/>
-  <xs:attribute name="start"   type="word16Type" use="required"/>
-  <xs:attribute name="end"     type="word16Type" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{ioPort} element requests a device I/O port resource with given
+    range \texttt{start .. end} from the system.
+
+    See line \ref{lst:af-lineref-compreq-dev-port} in listing
+    \ref{lst:annotated-policy} an example I/O port reference.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical I/O port name.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="start" type="word16Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     I/O port start address.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="end" type="word16Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     I/O port end address.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="logicalChannelReaderType">

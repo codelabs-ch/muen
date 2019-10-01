@@ -230,8 +230,13 @@ is
               & Indent (N => 1) & "end record"
               & (if I < Count then ";" & ASCII.LF & ASCII.LF else ";");
 
-            IOMMU_Fields := IOMMU_Fields & Indent (N => 2) & "IOMMU_" & Suffix
-              & " : IOMMU_" & Suffix & "_Type;" & ASCII.LF
+            IOMMU_Fields := IOMMU_Fields & Indent (N => 2)
+              & "--D @Interface" & ASCII.LF & Indent (N => 2)
+              & "--D Memory-mapped registers of IOMMU " & Suffix
+              & "." & ASCII.LF & Indent (N => 2)
+              & "IOMMU_" & Suffix & " : IOMMU_" & Suffix & "_Type;" & ASCII.LF
+              & Indent (N => 2) & "--D @Interface" & ASCII.LF & Indent (N => 2)
+              & "--D Padding for IOMMU " & Suffix &  " to 4K." & ASCII.LF
               & Indent (N => 2) & "Padding_" & Suffix & " : Bit_Array "
               & "(1 .. SK.Page_Size * 8 - IOMMU_" & Suffix & "_Type_Size)"
               & (if I < Count then ";" & ASCII.LF else ";");

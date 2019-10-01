@@ -126,17 +126,8 @@
  <xs:complexType name="devicesRefType">
   <xs:annotation>
    <xs:documentation>
-    The \texttt{devices} element is used to grant a subject access to devices
-    and their resources.
-
-    For PCI devices only a single virtual bus is provided (bus 0).  The
-    \texttt{pci} element may be used to place the device at a specific location
-    (BDF).  If no other logical device resources of the device are specified,
-    then the expander tool will map all physical devices resources into the
-    subject.  When logical device resources are explicitly specified, then only
-    access to those are actually granted.  The physical attribute must be either
-    a reference to an existing physical device, device alias or device class.
-    Validators check that this is the case.
+    List of device references. Used to grant a subject access to hardware
+    devices and their resources.
 
     See line \ref{lst:af-lineref-devicerefs} in listing \ref{lst:annotated-policy}
     for example device references.
@@ -148,14 +139,44 @@
  </xs:complexType>
 
  <xs:complexType name="deviceRefType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{device} element allows a subject access to devices referenced
+    via the \texttt{physical} attribute.
+
+    For PCI devices only a single virtual bus is provided (bus 0). The
+    \texttt{pci} element may be used to place the device at a specific location
+    (BDF).  If no other logical device resources of the device are specified,
+    then the expander tool will map all physical devices resources into the
+    subject.  When logical device resources are explicitly specified, then only
+    access to those are actually granted.  The physical attribute must be either
+    a reference to an existing physical device, device alias or device class.
+    Validators check that this is the case.
+
+    See line \ref{lst:af-lineref-devicerefs} in listing \ref{lst:annotated-policy}
+    for an example reference.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="pci"    type="pciAddressType"  minOccurs="0" maxOccurs="1"/>
    <xs:element name="irq"    type="irqRefType"      minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="memory" type="devMemRefType"   minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="ioPort" type="physicalRefType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
-  <xs:attribute name="logical"  type="nameType" use="required"/>
-  <xs:attribute name="physical" type="nameType" use="required"/>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical device name.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="physical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of physical device to reference.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="physicalRefType">

@@ -633,6 +633,12 @@
  </xs:complexType>
 
  <xs:simpleType name="componentProfileType">
+  <xs:annotation>
+   <xs:documentation>
+    The component profile defines default vCPU settings and triggers profile
+    specific actions in the expander tool.
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="xs:string">
    <xs:enumeration value="native"/>
    <xs:enumeration value="vm"/>

@@ -306,11 +306,33 @@
  </xs:complexType>
 
  <xs:complexType name="logicalIrqType">
+  <xs:annotation>
+   <xs:documentation>
+    An \texttt{irq} element of a logical device reference requests an IRQ with
+    given number from the system policy. The specified number will be injected
+    when the device requires attention for the associated logical function.
+
+    See line \ref{lst:af-lineref-compreq-dev-irq} in listing
+    \ref{lst:annotated-policy} an example IRQ reference.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="msi" type="logicalMsiIrqType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
-  <xs:attribute name="logical" type="nameType"   use="required"/>
-  <xs:attribute name="vector"  type="vectorType" use="required"/>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical name of IRQ resource.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="vector" type="vectorType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Expected IRQ number.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="logicalMsiIrqType">

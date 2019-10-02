@@ -71,23 +71,103 @@
 
  <xs:complexType name="channelReferencesType">
   <xs:choice minOccurs="0" maxOccurs="unbounded">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{channel} section of a subject declares references to
+    communication channels. The referenced channels become accessible to the
+    requesting subject either as reader or writer endpoint.
+
+    See line \ref{lst:af-lineref-subj-channels} in listing
+    \ref{lst:annotated-policy} for an example section.
+   </xs:documentation>
+  </xs:annotation>
    <xs:element name="reader" type="channelReaderType"/>
    <xs:element name="writer" type="channelWriterType"/>
   </xs:choice>
  </xs:complexType>
 
  <xs:complexType name="channelReaderType">
-  <xs:attribute name="logical"        type="nameType"   use="required"/>
-  <xs:attribute name="physical"       type="nameType"   use="required"/>
-  <xs:attribute name="virtualAddress" type="word64Type" use="required"/>
-  <xs:attribute name="vector"         type="vectorType" use="optional"/>
+  <xs:annotation>
+   <xs:documentation>
+    A channel \texttt{reader} element references a global communication channel
+    as reader endpoint, i.e. the channel is mapped read-only into the subject
+    address space.
+
+    See line \ref{lst:af-lineref-subj-channels-reader} in listing
+    \ref{lst:annotated-policy} for an example reader declaration.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical name of reader channel.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="physical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of physical channel.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="virtualAddress" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Address of mapping in subject address space.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="vector" type="vectorType" use="optional">
+   <xs:annotation>
+    <xs:documentation>
+     Associated vector. Must be set if a physical channel with \texttt{hasEvent}
+     mode \texttt{!= switch} is referenced (enforced by validator).
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="channelWriterType">
-  <xs:attribute name="logical"        type="nameType"              use="required"/>
-  <xs:attribute name="physical"       type="nameType"              use="required"/>
-  <xs:attribute name="virtualAddress" type="word64Type"            use="required"/>
-  <xs:attribute name="event"          type="xs:nonNegativeInteger" use="optional"/>
+  <xs:annotation>
+   <xs:documentation>
+    A channel \texttt{writer} element references a global communication channel
+    as reader endpoint, i.e. the channel is mapped with write permissions into
+    the subject address space.
+
+    See line \ref{lst:af-lineref-subj-channels-writer} in listing
+    \ref{lst:annotated-policy} for an example reader declaration.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical name of reader channel.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="physical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of physical channel.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="virtualAddress" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Address of mapping in subject address space.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="event" type="xs:nonNegativeInteger" use="optional">
+   <xs:annotation>
+    <xs:documentation>
+     Associated event number. Must be set if a physical channel with
+     \texttt{hasEvent} attribute is referenced.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
 </xs:schema>

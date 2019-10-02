@@ -36,6 +36,9 @@ with SK.Timed_Events;
 with SK.VMX;
 with SK.Crash_Audit;
 
+--D @Interface
+--D This package implements kernel initialization and is the initial entry
+--D point from the early boot code into the SPARK kernel implementation.
 package SK.Kernel
 is
 

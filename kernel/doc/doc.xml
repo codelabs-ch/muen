@@ -1,0 +1,24 @@
+<doc name="Muen Separation Kernel">
+ <author>Adrian-Ken Rüegsegger, Reto Bürki</author>
+ <version>0.1</version>
+ <section id="introduction" label="Introduction" priority="0">
+  <text priority="0">
+   This document describes the Muen Separation Kernel (SK). It is intended to
+   give the reader a better understanding of the SK design and its
+   implementation. Documentation is generated based on annotations in the SK
+   source code to keep them in sync.
+  </text>
+  <section id="intro_scope" label="Scope" priority="0">
+   <text priority="0">
+    Scope and objectives of this document.
+   </text>
+  </section>
+  <section id="intro_structure" label="Document structure" priority="0">
+   <text priority="0">
+    Description of the document structure.
+   </text>
+  </section>
+ </section>
+
+ <section id="verification_and_validation" label="Verification" priority="20"/>
+</doc>

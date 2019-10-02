@@ -13,7 +13,13 @@
    <xs:element name="default" type="defaultEventEntryType" minOccurs="0" maxOccurs="1"/>
    <xs:element name="event"   type="sourceEventEntryType"  minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
-  <xs:attribute name="name" type="eventGroupNameType" use="required"/>
+  <xs:attribute name="name" type="eventGroupNameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of event group.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="baseDefaultEventType">
@@ -38,6 +44,15 @@
  </xs:complexType>
 
  <xs:complexType name="targetEventEntryType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{event} element in the target section specifies one event
+    endpoint by referencing a physical event and assigning a logical name to it.
+
+    See line \ref{lst:af-lineref-subj-events-target-ev} in listing
+    \ref{lst:annotated-policy} for an example event endpoint.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="baseEventType">
     <xs:group ref="targetEventActionsGroup" minOccurs="0" maxOccurs="1"/>

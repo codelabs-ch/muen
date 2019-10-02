@@ -182,7 +182,22 @@
  </xs:complexType>
 
  <xs:complexType name="eventActionInjectInterruptType">
-  <xs:attribute name="vector" type="vectorType" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    Instructs the SK to inject a guest interrupt with given vector on event
+    occurrence.
+
+    See line \ref{lst:af-lineref-events-injintr} in listing
+    \ref{lst:annotated-policy} for an example declaration.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="vector" type="vectorType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Vector to inject on event occurrence.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="eventActionUnmaskIrqType">

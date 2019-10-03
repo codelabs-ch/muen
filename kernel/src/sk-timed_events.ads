@@ -24,6 +24,10 @@ private with Mutimedevents;
 
 with Skp.Events;
 
+--D @Interface
+--D This package provide facilities to manage timed events of each subject.
+--D Timed events allow a subject to trigger a policy defined event at a given
+--D time given as CPU tick value.
 package SK.Timed_Events
 with
    Abstract_State => (State with External => (Async_Writers, Async_Readers)),

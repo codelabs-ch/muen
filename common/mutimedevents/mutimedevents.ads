@@ -45,9 +45,12 @@ is
        Size => Padding_Bits;
 
    --D @Interface
+   --D Scheduling info records provide scheduling information to subjects at
+   --D runtime.
    type Timed_Event_Interface_Type is record
       --D @Interface
-      --D TSC value when to trigger the event.
+      --D CPU tick count to fire the event designated by the event number
+      --D field.
       TSC_Trigger_Value : Interfaces.Unsigned_64;
       --D @Interface
       --D Number of event to trigger.

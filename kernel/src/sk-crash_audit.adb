@@ -62,6 +62,8 @@ is
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
+   --D @Interface
+   --D Crash Audit Dump Store.
    Instance : Crash_Audit_Page
    with
       Volatile,

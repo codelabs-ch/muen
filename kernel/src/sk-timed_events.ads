@@ -82,7 +82,10 @@ private
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
-   --  Subject timed event pages.
+   --D @Interface
+   --D Subject timed events array. Each subject has an associated timed event,
+   --D identified by subject ID, which it can use to trigger a policy-defined
+   --D event at a specified timestamp.
    Subject_Events : Subject_Event_Array
    with
       Volatile,

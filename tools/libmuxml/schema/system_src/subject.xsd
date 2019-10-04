@@ -60,9 +60,71 @@
  </xs:complexType>
 
  <xs:complexType name="loaderSubjectRefType">
-  <xs:attribute name="subject"        type="nameType"   use="required"/>
-  <xs:attribute name="logical"        type="nameType"   use="required"/>
-  <xs:attribute name="virtualAddress" type="word64Type" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{loader} mechanism effectively puts the loaded subject denoted by
+    the \texttt{subject} attribute under loader control, as it is not able to
+    start without the help of the loader.
+
+    In more detail, the \texttt{loader} monitor element instructs the expander
+    tool to map all memory regions of the referenced subject into the address
+    space of the monitor subject, using \texttt{virtualAddress} as offset in the
+    address space of the loader.
+
+    If a memory region of the loaded subject is writable and file-backed, the
+    region is replaced with an empty region and linked via the \texttt{hashRef}
+    mechanism to the original region which is mapped into the loader.
+
+    The state of the loaded subject is then invalidated by clearing the
+    \texttt{CR4.VMXE} bit in the initial subject CR4 register value. If such a
+    subject is scheduled by the kernel, a VMX exit \emph{VM-entry failure due to
+    invalid guest state} (33) occurs. See Intel SDM Vol. 3C, "23.7 Enabling and
+    Entering VMX Operation" and Intel SDM Vol 3C, "23.8 Restrictions on VMX
+    Operation" for more details. This trap is linked to the loader via normal
+    VMX event handling. After handover, the loader initializes the memory
+    regions replaced by the expander with the designated content.
+
+    All information required to \emph{load} the loaded subject is provided to
+    the loader subject via its own sinfo API. Memory regions prefixed with
+    \texttt{monitor\_sinfo\_} provide access to the sinfo regions of the loaded
+    subjects. Regions prefixed with \texttt{monitor\_state\_} specify memory
+    regions containing the subject register state of the loaded subject.
+
+    The difference between the \texttt{monitor\_sinfo\_} memory region address
+    in the loader and the address of the \texttt{sinfo} memory region in the
+    target sinfo information denotes the \texttt{virtualAddress} offset
+    attribute of the \texttt{loader} element in the policy. This information
+    combined is enough to fully construct the initial state of the loaded
+    subject, or to reset a subject to its initial state on demand.
+
+    The loader may also optionally check the hashes of the restored regions, as
+    this information is provided via the sinfo mechanism as well.
+
+    See line \ref{lst:af-lineref-subject-mon-loader} in listing
+    \ref{lst:annotated-policy} for an example loader element.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="subject" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of subject under loader control.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical name of loader element.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="virtualAddress" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Address offset of loaded subject memory mappings.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="monitorSubjectRefType">

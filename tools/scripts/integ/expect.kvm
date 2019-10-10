@@ -1,0 +1,4 @@
+serial.out;Booting Muen kernel
+serial.out;PS/2 - Mouse: Device reset
+serial.out;PS/2 - Mouse: Streaming enabled
+serial.out;PS/2 driver initialized successfully

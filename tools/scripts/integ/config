@@ -10,8 +10,8 @@ LOCK=/tmp/muen-integ.running
 # AMT password, only set if not present in the environment
 : ${AMT_PASSWORD=XXX}
 
-# seconds to wait for bochs target to perform integ tests
-BOOTWAIT_BOCHS=180
+# seconds to wait for emulate target to perform integ tests
+BOOTWAIT_EMULATE=40
 
 # ssh configuration
 LNX1_LOGIN=root@192.168.254.100

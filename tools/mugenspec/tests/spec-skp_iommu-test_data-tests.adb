@@ -62,42 +62,6 @@ package body Spec.Skp_IOMMU.Test_Data.Tests is
                Filename2 => "data/skp-iommu.adb"),
               Message   => "IOMMU body mismatch");
       Ada.Directories.Delete_Tree (Directory => Output_Dir);
-
-      Ada.Directories.Create_Directory (New_Directory => Output_Dir);
-      Dummy := DOM.Core.Nodes.Remove_Child
-        (N         => Muxml.Utils.Get_Element
-           (Doc   => Policy.Doc,
-            XPath => "/system/hardware/devices"),
-         Old_Child => Muxml.Utils.Get_Element
-           (Doc   => Policy.Doc,
-            XPath => "/system/hardware/devices/device[@name='iommu_2']"));
-
-      Write (Output_Dir => Output_Dir,
-             Policy     => Policy);
-      declare
-         Spec_Content : constant String
-           := Test_Utils.Read_File (Filename => Path & "s");
-         Body_Content : constant String
-           := Test_Utils.Read_File (Filename => Path & "b");
-      begin
-         Assert (Condition => Ada.Strings.Fixed.Index
-                 (Source  => Spec_Content,
-                  Pattern => "pragma Warnings (GNATprove, Off,") > 0,
-                 Message   => "Pragma Warnings Off not found in spec");
-         Assert (Condition => Ada.Strings.Fixed.Index
-                 (Source  => Spec_Content,
-                  Pattern => "pragma Warnings (GNATprove, On,") > 0,
-                 Message   => "Pragma Warnings On not found in spec");
-         Assert (Condition => Ada.Strings.Fixed.Index
-                 (Source  => Body_Content,
-                  Pattern => "pragma Warnings (GNATprove, Off,") > 0,
-                 Message   => "Pragma Warnings Off not found in body");
-         Assert (Condition => Ada.Strings.Fixed.Index
-                 (Source  => Body_Content,
-                  Pattern => "pragma Warnings (GNATprove, On,") > 0,
-                 Message   => "Pragma Warnings On not found in body");
-      end;
-      Ada.Directories.Delete_Tree (Directory => Output_Dir);
 --  begin read only
    end Test_Write;
 --  end read only

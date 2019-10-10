@@ -72,7 +72,7 @@ TO_RAW_OPTS = -O binary \
 	--set-section-flags .stack=alloc,load,contents
 TO_RAW_CMD  = objcopy $(TO_RAW_OPTS)
 
-HARDWARE      ?= hardware/bochs.xml
+HARDWARE      ?= hardware/qemu-kvm.xml
 ADDITIONAL_HW ?= hardware/common_hardware.xml
 PLATFORM      ?= platform/$(notdir $(HARDWARE))
 

@@ -101,7 +101,7 @@ is
       Boot_Infos : constant DOM.Core.Node_List
         := Muxml.Utils.Get_Elements (Nodes     => Phys_Mem,
                                      Ref_Attr  => "type",
-                                     Ref_Value => "subject_ukvm_boot_info");
+                                     Ref_Value => "subject_solo5_boot_info");
    begin
       Mulog.Log (Msg => "Found" & DOM.Core.Nodes.Length
                  (List => Boot_Infos)'Img & " Solo5 boot info region(s)");

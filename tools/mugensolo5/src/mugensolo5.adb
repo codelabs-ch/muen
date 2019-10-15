@@ -25,11 +25,11 @@ with Mutools.Cmd_Line.Infile_Outdir;
 
 with Solo5.Generator;
 
-procedure Mugenukvm
+procedure Mugensolo5
 is
 begin
    Mutools.Cmd_Line.Infile_Outdir.Init
-     (Description => "Solo5/UKVM boot info structure generator");
+     (Description => "Solo5 boot info structure generator");
    Mutools.Cmd_Line.Infile_Outdir.Run
      (Kind    => Muxml.Format_B,
       Process => Solo5.Generator.Write'Access);
@@ -49,4 +49,4 @@ exception
       Mulog.Log (Level => Mulog.Error,
                  Msg   => Ada.Exceptions.Exception_Information (X => E));
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
-end Mugenukvm;
+end Mugensolo5;

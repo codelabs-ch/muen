@@ -19,11 +19,11 @@
 with "../libmutools/libmutools";
 with "../shared_tools";
 
-project Mugenukvm extends "../tools.gpr" is
+project Mugensolo5 extends "../tools.gpr" is
 
    for Source_Dirs use ("src");
    for Object_Dir use "obj/" & Shared_Tools.Build;
    for Exec_Dir use "bin";
-   for Main use ("mugenukvm.adb");
+   for Main use ("mugensolo5.adb");
 
-end Mugenukvm;
+end Mugensolo5;

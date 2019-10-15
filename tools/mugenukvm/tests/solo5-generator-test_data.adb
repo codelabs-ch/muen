@@ -3,7 +3,7 @@
 --  automatically. Contents of this package can be modified in any way
 --  except for sections surrounded by a 'read only' marker.
 
-package body Ukvm.Generator.Test_Data is
+package body Solo5.Generator.Test_Data is
 
    procedure Set_Up (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
@@ -17,4 +17,4 @@ package body Ukvm.Generator.Test_Data is
       null;
    end Tear_Down;
 
-end Ukvm.Generator.Test_Data;
+end Solo5.Generator.Test_Data;

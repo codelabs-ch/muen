@@ -23,7 +23,7 @@ with Muxml;
 with Mulog;
 with Mutools.Cmd_Line.Infile_Outdir;
 
-with Ukvm.Generator;
+with Solo5.Generator;
 
 procedure Mugenukvm
 is
@@ -32,7 +32,7 @@ begin
      (Description => "Solo5/UKVM boot info structure generator");
    Mutools.Cmd_Line.Infile_Outdir.Run
      (Kind    => Muxml.Format_B,
-      Process => Ukvm.Generator.Write'Access);
+      Process => Solo5.Generator.Write'Access);
 
 exception
    when Mutools.Cmd_Line.Invalid_Cmd_Line =>

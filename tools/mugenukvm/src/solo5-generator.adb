@@ -30,9 +30,9 @@ with Muxml.Utils;
 with Mutools.Files;
 with Mutools.Utils;
 
-with Ukvm.Types;
+with Solo5.Types;
 
-package body Ukvm.Generator
+package body Solo5.Generator
 is
 
    --  Return virtual address and size of memory region specified by logical
@@ -209,4 +209,4 @@ is
       Close (File => File);
    end Write_BI_File;
 
-end Ukvm.Generator;
+end Solo5.Generator;

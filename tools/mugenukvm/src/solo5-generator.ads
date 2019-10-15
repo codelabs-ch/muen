@@ -16,19 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Interfaces;
+with Muxml;
 
-package Ukvm.Types
+package Solo5.Generator
 is
 
-   --  struct hvt_boot_info
-   --  https://github.com/Solo5/solo5/blob/master/include/solo5/hvt_abi.h
-   type UKVM_Boot_Info_Type is record
-      Mem_Size   : Interfaces.Unsigned_64;
-      Kernel_End : Interfaces.Unsigned_64;
-      Tsc_Freq   : Interfaces.Unsigned_64;
-      Cmdline    : Interfaces.Unsigned_64;
-      Mft        : Interfaces.Unsigned_64;
-   end record;
+   --  Write Solo5/UKVM boot info structures according to the specified policy
+   --  to the given output directory.
+   procedure Write
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type);
 
-end Ukvm.Types;
+end Solo5.Generator;

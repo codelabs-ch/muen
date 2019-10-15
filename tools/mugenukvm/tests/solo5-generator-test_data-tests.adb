@@ -3,7 +3,7 @@
 --  Such changes will be kept during further regeneration of this file.
 --  All code placed outside of test routine bodies will be lost. The
 --  code intended to set up and tear down the test environment should be
---  placed into Ukvm.Generator.Test_Data.
+--  placed into Solo5.Generator.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
 with System.Assertions;
@@ -17,7 +17,7 @@ with System.Assertions;
 
 --  begin read only
 --  end read only
-package body Ukvm.Generator.Test_Data.Tests is
+package body Solo5.Generator.Test_Data.Tests is
 
 --  begin read only
 --  id:2.2/01/
@@ -53,11 +53,11 @@ package body Ukvm.Generator.Test_Data.Tests is
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "data/unikernel1_ukvmbi",
                Filename2 => Uni1_Ukvm),
-              Message   => "Unikernel 1 UKVM boot info mismatch");
+              Message   => "Unikernel 1 boot info mismatch");
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "data/unikernel2_ukvmbi",
                Filename2 => Uni2_Ukvm),
-              Message   => "Unikernel 2 UKVM boot info mismatch");
+              Message   => "Unikernel 2 boot info mismatch");
 
       Ada.Directories.Delete_File (Name => Uni1_Ukvm);
       Ada.Directories.Delete_File (Name => Uni2_Ukvm);
@@ -75,4 +75,4 @@ begin
    null;
 --  begin read only
 --  end read only
-end Ukvm.Generator.Test_Data.Tests;
+end Solo5.Generator.Test_Data.Tests;

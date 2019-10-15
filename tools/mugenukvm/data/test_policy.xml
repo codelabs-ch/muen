@@ -25,10 +25,10 @@
   <memory alignment="16#1000#" name="unikernel1|ram" physicalAddress="16#0030_0000#" size="16#1fe0_0000#" caching="WB" type="subject"/>
   <memory alignment="16#1000#" name="unikernel2|ram" physicalAddress="16#4000_0000#" size="16#0fe0_0000#" caching="WB" type="subject"/>
   <memory alignment="16#1000#" name="unikernel1|ukvm_boot_info" physicalAddress="16#0010_0000#" size="16#1000#" caching="WB" type="subject_ukvm_boot_info">
-   <file filename="unikernel1_ukvmbi" offset="none"/>
+   <file filename="unikernel1_bi" offset="none"/>
   </memory>
   <memory alignment="16#1000#" name="unikernel2|ukvm_boot_info" physicalAddress="16#0020_0000#" size="16#1000#" caching="WB" type="subject_ukvm_boot_info">
-   <file filename="unikernel2_ukvmbi" offset="none"/>
+   <file filename="unikernel2_bi" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="unikernel1|bin" physicalAddress="16#0014_0000#" size="16#0030_0000#" type="subject_binary">
    <file filename="unikernel" offset="none"/>

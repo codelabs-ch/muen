@@ -40,8 +40,8 @@ package body Solo5.Generator.Test_Data.Tests is
 
       Policy : Muxml.XML_Data_Type;
 
-      Uni1_Ukvm : constant String := "obj/unikernel1_ukvmbi";
-      Uni2_Ukvm : constant String := "obj/unikernel2_ukvmbi";
+      Uni1_Bi : constant String := "obj/unikernel1_bi";
+      Uni2_Bi : constant String := "obj/unikernel2_bi";
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
@@ -51,16 +51,16 @@ package body Solo5.Generator.Test_Data.Tests is
              Policy     => Policy);
 
       Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "data/unikernel1_ukvmbi",
-               Filename2 => Uni1_Ukvm),
+              (Filename1 => "data/unikernel1_bi",
+               Filename2 => Uni1_Bi),
               Message   => "Unikernel 1 boot info mismatch");
       Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "data/unikernel2_ukvmbi",
-               Filename2 => Uni2_Ukvm),
+              (Filename1 => "data/unikernel2_bi",
+               Filename2 => Uni2_Bi),
               Message   => "Unikernel 2 boot info mismatch");
 
-      Ada.Directories.Delete_File (Name => Uni1_Ukvm);
-      Ada.Directories.Delete_File (Name => Uni2_Ukvm);
+      Ada.Directories.Delete_File (Name => Uni1_Bi);
+      Ada.Directories.Delete_File (Name => Uni2_Bi);
 --  begin read only
    end Test_Write;
 --  end read only

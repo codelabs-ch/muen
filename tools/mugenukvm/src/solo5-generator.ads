@@ -21,8 +21,8 @@ with Muxml;
 package Solo5.Generator
 is
 
-   --  Write Solo5/UKVM boot info structures according to the specified policy
-   --  to the given output directory.
+   --  Write Solo5 boot info structures according to the specified policy to
+   --  the given output directory.
    procedure Write
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);

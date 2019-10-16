@@ -17,7 +17,7 @@ proof:
 
 $(OBJ_DIR)/prove/gnatprove/gnatprove.out: $(COMPONENT_TARGETS) $(PROOF_TARGETS)
 	@$(E) $(COMPONENT) Proof "gnatprove $(SPARK_OPTS) -P$(COMPONENT)"
-	@$(E) $(COMPONENT) "Proof summary" "head -n17 $@"
+	@$(E) $(COMPONENT) "Proof summary" "head -n$(SPARK_SUMMARY_LINES) $@"
 
 stackcheck_release: $(OBJ_DIR)/$(COMPONENT) $(wildcard $(OBJ_DIR)/release/*.ci)
 	@$(E) $(COMPONENT) "Check stack (release)" \

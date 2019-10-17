@@ -461,7 +461,7 @@ is
 
    -------------------------------------------------------------------------
 
-   --D @Section Id => impl_handle_target_event, Label => Target Event Handling, Parent => impl_exit_handler, Priority => 50
+   --D @Section Id => impl_handle_target_event, Label => Target Event Handling, Parent => impl_exit_handler, Priority => 60
    --D @Text Section => impl_handle_target_event, Priority => 0
    --D Target events are actions performed prior to resuming execution of a
    --D given subject.
@@ -546,9 +546,10 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Handle given source event of specified subject. If the event is of mode
-   --  handover, the target subject ID is returned in Next_Subject, otherwise
-   --  the parameter is set to the ID of the current subject.
+   --D @Section Id => impl_handle_source_event, Label => Source Event Handling, Parent => impl_exit_handler, Priority => 50
+   --D @Text Section => impl_handle_source_event, Priority => 0
+   --D Source events are actions performed when a given subject triggers a trap
+   --D or a hypercall.
    procedure Handle_Source_Event
      (Subject      :     Skp.Global_Subject_ID_Type;
       Event        :     Skp.Events.Source_Event_Type;
@@ -565,14 +566,31 @@ is
 
       Dst_CPU : Skp.CPU_Range;
    begin
+      --D @Text Section => impl_handle_source_event, Priority => 0
+      --D First, the next subject to be executed is initiaized to the current
+      --D one. A handover event may change this but otherwise the same subject
+      --D is to be executed next.
       Next_Subject := Subject;
 
+      --D @Text Section => impl_handle_source_event, Priority => 0
+      --D Then the operation corresponding to the given source event action is
+      --D performed.
+      --D @UL Id => impl_handle_source_event_actions, Section => impl_handle_source_event, Priority => 10
       case Event.Source_Action
       is
          when Skp.Events.No_Action       => null;
+            --D @Item List => impl_handle_source_event_actions, Priority => 0
+            --D If the designated action is no action, then nothing is
+            --D done.
          when Skp.Events.System_Reboot   =>
+            --D @Item List => impl_handle_source_event_actions, Priority => 0
+            --D If the designated action is system reboot, then a reboot with
+            --D power-cycle is initiated.
             Power.Reboot (Power_Cycle => True);
          when Skp.Events.System_Poweroff =>
+            --D @Item List => impl_handle_source_event_actions, Priority => 0
+            --D If the designated action is system shutdown, then a shutdown is
+            --D initiated.
             Power.Shutdown;
          when Skp.Events.System_Panic =>
             Handle_System_Panic (Subject => Subject);
@@ -583,11 +601,18 @@ is
 
       if Event.Target_Subject /= Skp.Invalid_Subject then
          if Event.Target_Event /= Skp.Events.Invalid_Target_Event then
+            --D @Text Section => impl_handle_source_event, Priority => 20
+            --D If the source event has a valid target subject and target event
+            --D set, then mark the target event pending for the designated
+            --D subject.
             Subjects_Events.Set_Event_Pending
               (Subject  => Event.Target_Subject,
                Event_ID => Event.Target_Event);
 
             if Event.Send_IPI then
+               --D @Text Section => impl_handle_source_event, Priority => 20
+               --D Additionally, send an IPI to the CPU running the target
+               --D subject if specified by the policy.
                Dst_CPU := Skp.Subjects.Get_CPU_ID
                  (Subject_ID => Event.Target_Subject);
                Apic.Send_IPI (Vector => SK.Constants.IPI_Vector,
@@ -596,6 +621,10 @@ is
          end if;
 
          if Event.Handover then
+            --D @Text Section => impl_handle_source_event, Priority => 20
+            --D If the source event has a valid target subject and it is a
+            --D handover event, then set the target subject as the next subject
+            --D to run.
             Next_Subject := Event.Target_Subject;
             Set_Current_Subject_ID (Subject_ID => Next_Subject);
          end if;
@@ -642,7 +671,8 @@ is
       --D @Text Section => hypercall_handling, Priority => 0
       --D First the event number of the hypercall is checked. If it is valid
       --D then the corresponding subject source event as specified by the
-      --D policy is looked up and processed.
+      --D policy is looked up and processed, see
+      --D \ref{impl_handle_source_event}.
       if Valid_Event_Nr then
          Event := Skp.Events.Get_Source_Event
            (Subject_ID => Current_Subject,
@@ -667,7 +697,6 @@ is
 
       --D @Text Section => hypercall_handling, Priority => 20
       --D If the hypercall triggered a handover event, load the new VMCS.
-
       if Current_Subject /= Next_Subject_ID then
          VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
                    (Subject_ID => Next_Subject_ID));
@@ -789,11 +818,13 @@ is
       --D as specified by the policy is looked up. If the trap specifies a null
       --D event an appropriate crash audit record is written and an error
       --D condition is signaled.
-      --D Otherwise the source event designated by the policy trap entry is
-      --D processed.
       Trap_Entry := Skp.Events.Get_Trap
         (Subject_ID => Current_Subject,
          Trap_Nr    => Skp.Events.Trap_Range (Trap_Nr));
+
+      --D @Text Section => impl_handle_trap, Priority => 0
+      --D Otherwise the source event designated by the policy trap entry is
+      --D processed, see \ref{impl_handle_source_event}.
       Handle_Source_Event
         (Subject      => Current_Subject,
          Event        => Trap_Entry,

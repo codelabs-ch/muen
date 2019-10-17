@@ -162,15 +162,45 @@
   <xs:sequence>
    <xs:element name="map" type="resourceMappingType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
-  <xs:attribute name="ref" type="nameType" use="required"/>
+  <xs:attribute name="ref" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of referenced component.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="resourceMappingType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{map} element maps a physical resource provided by the system
+    with a resource requested by the referenced component.
+
+    This element allows recursion to map child resources as well (e.g. device
+    memory, I/O ports etc).
+
+    See line \ref{lst:af-lineref-subject-compres} in listing
+    \ref{lst:annotated-policy} for an example mapping.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="map" type="resourceMappingType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
-  <xs:attribute name="logical"  type="nameType" use="required"/>
-  <xs:attribute name="physical" type="nameType" use="required"/>
+  <xs:attribute name="logical"  type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of logical resource requested by the component.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="physical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Physical name of resource.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
 </xs:schema>

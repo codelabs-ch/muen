@@ -79,7 +79,7 @@
     \texttt{CR4.VMXE} bit in the initial subject CR4 register value. If such a
     subject is scheduled by the kernel, a VMX exit \emph{VM-entry failure due to
     invalid guest state} (33) occurs. See Intel SDM Vol. 3C, "23.7 Enabling and
-    Entering VMX Operation" and Intel SDM Vol 3C, "23.8 Restrictions on VMX
+    Entering VMX Operation" and Intel SDM Vol. 3C, "23.8 Restrictions on VMX
     Operation" for more details. This trap is linked to the loader via normal
     VMX event handling. After handover, the loader initializes the memory
     regions replaced by the expander with the designated content.
@@ -180,7 +180,7 @@
     This element allows recursion to map child resources as well (e.g. device
     memory, I/O ports etc).
 
-    See line \ref{lst:af-lineref-subject-compres} in listing
+    See line \ref{lst:af-lineref-subject-compress} in listing
     \ref{lst:annotated-policy} for an example mapping.
    </xs:documentation>
   </xs:annotation>

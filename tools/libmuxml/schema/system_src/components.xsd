@@ -307,7 +307,7 @@
   <xs:annotation>
    <xs:documentation>
     A \texttt{device} element specifies an expected logical device with its
-    resources. Possible ressources are \texttt{irq}, \texttt{memory} and
+    resources. Possible resources are \texttt{irq}, \texttt{memory} and
     \texttt{ioPort}.
 
     See line \ref{lst:af-lineref-compreq-dev} in listing

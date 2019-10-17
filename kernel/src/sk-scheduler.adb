@@ -120,6 +120,7 @@ is
 
    --  Inject pending interrupt into subject identified by ID. Sets interrupt
    --  window if interrupt(s) remain pending.
+   --D @Section Id => impl_inject_interrupt, Label => Interrupt injection, Parent => impl_exit_handler, Priority => 70
    procedure Inject_Interrupt (Subject_ID : Skp.Global_Subject_ID_Type)
    with
       Global => (Input  => (CPU_Info.APIC_ID, Subjects.State),
@@ -130,12 +131,19 @@ is
       Interrupt_Pending : Boolean;
    begin
       if Subjects.Accepts_Interrupts (ID => Subject_ID) then
+         --D @Text Section => impl_inject_interrupt, Priority => 0
+         --D If a subject is ready to accept interrupts, check if it has a
+         --D pending interrupt.
          Subjects_Interrupts.Consume_Interrupt
            (Subject => Subject_ID,
             Found   => Interrupt_Pending,
             Vector  => Vector);
 
          if Interrupt_Pending then
+            --D @Text Section => impl_inject_interrupt, Priority => 0
+            --D Consume the pending interrupt, by writing the corresponding
+            --D vector to the VM-entry interruption-information and setting the
+            --D valid bit, see Intel SDM Vol. 3C, "26.6 Event Injection".
             VMX.VMCS_Write
               (Field => Constants.VM_ENTRY_INTERRUPT_INFO,
                Value => Constants.VM_INTERRUPT_INFO_VALID +
@@ -143,10 +151,13 @@ is
          end if;
       end if;
 
+      --D @Text Section => impl_inject_interrupt, Priority => 0
+      --D Then, check if the subject has more pending interrupts and activate
+      --D Interrupt window if required, see Intel SDM Vol. 3C, "6.7.5
+      --D Interrupt-Window Exiting and Virtual-Interrupt Delivery".
       Subjects_Interrupts.Has_Pending_Interrupt
         (Subject           => Subject_ID,
          Interrupt_Pending => Interrupt_Pending);
-
       if Interrupt_Pending then
          VMX.VMCS_Set_Interrupt_Window (Value => True);
       end if;
@@ -1007,10 +1018,13 @@ is
       --D @Text Section => impl_exit_handler, Priority => 0
       --D \paragraph{}
       --D Once the exit has been dealt with, the execution of the next subject
-      --D is prepared. A pending target event, if present, is handled and a
-      --D potentially pending interrupt is prepared for injection.
+      --D is prepared. A pending target event, if present, is handled see
+      --D \ref{impl_handle_target_event}.
       Current_Subject := Get_Current_Subject_ID;
       Handle_Pending_Target_Event (Subject_ID => Current_Subject);
+      --D @Text Section => impl_exit_handler, Priority => 0
+      --D Then, a pending interrupt, if present, is prepared for injection, see
+      --D \ref{impl_inject_interrupt}.
       Inject_Interrupt (Subject_ID => Current_Subject);
 
       --D @Text Section => impl_exit_handler, Priority => 0

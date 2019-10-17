@@ -134,7 +134,7 @@ digraph build {
   subgraph cluster_tau0 {
     style=filled
     color=gray95
-    label=<&tau;0>
+    label=Tau0
 
     labeljust=l
     generate -> structs

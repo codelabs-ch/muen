@@ -107,30 +107,41 @@
   <xs:attribute name="subject" type="nameType" use="required">
    <xs:annotation>
     <xs:documentation>
-     Name of subject under loader control.
+     Name of monitored subject.
     </xs:documentation>
    </xs:annotation>
   </xs:attribute>
   <xs:attribute name="logical" type="nameType" use="required">
    <xs:annotation>
     <xs:documentation>
-     Logical name of loader element.
+     Logical name of state mapping.
     </xs:documentation>
    </xs:annotation>
   </xs:attribute>
   <xs:attribute name="virtualAddress" type="word64Type" use="required">
    <xs:annotation>
     <xs:documentation>
-     Address offset of loaded subject memory mappings.
+     Address to map requested subject state.
     </xs:documentation>
    </xs:annotation>
   </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="monitorSubjectRefType">
+  <xs:annotation>
+   <xs:documentation>
+    Give subject monitor (SM) access to the referenced subject state.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="loaderSubjectRefType">
-    <xs:attribute name="writable" type="booleanType" use="required"/>
+    <xs:attribute name="writable" type="booleanType" use="required">
+     <xs:annotation>
+      <xs:documentation>
+       Whether or not the given state is mapped writable into the SM.
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>

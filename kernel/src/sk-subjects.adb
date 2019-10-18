@@ -258,6 +258,11 @@ is
 
    -------------------------------------------------------------------------
 
+   --D @Section Id => impl_subjects_state_restore, Label => State Restoring, Parent => impl_subjects_state, Priority => 10
+   --D @Text Section => impl_subjects_state_restore, Priority => 0
+   --D Restoring the state of a subject with given ID means that the current
+   --D state values are written to the corresponding VMCS fields.
+   --D @OL Id => impl_subjects_state_restore_steps, Section => impl_subjects_state_restore, Priority => 10
    procedure Restore_State
      (ID   :     Skp.Global_Subject_ID_Type;
       Regs : out CPU_Registers_Type)
@@ -271,60 +276,110 @@ is
       Refined_Post    => Descriptors (ID).Data.Regs = Regs
    is
    begin
+      --D @Item List => impl_subjects_state_restore_steps, Priority => 0
+      --D Restore guest interruptibility from \texttt{Intr\_State} field.
       VMX.VMCS_Write (Field => Constants.GUEST_INTERRUPTIBILITY,
                       Value => Word64 (Descriptors (ID).Data.Intr_State));
+      --D @Item List => impl_subjects_state_restore_steps, Priority => 0
+      --D Restore guest RIP from \texttt{RIP} field.
       VMX.VMCS_Write (Field => Constants.GUEST_RIP,
                       Value => Descriptors (ID).Data.RIP);
+      --D @Item List => impl_subjects_state_restore_steps, Priority => 0
+      --D Restore guest RSP from \texttt{RSP} field.
       VMX.VMCS_Write (Field => Constants.GUEST_RSP,
                       Value => Descriptors (ID).Data.RSP);
 
+      --D @Item List => impl_subjects_state_restore_steps, Priority => 0
+      --D Restore guest CR0 from \texttt{CR0} field.
       VMX.VMCS_Write (Field => Constants.GUEST_CR0,
                       Value => Descriptors (ID).Data.CR0);
+      --D @Item List => impl_subjects_state_restore_steps, Priority => 0
+      --D Restore guest CR0 read shadown from \texttt{SHADOW\_CR0} field.
       VMX.VMCS_Write (Field => Constants.CR0_READ_SHADOW,
                       Value => Descriptors (ID).Data.SHADOW_CR0);
+      --D @Item List => impl_subjects_state_restore_steps, Priority => 0
+      --D Restore guest CR4 from \texttt{CR4} field.
       VMX.VMCS_Write (Field => Constants.GUEST_CR4,
                       Value => Descriptors (ID).Data.CR4);
+      --D @Item List => impl_subjects_state_restore_steps, Priority => 0
+      --D Restore guest CR4 read shadow from \texttt{SHADOW\_CR4} field.
       VMX.VMCS_Write (Field => Constants.CR4_READ_SHADOW,
                       Value => Descriptors (ID).Data.SHADOW_CR4);
 
+      --D @Item List => impl_subjects_state_restore_steps, Priority => 0
+      --D Restore guest RFLAGS from \texttt{RFLAGS} field.
       VMX.VMCS_Write (Field => Constants.GUEST_RFLAGS,
                       Value => Descriptors (ID).Data.RFLAGS);
+      --D @Item List => impl_subjects_state_restore_steps, Priority => 0
+      --D Restore guest IA32\_EFER from \texttt{IA32\_EFER} field.
       VMX.VMCS_Write (Field => Constants.GUEST_IA32_EFER,
                       Value => Descriptors (ID).Data.IA32_EFER);
 
+      --D @Item List => impl_subjects_state_restore_steps, Priority => 0
+      --D Restore guest GDTR base from \texttt{GDTR.Base} field.
       VMX.VMCS_Write (Field => Constants.GUEST_BASE_GDTR,
                       Value => Descriptors (ID).Data.GDTR.Base);
+      --D @Item List => impl_subjects_state_restore_steps, Priority => 0
+      --D Restore guest GDTR limit from \texttt{GDTR.Limit} field.
       VMX.VMCS_Write (Field => Constants.GUEST_LIMIT_GDTR,
                       Value => Word64 (Descriptors (ID).Data.GDTR.Limit));
+      --D @Item List => impl_subjects_state_restore_steps, Priority => 0
+      --D Restore guest IDTR base from \texttt{IDTR.Base} field.
       VMX.VMCS_Write (Field => Constants.GUEST_BASE_IDTR,
                       Value => Descriptors (ID).Data.IDTR.Base);
+      --D @Item List => impl_subjects_state_restore_steps, Priority => 0
+      --D Restore guest IDTR limit from \texttt{IDTR.Limit} field.
       VMX.VMCS_Write (Field => Constants.GUEST_LIMIT_IDTR,
                       Value => Word64 (Descriptors (ID).Data.IDTR.Limit));
 
+      --D @Item List => impl_subjects_state_restore_steps, Priority => 0
+      --D Restore guest SYSENTER\_CS from \texttt{SYSENTER\_CS} field.
       VMX.VMCS_Write (Field => Constants.GUEST_SYSENTER_CS,
                       Value => Word64 (Descriptors (ID).Data.SYSENTER_CS));
+      --D @Item List => impl_subjects_state_restore_steps, Priority => 0
+      --D Restore guest SYSENTER\_EIP from \texttt{SYSENTER\_EIP} field.
       VMX.VMCS_Write (Field => Constants.GUEST_SYSENTER_EIP,
                       Value => Descriptors (ID).Data.SYSENTER_EIP);
+      --D @Item List => impl_subjects_state_restore_steps, Priority => 0
+      --D Restore guest SYSENTER\_ESP from \texttt{SYSENTER\_ESP} field.
       VMX.VMCS_Write (Field => Constants.GUEST_SYSENTER_ESP,
                       Value => Descriptors (ID).Data.SYSENTER_ESP);
 
+      --D @Item List => impl_subjects_state_restore_steps, Priority => 0
+      --D Restore guest CS segment from \texttt{CS} field.
       Restore_Segment (Segment_ID => CS,
                        Segment    => Descriptors (ID).Data.Segment_Regs.CS);
+      --D @Item List => impl_subjects_state_restore_steps, Priority => 0
+      --D Restore guest SS segment from \texttt{SS} field.
       Restore_Segment (Segment_ID => SS,
                        Segment    => Descriptors (ID).Data.Segment_Regs.SS);
+      --D @Item List => impl_subjects_state_restore_steps, Priority => 0
+      --D Restore guest DS segment from \texttt{DS} field.
       Restore_Segment (Segment_ID => DS,
                        Segment    => Descriptors (ID).Data.Segment_Regs.DS);
+      --D @Item List => impl_subjects_state_restore_steps, Priority => 0
+      --D Restore guest ES segment from \texttt{ES} field.
       Restore_Segment (Segment_ID => ES,
                        Segment    => Descriptors (ID).Data.Segment_Regs.ES);
+      --D @Item List => impl_subjects_state_restore_steps, Priority => 0
+      --D Restore guest FS segment from \texttt{FS} field.
       Restore_Segment (Segment_ID => FS,
                        Segment    => Descriptors (ID).Data.Segment_Regs.FS);
+      --D @Item List => impl_subjects_state_restore_steps, Priority => 0
+      --D Restore guest GS segment from \texttt{GS} field.
       Restore_Segment (Segment_ID => GS,
                        Segment    => Descriptors (ID).Data.Segment_Regs.GS);
+      --D @Item List => impl_subjects_state_restore_steps, Priority => 0
+      --D Restore guest TR segment from \texttt{TR} field.
       Restore_Segment (Segment_ID => TR,
                        Segment    => Descriptors (ID).Data.Segment_Regs.TR);
+      --D @Item List => impl_subjects_state_restore_steps, Priority => 0
+      --D Restore guest LDTR segment from \texttt{LDTR} field.
       Restore_Segment (Segment_ID => LDTR,
                        Segment    => Descriptors (ID).Data.Segment_Regs.LDTR);
 
+      --D @Item List => impl_subjects_state_restore_steps, Priority => 0
+      --D Restore subject registers from \texttt{Regs} field.
       Regs := Descriptors (ID).Data.Regs;
    end Restore_State;
 

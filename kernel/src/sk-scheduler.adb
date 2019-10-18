@@ -941,7 +941,8 @@ is
 
       --D @Text Section => impl_exit_handler, Priority => 0
       --D The state of the subject that has just trapped into the exit handler
-      --D is saved along with the register values and the exit reason.
+      --D is saved along with the register values and the exit reason, see
+      --D \ref{impl_subjects_state_save}.
       --D Analogously, the FPU state of the current subject is saved.
       Subjects.Save_State (ID          => Current_Subject,
                            Exit_Reason => Exit_Reason,
@@ -1030,16 +1031,20 @@ is
       --D @Text Section => impl_exit_handler, Priority => 0
       --D \paragraph{}
       --D Finally, the VMX preemption timer is armed, the FPU and subject state
-      --D are restored. The register values of the subject to be executed are
-      --D returned by the procedure. The calling assembler code then performs
-      --D an entry to VMX non-root mode thereby instructing the hardware to
-      --D resume execution of the subject.
+      --D are restored, see \ref{impl_subjects_state_restore}. Additionally, to
+      --D ensure the precondition of \texttt{Subjects.Restore\_State}, the state
+      --D is filtered beforehand, see \ref{impl_subjects_state_filter}.
       Set_VMX_Exit_Timer;
       FPU.Restore_State (ID => Current_Subject);
       Subjects.Filter_State (ID => Current_Subject);
       Subjects.Restore_State
         (ID   => Current_Subject,
          Regs => Subject_Registers);
+      --D @Text Section => impl_exit_handler, Priority => 0
+      --D The register values of the subject to be executed are returned by the
+      --D procedure. The calling assembler code then performs an entry to
+      --D VMX non-root mode thereby instructing the hardware to resume
+      --D execution of the subject using its VMCS.
    end Handle_Vmx_Exit;
 
 end SK.Scheduler;

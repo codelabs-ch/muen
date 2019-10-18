@@ -188,9 +188,16 @@ is
 
    -------------------------------------------------------------------------
 
+   --D @Section Id => impl_subjects_state_filter, Label => State Filtering, Parent => impl_subjects_state, Priority => 30
+   --D @Text Section => impl_subjects_state_filter, Priority => 0
+   --D Filtering the state of a subject with given ID means that the state
+   --D values fulfill the invariantes specified by \texttt{Valid\_State}.
    procedure Filter_State (ID : Skp.Global_Subject_ID_Type)
    is
    begin
+      --D @Text Section => impl_subjects_state_filter, Priority => 0
+      --D Force CR4.MCE bit to be set to ensure Machine Check Exceptions are
+      --D active.
       Descriptors (ID).Data.CR4 := Bitops.Bit_Set
         (Value => Descriptors (ID).Data.CR4,
          Pos   => Constants.CR4_MCE_FLAG);

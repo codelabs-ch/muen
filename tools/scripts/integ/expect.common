@@ -1,3 +1,8 @@
+serial.out;PS/2: Controller self-test successful
+serial.out;PS/2: KBD self-test successful
+serial.out;PS/2: AUX self-test successful
+serial.out;PS/2: KBD device enabled
+serial.out;PS/2: AUX device enabled
 serial.out;hvc_muen: Channel @ 0x
 serial.out;Using timed event region at address 0x
 serial.out;Switched to clocksource muen-clksrc
@@ -7,6 +12,7 @@ serial.out;muen-sinfo: Subject exports .* resources
 serial.out;muen: Registering platform-specific MSI operations
 serial.out;Mounting Muen channel filesystem
 serial.out;muenfs: registered file virtual_console - start 0x0000000000004000, size 0x00010000, access rw
+serial.out;muenfs: registered file virtual_input - start 0x0000000000003000, size 0x00001000, access ro
 serial.out;muenfs: registered file testchannel_1 - start 0x0000000e00f00000, size 0x00001000, access ro
 serial.out;muenfs: registered file testchannel_2 - start 0x0000000e00f01000, size 0x00001000, access rw
 serial.out;muenfs: registered file testchannel_3 - start 0x0000000e00f02000, size 0x00100000, access ro

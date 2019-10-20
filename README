@@ -159,10 +159,11 @@ environment listed in the following table.
 |===================================================================
 | Operating systems      | Debian GNU/Linux 9/10 x86_64 +
                            Ubuntu 18.04 x86_64
+| Linux kernel/KVM       | >= 5.2.0 with GUEST_CR3 fix <<lnxcr3>>
 | Ada compiler           | GNAT GPL 2019
 | GCC version            | 8.3.1 20190518 for GNAT Community 2019
 | SPARK version          | Community 2019
-| Emulator               | Bochs (>= version 2.6.5)
+| Emulator               | qemu-system-x86_64 (>= 3.1.0)
 | Intel AMT SoL client   | amtterm (>= commit 0ece513...)
 | Intel vPro AMT / WSMan | amtc (github.com/schnoddelbotz/amtc)
 |===================================================================
@@ -188,7 +189,7 @@ The first step to build Muen is to install the required packages:
 
   $ sudo apt-get install acpica-tools bc binutils-dev bison flex git-core \
       gnuplot grub-pc-bin lcov libc6-dev libelf-dev libiberty-dev \
-      libxml2-utils make tidy wget xorriso xsltproc zlib1g-dev
+      libxml2-utils make qemu-system-x86 tidy wget xorriso xsltproc zlib1g-dev
 
 The Ada and SPARK packages currently available in Debian and Ubuntu are too old
 to build Muen. GNAT/SPARK Community 2019 from AdaCore's <<libre>> site must be
@@ -197,7 +198,6 @@ visible to the Muen build system (assuming that they are installed below
 `/opt`):
 
   $ export PATH=/opt/gnat/bin:/opt/spark/bin:$PATH
-
 
 Docker
 ~~~~~~
@@ -224,36 +224,25 @@ system image.
 
 Emulation
 ~~~~~~~~~
-To ease kernel development, the Muen project makes use of emulation by
-employing the Bochs IA-32 emulator <<bochs>>. Among many other features, Bochs
-has support for multiple processors, APIC emulation and VMX extensions.
+To ease kernel development and testing, the Muen project makes use of nested
+virtualization provided by QEMU/KVM. In order for this to work, a recent Linux
+kernel (>= 5.2.0) with applied KVM GUEST_CR3 fix <<lnxcr3>> and the
+`qemu-system-x86_64` binary must be installed on the build machine.
 
-Download Bochs from its project site and issue the following commands to build
-and install it with `/usr/local` prefix:
-
-  $ sudo apt-get install g++ libsdl1.2-dev
-  $ tar xfvz bochs-2.6.5.tar.gz
-  $ cd bochs-2.6.5
-  $ ./configure           \
-      --prefix=/usr/local \
-      --enable-vmx=2      \
-      --enable-smp        \
-      --enable-cdrom      \
-      --enable-x86-64     \
-      --enable-avx        \
-      --with-sdl
-  $ make
-  $ sudo make install
-
-Issue the following command in the Muen project directory to start emulation:
+Issue the following command in the Muen project directory to start the nested
+virtualization of a Muen system:
 
   $ make emulate
 
-The Bochs emulator output is located at `emulate/bochsout.txt`, the Muen kernel
-serial console output is written to `emulate/serial.out`.
+The system serial console output is written to `emulate/serial.out`. Use your
+favorite VNC client to connect to the VNC server provided by QEMU on localhost
+or SSH into the NIC Linux guest VM via SSH (`ssh -p 5555 root@localhost` with
+root password 'muen').
 
-NOTE: As Bochs is missing IOMMU and PCI MMCONF emulation, device passthrough is
-      not supported for this hardware target.
+NOTE: As the virtual terminal (VT) over VNC is timing sensitive and QEMU/KVM
+cannot guarantee tick-exact timing depending on the host CPU and system load,
+this console is just an emergency console. Use SSH to interact with the
+booted Muen system.
 
 Hardware
 ~~~~~~~~
@@ -322,7 +311,7 @@ the `HARDWARE` variable:
 References
 ----------
 - [[[mboot]]]         Multiboot Specification, https://www.gnu.org/software/grub/manual/multiboot/
-- [[[bochs]]]         Bochs IA-32 Emulator, http://bochs.sourceforge.net/
+- [[[lnxcr3]]]        Linux KVM GUEST_CR3 fix, https://patchwork.kernel.org/patch/11165185/
 - [[[ipxe]]]          iPXE boot firmware, https://ipxe.org/
 - [[[amt]]]           Intel AMT SoL client + tools, https://www.kraxel.org/cgit/amtterm/
 - [[[libre]]]         AdaCore Libre, https://libre.adacore.com/download/

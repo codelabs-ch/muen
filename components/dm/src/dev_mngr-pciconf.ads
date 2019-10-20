@@ -53,9 +53,7 @@ private
    --  Virtual read functions.
    type Vread_Type is
      (Vread_None,
-      Vread_Cap_Pointer,
-      Vread_BAR,
-      Vread_MSI_Cap_ID_Next);
+      Vread_BAR);
 
    --  Virtual write functions.
    type Vwrite_Type is
@@ -116,11 +114,9 @@ private
 
    --  Device state of a managed device.
    type Device_Type is record
-      SID              : Musinfo.SID_Type;
-      MSI_Cap_Offset   : Mudm.Offset_Type;
-      MSI_X_Cap_Offset : Mudm.Offset_Type;
-      BARs             : BAR_Array;
-      Rules            : Rule_Array (1 .. 12);
+      SID   : Musinfo.SID_Type;
+      BARs  : BAR_Array;
+      Rules : Rule_Array (1 .. 12);
    end record;
 
    --  Required to avoid implicit loops. We consider devices with the same SID

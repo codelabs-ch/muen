@@ -1,0 +1,28 @@
+#!/bin/bash
+
+SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TOP=${SCRIPTDIR}/../..
+MOUNT=type=bind,source=${TOP},target=/home/user/muen
+HOST_UID=$(id -u)
+KVM_GID=$(getent group kvm | cut -d: -f3)
+EXPOSE="--expose 5555 --expose 5900"
+NET=host
+
+if [ -z $1 ]; then
+	echo "Please specify image name"
+	exit 1
+fi
+if [ -z ${KVM_GID} ]; then
+	echo "Group 'kvm' not resolvable, exiting"
+	exit 1
+fi
+
+docker run --rm -it \
+	--user=${HOST_UID} \
+	--mount ${MOUNT} \
+	--group-add=${KVM_GID} \
+	--device=/dev/kvm:/dev/kvm \
+	${EXPOSE} \
+	--network ${NET} \
+	-e TERM=xterm-color \
+	$1

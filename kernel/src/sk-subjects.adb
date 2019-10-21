@@ -141,6 +141,10 @@ is
                              Pos   => Constants.RFLAGS_IF_FLAG))
    is
    begin
+      --D @Text Section => impl_inject_interrupt, Priority => 0
+      --D A subject accepts interrupts if RFLAGS.IF is set and the VM
+      --D interruptibility state does not designate a blocking condition, see
+      --D Intel SDM Vol. 3C, "24.4.2 Guest Non-Register State".
       return Descriptors (ID).Data.Intr_State = 0
         and then Bitops.Bit_Test
           (Value => Descriptors (ID).Data.RFLAGS,

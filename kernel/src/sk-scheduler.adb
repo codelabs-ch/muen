@@ -131,7 +131,7 @@ is
       Interrupt_Pending : Boolean;
    begin
       if Subjects.Accepts_Interrupts (ID => Subject_ID) then
-         --D @Text Section => impl_inject_interrupt, Priority => 0
+         --D @Text Section => impl_inject_interrupt, Priority => 10
          --D If a subject is ready to accept interrupts, check if it has a
          --D pending interrupt.
          Subjects_Interrupts.Consume_Interrupt
@@ -140,7 +140,7 @@ is
             Vector  => Vector);
 
          if Interrupt_Pending then
-            --D @Text Section => impl_inject_interrupt, Priority => 0
+            --D @Text Section => impl_inject_interrupt, Priority => 10
             --D Consume the pending interrupt, by writing the corresponding
             --D vector to the VM-entry interruption-information and setting the
             --D valid bit, see Intel SDM Vol. 3C, "26.6 Event Injection".
@@ -151,7 +151,7 @@ is
          end if;
       end if;
 
-      --D @Text Section => impl_inject_interrupt, Priority => 0
+      --D @Text Section => impl_inject_interrupt, Priority => 10
       --D Then, check if the subject has more pending interrupts and activate
       --D Interrupt window if required, see Intel SDM Vol. 3C, "6.7.5
       --D Interrupt-Window Exiting and Virtual-Interrupt Delivery".

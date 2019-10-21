@@ -53,8 +53,6 @@ is
    MSI_Cap_ID   : constant := 16#05#;
    MSI_X_Cap_ID : constant := 16#11#;
 
-   No_Cap : constant := SK.Byte'Last;
-
    Null_Rule : constant Rule_Type
      := (Offset      => Mudm.Offset_Type'Last,
          Read_Mask   => Read_All_Virt,
@@ -123,13 +121,7 @@ is
                     Vread       => Vread_BAR,
                     Write_Perm  => Write_Virt,
                     Write_Width => Access_32,
-                    Vwrite      => Vwrite_BAR),
-         11     => (Offset      => Field_Cap_Pointer,
-                    Read_Mask   => Read_All_Virt,
-                    Vread       => Vread_Cap_Pointer,
-                    Write_Perm  => Write_Denied,
-                    Write_Width => Access_8,
-                    Vwrite      => Vwrite_None));
+                    Vwrite      => Vwrite_BAR));
 
    subtype Read_Idx_Type is SK.Byte range 0 .. 3;
 
@@ -144,11 +136,9 @@ is
          3 => Access_8);
 
    Null_Device : constant Device_Type
-     := (SID              => Musinfo.Null_SID,
-         MSI_Cap_Offset   => No_Cap,
-         MSI_X_Cap_Offset => No_Cap,
-         BARs             => (others => Null_BAR),
-         Rules            => (others => Null_Rule));
+     := (SID   => Musinfo.Null_SID,
+         BARs  => (others => Null_BAR),
+         Rules => (others => Null_Rule));
 
    type Device_Array is array (1 .. 4) of Device_Type;
 
@@ -200,15 +190,6 @@ is
       Operation : Vread_Type;
       Offset    : Mudm.Offset_Type)
       return SK.Word32;
-
-   --  Return virtualized capability pointer value of given device.
-   function Read_Cap_Pointer (Device : Device_Type) return Mudm.Offset_Type;
-
-   --  Return virtualized MSI cap ID and next pointer.
-   function Read_MSI_Cap_ID_Next
-     (Device : Device_Type;
-      Offset : Mudm.Offset_Type)
-      return SK.Word16;
 
    --  Return virtualized BAR value for specified device at given offset.
    function Read_BAR
@@ -293,13 +274,6 @@ is
           (Value => SK.Word64 (Flags),
            Pos   => MSI_Cap_Bit_64);
    begin
-      Append_Rule (Device => Device,
-                   Rule   => (Offset      => Offset,
-                              Read_Mask   => 16#ffff_0000#,
-                              Vread       => Vread_MSI_Cap_ID_Next,
-                              Write_Perm  => Write_Denied,
-                              Write_Width => Access_16,
-                              Vwrite      => Vwrite_None));
       Append_Rule (Device => Device,
                    Rule   => (Offset      => Offset + Field_MSI_Ctrl,
                               Read_Mask   => Read_No_Virt,
@@ -475,45 +449,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Read_Cap_Pointer (Device : Device_Type) return Mudm.Offset_Type
-   is
-      Res : Mudm.Offset_Type := 0;
-   begin
-      if Device.MSI_Cap_Offset /= No_Cap then
-         Res := Device.MSI_Cap_Offset;
-      elsif Device.MSI_X_Cap_Offset /= No_Cap then
-         Res := Device.MSI_X_Cap_Offset;
-      end if;
-
-      return Res;
-   end Read_Cap_Pointer;
-
-   -------------------------------------------------------------------------
-
-   function Read_MSI_Cap_ID_Next
-     (Device : Device_Type;
-      Offset : Mudm.Offset_Type)
-      return SK.Word16
-   is
-      use type SK.Word16;
-
-      Res : SK.Word16 := 0;
-   begin
-      if Offset = Device.MSI_X_Cap_Offset then
-         Res := MSI_X_Cap_ID;
-      else
-         if Device.MSI_X_Cap_Offset /= No_Cap then
-            Res := SK.Word16 (Device.MSI_X_Cap_Offset) * 2 ** 8;
-         end if;
-
-         Res := Res or SK.Word16 (MSI_Cap_ID);
-      end if;
-
-      return Res;
-   end Read_MSI_Cap_ID_Next;
-
-   -------------------------------------------------------------------------
-
    function Vread
      (Device    : Device_Type;
       Operation : Vread_Type;
@@ -532,11 +467,6 @@ is
               (Offset not in BAR_Offset_Type,
                Debug_Ops.Put (Item => " [invalid BAR offset "
                               & SK.Strings.Img (SK.Byte (Offset)) & "]"));
-         when Vread_Cap_Pointer => Res := SK.Word32
-              (Read_Cap_Pointer (Device => Device));
-         when Vread_MSI_Cap_ID_Next => Res := SK.Word32
-              (Read_MSI_Cap_ID_Next (Device => Device,
-                                     Offset => Offset));
          when Vread_None => null;
       end case;
 
@@ -629,11 +559,9 @@ is
    is
       use type SK.Word32;
    begin
-      Device := (SID              => SID,
-                 MSI_Cap_Offset   => No_Cap,
-                 MSI_X_Cap_Offset => No_Cap,
-                 BARs             => (others => Null_BAR),
-                 Rules            => (others => Null_Rule));
+      Device := (SID   => SID,
+                 BARs  => (others => Null_BAR),
+                 Rules => (others => Null_Rule));
 
       --  BARs
 
@@ -691,11 +619,6 @@ is
             if SK.Byte'Mod (Val) = MSI_Cap_ID
               or else SK.Byte'Mod (Val) = MSI_X_Cap_ID
             then
-               if SK.Byte'Mod (Val) = MSI_Cap_ID then
-                  Device.MSI_Cap_Offset   := Offset;
-               else
-                  Device.MSI_X_Cap_Offset := Offset;
-               end if;
                pragma Debug
                  (Debug_Ops.Put_Line
                     (Item => "Pciconf " & SK.Strings.Img (SID)

@@ -34,7 +34,7 @@ try:
 except ImportError:
     nocolor = True
 
-fd_action = action.lower().replace(' ', '_').replace('(', ''). replace(')', '')
+fd_action = action.lower().replace(' ', '_').replace('/', '_').replace('(', '').replace(')', '')
 
 failed = ': FAILED, '
 

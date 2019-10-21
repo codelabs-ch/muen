@@ -1,16 +1,18 @@
 # Muen Development Environment
 #
+# Prerequisites for nested emulation:
+#   - Linux kernel >= 5.2.0 with CR3 fix:
+#     https://patchwork.kernel.org/patch/11165185/
+#
 # Build container:
 #   docker build -t muen-dev-env -f Dockerfile.muen-dev-env .
 #
 # Enter the container:
-#   docker run -it \
-#     -v /tmp/.X11-unix:/tmp/.X11-unix \
-#     -e DISPLAY=unix$DISPLAY muen-dev-env
+#   ./run.muen-dev-env muen-dev-env
 
 # Base image
 ARG distro_name=debian
-ARG distro_version=stretch
+ARG distro_version=buster
 FROM ${distro_name}:${distro_version}
 
 LABEL maintainer "Adrian-Ken Rueegsegger <ken@codelabs.ch>"
@@ -20,7 +22,9 @@ ENV CC ccache gcc
 ENV CXX ccache g++
 
 # Install dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && \
+	DEBIAN_FRONTEND=noninteractive apt-get install -qq -y \
+		--no-install-recommends \
 		acpica-tools \
 		amtterm \
 		bc \
@@ -33,7 +37,6 @@ RUN apt-get update && apt-get install -y \
 		curl \
 		file \
 		flex \
-		g++ \
 		git-core \
 		gnuplot \
 		grub-pc-bin \
@@ -44,7 +47,6 @@ RUN apt-get update && apt-get install -y \
 		libelf-dev \
 		libiberty-dev \
 		libncurses-dev \
-		libsdl1.2-dev \
 		libssl-dev \
 		libxml2-utils \
 		make \
@@ -52,6 +54,8 @@ RUN apt-get update && apt-get install -y \
 		patch \
 		picocom \
 		python \
+		python-colorlog \
+		qemu-system-x86 \
 		rsync \
 		screen \
 		tidy \
@@ -62,7 +66,6 @@ RUN apt-get update && apt-get install -y \
 		xsltproc \
 		xz-utils \
 		zlib1g-dev \
-		--no-install-recommends \
 		&& rm -rf /var/lib/apt/lists/*
 
 # Install AdaCore toolchain
@@ -71,22 +74,6 @@ RUN git clone https://github.com/AdaCore/gnat_community_install_script.git /tmp/
 	&& sh /tmp/gnat_script/install_package.sh /tmp/gnat_installer.bin /opt/gnat \
 	&& rm -rf /tmp/gnat*
 
-# Install Bochs for emulation
-ARG bochs_revison=89265f376
-RUN git clone https://github.com/svn2github/bochs.git /tmp/bochs \
-	&& cd /tmp/bochs/bochs \
-	&& git checkout ${bochs_revison} \
-	&& ./configure \
-		--prefix=/usr/local \
-		--enable-vmx=2 \
-		--enable-smp \
-		--enable-cdrom \
-		--enable-x86-64 \
-		--enable-avx \
-		--with-sdl \
-		--with-term \
-	&& make install \
-	&& rm -rf /tmp/bochs
 
 # amtc tool
 RUN git clone https://github.com/schnoddelbotz/amtc.git /tmp/amtc \
@@ -100,7 +87,6 @@ ENV HOME /home/user
 ENV LANG C.UTF-8
 ENV PATH /opt/gnat/bin:$PATH
 
-# Add development user
 RUN useradd --create-home --home-dir $HOME user -G dialout
 
 WORKDIR $HOME

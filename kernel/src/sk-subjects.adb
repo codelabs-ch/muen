@@ -217,6 +217,9 @@ is
         Descriptors (ID).Data.RIP'Old + Word64
        (Descriptors (ID).Data.Instruction_Len)
    is
+      --D @Text Section => hypercall_handling, Priority => 10
+      --D The RIP of the subject is incremented by the value of the current
+      --D instruction length.
       Next_RIP : constant Word64 := Descriptors (ID).Data.RIP +
                    Word64 (Descriptors (ID).Data.Instruction_Len);
    begin

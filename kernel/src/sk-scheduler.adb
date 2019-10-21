@@ -700,7 +700,7 @@ is
                       (Current_Subject => Current_Subject,
                        Event_Nr        => Unchecked_Event_Nr));
 
-      --D @Text Section => hypercall_handling, Priority => 20
+      --D @Text Section => hypercall_handling, Priority => 0
       --D After handling the source event, the instruction pointer of the
       --D current subject is incremented so execution resumes after the
       --D \texttt{vmcall} instruction.

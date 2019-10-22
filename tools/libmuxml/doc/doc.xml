@@ -12,7 +12,7 @@
 
   \lstset{
   backgroundcolor=\color{white},
-  basicstyle=\footnotesize\ttfamily,
+  basicstyle=\scriptsize\ttfamily,
   breakatwhitespace=false,
   breaklines=true,
   captionpos=b,
@@ -48,11 +48,11 @@
  <section id="introduction" label="Introduction" priority="0">
   <text priority="0">
    The Muen system policy is a description of a component-based system running
-   on top of the Muen Separation Kernel. It defines what hardware resources are
-   present, how many active components (called subjects) the system is composed
-   of, how they interact and which system resources they are allowed to access.
-   The contents a Muen system policy is composed of is outlined in section
-   \ref{intro-policy-content} of this document.
+   on top of the Muen Separation Kernel (SK). It defines what hardware resources
+   are present, how many active components (called subjects) the system is
+   composed of, how they interact and which system resources they are allowed to
+   access.  The contents a Muen system policy is composed of is outlined in
+   section \ref{intro-policy-content} of this document.
 
    A system integrator specifies and configures such a component-based system at
    integration time in XML format. The Muen toolchain transforms the system
@@ -62,17 +62,17 @@
    section \ref{intro-policy-format}, an overview of the Muen toolchain is
    presented in section \ref{intro-integration}.
 
-   The Muen Separation Kernel (SK) is a policy enforcer, in the sense that it
-   has no knowledge about the actual content of the generated data structures.
-   The most important and final step in the integration of a Muen system is
-   therefore the actual generation of the data structures which guarantee
-   subject isolation and the composition of the final system image. This step is
-   performed by a trusted system composer called (static) $\tau$0.  This is
-   explained in section \ref{tau0-concept}.
+   The Muen SK is a policy enforcer, in the sense that it has no knowledge about
+   the actual content of the generated data structures.  The most important and
+   final step in the integration of a Muen system is therefore the actual
+   generation of the data structures which guarantee subject isolation and the
+   composition of the final system image. This step is performed by a trusted
+   system composer called (static) $\tau$0.  This is explained in section
+   \ref{tau0-concept}.
 
-   Section \ref{schema} then specifies the XML-schema for the system source
-   format of the Muen system policy. Explanations and examples illustrate how to
-   configure a component-based system with the Muen SK.
+   Section \ref{schema} specifies the XML-schema and structure of the system
+   source format of the Muen system policy. Explanations and examples illustrate
+   how to configure a component-based system with the Muen.
   </text>
 
   <section id="intro-policy-content" label="Policy Content" priority="0">
@@ -97,7 +97,7 @@
     all aspects of the system are fixed at integration time the policy is very
     well suited for automated and manual validation prior to system execution.
 
-    The details of each property is explained with examples in the XSD-schema of
+    The details of each property is outlined with examples in the XSD-schema of
     the format source policy in section \ref{schema}.
    </text>
   </section>
@@ -113,32 +113,34 @@
     \item Format B
     \end{itemize}
 
-    The motivation to have several policy formats is to provide abstractions and a
-    compact way for users to specify a system while simultaneously facilitate
-    reduced complexity of tools operating on the policy.
+    The motivation to have several policy formats is to provide abstractions and
+    a compact way for users to specify a system in format source while
+    simultaneously facilitate reduced complexity of tools operating on the
+    policy formats A and B.
 
     The implementation of such tools is simplified by the absence of
-    higher-level abstractions which would make the extraction of input data more
-    involved. As an example, the tool responsible for page table generation can
-    directly access all virtual memory mappings of a subject and must not
-    concern itself with channels. The channel abstraction has already been
-    broken down into the corresponding memory elements during the policy
-    compilation step of the build process.
+    higher-level abstractions in the latter formats which would make the
+    extraction of input data more involved. As an example, the tool responsible
+    for page table generation can directly access all virtual memory mappings of
+    a subject and must not concern itself with channels. The channel abstraction
+    has already been broken down into the corresponding memory elements during
+    the policy compilation step of the build process.
 
-    The following sections give more detail about a specfic format.
+    The following sections give more detail about each policy format.
 
     \pagebreak
     \begin{warning}
     Only the policy in format source is specified in this document, as the other
-    formats are considered \emph{internal}. While it is possible to specify a
-    system policy in format A or B, it is not recommended.
+    formats are considered \emph{internal} and might change unannounced. While
+    it is possible to specify a system policy in format A or B, it is therefore
+    not recommended.
     \end{warning}
    </text>
 
    <section id="intro-policy-format-src" label="Source Format" priority="0">
     <text priority="0">
      The user-specified policy is written in the \emph{source format}.
-     Constructs such as channels or events provide abstractions to simplify the
+     Constructs such as channels provide abstractions to simplify the
      specification of component-based systems. Many XML elements and attributes
      are optional and will be filled in with default values during later steps
      of the policy compilation process.
@@ -146,8 +148,7 @@
      Kernel and $\tau0$ resources are not part of the source format since they are also
      automatically added by the policy expansion step.
 
-     Additionally the use of configuration values enables easy parametrization of
-     the system policy.
+     The use of configuration values enables parametrization of the system policy.
 
      The policy in source format in specified in section \ref{schema}.
     </text>
@@ -159,7 +160,8 @@
      resolved and abstractions such as channels have been broken down into their
      underlying elements. For example, a channel is expanded to a physical
      memory region and the corresponding writer and reader subject mappings with
-     the appropriate access rights.
+     the appropriate access rights. Optional associated events have been
+     automatically created and correctly linked with the designated subjects.
 
      In this format all implicit elements, such as for example automatically
      generated page table memory regions, are specified. The kernel and $\tau$0
@@ -211,8 +213,10 @@
     \cite{muen:component_specification} can be used by components to generate
     source specifications (e.g.  in SPARK/Ada) from the component description.
     Furthermore, a component might expand its own component description with
-    information extracted from system information. The expanded component
-    description is then merged with the system policy for further processing.
+    information extracted from system information, or it might use the
+    Mucbinsplit tool (TODO) to fill in the auto-generated memory regions
+    provided by its binary after compilation. The expanded component description
+    is then merged with the system policy for further processing.
 
     After all component descriptions have been merged into the system policy, it
     is expanded by the expander tool (see TODO). This step transforms the system
@@ -222,17 +226,18 @@
     The allocater tool (see TODO) then loops over all physical memory regions
     which have no physical address assigned and allocates one from the usable
     pool. The usable pool information is extracted from the allocatable memory
-    block list (\ref{system_src.xsd:memoryBlockType}) in the system policy.
+    block list (\ref{system_src.xsd:physicalMemoryType}) in the system policy.
     After that, the policy is transformed to format B.
 
     The policy is now checked for correctness by the validator tool (see TODO).
-    If a misconfiguration is found, the user is informed and the build aborts. The checks
-    performed by the validator tool are listed in section \ref{validation}. If
-    no error is found, the system policy is now ready to be used for two things:
+    If a misconfiguration is found, the user is informed and the build aborts.
+    The checks performed by the validator tool are listed in section
+    \ref{validation}. If no error is found, the system policy is now ready to be
+    used for two things:
 
     \begin{itemize}
     \item Create a command stream for $\tau0$
-    \item Generate kernel specifications (.ads)
+    \item Generate kernel specifications (in SPARK/Ada)
     \end{itemize}
 
     The kernel source specifications contain tables and constants which are
@@ -242,7 +247,9 @@
     provide.
 
     The command stream generator (ref:TODO) generates instructions in XML format
-    for the $\tau0$ system composer explained in the following section.
+    for the $\tau0$ system composer explained in the following section. The
+    other tools of the Muen toolchain referenced in this section are described
+    in detail in section \ref{tools} afterwards.
    </text>
 
    <section id="tau0-concept" label="$\tau0$ Concept" priority="0">
@@ -256,14 +263,15 @@
      increase the dynamic of a component based system. The ultimate goal is to
      have a trusted $\tau0$ subject with extra privilege to interact with the
      Muen SK over the special $\tau0$ interface API. This would allow $\tau0$ to
-     change system state at runtime.
+     change certain well-defined aspects of the system state at runtime.
 
      Since it must be guaranteed that a dynamic system is as secure as the
      static one, $\tau0$ must be developed with the same utter care as the
      kernel itself, meaning it must be written in SPARK/Ada and security
-     properties which provide hard isolation must be formally proven.
+     properties which provide hard isolation must be formally proven. This is an
+     ongoing process.
 
-     Two $\tau0$ scenarios are relevant:
+     The two $\tau0$ scenarios are therefore:
      \begin{itemize}
      \item static
      \item dynamic
@@ -275,11 +283,15 @@
       The static variant is the one which is currently implemented. $\tau0$ runs
       at integration time and assembles the system image by constructing the
       data structures guaranteeing isolation and merging in the build artifacts
-      of the Muen toolchain.
+      of the other Muen tools, like untrusted ACPI data structures for a Linux
+      VM generated by Mugenacpi (TODO).
 
       Static $\tau0$ fulfills its task by creating the system image in memory
       while processing the commands from the command stream. The following
-      listing shows an example command stream: (TODO)
+      listing shows an example command stream:
+
+      \lstinputlisting[caption=$\tau0$ Command
+      Stream,label={lst:cmdstream},language=XML,linerange=1-34]{../../../pack/obj/policy_b_cmds.xml}
 
       $\tau0$ is written in SPARK/Ada and it applies memory typization to proof
       formal aspects of the system. Command processing starts from a well-known
@@ -295,10 +307,10 @@
     <section id="tau0-dynamic" label="Dynamic" priority="0">
      <text priority="0">
       While the system image is composed by the static variant of $\tau0$, the
-      goal is to run basically the same code as $\tau0$ subject at runtime. Note
-      that this is not yet implemented but planned as a way forward to achieve
-      more dynamic systems while having the same assurance about security and
-      safety properties.
+      goal is to run the same code as $\tau0$ subject at runtime. Note that this
+      is not yet implemented but planned as a way forward to achieve more
+      dynamic systems while having the same assurance about security and safety
+      properties.
 
       The dynamic $\tau0$ running as subject would reconstruct the system state
       at integration time and continue to process commands from there. Commands
@@ -325,16 +337,17 @@
 
   <section id="validation" label="Policy Validation" priority="0">
    <text priority="0">
-    As explained in section \ref{intro-integration}, the Muen system policy is
-    transformed by various tools. Before a tool performs actions on the policy,
-    it checks all required preconditions via \emph{validator} procedures. For
-    example a tool accessing physical devices via subject logical device
-    references will execute a validator checking such references for validity.
+    Before a tool outlined in the previous section \ref{tools} performs actions
+    on the policy, it checks all required preconditions via \emph{validator}
+    procedures. For example a tool accessing physical devices via subject
+    logical device references will execute a validator checking such references
+    for validity.
 
-    Before the policy is used to generate system structures like page tables and
-    the final system image, the allocated and expanded policy is again validated
-    by executing a comprehensive set of checks. This is done by the
-    \texttt{mucfgvalidate} tool.
+    Before the policy is used to generate system structures like page tables,
+    the command stream for $\tau0$, and ultimately the system image, the
+    allocated and expanded policy in format B is again validated by executing a
+    comprehensive set of checks. This is done by the \texttt{mucfgvalidate}
+    tool.
 
     The following sections list the various checks executed by
     \texttt{mucfgvalidate} and the other Muen build tools in the toolchain.

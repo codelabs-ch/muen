@@ -1,0 +1,74 @@
+\begin{tikzpicture}[minimum height=0.6cm]
+	\node (hws) [apribox, minimum width=2.2cm] {Hardware};
+	\node (pls) [apribox, below=1.5mm of hws, minimum width=2.2cm] {Platform};
+	\node (spo) [apribox, below=1.5mm of pls, minimum width=2.2cm] {System};
+
+	\node (mrg) [bluebox, below=of spo] {Merger};
+
+	\node (src) [apribox, right=of mrg] {Source Format};
+
+	\node (joi) [bluebox, above=of src] {Joiner};
+	\node (cmp) [apribox, above=of joi] {Components};
+
+	\node (spg) [bluebox, right=of cmp] {Specgen};
+	\node (cm2) [apribox, right=of spg] {Components};
+
+	\node (exp) [bluebox, right=of src] {Expander};
+	\node (fma) [apribox, right=of exp] {Format A};
+	\node (alo) [bluebox, right=of fma] {Allocator};
+	\node (fmb) [apribox, below=of alo] {Format B};
+	\node (val) [bluebox, left=of fmb]  {Validator};
+	\node (sge) [bluebox, left=of val]  {Structure Generators};
+	\node (cmd) [bluebox, below=of val] {Cmdstream Generator};
+
+	\node (zpa) [graybox, left=of sge, minimum width=2.2cm] {Zero Page};
+	\node (acp) [graybox, below=1.5mm of zpa, minimum width=2.2cm] {ACPI Tables};
+	\node (msc) [graybox, below=1.5mm of acp, minimum width=2.2cm] {...};
+	\node (spk) [graybox, below=of sge] {Source Specs};
+
+	\node (cms) [graybox, below=1.5mm of cmd] {Command Stream};
+
+	\node (knl) [apribox, below=of spk] {Kernel};
+	\node (bin) [apribox, below=of msc] {Binaries};
+
+	\node (has) [bluebox, below=of knl] {Hasher};
+
+	\node (sin) [bluebox, below=of has] {Sinfo};
+
+	\node (tau) [bluebox, below=of sin] {$\tau0$};
+
+	\node (img) [apribox, below=of tau] {System Image};
+
+	\draw[arrow] (spo) -- (mrg);
+
+	\draw[arrow] (cmp) -- (joi);
+	\draw[arrow] (joi) -- (src);
+
+	\draw[arrow] (spg) -- (cmp);
+	\draw[arrow] (cm2) -- (spg);
+
+	\draw[arrow] (mrg) -- (src);
+	\draw[arrow] (src) -- (exp);
+	\draw[arrow] (exp) -- (fma);
+	\draw[arrow] (fma) -- (alo);
+	\draw[arrow] (alo) -- (fmb);
+	\draw[arrow] (fmb) -- (val);
+	\draw[arrow] (val) -- (sge);
+	\draw[arrow] (val) -- (cmd);
+	\draw[arrow] (cms) -- (tau);
+
+	\draw[arrow] (sge) -- (zpa);
+	\draw[arrow] (sge) -- (spk);
+
+	\draw[arrow] (spk) -- (knl);
+
+	\draw[arrow] (knl) -- (bin);
+	\draw[arrow] (msc) -- (bin);
+
+	\draw[arrow] (bin) -- (has);
+
+	\draw[arrow] (has) -- (sin);
+	\draw[arrow] (sin) -- (tau);
+
+	\draw[arrow] (tau) -- (img);
+\end{tikzpicture}

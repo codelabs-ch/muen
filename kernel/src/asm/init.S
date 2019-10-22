@@ -73,7 +73,8 @@ _start:
 	movl $IA32_VMX_BASIC, %ecx
 	rdmsr
 
-	// VMXON
+	// Set VMCS revision identifier in VMXON regions, see Intel SDM Vol. 3C,
+	// "24.11.5 VMXON Region".
 
 	movl $CPU_COUNT, %ecx
 	movl $VMXON_ADDRESS, %edx

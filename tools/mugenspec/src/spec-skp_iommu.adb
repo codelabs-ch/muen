@@ -267,9 +267,10 @@ is
 
       for I in 1 .. Count loop
          declare
-            --  Intel VT-d spec, 10.4.8.1
+            --  Intel VT-d Specification, "10.4.8.1 IOTLB Invalidate Register"
             IOTLB_Invalidate_Size_Bits : constant := 64;
-            --  Intel VT-d spec, 10.4.14
+            --  Intel VT-d Specification, "10.4.14 Fault Recording
+            --  Registers [n]"
             Fault_Recording_Size_Bits  : constant := 128;
 
             Node : constant DOM.Core.Node
@@ -431,8 +432,8 @@ is
          Pattern  => "__iommu_device_range__",
          Content  => "1 .." & IOMMU_Count'Img);
 
-      --  Shifted, 4KB aligned IR table address (see Intel VT-d specification,
-      --  section 10.4.29).
+      --  Shifted, 4KB aligned IR table address (see Intel VT-d Specification,
+      --  "10.4.30 Interrupt Remapping Table Address Register").
 
       IRT_Phys_Addr := IRT_Phys_Addr / 2 ** 12;
 

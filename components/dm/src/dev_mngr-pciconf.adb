@@ -779,34 +779,31 @@ is
          pragma Debug (Debug_Ops.Put (Item => "Pciconf " & SK.Strings.Img (SID)
                                       & ": Write"));
 
-         if Rule /= Null_Rule then
-            case Rule.Write_Perm is
-               when Write_Denied => null;
-               when Write_Direct =>
-                  case Rule.Write_Width is
-                     when Access_8  => Addrspace.Write_Byte
-                          (SID    => SID,
-                           Offset => Offset,
-                           Value  => SK.Byte'Mod (Value));
-                     when Access_16 => Addrspace.Write_Word16
-                          (SID    => SID,
-                           Offset => Offset,
-                           Value  => SK.Word16'Mod (Value));
-                     when Access_32 => Addrspace.Write_Word32
-                          (SID    => SID,
-                           Offset => Offset,
-                           Value  => SK.Word32'Mod (Value));
-                  end case;
-               when Write_Virt =>
-                  Vwrite (Device    => Device,
-                          Operation => Rule.Vwrite,
-                          Offset    => Offset,
-                          Value     => SK.Word32'Mod (Value));
-                  pragma Debug (Debug_Ops.Put (Item => " (ALLVIRT)"));
-            end case;
-         end if;
-         pragma Debug (Rule = Null_Rule
-                       or else Rule.Write_Perm = Write_Denied,
+         case Rule.Write_Perm is
+            when Write_Denied => null;
+            when Write_Direct =>
+               case Rule.Write_Width is
+                  when Access_8  => Addrspace.Write_Byte
+                       (SID    => SID,
+                        Offset => Offset,
+                        Value  => SK.Byte'Mod (Value));
+                  when Access_16 => Addrspace.Write_Word16
+                       (SID    => SID,
+                        Offset => Offset,
+                        Value  => SK.Word16'Mod (Value));
+                  when Access_32 => Addrspace.Write_Word32
+                       (SID    => SID,
+                        Offset => Offset,
+                        Value  => SK.Word32'Mod (Value));
+               end case;
+            when Write_Virt =>
+               Vwrite (Device    => Device,
+                       Operation => Rule.Vwrite,
+                       Offset    => Offset,
+                       Value     => SK.Word32'Mod (Value));
+               pragma Debug (Debug_Ops.Put (Item => " (ALLVIRT)"));
+         end case;
+         pragma Debug (Rule.Write_Perm = Write_Denied,
                        Debug_Ops.Put (Item => " (DENIED)"));
          pragma Debug (Debug_Ops.Put_Line
                        (Item => " @ " & SK.Strings.Img (SK.Byte (Offset))

@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <system>
  <config>
-  <boolean name="iommu_enabled" value="false"/>
   <boolean name="dbgserver_sink_pcspkr" value="false"/>
   <boolean name="dbgserver_sink_serial" value="true"/>
   <boolean name="dbgserver_sink_shmem" value="false"/>

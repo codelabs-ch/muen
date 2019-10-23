@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <system>
  <config>
-  <boolean name="iommu_enabled" value="true"/>
   <integer name="foobar" value="42"/>
   <string name="foo" value="bar"/>
  </config>

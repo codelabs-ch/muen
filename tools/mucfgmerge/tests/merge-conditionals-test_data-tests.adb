@@ -112,7 +112,6 @@ package body Merge.Conditionals.Test_Data.Tests is
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/subjects/subject[@name='lnx']/memory/if"
-         & "[@variable='iommu_enabled']",
          Name  => "value",
          Value => "false");
 

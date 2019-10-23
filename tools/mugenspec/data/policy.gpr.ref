@@ -2,7 +2,6 @@ abstract project Policy is
 
    type Boolean is ("true", "false");
 
-   Iommu_Enabled : Boolean := "true";
    Foobar := "42";
    Foo := "bar";
 

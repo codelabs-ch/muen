@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <system>
  <config>
-  <boolean name="iommu_enabled" value="true"/>
   <string name="system" value="test_system.xml"/>
  </config>
  <hardware>

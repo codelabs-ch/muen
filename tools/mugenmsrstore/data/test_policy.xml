@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <system>
  <config>
-  <boolean name="iommu_enabled" value="false"/>
  </config>
 
  <hardware>

@@ -16,7 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Mutools.System_Config;
 with Mucfgcheck.Memory;
 with Mucfgcheck.Hardware;
 
@@ -37,21 +36,13 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Register_All (Data : Muxml.XML_Data_Type)
+   procedure Register_All
    is
    begin
       Check_Procs.Register
         (Process => Mucfgcheck.Memory.Physical_Memory_Name_Uniqueness'Access);
-
-      --  IOMMU config.
-
-      if Mutools.System_Config.Get_Value
-        (Data => Data,
-         Name => "iommu_enabled")
-      then
-         Check_Procs.Register
-           (Process => Mucfgcheck.Hardware.IOMMU_Cap_Agaw'Access);
-      end if;
+      Check_Procs.Register
+        (Process => Mucfgcheck.Hardware.IOMMU_Cap_Agaw'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

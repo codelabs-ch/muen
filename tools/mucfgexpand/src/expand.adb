@@ -67,7 +67,7 @@ is
       Stage2.Pre_Checks.Run (Data => Policy);
       Stage2.Expansion.Run (Data => Policy);
 
-      Post_Checks.Register_All (Data => Policy);
+      Post_Checks.Register_All;
       Mulog.Log (Msg => "Registered post-checks" & Post_Checks.Get_Count'Img);
       Post_Checks.Run (Data => Policy);
 

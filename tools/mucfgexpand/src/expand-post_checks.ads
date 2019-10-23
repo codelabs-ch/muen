@@ -23,7 +23,7 @@ package Expand.Post_Checks
 is
 
    --  Register post-checks.
-   procedure Register_All (Data : Muxml.XML_Data_Type);
+   procedure Register_All;
 
    --  Run registered post-checks.
    procedure Run (Data : Muxml.XML_Data_Type);

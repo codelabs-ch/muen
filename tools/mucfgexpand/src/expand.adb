@@ -60,7 +60,7 @@ is
       Stage2.Pre_Checks.Register_All;
       Mulog.Log (Msg => "Registered stage 2 pre-checks"
                  & Stage2.Pre_Checks.Get_Count'Img);
-      Stage2.Expansion.Register_All (Data => Policy);
+      Stage2.Expansion.Register_All;
       Mulog.Log (Msg => "Registered stage 2 expanders"
                  & Stage2.Expansion.Get_Count'Img);
       Mulog.Log (Msg => "STAGE 2 processing");

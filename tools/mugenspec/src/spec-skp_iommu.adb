@@ -477,22 +477,4 @@ is
          Filename => Output_Dir & "/skp-iommu.adb");
    end Write;
 
-   -------------------------------------------------------------------------
-
-   procedure Write_Empty (Output_Dir : String)
-   is
-      Tmpl : Mutools.Templates.Template_Type;
-   begin
-      Tmpl := Mutools.Templates.Create
-        (Content => String_Templates.skp_iommu_empty_ads);
-      Mutools.Templates.Write
-        (Template => Tmpl,
-         Filename => Output_Dir & "/skp-iommu.ads");
-      Tmpl := Mutools.Templates.Create
-        (Content => String_Templates.skp_iommu_empty_adb);
-      Mutools.Templates.Write
-        (Template => Tmpl,
-         Filename => Output_Dir & "/skp-iommu.adb");
-   end Write_Empty;
-
 end Spec.Skp_IOMMU;

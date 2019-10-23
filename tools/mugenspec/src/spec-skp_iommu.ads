@@ -26,7 +26,4 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);
 
-   --  Write empty IOMMU files. Required for non-IOMMU mode (Bochs).
-   procedure Write_Empty (Output_Dir : String);
-
 end Spec.Skp_IOMMU;

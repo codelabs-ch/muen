@@ -16,8 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Muxml;
 with Mulog;
-with Mutools.System_Config;
 with Mucfgcheck.Config;
 with Mucfgcheck.Memory;
 with Mucfgcheck.MSR;
@@ -36,7 +36,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Register_All (Policy : Muxml.XML_Data_Type)
+   procedure Register_All
    is
       use Mucfgcheck;
    begin
@@ -266,46 +266,38 @@ is
         (Process => Hardware.System_Board_Presence'Access);
       XML_Processors.Register
         (Process => Hardware.IOAPIC_Presence'Access);
-
-      --  IOMMU config.
-
-      if Mutools.System_Config.Get_Value
-        (Data => Policy,
-         Name => "iommu_enabled")
-      then
          XML_Processors.Register
-           (Process => Memory.VTd_Root_Region_Presence'Access);
-         XML_Processors.Register
-           (Process => Memory.VTd_Root_Region_Size'Access);
-         XML_Processors.Register
-           (Process => Memory.VTd_Context_Region_Size'Access);
-         XML_Processors.Register
-           (Process => Memory.VTd_IRT_Region_Presence'Access);
-         XML_Processors.Register
-           (Process => Hardware.IOMMU_Presence'Access);
-         XML_Processors.Register
-           (Process => Hardware.IOMMU_Cap_Agaw'Access);
-         XML_Processors.Register
-           (Process => Hardware.IOMMU_Cap_Register_Offsets'Access);
-         XML_Processors.Register
-           (Process => Device.IOMMU_Region_Size'Access);
-         XML_Processors.Register
-           (Process => Kernel.IOMMU_Consecutiveness'Access);
-         XML_Processors.Register
-           (Process => Device_Domains.Device_Reference_Uniqueness'Access);
-         XML_Processors.Register
-           (Process => Device_Domains.Domain_Memory_Overlap'Access);
-         XML_Processors.Register
-           (Process => Device_Domains.Memory_Reference_Uniqueness'Access);
-         XML_Processors.Register
-           (Process => Device_Domains.Domain_Memory_Type'Access);
-         XML_Processors.Register
-           (Process => Device_Domains.PCI_Device_References'Access);
-         XML_Processors.Register
-           (Process => Device_Domains.Domain_PT_Region_Presence'Access);
-         XML_Processors.Register
-           (Process => Device_Domains.PCI_Bus_Context_Region_Presence'Access);
-      end if;
+        (Process => Memory.VTd_Root_Region_Presence'Access);
+      XML_Processors.Register
+        (Process => Memory.VTd_Root_Region_Size'Access);
+      XML_Processors.Register
+        (Process => Memory.VTd_Context_Region_Size'Access);
+      XML_Processors.Register
+        (Process => Memory.VTd_IRT_Region_Presence'Access);
+      XML_Processors.Register
+        (Process => Hardware.IOMMU_Presence'Access);
+      XML_Processors.Register
+        (Process => Hardware.IOMMU_Cap_Agaw'Access);
+      XML_Processors.Register
+        (Process => Hardware.IOMMU_Cap_Register_Offsets'Access);
+      XML_Processors.Register
+        (Process => Device.IOMMU_Region_Size'Access);
+      XML_Processors.Register
+        (Process => Kernel.IOMMU_Consecutiveness'Access);
+      XML_Processors.Register
+        (Process => Device_Domains.Device_Reference_Uniqueness'Access);
+      XML_Processors.Register
+        (Process => Device_Domains.Domain_Memory_Overlap'Access);
+      XML_Processors.Register
+        (Process => Device_Domains.Memory_Reference_Uniqueness'Access);
+      XML_Processors.Register
+        (Process => Device_Domains.Domain_Memory_Type'Access);
+      XML_Processors.Register
+        (Process => Device_Domains.PCI_Device_References'Access);
+      XML_Processors.Register
+        (Process => Device_Domains.Domain_PT_Region_Presence'Access);
+      XML_Processors.Register
+        (Process => Device_Domains.PCI_Bus_Context_Region_Presence'Access);
    end Register_All;
 
    -------------------------------------------------------------------------
@@ -319,7 +311,7 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => Policy);
-      Register_All (Policy => Data);
+      Register_All;
 
       Mulog.Log
         (Msg => "Registered validators" & XML_Processors.Get_Count'Img);

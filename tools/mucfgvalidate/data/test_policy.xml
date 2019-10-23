@@ -1,9 +1,6 @@
 <?xml version="1.0"?>
 <system>
- <config>
-  <boolean name="iommu_enabled" value="false"/>
- </config>
-
+ <config/>
  <hardware>
   <processor cpuCores="1" speed="2900" vmxTimerRate="5">
    <cpu apicId="0" cpuId="0"/>
@@ -19,6 +16,15 @@
    <device name="vga">
     <memory name="buffer" physicalAddress="16#000b_8000#" size="16#4000#" caching="WC"/>
     <ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
+   </device>
+   <device name="iommu_1">
+    <memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
+    <capabilities>
+     <capability name="iommu"/>
+     <capability name="agaw">39</capability>
+     <capability name="fr_offset">544</capability>
+     <capability name="iotlb_invalidate_offset">248</capability>
+    </capabilities>
    </device>
    <device name="system_board">
     <ioPort end="16#0cf9#" name="ioport1" start="16#0cf9#"/>
@@ -74,6 +80,12 @@
   <memory alignment="16#1000#" name="linux|fpu" size="16#1000#" physicalAddress="16#0080_0000#" caching="WB" type="kernel_fpu"/>
   <memory alignment="16#1000#" name="scheduling_group_info_1" size="16#1000#" physicalAddress="16#2151_8000#" caching="WB" type="subject_scheduling_info"/>
   <memory alignment="16#1000#" name="crash_audit" size="16#1000#" physicalAddress="16#ab00_0000#" caching="UC" type="subject_crash_audit"/>
+  <memory alignment="16#1000#" caching="WB" name="vtd_root" physicalAddress="16#001f_5000#" size="16#1000#" type="system_vtd_root">
+   <file filename="vtd_root" offset="none"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="vtd_ir" physicalAddress="16#001f_f000#" size="16#1000#" type="system_vtd_ir">
+   <file filename="vtd_ir" offset="none"/>
+  </memory>
  </memory>
 
  <deviceDomains/>

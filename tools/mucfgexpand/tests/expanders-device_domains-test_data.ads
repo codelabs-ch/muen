@@ -38,7 +38,4 @@ package Expanders.Device_Domains.Test_Data is
    procedure Prepare_Dev_Domain_Without_Mem
      (Data : in out Muxml.XML_Data_Type);
 
-   --  Remove device domains and disable IOMMU support.
-   procedure Disable_IOMMU (Data : in out Muxml.XML_Data_Type);
-
 end Expanders.Device_Domains.Test_Data;

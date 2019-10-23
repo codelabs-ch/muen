@@ -47,18 +47,6 @@ package body Expanders.Device_Domains.Test_Data is
 
    -------------------------------------------------------------------------
 
-   procedure Disable_IOMMU (Data : in out Muxml.XML_Data_Type)
-   is
-   begin
-      Remove_Device_Domains (Data);
-      Mutools.System_Config.Set_Value
-        (Data  => Data,
-         Name  => "iommu_enabled",
-         Value => False);
-   end Disable_IOMMU;
-
-   -------------------------------------------------------------------------
-
    procedure Prepare_Dev_Domain_Without_Mem (Data : in out Muxml.XML_Data_Type)
    is
    begin

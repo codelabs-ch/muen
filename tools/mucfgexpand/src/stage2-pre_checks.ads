@@ -23,7 +23,7 @@ package Stage2.Pre_Checks
 is
 
    --  Register stage 2 pre-checks.
-   procedure Register_All (Data : Muxml.XML_Data_Type);
+   procedure Register_All;
 
    --  Run registered pre-checks.
    procedure Run (Data : Muxml.XML_Data_Type);

@@ -33,7 +33,6 @@ with Mulog;
 with Muxml.Utils;
 with Mutools.PCI;
 with Mutools.Files;
-with Mutools.System_Config;
 with Mutools.Utils;
 with Mutools.XML_Utils;
 with Mutools.Constants;
@@ -59,14 +58,6 @@ is
       Policy     : Muxml.XML_Data_Type)
    is
    begin
-      if not Mutools.System_Config.Get_Value
-        (Data => Policy,
-         Name => "iommu_enabled")
-      then
-         Mulog.Log (Msg => "IOMMU not enabled, exiting");
-         return;
-      end if;
-
       Write_Root_Table
         (Output_Dir => Output_Dir,
          Policy     => Policy);

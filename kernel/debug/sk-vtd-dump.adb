@@ -72,8 +72,8 @@ is
       use type Skp.IOMMU.Bit_Type;
       use type Skp.IOMMU.Bit_52_Type;
 
-      --  Interrupt translation fault reason range, see Intel VT-d spec,
-      --  section 7.1.
+      --  Interrupt translation fault reason range, see Intel VT-d
+      --  Specification, "5.1.4.1 Interrupt Remapping Fault Conditions".
       subtype IR_Fault_Range is SK.Byte range 16#20# .. 16#26#;
    begin
       Locks.Acquire;
@@ -88,7 +88,8 @@ is
 
             --  FI field is undefined for interrupt-remapping fault condition
             --  of blocked Compatibility mode interrupt (fault reason 16#25#,
-            --  see Intel VT-d spec, section 10.4.14).
+            --  see Intel VT-d Specification, "10.4.14 Fault Recording
+            --  Registers [n]").
 
             if Fault.FR /= 16#25# then
                KC.Put_String (Item => ", IRT index: "

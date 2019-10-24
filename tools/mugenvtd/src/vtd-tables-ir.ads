@@ -25,8 +25,8 @@ generic
 package VTd.Tables.IR
 is
 
-   --  Interrupt Remapping Table, see Intel VT-d specification, section
-   --  5.3.2.1.
+   --  Interrupt Remapping Table, see Intel VT-d Specification, "5.1 Interrupt
+   --  Remapping".
    type IR_Table_Type is private;
 
    --  Add an entry with given index and values to Interrupt Remapping Table.
@@ -54,8 +54,8 @@ private
    --  request.
    SID_SQ_Verification : constant Bit_Array (1 .. 2) := (1 => 1, 2 => 0);
 
-   --  Interrupt Remapping Table Entry (IRTE), see Intel VT-d specification,
-   --  section 9.10.
+   --  Interrupt Remapping Table Entry (IRTE), see Intel VT-d Specification,
+   --  "9.10 Interrupt Remapping Table Entry (IRTE) for Remapped Interrupts".
    type IR_Entry_Type is record
       Present    : Bit_Type               := 0;
       FPD        : Bit_Type               := 0;

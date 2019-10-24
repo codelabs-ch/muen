@@ -141,7 +141,8 @@ is
    --  Set command register fields based on given status register values.
    --  The current state of the global command register must be reconstructed
    --  from the global status register since command register values are
-   --  *undefined* when read, see Intel VT-d spec revision 2.4, section 10.4.4.
+   --  *undefined* when read, see Intel VT-d Specification, "10.4.4 Global
+   --  Command Register".
    procedure Set_Command_From_Status
      (Command : out Reg_Global_Command_Type;
       Status  :     Reg_Global_Status_Type)

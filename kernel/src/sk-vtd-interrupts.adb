@@ -24,7 +24,7 @@ package body SK.VTd.Interrupts
 is
 
    --  Position of the destination ID in an I/O APIC RTE for VT-d IR. See Intel
-   --  VT-d specification, section 5.5.1.
+   --  VT-d Specification, "5.1.5.1 I/OxAPIC Programming".
 
    Dest_ID_Shiftpos : constant Natural := 49;
 

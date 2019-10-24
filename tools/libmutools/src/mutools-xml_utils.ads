@@ -216,7 +216,7 @@ is
    --  Return supported paging-levels of IOMMUs. Since all IOMMUs must have the
    --  same AGAW capability, the paging-levels of the first IOMMU is returned.
    --  For an explanation of the IOMMU AGAW support and levels of page-table
-   --  walks see the Intel VT-d specification, section 10.4.2, figure 10-45.
+   --  walks see the Intel VT-d Specification, "10.4.2 Capability Register".
    function Get_IOMMU_Paging_Levels
      (Data : Muxml.XML_Data_Type)
       return IOMMU_Paging_Level;

@@ -56,23 +56,27 @@
    are present, how many active components (called subjects) the system is
    composed of, how they interact and which system resources they are allowed to
    access.  The contents a Muen system policy is composed of is outlined in
-   section \ref{intro-policy-content} of this document.
+   section \ref{policy} of this document.
 
    A system integrator specifies and configures such a component-based system at
    integration time in XML format. The Muen toolchain transforms the system
    description in multiple steps to the final system description, resolving
    abstractions which exist to make live simpler and less error-prone to the
-   integrator. The various XML-formats involved in this process are described in
-   section \ref{intro-policy-format}, an overview of the Muen toolchain is
-   presented in section \ref{intro-integration}.
+   integrator. The toolchain also creates various build artifacts which are
+   incorporated into the final system image by the final system composition
+   step. Section \ref{integration} gives an overview of the system integration
+   process.
 
    The Muen SK is a policy enforcer, in the sense that it has no knowledge about
-   the actual content of the generated data structures.  The most important and
+   the actual content of the generated data structures. The most important and
    final step in the integration of a Muen system is therefore the actual
    generation of the data structures which guarantee subject isolation and the
    composition of the final system image. This step is performed by a trusted
    system composer called (static) $\tau$0.  This is explained in section
    \ref{tau0-concept}.
+
+   Section \ref{toolchain} explains every toolchain tool and the system composer
+   $\tau0$ in detail. It also presents the usage of each tool to the reader.
 
    Section \ref{schema} specifies the XML-schema and structure of the system
    source format of the Muen system policy. Explanations and examples illustrate
@@ -106,7 +110,7 @@
    the format source policy in section \ref{schema}.
   </text>
 
-  <section id="intro-policy-format" label="Policy Format" priority="0">
+  <section id="policy-format" label="Policy Format" priority="0">
    <text priority="0">
     The system policy is specified in XML. There are currently three different
     policy formats:
@@ -141,7 +145,7 @@
     \end{warning}
    </text>
 
-   <section id="intro-policy-format-src" label="Source Format" priority="0">
+   <section id="policy-format-src" label="Source Format" priority="0">
     <text priority="0">
      The user-specified policy is written in the \emph{source format}.
      Constructs such as channels provide abstractions to simplify the
@@ -158,7 +162,7 @@
     </text>
    </section>
 
-   <section id="intro-policy-format-a" label="Format A" priority="0">
+   <section id="policy-format-a" label="Format A" priority="0">
     <text priority="0">
      Format A is a processed version of the source format where all includes are
      resolved and abstractions such as channels have been broken down into their
@@ -175,7 +179,7 @@
     </text>
    </section>
 
-   <section id="intro-policy-format-b" label="Format B" priority="0">
+   <section id="policy-format-b" label="Format B" priority="0">
     <text priority="0">
      Format B is equivalent to Format A except that all physical memory regions
      have a fixed location (i.e. their physical address is set).
@@ -186,7 +190,7 @@
 
  <section id="integration" label="System Integration" priority="0">
   <text priority="0">
-   A Muen system specified via the system policy outlined in the previous
+   A Muen system defined via the system policy introduced in the previous
    sections and specified in section \ref{schema} is transformed and integrated
    by various tools to generate a bootable system image.
 
@@ -335,670 +339,689 @@
  </section>
 
  <section id="toolchain" label="Toolchain" priority="0">
-  <text priority="0">
-   This section describe the Muen tools that process the system policy from
-   format source over format A to format B, and finally to the $\tau0$ command
-   stream in detail. It also outlines the structure generator tools which for
-   example generate the Linux zero-page or ACPI tables.
 
-   Up to the $\tau0$ image creation step described in the previous section,
-   the processing of the Muen system policy is divided into the following
-   steps:
-
-   \begin{itemize}
-   \item Policy merging
-   \item Components build
-   \item Components spec merging
-   \item Policy compilation
-   \item Policy validation
-   \item Structure generation
-   \item Command stream generation for $\tau0$
-   \end{itemize}
-
-   Following the Unix philosophy "A program should do only one thing and do it
-   well" each of the tools only performs a specific task. They work in
-   conjunction to process a user-defined policy and build a bootable system
-   image.  An in-depth description of the involved tools is given in section
-   \ref{sec:tools} while figure \ref{fig:build-process} gives an overview of
-   the whole build process.
-
-   \begin{figure}[h!]
-   \centering
-   \input{graph_build_process}
-   \caption{Build process}
-   \label{fig:build-process}
-   \end{figure}
-  </text>
-
-  <section id="toolchain-merging" label="Policy Merging" priority="0">
+  <section id="toolchain-overview" label="Overview" priority="0">
    <text priority="0">
-    The Merger tool outlined in section \ref{sec:tools-merger} is responsible to
-    merge XML files stored at different locations on the file system into one
-    system policy in source format.
-
-    The tool reads a system configuration in XML format to locate the following
-    files:
-    \begin{itemize}
-    \item System policy
-    \item Hardware specification
-    \item Additional hardware specification
-    \item Platform specification
-    \end{itemize}
-
-    The tool also provides an implementation of the XML XInclude
-    mechanism\footnote{\url{http://www.w3.org/TR/xinclude-11/}}. Using
-    includes, the policy writer is able to separate and organize the system
-    policy as desired. Instead of specifying the whole policy in one file, the
-    subject specifications can be split into separate files, or common parts
-    shared by different system descriptions can be extracted. See section
-    \ref{sec:tools-merger} for more information about the Merger tool.
-
-    After the merge step, the resulting policy is well formatted to minimize
-    the difference in the generated policies resulting from the subsequent
-    tasks. This allows the user to easily review (\texttt{diff}) and therefore
-    verify the results of each policy compilation task.
-
-    Expressions can be used to formulate (nested) boolean terms using the
-    numeric equality/inequality and logical operators. They are evaluated to
-    boolean config values prior to processing conditionals.
-
-    The use of conditionals enables selective activation of parts of the
-    source policy depending on the value of a given config variable. This
-    allows flexible customization of a system during policy compilation time
-    by setting the value of a config variable or formulating an appropriate
-    boolean expression.
-
-    Config variable substitution enables the policy writer to set the value of
-    attributes to those of referenced config values. Attributes that start
-    with a dollar sign followed by a config value name are substituted by the
-    value of the config variable.
-   </text>
-  </section>
-
-  <section id="toolchain-comp-build" label="Components Build" priority="0">
-   <text priority="0">
-    After hardware, platform and high-level system policy are merged into a
-    source policy without inclusions, components can extract relevant
-    information from it using whatever means suit best. For example an XSL
-    transformation (XSLT) script could extract the I/O port of a specific
-    device and create a corresponding configuration value based on it, which
-    is then included in the component specification.
-
-    The \texttt{mucgenspec} tool described in \ref{sec:tools-cgen-spec}
-    implements the blue \emph{Specgen} task shown in figure
-    \ref{fig:build-process}. It is used to process component specifications
-    and, similar to the policy merger, supports conditionals, expressions and
-    configuration value substitutions. It also generates Ada/SPARK packages
-    containing constants derived from the declared component resources and
-    config values. These constants can be used to reliably address specific or
-    configurable resources in the source code.
-
-    After the component specification has been processed, the component source
-    code is compiled into a binary.
-
-    The \texttt{mucbinsplit} tool described in \ref{sec:mucbinsplit} can be
-    used to extract ELF sections of the component binary into separate files.
-    It automatically extends the component specification by adding a
-    corresponding memory region with the appropriate access rights (e.g.
-    executable, writable).
-   </text>
-  </section>
-
-  <section id="toolchain-comp-spec-merging" label="Components Specification Merging" priority="0">
-   <text priority="0">
-    The processed component specifications are merged into the system source
-    policy by the Muen component specification joiner tool described in
-    section \ref{sec:tools-comps-joiner}.
-
-    This step is optional as static component specifications which need no
-    processing can also be manually specified in the system policy directly.
-   </text>
-  </section>
-
-  <section id="toolchain-policy-compiliation" label="Policy Compilation" priority="0">
-   <text priority="0">
-    Policy compilation encompasses the tasks involved to transform the policy
-    from source format to format A and finally to format B, which is the fully
-    expanded format with no implicit properties.
-
-    The Expander tool takes care of completing the user-specified policy with
-    additional information and abstractions only available in format source
-    are resolved to low-level constructs.
-
-    For example, the concept of \emph{channels} only exists in format source.
-    Therefore a channel specified in format source must be expanded to shared
-    memory regions with optional associated events in format A.  Also, the
-    Expander tool inserts specifications for the Muen kernel itself so the
-    user is lifted from that burden. Generally, the aim of the expansion task
-    is to make the life of a policy writer as easy as possible by expanding
-    all information which can be derived automatically. Section
-    \ref{sec:tools-expander} explains the Expander tool in detail.
-
-    The result of the expansion task is a policy in format A which is the
-    input for the Allocator tool. This tool is responsible to assign a
-    physical memory address to all memory regions which are not already
-    explicitly stated. By querying the hardware section of the policy, the
-    tool is aware of the total amount of available RAM on a specific system
-    and allocates regions of it for memory elements with no explicit physical
-    address.  The Allocator tool also implements optimization strategies to
-    keep the resulting system image as small as possible.  For example,
-    file-backed memory regions (e.g. a memory region storing a component
-    executable) are preferably placed in lower physical regions. See section
-    \ref{sec:tools-allocator} for a description of the Allocator tool.
-
-    After the allocation task is complete, the policy is stored in format B.
-    This format states all system properties explicitly and is used as input
-    for the Validation step discussed in the following section.
-   </text>
-  </section>
-
-  <section id="toolchain-policy-validation" label="Policy Validation" priority="0">
-   <text priority="0">
-    Before structures required to pack the final system image are generated,
-    the policy must be thoroughly validated to catch errors in the system
-    specification.  Such errors might range from overlapping memory, undefined
-    resource references to incomplete scheduling plans etc. The Validator task
-    performs checks that assure the policy in format B is sound and free from
-    higher-level errors that are not covered by XML schemata restrictions.
-
-    It is important to always run the Validator as the system could otherwise
-    exhibit unexpected behavior. This is especially true if a policy writer
-    decides to specify the system directly in format B which is also possible
-    but not advised. Section \ref{sec:tools-validator} explains the Validator
-    tool and lists some example checks performed by the tool as illustration.
-   </text>
-  </section>
-
-  <section id="toolchain-struct-gen" label="Structure Generation" priority="0">
-   <text priority="0">
-    The structure generation step encompasses various tools which extract
-    information from a policy in format B and generate files in different
-    formats (see figure \ref{fig:build-process}).
-
-    While some generated files are directly linked into the Muen kernel (i.e.
-    Source Specs, see \ref{sec:tools-gen-spec}), most of them are packed into
-    the final system image by $\tau0$.
-
-    For more information about the structure generators, see section
-    \ref{sec:tools-gen}.
-   </text>
-  </section>
-
-  <section id="tools-merger" label="Policy Merger" priority="0">
-   <text priority="0">
-    The merger tool \texttt{mucfgmerge} combines user-provided system policy
-    files into a single XML document.
-
-    \begin{description} \itemsep1pt \parskip0pt
-    \item[Name] \hfill \\
-    \texttt{mucfgmerge}
-    \item[Input] \hfill \\
-    System configuration as XML, Colon-separated list of include paths
-    \item[Output] \hfill \\
-    System policy in format source (merged)
-    \end{description}
-
-    This tool reads the system configuration and merges the specified system
-    policy, hardware and platform files into a single file. It evaluates
-    boolean expressions, resolves conditional parts of the policy and
-    substitutes attribute configuration value references. Included files are
-    inserted at the corresponding locations in the merged file. The XML
-    content is re-formatted so changes to the policy by subsequent build
-    steps can be manually reviewed or visualized by diffing the files.
-
-    It also merges the platform configuration section (if any) into the
-    global configuration section, removing the platform configuration section
-    in the process.
-   </text>
-  </section>
-
-  <section id="tools-comps-joiner" label="Component Joiner" priority="0">
-   <text priority="0">
-    The Muen component specification joiner adds component XML specifications
-    to the component section of a specified system policy and writes the
-    result to a specified output file. Each given component/library
-    specification is loaded and validated against the components XML schema.
-    If it is correct the content is added to the components section of the
-    system policy specified as input file.  If the given system policy does
-    not yet contain a components section, it is created. The result is
-    written to the file specified by the \texttt{-o} parameter.  In-place
-    processing is supported by passing in the same value for input and output
-    file.
-
-    \begin{description} \itemsep1pt \parskip0pt
-    \item[Name] \hfill \\
-    \texttt{mucfgcjoin}
-    \item[Input] \hfill \\
-    System policy in format source, comma-separated list of component specs
-    \item[Output] \hfill \\
-    System policy in format source (joined)
-    \end{description}
-   </text>
-  </section>
-
-  <section id="tools-expander" label="Expander" priority="0">
-   <text priority="0">
-    The expander completes the user-provided system policy by creating or
-    deriving additional configuration elements.
-
-    \begin{description} \itemsep1pt \parskip0pt
-    \item[Name] \hfill \\
-    \texttt{mucfgexpand}
-    \item[Input] \hfill \\
-    System policy in format source
-    \item[Output] \hfill \\
-    System policy in format A (expanded)
-    \end{description}
-
-    The Expander performs the following actions:
-    \begin{itemize}
-    \item Pre-check the system policy to make sure it is sound
-    \item Expand channels
-    \item Expand device resources
-    \item Expand device isolation domains
-    \item Expand kernel sections
-    \item Expand minimal $\tau$0 subject
-    \item Expand additional memory regions
-    \item Expand hardware-/platform-related information
-    \item Expand additional subject information
-    \item Expand profile-specific information
-    \item Expand scheduling information
-    \item Post-check resulting policy
-    \end{itemize}
-   </text>
-  </section>
-
-  <section id="tools-allocator" label="Allocator" priority="0">
-   <text priority="0">
-    The Allocator is responsible to assign a physical address to all global
-    memory regions.
-
-    \begin{description} \itemsep1pt \parskip0pt
-    \item[Name] \hfill \\
-    \texttt{mucfgalloc}
-    \item[Input] \hfill \\
-    System policy in format A
-    \item[Output] \hfill \\
-    System policy in format B (allocated)
-    \end{description}
-
-    First, the Allocator initializes the physical memory view of the system
-    based on the physical memory blocks specified in the XML hardware
-    section. It then reserves memory that is occupied by pre-allocated memory
-    elements (i.e. memory regions with a physical address or device memory).
-    Finally it places all remaining memory regions in physical memory.  In
-    order to reduce the size of the final system image file-backed memory
-    regions are placed at the start of memory.
-   </text>
-  </section>
-
-  <section id="tools-validator" label="Validator" priority="0">
-   <text priority="0">
-    The Validator performs additional checks that go beyond the basic
-    restrictions imposed by the XML schema validation. Currently over 110
-    checks are performed.
-
-    \begin{description} \itemsep1pt \parskip0pt
-    \item[Name] \hfill \\
-    \texttt{mucfgvalidate}
-    \item[Input] \hfill \\
-    System policy in format B
-    \item[Output] \hfill \\
-    None, raises exception on error
-    \end{description}
-   </text>
-  </section>
-
-  <section id="tools-msrstore" label="MSR Stores Generator" priority="0">
-   <text priority="0">
-    Generate MSR store for each subject with MSR access.
-
-    \begin{description} \itemsep1pt \parskip0pt
-    \item[Name] \hfill \\
-    \texttt{mugenmsrstore}
-    \item[Input] \hfill \\
-    System policy in format B
-    \item[Output] \hfill \\
-    MSR store files of subjects in binary format
-    \item[Output format] \hfill \\
-    Intel SDM Vol. 3C, table 24-11
-    \end{description}
-
-    The tool generates MSR stores for each subject. The MSR store is used to
-    save/load MSR values of registers not implicitly handled by hardware on
-    subject exit/resumption.
-
-    MSR stores are used by hardware (VT-x) to enforce isolation of MSR (i.e.
-    subjects that have access to the same MSRs cannot transfer data via these
-    registers).
-   </text>
-  </section>
-
-  <section id="tools-acpi" label="ACPI Tables" priority="0">
-   <text priority="0">
-    Generate ACPI tables for all Linux subjects.
-
-    \begin{description} \itemsep1pt \parskip0pt
-    \item[Name] \hfill \\
-    \texttt{mugenacpi}
-    \item[Input] \hfill \\
-    System policy in format B
-    \item[Output] \hfill \\
-    ACPI tables of all Linux subjects
-    \item[Output format] \hfill \\
-    Advanced Configuration and Power Interface (ACPI)
-    Specification\footnote{\url{http://www.acpi.info/DOWNLOADS/ACPIspec50.pdf}}
-    \end{description}
-
-    ACPI tables are used to announce available hardware to VM subjects. A set
-    of tables consists of an RSDP, XSDT, FADT and DSDT table. See the ACPI
-    specification for more information about a specific table.
-   </text>
-  </section>
-
-  <section id="tools-zp" label="Linux Zero Pages" priority="0">
-   <text priority="0">
-    Generate Zero Pages for all Linux subjects.
-
-    \begin{description} \itemsep1pt \parskip0pt
-    \item[Name] \hfill \\
-    \texttt{mugenzp}
-    \item[Input] \hfill \\
-    System policy in format B
-    \item[Output] \hfill \\
-    Zero pages of all Linux subjects
-    \item[Output format] \hfill \\
-    Linux Boot Protocol\footnote{\url{https://www.kernel.org/doc/Documentation/x86/boot.txt}} \\
-    Zero Page\footnote{\url{https://www.kernel.org/doc/Documentation/x86/zero-page.txt}}
-    \end{description}
-
-    The so-called Zero Page (ZP) exports information required by the boot
-    protocol of the Linux kernel on the x86 architecture. The kernel uses the
-    provided information to retrieve settings about its running environment:
-    \begin{itemize}
-    \item Type of bootloader
-    \item Map of physical memory (e820 map)
-    \item Address and size of initial ramdisk(s)
-    \item Kernel command line parameters
-    \end{itemize}
-   </text>
-  </section>
-
-  <section id="tools-solo5" label="Solo5 Boot Info" priority="0">
-   <text priority="0">
-    Generate Solo5 boot info structures for Mirage unikernels running on the
-    Solo5 platform with the unikernel monitor backend.
-
-    \begin{description} \itemsep1pt \parskip0pt
-    \item[Name] \hfill \\
-    \texttt{mugenusolo5}
-    \item[Input] \hfill \\
-    System policy in format B
-    \item[Output] \hfill \\
-    Solo5 boot info for all MirageOS subjects
-    \item[Output format] \hfill \\
-    struct
-    hvt\_boot\_info\footnote{\url{https://github.com/Solo5/solo5/blob/master/include/solo5/hvt_abi.h}}
-    \end{description}
-
-    The boot info structure exports information required by Solo5. The
-    unikernel uses the provided information to retrieve settings about its
-    runtime environment:
-    \begin{itemize}
-    \item Memory size in bytes
-    \item Address of end of unikernel
-    \item Command line parameters
-    \item TSC frequency
-    \end{itemize}
-   </text>
-  </section>
-
-  <section id="tools-gen-spec" label="Kernel Source Specifications" priority="0">
-   <text priority="0">
-    Generate source specifications used by kernel.
-
-    \begin{description} \itemsep1pt \parskip0pt
-    \item[Name] \hfill \\
-    \texttt{mugenspec}
-    \item[Input] \hfill \\
-    System policy in format B
-    \item[Output] \hfill \\
-    Source specifications in SPARK, C and GPR format
-    \end{description}
-
-    Gathers data from the system policy to generate various source files in
-    SPARK, C and GNAT project file (GPR) format. Created output includes
-    constant values for memory addresses, device resources, scheduling plans,
-    etc. See TODO the kernel spec for more information.
-   </text>
-  </section>
-
-  <section id="tools-cgen-spec" label="Component Source Specifications" priority="0">
-   <text priority="0">
-    Process component description and generate source specifications from it.
-    Write processed description to specified output file.
-
-    \begin{description} \itemsep1pt \parskip0pt
-    \item[Name] \hfill \\
-    \texttt{mucgenspec}
-    \item[Input] \hfill \\
-    Component description in XML, colon-separated list of include paths
-    \item[Output] \hfill \\
-    Component source specifications in SPARK, processed component
-    description in XML
-    \end{description}
-
-    The component spec generation tool processes the given component
-    description by evaluating XIncludes, boolean expressions and resolving
-    conditional parts.  Furthermore, it performs substitutions of attributes
-    with configuration values.
-
-    It also generates Ada/SPARK packages containing constants of the declared
-    logical component resources. The generated specifications can be used in
-    the component source code to access the declared resources.
-
-    The resulting processed component description is written to the given
-    output location.
-   </text>
-  </section>
-
-  <section id="tools-gen-sinfo" label="Subject Info (sinfo)" priority="0">
-   <text priority="0">
-    Generate subject information data for each subject.
-
-    \begin{description} \itemsep1pt \parskip0pt
-    \item[Name] \hfill \\
-    \texttt{mugensinfo}
-    \item[Input] \hfill \\
-    System policy in format B
-    \item[Output] \hfill \\
-    Subject info data in binary format
-    \item[Output format] \hfill \\
-    As specified in \texttt{common/musinfo/musinfo.ads}
-    \end{description}
-
-    The Sinfo page is used to export subject information data extracted from
-    the system policy to VM subjects. Currently, information about available
-    memory regions, communication channels and assigned PCI devices is
-    provided.
-   </text>
-  </section>
-
-  <section id="tools-hasher" label="Hasher" priority="0">
-   <text priority="0">
-    The Mucfgmemhashes tool is used to add memory integrity hashes to a given
-    policy.
-
-    \begin{description} \itemsep1pt \parskip0pt
-    \item[Name] \hfill \\
-    \texttt{mucfgmemhashes}
-    \item[Input] \hfill \\
-    System policy in format B
-    \item[Output] \hfill \\
-    System policy in format B with memory integrity hashes
-    \end{description}
-
-    The \texttt{Mucfgmemhashes} tool appends a hash to all memory regions
-    with fill and file content. It must run after all files have been
-    generated by the structure generator tools.
-
-    The actual hash is generated using the SHA-256 algorithm and is intended
-    to be used to verify the integrity of memory regions during runtime.
-
-    Note that no hashes are generated for sinfo memory regions. Since the
-    hash information will be exported via sinfo, and the sinfo region is
-    itself part of the memory information of a subject, this hash would be
-    self-referential.
-
-    The tool also replaces all occurrences of \texttt{hashRef} elements. A
-    hash reference element instructs the tool to copy the hash element of the
-    referenced memory region after message digest generation.
-
-    From an abstract point of view, the \texttt{hashRef} element is a way to
-    link multiple memory regions by declaring that the hash of the content is
-    the same.  The hash may serve as an indicator on how to reconstruct the
-    (initial) content of a memory region. This mechanism is heavily used by
-    the subject loader (SL) during subject init and reset operation. The
-    subject loader expander remaps writable memory regions of the loadee (the
-    subject under loader control) to SL and replaces the original regions
-    with new ones containing a hash reference to the associated pyhsical
-    memory region. This way SL is able to determine the intended content of
-    the target memory region by looking up the region in its sinfo page by
-    using the hash value as key.
-   </text>
-  </section>
-
-  <!-- TODO add interleaving sections like in orig doc -->
-
-  <section id="tools-elfcheck" label="Kernel ELF Checker" priority="0">
-   <text priority="0">
-    The \texttt{Mucheckelf} tool enforces that the format of a given Muen
-    kernel ELF binary matches the kernel memory layout specified in a system
-    policy.
-
-    Size, VMA (Virtual Memory Address) and permissions of binary ELF sections
-    are validated against kernel memory regions defined in the policy. The
-    following table lists the correspondence of ELF section names to logical
-    kernel memory region names.
-
-    <!-- TODO
-     \begin{table}[h]
-     \centering
-     \begin{tabular}{l|l}
-     \textbf{ELF Section} & \textbf{Memory Name} \\
-     \hline
-     .text   & kernel\_text \\
-     .data   & kernel\_data \\
-     .rodata & kernel\_ro   \\
-     .bss    & kernel\_bss  \\
-     \hline
-     \end{tabular}
-     \end{table}
-    -->
-   </text>
-  </section>
-
-  <section id="tools-stackcheck" label="Stack Usage Checker" priority="0">
-   <text priority="0">
-    The \texttt{Mucheckstack} tool statically calculates the worst-case stack
-    usage of a native Ada/SPARK component or the Muen kernel compiled with
-    the -fcallgraph-info
-    switch\footnote{\url{https://www.adacore.com/uploads/technical-papers/Stack\_Analysis.pdf}}.
-
-    The tool takes a GNAT project file and a stack limit in bytes as input.
-    All control-flow information (.ci) files found in the object directory of
-    the main project and all of its dependencies are parsed. Once the
-    control-flow graph is constructed the maximum stack usage of each
-    subprogram is calculated and checked against the user-specified limit.
-    The tool exits with a failure if a stack usage exceeding the limit is
-    detected.
-
-    Note that the tool is not applicable to arbitrary software projects as it
-    does not handle dynamic/unbounded stack usage and recursion. In the
-    context of the Muen project these cases can not occur since they are
-    prohibited by the following restriction pragmas:
-    \begin{itemize}
-    \item No\_Recursion
-    \item No\_Secondary\_Stack
-    \item No\_Implicit\_Dynamic\_Code
-    \end{itemize}
-
-    Additionally, the \texttt{-Wstack-usage} compiler switch warns about
-    potential unbounded stack usage.
-   </text>
-  </section>
-
-  <section id="tools-gen-hwconf" label="Hardware Config Generator" priority="0">
-   <text priority="0">
-    The
-    \texttt{Mugenhwcfg}\footnote{\url{https://git.codelabs.ch/?p=muen/mugenhwcfg.git}}
-    tool has been created to automate the process of gathering all necessary
-    hardware information. To collect data for a new target hardware all that
-    is required is to run the tool on a common Linux distribution. See the
-    project README for more information.
-
-    TODO: Explain what happens if something goes wrong.
-   </text>
-  </section>
-
-  <section id="tools-gen-sched" label="Scheduling Plan Generator" priority="0">
-   <text priority="0">
-    The
-    \texttt{Mugenschedcfg}\footnote{\url{https://git.codelabs.ch/?p=muen/mugenschedcfg.git}}
-    tool generates scheduling plans for Muen based on a given scheduling
-    configuration.  The configuration allows the user to specify the
-    following scheduling properties:
+    While the previous section \ref{integration} presented an overview of the
+    system integration process, this section focuses on the detailed description
+    of the toolchain processing and each tool of the toolchain.
+
+    The tool-based processing of the Muen system policy can be divided into the
+    following steps:
 
     \begin{itemize}
-    \item Number of CPU cores
-    \item The tick rate of the CPUs
-    \item Security constraints to meet
-    \begin{itemize}
-    \item Same CPU domains
-    \item Simultaneous execution domains
-    \end{itemize}
-    \item Subject specifications
-    \item Score functions
-    \item Number of plans to generate
-    \item Plans
-    \begin{itemize}
-    \item Weighting of plan importance
-    \item Levels
-    \item Subjects of a plan
-    \item Chains with throughput metric
-    \end{itemize}
+    \item Policy merging
+    \item Components build
+    \item Components spec merging
+    \item Policy compilation
+    \item Policy validation
+    \item Structure generation
+    \item Command stream generation for $\tau0$
+    \item Image generation by $\tau0$
     \end{itemize}
 
-    Consult the project's README and example plans on how to use the tool.
+    Following the Unix philosophy "A program should do only one thing and do it
+    well" each of the tools only performs a specific task. They work in
+    conjunction to process a user-defined policy and build a bootable system
+    image. Figure \ref{fig:build-process} presents an illustration of this tool
+    processing. The following sections explain each processing step before the
+    \ref{toolchain-tools} section describes each tool separately.
+
+    \begin{figure}[h!]
+    \centering
+    \input{graph_build_process}
+    \caption{Build process}
+    \label{fig:build-process}
+    \end{figure}
    </text>
+
+   <section id="toolchain-merging" label="Policy Merging" priority="0">
+    <text priority="0">
+     The Merger tool outlined in section \ref{sec:tools-merger} is responsible to
+     merge XML files stored at different locations on the file system into one
+     system policy in source format.
+
+     The tool reads a system configuration in XML format to locate the following
+     files:
+     \begin{itemize}
+     \item System policy
+     \item Hardware specification
+     \item Additional hardware specification
+     \item Platform specification
+     \end{itemize}
+
+     The tool also provides an implementation of the XML XInclude
+     mechanism\footnote{\url{http://www.w3.org/TR/xinclude-11/}}. Using
+     includes, the policy writer is able to separate and organize the system
+     policy as desired. Instead of specifying the whole policy in one file, the
+     subject specifications can be split into separate files, or common parts
+     shared by different system descriptions can be extracted. See section
+     \ref{sec:tools-merger} for more information about the Merger tool.
+
+     After the merge step, the resulting policy is well formatted to minimize
+     the difference in the generated policies resulting from the subsequent
+     tasks. This allows the user to easily review (\texttt{diff}) and therefore
+     verify the results of each policy compilation task.
+
+     Expressions can be used to formulate (nested) boolean terms using the
+     numeric equality/inequality and logical operators. They are evaluated to
+     boolean config values prior to processing conditionals.
+
+     The use of conditionals enables selective activation of parts of the
+     source policy depending on the value of a given config variable. This
+     allows flexible customization of a system during policy compilation time
+     by setting the value of a config variable or formulating an appropriate
+     boolean expression.
+
+     Config variable substitution enables the policy writer to set the value of
+     attributes to those of referenced config values. Attributes that start
+     with a dollar sign followed by a config value name are substituted by the
+     value of the config variable.
+    </text>
+   </section>
+
+   <section id="toolchain-comp-build" label="Components Build" priority="0">
+    <text priority="0">
+     After hardware, platform and high-level system policy are merged into a
+     source policy without inclusions, components can extract relevant
+     information from it using whatever means suit best. For example an XSL
+     transformation (XSLT) script could extract the I/O port of a specific
+     device and create a corresponding configuration value based on it, which
+     is then included in the component specification.
+
+     The \texttt{mucgenspec} tool described in \ref{sec:tools-cgen-spec}
+     implements the blue \emph{Specgen} task shown in figure
+     \ref{fig:build-process}. It is used to process component specifications
+     and, similar to the policy merger, supports conditionals, expressions and
+     configuration value substitutions. It also generates Ada/SPARK packages
+     containing constants derived from the declared component resources and
+     config values. These constants can be used to reliably address specific or
+     configurable resources in the source code.
+
+     After the component specification has been processed, the component source
+     code is compiled into a binary.
+
+     The \texttt{mucbinsplit} tool described in \ref{sec:mucbinsplit} can be
+     used to extract ELF sections of the component binary into separate files.
+     It automatically extends the component specification by adding a
+     corresponding memory region with the appropriate access rights (e.g.
+     executable, writable).
+    </text>
+   </section>
+
+   <section id="toolchain-comp-spec-merging" label="Components Specification Merging" priority="0">
+    <text priority="0">
+     The processed component specifications are merged into the system source
+     policy by the Muen component specification joiner tool described in
+     section \ref{sec:tools-comps-joiner}.
+
+     This step is optional as static component specifications which need no
+     processing can also be manually specified in the system policy directly.
+    </text>
+   </section>
+
+   <section id="toolchain-policy-compiliation" label="Policy Compilation" priority="0">
+    <text priority="0">
+     Policy compilation encompasses the tasks involved to transform the policy
+     from source format to format A and finally to format B, which is the fully
+     expanded format with no implicit properties.
+
+     The Expander tool takes care of completing the user-specified policy with
+     additional information and abstractions only available in format source
+     are resolved to low-level constructs.
+
+     For example, the concept of \emph{channels} only exists in format source.
+     Therefore a channel specified in format source must be expanded to shared
+     memory regions with optional associated events in format A.  Also, the
+     Expander tool inserts specifications for the Muen kernel itself so the
+     user is lifted from that burden. Generally, the aim of the expansion task
+     is to make the life of a policy writer as easy as possible by expanding
+     all information which can be derived automatically. Section
+     \ref{sec:tools-expander} explains the Expander tool in detail.
+
+     The result of the expansion task is a policy in format A which is the
+     input for the Allocator tool. This tool is responsible to assign a
+     physical memory address to all memory regions which are not already
+     explicitly stated. By querying the hardware section of the policy, the
+     tool is aware of the total amount of available RAM on a specific system
+     and allocates regions of it for memory elements with no explicit physical
+     address.  The Allocator tool also implements optimization strategies to
+     keep the resulting system image as small as possible.  For example,
+     file-backed memory regions (e.g. a memory region storing a component
+     executable) are preferably placed in lower physical regions. See section
+     \ref{sec:tools-allocator} for a description of the Allocator tool.
+
+     After the allocation task is complete, the policy is stored in format B.
+     This format states all system properties explicitly and is used as input
+     for the Validation step discussed in the following section.
+    </text>
+   </section>
+
+   <section id="toolchain-policy-validation" label="Policy Validation" priority="0">
+    <text priority="0">
+     Before structures required to pack the final system image are generated,
+     the policy must be thoroughly validated to catch errors in the system
+     specification.  Such errors might range from overlapping memory, undefined
+     resource references to incomplete scheduling plans etc. The Validator task
+     performs checks that assure the policy in format B is sound and free from
+     higher-level errors that are not covered by XML schemata restrictions.
+
+     It is important to always run the Validator as the system could otherwise
+     exhibit unexpected behavior. This is especially true if a policy writer
+     decides to specify the system directly in format B which is also possible
+     but not advised. Section \ref{sec:tools-validator} explains the Validator
+     tool and lists some example checks performed by the tool as illustration.
+    </text>
+   </section>
+
+   <section id="toolchain-struct-gen" label="Structure Generation" priority="0">
+    <text priority="0">
+     The structure generation step encompasses various tools which extract
+     information from a policy in format B and generate files in different
+     formats (see figure \ref{fig:build-process}).
+
+     While some generated files are directly linked into the Muen kernel (i.e.
+     Source Specs, see \ref{sec:tools-gen-spec}), most of them are packed into
+     the final system image by $\tau0$.
+
+     For more information about the structure generators, see section
+     \ref{sec:tools-gen}.
+    </text>
+   </section>
   </section>
 
-  <section id="tools-mucbinsplit" label="Component Binary Splitter" priority="0">
+  <section id="toolchain-core" label="Core Tools" priority="0">
    <text priority="0">
-    The \texttt{mucbinsplit} tool splits component binaries into multiple
-    files per ELF section.
-
-    \begin{description} \itemsep1pt \parskip0pt
-    \item[Name] \hfill \\
-    \texttt{mucbinsplit}
-    \item[Input] \hfill \\
-    Component description in XML, Component ELF binary
-    \item[Output] \hfill \\
-    Binary files corresponding to ELF sections, processed component
-    description in XML
-    \end{description}
-
-    The component binary splitter tool processes component binaries and
-    creates a separate file for each ELF section. The component XML
-    description is extended by adding a file-backed memory region for each
-    ELF section with the appropriate size and access rights.
-
-    The resulting processed component description is written to the given
-    output location while the binary section files are written to the
-    specified output path.
+    This section describes the tools which form the core of the Muen toolchain.
    </text>
+
+   <section id="tools-merger" label="Policy Merger" priority="0">
+    <text priority="0">
+     The merger tool \texttt{mucfgmerge} combines user-provided system policy
+     files into a single XML document.
+
+     \begin{description} \itemsep1pt \parskip0pt
+     \item[Name] \hfill \\
+     \texttt{mucfgmerge}
+     \item[Input] \hfill \\
+     System configuration as XML, Colon-separated list of include paths
+     \item[Output] \hfill \\
+     System policy in format source (merged)
+     \end{description}
+
+     This tool reads the system configuration and merges the specified system
+     policy, hardware and platform files into a single file. It evaluates
+     boolean expressions, resolves conditional parts of the policy and
+     substitutes attribute configuration value references. Included files are
+     inserted at the corresponding locations in the merged file. The XML
+     content is re-formatted so changes to the policy by subsequent build
+     steps can be manually reviewed or visualized by diffing the files.
+
+     It also merges the platform configuration section (if any) into the
+     global configuration section, removing the platform configuration section
+     in the process.
+    </text>
+   </section>
+
+   <section id="tools-comps-joiner" label="Component Joiner" priority="0">
+    <text priority="0">
+     The Muen component specification joiner adds component XML specifications
+     to the component section of a specified system policy and writes the
+     result to a specified output file. Each given component/library
+     specification is loaded and validated against the components XML schema.
+     If it is correct the content is added to the components section of the
+     system policy specified as input file.  If the given system policy does
+     not yet contain a components section, it is created. The result is
+     written to the file specified by the \texttt{-o} parameter.  In-place
+     processing is supported by passing in the same value for input and output
+     file.
+
+     \begin{description} \itemsep1pt \parskip0pt
+     \item[Name] \hfill \\
+     \texttt{mucfgcjoin}
+     \item[Input] \hfill \\
+     System policy in format source, comma-separated list of component specs
+     \item[Output] \hfill \\
+     System policy in format source (joined)
+     \end{description}
+    </text>
+   </section>
+
+   <section id="tools-expander" label="Expander" priority="0">
+    <text priority="0">
+     The expander completes the user-provided system policy by creating or
+     deriving additional configuration elements.
+
+     \begin{description} \itemsep1pt \parskip0pt
+     \item[Name] \hfill \\
+     \texttt{mucfgexpand}
+     \item[Input] \hfill \\
+     System policy in format source
+     \item[Output] \hfill \\
+     System policy in format A (expanded)
+     \end{description}
+
+     The Expander performs the following actions:
+     \begin{itemize}
+     \item Pre-check the system policy to make sure it is sound
+     \item Expand channels
+     \item Expand device resources
+     \item Expand device isolation domains
+     \item Expand kernel sections
+     \item Expand minimal $\tau$0 subject
+     \item Expand additional memory regions
+     \item Expand hardware-/platform-related information
+     \item Expand additional subject information
+     \item Expand profile-specific information
+     \item Expand scheduling information
+     \item Post-check resulting policy
+     \end{itemize}
+    </text>
+   </section>
+
+   <section id="tools-allocator" label="Allocator" priority="0">
+    <text priority="0">
+     The Allocator is responsible to assign a physical address to all global
+     memory regions.
+
+     \begin{description} \itemsep1pt \parskip0pt
+     \item[Name] \hfill \\
+     \texttt{mucfgalloc}
+     \item[Input] \hfill \\
+     System policy in format A
+     \item[Output] \hfill \\
+     System policy in format B (allocated)
+     \end{description}
+
+     First, the Allocator initializes the physical memory view of the system
+     based on the physical memory blocks specified in the XML hardware
+     section. It then reserves memory that is occupied by pre-allocated memory
+     elements (i.e. memory regions with a physical address or device memory).
+     Finally it places all remaining memory regions in physical memory.  In
+     order to reduce the size of the final system image file-backed memory
+     regions are placed at the start of memory.
+    </text>
+   </section>
+
+   <section id="tools-validator" label="Validator" priority="0">
+    <text priority="0">
+     The Validator performs additional checks that go beyond the basic
+     restrictions imposed by the XML schema validation. Currently over 110
+     checks are performed.
+
+     \begin{description} \itemsep1pt \parskip0pt
+     \item[Name] \hfill \\
+     \texttt{mucfgvalidate}
+     \item[Input] \hfill \\
+     System policy in format B
+     \item[Output] \hfill \\
+     None, raises exception on error
+     \end{description}
+    </text>
+   </section>
+
+   <section id="tools-hasher" label="Hasher" priority="0">
+    <text priority="0">
+     The Mucfgmemhashes tool is used to add memory integrity hashes to a given
+     policy.
+
+     \begin{description} \itemsep1pt \parskip0pt
+     \item[Name] \hfill \\
+     \texttt{mucfgmemhashes}
+     \item[Input] \hfill \\
+     System policy in format B
+     \item[Output] \hfill \\
+     System policy in format B with memory integrity hashes
+     \end{description}
+
+     The \texttt{Mucfgmemhashes} tool appends a hash to all memory regions
+     with fill and file content. It must run after all files have been
+     generated by the structure generator tools.
+
+     The actual hash is generated using the SHA-256 algorithm and is intended
+     to be used to verify the integrity of memory regions during runtime.
+
+     Note that no hashes are generated for sinfo memory regions. Since the
+     hash information will be exported via sinfo, and the sinfo region is
+     itself part of the memory information of a subject, this hash would be
+     self-referential.
+
+     The tool also replaces all occurrences of \texttt{hashRef} elements. A
+     hash reference element instructs the tool to copy the hash element of the
+     referenced memory region after message digest generation.
+
+     From an abstract point of view, the \texttt{hashRef} element is a way to
+     link multiple memory regions by declaring that the hash of the content is
+     the same.  The hash may serve as an indicator on how to reconstruct the
+     (initial) content of a memory region. This mechanism is heavily used by
+     the subject loader (SL) during subject init and reset operation. The
+     subject loader expander remaps writable memory regions of the loadee (the
+     subject under loader control) to SL and replaces the original regions
+     with new ones containing a hash reference to the associated pyhsical
+     memory region. This way SL is able to determine the intended content of
+     the target memory region by looking up the region in its sinfo page by
+     using the hash value as key.
+    </text>
+   </section>
+
+   <section id="toolchain-structgen" label="Structure Generators" priority="0">
+    <text priority="0">
+     These tools do not change the policy and use it read-only.
+    </text>
+
+    <section id="tools-msrstore" label="MSR Stores Generator" priority="0">
+     <text priority="0">
+      Generate MSR store for each subject with MSR access.
+
+      \begin{description} \itemsep1pt \parskip0pt
+      \item[Name] \hfill \\
+      \texttt{mugenmsrstore}
+      \item[Input] \hfill \\
+      System policy in format B
+      \item[Output] \hfill \\
+      MSR store files of subjects in binary format
+      \item[Output format] \hfill \\
+      Intel SDM Vol. 3C, table 24-11
+      \end{description}
+
+      The tool generates MSR stores for each subject. The MSR store is used to
+      save/load MSR values of registers not implicitly handled by hardware on
+      subject exit/resumption.
+
+      MSR stores are used by hardware (VT-x) to enforce isolation of MSR (i.e.
+      subjects that have access to the same MSRs cannot transfer data via these
+      registers).
+     </text>
+    </section>
+
+    <section id="tools-acpi" label="ACPI Tables" priority="0">
+     <text priority="0">
+      Generate ACPI tables for all Linux subjects.
+
+      \begin{description} \itemsep1pt \parskip0pt
+      \item[Name] \hfill \\
+      \texttt{mugenacpi}
+      \item[Input] \hfill \\
+      System policy in format B
+      \item[Output] \hfill \\
+      ACPI tables of all Linux subjects
+      \item[Output format] \hfill \\
+      Advanced Configuration and Power Interface (ACPI)
+      Specification\footnote{\url{http://www.acpi.info/DOWNLOADS/ACPIspec50.pdf}}
+      \end{description}
+
+      ACPI tables are used to announce available hardware to VM subjects. A set
+      of tables consists of an RSDP, XSDT, FADT and DSDT table. See the ACPI
+      specification for more information about a specific table.
+     </text>
+    </section>
+
+    <section id="tools-zp" label="Linux Zero Pages" priority="0">
+     <text priority="0">
+      Generate Zero Pages for all Linux subjects.
+
+      \begin{description} \itemsep1pt \parskip0pt
+      \item[Name] \hfill \\
+      \texttt{mugenzp}
+      \item[Input] \hfill \\
+      System policy in format B
+      \item[Output] \hfill \\
+      Zero pages of all Linux subjects
+      \item[Output format] \hfill \\
+      Linux Boot Protocol\footnote{\url{https://www.kernel.org/doc/Documentation/x86/boot.txt}} \\
+      Zero Page\footnote{\url{https://www.kernel.org/doc/Documentation/x86/zero-page.txt}}
+      \end{description}
+
+      The so-called Zero Page (ZP) exports information required by the boot
+      protocol of the Linux kernel on the x86 architecture. The kernel uses the
+      provided information to retrieve settings about its running environment:
+      \begin{itemize}
+      \item Type of bootloader
+      \item Map of physical memory (e820 map)
+      \item Address and size of initial ramdisk(s)
+      \item Kernel command line parameters
+      \end{itemize}
+     </text>
+    </section>
+
+    <section id="tools-solo5" label="Solo5 Boot Info" priority="0">
+     <text priority="0">
+      Generate Solo5 boot info structures for Mirage unikernels running on the
+      Solo5 platform with the unikernel monitor backend.
+
+      \begin{description} \itemsep1pt \parskip0pt
+      \item[Name] \hfill \\
+      \texttt{mugenusolo5}
+      \item[Input] \hfill \\
+      System policy in format B
+      \item[Output] \hfill \\
+      Solo5 boot info for all MirageOS subjects
+      \item[Output format] \hfill \\
+      struct
+      hvt\_boot\_info\footnote{\url{https://github.com/Solo5/solo5/blob/master/include/solo5/hvt_abi.h}}
+      \end{description}
+
+      The boot info structure exports information required by Solo5. The
+      unikernel uses the provided information to retrieve settings about its
+      runtime environment:
+      \begin{itemize}
+      \item Memory size in bytes
+      \item Address of end of unikernel
+      \item Command line parameters
+      \item TSC frequency
+      \end{itemize}
+     </text>
+    </section>
+
+    <section id="tools-gen-spec" label="Kernel Source Specifications" priority="0">
+     <text priority="0">
+      Generate source specifications used by kernel.
+
+      \begin{description} \itemsep1pt \parskip0pt
+      \item[Name] \hfill \\
+      \texttt{mugenspec}
+      \item[Input] \hfill \\
+      System policy in format B
+      \item[Output] \hfill \\
+      Source specifications in SPARK, C and GPR format
+      \end{description}
+
+      Gathers data from the system policy to generate various source files in
+      SPARK, C and GNAT project file (GPR) format. Created output includes
+      constant values for memory addresses, device resources, scheduling plans,
+      etc. See TODO the kernel spec for more information.
+     </text>
+    </section>
+
+    <section id="tools-cgen-spec" label="Component Source Specifications" priority="0">
+     <text priority="0">
+      Process component description and generate source specifications from it.
+      Write processed description to specified output file.
+
+      \begin{description} \itemsep1pt \parskip0pt
+      \item[Name] \hfill \\
+      \texttt{mucgenspec}
+      \item[Input] \hfill \\
+      Component description in XML, colon-separated list of include paths
+      \item[Output] \hfill \\
+      Component source specifications in SPARK, processed component
+      description in XML
+      \end{description}
+
+      The component spec generation tool processes the given component
+      description by evaluating XIncludes, boolean expressions and resolving
+      conditional parts.  Furthermore, it performs substitutions of attributes
+      with configuration values.
+
+      It also generates Ada/SPARK packages containing constants of the declared
+      logical component resources. The generated specifications can be used in
+      the component source code to access the declared resources.
+
+      The resulting processed component description is written to the given
+      output location.
+     </text>
+    </section>
+
+    <section id="tools-gen-sinfo" label="Subject Info (sinfo)" priority="0">
+     <text priority="0">
+      Generate subject information data for each subject.
+
+      \begin{description} \itemsep1pt \parskip0pt
+      \item[Name] \hfill \\
+      \texttt{mugensinfo}
+      \item[Input] \hfill \\
+      System policy in format B
+      \item[Output] \hfill \\
+      Subject info data in binary format
+      \item[Output format] \hfill \\
+      As specified in \texttt{common/musinfo/musinfo.ads}
+      \end{description}
+
+      The Sinfo page is used to export subject information data extracted from
+      the system policy to VM subjects. Currently, information about available
+      memory regions, communication channels and assigned PCI devices is
+      provided.
+     </text>
+    </section>
+   </section>
+  </section> <!-- toolchain-core -->
+
+  <section id="toolchain-additional" label="Additional Tools" priority="0">
+   <text priority="0">
+    This section lists additional helper tools which simplify the process of
+    generating and validating a Muen system.
+   </text>
+
+   <section id="tools-elfcheck" label="Kernel ELF Checker" priority="0">
+    <text priority="0">
+     The \texttt{Mucheckelf} tool enforces that the format of a given Muen
+     kernel ELF binary matches the kernel memory layout specified in a system
+     policy.
+
+     Size, VMA (Virtual Memory Address) and permissions of binary ELF sections
+     are validated against kernel memory regions defined in the policy. The
+     following table lists the correspondence of ELF section names to logical
+     kernel memory region names.
+
+     <!-- TODO
+      \begin{table}[h]
+      \centering
+      \begin{tabular}{l|l}
+      \textbf{ELF Section} & \textbf{Memory Name} \\
+      \hline
+      .text   & kernel\_text \\
+      .data   & kernel\_data \\
+      .rodata & kernel\_ro   \\
+      .bss    & kernel\_bss  \\
+      \hline
+      \end{tabular}
+      \end{table}
+     -->
+    </text>
+   </section>
+
+   <section id="tools-stackcheck" label="Stack Usage Checker" priority="0">
+    <text priority="0">
+     The \texttt{Mucheckstack} tool statically calculates the worst-case stack
+     usage of a native Ada/SPARK component or the Muen kernel compiled with
+     the -fcallgraph-info
+     switch\footnote{\url{https://www.adacore.com/uploads/technical-papers/Stack\_Analysis.pdf}}.
+
+     The tool takes a GNAT project file and a stack limit in bytes as input.
+     All control-flow information (.ci) files found in the object directory of
+     the main project and all of its dependencies are parsed. Once the
+     control-flow graph is constructed the maximum stack usage of each
+     subprogram is calculated and checked against the user-specified limit.
+     The tool exits with a failure if a stack usage exceeding the limit is
+     detected.
+
+     Note that the tool is not applicable to arbitrary software projects as it
+     does not handle dynamic/unbounded stack usage and recursion. In the
+     context of the Muen project these cases can not occur since they are
+     prohibited by the following restriction pragmas:
+     \begin{itemize}
+     \item No\_Recursion
+     \item No\_Secondary\_Stack
+     \item No\_Implicit\_Dynamic\_Code
+     \end{itemize}
+
+     Additionally, the \texttt{-Wstack-usage} compiler switch warns about
+     potential unbounded stack usage.
+    </text>
+   </section>
+
+   <section id="tools-gen-hwconf" label="Hardware Config Generator" priority="0">
+    <text priority="0">
+     The
+     \texttt{Mugenhwcfg}\footnote{\url{https://git.codelabs.ch/?p=muen/mugenhwcfg.git}}
+     tool has been created to automate the process of gathering all necessary
+     hardware information. To collect data for a new target hardware all that
+     is required is to run the tool on a common Linux distribution. See the
+     project README for more information.
+
+     TODO: Explain what happens if something goes wrong.
+    </text>
+   </section>
+
+   <section id="tools-gen-sched" label="Scheduling Plan Generator" priority="0">
+    <text priority="0">
+     The
+     \texttt{Mugenschedcfg}\footnote{\url{https://git.codelabs.ch/?p=muen/mugenschedcfg.git}}
+     tool generates scheduling plans for Muen based on a given scheduling
+     configuration.  The configuration allows the user to specify the
+     following scheduling properties:
+
+     \begin{itemize}
+     \item Number of CPU cores
+     \item The tick rate of the CPUs
+     \item Security constraints to meet
+     \begin{itemize}
+     \item Same CPU domains
+     \item Simultaneous execution domains
+     \end{itemize}
+     \item Subject specifications
+     \item Score functions
+     \item Number of plans to generate
+     \item Plans
+     \begin{itemize}
+     \item Weighting of plan importance
+     \item Levels
+     \item Subjects of a plan
+     \item Chains with throughput metric
+     \end{itemize}
+     \end{itemize}
+
+     Consult the project's README and example plans on how to use the tool.
+    </text>
+   </section>
+
+   <section id="tools-mucbinsplit" label="Component Binary Splitter" priority="0">
+    <text priority="0">
+     The \texttt{mucbinsplit} tool splits component binaries into multiple
+     files per ELF section.
+
+     \begin{description} \itemsep1pt \parskip0pt
+     \item[Name] \hfill \\
+     \texttt{mucbinsplit}
+     \item[Input] \hfill \\
+     Component description in XML, Component ELF binary
+     \item[Output] \hfill \\
+     Binary files corresponding to ELF sections, processed component
+     description in XML
+     \end{description}
+
+     The component binary splitter tool processes component binaries and
+     creates a separate file for each ELF section. The component XML
+     description is extended by adding a file-backed memory region for each
+     ELF section with the appropriate size and access rights.
+
+     The resulting processed component description is written to the given
+     output location while the binary section files are written to the
+     specified output path.
+    </text>
+   </section>
   </section>
- </section>
+ </section> <!-- toolchain-additional -->
 
  <section id="validation" label="Policy Validation" priority="0">
   <text priority="0">

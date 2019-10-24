@@ -903,20 +903,18 @@
      following table lists the correspondence of ELF section names to logical
      kernel memory region names.
 
-     <!-- TODO
-      \begin{table}[h]
-      \centering
-      \begin{tabular}{l|l}
-      \textbf{ELF Section} & \textbf{Memory Name} \\
-      \hline
-      .text   & kernel\_text \\
-      .data   & kernel\_data \\
-      .rodata & kernel\_ro   \\
-      .bss    & kernel\_bss  \\
-      \hline
-      \end{tabular}
-      \end{table}
-     -->
+     \begin{table}[h]
+     \centering
+     \begin{tabular}{l|l}
+     \textbf{ELF Section} &amp; \textbf{Memory Name} \\
+     \hline
+     .text   &amp; kernel\_text \\
+     .data   &amp; kernel\_data \\
+     .rodata &amp; kernel\_ro   \\
+     .bss    &amp; kernel\_bss  \\
+     \hline
+     \end{tabular}
+     \end{table}
     </text>
    </section>
 

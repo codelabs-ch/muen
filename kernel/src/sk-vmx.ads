@@ -78,7 +78,11 @@ is
       Global => (Input  => CPU_Info.APIC_ID,
                  In_Out => (Crash_Audit.State, X86_64.State));
 
-   --  Setup control fields of the currently active VMCS.
+   --D @Section Id => impl_vmcs, Label => VMCS Management, Parent => implementation, Priority => 0
+   --D @Section Id => impl_vmcs_setup_ctrl, Label => VM-Control Fields Setup, Parent => impl_vmcs, Priority => 0
+   --D @Text Section => impl_vmcs_setup_ctrl, Priority => 0
+   --D Setup control fields of the currently active VMCS. These fields govern
+   --D VMX non-root operation as well as VM Exit and Entry behavior.
    procedure VMCS_Setup_Control_Fields
      (IO_Bitmap_Address  : Word64;
       MSR_Bitmap_Address : Word64;

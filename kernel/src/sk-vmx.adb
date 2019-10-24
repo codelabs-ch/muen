@@ -260,9 +260,15 @@ is
    is
       Default0, Default1, Value : Word32;
    begin
-
-      --  Pin-based controls.
-
+      --D @OL Id => impl_vmcs_setup_ctrl_steps, Section => impl_vmcs_setup_ctrl, Priority => 10
+      --D @Item List => impl_vmcs_setup_ctrl_steps, Priority => 0
+      --D Read Default0 and Default1 from the
+      --D \texttt{IA32\_VMX\_TRUE\_PINBASED\_CTLS} MSR. Combine them with the
+      --D policy-defined value by setting the defaults for reserved control bits
+      --D according to Intel SDM Vol. 3C,
+      --D "A.3.1 Pin-Based VM-Execution Controls". Then, set the Pin-Base
+      --D VM-Execution controls by writing the value to the corresponding VMCS
+      --D field.
       CPU.Get_MSR (Register => Constants.IA32_VMX_TRUE_PINBASED_CTLS,
                    Low      => Default0,
                    High     => Default1);
@@ -272,8 +278,14 @@ is
       VMCS_Write (Field => Constants.PIN_BASED_EXEC_CONTROL,
                   Value => Word64 (Value));
 
-      --  Primary processor-based controls.
-
+      --D @Item List => impl_vmcs_setup_ctrl_steps, Priority => 0
+      --D Read Default0 and Default1 from the
+      --D \texttt{IA32\_VMX\_TRUE\_PROCBASED\_CTLS} MSR. Combine them with the
+      --D policy-defined value by setting the defaults for reserved control bits
+      --D according to Intel SDM Vol. 3C,
+      --D "A.3.2 Primary Processor-Based VM-Execution Controls". Then, set the
+      --D Processor-Based VM-Execution controls by writing the value to the
+      --D corresponding VMCS field.
       CPU.Get_MSR (Register => Constants.IA32_VMX_TRUE_PROCBASED_CTLS,
                    Low      => Default0,
                    High     => Default1);
@@ -283,8 +295,14 @@ is
       VMCS_Write (Field => Constants.CPU_BASED_EXEC_CONTROL,
                   Value => Word64 (Value));
 
-      --  Secondary processor-based controls.
-
+      --D @Item List => impl_vmcs_setup_ctrl_steps, Priority => 0
+      --D Read Default0 and Default1 from the
+      --D \texttt{IA32\_VMX\_PROCBASED\_CTLS2} MSR. Combine them with the
+      --D policy-defined value by setting the defaults for reserved control bits
+      --D according to Intel SDM Vol. 3C,
+      --D "A.3.3 Secondry Processor-Based VM-Execution Controls". Then, set the
+      --D secondary processor-based VM-Execution controls by writing the value
+      --D to the corresponding VMCS field.
       CPU.Get_MSR (Register => Constants.IA32_VMX_PROCBASED_CTLS2,
                    Low      => Default0,
                    High     => Default1);
@@ -294,38 +312,45 @@ is
       VMCS_Write (Field => Constants.CPU_BASED_EXEC_CONTROL2,
                   Value => Word64 (Value));
 
-      --  Exception bitmap.
-
+      --D @Item List => impl_vmcs_setup_ctrl_steps, Priority => 0
+      --D Write policy-defined exception bitmap value to the corresponding
+      --D VMCS field.
       VMCS_Write (Field => Constants.EXCEPTION_BITMAP,
                   Value => Word64 (Exception_Bitmap));
 
-      --  Write access to CR0/CR4.
-
+      --D @Item List => impl_vmcs_setup_ctrl_steps, Priority => 0
+      --D Write policy-defined CR0 and CR4 mask values to the corresponding
+      --D VMCS fields.
       VMCS_Write (Field => Constants.CR0_MASK,
                   Value => CR0_Mask);
       VMCS_Write (Field => Constants.CR4_MASK,
                   Value => CR4_Mask);
 
-      --  Explicitly set CR3-target count to 0 to always force CR3-load
-      --  exiting.
-
+      --D @Item List => impl_vmcs_setup_ctrl_steps, Priority => 0
+      --D Explicitly set CR3-target count to 0 to always force CR3-load
+      --D exiting, by writing zero to the corresponding VMCS field.
       VMCS_Write (Field => Constants.CR3_TARGET_COUNT,
                   Value => 0);
 
-      --  I/O bitmaps.
-
+      --D @Item List => impl_vmcs_setup_ctrl_steps, Priority => 0
+      --D Write policy-defined I/O Bitmap address to the corresponding VMCS
+      --D fields. I/O bitmap B is expected to be located in the next memory page
+      --D after bitmap A.
       VMCS_Write (Field => Constants.IO_BITMAP_A,
                   Value => IO_Bitmap_Address);
       VMCS_Write (Field => Constants.IO_BITMAP_B,
                   Value => IO_Bitmap_Address + Page_Size);
 
-      --  MSR bitmaps.
-
+      --D @Item List => impl_vmcs_setup_ctrl_steps, Priority => 0
+      --D Write policy-defined MSR Bitmap address to the corresponding VMCS
+      --D field.
       VMCS_Write (Field => Constants.MSR_BITMAP,
                   Value => MSR_Bitmap_Address);
 
-      --  MSR store.
-
+      --D @Item List => impl_vmcs_setup_ctrl_steps, Priority => 0
+      --D Write policy-defined MSR store address to the VM-Exit MSR store and
+      --D the VM-Entry MSR load address VMCS fields. Also set the VM-Exit MSR
+      --D store and VM-Entry load count fields to the policy-defined MSR count.
       VMCS_Write (Field => Constants.VM_EXIT_MSR_STORE_ADDRESS,
                   Value => MSR_Store_Address);
       VMCS_Write (Field => Constants.VM_ENTRY_MSR_LOAD_ADDRESS,
@@ -335,8 +360,12 @@ is
       VMCS_Write (Field => Constants.VM_ENTRY_MSR_LOAD_COUNT,
                   Value => Word64 (MSR_Count));
 
-      --  VM-exit controls.
-
+      --D @Item List => impl_vmcs_setup_ctrl_steps, Priority => 0
+      --D Read Default0 and Default1 from the
+      --D \texttt{IA32\_VMX\_TRUE\_EXIT\_CTLS} MSR. Combine them with the
+      --D policy-defined value by setting the defaults for reserved control bits
+      --D according to Intel SDM Vol. 3C, "A.4 VM-Exit Controls". Then, set the
+      --D VM-Exit controls by writing the value to the corresponding VMCS field.
       CPU.Get_MSR (Register => Constants.IA32_VMX_TRUE_EXIT_CTLS,
                    Low      => Default0,
                    High     => Default1);
@@ -346,8 +375,13 @@ is
       VMCS_Write (Field => Constants.VM_EXIT_CONTROLS,
                   Value => Word64 (Value));
 
-      --  VM-entry controls.
-
+      --D @Item List => impl_vmcs_setup_ctrl_steps, Priority => 0
+      --D Read Default0 and Default1 from the
+      --D \texttt{IA32\_VMX\_TRUE\_ENTRY\_CTLS} MSR. Combine them with the
+      --D policy-defined value by setting the defaults for reserved control bits
+      --D according to Intel SDM Vol. 3C, "A.5 VM-Entry Controls". Then, set the
+      --D VM-Entry controls by writing the value to the corresponding VMCS
+      --D field.
       CPU.Get_MSR (Register => Constants.IA32_VMX_TRUE_ENTRY_CTLS,
                    Low      => Default0,
                    High     => Default1);

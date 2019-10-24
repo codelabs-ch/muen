@@ -54,7 +54,7 @@ package body Mucfgcheck.Config.Test_Data.Tests is
         (Doc   => Data.Doc,
          XPath => "/system/config/boolean[@name='debug_enabled']",
          Name  => "name",
-         Value => "iommu_enabled");
+         Value => "feature_enabled");
 
       begin
          Name_Uniqueness (XML_Data => Data);
@@ -64,7 +64,7 @@ package body Mucfgcheck.Config.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Multiple config variables with name 'iommu_enabled'",
+                    = "Multiple config variables with name 'feature_enabled'",
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -296,7 +296,7 @@ package body Mucfgcheck.Config.Test_Data.Tests is
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/memory/if[@variable='iommu_enabled']",
+         XPath => "/system/memory/if[@variable='feature_enabled']",
          Name  => "variable",
          Value => "nonexistent");
 

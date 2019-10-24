@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <system>
  <config>
-  <boolean name="iommu_enabled" value="false"/>
+  <boolean name="feature_enabled" value="false"/>
   <string name="system" value="/home/ken/projects/muen/policy/xml/demo_system.xml"/>
   <string name="hardware" value="/home/ken/projects/muen/policy/platform/bochs.xml"/>
   <string name="additional_hardware" value="/home/ken/projects/muen/policy/../policy/platform/common_hardware.xml"/>

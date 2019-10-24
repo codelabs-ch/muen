@@ -45,7 +45,7 @@ package body Mutools.System_Config.Test_Data.Tests is
                    File => "data/test_policy.xml");
 
       Assert (Condition => Has_Boolean (Data => Policy,
-                                        Name => "iommu_enabled"),
+                                        Name => "feature_enabled"),
               Message   => "Boolean config variable not present");
       Assert (Condition => not Has_Boolean (Data => Policy,
                                             Name => "nonexistent"),
@@ -80,7 +80,7 @@ package body Mutools.System_Config.Test_Data.Tests is
                                             Name => "nonexistent"),
               Message   => "Integer config variable present (non-existent)");
       Assert (Condition => not Has_Integer (Data => Policy,
-                                            Name => "iommu_enabled"),
+                                            Name => "feature_enabled"),
               Message   => "Integer config variable present (type mismatch)");
 --  begin read only
    end Test_Has_Integer;
@@ -138,7 +138,7 @@ package body Mutools.System_Config.Test_Data.Tests is
                                       Name => "session_count"),
               Message   => "Config variable not present (2)");
       Assert (Condition => Has_Value (Data => Policy,
-                                      Name => "iommu_enabled"),
+                                      Name => "feature_enabled"),
               Message   => "Config variable not present (3)");
       Assert (Condition => not Has_Value (Data => Policy,
                                           Name => "nonexistent"),
@@ -164,16 +164,16 @@ package body Mutools.System_Config.Test_Data.Tests is
                    File => "data/test_policy.xml");
 
       Assert (Condition => Get_Value (Data => Policy,
-                                      Name => "iommu_enabled"),
+                                      Name => "feature_enabled"),
               Message   => "Boolean config value false");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
-         XPath => "/system/config/boolean[@name=""iommu_enabled""]",
+         XPath => "/system/config/boolean[@name=""feature_enabled""]",
          Name  => "value",
          Value => "false");
       Assert (Condition => not Get_Value (Data => Policy,
-                                      Name => "iommu_enabled"),
+                                      Name => "feature_enabled"),
               Message   => "Boolean config value true");
 
       begin
@@ -300,7 +300,7 @@ package body Mutools.System_Config.Test_Data.Tests is
 
       Assert (Condition => Get_Raw_Value
               (Data => Policy,
-               Name => "iommu_enabled") = "true",
+               Name => "feature_enabled") = "true",
               Message   => "Raw config value mismatch (1)");
       Assert (Condition => Get_Raw_Value
               (Data => Policy,

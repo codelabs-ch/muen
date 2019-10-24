@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <system>
  <config>
-  <boolean name="iommu_enabled" value="true"/>
+  <boolean name="feature_enabled" value="true"/>
   <integer name="session_count" value="4"/>
  </config>
  <expressions>
@@ -75,11 +75,11 @@
    <boolean value="true"/>
   </expression>
   <expression name="iommu_on">
-   <variable name="iommu_enabled"/>
+   <variable name="feature_enabled"/>
   </expression>
   <expression name="iommu_disabled">
    <not>
-    <variable name="iommu_enabled"/>
+    <variable name="feature_enabled"/>
    </not>
   </expression>
   <expression name="true">
@@ -90,7 +90,7 @@
   <expression name="and_expr">
    <and>
     <boolean value="false"/>
-    <variable name="iommu_enabled"/>
+    <variable name="feature_enabled"/>
    </and>
   </expression>
   <expression name="and_expr_2">
@@ -102,7 +102,7 @@
   <expression name="or_expr">
    <or>
     <boolean value="false"/>
-    <variable name="iommu_enabled"/>
+    <variable name="feature_enabled"/>
    </or>
   </expression>
   <expression name="or_expr_2">
@@ -126,7 +126,7 @@
         <boolean value="true"/>
        </not>
       </expression>
-      <variable name="iommu_enabled"/>
+      <variable name="feature_enabled"/>
      </or>
     </expression>
    </and>

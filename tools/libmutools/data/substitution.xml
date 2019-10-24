@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <system>
  <config>
-  <boolean name="iommu_enabled" value="false"/>
+  <boolean name="feature_enabled" value="false"/>
   <integer name="session_count" value="4"/>
   <integer name="default_size" value="16#1000#"/>
   <string name="default_name" value="foobar"/>

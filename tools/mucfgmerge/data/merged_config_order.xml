@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <system>
  <config>
-  <boolean name="iommu_enabled" value="true"/>
   <string name="no_caching" value="UC"/>
   <string name="system" value="data/test_policy.xml"/>
   <string name="hardware" value="data/hardware.xml"/>

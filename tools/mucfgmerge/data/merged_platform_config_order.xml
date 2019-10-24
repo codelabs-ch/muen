@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <system>
  <config>
-  <boolean name="iommu_enabled" value="true"/>
   <boolean name="supports_xhci_debug" value="false"/>
   <integer name="some_numeric_value" value="23"/>
   <string name="no_caching" value="UC"/>

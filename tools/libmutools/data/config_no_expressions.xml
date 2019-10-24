@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <system>
  <config>
-  <boolean name="iommu_enabled" value="true"/>
+  <boolean name="feature_enabled" value="true"/>
   <integer name="session_count" value="4"/>
  </config>
  <hardware>
@@ -27,14 +27,14 @@
    </classes>
   </mappings>
  </platform>
- <if value="true" variable="iommu_enabled">
+ <if value="true" variable="feature_enabled">
   <kernelDiagnosticsDevice physical="debugconsole">
    <ioPort physical="serial"/>
   </kernelDiagnosticsDevice>
  </if>
  <memory>
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
-  <if value="true" variable="iommu_enabled">
+  <if value="true" variable="feature_enabled">
    <memory caching="WB" name="extra_mem" physicalAddress="16#2000#" size="16#1000#"/>
   </if>
   <if value="1" variable="session_count">
@@ -55,14 +55,14 @@
   <subject name="lnx">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
-    <if value="true" variable="iommu_enabled">
+    <if value="true" variable="feature_enabled">
      <memory executable="false" logical="extra_mem" physical="extra_mem" virtualAddress="16#f000_0000#" writable="true"/>
     </if>
    </memory>
-   <if value="true" variable="iommu_enabled">
+   <if value="true" variable="feature_enabled">
     <devices>
      <device logical="usb" physical="usb_conitroller_1">
-      <if value="false" variable="iommu_enabled">
+      <if value="false" variable="feature_enabled">
        <ioPort logical="port1" physical="port_60"/>
       </if>
      </device>

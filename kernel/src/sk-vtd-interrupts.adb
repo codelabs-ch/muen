@@ -23,10 +23,10 @@ with SK.Dump;
 package body SK.VTd.Interrupts
 is
 
-   --  Position of the destination ID in an I/O APIC RTE, see Intel IOAPIC
-   --  specification, section 3.2.4.
+   --  Position of the destination ID in an I/O APIC RTE for VT-d IR. See Intel
+   --  VT-d Specification, "5.1.5.1 I/OxAPIC Programming".
 
-   Dest_ID_Shiftpos : constant Natural := 56;
+   Dest_ID_Shiftpos : constant Natural := 49;
 
    -------------------------------------------------------------------------
 
@@ -35,17 +35,18 @@ is
       use type Skp.Dst_Vector_Range;
 
       Route   : Skp.Interrupts.IRQ_Route_Type;
-      APIC_ID : SK.Byte;
+      Dest_ID : SK.Byte;
    begin
       for I in Skp.Interrupts.Routing_Range loop
          Route   := Skp.Interrupts.IRQ_Routing (I);
-         APIC_ID := SK.Byte (Route.APIC_ID);
+         Dest_ID := Route.IRQ;
 
          pragma Debug (Dump.Print_IRQ_Routing
-                       (RTE_Idx => Route.RTE_Idx,
-                        IRQ     => Route.IRQ,
-                        Vector  => SK.Byte (Route.Vector),
-                        APIC_ID => APIC_ID));
+                       (RTE_Idx     => Route.RTE_Idx,
+                        IRQ         => Dest_ID,
+                        Vector      => SK.Byte (Route.Vector),
+                        APIC_ID     => SK.Byte (Route.APIC_ID),
+                        VTd_IRT_Idx => Dump.IRT_Idx_Type (Dest_ID)));
 
          if Route.Vector /= Skp.Invalid_Vector then
             IO_Apic.Route_IRQ
@@ -53,7 +54,7 @@ is
                Vector         => SK.Byte (Route.Vector),
                Trigger_Mode   => Route.IRQ_Mode,
                Trigger_Level  => Route.IRQ_Level,
-               Destination_ID => SK.Word64 (APIC_ID) * 2 ** Dest_ID_Shiftpos);
+               Destination_ID => SK.Word64 (Dest_ID) * 2 ** Dest_ID_Shiftpos);
          end if;
       end loop;
    end Setup_IRQ_Routing;

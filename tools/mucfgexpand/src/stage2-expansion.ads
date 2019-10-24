@@ -23,7 +23,7 @@ package Stage2.Expansion
 is
 
    --  Register stage 2 expanders.
-   procedure Register_All (Data : Muxml.XML_Data_Type);
+   procedure Register_All;
 
    --  Run registered expanders.
    procedure Run (Data : in out Muxml.XML_Data_Type);

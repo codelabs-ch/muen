@@ -35,7 +35,7 @@ is
        Size              => 35,
        Dynamic_Predicate => Table_Pointer_Type mod MC.Page_Size = 0;
 
-   --  DMAR root table, see Intel VT-d specification, section 9.1.
+   --  DMAR root table, see Intel VT-d Specification, "9.1 Root Entry".
    type Root_Table_Type is private;
 
    --  Add an entry to given DMAR root table with specified bus number and
@@ -50,7 +50,7 @@ is
      (RT       : Root_Table_Type;
       Filename : String);
 
-   --  DMAR context table, see Intel VT-d specification, section 9.3.
+   --  DMAR context table, see Intel VT-d Specification, "9.3 Context Entry".
    type Context_Table_Type is private;
 
    type Domain_Range is range 1 .. 255;

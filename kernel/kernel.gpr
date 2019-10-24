@@ -17,7 +17,6 @@
 --
 
 with "../config/shared";
-with "../policy/obj/policy";
 
 project Kernel is
 
@@ -63,14 +62,6 @@ project Kernel is
       when "complete" =>
          Preprocessor_Switches := Preprocessor_Switches &
          ("-gnateDComplete_Proofs=On");
-   end case;
-
-   case Policy.Iommu_Enabled is
-      when "true"  =>
-         Extra_Dirs := Extra_Dirs & "features/vtd/enabled";
-         Extra_Dirs := Extra_Dirs & ("features/vtd/enabled/" & Build_Mode);
-      when "false" =>
-         Extra_Dirs := Extra_Dirs & "features/vtd/disabled";
    end case;
 
    for Languages use ("Ada") & Extra_Languages;

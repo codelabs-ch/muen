@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <system>
  <config>
-  <boolean name="iommu_enabled" value="false"/>
  </config>
  <hardware>
   <processor cpuCores="4" speed="50" vmxTimerRate="0">

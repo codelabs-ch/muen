@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Muxml;
-
 package Validate
 is
 
@@ -27,6 +25,6 @@ is
 private
 
    --  Register policy validators.
-   procedure Register_All (Policy : Muxml.XML_Data_Type);
+   procedure Register_All;
 
 end Validate;

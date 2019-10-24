@@ -65,27 +65,6 @@ package body VTd.Generator.Test_Data.Tests is
               Message   => "Net domain table exists (1)");
 
       Ada.Directories.Delete_File (Name => Root_Table);
-
-      Muxml.Utils.Set_Attribute
-        (Doc   => Policy.Doc,
-         XPath => "/system/config/boolean[@name='iommu_enabled']",
-         Name  => "value",
-         Value => "false");
-
-      --  IOMMU not enabled, no tables must be generated.
-
-      Write (Output_Dir => Output_Dir,
-             Policy     => Policy);
-      Assert (Condition => not Ada.Directories.Exists (Name => Root_Table),
-              Message   => "Root table exists");
-      Assert (Condition => not Ada.Directories.Exists (Name => Context_0),
-              Message   => "Context 0 table exists (2)");
-      Assert (Condition => not Ada.Directories.Exists (Name => Context_23),
-              Message   => "Context 23 table exists (2)");
-      Assert (Condition => not Ada.Directories.Exists (Name => Lnx_Dom_Pt),
-              Message   => "Lnx domain table exists (2)");
-      Assert (Condition => not Ada.Directories.Exists (Name => Net_Dom_Pt),
-              Message   => "Net domain table exists (2)");
 --  begin read only
    end Test_Write;
 --  end read only

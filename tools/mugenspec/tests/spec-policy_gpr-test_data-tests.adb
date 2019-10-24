@@ -50,21 +50,7 @@ package body Spec.Policy_Gpr.Test_Data.Tests is
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "data/policy.gpr.ref",
                Filename2 => Policy_GPR),
-              Message   => "Policy project file mismatch (1)");
-      Ada.Directories.Delete_File (Name => Policy_GPR);
-
-      Muxml.Utils.Set_Attribute
-        (Doc   => Policy.Doc,
-         XPath => "/system/config/boolean[@name='iommu_enabled']",
-         Name  => "value",
-         Value => "false");
-
-      Write (Output_Dir => "obj",
-             Policy     => Policy);
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "data/policy_iommu_disable.gpr.ref",
-               Filename2 => Policy_GPR),
-              Message   => "Policy project file mismatch (2)");
+              Message   => "Policy project file mismatch");
       Ada.Directories.Delete_File (Name => Policy_GPR);
 --  begin read only
    end Test_Write;

@@ -24,9 +24,6 @@ is
    --  Validate config variable name uniqueness.
    procedure Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 
-   --  Checks the presence of mandatory config variables.
-   procedure Required_Presence (XML_Data : Muxml.XML_Data_Type);
-
    --  Check that all expression config variable references are valid.
    procedure Expression_Config_Var_Refs (XML_Data : Muxml.XML_Data_Type);
 

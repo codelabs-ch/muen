@@ -56,8 +56,8 @@ package body Validate.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Register_All (Gnattest_T : in out Test);
-   procedure Test_Register_All_86826d (Gnattest_T : in out Test) renames Test_Register_All;
---  id:2.2/86826d71989a86e2/Register_All/1/0/
+   procedure Test_Register_All_3f90ea (Gnattest_T : in out Test) renames Test_Register_All;
+--  id:2.2/3f90ea30314141bf/Register_All/1/0/
    procedure Test_Register_All (Gnattest_T : in out Test) is
 --  end read only
 
@@ -69,25 +69,10 @@ package body Validate.Test_Data.Tests is
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/config/boolean[@name='iommu_enabled']",
-         Name  => "value",
-         Value => "true");
-      Register_All (Policy => Data);
-      Assert (Condition => XML_Processors.Get_Count = 130,
+      Register_All;
+      Assert (Condition => XML_Processors.Get_Count = 129,
               Message   => "Count mismatch(1):"
               & XML_Processors.Get_Count'Img);
-      XML_Processors.Clear;
-
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/config/boolean[@name='iommu_enabled']",
-         Name  => "value",
-         Value => "false");
-      Register_All (Policy => Data);
-      Assert (Condition => XML_Processors.Get_Count = 114,
-              Message   => "Count mismatch(2):" & XML_Processors.Get_Count'Img);
       XML_Processors.Clear;
 
    exception

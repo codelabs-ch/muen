@@ -16,7 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Mutools.System_Config;
 with Mutools.Immutable_Processors;
 with Mucfgcheck.Memory;
 with Mucfgcheck.Device;
@@ -45,7 +44,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Register_All (Data : Muxml.XML_Data_Type)
+   procedure Register_All
    is
       use Cfgchecks;
    begin
@@ -101,17 +100,10 @@ is
 
       Check_Procs.Register (Process => Mucfgcheck.Hardware.CPU_Count'Access);
 
-      --  IOMMU config.
-
-      if Mutools.System_Config.Get_Value
-        (Data => Data,
-         Name => "iommu_enabled")
-      then
-         Check_Procs.Register
-           (Process => Mucfgcheck.Hardware.IOMMU_Presence'Access);
-         Check_Procs.Register
-           (Process => Mucfgcheck.Device.IOMMU_Region_Size'Access);
-      end if;
+      Check_Procs.Register
+        (Process => Mucfgcheck.Hardware.IOMMU_Presence'Access);
+      Check_Procs.Register
+        (Process => Mucfgcheck.Device.IOMMU_Region_Size'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

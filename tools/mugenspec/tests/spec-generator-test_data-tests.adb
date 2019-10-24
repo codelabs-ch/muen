@@ -51,97 +51,58 @@ package body Spec.Generator.Test_Data.Tests is
       Evts_Spec_B : constant String := "skp-events.adb";
       Policy_GPR  : constant String := "policy.gpr";
 
-      ----------------------------------------------------------------------
-
-      procedure Write_Specs
-      is
-         Policy     : Muxml.XML_Data_Type;
-         Output_Dir : constant String := "obj/test-generator-write-specs/";
-      begin
-         if not Ada.Directories.Exists (Name => Output_Dir) then
-            Ada.Directories.Create_Directory (New_Directory => Output_Dir);
-         end if;
-
-         Muxml.Parse (Data => Policy,
-                      Kind => Muxml.Format_B,
-                      File => "data/test_policy.xml");
-
-         Write (Output_Dir => Output_Dir,
-                Policy     => Policy);
-
-         Assert (Condition => Ada.Directories.Exists
-                 (Name => Output_Dir & Sched_Spec),
-                 Message   => "Scheduling spec missing");
-         Assert (Condition => Ada.Directories.Exists
-                 (Name => Output_Dir & Intr_Spec),
-                 Message   => "Interrupt spec missing");
-         Assert (Condition => Ada.Directories.Exists
-                 (Name => Output_Dir & Kernel_Spec),
-                 Message   => "Kernel spec missing");
-         Assert (Condition => Ada.Directories.Exists
-                 (Name => Output_Dir & Kernel_H),
-                 Message   => "Kernel policy.h missing");
-         Assert (Condition => Ada.Directories.Exists
-                 (Name => Output_Dir & Subj_Spec_H),
-                 Message   => "Subject spec header missing");
-         Assert (Condition => Ada.Directories.Exists
-                 (Name => Output_Dir & Subj_Spec_B),
-                 Message   => "Subject spec body missing");
-         Assert (Condition => Ada.Directories.Exists
-                 (Name => Output_Dir & Skp_Spec),
-                 Message   => "Top-level spec missing");
-         Assert (Condition => Ada.Directories.Exists
-                 (Name => Output_Dir & HW_Spec),
-                 Message   => "Hardware spec missing");
-         Assert (Condition => Ada.Directories.Exists
-                 (Name => Output_Dir & IOMMU_Spec),
-                 Message   => "IOMMU spec missing");
-         Assert (Condition => Ada.Directories.Exists
-                 (Name => Output_Dir & Evts_Spec_H),
-                 Message   => "Events spec header missing");
-         Assert (Condition => Ada.Directories.Exists
-                 (Name => Output_Dir & Evts_Spec_B),
-                 Message   => "Events spec body missing");
-         Assert (Condition => Ada.Directories.Exists
-                 (Name => Output_Dir & Policy_GPR),
-                 Message   => "Policy GPR missing");
-
-         Ada.Directories.Delete_Tree (Directory => Output_Dir);
-      end Write_Specs;
-
-      ----------------------------------------------------------------------
-
-      procedure Write_No_IOMMUs
-      is
-         Policy     : Muxml.XML_Data_Type;
-         Output_Dir : constant String := "obj/test-generator-write-no-iommus/";
-      begin
-         if not Ada.Directories.Exists (Name => Output_Dir) then
-            Ada.Directories.Create_Directory (New_Directory => Output_Dir);
-         end if;
-
-         Muxml.Parse (Data => Policy,
-                      Kind => Muxml.Format_B,
-                      File => "data/test_policy.xml");
-
-         Muxml.Utils.Set_Attribute
-           (Doc   => Policy.Doc,
-            XPath => "/system/config/boolean[@name='iommu_enabled']",
-            Name  => "value",
-            Value => "false");
-
-         Write (Output_Dir => Output_Dir,
-                Policy     => Policy);
-         Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => Output_Dir & IOMMU_Spec,
-                  Filename2 => "data/skp-iommu_noiommus_ads.ref"),
-                 Message   => "Empty IOMMU spec mismatch");
-
-         Ada.Directories.Delete_Tree (Directory => Output_Dir);
-      end Write_No_IOMMUs;
+      Policy     : Muxml.XML_Data_Type;
+      Output_Dir : constant String := "obj/test-generator-write-specs/";
    begin
-      Write_Specs;
-      Write_No_IOMMUs;
+      if not Ada.Directories.Exists (Name => Output_Dir) then
+         Ada.Directories.Create_Directory (New_Directory => Output_Dir);
+      end if;
+
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      Write (Output_Dir => Output_Dir,
+             Policy     => Policy);
+
+      Assert (Condition => Ada.Directories.Exists
+              (Name => Output_Dir & Sched_Spec),
+              Message   => "Scheduling spec missing");
+      Assert (Condition => Ada.Directories.Exists
+              (Name => Output_Dir & Intr_Spec),
+              Message   => "Interrupt spec missing");
+      Assert (Condition => Ada.Directories.Exists
+              (Name => Output_Dir & Kernel_Spec),
+              Message   => "Kernel spec missing");
+      Assert (Condition => Ada.Directories.Exists
+              (Name => Output_Dir & Kernel_H),
+              Message   => "Kernel policy.h missing");
+      Assert (Condition => Ada.Directories.Exists
+              (Name => Output_Dir & Subj_Spec_H),
+              Message   => "Subject spec header missing");
+      Assert (Condition => Ada.Directories.Exists
+              (Name => Output_Dir & Subj_Spec_B),
+              Message   => "Subject spec body missing");
+      Assert (Condition => Ada.Directories.Exists
+              (Name => Output_Dir & Skp_Spec),
+              Message   => "Top-level spec missing");
+      Assert (Condition => Ada.Directories.Exists
+              (Name => Output_Dir & HW_Spec),
+              Message   => "Hardware spec missing");
+      Assert (Condition => Ada.Directories.Exists
+              (Name => Output_Dir & IOMMU_Spec),
+              Message   => "IOMMU spec missing");
+      Assert (Condition => Ada.Directories.Exists
+              (Name => Output_Dir & Evts_Spec_H),
+              Message   => "Events spec header missing");
+      Assert (Condition => Ada.Directories.Exists
+              (Name => Output_Dir & Evts_Spec_B),
+              Message   => "Events spec body missing");
+      Assert (Condition => Ada.Directories.Exists
+              (Name => Output_Dir & Policy_GPR),
+              Message   => "Policy GPR missing");
+
+      Ada.Directories.Delete_Tree (Directory => Output_Dir);
 --  begin read only
    end Test_Write;
 --  end read only

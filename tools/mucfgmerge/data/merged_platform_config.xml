@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <system>
  <config>
-  <boolean name="iommu_enabled" value="true"/>
   <boolean name="supports_xhci_debug" value="false"/>
   <integer name="session_count" value="4"/>
   <integer name="some_numeric_value" value="23"/>

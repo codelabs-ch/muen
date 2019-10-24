@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Mutools.System_Config;
-
 with Expanders.Events;
 with Expanders.Memory;
 with Expanders.Kernel;
@@ -44,7 +42,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Register_All (Data : Muxml.XML_Data_Type)
+   procedure Register_All
    is
       use Expanders;
    begin
@@ -161,17 +159,9 @@ is
 
       Procs.Register (Process => Device_Domains.Add_Section_Skeleton'Access);
 
-      --  IOMMU config.
-
-      if Mutools.System_Config.Get_Value
-        (Data => Data,
-         Name => "iommu_enabled")
-      then
-         Procs.Register (Process => Hardware.Add_IOMMU_Default_Caps'Access);
-         Procs.Register
-           (Process =>
-              Device_Domains.Add_Reserved_Memory_Region_Mappings'Access);
-      end if;
+      Procs.Register (Process => Hardware.Add_IOMMU_Default_Caps'Access);
+      Procs.Register
+        (Process => Device_Domains.Add_Reserved_Memory_Region_Mappings'Access);
 
       --  RMRR mappings must be added before the VT-d tables.
 

@@ -28,6 +28,7 @@ with McKae.XML.XPath.XIA;
 with Mulog;
 with Muxml.Utils;
 with Mutools.Files;
+with Mutools.Types;
 with Mutools.Utils;
 
 with Solo5.Types;
@@ -44,12 +45,77 @@ is
       Virtual_Address : out Interfaces.Unsigned_64;
       Size            : out Interfaces.Unsigned_64);
 
+   --  Return virtual end address of unikernel binary. Raises exception if no
+   --  subject binary region could be found.
+   function Get_Binary_End
+     (Physical_Mem : DOM.Core.Node_List;
+      Logical_Mem  : DOM.Core.Node_List)
+      return Interfaces.Unsigned_64;
+
    --  Write Solo5 boot info structure with given command line to file
    --  specified by filename.
    procedure Write_BI_File
      (Filename  : String;
       Boot_Info : Types.Boot_Info_Type;
       Cmdline   : String);
+
+   -------------------------------------------------------------------------
+
+   function Get_Binary_End
+     (Physical_Mem : DOM.Core.Node_List;
+      Logical_Mem  : DOM.Core.Node_List)
+      return Interfaces.Unsigned_64
+   is
+      use type Interfaces.Unsigned_64;
+
+      End_Addr : Interfaces.Unsigned_64 := 0;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Logical_Mem) - 1 loop
+         declare
+            use type Mutools.Types.Memory_Kind;
+
+            Log_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Logical_Mem,
+                                      Index => I);
+            Log_Addr : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Log_Node,
+                    Name => "virtualAddress"));
+            Phys_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Log_Node,
+                 Name => "physical");
+            Phys_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Physical_Mem,
+                 Ref_Attr  => "name",
+                 Ref_Value => Phys_Name);
+            Mem_Type : constant Mutools.Types.Memory_Kind
+              := Mutools.Types.Memory_Kind'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Phys_Node,
+                    Name => "type"));
+            Size : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Phys_Node,
+                    Name => "size"));
+         begin
+            if Mem_Type = Mutools.Types.Subject_Binary then
+               End_Addr := Interfaces.Unsigned_64'Max
+                 (End_Addr, Log_Addr + Size - 1);
+            end if;
+         end;
+      end loop;
+
+      if End_Addr = 0 then
+         raise Missing_Binary with "Unable to determine unikernel binary "
+           & "end: No memory region with type 'subject_binary' present";
+      end if;
+
+      return End_Addr;
+   end Get_Binary_End;
 
    -------------------------------------------------------------------------
 
@@ -158,14 +224,10 @@ is
                                   Virtual_Address => Address,
                                   Size            => Size);
             Boot_Info.Mem_Size := Address + Size;
-
-            Get_Region_Dimension (Physical_Mem    => Phys_Mem,
-                                  Logical_Mem     => Subj_Memory,
-                                  Region_Name     => "binary",
-                                  Virtual_Address => Address,
-                                  Size            => Size);
-            Boot_Info.Kernel_End := Address + Size - 1;
-            Boot_Info.Cmdline    := Interfaces.Unsigned_64'Value
+            Boot_Info.Kernel_End
+              := Get_Binary_End (Physical_Mem => Phys_Mem,
+                                 Logical_Mem  => Subj_Memory);
+            Boot_Info.Cmdline := Interfaces.Unsigned_64'Value
               (Info_Log_Addr) + Types.Boot_Info_Type'Size / 8;
 
             Mulog.Log (Msg => "Writing boot info for subject '"

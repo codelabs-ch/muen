@@ -61,6 +61,28 @@ package body Solo5.Generator.Test_Data.Tests is
 
       Ada.Directories.Delete_File (Name => Uni1_Bi);
       Ada.Directories.Delete_File (Name => Uni2_Bi);
+
+      --  Missing 'subject_binary' memory region.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/memory/memory[@type='subject_binary']",
+         Name  => "type",
+         Value => "subject");
+
+      begin
+         Write (Output_Dir => "obj",
+                Policy     => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Missing_Binary =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Unable to determine unikernel binary end: No memory "
+                    & "region with type 'subject_binary' present",
+                    Message   => "Exception message mismatch");
+      end;
 --  begin read only
    end Test_Write;
 --  end read only

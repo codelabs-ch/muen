@@ -72,11 +72,11 @@
    final step in the integration of a Muen system is therefore the actual
    generation of the data structures which guarantee subject isolation and the
    composition of the final system image. This step is performed by a trusted
-   system composer called (static) $\tau$0.  This is explained in section
-   \ref{tau0-concept}.
+   system composer called (static) $\tau$0.  The concept of $\tau0$ is
+   introduced in section \ref{tau0-concept}.
 
-   Section \ref{toolchain} explains every toolchain tool and the system composer
-   $\tau0$ in detail. It also presents the usage of each tool to the reader.
+   Section \ref{toolchain} explains every tool and the system image composer in
+   detail. It also presents the usage of each tool.
 
    Section \ref{schema} specifies the XML-schema and structure of the system
    source format of the Muen system policy. Explanations and examples illustrate
@@ -106,7 +106,7 @@
    all aspects of the system are fixed at integration time the policy is very
    well suited for automated and manual validation prior to system execution.
 
-   The details of each property is outlined with examples in the XSD-schema of
+   The details of each property above is outlined with examples in the XSD-schema of
    the format source policy in section \ref{schema}.
   </text>
 
@@ -128,20 +128,18 @@
 
     The implementation of such tools is simplified by the absence of
     higher-level abstractions in the latter formats which would make the
-    extraction of input data more involved. As an example, the tool responsible
-    for page table generation can directly access all virtual memory mappings of
-    a subject and must not concern itself with channels. The channel abstraction
-    has already been broken down into the corresponding memory elements during
-    the policy compilation step of the build process.
+    extraction of input data more involved.
+
+    Furthermore, the final format B must specify every aspect of the system
+    explicitly, something which can not be expected of an integrator.
 
     The following sections give more detail about each policy format.
 
-    \pagebreak
     \begin{warning}
     Only the policy in format source is specified in this document, as the other
     formats are considered \emph{internal} and might change unannounced. While
-    it is possible to specify a system policy in format A or B, it is therefore
-    not recommended.
+    it is possible to specify a system policy in format A or B, it is not
+    recommended.
     \end{warning}
    </text>
 
@@ -150,15 +148,16 @@
      The user-specified policy is written in the \emph{source format}.
      Constructs such as channels provide abstractions to simplify the
      specification of component-based systems. Many XML elements and attributes
-     are optional and will be filled in with default values during later steps
-     of the policy compilation process.
+     are optional and will be \epmh{expanded} during later steps of the policy
+     compilation process.
 
-     Kernel and $\tau0$ resources are not part of the source format since they are also
-     automatically added by the policy expansion step.
+     Kernel and $\tau0$ subject (\ref{tau0-dynamic}) resources are not part of
+     the source format since they are also automatically added by the policy
+     expansion step.
 
      The use of configuration values enables parametrization of the system policy.
 
-     The policy in source format in specified in section \ref{schema}.
+     The policy in source format is specified in section \ref{schema}.
     </text>
    </section>
 
@@ -194,7 +193,8 @@
    sections and specified in section \ref{schema} is transformed and integrated
    by various tools to generate a bootable system image.
 
-   The directed graph \ref{fig:integ} illustrates the process.
+   The directed graph \ref{fig:integ} on page \pageref{fig:integ} illustrates
+   the process.
 
    \begin{figure}[hp]
    \centering
@@ -223,33 +223,36 @@
    source specifications (e.g.  in SPARK/Ada) from the component description.
    Furthermore, a component might expand its own component description with
    information extracted from system information, or it might use the
-   Mucbinsplit tool (\ref{tools-mucbinsplit}) to fill in the auto-generated
-   memory regions provided by its binary after compilation. The expanded
-   component description is then merged with the system policy for further
-   processing.
+   \texttt{mucbinsplit} tool (\ref{tools-mucbinsplit}) to fill in the memory
+   regions provided by its binary after compilation. The expanded component
+   description is then merged with the system policy for further processing.
 
    After all component descriptions have been merged into the system policy, it
-   is expanded by the expander tool (see \ref{tools-mucfgexpand}). This step
+   is expanded by the expander tool (\ref{tools-mucfgexpand}). This step
    transforms the system policy from format source to format A. Abstractions
    like directed channels are now resolved to basic shared memory mechanisms and
-   events.
+   events, non-present optional attributes are added with default values.
 
-   The allocater tool (see \ref{tools-mucfgalloc) then loops over all physical
+   The allocater tool (\ref{tools-mucfgalloc}) then loops over all physical
    memory regions which have no physical address assigned and allocates one from
    the usable pool. The usable pool information is extracted from the
    allocatable memory block list (\ref{system_src.xsd:physicalMemoryType}) in
-   the system policy.  After that, the policy is transformed to format B.
+   the system policy.  This process transforms the policy to format B where all
+   elements must be present and attributes specified.
 
-   The policy is now checked for correctness by the validator tool (see
-   \ref{tools-mucfgvalidate}).  If a misconfiguration is found, the user is
-   informed and the build aborts.  The checks performed by the validator tool
-   are listed in section \ref{validation}. If no error is found, the system
-   policy is now ready to be used for two things:
+   The policy is now checked for correctness by the validator tool
+   (\ref{tools-mucfgvalidate}).  If a misconfiguration is found, the user is
+   informed and the build aborts. The extensive checks performed by the
+   validator tool are listed in section \ref{validation}. If no error is found,
+   the system policy is now ready to be used for three things:
 
    \begin{itemize}
-   \item Create a command stream for $\tau0$
    \item Generate kernel specifications (in SPARK/Ada)
+   \item Generate structures for subjects
+   \item Create a command stream for $\tau0$
    \end{itemize}
+
+   TODO: Update graph with other structure gen
 
    The kernel source specifications contain tables and constants which are
    compiled into the kernel in the kernel build process. See the description of
@@ -258,85 +261,86 @@
    provide.
 
    The command stream generator (ref:TODO) generates instructions in XML format
-   for the $\tau0$ system composer explained in the following section. The other
-   tools of the Muen toolchain referenced in this section are described in
-   detail in section \ref{toolchain-core-tools} afterwards.
+   for the $\tau0$ system composer explained in the following section.
+  </text>
+ </section>
+
+ <section id="tau0-concept" label="Tau0 Concept" priority="0">
+  <text priority="0">
+   The XML command stream together with the other build artifacts like subject
+   structures or the kernel binary is provided as input to the trusted system
+   composer $\tau0$.
+
+   The $\tau0$ concept is a process within Muen development to gradually
+   increase the dynamic of a component based system while keeping a high level
+   of assurance about the correctness of isolation enforcement.
+
+   The ultimate goal is to have a trusted $\tau0$ subject with extra privilege
+   to interact with the Muen SK over a special $\tau0$ interface API. This would
+   allow $\tau0$ to change certain well-defined aspects of the system state at
+   runtime.
+
+   Since it must be guaranteed that a dynamic system is as secure as the static
+   one, $\tau0$ must be developed with the same utter care as the kernel itself,
+   meaning it must be written in SPARK/Ada and security properties which provide
+   hard isolation must be formally proven. This is an ongoing process.
+
+   The two $\tau0$ scenarios to consider are therefore:
+   \begin{itemize}
+   \item static
+   \item dynamic
+   \end{itemize}
   </text>
 
-  <section id="tau0-concept" label="$\tau0$ Concept" priority="0">
+  <section id="tau0-static" label="Static" priority="0">
    <text priority="0">
-    The final system description created by the toolchain so far, as explained
-    in the previous section, is again transformed to an XML command stream and
-    fed together with other build artifacts to the trusted system composer
-    $\tau0$.
+    The static variant is the one which is currently implemented. $\tau0$ runs
+    at integration time and assembles the system image by constructing the
+    data structures guaranteeing isolation and merging in the build artifacts
+    of the other Muen tools, like untrusted ACPI data structures for a Linux
+    VM (\ref{tools-mugenacpi}).
 
-    The $\tau0$ concept is a process within Muen development to gradually
-    increase the dynamic of a component based system. The ultimate goal is to
-    have a trusted $\tau0$ subject with extra privilege to interact with the
-    Muen SK over the special $\tau0$ interface API. This would allow $\tau0$ to
-    change certain well-defined aspects of the system state at runtime.
+    Static $\tau0$ fulfills its task by creating the system image in memory
+    while processing the commands from the command stream. The following
+    listing shows an example command stream:
 
-    Since it must be guaranteed that a dynamic system is as secure as the
-    static one, $\tau0$ must be developed with the same utter care as the
-    kernel itself, meaning it must be written in SPARK/Ada and security
-    properties which provide hard isolation must be formally proven. This is an
-    ongoing process.
+    \lstinputlisting[caption=$\tau0$ Command
+    Stream,label={lst:cmdstream},language=XML,linerange=1-34]{../../../pack/obj/policy_b_cmds.xml}
 
-    The two $\tau0$ scenarios are therefore:
-    \begin{itemize}
-    \item static
-    \item dynamic
-    \end{itemize}
+    $\tau0$ is written in SPARK/Ada and it applies memory typization to proof
+    formal aspects of the system. Command processing starts from a well-known
+    good state and it is enforced that each system state transition resulting
+    from a new command input results in a good state again. If not, the
+    command is rejected and the build aborts.
+
+    See the project README or the webpage (TODO) for more information about
+    the current state of $\tau0$.
    </text>
+  </section>
 
-   <section id="tau0-static" label="Static" priority="0">
-    <text priority="0">
-     The static variant is the one which is currently implemented. $\tau0$ runs
-     at integration time and assembles the system image by constructing the
-     data structures guaranteeing isolation and merging in the build artifacts
-     of the other Muen tools, like untrusted ACPI data structures for a Linux
-     VM generated by Mugenacpi (\ref{tools-mugenacpi}).
+  <section id="tau0-dynamic" label="Dynamic" priority="0">
+   <text priority="0">
+    While the system image is composed by the static variant of $\tau0$, the
+    goal is to run the same code as $\tau0$ subject at runtime. Note that this
+    is not yet implemented but planned as a way forward to achieve more dynamic
+    systems while having the same assurance about security and safety
+    properties.
 
-     Static $\tau0$ fulfills its task by creating the system image in memory
-     while processing the commands from the command stream. The following
-     listing shows an example command stream:
+    The dynamic $\tau0$ running as subject would reconstruct the system state
+    at integration time and continue to process commands from there. Commands
+    might be sent to dynamic $\tau0$ by a special control subject, depending
+    on the system use case.
 
-     \lstinputlisting[caption=$\tau0$ Command
-     Stream,label={lst:cmdstream},language=XML,linerange=1-34]{../../../pack/obj/policy_b_cmds.xml}
+    The dynamic variant can be divided into multiple sub-variants, depending
+    on how dynamic system behavior is allowed. For example, the initial
+    dynamic variant might only allow entity construction, not destruction.
 
-     $\tau0$ is written in SPARK/Ada and it applies memory typization to proof
-     formal aspects of the system. Command processing starts from a well-known
-     good state and it is enforced that each system state transition resulting
-     from a new command input results in a good state again. If not, the
-     command is rejected and the build aborts.
-
-     See the project README or the webpage (TODO) for more information about
-     the current state of $\tau0$.
-    </text>
-   </section>
-
-   <section id="tau0-dynamic" label="Dynamic" priority="0">
-    <text priority="0">
-     While the system image is composed by the static variant of $\tau0$, the
-     goal is to run the same code as $\tau0$ subject at runtime. Note that this
-     is not yet implemented but planned as a way forward to achieve more
-     dynamic systems while having the same assurance about security and safety
-     properties.
-
-     The dynamic $\tau0$ running as subject would reconstruct the system state
-     at integration time and continue to process commands from there. Commands
-     might be sent to dynamic $\tau0$ by a special control subject, depending
-     on the system use case.
-
-     At runtime, memory can be initialized and additional subjects can be
-     added.  All entities must conform to a policy which may limit the system
-     to a set of preconfigured states.
-
-     The dynamic variant can be divided into multiple sub-variants, depending
-     on how dynamic system behavior is allowed. For example, the initial
-     dynamic variant might only allow entity construction, not destruction.
-    </text>
-   </section>
+    \begin{warning}
+    A simple proof of concept version of a dynamic $\tau0$ subject is already
+    scheduled as part of every Muen system. This simple version takes care of
+    switching scheduling major frames in a round-robin fashion.
+    \end{warning}
+   </text>
   </section>
  </section>
 
@@ -346,7 +350,7 @@
    <text priority="0">
     While the previous section \ref{integration} presented an overview of the
     system integration process, this section focuses on the detailed description
-    of the toolchain processing and each tool of the toolchain.
+    of the tools forming the Muen toolchain.
 
     The tool-based processing of the Muen system policy can be divided into the
     following steps:
@@ -354,7 +358,7 @@
     \begin{itemize}
     \item Policy merging
     \item Components build
-    \item Components spec merging
+    \item Components specification merging
     \item Policy compilation
     \item Policy validation
     \item Structure generation
@@ -365,9 +369,10 @@
     Following the Unix philosophy "A program should do only one thing and do it
     well" each of the tools only performs a specific task. They work in
     conjunction to process a user-defined policy and build a bootable system
-    image. Figure \ref{fig:build-process} presents an illustration of this tool
-    processing. The following sections explain each processing step before the
-    \ref{toolchain-core-tools} section describes each tool separately.
+    image. Figure \ref{fig:build-process} presents another illustration of the
+    policy processing, this time laying the focus on the tools. The following
+    sections explain each processing step before the \ref{toolchain-core-tools}
+    section describes each tool separately.
 
     \begin{figure}[h!]
     \centering
@@ -397,13 +402,12 @@
      includes, the policy writer is able to separate and organize the system
      policy as desired. Instead of specifying the whole policy in one file, the
      subject specifications can be split into separate files, or common parts
-     shared by different system descriptions can be extracted. See section
-     \ref{tools-mucfgmerge} for more information about the Merger tool.
+     shared by different system descriptions can be extracted.
 
      After the merge step, the resulting policy is well formatted to minimize
      the difference in the generated policies resulting from the subsequent
-     tasks. This allows the user to easily review (\texttt{diff}) and therefore
-     verify the results of each policy compilation task.
+     tasks. This allows the user to review (\texttt{diff}) and therefore verify
+     the results of each policy compilation task.
 
      Expressions can be used to formulate (nested) boolean terms using the
      numeric equality/inequality and logical operators. They are evaluated to
@@ -448,6 +452,11 @@
      It automatically extends the component specification by adding a
      corresponding memory region with the appropriate access rights (e.g.
      executable, writable).
+
+     \begin{warning}
+     The final component binary will be included in the system image as a RAW
+     binary, not ELF. The same is of course true for the kernel binary.
+     \end{warning}
     </text>
    </section>
 
@@ -511,8 +520,9 @@
      It is important to always run the Validator as the system could otherwise
      exhibit unexpected behavior. This is especially true if a policy writer
      decides to specify the system directly in format B which is also possible
-     but not advised. Section \ref{tools-mucfgvalidate} explains the Validator
-     tool and lists some example checks performed by the tool as illustration.
+     but not advised. Section \ref{tools-mucfgvalidate} explains the usage of
+     the Validator tool, while section \ref{validation} outlines all performed
+     checks.
     </text>
    </section>
 
@@ -520,14 +530,41 @@
     <text priority="0">
      The structure generation step encompasses various tools which extract
      information from a policy in format B and generate files in different
-     formats (see figure \ref{fig:build-process}).
+     formats.
 
      While some generated files are directly linked into the Muen kernel (i.e.
-     Source Specifications, see \ref{tools-mugenspec}), most of them are packed
-     into the final system image by $\tau0$.
+     Source Specifications, see \ref{tools-mugenspec}), most of them are
+     subject-related. Depending on the subjects included in the actual system
+     policy, the following subject structures are generated:
 
-     For more information about the structure generators, see section
+     \begin{itemize}
+     \item MSR store regions
+     \item Sinfo regions
+     \item Regions for Linux VMs
+     \begin{itemize}
+     \item ACPI tables
+     \item Linux zero-page (ZP) regions
+     \end{itemize}
+     \item Regions for solo5 VMs
+     \begin{itemize}
+     \item Solo5 boot info
+     \end{itemize}
+     \end{itemize}
+
+     As this structures do not guarantee isolation between subjects or subjects
+     and the kernel, they are not directly generated by $\tau0$ but only
+     included via XML command stream and build artifacts.
+
+     The structure generator tools are explained in section
      \ref{toolchain-tools-structgen}.
+    </text>
+   </section>
+
+   <section id="toolchain-image-creation" label="Image Creation" priority="0">
+    <text priority="0">
+     The system image composer assembles the final system image. This task is
+     perfomed by $\tau0$ static explained in the previous section
+     \ref{tau0-static}. The usage of it is specified in \ref{tools-tau0-static}.
     </text>
    </section>
   </section>
@@ -610,7 +647,7 @@
      \item Expand device resources
      \item Expand device isolation domains
      \item Expand kernel sections
-     \item Expand minimal $\tau$0 subject
+     \item Expand minimal dynamic $\tau$0 subject
      \item Expand additional memory regions
      \item Expand hardware-/platform-related information
      \item Expand additional subject information
@@ -648,8 +685,11 @@
    <section id="tools-mucfgvalidate" label="Validator" priority="0">
     <text priority="0">
      The Validator performs additional checks that go beyond the basic
-     restrictions imposed by the XML schema validation. Currently over 110
-     checks are performed.
+     restrictions imposed by the XML schema validation. For example it checks
+     that the hardware provides an IOMMU device and that all references to
+     subjects are resolvable. See \ref{validation} for a complete list of all
+     executed checks. The tool aborts with a non-zero exit status and an
+     explanatory message to the user if a check fails.
 
      \begin{description} \itemsep1pt \parskip0pt
      \item[Name] \hfill \\
@@ -703,6 +743,26 @@
      memory region. This way SL is able to determine the intended content of
      the target memory region by looking up the region in its sinfo page by
      using the hash value as key.
+    </text>
+   </section>
+
+   <section id="tools-tau0-static" label="Tau0 Static" priority="0">
+    <text priority="0">
+     The $\tau0$ static component serves as an image composer during
+     integration. The concept and motivation of this approach is described in
+     section \ref{tau0-concept}.
+
+     \begin{description} \itemsep1pt \parskip0pt
+     \item[Name] \hfill \\
+     \texttt{tau0\_main}
+     \item[Input] \hfill \\
+     XML command stream, input directory containing build artifacts
+     \item[Output] \hfill \\
+     Muen system image
+     \item[Output format] \hfill \\
+     Multiboot image\footnote{\url{https://www.gnu.org/software/grub/manual/multiboot/multiboot.html}},
+     bootable by any compliant bootloader.
+     \end{description}
     </text>
    </section>
 

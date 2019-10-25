@@ -227,8 +227,8 @@
   <memory alignment="16#1000#" caching="WB" name="kernel_text" physicalAddress="16#0010_0000#" size="16#0001_0000#" type="kernel_binary">
    <file filename="kernel" offset="16#0000#"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="kernel_global_data" physicalAddress="16#0011_9000#" size="16#1000#" type="kernel_binary">
-   <file filename="kernel" offset="16#0001_9000#"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_global_data" physicalAddress="16#0011_b000#" size="16#1000#" type="kernel_binary">
+   <file filename="kernel" offset="16#0001_b000#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="kernel_ro" physicalAddress="16#0011_f000#" size="16#0002_1000#" type="kernel_binary">
    <file filename="kernel" offset="16#0001_f000#"/>
@@ -440,7 +440,7 @@
     <memory executable="true" logical="text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="false"/>
     <memory executable="false" logical="data" physical="kernel_data_0" virtualAddress="16#0011_0000#" writable="true"/>
     <memory executable="false" logical="bss" physical="kernel_bss_0" virtualAddress="16#0011_2000#" writable="true"/>
-    <memory executable="false" logical="global_data" physical="kernel_global_data" virtualAddress="16#0011_9000#" writable="true"/>
+    <memory executable="false" logical="global_data" physical="kernel_global_data" virtualAddress="16#0011_b000#" writable="true"/>
     <memory executable="false" logical="ro" physical="kernel_ro" virtualAddress="16#0011_f000#" writable="false"/>
     <memory executable="false" logical="stack" physical="kernel_stack_0" virtualAddress="16#0011_5000#" writable="true"/>
     <memory executable="false" logical="interrupt_stack" physical="kernel_interrupt_stack_0" virtualAddress="16#0011_7000#" writable="true"/>
@@ -462,7 +462,7 @@
     <memory executable="true" logical="text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="false"/>
     <memory executable="false" logical="data" physical="kernel_data_1" virtualAddress="16#0011_0000#" writable="true"/>
     <memory executable="false" logical="bss" physical="kernel_bss_1" virtualAddress="16#0011_2000#" writable="true"/>
-    <memory executable="false" logical="global_data" physical="kernel_global_data" virtualAddress="16#0011_9000#" writable="true"/>
+    <memory executable="false" logical="global_data" physical="kernel_global_data" virtualAddress="16#0011_b000#" writable="true"/>
     <memory executable="false" logical="ro" physical="kernel_ro" virtualAddress="16#0011_f000#" writable="false"/>
     <memory executable="false" logical="stack" physical="kernel_stack_1" virtualAddress="16#0011_5000#" writable="true"/>
     <memory executable="false" logical="interrupt_stack" physical="kernel_interrupt_stack_1" virtualAddress="16#0011_7000#" writable="true"/>

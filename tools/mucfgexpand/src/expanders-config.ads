@@ -29,7 +29,7 @@ is
    Kernel_Stack_Size                : constant := 16#0000_1000#;
    Kernel_Interrupt_Stack_Addr      : constant := 16#0011_7000#;
    Kernel_Interrupt_Stack_Size      : constant := 16#0000_1000#;
-   Kernel_Global_Data_Section_Addr  : constant := 16#0011_9000#;
+   Kernel_Global_Data_Section_Addr  : constant := 16#0011_b000#;
    Kernel_Global_Data_Section_Size  : constant := 16#0000_1000#;
    Kernel_RO_Section_Addr           : constant := 16#0011_f000#;
    Kernel_RO_Section_Size           : constant := 16#0002_1000#;

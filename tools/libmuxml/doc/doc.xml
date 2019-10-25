@@ -253,13 +253,11 @@
    \end{itemize}
 
    The kernel source specifications contain tables and constants which are
-   compiled into the kernel in the kernel build process. See the description of
-   the \texttt{Skp} package hierarchy in the Muen Kernel Specification document
-   \cite{muen:kernel_specification} for the exact information these packages
-   provide.
+   compiled into the kernel in the kernel build process.
 
-   The command stream generator (ref:TODO) generates instructions in XML format
-   for the $\tau0$ system composer explained in the following section.
+   The command stream generator (\ref{tools-mugentau0cmds) generates
+   instructions in XML format for the $\tau0$ system composer explained in the
+   following section.
   </text>
  </section>
 
@@ -744,6 +742,31 @@
     </text>
    </section>
 
+   <section id="tools-mugentau0cmds" label="Tau0 Command Stream Generator" priority="0">
+    <text priority="0">
+     Creates an XML command stream for $\tau0$ to let it compose the system
+     image specified by the system policy given as input.
+
+     \begin{description} \itemsep1pt \parskip0pt
+     \item[Name] \hfill \\
+     \texttt{mugentau0cmds}
+     \item[Input] \hfill \\
+     System policy in format B
+     \item[Output] \hfill \\
+     XML command stream for $\tau0$ static
+     \end{description}
+
+     As $\tau0$ strictly enforces certain invariants, the system must be
+     constructed in a way not to violate these invariants. For example, before
+     memory can be typed as being a VT-d root table, this memory must be
+     cleared, as otherwise the memory typing model of $\tau0$ is violated.
+
+     The \texttt{mugentau0cmds} tool must take this into consideration when
+     iterating over the resources specified in the input system policy and
+     generating commands which instruct $\tau0$ to create the specified system.
+    </text>
+   </section>
+
    <section id="tools-tau0-static" label="Tau0 Static" priority="0">
     <text priority="0">
      The $\tau0$ static component serves as an image composer during
@@ -761,6 +784,10 @@
      Multiboot image\footnote{\url{https://www.gnu.org/software/grub/manual/multiboot/multiboot.html}},
      bootable by any compliant bootloader.
      \end{description}
+
+     If a command is received which violates a constraint enforced by $\tau0$
+     static, the tool aborts system image construction, displays an error
+     message and returns with a non-zero exit status.
     </text>
    </section>
 
@@ -889,7 +916,9 @@
       Gathers data from the system policy to generate various source files in
       SPARK, C and GNAT project file (GPR) format. Created output includes
       constant values for memory addresses, device resources, scheduling plans,
-      etc. See TODO the kernel spec for more information.
+      etc. See the description of the \texttt{Skp} package hierarchy in the Muen
+      Kernel Specification document \cite{muen:kernel_specification} for the
+      exact information these packages provide.
      </text>
     </section>
 

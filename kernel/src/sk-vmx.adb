@@ -536,14 +536,21 @@ is
    is
       Rev_ID, Unused_High : Word32;
    begin
-
-      --  Invalidate current VMCS and force CPU to sync data to VMCS memory.
-
+      --D @OL Id => impl_vmcs_reset_steps, Section => impl_vmcs_reset, Priority => 10
+      --D @Item List => impl_vmcs_reset_steps, Priority => 0
+      --D Make the VMCS inactive, not current and clear to force the CPU to
+      --D synchronize any cached data to the VMCS memory designated by the
+      --D physical memory address.
       Clear (VMCS_Address => VMCS_Address);
 
-      --  MSR IA32_VMX_BASIC definition, see Intel SDM Vol. 3D, "A.1 Basic VMX
-      --  Information".
-
+      --D @Item List => impl_vmcs_reset_steps, Priority => 0
+      --D Read IA32\_VMX\_BASIC MSR to determine the VMCS revision identifier
+      --D of the processor. Use this value to initialize the revision ID field
+      --D of the VMCS. Note, that bit 31 of the MSR is always 0 which means, the
+      --D shadow-VMCS indicator will always be cleared, see Intel SDM Vol. 3D,
+      --D "A.1 Basic VMX Information".
+      --D Set the VMX-abort indicator and all remaining VMCS data to zero, see
+      --D Intel SDM Vol 3C, "24.2 Format of the VMCS Region".
       CPU.Get_MSR (Register => Constants.IA32_VMX_BASIC,
                    Low      => Rev_ID,
                    High     => Unused_High);
@@ -551,8 +558,10 @@ is
                                    Abort_Indicator => 0);
       VMCS (Subject_ID).Data   := (others => 0);
 
-      --  Clear VMCS and set some initial values.
-
+      --D @Item List => impl_vmcs_reset_steps, Priority => 0
+      --D Execute VMCLEAR instruction again to initialize
+      --D implementation-specific information in the VMCS region, see Intel SDM
+      --D Vol. 3C, "24.11.3 Initializing VMCS"  .
       Clear (VMCS_Address => VMCS_Address);
    end Reset;
 

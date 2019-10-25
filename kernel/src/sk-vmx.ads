@@ -48,7 +48,11 @@ is
       Global => (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID),
                  In_Out => (Crash_Audit.State, X86_64.State));
 
-   --  Reset VMCS of subject specified by ID.
+   --D @Section Id => impl_vmcs_reset, Label => VMCS Reset, Parent => impl_vmcs, Priority => 0
+   --D @Text Section => impl_vmcs_reset, Priority => 0
+   --D Resetting a VMCS located at a specific physical memory address associated
+   --D with a specific subject means clearing all data and initializing the VMCS
+   --D for (re)use.
    procedure Reset
      (VMCS_Address : Word64;
       Subject_ID   : Skp.Global_Subject_ID_Type)

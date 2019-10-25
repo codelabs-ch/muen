@@ -56,6 +56,11 @@ emulate:	## Build and run Muen system in KVM
 emulate: pack
 	$(MAKE) -C $@
 
+emulate-bochs: HARDWARE=hardware/bochs.xml
+emulate-bochs: SYSTEM=xml/demo_system.xml
+emulate-bochs: pack
+	$(MAKE) -C emulate bochs-emulate
+
 iso:		## Build and create Muen system image (ISO)
 iso: HARDWARE=hardware/lenovo-t430s.xml
 iso: pack

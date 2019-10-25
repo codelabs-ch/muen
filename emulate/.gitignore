@@ -1,3 +1,5 @@
 .emulate
 *.iso
 *.out
+.bochs-emulate
+bochsout.txt

@@ -24,7 +24,7 @@ with SK.IO_Apic;
 package SK.VTd.Interrupts
 is
 
-   --  Setup I/O APIC IRQ routing (VT-d enabled).
+   --  Setup I/O APIC IRQ routing (VT-d disabled).
    procedure Setup_IRQ_Routing
    with
       Global  => (In_Out => IO_Apic.State),

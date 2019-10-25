@@ -121,3 +121,21 @@ clean: stop
 	rm -rf obj
 
 .PHONY: .emulate
+
+# BOCHS
+
+BOCHS_CONFIG ?= bochsrc
+
+bochs-emulate: .bochs-emulate
+
+.bochs-emulate: bochs-stop $(ISOFILE)
+	echo cont | bochs -q -f $(BOCHS_CONFIG) >bochs-emulate.out 2>&1 & echo "$$!" > $@
+
+bochs-stop:
+	kill `cat .bochs-emulate 2>/dev/null` 2>/dev/null || true
+
+bochs-clean: bochs-stop
+	rm -f $(ISOFILE) bochsout.txt *.out
+	rm -rf .bochs-emulate obj
+
+.PHONY: .bochs-emulate

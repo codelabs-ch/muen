@@ -1,0 +1,21 @@
+<platform>
+ <config>
+  <boolean name="ahci_supported" value="true"/>
+  <boolean name="serial_supported" value="true"/>
+  <boolean name="hsuart_supported" value="false"/>
+  <boolean name="xhcidbg_supported" value="false"/>
+  <boolean name="uefi_gop_rmrr_access" value="false"/>
+ </config>
+ <mappings>
+  <aliases>
+   <alias name="serial_device_1" physical="com_1">
+    <resource name="ioport1" physical="ioport1"/>
+   </alias>
+  </aliases>
+ </mappings>
+ <kernelDiagnostics type="uart">
+  <device physical="com_1">
+   <ioPort physical="ioport1"/>
+  </device>
+ </kernelDiagnostics>
+</platform>

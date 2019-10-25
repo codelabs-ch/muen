@@ -198,7 +198,7 @@
 
    \begin{figure}[hp]
    \centering
-   \includegraphics[width=1\textwidth,height=0.96\textheight,keepaspectratio]{build_overview.eps}
+   \includegraphics[width=1\textwidth,height=0.96\textheight,keepaspectratio]{integration_overview.eps}
    \caption{System Integration}
    \label{fig:integ}
    \end{figure}
@@ -251,8 +251,6 @@
    \item Generate structures for subjects
    \item Create a command stream for $\tau0$
    \end{itemize}
-
-   TODO: Update graph with other structure gen
 
    The kernel source specifications contain tables and constants which are
    compiled into the kernel in the kernel build process. See the description of

@@ -1046,7 +1046,47 @@
      is required is to run the tool on a common Linux distribution. See the
      project README for more information.
 
-     TODO: Explain what happens if something goes wrong.
+     \begin{description} \itemsep1pt \parskip0pt
+     \item[Name] \hfill \\
+     \texttt{mugenhwcfg}
+     \item[Input] \hfill \\
+     \emph{None}
+     \item[Output] \hfill \\
+     Hardware description in \texttt{output.xml}
+     \end{description}
+
+     The tool is implemented in a way to extract as much information from the
+     system and generate a hardware configuration even if problems are
+     encountered. The aim is to assist the integrator as much as possible in
+     writing a hardware configuration for the target hardware.
+
+     Therefore, the tool only fails with a non-zero exit status and no output if
+     essentially required data can not be extracted from the system. Other
+     problems are reported in the potentially incomplete \texttt{output.xml}
+     file as XML comments, making the encountered problems on the actual machine
+     evident. The following snippet provides an example of such a warning
+     comment in the header of the generated \texttt{output.xml} file:
+
+     \begin{lstlisting}[language=XML,numbers=none]
+     * WARNING *: Unable to resolve device class 0c80. Please update pci.ids
+     (-u) and try again
+     \end{lstlisting}
+
+     The comments should be rather self-explanatory. In this case, the problem
+     is only a minor issue since the tool was just unable to resolve a device
+     class number to a human-readable string.
+
+     The next example has more consequences:
+
+     \begin{lstlisting}[language=XML,numbers=none]
+     * WARNING *: Skipping invalid IRQ resource for device 0000:00:1f.3: None
+     \end{lstlisting}
+
+     This has the effect that no IRQ resource is appended in the specification
+     of the device exhibiting this problem. While the device can still be
+     assigned to a subject, it is missing the IRQ element and as a result the
+     IRQ resource itself. It can be assumed that this leads to problems with the
+     driver interacting with the device.
     </text>
    </section>
 

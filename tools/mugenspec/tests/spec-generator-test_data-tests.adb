@@ -49,7 +49,6 @@ package body Spec.Generator.Test_Data.Tests is
       IOMMU_Spec  : constant String := "skp-iommu.ads";
       Evts_Spec_H : constant String := "skp-events.ads";
       Evts_Spec_B : constant String := "skp-events.adb";
-      Policy_GPR  : constant String := "policy.gpr";
 
       Policy     : Muxml.XML_Data_Type;
       Output_Dir : constant String := "obj/test-generator-write-specs/";
@@ -98,9 +97,6 @@ package body Spec.Generator.Test_Data.Tests is
       Assert (Condition => Ada.Directories.Exists
               (Name => Output_Dir & Evts_Spec_B),
               Message   => "Events spec body missing");
-      Assert (Condition => Ada.Directories.Exists
-              (Name => Output_Dir & Policy_GPR),
-              Message   => "Policy GPR missing");
 
       Ada.Directories.Delete_Tree (Directory => Output_Dir);
 --  begin read only

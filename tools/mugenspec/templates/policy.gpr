@@ -1,6 +1,0 @@
-abstract project Policy is
-
-   type Boolean is ("true", "false");
-
-__config__
-end Policy;

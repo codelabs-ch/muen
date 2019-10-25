@@ -111,7 +111,12 @@ is
                             Interrupt_Tables.State),
                  In_Out => (Crash_Audit.State, X86_64.State));
 
-   --  Setup guest fields of the currently active VMCS.
+   --D @Section Id => impl_vmcs_setup_guest, Label => Guest-State Fields Setup, Parent => impl_vmcs, Priority => 0
+   --D @Text Section => impl_vmcs_setup_guest, Priority => 0
+   --D Setup guest-state fields of the currently active VMCS. Processor state is
+   --D loaded from these fields on every VM entry (Intel SDM Vol 3C,
+   --D "27.3 Saving Guest State") and stored on very VM exit (Intel SDM Vol. 3C,
+   --D "26.3.2 Loading Guest State").
    procedure VMCS_Setup_Guest_Fields
      (PML4_Address : Word64;
       EPT_Pointer  : Word64)

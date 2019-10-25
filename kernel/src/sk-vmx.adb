@@ -487,10 +487,17 @@ is
       EPT_Pointer  : Word64)
    is
    begin
+      --D @OL Id => impl_vmcs_setup_guest_steps, Section => impl_vmcs_setup_guest, Priority => 10
+      --D @Item List => impl_vmcs_setup_guest_steps, Priority => 0
+      --D Set VMCS link pointer field to \texttt{16\#ffffffff\_ffffffff\#}.
       VMCS_Write (Field => Constants.VMCS_LINK_POINTER,
                   Value => Word64'Last);
+      --D @Item List => impl_vmcs_setup_guest_steps, Priority => 0
+      --D Set guest CR3 field to policy-defined PML4 address value.
       VMCS_Write (Field => Constants.GUEST_CR3,
                   Value => PML4_Address);
+      --D @Item List => impl_vmcs_setup_guest_steps, Priority => 0
+      --D Set EPT pointer field to policy-defined value.
       VMCS_Write (Field => Constants.EPT_POINTER,
                   Value => EPT_Pointer);
    end VMCS_Setup_Guest_Fields;

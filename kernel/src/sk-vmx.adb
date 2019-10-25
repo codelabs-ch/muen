@@ -405,25 +405,46 @@ is
       IA32_EFER : constant Word64 := CPU.Get_MSR64
         (Register => Constants.IA32_EFER);
    begin
+      --D @OL Id => impl_vmcs_setup_host_steps, Section => impl_vmcs_setup_host, Priority => 10
+      --D @Item List => impl_vmcs_setup_host_steps, Priority => 0
+      --D Set host CS segment selector field to \texttt{SEL\_KERN\_CODE}.
       VMCS_Write (Field => Constants.HOST_SEL_CS,
                   Value => Constants.SEL_KERN_CODE);
+      --D @Item List => impl_vmcs_setup_host_steps, Priority => 0
+      --D Set host DS segment selector field to \texttt{SEL\_KERN\_DATA}.
       VMCS_Write (Field => Constants.HOST_SEL_DS,
                   Value => Constants.SEL_KERN_DATA);
+      --D @Item List => impl_vmcs_setup_host_steps, Priority => 0
+      --D Set host ES segment selector field to \texttt{SEL\_KERN\_DATA}.
       VMCS_Write (Field => Constants.HOST_SEL_ES,
                   Value => Constants.SEL_KERN_DATA);
+      --D @Item List => impl_vmcs_setup_host_steps, Priority => 0
+      --D Set host SS segment selector field to \texttt{SEL\_KERN\_DATA}.
       VMCS_Write (Field => Constants.HOST_SEL_SS,
                   Value => Constants.SEL_KERN_DATA);
+      --D @Item List => impl_vmcs_setup_host_steps, Priority => 0
+      --D Set host FS segment selector field to \texttt{SEL\_KERN\_DATA}.
       VMCS_Write (Field => Constants.HOST_SEL_FS,
                   Value => Constants.SEL_KERN_DATA);
+      --D @Item List => impl_vmcs_setup_host_steps, Priority => 0
+      --D Set host FS segment selector field to \texttt{SEL\_KERN\_DATA}.
       VMCS_Write (Field => Constants.HOST_SEL_GS,
                   Value => Constants.SEL_KERN_DATA);
+      --D @Item List => impl_vmcs_setup_host_steps, Priority => 0
+      --D Set host TR segment selector field to \texttt{SEL\_TSS}.
       VMCS_Write (Field => Constants.HOST_SEL_TR,
                   Value => Constants.SEL_TSS);
 
+      --D @Item List => impl_vmcs_setup_host_steps, Priority => 0
+      --D Set host CR0 field to current control register 0 value.
       VMCS_Write (Field => Constants.HOST_CR0,
                   Value => CR0);
+      --D @Item List => impl_vmcs_setup_host_steps, Priority => 0
+      --D Set host CR3 field to current control register 3 value.
       VMCS_Write (Field => Constants.HOST_CR3,
                   Value => CR3);
+      --D @Item List => impl_vmcs_setup_host_steps, Priority => 0
+      --D Set host CR4 field to current control register 4 value.
       VMCS_Write (Field => Constants.HOST_CR4,
                   Value => CR4);
 
@@ -431,17 +452,30 @@ is
         (GDT => GDT_Base,
          IDT => IDT_Base,
          TSS => TSS_Base);
+      --D @Item List => impl_vmcs_setup_host_steps, Priority => 0
+      --D Set host GDTR base address field to current GDT base address.
       VMCS_Write (Field => Constants.HOST_BASE_GDTR,
                   Value => GDT_Base);
+      --D @Item List => impl_vmcs_setup_host_steps, Priority => 0
+      --D Set host IDT base address field to current IDT base address.
       VMCS_Write (Field => Constants.HOST_BASE_IDTR,
                   Value => IDT_Base);
+      --D @Item List => impl_vmcs_setup_host_steps, Priority => 0
+      --D Set host TR base address field to current TSS base address.
       VMCS_Write (Field => Constants.HOST_BASE_TR,
                   Value => TSS_Base);
 
+      --D @Item List => impl_vmcs_setup_host_steps, Priority => 0
+      --D Set host RSP field to top of kernel stack as specified by the policy.
       VMCS_Write (Field => Constants.HOST_RSP,
                   Value => Skp.Kernel.Stack_Address);
+      --D @Item List => impl_vmcs_setup_host_steps, Priority => 0
+      --D Set host RIP field to exit address which points to
+      --D \texttt{vmx\_exit\_hander} declared in Assembly.
       VMCS_Write (Field => Constants.HOST_RIP,
                   Value => Exit_Address);
+      --D @Item List => impl_vmcs_setup_host_steps, Priority => 0
+      --D Set host IA32\_EFER field to current IA32\_EFER value.
       VMCS_Write (Field => Constants.HOST_IA32_EFER,
                   Value => IA32_EFER);
    end VMCS_Setup_Host_Fields;

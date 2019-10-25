@@ -100,7 +100,11 @@ is
       Global => (Input  => CPU_Info.APIC_ID,
                  In_Out => (Crash_Audit.State, X86_64.State));
 
-   --  Setup host fields of the currently active VMCS.
+   --D @Section Id => impl_vmcs_setup_host, Label => Host-State Fields Setup, Parent => impl_vmcs, Priority => 0
+   --D @Text Section => impl_vmcs_setup_host, Priority => 0
+   --D Setup host-state fields of the currently active VMCS. Processor state is
+   --D loaded from these fields on every VM exit, see Intel SDM Vol. 3C,
+   --D "27.5 Loading Host State".
    procedure VMCS_Setup_Host_Fields
    with
       Global => (Input  => (Exit_Address, CPU_Info.APIC_ID,

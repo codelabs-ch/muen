@@ -1,8 +1,0 @@
-abstract project Policy is
-
-   type Boolean is ("true", "false");
-
-   Foobar := "42";
-   Foo := "bar";
-
-end Policy;

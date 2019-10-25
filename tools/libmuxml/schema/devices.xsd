@@ -41,7 +41,7 @@
   <xs:sequence>
    <xs:element name="pci"    type="pciAddressType"  minOccurs="0" maxOccurs="1"/>
    <xs:element name="irq"    type="irqRefType"      minOccurs="0" maxOccurs="unbounded"/>
-   <xs:element name="memory" type="memRefType"      minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="memory" type="devMemRefType"   minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="ioPort" type="physicalRefType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
   <xs:attribute name="logical"  type="nameType" use="required"/>

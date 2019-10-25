@@ -85,6 +85,11 @@
   </xs:sequence>
  </xs:complexType>
 
+ <xs:complexType name="memRefType">
+  <xs:attributeGroup ref="memRefBaseAttrs"/>
+  <xs:attribute name="virtualAddress" type="word64Type" use="required"/>
+ </xs:complexType>
+
  <xs:complexType name="memoryRefsType">
   <xs:sequence>
    <xs:element name="memory" type="memRefType" minOccurs="1" maxOccurs="unbounded"/>

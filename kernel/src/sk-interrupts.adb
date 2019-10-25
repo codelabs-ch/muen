@@ -102,10 +102,8 @@ is
    procedure Dispatch_Exception (Context : Crash_Audit_Types.Isr_Context_Type)
    is
       A : Crash_Audit.Entry_Type;
-      E : Crash_Audit_Types.Exception_Context_Type
-        := Crash_Audit_Types.Null_Exception_Context;
-      M : Crash_Audit_Types.MCE_Context_Type
-        := Crash_Audit_Types.Null_MCE_Context;
+      E : Crash_Audit_Types.Exception_Context_Type;
+      M : Crash_Audit_Types.MCE_Context_Type;
    begin
       E.ISR_Ctx := Context;
       E.CR0     := CPU.Get_CR0;

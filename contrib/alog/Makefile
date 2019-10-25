@@ -1,4 +1,4 @@
-REV = f06f366
+REV = e666302
 PKG = alog
 SRC = https://git.codelabs.ch/git/alog.git
 

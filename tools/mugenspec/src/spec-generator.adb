@@ -16,7 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Spec.Policy_Gpr;
 with Spec.Skp;
 with Spec.Skp_Events;
 with Spec.Skp_Scheduling;
@@ -55,9 +54,6 @@ is
         (Output_Dir => Output_Dir,
          Policy     => Policy);
       Skp_Events.Write
-        (Output_Dir => Output_Dir,
-         Policy     => Policy);
-      Policy_Gpr.Write
         (Output_Dir => Output_Dir,
          Policy     => Policy);
       Skp_IOMMU.Write

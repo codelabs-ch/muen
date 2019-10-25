@@ -120,7 +120,7 @@ is
 
    --  Inject pending interrupt into subject identified by ID. Sets interrupt
    --  window if interrupt(s) remain pending.
-   --D @Section Id => impl_inject_interrupt, Label => Interrupt injection, Parent => impl_exit_handler, Priority => 70
+   --D @Section Id => impl_inject_interrupt, Label => Interrupt Injection, Parent => impl_exit_handler, Priority => 70
    procedure Inject_Interrupt (Subject_ID : Skp.Global_Subject_ID_Type)
    with
       Global => (Input  => (CPU_Info.APIC_ID, Subjects.State),
@@ -325,7 +325,7 @@ is
 
    -------------------------------------------------------------------------
 
-   --D @Section Id => impl_subject_init, Label => Subject initialization, Parent => impl_kernel_init_sched, Priority => 20
+   --D @Section Id => impl_subject_init, Label => Subject Initialization, Parent => impl_kernel_init_sched, Priority => 20
    --D @Text Section => impl_subject_init, Priority => 0
    --D Clear all state associated with the subject specified by ID and
    --D initialize to the values of the subject policy.
@@ -645,7 +645,7 @@ is
    -------------------------------------------------------------------------
 
    --  Handle hypercall with given event number.
-   --D @Section Id => hypercall_handling, Label => Hypercall handling, Parent => impl_exit_handler, Priority => 20
+   --D @Section Id => hypercall_handling, Label => Hypercall Handling, Parent => impl_exit_handler, Priority => 20
    procedure Handle_Hypercall
      (Current_Subject    : Skp.Global_Subject_ID_Type;
       Unchecked_Event_Nr : Word64)
@@ -717,7 +717,7 @@ is
    -------------------------------------------------------------------------
 
    --  Handle external interrupt request with given vector.
-   --D @Section Id => impl_handle_irq, Label => External Interrupt handling, Parent => impl_exit_handler, Priority => 10
+   --D @Section Id => impl_handle_irq, Label => External Interrupt Handling, Parent => impl_exit_handler, Priority => 10
    procedure Handle_Irq (Vector : SK.Byte)
    with
       Global => (In_Out => (IO_Apic.State, Subjects_Interrupts.State,
@@ -775,7 +775,7 @@ is
    -------------------------------------------------------------------------
 
    --  Handle trap with given number using trap table of current subject.
-   --D @Section Id => impl_handle_trap, Label => Trap handling, Parent => impl_exit_handler, Priority => 30
+   --D @Section Id => impl_handle_trap, Label => Trap Handling, Parent => impl_exit_handler, Priority => 30
    procedure Handle_Trap
      (Current_Subject : Skp.Global_Subject_ID_Type;
       Trap_Nr         : SK.Word16)
@@ -914,7 +914,7 @@ is
 
    -------------------------------------------------------------------------
 
-   --D @Section Id => impl_exit_handler, Label => VMX exit handling, Parent => implementation, Priority => -5
+   --D @Section Id => impl_exit_handler, Label => VMX Exit Handling, Parent => implementation, Priority => -5
    --D @Text Section => impl_exit_handler, Priority => 0
    --D The VMX exit handle procedure is the main subprogram of the kernel.
    --D It is invoked whenever the execution of a subject stops and an exit into

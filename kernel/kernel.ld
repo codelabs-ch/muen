@@ -46,7 +46,7 @@ SECTIONS
 		*(.bss)
 	}
 
-	.globaldata 0x00119000 :
+	.globaldata 0x0011b000 :
 	{
 		*(.globaldata)
 	}

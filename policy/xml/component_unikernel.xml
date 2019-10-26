@@ -38,18 +38,8 @@
     </cr4>
    </registers>
   </vcpu>
-  <if variable="unikernel_net" value="true">
-   <channels>
-    <reader logical="service0|in"  virtualAddress="16#e000_0000#" size="16#0010_0000#"/>
-    <writer logical="service0|out" virtualAddress="16#e010_0000#" size="16#0010_0000#"/>
-   </channels>
-  </if>
  </requires>
  <provides>
-  <memory executable="true" logical="ram" size="16#1f60_0000#" virtualAddress="16#00c0_0000#" writable="true"/>
-  <memory executable="true" logical="binary" size="16#00b0_0000#" type="subject_binary" virtualAddress="16#0010_0000#" writable="true">
-   <file filename="unikernel" offset="none"/>
-  </memory>
   <memory executable="false" logical="boot_info" size="16#1000#" type="subject_solo5_boot_info" virtualAddress="16#0000#" writable="false">
    <file filename="unikernel_bi" offset="none"/>
   </memory>

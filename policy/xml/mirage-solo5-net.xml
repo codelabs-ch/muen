@@ -109,10 +109,8 @@
     <reader logical="testchannel_4" physical="testchannel_4" virtualAddress="16#000e_00f0_2000#"/>
     <writer logical="testchannel_3" physical="testchannel_3" virtualAddress="16#000e_0100_2000#"/>
 
-    <if variable="unikernel_net" value="true">
-     <reader logical="unikernel_out" physical="unikernel_out" virtualAddress="16#000e_0300_0000#"/>
-     <writer logical="unikernel_in"  physical="unikernel_in"  virtualAddress="16#000e_0400_0000#"/>
-    </if>
+    <reader logical="unikernel_out" physical="unikernel_out" virtualAddress="16#000e_0300_0000#"/>
+    <writer logical="unikernel_in"  physical="unikernel_in"  virtualAddress="16#000e_0400_0000#"/>
    </channels>
    <component ref="linux">
     <map logical="lowmem" physical="nic_linux|lowmem"/>

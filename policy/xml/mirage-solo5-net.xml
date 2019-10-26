@@ -34,10 +34,6 @@
   <channel name="unikernel_out" size="16#0010_0000#"/>
  </channels>
 
- <components>
-  <include href="component_unikernel.xml"/>
- </components>
-
  <subjects>
   <include href="subject_vt.xml"/>
   <include href="subject_nic_sm.xml"/>

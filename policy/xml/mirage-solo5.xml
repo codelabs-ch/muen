@@ -28,10 +28,6 @@
   <channel name="debuglog_subject8" size="$logchannel_size"/>
  </channels>
 
- <components>
-  <include href="component_unikernel.xml"/>
- </components>
-
  <subjects>
   <include href="subject_time.xml"/>
   <include href="subject_unikernel_sm.xml"/>

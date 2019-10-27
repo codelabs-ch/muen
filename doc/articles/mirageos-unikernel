@@ -1,30 +1,15 @@
 == MirageOS Unikernels
 
-From the MirageOS 3.0 release
-https://mirage.io/blog/announcing-mirage-30-release[announcement]:
-
-_MirageOS applications can be compiled to run as self-contained virtual
-machines (a few MB in size) on Xen or KVM hosts, FreeBSD's bhyve, or even as
-regular Unix processes (allowing access to regular debugging tools). The system
-libraries themselves can be reused in traditional applications, just like any
-other software library._
-
 MirageOS unikernels are written in OCaml and can be run directly on top of Muen
 via the https://github.com/solo5/solo5/[Solo5] platform. Support for Muen was
 merged into Solo5 with https://github.com/Solo5/solo5/pull/190[pull-request
-#190] and is part of the official Mirage release since version 3.11. The port
+#190] and is part of the official Mirage release since version 3.5.0. The port
 includes an implementation of `muennet`, thus networking is supported.
 
 image:https-mirageos-muen.jpg[MirageOS on Muen, width=75%]
 
-NOTE: Since IncludeOS
-http://www.includeos.org/blog/2017/includeos-0.11-released.html[v0.11] was
-ported to run on Solo5, it should be possible to run it as subject on Muen as
-well. (We even got a mention in one of their
-http://unikernel.org/blog/2017/unikernels-are-secure[blog posts]).
-
-NOTE: According to the authors plans http://uhsure.com/halvm-status1.html[HalVM
-3.0] will include a port to Solo5, which would enable Haskell subjects on Muen.
+=== Muen Version
+The instructions in this article have been tested with Muen revision `1cd1f88`.
 
 === Unikernel Build
 MirageOS heavily depends on the OCaml Package Manager
@@ -32,21 +17,53 @@ MirageOS heavily depends on the OCaml Package Manager
 instructions https://mirage.io/wiki/install[here] to setup OPAM on your system.
 However, do not yet install `mirage` until after the next step.
 
+==== Docker
+We provide ready-made Docker images containing all required software to build
+Muen system images and MirageOS unikernels. Issue the following command to get
+the Muen Development environment:
+
+  $ docker pull codelabsch/muen-dev-env
+
+By default, the commands given in this article are expected to be run in the
+`muen-dev-env` container. You can use the run script provided as part of the
+Muen repository to enter the container like so:
+
+  $ tools/docker/run.muen-dev-env codelabsch/muen-dev-env \
+	  EXTRA_EXPOSE="--expose 4433"
+
+The `EXTRA_EXPOSE` environment variable makes sure that port 4433 is accessible
+from outside of the container. It is required for accessing the website served
+by the `static_website_tls` unikernel as described in section "Serving Static
+Website".
+
+For building MirageOS unikernels, there is a separate image, which you can
+acquire by issuing the following command:
+
+  $ docker pull codelabsch/muen-mirageos
+
+This container is only used for building unikernels and it is explicitly stated
+in this article when commands should be executed in the `muen-mirageos`
+container.
+
+If you use Docker to build the unikernels and Muen system images, you can skip
+the rest of this section and continue reading at "Running unikernels".
+
 ==== OCaml Compiler
-These instructions have been tested with version 4.05.0 of the compiler. If you
+These instructions have been tested with version 4.09.0 of the compiler. If you
 are not already using this compiler, you can create a new switch as follows:
 
-  $ opam switch 4.05.0
+  $ opam switch create 4.09.0
 
 Then make sure you update the environment:
 
-  $ eval `opam config env`
+  $ eval $(opam env)
 
-The version 4.05.0 should be marked as the current version:
+The version 4.09.0 should be marked as the current version:
 
   $ opam switch list
   ...
-  --  C 4.05.0  Official  4.05.0 release
+  #   switch  compiler                    description
+  ->  4.09.0  ocaml-base-compiler.4.09.0  4.09.0
   ...
 
 Update the Opam repository to the latest state:
@@ -55,33 +72,64 @@ Update the Opam repository to the latest state:
   $ opam upgrade
 
 ==== Mirage Tool
-After successfully adding the necessary pins, install the depext module. It
-handles external/system dependencies for opam packages.
+These instructions have been tested with MirageOS version 3.7.6. Install the
+depext module which handles external/system dependencies for opam packages.
 
-  $ opam install depext
+  $ opam install -y depext
 
 Then install the mirage tool:
 
-  $ opam install -y mirage
+  $ opam install -y mirage.3.7.6
 
-==== Docker
+==== Solo5 ELF tool
+Since version v0.6.0, Solo5 unikernels contain a so called "application
+manifest", which enables support for multiple network and block devices. In
+order to query this information the `solo5-elftool` needs to be installed. For
+that purpose, download Solo5 and install the tool like so:
 
-A ready-made Docker image containing the required software to build MirageOS
-unikernels for Muen can be acquired by issuing the following command:
+  $ wget https://github.com/Solo5/solo5/releases/download/v0.6.5/solo5-v0.6.5.tar.gz
+  $ tar -zxf solo5-v0.6.5.tar.gz
+  $ cd solo5-v0.6.5
+  $ ./configure.sh --only-tools
+  $ make install-tools
 
-  $ docker pull codelabsch/muen-mirageos
+By default, the tools are made accesible by installing them in
+`/usr/local/bin`. You can change the destination directory via the `DESTDIR`
+environment variable.
+
 
 === Running Unikernels
-The Solo5 repository includes simple test cases, some of which can be executed
-on Muen in Bochs:
+Solo5 comes bundled with simple test cases, most of which can be executed on
+Muen in QEMU/KVM. Download Solo5 and build the tests like so:
 
-  $ git clone https://github.com/solo5/solo5
-  $ cd solo5
+  $ wget https://github.com/Solo5/solo5/releases/download/v0.6.5/solo5-v0.6.5.tar.gz
+  $ tar -zxf solo5-v0.6.5.tar.gz
+  $ cd solo5-v0.6.5
+
+NOTE: You only need to download the Solo5 source if you are using the
+muen-dev-env Docker container and have not done so in the previous step.
+
+Then, build the tests:
+
+  $ ./configure.sh
   $ make
 
-Copy the generated binary to the Muen policy object directory:
+This should leave you with a Hello World unikernel ready to go, which you can
+find at `tests/test_hello/test_hello.muen`. Post-process the compiled binary
+with the `solo5-muen-gencspec` script invoking it from the Muen toplevel
+directory as follows:
 
-  $ objcopy -O binary tests/test_hello/test_hello.muen path/to/muen/policy/obj/unikernel
+  $ tools/scripts/solo5-muen-gencspec.py [..]/solo5-v0.6.5/tests/test_hello/test_hello.muen \
+	  policy/xml/mirageos/cspec_src.xml policy/obj \
+	  --out_spec policy/xml/mirageos/component_unikernel.xml \
+	  --bootparams "Hi!"
+
+The script generates a Muen component specification for the unikernel and
+copies the test_hello.muen binary to the Muen build directory. It is expected
+to be found in the `policy/obj` directory when assembling the Muen system image.
+
+NOTE: Boot parameters are optional and can be omitted. Additionally, you can
+specify the amount of unikernel RAM via the `--ram` parameter.
 
 Finally, emulate the system:
 
@@ -90,120 +138,110 @@ Finally, emulate the system:
 The unikernel does not produce any VGA output but you should see the following
 messages in the log:
 
-  $ cat emulate/serial.out | tools/scripts/mulog-subject.py 3
+  $ tools/scripts/mulog-subject.py 8 emulate/serial.out
+
 
 ```
-Solo5: Console: Muen Channel @ 0xffff00000, size 0x20000, epoch 0x26341161
+Solo5: Console: Muen Channel @ 0xffff00000, size 0x20000, epoch 0x221e12da6
             |      ___|
   __|  _ \  |  _ \ __ \
 \__ \ (   | | (   |  ) |
 ____/\___/ _|\___/____/
-Solo5: Memory map: 512 MB addressable:
-Solo5:     unused @ (0x0 - 0xfffff)
-Solo5:       text @ (0x100000 - 0x107fff)
-Solo5:     rodata @ (0x108000 - 0x109fff)
-Solo5:       data @ (0x10a000 - 0x10efff)
-Solo5:       heap >= 0x10f000 < stack < 0x20000000
-Solo5: Clock source: Muen PV clock, TSC frequency 50000000 Hz
-Solo5: Net: No output channel
+Solo5: Bindings version v0.6.5
+Solo5: Memory map: 513 MB addressable:
+Solo5:   reserved @ (0x0 - 0xfffff)
+Solo5:       text @ (0x100000 - 0x104fff)
+Solo5:     rodata @ (0x105000 - 0x106fff)
+Solo5:       data @ (0x107000 - 0x10cfff)
+Solo5:       heap >= 0x10d000 < stack < 0x2010d000
+Solo5: Clock source: Muen PV clock, TSC frequency 2112000000 Hz
 
 **** Solo5 standalone test_hello ****
 
 Hello, World
-Command line is: ''
+Command line is: 'Hi!'
+Solo5: solo5_exit(0) called
+Solo5: Halted
 ```
+
+NOTE: If the following failure pops up, run the `solo5-muen-gencspec.py` script
+again in order to (re-)generate the component specification and copy the
+unikernel binary to the expected directory: make[1]: *** No rule to make target
+'[..]/muen/policy/obj/test_hello.muen'.
 
 === Serving Static Website
 The `mirage-skeleton` https://github.com/mirage/mirage-skeleton/[repository]
 contains example unikernels. One of these examples serves a
 https://pbs.twimg.com/media/C6wSmDiWoAEQFvx.jpg[static website].
 
-  $ git clone -b mirage-dev https://github.com/mirage/mirage-skeleton
-
-NOTE: Currently there is a build issue on the master branch so make sure to be
-on the `mirage-dev` branch
-
+  $ git clone https://github.com/mirage/mirage-skeleton
   $ cd mirage-skeleton/applications/static_website_tls
+  $ git checkout 9c01288
+
+NOTE: If you are using Docker containers, execute the above commands in the
+`muen-mirageos` container.
+
+NOTE: We checkout a specific revision to make sure we are using a version which
+is known to work.
 
 The content that will be served can be found in the `htdocs` directory. You can
-replace it with something more interesting, e.g. the Muen project website.
-
-To build the unikernel using the mirage tool issue the following commands:
-
-  $ mirage configure -t muen
-  $ make depend
-  $ make
-
-If all goes well an unikernel image called `https.muen` should be present in
-the current directory.
-
-Copy it over to the Muen policy object directory:
-
-  $ objcopy -O binary https.muen path/to/muen/policy/obj/unikernel
-
-Build and deploy the system to hardware:
-
-  $ make SYSTEM=xml/mirage-solo5-net.xml deploy
-
-==== Routed Network
-
-CAUTION: The following commands must be executed in the NIC Linux of the
-deployed Muen system.
-
-Once the deployed system is booted, disable the standard muennet interface in
-NIC Linux and setup networking for MirageOS:
-
-  $ /etc/init.d/S51muennet stop
-  $ /usr/bin/mirage-net
-
-CAUTION: The following commands must be executed on the development/host
-computer.
-
-By default, the unikernel is listening on 10.0.0.2. So in order to make it
-reachable from the host computer add a route:
-
-  $ sudo ip route add 10.0.0.0/24 via 192.168.254.2
-
-You should be able to ping the NIC Linux and the unikernel:
-
-  $ ping 10.0.0.1
-  PING 10.0.0.1 (10.0.0.1) 56(84) bytes of data.
-  64 bytes from 10.0.0.1: icmp_seq=1 ttl=64 time=1.30 ms
-  ..
-  $ ping 10.0.0.2
-  PING 10.0.0.2 (10.0.0.2) 56(84) bytes of data.
-  64 bytes from 10.0.0.2: icmp_seq=1 ttl=37 time=3.52 ms
-
-Finally you can point your browser to `https://10.0.0.2:4433/` and after
-accepting the certificate warnings you should see the static website served by
-MirageOS.
-
-==== Bridged Network
-Instead of a routed connection, the muennet interface used by the unikernel can
-be bridged with the physical interface. This way the unikernel can talk
-directly to the local network.
+replace it with something more interesting, e.g. an article about your successful
+adventures with MirageOS and Muen.
 
 Which IP address the unikernel is supposed to use is configured via the
 `--ipv4*` options that can either be passed as unikernel configure parameters
-or as boot parameters in the subject policy of the unikernel subject
-(policy/xml/subject_unikernel.xml).
+or using the `--bootparams` parameter of the `solo5-muen-gencspec.py` script.
 
-To serve the website from 192.168.254.10, rebuild the static_website_tls
+To serve the website from 192.168.254.10, build the static_website_tls
 unikernel by issuing the following commands:
 
   $ mirage configure -t muen --ipv4=192.168.254.10/24 --ipv4-gateway=192.168.254.1
   $ make depend
   $ make
-  $ objcopy -O binary https.muen path/to/muen/policy/obj/unikernel
 
-CAUTION: Adjust the `--ipv4*` options to match your networking environment.
+NOTE: If you are using Docker containers, execute the above commands in the
+`muen-mirageos` container.
 
-Then rebuild and deploy the system to hardware.
+If all goes well an unikernel image called `https.muen` should be present in
+the current directory.
 
-On the NIC Linux, use the `mirage-net-bridge` script to setup the bridging:
+As before, process the ELF binary using the `solo5-muen-gencspec.py` script:
 
-  $ /etc/init.d/S51muennet stop
-  $ /usr/bin/mirage-net-bridge
+  $ tools/scripts/solo5-muen-gencspec.py [..]/static_website_tls/https.muen \
+	  policy/xml/mirageos/cspec_src.xml policy/obj \
+	  --out_spec policy/xml/mirageos/component_unikernel.xml
 
-If all goes well, the MirageOS unikernel should be reachable via the configured
-IP address.
+The unikernel serves the website via https on port 4433. Since we are using
+QEMU's host forwarding to expose networking of the emulated system to the host,
+we must forward this port by setting the `QEMU_NETDEV_EXTRA_OPTS` environment
+variable:
+
+  $ export QEMU_NETDEV_EXTRA_OPTS="hostfwd=tcp::4433-192.168.254.10:4433"
+
+NOTE: Make sure to use the same IP address that you specified in the mirage
+configure step.
+
+Now once more build and emulate the system:
+
+  $ make SYSTEM=xml/mirage-solo5.xml emulate
+
+Since system startup time varies, you can check the log file to make sure
+networking is up and ready:
+
+  $ tools/scripts/mulog-subject.py 2 emulate/serial.out | grep "Interface"
+
+
+```
+[    6.339000] net0: Interface added
+[    6.339000] service: Interface added
+
+```
+
+Finally, you can point your browser to `https://localhost:4433/` and after
+accepting the certificate warnings you should see the static website served by
+MirageOS. Congratulations, you have just successfully served yourself a website
+via a MirageOS unikernel running on Muen!
+
+NOTE: When deploying the system to hardware you must direct your browser to the
+IP address, which was used to configure the unikernel, e.g.
+`https://192.168.254.10:4433/`.

@@ -33,9 +33,12 @@ is
    with
       Global => (Input => X86_64.State);
 
-   --  Enable VMX feature (if disabled). Call this procedure after checking the
-   --  validity of the overall system state to make sure the VMX feature
-   --  control MSR (IA32_FEATURE_CONTROL) is setup correctly.
+   --D @Section Id => impl_vmcs_enable_vmx, Label => Enabling VMX, Parent => impl_vmcs, Priority => 0
+   --D @Text Section => impl_vmcs_enable_vmx, Priority => 0
+   --D Enable the VMX feature if it is not already enabled, e.g. by the BIOS.
+   --D To ensure that the VMX feature control MSR
+   --D (\texttt{IA32\_FEATURE\_CONTROL}) is setup correctly, this action is
+   --D only performed after checking the validity of the overall system state.
    procedure Enable_VMX_Feature
    with
       Global  => (In_Out => X86_64.State),

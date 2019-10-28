@@ -30,6 +30,9 @@ is
    is
       MSR_Feature_Control : Word64;
    begin
+      --D @OL Id => impl_vmcs_enable_vmx_steps, Section => impl_vmcs_enable_vmx, Priority => 10
+      --D @Item List => impl_vmcs_enable_vmx_steps, Priority => 0
+      --D Read the current value of the \texttt{IA32\_FEATURE\_CONTROL} MSR.
       MSR_Feature_Control := CPU.Get_MSR64
         (Register => Constants.IA32_FEATURE_CONTROL);
 
@@ -38,20 +41,22 @@ is
          Pos   => Constants.IA32_FCTRL_LOCKED_FLAG)
       then
 
-         --  Explicitly disable 'VMX in SMX operation'.
-
+         --D @Item List => impl_vmcs_enable_vmx_steps, Priority => 0
+         --D If the lock bit is not set, then explicitly disable
+         --D 'VMX in SMX operation' by clearing bit 1.
          MSR_Feature_Control := Bitops.Bit_Clear
            (Value => MSR_Feature_Control,
             Pos   => Constants.IA32_FCTRL_VMX_IN_SMX_FLAG);
 
-         --  Enable 'VMX outside SMX operation'.
-
+         --D @Item List => impl_vmcs_enable_vmx_steps, Priority => 0
+         --D Then, enable 'VMX outside SMX operation' by setting bit 2.
          MSR_Feature_Control := Bitops.Bit_Set
            (Value => MSR_Feature_Control,
             Pos   => Constants.IA32_FCTRL_VMX_FLAG);
 
-         --  Lock MSR.
-
+         --D @Item List => impl_vmcs_enable_vmx_steps, Priority => 0
+         --D Finally, lock the MSR by setting the locked flag and writing the
+         --D value back to the \texttt{IA32\_FEATURE\_CONTROL} MSR.
          MSR_Feature_Control := Bitops.Bit_Set
            (Value => MSR_Feature_Control,
             Pos   => Constants.IA32_FCTRL_LOCKED_FLAG);

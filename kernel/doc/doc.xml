@@ -233,8 +233,8 @@
 
      Scheduling is defined as the process of selecting a subject and giving it
      access to system resources for a certain amount of time.  The main resource
-     is processor time, which enables a subject to execute instructions and
-     perform its task.
+     is processor time, which enables a subject to execute instructions in order
+     to perform its task.
 
      A key objective of the scheduler is to provide temporal isolation by
      preventing any interference between subjects. To achieve this, scheduling
@@ -313,11 +313,13 @@
      regimes are fixed at integration time.
 
      The privileged subject $\tau$0 is allowed to elect and activate one of the
-     scheduling plans. A global variable termed \emph{major frame index}
-     designates the currently active scheduling plan (see
-     \ref{SK.Tau0_Interface.New_Major}). Its value is exclusively written by
-     the BSP while it is used by all cores to determine the currently active
-     major frame.
+     scheduling plans. It specifies the active scheduling plan using a global
+     variable called \texttt{New\_Major} which currently makes up the entirety of
+     the $\tau$0-Kernel interface, see \ref{SK.Tau0_Interface.New_Major}. On
+     major frame change, the BSP copies this value to the global
+     \emph{current major frame ID}. The value is exclusively written by the BSP
+     while it is used by all cores to determine the currently active major
+     frame, see \ref{SK.Scheduler.Global_Current_Major_Frame_ID}.
     </text>
    </section>
    <section id="overview_interrupts" label="Interrupts" priority="0">

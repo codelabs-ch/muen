@@ -42,7 +42,9 @@ is
       Convention => C,
       Link_Name  => "vmx_exit_handler_ptr";
 
-   --  Enter VMX root operation.
+   --D @Section Id => impl_vmcs_enter_root_mode, Label => Entering VMX root mode, Parent => impl_vmcs, Priority => 0
+   --D @Text Section => impl_vmcs_enter_root_mode, Priority => 0
+   --D Bring CPU into VMX root operation.
    procedure Enter_Root_Mode
    with
       Global => (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID),

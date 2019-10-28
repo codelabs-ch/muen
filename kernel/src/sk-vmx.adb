@@ -594,10 +594,20 @@ is
       Success : Boolean;
       CR4     : constant Word64 := CPU.Get_CR4;
    begin
+      --D @Text Section => impl_vmcs_enter_root_mode, Priority => 10
+      --D First, set \texttt{CR4.VMXE} bit. Then, execute \texttt{vmxon} with
+      --D the address of the VMXON region assigned to the CPU. VMXON regions
+      --D laid out in memory consecutively like an array and each CPU uses its
+      --D CPU\_ID as index. VMXON regions are not mapped into the kernel address
+      --D space, as they are cleared and initialized during boot in Assembly
+      --D (\texttt{init.S}). No further access is required.
+      --D The requirements for executing the \texttt{vmxon} instruction are
+      --D assured when the VMX feature is enabled see
+      --D \ref{impl_vmcs_enable_vmx}. For further reference see Intel SDM Vol.
+      --D 3C, "23.7 Enabling and Entering VMX operation".
       CPU.Set_CR4 (Value => Bitops.Bit_Set
                    (Value => CR4,
                     Pos   => Constants.CR4_VMXE_FLAG));
-
       CPU.VMX.VMXON
         (Region  => Skp.Vmxon_Address + Get_CPU_Offset,
          Success => Success);

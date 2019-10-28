@@ -728,9 +728,10 @@ is
    begin
       --D @Text Section => impl_handle_irq, Priority => 0
       --D First the vector of the external interrupt is validated. If it is an
-      --D IPI no further action is taken since the purpose was to preempt
-      --D currently executing subject. A subsequent subject resumption leads
-      --D to the evaluation of pending target events and subject interrupts.
+      --D IPI no further action is taken since the purpose was to force a VM
+      --D exit of the currently executing subject. A subsequent subject VM entry
+      --D leads to the evaluation of pending target events and subject
+      --D interrupts.
       if Vector >= Skp.Interrupts.Remap_Offset
         and then Vector < SK.Constants.VTd_Fault_Vector
       then
@@ -738,7 +739,11 @@ is
          --D \paragraph{}
          --D Consult the vector routing table to determine the target subject
          --D and vector as specified by the policy and insert the target
-         --D vector.
+         --D vector my marking it as pending. Note that there is no
+         --D switching to the destination of the IRQ. The interrupt will be
+         --D delivered whenever the target subject is executed according to the
+         --D scheduling plan.
+
          Vect_Nr := Skp.Interrupts.Remapped_Vector_Type (Vector);
          Route   := Skp.Interrupts.Vector_Routing (Vect_Nr);
          if Route.Subject in Skp.Global_Subject_ID_Type then

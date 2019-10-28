@@ -18,28 +18,36 @@
 
 with System;
 
-package body Crypt.Sender
+with SK.Hypercall;
+
+with Example_Component.Channels;
+
+package body Foo.Sender
 with
    Refined_State => (State => Response)
 is
 
-   Response : Crypt.Message_Type
+   Response : Foo.Message_Type
      with
        Volatile,
        Async_Readers,
-       Address => System'To_Address (16#20000#);
+       Address => System'To_Address
+         (Example_Component.Channels.Example_Response_Address);
 
    -------------------------------------------------------------------------
 
-   procedure Send (Res : Crypt.Message_Type)
+   procedure Send (Res : Foo.Message_Type)
    with
-      Refined_Global  => (Output   => Response),
-      Refined_Depends => (Response => Res)
+      Refined_Global  => (Output => Response, In_Out => X86_64.State),
+      Refined_Depends => (Response => Res, X86_64.State =>+ null)
    is
    begin
       Response := Res;
+
+      SK.Hypercall.Trigger_Event
+        (Number => Example_Component.Channels.Example_Response_Event);
    end Send;
 
 begin
-   Response := Crypt.Null_Message;
-end Crypt.Sender;
+   Response := Foo.Null_Message;
+end Foo.Sender;

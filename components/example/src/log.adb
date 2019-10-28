@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2019  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2019  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,28 +16,35 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with System;
+with Debuglog.Client;
 
-package body Crypt.Receiver
-with
-   Refined_State => (State => Request)
+package body Log
 is
 
-   Request : Crypt.Message_Type
-     with
-       Volatile,
-       Async_Writers,
-       Address => System'To_Address (16#10000#);
+   --  Print subject name.
+   procedure Put_Name
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
    -------------------------------------------------------------------------
 
-   procedure Receive (Req : out Crypt.Message_Type)
-   with
-      Refined_Global  => (Input => Request),
-      Refined_Depends => (Req => Request)
+   procedure Put_Line (Item : String)
    is
    begin
-      Req := Request;
-   end Receive;
+      Put_Name;
+      Debuglog.Client.Put (Item => ": ");
+      Debuglog.Client.Put_Line (Item => Item);
+   end Put_Line;
 
-end Crypt.Receiver;
+   -------------------------------------------------------------------------
+
+   procedure Put_Name
+   is
+      Name : constant Musinfo.Name_Type := Musinfo.Instance.Subject_Name;
+   begin
+      for I in 1 .. Name.Length loop
+         Debuglog.Client.Put (Item => Name.Data (Musinfo.Name_Index_Type (I)));
+      end loop;
+   end Put_Name;
+
+end Log;

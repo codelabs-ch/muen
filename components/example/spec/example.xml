@@ -1,0 +1,17 @@
+<component name="example" profile="native">
+	<config>
+		<boolean name="print_serial" value="false"/>
+		<boolean name="print_vcpu_speed" value="true"/>
+		<integer name="serial" value="123456789"/>
+		<string name="greeter" value="Subject running"/>
+	</config>
+	<depends>
+		<library ref="libdebuglog"/>
+	</depends>
+	<requires>
+		<channels>
+			<reader logical="example_request" size="16#1000#" virtualAddress="16#0001_0000#"/>
+			<writer logical="example_response" size="16#1000#" virtualAddress="16#0002_0000#" event="1"/>
+		</channels>
+	</requires>
+</component>

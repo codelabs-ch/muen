@@ -9,9 +9,9 @@ COMPONENTS_BUILD := \
 	libdebuglog \
 	libmusinfo \
 	libxhcidbg \
-	crypter \
 	dbgserver \
 	dm \
+	example \
 	idle \
 	ps2_drv \
 	sl \
@@ -21,8 +21,8 @@ COMPONENTS_BUILD := \
 
 # components to proof
 COMPONENTS_PROOF := \
-	crypter \
 	dm \
+	example \
 	sl \
 	sm \
 	time

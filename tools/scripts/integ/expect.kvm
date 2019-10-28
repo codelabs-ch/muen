@@ -2,3 +2,8 @@ serial.out;Booting Muen kernel
 serial.out;PS/2 - Mouse: Device reset
 serial.out;PS/2 - Mouse: Streaming enabled
 serial.out;PS/2 driver initialized successfully
+serial.out;example: Subject running
+serial.out;example: Triggering self-event
+serial.out;example: Halting
+serial.out;example: Received vector 16#25#
+serial.out;example: Monitored subject RIP 16#0000000000400000#

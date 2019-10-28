@@ -1,0 +1,23 @@
+<subject name="example">
+	<events>
+		<source>
+			<group name="vmcall">
+				<event id="2" logical="yield" physical="example_yield"/>
+				<event id="3" logical="timer" physical="example_self"/>
+			</group>
+		</source>
+		<target>
+			<event logical="timer" physical="example_self">
+				<inject_interrupt vector="37"/>
+			</event>
+		</target>
+	</events>
+	<monitor>
+		<state subject="storage_linux" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
+	</monitor>
+	<component ref="example">
+		<map logical="example_request" physical="example_request"/>
+		<map logical="example_response" physical="example_response"/>
+		<map logical="debuglog" physical="debuglog_example"/>
+	</component>
+</subject>

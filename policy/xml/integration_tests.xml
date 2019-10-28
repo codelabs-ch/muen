@@ -35,8 +35,20 @@
   <include href="subject_storage_sm.xml"/>
   <include href="subject_time.xml"/>
   <include href="subject_nic_sl.xml"/>
-  <include href="subject_dbgserver.xml"/>
   <include href="subject_ps2.xml"/>
+
+  <subject name="dbgserver">
+   <events/>
+   <component ref="dbgserver">
+    <map logical="log_channel1" physical="debuglog_subject1"/>
+    <map logical="log_channel2" physical="debuglog_subject2"/>
+    <map logical="log_channel3" physical="debuglog_subject3"/>
+    <map logical="log_channel4" physical="debuglog_subject4"/>
+    <map logical="log_channel5" physical="debuglog_subject5"/>
+    <map logical="log_channel6" physical="debuglog_subject6"/>
+    <include href="subject_dbgserver_common.xml"/>
+   </component>
+  </subject>
 
   <subject name="nic_linux">
    <vcpu>

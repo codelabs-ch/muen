@@ -16,25 +16,20 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "libsparkcrypto";
-with "../libdebuglog/libdebuglog";
+with System;
 
-project Crypter extends "../component_spark" is
+with SK;
 
-   Extra_Dirs := Component_Spark.Src_Dirs;
+package Subject_Info
+with
+   Initializes => State
+is
 
-   case Component_Spark.Build_Mode is
-      when "debug"   => Extra_Dirs := Extra_Dirs & Component_Spark.Build_Mode
-           & "../../common/strings/impl";
-      when "release" => Extra_Dirs := Extra_Dirs & Component_Spark.Build_Mode
-           & "../../common/strings/empty";
-      when "prove"   => Extra_Dirs := Extra_Dirs & "release"
-           & "../../common/strings/empty";
-   end case;
+   State : SK.Subject_State_Type
+     with
+       Volatile,
+       Async_Writers,
+       Async_Readers,
+       Address => System'To_Address (16#1e_0000#);
 
-   for Languages use ("Ada", "Asm");
-   for Source_Dirs use ("src") & Extra_Dirs;
-   for Object_Dir use "obj/" & Component_Spark.Build_Mode;
-   for Main use ("crypter");
-
-end Crypter;
+end Subject_Info;

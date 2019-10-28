@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2019  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,24 +16,19 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package Crypt.Debug
+with System;
+
+with Mutimedevents;
+
+package Timed_Events
 is
 
-   --  Output subject greeter.
-   procedure Put_Greeter;
+   Timed_Evt_Addr : constant := 16#000e_0001_0000#;
 
-   --  Output processing message for given client ID.
-   procedure Put_Process_Message (Client_ID : SK.Byte);
+   Timed_Evt : Mutimedevents.Timed_Event_Interface_Type
+     with
+       Import,
+       Volatile,
+       Address => System'To_Address (Timed_Evt_Addr);
 
-   --  Output hash data as hex string.
-   procedure Put_Hash (Item : Crypt.Message_Type);
-
-   --  Output given message and Word16 value.
-   procedure Put_Word16
-     (Message : String;
-      Value   : SK.Word16);
-
-   --  Output spurious interrupt message for given vector.
-   procedure Put_Spurious (Vector : SK.Byte);
-
-end Crypt.Debug;
+end Timed_Events;

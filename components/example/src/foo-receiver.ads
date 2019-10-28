@@ -16,31 +16,16 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK;
-
-package Crypt
+package Foo.Receiver
+with
+   Abstract_State => (State with External => Async_Writers),
+   Initializes    => State
 is
 
-   use type SK.Word16;
+   --  Fills the current crypter request into the given req parameter.
+   procedure Receive (Req : out Foo.Message_Type)
+   with
+      Global  => (Input => State),
+      Depends => (Req => State);
 
-   subtype Data_Range is SK.Word16 range 1 .. 2048;
-
-   type Data_Array is array (Data_Range) of SK.Byte;
-   for Data_Array'Size use Integer (Data_Range'Last * 8);
-
-   Null_Data : constant Data_Array;
-
-   type Message_Type is record
-      Size : Data_Range;
-      Data : Data_Array;
-   end record;
-   for Message_Type'Size use (2 + 2048) * 8;
-
-   Null_Message : constant Message_Type;
-
-private
-
-   Null_Data    : constant Data_Array   := Data_Array'(others => 0);
-   Null_Message : constant Message_Type := Message_Type'(Size => 1,
-                                                         Data => Null_Data);
-end Crypt;
+end Foo.Receiver;

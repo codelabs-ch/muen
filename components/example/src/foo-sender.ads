@@ -16,25 +16,18 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK;
+with X86_64;
 
-use type SK.Byte;
-
-package Handler
+package Foo.Sender
 with
-   Initializes => Requesting_Subject
+   Abstract_State => (State with External => Async_Readers),
+   Initializes    => State
 is
 
-   --  Interrupt handler.
-   procedure Handle_Interrupt (Vector : SK.Byte)
+   --  Copies the given response message into the crypter response page.
+   procedure Send (Res : Foo.Message_Type)
    with
-      Global     => (Output => Requesting_Subject),
-      Depends    => (Requesting_Subject => Vector),
-      Export,
-      Convention => C,
-      Link_Name  => "dispatch_interrupt";
+      Global  => (Output => State, In_Out => X86_64.State),
+      Depends => (State => Res, X86_64.State =>+ null);
 
-   Requesting_Subject : SK.Byte := 0
-     with Atomic;
-
-end Handler;
+end Foo.Sender;

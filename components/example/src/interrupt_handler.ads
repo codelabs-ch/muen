@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,20 +16,19 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with System;
-
 with SK;
 
-package Subject_Info
-with
-   Initializes => State
+with Musinfo.Instance;
+
+package Interrupt_Handler
 is
 
-   State : SK.Subject_State_Type
-     with
-       Volatile,
-       Async_Writers,
-       Async_Readers,
-       Address => System'To_Address (16#1e0000#);
+   --  Interrupt handler.
+   procedure Handle_Interrupt (Vector : SK.Byte)
+   with
+      Export,
+      Convention => C,
+      Link_Name  => "dispatch_interrupt",
+      Pre        => Musinfo.Instance.Is_Valid;
 
-end Subject_Info;
+end Interrupt_Handler;

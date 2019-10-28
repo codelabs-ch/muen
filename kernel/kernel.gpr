@@ -69,6 +69,7 @@ project Kernel is
    for Source_Dirs use
      ("../common/src",
       "../common/muschedinfo",
+      "../common/mutimedevents",
       "../policy/obj",
       "src/**") &
      Extra_Dirs;

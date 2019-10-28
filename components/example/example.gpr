@@ -16,16 +16,19 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package Crypt.Receiver
-with
-   Abstract_State => (State with External => Async_Writers),
-   Initializes    => State
-is
+with "../libdebuglog/libdebuglog";
+with "../libmusinfo/libmusinfo";
 
-   --  Fills the current crypter request into the given req parameter.
-   procedure Receive (Req : out Crypt.Message_Type)
-   with
-      Global  => (Input => State),
-      Depends => (Req => State);
+project Example extends "../component_spark" is
 
-end Crypt.Receiver;
+   Extra_Dirs := Component_Spark.Src_Dirs;
+   Extra_Dirs := Extra_Dirs
+     & "../../common/strings/impl"
+     & "../../common/mutimedevents";
+
+   for Languages use ("Ada", "Asm");
+   for Source_Dirs use ("generated", "src") & Extra_Dirs;
+   for Object_Dir use "obj/" & Component_Spark.Build_Mode;
+   for Main use ("example");
+
+end Example;

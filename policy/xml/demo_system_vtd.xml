@@ -26,10 +26,17 @@
 
  <events>
   <include href="common_events.xml"/>
+
+  <event name="example_yield" mode="switch"/>
+  <event name="example_self" mode="self"/>
  </events>
 
  <channels>
   <include href="common_channels.xml"/>
+
+  <channel name="debuglog_example" size="$logchannel_size"/>
+  <channel name="example_request" size="16#1000#" hasEvent="switch"/>
+  <channel name="example_response" size="16#1000#" hasEvent="switch"/>
  </channels>
 
  <subjects>
@@ -40,6 +47,7 @@
   <include href="subject_nic_sl.xml"/>
   <include href="subject_dbgserver.xml"/>
   <include href="subject_ps2.xml"/>
+  <include href="subject_example.xml"/>
 
   <if variable="pciconf_emulation_enabled" value="true">
    <include href="subject_nic_dm.xml"/>
@@ -128,6 +136,7 @@
     </source>
     <target>
      <event logical="resume_after_trap" physical="resume_linux_2"/>
+     <event logical="from_example_subject" physical="example_yield"/>
      <event logical="reset" physical="reset_linux_2">
       <reset/>
      </event>
@@ -142,6 +151,9 @@
    <channels>
     <reader logical="virtual_input" physical="virtual_input_2" virtualAddress="16#3000#" vector="49"/>
     <writer logical="virtual_console" physical="virtual_console_2" virtualAddress="16#4000#" event="1"/>
+
+    <reader logical="example_response" physical="example_response" virtualAddress="16#000e_0210_0000#"/>
+    <writer logical="example_request" physical="example_request" virtualAddress="16#000e_0210_1000#" event="2"/>
 
     <reader logical="testchannel_1" physical="testchannel_1" virtualAddress="16#000e_00f0_0000#"/>
     <writer logical="testchannel_2" physical="testchannel_2" virtualAddress="16#000e_00f0_1000#"/>

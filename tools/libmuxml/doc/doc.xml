@@ -255,7 +255,7 @@
    The kernel source specifications contain tables and constants which are
    compiled into the kernel in the kernel build process.
 
-   The command stream generator (\ref{tools-mugentau0cmds) generates
+   The command stream generator (\ref{tools-mugentau0cmds}) generates
    instructions in XML format for the $\tau0$ system composer explained in the
    following section.
   </text>

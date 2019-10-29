@@ -122,8 +122,8 @@
     (section \ref{interface_section}).
 
     An integrator must link the logical resources of a component specification
-    file with the actual system policy. How this is done is specified in the Muen
-    System Policy Specification document (TODO: name, link).
+    file with the actual system policy. How this is done is specified in the
+    Muen System Specification document \cite{muen:system_specification}.
 
     The \texttt{provides} section specifies memory regions which are provided by
     the component. Such regions will be added to the physical memory regions of
@@ -249,7 +249,7 @@
     During the component build process, the component specification in XML
     format outlined in section \ref{intro-component} and \ref{intro-libraries}
     is translated to SPARK/Ada specifications using the \texttt{mucgenspec} tool
-    (see also TODO: cite Muen System Specification document).
+    (see also \cite{muen:system_specification}).
 
     The generated packages in the \texttt{Example\_Component} hierarchy contain
     resource properties as SPARK/Ada constants. These can be used in the source
@@ -272,8 +272,8 @@
 
     The information is provided by mapping the subject info and scheduling info
     pages into the virtual address space of a subject. This task is performed by
-    the \texttt{mucfgexpand} tool during the system build (see TODO:cite Muen
-    SYSSPEC for more information).
+    the \texttt{mucfgexpand} tool during the system build (see
+    \cite{muen:system_specification} for more information).
 
     A component must verify the validity of the sinfo page by calling the
     appropriate validation method. In a verified SPARK/Ada component, it must be
@@ -310,8 +310,8 @@
     information mapped into its address space. These tasks are performed by
     \texttt{mugenzp} and \texttt{mucfgexpand} respectively.
 
-    See again the Muen System Specification TODO:cite for more information about
-    the involved tools.
+    See again the Muen System Specification \cite{muen:system_specification} for
+    more information about the involved tools.
 
     Similar methods might be applied by other guest operating systems when
     porting them to Muen.
@@ -350,9 +350,10 @@
    component is a critical error which should be treated accordingly (TODO: Ref
    security best practices).
 
-   See the Muen System Specification TODO:cite document for the specification of
-   all elements of a VCPU profile. The current VCPU profiles for VM and native
-   Muen components can be found in the Appendix, section \ref{appendix-vcpu}.
+   See the Muen System Specification \cite{muen:system_specification} document
+   for the specification of all elements of a VCPU profile. The current VCPU
+   profiles for VM and native Muen components can be found in the Appendix,
+   section \ref{appendix-vcpu}.
 
    While a policy writer is free to adjust, override or write a new VCPU
    profile, this is not recommended. Changing profile settings requires a deep
@@ -425,8 +426,8 @@
 
    The following subsections introduce each state configuration shortly, before
    the actual interface API is presented. See the Muen System Specification
-   TODO:cite for more details on the \texttt{monitor} element and its
-   implications.
+   \cite{muen:system_specification} for more details on the \texttt{monitor}
+   element and its implications.
   </text>
 
   <section id="subject-monitoring-state" label="Register State" priority="0">
@@ -487,9 +488,9 @@
     instruction or to (periodically) check the memory contents of the monitored
     subject against hash sums.
 
-    See the Muen System Specification TODO:cite for the specification of the
-    loader element with an in-depth description of the mechanism
-    (element \texttt{loader}, type \texttt{loaderSubjectRefType}).
+    See the Muen System Specification \cite{muen:system_specification} for the
+    definition of the loader element with an in-depth description of the
+    mechanism (element \texttt{loader}, type \texttt{loaderSubjectRefType}).
    </text>
   </section>
  </section>

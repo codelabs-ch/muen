@@ -383,11 +383,30 @@
    </section>
    <section id="overview_crash_audit" label="Crash Audit" priority="0">
     <text priority="0">
-     The crash audit mechanism is in charge of handling fatal, unrecoverable
-     errors which lead to immediate halting of execution and subsequent system
-     reset. Its main purpose is to record information regarding the error
-     condition and the current system state to enable administrators to identify
-     and determine the cause of the issue.
+     Every software system should provide a mechanism for auditing important
+     events. However, overly complex audit implementations can quickly lead to
+     complexity throughout the code base. In case of the Muen kernel, we have
+     identified two important events that require auditing: one is kernel and
+     the other is a fatal error condition resulting in an emergency halt.
+
+     Note that on the system level, there are certainly many more audit-worthy
+     events. However these can be handled by appropriate error handling routines
+     inside subjects, or by dedicated audit subjects using existing mechanisms
+     (e.g. events). The kernel does not need to provide any additional,
+     audit-specific functionality.
+
+     The first event is inherent in the execution of the kernel after a
+     successful system start. If there is an error during early initialization
+     before the system starts execution, then there is no way for the kernel to
+     recognize and report such an event. However, once the kernel does start
+     execution, the successful system start has realized so in that sense the
+     event becomes self-evident through running code.
+
+     The crash audit mechanism is in charge of covering the second case and thus
+     handling fatal, unrecoverable errors which lead to immediate halting of
+     execution and subsequent system reset. Its main purpose is to record
+     information regarding the error condition and the current system state to
+     enable administrators to identify and determine the cause of the issue.
 
      Audit information is stored in a dedicated, uncached memory region which
      retains its contents across system reboots. This region is mapped by all

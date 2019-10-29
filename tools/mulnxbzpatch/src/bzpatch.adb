@@ -91,7 +91,7 @@ is
       --  On the upside, it configures the segment selectors properly, so we
       --  don't need this here.
       --  Note: There's a Linux bootparams flag "KEEP_SEGMENTS" that would work
-      --        similarily. Unfortunately it also disables later segment
+      --        similarly. Unfortunately it also disables later segment
       --        configuration code that we _do_ need.
       --  We assume that there are only two entry points, one for each of 32bit
       --  and 64bit mode images.

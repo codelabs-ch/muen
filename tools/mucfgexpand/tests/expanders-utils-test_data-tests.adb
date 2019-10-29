@@ -184,7 +184,7 @@ package body Expanders.Utils.Test_Data.Tests is
                     Message   => "Number" & I'Img & " not reserved");
          else
             Assert (Condition => Alloc.Numbers (I),
-                    Message   => "Numer" & I'Img & " reserved");
+                    Message   => "Number" & I'Img & " reserved");
          end if;
       end loop;
 --  begin read only
@@ -251,7 +251,7 @@ package body Expanders.Utils.Test_Data.Tests is
          when E : Invalid_Attribute =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Node 'foo' has no valid number attribute 'nonexistent'",
-                    Message   => "Exeption message mismatch");
+                    Message   => "Exception message mismatch");
       end;
 --  begin read only
    end Test_Reserve_Numbers;

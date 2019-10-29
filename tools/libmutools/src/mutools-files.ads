@@ -21,7 +21,7 @@ with Ada.Streams.Stream_IO;
 package Mutools.Files
 is
 
-   --  Open file  with specified name. If Writable is True, the file is openend
+   --  Open file with specified name. If Writable is True, the file is opened
    --  for writing and created if it does not yet exist. If Writable is False,
    --  the given file is opened for reading. Raises IO_Error if the file could
    --  not be opened.

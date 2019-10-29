@@ -52,7 +52,7 @@ is
 
    --  Create paging structures from given memory regions and write them to the
    --  specified file. The PML4 address parameter specifies the physical start
-   --  adddress of the PML4 paging structure. Depending on the given pagetable
+   --  address of the PML4 paging structure. Depending on the given pagetable
    --  type IA-32e or EPT pagetables will be generated.
    procedure Write_Pagetable
      (Policy       : Muxml.XML_Data_Type;

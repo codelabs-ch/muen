@@ -32,7 +32,7 @@ is
    --  Return policy output filename.
    function Get_Policy_Output return String;
 
-   --  Retun input directory.
+   --  Return input directory.
    function Get_Input_Dir return String;
 
    Invalid_Cmd_Line : exception;

@@ -28,7 +28,7 @@ is
 
 private
 
-   --  Recursively evalute all conditionals of given parent node.
+   --  Recursively evaluate all conditionals of given parent node.
    procedure Evaluate
      (Policy : Muxml.XML_Data_Type;
       Parent : DOM.Core.Node);

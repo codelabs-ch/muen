@@ -35,7 +35,7 @@ is
    --  Return name of system image.
    function Get_Output_Imgname return String;
 
-   --  Retun input directory.
+   --  Return input directory.
    function Get_Input_Dir return String;
 
    --  Return if execution is a dry-run.

@@ -61,7 +61,7 @@ is
                     VMX.VMCS_State, X86_64.State));
 
    --  Set VMX-preemption timer of the currently active VMCS to trigger at the
-   --  current deadline. If the deadline has alread passed the timer is set to
+   --  current deadline. If the deadline has already passed the timer is set to
    --  zero.
    procedure Set_VMX_Exit_Timer
    with

@@ -163,6 +163,12 @@ is
 
    -------------------------------------------------------------------------
 
+   --D @Section Id => impl_kernel_init_check_state, Label => System state checks, Parent => impl_kernel_init, Priority => 10
+   --D @Text Section => impl_kernel_init_check_state, Priority => 0
+   --D Validate the system state to ensure correct execution of the kernel and
+   --D VMX in particular, see Intel SDM Vol. 3C, "31.5 VMM Setup & Tear Down"
+   --D and "30.3 VMX Instructions", \texttt{VMXON}.
+   --D @OL Id => impl_kernel_init_check_state_steps, Section => impl_kernel_init_check_state, Priority => 0
    procedure Check_State
      (Is_Valid : out Boolean;
       Ctx      : out Crash_Audit_Types.System_Init_Context_Type)
@@ -177,10 +183,16 @@ is
    begin
       Ctx := Crash_Audit_Types.Null_System_Init_Context;
 
+      --D @Item List => impl_kernel_init_check_state_steps, Priority => 0
+      --D Check that the processor has support for VMX, see Intel SDM Vol. 3C,
+      --D "23.6 Discovering Support for VMX".
       Ctx.VMX_Support := Has_VMX_Support;
       pragma Debug
         (not Ctx.VMX_Support, KC.Put_Line (Item => "Init: VMX not supported"));
 
+      --D @Item List => impl_kernel_init_check_state_steps, Priority => 0
+      --D Check that VMX was not disabled and locked by the BIOS, see Intel SDM
+      --D Vol. 3C, "23.7 Enabling and Entering VMX Operation".
       MSR_Feature_Control := CPU.Get_MSR64
         (Register => Constants.IA32_FEATURE_CONTROL);
       Ctx.Not_VMX_Disabled_Locked := not
@@ -194,6 +206,9 @@ is
         (not Ctx.Not_VMX_Disabled_Locked,
          KC.Put_Line (Item => "Init: VMX disabled by BIOS"));
 
+      --D @Item List => impl_kernel_init_check_state_steps, Priority => 0
+      --D Check that processor is in protected mode, i.e. \texttt{CR0.PE} is
+      --D set.
       Ctx.Protected_Mode := Bitops.Bit_Test
         (Value => CR0,
          Pos   => Constants.CR0_PE_FLAG);
@@ -201,12 +216,17 @@ is
         (not Ctx.Protected_Mode,
          KC.Put_Line (Item => "Init: Protected mode not enabled"));
 
+      --D @Item List => impl_kernel_init_check_state_steps, Priority => 0
+      --D Check that processor has Paging enabled, i.e. \texttt{CR0.PG} is set.
       Ctx.Paging := Bitops.Bit_Test
         (Value => CR0,
          Pos   => Constants.CR0_PG_FLAG);
       pragma Debug
         (not Ctx.Paging, KC.Put_Line (Item => "Init: Paging not enabled"));
 
+      --D @Item List => impl_kernel_init_check_state_steps, Priority => 0
+      --D Check that processor is in IA-32e mode, i.e. \texttt{IA32\_EFER.LMA}
+      --D is set.
       Ctx.IA_32e_Mode := Bitops.Bit_Test
         (Value => IA32_EFER,
          Pos   => Constants.IA32_EFER_LMA_FLAG);
@@ -214,6 +234,9 @@ is
         (not Ctx.IA_32e_Mode, KC.Put_Line
            (Item => "Init: IA-32e mode not enabled"));
 
+      --D @Item List => impl_kernel_init_check_state_steps, Priority => 0
+      --D Check that virtual 8086 mode is not enabled, i.e. \texttt{RFLAGS.VM}
+      --D is clear.
       Ctx.Not_Virtual_8086 := not Bitops.Bit_Test
         (Value => RFLAGS,
          Pos   => Constants.RFLAGS_VM_FLAG);
@@ -221,6 +244,9 @@ is
         (not Ctx.Not_Virtual_8086,
          KC.Put_Line (Item => "Init: Virtual-8086 mode enabled"));
 
+      --D @Item List => impl_kernel_init_check_state_steps, Priority => 0
+      --D Check that the current processor operating mode meets the required CR0
+      --D fixed bits, see Intel SDM Vol. 3C, "A.7 VMX-Fixed Bits in CR0".
       Fixed0 := CPU.Get_MSR64 (Register => Constants.IA32_VMX_CR0_FIXED0);
       Fixed1 := CPU.Get_MSR64 (Register => Constants.IA32_VMX_CR0_FIXED1);
       Ctx.CR0_Valid := Fixed_Valid
@@ -230,6 +256,9 @@ is
       pragma Debug
         (not Ctx.CR0_Valid, KC.Put_Line (Item => "Init: CR0 is invalid"));
 
+      --D @Item List => impl_kernel_init_check_state_steps, Priority => 0
+      --D Check that the current processor operating mode meets the required CR4
+      --D fixed bits, see Intel SDM Vol. 3C, "A.8 VMX-Fixed Bits in CR4".
       Fixed0 := CPU.Get_MSR64 (Register => Constants.IA32_VMX_CR4_FIXED0);
       Fixed1 := CPU.Get_MSR64 (Register => Constants.IA32_VMX_CR4_FIXED1);
       Ctx.CR4_Valid := Fixed_Valid
@@ -241,11 +270,16 @@ is
       pragma Debug (not Ctx.CR4_Valid, KC.Put_Line
                     (Item => "Init: CR4 is invalid"));
 
+      --D @Item List => impl_kernel_init_check_state_steps, Priority => 0
+      --D Check that the current processor supports x2APIC.
       Ctx.Apic_Support := Has_X2_Apic;
       pragma Debug
         (not Ctx.Apic_Support,
          KC.Put_Line (Item => "Init: Local x2APIC not present"));
 
+      --D @Item List => impl_kernel_init_check_state_steps, Priority => 0
+      --D Check that the current processor has Invariant TSC, see Intel SDM Vol.
+      --D 3B, "17.17.1 Invariant TSC".
       Ctx.Invariant_TSC := Has_Invariant_TSC;
       pragma Debug
         (not Ctx.Invariant_TSC,

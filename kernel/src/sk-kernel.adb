@@ -62,7 +62,8 @@ is
          Valid_VTd_State : Boolean;
       begin
          --D @Item List => impl_kernel_init_steps, Priority => 0
-         --D Validation of required CPU, FPU, MCE and VT-d features
+         --D Validation of required CPU (\ref{impl_kernel_init_check_state}),
+         --D FPU, MCE and VT-d features
          System_State.Check_State
            (Is_Valid => Valid_Sys_State,
             Ctx      => Init_Ctx.Sys_Ctx);

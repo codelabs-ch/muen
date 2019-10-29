@@ -35,6 +35,12 @@
   tabsize=2,
   title=\lstname
   }
+
+  \newenvironment{warning}
+  {\par
+  \begin{list}{}{\leftmargin=1cm
+  \labelwidth=\leftmargin}\item[\color{red}\Large\ding{43}]}
+  {\end{list}\par}
  </latex_preamble>
 
  <description scope="config" name="greeter">
@@ -355,11 +361,12 @@
    profiles for VM and native Muen components can be found in the Appendix,
    section \ref{appendix-vcpu}.
 
+   \begin{warning}
    While a policy writer is free to adjust, override or write a new VCPU
    profile, this is not recommended. Changing profile settings requires a deep
    understanding of the Intel virtualization technology VT-x, hardware behavior
    and the invariants of the Muen SK.
-   TODO: make this a warning box
+   \end{warning}
   </text>
  </section>
 
@@ -455,10 +462,11 @@
     handed over from the monitored subject to the SM subject to perform certain
     tasks.
 
-    TODO: make warning
+    \begin{warning}
     Currently, the monitored subject has unconditional access to its own timed
     events page and could therefore clear the event set by the monitor. The
     mechanism is therefore not suitable to \emph{enforce} preemption.
+    \end{warning}
    </text>
   </section>
 

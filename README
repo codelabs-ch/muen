@@ -216,6 +216,11 @@ source directory and issue the following command:
 This will create an image containing the example system which can be booted by
 any Multiboot <<mboot>> compliant bootloader.
 
+The following command gives a short description of the top-level Makefile
+targets:
+
+  $ make help
+
 
 Deploy
 ------

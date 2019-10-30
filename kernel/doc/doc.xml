@@ -411,7 +411,7 @@
      Audit information is stored in a dedicated, uncached memory region which
      retains its contents across system reboots. This region is mapped by all
      kernel instances on each CPU. Read access may be granted to a subject to
-     enable audit readout for further processing, e.g. debug server outputing
+     enable audit readout for further processing, e.g. debug server outputting
      the information via serial log. Note that processing of the audit
      information may also be done outside of a Muen system, e.g. by the boot
      loader.
@@ -677,7 +677,7 @@
     Remapping" \cite{intelvtd}.
 
     The IOMMU Interrupt Remapping (IR) feature with the remapping table
-    generated during intergration, assure that the correct interrupt vectors are
+    generated during integration, assure that the correct interrupt vectors are
     raised according to the policy for all assigned IRQs and that all other,
     non-assigned IRQs are blocked. During setup, the kernel installs the
     remapping table and enables IR. For further information see Intel VT-d

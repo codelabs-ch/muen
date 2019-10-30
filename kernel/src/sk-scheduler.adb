@@ -773,7 +773,7 @@ is
       --D @Text Section => impl_handle_irq, Priority => 0
       --D \paragraph{}
       --D Finally, signal to the local APIC that the interrupt servicing has
-      --D completed and other IRQs may be issued once interrupts are reenabled.
+      --D completed and other IRQs may be issued once interrupts are re-enabled.
       Apic.EOI;
    end Handle_Irq;
 

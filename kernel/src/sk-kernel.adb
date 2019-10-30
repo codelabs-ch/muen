@@ -33,7 +33,7 @@ is
 
    --D @Section Id => impl_kernel_init, Label => Initialization, Parent => implementation, Priority => -10
    --D @Text Section => impl_kernel_init, Priority => 0
-   --D Kernel initilization consists of the following steps:
+   --D Kernel initialization consists of the following steps:
    --D @OL Id => impl_kernel_init_steps, Section => impl_kernel_init, Priority => 10
    procedure Initialize (Subject_Registers : out SK.CPU_Registers_Type)
    is

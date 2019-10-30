@@ -27,7 +27,7 @@ with Skp;
 --D interprocessor Interrupts (IPIs).
 --D
 --D Additionally, it provides the information if a CPU is the bootstrap
---D processor (BSP), which initially brings up the system. Muen programms the
+--D processor (BSP), which initially brings up the system. Muen programs the
 --D APIC in x2APIC mode.
 package SK.Apic
 is

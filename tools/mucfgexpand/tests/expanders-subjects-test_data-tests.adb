@@ -193,11 +193,59 @@ package body Expanders.Subjects.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      procedure Missing_Endpoint
+      is
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_Src,
+                      File => "data/test_policy.xml");
+
+         --  Remove reader of channel with event.
+
+         Muxml.Utils.Remove_Elements
+           (Doc   => Policy.Doc,
+            XPath => "/system/subjects/subject/channels/"
+            & "reader[@physical='data_channel']");
+
+         begin
+            Add_Channel_Events (Data => Policy);
+            Assert (Condition => False,
+                    Message   => "Exception expected (reader)");
+
+         exception
+            when E : Mucfgcheck.Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "No reader for channel 'data_channel'",
+                       Message   => "Exception message mismatch (reader)");
+         end;
+
+
+         --  Remove writer of channel with event.
+
+         Muxml.Utils.Remove_Elements
+           (Doc   => Policy.Doc,
+            XPath => "/system/subjects/subject/channels/"
+            & "writer[@physical='data_channel']");
+
+         begin
+            Add_Channel_Events (Data => Policy);
+            Assert (Condition => False,
+                    Message   => "Exception expected (writer)");
+
+         exception
+            when E : Mucfgcheck.Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "No writer for channel 'data_channel'",
+                       Message   => "Exception message mismatch (writer)");
+         end;
+      end Missing_Endpoint;
    begin
       Test_Utils.Expander.Run_Test
         (Filename => "obj/subjects_channel_events.xml",
          Ref_Diff => "data/subjects_channel_events.xml.diff",
          Expander => Add_Channel_Events'Access);
+      Missing_Endpoint;
 --  begin read only
    end Test_Add_Channel_Events;
 --  end read only

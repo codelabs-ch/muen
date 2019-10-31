@@ -290,34 +290,34 @@
   <memory alignment="16#1000#" caching="WB" name="subject2|vmcs" size="16#1000#" type="kernel_vmcs"/>
   <memory alignment="16#1000#" caching="WB" name="lnx_core_1|vmcs" size="16#1000#" type="kernel_vmcs"/>
   <memory alignment="16#1000#" caching="WB" name="tau0|iobm" size="16#2000#" type="system_iobm">
-   <file filename="tau0_iobm" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="tau0|msrbm" size="16#1000#" type="system_msrbm">
-   <file filename="tau0_msrbm" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|iobm" size="16#2000#" type="system_iobm">
-   <file filename="lnx_iobm" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|msrbm" size="16#1000#" type="system_msrbm">
-   <file filename="lnx_msrbm" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="subject1|iobm" size="16#2000#" type="system_iobm">
-   <file filename="subject1_iobm" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="subject1|msrbm" size="16#1000#" type="system_msrbm">
-   <file filename="subject1_msrbm" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="subject2|iobm" size="16#2000#" type="system_iobm">
-   <file filename="subject2_iobm" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="subject2|msrbm" size="16#1000#" type="system_msrbm">
-   <file filename="subject2_msrbm" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx_core_1|iobm" size="16#2000#" type="system_iobm">
-   <file filename="lnx_core_1_iobm" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx_core_1|msrbm" size="16#1000#" type="system_msrbm">
-   <file filename="lnx_core_1_msrbm" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="scheduling_group_info_1" size="16#1000#" type="subject_scheduling_info"/>
   <memory alignment="16#1000#" caching="WB" name="scheduling_group_info_2" size="16#1000#" type="subject_scheduling_info"/>

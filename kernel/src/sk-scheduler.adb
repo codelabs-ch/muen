@@ -600,7 +600,7 @@ is
             Power.Reboot (Power_Cycle => True);
          when Skp.Events.System_Poweroff =>
             --D @Item List => impl_handle_source_event_actions, Priority => 0
-            --D If the designated action is system shutdown, then a shutdown is
+            --D If the designated action is system poweroff, then a shutdown is
             --D initiated.
             Power.Shutdown;
          when Skp.Events.System_Panic =>

@@ -182,12 +182,13 @@
      given in section \ref{impl_kernel_init}.
 
      On VM-Exit the hardware invokes the scheduler subprogram since it has been
-     set in the subject VMCS data structure. The kernel synchronizes data from
-     the VMCS to the subject state data structure in memory. After handling the
-     exit condition, the next subject is prepared by synchronizing the VMCS with
-     values from the subject state and execution is started by performing a
-     VM-entry. The kernel control-flow is illustrated by figure
-     \ref{fig:kernel-operation}.
+     set as the kernel entry point in the subject VMCS data structure. The
+     kernel synchronizes data from the VMCS to the subject state data structure
+     in memory. After handling the exit condition, the next subject is prepared
+     by synchronizing the VMCS with values from the subject state and execution
+     is started by performing a VM-entry. The kernel control-flow is illustrated
+     by figure \ref{fig:kernel-operation}. A detailed description of the
+     implementation is given in section \ref{impl_exit_handler}.
 
      \begin{figure}[h]
       \centering
@@ -463,10 +464,14 @@
      subject state that is mapped into the monitor's address space. It can then
      emulate the appropriate action by changing the subject's state and finally
      hand over execution back by triggering an event that has been specified in
-     the policy to resume the origin subject.
+     the policy to resume the origin subject. Prior to resumption the kernel
+     will synchronize the subject state to the VMCS, effectively continuing
+     execution of the origin subject with the new state.
 
      Through the use of the event mechanism, the vast majority of traps is
-     handed over to a second subject to process.
+     handed over to a second subject to process. Only two event actions are
+     handled directly by the kernel: system reboot and poweroff, see also
+     \ref{impl_handle_source_event}.
     </text>
    </section>
    <section id="overview_covert_channels" label="Avoidance of Covert Channels" priority="0">

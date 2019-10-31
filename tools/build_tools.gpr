@@ -38,7 +38,6 @@ is
       "mucheckstack/mucheckstack.gpr",
       "mugenacpi/mugenacpi.gpr",
       "mugenmsrstore/mugenmsrstore.gpr",
-      "mugenpt/mugenpt.gpr",
       "mugenschedcfg/mugenschedcfg.gpr",
       "mugensinfo/mugensinfo.gpr",
       "mugensolo5/mugensolo5.gpr",

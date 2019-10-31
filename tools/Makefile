@@ -28,7 +28,6 @@ TOOLS =            \
 	mucheckstack   \
 	mugenacpi      \
 	mugenmsrstore  \
-	mugenpt        \
 	mugenschedcfg  \
 	mugensinfo     \
 	mugensolo5     \

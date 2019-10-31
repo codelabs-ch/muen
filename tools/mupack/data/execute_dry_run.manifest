@@ -1,6 +1,0 @@
-[Name;PhysicalAddress;MemorySize;Offset;ContentSize;Usage;Type;Content]
-filled;16#0001_0000#;16#7fff_ffff_0000#;16#0000#;16#7fff_ffff_0000#;100%;fill_pattern;16#0000#
-mboot;16#0010_0000#;16#1000#;16#0000#;16#0000#;0%;system;data/mboot
-linux|acpi_rsdp;16#0010_1000#;16#1000#;16#0000#;16#0000#;0%;subject_acpi_rsdp;data/pattern
-linux|bin;16#0010_2000#;16#1000#;16#0004#;16#0000#;0%;subject_binary;data/obj1.o
-filled;16#0010_3000#;16#1000#;16#0000#;16#1000#;100%;fill_pattern;16#0002#

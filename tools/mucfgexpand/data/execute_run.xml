@@ -368,25 +368,25 @@
    <file filename="lnx_core_1_msrstore" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="kernel_0|pt" size="16#9000#" type="system_pt">
-   <file filename="kernel_pt_0" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="kernel_1|pt" size="16#9000#" type="system_pt">
-   <file filename="kernel_pt_1" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="tau0|pt" size="16#6000#" type="system_pt">
-   <file filename="tau0_pt" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#d000#" type="system_pt">
-   <file filename="lnx_pt" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#0002_2000#" type="system_pt">
-   <file filename="subject1_pt" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="subject2|pt" size="16#e000#" type="system_pt">
-   <file filename="subject2_pt" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx_core_1|pt" size="16#e000#" type="system_pt">
-   <file filename="lnx_core_1_pt" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="vtd_root" size="16#1000#" type="system_vtd_root">
    <fill pattern="16#00#"/>

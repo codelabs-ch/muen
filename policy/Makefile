@@ -20,7 +20,6 @@ GENERATORS =         \
 	$(MUGENPT)       \
 	$(MUGENSPEC)     \
 	$(MUGENSOLO5)    \
-	$(MUGENVTD)      \
 	$(MUGENZP)
 
 GEN_NAMES  = $(notdir $(GENERATORS))

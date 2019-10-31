@@ -34,7 +34,6 @@ TOOLS =            \
 	mugensolo5     \
 	mugenspec      \
 	mugentau0cmds  \
-	mugenvtd       \
 	mugenzp        \
 	mulnxbzpatch   \
 	mupack         \

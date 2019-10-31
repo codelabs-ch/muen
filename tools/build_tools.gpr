@@ -44,7 +44,6 @@ is
       "mugensolo5/mugensolo5.gpr",
       "mugenspec/mugenspec.gpr",
       "mugentau0cmds/mugentau0cmds.gpr",
-      "mugenvtd/mugenvtd.gpr",
       "mugenzp/mugenzp.gpr",
       "mulnxbzpatch/mulnxbzpatch.gpr",
       "mupack/mupack.gpr",

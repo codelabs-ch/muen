@@ -45,7 +45,6 @@ is
       "mugentau0cmds/mugentau0cmds.gpr",
       "mugenzp/mugenzp.gpr",
       "mulnxbzpatch/mulnxbzpatch.gpr",
-      "mupack/mupack.gpr",
       "mupcspkrdbg/mupcspkrdbg.gpr",
       "muwalkpt/muwalkpt.gpr",
       "sbs/sbs.gpr");

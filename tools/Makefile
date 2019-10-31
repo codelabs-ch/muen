@@ -35,7 +35,6 @@ TOOLS =            \
 	mugentau0cmds  \
 	mugenzp        \
 	mulnxbzpatch   \
-	mupack         \
 	mupcspkrdbg    \
 	muwalkpt \
 	sbs

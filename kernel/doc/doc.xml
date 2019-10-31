@@ -19,20 +19,59 @@
    provide information and ultimately give a better understanding of the SK
    design and its implementation. Additionally a short overview of related
    topics such as system policy and integration is given. References for
-   further reading are included as well.
+   further reading are included as well. The Muen System Specification
+   \cite{muen:system-spec} as well as the Muen Component Specification
+   \cite{muen:component-spec} in particular should be viewed as the main
+   complementary documents to this one. All three documents taken together make
+   up the main documentation of the entire Muen project.
 
    The reader is expected to be familiar with concepts related to system-level
    software such as Operating Systems/Microkernels, component-based systems as
    well as software development.
 
-   The majority of this document is generated based on annotations in the SK
+   Large parts of this document is generated based on annotations in the SK
    source code\footnote{Version: //{str:SK.Version.Version_String}}.
   </text>
   <section id="intro_structure" label="Document Structure" priority="0">
    <text priority="0">
-    First, a high-level overview of the design, architecture and basic operation
-    of the Muen Separation Kernel is provided.
-    Description of the document structure.
+    First, a high-level overview of the architecture, design and basic operation
+    of the Muen Separation Kernel is provided in chapter \ref{overview}. The
+    motivation for the architecture and the approach how kernel functionality is
+    minimized and complexity is avoided are described. Next, the concepts of the
+    system policy and configuration are quickly introduced. An overview is given
+    of the operation of the kernel and its main functional building blocks are
+    given in sections \ref{overview_operation} through
+    \ref{overview_crash_audit}. Chapter \ref{overview} closes with a discussion
+    how subjects can interact and how covert channels can be avoided or limited
+    in bandwidth on Muen systems.
+
+    Chapter \ref{datamodel} describes how multicore support is realized by Muen
+    and how kernel data is structured. This provides the reader with
+    documentation on what different degrees of data sharing between CPU cores
+    there are, what levels of coupling through data structures exists and how
+    the data is initialized.
+
+    The following chapters \ref{interface_section} and
+    \ref{cpu_global_variables_section} document all kernel data structures
+    grouped by the categories introduced in the previous chapter. The purpose of
+    each data structure is given as well as its type and layout.
+
+    Next, the kernels direct use of devices is described. Aside from the
+    interrupt controller and IOMMU, Muen's use of the VMX-preemption timer is
+    presented as well as how diagnostics information is provided by the debug
+    build of the kernel.
+
+    A quick introduction of SPARK and the verification process as well as tools
+    is given in chapter \ref{verification_and_validation}. Furthermore, a
+    summary of verification conditions of the SPARK proofs for the Muen SK
+    \footnote{based on the same version this document was generated from} is
+    given.
+
+    Chapter \ref{implementation} describes the kernel implementation in detail.
+    Aside from kernel initialization and exit handling the crash audit, subject
+    state and VMCS management are documented. Then an enumeration of all Ada
+    packages that make up the kernel code base is given. Finally, a call graph
+    visualization is presented.
    </text>
   </section>
  </section>

@@ -271,29 +271,27 @@ is
 
       Mulog.Log (Msg => "Adding VT-d DMAR root table");
       Mutools.XML_Utils.Add_Memory_Region
-        (Policy      => Data,
-         Name        => "vtd_root",
-         Address     => "",
-         Size        => "16#1000#",
-         Caching     => "WB",
-         Alignment   => "16#1000#",
-         Memory_Type => "system_vtd_root",
-         File_Name   => "vtd_root",
-         File_Offset => "none");
+        (Policy       => Data,
+         Name         => "vtd_root",
+         Address      => "",
+         Size         => "16#1000#",
+         Caching      => "WB",
+         Alignment    => "16#1000#",
+         Memory_Type  => "system_vtd_root",
+         Fill_Pattern => "16#00#"); --  Force placement in lower memory.
 
       --  Interrupt Remapping (IR) table.
 
       Mulog.Log (Msg => "Adding VT-d IR table");
       Mutools.XML_Utils.Add_Memory_Region
-        (Policy      => Data,
-         Name        => "vtd_ir",
-         Address     => "",
-         Size        => "16#1000#",
-         Caching     => "WB",
-         Alignment   => "16#1000#",
-         Memory_Type => "system_vtd_ir",
-         File_Name   => "vtd_ir",
-         File_Offset => "none");
+        (Policy       => Data,
+         Name         => "vtd_ir",
+         Address      => "",
+         Size         => "16#1000#",
+         Caching      => "WB",
+         Alignment    => "16#1000#",
+         Memory_Type  => "system_vtd_ir",
+         Fill_Pattern => "16#00#"); --  Force placement in lower memory.
 
       --  Do not expand regions used for context and address translation tables
       --  if no device domains are specified in the policy.
@@ -323,15 +321,14 @@ is
                Mulog.Log (Msg => "Adding VT-d DMAR context table for PCI bus "
                           & "16#" & Curr_Bus_Hx & "#");
                Mutools.XML_Utils.Add_Memory_Region
-                 (Policy      => Data,
-                  Name        => "vtd_context_" & Curr_Bus_Hx,
-                  Address     => "",
-                  Size        => "16#1000#",
-                  Caching     => "WB",
-                  Alignment   => "16#1000#",
-                  Memory_Type => "system_vtd_context",
-                  File_Name   => "vtd_context_bus_" & Curr_Bus_Hx,
-                  File_Offset => "none");
+                 (Policy       => Data,
+                  Name         => "vtd_context_bus_" & Curr_Bus_Hx,
+                  Address      => "",
+                  Size         => "16#1000#",
+                  Caching      => "WB",
+                  Alignment    => "16#1000#",
+                  Memory_Type  => "system_vtd_context",
+                  Fill_Pattern => "16#00#"); --  Force lower memory.
             end;
             Mutools.XML_Utils.PCI_Bus_Set.Next (Position => Curr_Idx);
          end loop;
@@ -364,15 +361,14 @@ is
             Mulog.Log (Msg => "Adding VT-d DMAR second-level paging entries "
                        & "for domain '" & Name & "' with size " & Size_Str);
             Mutools.XML_Utils.Add_Memory_Region
-              (Policy      => Data,
-               Name        => Descr,
-               Address     => "",
-               Size        => Size_Str,
-               Caching     => "WB",
-               Alignment   => "16#1000#",
-               Memory_Type => "system_pt",
-               File_Name   => Descr,
-               File_Offset => "none");
+              (Policy       => Data,
+               Name         => Descr,
+               Address      => "",
+               Size         => Size_Str,
+               Caching      => "WB",
+               Alignment    => "16#1000#",
+               Memory_Type  => "system_pt",
+               Fill_Pattern => "16#00#"); --  Force placement in lower memory.
          end;
       end loop;
    end Add_Tables;

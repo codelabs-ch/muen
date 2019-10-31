@@ -60,7 +60,6 @@ MUGENSOLO5     ?= $(TOP_DIR)/tools/mugensolo5/bin/mugensolo5
 MUGENSPEC      ?= $(TOP_DIR)/tools/mugenspec/bin/mugenspec
 MUGENTAU0CMDS  ?= $(TOP_DIR)/tools/mugentau0cmds/bin/mugentau0cmds
 MUGENZP        ?= $(TOP_DIR)/tools/mugenzp/bin/mugenzp
-MUPACK         ?= $(TOP_DIR)/tools/mupack/bin/mupack
 MULNXBZPATCH   ?= $(TOP_DIR)/tools/mulnxbzpatch/bin/mulnxbzpatch
 
 XML2ADA     ?= $(TOP_DIR)/tools/scripts/xml2ada

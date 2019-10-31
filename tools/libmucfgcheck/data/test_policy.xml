@@ -297,16 +297,16 @@
   </memory>
   <memory alignment="16#1000#" caching="UC" name="wireless_dma" physicalAddress="16#cafe_1000#" size="16#1000#" type="subject"/>
   <memory alignment="16#1000#" caching="WB" name="vtd_root" physicalAddress="16#cafe_2000#" size="16#1000#" type="system_vtd_root">
-   <file filename="vtd_root" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="vtd_context_0" physicalAddress="16#cafe_3000#" size="16#1000#" type="system_vtd_context">
-   <file filename="vtd_context_bus_0" offset="none"/>
+  <memory alignment="16#1000#" caching="WB" name="vtd_context_bus_0" physicalAddress="16#cafe_3000#" size="16#1000#" type="system_vtd_context">
+   <fill pattern="16#00#"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="vtd_context_3" physicalAddress="16#cafe_4000#" size="16#1000#" type="system_vtd_context">
-   <file filename="vtd_context_bus_3" offset="none"/>
+  <memory alignment="16#1000#" caching="WB" name="vtd_context_bus_3" physicalAddress="16#cafe_4000#" size="16#1000#" type="system_vtd_context">
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="vtd_ir" physicalAddress="16#cafe_5000#" size="16#1000#" type="system_vtd_ir">
-   <file filename="vtd_ir" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="tau0|timed_event" physicalAddress="16#1fa4_0000#" size="16#1000#" type="subject_timed_event"/>
   <memory alignment="16#1000#" caching="WB" name="vt|timed_event" physicalAddress="16#1fa4_1000#" size="16#1000#" type="subject_timed_event"/>

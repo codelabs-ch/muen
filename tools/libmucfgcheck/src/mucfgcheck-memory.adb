@@ -1508,8 +1508,7 @@ is
       Region : constant DOM.Core.Node
         := Muxml.Utils.Get_Element
           (Doc   => XML_Data.Doc,
-           XPath => "/system/memory/memory[@type='system_vtd_ir']"
-           & "/file");
+           XPath => "/system/memory/memory[@type='system_vtd_ir']");
    begin
       Mulog.Log (Msg => "Checking presence of VT-d interrupt remapping table"
                  & " memory region");
@@ -1527,8 +1526,7 @@ is
       Nodes : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/memory/memory[@type='system_vtd_root']"
-           & "/file");
+           XPath => "/system/memory/memory[@type='system_vtd_root']");
    begin
       Mulog.Log (Msg => "Checking presence of VT-d root table region");
 

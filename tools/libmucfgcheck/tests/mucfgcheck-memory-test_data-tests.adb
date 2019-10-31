@@ -2480,6 +2480,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      VTd_Root_Region_Presence (XML_Data => Data);
+
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/memory/memory[@type='system_vtd_root']",
@@ -2519,7 +2524,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/memory/memory[@name='vtd_context_3']",
+         XPath => "/system/memory/memory[@name='vtd_context_bus_3']",
          Name  => "size",
          Value => "16#002a#");
 
@@ -2531,7 +2536,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'size => 16#002a#' of 'vtd_context_3' VT-d "
+                    = "Attribute 'size => 16#002a#' of 'vtd_context_bus_3' VT-d "
                     & "context table element not 4K",
                     Message   => "Exception mismatch");
       end;

@@ -325,7 +325,7 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/memory/memory[@name='vtd_context_3']",
+         XPath => "/system/memory/memory[@name='vtd_context_bus_3']",
          Name  => "type",
          Value => "subject");
 
@@ -337,8 +337,8 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "No file-backed VT-d context table memory region found "
-                    & "for PCI bus 16#03#",
+                    = "No VT-d context table memory region found for PCI bus "
+                    & "16#03#",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

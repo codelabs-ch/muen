@@ -9,6 +9,7 @@ LAST_CFG = $(shell cat $(OBJ_DIR)/.cfg 2>/dev/null)
 CUR_CFG  = $(HARDWARE):$(ADDITIONAL_HW):$(PLATFORM):$(SYSTEM)
 
 SOURCES  = $(wildcard xml/*.xml)
+SOURCES += $(SYSTEM)
 SOURCES += $(PLATFORM)
 SOURCES += $(HARDWARE)
 SOURCES += $(ADDITIONAL_HW)
@@ -31,8 +32,26 @@ GENERATOR_OPTS = -o $(OBJ_DIR) $(SYSTEM_POLICY_B)
 
 include ../Makeconf
 
+# Include system policy Makefile if it exists to enable creation of system
+# policy prior to merge. The snippet is expected to have the same name as the
+# system policy but with the file extension 'mk' instead of 'xml'.
+SYSTEM_MK = $(patsubst %.xml,%.mk,$(SYSTEM))
+ifneq (,$(wildcard $(SYSTEM_MK)))
+include $(SYSTEM_MK)
+CLEAN_DEPS += clean-$(SYSTEM)
+endif
+
+# Do not check scheduling when cleaning.
+ifneq ($(MAKECMDGOALS),clean)
+# Only check for scheduling section if system policy file is present.
+ifneq (,$(wildcard $(SYSTEM)))
 # Do not care about scheduling if policy already contains scheduling node.
 SCHED_PRESENT = $(shell xmllint --xpath 'string(/system/scheduling)' $(SYSTEM))
+else
+# The SYSTEM_SCHED_PRESENT variable is set if the system policy does not yet
+# exist but the created one already has a plan defined.
+SCHED_PRESENT = $(SYSTEM_SCHED_PRESENT)
+endif
 
 ifeq (,$(SCHED_PRESENT))
 
@@ -61,6 +80,7 @@ $(error No scheduling configuration for $(SYSTEM_NAME) (platform: $(SCHED_PLATFO
 endif
 
 endif # SCHED_PRESENT
+endif # Not 'clean' target
 
 empty :=
 comma := ,
@@ -144,5 +164,8 @@ $(GEN_STAMPS): $(GENERATORS) $(SYSTEM_POLICY_B) .validated
 		"$(TOP_DIR)/tools/$(@:.gen-%=%)/bin/$(@:.gen-%=%) $(GENERATOR_OPTS)"
 	@touch $@
 
-clean:
+clean-$(SYSTEM):
+	@rm $(SYSTEM)
+
+clean: $(CLEAN_DEPS)
 	@rm -rf $(OBJ_DIR) .validated .gen-*

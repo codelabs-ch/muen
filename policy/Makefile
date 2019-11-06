@@ -44,6 +44,10 @@ ifneq ($(MAKECMDGOALS),clean)
 ifneq (,$(wildcard $(SYSTEM)))
 # Do not care about scheduling if policy already contains scheduling node.
 SCHED_PRESENT = $(shell xmllint --xpath 'string(/system/scheduling)' $(SYSTEM))
+else
+# The SYSTEM_SCHED_PRESENT variable is set if the system policy does not yet
+# exist but the created one already has a plan defined.
+SCHED_PRESENT = $(SYSTEM_SCHED_PRESENT)
 endif
 
 ifeq (,$(SCHED_PRESENT))

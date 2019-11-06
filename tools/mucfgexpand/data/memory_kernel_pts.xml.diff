@@ -7,10 +7,10 @@
   <memory alignment="16#1000#" caching="WB" name="kernel_0|vmxon" physicalAddress="16#1000#" size="16#1000#" type="system_vmxon"/>                        <memory alignment="16#1000#" caching="WB" name="kernel_0|vmxon" physicalAddress="16#1000#" size="16#1000#" type="system_vmxon"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_1|vmxon" physicalAddress="16#2000#" size="16#1000#" type="system_vmxon"/>                        <memory alignment="16#1000#" caching="WB" name="kernel_1|vmxon" physicalAddress="16#2000#" size="16#1000#" type="system_vmxon"/>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="kernel_0|pt" size="16#6000#" type="system_pt">
-                                                                                                                                                     >     <file filename="kernel_pt_0" offset="none"/>
+                                                                                                                                                     >     <fill pattern="16#00#"/>
                                                                                                                                                      >    </memory>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="kernel_1|pt" size="16#6000#" type="system_pt">
-                                                                                                                                                     >     <file filename="kernel_pt_1" offset="none"/>
+                                                                                                                                                     >     <fill pattern="16#00#"/>
                                                                                                                                                      >    </memory>
  </memory>                                                                                                                                               </memory>
  <deviceDomains/>                                                                                                                                        <deviceDomains/>

@@ -290,34 +290,34 @@
   <memory alignment="16#1000#" caching="WB" name="subject2|vmcs" size="16#1000#" type="kernel_vmcs"/>
   <memory alignment="16#1000#" caching="WB" name="lnx_core_1|vmcs" size="16#1000#" type="kernel_vmcs"/>
   <memory alignment="16#1000#" caching="WB" name="tau0|iobm" size="16#2000#" type="system_iobm">
-   <file filename="tau0_iobm" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="tau0|msrbm" size="16#1000#" type="system_msrbm">
-   <file filename="tau0_msrbm" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|iobm" size="16#2000#" type="system_iobm">
-   <file filename="lnx_iobm" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|msrbm" size="16#1000#" type="system_msrbm">
-   <file filename="lnx_msrbm" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="subject1|iobm" size="16#2000#" type="system_iobm">
-   <file filename="subject1_iobm" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="subject1|msrbm" size="16#1000#" type="system_msrbm">
-   <file filename="subject1_msrbm" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="subject2|iobm" size="16#2000#" type="system_iobm">
-   <file filename="subject2_iobm" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="subject2|msrbm" size="16#1000#" type="system_msrbm">
-   <file filename="subject2_msrbm" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx_core_1|iobm" size="16#2000#" type="system_iobm">
-   <file filename="lnx_core_1_iobm" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx_core_1|msrbm" size="16#1000#" type="system_msrbm">
-   <file filename="lnx_core_1_msrbm" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="scheduling_group_info_1" size="16#1000#" type="subject_scheduling_info"/>
   <memory alignment="16#1000#" caching="WB" name="scheduling_group_info_2" size="16#1000#" type="subject_scheduling_info"/>
@@ -368,49 +368,49 @@
    <file filename="lnx_core_1_msrstore" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="kernel_0|pt" size="16#9000#" type="system_pt">
-   <file filename="kernel_pt_0" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="kernel_1|pt" size="16#9000#" type="system_pt">
-   <file filename="kernel_pt_1" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="tau0|pt" size="16#6000#" type="system_pt">
-   <file filename="tau0_pt" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#d000#" type="system_pt">
-   <file filename="lnx_pt" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#0002_2000#" type="system_pt">
-   <file filename="subject1_pt" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="subject2|pt" size="16#e000#" type="system_pt">
-   <file filename="subject2_pt" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx_core_1|pt" size="16#e000#" type="system_pt">
-   <file filename="lnx_core_1_pt" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="vtd_root" size="16#1000#" type="system_vtd_root">
-   <file filename="vtd_root" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="vtd_ir" size="16#1000#" type="system_vtd_ir">
-   <file filename="vtd_ir" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="vtd_context_0" size="16#1000#" type="system_vtd_context">
-   <file filename="vtd_context_bus_0" offset="none"/>
+  <memory alignment="16#1000#" caching="WB" name="vtd_context_bus_0" size="16#1000#" type="system_vtd_context">
+   <fill pattern="16#00#"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="vtd_context_3" size="16#1000#" type="system_vtd_context">
-   <file filename="vtd_context_bus_3" offset="none"/>
+  <memory alignment="16#1000#" caching="WB" name="vtd_context_bus_3" size="16#1000#" type="system_vtd_context">
+   <fill pattern="16#00#"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="vtd_context_20" size="16#1000#" type="system_vtd_context">
-   <file filename="vtd_context_bus_20" offset="none"/>
+  <memory alignment="16#1000#" caching="WB" name="vtd_context_bus_20" size="16#1000#" type="system_vtd_context">
+   <fill pattern="16#00#"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="vtd_context_23" size="16#1000#" type="system_vtd_context">
-   <file filename="vtd_context_bus_23" offset="none"/>
+  <memory alignment="16#1000#" caching="WB" name="vtd_context_bus_23" size="16#1000#" type="system_vtd_context">
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="vtd_nic1_domain_pt" size="16#5000#" type="system_pt">
-   <file filename="vtd_nic1_domain_pt" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="vtd_xhci_domain_pt" size="16#3000#" type="system_pt">
-   <file filename="vtd_xhci_domain_pt" offset="none"/>
+   <fill pattern="16#00#"/>
   </memory>
  </memory>
  <deviceDomains>

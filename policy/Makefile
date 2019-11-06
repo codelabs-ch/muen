@@ -16,13 +16,9 @@ SOURCES += $(ADDITIONAL_HW)
 
 GENERATORS =         \
 	$(MUGENACPI)     \
-	$(MUGENIOBM)     \
-	$(MUGENMSRBM)    \
 	$(MUGENMSRSTORE) \
-	$(MUGENPT)       \
 	$(MUGENSPEC)     \
 	$(MUGENSOLO5)    \
-	$(MUGENVTD)      \
 	$(MUGENZP)
 
 GEN_NAMES  = $(notdir $(GENERATORS))

@@ -173,7 +173,7 @@ is
       PT_Regions : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/memory/memory[(file) and @type='system_pt']");
+           XPath => "/system/memory/memory[@type='system_pt']");
       Dom_Count : constant Natural := DOM.Core.Nodes.Length (List => Domains);
    begin
       Mulog.Log (Msg => "Checking presence of" & Dom_Count'Img
@@ -332,7 +332,7 @@ is
       Ctx_Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/memory/memory[@type='system_vtd_context']/file");
+           XPath => "/system/memory/memory[@type='system_vtd_context']");
       Devs  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
@@ -367,12 +367,12 @@ is
                Ctx_Node   : constant DOM.Core.Node
                  := Muxml.Utils.Get_Element
                    (Nodes     => Ctx_Nodes,
-                    Ref_Attr  => "filename",
+                    Ref_Attr  => "name",
                     Ref_Value => "vtd_context_bus_" & Bus_Nr_Hex);
             begin
                if Ctx_Node = null then
-                  raise Validation_Error with "No file-backed VT-d context "
-                    & "table memory region found for PCI bus "
+                  raise Validation_Error with "No VT-d context table memory "
+                    & "region found for PCI bus "
                     & Mutools.Utils.To_Hex (Number     => Bus_Nr,
                                             Byte_Short => True);
                end if;

@@ -1,22 +1,22 @@
   </memory>                                                                                                                                               </memory>
   <memory caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>                                    <memory caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="vtd_root" size="16#1000#" type="system_vtd_root">
-                                                                                                                                                     >     <file filename="vtd_root" offset="none"/>
+                                                                                                                                                     >     <fill pattern="16#00#"/>
                                                                                                                                                      >    </memory>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="vtd_ir" size="16#1000#" type="system_vtd_ir">
-                                                                                                                                                     >     <file filename="vtd_ir" offset="none"/>
+                                                                                                                                                     >     <fill pattern="16#00#"/>
                                                                                                                                                      >    </memory>
-                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="vtd_context_0" size="16#1000#" type="system_vtd_context">
-                                                                                                                                                     >     <file filename="vtd_context_bus_0" offset="none"/>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="vtd_context_bus_0" size="16#1000#" type="system_vtd_context">
+                                                                                                                                                     >     <fill pattern="16#00#"/>
                                                                                                                                                      >    </memory>
-                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="vtd_context_23" size="16#1000#" type="system_vtd_context">
-                                                                                                                                                     >     <file filename="vtd_context_bus_23" offset="none"/>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="vtd_context_bus_23" size="16#1000#" type="system_vtd_context">
+                                                                                                                                                     >     <fill pattern="16#00#"/>
                                                                                                                                                      >    </memory>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="vtd_nic1_domain_pt" size="16#3000#" type="system_pt">
-                                                                                                                                                     >     <file filename="vtd_nic1_domain_pt" offset="none"/>
+                                                                                                                                                     >     <fill pattern="16#00#"/>
                                                                                                                                                      >    </memory>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="vtd_xhci_domain_pt" size="16#3000#" type="system_pt">
-                                                                                                                                                     >     <file filename="vtd_xhci_domain_pt" offset="none"/>
+                                                                                                                                                     >     <fill pattern="16#00#"/>
                                                                                                                                                      >    </memory>
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>

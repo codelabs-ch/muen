@@ -27,19 +27,14 @@ TOOLS =            \
 	mucheckelf     \
 	mucheckstack   \
 	mugenacpi      \
-	mugeniobm      \
-	mugenmsrbm     \
 	mugenmsrstore  \
-	mugenpt        \
 	mugenschedcfg  \
 	mugensinfo     \
 	mugensolo5     \
 	mugenspec      \
 	mugentau0cmds  \
-	mugenvtd       \
 	mugenzp        \
 	mulnxbzpatch   \
-	mupack         \
 	mupcspkrdbg    \
 	muwalkpt \
 	sbs

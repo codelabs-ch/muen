@@ -158,15 +158,14 @@ is
             Mulog.Log (Msg => "Adding pagetable region with size " & Size_Str
                        & " for CPU " & CPU_Str);
             Mutools.XML_Utils.Add_Memory_Region
-              (Policy      => Data,
-               Name        => "kernel_" & CPU_Str & "|pt",
-               Address     => "",
-               Size        => Size_Str,
-               Caching     => "WB",
-               Alignment   => "16#1000#",
-               Memory_Type => "system_pt",
-               File_Name   => "kernel_pt_" & CPU_Str,
-               File_Offset => "none");
+              (Policy       => Data,
+               Name         => "kernel_" & CPU_Str & "|pt",
+               Address      => "",
+               Size         => Size_Str,
+               Caching      => "WB",
+               Alignment    => "16#1000#",
+               Memory_Type  => "system_pt",
+               Fill_Pattern => "16#00#"); --  Force placement in lower memory.
          end;
       end loop;
    end Add_Kernel_PTs;
@@ -404,25 +403,23 @@ is
             Mulog.Log (Msg => "Adding I/O and MSR bitmap memory regions for"
                        & " subject '" & Subj_Name & "'");
             Mutools.XML_Utils.Add_Memory_Region
-              (Policy      => Data,
-               Name        => Subj_Name & "|iobm",
-               Address     => "",
-               Size        => Mutools.Utils.To_Hex (Number => IOBM_Size),
-               Caching     => "WB",
-               Alignment   => "16#1000#",
-               Memory_Type => "system_iobm",
-               File_Name   => Subj_Name & "_iobm",
-               File_Offset => "none");
+              (Policy       => Data,
+               Name         => Subj_Name & "|iobm",
+               Address      => "",
+               Size         => Mutools.Utils.To_Hex (Number => IOBM_Size),
+               Caching      => "WB",
+               Alignment    => "16#1000#",
+               Memory_Type  => "system_iobm",
+               Fill_Pattern => "16#00#"); --  Force placement in lower memory.
             Mutools.XML_Utils.Add_Memory_Region
-              (Policy      => Data,
-               Name        => Subj_Name & "|msrbm",
-               Address     => "",
-               Size        => Mutools.Utils.To_Hex (Number => MSRBM_Size),
-               Caching     => "WB",
-               Alignment   => "16#1000#",
-               Memory_Type => "system_msrbm",
-               File_Name   => Subj_Name & "_msrbm",
-               File_Offset => "none");
+              (Policy       => Data,
+               Name         => Subj_Name & "|msrbm",
+               Address      => "",
+               Size         => Mutools.Utils.To_Hex (Number => MSRBM_Size),
+               Caching      => "WB",
+               Alignment    => "16#1000#",
+               Memory_Type  => "system_msrbm",
+               Fill_Pattern => "16#00#"); --  Force placement in lower memory.
          end;
       end loop;
    end Add_Subject_Bitmaps;
@@ -603,15 +600,14 @@ is
             Mulog.Log (Msg => "Adding pagetable region with size " & Size_Str
                        & " for subject '" & Subj_Name & "'");
             Mutools.XML_Utils.Add_Memory_Region
-              (Policy      => Data,
-               Name        => Subj_Name & "|pt",
-               Address     => "",
-               Size        => Size_Str,
-               Caching     => "WB",
-               Alignment   => "16#1000#",
-               Memory_Type => "system_pt",
-               File_Name   =>  Subj_Name & "_pt",
-               File_Offset => "none");
+              (Policy       => Data,
+               Name         => Subj_Name & "|pt",
+               Address      => "",
+               Size         => Size_Str,
+               Caching      => "WB",
+               Alignment    => "16#1000#",
+               Memory_Type  => "system_pt",
+               Fill_Pattern => "16#00#"); --  Force placement in lower memory.
          end;
       end loop;
    end Add_Subject_PTs;

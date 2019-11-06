@@ -9,6 +9,7 @@ LAST_CFG = $(shell cat $(OBJ_DIR)/.cfg 2>/dev/null)
 CUR_CFG  = $(HARDWARE):$(ADDITIONAL_HW):$(PLATFORM):$(SYSTEM)
 
 SOURCES  = $(wildcard xml/*.xml)
+SOURCES += $(SYSTEM)
 SOURCES += $(PLATFORM)
 SOURCES += $(HARDWARE)
 SOURCES += $(ADDITIONAL_HW)

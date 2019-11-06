@@ -32,6 +32,8 @@ GENERATOR_OPTS = -o $(OBJ_DIR) $(SYSTEM_POLICY_B)
 
 include ../Makeconf
 
+# Do not check scheduling when cleaning.
+ifneq ($(MAKECMDGOALS),clean)
 # Only check for scheduling section if system policy file is present.
 ifneq (,$(wildcard $(SYSTEM)))
 # Do not care about scheduling if policy already contains scheduling node.
@@ -65,6 +67,7 @@ $(error No scheduling configuration for $(SYSTEM_NAME) (platform: $(SCHED_PLATFO
 endif
 
 endif # SCHED_PRESENT
+endif # Not 'clean' target
 
 empty :=
 comma := ,

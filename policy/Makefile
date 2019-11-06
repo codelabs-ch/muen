@@ -32,8 +32,11 @@ GENERATOR_OPTS = -o $(OBJ_DIR) $(SYSTEM_POLICY_B)
 
 include ../Makeconf
 
+# Only check for scheduling section if system policy file is present.
+ifneq (,$(wildcard $(SYSTEM)))
 # Do not care about scheduling if policy already contains scheduling node.
 SCHED_PRESENT = $(shell xmllint --xpath 'string(/system/scheduling)' $(SYSTEM))
+endif
 
 ifeq (,$(SCHED_PRESENT))
 

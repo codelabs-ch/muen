@@ -36,7 +36,10 @@ include ../Makeconf
 # policy prior to merge. The snippet is expected to have the same name as the
 # system policy but with the file extension 'mk' instead of 'xml'.
 SYSTEM_MK = $(patsubst %.xml,%.mk,$(SYSTEM))
+ifneq (,$(wildcard $(SYSTEM_MK)))
 include $(SYSTEM_MK)
+CLEAN_DEPS += clean-$(SYSTEM)
+endif
 
 # Do not check scheduling when cleaning.
 ifneq ($(MAKECMDGOALS),clean)
@@ -161,5 +164,8 @@ $(GEN_STAMPS): $(GENERATORS) $(SYSTEM_POLICY_B) .validated
 		"$(TOP_DIR)/tools/$(@:.gen-%=%)/bin/$(@:.gen-%=%) $(GENERATOR_OPTS)"
 	@touch $@
 
-clean:
+clean-$(SYSTEM):
+	@rm $(SYSTEM)
+
+clean: $(CLEAN_DEPS)
 	@rm -rf $(OBJ_DIR) .validated .gen-*

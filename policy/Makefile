@@ -32,6 +32,12 @@ GENERATOR_OPTS = -o $(OBJ_DIR) $(SYSTEM_POLICY_B)
 
 include ../Makeconf
 
+# Include system policy Makefile if it exists to enable creation of system
+# policy prior to merge. The snippet is expected to have the same name as the
+# system policy but with the file extension 'mk' instead of 'xml'.
+SYSTEM_MK = $(patsubst %.xml,%.mk,$(SYSTEM))
+include $(SYSTEM_MK)
+
 # Do not check scheduling when cleaning.
 ifneq ($(MAKECMDGOALS),clean)
 # Only check for scheduling section if system policy file is present.

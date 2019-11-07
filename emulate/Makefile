@@ -48,6 +48,7 @@ $(ISOFILE): clean $(IMAGE) grub.cfg Makefile
 		if [ -n "$$boot" ]; then \
 			echo " OK"; echo; \
 			echo "    SSH: ssh -p $(QEMU_SSH_PORT) root@localhost"; \
+			echo "         (password: muen)"; \
 			echo "Console: screen -r kvm-muen"; \
 			echo "         (C-A k to quit, C-A d to detach)"; \
 			break; \

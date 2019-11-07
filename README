@@ -243,15 +243,14 @@ virtualization of a Muen system:
 
   $ make emulate
 
-The system serial console output is written to `emulate/serial.out`. Use your
-favorite VNC client to connect to the VNC server provided by QEMU on localhost
-or SSH into the NIC Linux guest VM via SSH (`ssh -p 5555 root@localhost` with
-root password 'muen').
+The system serial output is written to `emulate/serial.out`. Follow the
+on-screen instructions on how to connect to the QEMU curses console or how to
+SSH into the NIC Linux guest VM.
 
-NOTE: As the virtual terminal (VT) over VNC is timing sensitive and QEMU/KVM
+NOTE: As the virtual terminal (VT) over curses is timing sensitive and QEMU/KVM
 cannot guarantee tick-exact timing depending on the host CPU and system load,
-this console is just an emergency console. Use SSH to interact with the
-booted Muen system.
+this console is just an emergency console. Use SSH to interact with the booted
+Muen system.
 
 Hardware
 ~~~~~~~~

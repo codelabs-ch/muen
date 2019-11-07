@@ -5,12 +5,15 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Exceptions;
+
 with McKae.XML.XPath.XIA;
 
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
 with Muxml.Utils;
+with Mucfgcheck;
 
 with Expanders.Platform;
 with Expanders.Components;

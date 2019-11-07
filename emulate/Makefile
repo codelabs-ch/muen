@@ -39,7 +39,7 @@ $(ISOFILE): clean $(IMAGE) grub.cfg Makefile
 		"grub-mkrescue -o $@ boot/grub/grub.cfg=grub.cfg boot/kernel.bin=$(IMAGE)"
 
 .emulate: $(ISOFILE)
-	$(QEMU) $(QEMU_OPTS) -pidfile $@ -daemonize >emulate.out 2>&1
+	$(QEMU) $(QEMU_OPTS) $(QEMU_EXTRA_OPTS) -pidfile $@ -daemonize >emulate.out 2>&1
 	@echo
 	@echo -n "* QEMU/KVM started for '$(ISOFILE)', waiting for boot: "
 	@for i in $$(seq 1 5); do \

@@ -160,9 +160,9 @@ environment listed in the following table.
 | Operating systems      | Debian GNU/Linux 9/10 x86_64 +
                            Ubuntu 18.04 x86_64
 | Linux kernel/KVM       | >= 5.2.0 with GUEST_CR3 fix <<lnxcr3>>
-| Ada compiler           | GNAT GPL 2019
+| Ada compiler           | GNAT Community 2019
 | GCC version            | 8.3.1 20190518 for GNAT Community 2019
-| SPARK version          | Community 2019
+| SPARK version          | GNAT Community 2019
 | Emulator               | qemu-system-x86_64 (>= 3.1.0)
 | Intel AMT SoL client   | amtterm (>= commit 0ece513...)
 | Intel vPro AMT / WSMan | amtc (github.com/schnoddelbotz/amtc)
@@ -192,12 +192,16 @@ The first step to build Muen is to install the required packages:
       libxml2-utils make qemu-system-x86 tidy wget xorriso xsltproc zlib1g-dev
 
 The Ada and SPARK packages currently available in Debian and Ubuntu are too old
-to build Muen. GNAT/SPARK Community 2019 from AdaCore's <<libre>> site must be
-installed instead. Extend your `PATH` to make the GPL compiler and tools
+to build Muen. GNAT Community 2019 for x86 GNU Linux (64-bit) from AdaCore
+must be installed instead. It can be downloaded from the following location:
+
+  https://www.adacore.com/download
+
+Extend your `PATH` to make the GNAT Community 2019 compiler and tools
 visible to the Muen build system (assuming that they are installed below
 `/opt`):
 
-  $ export PATH=/opt/gnat/bin:/opt/spark/bin:$PATH
+  $ export PATH=/opt/GNAT/2019/bin:$PATH
 
 Docker
 ~~~~~~
@@ -215,6 +219,11 @@ source directory and issue the following command:
 
 This will create an image containing the example system which can be booted by
 any Multiboot <<mboot>> compliant bootloader.
+
+The following command gives a short description of the top-level Makefile
+targets:
+
+  $ make help
 
 
 Deploy
@@ -314,7 +323,6 @@ References
 - [[[lnxcr3]]]        Linux KVM GUEST_CR3 fix, https://patchwork.kernel.org/patch/11165185/
 - [[[ipxe]]]          iPXE boot firmware, https://ipxe.org/
 - [[[amt]]]           Intel AMT SoL client + tools, https://www.kraxel.org/cgit/amtterm/
-- [[[libre]]]         AdaCore Libre, https://libre.adacore.com/download/
 - [[[genode]]]        Genode OS Framework, https://genode.org/
 - [[[genode_muen]]]   Genode 16.08 release notes, https://genode.org/documentation/release-notes/16.08
 - [[[vbox]]]          VirtualBox, https://www.virtualbox.org

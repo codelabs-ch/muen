@@ -81,6 +81,8 @@ is
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Channels) - 1 loop
          declare
+            use type DOM.Core.Node;
+
             Channel_Node : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => Channels,
@@ -110,12 +112,20 @@ is
                Name   => Channel_Name,
                Mode   => Channel_Mode);
 
+            if Writer_Node = null then
+               raise Mucfgcheck.Validation_Error with "No writer for channel '"
+                 & Channel_Name & "'";
+            end if;
             Writer_Subj_Source_Group
               := XML_Utils.Add_Optional_Events_Source_Group
                 (Policy  => Data,
                  Subject => Muxml.Utils.Ancestor_Node
                    (Node  => Writer_Node,
                     Level => 2));
+            if Reader_Node = null then
+               raise Mucfgcheck.Validation_Error with "No reader for channel '"
+                 & Channel_Name & "'";
+            end if;
             Reader_Subj_Target_Node
               := XML_Utils.Add_Optional_Events_Target
                 (Policy  => Data,

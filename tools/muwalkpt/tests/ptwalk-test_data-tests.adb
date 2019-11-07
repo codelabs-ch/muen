@@ -117,7 +117,7 @@ package body Ptwalk.Test_Data.Tests is
                Success         => Success,
                Translated_Addr => Address);
       Assert (Condition => not Success,
-              Message   => "Successfull translation for invalid PT reference");
+              Message   => "Successful translation for invalid PT reference");
 
       Ada.Streams.Stream_IO.Close (File => PT_File);
 

@@ -104,7 +104,7 @@ is
                Name  => "globalId"));
       begin
 
-         --  The base address is calculated by substracting the subject
+         --  The base address is calculated by subtracting the subject
          --  specific offset from the virtual address of any MSR store kernel
          --  mapping.
 

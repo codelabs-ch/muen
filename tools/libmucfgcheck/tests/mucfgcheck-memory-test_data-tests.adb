@@ -1348,7 +1348,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       Subject_State_Mappings (XML_Data => Data);
 
-      --  Kernel subject state mappings with differnt virtual base addresses.
+      --  Kernel subject state mappings with different virtual base addresses.
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -1682,7 +1682,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       Subject_Timed_Event_Mappings (XML_Data => Data);
 
-      --  Kernel timed event mappings with differnt virtual base addresses.
+      --  Kernel timed event mappings with different virtual base addresses.
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,

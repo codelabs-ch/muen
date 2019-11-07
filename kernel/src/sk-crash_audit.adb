@@ -139,9 +139,9 @@ is
       pragma Unreferenced (Audit);
       --  Audit token authorizes to finalize crash dump and restart.
 
-      Next   : constant Positive               := Global_Next_Slot;
-      Boots  : constant Interfaces.Unsigned_64 := Instance.Header.Boot_Count;
-      Crashs : constant Interfaces.Unsigned_64 := Instance.Header.Crash_Count;
+      Next    : constant Positive               := Global_Next_Slot;
+      Boots   : constant Interfaces.Unsigned_64 := Instance.Header.Boot_Count;
+      Crashes : constant Interfaces.Unsigned_64 := Instance.Header.Crash_Count;
    begin
       if Next > Positive (Dumpdata_Length'Last) then
          Instance.Header.Dump_Count := Dumpdata_Length'Last;
@@ -153,8 +153,8 @@ is
          Instance.Header.Version_String (I) := Version.Version_String (I);
       end loop;
 
-      Instance.Header.Generation  := Boots  + 1;
-      Instance.Header.Crash_Count := Crashs + 1;
+      Instance.Header.Generation  := Boots   + 1;
+      Instance.Header.Crash_Count := Crashes + 1;
 
       Delays.U_Delay (US => Reset_Delay);
       pragma Debug (Dump.Print_Message

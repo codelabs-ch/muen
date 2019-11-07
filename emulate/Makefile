@@ -7,10 +7,9 @@ ISOPATH = $(CURDIR)/$(ISOFILE)
 
 IMAGE ?= ../pack/obj/muen.img
 
-QEMU             ?= qemu-system-x86_64
-QEMU_MEM         ?= 5120
-QEMU_SSH_PORT    ?= 5555
-QEMU_VNC_DISPLAY ?= 0
+QEMU          ?= qemu-system-x86_64
+QEMU_MEM      ?= 5120
+QEMU_SSH_PORT ?= 5555
 
 QEMU_OPTS = \
 	-drive file=$(ISOFILE),index=0,media=disk,format=raw \
@@ -25,7 +24,7 @@ QEMU_OPTS = \
 	-netdev user,id=net0,net=192.168.254.0/24,dhcpstart=192.168.254.100,hostfwd=tcp::$(QEMU_SSH_PORT)-:22 \
 	-device qemu-xhci,id=xhci \
 	-device usb-tablet,bus=xhci.0 \
-	-vnc 127.0.0.1:$(QEMU_VNC_DISPLAY)
+	-curses
 
 iso: $(ISOFILE)
 	@echo
@@ -39,7 +38,7 @@ $(ISOFILE): clean $(IMAGE) grub.cfg Makefile
 		"grub-mkrescue -o $@ boot/grub/grub.cfg=grub.cfg boot/kernel.bin=$(IMAGE)"
 
 .emulate: $(ISOFILE)
-	$(QEMU) $(QEMU_OPTS) $(QEMU_EXTRA_OPTS) -pidfile $@ -daemonize >emulate.out 2>&1
+	screen -c screenrc -L -dmS kvm-muen $(QEMU) $(QEMU_OPTS) $(QEMU_EXTRA_OPTS) -pidfile $@
 	@echo
 	@echo -n "* QEMU/KVM started for '$(ISOFILE)', waiting for boot: "
 	@for i in $$(seq 1 5); do \
@@ -48,12 +47,13 @@ $(ISOFILE): clean $(IMAGE) grub.cfg Makefile
 		boot=$$(cat serial.out 2>/dev/null | grep 'Booting Muen'); \
 		if [ -n "$$boot" ]; then \
 			echo " OK"; echo; \
-			echo "  SSH: ssh -p $(QEMU_SSH_PORT) root@localhost"; \
-			echo "  VNC: localhost, port $$((QEMU_VNC_DISPLAY + 5900))"; \
+			echo "    SSH: ssh -p $(QEMU_SSH_PORT) root@localhost"; \
+			echo "Console: screen -r kvm-muen"; \
+			echo "         (C-A k to quit, C-A d to detach)"; \
 			break; \
 		fi; \
 	done; \
-	if [ -z "$$boot" ]; then echo " ERROR:" && cat emulate.out && exit 1; fi
+	if [ -z "$$boot" ]; then echo "\nERROR:" && cat emulate.out && exit 1; fi
 
 stop:
 	kill `cat .emulate 2>/dev/null` 2>/dev/null || true

@@ -165,7 +165,7 @@ $(GEN_STAMPS): $(GENERATORS) $(SYSTEM_POLICY_B) .validated
 	@touch $@
 
 clean-$(SYSTEM):
-	@rm $(SYSTEM)
+	@rm -f $(SYSTEM)
 
 clean: $(CLEAN_DEPS)
 	@rm -rf $(OBJ_DIR) .validated .gen-*

@@ -5,7 +5,7 @@ from copy import deepcopy
 from lxml import etree
 import math
 
-POLICY_TEMPLATE = "mirage-solo5-net.xml"
+POLICY_TEMPLATE = "mirage-solo5.xml"
 COMPONENT_SPEC = "component_unikernel.xml"
 SUBJECT_NAME = "unikernel"
 LINUX_NAME = "nic_linux"

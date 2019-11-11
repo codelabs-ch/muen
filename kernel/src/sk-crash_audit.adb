@@ -130,16 +130,17 @@ is
    is
       H : constant Header_Type := Instance.Crash_Info.Header;
    begin
-      --D @Text Section => impl_crash_audit_init, Priority => 0
-      --D Check if the crash audit has as matching version number set. If not,
-      --D initialize the audit instance to the well-known empty state.
-      --D If it is already initialized, increase the boot counter but retain
-      --D current audit data.
       if H.Version_Magic /= Crash_Magic then
+         --D @Text Section => impl_crash_audit_init, Priority => 0
+         --D Initialize the audit instance to the well-known empty state if the
+         --D crash audit does not have a matching version number.
          Instance.Crash_Info := Null_Dump;
          pragma Debug (Dump.Print_Message
                        (Msg => "Crash audit: Initialized"));
       else
+         --D @Text Section => impl_crash_audit_init, Priority => 0
+         --D Increase the boot counter but retain current audit data, if it is
+         --D already initialized,
          Instance.Crash_Info.Header.Boot_Count := H.Boot_Count + 1;
          pragma Debug
            (Dump.Print_Message
@@ -182,7 +183,7 @@ is
       end if;
 
       --D @Text Section => impl_crash_audit_alloc, Priority => 0
-      --D Set index of current audit slot and clear crash dump fields.
+      --D Set index of current audit slot.
       Audit.Slot := Dumpdata_Index (S);
       pragma Debug (Dump.Print_Message
                     (Msg => "Crash audit: CPU APIC ID "
@@ -190,11 +191,15 @@ is
                      & " - Allocated record "
                      & Strings.Img (Byte (Audit.Slot))));
 
+      --D @Text Section => impl_crash_audit_alloc, Priority => 0
+      --D Clear crash dump fields of current audit slot.
       Instance.Crash_Info.Data (Audit.Slot) := Null_Dumpdata;
 
       --D @Text Section => impl_crash_audit_alloc, Priority => 0
-      --D Set APIC ID of this CPU and set timestamp to the current TSC value.
+      --D Set crash data APIC ID to this CPU.
       Instance.Crash_Info.Data (Audit.Slot).APIC_ID := Byte (CPU_Info.APIC_ID);
+      --D @Text Section => impl_crash_audit_alloc, Priority => 0
+      --D Set crash data timestamp to the current TSC value.
       Instance.Crash_Info.Data (Audit.Slot).TSC_Value := CPU.RDTSC;
    end Allocate;
 
@@ -212,18 +217,20 @@ is
       Boots : constant Interfaces.Unsigned_64
         := Instance.Crash_Info.Header.Boot_Count;
    begin
-      --D @Text Section => impl_crash_audit_final, Priority => 0
-      --D Set active crash dump count to the current slot index. If the next
-      --D slot index is too larger, set it to the last index.
       if Next > Positive (Dumpdata_Length'Last) then
+         --D @Text Section => impl_crash_audit_final, Priority => 0
+         --D Set active crash dump count to the last index if the next slot
+         --D index is too larger.
          Instance.Crash_Info.Header.Dump_Count := Dumpdata_Length'Last;
       else
+         --D @Text Section => impl_crash_audit_final, Priority => 0
+         --D Set active crash dump count to the current slot index.
          Instance.Crash_Info.Header.Dump_Count := Dumpdata_Length (Next - 1);
       end if;
 
-      --D @Text Section => impl_crash_audit_final, Priority => 0
-      --D Set the version string in the header to the current magic value.
       for I in Version.Version_String'Range loop
+         --D @Text Section => impl_crash_audit_final, Priority => 0
+         --D Set the version string in the header to the current version.
          Instance.Crash_Info.Header.Version_String (I)
            := Version.Version_String (I);
       end loop;
@@ -231,6 +238,8 @@ is
       --D @Text Section => impl_crash_audit_final, Priority => 0
       --D Increase the generation and crash counters.
       Instance.Crash_Info.Header.Generation := Boots + 1;
+      --D @Text Section => impl_crash_audit_final, Priority => 0
+      --D Increase the crash counter.
       Atomic_Inc_Crash_Count;
 
       --D @Text Section => impl_crash_audit_final, Priority => 0

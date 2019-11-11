@@ -33,7 +33,7 @@ is
    --  Check that all booleans defined in expressions contain a valid value.
    procedure Expression_Boolean_Values (XML_Data : Muxml.XML_Data_Type);
 
-   --  Check that all conditinal config variable references are valid.
+   --  Check that all conditional config variable references are valid.
    procedure Conditional_Config_Var_Refs (XML_Data : Muxml.XML_Data_Type);
 
 end Mucfgcheck.Config;

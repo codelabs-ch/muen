@@ -51,6 +51,8 @@ is
       Refined_Depends => (ID => New_Major)
    is
    begin
+      --D @Interface
+      --D Read current \texttt{New\_Major} value into ID out parameter.
       ID := New_Major;
       pragma Annotate
         (GNATprove, Intentional,

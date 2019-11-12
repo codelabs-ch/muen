@@ -89,6 +89,10 @@ is
         (Current_Minor_Frame_ID).Group_ID) = Subject_ID
    is
    begin
+      --D @Interface
+      --D Set active subject of current scheduling group, which is determined
+      --D by using the current major and minor frame IDs as indexes into the
+      --D scheduling plan.
       Scheduling_Groups
         (Skp.Scheduling.Scheduling_Plans (CPU_Info.CPU_ID)
          (Global_Current_Major_Frame_ID).Minor_Frames
@@ -187,6 +191,9 @@ is
       use type Skp.Scheduling.Minor_Frame_Range;
       use type Skp.Scheduling.Barrier_Index_Range;
 
+      --D @Interface
+      --D Save current global major frame ID to local constant to allow
+      --D changing the global variable on major frame change.
       Current_Major_ID     : constant Skp.Scheduling.Major_Frame_Range
         := Global_Current_Major_Frame_ID;
       Current_Minor_ID     : constant Skp.Scheduling.Minor_Frame_Range
@@ -195,7 +202,8 @@ is
         := Skp.Scheduling.Scheduling_Plans (CPU_Info.CPU_ID)
         (Current_Major_ID).Length;
 
-      --  Save current major frame CPU cycles for schedule info export.
+      --D @Interface
+      --D Save current major frame CPU cycles for schedule info export.
       Current_Major_Frame_Start : constant SK.Word64
         := Global_Current_Major_Start_Cycles;
 
@@ -243,14 +251,19 @@ is
                Tau0_Interface.Get_Major_Frame (ID => Next_Major_ID);
 
                --D @Text Section => impl_handle_timer_expiry, Priority => 10
-               --D Update the global major frame ID and set the new major frame
-               --D start time by incrementing the timestamp by period of the
-               --D major frame that just ended.
-
+               --D Calculate next major frame start by incrementing the current
+               --D global start timestamp by period of the major frame that
+               --D just ended.
                Next_Major_Start := Global_Current_Major_Start_Cycles
                  + Skp.Scheduling.Major_Frames (Current_Major_ID).Period;
 
+               --D @Text Section => impl_handle_timer_expiry, Priority => 10
+               --D Update the global major frame ID by setting it to the next
+               --D ID.
                Global_Current_Major_Frame_ID     := Next_Major_ID;
+               --D @Text Section => impl_handle_timer_expiry, Priority => 10
+               --D Set global major frame start cycles to the new major frame
+               --D start time.
                Global_Current_Major_Start_Cycles := Next_Major_Start;
 
                if Current_Major_ID /= Next_Major_ID then
@@ -308,6 +321,10 @@ is
       --  CPU cycles until the end of the current minor frame relative to major
       --  frame start.
 
+      --D @Interface
+      --D Calculate absolute deadline timestamp by using the current global
+      --D major frame start timestamp and adding the current minor frame
+      --D deadline, which is relative to major frame start.
       Deadline := Global_Current_Major_Start_Cycles +
         Skp.Scheduling.Scheduling_Plans (CPU_Info.CPU_ID)
         (Global_Current_Major_Frame_ID).Minor_Frames

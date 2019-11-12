@@ -30,6 +30,8 @@ is
    is
    begin
       for I in MSR_Entry_Range loop
+         --D @Interface
+         --D Set all MSR storage entries of each subject to \textt{0}.
          MSR_Storage (Subject).MSRs (I).Data := 0;
       end loop;
       MSR_Storage (Subject).Padding := (others => 0);

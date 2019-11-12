@@ -54,7 +54,10 @@ RUN apt-get update && \
 		patch \
 		picocom \
 		python \
+		python-lxml \
 		python-colorlog \
+		python-pip \
+		python-setuptools \
 		qemu-system-x86 \
 		rsync \
 		screen \
@@ -81,6 +84,10 @@ RUN git clone https://github.com/schnoddelbotz/amtc.git /tmp/amtc \
 	&& make amtc \
 	&& cp src/amtc /usr/local/bin \
 	&& rm -rf /tmp/amtc
+
+# Python modules
+RUN pip install wheel \
+	&& pip install lief
 
 # Setup environment
 ENV HOME /home/user

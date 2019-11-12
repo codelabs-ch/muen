@@ -545,17 +545,20 @@ is
 
       --D @Item List => impl_vmcs_reset_steps, Priority => 0
       --D Read IA32\_VMX\_BASIC MSR to determine the VMCS revision identifier
-      --D of the processor. Use this value to initialize the revision ID field
-      --D of the VMCS. Note, that bit 31 of the MSR is always 0 which means, the
-      --D shadow-VMCS indicator will always be cleared, see Intel SDM Vol. 3D,
-      --D "A.1 Basic VMX Information".
-      --D Set the VMX-abort indicator and all remaining VMCS data to zero, see
-      --D Intel SDM Vol 3C, "24.2 Format of the VMCS Region".
+      --D of the processor.
       CPU.Get_MSR (Register => Constants.IA32_VMX_BASIC,
                    Low      => Rev_ID,
                    High     => Unused_High);
+      --D @Item List => impl_vmcs_reset_steps, Priority => 0
+      --D Set VMCS revision ID field to CPU value and the abort indicator to 0.
+      --D Note, that bit 31 of the MSR is always 0 which means, the
+      --D shadow-VMCS indicator will always be cleared, see Intel SDM Vol. 3D,
+      --D "A.1 Basic VMX Information".
       VMCS (Subject_ID).Header := (Revision_ID     => Rev_ID,
                                    Abort_Indicator => 0);
+      --D @Item List => impl_vmcs_reset_steps, Priority => 0
+      --D Set all remaining VMCS data to zero, see Intel SDM Vol 3C,
+      --D "24.2 Format of the VMCS Region".
       VMCS (Subject_ID).Data   := (others => 0);
 
       --D @Item List => impl_vmcs_reset_steps, Priority => 0

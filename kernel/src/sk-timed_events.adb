@@ -34,6 +34,9 @@ is
       Refined_Depends => (Subject_Events =>+ Subject)
    is
    begin
+      --D @Interface
+      --D Set TSC trigger value of timed event for specific subject to
+      --D \textt{SK.Word'Last $2^{(64}-1$}.
       Subject_Events (Subject).Data.TSC_Trigger_Value := SK.Word64'Last;
    end Clear_Event;
 
@@ -49,7 +52,11 @@ is
         ((TSC_Trigger_Value, Event_Nr) => (Subject_Events, Subject))
    is
    begin
+      --D @Interface
+      --D Read current TSC trigger value from timed event of specific subject.
       TSC_Trigger_Value := Subject_Events (Subject).Data.TSC_Trigger_Value;
+      --D @Interface
+      --D Read current event number value from timed event of specific subject.
       Event_Nr          := Skp.Events.Event_Range
         (Subject_Events (Subject).Data.Event_Nr);
    end Get_Event;
@@ -62,6 +69,8 @@ is
       Refined_Depends => (Subject_Events =>+ Subject)
    is
    begin
+      --D @Interface
+      --D Set timed event of specific subject to \texttt{Null\_Event}.
       Subject_Events (Subject).Data := Null_Event;
    end Init_Event;
 

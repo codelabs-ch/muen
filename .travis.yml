@@ -67,13 +67,6 @@ jobs:
     - stage: Build on debian and ubuntu
       script:
         - export DISTRO_NAME=debian
-        - export DISTRO_VERSION=stretch
-        - DOCKER_PULL
-        - DOCKER_BUILD
-        - DOCKER_PUSH
-        - DOCKER_RUN
-    - script:
-        - export DISTRO_NAME=debian
         - export DISTRO_VERSION=buster
         - DOCKER_PULL
         - DOCKER_BUILD

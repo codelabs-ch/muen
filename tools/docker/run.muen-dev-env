@@ -5,7 +5,7 @@ TOP=${SCRIPTDIR}/../..
 MOUNT=type=bind,source=${TOP},target=/home/user/muen
 HOST_UID=$(id -u)
 KVM_GID=$(getent group kvm | cut -d: -f3)
-EXPOSE="--expose 5555 --expose 5900"
+EXPOSE="--expose 5555"
 NET=host
 
 if [ -z $1 ]; then

@@ -94,8 +94,10 @@ else
 JOIN = cp '$<' '$@'
 endif
 
+ifneq (,$(LAST_CFG))
 ifneq ($(CUR_CFG),$(LAST_CFG))
 	CFG_DEPS = cfgchange
+endif
 endif
 
 
@@ -106,11 +108,13 @@ merge: $(POLICY_SRC)
 $(OBJ_DIR):
 	@mkdir -p $@
 
-cfgchange: | $(OBJ_DIR)
-	rm -rf $(OBJ_DIR)/*
+cfgchange:
+	@$(E) policy "New config: $(CUR_CFG)" "rm -rf $(OBJ_DIR)/*"
+
+$(OBJ_DIR)/.cfg: $(CFG_DEPS) | $(OBJ_DIR)
 	echo $(CUR_CFG) > $(OBJ_DIR)/.cfg
 
-$(SYSTEM_CONFIG): $(CFG_DEPS)
+$(SYSTEM_CONFIG): $(OBJ_DIR)/.cfg
 	@echo '<system>'                                                         > $@;
 	@echo ' <config>'                                                       >> $@;
 	@echo '  <string name="system"              value="$(SYSTEM)"/>'        >> $@;
@@ -165,7 +169,7 @@ $(GEN_STAMPS): $(GENERATORS) $(SYSTEM_POLICY_B) .validated
 	@touch $@
 
 clean-$(SYSTEM):
-	@rm $(SYSTEM)
+	@rm -f $(SYSTEM)
 
 clean: $(CLEAN_DEPS)
 	@rm -rf $(OBJ_DIR) .validated .gen-*

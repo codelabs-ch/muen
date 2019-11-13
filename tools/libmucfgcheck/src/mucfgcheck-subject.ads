@@ -21,7 +21,7 @@ with Muxml;
 package Mucfgcheck.Subject
 is
 
-   --  Validate subject name uniqueness
+   --  Validate subject name uniqueness.
    procedure Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate subject CPU ID.

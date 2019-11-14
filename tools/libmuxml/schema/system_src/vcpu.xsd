@@ -257,7 +257,7 @@
  <xs:complexType name="vcpuType">
   <xs:annotation>
    <xs:documentation>
-    The \texttt{vpu} element controls the execution behavior of the virtual CPU
+    The \texttt{vcpu} element controls the execution behavior of the virtual CPU
     (vCPU). A default vCPU profile is selected by the component profile, but CPU
     execution settings can be customized both at component and subject level.
 

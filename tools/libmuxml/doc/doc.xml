@@ -61,26 +61,30 @@
    A system integrator specifies and configures such a component-based system at
    integration time in XML format. The Muen toolchain transforms the system
    description in multiple steps to the final system description, resolving
-   abstractions which exist to make live simpler and less error-prone to the
+   abstractions which exist to make life simpler and less error-prone to the
    integrator. The toolchain also creates various build artifacts which are
    incorporated into the final system image by the final system composition
    step. Section \ref{integration} gives an overview of the system integration
    process.
 
    The Muen SK is a policy enforcer, in the sense that it has no knowledge about
-   the actual content of the generated data structures. The most important and
-   final step in the integration of a Muen system is therefore the actual
-   generation of the data structures which guarantee subject isolation and the
-   composition of the final system image. This step is performed by a trusted
-   system composer called (static) $\tau$0.  The concept of $\tau0$ is
-   introduced in section \ref{tau0-concept}.
+   the actual content of the generated data structures. For example, it knows
+   nothing about the contents of subject page tables which define a subject's
+   address space, nor does it know anything about its own page tables.
+   Technically, these structures are not even mapped into the kernel.
+
+   The most important and final step in the integration of a Muen system is
+   therefore the actual generation of the data structures which guarantee
+   subject isolation and the composition of the final system image. This step is
+   performed by a trusted system composer called (static) $\tau$0.  The concept
+   of $\tau0$ is introduced in section \ref{tau0-concept}.
 
    Section \ref{toolchain} explains every tool and the system image composer in
    detail. It also presents the usage of each tool.
 
    Section \ref{schema} specifies the XML-schema and structure of the system
    source format of the Muen system policy. Explanations and examples illustrate
-   how to configure a component-based system with the Muen.
+   how to configure a component-based system with the Muen SK.
   </text>
  </section>
 
@@ -157,7 +161,9 @@
 
      The use of configuration values enables parametrization of the system policy.
 
-     The policy in source format is specified in section \ref{schema}.
+     The policy in source format is specified in section \ref{schema}, appendix
+     \ref{appendix-ap} provides an annotated example policy which is used to
+     illustrate the elements in the policy.
     </text>
    </section>
 
@@ -233,7 +239,7 @@
    like directed channels are now resolved to basic shared memory mechanisms and
    events, non-present optional attributes are added with default values.
 
-   The allocater tool (\ref{tools-mucfgalloc}) then loops over all physical
+   The allocator tool (\ref{tools-mucfgalloc}) then loops over all physical
    memory regions which have no physical address assigned and allocates one from
    the usable pool. The usable pool information is extracted from the
    allocatable memory block list (\ref{system_src.xsd:physicalMemoryType}) in
@@ -255,6 +261,9 @@
    The kernel source specifications contain tables and constants which are
    compiled into the kernel in the kernel build process.
 
+   An example of generated subject structures are ACPI tables, which are mapped
+   into a Linux VM to announce the available hardware resources.
+
    The command stream generator (\ref{tools-mugentau0cmds}) generates
    instructions in XML format for the $\tau0$ system composer explained in the
    following section.
@@ -268,13 +277,14 @@
    composer $\tau0$.
 
    The $\tau0$ concept is a process within Muen development to gradually
-   increase the dynamic of a component based system while keeping a high level
-   of assurance about the correctness of isolation enforcement.
+   increase the flexibility of a component based system while keeping a high
+   level of assurance about the correctness of isolation enforcement.
 
    The ultimate goal is to have a trusted $\tau0$ subject with extra privilege
    to interact with the Muen SK over a special $\tau0$ interface API. This would
    allow $\tau0$ to change certain well-defined aspects of the system state at
-   runtime.
+   runtime. A potential use-case would be to start a new subject and assign
+   resources like memory and devices to it.
 
    Since it must be guaranteed that a dynamic system is as secure as the static
    one, $\tau0$ must be developed with the same utter care as the kernel itself,
@@ -297,8 +307,8 @@
     VM (\ref{tools-mugenacpi}).
 
     Static $\tau0$ fulfills its task by creating the system image in memory
-    while processing the commands from the command stream. The following
-    listing shows an example command stream:
+    while processing the commands from the command stream. The following listing
+    shows an example command stream:
 
     \lstinputlisting[caption=$\tau0$ Command
     Stream,label={lst:cmdstream},language=XML,linerange=1-34]{../../../pack/obj/policy_b_cmds.xml}

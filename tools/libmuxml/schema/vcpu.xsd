@@ -29,7 +29,13 @@
  <xs:simpleType name="msrAddressType">
   <xs:annotation>
    <xs:documentation>
-    MSR start/end address value.
+    Start/end address value for MSRs in the low or high range:
+    \begin{itemize}
+    \item Low  : \texttt{16\#0000\_0000\# .. 16\#0000\_1fff\#}
+    \item High : \texttt{16\#C000\_0000\# .. 16\#C000\_1fff\#}
+    \end{itemize}
+
+    See also Intel SDM Vol. 3C, "24.6.9 MSR-Bitmap Address".
    </xs:documentation>
   </xs:annotation>
   <xs:restriction base="xs:string">

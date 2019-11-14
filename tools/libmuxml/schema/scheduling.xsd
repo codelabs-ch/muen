@@ -5,7 +5,7 @@
   <xs:annotation>
    <xs:documentation>
     The Muen SK implements a static, cyclic scheduler. The \texttt{scheduling}
-    element is used to specify such a stastic plan by means of a major frame. A
+    element is used to specify such a static plan by means of a major frame. A
     major frame consist of an arbitrary number of minor frames.  Minor frames in
     turn specify a duration in number of ticks a subject is scheduled before
     preemption in terms of the tick rate.

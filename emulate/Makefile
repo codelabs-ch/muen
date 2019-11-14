@@ -15,6 +15,10 @@ QEMU_NETDEV_OPTS := "user,id=net0,net=192.168.254.0/24,"
 QEMU_NETDEV_OPTS := "$(QEMU_NETDEV_OPTS)dhcpstart=192.168.254.100,"
 QEMU_NETDEV_OPTS := "$(QEMU_NETDEV_OPTS)hostfwd=tcp::$(QEMU_SSH_PORT)-:22"
 
+ifneq ($(QEMU_NETDEV_EXTRA_OPTS),)
+	QEMU_NETDEV_OPTS := "$(QEMU_NETDEV_OPTS),$(QEMU_NETDEV_EXTRA_OPTS)"
+endif
+
 QEMU_OPTS = \
 	-drive file=$(ISOFILE),index=0,media=disk,format=raw \
 	-serial file:serial.out \

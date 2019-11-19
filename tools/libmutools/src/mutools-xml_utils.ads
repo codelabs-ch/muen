@@ -235,6 +235,13 @@ is
      (IRQ : Legacy_IRQ_Range)
       return IOAPIC_RTE_Range;
 
+   --  Returns the largest I/O APIC RTE index specified by the I/O APICs of the
+   --  given system policy. Raises an IOAPIC_Not_Found exception if the maximum
+   --  cannot be determined.
+   function Get_IOAPIC_RTE_Index_Max
+     (Data : Muxml.XML_Data_Type)
+      return Natural;
+
    --  Supported IRQ types.
    type IRQ_Kind is
      (IRQ_ISA,
@@ -321,5 +328,6 @@ is
       return Natural;
 
    APIC_ID_Not_Found : exception;
+   IOAPIC_Not_Found  : exception;
 
 end Mutools.XML_Utils;

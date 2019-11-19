@@ -1373,6 +1373,48 @@ package body Mutools.XML_Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Get_IOAPIC_RTE_Index_Max (Gnattest_T : in out Test);
+   procedure Test_Get_IOAPIC_RTE_Index_Max_f9e0d9 (Gnattest_T : in out Test) renames Test_Get_IOAPIC_RTE_Index_Max;
+--  id:2.2/f9e0d90de9b7310d/Get_IOAPIC_RTE_Index_Max/1/0/
+   procedure Test_Get_IOAPIC_RTE_Index_Max (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Assert (Condition => Get_IOAPIC_RTE_Index_Max (Data => Policy) = 23,
+              Message   => "I/O APIC RTE Max not 23");
+
+      begin
+         Muxml.Utils.Remove_Elements
+           (Doc   => Policy.Doc,
+            XPath => "/system/hardware/devices/device[@name='ioapic_1']");
+         declare
+            Dummy : constant Natural
+              := Get_IOAPIC_RTE_Index_Max (Data => Policy);
+         begin
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+         end;
+
+      exception
+         when E : IOAPIC_Not_Found =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Unable to determine maximum I/O APIC RTE index: no I/O "
+                    & "APICs found",
+                    Message   => "Exception message mismatch");
+      end;
+
+--  begin read only
+   end Test_Get_IOAPIC_RTE_Index_Max;
+--  end read only
+
+
+--  begin read only
    procedure Test_Get_IRQ_Kind (Gnattest_T : in out Test);
    procedure Test_Get_IRQ_Kind_43e0bc (Gnattest_T : in out Test) renames Test_Get_IRQ_Kind;
 --  id:2.2/43e0bc53c1cd9b89/Get_IRQ_Kind/1/0/

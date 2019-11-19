@@ -826,6 +826,48 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_IOAPIC_RTE_Index_Max
+     (Data : Muxml.XML_Data_Type)
+      return Natural
+   is
+      IOAPICs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/hardware/devices/device/capabilities/"
+           & "capability[@name='ioapic']/..");
+      Max_RTE_Idx : Natural := 0;
+   begin
+      for I in Natural range 0 .. DOM.Core.Nodes.Length (List => IOAPICs) - 1
+      loop
+         declare
+            IOAPIC_Caps : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => IOAPICs,
+                                      Index => I);
+            GSI_Base : constant Natural
+              := Natural'Value
+                (Muxml.Utils.Get_Element_Value
+                                (Doc   => IOAPIC_Caps,
+                                 XPath => "capability[@name='gsi_base']"));
+            Max_Redir : constant Natural
+              := Natural'Value
+                (Muxml.Utils.Get_Element_Value
+                   (Doc   => IOAPIC_Caps,
+                    XPath => "capability[@name='max_redirection_entry']"));
+         begin
+            Max_RTE_Idx := Natural'Max (Max_RTE_Idx, GSI_Base + Max_Redir);
+         end;
+      end loop;
+
+      if Max_RTE_Idx = 0 then
+         raise IOAPIC_Not_Found with "Unable to determine maximum I/O APIC RTE"
+           & " index: no I/O APICs found";
+      end if;
+
+      return Max_RTE_Idx;
+   end Get_IOAPIC_RTE_Index_Max;
+
+   -------------------------------------------------------------------------
+
    function Get_IOMMU_Paging_Levels
      (Data : Muxml.XML_Data_Type)
       return IOMMU_Paging_Level

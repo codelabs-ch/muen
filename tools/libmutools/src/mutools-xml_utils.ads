@@ -222,11 +222,11 @@ is
       return IOMMU_Paging_Level;
 
    --  Legacy IRQ range (PIC cascade IRQ 2 excluded).
-   type Legacy_IRQ_Range is range 0 .. 23
+   type Legacy_IRQ_Range is range 0 .. 255
      with Static_Predicate => Legacy_IRQ_Range /= 2;
 
    --  I/O APIC RTE index.
-   type IOAPIC_RTE_Range is range 1 .. 23;
+   type IOAPIC_RTE_Range is range 1 .. 255;
 
    --  Return I/O APIC RTE index for given legacy IRQ. See Intel 82093AA I/O
    --  Advanced Programmable Interrupt Controller (IOAPIC) specification,

@@ -12,7 +12,7 @@ is
 
    type IRQ_Level_Type is (High, Low);
 
-   type RTE_Index_Type is range 1 .. 23;
+   type RTE_Index_Type is range 1 ..__rte_index_max__;
 
    type IRQ_Route_Type is record
       APIC_ID   : APIC_ID_Type;

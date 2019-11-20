@@ -43,6 +43,22 @@ is
       XML_Processors.Register
         (Process => Config.Name_Uniqueness'Access);
       XML_Processors.Register
+        (Process => Hardware.Memory_Space'Access);
+      XML_Processors.Register
+        (Process => Hardware.Memory_Block_Overlap'Access);
+      XML_Processors.Register
+        (Process => Hardware.Memory_Block_Size'Access);
+      XML_Processors.Register
+        (Process => Hardware.PCI_Config_Space_Address'Access);
+      XML_Processors.Register
+        (Process => Hardware.CPU_Count'Access);
+      XML_Processors.Register
+        (Process => Hardware.CPU_Sub_Elements'Access);
+      XML_Processors.Register
+        (Process => Hardware.System_Board_Presence'Access);
+      XML_Processors.Register
+        (Process => Hardware.IOAPIC_Presence'Access);
+      XML_Processors.Register
         (Process => Device.Physical_Device_Name_Uniqueness'Access);
       XML_Processors.Register
         (Process => Device.Physical_Device_References'Access);
@@ -251,22 +267,6 @@ is
       XML_Processors.Register
         (Process => Events.Kernel_Mode_System_Actions'Access);
       XML_Processors.Register
-        (Process => Hardware.Memory_Space'Access);
-      XML_Processors.Register
-        (Process => Hardware.Memory_Block_Overlap'Access);
-      XML_Processors.Register
-        (Process => Hardware.Memory_Block_Size'Access);
-      XML_Processors.Register
-        (Process => Hardware.PCI_Config_Space_Address'Access);
-      XML_Processors.Register
-        (Process => Hardware.CPU_Count'Access);
-      XML_Processors.Register
-        (Process => Hardware.CPU_Sub_Elements'Access);
-      XML_Processors.Register
-        (Process => Hardware.System_Board_Presence'Access);
-      XML_Processors.Register
-        (Process => Hardware.IOAPIC_Presence'Access);
-         XML_Processors.Register
         (Process => Memory.VTd_Root_Region_Presence'Access);
       XML_Processors.Register
         (Process => Memory.VTd_Root_Region_Size'Access);

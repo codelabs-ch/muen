@@ -1348,8 +1348,8 @@ package body Mutools.XML_Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Get_IOAPIC_RTE_Idx (Gnattest_T : in out Test);
-   procedure Test_Get_IOAPIC_RTE_Idx_46a118 (Gnattest_T : in out Test) renames Test_Get_IOAPIC_RTE_Idx;
---  id:2.2/46a1180676847d54/Get_IOAPIC_RTE_Idx/1/0/
+   procedure Test_Get_IOAPIC_RTE_Idx_634f02 (Gnattest_T : in out Test) renames Test_Get_IOAPIC_RTE_Idx;
+--  id:2.2/634f027c2ad084df/Get_IOAPIC_RTE_Idx/1/0/
    procedure Test_Get_IOAPIC_RTE_Idx (Gnattest_T : in out Test) is
 --  end read only
 
@@ -1359,7 +1359,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
       Assert (Condition => Get_IOAPIC_RTE_Idx (IRQ => 0) = 2,
               Message   => "Timer RTE idx mismatch");
 
-      for I in Legacy_IRQ_Range'First_Valid + 1 .. Legacy_IRQ_Range'Last_Valid
+      for I in IOAPIC_IRQ_Range'First_Valid + 1 .. IOAPIC_IRQ_Range'Last_Valid
       loop
          if I /= 2 then
             Assert (Condition => Get_IOAPIC_RTE_Idx
@@ -1369,6 +1369,48 @@ package body Mutools.XML_Utils.Test_Data.Tests is
       end loop;
 --  begin read only
    end Test_Get_IOAPIC_RTE_Idx;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Get_IOAPIC_RTE_Index_Max (Gnattest_T : in out Test);
+   procedure Test_Get_IOAPIC_RTE_Index_Max_f9e0d9 (Gnattest_T : in out Test) renames Test_Get_IOAPIC_RTE_Index_Max;
+--  id:2.2/f9e0d90de9b7310d/Get_IOAPIC_RTE_Index_Max/1/0/
+   procedure Test_Get_IOAPIC_RTE_Index_Max (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Assert (Condition => Get_IOAPIC_RTE_Index_Max (Data => Policy) = 23,
+              Message   => "I/O APIC RTE Max not 23");
+
+      begin
+         Muxml.Utils.Remove_Elements
+           (Doc   => Policy.Doc,
+            XPath => "/system/hardware/devices/device[@name='ioapic_1']");
+         declare
+            Dummy : constant Natural
+              := Get_IOAPIC_RTE_Index_Max (Data => Policy);
+         begin
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+         end;
+
+      exception
+         when E : IOAPIC_Not_Found =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Unable to determine maximum I/O APIC RTE index: no I/O "
+                    & "APICs found",
+                    Message   => "Exception message mismatch");
+      end;
+
+--  begin read only
+   end Test_Get_IOAPIC_RTE_Index_Max;
 --  end read only
 
 

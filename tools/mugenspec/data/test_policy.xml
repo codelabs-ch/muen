@@ -41,6 +41,14 @@
     </pci>
     <irq name="pci_irq" number="40"/>
    </device>
+   <device name="ioapic_1">
+     <memory caching="UC" name="mem1" physicalAddress="16#fec0_0000#" size="16#1000#"/>
+     <capabilities>
+       <capability name="ioapic"/>
+       <capability name="gsi_base">0</capability>
+       <capability name="max_redirection_entry">23</capability>
+     </capabilities>
+   </device>
    <device name="iommu_1">
     <memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
     <capabilities>
@@ -201,7 +209,7 @@
    <device logical="debugconsole" physical="debugconsole">
     <ioPort logical="port" physical="port"/>
    </device>
-   <device logical="ioapic_1" physical="ioapic">
+   <device logical="ioapic_1" physical="ioapic_1">
     <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#001f_c000#" writable="true"/>
    </device>
    <device logical="iommu_1" physical="iommu_1">

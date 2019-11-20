@@ -56,6 +56,8 @@ is
         := IRQ_Count - Utils.Get_IRQ_Count
           (IRQs     => IRQs.Right,
            IRQ_Kind => Mutools.XML_Utils.IRQ_PCI_MSI);
+      IOAPIC_RTE_Index_Max : constant Natural
+        := Mutools.XML_Utils.Get_IOAPIC_RTE_Index_Max (Data => Policy);
 
       Cur_IRQ   : Positive := 1;
       Cur_Route : Positive := 1;
@@ -130,7 +132,7 @@ is
                declare
                   RTE_Idx : constant Mutools.XML_Utils.IOAPIC_RTE_Range
                     := Mutools.XML_Utils.Get_IOAPIC_RTE_Idx
-                      (IRQ => Mutools.XML_Utils.Legacy_IRQ_Range (IRQ_Nr));
+                      (IRQ => Mutools.XML_Utils.IOAPIC_IRQ_Range (IRQ_Nr));
                begin
                   IRQ_Buffer := IRQ_Buffer & Indent (N => 2)
                     & Index'Img & " => IRQ_Route_Type'("
@@ -218,6 +220,10 @@ is
         (Template => Tmpl,
          Pattern  => "__remap_offset__",
          Content  => Mutools.Constants.Host_IRQ_Remap_Offset'Img);
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__rte_index_max__",
+         Content  => IOAPIC_RTE_Index_Max'Img);
       Mutools.Templates.Replace
         (Template => Tmpl,
          Pattern  => "__routing_range__",

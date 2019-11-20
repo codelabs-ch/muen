@@ -43,6 +43,52 @@ is
       XML_Processors.Register
         (Process => Config.Name_Uniqueness'Access);
       XML_Processors.Register
+        (Process => Device.Physical_Device_Name_Uniqueness'Access);
+      XML_Processors.Register
+        (Process => Device.Physical_Device_References'Access);
+      XML_Processors.Register
+        (Process => Device.Legacy_Device_References'Access);
+      XML_Processors.Register
+        (Process => Device.PCI_Device_References'Access);
+      XML_Processors.Register
+        (Process => Device.Physical_IRQ_Uniqueness'Access);
+      XML_Processors.Register
+        (Process => Device.Device_IRQ_Name_Uniqueness'Access);
+      XML_Processors.Register
+        (Process => Device.Physical_IRQ_References'Access);
+      XML_Processors.Register
+        (Process => Device.Physical_IRQ_Constraints_ISA'Access);
+      XML_Processors.Register
+        (Process => Device.Physical_IRQ_Constraints_PCI_LSI'Access);
+      XML_Processors.Register
+        (Process => Device.Physical_IRQ_Constraints_PCI_MSI'Access);
+      XML_Processors.Register
+        (Process => Device.Physical_IRQ_MSI_Consecutiveness'Access);
+      XML_Processors.Register
+        (Process => Device.IO_Port_Start_Smaller_End'Access);
+      XML_Processors.Register
+        (Process => Device.Device_IO_Port_Name_Uniqueness'Access);
+      XML_Processors.Register
+        (Process => Device.IO_Port_References'Access);
+      XML_Processors.Register
+        (Process => Device.IO_Port_Uniqueness'Access);
+      XML_Processors.Register
+        (Process => Device.Device_Memory_Name_Uniqueness'Access);
+      XML_Processors.Register
+        (Process => Device.Device_Memory_References'Access);
+      XML_Processors.Register
+        (Process => Device.Device_Reference_Uniqueness'Access);
+      XML_Processors.Register
+        (Process => Device.PCI_Device_BDF_Uniqueness'Access);
+      XML_Processors.Register
+        (Process => Device.PCI_Multifunction_Device_Refs'Access);
+      XML_Processors.Register
+        (Process => Device.Device_Reference_BDF_Uniqueness'Access);
+      XML_Processors.Register
+        (Process => Device.Device_References_PCI_Bus_Number'Access);
+      XML_Processors.Register
+        (Process => Device.Debugconsole_Presence'Access);
+      XML_Processors.Register
         (Process => Memory.Physical_Memory_Name_Uniqueness'Access);
       XML_Processors.Register
         (Process => Memory.Physical_Memory_References'Access);
@@ -126,52 +172,6 @@ is
         (Process => MSR.Start_Smaller_End'Access);
       XML_Processors.Register
         (Process => MSR.Low_Or_High'Access);
-      XML_Processors.Register
-        (Process => Device.Physical_Device_Name_Uniqueness'Access);
-      XML_Processors.Register
-        (Process => Device.Physical_Device_References'Access);
-      XML_Processors.Register
-        (Process => Device.Legacy_Device_References'Access);
-      XML_Processors.Register
-        (Process => Device.PCI_Device_References'Access);
-      XML_Processors.Register
-        (Process => Device.Physical_IRQ_Uniqueness'Access);
-      XML_Processors.Register
-        (Process => Device.Device_IRQ_Name_Uniqueness'Access);
-      XML_Processors.Register
-        (Process => Device.Physical_IRQ_References'Access);
-      XML_Processors.Register
-        (Process => Device.Physical_IRQ_Constraints_ISA'Access);
-      XML_Processors.Register
-        (Process => Device.Physical_IRQ_Constraints_PCI_LSI'Access);
-      XML_Processors.Register
-        (Process => Device.Physical_IRQ_Constraints_PCI_MSI'Access);
-      XML_Processors.Register
-        (Process => Device.Physical_IRQ_MSI_Consecutiveness'Access);
-      XML_Processors.Register
-        (Process => Device.IO_Port_Start_Smaller_End'Access);
-      XML_Processors.Register
-        (Process => Device.Device_IO_Port_Name_Uniqueness'Access);
-      XML_Processors.Register
-        (Process => Device.IO_Port_References'Access);
-      XML_Processors.Register
-        (Process => Device.IO_Port_Uniqueness'Access);
-      XML_Processors.Register
-        (Process => Device.Device_Memory_Name_Uniqueness'Access);
-      XML_Processors.Register
-        (Process => Device.Device_Memory_References'Access);
-      XML_Processors.Register
-        (Process => Device.Device_Reference_Uniqueness'Access);
-      XML_Processors.Register
-        (Process => Device.PCI_Device_BDF_Uniqueness'Access);
-      XML_Processors.Register
-        (Process => Device.PCI_Multifunction_Device_Refs'Access);
-      XML_Processors.Register
-        (Process => Device.Device_Reference_BDF_Uniqueness'Access);
-      XML_Processors.Register
-        (Process => Device.Device_References_PCI_Bus_Number'Access);
-      XML_Processors.Register
-        (Process => Device.Debugconsole_Presence'Access);
       XML_Processors.Register
         (Process => Scheduling.CPU_Element_Count'Access);
       XML_Processors.Register

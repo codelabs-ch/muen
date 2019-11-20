@@ -221,18 +221,18 @@ is
      (Data : Muxml.XML_Data_Type)
       return IOMMU_Paging_Level;
 
-   --  Legacy IRQ range (PIC cascade IRQ 2 excluded).
-   type Legacy_IRQ_Range is range 0 .. 255
-     with Static_Predicate => Legacy_IRQ_Range /= 2;
+   --  I/O APIC IRQ range (PIC cascade IRQ 2 excluded).
+   type IOAPIC_IRQ_Range is range 0 .. 255
+     with Static_Predicate => IOAPIC_IRQ_Range /= 2;
 
    --  I/O APIC RTE index.
    type IOAPIC_RTE_Range is range 1 .. 255;
 
-   --  Return I/O APIC RTE index for given legacy IRQ. See Intel 82093AA I/O
+   --  Return I/O APIC RTE index for given IRQ. See Intel 82093AA I/O
    --  Advanced Programmable Interrupt Controller (IOAPIC) specification,
    --  section 2.4 for more details.
    function Get_IOAPIC_RTE_Idx
-     (IRQ : Legacy_IRQ_Range)
+     (IRQ : IOAPIC_IRQ_Range)
       return IOAPIC_RTE_Range;
 
    --  Returns the largest I/O APIC RTE index specified by the I/O APICs of the

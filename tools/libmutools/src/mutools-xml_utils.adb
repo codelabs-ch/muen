@@ -811,7 +811,7 @@ is
    -------------------------------------------------------------------------
 
    function Get_IOAPIC_RTE_Idx
-     (IRQ : Legacy_IRQ_Range)
+     (IRQ : IOAPIC_IRQ_Range)
       return IOAPIC_RTE_Range
    is
       Res : IOAPIC_RTE_Range;

@@ -132,7 +132,7 @@ is
                declare
                   RTE_Idx : constant Mutools.XML_Utils.IOAPIC_RTE_Range
                     := Mutools.XML_Utils.Get_IOAPIC_RTE_Idx
-                      (IRQ => Mutools.XML_Utils.Legacy_IRQ_Range (IRQ_Nr));
+                      (IRQ => Mutools.XML_Utils.IOAPIC_IRQ_Range (IRQ_Nr));
                begin
                   IRQ_Buffer := IRQ_Buffer & Indent (N => 2)
                     & Index'Img & " => IRQ_Route_Type'("

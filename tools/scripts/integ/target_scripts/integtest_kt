@@ -10,12 +10,14 @@ date_print "*** Starting '$0'"
 lspci >$OUTPUT 2>&1
 
 ifconfig eth0 down >$OUTPUT 2>&1
+ifconfig br0 down >$OUTPUT 2>&1
 
 ifconfig eth1 up >$OUTPUT 2>&1
 ifconfig eth1 192.168.254.55 >$OUTPUT 2>&1
 ping -c 3 192.168.254.1 >$OUTPUT 2>&1
 ifconfig eth1 down >$OUTPUT 2>&1
 
+ifconfig br0 up >$OUTPUT >&1
 ifconfig eth0 up >$OUTPUT >&1
 
 muenblock-test >$OUTPUT 2>&1

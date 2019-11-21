@@ -18,6 +18,8 @@
 
 with Muxml;
 
+with Mucfgcheck.Device;
+
 package Mucfgcheck.Subject
 is
 
@@ -52,7 +54,13 @@ is
    procedure Logical_IRQ_MSI_Consecutiveness (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate that no virtual memory regions of a subject overlap.
-   procedure Virtual_Memory_Overlap (XML_Data : Muxml.XML_Data_Type);
+   procedure Virtual_Memory_Overlap (XML_Data : Muxml.XML_Data_Type)
+     with
+       Pre =>
+         Performed_Checks.Contains
+           (Item => Device.Physical_Device_References'Address)
+     and Performed_Checks.Contains
+       (Item => Device.Device_Memory_References'Address);
 
    --  Validate that multiple initramfs regions are consecutive.
    procedure Initramfs_Consecutiveness (XML_Data : Muxml.XML_Data_Type);

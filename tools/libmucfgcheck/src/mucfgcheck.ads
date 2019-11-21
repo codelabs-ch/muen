@@ -16,6 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with System;
+
+with Ada.Containers.Ordered_Sets;
+
 with DOM.Core;
 
 with Interfaces;
@@ -131,5 +135,12 @@ is
    function Match_Subject_Name (Left, Right : DOM.Core.Node) return Boolean;
 
    Validation_Error : exception;
+
+   use type System.Address;
+
+   package OSOC is new Ada.Containers.Ordered_Sets
+     (Element_Type => System.Address);
+
+   Performed_Checks : OSOC.Set;
 
 end Mucfgcheck;

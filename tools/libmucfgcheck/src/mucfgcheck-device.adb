@@ -262,6 +262,9 @@ is
          Log_Message  => "device memory reference(s)",
          Error        => Error_Msg'Access,
          Match        => Mutools.Match.Is_Valid_Resource_Ref'Access);
+
+      Performed_Checks.Insert
+        (New_Item => Device_Memory_References'Address);
    end Device_Memory_References;
 
    -------------------------------------------------------------------------
@@ -929,6 +932,9 @@ is
                       Log_Message  => "physical device reference(s)",
                       Error        => Error_Msg'Access,
                       Match        => Mutools.Match.Is_Valid_Reference'Access);
+
+      Performed_Checks.Insert
+        (New_Item => Physical_Device_References'Address);
    end Physical_Device_References;
 
    -------------------------------------------------------------------------

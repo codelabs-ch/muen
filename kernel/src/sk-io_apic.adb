@@ -150,4 +150,19 @@ is
       Locks.Release (Lock => Global_IO_APIC_Lock);
    end Route_IRQ;
 
+   -------------------------------------------------------------------------
+
+   procedure Unmask_IRQ (RTE_Index : Skp.Interrupts.RTE_Index_Type)
+   is
+      Cur_Val : SK.Word32;
+   begin
+      Locks.Acquire (Lock => Global_IO_APIC_Lock);
+      Register_Select := IO_APIC_REDTBL + SK.Word32 (RTE_Index) * 2;
+      Cur_Val := Window;
+      Window := Word32 (Bitops.Bit_Clear
+                        (Value => SK.Word64 (Cur_Val),
+                         Pos   => RED_INT_MASK));
+      Locks.Release (Lock => Global_IO_APIC_Lock);
+   end Unmask_IRQ;
+
 end SK.IO_Apic;

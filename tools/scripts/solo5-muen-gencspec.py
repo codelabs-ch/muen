@@ -11,6 +11,10 @@ import shutil
 import subprocess
 import sys
 
+sys.path.append(os.path.dirname(__file__) + "/../libmupy")
+
+import muutils
+
 MFT_CMD = "solo5-elftool query-manifest"
 DEFAULT_RAM_SIZE = "512"
 MAX_NAME_LEN = 63
@@ -18,33 +22,6 @@ MAX_NAME_LEN = 63
 chanSize = 0x100000
 chanAddr = 0xe0000000
 comp_name = ""
-
-
-def to_str(x):
-    """
-    Return lowercase string representation for bool types.
-    """
-    return str(x).lower() if isinstance(x, bool) else x
-
-
-def ada_hex(value):
-    """
-    Convert given numeric value to Ada hex string:
-    0x1230000 -> 16#0123_0000#
-    """
-    if value == "":
-        return ""
-    else:
-        val = hex(value).rstrip("L").lstrip("0x")
-        val = val.rjust(int(math.ceil(len(val) / 4.0) * 4), '0')
-        hexvalue = "16#"
-        for index in range(0, len(val)):
-            if ((index % 4) is 0) and (index is not 0):
-                hexvalue += "_"
-
-            hexvalue += val[index]
-
-        return hexvalue + "#"
 
 
 def add_bootparams(xml_spec, bootparams):
@@ -70,7 +47,7 @@ def set_rip(xml_spec, binary):
     Set RIP in XML spec to entry point of given ELF binary.
     """
     rip = src_spec.xpath("/component/requires/vcpu/registers/gpr/rip")[0]
-    rip.text = ada_hex(binary.header.entrypoint)
+    rip.text = muutils.int_to_ada_hex(binary.header.entrypoint)
     print("* Setting RIP to " + rip.text)
 
 
@@ -104,18 +81,20 @@ def add_elf_memory(xml_spec, binary, filename):
             phy_size = segment.physical_size
             # Round up to page size
             phy_size -= phy_size % -4096
+            vaddr_str = muutils.int_to_ada_hex(virtual_addr)
+            offset_str = muutils.int_to_ada_hex(segment.file_offset)
 
             mem = etree.Element("memory",
                                 logical=mem_name,
-                                virtualAddress=ada_hex(virtual_addr),
-                                size=ada_hex(phy_size),
-                                executable=to_str(x),
-                                writable=to_str(w),
+                                virtualAddress=vaddr_str,
+                                size=muutils.int_to_ada_hex(phy_size),
+                                executable=muutils.bool_to_str(x),
+                                writable=muutils.bool_to_str(w),
                                 type="subject_binary")
             etree.SubElement(mem,
                              "file",
                              filename=filename,
-                             offset=ada_hex(segment.file_offset))
+                             offset=offset_str)
             provides.append(mem)
 
             # Add fill region if virtual_size is larger than physical_size
@@ -123,13 +102,15 @@ def add_elf_memory(xml_spec, binary, filename):
             mem_size -= mem_size % -4096
             if phy_size < mem_size:
                 vaddr = virtual_addr + phy_size
+                vaddr_str = muutils.int_to_ada_hex(vaddr)
+                size_str = muutils.int_to_ada_hex(mem_size - phy_size)
                 print("* Adding memory region '" + mem_name + "|fill'")
                 mem = etree.Element("memory",
                                     logical=mem_name + "|fill",
-                                    virtualAddress=ada_hex(vaddr),
-                                    size=ada_hex(mem_size - phy_size),
-                                    executable=to_str(x),
-                                    writable=to_str(w),
+                                    virtualAddress=vaddr_str,
+                                    size=size_str,
+                                    executable=muutils.bool_to_str(x),
+                                    writable=muutils.bool_to_str(w),
                                     type="subject_binary")
                 etree.SubElement(mem, "fill", pattern="16#00#")
                 provides.append(mem)
@@ -148,14 +129,14 @@ def add_ram_memory(xml_spec, binary, binary_end, ram_size_mb):
     provides = src_spec.xpath("/component/provides")[0]
     etree.SubElement(provides, "memory",
                      logical="ram",
-                     virtualAddress=ada_hex(binary_end),
-                     size=ada_hex(ram_size),
+                     virtualAddress=muutils.int_to_ada_hex(binary_end),
+                     size=muutils.int_to_ada_hex(ram_size),
                      executable="false",
                      writable="true",
                      type="subject")
 
     rsp = src_spec.xpath("/component/requires/vcpu/registers/gpr/rsp")[0]
-    rsp.text = ada_hex(binary_end + ram_size - 8)
+    rsp.text = muutils.int_to_ada_hex(binary_end + ram_size - 8)
     print("* Setting RSP to " + rsp.text)
 
 
@@ -166,12 +147,12 @@ def add_channel(name, channels):
     global chanAddr, chanSize
     print("* Adding channels for device '" + name + "'")
     channels.append(etree.Element("reader", logical=name + "|in",
-                    virtualAddress=ada_hex(chanAddr),
-                    size=ada_hex(chanSize)))
+                    virtualAddress=muutils.int_to_ada_hex(chanAddr),
+                    size=muutils.int_to_ada_hex(chanSize)))
     chanAddr += chanSize
     channels.append(etree.Element("writer", logical=name + "|out",
-                    virtualAddress=ada_hex(chanAddr),
-                    size=ada_hex(chanSize)))
+                    virtualAddress=muutils.int_to_ada_hex(chanAddr),
+                    size=muutils.int_to_ada_hex(chanSize)))
     chanAddr += chanSize
 
 

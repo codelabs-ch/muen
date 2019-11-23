@@ -1,9 +1,14 @@
 #!/usr/bin/env python
 
 import sys
+
 from copy import deepcopy
 from lxml import etree
-import math
+from os.path import dirname
+
+sys.path.append(dirname(__file__) + "/../../../tools/libmupy")
+
+import muutils
 
 POLICY_TEMPLATE = "mirage-solo5.xml"
 COMPONENT_SPEC = "component_unikernel.xml"
@@ -12,38 +17,6 @@ LINUX_NAME = "nic_linux"
 LINUX_BASE_ADDR = 0xe03000000
 LINUX_BOOTPARAM = "unikernel_iface"
 OUT_SPEC_PATH = "../" + POLICY_TEMPLATE
-
-
-def hex_ada(value):
-    """
-    Convert given Ada hex string to numeric value:
-    16#0123_0000# -> 0x1230000
-    """
-    if value == "":
-        return ""
-    else:
-        val = value.replace('_', '').rstrip("#").lstrip("16#")
-        return int(val, 16)
-
-
-def ada_hex(value):
-    """
-    Convert given numeric value to Ada hex string:
-    0x1230000 -> 16#0123_0000#
-    """
-    if value == "":
-        return ""
-    else:
-        val = hex(value).rstrip("L").lstrip("0x")
-        val = val.rjust(int(math.ceil(len(val) / 4.0) * 4), '0')
-        hexvalue = "16#"
-        for index in range(0, len(val)):
-            if ((index % 4) is 0) and (index is not 0):
-                hexvalue += "_"
-
-            hexvalue += val[index]
-
-        return hexvalue + "#"
 
 
 def add_physical_channels(doc, comp_channels, subject_name):
@@ -87,12 +60,13 @@ def add_linux_channels(doc, comp_channels, subject_name):
         # Flip channel role
         chan_type = "reader" if comp_chan.tag == "writer" else "writer"
         log_name = comp_chan.get("logical")
-        size = hex_ada(comp_chan.get("size"))
+        size = muutils.ada_hex_to_int(comp_chan.get("size"))
         phys_name = subject_name + "_" + log_name.replace('|', '_')
+        addr_str = muutils.int_to_ada_hex(address)
         print("* Adding NIC Linux channel " + chan_type + " '" + phys_name
-              + "' @ " + ada_hex(address))
+              + "' @ " + addr_str)
         etree.SubElement(subj_channels, chan_type, logical=log_name,
-                         physical=phys_name, virtualAddress=ada_hex(address))
+                         physical=phys_name, virtualAddress=addr_str)
         address += size
 
 

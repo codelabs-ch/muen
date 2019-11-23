@@ -39,4 +39,10 @@ is
       Depends => (State  =>+ (Destination_ID, RTE_Index, Trigger_Mode,
                               Trigger_Level, Vector));
 
+   --  Mask IRQ with given redirection table index.
+   procedure Mask_IRQ (RTE_Index : Skp.Interrupts.RTE_Index_Type)
+   with
+      Global  => (In_Out => State),
+      Depends => (State =>+ RTE_Index);
+
 end SK.IO_Apic;

@@ -40,6 +40,7 @@ is
 
    RED_INTPOL       : constant := 13;
    RED_TRIGGER_MODE : constant := 15;
+   RED_INT_MASK     : constant := 16;
    RED_INTFORMAT    : constant := 48;
 
    Register_Select : SK.Word32
@@ -98,6 +99,21 @@ is
 
       Redir_Entry := Redir_Entry + Destination_ID;
    end Create_Redirection_Entry;
+
+   -------------------------------------------------------------------------
+
+   procedure Mask_IRQ (RTE_Index : Skp.Interrupts.RTE_Index_Type)
+   is
+      Cur_Val : SK.Word32;
+   begin
+      Locks.Acquire (Lock => Global_IO_APIC_Lock);
+      Register_Select := IO_APIC_REDTBL + SK.Word32 (RTE_Index) * 2;
+      Cur_Val := Window;
+      Window := Word32 (Bitops.Bit_Set
+                        (Value => SK.Word64 (Cur_Val),
+                         Pos   => RED_INT_MASK));
+      Locks.Release (Lock => Global_IO_APIC_Lock);
+   end Mask_IRQ;
 
    -------------------------------------------------------------------------
 

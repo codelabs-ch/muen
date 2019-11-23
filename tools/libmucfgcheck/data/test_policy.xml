@@ -361,6 +361,9 @@
   <event mode="ipi" name="sm_console"/>
   <event mode="kernel" name="system_reboot"/>
   <event mode="kernel" name="system_poweroff"/>
+  <event mode="kernel" name="unmask_irq20"/>
+  <event mode="kernel" name="unmask_irq21"/>
+  <event mode="kernel" name="unmask_irq22"/>
  </events>
  <kernel>
   <memory>
@@ -854,6 +857,9 @@
       </event>
       <event id="3" logical="system_poweroff" physical="system_poweroff">
        <system_poweroff/>
+      </event>
+      <event id="4" logical="unmask_wlan_irq" physical="unmask_irq21">
+       <unmask_irq number="21"/>
       </event>
      </group>
     </source>
@@ -1559,6 +1565,12 @@
      </group>
      <group name="vmcall">
       <event id="1" logical="channel_event_linux_console" physical="linux_console"/>
+      <event id="2" logical="unmask_irq_59" physical="unmask_irq20">
+       <unmask_irq number="20"/>
+      </event>
+      <event id="3" logical="unmask_irq_60" physical="unmask_irq22">
+       <unmask_irq number="22"/>
+      </event>
      </group>
     </source>
     <target>

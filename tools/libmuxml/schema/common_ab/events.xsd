@@ -20,6 +20,7 @@
     <xs:choice minOccurs="0" maxOccurs="1">
      <xs:element name="system_reboot"   type="eventActionNoParamType"/>
      <xs:element name="system_poweroff" type="eventActionNoParamType"/>
+     <xs:element name="unmask_irq"      type="eventActionUnmaskIrqType"/>
     </xs:choice>
    </xs:extension>
   </xs:complexContent>

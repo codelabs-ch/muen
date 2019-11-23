@@ -593,6 +593,37 @@ package body Mucfgcheck.Events.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure Missing_Unmask_Irq
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         Muxml.Utils.Remove_Child
+           (Node       => Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => "/system/subjects/subject/events/source/group/"
+               & "event[unmask_irq]"),
+            Child_Name => "unmask_irq");
+
+         begin
+            Kernel_Mode_Event_Actions (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (Unmask IRQ)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Kernel-mode source event 'unmask_wlan_irq' of subject"
+                         & " 'vt' does not specify mandatory event action",
+                       Message   => "Exception mismatch (Unmask IRQ)");
+         end;
+      end Missing_Unmask_Irq;
+
+      ----------------------------------------------------------------------
+
       procedure Positive_Test
       is
          Data : Muxml.XML_Data_Type;
@@ -609,6 +640,7 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       Positive_Test;
       Missing_System_Poweroff;
       Missing_System_Reboot;
+      Missing_Unmask_Irq;
 --  begin read only
    end Test_Kernel_Mode_Event_Actions;
 --  end read only

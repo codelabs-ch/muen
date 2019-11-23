@@ -528,34 +528,87 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       Data : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => "data/test_policy.xml");
 
-      --  Positive test, must not raise an exception.
+      ----------------------------------------------------------------------
 
-      Kernel_Mode_Event_Actions (XML_Data => Data);
-
-      Muxml.Utils.Remove_Child
-        (Node       => Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject/events/source/group/"
-            & "event[system_reboot]"),
-         Child_Name => "system_reboot");
-
+      procedure Missing_System_Poweroff
+      is
+         Data : Muxml.XML_Data_Type;
       begin
-         Kernel_Mode_Event_Actions (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Kernel-mode source event 'system_reboot' of subject "
-                    & "'vt' does not specify mandatory event action",
-                    Message   => "Exception mismatch");
-      end;
+         Muxml.Utils.Remove_Child
+           (Node       => Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => "/system/subjects/subject/events/source/group/"
+               & "event[system_poweroff]"),
+            Child_Name => "system_poweroff");
+
+         begin
+            Kernel_Mode_Event_Actions (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (Poweroff)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Kernel-mode source event 'system_poweroff' of subject"
+                       & " 'vt' does not specify mandatory event action",
+                       Message   => "Exception mismatch (Poweroff)");
+         end;
+      end Missing_System_Poweroff;
+
+      ----------------------------------------------------------------------
+
+      procedure Missing_System_Reboot
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         Muxml.Utils.Remove_Child
+           (Node       => Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => "/system/subjects/subject/events/source/group/"
+               & "event[system_reboot]"),
+            Child_Name => "system_reboot");
+
+         begin
+            Kernel_Mode_Event_Actions (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (Reboot)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Kernel-mode source event 'system_reboot' of subject "
+                       & "'vt' does not specify mandatory event action",
+                       Message   => "Exception mismatch (Reboot)");
+         end;
+      end Missing_System_Reboot;
+
+      ----------------------------------------------------------------------
+
+      procedure Positive_Test
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         --  Positive test, must not raise an exception.
+
+         Kernel_Mode_Event_Actions (XML_Data => Data);
+      end Positive_Test;
+   begin
+      Positive_Test;
+      Missing_System_Poweroff;
+      Missing_System_Reboot;
 --  begin read only
    end Test_Kernel_Mode_Event_Actions;
 --  end read only

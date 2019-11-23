@@ -464,7 +464,8 @@ is
       Global =>
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Scheduling_Plan),
-         In_Out => (Scheduling_Groups, Subjects_Events.State, X86_64.State))
+         In_Out => (Scheduling_Groups, IO_Apic.State, Subjects_Events.State,
+                    X86_64.State))
    is
       use type Skp.Events.Target_Event_Range;
 
@@ -479,7 +480,9 @@ is
             Power.Reboot (Power_Cycle => True);
          when Skp.Events.System_Poweroff =>
             Power.Shutdown;
-         when Skp.Events.Unmask_Irq      => null;
+         when Skp.Events.Unmask_Irq      =>
+            IO_Apic.Unmask_IRQ
+              (RTE_Index => Skp.Interrupts.RTE_Index_Type (Event.IRQ_Number));
       end case;
 
       if Event.Target_Subject /= Skp.Invalid_Subject then
@@ -513,8 +516,8 @@ is
       Global =>
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Scheduling_Plan, CPU_Info.APIC_ID),
-         In_Out => (Scheduling_Groups, Crash_Audit.State, Subjects.State,
-                    Subjects_Events.State, X86_64.State))
+         In_Out => (Scheduling_Groups, Crash_Audit.State, IO_Apic.State,
+                    Subjects.State, Subjects_Events.State, X86_64.State))
    is
       --  XXX: Only current wavefronts report that use type clause has no
       --       effect. To keep compatibility with earlier toolchains disable
@@ -618,7 +621,7 @@ is
       Global =>
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Scheduling_Plan, CPU_Info.APIC_ID, Subjects.State),
-         In_Out => (Scheduling_Groups, Crash_Audit.State,
+         In_Out => (Scheduling_Groups, Crash_Audit.State, IO_Apic.State,
                     Subjects_Events.State, X86_64.State))
    is
       use type Skp.Events.Source_Event_Type;
@@ -704,8 +707,9 @@ is
                     Tau0_Interface.State),
          In_Out => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Global_Current_Major_Start_Cycles, Scheduling_Groups,
-                    Crash_Audit.State, MP.Barrier, Scheduling_Info.State,
-                    Subjects_Events.State, Timed_Events.State, X86_64.State))
+                    Crash_Audit.State, IO_Apic.State, MP.Barrier,
+                    Scheduling_Info.State, Subjects_Events.State,
+                    Timed_Events.State, X86_64.State))
    is
       Next_Subject_ID : Skp.Global_Subject_ID_Type;
    begin

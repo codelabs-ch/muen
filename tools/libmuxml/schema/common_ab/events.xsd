@@ -3,19 +3,26 @@
 
  <xs:complexType name="eventGroupType">
   <xs:sequence>
-   <xs:element name="event" type="baseEventType" minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="event" type="sourceEventEntryType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
   <xs:attribute name="name" type="eventGroupNameType" use="required"/>
  </xs:complexType>
 
  <xs:complexType name="baseEventType">
-  <xs:sequence>
-   <xs:element name="system_reboot"   type="eventActionNoParamType" minOccurs="0" maxOccurs="1"/>
-   <xs:element name="system_poweroff" type="eventActionNoParamType" minOccurs="0" maxOccurs="1"/>
-  </xs:sequence>
   <xs:attribute name="id"       type="xs:nonNegativeInteger" use="required"/>
   <xs:attribute name="logical"  type="nameType"              use="required"/>
   <xs:attribute name="physical" type="nameType"              use="required"/>
+ </xs:complexType>
+
+ <xs:complexType name="sourceEventEntryType">
+  <xs:complexContent>
+   <xs:extension base="baseEventType">
+    <xs:choice minOccurs="0" maxOccurs="1">
+     <xs:element name="system_reboot"   type="eventActionNoParamType"/>
+     <xs:element name="system_poweroff" type="eventActionNoParamType"/>
+    </xs:choice>
+   </xs:extension>
+  </xs:complexContent>
  </xs:complexType>
 
  <xs:simpleType name="eventModeType">

@@ -4,3 +4,4 @@ obj
 generated
 .*.swp
 *~
+*.pyc

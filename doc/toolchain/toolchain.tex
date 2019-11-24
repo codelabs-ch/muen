@@ -88,7 +88,7 @@ execution, see also section \ref{subsec:policy_validation}.
 
 \subsection{Content}
 This section presents the different parts of a system policy and gives an
-overview what each section contains.
+overview of what each section contains.
 
 \subsubsection{Configuration Values}
 The purpose of a config section is to specify configuration values which
@@ -120,7 +120,7 @@ The Muen toolchain provides a handy tool to automate the cumbersome process of
 gathering hardware resource data, see section \ref{sec:mugenhwcfg}.
 
 \subsubsection{Platform description}
-To enable an uniform view of the hardware resources across different physical
+To enable a uniform view of the hardware resources across different physical
 machines from the system integrators perspective, the platform description layer
 is interposed between the hardware resource description and the rest of the
 system policy. This allows to build a Muen system for different physical target
@@ -172,7 +172,7 @@ represent directed information flows since they have a single writer and
 possibly multiple readers. Optionally a channel can have an associated
 notification event (doorbell interrupt).
 
-Channels are declared globally and have an unique name to be unambiguous.
+Channels are declared globally and have a unique name to be unambiguous.
 
 \subsubsection{Components}
 A component is a piece of software executed by the SK. Similar terms are
@@ -229,7 +229,7 @@ policy formats:
 \end{itemize}
 
 The motivation to have several policy formats is to provide abstractions and a
-compact way for users to specify a system while simultaneously facilitate
+compact way for users to specify a system while simultaneously facilitating
 reduced complexity of tools operating on the policy.
 
 The implementation of such tools is simplified by the absence of higher-level
@@ -250,7 +250,7 @@ process.
 Kernel and $\tau$0 resources are not part of the source format since they are also
 automatically added by the policy expansion step.
 
-Additionally the use of configuration values enables easy parametrization of
+Additionally, the use of configuration values enables easy parametrization of
 the system policy.
 
 \subsubsection{Format A}
@@ -434,10 +434,10 @@ final system image by the packer tool.
 
 For example, the tool responsible to generate page table structures queries
 memory mappings and the associated physical memory regions from the policy and
-creates page table structures in accordance to the format specified by the
-Intel Software Developer's Manual (SDM). The resulting files are packed into
-the system image and only applied by the kernel. The kernel itself does not
-care about memory management, all required tables are pre-built during system
+creates page table structures according to the format specified by the Intel
+Software Developer's Manual (SDM). The resulting files are packed into the
+system image and only applied by the kernel. The kernel itself does not care
+about memory management, all required tables are pre-built during system
 integration.
 
 For more information about the structure generators, see section
@@ -896,7 +896,7 @@ sinfo page by using the hash value as key.
 
 \subsection{Packer}
 \label{sec:tools-packer}
-The Packer is responsible to assemble the final system image.
+The Packer is responsible for assembling the final system image.
 
 \begin{description} \itemsep1pt \parskip0pt
 	\item[Name] \hfill \\

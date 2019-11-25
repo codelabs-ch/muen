@@ -1,5 +1,11 @@
+with Skp.Interrupts;
+
+with SK;
+
 package Skp.Events
 is
+
+   use type SK.Byte;
 
    Event_Bits : constant := 6;
    Event_Mask : constant := 2 ** Event_Bits - 1;
@@ -34,14 +40,25 @@ is
       Target_Event   : Target_Event_Range;
       Handover       : Boolean;
       Send_IPI       : Boolean;
-   end record;
+      IRQ_Number     : SK.Byte;
+   end record
+     with Dynamic_Predicate =>
+       (case Source_Event_Type.Source_Action is
+          when Unmask_Irq =>
+            Source_Event_Type.IRQ_Number >= SK.Byte
+          (Interrupts.RTE_Index_Type'First) and
+            Source_Event_Type.IRQ_Number <= SK.Byte
+          (Interrupts.RTE_Index_Type'Last),
+          when others           =>
+            Source_Event_Type.IRQ_Number = 0);
 
    Null_Source_Event : constant Source_Event_Type := Source_Event_Type'
      (Source_Action  => No_Action,
       Target_Subject => Invalid_Subject,
       Target_Event   => Invalid_Target_Event,
       Handover       => False,
-      Send_IPI       => False);
+      Send_IPI       => False,
+      IRQ_Number     => 0);
 
    type Target_Event_Type is private;
 

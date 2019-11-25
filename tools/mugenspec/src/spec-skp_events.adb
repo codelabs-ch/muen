@@ -167,10 +167,23 @@ is
 
          Buffer := Buffer & ASCII.LF & Indent (N => 4) & "Send_IPI       => ";
          if Notify_Mode = "ipi" then
-            Buffer := Buffer & "True)";
+            Buffer := Buffer & "True";
          else
-            Buffer := Buffer & "False)";
+            Buffer := Buffer & "False";
          end if;
+
+         Buffer := Buffer & "," & ASCII.LF & Indent (N => 4);
+         Buffer := Buffer & "IRQ_Number     => ";
+         declare
+            Number : constant String
+              := (if Src_Action_Kind = "Unmask_Irq" then
+                     DOM.Core.Elements.Get_Attribute
+                    (Elem => Src_Action,
+                     Name => "number")
+                  else "0");
+         begin
+            Buffer := Buffer & Number & ")";
+         end;
       end Add_Event_Entry;
 
       ----------------------------------------------------------------------

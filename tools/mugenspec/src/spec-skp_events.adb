@@ -86,7 +86,7 @@ is
                else "No_Action");
       begin
          Buffer := Buffer & Indent (N => 3)  & " "
-           & Event_ID & " => Event_Action_Type'("
+           & Event_ID & " => Target_Event_Type'("
            & ASCII.LF
            & Indent (N => 4) & "Kind   => "
            & Mutools.Utils.To_Ada_Identifier (Str => Action_Kind) & ",";
@@ -249,9 +249,9 @@ is
            & Indent & "    Target_Events => ";
 
          if Target_Ev_Count = 0 then
-            Buffer := Buffer & "Null_Event_Action_Table)";
+            Buffer := Buffer & "Null_Target_Event_Table)";
          else
-            Buffer := Buffer & "Event_Action_Table_Type'(" & ASCII.LF;
+            Buffer := Buffer & "Target_Event_Table_Type'(" & ASCII.LF;
             for I in 0 .. Target_Ev_Count - 1 loop
                Add_Event_Action_Entry (Event => DOM.Core.Nodes.Item
                                        (List  => Target_Events,
@@ -263,7 +263,7 @@ is
 
             if Target_Ev_Count /= 32 then
                Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
-                 & " others => Null_Event_Action";
+                 & " others => Null_Target_Event";
             end if;
             Buffer := Buffer & "))";
          end if;

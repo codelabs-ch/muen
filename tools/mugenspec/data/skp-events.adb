@@ -14,15 +14,15 @@ is
    Null_Source_Event_Table : constant Source_Event_Table_Type
      := Source_Event_Table_Type'(others => Null_Source_Event);
 
-   type Event_Action_Table_Type is array (Event_Range) of Event_Action_Type;
+   type Target_Event_Table_Type is array (Event_Range) of Target_Event_Type;
 
-   Null_Event_Action_Table : constant Event_Action_Table_Type
-     := Event_Action_Table_Type'(others => Null_Event_Action);
+   Null_Target_Event_Table : constant Target_Event_Table_Type
+     := Target_Event_Table_Type'(others => Null_Target_Event);
 
    type Subject_Events_Type is record
       Source_Traps  : Trap_Table_Type;
       Source_Events : Source_Event_Table_Type;
-      Target_Events : Event_Action_Table_Type;
+      Target_Events : Target_Event_Table_Type;
    end record;
 
    type Subjects_Events_Array is array (Global_Subject_ID_Type)
@@ -64,19 +64,19 @@ is
             Handover       => False,
             Send_IPI       => False),
           others => Null_Source_Event),
-       Target_Events => Event_Action_Table_Type'(
-          0 => Event_Action_Type'(
+       Target_Events => Target_Event_Table_Type'(
+          0 => Target_Event_Type'(
             Kind   => Inject_Interrupt,
             Vector => 32),
-          others => Null_Event_Action)),
+          others => Null_Target_Event)),
       1 => Subject_Events_Type'(
        Source_Traps  => Null_Trap_Table,
        Source_Events => Null_Source_Event_Table,
-       Target_Events => Event_Action_Table_Type'(
-          0 => Event_Action_Type'(
+       Target_Events => Target_Event_Table_Type'(
+          0 => Target_Event_Type'(
             Kind   => Inject_Interrupt,
             Vector => 32),
-          others => Null_Event_Action)),
+          others => Null_Target_Event)),
       2 => Subject_Events_Type'(
        Source_Traps  => Trap_Table_Type'(
           00 => Source_Event_Type'(
@@ -412,21 +412,21 @@ is
             Handover       => False,
             Send_IPI       => False),
           others => Null_Source_Event),
-       Target_Events => Event_Action_Table_Type'(
-          0 => Event_Action_Type'(
+       Target_Events => Target_Event_Table_Type'(
+          0 => Target_Event_Type'(
             Kind   => No_Action,
             Vector => Invalid_Vector),
-          1 => Event_Action_Type'(
+          1 => Target_Event_Type'(
             Kind   => Inject_Interrupt,
             Vector => 12),
-          2 => Event_Action_Type'(
+          2 => Target_Event_Type'(
             Kind   => Reset,
             Vector => Invalid_Vector),
-          others => Null_Event_Action)),
+          others => Null_Target_Event)),
       3 => Subject_Events_Type'(
        Source_Traps  => Null_Trap_Table,
        Source_Events => Null_Source_Event_Table,
-       Target_Events => Null_Event_Action_Table));
+       Target_Events => Null_Target_Event_Table));
 
    -------------------------------------------------------------------------
 
@@ -441,7 +441,7 @@ is
    function Get_Target_Event
      (Subject_ID : Global_Subject_ID_Type;
       Event_Nr   : Event_Range)
-      return Event_Action_Type
+      return Target_Event_Type
    is (Subject_Events (Subject_ID).Target_Events (Event_Nr));
 
    -------------------------------------------------------------------------

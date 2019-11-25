@@ -42,19 +42,19 @@ is
       Handover       => False,
       Send_IPI       => False);
 
-   type Event_Action_Type is private;
+   type Target_Event_Type is private;
 
-   Null_Event_Action : constant Event_Action_Type;
+   Null_Target_Event : constant Target_Event_Type;
 
    function Get_Kind
-     (Event_Action : Event_Action_Type)
+     (Target_Event : Target_Event_Type)
       return Target_Event_Action_Kind;
 
    function Get_Vector
-     (Event_Action : Event_Action_Type)
+     (Target_Event : Target_Event_Type)
       return Vector_Range
    with
-      Pre => Get_Kind (Event_Action) = Inject_Interrupt;
+      Pre => Get_Kind (Target_Event) = Inject_Interrupt;
 
    function Get_Trap
      (Subject_ID : Global_Subject_ID_Type;
@@ -69,32 +69,32 @@ is
    function Get_Target_Event
      (Subject_ID : Global_Subject_ID_Type;
       Event_Nr   : Event_Range)
-      return Event_Action_Type;
+      return Target_Event_Type;
 
 private
 
-   type Event_Action_Type is record
+   type Target_Event_Type is record
       Kind   : Target_Event_Action_Kind;
       Vector : Dst_Vector_Range;
    end record
      with Dynamic_Predicate =>
-       (case Event_Action_Type.Kind is
+       (case Target_Event_Type.Kind is
            when Inject_Interrupt =>
-             Event_Action_Type.Vector /= Invalid_Vector,
+             Target_Event_Type.Vector /= Invalid_Vector,
            when others           =>
-             Event_Action_Type.Vector = Invalid_Vector);
+             Target_Event_Type.Vector = Invalid_Vector);
 
    function Get_Kind
-     (Event_Action : Event_Action_Type)
+     (Target_Event : Target_Event_Type)
       return Target_Event_Action_Kind
-   is (Event_Action.Kind);
+   is (Target_Event.Kind);
 
    function Get_Vector
-     (Event_Action : Event_Action_Type)
+     (Target_Event : Target_Event_Type)
       return Vector_Range
-   is (Vector_Range (Event_Action.Vector));
+   is (Vector_Range (Target_Event.Vector));
 
-   Null_Event_Action : constant Event_Action_Type := Event_Action_Type'
+   Null_Target_Event : constant Target_Event_Type := Target_Event_Type'
      (Kind   => No_Action,
       Vector => Invalid_Vector);
 

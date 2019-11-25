@@ -14,15 +14,15 @@ is
    Null_Source_Event_Table : constant Source_Event_Table_Type
      := Source_Event_Table_Type'(others => Null_Source_Event);
 
-   type Event_Action_Table_Type is array (Event_Range) of Event_Action_Type;
+   type Target_Event_Table_Type is array (Event_Range) of Target_Event_Type;
 
-   Null_Event_Action_Table : constant Event_Action_Table_Type
-     := Event_Action_Table_Type'(others => Null_Event_Action);
+   Null_Target_Event_Table : constant Target_Event_Table_Type
+     := Target_Event_Table_Type'(others => Null_Target_Event);
 
    type Subject_Events_Type is record
       Source_Traps  : Trap_Table_Type;
       Source_Events : Source_Event_Table_Type;
-      Target_Events : Event_Action_Table_Type;
+      Target_Events : Target_Event_Table_Type;
    end record;
 
    type Subjects_Events_Array is array (Global_Subject_ID_Type)
@@ -44,7 +44,7 @@ __events__);
    function Get_Target_Event
      (Subject_ID : Global_Subject_ID_Type;
       Event_Nr   : Event_Range)
-      return Event_Action_Type
+      return Target_Event_Type
    is (Subject_Events (Subject_ID).Target_Events (Event_Nr));
 
    -------------------------------------------------------------------------

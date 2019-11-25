@@ -14,6 +14,9 @@ is
 
    type RTE_Index_Type is range 1 .. 23;
 
+   subtype Mask_IRQ_Type is Dst_Vector_Range
+     with Static_Predicate => Mask_IRQ_Type in 1 .. 0;
+
    type IRQ_Route_Type is record
       APIC_ID   : APIC_ID_Type;
       RTE_Idx   : RTE_Index_Type;

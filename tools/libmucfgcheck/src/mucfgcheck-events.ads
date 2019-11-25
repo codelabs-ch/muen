@@ -58,6 +58,10 @@ is
    --  Check that system-related actions are only used with kernel-mode events.
    procedure Kernel_Mode_System_Actions (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check that level-triggered IRQs have a corresponding unmask IRQ event.
+   procedure Level_Triggered_Unmask_IRQ_Action
+     (XML_Data : Muxml.XML_Data_Type);
+
    --  Returns the maximum valid ID for a given event group.
    function Get_Max_ID (Group : Mutools.Types.Event_Group_Type) return Natural;
 

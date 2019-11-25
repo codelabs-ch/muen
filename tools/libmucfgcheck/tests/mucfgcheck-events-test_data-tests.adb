@@ -715,6 +715,131 @@ package body Mucfgcheck.Events.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Level_Triggered_Unmask_IRQ_Action (Gnattest_T : in out Test);
+   procedure Test_Level_Triggered_Unmask_IRQ_Action_03dce8 (Gnattest_T : in out Test) renames Test_Level_Triggered_Unmask_IRQ_Action;
+--  id:2.2/03dce8c1382eca13/Level_Triggered_Unmask_IRQ_Action/1/0/
+   procedure Test_Level_Triggered_Unmask_IRQ_Action (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+
+      ----------------------------------------------------------------------
+
+      procedure Missing_Event
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         Muxml.Utils.Remove_Child
+           (Node       => Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => "/system/subjects/subject/events/source/group/"
+               & "event[unmask_irq]"),
+            Child_Name => "unmask_irq");
+
+         begin
+            Level_Triggered_Unmask_IRQ_Action (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (Missing event)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "No event with unmask_irq action and matching number "
+                       & "21 for IRQ 'wireless->irq'",
+                       Message   => "Exception mismatch (Missing event)");
+         end;
+      end Missing_Event;
+
+      ----------------------------------------------------------------------
+
+      procedure Positive_Test
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         --  Positive test, must not raise an exception.
+
+         Level_Triggered_Unmask_IRQ_Action (XML_Data => Data);
+      end Positive_Test;
+
+      ----------------------------------------------------------------------
+
+      procedure Unassigned_IRQ_Event
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         Muxml.Utils.Remove_Elements
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/devices/"
+            & "device[@physical='wireless']/irq");
+
+         begin
+            Level_Triggered_Unmask_IRQ_Action (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (Unassigned IRQ)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Event unmask_wlan_irq of subject 'vt' has unmask_irq "
+                       & "action for unassigned IRQ 'wireless->irq'",
+                       Message   => "Exception mismatch (Unassigned IRQ)");
+         end;
+      end Unassigned_IRQ_Event;
+
+      ----------------------------------------------------------------------
+
+      procedure Unmask_Nr_Mismatch
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/events/source/group/"
+            & "event[@logical='unmask_wlan_irq']/unmask_irq",
+            Name  => "number",
+            Value => "0");
+
+         begin
+            Level_Triggered_Unmask_IRQ_Action (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (Number mismatch)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "No event with unmask_irq action and matching number "
+                       & "21 for IRQ 'wireless->irq'",
+                       Message   => "Exception mismatch (Number mismatch)");
+         end;
+      end Unmask_Nr_Mismatch;
+   begin
+      Positive_Test;
+      Missing_Event;
+      Unmask_Nr_Mismatch;
+      Unassigned_IRQ_Event;
+--  begin read only
+   end Test_Level_Triggered_Unmask_IRQ_Action;
+--  end read only
+
+
+--  begin read only
    procedure Test_Get_Max_ID (Gnattest_T : in out Test);
    procedure Test_Get_Max_ID_a65afa (Gnattest_T : in out Test) renames Test_Get_Max_ID;
 --  id:2.2/a65afae2a79d6438/Get_Max_ID/1/0/

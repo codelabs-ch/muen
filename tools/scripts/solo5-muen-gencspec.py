@@ -9,10 +9,8 @@ import math
 import os
 import shutil
 import subprocess
-import sys
 
-sys.path.append(os.path.dirname(__file__) + "/../libmupy")
-
+import _paths
 import muutils
 
 MFT_CMD = "solo5-elftool query-manifest"

@@ -4,10 +4,8 @@ import sys
 
 from copy import deepcopy
 from lxml import etree
-from os.path import dirname
 
-sys.path.append(dirname(__file__) + "/../../../tools/libmupy")
-
+import _paths
 import muutils
 
 POLICY_TEMPLATE = "mirage-solo5.xml"

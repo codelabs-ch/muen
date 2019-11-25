@@ -251,6 +251,8 @@ is
       XML_Processors.Register
         (Process => Events.Kernel_Mode_System_Actions'Access);
       XML_Processors.Register
+        (Process => Events.Level_Triggered_Unmask_IRQ_Action'Access);
+      XML_Processors.Register
         (Process => Hardware.Memory_Space'Access);
       XML_Processors.Register
         (Process => Hardware.Memory_Block_Overlap'Access);

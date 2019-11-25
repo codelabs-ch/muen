@@ -150,7 +150,7 @@ is
                   Name => "id"));
       begin
          Buffer := Buffer & Indent (N => 3)  & " "
-           & Event_ID & " => Event_Entry_Type'("
+           & Event_ID & " => Source_Event_Type'("
            & ASCII.LF
            & Indent (N => 4) & "Source_Action  => " & Src_Action_Kind & ","
            & ASCII.LF
@@ -219,16 +219,16 @@ is
             end loop;
 
             Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
-              & " others => Null_Event),";
+              & " others => Null_Source_Event),";
          end if;
 
          Buffer := Buffer & ASCII.LF
            & Indent & "    Source_Events => ";
 
          if Src_Ev_Count = 0 then
-            Buffer := Buffer & "Null_Event_Table,";
+            Buffer := Buffer & "Null_Source_Event_Table,";
          else
-            Buffer := Buffer & "Event_Table_Type'(" & ASCII.LF;
+            Buffer := Buffer & "Source_Event_Table_Type'(" & ASCII.LF;
             for I in 0 .. Src_Ev_Count - 1 loop
                Add_Event_Entry (Event => DOM.Core.Nodes.Item
                                 (List  => Src_Events,
@@ -240,7 +240,7 @@ is
 
             if Src_Ev_Count /= 32 then
                Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
-                 & " others => Null_Event";
+                 & " others => Null_Source_Event";
             end if;
             Buffer := Buffer & "),";
          end if;

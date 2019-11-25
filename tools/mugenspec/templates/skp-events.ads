@@ -27,7 +27,7 @@ is
    subtype Target_Event_Action_Kind is Event_Action_Kind range
      No_Action .. Reset;
 
-   type Event_Entry_Type is record
+   type Source_Event_Type is record
       Source_Action  : Source_Event_Action_Kind;
       Target_Subject : Dst_Subject_Type;
       Target_Event   : Target_Event_Range;
@@ -35,7 +35,7 @@ is
       Send_IPI       : Boolean;
    end record;
 
-   Null_Event : constant Event_Entry_Type := Event_Entry_Type'
+   Null_Source_Event : constant Source_Event_Type := Source_Event_Type'
      (Source_Action  => No_Action,
       Target_Subject => Invalid_Subject,
       Target_Event   => Invalid_Target_Event,
@@ -59,12 +59,12 @@ is
    function Get_Trap
      (Subject_ID : Global_Subject_ID_Type;
       Trap_Nr    : Trap_Range)
-      return Event_Entry_Type;
+      return Source_Event_Type;
 
    function Get_Source_Event
      (Subject_ID : Global_Subject_ID_Type;
       Event_Nr   : Event_Range)
-      return Event_Entry_Type;
+      return Source_Event_Type;
 
    function Get_Target_Event
      (Subject_ID : Global_Subject_ID_Type;

@@ -458,7 +458,7 @@ is
    --  the parameter is set to the ID of the current subject.
    procedure Handle_Source_Event
      (Subject      :     Skp.Global_Subject_ID_Type;
-      Event        :     Skp.Events.Event_Entry_Type;
+      Event        :     Skp.Events.Source_Event_Type;
       Next_Subject : out Skp.Global_Subject_ID_Type)
    with
       Global =>
@@ -520,7 +520,7 @@ is
       --       all warnings.
       pragma $Release_Warnings (Off, -- "use clause for type * has no effect",
                                 Reason => "Only used for debug output");
-      use type Skp.Events.Event_Entry_Type;
+      use type Skp.Events.Source_Event_Type;
       pragma $Release_Warnings (On);
 
       --  The following code operating on Unchecked_Event_Nr was specifically
@@ -534,7 +534,7 @@ is
           (Unchecked_Event_Nr and Skp.Events.Event_Mask);
       Valid_Event_Nr  : constant Boolean
         := Word64 (Event_Nr) = Unchecked_Event_Nr;
-      Event           : Skp.Events.Event_Entry_Type;
+      Event           : Skp.Events.Source_Event_Type;
       Next_Subject_ID : Skp.Global_Subject_ID_Type := Current_Subject;
    begin
       if Valid_Event_Nr then
@@ -547,7 +547,8 @@ is
             Next_Subject => Next_Subject_ID);
       end if;
 
-      pragma Debug (not Valid_Event_Nr or else Event = Skp.Events.Null_Event,
+      pragma Debug (not Valid_Event_Nr or else
+                    Event = Skp.Events.Null_Source_Event,
                     Dump.Print_Spurious_Event
                       (Current_Subject => Current_Subject,
                        Event_Nr        => Unchecked_Event_Nr));
@@ -614,9 +615,9 @@ is
          In_Out => (Scheduling_Groups, Crash_Audit.State,
                     Subjects_Events.State, X86_64.State))
    is
-      use type Skp.Events.Event_Entry_Type;
+      use type Skp.Events.Source_Event_Type;
 
-      Trap_Entry      : Skp.Events.Event_Entry_Type;
+      Trap_Entry      : Skp.Events.Source_Event_Type;
       Next_Subject_ID : Skp.Global_Subject_ID_Type;
       Valid_Trap_Nr   : Boolean;
 
@@ -670,7 +671,7 @@ is
         (Subject_ID => Current_Subject,
          Trap_Nr    => Skp.Events.Trap_Range (Trap_Nr));
 
-      if Trap_Entry = Skp.Events.Null_Event then
+      if Trap_Entry = Skp.Events.Null_Source_Event then
          Panic_No_Trap_Handler;
       end if;
 

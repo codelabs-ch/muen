@@ -569,8 +569,8 @@ is
    --  Handle external interrupt request with given vector.
    procedure Handle_Irq (Vector : SK.Byte)
    with
-      Global => (In_Out => (Subjects_Interrupts.State, Skp.IOMMU.State,
-                            X86_64.State))
+      Global => (In_Out => (IO_Apic.State, Subjects_Interrupts.State,
+                            Skp.IOMMU.State, X86_64.State))
    is
       Vect_Nr : Skp.Interrupts.Remapped_Vector_Type;
       Route   : Skp.Interrupts.Vector_Route_Type;
@@ -587,6 +587,11 @@ is
                Subjects_Interrupts.Insert_Interrupt
                  (Subject => Route.Subject,
                   Vector  => SK.Byte (Route.Vector));
+            end if;
+
+            if Vect_Nr in Skp.Interrupts.Mask_IRQ_Type then
+               IO_Apic.Mask_IRQ
+                 (RTE_Index => Skp.Interrupts.RTE_Index_Type (Vector - 32));
             end if;
 
             pragma Debug (Route.Subject not in Skp.Global_Subject_ID_Type,

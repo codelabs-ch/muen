@@ -135,9 +135,8 @@ is
       Range_End   : Interfaces.Unsigned_64)
    is
       Devices : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => Dev_XPath);
+        := XPath_Query (N     => XML_Data.Doc,
+                        XPath => Dev_XPath);
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
          declare
@@ -150,9 +149,8 @@ is
                 (Elem => Dev,
                  Name => "name");
             IRQs     : constant DOM.Core.Node_List
-              := McKae.XML.XPath.XIA.XPath_Query
-                (N     => Dev,
-                 XPath => "irq");
+              := XPath_Query (N     => Dev,
+                              XPath => "irq");
             Length   : constant Natural
               := DOM.Core.Nodes.Length (List => IRQs);
          begin
@@ -1036,9 +1034,8 @@ is
                 (Elem => Dev,
                  Name => "name");
             IRQs : constant DOM.Core.Node_List
-              := McKae.XML.XPath.XIA.XPath_Query
-                (N     => Dev,
-                 XPath => "irq");
+              := XPath_Query (N     => Dev,
+                              XPath => "irq");
          begin
             For_Each_Match
               (Source_Nodes => IRQs,

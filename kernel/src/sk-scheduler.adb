@@ -479,6 +479,7 @@ is
             Power.Reboot (Power_Cycle => True);
          when Skp.Events.System_Poweroff =>
             Power.Shutdown;
+         when Skp.Events.Unmask_Irq      => null;
       end case;
 
       if Event.Target_Subject /= Skp.Invalid_Subject then

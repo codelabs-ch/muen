@@ -7,3 +7,5 @@ serial.out;example: Triggering self-event
 serial.out;example: Halting
 serial.out;example: Received vector 16#25#
 serial.out;example: Monitored subject RIP 16#0000000000400000#
+serial.out;64 bytes from 192.168.254.2: seq=.* ttl=.* time=.* ms
+serial.out;64 bytes from 192.168.254.3: seq=.* ttl=.* time=.* ms

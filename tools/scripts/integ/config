@@ -10,11 +10,9 @@ LOCK=/tmp/muen-integ.running
 # AMT password, only set if not present in the environment
 : ${AMT_PASSWORD=XXX}
 
-# seconds to wait for emulate target to perform integ tests
-BOOTWAIT_EMULATE=40
+: ${QEMU_SSH_PORT=5555}
 
 # ssh configuration
-LNX1_LOGIN=root@192.168.254.100
 LNX2_LOGIN=lnx2
 SSH_KEY=$ROOT/.ssh/id_rsa
 SSH="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
@@ -29,7 +27,7 @@ SCP="scp -r -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 # optionally, a target-specific expect file can be specified. The file path is
 # treated relatively to the scripts/integ directory.
 TARGETS=()
-TARGETS+=('192.168.254.2;xml/integration_tests.xml;hardware/lenovo-t430s.xml;integtest')
+#TARGETS+=('192.168.254.2;xml/integration_tests.xml;hardware/lenovo-t430s.xml;integtest')
 #TARGETS+=('192.168.254.3;xml/integration_tests_kt.xml;hardware/kontron-ktqm77.xml;integtest_kt;expect.kt')
 #TARGETS+=(';xml/integration_tests.xml;hardware/intel-nuc-6cayh.xml;integtest')
 

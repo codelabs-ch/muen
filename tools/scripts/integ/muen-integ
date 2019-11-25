@@ -25,6 +25,7 @@ KILL_ON_EXIT_PIDS=()
 MAKE="make -j$NUM_CPUS"
 
 export AMT_PASSWORD=$AMT_PASSWORD
+export QEMU_SSH_PORT=$QEMU_SSH_PORT
 export BUILD_OUTPUT_VERBOSE=1
 export BUILD_OUTPUT_NOCOLOR=1
 
@@ -128,11 +129,27 @@ hw_targetlogdir()
 	echo $LOGDIR/$system-$hardware
 }
 
+ssh_exec()
+{
+	lnx1_login=$1
+	ssh_port=$2
+	connect_attempts=$3
+	script=$4
+
+	execute "$SSH -p $ssh_port -o ConnectionAttempts=$connect_attempts -o ConnectTimeout=2 -i $SSH_KEY $lnx1_login mkdir -p /usr/local/bin"
+	execute "$SCP -P $ssh_port -i $SSH_KEY $SCRIPTDIR/target_scripts/* $lnx1_login:/usr/local/bin"
+	execute "$SSH -p $ssh_port -o ConnectionAttempts=$connect_attempts -o ConnectTimeout=2 -i $SSH_KEY $lnx1_login $SSH $LNX2_LOGIN mkdir -p /usr/local/bin"
+	execute "$SSH -p $ssh_port -i $SSH_KEY $lnx1_login $SCP /usr/local/bin $LNX2_LOGIN:/usr/local"
+	execute "$SSH -p $ssh_port -i $SSH_KEY $lnx1_login $script"
+}
+
 emulate()
 {
 	SAVE_ARTIFACTS=1
 	execute "$MAKE emulate"
-	execute "sleep $BOOTWAIT_EMULATE"
+
+	ssh_exec root@localhost $QEMU_SSH_PORT 40 integtest.kvm
+
 	save_artifacts
 	SAVE_ARTIFACTS=0
 
@@ -175,14 +192,7 @@ hw_deploy()
 	KILL_ON_EXIT_PIDS+=($pid_http)
 	cd $WORKDIR
 
-	# copy target scripts, retry first connect until ssh server is up on target
-	execute "$SSH -o ConnectionAttempts=20 -i $SSH_KEY $LNX1_LOGIN mkdir -p /usr/local/bin"
-	execute "$SCP -i $SSH_KEY $SCRIPTDIR/target_scripts/* $LNX1_LOGIN:/usr/local/bin"
-	execute "$SSH -i $SSH_KEY $LNX1_LOGIN $SSH $LNX2_LOGIN mkdir -p /usr/local/bin"
-	execute "$SSH -i $SSH_KEY $LNX1_LOGIN $SCP /usr/local/bin $LNX2_LOGIN:/usr/local"
-
-	# execute configured integration script
-	execute "$SSH -i $SSH_KEY $LNX1_LOGIN $integscript"
+	ssh_exec root@192.168.254.100 22 20 $integscript
 
 	# give serial output some time to reach the target logdir
 	execute "sleep 2"

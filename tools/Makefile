@@ -33,9 +33,9 @@ TOOLS =            \
 	mugenpt        \
 	mugenschedcfg  \
 	mugensinfo     \
+	mugensolo5     \
 	mugenspec      \
 	mugentau0cmds  \
-	mugenukvm      \
 	mugenvtd       \
 	mugenzp        \
 	mulnxbzpatch   \

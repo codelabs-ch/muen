@@ -16,14 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmutools/libmutools";
-with "../shared_tools";
+with Muxml;
 
-project Mugenukvm extends "../tools.gpr" is
+package Solo5.Generator
+is
 
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj/" & Shared_Tools.Build;
-   for Exec_Dir use "bin";
-   for Main use ("mugenukvm.adb");
+   --  Write Solo5 boot info structures according to the specified policy to
+   --  the given output directory.
+   procedure Write
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type);
 
-end Mugenukvm;
+   Missing_Binary : exception;
+
+end Solo5.Generator;

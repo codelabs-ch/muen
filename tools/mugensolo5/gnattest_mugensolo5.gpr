@@ -16,15 +16,14 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Muxml;
+with "../libmutools/libmutools";
+with "../libtest/libtest";
 
-package Ukvm.Generator
-is
+project GNATtest_Mugensolo5 extends "../tests.gpr" is
 
-   --  Write Solo5/UKVM boot info structures according to the specified policy
-   --  to the given output directory.
-   procedure Write
-     (Output_Dir : String;
-      Policy     : Muxml.XML_Data_Type);
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj/tests";
 
-end Ukvm.Generator;
+   package Make renames Tests.Make;
+
+end GNATtest_Mugensolo5;

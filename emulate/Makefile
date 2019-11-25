@@ -11,6 +11,14 @@ QEMU          ?= qemu-system-x86_64
 QEMU_MEM      ?= 5120
 QEMU_SSH_PORT ?= 5555
 
+QEMU_NETDEV_OPTS := "user,id=net0,net=192.168.254.0/24,"
+QEMU_NETDEV_OPTS := "$(QEMU_NETDEV_OPTS)dhcpstart=192.168.254.100,"
+QEMU_NETDEV_OPTS := "$(QEMU_NETDEV_OPTS)hostfwd=tcp::$(QEMU_SSH_PORT)-:22"
+
+ifneq ($(QEMU_NETDEV_EXTRA_OPTS),)
+	QEMU_NETDEV_OPTS := "$(QEMU_NETDEV_OPTS),$(QEMU_NETDEV_EXTRA_OPTS)"
+endif
+
 QEMU_OPTS = \
 	-drive file=$(ISOFILE),index=0,media=disk,format=raw \
 	-serial file:serial.out \
@@ -21,7 +29,7 @@ QEMU_OPTS = \
 	-device intel-iommu,intremap=on,device-iotlb=on \
 	-device ioh3420,id=pcie.1,chassis=1 \
 	-device virtio-net-pci,bus=pcie.1,netdev=net0,disable-legacy=on,disable-modern=off,iommu_platform=on,ats=on \
-	-netdev user,id=net0,net=192.168.254.0/24,dhcpstart=192.168.254.100,hostfwd=tcp::$(QEMU_SSH_PORT)-:22 \
+	-netdev $(QEMU_NETDEV_OPTS) \
 	-device qemu-xhci,id=xhci \
 	-device usb-tablet,bus=xhci.0 \
 	-curses

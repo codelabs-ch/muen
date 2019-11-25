@@ -16,14 +16,19 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmutools/libmutools";
-with "../libtest/libtest";
+with Interfaces;
 
-project GNATtest_Mugenukvm extends "../tests.gpr" is
+package Solo5.Types
+is
 
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj/tests";
+   --  struct hvt_boot_info
+   --  https://github.com/Solo5/solo5/blob/master/include/solo5/hvt_abi.h
+   type Boot_Info_Type is record
+      Mem_Size   : Interfaces.Unsigned_64;
+      Kernel_End : Interfaces.Unsigned_64;
+      Tsc_Freq   : Interfaces.Unsigned_64;
+      Cmdline    : Interfaces.Unsigned_64;
+      Mft        : Interfaces.Unsigned_64;
+   end record;
 
-   package Make renames Tests.Make;
-
-end GNATtest_Mugenukvm;
+end Solo5.Types;

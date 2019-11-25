@@ -28,11 +28,12 @@ with McKae.XML.XPath.XIA;
 with Mulog;
 with Muxml.Utils;
 with Mutools.Files;
+with Mutools.Types;
 with Mutools.Utils;
 
-with Ukvm.Types;
+with Solo5.Types;
 
-package body Ukvm.Generator
+package body Solo5.Generator
 is
 
    --  Return virtual address and size of memory region specified by logical
@@ -44,12 +45,77 @@ is
       Virtual_Address : out Interfaces.Unsigned_64;
       Size            : out Interfaces.Unsigned_64);
 
-   --  Write Solo5/UKVM boot info structure with given command line to file
+   --  Return virtual end address of unikernel binary. Raises exception if no
+   --  subject binary region could be found.
+   function Get_Binary_End
+     (Physical_Mem : DOM.Core.Node_List;
+      Logical_Mem  : DOM.Core.Node_List)
+      return Interfaces.Unsigned_64;
+
+   --  Write Solo5 boot info structure with given command line to file
    --  specified by filename.
    procedure Write_BI_File
      (Filename  : String;
-      Boot_Info : Types.UKVM_Boot_Info_Type;
+      Boot_Info : Types.Boot_Info_Type;
       Cmdline   : String);
+
+   -------------------------------------------------------------------------
+
+   function Get_Binary_End
+     (Physical_Mem : DOM.Core.Node_List;
+      Logical_Mem  : DOM.Core.Node_List)
+      return Interfaces.Unsigned_64
+   is
+      use type Interfaces.Unsigned_64;
+
+      End_Addr : Interfaces.Unsigned_64 := 0;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Logical_Mem) - 1 loop
+         declare
+            use type Mutools.Types.Memory_Kind;
+
+            Log_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Logical_Mem,
+                                      Index => I);
+            Log_Addr : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Log_Node,
+                    Name => "virtualAddress"));
+            Phys_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Log_Node,
+                 Name => "physical");
+            Phys_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Physical_Mem,
+                 Ref_Attr  => "name",
+                 Ref_Value => Phys_Name);
+            Mem_Type : constant Mutools.Types.Memory_Kind
+              := Mutools.Types.Memory_Kind'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Phys_Node,
+                    Name => "type"));
+            Size : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Phys_Node,
+                    Name => "size"));
+         begin
+            if Mem_Type = Mutools.Types.Subject_Binary then
+               End_Addr := Interfaces.Unsigned_64'Max
+                 (End_Addr, Log_Addr + Size - 1);
+            end if;
+         end;
+      end loop;
+
+      if End_Addr = 0 then
+         raise Missing_Binary with "Unable to determine unikernel binary "
+           & "end: No memory region with type 'subject_binary' present";
+      end if;
+
+      return End_Addr;
+   end Get_Binary_End;
 
    -------------------------------------------------------------------------
 
@@ -98,21 +164,21 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/subjects/subject/memory/memory");
-      Ukvm_Infos : constant DOM.Core.Node_List
+      Boot_Infos : constant DOM.Core.Node_List
         := Muxml.Utils.Get_Elements (Nodes     => Phys_Mem,
                                      Ref_Attr  => "type",
-                                     Ref_Value => "subject_ukvm_boot_info");
+                                     Ref_Value => "subject_solo5_boot_info");
    begin
       Mulog.Log (Msg => "Found" & DOM.Core.Nodes.Length
-                 (List => Ukvm_Infos)'Img & " UKVM boot info region(s)");
+                 (List => Boot_Infos)'Img & " Solo5 boot info region(s)");
 
-      for I in 1 .. DOM.Core.Nodes.Length (List => Ukvm_Infos) loop
+      for I in 1 .. DOM.Core.Nodes.Length (List => Boot_Infos) loop
          declare
             use type Interfaces.Unsigned_64;
 
             Info_Mem_Node : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
-                (List  => Ukvm_Infos,
+                (List  => Boot_Infos,
                  Index => I - 1);
             Filename : constant String
               := Muxml.Utils.Get_Attribute
@@ -149,7 +215,7 @@ is
                 (Doc   => Subj_Node,
                  XPath => "bootparams");
 
-            Boot_Info     : Types.UKVM_Boot_Info_Type := (others => 0);
+            Boot_Info     : Types.Boot_Info_Type := (others => 0);
             Address, Size : Interfaces.Unsigned_64;
          begin
             Get_Region_Dimension (Physical_Mem    => Phys_Mem,
@@ -158,17 +224,13 @@ is
                                   Virtual_Address => Address,
                                   Size            => Size);
             Boot_Info.Mem_Size := Address + Size;
+            Boot_Info.Kernel_End
+              := Get_Binary_End (Physical_Mem => Phys_Mem,
+                                 Logical_Mem  => Subj_Memory);
+            Boot_Info.Cmdline := Interfaces.Unsigned_64'Value
+              (Info_Log_Addr) + Types.Boot_Info_Type'Size / 8;
 
-            Get_Region_Dimension (Physical_Mem    => Phys_Mem,
-                                  Logical_Mem     => Subj_Memory,
-                                  Region_Name     => "binary",
-                                  Virtual_Address => Address,
-                                  Size            => Size);
-            Boot_Info.Kernel_End := Address + Size - 1;
-            Boot_Info.Cmdline    := Interfaces.Unsigned_64'Value
-              (Info_Log_Addr) + Types.UKVM_Boot_Info_Type'Size / 8;
-
-            Mulog.Log (Msg => "Writing UKVM boot info for subject '"
+            Mulog.Log (Msg => "Writing boot info for subject '"
                        & Subj_Name & "' to '" & Filename & "': memory size "
                        & Mutools.Utils.To_Hex (Number => Boot_Info.Mem_Size)
                        & ", kernel end @ "
@@ -186,7 +248,7 @@ is
 
    procedure Write_BI_File
      (Filename  : String;
-      Boot_Info : Types.UKVM_Boot_Info_Type;
+      Boot_Info : Types.Boot_Info_Type;
       Cmdline   : String)
    is
       use Ada.Streams.Stream_IO;
@@ -199,7 +261,7 @@ is
 
       Mutools.Files.Open (Filename => Filename,
                           File     => File);
-      Types.UKVM_Boot_Info_Type'Write (Stream (File => File), Boot_Info);
+      Types.Boot_Info_Type'Write (Stream (File => File), Boot_Info);
 
       --  Write command line
 
@@ -209,4 +271,4 @@ is
       Close (File => File);
    end Write_BI_File;
 
-end Ukvm.Generator;
+end Solo5.Generator;

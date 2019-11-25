@@ -1,4 +1,4 @@
-COMPONENT = mugenukvm
+COMPONENT = mugensolo5
 
 include ../component.mk
 include ../coverage.mk

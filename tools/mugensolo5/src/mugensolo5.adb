@@ -23,21 +23,23 @@ with Muxml;
 with Mulog;
 with Mutools.Cmd_Line.Infile_Outdir;
 
-with Ukvm.Generator;
+with Solo5.Generator;
 
-procedure Mugenukvm
+procedure Mugensolo5
 is
 begin
    Mutools.Cmd_Line.Infile_Outdir.Init
-     (Description => "Solo5/UKVM boot info structure generator");
+     (Description => "Solo5 boot info structure generator");
    Mutools.Cmd_Line.Infile_Outdir.Run
      (Kind    => Muxml.Format_B,
-      Process => Ukvm.Generator.Write'Access);
+      Process => Solo5.Generator.Write'Access);
 
 exception
    when Mutools.Cmd_Line.Invalid_Cmd_Line =>
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
-   when E : Muxml.XML_Input_Error | Muxml.Validation_Error =>
+   when E : Solo5.Generator.Missing_Binary
+      | Muxml.XML_Input_Error
+      | Muxml.Validation_Error =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "Processing failed, aborting");
       Mulog.Log (Level => Mulog.Error,
@@ -49,4 +51,4 @@ exception
       Mulog.Log (Level => Mulog.Error,
                  Msg   => Ada.Exceptions.Exception_Information (X => E));
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
-end Mugenukvm;
+end Mugensolo5;

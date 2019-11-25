@@ -6,10 +6,13 @@
 with AUnit.Test_Fixtures;
 
 with Ada.Directories;
+with Ada.Exceptions;
+
+with Muxml.Utils;
 
 with Test_Utils;
 
-package Ukvm.Generator.Test_Data is
+package Solo5.Generator.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -19,4 +22,4 @@ package Ukvm.Generator.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-end Ukvm.Generator.Test_Data;
+end Solo5.Generator.Test_Data;

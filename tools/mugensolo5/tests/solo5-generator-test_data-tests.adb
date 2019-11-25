@@ -3,7 +3,7 @@
 --  Such changes will be kept during further regeneration of this file.
 --  All code placed outside of test routine bodies will be lost. The
 --  code intended to set up and tear down the test environment should be
---  placed into Ukvm.Generator.Test_Data.
+--  placed into Solo5.Generator.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
 with System.Assertions;
@@ -17,7 +17,7 @@ with System.Assertions;
 
 --  begin read only
 --  end read only
-package body Ukvm.Generator.Test_Data.Tests is
+package body Solo5.Generator.Test_Data.Tests is
 
 --  begin read only
 --  id:2.2/01/
@@ -40,8 +40,8 @@ package body Ukvm.Generator.Test_Data.Tests is
 
       Policy : Muxml.XML_Data_Type;
 
-      Uni1_Ukvm : constant String := "obj/unikernel1_ukvmbi";
-      Uni2_Ukvm : constant String := "obj/unikernel2_ukvmbi";
+      Uni1_Bi : constant String := "obj/unikernel1_bi";
+      Uni2_Bi : constant String := "obj/unikernel2_bi";
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
@@ -51,16 +51,38 @@ package body Ukvm.Generator.Test_Data.Tests is
              Policy     => Policy);
 
       Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "data/unikernel1_ukvmbi",
-               Filename2 => Uni1_Ukvm),
-              Message   => "Unikernel 1 UKVM boot info mismatch");
+              (Filename1 => "data/unikernel1_bi",
+               Filename2 => Uni1_Bi),
+              Message   => "Unikernel 1 boot info mismatch");
       Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "data/unikernel2_ukvmbi",
-               Filename2 => Uni2_Ukvm),
-              Message   => "Unikernel 2 UKVM boot info mismatch");
+              (Filename1 => "data/unikernel2_bi",
+               Filename2 => Uni2_Bi),
+              Message   => "Unikernel 2 boot info mismatch");
 
-      Ada.Directories.Delete_File (Name => Uni1_Ukvm);
-      Ada.Directories.Delete_File (Name => Uni2_Ukvm);
+      Ada.Directories.Delete_File (Name => Uni1_Bi);
+      Ada.Directories.Delete_File (Name => Uni2_Bi);
+
+      --  Missing 'subject_binary' memory region.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/memory/memory[@type='subject_binary']",
+         Name  => "type",
+         Value => "subject");
+
+      begin
+         Write (Output_Dir => "obj",
+                Policy     => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Missing_Binary =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Unable to determine unikernel binary end: No memory "
+                    & "region with type 'subject_binary' present",
+                    Message   => "Exception message mismatch");
+      end;
 --  begin read only
    end Test_Write;
 --  end read only
@@ -75,4 +97,4 @@ begin
    null;
 --  begin read only
 --  end read only
-end Ukvm.Generator.Test_Data.Tests;
+end Solo5.Generator.Test_Data.Tests;

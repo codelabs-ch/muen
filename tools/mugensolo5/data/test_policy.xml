@@ -24,11 +24,11 @@
  <memory>
   <memory alignment="16#1000#" name="unikernel1|ram" physicalAddress="16#0030_0000#" size="16#1fe0_0000#" caching="WB" type="subject"/>
   <memory alignment="16#1000#" name="unikernel2|ram" physicalAddress="16#4000_0000#" size="16#0fe0_0000#" caching="WB" type="subject"/>
-  <memory alignment="16#1000#" name="unikernel1|ukvm_boot_info" physicalAddress="16#0010_0000#" size="16#1000#" caching="WB" type="subject_ukvm_boot_info">
-   <file filename="unikernel1_ukvmbi" offset="none"/>
+  <memory alignment="16#1000#" name="unikernel1|boot_info" physicalAddress="16#0010_0000#" size="16#1000#" caching="WB" type="subject_solo5_boot_info">
+   <file filename="unikernel1_bi" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" name="unikernel2|ukvm_boot_info" physicalAddress="16#0020_0000#" size="16#1000#" caching="WB" type="subject_ukvm_boot_info">
-   <file filename="unikernel2_ukvmbi" offset="none"/>
+  <memory alignment="16#1000#" name="unikernel2|boot_info" physicalAddress="16#0020_0000#" size="16#1000#" caching="WB" type="subject_solo5_boot_info">
+   <file filename="unikernel2_bi" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="unikernel1|bin" physicalAddress="16#0014_0000#" size="16#0030_0000#" type="subject_binary">
    <file filename="unikernel" offset="none"/>
@@ -244,7 +244,7 @@
    </vcpu>
    <bootparams>verbose</bootparams>
    <memory>
-    <memory logical="boot_info" physical="unikernel1|ukvm_boot_info" virtualAddress="16#0000#" writable="false" executable="false"/>
+    <memory logical="boot_info" physical="unikernel1|boot_info" virtualAddress="16#0000#" writable="false" executable="false"/>
     <memory logical="binary" physical="unikernel1|bin" virtualAddress="16#0010_0000#" writable="true" executable="true"/>
     <memory logical="ram" physical="unikernel1|ram" virtualAddress="16#0040_0000#" writable="true" executable="true"/>
    </memory>
@@ -430,7 +430,7 @@
    </vcpu>
    <bootparams/>
    <memory>
-    <memory logical="boot_info" physical="unikernel2|ukvm_boot_info" virtualAddress="16#0000#" writable="false" executable="false"/>
+    <memory logical="boot_info" physical="unikernel2|boot_info" virtualAddress="16#0000#" writable="false" executable="false"/>
     <memory logical="binary" physical="unikernel2|bin" virtualAddress="16#0010_0000#" writable="true" executable="true"/>
     <memory logical="ram" physical="unikernel2|ram" virtualAddress="16#0040_0000#" writable="true" executable="true"/>
    </memory>

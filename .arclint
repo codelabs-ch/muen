@@ -14,6 +14,12 @@
 					"(\\.xsd$)"],
 				"script-and-regex.script": "/opt/sdmref/sdmref -i",
 				"script-and-regex.regex": "/^(?P<message>.*)$/m"
+		},
+
+		"pep8": {
+			"type": "pep8",
+			"include": "(\\.py$)",
+			"exclude": "(^contrib/)"
 		}
 	}
 }

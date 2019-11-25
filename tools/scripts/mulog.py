@@ -14,6 +14,7 @@ def append(prefix, line):
             return
     raise Exception("Parent line '" + prefix + "' not found")
 
+
 filename = sys.argv[1]
 
 f = open(filename)

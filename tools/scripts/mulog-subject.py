@@ -20,8 +20,9 @@ def not_split(line_length):
     else:
         return line_length != SPLIT_LINE_LENGTH
 
+
 if len(sys.argv) == 1:
-    print (sys.argv[0] + " <subject_id> [filename]")
+    print(sys.argv[0] + " <subject_id> [filename]")
     exit(-1)
 elif len(sys.argv) == 2:
     f = sys.stdin
@@ -32,7 +33,7 @@ else:
 subject_id = int(sys.argv[1], 0)
 
 if subject_id > 0xffff:
-    print ("Invalid subject ID %x: must be in range 0 .. 0xffff" % subject_id)
+    print("Invalid subject ID %x: must be in range 0 .. 0xffff" % subject_id)
     exit(-1)
 
 p = re.compile('16#' + format(subject_id, 'x').zfill(4) + '#[%#>|]')
@@ -44,12 +45,12 @@ while line:
     m = p.match(line)
     if m:
         if line[8] != '>' and add_newline is True:
-            print ('\n', end='')
+            print('\n', end='')
 
-        print (line.rstrip('\n')[9:].translate(None, '\r\01'), end='')
+        print(line.rstrip('\n')[9:].translate(None, '\r\01'), end='')
 
         if not_split(len(line)):
-            print ('\n', end='')
+            print('\n', end='')
             add_newline = False
         else:
             add_newline = True
@@ -58,7 +59,7 @@ while line:
     line = f.readline()
 
 if add_newline:
-    print ('\n', end='')
+    print('\n', end='')
 
 f.close()
 exit(0)

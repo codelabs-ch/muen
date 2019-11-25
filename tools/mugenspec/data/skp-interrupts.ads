@@ -24,7 +24,11 @@ is
       IRQ_Mode  : IRQ_Mode_Type;
       IRQ_Level : IRQ_Level_Type;
       Vector    : Remapped_Vector_Type;
-   end record;
+   end record
+   with
+      Dynamic_Predicate =>
+         (if IRQ_Route_Type.IRQ_Mode = Level then
+             IRQ_Route_Type.Vector in Mask_IRQ_Type);
 
    Null_IRQ_Route : constant IRQ_Route_Type := IRQ_Route_Type'
      (APIC_ID   => 0,

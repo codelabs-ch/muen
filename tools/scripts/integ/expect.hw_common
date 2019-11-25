@@ -16,7 +16,6 @@ serial.out;reader.element_size: 1507
 serial.out;stats.rx_errors: 0
 serial.out;stats.rx_over_errors: 0
 serial.out;stats.rx_frame_errors: 0
-serial.out;64 bytes from 192.168.10.4: seq=.* ttl=.* time=.* ms
 
 serial.out;Current date/time matches expected value
 

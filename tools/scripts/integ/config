@@ -10,11 +10,9 @@ LOCK=/tmp/muen-integ.running
 # AMT password, only set if not present in the environment
 : ${AMT_PASSWORD=XXX}
 
-# seconds to wait for emulate target to perform integ tests
-BOOTWAIT_EMULATE=40
+: ${QEMU_SSH_PORT=5555}
 
 # ssh configuration
-LNX1_LOGIN=root@192.168.254.100
 LNX2_LOGIN=lnx2
 SSH_KEY=$ROOT/.ssh/id_rsa
 SSH="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"

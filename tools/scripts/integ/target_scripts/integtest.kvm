@@ -1,0 +1,16 @@
+#!/bin/bash
+
+OUTPUT=/dev/ttyS0
+SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. $SCRIPTDIR/func.sh
+
+date_print "*** Starting '$0'"
+
+# QEMU gateway
+ping -c 3 192.168.254.2 >$OUTPUT 2>&1
+# QEMU DNS
+ping -c 3 192.168.254.3 >$OUTPUT 2>&1
+# lnx2
+ping -c 3 192.168.10.4 >$OUTPUT 2>&1
+
+date_print "*** '$0' DONE"

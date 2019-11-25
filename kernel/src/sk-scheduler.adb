@@ -432,18 +432,18 @@ is
 
       if Found then
          declare
-            Cur_Event : constant Skp.Events.Event_Action_Type
+            Cur_Event : constant Skp.Events.Target_Event_Type
               := Skp.Events.Get_Target_Event (Subject_ID => Subject_ID,
                                               Event_Nr   => Event_ID);
          begin
-            case Skp.Events.Get_Kind (Event_Action => Cur_Event)
+            case Skp.Events.Get_Kind (Target_Event => Cur_Event)
             is
                when Skp.Events.No_Action        => null;
                when Skp.Events.Inject_Interrupt =>
                   SK.Subjects_Interrupts.Insert_Interrupt
                     (Subject => Subject_ID,
                      Vector  => SK.Byte (Skp.Events.Get_Vector
-                       (Event_Action => Cur_Event)));
+                       (Target_Event => Cur_Event)));
                when Skp.Events.Reset            =>
                   Init_Subject (ID => Subject_ID);
             end case;

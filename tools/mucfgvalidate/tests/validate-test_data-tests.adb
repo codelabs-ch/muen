@@ -71,7 +71,7 @@ package body Validate.Test_Data.Tests is
 
       Register_All;
       Assert (Condition => XML_Processors.Get_Count = 131,
-              Message   => "Count mismatch(1):"
+              Message   => "Count mismatch:"
               & XML_Processors.Get_Count'Img);
       XML_Processors.Clear;
 

@@ -71,7 +71,14 @@ is
           others => Null_Target_Event)),
       1 => Subject_Events_Type'(
        Source_Traps  => Null_Trap_Table,
-       Source_Events => Null_Source_Event_Table,
+       Source_Events => Source_Event_Table_Type'(
+          1 => Source_Event_Type'(
+            Source_Action  => Unmask_Irq,
+            Target_Subject => Skp.Invalid_Subject,
+            Target_Event   => Invalid_Target_Event,
+            Handover       => False,
+            Send_IPI       => False),
+          others => Null_Source_Event),
        Target_Events => Target_Event_Table_Type'(
           0 => Target_Event_Type'(
             Kind   => Inject_Interrupt,

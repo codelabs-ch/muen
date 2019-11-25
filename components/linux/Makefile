@@ -1,8 +1,6 @@
 include ../../Makeconf
 
 CONFIG ?= 4.18
-CC     ?= /usr/bin/gcc
-HOSTCC ?= $(CC)
 
 INITRAMFS_BASE := initramfs.cpio.gz
 INITRAMFS_URL  := $(INITRAMFS_BASE)-smp
@@ -14,13 +12,13 @@ LOG = $(OBJ_DIR)/log.obj
 all: $(OBJ_DIR)/.built $(INITRAMFS)
 
 $(OBJ_DIR)/.built: src/.config | $(OBJ_DIR)
-	@$(E) linux Oldconfig 'MAKEFLAGS="$(filter-out s,$(MAKEFLAGS))" $(MAKE) CC="$(CC)" LOCALVERSION= HOSTCC="$(HOSTCC)" oldconfig -C src' $(LOG)
-	@$(E) linux Build 'MAKEFLAGS="$(filter-out s,$(MAKEFLAGS))" $(MAKE) CC="$(CC)" LOCALVERSION= HOSTCC="$(HOSTCC)" -C src' $(LOG)
+	@$(E) linux Oldconfig 'MAKEFLAGS="$(filter-out s,$(MAKEFLAGS))" $(MAKE) LOCALVERSION= oldconfig -C src' $(LOG)
+	@$(E) linux Build 'MAKEFLAGS="$(filter-out s,$(MAKEFLAGS))" $(MAKE) LOCALVERSION= -C src' $(LOG)
 	@touch $@
 
 install_mods:
-	make CC="$(CC)" LOCALVERSION= HOSTCC="$(HOSTCC)" -j$(NUM_CPUS) -C src modules
-	make CC="$(CC)" LOCALVERSION= HOSTCC="$(HOSTCC)" -j$(NUM_CPUS) INSTALL_MOD_STRIP=1 INSTALL_MOD_PATH=$(OBJ_DIR) -C src modules_install
+	make LOCALVERSION= -j$(NUM_CPUS) -C src modules
+	make LOCALVERSION= -j$(NUM_CPUS) INSTALL_MOD_STRIP=1 INSTALL_MOD_PATH=$(OBJ_DIR) -C src modules_install
 
 src/.config: config/linux64-$(CONFIG)
 	cp $< $@

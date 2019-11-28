@@ -21,10 +21,12 @@ with System;
 with Skp.Kernel;
 
 with SK.Bitops;
+with SK.Constants;
+with SK.Locks;
 
 package body SK.IO_Apic
 with
-   Refined_State => (State => (Window, Register_Select))
+   Refined_State => (State => (Window, Register_Select, Global_IO_APIC_Lock))
 is
 
    --  I/O APIC register offsets relative to I/O Apic address, see 82093AA I/O
@@ -55,6 +57,10 @@ is
       Async_Readers,
       Effective_Writes,
       Address => System'To_Address (Skp.Kernel.IO_Apic_Address + IO_APIC_DAT);
+
+   Global_IO_APIC_Lock : Locks.Spin_Lock_Type := Locks.Free_Lock
+   with
+      Linker_Section => Constants.Global_Data_Section;
 
    -------------------------------------------------------------------------
 
@@ -103,11 +109,13 @@ is
       Destination_ID : SK.Word64)
    with
       --  XXX Data flow does not represent properties of registers
-      Refined_Global  => (Output => (Window, Register_Select)),
+      Refined_Global  => (In_Out => Global_IO_APIC_Lock,
+                          Output => (Window, Register_Select)),
       Refined_Depends =>
-        (Window          => (Destination_ID, Trigger_Mode, Trigger_Level,
-                             Vector),
-         Register_Select => RTE_Index)
+        (Window              => (Destination_ID, Trigger_Mode, Trigger_Level,
+                                 Vector),
+         Register_Select     => RTE_Index,
+         Global_IO_APIC_Lock =>+ null)
    is
       Redir_Entry : SK.Word64;
    begin
@@ -117,11 +125,13 @@ is
                                 Trigger_Level  => Trigger_Level,
                                 Destination_ID => Destination_ID);
 
+      Locks.Acquire (Lock => Global_IO_APIC_Lock);
       Register_Select := IO_APIC_REDTBL + SK.Word32 (RTE_Index) * 2;
       Window          := SK.Word32'Mod (Redir_Entry);
 
       Register_Select := IO_APIC_REDTBL + SK.Word32 (RTE_Index) * 2 + 1;
       Window          := SK.Word32 (Redir_Entry / 2 ** 32);
+      Locks.Release (Lock => Global_IO_APIC_Lock);
    end Route_IRQ;
 
 end SK.IO_Apic;

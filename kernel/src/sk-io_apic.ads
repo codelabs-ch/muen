@@ -35,8 +35,8 @@ is
       Trigger_Level  : Skp.Interrupts.IRQ_Level_Type;
       Destination_ID : SK.Word64)
    with
-      Global  => (Output => State),  --  XXX Logically output state *is* In_Out
-      Depends => (State => (Destination_ID, RTE_Index, Trigger_Mode,
-                            Trigger_Level, Vector));
+      Global  => (In_Out => State),
+      Depends => (State  =>+ (Destination_ID, RTE_Index, Trigger_Mode,
+                              Trigger_Level, Vector));
 
 end SK.IO_Apic;

@@ -100,7 +100,7 @@
     </target>
    </events>
    <channels>
-    <reader logical="virtual_keyboard" physical="virtual_input_1" virtualAddress="16#3000#" vector="49"/>
+    <reader logical="virtual_keyboard" physical="virtual_input_1" virtualAddress="16#3000#" vector="100"/>
     <writer logical="virtual_console" physical="virtual_console_1" virtualAddress="16#4000#" event="1"/>
 
     <reader logical="testchannel_2" physical="testchannel_2" virtualAddress="16#000e_00f0_0000#"/>

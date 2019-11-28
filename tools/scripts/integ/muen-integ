@@ -148,7 +148,7 @@ emulate()
 	SAVE_ARTIFACTS=1
 	execute "$MAKE emulate"
 
-	ssh_exec root@localhost $QEMU_SSH_PORT 40 integtest.kvm
+	ssh_exec root@localhost $QEMU_SSH_PORT $QEMU_SSH_ATTEMPTS integtest.kvm
 
 	save_artifacts
 	SAVE_ARTIFACTS=0

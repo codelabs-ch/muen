@@ -17,7 +17,7 @@
 --
 
 with SK.KC;
-with SK.Locks;
+with SK.Debug_Lock;
 with SK.Dumper;
 
 package body SK.Subjects.Debug
@@ -35,9 +35,9 @@ is
    procedure Print_State (S : Crash_Audit_Types.Subj_Context_Type)
    is
    begin
-      Locks.Acquire;
+      Debug_Lock.Acquire;
       D.Output_Subj_State (Context => S);
-      Locks.Release;
+      Debug_Lock.Release;
    end Print_State;
 
 end SK.Subjects.Debug;

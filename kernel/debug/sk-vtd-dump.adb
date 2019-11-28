@@ -17,7 +17,7 @@
 --
 
 with SK.KC;
-with SK.Locks;
+with SK.Debug_Lock;
 with SK.Strings;
 
 package body SK.VTd.Dump
@@ -76,7 +76,7 @@ is
       --  Specification, "5.1.4.1 Interrupt Remapping Fault Conditions".
       subtype IR_Fault_Range is SK.Byte range 16#20# .. 16#26#;
    begin
-      Locks.Acquire;
+      Debug_Lock.Acquire;
       Print_Message (IOMMU   => IOMMU,
                      Message => "VT-d fault with FRI " & Img (Status.FRI),
                      Newline => False);
@@ -115,7 +115,7 @@ is
 
       KC.New_Line;
 
-      Locks.Release;
+      Debug_Lock.Release;
    end Print_VTd_Fault;
 
 end SK.VTd.Dump;

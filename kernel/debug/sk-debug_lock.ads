@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package SK.Locks
+package SK.Debug_Lock
 with
    SPARK_Mode => Off
 is
@@ -27,4 +27,4 @@ is
    --  Unlock.
    procedure Release;
 
-end SK.Locks;
+end SK.Debug_Lock;

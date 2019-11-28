@@ -20,7 +20,7 @@ with System.Machine_Code;
 
 with SK.Constants;
 
-package body SK.Locks
+package body SK.Debug_Lock
 with
    SPARK_Mode => Off
 is
@@ -63,4 +63,4 @@ is
          Volatile => True);
    end Release;
 
-end SK.Locks;
+end SK.Debug_Lock;

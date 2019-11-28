@@ -17,8 +17,6 @@
 --
 
 package SK.Debug_Lock
-with
-   SPARK_Mode => Off
 is
 
    --  Spin until lock is acquired.

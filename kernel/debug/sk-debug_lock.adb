@@ -16,20 +16,13 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with System.Machine_Code;
-
 with SK.Constants;
+with SK.Locks;
 
 package body SK.Debug_Lock
-with
-   SPARK_Mode => Off
 is
 
-   type Spin_Lock_Type is record
-      Locked : SK.Word32;
-   end record;
-
-   Global_Lock : Spin_Lock_Type := (Locked => 0)
+   Global_Debug_Lock : Locks.Spin_Lock_Type
    with
       Linker_Section => Constants.Global_Data_Section;
 
@@ -37,19 +30,8 @@ is
 
    procedure Acquire
    is
-      Result : SK.Word32;
    begin
-      loop
-         System.Machine_Code.Asm
-           (Template => "mov $1, %%eax; lock xchgl %%eax, (%%rdx); pause",
-            Outputs  => (SK.Word32'Asm_Output ("=a", Result)),
-            Inputs   => (System.Address'Asm_Input
-                         ("d", Global_Lock.Locked'Address)));
-
-         if Result = 0 then
-            exit;
-         end if;
-      end loop;
+      Locks.Acquire (Lock => Global_Debug_Lock);
    end Acquire;
 
    -------------------------------------------------------------------------
@@ -57,10 +39,7 @@ is
    procedure Release
    is
    begin
-      System.Machine_Code.Asm
-        (Template => "movl $0, %0",
-         Outputs  => (SK.Word32'Asm_Output ("=m", Global_Lock.Locked)),
-         Volatile => True);
+      Locks.Release (Lock => Global_Debug_Lock);
    end Release;
 
 end SK.Debug_Lock;

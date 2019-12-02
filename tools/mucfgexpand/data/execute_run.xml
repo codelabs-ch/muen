@@ -915,13 +915,13 @@
     </device>
     <device logical="wlan2" physical="wlan2">
      <pci bus="16#01#" device="16#05#" function="2"/>
-     <irq logical="msi1" physical="msi1" vector="88"/>
+     <irq logical="msi1" physical="msi1" vector="56"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#f1c0_0000#" writable="true"/>
      <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f812_a000#" writable="true"/>
     </device>
     <device logical="wifi" physical="wlan3">
      <pci bus="16#00#" device="16#1c#" function="0"/>
-     <irq logical="interrupt" physical="irq1" vector="56"/>
+     <irq logical="interrupt" physical="irq1" vector="57"/>
      <memory executable="false" logical="memory" physical="mmio1" virtualAddress="16#f1c0_8000#" writable="true"/>
     </device>
    </devices>
@@ -1248,20 +1248,20 @@
    <devices>
     <device logical="wlan" physical="wlan1">
      <pci bus="16#00#" device="16#01#" function="0"/>
-     <irq logical="msi_interrupt" physical="msi1" vector="73"/>
+     <irq logical="msi_interrupt" physical="msi1" vector="34"/>
      <memory executable="false" logical="memory" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
      <memory executable="false" logical="memory" physical="mmconf" virtualAddress="16#f800_8000#" writable="true"/>
     </device>
     <device logical="nic1" physical="nic1">
      <pci bus="16#00#" device="16#19#" function="0"/>
-     <irq logical="irq" physical="irq" vector="33"/>
+     <irq logical="irq" physical="irq" vector="35"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d252_0000#" writable="true"/>
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d262_0000#" writable="true"/>
      <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#dead_beef#" writable="true"/>
     </device>
     <device logical="nic2" physical="nic2">
      <pci bus="16#00#" device="16#19#" function="1"/>
-     <irq logical="irq" physical="irq" vector="34"/>
+     <irq logical="irq" physical="irq" vector="36"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d272_0000#" writable="true"/>
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>
     </device>

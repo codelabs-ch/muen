@@ -60,13 +60,6 @@ is
      := (Types.Native           => MC.Host_IRQ_Remap_Offset,
          Types.VM | Types.Linux => 48);
 
-   --  Mapping of subject profiles to MSI vector remapping offset.
-   --  The value 40 is chosen to remap MSIs since it is the one used by Linux.
-   Subj_MSI_Remap_Offset : constant array
-     (Types.Subject_Profile_Type) of Natural
-     := (Types.Native           => MC.Host_IRQ_Remap_Offset + 40,
-         Types.VM | Types.Linux => 48 + 40);
-
    -------------------------------------------------------------------------
 
    procedure Add_Channel_Events (Data : in out Muxml.XML_Data_Type)
@@ -1170,9 +1163,6 @@ is
                  XPath => "events/target/event/inject_interrupt");
             IRQ_Alloc      : Utils.Number_Allocator_Type
               (Range_Start => Subj_IRQ_Remap_Offset (Subj_Profile),
-               Range_End   => Subj_IRQ_Remap_Offset (Subj_Profile) + 15);
-            MSI_Alloc      : Utils.Number_Allocator_Type
-              (Range_Start => Subj_MSI_Remap_Offset (Subj_Profile),
                Range_End   => 255);
          begin
             if Alloc_Count > 0 then
@@ -1189,12 +1179,6 @@ is
                Utils.Reserve_Numbers (Allocator => IRQ_Alloc,
                                       Nodes     => Event_Vectors,
                                       Attribute => "vector");
-               Utils.Reserve_Numbers (Allocator => MSI_Alloc,
-                                      Nodes     => Device_Vectors,
-                                      Attribute => "vector");
-               Utils.Reserve_Numbers (Allocator => MSI_Alloc,
-                                      Nodes     => Event_Vectors,
-                                      Attribute => "vector");
 
                if Subj_Profile = Types.Linux then
 
@@ -1204,8 +1188,6 @@ is
                   for I in IRQ_Alloc.Range_Start .. IRQ_Alloc.Range_Start + 4
                   loop
                      Utils.Reserve_Number (Allocator => IRQ_Alloc,
-                                           Number    => I);
-                     Utils.Reserve_Number (Allocator => MSI_Alloc,
                                            Number    => I);
                   end loop;
                end if;
@@ -1228,14 +1210,9 @@ is
                           Ref_Attr  => "name",
                           Ref_Value => Phys_Name);
                   begin
-                     if Phys_MSI_Dev /= null then
-                        Allocate_Vectors (Logical_Device => Cur_Dev,
-                                          Allocator      => MSI_Alloc,
-                                          Consecutive    => True);
-                     else
-                        Allocate_Vectors (Logical_Device => Cur_Dev,
-                                          Allocator      => IRQ_Alloc);
-                     end if;
+                     Allocate_Vectors (Logical_Device => Cur_Dev,
+                                       Allocator      => IRQ_Alloc,
+                                       Consecutive    => Phys_MSI_Dev /= null);
                   end;
                end loop;
             end if;

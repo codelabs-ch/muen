@@ -1185,10 +1185,10 @@ is
                   --  Reserve IRQ0 .. IRQ15 to avoid clashes with Linux legacy
                   --  device drivers.
 
-                  for I in IRQ_Alloc.Range_Start .. IRQ_Alloc.Range_Start + 16
+                  for J in IRQ_Alloc.Range_Start .. IRQ_Alloc.Range_Start + 16
                   loop
                      Utils.Reserve_Number (Allocator => IRQ_Alloc,
-                                           Number    => I);
+                                           Number    => J);
                   end loop;
                end if;
 

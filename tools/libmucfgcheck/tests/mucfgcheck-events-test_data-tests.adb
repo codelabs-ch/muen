@@ -616,8 +616,8 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          exception
             when E : Validation_Error =>
                Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Kernel-mode source event 'unmask_wlan_irq' of subject"
-                         & " 'vt' does not specify mandatory event action",
+                       = "Kernel-mode source event 'unmask_irq_57' of "
+                       & "subject 'vt' does not specify mandatory event action",
                        Message   => "Exception mismatch (Unmask IRQ)");
          end;
       end Missing_Unmask_Irq;
@@ -793,7 +793,7 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          exception
             when E : Validation_Error =>
                Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Event unmask_wlan_irq of subject 'vt' has unmask_irq "
+                       = "Event unmask_irq_57 of subject 'vt' has unmask_irq "
                        & "action for unassigned IRQ 'wireless->irq'",
                        Message   => "Exception mismatch (Unassigned IRQ)");
          end;
@@ -812,7 +812,7 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          Muxml.Utils.Set_Attribute
            (Doc   => Data.Doc,
             XPath => "/system/subjects/subject/events/source/group/"
-            & "event[@logical='unmask_wlan_irq']/unmask_irq",
+            & "event[@logical='unmask_irq_57']/unmask_irq",
             Name  => "number",
             Value => "0");
 

@@ -858,7 +858,7 @@
       <event id="3" logical="system_poweroff" physical="system_poweroff">
        <system_poweroff/>
       </event>
-      <event id="4" logical="unmask_wlan_irq" physical="unmask_irq21">
+      <event id="4" logical="unmask_irq_57" physical="unmask_irq21">
        <unmask_irq number="21"/>
       </event>
      </group>

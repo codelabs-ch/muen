@@ -22,4 +22,6 @@ is
    MR_ID_Attr_Name  : constant String := "tau0RootId";
    Dev_ID_Attr_Name : constant String := "tau0DeviceId";
 
+   Kernel_Entry_Point : constant String := "16#0010_0020#";
+
 end Cmd_Stream.Constants;

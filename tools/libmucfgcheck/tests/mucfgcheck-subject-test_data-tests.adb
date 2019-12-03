@@ -428,6 +428,175 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Logical_Unmask_Event (Gnattest_T : in out Test);
+   procedure Test_Logical_Unmask_Event_26684d (Gnattest_T : in out Test) renames Test_Logical_Unmask_Event;
+--  id:2.2/26684dd08b276bd8/Logical_Unmask_Event/1/0/
+   procedure Test_Logical_Unmask_Event (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Logical_Unmask_Event (XML_Data => Data);
+
+      begin
+
+         --  Set mistmatching physical IRQ number as suffix.
+
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/events/source/group/"
+            & "event[@logical='unmask_irq_57']/unmask_irq",
+            Name  => "number",
+            Value => "37");
+
+         Logical_Unmask_Event (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (IRQ mismatch 1)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Logical event 'unmask_irq_57' of subject 'vt' "
+                    & "referencing logical IRQ wireless->irq has unmask action"
+                    & " number different from physical IRQ wireless->irq: 37, "
+                    & "expected 21",
+                    Message   => "Exception mismatch (IRQ mismatch 1)");
+      end;
+
+      begin
+
+         --  Set mistmatching logical IRQ number as suffix
+         --  (unresolvable vector).
+
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/events/source/group/"
+            & "event[@logical='unmask_irq_57']",
+            Name  => "logical",
+            Value => "unmask_irq_255");
+
+         Logical_Unmask_Event (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (IRQ mismatch 2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Logical event 'unmask_irq_255' of subject 'vt' "
+                    & "references invalid logical IRQ with vector 255 as "
+                    & "logical name suffix",
+                    Message   => "Exception mismatch (IRQ mismatch 2)");
+      end;
+
+      begin
+
+         --  Mistmatching logical IRQ number as suffix (resolvable vector).
+
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/events/source/group/"
+            & "event[@logical='unmask_irq_255']/unmask_irq",
+            Name  => "number",
+            Value => "21");
+
+         Logical_Unmask_Event (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (IRQ mismatch 3)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Logical event 'unmask_irq_255' of subject 'vt' "
+                    & "references invalid logical IRQ with vector 255 as "
+                    & "logical name suffix: expected 57",
+                    Message   => "Exception mismatch (IRQ mismatch 3)");
+      end;
+
+      begin
+
+         --  Additionally, make expected logical IRQ number non-resolvable.
+
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/devices/device"
+            & "/irq[@logical='wlan_irq']",
+            Name  => "physical",
+            Value => "nonexistent");
+
+         Logical_Unmask_Event (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (IRQ mismatch 4)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Logical event 'unmask_irq_255' of subject 'vt' "
+                    & "references invalid logical IRQ with vector 255 as "
+                    & "logical name suffix",
+                    Message   => "Exception mismatch (IRQ mismatch 4)");
+      end;
+
+      begin
+
+         --  Set non-numeric suffix.
+
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/events/source/group/"
+            & "event[starts-with(@logical,'unmask_irq')]",
+            Name  => "logical",
+            Value => "unmask_irq_foobar");
+
+         Logical_Unmask_Event (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Non-numeric suffix)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Logical event 'unmask_irq_foobar' of subject 'vt' "
+                    & "has invalid suffix 'foobar': must match number of "
+                    & "corresponding logical IRQ vector",
+                    Message   => "Exception mismatch (Non-numeric suffix)");
+      end;
+
+      begin
+
+         --  Set non-matching prefix.
+
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/events/source/group/"
+            & "event[starts-with(@logical,'unmask_irq')]",
+            Name  => "logical",
+            Value => "foobar_irq");
+
+         Logical_Unmask_Event (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Unexpected prefix)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Logical event 'foobar_irq' of subject 'vt' has "
+                    & "unexpected logical name: must have the form "
+                    & "'unmask_irq_$VECTORNR'",
+                    Message   => "Exception mismatch (Unexpected prefix)");
+      end;
+--  begin read only
+   end Test_Logical_Unmask_Event;
+--  end read only
+
+
+--  begin read only
    procedure Test_Virtual_Memory_Overlap (Gnattest_T : in out Test);
    procedure Test_Virtual_Memory_Overlap_7973e4 (Gnattest_T : in out Test) renames Test_Virtual_Memory_Overlap;
 --  id:2.2/7973e4663e077f6d/Virtual_Memory_Overlap/1/0/

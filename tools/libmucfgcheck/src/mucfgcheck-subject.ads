@@ -51,6 +51,11 @@ is
    --  enabled are consecutive.
    procedure Logical_IRQ_MSI_Consecutiveness (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that logical names of subject unmask IRQ events conform to the
+   --  naming scheme ("unmask_irq_$IRQNR") and that the unmask number matches
+   --  the physical IRQ.
+   procedure Logical_Unmask_Event (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that no virtual memory regions of a subject overlap.
    procedure Virtual_Memory_Overlap (XML_Data : Muxml.XML_Data_Type);
 

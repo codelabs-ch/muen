@@ -1182,10 +1182,10 @@ is
 
                if Subj_Profile = Types.Linux then
 
-                  --  Reserve IRQ0 .. IRQ4 to avoid clashes with Linux legacy
+                  --  Reserve IRQ0 .. IRQ15 to avoid clashes with Linux legacy
                   --  device drivers.
 
-                  for I in IRQ_Alloc.Range_Start .. IRQ_Alloc.Range_Start + 4
+                  for I in IRQ_Alloc.Range_Start .. IRQ_Alloc.Range_Start + 16
                   loop
                      Utils.Reserve_Number (Allocator => IRQ_Alloc,
                                            Number    => I);

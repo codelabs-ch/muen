@@ -8,7 +8,7 @@ endif
 
 ifndef CMD_UNPACK
 define CMD_UNPACK
-tar xfz $(TMP)/$(DLA) -C $(TMP)
+tar xfJ $(TMP)/$(DLA) -C $(TMP)
 endef
 endif
 

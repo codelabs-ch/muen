@@ -5,7 +5,8 @@ all: .emulate
 ISOFILE = muen.iso
 ISOPATH = $(CURDIR)/$(ISOFILE)
 
-IMAGE ?= ../pack/obj/muen.img
+IMAGE     ?= ../pack/obj/muen.img
+IMAGE_CSL ?= ../pack/obj/muen.img.cmds
 
 GRUB_MKRESCUE ?= $(CONTRIB_BUILD_DIR)/bin/grub-mkrescue
 GRUB_MODS     ?= $(CONTRIB_BUILD_DIR)/lib/grub/i386-pc
@@ -48,7 +49,7 @@ iso: $(ISOFILE)
 
 $(ISOFILE): clean $(IMAGE) $(IMAGE_CSL) grub.cfg Makefile
 	@$(E) emulate "Generate ISO" \
-		"$(GRUB_MKRESCUE) -d $(GRUB_MODS) -o $@ boot/grub/grub.cfg=grub.cfg boot/kernel.bin=$(IMAGE)"
+		"$(GRUB_MKRESCUE) -d $(GRUB_MODS) -o $@ boot/grub/grub.cfg=grub.cfg boot/kernel.bin=$(IMAGE_CSL) boot/kernel.bin.mb=$(IMAGE)"
 
 .emulate: $(ISOFILE)
 	@echo "Using command '$(QEMU) $(QEMU_OPTS) $(QEMU_EXTRA_OPTS)'" > emulate.out

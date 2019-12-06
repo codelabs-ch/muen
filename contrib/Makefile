@@ -1,12 +1,13 @@
 # required for MAKEFLAGS silent option
 include ../projects/exec.mk
 
-RECIPES =    \
-	ada-bfd  \
-	alog     \
-	gnatcoll \
+RECIPES =     \
+	ada-bfd   \
+	alog      \
+	gnatcoll  \
+	grub      \
 	libhwbase \
-	lsc      \
+	lsc       \
 	xia
 
 RECIPES_DOWNLOAD = $(RECIPES:%=download-%)

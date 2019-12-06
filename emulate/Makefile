@@ -1,4 +1,4 @@
-include ../projects/exec.mk
+include ../Makeconf
 
 all: .emulate
 
@@ -6,6 +6,9 @@ ISOFILE = muen.iso
 ISOPATH = $(CURDIR)/$(ISOFILE)
 
 IMAGE ?= ../pack/obj/muen.img
+
+GRUB_MKRESCUE ?= $(CONTRIB_BUILD_DIR)/bin/grub-mkrescue
+GRUB_MODS     ?= $(CONTRIB_BUILD_DIR)/lib/grub/i386-pc
 
 QEMU          ?= qemu-system-x86_64
 QEMU_MEM      ?= 5120
@@ -43,9 +46,9 @@ iso: $(ISOFILE)
 	@echo "    \$$ sudo dd bs=1M if=$(ISOPATH) of=/dev/sdX"
 	@echo
 
-$(ISOFILE): clean $(IMAGE) grub.cfg Makefile
+$(ISOFILE): clean $(IMAGE) $(IMAGE_CSL) grub.cfg Makefile
 	@$(E) emulate "Generate ISO" \
-		"grub-mkrescue -o $@ boot/grub/grub.cfg=grub.cfg boot/kernel.bin=$(IMAGE)"
+		"$(GRUB_MKRESCUE) -d $(GRUB_MODS) -o $@ boot/grub/grub.cfg=grub.cfg boot/kernel.bin=$(IMAGE)"
 
 .emulate: $(ISOFILE)
 	@echo "Using command '$(QEMU) $(QEMU_OPTS) $(QEMU_EXTRA_OPTS)'" > emulate.out

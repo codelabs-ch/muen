@@ -27,6 +27,9 @@ RUN apt-get update && \
 		--no-install-recommends \
 		acpica-tools \
 		amtterm \
+		autoconf \
+		automake \
+		autopoint \
 		bc \
 		binutils-dev \
 		bison \

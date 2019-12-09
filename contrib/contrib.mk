@@ -29,7 +29,7 @@ $(STAMP_DOWNLOAD):
 	@touch $@
 
 $(STAMP_CONFIGURE): $(STAMP_PATCH)
-	@$(E) $(PKG) Configure "$(CMD_CONFIGURE)" $(LOG)
+	+@$(E) $(PKG) Configure "$(CMD_CONFIGURE)" $(LOG)
 	@touch $@
 
 ifdef CMD_CONFIGURE
@@ -37,12 +37,12 @@ $(STAMP_BUILD): $(STAMP_CONFIGURE)
 else
 $(STAMP_BUILD): $(STAMP_PATCH)
 endif
-	@$(E) $(PKG) Build "$(CMD_BUILD)" $(LOG)
+	+@$(E) $(PKG) Build "$(CMD_BUILD)" $(LOG)
 	@touch $@
 
 install_default: $(STAMP_INSTALL)
 $(STAMP_INSTALL): $(STAMP_BUILD)
-	@$(E) $(PKG) Install "$(CMD_INSTALL)" $(LOG)
+	+@$(E) $(PKG) Install "$(CMD_INSTALL)" $(LOG)
 	@touch $@
 
 download: $(STAMP_DOWNLOAD)

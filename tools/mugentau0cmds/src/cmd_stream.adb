@@ -27,6 +27,7 @@ with Cmd_Stream.Roots.Device_Domains;
 with Cmd_Stream.Roots.Kernels;
 with Cmd_Stream.Roots.Memory;
 with Cmd_Stream.Roots.Subjects;
+with Cmd_Stream.Constants;
 
 package body Cmd_Stream
 is
@@ -97,6 +98,12 @@ is
       Utils.Append_Command
         (Stream_Doc => Stream_Doc,
          Name       => "writeImage");
+      Utils.Append_Command
+        (Stream_Doc => Stream_Doc,
+         Name       => "writeImageCmdStream",
+         Attrs      =>
+           (1 => (Attr  => U ("entryPoint"),
+                  Value => U (Constants.Kernel_Entry_Point))));
 
       Utils.Close (Stream_Doc => Stream_Doc);
    end Run;

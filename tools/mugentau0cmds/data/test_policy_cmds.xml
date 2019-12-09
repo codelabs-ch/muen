@@ -2662,6 +2662,7 @@
   <activatePageTableDeviceDomain domain="202" level="4" virtualAddress="16#0000#"/>
   <activateDeviceDomain domain="202"/>
   <writeImage/>
+  <writeImageCmdStream entryPoint="16#0010_0020#"/>
  </commands>
 </tau0>
 

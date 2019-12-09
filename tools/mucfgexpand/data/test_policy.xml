@@ -58,7 +58,7 @@
     <pci bus="16#20#" device="16#1a#" function="0">
      <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8087#"/>
     </pci>
-    <irq name="irq" number="21"/>
+    <irq name="irq" number="22"/>
     <memory caching="UC" name="mmio1" physicalAddress="16#d270_0000#" size="16#0002_0000#"/>
    </device>
    <device name="wlan1">

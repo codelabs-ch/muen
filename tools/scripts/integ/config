@@ -33,6 +33,17 @@ TARGETS_HW=()
 #TARGETS_HW+=('192.168.254.3;xml/integration_tests_kt.xml;hardware/kontron-ktqm77.xml;integtest_kt;expect.kt')
 #TARGETS_HW+=(';xml/integration_tests.xml;hardware/intel-nuc-6cayh.xml;integtest')
 
+# emulate targets
+#
+# fields:
+# 1 : SYSTEM
+# 2 : HARDWARE
+# 3 : SCRIPT
+# 4 : EXPECT FILE
+# 5 : QEMU_EXTRA_OPTS
+TARGETS_EMUL=()
+TARGETS_EMUL+=('xml/demo_system_vtd.xml;hardware/qemu-kvm.xml;integtest.kvm;expect.kvm;')
+
 # log capture commands
 LOG_CMD_AMT="/usr/bin/amtterm"
 LOG_CMD_XHCI="components/libxhcidbg/misc/xhcidbg-log"

@@ -59,8 +59,8 @@ cleanup()
 
 save_artifacts()
 {
-	cp $WORKDIR/emulate/emulate.out $LOGDIR >>$LOGFILE 2>&1
-	cp $WORKDIR/emulate/serial.out $LOGDIR >>$LOGFILE 2>&1
+	cp $WORKDIR/emulate/emulate.out $CURRENT_EMUL_LOGDIR >>$LOGFILE 2>&1
+	cp $WORKDIR/emulate/serial.out $CURRENT_EMUL_LOGDIR >>$LOGFILE 2>&1
 }
 
 passed()
@@ -169,18 +169,55 @@ ssh_exec()
 
 emulate()
 {
-	SAVE_ARTIFACTS=1
-	execute "$MAKE emulate"
+	local system=$2
+	local hardware=$3
+	local intscr=$4
+	local expect=$5
 
-	ssh_exec root@localhost $QEMU_SSH_PORT $QEMU_SSH_ATTEMPTS integtest.kvm
+	export CURRENT_EMUL_LOGDIR=$1
+
+	if [ ! -z "$qemu_extra_opts" ]; then
+		export QEMU_EXTRA_OPTS="$6"
+		log "Using QEMU_EXTRA_OPTS '$QEMU_EXTRA_OPTS'"
+	fi
+
+	SAVE_ARTIFACTS=1
+	execute "$MAKE emulate HARDWARE=$hardware SYSTEM=$system"
+
+	ssh_exec root@localhost $QEMU_SSH_PORT $QEMU_SSH_ATTEMPTS $intscr
 
 	save_artifacts
 	SAVE_ARTIFACTS=0
 
 	execute "$MAKE -C emulate clean"
 
-	expect_from_file $SCRIPTDIR/expect.common "$LOGDIR"
-	expect_from_file $SCRIPTDIR/expect.kvm "$LOGDIR"
+	expect_from_file $SCRIPTDIR/expect.common "$CURRENT_EMUL_LOGDIR"
+
+	if [ ! -z "$expect" ]; then
+		file_exists $SCRIPTDIR/$expect
+		expect_from_file $SCRIPTDIR/$expect "$CURRENT_EMUL_LOGDIR"
+	fi
+
+	unset CURRENT_EMUL_LOGDIR
+	unset QEMU_EXTRA_OPTS
+}
+
+deploy_to_emul()
+{
+	for ((i = 0; i < ${#TARGETS_EMUL[@]}; i++)); do
+		local item="${TARGETS_EMUL[$i]}"
+		system=`echo $item | cut -d\; -f1`
+		hardware=`echo $item | cut -d\; -f2`
+		integscript=`echo $item | cut -d\; -f3`
+		expect=`echo $item | cut -d\; -f4`
+		qemu_extra_opts="`echo $item | cut -d\; -f5`"
+		target_logdir=$(hw_targetlogdir "$system" "$hardware")
+		execute "mkdir -p $target_logdir"
+
+		log "Deploying to QEMU/KVM: system '$system', config '$hardware'"
+
+		emulate $target_logdir $system $hardware $integscript $expect "$qemu_extra_opts"
+	done
 }
 
 capture_output()
@@ -281,7 +318,7 @@ execute "cd $WORKDIR"
 execute "$MAKE -C deploy clean"
 execute "$MAKE -C emulate clean"
 
-emulate
+deploy_to_emul
 deploy_to_hardware
 generate_metrics
 

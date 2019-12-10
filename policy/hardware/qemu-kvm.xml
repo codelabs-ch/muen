@@ -95,6 +95,17 @@
       <memory caching="UC" name="mem1" physicalAddress="16#fea1_0000#" size="16#4000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#b001_8000#" size="16#1000#"/>
     </device>
+    <device name="ethernet_controller_2">
+      <description>Realtek Semiconductor Co. network device</description>
+      <pci bus="16#00#" device="16#04#" function="0">
+        <identification classcode="16#0200#" deviceId="16#10ec#" revisionId="16#14#" vendorId="16#1af4#"/>
+        <iommuGroup id="2"/>
+      </pci>
+      <irq name="irq1" number="20"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#fea5_5000#" size="16#0004_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#b002_0000#" size="16#1000#"/>
+      <ioPort end="16#c0ff#" name="ioport1" start="16#c000#"/>
+    </device>
     <device name="isa_bridge_1">
       <description>Intel Corporation 82801IB (ICH9) LPC Interface Controller</description>
       <pci bus="16#00#" device="16#1f#" function="0">
@@ -114,7 +125,7 @@
       </irq>
       <memory caching="UC" name="mem1" physicalAddress="16#fea1_5000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#b00f_a000#" size="16#1000#"/>
-      <ioPort end="16#c05f#" name="ioport1" start="16#c040#"/>
+      <ioPort end="16#c15f#" name="ioport1" start="16#c140#"/>
     </device>
     <device name="smbus_1">
       <description>Intel Corporation 82801I (ICH9 Family) SMBus Controller</description>

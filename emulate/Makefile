@@ -8,6 +8,11 @@ ISOPATH = $(CURDIR)/$(ISOFILE)
 IMAGE     ?= ../pack/obj/muen.img
 IMAGE_CSL ?= ../pack/obj/muen.img.cmds
 
+ISO_FILES := \
+	boot/grub/grub.cfg=grub.cfg \
+	boot/kernel.bin=$(IMAGE_CSL) \
+	boot/kernel.bin.mb=$(IMAGE)
+
 QEMU_BIN         ?= qemu-system-x86_64
 QEMU_MEM         ?= 5120
 QEMU_SSH_PORT    ?= 5555
@@ -58,7 +63,7 @@ iso: $(ISOFILE)
 
 $(ISOFILE): clean $(IMAGE) $(IMAGE_CSL) grub.cfg Makefile
 	@$(E) emulate "Generate ISO" \
-		"$(GRUB_MKRESCUE) -d $(GRUB_MODS) -o $@ boot/grub/grub.cfg=grub.cfg boot/kernel.bin=$(IMAGE_CSL) boot/kernel.bin.mb=$(IMAGE)"
+		"$(GRUB_MKRESCUE) -d $(GRUB_MODS) -o $@ $(ISO_FILES)"
 
 .emulate: $(ISOFILE)
 	@echo "Using command '$(QEMU_CMD)'" > emulate.out

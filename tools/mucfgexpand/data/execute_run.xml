@@ -429,6 +429,11 @@
   <event mode="switch" name="trap_to_subject1"/>
   <event mode="async" name="data_channel"/>
   <event mode="switch" name="data_channel2"/>
+  <event mode="kernel" name="unmask_irq19"/>
+  <event mode="kernel" name="unmask_irq20"/>
+  <event mode="kernel" name="unmask_irq21"/>
+  <event mode="kernel" name="unmask_irq22"/>
+  <event mode="kernel" name="unmask_irq19"/>
   <event mode="ipi" name="lnx_smp_ipi_call_func_0001"/>
   <event mode="ipi" name="lnx_smp_ipi_reschedule_0001"/>
   <event mode="ipi" name="lnx_smp_ipi_call_func_0100"/>
@@ -987,8 +992,14 @@
       <event id="59" logical="default_event_59" physical="trap_to_subject1"/>
      </group>
      <group name="vmcall">
-      <event id="0" logical="smp_ipi_call_func_0001" physical="lnx_smp_ipi_call_func_0001"/>
-      <event id="1" logical="smp_ipi_reschedule_0001" physical="lnx_smp_ipi_reschedule_0001"/>
+      <event id="0" logical="unmask_irq_65" physical="unmask_irq19">
+       <unmask_irq number="19"/>
+      </event>
+      <event id="1" logical="unmask_irq_69" physical="unmask_irq19">
+       <unmask_irq number="19"/>
+      </event>
+      <event id="2" logical="smp_ipi_call_func_0001" physical="lnx_smp_ipi_call_func_0001"/>
+      <event id="3" logical="smp_ipi_reschedule_0001" physical="lnx_smp_ipi_reschedule_0001"/>
      </group>
     </source>
     <target>
@@ -1289,6 +1300,12 @@
       <event id="5" logical="ping" physical="ping_subject2"/>
       <event id="1" logical="primary_data" physical="data_channel"/>
       <event id="1" logical="secondary_data" physical="data_channel2"/>
+      <event id="0" logical="unmask_irq_35" physical="unmask_irq20">
+       <unmask_irq number="20"/>
+      </event>
+      <event id="2" logical="unmask_irq_36" physical="unmask_irq21">
+       <unmask_irq number="21"/>
+      </event>
      </group>
     </source>
     <target>
@@ -1513,6 +1530,13 @@
     </device>
    </devices>
    <events>
+    <source>
+     <group name="vmcall">
+      <event id="0" logical="unmask_irq_34" physical="unmask_irq22">
+       <unmask_irq number="22"/>
+      </event>
+     </group>
+    </source>
     <target>
      <event id="0" logical="ping_from_lnx" physical="ping_subject2">
       <inject_interrupt vector="32"/>

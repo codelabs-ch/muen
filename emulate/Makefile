@@ -48,6 +48,7 @@ $(ISOFILE): clean $(IMAGE) grub.cfg Makefile
 		"grub-mkrescue -o $@ boot/grub/grub.cfg=grub.cfg boot/kernel.bin=$(IMAGE)"
 
 .emulate: $(ISOFILE)
+	@echo "Using command '$(QEMU) $(QEMU_OPTS) $(QEMU_EXTRA_OPTS)'" > emulate.out
 	screen -c screenrc -L -dmS kvm-muen $(QEMU) $(QEMU_OPTS) $(QEMU_EXTRA_OPTS) -pidfile $@
 	@echo
 	@echo -n "* QEMU/KVM started for '$(ISOFILE)', waiting for boot: "

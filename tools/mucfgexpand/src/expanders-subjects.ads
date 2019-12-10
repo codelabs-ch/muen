@@ -77,6 +77,9 @@ is
    --  user).
    procedure Add_Device_Vectors (Data : in out Muxml.XML_Data_Type);
 
+   --  Add Unmask_Irq event for each assigned level-triggered PCI IRQ.
+   procedure Add_Unmask_IRQ_Events (Data : in out Muxml.XML_Data_Type);
+
    --  Add sinfo region to all subjects.
    procedure Add_Sinfo_Regions (Data : in out Muxml.XML_Data_Type);
 

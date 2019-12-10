@@ -63,6 +63,17 @@ package body Expanders.Subjects.Test_Data is
       Add_Global_IDs (Data => Data);
    end Prepare_Sched_Info_Mappings;
 
+
+   -------------------------------------------------------------------------
+
+   procedure Prepare_Unmask_Events (Data: in out Muxml.XML_Data_Type)
+   is
+   begin
+      Hardware.Add_PCI_Device_MSI_IRQs (Data => Data);
+      Prepare_Profile (Data => Data);
+      Add_Device_Vectors (Data => Data);
+   end Prepare_Unmask_Events;
+
    -------------------------------------------------------------------------
 
    procedure Remove_Subj_Device_Resources (Data : in out Muxml.XML_Data_Type)

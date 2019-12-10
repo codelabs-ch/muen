@@ -508,6 +508,26 @@ package body Expanders.Subjects.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Add_Unmask_IRQ_Events (Gnattest_T : in out Test);
+   procedure Test_Add_Unmask_IRQ_Events_e6628d (Gnattest_T : in out Test) renames Test_Add_Unmask_IRQ_Events;
+--  id:2.2/e6628de36901c24b/Add_Unmask_IRQ_Events/1/0/
+   procedure Test_Add_Unmask_IRQ_Events (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename => "obj/subjects_add_unmask_irq_events.xml",
+         Ref_Diff => "data/subjects_add_unmask_irq_events.xml.diff",
+         Pre      => Prepare_Unmask_Events'Access,
+         Expander => Add_Unmask_IRQ_Events'Access);
+--  begin read only
+   end Test_Add_Unmask_IRQ_Events;
+--  end read only
+
+
+--  begin read only
    procedure Test_Add_Sinfo_Regions (Gnattest_T : in out Test);
    procedure Test_Add_Sinfo_Regions_f78150 (Gnattest_T : in out Test) renames Test_Add_Sinfo_Regions;
 --  id:2.2/f78150be0443b081/Add_Sinfo_Regions/1/0/

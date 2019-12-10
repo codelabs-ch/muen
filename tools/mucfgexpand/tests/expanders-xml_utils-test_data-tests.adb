@@ -428,6 +428,84 @@ package body Expanders.XML_Utils.Test_Data.Tests is
    end Test_Is_Free_To_Map;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Next_Free_Source_Event_ID (Gnattest_T : in out Test);
+   procedure Test_Next_Free_Source_Event_ID_7f7dab (Gnattest_T : in out Test) renames Test_Next_Free_Source_Event_ID;
+--  id:2.2/7f7dab058e433a89/Next_Free_Source_Event_ID/1/0/
+   procedure Test_Next_Free_Source_Event_ID (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy   : Muxml.XML_Data_Type;
+      Dom_Impl : DOM.Core.DOM_Implementation;
+      Grp_Node : DOM.Core.Node;
+      Node     : DOM.Core.Node;
+   begin
+      Policy.Doc := DOM.Core.Create_Document (Implementation => Dom_Impl);
+
+      Grp_Node := DOM.Core.Documents.Create_Element
+        (Doc      => Policy.Doc,
+         Tag_Name => "group");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Grp_Node,
+         Name  => "name",
+         Value => "vmcall");
+
+      Assert (Condition => Next_Free_Source_Event_ID (Group => Grp_Node) = "0",
+              Message   => "Source ID mismatch (empty group)");
+
+      for I in 0 .. 10 loop
+         Node := DOM.Core.Documents.Create_Element
+           (Doc      => Policy.Doc,
+            Tag_Name => "event");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "id",
+            Value => Ada.Strings.Fixed.Trim
+              (Source => I'Img,
+               Side   => Ada.Strings.Left));
+         Muxml.Utils.Append_Child (Node      => Grp_Node,
+                                   New_Child => Node);
+      end loop;
+
+      Assert (Condition => Next_Free_Source_Event_ID (Group => Grp_Node)
+              = "11",
+              Message   => "Source ID mismatch (11)");
+
+      for I in 11 .. Mucfgcheck.Events.Get_Max_ID
+        (Group => Mutools.Types.Vmcall)
+      loop
+         Node := DOM.Core.Documents.Create_Element
+           (Doc      => Policy.Doc,
+            Tag_Name => "event");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "id",
+            Value => Ada.Strings.Fixed.Trim
+              (Source => I'Img,
+               Side   => Ada.Strings.Left));
+         Muxml.Utils.Append_Child (Node      => Grp_Node,
+                                   New_Child => Node);
+      end loop;
+
+      begin
+         declare
+            Dummy : constant String
+              := Next_Free_Source_Event_ID (Group => Grp_Node);
+         begin
+            Assert (Condition => False,
+                    Message   => "Exception expected " & Dummy);
+         end;
+
+      exception
+         when Utils.No_Free_Number => null;
+      end;
+--  begin read only
+   end Test_Next_Free_Source_Event_ID;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

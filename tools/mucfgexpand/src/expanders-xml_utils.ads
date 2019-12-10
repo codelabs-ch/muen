@@ -101,4 +101,8 @@ is
       Region_Size     : Interfaces.Unsigned_64)
       return Boolean;
 
+   --  Returns the next free source event ID of the given group as string. An
+   --  exception is raised if no ID is available.
+   function Next_Free_Source_Event_ID (Group : DOM.Core.Node) return String;
+
 end Expanders.XML_Utils;

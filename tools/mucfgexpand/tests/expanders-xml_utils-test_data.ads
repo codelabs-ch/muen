@@ -5,6 +5,8 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Strings.Fixed;
+
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 with DOM.Core.Documents;
@@ -12,6 +14,9 @@ with DOM.Core.Documents;
 with McKae.XML.XPath.XIA;
 
 with Muxml.Utils;
+with Mutools.Types;
+with Mucfgcheck.Events;
+with Expanders.Utils;
 
 package Expanders.XML_Utils.Test_Data is
 

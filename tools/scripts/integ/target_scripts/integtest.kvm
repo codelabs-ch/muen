@@ -13,4 +13,12 @@ ping -c 3 192.168.254.3 >$OUTPUT 2>&1
 # lnx2
 ping -c 3 192.168.10.4 >$OUTPUT 2>&1
 
+ifconfig eth1 up >$OUTPUT 2>&1
+ifconfig eth1 192.168.253.100 >$OUTPUT 2>&1
+
+# QEMU gateway
+ping -c 3 192.168.253.2 >$OUTPUT 2>&1
+
+cat /proc/interrupts >$OUTPUT 2>&1
+
 date_print "*** '$0' DONE"

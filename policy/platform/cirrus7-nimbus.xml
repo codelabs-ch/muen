@@ -31,6 +31,10 @@
     <device physical="network_controller_1"/>
     <device physical="sata_controller_1"/>
    </class>
+   <class name="additional_nics">
+    <device physical="ethernet_controller_2"/>
+    <device physical="network_controller_1"/>
+   </class>
   </classes>
  </mappings>
 </platform>

@@ -238,7 +238,7 @@ hw_deploy()
 
 deploy_to_hardware()
 {
-	for item in ${TARGETS[@]}; do
+	for item in ${TARGETS_HW[@]}; do
 		ip=`echo $item | cut -d\; -f1`
 		system=`echo $item | cut -d\; -f2`
 		hardware=`echo $item | cut -d\; -f3`

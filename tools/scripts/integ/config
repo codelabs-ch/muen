@@ -28,10 +28,10 @@ SCP="scp -r -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 #
 # optionally, a target-specific expect file can be specified. The file path is
 # treated relatively to the scripts/integ directory.
-TARGETS=()
-#TARGETS+=('192.168.254.2;xml/integration_tests.xml;hardware/lenovo-t430s.xml;integtest')
-#TARGETS+=('192.168.254.3;xml/integration_tests_kt.xml;hardware/kontron-ktqm77.xml;integtest_kt;expect.kt')
-#TARGETS+=(';xml/integration_tests.xml;hardware/intel-nuc-6cayh.xml;integtest')
+TARGETS_HW=()
+#TARGETS_HW+=('192.168.254.2;xml/integration_tests.xml;hardware/lenovo-t430s.xml;integtest')
+#TARGETS_HW+=('192.168.254.3;xml/integration_tests_kt.xml;hardware/kontron-ktqm77.xml;integtest_kt;expect.kt')
+#TARGETS_HW+=(';xml/integration_tests.xml;hardware/intel-nuc-6cayh.xml;integtest')
 
 # log capture commands
 LOG_CMD_AMT="/usr/bin/amtterm"

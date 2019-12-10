@@ -544,6 +544,211 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Logical_Unmask_Event (XML_Data : Muxml.XML_Data_Type)
+   is
+      Phys_Devs : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/devices/device"
+           & "[pci/@msi='false' and irq]");
+      Subjs : constant DOM.Core.Node_List := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject[events/source/group/"
+           & "event/unmask_irq]");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjs) - 1 loop
+         declare
+            Subj : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Subjs,
+                                      Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute (Elem => Subj,
+                                                  Name => "name");
+            Ev_Actions : constant DOM.Core.Node_List := XPath_Query
+              (N     => Subj,
+               XPath => "events/source/group/event/unmask_irq");
+            Log_Irqs : constant DOM.Core.Node_List := XPath_Query
+              (N     => Subj,
+               XPath => "devices/device/irq");
+         begin
+            Mulog.Log (Msg => "Checking 'Unmask_Irq' event logical names of "
+                       & "subject '" & Subj_Name & "'");
+            for J in 0 .. DOM.Core.Nodes.Length (List => Ev_Actions) - 1 loop
+               declare
+                  use type DOM.Core.Node;
+
+                  Ev_Action : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item (List  => Ev_Actions,
+                                            Index => J);
+                  Event : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Parent_Node (N => Ev_Action);
+                  Ev_Log_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Event,
+                       Name => "logical");
+                  Delim_Idx : constant Natural
+                    := Ada.Strings.Fixed.Index
+                      (Source  => Ev_Log_Name,
+                       Pattern => "_",
+                       From    => Ev_Log_Name'Last,
+                       Going   => Ada.Strings.Backward);
+                  Vector_Nr : constant String
+                    := Ev_Log_Name (Delim_Idx + 1 .. Ev_Log_Name'Last);
+                  Ev_IRQ_Nr : constant String
+                    := DOM.Core.Elements.Get_Attribute (Elem => Ev_Action,
+                                                        Name => "number");
+
+                  Log_IRQ : DOM.Core.Node;
+
+                  --  Function returns the expected vector number for the given
+                  --  physical IRQ number by resolving the corresponding
+                  --  logical device IRQ vector. An empty string is returned if
+                  --  the number could not be determined.
+                  function Get_Expected_Vector
+                    (IRQ_Number : String)
+                     return String;
+
+                  ----------------------------------------------------------
+
+                  function Get_Expected_Vector
+                    (IRQ_Number : String)
+                     return String
+                  is
+                     Phys_Dev_Irqs : constant DOM.Core.Node_List
+                       := XPath_Query
+                         (N     => XML_Data.Doc,
+                          XPath => "/system/hardware/devices/device"
+                          & "/irq[@number='" & IRQ_Number & "']");
+                  begin
+                     for I in 0 .. DOM.Core.Nodes.Length
+                       (List => Phys_Dev_Irqs) - 1
+                     loop
+                        declare
+                           Phys_IRQ : constant DOM.Core.Node
+                             := DOM.Core.Nodes.Item
+                               (List  => Phys_Dev_Irqs,
+                                Index => I);
+                           Phys_Dev_Name : constant String
+                             := DOM.Core.Elements.Get_Attribute
+                               (Elem => DOM.Core.Nodes.Parent_Node
+                                  (N => Phys_IRQ),
+                                Name => "name");
+                           Phys_IRQ_Name : constant String
+                             := DOM.Core.Elements.Get_Attribute
+                               (Elem => Phys_IRQ,
+                                Name => "name");
+                           Log_IRQ : constant DOM.Core.Node
+                             := Muxml.Utils.Get_Element
+                               (Nodes     => Log_Irqs,
+                                Ref_Attr  => "physical",
+                                Ref_Value => Phys_IRQ_Name);
+                           Log_Dev_Name : constant String
+                             := (if Log_IRQ = null then ""
+                                 else DOM.Core.Elements.Get_Attribute
+                                   (Elem => DOM.Core.Nodes.Parent_Node
+                                        (N => Log_IRQ),
+                                    Name => "physical"));
+                        begin
+                           if Phys_Dev_Name = Log_Dev_Name then
+                              return DOM.Core.Elements.Get_Attribute
+                                (Elem => Log_IRQ,
+                                 Name => "vector");
+                           end if;
+                        end;
+                     end loop;
+                     return "";
+                  end Get_Expected_Vector;
+               begin
+                  if Ev_Log_Name (Ev_Log_Name'First .. Delim_Idx)
+                    /= "unmask_irq_"
+                  then
+                     raise Validation_Error with "Logical event '"
+                       & Ev_Log_Name & "' of subject '" & Subj_Name & "' "
+                       & "has unexpected logical name: must have the form "
+                       & "'unmask_irq_$VECTORNR'";
+                  end if;
+
+                  declare
+                     Unused_Vector : Natural;
+                  begin
+                     Unused_Vector := Natural'Value (Vector_Nr);
+
+                  exception
+                     when Constraint_Error =>
+                        raise Validation_Error with "Logical event '"
+                          & Ev_Log_Name & "' of subject '" & Subj_Name
+                          & "' has invalid suffix '" & Vector_Nr & "': must "
+                          & "match number of corresponding logical IRQ vector";
+                  end;
+
+                  Log_IRQ := Muxml.Utils.Get_Element
+                    (Nodes     => Log_Irqs,
+                     Ref_Attr  => "vector",
+                     Ref_Value => Vector_Nr);
+                  if Log_IRQ = null then
+                     declare
+                        Exp_Vec : constant String
+                          := Get_Expected_Vector (IRQ_Number => Ev_IRQ_Nr);
+                     begin
+                        raise Validation_Error with "Logical event '"
+                          & Ev_Log_Name & "' of subject '" & Subj_Name & "' "
+                          & "references invalid logical IRQ with vector "
+                          & Vector_Nr & " as logical name suffix"
+                          & (if Exp_Vec'Length = 0 then ""
+                             else ": expected " & Exp_Vec);
+                     end;
+                  end if;
+
+                  declare
+                     Log_IRQ_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Log_IRQ,
+                          Name => "physical");
+                     Phys_IRQ_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Log_IRQ,
+                          Name => "physical");
+                     Log_Dev : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Parent_Node (N => Log_IRQ);
+                     Log_Dev_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Log_Dev,
+                          Name => "logical");
+                     Phys_Dev_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Log_Dev,
+                          Name => "physical");
+                     Phys_Dev : constant DOM.Core.Node
+                       := Muxml.Utils.Get_Element (Nodes     => Phys_Devs,
+                                                   Ref_Attr  => "name",
+                                                   Ref_Value => Phys_Dev_Name);
+                     Phys_IRQ : constant DOM.Core.Node
+                       := Muxml.Utils.Get_Element
+                         (Doc   => Phys_Dev,
+                          XPath => "irq[@name='" & Phys_IRQ_Name & "']");
+                     Phys_IRQ_Nr : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                       (Elem => Phys_IRQ,
+                        Name => "number");
+                  begin
+                     if Ev_IRQ_Nr /= Phys_IRQ_Nr then
+                        raise Validation_Error with "Logical event '"
+                          & Ev_Log_Name & "' of subject '" & Subj_Name & "' "
+                          & "referencing logical IRQ " & Log_Dev_Name & "->"
+                          & Log_IRQ_Name & " has unmask action number "
+                          & "different from physical IRQ " & Phys_Dev_Name
+                          & "->" & Phys_IRQ_Name & ": " & Ev_IRQ_Nr
+                          & ", expected " & Phys_IRQ_Nr;
+                     end if;
+                  end;
+               end;
+            end loop;
+         end;
+      end loop;
+   end Logical_Unmask_Event;
+
+   -------------------------------------------------------------------------
+
    procedure Memory_Types (XML_Data : Muxml.XML_Data_Type)
    is
       Phys_Memory    : constant DOM.Core.Node_List

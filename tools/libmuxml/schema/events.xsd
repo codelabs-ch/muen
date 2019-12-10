@@ -46,6 +46,10 @@
   <xs:attribute name="vector" type="vectorType" use="required"/>
  </xs:complexType>
 
+ <xs:complexType name="eventActionUnmaskIrqType">
+  <xs:attribute name="number" type="irqNumberType" use="required"/>
+ </xs:complexType>
+
  <xs:complexType name="eventActionNoParamType"/>
 
 </xs:schema>

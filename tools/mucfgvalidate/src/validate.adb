@@ -221,6 +221,8 @@ is
       XML_Processors.Register
         (Process => Subject.Logical_IRQ_MSI_Consecutiveness'Access);
       XML_Processors.Register
+        (Process => Subject.Logical_Unmask_Event'Access);
+      XML_Processors.Register
         (Process => Subject.Initramfs_Consecutiveness'Access);
       XML_Processors.Register
         (Process => Subject.Crash_Audit_Write_Access'Access);
@@ -250,6 +252,8 @@ is
         (Process => Events.Kernel_Mode_Event_Actions'Access);
       XML_Processors.Register
         (Process => Events.Kernel_Mode_System_Actions'Access);
+      XML_Processors.Register
+        (Process => Events.Level_Triggered_Unmask_IRQ_Action'Access);
       XML_Processors.Register
         (Process => Hardware.Memory_Space'Access);
       XML_Processors.Register

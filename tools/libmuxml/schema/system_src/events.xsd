@@ -21,10 +21,11 @@
  <xs:complexType name="sourceEventEntryType">
   <xs:complexContent>
    <xs:extension base="baseEventType">
-    <xs:sequence>
-     <xs:element name="system_reboot"   type="eventActionNoParamType" minOccurs="0" maxOccurs="1"/>
-     <xs:element name="system_poweroff" type="eventActionNoParamType" minOccurs="0" maxOccurs="1"/>
-    </xs:sequence>
+    <xs:choice minOccurs="0" maxOccurs="1">
+     <xs:element name="system_reboot"   type="eventActionNoParamType"/>
+     <xs:element name="system_poweroff" type="eventActionNoParamType"/>
+     <xs:element name="unmask_irq"      type="eventActionUnmaskIrqType"/>
+    </xs:choice>
     <xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
    </xs:extension>
   </xs:complexContent>

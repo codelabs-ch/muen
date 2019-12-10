@@ -160,7 +160,10 @@
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
    </memory>
    <devices>
-    <device logical="serial" physical="com_2"/>
+    <device logical="serial" physical="com_2">
+     <irq logical="irq1" physical="irq1" vector="53"/>
+     <ioPort logical="ioport1" physical="ioport1"/>
+    </device>
     <device logical="nic1" physical="ethernet_controller_1">
      <pci bus="16#00#" device="16#19#" function="0"/>
      <irq logical="nic1_irq" physical="irq1" vector="59">

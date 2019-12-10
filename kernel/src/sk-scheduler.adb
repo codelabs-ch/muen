@@ -432,18 +432,18 @@ is
 
       if Found then
          declare
-            Cur_Event : constant Skp.Events.Event_Action_Type
+            Cur_Event : constant Skp.Events.Target_Event_Type
               := Skp.Events.Get_Target_Event (Subject_ID => Subject_ID,
                                               Event_Nr   => Event_ID);
          begin
-            case Skp.Events.Get_Kind (Event_Action => Cur_Event)
+            case Skp.Events.Get_Kind (Target_Event => Cur_Event)
             is
                when Skp.Events.No_Action        => null;
                when Skp.Events.Inject_Interrupt =>
                   SK.Subjects_Interrupts.Insert_Interrupt
                     (Subject => Subject_ID,
                      Vector  => SK.Byte (Skp.Events.Get_Vector
-                       (Event_Action => Cur_Event)));
+                       (Target_Event => Cur_Event)));
                when Skp.Events.Reset            =>
                   Init_Subject (ID => Subject_ID);
             end case;
@@ -458,13 +458,14 @@ is
    --  the parameter is set to the ID of the current subject.
    procedure Handle_Source_Event
      (Subject      :     Skp.Global_Subject_ID_Type;
-      Event        :     Skp.Events.Event_Entry_Type;
+      Event        :     Skp.Events.Source_Event_Type;
       Next_Subject : out Skp.Global_Subject_ID_Type)
    with
       Global =>
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Scheduling_Plan),
-         In_Out => (Scheduling_Groups, Subjects_Events.State, X86_64.State))
+         In_Out => (Scheduling_Groups, IO_Apic.State, Subjects_Events.State,
+                    X86_64.State))
    is
       use type Skp.Events.Target_Event_Range;
 
@@ -479,6 +480,9 @@ is
             Power.Reboot (Power_Cycle => True);
          when Skp.Events.System_Poweroff =>
             Power.Shutdown;
+         when Skp.Events.Unmask_Irq      =>
+            IO_Apic.Unmask_IRQ
+              (RTE_Index => Skp.Interrupts.RTE_Index_Type (Event.IRQ_Number));
       end case;
 
       if Event.Target_Subject /= Skp.Invalid_Subject then
@@ -512,15 +516,15 @@ is
       Global =>
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Scheduling_Plan, CPU_Info.APIC_ID),
-         In_Out => (Scheduling_Groups, Crash_Audit.State, Subjects.State,
-                    Subjects_Events.State, X86_64.State))
+         In_Out => (Scheduling_Groups, Crash_Audit.State, IO_Apic.State,
+                    Subjects.State, Subjects_Events.State, X86_64.State))
    is
       --  XXX: Only current wavefronts report that use type clause has no
       --       effect. To keep compatibility with earlier toolchains disable
       --       all warnings.
       pragma $Release_Warnings (Off, -- "use clause for type * has no effect",
                                 Reason => "Only used for debug output");
-      use type Skp.Events.Event_Entry_Type;
+      use type Skp.Events.Source_Event_Type;
       pragma $Release_Warnings (On);
 
       --  The following code operating on Unchecked_Event_Nr was specifically
@@ -534,7 +538,7 @@ is
           (Unchecked_Event_Nr and Skp.Events.Event_Mask);
       Valid_Event_Nr  : constant Boolean
         := Word64 (Event_Nr) = Unchecked_Event_Nr;
-      Event           : Skp.Events.Event_Entry_Type;
+      Event           : Skp.Events.Source_Event_Type;
       Next_Subject_ID : Skp.Global_Subject_ID_Type := Current_Subject;
    begin
       if Valid_Event_Nr then
@@ -547,7 +551,8 @@ is
             Next_Subject => Next_Subject_ID);
       end if;
 
-      pragma Debug (not Valid_Event_Nr or else Event = Skp.Events.Null_Event,
+      pragma Debug (not Valid_Event_Nr or else
+                    Event = Skp.Events.Null_Source_Event,
                     Dump.Print_Spurious_Event
                       (Current_Subject => Current_Subject,
                        Event_Nr        => Unchecked_Event_Nr));
@@ -567,8 +572,8 @@ is
    --  Handle external interrupt request with given vector.
    procedure Handle_Irq (Vector : SK.Byte)
    with
-      Global => (In_Out => (Subjects_Interrupts.State, Skp.IOMMU.State,
-                            X86_64.State))
+      Global => (In_Out => (IO_Apic.State, Subjects_Interrupts.State,
+                            Skp.IOMMU.State, X86_64.State))
    is
       Vect_Nr : Skp.Interrupts.Remapped_Vector_Type;
       Route   : Skp.Interrupts.Vector_Route_Type;
@@ -585,6 +590,11 @@ is
                Subjects_Interrupts.Insert_Interrupt
                  (Subject => Route.Subject,
                   Vector  => SK.Byte (Route.Vector));
+            end if;
+
+            if Vect_Nr in Skp.Interrupts.Mask_IRQ_Type then
+               IO_Apic.Mask_IRQ
+                 (RTE_Index => Skp.Interrupts.RTE_Index_Type (Vector - 32));
             end if;
 
             pragma Debug (Route.Subject not in Skp.Global_Subject_ID_Type,
@@ -611,12 +621,12 @@ is
       Global =>
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Scheduling_Plan, CPU_Info.APIC_ID, Subjects.State),
-         In_Out => (Scheduling_Groups, Crash_Audit.State,
+         In_Out => (Scheduling_Groups, Crash_Audit.State, IO_Apic.State,
                     Subjects_Events.State, X86_64.State))
    is
-      use type Skp.Events.Event_Entry_Type;
+      use type Skp.Events.Source_Event_Type;
 
-      Trap_Entry      : Skp.Events.Event_Entry_Type;
+      Trap_Entry      : Skp.Events.Source_Event_Type;
       Next_Subject_ID : Skp.Global_Subject_ID_Type;
       Valid_Trap_Nr   : Boolean;
 
@@ -670,7 +680,7 @@ is
         (Subject_ID => Current_Subject,
          Trap_Nr    => Skp.Events.Trap_Range (Trap_Nr));
 
-      if Trap_Entry = Skp.Events.Null_Event then
+      if Trap_Entry = Skp.Events.Null_Source_Event then
          Panic_No_Trap_Handler;
       end if;
 
@@ -697,8 +707,9 @@ is
                     Tau0_Interface.State),
          In_Out => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Global_Current_Major_Start_Cycles, Scheduling_Groups,
-                    Crash_Audit.State, MP.Barrier, Scheduling_Info.State,
-                    Subjects_Events.State, Timed_Events.State, X86_64.State))
+                    Crash_Audit.State, IO_Apic.State, MP.Barrier,
+                    Scheduling_Info.State, Subjects_Events.State,
+                    Timed_Events.State, X86_64.State))
    is
       Next_Subject_ID : Skp.Global_Subject_ID_Type;
    begin

@@ -60,13 +60,6 @@ is
      := (Types.Native           => MC.Host_IRQ_Remap_Offset,
          Types.VM | Types.Linux => 48);
 
-   --  Mapping of subject profiles to MSI vector remapping offset.
-   --  The value 40 is chosen to remap MSIs since it is the one used by Linux.
-   Subj_MSI_Remap_Offset : constant array
-     (Types.Subject_Profile_Type) of Natural
-     := (Types.Native           => MC.Host_IRQ_Remap_Offset + 40,
-         Types.VM | Types.Linux => 48 + 40);
-
    -------------------------------------------------------------------------
 
    procedure Add_Channel_Events (Data : in out Muxml.XML_Data_Type)
@@ -1170,9 +1163,6 @@ is
                  XPath => "events/target/event/inject_interrupt");
             IRQ_Alloc      : Utils.Number_Allocator_Type
               (Range_Start => Subj_IRQ_Remap_Offset (Subj_Profile),
-               Range_End   => Subj_IRQ_Remap_Offset (Subj_Profile) + 15);
-            MSI_Alloc      : Utils.Number_Allocator_Type
-              (Range_Start => Subj_MSI_Remap_Offset (Subj_Profile),
                Range_End   => 255);
          begin
             if Alloc_Count > 0 then
@@ -1189,23 +1179,15 @@ is
                Utils.Reserve_Numbers (Allocator => IRQ_Alloc,
                                       Nodes     => Event_Vectors,
                                       Attribute => "vector");
-               Utils.Reserve_Numbers (Allocator => MSI_Alloc,
-                                      Nodes     => Device_Vectors,
-                                      Attribute => "vector");
-               Utils.Reserve_Numbers (Allocator => MSI_Alloc,
-                                      Nodes     => Event_Vectors,
-                                      Attribute => "vector");
 
                if Subj_Profile = Types.Linux then
 
-                  --  Reserve IRQ0 .. IRQ4 to avoid clashes with Linux legacy
+                  --  Reserve IRQ0 .. IRQ15 to avoid clashes with Linux legacy
                   --  device drivers.
 
-                  for I in IRQ_Alloc.Range_Start .. IRQ_Alloc.Range_Start + 4
+                  for I in IRQ_Alloc.Range_Start .. IRQ_Alloc.Range_Start + 16
                   loop
                      Utils.Reserve_Number (Allocator => IRQ_Alloc,
-                                           Number    => I);
-                     Utils.Reserve_Number (Allocator => MSI_Alloc,
                                            Number    => I);
                   end loop;
                end if;
@@ -1228,14 +1210,9 @@ is
                           Ref_Attr  => "name",
                           Ref_Value => Phys_Name);
                   begin
-                     if Phys_MSI_Dev /= null then
-                        Allocate_Vectors (Logical_Device => Cur_Dev,
-                                          Allocator      => MSI_Alloc,
-                                          Consecutive    => True);
-                     else
-                        Allocate_Vectors (Logical_Device => Cur_Dev,
-                                          Allocator      => IRQ_Alloc);
-                     end if;
+                     Allocate_Vectors (Logical_Device => Cur_Dev,
+                                       Allocator      => IRQ_Alloc,
+                                       Consecutive    => Phys_MSI_Dev /= null);
                   end;
                end loop;
             end if;
@@ -1908,6 +1885,149 @@ is
          end;
       end loop;
    end Add_Timed_Event_Mappings;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Unmask_IRQ_Events (Data : in out Muxml.XML_Data_Type)
+   is
+      Event_Prefix : constant String := "unmask_irq";
+
+      Phys_Events : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/events/event");
+      Unmask_Events : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject/events/source"
+           & "/group/*/unmask_irq");
+      Phys_IRQs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/hardware/devices/device"
+           & "[pci/@msi='false']/irq");
+      Log_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject/devices/device[irq]");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Phys_IRQs) - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            Phys_IRQ : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Phys_IRQs,
+                                      Index => I);
+            Phys_IRQ_Nr : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Phys_IRQ,
+                 Name => "number");
+            Unmask_Ev : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Unmask_Events,
+                 Ref_Attr  => "number",
+                 Ref_Value => Phys_IRQ_Nr);
+         begin
+            if Unmask_Ev = null then
+               declare
+                  Phys_Dev : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Parent_Node (N => Phys_IRQ);
+                  Phys_Dev_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute (Elem => Phys_Dev,
+                                                        Name => "name");
+                  Phys_IRQ_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute (Elem => Phys_IRQ,
+                                                        Name => "name");
+                  Phys_Ev_Name : constant String := Event_Prefix & Phys_IRQ_Nr;
+                  Log_Dev : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
+                      (Nodes     => Log_Devs,
+                       Ref_Attr  => "physical",
+                       Ref_Value => Phys_Dev_Name);
+                  Log_IRQ : constant DOM.Core.Node
+                    := (if Log_Dev = null then null
+                        else Muxml.Utils.Get_Element
+                          (Doc   => Log_Dev,
+                           XPath => "irq[@physical='" & Phys_IRQ_Name & "']"));
+               begin
+                  if Log_IRQ /= null then
+                     if Muxml.Utils.Get_Element
+                       (Nodes     => Phys_Events,
+                        Ref_Attr  => "name",
+                        Ref_Value => Phys_Ev_Name) = null
+                     then
+                        XML_Utils.Create_Physical_Event_Node
+                          (Policy => Data,
+                           Name   =>  Phys_Ev_Name,
+                           Mode   => "kernel");
+                     end if;
+                     declare
+                        Subj : constant DOM.Core.Node
+                          := Muxml.Utils.Ancestor_Node (Node  => Log_Dev,
+                                                        Level => 2);
+                        Subj_Name : constant String
+                          := DOM.Core.Elements.Get_Attribute
+                            (Elem => Subj,
+                             Name => "name");
+                        Log_IRQ_Name : constant String
+                          := DOM.Core.Elements.Get_Attribute
+                            (Elem => Log_IRQ,
+                             Name => "logical");
+                        Log_Dev_Name : constant String
+                          := DOM.Core.Elements.Get_Attribute
+                            (Elem => Log_Dev,
+                             Name => "logical");
+                        Log_IRQ_Vec : constant String
+                          := DOM.Core.Elements.Get_Attribute
+                            (Elem => Log_IRQ,
+                             Name => "vector");
+                        Log_Unmask_Ev : constant DOM.Core.Node
+                          := XML_Utils.Create_Source_Event_Node
+                            (Policy        => Data,
+                             ID            => "",
+                             Logical_Name  => Event_Prefix & "_" & Log_IRQ_Vec,
+                             Physical_Name => Event_Prefix & Phys_IRQ_Nr);
+                        Ev_Action : constant DOM.Core.Node
+                          := DOM.Core.Documents.Create_Element
+                            (Doc      => Data.Doc,
+                             Tag_Name => "unmask_irq");
+                        Src_Events : DOM.Core.Node
+                          := Muxml.Utils.Get_Element
+                            (Doc   => Subj,
+                             XPath => "events/source/group[@name='vmcall']");
+                     begin
+                        Mulog.Log (Msg => "Adding unmask IRQ event to subject "
+                                   & "'" & Subj_Name & "' for logical"
+                                   & " device IRQ " & Log_Dev_Name & "->"
+                                   & Log_IRQ_Name);
+                        if Src_Events = null then
+                           Src_Events
+                             := XML_Utils.Add_Optional_Events_Source_Group
+                               (Policy  => Data,
+                                Subject => Subj);
+                        end if;
+                        DOM.Core.Elements.Set_Attribute
+                          (Elem  => Log_Unmask_Ev,
+                           Name  => "id",
+                           Value => XML_Utils.Next_Free_Source_Event_ID
+                             (Group => Src_Events));
+                        DOM.Core.Elements.Set_Attribute
+                          (Elem  => Ev_Action,
+                           Name  => "number",
+                           Value => Phys_IRQ_Nr);
+                        Muxml.Utils.Append_Child
+                          (Node      => Log_Unmask_Ev,
+                           New_Child => Ev_Action);
+                        Muxml.Utils.Append_Child
+                          (Node      => Src_Events,
+                           New_Child => Log_Unmask_Ev);
+                     end;
+                  end if;
+               end;
+            end if;
+         end;
+      end loop;
+   end Add_Unmask_IRQ_Events;
 
    -------------------------------------------------------------------------
 

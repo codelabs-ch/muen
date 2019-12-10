@@ -1,3 +1,84 @@
+   </device>                                                                                                                                               </device>
+   <device name="xhci">                                                                                                                                    <device name="xhci">
+    <pci bus="16#00#" device="16#14#" function="0">                                                                                                  |      <pci bus="16#00#" device="16#14#" function="0" msi="true">
+     <identification classcode="16#0c03#" deviceId="16#3c31#" revisionId="16#04#" vendorId="16#8086#"/>                                                      <identification classcode="16#0c03#" deviceId="16#3c31#" revisionId="16#04#" vendorId="16#8086#"/>
+    </pci>                                                                                                                                                  </pci>
+    <irq name="irq1" number="19">                                                                                                                    |      <irq name="msi1" number=""/>
+     <msi name="msi1"/>                                                                                                                              |      <irq name="msi2" number=""/>
+     <msi name="msi2"/>                                                                                                                              <
+    </irq>                                                                                                                                           <
+    <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>                                                                 <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
+    <ioPort end="16#50c8#" name="port1" start="16#50c0#"/>                                                                                                  <ioPort end="16#50c8#" name="port1" start="16#50c0#"/>
+--
+   </device>                                                                                                                                               </device>
+   <device name="nic1">                                                                                                                                    <device name="nic1">
+    <pci bus="16#23#" device="16#19#" function="0">                                                                                                  |      <pci bus="16#23#" device="16#19#" function="0" msi="false">
+     <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8087#"/>                                                      <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8087#"/>
+    </pci>                                                                                                                                                  </pci>
+--
+   </device>                                                                                                                                               </device>
+   <device name="nic2">                                                                                                                                    <device name="nic2">
+    <pci bus="16#23#" device="16#19#" function="1">                                                                                                  |      <pci bus="16#23#" device="16#19#" function="1" msi="false">
+     <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8087#"/>                                                      <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8087#"/>
+    </pci>                                                                                                                                                  </pci>
+--
+   </device>                                                                                                                                               </device>
+   <device name="nic3">                                                                                                                                    <device name="nic3">
+    <pci bus="16#20#" device="16#1a#" function="0">                                                                                                  |      <pci bus="16#20#" device="16#1a#" function="0" msi="false">
+     <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8087#"/>                                                      <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8087#"/>
+    </pci>                                                                                                                                                  </pci>
+--
+   </device>                                                                                                                                               </device>
+   <device name="wlan1">                                                                                                                                   <device name="wlan1">
+    <pci bus="16#03#" device="16#00#" function="0">                                                                                                  |      <pci bus="16#03#" device="16#00#" function="0" msi="true">
+     <identification classcode="16#0c05#" deviceId="16#3c33#" revisionId="16#02#" vendorId="16#8088#"/>                                                      <identification classcode="16#0c05#" deviceId="16#3c33#" revisionId="16#02#" vendorId="16#8088#"/>
+    </pci>                                                                                                                                                  </pci>
+    <irq name="irq1" number="16">                                                                                                                    |      <irq name="msi1" number=""/>
+     <msi name="msi1"/>                                                                                                                              <
+    </irq>                                                                                                                                           <
+    <memory caching="UC" name="mmio1" physicalAddress="16#d1c0_0000#" size="16#2000#"/>                                                                     <memory caching="UC" name="mmio1" physicalAddress="16#d1c0_0000#" size="16#2000#"/>
+    <memory caching="UC" name="mmconf" physicalAddress="16#e030_0000#" size="16#1000#"/>                                                                    <memory caching="UC" name="mmconf" physicalAddress="16#e030_0000#" size="16#1000#"/>
+   </device>                                                                                                                                               </device>
+   <device name="wlan2">                                                                                                                                   <device name="wlan2">
+    <pci bus="16#00#" device="16#01#" function="0">                                                                                                  |      <pci bus="16#00#" device="16#01#" function="0" msi="true">
+     <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8088#"/>                                                      <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8088#"/>
+    </pci>                                                                                                                                                  </pci>
+    <irq name="irq1" number="18">                                                                                                                    |      <irq name="msi1" number=""/>
+     <msi name="msi1"/>                                                                                                                              <
+    </irq>                                                                                                                                           <
+    <memory caching="UC" name="mmio1" physicalAddress="16#f1c0_0000#" size="16#2000#"/>                                                                     <memory caching="UC" name="mmio1" physicalAddress="16#f1c0_0000#" size="16#2000#"/>
+    <memory caching="UC" name="mmconf" physicalAddress="16#e030_1000#" size="16#1000#"/>                                                                    <memory caching="UC" name="mmconf" physicalAddress="16#e030_1000#" size="16#1000#"/>
+   </device>                                                                                                                                               </device>
+   <device name="wlan3">                                                                                                                                   <device name="wlan3">
+    <pci bus="16#00#" device="16#1c#" function="0">                                                                                                  |      <pci bus="16#00#" device="16#1c#" function="0" msi="true">
+     <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8088#"/>                                                      <identification classcode="16#0c04#" deviceId="16#3c32#" revisionId="16#01#" vendorId="16#8088#"/>
+    </pci>                                                                                                                                                  </pci>
+    <irq name="irq1" number="19">                                                                                                                    |      <irq name="msi1" number=""/>
+     <msi name="msi1"/>                                                                                                                              <
+    </irq>                                                                                                                                           <
+    <memory caching="UC" name="mmio1" physicalAddress="16#f1c0_8000#" size="16#2000#"/>                                                                     <memory caching="UC" name="mmio1" physicalAddress="16#f1c0_8000#" size="16#2000#"/>
+    <memory caching="UC" name="mmconf" physicalAddress="16#e030_2000#" size="16#1000#"/>                                                                    <memory caching="UC" name="mmconf" physicalAddress="16#e030_2000#" size="16#1000#"/>
+   </device>                                                                                                                                               </device>
+   <device name="sata_controller">                                                                                                                         <device name="sata_controller">
+    <pci bus="16#00#" device="16#1f#" function="2">                                                                                                  |      <pci bus="16#00#" device="16#1f#" function="2" msi="true">
+     <identification classcode="16#0106#" deviceId="16#1e03#" revisionId="16#04#" vendorId="16#8086#"/>                                                      <identification classcode="16#0106#" deviceId="16#1e03#" revisionId="16#04#" vendorId="16#8086#"/>
+    </pci>                                                                                                                                                  </pci>
+    <irq name="irq1" number="43">                                                                                                                    |      <irq name="msi1" number=""/>
+     <msi name="msi1"/>                                                                                                                              |      <irq name="msi2" number=""/>
+     <msi name="msi2"/>                                                                                                                              |      <irq name="msi3" number=""/>
+     <msi name="msi3"/>                                                                                                                              |      <irq name="msi4" number=""/>
+     <msi name="msi4"/>                                                                                                                              <
+    </irq>                                                                                                                                           <
+    <memory caching="UC" name="mem1" physicalAddress="16#d254_8000#" size="16#4000#"/>                                                                      <memory caching="UC" name="mem1" physicalAddress="16#d254_8000#" size="16#4000#"/>
+    <ioPort end="16#50af#" name="ioport1" start="16#50a8#"/>                                                                                                <ioPort end="16#50af#" name="ioport1" start="16#50a8#"/>
+--
+  <event mode="asap" name="ping_subject2"/>                                                                                                               <event mode="asap" name="ping_subject2"/>
+  <event mode="switch" name="trap_to_subject1"/>                                                                                                          <event mode="switch" name="trap_to_subject1"/>
+                                                                                                                                                     >    <event mode="kernel" name="unmask_irq20"/>
+                                                                                                                                                     >    <event mode="kernel" name="unmask_irq21"/>
+ </events>                                                                                                                                               </events>
+ <channels>                                                                                                                                              <channels>
+--
  </components>                                                                                                                                           </components>
  <subjects>                                                                                                                                              <subjects>
   <subject name="lnx">                                                                                                                               |    <subject name="lnx" profile="linux">
@@ -383,6 +464,17 @@
      <irq logical="irq" physical="irq"/>                                                                                                             |       <irq logical="irq" physical="irq" vector="34"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d272_0000#" writable="true"/>                                            <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d272_0000#" writable="true"/>
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>                                            <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>
+--
+     <group name="vmcall">                                                                                                                                   <group name="vmcall">
+      <event id="5" logical="ping" physical="ping_subject2"/>                                                                                                 <event id="5" logical="ping" physical="ping_subject2"/>
+                                                                                                                                                     >        <event id="0" logical="unmask_irq_33" physical="unmask_irq20">
+                                                                                                                                                     >         <unmask_irq number="20"/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event id="1" logical="unmask_irq_34" physical="unmask_irq21">
+                                                                                                                                                     >         <unmask_irq number="21"/>
+                                                                                                                                                     >        </event>
+     </group>                                                                                                                                                </group>
+    </source>                                                                                                                                               </source>
 --
    </component>                                                                                                                                            </component>
   </subject>                                                                                                                                              </subject>

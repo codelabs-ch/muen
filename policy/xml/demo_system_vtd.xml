@@ -85,6 +85,7 @@
       <pci bus="16#00#" device="16#01#" function="0"/>
      </if>
     </device>
+    <device logical="aditional_nics" physical="additional_nics"/>
    </devices>
    <events>
     <source>

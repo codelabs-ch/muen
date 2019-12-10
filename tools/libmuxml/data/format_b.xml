@@ -41,6 +41,7 @@
  <deviceDomains/>
  <events>
   <event mode="ipi" name="xv6_keyboard"/>
+  <event mode="kernel" name="unmask_irq"/>
  </events>
  <kernel>
   <memory>
@@ -244,6 +245,9 @@
      <group name="vmcall">
       <event id="1" logical="channel_event_virtual_input_1" physical="virtual_input_1"/>
       <event id="2" logical="channel_event_virtual_input_2" physical="virtual_input_2"/>
+      <event id="3" logical="unmask_irq" physical="unmask_irq">
+       <unmask_irq number="10"/>
+      </event>
      </group>
     </source>
     <target>

@@ -243,7 +243,7 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/subjects/subject/events/source/group/"
-           & "event[system_reboot|system_poweroff]");
+           & "event[system_reboot|system_poweroff|unmask_irq]");
       Pairs : constant Muxml.Utils.Matching_Pairs_Type
         := Muxml.Utils.Get_Matching
           (Left_Nodes  => Actions,
@@ -287,6 +287,144 @@ is
          end;
       end if;
    end Kernel_Mode_System_Actions;
+
+   -------------------------------------------------------------------------
+
+   procedure Level_Triggered_Unmask_IRQ_Action (XML_Data : Muxml.XML_Data_Type)
+   is
+      use type DOM.Core.Node;
+
+      Phys_Devs : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/devices/device"
+           & "[pci/@msi='false' and irq]");
+      Log_Devs : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/devices/device");
+      Unmask_Events : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/events/source"
+           & "/group/*/unmask_irq");
+      Dev_Count : constant Natural := DOM.Core.Nodes.Length
+        (List => Phys_Devs);
+
+      --  Returns True if the given physical IRQ of the device with specified
+      --  name is assigned to a subject.
+      function IRQ_Is_Assigned
+        (Phys_IRQ      : DOM.Core.Node;
+         Phys_Dev_Name : String)
+         return Boolean;
+
+      --  Check presence/absence of corresponding unmask event for given
+      --  physical IRQ depending on assignment of the given IRQ.
+      procedure Check_IRQ_Unmask_Event
+        (Phys_IRQ : DOM.Core.Node;
+         Dev_Name : String;
+         Assigned : Boolean);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_IRQ_Unmask_Event
+        (Phys_IRQ : DOM.Core.Node;
+         Dev_Name : String;
+         Assigned : Boolean)
+      is
+         IRQ_Nr : constant String
+           := DOM.Core.Elements.Get_Attribute (Elem => Phys_IRQ,
+                                               Name => "number");
+         IRQ_Name : constant String
+           := DOM.Core.Elements.Get_Attribute (Elem => Phys_IRQ,
+                                               Name => "name");
+         Unmask_Ev : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Nodes     => Unmask_Events,
+              Ref_Attr  => "number",
+              Ref_Value => IRQ_Nr);
+      begin
+         if Assigned and then Unmask_Ev = null then
+            raise Validation_Error with "No event with unmask_irq action "
+              & "and matching number " & IRQ_Nr & " for IRQ '" & Dev_Name
+              & "->" & IRQ_Name & "'";
+         end if;
+
+         if not Assigned and then Unmask_Ev /= null then
+            declare
+               Ev_Name : constant String := DOM.Core.Elements.Get_Attribute
+                 (Elem => DOM.Core.Nodes.Parent_Node (N => Unmask_Ev),
+                  Name => "logical");
+               Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
+                 (Elem => Muxml.Utils.Ancestor_Node (Node  => Unmask_Ev,
+                                                     Level => 5),
+                  Name => "name");
+            begin
+               raise Validation_Error with "Event " & Ev_Name & " of subject '"
+                 & Subj_Name & "' has unmask_irq action "
+                 & "for unassigned IRQ '" & Dev_Name & "->" & IRQ_Name & "'";
+            end;
+         end if;
+      end Check_IRQ_Unmask_Event;
+
+      ----------------------------------------------------------------------
+
+      function IRQ_Is_Assigned
+        (Phys_IRQ      : DOM.Core.Node;
+         Phys_Dev_Name : String)
+         return Boolean
+      is
+         Phys_IRQ_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Phys_IRQ,
+            Name => "name");
+         Log_Dev : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Nodes     => Log_Devs,
+              Ref_Attr  => "physical",
+              Ref_Value => Phys_Dev_Name);
+         Log_IRQ : constant DOM.Core.Node
+           := (if Log_Dev = null then null
+               else Muxml.Utils.Get_Element
+                 (Doc   => Log_Dev,
+                  XPath => "irq[@physical='" & Phys_IRQ_Name & "']"));
+      begin
+         return Log_IRQ /= null;
+      end IRQ_Is_Assigned;
+   begin
+      Mulog.Log (Msg => "Checking" & Dev_Count'Img & " physical devices for "
+                 & "presence of corresponding IRQ unmask event(s)");
+
+      for I in 0 .. Dev_Count - 1 loop
+         declare
+            Phys_Dev : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => Phys_Devs,
+               Index => I);
+            Phys_Dev_Name : constant String
+              := DOM.Core.Elements.Get_Attribute (Elem => Phys_Dev,
+                                                  Name => "name");
+            Phys_IRQs : constant DOM.Core.Node_List
+              := XPath_Query
+                (N     => Phys_Dev,
+                 XPath => "irq");
+         begin
+            for J in 0 .. DOM.Core.Nodes.Length (List => Phys_IRQs) - 1
+            loop
+               declare
+                  Phys_IRQ : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item (List  => Phys_IRQs,
+                                            Index => J);
+               begin
+                  Check_IRQ_Unmask_Event
+                    (Phys_IRQ => Phys_IRQ,
+                     Dev_Name => Phys_Dev_Name,
+                     Assigned => IRQ_Is_Assigned
+                       (Phys_IRQ      => Phys_IRQ,
+                        Phys_Dev_Name => Phys_Dev_Name));
+               end;
+            end loop;
+         end;
+      end loop;
+   end Level_Triggered_Unmask_IRQ_Action;
 
    -------------------------------------------------------------------------
 

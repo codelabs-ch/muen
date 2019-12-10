@@ -22,5 +22,10 @@
    </alias>
    <alias name="storage_controller" physical="sata_controller_1"/>
   </aliases>
+  <classes>
+   <class name="additional_nics">
+    <device physical="ethernet_controller_2"/>
+   </class>
+  </classes>
  </mappings>
 </platform>

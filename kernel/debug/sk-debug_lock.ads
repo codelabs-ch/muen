@@ -16,9 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package SK.Locks
-with
-   SPARK_Mode => Off
+package SK.Debug_Lock
 is
 
    --  Spin until lock is acquired.
@@ -27,4 +25,4 @@ is
    --  Unlock.
    procedure Release;
 
-end SK.Locks;
+end SK.Debug_Lock;

@@ -117,6 +117,10 @@ is
 
       Procs.Register (Process => Subjects.Add_Device_Vectors'Access);
 
+      --  Logical vectors must be expanded to add Unmask IRQ events.
+
+      Procs.Register (Process => Subjects.Add_Unmask_IRQ_Events'Access);
+
       --  Handle profile removes profile info.
 
       Procs.Register (Process => Subjects.Handle_Profile'Access);

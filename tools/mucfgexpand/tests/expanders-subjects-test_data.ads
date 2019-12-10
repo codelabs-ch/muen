@@ -15,6 +15,7 @@ with DOM.Core.Elements;
 with Muxml.Utils;
 with Mucfgcheck;
 
+with Expanders.Hardware.Test_Data;
 with Expanders.Platform;
 with Expanders.Components;
 with Expanders.Siblings;
@@ -41,6 +42,9 @@ package Expanders.Subjects.Test_Data is
 
    --  Prepare subjects for scheduling group info mappings expansion step.
    procedure Prepare_Sched_Info_Mappings (Data : in out Muxml.XML_Data_Type);
+
+   --  Prepare devices and subjects for unmask IRQ event expansion step.
+   procedure Prepare_Unmask_Events (Data: in out Muxml.XML_Data_Type);
 
    --  Inject Mugenschedcfg idle subject.
    procedure Inject_Idle_Subject (Data : in out Muxml.XML_Data_Type);

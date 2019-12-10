@@ -5,7 +5,8 @@
    <memory logical="dma2" physical="nic_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
   </memory>
   <devices>
-   <device logical="nic" physical="ethernet_controller_1"/>
+   <device logical="first_nic" physical="ethernet_controller_1"/>
+   <device logical="additional_nics" physical="additional_nics"/>
   </devices>
  </domain>
  <domain name="storage_domain">

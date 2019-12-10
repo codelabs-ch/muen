@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 
 with DOM.Core.Nodes;
@@ -62,7 +63,7 @@ is
       Cur_IRQ   : Positive := 1;
       Cur_Route : Positive := 1;
 
-      IRQ_Buffer, Vector_Buffer : Unbounded_String;
+      IRQ_Buffer, Mask_IRQ_Buffer, Vector_Buffer : Unbounded_String;
 
       --  Write IRQ information to interrupts spec.
       procedure Write_Interrupt
@@ -151,6 +152,15 @@ is
                     & "IRQ_Level => " & (if Is_PCI_Dev then "Low" else "High")
                     & "," & ASCII.LF
                     & Indent (N => 3) & "Vector    =>" & Host_Vector'Img & ")";
+
+                  if Is_PCI_Dev then
+                     if Mask_IRQ_Buffer /= Null_Unbounded_String then
+                        Mask_IRQ_Buffer := Mask_IRQ_Buffer & " | ";
+                     end if;
+                     Mask_IRQ_Buffer := Mask_IRQ_Buffer
+                       & Ada.Strings.Fixed.Trim (Source => Host_Vector'Img,
+                                                 Side   => Ada.Strings.Left);
+                  end if;
                end;
 
                if Cur_Route /= Route_Count then
@@ -214,6 +224,11 @@ is
       Vector_Buffer := Vector_Buffer & Indent (N => 2)
         & " others => Null_Vector_Route";
 
+      if Mask_IRQ_Buffer = Null_Unbounded_String then
+         Mask_IRQ_Buffer := To_Unbounded_String
+           (Source => "1 .. 0");
+      end if;
+
       Tmpl := Mutools.Templates.Create
         (Content => String_Templates.skp_interrupts_ads);
       Mutools.Templates.Replace
@@ -228,6 +243,10 @@ is
         (Template => Tmpl,
          Pattern  => "__routing_range__",
          Content  => "1 .." & Natural'Max (1, Route_Count)'Img);
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__mask_irqs__",
+         Content  => To_String (Mask_IRQ_Buffer));
       Mutools.Templates.Replace
         (Template => Tmpl,
          Pattern  => "__irq_routing_table__",

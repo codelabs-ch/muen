@@ -253,6 +253,39 @@ package body Expanders.Utils.Test_Data.Tests is
                     = "Node 'foo' has no valid number attribute 'nonexistent'",
                     Message   => "Exception message mismatch");
       end;
+
+      --  Reserve all numbers.
+
+      for I in Alloc.Range_Start .. Alloc.Range_End loop
+         if I not in Reserved_Range then
+            Node := DOM.Core.Documents.Create_Element
+              (Doc      => Policy.Doc,
+               Tag_Name => "foo");
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Node,
+               Name  => "number",
+               Value => Ada.Strings.Fixed.Trim
+                 (Source => I'Img,
+                  Side   => Ada.Strings.Left));
+            DOM.Core.Append_Node (List => Nodes,
+                                  N    => Node);
+         end if;
+      end loop;
+
+      Reserve_Numbers (Allocator => Alloc,
+                       Nodes     => Nodes,
+                       Attribute => "number");
+      declare
+         Dummy : Natural;
+      begin
+         Utils.Allocate (Allocator => Alloc,
+                         Number    => Dummy);
+         Assert (Condition => False,
+                 Message   => "Exception expected (No free number)");
+
+      exception
+         when No_Free_Number => null;
+      end;
 --  begin read only
    end Test_Reserve_Numbers;
 --  end read only

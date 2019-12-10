@@ -86,7 +86,7 @@ is
                else "No_Action");
       begin
          Buffer := Buffer & Indent (N => 3)  & " "
-           & Event_ID & " => Event_Action_Type'("
+           & Event_ID & " => Target_Event_Type'("
            & ASCII.LF
            & Indent (N => 4) & "Kind   => "
            & Mutools.Utils.To_Ada_Identifier (Str => Action_Kind) & ",";
@@ -150,7 +150,7 @@ is
                   Name => "id"));
       begin
          Buffer := Buffer & Indent (N => 3)  & " "
-           & Event_ID & " => Event_Entry_Type'("
+           & Event_ID & " => Source_Event_Type'("
            & ASCII.LF
            & Indent (N => 4) & "Source_Action  => " & Src_Action_Kind & ","
            & ASCII.LF
@@ -167,10 +167,23 @@ is
 
          Buffer := Buffer & ASCII.LF & Indent (N => 4) & "Send_IPI       => ";
          if Notify_Mode = "ipi" then
-            Buffer := Buffer & "True)";
+            Buffer := Buffer & "True";
          else
-            Buffer := Buffer & "False)";
+            Buffer := Buffer & "False";
          end if;
+
+         Buffer := Buffer & "," & ASCII.LF & Indent (N => 4);
+         Buffer := Buffer & "IRQ_Number     => ";
+         declare
+            Number : constant String
+              := (if Src_Action_Kind = "Unmask_Irq" then
+                     DOM.Core.Elements.Get_Attribute
+                    (Elem => Src_Action,
+                     Name => "number")
+                  else "0");
+         begin
+            Buffer := Buffer & Number & ")";
+         end;
       end Add_Event_Entry;
 
       ----------------------------------------------------------------------
@@ -219,16 +232,16 @@ is
             end loop;
 
             Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
-              & " others => Null_Event),";
+              & " others => Null_Source_Event),";
          end if;
 
          Buffer := Buffer & ASCII.LF
            & Indent & "    Source_Events => ";
 
          if Src_Ev_Count = 0 then
-            Buffer := Buffer & "Null_Event_Table,";
+            Buffer := Buffer & "Null_Source_Event_Table,";
          else
-            Buffer := Buffer & "Event_Table_Type'(" & ASCII.LF;
+            Buffer := Buffer & "Source_Event_Table_Type'(" & ASCII.LF;
             for I in 0 .. Src_Ev_Count - 1 loop
                Add_Event_Entry (Event => DOM.Core.Nodes.Item
                                 (List  => Src_Events,
@@ -240,7 +253,7 @@ is
 
             if Src_Ev_Count /= 32 then
                Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
-                 & " others => Null_Event";
+                 & " others => Null_Source_Event";
             end if;
             Buffer := Buffer & "),";
          end if;
@@ -249,9 +262,9 @@ is
            & Indent & "    Target_Events => ";
 
          if Target_Ev_Count = 0 then
-            Buffer := Buffer & "Null_Event_Action_Table)";
+            Buffer := Buffer & "Null_Target_Event_Table)";
          else
-            Buffer := Buffer & "Event_Action_Table_Type'(" & ASCII.LF;
+            Buffer := Buffer & "Target_Event_Table_Type'(" & ASCII.LF;
             for I in 0 .. Target_Ev_Count - 1 loop
                Add_Event_Action_Entry (Event => DOM.Core.Nodes.Item
                                        (List  => Target_Events,
@@ -263,7 +276,7 @@ is
 
             if Target_Ev_Count /= 32 then
                Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
-                 & " others => Null_Event_Action";
+                 & " others => Null_Target_Event";
             end if;
             Buffer := Buffer & "))";
          end if;

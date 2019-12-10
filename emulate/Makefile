@@ -32,6 +32,8 @@ QEMU_OPTS = \
 	-netdev $(QEMU_NETDEV_OPTS) \
 	-device qemu-xhci,id=xhci \
 	-device usb-tablet,bus=xhci.0 \
+	-device rtl8139,netdev=net1 \
+	-netdev user,id=net1,net=192.168.253.0/24,dhcpstart=192.168.253.100 \
 	-curses
 
 iso: $(ISOFILE)

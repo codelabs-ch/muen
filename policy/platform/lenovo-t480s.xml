@@ -27,6 +27,9 @@
     <device physical="network_controller_1"/>
     <device physical="non-volatile_memory_controller_1"/>
    </class>
+   <class name="additional_nics">
+    <device physical="network_controller_1"/>
+   </class>
   </classes>
  </mappings>
 </platform>

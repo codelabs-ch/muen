@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2016  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,28 +16,30 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK.KC;
-with SK.Debug_Lock;
-with SK.Dumper;
+with SK.Constants;
+with SK.Locks;
 
-package body SK.Subjects.Debug
-with
-   SPARK_Mode => Off
+package body SK.Debug_Lock
 is
 
-   package D is new Dumper
-     (New_Line   => KC.New_Line,
-      Put_Line   => KC.Put_Line,
-      Put_String => KC.Put_String);
+   Global_Debug_Lock : Locks.Spin_Lock_Type
+   with
+      Linker_Section => Constants.Global_Data_Section;
 
    -------------------------------------------------------------------------
 
-   procedure Print_State (S : Crash_Audit_Types.Subj_Context_Type)
+   procedure Acquire
    is
    begin
-      Debug_Lock.Acquire;
-      D.Output_Subj_State (Context => S);
-      Debug_Lock.Release;
-   end Print_State;
+      Locks.Acquire (Lock => Global_Debug_Lock);
+   end Acquire;
 
-end SK.Subjects.Debug;
+   -------------------------------------------------------------------------
+
+   procedure Release
+   is
+   begin
+      Locks.Release (Lock => Global_Debug_Lock);
+   end Release;
+
+end SK.Debug_Lock;

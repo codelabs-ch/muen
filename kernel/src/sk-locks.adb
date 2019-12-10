@@ -18,48 +18,41 @@
 
 with System.Machine_Code;
 
-with SK.Constants;
+with SK.CPU;
 
 package body SK.Locks
-with
-   SPARK_Mode => Off
 is
-
-   type Spin_Lock_Type is record
-      Locked : SK.Word32;
-   end record;
-
-   Global_Lock : Spin_Lock_Type := (Locked => 0)
-   with
-      Linker_Section => Constants.Global_Data_Section;
 
    -------------------------------------------------------------------------
 
-   procedure Acquire
+   procedure Acquire (Lock : in out Spin_Lock_Type)
+   with SPARK_Mode => Off
    is
-      Result : SK.Word32;
+      Previous_State : Lock_State_Type;
    begin
       loop
          System.Machine_Code.Asm
-           (Template => "mov $1, %%eax; lock xchgl %%eax, (%%rdx); pause",
-            Outputs  => (SK.Word32'Asm_Output ("=a", Result)),
+           (Template => "mov $1, %%eax; lock xchgl %%eax, (%%rdx)",
+            Outputs  => (Lock_State_Type'Asm_Output ("=a", Previous_State)),
             Inputs   => (System.Address'Asm_Input
-                         ("d", Global_Lock.Locked'Address)));
+                         ("d", Lock.State'Address)));
 
-         if Result = 0 then
+         if Previous_State = Free then
             exit;
          end if;
+         SK.CPU.Pause;
       end loop;
    end Acquire;
 
    -------------------------------------------------------------------------
 
-   procedure Release
+   procedure Release (Lock : in out Spin_Lock_Type)
+   with SPARK_Mode => Off
    is
    begin
       System.Machine_Code.Asm
         (Template => "movl $0, %0",
-         Outputs  => (SK.Word32'Asm_Output ("=m", Global_Lock.Locked)),
+         Outputs  => (Lock_State_Type'Asm_Output ("=m", Lock.State)),
          Volatile => True);
    end Release;
 

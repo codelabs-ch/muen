@@ -14,6 +14,9 @@ is
 
    type RTE_Index_Type is range 1 .. 23;
 
+   subtype Mask_IRQ_Type is Dst_Vector_Range
+     with Static_Predicate => Mask_IRQ_Type in 1 .. 0;
+
    type IRQ_Route_Type is record
       APIC_ID   : APIC_ID_Type;
       RTE_Idx   : RTE_Index_Type;
@@ -21,7 +24,11 @@ is
       IRQ_Mode  : IRQ_Mode_Type;
       IRQ_Level : IRQ_Level_Type;
       Vector    : Remapped_Vector_Type;
-   end record;
+   end record
+   with
+      Dynamic_Predicate =>
+         (if IRQ_Route_Type.IRQ_Mode = Level then
+             IRQ_Route_Type.Vector in Mask_IRQ_Type);
 
    Null_IRQ_Route : constant IRQ_Route_Type := IRQ_Route_Type'
      (APIC_ID   => 0,

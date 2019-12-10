@@ -17,7 +17,7 @@
 --
 
 with SK.KC;
-with SK.Locks;
+with SK.Debug_Lock;
 with SK.CPU_Info;
 with SK.Strings;
 with SK.Dumper;
@@ -51,7 +51,7 @@ is
       VTd_IRT_Idx : IRT_Idx_Type := Invalid_IRT_Idx)
    is
    begin
-      Locks.Acquire;
+      Debug_Lock.Acquire;
       KC.Put_String
         (Item => "I/O APIC RTE " & Img (Byte (RTE_Idx)) & ": Routing IRQ "
          & Img (IRQ) & " as vector " & Img (Vector) & " to CPU with APIC ID "
@@ -63,7 +63,7 @@ is
       end if;
 
       KC.New_Line;
-      Locks.Release;
+      Debug_Lock.Release;
    end Print_IRQ_Routing;
 
    -------------------------------------------------------------------------
@@ -79,11 +79,11 @@ is
      (Context : Crash_Audit_Types.Exception_Context_Type)
    is
    begin
-      Locks.Acquire;
+      Debug_Lock.Acquire;
       D.Output_ISR_State
         (Context => Context,
          APIC_ID => Byte (CPU_Info.APIC_ID));
-      Locks.Release;
+      Debug_Lock.Release;
    end Print_ISR_State;
 
    -------------------------------------------------------------------------
@@ -91,9 +91,9 @@ is
    procedure Print_MCE_State (Context : Crash_Audit_Types.MCE_Context_Type)
    is
    begin
-      Locks.Acquire;
+      Debug_Lock.Acquire;
       D.Output_MCE_State (Context => Context);
-      Locks.Release;
+      Debug_Lock.Release;
    end Print_MCE_State;
 
    -------------------------------------------------------------------------
@@ -101,9 +101,9 @@ is
    procedure Print_Message (Msg : String)
    is
    begin
-      Locks.Acquire;
+      Debug_Lock.Acquire;
       KC.Put_Line (Item => Msg);
-      Locks.Release;
+      Debug_Lock.Release;
    end Print_Message;
 
    -------------------------------------------------------------------------
@@ -113,10 +113,10 @@ is
       Event_Nr        : Word64)
    is
    begin
-      Locks.Acquire;
+      Debug_Lock.Acquire;
       KC.Put_Line (Item => "Ignoring spurious event " & Img (Event_Nr)
                    & " from subject 0x" & Img (Byte (Current_Subject)));
-      Locks.Release;
+      Debug_Lock.Release;
    end Print_Spurious_Event;
 
    -------------------------------------------------------------------------
@@ -126,10 +126,10 @@ is
       Context : Crash_Audit_Types.VTx_Context_Type)
    is
    begin
-      Locks.Acquire;
+      Debug_Lock.Acquire;
       D.Output_VMX_Error (Reason  => Reason,
                           Context => Context);
-      Locks.Release;
+      Debug_Lock.Release;
    end Print_VMX_Error;
 
 end SK.Dump;

@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 
 with DOM.Core.Nodes;
@@ -29,7 +30,11 @@ with Paging.Layouts;
 with Alloc.Map;
 
 with Mutools.Constants;
+with Mutools.Types;
 with Muxml.Utils;
+with Mucfgcheck.Events;
+
+with Expanders.Utils;
 
 package body Expanders.XML_Utils
 is
@@ -601,5 +606,33 @@ is
 
       return True;
    end Is_Free_To_Map;
+
+   -------------------------------------------------------------------------
+
+   function Next_Free_Source_Event_ID (Group : DOM.Core.Node) return String
+   is
+      Group_Str : constant String
+        := DOM.Core.Elements.Get_Attribute (Elem => Group,
+                                            Name => "name");
+      Group_Type : constant Mutools.Types.Event_Group_Type
+        := Mutools.Types.Event_Group_Type'Value (Group_Str);
+      Events : constant DOM.Core.Node_List := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Group,
+         XPath => "*[@id]");
+      Alloc : Utils.Number_Allocator_Type
+        (Range_Start => 0,
+         Range_End   => Mucfgcheck.Events.Get_Max_ID (Group => Group_Type));
+
+      Result : Natural;
+   begin
+      Utils.Reserve_Numbers (Allocator => Alloc,
+                             Nodes     => Events,
+                             Attribute => "id");
+      Utils.Allocate (Allocator => Alloc,
+                      Number    => Result);
+
+      return Ada.Strings.Fixed.Trim (Source => Result'Img,
+                                     Side   => Ada.Strings.Left);
+   end Next_Free_Source_Event_ID;
 
 end Expanders.XML_Utils;

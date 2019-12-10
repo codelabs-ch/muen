@@ -12,7 +12,7 @@ LOCK=/tmp/muen-integ.running
 
 : ${QEMU_SSH_PORT=5555}
 
-: ${QEMU_SSH_ATTEMPTS=50}
+: ${QEMU_SSH_ATTEMPTS=100}
 
 # ssh configuration
 LNX2_LOGIN=lnx2

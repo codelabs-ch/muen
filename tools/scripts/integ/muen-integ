@@ -129,16 +129,40 @@ hw_targetlogdir()
 	echo $LOGDIR/$system-$hardware
 }
 
+execute_n()
+{
+	local cmd=$1
+	local times=$2
+	local sleep=$3
+	local status=1
+
+	log "Executing command '$cmd' [$times tries, sleep $sleep sec(s)]"
+
+	for i in `seq $times`; do
+		$cmd >> $LOGFILE 2>&1
+		status=$?
+		if [ $status -eq 0 ]; then
+			return
+		else
+			log "Try $i of $times failed, retry in $sleep second(s)"
+		fi
+		sleep $sleep
+	done
+
+	log "! Command '$cmd' failed (status $status)"
+	failed
+}
+
 ssh_exec()
 {
-	lnx1_login=$1
-	ssh_port=$2
-	connect_attempts=$3
-	script=$4
+	local lnx1_login=$1
+	local ssh_port=$2
+	local connect_attempts=$3
+	local script=$4
 
-	execute "$SSH -p $ssh_port -o ConnectionAttempts=$connect_attempts -o ConnectTimeout=2 -i $SSH_KEY $lnx1_login mkdir -p /usr/local/bin"
+	execute_n "$SSH -p $ssh_port -i $SSH_KEY $lnx1_login mkdir -p /usr/local/bin" $connect_attempts 1
 	execute "$SCP -P $ssh_port -i $SSH_KEY $SCRIPTDIR/target_scripts/* $lnx1_login:/usr/local/bin"
-	execute "$SSH -p $ssh_port -o ConnectionAttempts=$connect_attempts -o ConnectTimeout=2 -i $SSH_KEY $lnx1_login $SSH $LNX2_LOGIN mkdir -p /usr/local/bin"
+	execute_n "$SSH -p $ssh_port -i $SSH_KEY $lnx1_login $SSH $LNX2_LOGIN mkdir -p /usr/local/bin" $connect_attempts 1
 	execute "$SSH -p $ssh_port -i $SSH_KEY $lnx1_login $SCP /usr/local/bin $LNX2_LOGIN:/usr/local"
 	execute "$SSH -p $ssh_port -i $SSH_KEY $lnx1_login $script"
 }

@@ -623,6 +623,9 @@ is
          when Skp.Events.System_Panic =>
             Handle_System_Panic (Subject => Subject);
          when Skp.Events.Unmask_Irq      =>
+            --D @Item List => impl_handle_source_event_actions, Priority => 0
+            --D If the designated action is unmask IRQ, then use I/O APIC to
+            --D unmask the IRQ designated by event's IRQ number.
             IO_Apic.Unmask_IRQ
               (RTE_Index => Skp.Interrupts.RTE_Index_Type (Event.IRQ_Number));
       end case;
@@ -760,7 +763,6 @@ is
          --D switching to the destination of the IRQ. The interrupt will be
          --D delivered whenever the target subject is executed according to the
          --D scheduling plan.
-
          Vect_Nr := Skp.Interrupts.Remapped_Vector_Type (Vector);
          Route   := Skp.Interrupts.Vector_Routing (Vect_Nr);
          if Route.Subject in Skp.Global_Subject_ID_Type then
@@ -769,6 +771,11 @@ is
                Vector  => SK.Byte (Route.Vector));
          end if;
 
+         --D @Text Section => impl_handle_irq, Priority => 0
+         --D \paragraph{}
+         --D If the interrupt vector designates a IRQ that must be masked,
+         --D instruct the I/O APIC to mask the corresponding redirection
+         --D table entry.
          if Vect_Nr in Skp.Interrupts.Mask_IRQ_Type then
             IO_Apic.Mask_IRQ
               (RTE_Index => Skp.Interrupts.RTE_Index_Type (Vector - 32));

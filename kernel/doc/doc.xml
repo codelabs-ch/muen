@@ -375,12 +375,22 @@
      kernel uses the {Vector\_Routing} array at runtime to determine the
      destination subject that constitutes the final recipient of the interrupt.
 
+     The IRQ trigger mode is also designated by the \texttt{Skp.Interrupts}
+     package. Masking of the IRQ is done by the kernel for level-triggered IRQs.
+     A subject can unmask the IRQ by triggering an event that has the
+     corresponding unmask IRQ action specified in the policy.
+
      Each subject has a bitmap of 256 pending interrupts, each entry
      corresponding to the vector number of the interrupt. An interrupt is
      forwarded to a subject by atomically setting the correct bit in the data
      structure associated with the destination subject. Once execution of a
      subject is resumed, the kernel checks the pending interrupts and injects
      it, which completes the delivery of the interrupt.
+
+     Subjects can disable interrupt injection by setting or clearing the
+     \emph{Interrupt enable flag} (RFLAGS.IF). As long as the flag is clear, the
+     kernel will not inject any pending interrupts. A subject can use the
+     \texttt{cli} and \texttt{sti} instructions to clear/set the flag.
 
      To simplify the kernel control flow, the VMX External-interrupt exiting
      feature is used, see Intel SDM Vol. 3C, "24.6.1 Pin-Based VM-Execution
@@ -389,6 +399,13 @@
      same kernel entry point as any other VM exit is invoked by the hardware.
      The appropriate VM exit reason set by the hardware designates that the
      cause was an external interrupt and the handler routine can be executed.
+     The "Acknowledge Interrupt on Exit" VM-Exit control is leveraged, so the
+     hardware acknowledges the interrupt controller and stores the interrupt
+     vector in the VM-exit interruption-information field, see Intel SDM Vol.
+     3C, "27.7.1 VM-Exit controls".
+
+     Thus, interrupt handling is implemented as specified in Intel SDM Vol. 3C,
+     "33.3.3.3 Guest Assigned I/O Devices".
 
      Spurious or invalid interrupts that have no valid interrupt to subject
      mapping are ignored by the kernel.
@@ -699,8 +716,10 @@
     core. The I/O APIC and its interrupt routing table is programmed by the BSP
     according to the system policy.
 
-    During normal operation, only the APIC is accessed to acknowledge
-    End-Of-Interrupt (EOI) to unblock processing of other interrupts.
+    During normal operation, the APIC is accessed to acknowledge
+    End-Of-Interrupt (EOI) to unblock processing of other interrupts. In case of
+    level-triggered IRQs, the I/O APIC is used to mask and unmask the
+    corresponding redirection table entries.
 
     Enforcement that only the configured interrupts are raised is done by the
     IOMMU Interrupt Remapping, see section \ref{kernel_devs_iommu}

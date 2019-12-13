@@ -195,8 +195,8 @@ is
            := DOM.Core.Elements.Get_Attribute
              (Elem => Dev_Mem,
               Name => "physical");
-         Virtual_Addr  : constant Interfaces.Unsigned_32
-           := Interfaces.Unsigned_32'Value
+         Virtual_Addr  : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
              (DOM.Core.Elements.Get_Attribute
                 (Elem => Dev_Mem,
                  Name => "virtualAddress"));
@@ -213,8 +213,8 @@ is
              (Nodes     => Devices,
               Ref_Attr  => "name",
               Ref_Value => Phys_Dev_Name);
-         Mem_Size      : constant Interfaces.Unsigned_32
-           := Interfaces.Unsigned_32'Value
+         Mem_Size      : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
              (Muxml.Utils.Get_Attribute
                 (Doc   => Physical_Dev,
                  XPath => "memory[@name='" & Phys_Mem_Name & "']",
@@ -223,10 +223,20 @@ is
          Buffer := Buffer & Utils.Indent (N => 5)
            & "/* " & Log_Dev_Name & "->" & Log_Mem_Name & " */";
          Buffer := Buffer & ASCII.LF & Utils.Indent (N => 5);
-         Buffer := Buffer & Asl.DWordMemory
-           (Base_Address => Virtual_Addr,
-            Size         => Mem_Size,
-            Cacheable    => True) & ASCII.LF;
+
+         if Virtual_Addr > Interfaces.Unsigned_64
+           (Interfaces.Unsigned_32'Last)
+         then
+            Buffer := Buffer & Asl.QWordMemory
+              (Base_Address => Virtual_Addr,
+               Size         => Mem_Size,
+               Cacheable    => True) & ASCII.LF;
+         else
+            Buffer := Buffer & Asl.DWordMemory
+              (Base_Address => Interfaces.Unsigned_32 (Virtual_Addr),
+               Size         => Interfaces.Unsigned_32 (Mem_Size),
+               Cacheable    => True) & ASCII.LF;
+         end if;
       end Add_Device_Memory_Resources;
 
       ----------------------------------------------------------------------
@@ -428,7 +438,7 @@ is
             Buffer := Buffer & Utils.Indent (N => 4)
               & Asl.DWordMemory
               (Base_Address => Interfaces.Unsigned_32 (Base_Addr),
-               Size         => Interfaces.Unsigned_32 (PCI_Cfg_Space_Size),
+               Size         => PCI_Cfg_Space_Size,
                Cacheable    => False);
             Buffer := Buffer & ASCII.LF;
          end if;

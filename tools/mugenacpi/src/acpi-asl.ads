@@ -27,6 +27,14 @@ is
       Cacheable    : Boolean)
       return String;
 
+   --  Returns a QWord Memory Resource Descriptor string with the given
+   --  parameters, see ACPI Specification 6.1, section 19.6.104.
+   function QWordMemory
+     (Base_Address : Interfaces.Unsigned_64;
+      Size         : Interfaces.Unsigned_64;
+      Cacheable    : Boolean)
+      return String;
+
    --  Returns an IO Resource Descriptor string with the given parameters, see
    --  ACPI Specification 6.1, section 19.6.63.
    function IO

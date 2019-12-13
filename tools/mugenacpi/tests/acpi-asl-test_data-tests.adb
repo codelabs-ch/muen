@@ -61,6 +61,37 @@ package body Acpi.Asl.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_QWordMemory (Gnattest_T : in out Test);
+   procedure Test_QWordMemory_35e7b8 (Gnattest_T : in out Test) renames Test_QWordMemory;
+--  id:2.2/35e7b8d60b696031/QWordMemory/1/0/
+   procedure Test_QWordMemory (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Ref_1 : constant String := "QWordMemory (ResourceProducer, PosDecode, "
+        & "MinFixed, MaxFixed, Cacheable, ReadWrite, 0x0, 0x1d2520000, "
+        & "0x3d251ffff, 0x0, 0x200000000,,,, AddressRangeMemory, TypeStatic)";
+      Ref_2 : constant String := "QWordMemory (ResourceProducer, PosDecode, "
+        & "MinFixed, MaxFixed, NonCacheable, ReadWrite, 0x0, 0x3f8000000, "
+        & "0x5f8ffffff, 0x0, 0x201000000,,,, AddressRangeMemory, TypeStatic)";
+   begin
+      Assert (Condition => QWordMemory
+              (Base_Address => 16#0001_d252_0000#,
+               Size         => 16#0002_0000_0000#,
+               Cacheable    => True) = Ref_1,
+              Message   => "QWordMemory string mismatch (1)");
+      Assert (Condition => QWordMemory
+              (Base_Address => 16#0003_f800_0000#,
+               Size         => 16#0002_0100_0000#,
+               Cacheable    => False) = Ref_2,
+              Message   => "QWordMemory string mismatch (2)");
+--  begin read only
+   end Test_QWordMemory;
+--  end read only
+
+
+--  begin read only
    procedure Test_IO (Gnattest_T : in out Test);
    procedure Test_IO_93fe76 (Gnattest_T : in out Test) renames Test_IO;
 --  id:2.2/93fe76d2e3938c77/IO/1/0/

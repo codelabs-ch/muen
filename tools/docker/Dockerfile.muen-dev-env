@@ -53,6 +53,7 @@ RUN apt-get update && \
 		openssh-client \
 		patch \
 		picocom \
+		pkg-config \
 		python \
 		python-lxml \
 		python-colorlog \

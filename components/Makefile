@@ -27,7 +27,7 @@ COMPONENTS_PROOF := \
 	sm \
 	time
 
-# all components inkl. Linux, overridable by user
+# all components incl. Linux, overridable by user
 COMPONENTS ?= \
 	$(COMPONENTS_BUILD) \
 	linux

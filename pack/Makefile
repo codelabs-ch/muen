@@ -29,11 +29,11 @@ $(OBJ_DIR)/.diffok: $(IMG_PACK) $(IMG_TAU0)
 	@$(E) diff "Diffing images" "diff $(IMG_PACK) $(IMG_TAU0)"
 	@touch $@
 
-$(IMG_PACK): $(POLICY_B_HASH)
+$(IMG_PACK): $(POLICY_B_HASH) $(MUPACK)
 	@$(E) pack "Generate image (packer)" \
 		"$(MUPACK) -i $(POLICY_OBJ_DIR) -o $(OBJ_DIR) -n $(IMG_NAME_PACK) $(POLICY_B_HASH)"
 
-$(IMG_TAU0): $(POLICY_B_CMDS)
+$(IMG_TAU0): $(POLICY_B_CMDS) $(TAU0_STATIC)
 	@$(E) pack "Generate image (tau0)" \
 		"$(TAU0_STATIC) -i $(POLICY_OBJ_DIR) -o $(OBJ_DIR) -n $(IMG_NAME_TAU0) $(POLICY_B_CMDS)"
 

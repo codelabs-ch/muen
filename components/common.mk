@@ -4,7 +4,7 @@ all: $(ALL)
 
 include ../../Makeconf
 include ../../Makespark
-include ../cspecs.mk
+include ../cspecs_spark.mk
 include ../proofs.mk
 
 STACK_SIZE = $(COMPONENT_STACK_SIZE)

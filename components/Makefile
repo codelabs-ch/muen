@@ -32,14 +32,16 @@ COMPONENTS ?= \
 	$(COMPONENTS_SPARK) \
 	linux
 
-COMPS_BUILD_SPARK := $(filter $(COMPONENTS_SPARK),$(COMPONENTS))
-COMPS_PROOF       := $(filter $(COMPONENTS_PROOF),$(COMPONENTS))
+COMPS_BUILD_SPARK    := $(filter $(COMPONENTS_SPARK),$(COMPONENTS))
+COMPS_BUILD_NONSPARK := $(filter-out $(COMPONENTS_SPARK),$(COMPONENTS))
+COMPS_PROOF          := $(filter $(COMPONENTS_PROOF),$(COMPONENTS))
 
 TESTS = libmutime libmusinfo
 
 INST_TARGET = $(POLICY_OBJ_DIR)/$(@:install-%=%)
 
 COMPONENTS_PREPARE = $(COMPONENTS:%=.prepare-%)
+COMPONENTS_BUILD   = $(COMPS_BUILD_NONSPARK:%=build-%)
 COMPONENTS_CHECK   = $(COMPONENTS:%=check-%)
 COMPONENTS_INSTALL = $(COMPONENTS:%=install-%)
 COMPONENTS_CLEAN   = $(COMPONENTS:%=clean-%)
@@ -73,7 +75,11 @@ $(OBJ_DIR)/build.gpr:
 tau0_static:
 	$(MAKE) -C tau0-static
 
-build: $(OBJ_DIR)/build.gpr $(COMPONENTS_PREPARE)
+build: build_spark $(COMPONENTS_BUILD)
+$(COMPONENTS_BUILD): $(COMPONENTS_PREPARE)
+	$(MAKE) -C $(@:build-%=%) build
+
+build_spark: $(OBJ_DIR)/build.gpr $(COMPONENTS_PREPARE)
 	@$(E) components "Build SPARK (debug)" \
 		"gprbuild $(BUILD_OPTS) -P$< -Xbuild=debug -Xstacksize=$(STACK_SIZE) $(PROOF_OPTS)" \
 		$(LOG)

@@ -1,8 +1,8 @@
 include ../Makeconf
 include proofs.mk
 
-# components to be built
-COMPONENTS_BUILD := \
+# SPARK components to be built
+COMPONENTS_SPARK := \
 	libmuchannel \
 	libmudm \
 	libmutime \
@@ -29,11 +29,11 @@ COMPONENTS_PROOF := \
 
 # all components incl. Linux, overridable by user
 COMPONENTS ?= \
-	$(COMPONENTS_BUILD) \
+	$(COMPONENTS_SPARK) \
 	linux
 
-COMPS_BUILD := $(filter $(COMPONENTS_BUILD),$(COMPONENTS))
-COMPS_PROOF := $(filter $(COMPONENTS_PROOF),$(COMPONENTS))
+COMPS_BUILD_SPARK := $(filter $(COMPONENTS_SPARK),$(COMPONENTS))
+COMPS_PROOF       := $(filter $(COMPONENTS_PROOF),$(COMPONENTS))
 
 TESTS = libmutime libmusinfo
 
@@ -60,13 +60,13 @@ endif
 endif
 
 $(OBJ_DIR)/build.gpr:
-	@echo 'aggregate project Build extends "component_spark.gpr" is' > $@
-	@echo '   for Project_Files use ('                              >> $@
-	@$(foreach c,$(COMPS_BUILD),echo -n '      "../$(c)/$(c).gpr"'  >> $@; \
-		if [ $(c) != $(lastword $(COMPS_BUILD)) ]; then echo ','    >> $@; \
+	@echo 'aggregate project Build extends "component_spark.gpr" is'       > $@
+	@echo '   for Project_Files use ('                                    >> $@
+	@$(foreach c,$(COMPS_BUILD_SPARK),echo -n '      "../$(c)/$(c).gpr"'  >> $@; \
+		if [ $(c) != $(lastword $(COMPS_BUILD_SPARK)) ]; then echo ','    >> $@; \
 			else echo '' >> $@; fi;)
-	@echo '   );'                                                   >> $@
-	@echo 'end Build;'                                              >> $@
+	@echo '   );'                                                         >> $@
+	@echo 'end Build;'                                                    >> $@
 
 .PHONY: $(OBJ_DIR)/build.gpr
 

@@ -10,7 +10,7 @@ SITE           ?= https://github.com/codelabs-ch/buildroot-muen/raw/$(INITRAMFS_
 
 LOG = $(OBJ_DIR)/log.obj
 
-all: $(OBJ_DIR)/.built $(INITRAMFS)
+all: build $(INITRAMFS)
 
 $(OBJ_DIR)/.built: src/.config | $(OBJ_DIR)
 	@$(E) linux Oldconfig 'MAKEFLAGS="$(filter-out s,$(MAKEFLAGS))" $(MAKE) LOCALVERSION= oldconfig -C src' $(LOG)
@@ -48,6 +48,8 @@ $(POLICY_OBJ_DIR)/$(INITRAMFS_BASE): $(INITRAMFS) | $(POLICY_OBJ_DIR)
 	@$(E) linux "Install initramfs" "cp $< $@" $(LOG)
 
 prepare:
+
+build: $(OBJ_DIR)/.built
 
 check:
 

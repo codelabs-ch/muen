@@ -1,13 +1,9 @@
 <component name="linux" profile="linux">
- <requires>
-  <memory>
-   <memory logical="lowmem" size="16#0008_0000#" virtualAddress="16#0002_0000#" writable="true" executable="true"/>
-   <memory logical="ram" size="16#1000_0000#" virtualAddress="16#0100_0000#" writable="true" executable="true"/>
-  </memory>
- </requires>
- <provides>
-  <memory executable="true" logical="binary" size="16#0056_0000#" type="subject_binary" virtualAddress="16#0040_0000#" writable="true">
-   <file filename="bzImage" offset="none"/>
-  </memory>
- </provides>
+  <requires>
+    <memory>
+      <memory logical="lowmem" size="16#0008_0000#" virtualAddress="16#0002_0000#" writable="true" executable="true"/>
+      <memory logical="ram" size="16#1000_0000#" virtualAddress="16#0100_0000#" writable="true" executable="true"/>
+    </memory>
+  </requires>
+  <provides/>
 </component>

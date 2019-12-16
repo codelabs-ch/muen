@@ -10,6 +10,7 @@ INITRAMFS      ?= $(OBJ_DIR)/$(INITRAMFS_BASE)
 SITE           ?= https://github.com/codelabs-ch/buildroot-muen/raw/$(INITRAMFS_REV)/
 
 SRC_BZIMAGE = src/arch/x86/boot/bzImage
+GENCSPEC    = misc/linux-muen-gencspec.py
 
 LOG = $(OBJ_DIR)/log.obj
 
@@ -44,6 +45,9 @@ $(POLICY_OBJ_DIR) $(OBJ_DIR):
 COMPONENT = linux
 include ../cspecs.mk
 
+$(GEN_DIR)/$(COMPONENT).xml: spec/$(COMPONENT).xml $(OBJ_DIR)/bzImage | $(GEN_DIR)
+	@$(E) linux "Generate XML spec" "$(GENCSPEC) $(OBJ_DIR)/bzImage $< --out_spec $@" $(LOG)
+
 $(POLICY_OBJ_DIR)/linux: $(POLICY_OBJ_DIR)/bzImage install_initramfs
 $(POLICY_OBJ_DIR)/bzImage: $(OBJ_DIR)/bzImage $(CSPEC_INSTALL) | $(POLICY_OBJ_DIR)
 	@$(E) linux "Install bzImage" "cp $< $@" $(LOG)
@@ -54,10 +58,10 @@ $(POLICY_OBJ_DIR)/$(INITRAMFS_BASE): $(INITRAMFS) | $(POLICY_OBJ_DIR)
 
 prepare:
 
-build: $(OBJ_DIR)/bzImage
+build: $(GEN_DIR)/$(COMPONENT).xml
 
 check:
 
 clean:
-	rm -rf $(OBJ_DIR)
+	rm -rf $(OBJ_DIR) $(GEN_DIR)
 	$(MAKE) clean -C src

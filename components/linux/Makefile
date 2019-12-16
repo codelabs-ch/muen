@@ -8,14 +8,18 @@ INITRAMFS_REV  := d8c9f20b2a25b99980903ffab2412ebdeac590d9
 INITRAMFS      ?= $(OBJ_DIR)/$(INITRAMFS_BASE)
 SITE           ?= https://github.com/codelabs-ch/buildroot-muen/raw/$(INITRAMFS_REV)/
 
+SRC_BZIMAGE = src/arch/x86/boot/bzImage
+
 LOG = $(OBJ_DIR)/log.obj
 
 all: build $(INITRAMFS)
 
-$(OBJ_DIR)/.built: src/.config | $(OBJ_DIR)
+$(SRC_BZIMAGE): src/.config
 	@$(E) linux Oldconfig 'MAKEFLAGS="$(filter-out s,$(MAKEFLAGS))" $(MAKE) LOCALVERSION= oldconfig -C src' $(LOG)
 	@$(E) linux Build 'MAKEFLAGS="$(filter-out s,$(MAKEFLAGS))" $(MAKE) LOCALVERSION= -C src' $(LOG)
-	@touch $@
+
+$(OBJ_DIR)/bzImage: $(SRC_BZIMAGE) | $(OBJ_DIR)
+	@$(E) linux "Patch" "$(MULNXBZPATCH) $< $@" $(LOG)
 
 install_mods:
 	make LOCALVERSION= -j$(NUM_CPUS) -C src modules
@@ -40,8 +44,8 @@ COMPONENT = linux
 include ../cspecs.mk
 
 $(POLICY_OBJ_DIR)/linux: $(POLICY_OBJ_DIR)/bzImage install_initramfs
-$(POLICY_OBJ_DIR)/bzImage: $(OBJ_DIR)/.built $(CSPEC_INSTALL) | $(POLICY_OBJ_DIR)
-	@$(E) linux "Patch and install" "$(MULNXBZPATCH) src/arch/x86/boot/bzImage $@" $(LOG)
+$(POLICY_OBJ_DIR)/bzImage: $(OBJ_DIR)/bzImage $(CSPEC_INSTALL) | $(POLICY_OBJ_DIR)
+	@$(E) linux "Install bzImage" "cp $< $@" $(LOG)
 
 install_initramfs: $(POLICY_OBJ_DIR)/$(INITRAMFS_BASE) $(INITRAMFS)
 $(POLICY_OBJ_DIR)/$(INITRAMFS_BASE): $(INITRAMFS) | $(POLICY_OBJ_DIR)
@@ -49,7 +53,7 @@ $(POLICY_OBJ_DIR)/$(INITRAMFS_BASE): $(INITRAMFS) | $(POLICY_OBJ_DIR)
 
 prepare:
 
-build: $(OBJ_DIR)/.built
+build: $(OBJ_DIR)/bzImage
 
 check:
 

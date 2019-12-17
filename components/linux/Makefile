@@ -11,6 +11,14 @@ SITE           ?= https://github.com/codelabs-ch/buildroot-muen/raw/$(INITRAMFS_
 
 SRC_BZIMAGE = src/arch/x86/boot/bzImage
 GENCSPEC    = misc/linux-muen-gencspec.py
+EXTRA_MODS  = $(notdir $(wildcard modules/*))
+
+MODS_BUILD   = $(EXTRA_MODS:%=$(OBJ_DIR)/.%-build)
+MODS_INSTALL = $(EXTRA_MODS:%=$(OBJ_DIR)/.%-install)
+MODS_CLEAN   = $(EXTRA_MODS:%=clean-%)
+
+INSTALL_MOD_OPTS  = "INSTALL_MOD_STRIP=1"
+INSTALL_MOD_OPTS += "INSTALL_MOD_PATH=$(OBJ_DIR)"
 
 LINUX_FLAGS  = LOCALVERSION=
 LINUX_FLAGS += MAKEFLAGS="$(filter-out s,$(MAKEFLAGS))"
@@ -26,13 +34,33 @@ $(SRC_BZIMAGE): src/.config
 $(OBJ_DIR)/bzImage: $(SRC_BZIMAGE) | $(OBJ_DIR)
 	@$(E) linux "Patch" "$(MULNXBZPATCH) $< $@" $(LOG)
 
-build_mods: src/.config
+$(OBJ_DIR)/.mods-build: $(SRC_BZIMAGE) | $(OBJ_DIR)
 	@$(E) linux "Build kernel modules" \
 		'$(LINUX_FLAGS) $(MAKE) -C src modules' $(LOG)
+	@touch $@
 
-install_mods: build_mods | $(OBJ_DIR)
+$(MODS_BUILD): MOD_NAME = $(@:$(OBJ_DIR)/.%-build=%)
+$(MODS_BUILD): MOD_PATH = $(realpath modules/$(MOD_NAME))
+$(MODS_BUILD): $(OBJ_DIR)/.mods-build | $(OBJ_DIR)
+	@$(E) linux "Build module $(MOD_NAME)" \
+		'$(LINUX_FLAGS) $(MAKE) M=$(MOD_PATH) -C src modules' $(LOG)
+	@touch $@
+
+$(OBJ_DIR)/.mods-install: $(OBJ_DIR)/.mods-build | $(OBJ_DIR)
 	@$(E) linux "Install kernel modules" \
-		'$(LINUX_FLAGS) $(MAKE) INSTALL_MOD_STRIP=1 INSTALL_MOD_PATH=$(OBJ_DIR) -C src modules_install' $(LOG)
+		'$(LINUX_FLAGS) $(MAKE) $(INSTALL_MOD_OPTS) -C src modules_install' $(LOG)
+	@touch $@
+
+$(MODS_INSTALL): MOD_NAME = $(@:$(OBJ_DIR)/.%-install=%)
+$(MODS_INSTALL): MOD_PATH = $(realpath modules/$(MOD_NAME))
+$(MODS_INSTALL): $(OBJ_DIR)/.mods-install $(MODS_BUILD)
+	@$(E) linux "Install module $(MOD_NAME)" \
+		'$(LINUX_FLAGS) $(MAKE) M=$(MOD_PATH) $(INSTALL_MOD_OPTS) -C src modules_install' $(LOG)
+	@touch $@
+
+$(MODS_CLEAN): MOD_PATH = $(realpath modules/$(@:clean-%=%))
+$(MODS_CLEAN):
+	$(MAKE) M=$(MOD_PATH) -C src clean
 
 src/.config: $(LINUX_CONFIG)
 	cp $< $@
@@ -69,6 +97,6 @@ build: $(GEN_DIR)/$(COMPONENT).xml
 
 check:
 
-clean:
+clean: $(MODS_CLEAN)
 	rm -rf $(OBJ_DIR) $(GEN_DIR)
 	$(MAKE) clean -C src

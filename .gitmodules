@@ -17,3 +17,6 @@
 [submodule "components/linux/modules/muennet"]
 	path = components/linux/modules/muennet
 	url = ../muen/linux/muennet.git
+[submodule "components/linux/modules/muenblock"]
+	path = components/linux/modules/muenblock
+	url = ../muen/linux/muenblock.git

@@ -48,13 +48,13 @@ include ../cspecs.mk
 $(GEN_DIR)/$(COMPONENT).xml: spec/$(COMPONENT).xml $(OBJ_DIR)/bzImage | $(GEN_DIR)
 	@$(E) linux "Generate XML spec" "$(GENCSPEC) $(OBJ_DIR)/bzImage $< --out_spec $@" $(LOG)
 
-$(POLICY_OBJ_DIR)/linux: $(POLICY_OBJ_DIR)/bzImage install_initramfs
+$(POLICY_OBJ_DIR)/linux: $(POLICY_OBJ_DIR)/bzImage $(POLICY_OBJ_DIR)/$(INITRAMFS_BASE)
 $(POLICY_OBJ_DIR)/bzImage: $(OBJ_DIR)/bzImage $(CSPEC_INSTALL) | $(POLICY_OBJ_DIR)
 	@$(E) linux "Install bzImage" "cp $< $@" $(LOG)
-
-install_initramfs: $(POLICY_OBJ_DIR)/$(INITRAMFS_BASE) $(INITRAMFS)
 $(POLICY_OBJ_DIR)/$(INITRAMFS_BASE): $(INITRAMFS) | $(POLICY_OBJ_DIR)
 	@$(E) linux "Install initramfs" "cp $< $@" $(LOG)
+
+install_initramfs: $(POLICY_OBJ_DIR)/$(INITRAMFS_BASE)
 
 prepare:
 

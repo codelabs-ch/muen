@@ -12,20 +12,27 @@ SITE           ?= https://github.com/codelabs-ch/buildroot-muen/raw/$(INITRAMFS_
 SRC_BZIMAGE = src/arch/x86/boot/bzImage
 GENCSPEC    = misc/linux-muen-gencspec.py
 
+LINUX_FLAGS  = LOCALVERSION=
+LINUX_FLAGS += MAKEFLAGS="$(filter-out s,$(MAKEFLAGS))"
+
 LOG = $(OBJ_DIR)/log.obj
 
 all: build $(INITRAMFS)
 
 $(SRC_BZIMAGE): src/.config
-	@$(E) linux Oldconfig 'MAKEFLAGS="$(filter-out s,$(MAKEFLAGS))" $(MAKE) LOCALVERSION= oldconfig -C src' $(LOG)
-	@$(E) linux Build 'MAKEFLAGS="$(filter-out s,$(MAKEFLAGS))" $(MAKE) LOCALVERSION= -C src' $(LOG)
+	@$(E) linux Oldconfig '$(LINUX_FLAGS) $(MAKE) oldconfig -C src' $(LOG)
+	@$(E) linux Build '$(LINUX_FLAGS) $(MAKE) -C src' $(LOG)
 
 $(OBJ_DIR)/bzImage: $(SRC_BZIMAGE) | $(OBJ_DIR)
 	@$(E) linux "Patch" "$(MULNXBZPATCH) $< $@" $(LOG)
 
-install_mods:
-	make LOCALVERSION= -j$(NUM_CPUS) -C src modules
-	make LOCALVERSION= -j$(NUM_CPUS) INSTALL_MOD_STRIP=1 INSTALL_MOD_PATH=$(OBJ_DIR) -C src modules_install
+build_mods: src/.config
+	@$(E) linux "Build kernel modules" \
+		'$(LINUX_FLAGS) $(MAKE) -C src modules' $(LOG)
+
+install_mods: build_mods | $(OBJ_DIR)
+	@$(E) linux "Install kernel modules" \
+		'$(LINUX_FLAGS) $(MAKE) INSTALL_MOD_STRIP=1 INSTALL_MOD_PATH=$(OBJ_DIR) -C src modules_install' $(LOG)
 
 src/.config: $(LINUX_CONFIG)
 	cp $< $@

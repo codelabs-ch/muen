@@ -13,12 +13,14 @@ SRC_BZIMAGE = src/arch/x86/boot/bzImage
 GENCSPEC    = misc/linux-muen-gencspec.py
 EXTRA_MODS  = $(notdir $(wildcard modules/*))
 
-MODS_BUILD   = $(EXTRA_MODS:%=$(OBJ_DIR)/.%-build)
-MODS_INSTALL = $(EXTRA_MODS:%=$(OBJ_DIR)/.%-install)
-MODS_CLEAN   = $(EXTRA_MODS:%=clean-%)
+MODS_INITRAMFS = modules_$(INITRAMFS_BASE)
+MODS_BUILD     = $(EXTRA_MODS:%=$(OBJ_DIR)/.%-build)
+MODS_INSTALL   = $(EXTRA_MODS:%=$(OBJ_DIR)/.%-install)
+MODS_CLEAN     = $(EXTRA_MODS:%=clean-%)
+MODS_OBJ_DIR   = $(OBJ_DIR)/modules
 
 INSTALL_MOD_OPTS  = "INSTALL_MOD_STRIP=1"
-INSTALL_MOD_OPTS += "INSTALL_MOD_PATH=$(OBJ_DIR)"
+INSTALL_MOD_OPTS += "INSTALL_MOD_PATH=$(MODS_OBJ_DIR)"
 
 LINUX_FLAGS  = LOCALVERSION=
 LINUX_FLAGS += MAKEFLAGS="$(filter-out s,$(MAKEFLAGS))"
@@ -61,6 +63,10 @@ $(MODS_INSTALL): $(OBJ_DIR)/.mods-install $(MODS_BUILD)
 $(MODS_CLEAN): MOD_PATH = $(realpath modules/$(@:clean-%=%))
 $(MODS_CLEAN):
 	$(MAKE) M=$(MOD_PATH) -C src clean
+
+$(MODS_INITRAMFS): $(OBJ_DIR)/.mods-install $(MODS_INSTALL)
+	@$(E) linux "Generate $(MODS_INITRAMFS_BASE)" \
+		"cd $(MODS_OBJ_DIR) && find . | cpio -R +0:+0 -o -H newc --quiet | gzip -9 > $@" $(LOG)
 
 src/.config: $(LINUX_CONFIG)
 	cp $< $@

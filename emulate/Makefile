@@ -8,9 +8,6 @@ ISOPATH = $(CURDIR)/$(ISOFILE)
 IMAGE     ?= ../pack/obj/muen.img
 IMAGE_CSL ?= ../pack/obj/muen.img.cmds
 
-GRUB_MKRESCUE ?= $(CONTRIB_BUILD_DIR)/bin/grub-mkrescue
-GRUB_MODS     ?= $(CONTRIB_BUILD_DIR)/lib/grub/i386-pc
-
 QEMU             ?= qemu-system-x86_64
 QEMU_MEM         ?= 5120
 QEMU_SSH_PORT    ?= 5555
@@ -21,10 +18,20 @@ QEMU_NETDEV_OPTS := "$(QEMU_NETDEV_OPTS)dhcpstart=192.168.254.100,"
 QEMU_NETDEV_OPTS := "$(QEMU_NETDEV_OPTS)hostfwd=tcp::$(QEMU_SSH_PORT)-:22"
 
 ifneq ($(QEMU_NETDEV_EXTRA_OPTS),)
-	QEMU_NETDEV_OPTS := "$(QEMU_NETDEV_OPTS),$(QEMU_NETDEV_EXTRA_OPTS)"
+QEMU_NETDEV_OPTS := "$(QEMU_NETDEV_OPTS),$(QEMU_NETDEV_EXTRA_OPTS)"
 endif
 
-QEMU_OPTS = \
+ifeq ($(MUEN_EFI),)
+GRUB_MODS ?= $(CONTRIB_BUILD_DIR)/lib/grub/i386-pc
+QEMU_OPTS = -curses
+else
+GRUB_MODS ?= $(CONTRIB_BUILD_DIR)/lib/grub/x86_64-efi
+QEMU_OPTS = -bios /usr/share/ovmf/OVMF.fd
+endif
+
+GRUB_MKRESCUE ?= $(CONTRIB_BUILD_DIR)/bin/grub-mkrescue
+
+QEMU_OPTS += \
 	-drive file=$(ISOFILE),index=0,media=disk,format=raw \
 	-serial file:serial.out \
 	-machine q35,accel=kvm,kernel-irqchip=split \
@@ -38,8 +45,7 @@ QEMU_OPTS = \
 	-device qemu-xhci,id=xhci \
 	-device usb-tablet,bus=xhci.0 \
 	-device rtl8139,netdev=net1 \
-	-netdev user,id=net1,net=192.168.253.0/24,dhcpstart=192.168.253.100 \
-	-curses
+	-netdev user,id=net1,net=192.168.253.0/24,dhcpstart=192.168.253.100
 
 iso: $(ISOFILE)
 	@echo

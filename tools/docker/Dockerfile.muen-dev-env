@@ -49,11 +49,13 @@ RUN apt-get update && \
 		libc6-dev \
 		libcurl4-gnutls-dev \
 		libelf-dev \
+		libfreetype6-dev \
 		libiberty-dev \
 		libncurses-dev \
 		libssl-dev \
 		libxml2-utils \
 		make \
+		mtools \
 		openssh-client \
 		patch \
 		picocom \
@@ -70,6 +72,7 @@ RUN apt-get update && \
 		unzip \
 		vim \
 		wget \
+		xfonts-unifont \
 		xorriso \
 		xsltproc \
 		xz-utils \

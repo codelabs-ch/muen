@@ -13,11 +13,13 @@ SRC_BZIMAGE = src/arch/x86/boot/bzImage
 GENCSPEC    = misc/linux-muen-gencspec.py
 EXTRA_MODS  = $(notdir $(wildcard modules/*))
 
-MODS_INITRAMFS = modules_$(INITRAMFS_BASE)
-MODS_BUILD     = $(EXTRA_MODS:%=$(OBJ_DIR)/.%-build)
-MODS_INSTALL   = $(EXTRA_MODS:%=$(OBJ_DIR)/.%-install)
-MODS_CLEAN     = $(EXTRA_MODS:%=clean-%)
-MODS_OBJ_DIR   = $(OBJ_DIR)/modules
+MODS_BUILD   = $(EXTRA_MODS:%=$(OBJ_DIR)/.%-build)
+MODS_INSTALL = $(EXTRA_MODS:%=$(OBJ_DIR)/.%-install)
+MODS_CLEAN   = $(EXTRA_MODS:%=clean-%)
+MODS_OBJ_DIR = $(OBJ_DIR)/modules
+
+MODS_INITRAMFS_BASE = modules_$(INITRAMFS_BASE)
+MODS_INITRAMFS      = $(OBJ_DIR)/$(MODS_INITRAMFS_BASE)
 
 INSTALL_MOD_OPTS  = "INSTALL_MOD_STRIP=1"
 INSTALL_MOD_OPTS += "INSTALL_MOD_PATH=$(MODS_OBJ_DIR)"
@@ -86,8 +88,10 @@ $(POLICY_OBJ_DIR) $(OBJ_DIR):
 COMPONENT = linux
 include ../cspecs.mk
 
-$(GEN_DIR)/$(COMPONENT).xml: spec/$(COMPONENT).xml $(OBJ_DIR)/bzImage | $(GEN_DIR)
-	@$(E) linux "Generate XML spec" "$(GENCSPEC) $(OBJ_DIR)/bzImage $< --out_spec $@" $(LOG)
+$(GEN_DIR)/$(COMPONENT).xml: $(INITRAMFS) $(MODS_INITRAMFS) | $(GEN_DIR)
+$(GEN_DIR)/$(COMPONENT).xml: spec/$(COMPONENT).xml $(OBJ_DIR)/bzImage $(POLICY_SRC)
+	@$(E) linux "Generate XML spec" \
+		"$(GENCSPEC) $(OBJ_DIR)/bzImage $< --out_spec $@ --initramfs $(MODS_INITRAMFS) --src_policy $(POLICY_SRC)" $(LOG)
 
 $(POLICY_OBJ_DIR)/linux: $(POLICY_OBJ_DIR)/bzImage $(POLICY_OBJ_DIR)/$(INITRAMFS_BASE)
 $(POLICY_OBJ_DIR)/bzImage: $(OBJ_DIR)/bzImage $(CSPEC_INSTALL) | $(POLICY_OBJ_DIR)

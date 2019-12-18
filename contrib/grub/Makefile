@@ -11,6 +11,14 @@ define CMD_DL
 	cp $(SRC) $(TMP)
 endef
 
+ifeq (,$(MUEN_EFI))
+GRUB_PLATFORM := pc
+GRUB_TARGET   := i386
+else
+GRUB_PLATFORM := efi
+GRUB_TARGET   := x86_64
+endif
+
 define CMD_CONFIGURE
 	cd $(WRK) && ./autogen.sh && ./configure \
 		--prefix=$(BUILDDIR) \
@@ -24,7 +32,9 @@ define CMD_CONFIGURE
 		--disable-nls \
 		--disable-libzfs \
 		--disable-liblzma \
-		--disable-cache-stats
+		--disable-cache-stats \
+		--with-platform=$(GRUB_PLATFORM) \
+		--target=$(GRUB_TARGET)
 endef
 
 all: install_default

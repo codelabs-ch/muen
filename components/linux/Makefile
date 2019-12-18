@@ -94,10 +94,14 @@ $(GEN_DIR)/$(COMPONENT).xml: spec/$(COMPONENT).xml $(OBJ_DIR)/bzImage $(POLICY_S
 		"$(GENCSPEC) $(OBJ_DIR)/bzImage $< --out_spec $@ --initramfs $(MODS_INITRAMFS) --src_policy $(POLICY_SRC)" $(LOG)
 
 $(POLICY_OBJ_DIR)/linux: $(POLICY_OBJ_DIR)/bzImage $(POLICY_OBJ_DIR)/$(INITRAMFS_BASE)
+$(POLICY_OBJ_DIR)/linux: $(POLICY_OBJ_DIR)/$(MODS_INITRAMFS_BASE)
+
 $(POLICY_OBJ_DIR)/bzImage: $(OBJ_DIR)/bzImage $(CSPEC_INSTALL) | $(POLICY_OBJ_DIR)
 	@$(E) linux "Install bzImage" "cp $< $@" $(LOG)
 $(POLICY_OBJ_DIR)/$(INITRAMFS_BASE): $(INITRAMFS) | $(POLICY_OBJ_DIR)
 	@$(E) linux "Install initramfs" "cp $< $@" $(LOG)
+$(POLICY_OBJ_DIR)/$(MODS_INITRAMFS_BASE): $(MODS_INITRAMFS) | $(POLICY_OBJ_DIR)
+	@$(E) linux "Install $(MODS_INITRAMFS_BASE)" "cp $< $@" $(LOG)
 
 install_initramfs: $(POLICY_OBJ_DIR)/$(INITRAMFS_BASE)
 

@@ -4,8 +4,9 @@ CONFIG ?= 4.18
 
 INITRAMFS_BASE := initramfs.cpio.gz
 INITRAMFS_URL  := $(INITRAMFS_BASE)-smp
+INITRAMFS_REV  := d8c9f20b2a25b99980903ffab2412ebdeac590d9
 INITRAMFS      ?= $(OBJ_DIR)/$(INITRAMFS_BASE)
-SITE           ?= https://codelabs-ch.github.io/buildroot-muen
+SITE           ?= https://github.com/codelabs-ch/buildroot-muen/raw/$(INITRAMFS_REV)/
 
 LOG = $(OBJ_DIR)/log.obj
 

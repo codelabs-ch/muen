@@ -11,9 +11,10 @@ IMAGE_CSL ?= ../pack/obj/muen.img.cmds
 GRUB_MKRESCUE ?= $(CONTRIB_BUILD_DIR)/bin/grub-mkrescue
 GRUB_MODS     ?= $(CONTRIB_BUILD_DIR)/lib/grub/i386-pc
 
-QEMU          ?= qemu-system-x86_64
-QEMU_MEM      ?= 5120
-QEMU_SSH_PORT ?= 5555
+QEMU             ?= qemu-system-x86_64
+QEMU_MEM         ?= 5120
+QEMU_SSH_PORT    ?= 5555
+QEMU_SERIAL_WAIT ?= 8
 
 QEMU_NETDEV_OPTS := "user,id=net0,net=192.168.254.0/24,"
 QEMU_NETDEV_OPTS := "$(QEMU_NETDEV_OPTS)dhcpstart=192.168.254.100,"
@@ -56,7 +57,7 @@ $(ISOFILE): clean $(IMAGE) $(IMAGE_CSL) grub.cfg Makefile
 	screen -c screenrc -L -dmS kvm-muen $(QEMU) $(QEMU_OPTS) $(QEMU_EXTRA_OPTS) -pidfile $@
 	@echo
 	@echo -n "* QEMU/KVM started for '$(ISOFILE)', waiting for boot: "
-	@for i in $$(seq 1 5); do \
+	@for i in $$(seq 1 $(QEMU_SERIAL_WAIT)); do \
 		sleep 1; \
 		echo -n .; \
 		boot=$$(cat serial.out 2>/dev/null | grep 'Booting Muen'); \

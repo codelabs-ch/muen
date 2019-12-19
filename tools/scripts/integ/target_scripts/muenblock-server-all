@@ -4,7 +4,7 @@ BLKDEV=sdc
 
 echo noop > /sys/class/block/${BLKDEV}/queue/scheduler
 
-insmod /lib/modules/extra/muenblock-server.ko \
+modprobe muenblock-server \
 	req_shm_name=blockdev_request1 \
 	resp_shm_name=blockdev_response1 \
 	req_shm_protocol=9570208dca77db19 \

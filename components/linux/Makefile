@@ -75,11 +75,11 @@ src/.config: $(LINUX_CONFIG)
 
 $(INITRAMFS): | $(OBJ_DIR)
 	cd $(OBJ_DIR)
-	@$(E) linux "Download initramfs" "wget -c $(SITE)/$(INITRAMFS_URL)-$(KERNEL_VERSION)" $(LOG)
-	@$(E) linux "Download initramfs.sha256" "wget -c $(SITE)/$(INITRAMFS_URL)-$(KERNEL_VERSION).sha256" $(LOG)
-	@$(E) linux "Check initramfs.sha256" "sha256sum -c $(INITRAMFS_URL)-$(KERNEL_VERSION).sha256" $(LOG)
-	mv $(INITRAMFS_URL)-$(KERNEL_VERSION) $@
-	rm $(INITRAMFS_URL)-$(KERNEL_VERSION).sha256
+	@$(E) linux "Download initramfs" "wget -c $(SITE)/$(INITRAMFS_URL)-4.18" $(LOG)
+	@$(E) linux "Download initramfs.sha256" "wget -c $(SITE)/$(INITRAMFS_URL)-4.18.sha256" $(LOG)
+	@$(E) linux "Check initramfs.sha256" "sha256sum -c $(INITRAMFS_URL)-4.18.sha256" $(LOG)
+	mv $(INITRAMFS_URL)-4.18 $@
+	rm $(INITRAMFS_URL)-4.18.sha256
 
 $(POLICY_OBJ_DIR) $(OBJ_DIR):
 	mkdir -p $@

@@ -1,6 +1,7 @@
 include ../../Makeconf
 
-CONFIG ?= 4.18
+KERNEL_VERSION ?= 4.18
+LINUX_CONFIG   ?= config/linux64-$(KERNEL_VERSION)
 
 INITRAMFS_BASE := initramfs.cpio.gz
 INITRAMFS_URL  := $(INITRAMFS_BASE)-smp
@@ -25,16 +26,16 @@ install_mods:
 	make LOCALVERSION= -j$(NUM_CPUS) -C src modules
 	make LOCALVERSION= -j$(NUM_CPUS) INSTALL_MOD_STRIP=1 INSTALL_MOD_PATH=$(OBJ_DIR) -C src modules_install
 
-src/.config: config/linux64-$(CONFIG)
+src/.config: $(LINUX_CONFIG)
 	cp $< $@
 
 $(INITRAMFS): | $(OBJ_DIR)
 	cd $(OBJ_DIR)
-	@$(E) linux "Download initramfs" "wget -c $(SITE)/$(INITRAMFS_URL)-$(CONFIG)" $(LOG)
-	@$(E) linux "Download initramfs.sha256" "wget -c $(SITE)/$(INITRAMFS_URL)-$(CONFIG).sha256" $(LOG)
-	@$(E) linux "Check initramfs.sha256" "sha256sum -c $(INITRAMFS_URL)-$(CONFIG).sha256" $(LOG)
-	mv $(INITRAMFS_URL)-$(CONFIG) $@
-	rm $(INITRAMFS_URL)-$(CONFIG).sha256
+	@$(E) linux "Download initramfs" "wget -c $(SITE)/$(INITRAMFS_URL)-$(KERNEL_VERSION)" $(LOG)
+	@$(E) linux "Download initramfs.sha256" "wget -c $(SITE)/$(INITRAMFS_URL)-$(KERNEL_VERSION).sha256" $(LOG)
+	@$(E) linux "Check initramfs.sha256" "sha256sum -c $(INITRAMFS_URL)-$(KERNEL_VERSION).sha256" $(LOG)
+	mv $(INITRAMFS_URL)-$(KERNEL_VERSION) $@
+	rm $(INITRAMFS_URL)-$(KERNEL_VERSION).sha256
 
 $(POLICY_OBJ_DIR) $(OBJ_DIR):
 	mkdir -p $@

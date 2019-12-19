@@ -41,6 +41,7 @@ RUN apt-get update && \
 		gnuplot \
 		grub-pc-bin \
 		inotify-tools \
+		kmod \
 		lcov \
 		libc6-dev \
 		libcurl4-gnutls-dev \

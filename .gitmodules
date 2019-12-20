@@ -11,3 +11,12 @@
 [submodule "components/tau0-static"]
 	path = components/tau0-static
 	url = ../muen/tau0.git
+[submodule "components/linux/modules/muenfs"]
+	path = components/linux/modules/muenfs
+	url = ../muen/linux/muenfs.git
+[submodule "components/linux/modules/muennet"]
+	path = components/linux/modules/muennet
+	url = ../muen/linux/muennet.git
+[submodule "components/linux/modules/muenblock"]
+	path = components/linux/modules/muenblock
+	url = ../muen/linux/muenblock.git

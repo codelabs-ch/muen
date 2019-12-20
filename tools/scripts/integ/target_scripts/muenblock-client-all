@@ -1,6 +1,6 @@
 #!/bin/bash
 
-insmod /lib/modules/extra/muenblock-client.ko \
+modprobe muenblock-client \
    req_shm_name=blockdev_request1 \
    resp_shm_name=blockdev_response1 \
    req_shm_protocol=9570208dca77db19 \

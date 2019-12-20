@@ -1,8 +1,8 @@
 include ../Makeconf
 include proofs.mk
 
-# components to be built
-COMPONENTS_BUILD := \
+# SPARK components to be built
+COMPONENTS_SPARK := \
 	libmuchannel \
 	libmudm \
 	libmutime \
@@ -29,17 +29,19 @@ COMPONENTS_PROOF := \
 
 # all components incl. Linux, overridable by user
 COMPONENTS ?= \
-	$(COMPONENTS_BUILD) \
+	$(COMPONENTS_SPARK) \
 	linux
 
-COMPS_BUILD := $(filter $(COMPONENTS_BUILD),$(COMPONENTS))
-COMPS_PROOF := $(filter $(COMPONENTS_PROOF),$(COMPONENTS))
+COMPS_BUILD_SPARK    := $(filter $(COMPONENTS_SPARK),$(COMPONENTS))
+COMPS_BUILD_NONSPARK := $(filter-out $(COMPONENTS_SPARK),$(COMPONENTS))
+COMPS_PROOF          := $(filter $(COMPONENTS_PROOF),$(COMPONENTS))
 
 TESTS = libmutime libmusinfo
 
 INST_TARGET = $(POLICY_OBJ_DIR)/$(@:install-%=%)
 
 COMPONENTS_PREPARE = $(COMPONENTS:%=.prepare-%)
+COMPONENTS_BUILD   = $(COMPS_BUILD_NONSPARK:%=build-%)
 COMPONENTS_CHECK   = $(COMPONENTS:%=check-%)
 COMPONENTS_INSTALL = $(COMPONENTS:%=install-%)
 COMPONENTS_CLEAN   = $(COMPONENTS:%=clean-%)
@@ -60,20 +62,24 @@ endif
 endif
 
 $(OBJ_DIR)/build.gpr:
-	@echo 'aggregate project Build extends "component_spark.gpr" is' > $@
-	@echo '   for Project_Files use ('                              >> $@
-	@$(foreach c,$(COMPS_BUILD),echo -n '      "../$(c)/$(c).gpr"'  >> $@; \
-		if [ $(c) != $(lastword $(COMPS_BUILD)) ]; then echo ','    >> $@; \
+	@echo 'aggregate project Build extends "component_spark.gpr" is'       > $@
+	@echo '   for Project_Files use ('                                    >> $@
+	@$(foreach c,$(COMPS_BUILD_SPARK),echo -n '      "../$(c)/$(c).gpr"'  >> $@; \
+		if [ $(c) != $(lastword $(COMPS_BUILD_SPARK)) ]; then echo ','    >> $@; \
 			else echo '' >> $@; fi;)
-	@echo '   );'                                                   >> $@
-	@echo 'end Build;'                                              >> $@
+	@echo '   );'                                                         >> $@
+	@echo 'end Build;'                                                    >> $@
 
 .PHONY: $(OBJ_DIR)/build.gpr
 
 tau0_static:
 	$(MAKE) -C tau0-static
 
-build: $(OBJ_DIR)/build.gpr $(COMPONENTS_PREPARE)
+build: build_spark $(COMPONENTS_BUILD)
+$(COMPONENTS_BUILD): $(COMPONENTS_PREPARE)
+	$(MAKE) -C $(@:build-%=%) build
+
+build_spark: $(OBJ_DIR)/build.gpr $(COMPONENTS_PREPARE)
 	@$(E) components "Build SPARK (debug)" \
 		"gprbuild $(BUILD_OPTS) -P$< -Xbuild=debug -Xstacksize=$(STACK_SIZE) $(PROOF_OPTS)" \
 		$(LOG)

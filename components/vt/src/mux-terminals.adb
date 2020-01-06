@@ -278,9 +278,11 @@ is
                      Screens.Init (Screen => Output_Channel_Range (C));
                      SK.CPU.Sti;
                   when VT_Channel_Rdr.Success =>
+                     SK.CPU.Cli;
                      Screens.Update
                        (Screen => Output_Channel_Range (C),
                         Char   => Data);
+                     SK.CPU.Sti;
                end case;
 
                exit when Res /= VT_Channel_Rdr.Success;

@@ -270,7 +270,7 @@ is
         (Process => Hardware.System_Board_Presence'Access);
       XML_Processors.Register
         (Process => Hardware.IOAPIC_Presence'Access);
-         XML_Processors.Register
+      XML_Processors.Register
         (Process => Memory.VTd_Root_Region_Presence'Access);
       XML_Processors.Register
         (Process => Memory.VTd_Root_Region_Size'Access);

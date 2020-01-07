@@ -298,6 +298,8 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      ----------------------------------------------------------------------
+
       procedure Invalid_Reference
       is
          Data : Muxml.XML_Data_Type;
@@ -315,16 +317,85 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
          begin
             Kernel_Diagnostics_Device_Reference (XML_Data => Data);
             Assert (Condition => False,
-                    Message   => "Exception expected");
+                    Message   => "Exception expected (1)");
 
          exception
             when E : Validation_Error =>
                Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                        = "Physical device 'nonexistent' designated as kernel "
                        & "diagnostics device not found",
-                       Message   => "Exception mismatch");
+                       Message   => "Exception mismatch (1)");
          end;
       end Invalid_Reference;
+
+      ----------------------------------------------------------------------
+
+      procedure Invalid_Resource_Reference
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/kernelDiagnostics/device/ioPort",
+            Name  => "physical",
+            Value => "nonexistent");
+
+         begin
+            Kernel_Diagnostics_Device_Reference (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (2)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Physical device resource 'debugconsole->nonexistent'"
+                       & " referenced by kernel diagnostics device not found",
+                       Message   => "Exception mismatch (2)");
+         end;
+      end Invalid_Resource_Reference;
+
+      ----------------------------------------------------------------------
+
+      procedure Invalid_Resource_Type
+      is
+         Data : Muxml.XML_Data_Type;
+         Node : DOM.Core.Node;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "memory");
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                          Name  => "physical",
+                                          Value => "port");
+
+         Muxml.Utils.Append_Child
+           (Node      => Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => "/system/platform/kernelDiagnostics/device"),
+            New_Child => Node);
+
+         begin
+            Kernel_Diagnostics_Device_Reference (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (3)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Physical device resource 'debugconsole->port' "
+                       & "referenced by kernel diagnostics device has "
+                       & "different type: memory /= ioPort",
+                       Message   => "Exception mismatch (3)");
+         end;
+      end Invalid_Resource_Type;
 
       ----------------------------------------------------------------------
 
@@ -359,6 +430,8 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
       Positive_Test;
       No_Diagnostics;
       Invalid_Reference;
+      Invalid_Resource_Reference;
+      Invalid_Resource_Type;
 --  begin read only
    end Test_Kernel_Diagnostics_Device_Reference;
 --  end read only

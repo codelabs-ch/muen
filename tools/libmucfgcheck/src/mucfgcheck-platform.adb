@@ -137,20 +137,72 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/hardware/devices/device");
-      Phys_Name : constant String := Muxml.Utils.Get_Attribute
+      Diag_Dev  : constant DOM.Core.Node := Muxml.Utils.Get_Element
         (Doc   => XML_Data.Doc,
-         XPath => "/system/platform/kernelDiagnostics/device",
-         Name  => "physical");
+         XPath => "/system/platform/kernelDiagnostics/device");
+      Phys_Name : constant String
+        := (if Diag_Dev = null then ""
+            else DOM.Core.Elements.Get_Attribute
+              (Elem => Diag_Dev,
+               Name => "physical"));
+      Phys_Dev  : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element (Nodes     => Phys_Devs,
+                                    Ref_Attr  => "name",
+                                    Ref_Value => Phys_Name);
    begin
-      if Phys_Name'Length > 0 and then
-        Muxml.Utils.Get_Element
-          (Nodes     => Phys_Devs,
-           Ref_Attr  => "name",
-           Ref_Value => Phys_Name) = null
-      then
+      if Diag_Dev = null then
+         return;
+      end if;
+
+      Mulog.Log (Msg => "Checking kernel diagnostics device references");
+
+      if Phys_Dev = null then
          raise Validation_Error with "Physical device '" & Phys_Name
            & "' designated as kernel diagnostics device not found";
       end if;
+
+      declare
+         Diag_Resources : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Diag_Dev,
+              XPath => "*");
+         Phys_Resources : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Phys_Dev,
+              XPath => "*");
+      begin
+         for I in 0 .. DOM.Core.Nodes.Length (List => Diag_Resources) - 1 loop
+            declare
+               Diag_Res : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item (List  => Diag_Resources,
+                                         Index => I);
+               Diag_Res_Type : constant String
+                 := DOM.Core.Nodes.Node_Name (N => Diag_Res);
+               Phys_Res_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute (Elem => Diag_Res,
+                                                     Name => "physical");
+               Phys_Res : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element (Nodes     => Phys_Resources,
+                                             Ref_Attr  => "name",
+                                             Ref_Value => Phys_Res_Name);
+            begin
+               if Phys_Res = null then
+                  raise Validation_Error with "Physical device resource '"
+                    & Phys_Name & "->" & Phys_Res_Name & "' referenced by "
+                    & "kernel diagnostics device not found";
+               end if;
+
+               if Diag_Res_Type /= DOM.Core.Nodes.Node_Name (N => Phys_Res)
+               then
+                  raise Validation_Error with "Physical device resource '"
+                    & Phys_Name & "->" & Phys_Res_Name & "' referenced by "
+                    & "kernel diagnostics device has different type: "
+                    & Diag_Res_Type & " /= "
+                    & DOM.Core.Nodes.Node_Name (N => Phys_Res);
+               end if;
+            end;
+         end loop;
+      end;
    end Kernel_Diagnostics_Device_Reference;
 
    -------------------------------------------------------------------------

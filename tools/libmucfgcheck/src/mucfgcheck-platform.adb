@@ -23,6 +23,7 @@ with DOM.Core.Nodes;
 
 with Mulog;
 with Mutools.Match;
+with Mutools.Types;
 with Muxml.Utils;
 
 package body Mucfgcheck.Platform
@@ -204,6 +205,89 @@ is
          end loop;
       end;
    end Kernel_Diagnostics_Device_Reference;
+
+   -------------------------------------------------------------------------
+
+   procedure Kernel_Diagnostics_Type_Resources
+     (XML_Data : Muxml.XML_Data_Type)
+   is
+      use type DOM.Core.Node;
+
+      Diag_Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => XML_Data.Doc,
+           XPath => "/system/platform/kernelDiagnostics");
+      Diag_Dev_Node : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element (Doc   => Diag_Node,
+                                       XPath => "device");
+      Diag_Type_Str : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Diag_Node,
+           Name => "type");
+      Diag_Type : constant Mutools.Types.Kernel_Diagnostics_Kind
+        := Mutools.Types.Kernel_Diagnostics_Kind'Value (Diag_Type_Str);
+
+      --  Check that the diagnostics node has no child elements.
+      procedure Check_Diag_None (Diag_Device : DOM.Core.Node);
+
+      --  Check that the diagnostics node specifies device reference with I/O
+      --  port resource.
+      procedure Check_Diag_Uart (Diag_Device : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Diag_None (Diag_Device : DOM.Core.Node)
+      is
+      begin
+         if Diag_Device /= null then
+            raise Validation_Error with "Kernel diagnostics device of type '"
+              & Diag_Type_Str & "' must not specify device reference";
+         end if;
+      end Check_Diag_None;
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Diag_Uart (Diag_Device : DOM.Core.Node)
+      is
+         Res_Kind : constant String := "ioPort";
+      begin
+         if Diag_Device = null then
+            raise Validation_Error with "Kernel diagnostics device of type '"
+              & Diag_Type_Str & "' must specify device reference";
+         end if;
+
+         declare
+            Dev_Resources : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Diag_Device,
+                 XPath => "*");
+            Dev_Res_Count : constant Natural := DOM.Core.Nodes.Length
+              (List => Dev_Resources);
+            Dev_Res : DOM.Core.Node;
+         begin
+            if Dev_Res_Count /= 1 then
+               raise Validation_Error with "Kernel diagnostics device of type "
+                 & "'" & Diag_Type_Str & "' must specify exactly one device "
+                 & "resource reference";
+            end if;
+
+            Dev_Res := DOM.Core.Nodes.Item (List  => Dev_Resources,
+                                            Index => 0);
+            if DOM.Core.Nodes.Node_Name (N => Dev_Res) /= Res_Kind then
+               raise Validation_Error with "Kernel diagnostics device of type "
+                 & "'" & Diag_Type_Str & "' must specify an I/O port device "
+                 & "resource reference";
+            end if;
+         end;
+      end Check_Diag_Uart;
+   begin
+      case Diag_Type is
+         when Mutools.Types.None =>
+            Check_Diag_None (Diag_Device => Diag_Dev_Node);
+         when Mutools.Types.Uart =>
+            Check_Diag_Uart (Diag_Device => Diag_Dev_Node);
+      end case;
+   end Kernel_Diagnostics_Type_Resources;
 
    -------------------------------------------------------------------------
 

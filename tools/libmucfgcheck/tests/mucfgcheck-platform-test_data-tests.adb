@@ -436,6 +436,184 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
    end Test_Kernel_Diagnostics_Device_Reference;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Kernel_Diagnostics_Type_Resources (Gnattest_T : in out Test);
+   procedure Test_Kernel_Diagnostics_Type_Resources_6cdac4 (Gnattest_T : in out Test) renames Test_Kernel_Diagnostics_Type_Resources;
+--  id:2.2/6cdac4fb053ed697/Kernel_Diagnostics_Type_Resources/1/0/
+   procedure Test_Kernel_Diagnostics_Type_Resources (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      ----------------------------------------------------------------------
+
+      procedure None_Device_Reference
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/test_policy_src.xml");
+
+         Muxml.Utils.Add_Child
+           (Parent     => Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => "/system/platform/kernelDiagnostics"),
+            Child_Name => "device");
+
+         begin
+            Kernel_Diagnostics_Type_Resources (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (None device ref)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Kernel diagnostics device of type 'none' must not "
+                       & "specify device reference",
+                       Message   => "Exception mismatch (None device ref)");
+         end;
+      end None_Device_Reference;
+
+      ----------------------------------------------------------------------
+
+      procedure None_Positive_Test
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/test_policy_src.xml");
+
+         --  Positive tests, must no raise an exception.
+
+         Kernel_Diagnostics_Type_Resources (XML_Data => Data);
+      end None_Positive_Test;
+
+      ----------------------------------------------------------------------
+
+      procedure Uart_Device_Reference
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/test_policy.xml");
+
+         Muxml.Utils.Remove_Child
+           (Node      => Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => "/system/platform/kernelDiagnostics"),
+            Child_Name => "device");
+
+         begin
+            Kernel_Diagnostics_Type_Resources (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (Uart device ref)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Kernel diagnostics device of type 'uart' must "
+                       & "specify device reference",
+                       Message   => "Exception mismatch (Uart device ref)");
+         end;
+      end Uart_Device_Reference;
+
+      ----------------------------------------------------------------------
+
+      procedure Uart_Resource_Count_Mismatch
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/test_policy.xml");
+
+         declare
+            Diag_Dev_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Data.Doc,
+                 XPath => "/system/platform/kernelDiagnostics/device");
+         begin
+            Muxml.Utils.Add_Child
+              (Parent     => Diag_Dev_Node,
+               Child_Name => "memory");
+
+            Kernel_Diagnostics_Type_Resources (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (Uart res count)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Kernel diagnostics device of type 'uart' must "
+                       & "specify exactly one device resource reference",
+                       Message   => "Exception mismatch (Uart res count)");
+         end;
+      end Uart_Resource_Count_Mismatch;
+
+      ----------------------------------------------------------------------
+
+      procedure Uart_Resource_Mismatch
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/test_policy.xml");
+
+         declare
+            Diag_Dev_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Data.Doc,
+                 XPath => "/system/platform/kernelDiagnostics/device");
+         begin
+            Muxml.Utils.Remove_Child (Node       => Diag_Dev_Node,
+                                      Child_Name => "ioPort");
+            Muxml.Utils.Add_Child
+              (Parent     => Diag_Dev_Node,
+               Child_Name => "memory");
+
+            Kernel_Diagnostics_Type_Resources (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (Uart resource type)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Kernel diagnostics device of type 'uart' must "
+                       & "specify an I/O port device resource reference",
+                       Message   => "Exception mismatch (Uart resource type)");
+         end;
+      end Uart_Resource_Mismatch;
+
+      ----------------------------------------------------------------------
+
+      procedure Uart_Positive_Test
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         --  Positive tests, must not raise an exception.
+
+         Kernel_Diagnostics_Type_Resources (XML_Data => Data);
+      end Uart_Positive_Test;
+   begin
+      None_Positive_Test;
+      None_Device_Reference;
+      Uart_Positive_Test;
+      Uart_Device_Reference;
+      Uart_Resource_Mismatch;
+      Uart_Resource_Count_Mismatch;
+--  begin read only
+   end Test_Kernel_Diagnostics_Type_Resources;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

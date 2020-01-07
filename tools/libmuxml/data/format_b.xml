@@ -31,6 +31,7 @@
     </class>
    </classes>
   </mappings>
+  <kernelDiagnostics type="none"/>
  </platform>
  <memory>
   <memory alignment="16#1000#" caching="WB" name="trampoline" physicalAddress="16#2000#" size="16#1000#" type="system"/>

@@ -50,6 +50,11 @@
     </alias>
    </aliases>
   </mappings>
+  <kernelDiagnostics type="uart">
+   <device physical="debugconsole">
+    <ioPort physical="serial"/>
+   </device>
+  </kernelDiagnostics>
  </platform>
  <kernelDiagnosticsDevice physical="debugconsole">
   <ioPort physical="serial"/>

@@ -32,4 +32,26 @@
   <xs:attribute name="physical" type="nameType" use="required"/>
  </xs:complexType>
 
+ <xs:complexType name="kernelDiagType">
+  <xs:sequence>
+   <xs:element name="device" type="kernelDiagDeviceType" minOccurs="0" maxOccurs="1"/>
+  </xs:sequence>
+  <xs:attribute name="type" type="kernelDiagKindType" use="required"/>
+ </xs:complexType>
+
+ <xs:simpleType name="kernelDiagKindType">
+  <xs:restriction base="xs:string">
+   <xs:enumeration value="none"/>
+   <xs:enumeration value="uart"/>
+  </xs:restriction>
+ </xs:simpleType>
+
+ <xs:complexType name="kernelDiagDeviceType">
+  <xs:sequence>
+   <xs:element name="memory" type="physRefType" minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="ioPort" type="physRefType" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+  <xs:attribute name="physical" type="nameType" use="required"/>
+ </xs:complexType>
+
 </xs:schema>

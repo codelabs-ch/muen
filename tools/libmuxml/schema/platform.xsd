@@ -23,12 +23,12 @@
 
  <xs:complexType name="devClassType">
   <xs:sequence>
-   <xs:element name="device" type="devClassPhysRefType" minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="device" type="physRefType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
   <xs:attribute name="name" type="nameType" use="required"/>
  </xs:complexType>
 
- <xs:complexType name="devClassPhysRefType">
+ <xs:complexType name="physRefType">
   <xs:attribute name="physical" type="nameType" use="required"/>
  </xs:complexType>
 

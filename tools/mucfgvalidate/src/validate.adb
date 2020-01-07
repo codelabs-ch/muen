@@ -26,6 +26,7 @@ with Mucfgcheck.Scheduling;
 with Mucfgcheck.Kernel;
 with Mucfgcheck.Subject;
 with Mucfgcheck.Hardware;
+with Mucfgcheck.Platform;
 with Mucfgcheck.Events;
 with Mucfgcheck.Device_Domains;
 
@@ -270,6 +271,8 @@ is
         (Process => Hardware.System_Board_Presence'Access);
       XML_Processors.Register
         (Process => Hardware.IOAPIC_Presence'Access);
+      XML_Processors.Register
+        (Process => Platform.Kernel_Diagnostics_Device_Reference'Access);
       XML_Processors.Register
         (Process => Memory.VTd_Root_Region_Presence'Access);
       XML_Processors.Register

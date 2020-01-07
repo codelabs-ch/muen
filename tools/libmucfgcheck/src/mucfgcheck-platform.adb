@@ -128,6 +128,33 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Kernel_Diagnostics_Device_Reference
+     (XML_Data : Muxml.XML_Data_Type)
+   is
+      use type DOM.Core.Node;
+
+      Phys_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/devices/device");
+      Phys_Name : constant String := Muxml.Utils.Get_Attribute
+        (Doc   => XML_Data.Doc,
+         XPath => "/system/platform/kernelDiagnostics/device",
+         Name  => "physical");
+   begin
+      if Phys_Name'Length > 0 and then
+        Muxml.Utils.Get_Element
+          (Nodes     => Phys_Devs,
+           Ref_Attr  => "name",
+           Ref_Value => Phys_Name) = null
+      then
+         raise Validation_Error with "Physical device '" & Phys_Name
+           & "' designated as kernel diagnostics device not found";
+      end if;
+   end Kernel_Diagnostics_Device_Reference;
+
+   -------------------------------------------------------------------------
+
    procedure Subject_Alias_Resource_References (XML_Data : Muxml.XML_Data_Type)
    is
       use type DOM.Core.Node;

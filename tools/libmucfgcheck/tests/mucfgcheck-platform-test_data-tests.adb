@@ -288,6 +288,81 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
    end Test_Subject_Alias_Resource_References;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Kernel_Diagnostics_Device_Reference (Gnattest_T : in out Test);
+   procedure Test_Kernel_Diagnostics_Device_Reference_d0d3aa (Gnattest_T : in out Test) renames Test_Kernel_Diagnostics_Device_Reference;
+--  id:2.2/d0d3aa99d21b5bf6/Kernel_Diagnostics_Device_Reference/1/0/
+   procedure Test_Kernel_Diagnostics_Device_Reference (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      procedure Invalid_Reference
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/kernelDiagnostics/device",
+            Name  => "physical",
+            Value => "nonexistent");
+
+         begin
+            Kernel_Diagnostics_Device_Reference (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Physical device 'nonexistent' designated as kernel "
+                       & "diagnostics device not found",
+                       Message   => "Exception mismatch");
+         end;
+      end Invalid_Reference;
+
+      ----------------------------------------------------------------------
+
+      procedure No_Diagnostics
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/test_policy_src.xml");
+
+         --  Positive tests for type 'none', must no raise an exception.
+
+         Kernel_Diagnostics_Device_Reference (XML_Data => Data);
+      end No_Diagnostics;
+
+      ----------------------------------------------------------------------
+
+      procedure Positive_Test
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         --  Positive tests, must not raise an exception.
+
+         Kernel_Diagnostics_Device_Reference (XML_Data => Data);
+      end Positive_Test;
+   begin
+      Positive_Test;
+      No_Diagnostics;
+      Invalid_Reference;
+--  begin read only
+   end Test_Kernel_Diagnostics_Device_Reference;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

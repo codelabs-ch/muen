@@ -1,0 +1,7 @@
+abstract project Policy is
+
+   type Diagnostics_Kind is ("none","uart");
+
+   Debug_Type : Diagnostics_Kind := "uart";
+
+end Policy;

@@ -1,0 +1,6 @@
+abstract project Policy is
+
+   type Diagnostics_Kind is (__diagnostics_kind__);
+
+__debug_device_type__
+end Policy;

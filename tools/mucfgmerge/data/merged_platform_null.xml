@@ -43,6 +43,7 @@
     </class>
    </classes>
   </mappings>
+  <kernelDiagnostics type="none"/>
  </platform>
  <kernelDiagnosticsDevice physical="debugconsole">
   <ioPort physical="serial"/>

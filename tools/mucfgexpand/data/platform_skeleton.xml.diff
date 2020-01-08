@@ -28,6 +28,11 @@
     </class>                                                                                                                                         <
    </classes>                                                                                                                                        <
   </mappings>                                                                                                                                             </mappings>
+  <kernelDiagnostics type="uart">                                                                                                                    <
+   <device physical="debugconsole">                                                                                                                  <
+    <ioPort physical="serial"/>                                                                                                                      <
+   </device>                                                                                                                                         <
+  </kernelDiagnostics>                                                                                                                               <
  </platform>                                                                                                                                             </platform>
  <kernelDiagnosticsDevice physical="amt_console">                                                                                                    <
   <ioPort physical="ioports"/>                                                                                                                       <

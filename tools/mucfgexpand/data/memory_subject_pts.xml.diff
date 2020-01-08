@@ -1,4 +1,4 @@
-  </mappings>                                                                                                                                             </mappings>
+  </kernelDiagnostics>                                                                                                                                    </kernelDiagnostics>
  </platform>                                                                                                                                             </platform>
  <kernelDiagnosticsDevice physical="amt_console">                                                                                                    |   <kernelDiagnosticsDevice physical="debugconsole">
   <ioPort physical="ioports"/>                                                                                                                       |    <ioPort physical="serial"/>

@@ -150,6 +150,11 @@
     </class>
    </classes>
   </mappings>
+  <kernelDiagnostics type="uart">
+   <device physical="debugconsole">
+    <ioPort physical="serial"/>
+   </device>
+  </kernelDiagnostics>
  </platform>
  <memory>
   <memory alignment="16#1000#" caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#" type="subject"/>

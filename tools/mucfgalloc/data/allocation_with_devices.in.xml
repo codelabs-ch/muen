@@ -21,6 +21,7 @@
    <aliases/>
    <classes/>
   </mappings>
+  <kernelDiagnostics type="none"/>
  </platform>
  <memory>
   <memory alignment="16#1000#" caching="WB" name="mem1" physicalAddress="16#0030_8000#" size="16#0000_1000#" type="system"/>

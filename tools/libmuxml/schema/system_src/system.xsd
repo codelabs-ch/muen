@@ -9,7 +9,7 @@
    <xs:element name="config"                  type="configType"        minOccurs="1" maxOccurs="1"/>
    <xs:element name="hardware"                type="hardwareType"      minOccurs="1" maxOccurs="1"/>
    <xs:element name="platform"                type="platformType"      minOccurs="0" maxOccurs="1"/>
-   <xs:element name="kernelDiagnosticsDevice" type="kernelDiagDevType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="kernelDiagnosticsDevice" type="kernelDiagDevType" minOccurs="0" maxOccurs="1"/>
    <xs:element name="memory"                  type="memRegionsType"    minOccurs="1" maxOccurs="1"/>
    <xs:element name="deviceDomains"           type="deviceDomainsType" minOccurs="0" maxOccurs="1"/>
    <xs:element name="events"                  type="eventsType"        minOccurs="1" maxOccurs="1"/>

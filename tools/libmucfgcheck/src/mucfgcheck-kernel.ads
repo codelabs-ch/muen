@@ -55,4 +55,8 @@ is
    --  devices section and that it provides a logical reset port.
    procedure System_Board_Reference (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that the debug console device and its resources matches the
+   --  kernel diagnostics device specified in the platform section.
+   procedure Diagnostics_Device_Reference (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Kernel;

@@ -34,7 +34,8 @@ project Kernel is
    case Build_Mode is
       when "debug" =>
          Extra_Dirs := Extra_Dirs
-           & ("../common/" & Build_Mode, Build_Mode, "../common/strings/impl");
+           & ("../common/" & Build_Mode, "../common/strings/impl",
+              Build_Mode, Build_Mode & "/console/uart");
          Extra_Languages := ("Asm_Cpp");
          Preprocessor_Switches :=
            ("-gnateDRelease_Warnings=Ignored_Warnings");

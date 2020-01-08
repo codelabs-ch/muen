@@ -21,6 +21,7 @@ with Mucfgcheck.Memory;
 with Mucfgcheck.Device;
 with Mucfgcheck.Events;
 with Mucfgcheck.Hardware;
+with Mucfgcheck.Platform;
 with Mucfgcheck.Subject;
 
 with Cfgchecks;
@@ -95,6 +96,10 @@ is
       Check_Procs.Register (Process => Hardware_CPU_Count_Presence'Access);
       Check_Procs.Register
         (Process => MC.Hardware.IOAPIC_Presence'Access);
+      Check_Procs.Register
+        (Process => MC.Platform.Kernel_Diagnostics_Device_Reference'Access);
+      Check_Procs.Register
+        (Process => MC.Platform.Kernel_Diagnostics_Type_Resources'Access);
       Check_Procs.Register
         (Process => Kernel_Diagnostics_Dev_Reference'Access);
 

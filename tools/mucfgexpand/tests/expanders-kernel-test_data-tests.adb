@@ -265,25 +265,6 @@ package body Expanders.Kernel.Test_Data.Tests is
    end Test_Add_Crash_Audit_Mappings;
 --  end read only
 
-
---  begin read only
-   procedure Test_Remove_Diagnostics_Device (Gnattest_T : in out Test);
-   procedure Test_Remove_Diagnostics_Device_b093e6 (Gnattest_T : in out Test) renames Test_Remove_Diagnostics_Device;
---  id:2.2/b093e6fd6844d691/Remove_Diagnostics_Device/1/0/
-   procedure Test_Remove_Diagnostics_Device (Gnattest_T : in out Test) is
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-   begin
-      Test_Utils.Expander.Run_Test
-        (Filename => "obj/kernel_diag_dev.xml",
-         Ref_Diff => "data/kernel_diag_dev.xml.diff",
-         Expander => Remove_Diagnostics_Device'Access);
---  begin read only
-   end Test_Remove_Diagnostics_Device;
---  end read only
-
 --  begin read only
 --  id:2.2/02/
 --

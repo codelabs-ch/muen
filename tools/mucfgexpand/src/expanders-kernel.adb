@@ -800,18 +800,4 @@ is
             Executable    => False));
    end Map_Tau0_Interface;
 
-   -------------------------------------------------------------------------
-
-   procedure Remove_Diagnostics_Device (Data : in out Muxml.XML_Data_Type)
-   is
-      Node : constant DOM.Core.Node
-        := Muxml.Utils.Get_Element
-          (Doc   => Data.Doc,
-           XPath => "/system");
-   begin
-      Muxml.Utils.Remove_Child
-        (Node       => Node,
-         Child_Name => "kernelDiagnosticsDevice");
-   end Remove_Diagnostics_Device;
-
 end Expanders.Kernel;

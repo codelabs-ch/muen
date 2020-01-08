@@ -147,7 +147,4 @@ is
    procedure Component_Library_Cyclic_References
      (XML_Data : Muxml.XML_Data_Type);
 
-   --  Check that the kernel diagnostics port references a physical I/O device.
-   procedure Kernel_Diagnostics_Dev_Reference (XML_Data : Muxml.XML_Data_Type);
-
 end Cfgchecks;

@@ -100,8 +100,6 @@ is
         (Process => MC.Platform.Kernel_Diagnostics_Device_Reference'Access);
       Check_Procs.Register
         (Process => MC.Platform.Kernel_Diagnostics_Type_Resources'Access);
-      Check_Procs.Register
-        (Process => Kernel_Diagnostics_Dev_Reference'Access);
 
       --  Register after hardware CPU count presence check.
 

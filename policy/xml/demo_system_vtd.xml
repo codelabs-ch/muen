@@ -13,7 +13,6 @@
  </config>
 
  <include href="common_expressions.xml"/>
- <include href="kernel_diagnostics.xml"/>
 
  <memory>
   <include href="common_memory.xml"/>

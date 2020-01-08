@@ -14,8 +14,6 @@
   <string name="logchannel_size" value="16#0004_0000#"/>
  </config>
 
- <include href="kernel_diagnostics.xml"/>
-
  <memory>
   <include href="common_memory.xml"/>
   <include href="memory_xhci_dma.xml"/>

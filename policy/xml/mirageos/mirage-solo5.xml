@@ -8,7 +8,6 @@
     <boolean name="unikernel_net" value="true"/>
     <string name="logchannel_size" value="16#0002_0000#"/>
   </config>
-  <include href="kernel_diagnostics.xml"/>
   <memory>
     <include href="common_memory.xml"/>
   </memory>

@@ -172,8 +172,6 @@ is
       XML_Processors.Register
         (Process => Device.Device_References_PCI_Bus_Number'Access);
       XML_Processors.Register
-        (Process => Device.Debugconsole_Presence'Access);
-      XML_Processors.Register
         (Process => Scheduling.CPU_Element_Count'Access);
       XML_Processors.Register
         (Process => Scheduling.Subject_References'Access);

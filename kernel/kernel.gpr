@@ -17,6 +17,7 @@
 --
 
 with "../config/shared";
+with "../policy/obj/policy";
 
 project Kernel is
 
@@ -35,7 +36,7 @@ project Kernel is
       when "debug" =>
          Extra_Dirs := Extra_Dirs
            & ("../common/" & Build_Mode, "../common/strings/impl",
-              Build_Mode, Build_Mode & "/console/uart");
+              Build_Mode, Build_Mode & "/console/" & Policy.Debug_Type);
          Extra_Languages := ("Asm_Cpp");
          Preprocessor_Switches :=
            ("-gnateDRelease_Warnings=Ignored_Warnings");

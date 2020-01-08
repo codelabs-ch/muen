@@ -30,6 +30,8 @@ pragma Elaborate_All (Mutools.Immutable_Processors);
 package body Stage2.Pre_Checks
 is
 
+   package MC renames Mucfgcheck;
+
    -------------------------------------------------------------------------
 
    procedure Clear
@@ -49,35 +51,35 @@ is
       use Cfgchecks;
    begin
       Check_Procs.Register
-        (Process => Mucfgcheck.Memory.Physical_Memory_References'Access);
+        (Process => MC.Memory.Physical_Memory_References'Access);
       Check_Procs.Register
-        (Process => Mucfgcheck.Memory.Uncached_Crash_Audit_Presence'Access);
+        (Process => MC.Memory.Uncached_Crash_Audit_Presence'Access);
       Check_Procs.Register
-        (Process => Mucfgcheck.Device.Device_Reference_Uniqueness'Access);
+        (Process => MC.Device.Device_Reference_Uniqueness'Access);
       Check_Procs.Register
-        (Process => Mucfgcheck.Device.Device_Memory_References'Access);
+        (Process => MC.Device.Device_Memory_References'Access);
       Check_Procs.Register
-        (Process => Mucfgcheck.Device.PCI_Device_BDF_Uniqueness'Access);
+        (Process => MC.Device.PCI_Device_BDF_Uniqueness'Access);
       Check_Procs.Register
-        (Process => Mucfgcheck.Device.IO_Port_Uniqueness'Access);
+        (Process => MC.Device.IO_Port_Uniqueness'Access);
       Check_Procs.Register
-        (Process => Mucfgcheck.Hardware.PCI_Config_Space_Address'Access);
+        (Process => MC.Hardware.PCI_Config_Space_Address'Access);
       Check_Procs.Register
-        (Process => Mucfgcheck.Hardware.CPU_Sub_Elements'Access);
+        (Process => MC.Hardware.CPU_Sub_Elements'Access);
       Check_Procs.Register
-        (Process => Mucfgcheck.Hardware.System_Board_Presence'Access);
+        (Process => MC.Hardware.System_Board_Presence'Access);
       Check_Procs.Register
-        (Process => Mucfgcheck.Events.Physical_Event_Name_Uniqueness'Access);
+        (Process => MC.Events.Physical_Event_Name_Uniqueness'Access);
       Check_Procs.Register
-        (Process => Mucfgcheck.Events.Subject_Event_References'Access);
+        (Process => MC.Events.Subject_Event_References'Access);
       Check_Procs.Register
-        (Process => Mucfgcheck.Events.Source_Targets'Access);
+        (Process => MC.Events.Source_Targets'Access);
       Check_Procs.Register
-        (Process => Mucfgcheck.Events.Self_References'Access);
+        (Process => MC.Events.Self_References'Access);
       Check_Procs.Register
-        (Process => Mucfgcheck.Subject.Runnability'Access);
+        (Process => MC.Subject.Runnability'Access);
       Check_Procs.Register
-        (Process => Mucfgcheck.Subject.Logical_Device_Name_Uniqueness'Access);
+        (Process => MC.Subject.Logical_Device_Name_Uniqueness'Access);
 
       Check_Procs.Register (Process => Tau0_Presence_In_Scheduling'Access);
       Check_Procs.Register (Process => Subject_Monitor_References'Access);
@@ -92,18 +94,18 @@ is
       Check_Procs.Register (Process => Channel_Reader_Has_Event_Vector'Access);
       Check_Procs.Register (Process => Hardware_CPU_Count_Presence'Access);
       Check_Procs.Register
-        (Process => Mucfgcheck.Hardware.IOAPIC_Presence'Access);
+        (Process => MC.Hardware.IOAPIC_Presence'Access);
       Check_Procs.Register
         (Process => Kernel_Diagnostics_Dev_Reference'Access);
 
       --  Register after hardware CPU count presence check.
 
-      Check_Procs.Register (Process => Mucfgcheck.Hardware.CPU_Count'Access);
+      Check_Procs.Register (Process => MC.Hardware.CPU_Count'Access);
 
       Check_Procs.Register
-        (Process => Mucfgcheck.Hardware.IOMMU_Presence'Access);
+        (Process => MC.Hardware.IOMMU_Presence'Access);
       Check_Procs.Register
-        (Process => Mucfgcheck.Device.IOMMU_Region_Size'Access);
+        (Process => MC.Device.IOMMU_Region_Size'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

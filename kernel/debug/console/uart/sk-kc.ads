@@ -17,12 +17,12 @@
 --
 
 with SK.Console;
-with SK.Console_Serial;
+with SK.Console_UART;
 
 pragma Elaborate (SK.Console);
 
 --  Kernel debug console.
 package SK.KC is new SK.Console
-  (Initialize      => Console_Serial.Init,
-   Output_New_Line => Console_Serial.New_Line,
-   Output_Char     => Console_Serial.Put_Char);
+  (Initialize      => Console_UART.Init,
+   Output_New_Line => Console_UART.New_Line,
+   Output_Char     => Console_UART.Put_Char);

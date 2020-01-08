@@ -274,6 +274,8 @@ is
       XML_Processors.Register
         (Process => Platform.Kernel_Diagnostics_Device_Reference'Access);
       XML_Processors.Register
+        (Process => Platform.Kernel_Diagnostics_Type_Resources'Access);
+      XML_Processors.Register
         (Process => Memory.VTd_Root_Region_Presence'Access);
       XML_Processors.Register
         (Process => Memory.VTd_Root_Region_Size'Access);

@@ -2,21 +2,19 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
  <xs:include schemaLocation="./channels.xsd"/>
  <xs:include schemaLocation="./components.xsd"/>
- <xs:include schemaLocation="./kernel_diagdev.xsd"/>
 
  <xs:complexType name="systemType">
   <xs:sequence>
-   <xs:element name="config"                  type="configType"        minOccurs="1" maxOccurs="1"/>
-   <xs:element name="hardware"                type="hardwareType"      minOccurs="1" maxOccurs="1"/>
-   <xs:element name="platform"                type="platformType"      minOccurs="0" maxOccurs="1"/>
-   <xs:element name="kernelDiagnosticsDevice" type="kernelDiagDevType" minOccurs="0" maxOccurs="1"/>
-   <xs:element name="memory"                  type="memRegionsType"    minOccurs="1" maxOccurs="1"/>
-   <xs:element name="deviceDomains"           type="deviceDomainsType" minOccurs="0" maxOccurs="1"/>
-   <xs:element name="events"                  type="eventsType"        minOccurs="1" maxOccurs="1"/>
-   <xs:element name="channels"                type="channelsType"      minOccurs="0" maxOccurs="1"/>
-   <xs:element name="components"              type="componentsType"    minOccurs="0" maxOccurs="1"/>
-   <xs:element name="subjects"                type="subjectsType"      minOccurs="1" maxOccurs="1"/>
-   <xs:element name="scheduling"              type="schedulingType"    minOccurs="1" maxOccurs="1"/>
+   <xs:element name="config"        type="configType"        minOccurs="1" maxOccurs="1"/>
+   <xs:element name="hardware"      type="hardwareType"      minOccurs="1" maxOccurs="1"/>
+   <xs:element name="platform"      type="platformType"      minOccurs="0" maxOccurs="1"/>
+   <xs:element name="memory"        type="memRegionsType"    minOccurs="1" maxOccurs="1"/>
+   <xs:element name="deviceDomains" type="deviceDomainsType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="events"        type="eventsType"        minOccurs="1" maxOccurs="1"/>
+   <xs:element name="channels"      type="channelsType"      minOccurs="0" maxOccurs="1"/>
+   <xs:element name="components"    type="componentsType"    minOccurs="0" maxOccurs="1"/>
+   <xs:element name="subjects"      type="subjectsType"      minOccurs="1" maxOccurs="1"/>
+   <xs:element name="scheduling"    type="schedulingType"    minOccurs="1" maxOccurs="1"/>
   </xs:sequence>
  </xs:complexType>
 

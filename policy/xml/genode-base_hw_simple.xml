@@ -1,13 +1,15 @@
 <?xml version="1.0"?>
 <system>
  <config>
+  <boolean name="xhcidbg_enabled" value="false"/>
+  <boolean name="dbgserver_serial_enabled" value="true"/>
   <boolean name="dbgserver_sink_pcspkr" value="false"/>
-  <boolean name="dbgserver_sink_serial" value="true"/>
   <boolean name="dbgserver_sink_shmem" value="false"/>
-  <boolean name="dbgserver_sink_xhcidbg" value="false"/>
   <boolean name="pciconf_emulation_enabled" value="false"/>
   <string name="logchannel_size" value="16#0002_0000#"/>
  </config>
+
+ <include href="common_expressions.xml"/>
 
  <memory>
   <memory name="crash_audit" physicalAddress="16#1000_0000#" size="16#1000#" caching="UC" type="subject_crash_audit"/>

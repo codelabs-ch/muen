@@ -1,4 +1,10 @@
 <expressions>
+ <expression name="dbgserver_sink_serial">
+  <and>
+   <variable name="dbgserver_serial_enabled"/>
+   <variable name="serial_supported"/>
+  </and>
+ </expression>
  <expression name="dbgserver_sink_xhcidbg">
   <and>
    <variable name="xhcidbg_enabled"/>

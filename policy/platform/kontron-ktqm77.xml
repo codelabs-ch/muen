@@ -1,5 +1,6 @@
 <platform>
  <config>
+  <boolean name="serial_supported" value="true"/>
   <boolean name="xhcidbg_supported" value="false"/>
  </config>
  <mappings>

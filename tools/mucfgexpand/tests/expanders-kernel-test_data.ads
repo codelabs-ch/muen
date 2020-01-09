@@ -35,4 +35,7 @@ package Expanders.Kernel.Test_Data is
    --  Prepare policy for tau0 interface mapping test.
    procedure Pre_Map_Tau0_Interface (Data : in out Muxml.XML_Data_Type);
 
+   --  Prepare policy for vga diagnostics device test.
+   procedure Pre_Vga_Diagnostics (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Kernel.Test_Data;

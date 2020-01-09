@@ -1,0 +1,37 @@
+  </mappings>                                                                                                                                             </mappings>
+  <kernelDiagnostics type="uart">                                                                                                                         <kernelDiagnostics type="uart">
+   <device physical="debugconsole">                                                                                                                  |     <device physical="vga">
+    <ioPort physical="serial"/>                                                                                                                      |      <memory physical="buffer"/>
+                                                                                                                                                     >      <ioPort physical="ports"/>
+   </device>                                                                                                                                               </device>
+  </kernelDiagnostics>                                                                                                                                    </kernelDiagnostics>
+--
+  </component>                                                                                                                                            </component>
+ </components>                                                                                                                                           </components>
+                                                                                                                                                     >   <kernel>
+                                                                                                                                                     >    <memory>
+                                                                                                                                                     >     <cpu id="0"/>
+                                                                                                                                                     >     <cpu id="1"/>
+                                                                                                                                                     >    </memory>
+                                                                                                                                                     >    <devices>
+                                                                                                                                                     >     <device logical="debugconsole" physical="vga">
+                                                                                                                                                     >      <memory executable="false" logical="memory" physical="buffer" virtualAddress="16#0030_0000#" writable="true"/>
+                                                                                                                                                     >      <ioPort logical="port" physical="ports"/>
+                                                                                                                                                     >     </device>
+                                                                                                                                                     >     <device logical="ioapic_1" physical="ioapic">
+                                                                                                                                                     >      <memory executable="false" logical="mmio_regs" physical="mmio_regs" virtualAddress="16#0032_0000#" writable="true"/>
+                                                                                                                                                     >     </device>
+                                                                                                                                                     >     <device logical="iommu_1" physical="iommu_1">
+                                                                                                                                                     >      <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#0032_1000#" writable="true"/>
+                                                                                                                                                     >     </device>
+                                                                                                                                                     >     <device logical="iommu_2" physical="second_iommu">
+                                                                                                                                                     >      <memory executable="false" logical="MMIO_1" physical="MMIO_1" virtualAddress="16#0032_2000#" writable="true"/>
+                                                                                                                                                     >     </device>
+                                                                                                                                                     >     <device logical="system_board" physical="system_board">
+                                                                                                                                                     >      <ioPort logical="reset_port" physical="ioport1"/>
+                                                                                                                                                     >      <ioPort logical="poweroff_port" physical="pm1a_cnt"/>
+                                                                                                                                                     >     </device>
+                                                                                                                                                     >    </devices>
+                                                                                                                                                     >   </kernel>
+ <subjects>                                                                                                                                              <subjects>
+  <subject name="lnx">                                                                                                                                    <subject name="lnx">

@@ -24,6 +24,10 @@
      <capability name="max_redirection_entry">23</capability>
     </capabilities>
    </device>
+   <device name="vga">
+    <memory caching="WC" name="buffer" physicalAddress="16#000a_0000#" size="16#0002_0000#"/>
+    <ioPort end="16#03df#" name="ports" start="16#03c0#"/>
+   </device>
    <device name="xhci">
     <pci bus="16#00#" device="16#14#" function="0" msi="false">
      <identification classcode="16#0c03#" deviceId="16#3c31#" revisionId="16#04#" vendorId="16#8086#"/>

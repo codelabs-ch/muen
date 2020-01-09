@@ -3,6 +3,13 @@
 --  automatically. Contents of this package can be modified in any way
 --  except for sections surrounded by a 'read only' marker.
 
+with Ada.Strings.Unbounded;
+
+with DOM.Core.Documents;
+with DOM.Core.Elements;
+
+with Muxml.Utils;
+
 package body Expanders.Kernel.Test_Data is
 
    -------------------------------------------------------------------------
@@ -61,5 +68,38 @@ package body Expanders.Kernel.Test_Data is
       Add_Section_Skeleton (Data => Data);
       Hardware.Add_Processor_CPU_IDs (Data => Data);
    end Pre_Map_Tau0_Interface;
+
+   -------------------------------------------------------------------------
+
+   procedure Pre_Vga_Diagnostics (Data : in out Muxml.XML_Data_Type)
+   is
+      Diag_Dev : constant DOM.Core.Node := Muxml.Utils.Get_Element
+        (Doc   => Data.Doc,
+         XPath => "/system/platform/kernelDiagnostics/device");
+      Mem_Node : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "memory");
+   begin
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Diag_Dev,
+         Name  => "physical",
+         Value => "vga");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Mem_Node,
+         Name  => "physical",
+         Value => "buffer");
+      Muxml.Utils.Insert_Before
+        (Parent    => Diag_Dev,
+         New_Child => Mem_Node,
+         Ref_Names =>
+           (1 => Ada.Strings.Unbounded.To_Unbounded_String ("ioPort")));
+      Muxml.Utils.Set_Attribute
+        (Doc   => Diag_Dev,
+         XPath => "ioPort",
+         Name  => "physical",
+         Value => "ports");
+
+      Add_Section_Skeleton (Data => Data);
+   end Pre_Vga_Diagnostics;
 
 end Expanders.Kernel.Test_Data;

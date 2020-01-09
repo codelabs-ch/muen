@@ -73,6 +73,10 @@ is
                    (Str => DOM.Core.Elements.Get_Attribute
                       (Elem => Logical_Dev,
                        Name => "logical"));
+               Logical_Memory : constant DOM.Core.Node_List
+                 := McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Logical_Dev,
+                    XPath => "memory");
                Logical_Ports : constant DOM.Core.Node_List
                  := McKae.XML.XPath.XIA.XPath_Query
                    (N     => Logical_Dev,
@@ -119,6 +123,30 @@ is
                        & Phys_Address & ";" & ASCII.LF;
                   end;
                end loop Write_Ports;
+
+               Write_Memory :
+               for J in 0 .. DOM.Core.Nodes.Length (List => Logical_Memory) - 1
+               loop
+                  declare
+                     Logical_Mem : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Item
+                         (List  => Logical_Memory,
+                          Index => J);
+                     Logical_Mem_Name : constant String
+                       := Mutools.Utils.To_Ada_Identifier
+                         (Str => DOM.Core.Elements.Get_Attribute
+                            (Elem => Logical_Mem,
+                             Name => "logical"));
+                     Log_Address : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                            (Elem => Logical_Mem,
+                             Name => "virtualAddress");
+                  begin
+                     Res := Res & Mutools.Utils.Indent & Logical_Dev_Name
+                       & "_" & Logical_Mem_Name & " : constant := "
+                       & Log_Address & ";" & ASCII.LF;
+                  end;
+               end loop Write_Memory;
 
                Write_Caps :
                for J in 0 .. DOM.Core.Nodes.Length (List => Caps) - 1

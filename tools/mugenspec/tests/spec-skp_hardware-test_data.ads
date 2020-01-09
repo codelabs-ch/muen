@@ -6,6 +6,12 @@
 with AUnit.Test_Fixtures;
 
 with Ada.Directories;
+with Ada.Strings.Unbounded;
+
+with DOM.Core.Elements;
+
+with Muxml.Utils;
+with Mutools.XML_Utils;
 
 with Test_Utils;
 

@@ -446,6 +446,46 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      function U
+        (Source : String)
+      return Ada.Strings.Unbounded.Unbounded_String
+      renames Ada.Strings.Unbounded.To_Unbounded_String;
+
+      --  Setup platform diagnostics device to a valid vga configuration.
+      procedure Setup_VGA_Diagnostics_Device (Doc : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Setup_VGA_Diagnostics_Device (Doc : DOM.Core.Node)
+      is
+         Diag_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Doc,
+            XPath => "/system/platform/kernelDiagnostics");
+         Diag_Dev : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Diag_Node,
+            XPath => "device");
+         Memory : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
+           (Doc      => Doc,
+            Tag_Name => "memory");
+      begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Memory,
+                                          Name  => "physical",
+                                          Value => "buffer");
+         DOM.Core.Elements.Set_Attribute (Elem  => Diag_Node,
+                                          Name  => "type",
+                                          Value => "vga");
+         DOM.Core.Elements.Set_Attribute (Elem  => Diag_Dev,
+                                          Name  => "physical",
+                                          Value => "vga");
+         Muxml.Utils.Insert_Before (Parent    => Diag_Dev,
+                                    New_Child => Memory,
+                                    Ref_Names => (1 => U ("ioPort")));
+         Muxml.Utils.Set_Attribute (Doc   => Diag_Dev,
+                                    XPath => "ioPort",
+                                    Name  => "physical",
+                                    Value => "ports");
+      end Setup_VGA_Diagnostics_Device;
+
       ----------------------------------------------------------------------
 
       procedure None_Device_Reference
@@ -603,6 +643,178 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
 
          Kernel_Diagnostics_Type_Resources (XML_Data => Data);
       end Uart_Positive_Test;
+
+
+      ----------------------------------------------------------------------
+
+      procedure Vga_Device_Reference
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/test_policy.xml");
+         Setup_VGA_Diagnostics_Device (Doc => Data.Doc);
+
+         Muxml.Utils.Remove_Child
+           (Node      => Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => "/system/platform/kernelDiagnostics"),
+            Child_Name => "device");
+
+         begin
+            Kernel_Diagnostics_Type_Resources (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (Vga device ref)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Kernel diagnostics device of type 'vga' must "
+                       & "specify device reference",
+                       Message   => "Exception mismatch (Vga device ref)");
+         end;
+      end Vga_Device_Reference;
+
+      ----------------------------------------------------------------------
+
+      procedure Vga_Resource_Count_Mismatch
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/test_policy.xml");
+         Setup_VGA_Diagnostics_Device (Doc => Data.Doc);
+
+         declare
+            Diag_Dev_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Data.Doc,
+                 XPath => "/system/platform/kernelDiagnostics/device");
+         begin
+            Muxml.Utils.Append_Child
+              (Node      => Diag_Dev_Node,
+               New_Child => DOM.Core.Documents.Create_Element
+                 (Doc      => Data.Doc,
+                  Tag_Name => "memory"));
+
+            Kernel_Diagnostics_Type_Resources (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (Vga res count 3)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Kernel diagnostics device of type 'vga' must "
+                       & "specify exactly two device resource references",
+                       Message   => "Exception mismatch (Vga res count 3)");
+         end;
+
+         begin
+            Muxml.Utils.Remove_Elements
+              (Doc   => Data.Doc,
+               XPath => "/system/platform/kernelDiagnostics/device/*");
+
+            Kernel_Diagnostics_Type_Resources (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (Vga res count 0)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Kernel diagnostics device of type 'vga' must "
+                       & "specify exactly two device resource references",
+                       Message   => "Exception mismatch (Vga res count 0)");
+         end;
+      end Vga_Resource_Count_Mismatch;
+
+      ----------------------------------------------------------------------
+
+      procedure Vga_Resource_Mismatch
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/test_policy.xml");
+         Setup_VGA_Diagnostics_Device (Doc => Data.Doc);
+
+         declare
+            Diag_Dev_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Data.Doc,
+                 XPath => "/system/platform/kernelDiagnostics/device");
+         begin
+            Muxml.Utils.Remove_Child (Node       => Diag_Dev_Node,
+                                      Child_Name => "ioPort");
+            Muxml.Utils.Append_Child
+              (Node      => Diag_Dev_Node,
+               New_Child => DOM.Core.Documents.Create_Element
+                 (Doc      => Data.Doc,
+                  Tag_Name => "memory"));
+
+            Kernel_Diagnostics_Type_Resources (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (Vga resource port)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Kernel diagnostics device of type 'vga' must "
+                       & "specify an I/O port device resource reference",
+                       Message   => "Exception mismatch (Vga resource port)");
+         end;
+
+         declare
+            Diag_Dev_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Data.Doc,
+                 XPath => "/system/platform/kernelDiagnostics/device");
+         begin
+            Muxml.Utils.Remove_Child (Node       => Diag_Dev_Node,
+                                      Child_Name => "memory");
+            Muxml.Utils.Remove_Child (Node       => Diag_Dev_Node,
+                                      Child_Name => "memory");
+            Muxml.Utils.Append_Child
+              (Node      => Diag_Dev_Node,
+               New_Child => DOM.Core.Documents.Create_Element
+                 (Doc      => Data.Doc,
+                  Tag_Name => "ioPort"));
+            Muxml.Utils.Append_Child
+              (Node      => Diag_Dev_Node,
+               New_Child => DOM.Core.Documents.Create_Element
+                 (Doc      => Data.Doc,
+                  Tag_Name => "ioPort"));
+
+            Kernel_Diagnostics_Type_Resources (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (Vga resource mem)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Kernel diagnostics device of type 'vga' must "
+                       & "specify a memory device resource reference",
+                       Message   => "Exception mismatch (Vga resource mem)");
+         end;
+      end Vga_Resource_Mismatch;
+
+      ----------------------------------------------------------------------
+
+      procedure Vga_Positive_Test
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Setup_VGA_Diagnostics_Device (Doc => Data.Doc);
+
+         --  Positive tests, must not raise an exception.
+
+         Kernel_Diagnostics_Type_Resources (XML_Data => Data);
+      end Vga_Positive_Test;
    begin
       None_Positive_Test;
       None_Device_Reference;
@@ -610,6 +822,10 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
       Uart_Device_Reference;
       Uart_Resource_Mismatch;
       Uart_Resource_Count_Mismatch;
+      Vga_Positive_Test;
+      Vga_Device_Reference;
+      Vga_Resource_Mismatch;
+      Vga_Resource_Count_Mismatch;
 --  begin read only
    end Test_Kernel_Diagnostics_Type_Resources;
 --  end read only

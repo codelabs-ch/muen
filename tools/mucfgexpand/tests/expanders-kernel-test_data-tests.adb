@@ -241,6 +241,12 @@ package body Expanders.Kernel.Test_Data.Tests is
          Ref_Diff => "data/kernel_devices.xml.diff",
          Pre      => Add_Section_Skeleton'Access,
          Expander => Add_Devices'Access);
+
+      Test_Utils.Expander.Run_Test
+        (Filename => "obj/kernel_devices_vga.xml",
+         Ref_Diff => "data/kernel_devices_vga.xml.diff",
+         Pre      => Pre_Vga_Diagnostics'Access,
+         Expander => Add_Devices'Access);
 --  begin read only
    end Test_Add_Devices;
 --  end read only

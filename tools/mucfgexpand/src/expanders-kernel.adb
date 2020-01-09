@@ -263,6 +263,7 @@ is
            := DOM.Core.Nodes.Length (List => Dev_Resources);
 
          Port_Count : Natural := 0;
+         Mem_Count  : Natural := 0;
       begin
          Mulog.Log (Msg => "Adding physical device '" & Phys_Dev_Name & " as "
                     & Mutools.Utils.Capitalize (Str => Debug_Console_Type_Str)
@@ -299,6 +300,35 @@ is
                              Side   => Ada.Strings.Left)
                         else ""));
                   Port_Count := Port_Count + 1;
+               elsif Res_Kind = "memory" then
+                  Log_Res := MX.Create_Virtual_Memory_Node
+                    (Policy        => Data,
+                     Logical_Name  => "memory" &
+                     (if Mem_Count > 0 then Ada.Strings.Fixed.Trim
+                            (Source => Mem_Count'Img,
+                             Side   => Ada.Strings.Left)
+                        else ""),
+                     Physical_Name => Phys_Res_Name,
+                     Address       => Mutools.Utils.To_Hex
+                       (Number => Base_Address),
+                     Writable      => True,
+                     Executable    => False);
+
+                  declare
+                     use type Interfaces.Unsigned_64;
+
+                     Mem_Size : constant Interfaces.Unsigned_64
+                       := Interfaces.Unsigned_64'Value
+                         (Muxml.Utils.Get_Attribute
+                            (Doc   => Data.Doc,
+                             XPath => "/system/hardware/devices/device[@name='"
+                             & Phys_Dev_Name & "']/memory[@name='"
+                             & Phys_Res_Name & "']",
+                             Name  => "size"));
+                  begin
+                     Base_Address := Base_Address + Mem_Size;
+                  end;
+                  Mem_Count := Mem_Count + 1;
                end if;
 
                Muxml.Utils.Append_Child

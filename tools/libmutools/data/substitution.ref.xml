@@ -19,9 +19,6 @@
    <classes/>
   </mappings>
  </platform>
- <kernelDiagnosticsDevice physical="serial_controller_1">
-  <ioPort physical="ioport1"/>
- </kernelDiagnosticsDevice>
  <memory>
   <memory caching="WB" name="$nonexistentcfgvar" size="16#1000#"/>
  </memory>

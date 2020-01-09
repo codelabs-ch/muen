@@ -45,7 +45,7 @@ package body Expand.Post_Checks.Test_Data.Tests is
                    File => "data/test_policy.xml");
 
       Register_All;
-      Assert (Condition => Check_Procs.Get_Count = 2,
+      Assert (Condition => Check_Procs.Get_Count = 3,
               Message   => "Count mismatch (1):" & Get_Count'Img);
       Check_Procs.Clear;
 

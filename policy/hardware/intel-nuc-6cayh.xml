@@ -79,10 +79,6 @@
         <capability name="iotlb_invalidate_offset">1288</capability>
       </capabilities>
     </device>
-    <!-- XXX: Dummy serial controller -->
-    <device name="serial_controller_1">
-     <ioPort end="16#03ff#" name="ioport1" start="16#03f8#"/>
-    </device>
     <device name="host_bridge_1">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series Host Bridge</description>
       <pci bus="16#00#" device="16#00#" function="0">

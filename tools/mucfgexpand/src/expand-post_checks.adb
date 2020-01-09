@@ -18,6 +18,7 @@
 
 with Mucfgcheck.Memory;
 with Mucfgcheck.Hardware;
+with Mucfgcheck.Kernel;
 
 package body Expand.Post_Checks
 is
@@ -43,6 +44,8 @@ is
         (Process => Mucfgcheck.Memory.Physical_Memory_Name_Uniqueness'Access);
       Check_Procs.Register
         (Process => Mucfgcheck.Hardware.IOMMU_Cap_Agaw'Access);
+      Check_Procs.Register
+        (Process => Mucfgcheck.Kernel.Diagnostics_Device_Reference'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

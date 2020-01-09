@@ -37,4 +37,14 @@ is
    procedure Subject_Alias_Resource_References
      (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that the physical device and resources referenced by kernel
+   --  diagnostics device exists.
+   procedure Kernel_Diagnostics_Device_Reference
+     (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that the kernel diagnostics device resources match the
+   --  requirements of the specified diagnostics type.
+   procedure Kernel_Diagnostics_Type_Resources
+     (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Platform;

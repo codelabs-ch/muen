@@ -29,8 +29,9 @@ with DOM.Core.Elements;
 
 with Mulog;
 with Muxml.Utils;
-with Mutools.Utils;
 with Mutools.Constants;
+with Mutools.Types;
+with Mutools.Utils;
 with Mutools.XML_Utils;
 
 with Expanders.Config;
@@ -194,6 +195,16 @@ is
 
    procedure Add_Devices (Data : in out Muxml.XML_Data_Type)
    is
+      use type Mutools.Types.Kernel_Diagnostics_Kind;
+
+      Debug_Console_Type_Str : constant String
+        := Muxml.Utils.Get_Attribute
+          (Doc   => Data.Doc,
+           XPath => "/system/platform/kernelDiagnostics",
+           Name  => "type");
+      Debug_Console_Type : constant Mutools.Types.Kernel_Diagnostics_Kind
+        := Mutools.Types.Kernel_Diagnostics_Kind'Value
+          (Debug_Console_Type_Str);
 
       --  Base address of kernel device mappings.
       Base_Address : Interfaces.Unsigned_64
@@ -235,45 +246,66 @@ is
          Kernel_Diag_Dev  : constant DOM.Core.Node
            := Muxml.Utils.Get_Element
              (Doc   => Data.Doc,
-              XPath => "/system/kernelDiagnosticsDevice");
-         Kernel_Diag_Port : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Doc   => Kernel_Diag_Dev,
-              XPath => "ioPort");
+              XPath => "/system/platform/kernelDiagnostics/device");
          Phys_Dev_Name    : constant String
            := DOM.Core.Elements.Get_Attribute
              (Elem => Kernel_Diag_Dev,
               Name => "physical");
-         Phys_Port_Name   : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Kernel_Diag_Port,
-              Name => "physical");
-
          Log_Device : constant DOM.Core.Node
            := XML_Utils.Create_Logical_Device_Node
              (Policy        => Data,
               Logical_Name  => "debugconsole",
               Physical_Name => Phys_Dev_Name);
-         Log_Port   : constant  DOM.Core.Node
-           := DOM.Core.Documents.Create_Element
-             (Doc      => Data.Doc,
-              Tag_Name => "ioPort");
-      begin
-         Mulog.Log (Msg => "Adding debug console to kernel devices, physical "
-                    & "device '" & Phys_Dev_Name & "', port name '"
-                    & Phys_Port_Name & "'");
+         Dev_Resources : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query (N     => Kernel_Diag_Dev,
+                                               XPath => "*");
+         Dev_Res_Count : constant Natural
+           := DOM.Core.Nodes.Length (List => Dev_Resources);
 
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Log_Port,
-            Name  => "logical",
-            Value => "port");
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Log_Port,
-            Name  => "physical",
-            Value => Phys_Port_Name);
-         Muxml.Utils.Append_Child
-           (Node      => Log_Device,
-            New_Child => Log_Port);
+         Port_Count : Natural := 0;
+      begin
+         Mulog.Log (Msg => "Adding physical device '" & Phys_Dev_Name & " as "
+                    & Mutools.Utils.Capitalize (Str => Debug_Console_Type_Str)
+                    & " debug console to kernel devices");
+
+         for I in 0 .. Dev_Res_Count - 1 loop
+            declare
+               Dev_Res : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item (List  => Dev_Resources,
+                                         Index => I);
+               Res_Kind : constant String
+                 := DOM.Core.Nodes.Node_Name (N => Dev_Res);
+               Phys_Res_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Dev_Res,
+                    Name => "physical");
+
+               Log_Res : DOM.Core.Node;
+            begin
+               if Res_Kind = "ioPort" then
+                  Log_Res := DOM.Core.Documents.Create_Element
+                    (Doc      => Data.Doc,
+                     Tag_Name => Res_Kind);
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => Log_Res,
+                     Name  => "physical",
+                     Value => Phys_Res_Name);
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => Log_Res,
+                     Name  => "logical",
+                     Value => "port" &
+                     (if Port_Count > 0 then Ada.Strings.Fixed.Trim
+                            (Source => Port_Count'Img,
+                             Side   => Ada.Strings.Left)
+                        else ""));
+                  Port_Count := Port_Count + 1;
+               end if;
+
+               Muxml.Utils.Append_Child
+                 (Node      => Log_Device,
+                  New_Child => Log_Res);
+            end;
+         end loop;
 
          Muxml.Utils.Append_Child
            (Node      => Devices,
@@ -437,7 +469,9 @@ is
           (Doc   => Data.Doc,
            XPath => "/system/kernel/devices");
    begin
-      Add_Debug_Console (Devices => Devices_Node);
+      if Debug_Console_Type /= Mutools.Types.None then
+         Add_Debug_Console (Devices => Devices_Node);
+      end if;
       Add_IO_APIC       (Devices => Devices_Node);
       Add_IOMMUs        (Devices => Devices_Node);
       Add_System_Board  (Devices => Devices_Node);
@@ -765,19 +799,5 @@ is
             Writable      => False,
             Executable    => False));
    end Map_Tau0_Interface;
-
-   -------------------------------------------------------------------------
-
-   procedure Remove_Diagnostics_Device (Data : in out Muxml.XML_Data_Type)
-   is
-      Node : constant DOM.Core.Node
-        := Muxml.Utils.Get_Element
-          (Doc   => Data.Doc,
-           XPath => "/system");
-   begin
-      Muxml.Utils.Remove_Child
-        (Node       => Node,
-         Child_Name => "kernelDiagnosticsDevice");
-   end Remove_Diagnostics_Device;
 
 end Expanders.Kernel;

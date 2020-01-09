@@ -24,6 +24,7 @@
    <aliases/>
    <classes/>
   </mappings>
+  <kernelDiagnostics type="none"/>
  </platform>
  <memory>
   <memory alignment="16#1000#" caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#" type="subject"/>

@@ -1,14 +1,14 @@
 <system>
   <config>
+    <boolean name="xhcidbg_enabled" value="false"/>
+    <boolean name="dbgserver_serial_enabled" value="true"/>
     <boolean name="dbgserver_sink_pcspkr" value="false"/>
-    <boolean name="dbgserver_sink_serial" value="true"/>
     <boolean name="dbgserver_sink_shmem" value="false"/>
-    <boolean name="dbgserver_sink_xhcidbg" value="false"/>
     <boolean name="pciconf_emulation_enabled" value="false"/>
     <boolean name="unikernel_net" value="true"/>
     <string name="logchannel_size" value="16#0002_0000#"/>
   </config>
-  <include href="kernel_diagnostics.xml"/>
+  <include href="common_expressions.xml"/>
   <memory>
     <include href="common_memory.xml"/>
   </memory>

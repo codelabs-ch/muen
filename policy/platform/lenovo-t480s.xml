@@ -1,5 +1,6 @@
 <platform>
  <config>
+  <boolean name="serial_supported" value="true"/>
   <boolean name="xhcidbg_supported" value="true"/>
   <string name="igd_opregion_address" value="16#7b55_8000#"/>
  </config>
@@ -32,4 +33,9 @@
    </class>
   </classes>
  </mappings>
+ <kernelDiagnostics type="uart">
+  <device physical="serial_controller_1">
+   <ioPort physical="ioport1"/>
+  </device>
+ </kernelDiagnostics>
 </platform>

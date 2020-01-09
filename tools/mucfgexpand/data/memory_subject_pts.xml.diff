@@ -1,8 +1,4 @@
-  </mappings>                                                                                                                                             </mappings>
  </platform>                                                                                                                                             </platform>
- <kernelDiagnosticsDevice physical="amt_console">                                                                                                    |   <kernelDiagnosticsDevice physical="debugconsole">
-  <ioPort physical="ioports"/>                                                                                                                       |    <ioPort physical="serial"/>
- </kernelDiagnosticsDevice>                                                                                                                              </kernelDiagnosticsDevice>
  <memory>                                                                                                                                                <memory>
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>                                                                     |    <memory alignment="16#1000#" caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#" type="subject"/>
   <memory alignment="16#1000#" caching="UC" name="nic1|dma" physicalAddress="16#2000#" size="16#1000#"/>                                             |    <memory alignment="16#1000#" caching="UC" name="nic1|dma" physicalAddress="16#2000#" size="16#1000#" type="subject"/>

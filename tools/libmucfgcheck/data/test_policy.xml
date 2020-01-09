@@ -134,6 +134,11 @@
     </class>
    </classes>
   </mappings>
+  <kernelDiagnostics type="uart">
+   <device physical="debugconsole">
+    <ioPort physical="port"/>
+   </device>
+  </kernelDiagnostics>
  </platform>
  <memory>
   <memory alignment="16#0020_0000#" caching="WB" name="linux|ram" physicalAddress="16#0080_0000#" size="16#0f60_0000#" type="subject"/>

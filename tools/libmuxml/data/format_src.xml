@@ -50,10 +50,12 @@
     </alias>
    </aliases>
   </mappings>
+  <kernelDiagnostics type="uart">
+   <device physical="debugconsole">
+    <ioPort physical="serial"/>
+   </device>
+  </kernelDiagnostics>
  </platform>
- <kernelDiagnosticsDevice physical="debugconsole">
-  <ioPort physical="serial"/>
- </kernelDiagnosticsDevice>
  <memory>
   <memory alignment="16#1000#" caching="WB" name="trampoline" size="16#1000#" type="subject">
    <hash value="16#8529afcbc87cc6ea6eac37d12b60d9a87095170811b6b61036fda72a1036fda7#"/>

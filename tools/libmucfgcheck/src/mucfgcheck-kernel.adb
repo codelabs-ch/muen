@@ -24,9 +24,10 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.Match;
+with Mutools.Types;
 with Mutools.Utils;
 with Mutools.XML_Utils;
-with Mutools.Match;
 
 with Mucfgcheck.Utils;
 
@@ -144,6 +145,120 @@ is
                        B         => Addr,
                        Error_Msg => "differs");
    end Crash_Audit_Address_Equality;
+
+   -------------------------------------------------------------------------
+
+   procedure Diagnostics_Device_Reference (XML_Data : Muxml.XML_Data_Type)
+   is
+      use type Mutools.Types.Kernel_Diagnostics_Kind;
+
+      Diag_Dev_Type_Str : constant String := Muxml.Utils.Get_Attribute
+        (Doc   => XML_Data.Doc,
+         XPath => "/system/platform/kernelDiagnostics",
+         Name  => "type");
+      Diag_Dev_Type : constant Mutools.Types.Kernel_Diagnostics_Kind
+        := Mutools.Types.Kernel_Diagnostics_Kind'Value (Diag_Dev_Type_Str);
+      Diag_Device  : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => XML_Data.Doc,
+           XPath => "/system/platform/kernelDiagnostics/device");
+      Debug_Device : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => XML_Data.Doc,
+           XPath => "/system/kernel/devices/device[@logical='debugconsole']");
+
+      --  Returns error message for given device resource node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
+
+      --  Returns True if the physical attribute and node name of Left and
+      --  Right are identical.
+      function Match_Physical_And_Type
+        (Left, Right : DOM.Core.Node)
+         return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Res_Kind : constant String
+           := Mutools.Utils.To_Ada_Identifier
+             (Str => DOM.Core.Nodes.Node_Name (N => Node));
+         Phys_Name : constant String
+           := DOM.Core.Elements.Get_Attribute (Elem => Node,
+                                               Name => "physical");
+      begin
+         return "Kernel debug console reference to physical " & Res_Kind & " '"
+           & Phys_Name & "' not specified by platform kernel diagnostics "
+           & "device";
+      end Error_Msg;
+
+      ----------------------------------------------------------------------
+
+      function Match_Physical_And_Type
+        (Left, Right : DOM.Core.Node)
+         return Boolean
+      is
+         L_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "physical");
+         L_Type : constant String := DOM.Core.Nodes.Node_Name (N => Left);
+         R_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "physical");
+         R_Type : constant String := DOM.Core.Nodes.Node_Name (N => Right);
+      begin
+         return L_Name = R_Name and then L_Type = R_Type;
+      end Match_Physical_And_Type;
+   begin
+      Mulog.Log (Msg => "Checking " & Diag_Dev_Type_Str
+                 & " kernel diagnostics device reference");
+
+      if Diag_Dev_Type = Mutools.Types.None then
+         return;
+      end if;
+
+      declare
+         Diag_Phys_Dev_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Diag_Device,
+              Name => "physical");
+         Diag_Dev_Res : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Diag_Device,
+              XPath => "*");
+         Diag_Dev_Res_Count : constant Natural
+           := DOM.Core.Nodes.Length (List => Diag_Dev_Res);
+         Debug_Phys_Dev_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Debug_Device,
+              Name => "physical");
+         Debug_Dev_Res : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Debug_Device,
+              XPath => "*");
+         Debug_Dev_Res_Count : constant Natural
+           := DOM.Core.Nodes.Length (List => Debug_Dev_Res);
+      begin
+         if Diag_Phys_Dev_Name /= Debug_Phys_Dev_Name then
+            raise Validation_Error with "Kernel debug console and platform "
+              & "diagnostics device physical reference mismatch: "
+              & Debug_Phys_Dev_Name & " /= " & Diag_Phys_Dev_Name;
+         end if;
+
+         if Diag_Dev_Res_Count /= Debug_Dev_Res_Count then
+            raise Validation_Error with "Kernel debug console and platform "
+              & "diagnostics device resource count mismatch:"
+              & Debug_Dev_Res_Count'Img & " /=" & Diag_Dev_Res_Count'Img;
+         end if;
+
+         For_Each_Match
+           (Source_Nodes => Debug_Dev_Res,
+            Ref_Nodes    => Diag_Dev_Res,
+            Log_Message  => "kernel diagnostics device resource references",
+            Error        => Error_Msg'Access,
+            Match        => Match_Physical_And_Type'Access);
+      end;
+   end Diagnostics_Device_Reference;
 
    -------------------------------------------------------------------------
 

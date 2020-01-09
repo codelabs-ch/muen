@@ -53,4 +53,7 @@ is
    --  MSR access modes.
    type MSR_Mode_Type is (R, W, RW);
 
+   --  Types of kernel diagnostics devices.
+   type Kernel_Diagnostics_Kind is (None, Uart);
+
 end Mutools.Types;

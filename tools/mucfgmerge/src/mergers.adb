@@ -221,7 +221,7 @@ is
                                3 => U ("reservedMemory"),
                                4 => U ("cpu")),
          Section_Ref_Names => (1 => U ("platform"),
-                               2 => U ("kernelDiagnosticsDevice")),
+                               2 => U ("memory")),
          Add_Missing_Elems => Add_Missing_HW_Elements'Access);
    end Merge_Hardware;
 
@@ -240,7 +240,7 @@ is
                                2 => U ("resource"),
                                3 => U ("class"),
                                4 => U ("device")),
-         Section_Ref_Names => (1 => U ("kernelDiagnosticsDevice")),
+         Section_Ref_Names => (1 => U ("memory")),
          Add_Missing_Elems => Add_Missing_PL_Elements'Access);
    end Merge_Platform;
 

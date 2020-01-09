@@ -3,7 +3,8 @@
 
  <xs:complexType name="platformType">
   <xs:sequence>
-   <xs:element name="mappings" type="mappingsType" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="mappings"          type="mappingsType"   minOccurs="1" maxOccurs="1"/>
+   <xs:element name="kernelDiagnostics" type="kernelDiagType" minOccurs="1" maxOccurs="1"/>
   </xs:sequence>
  </xs:complexType>
 

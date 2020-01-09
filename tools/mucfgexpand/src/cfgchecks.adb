@@ -1456,51 +1456,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Kernel_Diagnostics_Dev_Reference (XML_Data : Muxml.XML_Data_Type)
-   is
-   begin
-      Mulog.Log (Msg => "Checking presence of kernel diagnostics device");
-
-      declare
-         use type DOM.Core.Node;
-
-         Kernel_Diag_Dev  : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Doc   => XML_Data.Doc,
-              XPath => "/system/kernelDiagnosticsDevice");
-         Kernel_Diag_Port : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Doc   => Kernel_Diag_Dev,
-              XPath => "ioPort");
-         Dev_Name         : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Kernel_Diag_Dev,
-              Name => "physical");
-         Port_Name        : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Kernel_Diag_Port,
-              Name => "physical");
-         Physical_Port    : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Doc   => XML_Data.Doc,
-              XPath => "/system/hardware/devices/device[@name='" & Dev_Name
-              & "' and ioPort/@name='" & Port_Name & "']");
-         Alias_Port       : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Doc   => XML_Data.Doc,
-              XPath => "/system/platform/mappings/aliases/alias[@name='"
-              & Dev_Name & "' and resource/@name='" & Port_Name & "']");
-      begin
-         if Physical_Port = null and then Alias_Port = null then
-            raise Mucfgcheck.Validation_Error with "Kernel diagnostics device "
-              & "'" & Dev_Name & "' with I/O port resource '" & Port_Name
-              & "' does not reference a physical I/O device or alias";
-         end if;
-      end;
-   end Kernel_Diagnostics_Dev_Reference;
-
-   -------------------------------------------------------------------------
-
    procedure Library_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List

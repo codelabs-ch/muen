@@ -233,10 +233,6 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/platform/mappings/aliases/alias");
-      Knl_Diag_Dev : constant DOM.Core.Node
-        := Muxml.Utils.Get_Element
-          (Doc   => Data.Doc,
-           XPath => "/system/kernelDiagnosticsDevice");
 
       Device_Refs : DOM.Core.Node_List;
 
@@ -254,34 +250,25 @@ is
 
       function Get_Owner_Info (Alias_Reference : DOM.Core.Node) return String
       is
-         Element_Name : constant String
-           := DOM.Core.Nodes.Node_Name (N => Alias_Reference);
+         Owner : constant DOM.Core.Node
+           := Muxml.Utils.Ancestor_Node
+             (Node  => Alias_Reference,
+              Level => 2);
+         Owner_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Owner,
+              Name => "name");
 
          Info : Unbounded_String;
       begin
-         if Element_Name = "kernelDiagnosticsDevice" then
-            Info := To_Unbounded_String ("kernel diagnostics device");
+         if DOM.Core.Nodes.Node_Name (N => Owner) = "subject" then
+            Info := To_Unbounded_String ("subject");
          else
-            declare
-               Owner : constant DOM.Core.Node
-                 := Muxml.Utils.Ancestor_Node
-                   (Node  => Alias_Reference,
-                    Level => 2);
-               Owner_Name : constant String
-                 := DOM.Core.Elements.Get_Attribute
-                   (Elem => Owner,
-                    Name => "name");
-            begin
-               if DOM.Core.Nodes.Node_Name (N => Owner) = "subject" then
-                  Info := To_Unbounded_String ("subject");
-               else
-                  Info := To_Unbounded_String ("device domain");
-               end if;
-
-               Append (Source   => Info,
-                       New_Item => " '" & Owner_Name & "'");
-            end;
+            Info := To_Unbounded_String ("device domain");
          end if;
+
+         Append (Source   => Info,
+                 New_Item => " '" & Owner_Name & "'");
 
          return To_String (Info);
       end Get_Owner_Info;
@@ -339,8 +326,6 @@ is
                           Right => Subj_Devs);
       Muxml.Utils.Append (Left  => Device_Refs,
                           Right => Domain_Devs);
-      DOM.Core.Append_Node (List => Device_Refs,
-                            N    => Knl_Diag_Dev);
 
       for I in 1 .. DOM.Core.Nodes.Length (List => Dev_Aliases) loop
          declare

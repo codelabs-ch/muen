@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,11 +16,13 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Skp.Hardware;
+with SK.Console;
+with SK.Console_UART;
 
-with SK.UART_8250;
+pragma Elaborate (SK.Console);
 
-pragma Elaborate (SK.UART_8250);
-
-package SK.Console_Serial is new SK.UART_8250
-  (Base_Address => Skp.Hardware.Debugconsole_Port);
+--  Kernel debug console.
+package SK.KC is new SK.Console
+  (Initialize      => Console_UART.Init,
+   Output_New_Line => Console_UART.New_Line,
+   Output_Char     => Console_UART.Put_Char);

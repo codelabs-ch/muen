@@ -79,6 +79,11 @@
    <aliases/>
    <classes/>
   </mappings>
+  <kernelDiagnostics type="uart">
+   <device physical="debuconsole">
+    <ioPort physical="port"/>
+   </device>
+  </kernelDiagnostics>
  </platform>
  <memory>
   <memory alignment="16#1000#" caching="WB" name="trampoline" physicalAddress="16#0000#" size="16#1000#" type="system"/>

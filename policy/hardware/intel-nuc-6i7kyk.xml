@@ -73,11 +73,6 @@
         <capability name="iotlb_invalidate_offset">1288</capability>
       </capabilities>
     </device>
-    <!-- XXX: Dummy serial controller -->
-    <device name="serial_controller_1">
-      <irq name="irq1" number="4"/>
-      <ioPort end="16#03ff#" name="ioport1" start="16#03f8#"/>
-    </device>
     <device name="host_bridge_1">
       <description>Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor Host Bridge/DRAM Registers</description>
       <pci bus="16#00#" device="16#00#" function="0">

@@ -95,7 +95,6 @@ is
       Procs.Register (Process => Kernel.Add_Crash_Audit_Mappings'Access);
       Procs.Register (Process => Kernel.Map_Tau0_Interface'Access);
       Procs.Register (Process => Kernel.Add_Devices'Access);
-      Procs.Register (Process => Kernel.Remove_Diagnostics_Device'Access);
 
       Procs.Register (Process => Subjects.Add_Sinfo_Regions'Access);
 

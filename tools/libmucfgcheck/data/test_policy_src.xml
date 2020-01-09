@@ -40,10 +40,8 @@
     </class>
    </classes>
   </mappings>
+  <kernelDiagnostics type="none"/>
  </platform>
- <kernelDiagnosticsDevice physical="debugconsole">
-  <ioPort physical="serial"/>
- </kernelDiagnosticsDevice>
  <memory>
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
   <if value="true" variable="feature_enabled">

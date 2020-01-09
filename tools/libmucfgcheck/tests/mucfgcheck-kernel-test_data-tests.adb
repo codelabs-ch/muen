@@ -699,6 +699,127 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
    end Test_System_Board_Reference;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Diagnostics_Device_Reference (Gnattest_T : in out Test);
+   procedure Test_Diagnostics_Device_Reference_91f2d6 (Gnattest_T : in out Test) renames Test_Diagnostics_Device_Reference;
+--  id:2.2/91f2d6f41421c208/Diagnostics_Device_Reference/1/0/
+   procedure Test_Diagnostics_Device_Reference (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Diagnostics_Device_Reference (XML_Data => Data);
+
+      --  Resource name mismatch
+
+      begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/kernel/devices/device[@physical='debugconsole']"
+            & "/ioPort",
+            Name  => "physical",
+            Value => "nonexistent");
+
+         Diagnostics_Device_Reference (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Resource name)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Kernel debug console reference to physical Ioport "
+                    & "'nonexistent' not specified by platform kernel "
+                    & "diagnostics device",
+                    Message   => "Exception mismatch (Resource name)");
+      end;
+
+      --  Resource type mismatch
+
+      declare
+         Dev_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/kernel/devices/device"
+            & "[@physical='debugconsole']");
+         New_Node : constant DOM.Core.Node
+           := DOM.Core.Documents.Create_Element
+             (Doc      => Data.Doc,
+              Tag_Name => "memory");
+      begin
+         Muxml.Utils.Remove_Child (Node       => Dev_Node,
+                                   Child_Name => "ioPort");
+         DOM.Core.Elements.Set_Attribute (Elem  => New_Node,
+                                          Name  => "physical",
+                                          Value => "port");
+         Muxml.Utils.Append_Child (Node      => Dev_Node,
+                                   New_Child => New_Node);
+
+         Diagnostics_Device_Reference (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Resource type)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Kernel debug console reference to physical Memory "
+                    & "'port' not specified by platform kernel "
+                    & "diagnostics device",
+                    Message   => "Exception mismatch (Resource type)");
+      end;
+
+      --  Resource count mismatch
+
+      begin
+         Muxml.Utils.Remove_Elements
+           (Doc   => Data.Doc,
+            XPath => "/system/kernel/devices/device"
+            & "[@physical='debugconsole']/*");
+
+         Diagnostics_Device_Reference (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Resource count)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Kernel debug console and platform diagnostics device "
+                    & "resource count mismatch: 0 /= 1",
+                    Message   => "Exception mismatch (Resource count)");
+      end;
+
+      --  Device name mismatch
+
+      begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/kernel/devices/device[@physical='debugconsole']",
+            Name  => "physical",
+            Value => "nonexistent");
+
+         Diagnostics_Device_Reference (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Device name)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Kernel debug console and platform diagnostics device "
+                    & "physical reference mismatch: nonexistent /= "
+                    & "debugconsole",
+                    Message   => "Exception mismatch (Resource count)");
+      end;
+--  begin read only
+   end Test_Diagnostics_Device_Reference;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

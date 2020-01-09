@@ -36,10 +36,12 @@
     </class>
    </classes>
   </mappings>
+  <kernelDiagnostics type="uart">
+   <device physical="debugconsole">
+    <ioPort physical="serial"/>
+   </device>
+  </kernelDiagnostics>
  </platform>
- <kernelDiagnosticsDevice physical="debugconsole">
-  <ioPort physical="serial"/>
- </kernelDiagnosticsDevice>
  <memory>
   <if value="true" variable="session2_enabled">
    <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>

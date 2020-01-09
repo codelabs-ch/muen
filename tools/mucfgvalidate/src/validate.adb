@@ -26,6 +26,7 @@ with Mucfgcheck.Scheduling;
 with Mucfgcheck.Kernel;
 with Mucfgcheck.Subject;
 with Mucfgcheck.Hardware;
+with Mucfgcheck.Platform;
 with Mucfgcheck.Events;
 with Mucfgcheck.Device_Domains;
 
@@ -171,8 +172,6 @@ is
       XML_Processors.Register
         (Process => Device.Device_References_PCI_Bus_Number'Access);
       XML_Processors.Register
-        (Process => Device.Debugconsole_Presence'Access);
-      XML_Processors.Register
         (Process => Scheduling.CPU_Element_Count'Access);
       XML_Processors.Register
         (Process => Scheduling.Subject_References'Access);
@@ -204,6 +203,8 @@ is
         (Process => Kernel.CPU_Memory_Section_Count'Access);
       XML_Processors.Register
         (Process => Kernel.System_Board_Reference'Access);
+      XML_Processors.Register
+        (Process => Kernel.Diagnostics_Device_Reference'Access);
       XML_Processors.Register
         (Process => Subject.Name_Uniqueness'Access);
       XML_Processors.Register
@@ -270,7 +271,11 @@ is
         (Process => Hardware.System_Board_Presence'Access);
       XML_Processors.Register
         (Process => Hardware.IOAPIC_Presence'Access);
-         XML_Processors.Register
+      XML_Processors.Register
+        (Process => Platform.Kernel_Diagnostics_Device_Reference'Access);
+      XML_Processors.Register
+        (Process => Platform.Kernel_Diagnostics_Type_Resources'Access);
+      XML_Processors.Register
         (Process => Memory.VTd_Root_Region_Presence'Access);
       XML_Processors.Register
         (Process => Memory.VTd_Root_Region_Size'Access);

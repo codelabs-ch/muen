@@ -47,6 +47,7 @@
    <aliases/>
    <classes/>
   </mappings>
+  <kernelDiagnostics type="none"/>
  </platform>
  <memory>
   <memory alignment="16#1000#" caching="WB" name="initramfs" physicalAddress="16#0014_0000#" size="16#0030_0000#" type="subject_initrd">

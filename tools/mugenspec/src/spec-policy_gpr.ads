@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014-2020  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014-2020  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,13 +16,14 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK.Console;
-with SK.Console_Serial;
+with Muxml;
 
-pragma Elaborate (SK.Console);
+package Spec.Policy_Gpr
+is
 
---  Kernel debug console.
-package SK.KC is new SK.Console
-  (Initialize      => Console_Serial.Init,
-   Output_New_Line => Console_Serial.New_Line,
-   Output_Char     => Console_Serial.Put_Char);
+   --  Write kernel policy gpr file to given directory.
+   procedure Write
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type);
+
+end Spec.Policy_Gpr;

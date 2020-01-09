@@ -47,10 +47,12 @@
     </class>
    </classes>
   </mappings>
+  <kernelDiagnostics type="uart">
+   <device physical="debugconsole">
+    <ioPort physical="serial"/>
+   </device>
+  </kernelDiagnostics>
  </platform>
- <kernelDiagnosticsDevice physical="debugconsole">
-  <ioPort physical="serial"/>
- </kernelDiagnosticsDevice>
  <memory>
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
   <memory caching="UC" name="extra_mem" physicalAddress="16#2000#" size="16#1000#"/>

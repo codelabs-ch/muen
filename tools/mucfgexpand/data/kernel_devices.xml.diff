@@ -6,8 +6,8 @@
                                                                                                                                                      >     <cpu id="1"/>
                                                                                                                                                      >    </memory>
                                                                                                                                                      >    <devices>
-                                                                                                                                                     >     <device logical="debugconsole" physical="amt_console">
-                                                                                                                                                     >      <ioPort logical="port" physical="ioports"/>
+                                                                                                                                                     >     <device logical="debugconsole" physical="debugconsole">
+                                                                                                                                                     >      <ioPort logical="port" physical="serial"/>
                                                                                                                                                      >     </device>
                                                                                                                                                      >     <device logical="ioapic_1" physical="ioapic">
                                                                                                                                                      >      <memory executable="false" logical="mmio_regs" physical="mmio_regs" virtualAddress="16#0030_0000#" writable="true"/>

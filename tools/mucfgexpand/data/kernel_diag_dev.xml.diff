@@ -1,7 +1,0 @@
-  </mappings>                                                                                                                                             </mappings>
- </platform>                                                                                                                                             </platform>
- <kernelDiagnosticsDevice physical="amt_console">                                                                                                    <
-  <ioPort physical="ioports"/>                                                                                                                       <
- </kernelDiagnosticsDevice>                                                                                                                          <
- <memory>                                                                                                                                                <memory>
-  <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>                                                                          <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>

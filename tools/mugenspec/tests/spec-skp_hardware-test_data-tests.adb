@@ -53,6 +53,46 @@ package body Spec.Skp_Hardware.Test_Data.Tests is
                Filename2 => "data/skp-hardware.ads"),
               Message   => "Hardware spec mismatch");
       Ada.Directories.Delete_File (Name => Spec);
+
+      declare
+         Dbg_Console : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Policy.Doc,
+              XPath => "/system/kernel/devices/device"
+              & "[@logical='debugconsole']");
+         Mem_Node : constant DOM.Core.Node
+           := Mutools.XML_Utils.Create_Virtual_Memory_Node
+             (Policy        => Policy,
+              Logical_Name  => "memory",
+              Physical_Name => "buffer",
+              Address       => "16#0030_0000#",
+              Writable      => True,
+              Executable    => False);
+      begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Dbg_Console,
+            Name  => "physical",
+            Value => "vga");
+         Muxml.Utils.Insert_Before
+           (Parent    => Dbg_Console,
+            New_Child => Mem_Node,
+            Ref_Names  =>
+              (1 => Ada.Strings.Unbounded.To_Unbounded_String ("ioPort")));
+         Muxml.Utils.Set_Attribute
+           (Doc   => Dbg_Console,
+            XPath => "ioPort",
+            Name  => "physical",
+            Value => "ports");
+      end;
+
+      Write (Output_Dir => Output_Dir,
+             Policy     => Policy);
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Spec,
+               Filename2 => "data/skp-hardware_vga.ref"),
+              Message   => "Hardware spec mismatch (vga)");
+
+      Ada.Directories.Delete_File (Name => Spec);
 --  begin read only
    end Test_Write;
 --  end read only

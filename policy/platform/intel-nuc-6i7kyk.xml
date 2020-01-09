@@ -5,9 +5,6 @@
  </config>
  <mappings>
   <aliases>
-   <alias name="serial_device_1" physical="serial_controller_1">
-    <resource name="ioport1" physical="ioport1"/>
-   </alias>
    <alias name="nic_1" physical="ethernet_controller_1">
     <resource name="irq1" physical="irq1">
      <resource name="msi1" physical="msi1"/>

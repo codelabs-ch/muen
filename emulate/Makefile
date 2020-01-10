@@ -8,7 +8,7 @@ ISOPATH = $(CURDIR)/$(ISOFILE)
 IMAGE     ?= ../pack/obj/muen.img
 IMAGE_CSL ?= ../pack/obj/muen.img.cmds
 
-QEMU             ?= qemu-system-x86_64
+QEMU_BIN         ?= qemu-system-x86_64
 QEMU_MEM         ?= 5120
 QEMU_SSH_PORT    ?= 5555
 QEMU_SERIAL_WAIT ?= 8
@@ -47,6 +47,8 @@ QEMU_OPTS += \
 	-device rtl8139,netdev=net1 \
 	-netdev user,id=net1,net=192.168.253.0/24,dhcpstart=192.168.253.100
 
+QEMU_CMD ?= $(QEMU_BIN) $(QEMU_OPTS) $(QEMU_EXTRA_OPTS)
+
 iso: $(ISOFILE)
 	@echo
 	@echo "* Successfully created bootable Muen ISO '$(ISOPATH)'"
@@ -59,8 +61,8 @@ $(ISOFILE): clean $(IMAGE) $(IMAGE_CSL) grub.cfg Makefile
 		"$(GRUB_MKRESCUE) -d $(GRUB_MODS) -o $@ boot/grub/grub.cfg=grub.cfg boot/kernel.bin=$(IMAGE_CSL) boot/kernel.bin.mb=$(IMAGE)"
 
 .emulate: $(ISOFILE)
-	@echo "Using command '$(QEMU) $(QEMU_OPTS) $(QEMU_EXTRA_OPTS)'" > emulate.out
-	screen -c screenrc -L -dmS kvm-muen $(QEMU) $(QEMU_OPTS) $(QEMU_EXTRA_OPTS) -pidfile $@
+	@echo "Using command '$(QEMU_CMD)'" > emulate.out
+	screen -c screenrc -L -dmS kvm-muen $(QEMU_CMD) -pidfile $@
 	@echo
 	@echo -n "* QEMU/KVM started for '$(ISOFILE)', waiting for boot: "
 	@for i in $$(seq 1 $(QEMU_SERIAL_WAIT)); do \
@@ -76,7 +78,7 @@ $(ISOFILE): clean $(IMAGE) $(IMAGE_CSL) grub.cfg Makefile
 			break; \
 		fi; \
 	done; \
-	if [ -z "$$boot" ]; then echo "\nERROR:" && cat emulate.out && exit 1; fi
+	if [ -z "$$boot" ]; then echo "\nERROR executing '$(QEMU_CMD)', see emulate.out for details" && exit 1; fi
 
 stop:
 	kill `cat .emulate 2>/dev/null` 2>/dev/null || true

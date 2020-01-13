@@ -54,7 +54,7 @@ is
 
       --  Enable FIFO.
 
-      IO.Outb (Port  => Base_Address + UART_IIR,
+      IO.Outb (Port  => Base_Address + UART_FCR,
                Value => 16#c7#);
 
       --  IRQS enabled, RTS/DSR set.

@@ -22,10 +22,19 @@ is
    --  Baud rate: 115200
    Divisor : constant := 1;
 
+   --  Interrupt Enable Register
    UART_IER : constant := 1;
+   --  Interrupt Identification Register
    UART_IIR : constant := 2;
+   --  FIFO Control Register
+   UART_FCR : constant := 2;
+   --  Line Control Register
    UART_LCR : constant := 3;
+   --  Modem Control Register
    UART_MCR : constant := 4;
+   --  Line Status Register
    UART_LSR : constant := 5;
+   --  Scratch Register
+   UART_SCR : constant := 7;
 
 end SK.UART;

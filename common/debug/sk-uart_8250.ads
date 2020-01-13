@@ -40,7 +40,7 @@ is
    --  whether actual data is available, otherwise you might receive garbage.
    function Read_Char return Character;
 
-   --  Return True if the send buffer is empty.
+   --  Return True if the send buffer (incl. FIFO) is empty.
    function Is_Send_Buffer_Empty return Boolean;
 
    --  Return True if data is available to be read.

@@ -80,13 +80,13 @@ is
 
    function Is_Send_Buffer_Empty return Boolean
    is
-      LSR_Empty_THR : constant := 16#20#;
+      LSR_Empty_DHR_and_THR : constant := 16#60#;
 
       Data : Byte;
    begin
       IO.Inb (Port  => Base_Address + UART_LSR,
               Value => Data);
-      return (Data and LSR_Empty_THR) /= 0;
+      return (Data and LSR_Empty_DHR_and_THR) /= 0;
    end Is_Send_Buffer_Empty;
 
    -------------------------------------------------------------------------

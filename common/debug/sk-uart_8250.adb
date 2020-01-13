@@ -42,9 +42,9 @@ is
 
       --  Set divisor (least/most significant byte).
 
-      IO.Outb (Port  => Base_Address,
+      IO.Outb (Port  => Base_Address + UART_DLL,
                Value => Divisor);
-      IO.Outb (Port  => Base_Address + UART_IER,
+      IO.Outb (Port  => Base_Address + UART_DLH,
                Value => 0);
 
       --  Clear DLAB and set 8 bits, no parity, one stop bit (8N1).

@@ -22,6 +22,10 @@ is
    --  Baud rate: 115200
    Divisor : constant := 1;
 
+   --  Divisor Latch Low Byte
+   UART_DLL : constant := 0;
+   --  Divisor Latch High Byte
+   UART_DLH : constant := 1;
    --  Interrupt Enable Register
    UART_IER : constant := 1;
    --  Interrupt Identification Register

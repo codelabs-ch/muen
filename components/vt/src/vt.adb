@@ -30,6 +30,7 @@ with Mux.Terminals;
 procedure VT
 is
 begin
+   SK.CPU.Stop;
    Log.Text_IO.Init (Epoch => 1);
    SK.Interrupt_Tables.Initialize
      (Stack_Addr => Component_Constants.Interrupt_Stack_Address);

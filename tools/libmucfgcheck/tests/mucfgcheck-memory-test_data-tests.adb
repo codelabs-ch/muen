@@ -1302,7 +1302,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
-      --  Positive test, must no raise an exception.
+      --  Positive test, must not raise an exception.
 
       Device_Memory_Mappings (XML_Data => Data);
 

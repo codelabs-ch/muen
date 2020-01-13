@@ -1229,7 +1229,7 @@ package body Cfgchecks.Test_Data.Tests is
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
 
-      --  Positive test, must no raise an exception.
+      --  Positive test, must not raise an exception.
 
       Hardware_Reserved_Memory_Region_References (XML_Data => Policy);
 
@@ -1908,7 +1908,7 @@ package body Cfgchecks.Test_Data.Tests is
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
 
-      --  Positive test, must no raise an exception.
+      --  Positive test, must not raise an exception.
 
       Component_Memory_Size (XML_Data => Policy);
 
@@ -1964,7 +1964,7 @@ package body Cfgchecks.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='subject2']/component"
          & "/map[@logical='wifi']");
 
-      --  Positive test, must no raise an exception.
+      --  Positive test, must not raise an exception.
 
       Component_Device_Memory_Size (XML_Data => Policy);
 
@@ -2021,7 +2021,7 @@ package body Cfgchecks.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='subject2']/component"
          & "/map[@logical='wifi']");
 
-      --  Positive test, must no raise an exception.
+      --  Positive test, must not raise an exception.
 
       Component_Device_IO_Port_Range (XML_Data => Policy);
 

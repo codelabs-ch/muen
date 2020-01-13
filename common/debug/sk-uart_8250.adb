@@ -57,10 +57,10 @@ is
       IO.Outb (Port  => Base_Address + UART_FCR,
                Value => 16#c7#);
 
-      --  IRQS enabled, RTS/DSR set.
+      --  Set DTR and RTS.
 
       IO.Outb (Port  => Base_Address + UART_MCR,
-               Value => 16#0b#);
+               Value => 3);
    end Init;
 
    -------------------------------------------------------------------------

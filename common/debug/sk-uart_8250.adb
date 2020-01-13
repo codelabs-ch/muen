@@ -67,22 +67,26 @@ is
 
    function Is_Data_Available return Boolean
    is
+      LSR_Data_Ready : constant := 16#01#;
+
       Data : Byte;
    begin
       IO.Inb (Port  => Base_Address + UART_LSR,
               Value => Data);
-      return (Data and 16#01#) /= 0;
+      return (Data and LSR_Data_Ready) /= 0;
    end Is_Data_Available;
 
    -------------------------------------------------------------------------
 
    function Is_Send_Buffer_Empty return Boolean
    is
+      LSR_Empty_THR : constant := 16#20#;
+
       Data : Byte;
    begin
       IO.Inb (Port  => Base_Address + UART_LSR,
               Value => Data);
-      return (Data and 16#20#) /= 0;
+      return (Data and LSR_Empty_THR) /= 0;
    end Is_Send_Buffer_Empty;
 
    -------------------------------------------------------------------------

@@ -29,11 +29,14 @@ is
       Output : Byte_Queue.Queue_Type;
    end record;
 
-   type Debug_Interfaces_Type
-      is (INTERFACE_XHCDBG,
-          INTERFACE_SERIAL,
-          INTERFACE_PCSPKR,
-          INTERFACE_SHMEM);
+   type Debug_Interfaces_Type is
+     (INTERFACE_XHCDBG,
+      INTERFACE_SERIAL,
+      INTERFACE_PCSPKR,
+      INTERFACE_SHMEM);
+
+   subtype Debug_Console_Type is
+     Debug_Interfaces_Type range INTERFACE_XHCDBG .. INTERFACE_SERIAL;
 
    type Channels_Type is array (Debug_Interfaces_Type) of Channel_Type;
 

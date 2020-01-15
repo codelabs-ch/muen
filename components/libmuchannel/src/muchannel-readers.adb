@@ -185,4 +185,12 @@ is
       end if;
    end Read;
 
+   -------------------------------------------------------------------------
+
+   procedure Reset (Reader  : in out Reader_Type)
+   is
+   begin
+      Reader.RC := Header_Field_Type (Data_Range'First);
+   end Reset;
+
 end Muchannel.Readers;

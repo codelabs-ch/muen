@@ -366,4 +366,117 @@ is
       end loop;
    end Update_Message_Buffers;
 
+   -------------------------------------------------------------------------
+
+   procedure Set_Log_Buffer_State
+     (Buffer  : in out Buffer_Type;
+      ID      :        Subject_Buffer_Range;
+      Enabled :        Boolean)
+   is
+   begin
+      Buffer.Subjects (ID).Enabled := Enabled;
+   end Set_Log_Buffer_State;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_All_Log_Buffer_State
+     (Buffer  : in out Buffer_Type;
+      Enabled :        Boolean)
+   is
+   begin
+      for ID in Subject_Buffer_Range loop
+         Set_Log_Buffer_State (Buffer  => Buffer,
+                               ID      => ID,
+                               Enabled => Enabled);
+      end loop;
+   end Set_All_Log_Buffer_State;
+
+   -------------------------------------------------------------------------
+
+   procedure Toggle_Log_Buffer_State
+     (Buffer : in out Buffer_Type;
+      ID     :        Subject_Buffer_Range)
+   is
+   begin
+      Buffer.Subjects (ID).Enabled := not Buffer.Subjects (ID).Enabled;
+   end Toggle_Log_Buffer_State;
+
+   -------------------------------------------------------------------------
+
+   procedure Reset_Readers (Buffer : in out Buffer_Type)
+   is
+   begin
+      for Subject_Buffer in Subject_Buffer_Range loop
+         Debuglog.Stream.Reader.Reset
+           (Reader => Buffer.Subjects (Subject_Buffer).State);
+      end loop;
+   end Reset_Readers;
+
+   -------------------------------------------------------------------------
+
+   procedure Print_State
+     (Buffer :        Buffer_Type;
+      Queue  : in out Byte_Queue.Queue_Type)
+   is
+      --  Output state of given subject buffer.
+      procedure Print_Subject_Buffer (Subject_Buffer : Subject_Buffer_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Print
+        (Text  : String;
+         Value : Boolean)
+      is
+      begin
+         Byte_Queue.Format.Append_String
+           (Queue => Queue,
+            Item  => Text);
+         Byte_Queue.Format.Append_Bool_Short
+           (Queue => Queue,
+            Item  => Value);
+      end Print;
+
+      ----------------------------------------------------------------------
+
+      procedure Print_Subject_Buffer (Subject_Buffer : Subject_Buffer_Type)
+      is
+      begin
+         Print (Text  => " | ",
+                Value => Subject_Buffer.Message_Incomplete);
+         Print (Text  => " | ",
+                Value => Subject_Buffer.Overrun_Occurred);
+         Print (Text  => " | ",
+                Value => Subject_Buffer.New_Epoch_Occurred);
+         Print (Text  => " | ",
+                Value => Subject_Buffer.Enabled);
+         Byte_Queue.Format.Append_String
+           (Queue => Queue,
+            Item  => " |");
+      end Print_Subject_Buffer;
+
+      Header : constant String := "| Source ID |MEI|OVO|NEO|ENA|";
+      H_Rule : constant String := "|-----------+---+---+---+---|";
+   begin
+      Byte_Queue.Format.Append_Line
+        (Queue => Queue,
+         Item  => Header);
+      Byte_Queue.Format.Append_Line
+        (Queue => Queue,
+         Item  => H_Rule);
+      for I in Buffer.Subjects'Range loop
+         Byte_Queue.Format.Append_Character
+           (Queue => Queue,
+            Item  => '|');
+         Byte_Queue.Format.Append_Natural
+           (Queue      => Queue,
+            Item       => Integer (I),
+            Left_Align => False);
+         Print_Subject_Buffer (Subject_Buffer => Buffer.Subjects (I));
+         Byte_Queue.Format.Append_New_Line (Queue => Queue);
+      end loop;
+      Byte_Queue.Format.Append_Line
+        (Queue => Queue,
+         Item  => H_Rule);
+   end Print_State;
+
 end Dbg.Buffers;

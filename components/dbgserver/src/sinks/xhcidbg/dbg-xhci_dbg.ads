@@ -16,6 +16,7 @@
 --
 
 with Dbg.Byte_Queue;
+with Dbg.Consoles;
 
 private package Dbg.Xhci_Dbg
 is
@@ -24,9 +25,11 @@ is
    procedure Init;
 
    --  Read bytes from the xHCI debug capability into the input queue and
-   --  output bytes in the output queue to the xHCI debug line.
+   --  output bytes from the output queue and the console to the xHCI debug
+   --  line.
    procedure Run
-      (Input_Queue  : in out Byte_Queue.Queue_Type;
-       Output_Queue : in out Byte_Queue.Queue_Type);
+     (Console      : in out Consoles.Console_Type;
+      Input_Queue  : in out Byte_Queue.Queue_Type;
+      Output_Queue : in out Byte_Queue.Queue_Type);
 
 end Dbg.Xhci_Dbg;

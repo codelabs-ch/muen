@@ -18,56 +18,63 @@
 with HW.DbC;
 
 with Dbg.Byte_Arrays;
+with Dbg.Non_Interfering_Output;
 
 package body Dbg.Xhci_Dbg
 is
 
+   --  Receive data up until Length bytes from xHCI DbC into given buffer. The
+   --  actual number of bytes received is return by Length.
+   procedure Receive_Buffer
+     (Buffer : in out Byte_Arrays.Byte_Array;
+      Length : in out Byte_Arrays.Byte_Array_Range);
+
+   --  Send data in buffer up until Length bytes to xHCI DbC. The actual number
+   --  of bytes sent is returned by Length.
+   procedure Send_Buffer
+     (Buffer  :        Byte_Arrays.Byte_Array;
+      Length  : in out Byte_Arrays.Byte_Array_Range;
+      Success :    out Boolean);
+
+   package NIO is new Non_Interfering_Output
+     (Buffer_Size => 4096,
+      Receive     => Receive_Buffer,
+      Send        => Send_Buffer);
+
    -------------------------------------------------------------------------
 
-   procedure Init
+   procedure Init renames HW.DbC.Init;
+
+   -------------------------------------------------------------------------
+
+   procedure Receive_Buffer
+     (Buffer : in out Byte_Arrays.Byte_Array;
+      Length : in out Byte_Arrays.Byte_Array_Range)
    is
    begin
-      HW.DbC.Init;
-   end Init;
+      HW.DbC.Receive (Buf => HW.Buffer (Buffer),
+                      Len => Length);
+   end Receive_Buffer;
+
+   -------------------------------------------------------------------------
+
+   procedure Send_Buffer
+     (Buffer  :        Byte_Arrays.Byte_Array;
+      Length  : in out Byte_Arrays.Byte_Array_Range;
+      Success :    out Boolean)
+   is
+   begin
+      HW.DbC.Send (Buf     => HW.Buffer (Buffer),
+                   Len     => Length,
+                   Success => Success);
+   end Send_Buffer;
 
    -------------------------------------------------------------------------
 
    procedure Run
-     (Input_Queue  : in out Byte_Queue.Queue_Type;
+     (Console      : in out Consoles.Console_Type;
+      Input_Queue  : in out Byte_Queue.Queue_Type;
       Output_Queue : in out Byte_Queue.Queue_Type)
-   is
-      subtype Data_Range is Positive range 1 .. 4096;
-      subtype Data_Array is Byte_Arrays.Byte_Array (Data_Range);
-
-      Data    : Data_Array;
-      Length  : Natural;
-      Success : Boolean;
-   begin
-      while Byte_Queue.Bytes_Free (Queue => Input_Queue) > 0 loop
-         Length := Natural'Min
-           (Byte_Queue.Bytes_Free (Queue => Input_Queue), Data'Length);
-         HW.DbC.Receive (HW.Buffer (Data), Length);
-         exit when Length = 0;
-         Byte_Queue.Append
-           (Queue  => Input_Queue,
-            Buffer => Data,
-            Length => Length);
-      end loop;
-
-      Success := True;
-      while Byte_Queue.Bytes_Used (Queue => Output_Queue) > 0 loop
-         Byte_Queue.Peek (Queue  => Output_Queue,
-                          Buffer => Data,
-                          Length => Length);
-
-         if Length > 0 then
-            HW.DbC.Send (HW.Buffer (Data), Length, Success);
-            Byte_Queue.Drop_Bytes (Queue  => Output_Queue,
-                                   Length => Length);
-         end if;
-         exit when not Success;
-      end loop;
-      HW.DbC.Poll;
-   end Run;
+      renames NIO.Run;
 
 end Dbg.Xhci_Dbg;

@@ -15,8 +15,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Dbgserver_Component.Channel_Arrays;
-
 with Debuglog.Types;
 with Debuglog.Stream.Reader;
 
@@ -46,10 +44,6 @@ private
       New_Epoch_Occurred : Boolean;
       Enabled            : Boolean;
    end record;
-
-   package Cspecs renames Dbgserver_Component.Channel_Arrays;
-
-   type Subject_Buffer_Range is range 1 .. Cspecs.Log_Channels_Element_Count;
 
    type Subject_Buffers_Type is array (Subject_Buffer_Range)
      of Subject_Buffer_Type;

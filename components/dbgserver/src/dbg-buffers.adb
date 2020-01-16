@@ -23,10 +23,14 @@ with SK.Strings;
 
 with Dbg.Byte_Queue.Format;
 
+with Dbgserver_Component.Channel_Arrays;
+
 package body Dbg.Buffers
 is
 
    use type Debuglog.Stream.Reader.Result_Type;
+
+   package Cspecs renames Dbgserver_Component.Channel_Arrays;
 
    --  Log channels for subjects defined in the active system policy.
    type Log_Context_Type is array (Subject_Buffer_Range)

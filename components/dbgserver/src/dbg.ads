@@ -15,6 +15,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+private with Dbgserver_Component.Channel_Arrays;
+
 package Dbg
 is
 
@@ -23,5 +25,10 @@ is
 
    --  Run log server.
    procedure Run;
+
+private
+
+   type Subject_Buffer_Range is range
+     1 .. Dbgserver_Component.Channel_Arrays.Log_Channels_Element_Count;
 
 end Dbg;

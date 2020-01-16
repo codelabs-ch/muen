@@ -40,12 +40,6 @@ is
        Buffer :        Byte_Arrays.Byte_Array;
        Length :        Positive);
 
-   --  Append string to given queue.
-   procedure Append_String
-      (Queue  : in out Queue_Type;
-       Buffer :        String;
-       Length :        Positive);
-
    --  Read bytes from given queue. The Length parameter designates the actual
    --  bytes copied. The bytes read remain in the queue until they are
    --  discarded using the Drop_Bytes procedure.

@@ -15,8 +15,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Interfaces;
-
 with Dbg.Byte_Arrays;
 
 package body Dbg.Byte_Queue.Format
@@ -73,9 +71,10 @@ is
       Item  :        String)
    is
    begin
-      Append_String (Queue  => Queue,
-                     Buffer => Item,
-                     Length => Item'Length);
+      for C of Item loop
+         Append_Character (Queue => Queue,
+                           Item  => C);
+      end loop;
    end Append_String;
 
 end Dbg.Byte_Queue.Format;

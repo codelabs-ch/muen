@@ -34,21 +34,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Append_String
-     (Queue  : in out Queue_Type;
-      Buffer :        String;
-      Length :        Positive)
-   is
-   begin
-      for I in Natural range Buffer'First .. Buffer'First + (Length - 1) loop
-         Queue.Buffer (Queue.WP) := Interfaces.Unsigned_8
-           (Character'Pos (Buffer (I)));
-         Queue.WP := Queue.WP + 1;
-      end loop;
-   end Append_String;
-
-   -------------------------------------------------------------------------
-
    function Bytes_Free (Queue : Queue_Type) return Natural
    is
    begin

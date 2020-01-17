@@ -20,7 +20,7 @@ with Dbg.PC_Speaker_Dbg;
 with Dbg.Serial;
 with Dbg.Shared_Memory;
 with Dbg.Xhci_Dbg;
-with Dbg.Byte_Queue;
+with Dbg.Byte_Queue.Format;
 with Dbg.Channels;
 
 package body Dbg
@@ -41,9 +41,8 @@ is
          Buffers.Initialize (Buffer => Channel.Buffer);
          Byte_Queue.Initialize (Queue => Channel.Input);
          Byte_Queue.Initialize (Queue => Channel.Output);
-         Byte_Queue.Append_String (Queue  => Channel.Output,
-                                   Buffer => Banner,
-                                   Length => Banner'Length);
+         Byte_Queue.Format.Append_String (Queue => Channel.Output,
+                                          Item  => Banner);
       end Initialize_Channel;
    begin
       for Channel in Debug_Interfaces_Type loop

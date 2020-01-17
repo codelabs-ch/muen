@@ -8,8 +8,8 @@
    <requires>                                                                                                                                              <requires>
     <memory>                                                                                                                                                <memory>
 --
-     </array>                                                                                                                                                </array>
-    </channels>                                                                                                                                             </channels>
+     </source>                                                                                                                                               </source>
+    </events>                                                                                                                                               </events>
                                                                                                                                                      >      <devices>
                                                                                                                                                      >       <device logical="some_dev">
                                                                                                                                                      >        <irq logical="irq" vector="21"/>
@@ -49,6 +49,16 @@
                                                                                                                                                      >        <ioPort end="16#50c8#" logical="port" start="16#50c0#"/>
                                                                                                                                                      >       </device>
     </devices>                                                                                                                                              </devices>
+    <events>                                                                                                                                                <events>
+--
+       <system_reboot/>                                                                                                                                        <system_reboot/>
+      </event>                                                                                                                                                </event>
+      <event id="31" logical="shutdown">                                                                                                             |        <event id="20" logical="foo">
+       <system_poweroff/>                                                                                                                                      <system_poweroff/>
+      </event>                                                                                                                                                </event>
+--
+     </target>                                                                                                                                               </target>
+    </events>                                                                                                                                               </events>
                                                                                                                                                      >      <channels>
                                                                                                                                                      >       <reader logical="chan1" size="16#1000#" virtualAddress="16#2000#"/>
                                                                                                                                                      >       <array elementSize="16#1000#" logical="input_arr" vectorBase="32" virtualAddressBase="16#0001_0000#">

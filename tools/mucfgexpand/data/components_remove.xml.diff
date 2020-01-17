@@ -38,6 +38,11 @@
       <writer logical="output2"/>                                                                                                                    <
      </array>                                                                                                                                        <
     </channels>                                                                                                                                      <
+    <events>                                                                                                                                         <
+     <source>                                                                                                                                        <
+      <event id="20" logical="foo"/>                                                                                                                 <
+     </source>                                                                                                                                       <
+    </events>                                                                                                                                        <
    </requires>                                                                                                                                       <
   </library>                                                                                                                                         <
   <library name="l2">                                                                                                                                <
@@ -76,6 +81,22 @@
       <ioPort end="16#50a7#" logical="port_3" start="16#50a0#"/>                                                                                     <
      </device>                                                                                                                                       <
     </devices>                                                                                                                                       <
+    <events>                                                                                                                                         <
+     <source>                                                                                                                                        <
+      <event id="1" logical="handover"/>                                                                                                             <
+      <event id="30" logical="reboot">                                                                                                               <
+       <system_reboot/>                                                                                                                              <
+      </event>                                                                                                                                       <
+      <event id="31" logical="shutdown">                                                                                                             <
+       <system_poweroff/>                                                                                                                            <
+      </event>                                                                                                                                       <
+     </source>                                                                                                                                       <
+     <target>                                                                                                                                        <
+      <event logical="timer">                                                                                                                        <
+       <inject_interrupt vector="37"/>                                                                                                               <
+      </event>                                                                                                                                       <
+     </target>                                                                                                                                       <
+    </events>                                                                                                                                        <
    </requires>                                                                                                                                       <
    <provides>                                                                                                                                        <
     <memory executable="true" logical="binary" size="16#1000#" type="subject_binary" virtualAddress="16#0020_0000#" writable="true">                 <

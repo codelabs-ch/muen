@@ -54,9 +54,8 @@ is
 
          Data (1) := Character'Pos (UART.Read_Char);
          Byte_Queue.Append
-           (Queue  => Input_Queue,
-            Buffer => Data,
-            Length => 1);
+           (Queue => Input_Queue,
+            Byte  => Data (1));
       end loop;
 
       while Byte_Queue.Bytes_Used (Queue => Output_Queue) > 0 loop

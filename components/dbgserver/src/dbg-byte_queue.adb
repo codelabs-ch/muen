@@ -21,14 +21,25 @@ is
    -------------------------------------------------------------------------
 
    procedure Append
+     (Queue : in out Queue_Type;
+      Byte  :        Interfaces.Unsigned_8)
+   is
+   begin
+      Queue.Buffer (Queue.WP) := Byte;
+      Queue.WP := Queue.WP + 1;
+   end Append;
+
+   -------------------------------------------------------------------------
+
+   procedure Append
      (Queue  : in out Queue_Type;
       Buffer :        Byte_Arrays.Byte_Array;
       Length :        Positive)
    is
    begin
       for I in Natural range Buffer'First .. Buffer'First + (Length - 1) loop
-         Queue.Buffer (Queue.WP) := Buffer (I);
-         Queue.WP := Queue.WP + 1;
+         Append (Queue => Queue,
+                 Byte  => Buffer (I));
       end loop;
    end Append;
 

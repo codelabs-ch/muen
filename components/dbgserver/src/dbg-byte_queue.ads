@@ -40,6 +40,11 @@ is
        Buffer :        Byte_Arrays.Byte_Array;
        Length :        Positive);
 
+   --  Append byte to given queue.
+   procedure Append
+     (Queue : in out Queue_Type;
+      Byte  :        Interfaces.Unsigned_8);
+
    --  Read bytes from given queue. The Length parameter designates the actual
    --  bytes copied. The bytes read remain in the queue until they are
    --  discarded using the Drop_Bytes procedure.

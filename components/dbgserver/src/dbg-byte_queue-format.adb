@@ -15,8 +15,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Dbg.Byte_Arrays;
-
 package body Dbg.Byte_Queue.Format
 is
 
@@ -44,13 +42,9 @@ is
      (Queue : in out Queue_Type;
       Item  :        Character)
    is
-      Single_Byte : Byte_Arrays.Single_Byte_Array;
    begin
-      Single_Byte := Byte_Arrays.Single_Byte_Array'
-        (1 => Interfaces.Unsigned_8 (Character'Pos (Item)));
-      Append (Queue  => Queue,
-              Buffer => Single_Byte,
-              Length => Single_Byte'Length);
+      Append (Queue => Queue,
+              Byte  => Character'Pos (Item));
    end Append_Character;
 
    -------------------------------------------------------------------------

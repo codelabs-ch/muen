@@ -52,4 +52,12 @@
 
  <xs:complexType name="eventActionNoParamType"/>
 
+ <xs:group name="sourceEventActionsGroup">
+  <xs:choice>
+   <xs:element name="system_reboot"   type="eventActionNoParamType"/>
+   <xs:element name="system_poweroff" type="eventActionNoParamType"/>
+   <xs:element name="unmask_irq"      type="eventActionUnmaskIrqType"/>
+  </xs:choice>
+ </xs:group>
+
 </xs:schema>

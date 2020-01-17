@@ -17,11 +17,7 @@
  <xs:complexType name="sourceEventEntryType">
   <xs:complexContent>
    <xs:extension base="baseEventType">
-    <xs:choice minOccurs="0" maxOccurs="1">
-     <xs:element name="system_reboot"   type="eventActionNoParamType"/>
-     <xs:element name="system_poweroff" type="eventActionNoParamType"/>
-     <xs:element name="unmask_irq"      type="eventActionUnmaskIrqType"/>
-    </xs:choice>
+    <xs:group ref="sourceEventActionsGroup" minOccurs="0" maxOccurs="1"/>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>

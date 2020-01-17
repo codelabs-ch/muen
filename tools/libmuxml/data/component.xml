@@ -43,6 +43,22 @@
     <ioPort end="16#cafe#" logical="port_1" start="16#cafa#"/>
    </device>
   </devices>
+  <events>
+   <source>
+    <event id="1" logical="handover"/>
+    <event id="30" logical="reboot">
+     <system_reboot/>
+    </event>
+    <event id="31" logical="shutdown">
+     <system_poweroff/>
+    </event>
+   </source>
+   <target>
+    <event logical="timer">
+     <inject_interrupt vector="37"/>
+    </event>
+   </target>
+  </events>
  </requires>
 </component>
 

@@ -40,6 +40,7 @@
    <xs:element name="memory"   type="logicalMemoryType"   minOccurs="0" maxOccurs="1"/>
    <xs:element name="channels" type="logicalChannelsType" minOccurs="0" maxOccurs="1"/>
    <xs:element name="devices"  type="logicalDevicesType"  minOccurs="0" maxOccurs="1"/>
+   <xs:element name="events"   type="logicalEventsType"   minOccurs="0" maxOccurs="1"/>
   </xs:sequence>
  </xs:complexType>
 
@@ -161,6 +162,46 @@
   <xs:attribute name="logical"    type="nameType"              use="required"/>
   <xs:attribute name="eventBase"  type="xs:nonNegativeInteger" use="optional"/>
   <xs:attribute name="vectorBase" type="vectorType"            use="optional"/>
+ </xs:complexType>
+
+ <xs:complexType name="logicalEventsType">
+  <xs:sequence>
+   <xs:element name="source" type="logicalEventSourceType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="target" type="logicalEventTargetType" minOccurs="0" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
+
+ <xs:complexType name="logicalEventSourceType">
+  <xs:sequence>
+   <xs:element name="event" type="logicalSourceEventEntryType" minOccurs="1" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
+
+ <xs:complexType name="logicalEventTargetType">
+  <xs:sequence>
+   <xs:element name="event" type="logicalTargetEventEntryType" minOccurs="1" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
+
+ <xs:complexType name="baseLogicalEventType">
+  <xs:attribute name="logical" type="nameType" use="required"/>
+ </xs:complexType>
+
+ <xs:complexType name="logicalSourceEventEntryType">
+  <xs:complexContent>
+   <xs:extension base="baseLogicalEventType">
+     <xs:group ref="sourceEventActionsGroup" minOccurs="0" maxOccurs="1"/>
+     <xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
+
+ <xs:complexType name="logicalTargetEventEntryType">
+  <xs:complexContent>
+   <xs:extension base="baseLogicalEventType">
+    <xs:group ref="targetEventActionsGroup" minOccurs="0" maxOccurs="1"/>
+   </xs:extension>
+  </xs:complexContent>
  </xs:complexType>
 
  <xs:simpleType name="componentProfileType">

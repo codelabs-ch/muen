@@ -51,11 +51,11 @@
     </devices>                                                                                                                                              </devices>
     <events>                                                                                                                                                <events>
 --
-       <system_reboot/>                                                                                                                                        <system_reboot/>
-      </event>                                                                                                                                                </event>
-      <event id="31" logical="shutdown">                                                                                                             |        <event id="20" logical="foo">
        <system_poweroff/>                                                                                                                                      <system_poweroff/>
       </event>                                                                                                                                                </event>
+                                                                                                                                                     >        <event id="20" logical="foo"/>
+     </source>                                                                                                                                               </source>
+     <target>                                                                                                                                                <target>
 --
      </target>                                                                                                                                               </target>
     </events>                                                                                                                                               </events>

@@ -489,7 +489,8 @@ is
                                 3 => To_Unbounded_String ("writer"),
                                 4 => To_Unbounded_String ("device"),
                                 5 => To_Unbounded_String ("array"),
-                                6 => To_Unbounded_String ("library")));
+                                6 => To_Unbounded_String ("library"),
+                                7 => To_Unbounded_String ("event")));
             end;
          end loop;
       end Merge_Childs;

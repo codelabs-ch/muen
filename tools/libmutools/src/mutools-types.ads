@@ -22,6 +22,23 @@ is
    --  Subject event groups.
    type Event_Group_Type is (Vmx_Exit, Vmcall);
 
+   --  Types of event actions.
+   type Event_Action_Kind is
+     (System_Reboot,
+      System_Poweroff,
+      Unmask_Irq,
+      No_Action,
+      Inject_Interrupt,
+      Reset);
+
+   --  Types of source event actions.
+   subtype Source_Event_Action_Kind is Event_Action_Kind range
+     System_Reboot .. No_Action;
+
+   --  Types of target event actions.
+   subtype Target_Event_Action_Kind is Event_Action_Kind range
+     No_Action .. Reset;
+
    --  Types of physical memory.
    type Memory_Kind is
      (System, System_Vmxon, System_Iobm, System_Msrbm, System_Pt,

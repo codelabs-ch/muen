@@ -51,10 +51,6 @@ is
    procedure Subject_Resource_Maps_Logical_Uniqueness
      (XML_Data : Muxml.XML_Data_Type);
 
-   --  Check that subject physical component resource mappings are unique.
-   procedure Subject_Resource_Maps_Physical_Uniqueness
-     (XML_Data : Muxml.XML_Data_Type);
-
    --  Check that MSI names are unique per subject logical device.
    procedure Subject_IRQ_MSI_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 

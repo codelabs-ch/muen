@@ -2206,17 +2206,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Subject_Resource_Maps_Physical_Uniqueness
-     (XML_Data : Muxml.XML_Data_Type)
-   is
-   begin
-      Check_Subject_Resource_Maps_Attr_Uniqueness
-        (XML_Data => XML_Data,
-         Attr     => "physical");
-   end Subject_Resource_Maps_Physical_Uniqueness;
-
-   -------------------------------------------------------------------------
-
    procedure Subject_Sibling_Bootparams (XML_Data : Muxml.XML_Data_Type)
    is
       Siblings : constant DOM.Core.Node_List

@@ -617,49 +617,6 @@ package body Cfgchecks.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Subject_Resource_Maps_Physical_Uniqueness (Gnattest_T : in out Test);
-   procedure Test_Subject_Resource_Maps_Physical_Uniqueness_205f09 (Gnattest_T : in out Test) renames Test_Subject_Resource_Maps_Physical_Uniqueness;
---  id:2.2/205f09d9298f08c0/Subject_Resource_Maps_Physical_Uniqueness/1/0/
-   procedure Test_Subject_Resource_Maps_Physical_Uniqueness (Gnattest_T : in out Test) is
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      Policy : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data => Policy,
-                   Kind => Muxml.Format_Src,
-                   File => "data/test_policy.xml");
-
-      --  Positive test, must not raise and exception.
-
-      Subject_Resource_Maps_Physical_Uniqueness (XML_Data => Policy);
-
-      Muxml.Utils.Set_Attribute
-        (Doc   => Policy.Doc,
-         XPath => "/system/subjects/subject[@name='subject1']/component/"
-         & "map[@physical='dummy_2']",
-         Name  => "physical",
-         Value => "data_channel5");
-
-      begin
-         Subject_Resource_Maps_Physical_Uniqueness (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Multiple physical resource mappings with name "
-                    & "'data_channel5' in subject 'subject1'",
-                    Message   => "Exception mismatch");
-      end;
---  begin read only
-   end Test_Subject_Resource_Maps_Physical_Uniqueness;
---  end read only
-
-
---  begin read only
    procedure Test_Subject_IRQ_MSI_Name_Uniqueness (Gnattest_T : in out Test);
    procedure Test_Subject_IRQ_MSI_Name_Uniqueness_1d94bf (Gnattest_T : in out Test) renames Test_Subject_IRQ_MSI_Name_Uniqueness;
 --  id:2.2/1d94bfe7db481293/Subject_IRQ_MSI_Name_Uniqueness/1/0/

@@ -444,6 +444,38 @@ package body Mutools.Utils.Test_Data.Tests is
    end Test_Lookup_File;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Get_Event_Kind_Types_String (Gnattest_T : in out Test);
+   procedure Test_Get_Event_Kind_Types_String_0488f8 (Gnattest_T : in out Test) renames Test_Get_Event_Kind_Types_String;
+--  id:2.2/0488f8a2626760a1/Get_Event_Kind_Types_String/1/0/
+   procedure Test_Get_Event_Kind_Types_String (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Ref_Str : constant String := "   type Event_Action_Kind is" & ASCII.LF
+        & "     (System_Reboot," & ASCII.LF
+        & "      System_Poweroff," & ASCII.LF
+        & "      Unmask_Irq," & ASCII.LF
+        & "      No_Action," & ASCII.LF
+        & "      Inject_Interrupt," & ASCII.LF
+        & "      Reset);" & ASCII.LF
+        & ASCII.LF
+        & "   subtype Source_Event_Action_Kind is Event_Action_Kind range"
+        & ASCII.LF
+        & "     System_Reboot .. No_Action;"  & ASCII.LF
+        & ASCII.LF
+        & "   subtype Target_Event_Action_Kind is Event_Action_Kind range"
+        & ASCII.LF
+        & "     No_Action .. Reset;" & ASCII.LF;
+   begin
+      Assert (Condition => Get_Event_Kind_Types_String = Ref_Str,
+              Message   => "Event kind types string mismatch");
+--  begin read only
+   end Test_Get_Event_Kind_Types_String;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

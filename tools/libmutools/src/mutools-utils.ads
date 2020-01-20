@@ -91,6 +91,9 @@ is
       Directories : Strings.String_Array)
       return String;
 
+   --  Returns the event action kinds as Ada type definition string.
+   function Get_Event_Kind_Types_String return String;
+
    File_Not_Found : exception;
 
 end Mutools.Utils;

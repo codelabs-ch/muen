@@ -1647,11 +1647,17 @@ is
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Node,
                  XPath => "requires/memory/memory");
+            Comp_Events    : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Node,
+                 XPath => "requires/events/*/event");
          begin
             Muxml.Utils.Append (Left  => Comp_Resources,
                                 Right => Comp_Channels);
             Muxml.Utils.Append (Left  => Comp_Resources,
                                 Right => Comp_Memory);
+            Muxml.Utils.Append (Left  => Comp_Resources,
+                                Right => Comp_Events);
 
             Mulog.Log (Msg => "Checking component resource mappings of "
                        & "subject '" & Subj_Name & "'");

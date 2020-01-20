@@ -46,6 +46,29 @@
     <memory executable="false" logical="mmio" size="16#5000#" virtualAddress="16#1000#" writable="true"/>
    </device>
   </devices>
+  <events>
+   <source>
+    <event id="1" logical="handover"/>
+    <event id="2" logical="unmask_irq_22">
+     <unmask_irq number="22"/>
+    </event>
+    <event id="30" logical="reboot">
+     <system_reboot/>
+    </event>
+    <event id="31" logical="shutdown">
+     <system_poweroff/>
+    </event>
+   </source>
+   <target>
+    <event logical="timer">
+     <inject_interrupt vector="37"/>
+    </event>
+    <event logical="reset">
+     <reset/>
+    </event>
+    <event logical="foo"/>
+   </target>
+  </events>
  </requires>
  <provides>
   <memory executable="true" logical="binary" size="16#0003_0000#" virtualAddress="16#1000#" writable="true">

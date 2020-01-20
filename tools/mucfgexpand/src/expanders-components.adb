@@ -401,6 +401,182 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Events (Data : in out Muxml.XML_Data_Type)
+   is
+      Components : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/components/component");
+      Subjects   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject[@name!='tau0' and component]");
+
+      --  Add given mappings of component events to subject events node.
+      procedure Add_Mapped_Events
+        (Subject_Node   : DOM.Core.Node;
+         Component_Node : DOM.Core.Node;
+         Mappings       : DOM.Core.Node_List;
+         Event_Kind     : String)
+      with Pre => Event_Kind = "source" or Event_Kind = "target";
+
+      ----------------------------------------------------------------------
+
+      procedure Add_Mapped_Events
+        (Subject_Node   : DOM.Core.Node;
+         Component_Node : DOM.Core.Node;
+         Mappings       : DOM.Core.Node_List;
+         Event_Kind     : String)
+      is
+         use type DOM.Core.Node;
+
+         Subj_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Subject_Node,
+              Name => "name");
+         Subject_Event_XPath : constant String := "events/" & Event_Kind
+           & (if Event_Kind = "source" then "/group[@name='vmcall']"
+              else "");
+         Subj_Event_Node : DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Subject_Node,
+              XPath => Subject_Event_XPath);
+         Comp_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Component_Node,
+              Name => "name");
+         Comp_Events_XPath : constant String := "requires/events/" & Event_Kind
+           & "/event";
+         Comp_Events : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Component_Node,
+              XPath => Comp_Events_XPath);
+         Log_Ev_Count : constant Natural
+           := DOM.Core.Nodes.Length (List => Comp_Events);
+
+         --  Create missing subject XML elements for inserting source/target
+         --  events.
+         procedure Create_Missing_Element;
+
+         -------------------------------------------------------------------
+
+         procedure Create_Missing_Element
+         is
+            Ref_Tags : constant Muxml.Utils.Tags_Type
+              := (if Event_Kind = "target" then Muxml.Utils.No_Tags
+                  else (1 => U ("target")));
+            Events_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Subject_Node,
+                 XPath => "events");
+         begin
+            Subj_Event_Node := DOM.Core.Documents.Create_Element
+              (Doc      => Data.Doc,
+               Tag_Name => Event_Kind);
+            Muxml.Utils.Insert_Before
+              (Parent    => Events_Node,
+               New_Child => Subj_Event_Node,
+               Ref_Names => Ref_Tags);
+
+            if Event_Kind = "source" then
+               declare
+                  Parent_Node : constant DOM.Core.Node := Subj_Event_Node;
+               begin
+                  Subj_Event_Node := DOM.Core.Documents.Create_Element
+                    (Doc      => Data.Doc,
+                     Tag_Name => "group");
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => Subj_Event_Node,
+                     Name  => "name",
+                     Value => "vmcall");
+                  Muxml.Utils.Append_Child
+                    (Node      => Parent_Node,
+                     New_Child => Subj_Event_Node);
+               end;
+            end if;
+         end Create_Missing_Element;
+      begin
+         if Log_Ev_Count > 0 then
+            Mulog.Log (Msg => "Expanding" & Log_Ev_Count'Img & " logical "
+                       & Event_Kind & " event(s) of component '" & Comp_Name
+                       & "' to subject '" & Subj_Name & "'");
+
+            if Subj_Event_Node = null then
+               Create_Missing_Element;
+            end if;
+
+            for I in 0 .. Log_Ev_Count - 1 loop
+               declare
+                  Log_Ev : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Clone_Node
+                      (N    => DOM.Core.Nodes.Item
+                         (List  => Comp_Events,
+                          Index => I),
+                       Deep => True);
+                  Log_Ev_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Log_Ev,
+                       Name => "logical");
+                  Phys_Ev_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Muxml.Utils.Get_Element
+                         (Nodes     => Mappings,
+                          Ref_Attr  => "logical",
+                          Ref_Value => Log_Ev_Name),
+                       Name => "physical");
+               begin
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => Log_Ev,
+                     Name  => "physical",
+                     Value => Phys_Ev_Name);
+                  Muxml.Utils.Append_Child
+                    (Node      => Subj_Event_Node,
+                     New_Child => Log_Ev);
+               end;
+            end loop;
+         end if;
+      end Add_Mapped_Events;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Comp_Ref_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Subj_Node,
+                 XPath => "component");
+            Comp_Ref : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Comp_Ref_Node,
+                 Name => "ref");
+            Mappings : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Ref_Node,
+                 XPath => "map");
+            Comp_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Components,
+                 Ref_Attr  => "name",
+                 Ref_Value => Comp_Ref);
+         begin
+            Add_Mapped_Events
+              (Subject_Node   => Subj_Node,
+               Component_Node => Comp_Node,
+               Mappings       => Mappings,
+               Event_Kind     => "source");
+            Add_Mapped_Events
+              (Subject_Node   => Subj_Node,
+               Component_Node => Comp_Node,
+               Mappings       => Mappings,
+               Event_Kind     => "target");
+         end;
+      end loop;
+   end Add_Events;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Library_Resources (Data : in out Muxml.XML_Data_Type)
    is
       Libraries : constant DOM.Core.Node_List

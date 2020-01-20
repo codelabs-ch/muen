@@ -287,6 +287,10 @@ is
 
       Tmpl := Mutools.Templates.Create
         (Content => String_Templates.skp_events_ads);
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__event_kind_types__",
+         Content  => Mutools.Utils.Get_Event_Kind_Types_String);
       Mutools.Templates.Write
         (Template => Tmpl,
          Filename => Output_Dir & "/skp-events.ads");

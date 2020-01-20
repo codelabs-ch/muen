@@ -20,20 +20,7 @@ is
 
    type Trap_Range is range 0 .. 59;
 
-   type Event_Action_Kind is
-     (System_Reboot,
-      System_Poweroff,
-      Unmask_Irq,
-      No_Action,
-      Inject_Interrupt,
-      Reset);
-
-   subtype Source_Event_Action_Kind is Event_Action_Kind range
-     System_Reboot .. No_Action;
-
-   subtype Target_Event_Action_Kind is Event_Action_Kind range
-     No_Action .. Reset;
-
+__event_kind_types__
    type Source_Event_Type is record
       Source_Action  : Source_Event_Action_Kind;
       Target_Subject : Dst_Subject_Type;

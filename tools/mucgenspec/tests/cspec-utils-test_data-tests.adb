@@ -184,6 +184,189 @@ package body Cspec.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_To_Event_Str (Gnattest_T : in out Test);
+   procedure Test_To_Event_Str_4b1772 (Gnattest_T : in out Test) renames Test_To_Event_Str;
+--  id:2.2/4b177268d9c4b6d9/To_Event_Str/1/0/
+   procedure Test_To_Event_Str (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      ----------------------------------------------------------------------
+
+      procedure Source_No_Action
+      is
+         Data    : Muxml.XML_Data_Type;
+         Ev_Node : DOM.Core.Node;
+         Ref_Str : constant String
+           := "   Handover_ID     : constant := 1;" & ASCII.LF
+           & "   Handover_Action : constant Source_Event_Action_Kind "
+           & ":= No_Action;";
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/component_vt.xml");
+         Ev_Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/component/requires/events/source/"
+            & "event[@logical='handover']");
+
+         Assert (Condition => To_Event_Str (Event => Ev_Node) = Ref_Str,
+                 Message   => "Event string mismatch (Src no action)");
+      end Source_No_Action;
+
+      ----------------------------------------------------------------------
+
+      procedure Source_Poweroff
+      is
+         Data    : Muxml.XML_Data_Type;
+         Ev_Node : DOM.Core.Node;
+         Ref_Str : constant String
+           := "   Shutdown_ID     : constant := 31;" & ASCII.LF
+           & "   Shutdown_Action : constant Source_Event_Action_Kind "
+           & ":= System_Poweroff;";
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/component_vt.xml");
+         Ev_Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/component/requires/events/source/"
+            & "event[@logical='shutdown']");
+
+         Assert (Condition => To_Event_Str (Event => Ev_Node) = Ref_Str,
+                 Message   => "Event string mismatch (Src poweroff)");
+      end Source_Poweroff;
+
+      ----------------------------------------------------------------------
+
+      procedure Source_Reboot
+      is
+         Data    : Muxml.XML_Data_Type;
+         Ev_Node : DOM.Core.Node;
+         Ref_Str : constant String
+           := "   Reboot_ID     : constant := 30;" & ASCII.LF
+           & "   Reboot_Action : constant Source_Event_Action_Kind "
+           & ":= System_Reboot;";
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/component_vt.xml");
+         Ev_Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/component/requires/events/source/"
+            & "event[@logical='reboot']");
+
+         Assert (Condition => To_Event_Str (Event => Ev_Node) = Ref_Str,
+                 Message   => "Event string mismatch (Src reboot) ");
+      end Source_Reboot;
+
+      ----------------------------------------------------------------------
+
+      procedure Source_Unmask_Irq
+      is
+         Data    : Muxml.XML_Data_Type;
+         Ev_Node : DOM.Core.Node;
+         Ref_Str : constant String
+           := "   Unmask_Irq_22_ID     : constant := 2;" & ASCII.LF
+           & "   Unmask_Irq_22_Number : constant := 22;" & ASCII.LF
+           & "   Unmask_Irq_22_Action : constant Source_Event_Action_Kind "
+           & ":= Unmask_Irq;";
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/component_vt.xml");
+         Ev_Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/component/requires/events/source/"
+            & "event[@logical='unmask_irq_22']");
+
+         Assert (Condition => To_Event_Str (Event => Ev_Node) = Ref_Str,
+                 Message   => "Event string mismatch (Src unmask irq)");
+      end Source_Unmask_Irq;
+
+      ----------------------------------------------------------------------
+
+      procedure Target_Inject_Interrupt
+      is
+         Data    : Muxml.XML_Data_Type;
+         Ev_Node : DOM.Core.Node;
+         Ref_Str : constant String
+           := "   Timer_Vector : constant := 37;" & ASCII.LF
+           & "   Timer_Action : constant Target_Event_Action_Kind "
+           & ":= Inject_Interrupt;";
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/component_vt.xml");
+         Ev_Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/component/requires/events/target/"
+            & "event[@logical='timer']");
+
+         Assert (Condition => To_Event_Str (Event => Ev_Node) = Ref_Str,
+                 Message   => "Event string mismatch (Tgt inject interrupt)");
+      end Target_Inject_Interrupt;
+
+      ----------------------------------------------------------------------
+
+      procedure Target_No_Action
+      is
+         Data    : Muxml.XML_Data_Type;
+         Ev_Node : DOM.Core.Node;
+         Ref_Str : constant String
+           := "   Foo_Action : constant Target_Event_Action_Kind "
+           & ":= No_Action;";
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/component_vt.xml");
+         Ev_Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/component/requires/events/target/"
+            & "event[@logical='foo']");
+
+         Assert (Condition => To_Event_Str (Event => Ev_Node) = Ref_Str,
+                 Message   => "Event string mismatch (Tgt no action)"
+                 & ASCII.LF & "'" & Ref_Str & "' /= " & ASCII.LF & "'"
+                 & To_Event_Str (Event => Ev_Node) & "'");
+      end Target_No_Action;
+
+       ----------------------------------------------------------------------
+
+      procedure Target_Reset
+      is
+         Data    : Muxml.XML_Data_Type;
+         Ev_Node : DOM.Core.Node;
+         Ref_Str : constant String
+           := "   Reset_Action : constant Target_Event_Action_Kind "
+           & ":= Reset;";
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/component_vt.xml");
+         Ev_Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/component/requires/events/target/"
+            & "event[@logical='reset']");
+
+         Assert (Condition => To_Event_Str (Event => Ev_Node) = Ref_Str,
+                 Message   => "Event string mismatch (Tgt reset)");
+      end Target_Reset;
+   begin
+      Source_No_Action;
+      Source_Poweroff;
+      Source_Reboot;
+      Source_Unmask_Irq;
+      Target_No_Action;
+      Target_Inject_Interrupt;
+      Target_Reset;
+--  begin read only
+   end Test_To_Event_Str;
+--  end read only
+
+
+--  begin read only
    procedure Test_To_Memory_Array_Str (Gnattest_T : in out Test);
    procedure Test_To_Memory_Array_Str_a91bde (Gnattest_T : in out Test) renames Test_To_Memory_Array_Str;
 --  id:2.2/a91bdeda113a5f83/To_Memory_Array_Str/1/0/

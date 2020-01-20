@@ -26,6 +26,7 @@ with McKae.XML.XPath.XIA;
 
 with Muxml.Utils;
 
+with Mutools.Types;
 with Mutools.Utils;
 
 package body Cspec.Utils
@@ -577,6 +578,97 @@ is
 
       return S (Res);
    end To_Device_Str;
+
+   -------------------------------------------------------------------------
+
+   function To_Event_Str (Event : DOM.Core.Node) return String
+   is
+
+      --  Return event action parameters of given XML node as string.
+      procedure Event_Action_As_String
+        (Node               :     DOM.Core.Node;
+         Action_Name        : out Ada.Strings.Unbounded.Unbounded_String;
+         Action_Param_Name  : out Ada.Strings.Unbounded.Unbounded_String;
+         Action_Param_Value : out Ada.Strings.Unbounded.Unbounded_String);
+
+      ----------------------------------------------------------------------
+
+      procedure Event_Action_As_String
+        (Node               :     DOM.Core.Node;
+         Action_Name        : out Ada.Strings.Unbounded.Unbounded_String;
+         Action_Param_Name  : out Ada.Strings.Unbounded.Unbounded_String;
+         Action_Param_Value : out Ada.Strings.Unbounded.Unbounded_String)
+      is
+         use type DOM.Core.Node;
+         use type Mutools.Types.Event_Action_Kind;
+
+         Action_Kind : Mutools.Types.Event_Action_Kind
+           := Mutools.Types.No_Action;
+      begin
+         if Node /= null then
+            Action_Kind := Mutools.Types.Event_Action_Kind'Value
+              (DOM.Core.Nodes.Node_Name (N => Node));
+         end if;
+
+         Action_Name := U (Mutools.Utils.To_Ada_Identifier
+                           (Str => Action_Kind'Img));
+
+         if Action_Kind = Mutools.Types.Unmask_Irq then
+            Action_Param_Name  := U ("Number");
+            Action_Param_Value := U (DOM.Core.Elements.Get_Attribute
+                                     (Elem => Node,
+                                      Name => "number"));
+         elsif Action_Kind = Mutools.Types.Inject_Interrupt then
+            Action_Param_Name  := U ("Vector");
+            Action_Param_Value := U (DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "vector"));
+         else
+            Action_Param_Name := Null_Unbounded_String;
+            Action_Param_Value := Null_Unbounded_String;
+         end if;
+      end Event_Action_As_String;
+
+      ----------------------------------------------------------------------
+
+      ID : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Event,
+           Name => "id");
+      Event_Kind : constant String := Mutools.Utils.To_Ada_Identifier
+        (Str => DOM.Core.Nodes.Node_Name
+           (N => DOM.Core.Nodes.Parent_Node
+                (N => Event)));
+      Logical : constant Unbounded_String
+        := U (Mutools.Utils.To_Ada_Identifier
+              (Str => DOM.Core.Elements.Get_Attribute
+               (Elem => Event,
+                Name => "logical")));
+
+      Res, Act_Name, Act_Param_Name, Act_Param_Val : Unbounded_String;
+   begin
+      Event_Action_As_String
+        (Node               => Muxml.Utils.Get_Element
+           (Doc   => Event,
+            XPath => "*"),
+         Action_Name        => Act_Name,
+         Action_Param_Name  => Act_Param_Name,
+         Action_Param_Value => Act_Param_Val);
+
+      if ID'Length > 0 then
+         Res := I & Logical & "_ID     : constant := " & ID & ";" & ASCII.LF;
+      end if;
+
+      if Act_Param_Name /= Null_Unbounded_String then
+         Res := Res & I & Logical & "_" & Act_Param_Name & " : constant := "
+           & Act_Param_Val & ";" & ASCII.LF;
+      end if;
+
+      Res := Res & I & Logical & "_Action : constant " & Event_Kind
+        & "_Event_Action_Kind := " & Act_Name & ";";
+
+      return S (Res);
+   end To_Event_Str;
 
    -------------------------------------------------------------------------
 

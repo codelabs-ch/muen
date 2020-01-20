@@ -49,8 +49,8 @@
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
 --
-  <event mode="asap" name="ping_subject2"/>                                                                                                               <event mode="asap" name="ping_subject2"/>
-  <event mode="switch" name="trap_to_subject1"/>                                                                                                          <event mode="switch" name="trap_to_subject1"/>
+  <event mode="kernel" name="system_reboot"/>                                                                                                             <event mode="kernel" name="system_reboot"/>
+  <event mode="kernel" name="system_poweroff"/>                                                                                                           <event mode="kernel" name="system_poweroff"/>
                                                                                                                                                      >    <event mode="asap" name="lnx_smp_ipi_call_func_0001"/>
                                                                                                                                                      >    <event mode="asap" name="lnx_smp_ipi_reschedule_0001"/>
                                                                                                                                                      >    <event mode="asap" name="lnx_smp_ipi_call_func_0100"/>
@@ -264,16 +264,16 @@
                                                                                                                                                      >        <event id="1" logical="smp_ipi_reschedule_0001" physical="lnx_smp_ipi_reschedule_0001"/>
                                                                                                                                                      >       </group>
     </source>                                                                                                                                               </source>
-                                                                                                                                                     >      <target>
+    <target>                                                                                                                                                <target>
+     <event logical="handover_from_subject1" physical="handover_to_lnx"/>                                                                                    <event logical="handover_from_subject1" physical="handover_to_lnx"/>
                                                                                                                                                      >       <event logical="smp_ipi_call_func_0100" physical="lnx_smp_ipi_call_func_0100">
                                                                                                                                                      >        <inject_interrupt vector="251"/>
                                                                                                                                                      >       </event>
                                                                                                                                                      >       <event logical="smp_ipi_reschedule_0100" physical="lnx_smp_ipi_reschedule_0100">
                                                                                                                                                      >        <inject_interrupt vector="253"/>
                                                                                                                                                      >       </event>
-                                                                                                                                                     >      </target>
+    </target>                                                                                                                                               </target>
    </events>                                                                                                                                               </events>
-   <channels>                                                                                                                                              <channels>
 --
   </subject>                                                                                                                                              </subject>
   <subject name="subject1">                                                                                                                               <subject name="subject1">

@@ -1,20 +1,18 @@
-  <event mode="asap" name="ping_subject2"/>                                                                                                               <event mode="asap" name="ping_subject2"/>
-  <event mode="switch" name="trap_to_subject1"/>                                                                                                          <event mode="switch" name="trap_to_subject1"/>
+  <event mode="kernel" name="system_reboot"/>                                                                                                             <event mode="kernel" name="system_reboot"/>
+  <event mode="kernel" name="system_poweroff"/>                                                                                                           <event mode="kernel" name="system_poweroff"/>
                                                                                                                                                      >    <event mode="asap" name="data_channel"/>
                                                                                                                                                      >    <event mode="switch" name="data_channel2"/>
  </events>                                                                                                                                               </events>
  <channels>                                                                                                                                              <channels>
 --
-     </group>                                                                                                                                                </group>
-    </source>                                                                                                                                               </source>
-                                                                                                                                                     >      <target>
+    <target>                                                                                                                                                <target>
+     <event logical="handover_from_subject1" physical="handover_to_lnx"/>                                                                                    <event logical="handover_from_subject1" physical="handover_to_lnx"/>
                                                                                                                                                      >       <event logical="channel_1" physical="data_channel">
                                                                                                                                                      >        <inject_interrupt vector="12"/>
                                                                                                                                                      >       </event>
                                                                                                                                                      >       <event logical="channel_2" physical="data_channel2"/>
-                                                                                                                                                     >      </target>
+    </target>                                                                                                                                               </target>
    </events>                                                                                                                                               </events>
-   <channels>                                                                                                                                              <channels>
 --
      <group name="vmcall">                                                                                                                                   <group name="vmcall">
       <event id="5" logical="ping" physical="ping_subject2"/>                                                                                                 <event id="5" logical="ping" physical="ping_subject2"/>

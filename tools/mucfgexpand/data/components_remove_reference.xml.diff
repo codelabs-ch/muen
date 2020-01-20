@@ -33,6 +33,13 @@
      <map logical="port" physical="port1"/>                                                                                                          <
      <map logical="mmio1" physical="mmio"/>                                                                                                          <
     </map>                                                                                                                                           <
+    <map logical="handover" physical="handover_to_lnx"/>                                                                                             <
+    <map logical="reboot" physical="system_reboot"/>                                                                                                 <
+    <map logical="shutdown" physical="system_poweroff"/>                                                                                             <
+    <map logical="trigger_timer" physical="timer_subject1"/>                                                                                         <
+    <map logical="timer" physical="timer_subject1"/>                                                                                                 <
+    <map logical="foo" physical="foo_subject1"/>                                                                                                     <
+    <map logical="self_reset" physical="foo_subject1"/>                                                                                              <
    </component>                                                                                                                                      <
   </subject>                                                                                                                                              </subject>
   <subject name="subject2">                                                                                                                               <subject name="subject2">

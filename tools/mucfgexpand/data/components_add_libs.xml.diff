@@ -8,7 +8,7 @@
    <requires>                                                                                                                                              <requires>
     <memory>                                                                                                                                                <memory>
 --
-     </source>                                                                                                                                               </source>
+     </target>                                                                                                                                               </target>
     </events>                                                                                                                                               </events>
                                                                                                                                                      >      <devices>
                                                                                                                                                      >       <device logical="some_dev">
@@ -57,6 +57,11 @@
      </source>                                                                                                                                               </source>
      <target>                                                                                                                                                <target>
 --
+       <inject_interrupt vector="37"/>                                                                                                                         <inject_interrupt vector="37"/>
+      </event>                                                                                                                                                </event>
+                                                                                                                                                     >        <event logical="self_reset">
+                                                                                                                                                     >         <reset/>
+                                                                                                                                                     >        </event>
      </target>                                                                                                                                               </target>
     </events>                                                                                                                                               </events>
                                                                                                                                                      >      <channels>

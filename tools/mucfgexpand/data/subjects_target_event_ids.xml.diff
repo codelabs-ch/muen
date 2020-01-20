@@ -1,5 +1,11 @@
     </source>                                                                                                                                               </source>
     <target>                                                                                                                                                <target>
+     <event logical="handover_from_subject1" physical="handover_to_lnx"/>                                                                            |       <event id="0" logical="handover_from_subject1" physical="handover_to_lnx"/>
+    </target>                                                                                                                                               </target>
+   </events>                                                                                                                                               </events>
+--
+    </source>                                                                                                                                               </source>
+    <target>                                                                                                                                                <target>
      <event logical="trap_to_subject1" physical="trap_to_subject1">                                                                                  |       <event id="0" logical="trap_to_subject1" physical="trap_to_subject1">
       <inject_interrupt vector="32"/>                                                                                                                         <inject_interrupt vector="32"/>
      </event>                                                                                                                                                </event>

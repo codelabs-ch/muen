@@ -42,6 +42,11 @@
      <source>                                                                                                                                        <
       <event id="20" logical="foo"/>                                                                                                                 <
      </source>                                                                                                                                       <
+     <target>                                                                                                                                        <
+      <event logical="self_reset">                                                                                                                   <
+       <reset/>                                                                                                                                      <
+      </event>                                                                                                                                       <
+     </target>                                                                                                                                       <
     </events>                                                                                                                                        <
    </requires>                                                                                                                                       <
   </library>                                                                                                                                         <
@@ -84,6 +89,7 @@
     <events>                                                                                                                                         <
      <source>                                                                                                                                        <
       <event id="1" logical="handover"/>                                                                                                             <
+      <event id="29" logical="trigger_timer"/>                                                                                                       <
       <event id="30" logical="reboot">                                                                                                               <
        <system_reboot/>                                                                                                                              <
       </event>                                                                                                                                       <

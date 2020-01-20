@@ -2,7 +2,7 @@ COMPONENT = mugenspec
 
 TEMPLATES    = $(GEN_DIR)/string_templates.ads
 SPECS        = $(wildcard data/*.ad*)
-STATIC_SPECS = $(OBJ_DIR)/prove/skp-subjects.ads $(OBJ_DIR)/prove/skp-events.ads
+STATIC_SPECS = $(OBJ_DIR)/prove/skp-subjects.ads
 
 COMPONENT_TARGETS = $(TEMPLATES)
 TEST_TARGETS      = $(COMPONENT_TARGETS) $(OBJ_DIR)/gnatprove/gnatprove.out

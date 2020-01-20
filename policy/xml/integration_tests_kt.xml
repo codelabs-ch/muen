@@ -103,17 +103,6 @@
 
   <subject name="vt">
    <events>
-    <source>
-     <group name="vmcall">
-      <event id="0" logical="reset_slot_1" physical="reset_slot_1"/>
-      <event id="30" logical="system_poweroff" physical="system_poweroff">
-       <system_poweroff/>
-      </event>
-      <event id="31" logical="system_reboot" physical="system_reboot">
-       <system_reboot/>
-      </event>
-     </group>
-    </source>
     <target>
      <event logical="nic_linux_core_1" physical="virtual_console_3">
       <inject_interrupt vector="34"/>
@@ -134,6 +123,9 @@
      <map logical="buffer" physical="buffer"/>
      <map logical="ports" physical="ports"/>
     </map>
+    <map logical="reset_slot_1" physical="reset_slot_1"/>
+    <map logical="shutdown" physical="system_poweroff"/>
+    <map logical="reboot" physical="system_reboot"/>
    </component>
   </subject>
 

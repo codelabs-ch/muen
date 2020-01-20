@@ -20,5 +20,16 @@
 				<ioPort logical="ports" start="16#03c0#" end="16#03df#"/>
 			</device>
 		</devices>
+		<events>
+			<source>
+				<event id="0"  logical="reset_slot_1"/>
+				<event id="30" logical="shutdown">
+					<system_poweroff/>
+				</event>
+				<event id="31" logical="reboot">
+					<system_reboot/>
+				</event>
+			</source>
+		</events>
 	</requires>
 </component>

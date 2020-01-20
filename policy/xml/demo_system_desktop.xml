@@ -75,14 +75,8 @@
     <source>
      <group name="vmcall">
       <event id="0" logical="serial_irq4" physical="serial_irq4_linux"/>
-      <event id="4" logical="resume_linux" physical="resume_linux"/>
      </group>
     </source>
-    <target>
-     <event logical="handle_linux_trap" physical="trap_to_sm">
-      <inject_interrupt vector="36"/>
-     </event>
-    </target>
    </events>
    <monitor>
     <state subject="linux" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
@@ -90,6 +84,8 @@
    <component ref="sm">
     <map logical="time_info" physical="time_info"/>
     <map logical="debuglog" physical="debuglog_subject1"/>
+    <map logical="resume_subject" physical="resume_linux"/>
+    <map logical="handle_subject_trap" physical="trap_to_sm"/>
    </component>
   </subject>
 

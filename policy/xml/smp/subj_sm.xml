@@ -3,13 +3,9 @@
   <source>
    <group name="vmcall">
     <event id="0" logical="serial_irq4" physical="serial_irq4_linux_" attrset="physical"/>
-    <event id="4" logical="resume_linux" physical="resume_linux_" attrset="physical"/>
    </group>
   </source>
   <target>
-   <event logical="handle_linux_trap" physical="trap_to_sm_" attrset="physical">
-    <inject_interrupt vector="36"/>
-   </event>
    <event logical="start_ap" physical="linux_smp_signal_sm_" attrset="physical" attrvalue="f=str(i).zfill(2)">
     <inject_interrupt vector="36"/>
    </event>
@@ -21,5 +17,7 @@
  <component ref="sm">
   <map logical="time_info" physical="time_info"/>
   <map logical="debuglog" physical="debuglog_subject" attrset="physical" attrvalue="f=str(dbgchannel_end + i)"/>
+  <map logical="resume_subject" physical="resume_linux_" attrset="physical"/>
+  <map logical="handle_subject_trap" physical="trap_to_sm_" attrset="physical"/>
  </component>
 </subject>

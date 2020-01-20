@@ -1,21 +1,12 @@
 <subject name="base_hw_sm">
- <events>
-  <source>
-   <group name="vmcall">
-    <event id="4" logical="resume_base_hw" physical="resume_base_hw_1"/>
-   </group>
-  </source>
-  <target>
-   <event physical="trap_to_sm_1" logical="handle_base_hw_trap">
-    <inject_interrupt vector="36"/>
-   </event>
-  </target>
- </events>
+ <events/>
  <monitor>
   <state subject="base_hw" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
  </monitor>
  <component ref="sm">
   <map logical="time_info" physical="time_info"/>
   <map logical="debuglog" physical="debuglog_subject1"/>
+  <map logical="resume_subject" physical="resume_base_hw_1"/>
+  <map logical="handle_subject_trap" physical="trap_to_sm_1"/>
  </component>
 </subject>

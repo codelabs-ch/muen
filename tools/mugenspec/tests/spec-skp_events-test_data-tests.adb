@@ -50,9 +50,13 @@ package body Spec.Skp_Events.Test_Data.Tests is
       Write (Output_Dir => Output_Dir,
              Policy     => Policy);
       Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => P_Spec,
+               Filename2 => "data/skp-events.ads"),
+              Message   => "Events spec mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => P_Body,
                Filename2 => "data/skp-events.adb"),
-              Message   => "Events spec mismatch");
+              Message   => "Events body mismatch");
       Ada.Directories.Delete_File (Name => P_Spec);
       Ada.Directories.Delete_File (Name => P_Body);
 --  begin read only

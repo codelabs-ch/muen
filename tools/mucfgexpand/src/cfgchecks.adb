@@ -1838,6 +1838,53 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Subject_Event_Exports (XML_Data : Muxml.XML_Data_Type)
+   is
+      Phys_Events : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/events/event");
+      Components : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/components/component");
+      Subjects   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject[component]");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subj_Node  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Comp_Name  : constant String
+              := Muxml.Utils.Get_Attribute
+                (Doc   => Subj_Node,
+                 XPath => "component",
+                 Name  => "ref");
+            Comp_Node  : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Components,
+                 Ref_Attr  => "name",
+                 Ref_Value => Comp_Name);
+            Comp_Events : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Node,
+                 XPath => "requires/events/*/event");
+         begin
+            Check_Component_Resource_Mappings
+              (Logical_Resources  => Comp_Events,
+               Physical_Resources => Phys_Events,
+               Resource_Type      => "event",
+               Subject            => Subj_Node);
+         end;
+      end loop;
+   end Subject_Event_Exports;
+
+   -------------------------------------------------------------------------
+
    procedure Subject_IRQ_MSI_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type)
    is
       Subj_MSI_Devices : constant DOM.Core.Node_List

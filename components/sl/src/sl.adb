@@ -28,6 +28,8 @@ with Musinfo.Instance;
 
 with Loader.Process_Target;
 
+with Sl_Component.Events;
+
 procedure Sl
 is
 begin
@@ -79,6 +81,6 @@ begin
          end loop;
       end;
 
-      SK.Hypercall.Trigger_Event (Number => 0);
+      SK.Hypercall.Trigger_Event (Number => Sl_Component.Events.Start_ID);
    end loop;
 end Sl;

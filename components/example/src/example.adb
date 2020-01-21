@@ -37,6 +37,7 @@ with Interrupt_Handler;
 pragma Unreferenced (Interrupt_Handler);
 
 with Example_Component.Config;
+with Example_Component.Events;
 
 procedure Example
 is
@@ -86,7 +87,7 @@ begin
         (Item => "Current minor frame ticks " &
            SK.Strings.Img (Minor_Start) & " .. " & SK.Strings.Img (Minor_End));
       Log.Put_Line (Item => "Triggering self-event");
-      Timed_Events.Timed_Evt.Event_Nr          := 3;
+      Timed_Events.Timed_Evt.Event_Nr := Example_Component.Events.Timer_ID;
       Timed_Events.Timed_Evt.TSC_Trigger_Value := Trigger;
    end;
 
@@ -114,7 +115,7 @@ begin
    --  Give up CPU.
 
    Log.Put_Line (Item => "Yielding CPU");
-   SK.Hypercall.Trigger_Event (Number => 2);
+   SK.Hypercall.Trigger_Event (Number => Example_Component.Events.Yield_ID);
 
    --  Act as a service: process events from associated subject.
 

@@ -37,6 +37,9 @@ is
    --  Convert given device node to string representation.
    function To_Device_Str (Device : DOM.Core.Node) return String;
 
+   --  Convert given event node to string representation.
+   function To_Event_Str (Event : DOM.Core.Node) return String;
+
    --  Convert given memory array node to string representation.
    function To_Memory_Array_Str (Arr : DOM.Core.Node) return String;
 

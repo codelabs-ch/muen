@@ -24,6 +24,7 @@ with SK.Hypercall;
 with SK.Strings;
 
 with VT_Channels;
+with Vt_Component.Events;
 
 with Log;
 with Mux.Screens;
@@ -139,7 +140,8 @@ is
 
                      --  Initiate reset of slot 1.
 
-                     SK.Hypercall.Trigger_Event (Number => 0);
+                     SK.Hypercall.Trigger_Event
+                       (Number => Vt_Component.Events.Reset_Slot_1_ID);
                      return;
                   end if;
 
@@ -149,7 +151,8 @@ is
 
                      --  Reboot the system.
 
-                     SK.Hypercall.Trigger_Event (Number => 31);
+                     SK.Hypercall.Trigger_Event
+                       (Number => Vt_Component.Events.Reboot_ID);
                      return;
                   end if;
 
@@ -159,7 +162,8 @@ is
 
                      --  Shutdown the system.
 
-                     SK.Hypercall.Trigger_Event (Number => 30);
+                     SK.Hypercall.Trigger_Event
+                       (Number => Vt_Component.Events.Shutdown_ID);
                      return;
                   end if;
 

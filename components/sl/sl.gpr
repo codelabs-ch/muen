@@ -22,7 +22,7 @@ with "libsparkcrypto";
 
 project Sl extends "../component_spark" is
 
-   Extra_Dirs := Component_Spark.Src_Dirs;
+   Extra_Dirs := Component_Spark.Src_Dirs & "generated";
 
    case Component_Spark.Build_Mode is
       when "debug"   => Extra_Dirs := Extra_Dirs & Component_Spark.Build_Mode

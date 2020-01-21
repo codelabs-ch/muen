@@ -64,8 +64,6 @@ is
       Check_Procs.Register
         (Process => Subject_IRQ_MSI_References'Access);
       Check_Procs.Register
-        (Process => Subject_Resource_Maps_Physical_Uniqueness'Access);
-      Check_Procs.Register
         (Process => Subject_Resource_Maps_Logical_Uniqueness'Access);
       Check_Procs.Register
         (Process => Subject_Component_Resource_Mappings'Access);
@@ -75,6 +73,8 @@ is
         (Process => Subject_Memory_Exports'Access);
       Check_Procs.Register
         (Process => Subject_Device_Exports'Access);
+      Check_Procs.Register
+        (Process => Subject_Event_Exports'Access);
       Check_Procs.Register
         (Process => Component_Channel_Size'Access);
       Check_Procs.Register

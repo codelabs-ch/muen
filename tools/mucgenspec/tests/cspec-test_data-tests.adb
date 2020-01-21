@@ -76,6 +76,10 @@ package body Cspec.Test_Data.Tests is
                   Filename2 => "data/" & C & P & "-devices.ads"),
                  Message   => C & P & "-devices.ads mismatch");
          Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Dir & "/" & C & P & "-events.ads",
+                  Filename2 => "data/" & C & P & "-events.ads"),
+                 Message   => C & P & "-events.ads mismatch");
+         Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => Dir & "/" & C & P & "-memory_arrays.ads",
                   Filename2 => "data/" & C & P & "-memory_arrays.ads"),
                  Message   => C & P & "-memory_arrays.ads mismatch");
@@ -109,6 +113,10 @@ package body Cspec.Test_Data.Tests is
                  (Filename1 => Dir & "/" & C & P & "-devices.ads",
                   Filename2 => "data/" & C & P & "-devices.ads"),
                  Message   => C & P & "-devices.ads mismatch");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Dir & "/" & C & P & "-events.ads",
+                  Filename2 => "data/" & C & P & "-events.ads"),
+                 Message   => C & P & "-events.ads mismatch");
       end Library;
 
       Ada.Directories.Delete_Tree (Directory => Dir);

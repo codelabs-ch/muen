@@ -574,6 +574,111 @@ package body Cfgchecks.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Subject_Event_Exports (Gnattest_T : in out Test);
+   procedure Test_Subject_Event_Exports_fdf55a (Gnattest_T : in out Test) renames Test_Subject_Event_Exports;
+--  id:2.2/fdf55afe35f3d4ab/Subject_Event_Exports/1/0/
+   procedure Test_Subject_Event_Exports (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise exception.
+
+      Subject_Event_Exports (XML_Data => Policy);
+
+      --  Invalid physical reference.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject1']/component"
+         & "/map[@logical='handover']",
+         Name  => "physical",
+         Value => "nonexistent");
+
+      begin
+         Subject_Event_Exports (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected (1)");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Physical event 'nonexistent' referenced by "
+                    & "mapping of component logical resource 'handover' by"
+                    & " subject 'subject1' does not exist",
+                    Message   => "Exception mismatch (1)");
+      end;
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject1']/component"
+         & "/map[@logical='handover']",
+         Name  => "physical",
+         Value => "handover_to_lnx");
+
+      --  Missing component source event mapping.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject1']/component"
+         & "/map[@physical='handover_to_lnx']",
+         Name  => "logical",
+         Value => "nonexistent");
+
+      begin
+         Subject_Event_Exports (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'subject1' does not map logical event "
+                    & "'handover' as requested by referenced component 'c1'",
+                    Message   => "Exception mismatch (2)");
+      end;
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject1']/component"
+         & "/map[@physical='handover_to_lnx']",
+         Name  => "logical",
+         Value => "handover");
+
+      --  Missing component target event mapping.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject1']/component"
+         & "/map[@physical='timer_subject1']",
+         Name  => "logical",
+         Value => "nonexistent");
+
+      begin
+         Subject_Event_Exports (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected (3)");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'subject1' does not map logical event "
+                    & "'trigger_timer' as requested by referenced component"
+                    & " 'c1'",
+                    Message   => "Exception mismatch (3)");
+      end;
+--  begin read only
+   end Test_Subject_Event_Exports;
+--  end read only
+
+
+--  begin read only
    procedure Test_Subject_Resource_Maps_Logical_Uniqueness (Gnattest_T : in out Test);
    procedure Test_Subject_Resource_Maps_Logical_Uniqueness_4e4f1e (Gnattest_T : in out Test) renames Test_Subject_Resource_Maps_Logical_Uniqueness;
 --  id:2.2/4e4f1e224492b324/Subject_Resource_Maps_Logical_Uniqueness/1/0/
@@ -613,49 +718,6 @@ package body Cfgchecks.Test_Data.Tests is
       end;
 --  begin read only
    end Test_Subject_Resource_Maps_Logical_Uniqueness;
---  end read only
-
-
---  begin read only
-   procedure Test_Subject_Resource_Maps_Physical_Uniqueness (Gnattest_T : in out Test);
-   procedure Test_Subject_Resource_Maps_Physical_Uniqueness_205f09 (Gnattest_T : in out Test) renames Test_Subject_Resource_Maps_Physical_Uniqueness;
---  id:2.2/205f09d9298f08c0/Subject_Resource_Maps_Physical_Uniqueness/1/0/
-   procedure Test_Subject_Resource_Maps_Physical_Uniqueness (Gnattest_T : in out Test) is
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      Policy : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data => Policy,
-                   Kind => Muxml.Format_Src,
-                   File => "data/test_policy.xml");
-
-      --  Positive test, must not raise and exception.
-
-      Subject_Resource_Maps_Physical_Uniqueness (XML_Data => Policy);
-
-      Muxml.Utils.Set_Attribute
-        (Doc   => Policy.Doc,
-         XPath => "/system/subjects/subject[@name='subject1']/component/"
-         & "map[@physical='dummy_2']",
-         Name  => "physical",
-         Value => "data_channel5");
-
-      begin
-         Subject_Resource_Maps_Physical_Uniqueness (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Multiple physical resource mappings with name "
-                    & "'data_channel5' in subject 'subject1'",
-                    Message   => "Exception mismatch");
-      end;
---  begin read only
-   end Test_Subject_Resource_Maps_Physical_Uniqueness;
 --  end read only
 
 

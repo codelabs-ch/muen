@@ -47,12 +47,12 @@ is
    --  referenced component to valid physical devices (incl. all resources).
    procedure Subject_Device_Exports (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check that a subject maps the logical events requested by the referenced
+   --  component to valid physical events.
+   procedure Subject_Event_Exports (XML_Data : Muxml.XML_Data_Type);
+
    --  Check that subject logical component resource mappings are unique.
    procedure Subject_Resource_Maps_Logical_Uniqueness
-     (XML_Data : Muxml.XML_Data_Type);
-
-   --  Check that subject physical component resource mappings are unique.
-   procedure Subject_Resource_Maps_Physical_Uniqueness
      (XML_Data : Muxml.XML_Data_Type);
 
    --  Check that MSI names are unique per subject logical device.

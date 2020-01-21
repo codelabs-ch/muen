@@ -208,6 +208,11 @@
  <events>
   <event mode="asap" name="ping_subject2"/>
   <event mode="switch" name="trap_to_subject1"/>
+  <event mode="switch" name="handover_to_lnx"/>
+  <event mode="self" name="timer_subject1"/>
+  <event mode="self" name="foo_subject1"/>
+  <event mode="kernel" name="system_reboot"/>
+  <event mode="kernel" name="system_poweroff"/>
  </events>
  <channels>
   <channel hasEvent="asap" name="data_channel" size="16#1000#"/>
@@ -258,6 +263,16 @@
       <writer logical="output2"/>
      </array>
     </channels>
+    <events>
+     <source>
+      <event id="20" logical="foo"/>
+     </source>
+     <target>
+      <event logical="self_reset">
+       <reset/>
+      </event>
+     </target>
+    </events>
    </requires>
   </library>
   <library name="l2">
@@ -296,6 +311,23 @@
       <ioPort end="16#50a7#" logical="port_3" start="16#50a0#"/>
      </device>
     </devices>
+    <events>
+     <source>
+      <event id="1" logical="handover"/>
+      <event id="29" logical="trigger_timer"/>
+      <event id="30" logical="reboot">
+       <system_reboot/>
+      </event>
+      <event id="31" logical="shutdown">
+       <system_poweroff/>
+      </event>
+     </source>
+     <target>
+      <event logical="timer">
+       <inject_interrupt vector="37"/>
+      </event>
+     </target>
+    </events>
    </requires>
    <provides>
     <memory executable="true" logical="binary" size="16#1000#" type="subject_binary" virtualAddress="16#0020_0000#" writable="true">
@@ -381,6 +413,9 @@
       <default physical="trap_to_subject1"/>
      </group>
     </source>
+    <target>
+     <event logical="handover_from_subject1" physical="handover_to_lnx"/>
+    </target>
    </events>
    <channels>
     <reader logical="channel_1" physical="data_channel" vector="12" virtualAddress="16#6000#"/>
@@ -463,6 +498,13 @@
      <map logical="port" physical="port1"/>
      <map logical="mmio1" physical="mmio"/>
     </map>
+    <map logical="handover" physical="handover_to_lnx"/>
+    <map logical="reboot" physical="system_reboot"/>
+    <map logical="shutdown" physical="system_poweroff"/>
+    <map logical="trigger_timer" physical="timer_subject1"/>
+    <map logical="timer" physical="timer_subject1"/>
+    <map logical="foo" physical="foo_subject1"/>
+    <map logical="self_reset" physical="foo_subject1"/>
    </component>
   </subject>
   <subject name="subject2">

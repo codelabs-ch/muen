@@ -22,6 +22,8 @@ with DOM.Core.Nodes;
 
 with McKae.XML.XPath.XIA;
 
+with Mutools.Utils;
+
 with Cspec.Utils;
 
 package body Cspec.Generators
@@ -86,6 +88,23 @@ is
          Func  => Utils.To_Device_Str'Access,
          XPath => "*[self::component or self::library]/requires/devices/*");
    end Get_Devices_Str;
+
+   -------------------------------------------------------------------------
+
+   function Get_Event_Str (Spec : Muxml.XML_Data_Type) return String
+   is
+      Events_Str : constant String := Get_Str
+        (Spec  => Spec,
+         Func  => Utils.To_Event_Str'Access,
+         XPath => "*[self::component or self::library]/requires/"
+         & "events/*/event");
+   begin
+      return
+        (if Events_Str'Length > 0 then
+            Mutools.Utils.Get_Event_Kind_Types_String & ASCII.LF
+         else "")
+        & Events_Str;
+   end Get_Event_Str;
 
    -------------------------------------------------------------------------
 

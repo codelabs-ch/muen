@@ -436,6 +436,11 @@
  <events>
   <event mode="ipi" name="ping_subject2"/>
   <event mode="switch" name="trap_to_subject1"/>
+  <event mode="switch" name="handover_to_lnx"/>
+  <event mode="self" name="timer_subject1"/>
+  <event mode="self" name="foo_subject1"/>
+  <event mode="kernel" name="system_reboot"/>
+  <event mode="kernel" name="system_poweroff"/>
   <event mode="async" name="data_channel"/>
   <event mode="switch" name="data_channel2"/>
   <event mode="kernel" name="unmask_irq19"/>
@@ -1012,14 +1017,15 @@
      </group>
     </source>
     <target>
-     <event id="0" logical="channel_1" physical="data_channel">
+     <event id="0" logical="handover_from_subject1" physical="handover_to_lnx"/>
+     <event id="1" logical="channel_1" physical="data_channel">
       <inject_interrupt vector="12"/>
      </event>
-     <event id="1" logical="channel_2" physical="data_channel2"/>
-     <event id="2" logical="smp_ipi_call_func_0100" physical="lnx_smp_ipi_call_func_0100">
+     <event id="2" logical="channel_2" physical="data_channel2"/>
+     <event id="3" logical="smp_ipi_call_func_0100" physical="lnx_smp_ipi_call_func_0100">
       <inject_interrupt vector="251"/>
      </event>
-     <event id="3" logical="smp_ipi_reschedule_0100" physical="lnx_smp_ipi_reschedule_0100">
+     <event id="4" logical="smp_ipi_reschedule_0100" physical="lnx_smp_ipi_reschedule_0100">
       <inject_interrupt vector="253"/>
      </event>
     </target>
@@ -1307,6 +1313,15 @@
     <source>
      <group name="vmcall">
       <event id="5" logical="ping" physical="ping_subject2"/>
+      <event id="1" logical="handover" physical="handover_to_lnx"/>
+      <event id="29" logical="trigger_timer" physical="timer_subject1"/>
+      <event id="30" logical="reboot" physical="system_reboot">
+       <system_reboot/>
+      </event>
+      <event id="31" logical="shutdown" physical="system_poweroff">
+       <system_poweroff/>
+      </event>
+      <event id="20" logical="foo" physical="foo_subject1"/>
       <event id="1" logical="primary_data" physical="data_channel"/>
       <event id="1" logical="secondary_data" physical="data_channel2"/>
       <event id="0" logical="unmask_irq_35" physical="unmask_irq20">
@@ -1320,6 +1335,12 @@
     <target>
      <event id="0" logical="trap_to_subject1" physical="trap_to_subject1">
       <inject_interrupt vector="32"/>
+     </event>
+     <event id="1" logical="timer" physical="timer_subject1">
+      <inject_interrupt vector="37"/>
+     </event>
+     <event id="2" logical="self_reset" physical="foo_subject1">
+      <reset/>
      </event>
     </target>
    </events>

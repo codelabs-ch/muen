@@ -92,6 +92,28 @@
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
 --
+    <source>                                                                                                                                                <source>
+     <group name="vmcall">                                                                                                                                   <group name="vmcall">
+      <event id="5" logical="ping" physical="ping_subject2"/>                                                                                        |        <event id="1" logical="handover" physical="handover_to_lnx"/>
+                                                                                                                                                     >        <event id="29" logical="trigger_timer" physical="timer_subject1"/>
+                                                                                                                                                     >        <event id="30" logical="reboot" physical="system_reboot">
+                                                                                                                                                     >         <system_reboot/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event id="31" logical="shutdown" physical="system_poweroff">
+                                                                                                                                                     >         <system_poweroff/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >        <event id="20" logical="foo" physical="foo_subject1"/>
+     </group>                                                                                                                                                </group>
+    </source>                                                                                                                                               </source>
+    <target>                                                                                                                                                <target>
+     <event logical="trap_to_subject1" physical="trap_to_subject1">                                                                                  |       <event logical="timer" physical="timer_subject1">
+      <inject_interrupt vector="32"/>                                                                                                                |        <inject_interrupt vector="37"/>
+                                                                                                                                                     >       </event>
+                                                                                                                                                     >       <event logical="self_reset" physical="foo_subject1">
+                                                                                                                                                     >        <reset/>
+     </event>                                                                                                                                                </event>
+    </target>                                                                                                                                               </target>
+--
     </msrs>                                                                                                                                                 </msrs>
    </vcpu>                                                                                                                                                 </vcpu>
                                                                                                                                                      >     <bootparams/>

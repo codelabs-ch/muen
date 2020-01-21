@@ -1647,11 +1647,17 @@ is
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Node,
                  XPath => "requires/memory/memory");
+            Comp_Events    : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Node,
+                 XPath => "requires/events/*/event");
          begin
             Muxml.Utils.Append (Left  => Comp_Resources,
                                 Right => Comp_Channels);
             Muxml.Utils.Append (Left  => Comp_Resources,
                                 Right => Comp_Memory);
+            Muxml.Utils.Append (Left  => Comp_Resources,
+                                Right => Comp_Events);
 
             Mulog.Log (Msg => "Checking component resource mappings of "
                        & "subject '" & Subj_Name & "'");
@@ -1829,6 +1835,53 @@ is
          end;
       end loop;
    end Subject_Device_Exports;
+
+   -------------------------------------------------------------------------
+
+   procedure Subject_Event_Exports (XML_Data : Muxml.XML_Data_Type)
+   is
+      Phys_Events : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/events/event");
+      Components : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/components/component");
+      Subjects   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject[component]");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subj_Node  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Comp_Name  : constant String
+              := Muxml.Utils.Get_Attribute
+                (Doc   => Subj_Node,
+                 XPath => "component",
+                 Name  => "ref");
+            Comp_Node  : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Components,
+                 Ref_Attr  => "name",
+                 Ref_Value => Comp_Name);
+            Comp_Events : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Node,
+                 XPath => "requires/events/*/event");
+         begin
+            Check_Component_Resource_Mappings
+              (Logical_Resources  => Comp_Events,
+               Physical_Resources => Phys_Events,
+               Resource_Type      => "event",
+               Subject            => Subj_Node);
+         end;
+      end loop;
+   end Subject_Event_Exports;
 
    -------------------------------------------------------------------------
 
@@ -2203,17 +2256,6 @@ is
         (XML_Data => XML_Data,
          Attr     => "logical");
    end Subject_Resource_Maps_Logical_Uniqueness;
-
-   -------------------------------------------------------------------------
-
-   procedure Subject_Resource_Maps_Physical_Uniqueness
-     (XML_Data : Muxml.XML_Data_Type)
-   is
-   begin
-      Check_Subject_Resource_Maps_Attr_Uniqueness
-        (XML_Data => XML_Data,
-         Attr     => "physical");
-   end Subject_Resource_Maps_Physical_Uniqueness;
 
    -------------------------------------------------------------------------
 

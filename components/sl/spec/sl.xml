@@ -2,4 +2,14 @@
 	<depends>
 		<library ref="libdebuglog"/>
 	</depends>
+	<requires>
+		<events>
+			<source>
+				<event id="0" logical="start"/>
+			</source>
+			<target>
+				<event logical="handle_reset"/>
+			</target>
+		</events>
+	</requires>
 </component>

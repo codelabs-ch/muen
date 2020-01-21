@@ -34,6 +34,10 @@ is
    --  empty string is returned if the component specifies no device resources.
    function Get_Devices_Str (Spec : Muxml.XML_Data_Type) return String;
 
+   --  Convert event elements of given component to string representation. An
+   --  empty string is returned if the component specifies no event resources.
+   function Get_Event_Str (Spec : Muxml.XML_Data_Type) return String;
+
    --  Convert memory array elements of given component to string
    --  representation. An empty string is returned if the component specifies
    --  no memory array resources.

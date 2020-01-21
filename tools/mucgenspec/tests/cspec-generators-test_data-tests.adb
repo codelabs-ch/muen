@@ -141,6 +141,43 @@ package body Cspec.Generators.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Get_Event_Str (Gnattest_T : in out Test);
+   procedure Test_Get_Event_Str_06c1b4 (Gnattest_T : in out Test) renames Test_Get_Event_Str;
+--  id:2.2/06c1b4962251c1a1/Get_Event_Str/1/0/
+   procedure Test_Get_Event_Str (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Fn   : constant String := "get_event_str";
+      Tmpl : Mutools.Templates.Template_Type;
+      Spec : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Spec,
+                   Kind => Muxml.None,
+                   File => "data/component_vt.xml");
+
+      Tmpl := Mutools.Templates.Create
+        (Content => Get_Event_Str (Spec => Spec));
+      Mutools.Templates.Write (Template => Tmpl,
+                               Filename => "obj/" & Fn);
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "obj/" & Fn,
+               Filename2 => "data/" & Fn),
+              Message   => "Content mismatch");
+      Ada.Directories.Delete_File (Name => "obj/" & Fn);
+
+      Muxml.Parse (Data => Spec,
+                   Kind => Muxml.None,
+                   File => "data/component_nores.xml");
+      Assert (Condition => Get_Memory_Str (Spec => Spec) = "",
+              Message   => "Content mismatch (2)");
+--  begin read only
+   end Test_Get_Event_Str;
+--  end read only
+
+
+--  begin read only
    procedure Test_Get_Memory_Arrays_Str (Gnattest_T : in out Test);
    procedure Test_Get_Memory_Arrays_Str_9d664b (Gnattest_T : in out Test) renames Test_Get_Memory_Arrays_Str;
 --  id:2.2/9d664b04eddb254a/Get_Memory_Arrays_Str/1/0/

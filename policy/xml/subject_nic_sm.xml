@@ -7,13 +7,9 @@
    <group name="vmcall">
     <event id="0" logical="serial_irq4" physical="serial_irq4_linux_1"/>
     <event id="1" logical="reset_linux" physical="reset_linux_1"/>
-    <event id="4" logical="resume_linux" physical="resume_linux_1"/>
    </group>
   </source>
   <target>
-   <event physical="trap_to_sm_1" logical="handle_linux_trap">
-    <inject_interrupt vector="36"/>
-   </event>
    <event physical="reset_sm_1" logical="reset">
     <reset/>
    </event>
@@ -29,5 +25,7 @@
    <map logical="dm_pciconf_req" physical="nic_dm_request"/>
    <map logical="dm_pciconf_res" physical="nic_dm_response"/>
   </if>
+  <map logical="resume_subject" physical="resume_linux_1"/>
+  <map logical="handle_subject_trap" physical="trap_to_sm_1"/>
  </component>
 </subject>

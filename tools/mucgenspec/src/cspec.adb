@@ -165,6 +165,8 @@ is
            := Generators.Get_Channels_Str (Spec => Spec);
          Devices : constant String
            := Generators.Get_Devices_Str (Spec => Spec);
+         Events : constant String
+           := Generators.Get_Event_Str (Spec => Spec);
          Mem_Arrays : constant String
            := Generators.Get_Memory_Arrays_Str (Spec => Spec);
          Channel_Arrays : constant String
@@ -182,6 +184,7 @@ is
            and then Memory'Length = 0
            and then Channels'Length = 0
            and then Devices'Length = 0
+           and then Events'Length = 0
            and then Mem_Arrays'Length = 0
            and then Channel_Arrays'Length = 0
          then
@@ -247,6 +250,15 @@ is
             Pattern  => "__devices__",
             Content  => Devices,
             Filename => Fname_Base & "-devices.ads");
+
+         Tmpl := Create_Template
+           (Comp_Name => Pack_Name,
+            Content   => String_Templates.component_events_ads);
+         Create_Child_Package
+           (Tmpl     => Tmpl,
+            Pattern  => "__events__",
+            Content  => Events,
+            Filename => Fname_Base & "-events.ads");
 
          Tmpl := Create_Template
            (Comp_Name => Pack_Name,

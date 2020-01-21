@@ -23,6 +23,7 @@ with Ada.Strings.Unbounded;
 with Ada.Characters.Handling;
 
 with Mutools.Constants;
+with Mutools.Types;
 
 package body Mutools.Utils
 is
@@ -103,6 +104,45 @@ is
    begin
       return Encoded_Str (Encoded_Str'First .. Udrl_Idx - 1);
    end Decode_Entity_Name;
+
+   -------------------------------------------------------------------------
+
+   function Get_Event_Kind_Types_String return String
+   is
+      use type Types.Event_Action_Kind;
+      use Ada.Strings.Unbounded;
+
+      Result : Unbounded_String
+        := Indent & To_Unbounded_String ("type Event_Action_Kind is");
+   begin
+      for T in Types.Event_Action_Kind'Range loop
+         Result := Result & ASCII.LF & Indent & "  "
+           & (if T = Types.Event_Action_Kind'First then "(" else " ")
+           & To_Ada_Identifier (Str => T'Img)
+           & (if T = Types.Event_Action_Kind'Last then ");" else ",");
+      end loop;
+      Result := Result & ASCII.LF  & ASCII.LF;
+
+      Result := Result & Indent
+        & "subtype Source_Event_Action_Kind is Event_Action_Kind range"
+        & ASCII.LF
+        & Indent & "  " & To_Ada_Identifier
+        (Str => Types.Source_Event_Action_Kind'First'Img)
+        & " .. " &  To_Ada_Identifier
+        (Str => Types.Source_Event_Action_Kind'Last'Img) & ";"
+        & ASCII.LF & ASCII.LF;
+
+      Result := Result & Indent
+        & "subtype Target_Event_Action_Kind is Event_Action_Kind range"
+        & ASCII.LF
+        & Indent & "  " & To_Ada_Identifier
+        (Str => Types.Target_Event_Action_Kind'First'Img)
+        & " .. " &  To_Ada_Identifier
+        (Str => Types.Target_Event_Action_Kind'Last'Img) & ";"
+        & ASCII.LF;
+
+      return To_String (Result);
+   end Get_Event_Kind_Types_String;
 
    -------------------------------------------------------------------------
 

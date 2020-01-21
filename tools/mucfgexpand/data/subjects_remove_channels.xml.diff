@@ -1,4 +1,4 @@
-    </source>                                                                                                                                               </source>
+    </target>                                                                                                                                               </target>
    </events>                                                                                                                                               </events>
    <channels>                                                                                                                                        <
     <reader logical="channel_1" physical="data_channel" vector="12" virtualAddress="16#6000#"/>                                                      <

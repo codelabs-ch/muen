@@ -103,17 +103,6 @@
 
   <subject name="vt">
    <events>
-    <source>
-     <group name="vmcall">
-      <event id="0" logical="reset_slot_1" physical="reset_slot_1"/>
-      <event id="30" logical="system_poweroff" physical="system_poweroff">
-       <system_poweroff/>
-      </event>
-      <event id="31" logical="system_reboot" physical="system_reboot">
-       <system_reboot/>
-      </event>
-     </group>
-    </source>
     <target>
      <event logical="nic_linux_core_1" physical="virtual_console_3">
       <inject_interrupt vector="34"/>
@@ -134,6 +123,9 @@
      <map logical="buffer" physical="buffer"/>
      <map logical="ports" physical="ports"/>
     </map>
+    <map logical="reset_slot_1" physical="reset_slot_1"/>
+    <map logical="shutdown" physical="system_poweroff"/>
+    <map logical="reboot" physical="system_reboot"/>
    </component>
   </subject>
 
@@ -278,13 +270,9 @@
     <source>
      <group name="vmcall">
       <event id="0" logical="serial_irq4" physical="serial_irq4_linux_3"/>
-      <event id="4" logical="resume_linux" physical="resume_linux_3"/>
      </group>
     </source>
     <target>
-     <event physical="trap_to_sm_3" logical="handle_linux_trap">
-      <inject_interrupt vector="36"/>
-     </event>
      <event physical="nic_linux_smp_signal_sm_01" logical="start_ap">
       <inject_interrupt vector="36"/>
      </event>
@@ -300,6 +288,8 @@
      <map logical="dm_pciconf_req" physical="nic_dm_request_1"/>
      <map logical="dm_pciconf_res" physical="nic_dm_response_1"/>
     </if>
+    <map logical="resume_subject" physical="resume_linux_3"/>
+    <map logical="handle_subject_trap" physical="trap_to_sm_3"/>
    </component>
   </subject>
 
@@ -375,13 +365,9 @@
     <source>
      <group name="vmcall">
       <event id="0" logical="serial_irq4" physical="serial_irq4_linux_4"/>
-      <event id="4" logical="resume_linux" physical="resume_linux_4"/>
      </group>
     </source>
     <target>
-     <event physical="trap_to_sm_4" logical="handle_linux_trap">
-      <inject_interrupt vector="36"/>
-     </event>
      <event physical="nic_linux_smp_signal_sm_02" logical="start_ap">
       <inject_interrupt vector="36"/>
      </event>
@@ -397,6 +383,8 @@
      <map logical="dm_pciconf_req" physical="nic_dm_request_2"/>
      <map logical="dm_pciconf_res" physical="nic_dm_response_2"/>
     </if>
+    <map logical="resume_subject" physical="resume_linux_4"/>
+    <map logical="handle_subject_trap" physical="trap_to_sm_4"/>
    </component>
   </subject>
 

@@ -22,10 +22,7 @@
  <xs:complexType name="targetEventEntryType">
   <xs:complexContent>
    <xs:extension base="baseEventType">
-    <xs:choice>
-     <xs:element name="inject_interrupt" type="eventActionInjectInterruptType" minOccurs="0" maxOccurs="1"/>
-     <xs:element name="reset"            type="eventActionNoParamType"         minOccurs="0" maxOccurs="1"/>
-    </xs:choice>
+    <xs:group ref="targetEventActionsGroup" minOccurs="0" maxOccurs="1"/>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>
@@ -51,5 +48,20 @@
  </xs:complexType>
 
  <xs:complexType name="eventActionNoParamType"/>
+
+ <xs:group name="sourceEventActionsGroup">
+  <xs:choice>
+   <xs:element name="system_reboot"   type="eventActionNoParamType"/>
+   <xs:element name="system_poweroff" type="eventActionNoParamType"/>
+   <xs:element name="unmask_irq"      type="eventActionUnmaskIrqType"/>
+  </xs:choice>
+ </xs:group>
+
+ <xs:group name="targetEventActionsGroup">
+  <xs:choice>
+   <xs:element name="inject_interrupt" type="eventActionInjectInterruptType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="reset"            type="eventActionNoParamType"         minOccurs="0" maxOccurs="1"/>
+  </xs:choice>
+ </xs:group>
 
 </xs:schema>

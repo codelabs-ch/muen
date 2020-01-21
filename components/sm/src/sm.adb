@@ -32,6 +32,8 @@ with Mudm.Client;
 
 with Component_Constants;
 
+with Sm_Component.Events;
+
 with Time;
 with Types;
 with Interrupt_Handler;
@@ -66,9 +68,11 @@ is
    use type Types.Subject_Action_Type;
    use Subject_Info;
 
-   Reset_Event  : constant := 1;
-   Resume_Event : constant := 4;
-   Action       : Types.Subject_Action_Type := Types.Subject_Continue;
+   --  Currently. the reset event cannot be declared in the component XML
+   --  spec since not all SM instances make use of the Reset functionality.
+
+   Reset_Event : constant := 1;
+   Action      : Types.Subject_Action_Type := Types.Subject_Continue;
 
    Exit_Reason, Instruction_Len : SK.Word32;
    RIP : SK.Word64;
@@ -135,12 +139,14 @@ begin
       case Action
       is
          when Types.Subject_Start    =>
-            SK.Hypercall.Trigger_Event (Number => Resume_Event);
+            SK.Hypercall.Trigger_Event
+              (Number => Sm_Component.Events.Resume_Subject_ID);
          when Types.Subject_Continue =>
             RIP             := State.RIP;
             Instruction_Len := State.Instruction_Len;
             State.RIP       := RIP + SK.Word64 (Instruction_Len);
-            SK.Hypercall.Trigger_Event (Number => Resume_Event);
+            SK.Hypercall.Trigger_Event
+              (Number => Sm_Component.Events.Resume_Subject_ID);
          when Types.Subject_Halt     =>
             pragma Debug (Debug_Ops.Dump_State);
             SK.CPU.Stop;

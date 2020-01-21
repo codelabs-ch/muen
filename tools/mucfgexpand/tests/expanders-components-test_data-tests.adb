@@ -90,6 +90,32 @@ package body Expanders.Components.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Add_Events (Gnattest_T : in out Test);
+   procedure Test_Add_Events_c19467 (Gnattest_T : in out Test) renames Test_Add_Events;
+--  id:2.2/c194679ab51f7a6e/Add_Events/1/0/
+   procedure Test_Add_Events (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename => "obj/components_add_events.xml",
+         Ref_Diff => "data/components_add_events.xml.diff",
+         Pre      => Prepare_Component_Events'Access,
+         Expander => Add_Events'Access);
+
+      Test_Utils.Expander.Run_Test
+        (Filename => "obj/components_add_events_missing_sections.xml",
+         Ref_Diff => "data/components_add_events_missing_sections.xml.diff",
+         Pre      => Pre_Component_Events_Missing_Sections'Access,
+         Expander => Add_Events'Access);
+--  begin read only
+   end Test_Add_Events;
+--  end read only
+
+
+--  begin read only
    procedure Test_Add_Library_Resources (Gnattest_T : in out Test);
    procedure Test_Add_Library_Resources_794077 (Gnattest_T : in out Test) renames Test_Add_Library_Resources;
 --  id:2.2/79407791296d1bb0/Add_Library_Resources/1/0/

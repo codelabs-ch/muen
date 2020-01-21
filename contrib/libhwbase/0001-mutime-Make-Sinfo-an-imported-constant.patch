@@ -1,40 +1,57 @@
-From 3290639e8de271a68991060097b8e18012aac306 Mon Sep 17 00:00:00 2001
+From 5c3e203ce54c61a8aa6e76be99cd83169c8da5ca Mon Sep 17 00:00:00 2001
 From: Adrian-Ken Rueegsegger <ken@codelabs.ch>
-Date: Tue, 3 Oct 2017 16:44:51 +0200
+Date: Tue, 21 Jan 2020 13:53:59 +0100
 Subject: [PATCH 1/3] mutime: Make Sinfo an imported constant
 
-This fixes a warning issued by gnatprove regarding the initialization of
-Sinfo. Also adjust refinement of abstract timer state to match global
-contract of Hz function.
----
- ada/mutime/hw-time-timer.adb | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+The subject info data structure is static and is not changed during
+runtime. Also adjust refinement of abstract timer state and adjust
+global contract of Hz function since it does not need to be volatile.
 
-diff --git a/ada/mutime/hw-time-timer.adb b/ada/mutime/hw-time-timer.adb
-index 272289c..e7d80e1 100644
---- a/ada/mutime/hw-time-timer.adb
-+++ b/ada/mutime/hw-time-timer.adb
-@@ -17,16 +17,17 @@ with Musinfo;
- with Muschedinfo;
+Signed-off-by: Adrian-Ken Rueegsegger <ken@codelabs.ch>
+---
+ common/hw-time-timer.ads        | 4 +---
+ common/mutime/hw-time-timer.adb | 5 ++---
+ 2 files changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/common/hw-time-timer.ads b/common/hw-time-timer.ads
+index 90978df..2bec99b 100644
+--- a/common/hw-time-timer.ads
++++ b/common/hw-time-timer.ads
+@@ -15,8 +15,7 @@
+ private package HW.Time.Timer
+    with
+       Abstract_State => ((Timer_State with
+-                           Part_Of => HW.Time.State,
+-                           External => Async_Writers),
++                           Part_Of => HW.Time.State),
+                          (Abstract_Time with
+                            Part_Of => HW.Time.State,
+                            External => Async_Writers))
+@@ -38,7 +37,6 @@ is
  
- package body HW.Time.Timer
--   with Refined_State => (Timer_State => null,
--                          Abstract_Time => (Sinfo, Sched_Info))
-+   with Refined_State => (Timer_State => Sinfo,
-+                          Abstract_Time => Sched_Info)
- is
-    Sinfo_Base_Address : constant := 16#000e_0000_0000#;
-    Sinfo_Page_Size    : constant
+    function Hz return T
+    with
+-      Volatile_Function,
+       Global => (Input => Timer_State);
+ 
+ end HW.Time.Timer;
+diff --git a/common/mutime/hw-time-timer.adb b/common/mutime/hw-time-timer.adb
+index c683d6f..8e9b497 100644
+--- a/common/mutime/hw-time-timer.adb
++++ b/common/mutime/hw-time-timer.adb
+@@ -25,10 +25,9 @@ is
       := ((Musinfo.Subject_Info_Type_Size + (16#1000# - 1))
           / 16#1000#) * 16#1000#;
  
 -   Sinfo : Musinfo.Subject_Info_Type
 +   Sinfo : constant Musinfo.Subject_Info_Type
     with
+-      Volatile,
+-      Async_Writers,
 +      Import,
        Address => System'To_Address (Sinfo_Base_Address);
  
     Sched_Info : Muschedinfo.Scheduling_Info_Type
 -- 
-2.1.4
+2.20.1
 

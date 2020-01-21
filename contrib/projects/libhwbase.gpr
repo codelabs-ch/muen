@@ -5,11 +5,14 @@ project Libhwbase is
 
    for Source_Dirs use
      ("../libhwbase/tmp/libhwbase/common",
+      "../libhwbase/tmp/libhwbase/common/mutime",
       "../libhwbase/tmp/libhwbase/debug",
       "../libhwbase/tmp/libhwbase/debug/null",
-      "../libhwbase/tmp/libhwbase/ada/mutime",
       "../libhwbase/tmp/libhwbase/ada/static_mmio");
    for Object_Dir use "../build/libhwbase";
+
+   for Excluded_Source_Files use
+     ("hw-file.ads", "hw-pci-dev.ads", "hw-pci-mmconf.ads", "hw-pci-mmconf.adb");
 
    package Compiler is
       for Default_Switches ("Ada") use Shared.Spark_Compiler_Switches & "-gnatyN";

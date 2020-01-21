@@ -1,9 +1,11 @@
-From de85dc7431af306d445bc1134d6a3fbb8c668f92 Mon Sep 17 00:00:00 2001
+From 453058f913021e76d3256ee52402973cfdb3e194 Mon Sep 17 00:00:00 2001
 From: Adrian-Ken Rueegsegger <ken@codelabs.ch>
 Date: Wed, 18 Oct 2017 14:53:35 +0200
 Subject: [PATCH 3/3] time: Add T_First constant
 
 The constant can be used to initialize variables of type Time.T.
+
+Signed-off-by: Adrian-Ken Rueegsegger <ken@codelabs.ch>
 ---
  common/hw-time.ads | 4 ++++
  1 file changed, 4 insertions(+)
@@ -31,5 +33,5 @@ index aeda5ec..5cfa963 100644
  
  --  vim: set ts=8 sts=3 sw=3 et:
 -- 
-2.1.4
+2.20.1
 

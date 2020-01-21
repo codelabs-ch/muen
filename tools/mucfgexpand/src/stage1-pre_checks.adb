@@ -74,6 +74,8 @@ is
       Check_Procs.Register
         (Process => Subject_Device_Exports'Access);
       Check_Procs.Register
+        (Process => Subject_Event_Exports'Access);
+      Check_Procs.Register
         (Process => Component_Channel_Size'Access);
       Check_Procs.Register
         (Process => Component_Memory_Size'Access);

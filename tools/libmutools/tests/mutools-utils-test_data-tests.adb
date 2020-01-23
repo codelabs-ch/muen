@@ -456,6 +456,7 @@ package body Mutools.Utils.Test_Data.Tests is
 
       Ref_Str : constant String := "   type Event_Action_Kind is" & ASCII.LF
         & "     (System_Reboot," & ASCII.LF
+        & "      System_Panic," & ASCII.LF
         & "      System_Poweroff," & ASCII.LF
         & "      Unmask_Irq," & ASCII.LF
         & "      No_Action," & ASCII.LF

@@ -480,6 +480,78 @@ package body Mucfgcheck.Events.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Source_VMX_Exit_Event_Completeness (Gnattest_T : in out Test);
+   procedure Test_Source_VMX_Exit_Event_Completeness_98714a (Gnattest_T : in out Test) renames Test_Source_VMX_Exit_Event_Completeness;
+--  id:2.2/98714a72f6bc4eef/Source_VMX_Exit_Event_Completeness/1/0/
+   procedure Test_Source_VMX_Exit_Event_Completeness (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Source_VMX_Exit_Event_Completeness (XML_Data => Data);
+
+      Muxml.Utils.Remove_Elements
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='sm']/events/source/"
+         & "group[@name='vmx_exit']/event[@id='23']");
+
+      begin
+         Source_VMX_Exit_Event_Completeness (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (1)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'sm' does not specify 'vmx_exit' group source "
+                    & "event with ID 23",
+                    Message   => "Exception mismatch (1)");
+      end;
+
+      Muxml.Utils.Add_Child
+        (Parent     => Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='sm']/events/source/"
+            & "group[@name='vmx_exit']"),
+         Child_Name => "default");
+      Muxml.Write (Data => Data,
+                   Kind => Muxml.None,
+                   File => "/tmp/foozl.xml");
+
+      --  Must not raise an exception because of <default/> presence.
+
+      Source_VMX_Exit_Event_Completeness (XML_Data => Data);
+
+      Muxml.Utils.Remove_Elements
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='sm']/events/source/"
+         & "group[@name='vmx_exit']");
+      begin
+         Source_VMX_Exit_Event_Completeness (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'sm' does not specify any source event in "
+                    & "'vmx_exit' group",
+                    Message   => "Exception mismatch (2)");
+      end;
+--  begin read only
+   end Test_Source_VMX_Exit_Event_Completeness;
+--  end read only
+
+
+--  begin read only
    procedure Test_Self_Event_Action (Gnattest_T : in out Test);
    procedure Test_Self_Event_Action_e649a6 (Gnattest_T : in out Test) renames Test_Self_Event_Action;
 --  id:2.2/e649a6f8cf4efeb5/Self_Event_Action/1/0/

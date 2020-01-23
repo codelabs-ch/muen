@@ -9,8 +9,16 @@
   <xs:attribute name="name" type="eventGroupNameType" use="required"/>
  </xs:complexType>
 
- <xs:complexType name="defaultEventEntryType">
+ <xs:complexType name="baseDefaultEventType">
   <xs:attribute name="physical" type="nameType" use="required"/>
+ </xs:complexType>
+
+ <xs:complexType name="defaultEventEntryType">
+  <xs:complexContent>
+   <xs:extension base="baseDefaultEventType">
+    <xs:group ref="sourceEventActionsGroup" minOccurs="0" maxOccurs="1"/>
+   </xs:extension>
+  </xs:complexContent>
  </xs:complexType>
 
  <xs:complexType name="baseEventType">

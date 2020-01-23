@@ -198,7 +198,15 @@
    </component>
   </subject>
   <subject name="sibling">
-   <events/>
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <default physical="panic">
+       <system_panic/>
+      </default>
+     </group>
+    </source>
+   </events>
    <sibling ref="tau0"/>
   </subject>
  </subjects>

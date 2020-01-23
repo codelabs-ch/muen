@@ -1566,8 +1566,6 @@
        <system_reboot/>
       </event>
      </group>
-    </source>
-    <source>
      <group name="vmcall">
       <event id="1" logical="shutdown" physical="system_poweroff">
        <system_poweroff/>

@@ -462,23 +462,25 @@ is
 
          procedure Create_Missing_Element
          is
-            Ref_Tags : constant Muxml.Utils.Tags_Type
-              := (if Event_Kind = "target" then Muxml.Utils.No_Tags
-                  else (1 => U ("target")));
             Events_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Subject_Node,
                  XPath => "events");
          begin
-            Subj_Event_Node := DOM.Core.Documents.Create_Element
-              (Doc      => Data.Doc,
-               Tag_Name => Event_Kind);
-            Muxml.Utils.Insert_Before
-              (Parent    => Events_Node,
-               New_Child => Subj_Event_Node,
-               Ref_Names => Ref_Tags);
-
             if Event_Kind = "source" then
+               Subj_Event_Node := Muxml.Utils.Get_Element
+                 (Doc   => Events_Node,
+                  XPath => Event_Kind);
+               if Subj_Event_Node = null then
+                  Subj_Event_Node := DOM.Core.Documents.Create_Element
+                    (Doc      => Data.Doc,
+                     Tag_Name => Event_Kind);
+                  Muxml.Utils.Insert_Before
+                    (Parent    => Events_Node,
+                     New_Child => Subj_Event_Node,
+                     Ref_Names => (1 => U ("target")));
+               end if;
+
                declare
                   Parent_Node : constant DOM.Core.Node := Subj_Event_Node;
                begin
@@ -493,6 +495,12 @@ is
                     (Node      => Parent_Node,
                      New_Child => Subj_Event_Node);
                end;
+            else
+               Subj_Event_Node := DOM.Core.Nodes.Append_Child
+                 (N         => Events_Node,
+                  New_Child => DOM.Core.Documents.Create_Element
+                    (Doc      => Data.Doc,
+                     Tag_Name => Event_Kind));
             end if;
          end Create_Missing_Element;
       begin

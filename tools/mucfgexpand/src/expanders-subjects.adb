@@ -1839,6 +1839,31 @@ is
          New_Child => DOM.Core.Documents.Create_Element
            (Doc      => Data.Doc,
             Tag_Name => "events"));
+      declare
+         Default_Ev : constant DOM.Core.Node
+           := DOM.Core.Documents.Create_Element
+             (Doc      => Data.Doc,
+              Tag_Name => "default");
+         Ev_Node : constant DOM.Core.Node
+           := XML_Utils.Add_Optional_Events_Source_Group
+           (Policy  => Data,
+            Subject => Tau0_Node,
+            Group   => Mutools.Types.Vmx_Exit);
+      begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Default_Ev,
+            Name  => "physical",
+            Value => "tau0_panic");
+         Muxml.Utils.Add_Child
+           (Parent     => Default_Ev,
+            Child_Name => "system_panic");
+         Muxml.Utils.Append_Child (Node      => Ev_Node,
+                                   New_Child => Default_Ev);
+         XML_Utils.Create_Physical_Event_Node
+           (Policy => Data,
+            Name   => "tau0_panic",
+            Mode   => "kernel");
+      end;
 
       Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,

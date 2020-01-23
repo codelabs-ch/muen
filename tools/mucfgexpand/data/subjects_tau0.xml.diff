@@ -6,6 +6,12 @@
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
 --
+  <event mode="kernel" name="system_poweroff"/>                                                                                                           <event mode="kernel" name="system_poweroff"/>
+  <event mode="kernel" name="system_panic"/>                                                                                                              <event mode="kernel" name="system_panic"/>
+                                                                                                                                                     >    <event mode="kernel" name="tau0_panic"/>
+ </events>                                                                                                                                               </events>
+ <channels>                                                                                                                                              <channels>
+--
  </components>                                                                                                                                           </components>
  <subjects>                                                                                                                                              <subjects>
                                                                                                                                                      >    <subject cpu="1" globalId="0" name="tau0" profile="native">
@@ -190,7 +196,15 @@
                                                                                                                                                      >      <memory executable="true" logical="binary" physical="tau0|bin" virtualAddress="16#1000#" writable="true"/>
                                                                                                                                                      >     </memory>
                                                                                                                                                      >     <devices/>
-                                                                                                                                                     >     <events/>
+                                                                                                                                                     >     <events>
+                                                                                                                                                     >      <source>
+                                                                                                                                                     >       <group name="vmx_exit">
+                                                                                                                                                     >        <default physical="tau0_panic">
+                                                                                                                                                     >         <system_panic/>
+                                                                                                                                                     >        </default>
+                                                                                                                                                     >       </group>
+                                                                                                                                                     >      </source>
+                                                                                                                                                     >     </events>
                                                                                                                                                      >    </subject>
   <subject name="lnx">                                                                                                                                    <subject name="lnx">
    <memory>                                                                                                                                                <memory>

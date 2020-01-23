@@ -741,6 +741,31 @@ package body Mucfgcheck.Events.Test_Data.Tests is
                     & "'system_poweroff'",
                     Message   => "Exception mismatch (2)");
       end;
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/events/event[@name='system_poweroff']",
+         Name  => "mode",
+         Value => "kernel");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/events/event[@name='system_panic']",
+         Name  => "mode",
+         Value => "ipi");
+
+      begin
+         Kernel_Mode_System_Actions (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (3)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "System action for event 'panic' of subject 'tau0' does "
+                    & "not reference physical kernel-mode event "
+                    & "'system_panic'",
+                    Message   => "Exception mismatch (3)");
+      end;
 --  begin read only
    end Test_Kernel_Mode_System_Actions;
 --  end read only

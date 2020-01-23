@@ -243,7 +243,7 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/subjects/subject/events/source/group/"
-           & "event[system_reboot|system_poweroff|unmask_irq]");
+           & "event[system_reboot|system_panic|system_poweroff|unmask_irq]");
       Pairs : constant Muxml.Utils.Matching_Pairs_Type
         := Muxml.Utils.Get_Matching
           (Left_Nodes  => Actions,

@@ -123,6 +123,18 @@
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
 --
+     </group>                                                                                                                                                </group>
+    </source>                                                                                                                                               </source>
+                                                                                                                                                     >      <source>
+                                                                                                                                                     >       <group name="vmcall">
+                                                                                                                                                     >        <event id="1" logical="shutdown" physical="system_poweroff">
+                                                                                                                                                     >         <system_poweroff/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >       </group>
+                                                                                                                                                     >      </source>
+    <target>                                                                                                                                                <target>
+     <event logical="ping_from_lnx" physical="ping_subject2">                                                                                                <event logical="ping_from_lnx" physical="ping_subject2">
+--
     </registers>                                                                                                                                            </registers>
    </vcpu>                                                                                                                                                 </vcpu>
                                                                                                                                                      >     <bootparams/>

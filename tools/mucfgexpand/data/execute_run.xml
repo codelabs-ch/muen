@@ -1561,7 +1561,17 @@
    </devices>
    <events>
     <source>
+     <group name="vmx_exit">
+      <event id="0" logical="reboot" physical="system_reboot">
+       <system_reboot/>
+      </event>
+     </group>
+    </source>
+    <source>
      <group name="vmcall">
+      <event id="1" logical="shutdown" physical="system_poweroff">
+       <system_poweroff/>
+      </event>
       <event id="0" logical="unmask_irq_34" physical="unmask_irq22">
        <unmask_irq number="22"/>
       </event>

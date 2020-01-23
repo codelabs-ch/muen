@@ -142,6 +142,13 @@
       <memory executable="false" logical="mmio" size="16#2000#" virtualAddress="16#d1c0_0000#" writable="true"/>                                     <
      </device>                                                                                                                                       <
     </devices>                                                                                                                                       <
+    <events>                                                                                                                                         <
+     <source>                                                                                                                                        <
+      <event id="1" logical="shutdown">                                                                                                              <
+       <system_poweroff/>                                                                                                                            <
+      </event>                                                                                                                                       <
+     </source>                                                                                                                                       <
+    </events>                                                                                                                                        <
    </requires>                                                                                                                                       <
    <provides>                                                                                                                                        <
     <memory executable="true" logical="binary" size="16#1000#" type="subject_binary" virtualAddress="16#0020_0000#" writable="true">                 <

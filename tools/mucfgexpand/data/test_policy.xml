@@ -367,6 +367,13 @@
       <memory executable="false" logical="mmio" size="16#2000#" virtualAddress="16#d1c0_0000#" writable="true"/>
      </device>
     </devices>
+    <events>
+     <source>
+      <event id="1" logical="shutdown">
+       <system_poweroff/>
+      </event>
+     </source>
+    </events>
    </requires>
    <provides>
     <memory executable="true" logical="binary" size="16#1000#" type="subject_binary" virtualAddress="16#0020_0000#" writable="true">
@@ -520,6 +527,13 @@
     <device logical="nics" physical="network_adapters"/>
    </devices>
    <events>
+    <source>
+     <group name="vmx_exit">
+      <event id="0" logical="reboot" physical="system_reboot">
+       <system_reboot/>
+      </event>
+     </group>
+    </source>
     <target>
      <event logical="ping_from_lnx" physical="ping_subject2">
       <inject_interrupt vector="32"/>
@@ -540,6 +554,7 @@
      <map logical="irq" physical="interrupt"/>
      <map logical="mmio" physical="memory"/>
     </map>
+    <map logical="shutdown" physical="system_poweroff"/>
    </component>
   </subject>
   <subject name="lnx_core_1">

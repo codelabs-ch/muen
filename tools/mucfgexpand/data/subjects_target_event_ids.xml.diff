@@ -10,7 +10,7 @@
       <inject_interrupt vector="32"/>                                                                                                                         <inject_interrupt vector="32"/>
      </event>                                                                                                                                                </event>
 --
-   <events>                                                                                                                                                <events>
+    </source>                                                                                                                                               </source>
     <target>                                                                                                                                                <target>
      <event logical="ping_from_lnx" physical="ping_subject2">                                                                                        |       <event id="0" logical="ping_from_lnx" physical="ping_subject2">
       <inject_interrupt vector="32"/>                                                                                                                         <inject_interrupt vector="32"/>

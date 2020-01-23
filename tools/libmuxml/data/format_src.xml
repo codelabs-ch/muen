@@ -82,6 +82,7 @@
  </deviceDomains>
  <events>
   <event mode="asap" name="xv6_keyboard"/>
+  <event mode="kernel" name="panic"/>
  </events>
  <channels>
   <channel hasEvent="asap" name="data_channel" size="16#1000#"/>
@@ -172,6 +173,9 @@
     <source>
      <group name="vmx_exit">
       <default physical="trap"/>
+      <event id="59" logical="bail_out" physical="panic">
+       <system_panic/>
+      </event>
      </group>
     </source>
     <target>

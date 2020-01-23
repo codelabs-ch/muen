@@ -562,6 +562,37 @@ package body Mucfgcheck.Events.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure Missing_System_Panic
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         Muxml.Utils.Remove_Child
+           (Node       => Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => "/system/subjects/subject[@name='vt']/events/source/"
+               & "group/event[system_panic]"),
+            Child_Name => "system_panic");
+
+         begin
+            Kernel_Mode_Event_Actions (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (Panic)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Kernel-mode source event 'panic' of subject"
+                       & " 'vt' does not specify mandatory event action",
+                       Message   => "Exception mismatch (Panic)");
+         end;
+      end Missing_System_Panic;
+
+      ----------------------------------------------------------------------
+
       procedure Missing_System_Reboot
       is
          Data : Muxml.XML_Data_Type;
@@ -638,6 +669,7 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       end Positive_Test;
    begin
       Positive_Test;
+      Missing_System_Panic;
       Missing_System_Poweroff;
       Missing_System_Reboot;
       Missing_Unmask_Irq;

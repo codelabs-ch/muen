@@ -317,6 +317,9 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Nodes,
                  Index => I);
+            Def_Action : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element (Doc   => Def_Node,
+                                          XPath => "*");
             Physical_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Def_Node,
@@ -349,9 +352,12 @@ is
 
             for ID in Natural range 0 .. Group_Max_Event loop
                declare
+                  use type DOM.Core.Node;
+
                   ID_Str : constant String := Ada.Strings.Fixed.Trim
                     (Source => ID'Img,
                      Side   => Ada.Strings.Left);
+                  Ev_Node : DOM.Core.Node;
                begin
                   if Mucfgcheck.Events.Is_Valid_Event_ID
                     (Group => Group,
@@ -360,13 +366,22 @@ is
                       not ID_Exists (Nodes  => Group_Events,
                                      Ref_ID => ID)
                   then
+                     Ev_Node := XML_Utils.Create_Source_Event_Node
+                       (Policy        => Data,
+                        ID            => ID_Str,
+                        Logical_Name  => "default_event_" & ID_Str,
+                        Physical_Name => Physical_Name);
+                     if Def_Action /= null then
+                        Muxml.Utils.Append_Child
+                          (Node      => Ev_Node,
+                           New_Child => DOM.Core.Nodes.Clone_Node
+                             (N    => Def_Action,
+                              Deep => True));
+                     end if;
+
                      Muxml.Utils.Append_Child
                        (Node      => Group_Node,
-                        New_Child => XML_Utils.Create_Source_Event_Node
-                          (Policy        => Data,
-                           ID            => ID_Str,
-                           Logical_Name  => "default_event_" & ID_Str,
-                           Physical_Name => Physical_Name));
+                        New_Child => Ev_Node);
                   end if;
                end;
             end loop;

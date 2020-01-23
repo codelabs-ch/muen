@@ -5,4 +5,4 @@
                                                                                                                                                      >      <memory executable="false" logical="file_2" physical="dummy_6" virtualAddress="16#0003_0000#" writable="true"/>
                                                                                                                                                      >      <memory executable="false" logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false"/>
    </memory>                                                                                                                                               </memory>
-   <events/>                                                                                                                                               <events/>
+   <events>                                                                                                                                                <events>

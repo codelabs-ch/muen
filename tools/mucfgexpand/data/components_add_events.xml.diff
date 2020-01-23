@@ -104,7 +104,7 @@
                                                                                                                                                      >        </event>
                                                                                                                                                      >        <event id="20" logical="foo" physical="foo_subject1"/>
      </group>                                                                                                                                                </group>
-    </source>                                                                                                                                               </source>
+     <group name="vmx_exit">                                                                                                                                 <group name="vmx_exit">
 --
       <inject_interrupt vector="32"/>                                                                                                                         <inject_interrupt vector="32"/>
      </event>                                                                                                                                                </event>
@@ -140,5 +140,5 @@
     <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>                                        <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>
    </memory>                                                                                                                                               </memory>
                                                                                                                                                      >     <devices/>
-   <events/>                                                                                                                                               <events/>
-   <sibling ref="lnx"/>                                                                                                                                    <sibling ref="lnx"/>
+   <events>                                                                                                                                                <events>
+    <source>                                                                                                                                                <source>

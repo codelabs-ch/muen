@@ -213,6 +213,7 @@
   <event mode="self" name="foo_subject1"/>
   <event mode="kernel" name="system_reboot"/>
   <event mode="kernel" name="system_poweroff"/>
+  <event mode="kernel" name="system_panic"/>
  </events>
  <channels>
   <channel hasEvent="asap" name="data_channel" size="16#1000#"/>
@@ -457,6 +458,11 @@
      <group name="vmcall">
       <event id="5" logical="ping" physical="ping_subject2"/>
      </group>
+     <group name="vmx_exit">
+      <default physical="system_panic">
+       <system_panic/>
+      </default>
+     </group>
     </source>
     <target>
      <event logical="trap_to_subject1" physical="trap_to_subject1">
@@ -529,6 +535,9 @@
    <events>
     <source>
      <group name="vmx_exit">
+      <default physical="system_panic">
+       <system_panic/>
+      </default>
       <event id="0" logical="reboot" physical="system_reboot">
        <system_reboot/>
       </event>
@@ -576,7 +585,15 @@
    <memory>
     <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>
    </memory>
-   <events/>
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <default physical="system_panic">
+       <system_panic/>
+      </default>
+     </group>
+    </source>
+   </events>
    <sibling ref="lnx"/>
   </subject>
  </subjects>

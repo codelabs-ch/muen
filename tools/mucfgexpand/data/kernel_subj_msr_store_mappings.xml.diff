@@ -29,8 +29,8 @@
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
 --
-  <event mode="kernel" name="system_reboot"/>                                                                                                             <event mode="kernel" name="system_reboot"/>
   <event mode="kernel" name="system_poweroff"/>                                                                                                           <event mode="kernel" name="system_poweroff"/>
+  <event mode="kernel" name="system_panic"/>                                                                                                              <event mode="kernel" name="system_panic"/>
                                                                                                                                                      >    <event mode="asap" name="lnx_smp_ipi_call_func_0001"/>
                                                                                                                                                      >    <event mode="asap" name="lnx_smp_ipi_reschedule_0001"/>
                                                                                                                                                      >    <event mode="asap" name="lnx_smp_ipi_call_func_0100"/>
@@ -818,7 +818,7 @@
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>                                        <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>
    </memory>                                                                                                                                               </memory>
-   <events/>                                                                                                                                         |     <devices>
+                                                                                                                                                     >     <devices>
                                                                                                                                                      >      <device logical="xhci" physical="xhci">
                                                                                                                                                      >       <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
                                                                                                                                                      >      </device>
@@ -832,13 +832,16 @@
                                                                                                                                                      >       <pci bus="16#00#" device="16#1c#" function="0"/>
                                                                                                                                                      >      </device>
                                                                                                                                                      >     </devices>
-                                                                                                                                                     >     <events>
-                                                                                                                                                     >      <source>
+   <events>                                                                                                                                                <events>
+    <source>                                                                                                                                                <source>
+--
+      </default>                                                                                                                                              </default>
+     </group>                                                                                                                                                </group>
                                                                                                                                                      >       <group name="vmcall">
                                                                                                                                                      >        <event id="0" logical="smp_ipi_call_func_0100" physical="lnx_smp_ipi_call_func_0100"/>
                                                                                                                                                      >        <event id="1" logical="smp_ipi_reschedule_0100" physical="lnx_smp_ipi_reschedule_0100"/>
                                                                                                                                                      >       </group>
-                                                                                                                                                     >      </source>
+    </source>                                                                                                                                               </source>
                                                                                                                                                      >      <target>
                                                                                                                                                      >       <event logical="smp_ipi_call_func_0001" physical="lnx_smp_ipi_call_func_0001">
                                                                                                                                                      >        <inject_interrupt vector="251"/>
@@ -847,6 +850,5 @@
                                                                                                                                                      >        <inject_interrupt vector="253"/>
                                                                                                                                                      >       </event>
                                                                                                                                                      >      </target>
-                                                                                                                                                     >     </events>
+   </events>                                                                                                                                               </events>
    <sibling ref="lnx"/>                                                                                                                                    <sibling ref="lnx"/>
-  </subject>                                                                                                                                              </subject>

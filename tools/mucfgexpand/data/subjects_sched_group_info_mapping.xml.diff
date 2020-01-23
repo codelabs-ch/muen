@@ -245,5 +245,5 @@
                                                                                                                                                      >      <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_4" virtualAddress="16#000e_0000_8000#" writable="false"/>
    </memory>                                                                                                                                               </memory>
                                                                                                                                                      >     <devices/>
-   <events/>                                                                                                                                               <events/>
-   <sibling ref="lnx"/>                                                                                                                                    <sibling ref="lnx"/>
+   <events>                                                                                                                                                <events>
+    <source>                                                                                                                                                <source>

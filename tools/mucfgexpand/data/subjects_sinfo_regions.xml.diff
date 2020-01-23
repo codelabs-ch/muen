@@ -55,5 +55,5 @@
                                                                                                                                                      >      <memory executable="false" logical="sinfo" physical="lnx_core_1|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
    </memory>                                                                                                                                               </memory>
                                                                                                                                                      >     <devices/>
-   <events/>                                                                                                                                               <events/>
-   <sibling ref="lnx"/>                                                                                                                                    <sibling ref="lnx"/>
+   <events>                                                                                                                                                <events>
+    <source>                                                                                                                                                <source>

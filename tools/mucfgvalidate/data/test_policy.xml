@@ -91,7 +91,9 @@
 
  <deviceDomains/>
 
- <events/>
+ <events>
+  <event mode="kernel" name="system_panic"/>
+ </events>
 
  <kernel>
   <memory>
@@ -314,7 +316,183 @@
      <ioPort logical="consoleports" physical="ports"/>
     </device>
    </devices>
-   <events/>
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <event id="0" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="1" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="2" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="3" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="4" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="5" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="6" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="7" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="8" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="9" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="10" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="11" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="12" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="13" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="14" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="15" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="16" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="17" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="18" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="19" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="20" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="21" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="22" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="23" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="24" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="25" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="26" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="27" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="28" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="29" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="30" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="31" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="32" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="33" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="34" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="36" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="37" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="39" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="40" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="41" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="43" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="44" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="45" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="46" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="47" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="48" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="49" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="50" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="51" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="52" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="53" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="54" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="55" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="56" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="57" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="58" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="59" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
+     </group>
+    </source>
+   </events>
   </subject>
  </subjects>
 

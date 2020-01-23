@@ -320,6 +320,11 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Switch_Same_Core (XML_Data => Data);
+
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/subjects/subject/events/source/group/"
@@ -402,6 +407,11 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Source_Group_Event_ID_Uniqueness (XML_Data => Data);
+
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/subjects/subject/events/source/group/event"
@@ -440,6 +450,11 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Source_Group_Event_ID_Validity (XML_Data => Data);
+
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/subjects/subject/events/source/group/event"

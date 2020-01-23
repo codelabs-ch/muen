@@ -6,9 +6,6 @@ is
 
    type Trap_Table_Type is array (Trap_Range) of Source_Event_Type;
 
-   Null_Trap_Table : constant Trap_Table_Type := Trap_Table_Type'
-     (others => Null_Source_Event);
-
    type Source_Event_Table_Type is array (Event_Range) of Source_Event_Type;
 
    Null_Source_Event_Table : constant Source_Event_Table_Type

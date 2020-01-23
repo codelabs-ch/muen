@@ -85,8 +85,8 @@ is
 
    --  Subject errors.
 
-   Subj_No_Handler_For_Trap : constant Reason_Type := 16#2000#;
-   Subj_Unknown_Trap        : constant Reason_Type := 16#2001#;
+   Subj_System_Panic : constant Reason_Type := 16#2000#;
+   Subj_Unknown_Trap : constant Reason_Type := 16#2001#;
 
    --  Init failure.
 
@@ -113,7 +113,7 @@ is
    VTd_Unable_To_Disable_QI           : constant Reason_Type := 16#5007#;
 
    subtype Subj_Reason_Range is Reason_Type range
-     Subj_No_Handler_For_Trap .. Subj_Unknown_Trap;
+     Subj_System_Panic .. Subj_Unknown_Trap;
 
    subtype VTx_Reason_Range is Reason_Type range
      VTx_VMX_Root_Mode_Failed .. VTx_VMCS_Read_Failed;

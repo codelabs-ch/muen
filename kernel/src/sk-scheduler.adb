@@ -647,7 +647,7 @@ is
                        (Msg => ">>> No handler for trap "
                         & Strings.Img (Trap_Nr)));
          pragma Debug (Subjects.Debug.Print_State (S => S));
-         Error (Reason   => Crash_Audit_Types.Subj_No_Handler_For_Trap,
+         Error (Reason   => Crash_Audit_Types.Subj_System_Panic,
                 Subj_Ctx => S);
       end Panic_No_Trap_Handler;
 

@@ -21,16 +21,18 @@ with Interfaces;
 with DOM.Core;
 
 with Muxml;
+with Mutools.Types;
 with Paging;
 
 package Expanders.XML_Utils
 is
 
-   --  Add optional events/source/group[@name='vmcall'] elements to given
-   --  subject.
+   --  Add optional events/source/group[@name='$Group'] elements for specified
+   --  group to given subject.
    function Add_Optional_Events_Source_Group
      (Policy  : in out Muxml.XML_Data_Type;
-      Subject :        DOM.Core.Node)
+      Subject :        DOM.Core.Node;
+      Group   :        Mutools.Types.Event_Group_Type)
       return DOM.Core.Node;
 
    --  Add optional events/target element to given subject.

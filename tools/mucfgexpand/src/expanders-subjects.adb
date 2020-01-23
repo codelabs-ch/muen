@@ -114,7 +114,8 @@ is
                 (Policy  => Data,
                  Subject => Muxml.Utils.Ancestor_Node
                    (Node  => Writer_Node,
-                    Level => 2));
+                    Level => 2),
+                 Group   => Mutools.Types.Vmcall);
             if Reader_Node = null then
                raise Mucfgcheck.Validation_Error with "No reader for channel '"
                  & Channel_Name & "'";
@@ -2004,7 +2005,8 @@ is
                            Src_Events
                              := XML_Utils.Add_Optional_Events_Source_Group
                                (Policy  => Data,
-                                Subject => Subj);
+                                Subject => Subj,
+                                Group   => Mutools.Types.Vmcall);
                         end if;
                         DOM.Core.Elements.Set_Attribute
                           (Elem  => Log_Unmask_Ev,

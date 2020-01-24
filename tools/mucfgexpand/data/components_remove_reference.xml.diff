@@ -55,6 +55,7 @@
      <map logical="irq" physical="interrupt"/>                                                                                                       <
      <map logical="mmio" physical="memory"/>                                                                                                         <
     </map>                                                                                                                                           <
+    <map logical="shutdown" physical="system_poweroff"/>                                                                                             <
    </component>                                                                                                                                      <
   </subject>                                                                                                                                              </subject>
   <subject name="lnx_core_1">                                                                                                                             <subject name="lnx_core_1">

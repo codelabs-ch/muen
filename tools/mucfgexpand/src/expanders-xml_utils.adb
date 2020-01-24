@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Characters.Handling;
 with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 
@@ -30,7 +31,6 @@ with Paging.Layouts;
 with Alloc.Map;
 
 with Mutools.Constants;
-with Mutools.Types;
 with Muxml.Utils;
 with Mucfgcheck.Events;
 
@@ -48,7 +48,8 @@ is
 
    function Add_Optional_Events_Source_Group
      (Policy  : in out Muxml.XML_Data_Type;
-      Subject :        DOM.Core.Node)
+      Subject :        DOM.Core.Node;
+      Group   :        Mutools.Types.Event_Group_Type)
       return DOM.Core.Node
    is
       use type DOM.Core.Node;
@@ -58,6 +59,8 @@ is
       Subj_Events_Node  : constant DOM.Core.Node
         := Muxml.Utils.Get_Element (Doc   => Subject,
                                     XPath => "events");
+      Subj_Group_Name   : constant String
+        := Ada.Characters.Handling.To_Lower (Item => Group'Img);
    begin
       Subj_Source_Node := Muxml.Utils.Get_Element
         (Doc   => Subj_Events_Node,
@@ -74,7 +77,7 @@ is
 
       Subj_Source_Group := Muxml.Utils.Get_Element
         (Doc   =>  Subj_Source_Node,
-         XPath => "group[@name='vmcall']");
+         XPath => "group[@name='" & Subj_Group_Name & "']");
       if Subj_Source_Group = null then
          Subj_Source_Group := DOM.Core.Nodes.Append_Child
            (N         => Subj_Source_Node,
@@ -84,7 +87,7 @@ is
          DOM.Core.Elements.Set_Attribute
            (Elem  => Subj_Source_Group,
             Name  => "name",
-            Value => "vmcall");
+            Value => Subj_Group_Name);
       end if;
 
       return Subj_Source_Group;

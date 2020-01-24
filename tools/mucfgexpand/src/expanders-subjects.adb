@@ -114,7 +114,8 @@ is
                 (Policy  => Data,
                  Subject => Muxml.Utils.Ancestor_Node
                    (Node  => Writer_Node,
-                    Level => 2));
+                    Level => 2),
+                 Group   => Mutools.Types.Vmcall);
             if Reader_Node = null then
                raise Mucfgcheck.Validation_Error with "No reader for channel '"
                  & Channel_Name & "'";
@@ -316,6 +317,9 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Nodes,
                  Index => I);
+            Def_Action : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element (Doc   => Def_Node,
+                                          XPath => "*");
             Physical_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Def_Node,
@@ -348,9 +352,12 @@ is
 
             for ID in Natural range 0 .. Group_Max_Event loop
                declare
+                  use type DOM.Core.Node;
+
                   ID_Str : constant String := Ada.Strings.Fixed.Trim
                     (Source => ID'Img,
                      Side   => Ada.Strings.Left);
+                  Ev_Node : DOM.Core.Node;
                begin
                   if Mucfgcheck.Events.Is_Valid_Event_ID
                     (Group => Group,
@@ -359,13 +366,22 @@ is
                       not ID_Exists (Nodes  => Group_Events,
                                      Ref_ID => ID)
                   then
+                     Ev_Node := XML_Utils.Create_Source_Event_Node
+                       (Policy        => Data,
+                        ID            => ID_Str,
+                        Logical_Name  => "default_event_" & ID_Str,
+                        Physical_Name => Physical_Name);
+                     if Def_Action /= null then
+                        Muxml.Utils.Append_Child
+                          (Node      => Ev_Node,
+                           New_Child => DOM.Core.Nodes.Clone_Node
+                             (N    => Def_Action,
+                              Deep => True));
+                     end if;
+
                      Muxml.Utils.Append_Child
                        (Node      => Group_Node,
-                        New_Child => XML_Utils.Create_Source_Event_Node
-                          (Policy        => Data,
-                           ID            => ID_Str,
-                           Logical_Name  => "default_event_" & ID_Str,
-                           Physical_Name => Physical_Name));
+                        New_Child => Ev_Node);
                   end if;
                end;
             end loop;
@@ -1367,10 +1383,15 @@ is
           (Doc   => Data.Doc,
            XPath => "/system/subjects");
       Count : constant Natural := DOM.Core.Nodes.Length (List => Auto_Idle);
+      Ev_Panic_Name : constant String := "idle_panic";
    begin
       if Count > 0 then
          Mulog.Log (Msg => "Adding idle subject(s) for Mugenschedcfg-generated"
                     & " scheduling plan");
+         XML_Utils.Create_Physical_Event_Node
+           (Policy => Data,
+            Name   => Ev_Panic_Name,
+            Mode   => "kernel");
          for I in 0 .. DOM.Core.Nodes.Length (List => Auto_Idle) - 1 loop
             declare
 
@@ -1435,6 +1456,27 @@ is
                   Muxml.Utils.Add_Child
                     (Parent     => N1,
                      Child_Name => "events");
+                  declare
+                     Default_Ev : constant DOM.Core.Node
+                       := DOM.Core.Documents.Create_Element
+                         (Doc      => Data.Doc,
+                          Tag_Name => "default");
+                     Ev_Node : constant DOM.Core.Node
+                       := XML_Utils.Add_Optional_Events_Source_Group
+                         (Policy  => Data,
+                          Subject => N1,
+                          Group   => Mutools.Types.Vmx_Exit);
+                  begin
+                     DOM.Core.Elements.Set_Attribute
+                       (Elem  => Default_Ev,
+                        Name  => "physical",
+                        Value => Ev_Panic_Name);
+                     Muxml.Utils.Add_Child
+                       (Parent     => Default_Ev,
+                        Child_Name => "system_panic");
+                     Muxml.Utils.Append_Child (Node      => Ev_Node,
+                                               New_Child => Default_Ev);
+                  end;
 
                   Mutools.XML_Utils.Add_Memory_Region
                     (Policy      => Data,
@@ -1823,6 +1865,31 @@ is
          New_Child => DOM.Core.Documents.Create_Element
            (Doc      => Data.Doc,
             Tag_Name => "events"));
+      declare
+         Default_Ev : constant DOM.Core.Node
+           := DOM.Core.Documents.Create_Element
+             (Doc      => Data.Doc,
+              Tag_Name => "default");
+         Ev_Node : constant DOM.Core.Node
+           := XML_Utils.Add_Optional_Events_Source_Group
+           (Policy  => Data,
+            Subject => Tau0_Node,
+            Group   => Mutools.Types.Vmx_Exit);
+      begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Default_Ev,
+            Name  => "physical",
+            Value => "tau0_panic");
+         Muxml.Utils.Add_Child
+           (Parent     => Default_Ev,
+            Child_Name => "system_panic");
+         Muxml.Utils.Append_Child (Node      => Ev_Node,
+                                   New_Child => Default_Ev);
+         XML_Utils.Create_Physical_Event_Node
+           (Policy => Data,
+            Name   => "tau0_panic",
+            Mode   => "kernel");
+      end;
 
       Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,
@@ -2004,7 +2071,8 @@ is
                            Src_Events
                              := XML_Utils.Add_Optional_Events_Source_Group
                                (Policy  => Data,
-                                Subject => Subj);
+                                Subject => Subj,
+                                Group   => Mutools.Types.Vmcall);
                         end if;
                         DOM.Core.Elements.Set_Attribute
                           (Elem  => Log_Unmask_Ev,

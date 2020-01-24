@@ -179,6 +179,7 @@
   <event mode="switch" name="tau0_handover"/>
   <event mode="kernel" name="system_reboot"/>
   <event mode="kernel" name="unmask_irq22"/>
+  <event mode="kernel" name="system_panic"/>
  </events>
  <kernel>
   <memory>
@@ -419,7 +420,63 @@
     <source>
      <group name="vmx_exit">
       <event id="00" logical="exception" physical="s2_handover"/>
+      <event id="01" logical="exception" physical="s2_handover"/>
+      <event id="02" logical="exception" physical="s2_handover"/>
+      <event id="03" logical="exception" physical="s2_handover"/>
+      <event id="04" logical="exception" physical="s2_handover"/>
+      <event id="05" logical="exception" physical="s2_handover"/>
+      <event id="06" logical="exception" physical="s2_handover"/>
+      <event id="07" logical="exception" physical="s2_handover"/>
+      <event id="08" logical="exception" physical="s2_handover"/>
+      <event id="09" logical="exception" physical="s2_handover"/>
+      <event id="10" logical="exception" physical="s2_handover"/>
+      <event id="11" logical="exception" physical="s2_handover"/>
+      <event id="12" logical="exception" physical="s2_handover"/>
+      <event id="13" logical="exception" physical="s2_handover"/>
+      <event id="14" logical="exception" physical="s2_handover"/>
+      <event id="15" logical="exception" physical="s2_handover"/>
+      <event id="16" logical="exception" physical="s2_handover"/>
+      <event id="17" logical="exception" physical="s2_handover"/>
+      <event id="18" logical="exception" physical="s2_handover"/>
+      <event id="19" logical="exception" physical="s2_handover"/>
+      <event id="20" logical="exception" physical="s2_handover"/>
+      <event id="21" logical="exception" physical="s2_handover"/>
+      <event id="22" logical="exception" physical="s2_handover"/>
+      <event id="23" logical="exception" physical="s2_handover"/>
+      <event id="24" logical="exception" physical="s2_handover"/>
+      <event id="25" logical="exception" physical="s2_handover"/>
+      <event id="26" logical="exception" physical="s2_handover"/>
+      <event id="27" logical="exception" physical="s2_handover"/>
+      <event id="28" logical="exception" physical="s2_handover"/>
+      <event id="29" logical="exception" physical="s2_handover"/>
+      <event id="30" logical="exception" physical="s2_handover"/>
+      <event id="31" logical="exception" physical="s2_handover"/>
+      <event id="32" logical="exception" physical="s2_handover"/>
+      <event id="33" logical="exception" physical="s2_handover"/>
+      <event id="34" logical="exception" physical="s2_handover"/>
+      <event id="36" logical="exception" physical="s2_handover"/>
+      <event id="37" logical="exception" physical="s2_handover"/>
+      <event id="38" logical="exception" physical="s2_handover"/>
+      <event id="39" logical="exception" physical="s2_handover"/>
+      <event id="40" logical="exception" physical="s2_handover"/>
+      <event id="41" logical="exception" physical="s2_handover"/>
+      <event id="43" logical="exception" physical="s2_handover"/>
+      <event id="44" logical="exception" physical="s2_handover"/>
+      <event id="45" logical="exception" physical="s2_handover"/>
+      <event id="46" logical="exception" physical="s2_handover"/>
+      <event id="47" logical="exception" physical="s2_handover"/>
       <event id="48" logical="ept_violation" physical="ept_handover"/>
+      <event id="49" logical="exception" physical="s2_handover"/>
+      <event id="50" logical="exception" physical="s2_handover"/>
+      <event id="51" logical="exception" physical="s2_handover"/>
+      <event id="52" logical="exception" physical="s2_handover"/>
+      <event id="53" logical="exception" physical="s2_handover"/>
+      <event id="54" logical="exception" physical="s2_handover"/>
+      <event id="55" logical="exception" physical="s2_handover"/>
+      <event id="56" logical="exception" physical="s2_handover"/>
+      <event id="57" logical="exception" physical="s2_handover"/>
+      <event id="58" logical="exception" physical="s2_handover"/>
+      <event id="59" logical="exception" physical="s2_handover"/>
      </group>
      <group name="vmcall">
       <event id="17" logical="s1_ipi" physical="xv6_keyboard"/>
@@ -639,13 +696,189 @@
     </device>
    </devices>
    <events>
-    <source>
-     <group name="vmcall">
-      <event id="1" logical="unmask_pci_irq" physical="unmask_irq22">
-       <unmask_irq number="22"/>
-      </event>
-     </group>
-    </source>
+   <source>
+    <group name="vmcall">
+     <event id="1" logical="unmask_pci_irq" physical="unmask_irq22">
+      <unmask_irq number="22"/>
+     </event>
+    </group>
+    <group name="vmx_exit">
+     <event id="00" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="01" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="02" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="03" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="04" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="05" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="06" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="07" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="08" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="09" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="10" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="11" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="12" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="13" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="14" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="15" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="16" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="17" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="18" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="19" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="20" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="21" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="22" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="23" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="24" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="25" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="26" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="27" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="28" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="29" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="30" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="31" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="32" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="33" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="34" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="36" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="37" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="38" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="39" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="40" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="41" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="43" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="44" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="45" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="46" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="47" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="48" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="49" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="50" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="51" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="52" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="53" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="54" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="55" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="56" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="57" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="58" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="59" logical="exception" physical="system_panic">
+      <system_panic/>
+     </event>
+    </group>
+   </source>
     <target>
      <event id="0" logical="xv6_keyboard" physical="xv6_keyboard">
       <inject_interrupt vector="32"/>
@@ -1105,7 +1338,186 @@
     <memory executable="true" logical="mem" physical="subject3" virtualAddress="16#0000#" writable="true"/>
    </memory>
    <devices/>
-   <events/>
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <event id="00" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="01" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="02" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="03" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="04" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="05" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="06" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="07" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="08" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="09" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="10" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="11" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="12" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="13" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="14" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="15" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="16" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="17" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="18" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="19" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="20" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="21" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="22" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="23" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="24" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="25" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="26" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="27" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="28" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="29" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="30" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="31" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="32" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="33" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="34" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="36" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="37" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="38" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="39" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="40" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="41" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="43" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="44" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="45" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="46" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="47" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="48" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="49" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="50" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="51" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="52" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="53" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="54" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="55" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="56" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="57" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="58" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="59" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
+     </group>
+    </source>
+   </events>
   </subject>
  </subjects>
  <scheduling tickRate="1000">

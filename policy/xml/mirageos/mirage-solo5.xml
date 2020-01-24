@@ -34,7 +34,15 @@
     <include href="subject_nic_sl.xml"/>
     <include href="subject_ps2.xml"/>
     <subject name="dbgserver">
-      <events/>
+      <events>
+        <source>
+          <group name="vmx_exit">
+            <default physical="system_panic">
+              <system_panic/>
+            </default>
+          </group>
+        </source>
+      </events>
       <component ref="dbgserver">
         <map logical="log_channel1" physical="debuglog_subject1"/>
         <map logical="log_channel2" physical="debuglog_subject2"/>
@@ -146,7 +154,15 @@
       </component>
     </subject>
     <subject name="unikernel_sm">
-     <events/>
+     <events>
+       <source>
+         <group name="vmx_exit">
+           <default physical="system_panic">
+             <system_panic/>
+           </default>
+         </group>
+       </source>
+     </events>
      <monitor>
       <state subject="unikernel" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
      </monitor>

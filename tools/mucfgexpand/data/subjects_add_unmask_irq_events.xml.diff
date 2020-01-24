@@ -72,8 +72,8 @@
     <memory caching="UC" name="mem1" physicalAddress="16#d254_8000#" size="16#4000#"/>                                                                      <memory caching="UC" name="mem1" physicalAddress="16#d254_8000#" size="16#4000#"/>
     <ioPort end="16#50af#" name="ioport1" start="16#50a8#"/>                                                                                                <ioPort end="16#50af#" name="ioport1" start="16#50a8#"/>
 --
-  <event mode="kernel" name="system_reboot"/>                                                                                                             <event mode="kernel" name="system_reboot"/>
   <event mode="kernel" name="system_poweroff"/>                                                                                                           <event mode="kernel" name="system_poweroff"/>
+  <event mode="kernel" name="system_panic"/>                                                                                                              <event mode="kernel" name="system_panic"/>
                                                                                                                                                      >    <event mode="kernel" name="unmask_irq20"/>
                                                                                                                                                      >    <event mode="kernel" name="unmask_irq21"/>
  </events>                                                                                                                                               </events>
@@ -474,7 +474,7 @@
                                                                                                                                                      >         <unmask_irq number="21"/>
                                                                                                                                                      >        </event>
      </group>                                                                                                                                                </group>
-    </source>                                                                                                                                               </source>
+     <group name="vmx_exit">                                                                                                                                 <group name="vmx_exit">
 --
    </component>                                                                                                                                            </component>
   </subject>                                                                                                                                              </subject>
@@ -845,5 +845,5 @@
     <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>                                        <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>
    </memory>                                                                                                                                               </memory>
                                                                                                                                                      >     <devices/>
-   <events/>                                                                                                                                               <events/>
-   <sibling ref="lnx"/>                                                                                                                                    <sibling ref="lnx"/>
+   <events>                                                                                                                                                <events>
+    <source>                                                                                                                                                <source>

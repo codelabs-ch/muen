@@ -17,6 +17,7 @@
 --
 
 with Ada.Characters.Handling;
+with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 
 with DOM.Core.Nodes;
@@ -243,7 +244,7 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/subjects/subject/events/source/group/"
-           & "event[system_reboot|system_poweroff|unmask_irq]");
+           & "event[system_reboot|system_panic|system_poweroff|unmask_irq]");
       Pairs : constant Muxml.Utils.Matching_Pairs_Type
         := Muxml.Utils.Get_Matching
           (Left_Nodes  => Actions,
@@ -785,6 +786,92 @@ is
          end;
       end loop;
    end Source_Targets;
+
+   -------------------------------------------------------------------------
+
+   procedure Source_VMX_Exit_Event_Completeness
+     (XML_Data : Muxml.XML_Data_Type)
+   is
+
+      --  Returns True if the given node list contains a <default> element.
+      function Contains_Default_Event
+        (List : DOM.Core.Node_List)
+         return Boolean;
+
+      ----------------------------------------------------------------
+
+      function Contains_Default_Event
+        (List : DOM.Core.Node_List)
+         return Boolean
+      is
+         Cur_Node : DOM.Core.Node;
+      begin
+         for I in 0 .. DOM.Core.Nodes.Length (List => List) - 1 loop
+            Cur_Node := DOM.Core.Nodes.Item (List  => List,
+                                             Index => I);
+            if DOM.Core.Nodes.Node_Name (N => Cur_Node) = "default" then
+               return True;
+            end if;
+         end loop;
+
+         return False;
+      end Contains_Default_Event;
+
+      ----------------------------------------------------------------------
+
+      Max_VMX_Exit_ID : constant Natural
+        := Get_Max_ID (Group => Mutools.Types.Vmx_Exit);
+      Subjects : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            Subject : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => Subjects,
+               Index => I);
+            Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Subject,
+               Name => "name");
+            Vmx_Exit_Grp : constant DOM.Core.Node := Muxml.Utils.Get_Element
+              (Doc   => Subject,
+               XPath => "events/source/group[@name='vmx_exit']");
+            Src_Events : DOM.Core.Node_List;
+         begin
+            Mulog.Log (Msg => "Checking 'vmx_exit' group source event "
+                       & "completeness for subject '" & Subj_Name & "'");
+            if Vmx_Exit_Grp = null then
+               raise Validation_Error with "Subject '" & Subj_Name
+                 & "' does not specify any source event in 'vmx_exit' group";
+            end if;
+
+            Src_Events := XPath_Query
+              (N     => Vmx_Exit_Grp,
+               XPath => "*");
+            if not Contains_Default_Event (List => Src_Events) then
+               for Ev_ID in 0 .. Max_VMX_Exit_ID loop
+                  if Is_Valid_Event_ID
+                    (Group => Mutools.Types.Vmx_Exit,
+                     ID    => Ev_ID)
+                    and then Muxml.Utils.Get_Element
+                      (Nodes     => Src_Events,
+                       Ref_Attr  => "id",
+                       Ref_Value => Ada.Strings.Fixed.Trim
+                         (Source => Ev_ID'Img,
+                          Side   => Ada.Strings.Left)) = null
+                  then
+                     raise Validation_Error with "Subject '" & Subj_Name
+                       & "' does not specify 'vmx_exit' group source event "
+                       & "with ID" & Ev_ID'Img;
+                  end if;
+               end loop;
+            end if;
+         end;
+      end loop;
+   end Source_VMX_Exit_Event_Completeness;
 
    -------------------------------------------------------------------------
 

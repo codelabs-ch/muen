@@ -320,6 +320,11 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Switch_Same_Core (XML_Data => Data);
+
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/subjects/subject/events/source/group/"
@@ -402,6 +407,11 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Source_Group_Event_ID_Uniqueness (XML_Data => Data);
+
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/subjects/subject/events/source/group/event"
@@ -440,6 +450,11 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Source_Group_Event_ID_Validity (XML_Data => Data);
+
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/subjects/subject/events/source/group/event"
@@ -461,6 +476,78 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       end;
 --  begin read only
    end Test_Source_Group_Event_ID_Validity;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Source_VMX_Exit_Event_Completeness (Gnattest_T : in out Test);
+   procedure Test_Source_VMX_Exit_Event_Completeness_98714a (Gnattest_T : in out Test) renames Test_Source_VMX_Exit_Event_Completeness;
+--  id:2.2/98714a72f6bc4eef/Source_VMX_Exit_Event_Completeness/1/0/
+   procedure Test_Source_VMX_Exit_Event_Completeness (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Source_VMX_Exit_Event_Completeness (XML_Data => Data);
+
+      Muxml.Utils.Remove_Elements
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='sm']/events/source/"
+         & "group[@name='vmx_exit']/event[@id='23']");
+
+      begin
+         Source_VMX_Exit_Event_Completeness (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (1)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'sm' does not specify 'vmx_exit' group source "
+                    & "event with ID 23",
+                    Message   => "Exception mismatch (1)");
+      end;
+
+      Muxml.Utils.Add_Child
+        (Parent     => Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='sm']/events/source/"
+            & "group[@name='vmx_exit']"),
+         Child_Name => "default");
+      Muxml.Write (Data => Data,
+                   Kind => Muxml.None,
+                   File => "/tmp/foozl.xml");
+
+      --  Must not raise an exception because of <default/> presence.
+
+      Source_VMX_Exit_Event_Completeness (XML_Data => Data);
+
+      Muxml.Utils.Remove_Elements
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='sm']/events/source/"
+         & "group[@name='vmx_exit']");
+      begin
+         Source_VMX_Exit_Event_Completeness (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'sm' does not specify any source event in "
+                    & "'vmx_exit' group",
+                    Message   => "Exception mismatch (2)");
+      end;
+--  begin read only
+   end Test_Source_VMX_Exit_Event_Completeness;
 --  end read only
 
 
@@ -562,6 +649,37 @@ package body Mucfgcheck.Events.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure Missing_System_Panic
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         Muxml.Utils.Remove_Child
+           (Node       => Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => "/system/subjects/subject[@name='vt']/events/source/"
+               & "group/event[system_panic]"),
+            Child_Name => "system_panic");
+
+         begin
+            Kernel_Mode_Event_Actions (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (Panic)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Kernel-mode source event 'panic' of subject"
+                       & " 'vt' does not specify mandatory event action",
+                       Message   => "Exception mismatch (Panic)");
+         end;
+      end Missing_System_Panic;
+
+      ----------------------------------------------------------------------
+
       procedure Missing_System_Reboot
       is
          Data : Muxml.XML_Data_Type;
@@ -638,6 +756,7 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       end Positive_Test;
    begin
       Positive_Test;
+      Missing_System_Panic;
       Missing_System_Poweroff;
       Missing_System_Reboot;
       Missing_Unmask_Irq;
@@ -708,6 +827,31 @@ package body Mucfgcheck.Events.Test_Data.Tests is
                     & "'vt' does not reference physical kernel-mode event "
                     & "'system_poweroff'",
                     Message   => "Exception mismatch (2)");
+      end;
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/events/event[@name='system_poweroff']",
+         Name  => "mode",
+         Value => "kernel");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/events/event[@name='system_panic']",
+         Name  => "mode",
+         Value => "ipi");
+
+      begin
+         Kernel_Mode_System_Actions (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (3)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "System action for event 'panic' of subject 'tau0' does "
+                    & "not reference physical kernel-mode event "
+                    & "'system_panic'",
+                    Message   => "Exception mismatch (3)");
       end;
 --  begin read only
    end Test_Kernel_Mode_System_Actions;

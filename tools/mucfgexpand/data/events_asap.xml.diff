@@ -4,8 +4,8 @@
   <event mode="switch" name="trap_to_subject1"/>                                                                                                          <event mode="switch" name="trap_to_subject1"/>
   <event mode="switch" name="handover_to_lnx"/>                                                                                                           <event mode="switch" name="handover_to_lnx"/>
 --
-  <event mode="kernel" name="system_reboot"/>                                                                                                             <event mode="kernel" name="system_reboot"/>
   <event mode="kernel" name="system_poweroff"/>                                                                                                           <event mode="kernel" name="system_poweroff"/>
+  <event mode="kernel" name="system_panic"/>                                                                                                              <event mode="kernel" name="system_panic"/>
                                                                                                                                                      >    <event mode="async" name="data_channel"/>
                                                                                                                                                      >    <event mode="switch" name="data_channel2"/>
  </events>                                                                                                                                               </events>
@@ -37,7 +37,7 @@
                                                                                                                                                      >        <event id="1" logical="primary_data" physical="data_channel"/>
                                                                                                                                                      >        <event id="1" logical="secondary_data" physical="data_channel2"/>
      </group>                                                                                                                                                </group>
-    </source>                                                                                                                                               </source>
+     <group name="vmx_exit">                                                                                                                                 <group name="vmx_exit">
 --
    </component>                                                                                                                                            </component>
   </subject>                                                                                                                                              </subject>

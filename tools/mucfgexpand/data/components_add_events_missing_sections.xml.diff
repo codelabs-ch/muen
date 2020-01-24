@@ -95,11 +95,11 @@
     <source>                                                                                                                                                <source>
      <group name="vmcall">                                                                                                                                   <group name="vmcall">
       <event id="5" logical="ping" physical="ping_subject2"/>                                                                                        |        <event id="1" logical="handover" physical="handover_to_lnx"/>
-                                                                                                                                                     >        <event id="29" logical="trigger_timer" physical="timer_subject1"/>
-                                                                                                                                                     >        <event id="30" logical="reboot" physical="system_reboot">
-                                                                                                                                                     >         <system_reboot/>
-                                                                                                                                                     >        </event>
-                                                                                                                                                     >        <event id="31" logical="shutdown" physical="system_poweroff">
+     </group>                                                                                                                                        |        <event id="29" logical="trigger_timer" physical="timer_subject1"/>
+     <group name="vmx_exit">                                                                                                                         |        <event id="30" logical="reboot" physical="system_reboot">
+      <default physical="system_panic">                                                                                                              |         <system_reboot/>
+       <system_panic/>                                                                                                                               |        </event>
+      </default>                                                                                                                                     |        <event id="31" logical="shutdown" physical="system_poweroff">
                                                                                                                                                      >         <system_poweroff/>
                                                                                                                                                      >        </event>
                                                                                                                                                      >        <event id="20" logical="foo" physical="foo_subject1"/>
@@ -120,6 +120,16 @@
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
 --
+      </event>                                                                                                                                                </event>
+     </group>                                                                                                                                                </group>
+                                                                                                                                                     >       <group name="vmcall">
+                                                                                                                                                     >        <event id="1" logical="shutdown" physical="system_poweroff">
+                                                                                                                                                     >         <system_poweroff/>
+                                                                                                                                                     >        </event>
+                                                                                                                                                     >       </group>
+    </source>                                                                                                                                               </source>
+    <target>                                                                                                                                                <target>
+--
     </registers>                                                                                                                                            </registers>
    </vcpu>                                                                                                                                                 </vcpu>
                                                                                                                                                      >     <bootparams/>
@@ -127,5 +137,5 @@
     <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>                                        <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>
    </memory>                                                                                                                                               </memory>
                                                                                                                                                      >     <devices/>
-   <events/>                                                                                                                                               <events/>
-   <sibling ref="lnx"/>                                                                                                                                    <sibling ref="lnx"/>
+   <events>                                                                                                                                                <events>
+    <source>                                                                                                                                                <source>

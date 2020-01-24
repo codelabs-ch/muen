@@ -149,8 +149,7 @@ is
                  (Elem => Event_Target,
                   Name => "id"));
       begin
-         Buffer := Buffer & Indent (N => 3)  & " "
-           & Event_ID & " => Source_Event_Type'("
+         Buffer := Buffer & Indent (N => 3)  & " " & Event_ID & " => ("
            & ASCII.LF
            & Indent (N => 4) & "Source_Action  => " & Src_Action_Kind & ","
            & ASCII.LF
@@ -218,22 +217,18 @@ is
            & " => Subject_Events_Type'(" & ASCII.LF
            & Indent & "    Source_Traps  => ";
 
-         if Trap_Count = 0 then
-            Buffer := Buffer & "Null_Trap_Table,";
-         else
-            Buffer := Buffer & "Trap_Table_Type'(" & ASCII.LF;
-            for I in 0 .. Trap_Count - 1 loop
-               Add_Event_Entry (Event => DOM.Core.Nodes.Item
-                                (List  => Traps,
-                                 Index => I));
-               if I < Trap_Count - 1 then
-                  Buffer := Buffer & "," & ASCII.LF;
-               end if;
-            end loop;
+         Buffer := Buffer & "Trap_Table_Type'(" & ASCII.LF;
+         for I in 0 .. Trap_Count - 1 loop
+            Add_Event_Entry (Event => DOM.Core.Nodes.Item
+                             (List  => Traps,
+                              Index => I));
+            if I < Trap_Count - 1 then
+               Buffer := Buffer & "," & ASCII.LF;
+            end if;
+         end loop;
 
-            Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
-              & " others => Null_Source_Event),";
-         end if;
+         Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
+           & " others => Invalid_Trap_Event),";
 
          Buffer := Buffer & ASCII.LF
            & Indent & "    Source_Events => ";

@@ -22,6 +22,7 @@ is
 
    type Event_Action_Kind is
      (System_Reboot,
+      System_Panic,
       System_Poweroff,
       Unmask_Irq,
       No_Action,
@@ -60,6 +61,19 @@ is
       Send_IPI       => False,
       IRQ_Number     => 0);
 
+   subtype Trap_Event_Type is Source_Event_Type with
+     Dynamic_Predicate =>
+       (if Trap_Event_Type.Source_Action = No_Action then
+          Trap_Event_Type.Target_Subject /= Skp.Invalid_Subject);
+
+   Invalid_Trap_Event : constant Trap_Event_Type := Trap_Event_Type'
+     (Source_Action  => System_Panic,
+      Target_Subject => Invalid_Subject,
+      Target_Event   => Invalid_Target_Event,
+      Handover       => False,
+      Send_IPI       => False,
+      IRQ_Number     => 0);
+
    type Target_Event_Type is private;
 
    Null_Target_Event : constant Target_Event_Type;
@@ -77,7 +91,7 @@ is
    function Get_Trap
      (Subject_ID : Global_Subject_ID_Type;
       Trap_Nr    : Trap_Range)
-      return Source_Event_Type;
+      return Trap_Event_Type;
 
    function Get_Source_Event
      (Subject_ID : Global_Subject_ID_Type;

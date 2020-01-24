@@ -50,6 +50,7 @@
   <event name="guest_vm_preemption_1" mode="switch"/>
   <event name="resume_guest_vm" mode="switch"/>
   <event name="trap_to_base_hw" mode="switch"/>
+  <event name="system_panic" mode="kernel"/>
  </events>
 
  <channels>

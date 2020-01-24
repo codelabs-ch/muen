@@ -31,4 +31,4 @@
      <map logical="irq" physical="interrupt"/>                                                                                                       |       <map logical="irq" physical="irq1"/>
      <map logical="mmio" physical="memory"/>                                                                                                         |       <map logical="mmio" physical="mmio1"/>
     </map>                                                                                                                                                  </map>
-   </component>                                                                                                                                            </component>
+    <map logical="shutdown" physical="system_poweroff"/>                                                                                                    <map logical="shutdown" physical="system_poweroff"/>

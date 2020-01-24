@@ -31,8 +31,8 @@ package body Expanders.XML_Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Add_Optional_Events_Source_Group (Gnattest_T : in out Test);
-   procedure Test_Add_Optional_Events_Source_Group_4aff65 (Gnattest_T : in out Test) renames Test_Add_Optional_Events_Source_Group;
---  id:2.2/4aff65e627b691d1/Add_Optional_Events_Source_Group/1/0/
+   procedure Test_Add_Optional_Events_Source_Group_353b6d (Gnattest_T : in out Test) renames Test_Add_Optional_Events_Source_Group;
+--  id:2.2/353b6dfc856adc66/Add_Optional_Events_Source_Group/1/0/
    procedure Test_Add_Optional_Events_Source_Group (Gnattest_T : in out Test) is
 --  end read only
 
@@ -60,11 +60,22 @@ package body Expanders.XML_Utils.Test_Data.Tests is
 
       Node := Add_Optional_Events_Source_Group
         (Policy  => Policy,
-         Subject => Parent);
+         Subject => Parent,
+         Group   => Mutools.Types.Vmcall);
       Assert (Condition => Muxml.Utils.Get_Element
               (Doc   => Policy.Doc,
                XPath => "subject/events/source/group[@name='vmcall']") /= null,
-              Message   => "Source group not present");
+              Message   => "Source group vmcall not present");
+
+      Node := Add_Optional_Events_Source_Group
+        (Policy  => Policy,
+         Subject => Parent,
+         Group   => Mutools.Types.Vmx_Exit);
+      Assert (Condition => Muxml.Utils.Get_Element
+              (Doc   => Policy.Doc,
+               XPath => "subject/events/source/group[@name='vmx_exit']")
+              /= null,
+              Message   => "Source group vmx_exit not present");
 --  begin read only
    end Test_Add_Optional_Events_Source_Group;
 --  end read only

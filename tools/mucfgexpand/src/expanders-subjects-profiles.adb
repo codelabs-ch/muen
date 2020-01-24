@@ -126,7 +126,8 @@ is
             Evt_Src_Node : constant DOM.Core.Node
               := XML_Utils.Add_Optional_Events_Source_Group
                 (Policy  => Data,
-                 Subject => My_Subj);
+                 Subject => My_Subj,
+                 Group   => Mutools.Types.Vmcall);
          begin
             Utils.Reserve_Numbers (Allocator => My_Evt_Nrs,
                                    Nodes     => My_Evts,

@@ -248,6 +248,8 @@ is
       XML_Processors.Register
         (Process => Events.Source_Group_Event_ID_Uniqueness'Access);
       XML_Processors.Register
+        (Process => Events.Source_VMX_Exit_Event_Completeness'Access);
+      XML_Processors.Register
         (Process => Events.Self_Event_Action'Access);
       XML_Processors.Register
         (Process => Events.Kernel_Mode_Event_Actions'Access);

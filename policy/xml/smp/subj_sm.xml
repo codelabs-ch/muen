@@ -4,6 +4,11 @@
    <group name="vmcall">
     <event id="0" logical="serial_irq4" physical="serial_irq4_linux_" attrset="physical"/>
    </group>
+   <group name="vmx_exit">
+    <default physical="system_panic">
+     <system_panic/>
+    </default>
+   </group>
   </source>
   <target>
    <event logical="start_ap" physical="linux_smp_signal_sm_" attrset="physical" attrvalue="f=str(i).zfill(2)">

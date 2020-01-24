@@ -6,9 +6,6 @@ is
 
    type Trap_Table_Type is array (Trap_Range) of Source_Event_Type;
 
-   Null_Trap_Table : constant Trap_Table_Type := Trap_Table_Type'
-     (others => Null_Source_Event);
-
    type Source_Event_Table_Type is array (Event_Range) of Source_Event_Type;
 
    Null_Source_Event_Table : constant Source_Event_Table_Type
@@ -52,7 +49,7 @@ __events__);
    function Get_Trap
      (Subject_ID : Global_Subject_ID_Type;
       Trap_Nr    : Trap_Range)
-      return Source_Event_Type
+      return Trap_Event_Type
    is (Subject_Events (Subject_ID).Source_Traps (Trap_Nr));
 
 end Skp.Events;

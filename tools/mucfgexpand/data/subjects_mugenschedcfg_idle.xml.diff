@@ -6,6 +6,12 @@
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
 --
+  <event mode="kernel" name="system_poweroff"/>                                                                                                           <event mode="kernel" name="system_poweroff"/>
+  <event mode="kernel" name="system_panic"/>                                                                                                              <event mode="kernel" name="system_panic"/>
+                                                                                                                                                     >    <event mode="kernel" name="idle_panic"/>
+ </events>                                                                                                                                               </events>
+ <channels>                                                                                                                                              <channels>
+--
    <sibling ref="lnx"/>                                                                                                                                    <sibling ref="lnx"/>
   </subject>                                                                                                                                              </subject>
                                                                                                                                                      >    <subject name="mugenschedcfg_auto_idle_0" profile="native">
@@ -189,7 +195,15 @@
                                                                                                                                                      >      <memory executable="true" logical="binary" physical="mugenschedcfg_auto_idle_0|bin" virtualAddress="16#1000#" writable="true"/>
                                                                                                                                                      >     </memory>
                                                                                                                                                      >     <devices/>
-                                                                                                                                                     >     <events/>
+                                                                                                                                                     >     <events>
+                                                                                                                                                     >      <source>
+                                                                                                                                                     >       <group name="vmx_exit">
+                                                                                                                                                     >        <default physical="idle_panic">
+                                                                                                                                                     >         <system_panic/>
+                                                                                                                                                     >        </default>
+                                                                                                                                                     >       </group>
+                                                                                                                                                     >      </source>
+                                                                                                                                                     >     </events>
                                                                                                                                                      >    </subject>
  </subjects>                                                                                                                                             </subjects>
  <scheduling tickRate="10000">                                                                                                                           <scheduling tickRate="10000">

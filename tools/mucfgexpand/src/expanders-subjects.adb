@@ -1383,10 +1383,15 @@ is
           (Doc   => Data.Doc,
            XPath => "/system/subjects");
       Count : constant Natural := DOM.Core.Nodes.Length (List => Auto_Idle);
+      Ev_Panic_Name : constant String := "idle_panic";
    begin
       if Count > 0 then
          Mulog.Log (Msg => "Adding idle subject(s) for Mugenschedcfg-generated"
                     & " scheduling plan");
+         XML_Utils.Create_Physical_Event_Node
+           (Policy => Data,
+            Name   => Ev_Panic_Name,
+            Mode   => "kernel");
          for I in 0 .. DOM.Core.Nodes.Length (List => Auto_Idle) - 1 loop
             declare
 
@@ -1451,6 +1456,27 @@ is
                   Muxml.Utils.Add_Child
                     (Parent     => N1,
                      Child_Name => "events");
+                  declare
+                     Default_Ev : constant DOM.Core.Node
+                       := DOM.Core.Documents.Create_Element
+                         (Doc      => Data.Doc,
+                          Tag_Name => "default");
+                     Ev_Node : constant DOM.Core.Node
+                       := XML_Utils.Add_Optional_Events_Source_Group
+                         (Policy  => Data,
+                          Subject => N1,
+                          Group   => Mutools.Types.Vmx_Exit);
+                  begin
+                     DOM.Core.Elements.Set_Attribute
+                       (Elem  => Default_Ev,
+                        Name  => "physical",
+                        Value => Ev_Panic_Name);
+                     Muxml.Utils.Add_Child
+                       (Parent     => Default_Ev,
+                        Child_Name => "system_panic");
+                     Muxml.Utils.Append_Child (Node      => Ev_Node,
+                                               New_Child => Default_Ev);
+                  end;
 
                   Mutools.XML_Utils.Add_Memory_Region
                     (Policy      => Data,

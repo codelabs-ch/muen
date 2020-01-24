@@ -453,6 +453,26 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Handle system panic action that was triggered by source event of given
+   --  subject by invoking crash audit.
+   procedure Handle_System_Panic (Subject : Skp.Global_Subject_ID_Type)
+   with
+       Global => (Input  => (CPU_Info.APIC_ID, Subjects.State),
+                  In_Out => (Crash_Audit.State, X86_64.State)),
+       No_Return
+   is
+      S : Crash_Audit_Types.Subj_Context_Type;
+   begin
+      Subjects.Create_Context (ID  => Subject,
+                               Ctx => S);
+      pragma Debug (Dump.Print_Message (Msg => ">>> System Panic triggered"));
+      pragma Debug (Subjects.Debug.Print_State (S => S));
+      Error (Reason   => Crash_Audit_Types.Subj_System_Panic,
+             Subj_Ctx => S);
+   end Handle_System_Panic;
+
+   -------------------------------------------------------------------------
+
    --  Handle given source event of specified subject. If the event is of mode
    --  handover, the target subject ID is returned in Next_Subject, otherwise
    --  the parameter is set to the ID of the current subject.
@@ -463,9 +483,9 @@ is
    with
       Global =>
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
-                    Scheduling_Plan),
-         In_Out => (Scheduling_Groups, IO_Apic.State, Subjects_Events.State,
-                    X86_64.State))
+                    Scheduling_Plan, CPU_Info.APIC_ID, Subjects.State),
+         In_Out => (Scheduling_Groups, Crash_Audit.State, IO_Apic.State,
+                    Subjects_Events.State, X86_64.State))
    is
       use type Skp.Events.Target_Event_Range;
 
@@ -480,6 +500,8 @@ is
             Power.Reboot (Power_Cycle => True);
          when Skp.Events.System_Poweroff =>
             Power.Shutdown;
+         when Skp.Events.System_Panic =>
+            Handle_System_Panic (Subject => Subject);
          when Skp.Events.Unmask_Irq      =>
             IO_Apic.Unmask_IRQ
               (RTE_Index => Skp.Interrupts.RTE_Index_Type (Event.IRQ_Number));
@@ -704,7 +726,7 @@ is
    with
       Global =>
         (Input  => (Scheduling_Plan, CPU_Info.APIC_ID, CPU_Info.Is_BSP,
-                    Tau0_Interface.State),
+                    Subjects.State, Tau0_Interface.State),
          In_Out => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Global_Current_Major_Start_Cycles, Scheduling_Groups,
                     Crash_Audit.State, IO_Apic.State, MP.Barrier,

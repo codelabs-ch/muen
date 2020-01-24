@@ -1,5 +1,13 @@
 <subject name="vt">
- <events/>
+ <events>
+  <source>
+   <group name="vmx_exit">
+    <default physical="system_panic">
+     <system_panic/>
+    </default>
+   </group>
+  </source>
+ </events>
  <component ref="vt">
   <map logical="NIC Linux" physical="virtual_console_1"/>
   <map logical="Storage Linux" physical="virtual_console_2"/>

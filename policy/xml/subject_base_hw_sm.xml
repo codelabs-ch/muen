@@ -1,5 +1,13 @@
 <subject name="base_hw_sm">
- <events/>
+ <events>
+  <source>
+   <group name="vmx_exit">
+    <default physical="system_panic">
+     <system_panic/>
+    </default>
+   </group>
+  </source>
+ </events>
  <monitor>
   <state subject="base_hw" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
  </monitor>

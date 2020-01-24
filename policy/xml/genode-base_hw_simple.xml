@@ -20,6 +20,7 @@
   <event name="resume_base_hw_1" mode="switch"/>
   <event name="timer_base_hw_1" mode="self"/>
   <event name="trap_to_sm_1" mode="switch"/>
+  <event name="system_panic" mode="kernel"/>
  </events>
 
  <channels>

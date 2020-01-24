@@ -83,7 +83,15 @@
   <include href="subject_ps2.xml"/>
 
   <subject name="dbgserver">
-   <events/>
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <default physical="system_panic">
+       <system_panic/>
+      </default>
+     </group>
+    </source>
+   </events>
    <component ref="dbgserver">
     <map logical="log_channel1" physical="debuglog_subject1"/>
     <map logical="log_channel2" physical="debuglog_subject2"/>
@@ -103,6 +111,13 @@
 
   <subject name="vt">
    <events>
+    <source>
+     <group name="vmx_exit">
+      <default physical="system_panic">
+       <system_panic/>
+      </default>
+     </group>
+    </source>
     <target>
      <event logical="nic_linux_core_1" physical="virtual_console_3">
       <inject_interrupt vector="34"/>
@@ -271,6 +286,11 @@
      <group name="vmcall">
       <event id="0" logical="serial_irq4" physical="serial_irq4_linux_3"/>
      </group>
+     <group name="vmx_exit">
+      <default physical="system_panic">
+       <system_panic/>
+      </default>
+     </group>
     </source>
     <target>
      <event physical="nic_linux_smp_signal_sm_01" logical="start_ap">
@@ -300,7 +320,15 @@
      <memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
     </device>
    </devices>
-   <events/>
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <default physical="system_panic">
+       <system_panic/>
+      </default>
+     </group>
+    </source>
+   </events>
    <component ref="dm">
     <map logical="debuglog" physical="debuglog_subject11"/>
     <map logical="request" physical="nic_dm_request_1"/>
@@ -366,6 +394,11 @@
      <group name="vmcall">
       <event id="0" logical="serial_irq4" physical="serial_irq4_linux_4"/>
      </group>
+     <group name="vmx_exit">
+      <default physical="system_panic">
+       <system_panic/>
+      </default>
+     </group>
     </source>
     <target>
      <event physical="nic_linux_smp_signal_sm_02" logical="start_ap">
@@ -395,7 +428,15 @@
      <memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
     </device>
    </devices>
-   <events/>
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <default physical="system_panic">
+       <system_panic/>
+      </default>
+     </group>
+    </source>
+   </events>
    <component ref="dm">
     <map logical="debuglog" physical="debuglog_subject12"/>
     <map logical="request" physical="nic_dm_request_2"/>

@@ -183,6 +183,11 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/events/event[@mode='kernel']");
+      Src_Events_No_Action : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/events/source/group/"
+           & "event[count(*) = 0]");
       Count : constant Natural
         := DOM.Core.Nodes.Length (List => Events);
    begin
@@ -195,6 +200,8 @@ is
 
       for I in 0 .. Count - 1 loop
          declare
+            use type DOM.Core.Node;
+
             Ev : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => Events,
@@ -203,26 +210,22 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Ev,
                  Name => "name");
-            Sources : constant DOM.Core.Node_List
-              := McKae.XML.XPath.XIA.XPath_Query
-                (N     => XML_Data.Doc,
-                 XPath => "/system/subjects/subject/events/source/group/"
-                 & "event[@physical='" & Name & "' and count(*) = 0]");
+            Source_Without_Action : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Src_Events_No_Action,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Name);
          begin
-            if DOM.Core.Nodes.Length (List => Sources) > 0 then
+            if Source_Without_Action /= null then
                declare
-                  First_Node : constant DOM.Core.Node
-                    := DOM.Core.Nodes.Item
-                      (List  => Sources,
-                       Index => 0);
                   Ev_Logical : constant String
                     := DOM.Core.Elements.Get_Attribute
-                      (Elem => First_Node,
+                      (Elem => Source_Without_Action,
                        Name => "logical");
                   Subj_Name : constant String
                     := DOM.Core.Elements.Get_Attribute
                       (Elem => Muxml.Utils.Ancestor_Node
-                         (Node  => First_Node,
+                         (Node  => Source_Without_Action,
                           Level => 4),
                        Name => "name");
                begin

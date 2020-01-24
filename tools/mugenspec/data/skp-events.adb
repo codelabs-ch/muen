@@ -434,7 +434,7 @@ is
             Handover       => True,
             Send_IPI       => False,
             IRQ_Number     => 0),
-          others => Null_Source_Event),
+          others => Invalid_Trap_Event),
        Source_Events => Source_Event_Table_Type'(
           17 => Source_Event_Type'(
             Source_Action  => No_Action,
@@ -871,7 +871,7 @@ is
             Handover       => False,
             Send_IPI       => False,
             IRQ_Number     => 0),
-          others => Null_Source_Event),
+          others => Invalid_Trap_Event),
        Source_Events => Source_Event_Table_Type'(
           1 => Source_Event_Type'(
             Source_Action  => Unmask_Irq,
@@ -1266,7 +1266,7 @@ is
             Handover       => True,
             Send_IPI       => False,
             IRQ_Number     => 0),
-          others => Null_Source_Event),
+          others => Invalid_Trap_Event),
        Source_Events => Source_Event_Table_Type'(
           1 => Source_Event_Type'(
             Source_Action  => No_Action,
@@ -1695,7 +1695,7 @@ is
             Handover       => False,
             Send_IPI       => False,
             IRQ_Number     => 0),
-          others => Null_Source_Event),
+          others => Invalid_Trap_Event),
        Source_Events => Null_Source_Event_Table,
        Target_Events => Null_Target_Event_Table));
 

@@ -61,6 +61,14 @@ is
       Send_IPI       => False,
       IRQ_Number     => 0);
 
+   Invalid_Trap_Event : constant Source_Event_Type := Source_Event_Type'
+     (Source_Action  => System_Panic,
+      Target_Subject => Invalid_Subject,
+      Target_Event   => Invalid_Target_Event,
+      Handover       => False,
+      Send_IPI       => False,
+      IRQ_Number     => 0);
+
    type Target_Event_Type is private;
 
    Null_Target_Event : constant Target_Event_Type;

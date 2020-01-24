@@ -229,7 +229,7 @@ is
          end loop;
 
          Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
-           & " others => Null_Source_Event),";
+           & " others => Invalid_Trap_Event),";
 
          Buffer := Buffer & ASCII.LF
            & Indent & "    Source_Events => ";

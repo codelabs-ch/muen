@@ -78,6 +78,8 @@ is
       Check_Procs.Register
         (Process => MC.Events.Self_References'Access);
       Check_Procs.Register
+        (Process => MC.Events.Source_VMX_Exit_Event_Completeness'Access);
+      Check_Procs.Register
         (Process => MC.Subject.Runnability'Access);
       Check_Procs.Register
         (Process => MC.Subject.Logical_Device_Name_Uniqueness'Access);

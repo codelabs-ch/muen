@@ -646,32 +646,9 @@ is
          In_Out => (Scheduling_Groups, Crash_Audit.State, IO_Apic.State,
                     Subjects_Events.State, X86_64.State))
    is
-      use type Skp.Events.Source_Event_Type;
-
       Trap_Entry      : Skp.Events.Source_Event_Type;
       Next_Subject_ID : Skp.Global_Subject_ID_Type;
       Valid_Trap_Nr   : Boolean;
-
-      ----------------------------------------------------------------------
-
-      procedure Panic_No_Trap_Handler
-      with
-         Global => (Input  => (Current_Subject, CPU_Info.APIC_ID,
-                               Subjects.State),
-                    In_Out => (Crash_Audit.State, X86_64.State)),
-         No_Return
-      is
-         S : Crash_Audit_Types.Subj_Context_Type;
-      begin
-         Subjects.Create_Context (ID  => Current_Subject,
-                                  Ctx => S);
-         pragma Debug (Dump.Print_Message
-                       (Msg => ">>> No handler for trap "
-                        & Strings.Img (Trap_Nr)));
-         pragma Debug (Subjects.Debug.Print_State (S => S));
-         Error (Reason   => Crash_Audit_Types.Subj_System_Panic,
-                Subj_Ctx => S);
-      end Panic_No_Trap_Handler;
 
       ----------------------------------------------------------------------
 
@@ -701,11 +678,6 @@ is
       Trap_Entry := Skp.Events.Get_Trap
         (Subject_ID => Current_Subject,
          Trap_Nr    => Skp.Events.Trap_Range (Trap_Nr));
-
-      if Trap_Entry = Skp.Events.Null_Source_Event then
-         Panic_No_Trap_Handler;
-      end if;
-
       Handle_Source_Event
         (Subject      => Current_Subject,
          Event        => Trap_Entry,

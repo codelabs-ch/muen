@@ -5,6 +5,7 @@ is
 
    type Event_Action_Kind is
      (System_Reboot,
+      System_Panic,
       System_Poweroff,
       Unmask_Irq,
       No_Action,

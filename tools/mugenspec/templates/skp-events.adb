@@ -49,7 +49,7 @@ __events__);
    function Get_Trap
      (Subject_ID : Global_Subject_ID_Type;
       Trap_Nr    : Trap_Range)
-      return Source_Event_Type
+      return Trap_Event_Type
    is (Subject_Events (Subject_ID).Source_Traps (Trap_Nr));
 
 end Skp.Events;

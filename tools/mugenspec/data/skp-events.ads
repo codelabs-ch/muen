@@ -61,7 +61,12 @@ is
       Send_IPI       => False,
       IRQ_Number     => 0);
 
-   Invalid_Trap_Event : constant Source_Event_Type := Source_Event_Type'
+   subtype Trap_Event_Type is Source_Event_Type with
+     Dynamic_Predicate =>
+       (if Trap_Event_Type.Source_Action = No_Action then
+          Trap_Event_Type.Target_Subject /= Skp.Invalid_Subject);
+
+   Invalid_Trap_Event : constant Trap_Event_Type := Trap_Event_Type'
      (Source_Action  => System_Panic,
       Target_Subject => Invalid_Subject,
       Target_Event   => Invalid_Target_Event,
@@ -86,7 +91,7 @@ is
    function Get_Trap
      (Subject_ID : Global_Subject_ID_Type;
       Trap_Nr    : Trap_Range)
-      return Source_Event_Type;
+      return Trap_Event_Type;
 
    function Get_Source_Event
      (Subject_ID : Global_Subject_ID_Type;

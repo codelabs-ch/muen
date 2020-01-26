@@ -149,8 +149,7 @@ is
                  (Elem => Event_Target,
                   Name => "id"));
       begin
-         Buffer := Buffer & Indent (N => 3)  & " "
-           & Event_ID & " => Source_Event_Type'("
+         Buffer := Buffer & Indent (N => 3)  & " " & Event_ID & " => ("
            & ASCII.LF
            & Indent (N => 4) & "Source_Action  => " & Src_Action_Kind & ","
            & ASCII.LF

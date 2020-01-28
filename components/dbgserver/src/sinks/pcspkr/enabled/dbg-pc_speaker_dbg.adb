@@ -38,9 +38,10 @@ is
                           Length => Length);
 
          if Length = 1 then
-            PC_Speaker.Put (Item => Data, Duration_MS => 10);
-
-            Byte_Queue.Drop_Bytes (Queue => Output_Queue, Length => Length);
+            PC_Speaker.Put (Item        => Data,
+                            Duration_MS => 10);
+            Byte_Queue.Drop_Bytes (Queue  => Output_Queue,
+                                   Length => Length);
          end if;
       end if;
    end Run;

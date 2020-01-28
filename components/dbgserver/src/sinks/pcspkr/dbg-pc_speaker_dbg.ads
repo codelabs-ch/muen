@@ -20,9 +20,10 @@ with Dbg.Byte_Queue;
 private package Dbg.PC_Speaker_Dbg
 is
 
-   --  Init PC Speaker debug.
+   --  Init PC Speaker log sink.
    procedure Init;
 
+   --  Write bytes in the output queue to the PC Speaker sink.
    procedure Run (Output_Queue : in out Byte_Queue.Queue_Type);
 
 end Dbg.PC_Speaker_Dbg;

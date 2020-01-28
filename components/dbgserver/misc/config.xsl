@@ -14,13 +14,13 @@
 
 	<xsl:template match="/system/subjects/subject/component">
 		<xsl:if test="@ref=$COMPONENTNAME">
-			<xsl:call-template name="configHeader"/>
+			<xsl:text>&lt;include&gt;&#10;</xsl:text>
 			<xsl:call-template name="extractLogSinks"/>
 			<xsl:if test="/system/config/boolean[@name='dbgserver_sink_serial']/@value='true'">
 				<xsl:call-template name="extractSerialPort"/>
 			</xsl:if>
 			<xsl:call-template name="extractLogChannelSize"/>
-			<xsl:call-template name="configFooter"/>
+			<xsl:text>&lt;/include&gt;&#10;</xsl:text>
 		</xsl:if>
 	</xsl:template>
 

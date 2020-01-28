@@ -1,5 +1,7 @@
 <component name="dbgserver" profile="native">
-	<include href="config.xml"/>
+	<config>
+		<include href="config.xml"/>
+	</config>
 	<if variable="dbgserver_sink_xhcidbg" value="true">
 		<depends>
 			<library ref="libxhcidbg"/>

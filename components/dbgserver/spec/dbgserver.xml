@@ -1,6 +1,9 @@
 <component name="dbgserver" profile="native">
 	<config>
+		<boolean name="default_channel_enabled_state" value="true"/>
 		<include href="config.xml"/>
+		<!-- CSV list of channel names that are enabled irrespective of the default. -->
+		<string name="enabled_channels_override" value=""/>
 	</config>
 	<if variable="dbgserver_sink_xhcidbg" value="true">
 		<depends>

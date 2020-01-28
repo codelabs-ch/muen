@@ -17,4 +17,6 @@
    <map logical="Port_42_43" physical="Port_42_43"/>
   </map>
  </if>
+ <map logical="reboot" physical="system_reboot"/>
+ <map logical="shutdown" physical="system_poweroff"/>
 </include>

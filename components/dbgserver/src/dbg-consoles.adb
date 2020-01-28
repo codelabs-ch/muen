@@ -31,18 +31,17 @@ with Dbg.String_Utils;
 
 with Dbgserver_Component.Channel_Arrays;
 with Dbgserver_Component.Config;
+with Dbgserver_Component.Events;
 
 package body Dbg.Consoles
 is
 
    package Cspecs renames Dbgserver_Component.Channel_Arrays;
    package Cspecs_Cfg renames Dbgserver_Component.Config;
+   package Cspecs_Ev renames Dbgserver_Component.Events;
 
    Command_Prompt          : constant String := "$ ";
    Invalid_Musinfo_Message : constant String := "Error reading subject info";
-
-   Event_Nr_Sys_Poweroff : constant := 30;
-   Event_Nr_Sys_Reboot   : constant := 31;
 
    --  Returns True if the given address is part of a log channel.
    function Is_Log_Channel (Address : Interfaces.Unsigned_64) return Boolean;
@@ -550,9 +549,9 @@ is
          when Clear_Line =>
             null;
          when Shutdown =>
-            SK.Hypercall.Trigger_Event (Number => Event_Nr_Sys_Poweroff);
+            SK.Hypercall.Trigger_Event (Number => Cspecs_Ev.Shutdown_ID);
          when Reboot =>
-            SK.Hypercall.Trigger_Event (Number => Event_Nr_Sys_Reboot);
+            SK.Hypercall.Trigger_Event (Number => Cspecs_Ev.Reboot_ID);
          when Log_All =>
             Log_All;
          when Log_None =>

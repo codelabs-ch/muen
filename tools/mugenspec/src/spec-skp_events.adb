@@ -197,6 +197,8 @@ is
       is
          use type DOM.Core.Node;
 
+         Max_Event_Count : constant Natural
+           := 2 ** Mutools.Constants.Event_Bits;
          Subj_ID : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Subject,
             Name => "globalId");
@@ -252,7 +254,7 @@ is
                end if;
             end loop;
 
-            if Src_Ev_Count /= 32 then
+            if Src_Ev_Count /= Max_Event_Count then
                Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
                  & " others => Null_Source_Event";
             end if;
@@ -275,7 +277,7 @@ is
                end if;
             end loop;
 
-            if Target_Ev_Count /= 32 then
+            if Target_Ev_Count /= Max_Event_Count then
                Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
                  & " others => Null_Target_Event";
             end if;

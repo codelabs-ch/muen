@@ -28,6 +28,11 @@ is
      (Queue : in out Queue_Type;
       Item  :        String);
 
+   --  Append string and new line to queue.
+   procedure Append_Line
+     (Queue : in out Queue_Type;
+      Item  :        String);
+
    --  Append boolean to queue.
    procedure Append_Bool
      (Queue : in out Queue_Type;

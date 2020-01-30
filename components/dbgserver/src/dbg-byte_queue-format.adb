@@ -49,6 +49,18 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Append_Line
+     (Queue : in out Queue_Type;
+      Item  :        String)
+   is
+   begin
+      Append_String (Queue => Queue,
+                     Item  => Item);
+      Append_New_Line (Queue => Queue);
+   end Append_Line;
+
+   -------------------------------------------------------------------------
+
    procedure Append_New_Line (Queue : in out Queue_Type)
    is
    begin

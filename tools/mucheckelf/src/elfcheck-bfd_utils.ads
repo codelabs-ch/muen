@@ -42,6 +42,10 @@ is
       Section     : Bfd.Sections.Section;
       Mapped      : Boolean := True);
 
+   --  Check that the given entry point address matches the expected kernel
+   --  entry point. An exception is raised if they do not match.
+   procedure Check_Entry_Point (Address : Interfaces.Unsigned_64);
+
 private
 
    --  Validate that the section size is smaller than the size of the memory

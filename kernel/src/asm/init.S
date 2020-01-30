@@ -19,7 +19,7 @@
 #include "gdt.h"
 #include "policy.h"
 
-.global _start
+.global kernel_entry_point
 .global ap_entry_point
 .global cpu_id
 
@@ -55,7 +55,7 @@
 // see "Initializing IA-32e Mode" in the Intel SDM Vol. 3A,
 // "9.8.5 Initializing IA-32e Mode"
 
-_start:
+kernel_entry_point:
 
 	// copy AP trampoline code to low-memory
 

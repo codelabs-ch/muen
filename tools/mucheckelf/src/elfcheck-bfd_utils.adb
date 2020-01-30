@@ -24,9 +24,24 @@ with McKae.XML.XPath.XIA;
 with Mulog;
 with Muxml.Utils;
 with Mutools.Utils;
+with Mutools.Constants;
 
 package body Elfcheck.Bfd_Utils
 is
+
+   -------------------------------------------------------------------------
+
+   procedure Check_Entry_Point (Address : Interfaces.Unsigned_64)
+   is
+      use type Interfaces.Unsigned_64;
+   begin
+      if Address /= Mutools.Constants.Kernel_Entry_Point then
+         raise ELF_Error with "Unexpected kernel entry address "
+           & Mutools.Utils.To_Hex (Number => Address) & ", expected "
+           & Mutools.Utils.To_Hex
+           (Number => Mutools.Constants.Kernel_Entry_Point);
+      end if;
+   end Check_Entry_Point;
 
    -------------------------------------------------------------------------
 

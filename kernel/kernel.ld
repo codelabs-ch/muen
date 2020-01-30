@@ -16,6 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+ENTRY(kernel_entry_point)
+
 SECTIONS
 {
 	. = 0x00100000;

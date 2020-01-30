@@ -19,6 +19,9 @@
 with DOM.Core;
 with McKae.XML.XPath.XIA;
 
+with Mutools.Constants;
+with Mutools.Utils;
+
 with Cmd_Stream.Utils;
 with Cmd_Stream.Memblocks;
 with Cmd_Stream.Processors;
@@ -27,7 +30,6 @@ with Cmd_Stream.Roots.Device_Domains;
 with Cmd_Stream.Roots.Kernels;
 with Cmd_Stream.Roots.Memory;
 with Cmd_Stream.Roots.Subjects;
-with Cmd_Stream.Constants;
 
 package body Cmd_Stream
 is
@@ -103,7 +105,8 @@ is
          Name       => "writeImageCmdStream",
          Attrs      =>
            (1 => (Attr  => U ("entryPoint"),
-                  Value => U (Constants.Kernel_Entry_Point))));
+                  Value => U (Mutools.Utils.To_Hex
+                    (Number => Mutools.Constants.Kernel_Entry_Point)))));
 
       Utils.Close (Stream_Doc => Stream_Doc);
    end Run;

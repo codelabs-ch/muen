@@ -33,4 +33,4 @@ multiboot_header:
 	.long image_start
 	.long 0
 	.long 0
-	.long _start
+	.long kernel_entry_point

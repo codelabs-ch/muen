@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with Ada.Strings.Unbounded;
 
 with Muxml;
@@ -93,6 +95,10 @@ is
                Name       => S (M.Section_Name)),
             Mapped        => M.Mapped);
       end loop;
+
+      Bfd_Utils.Check_Entry_Point
+        (Address => Interfaces.Unsigned_64
+           (Bfd.Files.Get_Start_Address (File => Fd)));
 
       Bfd.Files.Close (File => Fd);
 

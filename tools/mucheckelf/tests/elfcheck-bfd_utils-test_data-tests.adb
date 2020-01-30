@@ -215,6 +215,38 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Check_Entry_Point (Gnattest_T : in out Test);
+   procedure Test_Check_Entry_Point_4f654f (Gnattest_T : in out Test) renames Test_Check_Entry_Point;
+--  id:2.2/4f654f64924d294c/Check_Entry_Point/1/0/
+   procedure Test_Check_Entry_Point (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+
+      --  Positive test, must no raise an exception.
+
+      Check_Entry_Point (Address => Mutools.Constants.Kernel_Entry_Point);
+
+      begin
+         Check_Entry_Point (Address => 16#1000#);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : ELF_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Unexpected kernel entry address 16#1000#, expected "
+                    & "16#0010_0020#",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Check_Entry_Point;
+--  end read only
+
+
+--  begin read only
    procedure Test_Validate_Size (Gnattest_T : in out Test);
    procedure Test_Validate_Size_f89357 (Gnattest_T : in out Test) renames Test_Validate_Size;
 --  id:2.2/f89357f6993b636d/Validate_Size/1/0/

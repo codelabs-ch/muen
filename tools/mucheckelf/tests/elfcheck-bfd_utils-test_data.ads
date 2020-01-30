@@ -10,6 +10,7 @@ with Ada.Exceptions;
 with Muxml.Utils;
 
 with Mutools.Bfd;
+with Mutools.Constants;
 
 package Elfcheck.Bfd_Utils.Test_Data is
 

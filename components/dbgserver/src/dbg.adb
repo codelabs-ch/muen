@@ -68,7 +68,6 @@ is
       begin
          Buffers.Run
            (Buffer       => Channel.Buffer,
-            Input_Queue  => Channel.Input,
             Output_Queue => Channel.Output);
       end Run_Buffers;
 

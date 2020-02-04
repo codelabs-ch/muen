@@ -27,7 +27,6 @@ with Dbg.Byte_Queue.Format;
 package body Dbg.Buffers
 is
 
-   use type Interfaces.Unsigned_64;
    use type Debuglog.Stream.Reader.Result_Type;
 
    --  Log channels for subjects defined in the active system policy.
@@ -190,6 +189,8 @@ is
       Oldest_Subject : out Subject_Buffer_Range;
       Found          : out Boolean)
    is
+      use type Interfaces.Unsigned_64;
+
       Candidate_Timestamp : Interfaces.Unsigned_64 := Timestamp_Invalid;
    begin
       Oldest_Subject := Subject_Buffer_Range'First;
@@ -259,6 +260,7 @@ is
      (Subject_Buffer : Subject_Buffer_Type)
       return Boolean
    is
+      use type Interfaces.Unsigned_64;
    begin
       return Subject_Buffer.Cache.Timestamp /= Timestamp_Invalid;
    end Is_Message_Present;

@@ -111,4 +111,14 @@ is
       Length := Bytes_Copied;
    end Peek;
 
+   -------------------------------------------------------------------------
+
+   procedure Peek
+     (Queue :     Queue_Type;
+      Byte  : out Interfaces.Unsigned_8)
+   is
+   begin
+      Byte := Queue.Buffer (Queue.RP);
+   end Peek;
+
 end Dbg.Byte_Queue;

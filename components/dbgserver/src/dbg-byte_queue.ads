@@ -53,6 +53,11 @@ is
       Buffer : out Byte_Arrays.Byte_Array;
       Length : out Positive);
 
+   --  Read a single byte from given queue.
+   procedure Peek
+     (Queue :     Queue_Type;
+      Byte  : out Interfaces.Unsigned_8);
+
    --  Drop Length bytes from queue.
    procedure Drop_Bytes
      (Queue  : in out Queue_Type;

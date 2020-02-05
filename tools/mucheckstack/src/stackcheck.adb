@@ -94,11 +94,16 @@ is
       Files.For_Each_File (Files   => CIs,
                            Process => Parse_File'Access);
 
-      --  Add stack usage information for memcmp subprogram provided by RTS.
+      --  Add stack usage information for mem[cmp|cpy] subprograms provided by
+      --  RTS.
 
       Types.Add_Node (Graph      => CFG,
                       Subprogram => Types.Create (Name        => "memcmp",
                                                   Stack_Usage => 0));
+      Types.Add_Node (Graph      => CFG,
+                      Subprogram => Types.Create (Name        => "memcpy",
+                                                  Stack_Usage => 0));
+
       Types.Calculate_Stack_Usage (Graph => CFG);
 
       Mulog.Log (Msg => "Stack limit set to" & Limit'Img & " bytes");

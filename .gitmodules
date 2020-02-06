@@ -20,3 +20,6 @@
 [submodule "components/linux/modules/muenblock"]
 	path = components/linux/modules/muenblock
 	url = ../muen/linux/muenblock.git
+[submodule "tools/sbs"]
+	path = tools/sbs
+	url = ../sbs-tools

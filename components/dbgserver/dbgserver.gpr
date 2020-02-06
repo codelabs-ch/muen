@@ -33,15 +33,15 @@ project Dbgserver extends "../component_spark" is
       "src/sinks/serial",
       "src/sinks/shmem",
       "src/sinks/xhcidbg");
-   Obj_Suffix := "";
+   Obj_Suffix := "/";
 
    case dbg_config.dbgserver_sink_serial is
       when "true"  =>
          Src_Dirs   := Src_Dirs & "src/sinks/serial/enabled";
-         Obj_Suffix := "serial_enabled";
+         Obj_Suffix := Obj_Suffix & "serial_enabled";
       when "false" =>
          Src_Dirs   := Src_Dirs & "src/sinks/serial/disabled";
-         Obj_Suffix := "serial_disabled";
+         Obj_Suffix := Obj_Suffix & "serial_disabled";
    end case;
 
    case dbg_config.dbgserver_sink_shmem is

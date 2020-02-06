@@ -51,5 +51,6 @@ is
       "mulnxbzpatch/mulnxbzpatch.gpr",
       "mupack/mupack.gpr",
       "mupcspkrdbg/mupcspkrdbg.gpr",
-      "muwalkpt/muwalkpt.gpr");
+      "muwalkpt/muwalkpt.gpr",
+      "sbs/sbs.gpr");
 end Build_Tools;

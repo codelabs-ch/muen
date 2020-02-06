@@ -28,6 +28,7 @@ with Dbg.Buffers;
 with Dbg.Byte_Queue.Format;
 with Dbg.Channels;
 with Dbg.String_Utils;
+with Dbg.Subject_List;
 
 with Dbgserver_Component.Channel_Arrays;
 with Dbgserver_Component.Config;
@@ -140,6 +141,11 @@ is
           Command     => Command_Type'(Kind => List_Channels),
           Has_Param   => False,
           Description => To_Cmd_Descr ("List channels")),
+         (Cmd_Str     => "ls",
+          Cmd_Len     => 2,
+          Command     => Command_Type'(Kind => List_Subjects),
+          Has_Param   => False,
+          Description => To_Cmd_Descr ("List subjects")),
          (Cmd_Str     => "sr",
           Cmd_Len     => 2,
           Command     => Command_Type'(Kind => Stream_Reset),
@@ -439,6 +445,42 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure List_Subjects (Queue : in out Byte_Queue.Queue_Type)
+   is
+      Header    : constant String := "|        ID | Subject";
+      Subj_Rule : constant Subject_List.Name_Type := (others => '-');
+      H_Rule    : constant String := "|-----------+--" & Subj_Rule;
+   begin
+      Byte_Queue.Format.Append_Line
+        (Queue => Queue,
+         Item  => Header);
+      Byte_Queue.Format.Append_Line
+        (Queue => Queue,
+         Item  => H_Rule);
+
+      for I in Subject_List.Subject_Names'Range loop
+         Byte_Queue.Format.Append_Character
+           (Queue => Queue,
+            Item  => '|');
+         Byte_Queue.Format.Append_Natural
+           (Queue      => Queue,
+            Item       => Natural (I),
+            Left_Align => False);
+         Byte_Queue.Format.Append_String
+           (Queue => Queue,
+            Item  => " | ");
+         Byte_Queue.Format.Append_Line
+           (Queue => Queue,
+            Item  => Subject_List.Subject_Names (I));
+      end loop;
+
+      Byte_Queue.Format.Append_Line
+        (Queue => Queue,
+         Item  => H_Rule);
+   end List_Subjects;
+
+   -------------------------------------------------------------------------
+
    procedure Stream_Reset
    is
    begin
@@ -567,6 +609,8 @@ is
          when List_Channels =>
             List_Channels (Queue   => Queue,
                            Success => Success);
+         when List_Subjects =>
+            List_Subjects (Queue => Queue);
          when Stream_Reset =>
             Stream_Reset;
          when Print_Status =>

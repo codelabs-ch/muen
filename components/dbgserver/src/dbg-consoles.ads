@@ -55,6 +55,7 @@ private
      (Clear_Line,
       Failure,
       List_Channels,
+      List_Subjects,
       Log_All,
       Log_None,
       Log_Toggle,

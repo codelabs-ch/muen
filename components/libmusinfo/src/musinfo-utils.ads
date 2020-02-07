@@ -33,7 +33,7 @@ is
    function To_Name (Str : String) return Name_Type
    with
       Pre => Str'Length <= Name_Index_Type'Last
-                and Str'First + Str'Length < Positive'Last;
+                and Str'First + Str'Length <= Positive'Last;
 
    --  Concatenate given names.
    function Concat (L, R : Name_Type) return Name_Type

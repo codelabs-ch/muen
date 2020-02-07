@@ -522,9 +522,6 @@ package body Mucfgcheck.Events.Test_Data.Tests is
             XPath => "/system/subjects/subject[@name='sm']/events/source/"
             & "group[@name='vmx_exit']"),
          Child_Name => "default");
-      Muxml.Write (Data => Data,
-                   Kind => Muxml.None,
-                   File => "/tmp/foozl.xml");
 
       --  Must not raise an exception because of <default/> presence.
 

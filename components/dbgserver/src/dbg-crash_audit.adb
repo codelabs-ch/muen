@@ -317,8 +317,12 @@ is
                end;
             end if;
             if Instance.Data (I).Field_Validity.Init_Context then
-               Append_Init_Context
-                 (Ctx => Instance.Data (I).Init_Context);
+               declare
+                  Init_Ctx : constant SK.Crash_Audit_Types.Init_Context_Type
+                    := Instance.Data (I).Init_Context;
+               begin
+                  Append_Init_Context (Ctx => Init_Ctx);
+               end;
             end if;
             if Instance.Data (I).Field_Validity.VTx_Context then
                declare

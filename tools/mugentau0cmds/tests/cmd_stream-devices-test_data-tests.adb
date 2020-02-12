@@ -162,7 +162,7 @@ package body Cmd_Stream.Devices.Test_Data.Tests is
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "data/" & Fn,
                Filename2 => Fn_Obj),
-              Message   => "Files differ (1)");
+              Message   => "Files differ");
       Ada.Directories.Delete_File (Name => Fn_Obj);
 --  begin read only
    end Test_Create_VTd_Tables;

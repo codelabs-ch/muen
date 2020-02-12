@@ -418,6 +418,86 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_IOAPIC_Cap_SID (Gnattest_T : in out Test);
+   procedure Test_IOAPIC_Cap_SID_a0fa14 (Gnattest_T : in out Test) renames Test_IOAPIC_Cap_SID;
+--  id:2.2/a0fa14dee6207419/IOAPIC_Cap_SID/1/0/
+   procedure Test_IOAPIC_Cap_SID (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+      Cap  : DOM.Core.Node;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      IOAPIC_Cap_SID (XML_Data => Data);
+
+      --  Invalid SID value.
+
+      Cap := Muxml.Utils.Get_Element
+        (Doc   => Data.Doc,
+         XPath => "/system/hardware/devices/device[@name='ioapic']/"
+         & "capabilities/capability[@name='source_id']/text()");
+
+      DOM.Core.Nodes.Set_Node_Value (N     => Cap,
+                                     Value => "16#10000#");
+      begin
+         IOAPIC_Cap_SID (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (1)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Source ID capability of I/O APIC 'ioapic' set to "
+                    & "invalid value '16#10000#'",
+                    Message   => "Exception mismatch (1)");
+      end;
+
+      --  SID value not set.
+
+      DOM.Core.Nodes.Set_Node_Value (N     => Cap,
+                                     Value => "");
+      begin
+         IOAPIC_Cap_SID (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Source ID capability of I/O APIC 'ioapic' is not set",
+                    Message   => "Exception mismatch (2)");
+      end;
+
+      --  SID capability not present.
+
+      Muxml.Utils.Remove_Elements
+        (Doc   => Data.Doc,
+         XPath => "/system/hardware/devices/device[@name='ioapic']"
+         & "/capabilities/capability[@name='source_id']");
+      begin
+         IOAPIC_Cap_SID (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (3)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Source ID capability of I/O APIC 'ioapic' is not set",
+                    Message   => "Exception mismatch (3)");
+      end;
+--  begin read only
+   end Test_IOAPIC_Cap_SID;
+--  end read only
+
+
+--  begin read only
    procedure Test_IOMMU_Presence (Gnattest_T : in out Test);
    procedure Test_IOMMU_Presence_6c934e (Gnattest_T : in out Test) renames Test_IOMMU_Presence;
 --  id:2.2/6c934e0540bf7353/IOMMU_Presence/1/0/

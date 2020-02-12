@@ -242,6 +242,61 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure IOAPIC_Cap_SID (XML_Data : Muxml.XML_Data_Type)
+   is
+      IOAPICs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/devices/device[capabilities/"
+           & "capability/@name='ioapic']");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => IOAPICs);
+   begin
+      Mulog.Log (Msg => "Checking Source ID capability for" & Count'Img
+                 & " I/O APIC(s)");
+
+      for I in 0 .. Count - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            IOAPIC  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => IOAPICs,
+                 Index => I);
+            Name    : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => IOAPIC,
+                 Name => "name");
+            SID_Cap : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => IOAPIC,
+                 XPath => "capabilities/capability[@name='source_id']");
+         begin
+            if SID_Cap = null or else DOM.Core.Nodes.Node_Value
+              (N => DOM.Core.Nodes.First_Child (N => SID_Cap))'Length = 0
+            then
+               raise Validation_Error with "Source ID capability of I/O APIC '"
+                 & Name & "' is not set";
+            end if;
+
+            declare
+               SID_Str : constant String := DOM.Core.Nodes.Node_Value
+                 (N => DOM.Core.Nodes.First_Child (N => SID_Cap));
+               Unused_SID_Value : Interfaces.Unsigned_16;
+            begin
+               Unused_SID_Value := Interfaces.Unsigned_16'Value (SID_Str);
+
+            exception
+               when others =>
+                  raise Validation_Error with "Source ID capability of I/O "
+                    & "APIC '" & Name & "' set to invalid value '"
+                    & SID_Str & "'";
+            end;
+         end;
+      end loop;
+   end IOAPIC_Cap_SID;
+
+   -------------------------------------------------------------------------
+
    procedure IOAPIC_Presence (XML_Data : Muxml.XML_Data_Type)
    is
    begin

@@ -10,6 +10,7 @@
   <addMemoryBlock address="16#7d00_0000#" size="10240"/>
   <addProcessor id="0" apicId="0"/>
   <addProcessor id="1" apicId="2"/>
+  <addIoapic sid="16#f0f8#"/>
   <createLegacyDevice device="0"/>
   <addIOPortRangeDevice device="0" from="16#03c0#" to="16#03df#"/>
   <addMemoryDevice device="0" caching="WC" address="16#000a_0000#" size="32"/>

@@ -46,6 +46,7 @@
         <capability name="ioapic"/>
         <capability name="gsi_base">0</capability>
         <capability name="max_redirection_entry">23</capability>
+        <capability name="source_id">16#ff00#</capability>
       </capabilities>
     </device>
     <device name="iommu_1">

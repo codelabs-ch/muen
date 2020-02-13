@@ -92,7 +92,7 @@
 		<xsl:for-each select="/system/config/boolean">
 			<xsl:if test="starts-with(@name, 'dbgserver_sink')">
 				<xsl:call-template name="configBoolean">
-					<xsl:with-param name="name" select="@name"/>
+					<xsl:with-param name="name" select="substring(@name,11)"/>
 					<xsl:with-param name="value" select="@value"/>
 				</xsl:call-template>
 				<xsl:text>&#10;</xsl:text>

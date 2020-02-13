@@ -734,8 +734,6 @@ is
       Name  : String;
       Value : String)
    is
-      use type DOM.Core.Node;
-
       Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Doc,

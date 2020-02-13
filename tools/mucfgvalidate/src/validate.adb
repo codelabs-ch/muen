@@ -98,6 +98,8 @@ is
       XML_Processors.Register
         (Process => Memory.Subject_IOBM_Region_Presence'Access);
       XML_Processors.Register
+        (Process => Memory.Subject_MSRBM_Region_Presence'Access);
+      XML_Processors.Register
         (Process => Memory.Subject_MSR_Store_Region_Presence'Access);
       XML_Processors.Register
         (Process => Memory.Subject_FPU_State_Region_Presence'Access);

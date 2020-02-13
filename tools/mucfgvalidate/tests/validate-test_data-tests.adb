@@ -70,7 +70,7 @@ package body Validate.Test_Data.Tests is
                    File => "data/test_policy.xml");
 
       Register_All;
-      Assert (Condition => XML_Processors.Get_Count = 136,
+      Assert (Condition => XML_Processors.Get_Count = 137,
               Message   => "Count mismatch:"
               & XML_Processors.Get_Count'Img);
       XML_Processors.Clear;

@@ -758,6 +758,59 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Set_Element_Value
+     (Doc   : DOM.Core.Node;
+      XPath : String;
+      Value : String)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Doc,
+           XPath => XPath);
+      Count : constant Natural := DOM.Core.Nodes.Length (Nodes);
+   begin
+      if Count = 0 then
+         raise XML_Error with "Unable to set element value to '"
+           & Value & "' - No element found at XPath '" & XPath & "'";
+      end if;
+
+      for I in 0 .. Count - 1 loop
+         declare
+            use type DOM.Core.Node;
+            use type DOM.Core.Node_Types;
+
+            Element : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => Nodes,
+               Index => I);
+            Text_Node_Found : Boolean := False;
+            Child : DOM.Core.Node := DOM.Core.Nodes.First_Child (N => Element);
+         begin
+            Set_Text_Loop :
+            while Child /= null loop
+               if DOM.Core.Nodes.Node_Type (N => Child) = DOM.Core.Text_Node
+               then
+                  DOM.Core.Nodes.Set_Node_Value
+                    (N     => Child,
+                     Value => Value);
+                  Text_Node_Found := True;
+                  exit Set_Text_Loop;
+               end if;
+               Child := DOM.Core.Nodes.Next_Sibling (N => Child);
+            end loop Set_Text_Loop;
+
+            if not Text_Node_Found then
+               Append_Child
+                 (Node      => Element,
+                  New_Child => DOM.Core.Documents.Create_Text_Node
+                    (Doc  => Doc,
+                     Data => Value));
+            end if;
+         end;
+      end loop;
+   end Set_Element_Value;
+
+   -------------------------------------------------------------------------
+
    function Sum
      (Nodes  : DOM.Core.Node_List;
       Getter : not null access function (N : DOM.Core.Node) return String)

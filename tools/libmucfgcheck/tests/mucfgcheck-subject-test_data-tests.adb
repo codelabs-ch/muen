@@ -840,33 +840,78 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      Data : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => "data/test_policy.xml");
+      ----------------------------------------------------------------------
 
-      --  Positive test, must not raise an exception.
-
-      VMX_Controls_Entry_Checks (XML_Data => Data);
-
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/memory/memory[@name='linux|iobm']",
-         Name  => "physicalAddress",
-         Value => "16#0001_0001#");
+      procedure IO_Bitmap_Address
+      is
+         Data : Muxml.XML_Data_Type;
       begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/memory[@name='linux|iobm']",
+            Name  => "physicalAddress",
+            Value => "16#0001_0001#");
+
          VMX_Controls_Entry_Checks (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (IOBM)");
 
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Address of I/O Bitmap of subject 'linux' invalid: bits "
                     & "11:0 must be zero",
-                    Message   => "Exception mismatch");
-      end;
+                    Message   => "Exception mismatch (IOBM)");
+      end IO_Bitmap_Address;
+
+      ----------------------------------------------------------------------
+
+      procedure MSR_Bitmap_Address
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/memory[@name='linux|msrbm']",
+            Name  => "physicalAddress",
+            Value => "16#0001_0001#");
+
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (MSRBM)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Address of MSR Bitmap of subject 'linux' invalid: bits "
+                    & "11:0 must be zero",
+                    Message   => "Exception mismatch (MSRBM)");
+      end MSR_Bitmap_Address;
+
+      ----------------------------------------------------------------------
+
+      procedure Positive_Test
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         --  Positive test, must not raise an exception.
+
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+      end Positive_Test;
+   begin
+      Positive_Test;
+      IO_Bitmap_Address;
+      MSR_Bitmap_Address;
 --  begin read only
    end Test_VMX_Controls_Entry_Checks;
 --  end read only

@@ -1195,6 +1195,28 @@ is
                   end if;
                end;
             end if;
+
+            if Is_Set (Ctrls => VMX_Ctrls,
+                       XPath => "proc/UseMSRBitmaps")
+            then
+               declare
+                  Bit_Mask : constant Interfaces.Unsigned_64
+                    := 2#1111_1111_1111#;
+                  MSRBM_Addr : constant Interfaces.Unsigned_64
+                    := Interfaces.Unsigned_64'Value
+                      (Muxml.Utils.Get_Attribute
+                         (Nodes     => Phys_Mem,
+                          Ref_Attr  => "name",
+                          Ref_Value => Subj_Name & "|msrbm",
+                          Attr_Name => "physicalAddress"));
+               begin
+                  if (MSRBM_Addr and Bit_Mask) /= 0 then
+                     raise Validation_Error with "Address of MSR Bitmap of "
+                       & "subject '" & Subj_Name & "' invalid: bits 11:0 must "
+                       & "be zero";
+                  end if;
+               end;
+            end if;
          end;
       end loop;
    end VMX_Controls_Entry_Checks;

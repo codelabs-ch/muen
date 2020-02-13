@@ -236,6 +236,8 @@ is
       XML_Processors.Register
         (Process => Subject.Shared_Device_Same_PCI_Element'Access);
       XML_Processors.Register
+        (Process => Subject.VMX_Controls_Entry_Checks'Access);
+      XML_Processors.Register
         (Process => Events.Physical_Event_Name_Uniqueness'Access);
       XML_Processors.Register
         (Process => Events.Source_Targets'Access);

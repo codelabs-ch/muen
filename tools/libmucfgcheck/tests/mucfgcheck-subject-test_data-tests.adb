@@ -830,6 +830,47 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
    end Test_Shared_Device_Same_PCI_Element;
 --  end read only
 
+
+--  begin read only
+   procedure Test_VMX_Controls_Entry_Checks (Gnattest_T : in out Test);
+   procedure Test_VMX_Controls_Entry_Checks_6dde9d (Gnattest_T : in out Test) renames Test_VMX_Controls_Entry_Checks;
+--  id:2.2/6dde9d8234a9c19e/VMX_Controls_Entry_Checks/1/0/
+   procedure Test_VMX_Controls_Entry_Checks (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      VMX_Controls_Entry_Checks (XML_Data => Data);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='linux|iobm']",
+         Name  => "physicalAddress",
+         Value => "16#0001_0001#");
+      begin
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Address of I/O Bitmap of subject 'linux' invalid: bits "
+                    & "11:0 must be zero",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_VMX_Controls_Entry_Checks;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

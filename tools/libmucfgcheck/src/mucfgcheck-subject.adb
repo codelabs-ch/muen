@@ -1124,4 +1124,79 @@ is
       end loop;
    end Virtual_Memory_Overlap;
 
+   -------------------------------------------------------------------------
+
+   procedure VMX_Controls_Entry_Checks (XML_Data : Muxml.XML_Data_Type)
+   is
+      --  Returns True if the VMX control specified by XPath is set to 1.
+      function Is_Set
+        (Ctrls : DOM.Core.Node;
+         XPath : String)
+         return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Is_Set
+        (Ctrls : DOM.Core.Node;
+         XPath : String)
+         return Boolean
+      is
+         Ctrl_Val_Str : constant String
+           := Muxml.Utils.Get_Element_Value (Doc   => Ctrls,
+                                             XPath => XPath);
+      begin
+         return Ctrl_Val_Str = "1";
+      end Is_Set;
+
+      ----------------------------------------------------------------------
+
+      Phys_Mem : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/memory/memory");
+      Subjects : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/subjects/subject");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Subjects);
+   begin
+      for I in 0 .. Count - 1 loop
+         declare
+            Subject : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Subjects,
+                                      Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subject,
+                 Name => "name");
+            VMX_Ctrls : constant DOM.Core.Node := Muxml.Utils.Get_Element
+              (Doc   => Subject,
+               XPath => "vcpu/vmx/controls");
+         begin
+            Mulog.Log (Msg => "Checking VMX controls of subject '" & Subj_Name
+                       & "'");
+
+            if Is_Set (Ctrls => VMX_Ctrls,
+                       XPath => "proc/UseIOBitmaps")
+            then
+               declare
+                  Bit_Mask : constant Interfaces.Unsigned_64
+                    := 2#1111_1111_1111#;
+                  IOBM_Addr : constant Interfaces.Unsigned_64
+                    := Interfaces.Unsigned_64'Value
+                      (Muxml.Utils.Get_Attribute
+                         (Nodes     => Phys_Mem,
+                          Ref_Attr  => "name",
+                          Ref_Value => Subj_Name & "|iobm",
+                          Attr_Name => "physicalAddress"));
+               begin
+                  if (IOBM_Addr and Bit_Mask) /= 0 then
+                     raise Validation_Error with "Address of I/O Bitmap of "
+                       & "subject '" & Subj_Name & "' invalid: bits 11:0 must "
+                       & "be zero";
+                  end if;
+               end;
+            end if;
+         end;
+      end loop;
+   end VMX_Controls_Entry_Checks;
+
 end Mucfgcheck.Subject;

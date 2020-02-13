@@ -71,4 +71,8 @@ is
    --  Validate that shared PCI devices specify the same PCI element.
    procedure Shared_Device_Same_PCI_Element (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that the VMX controls conform to the checks specified in Intel
+   --  SDM Vol. 3C, "26.2.1 Checks on VMX Controls".
+   procedure VMX_Controls_Entry_Checks (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Subject;

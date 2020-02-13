@@ -2196,6 +2196,71 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Subject_MSRBM_Region_Presence (Gnattest_T : in out Test);
+   procedure Test_Subject_MSRBM_Region_Presence_bd93ad (Gnattest_T : in out Test) renames Test_Subject_MSRBM_Region_Presence;
+--  id:2.2/bd93ad5f8f75f6ac/Subject_MSRBM_Region_Presence/1/0/
+   procedure Test_Subject_MSRBM_Region_Presence (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Subject_MSRBM_Region_Presence (XML_Data => Data);
+
+      --  Missing subject MSRBM state region.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='linux|msrbm']",
+         Name  => "name",
+         Value => "foobar");
+
+      begin
+         Subject_MSRBM_Region_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (1)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject msrbm region 'linux|msrbm' for subject 'linux' not"
+                    & " found",
+                    Message   => "Exception mismatch (1)");
+      end;
+
+      --  Subject MSRBM region with incorrect region type.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='tau0|msrbm']",
+         Name  => "type",
+         Value => "subject");
+
+      begin
+         Subject_MSRBM_Region_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject msrbm region 'tau0|msrbm' for subject 'tau0' not"
+                    & " found",
+                    Message   => "Exception mismatch (2)");
+      end;
+--  begin read only
+   end Test_Subject_MSRBM_Region_Presence;
+--  end read only
+
+
+--  begin read only
    procedure Test_Subject_MSR_Store_Region_Presence (Gnattest_T : in out Test);
    procedure Test_Subject_MSR_Store_Region_Presence_ef7581 (Gnattest_T : in out Test) renames Test_Subject_MSR_Store_Region_Presence;
 --  id:2.2/ef758149cf6041df/Subject_MSR_Store_Region_Presence/1/0/

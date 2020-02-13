@@ -134,6 +134,9 @@ package body Muxml.Utils.Test_Data.Tests is
                         XPath => "/nonexistent",
                         Name  => "foo",
                         Value => "bar");
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
       exception
          when E : XML_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)

@@ -896,6 +896,38 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure NMI_Exiting
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/pin/NMIExiting",
+            Value => "0");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/pin/VirtualNMIs",
+            Value => "1");
+
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (NMI Exiting)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMX control 'NMI-Exiting' is 0 for subject "
+                    & "'linux' but 'Virtual NMIs' is 1",
+                    Message   => "Exception mismatch (NMI Exiting)");
+      end NMI_Exiting;
+
+      ----------------------------------------------------------------------
+
       procedure Positive_Test
       is
          Data : Muxml.XML_Data_Type;
@@ -912,6 +944,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       Positive_Test;
       IO_Bitmap_Address;
       MSR_Bitmap_Address;
+      NMI_Exiting;
 --  begin read only
    end Test_VMX_Controls_Entry_Checks;
 --  end read only

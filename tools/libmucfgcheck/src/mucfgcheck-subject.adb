@@ -1227,6 +1227,16 @@ is
                  with "VMX control 'NMI-Exiting' is 0 for subject '"
                  & Subj_Name & "' but 'Virtual NMIs' is 1";
             end if;
+
+            if not Is_Set (Ctrls => VMX_Ctrls,
+                           XPath => "pin/VirtualNMIs")
+              and Is_Set (Ctrls => VMX_Ctrls,
+                          XPath => "proc/NMIWindowExiting")
+            then
+               raise Validation_Error
+                 with "VMX control 'Virtual NMIs' is 0 for subject '"
+                 & Subj_Name & "' but 'NMI-window exiting' is 1";
+            end if;
          end;
       end loop;
    end VMX_Controls_Entry_Checks;

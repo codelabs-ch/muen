@@ -896,6 +896,33 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure MSR_Storage_Address
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/memory[@name='linux|msrstore']",
+            Name  => "physicalAddress",
+            Value => "16#0001_0001#");
+
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (MSR Store)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "MSR Store address of subject 'linux' invalid: bits "
+                    & "3:0 must be zero",
+                    Message   => "Exception mismatch (MSR Store)");
+      end MSR_Storage_Address;
+
+      ----------------------------------------------------------------------
+
       procedure NMI_Exiting
       is
          Data : Muxml.XML_Data_Type;
@@ -1251,6 +1278,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       Posted_Interrupts;
       Unrestricted_Guest;
       Preemption_Timer;
+      MSR_Storage_Address;
 --  begin read only
    end Test_VMX_Controls_Entry_Checks;
 --  end read only

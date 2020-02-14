@@ -1320,6 +1320,40 @@ is
               & "subject '" & Subject_Name & "' but 'save VMX-preemtion timer "
               & "value' is 1";
          end if;
+
+         declare
+            package MXU renames Mutools.XML_Utils;
+
+            MSR_Count : constant Natural
+              := MXU.Calculate_MSR_Count
+                (MSRs                   => XPath_Query
+                   (N     => Ctrls,
+                    XPath => "../../msrs/msr[@mode='rw' or @mode='w']"),
+                 DEBUGCTL_Control       => MXU.Has_Managed_DEBUGCTL
+                   (Controls => Ctrls),
+                 PAT_Control            => MXU.Has_Managed_PAT
+                   (Controls => Ctrls),
+                 PERFGLOBALCTRL_Control => MXU.Has_Managed_PERFGLOBALCTRL
+                   (Controls => Ctrls),
+                 EFER_Control           => MXU.Has_Managed_EFER
+                   (Controls => Ctrls));
+            Bit_Mask : constant Interfaces.Unsigned_64
+              := 2#1111#;
+            MSR_Store_Addr : Interfaces.Unsigned_64;
+         begin
+            if MSR_Count > 0 then
+               MSR_Store_Addr := Interfaces.Unsigned_64'Value
+                 (Muxml.Utils.Get_Attribute
+                    (Nodes     => Phys_Mem,
+                     Ref_Attr  => "name",
+                     Ref_Value => Subject_Name & "|msrstore",
+                     Attr_Name => "physicalAddress"));
+               if (MSR_Store_Addr and Bit_Mask) /= 0 then
+                  raise Validation_Error with "MSR Store address of subject '"
+                    & Subject_Name & "' invalid: bits 3:0 must be zero";
+               end if;
+            end if;
+         end;
       end Check_VM_Exit_Control_Fields;
 
       ----------------------------------------------------------------------

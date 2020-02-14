@@ -1282,6 +1282,26 @@ is
                  & "subject '" & Subj_Name & "' but 'external-interrupt "
                  & "exiting' is 0";
             end if;
+
+            if Is_Set (Ctrls => VMX_Ctrls,
+                       XPath => "pin/ProcessPostedInterrupts")
+            then
+               if not Is_Set (Ctrls => VMX_Ctrls,
+                              XPath => "proc2/VirtualInterruptDelivery")
+               then
+                  raise Validation_Error
+                    with "VMX control 'process posted interrupts' is 1 for "
+                    & "subject '" & Subj_Name & "' but 'virtual-interrupt "
+                    & "delivery' is 0";
+               elsif not Is_Set (Ctrls => VMX_Ctrls,
+                                 XPath => "exit/AckInterruptOnExit")
+               then
+                  raise Validation_Error
+                    with "VMX control 'process posted interrupts' is 1 for "
+                    & "subject '" & Subj_Name & "' but 'acknowledge interrupt"
+                    & " on exit' is 0";
+               end if;
+            end if;
          end;
       end loop;
    end VMX_Controls_Entry_Checks;

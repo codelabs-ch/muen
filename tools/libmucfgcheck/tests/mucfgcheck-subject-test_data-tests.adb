@@ -943,6 +943,69 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure Posted_Interrupts
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/pin/ProcessPostedInterrupts",
+            Value => "1");
+         begin
+            VMX_Controls_Entry_Checks (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (Posted Int 1)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "VMX control 'process posted interrupts' is 1 for "
+                       & "subject 'linux' but 'virtual-interrupt delivery' is"
+                       & " 0",
+                       Message   => "Exception mismatch (Posted Int 1)");
+         end;
+
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/proc2/VirtualInterruptDelivery",
+            Value => "1");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/proc/UseTPRShadow",
+            Value => "1");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/pin/ExternalInterruptExiting",
+            Value => "1");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/exit/AckInterruptOnExit",
+            Value => "0");
+         begin
+            VMX_Controls_Entry_Checks (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (Posted Int 2)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "VMX control 'process posted interrupts' is 1 for "
+                       & "subject 'linux' but 'acknowledge interrupt on exit' "
+                       & "is 0",
+                       Message   => "Exception mismatch (Posted Int 2)");
+         end;
+      end Posted_Interrupts;
+
+      ----------------------------------------------------------------------
+
       procedure TPR_Shadow
       is
          Data : Muxml.XML_Data_Type;
@@ -1120,6 +1183,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       TPR_Shadow;
       Virtualize_x2APIC_Mode;
       Virtual_Interrupt_Delivery;
+      Posted_Interrupts;
 --  begin read only
    end Test_VMX_Controls_Entry_Checks;
 --  end read only

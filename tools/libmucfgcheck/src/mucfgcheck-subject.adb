@@ -1237,6 +1237,30 @@ is
                  with "VMX control 'Virtual NMIs' is 0 for subject '"
                  & Subj_Name & "' but 'NMI-window exiting' is 1";
             end if;
+
+            if not Is_Set (Ctrls => VMX_Ctrls,
+                           XPath => "proc/UseTPRShadow")
+            then
+               if Is_Set (Ctrls => VMX_Ctrls,
+                          XPath => "proc2/Virtualizex2APICMode")
+               then
+                  raise Validation_Error
+                    with "VMX control 'Use TPR Shadow' is 0 for subject '"
+                    & Subj_Name & "' but 'Virtualize x2APIC mode' is 1";
+               elsif Is_Set (Ctrls => VMX_Ctrls,
+                             XPath => "proc2/APICRegisterVirtualization")
+               then
+                  raise Validation_Error
+                    with "VMX control 'Use TPR Shadow' is 0 for subject '"
+                    & Subj_Name & "' but 'APIC-register virtualization' is 1";
+               elsif Is_Set (Ctrls => VMX_Ctrls,
+                             XPath => "proc2/VirtualInterruptDelivery")
+               then
+                  raise Validation_Error
+                    with "VMX control 'Use TPR Shadow' is 0 for subject '"
+                    & Subj_Name & "' but 'virtual-interrupt delivery' is 1";
+               end if;
+            end if;
          end;
       end loop;
    end VMX_Controls_Entry_Checks;

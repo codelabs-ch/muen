@@ -943,6 +943,70 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure TPR_Shadow
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/proc2/VirtualInterruptDelivery",
+            Value => "1");
+         begin
+            VMX_Controls_Entry_Checks (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (TPR Shadow 1)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "VMX control 'Use TPR Shadow' is 0 for subject "
+                       & "'linux' but 'virtual-interrupt delivery' is 1",
+                       Message   => "Exception mismatch (TPR Shadow 1)");
+         end;
+
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/proc2/APICRegisterVirtualization",
+            Value => "1");
+         begin
+            VMX_Controls_Entry_Checks (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (TPR Shadow 2)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "VMX control 'Use TPR Shadow' is 0 for subject "
+                       & "'linux' but 'APIC-register virtualization' is 1",
+                       Message   => "Exception mismatch (TPR Shadow 2)");
+         end;
+
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/proc2/Virtualizex2APICMode",
+            Value => "1");
+         begin
+            VMX_Controls_Entry_Checks (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (TPR Shadow 3)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "VMX control 'Use TPR Shadow' is 0 for subject"
+                       & " 'linux' but 'Virtualize x2APIC mode' is 1",
+                       Message   => "Exception mismatch (TPR Shadow 3)");
+         end;
+      end TPR_Shadow;
+
+      ----------------------------------------------------------------------
+
       procedure Virtual_NMIs
       is
          Data : Muxml.XML_Data_Type;
@@ -978,6 +1042,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       MSR_Bitmap_Address;
       NMI_Exiting;
       Virtual_NMIs;
+      TPR_Shadow;
 --  begin read only
    end Test_VMX_Controls_Entry_Checks;
 --  end read only

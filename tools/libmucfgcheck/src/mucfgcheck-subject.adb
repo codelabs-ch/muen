@@ -1285,6 +1285,16 @@ is
                  & " on exit' is 0";
             end if;
          end if;
+
+         if Is_Set (Ctrls => Ctrls,
+                    XPath => "proc2/UnrestrictedGuest")
+           and not Is_Set (Ctrls => Ctrls,
+                           XPath => "proc2/EnableEPT")
+         then
+            raise Validation_Error
+              with "VMX control 'unrestricted guest' is 1 for "
+              & "subject '" & Subject_Name & "' but 'Enable EPT' is 0";
+         end if;
       end Check_VM_Execution_Control_Fields;
 
       ----------------------------------------------------------------------

@@ -1070,6 +1070,38 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure Unrestricted_Guest
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/proc2/UnrestrictedGuest",
+            Value => "1");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/proc2/EnableEPT",
+            Value => "0");
+
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Unrestricted Guest)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMX control 'unrestricted guest' is 1 for subject "
+                    & "'linux' but 'Enable EPT' is 0",
+                    Message   => "Exception mismatch (Unrestricted Guest)");
+      end Unrestricted_Guest;
+
+      ----------------------------------------------------------------------
+
       procedure Virtual_Interrupt_Delivery
       is
          Data : Muxml.XML_Data_Type;
@@ -1184,6 +1216,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       Virtualize_x2APIC_Mode;
       Virtual_Interrupt_Delivery;
       Posted_Interrupts;
+      Unrestricted_Guest;
 --  begin read only
    end Test_VMX_Controls_Entry_Checks;
 --  end read only

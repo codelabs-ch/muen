@@ -842,6 +842,57 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure Dual_Monitor_Treatment
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/entry/DeactiveDualMonitorTreatment",
+            Value => "1");
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Dual-Monitor)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMX control 'deactivate dual-monitor treatment' of "
+                    & "subject 'linux' is 1",
+                    Message   => "Exception mismatch (Dual-Monitor)");
+      end Dual_Monitor_Treatment;
+
+      ----------------------------------------------------------------------
+
+      procedure Entry_To_SMM
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/entry/EntryToSMM",
+            Value => "1");
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Entry to SMM)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMX control 'entry to SMM' of subject 'linux' is 1",
+                    Message   => "Exception mismatch (Entry to SMM)");
+      end Entry_To_SMM;
+
+      ----------------------------------------------------------------------
+
       procedure IO_Bitmap_Address
       is
          Data : Muxml.XML_Data_Type;
@@ -1279,6 +1330,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       Unrestricted_Guest;
       Preemption_Timer;
       MSR_Storage_Address;
+      Entry_To_SMM;
+      Dual_Monitor_Treatment;
 --  begin read only
    end Test_VMX_Controls_Entry_Checks;
 --  end read only

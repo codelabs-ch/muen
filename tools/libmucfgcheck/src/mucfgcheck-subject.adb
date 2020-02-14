@@ -1156,6 +1156,46 @@ is
         (Ctrls        : DOM.Core.Node;
          Subject_Name : String);
 
+      --  VM-Entry control field checks as specified by Intel SDM Vol. 3C,
+      --  "26.2.1.3 VM-Entry Control Fields".
+      procedure Check_VM_Entry_Control_Fields
+        (Ctrls        : DOM.Core.Node;
+         Subject_Name : String);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_VM_Entry_Control_Fields
+        (Ctrls        : DOM.Core.Node;
+         Subject_Name : String)
+      is
+      begin
+
+         --  MSR-load address is already checked as part of VM-Exit checks,
+         --  since we use the same MSR storage area for VM-Exit MSR-store and
+         --  VM-Entry MSR-load.
+
+         if Is_Set (Ctrls => Ctrls,
+                    XPath => "entry/EntryToSMM")
+         then
+            raise Validation_Error
+              with "VMX control 'entry to SMM' of subject '" & Subject_Name
+              & "' is 1";
+         end if;
+
+         if Is_Set (Ctrls => Ctrls,
+                    XPath => "entry/DeactiveDualMonitorTreatment")
+         then
+            raise Validation_Error
+              with "VMX control 'deactivate dual-monitor treatment' of "
+              & "subject '" & Subject_Name & "' is 1";
+         end if;
+
+         --  The "entry to SMM" and "deactivate dual-monitor treatment"
+         --  VM-entry controls cannot both be 1. This is assured since the
+         --  above two checks make sure that both controls are in fact 0.
+
+      end Check_VM_Entry_Control_Fields;
+
       ----------------------------------------------------------------------
 
       procedure Check_VM_Execution_Control_Fields
@@ -1389,6 +1429,8 @@ is
                                                Subject_Name => Subj_Name);
             Check_VM_Exit_Control_Fields (Ctrls        => VMX_Ctrls,
                                           Subject_Name => Subj_Name);
+            Check_VM_Entry_Control_Fields (Ctrls        => VMX_Ctrls,
+                                           Subject_Name => Subj_Name);
          end;
       end loop;
    end VMX_Controls_Entry_Checks;

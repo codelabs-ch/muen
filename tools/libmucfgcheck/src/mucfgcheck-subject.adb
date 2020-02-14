@@ -1271,6 +1271,17 @@ is
                  with "VMX control 'Virtualize x2APIC mode' is 1 for subject"
                  & " '" & Subj_Name & "' but 'virtualize APIC accesses' is 1";
             end if;
+
+            if Is_Set (Ctrls => VMX_Ctrls,
+                       XPath => "proc2/VirtualInterruptDelivery")
+              and not Is_Set (Ctrls => VMX_Ctrls,
+                              XPath => "pin/ExternalInterruptExiting")
+            then
+               raise Validation_Error
+                 with "VMX control 'virtual-interrupt delivery' is 1 for "
+                 & "subject '" & Subj_Name & "' but 'external-interrupt "
+                 & "exiting' is 0";
+            end if;
          end;
       end loop;
    end VMX_Controls_Entry_Checks;

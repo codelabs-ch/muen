@@ -1007,6 +1007,43 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure Virtual_Interrupt_Delivery
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/proc/UseTPRShadow",
+            Value => "1");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/proc2/VirtualInterruptDelivery",
+            Value => "1");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/pin/ExternalInterruptExiting",
+            Value => "0");
+
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Virtual INT delivery)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMX control 'virtual-interrupt delivery' is 1 for "
+                    & "subject 'linux' but 'external-interrupt exiting' is 0",
+                    Message   => "Exception mismatch (Virtual INT delivery)");
+      end Virtual_Interrupt_Delivery;
+
+      ----------------------------------------------------------------------
+
       procedure Virtual_NMIs
       is
          Data : Muxml.XML_Data_Type;
@@ -1082,6 +1119,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       Virtual_NMIs;
       TPR_Shadow;
       Virtualize_x2APIC_Mode;
+      Virtual_Interrupt_Delivery;
 --  begin read only
    end Test_VMX_Controls_Entry_Checks;
 --  end read only

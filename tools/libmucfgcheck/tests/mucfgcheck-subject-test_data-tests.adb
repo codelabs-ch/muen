@@ -1036,6 +1036,44 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
                     & " 'NMI-window exiting' is 1",
                     Message   => "Exception mismatch (Virtual NMIs)");
       end Virtual_NMIs;
+
+      ----------------------------------------------------------------------
+
+      procedure Virtualize_x2APIC_Mode
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/proc/UseTPRShadow",
+            Value => "1");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/proc2/Virtualizex2APICMode",
+            Value => "1");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/proc2/VirtualAPICAccesses",
+            Value => "1");
+         begin
+            VMX_Controls_Entry_Checks (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (Virt x2APIC Mode)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "VMX control 'Virtualize x2APIC mode' is 1 for "
+                       & "subject 'linux' but 'virtualize APIC accesses' is 1",
+                       Message   => "Exception mismatch (Virt x2APIC Mode)");
+         end;
+      end Virtualize_x2APIC_Mode;
    begin
       Positive_Test;
       IO_Bitmap_Address;
@@ -1043,6 +1081,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       NMI_Exiting;
       Virtual_NMIs;
       TPR_Shadow;
+      Virtualize_x2APIC_Mode;
 --  begin read only
    end Test_VMX_Controls_Entry_Checks;
 --  end read only

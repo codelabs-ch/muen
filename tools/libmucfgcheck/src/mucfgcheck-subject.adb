@@ -1261,6 +1261,16 @@ is
                     & Subj_Name & "' but 'virtual-interrupt delivery' is 1";
                end if;
             end if;
+
+            if Is_Set (Ctrls => VMX_Ctrls,
+                           XPath => "proc2/Virtualizex2APICMode")
+              and Is_Set (Ctrls => VMX_Ctrls,
+                          XPath => "proc2/VirtualAPICAccesses")
+            then
+               raise Validation_Error
+                 with "VMX control 'Virtualize x2APIC mode' is 1 for subject"
+                 & " '" & Subj_Name & "' but 'virtualize APIC accesses' is 1";
+            end if;
          end;
       end loop;
    end VMX_Controls_Entry_Checks;

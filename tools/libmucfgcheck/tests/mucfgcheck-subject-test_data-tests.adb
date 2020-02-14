@@ -690,7 +690,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when E : others =>
+         when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Initramfs region 'initramfs1' not adjacent to other "
                     & "initramfs regions",
@@ -733,7 +733,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when E : others =>
+         when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Logical memory node 'crash_audit' of subject 'tau0' "
                     & "declares illegal write access to crash audit region",
@@ -776,7 +776,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when E : others =>
+         when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "PCI mmconf region of subject 'vt' logical device "
                     & "'wireless' is 16#dead_beef# but should be "
@@ -820,7 +820,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when E : others =>
+         when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Shared logical devices 'wireless|xhci' specify "
                     & "different PCI elements",

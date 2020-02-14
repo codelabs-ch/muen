@@ -1150,6 +1150,12 @@ is
         (Ctrls        : DOM.Core.Node;
          Subject_Name : String);
 
+      --  VM-Exit control field checks as specified by Intel SDM Vol. 3C,
+      --  "26.2.1.2 VM-Exit Control Fields".
+      procedure Check_VM_Exit_Control_Fields
+        (Ctrls        : DOM.Core.Node;
+         Subject_Name : String);
+
       ----------------------------------------------------------------------
 
       procedure Check_VM_Execution_Control_Fields
@@ -1299,6 +1305,25 @@ is
 
       ----------------------------------------------------------------------
 
+      procedure Check_VM_Exit_Control_Fields
+        (Ctrls        : DOM.Core.Node;
+         Subject_Name : String)
+      is
+      begin
+         if not Is_Set (Ctrls => Ctrls,
+                        XPath => "pin/ActivateVMXTimer")
+           and Is_Set (Ctrls => Ctrls,
+                       XPath => "exit/SaveVMXTimerValue")
+         then
+            raise Validation_Error
+              with "VMX control 'activate VMX-preemption timer' is 0 for "
+              & "subject '" & Subject_Name & "' but 'save VMX-preemtion timer "
+              & "value' is 1";
+         end if;
+      end Check_VM_Exit_Control_Fields;
+
+      ----------------------------------------------------------------------
+
       function Is_Set
         (Ctrls : DOM.Core.Node;
          XPath : String)
@@ -1328,6 +1353,8 @@ is
                        & "'");
             Check_VM_Execution_Control_Fields (Ctrls        => VMX_Ctrls,
                                                Subject_Name => Subj_Name);
+            Check_VM_Exit_Control_Fields (Ctrls        => VMX_Ctrls,
+                                          Subject_Name => Subj_Name);
          end;
       end loop;
    end VMX_Controls_Entry_Checks;

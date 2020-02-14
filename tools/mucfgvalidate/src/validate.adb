@@ -96,6 +96,10 @@ is
       XML_Processors.Register
         (Process => Memory.Subject_Interrupts_Region_Presence'Access);
       XML_Processors.Register
+        (Process => Memory.Subject_IOBM_Region_Presence'Access);
+      XML_Processors.Register
+        (Process => Memory.Subject_MSRBM_Region_Presence'Access);
+      XML_Processors.Register
         (Process => Memory.Subject_MSR_Store_Region_Presence'Access);
       XML_Processors.Register
         (Process => Memory.Subject_FPU_State_Region_Presence'Access);
@@ -231,6 +235,8 @@ is
         (Process => Subject.Device_Mmconf_Mappings'Access);
       XML_Processors.Register
         (Process => Subject.Shared_Device_Same_PCI_Element'Access);
+      XML_Processors.Register
+        (Process => Subject.VMX_Controls_Entry_Checks'Access);
       XML_Processors.Register
         (Process => Events.Physical_Event_Name_Uniqueness'Access);
       XML_Processors.Register

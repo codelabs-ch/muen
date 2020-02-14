@@ -1124,4 +1124,315 @@ is
       end loop;
    end Virtual_Memory_Overlap;
 
+   -------------------------------------------------------------------------
+
+   procedure VMX_Controls_Entry_Checks (XML_Data : Muxml.XML_Data_Type)
+   is
+      Phys_Mem : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/memory/memory");
+      Subjects : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/subjects/subject");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Subjects);
+
+      ----------------------------------------------------------------------
+
+      --  Returns True if the VMX control specified by XPath is set to 1.
+      function Is_Set
+        (Ctrls : DOM.Core.Node;
+         XPath : String)
+         return Boolean;
+
+      --  VM-Execution control field checks as specified by Intel SDM Vol. 3C,
+      --  "26.2.1.1 VM-Execution Control Fields".
+      procedure Check_VM_Execution_Control_Fields
+        (Ctrls        : DOM.Core.Node;
+         Subject_Name : String);
+
+      --  VM-Exit control field checks as specified by Intel SDM Vol. 3C,
+      --  "26.2.1.2 VM-Exit Control Fields".
+      procedure Check_VM_Exit_Control_Fields
+        (Ctrls        : DOM.Core.Node;
+         Subject_Name : String);
+
+      --  VM-Entry control field checks as specified by Intel SDM Vol. 3C,
+      --  "26.2.1.3 VM-Entry Control Fields".
+      procedure Check_VM_Entry_Control_Fields
+        (Ctrls        : DOM.Core.Node;
+         Subject_Name : String);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_VM_Entry_Control_Fields
+        (Ctrls        : DOM.Core.Node;
+         Subject_Name : String)
+      is
+      begin
+
+         --  MSR-load address is already checked as part of VM-Exit checks,
+         --  since we use the same MSR storage area for VM-Exit MSR-store and
+         --  VM-Entry MSR-load.
+
+         if Is_Set (Ctrls => Ctrls,
+                    XPath => "entry/EntryToSMM")
+         then
+            raise Validation_Error
+              with "VMX control 'entry to SMM' of subject '" & Subject_Name
+              & "' is 1";
+         end if;
+
+         if Is_Set (Ctrls => Ctrls,
+                    XPath => "entry/DeactiveDualMonitorTreatment")
+         then
+            raise Validation_Error
+              with "VMX control 'deactivate dual-monitor treatment' of "
+              & "subject '" & Subject_Name & "' is 1";
+         end if;
+
+         --  The "entry to SMM" and "deactivate dual-monitor treatment"
+         --  VM-entry controls cannot both be 1. This is assured since the
+         --  above two checks make sure that both controls are in fact 0.
+
+      end Check_VM_Entry_Control_Fields;
+
+      ----------------------------------------------------------------------
+
+      procedure Check_VM_Execution_Control_Fields
+        (Ctrls        : DOM.Core.Node;
+         Subject_Name : String)
+      is
+      begin
+         if Is_Set (Ctrls => Ctrls,
+                    XPath => "proc/UseIOBitmaps")
+         then
+            declare
+               Bit_Mask : constant Interfaces.Unsigned_64
+                 := 2#1111_1111_1111#;
+               IOBM_Addr : constant Interfaces.Unsigned_64
+                 := Interfaces.Unsigned_64'Value
+                   (Muxml.Utils.Get_Attribute
+                      (Nodes     => Phys_Mem,
+                       Ref_Attr  => "name",
+                       Ref_Value => Subject_Name & "|iobm",
+                       Attr_Name => "physicalAddress"));
+            begin
+               if (IOBM_Addr and Bit_Mask) /= 0 then
+                  raise Validation_Error with "Address of I/O Bitmap of "
+                    & "subject '" & Subject_Name & "' invalid: bits 11:0 must "
+                    & "be zero";
+               end if;
+            end;
+         end if;
+
+         if Is_Set (Ctrls => Ctrls,
+                    XPath => "proc/UseMSRBitmaps")
+         then
+            declare
+               Bit_Mask : constant Interfaces.Unsigned_64
+                 := 2#1111_1111_1111#;
+               MSRBM_Addr : constant Interfaces.Unsigned_64
+                 := Interfaces.Unsigned_64'Value
+                   (Muxml.Utils.Get_Attribute
+                      (Nodes     => Phys_Mem,
+                       Ref_Attr  => "name",
+                       Ref_Value => Subject_Name & "|msrbm",
+                       Attr_Name => "physicalAddress"));
+            begin
+               if (MSRBM_Addr and Bit_Mask) /= 0 then
+                  raise Validation_Error with "Address of MSR Bitmap of "
+                    & "subject '" & Subject_Name & "' invalid: bits 11:0 must "
+                    & "be zero";
+               end if;
+            end;
+         end if;
+
+         if not Is_Set (Ctrls => Ctrls,
+                        XPath => "pin/NMIExiting")
+           and Is_Set (Ctrls => Ctrls,
+                       XPath => "pin/VirtualNMIs")
+         then
+            raise Validation_Error
+              with "VMX control 'NMI-Exiting' is 0 for subject '"
+              & Subject_Name & "' but 'Virtual NMIs' is 1";
+         end if;
+
+         if not Is_Set (Ctrls => Ctrls,
+                        XPath => "pin/VirtualNMIs")
+           and Is_Set (Ctrls => Ctrls,
+                       XPath => "proc/NMIWindowExiting")
+         then
+            raise Validation_Error
+              with "VMX control 'Virtual NMIs' is 0 for subject '"
+              & Subject_Name & "' but 'NMI-window exiting' is 1";
+         end if;
+
+         if not Is_Set (Ctrls => Ctrls,
+                        XPath => "proc/UseTPRShadow")
+         then
+            if Is_Set (Ctrls => Ctrls,
+                       XPath => "proc2/Virtualizex2APICMode")
+            then
+               raise Validation_Error
+                 with "VMX control 'Use TPR Shadow' is 0 for subject '"
+                 & Subject_Name & "' but 'Virtualize x2APIC mode' is 1";
+            elsif Is_Set (Ctrls => Ctrls,
+                          XPath => "proc2/APICRegisterVirtualization")
+            then
+               raise Validation_Error
+                 with "VMX control 'Use TPR Shadow' is 0 for subject '"
+                 & Subject_Name & "' but 'APIC-register virtualization' is 1";
+            elsif Is_Set (Ctrls => Ctrls,
+                          XPath => "proc2/VirtualInterruptDelivery")
+            then
+               raise Validation_Error
+                 with "VMX control 'Use TPR Shadow' is 0 for subject '"
+                 & Subject_Name & "' but 'virtual-interrupt delivery' is 1";
+            end if;
+         end if;
+
+         if Is_Set (Ctrls => Ctrls,
+                    XPath => "proc2/Virtualizex2APICMode")
+           and Is_Set (Ctrls => Ctrls,
+                       XPath => "proc2/VirtualAPICAccesses")
+         then
+            raise Validation_Error
+              with "VMX control 'Virtualize x2APIC mode' is 1 for subject"
+              & " '" & Subject_Name & "' but 'virtualize APIC accesses' is 1";
+         end if;
+
+         if Is_Set (Ctrls => Ctrls,
+                    XPath => "proc2/VirtualInterruptDelivery")
+           and not Is_Set (Ctrls => Ctrls,
+                           XPath => "pin/ExternalInterruptExiting")
+         then
+            raise Validation_Error
+              with "VMX control 'virtual-interrupt delivery' is 1 for "
+              & "subject '" & Subject_Name & "' but 'external-interrupt "
+              & "exiting' is 0";
+         end if;
+
+         if Is_Set (Ctrls => Ctrls,
+                    XPath => "pin/ProcessPostedInterrupts")
+         then
+            if not Is_Set (Ctrls => Ctrls,
+                           XPath => "proc2/VirtualInterruptDelivery")
+            then
+               raise Validation_Error
+                 with "VMX control 'process posted interrupts' is 1 for "
+                 & "subject '" & Subject_Name & "' but 'virtual-interrupt "
+                 & "delivery' is 0";
+            elsif not Is_Set (Ctrls => Ctrls,
+                              XPath => "exit/AckInterruptOnExit")
+            then
+               raise Validation_Error
+                 with "VMX control 'process posted interrupts' is 1 for "
+                 & "subject '" & Subject_Name & "' but 'acknowledge interrupt"
+                 & " on exit' is 0";
+            end if;
+         end if;
+
+         if Is_Set (Ctrls => Ctrls,
+                    XPath => "proc2/UnrestrictedGuest")
+           and not Is_Set (Ctrls => Ctrls,
+                           XPath => "proc2/EnableEPT")
+         then
+            raise Validation_Error
+              with "VMX control 'unrestricted guest' is 1 for "
+              & "subject '" & Subject_Name & "' but 'Enable EPT' is 0";
+         end if;
+      end Check_VM_Execution_Control_Fields;
+
+      ----------------------------------------------------------------------
+
+      procedure Check_VM_Exit_Control_Fields
+        (Ctrls        : DOM.Core.Node;
+         Subject_Name : String)
+      is
+      begin
+         if not Is_Set (Ctrls => Ctrls,
+                        XPath => "pin/ActivateVMXTimer")
+           and Is_Set (Ctrls => Ctrls,
+                       XPath => "exit/SaveVMXTimerValue")
+         then
+            raise Validation_Error
+              with "VMX control 'activate VMX-preemption timer' is 0 for "
+              & "subject '" & Subject_Name & "' but 'save VMX-preemtion timer "
+              & "value' is 1";
+         end if;
+
+         declare
+            package MXU renames Mutools.XML_Utils;
+
+            MSR_Count : constant Natural
+              := MXU.Calculate_MSR_Count
+                (MSRs                   => XPath_Query
+                   (N     => Ctrls,
+                    XPath => "../../msrs/msr[@mode='rw' or @mode='w']"),
+                 DEBUGCTL_Control       => MXU.Has_Managed_DEBUGCTL
+                   (Controls => Ctrls),
+                 PAT_Control            => MXU.Has_Managed_PAT
+                   (Controls => Ctrls),
+                 PERFGLOBALCTRL_Control => MXU.Has_Managed_PERFGLOBALCTRL
+                   (Controls => Ctrls),
+                 EFER_Control           => MXU.Has_Managed_EFER
+                   (Controls => Ctrls));
+            Bit_Mask : constant Interfaces.Unsigned_64
+              := 2#1111#;
+            MSR_Store_Addr : Interfaces.Unsigned_64;
+         begin
+            if MSR_Count > 0 then
+               MSR_Store_Addr := Interfaces.Unsigned_64'Value
+                 (Muxml.Utils.Get_Attribute
+                    (Nodes     => Phys_Mem,
+                     Ref_Attr  => "name",
+                     Ref_Value => Subject_Name & "|msrstore",
+                     Attr_Name => "physicalAddress"));
+               if (MSR_Store_Addr and Bit_Mask) /= 0 then
+                  raise Validation_Error with "MSR Store address of subject '"
+                    & Subject_Name & "' invalid: bits 3:0 must be zero";
+               end if;
+            end if;
+         end;
+      end Check_VM_Exit_Control_Fields;
+
+      ----------------------------------------------------------------------
+
+      function Is_Set
+        (Ctrls : DOM.Core.Node;
+         XPath : String)
+         return Boolean
+      is
+         Ctrl_Val_Str : constant String
+           := Muxml.Utils.Get_Element_Value (Doc   => Ctrls,
+                                             XPath => XPath);
+      begin
+         return Ctrl_Val_Str = "1";
+      end Is_Set;
+   begin
+      for I in 0 .. Count - 1 loop
+         declare
+            Subject : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Subjects,
+                                      Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subject,
+                 Name => "name");
+            VMX_Ctrls : constant DOM.Core.Node := Muxml.Utils.Get_Element
+              (Doc   => Subject,
+               XPath => "vcpu/vmx/controls");
+         begin
+            Mulog.Log (Msg => "Checking VMX controls of subject '" & Subj_Name
+                       & "'");
+            Check_VM_Execution_Control_Fields (Ctrls        => VMX_Ctrls,
+                                               Subject_Name => Subj_Name);
+            Check_VM_Exit_Control_Fields (Ctrls        => VMX_Ctrls,
+                                          Subject_Name => Subj_Name);
+            Check_VM_Entry_Control_Fields (Ctrls        => VMX_Ctrls,
+                                           Subject_Name => Subj_Name);
+         end;
+      end loop;
+   end VMX_Controls_Entry_Checks;
+
 end Mucfgcheck.Subject;

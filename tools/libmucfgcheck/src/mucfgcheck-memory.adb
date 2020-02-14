@@ -1004,6 +1004,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Subject_IOBM_Region_Presence (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_Subject_Region_Presence
+        (XML_Data     => XML_Data,
+         Region_Type  => "iobm",
+         Region_Class => "system");
+   end Subject_IOBM_Region_Presence;
+
+   -------------------------------------------------------------------------
+
    procedure Subject_MSR_Store_Mappings (XML_Data : Muxml.XML_Data_Type)
    is
    begin
@@ -1083,6 +1094,17 @@ is
          end;
       end loop;
    end Subject_MSR_Store_Region_Presence;
+
+   -------------------------------------------------------------------------
+
+   procedure Subject_MSRBM_Region_Presence (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_Subject_Region_Presence
+        (XML_Data     => XML_Data,
+         Region_Type  => "msrbm",
+         Region_Class => "system");
+   end Subject_MSRBM_Region_Presence;
 
    -------------------------------------------------------------------------
 

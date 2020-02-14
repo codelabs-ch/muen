@@ -690,7 +690,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when E : others =>
+         when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Initramfs region 'initramfs1' not adjacent to other "
                     & "initramfs regions",
@@ -733,7 +733,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when E : others =>
+         when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Logical memory node 'crash_audit' of subject 'tau0' "
                     & "declares illegal write access to crash audit region",
@@ -776,7 +776,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when E : others =>
+         when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "PCI mmconf region of subject 'vt' logical device "
                     & "'wireless' is 16#dead_beef# but should be "
@@ -820,7 +820,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when E : others =>
+         when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Shared logical devices 'wireless|xhci' specify "
                     & "different PCI elements",
@@ -828,6 +828,512 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       end;
 --  begin read only
    end Test_Shared_Device_Same_PCI_Element;
+--  end read only
+
+
+--  begin read only
+   procedure Test_VMX_Controls_Entry_Checks (Gnattest_T : in out Test);
+   procedure Test_VMX_Controls_Entry_Checks_6dde9d (Gnattest_T : in out Test) renames Test_VMX_Controls_Entry_Checks;
+--  id:2.2/6dde9d8234a9c19e/VMX_Controls_Entry_Checks/1/0/
+   procedure Test_VMX_Controls_Entry_Checks (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      ----------------------------------------------------------------------
+
+      procedure Dual_Monitor_Treatment
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/entry/DeactiveDualMonitorTreatment",
+            Value => "1");
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Dual-Monitor)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMX control 'deactivate dual-monitor treatment' of "
+                    & "subject 'linux' is 1",
+                    Message   => "Exception mismatch (Dual-Monitor)");
+      end Dual_Monitor_Treatment;
+
+      ----------------------------------------------------------------------
+
+      procedure Entry_To_SMM
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/entry/EntryToSMM",
+            Value => "1");
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Entry to SMM)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMX control 'entry to SMM' of subject 'linux' is 1",
+                    Message   => "Exception mismatch (Entry to SMM)");
+      end Entry_To_SMM;
+
+      ----------------------------------------------------------------------
+
+      procedure IO_Bitmap_Address
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/memory[@name='linux|iobm']",
+            Name  => "physicalAddress",
+            Value => "16#0001_0001#");
+
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (IOBM)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Address of I/O Bitmap of subject 'linux' invalid: bits "
+                    & "11:0 must be zero",
+                    Message   => "Exception mismatch (IOBM)");
+      end IO_Bitmap_Address;
+
+      ----------------------------------------------------------------------
+
+      procedure MSR_Bitmap_Address
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/memory[@name='linux|msrbm']",
+            Name  => "physicalAddress",
+            Value => "16#0001_0001#");
+
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (MSRBM)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Address of MSR Bitmap of subject 'linux' invalid: bits "
+                    & "11:0 must be zero",
+                    Message   => "Exception mismatch (MSRBM)");
+      end MSR_Bitmap_Address;
+
+      ----------------------------------------------------------------------
+
+      procedure MSR_Storage_Address
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/memory[@name='linux|msrstore']",
+            Name  => "physicalAddress",
+            Value => "16#0001_0001#");
+
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (MSR Store)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "MSR Store address of subject 'linux' invalid: bits "
+                    & "3:0 must be zero",
+                    Message   => "Exception mismatch (MSR Store)");
+      end MSR_Storage_Address;
+
+      ----------------------------------------------------------------------
+
+      procedure NMI_Exiting
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/pin/NMIExiting",
+            Value => "0");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/pin/VirtualNMIs",
+            Value => "1");
+
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (NMI Exiting)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMX control 'NMI-Exiting' is 0 for subject "
+                    & "'linux' but 'Virtual NMIs' is 1",
+                    Message   => "Exception mismatch (NMI Exiting)");
+      end NMI_Exiting;
+
+      ----------------------------------------------------------------------
+
+      procedure Positive_Test
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         --  Positive test, must not raise an exception.
+
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+      end Positive_Test;
+
+      ----------------------------------------------------------------------
+
+      procedure Posted_Interrupts
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/pin/ProcessPostedInterrupts",
+            Value => "1");
+         begin
+            VMX_Controls_Entry_Checks (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (Posted Int 1)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "VMX control 'process posted interrupts' is 1 for "
+                       & "subject 'linux' but 'virtual-interrupt delivery' is"
+                       & " 0",
+                       Message   => "Exception mismatch (Posted Int 1)");
+         end;
+
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/proc2/VirtualInterruptDelivery",
+            Value => "1");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/proc/UseTPRShadow",
+            Value => "1");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/pin/ExternalInterruptExiting",
+            Value => "1");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/exit/AckInterruptOnExit",
+            Value => "0");
+         begin
+            VMX_Controls_Entry_Checks (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (Posted Int 2)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "VMX control 'process posted interrupts' is 1 for "
+                       & "subject 'linux' but 'acknowledge interrupt on exit' "
+                       & "is 0",
+                       Message   => "Exception mismatch (Posted Int 2)");
+         end;
+      end Posted_Interrupts;
+
+      ----------------------------------------------------------------------
+
+      procedure Preemption_Timer
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/pin/ActivateVMXTimer",
+            Value => "0");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/exit/SaveVMXTimerValue",
+            Value => "1");
+
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (VMX-preemption timer)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMX control 'activate VMX-preemption timer' is 0 for "
+                    & "subject 'linux' but 'save VMX-preemtion timer value' "
+                    & "is 1",
+                    Message   => "Exception mismatch (VMX-preemption timer)");
+      end Preemption_Timer;
+
+      ----------------------------------------------------------------------
+
+      procedure TPR_Shadow
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/proc2/VirtualInterruptDelivery",
+            Value => "1");
+         begin
+            VMX_Controls_Entry_Checks (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (TPR Shadow 1)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "VMX control 'Use TPR Shadow' is 0 for subject "
+                       & "'linux' but 'virtual-interrupt delivery' is 1",
+                       Message   => "Exception mismatch (TPR Shadow 1)");
+         end;
+
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/proc2/APICRegisterVirtualization",
+            Value => "1");
+         begin
+            VMX_Controls_Entry_Checks (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (TPR Shadow 2)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "VMX control 'Use TPR Shadow' is 0 for subject "
+                       & "'linux' but 'APIC-register virtualization' is 1",
+                       Message   => "Exception mismatch (TPR Shadow 2)");
+         end;
+
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/proc2/Virtualizex2APICMode",
+            Value => "1");
+         begin
+            VMX_Controls_Entry_Checks (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (TPR Shadow 3)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "VMX control 'Use TPR Shadow' is 0 for subject"
+                       & " 'linux' but 'Virtualize x2APIC mode' is 1",
+                       Message   => "Exception mismatch (TPR Shadow 3)");
+         end;
+      end TPR_Shadow;
+
+      ----------------------------------------------------------------------
+
+      procedure Unrestricted_Guest
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/proc2/UnrestrictedGuest",
+            Value => "1");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/proc2/EnableEPT",
+            Value => "0");
+
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Unrestricted Guest)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMX control 'unrestricted guest' is 1 for subject "
+                    & "'linux' but 'Enable EPT' is 0",
+                    Message   => "Exception mismatch (Unrestricted Guest)");
+      end Unrestricted_Guest;
+
+      ----------------------------------------------------------------------
+
+      procedure Virtual_Interrupt_Delivery
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/proc/UseTPRShadow",
+            Value => "1");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/proc2/VirtualInterruptDelivery",
+            Value => "1");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/pin/ExternalInterruptExiting",
+            Value => "0");
+
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Virtual INT delivery)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMX control 'virtual-interrupt delivery' is 1 for "
+                    & "subject 'linux' but 'external-interrupt exiting' is 0",
+                    Message   => "Exception mismatch (Virtual INT delivery)");
+      end Virtual_Interrupt_Delivery;
+
+      ----------------------------------------------------------------------
+
+      procedure Virtual_NMIs
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/pin/VirtualNMIs",
+            Value => "0");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/proc/NMIWindowExiting",
+            Value => "1");
+
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Virtual NMIs)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMX control 'Virtual NMIs' is 0 for subject 'linux' but"
+                    & " 'NMI-window exiting' is 1",
+                    Message   => "Exception mismatch (Virtual NMIs)");
+      end Virtual_NMIs;
+
+      ----------------------------------------------------------------------
+
+      procedure Virtualize_x2APIC_Mode
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/proc/UseTPRShadow",
+            Value => "1");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/proc2/Virtualizex2APICMode",
+            Value => "1");
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/proc2/VirtualAPICAccesses",
+            Value => "1");
+         begin
+            VMX_Controls_Entry_Checks (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (Virt x2APIC Mode)");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "VMX control 'Virtualize x2APIC mode' is 1 for "
+                       & "subject 'linux' but 'virtualize APIC accesses' is 1",
+                       Message   => "Exception mismatch (Virt x2APIC Mode)");
+         end;
+      end Virtualize_x2APIC_Mode;
+   begin
+      Positive_Test;
+      IO_Bitmap_Address;
+      MSR_Bitmap_Address;
+      NMI_Exiting;
+      Virtual_NMIs;
+      TPR_Shadow;
+      Virtualize_x2APIC_Mode;
+      Virtual_Interrupt_Delivery;
+      Posted_Interrupts;
+      Unrestricted_Guest;
+      Preemption_Timer;
+      MSR_Storage_Address;
+      Entry_To_SMM;
+      Dual_Monitor_Treatment;
+--  begin read only
+   end Test_VMX_Controls_Entry_Checks;
 --  end read only
 
 --  begin read only

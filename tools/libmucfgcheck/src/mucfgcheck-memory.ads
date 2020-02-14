@@ -148,6 +148,12 @@ is
    procedure Subject_Timed_Event_Region_Presence
      (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that a subject I/O Bitmap region exists for every subject.
+   procedure Subject_IOBM_Region_Presence (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that a subject MSR Bitmap region exists for every subject.
+   procedure Subject_MSRBM_Region_Presence (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that a subject MSR store memory region exists for each subject
    --  that accesses MSR registers not managed by VMCS.
    procedure Subject_MSR_Store_Region_Presence

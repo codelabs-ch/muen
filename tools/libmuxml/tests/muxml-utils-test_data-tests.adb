@@ -134,6 +134,9 @@ package body Muxml.Utils.Test_Data.Tests is
                         XPath => "/nonexistent",
                         Name  => "foo",
                         Value => "bar");
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
       exception
          when E : XML_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
@@ -285,6 +288,63 @@ package body Muxml.Utils.Test_Data.Tests is
               Message   => "Element value mismatch (4)");
 --  begin read only
    end Test_Get_Element_Value;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Set_Element_Value (Gnattest_T : in out Test);
+   procedure Test_Set_Element_Value_74b2a4 (Gnattest_T : in out Test) renames Test_Set_Element_Value;
+--  id:2.2/74b2a414a94397f6/Set_Element_Value/1/0/
+   procedure Test_Set_Element_Value (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : XML_Data_Type;
+      Node : DOM.Core.Node;
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "elem");
+      Append_Child (Node      => Data.Doc,
+                    New_Child => Node);
+      Add_Child (Parent     => Node,
+                 Child_Name => "child");
+
+      Set_Element_Value  (Doc   => Data.Doc,
+                          XPath => "/elem",
+                          Value => "value");
+      Assert (Condition => Get_Element_Value
+              (Doc   => Data.Doc,
+               XPath => "/elem") = "value",
+              Message   => "Element value mismatch");
+
+      Set_Element_Value  (Doc   => Data.Doc,
+                          XPath => "/elem",
+                          Value => "newvalue");
+      Assert (Condition => Get_Element_Value
+              (Doc   => Data.Doc,
+               XPath => "/elem") = "newvalue",
+              Message   => "New element value mismatch");
+
+      begin
+         Set_Element_Value  (Doc   => Data.Doc,
+                             XPath => "/nonexistent",
+                             Value => "foobar");
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : XML_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Unable to set element value to 'foobar' - No "
+                    & "element found at XPath '/nonexistent'",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Set_Element_Value;
 --  end read only
 
 

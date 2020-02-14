@@ -58,6 +58,13 @@ is
       XPath : String)
       return String;
 
+   --  Sets the string value of elements specified by XPath in the given
+   --  document. If no such element exists, an exception is raised.
+   procedure Set_Element_Value
+     (Doc   : DOM.Core.Node;
+      XPath : String;
+      Value : String);
+
    --  Returns True if the specified node is a member of the given list.
    function Contains
      (List : DOM.Core.Node_List;

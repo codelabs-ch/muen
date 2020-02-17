@@ -31,7 +31,7 @@ GRUB_MODS ?= $(CONTRIB_BUILD_DIR)/lib/grub/i386-pc
 QEMU_OPTS = -curses
 else
 GRUB_MODS ?= $(CONTRIB_BUILD_DIR)/lib/grub/x86_64-efi
-QEMU_OPTS = -bios /usr/share/ovmf/OVMF.fd
+QEMU_OPTS = -bios OVMF.fd
 endif
 
 GRUB_MKRESCUE ?= $(CONTRIB_BUILD_DIR)/bin/grub-mkrescue

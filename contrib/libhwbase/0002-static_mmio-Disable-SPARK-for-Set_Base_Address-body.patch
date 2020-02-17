@@ -1,4 +1,4 @@
-From f03ca6864dba2cf1eb97a0cab94d073ddcb57c52 Mon Sep 17 00:00:00 2001
+From f833e9603b5c067c7715a5119c1286466596acab Mon Sep 17 00:00:00 2001
 From: Adrian-Ken Rueegsegger <ken@codelabs.ch>
 Date: Thu, 5 Oct 2017 18:08:07 +0200
 Subject: [PATCH 2/3] static_mmio: Disable SPARK for Set_Base_Address body
@@ -6,6 +6,8 @@ Subject: [PATCH 2/3] static_mmio: Disable SPARK for Set_Base_Address body
 Otherwise a warning will be issued that the procedure has no effect.
 However, we need to implement the subprogram since it is specified in
 the common HW.MMIO_Range spec.
+
+Signed-off-by: Adrian-Ken Rueegsegger <ken@codelabs.ch>
 ---
  ada/static_mmio/hw-mmio_range.adb | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
@@ -25,5 +27,5 @@ index 7e111a7..be5e41e 100644
  
  end HW.MMIO_Range;
 -- 
-2.1.4
+2.20.1
 

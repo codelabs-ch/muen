@@ -7,7 +7,7 @@
 #  $ sudo mkfs.ext4 /dev/sdX1
 #  $ sudo mount /dev/sdX1 /mnt
 #  $ sudo mkdir /mnt/files && cd /mnt/files
-#  $ sudo board/muen/rootfs-additions/usr/bin/muenblock-ref .
+#  $ sudo tools/scripts/integ/target_scripts/muenblock-ref .
 #  $ cd /mnt && sudo debootstrap stretch ./stretch-chroot http://deb.debian.org/debian
 #  $ sudo chroot /mnt/stretch-chroot
 #  # apt install cryptsetup lvm2

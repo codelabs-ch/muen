@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 
 with DOM.Core.Elements;
@@ -25,6 +26,7 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.Constants;
 with Mutools.Templates;
 
 with String_Templates;
@@ -40,17 +42,21 @@ is
    is
       use Ada.Strings.Unbounded;
 
-      Subjects      : constant DOM.Core.Node_List
+      Event_Bits_Str : constant String
+        := Ada.Strings.Fixed.Trim
+          (Source => Mutools.Constants.Event_Bits'Img,
+           Side   => Ada.Strings.Left);
+      Subjects       : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/subjects/subject");
-      Subj_Count    : constant Natural
+      Subj_Count     : constant Natural
         := DOM.Core.Nodes.Length (List => Subjects);
-      Phys_Events   : constant DOM.Core.Node_List
+      Phys_Events    : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/events/event");
-      Target_Events : constant DOM.Core.Node_List
+      Target_Events  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/subjects/subject/events/target/event");
@@ -191,6 +197,8 @@ is
       is
          use type DOM.Core.Node;
 
+         Max_Event_Count : constant Natural
+           := 2 ** Mutools.Constants.Event_Bits;
          Subj_ID : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Subject,
             Name => "globalId");
@@ -246,7 +254,7 @@ is
                end if;
             end loop;
 
-            if Src_Ev_Count /= 32 then
+            if Src_Ev_Count /= Max_Event_Count then
                Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
                  & " others => Null_Source_Event";
             end if;
@@ -269,7 +277,7 @@ is
                end if;
             end loop;
 
-            if Target_Ev_Count /= 32 then
+            if Target_Ev_Count /= Max_Event_Count then
                Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
                  & " others => Null_Target_Event";
             end if;
@@ -282,6 +290,10 @@ is
 
       Tmpl := Mutools.Templates.Create
         (Content => String_Templates.skp_events_ads);
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__event_bits__",
+         Content  => Event_Bits_Str);
       Mutools.Templates.Replace
         (Template => Tmpl,
          Pattern  => "__event_kind_types__",

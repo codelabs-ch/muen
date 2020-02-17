@@ -22,32 +22,37 @@ with Dbg.Byte_Arrays;
 package Dbg.PC_Speaker
 is
 
-   subtype Word32 is Interfaces.Unsigned_32;
-   subtype Word16 is Interfaces.Unsigned_16;
-   subtype Byte   is Interfaces.Unsigned_8;
-
+   --  Play sound of specified frequency for duration given in milliseconds.
    procedure Play_Sound
-     (Frequency   : Word32;
+     (Frequency   : Interfaces.Unsigned_32;
       Duration_MS : Natural);
 
+   --  Output sound for given byte and specified duration in milliseconds.
    procedure Put_Byte
-     (Item        : Byte;
+     (Item        : Interfaces.Unsigned_8;
       Duration_MS : Natural);
 
+   --  Output sound for given byte array using the specified duration in
+   --  milliseconds for each byte.
    procedure Put
      (Item        : Byte_Arrays.Byte_Array;
       Duration_MS : Natural);
 
 private
 
-   subtype Pos   is Byte range 0 .. 7;
-   subtype Phase is Byte range 0 .. 1;
-   subtype Bit   is Byte range 0 .. 1;
+   subtype Pos   is Interfaces.Unsigned_8 range 0 .. 7;
+   subtype Phase is Interfaces.Unsigned_8 range 0 .. 1;
+   subtype Bit   is Interfaces.Unsigned_8 range 0 .. 1;
 
-   procedure Start_Beep (Frequency : Word32);
+   --  Start beeping with specified frequency.
+   procedure Start_Beep (Frequency : Interfaces.Unsigned_32);
 
+   --  Stop beeping.
    procedure Stop_Beep;
 
-   function Nth_Bit (B : Byte; N : Pos) return Bit;
+   function Nth_Bit
+     (B : Interfaces.Unsigned_8;
+      N : Pos)
+      return Bit;
 
 end Dbg.PC_Speaker;

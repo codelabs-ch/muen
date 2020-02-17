@@ -54,4 +54,8 @@ is
    --  Base address of subject PCI config space.
    Subject_PCI_Config_Space_Addr : constant := 16#f800_0000#;
 
+   --  Number of bits for the subject event range. The total number of
+   --  available events is given by 2 ** Event_Bits.
+   Event_Bits : constant := 6;
+
 end Mutools.Constants;

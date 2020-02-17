@@ -44,7 +44,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
-      --  Positive tests, must no raise an exception.
+      --  Positive tests, must not raise an exception.
 
       Alias_Physical_Device_References (XML_Data => Data);
 
@@ -86,7 +86,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
-      --  Positive tests, must no raise an exception.
+      --  Positive tests, must not raise an exception.
 
       Alias_Physical_Device_Resource_References (XML_Data => Data);
 
@@ -129,7 +129,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
-      --  Positive tests, must no raise an exception.
+      --  Positive tests, must not raise an exception.
 
       Class_Physical_Device_References (XML_Data => Data);
 
@@ -207,7 +207,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                XPath => "memory[@physical='mmconf']"));
       end Setup_Nic_Alias;
 
-      --  Positive tests, must no raise an exception.
+      --  Positive tests, must not raise an exception.
 
       Subject_Alias_Resource_References (XML_Data => Data);
 
@@ -407,7 +407,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                       Kind => Muxml.None,
                       File => "data/test_policy_src.xml");
 
-         --  Positive tests for type 'none', must no raise an exception.
+         --  Positive tests for type 'none', must not raise an exception.
 
          Kernel_Diagnostics_Device_Reference (XML_Data => Data);
       end No_Diagnostics;
@@ -526,7 +526,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                       Kind => Muxml.None,
                       File => "data/test_policy_src.xml");
 
-         --  Positive tests, must no raise an exception.
+         --  Positive tests, must not raise an exception.
 
          Kernel_Diagnostics_Type_Resources (XML_Data => Data);
       end None_Positive_Test;

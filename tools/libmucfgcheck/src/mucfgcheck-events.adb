@@ -16,7 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Characters.Handling;
 with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 
@@ -184,6 +183,11 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/events/event[@mode='kernel']");
+      Src_Events_No_Action : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/events/source/group/"
+           & "event[count(*) = 0]");
       Count : constant Natural
         := DOM.Core.Nodes.Length (List => Events);
    begin
@@ -196,6 +200,8 @@ is
 
       for I in 0 .. Count - 1 loop
          declare
+            use type DOM.Core.Node;
+
             Ev : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => Events,
@@ -204,26 +210,22 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Ev,
                  Name => "name");
-            Sources : constant DOM.Core.Node_List
-              := McKae.XML.XPath.XIA.XPath_Query
-                (N     => XML_Data.Doc,
-                 XPath => "/system/subjects/subject/events/source/group/"
-                 & "event[@physical='" & Name & "' and count(*) = 0]");
+            Source_Without_Action : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Src_Events_No_Action,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Name);
          begin
-            if DOM.Core.Nodes.Length (List => Sources) > 0 then
+            if Source_Without_Action /= null then
                declare
-                  First_Node : constant DOM.Core.Node
-                    := DOM.Core.Nodes.Item
-                      (List  => Sources,
-                       Index => 0);
                   Ev_Logical : constant String
                     := DOM.Core.Elements.Get_Attribute
-                      (Elem => First_Node,
+                      (Elem => Source_Without_Action,
                        Name => "logical");
                   Subj_Name : constant String
                     := DOM.Core.Elements.Get_Attribute
                       (Elem => Muxml.Utils.Ancestor_Node
-                         (Node  => First_Node,
+                         (Node  => Source_Without_Action,
                           Level => 4),
                        Name => "name");
                begin
@@ -628,39 +630,42 @@ is
          end if;
       end Check_Inequality;
 
-      Subjects : constant DOM.Core.Node_List
-        := XPath_Query (N     => XML_Data.Doc,
-                        XPath => "/system/subjects/subject");
+      Subject_Event_Groups : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/events/source/group");
    begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subject_Event_Groups) - 1
+      loop
          declare
-            Subj_Node : constant DOM.Core.Node
+            Ev_Grp_Node : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
-                (List  => Subjects,
+                (List  => Subject_Event_Groups,
                  Index => I);
-            Events : DOM.Core.Node_List;
+            Ev_Group_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Ev_Grp_Node,
+                 Name => "name");
+            Events : constant DOM.Core.Node_List
+              := XPath_Query
+                 (N     => Ev_Grp_Node,
+                  XPath => "event");
          begin
-            for Group in Mutools.Types.Event_Group_Type loop
-               Events := XPath_Query
-                 (N     => Subj_Node,
-                  XPath => "events/source/group[@name='"
-                  & Ada.Characters.Handling.To_Lower (Item => Group'Img)
-                  & "']/event");
+            if DOM.Core.Nodes.Length (List => Events) > 1 then
+               Subj_Name := To_Unbounded_String
+                 (DOM.Core.Elements.Get_Attribute
+                    (Elem => Muxml.Utils.Ancestor_Node
+                         (Node  => Ev_Grp_Node,
+                          Level => 3),
+                     Name => "name"));
 
-               if DOM.Core.Nodes.Length (List => Events) > 0 then
-                  Subj_Name := To_Unbounded_String
-                    (DOM.Core.Elements.Get_Attribute
-                       (Elem => Subj_Node,
-                        Name => "name"));
-
-                  Mulog.Log (Msg => "Checking uniqueness of"
-                             & DOM.Core.Nodes.Length (List => Events)'Img
-                             & " " & Group'Img & " source event ID(s) for "
-                             & "subject '" & To_String (Subj_Name) & "'");
-                  Compare_All (Nodes      => Events,
-                               Comparator => Check_Inequality'Access);
-               end if;
-            end loop;
+               Mulog.Log (Msg => "Checking uniqueness of"
+                          & DOM.Core.Nodes.Length (List => Events)'Img
+                          & " " & Ev_Group_Name & " source event ID(s) for "
+                          & "subject '" & To_String (Subj_Name) & "'");
+               Compare_All (Nodes      => Events,
+                            Comparator => Check_Inequality'Access);
+            end if;
          end;
       end loop;
    end Source_Group_Event_ID_Uniqueness;

@@ -161,7 +161,7 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
-      --  Positive tests, must no raise an exception.
+      --  Positive tests, must not raise an exception.
 
       Major_Frame_Ticks (XML_Data => Data);
 

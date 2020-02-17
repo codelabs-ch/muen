@@ -7,7 +7,7 @@ is
 
    use type SK.Byte;
 
-   Event_Bits : constant := 6;
+   Event_Bits : constant := __event_bits__;
    Event_Mask : constant := 2 ** Event_Bits - 1;
 
    type Target_Event_Range is range 0 .. 2 ** Event_Bits;

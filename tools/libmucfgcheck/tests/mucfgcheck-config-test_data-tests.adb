@@ -44,7 +44,7 @@ package body Mucfgcheck.Config.Test_Data.Tests is
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
-      --  Positive test, must no raise exception.
+      --  Positive test, must not raise exception.
 
       Name_Uniqueness (XML_Data => Data);
 

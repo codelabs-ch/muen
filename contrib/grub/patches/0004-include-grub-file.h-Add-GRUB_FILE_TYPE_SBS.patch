@@ -1,0 +1,26 @@
+From 4c48b39ab2327cb1fd3d5c085b40eafde5133ca7 Mon Sep 17 00:00:00 2001
+From: Reto Buerki <reet@codelabs.ch>
+Date: Mon, 17 Feb 2020 13:21:26 +0100
+Subject: [PATCH 4/7] include/grub/file.h: Add GRUB_FILE_TYPE_SBS
+
+Designates a Signed Block Stream (SBS) image.
+---
+ include/grub/file.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/include/grub/file.h b/include/grub/file.h
+index 31567483c..aae453f3a 100644
+--- a/include/grub/file.h
++++ b/include/grub/file.h
+@@ -128,6 +128,8 @@ enum grub_file_type
+ 
+     GRUB_FILE_TYPE_VERIFY_SIGNATURE,
+ 
++    GRUB_FILE_TYPE_SBS,
++
+     GRUB_FILE_TYPE_MASK = 0xffff,
+ 
+     /* --skip-sig is specified.  */
+-- 
+2.20.1
+

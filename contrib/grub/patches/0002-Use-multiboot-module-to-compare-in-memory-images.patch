@@ -1,7 +1,7 @@
-From 8490e2704dc019ce450549b595f947e48474dff2 Mon Sep 17 00:00:00 2001
+From 2b8b844c8c25e6b2a8b31e9f532c365799ec7eed Mon Sep 17 00:00:00 2001
 From: Reto Buerki <reet@codelabs.ch>
 Date: Fri, 13 Dec 2019 16:01:59 +0100
-Subject: [PATCH 2/2] Use multiboot module to compare in-memory images
+Subject: [PATCH 2/7] Use multiboot module to compare in-memory images
 
 The existing 'multiboot' module is hacked to compare the CSL generated
 memory image with the one generated via the existing multiboot loader.

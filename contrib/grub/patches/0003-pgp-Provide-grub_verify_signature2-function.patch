@@ -1,0 +1,82 @@
+From 37f5e50b0505897c94efef3c82e6b87b006c196a Mon Sep 17 00:00:00 2001
+From: Reto Buerki <reet@codelabs.ch>
+Date: Mon, 17 Feb 2020 13:13:45 +0100
+Subject: [PATCH 3/7] pgp: Provide grub_verify_signature2 function
+
+This additional verify function expects a grub_file_t instead of a
+filename string as sig argument, i.e. it does not open the file itself.
+
+This is useful if the signature data is not stored in a file at all
+(see "pseudo" grub_fs operations).
+
+Adjust grub_verify_signature to use new grub_verify_signature2 function.
+---
+ grub-core/commands/pgp.c | 24 ++++++++++++++++--------
+ include/grub/pubkey.h    |  3 +++
+ 2 files changed, 19 insertions(+), 8 deletions(-)
+
+diff --git a/grub-core/commands/pgp.c b/grub-core/commands/pgp.c
+index bbf6871fe..570795fbc 100644
+--- a/grub-core/commands/pgp.c
++++ b/grub-core/commands/pgp.c
+@@ -683,20 +683,13 @@ grub_pubkey_close (void *ctxt)
+ }
+ 
+ grub_err_t
+-grub_verify_signature (grub_file_t f, const char *fsig,
++grub_verify_signature2 (grub_file_t f, grub_file_t sig,
+ 		       struct grub_public_key *pkey)
+ {
+-  grub_file_t sig;
+   grub_err_t err;
+   struct grub_pubkey_context ctxt;
+   grub_uint8_t *readbuf = NULL;
+ 
+-  sig = grub_file_open (fsig,
+-			GRUB_FILE_TYPE_SIGNATURE
+-			| GRUB_FILE_TYPE_NO_DECOMPRESS);
+-  if (!sig)
+-    return grub_errno;
+-
+   err = grub_verify_signature_init (&ctxt, sig);
+   if (err)
+     {
+@@ -727,6 +720,21 @@ grub_verify_signature (grub_file_t f, const char *fsig,
+   return grub_errno;
+ }
+ 
++grub_err_t
++grub_verify_signature (grub_file_t f, const char *fsig,
++		       struct grub_public_key *pkey)
++{
++  grub_file_t sig;
++
++  sig = grub_file_open (fsig,
++			GRUB_FILE_TYPE_SIGNATURE
++			| GRUB_FILE_TYPE_NO_DECOMPRESS);
++  if (!sig)
++    return grub_errno;
++
++  return grub_verify_signature2 (f, sig, pkey);
++}
++
+ static grub_err_t
+ grub_cmd_trust (grub_extcmd_context_t ctxt,
+ 		int argc, char **args)
+diff --git a/include/grub/pubkey.h b/include/grub/pubkey.h
+index fb8be9cbb..81f9b7a03 100644
+--- a/include/grub/pubkey.h
++++ b/include/grub/pubkey.h
+@@ -28,6 +28,9 @@ grub_err_t
+ grub_verify_signature (grub_file_t f, const char *fsig,
+ 		       struct grub_public_key *pk);
+ 
++grub_err_t
++grub_verify_signature2 (grub_file_t f, grub_file_t sig,
++		       struct grub_public_key *pk);
+ 
+ struct grub_public_subkey *
+ grub_crypto_pk_locate_subkey (grub_uint64_t keyid, struct grub_public_key *pkey);
+-- 
+2.20.1
+

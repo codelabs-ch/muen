@@ -1,0 +1,66 @@
+From ca31258a66c61f6af1067f20e64288a2b7936f00 Mon Sep 17 00:00:00 2001
+From: Reto Buerki <reet@codelabs.ch>
+Date: Mon, 17 Feb 2020 13:24:27 +0100
+Subject: [PATCH 6/7] grub-shell: Improve mkrescue_args handling
+
+Use an array to store mkrescue_args. Required to handle mkrescue
+arguments which expect a whitespace separated list as argument value,
+e.g.:
+
+--mkrescue-arg="--modules=normal serial pgp"
+
+Without this patch the shell does not correctly pass on the arguments to
+mkrescue, because the second module is interpreted as a separate
+argument.
+
+Quoting the modules does not help either as this affects the way the
+shell passes on the arguments to mkrescue (i.e. the quote becomes part
+of the first module name).
+---
+ tests/util/grub-shell.in | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/tests/util/grub-shell.in b/tests/util/grub-shell.in
+index 93e9f5148..4fc310c3a 100644
+--- a/tests/util/grub-shell.in
++++ b/tests/util/grub-shell.in
+@@ -201,6 +201,7 @@ esac
+ 
+ timeout=60
+ mkimage_extra_arg=
++mkrescue_args=()
+ 
+ # Check the arguments.
+ for option in "$@"; do
+@@ -224,7 +225,9 @@ for option in "$@"; do
+ 	files="$files $fls" ;;
+     --mkrescue-arg=*)
+ 	mkr=`echo "$option" | sed -e 's/--mkrescue-arg=//' -e 's/,/ /g'`
+-	mkrescue_args="$mkrescue_args $mkr" ;;
++	mkrescue_args+=("$(cut -d= -f1 <<< $mkr)")
++	mkrescue_args+=("$(cut -d= -f2 <<< $mkr)")
++	;;
+     --qemu=*)
+ 	qemu=`echo "$option" | sed -e 's/--qemu=//' -e 's/,/ /g'`;;
+     --pseries)
+@@ -383,7 +386,7 @@ if [ x$boot != xnet ] && [ x$boot != xemu ]; then
+ 	--rom-directory="${rom_directory}" \
+ 	--locale-directory="@srcdir@/po" \
+ 	--themes-directory="@srcdir@/themes" \
+-	$mkimage_extra_arg ${mkrescue_args} \
++	$mkimage_extra_arg "${mkrescue_args[@]}" \
+ 	"/boot/grub/grub.cfg=${cfgfile}" "/boot/grub/testcase.cfg=${source}" \
+ 	${files} >/dev/null 2>&1
+ fi
+@@ -477,7 +480,7 @@ copy_extra_files() {
+ 
+ if [ x$boot = xnet ]; then
+     netdir=`mktemp -d "${TMPDIR:-/tmp}/tmp.XXXXXXXXXX"` || exit 1
+-    pkgdatadir="@builddir@" "@builddir@/grub-mknetdir" "--grub-mkimage=${builddir}/grub-mkimage" "--directory=${builddir}/grub-core" "--net-directory=$netdir" ${mkrescue_args} > /dev/null
++    pkgdatadir="@builddir@" "@builddir@/grub-mknetdir" "--grub-mkimage=${builddir}/grub-mkimage" "--directory=${builddir}/grub-core" "--net-directory=$netdir" "${mkrescue_args[@]}" > /dev/null
+     cp "${cfgfile}" "$netdir/boot/grub/grub.cfg"
+     cp "${source}" "$netdir/boot/grub/testcase.cfg"
+     [ -z "$files" ] || copy_extra_files "$netdir" $files
+-- 
+2.20.1
+

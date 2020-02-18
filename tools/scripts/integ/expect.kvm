@@ -1,3 +1,4 @@
+emulate.out;SBS - signature valid
 serial.out;Booting Muen kernel
 serial.out;PS/2 - Mouse: Device reset
 serial.out;PS/2 - Mouse: Streaming enabled

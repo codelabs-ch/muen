@@ -41,12 +41,13 @@ TOOLS =            \
 	mulnxbzpatch   \
 	mupack         \
 	mupcspkrdbg    \
-	muwalkpt
+	muwalkpt \
+	sbs
 
 # Projects to test
-TESTS =      \
-	$(LIBS)  \
-	$(filter-out mugenschedcfg,$(TOOLS))
+TESTS := $(LIBS) $(TOOLS)
+TESTS := $(filter-out mugenschedcfg,$(TESTS))
+TESTS := $(filter-out sbs,$(TESTS))
 
 # Projects to clean
 CLEAN =              \
@@ -55,9 +56,7 @@ CLEAN =              \
 	$(TOOLS)
 
 # Projects to prepare
-PREPARE =   \
-	$(LIBS) \
-	$(TOOLS)
+PREPARE := $(LIBS) $(TOOLS)
 
 TOOLS_PREPARE = $(PREPARE:%=prepare-%)
 TOOLS_INSTALL = $(TOOLS:%=install-%)

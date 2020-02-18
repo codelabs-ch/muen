@@ -1,0 +1,35 @@
+From 40f8590f8c221273bf500892e9bded46d2c39862 Mon Sep 17 00:00:00 2001
+From: Reto Buerki <reet@codelabs.ch>
+Date: Mon, 17 Feb 2020 13:22:28 +0100
+Subject: [PATCH 5/7] pgp: Do not verify GRUB_FILE_TYPE_SBS files
+
+An SBS image contains an embedded (PGP) signature, which is checked by
+the upcoming SBS module.
+---
+ grub-core/commands/pgp.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/grub-core/commands/pgp.c b/grub-core/commands/pgp.c
+index 570795fbc..2c00fa0a0 100644
+--- a/grub-core/commands/pgp.c
++++ b/grub-core/commands/pgp.c
+@@ -888,6 +888,16 @@ grub_pubkey_init (grub_file_t io, enum grub_file_type type __attribute__ ((unuse
+       return GRUB_ERR_NONE;
+     }
+ 
++  switch (type & GRUB_FILE_TYPE_MASK)
++    {
++    case GRUB_FILE_TYPE_SBS:
++      /* skip files with embedded signatures */
++      *flags = GRUB_VERIFY_FLAGS_SKIP_VERIFICATION;
++      return GRUB_ERR_NONE;
++    default:
++      break;
++    }
++
+   fsuf = grub_malloc (grub_strlen (io->name) + sizeof (".sig"));
+   if (!fsuf)
+     return grub_errno;
+-- 
+2.20.1
+

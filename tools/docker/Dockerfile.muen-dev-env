@@ -41,6 +41,7 @@ RUN apt-get update && \
 		file \
 		flex \
 		git-core \
+		gnupg \
 		gnuplot \
 		grub-pc-bin \
 		inotify-tools \

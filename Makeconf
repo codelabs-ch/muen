@@ -113,3 +113,7 @@ SPARK_MEMCACHED_SERVER ?= localhost
 SPARK_MEMCACHED_PORT   ?= 11211
 SPARK_MEMCACHED_OPTION := --memcached-server=$(SPARK_MEMCACHED_SERVER):$(SPARK_MEMCACHED_PORT)
 endif
+
+SBS_CREATE  ?= $(TOP_DIR)/tools/sbs/bin/sbs_create
+SBS_INSPECT ?= $(TOP_DIR)/tools/sbs/bin/sbs_inspect
+SBS_PRIVKEY ?= $(TOP_DIR)/tools/sbs/data/gpg-homedir

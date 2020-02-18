@@ -1,7 +1,7 @@
 From 24c41f42a7682f1b8c372d154948416f871970c5 Mon Sep 17 00:00:00 2001
 From: Reto Buerki <reet@codelabs.ch>
 Date: Fri, 13 Dec 2019 16:01:07 +0100
-Subject: [PATCH 1/2] Implement Command Stream Loader (CSL) module
+Subject: [PATCH 1/7] Implement Command Stream Loader (CSL) module
 
 The Command Stream Loader (CSL) module enables the processing of
 TLV-encoded commands. The current protocol version 0x8adc5fa2448cb65e

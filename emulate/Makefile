@@ -40,14 +40,16 @@ ISO_FILES_SRC := \
 	$(IMAGE_CSL) \
 	$(IMAGE_SBS) \
 	$(IMAGE_MB) \
-	$(IMAGE_MB_SIG)
+	$(IMAGE_MB_SIG) \
+	menu.lst
 ISO_FILES := \
 	boot/grub/grub.cfg=$(GRUB_CFG) \
 	boot/grub/grub.cfg.sig=$(OBJ_DIR)/$(GRUB_CFG).sig \
 	boot/kernel.csl=$(IMAGE_CSL) \
 	boot/kernel.sbs=$(IMAGE_SBS) \
 	boot/kernel.mb=$(IMAGE_MB) \
-	boot/kernel.mb.sig=$(IMAGE_MB_SIG)
+	boot/kernel.mb.sig=$(IMAGE_MB_SIG) \
+	boot/filo/menu.lst=menu.lst
 
 GRUB_MKRESCUE ?= $(CONTRIB_BUILD_DIR)/bin/grub-mkrescue
 GRUB_MKRESCUE_PRELOAD_MODS ?= multiboot gcry_rsa gcry_sha512 configfile csl pgp sbs normal

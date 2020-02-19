@@ -141,6 +141,11 @@ is
           Command     => Command_Type'(Kind => List_Channels),
           Has_Param   => False,
           Description => To_Cmd_Descr ("List channels")),
+         (Cmd_Str     => "le",
+          Cmd_Len     => 2,
+          Command     => Command_Type'(Kind => List_Events),
+          Has_Param   => False,
+          Description => To_Cmd_Descr ("List events")),
          (Cmd_Str     => "ls",
           Cmd_Len     => 2,
           Command     => Command_Type'(Kind => List_Subjects),
@@ -445,6 +450,72 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure List_Events
+     (Queue   : in out Byte_Queue.Queue_Type;
+      Success :    out Boolean)
+   is
+      Header : constant String := "|        ID | Event";
+      H_Rule : constant String := "|-----------+--------------------";
+
+      Iter : Musinfo.Utils.Resource_Iterator_Type;
+   begin
+      if not Musinfo.Instance.Is_Valid then
+         Byte_Queue.Format.Append_Line
+           (Queue => Queue,
+            Item  => Invalid_Musinfo_Message);
+         Success := False;
+      else
+         Byte_Queue.Format.Append_Line
+           (Queue => Queue,
+            Item  => Header);
+         Byte_Queue.Format.Append_Line
+           (Queue => Queue,
+            Item  => H_Rule);
+
+         Iter := Musinfo.Instance.Create_Resource_Iterator;
+         while Musinfo.Instance.Has_Element (Iter => Iter) loop
+            pragma Loop_Invariant (Musinfo.Instance.Belongs_To (Iter => Iter));
+            declare
+               use type Musinfo.Resource_Kind;
+               use type Musinfo.Name_Size_Type;
+
+               Resource : constant Musinfo.Resource_Type :=
+                 Musinfo.Instance.Element (Iter => Iter);
+            begin
+               if Resource.Kind = Musinfo.Res_Event then
+                  Byte_Queue.Format.Append_Character
+                    (Queue => Queue,
+                     Item  => '|');
+                  Byte_Queue.Format.Append_Natural
+                    (Queue      => Queue,
+                     Item       => Natural (Resource.Evt_Data.Value),
+                     Left_Align => False);
+                  Byte_Queue.Format.Append_String
+                    (Queue => Queue,
+                     Item  => " | ");
+                  if Resource.Name.Length > 0 then
+                     Byte_Queue.Format.Append_Line
+                       (Queue => Queue,
+                        Item  => String (Resource.Name.Data
+                          (Resource.Name.Data'First .. Musinfo.Name_Index_Type
+                               (Resource.Name.Length))));
+                  else
+                     Byte_Queue.Format.Append_New_Line (Queue => Queue);
+                  end if;
+               end if;
+            end;
+            Musinfo.Instance.Next (Iter => Iter);
+         end loop;
+
+         Byte_Queue.Format.Append_Line
+           (Queue => Queue,
+            Item  => H_Rule);
+         Success := True;
+      end if;
+   end List_Events;
+
+   -------------------------------------------------------------------------
+
    procedure List_Subjects (Queue : in out Byte_Queue.Queue_Type)
    is
       Header    : constant String := "|        ID | Subject";
@@ -609,6 +680,9 @@ is
          when List_Channels =>
             List_Channels (Queue   => Queue,
                            Success => Success);
+         when List_Events =>
+            List_Events (Queue   => Queue,
+                         Success => Success);
          when List_Subjects =>
             List_Subjects (Queue => Queue);
          when Stream_Reset =>

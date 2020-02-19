@@ -194,8 +194,8 @@ emulate()
 	expect_from_file $SCRIPTDIR/expect.common "$CURRENT_EMUL_LOGDIR"
 
 	if [ ! -z "$expect" ]; then
-		file_exists $SCRIPTDIR/$expect
-		expect_from_file $SCRIPTDIR/$expect "$CURRENT_EMUL_LOGDIR"
+		file_exists $expect
+		expect_from_file $expect "$CURRENT_EMUL_LOGDIR"
 	fi
 
 	unset CURRENT_EMUL_LOGDIR
@@ -268,8 +268,8 @@ hw_deploy()
 	expect_from_file $SCRIPTDIR/expect.hw_common "$target_logdir"
 
 	if [ ! -z "$expect" ]; then
-		file_exists $SCRIPTDIR/$expect
-		expect_from_file $SCRIPTDIR/$expect "$target_logdir"
+		file_exists $expect
+		expect_from_file $expect "$target_logdir"
 	fi
 }
 

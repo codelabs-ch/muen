@@ -15,6 +15,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Dbg.String_Utils;
+
 package body Dbg.Byte_Queue.Format
 is
 
@@ -38,6 +40,19 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Append_Bool_Short
+     (Queue : in out Queue_Type;
+      Item  :        Boolean)
+   is
+      Char : constant Character := (if Item then 'T' else 'F');
+   begin
+      Append_Character
+        (Queue => Queue,
+         Item  => Char);
+   end Append_Bool_Short;
+
+   -------------------------------------------------------------------------
+
    procedure Append_Character
      (Queue : in out Queue_Type;
       Item  :        Character)
@@ -49,6 +64,35 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Append_Natural
+     (Queue      : in out Queue_Type;
+      Item       :        Natural;
+      Left_Align :        Boolean := True)
+   is
+      Buffer : String (1 .. 10) := (others => ' ');
+   begin
+      String_Utils.Unsigned_Integer_To_String
+        (Unsigned_Number => Item,
+         Buffer          => Buffer,
+         Left_Align      => Left_Align);
+      Append_String (Queue => Queue,
+                     Item  => Buffer);
+   end Append_Natural;
+
+   -------------------------------------------------------------------------
+
+   procedure Append_Line
+     (Queue : in out Queue_Type;
+      Item  :        String)
+   is
+   begin
+      Append_String (Queue => Queue,
+                     Item  => Item);
+      Append_New_Line (Queue => Queue);
+   end Append_Line;
+
+   -------------------------------------------------------------------------
+
    procedure Append_New_Line (Queue : in out Queue_Type)
    is
    begin
@@ -57,6 +101,26 @@ is
       Append_Character (Queue => Queue,
                         Item  => ASCII.LF);
    end Append_New_Line;
+
+   -------------------------------------------------------------------------
+
+   procedure Append_State
+     (Queue : in out Queue_Type;
+      Item  :        Queue_Type)
+   is
+   begin
+      Append_String (Queue => Queue,
+                     Item  => " free: ");
+      Append_Natural (Queue => Queue,
+                      Item  => Bytes_Free (Queue => Item));
+      Append_New_Line (Queue => Queue);
+
+      Append_String (Queue => Queue,
+                     Item  => " used: ");
+      Append_Natural (Queue => Queue,
+                      Item  => Bytes_Used (Queue => Item));
+      Append_New_Line (Queue => Queue);
+   end Append_State;
 
    -------------------------------------------------------------------------
 

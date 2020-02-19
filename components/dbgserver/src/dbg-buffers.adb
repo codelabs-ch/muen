@@ -21,14 +21,16 @@ with Interfaces;
 
 with SK.Strings;
 
-with Dbg.Byte_Arrays;
 with Dbg.Byte_Queue.Format;
+
+with Dbgserver_Component.Channel_Arrays;
 
 package body Dbg.Buffers
 is
 
-   use type Interfaces.Unsigned_64;
    use type Debuglog.Stream.Reader.Result_Type;
+
+   package Cspecs renames Dbgserver_Component.Channel_Arrays;
 
    --  Log channels for subjects defined in the active system policy.
    type Log_Context_Type is array (Subject_Buffer_Range)
@@ -96,9 +98,6 @@ is
      (Buffer       : in out Buffer_Type;
       Output_Queue : in out Byte_Queue.Queue_Type);
 
-   --  Echo content of input queue into output queue.
-   procedure Echo (Input, Output : in out Byte_Queue.Queue_Type);
-
    -------------------------------------------------------------------------
 
    procedure Add_Line_Prefix
@@ -155,34 +154,6 @@ is
       Subject_Buffer.Message_Incomplete := Char /= ASCII.LF;
    end Add_Message;
 
-   ----------------------------------------------------------------------
-
-   procedure Echo (Input, Output : in out Byte_Queue.Queue_Type)
-   is
-      subtype Echo_Buffer_Range is Positive range 1 .. 64;
-      subtype Echo_Buffer_Type is Byte_Arrays.Byte_Array
-        (Echo_Buffer_Range);
-
-      Echo_Buffer : Echo_Buffer_Type;
-      Length      : Natural;
-   begin
-      if Byte_Queue.Bytes_Free (Queue => Output) >= Echo_Buffer'Length
-        and Byte_Queue.Bytes_Used (Queue => Input) > 0
-      then
-         Byte_Queue.Peek
-           (Queue  => Input,
-            Buffer => Echo_Buffer,
-            Length => Length);
-         Byte_Queue.Drop_Bytes
-           (Queue  => Input,
-            Length => Length);
-         Byte_Queue.Append
-           (Queue  => Output,
-            Buffer => Echo_Buffer,
-            Length => Length);
-      end if;
-   end Echo;
-
    -------------------------------------------------------------------------
 
    procedure Find_Oldest_Message
@@ -190,6 +161,8 @@ is
       Oldest_Subject : out Subject_Buffer_Range;
       Found          : out Boolean)
    is
+      use type Interfaces.Unsigned_64;
+
       Candidate_Timestamp : Interfaces.Unsigned_64 := Timestamp_Invalid;
    begin
       Oldest_Subject := Subject_Buffer_Range'First;
@@ -259,6 +232,7 @@ is
      (Subject_Buffer : Subject_Buffer_Type)
       return Boolean
    is
+      use type Interfaces.Unsigned_64;
    begin
       return Subject_Buffer.Cache.Timestamp /= Timestamp_Invalid;
    end Is_Message_Present;
@@ -333,17 +307,13 @@ is
 
    procedure Run
      (Buffer       : in out Buffer_Type;
-      Input_Queue  : in out Byte_Queue.Queue_Type;
       Output_Queue : in out Byte_Queue.Queue_Type)
    is
    begin
-      Update_Message_Buffers
-        (Buffer => Buffer);
+      Update_Message_Buffers (Buffer => Buffer);
       Log_Oldest_Message
         (Buffer       => Buffer,
          Output_Queue => Output_Queue);
-      Echo (Input  => Input_Queue,
-            Output => Output_Queue);
    end Run;
 
    -------------------------------------------------------------------------
@@ -395,5 +365,118 @@ is
          end if;
       end loop;
    end Update_Message_Buffers;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Log_Buffer_State
+     (Buffer  : in out Buffer_Type;
+      ID      :        Subject_Buffer_Range;
+      Enabled :        Boolean)
+   is
+   begin
+      Buffer.Subjects (ID).Enabled := Enabled;
+   end Set_Log_Buffer_State;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_All_Log_Buffer_State
+     (Buffer  : in out Buffer_Type;
+      Enabled :        Boolean)
+   is
+   begin
+      for ID in Subject_Buffer_Range loop
+         Set_Log_Buffer_State (Buffer  => Buffer,
+                               ID      => ID,
+                               Enabled => Enabled);
+      end loop;
+   end Set_All_Log_Buffer_State;
+
+   -------------------------------------------------------------------------
+
+   procedure Toggle_Log_Buffer_State
+     (Buffer : in out Buffer_Type;
+      ID     :        Subject_Buffer_Range)
+   is
+   begin
+      Buffer.Subjects (ID).Enabled := not Buffer.Subjects (ID).Enabled;
+   end Toggle_Log_Buffer_State;
+
+   -------------------------------------------------------------------------
+
+   procedure Reset_Readers (Buffer : in out Buffer_Type)
+   is
+   begin
+      for Subject_Buffer in Subject_Buffer_Range loop
+         Debuglog.Stream.Reader.Reset
+           (Reader => Buffer.Subjects (Subject_Buffer).State);
+      end loop;
+   end Reset_Readers;
+
+   -------------------------------------------------------------------------
+
+   procedure Print_State
+     (Buffer :        Buffer_Type;
+      Queue  : in out Byte_Queue.Queue_Type)
+   is
+      --  Output state of given subject buffer.
+      procedure Print_Subject_Buffer (Subject_Buffer : Subject_Buffer_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Print
+        (Text  : String;
+         Value : Boolean)
+      is
+      begin
+         Byte_Queue.Format.Append_String
+           (Queue => Queue,
+            Item  => Text);
+         Byte_Queue.Format.Append_Bool_Short
+           (Queue => Queue,
+            Item  => Value);
+      end Print;
+
+      ----------------------------------------------------------------------
+
+      procedure Print_Subject_Buffer (Subject_Buffer : Subject_Buffer_Type)
+      is
+      begin
+         Print (Text  => " | ",
+                Value => Subject_Buffer.Message_Incomplete);
+         Print (Text  => " | ",
+                Value => Subject_Buffer.Overrun_Occurred);
+         Print (Text  => " | ",
+                Value => Subject_Buffer.New_Epoch_Occurred);
+         Print (Text  => " | ",
+                Value => Subject_Buffer.Enabled);
+         Byte_Queue.Format.Append_String
+           (Queue => Queue,
+            Item  => " |");
+      end Print_Subject_Buffer;
+
+      Header : constant String := "| Source ID |MEI|OVO|NEO|ENA|";
+      H_Rule : constant String := "|-----------+---+---+---+---|";
+   begin
+      Byte_Queue.Format.Append_Line
+        (Queue => Queue,
+         Item  => Header);
+      Byte_Queue.Format.Append_Line
+        (Queue => Queue,
+         Item  => H_Rule);
+      for I in Buffer.Subjects'Range loop
+         Byte_Queue.Format.Append_Character
+           (Queue => Queue,
+            Item  => '|');
+         Byte_Queue.Format.Append_Natural
+           (Queue      => Queue,
+            Item       => Integer (I),
+            Left_Align => False);
+         Print_Subject_Buffer (Subject_Buffer => Buffer.Subjects (I));
+         Byte_Queue.Format.Append_New_Line (Queue => Queue);
+      end loop;
+      Byte_Queue.Format.Append_Line
+        (Queue => Queue,
+         Item  => H_Rule);
+   end Print_State;
 
 end Dbg.Buffers;

@@ -18,24 +18,32 @@
 
 with Dbg.Buffers;
 with Dbg.Byte_Queue;
+with Dbg.Consoles;
 
 private package Dbg.Channels
 with SPARK_Mode => Off
 is
 
    type Channel_Type is record
-      Buffer : Buffers.Buffer_Type;
-      Input  : Byte_Queue.Queue_Type;
-      Output : Byte_Queue.Queue_Type;
+      Console : Consoles.Console_Type;
+      Buffer  : Buffers.Buffer_Type;
+      Input   : Byte_Queue.Queue_Type;
+      Output  : Byte_Queue.Queue_Type;
    end record;
 
-   type Debug_Interfaces_Type
-      is (INTERFACE_XHCDBG,
-          INTERFACE_SERIAL,
-          INTERFACE_PCSPKR,
-          INTERFACE_SHMEM);
+   type Debug_Interfaces_Type is
+     (INTERFACE_XHCDBG,
+      INTERFACE_SERIAL,
+      INTERFACE_PCSPKR,
+      INTERFACE_SHMEM);
+
+   subtype Debug_Console_Type is
+     Debug_Interfaces_Type range INTERFACE_XHCDBG .. INTERFACE_SERIAL;
 
    type Channels_Type is array (Debug_Interfaces_Type) of Channel_Type;
+
+   --  Output current state of debug interfaces to given queue.
+   procedure Print_State (Queue : in out Byte_Queue.Queue_Type);
 
    Instance : Channels_Type;
 

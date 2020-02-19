@@ -17,6 +17,7 @@
 
 with "../libxhcidbg/libxhcidbg";
 with "../libdebuglog/libdebuglog";
+with "../libmusinfo/libmusinfo";
 with "generated/dbg_config";
 
 project Dbgserver extends "../component_spark" is

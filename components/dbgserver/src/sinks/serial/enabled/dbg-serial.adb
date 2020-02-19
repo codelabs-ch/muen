@@ -20,14 +20,33 @@
 with SK.UART_8250;
 
 with Dbg.Byte_Arrays;
+with Dbg.Non_Interfering_Output;
 
 with Dbgserver_Component.Devices;
 
 package body Dbg.Serial
 is
 
+   --  Receive data up until Length bytes from UART into given buffer. The
+   --  actual number of bytes received is return by Length.
+   procedure Receive_Buffer
+     (Buffer : in out Byte_Arrays.Byte_Array;
+      Length : in out Byte_Arrays.Byte_Array_Range);
+
+   --  Send data in buffer up until Length bytes to UART. The actual number of
+   --  bytes sent is returned by Length.
+   procedure Send_Buffer
+     (Buffer  :        Byte_Arrays.Byte_Array;
+      Length  : in out Byte_Arrays.Byte_Array_Range;
+      Success :    out Boolean);
+
    package UART is new SK.UART_8250
      (Base_Address => Dbgserver_Component.Devices.Debugconsole_Port_Start);
+
+   package NIO is new Non_Interfering_Output
+     (Buffer_Size => UART.FIFO_Size,
+      Receive     => Receive_Buffer,
+      Send        => Send_Buffer);
 
    -------------------------------------------------------------------------
 
@@ -39,40 +58,40 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Run
-      (Input_Queue  : in out Byte_Queue.Queue_Type;
-       Output_Queue : in out Byte_Queue.Queue_Type)
+   procedure Receive_Buffer
+     (Buffer : in out Byte_Arrays.Byte_Array;
+      Length : in out Byte_Arrays.Byte_Array_Range)
    is
-      subtype Data_Range is Positive range 1 .. UART.FIFO_Size;
-      subtype Data_Array is Byte_Arrays.Byte_Array (Data_Range);
-
-      Data   : Data_Array := (others => 0);
-      Length : Natural;
    begin
-      while Byte_Queue.Bytes_Free (Queue => Input_Queue) > 0 loop
-         exit when not UART.Is_Data_Available;
-
-         Data (1) := Character'Pos (UART.Read_Char);
-         Byte_Queue.Append
-           (Queue => Input_Queue,
-            Byte  => Data (1));
-      end loop;
-
-      while Byte_Queue.Bytes_Used (Queue => Output_Queue) > 0 loop
-         exit when not UART.Is_Send_Buffer_Empty;
-
-         Byte_Queue.Peek (Queue  => Output_Queue,
-                          Buffer => Data,
-                          Length => Length);
-
-         if Length > 0 then
-            for I in Data_Range'First .. Length loop
-               UART.Put_Char (Item => Character'Val (Data (I)));
-            end loop;
-            Byte_Queue.Drop_Bytes (Queue  => Output_Queue,
-                                   Length => Length);
+      for I in Buffer'First .. Length loop
+         if not UART.Is_Data_Available then
+            Length := I - 1;
+            exit;
          end if;
+         Buffer (I) := Character'Pos (UART.Read_Char);
       end loop;
-   end Run;
+   end Receive_Buffer;
+
+   -------------------------------------------------------------------------
+
+   procedure Send_Buffer
+     (Buffer  :        Byte_Arrays.Byte_Array;
+      Length  : in out Byte_Arrays.Byte_Array_Range;
+      Success :    out Boolean)
+   is
+   begin
+      for I in Buffer'First .. Length loop
+         UART.Put_Char (Item => Character'Val (Buffer (I)));
+      end loop;
+      Success := True;
+   end Send_Buffer;
+
+   ---------------------------------------------------------------------------
+
+   procedure Run
+     (Console      : in out Consoles.Console_Type;
+      Input_Queue  : in out Byte_Queue.Queue_Type;
+      Output_Queue : in out Byte_Queue.Queue_Type)
+      renames NIO.Run;
 
 end Dbg.Serial;

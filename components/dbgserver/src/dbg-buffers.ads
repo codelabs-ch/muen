@@ -15,8 +15,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Dbgserver_Component.Channel_Arrays;
-
 with Debuglog.Types;
 with Debuglog.Stream.Reader;
 
@@ -34,8 +32,32 @@ is
    --  Run buffers.
    procedure Run
       (Buffer       : in out Buffer_Type;
-       Input_Queue  : in out Byte_Queue.Queue_Type;
        Output_Queue : in out Byte_Queue.Queue_Type);
+
+   --  Enable/disable log buffer given by ID to state specified by the Enabled
+   --  flag.
+   procedure Set_Log_Buffer_State
+     (Buffer  : in out Buffer_Type;
+      ID      :        Subject_Buffer_Range;
+      Enabled :        Boolean);
+
+   --  Toggle state of log buffer specified by ID.
+   procedure Toggle_Log_Buffer_State
+     (Buffer : in out Buffer_Type;
+      ID     :        Subject_Buffer_Range);
+
+   --  Enable/disable all log buffers to state specified by the Enabled flag.
+   procedure Set_All_Log_Buffer_State
+     (Buffer  : in out Buffer_Type;
+      Enabled :        Boolean);
+
+   --  Resets all readers.
+   procedure Reset_Readers (Buffer : in out Buffer_Type);
+
+   --  Prints the current state of the given buffer to the specified queue.
+   procedure Print_State
+     (Buffer :        Buffer_Type;
+      Queue  : in out Byte_Queue.Queue_Type);
 
 private
 
@@ -47,10 +69,6 @@ private
       New_Epoch_Occurred : Boolean;
       Enabled            : Boolean;
    end record;
-
-   package Cspecs renames Dbgserver_Component.Channel_Arrays;
-
-   type Subject_Buffer_Range is range 1 .. Cspecs.Log_Channels_Element_Count;
 
    type Subject_Buffers_Type is array (Subject_Buffer_Range)
      of Subject_Buffer_Type;

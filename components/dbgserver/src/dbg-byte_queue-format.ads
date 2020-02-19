@@ -28,12 +28,34 @@ is
      (Queue : in out Queue_Type;
       Item  :        String);
 
+   --  Append string and new line to queue.
+   procedure Append_Line
+     (Queue : in out Queue_Type;
+      Item  :        String);
+
    --  Append boolean to queue.
    procedure Append_Bool
      (Queue : in out Queue_Type;
       Item  :        Boolean);
 
+   --  Append boolean to queue (T (F, resp.) instead of True (False, resp.)).
+   procedure Append_Bool_Short
+     (Queue : in out Queue_Type;
+      Item  :        Boolean);
+
+   --  Appends natural number to queue. If Left_Align is False, then the number
+   --  is right aligned.
+   procedure Append_Natural
+     (Queue      : in out Queue_Type;
+      Item       :        Natural;
+      Left_Align :        Boolean := True);
+
    --  Append new line to queue.
    procedure Append_New_Line (Queue : in out Queue_Type);
+
+   --  Append current state of byte queue specified by Item to given queue.
+   procedure Append_State
+     (Queue : in out Queue_Type;
+      Item  :        Queue_Type);
 
 end Dbg.Byte_Queue.Format;

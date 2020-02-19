@@ -100,10 +100,9 @@ is
       end Append_Item;
    begin
       for Iface of Channels.Instance loop
-         Byte_Queue.Format.Append_String
+         Byte_Queue.Format.Append_Line
            (Queue => Iface.Output,
             Item  => "= System Context");
-         Byte_Queue.Format.Append_New_Line (Queue => Iface.Output);
          Append_Item (Queue  => Iface.Output,
                       Str    => "- VMX support              : ",
                       Status => Ctx.Sys_Ctx.VMX_Support);
@@ -128,20 +127,18 @@ is
          Append_Item (Queue  => Iface.Output,
                       Str    => "- Invariant TSC support    : ",
                       Status => Ctx.Sys_Ctx.Invariant_TSC);
-         Byte_Queue.Format.Append_String
+         Byte_Queue.Format.Append_Line
            (Queue => Iface.Output,
             Item  => "= FPU Context");
-         Byte_Queue.Format.Append_New_Line (Queue => Iface.Output);
          Append_Item (Queue  => Iface.Output,
                       Str    => "- XSAVE support            : ",
                       Status => Ctx.FPU_Ctx.XSAVE_Support);
          Append_Item (Queue  => Iface.Output,
                       Str    => "- Area size OK             : ",
                       Status => Ctx.FPU_Ctx.Area_Size);
-         Byte_Queue.Format.Append_String
+         Byte_Queue.Format.Append_Line
            (Queue => Iface.Output,
             Item  => "= MCE/MCA Context");
-         Byte_Queue.Format.Append_New_Line (Queue => Iface.Output);
          Append_Item (Queue  => Iface.Output,
                       Str    => "- Support for MCE          : ",
                       Status => Ctx.MCE_Ctx.MCE_Support);
@@ -151,26 +148,23 @@ is
          Append_Item (Queue  => Iface.Output,
                       Str    => "- Bank count OK            : ",
                       Status => Ctx.MCE_Ctx.Bank_Count_OK);
-         Byte_Queue.Format.Append_String
+         Byte_Queue.Format.Append_Line
            (Queue => Iface.Output,
             Item  => "= VT-d Context");
-         Byte_Queue.Format.Append_New_Line (Queue => Iface.Output);
          Byte_Queue.Format.Append_String
            (Queue => Iface.Output,
             Item  => "- IOMMU count              : ");
-         Byte_Queue.Format.Append_String
+         Byte_Queue.Format.Append_Line
            (Queue => Iface.Output,
             Item  => Img_Nobase (Item => Ctx.VTd_Ctx.IOMMU_Count));
-         Byte_Queue.Format.Append_New_Line (Queue => Iface.Output);
 
          for I in 1 .. Integer (Ctx.VTd_Ctx.IOMMU_Count) loop
             Byte_Queue.Format.Append_String
               (Queue => Iface.Output,
                Item  => "- IOMMU                    : ");
-            Byte_Queue.Format.Append_String
+            Byte_Queue.Format.Append_Line
               (Queue => Iface.Output,
                Item  => Img_Nobase (Item => SK.Byte (I)));
-            Byte_Queue.Format.Append_New_Line (Queue => Iface.Output);
             Append_Item (Queue  => Iface.Output,
                          Str    => "- Version support          : ",
                          Status => Ctx.VTd_Ctx.Status (I).Version_Support);
@@ -206,10 +200,9 @@ is
    is
    begin
       for Iface of Channels.Instance loop
-         Byte_Queue.Format.Append_String
+         Byte_Queue.Format.Append_Line
            (Queue => Iface.Output,
             Item  => Item);
-         Byte_Queue.Format.Append_New_Line (Queue => Iface.Output);
       end loop;
    end Append_Line;
 

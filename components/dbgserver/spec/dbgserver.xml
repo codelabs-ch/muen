@@ -1,6 +1,11 @@
 <component name="dbgserver" profile="native">
-	<include href="config.xml"/>
-	<if variable="dbgserver_sink_xhcidbg" value="true">
+	<config>
+		<boolean name="default_channel_enabled_state" value="true"/>
+		<include href="config.xml"/>
+		<!-- CSV list of channel names that are enabled irrespective of the default. -->
+		<string name="enabled_channels_override" value=""/>
+	</config>
+	<if variable="sink_xhcidbg" value="true">
 		<depends>
 			<library ref="libxhcidbg"/>
 		</depends>
@@ -11,22 +16,32 @@
 		</memory>
 		<channels>
 			<include href="logchannels.xml"/>
-			<if variable="dbgserver_sink_shmem" value="true">
+			<if variable="sink_shmem" value="true">
 				<writer logical="debug_shm_sink_memory" size="$logchannel_size" virtualAddress="16#b000_0000#"/>
 			</if>
 		</channels>
 		<devices>
-			<if variable="dbgserver_sink_serial" value="true">
+			<if variable="sink_serial" value="true">
 				<device logical="debugconsole">
 					<ioPort logical="port" start="$debugconsole_port_start" end="$debugconsole_port_end"/>
 				</device>
 			</if>
-			<if variable="dbgserver_sink_pcspkr" value="true">
+			<if variable="sink_pcspkr" value="true">
 				<device logical="pcspeaker">
 					<ioPort logical="Port_61" start="16#0061#" end="16#0061#"/>
 					<ioPort logical="Port_42_43" start="16#0042#" end="16#0043#"/>
 				</device>
 			</if>
 		</devices>
+		<events>
+			<source>
+				<event id="30" logical="shutdown">
+					<system_poweroff/>
+				</event>
+				<event id="31" logical="reboot">
+					<system_reboot/>
+				</event>
+			</source>
+		</events>
 	</requires>
 </component>

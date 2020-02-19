@@ -18,10 +18,15 @@
 package body Dbg.Serial
 is
 
+   -------------------------------------------------------------------------
+
    procedure Init is null;
 
+   -------------------------------------------------------------------------
+
    procedure Run
-     (Input_Queue  : in out Byte_Queue.Queue_Type;
+     (Console      : in out Consoles.Console_Type;
+      Input_Queue  : in out Byte_Queue.Queue_Type;
       Output_Queue : in out Byte_Queue.Queue_Type)
    is null;
 

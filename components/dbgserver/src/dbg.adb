@@ -22,6 +22,7 @@ with Dbg.Shared_Memory;
 with Dbg.Xhci_Dbg;
 with Dbg.Byte_Queue.Format;
 with Dbg.Channels;
+with Dbg.Consoles;
 
 package body Dbg
 is
@@ -43,6 +44,7 @@ is
          Byte_Queue.Initialize (Queue => Channel.Output);
          Byte_Queue.Format.Append_String (Queue => Channel.Output,
                                           Item  => Banner);
+         Consoles.Initialize (Console => Channel.Console);
       end Initialize_Channel;
    begin
       for Channel in Debug_Interfaces_Type loop
@@ -68,9 +70,20 @@ is
       begin
          Buffers.Run
            (Buffer       => Channel.Buffer,
-            Input_Queue  => Channel.Input,
             Output_Queue => Channel.Output);
       end Run_Buffers;
+
+      ----------------------------------------------------------------------
+
+      --  Run consoles.
+      procedure Run_Consoles (Channel : in out Channel_Type);
+      procedure Run_Consoles (Channel : in out Channel_Type)
+      is
+      begin
+         Consoles.Run
+           (Console     => Channel.Console,
+            Input_Queue => Channel.Input);
+      end Run_Consoles;
 
       ----------------------------------------------------------------------
 
@@ -88,7 +101,8 @@ is
       is
       begin
          Serial.Run
-           (Input_Queue  => Channel.Input,
+           (Console      => Channel.Console,
+            Input_Queue  => Channel.Input,
             Output_Queue => Channel.Output);
       end Run_Serial;
 
@@ -106,12 +120,14 @@ is
       is
       begin
          Xhci_Dbg.Run
-           (Input_Queue  => Channel.Input,
+           (Console      => Channel.Console,
+            Input_Queue  => Channel.Input,
             Output_Queue => Channel.Output);
       end Run_xHC_Dbg;
    begin
       for Channel in Debug_Interfaces_Type loop
          Run_Buffers (Channel => Instance (Channel));
+         Run_Consoles (Channel => Instance (Channel));
       end loop;
 
       Run_Serial (Channel => Instance (INTERFACE_SERIAL));

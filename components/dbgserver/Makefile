@@ -14,11 +14,11 @@ TFM_NAMES          = misc/extract-subject-names.py
 include ../component_spark.mk
 
 $(GEN_DIR)/config.xml: $(XSL_TFM_CFG) $(XSL_TFM_COMMON_CFG) $(POLICY_SRC)
-	@$(E) $(COMPONENT) "Generate config.xml" "xsltproc -o $@ --stringparam \
-		COMPONENTNAME $(COMPONENT) $< $(POLICY_SRC)"
 $(GEN_DIR)/logchannels.xml: $(XSL_TFM_LOG) $(POLICY_SRC)
-	@$(E) $(COMPONENT) "Generate logchannels.xml" "xsltproc -o $@ \
+$(GEN_DIR)/config.xml $(GEN_DIR)/logchannels.xml:
+	@$(E) $(COMPONENT) "Generate `basename $@`" "xsltproc -o $@ \
 		--stringparam COMPONENTNAME $(COMPONENT) $< $(POLICY_SRC)"
+
 $(GEN_DIR)/dbg-subject_list.ads: $(TFM_NAMES) $(POLICY_SRC)
 	@$(E) $(COMPONENT) "Generate `basename $@`" "$< --out $@ \
 		--src_policy $(POLICY_SRC)"

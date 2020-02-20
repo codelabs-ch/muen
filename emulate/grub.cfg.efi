@@ -4,6 +4,6 @@ set debug=csl
 
 menuentry "Muen Separation Kernel EFI" {
 	sbs_init
-	csl /boot/kernel.bin
+	csl /boot/kernel.sbs
 	boot
 }

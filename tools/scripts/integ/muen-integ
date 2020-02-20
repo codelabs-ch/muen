@@ -50,6 +50,7 @@ release_file_lock()
 
 cleanup()
 {
+	local pid
 	for pid in ${KILL_ON_EXIT_PIDS[@]}; do
 		kill -kill $pid >>$LOGFILE 2>&1 || true
 	done
@@ -138,6 +139,7 @@ execute_n()
 
 	log "Executing command '$cmd' [$times tries, sleep $sleep sec(s)]"
 
+	local i
 	for i in `seq $times`; do
 		$cmd >> $LOGFILE 2>&1
 		status=$?
@@ -194,8 +196,8 @@ emulate()
 	expect_from_file $SCRIPTDIR/expect.common "$CURRENT_EMUL_LOGDIR"
 
 	if [ ! -z "$expect" ]; then
-		file_exists $SCRIPTDIR/$expect
-		expect_from_file $SCRIPTDIR/$expect "$CURRENT_EMUL_LOGDIR"
+		file_exists $expect
+		expect_from_file $expect "$CURRENT_EMUL_LOGDIR"
 	fi
 
 	unset CURRENT_EMUL_LOGDIR
@@ -204,6 +206,7 @@ emulate()
 
 deploy_to_emul()
 {
+	local i
 	for ((i = 0; i < ${#TARGETS_EMUL[@]}; i++)); do
 		local item="${TARGETS_EMUL[$i]}"
 		system=`echo $item | cut -d\; -f1`
@@ -229,6 +232,7 @@ capture_output()
 	log_pid=$!
 	KILL_ON_EXIT_PIDS+=$log_pid
 	# manual forking needs some time for screen to see the socket.
+	local i
 	for i in `seq 4`; do screen -ls && break || sleep 0.5; done >>$LOGFILE 2>&1
 	screen -S $log_pid.integ -X colon "logfile flush 0^M"
 }
@@ -268,13 +272,14 @@ hw_deploy()
 	expect_from_file $SCRIPTDIR/expect.hw_common "$target_logdir"
 
 	if [ ! -z "$expect" ]; then
-		file_exists $SCRIPTDIR/$expect
-		expect_from_file $SCRIPTDIR/$expect "$target_logdir"
+		file_exists $expect
+		expect_from_file $expect "$target_logdir"
 	fi
 }
 
 deploy_to_hardware()
 {
+	local item
 	for item in ${TARGETS_HW[@]}; do
 		ip=`echo $item | cut -d\; -f1`
 		system=`echo $item | cut -d\; -f2`

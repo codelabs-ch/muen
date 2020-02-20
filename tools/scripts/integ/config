@@ -27,11 +27,12 @@ SCP="scp -r -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 # EPC power bar instead of Intel AMT.
 #
 # optionally, a target-specific expect file can be specified. The file path is
-# treated relatively to the scripts/integ directory.
+# either absolute or relative to the top-level working directory. Use the
+# $SCRIPTDIR variable to reference checked-in expect files as shown below.
 TARGETS_HW=()
-#TARGETS_HW+=('192.168.254.2;xml/integration_tests.xml;hardware/lenovo-t430s.xml;integtest')
-#TARGETS_HW+=('192.168.254.3;xml/integration_tests_kt.xml;hardware/kontron-ktqm77.xml;integtest_kt;expect.kt')
-#TARGETS_HW+=(';xml/integration_tests.xml;hardware/intel-nuc-6cayh.xml;integtest')
+#TARGETS_HW+=("192.168.254.2;xml/integration_tests.xml;hardware/lenovo-t430s.xml;integtest")
+#TARGETS_HW+=("192.168.254.3;xml/integration_tests_kt.xml;hardware/kontron-ktqm77.xml;integtest_kt;$SCRIPTDIR/expect.kt")
+#TARGETS_HW+=(";xml/integration_tests.xml;hardware/intel-nuc-6cayh.xml;integtest")
 
 # emulate targets
 #
@@ -42,7 +43,7 @@ TARGETS_HW=()
 # 4 : EXPECT FILE
 # 5 : QEMU_EXTRA_OPTS
 TARGETS_EMUL=()
-TARGETS_EMUL+=('xml/demo_system_vtd.xml;hardware/qemu-kvm.xml;integtest.kvm;expect.kvm;')
+TARGETS_EMUL+=("xml/demo_system_vtd.xml;hardware/qemu-kvm.xml;integtest.kvm;$SCRIPTDIR/expect.kvm")
 
 # log capture commands
 LOG_CMD_AMT="/usr/bin/amtterm"

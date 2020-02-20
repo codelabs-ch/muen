@@ -41,9 +41,6 @@ is
       Func   : Function_Range)
       return BDF_Type;
 
-   --  I/O APIC bus(8)/dev(5)/func(3) f0:1f.00
-   IOAPIC_Bus_Dev_Func : constant := 16#f0f8#;
-
    --  Convert given PCI BDF to IR SID (Intel VT-d Specification, "3.4.1 Source
    --  Identifier").
    function To_SID (BDF : BDF_Type) return Interfaces.Unsigned_16;

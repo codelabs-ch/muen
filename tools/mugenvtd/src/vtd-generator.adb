@@ -382,22 +382,26 @@ is
       package IR_Table is new Tables.IR
         (Index_Range => Entry_Range);
 
-      IRT       : IR_Table.IR_Table_Type;
-      IRT_File  : constant String
+      IRT        : IR_Table.IR_Table_Type;
+      IRT_File   : constant String
         := DOM.Core.Elements.Get_Attribute
           (Elem => Muxml.Utils.Get_Element
              (Doc   => Policy.Doc,
               XPath => "/system/memory/memory[@type='system_vtd_ir']/file"
               & "[@filename='vtd_ir']"),
            Name => "filename");
-      IRQs      : constant DOM.Core.Node_List
+      IRQs       : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/subjects/subject/devices/device/irq");
-      Phys_Devs : constant DOM.Core.Node_List
+      Phys_Devs  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/hardware/devices/device");
+      IOAPIC_SID : constant String := Muxml.Utils.Get_Element_Value
+        (Doc   => Policy.Doc,
+         XPath => "/system/hardware/devices/device/capabilities"
+         & "[capability/@name='ioapic']/capability[@name='source_id']");
    begin
       if IRT_File'Length > 0 then
          Mulog.Log (Msg => "Writing VT-d interrupt remapping table to file '"
@@ -455,10 +459,11 @@ is
                TM  : Tables.Bit_Type;
                SID : Interfaces.Unsigned_16;
             begin
-               Utils.Get_IR_TM_SID (Kind => IRQ_Kind,
-                                    BDF  => PCI_BDF,
-                                    TM   => TM,
-                                    SID  => SID);
+               Utils.Get_IR_TM_SID (Kind       => IRQ_Kind,
+                                    BDF        => PCI_BDF,
+                                    IOAPIC_SID => IOAPIC_SID,
+                                    TM         => TM,
+                                    SID        => SID);
                Mulog.Log
                  (Msg => "IRT index" & IRQ_Phys'Img & ", " & IRQ_Kind'Img
                   & ", device '" & Dev_Ref & "' (SID " & Mutools.Utils.To_Hex

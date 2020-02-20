@@ -43,6 +43,9 @@ is
    --  Validate that at least one I/O APIC device is present.
    procedure IOAPIC_Presence (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that all I/O APICs have a valid source ID capability.
+   procedure IOAPIC_Cap_SID (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that at least one and at most eight IOMMU devices are present.
    procedure IOMMU_Presence (XML_Data : Muxml.XML_Data_Type);
 

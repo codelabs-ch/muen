@@ -22,18 +22,19 @@ is
    -------------------------------------------------------------------------
 
    procedure Get_IR_TM_SID
-     (Kind :     Mutools.XML_Utils.IRQ_Kind;
-      BDF  :     Mutools.PCI.BDF_Type;
-      TM   : out Tables.Bit_Type;
-      SID  : out Interfaces.Unsigned_16)
+     (Kind       :     Mutools.XML_Utils.IRQ_Kind;
+      BDF        :     Mutools.PCI.BDF_Type;
+      IOAPIC_SID :     String;
+      TM         : out Tables.Bit_Type;
+      SID        : out Interfaces.Unsigned_16)
    is
    begin
       case Kind is
          when Mutools.XML_Utils.IRQ_ISA =>
-            SID := Mutools.PCI.IOAPIC_Bus_Dev_Func;
+            SID := Interfaces.Unsigned_16'Value (IOAPIC_SID);
             TM  := 0;
          when Mutools.XML_Utils.IRQ_PCI_LSI =>
-            SID := Mutools.PCI.IOAPIC_Bus_Dev_Func;
+            SID := Interfaces.Unsigned_16'Value (IOAPIC_SID);
             TM  := 1;
          when Mutools.XML_Utils.IRQ_PCI_MSI =>
             SID := Mutools.PCI.To_SID (BDF => BDF);

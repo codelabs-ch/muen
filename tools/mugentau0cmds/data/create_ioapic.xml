@@ -1,0 +1,6 @@
+<tau0>
+ <commands>
+  <addIoapic sid="16#f0f8#"/>
+ </commands>
+</tau0>
+

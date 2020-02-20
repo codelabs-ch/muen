@@ -63,6 +63,9 @@ is
         (Policy     => Policy,
          Stream_Doc => Stream_Doc);
 
+      Devices.Create_IO_APIC
+        (Policy     => Policy,
+         Stream_Doc => Stream_Doc);
       Devices.Create_Physical_Legacy_Devices
         (Policy     => Policy,
          Stream_Doc => Stream_Doc);

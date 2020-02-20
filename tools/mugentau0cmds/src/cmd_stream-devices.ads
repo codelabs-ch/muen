@@ -21,6 +21,11 @@ with Cmd_Stream.Utils;
 package Cmd_Stream.Devices
 is
 
+   --  Generate command stream to create I/O APIC of given system policy.
+   procedure Create_IO_APIC
+     (Policy     : in out Muxml.XML_Data_Type;
+      Stream_Doc : in out Utils.Stream_Document_Type);
+
    --  Generate command stream to create physical PCI devices of given system
    --  policy.
    procedure Create_Physical_PCI_Devices

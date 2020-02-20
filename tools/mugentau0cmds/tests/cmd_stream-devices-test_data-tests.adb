@@ -34,6 +34,40 @@ package body Cmd_Stream.Devices.Test_Data.Tests is
 --  end read only
 
 --  begin read only
+   procedure Test_Create_IO_APIC (Gnattest_T : in out Test);
+   procedure Test_Create_IO_APIC_c4c3c8 (Gnattest_T : in out Test) renames Test_Create_IO_APIC;
+--  id:2.2/c4c3c88cfa82fc1a/Create_IO_APIC/1/0/
+   procedure Test_Create_IO_APIC (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+      Fn     : constant String := "create_ioapic.xml";
+      Fn_Obj : constant String := "obj/" & Fn;
+      Stream : Utils.Stream_Document_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Utils.Create (Stream_Doc => Stream,
+                    Filename   => Fn_Obj);
+
+      Create_IO_APIC
+        (Policy     => Policy,
+         Stream_Doc => Stream);
+      Utils.Close (Stream_Doc => Stream);
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/" & Fn,
+               Filename2 => Fn_Obj),
+              Message   => "Files differ");
+      Ada.Directories.Delete_File (Name => Fn_Obj);
+--  begin read only
+   end Test_Create_IO_APIC;
+--  end read only
+
+
+--  begin read only
    procedure Test_Create_Physical_PCI_Devices (Gnattest_T : in out Test);
    procedure Test_Create_Physical_PCI_Devices_cdc2a2 (Gnattest_T : in out Test) renames Test_Create_Physical_PCI_Devices;
 --  id:2.2/cdc2a255188579c0/Create_Physical_PCI_Devices/1/0/
@@ -128,7 +162,7 @@ package body Cmd_Stream.Devices.Test_Data.Tests is
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "data/" & Fn,
                Filename2 => Fn_Obj),
-              Message   => "Files differ (1)");
+              Message   => "Files differ");
       Ada.Directories.Delete_File (Name => Fn_Obj);
 --  begin read only
    end Test_Create_VTd_Tables;

@@ -220,6 +220,24 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Create_IO_APIC
+     (Policy     : in out Muxml.XML_Data_Type;
+      Stream_Doc : in out Utils.Stream_Document_Type)
+   is
+      Source_ID : constant String := Muxml.Utils.Get_Element_Value
+        (Doc   => Policy.Doc,
+         XPath => "/system/hardware/devices/device/capabilities"
+         & "[capability/@name='ioapic']/capability[@name='source_id']");
+   begin
+      Utils.Append_Command
+        (Stream_Doc => Stream_Doc,
+         Name       => "addIoapic",
+         Attrs      => (1 => (Attr  => U ("sid"),
+                              Value => U (Source_ID))));
+   end Create_IO_APIC;
+
+   -------------------------------------------------------------------------
+
    procedure Create_Physical_Device
      (Dev_Node   :        DOM.Core.Node;
       Command    :        String;

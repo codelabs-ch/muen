@@ -69,7 +69,7 @@ package body Mutools.PCI.Test_Data.Tests is
               (BDF =>
                  (Bus    => 16#f0#,
                   Device => 16#1f#,
-                  Func   => 0)) = IOAPIC_Bus_Dev_Func,
+                  Func   => 0)) = 16#f0f8#,
               Message   => "SID mismatch");
 --  begin read only
    end Test_To_SID;

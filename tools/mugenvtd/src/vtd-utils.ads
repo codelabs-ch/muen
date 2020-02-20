@@ -26,12 +26,13 @@ with VTd.Tables;
 package VTd.Utils
 is
 
-   --  Return IR trigger mode and source-identifier for given IRQ kind and PCI
-   --  BDF triplet.
+   --  Return IR trigger mode and source-identifier for given IRQ kind, PCI BDF
+   --  triplet and I/O APIC source ID.
    procedure Get_IR_TM_SID
-     (Kind :     Mutools.XML_Utils.IRQ_Kind;
-      BDF  :     Mutools.PCI.BDF_Type;
-      TM   : out Tables.Bit_Type;
-      SID  : out Interfaces.Unsigned_16);
+     (Kind       :     Mutools.XML_Utils.IRQ_Kind;
+      BDF        :     Mutools.PCI.BDF_Type;
+      IOAPIC_SID :     String;
+      TM         : out Tables.Bit_Type;
+      SID        : out Interfaces.Unsigned_16);
 
 end VTd.Utils;

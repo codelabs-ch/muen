@@ -31,8 +31,8 @@ package body VTd.Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Get_IR_TM_SID (Gnattest_T : in out Test);
-   procedure Test_Get_IR_TM_SID_db1b39 (Gnattest_T : in out Test) renames Test_Get_IR_TM_SID;
---  id:2.2/db1b3998c0f5a7dc/Get_IR_TM_SID/1/0/
+   procedure Test_Get_IR_TM_SID_201ae5 (Gnattest_T : in out Test) renames Test_Get_IR_TM_SID;
+--  id:2.2/201ae557a111f1d1/Get_IR_TM_SID/1/0/
    procedure Test_Get_IR_TM_SID (Gnattest_T : in out Test) is
 --  end read only
 
@@ -41,35 +41,40 @@ package body VTd.Utils.Test_Data.Tests is
       use type Interfaces.Unsigned_16;
       use type VTd.Tables.Bit_Type;
 
+      IOAPIC_SID : constant String := "16#f0f8#";
+
       TM  : Tables.Bit_Type;
       SID : Interfaces.Unsigned_16;
       BDF : Mutools.PCI.BDF_Type := Mutools.PCI.Null_BDF;
    begin
-      Get_IR_TM_SID (Kind => Mutools.XML_Utils.IRQ_ISA,
-                     BDF  => BDF,
-                     TM   => TM,
-                     SID  => SID);
+      Get_IR_TM_SID (Kind       => Mutools.XML_Utils.IRQ_ISA,
+                     BDF        => BDF,
+                     IOAPIC_SID => IOAPIC_SID,
+                     TM         => TM,
+                     SID        => SID);
       Assert (Condition => TM = 0,
               Message   => "ISA: TM not 0");
-      Assert (Condition => SID = Mutools.PCI.IOAPIC_Bus_Dev_Func,
+      Assert (Condition => SID = Interfaces.Unsigned_16'Value (IOAPIC_SID),
               Message   => "ISA: SID mismatch");
 
-      Get_IR_TM_SID (Kind => Mutools.XML_Utils.IRQ_PCI_LSI,
-                     BDF  => BDF,
-                     TM   => TM,
-                     SID  => SID);
+      Get_IR_TM_SID (Kind       => Mutools.XML_Utils.IRQ_PCI_LSI,
+                     BDF        => BDF,
+                     IOAPIC_SID => IOAPIC_SID,
+                     TM         => TM,
+                     SID        => SID);
       Assert (Condition => TM = 1,
               Message   => "LSI: TM not 1");
-      Assert (Condition => SID = Mutools.PCI.IOAPIC_Bus_Dev_Func,
+      Assert (Condition => SID = Interfaces.Unsigned_16'Value (IOAPIC_SID),
               Message   => "LSI: SID mismatch");
 
       BDF := Mutools.PCI.Create (Bus    => 12,
                                  Device => 16,
                                  Func   => 5);
-      Get_IR_TM_SID (Kind => Mutools.XML_Utils.IRQ_PCI_MSI,
-                     BDF  => BDF,
-                     TM   => TM,
-                     SID  => SID);
+      Get_IR_TM_SID (Kind       => Mutools.XML_Utils.IRQ_PCI_MSI,
+                     BDF        => BDF,
+                     IOAPIC_SID => IOAPIC_SID,
+                     TM         => TM,
+                     SID        => SID);
       Assert (Condition => TM = 0,
               Message   => "MSI: TM not 0");
       Assert (Condition => SID = 3205,

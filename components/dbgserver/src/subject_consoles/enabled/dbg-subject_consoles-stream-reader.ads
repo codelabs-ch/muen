@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2023  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2023  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2020  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2020  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,15 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Dbgserver_Component.Channel_Arrays;
+with Muchannel.Readers;
 
-package body Dbg.Subject_Consoles
-is
-
-   package Cspecs renames Dbgserver_Component.Channel_Arrays;
-
-   -------------------------------------------------------------------------
-
-   procedure Init is null;
-
-end Dbg.Subject_Consoles;
+package Dbg.Subject_Consoles.Stream.Reader
+is new Dbg.Subject_Consoles.Stream.Readers;

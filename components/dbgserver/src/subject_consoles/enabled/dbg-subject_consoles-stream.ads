@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2023  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2023  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2020  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2020  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,15 +16,19 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
+with Muchannel;
+with Muchannel_Constants;
+
 with Dbgserver_Component.Channel_Arrays;
 
-package body Dbg.Subject_Consoles
-is
+pragma Elaborate_All (Muchannel);
 
-   package Cspecs renames Dbgserver_Component.Channel_Arrays;
-
-   -------------------------------------------------------------------------
-
-   procedure Init is null;
-
-end Dbg.Subject_Consoles;
+package Dbg.Subject_Consoles.Stream is new Muchannel
+  (Element_Type => Interfaces.Unsigned_8,
+   Elements     =>
+     (Dbgserver_Component.Channel_Arrays.Subject_Consoles_In_Element_Size
+      - Muchannel_Constants.Header_Size),
+   Null_Element => 0,
+   Protocol     => 1);

@@ -1088,6 +1088,9 @@ is
            (DOM.Core.Elements.Get_Attribute
               (Elem => Left,
                Name => "number"));
+         Left_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "name");
          Left_Dev_Name  : constant String  := DOM.Core.Elements.Get_Attribute
            (Elem => DOM.Core.Nodes.Parent_Node (N => Left),
             Name => "name");
@@ -1095,13 +1098,23 @@ is
            (DOM.Core.Elements.Get_Attribute
               (Elem => Right,
                Name => "number"));
+         Right_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "name");
          Right_Dev_Name : constant String  := DOM.Core.Elements.Get_Attribute
            (Elem => DOM.Core.Nodes.Parent_Node (N => Right),
             Name => "name");
       begin
          if Left_Number = Right_Number then
-            raise Validation_Error with "Devices '" & Left_Dev_Name & "' and '"
-              & Right_Dev_Name & "' share IRQ" & Left_Number'Img;
+            if Left_Dev_Name = Right_Dev_Name and then Left_Name = Right_Name
+            then
+               raise Validation_Error with "Multiple assignment of IRQ '"
+                 & Left_Dev_Name & "->" & Left_Name & "'";
+            else
+               raise Validation_Error with "Devices '" & Left_Dev_Name
+                 & "' and '" & Right_Dev_Name & "' share IRQ"
+                 & Left_Number'Img;
+            end if;
          end if;
       end Check_Inequality;
    begin

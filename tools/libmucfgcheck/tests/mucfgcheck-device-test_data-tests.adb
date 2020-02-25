@@ -321,6 +321,33 @@ package body Mucfgcheck.Device.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure Duplicate_Reference
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/devices/device"
+            & "[@physical='ethernet_2']",
+            Name  => "physical",
+            Value => "ethernet");
+
+         Physical_IRQ_Uniqueness (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Duplicate Ref)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Multiple assignment of IRQ 'ethernet->irq'",
+                    Message   => "Exception mismatch (Duplicate Ref)");
+      end Duplicate_Reference;
+
+      ----------------------------------------------------------------------
+
       procedure Duplicate_Unreferenced_IRQ
       is
          Data : Muxml.XML_Data_Type;
@@ -363,6 +390,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
    begin
       Positive_Test;
       Duplicate_IRQ;
+      Duplicate_Reference;
       Duplicate_Unreferenced_IRQ;
 --  begin read only
    end Test_Physical_IRQ_Uniqueness;

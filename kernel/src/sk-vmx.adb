@@ -289,6 +289,12 @@ is
       VMCS_Write (Field => Constants.CR4_MASK,
                   Value => CR4_Mask);
 
+      --  Explicitly set CR3-target count to 0 to always force CR3-load
+      --  exiting.
+
+      VMCS_Write (Field => Constants.CR3_TARGET_COUNT,
+                  Value => 0);
+
       --  I/O bitmaps.
 
       VMCS_Write (Field => Constants.IO_BITMAP_A,

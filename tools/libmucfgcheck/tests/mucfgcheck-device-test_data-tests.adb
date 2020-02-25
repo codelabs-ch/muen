@@ -293,17 +293,15 @@ package body Mucfgcheck.Device.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      Data : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => "data/test_policy.xml");
+      ----------------------------------------------------------------------
 
-      --  Positive test, must not raise an exception.
-
-      Physical_IRQ_Uniqueness (XML_Data => Data);
-
+      procedure Duplicate_IRQ
+      is
+         Data : Muxml.XML_Data_Type;
       begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
          Muxml.Utils.Set_Attribute
            (Doc   => Data.Doc,
             XPath => "/system/hardware/devices/device[@name='wireless']/irq",
@@ -312,25 +310,60 @@ package body Mucfgcheck.Device.Test_Data.Tests is
 
          Physical_IRQ_Uniqueness (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (Duplicate IRQ)");
 
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Devices 'wireless' and 'ethernet' share IRQ 20",
-                    Message   => "Exception mismatch");
-      end;
+                    Message   => "Exception mismatch (Duplicate IRQ)");
+      end Duplicate_IRQ;
 
-      --  Shared IRQs of unreferenced devices must not raise an exception.
+      ----------------------------------------------------------------------
 
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/subjects/subject/devices"
-         & "/device[@physical='wireless']",
-         Name  => "physical",
-         Value => "nonexistent");
+      procedure Duplicate_Unreferenced_IRQ
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/hardware/devices/device[@name='wireless']/irq",
+            Name  => "number",
+            Value => "20");
 
-      Physical_IRQ_Uniqueness (XML_Data => Data);
+         --  Shared IRQs of unreferenced devices must not raise an exception.
+
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/devices"
+            & "/device[@physical='wireless']",
+            Name  => "physical",
+            Value => "nonexistent");
+
+         Physical_IRQ_Uniqueness (XML_Data => Data);
+      end Duplicate_Unreferenced_IRQ;
+
+      ----------------------------------------------------------------------
+
+      procedure Positive_Test
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         --  Positive test, must not raise an exception.
+
+         Physical_IRQ_Uniqueness (XML_Data => Data);
+      end Positive_Test;
+   begin
+      Positive_Test;
+      Duplicate_IRQ;
+      Duplicate_Unreferenced_IRQ;
 --  begin read only
    end Test_Physical_IRQ_Uniqueness;
 --  end read only

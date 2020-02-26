@@ -6,6 +6,7 @@ RECIPES =     \
 	alog      \
 	gnatcoll  \
 	grub      \
+	libgpr    \
 	libhwbase \
 	lsc       \
 	xia

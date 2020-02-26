@@ -40,7 +40,7 @@ is
    Request : Mudm.Emul_Message_Type
    with
       Volatile,
-      Async_Writers,
+      Async_Readers,
       Address => System'To_Address
         (Libmudm_Component.Channels.Dm_Pciconf_Req_Address);
 

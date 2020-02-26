@@ -791,6 +791,26 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Run_Attached_Console (Console : in out Console_Type)
+   with
+      Pre => Console.Current_Mode = Forwarding
+   is
+      Input_Data : Interfaces.Unsigned_8;
+      Success    : Boolean;
+   begin
+      loop
+         Subject_Consoles.Get
+           (Data       => Input_Data,
+            Success    => Success);
+         exit when not Success;
+         Byte_Queue.Append
+           (Queue => Console.Output_Queue,
+            Byte  => Input_Data);
+      end loop;
+   end Run_Attached_Console;
+
+   -------------------------------------------------------------------------
+
    procedure Run
      (Console     : in out Console_Type;
       Input_Queue : in out Byte_Queue.Queue_Type)
@@ -923,6 +943,11 @@ is
             end;
          end if;
       end loop;
+
+      if Console.Current_Mode = Forwarding then
+         Subject_Consoles.Flush;
+         Run_Attached_Console (Console => Console);
+      end if;
    end Run;
 
 end Dbg.Consoles;

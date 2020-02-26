@@ -1,26 +1,14 @@
-GNAT_RELEASE := $(shell gnat --version 2>/dev/null | head -n1 | cut -d " " -f2 | tr A-Z a-z)
-GNAT_NUMBER  := $(shell gnat --version 2>/dev/null | head -n1 | cut -d " " -f3 | tr A-Z a-z)
-
-ifeq ($(GNAT_RELEASE), gpl)
-	BUILD_OPTS = static
-	REV = gpl-$(GNAT_NUMBER)
-	DEF_CMD_CONFIGURE = cd $(WRK) && ./configure_minimal --prefix=$(BUILDDIR)
-	DEF_CMD_INSTALL = $(MAKE) -C $(WRK) install_static
-else
-	REV = master
-	DEF_CMD_CONFIGURE = $(MAKE) -C $(WRK) ENABLE_SHARED=no prefix=$(BUILDDIR) setup
-	DEF_CMD_INSTALL = $(MAKE) -C $(WRK) install
-endif
-
 PKG = gnatcoll
-SRC = https://github.com/codelabs-ch/gnatcoll.git
+SRC = https://github.com/AdaCore/gnatcoll-core.git
+# Current head of branch 20.2
+REV = d71d4fce1438dd645c546892a8c8a6a5e65a856d
 
 define CMD_CONFIGURE
-$(DEF_CMD_CONFIGURE)
+$(MAKE) -C $(WRK) ENABLE_SHARED=no prefix=$(BUILDDIR) setup
 endef
 
 define CMD_INSTALL
-$(DEF_CMD_INSTALL)
+$(MAKE) -C $(WRK) install
 endef
 
 all: install_default

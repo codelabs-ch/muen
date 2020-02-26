@@ -20,6 +20,7 @@ with System;
 
 with Dbgserver_Component.Channel_Arrays;
 
+with Dbg.Subject_Consoles.Stream.Reader;
 with Dbg.Subject_Consoles.Stream.Writer_Instance;
 
 package body Dbg.Subject_Consoles
@@ -46,6 +47,9 @@ is
    No_Console : constant Extended_Subject_Console_Range
      := Extended_Subject_Console_Range'First;
 
+   type Console_Readers_Array is
+     array (Subject_Console_Range) of Stream.Reader.Reader_Type;
+
    type Console_Channels_Array is
      array (Subject_Console_Range) of Stream.Channel_Type;
 
@@ -62,6 +66,9 @@ is
       Address => System'To_Address (Cspecs.Subject_Consoles_Out_Address_Base),
       Size    => Cspecs.Subject_Consoles_Out_Element_Size
        * Cspecs.Subject_Consoles_Out_Element_Count * 8;
+
+   --  Console reader states.
+   Readers : Console_Readers_Array;
 
    --  ID of currently attached subject console.
    Attached_Console : Extended_Subject_Console_Range;
@@ -88,6 +95,29 @@ is
    begin
       Attached_Console := No_Console;
    end Detach;
+
+   -------------------------------------------------------------------------
+
+   procedure Get
+     (Data    : out Interfaces.Unsigned_8;
+      Success : out Boolean)
+   is
+      use type Dbg.Subject_Consoles.Stream.Reader.Result_Type;
+
+      Read_Result : Stream.Reader.Result_Type;
+   begin
+      if Attached_Console /= No_Console then
+         Stream.Reader.Read
+           (Channel => Consoles_Out (Subject_Console_Range (Attached_Console)),
+            Reader  => Readers (Subject_Console_Range (Attached_Console)),
+            Element => Data,
+            Result  => Read_Result);
+         Success := Read_Result = Stream.Reader.Success;
+      else
+         Data := 0;
+         Success := False;
+      end if;
+   end Get;
 
    -------------------------------------------------------------------------
 

@@ -33,6 +33,12 @@ is
    --  Detach from currently attached subject console.
    procedure Detach;
 
+   --  Read data from the currently attached console. Success is True if a
+   --  console is attached and valid data was read.
+   procedure Get
+     (Data    : out Interfaces.Unsigned_8;
+      Success : out Boolean);
+
    --  Forward given data to the currently attached console. If no console is
    --  attached, then the data is silently ignored.
    procedure Put (Data : Interfaces.Unsigned_8);

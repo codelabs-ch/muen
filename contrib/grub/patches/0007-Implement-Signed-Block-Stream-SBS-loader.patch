@@ -1,4 +1,4 @@
-From 26b1356b7a9ab8eacb303900146a862d0d1469e2 Mon Sep 17 00:00:00 2001
+From 80c709cc320d32fa6acb850852e2ed13bcda6c21 Mon Sep 17 00:00:00 2001
 From: Reto Buerki <reet@codelabs.ch>
 Date: Mon, 17 Feb 2020 13:30:38 +0100
 Subject: [PATCH 7/7] Implement Signed Block Stream (SBS) loader
@@ -9,9 +9,9 @@ specification [1]. See section 3 in this document for details.
 [1] - https://www.codelabs.ch/download/bsbsc-spec.pdf
 ---
  grub-core/Makefile.core.def  |   6 +
- grub-core/loader/bsbsc/sbs.c | 591 +++++++++++++++++++++++++++++++++++
+ grub-core/loader/bsbsc/sbs.c | 585 +++++++++++++++++++++++++++++++++++
  grub-core/loader/bsbsc/sbs.h |  60 ++++
- 3 files changed, 657 insertions(+)
+ 3 files changed, 651 insertions(+)
  create mode 100644 grub-core/loader/bsbsc/sbs.c
  create mode 100644 grub-core/loader/bsbsc/sbs.h
 
@@ -31,10 +31,10 @@ index d82c22528..9962146a3 100644
 +};
 diff --git a/grub-core/loader/bsbsc/sbs.c b/grub-core/loader/bsbsc/sbs.c
 new file mode 100644
-index 000000000..f83a821a5
+index 000000000..1072fe918
 --- /dev/null
 +++ b/grub-core/loader/bsbsc/sbs.c
-@@ -0,0 +1,591 @@
+@@ -0,0 +1,585 @@
 +/* sbs.c - Signed Block Stream (SBS) implementation */
 +/*
 + *  GRUB  --  GRand Unified Bootloader
@@ -265,7 +265,7 @@ index 000000000..f83a821a5
 +	hasher->init (hash_ctx);
 +	hasher->write (hash_ctx, state.next_hash, SHA512_HASHSUM_LEN);
 +	hasher->write (hash_ctx, state.data, bdl ());
-+	hasher->final(hash_ctx);
++	hasher->final (hash_ctx);
 +
 +	if (grub_crypto_memcmp (h, hasher->read (hash_ctx), hasher->mdlen) == 0)
 +	{
@@ -279,7 +279,7 @@ index 000000000..f83a821a5
 +		grub_printf ("SBS - computed hash ");
 +		print_buffer (hasher->read (hash_ctx), SHA512_HASHSUM_LEN);
 +		grub_printf ("\n");
-+		grub_printf ("SBS - stored hash ");
++		grub_printf ("SBS - stored hash   ");
 +		print_buffer (h, SHA512_HASHSUM_LEN);
 +		grub_printf ("\n");
 +	}
@@ -317,14 +317,11 @@ index 000000000..f83a821a5
 +	if (grub_file_read (state.fd, field, width) != (grub_ssize_t) width)
 +	{
 +		grub_printf ("SBS - %s\n", err_msg);
-+		goto header_invalid;
++		close_fd ();
++		return 0;
 +	}
 +
 +	return 1;
-+
-+header_invalid:
-+	close_fd ();
-+	return 0;
 +}
 +
 +/* Read SBS header */
@@ -408,10 +405,7 @@ index 000000000..f83a821a5
 +
 +	if (! read_field (header.root_hash, header.hashsum_len,
 +				"unable to read root hash"))
-+	{
-+		grub_free (header.root_hash);
 +		goto header_invalid;
-+	}
 +
 +	return 1;
 +
@@ -522,7 +516,7 @@ index 000000000..f83a821a5
 +/* Read len bytes from SBS file */
 +static grub_ssize_t
 +sbs_read (grub_file_t file __attribute__ ((unused)),
-+		void *buf __attribute__ ((unused)),
++		void *buf,
 +		grub_size_t len)
 +{
 +	grub_size_t to_read = len;

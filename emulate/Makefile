@@ -25,7 +25,7 @@ endif
 ifeq ($(MUEN_EFI),)
 GRUB_MODS_PATH ?= $(CONTRIB_BUILD_DIR)/i386-pc/lib/grub/i386-pc
 GRUB_MKRESCUE  ?= $(CONTRIB_BUILD_DIR)/i386-pc/bin/grub-mkrescue
-QEMU_OPTS = -display curses
+#QEMU_OPTS = -display curses
 GRUB_CFG = grub.cfg
 else
 GRUB_MODS_PATH ?= $(CONTRIB_BUILD_DIR)/x86_64-efi/lib/grub/x86_64-efi
@@ -50,7 +50,7 @@ ISO_FILES := \
 GRUB_MKRESCUE_PRELOAD_MODS ?= gcry_rsa gcry_sha512 configfile csl pgp sbs normal
 
 QEMU_OPTS += \
-	-drive file=$(ISOFILE),index=0,media=disk,format=raw \
+	-drive file=$(MUGENHWCFGIMG),index=0,media=disk,format=raw \
 	-serial file:serial.out \
 	-machine q35,accel=kvm,kernel-irqchip=split \
 	-cpu IvyBridge-IBRS,+invtsc,+vmx \

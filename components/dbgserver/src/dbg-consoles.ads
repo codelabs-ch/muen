@@ -40,6 +40,8 @@ is
       Command_Buffer_Pos : Natural;
       --  Current operational mode of console.
       Current_Mode       : Console_Mode_Kind;
+      --  ID of attached subject console.
+      Attached_Console   : Natural;
    end record;
 
    --  Initializes the given debug console.

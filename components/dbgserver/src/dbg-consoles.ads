@@ -28,6 +28,8 @@ is
 
    subtype Command_Buffer_Type is String (Command_Buffer_Range);
 
+   type Console_Mode_Kind is (Processing, Forwarding);
+
    type Console_Type is record
       --  The console has its own output queue to separate the emitted strings
       --  from the log messages.
@@ -36,6 +38,8 @@ is
       Command_Buffer     : Command_Buffer_Type;
       --  Buffer position of the next free character.
       Command_Buffer_Pos : Natural;
+      --  Current operational mode of console.
+      Current_Mode       : Console_Mode_Kind;
    end record;
 
    --  Initializes the given debug console.

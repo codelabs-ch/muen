@@ -298,6 +298,7 @@ is
       Console.Command_Buffer_Pos := Console.Command_Buffer'First;
       Byte_Queue.Initialize (Queue => Console.Output_Queue);
       Setup_Log_Buffers (Console => Console);
+      Console.Current_Mode := Processing;
    end Initialize;
 
    -------------------------------------------------------------------------

@@ -61,7 +61,8 @@ private
    Empty_Command_Buffer : constant Command_Buffer_Type := (others => ' ');
 
    type Command_Kind is
-     (Clear_Line,
+     (Attach_Console,
+      Clear_Line,
       Failure,
       List_Channels,
       List_Events,
@@ -79,9 +80,10 @@ private
 
    type Command_Type (Kind : Command_Kind := Failure) is record
       case Kind is
-         when Trigger_Event => Event_Number   : Natural := 0;
-         when Log_Toggle    => Channel_Number : Natural := 0;
-         when others        => null;
+         when Trigger_Event  => Event_Number   : Natural := 0;
+         when Log_Toggle     => Channel_Number : Natural := 0;
+         when Attach_Console => Console_ID     : Natural := 0;
+         when others         => null;
       end case;
    end record;
 

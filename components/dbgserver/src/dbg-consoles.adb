@@ -70,7 +70,7 @@ is
    subtype Command_String_Range  is Command_String_Length range
      Command_String_Length'First + 1 .. Command_String_Length'Last;
    subtype Command_String        is String (Command_String_Range);
-   subtype Command_Description   is String (1 .. 30);
+   subtype Command_Description   is String (1 .. 45);
 
    type Command_Descriptor_Type is record
       Cmd_Str     : Command_String;
@@ -177,7 +177,30 @@ is
                                        Event_Number => 0),
           Has_Param   => True,
           Description => To_Cmd_Descr ("Trigger event")),
+         (Cmd_Str     => "ac",
+          Cmd_Len     => 2,
+          Command     => Command_Type'(Kind       => Attach_Console,
+                                       Console_ID => 1),
+          Has_Param   => True,
+          Description => To_Cmd_Descr
+            ("Attach subject console (Detach: <ESC><ESC>)")),
          Null_Command);
+
+   -------------------------------------------------------------------------
+
+   procedure Attach_Console
+     (Console : in out Console_Type;
+      ID      :        Natural;
+      Success :    out Boolean)
+   is
+   begin
+      Subject_Consoles.Attach (ID      => ID,
+                               Success => Success);
+      if Success then
+         Console.Attached_Console := ID;
+         Console.Current_Mode := Forwarding;
+      end if;
+   end Attach_Console;
 
    -------------------------------------------------------------------------
 
@@ -690,6 +713,10 @@ is
             List_Subjects (Queue => Console.Output_Queue);
          when Stream_Reset =>
             Stream_Reset;
+         when Attach_Console =>
+            Attach_Console (Console => Console,
+                            ID      => Command.Console_ID,
+                            Success => Success);
          when Print_Status =>
             Print_Status (Queue => Console.Output_Queue);
       end case;
@@ -750,6 +777,8 @@ is
                      Command.Event_Number := Number;
                   elsif Command.Kind = Log_Toggle then
                      Command.Channel_Number := Number;
+                  elsif Command.Kind = Attach_Console then
+                     Command.Console_ID := Number;
                   end if;
                else
                   return Command_Type'(Kind => Failure);

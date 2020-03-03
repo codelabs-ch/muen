@@ -766,6 +766,7 @@ is
      (Console     : in out Console_Type;
       Input_Queue : in out Byte_Queue.Queue_Type)
    is
+      use type Interfaces.Unsigned_8;
 
       --  Overwrites the previous character in the command buffer with a space
       --  and decrements the buffer position.
@@ -859,7 +860,25 @@ is
                                 Length => 1);
 
          if Console.Current_Mode = Forwarding then
-            Subject_Consoles.Put (Data => Input_Element);
+            if Input_Element = Character'Pos (ASCII.ESC)
+              and then Console.Last_Input = Character'Pos (ASCII.ESC)
+            then
+
+               --  Detach console due to <ESC><ESC>
+
+               Subject_Consoles.Detach;
+               Console.Current_Mode := Processing;
+
+               Byte_Queue.Format.Append_New_Line
+                 (Queue => Console.Output_Queue);
+               Byte_Queue.Format.Append_New_Line
+                 (Queue => Console.Output_Queue);
+               Clean_Command_Buffer (Console => Console);
+               Write_Command_Buffer (Console => Console);
+            else
+               Subject_Consoles.Put (Data => Input_Element);
+               Console.Last_Input := Input_Element;
+            end if;
          else
             declare
                Input_Char : constant Character

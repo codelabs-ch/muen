@@ -28,6 +28,7 @@ with Dbg.Buffers;
 with Dbg.Byte_Queue.Format;
 with Dbg.Channels;
 with Dbg.String_Utils;
+with Dbg.Subject_Consoles;
 with Dbg.Subject_List;
 
 with Dbgserver_Component.Channel_Arrays;
@@ -858,17 +859,22 @@ is
          Byte_Queue.Drop_Bytes (Queue  => Input_Queue,
                                 Length => 1);
 
-         declare
-            Input_Char : constant Character := Character'Val (Input_Element);
-         begin
-            case Input_Char is
-               when ASCII.ESC => Handle_Escape;
-               when ASCII.BS
-                  | ASCII.DEL => Handle_Backspace;
-               when ASCII.CR  => Handle_Return;
-               when others    => Handle_Normal_Input (Char => Input_Char);
-            end case;
-         end;
+         if Console.Current_Mode = Forwarding then
+            Subject_Consoles.Put (Data => Input_Element);
+         else
+            declare
+               Input_Char : constant Character
+                 := Character'Val (Input_Element);
+            begin
+               case Input_Char is
+                  when ASCII.ESC => Handle_Escape;
+                  when ASCII.BS
+                     | ASCII.DEL => Handle_Backspace;
+                  when ASCII.CR  => Handle_Return;
+                  when others    => Handle_Normal_Input (Char => Input_Char);
+               end case;
+            end;
+         end if;
       end loop;
    end Run;
 

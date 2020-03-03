@@ -651,7 +651,7 @@ is
 
    procedure Execute_Command
      (Command :        Command_Type;
-      Queue   : in out Byte_Queue.Queue_Type;
+      Console : in out Console_Type;
       Success :    out Boolean)
    is
    begin
@@ -679,19 +679,19 @@ is
             Trigger_Event (Number  => Command.Event_Number,
                            Success => Success);
          when Print_Help =>
-            Print_Help (Queue => Queue);
+            Print_Help (Queue => Console.Output_Queue);
          when List_Channels =>
-            List_Channels (Queue   => Queue,
+            List_Channels (Queue   => Console.Output_Queue,
                            Success => Success);
          when List_Events =>
-            List_Events (Queue   => Queue,
+            List_Events (Queue   => Console.Output_Queue,
                          Success => Success);
          when List_Subjects =>
-            List_Subjects (Queue => Queue);
+            List_Subjects (Queue => Console.Output_Queue);
          when Stream_Reset =>
             Stream_Reset;
          when Print_Status =>
-            Print_Status (Queue => Queue);
+            Print_Status (Queue => Console.Output_Queue);
       end case;
    end Execute_Command;
 
@@ -837,8 +837,8 @@ is
          Failure_Message : constant String := "Command failed, try 'h'";
       begin
          Byte_Queue.Format.Append_New_Line (Queue => Console.Output_Queue);
-         Execute_Command (Command => Command,
-                          Queue   => Console.Output_Queue,
+         Execute_Command (Console => Console,
+                          Command => Command,
                           Success => Success);
 
          if not Success then

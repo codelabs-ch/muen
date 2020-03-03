@@ -17,6 +17,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with Dbg.Byte_Queue;
 
 package Dbg.Consoles
@@ -42,6 +44,7 @@ is
       Current_Mode       : Console_Mode_Kind;
       --  ID of attached subject console.
       Attached_Console   : Natural;
+      Last_Input         : Interfaces.Unsigned_8;
    end record;
 
    --  Initializes the given debug console.

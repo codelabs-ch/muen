@@ -17,8 +17,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Interfaces;
-
 with SK.Hypercall;
 
 with Musinfo.Instance;
@@ -300,6 +298,7 @@ is
       Byte_Queue.Initialize (Queue => Console.Output_Queue);
       Setup_Log_Buffers (Console => Console);
       Console.Current_Mode := Processing;
+      Console.Last_Input   := 0;
    end Initialize;
 
    -------------------------------------------------------------------------

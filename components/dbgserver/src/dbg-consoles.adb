@@ -926,6 +926,7 @@ is
                Write_Command_Buffer (Console => Console);
             else
                Subject_Consoles.Put (Data => Input_Element);
+               Subject_Consoles.Flush;
                Console.Last_Input := Input_Element;
             end if;
          else

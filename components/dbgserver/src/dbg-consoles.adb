@@ -909,6 +909,7 @@ is
                                 Length => 1);
 
          if Console.Current_Mode = Forwarding then
+            Run_Attached_Console (Console => Console);
             if Input_Element = Character'Pos (ASCII.ESC)
               and then Console.Last_Input = Character'Pos (ASCII.ESC)
             then

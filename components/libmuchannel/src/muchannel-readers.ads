@@ -68,7 +68,7 @@ is
       Depends => (Reader =>+ Channel);
 
    --  Reset reader element index.
-   procedure Reset (Reader  : in out Reader_Type)
+   procedure Reset (Reader : in out Reader_Type)
    with
       Global  => null,
       Depends => (Reader => Reader);

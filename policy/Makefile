@@ -16,8 +16,6 @@ SOURCES += $(ADDITIONAL_HW)
 
 GENERATORS =         \
 	$(MUGENACPI)     \
-	$(MUGENIOBM)     \
-	$(MUGENMSRBM)    \
 	$(MUGENMSRSTORE) \
 	$(MUGENPT)       \
 	$(MUGENSPEC)     \

@@ -27,8 +27,6 @@ TOOLS =            \
 	mucheckelf     \
 	mucheckstack   \
 	mugenacpi      \
-	mugeniobm      \
-	mugenmsrbm     \
 	mugenmsrstore  \
 	mugenpt        \
 	mugenschedcfg  \

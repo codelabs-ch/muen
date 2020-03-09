@@ -37,8 +37,6 @@ is
       "mucheckelf/mucheckelf.gpr",
       "mucheckstack/mucheckstack.gpr",
       "mugenacpi/mugenacpi.gpr",
-      "mugeniobm/mugeniobm.gpr",
-      "mugenmsrbm/mugenmsrbm.gpr",
       "mugenmsrstore/mugenmsrstore.gpr",
       "mugenpt/mugenpt.gpr",
       "mugenschedcfg/mugenschedcfg.gpr",

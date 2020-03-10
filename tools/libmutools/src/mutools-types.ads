@@ -25,6 +25,13 @@ is
    --  Returns the maximum valid ID for a given event group.
    function Get_Max_ID (Group : Event_Group_Type) return Natural;
 
+   --  Returns True if the specified ID is valid in the context of the given
+   --  event group.
+   function Is_Valid_Event_ID
+     (Group : Event_Group_Type;
+      ID    : Natural)
+      return Boolean;
+
    --  Types of event actions.
    type Event_Action_Kind is
      (System_Reboot,

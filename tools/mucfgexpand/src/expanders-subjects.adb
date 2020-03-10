@@ -37,7 +37,7 @@ with Mutools.Types;
 with Mutools.XML_Utils;
 with Mutools.Constants;
 with Mucfgvcpu;
-with Mucfgcheck.Events;
+with Mucfgcheck;
 
 with Expanders.Config;
 with Expanders.Types;
@@ -359,7 +359,7 @@ is
                      Side   => Ada.Strings.Left);
                   Ev_Node : DOM.Core.Node;
                begin
-                  if Mucfgcheck.Events.Is_Valid_Event_ID
+                  if Mutools.Types.Is_Valid_Event_ID
                     (Group => Group,
                      ID    => ID)
                     and then

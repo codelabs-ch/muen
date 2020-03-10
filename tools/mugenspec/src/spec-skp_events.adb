@@ -48,7 +48,7 @@ is
       IRQ_Number     : Natural;
    end record;
 
-   Invalid_Trap_Event : constant Source_Event_Type :=
+   Invalid_Event : constant Source_Event_Type :=
      (Source_Action  => Mutools.Types.System_Panic,
       Target_Subject => Natural'Last,
       Target_Event   => Natural'Last,
@@ -96,6 +96,7 @@ is
    --  Return map of source events for given events node list.
    function To_Source_Event_Map
      (Events          : DOM.Core.Node_List;
+      Event_Group     : Mutools.Types.Event_Group_Type;
       Physical_Events : DOM.Core.Node_List;
       Target_Events   : DOM.Core.Node_List)
       return SEM.Map;
@@ -197,41 +198,48 @@ is
 
    function To_Source_Event_Map
      (Events          : DOM.Core.Node_List;
+      Event_Group     : Mutools.Types.Event_Group_Type;
       Physical_Events : DOM.Core.Node_List;
       Target_Events   : DOM.Core.Node_List)
       return SEM.Map
    is
-      Trap_Map : SEM.Map;
+      Event_Map : SEM.Map;
    begin
       declare
          ID_Set : SON.Set;
       begin
 
-         --  Add reserved traps.
+         --  Add reserved events.
 
-         ID_Set.Insert (New_Item => 35);
-         ID_Set.Insert (New_Item => 38);
-         ID_Set.Insert (New_Item => 42);
-         Trap_Map.Insert (Key      => Invalid_Trap_Event,
-                          New_Item => ID_Set);
+         for I in 0 .. Mutools.Types.Get_Max_ID (Group => Event_Group) loop
+            if not Mutools.Types.Is_Valid_Event_ID (Group => Event_Group,
+                                                    ID    => I)
+            then
+               ID_Set.Insert (New_Item => I);
+            end if;
+         end loop;
+         if not ID_Set.Is_Empty then
+            Event_Map.Insert (Key      => Invalid_Event,
+                              New_Item => ID_Set);
+         end if;
       end;
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Events) - 1 loop
          declare
             use type SEM.Cursor;
 
-            Trap : constant DOM.Core.Node
+            Event : constant DOM.Core.Node
               := DOM.Core.Nodes.Item (List  => Events,
                                       Index => I);
             ID : constant Natural := Natural'Value
               (DOM.Core.Elements.Get_Attribute
-                 (Elem => Trap,
+                 (Elem => Event,
                   Name => "id"));
             Src_Evt : constant Source_Event_Type
-              := To_Source_Event (Event           => Trap,
+              := To_Source_Event (Event           => Event,
                                   Physical_Events => Physical_Events,
                                   Target_Events   => Target_Events);
-            Cursor : constant SEM.Cursor := Trap_Map.Find (Key => Src_Evt);
+            Cursor : constant SEM.Cursor := Event_Map.Find (Key => Src_Evt);
 
             --  Append current event ID to list.
             procedure Append_ID
@@ -254,16 +262,16 @@ is
                   ID_Set : SON.Set;
                begin
                   ID_Set.Insert (New_Item => ID);
-                  Trap_Map.Insert (Key      => Src_Evt,
-                                   New_Item => ID_Set);
+                  Event_Map.Insert (Key      => Src_Evt,
+                                    New_Item => ID_Set);
                end;
             else
-               Trap_Map.Update_Element (Position => Cursor,
-                                        Process  => Append_ID'Access);
+               Event_Map.Update_Element (Position => Cursor,
+                                         Process  => Append_ID'Access);
             end if;
          end;
       end loop;
-      return Trap_Map;
+      return Event_Map;
    end To_Source_Event_Map;
 
    -------------------------------------------------------------------------
@@ -444,7 +452,8 @@ is
          use type Ada.Containers.Count_Type;
 
          Trap_Map : constant SEM.Map
-           := To_Source_Event_Map (Events => Traps,
+           := To_Source_Event_Map (Events          => Traps,
+                                   Event_Group     => Mutools.Types.Vmx_Exit,
                                    Physical_Events => Phys_Events,
                                    Target_Events   => Target_Events);
 

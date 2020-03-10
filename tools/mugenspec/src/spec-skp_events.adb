@@ -282,6 +282,8 @@ is
    is
       use Ada.Strings.Unbounded;
 
+      Max_Event_Count : constant Natural
+        := 2 ** Mutools.Constants.Event_Bits;
       Event_Bits_Str : constant String
         := Ada.Strings.Fixed.Trim
           (Source => Mutools.Constants.Event_Bits'Img,
@@ -304,6 +306,11 @@ is
       Buffer : Unbounded_String;
       Tmpl   : Mutools.Templates.Template_Type;
 
+      --  Add source event table for given events to specified template buffer.
+      procedure Add_Source_Events
+        (Events :        DOM.Core.Node_List;
+         Buffer : in out Unbounded_String);
+
       --  Add trap table for given traps to specified template buffer.
       procedure Add_Traps
         (Traps  :        DOM.Core.Node_List;
@@ -313,9 +320,6 @@ is
       procedure Add_Event_Action_Entry
         (Event :     DOM.Core.Node;
          Added : out Boolean);
-
-      --  Add source event entry to template buffer.
-      procedure Add_Event_Entry (Event : DOM.Core.Node);
 
       --  Append SPARK events spec of given subject to template buffer.
       procedure Write_Subject_Event_Spec (Subject : DOM.Core.Node);
@@ -363,85 +367,68 @@ is
 
       ----------------------------------------------------------------------
 
-      procedure Add_Event_Entry (Event : DOM.Core.Node)
+      procedure Add_Source_Events
+        (Events :        DOM.Core.Node_List;
+         Buffer : in out Unbounded_String)
       is
-         use type DOM.Core.Node;
+         Src_Evts_Map : constant SEM.Map
+           := To_Source_Event_Map (Events          => Events,
+                                   Event_Group     => Mutools.Types.Vmcall,
+                                   Physical_Events => Phys_Events,
+                                   Target_Events   => Target_Events);
+         Src_Ev_Count : Natural := 0;
 
-         Event_ID : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Event,
-              Name => "id");
-         Phys_Event_Ref : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Event,
-              Name => "physical");
-         Notify_Mode : constant String
-           := Muxml.Utils.Get_Attribute
-             (Nodes     => Phys_Events,
-              Ref_Attr  => "name",
-              Ref_Value => Phys_Event_Ref,
-              Attr_Name => "mode");
-         Src_Action : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Doc   => Event,
-              XPath => "*");
-         Src_Action_Kind : constant String
-           := (if Src_Action /= null then Mutools.Utils.To_Ada_Identifier
-               (Str => DOM.Core.Nodes.Node_Name (N => Src_Action))
-               else "No_Action");
-         Event_Target : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Nodes     => Target_Events,
-              Ref_Attr  => "physical",
-              Ref_Value => Phys_Event_Ref);
-         Target_Subj_ID : constant String
-           := (if Event_Target = null then "Invalid_Subject"
-               else DOM.Core.Elements.Get_Attribute
-                 (Elem => Muxml.Utils.Ancestor_Node
-                      (Node  => Event_Target,
-                       Level => 3),
-                  Name => "globalId"));
-         Target_Event_ID : constant String
-           := (if Event_Target = null then "Invalid_Target_Event"
-               else DOM.Core.Elements.Get_Attribute
-                 (Elem => Event_Target,
-                  Name => "id"));
-      begin
-         Buffer := Buffer & Indent (N => 3)  & " " & Event_ID & " => ("
-           & ASCII.LF
-           & Indent (N => 4) & "Source_Action  => " & Src_Action_Kind & ","
-           & ASCII.LF
-           & Indent (N => 4) & "Target_Subject => " & Target_Subj_ID & ","
-           & ASCII.LF
-           & Indent (N => 4) & "Target_Event   => " & Target_Event_ID & ",";
+         --  Add given source event entry to buffer.
+         procedure Add_Entry (Cursor : SEM.Cursor);
 
-         Buffer := Buffer & ASCII.LF & Indent (N => 4) & "Handover       => ";
-         if Notify_Mode = "switch" then
-            Buffer := Buffer & "True,";
-         else
-            Buffer := Buffer & "False,";
-         end if;
+         -------------------------------------------------------------------
 
-         Buffer := Buffer & ASCII.LF & Indent (N => 4) & "Send_IPI       => ";
-         if Notify_Mode = "ipi" then
-            Buffer := Buffer & "True";
-         else
-            Buffer := Buffer & "False";
-         end if;
+         procedure Add_Entry (Cursor : SEM.Cursor)
+         is
+            use type SEM.Cursor;
 
-         Buffer := Buffer & "," & ASCII.LF & Indent (N => 4);
-         Buffer := Buffer & "IRQ_Number     => ";
-         declare
-            Number : constant String
-              := (if Src_Action_Kind = "Unmask_Irq" then
-                     DOM.Core.Elements.Get_Attribute
-                    (Elem => Src_Action,
-                     Name => "number")
-                  else "0");
+            Event  : constant Source_Event_Type
+              := SEM.Key (Position => Cursor);
+            IDs    : constant SON.Set := SEM.Element (Position => Cursor);
+            Cur_ID : Natural := 0;
          begin
-            Buffer := Buffer & Number & ")";
-         end;
-      end Add_Event_Entry;
+            if Cursor /= Src_Evts_Map.First then
+               Buffer := Buffer & ",";
+            end if;
+
+            for ID of IDs loop
+               if Cur_ID = 0 then
+                  Buffer := Buffer & ASCII.LF & Indent (N => 3);
+               end if;
+               if Cur_ID = 5 then
+                  Cur_ID := 0;
+               else
+                  Cur_ID := Cur_ID + 1;
+               end if;
+
+               --  Pad single digit IDs for alignment.
+
+               Buffer := Buffer & (if ID'Img'Length = 2 then " " else "")
+                 & ID'Img;
+
+               if ID /= IDs.Last_Element then
+                  Buffer := Buffer & " |";
+               end if;
+            end loop;
+            Buffer := Buffer & " => ";
+            Add_Source_Event (Event  => Event,
+                              Buffer => Buffer);
+            Src_Ev_Count := Src_Ev_Count + 1;
+         end Add_Entry;
+      begin
+         Buffer := Buffer & "Source_Event_Table_Type'(";
+         Src_Evts_Map.Iterate (Process => Add_Entry'Access);
+         if Src_Ev_Count /= Max_Event_Count then
+            Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
+              & " others => Null_Source_Event";
+         end if;
+         Buffer := Buffer & "),";
+      end Add_Source_Events;
 
       ----------------------------------------------------------------------
 
@@ -516,8 +503,6 @@ is
       is
          use type DOM.Core.Node;
 
-         Max_Event_Count : constant Natural
-           := 2 ** Mutools.Constants.Event_Bits;
          Subj_ID : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Subject,
             Name => "globalId");
@@ -553,21 +538,8 @@ is
          if Src_Ev_Count = 0 then
             Buffer := Buffer & "Null_Source_Event_Table,";
          else
-            Buffer := Buffer & "Source_Event_Table_Type'(" & ASCII.LF;
-            for I in 0 .. Src_Ev_Count - 1 loop
-               Add_Event_Entry (Event => DOM.Core.Nodes.Item
-                                (List  => Src_Events,
-                                 Index => I));
-               if I < Src_Ev_Count - 1 then
-                  Buffer := Buffer & "," & ASCII.LF;
-               end if;
-            end loop;
-
-            if Src_Ev_Count /= Max_Event_Count then
-               Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
-                 & " others => Null_Source_Event";
-            end if;
-            Buffer := Buffer & "),";
+            Add_Source_Events (Events => Src_Events,
+                               Buffer => Buffer);
          end if;
 
          Buffer := Buffer & ASCII.LF

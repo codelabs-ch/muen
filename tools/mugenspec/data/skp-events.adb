@@ -96,7 +96,7 @@ is
             Send_IPI       => False,
             IRQ_Number     => 0)),
        Source_Events => Source_Event_Table_Type'(
-          1 => (
+           1 => (
             Source_Action  => Unmask_Irq,
             Target_Subject => Invalid_Subject,
             Target_Event   => Invalid_Target_Event,
@@ -135,7 +135,7 @@ is
             Send_IPI       => False,
             IRQ_Number     => 0)),
        Source_Events => Source_Event_Table_Type'(
-          1 => (
+           1 => (
             Source_Action  => No_Action,
             Target_Subject => 2,
             Target_Event   => 2,

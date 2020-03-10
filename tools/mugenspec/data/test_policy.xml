@@ -456,7 +456,6 @@
       <event id="34" logical="exception" physical="s2_handover"/>
       <event id="36" logical="exception" physical="s2_handover"/>
       <event id="37" logical="exception" physical="s2_handover"/>
-      <event id="38" logical="exception" physical="s2_handover"/>
       <event id="39" logical="exception" physical="s2_handover"/>
       <event id="40" logical="exception" physical="s2_handover"/>
       <event id="41" logical="exception" physical="s2_handover"/>
@@ -812,9 +811,6 @@
       <system_panic/>
      </event>
      <event id="37" logical="exception" physical="system_panic">
-      <system_panic/>
-     </event>
-     <event id="38" logical="exception" physical="system_panic">
       <system_panic/>
      </event>
      <event id="39" logical="exception" physical="system_panic">
@@ -1450,9 +1446,6 @@
        <system_panic/>
       </event>
       <event id="37" logical="exception" physical="system_panic">
-       <system_panic/>
-      </event>
-      <event id="38" logical="exception" physical="system_panic">
        <system_panic/>
       </event>
       <event id="39" logical="exception" physical="system_panic">

@@ -67,8 +67,8 @@
    <channel name="blockdev_response2" size="16#0000_4000#" hasEvent="asap"/>
   </if>
   <if variable="dbgserver_console_forwarding" value="true">
-   <channel name="console_in_1" size="16#1000#"/>
-   <channel name="console_in_2" size="16#1000#"/>
+   <channel name="console_in_1" size="16#1000#" hasEvent="asap"/>
+   <channel name="console_in_2" size="16#1000#" hasEvent="asap"/>
    <channel name="console_out_1" size="16#1000#"/>
    <channel name="console_out_2" size="16#1000#"/>
   </if>
@@ -199,7 +199,7 @@
      <reader logical="debug_shm_sink_memory" physical="debug_shm_sink_memory"/>
     </if>
     <if variable="dbgserver_console_forwarding" value="true">
-     <reader logical="hvc1|in" physical="console_in_1"/>
+     <reader logical="hvc1|in" physical="console_in_1" vector="auto"/>
      <writer logical="hvc1|out" physical="console_out_1"/>
     </if>
    </channels>
@@ -264,7 +264,7 @@
      <reader logical="blockdev_response1" physical="blockdev_response1" vector="auto"/>
     </if>
     <if variable="dbgserver_console_forwarding" value="true">
-     <reader logical="hvc1|in" physical="console_in_2"/>
+     <reader logical="hvc1|in" physical="console_in_2" vector="auto"/>
      <writer logical="hvc1|out" physical="console_out_2"/>
     </if>
    </channels>

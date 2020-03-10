@@ -26,7 +26,7 @@
 </xsl:template>
 
 <xsl:template name="extractConsoleInputlMappings">
- <xsl:text>&lt;array elementSize=&#34;16&#35;1000&#35;&#34; logical=&#34;subject_consoles_in&#34;&gt;</xsl:text>
+ <xsl:text>&lt;array elementSize=&#34;16&#35;1000&#35;&#34; logical=&#34;subject_consoles_in&#34; eventBase=&#34;auto&#34;&gt;</xsl:text>
  <xsl:text>&#10;</xsl:text>
   <xsl:for-each select="map[starts-with(@logical,'subject_console_in_')]">
    <xsl:text>	&lt;writer logical=&#34;</xsl:text>

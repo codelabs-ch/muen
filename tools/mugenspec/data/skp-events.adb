@@ -1277,9 +1277,6 @@ is
             IRQ_Number     => 0),
           others => Null_Source_Event),
        Target_Events => Target_Event_Table_Type'(
-          0 => Target_Event_Type'(
-            Kind   => No_Action,
-            Vector => Invalid_Vector),
           1 => Target_Event_Type'(
             Kind   => Inject_Interrupt,
             Vector => 12),

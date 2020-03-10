@@ -65,7 +65,9 @@ is
       Tmpl   : Mutools.Templates.Template_Type;
 
       --  Add event action entry to template buffer.
-      procedure Add_Event_Action_Entry (Event : DOM.Core.Node);
+      procedure Add_Event_Action_Entry
+        (Event :     DOM.Core.Node;
+         Added : out Boolean);
 
       --  Add source event entry to template buffer.
       procedure Add_Event_Entry (Event : DOM.Core.Node);
@@ -75,7 +77,9 @@ is
 
       -------------------------------------------------------------------
 
-      procedure Add_Event_Action_Entry (Event : DOM.Core.Node)
+      procedure Add_Event_Action_Entry
+        (Event :     DOM.Core.Node;
+         Added : out Boolean)
       is
          use type DOM.Core.Node;
 
@@ -90,23 +94,26 @@ is
          Action_Kind : constant String
            := (if Action /= null then DOM.Core.Nodes.Node_Name (N => Action)
                else "No_Action");
-      begin
-         Buffer := Buffer & Indent (N => 3)  & " "
-           & Event_ID & " => Target_Event_Type'("
-           & ASCII.LF
-           & Indent (N => 4) & "Kind   => "
-           & Mutools.Utils.To_Ada_Identifier (Str => Action_Kind) & ",";
-
-         Buffer := Buffer & ASCII.LF & Indent (N => 4) & "Vector => ";
-         if Action_Kind = "inject_interrupt" then
-            Buffer := Buffer & DOM.Core.Elements.Get_Attribute
+         Vector_Str : constant String :=
+           (if Action_Kind = "inject_interrupt" then
+               DOM.Core.Elements.Get_Attribute
               (Elem => Action,
-               Name => "vector");
+               Name => "vector")
+            else "Invalid_Vector");
+      begin
+         if not (Action_Kind = "No_Action" and Vector_Str = "Invalid_Vector")
+         then
+            Buffer := Buffer & Indent (N => 3)  & " "
+              & Event_ID & " => ";
+            Buffer := Buffer & "Target_Event_Type'(" & ASCII.LF
+              & Indent (N => 4) & "Kind   => "
+              & Mutools.Utils.To_Ada_Identifier (Str => Action_Kind) & ",";
+            Buffer := Buffer & ASCII.LF & Indent (N => 4)
+              & "Vector => " & Vector_Str & ")";
+            Added := True;
          else
-            Buffer := Buffer & "Invalid_Vector";
+            Added := False;
          end if;
-
-         Buffer := Buffer & ")";
       end Add_Event_Action_Entry;
 
       -------------------------------------------------------------------
@@ -220,6 +227,8 @@ is
            (List => Src_Events);
          Target_Ev_Count : constant Natural := DOM.Core.Nodes.Length
            (List => Target_Events);
+         Target_Added : Boolean;
+         Skip_Count : Natural := 0;
       begin
          Buffer := Buffer & Indent (N => 2) & Subj_ID
            & " => Subject_Events_Type'(" & ASCII.LF
@@ -271,14 +280,24 @@ is
             for I in 0 .. Target_Ev_Count - 1 loop
                Add_Event_Action_Entry (Event => DOM.Core.Nodes.Item
                                        (List  => Target_Events,
-                                        Index => I));
-               if I < Target_Ev_Count - 1 then
+                                        Index => I),
+                                       Added => Target_Added);
+               if Target_Added and
+                 (I < Target_Ev_Count - 1 or else Skip_Count > 0)
+               then
                   Buffer := Buffer & "," & ASCII.LF;
+               end if;
+               if not Target_Added then
+                  Skip_Count := Skip_Count + 1;
                end if;
             end loop;
 
             if Target_Ev_Count /= Max_Event_Count then
-               Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
+               if Skip_Count = 0 then
+                  Buffer := Buffer & "," & ASCII.LF;
+               end if;
+
+               Buffer := Buffer & Indent (N => 3)
                  & " others => Null_Target_Event";
             end if;
             Buffer := Buffer & "))";

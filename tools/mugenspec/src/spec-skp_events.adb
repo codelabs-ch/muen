@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Containers.Ordered_Sets;
+with Ada.Containers.Hashed_Maps;
 with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 
@@ -28,11 +30,241 @@ with Mulog;
 with Muxml.Utils;
 with Mutools.Constants;
 with Mutools.Templates;
+with Mutools.Types;
 
 with String_Templates;
 
 package body Spec.Skp_Events
 is
+
+   use type Ada.Containers.Hash_Type;
+
+   type Source_Event_Type is record
+      Source_Action  : Mutools.Types.Event_Action_Kind;
+      Target_Subject : Natural;
+      Target_Event   : Natural;
+      Handover       : Boolean;
+      Send_IPI       : Boolean;
+      IRQ_Number     : Natural;
+   end record;
+
+   Invalid_Trap_Event : constant Source_Event_Type :=
+     (Source_Action  => Mutools.Types.System_Panic,
+      Target_Subject => Natural'Last,
+      Target_Event   => Natural'Last,
+      Handover       => False,
+      Send_IPI       => False,
+      IRQ_Number     => 0);
+
+   --  Returns the hash for a given source event. It is a trivial
+   --  implementation and only used for calculating key hashes for hashed maps,
+   --  which are not required to be (cryptographically) strong.
+   function Hash (Src_Ev : Source_Event_Type) return Ada.Containers.Hash_Type
+   is (Mutools.Types.Source_Event_Action_Kind'Pos (Src_Ev.Source_Action)
+        + Ada.Containers.Hash_Type'Mod (Src_Ev.Target_Subject)
+        + Ada.Containers.Hash_Type'Mod (Src_Ev.Target_Event)
+        + (if Src_Ev.Handover then 1 else 0)
+        + (if Src_Ev.Send_IPI then 1 else 0)
+        + Ada.Containers.Hash_Type (Src_Ev.IRQ_Number));
+
+   package SON is new Ada.Containers.Ordered_Sets
+     (Element_Type => Natural);
+
+   use type SON.Set;
+
+   --  Container to map source events to the event IDs that reference a given
+   --  event.
+   package SEM is new Ada.Containers.Hashed_Maps
+     (Key_Type        => Source_Event_Type,
+      Element_Type    => SON.Set,
+      Hash            => Hash,
+      Equivalent_Keys => "=");
+
+   --  Convert given source event to string representation and add it to the
+   --  specified buffer.
+   procedure Add_Source_Event
+     (Event  :        Source_Event_Type;
+      Buffer : in out Ada.Strings.Unbounded.Unbounded_String);
+
+   --  Return source event for given event node.
+   function To_Source_Event
+     (Event           : DOM.Core.Node;
+      Physical_Events : DOM.Core.Node_List;
+      Target_Events   : DOM.Core.Node_List)
+      return Source_Event_Type;
+
+   --  Return map of source events for given events node list.
+   function To_Source_Event_Map
+     (Events          : DOM.Core.Node_List;
+      Physical_Events : DOM.Core.Node_List;
+      Target_Events   : DOM.Core.Node_List)
+      return SEM.Map;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Source_Event
+     (Event  :        Source_Event_Type;
+      Buffer : in out Ada.Strings.Unbounded.Unbounded_String)
+   is
+      use Ada.Strings.Unbounded;
+   begin
+      Buffer := Buffer & "(" & ASCII.LF
+        & Indent (N => 4) & "Source_Action  => "
+        & Mutools.Utils.To_Ada_Identifier (Str => Event.Source_Action'Img)
+        & "," & ASCII.LF
+        & Indent (N => 4) & "Target_Subject =>"
+        & (if Event.Target_Subject = Natural'Last then " Invalid_Subject"
+           else Event.Target_Subject'Img)
+        & "," & ASCII.LF
+        & Indent (N => 4) & "Target_Event   =>"
+        & (if Event.Target_Event = Natural'Last then " Invalid_Target_Event"
+           else Event.Target_Event'Img)
+        & ",";
+
+      Buffer := Buffer & ASCII.LF & Indent (N => 4) & "Handover       => "
+        & (if Event.Handover then "True" else "False") & ",";
+
+      Buffer := Buffer & ASCII.LF & Indent (N => 4) & "Send_IPI       => "
+        & (if Event.Send_IPI then "True" else "False");
+
+      Buffer := Buffer & "," & ASCII.LF
+        & Indent (N => 4) & "IRQ_Number     =>" & Event.IRQ_Number'Img & ")";
+   end Add_Source_Event;
+
+   -------------------------------------------------------------------------
+
+   function To_Source_Event
+     (Event           : DOM.Core.Node;
+      Physical_Events : DOM.Core.Node_List;
+      Target_Events   : DOM.Core.Node_List)
+      return Source_Event_Type
+   is
+      use type DOM.Core.Node;
+
+      Phys_Event_Ref : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Event,
+           Name => "physical");
+      Notify_Mode : constant String
+        := Muxml.Utils.Get_Attribute
+          (Nodes     => Physical_Events,
+           Ref_Attr  => "name",
+           Ref_Value => Phys_Event_Ref,
+           Attr_Name => "mode");
+      Src_Action : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Event,
+           XPath => "*");
+      Src_Action_Kind_Str : constant String
+        := (if Src_Action /= null then Mutools.Utils.To_Ada_Identifier
+            (Str => DOM.Core.Nodes.Node_Name (N => Src_Action))
+            else "No_Action");
+      Event_Target : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Nodes     => Target_Events,
+           Ref_Attr  => "physical",
+           Ref_Value => Phys_Event_Ref);
+      Target_Subj_ID : constant Natural
+        := (if Event_Target = null then Natural'Last
+            else Natural'Value (DOM.Core.Elements.Get_Attribute
+              (Elem => Muxml.Utils.Ancestor_Node
+               (Node  => Event_Target,
+                Level => 3),
+               Name => "globalId")));
+      Target_Event_ID : constant Natural
+        := (if Event_Target = null then Natural'Last
+            else Natural'Value (DOM.Core.Elements.Get_Attribute
+              (Elem => Event_Target,
+               Name => "id")));
+      IRQ_Num : constant Natural
+        := (if Src_Action_Kind_Str = "Unmask_Irq" then
+               Natural'Value (DOM.Core.Elements.Get_Attribute
+              (Elem => Src_Action,
+               Name => "number"))
+            else 0);
+   begin
+      return Source_Event_Type'
+        (Source_Action  => Mutools.Types.Event_Action_Kind'Value
+           (Src_Action_Kind_Str),
+         Target_Subject => Target_Subj_ID,
+         Target_Event   => Target_Event_ID,
+         Handover       => Notify_Mode = "switch",
+         Send_IPI       => Notify_Mode = "ipi",
+         IRQ_Number     => IRQ_Num);
+   end To_Source_Event;
+
+   -------------------------------------------------------------------------
+
+   function To_Source_Event_Map
+     (Events          : DOM.Core.Node_List;
+      Physical_Events : DOM.Core.Node_List;
+      Target_Events   : DOM.Core.Node_List)
+      return SEM.Map
+   is
+      Trap_Map : SEM.Map;
+   begin
+      declare
+         ID_Set : SON.Set;
+      begin
+
+         --  Add reserved traps.
+
+         ID_Set.Insert (New_Item => 35);
+         ID_Set.Insert (New_Item => 38);
+         ID_Set.Insert (New_Item => 42);
+         Trap_Map.Insert (Key      => Invalid_Trap_Event,
+                          New_Item => ID_Set);
+      end;
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Events) - 1 loop
+         declare
+            use type SEM.Cursor;
+
+            Trap : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Events,
+                                      Index => I);
+            ID : constant Natural := Natural'Value
+              (DOM.Core.Elements.Get_Attribute
+                 (Elem => Trap,
+                  Name => "id"));
+            Src_Evt : constant Source_Event_Type
+              := To_Source_Event (Event           => Trap,
+                                  Physical_Events => Physical_Events,
+                                  Target_Events   => Target_Events);
+            Cursor : constant SEM.Cursor := Trap_Map.Find (Key => Src_Evt);
+
+            --  Append current event ID to list.
+            procedure Append_ID
+              (Key     :        Source_Event_Type;
+               Element : in out SON.Set);
+
+            -------------------------------------------------------------
+
+            procedure Append_ID
+              (Key     :        Source_Event_Type;
+               Element : in out SON.Set)
+            is
+               pragma Unreferenced (Key);
+            begin
+               Element.Insert (New_Item => ID);
+            end Append_ID;
+         begin
+            if Cursor = SEM.No_Element then
+               declare
+                  ID_Set : SON.Set;
+               begin
+                  ID_Set.Insert (New_Item => ID);
+                  Trap_Map.Insert (Key      => Src_Evt,
+                                   New_Item => ID_Set);
+               end;
+            else
+               Trap_Map.Update_Element (Position => Cursor,
+                                        Process  => Append_ID'Access);
+            end if;
+         end;
+      end loop;
+      return Trap_Map;
+   end To_Source_Event_Map;
 
    -------------------------------------------------------------------------
 
@@ -64,6 +296,11 @@ is
       Buffer : Unbounded_String;
       Tmpl   : Mutools.Templates.Template_Type;
 
+      --  Add trap table for given traps to specified template buffer.
+      procedure Add_Traps
+        (Traps  :        DOM.Core.Node_List;
+         Buffer : in out Unbounded_String);
+
       --  Add event action entry to template buffer.
       procedure Add_Event_Action_Entry
         (Event :     DOM.Core.Node;
@@ -75,7 +312,7 @@ is
       --  Append SPARK events spec of given subject to template buffer.
       procedure Write_Subject_Event_Spec (Subject : DOM.Core.Node);
 
-      -------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Add_Event_Action_Entry
         (Event :     DOM.Core.Node;
@@ -116,7 +353,7 @@ is
          end if;
       end Add_Event_Action_Entry;
 
-      -------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Add_Event_Entry (Event : DOM.Core.Node)
       is
@@ -200,6 +437,72 @@ is
 
       ----------------------------------------------------------------------
 
+      procedure Add_Traps
+        (Traps  :        DOM.Core.Node_List;
+         Buffer : in out Unbounded_String)
+      is
+         use type Ada.Containers.Count_Type;
+
+         Trap_Map : constant SEM.Map
+           := To_Source_Event_Map (Events => Traps,
+                                   Physical_Events => Phys_Events,
+                                   Target_Events   => Target_Events);
+
+         --  Add given source event entry to buffer.
+         procedure Add_Entry (Cursor : SEM.Cursor);
+
+         -------------------------------------------------------------------
+
+         procedure Add_Entry (Cursor : SEM.Cursor)
+         is
+            use type SEM.Cursor;
+
+            Event  : constant Source_Event_Type
+              := SEM.Key (Position => Cursor);
+            IDs    : constant SON.Set := SEM.Element (Position => Cursor);
+            Cur_ID : Natural := 0;
+         begin
+            if Cursor /= Trap_Map.First then
+               Buffer := Buffer & ",";
+            end if;
+
+            for ID of IDs loop
+               if Cur_ID = 0 then
+                  Buffer := Buffer & ASCII.LF & Indent (N => 3);
+               end if;
+               if Cur_ID = 5 then
+                  Cur_ID := 0;
+               else
+                  Cur_ID := Cur_ID + 1;
+               end if;
+
+               --  Pad single digit IDs for alignment.
+
+               Buffer := Buffer & (if ID'Img'Length = 2 then " " else "")
+                 & ID'Img;
+
+               if ID /= IDs.Last_Element then
+                  Buffer := Buffer & " |";
+               end if;
+            end loop;
+            Buffer := Buffer & " => ";
+            Add_Source_Event (Event  => Event,
+                              Buffer => Buffer);
+         end Add_Entry;
+      begin
+         Buffer := Buffer & "Trap_Table_Type'(";
+         if Trap_Map.Length = 1 then
+            Buffer := Buffer & ASCII.LF & Indent (N => 3) & "others => ";
+            Add_Source_Event (Event  => SEM.Key (Position => Trap_Map.First),
+                              Buffer => Buffer);
+         else
+            Trap_Map.Iterate (Process => Add_Entry'Access);
+         end if;
+         Buffer := Buffer & "),";
+      end Add_Traps;
+
+      ----------------------------------------------------------------------
+
       procedure Write_Subject_Event_Spec (Subject : DOM.Core.Node)
       is
          use type DOM.Core.Node;
@@ -213,8 +516,6 @@ is
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
               XPath => "events/source/group[@name='vmx_exit']/*");
-         Trap_Count : constant Natural := DOM.Core.Nodes.Length
-           (List => Traps);
          Src_Events : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
@@ -234,18 +535,8 @@ is
            & " => Subject_Events_Type'(" & ASCII.LF
            & Indent & "    Source_Traps  => ";
 
-         Buffer := Buffer & "Trap_Table_Type'(" & ASCII.LF;
-         for I in 0 .. Trap_Count - 1 loop
-            Add_Event_Entry (Event => DOM.Core.Nodes.Item
-                             (List  => Traps,
-                              Index => I));
-            if I < Trap_Count - 1 then
-               Buffer := Buffer & "," & ASCII.LF;
-            end if;
-         end loop;
-
-         Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
-           & " others => Invalid_Trap_Event),";
+         Add_Traps (Traps  => Traps,
+                    Buffer => Buffer);
 
          Buffer := Buffer & ASCII.LF
            & Indent & "    Source_Events => ";

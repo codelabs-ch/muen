@@ -18,6 +18,8 @@
 
 with System;
 
+with SK.Hypercall;
+
 with Dbgserver_Component.Channel_Arrays;
 
 with Dbg.Subject_Consoles.Stream.Reader;
@@ -73,6 +75,9 @@ is
    --  ID of currently attached subject console.
    Attached_Console : Extended_Subject_Console_Range;
 
+   --  Flags keeping track which subject consoles have pending data.
+   Pending_Flags : array (Subject_Console_Range) of Boolean;
+
    -------------------------------------------------------------------------
 
    procedure Attach
@@ -95,6 +100,22 @@ is
    begin
       Attached_Console := No_Console;
    end Detach;
+
+   -------------------------------------------------------------------------
+
+   procedure Flush
+   is
+      use type Interfaces.Unsigned_8;
+   begin
+      if Attached_Console /= No_Console
+        and then Pending_Flags (Subject_Console_Range (Attached_Console))
+      then
+         SK.Hypercall.Trigger_Event
+           (Number => Cspecs.Subject_Consoles_In_Event_Base
+            + Interfaces.Unsigned_8 (Attached_Console) - 1);
+         Pending_Flags (Subject_Console_Range (Attached_Console)) := False;
+      end if;
+   end Flush;
 
    -------------------------------------------------------------------------
 
@@ -128,6 +149,7 @@ is
          Stream.Writer_Instance.Initialize
            (Channel => Consoles_In (I),
             Epoch   => 1);
+         Pending_Flags (I) := False;
       end loop;
 
       Attached_Console := No_Console;
@@ -142,6 +164,7 @@ is
          Stream.Writer_Instance.Write
            (Channel => Consoles_In (Subject_Console_Range (Attached_Console)),
             Element => Data);
+         Pending_Flags (Subject_Console_Range (Attached_Console)) := True;
       end if;
    end Put;
 

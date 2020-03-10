@@ -36,6 +36,10 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Flush is null;
+
+   -------------------------------------------------------------------------
+
    procedure Get
      (Data    : out Interfaces.Unsigned_8;
       Success : out Boolean)

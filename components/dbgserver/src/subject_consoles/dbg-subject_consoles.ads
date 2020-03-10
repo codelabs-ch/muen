@@ -33,6 +33,9 @@ is
    --  Detach from currently attached subject console.
    procedure Detach;
 
+   --  Flush currently attached subject console.
+   procedure Flush;
+
    --  Read data from the currently attached console. Success is True if a
    --  console is attached and valid data was read.
    procedure Get

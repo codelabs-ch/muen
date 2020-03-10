@@ -37,7 +37,7 @@ with Mutools.Types;
 with Mutools.XML_Utils;
 with Mutools.Constants;
 with Mucfgvcpu;
-with Mucfgcheck.Events;
+with Mucfgcheck;
 
 with Expanders.Config;
 with Expanders.Types;
@@ -344,7 +344,7 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subj_Node,
                  Name => "name");
-            Group_Max_Event : constant Natural := Mucfgcheck.Events.Get_Max_ID
+            Group_Max_Event : constant Natural := Mutools.Types.Get_Max_ID
               (Group => Group);
          begin
             Mulog.Log (Msg => "Adding default events to event group '"
@@ -359,7 +359,7 @@ is
                      Side   => Ada.Strings.Left);
                   Ev_Node : DOM.Core.Node;
                begin
-                  if Mucfgcheck.Events.Is_Valid_Event_ID
+                  if Mutools.Types.Is_Valid_Event_ID
                     (Group => Group,
                      ID    => ID)
                     and then

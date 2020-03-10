@@ -17,7 +17,6 @@
 --
 
 with Muxml;
-with Mutools.Types;
 
 package Mucfgcheck.Events
 is
@@ -66,15 +65,5 @@ is
    --  Check that level-triggered IRQs have a corresponding unmask IRQ event.
    procedure Level_Triggered_Unmask_IRQ_Action
      (XML_Data : Muxml.XML_Data_Type);
-
-   --  Returns the maximum valid ID for a given event group.
-   function Get_Max_ID (Group : Mutools.Types.Event_Group_Type) return Natural;
-
-   --  Returns True if the specified ID is valid in the context of the given
-   --  event group.
-   function Is_Valid_Event_ID
-     (Group : Mutools.Types.Event_Group_Type;
-      ID    : Natural)
-      return Boolean;
 
 end Mucfgcheck.Events;

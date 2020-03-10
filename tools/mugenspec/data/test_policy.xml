@@ -456,7 +456,6 @@
       <event id="34" logical="exception" physical="s2_handover"/>
       <event id="36" logical="exception" physical="s2_handover"/>
       <event id="37" logical="exception" physical="s2_handover"/>
-      <event id="38" logical="exception" physical="s2_handover"/>
       <event id="39" logical="exception" physical="s2_handover"/>
       <event id="40" logical="exception" physical="s2_handover"/>
       <event id="41" logical="exception" physical="s2_handover"/>
@@ -814,9 +813,6 @@
      <event id="37" logical="exception" physical="system_panic">
       <system_panic/>
      </event>
-     <event id="38" logical="exception" physical="system_panic">
-      <system_panic/>
-     </event>
      <event id="39" logical="exception" physical="system_panic">
       <system_panic/>
      </event>
@@ -1071,15 +1067,13 @@
     <source>
      <group name="vmx_exit">
       <event id="00" logical="exception" physical="tau0_handover"/>
-
-      <!-- external_interrupt : reserved -->
+      <event id="01" logical="ext_int" physical="tau0_handover"/>
       <event id="02" logical="triple_fault" physical="tau0_handover"/>
       <event id="03" logical="init_signal" physical="tau0_handover"/>
       <event id="04" logical="sipi" physical="tau0_handover"/>
       <event id="05" logical="io_smi" physical="tau0_handover"/>
       <event id="06" logical="smi" physical="tau0_handover"/>
-
-      <!-- interrupt window : reserved -->
+      <event id="07" logical="int_window" physical="tau0_handover"/>
       <event id="08" logical="nmi_window" physical="tau0_handover"/>
       <event id="09" logical="task_switch" physical="tau0_handover"/>
       <event id="10" logical="cpuid" physical="tau0_handover"/>
@@ -1107,18 +1101,13 @@
       <event id="32" logical="wrmsr" physical="tau0_handover"/>
       <event id="33" logical="failure_guest_state" physical="tau0_handover"/>
       <event id="34" logical="failure_msr_loading" physical="tau0_handover"/>
-
       <!-- reserved -->
       <event id="36" logical="mwait" physical="tau0_handover"/>
       <event id="37" logical="monitor_trap_flag" physical="tau0_handover"/>
-
-      <!-- reserved -->
-
       <!-- reserved -->
       <event id="39" logical="monitor" physical="tau0_handover"/>
       <event id="40" logical="pause" physical="tau0_handover"/>
       <event id="41" logical="failure_machine_check" physical="tau0_handover"/>
-
       <!-- reserved -->
       <event id="43" logical="tpr_below_threshold" physical="tau0_handover"/>
       <event id="44" logical="apic_access" physical="tau0_handover"/>
@@ -1129,8 +1118,7 @@
       <event id="49" logical="ept_misconfiguration" physical="tau0_handover"/>
       <event id="50" logical="invept" physical="tau0_handover"/>
       <event id="51" logical="edtscp" physical="tau0_handover"/>
-
-      <!-- vmx_preemption_timer : reserved -->
+      <event id="52" logical="vmx_timer" physical="tau0_handover"/>
       <event id="53" logical="invvpid" physical="tau0_handover"/>
       <event id="54" logical="wbinvd" physical="tau0_handover"/>
       <event id="55" logical="xsetbv" physical="tau0_handover"/>
@@ -1450,9 +1438,6 @@
        <system_panic/>
       </event>
       <event id="37" logical="exception" physical="system_panic">
-       <system_panic/>
-      </event>
-      <event id="38" logical="exception" physical="system_panic">
        <system_panic/>
       </event>
       <event id="39" logical="exception" physical="system_panic">

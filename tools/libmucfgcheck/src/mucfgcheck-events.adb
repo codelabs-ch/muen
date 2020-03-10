@@ -27,6 +27,7 @@ with McKae.XML.XPath.XIA;
 with Mulog;
 with Muxml.Utils;
 with Mutools.Match;
+with Mutools.Types;
 
 package body Mucfgcheck.Events
 is
@@ -122,17 +123,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Max_ID (Group : Mutools.Types.Event_Group_Type) return Natural
-   is
-   begin
-      case Group is
-         when Mutools.Types.Vmx_Exit => return 59;
-         when Mutools.Types.Vmcall   => return 63;
-      end case;
-   end Get_Max_ID;
-
-   -------------------------------------------------------------------------
-
    procedure IPI_Different_Core (XML_Data : Muxml.XML_Data_Type)
    is
    begin
@@ -141,39 +131,6 @@ is
                                Test      => Not_Equals'Access,
                                Error_Msg => "must run on different CPU");
    end IPI_Different_Core;
-
-   -------------------------------------------------------------------------
-
-   function Is_Valid_Event_ID
-     (Group : Mutools.Types.Event_Group_Type;
-      ID    : Natural)
-      return Boolean
-   is
-      type Reserved_IDs_Type is array (Natural range <>) of Natural;
-
-      type Reserved_IDs_Access is access constant Reserved_IDs_Type;
-
-      --  Reserved VMX exit IDs, see Intel SDM Vol. 3D, "Appendix C VMX Basic
-      --  Exit Reasons".
-      Vmx_Exit_Reserved : aliased constant Reserved_IDs_Type := (35, 38, 42);
-
-      Reserved_IDs : constant array (Mutools.Types.Event_Group_Type)
-        of Reserved_IDs_Access
-          := (Mutools.Types.Vmx_Exit => Vmx_Exit_Reserved'Access,
-              Mutools.Types.Vmcall   => null);
-
-      Result : Boolean;
-   begin
-      Result := ID <= Get_Max_ID (Group => Group);
-
-      if Reserved_IDs (Group) /= null then
-         for Res_ID of Reserved_IDs (Group).all loop
-            Result := Result and ID /= Res_ID;
-         end loop;
-      end if;
-
-      return Result;
-   end Is_Valid_Event_ID;
 
    -------------------------------------------------------------------------
 
@@ -709,7 +666,7 @@ is
                    (Elem => DOM.Core.Nodes.Parent_Node (N => Event_Node),
                     Name => "name"));
          begin
-            if not Is_Valid_Event_ID
+            if not Mutools.Types.Is_Valid_Event_ID
               (Group => Event_Group,
                ID    => Event_ID)
             then
@@ -825,7 +782,7 @@ is
       ----------------------------------------------------------------------
 
       Max_VMX_Exit_ID : constant Natural
-        := Get_Max_ID (Group => Mutools.Types.Vmx_Exit);
+        := Mutools.Types.Get_Max_ID (Group => Mutools.Types.Vmx_Exit);
       Subjects : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
@@ -858,7 +815,7 @@ is
                XPath => "*");
             if not Contains_Default_Event (List => Src_Events) then
                for Ev_ID in 0 .. Max_VMX_Exit_ID loop
-                  if Is_Valid_Event_ID
+                  if Mutools.Types.Is_Valid_Event_ID
                     (Group => Mutools.Types.Vmx_Exit,
                      ID    => Ev_ID)
                     and then Muxml.Utils.Get_Element

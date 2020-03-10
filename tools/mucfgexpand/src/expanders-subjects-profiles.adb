@@ -32,7 +32,6 @@ with Muxml.Utils;
 with Mutools.Types;
 with Mutools.Utils;
 with Mutools.XML_Utils;
-with Mucfgcheck.Events;
 
 with Expanders.Utils;
 with Expanders.XML_Utils;
@@ -94,7 +93,7 @@ is
 
       Sibs           : DOM.Core.Node_List;
       Max_Evt_Src_ID : constant Positive
-        := Mucfgcheck.Events.Get_Max_ID (Group => Mutools.Types.Vmcall);
+        := Mutools.Types.Get_Max_ID (Group => Mutools.Types.Vmcall);
    begin
       Mulog.Log (Msg => "Adding SMP inter-core events to subject '"
                  & Subject_Name & "'");

@@ -395,7 +395,7 @@ is
               Ref_Attr  => "physical",
               Ref_Value => Phys_Event_Ref);
          Target_Subj_ID : constant String
-           := (if Event_Target = null then "Skp.Invalid_Subject"
+           := (if Event_Target = null then "Invalid_Subject"
                else DOM.Core.Elements.Get_Attribute
                  (Elem => Muxml.Utils.Ancestor_Node
                       (Node  => Event_Target,

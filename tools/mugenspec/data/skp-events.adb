@@ -75,7 +75,7 @@ is
             IRQ_Number     => 0),
           19 => (
             Source_Action  => System_Reboot,
-            Target_Subject => Skp.Invalid_Subject,
+            Target_Subject => Invalid_Subject,
             Target_Event   => Invalid_Target_Event,
             Handover       => False,
             Send_IPI       => False,
@@ -98,7 +98,7 @@ is
        Source_Events => Source_Event_Table_Type'(
           1 => (
             Source_Action  => Unmask_Irq,
-            Target_Subject => Skp.Invalid_Subject,
+            Target_Subject => Invalid_Subject,
             Target_Event   => Invalid_Target_Event,
             Handover       => False,
             Send_IPI       => False,

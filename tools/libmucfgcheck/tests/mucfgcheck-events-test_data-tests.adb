@@ -981,25 +981,6 @@ package body Mucfgcheck.Events.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Get_Max_ID (Gnattest_T : in out Test);
-   procedure Test_Get_Max_ID_a65afa (Gnattest_T : in out Test) renames Test_Get_Max_ID;
---  id:2.2/a65afae2a79d6438/Get_Max_ID/1/0/
-   procedure Test_Get_Max_ID (Gnattest_T : in out Test) is
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-   begin
-      Assert (Condition => Get_Max_ID (Group => Mutools.Types.Vmx_Exit) = 59,
-              Message   => "Invalid VMX exit max ID");
-      Assert (Condition => Get_Max_ID (Group => Mutools.Types.Vmcall) = 63,
-              Message   => "Invalid Vmcall max ID");
---  begin read only
-   end Test_Get_Max_ID;
---  end read only
-
-
---  begin read only
    procedure Test_Is_Valid_Event_ID (Gnattest_T : in out Test);
    procedure Test_Is_Valid_Event_ID_2d339d (Gnattest_T : in out Test) renames Test_Is_Valid_Event_ID;
 --  id:2.2/2d339dda9942d861/Is_Valid_Event_ID/1/0/

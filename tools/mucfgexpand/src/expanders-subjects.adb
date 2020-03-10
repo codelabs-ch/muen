@@ -344,7 +344,7 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subj_Node,
                  Name => "name");
-            Group_Max_Event : constant Natural := Mucfgcheck.Events.Get_Max_ID
+            Group_Max_Event : constant Natural := Mutools.Types.Get_Max_ID
               (Group => Group);
          begin
             Mulog.Log (Msg => "Adding default events to event group '"

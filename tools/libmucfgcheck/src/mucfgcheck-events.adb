@@ -122,17 +122,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Max_ID (Group : Mutools.Types.Event_Group_Type) return Natural
-   is
-   begin
-      case Group is
-         when Mutools.Types.Vmx_Exit => return 59;
-         when Mutools.Types.Vmcall   => return 63;
-      end case;
-   end Get_Max_ID;
-
-   -------------------------------------------------------------------------
-
    procedure IPI_Different_Core (XML_Data : Muxml.XML_Data_Type)
    is
    begin
@@ -164,7 +153,7 @@ is
 
       Result : Boolean;
    begin
-      Result := ID <= Get_Max_ID (Group => Group);
+      Result := ID <= Mutools.Types.Get_Max_ID (Group => Group);
 
       if Reserved_IDs (Group) /= null then
          for Res_ID of Reserved_IDs (Group).all loop
@@ -825,7 +814,7 @@ is
       ----------------------------------------------------------------------
 
       Max_VMX_Exit_ID : constant Natural
-        := Get_Max_ID (Group => Mutools.Types.Vmx_Exit);
+        := Mutools.Types.Get_Max_ID (Group => Mutools.Types.Vmx_Exit);
       Subjects : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,

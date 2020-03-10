@@ -32,7 +32,6 @@ with Alloc.Map;
 
 with Mutools.Constants;
 with Muxml.Utils;
-with Mucfgcheck.Events;
 
 with Expanders.Utils;
 
@@ -624,7 +623,7 @@ is
          XPath => "*[@id]");
       Alloc : Utils.Number_Allocator_Type
         (Range_Start => 0,
-         Range_End   => Mucfgcheck.Events.Get_Max_ID (Group => Group_Type));
+         Range_End   => Mutools.Types.Get_Max_ID (Group => Group_Type));
 
       Result : Natural;
    begin

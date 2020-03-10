@@ -485,8 +485,7 @@ package body Expanders.XML_Utils.Test_Data.Tests is
               = "11",
               Message   => "Source ID mismatch (11)");
 
-      for I in 11 .. Mucfgcheck.Events.Get_Max_ID
-        (Group => Mutools.Types.Vmcall)
+      for I in 11 .. Mutools.Types.Get_Max_ID (Group => Mutools.Types.Vmcall)
       loop
          Node := DOM.Core.Documents.Create_Element
            (Doc      => Policy.Doc,

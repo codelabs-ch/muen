@@ -1,0 +1,2 @@
+*.ads diff=ada
+*.adb diff=ada

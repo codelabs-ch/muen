@@ -15,6 +15,7 @@
  <memory>
   <memory name="crash_audit" physicalAddress="16#0001_0000_0000#" size="16#1000#" caching="UC" type="subject_crash_audit"/>
   <memory name="ahci_dma" size="16#0100_0000#" caching="UC" type="subject_device"/>
+  <include href="memory_xhci_dma.xml"/>
  </memory>
 
  <deviceDomains>
@@ -26,6 +27,16 @@
     <device logical="sata" physical="ahci_controller"/>
    </devices>
   </domain>
+  <if variable="dbgserver_sink_xhcidbg" value="true">
+   <domain name="usb_domain">
+    <memory>
+     <memory logical="dma1" physical="xhci_dma" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
+    </memory>
+    <devices>
+     <device logical="xhci" physical="usb_controller_1" mapReservedMemory="true"/>
+    </devices>
+   </domain>
+  </if>
  </deviceDomains>
 
  <events>

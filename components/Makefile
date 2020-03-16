@@ -12,6 +12,7 @@ COMPONENTS_SPARK := \
 	libmutime \
 	libmusinfo \
 	libxhcidbg \
+	ahci_drv \
 	controller \
 	dbgserver \
 	dm \

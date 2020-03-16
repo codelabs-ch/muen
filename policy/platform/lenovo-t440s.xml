@@ -22,6 +22,13 @@
     </if>
    </alias>
    <alias name="storage_controller" physical="sata_controller_1"/>
+   <alias name="ahci_controller" physical="sata_controller_1">
+    <resource name="irq1" physical="irq1">
+     <resource name="msi1" physical="msi1"/>
+    </resource>
+    <resource name="ahci_registers" physical="mem1"/>
+    <resource name="mmconf" physical="mmconf"/>
+   </alias>
   </aliases>
   <classes>
    <class name="desktop_devices">

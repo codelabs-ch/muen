@@ -43,6 +43,7 @@
   <xs:restriction base="xs:string">
    <xs:enumeration value="none"/>
    <xs:enumeration value="uart"/>
+   <xs:enumeration value="hsuart"/>
    <xs:enumeration value="vga"/>
   </xs:restriction>
  </xs:simpleType>

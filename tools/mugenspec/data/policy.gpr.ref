@@ -1,6 +1,6 @@
 abstract project Policy is
 
-   type Diagnostics_Kind is ("none","uart","vga");
+   type Diagnostics_Kind is ("none","uart","hsuart","vga");
 
    Debug_Type : Diagnostics_Kind := "uart";
 

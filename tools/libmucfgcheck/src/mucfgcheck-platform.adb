@@ -230,13 +230,32 @@ is
       --  Check that the diagnostics node has no child elements.
       procedure Check_Diag_None (Diag_Device : DOM.Core.Node);
 
-      --  Check that the diagnostics node specifies device reference with I/O
+      --  Check that the diagnostics node specifies a device reference with
+      --  given Res_Kind resource type.
+      procedure Check_Diag_Uart_Common
+        (Diag_Device : DOM.Core.Node;
+         Res_Kind    : String);
+
+      --  Check that the diagnostics node specifies a device reference with I/O
       --  port resource.
       procedure Check_Diag_Uart (Diag_Device : DOM.Core.Node);
 
       --  Check that the diagnostics node specifies a device reference with
+      --  memory resource.
+      procedure Check_Diag_Hsuart (Diag_Device : DOM.Core.Node);
+
+      --  Check that the diagnostics node specifies a device reference with
       --  I/O port and memory resource.
       procedure Check_Diag_Vga (Diag_Device : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Diag_Hsuart (Diag_Device : DOM.Core.Node)
+      is
+      begin
+         Check_Diag_Uart_Common (Diag_Device => Diag_Device,
+                                 Res_Kind    => "memory");
+      end Check_Diag_Hsuart;
 
       ----------------------------------------------------------------------
 
@@ -253,7 +272,17 @@ is
 
       procedure Check_Diag_Uart (Diag_Device : DOM.Core.Node)
       is
-         Res_Kind : constant String := "ioPort";
+      begin
+         Check_Diag_Uart_Common (Diag_Device => Diag_Device,
+                                 Res_Kind    => "ioPort");
+      end Check_Diag_Uart;
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Diag_Uart_Common
+        (Diag_Device : DOM.Core.Node;
+         Res_Kind    : String)
+      is
       begin
          if Diag_Device = null then
             raise Validation_Error with "Kernel diagnostics device of type '"
@@ -279,11 +308,11 @@ is
                                             Index => 0);
             if DOM.Core.Nodes.Node_Name (N => Dev_Res) /= Res_Kind then
                raise Validation_Error with "Kernel diagnostics device of type "
-                 & "'" & Diag_Type_Str & "' must specify an I/O port device "
-                 & "resource reference";
+                 & "'" & Diag_Type_Str & "' must specify " & Res_Kind
+                 & " device resource reference";
             end if;
          end;
-      end Check_Diag_Uart;
+      end Check_Diag_Uart_Common;
 
       ----------------------------------------------------------------------
 
@@ -333,6 +362,8 @@ is
             Check_Diag_None (Diag_Device => Diag_Dev_Node);
          when Mutools.Types.Uart =>
             Check_Diag_Uart (Diag_Device => Diag_Dev_Node);
+         when Mutools.Types.Hsuart =>
+            Check_Diag_Hsuart (Diag_Device => Diag_Dev_Node);
          when Mutools.Types.Vga =>
             Check_Diag_Vga (Diag_Device => Diag_Dev_Node);
       end case;

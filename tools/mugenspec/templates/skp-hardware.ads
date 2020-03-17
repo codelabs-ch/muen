@@ -1,5 +1,5 @@
 package Skp.Hardware
 is
 
-__port_io_devices__
+__device_resources__
 end Skp.Hardware;

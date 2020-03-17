@@ -82,7 +82,7 @@ is
    type MSR_Mode_Type is (R, W, RW);
 
    --  Types of kernel diagnostics devices.
-   type Kernel_Diagnostics_Kind is (None, Uart, Vga);
+   type Kernel_Diagnostics_Kind is (None, Uart, Hsuart, Vga);
 
 private
 

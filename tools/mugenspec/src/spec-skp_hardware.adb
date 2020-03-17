@@ -42,12 +42,12 @@ is
    is
       Tmpl : Mutools.Templates.Template_Type;
 
-      --  Write port I/O device resources.
-      procedure Write_Port_IO_Devices;
+      --  Write kernel device resources.
+      procedure Write_Device_Resources;
 
       ----------------------------------------------------------------------
 
-      procedure Write_Port_IO_Devices
+      procedure Write_Device_Resources
       is
          use Ada.Strings.Unbounded;
 
@@ -60,7 +60,7 @@ is
          Logical_Devs : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Policy.Doc,
-              XPath => "/system/kernel/devices/device[ioPort]");
+              XPath => "/system/kernel/devices/device[ioPort|memory]");
       begin
          for I in 0 .. DOM.Core.Nodes.Length (List => Logical_Devs) - 1 loop
             declare
@@ -177,9 +177,9 @@ is
 
          Mutools.Templates.Replace
            (Template => Tmpl,
-            Pattern  => "__port_io_devices__",
+            Pattern  => "__device_resources__",
             Content  => To_String (Res));
-      end Write_Port_IO_Devices;
+      end Write_Device_Resources;
    begin
       Mulog.Log (Msg => "Writing hardware spec to '"
                  & Output_Dir & "/skp-hardware.ads'");
@@ -187,7 +187,7 @@ is
       Tmpl := Mutools.Templates.Create
         (Content => String_Templates.skp_hardware_ads);
 
-      Write_Port_IO_Devices;
+      Write_Device_Resources;
 
       Mutools.Templates.Write
         (Template => Tmpl,

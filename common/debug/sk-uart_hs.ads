@@ -1,5 +1,6 @@
 --
---  Copyright (C) 2014  secunet Security Networks AG
+--  Copyright (C) 2020  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2020  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -15,24 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Dbg.Byte_Queue;
-with Dbg.Consoles;
-
-private package Dbg.Serial
+package SK.UART_HS
 is
 
-   --  Init serial line.
-   procedure Init;
+   --  Read register at given address.
+   procedure Read
+     (Address :     Word64;
+      Value   : out Word32);
 
-   --  Read bytes from the serial line into the input queue and output bytes
-   --  from the output queue and the console to the serial line.
-   procedure Run
-     (Console      : in out Consoles.Console_Type;
-      Input_Queue  : in out Byte_Queue.Queue_Type;
-      Output_Queue : in out Byte_Queue.Queue_Type);
+   --  Write Value to register at given address.
+   procedure Write
+     (Address : Word64;
+      Value   : Word32);
 
-private
-
-   FIFO_Size : constant := 16;
-
-end Dbg.Serial;
+end SK.UART_HS;

@@ -1,5 +1,6 @@
 --
---  Copyright (C) 2014  secunet Security Networks AG
+--  Copyright (C) 2020  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2020  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -15,24 +16,21 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Dbg.Byte_Queue;
-with Dbg.Consoles;
+with SK.UART;
+with SK.UART_HS;
 
-private package Dbg.Serial
-is
+with Skp.Hardware;
 
-   --  Init serial line.
-   procedure Init;
-
-   --  Read bytes from the serial line into the input queue and output bytes
-   --  from the output queue and the console to the serial line.
-   procedure Run
-     (Console      : in out Consoles.Console_Type;
-      Input_Queue  : in out Byte_Queue.Queue_Type;
-      Output_Queue : in out Byte_Queue.Queue_Type);
-
-private
-
-   FIFO_Size : constant := 16;
-
-end Dbg.Serial;
+package SK.Console_HSUART is new SK.UART
+  (Base_Address  => Skp.Hardware.Debugconsole_Memory,
+   Register_Type => Word32,
+   Address_Type  => Word64,
+   UART_DLL      => 0,
+   UART_DLH      => 4,
+   UART_IER      => 4,
+   UART_FCR      => 8,
+   UART_LCR      => 16#0c#,
+   UART_MCR      => 16#10#,
+   UART_LSR      => 16#14#,
+   Read          => UART_HS.Read,
+   Write         => UART_HS.Write);

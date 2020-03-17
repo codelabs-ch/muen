@@ -18,7 +18,7 @@
 
 with System;
 
-with Skp.Kernel;
+with Skp.Hardware;
 
 with SK.Bitops;
 with SK.Constants;
@@ -49,7 +49,7 @@ is
       Async_Writers,  --  XXX Can the chosen register change behind out back?
       Async_Readers,
       Effective_Writes,
-      Address => System'To_Address (Skp.Kernel.IO_Apic_Address + IO_APIC_IND);
+      Address => System'To_Address (Skp.Hardware.Ioapic_1_Mem1 + IO_APIC_IND);
 
    Window : SK.Word32
    with
@@ -57,7 +57,7 @@ is
       Async_Writers,  --  XXX Can the chosen register change behind out back?
       Async_Readers,
       Effective_Writes,
-      Address => System'To_Address (Skp.Kernel.IO_Apic_Address + IO_APIC_DAT);
+      Address => System'To_Address (Skp.Hardware.Ioapic_1_Mem1 + IO_APIC_DAT);
 
    Global_IO_APIC_Lock : Locks.Spin_Lock_Type := Locks.Free_Lock
    with

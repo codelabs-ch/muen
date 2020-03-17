@@ -40,6 +40,13 @@ project Dbgserver extends "../component_spark" is
       when "true"  =>
          Src_Dirs   := Src_Dirs & "src/sinks/serial/enabled";
          Obj_Suffix := Obj_Suffix & "serial_enabled";
+
+         case dbg_config.dbgserver_hsuart is
+            when "true"  =>
+               Src_Dirs := Src_Dirs & "src/sinks/serial/enabled/hsuart";
+            when "false" =>
+               Src_Dirs := Src_Dirs & "src/sinks/serial/enabled/uart";
+         end case;
       when "false" =>
          Src_Dirs   := Src_Dirs & "src/sinks/serial/disabled";
          Obj_Suffix := Obj_Suffix & "serial_disabled";

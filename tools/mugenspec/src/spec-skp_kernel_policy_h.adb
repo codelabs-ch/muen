@@ -312,12 +312,6 @@ is
                XPath => "/system/kernel/memory/cpu/"
                & "memory[@logical='scheduling_group_info_1']",
                Name  => "virtualAddress"));
-         IO_Apic_Addr : constant Unsigned_64 := Unsigned_64'Value
-           (Muxml.Utils.Get_Attribute
-              (Doc   => Policy.Doc,
-               XPath => "/system/kernel/devices/device"
-               & "[starts-with(@logical,'ioapic')]/memory",
-               Name  => "virtualAddress"));
          Subj_MSR_Store_Addr : constant Unsigned_64
            := Calculate_MSR_Store_Base_Address (Policy => Policy);
 
@@ -413,10 +407,6 @@ is
            (Template => Tmpl,
             Pattern  => "__sched_group_info_addr__",
             Content  => Mutools.Utils.To_Hex (Number => Sched_Grp_Info_Addr));
-         Mutools.Templates.Replace
-           (Template => Tmpl,
-            Pattern  => "__ioapic_addr__",
-            Content  => Mutools.Utils.To_Hex (Number => IO_Apic_Addr));
          Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__intr_stack_addr__",

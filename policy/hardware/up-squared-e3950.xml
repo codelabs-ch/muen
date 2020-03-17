@@ -1,0 +1,393 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- ==========================================
+     Generated with mugenhwcfg (commit v0.5-117-gd63a29e)
+     Linux kernel version: 4.19.0-8-amd64
+     Distribution: Debian GNU/Linux 10 (buster)
+     Product information:
+       Vendor: AAEON
+       Name: UP-APL01
+       Product Version: V1.0
+     Board information:
+       Vendor: AAEON
+       Name: UP-APL01
+       Version: V0.4
+     BIOS information:
+       Vendor: American Megatrends Inc.
+       Version: UPA1AM40
+       Date: 08/06/2018
+     Log:
+       * WARNING *: Unable to resolve device class 0c80. Please update pci.ids (-u) and
+       try again
+     ========================================== -->
+
+
+<hardware>
+  <processor cpuCores="4" speed="1594" vmxTimerRate="7">
+    <cpu apicId="0"/>
+    <cpu apicId="2"/>
+    <cpu apicId="4"/>
+    <cpu apicId="6"/>
+  </processor>
+  <memory>
+    <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#0000#" size="16#0003_f000#"/>
+    <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#0004_0000#" size="16#0005_e000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0010_0000#" size="16#0ff0_0000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#1215_1000#" size="16#659b_c000#"/>
+    <memoryBlock allocatable="false" name="ACPI Tables" physicalAddress="16#79c2_b000#" size="16#0001_9000#"/>
+    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#79c4_4000#" size="16#0006_0000#"/>
+    <memoryBlock allocatable="false" name="Unknown E820 type" physicalAddress="16#7a04_1000#" size="16#0004_c000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#7a08_d000#" size="16#0036_e000#"/>
+    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#7a3f_b000#" size="16#1000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#7a42_6000#" size="16#0053_f000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#7a96_7000#" size="16#0069_9000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0001_0000_0000#" size="16#0001_8000_0000#"/>
+    <reservedMemory name="rmrr1" physicalAddress="16#79bc_6000#" size="16#0002_0000#"/>
+    <reservedMemory name="rmrr2" physicalAddress="16#7b80_0000#" size="16#0480_0000#"/>
+  </memory>
+  <devices pciConfigAddress="16#e000_0000#">
+    <device name="system_board">
+      <ioPort end="16#0cf9#" name="reset" start="16#0cf9#"/>
+      <ioPort end="16#0404#" name="pm1a_cnt" start="16#0404#"/>
+      <capabilities>
+        <capability name="systemboard"/>
+        <capability name="pm1a_cnt_slp_typ">7168</capability>
+      </capabilities>
+    </device>
+    <device name="ioapic_1">
+      <memory caching="UC" name="mem1" physicalAddress="16#fec0_0000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="ioapic"/>
+        <capability name="gsi_base">0</capability>
+        <capability name="max_redirection_entry">119</capability>
+        <capability name="source_id">16#faf8#</capability>
+      </capabilities>
+    </device>
+    <device name="iommu_1">
+      <memory caching="UC" name="mmio" physicalAddress="16#fed6_4000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="iommu"/>
+        <capability name="agaw">48</capability>
+        <capability name="fr_offset">1024</capability>
+        <capability name="iotlb_invalidate_offset">1288</capability>
+      </capabilities>
+    </device>
+    <device name="iommu_2">
+      <memory caching="UC" name="mmio" physicalAddress="16#fed6_5000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="iommu"/>
+        <capability name="agaw">48</capability>
+        <capability name="fr_offset">1024</capability>
+        <capability name="iotlb_invalidate_offset">1288</capability>
+      </capabilities>
+    </device>
+    <device name="host_bridge_1">
+      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series Host Bridge</description>
+      <pci bus="16#00#" device="16#00#" function="0">
+        <identification classcode="16#0600#" deviceId="16#5af0#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <iommuGroup id="0"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e000_0000#" size="16#1000#"/>
+    </device>
+    <device name="vga_compatible_controller_1">
+      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series Integrated Graphics Controller</description>
+      <pci bus="16#00#" device="16#02#" function="0">
+        <identification classcode="16#0300#" deviceId="16#5a84#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <iommuGroup id="1"/>
+      </pci>
+      <memory caching="UC" name="mem1" physicalAddress="16#9000_0000#" size="16#0100_0000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#8000_0000#" size="16#1000_0000#"/>
+      <memory caching="UC" name="mem3" physicalAddress="16#000c_0000#" size="16#0002_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e001_0000#" size="16#1000#"/>
+      <ioPort end="16#f03f#" name="ioport1" start="16#f000#"/>
+      <reservedMemory ref="rmrr2"/>
+    </device>
+    <device name="multimedia_audio_controller_1">
+      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series Audio Cluster</description>
+      <pci bus="16#00#" device="16#0e#" function="0">
+        <identification classcode="16#0401#" deviceId="16#5a98#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <iommuGroup id="2"/>
+      </pci>
+      <irq name="irq1" number="25">
+        <msi name="msi1"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#9151_0000#" size="16#4000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#9120_0000#" size="16#0010_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e007_0000#" size="16#1000#"/>
+    </device>
+    <device name="communication_controller_1">
+      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series Trusted Execution Engine</description>
+      <pci bus="16#00#" device="16#0f#" function="0">
+        <identification classcode="16#0780#" deviceId="16#5a9a#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <iommuGroup id="3"/>
+      </pci>
+      <memory caching="UC" name="mem1" physicalAddress="16#9153_c000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e007_8000#" size="16#1000#"/>
+    </device>
+    <device name="sata_controller_1">
+      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series SATA AHCI Controller</description>
+      <pci bus="16#00#" device="16#12#" function="0">
+        <identification classcode="16#0106#" deviceId="16#5ae3#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <iommuGroup id="4"/>
+      </pci>
+      <memory caching="UC" name="mem1" physicalAddress="16#9151_4000#" size="16#2000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#9153_9000#" size="16#1000#"/>
+      <memory caching="UC" name="mem3" physicalAddress="16#9153_8000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e009_0000#" size="16#1000#"/>
+      <ioPort end="16#f097#" name="ioport1" start="16#f090#"/>
+      <ioPort end="16#f083#" name="ioport2" start="16#f080#"/>
+      <ioPort end="16#f07f#" name="ioport3" start="16#f060#"/>
+    </device>
+    <device name="usb_controller_1">
+      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series USB xHCI</description>
+      <pci bus="16#00#" device="16#15#" function="0">
+        <identification classcode="16#0c03#" deviceId="16#5aa8#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <iommuGroup id="7"/>
+      </pci>
+      <irq name="irq1" number="17">
+        <msi name="msi1"/>
+        <msi name="msi2"/>
+        <msi name="msi3"/>
+        <msi name="msi4"/>
+        <msi name="msi5"/>
+        <msi name="msi6"/>
+        <msi name="msi7"/>
+        <msi name="msi8"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#9150_0000#" size="16#0001_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00a_8000#" size="16#1000#"/>
+      <reservedMemory ref="rmrr1"/>
+    </device>
+    <device name="usb_controller_2">
+      <pci bus="16#00#" device="16#15#" function="1">
+        <identification classcode="16#0c03#" deviceId="16#5aaa#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <iommuGroup id="7"/>
+      </pci>
+      <irq name="irq1" number="13"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#9100_0000#" size="16#0020_0000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#9153_7000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00a_9000#" size="16#1000#"/>
+      <reservedMemory ref="rmrr1"/>
+    </device>
+    <device name="signal_processing_controller_1">
+      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series I2C Controller #1</description>
+      <pci bus="16#00#" device="16#16#" function="0">
+        <identification classcode="16#1180#" deviceId="16#5aac#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <iommuGroup id="8"/>
+      </pci>
+      <irq name="irq1" number="27"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#9153_6000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#9153_5000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00b_0000#" size="16#1000#"/>
+    </device>
+    <device name="signal_processing_controller_2">
+      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series I2C Controller #2</description>
+      <pci bus="16#00#" device="16#16#" function="1">
+        <identification classcode="16#1180#" deviceId="16#5aae#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <iommuGroup id="8"/>
+      </pci>
+      <irq name="irq1" number="28"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#9153_4000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#9153_3000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00b_1000#" size="16#1000#"/>
+    </device>
+    <device name="signal_processing_controller_3">
+      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series I2C Controller #3</description>
+      <pci bus="16#00#" device="16#16#" function="2">
+        <identification classcode="16#1180#" deviceId="16#5ab0#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <iommuGroup id="8"/>
+      </pci>
+      <irq name="irq1" number="29"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#9153_2000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#9153_1000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00b_2000#" size="16#1000#"/>
+    </device>
+    <device name="signal_processing_controller_4">
+      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series I2C Controller #4</description>
+      <pci bus="16#00#" device="16#16#" function="3">
+        <identification classcode="16#1180#" deviceId="16#5ab2#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <iommuGroup id="8"/>
+      </pci>
+      <irq name="irq1" number="30"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#9153_0000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#9152_f000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00b_3000#" size="16#1000#"/>
+    </device>
+    <device name="signal_processing_controller_5">
+      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series I2C Controller #5</description>
+      <pci bus="16#00#" device="16#17#" function="0">
+        <identification classcode="16#1180#" deviceId="16#5ab4#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <iommuGroup id="9"/>
+      </pci>
+      <irq name="irq1" number="31"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#9152_e000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#9152_d000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00b_8000#" size="16#1000#"/>
+    </device>
+    <device name="signal_processing_controller_6">
+      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series I2C Controller #6</description>
+      <pci bus="16#00#" device="16#17#" function="1">
+        <identification classcode="16#1180#" deviceId="16#5ab6#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <iommuGroup id="9"/>
+      </pci>
+      <irq name="irq1" number="32"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#9152_c000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#9152_b000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00b_9000#" size="16#1000#"/>
+    </device>
+    <device name="signal_processing_controller_7">
+      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series I2C Controller #7</description>
+      <pci bus="16#00#" device="16#17#" function="2">
+        <identification classcode="16#1180#" deviceId="16#5ab8#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <iommuGroup id="9"/>
+      </pci>
+      <irq name="irq1" number="33"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#9152_a000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#9152_9000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00b_a000#" size="16#1000#"/>
+    </device>
+    <device name="signal_processing_controller_8">
+      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series I2C Controller #8</description>
+      <pci bus="16#00#" device="16#17#" function="3">
+        <identification classcode="16#1180#" deviceId="16#5aba#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <iommuGroup id="9"/>
+      </pci>
+      <irq name="irq1" number="34"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#9152_8000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#9152_7000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00b_b000#" size="16#1000#"/>
+    </device>
+    <device name="signal_processing_controller_9">
+      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series HSUART Controller #1</description>
+      <pci bus="16#00#" device="16#18#" function="0">
+        <identification classcode="16#1180#" deviceId="16#5abc#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <iommuGroup id="10"/>
+      </pci>
+      <irq name="irq1" number="4"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#9152_6000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#9152_5000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00c_0000#" size="16#1000#"/>
+    </device>
+    <device name="signal_processing_controller_10">
+      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series HSUART Controller #2</description>
+      <pci bus="16#00#" device="16#18#" function="1">
+        <identification classcode="16#1180#" deviceId="16#5abe#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <iommuGroup id="10"/>
+      </pci>
+      <irq name="irq1" number="5"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#9152_4000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#9152_3000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00c_1000#" size="16#1000#"/>
+    </device>
+    <device name="signal_processing_controller_11">
+      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series SPI Controller #1</description>
+      <pci bus="16#00#" device="16#19#" function="0">
+        <identification classcode="16#1180#" deviceId="16#5ac2#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <iommuGroup id="11"/>
+      </pci>
+      <irq name="irq1" number="35"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#9152_2000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#9152_1000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00c_8000#" size="16#1000#"/>
+    </device>
+    <device name="signal_processing_controller_12">
+      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series SPI Controller #2</description>
+      <pci bus="16#00#" device="16#19#" function="1">
+        <identification classcode="16#1180#" deviceId="16#5ac4#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <iommuGroup id="11"/>
+      </pci>
+      <irq name="irq1" number="36"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#9152_0000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#9151_f000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00c_9000#" size="16#1000#"/>
+    </device>
+    <device name="signal_processing_controller_13">
+      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series SPI Controller #3</description>
+      <pci bus="16#00#" device="16#19#" function="2">
+        <identification classcode="16#1180#" deviceId="16#5ac6#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <iommuGroup id="11"/>
+      </pci>
+      <irq name="irq1" number="37"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#9151_e000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#9151_d000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00c_a000#" size="16#1000#"/>
+    </device>
+    <device name="0c80_1">
+      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series PWM Pin Controller</description>
+      <pci bus="16#00#" device="16#1a#" function="0">
+        <identification classcode="16#0c80#" deviceId="16#5ac8#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <iommuGroup id="12"/>
+      </pci>
+      <memory caching="UC" name="mem1" physicalAddress="16#9151_c000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#9151_b000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00d_0000#" size="16#1000#"/>
+    </device>
+    <device name="sd_host_controller_1">
+      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series eMMC Controller</description>
+      <pci bus="16#00#" device="16#1c#" function="0">
+        <identification classcode="16#0805#" deviceId="16#5acc#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <iommuGroup id="13"/>
+      </pci>
+      <irq name="irq1" number="39"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#9151_a000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#9151_9000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00e_0000#" size="16#1000#"/>
+    </device>
+    <device name="sd_host_controller_2">
+      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series SDIO Controller</description>
+      <pci bus="16#00#" device="16#1e#" function="0">
+        <identification classcode="16#0805#" deviceId="16#5ad0#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <iommuGroup id="14"/>
+      </pci>
+      <irq name="irq1" number="42"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#9151_8000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#9151_7000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00f_0000#" size="16#1000#"/>
+    </device>
+    <device name="isa_bridge_1">
+      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series Low Pin Count Interface</description>
+      <pci bus="16#00#" device="16#1f#" function="0">
+        <identification classcode="16#0601#" deviceId="16#5ae8#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <iommuGroup id="15"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00f_8000#" size="16#1000#"/>
+    </device>
+    <device name="smbus_1">
+      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series SMBus Controller</description>
+      <pci bus="16#00#" device="16#1f#" function="1">
+        <identification classcode="16#0c05#" deviceId="16#5ad4#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <iommuGroup id="15"/>
+      </pci>
+      <memory caching="UC" name="mem1" physicalAddress="16#9151_6000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e00f_9000#" size="16#1000#"/>
+      <ioPort end="16#f05f#" name="ioport1" start="16#f040#"/>
+    </device>
+    <device name="ethernet_controller_1">
+      <description>Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller</description>
+      <pci bus="16#02#" device="16#00#" function="0">
+        <identification classcode="16#0200#" deviceId="16#8168#" revisionId="16#0c#" vendorId="16#10ec#"/>
+        <iommuGroup id="5"/>
+       </pci>
+        <irq name="irq1" number="22"> <!-- FAKE IRQ -->
+        <msi name="msi1"/>
+       </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#9140_4000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#9140_0000#" size="16#4000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e020_0000#" size="16#1000#"/>
+      <ioPort end="16#e0ff#" name="ioport1" start="16#e000#"/>
+    </device>
+    <device name="ethernet_controller_2">
+      <description>Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller</description>
+      <pci bus="16#03#" device="16#00#" function="0">
+        <identification classcode="16#0200#" deviceId="16#8168#" revisionId="16#0c#" vendorId="16#10ec#"/>
+        <iommuGroup id="5"/>
+      </pci>
+       <irq name="irq1" number="23"> <!-- FAKE IRQ -->
+        <msi name="msi1"/>
+       </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#9130_4000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#9130_0000#" size="16#4000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e030_0000#" size="16#1000#"/>
+      <ioPort end="16#d0ff#" name="ioport1" start="16#d000#"/>
+    </device>
+  </devices>
+</hardware>

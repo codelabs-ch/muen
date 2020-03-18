@@ -108,6 +108,7 @@ is
    PIN_BASED_EXEC_CONTROL       : constant := 16#4000#;
    CPU_BASED_EXEC_CONTROL       : constant := 16#4002#;
    EXCEPTION_BITMAP             : constant := 16#4004#;
+   CR3_TARGET_COUNT             : constant := 16#400a#;
    VM_EXIT_CONTROLS             : constant := 16#400c#;
    VM_EXIT_MSR_STORE_COUNT      : constant := 16#400e#;
    VM_ENTRY_CONTROLS            : constant := 16#4012#;

@@ -160,6 +160,8 @@ is
       Put_Line (Item => " Revision   : " & SK.Strings.Img (Dummy8));
       Dummy32 := Interfaces.Unsigned_32 (Instance.Header.Class_Code);
       Put_Line (Item => " Class      : " & SK.Strings.Img (Dummy32));
+      Dummy32 := Instance.Header.Base_Address_Register_5;
+      Put_Line (Item => " ABAR       : " & SK.Strings.Img (Dummy32));
    end Print_PCI_Device_Info;
 
    -------------------------------------------------------------------------

@@ -28,8 +28,6 @@ is
    UART_DLH : constant := 1;
    --  Interrupt Enable Register
    UART_IER : constant := 1;
-   --  Interrupt Identification Register
-   UART_IIR : constant := 2;
    --  FIFO Control Register
    UART_FCR : constant := 2;
    --  Line Control Register

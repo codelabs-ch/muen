@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2015-2020  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2015-2020  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,29 +16,69 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+generic
+
+   --  Defines UART register width.
+   type Register_Type is mod <>;
+
+   --  Defines the UART address type.
+   type Address_Type is mod <>;
+
+   --  UART base address.
+   Base_Address : Address_Type;
+
+   --  Baud rate (default 115200)
+   Divisor  : Register_Type := 1;
+   --  Divisor Latch Low Byte
+   UART_DLL : Address_Type := 0;
+   --  Divisor Latch High Byte
+   UART_DLH : Address_Type := 1;
+
+   --  Interrupt Enable Register
+   UART_IER : Address_Type := 1;
+   --  FIFO Control Register
+   UART_FCR : Address_Type := 2;
+   --  Line Control Register
+   UART_LCR : Address_Type := 3;
+   --  Modem Control Register
+   UART_MCR : Address_Type := 4;
+   --  Line Status Register
+   UART_LSR : Address_Type := 5;
+
+   --  Size of FIFO.
+   FIFO_Size : Byte := 16;
+
+   --  Read register at given address.
+   with procedure Read
+     (Address :     Address_Type;
+      Value   : out Register_Type);
+
+   --  Write Value to register at given address.
+   with procedure Write
+     (Address : Address_Type;
+      Value   : Register_Type);
+
 package SK.UART
 is
 
-   --  Baud rate: 115200
-   Divisor : constant := 1;
+   --  Initialize serial port.
+   procedure Init;
 
-   --  Divisor Latch Low Byte
-   UART_DLL : constant := 0;
-   --  Divisor Latch High Byte
-   UART_DLH : constant := 1;
-   --  Interrupt Enable Register
-   UART_IER : constant := 1;
-   --  Interrupt Identification Register
-   UART_IIR : constant := 2;
-   --  FIFO Control Register
-   UART_FCR : constant := 2;
-   --  Line Control Register
-   UART_LCR : constant := 3;
-   --  Modem Control Register
-   UART_MCR : constant := 4;
-   --  Line Status Register
-   UART_LSR : constant := 5;
-   --  Scratch Register
-   UART_SCR : constant := 7;
+   --  Write new line and linefeed.
+   procedure New_Line;
+
+   --  Write character. Blocks until the send buffer is ready to accept new
+   --  data.
+   procedure Put_Char (Item : Character);
+
+   --  Read character. Use the Is_Data_Available getter function to check
+   --  whether actual data is available, otherwise you might receive garbage.
+   function Read_Char return Character;
+
+   --  Return True if the send buffer (incl. FIFO) is empty.
+   function Is_Send_Buffer_Empty return Boolean;
+
+   --  Return True if data is available to be read.
+   function Is_Data_Available return Boolean;
 
 end SK.UART;

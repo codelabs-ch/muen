@@ -38,7 +38,5 @@ is
    UART_MCR : constant := 4;
    --  Line Status Register
    UART_LSR : constant := 5;
-   --  Scratch Register
-   UART_SCR : constant := 7;
 
 end SK.UART;

@@ -66,6 +66,10 @@
   <channel name="time_info" size="16#1000#"/>
   <channel name="debuglog_subject1" size="$logchannel_size"/>
   <channel name="debuglog_subject4" size="$logchannel_size"/>
+  <channel name="blockdev_request1" size="16#0010_0000#"/>
+  <channel name="blockdev_response1" size="16#0010_0000#"/>
+  <channel name="blockdev_request2" size="16#0010_0000#"/>
+  <channel name="blockdev_response2" size="16#0010_0000#"/>
  </channels>
 
  <subjects>
@@ -96,7 +100,7 @@
   </subject>
 
   <subject name="linux">
-   <bootparams>console=ttyS0 console=tty0 pci=noearly hostname=linux drm.debug=0x2 i8042.nopnp=1</bootparams>
+      <bootparams>console=ttyS0 console=tty0 pci=noearly hostname=linux drm.debug=0x2 i8042.nopnp=1 root=/dev/mapper/debian-root noresume</bootparams>
    <memory>
     <memory logical="ram_2" physical="linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="true"/>
     <memory logical="ram_3" physical="linux|ram_3" virtualAddress="16#0001_0000_0000#" writable="true" executable="true"/>
@@ -150,6 +154,16 @@
      </event>
     </target>
    </events>
+   <channels>
+    <writer logical="w_blockdev_request1" physical="blockdev_request1" virtualAddress="16#000e_01f0_0000#"/>
+    <reader logical="r_blockdev_response1" physical="blockdev_response1" virtualAddress="16#000e_0200_0000#"/>
+    <writer logical="w_blockdev_request2" physical="blockdev_request2" virtualAddress="16#000e_0210_0000#"/>
+    <reader logical="r_blockdev_response2" physical="blockdev_response2" virtualAddress="16#000e_0220_0000#"/>
+    <reader logical="r_blockdev_request1" physical="blockdev_request1" virtualAddress="16#000e_11f0_0000#"/>
+    <writer logical="w_blockdev_response1" physical="blockdev_response1" virtualAddress="16#000e_1200_0000#"/>
+    <reader logical="r_blockdev_request2" physical="blockdev_request2" virtualAddress="16#000e_1210_0000#"/>
+    <writer logical="w_blockdev_response2" physical="blockdev_response2" virtualAddress="16#000e_1220_0000#"/>
+   </channels>
    <component ref="linux">
     <map logical="lowmem" physical="linux|lowmem"/>
     <map logical="ram" physical="linux|ram"/>

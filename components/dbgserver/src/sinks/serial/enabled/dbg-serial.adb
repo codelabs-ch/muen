@@ -17,6 +17,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.UART;
 with SK.UART_8250;
 
 with Dbg.Byte_Arrays;
@@ -26,6 +27,8 @@ with Dbgserver_Component.Devices;
 
 package body Dbg.Serial
 is
+
+   FIFO_Size : constant := 16;
 
    --  Receive data up until Length bytes from UART into given buffer. The
    --  actual number of bytes received is return by Length.
@@ -40,11 +43,16 @@ is
       Length  : in out Byte_Arrays.Byte_Array_Range;
       Success :    out Boolean);
 
-   package UART is new SK.UART_8250
-     (Base_Address => Dbgserver_Component.Devices.Debugconsole_Port_Start);
+   package UART is new SK.UART
+     (Base_Address  => Dbgserver_Component.Devices.Debugconsole_Port_Start,
+      Register_Type => SK.Byte,
+      Address_Type  => SK.Word16,
+      FIFO_Size     => FIFO_Size,
+      Read          => SK.UART_8250.Read,
+      Write         => SK.UART_8250.Write);
 
    package NIO is new Non_Interfering_Output
-     (Buffer_Size => UART.FIFO_Size,
+     (Buffer_Size => FIFO_Size,
       Receive     => Receive_Buffer,
       Send        => Send_Buffer);
 

@@ -16,34 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-generic
-
-   --  UART base address.
-   Base_Address : SK.Word16;
-
 package SK.UART_8250
 is
 
-   FIFO_Size : constant := 16;
+   --  Read register at given port.
+   procedure Read
+     (Address :     Word16;
+      Value   : out Byte);
 
-   --  Initialize serial port.
-   procedure Init;
-
-   --  Write new line and linefeed.
-   procedure New_Line;
-
-   --  Write character. Blocks until the send buffer is ready to accept new
-   --  data.
-   procedure Put_Char (Item : Character);
-
-   --  Read character. Use the Is_Data_Available getter function to check
-   --  whether actual data is available, otherwise you might receive garbage.
-   function Read_Char return Character;
-
-   --  Return True if the send buffer (incl. FIFO) is empty.
-   function Is_Send_Buffer_Empty return Boolean;
-
-   --  Return True if data is available to be read.
-   function Is_Data_Available return Boolean;
+   --  Write Value to register at given port.
+   procedure Write
+     (Address : Word16;
+      Value   : Byte);
 
 end SK.UART_8250;

@@ -17,116 +17,30 @@
 --
 
 with SK.IO;
-with SK.UART;
 
 package body SK.UART_8250
 is
 
-   use SK.UART;
+   -------------------------------------------------------------------------
 
-   Send_Char_Count : Natural := FIFO_Size;
+   procedure Read
+     (Address :     Word16;
+      Value   : out Byte)
+   is
+   begin
+      IO.Inb (Port  => Address,
+              Value => Value);
+   end Read;
 
    -------------------------------------------------------------------------
 
-   procedure Init
+   procedure Write
+     (Address : Word16;
+      Value   : Byte)
    is
    begin
-
-      --  Disable interrupts.
-
-      IO.Outb (Port  => Base_Address + UART_IER,
-               Value => 0);
-
-      --  Enable DLAB.
-
-      IO.Outb (Port  => Base_Address + UART_LCR,
-               Value => 16#80#);
-
-      --  Set divisor (least/most significant byte).
-
-      IO.Outb (Port  => Base_Address + UART_DLL,
-               Value => Divisor);
-      IO.Outb (Port  => Base_Address + UART_DLH,
-               Value => 0);
-
-      --  Clear DLAB and set 8 bits, no parity, one stop bit (8N1).
-
-      IO.Outb (Port  => Base_Address + UART_LCR,
-               Value => 3);
-
-      --  Enable FIFO.
-
-      IO.Outb (Port  => Base_Address + UART_FCR,
-               Value => 16#c7#);
-
-      --  Set DTR and RTS.
-
-      IO.Outb (Port  => Base_Address + UART_MCR,
-               Value => 3);
-   end Init;
-
-   -------------------------------------------------------------------------
-
-   function Is_Data_Available return Boolean
-   is
-      LSR_Data_Ready : constant := 16#01#;
-
-      Data : Byte;
-   begin
-      IO.Inb (Port  => Base_Address + UART_LSR,
-              Value => Data);
-      return (Data and LSR_Data_Ready) /= 0;
-   end Is_Data_Available;
-
-   -------------------------------------------------------------------------
-
-   function Is_Send_Buffer_Empty return Boolean
-   is
-      LSR_Empty_DHR_and_THR : constant := 16#60#;
-
-      Data : Byte;
-   begin
-      IO.Inb (Port  => Base_Address + UART_LSR,
-              Value => Data);
-      return (Data and LSR_Empty_DHR_and_THR) /= 0;
-   end Is_Send_Buffer_Empty;
-
-   -------------------------------------------------------------------------
-
-   procedure New_Line
-   is
-   begin
-      Put_Char (Item => ASCII.CR);
-      Put_Char (Item => ASCII.LF);
-   end New_Line;
-
-   -------------------------------------------------------------------------
-
-   procedure Put_Char (Item : Character)
-   is
-   begin
-      if Send_Char_Count = FIFO_Size then
-         while not Is_Send_Buffer_Empty loop
-            null;
-         end loop;
-         Send_Char_Count := 0;
-      end if;
-
-      IO.Outb (Port  => Base_Address,
-               Value => Character'Pos (Item));
-
-      Send_Char_Count := Send_Char_Count + 1;
-   end Put_Char;
-
-   -------------------------------------------------------------------------
-
-   function Read_Char return Character
-   is
-      Data : SK.Byte;
-   begin
-      IO.Inb (Port  => Base_Address,
-              Value => Data);
-      return Character'Val (Data);
-   end Read_Char;
+      IO.Outb (Port  => Address,
+               Value => Value);
+   end Write;
 
 end SK.UART_8250;

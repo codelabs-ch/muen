@@ -624,7 +624,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
             when E : Validation_Error =>
                Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                        = "Kernel diagnostics device of type 'uart' must "
-                       & "specify an I/O port device resource reference",
+                       & "specify ioPort device resource reference",
                        Message   => "Exception mismatch (Uart resource type)");
          end;
       end Uart_Resource_Mismatch;
@@ -815,6 +815,37 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
 
          Kernel_Diagnostics_Type_Resources (XML_Data => Data);
       end Vga_Positive_Test;
+
+      ----------------------------------------------------------------------
+
+      procedure Hsuart_Resource_Mismatch
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/test_policy.xml");
+
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/kernelDiagnostics",
+            Name  => "type",
+            Value => "hsuart");
+
+         begin
+            Kernel_Diagnostics_Type_Resources (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected (Hsuart resource type)");
+
+         exception
+            when E : Validation_Error =>
+               Assert
+                 (Condition => Ada.Exceptions.Exception_Message (X => E)
+                  = "Kernel diagnostics device of type 'hsuart' must specify "
+                  & "memory device resource reference",
+                  Message   => "Exception mismatch (Hsuart resource type)");
+         end;
+      end Hsuart_Resource_Mismatch;
    begin
       None_Positive_Test;
       None_Device_Reference;
@@ -826,6 +857,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
       Vga_Device_Reference;
       Vga_Resource_Mismatch;
       Vga_Resource_Count_Mismatch;
+      Hsuart_Resource_Mismatch;
 --  begin read only
    end Test_Kernel_Diagnostics_Type_Resources;
 --  end read only

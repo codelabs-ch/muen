@@ -31,4 +31,14 @@
   <xsl:text>";&#10;</xsl:text>
  </xsl:template>
 
+ <xsl:template name="configBooleanWithParams">
+  <xsl:param name="name"/>
+  <xsl:param name="value"/>
+  <xsl:text>   </xsl:text>
+  <xsl:value-of select="$name"/>
+  <xsl:text> : Boolean := "</xsl:text>
+  <xsl:value-of select="$value"/>
+  <xsl:text>";&#10;</xsl:text>
+ </xsl:template>
+
 </xsl:stylesheet>

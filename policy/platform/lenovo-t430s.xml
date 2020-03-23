@@ -1,6 +1,7 @@
 <platform>
  <config>
   <boolean name="serial_supported" value="true"/>
+  <boolean name="hsuart_supported" value="false"/>
   <boolean name="xhcidbg_supported" value="false"/>
   <string name="igd_opregion_address" value="16#baf5_5000#"/>
  </config>

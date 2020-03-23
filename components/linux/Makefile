@@ -4,8 +4,7 @@ KERNEL_VERSION ?= 5.4
 LINUX_CONFIG   ?= config/linux64-$(KERNEL_VERSION)
 
 INITRAMFS_BASE := initramfs.cpio.gz
-INITRAMFS_URL  := $(INITRAMFS_BASE)-smp
-INITRAMFS_REV  := a4cb2fd4f50adabd9c1ce9d57cda4ae41e0850c7
+INITRAMFS_REV  := 61fa58c582e58fd776cb45f9cdf01d22f5b7f91f
 INITRAMFS      ?= $(OBJ_DIR)/$(INITRAMFS_BASE)
 SITE           ?= https://github.com/codelabs-ch/buildroot-muen/raw/$(INITRAMFS_REV)/
 
@@ -79,9 +78,9 @@ src/.config: $(LINUX_CONFIG)
 
 $(INITRAMFS): | $(OBJ_DIR)
 	cd $(OBJ_DIR)
-	@$(E) linux "Download initramfs" "wget -c $(SITE)/$(INITRAMFS_URL)-$(KERNEL_VERSION)" $(LOG)
-	@$(E) linux "Download initramfs.sha256" "wget -c $(SITE)/$(INITRAMFS_URL)-$(KERNEL_VERSION).sha256" $(LOG)
-	@$(E) linux "Check initramfs.sha256" "sha256sum -c $(INITRAMFS_URL)-$(KERNEL_VERSION).sha256" $(LOG)
+	@$(E) linux "Download initramfs" "wget -c $(SITE)/$(INITRAMFS_BASE)" $(LOG)
+	@$(E) linux "Download initramfs.sha256" "wget -c $(SITE)/$(INITRAMFS_BASE).sha256" $(LOG)
+	@$(E) linux "Check initramfs.sha256" "sha256sum -c $(INITRAMFS_BASE).sha256" $(LOG)
 	mv $(INITRAMFS_URL)-$(KERNEL_VERSION) $@
 	rm $(INITRAMFS_URL)-$(KERNEL_VERSION).sha256
 

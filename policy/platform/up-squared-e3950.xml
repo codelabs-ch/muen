@@ -1,10 +1,14 @@
 <platform>
  <config>
-  <boolean name="serial_supported" value="false"/>
+  <boolean name="serial_supported" value="true"/>
+  <boolean name="hsuart_supported" value="true"/>
   <boolean name="xhcidbg_supported" value="false"/>
  </config>
  <mappings>
   <aliases>
+   <alias name="serial_device_1" physical="signal_processing_controller_10">
+    <resource name="mem" physical="mem1"/>
+   </alias>
    <alias name="nic_1" physical="ethernet_controller_1">
     <resource name="irq1" physical="irq1">
      <resource name="msi1" physical="msi1"/>

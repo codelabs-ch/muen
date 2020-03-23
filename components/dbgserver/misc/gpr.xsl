@@ -15,6 +15,12 @@
    <xsl:if test="starts-with(@name, 'dbgserver_sink')">
     <xsl:call-template name="configBoolean"/>
    </xsl:if>
+   <xsl:if test="@name='hsuart_supported'">
+    <xsl:call-template name="configBooleanWithParams">
+     <xsl:with-param name="name" select="'dbgserver_hsuart'"/>
+     <xsl:with-param name="value" select="@value"/>
+    </xsl:call-template>
+   </xsl:if>
   </xsl:for-each>
   <xsl:call-template name="gprFooter"/>
  </xsl:template>

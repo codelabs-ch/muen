@@ -23,7 +23,12 @@
   <devices>
    <if variable="sink_serial" value="true">
     <device logical="debugconsole">
-     <ioPort logical="port" start="$debugconsole_port_start" end="$debugconsole_port_end"/>
+     <if variable="hsuart_enabled" value="false">
+      <ioPort logical="port" start="$debugconsole_port_start" end="$debugconsole_port_end"/>
+     </if>
+     <if variable="hsuart_enabled" value="true">
+      <memory logical="mem" virtualAddress="16#000a_0000#" size="16#1000#" writable="true" executable="false"/>
+     </if>
     </device>
    </if>
    <if variable="sink_pcspkr" value="true">

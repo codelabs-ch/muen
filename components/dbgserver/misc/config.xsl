@@ -16,9 +16,31 @@
   <xsl:if test="@ref=$COMPONENTNAME">
    <xsl:text>&lt;include&gt;&#10;</xsl:text>
    <xsl:call-template name="extractLogSinks"/>
-   <xsl:if test="/system/config/boolean[@name='dbgserver_sink_serial']/@value='true'">
-    <xsl:call-template name="extractSerialPort"/>
-   </xsl:if>
+   <xsl:choose>
+    <xsl:when test="/system/config/boolean[@name='dbgserver_sink_serial']/@value='true'">
+     <xsl:choose>
+      <xsl:when test="/system/config/boolean[@name='hsuart_supported']/@value='false'">
+       <xsl:call-template name="configBoolean">
+        <xsl:with-param name="name" select="'hsuart_enabled'"/>
+        <xsl:with-param name="value" select="'false'"/>
+       </xsl:call-template>
+       <xsl:call-template name="extractSerialPort"/>
+      </xsl:when>
+      <xsl:otherwise>
+       <xsl:call-template name="configBoolean">
+        <xsl:with-param name="name" select="'hsuart_enabled'"/>
+        <xsl:with-param name="value" select="'true'"/>
+       </xsl:call-template>
+      </xsl:otherwise>
+     </xsl:choose>
+    </xsl:when>
+    <xsl:otherwise>
+     <xsl:call-template name="configBoolean">
+      <xsl:with-param name="name" select="'hsuart_enabled'"/>
+      <xsl:with-param name="value" select="'false'"/>
+     </xsl:call-template>
+    </xsl:otherwise>
+   </xsl:choose>
    <xsl:call-template name="extractLogChannelSize"/>
    <xsl:text>&lt;/include&gt;&#10;</xsl:text>
   </xsl:if>

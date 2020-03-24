@@ -1356,6 +1356,26 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       VMX_Controls_Pin_Requirements (XML_Data => Data);
 
+      --  Virtual NMIs.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/pin/VirtualNMIs",
+         Value => "1");
+      begin
+         VMX_Controls_Pin_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Virtual NMIs)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Pin-Based control 'Virtual NMIs' of subject 'linux' "
+                    & "invalid: must be 0",
+                    Message   => "Exception mismatch (Virtual NMIs)");
+      end;
+
       --  NMI exiting.
 
       Muxml.Utils.Set_Element_Value

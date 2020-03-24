@@ -42,6 +42,14 @@ is
    use Ada.Strings.Unbounded;
    use McKae.XML.XPath.XIA;
 
+   --  Returns True if the value of the element specified by XPath relative to
+   --  the given Node matches the specified value.
+   function Is_Element_Value
+     (Node  : DOM.Core.Node;
+      XPath : String;
+      Value : String := "1")
+      return Boolean;
+
    -------------------------------------------------------------------------
 
    procedure CPU_ID (XML_Data : Muxml.XML_Data_Type)
@@ -321,6 +329,21 @@ is
          end;
       end loop;
    end Initramfs_Consecutiveness;
+
+   ----------------------------------------------------------------------
+
+   function Is_Element_Value
+     (Node  : DOM.Core.Node;
+      XPath : String;
+      Value : String := "1")
+      return Boolean
+   is
+      Val_Str : constant String
+        := Muxml.Utils.Get_Element_Value (Doc   => Node,
+                                          XPath => XPath);
+   begin
+      return Val_Str = Value;
+   end Is_Element_Value;
 
    -------------------------------------------------------------------------
 
@@ -1136,14 +1159,6 @@ is
          XPath => "/system/subjects/subject");
       Count : constant Natural := DOM.Core.Nodes.Length (List => Subjects);
 
-      ----------------------------------------------------------------------
-
-      --  Returns True if the VMX control specified by XPath is set to 1.
-      function Is_Set
-        (Ctrls : DOM.Core.Node;
-         XPath : String)
-         return Boolean;
-
       --  VM-Execution control field checks as specified by Intel SDM Vol. 3C,
       --  "26.2.1.1 VM-Execution Control Fields".
       procedure Check_VM_Execution_Control_Fields
@@ -1174,16 +1189,16 @@ is
          --  since we use the same MSR storage area for VM-Exit MSR-store and
          --  VM-Entry MSR-load.
 
-         if Is_Set (Ctrls => Ctrls,
-                    XPath => "entry/EntryToSMM")
+         if Is_Element_Value (Node  => Ctrls,
+                              XPath => "entry/EntryToSMM")
          then
             raise Validation_Error
               with "VMX control 'entry to SMM' of subject '" & Subject_Name
               & "' is 1";
          end if;
 
-         if Is_Set (Ctrls => Ctrls,
-                    XPath => "entry/DeactiveDualMonitorTreatment")
+         if Is_Element_Value (Node  => Ctrls,
+                              XPath => "entry/DeactiveDualMonitorTreatment")
          then
             raise Validation_Error
               with "VMX control 'deactivate dual-monitor treatment' of "
@@ -1203,8 +1218,8 @@ is
          Subject_Name : String)
       is
       begin
-         if Is_Set (Ctrls => Ctrls,
-                    XPath => "proc/UseIOBitmaps")
+         if Is_Element_Value (Node  => Ctrls,
+                              XPath => "proc/UseIOBitmaps")
          then
             declare
                Bit_Mask : constant Interfaces.Unsigned_64
@@ -1225,8 +1240,8 @@ is
             end;
          end if;
 
-         if Is_Set (Ctrls => Ctrls,
-                    XPath => "proc/UseMSRBitmaps")
+         if Is_Element_Value (Node  => Ctrls,
+                              XPath => "proc/UseMSRBitmaps")
          then
             declare
                Bit_Mask : constant Interfaces.Unsigned_64
@@ -1247,43 +1262,44 @@ is
             end;
          end if;
 
-         if not Is_Set (Ctrls => Ctrls,
-                        XPath => "pin/NMIExiting")
-           and Is_Set (Ctrls => Ctrls,
-                       XPath => "pin/VirtualNMIs")
+         if not Is_Element_Value (Node  => Ctrls,
+                                  XPath => "pin/NMIExiting")
+           and Is_Element_Value (Node  => Ctrls,
+                                 XPath => "pin/VirtualNMIs")
          then
             raise Validation_Error
               with "VMX control 'NMI-Exiting' is 0 for subject '"
               & Subject_Name & "' but 'Virtual NMIs' is 1";
          end if;
 
-         if not Is_Set (Ctrls => Ctrls,
-                        XPath => "pin/VirtualNMIs")
-           and Is_Set (Ctrls => Ctrls,
-                       XPath => "proc/NMIWindowExiting")
+         if not Is_Element_Value (Node  => Ctrls,
+                                  XPath => "pin/VirtualNMIs")
+           and Is_Element_Value (Node  => Ctrls,
+                                 XPath => "proc/NMIWindowExiting")
          then
             raise Validation_Error
               with "VMX control 'Virtual NMIs' is 0 for subject '"
               & Subject_Name & "' but 'NMI-window exiting' is 1";
          end if;
 
-         if not Is_Set (Ctrls => Ctrls,
-                        XPath => "proc/UseTPRShadow")
+         if not Is_Element_Value (Node  => Ctrls,
+                                  XPath => "proc/UseTPRShadow")
          then
-            if Is_Set (Ctrls => Ctrls,
-                       XPath => "proc2/Virtualizex2APICMode")
+            if Is_Element_Value (Node  => Ctrls,
+                                 XPath => "proc2/Virtualizex2APICMode")
             then
                raise Validation_Error
                  with "VMX control 'Use TPR Shadow' is 0 for subject '"
                  & Subject_Name & "' but 'Virtualize x2APIC mode' is 1";
-            elsif Is_Set (Ctrls => Ctrls,
-                          XPath => "proc2/APICRegisterVirtualization")
+            elsif Is_Element_Value
+              (Node  => Ctrls,
+               XPath => "proc2/APICRegisterVirtualization")
             then
                raise Validation_Error
                  with "VMX control 'Use TPR Shadow' is 0 for subject '"
                  & Subject_Name & "' but 'APIC-register virtualization' is 1";
-            elsif Is_Set (Ctrls => Ctrls,
-                          XPath => "proc2/VirtualInterruptDelivery")
+            elsif Is_Element_Value (Node  => Ctrls,
+                                    XPath => "proc2/VirtualInterruptDelivery")
             then
                raise Validation_Error
                  with "VMX control 'Use TPR Shadow' is 0 for subject '"
@@ -1291,20 +1307,20 @@ is
             end if;
          end if;
 
-         if Is_Set (Ctrls => Ctrls,
-                    XPath => "proc2/Virtualizex2APICMode")
-           and Is_Set (Ctrls => Ctrls,
-                       XPath => "proc2/VirtualAPICAccesses")
+         if Is_Element_Value (Node  => Ctrls,
+                              XPath => "proc2/Virtualizex2APICMode")
+           and Is_Element_Value (Node  => Ctrls,
+                                 XPath => "proc2/VirtualAPICAccesses")
          then
             raise Validation_Error
               with "VMX control 'Virtualize x2APIC mode' is 1 for subject"
               & " '" & Subject_Name & "' but 'virtualize APIC accesses' is 1";
          end if;
 
-         if Is_Set (Ctrls => Ctrls,
-                    XPath => "proc2/VirtualInterruptDelivery")
-           and not Is_Set (Ctrls => Ctrls,
-                           XPath => "pin/ExternalInterruptExiting")
+         if Is_Element_Value (Node  => Ctrls,
+                              XPath => "proc2/VirtualInterruptDelivery")
+           and not Is_Element_Value (Node  => Ctrls,
+                                     XPath => "pin/ExternalInterruptExiting")
          then
             raise Validation_Error
               with "VMX control 'virtual-interrupt delivery' is 1 for "
@@ -1312,18 +1328,18 @@ is
               & "exiting' is 0";
          end if;
 
-         if Is_Set (Ctrls => Ctrls,
-                    XPath => "pin/ProcessPostedInterrupts")
+         if Is_Element_Value (Node  => Ctrls,
+                              XPath => "pin/ProcessPostedInterrupts")
          then
-            if not Is_Set (Ctrls => Ctrls,
-                           XPath => "proc2/VirtualInterruptDelivery")
+            if not Is_Element_Value (Node  => Ctrls,
+                                     XPath => "proc2/VirtualInterruptDelivery")
             then
                raise Validation_Error
                  with "VMX control 'process posted interrupts' is 1 for "
                  & "subject '" & Subject_Name & "' but 'virtual-interrupt "
                  & "delivery' is 0";
-            elsif not Is_Set (Ctrls => Ctrls,
-                              XPath => "exit/AckInterruptOnExit")
+            elsif not Is_Element_Value (Node  => Ctrls,
+                                        XPath => "exit/AckInterruptOnExit")
             then
                raise Validation_Error
                  with "VMX control 'process posted interrupts' is 1 for "
@@ -1332,10 +1348,10 @@ is
             end if;
          end if;
 
-         if Is_Set (Ctrls => Ctrls,
-                    XPath => "proc2/UnrestrictedGuest")
-           and not Is_Set (Ctrls => Ctrls,
-                           XPath => "proc2/EnableEPT")
+         if Is_Element_Value (Node  => Ctrls,
+                              XPath => "proc2/UnrestrictedGuest")
+           and not Is_Element_Value (Node  => Ctrls,
+                                     XPath => "proc2/EnableEPT")
          then
             raise Validation_Error
               with "VMX control 'unrestricted guest' is 1 for "
@@ -1350,10 +1366,10 @@ is
          Subject_Name : String)
       is
       begin
-         if not Is_Set (Ctrls => Ctrls,
-                        XPath => "pin/ActivateVMXTimer")
-           and Is_Set (Ctrls => Ctrls,
-                       XPath => "exit/SaveVMXTimerValue")
+         if not Is_Element_Value (Node  => Ctrls,
+                                  XPath => "pin/ActivateVMXTimer")
+           and Is_Element_Value (Node  => Ctrls,
+                                 XPath => "exit/SaveVMXTimerValue")
          then
             raise Validation_Error
               with "VMX control 'activate VMX-preemption timer' is 0 for "
@@ -1395,20 +1411,6 @@ is
             end if;
          end;
       end Check_VM_Exit_Control_Fields;
-
-      ----------------------------------------------------------------------
-
-      function Is_Set
-        (Ctrls : DOM.Core.Node;
-         XPath : String)
-         return Boolean
-      is
-         Ctrl_Val_Str : constant String
-           := Muxml.Utils.Get_Element_Value (Doc   => Ctrls,
-                                             XPath => XPath);
-      begin
-         return Ctrl_Val_Str = "1";
-      end Is_Set;
    begin
       for I in 0 .. Count - 1 loop
          declare

@@ -3,14 +3,11 @@
 # This script expects a block device on the server side with the following
 # configuration:
 
-# sdX1 - ext* partition - ref files, stretch-chroot in ./
+# sdX1 - ext* partition - ref files
 #  $ sudo mkfs.ext4 /dev/sdX1
 #  $ sudo mount /dev/sdX1 /mnt
 #  $ sudo mkdir /mnt/files && cd /mnt/files
 #  $ sudo tools/scripts/integ/target_scripts/muenblock-ref .
-#  $ cd /mnt && sudo debootstrap stretch ./stretch-chroot http://deb.debian.org/debian
-#  $ sudo chroot /mnt/stretch-chroot
-#  # apt install cryptsetup lvm2
 # sdX2 - ext* partition
 #  $ sudo mkfs.ext2 /dev/sdX2
 # sdX5 - ext* on lvm on dm-crypt
@@ -99,19 +96,7 @@ execute "umount /mnt/2"
 
 # ext* on lvm on crypt
 
-execute "mount -o bind /dev $CHROOT/dev"
-execute "mount -t sysfs sysfs $CHROOT/sys"
-execute "mount -t proc proc $CHROOT/proc"
-
-execute "mkdir -p $CHROOT/tmp/1"
-execute "mount -o loop /mnt/1 $CHROOT/tmp/1"
-execute "cp /usr/local/bin/muenblock-lvops $CHROOT/tmp"
-execute "cp /usr/local/bin/func.sh $CHROOT/tmp"
-execute "chroot $CHROOT /tmp/muenblock-lvops"
-execute "umount $CHROOT/dev"
-execute "umount $CHROOT/sys"
-execute "umount $CHROOT/proc"
-execute "umount $CHROOT/tmp/1"
+execute "muenblock-lvops"
 execute "umount /mnt/1"
 execute "fsck -n /dev/muendiska1"
 execute "fsck -n /dev/muendiska2"

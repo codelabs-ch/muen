@@ -21,7 +21,7 @@ serial.out;16#02#: Preparing->Validating
 serial.out;16#02#: Validating->Running
 serial.out;muen-sinfo: event \[number 0\] unmask_irq_69
 serial.out;8139cp 0000:00:02.0: PCI IRQ 21 (EOI event: 0)
-serial.out;8139cp 0000:00:02.0 eth1: RTL-8139C+ at 0x(____ptrval____), 52:54:00:12:34:57, IRQ 21
+serial.out;8139cp 0000:00:02.0 eth1: RTL-8139C+ at 0x.*, 52:54:00:12:34:57, IRQ 21
 serial.out;21:.* Muen-PCI    -fasteoi   eth1
 serial.out;64 bytes from 192.168.253.2: seq=.* ttl=.* time=.* ms
 serial.out;64 bytes from 192.168.254.2: seq=.* ttl=.* time=.* ms

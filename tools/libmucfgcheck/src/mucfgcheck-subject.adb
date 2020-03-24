@@ -1563,6 +1563,17 @@ is
                  & "'Use TSC offsetting' of subject '" & Subj_Name
                  & "' invalid: must be 0";
             end if;
+
+            --  Direct execution of INVLPG is not supported.
+
+            if Is_Element_Value (Node  => Proc_Ctrl,
+                                 XPath => "INVLPGExiting",
+                                 Value => "0")
+            then
+               raise Validation_Error with "Processor-Based control "
+                 & "'INVLPG exiting' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
          end;
       end loop;
    end VMX_Controls_Proc_Requirements;

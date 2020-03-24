@@ -1599,6 +1599,26 @@ is
                  & "'CR3-load exiting' of subject '" & Subj_Name
                  & "' invalid: must be 1";
             end if;
+
+            --  Access to CR8/TPR is restricted.
+
+            if Is_Element_Value (Node  => Proc_Ctrl,
+                                 XPath => "CR8LoadExiting",
+                                 Value => "0")
+            then
+               raise Validation_Error with "Processor-Based control "
+                 & "'CR8-load exiting' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+
+            if Is_Element_Value (Node  => Proc_Ctrl,
+                                 XPath => "CR8StoreExiting",
+                                 Value => "0")
+            then
+               raise Validation_Error with "Processor-Based control "
+                 & "'CR8-store exiting' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
          end;
       end loop;
    end VMX_Controls_Proc_Requirements;

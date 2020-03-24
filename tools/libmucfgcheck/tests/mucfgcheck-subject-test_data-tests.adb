@@ -1479,6 +1479,46 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       VMX_Controls_Proc_Requirements (XML_Data => Data);
 
+      --  CR8-store exiting.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc/CR8StoreExiting",
+         Value => "0");
+      begin
+         VMX_Controls_Proc_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (CR8-store exiting)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Processor-Based control 'CR8-store exiting' of "
+                    & "subject 'linux' invalid: must be 1",
+                    Message   => "Exception mismatch (CR8-store exiting)");
+      end;
+
+      --  CR8-load exiting.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc/CR8LoadExiting",
+         Value => "0");
+      begin
+         VMX_Controls_Proc_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (CR8-load exiting)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Processor-Based control 'CR8-load exiting' of "
+                    & "subject 'linux' invalid: must be 1",
+                    Message   => "Exception mismatch (CR8-load exiting)");
+      end;
+
       --  CR3-load exiting.
 
       Muxml.Utils.Set_Element_Value

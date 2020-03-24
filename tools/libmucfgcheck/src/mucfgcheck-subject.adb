@@ -1502,6 +1502,17 @@ is
                  & "VMX-preemption timer' of subject '" & Subj_Name
                  & "' invalid: must be 1";
             end if;
+
+            --  Posted Interrupts are not supported.
+
+            if Is_Element_Value (Node  => Pin_Ctrl,
+                                 XPath => "ProcessPostedInterrupts",
+                                 Value => "1")
+            then
+               raise Validation_Error with "Pin-Based control 'Process posted"
+                 & " interrupts' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
          end;
       end loop;
    end VMX_Controls_Pin_Requirements;

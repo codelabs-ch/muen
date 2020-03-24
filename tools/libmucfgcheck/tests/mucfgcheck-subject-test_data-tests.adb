@@ -1356,6 +1356,26 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       VMX_Controls_Pin_Requirements (XML_Data => Data);
 
+      --  Posted-Interrupt Processing.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/pin/ProcessPostedInterrupts",
+         Value => "1");
+      begin
+         VMX_Controls_Pin_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Posted Int)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Pin-Based control 'Process posted interrupts' of "
+                    & "subject 'linux' invalid: must be 0",
+                    Message   => "Exception mismatch (Posted Int)");
+      end;
+
       --  VMX-preemption timer.
 
       Muxml.Utils.Set_Element_Value

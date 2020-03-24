@@ -1471,6 +1471,16 @@ is
                  & "'External-Interrupt exiting' of subject '" & Subj_Name
                  & "' invalid: must be 1";
             end if;
+
+            --  NMI exiting must be 1 as NMIs are handled by kernel.
+
+            if Is_Element_Value (Node  => Pin_Ctrl,
+                                 XPath => "NMIExiting",
+                                 Value => "0")
+            then
+               raise Validation_Error with "Pin-Based control 'NMI exiting' "
+                 & "of subject '" & Subj_Name & "' invalid: must be 1";
+            end if;
          end;
       end loop;
    end VMX_Controls_Pin_Requirements;

@@ -1479,6 +1479,31 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       VMX_Controls_Proc_Requirements (XML_Data => Data);
 
+      --  CR3-load exiting.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='sm']/vcpu/vmx/"
+         & "controls/proc/CR3LoadExiting",
+         Value => "0");
+      begin
+         VMX_Controls_Proc_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (CR3-load exiting)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Processor-Based control 'CR3-load exiting' of "
+                    & "subject 'sm' invalid: must be 1",
+                    Message   => "Exception mismatch (CR3-load exiting)");
+      end;
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='sm']/vcpu/vmx/"
+         & "controls/proc/CR3LoadExiting",
+         Value => "1");
+
       --  MWAIT exiting.
 
       Muxml.Utils.Set_Element_Value

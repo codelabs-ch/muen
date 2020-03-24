@@ -1585,6 +1585,20 @@ is
                  & "'MWAIT exiting' of subject '" & Subj_Name
                  & "' invalid: must be 1";
             end if;
+
+            --  Setting CR3 must be restricted if EPT is disabled.
+
+            if Is_Element_Value (Node  => Proc_Ctrl,
+                                 XPath => "../proc2/EnableEPT",
+                                 Value => "0")
+              and Is_Element_Value (Node  => Proc_Ctrl,
+                                    XPath => "CR3LoadExiting",
+                                    Value => "0")
+            then
+               raise Validation_Error with "Processor-Based control "
+                 & "'CR3-load exiting' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
          end;
       end loop;
    end VMX_Controls_Proc_Requirements;

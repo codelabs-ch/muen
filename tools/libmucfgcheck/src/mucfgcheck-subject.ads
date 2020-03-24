@@ -79,4 +79,8 @@ is
    --  for the execution of Muen.
    procedure VMX_Controls_Pin_Requirements (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that the Processor-Based VM-Execution Controls meet the
+   --  requirements for the execution of Muen.
+   procedure VMX_Controls_Proc_Requirements (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Subject;

@@ -1517,4 +1517,43 @@ is
       end loop;
    end VMX_Controls_Pin_Requirements;
 
+   -------------------------------------------------------------------------
+
+   procedure VMX_Controls_Proc_Requirements (XML_Data : Muxml.XML_Data_Type)
+   is
+      Proc_Ctrls : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/subjects/subject/vcpu/vmx/controls/proc");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Proc_Ctrls);
+   begin
+      for I in 0 .. Count - 1 loop
+         declare
+            Proc_Ctrl : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Proc_Ctrls,
+                                      Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node (Node  => Proc_Ctrl,
+                                                    Level => 4),
+                 Name => "name");
+         begin
+            Mulog.Log (Msg => "Checking requirements for Processor-Based "
+                       & "VM-Execution Controls of subject '" & Subj_Name
+                       & "'");
+
+            --  Interrupt-window exiting used by kernel for interrupt
+            --  injection.
+
+            if Is_Element_Value (Node  => Proc_Ctrl,
+                                 XPath => "InterruptWindowExiting",
+                                 Value => "1")
+            then
+               raise Validation_Error with "Processor-Based control "
+                 & "'Interrupt-window exiting' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
+         end;
+      end loop;
+   end VMX_Controls_Proc_Requirements;
+
 end Mucfgcheck.Subject;

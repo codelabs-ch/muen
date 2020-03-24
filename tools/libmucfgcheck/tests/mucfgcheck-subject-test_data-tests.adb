@@ -1459,6 +1459,49 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
    end Test_VMX_Controls_Pin_Requirements;
 --  end read only
 
+
+--  begin read only
+   procedure Test_VMX_Controls_Proc_Requirements (Gnattest_T : in out Test);
+   procedure Test_VMX_Controls_Proc_Requirements_b82eb6 (Gnattest_T : in out Test) renames Test_VMX_Controls_Proc_Requirements;
+--  id:2.2/b82eb6a519d581d6/VMX_Controls_Proc_Requirements/1/0/
+   procedure Test_VMX_Controls_Proc_Requirements (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      VMX_Controls_Proc_Requirements (XML_Data => Data);
+
+      --  Interrupt-window exiting.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc/InterruptWindowExiting",
+         Value => "1");
+      begin
+         VMX_Controls_Proc_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Int Window)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Processor-Based control 'Interrupt-window exiting' of "
+                    & "subject 'linux' invalid: must be 0",
+                    Message   => "Exception mismatch (Int Window)");
+      end;
+--  begin read only
+   end Test_VMX_Controls_Proc_Requirements;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

@@ -75,4 +75,8 @@ is
    --  SDM Vol. 3C, "26.2.1 Checks on VMX Controls".
    procedure VMX_Controls_Entry_Checks (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that the Pin-Based VM-Execution controls meet the requirements
+   --  for the execution of Muen.
+   procedure VMX_Controls_Pin_Requirements (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Subject;

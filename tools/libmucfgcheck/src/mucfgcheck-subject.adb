@@ -1437,4 +1437,42 @@ is
       end loop;
    end VMX_Controls_Entry_Checks;
 
+   -------------------------------------------------------------------------
+
+   procedure VMX_Controls_Pin_Requirements (XML_Data : Muxml.XML_Data_Type)
+   is
+      Pin_Ctrls : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/subjects/subject/vcpu/vmx/controls/pin");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Pin_Ctrls);
+   begin
+      for I in 0 .. Count - 1 loop
+         declare
+            Pin_Ctrl  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Pin_Ctrls,
+                                      Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node (Node  => Pin_Ctrl,
+                                                    Level => 4),
+                 Name => "name");
+         begin
+            Mulog.Log (Msg => "Checking requirements for Pin-Based "
+                       & "VM-Execution Controls of subject '" & Subj_Name
+                       & "'");
+
+            --  External-Interrupt exiting must be 1 for interrupt handling.
+
+            if Is_Element_Value (Node  => Pin_Ctrl,
+                                 XPath => "ExternalInterruptExiting",
+                                 Value => "0")
+            then
+               raise Validation_Error with "Pin-Based control "
+                 & "'External-Interrupt exiting' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+         end;
+      end loop;
+   end VMX_Controls_Pin_Requirements;
+
 end Mucfgcheck.Subject;

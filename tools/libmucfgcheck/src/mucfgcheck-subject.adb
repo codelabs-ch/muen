@@ -1552,6 +1552,17 @@ is
                  & "'Interrupt-window exiting' of subject '" & Subj_Name
                  & "' invalid: must be 0";
             end if;
+
+            --  TSC Offsetting is not supported.
+
+            if Is_Element_Value (Node  => Proc_Ctrl,
+                                 XPath => "UseTSCOffsetting",
+                                 Value => "1")
+            then
+               raise Validation_Error with "Processor-Based control "
+                 & "'Use TSC offsetting' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
          end;
       end loop;
    end VMX_Controls_Proc_Requirements;

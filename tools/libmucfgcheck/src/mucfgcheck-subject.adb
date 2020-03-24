@@ -1491,6 +1491,17 @@ is
                raise Validation_Error with "Pin-Based control 'Virtual NMIs' "
                  & "of subject '" & Subj_Name & "' invalid: must be 0";
             end if;
+
+            --  VMX-preemption timer is required for scheduling.
+
+            if Is_Element_Value (Node  => Pin_Ctrl,
+                                 XPath => "ActivateVMXTimer",
+                                 Value => "0")
+            then
+               raise Validation_Error with "Pin-Based control 'Activate "
+                 & "VMX-preemption timer' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
          end;
       end loop;
    end VMX_Controls_Pin_Requirements;

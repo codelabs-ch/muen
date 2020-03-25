@@ -38,4 +38,12 @@ package Mutools.XML_Utils.Test_Data is
       Size    : String)
       return DOM.Core.Node;
 
+   --  Append MSR with given attributes to MSR list.
+   procedure Append_MSR
+     (Doc       : in out DOM.Core.Document;
+      List      : in out DOM.Core.Node_List;
+      MSR_Start :        String;
+      MSR_End   :        String;
+      Mode      :        String);
+
 end Mutools.XML_Utils.Test_Data;

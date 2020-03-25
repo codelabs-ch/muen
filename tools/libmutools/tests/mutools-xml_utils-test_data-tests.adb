@@ -976,34 +976,6 @@ package body Mutools.XML_Utils.Test_Data.Tests is
       Impl : DOM.Core.DOM_Implementation;
       Data : Muxml.XML_Data_Type;
       MSRs : DOM.Core.Node_List;
-
-      --  Append MSR with given attributes to MSR list.
-      procedure Append_MSR
-        (MSR_Start : String;
-         MSR_End   : String;
-         Mode      : String)
-      is
-         Node : DOM.Core.Node;
-      begin
-         Node := DOM.Core.Documents.Create_Element
-           (Doc      => Data.Doc,
-            Tag_Name => "msr");
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "mode",
-            Value => Mode);
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "start",
-            Value => MSR_Start);
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "end",
-            Value => MSR_End);
-
-         DOM.Core.Append_Node (List => MSRs,
-                               N    => Node);
-      end Append_MSR;
    begin
       Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 
@@ -1015,16 +987,24 @@ package body Mutools.XML_Utils.Test_Data.Tests is
                EFER_Control           => False) = 0,
               Message   => "Empty list count not 0");
 
-      Append_MSR (MSR_Start => "16#0010#",
+      Append_MSR (Doc       => Data.Doc,
+                  List      => MSRs,
+                  MSR_Start => "16#0010#",
                   MSR_End   => "16#0010#",
                   Mode      => "r");
-      Append_MSR (MSR_Start => "16#0174#",
+      Append_MSR (Doc       => Data.Doc,
+                  List      => MSRs,
+                  MSR_Start => "16#0174#",
                   MSR_End   => "16#0176#",
                   Mode      => "rw");
-      Append_MSR (MSR_Start => "16#c000_0080#",
+      Append_MSR (Doc       => Data.Doc,
+                  List      => MSRs,
+                  MSR_Start => "16#c000_0080#",
                   MSR_End   => "16#c000_0084#",
                   Mode      => "rw");
-      Append_MSR (MSR_Start => "16#c000_0100#",
+      Append_MSR (Doc       => Data.Doc,
+                  List      => MSRs,
+                  MSR_Start => "16#c000_0100#",
                   MSR_End   => "16#c000_0102#",
                   Mode      => "rw");
 

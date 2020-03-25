@@ -1674,6 +1674,17 @@ is
                  & "'Use MSR bitmaps' of subject '" & Subj_Name
                  & "' invalid: must be 1";
             end if;
+
+            --  Secondary controls enable required features like EPT etc.
+
+            if Is_Element_Value (Node  => Proc_Ctrl,
+                                 XPath => "Activate2ndaryControls",
+                                 Value => "0")
+            then
+               raise Validation_Error with "Processor-Based control "
+                 & "'Activate secondary controls' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
          end;
       end loop;
    end VMX_Controls_Proc_Requirements;

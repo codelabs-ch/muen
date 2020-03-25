@@ -1479,6 +1479,26 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       VMX_Controls_Proc_Requirements (XML_Data => Data);
 
+      --  Secondary Proc controls.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc/Activate2ndaryControls",
+         Value => "0");
+      begin
+         VMX_Controls_Proc_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2ndary Proc Ctrls)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Processor-Based control 'Activate secondary controls' "
+                    & "of subject 'linux' invalid: must be 1",
+                    Message   => "Exception mismatch (2ndary Proc Ctrls)");
+      end;
+
       --  MSR bitmaps.
 
       Muxml.Utils.Set_Element_Value

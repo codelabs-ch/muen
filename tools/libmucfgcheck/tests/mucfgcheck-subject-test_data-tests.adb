@@ -1958,6 +1958,26 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       VM_Exit_Controls_Requirements (XML_Data => Data);
 
+      --  Load IA32_PERF_GLOBAL_CTRL.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/exit/LoadIA32PERFGLOBALCTRL",
+         Value => "1");
+      begin
+         VM_Exit_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (IA32_PERF_GLOBAL_CTRL)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Exit control 'Load IA32_PERF_GLOBAL_CTRL' of subject"
+                    & " 'linux' invalid: must be 0",
+                    Message   => "Exception mismatch (IA32_PERF_GLOBAL_CTRL)");
+      end;
+
       --  Host address-space size.
 
       Muxml.Utils.Set_Element_Value

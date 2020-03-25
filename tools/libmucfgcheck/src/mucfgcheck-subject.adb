@@ -1198,6 +1198,17 @@ is
                  & "'Host address-space size' of subject '" & Subj_Name
                  & "' invalid: must be 1";
             end if;
+
+            --  Access to IA32_PERF_GLOBAL_CTRL not allowed.
+
+            if Is_Element_Value (Node  => VMExit_Ctrl,
+                                 XPath => "LoadIA32PERFGLOBALCTRL",
+                                 Value => "1")
+            then
+               raise Validation_Error with "VM-Exit control "
+                 & "'Load IA32_PERF_GLOBAL_CTRL' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
          end;
       end loop;
    end VM_Exit_Controls_Requirements;

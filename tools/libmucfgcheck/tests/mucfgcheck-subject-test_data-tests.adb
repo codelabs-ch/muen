@@ -1767,6 +1767,27 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       VMX_Controls_Proc2_Requirements (XML_Data => Data);
 
+      --  WBINVD exiting.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc2/WBINVDExiting",
+         Value => "0");
+      begin
+         VMX_Controls_Proc2_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (WBINVD)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Secondary Processor-Based control "
+                    & "'WBINVD exiting' of subject 'linux' "
+                    & "invalid: must be 1",
+                    Message   => "Exception mismatch (WBINVD)");
+      end;
+
       --  VPID.
 
       Muxml.Utils.Set_Element_Value

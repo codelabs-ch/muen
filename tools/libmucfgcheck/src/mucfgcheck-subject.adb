@@ -1573,6 +1573,17 @@ is
                  & "'Enable VPID' of subject '" & Subj_Name
                  & "' invalid: must be 0";
             end if;
+
+            --  Direct execution of WBINVD is not allowed.
+
+            if Is_Element_Value (Node  => Proc2_Ctrl,
+                                 XPath => "WBINVDExiting",
+                                 Value => "0")
+            then
+               raise Validation_Error with "Secondary Processor-Based control "
+                 & "'WBINVD exiting' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
          end;
       end loop;
    end VMX_Controls_Proc2_Requirements;

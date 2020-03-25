@@ -87,4 +87,8 @@ is
    --  the requirements for the execution of Muen.
    procedure VMX_Controls_Proc2_Requirements (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that the VM-Exit Controls meet the requirements for the
+   --  execution of Muen.
+   procedure VM_Exit_Controls_Requirements (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Subject;

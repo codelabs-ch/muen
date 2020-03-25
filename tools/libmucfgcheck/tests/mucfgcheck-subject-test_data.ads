@@ -7,7 +7,12 @@ with AUnit.Test_Fixtures;
 
 with Ada.Exceptions;
 
+with DOM.Core.Documents;
+with DOM.Core.Elements;
+
 with Muxml.Utils;
+with Mutools.Constants;
+with Mutools.Utils;
 
 package Mucfgcheck.Subject.Test_Data is
 

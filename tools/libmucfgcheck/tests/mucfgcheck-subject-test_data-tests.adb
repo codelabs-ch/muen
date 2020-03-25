@@ -1938,6 +1938,64 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
    end Test_VMX_Controls_Proc2_Requirements;
 --  end read only
 
+
+--  begin read only
+   procedure Test_VM_Exit_Controls_Requirements (Gnattest_T : in out Test);
+   procedure Test_VM_Exit_Controls_Requirements_432c58 (Gnattest_T : in out Test) renames Test_VM_Exit_Controls_Requirements;
+--  id:2.2/432c58c1b884576d/VM_Exit_Controls_Requirements/1/0/
+   procedure Test_VM_Exit_Controls_Requirements (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      VM_Exit_Controls_Requirements (XML_Data => Data);
+
+      --  Save IA32_DEBUGCTL.
+
+      declare
+         Node : DOM.Core.Node
+           := DOM.Core.Documents.Create_Element (Doc      => Data.Doc,
+                                                 Tag_Name => "msr");
+      begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "start",
+            Value => Mutools.Utils.To_Hex
+              (Number => Mutools.Constants.IA32_DEBUGCTL));
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "end",
+            Value => Mutools.Utils.To_Hex
+              (Number => Mutools.Constants.IA32_DEBUGCTL));
+         Muxml.Utils.Append_Child
+           (Node      => Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => "/system/subjects/subject[@name='linux']/vcpu/msrs"),
+            New_Child => Node);
+
+         VM_Exit_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (IA32_DEBUGCTL)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Exit control 'Save debug controls' of subject "
+                    & "'linux' invalid: must be 1",
+                    Message   => "Exception mismatch (IA32_DEBUGCTL)");
+      end;
+--  begin read only
+   end Test_VM_Exit_Controls_Requirements;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

@@ -1221,6 +1221,26 @@ is
                  & "'Acknowledge interrupt on exit' of subject '" & Subj_Name
                  & "' invalid: must be 1";
             end if;
+
+            --  Access to IA32_PAT is not allowed.
+
+            if Is_Element_Value (Node  => VMExit_Ctrl,
+                                 XPath => "SaveIA32PAT",
+                                 Value => "1")
+            then
+               raise Validation_Error with "VM-Exit control "
+                 & "'Save IA32_PAT' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
+
+            if Is_Element_Value (Node  => VMExit_Ctrl,
+                                 XPath => "LoadIA32PAT",
+                                 Value => "1")
+            then
+               raise Validation_Error with "VM-Exit control "
+                 & "'Load IA32_PAT' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
          end;
       end loop;
    end VM_Exit_Controls_Requirements;

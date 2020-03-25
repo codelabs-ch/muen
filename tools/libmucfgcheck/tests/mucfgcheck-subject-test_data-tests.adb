@@ -1958,6 +1958,46 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       VM_Exit_Controls_Requirements (XML_Data => Data);
 
+      --  Load IA32_PAT.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/exit/LoadIA32PAT",
+         Value => "1");
+      begin
+         VM_Exit_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Load IA32_PAT)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Exit control 'Load IA32_PAT' of subject"
+                    & " 'linux' invalid: must be 0",
+                    Message   => "Exception mismatch (Load IA32_PAT)");
+      end;
+
+      --  Save IA32_PAT.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/exit/SaveIA32PAT",
+         Value => "1");
+      begin
+         VM_Exit_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Save IA32_PAT)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Exit control 'Save IA32_PAT' of subject"
+                    & " 'linux' invalid: must be 0",
+                    Message   => "Exception mismatch (Save IA32_PAT)");
+      end;
+
       --  Acknowledge interrupt on exit.
 
       Muxml.Utils.Set_Element_Value

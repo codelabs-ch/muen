@@ -1617,6 +1617,17 @@ is
                  & "'Enable INVPCID' of subject '" & Subj_Name
                  & "' invalid: must be 0";
             end if;
+
+            --  VMFUNC is not supported.
+
+            if Is_Element_Value (Node  => Proc2_Ctrl,
+                                 XPath => "EnableVMFunctions",
+                                 Value => "1")
+            then
+               raise Validation_Error with "Secondary Processor-Based control "
+                 & "'Enable VM functions' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
          end;
       end loop;
    end VMX_Controls_Proc2_Requirements;

@@ -1767,6 +1767,27 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       VMX_Controls_Proc2_Requirements (XML_Data => Data);
 
+      --  VM Functions.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc2/EnableVMFunctions",
+         Value => "1");
+      begin
+         VMX_Controls_Proc2_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (VMFUNC)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Secondary Processor-Based control "
+                    & "'Enable VM functions' of subject 'linux' "
+                    & "invalid: must be 0",
+                    Message   => "Exception mismatch (VMFUNC)");
+      end;
+
       --  INVPCID.
 
       Muxml.Utils.Set_Element_Value

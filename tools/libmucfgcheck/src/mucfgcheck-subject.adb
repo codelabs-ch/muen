@@ -1584,6 +1584,28 @@ is
                  & "'WBINVD exiting' of subject '" & Subj_Name
                  & "' invalid: must be 1";
             end if;
+
+            --  APIC-register virtualization not implemented.
+
+            if Is_Element_Value (Node  => Proc2_Ctrl,
+                                 XPath => "APICRegisterVirtualization",
+                                 Value => "1")
+            then
+               raise Validation_Error with "Secondary Processor-Based control "
+                 & "'APIC-register virtualization' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
+
+            --  Virtual-interrupt delivery not implemented.
+
+            if Is_Element_Value (Node  => Proc2_Ctrl,
+                                 XPath => "VirtualInterruptDelivery",
+                                 Value => "1")
+            then
+               raise Validation_Error with "Secondary Processor-Based control "
+                 & "'Virtual-interrupt delivery' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
          end;
       end loop;
    end VMX_Controls_Proc2_Requirements;

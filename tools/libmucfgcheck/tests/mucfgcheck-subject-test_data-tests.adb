@@ -1767,6 +1767,48 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       VMX_Controls_Proc2_Requirements (XML_Data => Data);
 
+      --  Virtual-interrupt delivery.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc2/VirtualInterruptDelivery",
+         Value => "1");
+      begin
+         VMX_Controls_Proc2_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Virt Int Delivery)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Secondary Processor-Based control "
+                    & "'Virtual-interrupt delivery' of subject 'linux' "
+                    & "invalid: must be 0",
+                    Message   => "Exception mismatch (Virt Int Delivery)");
+      end;
+
+      --  APIC-register virtualization.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc2/APICRegisterVirtualization",
+         Value => "1");
+      begin
+         VMX_Controls_Proc2_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (APIC Reg Virt)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Secondary Processor-Based control "
+                    & "'APIC-register virtualization' of subject 'linux' "
+                    & "invalid: must be 0",
+                    Message   => "Exception mismatch (APIC Reg Virt)");
+      end;
+
       --  WBINVD exiting.
 
       Muxml.Utils.Set_Element_Value

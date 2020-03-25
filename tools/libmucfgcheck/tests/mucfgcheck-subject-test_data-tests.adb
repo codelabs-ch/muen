@@ -1958,6 +1958,26 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       VM_Exit_Controls_Requirements (XML_Data => Data);
 
+      --  Host address-space size.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/exit/HostAddressspaceSize",
+         Value => "0");
+      begin
+         VM_Exit_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Host Addr Space Size)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Exit control 'Host address-space size' of subject "
+                    & "'linux' invalid: must be 1",
+                    Message   => "Exception mismatch (Host Addr Space Size)");
+      end;
+
       --  Save IA32_DEBUGCTL.
 
       declare

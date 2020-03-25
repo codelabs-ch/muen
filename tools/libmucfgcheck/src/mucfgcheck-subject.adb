@@ -1186,6 +1186,18 @@ is
                  & "'Save debug controls' of subject '" & Subj_Name
                  & "' invalid: must be 1";
             end if;
+
+            --  Host address-space size must be set since kernel executes in
+            --  IA-32e mode.
+
+            if Is_Element_Value (Node  => VMExit_Ctrl,
+                                 XPath => "HostAddressspaceSize",
+                                 Value => "0")
+            then
+               raise Validation_Error with "VM-Exit control "
+                 & "'Host address-space size' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
          end;
       end loop;
    end VM_Exit_Controls_Requirements;

@@ -1266,6 +1266,18 @@ is
                     & "' invalid: must be 1";
                end if;
             end if;
+
+            --  VMX-preemption timer value is always recalculated and set
+            --  prior to VM-Entry.
+
+            if Is_Element_Value (Node  => VMExit_Ctrl,
+                                 XPath => "SaveVMXTimerValue",
+                                 Value => "1")
+            then
+               raise Validation_Error with "VM-Exit control "
+                 & "'Save VMX-preemption timer value' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
          end;
       end loop;
    end VM_Exit_Controls_Requirements;

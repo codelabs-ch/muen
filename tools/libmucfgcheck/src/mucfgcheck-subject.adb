@@ -1641,6 +1641,17 @@ is
                  & "'NMI-window exiting' of subject '" & Subj_Name
                  & "' invalid: must be 0";
             end if;
+
+            --  Restrict access to debug registers.
+
+            if Is_Element_Value (Node  => Proc_Ctrl,
+                                 XPath => "MOVDRExiting",
+                                 Value => "0")
+            then
+               raise Validation_Error with "Processor-Based control "
+                 & "'MOV-DR exiting' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
          end;
       end loop;
    end VMX_Controls_Proc_Requirements;

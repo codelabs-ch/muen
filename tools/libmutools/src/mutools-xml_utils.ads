@@ -163,6 +163,12 @@ is
       EFER_Control           : Boolean)
       return Natural;
 
+   --  Returns True if the given MSR is accessible.
+   function Is_MSR_Accessible
+     (MSR  : Interfaces.Unsigned_64;
+      MSRs : DOM.Core.Node_List)
+      return Boolean;
+
    type PCI_Bus_Range is range 0 .. 255;
 
    package PCI_Bus_Set is new Ada.Containers.Ordered_Sets

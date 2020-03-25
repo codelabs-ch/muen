@@ -1767,6 +1767,27 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       VMX_Controls_Proc2_Requirements (XML_Data => Data);
 
+      --  VPID.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc2/EnableVPID",
+         Value => "1");
+      begin
+         VMX_Controls_Proc2_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (VPID)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Secondary Processor-Based control "
+                    & "'Enable VPID' of subject 'linux' "
+                    & "invalid: must be 0",
+                    Message   => "Exception mismatch (VPID)");
+      end;
+
       --  Virtualize x2APIC mode.
 
       Muxml.Utils.Set_Element_Value

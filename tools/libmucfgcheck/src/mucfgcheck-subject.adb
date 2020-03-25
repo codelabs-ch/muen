@@ -1562,6 +1562,17 @@ is
                  & "'Virtualize x2APIC mode' of subject '" & Subj_Name
                  & "' invalid: must be 0";
             end if;
+
+            --  VPID not implemented.
+
+            if Is_Element_Value (Node  => Proc2_Ctrl,
+                                 XPath => "EnableVPID",
+                                 Value => "1")
+            then
+               raise Validation_Error with "Secondary Processor-Based control "
+                 & "'Enable VPID' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
          end;
       end loop;
    end VMX_Controls_Proc2_Requirements;

@@ -1767,6 +1767,27 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       VMX_Controls_Proc2_Requirements (XML_Data => Data);
 
+      --  INVPCID.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc2/EnableINVPCID",
+         Value => "1");
+      begin
+         VMX_Controls_Proc2_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (INVPCID)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Secondary Processor-Based control "
+                    & "'Enable INVPCID' of subject 'linux' "
+                    & "invalid: must be 0",
+                    Message   => "Exception mismatch (INVPCID)");
+      end;
+
       --  Virtual-interrupt delivery.
 
       Muxml.Utils.Set_Element_Value

@@ -1606,6 +1606,17 @@ is
                  & "'Virtual-interrupt delivery' of subject '" & Subj_Name
                  & "' invalid: must be 0";
             end if;
+
+            --  Direct execution of INVPCID is not allowed.
+
+            if Is_Element_Value (Node  => Proc2_Ctrl,
+                                 XPath => "EnableINVPCID",
+                                 Value => "1")
+            then
+               raise Validation_Error with "Secondary Processor-Based control "
+                 & "'Enable INVPCID' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
          end;
       end loop;
    end VMX_Controls_Proc2_Requirements;

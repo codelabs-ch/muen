@@ -1209,6 +1209,18 @@ is
                  & "'Load IA32_PERF_GLOBAL_CTRL' of subject '" & Subj_Name
                  & "' invalid: must be 0";
             end if;
+
+            --  Interrupt acknowledging on exit is required for interrupt
+            --  handling.
+
+            if Is_Element_Value (Node  => VMExit_Ctrl,
+                                 XPath => "AckInterruptOnExit",
+                                 Value => "0")
+            then
+               raise Validation_Error with "VM-Exit control "
+                 & "'Acknowledge interrupt on exit' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
          end;
       end loop;
    end VM_Exit_Controls_Requirements;

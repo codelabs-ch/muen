@@ -1479,6 +1479,26 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       VMX_Controls_Proc_Requirements (XML_Data => Data);
 
+      --  TPR Shadow.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc/UseTPRShadow",
+         Value => "1");
+      begin
+         VMX_Controls_Proc_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (TPR Shadow)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Processor-Based control 'Use TPR shadow' of "
+                    & "subject 'linux' invalid: must be 0",
+                    Message   => "Exception mismatch (TPR Shadow)");
+      end;
+
       --  CR8-store exiting.
 
       Muxml.Utils.Set_Element_Value

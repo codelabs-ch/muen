@@ -1479,6 +1479,26 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       VMX_Controls_Proc_Requirements (XML_Data => Data);
 
+      --  NMI-window exiting.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc/NMIWindowExiting",
+         Value => "1");
+      begin
+         VMX_Controls_Proc_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (NMI Window)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Processor-Based control 'NMI-window exiting' of "
+                    & "subject 'linux' invalid: must be 0",
+                    Message   => "Exception mismatch (NMI Window)");
+      end;
+
       --  TPR Shadow.
 
       Muxml.Utils.Set_Element_Value

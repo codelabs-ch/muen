@@ -1241,6 +1241,31 @@ is
                  & "'Load IA32_PAT' of subject '" & Subj_Name
                  & "' invalid: must be 0";
             end if;
+
+            --  IA32_EFER must be handled if subject has access.
+
+            if Mutools.XML_Utils.Is_MSR_Accessible
+                (MSR  => Mutools.Constants.IA32_EFER,
+                 MSRs => MSRs)
+            then
+               if Is_Element_Value (Node  => VMExit_Ctrl,
+                                    XPath => "SaveIA32EFER",
+                                    Value => "0")
+               then
+                  raise Validation_Error with "VM-Exit control "
+                    & "'Save IA32_EFER' of subject '" & Subj_Name
+                    & "' invalid: must be 1";
+               end if;
+
+               if Is_Element_Value (Node  => VMExit_Ctrl,
+                                    XPath => "LoadIA32EFER",
+                                    Value => "0")
+               then
+                  raise Validation_Error with "VM-Exit control "
+                    & "'Load IA32_EFER' of subject '" & Subj_Name
+                    & "' invalid: must be 1";
+               end if;
+            end if;
          end;
       end loop;
    end VM_Exit_Controls_Requirements;

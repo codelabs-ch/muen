@@ -1479,6 +1479,46 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       VMX_Controls_Proc_Requirements (XML_Data => Data);
 
+      --  MSR bitmaps.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc/UseMSRBitmaps",
+         Value => "0");
+      begin
+         VMX_Controls_Proc_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (MSR Bitmaps)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Processor-Based control 'Use MSR bitmaps' of "
+                    & "subject 'linux' invalid: must be 1",
+                    Message   => "Exception mismatch (MSR Bitmaps)");
+      end;
+
+      --  I/O bitmaps.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc/UseIOBitmaps",
+         Value => "0");
+      begin
+         VMX_Controls_Proc_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (I/O Bitmaps)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Processor-Based control 'Use I/O bitmaps' of "
+                    & "subject 'linux' invalid: must be 1",
+                    Message   => "Exception mismatch (I/O Bitmaps)");
+      end;
+
       --  MOV-DR exiting.
 
       Muxml.Utils.Set_Element_Value

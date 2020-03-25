@@ -1652,6 +1652,28 @@ is
                  & "'MOV-DR exiting' of subject '" & Subj_Name
                  & "' invalid: must be 1";
             end if;
+
+            --  Restrict access to I/O ports.
+
+            if Is_Element_Value (Node  => Proc_Ctrl,
+                                 XPath => "UseIOBitmaps",
+                                 Value => "0")
+            then
+               raise Validation_Error with "Processor-Based control "
+                 & "'Use I/O bitmaps' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+
+            --  Restrict access to MSRs.
+
+            if Is_Element_Value (Node  => Proc_Ctrl,
+                                 XPath => "UseMSRBitmaps",
+                                 Value => "0")
+            then
+               raise Validation_Error with "Processor-Based control "
+                 & "'Use MSR bitmaps' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
          end;
       end loop;
    end VMX_Controls_Proc_Requirements;

@@ -1747,6 +1747,71 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
    end Test_VMX_Controls_Proc_Requirements;
 --  end read only
 
+
+--  begin read only
+   procedure Test_VMX_Controls_Proc2_Requirements (Gnattest_T : in out Test);
+   procedure Test_VMX_Controls_Proc2_Requirements_11a81e (Gnattest_T : in out Test) renames Test_VMX_Controls_Proc2_Requirements;
+--  id:2.2/11a81e439f6e1d42/VMX_Controls_Proc2_Requirements/1/0/
+   procedure Test_VMX_Controls_Proc2_Requirements (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      VMX_Controls_Proc2_Requirements (XML_Data => Data);
+
+      --  Virtualize x2APIC mode.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc2/Virtualizex2APICMode",
+         Value => "1");
+      begin
+         VMX_Controls_Proc2_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Virt x2APIC mode)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Secondary Processor-Based control "
+                    & "'Virtualize x2APIC mode' of subject 'linux' "
+                    & "invalid: must be 0",
+                    Message   => "Exception mismatch (Virt x2APIC mode)");
+      end;
+
+      --  Virtualize APIC Accesses.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc2/VirtualAPICAccesses",
+         Value => "1");
+      begin
+         VMX_Controls_Proc2_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Virt APIC access)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Secondary Processor-Based control "
+                    & "'Virtualize APIC accesses' of subject 'linux' "
+                    & "invalid: must be 0",
+                    Message   => "Exception mismatch (Virt APIC access)");
+      end;
+--  begin read only
+   end Test_VMX_Controls_Proc2_Requirements;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

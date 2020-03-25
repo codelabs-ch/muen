@@ -1519,6 +1519,55 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure VMX_Controls_Proc2_Requirements (XML_Data : Muxml.XML_Data_Type)
+   is
+      Proc2_Ctrls : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/subjects/subject/vcpu/vmx/controls/proc2");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Proc2_Ctrls);
+   begin
+      for I in 0 .. Count - 1 loop
+         declare
+            Proc2_Ctrl : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Proc2_Ctrls,
+                                      Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node (Node  => Proc2_Ctrl,
+                                                    Level => 4),
+                 Name => "name");
+         begin
+            Mulog.Log (Msg => "Checking requirements for Secondary "
+                       & "Processor-Based VM-Execution Controls of subject '"
+                       & Subj_Name & "'");
+
+            --  APIC Virtualization not implemented.
+
+            if Is_Element_Value (Node  => Proc2_Ctrl,
+                                 XPath => "VirtualAPICAccesses",
+                                 Value => "1")
+            then
+               raise Validation_Error with "Secondary Processor-Based control "
+                 & "'Virtualize APIC accesses' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
+
+            --  x2APIC Virtualization not implemented.
+
+            if Is_Element_Value (Node  => Proc2_Ctrl,
+                                 XPath => "Virtualizex2APICMode",
+                                 Value => "1")
+            then
+               raise Validation_Error with "Secondary Processor-Based control "
+                 & "'Virtualize x2APIC mode' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
+         end;
+      end loop;
+   end VMX_Controls_Proc2_Requirements;
+
+   -------------------------------------------------------------------------
+
    procedure VMX_Controls_Proc_Requirements (XML_Data : Muxml.XML_Data_Type)
    is
       Proc_Ctrls : constant DOM.Core.Node_List := XPath_Query

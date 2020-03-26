@@ -246,6 +246,8 @@ is
       XML_Processors.Register
         (Process => Subject.VM_Exit_Controls_Requirements'Access);
       XML_Processors.Register
+        (Process => Subject.VM_Entry_Controls_Requirements'Access);
+      XML_Processors.Register
         (Process => Events.Physical_Event_Name_Uniqueness'Access);
       XML_Processors.Register
         (Process => Events.Source_Targets'Access);

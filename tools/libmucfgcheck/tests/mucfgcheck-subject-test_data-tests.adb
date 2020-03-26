@@ -2381,6 +2381,71 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
    end Test_VM_Entry_Controls_Requirements;
 --  end read only
 
+
+--  begin read only
+   procedure Test_VMX_CR0_Mask_Requirements (Gnattest_T : in out Test);
+   procedure Test_VMX_CR0_Mask_Requirements_ac4b69 (Gnattest_T : in out Test) renames Test_VMX_CR0_Mask_Requirements;
+--  id:2.2/ac4b692b1a57841d/VMX_CR0_Mask_Requirements/1/0/
+   procedure Test_VMX_CR0_Mask_Requirements (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      VMX_CR0_Mask_Requirements (XML_Data => Data);
+
+      --  Cache Disable.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "masks/cr0/CacheDisable",
+         Value => "0");
+      begin
+         VMX_CR0_Mask_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (CD)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMX CR0 guest/host mask control "
+                    & "'Cache Disable' of subject 'linux' "
+                    & "invalid: must be 1",
+                    Message   => "Exception mismatch (CD)");
+      end;
+
+      --  Not Write-through.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "masks/cr0/NotWritethrough",
+         Value => "0");
+      begin
+         VMX_CR0_Mask_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (NW)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMX CR0 guest/host mask control "
+                    & "'Not Write-through' of subject 'linux' "
+                    & "invalid: must be 1",
+                    Message   => "Exception mismatch (NW)");
+      end;
+--  begin read only
+   end Test_VMX_CR0_Mask_Requirements;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

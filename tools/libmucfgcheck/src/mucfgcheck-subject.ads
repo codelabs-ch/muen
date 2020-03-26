@@ -95,4 +95,8 @@ is
    --  execution of Muen.
    procedure VM_Entry_Controls_Requirements (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that the VMX CR0 guest/host masks meet the requirements for the
+   --  execution of Muen.
+   procedure VMX_CR0_Mask_Requirements (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Subject;

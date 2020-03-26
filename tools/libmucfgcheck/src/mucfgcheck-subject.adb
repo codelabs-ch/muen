@@ -2055,4 +2055,51 @@ is
       end loop;
    end VMX_Controls_Proc_Requirements;
 
+   -------------------------------------------------------------------------
+
+   procedure VMX_CR0_Mask_Requirements (XML_Data : Muxml.XML_Data_Type)
+   is
+      CR0_Masks : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/subjects/subject/vcpu/vmx/masks/cr0");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => CR0_Masks);
+   begin
+      for I in 0 .. Count - 1 loop
+         declare
+            CR0_Mask : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => CR0_Masks,
+                                      Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node (Node  => CR0_Mask,
+                                                    Level => 4),
+                 Name => "name");
+         begin
+            Mulog.Log (Msg => "Checking requirements for VMX CR0 guest/host "
+                       & "mask of subject '" & Subj_Name & "'");
+
+            --  Must be set as they control caching and are not saved/restored
+            --  by VMX.
+
+            if Is_Element_Value (Node  => CR0_Mask,
+                                 XPath => "NotWritethrough",
+                                 Value => "0")
+            then
+               raise Validation_Error with "VMX CR0 guest/host mask control "
+                 & "'Not Write-through' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+
+            if Is_Element_Value (Node  => CR0_Mask,
+                                 XPath => "CacheDisable",
+                                 Value => "0")
+            then
+               raise Validation_Error with "VMX CR0 guest/host mask control "
+                 & "'Cache Disable' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+         end;
+      end loop;
+   end VMX_CR0_Mask_Requirements;
+
 end Mucfgcheck.Subject;

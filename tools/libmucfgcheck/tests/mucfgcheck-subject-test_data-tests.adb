@@ -2198,6 +2198,31 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       VM_Entry_Controls_Requirements (XML_Data => Data);
 
+      --  IA-32e guest mode.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='vt']/vcpu/vmx/"
+         & "controls/entry/IA32eModeGuest",
+         Value => "0");
+      begin
+         VM_Entry_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (IA-32e guest)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Entry control 'IA-32e mode guest' of subject "
+                    & "'vt' invalid: must be 1",
+                    Message   => "Exception mismatch (IA-32e guest)");
+      end;
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='vt']/vcpu/vmx/"
+         & "controls/entry/IA32eModeGuest",
+         Value => "1");
+
       --  Load IA32_DEBUGCTL.
 
       declare

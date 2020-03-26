@@ -1187,6 +1187,20 @@ is
                  & "'Load debug controls' of subject '" & Subj_Name
                  & "' invalid: must be 1";
             end if;
+
+            --  Non-EPT subjects execute in IA-32e mode.
+
+            if Is_Element_Value (Node  => VMEntry_Ctrl,
+                                 XPath => "../proc2/EnableEPT",
+                                 Value => "0")
+              and Is_Element_Value (Node  => VMEntry_Ctrl,
+                                    XPath => "IA32eModeGuest",
+                                    Value => "0")
+            then
+               raise Validation_Error with "VM-Entry control "
+                 & "'IA-32e mode guest' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
          end;
       end loop;
    end VM_Entry_Controls_Requirements;

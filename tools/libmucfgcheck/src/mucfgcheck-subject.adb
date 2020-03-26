@@ -2102,4 +2102,55 @@ is
       end loop;
    end VMX_CR0_Mask_Requirements;
 
+   -------------------------------------------------------------------------
+
+   procedure VMX_CR4_Mask_Requirements (XML_Data : Muxml.XML_Data_Type)
+   is
+      CR4_Masks : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/subjects/subject/vcpu/vmx/masks/cr4");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => CR4_Masks);
+   begin
+      for I in 0 .. Count - 1 loop
+         declare
+            CR4_Mask : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => CR4_Masks,
+                                      Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node (Node  => CR4_Mask,
+                                                    Level => 4),
+                 Name => "name");
+         begin
+            Mulog.Log (Msg => "Checking requirements for VMX CR4 guest/host "
+                       & "mask of subject '" & Subj_Name & "'");
+
+            --  PAE must be set if EPT is not active.
+
+            if Is_Element_Value (Node  => CR4_Mask,
+                                 XPath => "../../controls/proc2/EnableEPT",
+                                 Value => "0")
+              and Is_Element_Value (Node  => CR4_Mask,
+                                    XPath => "PhysicalAddressExtension",
+                                    Value => "0")
+            then
+               raise Validation_Error with "VMX CR4 guest/host mask control "
+                 & "'Physical Address Extension' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+
+            --  Machine-Check Enable is required for MCE handling.
+
+            if Is_Element_Value (Node  => CR4_Mask,
+                                 XPath => "MachineCheckEnable",
+                                 Value => "0")
+            then
+               raise Validation_Error with "VMX CR4 guest/host mask control "
+                 & "'Machine-Check Enable' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+         end;
+      end loop;
+   end VMX_CR4_Mask_Requirements;
+
 end Mucfgcheck.Subject;

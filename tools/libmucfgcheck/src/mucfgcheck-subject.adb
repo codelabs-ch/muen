@@ -1245,6 +1245,20 @@ is
                  & "'Load IA32_PAT' of subject '" & Subj_Name
                  & "' invalid: must be 0";
             end if;
+
+            --  IA32_EFER must be handled if subject has access.
+
+            if Is_Element_Value (Node  => VMEntry_Ctrl,
+                                 XPath => "LoadIA32EFER",
+                                 Value => "0")
+              and then Mutools.XML_Utils.Is_MSR_Accessible
+                (MSR  => Mutools.Constants.IA32_EFER,
+                 MSRs => MSRs)
+            then
+               raise Validation_Error with "VM-Entry control "
+                 & "'Load IA32_EFER' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
          end;
       end loop;
    end VM_Entry_Controls_Requirements;

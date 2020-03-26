@@ -2198,6 +2198,46 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       VM_Entry_Controls_Requirements (XML_Data => Data);
 
+      --  Load IA32_EFER.
+
+      declare
+         Node : DOM.Core.Node
+           := DOM.Core.Documents.Create_Element (Doc      => Data.Doc,
+                                                 Tag_Name => "msr");
+      begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "start",
+            Value => Mutools.Utils.To_Hex
+              (Number => Mutools.Constants.IA32_EFER));
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "end",
+            Value => Mutools.Utils.To_Hex
+              (Number => Mutools.Constants.IA32_EFER));
+         Muxml.Utils.Append_Child
+           (Node      => Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => "/system/subjects/subject[@name='linux']/vcpu/msrs"),
+            New_Child => Node);
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/entry/LoadIA32EFER",
+            Value => "0");
+
+         VM_Entry_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Load IA32_EFER)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Entry control 'Load IA32_EFER' of subject"
+                    & " 'linux' invalid: must be 1",
+                    Message   => "Exception mismatch (Load IA32_EFER)");
+      end;
+
       --  Load IA32_PAT.
 
       Muxml.Utils.Set_Element_Value

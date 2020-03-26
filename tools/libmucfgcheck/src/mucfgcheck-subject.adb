@@ -1234,6 +1234,17 @@ is
                  & "'Load IA32_PERF_GLOBAL_CTRL' of subject '" & Subj_Name
                  & "' invalid: must be 0";
             end if;
+
+            --  Access to IA32_PAT not allowed.
+
+            if Is_Element_Value (Node  => VMEntry_Ctrl,
+                                 XPath => "LoadIA32PAT",
+                                 Value => "1")
+            then
+               raise Validation_Error with "VM-Entry control "
+                 & "'Load IA32_PAT' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
          end;
       end loop;
    end VM_Entry_Controls_Requirements;

@@ -2198,6 +2198,26 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       VM_Entry_Controls_Requirements (XML_Data => Data);
 
+      --  Load IA32_PAT.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/entry/LoadIA32PAT",
+         Value => "1");
+      begin
+         VM_Entry_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (IA32_PAT)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Entry control 'Load IA32_PAT' of "
+                    & "subject 'linux' invalid: must be 0",
+                    Message   => "Exception mismatch (IA32_PAT)");
+      end;
+
       --  Load IA32_PERF_GLOBAL_CTRL.
 
       Muxml.Utils.Set_Element_Value

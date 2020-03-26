@@ -242,7 +242,7 @@
        <DebuggingExtensions>0</DebuggingExtensions>
        <PageSizeExtensions>0</PageSizeExtensions>
        <PhysicalAddressExtension>1</PhysicalAddressExtension>
-       <MachineCheckEnable>0</MachineCheckEnable>
+       <MachineCheckEnable>1</MachineCheckEnable>
        <PageGlobalEnable>0</PageGlobalEnable>
        <PerfCounterEnable>0</PerfCounterEnable>
        <OSSupportFXSAVE>0</OSSupportFXSAVE>

@@ -2074,8 +2074,8 @@
        <NumericError>1</NumericError>
        <WriteProtect>0</WriteProtect>
        <AlignmentMask>0</AlignmentMask>
-       <NotWritethrough>0</NotWritethrough>
-       <CacheDisable>0</CacheDisable>
+       <NotWritethrough>1</NotWritethrough>
+       <CacheDisable>1</CacheDisable>
        <Paging>0</Paging>
       </cr0>
       <cr4>

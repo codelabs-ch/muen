@@ -2511,6 +2511,49 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
    end Test_VMX_CR4_Mask_Requirements;
 --  end read only
 
+
+--  begin read only
+   procedure Test_VMX_Exception_Bitmap_Requirements (Gnattest_T : in out Test);
+   procedure Test_VMX_Exception_Bitmap_Requirements_ce7455 (Gnattest_T : in out Test) renames Test_VMX_Exception_Bitmap_Requirements;
+--  id:2.2/ce745507a96aaac4/VMX_Exception_Bitmap_Requirements/1/0/
+   procedure Test_VMX_Exception_Bitmap_Requirements (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      VMX_Exception_Bitmap_Requirements (XML_Data => Data);
+
+      --  #MC.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='vt']/vcpu/vmx/"
+         & "masks/exception/MachineCheck",
+         Value => "0");
+      begin
+         VMX_Exception_Bitmap_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (#MC)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMX Exception bitmap control 'Machine Check' of subject"
+                    & " 'vt' invalid: must be 1",
+                    Message   => "Exception mismatch (#MC)");
+      end;
+--  begin read only
+   end Test_VMX_Exception_Bitmap_Requirements;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

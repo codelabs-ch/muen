@@ -103,4 +103,9 @@ is
    --  execution of Muen.
    procedure VMX_CR4_Mask_Requirements (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that the VMX Exception bitmap meet the requirements for the
+   --  execution of Muen.
+   procedure VMX_Exception_Bitmap_Requirements
+     (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Subject;

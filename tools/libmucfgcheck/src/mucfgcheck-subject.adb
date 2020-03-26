@@ -2153,4 +2153,41 @@ is
       end loop;
    end VMX_CR4_Mask_Requirements;
 
+   -------------------------------------------------------------------------
+
+   procedure VMX_Exception_Bitmap_Requirements (XML_Data : Muxml.XML_Data_Type)
+   is
+      Exc_Bitmaps : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/subjects/subject/vcpu/vmx/masks/exception");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Exc_Bitmaps);
+   begin
+      for I in 0 .. Count - 1 loop
+         declare
+            Exc_Bitmap : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Exc_Bitmaps,
+                                      Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node (Node  => Exc_Bitmap,
+                                                    Level => 4),
+                 Name => "name");
+         begin
+            Mulog.Log (Msg => "Checking requirements for VMX Exception bitmap "
+                       & "of subject '" & Subj_Name & "'");
+
+            --  #MC is required for MCE handling.
+
+            if Is_Element_Value (Node  => Exc_Bitmap,
+                                 XPath => "MachineCheck",
+                                 Value => "0")
+            then
+               raise Validation_Error with "VMX Exception bitmap control "
+                 & "'Machine Check' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+         end;
+      end loop;
+   end VMX_Exception_Bitmap_Requirements;
+
 end Mucfgcheck.Subject;

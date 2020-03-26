@@ -250,6 +250,8 @@ is
       XML_Processors.Register
         (Process => Subject.VMX_CR0_Mask_Requirements'Access);
       XML_Processors.Register
+        (Process => Subject.VMX_CR4_Mask_Requirements'Access);
+      XML_Processors.Register
         (Process => Events.Physical_Event_Name_Uniqueness'Access);
       XML_Processors.Register
         (Process => Events.Source_Targets'Access);

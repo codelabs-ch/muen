@@ -1201,6 +1201,28 @@ is
                  & "'IA-32e mode guest' of subject '" & Subj_Name
                  & "' invalid: must be 1";
             end if;
+
+            --  Any other value leads to VM-Entry failure.
+
+            if Is_Element_Value (Node  => VMEntry_Ctrl,
+                                 XPath => "EntryToSMM",
+                                 Value => "1")
+            then
+               raise Validation_Error with "VM-Entry control "
+                 & "'Entry to SMM' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
+
+            --  Any other value leads to VM-Entry failure.
+
+            if Is_Element_Value (Node  => VMEntry_Ctrl,
+                                 XPath => "DeactiveDualMonitorTreatment",
+                                 Value => "1")
+            then
+               raise Validation_Error with "VM-Entry control "
+                 & "'Deactivate dual-monitor treatment' of subject '"
+                 & Subj_Name & "' invalid: must be 0";
+            end if;
          end;
       end loop;
    end VM_Entry_Controls_Requirements;

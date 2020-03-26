@@ -2198,6 +2198,46 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       VM_Entry_Controls_Requirements (XML_Data => Data);
 
+      --  Dual-Monitor treatment.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/entry/DeactiveDualMonitorTreatment",
+         Value => "1");
+      begin
+         VM_Entry_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Dual-Monitor)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Entry control 'Deactivate dual-monitor treatment' of"
+                    & " subject 'linux' invalid: must be 0",
+                    Message   => "Exception mismatch (Dual-Monitor)");
+      end;
+
+      --  Entry to SMM.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/entry/EntryToSMM",
+         Value => "1");
+      begin
+         VM_Entry_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Entry to SMM)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Entry control 'Entry to SMM' of subject "
+                    & "'linux' invalid: must be 0",
+                    Message   => "Exception mismatch (Entry to SMM)");
+      end;
+
       --  IA-32e guest mode.
 
       Muxml.Utils.Set_Element_Value

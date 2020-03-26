@@ -2062,7 +2062,7 @@
        <PageFault>0</PageFault>
        <x87FPUFloatingPointError>0</x87FPUFloatingPointError>
        <AlignmentCheck>0</AlignmentCheck>
-       <MachineCheck>0</MachineCheck>
+       <MachineCheck>1</MachineCheck>
        <SIMDFloatingPointException>0</SIMDFloatingPointException>
       </exception>
       <cr0>

@@ -91,4 +91,8 @@ is
    --  execution of Muen.
    procedure VM_Exit_Controls_Requirements (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that the VM-Entry Controls meet the requirements for the
+   --  execution of Muen.
+   procedure VM_Entry_Controls_Requirements (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Subject;

@@ -1149,6 +1149,50 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure VM_Entry_Controls_Requirements (XML_Data : Muxml.XML_Data_Type)
+   is
+      VMEntry_Ctrls : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/subjects/subject/vcpu/vmx/controls/entry");
+      Count : constant Natural
+        := DOM.Core.Nodes.Length (List => VMEntry_Ctrls);
+   begin
+      for I in 0 .. Count - 1 loop
+         declare
+            VMEntry_Ctrl : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => VMEntry_Ctrls,
+                                      Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node (Node  => VMEntry_Ctrl,
+                                                    Level => 4),
+                 Name => "name");
+            MSRs : constant DOM.Core.Node_List
+              := XPath_Query (N     => VMEntry_Ctrl,
+                              XPath => "../../../msrs/msr");
+         begin
+            Mulog.Log (Msg => "Checking requirements for VM-Entry Controls of "
+                       & "subject '" & Subj_Name & "'");
+
+            --  Must be set if IA32_DEBUGCTL is accessible by subject.
+
+            if Is_Element_Value (Node  => VMEntry_Ctrl,
+                                 XPath => "LoadDebugControls",
+                                 Value => "0")
+              and then Mutools.XML_Utils.Is_MSR_Accessible
+                (MSR  => Mutools.Constants.IA32_DEBUGCTL,
+                 MSRs => MSRs)
+            then
+               raise Validation_Error with "VM-Entry control "
+                 & "'Load debug controls' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+         end;
+      end loop;
+   end VM_Entry_Controls_Requirements;
+
+   -------------------------------------------------------------------------
+
    procedure VM_Exit_Controls_Requirements (XML_Data : Muxml.XML_Data_Type)
    is
       VMExit_Ctrls : constant DOM.Core.Node_List := XPath_Query

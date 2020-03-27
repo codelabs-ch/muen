@@ -43,7 +43,7 @@ procedure Example
 is
    Request_Valid : Boolean;
    Request       : Foo.Message_Type;
-   Response      : Foo.Message_Type := Foo.Null_Message;
+   Response      : Foo.Message_Type;
 begin
 
    --  Initialize interrupt handling.

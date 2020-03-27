@@ -72,7 +72,7 @@ is
    --  spec since not all SM instances make use of the Reset functionality.
 
    Reset_Event : constant := 1;
-   Action      : Types.Subject_Action_Type := Types.Subject_Continue;
+   Action      : Types.Subject_Action_Type;
 
    Exit_Reason, Instruction_Len : SK.Word32;
    RIP : SK.Word64;

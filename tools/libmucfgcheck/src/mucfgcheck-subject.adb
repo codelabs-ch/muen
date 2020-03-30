@@ -47,7 +47,7 @@ is
    function Is_Element_Value
      (Node  : DOM.Core.Node;
       XPath : String;
-      Value : String := "1")
+      Value : String)
       return Boolean;
 
    -------------------------------------------------------------------------
@@ -335,7 +335,7 @@ is
    function Is_Element_Value
      (Node  : DOM.Core.Node;
       XPath : String;
-      Value : String := "1")
+      Value : String)
       return Boolean
    is
       Val_Str : constant String
@@ -1441,7 +1441,8 @@ is
          --  VM-Entry MSR-load.
 
          if Is_Element_Value (Node  => Ctrls,
-                              XPath => "entry/EntryToSMM")
+                              XPath => "entry/EntryToSMM",
+                              Value => "1")
          then
             raise Validation_Error
               with "VMX control 'entry to SMM' of subject '" & Subject_Name
@@ -1449,7 +1450,8 @@ is
          end if;
 
          if Is_Element_Value (Node  => Ctrls,
-                              XPath => "entry/DeactiveDualMonitorTreatment")
+                              XPath => "entry/DeactiveDualMonitorTreatment",
+                              Value => "1")
          then
             raise Validation_Error
               with "VMX control 'deactivate dual-monitor treatment' of "
@@ -1470,7 +1472,8 @@ is
       is
       begin
          if Is_Element_Value (Node  => Ctrls,
-                              XPath => "proc/UseIOBitmaps")
+                              XPath => "proc/UseIOBitmaps",
+                              Value => "1")
          then
             declare
                Bit_Mask : constant Interfaces.Unsigned_64
@@ -1492,7 +1495,8 @@ is
          end if;
 
          if Is_Element_Value (Node  => Ctrls,
-                              XPath => "proc/UseMSRBitmaps")
+                              XPath => "proc/UseMSRBitmaps",
+                              Value => "1")
          then
             declare
                Bit_Mask : constant Interfaces.Unsigned_64
@@ -1514,9 +1518,11 @@ is
          end if;
 
          if not Is_Element_Value (Node  => Ctrls,
-                                  XPath => "pin/NMIExiting")
+                                  XPath => "pin/NMIExiting",
+                                  Value => "1")
            and Is_Element_Value (Node  => Ctrls,
-                                 XPath => "pin/VirtualNMIs")
+                                 XPath => "pin/VirtualNMIs",
+                                 Value => "1")
          then
             raise Validation_Error
               with "VMX control 'NMI-Exiting' is 0 for subject '"
@@ -1524,9 +1530,11 @@ is
          end if;
 
          if not Is_Element_Value (Node  => Ctrls,
-                                  XPath => "pin/VirtualNMIs")
+                                  XPath => "pin/VirtualNMIs",
+                                  Value => "1")
            and Is_Element_Value (Node  => Ctrls,
-                                 XPath => "proc/NMIWindowExiting")
+                                 XPath => "proc/NMIWindowExiting",
+                                 Value => "1")
          then
             raise Validation_Error
               with "VMX control 'Virtual NMIs' is 0 for subject '"
@@ -1534,23 +1542,27 @@ is
          end if;
 
          if not Is_Element_Value (Node  => Ctrls,
-                                  XPath => "proc/UseTPRShadow")
+                                  XPath => "proc/UseTPRShadow",
+                                  Value => "1")
          then
             if Is_Element_Value (Node  => Ctrls,
-                                 XPath => "proc2/Virtualizex2APICMode")
+                                 XPath => "proc2/Virtualizex2APICMode",
+                                 Value => "1")
             then
                raise Validation_Error
                  with "VMX control 'Use TPR Shadow' is 0 for subject '"
                  & Subject_Name & "' but 'Virtualize x2APIC mode' is 1";
             elsif Is_Element_Value
               (Node  => Ctrls,
-               XPath => "proc2/APICRegisterVirtualization")
+               XPath => "proc2/APICRegisterVirtualization",
+               Value => "1")
             then
                raise Validation_Error
                  with "VMX control 'Use TPR Shadow' is 0 for subject '"
                  & Subject_Name & "' but 'APIC-register virtualization' is 1";
             elsif Is_Element_Value (Node  => Ctrls,
-                                    XPath => "proc2/VirtualInterruptDelivery")
+                                    XPath => "proc2/VirtualInterruptDelivery",
+                                    Value => "1")
             then
                raise Validation_Error
                  with "VMX control 'Use TPR Shadow' is 0 for subject '"
@@ -1559,9 +1571,11 @@ is
          end if;
 
          if Is_Element_Value (Node  => Ctrls,
-                              XPath => "proc2/Virtualizex2APICMode")
+                              XPath => "proc2/Virtualizex2APICMode",
+                              Value => "1")
            and Is_Element_Value (Node  => Ctrls,
-                                 XPath => "proc2/VirtualAPICAccesses")
+                                 XPath => "proc2/VirtualAPICAccesses",
+                                 Value => "1")
          then
             raise Validation_Error
               with "VMX control 'Virtualize x2APIC mode' is 1 for subject"
@@ -1569,9 +1583,11 @@ is
          end if;
 
          if Is_Element_Value (Node  => Ctrls,
-                              XPath => "proc2/VirtualInterruptDelivery")
+                              XPath => "proc2/VirtualInterruptDelivery",
+                              Value => "1")
            and not Is_Element_Value (Node  => Ctrls,
-                                     XPath => "pin/ExternalInterruptExiting")
+                                     XPath => "pin/ExternalInterruptExiting",
+                                     Value => "1")
          then
             raise Validation_Error
               with "VMX control 'virtual-interrupt delivery' is 1 for "
@@ -1580,17 +1596,20 @@ is
          end if;
 
          if Is_Element_Value (Node  => Ctrls,
-                              XPath => "pin/ProcessPostedInterrupts")
+                              XPath => "pin/ProcessPostedInterrupts",
+                              Value => "1")
          then
             if not Is_Element_Value (Node  => Ctrls,
-                                     XPath => "proc2/VirtualInterruptDelivery")
+                                     XPath => "proc2/VirtualInterruptDelivery",
+                                     Value => "1")
             then
                raise Validation_Error
                  with "VMX control 'process posted interrupts' is 1 for "
                  & "subject '" & Subject_Name & "' but 'virtual-interrupt "
                  & "delivery' is 0";
             elsif not Is_Element_Value (Node  => Ctrls,
-                                        XPath => "exit/AckInterruptOnExit")
+                                        XPath => "exit/AckInterruptOnExit",
+                                        Value => "1")
             then
                raise Validation_Error
                  with "VMX control 'process posted interrupts' is 1 for "
@@ -1600,9 +1619,11 @@ is
          end if;
 
          if Is_Element_Value (Node  => Ctrls,
-                              XPath => "proc2/UnrestrictedGuest")
+                              XPath => "proc2/UnrestrictedGuest",
+                              Value => "1")
            and not Is_Element_Value (Node  => Ctrls,
-                                     XPath => "proc2/EnableEPT")
+                                     XPath => "proc2/EnableEPT",
+                                     Value => "1")
          then
             raise Validation_Error
               with "VMX control 'unrestricted guest' is 1 for "
@@ -1618,9 +1639,11 @@ is
       is
       begin
          if not Is_Element_Value (Node  => Ctrls,
-                                  XPath => "pin/ActivateVMXTimer")
+                                  XPath => "pin/ActivateVMXTimer",
+                                  Value => "1")
            and Is_Element_Value (Node  => Ctrls,
-                                 XPath => "exit/SaveVMXTimerValue")
+                                 XPath => "exit/SaveVMXTimerValue",
+                                 Value => "1")
          then
             raise Validation_Error
               with "VMX control 'activate VMX-preemption timer' is 0 for "

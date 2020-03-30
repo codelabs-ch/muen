@@ -23,6 +23,36 @@ package body Mutools.XML_Utils.Test_Data is
 
    -------------------------------------------------------------------------
 
+   procedure Append_MSR
+     (Doc       : in out DOM.Core.Document;
+      List      : in out DOM.Core.Node_List;
+      MSR_Start :        String;
+      MSR_End   :        String;
+      Mode      :        String)
+   is
+      Node : DOM.Core.Node;
+   begin
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Doc,
+         Tag_Name => "msr");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "mode",
+         Value => Mode);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "start",
+         Value => MSR_Start);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "end",
+         Value => MSR_End);
+      DOM.Core.Append_Node (List => List,
+                            N    => Node);
+   end Append_MSR;
+
+   -------------------------------------------------------------------------
+
    function Create_Mem_Node
      (Doc     : DOM.Core.Document;
       Name    : String;

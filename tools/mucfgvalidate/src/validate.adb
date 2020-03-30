@@ -238,6 +238,22 @@ is
       XML_Processors.Register
         (Process => Subject.VMX_Controls_Entry_Checks'Access);
       XML_Processors.Register
+        (Process => Subject.VMX_Controls_Pin_Requirements'Access);
+      XML_Processors.Register
+        (Process => Subject.VMX_Controls_Proc_Requirements'Access);
+      XML_Processors.Register
+        (Process => Subject.VMX_Controls_Proc2_Requirements'Access);
+      XML_Processors.Register
+        (Process => Subject.VM_Exit_Controls_Requirements'Access);
+      XML_Processors.Register
+        (Process => Subject.VM_Entry_Controls_Requirements'Access);
+      XML_Processors.Register
+        (Process => Subject.VMX_CR0_Mask_Requirements'Access);
+      XML_Processors.Register
+        (Process => Subject.VMX_CR4_Mask_Requirements'Access);
+      XML_Processors.Register
+        (Process => Subject.VMX_Exception_Bitmap_Requirements'Access);
+      XML_Processors.Register
         (Process => Events.Physical_Event_Name_Uniqueness'Access);
       XML_Processors.Register
         (Process => Events.Source_Targets'Access);

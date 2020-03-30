@@ -1336,6 +1336,1224 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
    end Test_VMX_Controls_Entry_Checks;
 --  end read only
 
+
+--  begin read only
+   procedure Test_VMX_Controls_Pin_Requirements (Gnattest_T : in out Test);
+   procedure Test_VMX_Controls_Pin_Requirements_f8d4a7 (Gnattest_T : in out Test) renames Test_VMX_Controls_Pin_Requirements;
+--  id:2.2/f8d4a7e6bdd87428/VMX_Controls_Pin_Requirements/1/0/
+   procedure Test_VMX_Controls_Pin_Requirements (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      VMX_Controls_Pin_Requirements (XML_Data => Data);
+
+      --  Posted-Interrupt Processing.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/pin/ProcessPostedInterrupts",
+         Value => "1");
+      begin
+         VMX_Controls_Pin_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Posted Int)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Pin-Based control 'Process posted interrupts' of "
+                    & "subject 'linux' invalid: must be 0",
+                    Message   => "Exception mismatch (Posted Int)");
+      end;
+
+      --  VMX-preemption timer.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/pin/ActivateVMXTimer",
+         Value => "0");
+      begin
+         VMX_Controls_Pin_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (VMX Timer)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Pin-Based control 'Activate VMX-preemption timer' of "
+                    & "subject 'linux' invalid: must be 1",
+                    Message   => "Exception mismatch (VMX Timer)");
+      end;
+
+      --  Virtual NMIs.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/pin/VirtualNMIs",
+         Value => "1");
+      begin
+         VMX_Controls_Pin_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Virtual NMIs)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Pin-Based control 'Virtual NMIs' of subject 'linux' "
+                    & "invalid: must be 0",
+                    Message   => "Exception mismatch (Virtual NMIs)");
+      end;
+
+      --  NMI exiting.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/pin/NMIExiting",
+         Value => "0");
+      begin
+         VMX_Controls_Pin_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (NMI Exiting)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Pin-Based control 'NMI exiting' of subject 'linux' "
+                    & "invalid: must be 1",
+                    Message   => "Exception mismatch (NMI Exiting)");
+      end;
+
+      --  External-interrupt exiting.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/pin/ExternalInterruptExiting",
+         Value => "0");
+      begin
+         VMX_Controls_Pin_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (ExtInt)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Pin-Based control 'External-Interrupt exiting' of "
+                    & "subject 'linux' invalid: must be 1",
+                    Message   => "Exception mismatch (ExtInt)");
+      end;
+--  begin read only
+   end Test_VMX_Controls_Pin_Requirements;
+--  end read only
+
+
+--  begin read only
+   procedure Test_VMX_Controls_Proc_Requirements (Gnattest_T : in out Test);
+   procedure Test_VMX_Controls_Proc_Requirements_b82eb6 (Gnattest_T : in out Test) renames Test_VMX_Controls_Proc_Requirements;
+--  id:2.2/b82eb6a519d581d6/VMX_Controls_Proc_Requirements/1/0/
+   procedure Test_VMX_Controls_Proc_Requirements (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      VMX_Controls_Proc_Requirements (XML_Data => Data);
+
+      --  Secondary Proc controls.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc/Activate2ndaryControls",
+         Value => "0");
+      begin
+         VMX_Controls_Proc_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2ndary Proc Ctrls)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Processor-Based control 'Activate secondary controls' "
+                    & "of subject 'linux' invalid: must be 1",
+                    Message   => "Exception mismatch (2ndary Proc Ctrls)");
+      end;
+
+      --  MSR bitmaps.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc/UseMSRBitmaps",
+         Value => "0");
+      begin
+         VMX_Controls_Proc_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (MSR Bitmaps)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Processor-Based control 'Use MSR bitmaps' of "
+                    & "subject 'linux' invalid: must be 1",
+                    Message   => "Exception mismatch (MSR Bitmaps)");
+      end;
+
+      --  I/O bitmaps.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc/UseIOBitmaps",
+         Value => "0");
+      begin
+         VMX_Controls_Proc_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (I/O Bitmaps)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Processor-Based control 'Use I/O bitmaps' of "
+                    & "subject 'linux' invalid: must be 1",
+                    Message   => "Exception mismatch (I/O Bitmaps)");
+      end;
+
+      --  MOV-DR exiting.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc/MOVDRExiting",
+         Value => "0");
+      begin
+         VMX_Controls_Proc_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (MOV DR)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Processor-Based control 'MOV-DR exiting' of "
+                    & "subject 'linux' invalid: must be 1",
+                    Message   => "Exception mismatch (MOV DR)");
+      end;
+
+      --  NMI-window exiting.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc/NMIWindowExiting",
+         Value => "1");
+      begin
+         VMX_Controls_Proc_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (NMI Window)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Processor-Based control 'NMI-window exiting' of "
+                    & "subject 'linux' invalid: must be 0",
+                    Message   => "Exception mismatch (NMI Window)");
+      end;
+
+      --  TPR Shadow.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc/UseTPRShadow",
+         Value => "1");
+      begin
+         VMX_Controls_Proc_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (TPR Shadow)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Processor-Based control 'Use TPR shadow' of "
+                    & "subject 'linux' invalid: must be 0",
+                    Message   => "Exception mismatch (TPR Shadow)");
+      end;
+
+      --  CR8-store exiting.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc/CR8StoreExiting",
+         Value => "0");
+      begin
+         VMX_Controls_Proc_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (CR8-store exiting)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Processor-Based control 'CR8-store exiting' of "
+                    & "subject 'linux' invalid: must be 1",
+                    Message   => "Exception mismatch (CR8-store exiting)");
+      end;
+
+      --  CR8-load exiting.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc/CR8LoadExiting",
+         Value => "0");
+      begin
+         VMX_Controls_Proc_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (CR8-load exiting)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Processor-Based control 'CR8-load exiting' of "
+                    & "subject 'linux' invalid: must be 1",
+                    Message   => "Exception mismatch (CR8-load exiting)");
+      end;
+
+      --  CR3-load exiting.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='sm']/vcpu/vmx/"
+         & "controls/proc/CR3LoadExiting",
+         Value => "0");
+      begin
+         VMX_Controls_Proc_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (CR3-load exiting)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Processor-Based control 'CR3-load exiting' of "
+                    & "subject 'sm' invalid: must be 1",
+                    Message   => "Exception mismatch (CR3-load exiting)");
+      end;
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='sm']/vcpu/vmx/"
+         & "controls/proc/CR3LoadExiting",
+         Value => "1");
+
+      --  MWAIT exiting.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc/MWAITExiting",
+         Value => "0");
+      begin
+         VMX_Controls_Proc_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (MWAIT exiting)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Processor-Based control 'MWAIT exiting' of "
+                    & "subject 'linux' invalid: must be 1",
+                    Message   => "Exception mismatch (MWAIT exiting)");
+      end;
+
+      --  INVLPG exiting.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc/INVLPGExiting",
+         Value => "0");
+      begin
+         VMX_Controls_Proc_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (INVLPG exiting)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Processor-Based control 'INVLPG exiting' of "
+                    & "subject 'linux' invalid: must be 1",
+                    Message   => "Exception mismatch (INVLPG exiting)");
+      end;
+
+      --  TSC Offsetting.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc/UseTSCOffsetting",
+         Value => "1");
+      begin
+         VMX_Controls_Proc_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (TSC Offsetting)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Processor-Based control 'Use TSC offsetting' of "
+                    & "subject 'linux' invalid: must be 0",
+                    Message   => "Exception mismatch (TSC Offsetting)");
+      end;
+
+      --  Interrupt-window exiting.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc/InterruptWindowExiting",
+         Value => "1");
+      begin
+         VMX_Controls_Proc_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Int Window)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Processor-Based control 'Interrupt-window exiting' of "
+                    & "subject 'linux' invalid: must be 0",
+                    Message   => "Exception mismatch (Int Window)");
+      end;
+--  begin read only
+   end Test_VMX_Controls_Proc_Requirements;
+--  end read only
+
+
+--  begin read only
+   procedure Test_VMX_Controls_Proc2_Requirements (Gnattest_T : in out Test);
+   procedure Test_VMX_Controls_Proc2_Requirements_11a81e (Gnattest_T : in out Test) renames Test_VMX_Controls_Proc2_Requirements;
+--  id:2.2/11a81e439f6e1d42/VMX_Controls_Proc2_Requirements/1/0/
+   procedure Test_VMX_Controls_Proc2_Requirements (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      VMX_Controls_Proc2_Requirements (XML_Data => Data);
+
+      --  VM Functions.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc2/EnableVMFunctions",
+         Value => "1");
+      begin
+         VMX_Controls_Proc2_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (VMFUNC)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Secondary Processor-Based control "
+                    & "'Enable VM functions' of subject 'linux' "
+                    & "invalid: must be 0",
+                    Message   => "Exception mismatch (VMFUNC)");
+      end;
+
+      --  INVPCID.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc2/EnableINVPCID",
+         Value => "1");
+      begin
+         VMX_Controls_Proc2_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (INVPCID)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Secondary Processor-Based control "
+                    & "'Enable INVPCID' of subject 'linux' "
+                    & "invalid: must be 0",
+                    Message   => "Exception mismatch (INVPCID)");
+      end;
+
+      --  Virtual-interrupt delivery.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc2/VirtualInterruptDelivery",
+         Value => "1");
+      begin
+         VMX_Controls_Proc2_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Virt Int Delivery)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Secondary Processor-Based control "
+                    & "'Virtual-interrupt delivery' of subject 'linux' "
+                    & "invalid: must be 0",
+                    Message   => "Exception mismatch (Virt Int Delivery)");
+      end;
+
+      --  APIC-register virtualization.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc2/APICRegisterVirtualization",
+         Value => "1");
+      begin
+         VMX_Controls_Proc2_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (APIC Reg Virt)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Secondary Processor-Based control "
+                    & "'APIC-register virtualization' of subject 'linux' "
+                    & "invalid: must be 0",
+                    Message   => "Exception mismatch (APIC Reg Virt)");
+      end;
+
+      --  WBINVD exiting.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc2/WBINVDExiting",
+         Value => "0");
+      begin
+         VMX_Controls_Proc2_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (WBINVD)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Secondary Processor-Based control "
+                    & "'WBINVD exiting' of subject 'linux' "
+                    & "invalid: must be 1",
+                    Message   => "Exception mismatch (WBINVD)");
+      end;
+
+      --  VPID.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc2/EnableVPID",
+         Value => "1");
+      begin
+         VMX_Controls_Proc2_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (VPID)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Secondary Processor-Based control "
+                    & "'Enable VPID' of subject 'linux' "
+                    & "invalid: must be 0",
+                    Message   => "Exception mismatch (VPID)");
+      end;
+
+      --  Virtualize x2APIC mode.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc2/Virtualizex2APICMode",
+         Value => "1");
+      begin
+         VMX_Controls_Proc2_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Virt x2APIC mode)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Secondary Processor-Based control "
+                    & "'Virtualize x2APIC mode' of subject 'linux' "
+                    & "invalid: must be 0",
+                    Message   => "Exception mismatch (Virt x2APIC mode)");
+      end;
+
+      --  Virtualize APIC Accesses.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/proc2/VirtualAPICAccesses",
+         Value => "1");
+      begin
+         VMX_Controls_Proc2_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Virt APIC access)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Secondary Processor-Based control "
+                    & "'Virtualize APIC accesses' of subject 'linux' "
+                    & "invalid: must be 0",
+                    Message   => "Exception mismatch (Virt APIC access)");
+      end;
+--  begin read only
+   end Test_VMX_Controls_Proc2_Requirements;
+--  end read only
+
+
+--  begin read only
+   procedure Test_VM_Exit_Controls_Requirements (Gnattest_T : in out Test);
+   procedure Test_VM_Exit_Controls_Requirements_432c58 (Gnattest_T : in out Test) renames Test_VM_Exit_Controls_Requirements;
+--  id:2.2/432c58c1b884576d/VM_Exit_Controls_Requirements/1/0/
+   procedure Test_VM_Exit_Controls_Requirements (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      VM_Exit_Controls_Requirements (XML_Data => Data);
+
+      --  Save VMX-preemption timer.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/exit/SaveVMXTimerValue",
+         Value => "1");
+      begin
+         VM_Exit_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (VMX-preempt timer)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Exit control 'Save VMX-preemption timer value' of "
+                    & "subject 'linux' invalid: must be 0",
+                    Message   => "Exception mismatch (VMX-preempt timer)");
+      end;
+
+      declare
+         Node : DOM.Core.Node
+           := DOM.Core.Documents.Create_Element (Doc      => Data.Doc,
+                                                 Tag_Name => "msr");
+      begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "start",
+            Value => Mutools.Utils.To_Hex
+              (Number => Mutools.Constants.IA32_EFER));
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "end",
+            Value => Mutools.Utils.To_Hex
+              (Number => Mutools.Constants.IA32_EFER));
+         Muxml.Utils.Append_Child
+           (Node      => Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => "/system/subjects/subject[@name='linux']/vcpu/msrs"),
+            New_Child => Node);
+      end;
+
+      --  Load IA32_EFER.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/exit/LoadIA32EFER",
+         Value => "0");
+      begin
+         VM_Exit_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Load IA32_EFER)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Exit control 'Load IA32_EFER' of subject"
+                    & " 'linux' invalid: must be 1",
+                    Message   => "Exception mismatch (Load IA32_EFER)");
+      end;
+
+      --  Save IA32_EFER.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/exit/SaveIA32EFER",
+         Value => "0");
+      begin
+         VM_Exit_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Save IA32_EFER)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Exit control 'Save IA32_EFER' of subject"
+                    & " 'linux' invalid: must be 1",
+                    Message   => "Exception mismatch (Save IA32_EFER)");
+      end;
+
+      --  Load IA32_PAT.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/exit/LoadIA32PAT",
+         Value => "1");
+      begin
+         VM_Exit_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Load IA32_PAT)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Exit control 'Load IA32_PAT' of subject"
+                    & " 'linux' invalid: must be 0",
+                    Message   => "Exception mismatch (Load IA32_PAT)");
+      end;
+
+      --  Save IA32_PAT.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/exit/SaveIA32PAT",
+         Value => "1");
+      begin
+         VM_Exit_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Save IA32_PAT)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Exit control 'Save IA32_PAT' of subject"
+                    & " 'linux' invalid: must be 0",
+                    Message   => "Exception mismatch (Save IA32_PAT)");
+      end;
+
+      --  Acknowledge interrupt on exit.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/exit/AckInterruptOnExit",
+         Value => "0");
+      begin
+         VM_Exit_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Ack INT)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Exit control 'Acknowledge interrupt on exit' of "
+                    & "subject 'linux' invalid: must be 1",
+                    Message   => "Exception mismatch (Ack INT)");
+      end;
+
+      --  Load IA32_PERF_GLOBAL_CTRL.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/exit/LoadIA32PERFGLOBALCTRL",
+         Value => "1");
+      begin
+         VM_Exit_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (IA32_PERF_GLOBAL_CTRL)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Exit control 'Load IA32_PERF_GLOBAL_CTRL' of subject"
+                    & " 'linux' invalid: must be 0",
+                    Message   => "Exception mismatch (IA32_PERF_GLOBAL_CTRL)");
+      end;
+
+      --  Host address-space size.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/exit/HostAddressspaceSize",
+         Value => "0");
+      begin
+         VM_Exit_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Host Addr Space Size)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Exit control 'Host address-space size' of subject "
+                    & "'linux' invalid: must be 1",
+                    Message   => "Exception mismatch (Host Addr Space Size)");
+      end;
+
+      --  Save IA32_DEBUGCTL.
+
+      declare
+         Node : DOM.Core.Node
+           := DOM.Core.Documents.Create_Element (Doc      => Data.Doc,
+                                                 Tag_Name => "msr");
+      begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "start",
+            Value => Mutools.Utils.To_Hex
+              (Number => Mutools.Constants.IA32_DEBUGCTL));
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "end",
+            Value => Mutools.Utils.To_Hex
+              (Number => Mutools.Constants.IA32_DEBUGCTL));
+         Muxml.Utils.Append_Child
+           (Node      => Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => "/system/subjects/subject[@name='linux']/vcpu/msrs"),
+            New_Child => Node);
+
+         VM_Exit_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (IA32_DEBUGCTL)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Exit control 'Save debug controls' of subject "
+                    & "'linux' invalid: must be 1",
+                    Message   => "Exception mismatch (IA32_DEBUGCTL)");
+      end;
+--  begin read only
+   end Test_VM_Exit_Controls_Requirements;
+--  end read only
+
+
+--  begin read only
+   procedure Test_VM_Entry_Controls_Requirements (Gnattest_T : in out Test);
+   procedure Test_VM_Entry_Controls_Requirements_422840 (Gnattest_T : in out Test) renames Test_VM_Entry_Controls_Requirements;
+--  id:2.2/422840201cc0190f/VM_Entry_Controls_Requirements/1/0/
+   procedure Test_VM_Entry_Controls_Requirements (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      VM_Entry_Controls_Requirements (XML_Data => Data);
+
+      --  Load IA32_EFER.
+
+      declare
+         Node : DOM.Core.Node
+           := DOM.Core.Documents.Create_Element (Doc      => Data.Doc,
+                                                 Tag_Name => "msr");
+      begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "start",
+            Value => Mutools.Utils.To_Hex
+              (Number => Mutools.Constants.IA32_EFER));
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "end",
+            Value => Mutools.Utils.To_Hex
+              (Number => Mutools.Constants.IA32_EFER));
+         Muxml.Utils.Append_Child
+           (Node      => Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => "/system/subjects/subject[@name='linux']/vcpu/msrs"),
+            New_Child => Node);
+         Muxml.Utils.Set_Element_Value
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+            & "controls/entry/LoadIA32EFER",
+            Value => "0");
+
+         VM_Entry_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Load IA32_EFER)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Entry control 'Load IA32_EFER' of subject"
+                    & " 'linux' invalid: must be 1",
+                    Message   => "Exception mismatch (Load IA32_EFER)");
+      end;
+
+      --  Load IA32_PAT.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/entry/LoadIA32PAT",
+         Value => "1");
+      begin
+         VM_Entry_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (IA32_PAT)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Entry control 'Load IA32_PAT' of "
+                    & "subject 'linux' invalid: must be 0",
+                    Message   => "Exception mismatch (IA32_PAT)");
+      end;
+
+      --  Load IA32_PERF_GLOBAL_CTRL.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/entry/LoadIA32PERFGLOBALCTRL",
+         Value => "1");
+      begin
+         VM_Entry_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (IA32_PERF_GLOBAL_CTRL)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Entry control 'Load IA32_PERF_GLOBAL_CTRL' of "
+                    & "subject 'linux' invalid: must be 0",
+                    Message   => "Exception mismatch (IA32_PERF_GLOBAL_CTRL)");
+      end;
+
+      --  Dual-Monitor treatment.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/entry/DeactiveDualMonitorTreatment",
+         Value => "1");
+      begin
+         VM_Entry_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Dual-Monitor)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Entry control 'Deactivate dual-monitor treatment' of"
+                    & " subject 'linux' invalid: must be 0",
+                    Message   => "Exception mismatch (Dual-Monitor)");
+      end;
+
+      --  Entry to SMM.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "controls/entry/EntryToSMM",
+         Value => "1");
+      begin
+         VM_Entry_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (Entry to SMM)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Entry control 'Entry to SMM' of subject "
+                    & "'linux' invalid: must be 0",
+                    Message   => "Exception mismatch (Entry to SMM)");
+      end;
+
+      --  IA-32e guest mode.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='vt']/vcpu/vmx/"
+         & "controls/entry/IA32eModeGuest",
+         Value => "0");
+      begin
+         VM_Entry_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (IA-32e guest)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Entry control 'IA-32e mode guest' of subject "
+                    & "'vt' invalid: must be 1",
+                    Message   => "Exception mismatch (IA-32e guest)");
+      end;
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='vt']/vcpu/vmx/"
+         & "controls/entry/IA32eModeGuest",
+         Value => "1");
+
+      --  Load IA32_DEBUGCTL.
+
+      declare
+         Node : DOM.Core.Node
+           := DOM.Core.Documents.Create_Element (Doc      => Data.Doc,
+                                                 Tag_Name => "msr");
+      begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "start",
+            Value => Mutools.Utils.To_Hex
+              (Number => Mutools.Constants.IA32_DEBUGCTL));
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "end",
+            Value => Mutools.Utils.To_Hex
+              (Number => Mutools.Constants.IA32_DEBUGCTL));
+         Muxml.Utils.Append_Child
+           (Node      => Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => "/system/subjects/subject[@name='linux']/vcpu/msrs"),
+            New_Child => Node);
+
+         VM_Entry_Controls_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (IA32_DEBUGCTL)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VM-Entry control 'Load debug controls' of subject "
+                    & "'linux' invalid: must be 1",
+                    Message   => "Exception mismatch (IA32_DEBUGCTL)");
+      end;
+--  begin read only
+   end Test_VM_Entry_Controls_Requirements;
+--  end read only
+
+
+--  begin read only
+   procedure Test_VMX_CR0_Mask_Requirements (Gnattest_T : in out Test);
+   procedure Test_VMX_CR0_Mask_Requirements_ac4b69 (Gnattest_T : in out Test) renames Test_VMX_CR0_Mask_Requirements;
+--  id:2.2/ac4b692b1a57841d/VMX_CR0_Mask_Requirements/1/0/
+   procedure Test_VMX_CR0_Mask_Requirements (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      VMX_CR0_Mask_Requirements (XML_Data => Data);
+
+      --  Cache Disable.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "masks/cr0/CacheDisable",
+         Value => "0");
+      begin
+         VMX_CR0_Mask_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (CD)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMX CR0 guest/host mask control "
+                    & "'Cache Disable' of subject 'linux' "
+                    & "invalid: must be 1",
+                    Message   => "Exception mismatch (CD)");
+      end;
+
+      --  Not Write-through.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
+         & "masks/cr0/NotWritethrough",
+         Value => "0");
+      begin
+         VMX_CR0_Mask_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (NW)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMX CR0 guest/host mask control "
+                    & "'Not Write-through' of subject 'linux' "
+                    & "invalid: must be 1",
+                    Message   => "Exception mismatch (NW)");
+      end;
+--  begin read only
+   end Test_VMX_CR0_Mask_Requirements;
+--  end read only
+
+
+--  begin read only
+   procedure Test_VMX_CR4_Mask_Requirements (Gnattest_T : in out Test);
+   procedure Test_VMX_CR4_Mask_Requirements_6294be (Gnattest_T : in out Test) renames Test_VMX_CR4_Mask_Requirements;
+--  id:2.2/6294be7b9d1ba769/VMX_CR4_Mask_Requirements/1/0/
+   procedure Test_VMX_CR4_Mask_Requirements (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      VMX_CR4_Mask_Requirements (XML_Data => Data);
+
+      --  MCE.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='vt']/vcpu/vmx/"
+         & "masks/cr4/MachineCheckEnable",
+         Value => "0");
+      begin
+         VMX_CR4_Mask_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (MCE)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMX CR4 guest/host mask control "
+                    & "'Machine-Check Enable' of subject 'vt' "
+                    & "invalid: must be 1",
+                    Message   => "Exception mismatch (MCE)");
+      end;
+
+      --  PAE.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='vt']/vcpu/vmx/"
+         & "masks/cr4/PhysicalAddressExtension",
+         Value => "0");
+      begin
+         VMX_CR4_Mask_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (PAE)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMX CR4 guest/host mask control "
+                    & "'Physical Address Extension' of subject 'vt' "
+                    & "invalid: must be 1",
+                    Message   => "Exception mismatch (PAE)");
+      end;
+--  begin read only
+   end Test_VMX_CR4_Mask_Requirements;
+--  end read only
+
+
+--  begin read only
+   procedure Test_VMX_Exception_Bitmap_Requirements (Gnattest_T : in out Test);
+   procedure Test_VMX_Exception_Bitmap_Requirements_ce7455 (Gnattest_T : in out Test) renames Test_VMX_Exception_Bitmap_Requirements;
+--  id:2.2/ce745507a96aaac4/VMX_Exception_Bitmap_Requirements/1/0/
+   procedure Test_VMX_Exception_Bitmap_Requirements (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      VMX_Exception_Bitmap_Requirements (XML_Data => Data);
+
+      --  #MC.
+
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='vt']/vcpu/vmx/"
+         & "masks/exception/MachineCheck",
+         Value => "0");
+      begin
+         VMX_Exception_Bitmap_Requirements (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (#MC)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMX Exception bitmap control 'Machine Check' of subject"
+                    & " 'vt' invalid: must be 1",
+                    Message   => "Exception mismatch (#MC)");
+      end;
+--  begin read only
+   end Test_VMX_Exception_Bitmap_Requirements;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

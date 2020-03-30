@@ -976,34 +976,6 @@ package body Mutools.XML_Utils.Test_Data.Tests is
       Impl : DOM.Core.DOM_Implementation;
       Data : Muxml.XML_Data_Type;
       MSRs : DOM.Core.Node_List;
-
-      --  Append MSR with given attributes to MSR list.
-      procedure Append_MSR
-        (MSR_Start : String;
-         MSR_End   : String;
-         Mode      : String)
-      is
-         Node : DOM.Core.Node;
-      begin
-         Node := DOM.Core.Documents.Create_Element
-           (Doc      => Data.Doc,
-            Tag_Name => "msr");
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "mode",
-            Value => Mode);
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "start",
-            Value => MSR_Start);
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "end",
-            Value => MSR_End);
-
-         DOM.Core.Append_Node (List => MSRs,
-                               N    => Node);
-      end Append_MSR;
    begin
       Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 
@@ -1015,16 +987,24 @@ package body Mutools.XML_Utils.Test_Data.Tests is
                EFER_Control           => False) = 0,
               Message   => "Empty list count not 0");
 
-      Append_MSR (MSR_Start => "16#0010#",
+      Append_MSR (Doc       => Data.Doc,
+                  List      => MSRs,
+                  MSR_Start => "16#0010#",
                   MSR_End   => "16#0010#",
                   Mode      => "r");
-      Append_MSR (MSR_Start => "16#0174#",
+      Append_MSR (Doc       => Data.Doc,
+                  List      => MSRs,
+                  MSR_Start => "16#0174#",
                   MSR_End   => "16#0176#",
                   Mode      => "rw");
-      Append_MSR (MSR_Start => "16#c000_0080#",
+      Append_MSR (Doc       => Data.Doc,
+                  List      => MSRs,
+                  MSR_Start => "16#c000_0080#",
                   MSR_End   => "16#c000_0084#",
                   Mode      => "rw");
-      Append_MSR (MSR_Start => "16#c000_0100#",
+      Append_MSR (Doc       => Data.Doc,
+                  List      => MSRs,
+                  MSR_Start => "16#c000_0100#",
                   MSR_End   => "16#c000_0102#",
                   Mode      => "rw");
 
@@ -1037,6 +1017,71 @@ package body Mutools.XML_Utils.Test_Data.Tests is
               Message   => "MSR count mismatch");
 --  begin read only
    end Test_Calculate_MSR_Count;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Is_MSR_Accessible (Gnattest_T : in out Test);
+   procedure Test_Is_MSR_Accessible_652a62 (Gnattest_T : in out Test) renames Test_Is_MSR_Accessible;
+--  id:2.2/652a62dcfa198d1c/Is_MSR_Accessible/1/0/
+   procedure Test_Is_MSR_Accessible (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : Muxml.XML_Data_Type;
+      MSRs : DOM.Core.Node_List;
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Assert (Condition => not Is_MSR_Accessible (MSR  => 16#0174#,
+                                                  MSRs => MSRs),
+              Message   => "MSR accessible (empty list)");
+
+      Append_MSR (Doc       => Data.Doc,
+                  List      => MSRs,
+                  MSR_Start => "16#0174#",
+                  MSR_End   => "16#0176#",
+                  Mode      => "rw");
+      Append_MSR (Doc       => Data.Doc,
+                  List      => MSRs,
+                  MSR_Start => "16#c000_0080#",
+                  MSR_End   => "16#c000_0084#",
+                  Mode      => "rw");
+      Append_MSR (Doc       => Data.Doc,
+                  List      => MSRs,
+                  MSR_Start => "16#c000_0100#",
+                  MSR_End   => "16#c000_0102#",
+                  Mode      => "rw");
+      Assert (Condition => Is_MSR_Accessible (MSR  => 16#0174#,
+                                              MSRs => MSRs),
+              Message   => "MSR not accessible (1)");
+      Assert (Condition => Is_MSR_Accessible (MSR  => 16#0175#,
+                                              MSRs => MSRs),
+              Message   => "MSR not accessible (2)");
+      Assert (Condition => Is_MSR_Accessible (MSR  => 16#c000_0101#,
+                                              MSRs => MSRs),
+              Message   => "MSR not accessible (3)");
+      Assert (Condition => not Is_MSR_Accessible (MSR  => 16#0173#,
+                                                  MSRs => MSRs),
+              Message   => "MSR accessible (1)");
+      Assert (Condition => not Is_MSR_Accessible (MSR  => 16#0177#,
+                                                  MSRs => MSRs),
+              Message   => "MSR accessible (2)");
+      Assert (Condition => not Is_MSR_Accessible (MSR  => 16#cafe#,
+                                              MSRs => MSRs),
+              Message   => "MSR accessible (3)");
+      Assert (Condition => not Is_MSR_Accessible
+              (MSR  => Interfaces.Unsigned_64'First,
+               MSRs => MSRs),
+              Message   => "MSR accessible (4)");
+      Assert (Condition => not Is_MSR_Accessible
+              (MSR  => Interfaces.Unsigned_64'Last,
+               MSRs => MSRs),
+              Message   => "MSR accessible (5)");
+--  begin read only
+   end Test_Is_MSR_Accessible;
 --  end read only
 
 

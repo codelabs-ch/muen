@@ -145,17 +145,17 @@
        <InterruptWindowExiting>0</InterruptWindowExiting>
        <UseTSCOffsetting>0</UseTSCOffsetting>
        <HLTExiting>0</HLTExiting>
-       <INVLPGExiting>0</INVLPGExiting>
-       <MWAITExiting>0</MWAITExiting>
+       <INVLPGExiting>1</INVLPGExiting>
+       <MWAITExiting>1</MWAITExiting>
        <RDPMCExiting>0</RDPMCExiting>
        <RDTSCExiting>0</RDTSCExiting>
        <CR3LoadExiting>0</CR3LoadExiting>
        <CR3StoreExiting>0</CR3StoreExiting>
-       <CR8LoadExiting>0</CR8LoadExiting>
-       <CR8StoreExiting>0</CR8StoreExiting>
+       <CR8LoadExiting>1</CR8LoadExiting>
+       <CR8StoreExiting>1</CR8StoreExiting>
        <UseTPRShadow>0</UseTPRShadow>
        <NMIWindowExiting>0</NMIWindowExiting>
-       <MOVDRExiting>0</MOVDRExiting>
+       <MOVDRExiting>1</MOVDRExiting>
        <UnconditionalIOExiting>0</UnconditionalIOExiting>
        <UseIOBitmaps>1</UseIOBitmaps>
        <MonitorTrapFlag>0</MonitorTrapFlag>
@@ -166,7 +166,7 @@
       </proc>
       <proc2>
        <VirtualAPICAccesses>0</VirtualAPICAccesses>
-       <EnableEPT>0</EnableEPT>
+       <EnableEPT>1</EnableEPT>
        <DescriptorTableExiting>0</DescriptorTableExiting>
        <EnableRDTSCP>0</EnableRDTSCP>
        <Virtualizex2APICMode>0</Virtualizex2APICMode>
@@ -191,14 +191,14 @@
       </entry>
       <exit>
        <SaveDebugControls>0</SaveDebugControls>
-       <HostAddressspaceSize>0</HostAddressspaceSize>
+       <HostAddressspaceSize>1</HostAddressspaceSize>
        <LoadIA32PERFGLOBALCTRL>0</LoadIA32PERFGLOBALCTRL>
        <AckInterruptOnExit>1</AckInterruptOnExit>
        <SaveIA32PAT>0</SaveIA32PAT>
        <LoadIA32PAT>0</LoadIA32PAT>
        <SaveIA32EFER>0</SaveIA32EFER>
        <LoadIA32EFER>0</LoadIA32EFER>
-       <SaveVMXTimerValue>1</SaveVMXTimerValue>
+       <SaveVMXTimerValue>0</SaveVMXTimerValue>
       </exit>
      </controls>
      <masks>
@@ -219,7 +219,7 @@
        <PageFault>0</PageFault>
        <x87FPUFloatingPointError>0</x87FPUFloatingPointError>
        <AlignmentCheck>0</AlignmentCheck>
-       <MachineCheck>0</MachineCheck>
+       <MachineCheck>1</MachineCheck>
        <SIMDFloatingPointException>0</SIMDFloatingPointException>
       </exception>
       <cr0>
@@ -231,8 +231,8 @@
        <NumericError>0</NumericError>
        <WriteProtect>0</WriteProtect>
        <AlignmentMask>0</AlignmentMask>
-       <NotWritethrough>0</NotWritethrough>
-       <CacheDisable>0</CacheDisable>
+       <NotWritethrough>1</NotWritethrough>
+       <CacheDisable>1</CacheDisable>
        <Paging>0</Paging>
       </cr0>
       <cr4>
@@ -242,7 +242,7 @@
        <DebuggingExtensions>0</DebuggingExtensions>
        <PageSizeExtensions>0</PageSizeExtensions>
        <PhysicalAddressExtension>1</PhysicalAddressExtension>
-       <MachineCheckEnable>0</MachineCheckEnable>
+       <MachineCheckEnable>1</MachineCheckEnable>
        <PageGlobalEnable>0</PageGlobalEnable>
        <PerfCounterEnable>0</PerfCounterEnable>
        <OSSupportFXSAVE>0</OSSupportFXSAVE>

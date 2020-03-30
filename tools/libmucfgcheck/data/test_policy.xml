@@ -535,7 +535,7 @@
        <LoadIA32PAT>0</LoadIA32PAT>
        <SaveIA32EFER>0</SaveIA32EFER>
        <LoadIA32EFER>0</LoadIA32EFER>
-       <SaveVMXTimerValue>1</SaveVMXTimerValue>
+       <SaveVMXTimerValue>0</SaveVMXTimerValue>
       </exit>
      </controls>
      <masks>
@@ -897,7 +897,7 @@
        <LoadIA32PAT>0</LoadIA32PAT>
        <SaveIA32EFER>0</SaveIA32EFER>
        <LoadIA32EFER>0</LoadIA32EFER>
-       <SaveVMXTimerValue>1</SaveVMXTimerValue>
+       <SaveVMXTimerValue>0</SaveVMXTimerValue>
       </exit>
      </controls>
      <masks>
@@ -1300,7 +1300,7 @@
        <LoadIA32PAT>0</LoadIA32PAT>
        <SaveIA32EFER>0</SaveIA32EFER>
        <LoadIA32EFER>0</LoadIA32EFER>
-       <SaveVMXTimerValue>1</SaveVMXTimerValue>
+       <SaveVMXTimerValue>0</SaveVMXTimerValue>
       </exit>
      </controls>
      <masks>
@@ -1669,7 +1669,7 @@
        <LoadIA32PAT>0</LoadIA32PAT>
        <SaveIA32EFER>0</SaveIA32EFER>
        <LoadIA32EFER>0</LoadIA32EFER>
-       <SaveVMXTimerValue>1</SaveVMXTimerValue>
+       <SaveVMXTimerValue>0</SaveVMXTimerValue>
       </exit>
      </controls>
      <masks>
@@ -2041,7 +2041,7 @@
        <LoadIA32PAT>0</LoadIA32PAT>
        <SaveIA32EFER>1</SaveIA32EFER>
        <LoadIA32EFER>1</LoadIA32EFER>
-       <SaveVMXTimerValue>1</SaveVMXTimerValue>
+       <SaveVMXTimerValue>0</SaveVMXTimerValue>
       </exit>
      </controls>
      <masks>
@@ -2062,7 +2062,7 @@
        <PageFault>0</PageFault>
        <x87FPUFloatingPointError>0</x87FPUFloatingPointError>
        <AlignmentCheck>0</AlignmentCheck>
-       <MachineCheck>0</MachineCheck>
+       <MachineCheck>1</MachineCheck>
        <SIMDFloatingPointException>0</SIMDFloatingPointException>
       </exception>
       <cr0>
@@ -2074,8 +2074,8 @@
        <NumericError>1</NumericError>
        <WriteProtect>0</WriteProtect>
        <AlignmentMask>0</AlignmentMask>
-       <NotWritethrough>0</NotWritethrough>
-       <CacheDisable>0</CacheDisable>
+       <NotWritethrough>1</NotWritethrough>
+       <CacheDisable>1</CacheDisable>
        <Paging>0</Paging>
       </cr0>
       <cr4>
@@ -2085,7 +2085,7 @@
        <DebuggingExtensions>0</DebuggingExtensions>
        <PageSizeExtensions>0</PageSizeExtensions>
        <PhysicalAddressExtension>0</PhysicalAddressExtension>
-       <MachineCheckEnable>0</MachineCheckEnable>
+       <MachineCheckEnable>1</MachineCheckEnable>
        <PageGlobalEnable>0</PageGlobalEnable>
        <PerfCounterEnable>0</PerfCounterEnable>
        <OSSupportFXSAVE>0</OSSupportFXSAVE>

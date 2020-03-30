@@ -1280,6 +1280,41 @@ is
 
    -------------------------------------------------------------------------
 
+   function Is_MSR_Accessible
+     (MSR  : Interfaces.Unsigned_64;
+      MSRs : DOM.Core.Node_List)
+      return Boolean
+   is
+      use type Interfaces.Unsigned_64;
+
+      MSR_Count : constant Natural := DOM.Core.Nodes.Length (List => MSRs);
+   begin
+      for I in Natural range 0 .. MSR_Count - 1 loop
+         declare
+            Cur_MSR : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => MSRs,
+                                      Index => I);
+            MSR_Start : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                     (Elem => Cur_MSR,
+                      Name => "start"));
+            MSR_End : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                     (Elem => Cur_MSR,
+                      Name => "end"));
+         begin
+            if MSR >= MSR_Start and then MSR <= MSR_End then
+               return True;
+            end if;
+         end;
+      end loop;
+      return False;
+   end Is_MSR_Accessible;
+
+   -------------------------------------------------------------------------
+
    function Is_PCI_Device_Reference
      (Data       : Muxml.XML_Data_Type;
       Device_Ref : DOM.Core.Node)

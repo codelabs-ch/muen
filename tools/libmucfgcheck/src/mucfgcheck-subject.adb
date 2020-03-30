@@ -42,6 +42,14 @@ is
    use Ada.Strings.Unbounded;
    use McKae.XML.XPath.XIA;
 
+   --  Returns True if the value of the element specified by XPath relative to
+   --  the given Node matches the specified value.
+   function Is_Element_Value
+     (Node  : DOM.Core.Node;
+      XPath : String;
+      Value : String)
+      return Boolean;
+
    -------------------------------------------------------------------------
 
    procedure CPU_ID (XML_Data : Muxml.XML_Data_Type)
@@ -321,6 +329,21 @@ is
          end;
       end loop;
    end Initramfs_Consecutiveness;
+
+   ----------------------------------------------------------------------
+
+   function Is_Element_Value
+     (Node  : DOM.Core.Node;
+      XPath : String;
+      Value : String)
+      return Boolean
+   is
+      Val_Str : constant String
+        := Muxml.Utils.Get_Element_Value (Doc   => Node,
+                                          XPath => XPath);
+   begin
+      return Val_Str = Value;
+   end Is_Element_Value;
 
    -------------------------------------------------------------------------
 
@@ -1126,6 +1149,257 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure VM_Entry_Controls_Requirements (XML_Data : Muxml.XML_Data_Type)
+   is
+      VMEntry_Ctrls : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/subjects/subject/vcpu/vmx/controls/entry");
+      Count : constant Natural
+        := DOM.Core.Nodes.Length (List => VMEntry_Ctrls);
+   begin
+      for I in 0 .. Count - 1 loop
+         declare
+            VMEntry_Ctrl : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => VMEntry_Ctrls,
+                                      Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node (Node  => VMEntry_Ctrl,
+                                                    Level => 4),
+                 Name => "name");
+            MSRs : constant DOM.Core.Node_List
+              := XPath_Query (N     => VMEntry_Ctrl,
+                              XPath => "../../../msrs/msr");
+         begin
+            Mulog.Log (Msg => "Checking requirements for VM-Entry Controls of "
+                       & "subject '" & Subj_Name & "'");
+
+            --  Must be set if IA32_DEBUGCTL is accessible by subject.
+
+            if Is_Element_Value (Node  => VMEntry_Ctrl,
+                                 XPath => "LoadDebugControls",
+                                 Value => "0")
+              and then Mutools.XML_Utils.Is_MSR_Accessible
+                (MSR  => Mutools.Constants.IA32_DEBUGCTL,
+                 MSRs => MSRs)
+            then
+               raise Validation_Error with "VM-Entry control "
+                 & "'Load debug controls' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+
+            --  Non-EPT subjects execute in IA-32e mode.
+
+            if Is_Element_Value (Node  => VMEntry_Ctrl,
+                                 XPath => "../proc2/EnableEPT",
+                                 Value => "0")
+              and Is_Element_Value (Node  => VMEntry_Ctrl,
+                                    XPath => "IA32eModeGuest",
+                                    Value => "0")
+            then
+               raise Validation_Error with "VM-Entry control "
+                 & "'IA-32e mode guest' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+
+            --  Any other value leads to VM-Entry failure.
+
+            if Is_Element_Value (Node  => VMEntry_Ctrl,
+                                 XPath => "EntryToSMM",
+                                 Value => "1")
+            then
+               raise Validation_Error with "VM-Entry control "
+                 & "'Entry to SMM' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
+
+            --  Any other value leads to VM-Entry failure.
+
+            if Is_Element_Value (Node  => VMEntry_Ctrl,
+                                 XPath => "DeactiveDualMonitorTreatment",
+                                 Value => "1")
+            then
+               raise Validation_Error with "VM-Entry control "
+                 & "'Deactivate dual-monitor treatment' of subject '"
+                 & Subj_Name & "' invalid: must be 0";
+            end if;
+
+            --  Access to IA32_PERF_GLOBAL_CTRL not allowed.
+
+            if Is_Element_Value (Node  => VMEntry_Ctrl,
+                                 XPath => "LoadIA32PERFGLOBALCTRL",
+                                 Value => "1")
+            then
+               raise Validation_Error with "VM-Entry control "
+                 & "'Load IA32_PERF_GLOBAL_CTRL' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
+
+            --  Access to IA32_PAT not allowed.
+
+            if Is_Element_Value (Node  => VMEntry_Ctrl,
+                                 XPath => "LoadIA32PAT",
+                                 Value => "1")
+            then
+               raise Validation_Error with "VM-Entry control "
+                 & "'Load IA32_PAT' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
+
+            --  IA32_EFER must be handled if subject has access.
+
+            if Is_Element_Value (Node  => VMEntry_Ctrl,
+                                 XPath => "LoadIA32EFER",
+                                 Value => "0")
+              and then Mutools.XML_Utils.Is_MSR_Accessible
+                (MSR  => Mutools.Constants.IA32_EFER,
+                 MSRs => MSRs)
+            then
+               raise Validation_Error with "VM-Entry control "
+                 & "'Load IA32_EFER' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+         end;
+      end loop;
+   end VM_Entry_Controls_Requirements;
+
+   -------------------------------------------------------------------------
+
+   procedure VM_Exit_Controls_Requirements (XML_Data : Muxml.XML_Data_Type)
+   is
+      VMExit_Ctrls : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/subjects/subject/vcpu/vmx/controls/exit");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => VMExit_Ctrls);
+   begin
+      for I in 0 .. Count - 1 loop
+         declare
+            VMExit_Ctrl : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => VMExit_Ctrls,
+                                      Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node (Node  => VMExit_Ctrl,
+                                                    Level => 4),
+                 Name => "name");
+            MSRs : constant DOM.Core.Node_List
+              := XPath_Query (N     => VMExit_Ctrl,
+                              XPath => "../../../msrs/msr");
+         begin
+            Mulog.Log (Msg => "Checking requirements for VM-Exit Controls of "
+                       & "subject '" & Subj_Name & "'");
+
+            --  Must be set if IA32_DEBUGCTL is accessible by subject.
+
+            if Is_Element_Value (Node  => VMExit_Ctrl,
+                                 XPath => "SaveDebugControls",
+                                 Value => "0")
+              and then Mutools.XML_Utils.Is_MSR_Accessible
+                (MSR  => Mutools.Constants.IA32_DEBUGCTL,
+                 MSRs => MSRs)
+            then
+               raise Validation_Error with "VM-Exit control "
+                 & "'Save debug controls' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+
+            --  Host address-space size must be set since kernel executes in
+            --  IA-32e mode.
+
+            if Is_Element_Value (Node  => VMExit_Ctrl,
+                                 XPath => "HostAddressspaceSize",
+                                 Value => "0")
+            then
+               raise Validation_Error with "VM-Exit control "
+                 & "'Host address-space size' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+
+            --  Access to IA32_PERF_GLOBAL_CTRL not allowed.
+
+            if Is_Element_Value (Node  => VMExit_Ctrl,
+                                 XPath => "LoadIA32PERFGLOBALCTRL",
+                                 Value => "1")
+            then
+               raise Validation_Error with "VM-Exit control "
+                 & "'Load IA32_PERF_GLOBAL_CTRL' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
+
+            --  Interrupt acknowledging on exit is required for interrupt
+            --  handling.
+
+            if Is_Element_Value (Node  => VMExit_Ctrl,
+                                 XPath => "AckInterruptOnExit",
+                                 Value => "0")
+            then
+               raise Validation_Error with "VM-Exit control "
+                 & "'Acknowledge interrupt on exit' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+
+            --  Access to IA32_PAT is not allowed.
+
+            if Is_Element_Value (Node  => VMExit_Ctrl,
+                                 XPath => "SaveIA32PAT",
+                                 Value => "1")
+            then
+               raise Validation_Error with "VM-Exit control "
+                 & "'Save IA32_PAT' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
+
+            if Is_Element_Value (Node  => VMExit_Ctrl,
+                                 XPath => "LoadIA32PAT",
+                                 Value => "1")
+            then
+               raise Validation_Error with "VM-Exit control "
+                 & "'Load IA32_PAT' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
+
+            --  IA32_EFER must be handled if subject has access.
+
+            if Mutools.XML_Utils.Is_MSR_Accessible
+                (MSR  => Mutools.Constants.IA32_EFER,
+                 MSRs => MSRs)
+            then
+               if Is_Element_Value (Node  => VMExit_Ctrl,
+                                    XPath => "SaveIA32EFER",
+                                    Value => "0")
+               then
+                  raise Validation_Error with "VM-Exit control "
+                    & "'Save IA32_EFER' of subject '" & Subj_Name
+                    & "' invalid: must be 1";
+               end if;
+
+               if Is_Element_Value (Node  => VMExit_Ctrl,
+                                    XPath => "LoadIA32EFER",
+                                    Value => "0")
+               then
+                  raise Validation_Error with "VM-Exit control "
+                    & "'Load IA32_EFER' of subject '" & Subj_Name
+                    & "' invalid: must be 1";
+               end if;
+            end if;
+
+            --  VMX-preemption timer value is always recalculated and set
+            --  prior to VM-Entry.
+
+            if Is_Element_Value (Node  => VMExit_Ctrl,
+                                 XPath => "SaveVMXTimerValue",
+                                 Value => "1")
+            then
+               raise Validation_Error with "VM-Exit control "
+                 & "'Save VMX-preemption timer value' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
+         end;
+      end loop;
+   end VM_Exit_Controls_Requirements;
+
+   -------------------------------------------------------------------------
+
    procedure VMX_Controls_Entry_Checks (XML_Data : Muxml.XML_Data_Type)
    is
       Phys_Mem : constant DOM.Core.Node_List := XPath_Query
@@ -1135,14 +1409,6 @@ is
         (N     => XML_Data.Doc,
          XPath => "/system/subjects/subject");
       Count : constant Natural := DOM.Core.Nodes.Length (List => Subjects);
-
-      ----------------------------------------------------------------------
-
-      --  Returns True if the VMX control specified by XPath is set to 1.
-      function Is_Set
-        (Ctrls : DOM.Core.Node;
-         XPath : String)
-         return Boolean;
 
       --  VM-Execution control field checks as specified by Intel SDM Vol. 3C,
       --  "26.2.1.1 VM-Execution Control Fields".
@@ -1174,16 +1440,18 @@ is
          --  since we use the same MSR storage area for VM-Exit MSR-store and
          --  VM-Entry MSR-load.
 
-         if Is_Set (Ctrls => Ctrls,
-                    XPath => "entry/EntryToSMM")
+         if Is_Element_Value (Node  => Ctrls,
+                              XPath => "entry/EntryToSMM",
+                              Value => "1")
          then
             raise Validation_Error
               with "VMX control 'entry to SMM' of subject '" & Subject_Name
               & "' is 1";
          end if;
 
-         if Is_Set (Ctrls => Ctrls,
-                    XPath => "entry/DeactiveDualMonitorTreatment")
+         if Is_Element_Value (Node  => Ctrls,
+                              XPath => "entry/DeactiveDualMonitorTreatment",
+                              Value => "1")
          then
             raise Validation_Error
               with "VMX control 'deactivate dual-monitor treatment' of "
@@ -1203,8 +1471,9 @@ is
          Subject_Name : String)
       is
       begin
-         if Is_Set (Ctrls => Ctrls,
-                    XPath => "proc/UseIOBitmaps")
+         if Is_Element_Value (Node  => Ctrls,
+                              XPath => "proc/UseIOBitmaps",
+                              Value => "1")
          then
             declare
                Bit_Mask : constant Interfaces.Unsigned_64
@@ -1225,8 +1494,9 @@ is
             end;
          end if;
 
-         if Is_Set (Ctrls => Ctrls,
-                    XPath => "proc/UseMSRBitmaps")
+         if Is_Element_Value (Node  => Ctrls,
+                              XPath => "proc/UseMSRBitmaps",
+                              Value => "1")
          then
             declare
                Bit_Mask : constant Interfaces.Unsigned_64
@@ -1247,43 +1517,52 @@ is
             end;
          end if;
 
-         if not Is_Set (Ctrls => Ctrls,
-                        XPath => "pin/NMIExiting")
-           and Is_Set (Ctrls => Ctrls,
-                       XPath => "pin/VirtualNMIs")
+         if not Is_Element_Value (Node  => Ctrls,
+                                  XPath => "pin/NMIExiting",
+                                  Value => "1")
+           and Is_Element_Value (Node  => Ctrls,
+                                 XPath => "pin/VirtualNMIs",
+                                 Value => "1")
          then
             raise Validation_Error
               with "VMX control 'NMI-Exiting' is 0 for subject '"
               & Subject_Name & "' but 'Virtual NMIs' is 1";
          end if;
 
-         if not Is_Set (Ctrls => Ctrls,
-                        XPath => "pin/VirtualNMIs")
-           and Is_Set (Ctrls => Ctrls,
-                       XPath => "proc/NMIWindowExiting")
+         if not Is_Element_Value (Node  => Ctrls,
+                                  XPath => "pin/VirtualNMIs",
+                                  Value => "1")
+           and Is_Element_Value (Node  => Ctrls,
+                                 XPath => "proc/NMIWindowExiting",
+                                 Value => "1")
          then
             raise Validation_Error
               with "VMX control 'Virtual NMIs' is 0 for subject '"
               & Subject_Name & "' but 'NMI-window exiting' is 1";
          end if;
 
-         if not Is_Set (Ctrls => Ctrls,
-                        XPath => "proc/UseTPRShadow")
+         if not Is_Element_Value (Node  => Ctrls,
+                                  XPath => "proc/UseTPRShadow",
+                                  Value => "1")
          then
-            if Is_Set (Ctrls => Ctrls,
-                       XPath => "proc2/Virtualizex2APICMode")
+            if Is_Element_Value (Node  => Ctrls,
+                                 XPath => "proc2/Virtualizex2APICMode",
+                                 Value => "1")
             then
                raise Validation_Error
                  with "VMX control 'Use TPR Shadow' is 0 for subject '"
                  & Subject_Name & "' but 'Virtualize x2APIC mode' is 1";
-            elsif Is_Set (Ctrls => Ctrls,
-                          XPath => "proc2/APICRegisterVirtualization")
+            elsif Is_Element_Value
+              (Node  => Ctrls,
+               XPath => "proc2/APICRegisterVirtualization",
+               Value => "1")
             then
                raise Validation_Error
                  with "VMX control 'Use TPR Shadow' is 0 for subject '"
                  & Subject_Name & "' but 'APIC-register virtualization' is 1";
-            elsif Is_Set (Ctrls => Ctrls,
-                          XPath => "proc2/VirtualInterruptDelivery")
+            elsif Is_Element_Value (Node  => Ctrls,
+                                    XPath => "proc2/VirtualInterruptDelivery",
+                                    Value => "1")
             then
                raise Validation_Error
                  with "VMX control 'Use TPR Shadow' is 0 for subject '"
@@ -1291,20 +1570,24 @@ is
             end if;
          end if;
 
-         if Is_Set (Ctrls => Ctrls,
-                    XPath => "proc2/Virtualizex2APICMode")
-           and Is_Set (Ctrls => Ctrls,
-                       XPath => "proc2/VirtualAPICAccesses")
+         if Is_Element_Value (Node  => Ctrls,
+                              XPath => "proc2/Virtualizex2APICMode",
+                              Value => "1")
+           and Is_Element_Value (Node  => Ctrls,
+                                 XPath => "proc2/VirtualAPICAccesses",
+                                 Value => "1")
          then
             raise Validation_Error
               with "VMX control 'Virtualize x2APIC mode' is 1 for subject"
               & " '" & Subject_Name & "' but 'virtualize APIC accesses' is 1";
          end if;
 
-         if Is_Set (Ctrls => Ctrls,
-                    XPath => "proc2/VirtualInterruptDelivery")
-           and not Is_Set (Ctrls => Ctrls,
-                           XPath => "pin/ExternalInterruptExiting")
+         if Is_Element_Value (Node  => Ctrls,
+                              XPath => "proc2/VirtualInterruptDelivery",
+                              Value => "1")
+           and not Is_Element_Value (Node  => Ctrls,
+                                     XPath => "pin/ExternalInterruptExiting",
+                                     Value => "1")
          then
             raise Validation_Error
               with "VMX control 'virtual-interrupt delivery' is 1 for "
@@ -1312,18 +1595,21 @@ is
               & "exiting' is 0";
          end if;
 
-         if Is_Set (Ctrls => Ctrls,
-                    XPath => "pin/ProcessPostedInterrupts")
+         if Is_Element_Value (Node  => Ctrls,
+                              XPath => "pin/ProcessPostedInterrupts",
+                              Value => "1")
          then
-            if not Is_Set (Ctrls => Ctrls,
-                           XPath => "proc2/VirtualInterruptDelivery")
+            if not Is_Element_Value (Node  => Ctrls,
+                                     XPath => "proc2/VirtualInterruptDelivery",
+                                     Value => "1")
             then
                raise Validation_Error
                  with "VMX control 'process posted interrupts' is 1 for "
                  & "subject '" & Subject_Name & "' but 'virtual-interrupt "
                  & "delivery' is 0";
-            elsif not Is_Set (Ctrls => Ctrls,
-                              XPath => "exit/AckInterruptOnExit")
+            elsif not Is_Element_Value (Node  => Ctrls,
+                                        XPath => "exit/AckInterruptOnExit",
+                                        Value => "1")
             then
                raise Validation_Error
                  with "VMX control 'process posted interrupts' is 1 for "
@@ -1332,10 +1618,12 @@ is
             end if;
          end if;
 
-         if Is_Set (Ctrls => Ctrls,
-                    XPath => "proc2/UnrestrictedGuest")
-           and not Is_Set (Ctrls => Ctrls,
-                           XPath => "proc2/EnableEPT")
+         if Is_Element_Value (Node  => Ctrls,
+                              XPath => "proc2/UnrestrictedGuest",
+                              Value => "1")
+           and not Is_Element_Value (Node  => Ctrls,
+                                     XPath => "proc2/EnableEPT",
+                                     Value => "1")
          then
             raise Validation_Error
               with "VMX control 'unrestricted guest' is 1 for "
@@ -1350,10 +1638,12 @@ is
          Subject_Name : String)
       is
       begin
-         if not Is_Set (Ctrls => Ctrls,
-                        XPath => "pin/ActivateVMXTimer")
-           and Is_Set (Ctrls => Ctrls,
-                       XPath => "exit/SaveVMXTimerValue")
+         if not Is_Element_Value (Node  => Ctrls,
+                                  XPath => "pin/ActivateVMXTimer",
+                                  Value => "1")
+           and Is_Element_Value (Node  => Ctrls,
+                                 XPath => "exit/SaveVMXTimerValue",
+                                 Value => "1")
          then
             raise Validation_Error
               with "VMX control 'activate VMX-preemption timer' is 0 for "
@@ -1395,20 +1685,6 @@ is
             end if;
          end;
       end Check_VM_Exit_Control_Fields;
-
-      ----------------------------------------------------------------------
-
-      function Is_Set
-        (Ctrls : DOM.Core.Node;
-         XPath : String)
-         return Boolean
-      is
-         Ctrl_Val_Str : constant String
-           := Muxml.Utils.Get_Element_Value (Doc   => Ctrls,
-                                             XPath => XPath);
-      begin
-         return Ctrl_Val_Str = "1";
-      end Is_Set;
    begin
       for I in 0 .. Count - 1 loop
          declare
@@ -1434,5 +1710,507 @@ is
          end;
       end loop;
    end VMX_Controls_Entry_Checks;
+
+   -------------------------------------------------------------------------
+
+   procedure VMX_Controls_Pin_Requirements (XML_Data : Muxml.XML_Data_Type)
+   is
+      Pin_Ctrls : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/subjects/subject/vcpu/vmx/controls/pin");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Pin_Ctrls);
+   begin
+      for I in 0 .. Count - 1 loop
+         declare
+            Pin_Ctrl  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Pin_Ctrls,
+                                      Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node (Node  => Pin_Ctrl,
+                                                    Level => 4),
+                 Name => "name");
+         begin
+            Mulog.Log (Msg => "Checking requirements for Pin-Based "
+                       & "VM-Execution Controls of subject '" & Subj_Name
+                       & "'");
+
+            --  External-Interrupt exiting must be 1 for interrupt handling.
+
+            if Is_Element_Value (Node  => Pin_Ctrl,
+                                 XPath => "ExternalInterruptExiting",
+                                 Value => "0")
+            then
+               raise Validation_Error with "Pin-Based control "
+                 & "'External-Interrupt exiting' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+
+            --  NMI exiting must be 1 as NMIs are handled by kernel.
+
+            if Is_Element_Value (Node  => Pin_Ctrl,
+                                 XPath => "NMIExiting",
+                                 Value => "0")
+            then
+               raise Validation_Error with "Pin-Based control 'NMI exiting' "
+                 & "of subject '" & Subj_Name & "' invalid: must be 1";
+            end if;
+
+            --  Virtual NMIs are not supported.
+
+            if Is_Element_Value (Node  => Pin_Ctrl,
+                                 XPath => "VirtualNMIs",
+                                 Value => "1")
+            then
+               raise Validation_Error with "Pin-Based control 'Virtual NMIs' "
+                 & "of subject '" & Subj_Name & "' invalid: must be 0";
+            end if;
+
+            --  VMX-preemption timer is required for scheduling.
+
+            if Is_Element_Value (Node  => Pin_Ctrl,
+                                 XPath => "ActivateVMXTimer",
+                                 Value => "0")
+            then
+               raise Validation_Error with "Pin-Based control 'Activate "
+                 & "VMX-preemption timer' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+
+            --  Posted Interrupts are not supported.
+
+            if Is_Element_Value (Node  => Pin_Ctrl,
+                                 XPath => "ProcessPostedInterrupts",
+                                 Value => "1")
+            then
+               raise Validation_Error with "Pin-Based control 'Process posted"
+                 & " interrupts' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
+         end;
+      end loop;
+   end VMX_Controls_Pin_Requirements;
+
+   -------------------------------------------------------------------------
+
+   procedure VMX_Controls_Proc2_Requirements (XML_Data : Muxml.XML_Data_Type)
+   is
+      Proc2_Ctrls : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/subjects/subject/vcpu/vmx/controls/proc2");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Proc2_Ctrls);
+   begin
+      for I in 0 .. Count - 1 loop
+         declare
+            Proc2_Ctrl : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Proc2_Ctrls,
+                                      Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node (Node  => Proc2_Ctrl,
+                                                    Level => 4),
+                 Name => "name");
+         begin
+            Mulog.Log (Msg => "Checking requirements for Secondary "
+                       & "Processor-Based VM-Execution Controls of subject '"
+                       & Subj_Name & "'");
+
+            --  APIC Virtualization not implemented.
+
+            if Is_Element_Value (Node  => Proc2_Ctrl,
+                                 XPath => "VirtualAPICAccesses",
+                                 Value => "1")
+            then
+               raise Validation_Error with "Secondary Processor-Based control "
+                 & "'Virtualize APIC accesses' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
+
+            --  x2APIC Virtualization not implemented.
+
+            if Is_Element_Value (Node  => Proc2_Ctrl,
+                                 XPath => "Virtualizex2APICMode",
+                                 Value => "1")
+            then
+               raise Validation_Error with "Secondary Processor-Based control "
+                 & "'Virtualize x2APIC mode' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
+
+            --  VPID not implemented.
+
+            if Is_Element_Value (Node  => Proc2_Ctrl,
+                                 XPath => "EnableVPID",
+                                 Value => "1")
+            then
+               raise Validation_Error with "Secondary Processor-Based control "
+                 & "'Enable VPID' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
+
+            --  Direct execution of WBINVD is not allowed.
+
+            if Is_Element_Value (Node  => Proc2_Ctrl,
+                                 XPath => "WBINVDExiting",
+                                 Value => "0")
+            then
+               raise Validation_Error with "Secondary Processor-Based control "
+                 & "'WBINVD exiting' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+
+            --  APIC-register virtualization not implemented.
+
+            if Is_Element_Value (Node  => Proc2_Ctrl,
+                                 XPath => "APICRegisterVirtualization",
+                                 Value => "1")
+            then
+               raise Validation_Error with "Secondary Processor-Based control "
+                 & "'APIC-register virtualization' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
+
+            --  Virtual-interrupt delivery not implemented.
+
+            if Is_Element_Value (Node  => Proc2_Ctrl,
+                                 XPath => "VirtualInterruptDelivery",
+                                 Value => "1")
+            then
+               raise Validation_Error with "Secondary Processor-Based control "
+                 & "'Virtual-interrupt delivery' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
+
+            --  Direct execution of INVPCID is not allowed.
+
+            if Is_Element_Value (Node  => Proc2_Ctrl,
+                                 XPath => "EnableINVPCID",
+                                 Value => "1")
+            then
+               raise Validation_Error with "Secondary Processor-Based control "
+                 & "'Enable INVPCID' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
+
+            --  VMFUNC is not supported.
+
+            if Is_Element_Value (Node  => Proc2_Ctrl,
+                                 XPath => "EnableVMFunctions",
+                                 Value => "1")
+            then
+               raise Validation_Error with "Secondary Processor-Based control "
+                 & "'Enable VM functions' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
+         end;
+      end loop;
+   end VMX_Controls_Proc2_Requirements;
+
+   -------------------------------------------------------------------------
+
+   procedure VMX_Controls_Proc_Requirements (XML_Data : Muxml.XML_Data_Type)
+   is
+      Proc_Ctrls : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/subjects/subject/vcpu/vmx/controls/proc");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Proc_Ctrls);
+   begin
+      for I in 0 .. Count - 1 loop
+         declare
+            Proc_Ctrl : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Proc_Ctrls,
+                                      Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node (Node  => Proc_Ctrl,
+                                                    Level => 4),
+                 Name => "name");
+         begin
+            Mulog.Log (Msg => "Checking requirements for Processor-Based "
+                       & "VM-Execution Controls of subject '" & Subj_Name
+                       & "'");
+
+            --  Interrupt-window exiting used by kernel for interrupt
+            --  injection.
+
+            if Is_Element_Value (Node  => Proc_Ctrl,
+                                 XPath => "InterruptWindowExiting",
+                                 Value => "1")
+            then
+               raise Validation_Error with "Processor-Based control "
+                 & "'Interrupt-window exiting' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
+
+            --  TSC Offsetting is not supported.
+
+            if Is_Element_Value (Node  => Proc_Ctrl,
+                                 XPath => "UseTSCOffsetting",
+                                 Value => "1")
+            then
+               raise Validation_Error with "Processor-Based control "
+                 & "'Use TSC offsetting' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
+
+            --  Direct execution of INVLPG is not supported.
+
+            if Is_Element_Value (Node  => Proc_Ctrl,
+                                 XPath => "INVLPGExiting",
+                                 Value => "0")
+            then
+               raise Validation_Error with "Processor-Based control "
+                 & "'INVLPG exiting' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+
+            --  Direct execution of MWAIT is not supported.
+
+            if Is_Element_Value (Node  => Proc_Ctrl,
+                                 XPath => "MWAITExiting",
+                                 Value => "0")
+            then
+               raise Validation_Error with "Processor-Based control "
+                 & "'MWAIT exiting' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+
+            --  Setting CR3 must be restricted if EPT is disabled.
+
+            if Is_Element_Value (Node  => Proc_Ctrl,
+                                 XPath => "../proc2/EnableEPT",
+                                 Value => "0")
+              and Is_Element_Value (Node  => Proc_Ctrl,
+                                    XPath => "CR3LoadExiting",
+                                    Value => "0")
+            then
+               raise Validation_Error with "Processor-Based control "
+                 & "'CR3-load exiting' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+
+            --  Access to CR8/TPR is restricted.
+
+            if Is_Element_Value (Node  => Proc_Ctrl,
+                                 XPath => "CR8LoadExiting",
+                                 Value => "0")
+            then
+               raise Validation_Error with "Processor-Based control "
+                 & "'CR8-load exiting' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+
+            if Is_Element_Value (Node  => Proc_Ctrl,
+                                 XPath => "CR8StoreExiting",
+                                 Value => "0")
+            then
+               raise Validation_Error with "Processor-Based control "
+                 & "'CR8-store exiting' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+
+            --  TPR virtualization is not implemented.
+
+            if Is_Element_Value (Node  => Proc_Ctrl,
+                                 XPath => "UseTPRShadow",
+                                 Value => "1")
+            then
+               raise Validation_Error with "Processor-Based control "
+                 & "'Use TPR shadow' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
+
+            --  NMI-window exiting is not supported.
+
+            if Is_Element_Value (Node  => Proc_Ctrl,
+                                 XPath => "NMIWindowExiting",
+                                 Value => "1")
+            then
+               raise Validation_Error with "Processor-Based control "
+                 & "'NMI-window exiting' of subject '" & Subj_Name
+                 & "' invalid: must be 0";
+            end if;
+
+            --  Restrict access to debug registers.
+
+            if Is_Element_Value (Node  => Proc_Ctrl,
+                                 XPath => "MOVDRExiting",
+                                 Value => "0")
+            then
+               raise Validation_Error with "Processor-Based control "
+                 & "'MOV-DR exiting' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+
+            --  Restrict access to I/O ports.
+
+            if Is_Element_Value (Node  => Proc_Ctrl,
+                                 XPath => "UseIOBitmaps",
+                                 Value => "0")
+            then
+               raise Validation_Error with "Processor-Based control "
+                 & "'Use I/O bitmaps' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+
+            --  Restrict access to MSRs.
+
+            if Is_Element_Value (Node  => Proc_Ctrl,
+                                 XPath => "UseMSRBitmaps",
+                                 Value => "0")
+            then
+               raise Validation_Error with "Processor-Based control "
+                 & "'Use MSR bitmaps' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+
+            --  Secondary controls enable required features like EPT etc.
+
+            if Is_Element_Value (Node  => Proc_Ctrl,
+                                 XPath => "Activate2ndaryControls",
+                                 Value => "0")
+            then
+               raise Validation_Error with "Processor-Based control "
+                 & "'Activate secondary controls' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+         end;
+      end loop;
+   end VMX_Controls_Proc_Requirements;
+
+   -------------------------------------------------------------------------
+
+   procedure VMX_CR0_Mask_Requirements (XML_Data : Muxml.XML_Data_Type)
+   is
+      CR0_Masks : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/subjects/subject/vcpu/vmx/masks/cr0");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => CR0_Masks);
+   begin
+      for I in 0 .. Count - 1 loop
+         declare
+            CR0_Mask : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => CR0_Masks,
+                                      Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node (Node  => CR0_Mask,
+                                                    Level => 4),
+                 Name => "name");
+         begin
+            Mulog.Log (Msg => "Checking requirements for VMX CR0 guest/host "
+                       & "mask of subject '" & Subj_Name & "'");
+
+            --  Must be set as they control caching and are not saved/restored
+            --  by VMX.
+
+            if Is_Element_Value (Node  => CR0_Mask,
+                                 XPath => "NotWritethrough",
+                                 Value => "0")
+            then
+               raise Validation_Error with "VMX CR0 guest/host mask control "
+                 & "'Not Write-through' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+
+            if Is_Element_Value (Node  => CR0_Mask,
+                                 XPath => "CacheDisable",
+                                 Value => "0")
+            then
+               raise Validation_Error with "VMX CR0 guest/host mask control "
+                 & "'Cache Disable' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+         end;
+      end loop;
+   end VMX_CR0_Mask_Requirements;
+
+   -------------------------------------------------------------------------
+
+   procedure VMX_CR4_Mask_Requirements (XML_Data : Muxml.XML_Data_Type)
+   is
+      CR4_Masks : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/subjects/subject/vcpu/vmx/masks/cr4");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => CR4_Masks);
+   begin
+      for I in 0 .. Count - 1 loop
+         declare
+            CR4_Mask : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => CR4_Masks,
+                                      Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node (Node  => CR4_Mask,
+                                                    Level => 4),
+                 Name => "name");
+         begin
+            Mulog.Log (Msg => "Checking requirements for VMX CR4 guest/host "
+                       & "mask of subject '" & Subj_Name & "'");
+
+            --  PAE must be set if EPT is not active.
+
+            if Is_Element_Value (Node  => CR4_Mask,
+                                 XPath => "../../controls/proc2/EnableEPT",
+                                 Value => "0")
+              and Is_Element_Value (Node  => CR4_Mask,
+                                    XPath => "PhysicalAddressExtension",
+                                    Value => "0")
+            then
+               raise Validation_Error with "VMX CR4 guest/host mask control "
+                 & "'Physical Address Extension' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+
+            --  Machine-Check Enable is required for MCE handling.
+
+            if Is_Element_Value (Node  => CR4_Mask,
+                                 XPath => "MachineCheckEnable",
+                                 Value => "0")
+            then
+               raise Validation_Error with "VMX CR4 guest/host mask control "
+                 & "'Machine-Check Enable' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+         end;
+      end loop;
+   end VMX_CR4_Mask_Requirements;
+
+   -------------------------------------------------------------------------
+
+   procedure VMX_Exception_Bitmap_Requirements (XML_Data : Muxml.XML_Data_Type)
+   is
+      Exc_Bitmaps : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/subjects/subject/vcpu/vmx/masks/exception");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Exc_Bitmaps);
+   begin
+      for I in 0 .. Count - 1 loop
+         declare
+            Exc_Bitmap : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Exc_Bitmaps,
+                                      Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node (Node  => Exc_Bitmap,
+                                                    Level => 4),
+                 Name => "name");
+         begin
+            Mulog.Log (Msg => "Checking requirements for VMX Exception bitmap "
+                       & "of subject '" & Subj_Name & "'");
+
+            --  #MC is required for MCE handling.
+
+            if Is_Element_Value (Node  => Exc_Bitmap,
+                                 XPath => "MachineCheck",
+                                 Value => "0")
+            then
+               raise Validation_Error with "VMX Exception bitmap control "
+                 & "'Machine Check' of subject '" & Subj_Name
+                 & "' invalid: must be 1";
+            end if;
+         end;
+      end loop;
+   end VMX_Exception_Bitmap_Requirements;
 
 end Mucfgcheck.Subject;

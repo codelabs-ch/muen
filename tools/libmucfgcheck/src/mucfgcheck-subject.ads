@@ -75,4 +75,37 @@ is
    --  SDM Vol. 3C, "26.2.1 Checks on VMX Controls".
    procedure VMX_Controls_Entry_Checks (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that the Pin-Based VM-Execution controls meet the requirements
+   --  for the execution of Muen.
+   procedure VMX_Controls_Pin_Requirements (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that the Processor-Based VM-Execution Controls meet the
+   --  requirements for the execution of Muen.
+   procedure VMX_Controls_Proc_Requirements (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that the secondary Processor-Based VM-Execution Controls meet
+   --  the requirements for the execution of Muen.
+   procedure VMX_Controls_Proc2_Requirements (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that the VM-Exit Controls meet the requirements for the
+   --  execution of Muen.
+   procedure VM_Exit_Controls_Requirements (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that the VM-Entry Controls meet the requirements for the
+   --  execution of Muen.
+   procedure VM_Entry_Controls_Requirements (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that the VMX CR0 guest/host masks meet the requirements for the
+   --  execution of Muen.
+   procedure VMX_CR0_Mask_Requirements (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that the VMX CR4 guest/host masks meet the requirements for the
+   --  execution of Muen.
+   procedure VMX_CR4_Mask_Requirements (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that the VMX Exception bitmap meet the requirements for the
+   --  execution of Muen.
+   procedure VMX_Exception_Bitmap_Requirements
+     (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Subject;

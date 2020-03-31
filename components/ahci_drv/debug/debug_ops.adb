@@ -93,6 +93,25 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Print_MBR_Partition_Table (Table : Mbr.Partition_Table_Type)
+   is
+
+   begin
+      for I in Integer range 0 .. Table.Count - 1 loop
+         pragma Debug (Debug_Ops.Put_Line ("Partition " &
+            SK.Strings.Img (Interfaces.Unsigned_32 (I))));
+         pragma Debug (Debug_Ops.Put_Line (" Start LBA : " &
+            SK.Strings.Img (Table.Entries (I).Start_Lba)));
+         pragma Debug (Debug_Ops.Put_Line (" Count     : " &
+            SK.Strings.Img (Table.Entries (I).Sector_Cnt)));
+         pragma Debug (Debug_Ops.Put_Line (" Type      : " &
+            SK.Strings.Img (Table.Entries (I).Partition_Type)));
+      end loop;
+
+   end Print_MBR_Partition_Table;
+
+   -------------------------------------------------------------------------
+
    type Cmd_Table_Buf_Type
    is array (Integer range 0 .. Integer ((Ahci.Port_Range'Last + 1) * 16#40#))
       of Interfaces.Unsigned_32;

@@ -19,6 +19,7 @@
 with Interfaces;
 
 with Ahci;
+with Mbr;
 
 package Debug_Ops
 is
@@ -33,6 +34,8 @@ is
    procedure Dump_Port_Regs (ID : Ahci.Port_Range);
 
    procedure Print_Port_Error (ID : Ahci.Port_Range);
+
+   procedure Print_MBR_Partition_Table (Table : Mbr.Partition_Table_Type);
 
    --  Initialize debug log.
    procedure Init (Epoch : Interfaces.Unsigned_64);

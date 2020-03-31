@@ -1,8 +1,4 @@
 #!/bin/bash
 
 modprobe muenblock-client \
-   req_shm_name=blockdev_request1,blockdev_request2 \
-   resp_shm_name=blockdev_response1,blockdev_response2 \
-   req_shm_protocol=9570208dca77db19,9570208dca77db20 \
-   resp_shm_protocol=9851be3282fef0dc,9851be3282fef0dd \
-   poll_interval=1
+   connections=1:blockdev_request1:blockdev_response1:muenblock:9570208dca77db19:9851be3282fef0dc

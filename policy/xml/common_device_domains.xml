@@ -13,6 +13,9 @@
   <memory>
    <memory logical="dma1" physical="storage_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
    <memory logical="dma2" physical="storage_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
+   <if variable="muenblock_enabled" value="true">
+    <memory logical="muenblock" physical="muenblock" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
+   </if>
   </memory>
   <devices>
    <device logical="storage_controller" physical="storage_controller"/>

@@ -5,6 +5,7 @@
   <boolean name="dbgserver_serial_enabled" value="true"/>
   <boolean name="dbgserver_sink_pcspkr" value="false"/>
   <boolean name="dbgserver_sink_shmem" value="false"/>
+  <boolean name="muenblock_enabled" value="true"/>
   <boolean name="pciconf_emulation_enabled" value="true"/>
   <boolean name="pciconf_emulation_xhci_enabled" value="false"/>
   <string name="pciconf_emulation_nic_devid" value="16#01#"/>
@@ -17,6 +18,9 @@
  <memory>
   <include href="common_memory.xml"/>
   <include href="memory_xhci_dma.xml"/>
+  <if variable="muenblock_enabled" value="true">
+   <memory name="muenblock" size="16#0100_0000#" caching="WB" type="subject_device"/>
+  </if>
  </memory>
 
  <deviceDomains>
@@ -36,6 +40,10 @@
   <channel name="debuglog_example" size="$logchannel_size"/>
   <channel name="example_request" size="16#1000#" hasEvent="switch"/>
   <channel name="example_response" size="16#1000#" hasEvent="switch"/>
+  <if variable="muenblock_enabled" value="true">
+   <channel name="blockdev_request1"  size="16#0000_8000#" hasEvent="asap"/>
+   <channel name="blockdev_response1" size="16#0000_4000#" hasEvent="asap"/>
+  </if>
  </channels>
 
  <subjects>
@@ -86,6 +94,9 @@
    <bootparams>console=hvc console=ttyS0 pci=noearly hostname=nic_linux</bootparams>
    <memory>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
+    <if variable="muenblock_enabled" value="true">
+     <memory logical="muenblock" physical="muenblock" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
+    </if>
    </memory>
    <devices>
     <device logical="eth0" physical="nic_1">
@@ -132,6 +143,12 @@
     <writer logical="testchannel_1" physical="testchannel_1" virtualAddress="16#000e_00f0_1000#"/>
     <reader logical="testchannel_4" physical="testchannel_4" virtualAddress="16#000e_00f0_2000#"/>
     <writer logical="testchannel_3" physical="testchannel_3" virtualAddress="16#000e_0100_2000#"/>
+
+    <if variable="muenblock_enabled" value="true">
+     <writer logical="blockdev_request1" physical="blockdev_request1" virtualAddress="16#000e_01f0_0000#" event="3"/>
+     <reader logical="blockdev_response1" physical="blockdev_response1" virtualAddress="16#000e_0200_0000#" vector="101"/>
+    </if>
+
     <if variable="dbgserver_sink_shmem" value="true">
      <reader logical="debug_shm_sink_memory" physical="debug_shm_sink_memory" virtualAddress="16#000e_0200_0000#"/>
     </if>
@@ -146,6 +163,9 @@
    <bootparams>console=hvc console=ttyS0 pci=noearly hostname=storage_linux</bootparams>
    <memory>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
+    <if variable="muenblock_enabled" value="true">
+     <memory logical="muenblock" physical="muenblock" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
+    </if>
    </memory>
    <devices>
     <device logical="storage_controller" physical="storage_controller">
@@ -189,6 +209,11 @@
     <writer logical="testchannel_2" physical="testchannel_2" virtualAddress="16#000e_00f0_1000#"/>
     <reader logical="testchannel_3" physical="testchannel_3" virtualAddress="16#000e_00f0_2000#"/>
     <writer logical="testchannel_4" physical="testchannel_4" virtualAddress="16#000e_0100_2000#"/>
+
+    <if variable="muenblock_enabled" value="true">
+     <reader logical="blockdev_request1" physical="blockdev_request1" virtualAddress="16#000e_01f0_0000#" vector="50"/>
+     <writer logical="blockdev_response1" physical="blockdev_response1" virtualAddress="16#000e_0200_0000#" event="3"/>
+    </if>
    </channels>
    <component ref="linux">
     <map logical="lowmem" physical="storage_linux|lowmem"/>

@@ -27,7 +27,6 @@ is
 
    use Ahci_Drv_Component.Devices;
 
-   type Port_Range is range 0 .. 31;
 
    --  Reset port specified by ID.
    procedure Reset

@@ -30,6 +30,9 @@ is
    --  Enable the Host Bus Adapter.
    procedure Enable;
 
+   --  Reset the HBA.
+   procedure Reset;
+
    --  Serial ATA AHCI 1.3.1 Specification, section 3.1.
 
    type HBA_Caps_Type is record

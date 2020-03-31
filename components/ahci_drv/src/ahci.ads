@@ -101,6 +101,7 @@ is
       Support_Discard    : Boolean;
       Sector_Size        : Interfaces.Unsigned_32;
       Sector_Size_Shift  : Integer;
+      Number_Of_Sectors  : Interfaces.Unsigned_64;
    end record;
 
    Null_Device : Device_Type :=

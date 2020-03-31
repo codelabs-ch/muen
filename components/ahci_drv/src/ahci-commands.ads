@@ -19,8 +19,15 @@
 with Interfaces;
 with System;
 
+use type Interfaces.Unsigned_32;
+
 package Ahci.Commands
 is
+   procedure Cmd_Slot_Prepare
+      (Port_ID :        Port_Range;
+       Len     : in out Interfaces.Unsigned_32;
+       Address :        Interfaces.Unsigned_64;
+       RW      :        RW_Type);
 
    --  Serial ATA AHCI 1.3.1 Specification, section 4.2.2.
 

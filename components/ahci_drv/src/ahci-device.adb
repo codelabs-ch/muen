@@ -15,6 +15,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ata;
+
 with Ahci.Commands;
 with Ahci.Delays;
 with Ahci.HBA;
@@ -36,14 +38,18 @@ is
        Start   :     Interfaces.Unsigned_64;
        Count   :     Interfaces.Unsigned_32;
        Address :     Interfaces.Unsigned_64;
-       Ret_Val : out Ahci.Status_Type)
+       Ret_Val : out Status_Type)
    is
-      RW : constant RW_Type := Write;
       Signature : constant Signature_Type := Devices (ID).Signature;
    begin
       case Signature is
          when Sata =>
-            null;
+            Ata.RW_Sectors (ID => ID,
+               RW      => RW,
+               Start   => Start,
+               Count   => Count,
+               Address => Address,
+               Ret_Val => Ret_Val);
          when others =>
             Ret_Val := ENOTSUP;
       end case;
@@ -57,12 +63,15 @@ is
        Count   :     Interfaces.Unsigned_32;
        Ret_Val : out Status_Type)
    is
-      RW : constant RW_Type := Read;
       Signature : constant Signature_Type := Devices (ID).Signature;
    begin
       case Signature is
          when Sata =>
-            null;
+            Ata.Discard_Sectors
+               (ID    => ID,
+                Start => Start,
+                Count => Count,
+                Ret_Val => Ret_Val);
          when others =>
             Ret_Val := ENOTSUP;
       end case;
@@ -107,7 +116,8 @@ is
    begin
       Sig := Ports.Instance (Port_ID).Signature;
       case Sig is
-         when Ahci.Ports.SIG_ATA =>
+         when Ports.SIG_ATA =>
+            Ata.Identify_Device (Port_ID => Port_ID);
             Devices (Port_ID).Signature := Sata;
          when Ports.SIG_ATAPI =>
             Devices (Port_ID).Signature := Atapi;

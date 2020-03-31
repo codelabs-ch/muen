@@ -167,12 +167,13 @@ is
       Reserved_1         : Bit_Array (16 .. 31);
       DMA_Buffer_ID_Low  : Interfaces.Unsigned_32;
       DMA_Buffer_ID_High : Interfaces.Unsigned_32;
+      Reserved_2         : Interfaces.Unsigned_32;
       DMA_Buffer_Offset  : Interfaces.Unsigned_32;
       DMA_Transfer_Count : Interfaces.Unsigned_32;
-      Reserved_2         : Bit_Array (0 .. 31);
+      Reserved_3         : Bit_Array (0 .. 31);
    end record
    with
-      Size => 24 * 8;
+      Size => 28 * 8;
 
    for DMA_Setup_FIS_Type use record
       FIS_Type           at  0 range  0 ..  7;
@@ -184,9 +185,10 @@ is
       Reserved_1         at  0 range 16 .. 31;
       DMA_Buffer_ID_Low  at  4 range  0 .. 31;
       DMA_Buffer_ID_High at  8 range  0 .. 31;
-      DMA_Buffer_Offset  at 12 range  0 .. 31;
-      DMA_Transfer_Count at 16 range  0 .. 31;
-      Reserved_2         at 20 range  0 .. 31;
+      Reserved_2         at 12 range  0 .. 31;
+      DMA_Buffer_Offset  at 16 range  0 .. 31;
+      DMA_Transfer_Count at 20 range  0 .. 31;
+      Reserved_3         at 24 range  0 .. 31;
    end record;
 
    --  Serial ATA Revision 3.0, section 10.3.10.
@@ -231,5 +233,40 @@ is
       Transfer_Count at 16 range  0 .. 15;
       Reserved_5     at 16 range 16 .. 31;
    end record;
+
+   --  Serial ATA AHCI 1.3.1 Specification, section 4.2.1.
+   type Received_FIS_Type is record
+      DSFIS     : DMA_Setup_FIS_Type;
+      Reserved1 : Interfaces.Unsigned_32;
+      PSFIS     : PIO_Setup_FIS_Type;
+      Reserved2 : Byte_Array (0 .. 11);
+      RFIS      : Device_To_Host_FIS_Type;
+      Reserved3 : Interfaces.Unsigned_32;
+      SDBFIS    : Set_Device_Bits_FIS_Type;
+      UFIS      : Byte_Array (0 .. 63);
+      Reserved4 : Byte_Array (0 .. 95);
+   end record
+   with
+      Size => 256 * 8;
+
+   for Received_FIS_Type use record
+      DSFIS     at 16#00# range 0 .. 28 * 8 - 1;
+      Reserved1 at 16#1c# range 0 .. 31;
+      PSFIS     at 16#20# range 0 .. 16#14# * 8 - 1;
+      Reserved2 at 16#34# range 0 .. 12 * 8 - 1;
+      RFIS      at 16#40# range 0 .. 16#14# * 8 - 1;
+      Reserved3 at 16#54# range 0 .. 31;
+      SDBFIS    at 16#58# range 0 .. 16#08# * 8 - 1;
+      UFIS      at 16#60# range 0 .. 64 * 8 - 1;
+      Reserved4 at 16#A0# range 0 .. 96 * 8 - 1;
+   end record;
+
+   type FIS_Array_Type is array (Port_Range) of Received_FIS_Type;
+   Fis_Array : FIS_Array_Type
+   with
+      Volatile,
+      Async_Readers,
+      Async_Writers,
+      Address => System'To_Address (Fis_Base_Address);
 
 end Ahci.FIS;

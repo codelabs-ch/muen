@@ -17,6 +17,7 @@
 --
 
 with Interfaces;
+with System;
 
 package Ahci.Commands
 is
@@ -93,5 +94,45 @@ is
       Reserved_3 at 12 range 22 .. 30;
       I          at 12 range 31 .. 31;
    end record;
+
+   type Prdt_Arr_Type is
+      array (Natural range 0 .. 7)
+      of Physical_Region_Descriptor_Table_Entry_Type;
+
+   type Command_Table_Type is record
+      Cfis : Byte_Array (0 .. 63);
+      Acmd : Byte_Array (0 .. 15);
+      Res1 : Byte_Array (0 .. 47);
+      Prdt : Prdt_Arr_Type;
+   end record
+   with
+      Size => 16#100# * 8;
+
+   for Command_Table_Type use record
+      Cfis at 16#00# range 0 .. 511;
+      Acmd at 16#40# range 0 .. 127;
+      Res1 at 16#50# range 0 .. 383;
+      Prdt at 16#80# range 0 .. 1023;
+   end record;
+
+   type Command_Lists_Array_Type is array (Port_Range)
+      of Ahci.Commands.Command_List_Type;
+
+   Command_Lists : Command_Lists_Array_Type
+   with
+      Volatile,
+      Async_Readers,
+      Async_Writers,
+      Address => System'To_Address (Ahci.Command_Lists_Address);
+
+   type Command_Table_Array_Type is array (Port_Range)
+      of Ahci.Commands.Command_Table_Type;
+
+   Command_Table : Command_Table_Array_Type
+   with
+      Volatile,
+      Async_Readers,
+      Async_Writers,
+      Address => System'To_Address (Ahci.Command_Table_Address);
 
 end Ahci.Commands;

@@ -24,11 +24,18 @@ with Ahci.Constants;
 with Ahci.Pciconf;
 with Ahci.Ports;
 with Ahci.HBA;
+with Ahci_Drv_Component.Devices;
+with System;
 
 package body Debug_Ops
 with
    SPARK_Mode => Off
 is
+
+   use type Interfaces.Unsigned_8;
+   use type Interfaces.Unsigned_16;
+   use type Interfaces.Unsigned_32;
+   use Ahci;
 
    --  Outputs 'yes' if Boolean is True, 'no' otherwise.
    procedure Put
@@ -43,32 +50,39 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Put_Bit_Array (Item : Ahci.Bit_Array)
+   is
+   begin
+      for I in reverse Item'Range loop
+         if Item (I) then
+            Put_String ("1");
+         else
+            Put_String ("0");
+         end if;
+      end loop;
+      Put_Line ("");
+   end Put_Bit_Array;
+
+   -------------------------------------------------------------------------
+
    procedure Print_Ports_Info
    is
-      use type Interfaces.Unsigned_32;
-      use Ahci;
-
-      SIG_ATA   : constant := 16#00000101#;
-      SIG_ATAPI : constant := 16#eb140101#;
-      SIG_SEMB  : constant := 16#c33c0101#;
-      SIG_PM    : constant := 16#96690101#;
-
       PI  : constant Ahci.Bit_Array := HBA.Instance.Ports_Implemented;
       Sig : Interfaces.Unsigned_32;
    begin
       Put_Line (Item => "== Ports");
-      for I in Ahci.Ports.Port_Range loop
+      for I in Port_Range loop
          if PI (Natural (I)) then
             Put_String (Item => " Port "
                         & SK.Strings.Img (Interfaces.Unsigned_8 (I)));
             Sig := Ports.Instance (I).Signature;
-            if Sig = SIG_ATA then
+            if Sig = Ahci.Ports.SIG_ATA then
                Put_Line (Item => " : SATA drive");
-            elsif Sig = SIG_ATAPI then
+            elsif Sig = Ahci.Ports.SIG_ATAPI then
                Put_Line (Item => " : ATAPI drive");
-            elsif Sig = SIG_SEMB then
+            elsif Sig = Ahci.Ports.SIG_SEMB then
                Put_Line (Item => " : Enclosure management bridge");
-            elsif Sig = SIG_PM then
+            elsif Sig = Ahci.Ports.SIG_PM then
                Put_Line (Item => " : Port multiplier");
             else
                Put_Line (Item => " : [no drive]");
@@ -79,9 +93,135 @@ is
 
    -------------------------------------------------------------------------
 
+   type Cmd_Table_Buf_Type
+   is array (Integer range 0 .. Integer ((Ahci.Port_Range'Last + 1) * 16#40#))
+      of Interfaces.Unsigned_32;
+   Cmd_Table_Buf : Cmd_Table_Buf_Type
+   with
+      Volatile,
+      Async_Readers,
+      Async_Writers,
+      Address => System'To_Address (Ahci.Command_Table_Address);
+
+   procedure Dump_Cmd_Table (
+      ID  : Ahci.Port_Range;
+      Len : Integer)
+   is
+      Local32 : Interfaces.Unsigned_32;
+      Start   : constant Integer := Integer (ID) * 16#40#;
+   begin
+      for I in Integer range Start .. Start + Len loop
+         Local32 := Cmd_Table_Buf (I);
+         pragma Debug (Debug_Ops.Put_Line ("Cmd Table ["
+            & SK.Strings.Img (Interfaces.Unsigned_8 (I))
+            & "] "
+            & SK.Strings.Img (Local32)));
+         Local32 := Local32 + 1;
+      end loop;
+   end Dump_Cmd_Table;
+
+   -------------------------------------------------------------------------
+
+   type Cmd_List_Buf_Type
+   is array (Integer range 0 ..
+               Integer ((Ahci.Port_Range'Last + 1) * 16#100#))
+      of Interfaces.Unsigned_32;
+   Cmd_List_Buf : Cmd_List_Buf_Type
+   with
+      Volatile,
+      Async_Readers,
+      Async_Writers,
+      Address => System'To_Address (Ahci.Command_Lists_Address);
+
+   procedure Dump_Cmd_List
+     (ID  : Ahci.Port_Range;
+      Len : Integer)
+   is
+      Local32 : Interfaces.Unsigned_32;
+      Start   : constant Integer := Integer (ID) * 16#100#;
+   begin
+      for I in Integer range Start .. Start + Len loop
+         Local32 := Cmd_List_Buf (I);
+         pragma Debug (Debug_Ops.Put_Line ("Cmd List ["
+            & SK.Strings.Img (Interfaces.Unsigned_8 (I))
+            & "] "
+            & SK.Strings.Img (Local32)));
+         Local32 := Local32 + 1;
+      end loop;
+   end Dump_Cmd_List;
+
+   -------------------------------------------------------------------------
+
+   type Port_Regs_Array
+      is array (Integer range 0 ..
+                  Integer (Ahci.Port_Range'Last) * 16#20# + 17)
+      of Interfaces.Unsigned_32;
+   Port_Regs : Port_Regs_Array
+   with
+      Volatile,
+      Async_Readers,
+      Async_Writers,
+      Address => System'To_Address
+        (Ahci_Drv_Component.Devices.Ahci_Controller_Ahci_Registers_Address
+            + 16#100#);
+
+   procedure Dump_Port_Regs (ID  : Ahci.Port_Range)
+   is
+      Local32 : Interfaces.Unsigned_32;
+      Start   : constant Integer := Integer (ID) * 16#20#;
+   begin
+      pragma Debug (Debug_Ops.Put_Line ("Dumping Port  " & SK.Strings.Img (
+         Interfaces.Unsigned_32 (ID))));
+      for I in Integer range Start .. 17 + Start loop
+         Local32 := Port_Regs (I);
+         pragma Debug (Debug_Ops.Put_Line (SK.Strings.Img (Local32)));
+         Local32 := Local32 + 1;
+      end loop;
+   end Dump_Port_Regs;
+
+   -------------------------------------------------------------------------
+
+   procedure Print_Port_Error (ID : Ahci.Port_Range)
+   is
+      use Ahci.Ports;
+
+      Sata_Error  : constant Port_SATA_Error_Type :=
+                        Ahci.Ports.Instance (ID).SATA_Error;
+      Intr_Status : constant Port_Interrupt_Status_Type :=
+                        Ahci.Ports.Instance (ID).Interrupt_Status;
+      T_F_Status  : constant Port_Task_File_Data_Type :=
+                        Ahci.Ports.Instance (ID).Task_File_Data;
+   begin
+      pragma Debug (Intr_Status.OFS,
+         Debug_Ops.Put_Line ("err: Overflow"));
+      pragma Debug (Intr_Status.INFS,
+         Debug_Ops.Put_Line ("err: Interface Non-Fatal Error"));
+      pragma Debug (Intr_Status.IFS,
+         Debug_Ops.Put_Line ("err: Interface Fata Error"));
+      pragma Debug (Intr_Status.HBDS,
+         Debug_Ops.Put_Line ("err: Host Bus Data Error"));
+      pragma Debug (Intr_Status.OFS,
+         Debug_Ops.Put_Line ("err: Host Bus Fatal Error"));
+      pragma Debug (Intr_Status.TFES,
+         Debug_Ops.Put_Line ("err: Task File Error"));
+      pragma Debug (Intr_Status.TFES,
+         Debug_Ops.Put_Line ("TF Err: " &
+             SK.Strings.Img (T_F_Status.ERR)));
+      pragma Debug (Intr_Status.PCS,
+         Debug_Ops.Put_Line ("err: Port Connect Change Status"));
+      pragma Debug (Sata_Error.ERR /= 0,
+         Debug_Ops.Put_Line ("err: Sata Err: " &
+            SK.Strings.Img (Sata_Error.ERR)));
+      pragma Debug (Sata_Error.DIAG /= 0,
+         Debug_Ops.Put_Line ("err: Sata DIAG: " &
+            SK.Strings.Img (Sata_Error.DIAG)));
+
+   end Print_Port_Error;
+
+   -------------------------------------------------------------------------
+
    procedure Print_HBA_Memory_Regs
    is
-      use type Interfaces.Unsigned_8;
       use Ahci.HBA;
 
       Dummy4  : Ahci.Unsigned_4;
@@ -126,7 +266,6 @@ is
 
    procedure Print_PCI_Capabilities
    is
-      use type Interfaces.Unsigned_8;
       use Ahci.Pciconf;
 
       Cap_ID : Interfaces.Unsigned_8;
@@ -162,6 +301,8 @@ is
       Put_Line (Item => " Class      : " & SK.Strings.Img (Dummy32));
       Dummy32 := Instance.Header.Base_Address_Register_5;
       Put_Line (Item => " ABAR       : " & SK.Strings.Img (Dummy32));
+      Dummy16 := Instance.Header.Command;
+      Put_Line (Item => " CMD        : " & SK.Strings.Img (Dummy16));
    end Print_PCI_Device_Info;
 
    -------------------------------------------------------------------------

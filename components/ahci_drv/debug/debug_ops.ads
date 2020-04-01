@@ -18,8 +18,21 @@
 
 with Interfaces;
 
+with Ahci;
+
 package Debug_Ops
 is
+   procedure Dump_Cmd_Table
+     (ID  : Ahci.Port_Range;
+      Len : Integer);
+
+   procedure Dump_Cmd_List
+     (ID  : Ahci.Port_Range;
+      Len : Integer);
+
+   procedure Dump_Port_Regs (ID : Ahci.Port_Range);
+
+   procedure Print_Port_Error (ID : Ahci.Port_Range);
 
    --  Initialize debug log.
    procedure Init (Epoch : Interfaces.Unsigned_64);
@@ -29,6 +42,9 @@ is
 
    --  Output given string and append a new line.
    procedure Put_Line (Item : String);
+
+   --  Output a given Bit_Array
+   procedure Put_Bit_Array (Item : Ahci.Bit_Array);
 
    --  Output PCI device information.
    procedure Print_PCI_Device_Info;

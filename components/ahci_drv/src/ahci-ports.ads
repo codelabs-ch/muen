@@ -377,6 +377,13 @@ is
       Vendor_Specific          at 16#70# range 0 .. 127;
    end record;
 
+   --  Port Signature Constantsa
+   --  ATA/ATAPI Command Set - 3 (ACS-3) T13/2161-D Revision 5, Table 206
+   SIG_ATA   : constant := 16#00000101#;
+   SIG_ATAPI : constant := 16#eb140101#;
+   SIG_SEMB  : constant := 16#c33c0101#;
+   SIG_PM    : constant := 16#96690101#;
+
    type Ports_Array is array (Port_Range) of Port_Registers_Type
    with
       Pack;

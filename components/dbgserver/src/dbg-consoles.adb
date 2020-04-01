@@ -187,6 +187,7 @@ is
       Name    :        String;
       Success :    out Boolean)
    is
+      use type Musinfo.Memory_Kind;
       use type Musinfo.Memregion_Type;
 
       Region : Musinfo.Memregion_Type;
@@ -207,7 +208,8 @@ is
 
       Region := Musinfo.Instance.Memory_By_Name
         (Name => Musinfo.Utils.To_Name (Str => Name));
-      if Region /= Musinfo.Null_Memregion and then Region.Flags.Channel
+      if Region /= Musinfo.Null_Memregion
+        and then Region.Kind = Musinfo.Subject_Channel
         and then Is_Log_Channel (Address => Region.Address)
       then
          for Channel in Channels.Debug_Interfaces_Type loop

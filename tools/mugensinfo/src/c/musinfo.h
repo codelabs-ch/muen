@@ -38,7 +38,6 @@
 
 #define MEM_WRITABLE_FLAG	(1 << 0)
 #define MEM_EXECUTABLE_FLAG	(1 << 1)
-#define MEM_CHANNEL_FLAG	(1 << 2)
 
 #define DEV_MSI_FLAG		(1 << 0)
 
@@ -47,23 +46,49 @@ struct muen_name_type {
 	uint8_t length;
 	char data[MAX_NAME_LENGTH];
 	uint8_t null_term;
-} __attribute__((packed));
+} __attribute__ ((packed));
+
+/* Type of memory */
+enum muen_memory_kind {
+	MUEN_MEM_SUBJ = 0,
+	MUEN_MEM_SUBJ_INFO,
+	MUEN_MEM_SUBJ_BIN,
+	MUEN_MEM_SUBJ_ZP,
+	MUEN_MEM_SUBJ_INITRD,
+	MUEN_MEM_SUBJ_CHANNEL,
+	MUEN_MEM_SUBJ_STATE,
+	MUEN_MEM_SUBJ_TIMED_EVT,
+	MUEN_MEM_SUBJ_INTRS,
+	MUEN_MEM_SUBJ_SCHEDINFO,
+	MUEN_MEM_SUBJ_BIOS,
+	MUEN_MEM_SUBJ_ACPI_RSDP,
+	MUEN_MEM_SUBJ_ACPI_XSDT,
+	MUEN_MEM_SUBJ_ACPI_FADT,
+	MUEN_MEM_SUBJ_ACPI_DSDT,
+	MUEN_MEM_SUBJ_DEVICE,
+	MUEN_MEM_SUBJ_SOLO5_BOOT_INFO,
+	MUEN_MEM_SUBJ_CRASH_AUDIT,
+	MUEN_MEM_KRNL_IFACE
+} __attribute__ ((packed));
 
 /* Known memory contents */
 enum muen_content_kind {
-	MUEN_CONTENT_UNINITIALIZED, MUEN_CONTENT_FILL, MUEN_CONTENT_FILE
-};
+	MUEN_CONTENT_UNINITIALIZED = 0,
+	MUEN_CONTENT_FILL,
+	MUEN_CONTENT_FILE
+} __attribute__ ((packed));
 
 /* Structure holding information about a memory region */
 struct muen_memregion_type {
+	enum muen_memory_kind kind;
 	enum muen_content_kind content;
+	uint8_t flags;
+	uint16_t pattern;
+	char padding[3];
 	uint64_t address;
 	uint64_t size;
 	uint8_t hash[HASH_LENGTH];
-	uint8_t flags;
-	uint16_t pattern;
-	char padding[1];
-} __attribute__((packed, aligned(8)));
+} __attribute__ ((packed, aligned(8)));
 
 /* Required for explicit padding */
 #define largest_variant_size sizeof(struct muen_memregion_type)
@@ -77,11 +102,14 @@ struct muen_device_type {
 	uint8_t ir_count;
 	uint8_t flags;
 	char padding[largest_variant_size - device_type_size];
-} __attribute__((packed, aligned(8)));
+} __attribute__ ((packed, aligned(8)));
 
 /* Currently known resource types */
 enum muen_resource_kind {
-	MUEN_RES_NONE, MUEN_RES_MEMORY, MUEN_RES_EVENT, MUEN_RES_VECTOR,
+	MUEN_RES_NONE = 0,
+	MUEN_RES_MEMORY,
+	MUEN_RES_EVENT,
+	MUEN_RES_VECTOR,
 	MUEN_RES_DEVICE
 };
 
@@ -98,7 +126,7 @@ struct muen_resource_type {
 	struct muen_name_type name;
 	char padding[3];
 	union muen_resource_data data;
-} __attribute__((packed, aligned(8)));
+} __attribute__ ((packed, aligned(8)));
 
 /* Muen subject information (sinfo) structure */
 struct subject_info_type {
@@ -108,6 +136,6 @@ struct subject_info_type {
 	uint16_t resource_count;
 	char padding[1];
 	struct muen_resource_type resources[MAX_RESOURCE_COUNT];
-} __attribute__((packed, aligned (8)));
+} __attribute__ ((packed, aligned (8)));
 
 #endif /* MUSINFO_H_  */

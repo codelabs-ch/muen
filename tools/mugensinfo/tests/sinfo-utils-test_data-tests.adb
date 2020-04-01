@@ -188,27 +188,27 @@ package body Sinfo.Utils.Test_Data.Tests is
         & "[@name='lnx_keyboard']";
       Policy  : Muxml.XML_Data_Type;
       Ref1    : constant Musinfo.Memregion_Type
-        := (Content => Musinfo.Content_File,
-            Address => 16#1000_0000#,
-            Size    => 16#1000#,
-            Hash    => Utils.Test_Data.Ref_Hash,
+        := (Kind    => Musinfo.Subject_Acpi_Rsdp,
+            Content => Musinfo.Content_File,
             Flags   => (Writable   => False,
                         Executable => False,
-                        Channel    => False,
                         Padding    => 0),
             Pattern => Musinfo.No_Pattern,
-            Padding => 0);
-      Ref2    : constant Musinfo.Memregion_Type
-        := (Content => Musinfo.Content_Fill,
-            Address => 16#ffff_e000#,
+            Padding => 0,
+            Address => 16#1000_0000#,
             Size    => 16#1000#,
-            Hash    => Musinfo.No_Hash,
+            Hash    => Utils.Test_Data.Ref_Hash);
+      Ref2    : constant Musinfo.Memregion_Type
+        := (Kind    => Musinfo.Subject_Channel,
+            Content => Musinfo.Content_Fill,
             Flags   => (Writable   => False,
                         Executable => False,
-                        Channel    => True,
                         Padding    => 0),
             Pattern => 34,
-            Padding => 0);
+            Padding => 0,
+            Address => 16#ffff_e000#,
+            Size    => 16#1000#,
+            Hash    => Musinfo.No_Hash);
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,

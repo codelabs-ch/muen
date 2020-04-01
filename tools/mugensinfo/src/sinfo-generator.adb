@@ -217,8 +217,7 @@ is
          & ", size " & Mutools.Utils.To_Hex (Number => R.Size) & ", "
          & (if R.Flags.Writable   then "writable" else "read-only") & ", "
          & (if R.Flags.Executable then "executable" else "non-executable")
-         & (if R.Flags.Channel then ", channel" else "")
-         & ", " & R.Content'Img);
+         & ", " & R.Kind'Img & ", " & R.Content'Img);
 
       Utils.Append_Resource
         (Info     => Info,

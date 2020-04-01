@@ -21,9 +21,44 @@ with Interfaces;
 with DOM.Core.Elements;
 
 with Muxml.Utils;
+with Mutools.Types;
 
 package body Sinfo.Utils
 is
+
+   package MTT renames Mutools.Types;
+
+   use type MTT.Memory_Kind;
+
+   To_Subject_Mem : constant array (MTT.Subject_Memory)
+     of Musinfo.Memory_Kind
+       := (MTT.Subject                 => Musinfo.Subject,
+           MTT.Subject_Info            => Musinfo.Subject_Info,
+           MTT.Subject_Binary          => Musinfo.Subject_Binary,
+           MTT.Subject_Zeropage        => Musinfo.Subject_Zeropage,
+           MTT.Subject_Initrd          => Musinfo.Subject_Initrd,
+           MTT.Subject_Channel         => Musinfo.Subject_Channel,
+           MTT.Subject_State           => Musinfo.Subject_State,
+           MTT.Subject_Timed_Event     => Musinfo.Subject_Timed_Event,
+           MTT.Subject_Interrupts      => Musinfo.Subject_Interrupts,
+           MTT.Subject_Scheduling_Info => Musinfo.Subject_Scheduling_Info,
+           MTT.Subject_Bios            => Musinfo.Subject_Bios,
+           MTT.Subject_Acpi_Rsdp       => Musinfo.Subject_Acpi_Rsdp,
+           MTT.Subject_Acpi_Xsdt       => Musinfo.Subject_Acpi_Xsdt,
+           MTT.Subject_Acpi_Fadt       => Musinfo.Subject_Acpi_Fadt,
+           MTT.Subject_Acpi_Dsdt       => Musinfo.Subject_Acpi_Dsdt,
+           MTT.Subject_Device          => Musinfo.Subject_Device,
+           MTT.Subject_Solo5_Boot_Info => Musinfo.Subject_Solo5_Boot_Info,
+           MTT.Subject_Crash_Audit     => Musinfo.Subject_Crash_Audit);
+
+   --  Convert given subject memory to Musinfo representation. Allowed values
+   --  are Mutools.Types.Subject_Memory and Mutools.Types.Kernel_Interface
+   --  (for tau0).
+   function To_Musinfo_Mem (Mem : MTT.Memory_Kind) return Musinfo.Memory_Kind
+   is (if Mem = MTT.Kernel_Interface then Musinfo.Kernel_Interface
+       else To_Subject_Mem (Mem))
+   with
+      Pre => Mem in MTT.Subject_Memory or else Mem in MTT.Kernel_Interface;
 
    -------------------------------------------------------------------------
 
@@ -93,10 +128,12 @@ is
           (DOM.Core.Elements.Get_Attribute
              (Elem => Virt_Mem_Node,
               Name => "executable"));
-      Channel : constant Boolean
-        := DOM.Core.Elements.Get_Attribute
-          (Elem => Phys_Mem_Node,
-           Name => "type") = "subject_channel";
+
+      Kind : constant Musinfo.Memory_Kind
+        := To_Musinfo_Mem (Mutools.Types.Subject_Memory'Value
+                           (DOM.Core.Elements.Get_Attribute
+                              (Elem => Phys_Mem_Node,
+                               Name => "type")));
 
       Hash_Node : constant DOM.Core.Node
         := Muxml.Utils.Get_Element (Doc   => Phys_Mem_Node,
@@ -130,16 +167,16 @@ is
          Content := Musinfo.Content_Uninitialized;
       end if;
 
-      return (Content => Content,
-              Address => Address,
-              Size    => Size,
-              Hash    => Hash,
+      return (Kind    => Kind,
+              Content => Content,
               Flags   => (Writable   => Writable,
                           Executable => Executable,
-                          Channel    => Channel,
                           Padding    => 0),
               Pattern => Pattern,
-              Padding => 0);
+              Padding => 0,
+              Address => Address,
+              Size    => Size,
+              Hash    => Hash);
    end Get_Memory_Info;
 
    -------------------------------------------------------------------------

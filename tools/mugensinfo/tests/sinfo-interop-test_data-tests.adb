@@ -58,16 +58,16 @@ package body Sinfo.Interop.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       M : Musinfo.Memregion_Type
-        := (Content => Musinfo.Content_Fill,
-            Address => 16#dead_beef_cafe_feed#,
-            Size    => 16#8080_abab_cdcd_9000#,
-            Hash       => (others => 253),
+        := (Kind    => Musinfo.Subject_Zeropage,
+            Content => Musinfo.Content_Fill,
             Flags   => (Writable   => True,
                         Executable => True,
-                        Channel    => True,
                         Padding    => 0),
             Pattern => 45,
-            Padding => 0);
+            Padding => 0,
+            Address => 16#dead_beef_cafe_feed#,
+            Size    => 16#8080_abab_cdcd_9000#,
+            Hash       => (others => 253));
    begin
       Assert (Condition => C_Imports.C_Assert_Memregion
               (Memregion => M'Address) = 1,
@@ -177,6 +177,7 @@ package body Sinfo.Interop.Test_Data.Tests is
    begin
       Assert (Condition => C_Imports.C_Assert_Memregion_Type
               (Size           => Musinfo.Memregion_Type'Size / 8,
+               Kind_Offset    => Dummy.Kind'Bit_Position / 8,
                Content_Offset => Dummy.Content'Bit_Position / 8,
                Address_Offset => Dummy.Address'Bit_Position / 8,
                Size_Offset    => Dummy.Size'Bit_Position / 8,

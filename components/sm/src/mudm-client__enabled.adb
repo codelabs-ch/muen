@@ -37,7 +37,7 @@ with
    Refined_State => (State => (Request, Response))
 is
 
-   Request : Mudm.Emul_Message_Type
+   Request : Mudm.Emul_Message_Type := Null_Emul_Message
    with
       Volatile,
       Async_Readers,

@@ -6,6 +6,10 @@
   <memory>
    <memory executable="false" logical="dma_region" size="16#0100_0000#" virtualAddress="16#a000_0000#" writable="true"/>
   </memory>
+  <channels>
+   <reader logical="blockdev_request" size="16#0010_0000#" virtualAddress="16#0100_0000#"/>
+   <writer logical="blockdev_response" size="16#0010_0000#" virtualAddress="16#0110_0000#"/>
+  </channels>
   <devices>
    <device logical="ahci_controller">
     <irq logical="irq" vector="48"/>

@@ -58,16 +58,16 @@ package body Sinfo.Interop.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       M : Musinfo.Memregion_Type
-        := (Content => Musinfo.Content_Fill,
-            Address => 16#dead_beef_cafe_feed#,
-            Size    => 16#8080_abab_cdcd_9000#,
-            Hash       => (others => 253),
+        := (Kind    => Musinfo.Subject_Zeropage,
+            Content => Musinfo.Content_Fill,
             Flags   => (Writable   => True,
                         Executable => True,
-                        Channel    => True,
                         Padding    => 0),
             Pattern => 45,
-            Padding => 0);
+            Padding => 0,
+            Address => 16#dead_beef_cafe_feed#,
+            Size    => 16#8080_abab_cdcd_9000#,
+            Hash       => (others => 253));
    begin
       Assert (Condition => C_Imports.C_Assert_Memregion
               (Memregion => M'Address) = 1,
@@ -92,6 +92,32 @@ package body Sinfo.Interop.Test_Data.Tests is
               Message   => "C device mismatch");
 --  begin read only
    end Test_Device_To_C;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Device_Memory_To_C (Gnattest_T : in out Test);
+   procedure Test_Device_Memory_To_C_59deac (Gnattest_T : in out Test) renames Test_Device_Memory_To_C;
+--  id:2.2/59deac6f1c89b60c/Device_Memory_To_C/1/0/
+   procedure Test_Device_Memory_To_C (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      M : Musinfo.Device_Memory_Type
+        := (Flags    => (Writable   => True,
+                         Executable => True,
+                         Padding    => 0),
+            Padding1 => (others => 0),
+            Address  => 16#dead_beef_cafe_feed#,
+            Size     => 16#8080_abab_cdcd_9000#,
+            Padding2 => (others => 0));
+   begin
+      Assert (Condition => C_Imports.C_Assert_Device_Memory
+              (Memory => M'Address) = 1,
+              Message   => "C device memorymismatch");
+--  begin read only
+   end Test_Device_Memory_To_C;
 --  end read only
 
 
@@ -177,6 +203,7 @@ package body Sinfo.Interop.Test_Data.Tests is
    begin
       Assert (Condition => C_Imports.C_Assert_Memregion_Type
               (Size           => Musinfo.Memregion_Type'Size / 8,
+               Kind_Offset    => Dummy.Kind'Bit_Position / 8,
                Content_Offset => Dummy.Content'Bit_Position / 8,
                Address_Offset => Dummy.Address'Bit_Position / 8,
                Size_Offset    => Dummy.Size'Bit_Position / 8,
@@ -231,6 +258,28 @@ package body Sinfo.Interop.Test_Data.Tests is
          Message   => "C device type mismatch");
 --  begin read only
    end Test_Check_Device_Type;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Check_Device_Memory_Type (Gnattest_T : in out Test);
+   procedure Test_Check_Device_Memory_Type_f56b89 (Gnattest_T : in out Test) renames Test_Check_Device_Memory_Type;
+--  id:2.2/f56b89551ecc2e95/Check_Device_Memory_Type/1/0/
+   procedure Test_Check_Device_Memory_Type (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Dummy : Musinfo.Device_Memory_Type := Musinfo.Null_Device_Memory;
+   begin
+      Assert (Condition => C_Imports.C_Assert_Device_Memory_Type
+              (Size           => Musinfo.Device_Memory_Type'Size / 8,
+               Flags_Offset   => Dummy.Flags'Bit_Position / 8,
+               Address_Offset => Dummy.Address'Bit_Position / 8,
+               Size_Offset    => Dummy.Size'Bit_Position / 8) = 1,
+              Message   => "C device memory type mismatch");
+--  begin read only
+   end Test_Check_Device_Memory_Type;
 --  end read only
 
 

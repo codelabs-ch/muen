@@ -43,19 +43,23 @@ is
 
    --  Unique identifier used to designate a subject info memory region.
    --  "muinfo" with highest 2 bytes for counter.
-   Muen_Subject_Info_Magic : constant := 16#0200_6f66_6e69_756d#;
+   Muen_Subject_Info_Magic : constant := 16#0300_6f66_6e69_756d#;
 
    type Unsigned_2 is mod 2 ** 2
      with
        Size => 2;
 
-   type Unsigned_5 is mod 2 ** 5
+   type Unsigned_6 is mod 2 ** 6
      with
-       Size => 5;
+       Size => 6;
 
    type Unsigned_7 is mod 2 ** 7
      with
        Size => 7;
+
+   type Unsigned_24 is mod 2 ** 24
+     with
+       Size => 24;
 
    type Name_Size_Type is range 0 .. 63
      with
@@ -97,25 +101,23 @@ is
    type Memory_Flags_Type is record
       Writable   : Boolean;
       Executable : Boolean;
-      Channel    : Boolean;
-      Padding    : Unsigned_5;
+      Padding    : Unsigned_6;
    end record
-     with Size => 8;
+     with
+       Size => 8;
 
    for Memory_Flags_Type use record
       Writable   at 0 range 0 .. 0;
       Executable at 0 range 1 .. 1;
-      Channel    at 0 range 2 .. 2;
-      Padding    at 0 range 3 .. 7;
+      Padding    at 0 range 2 .. 7;
    end record;
 
    Null_Memory_Flags : constant Memory_Flags_Type
      := (Writable   => False,
          Executable => False,
-         Channel    => False,
          Padding    => 0);
 
-   Memregion_Type_Size : constant := 4 + 8 + 8 + 32 + 1 + 2 + 1;
+   Memregion_Type_Size : constant := 1 + 1 + 1 + 2 + 3 + 8 + 8 + 32;
 
    --  Size of the largest variant. All smaller variants must be manually
    --  padded in order to have unused space properly initialized.
@@ -123,7 +125,12 @@ is
 
    type Content_Type is (Content_Uninitialized, Content_Fill, Content_File)
      with
-       Size => 32;
+       Size => 8;
+
+   for Content_Type use
+     (Content_Uninitialized => 0,
+      Content_Fill          => 1,
+      Content_File          => 2);
 
    --  256-bit Hash.
    type Hash_Type is array (1 .. 32) of Interfaces.Unsigned_8
@@ -138,17 +145,62 @@ is
      with
        Size => 16;
 
-   --  A memory region is described by its content, memory address, size, and
-   --  flags. Regions of type fill and file may optionally provide a hash of
-   --  the content.
+   type Memory_Kind is
+     (Subject,
+      Subject_Info,
+      Subject_Binary,
+      Subject_Zeropage,
+      Subject_Initrd,
+      Subject_Channel,
+      Subject_State,
+      Subject_Timed_Event,
+      Subject_Interrupts,
+      Subject_Scheduling_Info,
+      Subject_Bios,
+      Subject_Acpi_Rsdp,
+      Subject_Acpi_Xsdt,
+      Subject_Acpi_Fadt,
+      Subject_Acpi_Dsdt,
+      Subject_Device,
+      Subject_Solo5_Boot_Info,
+      Subject_Crash_Audit,
+      Kernel_Interface)
+     with
+       Size => 8;
+
+   for Memory_Kind use
+     (Subject                 => 0,
+      Subject_Info            => 1,
+      Subject_Binary          => 2,
+      Subject_Zeropage        => 3,
+      Subject_Initrd          => 4,
+      Subject_Channel         => 5,
+      Subject_State           => 6,
+      Subject_Timed_Event     => 7,
+      Subject_Interrupts      => 8,
+      Subject_Scheduling_Info => 9,
+      Subject_Bios            => 10,
+      Subject_Acpi_Rsdp       => 11,
+      Subject_Acpi_Xsdt       => 12,
+      Subject_Acpi_Fadt       => 13,
+      Subject_Acpi_Dsdt       => 14,
+      Subject_Device          => 15,
+      Subject_Solo5_Boot_Info => 16,
+      Subject_Crash_Audit     => 17,
+      Kernel_Interface        => 18);
+
+   --  A memory region is described by its kind, content, memory address, size,
+   --  and flags. Regions of type fill and file may optionally provide a hash
+   --  of the content.
    type Memregion_Type is record
+      Kind    : Memory_Kind;
       Content : Content_Type;
+      Flags   : Memory_Flags_Type;
+      Pattern : Pattern_Type;
+      Padding : Unsigned_24;
       Address : Interfaces.Unsigned_64;
       Size    : Interfaces.Unsigned_64;
       Hash    : Hash_Type;
-      Flags   : Memory_Flags_Type;
-      Pattern : Pattern_Type;
-      Padding : Interfaces.Unsigned_8;
    end record
      with
        Size              => Memregion_Type_Size * 8,
@@ -162,23 +214,25 @@ is
                  | Content_File => Memregion_Type.Pattern = No_Pattern));
 
    for Memregion_Type use record
-      Content at  0 range 0 .. 31;
-      Address at  4 range 0 .. 63;
-      Size    at 12 range 0 .. 63;
-      Hash    at 20 range 0 .. 32 * 8 - 1;
-      Flags   at 52 range 0 .. 7;
-      Pattern at 53 range 0 .. 15;
-      Padding at 55 range 0 .. 7;
+      Kind    at  0 range 0 .. 7;
+      Content at  1 range 0 .. 7;
+      Flags   at  2 range 0 .. 7;
+      Pattern at  3 range 0 .. 15;
+      Padding at  5 range 0 .. 23;
+      Address at  8 range 0 .. 63;
+      Size    at 16 range 0 .. 63;
+      Hash    at 24 range 0 .. 32 * 8 - 1;
    end record;
 
    Null_Memregion : constant Memregion_Type
      := (Content => Content_Uninitialized,
-         Address => 0,
-         Size    => 0,
-         Hash    => (others => 0),
+         Kind    => Subject,
          Flags   => Null_Memory_Flags,
          Pattern => No_Pattern,
-         Padding => 0);
+         Padding => 0,
+         Address => 0,
+         Size    => 0,
+         Hash    => (others => 0));
 
    type Byte_Array is array (Positive range <>) of Interfaces.Unsigned_8;
 
@@ -253,14 +307,57 @@ is
          Flags      => Null_Dev_Flags,
          Padding    => (others => 0));
 
+   Device_Memory_Type_Size : constant := 1 + 2 * 8;
+
+   subtype Dev_Mem_Padding1 is Byte_Array (1 .. 7);
+   subtype Dev_Mem_Padding2 is Byte_Array
+     (1 .. Largest_Variant_Size - Device_Memory_Type_Size
+      - Dev_Mem_Padding1'Length);
+
+   --  A device mmio memory region.
+   type Device_Memory_Type is record
+      Flags    : Memory_Flags_Type;
+      Padding1 : Dev_Mem_Padding1;
+      Address  : Interfaces.Unsigned_64;
+      Size     : Interfaces.Unsigned_64;
+      Padding2 : Dev_Mem_Padding2;
+   end record
+     with
+       Size      => Largest_Variant_Size * 8,
+       Alignment => 8;
+
+   for Device_Memory_Type use record
+      Flags    at  0 range 0 .. 7;
+      Padding1 at  1 range 0 .. Dev_Mem_Padding1'Length * 8 - 1;
+      Address  at  8 range 0 .. 63;
+      Size     at 16 range 0 .. 63;
+      Padding2 at 24 range 0 .. Dev_Mem_Padding2'Length * 8 - 1;
+   end record;
+
+   Null_Device_Memory : constant Device_Memory_Type
+     := (Flags    => Null_Memory_Flags,
+         Padding1 => (others => 0),
+         Address  => 0,
+         Size     => 0,
+         Padding2 => (others => 0));
+
    type Resource_Kind is
      (Res_None,
       Res_Memory,
       Res_Event,
       Res_Vector,
-      Res_Device)
+      Res_Device,
+      Res_Device_Memory)
      with
-       Size => 32;
+       Size => 32; -- Matches the unpacked C enum type (int).
+
+   for Resource_Kind use
+     (Res_None          => 0,
+      Res_Memory        => 1,
+      Res_Event         => 2,
+      Res_Vector        => 3,
+      Res_Device        => 4,
+      Res_Device_Memory => 5);
 
    --  Must be the size of the largest variant + name + discrimant (4 bytes).
    Resource_Type_Size : constant := 4 + 3 + Name_Type_Size
@@ -281,6 +378,8 @@ is
             Vec_Data : Byte_Type;
          when Res_Device =>
             Dev_Data : Device_Type;
+         when Res_Device_Memory =>
+            Dev_Mem_Data : Device_Memory_Type;
       end case;
    end record
      with

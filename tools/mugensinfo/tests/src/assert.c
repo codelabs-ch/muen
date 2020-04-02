@@ -90,6 +90,12 @@ int assert_memregion(const struct muen_memregion_type *const memregion)
 {
 	int i;
 
+	if (memregion->kind != MUEN_MEM_SUBJ_ZP)
+	{
+		printf("Memregion: Invalid kind 0x%u\n", memregion->kind);
+		return 0;
+	}
+
 	if (memregion->content != MUEN_CONTENT_FILL)
 	{
 		printf("Memregion: Invalid content 0x%u\n", memregion->content);
@@ -128,11 +134,6 @@ int assert_memregion(const struct muen_memregion_type *const memregion)
 		printf("Memregion: Executable flag not set\n");
 		return 0;
 	}
-	if (!(memregion->flags & MEM_CHANNEL_FLAG))
-	{
-		printf("Memregion: Channel flag not set\n");
-		return 0;
-	}
 
 	if (memregion->pattern != 45)
 	{
@@ -143,14 +144,22 @@ int assert_memregion(const struct muen_memregion_type *const memregion)
 	return 1;
 }
 
-int assert_memregion_type(const int size, const int content_offset,
-		const int address_offset, const int size_offset, const int hash_offset,
+int assert_memregion_type(const int size, const int kind_offset,
+		const int content_offset, const int address_offset,
+		const int size_offset, const int hash_offset,
 		const int flags_offset, const int pattern_offset)
 {
 	if (sizeof(struct muen_memregion_type) != size)
 	{
 		printf("Memregion: Invalid struct size %d /= %d\n", size,
 				sizeof(struct muen_memregion_type));
+		return 0;
+	}
+
+	if (offsetof(struct muen_memregion_type, kind) != kind_offset)
+	{
+		printf("Memregion: Invalid 'kind' offset %d /= %d\n", kind_offset,
+				offsetof(struct muen_memregion_type, kind));
 		return 0;
 	}
 
@@ -247,7 +256,6 @@ int assert_resource_type(const int size, const int alignment,
 	return 1;
 }
 
-
 int assert_device(const struct muen_device_type *const dev_info)
 {
 	if (dev_info->sid != 0xabcd)
@@ -322,6 +330,68 @@ int assert_device_type(const int size, const int irte_start_offset,
 		printf("Dev: Invalid 'flags' offset %d /= %d\n",
 				flags_offset,
 				offsetof(struct muen_device_type, flags));
+		return 0;
+	}
+
+	return 1;
+}
+
+int assert_device_memory(const struct muen_devmem_type *const mem)
+{
+	if (!(mem->flags & MEM_WRITABLE_FLAG))
+	{
+		printf("Devmem: Writable flag not set\n");
+		return 0;
+	}
+	if (!(mem->flags & MEM_EXECUTABLE_FLAG))
+	{
+		printf("Devmem: Executable flag not set\n");
+		return 0;
+	}
+
+	if (mem->address != 0xdeadbeefcafefeed)
+	{
+		printf("Devmem: Invalid address 0x%lx\n", mem->address);
+		return 0;
+	}
+
+	if (mem->size != 0x8080ababcdcd9000)
+	{
+		printf("Devmem: Invalid size field 0x%lx\n", mem->size);
+		return 0;
+	}
+
+	return 1;
+}
+
+int assert_device_memory_type(const int size, const int flags_offset,
+		const int address_offset, const int size_offset)
+{
+	if (sizeof(struct muen_devmem_type) != size)
+	{
+		printf("Devmem: Invalid struct size %d /= %d\n", size,
+				sizeof(struct muen_devmem_type));
+		return 0;
+	}
+
+	if (offsetof(struct muen_devmem_type, flags) != flags_offset)
+	{
+		printf("Devmem: Invalid 'flags' offset %d /= %d\n", flags_offset,
+				offsetof(struct muen_devmem_type, flags));
+		return 0;
+	}
+
+	if (offsetof(struct muen_devmem_type, address) != address_offset)
+	{
+		printf("Devmem: Invalid 'address' offset %d /= %d\n", address_offset,
+				offsetof(struct muen_devmem_type, address));
+		return 0;
+	}
+
+	if (offsetof(struct muen_devmem_type, size) != size_offset)
+	{
+		printf("Devmem: Invalid 'size' offset %d /= %d\n", size_offset,
+				offsetof(struct muen_devmem_type, size));
 		return 0;
 	}
 

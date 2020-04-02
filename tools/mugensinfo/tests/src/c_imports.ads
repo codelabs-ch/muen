@@ -65,6 +65,14 @@ is
        Convention => C,
        Link_Name  => "assert_device";
 
+   function C_Assert_Device_Memory
+     (Memory : System.Address)
+      return Interfaces.C.int
+     with
+       Import     => True,
+       Convention => C,
+       Link_Name  => "assert_device_memory";
+
    function C_Assert_Subject_Info
      (Info : System.Address)
       return Interfaces.C.int
@@ -86,6 +94,7 @@ is
 
    function C_Assert_Memregion_Type
      (Size           : Interfaces.C.int;
+      Kind_Offset    : Interfaces.C.int;
       Content_Offset : Interfaces.C.int;
       Address_Offset : Interfaces.C.int;
       Size_Offset    : Interfaces.C.int;
@@ -120,6 +129,17 @@ is
        Import     => True,
        Convention => C,
        Link_Name  => "assert_device_type";
+
+   function C_Assert_Device_Memory_Type
+     (Size           : Interfaces.C.int;
+      Flags_Offset   : Interfaces.C.int;
+      Address_Offset : Interfaces.C.int;
+      Size_Offset    : Interfaces.C.int)
+      return Interfaces.C.int
+     with
+       Import     => True,
+       Convention => C,
+       Link_Name  => "assert_device_memory_type";
 
    function C_Assert_Subject_Info_Type
      (Size             : Interfaces.C.int;

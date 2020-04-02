@@ -74,6 +74,30 @@ is
 
    -------------------------------------------------------------------------
 
+   function Device_Memory_By_Name
+     (Sinfo : Subject_Info_Type;
+      Name  : Name_Type)
+      return Device_Memory_Type
+   is
+      M : Device_Memory_Type := Null_Device_Memory;
+   begin
+      Search :
+      for R of Sinfo.Resources loop
+         if R.Kind = Musinfo.Res_Device_Memory
+           and then Names_Equal
+             (Left  => Name,
+              Right => R.Name)
+         then
+            M := R.Dev_Mem_Data;
+            exit Search;
+         end if;
+      end loop Search;
+
+      return M;
+   end Device_Memory_By_Name;
+
+   -------------------------------------------------------------------------
+
    function Device_By_SID
      (Sinfo : Subject_Info_Type;
       SID   : SID_Type)
@@ -209,10 +233,9 @@ is
       Search :
       for R of Sinfo.Resources loop
          if R.Kind = Musinfo.Res_Memory
-           and then Names_Match
-             (N1    => R.Name,
-              N2    => Name,
-              Count => Name.Length)
+           and then Names_Equal
+             (Left  => Name,
+              Right => R.Name)
          then
             M := R.Mem_Data;
             exit Search;

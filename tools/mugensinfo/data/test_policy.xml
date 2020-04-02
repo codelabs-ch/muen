@@ -270,6 +270,8 @@
      <pci bus="16#00#" device="16#19#" function="0"/>
      <irq logical="eth0_irq_1" physical="irq_1" vector="59"/>
      <irq logical="eth0_irq_2" physical="irq_2" vector="60"/>
+     <memory executable="false" logical="mem1" physical="mmio1" virtualAddress="16#fea5_5000#" writable="true"/>
+     <memory executable="false" logical="mem2" physical="mmio2" virtualAddress="16#fea5_6000#" writable="true"/>
     </device>
     <device logical="wlan0" physical="wireless">
      <pci bus="16#23#" device="16#00#" function="0"/>

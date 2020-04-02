@@ -267,9 +267,33 @@ is
 
    -------------------------------------------------------------------------
 
+   function Memory_Starts_With
+     (Sinfo : Subject_Info_Type;
+      Name  : Name_Type)
+      return Memregion_Type
+   is
+      M : Memregion_Type := Null_Memregion;
+   begin
+      Search :
+      for R of Sinfo.Resources loop
+         if R.Kind = Musinfo.Res_Memory
+           and then Names_Match
+             (N1    => R.Name,
+              N2    => Name,
+              Count => Name.Length)
+         then
+            M := R.Mem_Data;
+            exit Search;
+         end if;
+      end loop Search;
+
+      return M;
+   end Memory_Starts_With;
+
+   -------------------------------------------------------------------------
+
    procedure Next (Iter : in out Resource_Iterator_Type)
    is
-
    begin
       if Iter.Owner /= Null_Name and then
         Iter.Resource_Idx < Musinfo.Resource_Index_Type'Last

@@ -78,6 +78,14 @@ is
       Global => (Input => State),
       Pre    => Is_Valid;
 
+   --  Return memory region starting with given name. If no such
+   --  memory region exists, Null_Memregion is returned. The first occurrence
+   --  is returned if multiple regions starting with the given name exist.
+   function Memory_Starts_With (Name : Name_Type) return Memregion_Type
+   with
+      Global => (Input => State),
+      Pre    => Is_Valid;
+
    --  Return memory region with specified hash and content type. If no such
    --  memory region exists, Null_Memregion is returned. If multiple regions
    --  with the same hash/content exist, the first occurrence is returned.

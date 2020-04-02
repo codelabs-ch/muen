@@ -95,6 +95,14 @@ is
 
    -------------------------------------------------------------------------
 
+   function Memory_Starts_With (Name : Name_Type) return Memregion_Type
+   is (Utils.Memory_Starts_With (Sinfo => Object,
+                                 Name  => Name))
+   with
+      Refined_Global => (Input => Object);
+
+   -------------------------------------------------------------------------
+
    procedure Next (Iter : in out Utils.Resource_Iterator_Type)
    is
    begin

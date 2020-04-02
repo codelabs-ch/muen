@@ -29,6 +29,9 @@ is
    --  Verify device type interoperability.
    procedure Device_To_C;
 
+   --  Verify device memory type interoperability.
+   procedure Device_Memory_To_C;
+
    --  Verify resource type interoperability.
    procedure Resource_To_C;
 
@@ -46,6 +49,9 @@ is
 
    --  Verify dev info type equivalence.
    procedure Check_Device_Type;
+
+   --  Verify device memory type equivalence.
+   procedure Check_Device_Memory_Type;
 
    --  Verify subject info type equivalence.
    procedure Check_Subject_Info_Type;

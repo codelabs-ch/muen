@@ -56,6 +56,14 @@ is
       Physical_Dev  :        DOM.Core.Node;
       Physical_Name :        String);
 
+   --  Add device memory to given subject info.
+   procedure Add_Device_Memory_To_Info
+     (Info         : in out Musinfo.Subject_Info_Type;
+      Subject_Name :        String;
+      Logical_Dev  :        DOM.Core.Node;
+      Logical_Mem  :        DOM.Core.Node;
+      Physical_Mem :        DOM.Core.Node);
+
    --  Add event to given subject info.
    procedure Add_Event_To_Info
      (Info         : in out Musinfo.Subject_Info_Type;
@@ -67,6 +75,69 @@ is
      (Info         : in out Musinfo.Subject_Info_Type;
       Subject_Name :        String;
       Logical_Vec  :        DOM.Core.Node);
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Device_Memory_To_Info
+     (Info         : in out Musinfo.Subject_Info_Type;
+      Subject_Name :        String;
+      Logical_Dev  :        DOM.Core.Node;
+      Logical_Mem  :        DOM.Core.Node;
+      Physical_Mem :        DOM.Core.Node)
+   is
+      Device_Name : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Logical_Dev,
+           Name => "logical");
+      Log_Mem_Name : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Logical_Mem,
+           Name => "logical");
+      Address : constant Interfaces.Unsigned_64
+        := Interfaces.Unsigned_64'Value
+          (DOM.Core.Elements.Get_Attribute
+             (Elem => Logical_Mem,
+              Name => "virtualAddress"));
+      Size : constant Interfaces.Unsigned_64
+        := Interfaces.Unsigned_64'Value
+          (DOM.Core.Elements.Get_Attribute
+             (Elem => Physical_Mem,
+              Name => "size"));
+      Writable : constant Boolean
+        := Boolean'Value
+          (DOM.Core.Elements.Get_Attribute
+             (Elem => Logical_Mem,
+              Name => "writable"));
+      Executable : constant Boolean
+        := Boolean'Value
+          (DOM.Core.Elements.Get_Attribute
+             (Elem => Logical_Mem,
+              Name => "executable"));
+   begin
+      Mulog.Log
+        (Msg => "Announcing device '" & Device_Name & "' memory to subject '"
+         & Subject_Name & "': " & Log_Mem_Name & "@"
+         & Mutools.Utils.To_Hex (Number => Address)
+         & ", size " & Mutools.Utils.To_Hex (Number => Size) & ", "
+         & (if Writable   then "writable" else "read-only") & ", "
+         & (if Executable then "executable" else "non-executable"));
+
+      Utils.Append_Resource
+        (Info     => Info,
+         Resource =>
+           (Kind         => Musinfo.Res_Device_Memory,
+            Name         => Utils.Create_Name
+              (Str => Device_Name & "_" & Log_Mem_Name),
+            Dev_Mem_Data =>
+              (Flags    => (Executable => Executable,
+                            Writable   => Writable,
+                            Padding    => 0),
+               Padding1 => (others => 0),
+               Address  => Address,
+               Size     => Size,
+               Padding2 => (others => 0)),
+            Padding      => (others => 0)));
+   end Add_Device_Memory_To_Info;
 
    -------------------------------------------------------------------------
 
@@ -376,6 +447,10 @@ is
                       (Nodes     => Phys_Dev,
                        Ref_Attr  => "name",
                        Ref_Value => Physical_Name);
+                  Dev_Mem : constant DOM.Core.Node_List
+                    := McKae.XML.XPath.XIA.XPath_Query
+                      (N     => Logical_Device,
+                       XPath => "memory");
                begin
                   Add_Device_To_Info
                     (Info          => Subject_Info,
@@ -383,6 +458,30 @@ is
                      Logical_Dev   => Logical_Device,
                      Physical_Dev  => Physical_Device,
                      Physical_Name => Physical_Name);
+
+                  for K in 0 .. DOM.Core.Nodes.Length (List => Dev_Mem) - 1
+                  loop
+                     declare
+                        Log_Mem : constant DOM.Core.Node
+                          := DOM.Core.Nodes.Item (List  => Dev_Mem,
+                                                  Index => K);
+                        Phys_Mem_Name : constant String
+                          := DOM.Core.Elements.Get_Attribute
+                            (Elem => Log_Mem,
+                             Name => "physical");
+                        Phys_Mem : constant DOM.Core.Node
+                          := Muxml.Utils.Get_Element
+                            (Doc   => Physical_Device,
+                             XPath => "memory[@name='" & Phys_Mem_Name & "']");
+                     begin
+                        Add_Device_Memory_To_Info
+                          (Info         => Subject_Info,
+                           Subject_Name => Subj_Name,
+                           Logical_Dev  => Logical_Device,
+                           Logical_Mem  => Log_Mem,
+                           Physical_Mem => Phys_Mem);
+                     end;
+                  end loop;
                end;
             end loop;
 

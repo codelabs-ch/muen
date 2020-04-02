@@ -159,6 +159,15 @@ is
    with
       Pre => Is_Valid (Sinfo);
 
+   --  Return device memory with given logical name (exact match). If no such
+   --  memory element exists, Null_Device_Memory is returned.
+   function Device_Memory_By_Name
+     (Sinfo : Subject_Info_Type;
+      Name  : Name_Type)
+      return Device_Memory_Type
+   with
+      Pre => Is_Valid (Sinfo);
+
 private
 
    function Subject_Name (Sinfo : Subject_Info_Type) return Name_Type

@@ -137,6 +137,13 @@ is
       Global => (Input => State),
       Pre    => Is_Valid;
 
+   --  Return device memory with given logical name. If no such memory element
+   --  exists, Null_Device_Memory is returned.
+   function Device_Memory_By_Name (Name : Name_Type) return Device_Memory_Type
+   with
+      Global => (Input => State),
+      Pre    => Is_Valid;
+
 private
 
    Subject_Info_Virtual_Addr : constant := 16#000e_0000_0000#;

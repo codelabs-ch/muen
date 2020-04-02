@@ -336,6 +336,68 @@ int assert_device_type(const int size, const int irte_start_offset,
 	return 1;
 }
 
+int assert_device_memory(const struct muen_devmem_type *const mem)
+{
+	if (!(mem->flags & MEM_WRITABLE_FLAG))
+	{
+		printf("Devmem: Writable flag not set\n");
+		return 0;
+	}
+	if (!(mem->flags & MEM_EXECUTABLE_FLAG))
+	{
+		printf("Devmem: Executable flag not set\n");
+		return 0;
+	}
+
+	if (mem->address != 0xdeadbeefcafefeed)
+	{
+		printf("Devmem: Invalid address 0x%lx\n", mem->address);
+		return 0;
+	}
+
+	if (mem->size != 0x8080ababcdcd9000)
+	{
+		printf("Devmem: Invalid size field 0x%lx\n", mem->size);
+		return 0;
+	}
+
+	return 1;
+}
+
+int assert_device_memory_type(const int size, const int flags_offset,
+		const int address_offset, const int size_offset)
+{
+	if (sizeof(struct muen_devmem_type) != size)
+	{
+		printf("Devmem: Invalid struct size %d /= %d\n", size,
+				sizeof(struct muen_devmem_type));
+		return 0;
+	}
+
+	if (offsetof(struct muen_devmem_type, flags) != flags_offset)
+	{
+		printf("Devmem: Invalid 'flags' offset %d /= %d\n", flags_offset,
+				offsetof(struct muen_devmem_type, flags));
+		return 0;
+	}
+
+	if (offsetof(struct muen_devmem_type, address) != address_offset)
+	{
+		printf("Devmem: Invalid 'address' offset %d /= %d\n", address_offset,
+				offsetof(struct muen_devmem_type, address));
+		return 0;
+	}
+
+	if (offsetof(struct muen_devmem_type, size) != size_offset)
+	{
+		printf("Devmem: Invalid 'size' offset %d /= %d\n", size_offset,
+				offsetof(struct muen_devmem_type, size));
+		return 0;
+	}
+
+	return 1;
+}
+
 int assert_subject_info(const struct subject_info_type *const info)
 {
 	if (info->magic != MUEN_SUBJECT_INFO_MAGIC)

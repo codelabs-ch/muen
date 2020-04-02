@@ -18,6 +18,7 @@
  <memory>
   <include href="common_memory.xml"/>
   <include href="memory_xhci_dma.xml"/>
+  <include href="memory_ahci.xml"/>
   <if variable="muenblock_enabled" value="true">
    <memory name="blockdev_shm1" size="16#0100_0000#" caching="WB" type="subject_device"/>
    <memory name="blockdev_shm2" size="16#0100_0000#" caching="WB" type="subject_device"/>
@@ -38,6 +39,7 @@
  <channels>
   <include href="common_channels.xml"/>
 
+  <channel name="debuglog_ahci_drv" size="$logchannel_size"/>
   <channel name="debuglog_example" size="$logchannel_size"/>
   <channel name="example_request" size="16#1000#" hasEvent="switch"/>
   <channel name="example_response" size="16#1000#" hasEvent="switch"/>
@@ -56,6 +58,7 @@
   <include href="subject_ps2.xml"/>
   <include href="subject_example.xml"/>
   <include href="subject_controller.xml"/>
+  <include href="subject_ahci.xml"/>
 
   <if variable="pciconf_emulation_enabled" value="true">
    <include href="subject_nic_dm.xml"/>
@@ -80,6 +83,7 @@
     <map logical="log_channel5" physical="debuglog_subject5"/>
     <map logical="log_channel_example" physical="debuglog_example"/>
     <map logical="log_channel_6" physical="debuglog_controller"/>
+    <map logical="log_ahci_drv" physical="debuglog_ahci_drv"/>
     <if variable="pciconf_emulation_enabled" value="true">
      <map logical="log_channel7" physical="debuglog_subject6"/>
      <map logical="log_channel8" physical="debuglog_subject7"/>
@@ -169,9 +173,6 @@
     </if>
    </memory>
    <devices>
-    <device logical="storage_controller" physical="storage_controller">
-     <pci bus="16#00#" device="16#1f#" function="0"/>
-    </device>
     <if variable="dbgserver_sink_xhcidbg" value="false">
      <device logical="xhci" physical="usb_controller_1"/>
     </if>

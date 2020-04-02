@@ -10,7 +10,8 @@
    <minorFrame subject="time" ticks="20"/>
    <minorFrame subject="dbgserver" ticks="30"/>
    <minorFrame subject="vt" ticks="25"/>
-   <minorFrame subject="example" ticks="75"/>
+   <minorFrame subject="ahci_drv" ticks="40"/>
+   <minorFrame subject="example" ticks="35"/>
   </cpu>
  </majorFrame>
  <majorFrame>
@@ -21,8 +22,9 @@
    <minorFrame subject="nic_linux" ticks="140"/>
   </cpu>
   <cpu id="1">
-   <minorFrame subject="example" ticks="100"/>
+   <minorFrame subject="example" ticks="50"/>
    <minorFrame subject="vt" ticks="20"/>
+   <minorFrame subject="ahci_drv" ticks="50"/>
    <minorFrame subject="example" ticks="30"/>
   </cpu>
  </majorFrame>

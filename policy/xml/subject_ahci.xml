@@ -1,0 +1,20 @@
+<subject name="ahci_drv">
+ <events>
+  <source>
+   <group name="vmx_exit">
+    <default physical="system_panic">
+     <system_panic/>
+    </default>
+   </group>
+  </source>
+ </events>
+ <component ref="ahci_drv">
+  <map logical="ahci_controller" physical="ahci_controller">
+   <map logical="irq" physical="irq1"/>
+   <map logical="mmconf" physical="mmconf"/>
+   <map logical="ahci_registers" physical="ahci_registers"/>
+  </map>
+  <map logical="dma_region" physical="ahci_dma"/>
+  <map logical="debuglog" physical="debuglog_ahci_drv"/>
+ </component>
+</subject>

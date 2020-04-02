@@ -20,6 +20,8 @@ build_recipes: $(RECIPES)
 $(RECIPES):
 	$(MAKE) -C $@
 
+gnatcoll: libgpr
+
 download: $(RECIPES_DOWNLOAD)
 $(RECIPES_DOWNLOAD):
 	$(MAKE) -C $(@:download-%=%) download

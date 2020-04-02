@@ -104,19 +104,32 @@ struct muen_device_type {
 	char padding[largest_variant_size - device_type_size];
 } __attribute__ ((packed, aligned(8)));
 
+#define devmem_type_size (1 + 16)
+
+/* Structure holding information about a device MMIO region */
+struct muen_devmem_type {
+	uint8_t flags;
+	char padding1[7];
+	uint64_t address;
+	uint64_t size;
+	char padding2[largest_variant_size - (devmem_type_size + 7)];
+} __attribute__ ((packed, aligned(8)));
+
 /* Currently known resource types */
 enum muen_resource_kind {
 	MUEN_RES_NONE = 0,
 	MUEN_RES_MEMORY,
 	MUEN_RES_EVENT,
 	MUEN_RES_VECTOR,
-	MUEN_RES_DEVICE
+	MUEN_RES_DEVICE,
+	MUEN_RES_DEVMEM
 };
 
 /* Resource data depending on the kind of resource */
 union muen_resource_data {
 	struct muen_memregion_type mem;
 	struct muen_device_type dev;
+	struct muen_devmem_type devmem;
 	uint8_t number;
 };
 

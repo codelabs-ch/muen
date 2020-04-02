@@ -16,5 +16,7 @@
   </map>
   <map logical="dma_region" physical="ahci_dma"/>
   <map logical="debuglog" physical="debuglog_ahci_drv"/>
+  <map logical="blockdev_request" physical="blockdev_request"/>
+  <map logical="blockdev_response" physical="blockdev_response"/>
  </component>
 </subject>

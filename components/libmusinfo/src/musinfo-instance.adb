@@ -70,6 +70,14 @@ is
 
    -------------------------------------------------------------------------
 
+   function Memory_By_Kind (Kind : Memory_Kind) return Memregion_Type
+   is (Utils.Memory_By_Kind (Sinfo => Object,
+                             Kind  => Kind))
+   with
+      Refined_Global => (Input => Object);
+
+   -------------------------------------------------------------------------
+
    function Memory_By_Name (Name : Name_Type) return Memregion_Type
    with
       Refined_Global => (Input => Object)

@@ -89,6 +89,13 @@ is
       Global => (Input => State),
       Pre    => Is_Valid;
 
+   --  Return memory region by memory kind. If no such memory region exists,
+   --  Null_Memregion is returned.
+   function Memory_By_Kind (Kind : Memory_Kind) return Memregion_Type
+   with
+      Global => (Input => State),
+      Pre    => Is_Valid;
+
    --  Returns True if the given iterator belongs to this sinfo instance.
    function Belongs_To
      (Iter : Utils.Resource_Iterator_Type)

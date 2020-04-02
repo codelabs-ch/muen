@@ -199,6 +199,26 @@ is
 
    -------------------------------------------------------------------------
 
+   function Memory_By_Kind
+     (Sinfo : Subject_Info_Type;
+      Kind  : Memory_Kind)
+      return Memregion_Type
+   is
+      M : Memregion_Type := Null_Memregion;
+   begin
+      Search :
+      for R of Sinfo.Resources loop
+         if R.Kind = Musinfo.Res_Memory and then R.Mem_Data.Kind = Kind then
+            M := R.Mem_Data;
+            exit Search;
+         end if;
+      end loop Search;
+
+      return M;
+   end Memory_By_Kind;
+
+   -------------------------------------------------------------------------
+
    function Memory_By_Name
      (Sinfo : Subject_Info_Type;
       Name  : Name_Type)

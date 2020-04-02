@@ -96,6 +96,15 @@ is
    with
       Pre => Is_Valid (Sinfo => Sinfo);
 
+   --  Return memory region by memory kind. If no such memory region exists,
+   --  Null_Memregion is returned.
+   function Memory_By_Kind
+     (Sinfo : Subject_Info_Type;
+      Kind  : Memory_Kind)
+      return Memregion_Type
+   with
+      Pre => Is_Valid (Sinfo);
+
    --  Resource iterator.
    type Resource_Iterator_Type is private;
 

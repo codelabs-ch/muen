@@ -443,6 +443,73 @@ package body Musinfo.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Memory_By_Kind (Gnattest_T : in out Test);
+   procedure Test_Memory_By_Kind_8091e0 (Gnattest_T : in out Test) renames Test_Memory_By_Kind;
+--  id:2.2/8091e008ebc4c3e1/Memory_By_Kind/1/0/
+   procedure Test_Memory_By_Kind (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      SI  : Subject_Info_Type;
+      Ref : constant Memregion_Type := Memregion_Type'
+        (Kind    => Subject_Zeropage,
+         Content => Content_Fill,
+         Address => 16#2000#,
+         Size    => 16#6000_0000#,
+         Hash    => No_Hash,
+         Flags   => Null_Memory_Flags,
+         Pattern => 234,
+         Padding => 0);
+   begin
+      SI.Magic := 12;
+      Assert (Condition => Memory_By_Kind
+              (Sinfo => SI,
+               Kind  => Subject_Zeropage) = Null_Memregion,
+              Message   => "Null_Memregion expected (1)");
+
+      SI.Resources (1) := Resource_Type'
+        (Kind     => Res_Memory,
+         Name     => Name_Type'
+           (Length  => 2,
+            Padding   => 0,
+            Data      => Name_Data_Type'
+              (1 => 'm', 2 => '1', others => ASCII.NUL),
+            Null_Term => ASCII.NUL),
+         Padding  => (others => 0),
+         Mem_Data => (Kind    => Subject_Channel,
+                      Content => Content_Fill,
+                      Address => 16#2000#,
+                      Size    => 16#6000_0000#,
+                      Hash    => No_Hash,
+                      Flags   => Null_Memory_Flags,
+                      Pattern => 234,
+                      Padding => 0));
+      SI.Resources (2) := Resource_Type'
+        (Kind     => Res_Memory,
+         Name     => Name_Type'
+           (Length   => 2,
+            Padding  => 0,
+            Data     => Name_Data_Type'
+              (1 => 'm', 2 => '2', others => ASCII.NUL),
+           Null_Term => ASCII.NUL),
+         Padding  => (others => 0),
+         Mem_Data => Ref);
+
+      Assert (Condition => Memory_By_Kind
+              (Sinfo => SI,
+               Kind  => Subject_Acpi_Xsdt) = Null_Memregion,
+              Message   => "Null_Memregion expected (2)");
+      Assert (Condition => Memory_By_Kind
+              (Sinfo => SI,
+               Kind  => Subject_Zeropage) = Ref,
+              Message   => "Memregion mismatch");
+--  begin read only
+   end Test_Memory_By_Kind;
+--  end read only
+
+
+--  begin read only
    procedure Test_Create_Resource_Iterator (Gnattest_T : in out Test);
    procedure Test_Create_Resource_Iterator_46ac9c (Gnattest_T : in out Test) renames Test_Create_Resource_Iterator;
 --  id:2.2/46ac9c9c3f25bd39/Create_Resource_Iterator/1/0/

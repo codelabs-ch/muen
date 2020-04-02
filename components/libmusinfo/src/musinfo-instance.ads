@@ -71,8 +71,8 @@ is
       Pre    => Is_Valid,
       Volatile_Function;
 
-   --  Return memory region with specified name. If no such memory region
-   --  exists, Null_Memregion is returned.
+   --  Return memory region with specified name (exact match). If no such
+   --  memory region exists, Null_Memregion is returned.
    function Memory_By_Name (Name : Name_Type) return Memregion_Type
    with
       Global => (Input => State),

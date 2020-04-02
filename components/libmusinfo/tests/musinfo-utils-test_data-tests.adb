@@ -333,6 +333,23 @@ package body Musinfo.Utils.Test_Data.Tests is
       SI.Resources (2) := Resource_Type'
         (Kind     => Res_Memory,
          Name     => Name_Type'
+           (Length  => 2,
+            Padding   => 0,
+            Data      => Name_Data_Type'
+              (1 => 'm', 2 => '2', 3 => '2', others => ASCII.NUL),
+            Null_Term => ASCII.NUL),
+         Padding  => (others => 0),
+         Mem_Data => (Kind    => Subject_Channel,
+                      Content => Content_Fill,
+                      Address => 16#2000#,
+                      Size    => 16#6000_0000#,
+                      Hash    => No_Hash,
+                      Flags   => Null_Memory_Flags,
+                      Pattern => 234,
+                      Padding => 0));
+      SI.Resources (3) := Resource_Type'
+        (Kind     => Res_Memory,
+         Name     => Name_Type'
            (Length   => 2,
             Padding  => 0,
             Data     => Name_Data_Type'

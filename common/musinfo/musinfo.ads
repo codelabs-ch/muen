@@ -307,21 +307,57 @@ is
          Flags      => Null_Dev_Flags,
          Padding    => (others => 0));
 
+   Device_Memory_Type_Size : constant := 1 + 2 * 8;
+
+   subtype Dev_Mem_Padding1 is Byte_Array (1 .. 7);
+   subtype Dev_Mem_Padding2 is Byte_Array
+     (1 .. Largest_Variant_Size - Device_Memory_Type_Size
+      - Dev_Mem_Padding1'Length);
+
+   --  A device mmio memory region.
+   type Device_Memory_Type is record
+      Flags    : Memory_Flags_Type;
+      Padding1 : Dev_Mem_Padding1;
+      Address  : Interfaces.Unsigned_64;
+      Size     : Interfaces.Unsigned_64;
+      Padding2 : Dev_Mem_Padding2;
+   end record
+     with
+       Size      => Largest_Variant_Size * 8,
+       Alignment => 8;
+
+   for Device_Memory_Type use record
+      Flags    at  0 range 0 .. 7;
+      Padding1 at  1 range 0 .. Dev_Mem_Padding1'Length * 8 - 1;
+      Address  at  8 range 0 .. 63;
+      Size     at 16 range 0 .. 63;
+      Padding2 at 24 range 0 .. Dev_Mem_Padding2'Length * 8 - 1;
+   end record;
+
+   Null_Device_Memory : constant Device_Memory_Type
+     := (Flags    => Null_Memory_Flags,
+         Padding1 => (others => 0),
+         Address  => 0,
+         Size     => 0,
+         Padding2 => (others => 0));
+
    type Resource_Kind is
      (Res_None,
       Res_Memory,
       Res_Event,
       Res_Vector,
-      Res_Device)
+      Res_Device,
+      Res_Device_Memory)
      with
        Size => 32; -- Matches the unpacked C enum type (int).
 
    for Resource_Kind use
-     (Res_None   => 0,
-      Res_Memory => 1,
-      Res_Event  => 2,
-      Res_Vector => 3,
-      Res_Device => 4);
+     (Res_None          => 0,
+      Res_Memory        => 1,
+      Res_Event         => 2,
+      Res_Vector        => 3,
+      Res_Device        => 4,
+      Res_Device_Memory => 5);
 
    --  Must be the size of the largest variant + name + discrimant (4 bytes).
    Resource_Type_Size : constant := 4 + 3 + Name_Type_Size
@@ -342,6 +378,8 @@ is
             Vec_Data : Byte_Type;
          when Res_Device =>
             Dev_Data : Device_Type;
+         when Res_Device_Memory =>
+            Dev_Mem_Data : Device_Memory_Type;
       end case;
    end record
      with

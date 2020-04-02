@@ -35,6 +35,12 @@ is
 
    -------------------------------------------------------------------------
 
+   function Device_Memory_By_Name (Name : Name_Type) return Device_Memory_Type
+   is (Utils.Device_Memory_By_Name (Sinfo => Object,
+                                    Name  => Name));
+
+   -------------------------------------------------------------------------
+
    function Device_By_SID (SID : SID_Type) return Device_Type
    is (Utils.Device_By_SID
        (Sinfo => Object,

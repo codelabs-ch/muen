@@ -763,6 +763,66 @@ package body Musinfo.Utils.Test_Data.Tests is
    end Test_Device_By_SID;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Device_Memory_By_Name (Gnattest_T : in out Test);
+   procedure Test_Device_Memory_By_Name_6aa51f (Gnattest_T : in out Test) renames Test_Device_Memory_By_Name;
+--  id:2.2/6aa51faafafd8c03/Device_Memory_By_Name/1/0/
+   procedure Test_Device_Memory_By_Name (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      SI  : Subject_Info_Type;
+      Ref : constant Device_Memory_Type := Device_Memory_Type'
+        (Flags    => (Executable => True,
+                      Writable   => False,
+                      Padding    => 0),
+         Padding1 => (others => 0),
+         Address  => 16#3000#,
+         Size     => 16#2000_2000#,
+         Padding2 => (others => 0));
+   begin
+      SI.Magic := 12;
+      Assert (Condition => Device_Memory_By_Name
+              (Sinfo => SI,
+               Name  => To_Name (Str => "something")) = Null_Device_Memory,
+              Message   => "Null_Device_Memory expected");
+
+      SI.Resources (1) := Resource_Type'
+        (Kind         => Res_Device_Memory,
+         Name         => Name_Type'
+           (Length  => 2,
+            Padding => 0,
+            Data    => Name_Data_Type'
+              (1 => 'm', 2 => '1', others => ASCII.NUL),
+            Null_Term => ASCII.NUL),
+         Padding      => (others => 0),
+         Dev_Mem_Data => (Flags    => (Executable => True,
+                                       Writable   => False,
+                                       Padding    => 0),
+                          Padding1 => (others => 0),
+                          Address  => 16#4000#,
+                          Size     => 16#1000_2000#,
+                          Padding2 => (others => 0)));
+      SI.Resources (2) := Resource_Type'
+        (Kind         => Res_Device_Memory,
+         Name         => Name_Type'
+           (Length   => 2,
+            Padding  => 0,
+            Data     => Name_Data_Type'
+              (1 => 'm', 2 => '2', others => ASCII.NUL),
+            Null_Term => ASCII.NUL),
+         Padding      => (others => 0),
+         Dev_Mem_Data => Ref);
+      Assert (Condition => Device_Memory_By_Name
+              (Sinfo => SI,
+               Name  => To_Name ("m2")) = Ref,
+              Message   => "Device memory mismatch");
+--  begin read only
+   end Test_Device_Memory_By_Name;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

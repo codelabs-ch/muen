@@ -298,7 +298,8 @@ package body Musinfo.Utils.Test_Data.Tests is
 
       SI  : Subject_Info_Type;
       Ref : constant Memregion_Type := Memregion_Type'
-        (Content => Content_Fill,
+        (Kind    => Subject_Channel,
+         Content => Content_Fill,
          Address => 16#2000#,
          Size    => 16#6000_0000#,
          Hash    => No_Hash,
@@ -310,7 +311,7 @@ package body Musinfo.Utils.Test_Data.Tests is
       Assert (Condition => Memory_By_Name
               (Sinfo => SI,
                Name  => To_Name (Str => "something")) = Null_Memregion,
-              Message   => "Null_Memregion expected (1)");
+              Message   => "Null_Memregion expected");
 
       SI.Resources (1) := Resource_Type'
         (Kind     => Res_Memory,
@@ -321,7 +322,8 @@ package body Musinfo.Utils.Test_Data.Tests is
               (1 => 'm', 2 => '1', others => ASCII.NUL),
             Null_Term => ASCII.NUL),
          Padding  => (others => 0),
-         Mem_Data => (Content => Content_Fill,
+         Mem_Data => (Kind    => Subject_Channel,
+                      Content => Content_Fill,
                       Address => 16#2000#,
                       Size    => 16#6000_0000#,
                       Hash    => No_Hash,
@@ -359,7 +361,8 @@ package body Musinfo.Utils.Test_Data.Tests is
       SI       : Subject_Info_Type;
       Ref_Hash : constant Hash_Type := (others => 128);
       Ref_Mem  : constant Memregion_Type := Memregion_Type'
-        (Content => Content_Fill,
+        (Kind    => Subject_Channel,
+         Content => Content_Fill,
          Address => 16#2000#,
          Size    => 16#6000_0000#,
          Hash    => Ref_Hash,
@@ -384,7 +387,8 @@ package body Musinfo.Utils.Test_Data.Tests is
             Null_Term => ASCII.NUL),
          Padding  => (others => 0),
          Mem_Data => Memregion_Type'
-           (Content => Content_Fill,
+           (Kind    => Subject_Channel,
+            Content => Content_Fill,
             Address => 16#2000#,
             Size    => 16#6000_0000#,
             Hash    => (others => 127),
@@ -401,7 +405,8 @@ package body Musinfo.Utils.Test_Data.Tests is
             Null_Term => ASCII.NUL),
          Padding  => (others => 0),
          Mem_Data => Memregion_Type'
-           (Content => Content_Fill,
+           (Kind    => Subject_Channel,
+            Content => Content_Fill,
             Address => 16#2000#,
             Size    => 16#6000_0000#,
             Hash    => (others => 12),
@@ -502,7 +507,8 @@ package body Musinfo.Utils.Test_Data.Tests is
             Null_Term => ASCII.NUL),
          Padding  => (others => 0),
          Mem_Data => Memregion_Type'
-           (Content => Content_Fill,
+           (Kind    => Subject_Channel,
+            Content => Content_Fill,
             Address => 16#2000#,
             Size    => 16#6000_0000#,
             Hash    => No_Hash,
@@ -538,7 +544,8 @@ package body Musinfo.Utils.Test_Data.Tests is
 
       R     : Resource_Type;
       M_Ref : constant Memregion_Type := Memregion_Type'
-        (Content => Content_Fill,
+        (Kind    => Subject_Channel,
+         Content => Content_Fill,
          Address => 16#2000#,
          Size    => 16#6000_0000#,
          Hash    => No_Hash,

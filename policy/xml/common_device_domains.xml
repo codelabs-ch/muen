@@ -11,6 +11,7 @@
  </domain>
  <domain name="storage_domain">
   <memory>
+   <memory logical="dma" physical="ahci_dma" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
    <memory logical="dma1" physical="storage_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
    <memory logical="dma2" physical="storage_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
    <if variable="muenblock_enabled" value="true">

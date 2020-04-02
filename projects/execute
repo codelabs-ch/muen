@@ -34,7 +34,8 @@ try:
 except ImportError:
     nocolor = True
 
-fd_action = action.lower().replace(' ', '_').replace('/', '_').replace('(', '').replace(')', '')
+fd_action = action.lower().replace(' ', '_').replace(
+    '/', '_').replace('(', '').replace(')', '')
 
 failed = ': FAILED, '
 
@@ -76,16 +77,16 @@ if nocolor:
 else:
     console = colorlog.StreamHandler(stream=sys.stdout)
     console.setFormatter(
-            colorlog.ColoredFormatter(
-                fmt='%(yellow)s%(asctime)s%(reset)s %(bold_blue)s%(name)s'
-                    '%(reset)s: %(log_color)s%(message)s',
-                datefmt='%b %d %Y %H:%M:%S',
-                reset=True,
-                log_colors={
+        colorlog.ColoredFormatter(
+            fmt='%(yellow)s%(asctime)s%(reset)s %(bold_blue)s%(name)s'
+            '%(reset)s: %(log_color)s%(message)s',
+            datefmt='%b %d %Y %H:%M:%S',
+            reset=True,
+            log_colors={
                     'DEBUG': 'white',
                     'ERROR': 'red',
-                })
-            )
+            })
+    )
 
 console.setLevel(logging.INFO)
 fhandler.setFormatter(std_formatter)
@@ -98,8 +99,8 @@ logger.debug("Executing '" + cmd + "'")
 console.flush()
 
 with open(logfile, 'a+') as f:
-    child = subprocess.Popen(cmd, shell=True, stdout=f,
-                             stderr=subprocess.STDOUT)
+    child = subprocess.Popen(['/bin/bash', '-o', 'pipefail', '-c', cmd],
+                             stdout=f, stderr=subprocess.STDOUT)
     try:
         child.communicate()[0]
     except KeyboardInterrupt:

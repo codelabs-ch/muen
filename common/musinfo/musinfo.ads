@@ -43,7 +43,7 @@ is
 
    --  Unique identifier used to designate a subject info memory region.
    --  "muinfo" with highest 2 bytes for counter.
-   Muen_Subject_Info_Magic : constant := 16#0200_6f66_6e69_756d#;
+   Muen_Subject_Info_Magic : constant := 16#0300_6f66_6e69_756d#;
 
    type Unsigned_2 is mod 2 ** 2
      with

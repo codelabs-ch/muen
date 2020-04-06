@@ -6,6 +6,7 @@ RECIPES =     \
 	alog      \
 	gnatcoll  \
 	grub      \
+	libgpr    \
 	libhwbase \
 	lsc       \
 	xia
@@ -18,6 +19,8 @@ all: build_recipes
 build_recipes: $(RECIPES)
 $(RECIPES):
 	$(MAKE) -C $@
+
+gnatcoll: libgpr
 
 download: $(RECIPES_DOWNLOAD)
 $(RECIPES_DOWNLOAD):

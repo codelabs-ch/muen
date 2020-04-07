@@ -4,11 +4,22 @@
  </depends>
  <requires>
   <memory>
-   <memory executable="false" logical="dma_region" size="16#0100_0000#" virtualAddress="16#a000_0000#" writable="true"/>
+   <!-- for 32 ports 16#c000# bytes are needed for descriptor tables + 16K for device init -->
+   <memory executable="false" logical="dma_region" size="16#0001_0000#" virtualAddress="16#a000_0000#" writable="true"/>
+   <array elementSize="16#0100_0000#" logical="blockdev_shm" virtualAddressBase="16#a100_0000#" executable="false" writable="true">
+      <memory logical="blockdev_shm1"/>
+      <memory logical="blockdev_shm2"/>
+   </array>
   </memory>
   <channels>
-   <reader logical="blockdev_request" size="16#0010_0000#" virtualAddress="16#0100_0000#"/>
-   <writer logical="blockdev_response" size="16#0010_0000#" virtualAddress="16#0110_0000#"/>
+    <array elementSize="16#0000_8000#" logical="blockdev_request" virtualAddressBase="16#0200_0000#" vectorBase="50">
+       <reader logical="blockdev_request1"/>
+       <reader logical="blockdev_request2"/>
+    </array>
+    <array elementSize="16#0000_4000#" logical="blockdev_response" virtualAddressBase="16#0300_0000#" eventBase="40">
+       <writer logical="blockdev_response1"/>
+       <writer logical="blockdev_response2"/>
+    </array>
   </channels>
   <devices>
    <device logical="ahci_controller">

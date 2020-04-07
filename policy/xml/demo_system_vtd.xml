@@ -46,6 +46,8 @@
   <if variable="muenblock_enabled" value="true">
    <channel name="blockdev_request1"  size="16#0000_8000#" hasEvent="asap"/>
    <channel name="blockdev_response1" size="16#0000_4000#" hasEvent="asap"/>
+   <channel name="blockdev_request2"  size="16#0000_8000#" hasEvent="asap"/>
+   <channel name="blockdev_response2" size="16#0000_4000#" hasEvent="asap"/>
   </if>
  </channels>
 

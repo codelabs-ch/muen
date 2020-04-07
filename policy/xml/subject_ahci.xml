@@ -14,9 +14,14 @@
    <map logical="mmconf" physical="mmconf"/>
    <map logical="ahci_registers" physical="ahci_registers"/>
   </map>
-  <map logical="dma_region" physical="ahci_dma"/>
   <map logical="debuglog" physical="debuglog_ahci_drv"/>
-  <map logical="blockdev_request" physical="blockdev_request"/>
-  <map logical="blockdev_response" physical="blockdev_response"/>
+  <map logical="dma_region" physical="ahci_dma"/>
+  <map logical="blockdev_shm1" physical="blockdev_shm1"/>
+  <map logical="blockdev_shm2" physical="blockdev_shm2"/>
+  <map logical="blockdev_request1" physical="blockdev_request1"/>
+  <map logical="blockdev_response1" physical="blockdev_response1"/>
+  <map logical="blockdev_request2" physical="blockdev_request2"/>
+  <map logical="blockdev_response2" physical="blockdev_response2"/>
  </component>
 </subject>
+     

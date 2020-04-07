@@ -9,13 +9,18 @@ import math
 import os
 import shutil
 import subprocess
+import sys
 
 import _paths
 import muutils
 
 MFT_CMD = "solo5-elftool query-manifest"
+ABI_CMD = "solo5-elftool query-abi"
 DEFAULT_RAM_SIZE = "512"
 MAX_NAME_LEN = 63
+
+ABI_TARGET = "muen"
+ABI_VERSION = 2
 
 chanSize = 0x100000
 chanAddr = 0xe0000000
@@ -154,6 +159,25 @@ def add_channel(name, channels):
     chanAddr += chanSize
 
 
+def validate_solo5_abi(raw_abi):
+    """
+    Check the given Solo5 ABI against the expected values.
+    """
+    print("* Checking Solo5 ABI")
+    data = json.loads(raw_abi)
+
+    if not data['type'] == "solo5.abi":
+        sys.exit("Error: JSON file does not contain Solo5 ABI")
+
+    if not data['target'] == ABI_TARGET:
+        sys.exit("Error: Solo5 ABI target mismatch: " + data['target']
+                 + ", expected " + ABI_TARGET)
+
+    if not data['version'] == ABI_VERSION:
+        sys.exit("Error: Solo5 ABI version: " + str(data['version'])
+                 + ", expected " + str(ABI_VERSION))
+
+
 def parse_args():
     """
     Returned parsed command line arguments
@@ -210,6 +234,15 @@ add_bootparams(src_spec, boot_params)
 set_rip(src_spec, binary)
 end_address = add_elf_memory(src_spec, binary, binary_name)
 add_ram_memory(src_spec, binary, end_address, ram_size_mb)
+
+print("Extracting Solo5 ABI information from unikernel binary")
+try:
+    abi_info = subprocess.check_output(ABI_CMD + " " + src_bin_path,
+                                       shell=True)
+except subprocess.CalledProcessError:
+    sys.exit("Error: Unable to extract ABI from unikernel binary")
+
+validate_solo5_abi(abi_info)
 
 print("Extracting Solo5 manifest from unikernel binary")
 try:

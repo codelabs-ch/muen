@@ -25,6 +25,10 @@ is
       Entries : Partitions.Partition_Array_Type;
    end record;
 
+   Null_Partition_Table : Partition_Table_Type :=
+      (Count   => Integer'Last,
+       Entries => Partitions.Null_Partition_Array);
+
    --  Parse the MBR (in Sector 0) of the given device
    procedure Parse
       (ID         :     Ahci.Port_Range;

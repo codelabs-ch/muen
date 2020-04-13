@@ -13,6 +13,8 @@
   <subject level="3" name="vt" cpu="1"/>
   <subject level="1" name="nic_linux" cpu="0"/>
   <subject level="1" name="storage_linux" cpu="1"/>
+  <subject level="3" name="ahci_drv"/>
+  <subject level="1" name="example" cpu="1"/>
   <subject level="2" name="dbgserver">
    <simultaneousDomain ref="2"/>
   </subject>
@@ -55,6 +57,7 @@
      <scoreFunction ref="identity_20"/>
     </chain>
     <chain>
+     <subject ref="ahci_drv" speed="1.0"/>
      <subject ref="vt" speed="1.0"/>
      <scoreFunction ref="identity_20"/>
     </chain>
@@ -73,8 +76,10 @@
     <subject ref="controller"/>
     <subject ref="vt"/>
     <subject ref="nic_linux"/>
+    <subject ref="ahci_drv"/>
     <subject ref="storage_linux"/>
     <subject ref="dbgserver"/>
+    <subject ref="example"/>
    </subjects>
    <chains>
     <chain>
@@ -87,6 +92,7 @@
      <scoreFunction ref="identity_20"/>
     </chain>
     <chain>
+     <subject ref="ahci_drv" speed="1.0"/>
      <subject ref="vt" speed="1.0"/>
      <scoreFunction ref="identity_20"/>
     </chain>

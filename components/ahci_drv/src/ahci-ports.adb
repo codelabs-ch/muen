@@ -24,6 +24,9 @@ with Ahci.Delays;
 with Debug_Ops;
 
 with Interfaces;
+
+with Musinfo.Instance;
+
 use type Interfaces.Unsigned_16;
 use type Interfaces.Unsigned_32;
 
@@ -164,6 +167,8 @@ is
       (ID      :     Port_Range;
        Success : out Boolean)
    is
+      use type Interfaces.Unsigned_64;
+
       Local_Cmd_Issue  : Bit_Array (0 .. 31);
       Local_Int_Status : Port_Interrupt_Status_Type;
       Local_Cmd_Status : Port_Command_Status_Type;
@@ -189,13 +194,15 @@ is
       Instance (ID).Command_Issue := Local_Cmd_Issue;
 
       --  wait command execution (Up to 5s)
-      for Time_Out in Natural range 1 .. 5_000 loop
+      Wait : loop
          Local_Cmd_Issue := Instance (ID).Command_Issue;
          Local_Int_Status := Instance (ID).Interrupt_Status;
-         exit when (Local_Cmd_Issue (0) = False)
-                     or (Local_Int_Status.TFES = True);
-         Delays.M_Delay (Msec => 1);
-      end loop;
+
+         Now := Musinfo.Instance.TSC_Schedule_Start;
+         exit Wait when (Local_Cmd_Issue (0) = False)
+                     or (Local_Int_Status.TFES = True)
+                     or (Now >= Timeout);
+      end loop Wait;
 
       pragma Debug (Now > Timeout, Debug_Ops.Put_Line ("TimeOut!"));
       Check_Error (ID, Error);
@@ -209,7 +216,7 @@ is
       Clear_Errors (ID, Clear);
 
       if (Local_Cmd_Issue (0) = True)
-         and (Local_Int_Status.TFES = False)
+         or (Local_Int_Status.TFES = True)
       then
          pragma Debug (Debug_Ops.Put_Line (
             "AHCI: Timeout during command execution!"));

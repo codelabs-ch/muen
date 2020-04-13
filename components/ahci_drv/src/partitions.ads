@@ -28,7 +28,15 @@ is
       Partition_Type : Interfaces.Unsigned_8;
    end record;
 
+   Null_Partition_Element : Partition_Element_Type :=
+      (Start_Lba      => 0,
+       Sector_Cnt     => 0,
+       Partition_Type => 0);
+
    type Partition_Array_Type
    is array (Integer range 0 .. 127)
       of Partition_Element_Type;
+
+   Null_Partition_Array : Partition_Array_Type :=
+      (others => Null_Partition_Element);
 end Partitions;

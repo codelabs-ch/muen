@@ -598,7 +598,7 @@ is
       Dst_CPU : Skp.CPU_Range;
    begin
       --D @Text Section => impl_handle_source_event, Priority => 0
-      --D First, the next subject to be executed is initiaized to the current
+      --D First, the next subject to be executed is initialized to the current
       --D one. A handover event may change this but otherwise the same subject
       --D is to be executed next.
       Next_Subject := Subject;
@@ -631,7 +631,7 @@ is
          when Skp.Events.Unmask_Irq      =>
             --D @Item List => impl_handle_source_event_actions, Priority => 0
             --D If the designated action is unmask IRQ, then use I/O APIC to
-            --D unmask the IRQ designated by event's IRQ number.
+            --D unmask the IRQ designated by the event's IRQ number.
             IO_Apic.Unmask_IRQ
               (RTE_Index => Skp.Interrupts.RTE_Index_Type (Event.IRQ_Number));
       end case;
@@ -890,7 +890,8 @@ is
    --D @Section Id => impl_handle_timer_expiry, Label => Timer Expiry, Parent => impl_exit_handler, Priority => 40
    --D @Text Section => impl_handle_timer_expiry, Priority => 0
    --D The timer expiration designates the end of a minor frame. Handle the
-   --D timer expiry.
+   --D timer expiry by updating the current scheduling information and checking
+   --D if a timed event has expired.
    procedure Handle_Timer_Expiry (Current_Subject : Skp.Global_Subject_ID_Type)
    with
       Global =>

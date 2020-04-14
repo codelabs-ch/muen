@@ -23,7 +23,13 @@
  </xs:complexType>
 
  <xs:complexType name="baseDefaultEventType">
-  <xs:attribute name="physical" type="nameType" use="required"/>
+  <xs:attribute name="physical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Global event reference.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="defaultEventEntryType">
@@ -56,7 +62,13 @@
   <xs:complexContent>
    <xs:extension base="baseEventType">
     <xs:group ref="targetEventActionsGroup" minOccurs="0" maxOccurs="1"/>
-    <xs:attribute name="id" type="xs:nonNegativeInteger" use="optional"/>
+    <xs:attribute name="id" type="xs:nonNegativeInteger" use="optional">
+     <xs:annotation>
+      <xs:documentation>
+       Event ID.
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>

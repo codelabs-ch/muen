@@ -553,14 +553,14 @@
      cases, can only be limited in capacity by means of a suitable system
      structure.
 
-     Muen offers the possibility to provide subjects with an inaccurate time
+     Muen offers the possibility to provide subjects with an coarse-grained time
      source, i.e. removing direct access to the Time-Stamp Counter (TSC). Due to
      the low temporal resolution, observing a side channel is made significantly
      more difficult and thus the achievable transmission rate in practice is
      greatly reduced. In addition, subjects are preferably only assigned a
      single CPU, which prevents them from easily constructing a high resolution
-     time source. The timer mechanism also offers only limited accuracy, as
-     timers are only evaluated at the beginning of a minor frame.
+     time source. The timer mechanism also offers limited accuracy, as timers
+     are only evaluated at the beginning of a minor frame.
 
      Deterministic scheduling can be leveraged to ensure that the amount of
      shared hardware (e.g. L1 cache, Branch Predictor Cache, Translation
@@ -630,7 +630,8 @@
     Since each CPU executes a distinct instance of the Muen kernel, by default,
     all kernel data is CPU-local, meaning it is not shared between kernels
     running on different CPUs. Global data is shared explicitly and is
-    designated as such by placing it in a dedicated section (.globaldata).
+    designated as such by placing it in a dedicated section
+    (\texttt{.globaldata}).
 
     Kernel data can be categorized as follows:
     \begin{itemize}
@@ -765,7 +766,7 @@
   <section id="kernel_devs_debug" label="Diagnostics" priority="0">
    <text priority="0">
     The debug build of the Muen SK provides additional debug information at
-    runtime via a serial I/O device. This output can provide system integrators
+    runtime via an I/O device. This output can provide system integrators
     and developers with additional information, e.g. in an unexpected error case
     as the crash audit information is output via the I/O device on top of
     writing it to the audit memory region. Which hardware device the kernel

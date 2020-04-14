@@ -38,6 +38,7 @@
     \item Logical channels
     \item Logical memory regions
     \item Logical devices
+    \item Logical events
     \end{itemize}
 
     Components are identified by name and specify a profile. The profile
@@ -249,7 +250,7 @@
     access rights and region size.
 
     See line \ref{lst:af-lineref-compreq-memarray} in listing
-    \ref{lst:annotated-policy} an example specification.
+    \ref{lst:annotated-policy} for an example specification.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>
@@ -268,7 +269,7 @@
     placed at the address given via the \texttt{virtualAddress} attribute.
 
     See line \ref{lst:af-lineref-compreq-mem} in listing
-    \ref{lst:annotated-policy} an example specification.
+    \ref{lst:annotated-policy} for an example specification.
    </xs:documentation>
   </xs:annotation>
   <xs:attributeGroup ref="memBaseAttrs"/>
@@ -295,7 +296,7 @@
     specify expected devices with their associated resources.
 
     See line \ref{lst:af-lineref-compreq-devs} in listing
-    \ref{lst:annotated-policy} an example specification.
+    \ref{lst:annotated-policy} for an example specification.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>
@@ -311,7 +312,7 @@
     \texttt{ioPort}.
 
     See line \ref{lst:af-lineref-compreq-dev} in listing
-    \ref{lst:annotated-policy} an example specification.
+    \ref{lst:annotated-policy} for an example specification.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>
@@ -336,7 +337,7 @@
     when the device requires attention for the associated logical function.
 
     See line \ref{lst:af-lineref-compreq-dev-irq} in listing
-    \ref{lst:annotated-policy} an example IRQ reference.
+    \ref{lst:annotated-policy} for an example IRQ reference.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>
@@ -383,7 +384,7 @@
     range \texttt{start .. end} from the system.
 
     See line \ref{lst:af-lineref-compreq-dev-port} in listing
-    \ref{lst:annotated-policy} an example I/O port reference.
+    \ref{lst:annotated-policy} for an example I/O port reference.
    </xs:documentation>
   </xs:annotation>
   <xs:attribute name="logical" type="nameType" use="required">
@@ -416,7 +417,7 @@
     size, address and optional notification vector.
 
     See line \ref{lst:af-lineref-compreq-channel-reader} in listing
-    \ref{lst:annotated-policy} an example channel reader specification.
+    \ref{lst:annotated-policy} for an example channel reader spec fication.
    </xs:documentation>
   </xs:annotation>
   <xs:attribute name="logical" type="nameType" use="required">
@@ -456,7 +457,7 @@
     specified size, address and optional notification event number.
 
     See line \ref{lst:af-lineref-compreq-channel-writer} in listing
-    \ref{lst:annotated-policy} an example channel writer specification.
+    \ref{lst:annotated-policy} for an example channel writer specification.
    </xs:documentation>
   </xs:annotation>
   <xs:attribute name="logical" type="nameType" use="required">
@@ -513,7 +514,7 @@
     to each element.
 
     See line \ref{lst:af-lineref-compreq-array-entry} in listing
-    \ref{lst:annotated-policy} an example array entry declaration.
+    \ref{lst:annotated-policy} for an example array entry declaration.
    </xs:documentation>
   </xs:annotation>
   <xs:attribute name="logical" type="nameType" use="required">
@@ -550,7 +551,7 @@
     channels and either the \texttt{reader} or \texttt{writer} role.
 
     See line \ref{lst:af-lineref-compreq-chanarr} in listing
-    \ref{lst:annotated-policy} an example specification.
+    \ref{lst:annotated-policy} for an example specification.
    </xs:documentation>
   </xs:annotation>
   <xs:choice>
@@ -592,6 +593,17 @@
 </xs:complexType>
 
  <xs:complexType name="logicalEventsType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{events} sub-section of the \texttt{requires} section is used to
+    specify expected events with optional event actions.
+
+    A component can specify both source events and target events.
+
+    See line \ref{lst:af-lineref-compreq-evts} in listing
+    \ref{lst:annotated-policy} for an example specification.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="source" type="logicalEventSourceType" minOccurs="0" maxOccurs="1"/>
    <xs:element name="target" type="logicalEventTargetType" minOccurs="0" maxOccurs="1"/>
@@ -599,31 +611,63 @@
  </xs:complexType>
 
  <xs:complexType name="logicalEventSourceType">
+  <xs:annotation>
+   <xs:documentation>
+    Specifies expected source events.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="event" type="logicalSourceEventEntryType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>
  </xs:complexType>
 
  <xs:complexType name="logicalEventTargetType">
+  <xs:annotation>
+   <xs:documentation>
+    Specifies expected event targets.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="event" type="logicalTargetEventEntryType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>
  </xs:complexType>
 
  <xs:complexType name="baseLogicalEventType">
-  <xs:attribute name="logical" type="nameType" use="required"/>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical name of event.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="logicalSourceEventEntryType">
+  <xs:annotation>
+   <xs:documentation>
+    An entry in the component's source event list.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="baseLogicalEventType">
      <xs:group ref="sourceEventActionsGroup" minOccurs="0" maxOccurs="1"/>
-     <xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
+     <xs:attribute name="id" type="xs:nonNegativeInteger" use="required">
+      <xs:annotation>
+       <xs:documentation>
+        ID of source event.
+       </xs:documentation>
+      </xs:annotation>
+     </xs:attribute>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>
 
  <xs:complexType name="logicalTargetEventEntryType">
+  <xs:annotation>
+   <xs:documentation>
+    An entry in the component's target event list.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="baseLogicalEventType">
     <xs:group ref="targetEventActionsGroup" minOccurs="0" maxOccurs="1"/>

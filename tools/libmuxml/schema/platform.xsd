@@ -88,13 +88,43 @@
  </xs:complexType>
 
  <xs:complexType name="kernelDiagType">
+  <xs:annotation>
+   <xs:documentation>
+    The Muen SK can be instructed to output debugging information during
+    runtime. The platform diagnostics device specifies which device the kernel
+    is to use for this purpose.
+
+    The presence of this device and the necessary resources are checked by the
+    validator tool.
+
+    See line \ref{lst:af-lineref-diagdev} in listing \ref{lst:annotated-policy}
+    for an example platform diagnostic device configuration.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="device" type="kernelDiagDeviceType" minOccurs="0" maxOccurs="1"/>
   </xs:sequence>
-  <xs:attribute name="type" type="kernelDiagKindType" use="required"/>
+  <xs:attribute name="type" type="kernelDiagKindType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Specifies the type of diagnostics device to use.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:simpleType name="kernelDiagKindType">
+  <xs:annotation>
+   <xs:documentation>
+    Type of diagnostics device. While \texttt{none} disables kernel diagnostics
+    output, \texttt{uart} specifies an Universal Asynchronous
+    Receiver-Transmitter serial device.
+
+    \texttt{vga} outputs the kernel diagnostics information to a VGA console,
+    which is mainly useful for initial bring-up of a new hardware platform with
+    no UART device.
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="xs:string">
    <xs:enumeration value="none"/>
    <xs:enumeration value="uart"/>
@@ -104,11 +134,27 @@
  </xs:simpleType>
 
  <xs:complexType name="kernelDiagDeviceType">
+  <xs:annotation>
+   <xs:documentation>
+    Reference to physical device for \texttt{uart} and \texttt{vga} diagnostic
+    device type.
+
+    If an UART device is referenced via type \texttt{uart}, an I/O port resource
+    must be provided. If a VGA device is referenced via type \texttt{vga}, a
+    memory resource must be provided (both checked via validator).
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="memory" type="physRefType" minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="ioPort" type="physRefType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
-  <xs:attribute name="physical" type="nameType" use="required"/>
+  <xs:attribute name="physical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of physical device to use for kernel diagnostics output.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
 </xs:schema>

@@ -121,10 +121,88 @@
  <xs:simpleType name="subjectMemoryKindType">
   <xs:annotation>
    <xs:documentation>
-    Subject memory type to categorize memory assigned to a subject. Used by
-    build tools to lookup certain elements by type. For example, the
-    \texttt{mugenzp} tool looks for subject memory of type
+    Subject memory type to categorize memory assigned to a subject. The
+    validator tool checks that a subject only maps memory regions of types
+    outlined in this section (\ref{validation-subj}).
+
+    Also used by build tools to lookup certain elements by type. For example,
+    the \texttt{mugenzp} tool looks for subject memory of type
     \texttt{subject\_zeropage} to process all Linux zero-pages in the policy.
+
+    The following memory types are currently supported:
+
+    \begin{itemize}
+    \item subject~\\
+    Unspecific subject memory, used e.g. for RAM regions of VM subjects.  The
+    \texttt{mugenzp} tool used for Linux VMs (\ref{tools-mugenzp}) exports such
+    regions as \texttt{E820\_RAM} in the ZP E820 memory map.
+    \item subject\_info~\\
+    Subject info (sinfo) region. Provided to all subjects in order to query
+    information about the execution environment. The file backing of this region
+    is created by the \texttt{mugensinfo} tool (\ref{tools-mugensinfo}).
+    \item subject\_state~\\
+    Subject register state. Mapped into the SK kernel executing the given
+    subject, kernels running on other CPUs have no access. Accessible by subject
+    monitors running on the same CPU if specified in the policy. Validator
+    enforces that each subject has an associated \texttt{subject\_state} region
+    and that it is mapped at the expected virtual address in the executing
+    kernel (\ref{validation-subj}).
+    \item subject\_binary~\\
+    Subject executable as a whole or separate subject executable regions (text,
+    rodata, data, bss, stack) with access rights (writable/executable). The
+    \texttt{mucbinsplit} tool automatically creates a component
+    \texttt{provides} section with separate binary regions and associated
+    backing files from a component binary (\ref{tools-mucbinsplit}).
+    \item subject\_channel~\\
+    Physical memory region used as shared channel between two subjects. The
+    expander tool expands channels in system policy source format to memory
+    regions with this type in system policy format a/b, as described in section
+    \ref{system_src.xsd:channelsType}.
+    \item subject\_crash\_audit~\\
+    Memory region used by crash audit to store system crash information into
+    slots, see \cite{muen:kernel_specification}. This information is preserved
+    after a crash by performing a system warm start. Validators enforce that
+    \begin{itemize}
+    \item Region is present and uncached, \ref{validation-mem}
+    \item Region does not overlap with image, \ref{validation-mem}
+    \item Kernel mappings are present and correct, \ref{validation-knl}
+    \item No subject has write access to this region, \ref{validation-subj}
+    \end{itemize}
+    \item subject\_initrd~\\
+    Physical memory of this type designates an \emph{initial ramdisk}. This
+    memory type is mostly used by Linux VMs. If multiple initrd regions are
+    mapped into a subject, they must be adjacent (\ref{validation-subj}).
+
+    The \texttt{mugenzp} tool (\ref{tools-mugenzp}) extracts the virtual address
+    and size of a subject-mapped \texttt{subject\_initrd} region and stores the
+    values in the generated Linux zero-page (ZP) backing file.
+    \item subject\_bios~\\
+    Indicates to subjects that the memory region is reserved for BIOS/firmware
+    and must not be used as regular RAM.
+    \item subject\_acpi\_*~\\
+    Indicates to subjects that the memory region contains an ACPI table. See the
+    ACPI specification for more information about RSDP, XSDT, FADT and DSDT ACPI
+    tables. The \texttt{mugenzp} tool (\ref{tools-mugenzp}) exports such regions
+    as \texttt{E820\_ACPI} in the ZP E820 memory map.
+    \item subject\_zeropage~\\
+    Indicates to Linux subjects that the memory region contains a zero-page. See
+    the Linux kernel Zero Page documentation for more information.
+    \item subject\_solo5\_boot\_info~\\
+    Indicates to a VM running Solo5/Mirage that the memory region contains a
+    boot info structure. The file-backing of such a region may be created using
+    the \texttt{mugensolo5} tool (\ref{tools-mugensolo5}).
+    \item subject\_device~\\
+    Designates a memory region which is allowed to be added to a subject and a
+    device domain. The difference to the \texttt{subject} memory type is that
+    the region is not exported as \texttt{E820\_RAM} but \texttt{E820\_RESERVED}
+    to Linux subjects. Therefore, such a region is useful to implement custom
+    drivers without interference from Linux DMA zone handling.
+    \item subject\_timed\_event~\\
+    Region designates a subject timed event page, as described in
+    \cite{muen:component_specification}. The expander tool creates a physical
+    memory region for each subject and maps it into the associated subject and
+    the SK kernel executing this subject.
+    \end{itemize}
    </xs:documentation>
   </xs:annotation>
   <xs:restriction base="memoryKindType">

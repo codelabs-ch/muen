@@ -10,9 +10,15 @@
 		<library ref="muinit"/>
 	</depends>
 	<requires>
+		<memory>
+			<memory executable="false" logical="blockdev_shm2" size="16#0100_0000#" virtualAddress="16#a100_0000#" writable="true"/>
+		</memory>
 		<channels>
 			<reader logical="example_request" size="16#1000#" virtualAddress="16#0001_0000#"/>
 			<writer logical="example_response" size="16#1000#" virtualAddress="16#0002_0000#" event="1"/>
+
+			<writer logical="blockdev_request2"  size="16#0000_8000#" virtualAddress="16#0030_0000#" event="51"/>
+			<reader logical="blockdev_response2" size="16#0000_4000#" virtualAddress="16#0040_0000#" vector="38"/>
 		</channels>
 		<events>
 			<source>

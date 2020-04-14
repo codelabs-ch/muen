@@ -552,8 +552,7 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Handle system panic action that was triggered by source event of given
-   --  subject by invoking crash audit.
+   --D @Section Id => impl_handle_system_panic, Label => System Panic Action Handling, Parent => impl_handle_source_event, Priority => 10
    procedure Handle_System_Panic (Subject : Skp.Global_Subject_ID_Type)
    with
        Global => (Input  => (CPU_Info.APIC_ID, FPU.State, Subjects.State),
@@ -562,6 +561,10 @@ is
    is
       S : Crash_Audit_Types.Subj_Context_Type;
    begin
+      --D @Text Section => impl_handle_system_panic, Priority => 0
+      --D A system panic action triggered by a source event of a given subject
+      --D is handled by creating a crash audit entry with the state of the
+      --D triggering subject and invoking the crash audit facility.
       Subjects.Create_Context (ID  => Subject,
                                Ctx => S);
       FPU.Get_Registers (ID   => Subject,
@@ -621,6 +624,9 @@ is
             --D initiated.
             Power.Shutdown;
          when Skp.Events.System_Panic =>
+            --D @Item List => impl_handle_source_event_actions, Priority => 0
+            --D If the designated action is system panic, then the system panic
+            --D handler is invoked, see \ref{impl_handle_system_panic}.
             Handle_System_Panic (Subject => Subject);
          when Skp.Events.Unmask_Irq      =>
             --D @Item List => impl_handle_source_event_actions, Priority => 0
@@ -855,16 +861,16 @@ is
       --D @Text Section => impl_handle_trap, Priority => 0
       --D \paragraph{}
       --D If the trap number is valid then the corresponding subject trap entry
-      --D as specified by the policy is looked up. If the trap specifies a null
-      --D event an appropriate crash audit record is written and an error
-      --D condition is signaled.
+      --D as specified by the policy is looked up. Note that the policy
+      --D validation tools enforce that an event must be specified for each
+      --D trap ID.
       Trap_Entry := Skp.Events.Get_Trap
         (Subject_ID => Current_Subject,
          Trap_Nr    => Skp.Events.Trap_Range (Trap_Nr));
 
       --D @Text Section => impl_handle_trap, Priority => 0
-      --D Otherwise the source event designated by the policy trap entry is
-      --D processed, see \ref{impl_handle_source_event}.
+      --D The source event designated by the policy trap entry is processed,
+      --D see \ref{impl_handle_source_event}.
       Handle_Source_Event
         (Subject      => Current_Subject,
          Event        => Trap_Entry,

@@ -84,7 +84,18 @@
  </xs:complexType>
 
  <xs:complexType name="physRefType">
-  <xs:attribute name="physical" type="nameType" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    Reference to physical device or physical device resource.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="physical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Physical resource name (device or resource sub-element).
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="kernelDiagType">

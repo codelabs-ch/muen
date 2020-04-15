@@ -183,7 +183,7 @@ is
       --D Guest RIP register; Intel SDM Vol. 3C, "24.4.1 Guest Register State".
       RIP                : Word64;
       --D @Interface
-      --D Guest RSP register. ; Intel SDM Vol. 3C, "24.4.1 Guest Register
+      --D Guest RSP register; Intel SDM Vol. 3C, "24.4.1 Guest Register
       --D State".
       RSP                : Word64;
       --D @Interface

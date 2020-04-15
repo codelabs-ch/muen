@@ -1,4 +1,4 @@
 doc/*
 
-!doc/doc.xml
+!doc/doc.xml.in
 !doc/bib.bib

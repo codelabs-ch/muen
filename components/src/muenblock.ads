@@ -116,7 +116,7 @@ is
        Request_Tag  => 0,
        others       => 0);
 
-   --  Muenblock Channel Protocoll ID
+   --  Muenblock Channel Protocol ID
    Protocol : constant := 16#5155_6844_5351_6f3d#;
 
    --  Number of request / responsens in request / response channel

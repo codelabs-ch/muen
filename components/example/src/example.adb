@@ -30,6 +30,8 @@ with Component_Constants;
 with Foo.Receiver;
 with Foo.Sender;
 
+with Muenblock_Example;
+
 with Debuglog.Client;
 
 with Log;
@@ -95,6 +97,9 @@ begin
    --  Enable interrupts.
 
    SK.CPU.Sti;
+
+   --  Muenblock Showcase
+   Muenblock_Example.Show;
 
    --  Trigger a self-event to wakeup from hlt.
 

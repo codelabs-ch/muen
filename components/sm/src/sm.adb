@@ -92,11 +92,13 @@ begin
    end if;
 
    loop
+      --D @Lst Smexitbegin
       Exit_Reason := State.Exit_Reason;
 
       if Exit_Reason = SK.Constants.EXIT_REASON_CPUID then
          Exit_Handlers.CPUID.Process (Action => Action);
       elsif Exit_Reason = SK.Constants.EXIT_REASON_INVLPG
+      --D @Lst Smexitend
         or else Exit_Reason = SK.Constants.EXIT_REASON_DR_ACCESS
         or else Exit_Reason = SK.Constants.EXIT_REASON_WBINVD
         or else Exit_Reason = SK.Constants.EXIT_REASON_VMCALL
@@ -129,6 +131,7 @@ begin
          Action := Types.Subject_Halt;
       end if;
 
+      --D @Lst Smresumebegin
       case Action
       is
          when Types.Subject_Start    =>
@@ -144,5 +147,6 @@ begin
             pragma Debug (Debug_Ops.Dump_State);
             SK.CPU.Stop;
       end case;
+      --D @Lst Smresumeend
    end loop;
 end Sm;

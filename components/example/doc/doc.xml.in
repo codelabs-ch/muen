@@ -431,8 +431,9 @@
    faulting subject after handling of the event.
 
    The system policy allows the configuration of a monitor subject as seen in
-   listing \ref{code-sm}.
-   \lstinputlisting[linerange=138-142,label=code-sm,caption=Subject Monitor (SM) configuration in the policy,language=XML]{../../../policy/xml/genode-base_hw.xml}
+   listing \ref{genode-monitor-policy}.
+
+   \lstinputlisting[linerange=138-142,label=genode-monitor-policy,caption=Subject Monitor (SM) configuration in the policy,language=XML]{../../../policy/xml/genode-base_hw.xml}
 
    The policy writer defines the access permissions to the monitored subject
    state. The following state items are available:
@@ -514,6 +515,82 @@
     See the Muen System Specification \cite{muen:system_specification} for the
     definition of the loader element with an in-depth description of the
     mechanism (element \texttt{loader}, type \texttt{loaderSubjectRefType}).
+   </text>
+  </section>
+
+  <section id="subject-monitoring-example" label="By Example" priority="0">
+   <text priority="0">
+    This section illustrates the monitoring concept using the SM component for
+    Linux, which is part of the Muen ecosystem of available components written
+    in SPARK 2014. It is used to enable the execution of Linux as a VM subject
+    on Muen.
+
+    The SM component has the CPU register state of the associated monitored
+    Linux VM mapped. Since the SM for Muen Linux is quite simple, it only maps
+    the CPU register state, the timed event/interrupt pages and loader
+    functionality is not required to fulfill its task:
+
+    \lstinputlisting[linerange=19-21,label=sm-monitor-policy,caption=SM
+    configuration for Linux VM,language=XML]{../../../policy/xml/subject_nic_sm.xml}
+
+    SM declares a package-level \texttt{State} variable of type
+    \texttt{SK.Subject\_State\_Type}, as specified in section
+    \ref{Subject_Info.Stateexample}. The address of the variable in memory must
+    be set using the Ada \texttt{Address} aspect, with the value as configured
+    in listing \ref{sm-monitor-policy}. The \texttt{Volatile} aspect must be
+    used as well, to tell the compiler that the value of this variable might
+    suddenly change.
+
+    Using the \texttt{State} variable, SM is able to inspect and alter the
+    subject CPU register state of the monitored subject after a trap. For
+    illustrative purposes, it is assumed that the monitored subject executes the
+    \texttt{CPUID} instruction, which always traps in VMX non-root mode. The
+    policy is setup so that a handover from the monitored subject to SM occurs
+    in this case. The following snipped shows the \texttt{events} node of the
+    monitored subject:
+
+    \lstinputlisting[caption=CPUID event,language=XML]{sm_policy_trap.xml}
+
+    On \texttt{CPUID} in the monitored subject, the kernel inspects the events
+    table of the subject after exit and, according to its static configuration,
+    hands over execution to SM.
+
+    SM first examines the exit reason of the associated subject, by using the
+    aformentioned \texttt{State} variable:
+
+    \lstinputlisting[linerange=Smexitbegin-Smexitend,label=code-sm-exit-reason,caption=Determining
+    the exit reason,language=Ada]{../../sm/src/sm.adb}
+
+    If it determines that the exit was caused by the execution of
+    \texttt{CPUID}, it calls the exit handler for this exit reason. It does the
+    same for other exit reasons of interest. If there is no handler for a
+    specific exit reason, execution of the monitored subject is halted by
+    stopping the vCPU. This is done by calling \texttt{SK.CPU.Stop}, which
+    executes \texttt{cli; hlt} in a loop. By not returning to the monitored
+    subject, the cooperative scheduling group is now in a halted state.
+
+    The \texttt{CPUID.Process} procedure called on a \texttt{CPUID} exit
+    emulates a vCPU with certain features.  Therefore, depending on the
+    requested CPUID leaf in the \texttt{RAX} register, the CPU register state is
+    updated to reflect the result of the \texttt{CPUID} instruction back to the
+    monitored subject:
+
+    \lstinputlisting[linerange=Smcpuidbegin-Smcpuidend,label=code-sm-cpuid,caption=CPUID
+    emulation of leaf 0,language=Ada]{../../sm/src/exit_handlers-cpuid.adb}
+
+    After that, the SM main procedure is instructed to continue monitored
+    subject execution by setting the \texttt{Action} out parameter of the
+    \texttt{Process} procedure to \texttt{Subject\_Continue}. The SM main
+    procedure then resumes the monitored subject by increasing the \texttt{RIP}
+    and calling the hypercall procedure with event ID designated by the
+    \texttt{Events.Resume\_Subject\_ID} constant. This triggers a handover back
+    to the monitored subject:
+
+    \lstinputlisting[linerange=Smresumebegin-Smresumeend,label=code-sm-resume,caption=End
+    of SM main loop,language=Ada]{../../sm/src/sm.adb}
+
+    The monitored subject then continues execution in the scheduling slot of SM
+    until the next trap occurs.
    </text>
   </section>
  </section>

@@ -38,6 +38,7 @@ is
    is
       use type SK.Word64;
 
+      --D @Lst Smcpuidbegin
       RAX : constant SK.Word64 := State.Regs.RAX;
       RCX : constant SK.Word64 := State.Regs.RCX;
    begin
@@ -56,6 +57,7 @@ is
             State.Regs.RCX := 16#6c65_746e#;
             State.Regs.RDX := 16#4965_6e69#;
          when 1 =>
+            --D @Lst Smcpuidend
 
             --  Processor Info and Feature Bits.
             --                            Model IVB

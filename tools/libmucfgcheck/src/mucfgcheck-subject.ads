@@ -30,10 +30,10 @@ is
    --  Validate uniqueness of global subject IDs.
    procedure Global_ID_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate uniqueness of local subject IDs.
+   --  Validate pre-CPU uniqueness of local subject IDs.
    procedure Local_ID_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate memory types of memory mappings.
+   --  Validate memory types of memory mappings (ie. allow access by subjects).
    procedure Memory_Types (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate that no subject references an IOMMU device.

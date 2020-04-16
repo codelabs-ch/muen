@@ -37,7 +37,7 @@ is
    procedure Subject_Alias_Resource_References
      (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that the physical device and resources referenced by kernel
+   --  Validate that the physical device and resources referenced by the kernel
    --  diagnostics device exists.
    procedure Kernel_Diagnostics_Device_Reference
      (XML_Data : Muxml.XML_Data_Type);

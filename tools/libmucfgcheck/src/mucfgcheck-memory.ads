@@ -100,13 +100,14 @@ is
    procedure Subject_Interrupts_Region_Presence
      (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate kernel memory mappings.
+   --  Validate that memory of type kernel is only mapped by kernel or Tau0.
    procedure Kernel_Memory_Mappings (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate system memory mappings.
+   --  Validate that memory of type system is not mapped by any entity.
    procedure System_Memory_Mappings (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate memory mappings of type 'device' (e.g. device_rmrr).
+   --  Validate that memory of type 'device' (e.g. device_rmrr) is only
+   --  mapped by device domains.
    procedure Device_Memory_Mappings (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate that subject state memory regions are mapped by the kernel

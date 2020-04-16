@@ -227,6 +227,9 @@
    subject, or whether a specific debug facility has been enabled by the system
    integrator.
 
+   % XXX: Describe purpose of component description/spec since it's not that
+   %      clear what it is for?
+
    The CSPECs mechanism outlined in the Muen Component Specification document
    \cite{muen:component_specification} can be used by components to generate
    source specifications (e.g.  in SPARK/Ada) from the component description.
@@ -331,6 +334,7 @@
     invariants hold after the transition. If not, the command is rejected and
     the build aborts.
 
+    % XXX: List invariants enforced by Tau0?
     See the project README or the webpage (TODO) for more information about
     the current state of $\tau0$.
    </text>
@@ -353,6 +357,9 @@
     on how much dynamic system behavior is allowed. For example, the initial
     dynamic variant might only allow entity construction, not destruction.
 
+    % XXX: Drop warning regarding PoC Tau0? Might be confusing and raise
+    % questions in context of communicator eval. Plus it is only an upstream
+    % artifact.
     \begin{warning}
     A simple proof of concept version of a dynamic $\tau0$ subject is already
     scheduled as part of every Muen system. This simple version takes care of
@@ -473,6 +480,7 @@
      executable, writable).
 
      \begin{warning}
+     % XXX: Note is confusing, remove?
      The final component binary will be included in the system image as a RAW
      binary, not ELF. The same is of course true for the kernel binary.
      \end{warning}
@@ -485,6 +493,8 @@
      policy by the Muen component specification joiner tool described in
      section \ref{tools-mucfgcjoin}.
 
+     % XXX: Purpose of component spec is not entirely clear at this point.
+     % Combine with description on p10 or add longer description/reference here?
      This step is optional as static component specifications which need no
      processing can also be manually specified in the system policy directly.
     </text>
@@ -774,6 +784,7 @@
     <text priority="0">
      Creates an XML command stream for $\tau0$ to let it compose the system
      image specified by the system policy given as input.
+     % XXX: Maybe description is a bit brief? Extend?
 
      \begin{description} \itemsep1pt \parskip0pt
      \item[Name] \hfill \\
@@ -811,6 +822,7 @@
      \item[Output format] \hfill \\
      Multiboot image\footnote{\url{https://www.gnu.org/software/grub/manual/multiboot/multiboot.html}},
      bootable by any compliant bootloader.
+     % XXX: BSBSC is missing
      \end{description}
 
      If a command is received which violates a constraint enforced by $\tau0$
@@ -1201,6 +1213,7 @@
   </text>
  </section>
 
+ <!-- XXX: Rename schema to "Policy structure" or "Policy content"? -->
  <section id="schema" label="Schema" priority="0"/>
 
  <section id="appendix" label="Appendix" priority="1000">

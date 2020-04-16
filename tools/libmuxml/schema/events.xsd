@@ -148,6 +148,7 @@
     event. Such events are useful to implement para-virtualized timers in VM
     subjects for example. A subject sends itself a delayed event, using the
     timed event mechanism (muen-component-spec:4.3). Note that a self event must
+    % XXX: Is this reference in the correct format?.
     always have a target action assigned, checked by validator.
     \item switch~\\
     The switch mode facilitates suspension of execution of the source subject

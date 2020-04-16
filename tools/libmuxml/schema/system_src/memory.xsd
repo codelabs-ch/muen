@@ -131,6 +131,7 @@
 
     The following memory types are currently supported:
 
+    % Use \texttt for memory types in list?
     \begin{itemize}
     \item subject~\\
     Unspecific subject memory, used e.g. for RAM regions of VM subjects.  The

@@ -55,36 +55,37 @@
    on top of the Muen Separation Kernel (SK). It defines what hardware resources
    are present, how many active components (called subjects) the system is
    composed of, how they interact and which system resources they are allowed to
-   access.  The contents a Muen system policy is composed of is outlined in
+   access.  The contents a Muen system policy is composed of are outlined in
    section \ref{policy} of this document.
 
    A system integrator specifies and configures such a component-based system at
    integration time in XML format. The Muen toolchain transforms the system
    description in multiple steps to the final system description, resolving
    abstractions which exist to make life simpler and less error-prone to the
-   integrator. The toolchain also creates various build artifacts which are
-   incorporated into the final system image by the final system composition
-   step. Section \ref{integration} gives an overview of the system integration
-   process.
+   integrator. Additionally, the toolchain also creates various build artifacts
+   which are incorporated into the final system image by the final system
+   composition step. Section \ref{integration} gives an overview of the system
+   integration process.
 
-   The Muen SK is a policy enforcer, in the sense that it has no knowledge about
-   the actual content of the generated data structures. For example, it knows
-   nothing about the contents of subject page tables which define a subject's
-   address space, nor does it know anything about its own page tables.
-   Technically, these structures are not even mapped into the kernel.
+   The Muen SK can be regarded as a policy enforcement engine, in the sense that
+   it has no knowledge about the actual content of the generated data structures
+   and in consequence the policy. For example, it knows nothing about the
+   contents of subject page tables which define a subject's address space, nor
+   does it know anything about its own page tables. In fact, these structures
+   are not even mapped into the kernel.
 
-   The most important and final step in the integration of a Muen system is
-   therefore the actual generation of the data structures which guarantee
-   subject isolation and the composition of the final system image. This step is
-   performed by a trusted system composer called (static) $\tau$0.  The concept
-   of $\tau0$ is introduced in section \ref{tau0-concept}.
+   The most important and final step in the integration of a Muen system is the
+   actual generation of the data structures which guarantee subject isolation
+   and the composition of the final system image. This step is performed by a
+   trusted system composer called (static) $\tau$0.  The concept of $\tau0$ is
+   introduced in section \ref{tau0-concept}.
 
    Section \ref{toolchain} explains every tool and the system image composer in
    detail. It also presents the usage of each tool.
 
-   Section \ref{schema} specifies the XML-schema and structure of the system
-   source format of the Muen system policy. Explanations and examples illustrate
-   how to configure a component-based system with the Muen SK.
+   Section \ref{schema} specifies the XML-schema and structure of the source
+   format of the Muen system policy. Explanations and examples illustrate how to
+   configure a component-based system with the Muen SK.
   </text>
  </section>
 
@@ -96,7 +97,6 @@
    \item Configuration values
    \item Hardware resources
    \item Platform description
-   \item Kernel diagnostics device
    \item Physical memory regions
    \item Device domains
    \item Events
@@ -106,9 +106,9 @@
    \item Scheduling plans
    \end{itemize}
 
-   The policy therefore serves as a static description of a Muen system. Since
-   all aspects of the system are fixed at integration time the policy is very
-   well suited for automated and manual validation prior to system execution.
+   The policy serves as a static description of a Muen system. Since all aspects
+   of the system are fixed at integration time the policy is very well suited
+   for automated as well as manual validation prior to system execution.
 
    The details of each property above is outlined with examples in the XSD-schema of
    the format source policy in section \ref{schema}.
@@ -131,50 +131,53 @@
     policy formats A and B.
 
     The implementation of such tools is simplified by the absence of
-    higher-level abstractions in the latter formats which would make the
+    higher-level abstractions in the latter formats and  which would make the
     extraction of input data more involved.
 
     Furthermore, the final format B must specify every aspect of the system
-    explicitly, something which can not be expected of an integrator.
+    explicitly, e.g. all attributes have a concrete value assigned, something
+    which would be very tedious and repetitive and that should not be expected
+    of an integrator.
 
     The following sections give more detail about each policy format.
 
     \begin{warning}
-    Only the policy in format source is specified in this document, as the other
-    formats are considered \emph{internal} and might change unannounced. While
-    it is possible to specify a system policy in format A or B, it is not
-    recommended.
+    Only the policy in format source intended for system integrators is
+    specified in this document. Other formats are intended to be processed by
+    tools and thus considered \emph{internal}. While it is possible to specify a
+    system policy in format A or B, it is not recommended.
     \end{warning}
    </text>
 
    <section id="policy-format-src" label="Source Format" priority="0">
     <text priority="0">
-     The user-specified policy is written in the \emph{source format}.
+     The user-specified policy is written in the so called \emph{source format}.
      Constructs such as channels provide abstractions to simplify the
      specification of component-based systems. Many XML elements and attributes
-     are optional and will be \epmh{expanded} during later steps of the policy
+     are optional and are \epmh{expanded} during later steps of the policy
      compilation process.
 
      Kernel and $\tau0$ subject (\ref{tau0-dynamic}) resources are not part of
-     the source format since they are also automatically added by the policy
+     the source format since they are automatically added as part of the policy
      expansion step.
 
      The use of configuration values enables parametrization of the system policy.
 
-     The policy in source format is specified in section \ref{schema}, appendix
-     \ref{appendix-ap} provides an annotated example policy which is used to
-     illustrate the elements in the policy.
+     The policy in source format is specified in detail in section \ref{schema},
+     while appendix \ref{appendix-ap} provides an annotated example policy
+     illustrating the various policy elements.
     </text>
    </section>
 
    <section id="policy-format-a" label="Format A" priority="0">
     <text priority="0">
-     Format A is a processed version of the source format where all includes are
-     resolved and abstractions such as channels have been broken down into their
-     underlying elements. For example, a channel is expanded to a physical
-     memory region and the corresponding writer and reader subject mappings with
-     the appropriate access rights. Optional associated events have been
-     automatically created and correctly linked with the designated subjects.
+     Format A is a processed version of the source format where all inclusions
+     of external files are resolved and abstractions such as channels have been
+     deconstructed down into their constituent parts. For example, a channel is
+     expanded to a physical memory region and the corresponding writer and
+     reader subject mappings with the appropriate access rights. Optional
+     associated events have been automatically created and correctly linked with
+     the designated subjects.
 
      In this format all implicit elements, such as for example automatically
      generated page table memory regions, are specified. The kernel and $\tau$0
@@ -196,7 +199,7 @@
  <section id="integration" label="System Integration" priority="0">
   <text priority="0">
    A Muen system defined via the system policy introduced in the previous
-   sections and specified in section \ref{schema} is transformed and integrated
+   sections and further specified in section \ref{schema} is transformed and integrated
    by various tools to generate a bootable system image.
 
    The directed graph \ref{fig:integ} on page \pageref{fig:integ} illustrates
@@ -209,7 +212,7 @@
    \label{fig:integ}
    \end{figure}
 
-   The top of the graph shows how configuration and build parameters are
+   At the top, the graph shows how configuration and build parameters are
    applied to the following constituents of the system policy:
    \begin{itemize}
    \item Hardware description (static)
@@ -218,7 +221,7 @@
    \item System description
    \end{itemize}
 
-   These inputs combined form the parameterized system policy in format source,
+   These combined inputs form the parameterized system policy in format source,
    which can be used by components to extract system information. Such
    information might be for example the log channel count of a debug server
    subject, or whether a specific debug facility has been enabled by the system
@@ -237,29 +240,31 @@
    is expanded by the expander tool (\ref{tools-mucfgexpand}). This step
    transforms the system policy from format source to format A. Abstractions
    like directed channels are now resolved to basic shared memory mechanisms and
-   events, non-present optional attributes are added with default values.
+   events, non-present optional attributes are added and set to default values.
 
    The allocator tool (\ref{tools-mucfgalloc}) then loops over all physical
-   memory regions which have no physical address assigned and allocates one from
-   the usable pool. The usable pool information is extracted from the
+   memory regions which have no physical address assigned and places them in
+   physical memory by allocating a regioni and thus a physical start address
+   from the usable pool. The usable pool information is extracted from the
    allocatable memory block list (\ref{system_src.xsd:physicalMemoryType}) in
    the system policy.  This process transforms the policy to format B where all
    elements must be present and attributes specified.
 
-   The policy is now checked for correctness by the validator tool
-   (\ref{tools-mucfgvalidate}).  If a misconfiguration is found, the user is
-   informed and the build aborts. The extensive checks performed by the
-   validator tool are listed in section \ref{validation}. If no error is found,
-   the system policy is now ready to be used for three things:
+   The policy is then checked for consistency and configuration errors by the
+   validator tool (\ref{tools-mucfgvalidate}).  If a misconfiguration is found,
+   the user is informed and the build aborts. The extensive checks performed by
+   the validator tool are listed in section \ref{validation}. If no error is
+   found, the system policy is then ready to be used for three subsequent
+   steps:
 
    \begin{itemize}
-   \item Generate kernel specifications (in SPARK/Ada)
+   \item Generate kernel specifications (SPARK/Ada source files)
    \item Generate structures for subjects
    \item Create a command stream for $\tau0$
    \end{itemize}
 
    The kernel source specifications contain tables and constants which are
-   compiled into the kernel in the kernel build process.
+   compiled into the kernel as part of the kernel build process.
 
    An example of generated subject structures are ACPI tables, which are mapped
    into a Linux VM to announce the available hardware resources.
@@ -274,37 +279,43 @@
   <text priority="0">
    The XML command stream together with the other build artifacts like subject
    structures or the kernel binary is provided as input to the trusted system
-   composer $\tau0$.
+   composer $\tau0$. Its task is to compose a system image while making
+   sure that certain invariants are not violated.
+   The $\tau0$ concept is a mechanism to gradually increase the flexibility of a
+   component based system while keeping a high level of assurance regarding the
+   correctness of isolation enforcement.
 
-   The $\tau0$ concept is a process within Muen development to gradually
-   increase the flexibility of a component based system while keeping a high
-   level of assurance about the correctness of isolation enforcement.
-
-   The ultimate goal is to have a trusted $\tau0$ subject with extra privilege
-   to interact with the Muen SK over a special $\tau0$ interface API. This would
-   allow $\tau0$ to change certain well-defined aspects of the system state at
-   runtime. A potential use-case would be to start a new subject and assign
-   resources like memory and devices to it.
-
-   Since it must be guaranteed that a dynamic system is as secure as the static
-   one, $\tau0$ must be developed with the same utter care as the kernel itself,
-   meaning it must be written in SPARK/Ada and security properties which provide
-   hard isolation must be formally proven. This is an ongoing process.
-
-   The two $\tau0$ scenarios to consider are therefore:
+   There are two modes of operation for $\tau0$:
    \begin{itemize}
    \item static
    \item dynamic
    \end{itemize}
+
+   In the static scenario, the task of $\tau0$ is to construct a bootable system
+   image via assembling the input files and generating data structures such as
+   page tables, all while checking that invariants necessary for correct
+   isolation are valid. An example for such an invariant is that no subject
+   memory mapping may reference a memory region containing paging structure.
+
+   For the dynamic case, the goal is to have a trusted $\tau0$ subject with
+   additional privileges to interact with the Muen SK over a special $\tau0$
+   interface. This will allow $\tau0$ to change certain clearly defined aspects
+   of the system state at runtime. A potential use-case would be to start a new
+   subject and assign resources like memory and devices to it.
+
+   Since it must be guaranteed that a dynamic system is as secure as the static
+   one, $\tau0$ must be developed with the same utter care as the kernel itself,
+   meaning it must be written in SPARK/Ada and security properties which provide
+   hard isolation must be formally proven. This process is currently ongoing.
   </text>
 
-  <section id="tau0-static" label="Static" priority="0">
+  <section id="tau0-static" label="Static mode of operation" priority="0">
    <text priority="0">
     The static variant is the one which is currently implemented. $\tau0$ runs
     at integration time and assembles the system image by constructing the
     data structures guaranteeing isolation and merging in the build artifacts
-    of the other Muen tools, like untrusted ACPI data structures for a Linux
-    VM (\ref{tools-mugenacpi}).
+    of the other Muen tools, like untrusted ACPI data structures for Linux
+    VMs (\ref{tools-mugenacpi}).
 
     Static $\tau0$ fulfills its task by creating the system image in memory
     while processing the commands from the command stream. The following listing
@@ -313,11 +324,12 @@
     \lstinputlisting[caption=$\tau0$ Command
     Stream,label={lst:cmdstream},language=XML,linerange=1-34]{../../../pack/obj/policy_b_cmds.xml}
 
-    $\tau0$ is written in SPARK/Ada and it applies memory typization to proof
-    formal aspects of the system. Command processing starts from a well-known
+    $\tau0$ is written in SPARK/Ada and it applies memory typization to formally
+    prove aspects of the system. Command processing starts from a well-known
     good state and it is enforced that each system state transition resulting
-    from a new command input results in a good state again. If not, the
-    command is rejected and the build aborts.
+    from a new command input results in a good state again by showing that
+    invariants hold after the transition. If not, the command is rejected and
+    the build aborts.
 
     See the project README or the webpage (TODO) for more information about
     the current state of $\tau0$.
@@ -332,13 +344,13 @@
     systems while having the same assurance about security and safety
     properties.
 
-    The dynamic $\tau0$ running as subject would reconstruct the system state
-    at integration time and continue to process commands from there. Commands
-    might be sent to dynamic $\tau0$ by a special control subject, depending
-    on the system use case.
+    The dynamic $\tau0$ running as subject will reconstruct the system state
+    defined at integration time and continue to process commands starting from
+    there. Depending on the system use case, commands might be sent to dynamic
+    $\tau0$ by a special control subject.
 
     The dynamic variant can be divided into multiple sub-variants, depending
-    on how dynamic system behavior is allowed. For example, the initial
+    on how much dynamic system behavior is allowed. For example, the initial
     dynamic variant might only allow entity construction, not destruction.
 
     \begin{warning}
@@ -377,8 +389,8 @@
     conjunction to process a user-defined policy and build a bootable system
     image. Figure \ref{fig:build-process} presents another illustration of the
     policy processing, this time laying the focus on the tools. The following
-    sections explain each processing step before the \ref{toolchain-core-tools}
-    section describes each tool separately.
+    sections explain each processing step while section \ref{toolchain-core-tools}
+    describes each tool separately.
 
     \begin{figure}[h!]
     \centering
@@ -406,9 +418,10 @@
      The tool also provides an implementation of the XML XInclude
      mechanism\footnote{\url{http://www.w3.org/TR/xinclude-11/}}. Using
      includes, the policy writer is able to separate and organize the system
-     policy as desired. Instead of specifying the whole policy in one file, the
+     policy as desired. Instead of specifying the whole policy in one file, e.g.
      subject specifications can be split into separate files, or common parts
-     shared by different system descriptions can be extracted.
+     shared by different system descriptions can be extracted, thus modularizing
+     and simplifying the policy specification task.
 
      After the merge step, the resulting policy is well formatted to minimize
      the difference in the generated policies resulting from the subsequent
@@ -435,11 +448,11 @@
    <section id="toolchain-comp-build" label="Components Build" priority="0">
     <text priority="0">
      After hardware, platform and high-level system policy are merged into a
-     source policy without inclusions, components can extract relevant
-     information from it using whatever means suit best. For example an XSL
-     transformation (XSLT) script could extract the I/O port of a specific
-     device and create a corresponding configuration value based on it, which
-     is then included in the component specification.
+     single source policy file, from which components can extract relevant
+     information from it. For example an XSL transformation (XSLT) script could
+     extract the I/O port of a specific device and create a corresponding
+     configuration value based on it, which is then included in the component
+     specification.
 
      The \texttt{mucgenspec} tool described in \ref{tools-mucgenspec}
      implements the blue \emph{Specgen} task shown in figure
@@ -496,16 +509,16 @@
      all information which can be derived automatically. Section
      \ref{tools-mucfgexpand} explains the Expander tool in detail.
 
-     The result of the expansion task is a policy in format A which is the
-     input for the Allocator tool. This tool is responsible to assign a
-     physical memory address to all memory regions which are not already
-     explicitly stated. By querying the hardware section of the policy, the
-     tool is aware of the total amount of available RAM on a specific system
-     and allocates regions of it for memory elements with no explicit physical
-     address.  The Allocator tool also implements optimization strategies to
-     keep the resulting system image as small as possible.  For example,
-     file-backed memory regions (e.g. a memory region storing a component
-     executable) are preferably placed in lower physical regions. See section
+     The result of the expansion task is a policy in format A which is the input
+     for the Allocator tool. This tool is responsible to assign physical memory
+     addresses to all memory regions which are not already explicitly placed in
+     memory. By querying the hardware section of the policy, the tool is aware
+     of the total amount of available RAM on a specific system and allocates
+     regions of it for memory elements with no explicit physical address.  The
+     Allocator tool also implements optimization strategies to keep the
+     resulting system image as small as possible.  For example, file-backed
+     memory regions (e.g. a memory region storing a component executable) are
+     preferably placed in lower physical regions. See section
      \ref{tools-mucfgalloc} for a description of the Allocator tool.
 
      After the allocation task is complete, the policy is stored in format B.
@@ -529,6 +542,10 @@
      but not advised. Section \ref{tools-mucfgvalidate} explains the usage of
      the Validator tool, while section \ref{validation} outlines all performed
      checks.
+
+     It should be noted that correct memory typization and all invariants
+     enforced by $\tau0$ when constructing the system image cannot be bypassed,
+     since the checks are inherent to the generation of the bootable image file.
     </text>
    </section>
 
@@ -551,15 +568,15 @@
      \item ACPI tables
      \item Linux zero-page (ZP) regions
      \end{itemize}
-     \item Regions for solo5 VMs
+     \item Regions for Solo5 unikernels
      \begin{itemize}
      \item Solo5 boot info
      \end{itemize}
      \end{itemize}
 
-     As this structures do not guarantee isolation between subjects or subjects
-     and the kernel, they are not directly generated by $\tau0$ but only
-     included via XML command stream and build artifacts.
+     As these structures do not affect isolation between subjects or subjects
+     and the kernel, they are not generated by $\tau0$ but only included as
+     binary data via XML command stream and build artifacts.
 
      The structure generator tools are explained in section
      \ref{toolchain-tools-structgen}.
@@ -608,12 +625,13 @@
     </text>
    </section>
 
-   <section id="tools-mucfgcjoin" label="Component Joiner" priority="0">
+   <section id="tools-mucfgcjoin" label="Component Specification Joiner" priority="0">
     <text priority="0">
      The Muen component specification joiner adds component XML specifications
      to the component section of a specified system policy and writes the
      result to a specified output file. Each given component/library
-     specification is loaded and validated against the components XML schema.
+     specification is loaded and validated against the component specification
+     XML schema.
      If it is correct the content is added to the components section of the
      system policy specified as input file.  If the given system policy does
      not yet contain a components section, it is created. The result is
@@ -730,8 +748,8 @@
      to be used to verify the integrity of memory regions during runtime.
 
      Note that no hashes are generated for sinfo memory regions. Since the
-     hash information will be exported via sinfo, and the sinfo region is
-     itself part of the memory information of a subject, this hash would be
+     hash information is exported via sinfo, and the sinfo region is itself part
+     of the memory information of a subject, this hash would be
      self-referential.
 
      The tool also replaces all occurrences of \texttt{hashRef} elements. A
@@ -741,14 +759,14 @@
      From an abstract point of view, the \texttt{hashRef} element is a way to
      link multiple memory regions by declaring that the hash of the content is
      the same.  The hash may serve as an indicator on how to reconstruct the
-     (initial) content of a memory region. This mechanism is heavily used by
-     the subject loader (SL) during subject init and reset operation. The
-     subject loader expander remaps writable memory regions of the loadee (the
-     subject under loader control) to SL and replaces the original regions
-     with new ones containing a hash reference to the associated pyhsical
-     memory region. This way SL is able to determine the intended content of
-     the target memory region by looking up the region in its sinfo page by
-     using the hash value as key.
+     (initial) content of a memory region. This mechanism is used by the subject
+     loader (SL) during subject init and reset operation. The subject loader
+     expansion step remaps writable memory regions of the loadee (the subject
+     under loader control) to SL and replaces the original regions with new
+     ones containing a hash reference to the associated pyhsical memory region.
+     This way SL is able to determine the intended content of the target memory
+     region by looking up the region in its sinfo page by using the hash value
+     as key.
     </text>
    </section>
 
@@ -871,7 +889,7 @@
 
       The so-called Zero Page (ZP) exports information required by the boot
       protocol of the Linux kernel on the x86 architecture. The kernel uses the
-      provided information to retrieve settings about its running environment:
+      provided information to retrieve settings about its runtime environment:
       \begin{itemize}
       \item Type of bootloader
       \item Map of physical memory (e820 map)
@@ -884,7 +902,7 @@
     <section id="tools-mugensolo5" label="Solo5 Boot Info" priority="0">
      <text priority="0">
       Generate Solo5 boot info structures for Mirage unikernels running on the
-      Solo5 platform with the unikernel monitor backend.
+      Solo5 platform.
 
       \begin{description} \itemsep1pt \parskip0pt
       \item[Name] \hfill \\
@@ -904,8 +922,9 @@
       \begin{itemize}
       \item Memory size in bytes
       \item Address of end of unikernel
-      \item Command line parameters
       \item TSC frequency
+      \item Command line parameters
+      \item Address of application manifest
       \end{itemize}
      </text>
     </section>
@@ -977,7 +996,7 @@
       \end{description}
 
       The Sinfo page is used to export subject information data extracted from
-      the system policy to VM subjects. Currently, information about available
+      the system policy to subjects. Currently, information about available
       memory regions, communication channels and assigned PCI devices is
       provided.
      </text>
@@ -995,7 +1014,8 @@
     <text priority="0">
      The \texttt{Mucheckelf} tool enforces that the format of a given Muen
      kernel ELF binary matches the kernel memory layout specified in a system
-     policy.
+     policy. Furthermore, the ELF kernel entry point is compared to the expected
+     value.
 
      Size, VMA (Virtual Memory Address) and permissions of binary ELF sections
      are validated against kernel memory regions defined in the policy. The
@@ -1096,7 +1116,9 @@
      of the device exhibiting this problem. While the device can still be
      assigned to a subject, it is missing the IRQ element and as a result the
      IRQ resource itself. It can be assumed that this leads to problems with the
-     driver interacting with the device.
+     driver interacting with the device. For proper operation, it is the policy
+     writer's task to rectify the hardware specification by determining the
+     correct configuration manually.
     </text>
    </section>
 
@@ -1135,7 +1157,7 @@
    <section id="tools-mucbinsplit" label="Component Binary Splitter" priority="0">
     <text priority="0">
      The \texttt{mucbinsplit} tool splits component binaries into multiple
-     files per ELF section.
+     files, one per ELF section.
 
      \begin{description} \itemsep1pt \parskip0pt
      \item[Name] \hfill \\
@@ -1150,7 +1172,8 @@
      The component binary splitter tool processes component binaries and
      creates a separate file for each ELF section. The component XML
      description is extended by adding a file-backed memory region for each
-     ELF section with the appropriate size and access rights.
+     ELF section with the appropriate virtual mapping address, size and access
+     rights.
 
      The resulting processed component description is written to the given
      output location while the binary section files are written to the
@@ -1162,17 +1185,16 @@
 
  <section id="validation" label="Policy Validation" priority="0">
   <text priority="0">
-   Before a tool outlined in the toolchain section \ref{toolchain-core-tools}
-   performs actions on the policy, it checks all required preconditions via
+   Prior to operate on the policy, any tool outlined in the toolchain section
+   \ref{toolchain-core-tools} checks all required preconditions by running
    \emph{validator} procedures. For example a tool accessing physical devices
    via subject logical device references will execute a validator checking such
    references for validity.
 
    Before the policy is used to generate system structures like sinfo regions,
-   or the command stream for $\tau0$, the allocated and expanded policy in
-   format B is validated by executing a comprehensive set of checks. This
-   is done by the \texttt{mucfgvalidate} tool outlined in section
-   \ref{tools-mucfgvalidate}.
+   or the command stream for $\tau0$, the expanded policy in format B is
+   validated by executing a comprehensive set of checks. This is done by the
+   \texttt{mucfgvalidate} tool outlined in section \ref{tools-mucfgvalidate}.
 
    The following sections list the various checks executed by
    \texttt{mucfgvalidate} and the other Muen build tools in the toolchain.

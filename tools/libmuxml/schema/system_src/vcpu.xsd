@@ -15,7 +15,10 @@
     Deviating from the settings provided by the component vCPU profile might
     result in unexpected system behavior. A system integrator changing any of
     these values must have a thorough understanding of both the runtime behavior
-    of the Muen SK and the Intel VT-x/VT-d architecture.
+    of the Muen SK and the Intel VT-x/VT-d architecture. The
+    \texttt{mucfgvalidate} tool checks that requirements for safe execution of
+    Muen are met, i.e. invalid settings are detected and a meaningful error
+    message will be presented.
     \end{warning}
    </xs:documentation>
   </xs:annotation>
@@ -45,7 +48,10 @@
     Deviating from the settings provided by the component vCPU profile might
     result in unexpected system behavior. A system integrator changing any of
     these values must have a thorough understanding of both the runtime behavior
-    of the Muen SK and the Intel VT-x/VT-d architecture.
+    of the Muen SK and the Intel VT-x/VT-d architecture. The
+    \texttt{mucfgvalidate} tool checks that requirements for safe execution of
+    Muen are met, i.e. invalid settings are detected and a meaningful error
+    message will be presented.
     \end{warning}
    </xs:documentation>
   </xs:annotation>
@@ -92,7 +98,10 @@
     Deviating from the settings provided by the component vCPU profile might
     result in unexpected system behavior. A system integrator changing any of
     these values must have a thorough understanding of both the runtime behavior
-    of the Muen SK and the Intel VT-x/VT-d architecture.
+    of the Muen SK and the Intel VT-x/VT-d architecture. The
+    \texttt{mucfgvalidate} tool checks that requirements for safe execution of
+    Muen are met, i.e. invalid settings are detected and a meaningful error
+    message will be presented.
     \end{warning}
    </xs:documentation>
   </xs:annotation>
@@ -127,7 +136,10 @@
     Deviating from the settings provided by the component vCPU profile might
     result in unexpected system behavior. A system integrator changing any of
     these values must have a thorough understanding of both the runtime behavior
-    of the Muen SK and the Intel VT-x/VT-d architecture.
+    of the Muen SK and the Intel VT-x/VT-d architecture. The
+    \texttt{mucfgvalidate} tool checks that requirements for safe execution of
+    Muen are met, i.e. invalid settings are detected and a meaningful error
+    message will be presented.
     \end{warning}
    </xs:documentation>
   </xs:annotation>
@@ -155,7 +167,10 @@
     Deviating from the settings provided by the component vCPU profile might
     result in unexpected system behavior. A system integrator changing any of
     these values must have a thorough understanding of both the runtime behavior
-    of the Muen SK and the Intel VT-x/VT-d architecture.
+    of the Muen SK and the Intel VT-x/VT-d architecture. The
+    \texttt{mucfgvalidate} tool checks that requirements for safe execution of
+    Muen are met, i.e. invalid settings are detected and a meaningful error
+    message will be presented.
     \end{warning}
    </xs:documentation>
   </xs:annotation>

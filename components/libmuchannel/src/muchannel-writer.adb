@@ -43,6 +43,8 @@ is
      (Channel : out Channel_Type;
       Epoch   :     Header_Field_Type)
    is
+      Local_Null_Element : Element_Type;
+      for Local_Null_Element'Address use Null_Element'Address;
    begin
 
       --  Deactivate previous epoch.
@@ -62,7 +64,7 @@ is
       --  Initialize channel data.
 
       for I in Data_Type'Range loop
-         Channel.Data (I) := Null_Element;
+         Channel.Data (I) := Local_Null_Element;
       end loop;
 
       --  Initiate new epoch.

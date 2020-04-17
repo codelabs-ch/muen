@@ -27,25 +27,46 @@ is
 
    use Ahci_Drv_Component.Devices;
 
+   type Clear_Error_Type is record
+      Sata : Boolean;
+      Intr : Boolean;
+   end record;
 
-   --  Reset port specified by ID.
-   procedure Reset
-     (ID      :     Port_Range;
-      Success : out Boolean);
+   procedure Clear_Errors
+      (ID    : Port_Range;
+       Clear : Clear_Error_Type);
 
    --  Enable port specified by ID.
    procedure Enable
      (ID      :     Port_Range;
       Success : out Boolean);
 
+   --  Execute commandslot
+   procedure Execute
+      (ID      :     Port_Range;
+       Success : out Boolean);
+
+   --  Test if the port is active (device detected)
+   procedure Is_Active
+      (ID     :     Port_Range;
+       Active : out Boolean);
+
+   --  Power up port specified by ID.
+   procedure Power_Up (ID : Port_Range);
+
+   --  Reset port specified by ID.
+   procedure Reset
+     (ID      :     Port_Range;
+      Success : out Boolean);
+
+   --  Spin up device
+   procedure Spin_Up (ID : Port_Range);
+
    --  Start command processing of command list for port specified by ID.
    procedure Start (ID : Port_Range);
 
    --  Stop command processing of command list for port specified by ID.
    procedure Stop (ID : Port_Range);
-
-   --  Power up port specified by ID.
-   procedure Power_Up (ID : Port_Range);
 
    --  Serial ATA AHCI 1.3.1 Specification, section 3.3.
 

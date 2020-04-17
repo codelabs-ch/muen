@@ -953,12 +953,12 @@ is
 
    --D @Section Id => impl_exit_handler, Label => VMX Exit Handling, Parent => implementation, Priority => -5
    --D @Text Section => impl_exit_handler, Priority => 0
-   --D The VMX exit handle procedure \texttt{Handle_Vmx_Exit} is the main
+   --D The VMX exit handle procedure \texttt{Handle\_Vmx\_Exit} is the main
    --D subprogram of the kernel.
    --D It is invoked whenever the execution of a subject stops and an exit into
    --D VMX root mode is performed by the hardware. The register state of the
    --D current subject is passed to the procedure by the
-   --D \texttt{vmx_exit_handler} assembly code (which is set as kernel entry
+   --D \texttt{vmx\_exit\_handler} assembly code (which is set as kernel entry
    --D point in the VMCS of the trapping subject).
    procedure Handle_Vmx_Exit (Subject_Registers : in out SK.CPU_Registers_Type)
    is
@@ -980,7 +980,7 @@ is
       Basic_Exit_Reason := SK.Word16 (Exit_Reason and 16#ffff#);
 
       --D @Text Section => impl_exit_handler, Priority => 0
-      --D The \texttt{Handle_Vmx_Exit} procedure first saves the state of the
+      --D The \texttt{Handle\_Vmx\_Exit} procedure first saves the state of the
       --D subject that has just trapped into the exit handler, along with the
       --D register values and the exit reason, see
       --D \ref{impl_subjects_state_save}.

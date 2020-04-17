@@ -215,9 +215,9 @@
      The Muen kernel has two main entry points: system initialization and the
      scheduler loop. Upon start of a system the kernel puts the CPU in the
      appropriate state by setting up the MMU and transitioning into VMX
-     root-mode. After setting up the interrupt controllers and IOMMU, the
-     initial subject is executed via VM-Entry after all CPU cores have setup
-     everything and are ready. Detailed description of kernel initialization is
+     root-mode. After setting up the interrupt controllers, IOMMU and when all active
+     CPU cores are ready, the execution of the initial subject is started by
+     means of a VM-Entry. Detailed description of kernel initialization is
      given in section \ref{impl_kernel_init}.
 
      On VM-Exit the hardware invokes the scheduler subprogram since it has been
@@ -249,8 +249,10 @@
      active whenever a subject is executed. As a consequence, subjects have only
      access to the memory resources assigned to them.
      Architectural state, such as processor and FPU registers, is saved to an
-     associated memory region when subjects change. The state of the subject to
-     be executed is completely restored.
+     associated memory region when subjects change detailed description. The
+     state of the subject to be executed is completely restored. An in-depth
+     description of the implementation is given in section
+     \ref{impl_subjects_state}.
 
      Access rights to model-specific registers (MSRs) as well as I/O ports of
      devices are determined via MSR and I/O bitmaps, see Intel SDM Vol. 3C,
@@ -370,8 +372,8 @@
 
      Since resource allocation is static, a global mapping of hardware interrupt
      to destination subject including the interrupt vector to deliver, is
-     generated at integration time, see \texttt{Skp.Interrupts} package. The
-     kernel uses the {Vector\_Routing} array at runtime to determine the
+     generated at integration time, see the \ref{Skp.Interrupts} package. The
+     kernel uses the \texttt{Vector\_Routing} array at runtime to determine the
      destination subject that constitutes the final recipient of the interrupt.
 
      The IRQ trigger mode is also designated by the \texttt{Skp.Interrupts}
@@ -384,7 +386,8 @@
      forwarded to a subject by atomically setting the correct bit in the data
      structure associated with the destination subject. Once execution of a
      subject is resumed, the kernel checks the pending interrupts and injects
-     it, which completes the delivery of the interrupt.
+     it, which completes the delivery of the interrupt. If multiple interrupts
+     are pending, the one with the highest vector number is processed.
 
      Subjects can control interrupt injection by setting or clearing the
      \emph{Interrupt enable flag} (RFLAGS.IF). As long as the flag is clear, the
@@ -421,15 +424,17 @@
      expected. If for some unforeseen reason (e.g.  non-maskable interrupt NMI)
      an exception occurs, it indicates a serious error. In that case, a crash
      audit record is filled with the appropriate error information and the
-     system is halted.
+     system is haltedi. Refer to section \ref{impl_crash_audit} for a detailed
+     description of the Crash Audit implementation.
 
      In the case of an exception being caused by the execution of a subject, the
-     kind of exception handling depends on the vCPU profile, specified in the
-     system policy, of the running subject. If the subject is not allowed to
-     handle a particular exception itself, then a VM exit occurs with the exit
-     reason indicating the cause. The kernel handles the trap like any other
-     exit and consults the subject's trap table to determine the appropriate
-     action as specified in the policy, e.g. switching to a monitor subject.
+     kind of exception handling depends on the vCPU profile of the running
+     subject. The vCPU configuration of each subject is specified as part of the
+     system policy. If the subject is not allowed to handle a particular
+     exception itself, then a VM exit occurs with the exit reason indicating the
+     cause. The kernel handles the trap like any other exit and consults the
+     subject's trap table to determine the appropriate action as specified in
+     the policy, e.g. switching to a monitor subject.
 
      Subjects may be allowed to process exceptions themselves, e.g. a VM subject
      performing it's own page fault handling.  In this case, an exception is
@@ -455,7 +460,7 @@
      successful system start. If there is an error during early machine initialization
      before the actual Muen-based system starts execution, then there is no way for the kernel to
      recognize and report such an event. However, once the kernel does start
-     execution, the successful system start has realized so in that sense the
+     execution, the successful system start has occurred so in that sense the
      event becomes self-evident through running code.
 
      The crash audit mechanism is in charge of covering the second case and thus
@@ -525,9 +530,9 @@
      execution of the origin subject with the new state.
 
      Through the use of the event mechanism, the vast majority of traps is
-     handed over to a second subject to process. Only two event actions are
-     handled directly by the kernel: system reboot and poweroff, see also
-     \ref{impl_handle_source_event}.
+     handed over to a second subject to process. Only a few event actions are
+     handled directly by the kernel: unmask IRQ, system panic, reboot and
+     poweroff, see also \ref{impl_handle_source_event}.
     </text>
    </section>
    <section id="overview_covert_channels" label="Avoidance of Covert Channels" priority="0">
@@ -546,6 +551,13 @@
      The receiver measures this variance and can thereby extract data bits. If a
      particular operation can be carried out quickly, then this is e.g.
      interpreted as 1; otherwise a 0 is assumed.
+
+     As a general rule, only the required resources with minimal rights are
+     available to both the kernel as well as subjects. This has the effect that
+     the exposure of data is greatly reduced, minimizing the information which
+     could be transferred via side channels. See also section
+     \ref{datamodel_multicore} for further information on how data is handled in
+     the Muen kernel.
 
      Data channels can be largely avoided or eliminated by careful assignment of
      resources to subjects in the system policy. On the other hand, timing
@@ -569,20 +581,17 @@
      running on the same physical CPU or not concurrently on separate CPUs. If subjects
      are executed at different times, the observability of side channels and
      their bandwidth is limited since the sender and receiver must always
-     alternate encoding and decoding of data.
-     This also applies to subjects running on the same physical core, even
-     though they still share a lot of hardware state. To further reduce bandwidth
-     in this case, the integrator may explicitly schedule a subject, which
-     "scrubs" the (micro-)architectural state, between the execution of other
-     subjects.
+     alternate encoding and decoding of data. This also applies to subjects
+     running on the same physical core, even though they still share a lot of
+     hardware state. To further reduce bandwidth in this case, the integrator
+     may explicitly schedule a subject, which "scrubs" the (micro-)architectural
+     state, between the execution of other subjects.  Thus, the exact control
+     over scheduling of subject enables system integrators to reduce the risk of
+     side channels.
 
      Furthermore, on Muen systems, Hyper-Threading is generally disabled because
      hardware threads share much more (micro-)architectural state than physical
      CPU cores.
-
-     As a general rule, only the required resources with minimal rights are
-     available to both the kernel as well as subjects. This topic is further
-     expanded in section \ref{datamodel_multicore}.
     </text>
    </section>
   </section>
@@ -719,9 +728,9 @@
     according to the system policy.
 
     During normal operation, the APIC is accessed to acknowledge
-    End-Of-Interrupt (EOI) to unblock processing of other interrupts [TODO:
-    when]. In case of level-triggered IRQs, the I/O APIC is used to mask and unmask the
-    corresponding redirection table entries.
+    End-Of-Interrupt (EOI) whenever an IRQ is handled, in order to unblock
+    processing of other interrupts. In case of level-triggered IRQs, the I/O
+    APIC is used to mask and unmask the corresponding redirection table entries.
 
     Enforcement that only the configured interrupts are raised is done by the
     IOMMU Interrupt Remapping functionality, see section

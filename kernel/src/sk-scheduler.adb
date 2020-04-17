@@ -157,7 +157,7 @@ is
 
       --D @Text Section => impl_inject_interrupt, Priority => 10
       --D Then, check if the subject has more pending interrupts and activate
-      --D Interrupt window if required, see Intel SDM Vol. 3C, "6.7.5
+      --D Interrupt window if required, see Intel SDM Vol. 3C, "26.7.5
       --D Interrupt-Window Exiting and Virtual-Interrupt Delivery".
       Subjects_Interrupts.Has_Pending_Interrupt
         (Subject           => Subject_ID,

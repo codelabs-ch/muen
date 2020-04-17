@@ -48,7 +48,7 @@ is
 
    --D @Interface
    --D Virtual-Machine Control Structure as specified in Intel SDM Vol. 3C,
-   --D "24 Virtual Machine Control Structures".
+   --D "Chapter 24 Virtual Machine Control Structures".
    type VMCS_Region_Type is record
       --D @Interface
       --D Header comprised of VMCS revision identifier and VMX-abort indicator.
@@ -75,7 +75,8 @@ is
    --D Virtual Machine Control Structure (VMCS) is used by hardware to manage
    --D the VM state of each subject designated by ID. The VM state is saved and
    --D restored on each VM-exit and entry according to the VM-controls and as
-   --D specified in Intel SDM Vol. 3C, chapter 24 \cite{intelsdm}.
+   --D specified in Intel SDM Vol. 3C, "Chapter 24 Virtual Machine Control
+   --D Structures" \cite{intelsdm}.
    VMCS : VMCS_Array
    with
       Volatile,
@@ -265,7 +266,7 @@ is
       --D Read Default0 and Default1 from the
       --D \texttt{IA32\_VMX\_TRUE\_PINBASED\_CTLS} MSR. Combine them with the
       --D policy-defined value by setting the defaults for reserved control bits
-      --D according to Intel SDM Vol. 3C,
+      --D according to Intel SDM Vol. 3D,
       --D "A.3.1 Pin-Based VM-Execution Controls". Then, set the Pin-Based
       --D VM-Execution controls by writing the value to the corresponding VMCS
       --D field.
@@ -282,7 +283,7 @@ is
       --D Read Default0 and Default1 from the
       --D \texttt{IA32\_VMX\_TRUE\_PROCBASED\_CTLS} MSR. Combine them with the
       --D policy-defined value by setting the defaults for reserved control bits
-      --D according to Intel SDM Vol. 3C,
+      --D according to Intel SDM Vol. 3D,
       --D "A.3.2 Primary Processor-Based VM-Execution Controls". Then, set the
       --D Processor-Based VM-Execution controls by writing the value to the
       --D corresponding VMCS field.
@@ -299,8 +300,8 @@ is
       --D Read Default0 and Default1 from the
       --D \texttt{IA32\_VMX\_PROCBASED\_CTLS2} MSR. Combine them with the
       --D policy-defined value by setting the defaults for reserved control bits
-      --D according to Intel SDM Vol. 3C,
-      --D "A.3.3 Secondry Processor-Based VM-Execution Controls". Then, set the
+      --D according to Intel SDM Vol. 3D,
+      --D "A.3.3 Secondary Processor-Based VM-Execution Controls". Then, set the
       --D secondary processor-based VM-Execution controls by writing the value
       --D to the corresponding VMCS field.
       CPU.Get_MSR (Register => Constants.IA32_VMX_PROCBASED_CTLS2,
@@ -364,7 +365,7 @@ is
       --D Read Default0 and Default1 from the
       --D \texttt{IA32\_VMX\_TRUE\_EXIT\_CTLS} MSR. Combine them with the
       --D policy-defined value by setting the defaults for reserved control bits
-      --D according to Intel SDM Vol. 3C, "A.4 VM-Exit Controls". Then, set the
+      --D according to Intel SDM Vol. 3D, "A.4 VM-Exit Controls". Then, set the
       --D VM-Exit controls by writing the value to the corresponding VMCS field.
       CPU.Get_MSR (Register => Constants.IA32_VMX_TRUE_EXIT_CTLS,
                    Low      => Default0,
@@ -379,7 +380,7 @@ is
       --D Read Default0 and Default1 from the
       --D \texttt{IA32\_VMX\_TRUE\_ENTRY\_CTLS} MSR. Combine them with the
       --D policy-defined value by setting the defaults for reserved control bits
-      --D according to Intel SDM Vol. 3C, "A.5 VM-Entry Controls". Then, set the
+      --D according to Intel SDM Vol. 3D, "A.5 VM-Entry Controls". Then, set the
       --D VM-Entry controls by writing the value to the corresponding VMCS
       --D field.
       CPU.Get_MSR (Register => Constants.IA32_VMX_TRUE_ENTRY_CTLS,
@@ -557,14 +558,14 @@ is
       VMCS (Subject_ID).Header := (Revision_ID     => Rev_ID,
                                    Abort_Indicator => 0);
       --D @Item List => impl_vmcs_reset_steps, Priority => 0
-      --D Set all remaining VMCS data to zero, see Intel SDM Vol 3C,
+      --D Set all remaining VMCS data to zero, see Intel SDM Vol. 3C,
       --D "24.2 Format of the VMCS Region".
       VMCS (Subject_ID).Data   := (others => 0);
 
       --D @Item List => impl_vmcs_reset_steps, Priority => 0
       --D Execute VMCLEAR instruction again to initialize
       --D implementation-specific information in the VMCS region, see Intel SDM
-      --D Vol. 3C, "24.11.3 Initializing VMCS"  .
+      --D Vol. 3C, "24.11.3 Initializing a VMCS".
       Clear (VMCS_Address => VMCS_Address);
    end Reset;
 
@@ -607,7 +608,7 @@ is
       --D The requirements for executing the \texttt{vmxon} instruction are
       --D assured when the VMX feature is enabled see
       --D \ref{impl_vmcs_enable_vmx}. For further reference see Intel SDM Vol.
-      --D 3C, "23.7 Enabling and Entering VMX operation".
+      --D 3C, "23.7 Enabling and Entering VMX Operation".
       CPU.Set_CR4 (Value => Bitops.Bit_Set
                    (Value => CR4,
                     Pos   => Constants.CR4_VMXE_FLAG));

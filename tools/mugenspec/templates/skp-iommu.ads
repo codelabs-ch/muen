@@ -550,7 +550,7 @@ __iommu_type_sizes__
 
    --D @Interface
    --D Common register definitions that are the same for IOMMUs of any
-   --D generation, see Intel VT-d spec, section "10.4 Register Descriptions".
+   --D generation, see Intel VT-d Specification, "10.4 Register Descriptions".
    type IOMMU_Common_Type is record
       Version             : Reg_Version_Type;
       Reserved_1          : SK.Word32;
@@ -596,13 +596,13 @@ __iommu_type_sizes__
       Common           : IOMMU_Common_Type;
       --D @Interface
       --D IOTLB registers used for IOTLB invalidation. They have a variable
-      --D offset depending on the specific IOMMU device, see Intel VT-d spec,
-      --D "10.4.8 IOTLB Registers".
+      --D offset depending on the specific IOMMU device, see Intel VT-d
+      --D Specification, "10.4.8 IOTLB Registers".
       IOTLB_Invalidate : Reg_IOTLB_Invalidate;
       --D @Interface
       --D Fault recording registers used providing error information on VT-d
       --D faults. Their number and offset varies depending on the specific
-      --D IOMMU device, see Intel VT-d spec, "10.4.14 Fault Recording
+      --D IOMMU device, see Intel VT-d Specification, "10.4.14 Fault Recording
       --D Registers [n]".
       Fault_Recording  : Reg_Fault_Recording_Type;
    end record;

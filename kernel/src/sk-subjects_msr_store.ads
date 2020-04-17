@@ -97,7 +97,8 @@ private
    --D @Interface
    --D MSR save/restore storage area of each subject identified by ID. Hardware
    --D saves and restores MSRs on each VM-Entry and Exit as specified by Intel
-   --D SDM Vol. 3C, section 24.7.2 and 24.8.2 \cite{intelsdm}.
+   --D SDM Vol. 3C, "24.7.2 VM-Exit Controls for MSRs" and Intel SDM Vol. 3C,
+   --D "24.8.2 VM-Entry Controls for MSRs" \cite{intelsdm}.
    MSR_Storage : MSR_Storage_Array
    with
       Volatile,

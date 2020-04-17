@@ -25,10 +25,10 @@ with SK.Crash_Audit;
 with SK.Interrupt_Tables;
 
 --D @Interface
---D This package implements subprograms corresponding to low-level Intel VT-x
---D instructions. They are required for the management of VMX data structures
---D such as VMXON and VMCS regions, see Intel SDM Vol. 3C, chapter 30
---D \cite{intelsdm}.
+--D This package implements subprograms to enter VMX root operation as well as
+--D for higher level access and management D of VMX structures such as VMCS and
+--D VMXON regions, see Intel SDM Vol. 3C, "Chapter 24 Virtual Machine Control
+--D Structures" \cite{intelsdm}.
 package SK.VMX
 with
    Abstract_State =>
@@ -120,7 +120,7 @@ is
    --D @Section Id => impl_vmcs_setup_guest, Label => Guest-State Fields Setup, Parent => impl_vmcs, Priority => 0
    --D @Text Section => impl_vmcs_setup_guest, Priority => 0
    --D Setup guest-state fields of the currently active VMCS. Processor state is
-   --D loaded from these fields on every VM entry (Intel SDM Vol 3C,
+   --D loaded from these fields on every VM entry (Intel SDM Vol. 3C,
    --D "27.3 Saving Guest State") and stored on very VM exit (Intel SDM Vol. 3C,
    --D "26.3.2 Loading Guest State").
    procedure VMCS_Setup_Guest_Fields

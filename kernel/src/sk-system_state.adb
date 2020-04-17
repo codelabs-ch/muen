@@ -246,7 +246,7 @@ is
 
       --D @Item List => impl_kernel_init_check_state_steps, Priority => 0
       --D Check that the current processor operating mode meets the required CR0
-      --D fixed bits, see Intel SDM Vol. 3C, "A.7 VMX-Fixed Bits in CR0".
+      --D fixed bits, see Intel SDM Vol. 3D, "A.7 VMX-Fixed Bits in CR0".
       Fixed0 := CPU.Get_MSR64 (Register => Constants.IA32_VMX_CR0_FIXED0);
       Fixed1 := CPU.Get_MSR64 (Register => Constants.IA32_VMX_CR0_FIXED1);
       Ctx.CR0_Valid := Fixed_Valid
@@ -258,7 +258,7 @@ is
 
       --D @Item List => impl_kernel_init_check_state_steps, Priority => 0
       --D Check that the current processor operating mode meets the required CR4
-      --D fixed bits, see Intel SDM Vol. 3C, "A.8 VMX-Fixed Bits in CR4".
+      --D fixed bits, see Intel SDM Vol. 3D, "A.8 VMX-Fixed Bits in CR4".
       Fixed0 := CPU.Get_MSR64 (Register => Constants.IA32_VMX_CR4_FIXED0);
       Fixed1 := CPU.Get_MSR64 (Register => Constants.IA32_VMX_CR4_FIXED1);
       Ctx.CR4_Valid := Fixed_Valid

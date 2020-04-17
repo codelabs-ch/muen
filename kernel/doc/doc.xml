@@ -404,10 +404,10 @@
      executed.  The "Acknowledge Interrupt on Exit" VM-Exit control is
      leveraged, so the hardware acknowledges the interrupt controller and stores
      the interrupt vector in the VM-exit interruption-information field, see
-     Intel SDM Vol.  3C, "27.7.1 VM-Exit controls".
+     Intel SDM Vol. 3C, "24.7.1 VM-Exit Controls".
 
      Thus, interrupt handling is implemented as specified in Intel SDM Vol. 3C,
-     "33.3.3.3 Guest Assigned I/O Devices".
+     "33.3.3.3 Processing of External Interrupts by VMM".
 
      Spurious or invalid interrupts that have no valid interrupt to subject
      mapping are ignored by the kernel.
@@ -748,7 +748,7 @@
     by the device source ID which is associated with the VT-d page tables
     generated for the given device. During startup, the kernel installs the
     necessary and pre-generated data structure, activating DMAR by programming
-    the IOMMU. For further information see Intel VT-d specification, "3 DMA
+    the IOMMU. For further information see Intel VT-d Specification, "3 DMA
     Remapping" \cite{intelvtd}.
 
     The IOMMU Interrupt Remapping (IR) feature with the remapping table
@@ -756,8 +756,7 @@
     raised according to the policy for all assigned IRQs and that all other,
     non-assigned IRQs are blocked. During setup, the kernel installs the
     remapping table and enables IR. For further information see Intel VT-d
-    specification, "5 Interrupt Remapping and Interrupt Posting"
-    \cite{intelvtd}.
+    Specification, "5 Interrupt Remapping" \cite{intelvtd}.
    </text>
   </section>
   <section id="kernel_devs_timer" label="Timer" priority="0">
@@ -767,11 +766,11 @@
     which is programmed by writing a countdown value in the corresponding VMCS
     field. In VMX non-root mode, the VMX-preemption timer counts down at a rate
     proportional to the TSC and causes a VM-exit when the counter reaches zero.
-    For further documentation see Intel SDM Volume 3C, "25.5.1 VMX-Preemption
+    For further documentation see Intel SDM Vol. 3C, "25.5.1 VMX-Preemption
     Timer".
 
     Note that Muen only supports systems that have the "Invariant TSC" feature,
-    see Intel SDM Vol. 3B "17.17.1 Invariant TSC".
+    see Intel SDM Vol. 3B, "17.17.1 Invariant TSC".
    </text>
   </section>
   <section id="kernel_devs_debug" label="Diagnostics" priority="0">

@@ -1,6 +1,6 @@
 <doc name="Muen Separation Kernel">
  <author>Adrian-Ken Rüegsegger, Reto Bürki</author>
- <version>0.1</version>
+ <version>0.6</version>
 
  <latex_preamble>
   \usepackage{acronym}

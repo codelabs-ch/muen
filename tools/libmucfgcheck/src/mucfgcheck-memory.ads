@@ -91,11 +91,12 @@ is
    --  mapping is at the expected virtual location.
    procedure Kernel_Sched_Group_Info_Mappings (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that a subject state memory region exists for every subject.
+   --  Validate that a subject state memory region with the expected size
+   --  exists for every subject.
    procedure Subject_State_Region_Presence (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that a subject interrupts memory region exists for every
-   --  subject.
+   --  Validate that a subject interrupts memory region with the expected size
+   --  exists for every subject.
    procedure Subject_Interrupts_Region_Presence
      (XML_Data : Muxml.XML_Data_Type);
 
@@ -138,20 +139,22 @@ is
    --  virtual location.
    procedure Subject_FPU_State_Mappings (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that a subject FPU state memory region exists for every
-   --  subject.
+   --  Validate that a subject FPU state memory region with the expected size
+   --  exists for every subject.
    procedure Subject_FPU_State_Region_Presence
      (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that a subject timed event memory region exists for every
-   --  subject.
+   --  Validate that a subject timed event memory region with the expected size
+   --  exists for every subject.
    procedure Subject_Timed_Event_Region_Presence
      (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that a subject I/O Bitmap region exists for every subject.
+   --  Validate that a subject I/O Bitmap region with the expected size exists
+   --  for every subject.
    procedure Subject_IOBM_Region_Presence (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that a subject MSR Bitmap region exists for every subject.
+   --  Validate that a subject MSR Bitmap region  with the expected size exists
+   --  for every subject.
    procedure Subject_MSRBM_Region_Presence (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate that a subject MSR store memory region exists for each subject

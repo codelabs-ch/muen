@@ -73,7 +73,7 @@ is
 
    --D @Item List => validators_subj, Priority => 0
    --D Validate that logical names of subject unmask IRQ events conform to the
-   --D naming scheme ("unmask_irq_$IRQNR") and that the unmask number matches
+   --D naming scheme (\verb"unmask_irq_$IRQNR") and that the unmask number matches
    --D the physical IRQ.
    procedure Logical_Unmask_Event (XML_Data : Muxml.XML_Data_Type);
 

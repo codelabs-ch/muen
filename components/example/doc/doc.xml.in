@@ -1,6 +1,6 @@
 <doc name="Muen Component Specification">
  <author>Adrian-Ken Rueegsegger, Reto Buerki</author>
- <version>0.1</version>
+ <version>0.6</version>
 
  <latex_preamble>
   \usepackage{listings}

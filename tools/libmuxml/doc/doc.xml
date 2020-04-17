@@ -154,7 +154,7 @@
      The user-specified policy is written in the so called \emph{source format}.
      Constructs such as channels provide abstractions to simplify the
      specification of component-based systems. Many XML elements and attributes
-     are optional and are \epmh{expanded} during later steps of the policy
+     are optional and are \emph{expanded} during later steps of the policy
      compilation process.
 
      Kernel and $\tau0$ subject (\ref{tau0-dynamic}) resources are not part of

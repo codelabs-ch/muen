@@ -156,8 +156,8 @@
     backing files from a component binary (\ref{tools-mucbinsplit}).
     \item subject\_channel~\\
     Physical memory region used as shared channel between two subjects. The
-    expander tool expands channels in system policy source format to memory
-    regions with this type in system policy format a/b, as described in section
+    expander tool transforms channels in system policy source format to memory
+    regions with this type in system policy format A/B, as described in section
     \ref{system_src.xsd:channelsType}.
     \item subject\_crash\_audit~\\
     Memory region used by crash audit to store system crash information into

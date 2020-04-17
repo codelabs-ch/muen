@@ -215,10 +215,18 @@
    At the top, the graph shows how configuration and build parameters are
    applied to the following constituents of the system policy:
    \begin{itemize}
-   \item Hardware description (static)
-   \item Hardware description (generated)
-   \item Platform description
-   \item System description
+   \item Hardware description (static)~\\
+   Contains manually specified devices by the integrator, e.g. common hardware
+   like I/O ports of a PC speaker. Such devices are not automatically collected
+   by the hardware configuration generator.
+   \item Hardware description (generated)~\\
+   Hardware description extracted from a running Linux system by the
+   \texttt{mugenhwcfg} tool (\ref{tools-mugenhwcfg}).
+   \item Platform description~\\
+   Common names and abstractions to form a unifying view over different hardware
+   configurations.
+   \item System description~\\
+   Specification of an actual component-based system running on the Muen SK.
    \end{itemize}
 
    These combined inputs form the parameterized system policy in format source,
@@ -227,8 +235,8 @@
    subject, or whether a specific debug facility has been enabled by the system
    integrator.
 
-   % XXX: Describe purpose of component description/spec since it's not that
-   %      clear what it is for?
+   % XXX: Describe/introduce component specification
+   % XXX: Update graph: Component specs can also be parameterized
 
    The CSPECs mechanism outlined in the Muen Component Specification document
    \cite{muen:component_specification} can be used by components to generate
@@ -321,11 +329,8 @@
     VMs (\ref{tools-mugenacpi}).
 
     Static $\tau0$ fulfills its task by creating the system image in memory
-    while processing the commands from the command stream. The following listing
-    shows an example command stream:
-
-    \lstinputlisting[caption=$\tau0$ Command
-    Stream,label={lst:cmdstream},language=XML,linerange=1-34]{../../../pack/obj/policy_b_cmds.xml}
+    while processing the commands from the command stream. See
+    \ref{tools-mugentau0cmds} for an example command stream.
 
     $\tau0$ is written in SPARK/Ada and it applies memory typization to formally
     prove aspects of the system. Command processing starts from a well-known
@@ -767,16 +772,12 @@
     <text priority="0">
      Creates an XML command stream for $\tau0$ to let it compose the system
      image specified by the system policy given as input.
-     % XXX: Maybe description is a bit brief? Extend?
 
-     \begin{description} \itemsep1pt \parskip0pt
-     \item[Name] \hfill \\
-     \texttt{mugentau0cmds}
-     \item[Input] \hfill \\
-     System policy in format B
-     \item[Output] \hfill \\
-     XML command stream for $\tau0$ static
-     \end{description}
+     The tool reads the policy in format B and transforms it to a stream of
+     sequential commands as shown in the following listing:
+
+     \lstinputlisting[caption=$\tau0$ Command
+     Stream,label={lst:cmdstream},language=XML,linerange=1-34]{../../../pack/obj/policy_b_cmds.xml}
 
      As $\tau0$ strictly enforces certain invariants, the system must be
      constructed in a way not to violate these invariants. For example, before
@@ -786,6 +787,15 @@
      The \texttt{mugentau0cmds} tool must take this into consideration when
      iterating over the resources specified in the input system policy and
      generating commands which instruct $\tau0$ to create the specified system.
+
+     \begin{description} \itemsep1pt \parskip0pt
+     \item[Name] \hfill \\
+     \texttt{mugentau0cmds}
+     \item[Input] \hfill \\
+     System policy in format B
+     \item[Output] \hfill \\
+     XML command stream for $\tau0$ static
+     \end{description}
     </text>
    </section>
 
@@ -805,7 +815,9 @@
      \item[Output format] \hfill \\
      Multiboot image\footnote{\url{https://www.gnu.org/software/grub/manual/multiboot/multiboot.html}},
      bootable by any compliant bootloader.
-     % XXX: BSBSC is missing
+     Command Stream Loader (CSL)
+     image\footnote{\url{https://www.codelabs.ch/download/bsbsc-spec.pdf}},
+     bootable by any compliant bootloader.
      \end{description}
 
      If a command is received which violates a constraint enforced by $\tau0$
@@ -1062,7 +1074,7 @@
     </text>
    </section>
 
-   <section id="tools-mugenhwconf" label="Hardware Config Generator" priority="0">
+   <section id="tools-mugenhwcfg" label="Hardware Config Generator" priority="0">
     <text priority="0">
      The
      \texttt{Mugenhwcfg}\footnote{\url{https://git.codelabs.ch/?p=muen/mugenhwcfg.git}}

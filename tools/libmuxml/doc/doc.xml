@@ -355,15 +355,6 @@
     The dynamic variant can be divided into multiple sub-variants, depending
     on how much dynamic system behavior is allowed. For example, the initial
     dynamic variant might only allow entity construction, not destruction.
-
-    % XXX: Drop warning regarding PoC Tau0? Might be confusing and raise
-    % questions in context of communicator eval. Plus it is only an upstream
-    % artifact.
-    \begin{warning}
-    A simple proof of concept version of a dynamic $\tau0$ subject is already
-    scheduled as part of every Muen system. This simple version takes care of
-    switching scheduling major frames in a round-robin fashion.
-    \end{warning}
    </text>
   </section>
  </section>
@@ -476,12 +467,6 @@
      It automatically extends the component specification by adding a
      corresponding memory region with the appropriate access rights (e.g.
      executable, writable).
-
-     \begin{warning}
-     % XXX: Note is confusing, remove?
-     The final component binary will be included in the system image as a RAW
-     binary, not ELF. The same is of course true for the kernel binary.
-     \end{warning}
     </text>
    </section>
 
@@ -1211,8 +1196,7 @@
   </text>
  </section>
 
- <!-- XXX: Rename schema to "Policy structure" or "Policy content"? -->
- <section id="schema" label="Schema" priority="0"/>
+ <section id="schema" label="Policy Structure" priority="0"/>
 
  <section id="appendix" label="Appendix" priority="1000">
   <section id="appendix-ap" label="Annotated Example Policy" priority="0">

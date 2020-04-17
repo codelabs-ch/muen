@@ -24,9 +24,9 @@ private with SK.Constants;
 
 --D @Interface
 --D This package provides facilities for managing subject target events. Each
---D has a fixed number of events that can be marked as pending and are
---D processed prior to resuming the execution of the associated subject.
---D Pending events are marked by their ID which is used as a lookup index into
+--D subject has a fixed number of events that can be marked as pending. Events
+--D are processed prior to resuming the execution of the associated subject.
+--D Pending events are marked by their ID, which is used as a lookup index into
 --D the static policy event array.
 package SK.Subjects_Events
 with
@@ -91,7 +91,7 @@ private
 
    --D @Interface
    --D Bitmap of the currently pending subject target events. Each subject has
-   --D a corresponding pending events data structure which is may be accessed
+   --D a corresponding pending events data structure which may be accessed
    --D asynchronously by all CPU cores. The CPU executing the associated
    --D subject consumes pending events while all CPUs may mark target events as
    --D pending if allowed by the policy. Data consistency is established via

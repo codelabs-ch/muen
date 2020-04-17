@@ -580,7 +580,8 @@ is
    --D @Section Id => impl_handle_source_event, Label => Source Event Handling, Parent => impl_exit_handler, Priority => 50
    --D @Text Section => impl_handle_source_event, Priority => 0
    --D Source events are actions performed when a given subject triggers a trap
-   --D or a hypercall.
+   --D or a hypercall. Source events can also be triggered by the timed event
+   --D mechanism.
    procedure Handle_Source_Event
      (Subject      :     Skp.Global_Subject_ID_Type;
       Event        :     Skp.Events.Source_Event_Type;
@@ -765,10 +766,10 @@ is
          --D \paragraph{}
          --D Consult the vector routing table to determine the target subject
          --D and vector as specified by the policy and insert the target
-         --D vector my marking it as pending. Note that there is no
+         --D vector by marking it as pending. Note that there is no
          --D switching to the destination of the IRQ. The interrupt will be
          --D delivered whenever the target subject is executed according to the
-         --D scheduling plan.
+         --D scheduling plan (i.e. IRQs are not preemptive).
          Vect_Nr := Skp.Interrupts.Remapped_Vector_Type (Vector);
          Route   := Skp.Interrupts.Vector_Routing (Vect_Nr);
          if Route.Subject in Skp.Global_Subject_ID_Type then
@@ -779,7 +780,7 @@ is
 
          --D @Text Section => impl_handle_irq, Priority => 0
          --D \paragraph{}
-         --D If the interrupt vector designates a IRQ that must be masked,
+         --D If the interrupt vector designates an IRQ that must be masked,
          --D instruct the I/O APIC to mask the corresponding redirection
          --D table entry.
          if Vect_Nr in Skp.Interrupts.Mask_IRQ_Type then
@@ -889,9 +890,9 @@ is
 
    --D @Section Id => impl_handle_timer_expiry, Label => Timer Expiry, Parent => impl_exit_handler, Priority => 40
    --D @Text Section => impl_handle_timer_expiry, Priority => 0
-   --D The timer expiration designates the end of a minor frame. Handle the
+   --D The VMX timer expiration designates the end of a minor frame. Handle the
    --D timer expiry by updating the current scheduling information and checking
-   --D if a timed event has expired.
+   --D if a timed event has expired as well.
    procedure Handle_Timer_Expiry (Current_Subject : Skp.Global_Subject_ID_Type)
    with
       Global =>
@@ -937,7 +938,7 @@ is
       end;
 
       --D @Text Section => impl_handle_timer_expiry, Priority => 20
-      --D If the new minor frame designates a differentt subject, load its VMCS.
+      --D If the new minor frame designates a different subject, load its VMCS.
 
       if Current_Subject /= Next_Subject_ID then
 
@@ -952,10 +953,13 @@ is
 
    --D @Section Id => impl_exit_handler, Label => VMX Exit Handling, Parent => implementation, Priority => -5
    --D @Text Section => impl_exit_handler, Priority => 0
-   --D The VMX exit handle procedure is the main subprogram of the kernel.
+   --D The VMX exit handle procedure \texttt{Handle_Vmx_Exit} is the main
+   --D subprogram of the kernel.
    --D It is invoked whenever the execution of a subject stops and an exit into
    --D VMX root mode is performed by the hardware. The register state of the
-   --D current subject is passed into the subprogram.
+   --D current subject is passed to the procedure by the
+   --D \texttt{vmx_exit_handler} assembly code (which is set as kernel entry
+   --D point in the VMCS of the trapping subject).
    procedure Handle_Vmx_Exit (Subject_Registers : in out SK.CPU_Registers_Type)
    is
       --  See Intel SDM Vol. 3C, "27.2.2 Information for VM Exits Due to
@@ -976,8 +980,9 @@ is
       Basic_Exit_Reason := SK.Word16 (Exit_Reason and 16#ffff#);
 
       --D @Text Section => impl_exit_handler, Priority => 0
-      --D The state of the subject that has just trapped into the exit handler
-      --D is saved along with the register values and the exit reason, see
+      --D The \texttt{Handle_Vmx_Exit} procedure first saves the state of the
+      --D subject that has just trapped into the exit handler, along with the
+      --D register values and the exit reason, see
       --D \ref{impl_subjects_state_save}.
       --D Analogously, the FPU state of the current subject is saved.
       Subjects.Save_State (ID          => Current_Subject,
@@ -995,7 +1000,7 @@ is
       --D \paragraph{}
       --D If an unrecoverable error occurs, i.e. NMI or MCE, a crash audit
       --D record with the appropriate error information is allocated and the
-      --D kernel halts execution.
+      --D kernel performs a controlled system restart.
       if Basic_Exit_Reason = Constants.EXIT_REASON_EXTERNAL_INT then
          Handle_Irq (Vector => Byte'Mod (Exit_Interruption_Info));
       elsif Basic_Exit_Reason = Constants.EXIT_REASON_VMCALL
@@ -1079,8 +1084,8 @@ is
       --D @Text Section => impl_exit_handler, Priority => 0
       --D The register values of the subject to be executed are returned by the
       --D procedure. The calling assembler code then performs an entry to
-      --D VMX non-root mode thereby instructing the hardware to resume
-      --D execution of the subject using its VMCS.
+      --D VMX non-root mode, thereby instructing the hardware to resume
+      --D execution of the subject designated by the currently active VMCS.
    end Handle_Vmx_Exit;
 
 end SK.Scheduler;

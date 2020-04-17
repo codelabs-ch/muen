@@ -220,7 +220,7 @@ is
       if Next > Positive (Dumpdata_Length'Last) then
          --D @Text Section => impl_crash_audit_final, Priority => 0
          --D Set active crash dump count to the last index if the next slot
-         --D index is too larger.
+         --D index is too large.
          Instance.Crash_Info.Header.Dump_Count := Dumpdata_Length'Last;
       else
          --D @Text Section => impl_crash_audit_final, Priority => 0

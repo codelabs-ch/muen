@@ -27,7 +27,7 @@
 
    The reader is expected to be familiar with concepts related to system-level
    software such as Operating Systems/Microkernels, component-based systems as
-   well as software development.
+   well as software development principles.
 
    Large parts of this document is generated based on annotations in the SK
    source code\footnote{Version: //{str:SK.Version.Version_String}}.
@@ -40,7 +40,7 @@
     minimized and complexity is avoided are described. Next, the concepts of the
     system policy and configuration are quickly introduced. An overview is given
     of the operation of the kernel and its main functional building blocks are
-    given in sections \ref{overview_operation} through
+    presented in sections \ref{overview_operation} through
     \ref{overview_crash_audit}. Chapter \ref{overview} closes with a discussion
     how subjects can interact and how covert channels can be avoided or limited
     in bandwidth on Muen systems.
@@ -98,19 +98,19 @@
        while all Subjects execute in unprivileged non-root mode.}
     \end{figure}
 
-    The formally proven Muen SK is the only part of the system running in VMX
+    The Muen SK is the only part of the system running in VMX
     root mode: all subjects, be it fully-fledged VMs or small, native subjects,
     execute with lower privileges in non-root mode. By design, no code is
     executed in user-space (ring 3) of VMX root mode. This enables Muen to
-    completely forgo code for handling Syscalls/Ring-3-to-Ring-0 transitions,
+    completely avoid code for handling Syscalls/Ring-3-to-Ring-0 transitions,
     significantly reducing the code size and complexity.
 
     Deterministic runtime behavior of the SK is achieved by avoiding
-    long-running code paths and no preemption of kernel code. During kernel
+    long-running code paths and preemption of kernel code. During kernel
     execution, external interrupts are disabled and the proof of absence of
     runtime errors assures that no exceptions occur. Furthermore, the absence of
     any kind of dynamic resource management and the fixed, cyclic scheduler
-    contribute to highly deterministic runtime behavior of the kernel.
+    contribute to the highly deterministic runtime behavior of the kernel.
 
     The sole purpose of the kernel is to provide temporal and spatial
     isolation for subjects running on top of it. By design, all non-essential
@@ -173,8 +173,8 @@
      usage is also possible. Unassigned resources are not available during
      runtime.
 
-     From the information specified in the policy, the Muen toolchain in
-     conjunction with $\tau$0 generates the actual configuration of the
+     From the information specified in the policy, the Muen toolchain
+     generates the actual configuration of the
      hardware, which is merely applied by the kernel at runtime. For example,
      the page tables for a subject are generated, which the kernel applies
      accordingly, when the associated subject is executed. The SK has no
@@ -191,7 +191,7 @@
    </section>
    <section id="overview_config" label="Configuration" priority="0">
     <text priority="0">
-     Relevant aspects of the system are transformed by the Mugenspec tool to
+     Relevant aspects of the system are transformed by the \texttt{mugenspec} tool to
      data structures in the form of SPARK source files, which are represented by
      the package hierarchy \texttt{Skp}. These include for example IRQ routing
      information, scheduling plans, initial subject state etc, see section
@@ -292,7 +292,7 @@
 
      Scheduling information is declared in a \emph{scheduling plan}. Such a plan
      is part of the policy and specifies in what order subjects are executed on
-     which logical CPU and for how long (see \ref{Skp.Scheduling}). The task of
+     which CPU core and for how long (see \ref{Skp.Scheduling}). The task of
      the scheduler is to enforce a given scheduling regime.
 
      A scheduling plan is specified in terms of frames. A \emph{major frame}
@@ -318,7 +318,7 @@
       \label{fig:example-major-frame}
      \end{figure}
 
-     On systems with multiple logical CPUs, a scheduling plan must specify a
+     On systems with multiple CPU cores, a scheduling plan must specify a
      sequence of minor frames for each processor core. For any given major
      frame, the sum of all minor frame time slices of a major frame must amount
      to the same time duration. In order for the cores to not run out of sync,
@@ -326,9 +326,9 @@
      frame. Additionally, CPUs that switch minor frames at the same time also
      synchronize the execution of the next minor frame.
 
-     An example of a scheduling plan for multiple logical CPUs is depicted in
+     An example of a scheduling plan for multiple CPUs is depicted in
      figure \ref{fig:example-scheduling-plan}. It illustrates a system with two
-     logical CPUs that execute various subjects indicated by different colors.
+     CPUs that execute various subjects indicated by different colors.
 
      \begin{figure}[ht]
       \centering
@@ -338,8 +338,7 @@
      \end{figure}
 
      CPU0 is executing the same subject for the whole duration of the major
-     frame. This could for example be the $\tau$0 subject executing on the
-     bootstrap processor (BSP). The second CPU is executing two subjects (blue
+     frame. The second CPU is executing two subjects (blue
      and green) in alternating order. As can be seen, subject green is granted
      more CPU cycles than subject blue. All CPUs of the system wait on a barrier
      at the beginning of a new major frame.  This guarantees that all logical
@@ -387,7 +386,7 @@
      subject is resumed, the kernel checks the pending interrupts and injects
      it, which completes the delivery of the interrupt.
 
-     Subjects can disable interrupt injection by setting or clearing the
+     Subjects can control interrupt injection by setting or clearing the
      \emph{Interrupt enable flag} (RFLAGS.IF). As long as the flag is clear, the
      kernel will not inject any pending interrupts. A subject can use the
      \texttt{cli} and \texttt{sti} instructions to clear/set the flag.
@@ -398,11 +397,11 @@
      exit. This means that instead of a separate interrupt handler routine, the
      same kernel entry point as any other VM exit is invoked by the hardware.
      The appropriate VM exit reason set by the hardware designates that the
-     cause was an external interrupt and the handler routine can be executed.
-     The "Acknowledge Interrupt on Exit" VM-Exit control is leveraged, so the
-     hardware acknowledges the interrupt controller and stores the interrupt
-     vector in the VM-exit interruption-information field, see Intel SDM Vol.
-     3C, "27.7.1 VM-Exit controls".
+     cause was an external interrupt and the interrupt handler routine is
+     executed.  The "Acknowledge Interrupt on Exit" VM-Exit control is
+     leveraged, so the hardware acknowledges the interrupt controller and stores
+     the interrupt vector in the VM-exit interruption-information field, see
+     Intel SDM Vol.  3C, "27.7.1 VM-Exit controls".
 
      Thus, interrupt handling is implemented as specified in Intel SDM Vol. 3C,
      "33.3.3.3 Guest Assigned I/O Devices".
@@ -432,7 +431,7 @@
      exit and consults the subject's trap table to determine the appropriate
      action as specified in the policy, e.g. switching to a monitor subject.
 
-     Subjects may be allowed to process exceptions themselves, e.g. VM subject
+     Subjects may be allowed to process exceptions themselves, e.g. a VM subject
      performing it's own page fault handling.  In this case, an exception is
      directly delivered to the subject's exception handler via the subject's
      IDT. The kernel is not involved at all in this case.
@@ -443,8 +442,8 @@
      Every software system should provide a mechanism for auditing important
      events. However, overly complex audit implementations can quickly lead to
      complexity throughout the code base. In case of the Muen kernel, we have
-     identified two important events that require auditing: one is kernel and
-     the other is a fatal error condition resulting in an emergency halt.
+     identified two important events that require auditing: one is \emph{kernel
+     started} and the other is a \emph{fatal error condition} resulting in an emergency halt.
 
      Note that on the system level, there are certainly many more audit-worthy
      events. However these can be handled by appropriate error handling routines
@@ -453,25 +452,25 @@
      audit-specific functionality.
 
      The first event is inherent in the execution of the kernel after a
-     successful system start. If there is an error during early initialization
-     before the system starts execution, then there is no way for the kernel to
+     successful system start. If there is an error during early machine initialization
+     before the actual Muen-based system starts execution, then there is no way for the kernel to
      recognize and report such an event. However, once the kernel does start
      execution, the successful system start has realized so in that sense the
      event becomes self-evident through running code.
 
      The crash audit mechanism is in charge of covering the second case and thus
-     handling fatal, unrecoverable errors which lead to immediate halting of
-     execution and subsequent system reset. Its main purpose is to record
-     information regarding the error condition and the current system state to
-     enable administrators to identify and determine the cause of the issue.
+     handling fatal, unrecoverable errors which lead to immediate system halt
+     and subsequent system reset. Its main purpose is to record information
+     regarding the error condition and the current system state to enable
+     administrators to identify and determine the cause of the issue.
 
      Audit information is stored in a dedicated, uncached memory region which
      retains its contents across system reboots. This region is mapped by all
      kernel instances on each CPU. Read access may be granted to a subject to
      enable audit readout for further processing, e.g. debug server outputting
      the information via serial log. Note that processing of the audit
-     information may also be done outside of a Muen system, e.g. by the boot
-     loader.
+     information may also be done outside of a Muen system, e.g. by a crash
+     audit aware boot loader.
 
      When a fatal crash occurs, the kernel allocates a free audit entry, sets
      the appropriate reason for the current cause and fills the remaining
@@ -494,7 +493,9 @@
      (e.g. monolithic or microkernel), subjects have very limited means to
      influence the overall system. Only the resources assigned in the policy are
      accessible and the interaction with the SK is limited to the following
-     mechanisms. Subjects can trigger static events defined in the policy. If
+     mechanisms.
+
+     Subjects can trigger static events defined in the policy. If
      there is a valid event number, the kernel executes the action defined by
      the event. Invalid event numbers are ignored.
 
@@ -502,13 +503,12 @@
      region, a trap table also specified in the policy is consulted. Similar to
      handling of events, the defined action is executed.
 
-     The last interaction option is the timer mechanism. Each subject can
-     define an event number and a time at which the event should be triggered. At
-     the beginning of each time slice, the kernel checks whether the timer
-     belonging to the subject to be executed has expired. In this case, the event
-     designated by the event number is treated in the same way as the regular
-     event mechanism. The timer can thus be regarded as a delayed triggering of
-     events.
+     The last interaction option is the timed event mechanism. Each subject can
+     define an event number and a time at which the event should be triggered.
+     At the beginning of each time slice, the kernel checks whether the event
+     trigger value belonging to the subject to be executed has expired. If this
+     is the case, the event designated by the event number is treated in the
+     same way as the regular event mechanism.
 
      An important use case is running a subject that depends on a monitor
      subject for emulation of certain operations, e.g. serial device emulation.
@@ -554,19 +554,19 @@
      structure.
 
      Muen offers the possibility to provide subjects with an coarse-grained time
-     source, i.e. removing direct access to the Time-Stamp Counter (TSC). Due to
+     source, i.e. removing direct access to the hardware Time-Stamp Counter (TSC). Due to
      the low temporal resolution, observing a side channel is made significantly
      more difficult and thus the achievable transmission rate in practice is
      greatly reduced. In addition, subjects are preferably only assigned a
      single CPU, which prevents them from easily constructing a high resolution
-     time source. The timer mechanism also offers limited accuracy, as timers
-     are only evaluated at the beginning of a minor frame.
+     time source. The timed event mechanism also offers limited accuracy, as
+     such events are only evaluated at the beginning of a minor frame.
 
      Deterministic scheduling can be leveraged to ensure that the amount of
      shared hardware (e.g. L1 cache, Branch Predictor Cache, Translation
      Lookaside-Buffer, etc.) between specific subjects is reduced. By
      appropriate configuration, it can be guaranteed that two subjects are not
-     running on the same physical CPU and/or not at the same time. If subjects
+     running on the same physical CPU or not concurrently on separate CPUs. If subjects
      are executed at different times, the observability of side channels and
      their bandwidth is limited since the sender and receiver must always
      alternate encoding and decoding of data.
@@ -616,7 +616,7 @@
     system bring up code is run exclusively by the BSP.
 
     An important aspect of Muen's multicore design is that subjects are pinned
-    to a specific logical CPU. Subjects do not migrate between cores and are
+    to a specific CPU core. Subjects do not migrate between cores and are
     exclusively executed on the core defined by the associated subject
     specification in the system policy. This removes complexity from the kernel
     and the overall system by thwarting potential isolation issues which could
@@ -630,8 +630,8 @@
     Since each CPU executes a distinct instance of the Muen kernel, by default,
     all kernel data is CPU-local, meaning it is not shared between kernels
     running on different CPUs. Global data is shared explicitly and is
-    designated as such by placing it in a dedicated section
-    (\texttt{.globaldata}).
+    designated as such by placing it in a dedicated \texttt{.globaldata} linker
+    section.
 
     Kernel data can be categorized as follows:
     \begin{itemize}
@@ -643,11 +643,12 @@
     The following sections provide explanations for each of the categories.
    </text>
   </section>
+
   <section id="datamodel_cpulocal" label="CPU-local Data" priority="0">
    <text priority="0">
     Library level data structures without special aspects (e.g. address clauses)
     are private, meaning each CPU has their own, local copy. This is achieved by
-    providing each CPU with separate copies of the necessary ELF binary sections
+    providing each CPU with separate copies of the necessary binary sections
     (\texttt{.data} and \texttt{.bss}). Only the memory regions of sections
     belonging to a given CPU are mapped into the address space of that
     particular kernel.
@@ -682,14 +683,14 @@
   <section id="datamodel_global" label="Global Shared Data" priority="0">
    <text priority="0">
     Some data is accessed by all CPUs. This data is located in a separate,
-    distinct ELF section (\texttt{.globaldata}) which is backed by a single
+    distinct linker section (\texttt{.globaldata}) which is backed by a single
     physical memory region, shared across all CPUs. Each kernel has a mapping of
     this region at the same memory location.
 
-    Variable instances that are shared globally are placed in the ELF section
+    Variable instances that are shared globally are placed in the linker section
     \texttt{.globaldata} via use of the Ada \texttt{Linker\_Section} aspect.
 
-    By convention affected variables are prefixed with \texttt{Global\_}.
+    By convention, affected variables are prefixed with \texttt{Global\_}.
    </text>
    <section id="datamodel_global_init" label="Initialization" priority="0">
     <text priority="0">
@@ -708,7 +709,7 @@
   <section id="kernel_devs_apic" label="Interrupt Controllers" priority="0">
    <text priority="0">
     The kernel controls and programs all interrupt controllers since it must
-    ensure that only IRQs according to the policy are generated and route to the
+    ensure that only IRQs according to the policy are generated and routed to the
     assigned subject, and thus CPU. On x86, there are three different interrupt
     controllers that must be considered: PIC, APIC and I/O APIC.
 
@@ -718,12 +719,13 @@
     according to the system policy.
 
     During normal operation, the APIC is accessed to acknowledge
-    End-Of-Interrupt (EOI) to unblock processing of other interrupts. In case of
-    level-triggered IRQs, the I/O APIC is used to mask and unmask the
+    End-Of-Interrupt (EOI) to unblock processing of other interrupts [TODO:
+    when]. In case of level-triggered IRQs, the I/O APIC is used to mask and unmask the
     corresponding redirection table entries.
 
     Enforcement that only the configured interrupts are raised is done by the
-    IOMMU Interrupt Remapping, see section \ref{kernel_devs_iommu}
+    IOMMU Interrupt Remapping functionality, see section
+    \ref{kernel_devs_iommu}.
    </text>
   </section>
   <section id="kernel_devs_iommu" label="IOMMU" priority="0">
@@ -770,7 +772,7 @@
     and developers with additional information, e.g. in an unexpected error case
     as the crash audit information is output via the I/O device on top of
     writing it to the audit memory region. Which hardware device the kernel
-    uses for diagnostics is specified in the system policy.
+    uses for diagnostics, if any, is specified in the system policy.
 
     All debug output statements in the kernel are enclosed in \texttt{pragma
     Debug}. This has the effect that none of them are present in the release

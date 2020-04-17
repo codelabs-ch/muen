@@ -266,7 +266,7 @@ is
       --D \texttt{IA32\_VMX\_TRUE\_PINBASED\_CTLS} MSR. Combine them with the
       --D policy-defined value by setting the defaults for reserved control bits
       --D according to Intel SDM Vol. 3C,
-      --D "A.3.1 Pin-Based VM-Execution Controls". Then, set the Pin-Base
+      --D "A.3.1 Pin-Based VM-Execution Controls". Then, set the Pin-Based
       --D VM-Execution controls by writing the value to the corresponding VMCS
       --D field.
       CPU.Get_MSR (Register => Constants.IA32_VMX_TRUE_PINBASED_CTLS,
@@ -544,8 +544,8 @@ is
       Clear (VMCS_Address => VMCS_Address);
 
       --D @Item List => impl_vmcs_reset_steps, Priority => 0
-      --D Read IA32\_VMX\_BASIC MSR to determine the VMCS revision identifier
-      --D of the processor.
+      --D Read \texttt{IA32\_VMX\_BASIC} MSR to determine the VMCS revision
+      --D identifier of the processor.
       CPU.Get_MSR (Register => Constants.IA32_VMX_BASIC,
                    Low      => Rev_ID,
                    High     => Unused_High);
@@ -599,7 +599,7 @@ is
    begin
       --D @Text Section => impl_vmcs_enter_root_mode, Priority => 10
       --D First, set \texttt{CR4.VMXE} bit. Then, execute \texttt{vmxon} with
-      --D the address of the VMXON region assigned to the CPU. VMXON regions
+      --D the address of the VMXON region assigned to the CPU. VMXON regions are
       --D laid out in memory consecutively like an array and each CPU uses its
       --D CPU\_ID as index. VMXON regions are not mapped into the kernel address
       --D space, as they are cleared and initialized during boot in Assembly

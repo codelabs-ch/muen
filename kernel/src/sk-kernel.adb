@@ -39,7 +39,7 @@ is
    is
    begin
       --D @Item List => impl_kernel_init_steps, Priority => 0
-      --D Interrupt table initialization (GDT, IDT) and interrupt stack setup.
+      --D Initialize interrupt table (GDT, IDT) and setup interrupt stack.
       Interrupt_Tables.Initialize
         (Stack_Addr => Skp.Kernel.Intr_Stack_Address);
 
@@ -51,7 +51,7 @@ is
 
       if CPU_Info.Is_BSP then
          --D @Item List => impl_kernel_init_steps, Priority => 0
-         --D Crash Audit setup (BSP-only)
+         --D Setup crash audit (BSP-only)
          Crash_Audit.Init;
       end if;
 
@@ -62,7 +62,7 @@ is
          Valid_VTd_State : Boolean;
       begin
          --D @Item List => impl_kernel_init_steps, Priority => 0
-         --D Validation of required CPU (\ref{impl_kernel_init_check_state}),
+         --D Validate required CPU (\ref{impl_kernel_init_check_state}),
          --D FPU, MCE and VT-d features
          System_State.Check_State
            (Is_Valid => Valid_Sys_State,
@@ -91,7 +91,7 @@ is
                --D @Item List => impl_kernel_init_steps, Priority => 0
                --D If a required feature is not present, allocate a crash audit
                --D entry designating a system initialization failure and
-               --D providing initialization context information.
+               --D provide initialization context information.
                Subject_Registers := Null_CPU_Regs;
                Crash_Audit.Allocate (Audit => Audit_Entry);
                Crash_Audit.Set_Reason
@@ -105,7 +105,7 @@ is
          end if;
 
          --D @Item List => impl_kernel_init_steps, Priority => 0
-         --D Enabling of hardware features (FPU, APIC, MCE)
+         --D Enable hardware features (FPU, APIC, MCE)
          FPU.Enable;
          Apic.Enable;
          MCE.Enable;
@@ -116,7 +116,7 @@ is
             MP.Initialize_All_Barrier;
 
             --D @Item List => impl_kernel_init_steps, Priority => 0
-            --D Disabling of legacy PIC/PIT (BSP-only)
+            --D Disable legacy PIC/PIT (BSP-only)
             Interrupts.Disable_Legacy_PIT;
             Interrupts.Disable_Legacy_PIC;
 
@@ -126,11 +126,11 @@ is
             VTd.Interrupts.Setup_IRQ_Routing;
 
             --D @Item List => impl_kernel_init_steps, Priority => 0
-            --D Initialization of subject pending events. (BSP-only)
+            --D Initialize subject pending events. (BSP-only)
             Subjects_Events.Initialize;
 
             --D @Item List => impl_kernel_init_steps, Priority => 0
-            --D Wake up of application processors. (BSP-only)
+            --D Wake up application processors. (BSP-only)
             Apic.Start_AP_Processors;
          end if;
 
@@ -169,7 +169,7 @@ is
       end;
 
       --D @Text Section => impl_kernel_init, Priority => 20
-      --D Subject registers are returned by the Initialization code and the
+      --D Subject registers are returned by the initialization code and the
       --D calling assembler code will start executing the first subject.
    end Initialize;
 

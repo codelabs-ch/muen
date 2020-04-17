@@ -74,7 +74,10 @@
   <xs:annotation>
    <xs:documentation>
     The \texttt{identification} element specifies the PCI device class, device,
-    revision and vendor ID. <!-- XXX: Reference to PCI Local Bus Specification? -->
+    revision and vendor ID.
+
+    For more information, consult the PCI Local Bus Specification,
+    "Configuration Space Decoding".
 
     See line \ref{lst:af-lineref-hw-device-pci-id} in listing
     \ref{lst:annotated-policy} for an example PCI identification.

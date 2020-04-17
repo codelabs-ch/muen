@@ -131,7 +131,7 @@
 
     The following event modes are currently supported:
     \begin{itemize}
-    \item asap~\\
+    \item \texttt{asap}~\\
     The asap event is an abstraction to state that the event should be delivered
     as soon as possible, depending on the CPU of the target subject. If the
     target runs on another CPU core, this mode is expanded to mode \emph{ipi},
@@ -139,24 +139,23 @@
     preempt the kernel running the target subject and inject the event
     immediately. If the target subject runs on the same core as the source
     subject, the mode is expanded to mode \emph{async}.
-    \item async~\\
+    \item \texttt{async}~\\
     Async events trigger no preemption at the target subject. The event is
     marked as pending in the target subject's pending event table and inserted
     on the next VM exit/entry cycle of the target subject.
-    \item self~\\
+    \item \texttt{self}~\\
     An event can also have the same source and target, which is called a self
     event. Such events are useful to implement para-virtualized timers in VM
     subjects for example. A subject sends itself a delayed event, using the
-    timed event mechanism (muen-component-spec:4.3). Note that a self event must
-    % XXX: Is this reference in the correct format?.
-    always have a target action assigned, checked by validator.
-    \item switch~\\
+    timed event mechanism. Note that a self event must always have a target
+    action assigned, checked by validator.
+    \item \texttt{switch}~\\
     The switch mode facilitates suspension of execution of the source subject
     and switching to the target. This can only happen between subjects running
     on the same core. Such a construct is used to pass the thread of execution
     on to a different subject, e.g. invocation of a debugger subject if an error
     occurs in the source subject.
-    \item kernel~\\
+    \item \texttt{kernel}~\\
     These kinds of events are directed at the kernel an thus only specify a
     source since the target is the kernel. They are used to enable specific
     subjects to unmask level-triggered IRQs and trigger a system reboot,

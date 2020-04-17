@@ -843,7 +843,8 @@
       \item[Output] \hfill \\
       MSR store files of subjects in binary format
       \item[Output format] \hfill \\
-      Intel SDM Vol. 3C, table 24-11
+      Intel SDM Vol. 3C, "24.8.2 VM-Entry Controls for MSRs" and Intel SDM Vol.
+      3C, "24.7.2 VM-Exit Controls for MSRs".
       \end{description}
 
       The tool generates MSR stores for each subject. The MSR store is used to

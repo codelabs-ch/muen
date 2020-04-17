@@ -131,7 +131,7 @@
     policy formats A and B.
 
     The implementation of such tools is simplified by the absence of
-    higher-level abstractions in the latter formats and  which would make the
+    higher-level abstractions in the latter formats which would make the
     extraction of input data more involved.
 
     Furthermore, the final format B must specify every aspect of the system
@@ -143,9 +143,9 @@
 
     \begin{warning}
     Only the policy in format source intended for system integrators is
-    specified in this document. Other formats are intended to be processed by
-    tools and thus considered \emph{internal}. While it is possible to specify a
-    system policy in format A or B, it is not recommended.
+    specified in this document. Other formats are processed by the toolchain and
+    thus considered \emph{internal}. While it is possible to specify a system
+    policy in format A or B, it is not recommended.
     \end{warning}
    </text>
 
@@ -247,7 +247,7 @@
 
    The allocator tool (\ref{tools-mucfgalloc}) then loops over all physical
    memory regions which have no physical address assigned and places them in
-   physical memory by allocating a regioni and thus a physical start address
+   physical memory by allocating a region and thus a physical start address
    from the usable pool. The usable pool information is extracted from the
    allocatable memory block list (\ref{system_src.xsd:physicalMemoryType}) in
    the system policy.  This process transforms the policy to format B where all
@@ -295,7 +295,7 @@
    \end{itemize}
 
    In the static scenario, the task of $\tau0$ is to construct a bootable system
-   image via assembling the input files and generating data structures such as
+   image by assembling the input files and generating data structures such as
    page tables, all while checking that invariants necessary for correct
    isolation are valid. An example for such an invariant is that no subject
    memory mapping may reference a memory region containing paging structure.
@@ -456,10 +456,9 @@
     <text priority="0">
      After hardware, platform and high-level system policy are merged into a
      single source policy file, from which components can extract relevant
-     information from it. For example an XSL transformation (XSLT) script could
-     extract the I/O port of a specific device and create a corresponding
-     configuration value based on it, which is then included in the component
-     specification.
+     information. For example an XSL transformation (XSLT) script could extract
+     the I/O port of a specific device and create a corresponding configuration
+     value based on it, which is then included in the component specification.
 
      The \texttt{mucgenspec} tool described in \ref{tools-mucgenspec}
      implements the blue \emph{Specgen} task shown in figure
@@ -775,8 +774,8 @@
      under loader control) to SL and replaces the original regions with new
      ones containing a hash reference to the associated pyhsical memory region.
      This way SL is able to determine the intended content of the target memory
-     region by looking up the region in its sinfo page by using the hash value
-     as key.
+     region by looking up the region in its sinfo page using the hash value as
+     key.
     </text>
    </section>
 

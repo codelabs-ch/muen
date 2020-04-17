@@ -159,7 +159,8 @@
     \item kernel~\\
     These kinds of events are directed at the kernel an thus only specify a
     source since the target is the kernel. They are used to enable specific
-    subjects to trigger a system reboot or poweroff.
+    subjects to unmask level-triggered IRQs and trigger a system reboot,
+    poweroff or explicit panic (crash audit slot allocation and reboot).
     \end{itemize}
 
     See line \ref{lst:af-lineref-events-entry} in listing

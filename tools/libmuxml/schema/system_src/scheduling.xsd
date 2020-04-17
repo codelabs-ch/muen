@@ -5,10 +5,10 @@
   <xs:annotation>
    <xs:documentation>
     A major frame consists of a sequence of minor frames for a given CPU. When
-    the end of a major frame is reached, all CPU sync and the scheduler starts
-    over from the beginning and uses the first minor frame in a cyclic fashion.
-    This means that major frames are repetitive until a controller switches to a
-    new major frame.
+    the end of a major frame is reached, all CPUs synchronize and the scheduler
+    starts over from the beginning using the first minor frame again. This means
+    that major frames are repeated in a cyclic fashion until a different major
+    frame is designated via the Tau0 interface.
 
     See line \ref{lst:af-lineref-sched-major} in listing
     \ref{lst:annotated-policy} for an example major frame.

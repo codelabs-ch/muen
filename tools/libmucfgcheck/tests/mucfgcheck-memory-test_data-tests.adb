@@ -1113,14 +1113,14 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       begin
          Subject_State_Region_Presence (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (1)");
 
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Subject state region 'vt|state' for subject 'vt' not"
                     & " found",
-                    Message   => "Exception mismatch");
+                    Message   => "Exception mismatch (1)");
       end;
 
       --  Subject state region with incorrect region type.
@@ -1134,14 +1134,14 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       begin
          Subject_State_Region_Presence (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (2)");
 
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Subject state region 'tau0|state' for subject 'tau0'"
                     & " not found",
-                    Message   => "Exception mismatch");
+                    Message   => "Exception mismatch (2)");
       end;
 --  begin read only
    end Test_Subject_State_Region_Presence;
@@ -2290,14 +2290,14 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       begin
          Subject_MSR_Store_Region_Presence (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (1)");
 
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Subject MSR store region 'linux|msrstore' for subject "
                     & "'linux' not found",
-                    Message   => "Exception mismatch");
+                    Message   => "Exception mismatch (1)");
       end;
 
       --  Subject MSR store region with incorrect region type.
@@ -2316,14 +2316,14 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       begin
          Subject_MSR_Store_Region_Presence (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (2)");
 
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Subject MSR store region 'linux|msrstore' for subject "
                     & "'linux' not found",
-                    Message   => "Exception mismatch");
+                    Message   => "Exception mismatch (2)");
       end;
 --  begin read only
    end Test_Subject_MSR_Store_Region_Presence;

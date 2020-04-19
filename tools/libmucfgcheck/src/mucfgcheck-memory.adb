@@ -55,11 +55,12 @@ is
       Region_Type  : String);
 
    --  Check presence of physical per-subject memory region with specified
-   --  region type and class.
+   --  region type, class and size.
    procedure Check_Subject_Region_Presence
      (XML_Data     : Muxml.XML_Data_Type;
       Region_Type  : String;
-      Region_Class : String := "subject");
+      Region_Class : String := "subject";
+      Region_Size  : Interfaces.Unsigned_64 := Mutools.Constants.Page_Size);
 
    --  Check presence of physical kernel memory region with given name prefix
    --  and suffix for each CPU. The specified region kind is used in log
@@ -278,13 +279,14 @@ is
    procedure Check_Subject_Region_Presence
      (XML_Data     : Muxml.XML_Data_Type;
       Region_Type  : String;
-      Region_Class : String := "subject")
+      Region_Class : String := "subject";
+      Region_Size  : Interfaces.Unsigned_64 := Mutools.Constants.Page_Size)
    is
       --  Returns the error message for a given reference node.
       function Error_Msg (Node : DOM.Core.Node) return String;
 
-      --  Returns True if the physical memory region name matches.
-      function Match_Region_Name (Left, Right : DOM.Core.Node) return Boolean;
+      --  Returns True if the physical memory region name and size match.
+      function Match_Region_Attrs (Left, Right : DOM.Core.Node) return Boolean;
 
       ----------------------------------------------------------------------
 
@@ -297,12 +299,13 @@ is
          Ref_Name  : constant String := Subj_Name & "|" & Region_Type;
       begin
          return "Subject " & Region_Type & " region '" & Ref_Name
-           & "' for subject '" & Subj_Name & "' not found";
+           & "' with size " & Mutools.Utils.To_Hex (Number => Region_Size)
+           & " for subject '" & Subj_Name & "' not found";
       end Error_Msg;
 
       ----------------------------------------------------------------------
 
-      function Match_Region_Name (Left, Right : DOM.Core.Node) return Boolean
+      function Match_Region_Attrs (Left, Right : DOM.Core.Node) return Boolean
       is
          Subj_Name : constant String
            := DOM.Core.Elements.Get_Attribute
@@ -312,9 +315,14 @@ is
          Mem_Name  : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Right,
             Name => "name");
+         Mem_Size  : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => Right,
+                 Name => "size"));
       begin
-         return Ref_Name = Mem_Name;
-      end Match_Region_Name;
+         return Ref_Name = Mem_Name and then Region_Size = Mem_Size;
+      end Match_Region_Attrs;
    begin
       For_Each_Match
         (XML_Data     => XML_Data,
@@ -323,7 +331,7 @@ is
          & Region_Class & "_" & Region_Type & "']",
          Log_Message  => "subject " & Region_Type & " region(s) for presence",
          Error        => Error_Msg'Access,
-         Match        => Match_Region_Name'Access);
+         Match        => Match_Region_Attrs'Access);
    end Check_Subject_Region_Presence;
 
    -------------------------------------------------------------------------
@@ -1010,7 +1018,8 @@ is
       Check_Subject_Region_Presence
         (XML_Data     => XML_Data,
          Region_Type  => "iobm",
-         Region_Class => "system");
+         Region_Class => "system",
+         Region_Size  => 16#2000#);
    end Subject_IOBM_Region_Presence;
 
    -------------------------------------------------------------------------
@@ -1081,15 +1090,30 @@ is
                  PERFGLOBALCTRL_Control => PERF_Ctrl,
                  EFER_Control           => EFER_Ctrl);
          begin
-            if MSR_Count > 0
-              and then Muxml.Utils.Get_Element
-                (Nodes     => MSR_Regions,
-                 Ref_Attr  => "name",
-                 Ref_Value => Subj_Name & "|msrstore") = null
-            then
-               raise Validation_Error with "Subject MSR store region '"
-                 & Subj_Name & "|msrstore' for subject '" & Subj_Name
-                 & "' not found";
+            if MSR_Count > 0 then
+               declare
+                  MSR_Store : constant DOM.Core.Node := Muxml.Utils.Get_Element
+                    (Nodes     => MSR_Regions,
+                     Ref_Attr  => "name",
+                     Ref_Value => Subj_Name & "|msrstore");
+                  Size_Str  : constant String
+                    := (if MSR_Store /= null then
+                           DOM.Core.Elements.Get_Attribute
+                          (Elem => MSR_Store,
+                           Name => "size")
+                          else "0");
+               begin
+                  if MSR_Store = null
+                    or else Interfaces.Unsigned_64'Value (Size_Str)
+                    /= Mutools.Constants.Page_Size
+                  then
+                     raise Validation_Error with "Subject MSR store region '"
+                       & Subj_Name & "|msrstore' with size "
+                       & Mutools.Utils.To_Hex
+                       (Number => Mutools.Constants.Page_Size)
+                       & " for subject '" & Subj_Name & "' not found";
+                  end if;
+               end;
             end if;
          end;
       end loop;

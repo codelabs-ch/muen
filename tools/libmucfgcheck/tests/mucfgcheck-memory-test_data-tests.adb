@@ -1113,14 +1113,14 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       begin
          Subject_State_Region_Presence (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (1)");
 
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject state region 'vt|state' for subject 'vt' not"
-                    & " found",
-                    Message   => "Exception mismatch");
+                    = "Subject state region 'vt|state' with size 16#1000# for "
+                    & "subject 'vt' not found",
+                    Message   => "Exception mismatch (1)");
       end;
 
       --  Subject state region with incorrect region type.
@@ -1134,14 +1134,14 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       begin
          Subject_State_Region_Presence (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (2)");
 
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject state region 'tau0|state' for subject 'tau0'"
-                    & " not found",
-                    Message   => "Exception mismatch");
+                    = "Subject state region 'tau0|state' with size 16#1000# "
+                    & "for subject 'tau0' not found",
+                    Message   => "Exception mismatch (2)");
       end;
 --  begin read only
    end Test_Subject_State_Region_Presence;
@@ -1183,8 +1183,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject interrupts region 'linux|interrupts' for "
-                    & "subject 'linux' not found",
+                    = "Subject interrupts region 'linux|interrupts' with size "
+                    & "16#1000# for subject 'linux' not found",
                     Message   => "Exception mismatch (1)");
       end;
 
@@ -1204,8 +1204,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject interrupts region 'tau0|interrupts' for subject"
-                    & " 'tau0' not found",
+                    = "Subject interrupts region 'tau0|interrupts' with size "
+                    & "16#1000# for subject 'tau0' not found",
                     Message   => "Exception mismatch (2)");
       end;
 --  begin read only
@@ -2035,8 +2035,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject fpu region 'linux|fpu' for subject 'linux' not"
-                    & " found",
+                    = "Subject fpu region 'linux|fpu' with size 16#1000# for "
+                    & "subject 'linux' not found",
                     Message   => "Exception mismatch (1)");
       end;
 
@@ -2056,8 +2056,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject fpu region 'tau0|fpu' for subject 'tau0' not"
-                    & " found",
+                    = "Subject fpu region 'tau0|fpu' with size 16#1000# for "
+                    & "subject 'tau0' not found",
                     Message   => "Exception mismatch (2)");
       end;
 --  begin read only
@@ -2100,8 +2100,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject timed_event region 'vt|timed_event' for subject"
-                    & " 'vt' not found",
+                    = "Subject timed_event region 'vt|timed_event' with size "
+                    & "16#1000# for subject 'vt' not found",
                     Message   => "Exception mismatch (1)");
       end;
 
@@ -2121,8 +2121,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject timed_event region 'tau0|timed_event' for "
-                    & "subject 'tau0' not found",
+                    = "Subject timed_event region 'tau0|timed_event' with size"
+                    & " 16#1000# for subject 'tau0' not found",
                     Message   => "Exception mismatch (2)");
       end;
 --  begin read only
@@ -2165,9 +2165,30 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject iobm region 'linux|iobm' for subject 'linux' not"
-                    & " found",
+                    = "Subject iobm region 'linux|iobm' with size 16#2000# for"
+                    & " subject 'linux' not found",
                     Message   => "Exception mismatch (1)");
+      end;
+
+      --  Subject IOBM region with incorrect region size.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='time|iobm']",
+         Name  => "size",
+         Value => "16#1000#");
+
+      begin
+         Subject_IOBM_Region_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject iobm region 'time|iobm' with size 16#2000# for"
+                    & " subject 'time' not found",
+                    Message   => "Exception mismatch (2)");
       end;
 
       --  Subject IOBM region with incorrect region type.
@@ -2181,14 +2202,14 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       begin
          Subject_IOBM_Region_Presence (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected (2)");
+                 Message   => "Exception expected (3)");
 
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject iobm region 'tau0|iobm' for subject 'tau0' not"
-                    & " found",
-                    Message   => "Exception mismatch (2)");
+                    = "Subject iobm region 'tau0|iobm' with size 16#2000# for"
+                    & " subject 'tau0' not found",
+                    Message   => "Exception mismatch (3)");
       end;
 --  begin read only
    end Test_Subject_IOBM_Region_Presence;
@@ -2230,8 +2251,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject msrbm region 'linux|msrbm' for subject 'linux' not"
-                    & " found",
+                    = "Subject msrbm region 'linux|msrbm' with size 16#1000# "
+                    & "for subject 'linux' not found",
                     Message   => "Exception mismatch (1)");
       end;
 
@@ -2251,8 +2272,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject msrbm region 'tau0|msrbm' for subject 'tau0' not"
-                    & " found",
+                    = "Subject msrbm region 'tau0|msrbm' with size 16#1000# "
+                    & "for subject 'tau0' not found",
                     Message   => "Exception mismatch (2)");
       end;
 --  begin read only
@@ -2290,17 +2311,17 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       begin
          Subject_MSR_Store_Region_Presence (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (1)");
 
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject MSR store region 'linux|msrstore' for subject "
-                    & "'linux' not found",
-                    Message   => "Exception mismatch");
+                    = "Subject MSR store region 'linux|msrstore' with size "
+                    & "16#1000# for subject 'linux' not found",
+                    Message   => "Exception mismatch (1)");
       end;
 
-      --  Subject MSR store region with incorrect region type.
+      --  Subject MSR store region with incorrect size.
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -2310,20 +2331,46 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/memory/memory[@name='linux|msrstore']",
+         Name  => "size",
+         Value => "16#0000#");
+
+      begin
+         Subject_MSR_Store_Region_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject MSR store region 'linux|msrstore' with size "
+                    & "16#1000# for subject 'linux' not found",
+                    Message   => "Exception mismatch (2)");
+      end;
+
+      --  Subject MSR store region with incorrect region type.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='linux|msrstore']",
+         Name  => "size",
+         Value => "16#1000#");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='linux|msrstore']",
          Name  => "type",
          Value => "subject");
 
       begin
          Subject_MSR_Store_Region_Presence (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (3)");
 
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject MSR store region 'linux|msrstore' for subject "
-                    & "'linux' not found",
-                    Message   => "Exception mismatch");
+                    = "Subject MSR store region 'linux|msrstore' with size "
+                    & "16#1000# for subject 'linux' not found",
+                    Message   => "Exception mismatch (3)");
       end;
 --  begin read only
    end Test_Subject_MSR_Store_Region_Presence;

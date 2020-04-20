@@ -1090,15 +1090,30 @@ is
                  PERFGLOBALCTRL_Control => PERF_Ctrl,
                  EFER_Control           => EFER_Ctrl);
          begin
-            if MSR_Count > 0
-              and then Muxml.Utils.Get_Element
-                (Nodes     => MSR_Regions,
-                 Ref_Attr  => "name",
-                 Ref_Value => Subj_Name & "|msrstore") = null
-            then
-               raise Validation_Error with "Subject MSR store region '"
-                 & Subj_Name & "|msrstore' for subject '" & Subj_Name
-                 & "' not found";
+            if MSR_Count > 0 then
+               declare
+                  MSR_Store : constant DOM.Core.Node := Muxml.Utils.Get_Element
+                    (Nodes     => MSR_Regions,
+                     Ref_Attr  => "name",
+                     Ref_Value => Subj_Name & "|msrstore");
+                  Size_Str  : constant String
+                    := (if MSR_Store /= null then
+                           DOM.Core.Elements.Get_Attribute
+                          (Elem => MSR_Store,
+                           Name => "size")
+                          else "0");
+               begin
+                  if MSR_Store = null
+                    or else Interfaces.Unsigned_64'Value (Size_Str)
+                    /= Mutools.Constants.Page_Size
+                  then
+                     raise Validation_Error with "Subject MSR store region '"
+                       & Subj_Name & "|msrstore' with size "
+                       & Mutools.Utils.To_Hex
+                       (Number => Mutools.Constants.Page_Size)
+                       & " for subject '" & Subj_Name & "' not found";
+                  end if;
+               end;
             end if;
          end;
       end loop;

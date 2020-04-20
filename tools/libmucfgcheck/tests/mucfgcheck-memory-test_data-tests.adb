@@ -2316,12 +2316,12 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject MSR store region 'linux|msrstore' for subject "
-                    & "'linux' not found",
+                    = "Subject MSR store region 'linux|msrstore' with size "
+                    & "16#1000# for subject 'linux' not found",
                     Message   => "Exception mismatch (1)");
       end;
 
-      --  Subject MSR store region with incorrect region type.
+      --  Subject MSR store region with incorrect size.
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -2331,8 +2331,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/memory/memory[@name='linux|msrstore']",
-         Name  => "type",
-         Value => "subject");
+         Name  => "size",
+         Value => "16#0000#");
 
       begin
          Subject_MSR_Store_Region_Presence (XML_Data => Data);
@@ -2342,9 +2342,35 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject MSR store region 'linux|msrstore' for subject "
-                    & "'linux' not found",
+                    = "Subject MSR store region 'linux|msrstore' with size "
+                    & "16#1000# for subject 'linux' not found",
                     Message   => "Exception mismatch (2)");
+      end;
+
+      --  Subject MSR store region with incorrect region type.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='linux|msrstore']",
+         Name  => "size",
+         Value => "16#1000#");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='linux|msrstore']",
+         Name  => "type",
+         Value => "subject");
+
+      begin
+         Subject_MSR_Store_Region_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (3)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject MSR store region 'linux|msrstore' with size "
+                    & "16#1000# for subject 'linux' not found",
+                    Message   => "Exception mismatch (3)");
       end;
 --  begin read only
    end Test_Subject_MSR_Store_Region_Presence;

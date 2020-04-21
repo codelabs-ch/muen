@@ -5,6 +5,7 @@
   <boolean name="dbgserver_sink_serial" value="true"/>
   <boolean name="dbgserver_sink_shmem" value="false"/>
   <boolean name="dbgserver_sink_xhcidbg" value="false"/>
+  <boolean name="muenblock_enabled" value="true"/>
   <boolean name="pciconf_emulation_enabled" value="true"/>
   <boolean name="pciconf_emulation_xhci_enabled" value="true"/>
   <string name="pciconf_emulation_nic_devid" value="16#1f#"/>
@@ -33,6 +34,7 @@
    <hash value="none"/>
   </memory>
   <include href="memory_xhci_dma.xml"/>
+  <memory name="muenblock" size="16#0100_0000#" caching="WB" type="subject_device"/>
  </memory>
 
  <deviceDomains>
@@ -50,6 +52,7 @@
    <memory>
     <memory logical="dma1" physical="storage_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
     <memory logical="dma2" physical="storage_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
+    <memory logical="muenblock" physical="muenblock" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
    </memory>
    <devices>
     <device logical="xhci" physical="usb_controller_1"/>
@@ -83,10 +86,10 @@
   <channel name="nic_dm_request_2" size="16#1000#" hasEvent="switch"/>
   <channel name="nic_dm_response_1" size="16#1000#" hasEvent="switch"/>
   <channel name="nic_dm_response_2" size="16#1000#" hasEvent="switch"/>
-  <channel name="blockdev_request1" size="16#0010_0000#"/>
-  <channel name="blockdev_response1" size="16#0010_0000#"/>
-  <channel name="blockdev_request2" size="16#0010_0000#"/>
-  <channel name="blockdev_response2" size="16#0010_0000#"/>
+  <channel name="blockdev_request1" size="16#0010_0000#" hasEvent="asap"/>
+  <channel name="blockdev_response1" size="16#0010_0000#" hasEvent="asap"/>
+  <channel name="blockdev_request2" size="16#0010_0000#" hasEvent="asap"/>
+  <channel name="blockdev_response2" size="16#0010_0000#" hasEvent="asap"/>
  </channels>
 
  <subjects>
@@ -144,6 +147,7 @@
    <bootparams>console=hvc console=ttyS0 pci=noearly hostname=nic_linux muen-input.channel=virtual_keyboard debug</bootparams>
    <memory>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
+    <memory logical="muenblock" physical="muenblock" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
    </memory>
    <devices>
     <device logical="serial" physical="com_2">
@@ -199,10 +203,10 @@
     <writer logical="testchannel_1" physical="testchannel_1" virtualAddress="16#000e_00f0_1000#"/>
     <reader logical="testchannel_4" physical="testchannel_4" virtualAddress="16#000e_00f0_2000#"/>
     <writer logical="testchannel_3" physical="testchannel_3" virtualAddress="16#000e_0100_2000#"/>
-    <writer logical="blockdev_request1" physical="blockdev_request1" virtualAddress="16#000e_01f0_0000#"/>
-    <reader logical="blockdev_response1" physical="blockdev_response1" virtualAddress="16#000e_0200_0000#"/>
-    <writer logical="blockdev_request2" physical="blockdev_request2" virtualAddress="16#000e_0210_0000#"/>
-    <reader logical="blockdev_response2" physical="blockdev_response2" virtualAddress="16#000e_0220_0000#"/>
+    <writer logical="blockdev_request1" physical="blockdev_request1" virtualAddress="16#000e_01f0_0000#" event="3"/>
+    <reader logical="blockdev_response1" physical="blockdev_response1" virtualAddress="16#000e_0200_0000#" vector="101"/>
+    <writer logical="blockdev_request2" physical="blockdev_request2" virtualAddress="16#000e_0210_0000#" event="4"/>
+    <reader logical="blockdev_response2" physical="blockdev_response2" virtualAddress="16#000e_0220_0000#" vector="102"/>
    </channels>
    <component ref="linux">
     <map logical="lowmem" physical="nic_linux|lowmem"/>
@@ -431,6 +435,7 @@
    <bootparams>console=hvc console=ttyS0 pci=noearly hostname=storage_linux debug</bootparams>
    <memory>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
+    <memory logical="muenblock" physical="muenblock" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
    </memory>
    <devices>
     <device logical="xhci" physical="$pciconf_emulation_xhci_physdev">
@@ -487,10 +492,10 @@
     <writer logical="testchannel_2" physical="testchannel_2" virtualAddress="16#000e_00f0_1000#"/>
     <reader logical="testchannel_3" physical="testchannel_3" virtualAddress="16#000e_00f0_2000#"/>
     <writer logical="testchannel_4" physical="testchannel_4" virtualAddress="16#000e_0100_2000#"/>
-    <reader logical="blockdev_request1" physical="blockdev_request1" virtualAddress="16#000e_01f0_0000#"/>
-    <writer logical="blockdev_response1" physical="blockdev_response1" virtualAddress="16#000e_0200_0000#"/>
-    <reader logical="blockdev_request2" physical="blockdev_request2" virtualAddress="16#000e_0210_0000#"/>
-    <writer logical="blockdev_response2" physical="blockdev_response2" virtualAddress="16#000e_0220_0000#"/>
+    <reader logical="blockdev_request1" physical="blockdev_request1" virtualAddress="16#000e_01f0_0000#" vector="101"/>
+    <writer logical="blockdev_response1" physical="blockdev_response1" virtualAddress="16#000e_0200_0000#" event="3"/>
+    <reader logical="blockdev_request2" physical="blockdev_request2" virtualAddress="16#000e_0210_0000#" vector="102"/>
+    <writer logical="blockdev_response2" physical="blockdev_response2" virtualAddress="16#000e_0220_0000#" event="4"/>
    </channels>
    <component ref="linux">
     <map logical="lowmem" physical="storage_linux|lowmem"/>

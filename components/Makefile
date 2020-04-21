@@ -31,7 +31,6 @@ COMPONENTS_SPARK := \
 COMPONENTS_PROOF := \
 	controller \
 	dm \
-	example \
 	sm \
 	time
 

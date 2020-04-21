@@ -3,6 +3,7 @@
   <boolean name="serial_supported" value="true"/>
   <boolean name="hsuart_supported" value="false"/>
   <boolean name="xhcidbg_supported" value="true"/>
+  <boolean name="uefi_gop_rmrr_access" value="false"/>
  </config>
  <mappings>
   <aliases>

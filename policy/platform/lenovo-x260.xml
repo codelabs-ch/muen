@@ -3,6 +3,7 @@
   <boolean name="serial_supported" value="false"/>
   <boolean name="hsuart_supported" value="false"/>
   <boolean name="xhcidbg_supported" value="true"/>
+  <boolean name="uefi_gop_rmrr_access" value="false"/>
   <string name="igd_opregion_address" value="16#b7fb_d000#"/>
  </config>
  <mappings>

@@ -13,6 +13,7 @@ SRC_BZIMAGE = src/arch/x86/boot/bzImage
 GENCSPEC    = misc/linux-muen-gencspec.py
 EXTRA_MODS  = $(notdir $(wildcard modules/*))
 
+MODS_SRC     = $(wildcard modules/*/*.[ch])
 MODS_BUILD   = $(EXTRA_MODS:%=$(OBJ_DIR)/.%-build)
 MODS_CLEAN   = $(EXTRA_MODS:%=clean-%)
 MODS_OBJ_DIR = $(OBJ_DIR)/modules
@@ -47,7 +48,7 @@ $(OBJ_DIR)/.mods-build: $(SRC_BZIMAGE) | $(OBJ_DIR)
 
 $(MODS_BUILD): MOD_NAME = $(@:$(OBJ_DIR)/.%-build=%)
 $(MODS_BUILD): MOD_PATH = $(MODS_PATH)/$(MOD_NAME)
-$(MODS_BUILD): $(OBJ_DIR)/.mods-build | $(OBJ_DIR)
+$(MODS_BUILD): $(OBJ_DIR)/.mods-build $(MODS_SRC) | $(OBJ_DIR)
 	@$(E) linux "Build module $(MOD_NAME)" \
 		"$(LINUX_FLAGS) $(MAKE) M=$(MOD_PATH) -C src modules" $(LOG)
 	@touch $@

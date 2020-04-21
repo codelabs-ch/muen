@@ -39,6 +39,12 @@ is
    with
       Global => (Input => State);
 
+   --  Returns true if the current privilege level of the subject with given ID
+   --  is zero.
+   function Is_CPL_0 (ID : Skp.Global_Subject_ID_Type) return Boolean
+   with
+      Global => (Input => State);
+
    --  Move instruction pointer of subject with given ID to next instruction.
    procedure Increment_RIP (ID : Skp.Global_Subject_ID_Type)
    with

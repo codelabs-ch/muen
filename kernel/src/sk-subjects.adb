@@ -72,6 +72,10 @@ is
    VMX_EXIT_INTR_INFO_ERROR_CODE_VALID_FLAG : constant := 11;
    VMX_EXIT_INTR_INFO_VALID_FLAG            : constant := 31;
 
+   --  Segment selector privilege level mask, see Intel SDM Vol. 3A,
+   --  "3.4.2 Segment Selectors".
+   SEGMENT_SELECTOR_PL_MASK : constant := 2#11#;
+
    -------------------------------------------------------------------------
 
    --  Stores the VMCS guest selector and descriptor information of the segment
@@ -218,6 +222,15 @@ is
    begin
       Descriptors (ID).RIP := Next_RIP;
    end Increment_RIP;
+
+   -------------------------------------------------------------------------
+
+   function Is_CPL_0 (ID : Skp.Global_Subject_ID_Type) return Boolean
+   is ((Descriptors (ID).CS.Selector and SEGMENT_SELECTOR_PL_MASK) = 0)
+   with
+      Refined_Global => (Input => Descriptors),
+      Refined_Post   => Is_CPL_0'Result =
+         ((Descriptors (ID).CS.Selector and SEGMENT_SELECTOR_PL_MASK) = 0);
 
    -------------------------------------------------------------------------
 

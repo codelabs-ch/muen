@@ -114,7 +114,9 @@ begin
          pragma Debug (Debug_Ops.Put_Line
                        (Item => "Invalid guest state, halting until further"
                         & " notice"));
+         SK.CPU.Sti;
          SK.CPU.Hlt;
+         SK.CPU.Cli;
          pragma Debug (Debug_Ops.Put_Line
                        (Item => "AP wakeup event, restarting CPU"));
          declare

@@ -82,9 +82,6 @@ begin
      (Stack_Addr => Component_Constants.Interrupt_Stack_Address);
    Time.Initialize;
 
-   SK.CPU.Sti;
-   SK.CPU.Hlt;
-
    loop
       Exit_Reason := State.Exit_Reason;
 

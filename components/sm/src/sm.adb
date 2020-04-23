@@ -90,9 +90,10 @@ begin
       elsif Exit_Reason = SK.Constants.EXIT_REASON_INVLPG
         or else Exit_Reason = SK.Constants.EXIT_REASON_DR_ACCESS
         or else Exit_Reason = SK.Constants.EXIT_REASON_WBINVD
+        or else Exit_Reason = SK.Constants.EXIT_REASON_VMCALL
       then
 
-         --  Ignore WBINVD, INVLPG and MOV DR for now.
+         --  Ignore VMCALL, WBINVD, INVLPG and MOV DR for now.
 
          Action := Types.Subject_Continue;
 

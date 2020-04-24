@@ -241,4 +241,8 @@ is
    MCi_STATUS_Bit_Miscv : constant := 59;
    MCi_STATUS_Bit_Valid : constant := 63;
 
+   --  MXCSR Control and Status Register default initial value, see Intel SDM
+   --  Vol. 3A, "9.1.1 Processor State After Reset".
+   MXCSR_Default_Value : constant := 16#1f80#;
+
 end SK.Constants;

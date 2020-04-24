@@ -83,6 +83,7 @@ is
       CPU.XSETBV (Register => 0,
                   Value    => XCR0);
       CPU.Fninit;
+      CPU.Ldmxcsr (Value => Constants.MXCSR_Default_Value);
    end Enable;
 
    -------------------------------------------------------------------------

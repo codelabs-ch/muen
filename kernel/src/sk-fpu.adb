@@ -62,6 +62,8 @@ is
    begin
       CR4 := CPU.Get_CR4;
       CR4 := Bitops.Bit_Set (Value => CR4,
+                             Pos   => Constants.CR4_OSFXSR_FLAG);
+      CR4 := Bitops.Bit_Set (Value => CR4,
                              Pos   => Constants.CR4_XSAVE_FLAG);
       CPU.Set_CR4 (Value => CR4);
 

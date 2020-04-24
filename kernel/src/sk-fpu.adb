@@ -104,12 +104,13 @@ is
 
    procedure Save_State (ID : Skp.Global_Subject_ID_Type)
    with
-      Refined_Global  => (Input  => X86_64.State,
+      Refined_Global  => (Input  => (X86_64.State, XCR0),
                           In_Out => Subject_FPU_States),
-      Refined_Depends => (Subject_FPU_States =>+ (ID, X86_64.State))
+      Refined_Depends => (Subject_FPU_States =>+ (ID, XCR0, X86_64.State))
    is
    begin
-      CPU.XSAVE (Target => Subject_FPU_States (ID));
+      CPU.XSAVE (Target => Subject_FPU_States (ID),
+                 State  => XCR0);
    end Save_State;
 
    -------------------------------------------------------------------------

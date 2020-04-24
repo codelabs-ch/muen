@@ -208,11 +208,13 @@ is
       Depends => (X86_64.State =>+ Source),
       Inline_Always;
 
-   --  Save Processor Extended States to given XSAVE area.
-   procedure XSAVE (Target : out SK.XSAVE_Area_Type)
+   --  Save specified Processor Extended States to given XSAVE area.
+   procedure XSAVE
+     (Target : out XSAVE_Area_Type;
+      State  :     Word64)
    with
       Global  => (Input => X86_64.State),
-      Depends => (Target => X86_64.State),
+      Depends => (Target => (X86_64.State, State)),
       Inline_Always;
 
    --  Set specified Extended Control Register (XCR) to given value.

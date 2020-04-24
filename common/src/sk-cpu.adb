@@ -393,10 +393,14 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure XSAVE (Target : out SK.XSAVE_Area_Type)
+   procedure XSAVE
+     (Target : out XSAVE_Area_Type;
+      State  :     Word64)
    with
       SPARK_Mode => Off
    is
+      Low_Dword  : constant Word32 := Word32'Mod (State);
+      High_Dword : constant Word32 := Word32'Mod (State / 2 ** 32);
    begin
 
       --  Save mask in EDX:EAX specifies to save x87, SSE and AVX registers,
@@ -405,9 +409,9 @@ is
 
       System.Machine_Code.Asm
         (Template => "xsave64 %0",
-         Inputs   => (SK.Word32'Asm_Input ("a", 7),
-                      SK.Word32'Asm_Input ("d", 0)),
-         Outputs  => (SK.XSAVE_Area_Type'Asm_Output ("=m", Target)),
+         Inputs   => (Word32'Asm_Input ("a", Low_Dword),
+                      Word32'Asm_Input ("d", High_Dword)),
+         Outputs  => (XSAVE_Area_Type'Asm_Output ("=m", Target)),
          Volatile => True);
    end XSAVE;
 

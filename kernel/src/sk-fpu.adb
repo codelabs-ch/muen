@@ -92,12 +92,13 @@ is
 
    procedure Restore_State (ID : Skp.Global_Subject_ID_Type)
    with
-     Refined_Global  => (Input  => Subject_FPU_States,
+     Refined_Global  => (Input  => (Subject_FPU_States, XCR0),
                          In_Out => X86_64.State),
-     Refined_Depends => (X86_64.State =>+ (ID, Subject_FPU_States))
+     Refined_Depends => (X86_64.State =>+ (ID, Subject_FPU_States, XCR0))
    is
    begin
-      CPU.XRSTOR (Source => Subject_FPU_States (ID));
+      CPU.XRSTOR (Source => Subject_FPU_States (ID),
+                  State  => XCR0);
    end Restore_State;
 
    -------------------------------------------------------------------------

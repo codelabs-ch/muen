@@ -373,10 +373,14 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure XRSTOR (Source : SK.XSAVE_Area_Type)
+   procedure XRSTOR
+     (Source : XSAVE_Area_Type;
+      State  : Word64)
    with
       SPARK_Mode => Off
    is
+      Low_Dword  : constant Word32 := Word32'Mod (State);
+      High_Dword : constant Word32 := Word32'Mod (State / 2 ** 32);
    begin
 
       --  Restore mask in EDX:EAX specifies to restore x87, SSE and AVX
@@ -385,9 +389,9 @@ is
 
       System.Machine_Code.Asm
         (Template => "xrstor64 %2",
-         Inputs   => (SK.Word32'Asm_Input ("a", 7),
-                      SK.Word32'Asm_Input ("d", 0),
-                      SK.XSAVE_Area_Type'Asm_Input ("m", Source)),
+         Inputs   => (Word32'Asm_Input ("a", Low_Dword),
+                      Word32'Asm_Input ("d", High_Dword),
+                      XSAVE_Area_Type'Asm_Input ("m", Source)),
          Volatile => True);
    end XRSTOR;
 

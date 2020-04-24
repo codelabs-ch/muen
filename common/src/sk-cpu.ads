@@ -201,11 +201,13 @@ is
       Inline_Always;
    pragma Annotate (GNATprove, Terminating, Get_RFLAGS);
 
-   --  Restore Processor Extended States from given XSAVE area.
-   procedure XRSTOR (Source : SK.XSAVE_Area_Type)
+   --  Restore specified Processor Extended States from given XSAVE area.
+   procedure XRSTOR
+     (Source : XSAVE_Area_Type;
+      State  : Word64)
    with
       Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ Source),
+      Depends => (X86_64.State =>+ (Source, State)),
       Inline_Always;
 
    --  Save specified Processor Extended States to given XSAVE area.

@@ -25,7 +25,7 @@ with SK.Strings;
 
 package body SK.FPU
 with
-   Refined_State => (State => Subject_FPU_States)
+   Refined_State => (State => (Subject_FPU_States, XCR0))
 is
 
    Null_FPU_State : constant XSAVE_Area_Type := (others => 0);
@@ -39,6 +39,8 @@ is
      + 2 ** Constants.XCR0_OPMASK_STATE_FLAG
      + 2 ** Constants.XCR0_ZMM_HI256_STATE_FLAG
      + 2 ** Constants.XCR0_HI16_ZMM_STATE_FLAG;
+
+   XCR0 : Word64 := 0;
 
    -------------------------------------------------------------------------
 
@@ -57,7 +59,7 @@ is
 
    procedure Enable
    is
-      CR4, XCR0 : Word64;
+      CR4 : Word64;
       EAX, Unused_EBX, Unused_ECX, EDX : Word32;
    begin
       CR4 := CPU.Get_CR4;

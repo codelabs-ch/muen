@@ -34,8 +34,6 @@ is
    XCR0_Features : constant := 2 ** Constants.XCR0_FPU_STATE_FLAG
      + 2 ** Constants.XCR0_SSE_STATE_FLAG
      + 2 ** Constants.XCR0_AVX_STATE_FLAG
-     + 2 ** Constants.XCR0_BNDREG_STATE_FLAG
-     + 2 ** Constants.XCR0_BNDCSR_TATE_FLAG
      + 2 ** Constants.XCR0_OPMASK_STATE_FLAG
      + 2 ** Constants.XCR0_ZMM_HI256_STATE_FLAG
      + 2 ** Constants.XCR0_HI16_ZMM_STATE_FLAG;

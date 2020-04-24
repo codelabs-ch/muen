@@ -46,6 +46,13 @@ is
       Depends => (X86_64.State =>+ null),
       Inline_Always;
 
+   --  Load MXCSR Register.
+   procedure Ldmxcsr (Value : Word32)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ Value),
+      Inline_Always;
+
    --  Halt the CPU.
    procedure Hlt
    with

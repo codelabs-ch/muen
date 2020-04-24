@@ -198,6 +198,19 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Ldmxcsr (Value : Word32)
+   with
+      SPARK_Mode => Off
+   is
+   begin
+      System.Machine_Code.Asm
+        (Template => "ldmxcsr %0",
+         Inputs   => (Word32'Asm_Input ("m", Value)),
+         Volatile => True);
+   end Ldmxcsr;
+
+   -------------------------------------------------------------------------
+
    procedure Lgdt (Descriptor : Pseudo_Descriptor_Type)
    with
       SPARK_Mode => Off

@@ -39,6 +39,7 @@ is
    CR0_PG_FLAG                  : constant := 31;
 
    CR4_MCE_FLAG                 : constant := 6;
+   CR4_OSFXSR_FLAG              : constant := 9;
    CR4_VMXE_FLAG                : constant := 13;
    CR4_SMXE_FLAG                : constant := 14;
    CR4_XSAVE_FLAG               : constant := 18;

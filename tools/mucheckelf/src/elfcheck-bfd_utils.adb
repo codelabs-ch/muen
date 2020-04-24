@@ -149,23 +149,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Section
-     (Descriptor : Bfd.Files.File_Type;
-      Name       : String)
-      return Bfd.Sections.Section
-   is
-   begin
-      return Bfd.Sections.Find_Section
-        (File => Descriptor,
-         Name => Name);
-
-   exception
-      when Bfd.NOT_FOUND =>
-         raise ELF_Error with "Section '" & Name & "' not found";
-   end Get_Section;
-
-   -------------------------------------------------------------------------
-
    procedure Validate_LMA_In_Region
      (Section      : Bfd.Sections.Section;
       Section_Name : String;

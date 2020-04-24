@@ -28,6 +28,7 @@ abstract project Shared is
 
    Spark_Compiler_Switches := Common_Compiler_Switches
      & ("-gnatyyBdgIOSux-s",
+        "-mindirect-branch=thunk-extern",
         "-gnatp");
 
    Common_Ada_Compiler_Switches := Common_Compiler_Switches

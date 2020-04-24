@@ -23,12 +23,36 @@
 vmx_exit_handler_ptr:
 	.quad vmx_exit_handler
 
-#define CPU_REGS_SIZE 8 * 16
+#define CPU_REGS_SIZE	8 * 16
+#define RSB_ENTRIES		16
 
 .text
 vmx_exit_handler:
 	push %r15
 	xor  %r15, %r15
+
+	/*
+	 * SpectreRSB mitigation: stuff RSB
+	 * Linux __FILL_RETURN_BUFFER but with 16 calls instead of 32.
+	 */
+	mov $(RSB_ENTRIES/2), %r15
+1:
+	call 3f
+2:	/* speculation trap */
+	pause
+	lfence
+	jmp 2b
+3:
+	call 5f
+4:	/* speculation trap */			\
+	pause
+	lfence
+	jmp 4b
+5:
+	dec %r15
+	jnz 1b
+	add $(RSB_ENTRIES*8), %rsp;
+
 	push %r14
 	xor  %r14, %r14
 	push %r13
@@ -84,8 +108,8 @@ launch_subject:
 	vmlaunch
 	call vmx_error_from_asm
 
-1:	hlt
-	jmp 1b
+6:	hlt
+	jmp 6b
 
 kernel_init:
 	sub $CPU_REGS_SIZE, %rsp

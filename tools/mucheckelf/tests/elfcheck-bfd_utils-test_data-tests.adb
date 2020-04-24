@@ -14,7 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with Bfd.Files;
 --  begin read only
 --  end read only
 package body Elfcheck.Bfd_Utils.Test_Data.Tests is
@@ -28,73 +28,6 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
 
 --  begin read only
 --  end read only
-
---  begin read only
-   procedure Test_Get_Section (Gnattest_T : in out Test);
-   procedure Test_Get_Section_eabc3e (Gnattest_T : in out Test) renames Test_Get_Section;
---  id:2.2/eabc3e5123f1b3fe/Get_Section/1/0/
-   procedure Test_Get_Section (Gnattest_T : in out Test) is
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      ----------------------------------------------------------------------
-
-      procedure Nonexistent_Section
-      is
-         Fd : Bfd.Files.File_Type;
-         S  : Bfd.Sections.Section;
-      begin
-         Mutools.Bfd.Open (Filename   => "data/binary",
-                           Descriptor => Fd);
-         S := Get_Section (Descriptor => Fd,
-                           Name       => "nonexistent");
-         Bfd.Files.Close (File => Fd);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : ELF_Error =>
-            Bfd.Files.Close (File => Fd);
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Section 'nonexistent' not found",
-                    Message   => "Exception mismatch");
-         when others =>
-            Bfd.Files.Close (File => Fd);
-            raise;
-      end Nonexistent_Section;
-
-      ----------------------------------------------------------------------
-
-      procedure Positive_Test
-      is
-         use type Bfd.Size_Type;
-
-         Fd : Bfd.Files.File_Type;
-         S  : Bfd.Sections.Section;
-      begin
-         Mutools.Bfd.Open (Filename   => "data/binary",
-                           Descriptor => Fd);
-         S := Get_Section (Descriptor => Fd,
-                           Name       => ".text");
-         Bfd.Files.Close (File => Fd);
-
-         Assert (Condition => S.Size > 0,
-                 Message   => "Section size is zero");
-
-      exception
-         when others =>
-            Bfd.Files.Close (File => Fd);
-            raise;
-      end Positive_Test;
-
-   begin
-      Nonexistent_Section;
-      Positive_Test;
---  begin read only
-   end Test_Get_Section;
---  end read only
-
 
 --  begin read only
    procedure Test_Check_Section (Gnattest_T : in out Test);
@@ -118,8 +51,8 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
                       File => "data/test_policy.xml");
          Mutools.Bfd.Open (Filename   => "data/binary",
                            Descriptor => Fd);
-         S := Get_Section (Descriptor => Fd,
-                           Name       => ".text");
+         S := Bfd.Sections.Find_Section (File => Fd,
+                                         Name => ".text");
          Check_Section (Policy      => Policy,
                         Region_Name => "nonexistent",
                         Section     => S);
@@ -152,8 +85,8 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
                       File => "data/test_policy.xml");
          Mutools.Bfd.Open (Filename   => "data/binary",
                            Descriptor => Fd);
-         S := Get_Section (Descriptor => Fd,
-                           Name       => ".text");
+         S := Bfd.Sections.Find_Section (File => Fd,
+                                         Name => ".text");
 
          Muxml.Utils.Set_Attribute
            (Doc   => Policy.Doc,
@@ -192,8 +125,8 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
                       File => "data/test_policy.xml");
          Mutools.Bfd.Open (Filename   => "data/binary",
                            Descriptor => Fd);
-         S := Get_Section (Descriptor => Fd,
-                           Name       => ".text");
+         S := Bfd.Sections.Find_Section (File => Fd,
+                                         Name => ".text");
          Bfd.Files.Close (File => Fd);
          Check_Section (Policy      => Policy,
                         Region_Name => "kernel_text",

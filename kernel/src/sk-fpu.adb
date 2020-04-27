@@ -28,7 +28,17 @@ with
    Refined_State => (State => (Subject_FPU_States, XCR0))
 is
 
-   Null_FPU_State : constant XSAVE_Area_Type := (others => 0);
+   Null_FPU_State : constant XSAVE_Area_Type
+     := (Legacy_Header   => (FCW        => 0,
+                             FSW        => 0,
+                             FTW        => 0,
+                             Reserved   => 0,
+                             FOP        => 0,
+                             FIP        => 0,
+                             FDP        => 0,
+                             MXCSR      => 0,
+                             MXCSR_Mask => 0),
+         Extended_Region => (others => 0));
 
    --  FPU features that shall be enabled if supported by the hardware.
    XCR0_Features : constant := 2 ** Constants.XCR0_FPU_STATE_FLAG

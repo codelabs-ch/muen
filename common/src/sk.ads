@@ -72,12 +72,37 @@ is
 
    --  Size of XSAVE storage area in bytes. Must be at least as large as
    --  described in Intel SDM Vol. 1, "13.4 XSAVE Area".
-   XSAVE_Area_Size : constant := Page_Size;
+   XSAVE_Area_Size          : constant := Page_Size;
+   XSAVE_Legacy_Header_Size : constant := 32;
 
-   type XSAVE_Area_Range is range 0 .. XSAVE_Area_Size - 1;
+   --  For layout of XSAVE legacy region see Intel SDM Vol. 1,
+   --  "13.4.1 Legacy Region of an XSAVE Area".
+   type XSAVE_Legacy_Header_Type is record
+      FCW        : Word16;
+      FSW        : Word16;
+      FTW        : Byte;
+      Reserved   : Byte;
+      FOP        : Word16;
+      FIP        : Word64;
+      FDP        : Word64;
+      MXCSR      : Word32;
+      MXCSR_Mask : Word32;
+   end record
+   with
+      Size => XSAVE_Legacy_Header_Size * 8;
 
-   type XSAVE_Area_Type is array (XSAVE_Area_Range) of Byte;
-   for XSAVE_Area_Type'Alignment use 64;
+   type XSAVE_Extended_Region_Type is array (32 .. XSAVE_Area_Size - 1) of Byte
+   with
+      Size => (XSAVE_Area_Size - XSAVE_Legacy_Header_Size) * 8;
+
+   type XSAVE_Area_Type is record
+      Legacy_Header   : XSAVE_Legacy_Header_Type;
+      Extended_Region : XSAVE_Extended_Region_Type;
+   end record
+   with
+      Pack,
+      Alignment => 64,
+      Size      => XSAVE_Area_Size * 8;
 
    Seg_Type_Size : constant := 8 + 8 + 4 + 4;
 
@@ -141,6 +166,18 @@ is
       Size => 80;
 
 private
+
+   for XSAVE_Legacy_Header_Type use record
+      FCW        at  0 range  0 .. 15;
+      FSW        at  2 range  0 .. 15;
+      FTW        at  4 range  0 ..  7;
+      Reserved   at  5 range  0 ..  7;
+      FOP        at  6 range  0 .. 15;
+      FIP        at  8 range  0 .. 63;
+      FDP        at 16 range  0 .. 63;
+      MXCSR      at 24 range  0 .. 31;
+      MXCSR_Mask at 28 range  0 .. 31;
+   end record;
 
    for Segment_Type use record
       Selector      at  0 range 0 .. 63;

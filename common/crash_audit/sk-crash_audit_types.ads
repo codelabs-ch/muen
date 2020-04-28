@@ -32,8 +32,8 @@ is
    with
       Size => 6;
 
-   --  xxd -l 8 -p /dev/random
-   Crash_Magic : constant := 16#d93d_0df7_50d5_0e9a#;
+   --  xxd -l 8 -p /dev/random with highest 2 bytes for counter
+   Crash_Magic : constant := 16#0100_0df7_50d5_0e9a#;
 
    subtype Version_Str_Range is Positive range 1 .. 64;
 

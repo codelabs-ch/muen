@@ -42,24 +42,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Clear_State (ID : Skp.Global_Subject_ID_Type)
-   with
-      Refined_Global  => (Input  => XCR0,
-                          In_Out => (Subject_FPU_States, X86_64.State)),
-      Refined_Depends => ((Subject_FPU_States,
-                           X86_64.State)       => (ID, XCR0, X86_64.State,
-                                                   Subject_FPU_States))
-   is
-   begin
-      Subject_FPU_States (ID) := Null_FPU_State;
-      Restore_State (ID => ID);
-      CPU.Fninit;
-      CPU.Ldmxcsr (Value => Constants.MXCSR_Default_Value);
-      Save_State (ID => ID);
-   end Clear_State;
-
-   -------------------------------------------------------------------------
-
    procedure Enable
    with
       Refined_Global  => (In_Out => X86_64.State,
@@ -92,6 +74,24 @@ is
       CPU.XSETBV (Register => 0,
                   Value    => XCR0);
    end Enable;
+
+   -------------------------------------------------------------------------
+
+   procedure Reset_State (ID : Skp.Global_Subject_ID_Type)
+   with
+      Refined_Global  => (Input  => XCR0,
+                          In_Out => (Subject_FPU_States, X86_64.State)),
+      Refined_Depends => ((Subject_FPU_States,
+                           X86_64.State)       => (ID, XCR0, X86_64.State,
+                                                   Subject_FPU_States))
+   is
+   begin
+      Subject_FPU_States (ID) := Null_FPU_State;
+      Restore_State (ID => ID);
+      CPU.Fninit;
+      CPU.Ldmxcsr (Value => Constants.MXCSR_Default_Value);
+      Save_State (ID => ID);
+   end Reset_State;
 
    -------------------------------------------------------------------------
 

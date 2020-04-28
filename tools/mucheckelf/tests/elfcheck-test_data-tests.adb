@@ -14,7 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with Ada.Exceptions;
 --  begin read only
 --  end read only
 package body Elfcheck.Test_Data.Tests is
@@ -41,6 +41,19 @@ package body Elfcheck.Test_Data.Tests is
    begin
       Run (Policy_File => "data/test_policy.xml",
            ELF_Binary  => "data/binary");
+
+      begin
+         Run (Policy_File => "data/test_policy.xml",
+              ELF_Binary  => "data/unexpected_section");
+         Assert (Condition => True,
+                 Message   => "Exception expected (1)");
+
+      exception
+         when E : ELF_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Unexpected ELF section '.rela.dyn'",
+                    Message   => "Exception expected (1)");
+      end;
 --  begin read only
    end Test_Run;
 --  end read only

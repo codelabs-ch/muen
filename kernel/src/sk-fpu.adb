@@ -29,15 +29,7 @@ with
 is
 
    Null_FPU_State : constant XSAVE_Area_Type
-     := (Legacy_Header   => (FCW        => 0,
-                             FSW        => 0,
-                             FTW        => 0,
-                             Reserved   => 0,
-                             FOP        => 0,
-                             FIP        => 0,
-                             FDP        => 0,
-                             MXCSR      => 0,
-                             MXCSR_Mask => 0),
+     := (Legacy_Header   => Null_XSAVE_Legacy_Header,
          Extended_Region => (others => 0));
 
    --  FPU features that shall be enabled if supported by the hardware.

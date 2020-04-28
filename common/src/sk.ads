@@ -91,6 +91,8 @@ is
    with
       Size => XSAVE_Legacy_Header_Size * 8;
 
+   Null_XSAVE_Legacy_Header : constant XSAVE_Legacy_Header_Type;
+
    type XSAVE_Extended_Region_Type is array (32 .. XSAVE_Area_Size - 1) of Byte
    with
       Size => (XSAVE_Area_Size - XSAVE_Legacy_Header_Size) * 8;
@@ -209,6 +211,17 @@ private
       R14 at 112 range 0 .. 63;
       R15 at 120 range 0 .. 63;
    end record;
+
+   Null_XSAVE_Legacy_Header : constant XSAVE_Legacy_Header_Type
+     := (FCW        => 0,
+         FSW        => 0,
+         FTW        => 0,
+         Reserved   => 0,
+         FOP        => 0,
+         FIP        => 0,
+         FDP        => 0,
+         MXCSR      => 0,
+         MXCSR_Mask => 0);
 
    Null_CPU_Regs : constant CPU_Registers_Type
      := CPU_Registers_Type'(others => 0);

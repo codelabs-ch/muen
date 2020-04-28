@@ -18,8 +18,6 @@
 
 with Interfaces;
 
-with Ada.Strings.Unbounded;
-
 with Muxml;
 with Mulog;
 
@@ -33,53 +31,13 @@ with Elfcheck.Bfd_Utils;
 
 package body Elfcheck
 is
-   use Ada.Strings.Unbounded;
 
    function S
      (Source : Unbounded_String)
       return String
       renames To_String;
 
-   function U
-     (Source : String)
-      return Unbounded_String
-      renames To_Unbounded_String;
-
-   type Section_Mapping_Type is record
-      Region_Name  : Unbounded_String;
-      Section_Name : Unbounded_String;
-      Mapped       : Boolean;
-      Present      : Boolean;
-   end record;
-
    type Section_Mapping_Access is access all Section_Mapping_Type;
-
-   --  Mapping of memory region names to binary section names.
-   Section_Map : array (1 .. 6) of aliased Section_Mapping_Type
-     := (1 => (Region_Name  => U ("kernel_text"),
-               Section_Name => U (".text"),
-               Mapped       => True,
-               Present      => False),
-         2 => (Region_Name  => U ("kernel_data_0"),
-               Section_Name => U (".data"),
-               Mapped       => True,
-               Present      => False),
-         3 => (Region_Name  => U ("kernel_bss_0"),
-               Section_Name => U (".bss"),
-               Mapped       => True,
-               Present      => False),
-         4 => (Region_Name  => U ("kernel_ro"),
-               Section_Name => U (".rodata"),
-               Mapped       => True,
-               Present      => False),
-         5 => (Region_Name  => U ("kernel_global_data"),
-               Section_Name => U (".globaldata"),
-               Mapped       => True,
-               Present      => False),
-         6 => (Region_Name  => U ("kernel_text"),
-               Section_Name => U (".trampoline"),
-               Mapped       => False,
-               Present      => False));
 
    --  Return section mapping info for section with given name. If no matching
    --  information is found, null is returned.

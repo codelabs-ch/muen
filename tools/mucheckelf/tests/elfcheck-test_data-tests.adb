@@ -54,6 +54,23 @@ package body Elfcheck.Test_Data.Tests is
                     = "Unexpected ELF section '.rela.dyn'",
                     Message   => "Exception expected (1)");
       end;
+
+      for M of Section_Map loop
+         M.Present := False;
+      end loop;
+
+      begin
+         Run (Policy_File => "data/test_policy.xml",
+              ELF_Binary  => "data/section_missing");
+         Assert (Condition => True,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : ELF_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Required section '.text' not present",
+                    Message   => "Exception mismatch (2)");
+      end;
 --  begin read only
    end Test_Run;
 --  end read only

@@ -51,8 +51,6 @@ is
 
    procedure Init (Description : String)
    is
-      use Ada.Strings.Unbounded;
-
       Cmdline : Mutools.Cmd_Line.Config_Type;
    begin
       GNAT.Command_Line.Set_Usage

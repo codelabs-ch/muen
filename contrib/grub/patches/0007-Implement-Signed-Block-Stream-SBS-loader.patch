@@ -1,4 +1,4 @@
-From 80c709cc320d32fa6acb850852e2ed13bcda6c21 Mon Sep 17 00:00:00 2001
+From 848ac827975a2c59e4c3ca04affbf861c757264b Mon Sep 17 00:00:00 2001
 From: Reto Buerki <reet@codelabs.ch>
 Date: Mon, 17 Feb 2020 13:30:38 +0100
 Subject: [PATCH 7/7] Implement Signed Block Stream (SBS) loader
@@ -9,9 +9,9 @@ specification [1]. See section 3 in this document for details.
 [1] - https://www.codelabs.ch/download/bsbsc-spec.pdf
 ---
  grub-core/Makefile.core.def  |   6 +
- grub-core/loader/bsbsc/sbs.c | 585 +++++++++++++++++++++++++++++++++++
+ grub-core/loader/bsbsc/sbs.c | 572 +++++++++++++++++++++++++++++++++++
  grub-core/loader/bsbsc/sbs.h |  60 ++++
- 3 files changed, 651 insertions(+)
+ 3 files changed, 638 insertions(+)
  create mode 100644 grub-core/loader/bsbsc/sbs.c
  create mode 100644 grub-core/loader/bsbsc/sbs.h
 
@@ -31,10 +31,10 @@ index d82c22528..9962146a3 100644
 +};
 diff --git a/grub-core/loader/bsbsc/sbs.c b/grub-core/loader/bsbsc/sbs.c
 new file mode 100644
-index 000000000..1072fe918
+index 000000000..db8e6b596
 --- /dev/null
 +++ b/grub-core/loader/bsbsc/sbs.c
-@@ -0,0 +1,585 @@
+@@ -0,0 +1,572 @@
 +/* sbs.c - Signed Block Stream (SBS) implementation */
 +/*
 + *  GRUB  --  GRand Unified Bootloader
@@ -414,18 +414,6 @@ index 000000000..1072fe918
 +	return 0;
 +}
 +
-+/* Copy len bytes from read buffer to given destination */
-+static grub_uint32_t
-+copy_buffer (void *dest, grub_uint32_t len)
-+{
-+	if (buffer_bytes () < len)
-+		return 0;
-+
-+	grub_memcpy (dest, state.read_pos, len);
-+	state.read_pos += len;
-+	return len;
-+}
-+
 +/* Open SBS file with given name */
 +static grub_file_t
 +sbs_open (const char *name,
@@ -472,6 +460,7 @@ index 000000000..1072fe918
 +	grub_printf ("SBS - block count       : %u\n", header.block_count);
 +	grub_printf ("SBS - initial padding   : %u\n", header.padding_len);
 +	grub_printf ("SBS - block size        : %u\n", header.block_size);
++	grub_printf ("SBS - signature length  : %u\n", header.sig_len);
 +	grub_printf ("SBS - hashsum length    : %u\n", header.hashsum_len);
 +	grub_printf ("SBS - block data length : %u\n", bdl ());
 +
@@ -521,33 +510,31 @@ index 000000000..1072fe918
 +{
 +	grub_size_t to_read = len;
 +	void *ptr = buf;
-+	grub_uint32_t copied;
 +
 +	if (! state.sbs_valid)
 +		return -1;
 +
-+	if (! state.bytes_remaining)
-+		return 0;
++	if (to_read > state.bytes_remaining)
++		to_read = state.bytes_remaining;
 +
-+	if (buffer_empty ())
-+		if (! load_next_block (0))
-+			goto invalid;
-+
-+	while (to_read && state.bytes_remaining) {
-+		const grub_uint32_t to_copy = to_read > buffer_bytes ()
-+			? buffer_bytes () : to_read;
-+		copied = copy_buffer (ptr, to_copy);
-+		if (copied != to_copy)
-+			goto invalid;
-+		ptr = (grub_uint8_t *) ptr + copied;
-+		to_read -= copied;
-+		state.bytes_remaining -= copied;
-+		if (to_read)
++	while (to_read)
++	{
++		if (buffer_empty ())
 +			if (! load_next_block (0))
 +				goto invalid;
++
++		const grub_uint32_t to_copy = to_read > buffer_bytes ()
++			? buffer_bytes () : to_read;
++		grub_memcpy (ptr, state.read_pos, to_copy);
++
++		state.bytes_remaining -= to_copy;
++		state.read_pos        += to_copy;
++		to_read               -= to_copy;
++
++		ptr = (grub_uint8_t *) ptr + to_copy;
 +	}
 +
-+	return len - to_read;
++	return (grub_uint8_t *) ptr - (grub_uint8_t *) buf;
 +
 +invalid:
 +	grub_printf("SBS - error in block read\n");

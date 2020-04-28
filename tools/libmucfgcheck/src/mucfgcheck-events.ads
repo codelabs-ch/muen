@@ -48,7 +48,7 @@ is
    --  Check source event ID validity.
    procedure Source_Group_Event_ID_Validity (XML_Data : Muxml.XML_Data_Type);
 
-   --  Check that source event IDs of the vmx_exit group are all given or a
+   --  Check that source event IDs of the VMX Exit group are all given or a
    --  default is specified.
    procedure Source_VMX_Exit_Event_Completeness
      (XML_Data : Muxml.XML_Data_Type);

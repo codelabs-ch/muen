@@ -21,9 +21,7 @@
 				<event id="4" logical="resume_subject"/>
 			</source>
 			<target>
-				<event logical="handle_subject_trap">
-					<inject_interrupt vector="36"/>
-				</event>
+				<event logical="handle_subject_trap"/>
 			</target>
 		</events>
 	</requires>

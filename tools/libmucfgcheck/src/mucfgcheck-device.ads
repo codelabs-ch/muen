@@ -49,7 +49,7 @@ is
    --  Validate that physical IRQ names are unique per device.
    procedure Device_IRQ_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that all IO start ports are smaller than end ports.
+   --  Validate that all I/O start ports are smaller than end ports.
    procedure IO_Port_Start_Smaller_End (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate that physical I/O ports referenced by logical I/O ports exists.
@@ -90,7 +90,7 @@ is
    --  function triplet are references to physical legacy (non-PCI) devices.
    procedure Legacy_Device_References (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that all logical PCI devices specify bus number 16#00#.
+   --  Validate that all logical PCI devices specify bus number zero.
    procedure Device_References_PCI_Bus_Number (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate that all IOMMU memory-mapped IO regions have a size of 4K.

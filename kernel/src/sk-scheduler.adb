@@ -311,7 +311,7 @@ is
       MSR_Count : constant SK.Word32
         := Skp.Subjects.Get_MSR_Count (Subject_ID => ID);
    begin
-      FPU.Clear_State (ID => ID);
+      FPU.Reset_State (ID => ID);
       Subjects.Clear_State (ID => ID);
       Subjects_Events.Clear_Events (Subject => ID);
       Subjects_Interrupts.Init_Interrupts (Subject => ID);

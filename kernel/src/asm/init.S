@@ -27,6 +27,7 @@
 #define IA32_PAT       0x277
 #define IA32_EFER      0xc0000080
 
+#define CR0_MP_BIT    1
 #define CR0_NE_BIT    5
 #define CR0_WP_BIT    16
 #define CR0_NW_BIT    29
@@ -131,11 +132,12 @@ ap_entry_point:
 	btsl $EFER_NXE_BIT, %eax
 	wrmsr
 
-	// enable paging, write protection, caching and native FPU error reporting
+	// enable paging, write protection, caching, FPU and native FPU error reporting
 
 	movl %cr0, %eax
 	btsl $CR0_PG_BIT, %eax
 	btsl $CR0_WP_BIT, %eax
+	btsl $CR0_MP_BIT, %eax
 	btsl $CR0_NE_BIT, %eax
 	btrl $CR0_NW_BIT, %eax
 	btrl $CR0_CD_BIT, %eax

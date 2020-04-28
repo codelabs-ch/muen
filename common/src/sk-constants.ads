@@ -39,6 +39,7 @@ is
    CR0_PG_FLAG                  : constant := 31;
 
    CR4_MCE_FLAG                 : constant := 6;
+   CR4_OSFXSR_FLAG              : constant := 9;
    CR4_VMXE_FLAG                : constant := 13;
    CR4_SMXE_FLAG                : constant := 14;
    CR4_XSAVE_FLAG               : constant := 18;
@@ -239,5 +240,9 @@ is
    MCi_STATUS_Bit_Addrv : constant := 58;
    MCi_STATUS_Bit_Miscv : constant := 59;
    MCi_STATUS_Bit_Valid : constant := 63;
+
+   --  MXCSR Control and Status Register default initial value, see Intel SDM
+   --  Vol. 3A, "9.1.1 Processor State After Reset".
+   MXCSR_Default_Value : constant := 16#1f80#;
 
 end SK.Constants;

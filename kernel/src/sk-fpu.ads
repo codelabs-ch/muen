@@ -43,8 +43,8 @@ is
    --  FPU-related hardware registers.
    procedure Enable
    with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ null);
+      Global  => (In_Out => (State, X86_64.State)),
+      Depends => ((State, X86_64.State) =>+ X86_64.State);
 
    --  Save current FPU state to save area of subject specified by ID.
    procedure Save_State (ID : Skp.Global_Subject_ID_Type)
@@ -60,11 +60,12 @@ is
                  In_Out => X86_64.State),
      Depends => (X86_64.State =>+ (ID, State));
 
-   --  Clear FPU state of subject with given ID.
-   procedure Clear_State (ID : Skp.Global_Subject_ID_Type)
+   --  Reset FPU state of subject with given ID, see Intel SDM Vol. 3A, "9.1.1
+   --  Processor State After Reset", table 9-1, column INIT.
+   procedure Reset_State (ID : Skp.Global_Subject_ID_Type)
    with
-      Global  => (In_Out => State),
-      Depends => (State =>+ ID);
+      Global  => (In_Out => (State, X86_64.State)),
+      Depends => ((State, X86_64.State) => (ID, State, X86_64.State));
 
 private
 

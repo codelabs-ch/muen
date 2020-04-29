@@ -187,6 +187,7 @@ is
                       Seg  => Context.Descriptor.TR);
       Output_Segment (Name => "LDTR",
                       Seg  => Context.Descriptor.LDTR);
+      Output_FPU_Registers (Regs => Context.FPU_Registers);
    end Output_Subj_State;
 
    -------------------------------------------------------------------------

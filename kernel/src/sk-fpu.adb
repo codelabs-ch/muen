@@ -28,7 +28,9 @@ with
    Refined_State => (State => (Subject_FPU_States, XCR0))
 is
 
-   Null_FPU_State : constant XSAVE_Area_Type := (others => 0);
+   Null_FPU_State : constant XSAVE_Area_Type
+     := (Legacy_Header   => Null_XSAVE_Legacy_Header,
+         Extended_Region => (others => 0));
 
    --  FPU features that shall be enabled if supported by the hardware.
    XCR0_Features : constant := 2 ** Constants.XCR0_FPU_STATE_FLAG
@@ -74,6 +76,20 @@ is
       CPU.XSETBV (Register => 0,
                   Value    => XCR0);
    end Enable;
+
+   -------------------------------------------------------------------------
+
+   procedure Get_Registers
+     (ID   :     Skp.Global_Subject_ID_Type;
+      Regs : out XSAVE_Legacy_Header_Type)
+   with
+      Refined_Global  => (Input => Subject_FPU_States),
+      Refined_Depends => (Regs  => (ID, Subject_FPU_States)),
+      Refined_Post    => Regs = Subject_FPU_States (ID).Legacy_Header
+   is
+   begin
+      Regs := Subject_FPU_States (ID).Legacy_Header;
+   end Get_Registers;
 
    -------------------------------------------------------------------------
 

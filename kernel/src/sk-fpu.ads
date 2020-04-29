@@ -67,6 +67,15 @@ is
       Global  => (In_Out => (State, X86_64.State)),
       Depends => ((State, X86_64.State) => (ID, State, X86_64.State));
 
+   --  Get FPU XSAVE Legacy registers from save area of subject specified by
+   --  ID.
+   procedure Get_Registers
+     (ID   :     Skp.Global_Subject_ID_Type;
+      Regs : out XSAVE_Legacy_Header_Type)
+   with
+      Global  => (Input => State),
+      Depends => (Regs  => (ID, State));
+
 private
 
    type Subject_FPU_State_Array is array

@@ -32,8 +32,8 @@ is
    with
       Size => 6;
 
-   --  xxd -l 8 -p /dev/random
-   Crash_Magic : constant := 16#d93d_0df7_50d5_0e9a#;
+   --  xxd -l 8 -p /dev/random with highest 2 bytes for counter
+   Crash_Magic : constant := 16#0100_0df7_50d5_0e9a#;
 
    subtype Version_Str_Range is Positive range 1 .. 64;
 
@@ -203,7 +203,8 @@ is
 
    Null_Subj_Ctx_Validity_Flags : constant Subj_Ctx_Validity_Flags_Type;
 
-   Subj_Ctx_Size : constant := 2 + 1 + 1 + 4 + 4 + Subj_State_Size;
+   Subj_Ctx_Size : constant
+     := 2 + 1 + 1 + 4 + 4 + Subj_State_Size + XSAVE_Legacy_Header_Size;
 
    type Subj_Context_Type is record
       Subject_ID      : Interfaces.Unsigned_16;
@@ -212,6 +213,7 @@ is
       Intr_Info       : Interfaces.Unsigned_32;
       Intr_Error_Code : Interfaces.Unsigned_32;
       Descriptor      : Subject_State_Type;
+      FPU_Registers   : XSAVE_Legacy_Header_Type;
    end record
    with
       Pack,
@@ -437,7 +439,8 @@ private
          Padding         => 0,
          Intr_Info       => 0,
          Intr_Error_Code => 0,
-         Descriptor      => Null_Subject_State);
+         Descriptor      => Null_Subject_State,
+         FPU_Registers   => Null_XSAVE_Legacy_Header);
 
    Null_VTx_Ctx_Validity_Flags : constant VTx_Ctx_Validity_Flags_Type
      := (Padding => 0,

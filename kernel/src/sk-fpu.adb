@@ -79,6 +79,20 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Get_Registers
+     (ID   :     Skp.Global_Subject_ID_Type;
+      Regs : out XSAVE_Legacy_Header_Type)
+   with
+      Refined_Global  => (Input => Subject_FPU_States),
+      Refined_Depends => (Regs  => (ID, Subject_FPU_States)),
+      Refined_Post    => Regs = Subject_FPU_States (ID).Legacy_Header
+   is
+   begin
+      Regs := Subject_FPU_States (ID).Legacy_Header;
+   end Get_Registers;
+
+   -------------------------------------------------------------------------
+
    procedure Reset_State (ID : Skp.Global_Subject_ID_Type)
    with
       Refined_Global  => (Input  => XCR0,

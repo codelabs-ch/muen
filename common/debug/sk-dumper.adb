@@ -27,6 +27,19 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Output_FPU_Registers (Regs : XSAVE_Legacy_Header_Type)
+   is
+   begin
+      Put_Line (Item => "MXCSR: " & Img (Regs.MXCSR)
+                & " MXCSR mask: " & Img (Regs.MXCSR_Mask));
+      Put_Line (Item => "FCW  : " & Img (Regs.FCW) & " FSW: " & Img (Regs.FSW)
+                & " FTW: " & Img (Regs.FTW) & " FOP: " & Img (Regs.FOP));
+      Put_Line (Item => "FIP  : " & Img (Regs.FIP)
+                & "   FDP: " & Img (Regs.FDP));
+   end Output_FPU_Registers;
+
+   -------------------------------------------------------------------------
+
    procedure Output_Registers
      (Regs : CPU_Registers_Type;
       RIP, CS, RFL, RSP, SS, CR0, CR3, CR4 : Word64)

@@ -48,6 +48,9 @@ is
      (Regs : CPU_Registers_Type;
       RIP, CS, RFL, RSP, SS, CR0, CR3, CR4 : Word64);
 
+   --  Output FPU registers.
+   procedure Output_FPU_Registers (Regs : XSAVE_Legacy_Header_Type);
+
    --  Output CPU segment with given name.
    procedure Output_Segment
      (Name : String;

@@ -465,6 +465,8 @@ is
    begin
       Subjects.Create_Context (ID  => Subject,
                                Ctx => S);
+      FPU.Get_Registers (ID   => Subject,
+                         Regs => S.FPU_Registers);
       pragma Debug (Dump.Print_Message (Msg => ">>> System Panic triggered"));
       pragma Debug (Subjects.Debug.Print_State (S => S));
       Error (Reason   => Crash_Audit_Types.Subj_System_Panic,

@@ -665,6 +665,8 @@ is
       begin
          Subjects.Create_Context (ID  => Current_Subject,
                                   Ctx => S);
+         FPU.Get_Registers (ID   => Current_Subject,
+                            Regs => S.FPU_Registers);
          pragma Debug (Dump.Print_Message (Msg => ">>> Unknown trap "
                                            & Strings.Img (Trap_Nr)));
          pragma Debug (Subjects.Debug.Print_State (S => S));

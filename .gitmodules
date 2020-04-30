@@ -23,3 +23,6 @@
 [submodule "tools/sbs"]
 	path = tools/sbs
 	url = ../sbs-tools
+[submodule "components/linux/modules/muenevents"]
+	path = components/linux/modules/muenevents
+	url = ../muen/linux/muenevents.git

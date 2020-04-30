@@ -30,6 +30,7 @@ install:
   - git config --file=.gitmodules submodule.components/linux/modules/muenfs.url https://git.codelabs.ch/muen/linux/muenfs.git
   - git config --file=.gitmodules submodule.components/linux/modules/muennet.url https://git.codelabs.ch/muen/linux/muennet.git
   - git config --file=.gitmodules submodule.components/linux/modules/muenblock.url https://git.codelabs.ch/muen/linux/muenblock.git
+  - git config --file=.gitmodules submodule.components/linux/modules/muenevents.url https://git.codelabs.ch/muen/linux/muenevents.git
   - git submodule update --init --depth=1 -- components/linux/src
   - git submodule update --init -- components/tau0-static
   - git submodule update --init -- tools/mugenschedcfg

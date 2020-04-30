@@ -1,0 +1,11 @@
+#!/bin/bash
+
+MOUNTDIR="/muenevents"
+
+modprobe muenevents
+mkdir -p $MOUNTDIR
+mount -t muenevents none $MOUNTDIR
+
+find $MOUNTDIR -type f -exec echo -n {}" " \; -exec cat {} \;
+
+umount $MOUNTDIR

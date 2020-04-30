@@ -6,6 +6,8 @@ serial.out;Muen channel marker found in file '/muenfs/virtual_keyboard'
 serial.out;TEST of file /muenfs/testchannel_1: OK
 serial.out;TEST of file /muenfs/testchannel_2: OK
 
+serial.out;/muenevents/timer 31
+
 serial.out;net0: Using protocol 2, channel/element size 0x100000/0x5e3 bytes
 serial.out;in/out: testchannel_4:testchannel_3
 serial.out;flags: net_hdr

@@ -541,7 +541,8 @@ is
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Scheduling_Plan, CPU_Info.APIC_ID),
          In_Out => (Scheduling_Groups, Crash_Audit.State, IO_Apic.State,
-                    Subjects.State, Subjects_Events.State, X86_64.State))
+                    Subjects.State, Subjects_Events.State, X86_64.State)),
+      Pre    => Subjects.Is_CPL_0 (ID => Current_Subject)
    is
       --  XXX: Only current wavefronts report that use type clause has no
       --       effect. To keep compatibility with earlier toolchains disable
@@ -780,7 +781,9 @@ is
 
       if Basic_Exit_Reason = Constants.EXIT_REASON_EXTERNAL_INT then
          Handle_Irq (Vector => Byte'Mod (Exit_Interruption_Info));
-      elsif Basic_Exit_Reason = Constants.EXIT_REASON_VMCALL then
+      elsif Basic_Exit_Reason = Constants.EXIT_REASON_VMCALL
+        and then Subjects.Is_CPL_0 (ID => Current_Subject)
+      then
          Handle_Hypercall (Current_Subject    => Current_Subject,
                            Unchecked_Event_Nr => Subject_Registers.RAX);
       elsif Basic_Exit_Reason = Constants.EXIT_REASON_TIMER_EXPIRY then

@@ -24,6 +24,8 @@ muenfs-marker /muenfs/virtual_keyboard >$OUTPUT 2>&1
 muenfs-test /muenfs/testchannel_1 >$OUTPUT 2>&1
 muenfs-test /muenfs/testchannel_2 >$OUTPUT 2>&1
 
+muenevents-test >$OUTPUT 2>&1
+
 ifconfig >$OUTPUT 2>&1
 ethtool eth0 >$OUTPUT 2>&1
 

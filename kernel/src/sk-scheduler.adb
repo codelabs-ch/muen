@@ -454,7 +454,7 @@ is
    --  subject by invoking crash audit.
    procedure Handle_System_Panic (Subject : Skp.Global_Subject_ID_Type)
    with
-       Global => (Input  => (CPU_Info.APIC_ID, Subjects.State),
+       Global => (Input  => (CPU_Info.APIC_ID, FPU.State, Subjects.State),
                   In_Out => (Crash_Audit.State, X86_64.State)),
        No_Return
    is
@@ -482,7 +482,8 @@ is
    with
       Global =>
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
-                    Scheduling_Plan, CPU_Info.APIC_ID, Subjects.State),
+                    Scheduling_Plan, CPU_Info.APIC_ID, FPU.State,
+                    Subjects.State),
          In_Out => (Scheduling_Groups, Crash_Audit.State, IO_Apic.State,
                     Subjects_Events.State, X86_64.State))
    is
@@ -536,7 +537,7 @@ is
    with
       Global =>
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
-                    Scheduling_Plan, CPU_Info.APIC_ID),
+                    Scheduling_Plan, CPU_Info.APIC_ID, FPU.State),
          In_Out => (Scheduling_Groups, Crash_Audit.State, IO_Apic.State,
                     Subjects.State, Subjects_Events.State, X86_64.State)),
       Pre    => Subjects.Is_CPL_0 (ID => Current_Subject)
@@ -642,7 +643,8 @@ is
    with
       Global =>
         (Input  => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
-                    Scheduling_Plan, CPU_Info.APIC_ID, Subjects.State),
+                    Scheduling_Plan, CPU_Info.APIC_ID, FPU.State,
+                    Subjects.State),
          In_Out => (Scheduling_Groups, Crash_Audit.State, IO_Apic.State,
                     Subjects_Events.State, X86_64.State))
    is
@@ -654,7 +656,7 @@ is
 
       procedure Panic_Unknown_Trap
       with
-         Global => (Input  => (Current_Subject, CPU_Info.APIC_ID,
+         Global => (Input  => (Current_Subject, CPU_Info.APIC_ID, FPU.State,
                                Subjects.State),
                     In_Out => (Crash_Audit.State, X86_64.State)),
          No_Return
@@ -700,7 +702,7 @@ is
    with
       Global =>
         (Input  => (Scheduling_Plan, CPU_Info.APIC_ID, CPU_Info.Is_BSP,
-                    Subjects.State, Tau0_Interface.State),
+                    FPU.State, Subjects.State, Tau0_Interface.State),
          In_Out => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Global_Current_Major_Start_Cycles, Scheduling_Groups,
                     Crash_Audit.State, IO_Apic.State, MP.Barrier,

@@ -186,6 +186,21 @@
      <gpr>
       <rip>16#0000#</rip>
       <rsp>16#9000#</rsp>
+      <rax>16#0001#</rax>
+      <rbx>16#00ff#</rbx>
+      <rcx>16#0002#</rcx>
+      <rdx>16#00fe#</rdx>
+      <rdi>16#0003#</rdi>
+      <rsi>16#00f0#</rsi>
+      <rbp>16#9000#</rbp>
+      <r08>16#0f0f#</r08>
+      <r09>16#ff00#</r09>
+      <r10>16#cafe#</r10>
+      <r11>16#fefe#</r11>
+      <r12>16#efef#</r12>
+      <r13>16#c9c9#</r13>
+      <r14>16#a0b0#</r14>
+      <r15>16#0000#</r15>
      </gpr>
      <cr0>
       <ProtectionEnable>1</ProtectionEnable>

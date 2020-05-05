@@ -35,6 +35,8 @@
  <registers>
   <gpr>
    <rsp>16#7000#</rsp>
+   <rsi>16#cafe#</rsi>
+   <r15>16#ffff#</r15>
   </gpr>
   <cr4>
    <PerfCounterEnable>1</PerfCounterEnable>

@@ -122,6 +122,12 @@
        </proc>
       </controls>
      </vmx>
+     <registers>
+      <gpr>
+       <rsp>16#eff8#</rsp>
+       <rbp>16#f000#</rbp>
+      </gpr>
+     </registers>
     </vcpu>
     <memory>
      <memory executable="false" logical="data" size="16#1000#" virtualAddress="16#0001_0000#" writable="true"/>

@@ -192,6 +192,21 @@
   <xs:sequence>
    <xs:element name="rip" type="word64Type" minOccurs="1" maxOccurs="1"/>
    <xs:element name="rsp" type="word64Type" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="rax" type="word64Type" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="rbx" type="word64Type" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="rcx" type="word64Type" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="rdx" type="word64Type" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="rdi" type="word64Type" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="rsi" type="word64Type" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="rbp" type="word64Type" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="r08" type="word64Type" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="r09" type="word64Type" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="r10" type="word64Type" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="r11" type="word64Type" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="r12" type="word64Type" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="r13" type="word64Type" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="r14" type="word64Type" minOccurs="1" maxOccurs="1"/>
+   <xs:element name="r15" type="word64Type" minOccurs="1" maxOccurs="1"/>
   </xs:sequence>
  </xs:complexType>
 

@@ -356,7 +356,7 @@ is
       Subjects.Save_State
         (ID          => ID,
          Exit_Reason => 0,
-         Regs        => SK.Null_CPU_Regs);
+         Regs        => Skp.Subjects.Get_GPRs (Subject_ID => ID));
    end Init_Subject;
 
    -------------------------------------------------------------------------

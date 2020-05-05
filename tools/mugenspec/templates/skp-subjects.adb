@@ -14,6 +14,7 @@ is
       MSR_Store_Address  : SK.Word64;
       Stack_Address      : SK.Word64;
       Entry_Point        : SK.Word64;
+      GPRs               : SK.CPU_Registers_Type;
       CR0_Value          : SK.Word64;
       CR0_Mask           : SK.Word64;
       CR4_Value          : SK.Word64;
@@ -82,6 +83,13 @@ __subjects__);
      (Subject_ID : Global_Subject_ID_Type)
       return SK.Word32
    is (Subject_Specs (Subject_ID).Exception_Bitmap);
+
+   -------------------------------------------------------------------------
+
+   function Get_GPRs
+     (Subject_ID : Global_Subject_ID_Type)
+      return SK.CPU_Registers_Type
+   is (Subject_Specs (Subject_ID).GPRs);
 
    -------------------------------------------------------------------------
 

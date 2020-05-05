@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Characters.Handling;
 with Ada.Strings.Unbounded;
 
 with Interfaces;
@@ -37,13 +38,56 @@ with String_Templates;
 package body Spec.Skp_Subjects
 is
 
+   use Ada.Strings.Unbounded;
+
+   --  Add subject GPR values to buffer.
+   procedure Add_GPRs
+     (Buffer : in out Unbounded_String;
+      GPRs   :        DOM.Core.Node);
+
+   -------------------------------------------------------------------------
+
+   procedure Add_GPRs
+     (Buffer : in out Unbounded_String;
+      GPRs   :        DOM.Core.Node)
+   is
+      Regs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query (N     => GPRs,
+                                            XPath => "*");
+   begin
+      Buffer := Buffer
+        & Indent & "    GPRs               => SK.CPU_Registers_Type'("
+        & ASCII.LF
+        & Indent (N => 3) & " CR2 => 16#0000#";
+      for I in 0 .. DOM.Core.Nodes.Length (List => Regs) - 1 loop
+         declare
+            Reg       : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => Regs,
+               Index => I);
+            Reg_Name  : constant String := Ada.Characters.Handling.To_Upper
+              (Item => DOM.Core.Nodes.Node_Name (N => Reg));
+            Reg_Value : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Nodes.Node_Value
+                   (N => DOM.Core.Nodes.First_Child (N => Reg)));
+         begin
+
+            if Reg_Name /= "RIP" and then Reg_Name /= "RSP" then
+               Buffer := Buffer & "," & ASCII.LF
+                 & Indent (N => 3) & " " & Reg_Name & " => "
+                 & Mutools.Utils.To_Hex (Number => Reg_Value);
+            end if;
+         end;
+      end loop;
+      Buffer := Buffer & ")," & ASCII.LF;
+   end Add_GPRs;
+
    -------------------------------------------------------------------------
 
    procedure Write
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      use Ada.Strings.Unbounded;
       use Interfaces;
 
       Subjects    : constant DOM.Core.Node_List
@@ -97,14 +141,19 @@ is
                              (Name  => U ("name"),
                               Value => U (Name & "|pt"))),
                Attr_Name => "physicalAddress"));
+
+         GPR_Node : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Subject,
+              XPath => "vcpu/registers/gpr");
          Entry_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Element_Value
-              (Doc   => Subject,
-               XPath => "vcpu/registers/gpr/rip"));
+              (Doc   => GPR_Node,
+               XPath => "rip"));
          Stack_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Element_Value
-              (Doc   => Subject,
-               XPath => "vcpu/registers/gpr/rsp"));
+              (Doc   => GPR_Node,
+               XPath => "rsp"));
          VMCS_Addr  : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Nodes     => Phys_Memory,
@@ -261,7 +310,12 @@ is
            & ASCII.LF
            & Indent & "    Entry_Point        => "
            & Mutools.Utils.To_Hex (Number => Entry_Addr) & ","
-           & ASCII.LF
+           & ASCII.LF;
+
+         Add_GPRs (Buffer => Buffer,
+                   GPRs   => GPR_Node);
+
+         Buffer := Buffer
            & Indent & "    CR0_Value          => "
            & Mutools.Utils.To_Hex (Number => VMX.Get_CR0 (Fields => CR0_Value))
            & "," & ASCII.LF

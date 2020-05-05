@@ -49,6 +49,10 @@ is
      (Subject_ID : Global_Subject_ID_Type)
       return SK.Word64;
 
+   function Get_GPRs
+     (Subject_ID : Global_Subject_ID_Type)
+      return SK.CPU_Registers_Type;
+
    function Get_VMX_Controls
      (Subject_ID : Global_Subject_ID_Type)
       return VMX_Controls_Type;

@@ -14,6 +14,7 @@ is
       MSR_Store_Address  : SK.Word64;
       Stack_Address      : SK.Word64;
       Entry_Point        : SK.Word64;
+      GPRs               : SK.CPU_Registers_Type;
       CR0_Value          : SK.Word64;
       CR0_Mask           : SK.Word64;
       CR4_Value          : SK.Word64;
@@ -38,6 +39,23 @@ is
        MSR_Store_Address  => 16#0090_1000#,
        Stack_Address      => 16#0012_0000#,
        Entry_Point        => 16#0abc#,
+       GPRs               => SK.CPU_Registers_Type'(
+          CR2 => 16#0000#,
+          RAX => 16#0000#,
+          RBX => 16#0000#,
+          RCX => 16#0000#,
+          RDX => 16#0000#,
+          RDI => 16#0000#,
+          RSI => 16#0000#,
+          RBP => 16#0000#,
+          R08 => 16#0000#,
+          R09 => 16#0000#,
+          R10 => 16#0000#,
+          R11 => 16#0000#,
+          R12 => 16#0000#,
+          R13 => 16#0000#,
+          R14 => 16#0000#,
+          R15 => 16#0000#),
        CR0_Value          => 16#8001_0035#,
        CR0_Mask           => 16#ffff_ffff_ffff_ffff#,
        CR4_Value          => 16#2020#,
@@ -61,6 +79,23 @@ is
        MSR_Store_Address  => 16#0091_1000#,
        Stack_Address      => 16#0012_0000#,
        Entry_Point        => 16#0abc#,
+       GPRs               => SK.CPU_Registers_Type'(
+          CR2 => 16#0000#,
+          RAX => 16#0001#,
+          RBX => 16#00ff#,
+          RCX => 16#0002#,
+          RDX => 16#00fe#,
+          RDI => 16#0003#,
+          RSI => 16#00f0#,
+          RBP => 16#9000#,
+          R08 => 16#0f0f#,
+          R09 => 16#ff00#,
+          R10 => 16#cafe#,
+          R11 => 16#fefe#,
+          R12 => 16#efef#,
+          R13 => 16#c9c9#,
+          R14 => 16#a0b0#,
+          R15 => 16#0000#),
        CR0_Value          => 16#0035#,
        CR0_Mask           => 16#ffff_ffff_1ffa_ffe0#,
        CR4_Value          => 16#2020#,
@@ -84,6 +119,23 @@ is
        MSR_Store_Address  => 16#0000#,
        Stack_Address      => 16#0012_0000#,
        Entry_Point        => 16#0abc#,
+       GPRs               => SK.CPU_Registers_Type'(
+          CR2 => 16#0000#,
+          RAX => 16#0000#,
+          RBX => 16#0000#,
+          RCX => 16#0000#,
+          RDX => 16#0000#,
+          RDI => 16#0000#,
+          RSI => 16#0000#,
+          RBP => 16#0000#,
+          R08 => 16#0000#,
+          R09 => 16#0000#,
+          R10 => 16#0000#,
+          R11 => 16#0000#,
+          R12 => 16#0000#,
+          R13 => 16#0000#,
+          R14 => 16#0000#,
+          R15 => 16#0000#),
        CR0_Value          => 16#8001_0035#,
        CR0_Mask           => 16#ffff_ffff_ffff_ffff#,
        CR4_Value          => 16#2020#,
@@ -107,6 +159,23 @@ is
        MSR_Store_Address  => 16#0000#,
        Stack_Address      => 16#0012_0000#,
        Entry_Point        => 16#0abc#,
+       GPRs               => SK.CPU_Registers_Type'(
+          CR2 => 16#0000#,
+          RAX => 16#0001#,
+          RBX => 16#0002#,
+          RCX => 16#0003#,
+          RDX => 16#0004#,
+          RDI => 16#0005#,
+          RSI => 16#0006#,
+          RBP => 16#0007#,
+          R08 => 16#0008#,
+          R09 => 16#0009#,
+          R10 => 16#000a#,
+          R11 => 16#000b#,
+          R12 => 16#000c#,
+          R13 => 16#000d#,
+          R14 => 16#000e#,
+          R15 => 16#000f#),
        CR0_Value          => 16#8001_0035#,
        CR0_Mask           => 16#ffff_ffff_ffff_ffff#,
        CR4_Value          => 16#2020#,
@@ -173,6 +242,13 @@ is
      (Subject_ID : Global_Subject_ID_Type)
       return SK.Word32
    is (Subject_Specs (Subject_ID).Exception_Bitmap);
+
+   -------------------------------------------------------------------------
+
+   function Get_GPRs
+     (Subject_ID : Global_Subject_ID_Type)
+      return SK.CPU_Registers_Type
+   is (Subject_Specs (Subject_ID).GPRs);
 
    -------------------------------------------------------------------------
 

@@ -97,14 +97,19 @@ is
                              (Name  => U ("name"),
                               Value => U (Name & "|pt"))),
                Attr_Name => "physicalAddress"));
+
+         GPR_Node : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Subject,
+              XPath => "vcpu/registers/gpr");
          Entry_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Element_Value
-              (Doc   => Subject,
-               XPath => "vcpu/registers/gpr/rip"));
+              (Doc   => GPR_Node,
+               XPath => "rip"));
          Stack_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Element_Value
-              (Doc   => Subject,
-               XPath => "vcpu/registers/gpr/rsp"));
+              (Doc   => GPR_Node,
+               XPath => "rsp"));
          VMCS_Addr  : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Nodes     => Phys_Memory,

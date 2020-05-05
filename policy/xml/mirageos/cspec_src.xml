@@ -32,6 +32,7 @@
     <gpr>
      <rip>16#0010_0000#</rip>
      <rsp>16#1fff_fff8#</rsp>
+     <rdi>16#0000_1000#<rdi>
     </gpr>
     <cr4>
      <OSSupportSIMDExceptions>1</OSSupportSIMDExceptions>
@@ -40,7 +41,7 @@
   </vcpu>
  </requires>
  <provides>
-  <memory executable="false" logical="boot_info" size="16#1000#" type="subject_solo5_boot_info" virtualAddress="16#0000#" writable="false">
+  <memory executable="false" logical="boot_info" size="16#1000#" type="subject_solo5_boot_info" virtualAddress="16#1000#" writable="false">
    <file filename="unikernel_bi" offset="none"/>
   </memory>
  </provides>

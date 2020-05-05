@@ -17,6 +17,11 @@
      </proc>
     </controls>
    </vmx>
+   <registers>
+    <gpr>
+     <rax>16#cafe#</rax>
+    </gpr>
+   </registers>
   </vcpu>
   <memory>
    <memory executable="false" logical="data" size="16#1000#" virtualAddress="16#0001_0000#" writable="true"/>

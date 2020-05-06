@@ -245,4 +245,10 @@ is
    --  Vol. 3A, "9.1.1 Processor State After Reset".
    MXCSR_Default_Value : constant := 16#1f80#;
 
+   --  Segment selector values.
+
+   SEL_KERN_CODE : constant := 16#08#;
+   SEL_KERN_DATA : constant := 16#10#;
+   SEL_TSS       : constant := 16#18#;
+
 end SK.Constants;

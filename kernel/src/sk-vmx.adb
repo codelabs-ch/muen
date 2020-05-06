@@ -31,12 +31,6 @@ with
    Refined_State => (VMCS_State => VMCS)
 is
 
-   --  Segment selectors
-
-   SEL_KERN_CODE : constant := 16#08#;
-   SEL_KERN_DATA : constant := 16#10#;
-   SEL_TSS       : constant := 16#18#;
-
    --  VMCS region format, see Intel SDM Vol. 3C, "24.2 Format of the VMCS
    --  Region".
    type VMCS_Header_Type is record
@@ -355,19 +349,19 @@ is
         (Register => Constants.IA32_EFER);
    begin
       VMCS_Write (Field => Constants.HOST_SEL_CS,
-                  Value => SEL_KERN_CODE);
+                  Value => Constants.SEL_KERN_CODE);
       VMCS_Write (Field => Constants.HOST_SEL_DS,
-                  Value => SEL_KERN_DATA);
+                  Value => Constants.SEL_KERN_DATA);
       VMCS_Write (Field => Constants.HOST_SEL_ES,
-                  Value => SEL_KERN_DATA);
+                  Value => Constants.SEL_KERN_DATA);
       VMCS_Write (Field => Constants.HOST_SEL_SS,
-                  Value => SEL_KERN_DATA);
+                  Value => Constants.SEL_KERN_DATA);
       VMCS_Write (Field => Constants.HOST_SEL_FS,
-                  Value => SEL_KERN_DATA);
+                  Value => Constants.SEL_KERN_DATA);
       VMCS_Write (Field => Constants.HOST_SEL_GS,
-                  Value => SEL_KERN_DATA);
+                  Value => Constants.SEL_KERN_DATA);
       VMCS_Write (Field => Constants.HOST_SEL_TR,
-                  Value => SEL_TSS);
+                  Value => Constants.SEL_TSS);
 
       VMCS_Write (Field => Constants.HOST_CR0,
                   Value => CR0);
@@ -411,21 +405,21 @@ is
                   Value => SK.Word64'Last);
 
       VMCS_Write (Field => Constants.GUEST_SEL_CS,
-                  Value => SEL_KERN_CODE);
+                  Value => Constants.SEL_KERN_CODE);
       VMCS_Write (Field => Constants.GUEST_SEL_DS,
-                  Value => SEL_KERN_DATA);
+                  Value => Constants.SEL_KERN_DATA);
       VMCS_Write (Field => Constants.GUEST_SEL_ES,
-                  Value => SEL_KERN_DATA);
+                  Value => Constants.SEL_KERN_DATA);
       VMCS_Write (Field => Constants.GUEST_SEL_FS,
-                  Value => SEL_KERN_DATA);
+                  Value => Constants.SEL_KERN_DATA);
       VMCS_Write (Field => Constants.GUEST_SEL_GS,
-                  Value => SEL_KERN_DATA);
+                  Value => Constants.SEL_KERN_DATA);
       VMCS_Write (Field => Constants.GUEST_SEL_SS,
-                  Value => SEL_KERN_DATA);
+                  Value => Constants.SEL_KERN_DATA);
       VMCS_Write (Field => Constants.GUEST_SEL_TR,
-                  Value => SEL_TSS);
+                  Value => Constants.SEL_TSS);
       VMCS_Write (Field => Constants.GUEST_SEL_LDTR,
-                  Value => SEL_TSS);
+                  Value => Constants.SEL_TSS);
 
       VMCS_Write (Field => Constants.GUEST_LIMIT_CS,
                   Value => SK.Word64 (SK.Word32'Last));

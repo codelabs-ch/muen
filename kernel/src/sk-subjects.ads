@@ -99,6 +99,19 @@ is
       Global  => (In_Out => State),
       Depends => (State =>+ ID);
 
+   --  Reset state of subject with given ID to the specified initial values.
+   procedure Reset_State
+     (ID        : Skp.Global_Subject_ID_Type;
+      GPRs      : CPU_Registers_Type;
+      RIP       : Word64;
+      RSP       : Word64;
+      CR0       : Word64;
+      CR4       : Word64;
+      CS_Access : Word32)
+   with
+      Global  => (In_Out => State),
+      Depends => (State =>+ (ID, GPRs, RIP, RSP, CR0, CR4, CS_Access));
+
    --  Create crash audit context for subject with given ID.
    procedure Create_Context
      (ID  :     Skp.Global_Subject_ID_Type;

@@ -234,6 +234,55 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Reset_State
+     (ID        : Skp.Global_Subject_ID_Type;
+      GPRs      : CPU_Registers_Type;
+      RIP       : Word64;
+      RSP       : Word64;
+      CR0       : Word64;
+      CR4       : Word64;
+      CS_Access : Word32)
+   with
+      Refined_Global  => (In_Out => Descriptors),
+      Refined_Depends => (Descriptors =>+ (ID, GPRs, RIP, RSP, CR0, CR4,
+                                           CS_Access))
+   is
+      Default_Data_Segment : constant Segment_Type
+        := (Selector      => Constants.SEL_KERN_DATA,
+            Base          => 0,
+            Limit         => 16#ffff_ffff#,
+            Access_Rights => 16#c093#);
+      Disabled_Segment     : constant Segment_Type
+        := (Selector      => 0,
+            Base          => 0,
+            Limit         => 0,
+            Access_Rights => 16#10000#);
+   begin
+      Descriptors (ID) := Null_Subject_State;
+      Descriptors (ID).Regs := GPRs;
+      Descriptors (ID).RFLAGS := Constants.RFLAGS_Default_Value;
+      Descriptors (ID).RIP := RIP;
+      Descriptors (ID).RSP := RSP;
+      Descriptors (ID).CR0 := CR0;
+      Descriptors (ID).CR4 := CR4;
+      Descriptors (ID).CS := (Selector      => Constants.SEL_KERN_CODE,
+                              Base          => 0,
+                              Limit         => 16#ffff_ffff#,
+                              Access_Rights => CS_Access);
+      Descriptors (ID).DS := Default_Data_Segment;
+      Descriptors (ID).ES := Default_Data_Segment;
+      Descriptors (ID).SS := Default_Data_Segment;
+      Descriptors (ID).FS := Disabled_Segment;
+      Descriptors (ID).GS := Disabled_Segment;
+      Descriptors (ID).TR :=  (Selector      => Constants.SEL_TSS,
+                               Base          => 0,
+                               Limit         => 16#ffff#,
+                               Access_Rights => 16#008b#);
+      Descriptors (ID).LDTR := Disabled_Segment;
+   end Reset_State;
+
+   -------------------------------------------------------------------------
+
    procedure Restore_State
      (ID   :     Skp.Global_Subject_ID_Type;
       Regs : out SK.CPU_Registers_Type)

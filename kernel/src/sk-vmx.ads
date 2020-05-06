@@ -101,12 +101,7 @@ is
    --  Setup guest fields of the currently active VMCS.
    procedure VMCS_Setup_Guest_Fields
      (PML4_Address : SK.Word64;
-      EPT_Pointer  : SK.Word64;
-      RIP_Value    : SK.Word64;
-      RSP_Value    : SK.Word64;
-      CR0_Value    : SK.Word64;
-      CR4_Value    : SK.Word64;
-      CS_Access    : SK.Word32)
+      EPT_Pointer  : SK.Word64)
    with
       Global => (Input  => CPU_Info.APIC_ID,
                  In_Out => (Crash_Audit.State, X86_64.State));

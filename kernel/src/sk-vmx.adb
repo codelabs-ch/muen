@@ -393,84 +393,15 @@ is
 
    procedure VMCS_Setup_Guest_Fields
      (PML4_Address : SK.Word64;
-      EPT_Pointer  : SK.Word64;
-      RIP_Value    : SK.Word64;
-      RSP_Value    : SK.Word64;
-      CR0_Value    : SK.Word64;
-      CR4_Value    : SK.Word64;
-      CS_Access    : SK.Word32)
+      EPT_Pointer  : SK.Word64)
    is
    begin
       VMCS_Write (Field => Constants.VMCS_LINK_POINTER,
                   Value => SK.Word64'Last);
-
-      VMCS_Write (Field => Constants.GUEST_SEL_CS,
-                  Value => Constants.SEL_KERN_CODE);
-      VMCS_Write (Field => Constants.GUEST_SEL_DS,
-                  Value => Constants.SEL_KERN_DATA);
-      VMCS_Write (Field => Constants.GUEST_SEL_ES,
-                  Value => Constants.SEL_KERN_DATA);
-      VMCS_Write (Field => Constants.GUEST_SEL_FS,
-                  Value => Constants.SEL_KERN_DATA);
-      VMCS_Write (Field => Constants.GUEST_SEL_GS,
-                  Value => Constants.SEL_KERN_DATA);
-      VMCS_Write (Field => Constants.GUEST_SEL_SS,
-                  Value => Constants.SEL_KERN_DATA);
-      VMCS_Write (Field => Constants.GUEST_SEL_TR,
-                  Value => Constants.SEL_TSS);
-      VMCS_Write (Field => Constants.GUEST_SEL_LDTR,
-                  Value => Constants.SEL_TSS);
-
-      VMCS_Write (Field => Constants.GUEST_LIMIT_CS,
-                  Value => SK.Word64 (SK.Word32'Last));
-      VMCS_Write (Field => Constants.GUEST_LIMIT_DS,
-                  Value => SK.Word64 (SK.Word32'Last));
-      VMCS_Write (Field => Constants.GUEST_LIMIT_ES,
-                  Value => SK.Word64 (SK.Word32'Last));
-      VMCS_Write (Field => Constants.GUEST_LIMIT_SS,
-                  Value => SK.Word64 (SK.Word32'Last));
-      VMCS_Write (Field => Constants.GUEST_LIMIT_TR,
-                  Value => SK.Word64 (SK.Byte'Last));
-      VMCS_Write (Field => Constants.GUEST_LIMIT_LDTR,
-                  Value => SK.Word64 (SK.Byte'Last));
-
-      VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_CS,
-                  Value => SK.Word64 (CS_Access));
-      VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_DS,
-                  Value => 16#c093#);
-      VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_ES,
-                  Value => 16#c093#);
-      VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_SS,
-                  Value => 16#c093#);
-      VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_TR,
-                  Value => 16#8b#);
-
-      --  Disable fs, gs and ldt segments; they can be enabled by guest code
-      --  if needed.
-
-      VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_FS,
-                  Value => 16#10000#);
-      VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_GS,
-                  Value => 16#10000#);
-      VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_LDTR,
-                  Value => 16#10000#);
-
-      VMCS_Write (Field => Constants.GUEST_CR0,
-                  Value => CR0_Value);
       VMCS_Write (Field => Constants.GUEST_CR3,
                   Value => PML4_Address);
-      VMCS_Write (Field => Constants.GUEST_CR4,
-                  Value => CR4_Value);
-
       VMCS_Write (Field => Constants.EPT_POINTER,
                   Value => EPT_Pointer);
-
-      VMCS_Write (Field => Constants.GUEST_RIP,
-                  Value => RIP_Value);
-      VMCS_Write (Field => Constants.GUEST_RSP,
-                  Value => RSP_Value);
-      VMCS_Write (Field => Constants.GUEST_RFLAGS,
-                  Value => Constants.RFLAGS_Default_Value);
    end VMCS_Setup_Guest_Fields;
 
    -------------------------------------------------------------------------

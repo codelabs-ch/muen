@@ -104,6 +104,103 @@ package body Mucfgcheck.MSR.Test_Data.Tests is
    end Test_Low_Or_High;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Check_Whitelist (Gnattest_T : in out Test);
+   procedure Test_Check_Whitelist_5e74b8 (Gnattest_T : in out Test) renames Test_Check_Whitelist;
+--  id:2.2/5e74b81b3c54dae8/Check_Whitelist/1/0/
+   procedure Test_Check_Whitelist (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positve test.
+
+      Check_Whitelist (XML_Data => Data);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/vcpu/msrs/"
+         & "msr[@end='16#0176#']",
+         Name  => "end",
+         Value => "16#0177#");
+
+      begin
+         Check_Whitelist (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (1)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "MSR start 16#0174# and end 16#0177# not in MSR "
+                    & "whitelist (Subject 'linux')",
+                    Message   => "Exception mismatch (1)");
+      end;
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/vcpu/msrs/"
+         & "msr[@end='16#0177#']",
+         Name  => "end",
+         Value => "16#0176#");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/vcpu/msrs/"
+         & "msr[@start='16#0174#']",
+         Name  => "start",
+         Value => "16#0173#");
+
+      begin
+         Check_Whitelist (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (2)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "MSR start 16#0173# and end 16#0176# not in MSR "
+                    & "whitelist (Subject 'linux')",
+                    Message   => "Exception mismatch (2)");
+      end;
+
+      --  Start|End in whitelist, but not the total range.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/vcpu/msrs/"
+         & "msr[@start='16#0173#']",
+         Name  => "start",
+         Value => "16#0174#");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/vcpu/msrs/"
+         & "msr[@end='16#0176#']",
+         Name  => "end",
+         Value => "16#01d9#");
+
+      begin
+         Check_Whitelist (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (3)");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "MSR start 16#0174# and end 16#01d9# not in MSR "
+                    & "whitelist (Subject 'linux')",
+                    Message   => "Exception mismatch (3)");
+      end;
+--  begin read only
+   end Test_Check_Whitelist;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

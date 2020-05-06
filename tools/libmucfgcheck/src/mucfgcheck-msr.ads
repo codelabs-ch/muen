@@ -27,4 +27,11 @@ is
    --  Validate that all MSR start and addresses are either low or high.
    procedure Low_Or_High (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that subject MSRs are in the allowed list:
+   --  - IA32_SYSENTER_CS/ESP/EIP
+   --  - IA32_DEBUGCTL
+   --  - IA32_EFER/STAR/LSTAR/CSTAR/FMASK
+   --  - IA32_FS_BASE/GS_BASE/KERNEL_GS_BASE
+   procedure Check_Whitelist (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.MSR;

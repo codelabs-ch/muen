@@ -130,8 +130,6 @@ is
       XML_Processors.Register
         (Process => MSR.Start_Smaller_End'Access);
       XML_Processors.Register
-        (Process => MSR.Low_Or_High'Access);
-      XML_Processors.Register
         (Process => MSR.Check_Whitelist'Access);
       XML_Processors.Register
         (Process => Device.Physical_Device_Name_Uniqueness'Access);

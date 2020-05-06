@@ -68,44 +68,6 @@ package body Mucfgcheck.MSR.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Low_Or_High (Gnattest_T : in out Test);
-   procedure Test_Low_Or_High_2e4f48 (Gnattest_T : in out Test) renames Test_Low_Or_High;
---  id:2.2/2e4f4877eabfbdff/Low_Or_High/1/0/
-   procedure Test_Low_Or_High (Gnattest_T : in out Test) is
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      Data : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => "data/test_policy.xml");
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/subjects/subject/vcpu/msrs/"
-         & "msr[@end='16#0176#']",
-         Name  => "end",
-         Value => "16#c000_0800#");
-
-      begin
-         Low_Or_High (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "MSR start 16#0174# and end 16#c000_0800# in different"
-                    & " low/high range (Subject 'linux')",
-                    Message   => "Exception mismatch");
-      end;
---  begin read only
-   end Test_Low_Or_High;
---  end read only
-
-
---  begin read only
    procedure Test_Check_Whitelist (Gnattest_T : in out Test);
    procedure Test_Check_Whitelist_5e74b8 (Gnattest_T : in out Test) renames Test_Check_Whitelist;
 --  id:2.2/5e74b81b3c54dae8/Check_Whitelist/1/0/

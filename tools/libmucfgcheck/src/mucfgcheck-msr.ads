@@ -24,9 +24,6 @@ is
    --  Validate that all MSR start addresses are smaller than end addresses.
    procedure Start_Smaller_End (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that all MSR start and addresses are either low or high.
-   procedure Low_Or_High (XML_Data : Muxml.XML_Data_Type);
-
    --  Validate that subject MSRs are in the allowed list:
    --  - IA32_SYSENTER_CS/ESP/EIP
    --  - IA32_DEBUGCTL

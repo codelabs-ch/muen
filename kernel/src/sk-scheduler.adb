@@ -312,7 +312,6 @@ is
         := Skp.Subjects.Get_MSR_Count (Subject_ID => ID);
    begin
       FPU.Reset_State (ID => ID);
-      Subjects.Clear_State (ID => ID);
       Subjects_Events.Clear_Events (Subject => ID);
       Subjects_Interrupts.Init_Interrupts (Subject => ID);
       Timed_Events.Init_Event (Subject => ID);

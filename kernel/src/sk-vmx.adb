@@ -470,7 +470,7 @@ is
       VMCS_Write (Field => Constants.GUEST_RSP,
                   Value => RSP_Value);
       VMCS_Write (Field => Constants.GUEST_RFLAGS,
-                  Value => 2);
+                  Value => Constants.RFLAGS_Default_Value);
    end VMCS_Setup_Guest_Fields;
 
    -------------------------------------------------------------------------

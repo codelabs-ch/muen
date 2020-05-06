@@ -33,6 +33,7 @@ is
    IA32_EFER             : constant := 16#c000_0080#;
    IA32_STAR             : constant := 16#c000_0081#;
    IA32_LSTAR            : constant := 16#c000_0082#;
+   IA32_CSTAR            : constant := 16#c000_0083#;
    IA32_FMASK            : constant := 16#c000_0084#;
    IA32_FS_BASE          : constant := 16#c000_0100#;
    IA32_GS_BASE          : constant := 16#c000_0101#;

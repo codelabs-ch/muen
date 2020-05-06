@@ -245,4 +245,14 @@ is
    --  Vol. 3A, "9.1.1 Processor State After Reset".
    MXCSR_Default_Value : constant := 16#1f80#;
 
+   --  Segment selector values.
+
+   SEL_KERN_CODE : constant := 16#08#;
+   SEL_KERN_DATA : constant := 16#10#;
+   SEL_TSS       : constant := 16#18#;
+
+   --  By default, RFLAGS only has the reserved bit 1 set and all others are 0,
+   --  see Intel SDM Vol. 3A, "9.1.1 Processor State After Reset".
+   RFLAGS_Default_Value : constant := 2;
+
 end SK.Constants;

@@ -149,18 +149,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Clear_State (ID : Skp.Global_Subject_ID_Type)
-   with
-      Refined_Global  => (In_Out => Descriptors),
-      Refined_Depends => (Descriptors =>+ ID),
-      Refined_Post    => Descriptors (ID) = SK.Null_Subject_State
-   is
-   begin
-      Descriptors (ID) := SK.Null_Subject_State;
-   end Clear_State;
-
-   -------------------------------------------------------------------------
-
    procedure Create_Context
      (ID  :     Skp.Global_Subject_ID_Type;
       Ctx : out Crash_Audit_Types.Subj_Context_Type)
@@ -231,6 +219,55 @@ is
       Refined_Global => (Input => Descriptors),
       Refined_Post   => Is_CPL_0'Result =
          ((Descriptors (ID).CS.Selector and SEGMENT_SELECTOR_PL_MASK) = 0);
+
+   -------------------------------------------------------------------------
+
+   procedure Reset_State
+     (ID        : Skp.Global_Subject_ID_Type;
+      GPRs      : CPU_Registers_Type;
+      RIP       : Word64;
+      RSP       : Word64;
+      CR0       : Word64;
+      CR4       : Word64;
+      CS_Access : Word32)
+   with
+      Refined_Global  => (In_Out => Descriptors),
+      Refined_Depends => (Descriptors =>+ (ID, GPRs, RIP, RSP, CR0, CR4,
+                                           CS_Access))
+   is
+      Default_Data_Segment : constant Segment_Type
+        := (Selector      => Constants.SEL_KERN_DATA,
+            Base          => 0,
+            Limit         => 16#ffff_ffff#,
+            Access_Rights => 16#c093#);
+      Disabled_Segment     : constant Segment_Type
+        := (Selector      => 0,
+            Base          => 0,
+            Limit         => 0,
+            Access_Rights => 16#10000#);
+   begin
+      Descriptors (ID) := Null_Subject_State;
+      Descriptors (ID).Regs := GPRs;
+      Descriptors (ID).RFLAGS := Constants.RFLAGS_Default_Value;
+      Descriptors (ID).RIP := RIP;
+      Descriptors (ID).RSP := RSP;
+      Descriptors (ID).CR0 := CR0;
+      Descriptors (ID).CR4 := CR4;
+      Descriptors (ID).CS := (Selector      => Constants.SEL_KERN_CODE,
+                              Base          => 0,
+                              Limit         => 16#ffff_ffff#,
+                              Access_Rights => CS_Access);
+      Descriptors (ID).DS := Default_Data_Segment;
+      Descriptors (ID).ES := Default_Data_Segment;
+      Descriptors (ID).SS := Default_Data_Segment;
+      Descriptors (ID).FS := Disabled_Segment;
+      Descriptors (ID).GS := Disabled_Segment;
+      Descriptors (ID).TR :=  (Selector      => Constants.SEL_TSS,
+                               Base          => 0,
+                               Limit         => 16#ffff#,
+                               Access_Rights => 16#008b#);
+      Descriptors (ID).LDTR := Disabled_Segment;
+   end Reset_State;
 
    -------------------------------------------------------------------------
 

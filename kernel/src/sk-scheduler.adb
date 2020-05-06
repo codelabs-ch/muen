@@ -312,7 +312,6 @@ is
         := Skp.Subjects.Get_MSR_Count (Subject_ID => ID);
    begin
       FPU.Reset_State (ID => ID);
-      Subjects.Clear_State (ID => ID);
       Subjects_Events.Clear_Events (Subject => ID);
       Subjects_Interrupts.Init_Interrupts (Subject => ID);
       Timed_Events.Init_Event (Subject => ID);
@@ -346,17 +345,15 @@ is
       VMX.VMCS_Setup_Host_Fields;
       VMX.VMCS_Setup_Guest_Fields
         (PML4_Address => Skp.Subjects.Get_PML4_Address (Subject_ID => ID),
-         EPT_Pointer  => Skp.Subjects.Get_EPT_Pointer (Subject_ID => ID),
-         RIP_Value    => Skp.Subjects.Get_Entry_Point (Subject_ID => ID),
-         RSP_Value    => Skp.Subjects.Get_Stack_Address (Subject_ID => ID),
-         CR0_Value    => Skp.Subjects.Get_CR0 (Subject_ID => ID),
-         CR4_Value    => Skp.Subjects.Get_CR4 (Subject_ID => ID),
-         CS_Access    => Skp.Subjects.Get_CS_Access (Subject_ID => ID));
-
-      Subjects.Save_State
-        (ID          => ID,
-         Exit_Reason => 0,
-         Regs        => Skp.Subjects.Get_GPRs (Subject_ID => ID));
+         EPT_Pointer  => Skp.Subjects.Get_EPT_Pointer (Subject_ID => ID));
+      Subjects.Reset_State
+        (ID        => ID,
+         GPRs      => Skp.Subjects.Get_GPRs (Subject_ID => ID),
+         RIP       => Skp.Subjects.Get_Entry_Point (Subject_ID => ID),
+         RSP       => Skp.Subjects.Get_Stack_Address (Subject_ID => ID),
+         CR0       => Skp.Subjects.Get_CR0 (Subject_ID => ID),
+         CR4       => Skp.Subjects.Get_CR4 (Subject_ID => ID),
+         CS_Access => Skp.Subjects.Get_CS_Access (Subject_ID => ID));
    end Init_Subject;
 
    -------------------------------------------------------------------------

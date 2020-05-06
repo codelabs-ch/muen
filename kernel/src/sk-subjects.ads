@@ -93,11 +93,18 @@ is
                    X86_64.State)      => (CPU_Info.APIC_ID, Crash_Audit.State,
                                           X86_64.State));
 
-   --  Clear state of subject with given ID.
-   procedure Clear_State (ID : Skp.Global_Subject_ID_Type)
+   --  Reset state of subject with given ID to the specified initial values.
+   procedure Reset_State
+     (ID        : Skp.Global_Subject_ID_Type;
+      GPRs      : CPU_Registers_Type;
+      RIP       : Word64;
+      RSP       : Word64;
+      CR0       : Word64;
+      CR4       : Word64;
+      CS_Access : Word32)
    with
       Global  => (In_Out => State),
-      Depends => (State =>+ ID);
+      Depends => (State =>+ (ID, GPRs, RIP, RSP, CR0, CR4, CS_Access));
 
    --  Create crash audit context for subject with given ID.
    procedure Create_Context

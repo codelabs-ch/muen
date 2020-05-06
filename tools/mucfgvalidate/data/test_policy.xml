@@ -260,7 +260,7 @@
      </masks>
     </vmx>
     <msrs>
-     <msr start="16#0020#" end="16#0120#" mode="r"/>
+     <msr start="16#0174#" end="16#0176#" mode="r"/>
     </msrs>
     <registers>
      <gpr>

@@ -214,11 +214,13 @@ is
    -------------------------------------------------------------------------
 
    function Is_CPL_0 (ID : Skp.Global_Subject_ID_Type) return Boolean
-   is ((Descriptors (ID).CS.Selector and SEGMENT_SELECTOR_PL_MASK) = 0)
+   is ((Descriptors (ID).Segment_Regs.CS.Selector and SEGMENT_SELECTOR_PL_MASK)
+       = 0)
    with
       Refined_Global => (Input => Descriptors),
       Refined_Post   => Is_CPL_0'Result =
-         ((Descriptors (ID).CS.Selector and SEGMENT_SELECTOR_PL_MASK) = 0);
+       ((Descriptors (ID).Segment_Regs.CS.Selector
+        and SEGMENT_SELECTOR_PL_MASK) = 0);
 
    -------------------------------------------------------------------------
 
@@ -253,20 +255,22 @@ is
       Descriptors (ID).RSP := RSP;
       Descriptors (ID).CR0 := CR0;
       Descriptors (ID).CR4 := CR4;
-      Descriptors (ID).CS := (Selector      => Constants.SEL_KERN_CODE,
-                              Base          => 0,
-                              Limit         => 16#ffff_ffff#,
-                              Access_Rights => CS_Access);
-      Descriptors (ID).DS := Default_Data_Segment;
-      Descriptors (ID).ES := Default_Data_Segment;
-      Descriptors (ID).SS := Default_Data_Segment;
-      Descriptors (ID).FS := Disabled_Segment;
-      Descriptors (ID).GS := Disabled_Segment;
-      Descriptors (ID).TR :=  (Selector      => Constants.SEL_TSS,
-                               Base          => 0,
-                               Limit         => 16#ffff#,
-                               Access_Rights => 16#008b#);
-      Descriptors (ID).LDTR := Disabled_Segment;
+      Descriptors (ID).Segment_Regs.CS
+        := (Selector      => Constants.SEL_KERN_CODE,
+            Base          => 0,
+            Limit         => 16#ffff_ffff#,
+            Access_Rights => CS_Access);
+      Descriptors (ID).Segment_Regs.DS := Default_Data_Segment;
+      Descriptors (ID).Segment_Regs.ES := Default_Data_Segment;
+      Descriptors (ID).Segment_Regs.SS := Default_Data_Segment;
+      Descriptors (ID).Segment_Regs.FS := Disabled_Segment;
+      Descriptors (ID).Segment_Regs.GS := Disabled_Segment;
+      Descriptors (ID).Segment_Regs.TR
+        := (Selector      => Constants.SEL_TSS,
+            Base          => 0,
+            Limit         => 16#ffff#,
+            Access_Rights => 16#008b#);
+      Descriptors (ID).Segment_Regs.LDTR := Disabled_Segment;
    end Reset_State;
 
    -------------------------------------------------------------------------
@@ -322,21 +326,21 @@ is
                       Value => Descriptors (ID).SYSENTER_ESP);
 
       Restore_Segment (Segment_ID => CS,
-                       Segment    => Descriptors (ID).CS);
+                       Segment    => Descriptors (ID).Segment_Regs.CS);
       Restore_Segment (Segment_ID => SS,
-                       Segment    => Descriptors (ID).SS);
+                       Segment    => Descriptors (ID).Segment_Regs.SS);
       Restore_Segment (Segment_ID => DS,
-                       Segment    => Descriptors (ID).DS);
+                       Segment    => Descriptors (ID).Segment_Regs.DS);
       Restore_Segment (Segment_ID => ES,
-                       Segment    => Descriptors (ID).ES);
+                       Segment    => Descriptors (ID).Segment_Regs.ES);
       Restore_Segment (Segment_ID => FS,
-                       Segment    => Descriptors (ID).FS);
+                       Segment    => Descriptors (ID).Segment_Regs.FS);
       Restore_Segment (Segment_ID => GS,
-                       Segment    => Descriptors (ID).GS);
+                       Segment    => Descriptors (ID).Segment_Regs.GS);
       Restore_Segment (Segment_ID => TR,
-                       Segment    => Descriptors (ID).TR);
+                       Segment    => Descriptors (ID).Segment_Regs.TR);
       Restore_Segment (Segment_ID => LDTR,
-                       Segment    => Descriptors (ID).LDTR);
+                       Segment    => Descriptors (ID).Segment_Regs.LDTR);
 
       Regs := Descriptors (ID).Regs;
    end Restore_State;
@@ -413,21 +417,21 @@ is
                      Value => Descriptors (ID).SYSENTER_ESP);
 
       Save_Segment (Segment_ID => CS,
-                    Segment    => Descriptors (ID).CS);
+                    Segment    => Descriptors (ID).Segment_Regs.CS);
       Save_Segment (Segment_ID => SS,
-                    Segment    => Descriptors (ID).SS);
+                    Segment    => Descriptors (ID).Segment_Regs.SS);
       Save_Segment (Segment_ID => DS,
-                    Segment    => Descriptors (ID).DS);
+                    Segment    => Descriptors (ID).Segment_Regs.DS);
       Save_Segment (Segment_ID => ES,
-                    Segment    => Descriptors (ID).ES);
+                    Segment    => Descriptors (ID).Segment_Regs.ES);
       Save_Segment (Segment_ID => FS,
-                    Segment    => Descriptors (ID).FS);
+                    Segment    => Descriptors (ID).Segment_Regs.FS);
       Save_Segment (Segment_ID => GS,
-                    Segment    => Descriptors (ID).GS);
+                    Segment    => Descriptors (ID).Segment_Regs.GS);
       Save_Segment (Segment_ID => TR,
-                    Segment    => Descriptors (ID).TR);
+                    Segment    => Descriptors (ID).Segment_Regs.TR);
       Save_Segment (Segment_ID => LDTR,
-                    Segment    => Descriptors (ID).LDTR);
+                    Segment    => Descriptors (ID).Segment_Regs.LDTR);
 
       Descriptors (ID).Regs := Regs;
    end Save_State;

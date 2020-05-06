@@ -119,8 +119,24 @@ is
 
    Null_Segment : constant Segment_Type;
 
+   Segment_Regs_Size : constant := Seg_Type_Size * 8;
+
+   --  Segment registers.
+   type Segment_Registers_Type is record
+      CS   : Segment_Type;
+      SS   : Segment_Type;
+      DS   : Segment_Type;
+      ES   : Segment_Type;
+      FS   : Segment_Type;
+      GS   : Segment_Type;
+      TR   : Segment_Type;
+      LDTR : Segment_Type;
+   end record
+     with
+       Size => Segment_Regs_Size * 8;
+
    Subj_State_Size : constant :=
-     (CPU_Regs_Size + 10 * Seg_Type_Size + 4 * 4 + 13 * 8);
+     (CPU_Regs_Size + Segment_Regs_Size + 2 * Seg_Type_Size + 4 * 4 + 13 * 8);
 
    type Subject_State_Type is record
       Regs               : CPU_Registers_Type;
@@ -141,14 +157,7 @@ is
       IA32_EFER          : Word64;
       SYSENTER_ESP       : Word64;
       SYSENTER_EIP       : Word64;
-      CS                 : Segment_Type;
-      SS                 : Segment_Type;
-      DS                 : Segment_Type;
-      ES                 : Segment_Type;
-      FS                 : Segment_Type;
-      GS                 : Segment_Type;
-      TR                 : Segment_Type;
-      LDTR               : Segment_Type;
+      Segment_Regs       : Segment_Registers_Type;
       GDTR               : Segment_Type;
       IDTR               : Segment_Type;
    end record
@@ -239,14 +248,14 @@ private
         Intr_State      => 0,
         SYSENTER_CS     => 0,
         Instruction_Len => 0,
-        CS              => Null_Segment,
-        SS              => Null_Segment,
-        DS              => Null_Segment,
-        ES              => Null_Segment,
-        FS              => Null_Segment,
-        GS              => Null_Segment,
-        TR              => Null_Segment,
-        LDTR            => Null_Segment,
+        Segment_Regs    => (CS   => Null_Segment,
+                            SS   => Null_Segment,
+                            DS   => Null_Segment,
+                            ES   => Null_Segment,
+                            FS   => Null_Segment,
+                            GS   => Null_Segment,
+                            TR   => Null_Segment,
+                            LDTR => Null_Segment),
         GDTR            => Null_Segment,
         IDTR            => Null_Segment,
         others          => 0);

@@ -164,29 +164,29 @@ is
 
       Output_Registers (Regs => Context.Descriptor.Regs,
                         RIP  => Context.Descriptor.RIP,
-                        CS   => Context.Descriptor.CS.Selector,
+                        CS   => Context.Descriptor.Segment_Regs.CS.Selector,
                         RFL  => Context.Descriptor.RFLAGS,
                         RSP  => Context.Descriptor.RSP,
-                        SS   => Context.Descriptor.SS.Selector,
+                        SS   => Context.Descriptor.Segment_Regs.SS.Selector,
                         CR0  => Context.Descriptor.CR0,
                         CR3  => Context.Descriptor.CR3,
                         CR4  => Context.Descriptor.CR4);
       Output_Segment (Name => "CS  ",
-                      Seg  => Context.Descriptor.CS);
+                      Seg  => Context.Descriptor.Segment_Regs.CS);
       Output_Segment (Name => "SS  ",
-                      Seg  => Context.Descriptor.SS);
+                      Seg  => Context.Descriptor.Segment_Regs.SS);
       Output_Segment (Name => "DS  ",
-                      Seg  => Context.Descriptor.DS);
+                      Seg  => Context.Descriptor.Segment_Regs.DS);
       Output_Segment (Name => "ES  ",
-                      Seg  => Context.Descriptor.ES);
+                      Seg  => Context.Descriptor.Segment_Regs.ES);
       Output_Segment (Name => "FS  ",
-                      Seg  => Context.Descriptor.FS);
+                      Seg  => Context.Descriptor.Segment_Regs.FS);
       Output_Segment (Name => "GS  ",
-                      Seg  => Context.Descriptor.GS);
+                      Seg  => Context.Descriptor.Segment_Regs.GS);
       Output_Segment (Name => "TR  ",
-                      Seg  => Context.Descriptor.TR);
+                      Seg  => Context.Descriptor.Segment_Regs.TR);
       Output_Segment (Name => "LDTR",
-                      Seg  => Context.Descriptor.LDTR);
+                      Seg  => Context.Descriptor.Segment_Regs.LDTR);
       Output_FPU_Registers (Regs => Context.FPU_Registers);
    end Output_Subj_State;
 

@@ -149,18 +149,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Clear_State (ID : Skp.Global_Subject_ID_Type)
-   with
-      Refined_Global  => (In_Out => Descriptors),
-      Refined_Depends => (Descriptors =>+ ID),
-      Refined_Post    => Descriptors (ID) = SK.Null_Subject_State
-   is
-   begin
-      Descriptors (ID) := SK.Null_Subject_State;
-   end Clear_State;
-
-   -------------------------------------------------------------------------
-
    procedure Create_Context
      (ID  :     Skp.Global_Subject_ID_Type;
       Ctx : out Crash_Audit_Types.Subj_Context_Type)

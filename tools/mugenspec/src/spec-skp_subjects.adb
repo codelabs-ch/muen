@@ -45,6 +45,11 @@ is
      (Buffer : in out Unbounded_String;
       GPRs   :        DOM.Core.Node);
 
+   --  Add subject segment register values to buffer.
+   procedure Add_Segment_Regs
+     (Buffer   : in out Unbounded_String;
+      Seg_Regs :        DOM.Core.Node);
+
    -------------------------------------------------------------------------
 
    procedure Add_GPRs
@@ -81,6 +86,57 @@ is
       end loop;
       Buffer := Buffer & ")," & ASCII.LF;
    end Add_GPRs;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Segment_Regs
+     (Buffer   : in out Unbounded_String;
+      Seg_Regs :        DOM.Core.Node)
+   is
+      Segs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query (N     => Seg_Regs,
+                                            XPath => "*");
+   begin
+      Buffer := Buffer
+        & Indent & "    Segment_Regs       => SK.Segment_Registers_Type'("
+        & ASCII.LF;
+      for I in 0 .. DOM.Core.Nodes.Length (List => Segs) - 1 loop
+         declare
+            Seg : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => Segs,
+               Index => I);
+            Seg_Name : constant String := Ada.Characters.Handling.To_Upper
+              (Item => DOM.Core.Nodes.Node_Name (N => Seg));
+            Seg_Selector : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Seg,
+               Name => "selector");
+            Seg_Base : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Seg,
+               Name => "base");
+            Seg_Limit : constant String := DOM.Core.Elements.Get_Attribute
+                (Elem => Seg,
+                 Name => "limit");
+            Seg_AR : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Seg,
+               Name => "access");
+         begin
+            if I > 0 then
+               Buffer := Buffer & ")," & ASCII.LF;
+            end if;
+
+            Buffer := Buffer & Indent (N => 3) & " " & Seg_Name & " =>"
+              & ASCII.LF
+              & Indent (N => 4) & "(Selector      => " & Seg_Selector & ","
+              & ASCII.LF
+              & Indent (N => 4) & " Base          => " & Seg_Base & ","
+              & ASCII.LF
+              & Indent (N => 4) & " Limit         => " & Seg_Limit & ","
+              & ASCII.LF
+              & Indent (N => 4) & " Access_Rights => " & Seg_AR & "";
+         end;
+      end loop;
+      Buffer := Buffer & "))," & ASCII.LF;
+   end Add_Segment_Regs;
 
    -------------------------------------------------------------------------
 
@@ -146,6 +202,10 @@ is
            := Muxml.Utils.Get_Element
              (Doc   => Subject,
               XPath => "vcpu/registers/gpr");
+         Segments_Node : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Subject,
+              XPath => "vcpu/registers/segments");
          Entry_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Element_Value
               (Doc   => GPR_Node,
@@ -188,11 +248,6 @@ is
                          Value => U (Name & "|msrstore"))));
          MSR_Store_Addr : Unsigned_64 := 0;
          MSR_Count      : Natural     := 0;
-
-         CS_Access : constant String := Muxml.Utils.Get_Attribute
-           (Doc   => Subject,
-            XPath => "vcpu/registers/segments/cs",
-            Name  => "access");
 
          Pin_Ctrls   : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
@@ -315,6 +370,9 @@ is
          Add_GPRs (Buffer => Buffer,
                    GPRs   => GPR_Node);
 
+         Add_Segment_Regs (Buffer   => Buffer,
+                           Seg_Regs => Segments_Node);
+
          Buffer := Buffer
            & Indent & "    CR0_Value          => "
            & Mutools.Utils.To_Hex (Number => VMX.Get_CR0 (Fields => CR0_Value))
@@ -332,8 +390,6 @@ is
                                    (Fields => CR4_Mask,
                                     Default => Interfaces.Unsigned_64'Last))
            & "," & ASCII.LF
-           & Indent & "    CS_Access          => " & CS_Access & ","
-           & ASCII.LF
            & Indent & "    Exception_Bitmap   => "
            & Mutools.Utils.To_Hex
            (Number => VMX.Get_Exceptions (Fields  => Exceptions,

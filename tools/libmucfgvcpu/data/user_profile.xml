@@ -44,6 +44,8 @@
   </cr4>
   <segments>
    <ds access="16#d093#" base="16#0000#" limit="16#abcd#" selector="16#0018#"/>
+   <gs access="16#d093#" base="16#0000#" limit="16#cafe#" selector="16#0020#"/>
+   <ldtr access="16#d093#" base="16#0000#" limit="16#ffff#" selector="16#0018#"/>
   </segments>
  </registers>
 </vcpu>

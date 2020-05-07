@@ -15,11 +15,11 @@ is
       Stack_Address      : SK.Word64;
       Entry_Point        : SK.Word64;
       GPRs               : SK.CPU_Registers_Type;
+      Segment_Regs       : SK.Segment_Registers_Type;
       CR0_Value          : SK.Word64;
       CR0_Mask           : SK.Word64;
       CR4_Value          : SK.Word64;
       CR4_Mask           : SK.Word64;
-      CS_Access          : SK.Word32;
       Exception_Bitmap   : SK.Word32;
       MSR_Count          : SK.Word32;
       VMX_Controls       : VMX_Controls_Type;
@@ -55,13 +55,6 @@ __subjects__);
 
    function Get_CR4_Mask (Subject_ID : Global_Subject_ID_Type) return SK.Word64
    is (Subject_Specs (Subject_ID).CR4_Mask);
-
-   -------------------------------------------------------------------------
-
-   function Get_CS_Access
-     (Subject_ID : Global_Subject_ID_Type)
-      return SK.Word32
-   is (Subject_Specs (Subject_ID).CS_Access);
 
    -------------------------------------------------------------------------
 
@@ -125,6 +118,13 @@ __subjects__);
      (Subject_ID : Global_Subject_ID_Type)
       return SK.Word64
    is (Subject_Specs (Subject_ID).PML4_Address);
+
+   -------------------------------------------------------------------------
+
+   function Get_Segment_Registers
+     (Subject_ID : Global_Subject_ID_Type)
+      return SK.Segment_Registers_Type
+   is (Subject_Specs (Subject_ID).Segment_Regs);
 
    -------------------------------------------------------------------------
 

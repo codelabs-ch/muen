@@ -225,52 +225,34 @@ is
    -------------------------------------------------------------------------
 
    procedure Reset_State
-     (ID        : Skp.Global_Subject_ID_Type;
-      GPRs      : CPU_Registers_Type;
-      RIP       : Word64;
-      RSP       : Word64;
-      CR0       : Word64;
-      CR4       : Word64;
-      CS_Access : Word32)
+     (ID       : Skp.Global_Subject_ID_Type;
+      GPRs     : CPU_Registers_Type;
+      RIP      : Word64;
+      RSP      : Word64;
+      CR0      : Word64;
+      CR4      : Word64;
+      Segments : Segment_Registers_Type)
    with
       Refined_Global  => (In_Out => Descriptors),
       Refined_Depends => (Descriptors =>+ (ID, GPRs, RIP, RSP, CR0, CR4,
-                                           CS_Access))
+                                           Segments))
    is
-      Default_Data_Segment : constant Segment_Type
-        := (Selector      => Constants.SEL_KERN_DATA,
-            Base          => 0,
-            Limit         => 16#ffff_ffff#,
-            Access_Rights => 16#c093#);
-      Disabled_Segment     : constant Segment_Type
-        := (Selector      => 0,
-            Base          => 0,
-            Limit         => 0,
-            Access_Rights => 16#10000#);
    begin
-      Descriptors (ID) := Null_Subject_State;
-      Descriptors (ID).Regs := GPRs;
-      Descriptors (ID).RFLAGS := Constants.RFLAGS_Default_Value;
-      Descriptors (ID).RIP := RIP;
-      Descriptors (ID).RSP := RSP;
-      Descriptors (ID).CR0 := CR0;
-      Descriptors (ID).CR4 := CR4;
-      Descriptors (ID).Segment_Regs.CS
-        := (Selector      => Constants.SEL_KERN_CODE,
-            Base          => 0,
-            Limit         => 16#ffff_ffff#,
-            Access_Rights => CS_Access);
-      Descriptors (ID).Segment_Regs.DS := Default_Data_Segment;
-      Descriptors (ID).Segment_Regs.ES := Default_Data_Segment;
-      Descriptors (ID).Segment_Regs.SS := Default_Data_Segment;
-      Descriptors (ID).Segment_Regs.FS := Disabled_Segment;
-      Descriptors (ID).Segment_Regs.GS := Disabled_Segment;
-      Descriptors (ID).Segment_Regs.TR
-        := (Selector      => Constants.SEL_TSS,
-            Base          => 0,
-            Limit         => 16#ffff#,
-            Access_Rights => 16#008b#);
-      Descriptors (ID).Segment_Regs.LDTR := Disabled_Segment;
+      Descriptors (ID) :=
+        (Regs            => GPRs,
+         Exit_Reason     => 0,
+         Intr_State      => 0,
+         SYSENTER_CS     => 0,
+         Instruction_Len => 0,
+         RIP             => RIP,
+         RSP             => RSP,
+         CR0             => CR0,
+         CR4             => CR4,
+         RFLAGS          => Constants.RFLAGS_Default_Value,
+         Segment_Regs    => Segments,
+         GDTR            => Null_Segment,
+         IDTR            => Null_Segment,
+         others          => 0);
    end Reset_State;
 
    -------------------------------------------------------------------------

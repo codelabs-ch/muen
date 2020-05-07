@@ -20,7 +20,6 @@ is
       CR0_Mask           : SK.Word64;
       CR4_Value          : SK.Word64;
       CR4_Mask           : SK.Word64;
-      CS_Access          : SK.Word32;
       Exception_Bitmap   : SK.Word32;
       MSR_Count          : SK.Word32;
       VMX_Controls       : VMX_Controls_Type;
@@ -102,7 +101,6 @@ is
        CR0_Mask           => 16#ffff_ffff_ffff_ffff#,
        CR4_Value          => 16#2020#,
        CR4_Mask           => 16#ffff_ffff_ffff_ffff#,
-       CS_Access          => 16#a09b#,
        Exception_Bitmap   => 16#ffff_ffff#,
        MSR_Count          => 1,
        VMX_Controls       => VMX_Controls_Type'(
@@ -183,7 +181,6 @@ is
        CR0_Mask           => 16#ffff_ffff_1ffa_ffe0#,
        CR4_Value          => 16#2020#,
        CR4_Mask           => 16#ffff_ffff_ff88_b000#,
-       CS_Access          => 16#c09b#,
        Exception_Bitmap   => 16#fff0_8006#,
        MSR_Count          => 5,
        VMX_Controls       => VMX_Controls_Type'(
@@ -264,7 +261,6 @@ is
        CR0_Mask           => 16#ffff_ffff_ffff_ffff#,
        CR4_Value          => 16#2020#,
        CR4_Mask           => 16#ffff_ffff_ffff_ffff#,
-       CS_Access          => 16#a09b#,
        Exception_Bitmap   => 16#ffff_ffff#,
        MSR_Count          => 0,
        VMX_Controls       => VMX_Controls_Type'(
@@ -345,7 +341,6 @@ is
        CR0_Mask           => 16#ffff_ffff_ffff_ffff#,
        CR4_Value          => 16#2020#,
        CR4_Mask           => 16#ffff_ffff_ffff_ffff#,
-       CS_Access          => 16#a09b#,
        Exception_Bitmap   => 16#ffff_ffff#,
        MSR_Count          => 0,
        VMX_Controls       => VMX_Controls_Type'(
@@ -379,13 +374,6 @@ is
 
    function Get_CR4_Mask (Subject_ID : Global_Subject_ID_Type) return SK.Word64
    is (Subject_Specs (Subject_ID).CR4_Mask);
-
-   -------------------------------------------------------------------------
-
-   function Get_CS_Access
-     (Subject_ID : Global_Subject_ID_Type)
-      return SK.Word32
-   is (Subject_Specs (Subject_ID).CS_Access);
 
    -------------------------------------------------------------------------
 

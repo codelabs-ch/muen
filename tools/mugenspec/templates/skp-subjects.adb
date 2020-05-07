@@ -20,7 +20,6 @@ is
       CR0_Mask           : SK.Word64;
       CR4_Value          : SK.Word64;
       CR4_Mask           : SK.Word64;
-      CS_Access          : SK.Word32;
       Exception_Bitmap   : SK.Word32;
       MSR_Count          : SK.Word32;
       VMX_Controls       : VMX_Controls_Type;
@@ -56,13 +55,6 @@ __subjects__);
 
    function Get_CR4_Mask (Subject_ID : Global_Subject_ID_Type) return SK.Word64
    is (Subject_Specs (Subject_ID).CR4_Mask);
-
-   -------------------------------------------------------------------------
-
-   function Get_CS_Access
-     (Subject_ID : Global_Subject_ID_Type)
-      return SK.Word32
-   is (Subject_Specs (Subject_ID).CS_Access);
 
    -------------------------------------------------------------------------
 

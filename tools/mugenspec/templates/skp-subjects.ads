@@ -73,10 +73,6 @@ is
      (Subject_ID : Global_Subject_ID_Type)
       return SK.Word64;
 
-   function Get_CS_Access
-     (Subject_ID : Global_Subject_ID_Type)
-      return SK.Word32;
-
    function Get_Exception_Bitmap
      (Subject_ID : Global_Subject_ID_Type)
       return SK.Word32;

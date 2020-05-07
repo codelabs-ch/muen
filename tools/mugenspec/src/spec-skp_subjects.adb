@@ -249,11 +249,6 @@ is
          MSR_Store_Addr : Unsigned_64 := 0;
          MSR_Count      : Natural     := 0;
 
-         CS_Access : constant String := Muxml.Utils.Get_Attribute
-           (Doc   => Subject,
-            XPath => "vcpu/registers/segments/cs",
-            Name  => "access");
-
          Pin_Ctrls   : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
@@ -395,8 +390,6 @@ is
                                    (Fields => CR4_Mask,
                                     Default => Interfaces.Unsigned_64'Last))
            & "," & ASCII.LF
-           & Indent & "    CS_Access          => " & CS_Access & ","
-           & ASCII.LF
            & Indent & "    Exception_Bitmap   => "
            & Mutools.Utils.To_Hex
            (Number => VMX.Get_Exceptions (Fields  => Exceptions,

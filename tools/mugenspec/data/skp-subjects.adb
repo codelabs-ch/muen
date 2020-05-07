@@ -15,6 +15,7 @@ is
       Stack_Address      : SK.Word64;
       Entry_Point        : SK.Word64;
       GPRs               : SK.CPU_Registers_Type;
+      Segment_Regs       : SK.Segment_Registers_Type;
       CR0_Value          : SK.Word64;
       CR0_Mask           : SK.Word64;
       CR4_Value          : SK.Word64;
@@ -56,6 +57,47 @@ is
           R13 => 16#0000#,
           R14 => 16#0000#,
           R15 => 16#0000#),
+       Segment_Regs       => SK.Segment_Registers_Type'(
+          CS =>
+            (Selector      => 16#0008#,
+             Base          => 16#0000#,
+             Limit         => 16#ffff#,
+             Access_Rights => 16#a09b#),
+          DS =>
+            (Selector      => 16#0010#,
+             Base          => 16#0000#,
+             Limit         => 16#ffff#,
+             Access_Rights => 16#c093#),
+          ES =>
+            (Selector      => 16#0010#,
+             Base          => 16#0000#,
+             Limit         => 16#ffff_ffff#,
+             Access_Rights => 16#c093#),
+          FS =>
+            (Selector      => 16#0000#,
+             Base          => 16#0000#,
+             Limit         => 16#0000#,
+             Access_Rights => 16#0001_0000#),
+          GS =>
+            (Selector      => 16#0000#,
+             Base          => 16#0000#,
+             Limit         => 16#0000#,
+             Access_Rights => 16#0001_0000#),
+          SS =>
+            (Selector      => 16#0010#,
+             Base          => 16#0000#,
+             Limit         => 16#ffff_ffff#,
+             Access_Rights => 16#c093#),
+          TR =>
+            (Selector      => 16#0018#,
+             Base          => 16#0000#,
+             Limit         => 16#ffff#,
+             Access_Rights => 16#008b#),
+          LDTR =>
+            (Selector      => 16#0000#,
+             Base          => 16#0000#,
+             Limit         => 16#0000#,
+             Access_Rights => 16#0001_0000#)),
        CR0_Value          => 16#8001_0035#,
        CR0_Mask           => 16#ffff_ffff_ffff_ffff#,
        CR4_Value          => 16#2020#,
@@ -96,6 +138,47 @@ is
           R13 => 16#c9c9#,
           R14 => 16#a0b0#,
           R15 => 16#0000#),
+       Segment_Regs       => SK.Segment_Registers_Type'(
+          CS =>
+            (Selector      => 16#0008#,
+             Base          => 16#0000#,
+             Limit         => 16#ffff#,
+             Access_Rights => 16#c09b#),
+          DS =>
+            (Selector      => 16#0010#,
+             Base          => 16#0000#,
+             Limit         => 16#ffff#,
+             Access_Rights => 16#c093#),
+          ES =>
+            (Selector      => 16#0010#,
+             Base          => 16#0000#,
+             Limit         => 16#ffff_ffff#,
+             Access_Rights => 16#c093#),
+          FS =>
+            (Selector      => 16#0000#,
+             Base          => 16#0000#,
+             Limit         => 16#0000#,
+             Access_Rights => 16#0001_0000#),
+          GS =>
+            (Selector      => 16#0000#,
+             Base          => 16#0000#,
+             Limit         => 16#0000#,
+             Access_Rights => 16#0001_0000#),
+          SS =>
+            (Selector      => 16#0010#,
+             Base          => 16#0000#,
+             Limit         => 16#ffff_ffff#,
+             Access_Rights => 16#c093#),
+          TR =>
+            (Selector      => 16#0018#,
+             Base          => 16#0000#,
+             Limit         => 16#ffff#,
+             Access_Rights => 16#008b#),
+          LDTR =>
+            (Selector      => 16#0000#,
+             Base          => 16#0000#,
+             Limit         => 16#0000#,
+             Access_Rights => 16#0001_0000#)),
        CR0_Value          => 16#0035#,
        CR0_Mask           => 16#ffff_ffff_1ffa_ffe0#,
        CR4_Value          => 16#2020#,
@@ -136,6 +219,47 @@ is
           R13 => 16#0000#,
           R14 => 16#0000#,
           R15 => 16#0000#),
+       Segment_Regs       => SK.Segment_Registers_Type'(
+          CS =>
+            (Selector      => 16#0008#,
+             Base          => 16#0000#,
+             Limit         => 16#ffff#,
+             Access_Rights => 16#a09b#),
+          DS =>
+            (Selector      => 16#0010#,
+             Base          => 16#0000#,
+             Limit         => 16#ffff#,
+             Access_Rights => 16#c093#),
+          ES =>
+            (Selector      => 16#0010#,
+             Base          => 16#0000#,
+             Limit         => 16#ffff_ffff#,
+             Access_Rights => 16#c093#),
+          FS =>
+            (Selector      => 16#0000#,
+             Base          => 16#0000#,
+             Limit         => 16#0000#,
+             Access_Rights => 16#0001_0000#),
+          GS =>
+            (Selector      => 16#0000#,
+             Base          => 16#0000#,
+             Limit         => 16#0000#,
+             Access_Rights => 16#0001_0000#),
+          SS =>
+            (Selector      => 16#0010#,
+             Base          => 16#0000#,
+             Limit         => 16#ffff_ffff#,
+             Access_Rights => 16#c093#),
+          TR =>
+            (Selector      => 16#0018#,
+             Base          => 16#0000#,
+             Limit         => 16#ffff#,
+             Access_Rights => 16#008b#),
+          LDTR =>
+            (Selector      => 16#0000#,
+             Base          => 16#0000#,
+             Limit         => 16#0000#,
+             Access_Rights => 16#0001_0000#)),
        CR0_Value          => 16#8001_0035#,
        CR0_Mask           => 16#ffff_ffff_ffff_ffff#,
        CR4_Value          => 16#2020#,
@@ -176,6 +300,47 @@ is
           R13 => 16#000d#,
           R14 => 16#000e#,
           R15 => 16#000f#),
+       Segment_Regs       => SK.Segment_Registers_Type'(
+          CS =>
+            (Selector      => 16#0008#,
+             Base          => 16#0000#,
+             Limit         => 16#ffff#,
+             Access_Rights => 16#a09b#),
+          DS =>
+            (Selector      => 16#0010#,
+             Base          => 16#0000#,
+             Limit         => 16#ffff#,
+             Access_Rights => 16#c093#),
+          ES =>
+            (Selector      => 16#0010#,
+             Base          => 16#0000#,
+             Limit         => 16#ffff_ffff#,
+             Access_Rights => 16#c093#),
+          FS =>
+            (Selector      => 16#0000#,
+             Base          => 16#0000#,
+             Limit         => 16#0000#,
+             Access_Rights => 16#0001_0000#),
+          GS =>
+            (Selector      => 16#0000#,
+             Base          => 16#0000#,
+             Limit         => 16#0000#,
+             Access_Rights => 16#0001_0000#),
+          SS =>
+            (Selector      => 16#0010#,
+             Base          => 16#0000#,
+             Limit         => 16#ffff_ffff#,
+             Access_Rights => 16#c093#),
+          TR =>
+            (Selector      => 16#0018#,
+             Base          => 16#0000#,
+             Limit         => 16#ffff#,
+             Access_Rights => 16#008b#),
+          LDTR =>
+            (Selector      => 16#0000#,
+             Base          => 16#0000#,
+             Limit         => 16#0000#,
+             Access_Rights => 16#0001_0000#)),
        CR0_Value          => 16#8001_0035#,
        CR0_Mask           => 16#ffff_ffff_ffff_ffff#,
        CR4_Value          => 16#2020#,
@@ -284,6 +449,13 @@ is
      (Subject_ID : Global_Subject_ID_Type)
       return SK.Word64
    is (Subject_Specs (Subject_ID).PML4_Address);
+
+   -------------------------------------------------------------------------
+
+   function Get_Segment_Registers
+     (Subject_ID : Global_Subject_ID_Type)
+      return SK.Segment_Registers_Type
+   is (Subject_Specs (Subject_ID).Segment_Regs);
 
    -------------------------------------------------------------------------
 

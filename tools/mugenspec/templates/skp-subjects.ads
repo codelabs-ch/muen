@@ -53,6 +53,10 @@ is
      (Subject_ID : Global_Subject_ID_Type)
       return SK.CPU_Registers_Type;
 
+   function Get_Segment_Registers
+     (Subject_ID : Global_Subject_ID_Type)
+      return SK.Segment_Registers_Type;
+
    function Get_VMX_Controls
      (Subject_ID : Global_Subject_ID_Type)
       return VMX_Controls_Type;

@@ -15,6 +15,7 @@ is
       Stack_Address      : SK.Word64;
       Entry_Point        : SK.Word64;
       GPRs               : SK.CPU_Registers_Type;
+      Segment_Regs       : SK.Segment_Registers_Type;
       CR0_Value          : SK.Word64;
       CR0_Mask           : SK.Word64;
       CR4_Value          : SK.Word64;
@@ -125,6 +126,13 @@ __subjects__);
      (Subject_ID : Global_Subject_ID_Type)
       return SK.Word64
    is (Subject_Specs (Subject_ID).PML4_Address);
+
+   -------------------------------------------------------------------------
+
+   function Get_Segment_Registers
+     (Subject_ID : Global_Subject_ID_Type)
+      return SK.Segment_Registers_Type
+   is (Subject_Specs (Subject_ID).Segment_Regs);
 
    -------------------------------------------------------------------------
 

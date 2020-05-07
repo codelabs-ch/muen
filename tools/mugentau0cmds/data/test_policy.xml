@@ -1377,6 +1377,12 @@
      <segments>
       <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
       <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+      <es access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <fs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <gs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <ss access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <tr access="16#008b#" base="16#0000#" limit="16#ffff#" selector="16#0018#"/>
+      <ldtr access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
      </segments>
     </registers>
    </vcpu>
@@ -1579,6 +1585,12 @@
      <segments>
       <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
       <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+      <es access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <fs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <gs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <ss access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <tr access="16#008b#" base="16#0000#" limit="16#ffff#" selector="16#0018#"/>
+      <ldtr access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
      </segments>
     </registers>
    </vcpu>
@@ -1820,6 +1832,12 @@
      <segments>
       <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
       <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+      <es access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <fs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <gs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <ss access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <tr access="16#008b#" base="16#0000#" limit="16#ffff#" selector="16#0018#"/>
+      <ldtr access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
      </segments>
     </registers>
    </vcpu>
@@ -2051,6 +2069,12 @@
      <segments>
       <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
       <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+      <es access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <fs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <gs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <ss access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <tr access="16#008b#" base="16#0000#" limit="16#ffff#" selector="16#0018#"/>
+      <ldtr access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
      </segments>
     </registers>
    </vcpu>
@@ -2276,6 +2300,12 @@
      <segments>
       <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
       <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+      <es access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <fs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <gs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <ss access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <tr access="16#008b#" base="16#0000#" limit="16#ffff#" selector="16#0018#"/>
+      <ldtr access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
      </segments>
     </registers>
    </vcpu>
@@ -2487,6 +2517,12 @@
      <segments>
       <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
       <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+      <es access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <fs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <gs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <ss access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <tr access="16#008b#" base="16#0000#" limit="16#ffff#" selector="16#0018#"/>
+      <ldtr access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
      </segments>
     </registers>
    </vcpu>
@@ -2740,6 +2776,12 @@
      <segments>
       <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
       <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+      <es access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <fs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <gs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <ss access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <tr access="16#008b#" base="16#0000#" limit="16#ffff#" selector="16#0018#"/>
+      <ldtr access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
      </segments>
     </registers>
    </vcpu>
@@ -2964,6 +3006,12 @@
      <segments>
       <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
       <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+      <es access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <fs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <gs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <ss access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <tr access="16#008b#" base="16#0000#" limit="16#ffff#" selector="16#0018#"/>
+      <ldtr access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
      </segments>
     </registers>
    </vcpu>
@@ -3184,6 +3232,12 @@
      <segments>
       <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
       <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+      <es access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <fs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <gs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <ss access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <tr access="16#008b#" base="16#0000#" limit="16#ffff#" selector="16#0018#"/>
+      <ldtr access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
      </segments>
     </registers>
    </vcpu>
@@ -3405,6 +3459,12 @@
      <segments>
       <cs access="16#a09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
       <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+      <es access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <fs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <gs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <ss access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <tr access="16#008b#" base="16#0000#" limit="16#ffff#" selector="16#0018#"/>
+      <ldtr access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
      </segments>
     </registers>
    </vcpu>
@@ -3625,6 +3685,12 @@
      <segments>
       <cs access="16#c09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
       <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+      <es access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <fs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <gs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <ss access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <tr access="16#008b#" base="16#0000#" limit="16#ffff#" selector="16#0018#"/>
+      <ldtr access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
      </segments>
     </registers>
    </vcpu>
@@ -3942,6 +4008,12 @@
      <segments>
       <cs access="16#c09b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
       <ds access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+      <es access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <fs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <gs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <ss access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <tr access="16#008b#" base="16#0000#" limit="16#ffff#" selector="16#0018#"/>
+      <ldtr access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
      </segments>
     </registers>
    </vcpu>

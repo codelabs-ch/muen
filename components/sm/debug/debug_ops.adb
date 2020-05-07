@@ -84,11 +84,12 @@ is
       if (State.IA32_EFER and 16#400#) = 0 then
          Debuglog.Client.Put_Line
            (Item => "EIP: " & Img (Ifa.Unsigned_32 (State.RIP))
-            & " CS : " & Img (Ifa.Unsigned_16 (State.CS.Selector))
+            & " CS : " & Img (Ifa.Unsigned_16 (State.Segment_Regs.CS.Selector))
             & " EFLAGS: " & Img (Ifa.Unsigned_32 (State.RFLAGS)));
          Debuglog.Client.Put_Line
            (Item => "ESP: " & Img (Ifa.Unsigned_32 (State.RSP))
-            & " SS : " & Img (Ifa.Unsigned_16 (State.SS.Selector)));
+            & " SS : "
+            & Img (Ifa.Unsigned_16 (State.Segment_Regs.SS.Selector)));
 
          Debuglog.Client.Put_Line
            (Item => "EAX: " & Img (Ifa.Unsigned_32 (State.Regs.RAX))
@@ -116,11 +117,12 @@ is
       else
          Debuglog.Client.Put_Line
            (Item => "RIP: " & Img (State.RIP)
-            & " CS : " & Img (Ifa.Unsigned_16 (State.CS.Selector))
+            & " CS : " & Img (Ifa.Unsigned_16 (State.Segment_Regs.CS.Selector))
             & " RFLAGS: " & Img (State.RFLAGS));
          Debuglog.Client.Put_Line
            (Item => "RSP: " & Img (State.RSP)
-            & " SS : " & Img (Ifa.Unsigned_16 (State.SS.Selector)));
+            & " SS : "
+            & Img (Ifa.Unsigned_16 (State.Segment_Regs.SS.Selector)));
 
          Debuglog.Client.Put_Line
            (Item => "RAX: " & Img (State.Regs.RAX)

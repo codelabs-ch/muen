@@ -127,6 +127,9 @@
        <rsp>16#eff8#</rsp>
        <rbp>16#f000#</rbp>
       </gpr>
+      <segments>
+       <es access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      </segments>
      </registers>
     </vcpu>
     <memory>

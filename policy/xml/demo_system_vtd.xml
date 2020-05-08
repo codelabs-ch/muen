@@ -20,7 +20,8 @@
   <include href="common_memory.xml"/>
   <include href="memory_xhci_dma.xml"/>
   <if variable="muenblock_enabled" value="true">
-   <memory name="muenblock" size="16#0100_0000#" caching="WB" type="subject_device"/>
+   <memory name="blockdev_shm1" size="16#0100_0000#" caching="WB" type="subject_device"/>
+   <memory name="blockdev_shm2" size="16#0100_0000#" caching="WB" type="subject_device"/>
   </if>
  </memory>
 
@@ -99,7 +100,7 @@
    <memory>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
     <if variable="muenblock_enabled" value="true">
-     <memory logical="muenblock" physical="muenblock" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
+     <memory logical="muenblock" physical="blockdev_shm1" virtualAddress="16#a100_0000#" writable="true" executable="false"/>
     </if>
    </memory>
    <devices>
@@ -171,7 +172,7 @@
    <memory>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
     <if variable="muenblock_enabled" value="true">
-     <memory logical="muenblock" physical="muenblock" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
+     <memory logical="muenblock" physical="blockdev_shm1" virtualAddress="16#a100_0000#" writable="true" executable="false"/>
     </if>
    </memory>
    <devices>

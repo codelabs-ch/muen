@@ -17,6 +17,7 @@ MODS_BUILD   = $(EXTRA_MODS:%=$(OBJ_DIR)/.%-build)
 MODS_INSTALL = $(EXTRA_MODS:%=$(OBJ_DIR)/.%-install)
 MODS_CLEAN   = $(EXTRA_MODS:%=clean-%)
 MODS_OBJ_DIR = $(OBJ_DIR)/modules
+MODS_PATH    = $(realpath modules)
 
 LINUX_MODS_DESTDIR ?=
 
@@ -46,7 +47,7 @@ $(OBJ_DIR)/.mods-build: $(SRC_BZIMAGE) | $(OBJ_DIR)
 	@touch $@
 
 $(MODS_BUILD): MOD_NAME = $(@:$(OBJ_DIR)/.%-build=%)
-$(MODS_BUILD): MOD_PATH = $(realpath modules/$(MOD_NAME))
+$(MODS_BUILD): MOD_PATH = $(MODS_PATH)/$(MOD_NAME)
 $(MODS_BUILD): $(OBJ_DIR)/.mods-build | $(OBJ_DIR)
 	@$(E) linux "Build module $(MOD_NAME)" \
 		'$(LINUX_FLAGS) $(MAKE) M=$(MOD_PATH) -C src modules' $(LOG)
@@ -58,13 +59,13 @@ $(OBJ_DIR)/.mods-install: $(OBJ_DIR)/.mods-build | $(OBJ_DIR)
 	@touch $@
 
 $(MODS_INSTALL): MOD_NAME = $(@:$(OBJ_DIR)/.%-install=%)
-$(MODS_INSTALL): MOD_PATH = $(realpath modules/$(MOD_NAME))
+$(MODS_INSTALL): MOD_PATH = $(MODS_PATH)/$(MOD_NAME)
 $(MODS_INSTALL): $(OBJ_DIR)/.mods-install $(MODS_BUILD)
 	@$(E) linux "Install module $(MOD_NAME)" \
 		'$(LINUX_FLAGS) $(MAKE) M=$(MOD_PATH) $(INSTALL_MOD_OPTS) -C src modules_install' $(LOG)
 	@touch $@
 
-$(MODS_CLEAN): MOD_PATH = $(realpath modules/$(@:clean-%=%))
+$(MODS_CLEAN): MOD_PATH = $(MODS_PATH)/$(@:clean-%=%)
 $(MODS_CLEAN):
 	$(MAKE) M=$(MOD_PATH) -C src clean
 

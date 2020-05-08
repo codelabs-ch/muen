@@ -14,7 +14,6 @@ GENCSPEC    = misc/linux-muen-gencspec.py
 EXTRA_MODS  = $(notdir $(wildcard modules/*))
 
 MODS_BUILD   = $(EXTRA_MODS:%=$(OBJ_DIR)/.%-build)
-MODS_INSTALL = $(EXTRA_MODS:%=$(OBJ_DIR)/.%-install)
 MODS_CLEAN   = $(EXTRA_MODS:%=clean-%)
 MODS_OBJ_DIR = $(OBJ_DIR)/modules
 MODS_PATH    = $(realpath modules)
@@ -58,18 +57,19 @@ $(OBJ_DIR)/.mods-install: $(OBJ_DIR)/.mods-build | $(OBJ_DIR)
 		"$(LINUX_FLAGS) $(MAKE) $(INSTALL_MOD_OPTS) -C src modules_install" $(LOG)
 	@touch $@
 
-$(MODS_INSTALL): MOD_NAME = $(@:$(OBJ_DIR)/.%-install=%)
-$(MODS_INSTALL): MOD_PATH = $(MODS_PATH)/$(MOD_NAME)
-$(MODS_INSTALL): $(OBJ_DIR)/.mods-install $(MODS_BUILD)
-	@$(E) linux "Install module $(MOD_NAME)" \
-		"$(LINUX_FLAGS) $(MAKE) M=$(MOD_PATH) $(INSTALL_MOD_OPTS) -C src modules_install" $(LOG)
+# Serialize module installation since some depmod versions have issues with
+# parallel invocation.
+$(OBJ_DIR)/.mods-extra-install: $(OBJ_DIR)/.mods-install $(MODS_BUILD)
+	$(foreach MOD,$(EXTRA_MODS),$(E) linux "Install module $(MOD)" \
+		"$(LINUX_FLAGS) $(MAKE) M=$(MODS_PATH)/$(MOD) $(INSTALL_MOD_OPTS) -C src modules_install" \
+		$(LOG);)
 	@touch $@
 
 $(MODS_CLEAN): MOD_PATH = $(MODS_PATH)/$(@:clean-%=%)
 $(MODS_CLEAN):
 	$(MAKE) M=$(MOD_PATH) -C src clean
 
-$(MODS_INITRAMFS): $(OBJ_DIR)/.mods-install $(MODS_INSTALL)
+$(MODS_INITRAMFS): $(OBJ_DIR)/.mods-extra-install
 	@$(E) linux "Generate $(MODS_INITRAMFS_BASE)" \
 		"cd $(MODS_OBJ_DIR) && find . | cpio -R +0:+0 -o -H newc --quiet | gzip -9 > $@" $(LOG)
 

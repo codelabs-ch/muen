@@ -24,45 +24,45 @@ LINUX_MODS_DESTDIR ?=
 MODS_INITRAMFS_BASE = modules_$(INITRAMFS_BASE)
 MODS_INITRAMFS      = $(OBJ_DIR)/$(MODS_INITRAMFS_BASE)
 
-INSTALL_MOD_OPTS  = "INSTALL_MOD_STRIP=1"
-INSTALL_MOD_OPTS += "INSTALL_MOD_PATH=$(MODS_OBJ_DIR)/$(LINUX_MODS_DESTDIR)"
+INSTALL_MOD_OPTS  = INSTALL_MOD_STRIP=1
+INSTALL_MOD_OPTS += INSTALL_MOD_PATH=$(MODS_OBJ_DIR)/$(LINUX_MODS_DESTDIR)
 
 LINUX_FLAGS  = LOCALVERSION=
-LINUX_FLAGS += MAKEFLAGS="$(filter-out s,$(MAKEFLAGS))"
+LINUX_FLAGS += MAKEFLAGS='$(filter-out s,$(MAKEFLAGS))'
 
 LOG = $(OBJ_DIR)/log.obj
 
 all: build $(INITRAMFS)
 
 $(SRC_BZIMAGE): src/.config
-	@$(E) linux Oldconfig '$(LINUX_FLAGS) $(MAKE) oldconfig -C src' $(LOG)
-	@$(E) linux Build '$(LINUX_FLAGS) $(MAKE) -C src' $(LOG)
+	@$(E) linux Oldconfig "$(LINUX_FLAGS) $(MAKE) oldconfig -C src" $(LOG)
+	@$(E) linux Build "$(LINUX_FLAGS) $(MAKE) -C src" $(LOG)
 
 $(OBJ_DIR)/bzImage: $(SRC_BZIMAGE) | $(OBJ_DIR)
 	@$(E) linux "Patch" "$(MULNXBZPATCH) $< $@" $(LOG)
 
 $(OBJ_DIR)/.mods-build: $(SRC_BZIMAGE) | $(OBJ_DIR)
 	@$(E) linux "Build kernel modules" \
-		'$(LINUX_FLAGS) $(MAKE) -C src modules' $(LOG)
+		"$(LINUX_FLAGS) $(MAKE) -C src modules" $(LOG)
 	@touch $@
 
 $(MODS_BUILD): MOD_NAME = $(@:$(OBJ_DIR)/.%-build=%)
 $(MODS_BUILD): MOD_PATH = $(MODS_PATH)/$(MOD_NAME)
 $(MODS_BUILD): $(OBJ_DIR)/.mods-build | $(OBJ_DIR)
 	@$(E) linux "Build module $(MOD_NAME)" \
-		'$(LINUX_FLAGS) $(MAKE) M=$(MOD_PATH) -C src modules' $(LOG)
+		"$(LINUX_FLAGS) $(MAKE) M=$(MOD_PATH) -C src modules" $(LOG)
 	@touch $@
 
 $(OBJ_DIR)/.mods-install: $(OBJ_DIR)/.mods-build | $(OBJ_DIR)
 	@$(E) linux "Install kernel modules" \
-		'$(LINUX_FLAGS) $(MAKE) $(INSTALL_MOD_OPTS) -C src modules_install' $(LOG)
+		"$(LINUX_FLAGS) $(MAKE) $(INSTALL_MOD_OPTS) -C src modules_install" $(LOG)
 	@touch $@
 
 $(MODS_INSTALL): MOD_NAME = $(@:$(OBJ_DIR)/.%-install=%)
 $(MODS_INSTALL): MOD_PATH = $(MODS_PATH)/$(MOD_NAME)
 $(MODS_INSTALL): $(OBJ_DIR)/.mods-install $(MODS_BUILD)
 	@$(E) linux "Install module $(MOD_NAME)" \
-		'$(LINUX_FLAGS) $(MAKE) M=$(MOD_PATH) $(INSTALL_MOD_OPTS) -C src modules_install' $(LOG)
+		"$(LINUX_FLAGS) $(MAKE) M=$(MOD_PATH) $(INSTALL_MOD_OPTS) -C src modules_install" $(LOG)
 	@touch $@
 
 $(MODS_CLEAN): MOD_PATH = $(MODS_PATH)/$(@:clean-%=%)

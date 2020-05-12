@@ -1,13 +1,12 @@
-FROM ocaml/opam:debian-9_ocaml-4.05.0
+FROM ocaml/opam2
 
 LABEL maintainer "Reto Buerki <reet@codelabs.ch>"
-LABEL description "Build environment for Muen-enabled MirageOS/Solo5 static website unikernel"
+LABEL description "Build environment for Muen-enabled MirageOS/Solo5 Unipi website unikernel"
 
-RUN opam repository set-url default https://opam.ocaml.org
-RUN opam update && opam upgrade
-RUN opam install -y mirage
+RUN opam depext -y mirage.3.7.6
+RUN opam install -y mirage.3.7.6
 
 RUN git clone https://github.com/mirage/mirage-skeleton
-WORKDIR mirage-skeleton/applications/static_website_tls
+RUN git clone -b with-kv https://github.com/hannesm/unipi.git
 
 CMD [ "bash" ]

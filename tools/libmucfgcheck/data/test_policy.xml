@@ -678,9 +678,6 @@
       <event id="0" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
-      <event id="1" logical="panic" physical="system_panic">
-       <system_panic/>
-      </event>
       <event id="2" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
@@ -694,9 +691,6 @@
        <system_panic/>
       </event>
       <event id="6" logical="panic" physical="system_panic">
-       <system_panic/>
-      </event>
-      <event id="7" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
       <event id="8" logical="panic" physical="system_panic">
@@ -792,9 +786,6 @@
       <event id="40" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
-      <event id="41" logical="panic" physical="system_panic">
-       <system_panic/>
-      </event>
       <event id="43" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
@@ -820,9 +811,6 @@
        <system_panic/>
       </event>
       <event id="51" logical="panic" physical="system_panic">
-       <system_panic/>
-      </event>
-      <event id="52" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
       <event id="53" logical="panic" physical="system_panic">
@@ -1091,9 +1079,6 @@
       <event id="0" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
-      <event id="1" logical="panic" physical="system_panic">
-       <system_panic/>
-      </event>
       <event id="2" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
@@ -1107,9 +1092,6 @@
        <system_panic/>
       </event>
       <event id="6" logical="panic" physical="system_panic">
-       <system_panic/>
-      </event>
-      <event id="7" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
       <event id="8" logical="panic" physical="system_panic">
@@ -1205,9 +1187,6 @@
       <event id="40" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
-      <event id="41" logical="panic" physical="system_panic">
-       <system_panic/>
-      </event>
       <event id="43" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
@@ -1233,9 +1212,6 @@
        <system_panic/>
       </event>
       <event id="51" logical="panic" physical="system_panic">
-       <system_panic/>
-      </event>
-      <event id="52" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
       <event id="53" logical="panic" physical="system_panic">
@@ -1492,9 +1468,6 @@
       <event id="0" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
-      <event id="1" logical="panic" physical="system_panic">
-       <system_panic/>
-      </event>
       <event id="2" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
@@ -1508,9 +1481,6 @@
        <system_panic/>
       </event>
       <event id="6" logical="panic" physical="system_panic">
-       <system_panic/>
-      </event>
-      <event id="7" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
       <event id="8" logical="panic" physical="system_panic">
@@ -1606,9 +1576,6 @@
       <event id="40" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
-      <event id="41" logical="panic" physical="system_panic">
-       <system_panic/>
-      </event>
       <event id="43" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
@@ -1634,9 +1601,6 @@
        <system_panic/>
       </event>
       <event id="51" logical="panic" physical="system_panic">
-       <system_panic/>
-      </event>
-      <event id="52" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
       <event id="53" logical="panic" physical="system_panic">
@@ -1880,9 +1844,6 @@
       <event id="0" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
-      <event id="1" logical="panic" physical="system_panic">
-       <system_panic/>
-      </event>
       <event id="2" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
@@ -1896,9 +1857,6 @@
        <system_panic/>
       </event>
       <event id="6" logical="panic" physical="system_panic">
-       <system_panic/>
-      </event>
-      <event id="7" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
       <event id="8" logical="panic" physical="system_panic">
@@ -1994,9 +1952,6 @@
       <event id="40" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
-      <event id="41" logical="panic" physical="system_panic">
-       <system_panic/>
-      </event>
       <event id="43" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
@@ -2022,9 +1977,6 @@
        <system_panic/>
       </event>
       <event id="51" logical="panic" physical="system_panic">
-       <system_panic/>
-      </event>
-      <event id="52" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
       <event id="53" logical="panic" physical="system_panic">
@@ -2313,13 +2265,11 @@
     <source>
      <group name="vmx_exit">
       <event id="0" logical="default_event_0" physical="trap_to_sm"/>
-      <event id="1" logical="default_event_1" physical="trap_to_sm"/>
       <event id="2" logical="default_event_2" physical="trap_to_sm"/>
       <event id="3" logical="default_event_3" physical="trap_to_sm"/>
       <event id="4" logical="default_event_4" physical="trap_to_sm"/>
       <event id="5" logical="default_event_5" physical="trap_to_sm"/>
       <event id="6" logical="default_event_6" physical="trap_to_sm"/>
-      <event id="7" logical="default_event_7" physical="trap_to_sm"/>
       <event id="8" logical="default_event_8" physical="trap_to_sm"/>
       <event id="9" logical="default_event_9" physical="trap_to_sm"/>
       <event id="10" logical="default_event_10" physical="trap_to_sm"/>
@@ -2351,7 +2301,6 @@
       <event id="37" logical="default_event_37" physical="trap_to_sm"/>
       <event id="39" logical="default_event_39" physical="trap_to_sm"/>
       <event id="40" logical="default_event_40" physical="trap_to_sm"/>
-      <event id="41" logical="default_event_41" physical="trap_to_sm"/>
       <event id="43" logical="default_event_43" physical="trap_to_sm"/>
       <event id="44" logical="default_event_44" physical="trap_to_sm"/>
       <event id="45" logical="default_event_45" physical="trap_to_sm"/>
@@ -2361,7 +2310,6 @@
       <event id="49" logical="default_event_49" physical="trap_to_sm"/>
       <event id="50" logical="default_event_50" physical="trap_to_sm"/>
       <event id="51" logical="default_event_51" physical="trap_to_sm"/>
-      <event id="52" logical="default_event_52" physical="trap_to_sm"/>
       <event id="53" logical="default_event_53" physical="trap_to_sm"/>
       <event id="54" logical="default_event_54" physical="trap_to_sm"/>
       <event id="55" logical="default_event_55" physical="trap_to_sm"/>

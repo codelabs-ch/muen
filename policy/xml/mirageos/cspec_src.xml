@@ -32,7 +32,7 @@
     <gpr>
      <rip>16#0010_0000#</rip>
      <rsp>16#1fff_fff8#</rsp>
-     <rdi>16#0000_1000#<rdi>
+     <rdi>16#0000_1000#</rdi>
     </gpr>
     <cr4>
      <OSSupportSIMDExceptions>1</OSSupportSIMDExceptions>

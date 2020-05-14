@@ -14,61 +14,62 @@ GENCSPEC    = misc/linux-muen-gencspec.py
 EXTRA_MODS  = $(notdir $(wildcard modules/*))
 
 MODS_BUILD   = $(EXTRA_MODS:%=$(OBJ_DIR)/.%-build)
-MODS_INSTALL = $(EXTRA_MODS:%=$(OBJ_DIR)/.%-install)
 MODS_CLEAN   = $(EXTRA_MODS:%=clean-%)
 MODS_OBJ_DIR = $(OBJ_DIR)/modules
+MODS_PATH    = $(realpath modules)
 
 LINUX_MODS_DESTDIR ?=
 
 MODS_INITRAMFS_BASE = modules_$(INITRAMFS_BASE)
 MODS_INITRAMFS      = $(OBJ_DIR)/$(MODS_INITRAMFS_BASE)
 
-INSTALL_MOD_OPTS  = "INSTALL_MOD_STRIP=1"
-INSTALL_MOD_OPTS += "INSTALL_MOD_PATH=$(MODS_OBJ_DIR)/$(LINUX_MODS_DESTDIR)"
+INSTALL_MOD_OPTS  = INSTALL_MOD_STRIP=1
+INSTALL_MOD_OPTS += INSTALL_MOD_PATH=$(MODS_OBJ_DIR)/$(LINUX_MODS_DESTDIR)
 
 LINUX_FLAGS  = LOCALVERSION=
-LINUX_FLAGS += MAKEFLAGS="$(filter-out s,$(MAKEFLAGS))"
+LINUX_FLAGS += MAKEFLAGS='$(filter-out s,$(MAKEFLAGS))'
 
 LOG = $(OBJ_DIR)/log.obj
 
 all: build $(INITRAMFS)
 
 $(SRC_BZIMAGE): src/.config
-	@$(E) linux Oldconfig '$(LINUX_FLAGS) $(MAKE) oldconfig -C src' $(LOG)
-	@$(E) linux Build '$(LINUX_FLAGS) $(MAKE) -C src' $(LOG)
+	@$(E) linux Oldconfig "$(LINUX_FLAGS) $(MAKE) oldconfig -C src" $(LOG)
+	@$(E) linux Build "$(LINUX_FLAGS) $(MAKE) -C src" $(LOG)
 
 $(OBJ_DIR)/bzImage: $(SRC_BZIMAGE) | $(OBJ_DIR)
 	@$(E) linux "Patch" "$(MULNXBZPATCH) $< $@" $(LOG)
 
 $(OBJ_DIR)/.mods-build: $(SRC_BZIMAGE) | $(OBJ_DIR)
 	@$(E) linux "Build kernel modules" \
-		'$(LINUX_FLAGS) $(MAKE) -C src modules' $(LOG)
+		"$(LINUX_FLAGS) $(MAKE) -C src modules" $(LOG)
 	@touch $@
 
 $(MODS_BUILD): MOD_NAME = $(@:$(OBJ_DIR)/.%-build=%)
-$(MODS_BUILD): MOD_PATH = $(realpath modules/$(MOD_NAME))
+$(MODS_BUILD): MOD_PATH = $(MODS_PATH)/$(MOD_NAME)
 $(MODS_BUILD): $(OBJ_DIR)/.mods-build | $(OBJ_DIR)
 	@$(E) linux "Build module $(MOD_NAME)" \
-		'$(LINUX_FLAGS) $(MAKE) M=$(MOD_PATH) -C src modules' $(LOG)
+		"$(LINUX_FLAGS) $(MAKE) M=$(MOD_PATH) -C src modules" $(LOG)
 	@touch $@
 
 $(OBJ_DIR)/.mods-install: $(OBJ_DIR)/.mods-build | $(OBJ_DIR)
 	@$(E) linux "Install kernel modules" \
-		'$(LINUX_FLAGS) $(MAKE) $(INSTALL_MOD_OPTS) -C src modules_install' $(LOG)
+		"$(LINUX_FLAGS) $(MAKE) $(INSTALL_MOD_OPTS) -C src modules_install" $(LOG)
 	@touch $@
 
-$(MODS_INSTALL): MOD_NAME = $(@:$(OBJ_DIR)/.%-install=%)
-$(MODS_INSTALL): MOD_PATH = $(realpath modules/$(MOD_NAME))
-$(MODS_INSTALL): $(OBJ_DIR)/.mods-install $(MODS_BUILD)
-	@$(E) linux "Install module $(MOD_NAME)" \
-		'$(LINUX_FLAGS) $(MAKE) M=$(MOD_PATH) $(INSTALL_MOD_OPTS) -C src modules_install' $(LOG)
+# Serialize module installation since some depmod versions have issues with
+# parallel invocation.
+$(OBJ_DIR)/.mods-extra-install: $(OBJ_DIR)/.mods-install $(MODS_BUILD)
+	$(foreach MOD,$(EXTRA_MODS),$(E) linux "Install module $(MOD)" \
+		"$(LINUX_FLAGS) $(MAKE) M=$(MODS_PATH)/$(MOD) $(INSTALL_MOD_OPTS) -C src modules_install" \
+		$(LOG);)
 	@touch $@
 
-$(MODS_CLEAN): MOD_PATH = $(realpath modules/$(@:clean-%=%))
+$(MODS_CLEAN): MOD_PATH = $(MODS_PATH)/$(@:clean-%=%)
 $(MODS_CLEAN):
 	$(MAKE) M=$(MOD_PATH) -C src clean
 
-$(MODS_INITRAMFS): $(OBJ_DIR)/.mods-install $(MODS_INSTALL)
+$(MODS_INITRAMFS): $(OBJ_DIR)/.mods-extra-install
 	@$(E) linux "Generate $(MODS_INITRAMFS_BASE)" \
 		"cd $(MODS_OBJ_DIR) && find . | cpio -R +0:+0 -o -H newc --quiet | gzip -9 > $@" $(LOG)
 

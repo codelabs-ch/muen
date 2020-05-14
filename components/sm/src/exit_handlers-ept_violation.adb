@@ -79,13 +79,13 @@ is
 
       pragma Debug (Sm_Component.Config.Debug_Ept and then
                     GPA not in Mudm.Config.MMConf_Region,
-                    Debug_Ops.Put_String (Item => "Unhandled "));
+                    Debug_Ops.Put_String (Item => "Unhandled"));
       pragma Debug (Sm_Component.Config.Debug_Ept and then
                     GPA not in Mudm.Config.MMConf_Region and then Info.Read,
-                    Debug_Ops.Put_String (Item => "read"));
+                    Debug_Ops.Put_String (Item => " read"));
       pragma Debug (Sm_Component.Config.Debug_Ept and then
                     GPA not in Mudm.Config.MMConf_Region and then Info.Write,
-                    Debug_Ops.Put_String (Item => "write"));
+                    Debug_Ops.Put_String (Item => " write"));
       pragma Debug (Sm_Component.Config.Debug_Ept and then
                     GPA not in Mudm.Config.MMConf_Region, Debug_Ops.Put_Line
                     (Item => " access at guest physical address "

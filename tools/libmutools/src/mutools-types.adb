@@ -32,10 +32,15 @@ is
       subtype Reserved_VMX_Exit_IDs_Type is Natural
         with Static_Predicate => Reserved_VMX_Exit_IDs_Type in 35 | 38 | 42;
 
+      --  Kernel reserved IDs. Used internally by the SK.
+      subtype Reserved_Kernel_IDs_Type is Natural
+        with Static_Predicate => Reserved_Kernel_IDs_Type in 1 | 7 | 41 | 52;
+
    begin
       return ID <= Get_Max_ID (Group => Group) and then
         (case Group is
-            when Vmx_Exit => not (ID in Reserved_VMX_Exit_IDs_Type),
+            when Vmx_Exit => not (ID in Reserved_VMX_Exit_IDs_Type
+                                  or else ID in Reserved_Kernel_IDs_Type),
             when Vmcall   => True);
    end Is_Valid_Event_ID;
 

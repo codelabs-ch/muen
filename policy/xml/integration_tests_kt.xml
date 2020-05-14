@@ -7,9 +7,9 @@
   <boolean name="dbgserver_sink_xhcidbg" value="false"/>
   <boolean name="muenblock_enabled" value="true"/>
   <boolean name="pciconf_emulation_enabled" value="true"/>
-  <boolean name="pciconf_emulation_xhci_enabled" value="true"/>
+  <boolean name="pciconf_emulation_xhci_enabled" value="false"/>
   <string name="pciconf_emulation_nic_devid" value="16#1f#"/>
-  <string name="pciconf_emulation_nic_physdev" value="ethernet_controller_2"/>
+  <string name="pciconf_emulation_nic_physdev" value="ethernet_controller_1"/>
   <string name="pciconf_emulation_xhci_devid" value="16#01#"/>
   <string name="pciconf_emulation_xhci_physdev" value="usb_controller_1"/>
   <string name="logchannel_size" value="16#0004_0000#"/>
@@ -45,7 +45,6 @@
    </memory>
    <devices>
     <device logical="nic1" physical="ethernet_controller_1"/>
-    <device logical="nic2" physical="ethernet_controller_2"/>
    </devices>
   </domain>
   <domain name="storage_domain">
@@ -56,8 +55,6 @@
    </memory>
    <devices>
     <device logical="xhci" physical="usb_controller_1"/>
-    <device logical="sata" physical="sata_controller_1"/>
-    <device logical="nic3" physical="ethernet_controller_3"/>
    </devices>
   </domain>
  </deviceDomains>
@@ -150,18 +147,8 @@
     <memory logical="muenblock" physical="muenblock" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
    </memory>
    <devices>
-    <device logical="serial" physical="com_2">
-     <irq logical="irq1" physical="irq1" vector="53"/>
-     <ioPort logical="ioport1" physical="ioport1"/>
-    </device>
     <device logical="nic1" physical="ethernet_controller_1">
-     <pci bus="16#00#" device="16#19#" function="0"/>
-     <irq logical="nic1_irq" physical="irq1" vector="59">
-      <msi logical="nic1_msi" physical="msi1"/>
-     </irq>
-     <memory logical="mmio1" physical="mem1" writable="true" executable="false"/>
-     <memory logical="mmio2" physical="mem2" writable="true" executable="false"/>
-     <memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
+     <pci bus="16#00#" device="$pciconf_emulation_nic_devid" function="0"/>
     </device>
    </devices>
    <events>
@@ -231,14 +218,6 @@
     </registers>
    </vcpu>
    <devices>
-    <device logical="nic2" physical="$pciconf_emulation_nic_physdev">
-     <pci bus="16#00#" device="$pciconf_emulation_nic_devid" function="0"/>
-     <irq logical="nic_irq" physical="irq1" vector="90">
-      <msi logical="nic2_msi1" physical="msi1"/>
-     </irq>
-     <memory logical="mmio1" physical="mem1" writable="true" executable="false"/>
-     <memory logical="mmio2" physical="mem2" writable="true" executable="false"/>
-    </device>
    </devices>
    <events>
     <source>
@@ -338,17 +317,6 @@
     </registers>
    </vcpu>
    <devices>
-    <device logical="nic2" physical="$pciconf_emulation_nic_physdev">
-     <pci bus="16#00#" device="$pciconf_emulation_nic_devid" function="0"/>
-     <irq logical="nic_irq" physical="irq1" vector="91">
-      <msi logical="nic2_msi2" physical="msi2"/>
-      <msi logical="nic2_msi3" physical="msi3"/>
-      <msi logical="nic2_msi4" physical="msi4"/>
-      <msi logical="nic2_msi5" physical="msi5"/>
-     </irq>
-     <memory logical="mmio1" physical="mem1" writable="true" executable="false"/>
-     <memory logical="mmio2" physical="mem2" writable="true" executable="false"/>
-    </device>
    </devices>
    <events>
     <source>
@@ -438,29 +406,7 @@
     <memory logical="muenblock" physical="muenblock" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
    </memory>
    <devices>
-    <device logical="xhci" physical="$pciconf_emulation_xhci_physdev">
-     <pci bus="16#00#" device="$pciconf_emulation_xhci_devid" function="0"/>
-     <irq logical="xhci_irq" physical="irq1" vector="55">
-      <msi logical="xhci_msi1" physical="msi1"/>
-     </irq>
-     <memory logical="mmio" physical="mem1" writable="true" executable="false"/>
-    </device>
-    <device logical="ahci" physical="sata_controller_1">
-     <pci bus="16#00#" device="16#1f#" function="0"/>
-     <irq logical="irq" physical="irq1" vector="59">
-      <msi logical="ahci_msi1" physical="msi1"/>
-     </irq>
-     <memory logical="mmio" physical="mem1" writable="true" executable="false"/>
-     <memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
-     <ioPort logical="port1" physical="ioport1"/>
-     <ioPort logical="port2" physical="ioport2"/>
-     <ioPort logical="port3" physical="ioport3"/>
-     <ioPort logical="port4" physical="ioport4"/>
-     <ioPort logical="port5" physical="ioport5"/>
-    </device>
-    <device logical="nic" physical="ethernet_controller_3">
-     <pci bus="16#00#" device="16#1e#" function="0"/>
-    </device>
+    <device logical="xhci" physical="usb_controller_1"/>
    </devices>
    <events>
     <source>

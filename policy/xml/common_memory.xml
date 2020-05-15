@@ -1,4 +1,8 @@
 <include>
+ <memory name="control_example" size="16#1000#" caching="WB">
+  <fill pattern="16#00#"/>
+ </memory>
+ <memory name="status_example" size="16#1000#" caching="WB"/>
  <memory name="initramfs" size="16#0098_1000#" caching="WB" type="subject_initrd">
   <file filename="initramfs.cpio.gz" offset="none"/>
  </memory>

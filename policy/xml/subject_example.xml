@@ -18,5 +18,7 @@
 		<map logical="yield" physical="example_yield"/>
 		<map logical="timer" physical="example_self"/>
 		<map logical="inject_timer" physical="example_self"/>
+		<map logical="control" physical="control_example"/>
+		<map logical="status" physical="status_example"/>
 	</component>
 </subject>

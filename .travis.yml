@@ -31,15 +31,8 @@ install:
   - git config --file=.gitmodules submodule.components/linux/modules/muennet.url https://git.codelabs.ch/muen/linux/muennet.git
   - git config --file=.gitmodules submodule.components/linux/modules/muenblock.url https://git.codelabs.ch/muen/linux/muenblock.git
   - git config --file=.gitmodules submodule.components/linux/modules/muenevents.url https://git.codelabs.ch/muen/linux/muenevents.git
-  - git submodule update --init --depth=1 -- components/linux/src
-  - git submodule update --init -- components/tau0-static
-  - git submodule update --init -- tools/mugenschedcfg
-  - git submodule update --init -- tools/sbs
-  - git submodule update --init -- components/libxhcidbg
-  - git submodule update --init -- components/linux/modules/muen*
   - sudo sh -c 'echo "max_size = 2.0G" > ${CCACHE_HOST}/ccache.conf'
   - sudo chown -R 1000:1000 ${CCACHE_HOST}
-  - sudo chown -R 1000:1000 ${TRAVIS_BUILD_DIR}
   - df -alh
   - ccache -z
   - DOCKER_PULL() { docker pull
@@ -74,8 +67,11 @@ install:
     }
 jobs:
   include:
-    - stage: Build on debian and ubuntu
+    - stage: Build Muen on Debian/Ubuntu and build MirageOS docker container
       script:
+        - git submodule update --init --depth=1 -- components/linux/src
+        - git submodule update --init
+        - sudo chown -R 1000:1000 ${TRAVIS_BUILD_DIR}
         - export DISTRO_NAME=debian
         - export DISTRO_VERSION=buster
         - DOCKER_PULL
@@ -83,9 +79,21 @@ jobs:
         - DOCKER_PUSH
         - DOCKER_RUN
     - script:
+        - git submodule update --init --depth=1 -- components/linux/src
+        - git submodule update --init
+        - sudo chown -R 1000:1000 ${TRAVIS_BUILD_DIR}
         - export DISTRO_NAME=ubuntu
         - export DISTRO_VERSION=bionic
         - DOCKER_PULL
         - DOCKER_BUILD
         - DOCKER_PUSH
         - DOCKER_RUN
+    - script:
+        - docker pull codelabsch/muen-mirageos || true
+        - docker build --cache-from codelabsch/muen-mirageos
+          --tag codelabsch/muen-mirageos:latest
+           -f tools/docker/Dockerfile.muen-mirageos .
+        - if [ "$TRAVIS_BRANCH" = "devel" ]; then
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin;
+          docker push codelabsch/muen-mirageos:latest;
+          fi

@@ -53,6 +53,7 @@ RUN apt-get update && \
 		libfreetype6-dev \
 		libiberty-dev \
 		libncurses-dev \
+		libseccomp-dev \
 		libssl-dev \
 		libxml2-utils \
 		make \

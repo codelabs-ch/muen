@@ -5,12 +5,11 @@ SRC = src/$(DLA)
 
 PATCHES = \
 	patches/0001-Implement-Command-Stream-Loader-CSL-module.patch \
-	patches/0002-Use-multiboot-module-to-compare-in-memory-images.patch \
-	patches/0003-pgp-Provide-grub_verify_signature2-function.patch \
-	patches/0004-include-grub-file.h-Add-GRUB_FILE_TYPE_SBS.patch \
-	patches/0005-pgp-Do-not-verify-GRUB_FILE_TYPE_SBS-files.patch \
-	patches/0006-grub-shell-Improve-mkrescue_args-handling.patch \
-	patches/0007-Implement-Signed-Block-Stream-SBS-loader.patch
+	patches/0002-pgp-Provide-grub_verify_signature2-function.patch \
+	patches/0003-include-grub-file.h-Add-GRUB_FILE_TYPE_SBS.patch \
+	patches/0004-pgp-Do-not-verify-GRUB_FILE_TYPE_SBS-files.patch \
+	patches/0005-grub-shell-Improve-mkrescue_args-handling.patch \
+	patches/0006-Implement-Signed-Block-Stream-SBS-loader.patch
 
 define CMD_DL
 	cp $(SRC) $(TMP)

@@ -112,6 +112,48 @@ package body Bin_Split.Spec.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Set_RIP (Gnattest_T : in out Test);
+   procedure Test_Set_RIP_e793c2 (Gnattest_T : in out Test) renames Test_Set_RIP;
+--  id:2.2/e793c22e421e5ffd/Set_RIP/1/0/
+   procedure Test_Set_RIP (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.Unsigned_64;
+
+      Ref_1 : constant Interfaces.Unsigned_64 := 16#cafe_beef#;
+      Ref_2 : constant Interfaces.Unsigned_64 := 16#9090_4242#;
+      Spec    : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Spec,
+                   Kind => Muxml.Component,
+                   File => "data/test_cspec.xml");
+      Set_RIP (Spec        => Spec,
+               Entry_Point => Ref_1);
+      Assert (Condition => Interfaces.Unsigned_64'Value
+              (Muxml.Utils.Get_Element_Value
+                 (Doc   => Spec.Doc,
+                  XPath => "/component/requires/vcpu/registers/gpr/rip"))
+              = Ref_1,
+              Message   => "RIP value mismatch (1)");
+
+      --  Test setting RIP with existing XML elements.
+
+      Set_RIP (Spec        => Spec,
+               Entry_Point => Ref_2);
+      Assert (Condition => Interfaces.Unsigned_64'Value
+              (Muxml.Utils.Get_Element_Value
+                 (Doc   => Spec.Doc,
+                  XPath => "/component/requires/vcpu/registers/gpr/rip"))
+              = Ref_2,
+              Message   => "RIP value mismatch (2)");
+--  begin read only
+   end Test_Set_RIP;
+--  end read only
+
+
+--  begin read only
    procedure Test_Create_Memory_Node (Gnattest_T : in out Test);
    procedure Test_Create_Memory_Node_8de05b (Gnattest_T : in out Test) renames Test_Create_Memory_Node;
 --  id:2.2/8de05b00e8474ef3/Create_Memory_Node/1/0/

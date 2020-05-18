@@ -5,11 +5,9 @@ all: .emulate
 ISOFILE = muen.iso
 ISOPATH = $(CURDIR)/$(ISOFILE)
 
-IMAGE_BASE   ?= muen.img
-IMAGE_MB     ?= ../pack/obj/$(IMAGE_BASE)
-IMAGE_CSL    ?= ../pack/obj/$(IMAGE_BASE).cmds
-IMAGE_MB_SIG ?= $(OBJ_DIR)/$(IMAGE_BASE).sig
-IMAGE_SBS    ?= $(OBJ_DIR)/$(IMAGE_BASE).sbs
+IMAGE_BASE ?= muen.img
+IMAGE_CSL  ?= ../pack/obj/$(IMAGE_BASE).cmds
+IMAGE_SBS  ?= $(OBJ_DIR)/$(IMAGE_BASE).sbs
 
 QEMU_BIN         ?= qemu-system-x86_64
 QEMU_MEM         ?= 5120
@@ -39,20 +37,16 @@ ISO_FILES_SRC := \
 	$(OBJ_DIR)/$(GRUB_CFG).sig \
 	$(IMAGE_CSL) \
 	$(IMAGE_SBS) \
-	$(IMAGE_MB) \
-	$(IMAGE_MB_SIG) \
 	menu.lst
 ISO_FILES := \
 	boot/grub/grub.cfg=$(GRUB_CFG) \
 	boot/grub/grub.cfg.sig=$(OBJ_DIR)/$(GRUB_CFG).sig \
 	boot/kernel.csl=$(IMAGE_CSL) \
 	boot/kernel.sbs=$(IMAGE_SBS) \
-	boot/kernel.mb=$(IMAGE_MB) \
-	boot/kernel.mb.sig=$(IMAGE_MB_SIG) \
 	boot/filo/menu.lst=menu.lst
 
 GRUB_MKRESCUE ?= $(CONTRIB_BUILD_DIR)/bin/grub-mkrescue
-GRUB_MKRESCUE_PRELOAD_MODS ?= multiboot gcry_rsa gcry_sha512 configfile csl pgp sbs normal
+GRUB_MKRESCUE_PRELOAD_MODS ?= gcry_rsa gcry_sha512 configfile csl pgp sbs normal
 
 QEMU_OPTS += \
 	-drive file=$(ISOFILE),index=0,media=disk,format=raw \
@@ -88,9 +82,7 @@ $(IMAGE_SBS): $(IMAGE_CSL) | $(OBJ_DIR)
 	@$(E) emulate "SBS inspect `basename $@`" \
 		"$(SBS_INSPECT) -i $@"
 
-$(IMAGE_MB_SIG): $(IMAGE_MB) | $(OBJ_DIR)
 $(OBJ_DIR)/$(GRUB_CFG).sig: $(GRUB_CFG) | $(OBJ_DIR)
-$(OBJ_DIR)/$(GRUB_CFG).sig $(IMAGE_MB_SIG):
 	@rm -f $@
 	@$(E) emulate "Creating signature `basename $@`" \
 		"gpg --batch --digest-algo SHA512 -b --homedir $(SBS_PRIVKEY) -o $@ $<"

@@ -802,7 +802,7 @@ is
                Append_Child
                  (Node      => Element,
                   New_Child => DOM.Core.Documents.Create_Text_Node
-                    (Doc  => Doc,
+                    (Doc  => DOM.Core.Nodes.Owner_Document (N => Doc),
                      Data => Value));
             end if;
          end;

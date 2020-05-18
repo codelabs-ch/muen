@@ -95,9 +95,9 @@ RUN git clone https://github.com/schnoddelbotz/amtc.git /tmp/amtc \
 	&& rm -rf /tmp/amtc
 
 # Install solo5-elftool
-RUN curl -sSL "https://github.com/Solo5/solo5/releases/download/v0.6.4/solo5-v0.6.4.tar.gz" -o /tmp/solo5-v0.6.4.tar.gz \
-	&& tar -C /tmp/ -zxf /tmp/solo5-v0.6.4.tar.gz \
-	&& cd /tmp/solo5-v0.6.4 \
+RUN curl -sSL "https://github.com/Solo5/solo5/releases/download/v0.6.5/solo5-v0.6.5.tar.gz" -o /tmp/solo5-v0.6.5.tar.gz \
+	&& tar -C /tmp/ -zxf /tmp/solo5-v0.6.5.tar.gz \
+	&& cd /tmp/solo5-v0.6.5 \
 	&& ./configure.sh --only-tools \
 	&& make install-tools \
 	&& rm -rf /tmp/solo5*

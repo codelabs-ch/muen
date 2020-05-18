@@ -219,8 +219,8 @@ source directory and issue the following command:
 
   $ make
 
-This will create an image containing the example system which can be booted by
-any Multiboot <<mboot>> compliant bootloader.
+This will create a bootable ISO image containing the example system. See below
+for deployment instructions.
 
 The following command gives a short description of the top-level Makefile
 targets:
@@ -320,7 +320,6 @@ the `HARDWARE` variable:
 
 References
 ----------
-- [[[mboot]]]         Multiboot Specification, https://www.gnu.org/software/grub/manual/multiboot/
 - [[[lnxcr3]]]        Linux KVM GUEST_CR3 fix, https://patchwork.kernel.org/patch/11165185/
 - [[[ipxe]]]          iPXE boot firmware, https://ipxe.org/
 - [[[amt]]]           Intel AMT SoL client + tools, https://www.kraxel.org/cgit/amtterm/

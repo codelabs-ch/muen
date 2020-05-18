@@ -48,7 +48,7 @@ tools_install:
 
 deploy:		## Build and deploy Muen system to hardware target
 deploy: HARDWARE=hardware/lenovo-t430s.xml
-deploy: pack
+deploy: iso
 	$(MAKE) -C $@
 
 emulate:	## Build and run Muen system in KVM

@@ -56,3 +56,5 @@ _main:
 	movq $STATE_RUNNING, (%r15)
 	pop %r15
 	jmpq *component_entrypoint
+	// Should never return
+	ud2

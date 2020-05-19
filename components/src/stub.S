@@ -21,4 +21,6 @@
 .section .stub
 
 subject_entry:
-	jmp main
+	call main
+	// Should never return. Raise exception if ever reached.
+	ud2

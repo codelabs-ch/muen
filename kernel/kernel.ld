@@ -25,16 +25,15 @@ SECTIONS
 	.text :
 	{
 		image_start = .;
-		multiboot.o(.multiboot)
+		KEEP (multiboot.o(.multiboot))
 		*(.text)
-
 		trampoline_src = .;
 	}
 
 	.trampoline 0x00001000 : AT (ADDR (.text) + SIZEOF (.text))
 	{
 		trampoline_start = .;
-		trampoline.o(.trampoline)
+		KEEP (trampoline.o(.trampoline))
 		trampoline_end = .;
 	}
 

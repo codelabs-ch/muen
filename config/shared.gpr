@@ -58,6 +58,7 @@ abstract project Shared is
    Spark_Linker_Switches :=
      ("-nostdlib",
       "-n",
-      "-T", Linker_Script);
+      "-T", Linker_Script,
+      "-Wl,--gc-sections");
 
 end Shared;

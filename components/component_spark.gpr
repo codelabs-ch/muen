@@ -16,13 +16,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with "../config/shared";
+
 abstract project Component_Spark extends "common.gpr" is
 
    package Linker is
-      for Default_Switches ("Ada") use
-        ("-T", "../component.ld",
-         "-nostdlib",
-         "-n");
+      for Default_Switches ("Ada") use Shared.Spark_Linker_Switches;
    end Linker;
 
 end Component_Spark;

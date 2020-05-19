@@ -26,7 +26,7 @@ SECTIONS
 	{
 		image_start = .;
 		KEEP (multiboot.o(.multiboot))
-		*(.text)
+		*(.text .text.*)
 		trampoline_src = .;
 	}
 
@@ -39,12 +39,12 @@ SECTIONS
 
 	.data 0x00120000 : AT (0x00120000)
 	{
-		*(.data)
+		*(.data .data.*)
 	}
 
 	.bss 0x00122000 :
 	{
-		*(.bss)
+		*(.bss .bss.*)
 	}
 
 	.globaldata 0x0012b000 :
@@ -54,7 +54,7 @@ SECTIONS
 
 	.rodata 0x0012f000 :
 	{
-		*(.rodata)
+		*(.rodata .rodata.*)
 	}
 
 	/DISCARD/ :

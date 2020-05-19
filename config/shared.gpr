@@ -25,7 +25,9 @@ abstract project Shared is
      ("-fcallgraph-info=su",
       "-g",
       "-gnatef",
-      "-fstrict-aliasing");
+      "-fstrict-aliasing",
+      "-fdata-sections",
+      "-ffunction-sections");
 
    Spark_Compiler_Switches := Common_Compiler_Switches
      & ("-gnatyyBdgIOSux-s",

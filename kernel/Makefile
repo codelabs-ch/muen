@@ -24,7 +24,8 @@ ifeq ($(AXIOM_GUARD),1)
 SPARK_OPTS += --no-axiom-guard
 endif
 
-STACK_SIZE = $(KERNEL_STACK_SIZE)
+LINKER_SCRIPT = kernel.ld
+STACK_SIZE    = $(KERNEL_STACK_SIZE)
 
 ELF_CHECK = $(OBJ_DIR)/.elfcheck_ok
 

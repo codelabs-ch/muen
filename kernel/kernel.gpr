@@ -95,10 +95,7 @@ project Kernel is
    end Compiler;
 
    package Linker is
-      for Default_Switches ("Asm_Cpp") use
-        ("-T", "kernel.ld",
-         "-nostdlib",
-         "-n");
+      for Default_Switches ("Asm_Cpp") use Shared.Spark_Linker_Switches;
    end Linker;
 
    package Naming is

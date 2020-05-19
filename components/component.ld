@@ -30,20 +30,29 @@ SECTIONS
 	.text :
 	{
 		KEEP (stub.o(.stub))
-		*(.text)
+		*(.text .text.*)
 	}
 
 	. = ALIGN (4096);
 
-	.bss : { *(.bss) }
+	.bss :
+	{
+		*(.bss .bss.*)
+	}
 
 	. = ALIGN (4096);
 
-	.rodata : { *(.rodata) }
+	.rodata :
+	{
+		*(.rodata .rodata.*)
+	}
 
 	. = ALIGN (4096);
 
-	.data :	{ *(.data) }
+	.data :
+	{
+		*(.data .data.*)
+	}
 
 	. = ALIGN (4096);
 

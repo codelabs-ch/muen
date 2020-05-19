@@ -29,7 +29,7 @@ SECTIONS
 
 	.text :
 	{
-		stub.o(.stub)
+		KEEP (stub.o(.stub))
 		*(.text)
 	}
 

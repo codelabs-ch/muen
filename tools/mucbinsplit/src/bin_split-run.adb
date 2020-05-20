@@ -250,6 +250,16 @@ is
          end if;
       end loop;
 
+      declare
+         Entry_Point : constant Interfaces.Unsigned_64
+           := Get_Start_Address (Descriptor => Descriptor);
+      begin
+         Mulog.Log (Msg => "Setting entry point to " & Mutools.Utils.To_Hex
+                    (Number => Entry_Point));
+         Bin_Split.Spec.Set_RIP (Spec        => Spec,
+                                 Entry_Point => Entry_Point);
+      end;
+
       Mulog.Log (Msg => "Writing output component spec '" & Output_Spec & "'");
 
       Muxml.Write

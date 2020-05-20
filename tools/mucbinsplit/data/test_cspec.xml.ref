@@ -4,6 +4,15 @@
   <library ref="libmutime"/>
   <library ref="libdebuglog"/>
  </depends>
+ <requires>
+  <vcpu>
+   <registers>
+    <gpr>
+     <rip>16#5000#</rip>
+    </gpr>
+   </registers>
+  </vcpu>
+ </requires>
  <provides>
   <memory executable="true" logical="binary" size="16#0001_4000#" type="subject_binary" virtualAddress="16#1000#" writable="true">
    <file filename="sm" offset="none"/>

@@ -329,6 +329,14 @@ package body Muxml.Utils.Test_Data.Tests is
                XPath => "/elem") = "newvalue",
               Message   => "New element value mismatch");
 
+      Set_Element_Value  (Doc   => Node,
+                          XPath => "child",
+                          Value => "childvalue");
+      Assert (Condition => Get_Element_Value
+              (Doc   => Data.Doc,
+               XPath => "/elem/child") = "childvalue",
+              Message   => "Child value mismatch");
+
       begin
          Set_Element_Value  (Doc   => Data.Doc,
                              XPath => "/nonexistent",

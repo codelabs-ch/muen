@@ -27,34 +27,26 @@ SECTIONS
 		. += 0x4000;
 	}
 
-	.text :
+	.text ALIGN (4096) :
 	{
 		KEEP (stub.o(.stub))
 		*(.text .text.*)
 	}
 
-	. = ALIGN (4096);
-
-	.bss :
+	.bss ALIGN (4096) :
 	{
 		*(.bss .bss.*)
 	}
 
-	. = ALIGN (4096);
-
-	.rodata :
+	.rodata ALIGN (4096) :
 	{
 		*(.rodata .rodata.*)
 	}
 
-	. = ALIGN (4096);
-
-	.data :
+	.data ALIGN (4096) :
 	{
 		*(.data .data.*)
 	}
-
-	. = ALIGN (4096);
 
 	/DISCARD/ :
 	{

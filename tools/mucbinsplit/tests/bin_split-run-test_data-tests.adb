@@ -14,7 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with Test_Utils;
 --  begin read only
 --  end read only
 package body Bin_Split.Run.Test_Data.Tests is
@@ -47,6 +47,10 @@ package body Bin_Split.Run.Test_Data.Tests is
 
       Assert (Condition => Ada.Directories.Exists (Name => Out_Spec),
               Message   => "Output component specification not created");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/test_cspec.xml.ref",
+               Filename2 => Out_Spec),
+              Message   => "Generated component XML spec mismatch");
 --  begin read only
    end Test_Run;
 --  end read only

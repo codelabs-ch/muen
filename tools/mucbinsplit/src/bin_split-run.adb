@@ -137,6 +137,17 @@ is
          return False;
    end Get_Binary_Section;
 
+   -------------------------------------------------------------------------
+
+   function Get_Start_Address
+     (Descriptor : Bfd.Files.File_Type)
+      return Interfaces.Unsigned_64
+   is
+   begin
+      return Interfaces.Unsigned_64
+        (Bfd.Files.Get_Start_Address (File => Descriptor));
+   end Get_Start_Address;
+
    --------------------------------------------------------------------------
 
    function Is_Valid_Section

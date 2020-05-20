@@ -376,6 +376,34 @@ package body Bin_Split.Run.Test_Data.Tests is
    end Test_Get_Binary_Section;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Get_Start_Address (Gnattest_T : in out Test);
+   procedure Test_Get_Start_Address_311e84 (Gnattest_T : in out Test) renames Test_Get_Start_Address;
+--  id:2.2/311e848b86235bb2/Get_Start_Address/1/0/
+   procedure Test_Get_Start_Address (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.Unsigned_64;
+
+      Fd : Bfd.Files.File_Type;
+   begin
+      Mutools.Bfd.Open (Filename   => "data/test_binary",
+                        Descriptor => Fd);
+      Assert (Condition => Get_Start_Address (Descriptor => Fd) = 16#5000#,
+              Message   => "Start address mismatch (1)");
+      Bfd.Files.Close (File => Fd);
+
+      Mutools.Bfd.Open (Filename   => "data/wrong_flags",
+                        Descriptor => Fd);
+      Assert (Condition => Get_Start_Address (Descriptor => Fd) = 16#53a6#,
+              Message   => "Start address mismatch (2)");
+--  begin read only
+   end Test_Get_Start_Address;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

@@ -1,4 +1,4 @@
-BUILD_OPTS += --RTS=$(TOP_DIR)/rts/obj
+BUILD_OPTS += --RTS=$(TOP_DIR)/rts/obj -Xlinker_script=$(LINKER_SCRIPT)
 
 ALL = $(OBJ_DIR)/$(COMPONENT)
 

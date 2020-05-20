@@ -16,9 +16,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.global subject_entry
+.global _main
 
 .section .stub
 
-subject_entry:
-	jmp main
+_main:
+	call main
+	// Should never return. Raise exception if ever reached.
+	ud2

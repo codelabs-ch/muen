@@ -7,7 +7,8 @@ include ../../Makespark
 include ../cspecs_spark.mk
 include ../proofs.mk
 
-STACK_SIZE = $(COMPONENT_STACK_SIZE)
+LINKER_SCRIPT = ../component.ld
+STACK_SIZE    = $(COMPONENT_STACK_SIZE)
 
 all: $(STACK_CHECK)
 

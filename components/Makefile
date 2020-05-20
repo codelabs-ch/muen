@@ -47,7 +47,7 @@ COMPONENTS_INSTALL = $(COMPONENTS:%=install-%)
 COMPONENTS_CLEAN   = $(COMPONENTS:%=clean-%)
 
 SPARK_OPTS += $(PROOF_OPTS)
-BUILD_OPTS += --RTS=$(TOP_DIR)/rts/obj
+BUILD_OPTS += --RTS=$(TOP_DIR)/rts/obj -Xlinker_script=../component.ld
 STACK_SIZE = $(COMPONENT_STACK_SIZE)
 
 LOG = $(OBJ_DIR)/components.log

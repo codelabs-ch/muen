@@ -3,6 +3,9 @@ abstract project Shared is
    --  Static stack size.
    Stack_Size := external ("stacksize", "8912");
 
+   --  Linker script for linking SPARK components/kernel.
+   Linker_Script := external ("linker_script", "-Xlinker_script parameter must be provided");
+
    --  Prevent compiler from generating floating-point code, see:
    --    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=41202
    --    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=53383
@@ -24,7 +27,10 @@ abstract project Shared is
    Common_Compiler_Switches :=
      ("-fcallgraph-info=su",
       "-g",
-      "-gnatef");
+      "-gnatef",
+      "-fstrict-aliasing",
+      "-fdata-sections",
+      "-ffunction-sections");
 
    Spark_Compiler_Switches := Common_Compiler_Switches
      & ("-gnatyyBdgIOSux-s",
@@ -48,5 +54,11 @@ abstract project Shared is
       "-Wuninitialized",
       "-Wall",
       "-Werror");
+
+   Spark_Linker_Switches :=
+     ("-nostdlib",
+      "-n",
+      "-T", Linker_Script,
+      "-Wl,--gc-sections");
 
 end Shared;

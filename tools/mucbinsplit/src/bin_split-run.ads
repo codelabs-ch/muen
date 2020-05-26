@@ -139,4 +139,9 @@ private
       Sec        : out Bfd.Sections.Section)
       return Boolean;
 
+   --  Get start address (ELF entry point) of given binary.
+   function Get_Start_Address
+     (Descriptor : Bfd.Files.File_Type)
+      return Interfaces.Unsigned_64;
+
 end Bin_Split.Run;

@@ -26,6 +26,11 @@ with DOM.Core.Elements;
 package body Bin_Split.Spec
 is
 
+   function U
+     (Source : String)
+      return Ada.Strings.Unbounded.Unbounded_String
+      renames Ada.Strings.Unbounded.To_Unbounded_String;
+
    --------------------------------------------------------------------------
 
    procedure Add_File_Entry
@@ -170,5 +175,105 @@ is
 
       return Memory_Node;
    end Create_Memory_Node;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_RIP
+     (Spec        : in out Muxml.XML_Data_Type;
+      Entry_Point :        Interfaces.Unsigned_64)
+   is
+      use type DOM.Core.Node;
+
+      Parent_Node : DOM.Core.Node := Muxml.Utils.Get_Element
+        (Doc   => Spec.Doc,
+         XPath => "/component/requires");
+      Node : DOM.Core.Node;
+   begin
+      if Parent_Node = null then
+         Parent_Node := DOM.Core.Documents.Create_Element
+           (Doc      => Spec.Doc,
+            Tag_Name => "requires");
+         Muxml.Utils.Insert_Before
+           (Parent    => DOM.Core.Documents.Get_Element (Doc => Spec.Doc),
+            New_Child => Parent_Node,
+            Ref_Child => "provides");
+      end if;
+
+      Node := Muxml.Utils.Get_Element
+        (Doc   => Parent_Node,
+         XPath => "vcpu");
+      if Node = null then
+         Node := DOM.Core.Documents.Create_Element
+           (Doc      => Spec.Doc,
+            Tag_Name => "vcpu");
+         Muxml.Utils.Insert_Before
+           (Parent    => Parent_Node,
+            New_Child => Node,
+            Ref_Names => (U ("memory"),
+                          U ("channels"),
+                          U ("devices"),
+                          U ("events")));
+      end if;
+
+      Parent_Node := Node;
+      Node := Muxml.Utils.Get_Element
+        (Doc   => Parent_Node,
+         XPath => "registers");
+      if Node = null then
+         Node := DOM.Core.Documents.Create_Element
+           (Doc      => Spec.Doc,
+            Tag_Name => "registers");
+         Muxml.Utils.Append_Child (Node      => Parent_Node,
+                                   New_Child => Node);
+      end if;
+
+      Parent_Node := Node;
+      Node := Muxml.Utils.Get_Element
+        (Doc   => Parent_Node,
+         XPath => "gpr");
+      if Node = null then
+         Node := DOM.Core.Documents.Create_Element
+           (Doc      => Spec.Doc,
+            Tag_Name => "gpr");
+         Muxml.Utils.Insert_Before
+           (Parent    => Parent_Node,
+            New_Child => Node,
+            Ref_Names => (U ("cr0"),
+                          U ("cr4"),
+                          U ("segments")));
+      end if;
+      Parent_Node := Node;
+      Node := Muxml.Utils.Get_Element
+        (Doc   => Parent_Node,
+         XPath => "rip");
+      if Node = null then
+         Node := DOM.Core.Documents.Create_Element
+           (Doc      => Spec.Doc,
+            Tag_Name => "rip");
+         Muxml.Utils.Insert_Before
+           (Parent    => Parent_Node,
+            New_Child => Node,
+            Ref_Names => (U ("rsp"),
+                          U ("rax"),
+                          U ("rbx"),
+                          U ("rcx"),
+                          U ("rdx"),
+                          U ("rdi"),
+                          U ("rsi"),
+                          U ("rbp"),
+                          U ("r08"),
+                          U ("r09"),
+                          U ("r10"),
+                          U ("r11"),
+                          U ("r12"),
+                          U ("r13"),
+                          U ("r14"),
+                          U ("r15")));
+      end if;
+      Muxml.Utils.Set_Element_Value
+        (Doc   => Node,
+         XPath => ".",
+         Value => Mutools.Utils.To_Hex (Number => Entry_Point));
+   end Set_RIP;
 
 end Bin_Split.Spec;

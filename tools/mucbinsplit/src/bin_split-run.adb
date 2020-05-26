@@ -23,7 +23,7 @@ with Ada.Strings.Maps;
 
 with Mulog;
 
-with Muxml;
+with Muxml.Utils;
 
 with Mutools.Utils;
 with Mutools.Constants;
@@ -137,6 +137,17 @@ is
          return False;
    end Get_Binary_Section;
 
+   -------------------------------------------------------------------------
+
+   function Get_Start_Address
+     (Descriptor : Bfd.Files.File_Type)
+      return Interfaces.Unsigned_64
+   is
+   begin
+      return Interfaces.Unsigned_64
+        (Bfd.Files.Get_Start_Address (File => Descriptor));
+   end Get_Start_Address;
+
    --------------------------------------------------------------------------
 
    function Is_Valid_Section
@@ -238,6 +249,25 @@ is
                        & "' ignored");
          end if;
       end loop;
+
+      declare
+         Entry_Point_Str : constant String
+           := Muxml.Utils.Get_Element_Value
+             (Doc   => Spec.Doc,
+              XPath => "/component/requires/vcpu/registers/gpr/rip");
+         Entry_Point : Interfaces.Unsigned_64;
+      begin
+         if Entry_Point_Str'Length > 0 then
+            Mulog.Log (Msg => "Entry point address provided in compoent spec: "
+                       & Entry_Point_Str);
+         else
+            Entry_Point := Get_Start_Address (Descriptor => Descriptor);
+            Mulog.Log (Msg => "Setting entry point to " & Mutools.Utils.To_Hex
+                       (Number => Entry_Point));
+            Bin_Split.Spec.Set_RIP (Spec        => Spec,
+                                    Entry_Point => Entry_Point);
+         end if;
+      end;
 
       Mulog.Log (Msg => "Writing output component spec '" & Output_Spec & "'");
 

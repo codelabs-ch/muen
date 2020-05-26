@@ -14,7 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with Test_Utils;
 --  begin read only
 --  end read only
 package body Bin_Split.Run.Test_Data.Tests is
@@ -47,6 +47,19 @@ package body Bin_Split.Run.Test_Data.Tests is
 
       Assert (Condition => Ada.Directories.Exists (Name => Out_Spec),
               Message   => "Output component specification not created");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/test_cspec.xml.ref",
+               Filename2 => Out_Spec),
+              Message   => "Generated component XML spec mismatch (1)");
+
+      Run (Spec_File   => "data/test_cspec_rip.xml",
+           Binary_File => "data/test_binary",
+           Output_Spec => Out_Spec,
+           Output_Dir  => Out_Dir);
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/test_cspec_rip.xml.ref",
+               Filename2 => Out_Spec),
+              Message   => "Generated component XML spec mismatch (2)");
 --  begin read only
    end Test_Run;
 --  end read only
@@ -370,6 +383,34 @@ package body Bin_Split.Run.Test_Data.Tests is
               Message   => "Optional present");
 --  begin read only
    end Test_Get_Binary_Section;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Get_Start_Address (Gnattest_T : in out Test);
+   procedure Test_Get_Start_Address_311e84 (Gnattest_T : in out Test) renames Test_Get_Start_Address;
+--  id:2.2/311e848b86235bb2/Get_Start_Address/1/0/
+   procedure Test_Get_Start_Address (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.Unsigned_64;
+
+      Fd : Bfd.Files.File_Type;
+   begin
+      Mutools.Bfd.Open (Filename   => "data/test_binary",
+                        Descriptor => Fd);
+      Assert (Condition => Get_Start_Address (Descriptor => Fd) = 16#5000#,
+              Message   => "Start address mismatch (1)");
+      Bfd.Files.Close (File => Fd);
+
+      Mutools.Bfd.Open (Filename   => "data/wrong_flags",
+                        Descriptor => Fd);
+      Assert (Condition => Get_Start_Address (Descriptor => Fd) = 16#53a6#,
+              Message   => "Start address mismatch (2)");
+--  begin read only
+   end Test_Get_Start_Address;
 --  end read only
 
 --  begin read only

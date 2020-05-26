@@ -47,6 +47,11 @@ is
       Size            :        Interfaces.Unsigned_64;
       Virtual_Address :        Interfaces.Unsigned_64);
 
+   --  Set RIP of component to given entry point value.
+   procedure Set_RIP
+     (Spec        : in out Muxml.XML_Data_Type;
+      Entry_Point :        Interfaces.Unsigned_64);
+
 private
 
    function Create_Memory_Node

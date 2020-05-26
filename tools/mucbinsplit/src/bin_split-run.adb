@@ -23,7 +23,7 @@ with Ada.Strings.Maps;
 
 with Mulog;
 
-with Muxml;
+with Muxml.Utils;
 
 with Mutools.Utils;
 with Mutools.Constants;
@@ -251,13 +251,22 @@ is
       end loop;
 
       declare
-         Entry_Point : constant Interfaces.Unsigned_64
-           := Get_Start_Address (Descriptor => Descriptor);
+         Entry_Point_Str : constant String
+           := Muxml.Utils.Get_Element_Value
+             (Doc   => Spec.Doc,
+              XPath => "/component/requires/vcpu/registers/gpr/rip");
+         Entry_Point : Interfaces.Unsigned_64;
       begin
-         Mulog.Log (Msg => "Setting entry point to " & Mutools.Utils.To_Hex
-                    (Number => Entry_Point));
-         Bin_Split.Spec.Set_RIP (Spec        => Spec,
-                                 Entry_Point => Entry_Point);
+         if Entry_Point_Str'Length > 0 then
+            Mulog.Log (Msg => "Entry point address provided in compoent spec: "
+                       & Entry_Point_Str);
+         else
+            Entry_Point := Get_Start_Address (Descriptor => Descriptor);
+            Mulog.Log (Msg => "Setting entry point to " & Mutools.Utils.To_Hex
+                       (Number => Entry_Point));
+            Bin_Split.Spec.Set_RIP (Spec        => Spec,
+                                    Entry_Point => Entry_Point);
+         end if;
       end;
 
       Mulog.Log (Msg => "Writing output component spec '" & Output_Spec & "'");

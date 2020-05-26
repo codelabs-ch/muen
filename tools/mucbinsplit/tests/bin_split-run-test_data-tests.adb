@@ -50,7 +50,16 @@ package body Bin_Split.Run.Test_Data.Tests is
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "data/test_cspec.xml.ref",
                Filename2 => Out_Spec),
-              Message   => "Generated component XML spec mismatch");
+              Message   => "Generated component XML spec mismatch (1)");
+
+      Run (Spec_File   => "data/test_cspec_rip.xml",
+           Binary_File => "data/test_binary",
+           Output_Spec => Out_Spec,
+           Output_Dir  => Out_Dir);
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/test_cspec_rip.xml.ref",
+               Filename2 => Out_Spec),
+              Message   => "Generated component XML spec mismatch (2)");
 --  begin read only
    end Test_Run;
 --  end read only

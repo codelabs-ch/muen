@@ -38,16 +38,19 @@ is
    subtype TSC_Tick_Rate_Hz_Type is
      Interfaces.Unsigned_64 range 1000000 .. 100000000000;
 
+   Time_Info_Size : constant := 24;
+
    type Time_Info_Type is record
       --  Mutime timestamp when TSC was zero. A TSC_Time_Base value of zero
       --  indicates that the time info is not (yet) valid. Use Update_Validity
       --  and Is_Valid operations to check.
-      TSC_Time_Base      : Timestamp_Type with Atomic;
+      TSC_Time_Base      : Timestamp_Type'Base with Atomic;
       --  TSC Ticks in Hz
-      TSC_Tick_Rate_Hz   : TSC_Tick_Rate_Hz_Type;
+      TSC_Tick_Rate_Hz   : TSC_Tick_Rate_Hz_Type'Base;
       --  Timezone offset in microseconds
-      Timezone_Microsecs : Timezone_Type;
-   end record;
+      Timezone_Microsecs : Timezone_Type'Base;
+   end record
+   with Size => Time_Info_Size * 8;
 
    --  Update time info validity flag.
    procedure Update_Validity
@@ -91,6 +94,7 @@ private
       TSC_Tick_Rate_Hz   at  8 range 0 .. 63;
       Timezone_Microsecs at 16 range 0 .. 63;
    end record;
+   for Time_Info_Type'Object_Size use Time_Info_Size * 8;
 
    procedure Get_Current_Time
      (TI             :     Time_Info_Type;

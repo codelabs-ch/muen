@@ -37,6 +37,9 @@ is
 
 private
 
+   --  Size of one MSR entry in bytes.
+   MSR_Entry_Size : constant := 16;
+
    --  MSR-store area entry type, see Intel SDM Vol. 3C, "24.7.2
    --  VM-Exit Controls for MSRs".
    type MSR_Entry_Type is record
@@ -45,7 +48,7 @@ private
       Data     : SK.Word64;
    end record
    with
-      Size => 16 * 8;
+      Size => MSR_Entry_Size * 8;
 
    for MSR_Entry_Type use record
       Index    at 0  range  0 ..  31;
@@ -57,16 +60,29 @@ private
    --  "24.7.2 VM-Exit Controls for MSRs".
    type MSR_Entry_Range is range 1 .. 32;
 
-   type MSR_Storage_Table is array (MSR_Entry_Range) of MSR_Entry_Type;
+   MSR_Storage_Table_Size : constant := MSR_Entry_Range'Last * MSR_Entry_Size;
 
-   pragma Warnings (GNAT, Off, "*padded by * bits");
+   type MSR_Storage_Table is array (MSR_Entry_Range) of MSR_Entry_Type
+   with
+      Size => MSR_Storage_Table_Size * 8;
+
+   type Padding_Type is array (MSR_Storage_Table_Size + 1 .. Page_Size) of Byte
+   with
+      Size => (Page_Size - MSR_Storage_Table_Size) * 8;
+
+   type MSR_Storage_Page is record
+      MSRs    : MSR_Storage_Table;
+      Padding : Padding_Type;
+   end record
+   with
+      Size => Page_Size * 8;
+
    type MSR_Storage_Array is array (Skp.Global_Subject_ID_Type)
-     of MSR_Storage_Table
+     of MSR_Storage_Page
    with
       Independent_Components,
       Component_Size => Page_Size * 8,
       Alignment      => Page_Size;
-   pragma Warnings (GNAT, On, "*padded by * bits");
 
    MSR_Storage : MSR_Storage_Array
    with

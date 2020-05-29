@@ -25,7 +25,7 @@ with
    Refined_State => (State => New_Major)
 is
 
-   New_Major : Skp.Scheduling.Major_Frame_Range
+   New_Major : Skp.Scheduling.Major_Frame_Range'Base
    with
       Atomic,
       Async_Writers,
@@ -41,6 +41,10 @@ is
    is
    begin
       ID := New_Major;
+      pragma Annotate
+        (GNATprove, Intentional,
+         "range check might fail",
+         "Tau0 always provides valid major frame values.");
    end Get_Major_Frame;
 
 end SK.Tau0_Interface;

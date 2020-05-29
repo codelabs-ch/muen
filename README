@@ -67,6 +67,17 @@ inside a strongly isolated VM subject on top of Genode's base-hw kernel. See
 the release notes of the Genode OS Framework version 16.08 <<genode_muen>> for
 more information about this exciting feature.
 
+
+Tau0
+~~~~
+_Tau0_ (τ₀) is the Muen System Composer. In its current static mode of
+operation, the task of Tau0 is to compose a system image while making sure that
+certain invariants are not violated. The Tau0 concept is a mechanism to
+gradually increase the flexibility of component-based systems running on top of
+Muen, while keeping a high level of assurance regarding the correctness of
+isolation enforcement.  Read more about Tau0 https://muen.sk/tau0.html[here].
+
+
 Components
 ~~~~~~~~~~
 The Muen platform includes re-usable components which implement common services:

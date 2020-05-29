@@ -82,7 +82,8 @@ private
    with
       Independent_Components,
       Component_Size => Page_Size * 8,
-      Alignment      => Page_Size;
+      Alignment      => Page_Size,
+      Object_Size    => (Skp.Global_Subject_ID_Type'Last + 1) * Page_Size * 8;
 
    MSR_Storage : MSR_Storage_Array
    with

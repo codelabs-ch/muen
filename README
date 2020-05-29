@@ -1,10 +1,10 @@
 The Muen Separation Kernel
 ==========================
 
-The Muen Separation Kernel is the world's first Open Source microkernel that
-has been formally proven to contain no runtime errors at the source code level.
-It is developed in Switzerland by https://www.codelabs.ch[codelabs GmbH].
-Muen was designed specifically to meet the challenging requirements of
+Muen is an Open Source separation kernel (SK) for the Intel x86/64 architecture
+that has been formally proven to contain no runtime errors at the source code
+level. It is developed in Switzerland by https://www.codelabs.ch[codelabs
+GmbH]. Muen was designed specifically to meet the challenging requirements of
 high-assurance systems on the Intel x86/64 platform. To ensure Muen is suitable
 for highly critical systems and advanced national security platforms, codelabs
 closely cooperates with the high-security specialist secunet Security Networks
@@ -12,10 +12,10 @@ AG in Germany.
 
 image::example.svg[Example Architecture, width=70%, align="center"]
 
-A Separation Kernel (SK) is a specialized microkernel that provides an
-execution environment for components that exclusively communicate according to
-a given security policy and are otherwise strictly isolated from each other.
-The covert channel problem, largely ignored by other platforms, is addressed
+A separation kernel is a specialized microkernel that provides an execution
+environment for components that exclusively communicate according to a given
+security policy and are otherwise strictly isolated from each other.  The
+covert channel problem, largely ignored by other platforms, is addressed
 explicitly by these kernels. SKs are generally more static and smaller than
 dynamic microkernels, which minimizes the possibility of kernel failure,
 enables the application of formal verification techniques and the mitigation of
@@ -131,7 +131,7 @@ The following detailed project documentation is available:
 Mailing list
 ~~~~~~~~~~~~
 The muen-dev@googlegroups.com mailing list is used for project announcements and
-discussions regarding the Muen Separation Kernel.
+discussions regarding the Muen separation kernel.
 
 * To subscribe to the list, send a (blank) mail to
   mailto:muen-dev+\subscribe@googlegroups.com[].

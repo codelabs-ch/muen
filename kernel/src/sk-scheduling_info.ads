@@ -58,7 +58,9 @@ private
    with
       Independent_Components,
       Component_Size => Page_Size * 8,
-      Alignment      => Page_Size;
+      Alignment      => Page_Size,
+      Object_Size    => Page_Size * 8
+           * Word64 (Skp.Scheduling.Scheduling_Group_Range'Last);
 
    --  Scheduling group info regions.
    Sched_Info : Sched_Info_Array

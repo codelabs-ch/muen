@@ -83,7 +83,8 @@ private
    with
       Independent_Components,
       Component_Size => Page_Size * 8,
-      Alignment      => Page_Size;
+      Alignment      => Page_Size,
+      Object_Size    => Page_Size * 8 * (Skp.Global_Subject_ID_Type'Last + 1);
 
    Subject_FPU_States : Subject_FPU_State_Array
    with

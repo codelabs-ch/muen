@@ -41,20 +41,24 @@ is
 
 private
 
-   pragma Warnings
-     (Off,
-      "component size overrides size clause for ""Scheduling_Info_Type""",
-      Reason => "Reserved memory size is bigger than actual size of type");
-   pragma Warnings (GNAT, Off, "*padded by * bits");
+   type Padding_Type is
+     array (Muschedinfo.Scheduling_Info_Size + 1 .. Page_Size) of Byte
+   with
+      Size => (Page_Size - Muschedinfo.Scheduling_Info_Size) * 8;
+
+   type Sched_Info_Page_Type is record
+      Data    : Muschedinfo.Scheduling_Info_Type;
+      Padding : Padding_Type;
+   end record
+   with
+      Size => Page_Size * 8;
+
    type Sched_Info_Array is array (Skp.Scheduling.Scheduling_Group_Range)
-     of Muschedinfo.Scheduling_Info_Type
+     of Sched_Info_Page_Type
    with
       Independent_Components,
       Component_Size => Page_Size * 8,
       Alignment      => Page_Size;
-   pragma Warnings (GNAT, On, "*padded by * bits");
-   pragma Warnings
-     (On, "component size overrides size clause for ""Scheduling_Info_Type""");
 
    --  Scheduling group info regions.
    Sched_Info : Sched_Info_Array

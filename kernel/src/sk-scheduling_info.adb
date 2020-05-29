@@ -29,8 +29,8 @@ is
       TSC_Schedule_End   : SK.Word64)
    is
    begin
-      Sched_Info (ID).TSC_Schedule_Start := TSC_Schedule_Start;
-      Sched_Info (ID).TSC_Schedule_End   := TSC_Schedule_End;
+      Sched_Info (ID).Data.TSC_Schedule_Start := TSC_Schedule_Start;
+      Sched_Info (ID).Data.TSC_Schedule_End   := TSC_Schedule_End;
    end Set_Scheduling_Info;
 
 end SK.Scheduling_Info;

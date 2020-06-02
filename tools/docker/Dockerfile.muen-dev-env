@@ -43,7 +43,6 @@ RUN apt-get update && \
 		git-core \
 		gnupg \
 		gnuplot \
-		grub-pc-bin \
 		inotify-tools \
 		kmod \
 		lcov \

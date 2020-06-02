@@ -34,25 +34,24 @@ is
    --  VMCS region format, see Intel SDM Vol. 3C, "24.2 Format of the VMCS
    --  Region".
    type VMCS_Header_Type is record
-      Revision_ID     : SK.Word32;
-      Abort_Indicator : SK.Word32;
+      Revision_ID     : Word32;
+      Abort_Indicator : Word32;
    end record
    with
       Size => 8 * 8;
 
-   type VMCS_Data is array (1 .. SK.Page_Size - (VMCS_Header_Type'Size / 8))
-     of SK.Byte;
+   type VMCS_Data is array (1 .. Page_Size - (VMCS_Header_Type'Size / 8))
+     of Byte;
 
    type VMCS_Region_Type is record
       Header : VMCS_Header_Type;
       Data   : VMCS_Data;
    end record
    with
-      Alignment => SK.Page_Size,
-      Size      => SK.Page_Size * 8;
+      Alignment => Page_Size,
+      Size      => Page_Size * 8;
 
-   type VMCS_Array is array (Skp.Global_Subject_ID_Type)
-     of VMCS_Region_Type
+   type VMCS_Array is array (Skp.Global_Subject_ID_Type) of VMCS_Region_Type
    with
       Independent_Components;
 
@@ -86,21 +85,21 @@ is
    ---------------------------------------------------------------------------
 
    --  Return per-CPU memory offset.
-   function Get_CPU_Offset return SK.Word64
-   is (SK.Word64 (CPU_Info.CPU_ID) * SK.Page_Size)
+   function Get_CPU_Offset return Word64
+   is (Word64 (CPU_Info.CPU_ID) * Page_Size)
    with
       Global => (Input => CPU_Info.CPU_ID);
 
    -------------------------------------------------------------------------
 
    procedure VMCS_Write
-     (Field : SK.Word16;
-      Value : SK.Word64)
+     (Field : Word16;
+      Value : Word64)
    is
       Success : Boolean;
    begin
       CPU.VMX.VMWRITE
-        (Field   => SK.Word64 (Field),
+        (Field   => Word64 (Field),
          Value   => Value,
          Success => Success);
       if not Success then
@@ -121,13 +120,13 @@ is
    -------------------------------------------------------------------------
 
    procedure VMCS_Read
-     (Field :     SK.Word16;
-      Value : out SK.Word64)
+     (Field :     Word16;
+      Value : out Word64)
    is
       Success : Boolean;
    begin
       CPU.VMX.VMREAD
-        (Field   => SK.Word64 (Field),
+        (Field   => Word64 (Field),
          Value   => Value,
          Success => Success);
       if not Success then
@@ -222,20 +221,20 @@ is
    -------------------------------------------------------------------------
 
    procedure VMCS_Setup_Control_Fields
-     (IO_Bitmap_Address  : SK.Word64;
-      MSR_Bitmap_Address : SK.Word64;
-      MSR_Store_Address  : SK.Word64;
-      MSR_Count          : SK.Word32;
-      Ctls_Exec_Pin      : SK.Word32;
-      Ctls_Exec_Proc     : SK.Word32;
-      Ctls_Exec_Proc2    : SK.Word32;
-      Ctls_Exit          : SK.Word32;
-      Ctls_Entry         : SK.Word32;
-      CR0_Mask           : SK.Word64;
-      CR4_Mask           : SK.Word64;
-      Exception_Bitmap   : SK.Word32)
+     (IO_Bitmap_Address  : Word64;
+      MSR_Bitmap_Address : Word64;
+      MSR_Store_Address  : Word64;
+      MSR_Count          : Word32;
+      Ctls_Exec_Pin      : Word32;
+      Ctls_Exec_Proc     : Word32;
+      Ctls_Exec_Proc2    : Word32;
+      Ctls_Exit          : Word32;
+      Ctls_Entry         : Word32;
+      CR0_Mask           : Word64;
+      CR4_Mask           : Word64;
+      Exception_Bitmap   : Word32)
    is
-      Default0, Default1, Value : SK.Word32;
+      Default0, Default1, Value : Word32;
    begin
 
       --  Pin-based controls.
@@ -247,7 +246,7 @@ is
       Value := Value and Default1;
       Value := Value or  Default0;
       VMCS_Write (Field => Constants.PIN_BASED_EXEC_CONTROL,
-                  Value => SK.Word64 (Value));
+                  Value => Word64 (Value));
 
       --  Primary processor-based controls.
 
@@ -258,7 +257,7 @@ is
       Value := Value and Default1;
       Value := Value or  Default0;
       VMCS_Write (Field => Constants.CPU_BASED_EXEC_CONTROL,
-                  Value => SK.Word64 (Value));
+                  Value => Word64 (Value));
 
       --  Secondary processor-based controls.
 
@@ -269,12 +268,12 @@ is
       Value := Value and Default1;
       Value := Value or  Default0;
       VMCS_Write (Field => Constants.CPU_BASED_EXEC_CONTROL2,
-                  Value => SK.Word64 (Value));
+                  Value => Word64 (Value));
 
       --  Exception bitmap.
 
       VMCS_Write (Field => Constants.EXCEPTION_BITMAP,
-                  Value => SK.Word64 (Exception_Bitmap));
+                  Value => Word64 (Exception_Bitmap));
 
       --  Write access to CR0/CR4.
 
@@ -294,7 +293,7 @@ is
       VMCS_Write (Field => Constants.IO_BITMAP_A,
                   Value => IO_Bitmap_Address);
       VMCS_Write (Field => Constants.IO_BITMAP_B,
-                  Value => IO_Bitmap_Address + SK.Page_Size);
+                  Value => IO_Bitmap_Address + Page_Size);
 
       --  MSR bitmaps.
 
@@ -308,9 +307,9 @@ is
       VMCS_Write (Field => Constants.VM_ENTRY_MSR_LOAD_ADDRESS,
                   Value => MSR_Store_Address);
       VMCS_Write (Field => Constants.VM_EXIT_MSR_STORE_COUNT,
-                  Value => SK.Word64 (MSR_Count));
+                  Value => Word64 (MSR_Count));
       VMCS_Write (Field => Constants.VM_ENTRY_MSR_LOAD_COUNT,
-                  Value => SK.Word64 (MSR_Count));
+                  Value => Word64 (MSR_Count));
 
       --  VM-exit controls.
 
@@ -321,7 +320,7 @@ is
       Value := Value and Default1;
       Value := Value or  Default0;
       VMCS_Write (Field => Constants.VM_EXIT_CONTROLS,
-                  Value => SK.Word64 (Value));
+                  Value => Word64 (Value));
 
       --  VM-entry controls.
 
@@ -332,7 +331,7 @@ is
       Value := Value and Default1;
       Value := Value or  Default0;
       VMCS_Write (Field => Constants.VM_ENTRY_CONTROLS,
-                  Value => SK.Word64 (Value));
+                  Value => Word64 (Value));
    end VMCS_Setup_Control_Fields;
 
    -------------------------------------------------------------------------
@@ -392,12 +391,12 @@ is
    -------------------------------------------------------------------------
 
    procedure VMCS_Setup_Guest_Fields
-     (PML4_Address : SK.Word64;
-      EPT_Pointer  : SK.Word64)
+     (PML4_Address : Word64;
+      EPT_Pointer  : Word64)
    is
    begin
       VMCS_Write (Field => Constants.VMCS_LINK_POINTER,
-                  Value => SK.Word64'Last);
+                  Value => Word64'Last);
       VMCS_Write (Field => Constants.GUEST_CR3,
                   Value => PML4_Address);
       VMCS_Write (Field => Constants.EPT_POINTER,
@@ -407,7 +406,7 @@ is
    -------------------------------------------------------------------------
 
    --  Clear VMCS with given address.
-   procedure Clear (VMCS_Address : SK.Word64)
+   procedure Clear (VMCS_Address : Word64)
    with
       Global => (Input  => CPU_Info.APIC_ID,
                  In_Out => (Crash_Audit.State, X86_64.State))
@@ -433,10 +432,10 @@ is
    -------------------------------------------------------------------------
 
    procedure Reset
-     (VMCS_Address : SK.Word64;
+     (VMCS_Address : Word64;
       Subject_ID   : Skp.Global_Subject_ID_Type)
    is
-      Rev_ID, Unused_High : SK.Word32;
+      Rev_ID, Unused_High : Word32;
    begin
 
       --  Invalidate current VMCS and force CPU to sync data to VMCS memory.
@@ -460,7 +459,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Load (VMCS_Address : SK.Word64)
+   procedure Load (VMCS_Address : Word64)
    is
       Success : Boolean;
    begin

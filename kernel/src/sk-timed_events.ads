@@ -53,14 +53,24 @@ is
 
 private
 
-   pragma Warnings (GNAT, Off, "*padded by * bits");
+   type Padding_Type is array
+     (Mutimedevents.Timed_Event_Interface_Size / 8 .. Page_Size - 1) of Byte
+   with
+      Size => Page_Size * 8 - Mutimedevents.Timed_Event_Interface_Size;
+
+   type Timed_Event_Page is record
+      Data    : Mutimedevents.Timed_Event_Interface_Type;
+      Padding : Padding_Type;
+   end record
+   with
+      Size => Page_Size * 8;
+
    type Subject_Event_Array is array
-     (Skp.Global_Subject_ID_Type) of Mutimedevents.Timed_Event_Interface_Type
+     (Skp.Global_Subject_ID_Type) of Timed_Event_Page
    with
       Independent_Components,
       Component_Size => Page_Size * 8,
       Alignment      => Page_Size;
-   pragma Warnings (GNAT, On, "*padded by * bits");
 
    --  Subject timed event pages.
    Subject_Events : Subject_Event_Array

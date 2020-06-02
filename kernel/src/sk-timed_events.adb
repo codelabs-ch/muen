@@ -34,7 +34,7 @@ is
       Refined_Depends => (Subject_Events =>+ Subject)
    is
    begin
-      Subject_Events (Subject).TSC_Trigger_Value := SK.Word64'Last;
+      Subject_Events (Subject).Data.TSC_Trigger_Value := SK.Word64'Last;
    end Clear_Event;
 
    -------------------------------------------------------------------------
@@ -49,9 +49,9 @@ is
         ((TSC_Trigger_Value, Event_Nr) => (Subject_Events, Subject))
    is
    begin
-      TSC_Trigger_Value := Subject_Events (Subject).TSC_Trigger_Value;
+      TSC_Trigger_Value := Subject_Events (Subject).Data.TSC_Trigger_Value;
       Event_Nr          := Skp.Events.Event_Range
-        (Subject_Events (Subject).Event_Nr);
+        (Subject_Events (Subject).Data.Event_Nr);
    end Get_Event;
 
    -------------------------------------------------------------------------
@@ -62,7 +62,7 @@ is
       Refined_Depends => (Subject_Events =>+ Subject)
    is
    begin
-      Subject_Events (Subject) := Null_Event;
+      Subject_Events (Subject).Data := Null_Event;
    end Init_Event;
 
 end SK.Timed_Events;

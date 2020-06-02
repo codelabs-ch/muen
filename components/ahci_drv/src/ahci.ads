@@ -52,6 +52,9 @@ is
    type Unsigned_31 is mod 2 ** 31;
    for Unsigned_31'Size use 31;
 
+   type Unsigned_48 is mod 2 ** 48;
+   for Unsigned_48'Size use 48;
+
    type Bit_Array is array (Natural range <>) of Boolean
    with
       Pack;

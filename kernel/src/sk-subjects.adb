@@ -136,14 +136,14 @@ is
    with
       Refined_Global => (Input => Descriptors),
       Refined_Post   => Accepts_Interrupts'Result =
-         (Descriptors (ID).Intr_State = 0 and then
-            Bitops.Bit_Test (Value => Descriptors (ID).RFLAGS,
+         (Descriptors (ID).Data.Intr_State = 0 and then
+            Bitops.Bit_Test (Value => Descriptors (ID).Data.RFLAGS,
                              Pos   => Constants.RFLAGS_IF_FLAG))
    is
    begin
-      return Descriptors (ID).Intr_State = 0
+      return Descriptors (ID).Data.Intr_State = 0
         and then Bitops.Bit_Test
-          (Value => Descriptors (ID).RFLAGS,
+          (Value => Descriptors (ID).Data.RFLAGS,
            Pos   => Constants.RFLAGS_IF_FLAG);
    end Accepts_Interrupts;
 
@@ -183,7 +183,7 @@ is
       end if;
 
       Ctx.Subject_ID := Word16 (ID);
-      Ctx.Descriptor := Descriptors (ID);
+      Ctx.Descriptor := Descriptors (ID).Data;
    end Create_Context;
 
    -------------------------------------------------------------------------
@@ -191,8 +191,8 @@ is
    procedure Filter_State (ID : Skp.Global_Subject_ID_Type)
    is
    begin
-      Descriptors (ID).CR4 := Bitops.Bit_Set
-        (Value => Descriptors (ID).CR4,
+      Descriptors (ID).Data.CR4 := Bitops.Bit_Set
+        (Value => Descriptors (ID).Data.CR4,
          Pos   => Constants.CR4_MCE_FLAG);
    end Filter_State;
 
@@ -202,24 +202,25 @@ is
    with
       Refined_Global  => (In_Out => Descriptors),
       Refined_Depends => (Descriptors  =>+ ID),
-      Refined_Post    => Descriptors (ID).RIP =
-        Descriptors (ID).RIP'Old + Word64 (Descriptors (ID).Instruction_Len)
+      Refined_Post    => Descriptors (ID).Data.RIP =
+        Descriptors (ID).Data.RIP'Old + Word64
+       (Descriptors (ID).Data.Instruction_Len)
    is
-      Next_RIP : constant Word64
-        := Descriptors (ID).RIP + Word64 (Descriptors (ID).Instruction_Len);
+      Next_RIP : constant Word64 := Descriptors (ID).Data.RIP +
+                   Word64 (Descriptors (ID).Data.Instruction_Len);
    begin
-      Descriptors (ID).RIP := Next_RIP;
+      Descriptors (ID).Data.RIP := Next_RIP;
    end Increment_RIP;
 
    -------------------------------------------------------------------------
 
    function Is_CPL_0 (ID : Skp.Global_Subject_ID_Type) return Boolean
-   is ((Descriptors (ID).Segment_Regs.CS.Selector and SEGMENT_SELECTOR_PL_MASK)
-       = 0)
+   is ((Descriptors (ID).Data.Segment_Regs.CS.Selector
+        and SEGMENT_SELECTOR_PL_MASK) = 0)
    with
       Refined_Global => (Input => Descriptors),
       Refined_Post   => Is_CPL_0'Result =
-       ((Descriptors (ID).Segment_Regs.CS.Selector
+       ((Descriptors (ID).Data.Segment_Regs.CS.Selector
         and SEGMENT_SELECTOR_PL_MASK) = 0);
 
    -------------------------------------------------------------------------
@@ -238,7 +239,7 @@ is
                                            Segments))
    is
    begin
-      Descriptors (ID) :=
+      Descriptors (ID).Data :=
         (Regs            => GPRs,
          Exit_Reason     => 0,
          Intr_State      => 0,
@@ -267,64 +268,64 @@ is
                            X86_64.State) => (ID, Descriptors, CPU_Info.APIC_ID,
                                              Crash_Audit.State, X86_64.State),
                           Regs           => (ID, Descriptors)),
-      Refined_Post    => Descriptors (ID).Regs = Regs
+      Refined_Post    => Descriptors (ID).Data.Regs = Regs
    is
    begin
       VMX.VMCS_Write (Field => Constants.GUEST_INTERRUPTIBILITY,
-                      Value => Word64 (Descriptors (ID).Intr_State));
+                      Value => Word64 (Descriptors (ID).Data.Intr_State));
       VMX.VMCS_Write (Field => Constants.GUEST_RIP,
-                      Value => Descriptors (ID).RIP);
+                      Value => Descriptors (ID).Data.RIP);
       VMX.VMCS_Write (Field => Constants.GUEST_RSP,
-                      Value => Descriptors (ID).RSP);
+                      Value => Descriptors (ID).Data.RSP);
 
       VMX.VMCS_Write (Field => Constants.GUEST_CR0,
-                      Value => Descriptors (ID).CR0);
+                      Value => Descriptors (ID).Data.CR0);
       VMX.VMCS_Write (Field => Constants.CR0_READ_SHADOW,
-                      Value => Descriptors (ID).SHADOW_CR0);
+                      Value => Descriptors (ID).Data.SHADOW_CR0);
       VMX.VMCS_Write (Field => Constants.GUEST_CR4,
-                      Value => Descriptors (ID).CR4);
+                      Value => Descriptors (ID).Data.CR4);
       VMX.VMCS_Write (Field => Constants.CR4_READ_SHADOW,
-                      Value => Descriptors (ID).SHADOW_CR4);
+                      Value => Descriptors (ID).Data.SHADOW_CR4);
 
       VMX.VMCS_Write (Field => Constants.GUEST_RFLAGS,
-                      Value => Descriptors (ID).RFLAGS);
+                      Value => Descriptors (ID).Data.RFLAGS);
       VMX.VMCS_Write (Field => Constants.GUEST_IA32_EFER,
-                      Value => Descriptors (ID).IA32_EFER);
+                      Value => Descriptors (ID).Data.IA32_EFER);
 
       VMX.VMCS_Write (Field => Constants.GUEST_BASE_GDTR,
-                      Value => Descriptors (ID).GDTR.Base);
+                      Value => Descriptors (ID).Data.GDTR.Base);
       VMX.VMCS_Write (Field => Constants.GUEST_LIMIT_GDTR,
-                      Value => Word64 (Descriptors (ID).GDTR.Limit));
+                      Value => Word64 (Descriptors (ID).Data.GDTR.Limit));
       VMX.VMCS_Write (Field => Constants.GUEST_BASE_IDTR,
-                      Value => Descriptors (ID).IDTR.Base);
+                      Value => Descriptors (ID).Data.IDTR.Base);
       VMX.VMCS_Write (Field => Constants.GUEST_LIMIT_IDTR,
-                      Value => Word64 (Descriptors (ID).IDTR.Limit));
+                      Value => Word64 (Descriptors (ID).Data.IDTR.Limit));
 
       VMX.VMCS_Write (Field => Constants.GUEST_SYSENTER_CS,
-                      Value => Word64 (Descriptors (ID).SYSENTER_CS));
+                      Value => Word64 (Descriptors (ID).Data.SYSENTER_CS));
       VMX.VMCS_Write (Field => Constants.GUEST_SYSENTER_EIP,
-                      Value => Descriptors (ID).SYSENTER_EIP);
+                      Value => Descriptors (ID).Data.SYSENTER_EIP);
       VMX.VMCS_Write (Field => Constants.GUEST_SYSENTER_ESP,
-                      Value => Descriptors (ID).SYSENTER_ESP);
+                      Value => Descriptors (ID).Data.SYSENTER_ESP);
 
       Restore_Segment (Segment_ID => CS,
-                       Segment    => Descriptors (ID).Segment_Regs.CS);
+                       Segment    => Descriptors (ID).Data.Segment_Regs.CS);
       Restore_Segment (Segment_ID => SS,
-                       Segment    => Descriptors (ID).Segment_Regs.SS);
+                       Segment    => Descriptors (ID).Data.Segment_Regs.SS);
       Restore_Segment (Segment_ID => DS,
-                       Segment    => Descriptors (ID).Segment_Regs.DS);
+                       Segment    => Descriptors (ID).Data.Segment_Regs.DS);
       Restore_Segment (Segment_ID => ES,
-                       Segment    => Descriptors (ID).Segment_Regs.ES);
+                       Segment    => Descriptors (ID).Data.Segment_Regs.ES);
       Restore_Segment (Segment_ID => FS,
-                       Segment    => Descriptors (ID).Segment_Regs.FS);
+                       Segment    => Descriptors (ID).Data.Segment_Regs.FS);
       Restore_Segment (Segment_ID => GS,
-                       Segment    => Descriptors (ID).Segment_Regs.GS);
+                       Segment    => Descriptors (ID).Data.Segment_Regs.GS);
       Restore_Segment (Segment_ID => TR,
-                       Segment    => Descriptors (ID).Segment_Regs.TR);
+                       Segment    => Descriptors (ID).Data.Segment_Regs.TR);
       Restore_Segment (Segment_ID => LDTR,
-                       Segment    => Descriptors (ID).Segment_Regs.LDTR);
+                       Segment    => Descriptors (ID).Data.Segment_Regs.LDTR);
 
-      Regs := Descriptors (ID).Regs;
+      Regs := Descriptors (ID).Data.Regs;
    end Restore_State;
 
    -------------------------------------------------------------------------
@@ -343,86 +344,86 @@ is
          (Crash_Audit.State,
           X86_64.State)      => (CPU_Info.APIC_ID, Crash_Audit.State,
                                  X86_64.State)),
-      Refined_Post    => Descriptors (ID).Regs = Regs
+      Refined_Post    => Descriptors (ID).Data.Regs = Regs
    is
       Value : Word64;
    begin
-      Descriptors (ID).Exit_Reason := Word32'Mod (Exit_Reason);
+      Descriptors (ID).Data.Exit_Reason := Word32'Mod (Exit_Reason);
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
-                     Value => Descriptors (ID).Exit_Qualification);
+                     Value => Descriptors (ID).Data.Exit_Qualification);
       VMX.VMCS_Read (Field => Constants.GUEST_INTERRUPTIBILITY,
                      Value => Value);
-      Descriptors (ID).Intr_State := Word32'Mod (Value);
+      Descriptors (ID).Data.Intr_State := Word32'Mod (Value);
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_INSTRUCTION_LEN,
                      Value => Value);
-      Descriptors (ID).Instruction_Len := Word32'Mod (Value);
+      Descriptors (ID).Data.Instruction_Len := Word32'Mod (Value);
 
       VMX.VMCS_Read (Field => Constants.GUEST_PHYSICAL_ADDRESS,
-                     Value => Descriptors (ID).Guest_Phys_Addr);
+                     Value => Descriptors (ID).Data.Guest_Phys_Addr);
 
       VMX.VMCS_Read (Field => Constants.GUEST_RIP,
-                     Value => Descriptors (ID).RIP);
+                     Value => Descriptors (ID).Data.RIP);
       VMX.VMCS_Read (Field => Constants.GUEST_RSP,
-                     Value => Descriptors (ID).RSP);
+                     Value => Descriptors (ID).Data.RSP);
       VMX.VMCS_Read (Field => Constants.GUEST_CR0,
-                     Value => Descriptors (ID).CR0);
+                     Value => Descriptors (ID).Data.CR0);
       VMX.VMCS_Read (Field => Constants.CR0_READ_SHADOW,
-                     Value => Descriptors (ID).SHADOW_CR0);
+                     Value => Descriptors (ID).Data.SHADOW_CR0);
       VMX.VMCS_Read (Field => Constants.GUEST_CR3,
-                     Value => Descriptors (ID).CR3);
+                     Value => Descriptors (ID).Data.CR3);
       VMX.VMCS_Read (Field => Constants.GUEST_CR4,
-                     Value => Descriptors (ID).CR4);
+                     Value => Descriptors (ID).Data.CR4);
       VMX.VMCS_Read (Field => Constants.CR4_READ_SHADOW,
-                     Value => Descriptors (ID).SHADOW_CR4);
+                     Value => Descriptors (ID).Data.SHADOW_CR4);
       VMX.VMCS_Read (Field => Constants.GUEST_RFLAGS,
-                     Value => Descriptors (ID).RFLAGS);
+                     Value => Descriptors (ID).Data.RFLAGS);
       VMX.VMCS_Read (Field => Constants.GUEST_IA32_EFER,
-                     Value => Descriptors (ID).IA32_EFER);
+                     Value => Descriptors (ID).Data.IA32_EFER);
 
       VMX.VMCS_Read (Field => Constants.GUEST_BASE_GDTR,
-                     Value => Descriptors (ID).GDTR.Base);
+                     Value => Descriptors (ID).Data.GDTR.Base);
       VMX.VMCS_Read (Field => Constants.GUEST_LIMIT_GDTR,
                      Value => Value);
-      Descriptors (ID).GDTR.Limit := Word32'Mod (Value);
+      Descriptors (ID).Data.GDTR.Limit := Word32'Mod (Value);
       VMX.VMCS_Read (Field => Constants.GUEST_BASE_IDTR,
-                     Value => Descriptors (ID).IDTR.Base);
+                     Value => Descriptors (ID).Data.IDTR.Base);
       VMX.VMCS_Read (Field => Constants.GUEST_LIMIT_IDTR,
                      Value => Value);
-      Descriptors (ID).IDTR.Limit := Word32'Mod (Value);
+      Descriptors (ID).Data.IDTR.Limit := Word32'Mod (Value);
 
       VMX.VMCS_Read (Field => Constants.GUEST_SYSENTER_CS,
                      Value => Value);
-      Descriptors (ID).SYSENTER_CS := Word32'Mod (Value);
+      Descriptors (ID).Data.SYSENTER_CS := Word32'Mod (Value);
       VMX.VMCS_Read (Field => Constants.GUEST_SYSENTER_EIP,
-                     Value => Descriptors (ID).SYSENTER_EIP);
+                     Value => Descriptors (ID).Data.SYSENTER_EIP);
       VMX.VMCS_Read (Field => Constants.GUEST_SYSENTER_ESP,
-                     Value => Descriptors (ID).SYSENTER_ESP);
+                     Value => Descriptors (ID).Data.SYSENTER_ESP);
 
       Save_Segment (Segment_ID => CS,
-                    Segment    => Descriptors (ID).Segment_Regs.CS);
+                    Segment    => Descriptors (ID).Data.Segment_Regs.CS);
       Save_Segment (Segment_ID => SS,
-                    Segment    => Descriptors (ID).Segment_Regs.SS);
+                    Segment    => Descriptors (ID).Data.Segment_Regs.SS);
       Save_Segment (Segment_ID => DS,
-                    Segment    => Descriptors (ID).Segment_Regs.DS);
+                    Segment    => Descriptors (ID).Data.Segment_Regs.DS);
       Save_Segment (Segment_ID => ES,
-                    Segment    => Descriptors (ID).Segment_Regs.ES);
+                    Segment    => Descriptors (ID).Data.Segment_Regs.ES);
       Save_Segment (Segment_ID => FS,
-                    Segment    => Descriptors (ID).Segment_Regs.FS);
+                    Segment    => Descriptors (ID).Data.Segment_Regs.FS);
       Save_Segment (Segment_ID => GS,
-                    Segment    => Descriptors (ID).Segment_Regs.GS);
+                    Segment    => Descriptors (ID).Data.Segment_Regs.GS);
       Save_Segment (Segment_ID => TR,
-                    Segment    => Descriptors (ID).Segment_Regs.TR);
+                    Segment    => Descriptors (ID).Data.Segment_Regs.TR);
       Save_Segment (Segment_ID => LDTR,
-                    Segment    => Descriptors (ID).Segment_Regs.LDTR);
+                    Segment    => Descriptors (ID).Data.Segment_Regs.LDTR);
 
-      Descriptors (ID).Regs := Regs;
+      Descriptors (ID).Data.Regs := Regs;
    end Save_State;
 
    -------------------------------------------------------------------------
 
    function Valid_State (ID : Skp.Global_Subject_ID_Type) return Boolean
    is
-     (Bitops.Bit_Test (Value => Descriptors (ID).CR4,
+     (Bitops.Bit_Test (Value => Descriptors (ID).Data.CR4,
                        Pos   => Constants.CR4_MCE_FLAG));
 
 end SK.Subjects;

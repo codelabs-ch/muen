@@ -5,6 +5,7 @@ with
    Refined_State => (State => IOMMUs)
 is
 
+   pragma Warnings (Off);  --  Only emitted by recent GNATprove versions.
    IOMMUs : IOMMUs_Type
      with
        Volatile,
@@ -12,6 +13,11 @@ is
        Async_Readers,
        Effective_Writes,
        Address => System'To_Address (__base_addr__);
+   pragma Annotate
+     (GNATprove, Intentional,
+      "object is unsuitable for aliasing via address clause",
+      "Only necessary registers of MMIO device are specified.");
+   pragma Warnings (On);
 
    -------------------------------------------------------------------------
 

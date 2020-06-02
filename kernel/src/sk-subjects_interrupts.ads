@@ -89,6 +89,7 @@ private
    with
       Independent_Components,
       Component_Size => Page_Size * 8,
+      Object_Size    => (Skp.Global_Subject_ID_Type'Last + 1) * Page_Size * 8,
       Alignment      => Page_Size;
 
    Pending_Interrupts : Pending_Interrupts_Array

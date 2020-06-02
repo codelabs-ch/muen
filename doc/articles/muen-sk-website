@@ -5,8 +5,10 @@ link:#mirageos-unikernels[MirageOS Unikernels] article described how to build
 and deploy MirageOS/Solo5 unikernels as subjects on Muen in general, this
 article focuses on a practical use-case of the technology.
 
-The https://muen.sk[muen.sk] project website is served by a MirageOS unikernel
-running on Muen. The article explains how to build such a system using
+The https://muen.sk[muen.sk] project website is served by the
+https://github.com/hannesm/unipi[Unipi] MirageOS unikernel running on Muen.
+Unipi fetches the static website content to serve from a Git repositry. The
+article explains how to build such a system using
 https://docs.docker.com/engine/userguide/eng-image/multistage-build/[multi-stage
 Docker] images and then deploy it to actual hardware.
 
@@ -33,30 +35,29 @@ https://certbot.eff.org/docs/using.html#standalone[standalone feature] of the
 Letsencrypt's certbot client. The certificate files are then added as content
 of stage one in the multi-stage Docker build.
 
-The complete Muen system image build consists of three Docker images:
+The complete Muen system image build consists of two Docker images:
 
-. codelabsch/muen-website
 . codelabsch/muen-mirageos
 . codelabsch/muen-dev-env
 
 These images can be found on our https://hub.docker.com/u/codelabsch/[Docker
 Hub] page. The key is to import artifacts from the previous build stage into
-the next one using the `COPY --from` syntax.  The following command gives an
-example how to copy the generated site content from the website to the
-unikernel stage:
+the next one using the `COPY --from` syntax.  The following commands serve as
+an example of how to copy the unikernel binary the MirageOS container to the
+Muen system image build stage:
 
 ```
-FROM codelabsch/muen-website:latest as website-content
-# generate website content
+FROM codelabsch/muen-mirageos as unikernel
+# compile unikernel
 
-FROM codelabsch/muen-mirageos:latest as unikernel
-COPY --from=website-content /home/writer/website-muen.sk/_site htdocs
+FROM codelabsch/muen-dev-env:latest
+COPY --from=unikernel /home/opam/opam-repository/unipi/unipi.muen /tmp/unikernel
 ```
 
 The assembled Muen system image containing the unikernel subject serving the
-generated website content is copied out of the final Docker container. Because
-we want the target system to only boot cryptographically verified images, the
-image is signed using the following command (as described by the
+Muen website is copied out of the final Docker container. Because we want the
+target system to only boot cryptographically verified images, the image is
+signed using the following command (as described by the
 http://ipxe.org/crypto#code_signing[iPXE homepage]):
 
 ```
@@ -145,6 +146,3 @@ image:graph_system_boot.svg[System boot, width=50%]
 
 Your minimal, unikernel-based website should now be served at the configured IP
 after system start.
-
-In order to easily perform updates of the static Muen website with minimal
-downtime, the whole aforementioned process is scripted.

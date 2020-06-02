@@ -21,71 +21,27 @@ LABEL description "This image provides the build environment for the Muen projec
 ENV CC ccache gcc
 ENV CXX ccache g++
 
+# Required packages
+ARG packages="acpica-tools amtterm autoconf automake autopoint bc binutils-dev \
+bison bzip2 ca-certificates ccache cpio curl file flex git-core gnupg gnuplot \
+inotify-tools kmod lcov libc6-dev libcurl4-gnutls-dev libelf-dev \
+libfreetype6-dev libiberty-dev libncurses-dev libseccomp-dev libssl-dev \
+libxml2-utils make mtools openssh-client patch picocom pkg-config python \
+python-lxml python-colorlog python-pip python-setuptools qemu-system-x86 rsync \
+screen tidy unzip vim wget xfonts-unifont xorriso xsltproc xz-utils zlib1g-dev"
+
 # Install dependencies
 RUN apt-get update && \
 	DEBIAN_FRONTEND=noninteractive apt-get install -qq -y \
-		--no-install-recommends \
-		acpica-tools \
-		amtterm \
-		autoconf \
-		automake \
-		autopoint \
-		bc \
-		binutils-dev \
-		bison \
-		bzip2 \
-		ca-certificates \
-		ccache \
-		cpio \
-		curl \
-		file \
-		flex \
-		git-core \
-		gnupg \
-		gnuplot \
-		grub-pc-bin \
-		inotify-tools \
-		kmod \
-		lcov \
-		libc6-dev \
-		libcurl4-gnutls-dev \
-		libelf-dev \
-		libfreetype6-dev \
-		libiberty-dev \
-		libncurses-dev \
-		libssl-dev \
-		libxml2-utils \
-		make \
-		mtools \
-		openssh-client \
-		patch \
-		picocom \
-		pkg-config \
-		python \
-		python-lxml \
-		python-colorlog \
-		python-pip \
-		python-setuptools \
-		qemu-system-x86 \
-		rsync \
-		screen \
-		tidy \
-		unzip \
-		vim \
-		wget \
-		xfonts-unifont \
-		xorriso \
-		xsltproc \
-		xz-utils \
-		zlib1g-dev \
-		&& rm -rf /var/lib/apt/lists/*
+	--no-install-recommends \
+	$packages \
+	&& rm -rf /var/lib/apt/lists/*
 
 # Install AdaCore toolchain
 RUN git clone https://github.com/AdaCore/gnat_community_install_script.git /tmp/gnat_script \
 	&& curl -sSL "https://www.codelabs.ch/download/ada/gnat-community-2019-20190517-x86_64-linux-bin" -o /tmp/gnat_installer.bin \
 	&& sh /tmp/gnat_script/install_package.sh /tmp/gnat_installer.bin /opt/gnat \
 	&& rm -rf /tmp/gnat*
-
 
 # amtc tool
 RUN git clone https://github.com/schnoddelbotz/amtc.git /tmp/amtc \
@@ -95,9 +51,9 @@ RUN git clone https://github.com/schnoddelbotz/amtc.git /tmp/amtc \
 	&& rm -rf /tmp/amtc
 
 # Install solo5-elftool
-RUN curl -sSL "https://github.com/Solo5/solo5/releases/download/v0.6.4/solo5-v0.6.4.tar.gz" -o /tmp/solo5-v0.6.4.tar.gz \
-	&& tar -C /tmp/ -zxf /tmp/solo5-v0.6.4.tar.gz \
-	&& cd /tmp/solo5-v0.6.4 \
+RUN curl -sSL "https://github.com/Solo5/solo5/releases/download/v0.6.5/solo5-v0.6.5.tar.gz" -o /tmp/solo5-v0.6.5.tar.gz \
+	&& tar -C /tmp/ -zxf /tmp/solo5-v0.6.5.tar.gz \
+	&& cd /tmp/solo5-v0.6.5 \
 	&& ./configure.sh --only-tools \
 	&& make install-tools \
 	&& rm -rf /tmp/solo5*

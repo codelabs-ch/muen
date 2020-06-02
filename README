@@ -1,10 +1,10 @@
 The Muen Separation Kernel
 ==========================
 
-The Muen Separation Kernel is the world's first Open Source microkernel that
-has been formally proven to contain no runtime errors at the source code level.
-It is developed in Switzerland by https://www.codelabs.ch[codelabs GmbH].
-Muen was designed specifically to meet the challenging requirements of
+Muen is an Open Source separation kernel (SK) for the Intel x86/64 architecture
+that has been formally proven to contain no runtime errors at the source code
+level. It is developed in Switzerland by https://www.codelabs.ch[codelabs
+GmbH]. Muen was designed specifically to meet the challenging requirements of
 high-assurance systems on the Intel x86/64 platform. To ensure Muen is suitable
 for highly critical systems and advanced national security platforms, codelabs
 closely cooperates with the high-security specialist secunet Security Networks
@@ -12,10 +12,10 @@ AG in Germany.
 
 image::example.svg[Example Architecture, width=70%, align="center"]
 
-A Separation Kernel (SK) is a specialized microkernel that provides an
-execution environment for components that exclusively communicate according to
-a given security policy and are otherwise strictly isolated from each other.
-The covert channel problem, largely ignored by other platforms, is addressed
+A separation kernel is a specialized microkernel that provides an execution
+environment for components that exclusively communicate according to a given
+security policy and are otherwise strictly isolated from each other.  The
+covert channel problem, largely ignored by other platforms, is addressed
 explicitly by these kernels. SKs are generally more static and smaller than
 dynamic microkernels, which minimizes the possibility of kernel failure,
 enables the application of formal verification techniques and the mitigation of
@@ -66,6 +66,17 @@ through the use of a fully de-privileged variant of VirtualBox <<vbox>> running
 inside a strongly isolated VM subject on top of Genode's base-hw kernel. See
 the release notes of the Genode OS Framework version 16.08 <<genode_muen>> for
 more information about this exciting feature.
+
+
+Tau0
+~~~~
+_Tau0_ (τ₀) is the Muen System Composer. In its current static mode of
+operation, the task of Tau0 is to compose a system image while making sure that
+certain invariants are not violated. The Tau0 concept is a mechanism to
+gradually increase the flexibility of component-based systems running on top of
+Muen, while keeping a high level of assurance regarding the correctness of
+isolation enforcement.  Read more about Tau0 https://muen.sk/tau0.html[here].
+
 
 Components
 ~~~~~~~~~~
@@ -120,7 +131,7 @@ The following detailed project documentation is available:
 Mailing list
 ~~~~~~~~~~~~
 The muen-dev@googlegroups.com mailing list is used for project announcements and
-discussions regarding the Muen Separation Kernel.
+discussions regarding the Muen separation kernel.
 
 * To subscribe to the list, send a (blank) mail to
   mailto:muen-dev+\subscribe@googlegroups.com[].
@@ -184,11 +195,9 @@ Bridge or newer.
 | Kontron Technology KTQM77/mITX | Ivy Bridge  | i7-3610QE
 |===================================================================
 
-The first step to build Muen is to install the required packages:
-
-  $ sudo apt-get install acpica-tools bc binutils-dev bison flex git-core \
-      gnuplot grub-pc-bin lcov libc6-dev libelf-dev libiberty-dev \
-      libxml2-utils make qemu-system-x86 tidy wget xorriso xsltproc zlib1g-dev
+The first step to build Muen is to install the required packages. See the
+`tools/docker/Dockerfile.muen-dev-env` file in the project repository for the
+current list of required packages.
 
 The Ada and SPARK packages currently available in Debian and Ubuntu are too old
 to build Muen. GNAT Community 2019 for x86 GNU Linux (64-bit) from AdaCore

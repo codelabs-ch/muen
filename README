@@ -195,11 +195,9 @@ Bridge or newer.
 | Kontron Technology KTQM77/mITX | Ivy Bridge  | i7-3610QE
 |===================================================================
 
-The first step to build Muen is to install the required packages:
-
-  $ sudo apt-get install acpica-tools bc binutils-dev bison flex git-core \
-      gnuplot grub-pc-bin lcov libc6-dev libelf-dev libiberty-dev \
-      libxml2-utils make qemu-system-x86 tidy wget xorriso xsltproc zlib1g-dev
+The first step to build Muen is to install the required packages. See the
+`tools/docker/Dockerfile.muen-dev-env` file in the project repository for the
+current list of required packages.
 
 The Ada and SPARK packages currently available in Debian and Ubuntu are too old
 to build Muen. GNAT Community 2019 for x86 GNU Linux (64-bit) from AdaCore

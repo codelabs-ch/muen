@@ -38,7 +38,7 @@ is
 
    type Unsigned_6 is mod 2 ** Event_Bits
      with
-       Size => 6;
+       Size => Event_Bits;
 
    type Padding_Type is mod 2 ** Padding_Bits
      with

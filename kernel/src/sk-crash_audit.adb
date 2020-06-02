@@ -45,18 +45,29 @@ is
       Async_Writers,
       Linker_Section => Constants.Global_Data_Section;
 
-   pragma Warnings
-     (GNAT, Off, "* bits of ""Instance"" unused",
-      Reason => "We only care if the region is too small");
-   Instance : Dump_Type
+   type Padding_Type is
+     array (Crash_Audit_Types.Dump_Type_Size + 1 .. Page_Size) of Byte
+   with
+      Size => (Page_Size - Crash_Audit_Types.Dump_Type_Size) * 8;
+
+   type Crash_Audit_Page is record
+      Crash_Info : Crash_Audit_Types.Dump_Type;
+      Padding    : Padding_Type;
+   end record
+   with
+      Object_Size => Page_Size * 8;
+
+   Instance : Crash_Audit_Page
    with
       Volatile,
       Import,
       Async_Readers,
       Async_Writers,
-      Address => System'To_Address (Skp.Kernel.Crash_Audit_Address),
-      Size    => Skp.Kernel.Crash_Audit_Size * 8;
-   pragma Warnings (GNAT, On, "* bits of ""Instance"" unused");
+      Address => System'To_Address (Skp.Kernel.Crash_Audit_Address);
+
+   pragma Compile_Time_Error
+     (Instance'Size <= Skp.Kernel.Crash_Audit_Size,
+      "Crash audit region too small");
 
    -------------------------------------------------------------------------
 
@@ -94,7 +105,7 @@ is
       System.Machine_Code.Asm
         (Template => "lock incq %0",
          Outputs  => (Interfaces.Unsigned_64'Asm_Output
-                       ("=m", Instance.Header.Crash_Count)),
+                       ("=m", Instance.Crash_Info.Header.Crash_Count)),
          Volatile => True);
    end Atomic_Inc_Crash_Count;
 
@@ -102,14 +113,14 @@ is
 
    procedure Init
    is
-      H : constant Header_Type := Instance.Header;
+      H : constant Header_Type := Instance.Crash_Info.Header;
    begin
       if H.Version_Magic /= Crash_Magic then
-         Instance := Null_Dump;
+         Instance.Crash_Info := Null_Dump;
          pragma Debug (Dump.Print_Message
                        (Msg => "Crash audit: Initialized"));
       else
-         Instance.Header.Boot_Count := H.Boot_Count + 1;
+         Instance.Crash_Info.Header.Boot_Count := H.Boot_Count + 1;
          pragma Debug
            (Dump.Print_Message
               (Msg => "Crash audit: Reset detected, setting boot count to "
@@ -147,10 +158,10 @@ is
                      & " - Allocated record "
                      & Strings.Img (Byte (Audit.Slot))));
 
-      Instance.Data (Audit.Slot) := Null_Dumpdata;
+      Instance.Crash_Info.Data (Audit.Slot) := Null_Dumpdata;
 
-      Instance.Data (Audit.Slot).APIC_ID   := Byte (CPU_Info.APIC_ID);
-      Instance.Data (Audit.Slot).TSC_Value := CPU.RDTSC;
+      Instance.Crash_Info.Data (Audit.Slot).APIC_ID := Byte (CPU_Info.APIC_ID);
+      Instance.Crash_Info.Data (Audit.Slot).TSC_Value := CPU.RDTSC;
    end Allocate;
 
    -------------------------------------------------------------------------
@@ -160,20 +171,22 @@ is
       pragma Unreferenced (Audit);
       --  Audit token authorizes to finalize crash dump and restart.
 
-      Next  : constant Positive               := Global_Next_Slot;
-      Boots : constant Interfaces.Unsigned_64 := Instance.Header.Boot_Count;
+      Next  : constant Positive := Global_Next_Slot;
+      Boots : constant Interfaces.Unsigned_64
+        := Instance.Crash_Info.Header.Boot_Count;
    begin
       if Next > Positive (Dumpdata_Length'Last) then
-         Instance.Header.Dump_Count := Dumpdata_Length'Last;
+         Instance.Crash_Info.Header.Dump_Count := Dumpdata_Length'Last;
       else
-         Instance.Header.Dump_Count := Dumpdata_Length (Next - 1);
+         Instance.Crash_Info.Header.Dump_Count := Dumpdata_Length (Next - 1);
       end if;
 
       for I in Version.Version_String'Range loop
-         Instance.Header.Version_String (I) := Version.Version_String (I);
+         Instance.Crash_Info.Header.Version_String (I)
+           := Version.Version_String (I);
       end loop;
 
-      Instance.Header.Generation := Boots + 1;
+      Instance.Crash_Info.Header.Generation := Boots + 1;
       Atomic_Inc_Crash_Count;
 
       Delays.U_Delay (US => Reset_Delay);
@@ -192,8 +205,8 @@ is
       Context : Exception_Context_Type)
    is
    begin
-      Instance.Data (Audit.Slot).Exception_Context := Context;
-      Instance.Data (Audit.Slot).Field_Validity.Ex_Context := True;
+      Instance.Crash_Info.Data (Audit.Slot).Exception_Context := Context;
+      Instance.Crash_Info.Data (Audit.Slot).Field_Validity.Ex_Context := True;
    end Set_Exception_Context;
 
    -------------------------------------------------------------------------
@@ -203,8 +216,9 @@ is
       Context : Init_Context_Type)
    is
    begin
-      Instance.Data (Audit.Slot).Init_Context := Context;
-      Instance.Data (Audit.Slot).Field_Validity.Init_Context := True;
+      Instance.Crash_Info.Data (Audit.Slot).Init_Context := Context;
+      Instance.Crash_Info.Data (Audit.Slot).Field_Validity.Init_Context
+        := True;
    end Set_Init_Context;
 
    -------------------------------------------------------------------------
@@ -214,8 +228,8 @@ is
       Context : MCE_Context_Type)
    is
    begin
-      Instance.Data (Audit.Slot).MCE_Context := Context;
-      Instance.Data (Audit.Slot).Field_Validity.MCE_Context := True;
+      Instance.Crash_Info.Data (Audit.Slot).MCE_Context := Context;
+      Instance.Crash_Info.Data (Audit.Slot).Field_Validity.MCE_Context := True;
    end Set_MCE_Context;
 
    -------------------------------------------------------------------------
@@ -225,7 +239,7 @@ is
       Reason :        Reason_Type)
    is
    begin
-      Instance.Data (Audit.Slot).Reason := Reason;
+      Instance.Crash_Info.Data (Audit.Slot).Reason := Reason;
       Audit.Reason := Reason;
    end Set_Reason;
 
@@ -236,8 +250,9 @@ is
       Context : Subj_Context_Type)
    is
    begin
-      Instance.Data (Audit.Slot).Subject_Context := Context;
-      Instance.Data (Audit.Slot).Field_Validity.Subj_Context := True;
+      Instance.Crash_Info.Data (Audit.Slot).Subject_Context := Context;
+      Instance.Crash_Info.Data (Audit.Slot).Field_Validity.Subj_Context
+        := True;
    end Set_Subject_Context;
 
    -------------------------------------------------------------------------
@@ -247,8 +262,8 @@ is
       Context : VTx_Context_Type)
    is
    begin
-      Instance.Data (Audit.Slot).VTx_Context := Context;
-      Instance.Data (Audit.Slot).Field_Validity.VTx_Context := True;
+      Instance.Crash_Info.Data (Audit.Slot).VTx_Context := Context;
+      Instance.Crash_Info.Data (Audit.Slot).Field_Validity.VTx_Context := True;
    end Set_VTx_Context;
 
 end SK.Crash_Audit;

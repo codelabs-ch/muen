@@ -37,7 +37,9 @@ is
 
    subtype Version_Str_Range is Positive range 1 .. 64;
 
-   type Version_String_Type is new String (Version_Str_Range);
+   type Version_String_Type is new String (Version_Str_Range)
+   with
+      Size => Version_Str_Range'Last * 8;
 
    Null_Version_String : constant Version_String_Type := (others => ASCII.NUL);
 
@@ -175,7 +177,9 @@ is
    subtype Bank_Index_Range is Bank_Index_Ext_Range range
      0 .. MCE_Max_Banks - 1;
 
-   type Banks_Array is array (Bank_Index_Range) of Interfaces.Unsigned_64;
+   type Banks_Array is array (Bank_Index_Range) of Interfaces.Unsigned_64
+   with
+      Size => MCE_Max_Banks * 8 * 8;
 
    MCE_Ctx_Size : constant := 8 + 1 + 3 * MCE_Max_Banks * 8;
 
@@ -388,13 +392,15 @@ is
 
    Null_Dumpdata_Array : constant Dumpdata_Array;
 
+   Dump_Type_Size : constant := Header_Type_Size + Dumpdata_Array_Size;
+
    type Dump_Type is record
       Header : Header_Type;
       Data   : Dumpdata_Array;
    end record
    with
       Pack,
-      Size => (Header_Type_Size + Dumpdata_Array_Size) * 8;
+      Size => Dump_Type_Size * 8;
 
    Null_Dump : constant Dump_Type;
 

@@ -205,7 +205,7 @@ is
       Refined_Post    => Descriptors (ID).RIP =
         Descriptors (ID).RIP'Old + Word64 (Descriptors (ID).Instruction_Len)
    is
-      Next_RIP : constant SK.Word64
+      Next_RIP : constant Word64
         := Descriptors (ID).RIP + Word64 (Descriptors (ID).Instruction_Len);
    begin
       Descriptors (ID).RIP := Next_RIP;
@@ -259,7 +259,7 @@ is
 
    procedure Restore_State
      (ID   :     Skp.Global_Subject_ID_Type;
-      Regs : out SK.CPU_Registers_Type)
+      Regs : out CPU_Registers_Type)
      with
       Refined_Global  => (Input  => (Descriptors, CPU_Info.APIC_ID),
                           In_Out => (Crash_Audit.State, X86_64.State)),
@@ -332,7 +332,7 @@ is
    procedure Save_State
      (ID          : Skp.Global_Subject_ID_Type;
       Exit_Reason : Word64;
-      Regs        : SK.CPU_Registers_Type)
+      Regs        : CPU_Registers_Type)
    with
       Refined_Global  => (Input  => CPU_Info.APIC_ID,
                           In_Out => (Descriptors, Crash_Audit.State,

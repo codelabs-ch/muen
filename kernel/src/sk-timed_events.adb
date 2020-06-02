@@ -23,7 +23,8 @@ is
 
    Null_Event : constant Mutimedevents.Timed_Event_Interface_Type
      := (TSC_Trigger_Value => SK.Word64'Last,
-         Event_Nr          => 0);
+         Event_Nr          => 0,
+         Padding           => 0);
 
    -------------------------------------------------------------------------
 

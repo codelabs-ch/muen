@@ -32,20 +32,30 @@ with Interfaces;
 package Mutimedevents
 is
 
-   Event_Bits : constant := 6;
+   Event_Bits                 : constant := 6;
+   Padding_Bits               : constant := 64 - Event_Bits;
+   Timed_Event_Interface_Size : constant := 128;
 
    type Unsigned_6 is mod 2 ** Event_Bits
      with
        Size => 6;
 
+   type Padding_Type is mod 2 ** Padding_Bits
+     with
+       Size => Padding_Bits;
+
    type Timed_Event_Interface_Type is record
       TSC_Trigger_Value : Interfaces.Unsigned_64;
       Event_Nr          : Unsigned_6;
-   end record;
+      Padding           : Padding_Type;
+   end record
+     with
+       Size => Timed_Event_Interface_Size;
 
    for Timed_Event_Interface_Type use record
       TSC_Trigger_Value at 0 range 0 .. 63;
       Event_Nr          at 8 range 0 ..  Event_Bits - 1;
+      Padding           at 8 range Event_Bits .. 63;
    end record;
 
 end Mutimedevents;

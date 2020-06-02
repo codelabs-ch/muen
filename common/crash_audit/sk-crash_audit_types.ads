@@ -61,8 +61,8 @@ is
       Crash_Count    : Interfaces.Unsigned_64;
       Crc32          : Interfaces.Unsigned_32;
       Padding        : Interfaces.Unsigned_16;
-      Dump_Count     : Dumpdata_Length;
-      Max_Dump_Count : Dumpdata_Index;
+      Dump_Count     : Dumpdata_Length'Base;
+      Max_Dump_Count : Dumpdata_Index'Base;
    end record
    with
       Pack,
@@ -185,7 +185,7 @@ is
 
    type MCE_Context_Type is record
       MCG_Status : Interfaces.Unsigned_64;
-      Bank_Count : Bank_Index_Ext_Range;
+      Bank_Count : Bank_Index_Ext_Range'Base;
       MCi_Status : Banks_Array;
       MCi_Addr   : Banks_Array;
       MCi_Misc   : Banks_Array;

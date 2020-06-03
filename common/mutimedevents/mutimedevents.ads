@@ -50,7 +50,8 @@ is
       Padding           : Padding_Type;
    end record
      with
-       Size => Timed_Event_Interface_Size;
+       Size        => Timed_Event_Interface_Size,
+       Object_Size => Timed_Event_Interface_Size;
 
    for Timed_Event_Interface_Type use record
       TSC_Trigger_Value at 0 range 0 .. 63;

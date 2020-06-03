@@ -135,7 +135,8 @@ is
    --  256-bit Hash.
    type Hash_Type is array (1 .. 32) of Interfaces.Unsigned_8
      with
-       Convention => C;
+       Object_Size => 256,
+       Convention  => C;
 
    No_Hash : constant Hash_Type := (others => 0);
 
@@ -427,8 +428,9 @@ is
       Resources      : Resource_Array;
    end record
      with
-       Size      => Subject_Info_Type_Size * 8,
-       Alignment => 8;
+       Size        => Subject_Info_Type_Size * 8,
+       Object_Size => Subject_Info_Type_Size * 8,
+       Alignment   => 8;
 
    Res_Count_Offset : constant := 8 + 4 + Name_Type_Size;
    Pad_Offset       : constant := Res_Count_Offset + 2;

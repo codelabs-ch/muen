@@ -1,0 +1,36 @@
+From 924689321ab44b7c29181e3176640a9f6c1ac604 Mon Sep 17 00:00:00 2001
+From: Adrian-Ken Rueegsegger <ken@codelabs.ch>
+Date: Wed, 3 Jun 2020 23:28:31 +0200
+Subject: [PATCH] Specify object size of SHA256 types
+
+---
+ src/shared/generic/lsc-sha256.ads | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/src/shared/generic/lsc-sha256.ads b/src/shared/generic/lsc-sha256.ads
+index d003a47..30b5ebb 100644
+--- a/src/shared/generic/lsc-sha256.ads
++++ b/src/shared/generic/lsc-sha256.ads
+@@ -58,7 +58,8 @@ package LSC.SHA256 is
+    subtype Block_Index is Types.Index range 0 .. 15;
+ 
+    -- SHA-256 block
+-   subtype Block_Type is Types.Word32_Array_Type (Block_Index);
++   subtype Block_Type is Types.Word32_Array_Type (Block_Index)
++   with Object_Size => Block_Size;
+ 
+    -- SHA-256 block size
+    Block_Size : constant := 512;
+@@ -67,7 +68,8 @@ package LSC.SHA256 is
+    subtype SHA256_Hash_Index is Types.Index range 0 .. 7;
+ 
+    -- SHA-256 hash
+-   subtype SHA256_Hash_Type is Types.Word32_Array_Type (SHA256_Hash_Index);
++   subtype SHA256_Hash_Type is Types.Word32_Array_Type (SHA256_Hash_Index)
++   with Object_Size => Block_Size / 2;
+ 
+    -- SHA-256 block length
+    subtype Block_Length_Type is Types.Word32 range 0 .. Block_Size - 1;
+-- 
+2.20.1
+

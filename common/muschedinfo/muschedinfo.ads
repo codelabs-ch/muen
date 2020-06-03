@@ -40,8 +40,9 @@ is
       TSC_Schedule_End   : Interfaces.Unsigned_64;
    end record
    with
-      Size      => Scheduling_Info_Size * 8,
-      Alignment => 8;
+      Size        => Scheduling_Info_Size * 8,
+      Object_Size => Scheduling_Info_Size * 8,
+      Alignment   => 8;
 
    for Scheduling_Info_Type use record
       TSC_Schedule_Start at 0 range 0 .. 63;

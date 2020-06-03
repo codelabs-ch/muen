@@ -84,7 +84,7 @@ is
       NMI_Blocking      : Boolean;
       Reserved_3        : SK.Bit_Array (13 .. 63);
    end record
-     with Size => 64;
+     with Object_Size => 64;
 
    for EPTV_Info_Type use record
       Read              at 0 range  0 ..  0;

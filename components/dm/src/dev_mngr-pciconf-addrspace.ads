@@ -81,11 +81,17 @@ is
 
 private
 
-   type Device_Space_Type is array (0 .. SK.Page_Size - 1) of SK.Byte;
+   use type Interfaces.Unsigned_64;
+
+   type Device_Space_Type is array (0 .. SK.Page_Size - 1) of SK.Byte
+     with
+       Size => SK.Page_Size * 8;
 
    type Addrspace_Type is array (Musinfo.SID_Type) of Device_Space_Type
    with
       Component_Size => SK.Page_Size * 8,
+      Object_Size    => (Interfaces.Unsigned_64 (Musinfo.SID_Type'Last) + 1)
+         * SK.Page_Size * 8,
       Pack;
 
    Space : Addrspace_Type

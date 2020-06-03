@@ -42,16 +42,21 @@ is
      (DX        => 0,
       Immediate => 1);
 
+   type IO_Padding_Type is new SK.Bit_Array (1 .. 9)
+     with Size => 9;
+
    type IO_Info_Type is record
       Size         : Access_Size_Type;
       Direction    : Direction_Type;
       String_Instr : Boolean;
       REP_Prefixed : Boolean;
       Op_Encoding  : Operand_Encoding_Type;
-      Reserved     : SK.Bit_Array (1 .. 9);
+      Reserved     : IO_Padding_Type;
       Port_Number  : SK.Word16;
+      Reserved_2   : SK.Word32;
    end record
-     with Size => 64;
+     with
+       Object_Size => 64;
 
    for IO_Info_Type use record
       Size         at 0 range  0 ..  2;
@@ -61,6 +66,7 @@ is
       Op_Encoding  at 0 range  6 ..  6;
       Reserved     at 0 range  7 .. 15;
       Port_Number  at 0 range 16 .. 31;
+      Reserved_2   at 0 range 32 .. 63;
    end record;
 
    --  Type related to EPT violation specific exit qualification.

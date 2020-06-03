@@ -62,8 +62,9 @@ is
       Data_Register : Types.Data_Register_Type;
       Reserved_2    : SK.Bit_Array (1 .. 4);
       Source_Data   : SK.Word16;
+      Reserved_3    : SK.Word32;
    end record
-     with Size => 64;
+     with Object_Size => 64;
 
    for CR_Info_Type use record
       CR_Number     at 0 range  0 ..  3;
@@ -73,6 +74,7 @@ is
       Data_Register at 0 range  8 .. 11;
       Reserved_2    at 0 range 12 .. 15;
       Source_Data   at 0 range 16 .. 31;
+      Reserved_3    at 0 range 32 .. 63;
    end record;
 
    -------------------------------------------------------------------------

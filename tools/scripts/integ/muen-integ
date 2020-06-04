@@ -323,6 +323,10 @@ execute "cd $WORKDIR"
 execute "$MAKE -C deploy clean"
 execute "$MAKE -C emulate clean"
 
+# Build GRUB2 for both pc and efi
+execute "$MAKE -C contrib/grub"
+execute "$MAKE -C contrib/grub MUEN_EFI=1"
+
 deploy_to_emul
 deploy_to_hardware
 generate_metrics

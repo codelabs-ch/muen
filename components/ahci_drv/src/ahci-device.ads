@@ -41,7 +41,11 @@ is
    --  Returns a Bit_Array where 'found' devices are 'True'
    procedure Get_Attached_Devices (Dev : out Bit_Array);
 
-   --  get Size in Bytes
+   --  Get maximum number of Sectors per R/W/Discard request.
+   function Get_Max_Sector_Count (ID : Port_Range)
+      return Interfaces.Unsigned_32;
+
+   --  Get size of the disk at port 'ID' in bytes.
    function Get_Size (ID : Port_Range) return Interfaces.Unsigned_64;
 
    --  Get number of sectors of the device at port 'ID'.

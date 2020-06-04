@@ -86,6 +86,21 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Max_Sector_Count (ID : Port_Range)
+      return Interfaces.Unsigned_32
+   is
+      Signature : constant Signature_Type := Devices (ID).Signature;
+   begin
+      case Signature is
+         when Sata =>
+            return Ata.Get_Max_Sector_Count (ID => ID);
+         when others =>
+            return 0;
+      end case;
+   end Get_Max_Sector_Count;
+
+   -------------------------------------------------------------------------
+
    function Get_Size (ID : Port_Range) return Interfaces.Unsigned_64
    is
       use type Interfaces.Unsigned_64;

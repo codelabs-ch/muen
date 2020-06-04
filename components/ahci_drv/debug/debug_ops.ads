@@ -20,6 +20,7 @@ with Interfaces;
 
 with Ahci;
 with Mbr;
+with Muenblock;
 
 package Debug_Ops
 is
@@ -36,6 +37,8 @@ is
    procedure Print_Port_Error (ID : Ahci.Port_Range);
 
    procedure Print_MBR_Partition_Table (Table : Mbr.Partition_Table_Type);
+
+   procedure Print_Request (Request : Muenblock.Block_Request_Type);
 
    --  Initialize debug log.
    procedure Init (Epoch : Interfaces.Unsigned_64);

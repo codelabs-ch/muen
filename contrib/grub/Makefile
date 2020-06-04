@@ -25,7 +25,7 @@ endif
 
 define CMD_CONFIGURE
 	cd $(WRK) && ./autogen.sh && ./configure \
-		--prefix=$(BUILDDIR) \
+		--prefix=$(BUILDDIR)/$(GRUB_TARGET)-$(GRUB_PLATFORM) \
 		--disable-device-mapper \
 		--disable-grub-mount \
 		--disable-grub-themes \
@@ -41,6 +41,15 @@ define CMD_CONFIGURE
 		--target=$(GRUB_TARGET)
 endef
 
-all: install_default
+all: install_grub_platform
 
 include ../contrib.archive.mk
+
+install_grub_platform: $(TMP)/.$(GRUB_TARGET)-$(GRUB_PLATFORM)
+$(TMP)/.$(GRUB_TARGET)-$(GRUB_PLATFORM):
+	@if [ -d $(WRK) ]; then \
+		$(E) $(PKG) Cleaning "$(MAKE) -C $(WRK) clean"; \
+		touch $(STAMP_PATCH); \
+	fi
+	$(MAKE) install_default
+	@touch $@

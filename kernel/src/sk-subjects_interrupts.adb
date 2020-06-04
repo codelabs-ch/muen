@@ -25,10 +25,6 @@ with
    Refined_State => (State => Pending_Interrupts)
 is
 
-   Null_Interrupts : constant Interrupt_Page
-     := (Data    => (others => 0),
-         Padding => (others => 0));
-
    procedure Find_Highest_Bit_Set is new Bitops.Find_Highest_Bit_Set
      (Search_Range => Bitops.Word64_Pos);
 
@@ -92,7 +88,8 @@ is
       Refined_Depends => (Pending_Interrupts =>+ Subject)
    is
    begin
-      Pending_Interrupts (Subject) := Null_Interrupts;
+      Pending_Interrupts (Subject) := (Data    => (others => 0),
+                                       Padding => (others => 0));
    end Init_Interrupts;
 
    -------------------------------------------------------------------------

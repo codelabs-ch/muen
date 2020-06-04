@@ -20,19 +20,23 @@ SSH_KEY=$ROOT/.ssh/id_rsa
 SSH="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 SCP="scp -r -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 
-# target IPs, associated system policy, platform config and integration test
-# script to execute.
+# hardware targets
 #
-# if no IP is specified for a target, it is assumed that the host is managed via
-# EPC power bar instead of Intel AMT.
+# fields:
+# 1 : Target IPs or NIL. if no IP is specified for a target, it is assumed that
+#     the host is managed via EPC power bar instead of Intel AMT.
+# 2 : SYSTEM
+# 3 : HARDWARE
+# 4 : SCRIPT, integration test script to execute.
+# 5 : EXPECT_FILE, optional target-specific expect file. The file path is
+#     either absolute or relative to the top-level working directory. Use the
+#     $SCRIPTDIR variable to reference checked-in expect files as shown below.
+# 6 : BUILD_VARS with | as delimiter, e.g. MUEN_EFI=1|QEMU_EXTRA_OPTS=-bios OVMF.fd
 #
-# optionally, a target-specific expect file can be specified. The file path is
-# either absolute or relative to the top-level working directory. Use the
-# $SCRIPTDIR variable to reference checked-in expect files as shown below.
 TARGETS_HW=()
 #TARGETS_HW+=("192.168.254.2;xml/integration_tests.xml;hardware/lenovo-t430s.xml;integtest")
 #TARGETS_HW+=("192.168.254.3;xml/integration_tests_kt.xml;hardware/kontron-ktqm77.xml;integtest_kt;$SCRIPTDIR/expect.kt")
-#TARGETS_HW+=(";xml/integration_tests.xml;hardware/intel-nuc-6cayh.xml;integtest")
+#TARGETS_HW+=(";xml/integration_tests.xml;hardware/intel-nuc-6cayh-efi.xml;integtest;;MUEN_EFI=1")
 
 # emulate targets
 #
@@ -40,8 +44,8 @@ TARGETS_HW=()
 # 1 : SYSTEM
 # 2 : HARDWARE
 # 3 : SCRIPT
-# 4 : EXPECT FILE
-# 5 : QEMU_EXTRA_OPTS
+# 4 : EXPECT_FILE
+# 5 : BUILD_VARS
 TARGETS_EMUL=()
 TARGETS_EMUL+=("xml/demo_system_vtd.xml;hardware/qemu-kvm.xml;integtest.kvm;$SCRIPTDIR/expect.kvm")
 

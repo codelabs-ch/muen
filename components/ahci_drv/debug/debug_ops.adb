@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Unchecked_Conversion;
+
 with SK.Strings;
 
 with Debuglog.Client;
@@ -109,6 +111,28 @@ is
       end loop;
 
    end Print_MBR_Partition_Table;
+
+   -------------------------------------------------------------------------
+
+   procedure Print_Request (Request : Muenblock.Block_Request_Type)
+   is
+      function Kind_To_Int is new Ada.Unchecked_Conversion
+         (Muenblock.Request_Kind_Type, Interfaces.Unsigned_16);
+   begin
+      pragma Debug (Debug_Ops.Put_Line ("Request: "));
+      pragma Debug (Debug_Ops.Put_Line (
+         " Kind: " & SK.Strings.Img (Kind_To_Int (Request.Request_Kind))));
+      pragma Debug (Debug_Ops.Put_Line (
+         " Device_ID     : " & SK.Strings.Img (Request.Device_Id)));
+      pragma Debug (Debug_Ops.Put_Line (
+         " Request_Tag   : " & SK.Strings.Img (Request.Request_Tag)));
+      pragma Debug (Debug_Ops.Put_Line (
+         " Request_Length: " & SK.Strings.Img (Request.Request_Length)));
+      pragma Debug (Debug_Ops.Put_Line (
+         " Device_Offset : " & SK.Strings.Img (Request.Device_Offset)));
+      pragma Debug (Debug_Ops.Put_Line (
+         " Buffer_Offset : " & SK.Strings.Img (Request.Buffer_Offset)));
+   end Print_Request;
 
    -------------------------------------------------------------------------
 

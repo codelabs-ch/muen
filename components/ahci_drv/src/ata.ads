@@ -39,6 +39,10 @@ is
        Address :     Interfaces.Unsigned_64; --  DMA Buffer address
        Ret_Val : out Ahci.Status_Type);
 
+   procedure Sync
+      (ID      :     Ahci.Port_Range;
+       Ret_Val : out Ahci.Status_Type);
+
    procedure Identify_Device
       (Port_ID   : Ahci.Port_Range);
 

@@ -44,6 +44,10 @@ is
 
    Ata_Data_Set_Management : constant := 16#06#;
    Ata_Identify_Device_Cmd : constant := 16#ec#;
+
+   Ata_Flush_Cache         : constant := 16#e7#;
+   Ata_Flush_Cache_Ext     : constant := 16#ea#;
+
    Ata_Read_Dma            : constant := 16#c8#;
    Ata_Read_Dma_Ext        : constant := 16#25#;
 
@@ -311,6 +315,40 @@ is
       end if;
 
    end RW_Sectors;
+
+   -------------------------------------------------------------------------
+
+   procedure Sync
+      (ID      :     Ahci.Port_Range;
+       Ret_Val : out Ahci.Status_Type)
+   is
+      Cmd     : Interfaces.Unsigned_8;
+      Success : Boolean;
+   begin
+      if Ahci.Devices (ID).Support_48Bit then
+         Cmd := Ata_Flush_Cache_Ext;
+      else
+         Cmd := Ata_Flush_Cache;
+      end if;
+
+      Setup_H2D_Cmd (ID       => ID,
+                     Cmd      => Cmd,
+                     Start    => 0,
+                     Sectors  => 0,
+                     Features => 0);
+
+      --  spec says "This command may take longer than 30 seconds to complete."
+      --  use 60sec for timeout...
+      Ahci.Ports.Execute (ID      => ID,
+                          Timeout => 60,
+                          Success => Success);
+      pragma Debug (not Success, Debug_Ops.Put_Line ("Flush Cache failed!"));
+      if Success then
+         Ret_Val := Ahci.OK;
+      else
+         Ret_Val := Ahci.EIO;
+      end if;
+   end Sync;
 
    -------------------------------------------------------------------------
    --  Word 106 type

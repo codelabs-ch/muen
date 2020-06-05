@@ -382,8 +382,28 @@ is
             end loop;
             Response.Status_Code := 0;
          when MB.Sync =>
-            --  FIXME: add sync
-            Response.Status_Code := 0;
+            --  end all outstanding requests
+            for I in Ports (Port_Idx).Devs'Range loop
+               if Ports (Port_Idx).Devs (I).Is_Valid then
+                  Finish_Current_Request (Port_Idx, I);
+               end if;
+            end loop;
+
+            declare
+               use type Ahci.Status_Type;
+               Ret : Ahci.Status_Type;
+            begin
+               Ahci.Device.Sync
+                  (ID      => Ports (Port_Idx).Devs (Dev_Idx).Ahci_Port,
+                   Ret_Val => Ret);
+
+               if Ret = Ahci.OK then
+                  Response.Status_Code := 0;
+               else
+                  Response.Status_Code := 1;
+               end if;
+            end;
+
          when others =>
             pragma Debug (Debug_Ops.Put_Line ("simple_req: unknown!"));
             null;

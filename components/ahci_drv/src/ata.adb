@@ -213,8 +213,9 @@ is
                      Sectors  => Length / 512,
                      Features => 1);
 
-      Ahci.Ports.Execute (ID, Success);
-
+      Ahci.Ports.Execute (ID      => ID,
+                          Timeout => 30,
+                          Success => Success);
       pragma Debug (not Success, Debug_Ops.Dump_Cmd_List (ID, 8));
       pragma Debug (not Success, Debug_Ops.Dump_Cmd_Table (ID, 40));
 
@@ -286,13 +287,15 @@ is
          Sectors := 0;
       end if;
 
-      Setup_H2D_Cmd (ID => ID,
-                     Cmd => Cmd,
-                     Start => Start,
-                     Sectors => Sectors,
+      Setup_H2D_Cmd (ID       => ID,
+                     Cmd      => Cmd,
+                     Start    => Start,
+                     Sectors  => Sectors,
                      Features => 0);
-      Ahci.Ports.Execute (ID, Success);
 
+      Ahci.Ports.Execute (ID      => ID,
+                          Timeout => 30,
+                          Success => Success);
       pragma Debug (not Success, Debug_Ops.Dump_Cmd_List (ID, 8));
       pragma Debug (not Success, Debug_Ops.Dump_Cmd_Table (ID, 40));
 
@@ -467,7 +470,9 @@ is
                      Sectors  => 0,
                      Features => 0);
 
-      Ahci.Ports.Execute (Port_ID, Success);
+      Ahci.Ports.Execute (ID      => Port_ID,
+                          Timeout => 30,
+                          Success => Success);
 
       if Success then
          FW := Ata_Identify_Response.FW;

@@ -37,6 +37,10 @@ is
        Count   :     Interfaces.Unsigned_32; --  Number of Sectors
        Ret_Val : out Ahci.Status_Type);
 
+   procedure Sync
+      (ID : Port_Range;
+       Ret_Val : out Ahci.Status_Type);
+
    --  Returns a Bit_Array where 'found' devices are 'True'
    procedure Get_Attached_Devices (Dev : out Bit_Array);
 

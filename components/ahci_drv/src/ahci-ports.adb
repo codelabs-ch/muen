@@ -168,6 +168,7 @@ is
 
    procedure Execute
       (ID      :     Port_Range;
+       Timeout :     Integer;
        Success : out Boolean)
    is
       use type Interfaces.Unsigned_64;
@@ -178,9 +179,10 @@ is
       Error            : Boolean;
       Clear            : Clear_Error_Type := (others => False);
       Now              : Interfaces.Unsigned_64;
-      Timeout          : constant Interfaces.Unsigned_64
+      End_Time         : constant Interfaces.Unsigned_64
         := Musinfo.Instance.TSC_Schedule_End +
-            5 * Musinfo.Instance.TSC_Khz * 1000;
+            Musinfo.TSC_Tick_Rate_Khz_Type (Timeout) *
+               Musinfo.Instance.TSC_Khz * 1000;
    begin
       Local_Cmd_Status := Instance (ID).Command_And_Status;
       Local_Cmd_Issue := Instance (ID).Command_Issue;
@@ -204,10 +206,10 @@ is
          Now := Musinfo.Instance.TSC_Schedule_Start;
          exit Wait when (Local_Cmd_Issue (0) = False)
                      or (Local_Int_Status.TFES = True)
-                     or (Now >= Timeout);
+                     or (Now >= End_Time);
       end loop Wait;
 
-      pragma Debug (Now > Timeout, Debug_Ops.Put_Line ("TimeOut!"));
+      pragma Debug (Now > End_Time, Debug_Ops.Put_Line ("TimeOut!"));
       Check_Error (ID, Error);
 
       if Error then

@@ -38,6 +38,11 @@ is
        Count   :     Interfaces.Unsigned_32; --  Number of Sectors
        Ret_Val : out Status_Type);
 
+   --  Send Sync-Command to the device.
+   procedure Sync
+      (ID      : Port_Range;
+       Ret_Val : out Status_Type);
+
    --  Returns a Bit_Array where 'found' devices are 'True'
    procedure Get_Attached_Devices (Dev : out Bit_Array);
 

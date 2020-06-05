@@ -237,6 +237,24 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Sync
+      (ID      :     Port_Range;
+       Ret_Val : out Status_Type)
+   is
+      Signature : constant Signature_Type := Devices (ID).Signature;
+   begin
+      case Signature is
+         when Sata =>
+            Ata.Sync (ID => ID, Ret_Val => Ret_Val);
+         when others =>
+            Ret_Val := ENOTSUP;
+            null;
+      end case;
+
+   end Sync;
+
+   -------------------------------------------------------------------------
+
    procedure Init
    is
       PI : constant Bit_Array := HBA.Instance.Ports_Implemented;

@@ -98,6 +98,7 @@ $(OBJ_DIR)/proof.gpr:
 
 $(OBJ_DIR)/gnatprove/gnatprove.out: $(OBJ_DIR)/proof.gpr $(COMPONENTS_PREPARE)
 	@$(E) components Proof "gnatprove $(SPARK_OPTS) -P$<" $(LOG)
+	@$(E) components "Proof summary" "head -n$(SPARK_SUMMARY_LINES) $@" $(LOG)
 
 # build components and then execute all defined checks (stackcheck etc).
 check: $(COMPONENTS_CHECK)

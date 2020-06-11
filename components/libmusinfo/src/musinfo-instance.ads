@@ -163,11 +163,17 @@ private
    Subject_Info_Virtual_Addr : constant := 16#000e_0000_0000#;
    Subject_Info_Size         : constant := 16#8000#;
 
+   pragma Warnings (Off);  --  Only emitted by recent GNATprove versions.
    Object : Subject_Info_Type
    with
       Import,
       Part_Of => State,
       Address => System'To_Address (Subject_Info_Virtual_Addr);
+   pragma Annotate
+     (GNATprove, Intentional,
+      "object is unsuitable for aliasing via address clause",
+      "Sinfo is generated at integration time.");
+   pragma Warnings (On);
 
    Sched_Info : Muschedinfo.Scheduling_Info_Type
    with

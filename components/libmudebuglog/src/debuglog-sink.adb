@@ -39,7 +39,12 @@ is
 
    package Cspecs renames Libmudebuglog_Component.Channels;
 
-   Message_Channel : Stream.Channel_Type
+   --  Workaround for [T611-019]: Size of channel cannot be set in generic.
+   --  See also https://github.com/AdaCore/ada-spark-rfcs/issues/75
+   subtype CT is Stream.Channel_Type
+     with Object_Size => Cspecs.Debuglog_Size * 8;
+
+   Message_Channel : CT
    with
       Address => System'To_Address (Cspecs.Debuglog_Address),
       Size    => Cspecs.Debuglog_Size * 8,

@@ -86,7 +86,7 @@ $(IMAGE_SBS): $(IMAGE_CSL) | $(OBJ_DIR)
 	@$(E) emulate "SBS create `basename $@`" \
 		"$(SBS_CREATE) -k $(SBS_PRIVKEY) -i $< -o $@"
 	@$(E) emulate "SBS inspect `basename $@`" \
-		"$(SBS_INSPECT) -s $@"
+		"$(SBS_INSPECT) -i $@"
 
 $(IMAGE_MB_SIG): $(IMAGE_MB) | $(OBJ_DIR)
 $(OBJ_DIR)/$(GRUB_CFG).sig: $(GRUB_CFG) | $(OBJ_DIR)

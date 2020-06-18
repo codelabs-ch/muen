@@ -11,9 +11,6 @@
  <xs:complexType name="componentType">
   <xs:complexContent>
    <xs:extension base="libraryType">
-    <xs:sequence>
-     <xs:element name="provides" type="providedResourcesType" minOccurs="0" maxOccurs="1"/>
-    </xs:sequence>
     <xs:attribute name="profile" type="componentProfileType" use="required"/>
    </xs:extension>
   </xs:complexContent>
@@ -24,6 +21,7 @@
    <xs:element name="config"   type="configType"            minOccurs="0" maxOccurs="1"/>
    <xs:element name="depends"  type="libraryDepsType"       minOccurs="0" maxOccurs="1"/>
    <xs:element name="requires" type="requiredResourcesType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="provides" type="providedResourcesType" minOccurs="0" maxOccurs="1"/>
   </xs:sequence>
   <xs:attribute name="name" type="nameType" use="required"/>
  </xs:complexType>

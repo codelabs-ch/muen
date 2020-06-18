@@ -1444,9 +1444,18 @@ is
                     (Node      => N2,
                      New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                        (Policy        => Data,
+                        Logical_Name  => "stack",
+                        Physical_Name => Name & "|stack",
+                        Address       => "16#1000#",
+                        Writable      => True,
+                        Executable    => False));
+                  Muxml.Utils.Append_Child
+                    (Node      => N2,
+                     New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+                       (Policy        => Data,
                         Logical_Name  => "binary",
                         Physical_Name => Name & "|bin",
-                        Address       => "16#1000#",
+                        Address       => "16#5000#",
                         Writable      => True,
                         Executable    => True));
 
@@ -1477,17 +1486,25 @@ is
                      Muxml.Utils.Append_Child (Node      => Ev_Node,
                                                New_Child => Default_Ev);
                   end;
-
+                  Mutools.XML_Utils.Add_Memory_Region
+                    (Policy       => Data,
+                     Name         => Name & "|stack",
+                     Address      => "",
+                     Size         => "16#4000#",
+                     Caching      => "WB",
+                     Alignment    => "16#1000#",
+                     Memory_Type  => "subject",
+                     Fill_Pattern => "16#00#");
                   Mutools.XML_Utils.Add_Memory_Region
                     (Policy      => Data,
                      Name        => Name & "|bin",
                      Address     => "",
-                     Size        => "16#7000#",
+                     Size        => "16#3000#",
                      Caching     => "WB",
                      Alignment   => "16#1000#",
                      Memory_Type => "subject_binary",
                      File_Name   => "idle",
-                     File_Offset => "none");
+                     File_Offset => "16#4000#");
                end Add_Subject;
 
                Node : constant DOM.Core.Node

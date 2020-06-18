@@ -4,7 +4,7 @@
                                                                                                                                                      >     <fill pattern="16#00#"/>
                                                                                                                                                      >    </memory>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="mugenschedcfg_auto_idle_0|bin" size="16#3000#" type="subject_binary">
-                                                                                                                                                     >     <file filename="idle" offset="16#4000#"/>
+                                                                                                                                                     >     <file filename="idle" offset="16#001f_f000#"/>
                                                                                                                                                      >    </memory>
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
@@ -217,7 +217,7 @@
                                                                                                                                                      >     <bootparams/>
                                                                                                                                                      >     <memory>
                                                                                                                                                      >      <memory executable="false" logical="stack" physical="mugenschedcfg_auto_idle_0|stack" virtualAddress="16#1000#" writable="true"/>
-                                                                                                                                                     >      <memory executable="true" logical="binary" physical="mugenschedcfg_auto_idle_0|bin" virtualAddress="16#5000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="true" logical="binary" physical="mugenschedcfg_auto_idle_0|bin" virtualAddress="16#0020_0000#" writable="true"/>
                                                                                                                                                      >     </memory>
                                                                                                                                                      >     <devices/>
                                                                                                                                                      >     <events>

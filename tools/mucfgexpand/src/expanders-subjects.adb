@@ -1455,7 +1455,7 @@ is
                        (Policy        => Data,
                         Logical_Name  => "binary",
                         Physical_Name => Name & "|bin",
-                        Address       => "16#5000#",
+                        Address       => "16#0020_0000#",
                         Writable      => True,
                         Executable    => True));
 
@@ -1504,7 +1504,7 @@ is
                      Alignment   => "16#1000#",
                      Memory_Type => "subject_binary",
                      File_Name   => "idle",
-                     File_Offset => "16#4000#");
+                     File_Offset => "16#001f_f000#");
                end Add_Subject;
 
                Node : constant DOM.Core.Node

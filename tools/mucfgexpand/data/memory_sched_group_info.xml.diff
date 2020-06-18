@@ -4,7 +4,7 @@
                                                                                                                                                      >     <fill pattern="16#00#"/>
                                                                                                                                                      >    </memory>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="tau0|bin" size="16#0001_0000#" type="subject_binary">
-                                                                                                                                                     >     <file filename="tau0" offset="16#4000#"/>
+                                                                                                                                                     >     <file filename="tau0" offset="16#001f_f000#"/>
                                                                                                                                                      >    </memory>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="scheduling_group_info_1" size="16#1000#" type="subject_scheduling_info"/>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="scheduling_group_info_2" size="16#1000#" type="subject_scheduling_info"/>
@@ -153,7 +153,7 @@
                                                                                                                                                      >      <msrs/>
                                                                                                                                                      >      <registers>
                                                                                                                                                      >       <gpr>
-                                                                                                                                                     >        <rip>16#5000#</rip>
+                                                                                                                                                     >        <rip>16#0020_0000#</rip>
                                                                                                                                                      >        <rsp>16#3000#</rsp>
                                                                                                                                                      >        <rax>16#0000#</rax>
                                                                                                                                                      >        <rbx>16#0000#</rbx>
@@ -222,7 +222,7 @@
                                                                                                                                                      >     <memory>
                                                                                                                                                      >      <memory executable="false" logical="sys_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="true"/>
                                                                                                                                                      >      <memory executable="false" logical="stack" physical="tau0|stack" virtualAddress="16#1000#" writable="true"/>
-                                                                                                                                                     >      <memory executable="true" logical="binary" physical="tau0|bin" virtualAddress="16#5000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="true" logical="binary" physical="tau0|bin" virtualAddress="16#0020_0000#" writable="true"/>
                                                                                                                                                      >     </memory>
                                                                                                                                                      >     <devices/>
                                                                                                                                                      >     <events>

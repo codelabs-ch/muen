@@ -1947,14 +1947,14 @@ is
          Alignment   => "16#1000#",
          Memory_Type => "subject_binary",
          File_Name   => "tau0",
-         File_Offset => "16#4000#");
+         File_Offset => "16#001f_f000#");
       Muxml.Utils.Append_Child
         (Node      => Mem_Node,
          New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
            (Policy        => Data,
             Logical_Name  => "binary",
             Physical_Name => "tau0|bin",
-            Address       => "16#5000#",
+            Address       => "16#0020_0000#",
             Writable      => True,
             Executable    => True));
    end Add_Tau0;

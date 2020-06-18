@@ -231,7 +231,7 @@
    <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="tau0|bin" size="16#0001_0000#" type="subject_binary">
-   <file filename="tau0" offset="16#4000#"/>
+   <file filename="tau0" offset="16#001f_f000#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="kernel_text" physicalAddress="16#0010_0000#" size="16#0001_1000#" type="kernel_binary">
    <file filename="kernel" offset="16#0000#"/>
@@ -373,7 +373,7 @@
   <memory alignment="16#1000#" caching="WB" name="kernel_1|pt" size="16#9000#" type="system_pt">
    <fill pattern="16#00#"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="tau0|pt" size="16#6000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="tau0|pt" size="16#7000#" type="system_pt">
    <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#d000#" type="system_pt">
@@ -663,7 +663,7 @@
     <msrs/>
     <registers>
      <gpr>
-      <rip>16#5000#</rip>
+      <rip>16#0020_0000#</rip>
       <rsp>16#3000#</rsp>
       <rax>16#0000#</rax>
       <rbx>16#0000#</rbx>
@@ -732,7 +732,7 @@
    <memory>
     <memory executable="false" logical="sys_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="true"/>
     <memory executable="false" logical="stack" physical="tau0|stack" virtualAddress="16#1000#" writable="true"/>
-    <memory executable="true" logical="binary" physical="tau0|bin" virtualAddress="16#5000#" writable="true"/>
+    <memory executable="true" logical="binary" physical="tau0|bin" virtualAddress="16#0020_0000#" writable="true"/>
     <memory executable="false" logical="sinfo" physical="tau0|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
     <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_2" virtualAddress="16#000e_0000_8000#" writable="false"/>
     <memory executable="false" logical="timed_event" physical="tau0|timed_event" virtualAddress="16#000e_0001_0000#" writable="true"/>
@@ -1368,7 +1368,7 @@
     <msrs/>
     <registers>
      <gpr>
-      <rip>16#5000#</rip>
+      <rip>16#0020_0000#</rip>
       <rsp>16#3000#</rsp>
       <rax>16#0000#</rax>
       <rbx>16#0000#</rbx>
@@ -1853,7 +1853,7 @@
     </msrs>
     <registers>
      <gpr>
-      <rip>16#5000#</rip>
+      <rip>16#0020_0000#</rip>
       <rsp>16#3000#</rsp>
       <rax>16#0000#</rax>
       <rbx>16#0000#</rbx>

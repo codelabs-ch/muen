@@ -1,7 +1,10 @@
   </memory>                                                                                                                                               </memory>
   <memory caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>                                    <memory caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>
-                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="tau0|bin" size="16#0001_4000#" type="subject_binary">
-                                                                                                                                                     >     <file filename="tau0" offset="none"/>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="tau0|stack" size="16#4000#" type="subject">
+                                                                                                                                                     >     <fill pattern="16#00#"/>
+                                                                                                                                                     >    </memory>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="tau0|bin" size="16#0001_0000#" type="subject_binary">
+                                                                                                                                                     >     <file filename="tau0" offset="16#001f_f000#"/>
                                                                                                                                                      >    </memory>
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
@@ -146,7 +149,7 @@
                                                                                                                                                      >      <msrs/>
                                                                                                                                                      >      <registers>
                                                                                                                                                      >       <gpr>
-                                                                                                                                                     >        <rip>16#5000#</rip>
+                                                                                                                                                     >        <rip>16#0020_0000#</rip>
                                                                                                                                                      >        <rsp>16#3000#</rsp>
                                                                                                                                                      >        <rax>16#0000#</rax>
                                                                                                                                                      >        <rbx>16#0000#</rbx>
@@ -214,7 +217,8 @@
                                                                                                                                                      >     <bootparams/>
                                                                                                                                                      >     <memory>
                                                                                                                                                      >      <memory executable="false" logical="sys_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="true"/>
-                                                                                                                                                     >      <memory executable="true" logical="binary" physical="tau0|bin" virtualAddress="16#1000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="stack" physical="tau0|stack" virtualAddress="16#1000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="true" logical="binary" physical="tau0|bin" virtualAddress="16#0020_0000#" writable="true"/>
                                                                                                                                                      >      <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_2" virtualAddress="16#000e_0000_8000#" writable="false"/>
                                                                                                                                                      >     </memory>
                                                                                                                                                      >     <devices/>

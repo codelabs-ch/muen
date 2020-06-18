@@ -411,7 +411,7 @@
                                                                                                                                                      >      <msrs/>
                                                                                                                                                      >      <registers>
                                                                                                                                                      >       <gpr>
-                                                                                                                                                     >        <rip>16#5000#</rip>
+                                                                                                                                                     >        <rip>16#0020_0000#</rip>
                                                                                                                                                      >        <rsp>16#3000#</rsp>
                                                                                                                                                      >        <rax>16#0000#</rax>
                                                                                                                                                      >        <rbx>16#0000#</rbx>
@@ -615,7 +615,7 @@
     </msrs>                                                                                                                                                 </msrs>
                                                                                                                                                      >      <registers>
                                                                                                                                                      >       <gpr>
-                                                                                                                                                     >        <rip>16#5000#</rip>
+                                                                                                                                                     >        <rip>16#0020_0000#</rip>
                                                                                                                                                      >        <rsp>16#3000#</rsp>
                                                                                                                                                      >        <rax>16#0000#</rax>
                                                                                                                                                      >        <rbx>16#0000#</rbx>

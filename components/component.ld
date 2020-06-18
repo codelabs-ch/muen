@@ -27,7 +27,7 @@ SECTIONS
 		. += 0x4000;
 	}
 
-	.text ALIGN (4096) :
+	.text 0x200000 :
 	{
 		KEEP (stub.o(.stub))
 		*(.text .text.*)

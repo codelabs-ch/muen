@@ -3,8 +3,11 @@
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="mugenschedcfg_auto_idle_0|stack" size="16#4000#" type="subject">
                                                                                                                                                      >     <fill pattern="16#00#"/>
                                                                                                                                                      >    </memory>
-                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="mugenschedcfg_auto_idle_0|bin" size="16#3000#" type="subject_binary">
-                                                                                                                                                     >     <file filename="idle" offset="16#001f_f000#"/>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="mugenschedcfg_auto_idle_0|text" size="16#1000#" type="subject_binary">
+                                                                                                                                                     >     <file filename="idle_text" offset="none"/>
+                                                                                                                                                     >    </memory>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="mugenschedcfg_auto_idle_0|rodata" size="16#1000#" type="subject_binary">
+                                                                                                                                                     >     <file filename="idle_rodata" offset="none"/>
                                                                                                                                                      >    </memory>
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
@@ -217,7 +220,8 @@
                                                                                                                                                      >     <bootparams/>
                                                                                                                                                      >     <memory>
                                                                                                                                                      >      <memory executable="false" logical="stack" physical="mugenschedcfg_auto_idle_0|stack" virtualAddress="16#1000#" writable="true"/>
-                                                                                                                                                     >      <memory executable="true" logical="binary" physical="mugenschedcfg_auto_idle_0|bin" virtualAddress="16#0020_0000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="true" logical="text" physical="mugenschedcfg_auto_idle_0|text" virtualAddress="16#0020_0000#" writable="false"/>
+                                                                                                                                                     >      <memory executable="false" logical="rodata" physical="mugenschedcfg_auto_idle_0|rodata" virtualAddress="16#0020_1000#" writable="false"/>
                                                                                                                                                      >     </memory>
                                                                                                                                                      >     <devices/>
                                                                                                                                                      >     <events>

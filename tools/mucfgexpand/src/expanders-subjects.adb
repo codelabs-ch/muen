@@ -1453,11 +1453,20 @@ is
                     (Node      => N2,
                      New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                        (Policy        => Data,
-                        Logical_Name  => "binary",
-                        Physical_Name => Name & "|bin",
+                        Logical_Name  => "text",
+                        Physical_Name => Name & "|text",
                         Address       => "16#0020_0000#",
-                        Writable      => True,
+                        Writable      => False,
                         Executable    => True));
+                  Muxml.Utils.Append_Child
+                    (Node      => N2,
+                     New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+                       (Policy        => Data,
+                        Logical_Name  => "rodata",
+                        Physical_Name => Name & "|rodata",
+                        Address       => "16#0020_1000#",
+                        Writable      => False,
+                        Executable    => False));
 
                   Muxml.Utils.Add_Child
                     (Parent     => N1,
@@ -1497,14 +1506,24 @@ is
                      Fill_Pattern => "16#00#");
                   Mutools.XML_Utils.Add_Memory_Region
                     (Policy      => Data,
-                     Name        => Name & "|bin",
+                     Name        => Name & "|text",
                      Address     => "",
-                     Size        => "16#3000#",
+                     Size        => "16#1000#",
                      Caching     => "WB",
                      Alignment   => "16#1000#",
                      Memory_Type => "subject_binary",
-                     File_Name   => "idle",
-                     File_Offset => "16#001f_f000#");
+                     File_Name   => "idle_text",
+                     File_Offset => "none");
+                  Mutools.XML_Utils.Add_Memory_Region
+                    (Policy      => Data,
+                     Name        => Name & "|rodata",
+                     Address     => "",
+                     Size        => "16#1000#",
+                     Caching     => "WB",
+                     Alignment   => "16#1000#",
+                     Memory_Type => "subject_binary",
+                     File_Name   => "idle_rodata",
+                     File_Offset => "none");
                end Add_Subject;
 
                Node : constant DOM.Core.Node

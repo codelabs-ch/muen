@@ -1904,22 +1904,40 @@ is
       end;
 
       Mutools.XML_Utils.Add_Memory_Region
+        (Policy       => Data,
+         Name         => "tau0|stack",
+         Address      => "",
+         Size         => "16#4000#",
+         Caching      => "WB",
+         Alignment    => "16#1000#",
+         Memory_Type  => "subject",
+         Fill_Pattern => "16#00#");
+      Muxml.Utils.Append_Child
+        (Node      => Mem_Node,
+         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+           (Policy        => Data,
+            Logical_Name  => "stack",
+            Physical_Name => "tau0|stack",
+            Address       => "16#1000#",
+            Writable      => True,
+            Executable    => False));
+      Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => "tau0|bin",
          Address     => "",
-         Size        => "16#0001_4000#",
+         Size        => "16#0001_0000#",
          Caching     => "WB",
          Alignment   => "16#1000#",
          Memory_Type => "subject_binary",
          File_Name   => "tau0",
-         File_Offset => "none");
+         File_Offset => "16#4000#");
       Muxml.Utils.Append_Child
         (Node      => Mem_Node,
          New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
            (Policy        => Data,
             Logical_Name  => "binary",
             Physical_Name => "tau0|bin",
-            Address       => "16#1000#",
+            Address       => "16#5000#",
             Writable      => True,
             Executable    => True));
    end Add_Tau0;

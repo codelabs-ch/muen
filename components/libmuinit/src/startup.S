@@ -55,3 +55,4 @@ _main:
 	movq $STATUS_PAGE_ADDR, %r15
 	movq $STATE_RUNNING, (%r15)
 	pop %r15
+	jmpq *component_entrypoint

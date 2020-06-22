@@ -113,6 +113,36 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Text_Base return Interfaces.Unsigned_64
+   is
+      use type Musinfo.Memregion_Type;
+      use type Musinfo.Content_Type;
+
+      Default_Text_Base : constant Interfaces.Unsigned_64 := 16#0020_0000#;
+      Text_Name : constant Musinfo.Name_Type := (Length    => 4,
+                                                  Padding   => 0,
+                                                  Data      =>
+                                                    (1      => 't',
+                                                     2      => 'e',
+                                                     3      => 'x',
+                                                     4      => 't',
+                                                     others => ASCII.NUL),
+                                                  Null_Term => ASCII.NUL);
+      Text_Region : constant Musinfo.Memregion_Type
+        := Musinfo.Instance.Memory_By_Name (Name => Text_Name);
+   begin
+      return
+        (if Text_Region /= Musinfo.Null_Memregion
+         and then Text_Region.Kind = Musinfo.Subject_Binary
+         and then Text_Region.Flags.Executable
+         and then not Text_Region.Flags.Writable
+         and then Text_Region.Content = Musinfo.Content_File
+         then Text_Region.Address
+         else Default_Text_Base);
+   end Get_Text_Base;
+
+   -------------------------------------------------------------------------
+
    procedure Init_Region_Content
      (Region  :     Musinfo.Memregion_Type;
       Success : out Boolean)

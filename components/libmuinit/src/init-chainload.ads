@@ -28,30 +28,14 @@
 
 with Interfaces;
 
-with Musinfo.Instance;
-
-package Init.Memory
+package Init.Chainload
 is
 
-   --  Zeroize all writable memory regions present in subject info.
-   procedure Clear_Writable
+   Component_Entrypoint : Interfaces.Unsigned_64
    with
-      Pre => Musinfo.Instance.Is_Valid;
+      Export,
+      Size       => 64,
+      Convention => C,
+      Link_Name  => "component_entrypoint";
 
-   --  Returns the base address of the stack memory region.
-   function Get_Stack_Base return Interfaces.Unsigned_64
-   with
-      Pre => Musinfo.Instance.Is_Valid;
-
-   --  Returns the base address of the component text memory region.
-   function Get_Text_Base return Interfaces.Unsigned_64
-   with
-      Pre => Musinfo.Instance.Is_Valid;
-
-   --  Setup all writable memory regions present in subject info with their
-   --  initial content.
-   procedure Setup_Writable (Success : out Boolean)
-   with
-      Pre => Musinfo.Instance.Is_Valid;
-
-end Init.Memory;
+end Init.Chainload;

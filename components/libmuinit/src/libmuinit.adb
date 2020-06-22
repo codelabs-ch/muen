@@ -28,6 +28,7 @@
 
 with Mucontrol.Status;
 
+with Init.Chainload;
 with Init.Commands;
 with Init.Memory;
 with Init.Stack;
@@ -84,5 +85,6 @@ begin
       Init.Status.Error (Diagnostic => 1);
    end if;
 
+   Init.Chainload.Component_Entrypoint := Init.Memory.Get_Text_Base;
    Init.Stack.Clear (Stack_Start => Init.Memory.Get_Stack_Base);
 end Libmuinit;

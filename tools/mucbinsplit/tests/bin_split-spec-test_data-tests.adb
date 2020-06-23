@@ -75,6 +75,9 @@ package body Bin_Split.Spec.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Filename : constant String := "test";
+      Hash     : constant String := "3827eeabc";
+
       Spec : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Spec,
@@ -86,26 +89,43 @@ package body Bin_Split.Spec.Test_Data.Tests is
          Logical         => "section_name",
          Writable        => True,
          Executable      => False,
-         File_Name       => "test",
+         File_Name       => Filename,
          Size            => 16#0700#,
          Virtual_Address => 16#0400#,
-         Hash            => "3827eeabc");
+         Hash            => Hash);
 
-      Assert
-        (Condition =>
-           DOM.Core.Nodes.Length
-             (DOM.Core.Documents.Get_Elements_By_Tag_Name
-                (Doc => Spec.Doc,
-                 Tag_Name => "file")) > 0,
-         Message   => "File entry not created");
+      declare
+         use type DOM.Core.Node;
 
-      Assert
-        (Condition =>
-           DOM.Core.Nodes.Length
-             (DOM.Core.Documents.Get_Elements_By_Tag_Name
-                (Doc => Spec.Doc,
-                 Tag_Name => "hash")) > 0,
-         Message   => "Hash entry not created");
+         File_Node : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Spec.Doc,
+              XPath => "/component/provides/memory"
+              & "[@logical='section_name']/file");
+         Hash_Node : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Spec.Doc,
+              XPath => "/component/provides/memory"
+              & "[@logical='section_name']/hash");
+      begin
+         Assert (Condition => File_Node /= null,
+                 Message   => "File entry not created");
+         Assert (Condition => DOM.Core.Elements.Get_Attribute
+                 (Elem => File_Node,
+                  Name => "filename") = Filename,
+                 Message   => "Filename mismatch");
+         Assert (Condition => DOM.Core.Elements.Get_Attribute
+                 (Elem => File_Node,
+                  Name => "offset") = "none",
+                 Message   => "File offset mismatch");
+
+         Assert (Condition => Hash_Node /= null,
+                 Message   => "Hash entry not created");
+         Assert (Condition => DOM.Core.Elements.Get_Attribute
+                 (Elem => Hash_Node,
+                  Name => "value") = Hash,
+                 Message   => "Hash value mismatch");
+      end;
 --  begin read only
    end Test_Add_File_Entry;
 --  end read only

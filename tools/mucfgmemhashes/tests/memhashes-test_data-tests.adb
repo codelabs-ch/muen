@@ -54,6 +54,32 @@ package body Memhashes.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Generate_Hashes (Gnattest_T : in out Test);
+   procedure Test_Generate_Hashes_4c3fdf (Gnattest_T : in out Test) renames Test_Generate_Hashes;
+--  id:2.2/4c3fdf3fefeb56aa/Generate_Hashes/1/0/
+   procedure Test_Generate_Hashes (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Generate_Hashes (Policy    => Policy,
+                       Input_Dir => "data");
+      Assert (Condition => DOM.Core.Nodes.Length
+              (List => McKae.XML.XPath.XIA.XPath_Query
+               (N     => Policy.Doc,
+                XPath => "/system/memory/memory/hash")) = 3,
+              Message   => "Generated hashes mismatch");
+--  begin read only
+   end Test_Generate_Hashes;
+--  end read only
+
+
+--  begin read only
    procedure Test_Resolve_Refs (Gnattest_T : in out Test);
    procedure Test_Resolve_Refs_eb1e6d (Gnattest_T : in out Test) renames Test_Resolve_Refs;
 --  id:2.2/eb1e6dac99bddea5/Resolve_Refs/1/0/

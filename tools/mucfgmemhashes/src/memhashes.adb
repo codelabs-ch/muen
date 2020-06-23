@@ -35,11 +35,6 @@ with Memhashes.Pre_Checks;
 package body Memhashes
 is
 
-   --  Generate hashes for memory content in given policy.
-   procedure Generate_Hashes
-     (Policy    : in out Muxml.XML_Data_Type;
-      Input_Dir :        String);
-
    --  As sinfo files are not hashed, create a copy of the given policy with
    --  sinfo memory regions stripped.
    function Remove_Sinfo_Files

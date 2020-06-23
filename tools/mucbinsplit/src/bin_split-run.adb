@@ -233,6 +233,7 @@ is
                     (Spec            => Spec,
                      Logical         => Section_Name,
                      Size            => Size,
+                     Hash            => "16#" & Hash & "#",
                      Virtual_Address => Interfaces.Unsigned_64 (Bin_Sec.Vma),
                      File_Name       => Output_File_Name,
                      Writable        => SI.Writable,

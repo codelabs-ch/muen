@@ -74,6 +74,35 @@ package body Memhashes.Test_Data.Tests is
                (N     => Policy.Doc,
                 XPath => "/system/memory/memory/hash")) = 3,
               Message   => "Generated hashes mismatch");
+
+      --  Existing hashes should only be checked instead of adding additional
+      --  hash elements.
+
+      Generate_Hashes (Policy    => Policy,
+                       Input_Dir => "data");
+      Assert (Condition => DOM.Core.Nodes.Length
+              (List => McKae.XML.XPath.XIA.XPath_Query
+               (N     => Policy.Doc,
+                XPath => "/system/memory/memory/hash")) = 3,
+              Message   => "Regenerated hashes mismatch");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/memory/memory[@name='src']/hash",
+         Name  => "value",
+         Value => "16#00#");
+      begin
+         Generate_Hashes (Policy    => Policy,
+                          Input_Dir => "data");
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Hasher_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Hash mismatch for memory region 'src'",
+                    Message   => "Exception message mismatch");
+      end;
 --  begin read only
    end Test_Generate_Hashes;
 --  end read only

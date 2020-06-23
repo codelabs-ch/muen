@@ -21,6 +21,8 @@ with Ada.Directories;
 with Ada.Strings.Fixed;
 with Ada.Strings.Maps;
 
+with GNAT.SHA256;
+
 with Mulog;
 
 with Muxml.Utils;
@@ -213,6 +215,7 @@ is
                Size : constant Interfaces.Unsigned_64
                  := Utils.Round_Up (Address => Interfaces.Unsigned_64
                                     (Bin_Sec.Size));
+               Hash : GNAT.SHA256.Message_Digest;
             begin
                Check_Alignment (Section => Bin_Sec);
 
@@ -220,6 +223,12 @@ is
                             Descriptor => Descriptor);
 
                if SI.Write_To_File then
+                  Files.Write_Section
+                    (Info             => SI,
+                     Output_File_Name => Output_Dir & "/" & Output_File_Name,
+                     Descriptor       => Descriptor,
+                     Hash             => Hash);
+
                   Bin_Split.Spec.Add_File_Entry
                     (Spec            => Spec,
                      Logical         => Section_Name,
@@ -228,11 +237,6 @@ is
                      File_Name       => Output_File_Name,
                      Writable        => SI.Writable,
                      Executable      => SI.Executable);
-
-                  Files.Write_Section
-                    (Info             => SI,
-                     Output_File_Name => Output_Dir & "/" & Output_File_Name,
-                     Descriptor       => Descriptor);
                else
                   Bin_Split.Spec.Add_Fill_Entry
                     (Spec            => Spec,

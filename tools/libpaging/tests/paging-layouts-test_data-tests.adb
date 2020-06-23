@@ -336,14 +336,14 @@ package body Paging.Layouts.Test_Data.Tests is
                Writable         => False,
                Executable       => True);
             Assert (Condition => False,
-                    Message   => "Exception expected");
+                    Message   => "Exception expected (Duplicate PT)");
 
          exception
             when E : Mapping_Present =>
                Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                        = "Multiple mappings of VMA 16#e000_0000# with "
                        & "different attributes present",
-                       Message   => "Exception mismatch");
+                       Message   => "Exception mismatch (Duplicate PT)");
          end;
       end Add_Duplicate_PT_Regions;
 
@@ -379,6 +379,53 @@ package body Paging.Layouts.Test_Data.Tests is
                     Message   => "Level 2 table has no entry" & I'Img);
          end loop;
       end Add_Large_Region_Three_Levels;
+
+      ----------------------------------------------------------------------
+
+      procedure Add_Canonical_Low_High_Regions
+      is
+         Layout : Memory_Layout_Type (Levels => 4);
+      begin
+         Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#0010_0000#,
+            Virtual_Address  => 16#0010_0000#,
+            Size             => Page_Size,
+            Caching          => WB,
+            Writable         => True,
+            Executable       => False);
+
+         --  Adding a canonical high-mem mapping must not raise an exception.
+
+         Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#cafe_0000#,
+            Virtual_Address  => 16#ffff_8000_0010_0000#,
+            Size             => Page_Size,
+            Caching          => WB,
+            Writable         => False,
+            Executable       => False);
+
+         begin
+            Add_Memory_Region
+              (Mem_Layout       => Layout,
+               Physical_Address => 16#cafe_0000#,
+               Virtual_Address  => 16#ffff_8000_0010_0000#,
+               Size             => Page_Size,
+               Caching          => WB,
+               Writable         => True,
+               Executable       => True);
+            Assert (Condition => False,
+                    Message   => "Exception expected (Canonical)");
+
+         exception
+            when E : Mapping_Present =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Multiple mappings of VMA 16#ffff_8000_0010_0000# "
+                       & "with different attributes present",
+                       Message   => "Exception mismatch (Canonical)");
+         end;
+      end Add_Canonical_Low_High_Regions;
    begin
       Add_PT_Region;
       Add_PD_Region;
@@ -386,6 +433,7 @@ package body Paging.Layouts.Test_Data.Tests is
       Add_Multiple_PT_Regions;
       Add_Duplicate_PT_Regions;
       Add_Large_Region_Three_Levels;
+      Add_Canonical_Low_High_Regions;
 --  begin read only
    end Test_Add_Memory_Region;
 --  end read only

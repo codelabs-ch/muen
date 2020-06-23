@@ -2170,9 +2170,7 @@ is
                       (N     => Loadee_Mem_Node,
                        XPath => "memory");
                begin
-                  for K in 0 .. DCN.Length
-                    (List => Loadee_Mappings) - 1
-                  loop
+                  for K in 0 .. DCN.Length (List => Loadee_Mappings) - 1 loop
                      declare
                         use type Interfaces.Unsigned_64;
 

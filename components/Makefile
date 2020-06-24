@@ -6,6 +6,7 @@ COMPONENTS_SPARK := \
 	libmuchannel \
 	libmudm \
 	libmucontroltypes \
+	libmucontrol \
 	libmutime \
 	libdebuglog \
 	libmusinfo \

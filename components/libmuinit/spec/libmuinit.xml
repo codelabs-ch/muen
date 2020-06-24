@@ -1,4 +1,7 @@
 <library name="libmuinit">
+ <depends>
+  <library ref="libmucontrol"/>
+ </depends>
  <requires>
   <vcpu>
    <registers>

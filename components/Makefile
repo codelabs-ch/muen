@@ -5,6 +5,7 @@ include proofs.mk
 COMPONENTS_SPARK := \
 	libmuchannel \
 	libmudm \
+	libmucontroltypes \
 	libmutime \
 	libdebuglog \
 	libmusinfo \

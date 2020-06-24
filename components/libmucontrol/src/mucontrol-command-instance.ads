@@ -37,6 +37,10 @@ is
    function Get_Epoch return Interfaces.Unsigned_64
    with Volatile_Function;
 
+   --  Returns the current watchdog interval.
+   function Get_Watchdog_Interval return Interfaces.Unsigned_64
+   with Volatile_Function;
+
    --  Returns True if the subject is self-governed.
    function Is_Self_Governed return Boolean
    with Volatile_Function;

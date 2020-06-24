@@ -57,6 +57,16 @@ is
       return Command_Page.Epoch;
    end Get_Epoch;
 
+   -------------------------------------------------------------------------
+
+   function Get_Watchdog_Interval return Interfaces.Unsigned_64
+   is
+   begin
+      return Command_Page.Watchdog_Interval;
+   end Get_Watchdog_Interval;
+
+   -------------------------------------------------------------------------
+
    function Is_Self_Governed return Boolean
    is
       Current_Cmd : constant Command_Type := Command_Page.Command;

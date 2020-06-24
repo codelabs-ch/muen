@@ -33,6 +33,10 @@ is
    function Get return Command_Type
    with Volatile_Function;
 
+   --  Returns the current epoch.
+   function Get_Epoch return Interfaces.Unsigned_64
+   with Volatile_Function;
+
    --  Returns True if the subject is self-governed.
    function Is_Self_Governed return Boolean
    with Volatile_Function;

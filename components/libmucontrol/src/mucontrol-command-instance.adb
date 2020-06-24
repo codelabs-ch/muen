@@ -51,6 +51,12 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Epoch return Interfaces.Unsigned_64
+   is
+   begin
+      return Command_Page.Epoch;
+   end Get_Epoch;
+
    function Is_Self_Governed return Boolean
    is
       Current_Cmd : constant Command_Type := Command_Page.Command;

@@ -4,6 +4,7 @@
   <boolean name="hsuart_supported" value="false"/>
   <boolean name="xhcidbg_supported" value="true"/>
   <boolean name="uefi_gop_rmrr_access" value="false"/>
+  <boolean name="vga_kernel_console" value="false"/>
   <string name="igd_opregion_address" value="16#7987_b000#"/>
  </config>
  <mappings>
@@ -33,5 +34,15 @@
    </class>
   </classes>
  </mappings>
- <kernelDiagnostics type="none"/>
+ <if variable="vga_kernel_console" value="false">
+  <kernelDiagnostics type="none"/>
+ </if>
+ <if variable="vga_kernel_console" value="true">
+  <kernelDiagnostics type="vga">
+   <device physical="vga">
+    <memory physical="buffer"/>
+    <ioPort physical="ports"/>
+   </device>
+  </kernelDiagnostics>
+ </if>
 </platform>

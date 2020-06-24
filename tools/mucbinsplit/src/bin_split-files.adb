@@ -32,9 +32,10 @@ is
    --------------------------------------------------------------------------
 
    procedure Write_Section
-     (Info             : Section_Info;
-      Output_File_Name : String;
-      Descriptor       : Bfd.Files.File_Type)
+     (Info             :     Section_Info;
+      Output_File_Name :     String;
+      Descriptor       :     Bfd.Files.File_Type;
+      Hash             : out GNAT.SHA256.Message_Digest)
    is
       use type Ada.Streams.Stream_Element_Offset;
 
@@ -51,8 +52,10 @@ is
 
       Out_File  : Ada.Streams.Stream_IO.File_Type;
       Pos, Last : Ada.Streams.Stream_Element_Offset;
-      Buf      : Ada.Streams.Stream_Element_Array (0 .. Buf_Size - 1);
+      Buf       : Ada.Streams.Stream_Element_Array (0 .. Buf_Size - 1);
+      Hash_Ctx  : GNAT.SHA256.Context := GNAT.SHA256.Initial_Context;
    begin
+      Hash := (others => ASCII.NUL);
       Last := 1;
       Pos  := 0;
       Mulog.Log (Level => Mulog.Debug,
@@ -77,12 +80,27 @@ is
            (File => Out_File,
             Item => Buf (Buf'First .. Ada.Streams.Stream_Element_Offset'Max
               (Last, Rem_Bytes - 1)));
+         GNAT.SHA256.Update
+           (C     => Hash_Ctx,
+            Input => Buf (Buf'First .. Ada.Streams.Stream_Element_Offset'Max
+              (Last, Rem_Bytes - 1)));
 
          Pos := Pos + Last + 1;
          exit when Pos >= Size;
       end loop;
 
       Ada.Streams.Stream_IO.Close (Out_File);
+
+      --  Update hash to include zero-padding up to 4 KB since the hash is over
+      --  the entire memory region and not just the file content.
+
+      Buf (Ada.Streams.Stream_Element_Offset'Max (Last + 1,
+           Rem_Bytes) .. Buf'Last) := (others => 0);
+      GNAT.SHA256.Update
+        (C     => Hash_Ctx,
+         Input => Buf (Ada.Streams.Stream_Element_Offset'Max (Last + 1,
+           Rem_Bytes) .. Buf'Last));
+      Hash := GNAT.SHA256.Digest (C => Hash_Ctx);
 
    exception
       when others =>

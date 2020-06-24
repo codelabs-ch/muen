@@ -31,6 +31,11 @@ is
 
 private
 
+   --  Generate hashes for memory content in given policy.
+   procedure Generate_Hashes
+     (Policy    : in out Muxml.XML_Data_Type;
+      Input_Dir :        String);
+
    --  Resolve hash references.
    procedure Resolve_Refs (Policy : in out Muxml.XML_Data_Type);
 

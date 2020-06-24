@@ -1,6 +1,6 @@
-CSPEC_XML     = $(wildcard spec/$(COMPONENT).xml)
-CSPEC_INSTALL = $(POLICY_CSPEC_DIR)/$(COMPONENT).xml
-COMP_HAS_BIN  = $(wildcard $(COMP_BIN))
+CSPEC_XML      = $(wildcard spec/$(COMPONENT).xml)
+CSPEC_INSTALL  = $(POLICY_CSPEC_DIR)/$(COMPONENT).xml
+COMP_HAS_BIN  ?= $(wildcard $(COMP_BIN))
 
 ifneq ($(CSPEC_XML),)
 INSTALL_TARGETS += $(CSPEC_INSTALL)

@@ -31,8 +31,8 @@ package body Bin_Split.Files.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Write_Section (Gnattest_T : in out Test);
-   procedure Test_Write_Section_6af65c (Gnattest_T : in out Test) renames Test_Write_Section;
---  id:2.2/6af65ca91ddd2c4b/Write_Section/1/0/
+   procedure Test_Write_Section_121336 (Gnattest_T : in out Test) renames Test_Write_Section;
+--  id:2.2/1213361284e35151/Write_Section/1/0/
    procedure Test_Write_Section (Gnattest_T : in out Test) is
 --  end read only
 
@@ -56,11 +56,13 @@ package body Bin_Split.Files.Test_Data.Tests is
                  := Ada.Directories.Compose
                    (Containing_Directory => Dir,
                     Name                 => Section_Name);
+               Hash_Unused : GNAT.SHA256.Message_Digest;
             begin
                Write_Section
                  (Info             => SI,
                   Output_File_Name => Out_Filename,
-                  Descriptor       => Fd);
+                  Descriptor       => Fd,
+                  Hash             => Hash_Unused);
 
                Assert
                  (Condition => Ada.Directories.Exists (Name => Out_Filename),

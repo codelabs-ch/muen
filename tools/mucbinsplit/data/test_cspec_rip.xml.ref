@@ -19,12 +19,15 @@
   </memory>
   <memory executable="true" logical="text" size="16#5000#" type="subject_binary" virtualAddress="16#5000#" writable="false">
    <file filename="test_binary_text" offset="none"/>
+   <hash value="16#66b2f58b13fe844859350d29236c963d3bf9fb5a2e5638bae9e2c3a927000263#"/>
   </memory>
   <memory executable="false" logical="rodata" size="16#1000#" type="subject_binary" virtualAddress="16#c000#" writable="false">
    <file filename="test_binary_rodata" offset="none"/>
+   <hash value="16#4a214bfd2e420612bc070e1ced632368ffdf04eb8fd4491db2b14c78b2824010#"/>
   </memory>
   <memory executable="false" logical="data" size="16#1000#" type="subject_binary" virtualAddress="16#d000#" writable="true">
    <file filename="test_binary_data" offset="none"/>
+   <hash value="16#e292d1b5d4c9498050d593b6ff88df716da10d523e652e9680d4393dc4062ae4#"/>
   </memory>
   <memory executable="false" logical="bss" size="16#2000#" type="subject_binary" virtualAddress="16#a000#" writable="true">
    <fill pattern="16#00#"/>

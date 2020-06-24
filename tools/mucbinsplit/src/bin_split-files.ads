@@ -17,6 +17,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with GNAT.SHA256;
+
 with Bfd.Files;
 
 package Bin_Split.Files
@@ -25,8 +27,9 @@ is
    --  Write section of input binary given by Info to a a file with name
    --  Output_File_Name. The input binary is given by Descriptor.
    procedure Write_Section
-     (Info             : Section_Info;
-      Output_File_Name : String;
-      Descriptor       : Bfd.Files.File_Type);
+     (Info             :     Section_Info;
+      Output_File_Name :     String;
+      Descriptor       :     Bfd.Files.File_Type;
+      Hash             : out GNAT.SHA256.Message_Digest);
 
 end Bin_Split.Files;

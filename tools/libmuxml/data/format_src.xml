@@ -94,6 +94,11 @@
      <memory executable="false" logical="foo" size="16#1000#" virtualAddress="16#cafe_0000#" writable="false"/>
     </memory>
    </requires>
+   <provides>
+    <memory executable="false" logical="lib_resource" size="16#1000#" type="subject" virtualAddress="16#5000#" writable="true">
+     <fill pattern="16#00#"/>
+    </memory>
+   </provides>
   </library>
   <library name="libdebuglog">
    <depends>

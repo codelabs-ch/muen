@@ -79,7 +79,7 @@ is
                  Tag_Name => "hash");
          begin
             Muxml.Utils.Append_Child
-              (Node      => File_Node,
+              (Node      => Memory_Node,
                New_Child => Hash_Node);
 
             DOM.Core.Elements.Set_Attribute

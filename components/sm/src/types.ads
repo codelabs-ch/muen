@@ -122,8 +122,7 @@ is
    type Subject_Action_Type is
      (Subject_Start,
       Subject_Continue,
-      Subject_Halt,
-      Subject_Reset);
+      Subject_Halt);
 
    --  Return I/O instruction information from exit qualification, as specified
    --  by Intel SDM Vol. 3C, "27.2.1 Basic VM-Exit Information", table 27-5.

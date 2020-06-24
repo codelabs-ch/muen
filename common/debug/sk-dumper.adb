@@ -146,7 +146,7 @@ is
    procedure Output_Subj_State (Context : Crash_Audit_Types.Subj_Context_Type)
    is
    begin
-      Put_Line (Item => "Subject 0x" & Img (Context.Subject_ID));
+      Put_Line (Item => "Subject " & Img (Context.Subject_ID));
 
       Put_Line (Item => "Exit reason: "
                 & Img (Word16 (Context.Descriptor.Exit_Reason))

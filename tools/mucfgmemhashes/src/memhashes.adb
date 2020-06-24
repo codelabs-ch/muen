@@ -35,11 +35,6 @@ with Memhashes.Pre_Checks;
 package body Memhashes
 is
 
-   --  Generate hashes for memory content in given policy.
-   procedure Generate_Hashes
-     (Policy    : in out Muxml.XML_Data_Type;
-      Input_Dir :        String);
-
    --  As sinfo files are not hashed, create a copy of the given policy with
    --  sinfo memory regions stripped.
    function Remove_Sinfo_Files
@@ -65,6 +60,8 @@ is
 
       for I in 0 .. Count - 1 loop
          declare
+            use type DOM.Core.Node;
+
             Mem_Node : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => Nodes,
@@ -73,17 +70,34 @@ is
               := Utils.To_Stream
                 (Node      => Mem_Node,
                  Input_Dir => Input_Dir);
-            Hash_Node : constant DOM.Core.Node
-              := DOM.Core.Documents.Create_Element
-                (Doc      => Policy.Doc,
-                 Tag_Name => "hash");
+            Hash_Str : constant String
+              := "16#" & GNAT.SHA256.Digest (A => Buffer) & "#";
+            Hash_Node : DOM.Core.Node
+              := Muxml.Utils.Get_Element (Doc   => Mem_Node,
+                                          XPath => "hash");
          begin
-            DOM.Core.Elements.Set_Attribute
-              (Elem  => Hash_Node,
-               Name  => "value",
-               Value => "16#" & GNAT.SHA256.Digest (A => Buffer) & "#");
-            Muxml.Utils.Append_Child (Node      => Mem_Node,
-                                      New_Child => Hash_Node);
+            if Hash_Node = null then
+               Hash_Node := DOM.Core.Documents.Create_Element
+                 (Doc      => Policy.Doc,
+                  Tag_Name => "hash");
+               DOM.Core.Elements.Set_Attribute
+                 (Elem  => Hash_Node,
+                  Name  => "value",
+                  Value => Hash_Str);
+               Muxml.Utils.Append_Child (Node      => Mem_Node,
+                                         New_Child => Hash_Node);
+            else
+               if Hash_Str /= DOM.Core.Elements.Get_Attribute
+                 (Elem => Hash_Node,
+                  Name => "value")
+               then
+                  raise Hasher_Error with "Hash mismatch for memory "
+                    & "region '"
+                    & DOM.Core.Elements.Get_Attribute (Elem => Mem_Node,
+                                                       Name => "name")
+                    & "'";
+               end if;
+            end if;
          end;
       end loop;
    end Generate_Hashes;

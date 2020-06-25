@@ -68,12 +68,7 @@ is
    use type Types.Subject_Action_Type;
    use Subject_Info;
 
-   --  Currently. the reset event cannot be declared in the component XML
-   --  spec since not all SM instances make use of the Reset functionality.
-
-   Reset_Event : constant := 1;
-   Action      : Types.Subject_Action_Type;
-
+   Action : Types.Subject_Action_Type;
    Exit_Reason, Instruction_Len : SK.Word32;
    RIP : SK.Word64;
 begin

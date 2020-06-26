@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with System;
-
 with Interfaces;
 
 with SK.Strings;
@@ -35,18 +33,6 @@ with Debug_Ops;
 
 package body Loader.Process_Target
 is
-
-   --  Does the actual target sinfo processing.
-   --
-   --  Rationale: Overlays with non-volatile variables won't be legal SPARK for
-   --  much longer, that is why we factor out the real processing in this extra
-   --  function [PA24-008].
-   procedure Process
-     (Sinfo      :     Musinfo.Subject_Info_Type;
-      Sinfo_Addr :     Interfaces.Unsigned_64;
-      Success    : out Boolean)
-   with
-      Pre => Musinfo.Instance.Is_Valid;
 
    --  Process given target subject memory region resource.
    procedure Process_Memregion
@@ -68,7 +54,7 @@ is
       use type Musinfo.Memregion_Type;
 
       Dst_Addr : constant IFA.Unsigned_64
-        := Resource.Mem_Data.Address + Globals.Get_Current_Sinfo_Offset;
+        := Resource.Mem_Data.Address + Target_Sinfo_Offset;
    begin
       Success := False;
 
@@ -200,69 +186,61 @@ is
    procedure Process
      (Sinfo_Mem :     Musinfo.Resource_Type;
       Success   : out Boolean)
-   with
-      SPARK_Mode => Off
    is
-      Target_Sinfo : Musinfo.Subject_Info_Type
-      with
-         Import,
-         Address => System'To_Address (Sinfo_Mem.Mem_Data.Address);
-   begin
-      Process (Sinfo      => Target_Sinfo,
-               Sinfo_Addr => Sinfo_Mem.Mem_Data.Address,
-               Success    => Success);
-   end Process;
-
-   -------------------------------------------------------------------------
-
-   procedure Process
-     (Sinfo      :     Musinfo.Subject_Info_Type;
-      Sinfo_Addr :     Interfaces.Unsigned_64;
-      Success    : out Boolean)
-   is
+      use type Interfaces.Unsigned_64;
    begin
       Success := False;
-
-      if not Musinfo.Utils.Is_Valid (Sinfo => Sinfo) then
+      if Sinfo_Mem.Mem_Data.Address /= Target_Sinfo_Address then
          pragma Debug (Debuglog.Client.Put_Line
-                       (Item => "Error: Target sinfo not valid at address "
-                        & SK.Strings.Img (Sinfo_Addr)));
+                       (Item => "Error: Target sinfo address mismatch "
+                        & SK.Strings.Img (Sinfo_Mem.Mem_Data.Address) & " /= "
+                        & SK.Strings.Img
+                          (Interfaces.Unsigned_64'(Target_Sinfo_Address))));
+         return;
+      end if;
+
+      if not Musinfo.Utils.Is_Valid (Sinfo => Globals.Target_Sinfo) then
+         pragma Debug (Debuglog.Client.Put_Line
+                       (Item => "Error: Target sinfo not valid"));
          return;
       end if;
 
       pragma Debug (Debug_Ops.Put
                     (Msg  => "Processing subject",
-                     Name => Sinfo.Name));
+                     Name => Globals.Target_Sinfo.Name));
 
       declare
-         use type Interfaces.Unsigned_64;
-
          Target_Sinfo_Mem : constant Musinfo.Memregion_Type
            := Musinfo.Utils.Memory_By_Name
-             (Sinfo => Sinfo,
+             (Sinfo => Globals.Target_Sinfo,
               Name  => Musinfo.Utils.To_Name (Str => "sinfo"));
-         Offset : constant Interfaces.Unsigned_64
-           := Sinfo_Addr - Target_Sinfo_Mem.Address;
+         Offset           : constant Interfaces.Unsigned_64
+           := Target_Sinfo_Address - Target_Sinfo_Mem.Address;
       begin
-         pragma Debug (Debuglog.Client.Put_Line
-                       (Item => "Setting current sinfo offset to "
-                        & SK.Strings.Img (Offset)));
-         Globals.Set_Current_Sinfo_Offset (O => Offset);
+         if Offset /= Target_Sinfo_Offset then
+            pragma Debug (Debuglog.Client.Put_Line
+                          (Item => "Error: Target sinfo offset mismatch "
+                           & SK.Strings.Img (Offset) & " /= "
+                           & SK.Strings.Img
+                             (Interfaces.Unsigned_64'(Target_Sinfo_Offset))));
+            return;
+         end if;
 
          declare
             Iter     : Musinfo.Utils.Resource_Iterator_Type
-              := Musinfo.Utils.Create_Resource_Iterator (Container => Sinfo);
+              := Musinfo.Utils.Create_Resource_Iterator
+                (Container => Globals.Target_Sinfo);
             Mem_Succ : Boolean;
             Element  : Musinfo.Resource_Type;
          begin
             Process_Memregions :
             while Musinfo.Utils.Has_Element
-              (Container => Sinfo,
+              (Container => Globals.Target_Sinfo,
                Iter      => Iter)
             loop
                Element := Musinfo.Utils.Element
-                   (Container => Sinfo,
-                    Iter      => Iter);
+                 (Container => Globals.Target_Sinfo,
+                  Iter      => Iter);
 
                if Element.Kind = Musinfo.Res_Memory then
                   Process_Memregion
@@ -274,7 +252,7 @@ is
                end if;
                Musinfo.Utils.Next (Iter => Iter);
                pragma Loop_Invariant
-                 (Musinfo.Utils.Belongs_To (Container => Sinfo,
+                 (Musinfo.Utils.Belongs_To (Container => Globals.Target_Sinfo,
                                             Iter      => Iter));
             end loop Process_Memregions;
          end;

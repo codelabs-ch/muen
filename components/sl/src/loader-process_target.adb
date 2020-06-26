@@ -266,9 +266,7 @@ is
 
                if Element.Kind = Musinfo.Res_Memory then
                   Process_Memregion
-                    (Resource => Musinfo.Utils.Element
-                       (Container => Sinfo,
-                        Iter      => Iter),
+                    (Resource => Element,
                      Success  => Mem_Succ);
                   if not Mem_Succ then
                      return;

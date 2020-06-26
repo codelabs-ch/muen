@@ -98,7 +98,6 @@
     <source>
      <group name="vmx_exit">
       <default physical="trap_to_sm_1"/>
-      <event id="33" logical="reset" physical="reset_sm_1"/>
      </group>
      <group name="vmcall">
       <event id="30" logical="reboot" physical="reboot_linux_1"/>
@@ -107,7 +106,6 @@
     </source>
     <target>
      <event logical="resume_after_trap" physical="resume_linux_1"/>
-     <event logical="resume_after_reset" physical="start_linux_1"/>
      <event logical="reset" physical="reset_linux_1">
       <reset/>
      </event>

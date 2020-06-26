@@ -5,14 +5,15 @@
     <default physical="system_panic">
      <system_panic/>
     </default>
-    <event id="33" logical="reset" physical="load_linux_1"/>
    </group>
    <group name="vmcall">
     <event id="0" logical="serial_irq4" physical="serial_irq4_linux_1"/>
     <event id="1" logical="reset_linux" physical="reset_linux_1"/>
+    <event id="2" logical="load_linux" physical="load_linux_1"/>
    </group>
   </source>
   <target>
+   <event physical="start_linux_1" logical="resume_after_load"/>
    <event physical="reset_sm_1" logical="reset">
     <reset/>
    </event>

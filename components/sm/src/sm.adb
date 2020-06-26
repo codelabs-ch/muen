@@ -114,17 +114,23 @@ begin
         = SK.Constants.EXIT_REASON_ENTRY_FAIL_GSTATE
       then
          Startup.Setup_Monitored_Subject;
-         pragma Debug (Debug_Ops.Put_Line
-                       (Item => "Invalid guest state, halting until further"
-                        & " notice"));
-         SK.CPU.Sti;
-         SK.CPU.Hlt;
-         SK.CPU.Cli;
-         pragma Debug (Debug_Ops.Put_Line
-                       (Item => "AP wakeup event, restarting CPU"));
+
          declare
+            CR0 : constant SK.Word64 := Subject_Info.State.CR0;
             CR4 : SK.Word64 := Subject_Info.State.CR4;
          begin
+            if not SK.Bitops.Bit_Test (Value => CR0,
+                                       Pos   => SK.Constants.CR0_PE_FLAG)
+            then
+               pragma Debug (Debug_Ops.Put_Line
+                             (Item => "Waiting for AP wakeup event"));
+               SK.CPU.Sti;
+               SK.CPU.Hlt;
+               SK.CPU.Cli;
+               pragma Debug (Debug_Ops.Put_Line
+                             (Item => "AP wakeup event received"));
+            end if;
+
             CR4 := SK.Bitops.Bit_Set
               (Value => CR4,
                Pos   => SK.Constants.CR4_VMXE_FLAG);

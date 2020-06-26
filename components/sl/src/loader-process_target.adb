@@ -20,9 +20,7 @@ with System;
 
 with Interfaces;
 
-with SK.Bitops;
 with SK.Strings;
-with SK.Constants;
 
 with Musinfo.Utils;
 
@@ -56,24 +54,6 @@ is
       Success  : out Boolean)
    with
       Pre => Musinfo.Instance.Is_Valid and Resource.Kind = Musinfo.Res_Memory;
-
-   --  Set CR4.VMXE bit in subject state at given address.
-   procedure Set_VMXE_Bit (State_Addr : Interfaces.Unsigned_64);
-
-   -------------------------------------------------------------------------
-
-   procedure Set_VMXE_Bit (State_Addr : Interfaces.Unsigned_64)
-   with
-      SPARK_Mode => Off
-   is
-      State : SK.Subject_State_Type
-      with
-         Import,
-         Address => System'To_Address (State_Addr);
-   begin
-      State.CR4 := SK.Bitops.Bit_Set (Value => State.CR4,
-                                      Pos   => SK.Constants.CR4_VMXE_FLAG);
-   end Set_VMXE_Bit;
 
    -------------------------------------------------------------------------
 
@@ -299,42 +279,6 @@ is
                  (Musinfo.Utils.Belongs_To (Container => Sinfo,
                                             Iter      => Iter));
             end loop Process_Memregions;
-         end;
-
-         --  Reset state.
-
-         declare
-            use type Musinfo.Name_Size_Type;
-            use type Musinfo.Memregion_Type;
-
-            Subj_Name : constant Musinfo.Name_Type
-              := Musinfo.Utils.Subject_Name (Sinfo => Sinfo);
-            Selector  : constant Musinfo.Name_Type
-              := Musinfo.Utils.To_Name (Str => "monitor_state_");
-            State_Mem : Musinfo.Memregion_Type;
-         begin
-            if Subj_Name.Length + Selector.Length > Musinfo.Name_Size_Type'Last
-            then
-               pragma Debug
-                 (Debuglog.Client.Put_Line
-                    (Item => "Error: Unable to construct subject state "
-                     & "selector, string too long"));
-               return;
-            end if;
-
-            State_Mem := Musinfo.Instance.Memory_By_Name
-              (Name => Musinfo.Utils.Concat
-                 (L => Selector,
-                  R => Subj_Name));
-            if State_Mem = Musinfo.Null_Memregion then
-               pragma Debug
-                 (Debuglog.Client.Put_Line
-                    (Item => "Error: Unable to retrieve state memory, check "
-                     & "logical names"));
-               return;
-            end if;
-
-            Set_VMXE_Bit (State_Addr => State_Mem.Address);
          end;
       end;
 

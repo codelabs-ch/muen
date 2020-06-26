@@ -131,12 +131,21 @@ begin
                              (Item => "AP wakeup event received"));
             end if;
 
-            CR4 := SK.Bitops.Bit_Set
-              (Value => CR4,
-               Pos   => SK.Constants.CR4_VMXE_FLAG);
-            Subject_Info.State.CR4 := CR4;
+            if SK.Bitops.Bit_Test (Value => CR4,
+                                   Pos   => SK.Constants.CR4_VMXE_FLAG)
+            then
+               pragma Debug (Debug_Ops.Put_Line
+                             (Item => "Invalid guest state, halting subject"));
+               Action := Types.Subject_Halt;
+            else
+               CR4 := SK.Bitops.Bit_Set
+                 (Value => CR4,
+                  Pos   => SK.Constants.CR4_VMXE_FLAG);
+               Subject_Info.State.CR4 := CR4;
+               Action := Types.Subject_Start;
+            end if;
          end;
-         Action := Types.Subject_Start;
+
       else
          pragma Debug (Debug_Ops.Put_Line
                        (Item => "Unhandled trap for associated subject"));

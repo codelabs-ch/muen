@@ -79,21 +79,16 @@ is
       Name  : Name_Type)
       return Device_Memory_Type
    is
-      M : Device_Memory_Type := Null_Device_Memory;
+      Res : constant Resource_Type
+        := Resource_By_Name (Sinfo => Sinfo,
+                             Name  => Name,
+                             Kind  => Res_Device_Memory);
    begin
-      Search :
-      for R of Sinfo.Resources loop
-         if R.Kind = Musinfo.Res_Device_Memory
-           and then Names_Equal
-             (Left  => Name,
-              Right => R.Name)
-         then
-            M := R.Dev_Mem_Data;
-            exit Search;
-         end if;
-      end loop Search;
-
-      return M;
+      if Res = Null_Resource then
+         return Null_Device_Memory;
+      else
+         return Res.Dev_Mem_Data;
+      end if;
    end Device_Memory_By_Name;
 
    -------------------------------------------------------------------------
@@ -228,21 +223,16 @@ is
       Name  : Name_Type)
       return Memregion_Type
    is
-      M : Memregion_Type := Null_Memregion;
+      Res : constant Resource_Type
+        := Resource_By_Name (Sinfo => Sinfo,
+                             Name  => Name,
+                             Kind  => Res_Memory);
    begin
-      Search :
-      for R of Sinfo.Resources loop
-         if R.Kind = Musinfo.Res_Memory
-           and then Names_Equal
-             (Left  => Name,
-              Right => R.Name)
-         then
-            M := R.Mem_Data;
-            exit Search;
-         end if;
-      end loop Search;
-
-      return M;
+      if Res = Null_Resource then
+         return Null_Memregion;
+      else
+         return Res.Mem_Data;
+      end if;
    end Memory_By_Name;
 
    -------------------------------------------------------------------------

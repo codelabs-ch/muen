@@ -5,7 +5,7 @@
     <default physical="system_panic">
      <system_panic/>
     </default>
-    <event id="33" logical="reset" physical="trap_to_sl_1"/>
+    <event id="33" logical="reset" physical="load_linux_1"/>
    </group>
    <group name="vmcall">
     <event id="0" logical="serial_irq4" physical="serial_irq4_linux_1"/>

@@ -2,7 +2,9 @@
  <events>
   <source>
    <group name="vmx_exit">
-    <default physical="trap_to_sl_1"/>
+    <default physical="system_panic">
+     <system_panic/>
+    </default>
     <event id="33" logical="reset" physical="trap_to_sl_1"/>
    </group>
    <group name="vmcall">

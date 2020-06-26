@@ -206,7 +206,7 @@ is
       end if;
 
       pragma Debug (Debug_Ops.Put
-                    (Msg  => "Processing subject",
+                    (Msg  => "Loading subject",
                      Name => Globals.Target_Sinfo.Name));
 
       declare

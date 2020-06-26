@@ -43,9 +43,6 @@ begin
    end if;
 
    loop
-      pragma Debug (Debuglog.Client.Put_Line
-                    (Item => "Resetting managed subject(s)"));
-
       declare
          use type Musinfo.Resource_Kind;
 

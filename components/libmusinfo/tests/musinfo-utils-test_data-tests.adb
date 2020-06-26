@@ -773,6 +773,98 @@ package body Musinfo.Utils.Test_Data.Tests is
    end Test_Device_Memory_By_Name;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Resource_By_Name (Gnattest_T : in out Test);
+   procedure Test_Resource_By_Name_7898f4 (Gnattest_T : in out Test) renames Test_Resource_By_Name;
+--  id:2.2/7898f47c562df770/Resource_By_Name/1/0/
+   procedure Test_Resource_By_Name (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      SI      : Subject_Info_Type;
+      Ref_Evt : constant Byte_Type := (Value   => 5,
+                                       Padding => (others => 0));
+      Ref_Mem : constant Memregion_Type := Memregion_Type'
+        (Kind    => Subject_Channel,
+         Content => Content_Fill,
+         Address => 16#2000#,
+         Size    => 16#6000_0000#,
+         Hash    => No_Hash,
+         Flags   => Null_Memory_Flags,
+         Pattern => 234,
+         Padding => 0);
+   begin
+      SI.Magic := 12;
+      Assert (Condition => Resource_By_Name
+              (Sinfo => SI,
+               Name  => To_Name (Str => "foo"),
+               Kind  => Res_Event) = Null_Resource,
+              Message   => "Null_Resource expected");
+
+      SI.Resources (1) := Resource_Type'
+        (Kind     => Res_Memory,
+         Name     => Name_Type'
+           (Length    => 2,
+            Padding   => 0,
+            Data      => Name_Data_Type'
+              (1 => 'r', 2 => '1', others => ASCII.NUL),
+            Null_Term => ASCII.NUL),
+         Padding  => (others => 0),
+         Mem_Data => (Kind    => Subject_Channel,
+                      Content => Content_Fill,
+                      Address => 16#2000#,
+                      Size    => 16#6000_0000#,
+                      Hash    => No_Hash,
+                      Flags   => Null_Memory_Flags,
+                      Pattern => 234,
+                      Padding => 0));
+      SI.Resources (2) := Resource_Type'
+        (Kind     => Res_Event,
+         Name     => Name_Type'
+           (Length    => 2,
+            Padding   => 0,
+            Data      => Name_Data_Type'
+              (1 => 'r', 2 => '2', 3 => '3', others => ASCII.NUL),
+            Null_Term => ASCII.NUL),
+         Padding  => (others => 0),
+         Evt_Data => (Value   => 5,
+                      Padding => (others => 0)));
+      SI.Resources (3) := Resource_Type'
+        (Kind     => Res_Memory,
+         Name     => Name_Type'
+           (Length    => 2,
+            Padding   => 0,
+            Data      => Name_Data_Type'
+              (1 => 'r', 2 => '2', others => ASCII.NUL),
+            Null_Term => ASCII.NUL),
+         Padding  => (others => 0),
+         Mem_Data => Ref_Mem);
+      SI.Resources (4) := Resource_Type'
+        (Kind     => Res_Event,
+         Name     => Name_Type'
+           (Length    => 2,
+            Padding   => 0,
+            Data      => Name_Data_Type'
+              (1 => 'r', 2 => '2', others => ASCII.NUL),
+            Null_Term => ASCII.NUL),
+         Padding  => (others => 0),
+         Evt_Data => Ref_Evt);
+      Assert (Condition => Resource_By_Name
+              (Sinfo => SI,
+               Name  => To_Name ("r2"),
+               Kind  => Res_Event).Evt_Data = Ref_Evt,
+              Message   => "Resource mismatch (Event)");
+      Assert (Condition => Resource_By_Name
+              (Sinfo => SI,
+               Name  => To_Name ("r2"),
+               Kind  => Res_Memory).Mem_Data = Ref_Mem,
+              Message   => "Resource mismatch (Memory)");
+--  begin read only
+   end Test_Resource_By_Name;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

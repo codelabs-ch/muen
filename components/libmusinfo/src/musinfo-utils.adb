@@ -262,6 +262,36 @@ is
 
    -------------------------------------------------------------------------
 
+   function Resource_By_Name
+     (Sinfo : Subject_Info_Type;
+      Name  : Name_Type;
+      Kind  : Resource_Kind)
+      return Resource_Type
+   is
+      Res : Resource_Type := Null_Resource;
+   begin
+      Search :
+      for I in Sinfo.Resources'Range loop
+         if Sinfo.Resources (I).Kind = Kind
+           and then Names_Equal
+             (Left  => Name,
+              Right => Sinfo.Resources (I).Name)
+         then
+            Res := Sinfo.Resources (I);
+            exit Search;
+         end if;
+         pragma Loop_Invariant
+           (for all J in Sinfo.Resources'First .. I =>
+              Sinfo.Resources (J).Kind /= Kind or
+                not Names_Equal (Left  => Sinfo.Resources (J).Name,
+                                 Right => Name));
+      end loop Search;
+
+      return Res;
+   end Resource_By_Name;
+
+   -------------------------------------------------------------------------
+
    function To_Name (Str : String) return Name_Type
    is
       N : Name_Type := (Length    => Str'Length,

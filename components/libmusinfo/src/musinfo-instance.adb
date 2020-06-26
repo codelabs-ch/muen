@@ -95,6 +95,20 @@ is
 
    -------------------------------------------------------------------------
 
+   function Resource_By_Name
+     (Name : Name_Type;
+      Kind : Resource_Kind)
+      return Resource_Type
+   is
+   begin
+      return Utils.Resource_By_Name
+        (Sinfo => Object,
+         Name  => Name,
+         Kind  => Kind);
+   end Resource_By_Name;
+
+   -------------------------------------------------------------------------
+
    function TSC_Khz return TSC_Tick_Rate_Khz_Type
    with
       Refined_Global => (Input => Object)

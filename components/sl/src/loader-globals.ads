@@ -16,11 +16,20 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with System;
+
 with Interfaces;
+
+with Musinfo;
 
 package Loader.Globals
 is
    use type Interfaces.Unsigned_64;
+
+   Target_Sinfo : constant Musinfo.Subject_Info_Type
+   with
+      Import,
+      Address => System'To_Address (Target_Sinfo_Address);
 
    --  Set sinfo offset to specified value.
    procedure Set_Current_Sinfo_Offset (O : Interfaces.Unsigned_64)

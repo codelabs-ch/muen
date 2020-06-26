@@ -47,6 +47,7 @@ with Exit_Handlers.CR_Access;
 with Exit_Handlers.RDTSC;
 with Devices.RTC;
 with Devices.UART8250;
+with Startup;
 
 with Debug_Ops;
 
@@ -76,6 +77,11 @@ begin
    SK.Interrupt_Tables.Initialize
      (Stack_Addr => Component_Constants.Interrupt_Stack_Address);
    Time.Initialize;
+
+   if not Musinfo.Instance.Is_Valid then
+      pragma Debug (Debug_Ops.Put_Line (Item => "Sinfo not valid"));
+      SK.CPU.Stop;
+   end if;
 
    loop
       Exit_Reason := State.Exit_Reason;
@@ -107,6 +113,7 @@ begin
       elsif SK.Word16'Mod (Exit_Reason)
         = SK.Constants.EXIT_REASON_ENTRY_FAIL_GSTATE
       then
+         Startup.Setup_Monitored_Subject;
          pragma Debug (Debug_Ops.Put_Line
                        (Item => "Invalid guest state, halting until further"
                         & " notice"));

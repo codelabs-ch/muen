@@ -18,4 +18,8 @@
 
 package Loader
 is
+
+   Target_Sinfo_Address : constant := 16#000f_0000_0000#;
+   Target_Sinfo_Offset  : constant := 16#0001_0000_0000#;
+
 end Loader;

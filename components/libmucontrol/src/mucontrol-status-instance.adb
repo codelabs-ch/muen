@@ -43,7 +43,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Error (Diagnostic : Interfaces.Unsigned_64)
+   procedure Error (Diagnostic : Diagnostics_Type)
    is
    begin
       Status_Page.Diagnostics := Diagnostic;
@@ -67,7 +67,7 @@ is
    begin
       Status_Page := (Status      => STATE_INITIAL,
                       Watchdog    => 0,
-                      Diagnostics => 0,
+                      Diagnostics => DIAG_OK,
                       Reserved    => (others => 0));
    end Initialize;
 

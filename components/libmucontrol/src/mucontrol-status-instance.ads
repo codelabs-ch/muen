@@ -44,7 +44,7 @@ is
    procedure Set (New_Status : Status_Type);
 
    --  Set subject status to error with given diagnostic value.
-   procedure Error (Diagnostic : Interfaces.Unsigned_64);
+   procedure Error (Diagnostic : Diagnostics_Type);
 
    --  Set watchdog value.
    procedure Set_Watchdog (Value : Interfaces.Unsigned_64);

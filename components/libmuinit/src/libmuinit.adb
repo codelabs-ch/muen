@@ -54,7 +54,8 @@ begin
             Init.Status.Set (New_Status => Mucontrol.Status.STATE_ERASED);
             Init.Commands.Wait_For_Prepare (Success => Success);
             if not Success then
-               Init.Status.Error (Diagnostic => 3);
+               Init.Status.Error
+                 (Diagnostic => Mucontrol.Status.DIAG_UNEXPECTED_CMD);
                return;
             end if;
          end if;
@@ -73,16 +74,20 @@ begin
             --  Verify hashes of all memory regions.
             Init.Status.Set (New_Status => Mucontrol.Status.STATE_VALIDATED);
             Init.Commands.Wait_For_Run (Success => Success);
-            Init.Status.Set
-              (New_Status => Mucontrol.Status.STATE_INITIALIZING);
-         else
-            Init.Status.Error (Diagnostic => 4);
+            if not Success then
+               Init.Status.Error
+                 (Diagnostic => Mucontrol.Status.DIAG_UNEXPECTED_CMD);
+            else
+               Init.Status.Set
+                 (New_Status => Mucontrol.Status.STATE_INITIALIZING);
+            end if;
          end if;
       else
-         Init.Status.Error (Diagnostic => 2);
+         Init.Status.Error
+           (Diagnostic => Mucontrol.Status.DIAG_UNEXPECTED_CMD);
       end if;
    else
-      Init.Status.Error (Diagnostic => 1);
+      Init.Status.Error (Diagnostic => Mucontrol.Status.DIAG_UNEXPECTED_CMD);
    end if;
 
    Init.Chainload.Component_Entrypoint := Init.Memory.Get_Text_Base;

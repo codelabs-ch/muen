@@ -33,7 +33,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Error (Diagnostic : Interfaces.Unsigned_64)
+   procedure Error (Diagnostic : Mucontrol.Status.Diagnostics_Type)
    is
    begin
       Mucontrol.Status.Instance.Set_Diagnostics (Value => Diagnostic);

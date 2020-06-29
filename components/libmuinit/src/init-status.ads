@@ -26,8 +26,6 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Interfaces;
-
 with Mucontrol.Status;
 
 package Init.Status
@@ -40,7 +38,7 @@ is
    procedure Set (New_Status : Mucontrol.Status.Status_Type);
 
    --  Set subject status to error with given diagnostic value.
-   procedure Error (Diagnostic : Interfaces.Unsigned_64)
+   procedure Error (Diagnostic : Mucontrol.Status.Diagnostics_Type)
      with No_Return;
 
 end Init.Status;

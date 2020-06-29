@@ -58,6 +58,14 @@ is
    --  Error occurred.
    STATE_ERROR        : constant Status_Type := 16#FFFF#;
 
+   type Diagnostics_Type is new Interfaces.Unsigned_64
+     with Size => 64;
+
+   --  Processing successful, no error.
+   DIAG_OK             : constant Diagnostics_Type := 16#0000#;
+   --  Received unexpected command.
+   DIAG_UNEXPECTED_CMD : constant Diagnostics_Type := 16#0001#;
+
    Padding_Start_Byte : constant := 8 + 8 + 8;
    Padding_Size       : constant := (Page_Size - Padding_Start_Byte) * 8;
 
@@ -68,7 +76,7 @@ is
    type Status_Page_Type is record
       Status      : Status_Type with Atomic;
       Watchdog    : Interfaces.Unsigned_64;
-      Diagnostics : Interfaces.Unsigned_64;
+      Diagnostics : Diagnostics_Type;
       Reserved    : Padding_Type;
    end record
      with

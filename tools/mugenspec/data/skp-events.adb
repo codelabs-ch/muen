@@ -28,6 +28,13 @@ is
    Subject_Events : constant Subjects_Events_Array := Subjects_Events_Array'(
       0 => Subject_Events_Type'(
        Source_Traps  => Trap_Table_Type'(
+          48 => (
+            Source_Action  => No_Action,
+            Target_Subject => 2,
+            Target_Event   => 1,
+            Handover       => True,
+            Send_IPI       => False,
+            IRQ_Number     => 0),
            0 |  2 |  3 |  4 |  5 |  6 |
            8 |  9 | 10 | 11 | 12 | 13 |
           14 | 15 | 16 | 17 | 18 | 19 |
@@ -39,14 +46,7 @@ is
           56 | 57 | 58 | 59 => (
             Source_Action  => No_Action,
             Target_Subject => 2,
-            Target_Event   => 0,
-            Handover       => True,
-            Send_IPI       => False,
-            IRQ_Number     => 0),
-          48 => (
-            Source_Action  => No_Action,
-            Target_Subject => 2,
-            Target_Event   => 1,
+            Target_Event   => Invalid_Target_Event,
             Handover       => True,
             Send_IPI       => False,
             IRQ_Number     => 0),
@@ -69,7 +69,7 @@ is
           18 => (
             Source_Action  => No_Action,
             Target_Subject => 2,
-            Target_Event   => 0,
+            Target_Event   => Invalid_Target_Event,
             Handover       => True,
             Send_IPI       => False,
             IRQ_Number     => 0),

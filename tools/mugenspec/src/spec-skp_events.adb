@@ -172,8 +172,13 @@ is
                (Node  => Event_Target,
                 Level => 3),
                Name => "globalId")));
+      Has_Target_Action : constant Boolean
+        := (if Event_Target = null then False
+            else Muxml.Utils.Get_Element
+              (Doc   => Event_Target,
+               XPath => "*") /= null);
       Target_Event_ID : constant Natural
-        := (if Event_Target = null then Natural'Last
+        := (if Event_Target = null or not Has_Target_Action then Natural'Last
             else Natural'Value (DOM.Core.Elements.Get_Attribute
               (Elem => Event_Target,
                Name => "id")));

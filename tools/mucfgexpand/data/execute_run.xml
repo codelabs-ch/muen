@@ -1725,7 +1725,7 @@
      <event id="1" logical="timer" physical="timer_subject1">
       <inject_interrupt vector="37"/>
      </event>
-     <event id="2" logical="self_reset" physical="foo_subject1">
+     <event id="63" logical="self_reset" physical="foo_subject1">
       <reset/>
      </event>
     </target>

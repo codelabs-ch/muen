@@ -198,6 +198,7 @@
   <xs:complexContent>
    <xs:extension base="baseLogicalEventType">
     <xs:group ref="targetEventActionsGroup" minOccurs="0" maxOccurs="1"/>
+     <xs:attribute name="id" type="xs:nonNegativeInteger" use="optional"/>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>

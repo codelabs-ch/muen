@@ -1740,17 +1740,30 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subj_Node,
                  Name => "name");
-            Events    : constant DOM.Core.Node_List
+            Events_with_IDs : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Subj_Node,
-                 XPath => "events/target/event");
-            Cur_ID    : Natural := 0;
+                 XPath => "events/target/event[@id]");
+            Events_No_IDs : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Subj_Node,
+                 XPath => "events/target/event[not(@id)]");
+            ID_Alloc : Utils.Number_Allocator_Type
+              (Range_Start => 0,
+               Range_End   => 2 ** Mutools.Constants.Event_Bits - 1);
+            Cur_ID : Natural;
          begin
-            for J in 0 .. DOM.Core.Nodes.Length (List => Events) - 1 loop
+            Utils.Reserve_Numbers (Allocator => ID_Alloc,
+                                   Nodes     => Events_with_IDs,
+                                   Attribute => "id");
+            for J in 0 .. DOM.Core.Nodes.Length (List => Events_No_IDs) - 1
+            loop
+               Utils.Allocate (Allocator => ID_Alloc,
+                               Number    => Cur_ID);
                declare
                   Ev_Node : constant DOM.Core.Node
                     := DOM.Core.Nodes.Item
-                      (List  => Events,
+                      (List  => Events_No_IDs,
                        Index => J);
                   Ev_Name :  constant String
                     := DOM.Core.Elements.Get_Attribute
@@ -1768,7 +1781,6 @@ is
                     (Elem  => Ev_Node,
                      Name  => "id",
                      Value => ID_Str);
-                  Cur_ID := Cur_ID + 1;
                end;
             end loop;
          end;

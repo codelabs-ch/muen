@@ -65,6 +65,9 @@
     <event logical="timer">
      <inject_interrupt vector="37"/>
     </event>
+    <event id="63" logical="reset">
+     <reset/>
+    </event>
    </target>
   </events>
  </requires>

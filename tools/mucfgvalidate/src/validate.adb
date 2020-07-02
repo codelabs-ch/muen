@@ -266,6 +266,8 @@ is
       XML_Processors.Register
         (Process => Events.IPI_Different_Core'Access);
       XML_Processors.Register
+        (Process => Events.Target_Event_ID_Uniqueness'Access);
+      XML_Processors.Register
         (Process => Events.Source_Group_Event_ID_Validity'Access);
       XML_Processors.Register
         (Process => Events.Source_Group_Event_ID_Uniqueness'Access);

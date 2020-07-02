@@ -21,16 +21,11 @@
   </xs:complexContent>
  </xs:complexType>
 
- <xs:complexType name="baseEventType">
-  <xs:attribute name="logical"  type="nameType" use="required"/>
-  <xs:attribute name="physical" type="nameType" use="required"/>
- </xs:complexType>
-
- <xs:complexType name="sourceEventEntryType">
+ <xs:complexType name="targetEventEntryType">
   <xs:complexContent>
    <xs:extension base="baseEventType">
-    <xs:group ref="sourceEventActionsGroup" minOccurs="0" maxOccurs="1"/>
-    <xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
+    <xs:group ref="targetEventActionsGroup" minOccurs="0" maxOccurs="1"/>
+    <xs:attribute name="id" type="xs:nonNegativeInteger" use="optional"/>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>

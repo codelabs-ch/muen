@@ -193,7 +193,7 @@
      </group>
     </source>
     <target>
-     <event logical="reset" physical="reset_subject">
+     <event id="0" logical="reset" physical="reset_subject">
       <reset/>
      </event>
     </target>

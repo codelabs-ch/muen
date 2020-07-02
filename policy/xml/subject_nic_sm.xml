@@ -14,7 +14,7 @@
   </source>
   <target>
    <event physical="start_linux_1" logical="resume_after_load"/>
-   <event physical="reset_sm_1" logical="reset">
+   <event id="63" physical="reset_sm_1" logical="reset">
     <reset/>
    </event>
   </target>

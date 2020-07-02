@@ -42,6 +42,9 @@ is
    --  different logical CPUs.
    procedure IPI_Different_Core (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that target event IDs are unique.
+   procedure Target_Event_ID_Uniqueness (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that source event IDs are unique per group.
    procedure Source_Group_Event_ID_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 

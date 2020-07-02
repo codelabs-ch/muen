@@ -898,4 +898,81 @@ is
                                Error_Msg => "must run on the same CPU");
    end Switch_Same_Core;
 
+   -------------------------------------------------------------------------
+
+   procedure Target_Event_ID_Uniqueness (XML_Data : Muxml.XML_Data_Type)
+   is
+      use Ada.Strings.Unbounded;
+
+      Subj_Name : Unbounded_String;
+
+      --  Check inequality of event ID.
+      procedure Check_Inequality (Left, Right : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Inequality (Left, Right : DOM.Core.Node)
+      is
+         Left_ID : constant Natural
+           := Natural'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => Left,
+                 Name => "id"));
+         Left_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Left,
+              Name => "logical");
+         Right_ID : constant Natural
+           := Natural'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => Right,
+                 Name => "id"));
+         Right_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Right,
+              Name => "logical");
+      begin
+         if Left_ID = Right_ID then
+            raise Validation_Error with "Subject '" & To_String (Subj_Name)
+              & "' target events '" & Left_Name & "' and '" & Right_Name
+              & "' share ID" & Left_ID'Img;
+         end if;
+      end Check_Inequality;
+
+      Subject_Target_Events : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/events/target");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subject_Target_Events) - 1
+      loop
+         declare
+            Event_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subject_Target_Events,
+                 Index => I);
+            Events : constant DOM.Core.Node_List
+              := XPath_Query
+                 (N     => Event_Node,
+                  XPath => "event");
+         begin
+            if DOM.Core.Nodes.Length (List => Events) > 1 then
+               Subj_Name := To_Unbounded_String
+                 (DOM.Core.Elements.Get_Attribute
+                    (Elem => Muxml.Utils.Ancestor_Node
+                         (Node  => Event_Node,
+                          Level => 2),
+                     Name => "name"));
+
+               Mulog.Log (Msg => "Checking uniqueness of"
+                          & DOM.Core.Nodes.Length (List => Events)'Img
+                          & " target event ID(s) for subject '"
+                          & To_String (Subj_Name) & "'");
+               Compare_All (Nodes      => Events,
+                            Comparator => Check_Inequality'Access);
+            end if;
+         end;
+      end loop;
+   end Target_Event_ID_Uniqueness;
+
 end Mucfgcheck.Events;

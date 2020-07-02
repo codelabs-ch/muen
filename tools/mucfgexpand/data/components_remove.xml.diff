@@ -43,7 +43,7 @@
       <event id="20" logical="foo"/>                                                                                                                 <
      </source>                                                                                                                                       <
      <target>                                                                                                                                        <
-      <event logical="self_reset">                                                                                                                   <
+      <event id="63" logical="self_reset">                                                                                                           <
        <reset/>                                                                                                                                      <
       </event>                                                                                                                                       <
      </target>                                                                                                                                       <

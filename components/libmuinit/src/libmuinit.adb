@@ -26,8 +26,61 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
+with Mucontrol.Status;
+
+with Init.Commands;
+with Init.Memory;
+with Init.Status;
+
 procedure Libmuinit
 is
+   Success, Do_Erase : Boolean;
 begin
-   null;
+   Init.Status.Initialize;
+
+   Init.Commands.Wait_For_Sync (Success => Success);
+   if Success then
+      Init.Status.Set (New_Status => Mucontrol.Status.STATE_SYNCED);
+      Init.Commands.Wait_For_Erase_Or_Prepare (Success => Success,
+                                               Erase   => Do_Erase);
+      if Success then
+         if Do_Erase then
+            Init.Status.Set (New_Status => Mucontrol.Status.STATE_ERASING);
+
+            --  Erase writable regions
+
+            Init.Memory.Clear_Writable;
+            Init.Status.Set (New_Status => Mucontrol.Status.STATE_ERASED);
+            Init.Commands.Wait_For_Prepare (Success => Success);
+            if not Success then
+               Init.Status.Error (Diagnostic => 3);
+               return;
+            end if;
+         end if;
+         Init.Status.Set (New_Status => Mucontrol.Status.STATE_PREPARING);
+
+         --  Set up memory region content.
+         Init.Memory.Setup_Writable (Success => Success);
+         if not Success then
+            Init.Status.Error (Diagnostic => 5);
+         end if;
+         Init.Status.Set (New_Status => Mucontrol.Status.STATE_PREPARED);
+         Init.Commands.Wait_For_Validate (Success => Success);
+         if Success then
+            Init.Status.Set
+              (New_Status => Mucontrol.Status.STATE_VALIDATING);
+            --  Verify hashes of all memory regions.
+            Init.Status.Set (New_Status => Mucontrol.Status.STATE_VALIDATED);
+            Init.Commands.Wait_For_Run (Success => Success);
+            Init.Status.Set
+              (New_Status => Mucontrol.Status.STATE_INITIALIZING);
+         else
+            Init.Status.Error (Diagnostic => 4);
+         end if;
+      else
+         Init.Status.Error (Diagnostic => 2);
+      end if;
+   else
+      Init.Status.Error (Diagnostic => 1);
+   end if;
 end Libmuinit;

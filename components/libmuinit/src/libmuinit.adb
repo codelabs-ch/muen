@@ -30,6 +30,7 @@ with Mucontrol.Status;
 
 with Init.Commands;
 with Init.Memory;
+with Init.Stack;
 with Init.Status;
 
 procedure Libmuinit
@@ -37,7 +38,6 @@ is
    Success, Do_Erase : Boolean;
 begin
    Init.Status.Initialize;
-
    Init.Commands.Wait_For_Sync (Success => Success);
    if Success then
       Init.Status.Set (New_Status => Mucontrol.Status.STATE_SYNCED);
@@ -83,4 +83,6 @@ begin
    else
       Init.Status.Error (Diagnostic => 1);
    end if;
+
+   Init.Stack.Clear (Stack_Start => Init.Memory.Get_Stack_Base);
 end Libmuinit;

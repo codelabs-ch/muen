@@ -16,6 +16,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define STATE_RUNNING 0x0009
+#define STATUS_PAGE_ADDR 0xfff001000
+
 .section .text
 
 _main:
@@ -49,4 +52,6 @@ _main:
 	pop %r12
 	pop %r13
 	pop %r14
+	movq $STATUS_PAGE_ADDR, %r15
+	movq $STATE_RUNNING, (%r15)
 	pop %r15

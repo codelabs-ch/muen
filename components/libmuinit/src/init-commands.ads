@@ -29,26 +29,27 @@
 package Init.Commands
 is
 
-   --  Wait for erase or prepare command. Success is True if the received
-   --  command was either erase or prepare. Erase is set to True if the command
-   --  was erase.
+   --  Wait for erase, prepare or self-control command. Success is True if the
+   --  received command was either erase, prepare or self-control. Erase is set
+   --  to True if the command was erase.
    procedure Wait_For_Erase_Or_Prepare
      (Success : out Boolean;
       Erase   : out Boolean);
 
-   --  Wait for prepare command. Success is True if the received command was
-   --  prepare.
+   --  Wait for prepare or self-control command. Success is True if the
+   --  received command was either prepare or self-control.
    procedure Wait_For_Prepare (Success : out Boolean);
 
-   --  Wait for run command. Success is True if the received command was run.
+   --  Wait for run or self-control command. Success is True if the received
+   --  command was either run or self-control.
    procedure Wait_For_Run (Success : out Boolean);
 
-   --  Wait for synchronization command. Success is True if the received
-   --  command was sync.
+   --  Wait for synchronization or self-control command. Success is True if the
+   --  received command was either sync or self-control.
    procedure Wait_For_Sync (Success : out Boolean);
 
-   --  Wait for validation command. Success is True if the received command was
-   --  validate.
+   --  Wait for validation or self-control command. Success is True if the
+   --  received command was either validate or self-control.
    procedure Wait_For_Validate (Success : out Boolean);
 
 end Init.Commands;

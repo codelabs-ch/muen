@@ -43,7 +43,8 @@ is
    begin
       Mucontrol.Command.Instance.Wait_For_Next (Cmd => Cmd);
       Erase := Cmd = Mucontrol.Command.CMD_ERASE;
-      Success := Erase or Cmd = Mucontrol.Command.CMD_PREPARE;
+      Success := Erase or Cmd = Mucontrol.Command.CMD_PREPARE
+        or Cmd = Mucontrol.Command.CMD_SELF_CTRL;
    end Wait_For_Erase_Or_Prepare;
 
    -------------------------------------------------------------------------
@@ -53,7 +54,8 @@ is
       Cmd : Mucontrol.Command.Command_Type := Mucontrol.Command.CMD_ERASE;
    begin
       Mucontrol.Command.Instance.Wait_For_Next (Cmd => Cmd);
-      Success := Cmd = Mucontrol.Command.CMD_PREPARE;
+      Success := Cmd = Mucontrol.Command.CMD_PREPARE
+        or Cmd = Mucontrol.Command.CMD_SELF_CTRL;
    end Wait_For_Prepare;
 
    -------------------------------------------------------------------------
@@ -63,7 +65,8 @@ is
       Cmd : Mucontrol.Command.Command_Type := Mucontrol.Command.CMD_VALIDATE;
    begin
       Mucontrol.Command.Instance.Wait_For_Next (Cmd => Cmd);
-      Success := Cmd = Mucontrol.Command.CMD_RUN;
+      Success := Cmd = Mucontrol.Command.CMD_RUN
+        or Cmd = Mucontrol.Command.CMD_SELF_CTRL;
    end Wait_For_Run;
 
    -------------------------------------------------------------------------
@@ -73,7 +76,8 @@ is
       Cmd : Mucontrol.Command.Command_Type := Mucontrol.Command.CMD_NOP;
    begin
       Mucontrol.Command.Instance.Wait_For_Next (Cmd => Cmd);
-      Success := Cmd = Mucontrol.Command.CMD_SYNC;
+      Success := Cmd = Mucontrol.Command.CMD_SYNC
+        or Cmd = Mucontrol.Command.CMD_SELF_CTRL;
    end Wait_For_Sync;
 
    -------------------------------------------------------------------------
@@ -83,7 +87,8 @@ is
       Cmd : Mucontrol.Command.Command_Type := Mucontrol.Command.CMD_PREPARE;
    begin
       Mucontrol.Command.Instance.Wait_For_Next (Cmd => Cmd);
-      Success := Cmd = Mucontrol.Command.CMD_VALIDATE;
+      Success := Cmd = Mucontrol.Command.CMD_VALIDATE
+        or Cmd = Mucontrol.Command.CMD_SELF_CTRL;
    end Wait_For_Validate;
 
 end Init.Commands;

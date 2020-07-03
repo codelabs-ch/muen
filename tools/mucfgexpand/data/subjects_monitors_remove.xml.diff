@@ -8,7 +8,6 @@
     <interrupts logical="monitor_interrupts_lnx" subject="lnx" virtualAddress="16#0001_f000#" writable="true"/>                                      <
     <interrupts logical="monitor_interrupts_subject2" subject="subject2" virtualAddress="16#0002_f000#" writable="true"/>                            <
     <loader logical="monitor_loader_lnx" subject="lnx" virtualAddress="16#0001_0000_0000#"/>                                                         <
-    <loader logical="monitor_loader_subject2" subject="subject2" virtualAddress="16#0002_0000_0000#"/>                                               <
    </monitor>                                                                                                                                        <
    <component ref="c1">                                                                                                                                    <component ref="c1">
     <map logical="control_data" physical="dummy_2"/>                                                                                                        <map logical="control_data" physical="dummy_2"/>

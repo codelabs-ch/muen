@@ -16,7 +16,9 @@
 --
 
 with Ahci.Commands;
+with Ahci.FIS;
 with Ahci.Ports;
+with Ahci.Delays;
 
 with Debug_Ops;
 with Interfaces;
@@ -49,6 +51,20 @@ is
 
    Ata_Write_Dma           : constant := 16#ca#;
    Ata_Write_Dma_Ext       : constant := 16#35#;
+
+   Ata_Smart               : constant := 16#b0#;
+
+   -------------------------------------------------------------------------
+   --  SMART Features
+
+   SMART_Read_Data              : constant := 16#d0#;
+   --  SMART_Attribute_Autosav      : constant := 16#d2#;
+   --  SMART_Exec_Offline_Immediate : constant := 16#d4#;
+   --  SMART_Read_Log               : constant := 16#d5#;
+   --  SMART_Write_Log              : constant := 16#d6#;
+   SMART_Enable_Operations      : constant := 16#d8#;
+   SMART_Disable_Operations     : constant := 16#d9#;
+   SMART_Return_Status          : constant := 16#da#;
 
    -------------------------------------------------------------------------
 
@@ -347,6 +363,151 @@ is
    end Sync;
 
    -------------------------------------------------------------------------
+
+   procedure SMART_Execute_Cmd
+      (ID      :     Ahci.Port_Range;
+       Feature :     Interfaces.Unsigned_16;
+       Ret_Val : out Ahci.Status_Type)
+   is
+      RW       : constant Ahci.RW_Type := Ahci.Read;
+      Length   : Interfaces.Unsigned_32 := 512;
+      Success  : Boolean;
+   begin
+      Ret_Val := Ahci.EIO;
+      Ahci.Commands.Cmd_Slot_Prepare (Port_ID => ID,
+                                      Len     => Length,
+                                      Address => Ahci.DMA_Mem_Base_Address,
+                                      RW      => RW);
+
+      if Length /= 512 then
+         return;
+      end if;
+
+      Setup_H2D_Cmd (ID => ID,
+                     Cmd  => Ata_Smart,
+                     Start => 16#c24f00#,
+                     Sectors => 0,
+                     Features => Feature);
+
+      Ahci.Ports.Execute (ID       => ID,
+                          Timeout  => 10,
+                          Success  => Success);
+
+      if Success then
+         Ret_Val := Ahci.OK;
+      end if;
+
+   end SMART_Execute_Cmd;
+
+   -------------------------------------------------------------------------
+
+   type SMART_Attribute_Type is record
+      ID       : Interfaces.Unsigned_8;
+      Flags    : Interfaces.Unsigned_16;
+      Current  : Interfaces.Unsigned_8;
+      Worst    : Interfaces.Unsigned_8;
+      Raw      : Ahci.Unsigned_48;
+      Reserved : Interfaces.Unsigned_8;
+   end record
+   with
+      Size => 12 * 8;
+
+   for SMART_Attribute_Type use record
+      ID       at 0 range 0 .. 7;
+      Flags    at 1 range 0 .. 15;
+      Current  at 3 range 0 .. 7;
+      Worst    at 4 range 0 .. 7;
+      Raw      at 5 range 0 .. 6 * 8 - 1;
+      Reserved at 11 range 0 .. 7;
+   end record;
+
+   type SMART_Attribute_Table_Type is
+      array (Integer range 1 .. 30) of SMART_Attribute_Type;
+   SMART_Attribute_Table : SMART_Attribute_Table_Type
+   with
+      Volatile,
+      Async_Readers,
+      Async_Writers,
+      Address => System'To_Address (Ahci.DMA_Mem_Base_Address + 2);
+
+   procedure SMART_Dump_Data
+      (ID      :     Ahci.Port_Range)
+   is
+      use type Ahci.Status_Type;
+      use type Interfaces.Unsigned_8;
+      Ret_Val   : Ahci.Status_Type;
+      Attribute : SMART_Attribute_Type;
+   begin
+      SMART_Execute_Cmd (ID => ID,
+                         Feature  => SMART_Read_Data,
+                         Ret_Val => Ret_Val);
+      if Ret_Val = Ahci.OK then
+         for I in SMART_Attribute_Table_Type'Range loop
+            Attribute := SMART_Attribute_Table (I);
+            if Attribute.ID /= 0 then
+               pragma Debug (Debug_Ops.Put_Line
+                  (Item => "ID:  " & SK.Strings.Img (Attribute.ID)));
+               pragma Debug (Debug_Ops.Put_Line
+                  (Item => " Flags: " & SK.Strings.Img (Attribute.Flags)));
+               pragma Debug (Debug_Ops.Put_Line
+                  (Item => " Current: " & SK.Strings.Img (Attribute.Current)));
+               pragma Debug (Debug_Ops.Put_Line
+                  (Item => " Worst: " & SK.Strings.Img (Attribute.Worst)));
+               pragma Debug (Debug_Ops.Put_Line
+                  (Item => " Raw: " & SK.Strings.Img
+                     (Interfaces.Unsigned_64 (Attribute.Raw))));
+            end if;
+         end loop;
+      end if;
+   end SMART_Dump_Data;
+
+   -------------------------------------------------------------------------
+
+   procedure SMART_Status
+      (ID     :     Ahci.Port_Range;
+       Status : out SMART_Status_Type)
+   is
+      use type Ahci.Status_Type;
+      use type Interfaces.Unsigned_24;
+      Ret_Val       : Ahci.Status_Type;
+      Return_Status : Interfaces.Unsigned_24;
+   begin
+      SMART_Execute_Cmd (ID      => ID,
+                         Feature => SMART_Return_Status,
+                         Ret_Val => Ret_Val);
+      if Ret_Val = Ahci.OK then
+         Return_Status := Ahci.FIS.Fis_Array (ID).RFIS.LBA0_23;
+         if (Return_Status and 16#ffff00#) = 16#c24f00# then
+            Status := OK;
+         elsif (Return_Status and 16#ffff00#) = 16#2cf400# then
+            Status := Threshold_Exceeded;
+         else
+            Status := Undefined;
+         end if;
+      end if;
+   end SMART_Status;
+
+   -------------------------------------------------------------------------
+
+   procedure SMART_Enable_Disable
+      (ID      :     Ahci.Port_Range;
+       Enable  :     Boolean;
+       Ret_Val : out Ahci.Status_Type)
+   is
+      Feature : Interfaces.Unsigned_16;
+   begin
+      if Enable then
+         Feature := SMART_Enable_Operations;
+      else
+         Feature := SMART_Disable_Operations;
+      end if;
+
+      SMART_Execute_Cmd (ID       => ID,
+                         Feature  => Feature,
+                         Ret_Val  => Ret_Val);
+   end SMART_Enable_Disable;
+
+   -------------------------------------------------------------------------
    --  Word 106 type
    type Sector_Size_Type is record
       Size          : Ahci.Unsigned_4;
@@ -366,6 +527,23 @@ is
    end record;
 
    type Cmds_Features_Type is record
+      SMART_Supported    : Boolean;
+      Security_Supported : Boolean;
+      Obsolete_82_1      : Boolean;
+      PM_Supported       : Boolean;
+      Packet_Feat_Sup    : Boolean;
+      Volatile_WCache    : Boolean;
+      Read_Look_Ahead    : Boolean;
+      Release_Int_Sup    : Boolean;
+      Service_Int_Sup    : Boolean;
+      Reset_Sup          : Boolean;
+      HPA_Sup            : Boolean;
+      Obsolete_82_2      : Boolean;
+      Write_Buffer_Cmd   : Boolean;
+      Read_Buffer_Cmd    : Boolean;
+      NOP_Cmd            : Boolean;
+      Obsolete_82_3      : Boolean;
+
       Download_Microcode : Boolean;
       TCQ                : Boolean;
       CFA                : Boolean;
@@ -382,26 +560,112 @@ is
       Flush_Cache_Ext    : Boolean;
       Unused_14          : Boolean;
       Unused_15          : Boolean;
+
+      SMART_Err          : Boolean;
+      SMART_Self_Test    : Boolean;
+      Media_SN           : Boolean;
+      MC_Pass_Through    : Boolean;
+      Streaming_Feature  : Boolean;
+      GPL_Feature        : Boolean;
+      WDMA_FAU_EXT       : Boolean;
+      WDMA_QUEUE_FUA_EXT : Boolean;
+      Word_Wide_Name_64  : Boolean;
+      Obsolete_5         : Boolean;
+      Obsolete_6         : Boolean;
+      TLC_Reserved_1     : Boolean;
+      TLC_Reserved_2     : Boolean;
+      IDLE_IMM           : Boolean;
+      Unused_14_1        : Boolean;
+      Unused_15_1        : Boolean;
+
+      SMART_Enabled      : Boolean;
+      Security_Enabled   : Boolean;
+      Obsolete_85_1      : Boolean;
+      PM_Supported_1     : Boolean;
+      Packet_Feat_Sup_1  : Boolean;
+      Volatile_WCache_En : Boolean;
+      Read_Look_Ahead_En : Boolean;
+      Release_Int_En     : Boolean;
+      Service_Int_En     : Boolean;
+      Reset_Sup_1        : Boolean;
+      HPA_Sup_1          : Boolean;
+      Obsolete_85_2      : Boolean;
+      Write_Buffer_Cmd_1 : Boolean;
+      Read_Buffer_Cmd_1  : Boolean;
+      NOP_Cmd_1          : Boolean;
+      Obsolete_85_3      : Boolean;
+
    end record
-     with Size => 2 * 8;
+     with Size => 8 * 8;
 
    for Cmds_Features_Type use record
-      Download_Microcode at 0 range   0 ..  0;
-      TCQ                at 0 range   1 ..  1;
-      CFA                at 0 range   2 ..  2;
-      APM                at 0 range   3 ..  3;
-      Unused_1           at 0 range   4 ..  4;
-      PUIS               at 0 range   5 ..  5;
-      Set_features_req   at 0 range   6 ..  6;
-      Reserved_1         at 0 range   7 ..  7;
-      HPA                at 0 range   8 ..  8;
-      AAM                at 0 range   9 ..  9;
-      Support_48Bit      at 0 range  10 .. 10;
-      DCO                at 0 range  11 .. 11;
-      Flush_Cache        at 0 range  12 .. 12;
-      Flush_Cache_Ext    at 0 range  13 .. 13;
-      Unused_14          at 0 range  14 .. 14;
-      Unused_15          at 0 range  15 .. 15;
+      SMART_Supported    at 0 range   0 ..  0;
+      Security_Supported at 0 range   1 ..  1;
+      Obsolete_82_1      at 0 range   2 ..  2;
+      PM_Supported       at 0 range   3 ..  3;
+      Packet_Feat_Sup    at 0 range   4 ..  4;
+      Volatile_WCache    at 0 range   5 ..  5;
+      Read_Look_Ahead    at 0 range   6 ..  6;
+      Release_Int_Sup    at 0 range   7 ..  7;
+      Service_Int_Sup    at 0 range   8 ..  8;
+      Reset_Sup          at 0 range   9 ..  9;
+      HPA_Sup            at 0 range  10 .. 10;
+      Obsolete_82_2      at 0 range  11 .. 11;
+      Write_Buffer_Cmd   at 0 range  12 .. 12;
+      Read_Buffer_Cmd    at 0 range  13 .. 13;
+      NOP_Cmd            at 0 range  14 .. 14;
+      Obsolete_82_3      at 0 range  15 .. 15;
+
+      Download_Microcode at 2 range   0 ..  0;
+      TCQ                at 2 range   1 ..  1;
+      CFA                at 2 range   2 ..  2;
+      APM                at 2 range   3 ..  3;
+      Unused_1           at 2 range   4 ..  4;
+      PUIS               at 2 range   5 ..  5;
+      Set_features_req   at 2 range   6 ..  6;
+      Reserved_1         at 2 range   7 ..  7;
+      HPA                at 2 range   8 ..  8;
+      AAM                at 2 range   9 ..  9;
+      Support_48Bit      at 2 range  10 .. 10;
+      DCO                at 2 range  11 .. 11;
+      Flush_Cache        at 2 range  12 .. 12;
+      Flush_Cache_Ext    at 2 range  13 .. 13;
+      Unused_14          at 2 range  14 .. 14;
+      Unused_15          at 2 range  15 .. 15;
+
+      SMART_Err          at 4 range   0 ..  0;
+      SMART_Self_Test    at 4 range   1 ..  1;
+      Media_SN           at 4 range   2 ..  2;
+      MC_Pass_Through    at 4 range   3 ..  3;
+      Streaming_Feature  at 4 range   4 ..  4;
+      GPL_Feature        at 4 range   5 ..  5;
+      WDMA_FAU_EXT       at 4 range   6 ..  6;
+      WDMA_QUEUE_FUA_EXT at 4 range   7 ..  7;
+      Word_Wide_Name_64  at 4 range   8 ..  8;
+      Obsolete_5         at 4 range   9 ..  9;
+      Obsolete_6         at 4 range  10 .. 10;
+      TLC_Reserved_1     at 4 range  11 .. 11;
+      TLC_Reserved_2     at 4 range  12 .. 12;
+      IDLE_IMM           at 4 range  13 .. 13;
+      Unused_14_1        at 4 range  14 .. 14;
+      Unused_15_1        at 4 range  15 .. 15;
+
+      SMART_Enabled      at 6 range   0 ..  0;
+      Security_Enabled   at 6 range   1 ..  1;
+      Obsolete_85_1      at 6 range   2 ..  2;
+      PM_Supported_1     at 6 range   3 ..  3;
+      Packet_Feat_Sup_1  at 6 range   4 ..  4;
+      Volatile_WCache_En at 6 range   5 ..  5;
+      Read_Look_Ahead_En at 6 range   6 ..  6;
+      Release_Int_En     at 6 range   7 ..  7;
+      Service_Int_En     at 6 range   8 ..  8;
+      Reset_Sup_1        at 6 range   9 ..  9;
+      HPA_Sup_1          at 6 range  10 .. 10;
+      Obsolete_85_2      at 6 range  11 .. 11;
+      Write_Buffer_Cmd_1 at 6 range  12 .. 12;
+      Read_Buffer_Cmd_1  at 6 range  13 .. 13;
+      NOP_Cmd_1          at 6 range  14 .. 14;
+      Obsolete_85_3      at 6 range  15 .. 15;
    end record;
 
    type Ata_Identify_Response_Type is record
@@ -412,9 +676,9 @@ is
       Number_Of_Sectors   : Interfaces.Unsigned_32;
       Unused_3            : Ahci.Word_Array (62 .. 68);
       Additional_Support  : Interfaces.Unsigned_16;
-      Unused_4            : Ahci.Word_Array (70 .. 82);
+      Unused_4            : Ahci.Word_Array (70 .. 81);
       Cmds_Features       : Cmds_Features_Type;
-      Unused_5            : Ahci.Word_Array (84 .. 99);
+      Unused_5            : Ahci.Word_Array (86 .. 99);
       Number_Of_Sectors_2 : Interfaces.Unsigned_64;
       Unused_6            : Ahci.Word_Array (104 .. 105);
       Sector_Size         : Sector_Size_Type;
@@ -435,9 +699,9 @@ is
       Number_Of_Sectors   at  60 * 2 range 0 ..  1 * 32 - 1;
       Unused_3            at  62 * 2 range 0 ..  7 * 16 - 1;
       Additional_Support  at  69 * 2 range 0 ..  1 * 16 - 1;
-      Unused_4            at  70 * 2 range 0 .. 13 * 16 - 1;
-      Cmds_Features       at  83 * 2 range 0 ..  1 * 16 - 1;
-      Unused_5            at  84 * 2 range 0 .. 16 * 16 - 1;
+      Unused_4            at  70 * 2 range 0 .. 12 * 16 - 1;
+      Cmds_Features       at  82 * 2 range 0 ..  4 * 16 - 1;
+      Unused_5            at  86 * 2 range 0 .. 14 * 16 - 1;
       Number_Of_Sectors_2 at 100 * 2 range 0 ..  1 * 64 - 1;
       Unused_6            at 104 * 2 range 0 ..  2 * 16 - 1;
       Sector_Size         at 106 * 2 range 0 ..  1 * 16 - 1;
@@ -566,6 +830,27 @@ is
             Ata_Identify_Response.DSM_Support (0);
          pragma Debug (Ahci.Devices (Port_ID).Support_Discard,
             Debug_Ops.Put_Line ("ata: Trim supported"));
+
+         Ahci.Devices (Port_ID).Support_SMART :=
+            Ata_Identify_Response.Cmds_Features.SMART_Supported;
+         pragma Debug (Ahci.Devices (Port_ID).Support_SMART,
+            Debug_Ops.Put_Line ("ata: SMART supported"));
+
+         declare
+            Ret_Val       : Ahci.Status_Type;
+            Smart_Enabled : constant Boolean :=
+               Ata_Identify_Response.Cmds_Features.SMART_Enabled;
+         begin
+            if Ahci.Devices (Port_ID).Support_SMART then
+               if not Smart_Enabled then
+                  pragma Debug (
+                     Debug_Ops.Put_Line ("ata: enabling SMART"));
+                  SMART_Enable_Disable (Port_ID, True, Ret_Val);
+               end if;
+               pragma Debug (
+                     Debug_Ops.Put_Line ("ata: SMART enabled."));
+            end if;
+         end;
       end if;
    end Identify_Device;
 end Ata;

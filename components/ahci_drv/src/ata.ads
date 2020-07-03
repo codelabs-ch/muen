@@ -44,4 +44,19 @@ is
    procedure Identify_Device
       (Port_ID   : Ahci.Port_Range);
 
+   --  Enable or Disbale SMART function
+   procedure SMART_Enable_Disable
+      (ID      :     Ahci.Port_Range;
+       Enable  :     Boolean;
+       Ret_Val : out Ahci.Status_Type);
+
+   --  Dump SMART Attributes raw to console without interpreting them
+   procedure SMART_Dump_Data
+      (ID      :     Ahci.Port_Range);
+
+   type SMART_Status_Type is (OK, Threshold_Exceeded, Undefined);
+   --  Returns the SMART Status
+   procedure SMART_Status
+      (ID     :     Ahci.Port_Range;
+       Status : out SMART_Status_Type);
 end Ata;

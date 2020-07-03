@@ -102,6 +102,7 @@ is
       Signature          : Signature_Type;
       Support_48Bit      : Boolean;
       Support_Discard    : Boolean;
+      Support_SMART      : Boolean;
       Sector_Size        : Interfaces.Unsigned_32;
       Sector_Size_Shift  : Integer;
       Number_Of_Sectors  : Interfaces.Unsigned_64;
@@ -111,6 +112,7 @@ is
       (Signature         => Empty,
        Support_48Bit     => False,
        Support_Discard   => False,
+       Support_SMART     => False,
        Sector_Size       => 0,
        Sector_Size_Shift => 0,
        Number_Of_Sectors => 0);

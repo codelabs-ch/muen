@@ -39,6 +39,9 @@ is
 
    use type Ada.Containers.Hash_Type;
 
+   Invalid_Target_Subject : constant Natural := Natural'Last;
+   Invalid_Target_Event   : constant Natural := Natural'Last;
+
    type Source_Event_Type is record
       Source_Action  : Mutools.Types.Event_Action_Kind;
       Target_Subject : Natural;
@@ -50,8 +53,8 @@ is
 
    Invalid_Event : constant Source_Event_Type :=
      (Source_Action  => Mutools.Types.System_Panic,
-      Target_Subject => Natural'Last,
-      Target_Event   => Natural'Last,
+      Target_Subject => Invalid_Target_Subject,
+      Target_Event   => Invalid_Target_Event,
       Handover       => False,
       Send_IPI       => False,
       IRQ_Number     => 0);
@@ -114,12 +117,12 @@ is
         & Mutools.Utils.To_Ada_Identifier (Str => Event.Source_Action'Img)
         & "," & ASCII.LF
         & Indent (N => 4) & "Target_Subject =>"
-        & (if Event.Target_Subject = Natural'Last then " Invalid_Subject"
-           else Event.Target_Subject'Img)
+        & (if Event.Target_Subject = Invalid_Target_Subject
+           then " Invalid_Subject" else Event.Target_Subject'Img)
         & "," & ASCII.LF
         & Indent (N => 4) & "Target_Event   =>"
-        & (if Event.Target_Event = Natural'Last then " Invalid_Target_Event"
-           else Event.Target_Event'Img)
+        & (if Event.Target_Event = Invalid_Target_Event
+           then " Invalid_Target_Event" else Event.Target_Event'Img)
         & ",";
 
       Buffer := Buffer & ASCII.LF & Indent (N => 4) & "Handover       => "
@@ -166,7 +169,7 @@ is
            Ref_Attr  => "physical",
            Ref_Value => Phys_Event_Ref);
       Target_Subj_ID : constant Natural
-        := (if Event_Target = null then Natural'Last
+        := (if Event_Target = null then Invalid_Target_Subject
             else Natural'Value (DOM.Core.Elements.Get_Attribute
               (Elem => Muxml.Utils.Ancestor_Node
                (Node  => Event_Target,
@@ -178,7 +181,8 @@ is
               (Doc   => Event_Target,
                XPath => "*") /= null);
       Target_Event_ID : constant Natural
-        := (if Event_Target = null or not Has_Target_Action then Natural'Last
+        := (if Event_Target = null or not Has_Target_Action
+            then Invalid_Target_Event
             else Natural'Value (DOM.Core.Elements.Get_Attribute
               (Elem => Event_Target,
                Name => "id")));

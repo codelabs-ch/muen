@@ -1,0 +1,16 @@
+<library name="libmuinit">
+ <requires>
+  <vcpu>
+   <registers>
+    <gpr>
+     <rip>16#0010_0000#</rip>
+    </gpr>
+   </registers>
+  </vcpu>
+ </requires>
+ <provides>
+  <memory executable="true" logical="muinit" size="16#9000#" type="subject_binary" virtualAddress="16#0010_0000#" writable="true">
+   <file filename="libmuinit" offset="none"/>
+  </memory>
+ </provides>
+</library>

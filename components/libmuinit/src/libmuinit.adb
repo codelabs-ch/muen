@@ -72,6 +72,10 @@ begin
             Init.Status.Set
               (New_Status => Mucontrol.Status.STATE_VALIDATING);
             --  Verify hashes of all memory regions.
+            Init.Memory.Check_Hashes (Success => Success);
+            if not Success then
+               Init.Status.Error;
+            end if;
             Init.Status.Set (New_Status => Mucontrol.Status.STATE_VALIDATED);
             Init.Commands.Wait_For_Run (Success => Success);
             if not Success then

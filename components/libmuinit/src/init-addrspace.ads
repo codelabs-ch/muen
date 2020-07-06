@@ -49,4 +49,10 @@ is
    with
       Pre => Source.Size = Destination.Size and Destination.Flags.Writable;
 
+   --  Calculate hash over current in-memory content of given source memory
+   --  region.
+   function Calculate_Hash
+     (Source : Musinfo.Memregion_Type)
+      return Musinfo.Hash_Type;
+
 end Init.Addrspace;

@@ -29,6 +29,7 @@
 with "../../config/shared.gpr";
 with "../libmusinfo/libmusinfo";
 with "../libmucontrol/libmucontrol";
+with "libsparkcrypto";
 
 project Libmuinit extends "../common" is
 

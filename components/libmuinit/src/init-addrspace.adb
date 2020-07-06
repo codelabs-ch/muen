@@ -26,10 +26,64 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
+with Ada.Unchecked_Conversion;
+
 with System;
+
+with LSC.SHA256;
 
 package body Init.Addrspace
 is
+
+   -------------------------------------------------------------------------
+
+   function Calculate_Hash
+     (Source : Musinfo.Memregion_Type)
+      return Musinfo.Hash_Type
+   is
+      Bytes_Per_Block : constant := LSC.SHA256.Block_Size / 8;
+
+      subtype Block_Range is Interfaces.Unsigned_64 range
+        0 .. Source.Size / Bytes_Per_Block - 1;
+
+      type Data_Array is array (Block_Range) of LSC.SHA256.Block_Type
+      with Pack;
+
+      Src_Memory : constant Data_Array
+        with
+          Import,
+          Address => System'To_Address (Source.Address);
+
+      --  Convert SHA256 hash to musinfo hash.
+      function To_Musinfo_Hash is new Ada.Unchecked_Conversion
+        (Source => LSC.SHA256.SHA256_Hash_Type,
+         Target => Musinfo.Hash_Type);
+
+      Ctx : LSC.SHA256.Context_Type
+        := LSC.SHA256.SHA256_Context_Init;
+   begin
+      for I in Block_Range'Range loop
+         LSC.SHA256.Context_Update
+           (Context => Ctx,
+            Block   => Src_Memory (I));
+      end loop;
+
+      --  Enforced by policy: Input region is always dividable by block size,
+      --  therefore we finalize with Null_Block.
+
+      LSC.SHA256.Context_Finalize (Context => Ctx,
+                                   Block   => LSC.SHA256.Null_Block,
+                                   Length  => 0);
+
+      declare
+         LSC_H  : constant LSC.SHA256.SHA256_Hash_Type
+           := LSC.SHA256.SHA256_Get_Hash (Context => Ctx);
+         Result : constant Musinfo.Hash_Type
+           := To_Musinfo_Hash (LSC_H);
+      begin
+         return Result;
+      end;
+   end Calculate_Hash;
 
    -------------------------------------------------------------------------
 

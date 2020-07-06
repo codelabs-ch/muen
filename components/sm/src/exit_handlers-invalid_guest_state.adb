@@ -51,20 +51,7 @@ is
    begin
       Startup.Setup_Monitored_Subject;
 
-      --  A subject is considered a BSP if it is in protected mode initially.
-
-      Is_BSP := Is_Protected_Mode_Enabled;
-      if not Is_BSP then
-         pragma Debug (Debug_Ops.Put_Line
-                       (Item => "Waiting for AP wakeup event"));
-         SK.CPU.Sti;
-         SK.CPU.Hlt;
-         SK.CPU.Cli;
-         pragma Debug (Debug_Ops.Put_Line
-                       (Item => "AP wakeup event received"));
-      end if;
-
-      --  Fix subject to make the state valid and runnable.
+      --  Check if subject state was invalid due to expected use case.
 
       CR4 := Subject_Info.State.CR4;
       if SK.Bitops.Bit_Test (Value => CR4,
@@ -74,9 +61,25 @@ is
                        (Item => "Invalid guest state, halting subject"));
          Action := Types.Subject_Halt;
       else
-         CR4 := SK.Bitops.Bit_Set
-           (Value => CR4,
-            Pos   => SK.Constants.CR4_VMXE_FLAG);
+
+         --  A subject is considered a BSP if it is in protected mode
+         --  initially.
+
+         Is_BSP := Is_Protected_Mode_Enabled;
+         if not Is_BSP then
+            pragma Debug (Debug_Ops.Put_Line
+                          (Item => "Waiting for AP wakeup event"));
+            SK.CPU.Sti;
+            SK.CPU.Hlt;
+            SK.CPU.Cli;
+            pragma Debug (Debug_Ops.Put_Line
+                          (Item => "AP wakeup event received"));
+         end if;
+
+         --  Fix subject to make the state valid and runnable.
+
+         CR4 := SK.Bitops.Bit_Set (Value => CR4,
+                                   Pos   => SK.Constants.CR4_VMXE_FLAG);
          Subject_Info.State.CR4 := CR4;
          Action := Types.Subject_Start;
       end if;

@@ -5,6 +5,8 @@ serial.out;I/O APIC RTE 16#01#: Routing IRQ 16#01# as vector 16#21# to CPU with 
 serial.out;I/O APIC RTE 16#0c#: Routing IRQ 16#0c# as vector 16#2c# to CPU with APIC ID 16#00#, VT-d IRT index 16#0c#
 serial.out;IOMMU 01: TES 01, RTPS 01, FLS 00, AFLS 00, WBFS 00, QIES 00, IRES 01, IRTPS 01, CFIS 00
 serial.out;IOMMU 02: TES 01, RTPS 01, FLS 00, AFLS 00, WBFS 00, QIES 00, IRES 01, IRTPS 01, CFIS 00
+serial.out;Waiting for AP wakeup event
+serial.out;AP wakeup event received
 serial.out;ttyS1 at I/O 0x2f8 (irq = 5, base_baud = 115200)
 serial.out;pci 0000:00:19.0: \[8086:1502\] type 00 class 0x020000
 serial.out;pci 0000:00:19.0: reg 0x10: \[mem 0xf7f00000-0xf7f1ffff\]

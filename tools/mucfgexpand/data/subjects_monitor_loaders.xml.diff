@@ -514,8 +514,6 @@
                                                                                                                                                      >      <memory executable="false" logical="lnx_acpi_free" physical="lnx|acpi_empty" virtualAddress="16#0001_000e_4000#" writable="false"/>
                                                                                                                                                      >      <memory executable="false" logical="lnx_bios" physical="lnx|bios" virtualAddress="16#0001_000c_0000#" writable="false"/>
                                                                                                                                                      >      <memory executable="false" logical="lnx_bios" physical="lnx|bios" virtualAddress="16#0001_000d_0000#" writable="false"/>
-                                                                                                                                                     >      <memory executable="false" logical="subject2_dummy" physical="dummy" virtualAddress="16#0002_0000_1000#" writable="true"/>
-                                                                                                                                                     >      <memory executable="false" logical="monitor_sinfo_subject2" physical="subject2|sinfo" virtualAddress="16#0010_0000_0000#" writable="false"/>
    </memory>                                                                                                                                               </memory>
    <devices>                                                                                                                                               <devices>
 --
@@ -698,7 +696,7 @@
                                                                                                                                                      >        <OSSupportFXSAVE>1</OSSupportFXSAVE>
                                                                                                                                                      >        <OSSupportSIMDExceptions>0</OSSupportSIMDExceptions>
                                                                                                                                                      >        <UMInstructionPrevention>0</UMInstructionPrevention>
-                                                                                                                                                     >        <VMXEnable>0</VMXEnable>
+                                                                                                                                                     >        <VMXEnable>1</VMXEnable>
                                                                                                                                                      >        <SMXEnable>0</SMXEnable>
                                                                                                                                                      >        <FSGSBASEEnable>0</FSGSBASEEnable>
                                                                                                                                                      >        <PCIDEnable>0</PCIDEnable>

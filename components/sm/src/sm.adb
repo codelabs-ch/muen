@@ -19,7 +19,6 @@
 with X86_64;
 
 with SK.CPU;
-with SK.Bitops;
 with SK.Hypercall;
 with SK.Constants;
 with SK.Interrupt_Tables;
@@ -41,6 +40,7 @@ with Subject_Info;
 with Exit_Handlers.CPUID;
 with Exit_Handlers.EPT_Violation;
 with Exit_Handlers.IO_Instruction;
+with Exit_Handlers.Invalid_Guest_State;
 with Exit_Handlers.RDMSR;
 with Exit_Handlers.WRMSR;
 with Exit_Handlers.CR_Access;
@@ -77,6 +77,11 @@ begin
      (Stack_Addr => Component_Constants.Interrupt_Stack_Address);
    Time.Initialize;
 
+   if not Musinfo.Instance.Is_Valid then
+      pragma Debug (Debug_Ops.Put_Line (Item => "Sinfo not valid"));
+      SK.CPU.Stop;
+   end if;
+
    loop
       Exit_Reason := State.Exit_Reason;
 
@@ -107,23 +112,7 @@ begin
       elsif SK.Word16'Mod (Exit_Reason)
         = SK.Constants.EXIT_REASON_ENTRY_FAIL_GSTATE
       then
-         pragma Debug (Debug_Ops.Put_Line
-                       (Item => "Invalid guest state, halting until further"
-                        & " notice"));
-         SK.CPU.Sti;
-         SK.CPU.Hlt;
-         SK.CPU.Cli;
-         pragma Debug (Debug_Ops.Put_Line
-                       (Item => "AP wakeup event, restarting CPU"));
-         declare
-            CR4 : SK.Word64 := Subject_Info.State.CR4;
-         begin
-            CR4 := SK.Bitops.Bit_Set
-              (Value => CR4,
-               Pos   => SK.Constants.CR4_VMXE_FLAG);
-            Subject_Info.State.CR4 := CR4;
-         end;
-         Action := Types.Subject_Start;
+         Exit_Handlers.Invalid_Guest_State.Process (Action => Action);
       else
          pragma Debug (Debug_Ops.Put_Line
                        (Item => "Unhandled trap for associated subject"));

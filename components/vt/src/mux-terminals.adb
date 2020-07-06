@@ -141,7 +141,9 @@ is
                      --  Initiate reset of slot 1.
 
                      SK.Hypercall.Trigger_Event
-                       (Number => Vt_Component.Events.Reset_Slot_1_ID);
+                       (Number => Vt_Component.Events.Reset_Slot_1_Sm_ID);
+                     SK.Hypercall.Trigger_Event
+                       (Number => Vt_Component.Events.Reset_Slot_1_Linux_ID);
                      return;
                   end if;
 

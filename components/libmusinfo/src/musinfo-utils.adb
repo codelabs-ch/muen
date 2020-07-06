@@ -79,21 +79,16 @@ is
       Name  : Name_Type)
       return Device_Memory_Type
    is
-      M : Device_Memory_Type := Null_Device_Memory;
+      Res : constant Resource_Type
+        := Resource_By_Name (Sinfo => Sinfo,
+                             Name  => Name,
+                             Kind  => Res_Device_Memory);
    begin
-      Search :
-      for R of Sinfo.Resources loop
-         if R.Kind = Musinfo.Res_Device_Memory
-           and then Names_Equal
-             (Left  => Name,
-              Right => R.Name)
-         then
-            M := R.Dev_Mem_Data;
-            exit Search;
-         end if;
-      end loop Search;
-
-      return M;
+      if Res = Null_Resource then
+         return Null_Device_Memory;
+      else
+         return Res.Dev_Mem_Data;
+      end if;
    end Device_Memory_By_Name;
 
    -------------------------------------------------------------------------
@@ -228,21 +223,16 @@ is
       Name  : Name_Type)
       return Memregion_Type
    is
-      M : Memregion_Type := Null_Memregion;
+      Res : constant Resource_Type
+        := Resource_By_Name (Sinfo => Sinfo,
+                             Name  => Name,
+                             Kind  => Res_Memory);
    begin
-      Search :
-      for R of Sinfo.Resources loop
-         if R.Kind = Musinfo.Res_Memory
-           and then Names_Equal
-             (Left  => Name,
-              Right => R.Name)
-         then
-            M := R.Mem_Data;
-            exit Search;
-         end if;
-      end loop Search;
-
-      return M;
+      if Res = Null_Resource then
+         return Null_Memregion;
+      else
+         return Res.Mem_Data;
+      end if;
    end Memory_By_Name;
 
    -------------------------------------------------------------------------
@@ -259,6 +249,36 @@ is
          Iter.Done := True;
       end if;
    end Next;
+
+   -------------------------------------------------------------------------
+
+   function Resource_By_Name
+     (Sinfo : Subject_Info_Type;
+      Name  : Name_Type;
+      Kind  : Resource_Kind)
+      return Resource_Type
+   is
+      Res : Resource_Type := Null_Resource;
+   begin
+      Search :
+      for I in Sinfo.Resources'Range loop
+         if Sinfo.Resources (I).Kind = Kind
+           and then Names_Equal
+             (Left  => Name,
+              Right => Sinfo.Resources (I).Name)
+         then
+            Res := Sinfo.Resources (I);
+            exit Search;
+         end if;
+         pragma Loop_Invariant
+           (for all J in Sinfo.Resources'First .. I =>
+              Sinfo.Resources (J).Kind /= Kind or
+                not Names_Equal (Left  => Sinfo.Resources (J).Name,
+                                 Right => Name));
+      end loop Search;
+
+      return Res;
+   end Resource_By_Name;
 
    -------------------------------------------------------------------------
 

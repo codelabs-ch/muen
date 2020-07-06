@@ -3,11 +3,11 @@
  <event name="resume_linux_2" mode="switch"/>
  <event name="trap_to_sm_1" mode="switch"/>
  <event name="trap_to_sm_2" mode="switch"/>
- <event name="trap_to_sl_1" mode="switch"/>
+ <event name="load_linux_1" mode="switch"/>
  <event name="start_linux_1" mode="switch"/>
  <event name="reset_linux_1" mode="switch"/>
  <event name="reset_linux_2" mode="switch"/>
- <event name="reset_sm_1" mode="switch"/>
+ <event name="reset_sm_1" mode="async"/>
  <event name="reset_slot_1" mode="async"/>
  <event name="serial_irq4_linux_1" mode="async"/>
  <event name="serial_irq4_linux_2" mode="async"/>

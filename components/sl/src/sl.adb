@@ -43,9 +43,6 @@ begin
    end if;
 
    loop
-      pragma Debug (Debuglog.Client.Put_Line
-                    (Item => "Resetting managed subject(s)"));
-
       declare
          use type Musinfo.Resource_Kind;
 
@@ -53,8 +50,9 @@ begin
          Iter     : Musinfo.Utils.Resource_Iterator_Type
            := Musinfo.Instance.Create_Resource_Iterator;
          Resource : Musinfo.Resource_Type;
-         Success  : Boolean;
+         Success  : Boolean := False;
       begin
+         Process_Loop :
          while Musinfo.Instance.Has_Element (Iter => Iter) loop
             Resource := Musinfo.Instance.Element (Iter => Iter);
 
@@ -68,17 +66,19 @@ begin
                Loader.Process_Target.Process
                  (Sinfo_Mem => Resource,
                   Success   => Success);
-               if not Success then
-                  pragma Debug
-                    (Debuglog.Client.Put_Line
-                       (Item => "Error: Reset of subject failed"));
-                  SK.CPU.Stop;
-               end if;
+               exit Process_Loop;
             end if;
 
             Musinfo.Instance.Next (Iter => Iter);
             pragma Loop_Invariant (Musinfo.Instance.Belongs_To (Iter => Iter));
-         end loop;
+         end loop Process_Loop;
+
+         if not Success then
+            pragma Debug
+              (Debuglog.Client.Put_Line
+                 (Item => "Error: Reset of subject failed"));
+            SK.CPU.Stop;
+         end if;
       end;
 
       SK.Hypercall.Trigger_Event (Number => Sl_Component.Events.Start_ID);

@@ -71,6 +71,20 @@ is
       Pre    => Is_Valid,
       Volatile_Function;
 
+   --  Return resource with specified name (exact match) and given kind. If no
+   --  such resource exists, Null_Resource is returned.
+   function Resource_By_Name
+     (Name : Name_Type;
+      Kind : Resource_Kind)
+      return Resource_Type
+   with
+      Global => (Input => State),
+      Pre    => Is_Valid,
+      Post   => (if Resource_By_Name'Result /= Null_Resource then
+                  Resource_By_Name'Result.Kind = Kind and
+                    Utils.Names_Equal (Left  => Resource_By_Name'Result.Name,
+                                       Right => Name));
+
    --  Return memory region with specified name (exact match). If no such
    --  memory region exists, Null_Memregion is returned.
    function Memory_By_Name (Name : Name_Type) return Memregion_Type

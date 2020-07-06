@@ -22,7 +22,8 @@
 		</devices>
 		<events>
 			<source>
-				<event id="0"  logical="reset_slot_1"/>
+				<event id="10" logical="reset_slot_1_sm"/>
+				<event id="11" logical="reset_slot_1_linux"/>
 				<event id="30" logical="shutdown">
 					<system_poweroff/>
 				</event>

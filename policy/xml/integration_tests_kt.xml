@@ -138,7 +138,8 @@
      <map logical="buffer" physical="buffer"/>
      <map logical="ports" physical="ports"/>
     </map>
-    <map logical="reset_slot_1" physical="reset_slot_1"/>
+    <map logical="reset_slot_1_sm" physical="reset_sm_1"/>
+    <map logical="reset_slot_1_linux" physical="reset_slot_1"/>
     <map logical="shutdown" physical="system_poweroff"/>
     <map logical="reboot" physical="system_reboot"/>
    </component>
@@ -183,7 +184,6 @@
     <source>
      <group name="vmx_exit">
       <default physical="trap_to_sm_1"/>
-      <event id="33" logical="reset" physical="reset_sm_1"/>
      </group>
      <group name="vmcall">
       <event id="0" logical="smp_signal_sm_01" physical="nic_linux_smp_signal_sm_01"/>
@@ -194,14 +194,13 @@
     </source>
     <target>
      <event logical="resume_after_trap" physical="resume_linux_1"/>
-     <event logical="resume_after_reset" physical="start_linux_1"/>
-     <event logical="reset" physical="reset_linux_1">
+     <event id="63" logical="reset" physical="reset_linux_1">
       <reset/>
      </event>
-     <event logical="reset_from_vt" physical="reset_slot_1">
+     <event id="62" logical="reset_from_vt" physical="reset_slot_1">
       <reset/>
      </event>
-     <event logical="reboot" physical="reboot_linux_1">
+     <event id="61" logical="reboot" physical="reboot_linux_1">
       <reset/>
      </event>
      <event logical="serial_irq4" physical="serial_irq4_linux_1">
@@ -485,7 +484,7 @@
     </source>
     <target>
      <event logical="resume_after_trap" physical="resume_linux_2"/>
-     <event logical="reset" physical="reset_linux_2">
+     <event id="63" logical="reset" physical="reset_linux_2">
       <reset/>
      </event>
      <event logical="serial_irq4" physical="serial_irq4_linux_2">

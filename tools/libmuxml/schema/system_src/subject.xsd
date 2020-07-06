@@ -23,7 +23,7 @@
    <xs:element name="state"       type="monitorSubjectRefType" minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="timed_event" type="monitorSubjectRefType" minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="interrupts"  type="monitorSubjectRefType" minOccurs="0" maxOccurs="unbounded"/>
-   <xs:element name="loader"      type="loaderSubjectRefType"  minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="loader"      type="loaderSubjectRefType"  minOccurs="0" maxOccurs="1"/>
   </xs:sequence>
  </xs:complexType>
 

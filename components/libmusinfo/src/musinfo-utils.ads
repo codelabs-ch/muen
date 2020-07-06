@@ -168,6 +168,26 @@ is
    with
       Pre => Is_Valid (Sinfo);
 
+   --  Return resource with specified name (exact match) and given kind. If no
+   --  such resource exists, Null_Resource is returned.
+   function Resource_By_Name
+     (Sinfo : Subject_Info_Type;
+      Name  : Name_Type;
+      Kind  : Resource_Kind)
+      return Resource_Type
+   with
+      Pre  => Is_Valid (Sinfo),
+      Post =>
+       (if (for some I in Sinfo.Resources'Range =>
+                  Sinfo.Resources (I).Kind = Kind and
+              Names_Equal (Left  => Sinfo.Resources (I).Name,
+                           Right => Name))
+          then
+            Resource_By_Name'Result.Kind = Kind and
+              Names_Equal (Left  => Resource_By_Name'Result.Name,
+                           Right => Name)
+          else Resource_By_Name'Result = Null_Resource);
+
 private
 
    function Subject_Name (Sinfo : Subject_Info_Type) return Name_Type

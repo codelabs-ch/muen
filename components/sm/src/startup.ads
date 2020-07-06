@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2016  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2020  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2020  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,10 +16,14 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package Loader
+with Musinfo.Instance;
+
+package Startup
 is
 
-   Target_Sinfo_Address : constant := 16#000f_0000_0000#;
-   Target_Sinfo_Offset  : constant := 16#0001_0000_0000#;
+   --  Initialize runtime environment of monitored subject.
+   procedure Setup_Monitored_Subject
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
-end Loader;
+end Startup;

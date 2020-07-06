@@ -65,10 +65,6 @@ is
    --  range.
    procedure Subject_Monitor_Loader_Addresses (XML_Data : Muxml.XML_Data_Type);
 
-   --  Check that loader subjects also monitor subject state and that the
-   --  logical name has the form monitor_state_SUBJECT_NAME.
-   procedure Subject_Monitor_Loader_States (XML_Data : Muxml.XML_Data_Type);
-
    --  Check that each channel has exactly one reader and one writer.
    procedure Channel_Reader_Writer (XML_Data : Muxml.XML_Data_Type);
 

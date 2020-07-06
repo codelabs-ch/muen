@@ -19,7 +19,6 @@
 with X86_64;
 
 with SK.CPU;
-with SK.Bitops;
 with SK.Hypercall;
 with SK.Constants;
 with SK.Interrupt_Tables;
@@ -41,13 +40,13 @@ with Subject_Info;
 with Exit_Handlers.CPUID;
 with Exit_Handlers.EPT_Violation;
 with Exit_Handlers.IO_Instruction;
+with Exit_Handlers.Invalid_Guest_State;
 with Exit_Handlers.RDMSR;
 with Exit_Handlers.WRMSR;
 with Exit_Handlers.CR_Access;
 with Exit_Handlers.RDTSC;
 with Devices.RTC;
 with Devices.UART8250;
-with Startup;
 
 with Debug_Ops;
 
@@ -113,39 +112,7 @@ begin
       elsif SK.Word16'Mod (Exit_Reason)
         = SK.Constants.EXIT_REASON_ENTRY_FAIL_GSTATE
       then
-         Startup.Setup_Monitored_Subject;
-
-         declare
-            CR0 : constant SK.Word64 := Subject_Info.State.CR0;
-            CR4 : SK.Word64 := Subject_Info.State.CR4;
-         begin
-            if not SK.Bitops.Bit_Test (Value => CR0,
-                                       Pos   => SK.Constants.CR0_PE_FLAG)
-            then
-               pragma Debug (Debug_Ops.Put_Line
-                             (Item => "Waiting for AP wakeup event"));
-               SK.CPU.Sti;
-               SK.CPU.Hlt;
-               SK.CPU.Cli;
-               pragma Debug (Debug_Ops.Put_Line
-                             (Item => "AP wakeup event received"));
-            end if;
-
-            if SK.Bitops.Bit_Test (Value => CR4,
-                                   Pos   => SK.Constants.CR4_VMXE_FLAG)
-            then
-               pragma Debug (Debug_Ops.Put_Line
-                             (Item => "Invalid guest state, halting subject"));
-               Action := Types.Subject_Halt;
-            else
-               CR4 := SK.Bitops.Bit_Set
-                 (Value => CR4,
-                  Pos   => SK.Constants.CR4_VMXE_FLAG);
-               Subject_Info.State.CR4 := CR4;
-               Action := Types.Subject_Start;
-            end if;
-         end;
-
+         Exit_Handlers.Invalid_Guest_State.Process (Action => Action);
       else
          pragma Debug (Debug_Ops.Put_Line
                        (Item => "Unhandled trap for associated subject"));

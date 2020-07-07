@@ -37,14 +37,17 @@ is
    --  Get current subject status.
    function Get return Status_Type;
 
+   --  Get current diagnostics value.
+   function Get_Diagnostics return Diagnostics_Type;
+
    --  Get current watchdog value.
    function Get_Watchdog return Interfaces.Unsigned_64;
 
    --  Set subject status to given value.
    procedure Set (New_Status : Status_Type);
 
-   --  Set subject status to error with given diagnostic value.
-   procedure Error (Diagnostic : Diagnostics_Type);
+   --  Set diagnostic to given value.
+   procedure Set_Diagnostics (Value : Diagnostics_Type);
 
    --  Set watchdog value.
    procedure Set_Watchdog (Value : Interfaces.Unsigned_64);

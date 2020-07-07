@@ -43,17 +43,13 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Error (Diagnostic : Diagnostics_Type)
-   is
-   begin
-      Status_Page.Diagnostics := Diagnostic;
-      Status_Page.Status := STATE_ERROR;
-   end Error;
+   function Get return Status_Type
+   is (Status_Page.Status);
 
    -------------------------------------------------------------------------
 
-   function Get return Status_Type
-   is (Status_Page.Status);
+   function Get_Diagnostics return Diagnostics_Type
+   is (Status_Page.Diagnostics);
 
    -------------------------------------------------------------------------
 
@@ -78,6 +74,14 @@ is
    begin
       Status_Page.Status := New_Status;
    end Set;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Diagnostics (Value : Diagnostics_Type)
+   is
+   begin
+      Status_Page.Diagnostics := Value;
+   end Set_Diagnostics;
 
    -------------------------------------------------------------------------
 

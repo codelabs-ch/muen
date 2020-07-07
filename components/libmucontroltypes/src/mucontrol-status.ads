@@ -56,7 +56,7 @@ is
    --  Subject is running.
    STATE_RUNNING      : constant Status_Type := 16#0009#;
    --  Error occurred.
-   STATE_ERROR        : constant Status_Type := 16#FFFF#;
+   STATE_ERROR        : constant Status_Type := 16#8000_0000_0000_0000#;
 
    type Diagnostics_Type is new Interfaces.Unsigned_64
      with Size => 64;

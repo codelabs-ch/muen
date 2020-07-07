@@ -46,6 +46,9 @@ is
    --  Set subject status to given value.
    procedure Set (New_Status : Status_Type);
 
+   --  Set error in subject status.
+   procedure Error;
+
    --  Set diagnostic to given value.
    procedure Set_Diagnostics (Value : Diagnostics_Type);
 

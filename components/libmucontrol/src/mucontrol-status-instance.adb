@@ -43,6 +43,16 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Error
+   is
+      Cur_Status : Status_Type := Status_Page.Status;
+   begin
+      Cur_Status := Cur_Status or STATE_ERROR;
+      Status_Page.Status := Cur_Status;
+   end Error;
+
+   -------------------------------------------------------------------------
+
    function Get return Status_Type
    is (Status_Page.Status);
 

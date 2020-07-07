@@ -64,7 +64,7 @@ begin
          --  Set up memory region content.
          Init.Memory.Setup_Writable (Success => Success);
          if not Success then
-            Init.Status.Error (Diagnostic => 5);
+            Init.Status.Error;
          end if;
          Init.Status.Set (New_Status => Mucontrol.Status.STATE_PREPARED);
          Init.Commands.Wait_For_Validate (Success => Success);

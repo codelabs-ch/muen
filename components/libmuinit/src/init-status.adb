@@ -33,12 +33,16 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Error (Diagnostic : Mucontrol.Status.Diagnostics_Type)
+   procedure Error
+     (Diagnostic : Mucontrol.Status.Diagnostics_Type
+      := Mucontrol.Status.DIAG_OK)
    is
+      use type Mucontrol.Status.Diagnostics_Type;
    begin
-      Mucontrol.Status.Instance.Set_Diagnostics (Value => Diagnostic);
-      Mucontrol.Status.Instance.Set
-        (New_Status => Mucontrol.Status.STATE_ERROR);
+      if Diagnostic /= Mucontrol.Status.DIAG_OK then
+         Mucontrol.Status.Instance.Set_Diagnostics (Value => Diagnostic);
+      end if;
+      Mucontrol.Status.Instance.Error;
       loop
          null;
       end loop;
@@ -53,5 +57,10 @@ is
    procedure Set
      (New_Status : Mucontrol.Status.Status_Type)
       renames Mucontrol.Status.Instance.Set;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Diagnostics (Value : Mucontrol.Status.Diagnostics_Type)
+      renames Mucontrol.Status.Instance.Set_Diagnostics;
 
 end Init.Status;

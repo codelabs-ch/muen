@@ -37,8 +37,15 @@ is
    --  Set subject status to given value.
    procedure Set (New_Status : Mucontrol.Status.Status_Type);
 
-   --  Set subject status to error with given diagnostic value.
-   procedure Error (Diagnostic : Mucontrol.Status.Diagnostics_Type)
+   --  Set diagnostic to given value.
+   procedure Set_Diagnostics (Value : Mucontrol.Status.Diagnostics_Type);
+
+   --  Set subject status to error with given diagnostic value. If Diagnostic
+   --  is DIAG_OK then the diagnostic field is not updated and the previously
+   --  set value is retained.
+   procedure Error
+     (Diagnostic : Mucontrol.Status.Diagnostics_Type
+      := Mucontrol.Status.DIAG_OK)
      with No_Return;
 
 end Init.Status;

@@ -596,6 +596,25 @@ package body Musinfo.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Index (Gnattest_T : in out Test);
+   procedure Test_Index_5ebff0 (Gnattest_T : in out Test) renames Test_Index;
+--  id:2.2/5ebff026737582d4/Index/1/0/
+   procedure Test_Index (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+       Iter : Resource_Iterator_Type;
+   begin
+      Iter.Resource_Idx := 5;
+      Assert (Condition => Index (Iter => Iter) = 5,
+              Message   => "Index mismatch");
+--  begin read only
+   end Test_Index;
+--  end read only
+
+
+--  begin read only
    procedure Test_Next (Gnattest_T : in out Test);
    procedure Test_Next_4ec7b6 (Gnattest_T : in out Test) renames Test_Next;
 --  id:2.2/4ec7b6773a7eeba5/Next/1/0/

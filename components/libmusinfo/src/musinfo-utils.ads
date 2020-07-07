@@ -145,6 +145,9 @@ is
              and Belongs_To (Container => Container,
                              Iter      => Iter);
 
+   --  Return index of current iterator position.
+   function Index (Iter : Resource_Iterator_Type) return Resource_Index_Type;
+
    --  Advance resource iterator to next position (if available).
    procedure Next (Iter : in out Resource_Iterator_Type)
    with

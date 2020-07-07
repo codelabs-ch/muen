@@ -28,7 +28,10 @@
 
 with Musinfo.Utils;
 
+with Mucontrol.Status;
+
 with Init.Addrspace;
+with Init.Status;
 with Init.Utils;
 
 package body Init.Memory
@@ -76,6 +79,9 @@ is
    begin
       Process_Memregions :
       while Musinfo.Instance.Has_Element (Iter => Iter) loop
+         Status.Set_Diagnostics
+           (Value => Mucontrol.Status.Diagnostics_Type
+              (Musinfo.Utils.Index (Iter => Iter)));
          Element := Musinfo.Instance.Element (Iter => Iter);
          if Should_Process (Resource => Element)
            and then Element.Mem_Data.Kind /= Musinfo.Subject_Channel
@@ -105,6 +111,9 @@ is
    begin
       Process_Memregions :
       while Musinfo.Instance.Has_Element (Iter => Iter) loop
+         Status.Set_Diagnostics
+           (Value => Mucontrol.Status.Diagnostics_Type
+              (Musinfo.Utils.Index (Iter => Iter)));
          Element := Musinfo.Instance.Element (Iter => Iter);
          if Should_Process (Resource => Element)
            and then Element.Mem_Data.Flags.Writable
@@ -224,6 +233,9 @@ is
    begin
       Process_Memregions :
       while Musinfo.Instance.Has_Element (Iter => Iter) loop
+         Status.Set_Diagnostics
+           (Value => Mucontrol.Status.Diagnostics_Type
+              (Musinfo.Utils.Index (Iter => Iter)));
          Element := Musinfo.Instance.Element (Iter => Iter);
          if Should_Process (Resource => Element)
            and then Element.Mem_Data.Flags.Writable

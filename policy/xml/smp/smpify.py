@@ -17,6 +17,18 @@ cores -= 1
 dbgchannel_end = 4
 
 
+def create_phys_memory(mem):
+    for i in range(1, cores + 1):
+        control = etree.Element("memory", name="control_sm_" + str(i),
+                                size="16#1000#", caching="WB")
+        control.append(etree.Element("fill", pattern="16#ff#"))
+        mem.append(control)
+        status = etree.Element("memory", name="status_sm_" + str(i),
+                               size="16#1000#", caching="WB")
+        status.append(etree.Element("fill", pattern="16#00#"))
+        mem.append(status)
+
+
 def create_phys_events(events):
     for i in range(1, cores + 1):
         events.append(etree.Element("event", mode="switch",
@@ -128,6 +140,7 @@ def spread_devices():
 parser = etree.XMLParser(remove_blank_text=True)
 doc = etree.parse("../demo_system_desktop.xml", parser).getroot()
 
+create_phys_memory(doc.xpath("/system/memory")[0])
 create_phys_events(doc.xpath("/system/events")[0])
 create_phys_channels(doc.xpath("/system/channels")[0])
 create_lnx_resources(doc.xpath("/system/subjects/subject[@name='linux']")[0])

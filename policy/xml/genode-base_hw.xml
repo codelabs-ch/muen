@@ -28,6 +28,12 @@
   <memory name="guest_vm|vga_1" size="16#0800_0000#" caching="WB"/>
   <memory name="guest_vm|vga_2" size="16#9000#" caching="WB"/>
   <memory name="guest_vm|acpi" size="16#1000#" caching="WB"/>
+  <memory name="control_sm" size="16#1000#" caching="WB">
+   <fill pattern="16#ff#"/>
+  </memory>
+  <memory name="status_sm" size="16#1000#" caching="WB">
+   <fill pattern="16#00#"/>
+  </memory>
  </memory>
 
  <deviceDomains>

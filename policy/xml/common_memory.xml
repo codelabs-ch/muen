@@ -2,7 +2,17 @@
  <memory name="control_example" size="16#1000#" caching="WB">
   <fill pattern="16#00#"/>
  </memory>
+ <memory name="control_sm_1" size="16#1000#" caching="WB">
+  <fill pattern="16#00#"/>
+ </memory>
+ <memory name="control_sm_2" size="16#1000#" caching="WB">
+  <fill pattern="16#ff#"/>
+ </memory>
  <memory name="status_example" size="16#1000#" caching="WB"/>
+ <memory name="status_sm_1" size="16#1000#" caching="WB"/>
+ <memory name="status_sm_2" size="16#1000#" caching="WB">
+  <fill pattern="16#00#"/>
+ </memory>
  <memory name="initramfs" size="16#0098_1000#" caching="WB" type="subject_initrd">
   <file filename="initramfs.cpio.gz" offset="none"/>
  </memory>

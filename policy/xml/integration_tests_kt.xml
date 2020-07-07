@@ -16,6 +16,18 @@
 
  <memory>
   <include href="common_memory.xml"/>
+  <memory name="control_sm_3" size="16#1000#" caching="WB">
+   <fill pattern="16#ff#"/>
+  </memory>
+  <memory name="control_sm_4" size="16#1000#" caching="WB">
+   <fill pattern="16#ff#"/>
+  </memory>
+  <memory name="status_sm_3" size="16#1000#" caching="WB">
+   <fill pattern="16#00#"/>
+  </memory>
+  <memory name="status_sm_4" size="16#1000#" caching="WB">
+   <fill pattern="16#00#"/>
+  </memory>
   <include href="memory_xhci_dma.xml"/>
  </memory>
 
@@ -309,6 +321,8 @@
     </if>
     <map logical="resume_subject" physical="resume_linux_3"/>
     <map logical="handle_subject_trap" physical="trap_to_sm_3"/>
+    <map logical="status" physical="status_sm_3"/>
+    <map logical="control" physical="control_sm_3"/>
    </component>
   </subject>
 
@@ -417,6 +431,8 @@
     </if>
     <map logical="resume_subject" physical="resume_linux_4"/>
     <map logical="handle_subject_trap" physical="trap_to_sm_4"/>
+    <map logical="status" physical="status_sm_4"/>
+    <map logical="control" physical="control_sm_4"/>
    </component>
   </subject>
 

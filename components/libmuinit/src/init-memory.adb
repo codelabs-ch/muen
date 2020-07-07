@@ -52,17 +52,48 @@ is
                        others => ASCII.NUL),
          Null_Term => ASCII.NUL);
 
-   --  Returns True if the given resource should be processed, i.e. it is a
-   --  writable memory region that must be reset.
+   --  Returns True if the given resource should be processed.
    function Should_Process (Resource : Musinfo.Resource_Type) return Boolean
    is (Resource.Kind = Musinfo.Res_Memory
-       and then Resource.Mem_Data.Flags.Writable
-       and then Resource.Mem_Data.Kind /= Musinfo.Subject_State
-       and then Resource.Mem_Data.Kind /= Musinfo.Subject_Timed_Event
        and then not Utils.Is_Stack (Region => Resource.Mem_Data)
        and then not Utils.Is_Status (Region => Resource.Mem_Data)
+       and then not Utils.Is_Control (Region => Resource.Mem_Data)
        and then not Musinfo.Utils.Names_Equal (Left  => Resource.Name,
-                                               Right => Self_Name));
+                                               Right => Self_Name))
+   with
+      Post =>
+        (if Should_Process'Result then Resource.Kind = Musinfo.Res_Memory);
+
+   -------------------------------------------------------------------------
+
+   procedure Check_Hashes (Success : out Boolean)
+   is
+      use type Musinfo.Hash_Type;
+
+      Iter    : Musinfo.Utils.Resource_Iterator_Type
+        := Musinfo.Instance.Create_Resource_Iterator;
+      Element : Musinfo.Resource_Type;
+   begin
+      Process_Memregions :
+      while Musinfo.Instance.Has_Element (Iter => Iter) loop
+         Element := Musinfo.Instance.Element (Iter => Iter);
+         if Should_Process (Resource => Element)
+           and then Element.Mem_Data.Kind /= Musinfo.Subject_Channel
+           and then Element.Mem_Data.Hash /= Musinfo.No_Hash
+         then
+            Success := Addrspace.Calculate_Hash
+              (Source => Element.Mem_Data) = Element.Mem_Data.Hash;
+            if not Success then
+               return;
+            end if;
+         end if;
+         Musinfo.Utils.Next (Iter => Iter);
+         pragma Loop_Invariant
+           (Musinfo.Instance.Belongs_To (Iter => Iter));
+      end loop Process_Memregions;
+
+      Success := True;
+   end Check_Hashes;
 
    -------------------------------------------------------------------------
 
@@ -75,7 +106,11 @@ is
       Process_Memregions :
       while Musinfo.Instance.Has_Element (Iter => Iter) loop
          Element := Musinfo.Instance.Element (Iter => Iter);
-         if Should_Process (Resource => Element) then
+         if Should_Process (Resource => Element)
+           and then Element.Mem_Data.Flags.Writable
+           and then Element.Mem_Data.Kind /= Musinfo.Subject_State
+           and then Element.Mem_Data.Kind /= Musinfo.Subject_Timed_Event
+         then
             Addrspace.Memset (Region  => Element.Mem_Data,
                               Pattern => 0);
          end if;
@@ -190,7 +225,11 @@ is
       Process_Memregions :
       while Musinfo.Instance.Has_Element (Iter => Iter) loop
          Element := Musinfo.Instance.Element (Iter => Iter);
-         if Should_Process (Resource => Element) then
+         if Should_Process (Resource => Element)
+           and then Element.Mem_Data.Flags.Writable
+           and then Element.Mem_Data.Kind /= Musinfo.Subject_State
+           and then Element.Mem_Data.Kind /= Musinfo.Subject_Timed_Event
+         then
             Init_Region_Content (Region  => Element.Mem_Data,
                                  Success => Success);
             if not Success then

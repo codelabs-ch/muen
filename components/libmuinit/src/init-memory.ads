@@ -54,4 +54,10 @@ is
    with
       Pre => Musinfo.Instance.Is_Valid;
 
+   --  Check hashes of all memory regions present in subject info against
+   --  current in-memory content hashes.
+   procedure Check_Hashes (Success : out Boolean)
+   with
+      Pre => Musinfo.Instance.Is_Valid;
+
 end Init.Memory;

@@ -28,31 +28,74 @@
 
 with Interfaces;
 
+private with System;
+
+private with Libmucontrol_Component.Memory;
+
 package Mucontrol.Status.Instance
+with
+   Abstract_State => (State with External => Async_Readers),
+   Initializes    => State
 is
 
    --  Initialize subject status.
-   procedure Initialize;
+   procedure Initialize
+   with
+      Global  => (Output => State),
+      Depends => (State => null);
 
    --  Get current subject status.
-   function Get return Status_Type;
+   function Get return Status_Type
+   with
+      Global => (Input => State),
+      Volatile_Function;
 
    --  Get current diagnostics value.
-   function Get_Diagnostics return Diagnostics_Type;
+   function Get_Diagnostics return Diagnostics_Type
+   with
+      Global => (Input => State),
+      Volatile_Function;
 
    --  Get current watchdog value.
-   function Get_Watchdog return Interfaces.Unsigned_64;
+   function Get_Watchdog return Interfaces.Unsigned_64
+   with
+      Global => (Input => State),
+      Volatile_Function;
 
    --  Set subject status to given value.
-   procedure Set (New_Status : Status_Type);
+   procedure Set (New_Status : Status_Type)
+   with
+      Global  => (In_Out => State),
+      Depends => (State  =>+ New_Status);
 
    --  Set error in subject status.
-   procedure Error;
+   procedure Error
+   with
+      Global  => (In_Out => State),
+      Depends => (State  => State);
 
    --  Set diagnostic to given value.
-   procedure Set_Diagnostics (Value : Diagnostics_Type);
+   procedure Set_Diagnostics (Value : Diagnostics_Type)
+   with
+      Global  => (In_Out => State),
+      Depends => (State  =>+ Value);
 
    --  Set watchdog value.
-   procedure Set_Watchdog (Value : Interfaces.Unsigned_64);
+   procedure Set_Watchdog (Value : Interfaces.Unsigned_64)
+   with
+      Global  => (In_Out => State),
+      Depends => (State  =>+ Value);
+
+private
+
+   package Cspec renames Libmucontrol_Component.Memory;
+
+   Status_Page : Status_Page_Type
+   with
+      Import,
+      Async_Readers,
+      Part_Of => State,
+      Size    => Cspec.Status_Size * 8,
+      Address => System'To_Address (Cspec.Status_Address);
 
 end Mucontrol.Status.Instance;

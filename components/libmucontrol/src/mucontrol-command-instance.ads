@@ -26,27 +26,56 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
+private with System;
+
+private with Libmucontrol_Component.Memory;
+
 package Mucontrol.Command.Instance
+with
+   Abstract_State => (State with External => Async_Writers)
 is
 
    --  Returns the current command.
    function Get return Command_Type
-   with Volatile_Function;
+   with
+      Global => (Input => State),
+      Volatile_Function;
 
    --  Returns the current epoch.
    function Get_Epoch return Interfaces.Unsigned_64
-   with Volatile_Function;
+   with
+      Global => (Input => State),
+      Volatile_Function;
 
    --  Returns the current watchdog interval.
    function Get_Watchdog_Interval return Interfaces.Unsigned_64
-   with Volatile_Function;
+   with
+      Global => (Input => State),
+      Volatile_Function;
 
    --  Returns True if the subject is self-governed.
    function Is_Self_Governed return Boolean
-   with Volatile_Function;
+   with
+      Global => (Input => State),
+      Volatile_Function;
 
    --  Wait for next command that is different from the given Cmd value. Cmd is
    --  set to the new command value.
-   procedure Wait_For_Next (Cmd : in out Command_Type);
+   procedure Wait_For_Next (Cmd : in out Command_Type)
+   with
+      Global  => (Input => State),
+      Depends => (Cmd   =>+ State);
+
+private
+
+   package Cspec renames Libmucontrol_Component.Memory;
+
+   Command_Page : Command_Page_Type
+   with
+      Import,
+      Async_Writers,
+      Part_Of => State,
+      Size    => Cspec.Control_Size * 8,
+      Address => System'To_Address (Cspec.Control_Address);
 
 end Mucontrol.Command.Instance;

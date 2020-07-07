@@ -26,20 +26,10 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-with System;
-
-with Libmucontrol_Component.Memory;
-
 package body Mucontrol.Command.Instance
+with
+   Refined_State => (State => Command_Page)
 is
-
-   package Cspec renames Libmucontrol_Component.Memory;
-
-   Command_Page : Command_Page_Type
-   with
-      Async_Writers,
-      Size    => Cspec.Control_Size * 8,
-      Address => System'To_Address (Cspec.Control_Address);
 
    -------------------------------------------------------------------------
 

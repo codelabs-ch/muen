@@ -26,20 +26,10 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-with System;
-
-with Libmucontrol_Component.Memory;
-
 package body Mucontrol.Status.Instance
+with
+   Refined_State => (State => Status_Page)
 is
-
-   package Cspec renames Libmucontrol_Component.Memory;
-
-   Status_Page : Status_Page_Type
-   with
-      Async_Readers,
-      Size    => Cspec.Status_Size * 8,
-      Address => System'To_Address (Cspec.Status_Address);
 
    -------------------------------------------------------------------------
 

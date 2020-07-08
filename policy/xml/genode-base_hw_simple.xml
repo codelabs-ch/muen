@@ -21,6 +21,8 @@
   <event name="timer_base_hw_1" mode="self"/>
   <event name="trap_to_sm_1" mode="switch"/>
   <event name="system_panic" mode="kernel"/>
+  <event name="system_reboot" mode="kernel"/>
+  <event name="system_poweroff" mode="kernel"/>
  </events>
 
  <channels>

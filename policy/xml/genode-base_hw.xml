@@ -51,6 +51,8 @@
   <event name="resume_guest_vm" mode="switch"/>
   <event name="trap_to_base_hw" mode="switch"/>
   <event name="system_panic" mode="kernel"/>
+  <event name="system_reboot" mode="kernel"/>
+  <event name="system_poweroff" mode="kernel"/>
  </events>
 
  <channels>

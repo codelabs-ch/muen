@@ -16,6 +16,7 @@ COMPONENTS_SPARK := \
 	dm \
 	example \
 	idle \
+	manager \
 	ps2_drv \
 	sl \
 	sm \
@@ -26,6 +27,7 @@ COMPONENTS_SPARK := \
 COMPONENTS_PROOF := \
 	dm \
 	example \
+	manager \
 	sl \
 	sm \
 	time

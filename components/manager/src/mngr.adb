@@ -18,6 +18,8 @@
 
 with Debuglog.Client;
 
+with Mngr.Lifecycle;
+
 package body Mngr
 is
 
@@ -27,8 +29,11 @@ is
    is
    begin
       Debuglog.Client.Put_Line (Item => "Manager running");
+
       loop
-         null;
+         for I in Managed_Subjects_Range loop
+            Lifecycle.Process (ID => I);
+         end loop;
       end loop;
    end Run;
 

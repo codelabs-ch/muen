@@ -32,9 +32,9 @@ def create_phys_events(events):
                                     + str(i).zfill(2)))
 
 
-def create_phys_channels(events):
+def create_phys_channels(channels):
     for i in range(1, cores + 1):
-        events.append(
+        channels.append(
                 etree.Element("channel", name="debuglog_subject"
                               + str(dbgchannel_end + i),
                               size="$logchannel_size"))

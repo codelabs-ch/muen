@@ -55,6 +55,8 @@ is
    STATE_INITIALIZING : constant Status_Type := 16#0008#;
    --  Subject is running.
    STATE_RUNNING      : constant Status_Type := 16#0009#;
+   --  Subject has finished its task and halted further execution.
+   STATE_FINISHED     : constant Status_Type := 16#000a#;
    --  Error occurred.
    STATE_ERROR        : constant Status_Type := 16#8000_0000_0000_0000#;
 

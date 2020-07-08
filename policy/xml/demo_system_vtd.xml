@@ -33,6 +33,7 @@
  <channels>
   <include href="common_channels.xml"/>
 
+  <channel name="debuglog_manager" size="$logchannel_size"/>
   <channel name="debuglog_example" size="$logchannel_size"/>
   <channel name="example_request" size="16#1000#" hasEvent="switch"/>
   <channel name="example_response" size="16#1000#" hasEvent="switch"/>
@@ -70,14 +71,30 @@
     <map logical="log_channel5" physical="debuglog_subject5"/>
     <map logical="log_channel6" physical="debuglog_subject6"/>
     <map logical="log_channel_example" physical="debuglog_example"/>
+    <map logical="log_channel_7" physical="debuglog_manager"/>
     <if variable="pciconf_emulation_enabled" value="true">
-     <map logical="log_channel7" physical="debuglog_subject7"/>
-     <map logical="log_channel8" physical="debuglog_subject8"/>
+     <map logical="log_channel8" physical="debuglog_subject7"/>
+     <map logical="log_channel9" physical="debuglog_subject8"/>
     </if>
     <if variable="dbgserver_sink_shmem" value="true">
      <map logical="debug_shm_sink_memory" physical="debug_shm_sink_memory"/>
     </if>
     <include href="subject_dbgserver_common.xml"/>
+   </component>
+  </subject>
+
+  <subject name="manager">
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <default physical="system_panic">
+       <system_panic/>
+      </default>
+     </group>
+    </source>
+   </events>
+   <component ref="manager">
+    <map logical="debuglog" physical="debuglog_manager"/>
    </component>
   </subject>
 

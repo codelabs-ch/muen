@@ -53,6 +53,7 @@ is
       Sector_Cnt  : Interfaces.Unsigned_64;
       Sector_Size : Interfaces.Unsigned_64;
       Max_Sectors : Interfaces.Unsigned_64;
+      Valid       : Boolean;
 
       Test_Data_Sector_Cnt : Interfaces.Unsigned_64;
    begin
@@ -63,7 +64,13 @@ is
          (Device_Id   => 0,
           Sector_Cnt  => Sector_Cnt,
           Sector_Size => Sector_Size,
-          Max_Sectors => Max_Sectors);
+          Max_Sectors => Max_Sectors,
+          Valid       => Valid);
+
+      if not Valid then
+         Log.Put_Line ("Unable to get device Info");
+         return;
+      end if;
 
       Log.Put_Line ("Device found with " &
          SK.Strings.Img (Sector_Cnt) & "Sectors. Sector_Size: " &

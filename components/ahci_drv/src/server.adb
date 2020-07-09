@@ -207,6 +207,9 @@ is
                      := Mbr_Partitions.Entries (Dev.Partition).Sector_Cnt;
                end if;
             end if;
+            if Dev.Partition = PC.Smart_Only then
+               Ports (Port_Idx).Devs (Dev_Idx).Ahci_Port := Dev.Ahci_Port;
+            end if;
             <<Next_Dev>>
             Dev_Idx := Dev_Idx + 1;
          end loop;
@@ -350,6 +353,8 @@ is
        Dev_Idx  : PC.Devices_Range;
        Request  : MB.Block_Request_Type)
    is
+      use type Ahci.Status_Type;
+      Ret : Ahci.Status_Type;
       Response  : MB.Block_Response_Type;
    begin
       Response.Request_Kind := Request.Request_Kind;
@@ -388,6 +393,31 @@ is
                end if;
             end loop;
             Response.Status_Code := 0;
+         when MB.Get_SMART =>
+            declare
+               Address      : constant Interfaces.Unsigned_64
+                   := Ports (Port_Idx).Devs (Dev_Idx).Current.Buffer_Offset +
+                            Get_Shm_Buffer_Base (Ports (Port_Idx).Chan_Idx);
+               SMART_Status : Ahci.Device.SMART_Status_Type;
+            begin
+               Ahci.Device.Get_SMART
+                 (ID      => Ports (Port_Idx).Devs (Dev_Idx).Ahci_Port,
+                  Address => Address,
+                  Status  => SMART_Status,
+                  Ret_Val => Ret);
+               if Ret  = Ahci.OK then
+                  case SMART_Status is
+                     when Ahci.Device.OK =>
+                        Response.Status_Code := MB.SMART_OK;
+                     when Ahci.Device.Threshold_Exceeded =>
+                        Response.Status_Code := MB.SMART_THRESHOLD_EXCEEDED;
+                     when Ahci.Device.Undefined =>
+                        Response.Status_Code := MB.SMART_UNDEFINED;
+                  end case;
+               else
+                  Response.Status_Code := 0;
+               end if;
+            end;
          when MB.Sync =>
             --  end all outstanding requests
             for I in Ports (Port_Idx).Devs'Range loop
@@ -396,20 +426,15 @@ is
                end if;
             end loop;
 
-            declare
-               use type Ahci.Status_Type;
-               Ret : Ahci.Status_Type;
-            begin
-               Ahci.Device.Sync
-                  (ID      => Ports (Port_Idx).Devs (Dev_Idx).Ahci_Port,
-                   Ret_Val => Ret);
+            Ahci.Device.Sync
+               (ID      => Ports (Port_Idx).Devs (Dev_Idx).Ahci_Port,
+                Ret_Val => Ret);
 
-               if Ret = Ahci.OK then
-                  Response.Status_Code := 0;
-               else
-                  Response.Status_Code := 1;
-               end if;
-            end;
+            if Ret = Ahci.OK then
+               Response.Status_Code := 0;
+            else
+               Response.Status_Code := 1;
+            end if;
 
          when others =>
             pragma Debug (Debug_Ops.Put_Line ("simple_req: unknown!"));
@@ -506,6 +531,7 @@ is
                | MB.Max_Blocks_Count
                | MB.Max_Devices
                | MB.Reset
+               | MB.Get_SMART
                | MB.Sync =>
             Process_Simple_Request (Port_Idx, Dev_Idx, Request);
          when others =>

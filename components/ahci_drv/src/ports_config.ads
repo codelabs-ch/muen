@@ -21,9 +21,11 @@ with Ahci_Drv_Component.Memory_Arrays;
 
 package Ports_Config is
    --  Use No_Partition if you want to export the whole Device attached
-   --  to the given AHCI_Port
+   --  to the given AHCI_Port. Smart_Only will not assign a partition to the
+   --  device and allow only the Get_SMART request
    No_Partition   : Integer := Natural'Last;
    Null_Partition : Integer := 16#cafe#;
+   Smart_Only     : Integer := 16#beef#;
 
    --  Maximum zero based device index of devices attached to a server port
    Devices_Max : constant := 1;

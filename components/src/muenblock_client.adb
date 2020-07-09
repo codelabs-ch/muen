@@ -242,6 +242,37 @@ is
 
    --------------------------------------------------------------------
 
+   procedure Get_SMART
+      (Device_Id     :     Interfaces.Unsigned_16;
+       Buffer_Offset :     Interfaces.Unsigned_64;
+       Result        : out Interfaces.Unsigned_64)
+   is
+      use type MB.Request_Kind_Type;
+      Request  : MB.Block_Request_Type  := MB.Null_Request;
+      Response : MB.Block_Response_Type := MB.Null_Response;
+      Tag      : constant Interfaces.Unsigned_32 := 16#534d4152#;
+      Error    : Boolean;
+   begin
+      Request.Request_Kind  := MB.Get_SMART;
+      Request.Request_Tag   := Tag;
+      Request.Device_Id     := Device_Id;
+      Request.Buffer_Offset := Buffer_Offset;
+
+      Send_Request (Request);
+
+      Receive (Response, Error);
+      if not Error
+         and (Response.Request_Kind = MB.Get_SMART)
+         and (Response.Request_Tag = Tag)
+      then
+         Result := Response.Status_Code;
+      else
+         Result := 0;
+      end if;
+   end Get_SMART;
+
+   --------------------------------------------------------------------
+
    procedure Init (Timeout_MS : Integer := Integer'Last)
    with
       SPARK_Mode => Off

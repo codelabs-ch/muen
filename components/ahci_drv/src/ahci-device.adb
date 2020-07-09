@@ -121,6 +121,28 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Get_SMART
+      (ID : Port_Range;
+       Address :     Interfaces.Unsigned_64; --  Buffer Address
+       Status  : out SMART_Status_Type;
+       Ret_Val : out Ahci.Status_Type)
+   is
+      Signature : constant Signature_Type := Devices (ID).Signature;
+   begin
+      case Signature is
+         when Sata =>
+            Ata.Get_SMART (ID => ID,
+               Address => Address,
+               Status  => Status,
+               Ret_Val => Ret_Val);
+         when others =>
+            Ret_Val := Ahci.ENOTSUP;
+      end case;
+
+   end Get_SMART;
+
+   -------------------------------------------------------------------------
+
    procedure Identify_Device
       (Port_ID   : Port_Range)
    is

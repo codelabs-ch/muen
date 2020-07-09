@@ -22,6 +22,7 @@ with Interfaces;
 with Log;
 
 with Musinfo.Instance;
+with Muenblock;
 
 package body Muenblock_Example
 is
@@ -42,6 +43,64 @@ is
       Address => System'To_Address
             (Example_Component.Memory.Blockdev_Shm2_Address
                + (Test_Data_Type'Size / 8));
+
+   -------------------------------------------------------------------------
+
+   type Unsigned_48 is mod 2 ** 48;
+   for Unsigned_48'Size use 48;
+
+   type SMART_Attribute_Type is record
+      ID       : Interfaces.Unsigned_8;
+      Flags    : Interfaces.Unsigned_16;
+      Current  : Interfaces.Unsigned_8;
+      Worst    : Interfaces.Unsigned_8;
+      Raw      : Unsigned_48;
+      Reserved : Interfaces.Unsigned_8;
+   end record
+   with
+      Size => 12 * 8;
+
+   for SMART_Attribute_Type use record
+      ID       at 0 range 0 .. 7;
+      Flags    at 1 range 0 .. 15;
+      Current  at 3 range 0 .. 7;
+      Worst    at 4 range 0 .. 7;
+      Raw      at 5 range 0 .. 6 * 8 - 1;
+      Reserved at 11 range 0 .. 7;
+   end record;
+
+   type SMART_Attribute_Table_Type is
+      array (Integer range 1 .. 30) of SMART_Attribute_Type;
+   SMART_Attribute_Table : SMART_Attribute_Table_Type
+   with
+      Volatile,
+      Async_Writers,
+      Address => System'To_Address
+         (Example_Component.Memory.Blockdev_Shm2_Address + 2);
+
+   procedure SMART_Dump_Data
+   is
+      use type Interfaces.Unsigned_8;
+      Attribute : SMART_Attribute_Type;
+   begin
+      for I in SMART_Attribute_Table_Type'Range loop
+         Attribute := SMART_Attribute_Table (I);
+         if Attribute.ID /= 0 then
+            Log.Put_Line
+               (Item => "SMART Attribute ID: "
+                  & SK.Strings.Img (Attribute.ID));
+            Log.Put_Line
+               (Item => " Flags: " & SK.Strings.Img (Attribute.Flags));
+            Log.Put_Line
+               (Item => " Current: " & SK.Strings.Img (Attribute.Current));
+            Log.Put_Line
+               (Item => " Worst: " & SK.Strings.Img (Attribute.Worst));
+            Log.Put_Line
+               (Item => " Raw: " & SK.Strings.Img
+                  (Interfaces.Unsigned_64 (Attribute.Raw)));
+         end if;
+      end loop;
+   end SMART_Dump_Data;
 
    procedure Show
    is
@@ -76,6 +135,28 @@ is
          SK.Strings.Img (Sector_Cnt) & "Sectors. Sector_Size: " &
          SK.Strings.Img (Sector_Size));
       Test_Data_Sector_Cnt := Test_Data_Type'Size / 8 / Sector_Size;
+
+      --  get device health (SMART)
+      Muenblock_Client_Instance.Get_SMART
+         (Device_Id     => 0,
+          Buffer_Offset => 0,
+          Result        => Res);
+      case Res is
+         when 0 =>
+            Log.Put_Line ("Unable to read SMART Data!");
+         when Muenblock.SMART_OK =>
+            Log.Put_Line ("SMART Status: OK!");
+         when Muenblock.SMART_THRESHOLD_EXCEEDED =>
+            Log.Put_Line ("SMART Status: Threshold Exceeded!");
+         when Muenblock.SMART_UNDEFINED =>
+            Log.Put_Line ("SMART Status: Undefined!");
+         when others =>
+            null;
+      end case;
+
+      if Res /= 0 then
+         SMART_Dump_Data;
+      end if;
 
       Muenblock_Client_Instance.Discard
          (Device_Id     => 0,

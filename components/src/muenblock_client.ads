@@ -52,6 +52,12 @@ is
        Max_Sectors : out Interfaces.Unsigned_64;
        Valid       : out Boolean);
 
+   --  Get the SMART Attributes
+   procedure Get_SMART
+      (Device_Id     :     Interfaces.Unsigned_16;
+       Buffer_Offset :     Interfaces.Unsigned_64;
+       Result        : out Interfaces.Unsigned_64);
+
    --  Read 'Sector_Cnt' Sectors from 'Start_Sector' to
    --  'Buffer_Offset'
    --

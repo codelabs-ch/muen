@@ -24,6 +24,7 @@
         <xsl:with-param name="name" select="'hsuart_enabled'"/>
         <xsl:with-param name="value" select="'false'"/>
        </xsl:call-template>
+       <xsl:text>&#10;</xsl:text>
        <xsl:call-template name="extractSerialPort"/>
       </xsl:when>
       <xsl:otherwise>
@@ -31,6 +32,7 @@
         <xsl:with-param name="name" select="'hsuart_enabled'"/>
         <xsl:with-param name="value" select="'true'"/>
        </xsl:call-template>
+       <xsl:text>&#10;</xsl:text>
       </xsl:otherwise>
      </xsl:choose>
     </xsl:when>
@@ -39,6 +41,7 @@
       <xsl:with-param name="name" select="'hsuart_enabled'"/>
       <xsl:with-param name="value" select="'false'"/>
      </xsl:call-template>
+     <xsl:text>&#10;</xsl:text>
     </xsl:otherwise>
    </xsl:choose>
    <xsl:call-template name="extractLogChannelSize"/>
@@ -71,25 +74,31 @@
     <xsl:with-param name="aliasResourceName" select="$physPortName"/>
    </xsl:call-template>
   </xsl:variable>
-  <xsl:variable name="physPortStart">
+  <xsl:variable name="effectivePhysDevName">
    <xsl:choose>
-    <xsl:when test="$aliasPhysDevName!='' and $aliasPhysResourceName!=''">
-     <xsl:value-of select="/system/hardware/devices/device[@name=$aliasPhysDevName]/ioPort[@name=$aliasPhysResourceName]/@start"/>
+    <xsl:when test="$aliasPhysDevName!=''">
+     <xsl:value-of select="$aliasPhysDevName"/>
     </xsl:when>
     <xsl:otherwise>
-     <xsl:value-of select="/system/hardware/devices/device[@name=$physDevName]/ioPort[@name=$physPortName]/@start"/>
+     <xsl:value-of select="$physDevName"/>
     </xsl:otherwise>
    </xsl:choose>
   </xsl:variable>
-  <xsl:variable name="physPortEnd">
+  <xsl:variable name="effectivePhysPortName">
    <xsl:choose>
-    <xsl:when test="$aliasPhysDevName!='' and $aliasPhysResourceName!=''">
-     <xsl:value-of select="/system/hardware/devices/device[@name=$aliasPhysDevName]/ioPort[@name=$aliasPhysResourceName]/@end"/>
+    <xsl:when test="$aliasPhysResourceName!=''">
+     <xsl:value-of select="$aliasPhysResourceName"/>
     </xsl:when>
     <xsl:otherwise>
-     <xsl:value-of select="/system/hardware/devices/device[@name=$physDevName]/ioPort[@name=$physPortName]/@end"/>
+     <xsl:value-of select="$physPortName"/>
     </xsl:otherwise>
    </xsl:choose>
+  </xsl:variable>
+  <xsl:variable name="physPortStart">
+   <xsl:value-of select="/system/hardware/devices/device[@name=$effectivePhysDevName]/ioPort[@name=$effectivePhysPortName]/@start"/>
+  </xsl:variable>
+  <xsl:variable name="physPortEnd">
+   <xsl:value-of select="/system/hardware/devices/device[@name=$effectivePhysDevName]/ioPort[@name=$effectivePhysPortName]/@end"/>
   </xsl:variable>
   <xsl:choose>
    <xsl:when test="$physPortStart='' or $physPortEnd=''">
@@ -105,7 +114,6 @@
      <xsl:with-param name="name" select="'debugconsole_port_end'"/>
      <xsl:with-param name="value" select="$physPortEnd"/>
     </xsl:call-template>
-    <xsl:text>&#10;</xsl:text>
    </xsl:otherwise>
   </xsl:choose>
  </xsl:template>

@@ -187,28 +187,29 @@ is
       (Device_Id   :     Device_Range_Type;
        Sector_Cnt  : out Interfaces.Unsigned_64;
        Sector_Size : out Interfaces.Unsigned_64;
-       Max_Sectors : out Interfaces.Unsigned_64)
+       Max_Sectors : out Interfaces.Unsigned_64;
+       Valid       : out Boolean)
    is
       Request  : MB.Block_Request_Type  := MB.Null_Request;
       Response : MB.Block_Response_Type := MB.Null_Response;
       Error    : Boolean;
    begin
+      Sector_Cnt  := Interfaces.Unsigned_64'Last;
+      Sector_Size := Interfaces.Unsigned_64'Last;
+      Max_Sectors := Interfaces.Unsigned_64'Last;
+      Valid       := False;
+
       if (Devices_Cnt = 0) or (Device_Id > (Devices_Cnt - 1)) then
-         Sector_Cnt  := 0;
-         Sector_Size := 0;
-         Max_Sectors := 0;
+         return;
       end if;
 
       if Device_Info (Device_Id).Valid then
          Sector_Cnt  := Device_Info (Device_Id).Sector_Cnt;
          Sector_Size := Device_Info (Device_Id).Sector_Size;
          Max_Sectors := Device_Info (Device_Id).Max_Sectors;
+         Valid       := True;
          return;
       end if;
-
-      Sector_Cnt  := Interfaces.Unsigned_64'Last;
-      Sector_Size := Interfaces.Unsigned_64'Last;
-      Max_Sectors := Interfaces.Unsigned_64'Last;
 
       Request.Request_Kind := MB.Media_Blocks;
       Request.Request_Tag  := 10;
@@ -243,6 +244,7 @@ is
          end if;
       end loop;
 
+      Valid := True;
       Device_Info (Device_Id).Valid := True;
    end Get_Device_Info;
 
@@ -252,6 +254,7 @@ is
    with
       SPARK_Mode => Off
    is
+      Valid  : Boolean;
       Active : Boolean;
    begin
       Req_Chn.Writer_Instance.Initialize
@@ -302,7 +305,8 @@ is
          Get_Device_Info (Device_Id   => I,
                           Sector_Cnt  => Device_Info (I).Sector_Cnt,
                           Sector_Size => Device_Info (I).Sector_Size,
-                          Max_Sectors => Device_Info (I).Max_Sectors);
+                          Max_Sectors => Device_Info (I).Max_Sectors,
+                          Valid       => Valid);
       end loop;
    end Init;
 

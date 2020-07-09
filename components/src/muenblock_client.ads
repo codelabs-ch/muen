@@ -56,7 +56,8 @@ is
       (Device_Id   :     Device_Range_Type;
        Sector_Cnt  : out Interfaces.Unsigned_64;
        Sector_Size : out Interfaces.Unsigned_64;
-       Max_Sectors : out Interfaces.Unsigned_64);
+       Max_Sectors : out Interfaces.Unsigned_64;
+       Valid       : out Boolean);
 
    --  Read 'Sector_Cnt' Sectors from 'Start_Sector' to
    --  'Buffer_Offset'

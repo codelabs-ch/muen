@@ -18,7 +18,6 @@
 with Ahci.Commands;
 with Ahci.FIS;
 with Ahci.Ports;
-with Ahci.Delays;
 
 with Debug_Ops;
 with Interfaces;
@@ -367,6 +366,7 @@ is
    procedure SMART_Execute_Cmd
       (ID      :     Ahci.Port_Range;
        Feature :     Interfaces.Unsigned_16;
+       Address :     Interfaces.Unsigned_64 := Ahci.DMA_Mem_Base_Address;
        Ret_Val : out Ahci.Status_Type)
    is
       RW       : constant Ahci.RW_Type := Ahci.Read;
@@ -374,9 +374,10 @@ is
       Success  : Boolean;
    begin
       Ret_Val := Ahci.EIO;
+
       Ahci.Commands.Cmd_Slot_Prepare (Port_ID => ID,
                                       Len     => Length,
-                                      Address => Ahci.DMA_Mem_Base_Address,
+                                      Address => Address,
                                       RW      => RW);
 
       if Length /= 512 then
@@ -401,91 +402,46 @@ is
 
    -------------------------------------------------------------------------
 
-   type SMART_Attribute_Type is record
-      ID       : Interfaces.Unsigned_8;
-      Flags    : Interfaces.Unsigned_16;
-      Current  : Interfaces.Unsigned_8;
-      Worst    : Interfaces.Unsigned_8;
-      Raw      : Ahci.Unsigned_48;
-      Reserved : Interfaces.Unsigned_8;
-   end record
-   with
-      Size => 12 * 8;
-
-   for SMART_Attribute_Type use record
-      ID       at 0 range 0 .. 7;
-      Flags    at 1 range 0 .. 15;
-      Current  at 3 range 0 .. 7;
-      Worst    at 4 range 0 .. 7;
-      Raw      at 5 range 0 .. 6 * 8 - 1;
-      Reserved at 11 range 0 .. 7;
-   end record;
-
-   type SMART_Attribute_Table_Type is
-      array (Integer range 1 .. 30) of SMART_Attribute_Type;
-   SMART_Attribute_Table : SMART_Attribute_Table_Type
-   with
-      Volatile,
-      Async_Readers,
-      Async_Writers,
-      Address => System'To_Address (Ahci.DMA_Mem_Base_Address + 2);
-
-   procedure SMART_Dump_Data
-      (ID      :     Ahci.Port_Range)
-   is
-      use type Ahci.Status_Type;
-      use type Interfaces.Unsigned_8;
-      Ret_Val   : Ahci.Status_Type;
-      Attribute : SMART_Attribute_Type;
-   begin
-      SMART_Execute_Cmd (ID => ID,
-                         Feature  => SMART_Read_Data,
-                         Ret_Val => Ret_Val);
-      if Ret_Val = Ahci.OK then
-         for I in SMART_Attribute_Table_Type'Range loop
-            Attribute := SMART_Attribute_Table (I);
-            if Attribute.ID /= 0 then
-               pragma Debug (Debug_Ops.Put_Line
-                  (Item => "ID:  " & SK.Strings.Img (Attribute.ID)));
-               pragma Debug (Debug_Ops.Put_Line
-                  (Item => " Flags: " & SK.Strings.Img (Attribute.Flags)));
-               pragma Debug (Debug_Ops.Put_Line
-                  (Item => " Current: " & SK.Strings.Img (Attribute.Current)));
-               pragma Debug (Debug_Ops.Put_Line
-                  (Item => " Worst: " & SK.Strings.Img (Attribute.Worst)));
-               pragma Debug (Debug_Ops.Put_Line
-                  (Item => " Raw: " & SK.Strings.Img
-                     (Interfaces.Unsigned_64 (Attribute.Raw))));
-            end if;
-         end loop;
-      end if;
-   end SMART_Dump_Data;
-
-   -------------------------------------------------------------------------
-
-   procedure SMART_Status
-      (ID     :     Ahci.Port_Range;
-       Status : out SMART_Status_Type)
+   procedure Get_SMART
+      (ID      :     Ahci.Port_Range;
+       Address :     Interfaces.Unsigned_64; --  DMA Buffer address
+       Status  : out Ahci.Device.SMART_Status_Type;
+       Ret_Val : out Ahci.Status_Type)
    is
       use type Ahci.Status_Type;
       use type Interfaces.Unsigned_24;
-      Ret_Val       : Ahci.Status_Type;
       Return_Status : Interfaces.Unsigned_24;
    begin
+      Status := Ahci.Device.Undefined;
+      if not Ahci.Devices (ID).Support_SMART then
+         Ret_Val := Ahci.ENOTSUP;
+         return;
+      end if;
+
+      SMART_Execute_Cmd (ID => ID,
+                         Feature  => SMART_Read_Data,
+                         Address => Address,
+                         Ret_Val => Ret_Val);
+
+      if Ret_Val /= Ahci.OK then
+         return;
+      end if;
+
       SMART_Execute_Cmd (ID      => ID,
                          Feature => SMART_Return_Status,
                          Ret_Val => Ret_Val);
+
       if Ret_Val = Ahci.OK then
          Return_Status := Ahci.FIS.Fis_Array (ID).RFIS.LBA0_23;
          if (Return_Status and 16#ffff00#) = 16#c24f00# then
-            Status := OK;
+            Status := Ahci.Device.OK;
          elsif (Return_Status and 16#ffff00#) = 16#2cf400# then
-            Status := Threshold_Exceeded;
+            Status := Ahci.Device.Threshold_Exceeded;
          else
-            Status := Undefined;
+            Status := Ahci.Device.Undefined;
          end if;
       end if;
-   end SMART_Status;
+   end Get_SMART;
 
    -------------------------------------------------------------------------
 
@@ -843,12 +799,8 @@ is
          begin
             if Ahci.Devices (Port_ID).Support_SMART then
                if not Smart_Enabled then
-                  pragma Debug (
-                     Debug_Ops.Put_Line ("ata: enabling SMART"));
                   SMART_Enable_Disable (Port_ID, True, Ret_Val);
                end if;
-               pragma Debug (
-                     Debug_Ops.Put_Line ("ata: SMART enabled."));
             end if;
          end;
       end if;

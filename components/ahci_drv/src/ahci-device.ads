@@ -41,6 +41,14 @@ is
       (ID : Port_Range;
        Ret_Val : out Ahci.Status_Type);
 
+   type SMART_Status_Type is (OK, Threshold_Exceeded, Undefined);
+
+   procedure Get_SMART
+      (ID : Port_Range;
+       Address :     Interfaces.Unsigned_64; --  Buffer Address
+       Status  : out SMART_Status_Type;
+       Ret_Val : out Ahci.Status_Type);
+
    --  Returns a Bit_Array where 'found' devices are 'True'
    procedure Get_Attached_Devices (Dev : out Bit_Array);
 

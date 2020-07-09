@@ -31,6 +31,7 @@ is
        Discard,            --  Discard/zero count blocks
        Sync,
        Barrier,            --  Enforce media write/barrier etc.
+       Get_SMART,          --  Return SMART read Data (raw)
        Media_Blocks,       --  Return number of Blocks of device
        Block_Length,       --  Return block size of device
        Max_Requests,       --  Return maximum number of requests in flight
@@ -47,6 +48,7 @@ is
        Discard            => 16#0003#,
        Sync               => 16#0004#,
        Barrier            => 16#0005#,
+       Get_SMART          => 16#0006#,
        Media_Blocks       => 16#0010#,
        Block_Length       => 16#0011#,
        Max_Requests       => 16#0019#,
@@ -103,6 +105,10 @@ is
      Request_Tag  at 4 range 0 .. 31;
      Status_Code  at 8 range 0 .. 63;
    end record;
+
+   SMART_OK                 : constant := 16#1#;
+   SMART_THRESHOLD_EXCEEDED : constant := 16#2#;
+   SMART_UNDEFINED          : constant := 16#3#;
 
    Null_Request  : constant Block_Request_Type :=
       (Request_Kind => None,

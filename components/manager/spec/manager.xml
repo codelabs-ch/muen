@@ -16,6 +16,7 @@
     <memory logical="status_3"/>
     <memory logical="status_4"/>
    </array>
+   <memory logical="slot_control_1" virtualAddress="16#9000_0000#" size="16#1000#" writable="false" executable="false"/>
   </memory>
  </requires>
 </component>

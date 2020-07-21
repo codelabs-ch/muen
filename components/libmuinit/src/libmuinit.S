@@ -23,7 +23,6 @@
 .global _main
 
 _main:
-	push %r15
 	push %r14
 	push %r13
 	push %r12
@@ -38,7 +37,10 @@ _main:
 	push %rcx
 	push %rbx
 	push %rax
+	push %r15
+	mov %rsp, %rdi
 	call init_main
+	pop %r15
 	pop %rax
 	pop %rbx
 	pop %rcx
@@ -53,9 +55,10 @@ _main:
 	pop %r12
 	pop %r13
 	pop %r14
+	push %r15
 	movq $STATUS_PAGE_ADDR, %r15
 	movq $STATE_RUNNING, (%r15)
 	pop %r15
-	jmpq *component_entrypoint
+	jmpq *%r15
 	// Should never return
 	ud2

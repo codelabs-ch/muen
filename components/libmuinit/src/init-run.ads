@@ -26,11 +26,13 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
+with Interfaces;
+
 package Init.Run
 is
 
    --  Initialize subject memory.
-   procedure Main
+   procedure Main (Entry_Point : out Interfaces.Unsigned_64)
    with
       Export,
       Convention => C,

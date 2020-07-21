@@ -39,7 +39,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Main
+   procedure Main (Entry_Point : out Interfaces.Unsigned_64)
    is
       Success, Do_Erase : Boolean;
    begin
@@ -99,6 +99,7 @@ is
          Status.Error (Diagnostic => Mucontrol.Status.DIAG_UNEXPECTED_CMD);
       end if;
 
+      Entry_Point := Memory.Get_Text_Base;
       Chainload.Component_Entrypoint := Init.Memory.Get_Text_Base;
       Stack.Clear (Stack_Start => Init.Memory.Get_Stack_Base);
    end Main;

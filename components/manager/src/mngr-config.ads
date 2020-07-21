@@ -20,8 +20,24 @@ with Interfaces;
 
 with Mucontrol.Command;
 
+with Manager_Component.Events;
+
 package Mngr.Config
 is
+
+   package Cspecs renames Manager_Component.Events;
+
+   type Reset_Event_Range is range 0 .. 64;
+
+   Null_Reset_Event : constant Reset_Event_Range := Reset_Event_Range'Last;
+
+   subtype Valid_Reset_Event_Range is Reset_Event_Range range
+     Reset_Event_Range'First .. Reset_Event_Range'Last - 1;
+
+   type Reset_Events_Type is array (1 .. 2) of Reset_Event_Range;
+
+   Null_Reset_Events : constant Reset_Events_Type
+     := (others => Null_Reset_Event);
 
    type Subject_Dependency_Type is record
       Dep_ID    : Subjects_Range;
@@ -39,6 +55,7 @@ is
       Initial_Erase : Boolean;
       WD_Interval   : Interfaces.Unsigned_64;
       Run_Deps      : Subject_Deps_Type;
+      Reset_Events  : Reset_Events_Type;
    end record;
 
    type Subject_Configs_Type is array (Managed_Subjects_Range)
@@ -48,27 +65,32 @@ is
      := (1 => (Self_Governed => True,
                Initial_Erase => False,
                WD_Interval   => Mucontrol.Command.WD_DISABLED,
-               Run_Deps      => (others => No_Dep)),
+               Run_Deps      => (others => No_Dep),
+               Reset_Events  => Null_Reset_Events),
          2 => (Self_Governed => False,
                Initial_Erase => True,
                WD_Interval   => Mucontrol.Command.WD_DISABLED,
-               Run_Deps          =>
+               Run_Deps      =>
                  (1      => (Dep_ID    => 1,
                              Dep_State => FSM_Finished),
-                  others => No_Dep)),
+                  others => No_Dep),
+               Reset_Events  => (1 => Cspecs.Reset_Slot_1_Sm_ID,
+                                 2 => Cspecs.Reset_Slot_1_Linux_ID)),
          3 => (Self_Governed => True,
                Initial_Erase => False,
                WD_Interval   => Mucontrol.Command.WD_DISABLED,
                Run_Deps      =>
                  (1      => (Dep_ID    => 1,
                              Dep_State => FSM_Finished),
-                  others => No_Dep)),
+                  others => No_Dep),
+               Reset_Events  => Null_Reset_Events),
          4 => (Self_Governed => False,
                Initial_Erase => True,
                WD_Interval   => Mucontrol.Command.WD_DISABLED,
                Run_Deps      =>
                  (1      => (Dep_ID    => 1,
                              Dep_State => FSM_Finished),
-                  others => No_Dep)));
+                  others => No_Dep),
+               Reset_Events  => Null_Reset_Events));
 
 end Mngr.Config;

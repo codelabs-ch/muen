@@ -39,6 +39,8 @@ is
    Null_Reset_Events : constant Reset_Events_Type
      := (others => Null_Reset_Event);
 
+   No_Slot : constant := 0;
+
    type Subject_Dependency_Type is record
       Dep_ID    : Subjects_Range;
       Dep_State : Run_State_Type;
@@ -55,6 +57,7 @@ is
       Initial_Erase : Boolean;
       WD_Interval   : Interfaces.Unsigned_64;
       Run_Deps      : Subject_Deps_Type;
+      Slot_ID       : Natural;
       Reset_Events  : Reset_Events_Type;
    end record;
 
@@ -66,6 +69,7 @@ is
                Initial_Erase => False,
                WD_Interval   => Mucontrol.Command.WD_DISABLED,
                Run_Deps      => (others => No_Dep),
+               Slot_ID       => No_Slot,
                Reset_Events  => Null_Reset_Events),
          2 => (Self_Governed => False,
                Initial_Erase => True,
@@ -74,6 +78,7 @@ is
                  (1      => (Dep_ID    => 1,
                              Dep_State => FSM_Finished),
                   others => No_Dep),
+               Slot_ID       => 1,
                Reset_Events  => (1 => Cspecs.Reset_Slot_1_Sm_ID,
                                  2 => Cspecs.Reset_Slot_1_Linux_ID)),
          3 => (Self_Governed => True,
@@ -83,6 +88,7 @@ is
                  (1      => (Dep_ID    => 1,
                              Dep_State => FSM_Finished),
                   others => No_Dep),
+               Slot_ID       => No_Slot,
                Reset_Events  => Null_Reset_Events),
          4 => (Self_Governed => False,
                Initial_Erase => True,
@@ -91,6 +97,7 @@ is
                  (1      => (Dep_ID    => 1,
                              Dep_State => FSM_Finished),
                   others => No_Dep),
+               Slot_ID       => No_Slot,
                Reset_Events  => Null_Reset_Events));
 
 end Mngr.Config;

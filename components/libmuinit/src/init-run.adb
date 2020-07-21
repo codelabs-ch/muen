@@ -28,7 +28,6 @@
 
 with Mucontrol.Status;
 
-with Init.Chainload;
 with Init.Commands;
 with Init.Memory;
 with Init.Stack;
@@ -100,7 +99,6 @@ is
       end if;
 
       Entry_Point := Memory.Get_Text_Base;
-      Chainload.Component_Entrypoint := Init.Memory.Get_Text_Base;
       Stack.Clear (Stack_Start => Init.Memory.Get_Stack_Base);
    end Main;
 

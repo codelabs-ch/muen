@@ -48,21 +48,12 @@ is
       Pre => Musinfo.Instance.Is_Valid and
        Region.Flags.Writable;
 
-   Self_Name    : constant Musinfo.Name_Type
-     := (Length    => 6,
-         Padding   => 0,
-         Data      => ('m', 'u', 'i', 'n', 'i', 't',
-                       others => ASCII.NUL),
-         Null_Term => ASCII.NUL);
-
    --  Returns True if the given resource should be processed.
    function Should_Process (Resource : Musinfo.Resource_Type) return Boolean
    is (Resource.Kind = Musinfo.Res_Memory
        and then not Utils.Is_Stack (Region => Resource.Mem_Data)
        and then not Utils.Is_Status (Region => Resource.Mem_Data)
-       and then not Utils.Is_Control (Region => Resource.Mem_Data)
-       and then not Musinfo.Utils.Names_Equal (Left  => Resource.Name,
-                                               Right => Self_Name))
+       and then not Utils.Is_Control (Region => Resource.Mem_Data))
    with
       Post =>
         (if Should_Process'Result then Resource.Kind = Musinfo.Res_Memory);

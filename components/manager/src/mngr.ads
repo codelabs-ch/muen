@@ -16,8 +16,18 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Manager_Component.Memory_Arrays;
+
 package Mngr
 is
+
+   type Subjects_Range is range
+     0 .. Manager_Component.Memory_Arrays.Control_Element_Count;
+
+   No_Subject : constant Subjects_Range := Subjects_Range'First;
+
+   subtype Managed_Subjects_Range is Subjects_Range
+    range 1 .. Subjects_Range'Last;
 
    --  Run manager.
    procedure Run;

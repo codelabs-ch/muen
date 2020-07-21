@@ -22,7 +22,7 @@ SECTIONS
 {
 	.text 0x100000 :
 	{
-		KEEP (startup.o)
+		KEEP (libmuinit.o)
 		*(.text .text.*)
 	}
 

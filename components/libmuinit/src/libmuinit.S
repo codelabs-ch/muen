@@ -20,6 +20,7 @@
 #define STATUS_PAGE_ADDR 0xfff001000
 
 .section .text
+.global _main
 
 _main:
 	push %r15
@@ -37,7 +38,7 @@ _main:
 	push %rcx
 	push %rbx
 	push %rax
-	call main
+	call init_main
 	pop %rax
 	pop %rbx
 	pop %rcx

@@ -33,14 +33,18 @@ with "libsparkcrypto";
 
 project Libmuinit extends "../common" is
 
-   for Languages use ("Ada", "Asm");
+   for Languages use ("Ada", "Asm_Cpp");
    for Source_Dirs use ("src");
    for Object_Dir use "obj/" & Common.Build_Mode;
    for Main use ("libmuinit");
 
    package Linker is
-      for Default_Switches ("Ada") use
+      for Default_Switches ("Asm_Cpp") use
         ("-T","muinit.ld") & Shared.Common_Linker_Switches;
    end Linker;
+
+   package Naming is
+      for Body_Suffix ("Asm_Cpp") use ".S";
+   end Naming;
 
 end Libmuinit;

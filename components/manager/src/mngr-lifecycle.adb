@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.Hypercall;
 with SK.Strings;
 
 with Debuglog.Client;
@@ -25,6 +26,7 @@ with Mucontrol.Status;
 
 with Mngr.Commands;
 with Mngr.Config;
+with Mngr.Slot_Control;
 with Mngr.Status;
 
 package body Mngr.Lifecycle
@@ -61,6 +63,7 @@ is
          when FSM_Validating   => Debuglog.Client.Put (Item => "Validating");
          when FSM_Running      => Debuglog.Client.Put (Item => "Running");
          when FSM_Finished     => Debuglog.Client.Put (Item => "Finished");
+         when FSM_Resetting    => Debuglog.Client.Put (Item => "Resetting");
          when FSM_Error        => Debuglog.Client.Put (Item => "Error");
          when FSM_Self_Control => Debuglog.Client.Put (Item => "Self-Control");
       end case;
@@ -148,13 +151,17 @@ is
 
    function Get_Next_State
      (ID             : Managed_Subjects_Range;
-      Subject_Status : Mucontrol.Status.Status_Type)
+      Subject_Status : Mucontrol.Status.Status_Type;
+      Control_Era    : Interfaces.Unsigned_64)
      return Run_State_Type
    is
+      use type Interfaces.Unsigned_64;
+
       Next_State : Run_State_Type := States (ID).Current_State;
    begin
       case States (ID).Current_State is
-         when FSM_Start    =>
+         when FSM_Start
+            | FSM_Resetting =>
             Next_State := FSM_Initial;
          when FSM_Initial  =>
             if Config.Instance (ID).Self_Governed then
@@ -194,14 +201,18 @@ is
             end if;
          when FSM_Running
             | FSM_Self_Control =>
-            if Subject_Status = Mucontrol.Status.STATE_FINISHED then
+            if States (ID).Current_Era /= Control_Era then
+               Next_State := FSM_Resetting;
+            elsif Subject_Status = Mucontrol.Status.STATE_FINISHED then
                Next_State := FSM_Finished;
             elsif Has_Error (Subject_Status => Subject_Status) then
                Next_State := FSM_Error;
             end if;
          when FSM_Finished
             | FSM_Error =>
-            null;
+            if States (ID).Current_Era /= Control_Era then
+               Next_State := FSM_Resetting;
+            end if;
       end case;
 
       return Next_State;
@@ -211,9 +222,11 @@ is
 
    procedure Perform_Transition
      (ID        : Managed_Subjects_Range;
-      New_State : Run_State_Type)
+      New_State : Run_State_Type;
+      Era       : Interfaces.Unsigned_64)
    is
       use type Interfaces.Unsigned_64;
+      use type Config.Reset_Event_Range;
    begin
       case New_State is
          when FSM_Initial =>
@@ -241,6 +254,16 @@ is
          when FSM_Self_Control =>
             Commands.Set_Command (ID    => ID,
                                   Value => Mucontrol.Command.CMD_SELF_CTRL);
+         when FSM_Resetting =>
+            Commands.Set_Command (ID    => ID,
+                                  Value => Mucontrol.Command.CMD_NOP);
+            for Evt of Config.Instance (ID).Reset_Events loop
+               if Evt /= Config.Null_Reset_Event then
+                  SK.Hypercall.Trigger_Event
+                    (Number => Interfaces.Unsigned_8 (Evt));
+               end if;
+            end loop;
+            States (ID).Current_Era := Era;
          when FSM_Error =>
             Dump_Status (ID => ID);
             Dump_Command (ID => ID);
@@ -255,16 +278,20 @@ is
    procedure Process (ID : Managed_Subjects_Range)
    is
       Cur_Status : Mucontrol.Status.Status_Type;
+      Cur_Era    : Interfaces.Unsigned_64;
       New_State  : Run_State_Type;
    begin
       Cur_Status := Status.Get_Status (ID => ID);
+      Cur_Era    := Slot_Control.Get_Current_Era (ID => ID);
       New_State  := Get_Next_State
         (ID             => ID,
-         Subject_Status => Cur_Status);
+         Subject_Status => Cur_Status,
+         Control_Era    => Cur_Era);
 
       if New_State /= States (ID).Current_State then
          Perform_Transition (ID        => ID,
-                             New_State => New_State);
+                             New_State => New_State,
+                             Era       => Cur_Era);
          Log_Transition (ID        => ID,
                          Old_State => States (ID).Current_State,
                          New_State => New_State);

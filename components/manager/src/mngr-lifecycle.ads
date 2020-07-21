@@ -30,6 +30,7 @@ private
    type Subject_Lifecycle_State_Type is record
       Current_State : Run_State_Type;
       Current_Epoch : Interfaces.Unsigned_64;
+      Current_Era   : Interfaces.Unsigned_64;
    end record;
 
    type Lifecycle_States_Type is
@@ -37,6 +38,7 @@ private
 
    States : Lifecycle_States_Type
      := (others => (Current_State => FSM_Start,
-                    Current_Epoch => 0));
+                    Current_Epoch => 0,
+                    Current_Era   => 0));
 
 end Mngr.Lifecycle;

@@ -16,9 +16,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define STATE_RUNNING 0x0009
-#define STATUS_PAGE_ADDR 0xfff001000
-
 .section .text
 .global _main
 
@@ -38,9 +35,13 @@ _main:
 	push %rbx
 	push %rax
 	push %r15
+	// Space for return values
+	sub $0x18, %rsp
 	mov %rsp, %rdi
 	call init_main
 	pop %r15
+	pop %r14
+	pop %r13
 	pop %rax
 	pop %rbx
 	pop %rcx
@@ -53,12 +54,9 @@ _main:
 	pop %r10
 	pop %r11
 	pop %r12
+	movq %r13, (%r14)
 	pop %r13
 	pop %r14
-	push %r15
-	movq $STATUS_PAGE_ADDR, %r15
-	movq $STATE_RUNNING, (%r15)
-	pop %r15
 	jmpq *%r15
 	// Should never return
 	ud2

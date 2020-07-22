@@ -28,6 +28,8 @@
 
 with Mucontrol.Status;
 
+with Libmucontrol_Component.Memory;
+
 with Init.Commands;
 with Init.Memory;
 with Init.Stack;
@@ -38,7 +40,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Main (Entry_Point : out Interfaces.Unsigned_64)
+   procedure Main (Run_Info : out Run_Info_Type)
    is
       Success, Do_Erase : Boolean;
    begin
@@ -98,8 +100,12 @@ is
          Status.Error (Diagnostic => Mucontrol.Status.DIAG_UNEXPECTED_CMD);
       end if;
 
-      Entry_Point := Memory.Get_Text_Base;
-      Stack.Clear (Stack_Start => Init.Memory.Get_Stack_Base);
+      Run_Info.Entry_Point := Memory.Get_Text_Base;
+      Run_Info.Status_Address := Libmucontrol_Component.Memory.Status_Address;
+      Run_Info.Status_Value   := Interfaces.Unsigned_64
+        (Mucontrol.Status.STATE_RUNNING);
+
+      Stack.Clear (Stack_Start => Memory.Get_Stack_Base);
    end Main;
 
 end Init.Run;

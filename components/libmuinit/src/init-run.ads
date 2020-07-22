@@ -31,8 +31,15 @@ with Interfaces;
 package Init.Run
 is
 
-   --  Initialize subject memory.
-   procedure Main (Entry_Point : out Interfaces.Unsigned_64)
+   type Run_Info_Type is record
+      Entry_Point    : Interfaces.Unsigned_64;
+      Status_Address : Interfaces.Unsigned_64;
+      Status_Value   : Interfaces.Unsigned_64;
+   end record
+   with Size => 3 * 64;
+
+   --  Initialize subject memory. Return run information required by assembler.
+   procedure Main (Run_Info : out Run_Info_Type)
    with
       Export,
       Convention => C,

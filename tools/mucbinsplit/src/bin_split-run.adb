@@ -23,6 +23,8 @@ with Ada.Strings.Maps;
 
 with GNAT.SHA256;
 
+with DOM.Core;
+
 with Mulog;
 
 with Muxml.Utils;
@@ -179,11 +181,13 @@ is
       Output_Dir  : String := "")
    is
       package BS renames Bfd.Sections;
+      use type DOM.Core.Node;
 
       Spec       : Muxml.XML_Data_Type;
       Descriptor : Bfd.Files.File_Type;
       Bin_Sec    : BS.Section;
       Base_Name  : constant String := Ada.Directories.Base_Name (Binary_File);
+      Reloadable : Boolean;
    begin
       Utils.Make_Output_Directory (Dir_Name => Output_Dir);
 
@@ -196,6 +200,10 @@ is
       Muxml.Parse (Data => Spec,
                    Kind => Muxml.Component,
                    File => Spec_File);
+
+      Reloadable := Muxml.Utils.Get_Element
+        (Doc   => Spec.Doc,
+         XPath => "/component/depends/library[@ref='libmuinit']") /= null;
 
       Check_Section_Names (Descriptor => Descriptor);
 
@@ -237,7 +245,8 @@ is
                      Virtual_Address => Interfaces.Unsigned_64 (Bin_Sec.Vma),
                      File_Name       => Output_File_Name,
                      Writable        => SI.Writable,
-                     Executable      => SI.Executable);
+                     Executable      => SI.Executable,
+                     Reloadable      => Reloadable);
                else
                   Bin_Split.Spec.Add_Fill_Entry
                     (Spec            => Spec,

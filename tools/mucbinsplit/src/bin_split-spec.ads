@@ -45,7 +45,8 @@ is
       File_Name       :        String;
       Hash            :        String := "";
       Size            :        Interfaces.Unsigned_64;
-      Virtual_Address :        Interfaces.Unsigned_64);
+      Virtual_Address :        Interfaces.Unsigned_64;
+      Reloadable      :        Boolean := False);
 
    --  Set RIP of component to given entry point value.
    procedure Set_RIP

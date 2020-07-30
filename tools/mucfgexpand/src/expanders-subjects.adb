@@ -2290,7 +2290,7 @@ is
                                          Physical_Name => Map_Phys_Name,
                                          Address       => Mutools.Utils.To_Hex
                                            (Number => Current_Loader_Addr),
-                                         Writable      => Map_Is_Writable,
+                                         Writable      => False,
                                          Executable    => False);
                                  begin
                                     Mulog.Log

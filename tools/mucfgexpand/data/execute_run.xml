@@ -1455,12 +1455,12 @@
     <memory executable="false" logical="timed_event" physical="subject1|timed_event" virtualAddress="16#000e_0001_0000#" writable="true"/>
     <memory executable="false" logical="lnx_dummy" physical="dummy" virtualAddress="16#0001_0000_3000#" writable="true"/>
     <memory executable="false" logical="lnx_file_1" physical="dummy_5_dst" virtualAddress="16#0001_0002_0000#" writable="true"/>
-    <memory executable="false" logical="lnx_file_1_src" physical="dummy_5" virtualAddress="16#7000_0000_0000#" writable="true"/>
+    <memory executable="false" logical="lnx_file_1_src" physical="dummy_5" virtualAddress="16#7000_0000_0000#" writable="false"/>
     <memory executable="false" logical="lnx_file_2" physical="dummy_6_dst" virtualAddress="16#0001_0003_0000#" writable="true"/>
-    <memory executable="false" logical="lnx_file_2_src" physical="dummy_6" virtualAddress="16#7000_0000_2000#" writable="true"/>
+    <memory executable="false" logical="lnx_file_2_src" physical="dummy_6" virtualAddress="16#7000_0000_2000#" writable="false"/>
     <memory executable="false" logical="lnx_initramfs" physical="initramfs" virtualAddress="16#0001_9000_0000#" writable="false"/>
     <memory executable="false" logical="lnx_binary" physical="lnx|binary_dst" virtualAddress="16#0001_0000_2000#" writable="true"/>
-    <memory executable="false" logical="lnx_binary_src" physical="lnx|binary" virtualAddress="16#7000_0000_3000#" writable="true"/>
+    <memory executable="false" logical="lnx_binary_src" physical="lnx|binary" virtualAddress="16#7000_0000_3000#" writable="false"/>
     <memory executable="false" logical="lnx_channel_1" physical="data_channel" virtualAddress="16#0001_0000_6000#" writable="false"/>
     <memory executable="false" logical="lnx_channel_2" physical="data_channel2" virtualAddress="16#0001_0000_7000#" writable="false"/>
     <memory executable="false" logical="lnx_channel_3" physical="data_channel3" virtualAddress="16#0001_0000_9000#" writable="true"/>
@@ -1470,7 +1470,7 @@
     <memory executable="false" logical="lnx_sched_group_info" physical="scheduling_group_info_1" virtualAddress="16#000f_0000_8000#" writable="false"/>
     <memory executable="false" logical="lnx_timed_event" physical="lnx|timed_event" virtualAddress="16#000f_0001_0000#" writable="true"/>
     <memory executable="false" logical="lnx_zero_page" physical="lnx|zp_dst" virtualAddress="16#0001_0000_0000#" writable="true"/>
-    <memory executable="false" logical="lnx_zero_page_src" physical="lnx|zp" virtualAddress="16#7000_0000_4000#" writable="true"/>
+    <memory executable="false" logical="lnx_zero_page_src" physical="lnx|zp" virtualAddress="16#7000_0000_4000#" writable="false"/>
     <memory executable="false" logical="lnx_acpi_rsdp" physical="lnx|acpi_rsdp" virtualAddress="16#0001_000e_0000#" writable="false"/>
     <memory executable="false" logical="lnx_acpi_xsdt" physical="lnx|acpi_xsdt" virtualAddress="16#0001_000e_1000#" writable="false"/>
     <memory executable="false" logical="lnx_acpi_fadt" physical="lnx|acpi_fadt" virtualAddress="16#0001_000e_2000#" writable="false"/>

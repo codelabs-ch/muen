@@ -28,5 +28,4 @@ serial.out;Using century register for year calculation
 serial.out;rtc_cmos rtc_cmos: registered as rtc0
 serial.out;64 bytes from 192.168.10.4: seq=.* ttl=.* time=.* ms
 serial.out;Linux reset
-serial.out;Loading subject 'nic_linux'
 serial.out;Linux loaded

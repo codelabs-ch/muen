@@ -19,10 +19,6 @@
 with SK.CPU;
 with SK.Hypercall;
 
-pragma $Release_Warnings (Off, "unit * is not referenced");
-with Debuglog.Client;
-pragma $Release_Warnings (On, "unit * is not referenced");
-
 with Musinfo.Instance;
 with Mucontrol.Status;
 
@@ -35,12 +31,7 @@ procedure Sl
 is
    Success : Boolean;
 begin
-   pragma Debug (Debuglog.Client.Put_Line (Item => "SL subject running"));
-
    if not Musinfo.Instance.Is_Valid then
-      pragma Debug
-        (Debuglog.Client.Put_Line
-           (Item => "Error: Own sinfo data not valid, halting"));
       SK.CPU.Stop;
    end if;
 

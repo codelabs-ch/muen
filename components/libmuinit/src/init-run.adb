@@ -40,7 +40,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Main (Run_Info : out Run_Info_Type)
+   procedure Initialize
    is
       Success, Do_Erase : Boolean;
    begin
@@ -99,7 +99,14 @@ is
       else
          Status.Error (Diagnostic => Mucontrol.Status.DIAG_UNEXPECTED_CMD);
       end if;
+   end Initialize;
 
+   -------------------------------------------------------------------------
+
+   procedure Main (Run_Info : out Run_Info_Type)
+   is
+   begin
+      Initialize;
       Run_Info.Entry_Point := Memory.Get_Text_Base;
       Run_Info.Status_Address := Libmucontrol_Component.Memory.Status_Address;
       Run_Info.Status_Value   := Interfaces.Unsigned_64

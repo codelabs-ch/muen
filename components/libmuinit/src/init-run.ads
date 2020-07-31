@@ -45,4 +45,7 @@ is
       Convention => C,
       Link_Name  => "init_main";
 
+   --  Run initialization protocol to setup and verify memory content.
+   procedure Initialize;
+
 end Init.Run;

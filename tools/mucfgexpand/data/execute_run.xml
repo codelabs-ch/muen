@@ -1470,7 +1470,7 @@
     <memory executable="false" logical="lnx_channel_3" physical="data_channel3" virtualAddress="16#0001_0000_9000#" writable="true"/>
     <memory executable="false" logical="lnx_channel_4" physical="data_channel4" virtualAddress="16#0001_0000_a000#" writable="true"/>
     <memory executable="false" logical="lnx_channel_5" physical="data_channel5" virtualAddress="16#0001_0000_b000#" writable="true"/>
-    <memory executable="false" logical="monitor_sinfo_lnx" physical="lnx|sinfo" virtualAddress="16#000f_0000_0000#" writable="false"/>
+    <memory executable="false" logical="lnx_sinfo" physical="lnx|sinfo" virtualAddress="16#000f_0000_0000#" writable="false"/>
     <memory executable="false" logical="lnx_sched_group_info" physical="scheduling_group_info_1" virtualAddress="16#000f_0000_8000#" writable="false"/>
     <memory executable="false" logical="lnx_timed_event" physical="lnx|timed_event" virtualAddress="16#000f_0001_0000#" writable="true"/>
     <memory executable="false" logical="lnx_zero_page" physical="lnx|zp_dst" virtualAddress="16#0001_0000_0000#" writable="true"/>

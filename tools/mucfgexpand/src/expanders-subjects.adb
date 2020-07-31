@@ -2256,10 +2256,7 @@ is
                             Name => "writable"));
                   Target_Name     : constant String := Map_Phys_Name & "_dst";
                   Log_Name        : constant String
-                    := (if Map_Log_Name = "sinfo" then
-                           "monitor_sinfo_" & Loadee_Name
-                        else
-                           Loadee_Name & "_" & Map_Log_Name);
+                    := Loadee_Name & "_" & Map_Log_Name;
                   Virtual_Addr    : constant String
                     := Mutools.Utils.To_Hex
                       (Number => Ldr_Addr + Map_Addr);

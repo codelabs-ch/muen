@@ -40,9 +40,9 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Initialize
+   procedure Initialize (Success : out Boolean)
    is
-      Success, Do_Erase : Boolean;
+      Do_Erase : Boolean;
    begin
       Status.Initialize;
       Commands.Wait_For_Sync (Success => Success);
@@ -62,6 +62,7 @@ is
                if not Success then
                   Status.Error
                     (Diagnostic => Mucontrol.Status.DIAG_UNEXPECTED_CMD);
+                  return;
                end if;
             end if;
             Status.Set (New_Status => Mucontrol.Status.STATE_PREPARING);
@@ -71,6 +72,7 @@ is
             Memory.Setup_Writable (Success => Success);
             if not Success then
                Status.Error;
+               return;
             end if;
             Status.Set (New_Status => Mucontrol.Status.STATE_PREPARED);
             Commands.Wait_For_Validate (Success => Success);
@@ -82,6 +84,7 @@ is
                Memory.Check_Hashes (Success => Success);
                if not Success then
                   Status.Error;
+                  return;
                end if;
                Status.Set (New_Status => Mucontrol.Status.STATE_VALIDATED);
                Commands.Wait_For_Run (Success => Success);
@@ -105,8 +108,15 @@ is
 
    procedure Main (Run_Info : out Run_Info_Type)
    is
+      Success : Boolean;
    begin
-      Initialize;
+      Initialize (Success => Success);
+      if not Success then
+         loop
+            null;
+         end loop;
+      end if;
+
       Run_Info.Entry_Point := Memory.Get_Text_Base;
       Run_Info.Status_Address := Libmucontrol_Component.Memory.Status_Address;
       Run_Info.Status_Value   := Interfaces.Unsigned_64

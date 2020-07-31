@@ -43,9 +43,6 @@ is
          Mucontrol.Status.Instance.Set_Diagnostics (Value => Diagnostic);
       end if;
       Mucontrol.Status.Instance.Error;
-      loop
-         null;
-      end loop;
    end Error;
 
    -------------------------------------------------------------------------

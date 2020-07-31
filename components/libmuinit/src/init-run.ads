@@ -46,6 +46,6 @@ is
       Link_Name  => "init_main";
 
    --  Run initialization protocol to setup and verify memory content.
-   procedure Initialize;
+   procedure Initialize (Success : out Boolean);
 
 end Init.Run;

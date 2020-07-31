@@ -45,7 +45,6 @@ is
    --  set value is retained.
    procedure Error
      (Diagnostic : Mucontrol.Status.Diagnostics_Type
-      := Mucontrol.Status.DIAG_OK)
-     with No_Return;
+      := Mucontrol.Status.DIAG_OK);
 
 end Init.Status;

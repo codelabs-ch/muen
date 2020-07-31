@@ -98,6 +98,12 @@ is
                              Dep_State => FSM_Finished),
                   others => No_Dep),
                Slot_ID       => No_Slot,
+               Reset_Events  => Null_Reset_Events),
+         5 => (Self_Governed => False,
+               Initial_Erase => True,
+               WD_Interval   => Mucontrol.Command.WD_DISABLED,
+               Run_Deps      => (others => No_Dep),
+               Slot_ID       => 1,
                Reset_Events  => Null_Reset_Events));
 
 end Mngr.Config;

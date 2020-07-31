@@ -26,10 +26,36 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-package Init.Run
+with Mucontrol.Status;
+
+with Libmucontrol_Component.Memory;
+
+with Init.Memory;
+with Init.Run;
+with Init.Stack;
+
+package body Muinit_Main
 is
 
-   --  Run initialization protocol to setup and verify memory content.
-   procedure Initialize (Success : out Boolean);
+   -------------------------------------------------------------------------
 
-end Init.Run;
+   procedure Run (Run_Info : out Run_Info_Type)
+   is
+      Success : Boolean;
+   begin
+      Init.Run.Initialize (Success => Success);
+      if not Success then
+         loop
+            null;
+         end loop;
+      end if;
+
+      Run_Info.Entry_Point := Init.Memory.Get_Text_Base;
+      Run_Info.Status_Address := Libmucontrol_Component.Memory.Status_Address;
+      Run_Info.Status_Value   := Interfaces.Unsigned_64
+        (Mucontrol.Status.STATE_RUNNING);
+
+      Init.Stack.Clear (Stack_Start => Init.Memory.Get_Stack_Base);
+   end Run;
+
+end Muinit_Main;

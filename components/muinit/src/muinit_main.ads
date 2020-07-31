@@ -26,10 +26,23 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-package Init.Run
+with Interfaces;
+
+package Muinit_Main
 is
 
-   --  Run initialization protocol to setup and verify memory content.
-   procedure Initialize (Success : out Boolean);
+   type Run_Info_Type is record
+      Entry_Point    : Interfaces.Unsigned_64;
+      Status_Address : Interfaces.Unsigned_64;
+      Status_Value   : Interfaces.Unsigned_64;
+   end record
+   with Size => 3 * 64;
 
-end Init.Run;
+   --  Initialize subject memory. Return run information required by assembler.
+   procedure Run (Run_Info : out Run_Info_Type)
+   with
+      Export,
+      Convention => C,
+      Link_Name  => "init_main";
+
+end Muinit_Main;

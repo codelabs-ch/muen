@@ -17,6 +17,7 @@ COMPONENTS_SPARK := \
 	example \
 	idle \
 	manager \
+	muinit \
 	ps2_drv \
 	sl \
 	sm \

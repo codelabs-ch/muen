@@ -28,11 +28,8 @@
 
 with Mucontrol.Status;
 
-with Libmucontrol_Component.Memory;
-
 with Init.Commands;
 with Init.Memory;
-with Init.Stack;
 with Init.Status;
 
 package body Init.Run
@@ -103,26 +100,5 @@ is
          Status.Error (Diagnostic => Mucontrol.Status.DIAG_UNEXPECTED_CMD);
       end if;
    end Initialize;
-
-   -------------------------------------------------------------------------
-
-   procedure Main (Run_Info : out Run_Info_Type)
-   is
-      Success : Boolean;
-   begin
-      Initialize (Success => Success);
-      if not Success then
-         loop
-            null;
-         end loop;
-      end if;
-
-      Run_Info.Entry_Point := Memory.Get_Text_Base;
-      Run_Info.Status_Address := Libmucontrol_Component.Memory.Status_Address;
-      Run_Info.Status_Value   := Interfaces.Unsigned_64
-        (Mucontrol.Status.STATE_RUNNING);
-
-      Stack.Clear (Stack_Start => Memory.Get_Stack_Base);
-   end Main;
 
 end Init.Run;

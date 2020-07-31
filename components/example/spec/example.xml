@@ -7,7 +7,7 @@
 	</config>
 	<depends>
 		<library ref="libdebuglog"/>
-		<library ref="libmuinit"/>
+		<library ref="muinit"/>
 	</depends>
 	<requires>
 		<channels>

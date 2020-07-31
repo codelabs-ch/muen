@@ -1,0 +1,19 @@
+<library name="muinit">
+ <depends>
+  <library ref="libmuinit"/>
+ </depends>
+ <requires>
+  <vcpu>
+   <registers>
+    <gpr>
+     <rip>16#0010_0000#</rip>
+    </gpr>
+   </registers>
+  </vcpu>
+ </requires>
+ <provides>
+  <memory executable="true" logical="muinit" size="16#9000#" type="subject_binary" virtualAddress="16#0010_0000#" writable="false">
+   <file filename="muinit" offset="none"/>
+  </memory>
+ </provides>
+</library>

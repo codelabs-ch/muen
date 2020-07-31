@@ -15,5 +15,7 @@
   <map logical="debuglog" physical="debuglog_subject5"/>
   <map logical="start" physical="start_linux_1"/>
   <map logical="handle_reset" physical="load_linux_1"/>
+  <map logical="status" physical="status_linux_1"/>
+  <map logical="control" physical="control_linux_1"/>
  </component>
 </subject>

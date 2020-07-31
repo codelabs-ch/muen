@@ -23,15 +23,17 @@ pragma $Release_Warnings (Off, "unit * is not referenced");
 with Debuglog.Client;
 pragma $Release_Warnings (On, "unit * is not referenced");
 
-with Musinfo.Utils;
 with Musinfo.Instance;
+with Mucontrol.Status;
 
-with Loader.Process_Target;
+with Init.Run;
+with Init.Status;
 
 with Sl_Component.Events;
 
 procedure Sl
 is
+   Success : Boolean;
 begin
    pragma Debug (Debuglog.Client.Put_Line (Item => "SL subject running"));
 
@@ -43,44 +45,10 @@ begin
    end if;
 
    loop
-      declare
-         use type Musinfo.Resource_Kind;
-
-         Pattern  : constant String := "monitor_sinfo";
-         Iter     : Musinfo.Utils.Resource_Iterator_Type
-           := Musinfo.Instance.Create_Resource_Iterator;
-         Resource : Musinfo.Resource_Type;
-         Success  : Boolean := False;
-      begin
-         Process_Loop :
-         while Musinfo.Instance.Has_Element (Iter => Iter) loop
-            Resource := Musinfo.Instance.Element (Iter => Iter);
-
-            if Resource.Kind = Musinfo.Res_Memory
-              and then
-                Musinfo.Utils.Names_Match
-                  (N1    => Resource.Name,
-                   N2    => Musinfo.Utils.To_Name (Str => Pattern),
-                   Count => Pattern'Length)
-            then
-               Loader.Process_Target.Process
-                 (Sinfo_Mem => Resource,
-                  Success   => Success);
-               exit Process_Loop;
-            end if;
-
-            Musinfo.Instance.Next (Iter => Iter);
-            pragma Loop_Invariant (Musinfo.Instance.Belongs_To (Iter => Iter));
-         end loop Process_Loop;
-
-         if not Success then
-            pragma Debug
-              (Debuglog.Client.Put_Line
-                 (Item => "Error: Reset of subject failed"));
-            SK.CPU.Stop;
-         end if;
-      end;
-
+      Init.Run.Initialize (Success => Success);
+      if Success then
+         Init.Status.Set (New_Status => Mucontrol.Status.STATE_RUNNING);
+      end if;
       SK.Hypercall.Trigger_Event (Number => Sl_Component.Events.Start_ID);
    end loop;
 end Sl;

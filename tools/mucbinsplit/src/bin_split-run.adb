@@ -203,7 +203,7 @@ is
 
       Reloadable := Muxml.Utils.Get_Element
         (Doc   => Spec.Doc,
-         XPath => "/component/depends/library[@ref='libmuinit']") /= null;
+         XPath => "/component/depends/library[@ref='muinit']") /= null;
 
       Check_Section_Names (Descriptor => Descriptor);
 

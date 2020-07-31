@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <component name="sm" profile="native">
  <depends>
-  <library ref="libmuinit"/>
   <library ref="libmutime"/>
   <library ref="libdebuglog"/>
+  <library ref="muinit"/>
  </depends>
  <requires>
   <vcpu>

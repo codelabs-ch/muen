@@ -26,6 +26,8 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
+with Musinfo.Instance;
+
 with Mucontrol.Status;
 
 with Init.Commands;
@@ -42,6 +44,13 @@ is
       Do_Erase : Boolean;
    begin
       Status.Initialize;
+
+      if not Musinfo.Instance.Is_Valid then
+         Success := False;
+         Status.Error;
+         return;
+      end if;
+
       Commands.Wait_For_Sync (Success => Success);
       if Success then
          Status.Set (New_Status => Mucontrol.Status.STATE_SYNCED);

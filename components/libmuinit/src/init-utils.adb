@@ -41,6 +41,7 @@ is
    -------------------------------------------------------------------------
 
    function Get_Stack_Pointer return Interfaces.Unsigned_64
+   with SPARK_Mode => Off
    is
       Result : Interfaces.Unsigned_64;
    begin

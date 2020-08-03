@@ -27,8 +27,6 @@ pragma $Release_Warnings (On, "unit * is not referenced");
 
 with Mutime.Info;
 
-with Mucontrol.Status.Instance;
-
 with Tm.Rtc;
 with Tm.Utils;
 

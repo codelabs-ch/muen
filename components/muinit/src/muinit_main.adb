@@ -26,6 +26,10 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
+with System.Machine_Code;
+
+with Musinfo.Instance;
+
 with Mucontrol.Status;
 
 with Libmucontrol_Component.Memory;
@@ -33,9 +37,22 @@ with Libmucontrol_Component.Memory;
 with Init.Memory;
 with Init.Run;
 with Init.Stack;
+with Init.Status;
 
 package body Muinit_Main
 is
+
+   -------------------------------------------------------------------------
+
+   procedure Halt
+     with No_Return
+   is
+   begin
+      loop
+         System.Machine_Code.Asm (Template => "hlt",
+                                  Volatile => True);
+      end loop;
+   end Halt;
 
    -------------------------------------------------------------------------
 
@@ -43,11 +60,14 @@ is
    is
       Success : Boolean;
    begin
+      if not Musinfo.Instance.Is_Valid then
+         Init.Status.Error;
+         Halt;
+      end if;
+
       Init.Run.Initialize (Success => Success);
       if not Success then
-         loop
-            null;
-         end loop;
+         Halt;
       end if;
 
       Run_Info.Entry_Point := Init.Memory.Get_Text_Base;

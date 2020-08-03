@@ -29,6 +29,8 @@ is
    subtype Managed_Subjects_Range is Subjects_Range
     range 1 .. Subjects_Range'Last;
 
+   Page_Size : constant := 4096;
+
    --  Various run states a managed subject can be in.
    type Run_State_Type is
      (FSM_Start, FSM_Initial, FSM_Syncing, FSM_Erasing, FSM_Preparing,

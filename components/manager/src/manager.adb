@@ -16,10 +16,16 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Debuglog.Client;
+
 with Mngr;
 
 procedure Manager
 is
 begin
-   Mngr.Run;
+   Debuglog.Client.Put_Line (Item => "Manager running");
+
+   loop
+      Mngr.Run;
+   end loop;
 end Manager;

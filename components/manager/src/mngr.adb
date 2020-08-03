@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Debuglog.Client;
-
 with Mngr.Lifecycle;
 
 package body Mngr
@@ -28,12 +26,8 @@ is
    procedure Run
    is
    begin
-      Debuglog.Client.Put_Line (Item => "Manager running");
-
-      loop
-         for I in Managed_Subjects_Range loop
-            Lifecycle.Process (ID => I);
-         end loop;
+      for I in Managed_Subjects_Range loop
+         Lifecycle.Process (ID => I);
       end loop;
    end Run;
 

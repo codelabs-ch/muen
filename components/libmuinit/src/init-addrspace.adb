@@ -90,6 +90,7 @@ is
    procedure Memcopy
      (Source      : Musinfo.Memregion_Type;
       Destination : Musinfo.Memregion_Type)
+     with SPARK_Mode => Off
    is
       subtype Region_Range is Interfaces.Unsigned_64 range 1 .. Source.Size;
       type Data_Array is array (Region_Range) of Interfaces.Unsigned_8
@@ -115,6 +116,7 @@ is
    procedure Memset
      (Region  : Musinfo.Memregion_Type;
       Pattern : Musinfo.Pattern_Type)
+     with SPARK_Mode => Off
    is
       subtype Region_Range is Interfaces.Unsigned_64 range 1 .. Region.Size;
 

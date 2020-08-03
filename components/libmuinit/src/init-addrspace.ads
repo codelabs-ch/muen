@@ -34,13 +34,14 @@ package Init.Addrspace
 is
 
    use type Interfaces.Unsigned_64;
+   use type Musinfo.Pattern_Type;
 
    --  Fill given memory region with specified pattern.
    procedure Memset
      (Region  : Musinfo.Memregion_Type;
       Pattern : Musinfo.Pattern_Type)
    with
-      Pre => Region.Flags.Writable;
+      Pre => Region.Flags.Writable and Pattern /= Musinfo.No_Pattern;
 
    --  Copy content of source region to destination.
    procedure Memcopy

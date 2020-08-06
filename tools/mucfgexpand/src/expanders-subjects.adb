@@ -2200,211 +2200,199 @@ is
               := Muxml.Utils.Get_Element
                 (Doc   => Ldr_Subj_Node,
                  XPath => "memory");
-            Loader_Nodes        : constant DOM.Core.Node_List
-              := McKae.XML.XPath.XIA.XPath_Query
-                (N     => Ldr_Subj_Node,
+            Ldr_Node            : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Ldr_Subj_Node,
                  XPath => "monitor/loader");
+            Ldr_Addr            : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                     (Elem => Ldr_Node,
+                      Name => "virtualAddress"));
+            Loadee_Name         : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Ldr_Node,
+                 Name => "subject");
+            Loadee_Subj         : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Subjects,
+                 Ref_Attr  => "name",
+                 Ref_Value => Loadee_Name);
+            Loadee_Mem_Node     : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Loadee_Subj,
+                 XPath => "memory");
+            Loadee_Mappings     : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Loadee_Mem_Node,
+                 XPath => "memory");
             Current_Loader_Addr : Interfaces.Unsigned_64
               := Expanders.Config.Subject_Loader_Source_Base_Addr;
          begin
-            for J in 0 .. DCN.Length (List => Loader_Nodes) - 1 loop
+            for J in 0 .. DCN.Length (List => Loadee_Mappings) - 1 loop
                declare
-                  Ldr_Node        : constant DOM.Core.Node
-                    := DCN.Item
-                      (List  => Loader_Nodes,
-                       Index => J);
-                  Ldr_Addr        : constant Interfaces.Unsigned_64
+                  use type Interfaces.Unsigned_64;
+
+                  Map_Node        : constant DOM.Core.Node
+                    := DCN.Item (List  => Loadee_Mappings,
+                                 Index => J);
+                  Map_Log_Name    : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Map_Node,
+                       Name => "logical");
+                  Map_Phys_Name   : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Map_Node,
+                       Name => "physical");
+                  Map_Addr        : constant Interfaces.Unsigned_64
                     := Interfaces.Unsigned_64'Value
                       (DOM.Core.Elements.Get_Attribute
-                         (Elem => Ldr_Node,
-                          Name => "virtualAddress"));
-                  Loadee_Name     : constant String
-                    := DOM.Core.Elements.Get_Attribute
-                      (Elem => Ldr_Node,
-                       Name => "subject");
-                  Loadee_Subj     : constant DOM.Core.Node
-                    := Muxml.Utils.Get_Element
-                      (Nodes     => Subjects,
-                       Ref_Attr  => "name",
-                       Ref_Value => Loadee_Name);
-                  Loadee_Mem_Node : constant DOM.Core.Node
-                    := Muxml.Utils.Get_Element
-                      (Doc   => Loadee_Subj,
-                       XPath => "memory");
-                  Loadee_Mappings : constant DOM.Core.Node_List
-                    := McKae.XML.XPath.XIA.XPath_Query
-                      (N     => Loadee_Mem_Node,
-                       XPath => "memory");
+                           (Elem => Map_Node,
+                            Name => "virtualAddress"));
+                  Map_Is_Writable : constant Boolean
+                    := Boolean'Value
+                      (DOM.Core.Elements.Get_Attribute
+                           (Elem => Map_Node,
+                            Name => "writable"));
+                  Target_Name     : constant String := Map_Phys_Name & "_dst";
+                  Log_Name        : constant String
+                    := (if Map_Log_Name = "sinfo" then
+                           "monitor_sinfo_" & Loadee_Name
+                        else
+                           Loadee_Name & "_" & Map_Log_Name);
+                  Virtual_Addr    : constant String
+                    := Mutools.Utils.To_Hex
+                      (Number => Ldr_Addr + Map_Addr);
+                  Loader_Mapping  : constant DOM.Core.Node
+                    := MXU.Create_Virtual_Memory_Node
+                      (Policy        => Data,
+                       Logical_Name  => Log_Name,
+                       Physical_Name => Map_Phys_Name,
+                       Address       => Virtual_Addr,
+                       Writable      => Map_Is_Writable,
+                       Executable    => False);
                begin
-                  for K in 0 .. DCN.Length (List => Loadee_Mappings) - 1 loop
+                  Mulog.Log
+                    (Msg => "Mapping memory region '" & Map_Log_Name
+                     & "' of subject '" & Loadee_Name & "' "
+                     & (if Map_Is_Writable then "writable"
+                       else "readable")
+                     & " to virtual address " & Virtual_Addr
+                     & " of loader subject '" & Ldr_Subj_Name & "'");
+
+                  --  Map region into loader.
+
+                  Muxml.Utils.Append_Child
+                    (Node      => Ldr_Mem_Node,
+                     New_Child => Loader_Mapping);
+
+                  --  If writable and file-backed, create physical target
+                  --  region and swap original mapping.
+
+                  if Map_Is_Writable then
                      declare
-                        use type Interfaces.Unsigned_64;
+                        use type DOM.Core.Node;
 
-                        Map_Node        : constant DOM.Core.Node
-                          := DCN.Item
-                            (List  => Loadee_Mappings,
-                             Index => K);
-                        Map_Log_Name    : constant String
-                          := DOM.Core.Elements.Get_Attribute
-                            (Elem => Map_Node,
-                             Name => "logical");
-                        Map_Phys_Name   : constant String
-                          := DOM.Core.Elements.Get_Attribute
-                            (Elem => Map_Node,
-                             Name => "physical");
-                        Map_Addr        : constant Interfaces.Unsigned_64
-                          := Interfaces.Unsigned_64'Value
-                            (DOM.Core.Elements.Get_Attribute
-                               (Elem => Map_Node,
-                                Name => "virtualAddress"));
-                        Map_Is_Writable : constant Boolean
-                          := Boolean'Value
-                            (DOM.Core.Elements.Get_Attribute
-                               (Elem => Map_Node,
-                                Name => "writable"));
-                        Target_Name     : constant String
-                          := Map_Phys_Name & "_dst";
-                        Log_Name        : constant String
-                          := (if Map_Log_Name = "sinfo" then
-                                 "monitor_sinfo_" & Loadee_Name
-                              else
-                                 Loadee_Name & "_" & Map_Log_Name);
-                        Virtual_Addr    : constant String
-                          := Mutools.Utils.To_Hex
-                            (Number => Ldr_Addr + Map_Addr);
-                        Loader_Mapping  : constant DOM.Core.Node
-                          := MXU.Create_Virtual_Memory_Node
-                            (Policy        => Data,
-                             Logical_Name  => Log_Name,
-                             Physical_Name => Map_Phys_Name,
-                             Address       => Virtual_Addr,
-                             Writable      => Map_Is_Writable,
-                             Executable    => False);
+                        Phys_Mem : constant DOM.Core.Node
+                          := Muxml.Utils.Get_Element
+                            (Nodes     => File_Memory,
+                             Ref_Attr  => "name",
+                             Ref_Value => Map_Phys_Name);
                      begin
-                        Mulog.Log
-                          (Msg => "Mapping memory region '" & Map_Log_Name
-                           & "' of subject '" & Loadee_Name & "' "
-                           & (if Map_Is_Writable then "writable"
-                             else "readable")
-                           & " to virtual address " & Virtual_Addr
-                           & " of loader subject '" & Ldr_Subj_Name & "'");
-
-                        --  Map region into loader.
-
-                        Muxml.Utils.Append_Child
-                          (Node      => Ldr_Mem_Node,
-                           New_Child => Loader_Mapping);
-
-                        --  If writable and file-backed, create physical target
-                        --  region and swap original mapping.
-
-                        if Map_Is_Writable then
+                        if Phys_Mem /= null then
                            declare
-                              use type DOM.Core.Node;
-
-                              Phys_Mem : constant DOM.Core.Node
-                                := Muxml.Utils.Get_Element
-                                  (Nodes     => File_Memory,
-                                   Ref_Attr  => "name",
-                                   Ref_Value => Map_Phys_Name);
+                              Phys_Size       : constant String
+                                := DOM.Core.Elements.Get_Attribute
+                                  (Elem => Phys_Mem,
+                                   Name => "size");
+                              Phys_Type       : constant String
+                                := DOM.Core.Elements.Get_Attribute
+                                  (Elem => Phys_Mem,
+                                   Name => "type");
+                              Target_Phys_Mem : constant DOM.Core.Node
+                                := MXU.Create_Memory_Node
+                                  (Policy      => Data,
+                                   Name        => Target_Name,
+                                   Address     => "",
+                                   Size        => Phys_Size,
+                                   Caching     =>
+                                     DOM.Core.Elements.Get_Attribute
+                                       (Elem => Phys_Mem,
+                                        Name => "caching"),
+                                   Alignment   =>
+                                     DOM.Core.Elements.Get_Attribute
+                                       (Elem => Phys_Mem,
+                                        Name => "alignment"),
+                                   Memory_Type => Phys_Type);
+                              Hash_Ref        : constant DOM.Core.Node
+                                := DOM.Core.Documents.Create_Element
+                                  (Doc      => Data.Doc,
+                                   Tag_Name => "hashRef");
+                              Mapping         : constant DOM.Core.Node
+                                := MXU.Create_Virtual_Memory_Node
+                                  (Policy        => Data,
+                                   Logical_Name  => Log_Name & "_src",
+                                   Physical_Name => Map_Phys_Name,
+                                   Address       => Mutools.Utils.To_Hex
+                                     (Number => Current_Loader_Addr),
+                                   Writable      => False,
+                                   Executable    => False);
                            begin
-                              if Phys_Mem /= null then
-                                 declare
-                                    Phys_Size       : constant String
-                                      := DOM.Core.Elements.Get_Attribute
-                                        (Elem => Phys_Mem,
-                                         Name => "size");
-                                    Phys_Type       : constant String
-                                      := DOM.Core.Elements.Get_Attribute
-                                        (Elem => Phys_Mem,
-                                         Name => "type");
-                                    Target_Phys_Mem : constant DOM.Core.Node
-                                      := MXU.Create_Memory_Node
-                                        (Policy      => Data,
-                                         Name        => Target_Name,
-                                         Address     => "",
-                                         Size        => Phys_Size,
-                                         Caching     =>
-                                           DOM.Core.Elements.Get_Attribute
-                                             (Elem => Phys_Mem,
-                                              Name => "caching"),
-                                         Alignment   =>
-                                           DOM.Core.Elements.Get_Attribute
-                                             (Elem => Phys_Mem,
-                                              Name => "alignment"),
-                                         Memory_Type => Phys_Type);
-                                    Hash_Ref        : constant DOM.Core.Node
-                                      := DOM.Core.Documents.Create_Element
-                                        (Doc      => Data.Doc,
-                                         Tag_Name => "hashRef");
-                                    Mapping         : constant DOM.Core.Node
-                                      := MXU.Create_Virtual_Memory_Node
-                                        (Policy        => Data,
-                                         Logical_Name  => Log_Name & "_src",
-                                         Physical_Name => Map_Phys_Name,
-                                         Address       => Mutools.Utils.To_Hex
-                                           (Number => Current_Loader_Addr),
-                                         Writable      => False,
-                                         Executable    => False);
-                                 begin
-                                    Mulog.Log
-                                      (Msg => "Swapping file-backed source "
-                                       & "region '" & Map_Phys_Name
-                                       & "' with new target memory region '"
-                                       & Target_Name & "'");
+                              Mulog.Log
+                                (Msg => "Swapping file-backed source "
+                                 & "region '" & Map_Phys_Name
+                                 & "' with new target memory region '"
+                                 & Target_Name & "'");
 
-                                    Muxml.Utils.Append_Child
-                                      (Node      => DCN.Insert_Before
-                                         (N         => Memory_Section,
-                                          New_Child => Target_Phys_Mem,
-                                          Ref_Child => Phys_Mem),
-                                       New_Child => Hash_Ref);
-                                    DOM.Core.Elements.Set_Attribute
-                                      (Elem  => Hash_Ref,
-                                       Name  => "memory",
-                                       Value => Map_Phys_Name);
+                              Muxml.Utils.Append_Child
+                                (Node      => DCN.Insert_Before
+                                   (N         => Memory_Section,
+                                    New_Child => Target_Phys_Mem,
+                                    Ref_Child => Phys_Mem),
+                                 New_Child => Hash_Ref);
+                              DOM.Core.Elements.Set_Attribute
+                                (Elem  => Hash_Ref,
+                                 Name  => "memory",
+                                 Value => Map_Phys_Name);
 
-                                    --  Map new target region into loadee.
+                              --  Map new target region into loadee.
 
-                                    DOM.Core.Elements.Set_Attribute
-                                      (Elem  => Map_Node,
-                                       Name  => "physical",
-                                       Value => Target_Name);
+                              DOM.Core.Elements.Set_Attribute
+                                (Elem  => Map_Node,
+                                 Name  => "physical",
+                                 Value => Target_Name);
 
-                                    --  Map new target region into loader.
+                              --  Map new target region into loader.
 
-                                    DOM.Core.Elements.Set_Attribute
-                                      (Elem  => Loader_Mapping,
-                                       Name  => "physical",
-                                       Value => Target_Name);
+                              DOM.Core.Elements.Set_Attribute
+                                (Elem  => Loader_Mapping,
+                                 Name  => "physical",
+                                 Value => Target_Name);
 
-                                    Muxml.Utils.Append_Child
-                                      (Node      => Ldr_Mem_Node,
-                                       New_Child => Mapping);
+                              Muxml.Utils.Append_Child
+                                (Node      => Ldr_Mem_Node,
+                                 New_Child => Mapping);
 
-                                    Current_Loader_Addr := Current_Loader_Addr
-                                      + Interfaces.Unsigned_64'Value
-                                      (Phys_Size);
-                                 end;
-                              end if;
+                              Current_Loader_Addr := Current_Loader_Addr
+                                + Interfaces.Unsigned_64'Value (Phys_Size);
                            end;
                         end if;
-
-                        --  Clear CR4.VMXE in loadee subject state.
-
-                        declare
-                           VMXE_Node : constant DOM.Core.Node
-                             := Muxml.Utils.Get_Element
-                               (Doc   => Loadee_Subj,
-                                XPath => "vcpu/registers/cr4/VMXEnable");
-                        begin
-                           DCN.Normalize (N => VMXE_Node);
-                           DCN.Set_Node_Value
-                             (N     => DCN.First_Child (N => VMXE_Node),
-                              Value => "0");
-                        end;
                      end;
-                  end loop;
+                  end if;
+
+                  --  Clear CR4.VMXE in loadee subject state.
+
+                  declare
+                     VMXE_Node : constant DOM.Core.Node
+                       := Muxml.Utils.Get_Element
+                         (Doc   => Loadee_Subj,
+                          XPath => "vcpu/registers/cr4/VMXEnable");
+                  begin
+                     DCN.Normalize (N => VMXE_Node);
+                     DCN.Set_Node_Value
+                       (N     => DCN.First_Child (N => VMXE_Node),
+                        Value => "0");
+                  end;
                end;
             end loop;
          end;

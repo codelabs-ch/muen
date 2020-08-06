@@ -2226,6 +2226,8 @@ is
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Loadee_Mem_Node,
                  XPath => "memory");
+            Self_Loader         : constant Boolean
+              := Ldr_Subj_Name = Loadee_Name;
             Current_Loader_Addr : Interfaces.Unsigned_64
               := Expanders.Config.Subject_Loader_Source_Base_Addr;
          begin
@@ -2254,7 +2256,6 @@ is
                       (DOM.Core.Elements.Get_Attribute
                            (Elem => Map_Node,
                             Name => "writable"));
-                  Target_Name     : constant String := Map_Phys_Name & "_dst";
                   Log_Name        : constant String
                     := Loadee_Name & "_" & Map_Log_Name;
                   Virtual_Addr    : constant String
@@ -2269,19 +2270,42 @@ is
                        Writable      => Map_Is_Writable,
                        Executable    => False);
                begin
-                  Mulog.Log
-                    (Msg => "Mapping memory region '" & Map_Log_Name
-                     & "' of subject '" & Loadee_Name & "' "
-                     & (if Map_Is_Writable then "writable"
-                       else "readable")
-                     & " to virtual address " & Virtual_Addr
-                     & " of loader subject '" & Ldr_Subj_Name & "'");
 
-                  --  Map region into loader.
+                  --  In case of loading a different subject, a new mapping in
+                  --  the loader address space must be added. Furthermore the
+                  --  CR4.VMXE flag in the loadee state is cleared to make sure
+                  --  a trap occurs after loadee reset. These steps must be
+                  --  skipped, when a subject is loading itself.
 
-                  Muxml.Utils.Append_Child
-                    (Node      => Ldr_Mem_Node,
-                     New_Child => Loader_Mapping);
+                  if not Self_Loader then
+                     Mulog.Log
+                       (Msg => "Mapping memory region '" & Map_Log_Name
+                        & "' of subject '" & Loadee_Name & "' "
+                        & (if Map_Is_Writable then "writable"
+                          else "readable")
+                        & " to virtual address " & Virtual_Addr
+                        & " of loader subject '" & Ldr_Subj_Name & "'");
+
+                     --  Map region into loader.
+
+                     Muxml.Utils.Append_Child
+                       (Node      => Ldr_Mem_Node,
+                        New_Child => Loader_Mapping);
+
+                     --  Clear CR4.VMXE in loadee subject state.
+
+                     declare
+                        VMXE_Node : constant DOM.Core.Node
+                          := Muxml.Utils.Get_Element
+                            (Doc   => Loadee_Subj,
+                             XPath => "vcpu/registers/cr4/VMXEnable");
+                     begin
+                        DCN.Normalize (N => VMXE_Node);
+                        DCN.Set_Node_Value
+                          (N     => DCN.First_Child (N => VMXE_Node),
+                           Value => "0");
+                     end;
+                  end if;
 
                   --  If writable and file-backed, create physical target
                   --  region and swap original mapping.
@@ -2309,7 +2333,7 @@ is
                               Target_Phys_Mem : constant DOM.Core.Node
                                 := MXU.Create_Memory_Node
                                   (Policy      => Data,
-                                   Name        => Target_Name,
+                                   Name        => Map_Phys_Name,
                                    Address     => "",
                                    Size        => Phys_Size,
                                    Caching     =>
@@ -2325,11 +2349,13 @@ is
                                 := DOM.Core.Documents.Create_Element
                                   (Doc      => Data.Doc,
                                    Tag_Name => "hashRef");
-                              Mapping         : constant DOM.Core.Node
+                              Src_Phys_Name   : constant String
+                                := Map_Phys_Name & "_src";
+                              Src_Mapping     : constant DOM.Core.Node
                                 := MXU.Create_Virtual_Memory_Node
                                   (Policy        => Data,
                                    Logical_Name  => Log_Name & "_src",
-                                   Physical_Name => Map_Phys_Name,
+                                   Physical_Name => Src_Phys_Name,
                                    Address       => Mutools.Utils.To_Hex
                                      (Number => Current_Loader_Addr),
                                    Writable      => False,
@@ -2338,8 +2364,8 @@ is
                               Mulog.Log
                                 (Msg => "Swapping file-backed source "
                                  & "region '" & Map_Phys_Name
-                                 & "' with new target memory region '"
-                                 & Target_Name & "'");
+                                 & "' with new source memory region '"
+                                 & Src_Phys_Name & "'");
 
                               Muxml.Utils.Append_Child
                                 (Node      => DCN.Insert_Before
@@ -2350,25 +2376,18 @@ is
                               DOM.Core.Elements.Set_Attribute
                                 (Elem  => Hash_Ref,
                                  Name  => "memory",
-                                 Value => Map_Phys_Name);
-
-                              --  Map new target region into loadee.
+                                 Value => Src_Phys_Name);
 
                               DOM.Core.Elements.Set_Attribute
-                                (Elem  => Map_Node,
-                                 Name  => "physical",
-                                 Value => Target_Name);
+                                (Elem  => Phys_Mem,
+                                 Name  => "name",
+                                 Value => Src_Phys_Name);
 
-                              --  Map new target region into loader.
-
-                              DOM.Core.Elements.Set_Attribute
-                                (Elem  => Loader_Mapping,
-                                 Name  => "physical",
-                                 Value => Target_Name);
+                              --  Map new source region into loader.
 
                               Muxml.Utils.Append_Child
                                 (Node      => Ldr_Mem_Node,
-                                 New_Child => Mapping);
+                                 New_Child => Src_Mapping);
 
                               Current_Loader_Addr := Current_Loader_Addr
                                 + Interfaces.Unsigned_64'Value (Phys_Size);
@@ -2376,20 +2395,6 @@ is
                         end if;
                      end;
                   end if;
-
-                  --  Clear CR4.VMXE in loadee subject state.
-
-                  declare
-                     VMXE_Node : constant DOM.Core.Node
-                       := Muxml.Utils.Get_Element
-                         (Doc   => Loadee_Subj,
-                          XPath => "vcpu/registers/cr4/VMXEnable");
-                  begin
-                     DCN.Normalize (N => VMXE_Node);
-                     DCN.Set_Node_Value
-                       (N     => DCN.First_Child (N => VMXE_Node),
-                        Value => "0");
-                  end;
                end;
             end loop;
          end;

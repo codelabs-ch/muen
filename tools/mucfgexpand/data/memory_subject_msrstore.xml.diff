@@ -1127,5 +1127,5 @@
     </source>                                                                                                                                               </source>
    </events>                                                                                                                                               </events>
                                                                                                                                                      >     <channels/>
-   <component ref="c3"/>                                                                                                                                   <component ref="c3"/>
-  </subject>                                                                                                                                              </subject>
+   <monitor>                                                                                                                                               <monitor>
+    <loader logical="reload" subject="subject3" virtualAddress="16#0000#"/>                                                                                 <loader logical="reload" subject="subject3" virtualAddress="16#0000#"/>

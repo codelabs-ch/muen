@@ -19,7 +19,7 @@
     <minorFrame subject="lnx" ticks="40"/>                                                                                                           |      <minorFrame barrier="2" subject="lnx" ticks="40"/>
     <minorFrame subject="lnx" ticks="20"/>                                                                                                           |      <minorFrame barrier="3" subject="lnx" ticks="20"/>
     <minorFrame subject="lnx" ticks="10"/>                                                                                                           |      <minorFrame barrier="none" subject="lnx" ticks="10"/>
-    <minorFrame subject="lnx" ticks="10"/>                                                                                                           |      <minorFrame barrier="4" subject="lnx" ticks="10"/>
+    <minorFrame subject="subject3" ticks="10"/>                                                                                                      |      <minorFrame barrier="4" subject="subject3" ticks="10"/>
    </cpu>                                                                                                                                                  </cpu>
    <cpu id="1">                                                                                                                                            <cpu id="1">
     <minorFrame subject="tau0" ticks="10"/>                                                                                                          |      <minorFrame barrier="1" subject="tau0" ticks="10"/>

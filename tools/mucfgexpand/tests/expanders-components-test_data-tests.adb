@@ -208,6 +208,7 @@ package body Expanders.Components.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename => "obj/components_add_provided_mem.xml",
          Ref_Diff => "data/components_add_provided_mem.xml.diff",
+         Pre      => Subjects.Add_Missing_Elements'Access,
          Expander => Add_Provided_Memory'Access);
 --  begin read only
    end Test_Add_Provided_Memory;

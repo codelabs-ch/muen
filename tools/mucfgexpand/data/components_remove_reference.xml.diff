@@ -59,3 +59,9 @@
    </component>                                                                                                                                      <
   </subject>                                                                                                                                              </subject>
   <subject name="lnx_core_1">                                                                                                                             <subject name="lnx_core_1">
+--
+    </source>                                                                                                                                               </source>
+   </events>                                                                                                                                               </events>
+   <component ref="c3"/>                                                                                                                             <
+  </subject>                                                                                                                                              </subject>
+ </subjects>                                                                                                                                             </subjects>

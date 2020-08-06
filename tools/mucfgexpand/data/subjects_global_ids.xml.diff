@@ -21,3 +21,9 @@
   <subject name="lnx_core_1">                                                                                                                        |    <subject globalId="4" name="lnx_core_1">
    <vcpu>                                                                                                                                                  <vcpu>
     <registers>                                                                                                                                             <registers>
+--
+   <sibling ref="lnx"/>                                                                                                                                    <sibling ref="lnx"/>
+  </subject>                                                                                                                                              </subject>
+  <subject name="subject3">                                                                                                                          |    <subject globalId="5" name="subject3">
+   <events>                                                                                                                                                <events>
+    <source>                                                                                                                                                <source>

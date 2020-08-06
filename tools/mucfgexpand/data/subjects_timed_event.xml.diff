@@ -40,3 +40,20 @@
                                                                                                                                                      >     <devices/>
    <events>                                                                                                                                                <events>
     <source>                                                                                                                                                <source>
+--
+  </subject>                                                                                                                                              </subject>
+  <subject name="subject3">                                                                                                                               <subject name="subject3">
+                                                                                                                                                     >     <vcpu/>
+                                                                                                                                                     >     <bootparams/>
+                                                                                                                                                     >     <memory>
+                                                                                                                                                     >      <memory executable="false" logical="timed_event" physical="subject3|timed_event" virtualAddress="16#000e_0001_0000#" writable="true"/>
+                                                                                                                                                     >     </memory>
+                                                                                                                                                     >     <devices/>
+   <events>                                                                                                                                                <events>
+    <source>                                                                                                                                                <source>
+--
+    </source>                                                                                                                                               </source>
+   </events>                                                                                                                                               </events>
+                                                                                                                                                     >     <channels/>
+   <component ref="c3"/>                                                                                                                                   <component ref="c3"/>
+  </subject>                                                                                                                                              </subject>

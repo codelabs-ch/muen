@@ -10,6 +10,7 @@
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="scheduling_group_info_2" size="16#1000#" type="subject_scheduling_info"/>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="scheduling_group_info_3" size="16#1000#" type="subject_scheduling_info"/>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="scheduling_group_info_4" size="16#1000#" type="subject_scheduling_info"/>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="scheduling_group_info_5" size="16#1000#" type="subject_scheduling_info"/>
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
 --
@@ -256,3 +257,9 @@
   <subject name="lnx_core_1">                                                                                                                        |    <subject globalId="4" name="lnx_core_1">
    <vcpu>                                                                                                                                                  <vcpu>
     <registers>                                                                                                                                             <registers>
+--
+   <sibling ref="lnx"/>                                                                                                                                    <sibling ref="lnx"/>
+  </subject>                                                                                                                                              </subject>
+  <subject name="subject3">                                                                                                                          |    <subject globalId="5" name="subject3">
+   <events>                                                                                                                                                <events>
+    <source>                                                                                                                                                <source>

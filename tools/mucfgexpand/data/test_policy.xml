@@ -385,6 +385,20 @@
     </memory>
    </provides>
   </component>
+  <component name="c3" profile="native">
+   <provides>
+    <memory executable="true" logical="binary" size="16#1000#" type="subject_binary" virtualAddress="16#0020_0000#" writable="false">
+     <file filename="c3_bin" offset="none"/>
+    </memory>
+    <memory executable="false" logical="resource_1" size="16#2000#" virtualAddress="16#0020_1000#" writable="true">
+     <file filename="somedata" offset="none"/>
+    </memory>
+    <memory executable="false" logical="resource_2" size="16#1000#" virtualAddress="16#0040_0000#" writable="true">
+     <file filename="somedata" offset="none"/>
+     <hash value="16#ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7#"/>
+    </memory>
+   </provides>
+  </component>
  </components>
  <subjects>
   <subject name="lnx">
@@ -595,6 +609,18 @@
    </events>
    <sibling ref="lnx"/>
   </subject>
+  <subject name="subject3">
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <default physical="system_panic">
+       <system_panic/>
+      </default>
+     </group>
+    </source>
+   </events>
+   <component ref="c3"/>
+  </subject>
  </subjects>
  <scheduling tickRate="10000">
   <majorFrame>
@@ -615,7 +641,7 @@
     <minorFrame subject="lnx" ticks="40"/>
     <minorFrame subject="lnx" ticks="20"/>
     <minorFrame subject="lnx" ticks="10"/>
-    <minorFrame subject="lnx" ticks="10"/>
+    <minorFrame subject="subject3" ticks="10"/>
    </cpu>
    <cpu id="1">
     <minorFrame subject="tau0" ticks="10"/>

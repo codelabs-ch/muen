@@ -96,6 +96,11 @@ private
    end record;
    for Time_Info_Type'Object_Size use Time_Info_Size * 8;
 
+   function Valid (TI : Time_Info_Type) return Boolean
+   is (TI.TSC_Time_Base in Timestamp_Type
+       and TI.TSC_Tick_Rate_Hz in TSC_Tick_Rate_Hz_Type
+       and TI.Timezone_Microsecs in Timezone_Type);
+
    procedure Get_Current_Time
      (TI             :     Time_Info_Type;
       Schedule_Ticks :     Integer_62;

@@ -113,6 +113,41 @@ package body Mutime.Info.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Valid (Gnattest_T : in out Test);
+   procedure Test_Valid_b7cce7 (Gnattest_T : in out Test) renames Test_Valid;
+--  id:2.2/b7cce7d60dedeb4c/Valid/1/0/
+   procedure Test_Valid (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      TI : Time_Info_Type;
+   begin
+      TI := (TSC_Time_Base      => Timestamp_Type'First,
+             TSC_Tick_Rate_Hz   => TSC_Tick_Rate_Hz_Type'First,
+             Timezone_Microsecs => Timezone_Type'First);
+      Assert (Condition => Valid (TI => TI),
+              Message   => "Time info not valid");
+
+      TI.TSC_Time_Base := Timestamp_Type'Base'Last;
+      Assert (Condition => not Valid (TI => TI),
+              Message   => "Time info valid (TSC Time Base)");
+      TI.TSC_Time_Base := Timestamp_Type'First;
+
+      TI.TSC_Tick_Rate_Hz := TSC_Tick_Rate_Hz_Type'Base'Last;
+      Assert (Condition => not Valid (TI => TI),
+              Message   => "Time info valid (TSC Tick Rate)");
+      TI.TSC_Tick_Rate_Hz := TSC_Tick_Rate_Hz_Type'First;
+
+      TI.Timezone_Microsecs := Timezone_Type'Base'Last;
+      Assert (Condition => not Valid (TI => TI),
+              Message   => "Time info valid (Timezone)");
+--  begin read only
+   end Test_Valid;
+--  end read only
+
+
+--  begin read only
    procedure Test_1_Get_Current_Time (Gnattest_T : in out Test);
    procedure Test_Get_Current_Time_cea631 (Gnattest_T : in out Test) renames Test_1_Get_Current_Time;
 --  id:2.2/cea6319c99ce0b67/Get_Current_Time/1/0/

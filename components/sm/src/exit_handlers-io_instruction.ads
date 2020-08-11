@@ -34,7 +34,7 @@ is
    --  Emulate I/O port access.
    procedure Process (Action : out Types.Subject_Action_Type)
    with
-      Global => (Proof_In => (Mutime.Info.Valid, Musinfo.Instance.State),
+      Global => (Proof_In => Musinfo.Instance.State,
                  Input    => (Mutime.Info.State,
                               Musinfo.Instance.Scheduling_Info),
                  In_Out   => (Subject_Info.State, Devices.UART8250.State,
@@ -50,6 +50,6 @@ is
         Devices.RTC.State        =>+ (Subject_Info.State, Mutime.Info.State,
                                       Musinfo.Instance.Scheduling_Info),
         Action                   =>  Subject_Info.State),
-      Pre     => Musinfo.Instance.Is_Valid and Mutime.Info.Is_Valid;
+      Pre     => Musinfo.Instance.Is_Valid;
 
 end Exit_Handlers.IO_Instruction;

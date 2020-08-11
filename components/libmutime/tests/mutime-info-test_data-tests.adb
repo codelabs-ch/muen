@@ -30,24 +30,6 @@ package body Mutime.Info.Test_Data.Tests is
 --  end read only
 
 --  begin read only
-   procedure Test_Update_Validity (Gnattest_T : in out Test);
-   procedure Test_Update_Validity_8a415a (Gnattest_T : in out Test) renames Test_Update_Validity;
---  id:2.2/8a415a2498577666/Update_Validity/1/0/
-   procedure Test_Update_Validity (Gnattest_T : in out Test) is
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-   begin
-      Assert (Condition => True,
-              Message   => "Not easily testable due to TI object with "
-              & "Address clause");
---  begin read only
-   end Test_Update_Validity;
---  end read only
-
-
---  begin read only
    procedure Test_Is_Valid (Gnattest_T : in out Test);
    procedure Test_Is_Valid_f361e9 (Gnattest_T : in out Test) renames Test_Is_Valid;
 --  id:2.2/f361e911d85a7ba5/Is_Valid/1/0/
@@ -57,14 +39,8 @@ package body Mutime.Info.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-      State_Valid := False;
-      Assert
-        (Condition => not Is_Valid,
-         Message   => "State valid");
-      State_Valid := True;
-      Assert
-        (Condition => Is_Valid,
-         Message   => "State not valid");
+      Assert (Condition => True,
+              Message   => "Tested with Test_Valid");
 --  begin read only
    end Test_Is_Valid;
 --  end read only

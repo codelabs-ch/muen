@@ -28,7 +28,7 @@
 
 package Mutime.Info
 with
-   Abstract_State => (Valid, (State with External => Async_Writers))
+   Abstract_State => (State with External => Async_Writers)
 is
 
    subtype Timezone_Type is Integer_62 range
@@ -52,17 +52,11 @@ is
    end record
    with Size => Time_Info_Size * 8;
 
-   --  Update time info validity flag.
-   procedure Update_Validity
-   with
-      Global  => (Input  => State,
-                  Output => Valid),
-      Depends => (Valid => State);
-
    --  Return validity status of time info page.
    function Is_Valid return Boolean
    with
-      Global => (Input => Valid);
+      Global => (Input => State),
+      Volatile_Function;
 
    --  Calculate current timestamp using the information stored in the time
    --  info record and the specified CPU ticks. The procedure returns the
@@ -82,10 +76,8 @@ is
    procedure Get_Boot_Time
      (Timestamp : out Timestamp_Type)
    with
-      Global  => (Proof_In => Valid,
-                  Input    => State),
-      Depends => (Timestamp => State),
-      Pre     => Is_Valid;
+      Global  => (Input => State),
+      Depends => (Timestamp => State);
 
 private
 
@@ -114,14 +106,7 @@ private
      (TI        :     Time_Info_Type;
       Timestamp : out Timestamp_Type)
    with
-      Depends => (Timestamp => TI);
-
-   State_Valid : Boolean := False
-   with
-      Part_Of => Valid;
-
-   function Is_Valid return Boolean is (State_Valid)
-   with
-      Refined_Global => (Input => State_Valid);
+      Depends => (Timestamp => TI),
+      Pre     => Valid (TI => TI);
 
 end Mutime.Info;

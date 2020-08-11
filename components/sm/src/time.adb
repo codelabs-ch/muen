@@ -77,6 +77,7 @@ is
 
    procedure Initialize
    is
+      Time_Valid : Boolean;
    begin
       if not Musinfo.Instance.Is_Valid then
          pragma Debug (Debug_Ops.Put_Line
@@ -84,19 +85,17 @@ is
          SK.CPU.Stop;
       end if;
 
-      Mutime.Info.Update_Validity;
-      if not Mutime.Info.Is_Valid then
+      Time_Valid := Mutime.Info.Is_Valid;
+      if not Time_Valid then
          pragma Debug
            (Debug_Ops.Put_Line
               (Item => "Absolute time not yet available, waiting ..."));
-         while not Mutime.Info.Is_Valid loop
+         while not Time_Valid loop
+            Time_Valid := Mutime.Info.Is_Valid;
             SK.CPU.Pause;
-            Mutime.Info.Update_Validity;
          end loop;
       end if;
-      pragma Debug
-        (Debug_Ops.Put_Line
-           (Item => "Absolute time available"));
+      pragma Debug (Debug_Ops.Put_Line (Item => "Absolute time available"));
    end Initialize;
 
 end Time;

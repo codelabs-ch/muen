@@ -72,8 +72,8 @@ package body Mutime.Info.Test_Data.Tests is
 
 --  begin read only
    procedure Test_2_Get_Current_Time (Gnattest_T : in out Test);
-   procedure Test_Get_Current_Time_201366 (Gnattest_T : in out Test) renames Test_2_Get_Current_Time;
---  id:2.2/201366884977c714/Get_Current_Time/0/0/
+   procedure Test_Get_Current_Time_7024f2 (Gnattest_T : in out Test) renames Test_2_Get_Current_Time;
+--  id:2.2/7024f2e671a6d9a3/Get_Current_Time/0/0/
    procedure Test_2_Get_Current_Time (Gnattest_T : in out Test) is
 --  end read only
 

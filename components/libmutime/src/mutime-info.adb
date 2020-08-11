@@ -99,19 +99,26 @@ is
    procedure Get_Current_Time
      (Schedule_Ticks :     Integer_62;
       Correction     : out Integer_63;
-      Timestamp      : out Timestamp_Type)
+      Timestamp      : out Timestamp_Type;
+      Success        : out Boolean)
    with
-      Refined_Global  => (Proof_In => State_Valid,
-                          Input    => Time_Info),
+      Refined_Global  => (Input => Time_Info),
       Refined_Depends => ((Correction, Timestamp) => (Schedule_Ticks,
-                                                      Time_Info))
+                                                      Time_Info),
+                          Success                 => Time_Info)
    is
       Time : constant Time_Info_Type := Time_Info;
    begin
-      Get_Current_Time (TI             => Time,
-                        Schedule_Ticks => Schedule_Ticks,
-                        Correction     => Correction,
-                        Timestamp      => Timestamp);
+      Success := Valid (TI => Time);
+      if Success then
+         Get_Current_Time (TI             => Time,
+                           Schedule_Ticks => Schedule_Ticks,
+                           Correction     => Correction,
+                           Timestamp      => Timestamp);
+      else
+         Correction := Integer_63'First;
+         Timestamp := Timestamp_Type'First;
+      end if;
    end Get_Current_Time;
 
    -------------------------------------------------------------------------

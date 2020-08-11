@@ -36,6 +36,7 @@ is
       Date_Time         : Mutime.Date_Time_Type;
       Sched             : Mutime.Integer_62;
       Correction_Unused : Mutime.Integer_63;
+      Success           : Boolean;
 
       TSC_Schedule_Start : constant Interfaces.Unsigned_64
         := Musinfo.Instance.TSC_Schedule_Start;
@@ -54,13 +55,21 @@ is
       Mutime.Info.Get_Current_Time
         (Schedule_Ticks => Sched,
          Correction     => Correction_Unused,
-         Timestamp      => Timestamp);
-      pragma Debug (Debug_Ops.Put_Line
-                    (Item => "Correction to boot timestamp (microsecs) "
-                     & SK.Strings.Img (SK.Word64 (Correction_Unused))));
+         Timestamp      => Timestamp,
+         Success        => Success);
+      if Success then
+         pragma Debug (Debug_Ops.Put_Line
+                      (Item => "Correction to boot timestamp (microsecs) "
+                        & SK.Strings.Img (SK.Word64 (Correction_Unused))));
+         Mutime.Split (Timestamp => Timestamp,
+                       Date_Time => Date_Time);
+      else
+         Date_Time := Mutime.Epoch;
+         pragma Debug
+           (Debug_Ops.Put_Line
+              (Item => "Error: Unable to get current time, using epoch"));
+      end if;
 
-      Mutime.Split (Timestamp => Timestamp,
-                    Date_Time => Date_Time);
       return Date_Time;
    end Get_Date_Time;
 

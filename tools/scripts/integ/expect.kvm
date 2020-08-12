@@ -4,10 +4,21 @@ serial.out;PS/2 - Mouse: Device reset
 serial.out;PS/2 - Mouse: Streaming enabled
 serial.out;PS/2 driver initialized successfully
 serial.out;example: Subject running
+serial.out;example: Current Status: 16#0000000000000009#
+serial.out;example: Current Epoch : 16#0000000000000001#
 serial.out;example: Triggering self-event
 serial.out;example: Halting
 serial.out;example: Received vector 16#25#
 serial.out;example: Monitored subject RIP 16#0000000000400000#
+serial.out;Manager running
+serial.out;16#01#: Initial->Self-Control
+serial.out;16#01#: Self-Control->Finished
+serial.out;16#02#: Start->Initial
+serial.out;16#02#: Initial->Syncing
+serial.out;16#02#: Syncing->Erasing
+serial.out;16#02#: Erasing->Preparing
+serial.out;16#02#: Preparing->Validating
+serial.out;16#02#: Validating->Running
 serial.out;muen-sinfo: event \[number 0\] unmask_irq_69
 serial.out;8139cp 0000:00:02.0: PCI IRQ 21 (EOI event: 0)
 serial.out;8139cp 0000:00:02.0 eth1: RTL-8139C+ at 0x(____ptrval____), 52:54:00:12:34:57, IRQ 21

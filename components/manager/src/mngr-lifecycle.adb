@@ -169,7 +169,9 @@ is
                   Next_State := FSM_Self_Control;
                end if;
             else
-               Next_State := FSM_Syncing;
+               if Subject_Status = Mucontrol.Status.STATE_INITIAL then
+                  Next_State := FSM_Syncing;
+               end if;
             end if;
          when FSM_Syncing =>
             if Subject_Status = Mucontrol.Status.STATE_SYNCED then

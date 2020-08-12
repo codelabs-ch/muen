@@ -29,7 +29,6 @@ COMPONENTS_PROOF := \
 	dm \
 	example \
 	manager \
-	sl \
 	sm \
 	time
 

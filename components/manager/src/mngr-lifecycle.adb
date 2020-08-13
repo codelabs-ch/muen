@@ -235,7 +235,9 @@ is
             States (ID).Current_Epoch := States (ID).Current_Epoch + 1;
             Commands.Initialize
               (ID          => ID,
-               Command     => Mucontrol.Command.CMD_NOP,
+               Command     => (if Config.Instance (ID).Self_Governed
+                               then Mucontrol.Command.CMD_SELF_CTRL
+                               else Mucontrol.Command.CMD_NOP),
                Epoch       => States (ID).Current_Epoch,
                WD_Interval => Config.Instance (ID).WD_Interval);
          when FSM_Syncing =>

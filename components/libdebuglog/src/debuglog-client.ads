@@ -25,11 +25,19 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
+with Interfaces;
+
 package Debuglog.Client
 with
    Abstract_State => State,
    Initializes    => State
 is
+
+   --  Inititalize debug log.
+   procedure Init (Epoch : Interfaces.Unsigned_64)
+   with
+      Global  => (Output => State),
+      Depends => (State  => Epoch);
 
    --  Write character.
    procedure Put (Item : Character)

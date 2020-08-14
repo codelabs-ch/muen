@@ -25,6 +25,8 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
+with Interfaces;
+
 with Musinfo.Instance;
 
 with Debuglog.Client;
@@ -35,6 +37,12 @@ with
                                  External => Async_Readers),
    Initializes    => State
 is
+
+   --  Initialize log sink.
+   procedure Init (Epoch : Interfaces.Unsigned_64)
+   with
+      Global  => (Output => State),
+      Depends => (State  => Epoch);
 
    --  Flush buffers.
    procedure Flush

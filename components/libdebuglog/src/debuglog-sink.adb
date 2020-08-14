@@ -74,6 +74,24 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Init (Epoch : Interfaces.Unsigned_64)
+   with
+      Refined_Global  => (Output => (Message_Buffer, Message_Channel,
+                                     Message_Index)),
+      Refined_Depends => (Message_Channel  => (Epoch),
+                          (Message_Buffer,
+                           Message_Index)  => null)
+   is
+   begin
+      Message_Index  := Types.Message_Index'First;
+      Message_Buffer := Types.Null_Data;
+      Stream.Writer_Instance.Initialize
+        (Channel => Message_Channel,
+         Epoch   => Stream.Header_Field_Type (Epoch));
+   end Init;
+
+   -------------------------------------------------------------------------
+
    procedure Write_Character (Item : Character)
    with
       Refined_Global  => (Input    => Musinfo.Instance.Scheduling_Info,

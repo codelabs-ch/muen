@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with SK.CPU;
 with SK.Interrupt_Tables;
 with SK.Strings;
@@ -44,10 +46,17 @@ with Mucontrol.Status.Instance;
 
 procedure Example
 is
+   Cur_Epoch     : constant Interfaces.Unsigned_64
+     := Mucontrol.Command.Instance.Get_Epoch;
+
    Request_Valid : Boolean;
    Request       : Foo.Message_Type;
    Response      : Foo.Message_Type;
 begin
+
+   --  Initialize debug log.
+
+   Debuglog.Client.Init (Epoch => Cur_Epoch);
 
    --  Initialize interrupt handling.
 

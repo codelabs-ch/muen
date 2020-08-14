@@ -35,6 +35,7 @@ is
 
    Request, Response : Mudm.Emul_Message_Type;
 begin
+   pragma Debug (Debug_Ops.Init (Epoch => 1));
    pragma Debug (Debug_Ops.Put_Line (Item => "DM subject running"));
 
    if not Musinfo.Instance.Is_Valid then

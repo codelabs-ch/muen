@@ -29,8 +29,7 @@ with Interfaces;
 
 package Debuglog.Client
 with
-   Abstract_State => State,
-   Initializes    => State
+   Abstract_State => State
 is
 
    --  Inititalize debug log.

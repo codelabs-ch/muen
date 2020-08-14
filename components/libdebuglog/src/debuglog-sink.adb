@@ -116,7 +116,5 @@ is
          end if;
       end if;
    end Write_Character;
-begin
-   Stream.Writer_Instance.Initialize (Channel => Message_Channel,
-                                      Epoch   => 1);
+
 end Debuglog.Sink;

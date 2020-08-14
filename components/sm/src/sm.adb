@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with X86_64;
 
 with SK.CPU;
@@ -24,6 +26,8 @@ with SK.Constants;
 with SK.Interrupt_Tables;
 
 with Debuglog.Client;
+
+with Mucontrol.Command.Instance;
 
 with Mutime.Info;
 with Musinfo.Instance;
@@ -55,12 +59,13 @@ pragma Unreferenced (Interrupt_Handler);
 procedure Sm
 with
    Global => (Input  => (Musinfo.Instance.State, Mutime.Info.State,
-                         Musinfo.Instance.Scheduling_Info),
-              In_Out => (Debuglog.Client.State,
-                         Devices.RTC.State, Mudm.Client.State,
+                         Musinfo.Instance.Scheduling_Info,
+                         Mucontrol.Command.Instance.State),
+              In_Out => (Devices.RTC.State, Mudm.Client.State,
                          Devices.UART8250.State, Exit_Handlers.RDTSC.State,
                          Mutime.Info.Valid, Subject_Info.State,
-                         SK.Interrupt_Tables.State, X86_64.State))
+                         SK.Interrupt_Tables.State, X86_64.State),
+              Output => Debuglog.Client.State)
 is
    use type SK.Word16;
    use type SK.Word32;
@@ -68,10 +73,14 @@ is
    use type Types.Subject_Action_Type;
    use Subject_Info;
 
+   Cur_Epoch : constant Interfaces.Unsigned_64
+        := Mucontrol.Command.Instance.Get_Epoch;
+
    Action : Types.Subject_Action_Type;
    Exit_Reason, Instruction_Len : SK.Word32;
    RIP : SK.Word64;
 begin
+   Debuglog.Client.Init (Epoch => Cur_Epoch);
    pragma Debug (Debug_Ops.Put_Line (Item => "SM subject running"));
    SK.Interrupt_Tables.Initialize
      (Stack_Addr => Component_Constants.Interrupt_Stack_Address);

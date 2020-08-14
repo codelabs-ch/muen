@@ -23,6 +23,7 @@ with Ctrlr;
 procedure Controller
 is
 begin
+   Debuglog.Client.Init (Epoch => 1);
    Debuglog.Client.Put_Line (Item => "Controller running");
 
    loop

@@ -42,6 +42,7 @@ is
       TSC_Value : Interfaces.Unsigned_64;
       Success   : Boolean;
    begin
+      pragma Debug (Debuglog.Client.Init (Epoch => 1));
       pragma Debug (Debuglog.Client.Put_Line (Item => "Time subject running"));
 
       if not Musinfo.Instance.Is_Valid then

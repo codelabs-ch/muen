@@ -2,7 +2,7 @@
  <majorFrame>
   <cpu id="0">
    <minorFrame subject="tau0" ticks="10"/>
-   <minorFrame subject="manager" ticks="10"/>
+   <minorFrame subject="controller" ticks="10"/>
    <minorFrame subject="ps2" ticks="10"/>
    <minorFrame subject="nic_linux" ticks="120"/>
   </cpu>
@@ -17,7 +17,7 @@
   <cpu id="0">
    <minorFrame subject="ps2" ticks="5"/>
    <minorFrame subject="tau0" ticks="3"/>
-   <minorFrame subject="manager" ticks="2"/>
+   <minorFrame subject="controller" ticks="2"/>
    <minorFrame subject="nic_linux" ticks="140"/>
   </cpu>
   <cpu id="1">

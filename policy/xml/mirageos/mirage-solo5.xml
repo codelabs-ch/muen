@@ -39,7 +39,7 @@
     <include href="subject_time.xml"/>
     <include href="subject_nic_sl.xml"/>
     <include href="subject_ps2.xml"/>
-    <include href="subject_manager.xml"/>
+    <include href="subject_controller.xml"/>
     <subject name="dbgserver">
       <events>
         <source>
@@ -59,7 +59,7 @@
         <map logical="log_channel6" physical="debuglog_subject6"/>
         <map logical="log_channel7" physical="debuglog_subject7"/>
         <map logical="log_channel8" physical="debuglog_subject8"/>
-        <map logical="log_channel9" physical="debuglog_manager"/>
+        <map logical="log_channel9" physical="debuglog_controller"/>
         <include href="subject_dbgserver_common.xml"/>
       </component>
     </subject>

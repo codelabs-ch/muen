@@ -1,4 +1,4 @@
-<component name="manager" profile="native">
+<component name="controller" profile="native">
  <depends>
   <library ref="libdebuglog"/>
  </depends>

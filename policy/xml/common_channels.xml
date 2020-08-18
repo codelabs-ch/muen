@@ -24,7 +24,7 @@
   <channel name="storage_dm_request" size="16#1000#" hasEvent="switch"/>
   <channel name="storage_dm_response" size="16#1000#" hasEvent="switch"/>
  </if>
- <channel name="debuglog_manager" size="$logchannel_size"/>
+ <channel name="debuglog_controller" size="$logchannel_size"/>
 
  <channel name="testchannel_1" size="16#1000#"/>
  <channel name="testchannel_2" size="16#1000#"/>

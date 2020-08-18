@@ -1,4 +1,4 @@
-<subject name="manager">
+<subject name="controller">
  <events>
   <source>
    <group name="vmx_exit">
@@ -8,8 +8,8 @@
    </group>
   </source>
  </events>
- <component ref="manager">
-  <map logical="debuglog" physical="debuglog_manager"/>
+ <component ref="controller">
+  <map logical="debuglog" physical="debuglog_controller"/>
   <map logical="control_1" physical="control_time"/>
   <map logical="control_2" physical="control_sm_1"/>
   <map logical="control_3" physical="control_sm_2"/>

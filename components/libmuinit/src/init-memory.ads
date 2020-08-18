@@ -47,16 +47,6 @@ is
    with
       Pre => Musinfo.Instance.Is_Valid;
 
-   --  Returns the base address of the stack memory region.
-   function Get_Stack_Base return Interfaces.Unsigned_64
-   with
-      Pre => Musinfo.Instance.Is_Valid;
-
-   --  Returns the base address of the component text memory region.
-   function Get_Text_Base return Interfaces.Unsigned_64
-   with
-      Pre => Musinfo.Instance.Is_Valid;
-
    --  Setup all writable memory regions present in subject info with their
    --  initial content.
    procedure Setup_Writable (Success : out Boolean)

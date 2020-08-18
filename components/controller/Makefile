@@ -1,4 +1,4 @@
-COMPONENT = manager
+COMPONENT = controller
 
 COMPONENT_TARGETS = cspecs
 

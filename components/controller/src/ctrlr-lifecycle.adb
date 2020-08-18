@@ -24,12 +24,12 @@ with Debuglog.Client;
 with Mucontrol.Command;
 with Mucontrol.Status;
 
-with Mngr.Commands;
-with Mngr.Config;
-with Mngr.Slot_Control;
-with Mngr.Status;
+with Ctrlr.Commands;
+with Ctrlr.Config;
+with Ctrlr.Slot_Control;
+with Ctrlr.Status;
 
-package body Mngr.Lifecycle
+package body Ctrlr.Lifecycle
 is
 
    use type  Mucontrol.Status.Status_Type;
@@ -303,4 +303,4 @@ is
       end if;
    end Process;
 
-end Mngr.Lifecycle;
+end Ctrlr.Lifecycle;

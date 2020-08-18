@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package body Mngr.Status
+package body Ctrlr.Status
 is
 
    -------------------------------------------------------------------------
@@ -55,4 +55,4 @@ is
       return Cur_Value;
    end Get_Watchdog;
 
-end Mngr.Status;
+end Ctrlr.Status;

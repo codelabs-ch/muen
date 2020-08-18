@@ -16,19 +16,23 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Mngr.Lifecycle;
+with Ctrlr.Config;
 
-package body Mngr
+package body Ctrlr.Slot_Control
 is
 
    -------------------------------------------------------------------------
 
-   procedure Run
+   function Get_Current_Era
+     (ID : Managed_Subjects_Range)
+      return Interfaces.Unsigned_64
    is
+      Cur_Era : Interfaces.Unsigned_64 := 0;
    begin
-      for I in Managed_Subjects_Range loop
-         Lifecycle.Process (ID => I);
-      end loop;
-   end Run;
+      if Config.Instance (ID).Slot_ID = 1 then
+         Cur_Era := Slot_Control_1.Era;
+      end if;
+      return Cur_Era;
+   end Get_Current_Era;
 
-end Mngr;
+end Ctrlr.Slot_Control;

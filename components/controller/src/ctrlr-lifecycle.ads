@@ -16,23 +16,29 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Mngr.Config;
+private with Interfaces;
 
-package body Mngr.Slot_Control
+package Ctrlr.Lifecycle
 is
 
-   -------------------------------------------------------------------------
+   --  Update state of managed subject specified by ID and perform transition
+   --  if possible.
+   procedure Process (ID : Managed_Subjects_Range);
 
-   function Get_Current_Era
-     (ID : Managed_Subjects_Range)
-      return Interfaces.Unsigned_64
-   is
-      Cur_Era : Interfaces.Unsigned_64 := 0;
-   begin
-      if Config.Instance (ID).Slot_ID = 1 then
-         Cur_Era := Slot_Control_1.Era;
-      end if;
-      return Cur_Era;
-   end Get_Current_Era;
+private
 
-end Mngr.Slot_Control;
+   type Subject_Lifecycle_State_Type is record
+      Current_State : Run_State_Type;
+      Current_Epoch : Interfaces.Unsigned_64;
+      Current_Era   : Interfaces.Unsigned_64;
+   end record;
+
+   type Lifecycle_States_Type is
+     array (Managed_Subjects_Range) of Subject_Lifecycle_State_Type;
+
+   States : Lifecycle_States_Type
+     := (others => (Current_State => FSM_Start,
+                    Current_Epoch => 0,
+                    Current_Era   => 0));
+
+end Ctrlr.Lifecycle;

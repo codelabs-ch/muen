@@ -20,9 +20,9 @@ with Interfaces;
 
 private with System;
 
-private with Manager_Component.Memory;
+private with Controller_Component.Memory;
 
-package Mngr.Slot_Control
+package Ctrlr.Slot_Control
 is
 
    --  Returns the current era for the managed subject specified by ID.
@@ -33,7 +33,7 @@ is
 
 private
 
-   package Cspecs renames Manager_Component.Memory;
+   package Cspecs renames Controller_Component.Memory;
 
    Padding_Start : constant := 9;
 
@@ -54,4 +54,4 @@ private
       Address => System'To_Address (Cspecs.Slot_Control_1_Address),
       Size    => Cspecs.Slot_Control_1_Size * 8;
 
-end Mngr.Slot_Control;
+end Ctrlr.Slot_Control;

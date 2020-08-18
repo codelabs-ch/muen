@@ -20,12 +20,12 @@ with Interfaces;
 
 with Mucontrol.Command;
 
-with Manager_Component.Events;
+with Controller_Component.Events;
 
-package Mngr.Config
+package Ctrlr.Config
 is
 
-   package Cspecs renames Manager_Component.Events;
+   package Cspecs renames Controller_Component.Events;
 
    type Reset_Event_Range is range 0 .. 64;
 
@@ -106,4 +106,4 @@ is
                Slot_ID       => 1,
                Reset_Events  => Null_Reset_Events));
 
-end Mngr.Config;
+end Ctrlr.Config;

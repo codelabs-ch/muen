@@ -16,28 +16,16 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Manager_Component.Memory_Arrays;
+with Debuglog.Client;
 
-package Mngr
+with Ctrlr;
+
+procedure Controller
 is
+begin
+   Debuglog.Client.Put_Line (Item => "Controller running");
 
-   type Subjects_Range is range
-     0 .. Manager_Component.Memory_Arrays.Control_Element_Count;
-
-   No_Subject : constant Subjects_Range := Subjects_Range'First;
-
-   subtype Managed_Subjects_Range is Subjects_Range
-    range 1 .. Subjects_Range'Last;
-
-   Page_Size : constant := 4096;
-
-   --  Various run states a managed subject can be in.
-   type Run_State_Type is
-     (FSM_Start, FSM_Initial, FSM_Syncing, FSM_Erasing, FSM_Preparing,
-      FSM_Validating, FSM_Running, FSM_Finished, FSM_Resetting, FSM_Error,
-      FSM_Self_Control);
-
-   --  Run manager.
-   procedure Run;
-
-end Mngr;
+   loop
+      Ctrlr.Run;
+   end loop;
+end Controller;

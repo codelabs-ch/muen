@@ -16,16 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Debuglog.Client;
+with "../libdebuglog/libdebuglog";
+with "../libmucontroltypes/libmucontroltypes";
 
-with Mngr;
+project Controller extends "../component_spark" is
 
-procedure Manager
-is
-begin
-   Debuglog.Client.Put_Line (Item => "Manager running");
+   Extra_Dirs := Component_Spark.Src_Dirs
+     & "../../common/strings/impl";
 
-   loop
-      Mngr.Run;
-   end loop;
-end Manager;
+   for Languages use ("Ada", "Asm");
+   for Source_Dirs use ("generated", "src") & Extra_Dirs;
+   for Object_Dir use "obj/" & Component_Spark.Build_Mode;
+   for Main use ("controller");
+
+end Controller;

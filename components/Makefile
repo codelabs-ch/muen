@@ -12,11 +12,11 @@ COMPONENTS_SPARK := \
 	libdebuglog \
 	libmusinfo \
 	libxhcidbg \
+	controller \
 	dbgserver \
 	dm \
 	example \
 	idle \
-	manager \
 	muinit \
 	ps2_drv \
 	sl \
@@ -26,9 +26,9 @@ COMPONENTS_SPARK := \
 
 # components to proof
 COMPONENTS_PROOF := \
+	controller \
 	dm \
 	example \
-	manager \
 	sm \
 	time
 

@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package body Mngr.Commands
+package body Ctrlr.Commands
 is
 
    package CTRL_CMD renames Mucontrol.Command;
@@ -87,4 +87,4 @@ is
       Command_Pages (ID).Watchdog_Interval := Value;
    end Set_Watchdog_Interval;
 
-end Mngr.Commands;
+end Ctrlr.Commands;

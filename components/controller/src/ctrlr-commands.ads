@@ -22,7 +22,7 @@ with Interfaces;
 
 with Mucontrol.Command;
 
-package Mngr.Commands
+package Ctrlr.Commands
 is
 
    --  Initialize command interface of subject specified by ID with given
@@ -71,7 +71,7 @@ private
 
    use type Interfaces.Unsigned_64;
 
-   package Cspecs renames Manager_Component.Memory_Arrays;
+   package Cspecs renames Controller_Component.Memory_Arrays;
 
    Array_Size : constant Interfaces.Unsigned_64
      := Interfaces.Unsigned_64 (Managed_Subjects_Range'Last) * Page_Size * 8;
@@ -89,4 +89,4 @@ private
        Size    => Array_Size,
        Address => System'To_Address (Cspecs.Control_Address_Base);
 
-end Mngr.Commands;
+end Ctrlr.Commands;

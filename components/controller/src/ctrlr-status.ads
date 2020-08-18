@@ -22,7 +22,7 @@ with Interfaces;
 
 with Mucontrol.Status;
 
-package Mngr.Status
+package Ctrlr.Status
 is
 
    --  Returns the current status for subject specified by ID.
@@ -45,7 +45,7 @@ is
 
 private
 
-   package Cspecs renames Manager_Component.Memory_Arrays;
+   package Cspecs renames Controller_Component.Memory_Arrays;
 
    type Status_Array is array (Managed_Subjects_Range)
      of Mucontrol.Status.Status_Page_Type
@@ -62,4 +62,4 @@ private
       Size    => Cspecs.Status_Element_Size * Cspecs.Status_Element_Count
         * 8;
 
-end Mngr.Status;
+end Ctrlr.Status;

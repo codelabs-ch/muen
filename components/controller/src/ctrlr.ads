@@ -16,29 +16,28 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-private with Interfaces;
+with Controller_Component.Memory_Arrays;
 
-package Mngr.Lifecycle
+package Ctrlr
 is
 
-   --  Update state of managed subject specified by ID and perform transition
-   --  if possible.
-   procedure Process (ID : Managed_Subjects_Range);
+   type Subjects_Range is range
+     0 .. Controller_Component.Memory_Arrays.Control_Element_Count;
 
-private
+   No_Subject : constant Subjects_Range := Subjects_Range'First;
 
-   type Subject_Lifecycle_State_Type is record
-      Current_State : Run_State_Type;
-      Current_Epoch : Interfaces.Unsigned_64;
-      Current_Era   : Interfaces.Unsigned_64;
-   end record;
+   subtype Managed_Subjects_Range is Subjects_Range
+    range 1 .. Subjects_Range'Last;
 
-   type Lifecycle_States_Type is
-     array (Managed_Subjects_Range) of Subject_Lifecycle_State_Type;
+   Page_Size : constant := 4096;
 
-   States : Lifecycle_States_Type
-     := (others => (Current_State => FSM_Start,
-                    Current_Epoch => 0,
-                    Current_Era   => 0));
+   --  Various run states a managed subject can be in.
+   type Run_State_Type is
+     (FSM_Start, FSM_Initial, FSM_Syncing, FSM_Erasing, FSM_Preparing,
+      FSM_Validating, FSM_Running, FSM_Finished, FSM_Resetting, FSM_Error,
+      FSM_Self_Control);
 
-end Mngr.Lifecycle;
+   --  Run controller.
+   procedure Run;
+
+end Ctrlr;

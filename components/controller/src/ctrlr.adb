@@ -16,17 +16,19 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libdebuglog/libdebuglog";
-with "../libmucontroltypes/libmucontroltypes";
+with Ctrlr.Lifecycle;
 
-project Manager extends "../component_spark" is
+package body Ctrlr
+is
 
-   Extra_Dirs := Component_Spark.Src_Dirs
-     & "../../common/strings/impl";
+   -------------------------------------------------------------------------
 
-   for Languages use ("Ada", "Asm");
-   for Source_Dirs use ("generated", "src") & Extra_Dirs;
-   for Object_Dir use "obj/" & Component_Spark.Build_Mode;
-   for Main use ("manager");
+   procedure Run
+   is
+   begin
+      for I in Managed_Subjects_Range loop
+         Lifecycle.Process (ID => I);
+      end loop;
+   end Run;
 
-end Manager;
+end Ctrlr;

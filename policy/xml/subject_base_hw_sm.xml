@@ -10,6 +10,7 @@
  </events>
  <monitor>
   <state subject="base_hw" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
+  <loader logical="reload" subject="base_hw_sm" virtualAddress="16#0000#"/>
  </monitor>
  <component ref="sm">
   <map logical="time_info" physical="time_info"/>

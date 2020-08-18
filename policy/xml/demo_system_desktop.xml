@@ -98,6 +98,7 @@
    </events>
    <monitor>
     <state subject="linux" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
+    <loader logical="reload" subject="sm" virtualAddress="16#0000#"/>
    </monitor>
    <component ref="sm">
     <map logical="time_info" physical="time_info"/>

@@ -31,8 +31,17 @@ with Musinfo;
 package Init.Utils
 is
 
+   use type Musinfo.Resource_Kind;
+
    --  Returns True if the given region designates the stack region.
    function Is_Stack (Region : Musinfo.Memregion_Type) return Boolean;
+
+   --  Returns True if the given memory resource designates the component
+   --  binary text region.
+   function Is_Text_Region
+     (Resource : Musinfo.Resource_Type)
+      return Boolean
+   with Pre => Resource.Kind = Musinfo.Res_Memory;
 
    --  Returns True if the given region designates the status region.
    function Is_Status (Region : Musinfo.Memregion_Type) return Boolean;

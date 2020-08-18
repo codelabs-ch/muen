@@ -122,6 +122,40 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Get_Base_Addresses
+     (Text_Base  : out Interfaces.Unsigned_64;
+      Stack_Base : out Interfaces.Unsigned_64;
+      Success    : out Boolean)
+   is
+      Iter    : Musinfo.Utils.Resource_Iterator_Type
+        := Musinfo.Instance.Create_Resource_Iterator;
+      Element : Musinfo.Resource_Type;
+      Stack_Found, Text_Found : Boolean;
+   begin
+      Stack_Found := False;
+      Text_Found := False;
+
+      Process_Memregions :
+      while Musinfo.Instance.Has_Element (Iter => Iter) loop
+         Element := Musinfo.Instance.Element (Iter => Iter);
+         if Element.Kind = Musinfo.Res_Memory then
+            if Utils.Is_Stack (Region => Element.Mem_Data) then
+               Stack_Base  := Element.Mem_Data.Address;
+               Stack_Found := True;
+            elsif Utils.Is_Text_Region (Resource => Element) then
+               Text_Base  := Element.Mem_Data.Address;
+               Text_Found := True;
+            end if;
+         end if;
+         Musinfo.Utils.Next (Iter => Iter);
+         pragma Loop_Invariant
+           (Musinfo.Instance.Belongs_To (Iter => Iter));
+      end loop Process_Memregions;
+      Success := Stack_Found and Text_Found;
+   end Get_Base_Addresses;
+
+   -------------------------------------------------------------------------
+
    function Get_Stack_Base return Interfaces.Unsigned_64
    is
       Default_Stack_Bottom : constant Interfaces.Unsigned_64 := 16#1000#;

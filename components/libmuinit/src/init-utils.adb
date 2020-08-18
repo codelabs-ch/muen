@@ -30,6 +30,8 @@ with System.Machine_Code;
 
 with Interfaces;
 
+with Musinfo.Utils;
+
 with Libmucontrol_Component.Memory;
 
 package body Init.Utils
@@ -83,4 +85,32 @@ is
       return Region.Address = Libmucontrol_Component.Memory.Status_Address;
    end Is_Status;
 
+   -------------------------------------------------------------------------
+
+   function Is_Text_Region
+     (Resource : Musinfo.Resource_Type)
+      return Boolean
+   is
+      use type Musinfo.Content_Type;
+      use type Musinfo.Memory_Kind;
+      use type Musinfo.Memregion_Type;
+
+      Text_Name : constant Musinfo.Name_Type := (Length    => 4,
+                                                 Padding   => 0,
+                                                 Data      =>
+                                                   (1      => 't',
+                                                    2      => 'e',
+                                                    3      => 'x',
+                                                    4      => 't',
+                                                    others => ASCII.NUL),
+                                                 Null_Term => ASCII.NUL);
+   begin
+      return Resource.Mem_Data /= Musinfo.Null_Memregion
+         and then Resource.Mem_Data.Kind = Musinfo.Subject_Binary
+         and then Resource.Mem_Data.Flags.Executable
+         and then not Resource.Mem_Data.Flags.Writable
+         and then Resource.Mem_Data.Content = Musinfo.Content_File
+         and then Musinfo.Utils.Names_Equal (Left  => Resource.Name,
+                                             Right => Text_Name);
+   end Is_Text_Region;
 end Init.Utils;

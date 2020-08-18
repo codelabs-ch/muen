@@ -38,6 +38,15 @@ is
    with
       Pre => Musinfo.Instance.Is_Valid;
 
+   --  Returns the base addresses of the component text and stack memory
+   --  regions. Success is set to True if both addresses could be determined.
+   procedure Get_Base_Addresses
+     (Text_Base  : out Interfaces.Unsigned_64;
+      Stack_Base : out Interfaces.Unsigned_64;
+      Success    : out Boolean)
+   with
+      Pre => Musinfo.Instance.Is_Valid;
+
    --  Returns the base address of the stack memory region.
    function Get_Stack_Base return Interfaces.Unsigned_64
    with

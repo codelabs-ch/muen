@@ -20,11 +20,10 @@
 .global _main
 
 _main:
-	push %r14
-	push %r13
-	push %r12
-	push %r11
-	push %r10
+	// Save initial register values on stack to restore after
+	// initialization.
+	// Note: Registers r10-r15 are used by the init code and do not
+	//       retain their initial value.
 	push %r9
 	push %r8
 	push %rbp
@@ -34,14 +33,15 @@ _main:
 	push %rcx
 	push %rbx
 	push %rax
-	push %r15
 	// Space for return values: 5 x 8 bytes (see Run_Info_Type).
 	sub $0x28, %rsp
 	mov %rsp, %rdi
 	call init_main
-	pop %r15
-	pop %r14
-	pop %r13
+	pop %r15       // Entry point
+	pop %r14       // Status address
+	pop %r13       // Status value
+	pop %r12       // Stack address
+	pop %r11       // Stack size
 	pop %rax
 	pop %rbx
 	pop %rcx
@@ -51,12 +51,29 @@ _main:
 	pop %rbp
 	pop %r8
 	pop %r9
-	pop %r10
-	pop %r11
-	pop %r12
+
+	// Clear stack region
+	xchg %rdi, %r12
+	xchg %rcx, %r11
+	xor %r10, %r10
+	xchg %rax, %r10
+	rep stosb
+
+	// Restore registers
+	xchg %rdi, %r12
+	xchg %rcx, %r11
+	xchg %rax, %r10
+
+	// Set STATE_RUNNING
 	movq %r13, (%r14)
-	pop %r13
-	pop %r14
+
+	// Clear used registers.
+	xor %r11, %r11
+	xor %r12, %r12
+	xor %r13, %r13
+	xor %r14, %r14
+
+	// Jump to component code
 	jmpq *%r15
 	// Should never return
 	ud2

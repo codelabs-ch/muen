@@ -36,7 +36,6 @@ with Libmucontrol_Component.Memory;
 
 with Init.Memory;
 with Init.Run;
-with Init.Stack;
 with Init.Status;
 
 package body Muinit_Main
@@ -59,7 +58,6 @@ is
    procedure Run (Run_Info : out Run_Info_Type)
    is
       DIAG_BASE_ADDR : constant Mucontrol.Status.Diagnostics_Type := 16#f00#;
-      Stack_Base     : Interfaces.Unsigned_64;
       Success        : Boolean;
    begin
       if not Musinfo.Instance.Is_Valid then
@@ -76,15 +74,13 @@ is
       Run_Info.Status_Value   := Interfaces.Unsigned_64
         (Mucontrol.Status.STATE_RUNNING);
       Init.Memory.Get_Base_Addresses (Text_Base  => Run_Info.Entry_Point,
-                                      Stack_Base => Stack_Base,
+                                      Stack_Base => Run_Info.Stack_Address,
                                       Stack_Size => Run_Info.Stack_Size,
                                       Success    => Success);
       if not Success then
          Init.Status.Error (Diagnostic => DIAG_BASE_ADDR);
          Halt;
       end if;
-
-      Init.Stack.Clear (Stack_Start => Stack_Base);
    end Run;
 
 end Muinit_Main;

@@ -77,6 +77,7 @@ is
         (Mucontrol.Status.STATE_RUNNING);
       Init.Memory.Get_Base_Addresses (Text_Base  => Run_Info.Entry_Point,
                                       Stack_Base => Stack_Base,
+                                      Stack_Size => Run_Info.Stack_Size,
                                       Success    => Success);
       if not Success then
          Init.Status.Error (Diagnostic => DIAG_BASE_ADDR);

@@ -125,6 +125,7 @@ is
    procedure Get_Base_Addresses
      (Text_Base  : out Interfaces.Unsigned_64;
       Stack_Base : out Interfaces.Unsigned_64;
+      Stack_Size : out Interfaces.Unsigned_64;
       Success    : out Boolean)
    is
       Iter    : Musinfo.Utils.Resource_Iterator_Type
@@ -136,11 +137,14 @@ is
       Text_Found := False;
 
       Process_Memregions :
-      while Musinfo.Instance.Has_Element (Iter => Iter) loop
+      while Musinfo.Instance.Has_Element (Iter => Iter)
+        and not (Stack_Found and Text_Found)
+      loop
          Element := Musinfo.Instance.Element (Iter => Iter);
          if Element.Kind = Musinfo.Res_Memory then
             if Utils.Is_Stack (Region => Element.Mem_Data) then
                Stack_Base  := Element.Mem_Data.Address;
+               Stack_Size  := Element.Mem_Data.Size;
                Stack_Found := True;
             elsif Utils.Is_Text_Region (Resource => Element) then
                Text_Base  := Element.Mem_Data.Address;

@@ -58,7 +58,9 @@ is
 
    procedure Run (Run_Info : out Run_Info_Type)
    is
-      Success : Boolean;
+      DIAG_BASE_ADDR : constant Mucontrol.Status.Diagnostics_Type := 16#f00#;
+      Stack_Base     : Interfaces.Unsigned_64;
+      Success        : Boolean;
    begin
       if not Musinfo.Instance.Is_Valid then
          Init.Status.Error;
@@ -70,12 +72,18 @@ is
          Halt;
       end if;
 
-      Run_Info.Entry_Point := Init.Memory.Get_Text_Base;
       Run_Info.Status_Address := Libmucontrol_Component.Memory.Status_Address;
       Run_Info.Status_Value   := Interfaces.Unsigned_64
         (Mucontrol.Status.STATE_RUNNING);
+      Init.Memory.Get_Base_Addresses (Text_Base  => Run_Info.Entry_Point,
+                                      Stack_Base => Stack_Base,
+                                      Success    => Success);
+      if not Success then
+         Init.Status.Error (Diagnostic => DIAG_BASE_ADDR);
+         Halt;
+      end if;
 
-      Init.Stack.Clear (Stack_Start => Init.Memory.Get_Stack_Base);
+      Init.Stack.Clear (Stack_Start => Stack_Base);
    end Run;
 
 end Muinit_Main;

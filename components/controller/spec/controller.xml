@@ -1,0 +1,30 @@
+<component name="controller" profile="native">
+ <depends>
+  <library ref="libdebuglog"/>
+ </depends>
+ <requires>
+  <memory>
+   <array logical="control" virtualAddressBase="16#a000_0000#" elementSize="16#1000#" executable="false" writable="true">
+    <memory logical="control_1"/>
+    <memory logical="control_2"/>
+    <memory logical="control_3"/>
+    <memory logical="control_4"/>
+    <memory logical="control_5"/>
+   </array>
+   <array logical="status" virtualAddressBase="16#a100_0000#" elementSize="16#1000#" executable="false" writable="false">
+    <memory logical="status_1"/>
+    <memory logical="status_2"/>
+    <memory logical="status_3"/>
+    <memory logical="status_4"/>
+    <memory logical="status_5"/>
+   </array>
+   <memory logical="slot_control_1" virtualAddress="16#9000_0000#" size="16#1000#" writable="false" executable="false"/>
+  </memory>
+  <events>
+   <source>
+    <event id="10" logical="reset_slot_1_sm"/>
+    <event id="11" logical="reset_slot_1_linux"/>
+   </source>
+  </events>
+ </requires>
+</component>

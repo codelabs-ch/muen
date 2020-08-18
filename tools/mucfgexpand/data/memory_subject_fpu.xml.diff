@@ -4,5 +4,6 @@
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="subject1|fpu" size="16#1000#" type="kernel_fpu"/>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="subject2|fpu" size="16#1000#" type="kernel_fpu"/>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="lnx_core_1|fpu" size="16#1000#" type="kernel_fpu"/>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="subject3|fpu" size="16#1000#" type="kernel_fpu"/>
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>

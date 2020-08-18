@@ -50,6 +50,8 @@ is
          SK.CPU.Stop;
       end if;
 
+      Mucontrol.Status.Instance.Initialize;
+
       Rtc.Read_Time (T => Rtc_Time);
       TSC_Value := SK.CPU.RDTSC;
 
@@ -116,6 +118,9 @@ is
       pragma Debug
         (Debuglog.Client.Put_Line
            (Item => "Time successfully published, halting"));
+
+      Mucontrol.Status.Instance.Set
+        (New_Status => Mucontrol.Status.STATE_FINISHED);
       SK.CPU.Stop;
    end Run;
 

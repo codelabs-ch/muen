@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2016  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2020  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2020  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,16 +16,16 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with System;
+with Debuglog.Client;
 
-with Musinfo;
+with Ctrlr;
 
-package Loader.Globals
+procedure Controller
 is
+begin
+   Debuglog.Client.Put_Line (Item => "Controller running");
 
-   Target_Sinfo : constant Musinfo.Subject_Info_Type
-   with
-      Import,
-      Address => System'To_Address (Target_Sinfo_Address);
-
-end Loader.Globals;
+   loop
+      Ctrlr.Run;
+   end loop;
+end Controller;

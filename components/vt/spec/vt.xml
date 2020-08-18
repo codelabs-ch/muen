@@ -3,6 +3,9 @@
 		<library ref="libdebuglog"/>
 	</depends>
 	<requires>
+		<memory>
+			<memory logical="slot_control_1" virtualAddress="16#0007_0000#" size="16#1000#" writable="true" executable="false"/>
+		</memory>
 		<channels>
 			<array elementSize="16#0001_0000#" logical="console" vectorBase="34" virtualAddressBase="16#0010_0000#">
 				<reader logical="NIC Linux"/>
@@ -22,8 +25,6 @@
 		</devices>
 		<events>
 			<source>
-				<event id="10" logical="reset_slot_1_sm"/>
-				<event id="11" logical="reset_slot_1_linux"/>
 				<event id="30" logical="shutdown">
 					<system_poweroff/>
 				</event>

@@ -12,8 +12,25 @@
                                                                                                                                                      >    <memory caching="WB" name="subject2|stack" size="16#2000#">
                                                                                                                                                      >     <fill pattern="16#00#"/>
                                                                                                                                                      >    </memory>
+                                                                                                                                                     >    <memory caching="WB" name="subject3|binary" size="16#1000#" type="subject_binary">
+                                                                                                                                                     >     <file filename="c3_bin" offset="none"/>
+                                                                                                                                                     >    </memory>
+                                                                                                                                                     >    <memory caching="WB" name="subject3|resource_1" size="16#2000#">
+                                                                                                                                                     >     <file filename="somedata" offset="none"/>
+                                                                                                                                                     >    </memory>
+                                                                                                                                                     >    <memory caching="WB" name="subject3|resource_2" size="16#1000#">
+                                                                                                                                                     >     <file filename="somedata" offset="none"/>
+                                                                                                                                                     >     <hash value="16#ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7#"/>
+                                                                                                                                                     >    </memory>
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
+--
+ <subjects>                                                                                                                                              <subjects>
+  <subject name="lnx">                                                                                                                                    <subject name="lnx">
+                                                                                                                                                     >     <vcpu/>
+                                                                                                                                                     >     <bootparams/>
+   <memory>                                                                                                                                                <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
 --
     <memory executable="false" logical="file_2" physical="dummy_6" virtualAddress="16#0003_0000#" writable="true"/>                                         <memory executable="false" logical="file_2" physical="dummy_6" virtualAddress="16#0003_0000#" writable="true"/>
     <memory executable="false" logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false"/>                                   <memory executable="false" logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false"/>
@@ -21,15 +38,51 @@
    </memory>                                                                                                                                               </memory>
    <devices>                                                                                                                                               <devices>
 --
+  </subject>                                                                                                                                              </subject>
+  <subject name="subject1">                                                                                                                               <subject name="subject1">
+                                                                                                                                                     >     <vcpu/>
+                                                                                                                                                     >     <bootparams/>
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
                                                                                                                                                      >      <memory executable="true" logical="binary" physical="subject1|binary" virtualAddress="16#0020_0000#" writable="true"/>
    </memory>                                                                                                                                               </memory>
    <devices>                                                                                                                                               <devices>
 --
+    </msrs>                                                                                                                                                 </msrs>
+   </vcpu>                                                                                                                                                 </vcpu>
+                                                                                                                                                     >     <bootparams/>
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
                                                                                                                                                      >      <memory executable="true" logical="binary" physical="subject2|binary" virtualAddress="16#0020_0000#" writable="true"/>
                                                                                                                                                      >      <memory executable="false" logical="stack" physical="subject2|stack" virtualAddress="16#0020_1000#" writable="true"/>
    </memory>                                                                                                                                               </memory>
    <devices>                                                                                                                                               <devices>
+--
+    </registers>                                                                                                                                            </registers>
+   </vcpu>                                                                                                                                                 </vcpu>
+                                                                                                                                                     >     <bootparams/>
+   <memory>                                                                                                                                                <memory>
+    <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>                                        <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>
+   </memory>                                                                                                                                               </memory>
+                                                                                                                                                     >     <devices/>
+   <events>                                                                                                                                                <events>
+    <source>                                                                                                                                                <source>
+--
+  </subject>                                                                                                                                              </subject>
+  <subject name="subject3">                                                                                                                               <subject name="subject3">
+                                                                                                                                                     >     <vcpu/>
+                                                                                                                                                     >     <bootparams/>
+                                                                                                                                                     >     <memory>
+                                                                                                                                                     >      <memory executable="true" logical="binary" physical="subject3|binary" virtualAddress="16#0020_0000#" writable="false"/>
+                                                                                                                                                     >      <memory executable="false" logical="resource_1" physical="subject3|resource_1" virtualAddress="16#0020_1000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="resource_2" physical="subject3|resource_2" virtualAddress="16#0040_0000#" writable="true"/>
+                                                                                                                                                     >     </memory>
+                                                                                                                                                     >     <devices/>
+   <events>                                                                                                                                                <events>
+    <source>                                                                                                                                                <source>
+--
+    </source>                                                                                                                                               </source>
+   </events>                                                                                                                                               </events>
+                                                                                                                                                     >     <channels/>
+   <monitor>                                                                                                                                               <monitor>
+    <loader logical="reload" subject="subject3" virtualAddress="16#0000#"/>                                                                                 <loader logical="reload" subject="subject3" virtualAddress="16#0000#"/>

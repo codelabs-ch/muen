@@ -10,11 +10,14 @@
  </events>
  <monitor>
   <state subject="base_hw" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
+  <loader logical="reload" subject="base_hw_sm" virtualAddress="16#0000#"/>
  </monitor>
  <component ref="sm">
   <map logical="time_info" physical="time_info"/>
   <map logical="debuglog" physical="debuglog_subject1"/>
   <map logical="resume_subject" physical="resume_base_hw_1"/>
   <map logical="handle_subject_trap" physical="trap_to_sm_1"/>
+  <map logical="status" physical="status_sm"/>
+  <map logical="control" physical="control_sm"/>
  </component>
 </subject>

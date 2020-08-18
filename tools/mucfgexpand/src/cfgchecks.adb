@@ -2095,12 +2095,23 @@ is
             Ldr_Node  : constant DOM.Core.Node
               := DOM.Core.Nodes.Item (List  => Loader_Nodes,
                                       Index => I);
+            Loadee_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Ldr_Node,
+                 Name => "subject");
+            Subject_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node
+                     (Node  => Ldr_Node,
+                      Level => 2),
+                 Name => "name");
+            Self_Load : constant Boolean := Loadee_Name = Subject_Name;
             Virt_Addr : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value
                 (DOM.Core.Elements.Get_Attribute (Elem => Ldr_Node,
                                                   Name => "virtualAddress"));
          begin
-            if Virt_Addr not in Valid_Address_Range then
+            if not Self_Load and then Virt_Addr not in Valid_Address_Range then
                declare
                   Ldr_Logical  : constant String
                     := DOM.Core.Elements.Get_Attribute

@@ -20,6 +20,8 @@ with X86_64;
 
 with Musinfo.Instance;
 
+with Mucontrol.Status.Instance;
+
 with Tm.Publish;
 
 package Tm.Main
@@ -29,6 +31,7 @@ is
    procedure Run
    with
       Global => (Input  => Musinfo.Instance.State,
-                 In_Out => (Publish.State, X86_64.State));
+                 In_Out => (Publish.State, Mucontrol.Status.Instance.State,
+                            X86_64.State));
 
 end Tm.Main;

@@ -40,3 +40,18 @@
                                                                                                                                                      >     <devices/>
    <events>                                                                                                                                                <events>
     <source>                                                                                                                                                <source>
+--
+  </subject>                                                                                                                                              </subject>
+  <subject name="subject3">                                                                                                                               <subject name="subject3">
+                                                                                                                                                     >     <vcpu/>
+                                                                                                                                                     >     <bootparams/>
+                                                                                                                                                     >     <memory/>
+                                                                                                                                                     >     <devices/>
+   <events>                                                                                                                                                <events>
+    <source>                                                                                                                                                <source>
+--
+    </source>                                                                                                                                               </source>
+   </events>                                                                                                                                               </events>
+                                                                                                                                                     >     <channels/>
+   <monitor>                                                                                                                                               <monitor>
+    <loader logical="reload" subject="subject3" virtualAddress="16#0000#"/>                                                                                 <loader logical="reload" subject="subject3" virtualAddress="16#0000#"/>

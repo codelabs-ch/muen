@@ -10,6 +10,7 @@
 	</events>
 	<monitor>
 		<state subject="storage_linux" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
+		<loader logical="reload" subject="example" virtualAddress="16#0000#"/>
 	</monitor>
 	<component ref="example">
 		<map logical="example_request" physical="example_request"/>
@@ -18,5 +19,7 @@
 		<map logical="yield" physical="example_yield"/>
 		<map logical="timer" physical="example_self"/>
 		<map logical="inject_timer" physical="example_self"/>
+		<map logical="control" physical="control_example"/>
+		<map logical="status" physical="status_example"/>
 	</component>
 </subject>

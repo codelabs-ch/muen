@@ -12,6 +12,9 @@
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="lnx_core_1|sinfo" size="16#8000#" type="subject_info">
                                                                                                                                                      >     <file filename="lnx_core_1_sinfo" offset="none" size="16#8000#"/>
                                                                                                                                                      >    </memory>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="subject3|sinfo" size="16#8000#" type="subject_info">
+                                                                                                                                                     >     <file filename="subject3_sinfo" offset="none" size="16#8000#"/>
+                                                                                                                                                     >    </memory>
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
 --
@@ -57,3 +60,20 @@
                                                                                                                                                      >     <devices/>
    <events>                                                                                                                                                <events>
     <source>                                                                                                                                                <source>
+--
+  </subject>                                                                                                                                              </subject>
+  <subject name="subject3">                                                                                                                               <subject name="subject3">
+                                                                                                                                                     >     <vcpu/>
+                                                                                                                                                     >     <bootparams/>
+                                                                                                                                                     >     <memory>
+                                                                                                                                                     >      <memory executable="false" logical="sinfo" physical="subject3|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
+                                                                                                                                                     >     </memory>
+                                                                                                                                                     >     <devices/>
+   <events>                                                                                                                                                <events>
+    <source>                                                                                                                                                <source>
+--
+    </source>                                                                                                                                               </source>
+   </events>                                                                                                                                               </events>
+                                                                                                                                                     >     <channels/>
+   <monitor>                                                                                                                                               <monitor>
+    <loader logical="reload" subject="subject3" virtualAddress="16#0000#"/>                                                                                 <loader logical="reload" subject="subject3" virtualAddress="16#0000#"/>

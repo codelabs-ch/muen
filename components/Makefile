@@ -5,14 +5,19 @@ include proofs.mk
 COMPONENTS_SPARK := \
 	libmuchannel \
 	libmudm \
+	libmucontroltypes \
+	libmucontrol \
+	libmuinit \
 	libmutime \
 	libdebuglog \
 	libmusinfo \
 	libxhcidbg \
+	controller \
 	dbgserver \
 	dm \
 	example \
 	idle \
+	muinit \
 	ps2_drv \
 	sl \
 	sm \
@@ -21,9 +26,9 @@ COMPONENTS_SPARK := \
 
 # components to proof
 COMPONENTS_PROOF := \
+	controller \
 	dm \
 	example \
-	sl \
 	sm \
 	time
 

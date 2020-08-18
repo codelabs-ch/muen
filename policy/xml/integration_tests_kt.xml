@@ -16,6 +16,18 @@
 
  <memory>
   <include href="common_memory.xml"/>
+  <memory name="control_sm_3" size="16#1000#" caching="WB">
+   <fill pattern="16#ff#"/>
+  </memory>
+  <memory name="control_sm_4" size="16#1000#" caching="WB">
+   <fill pattern="16#ff#"/>
+  </memory>
+  <memory name="status_sm_3" size="16#1000#" caching="WB">
+   <fill pattern="16#00#"/>
+  </memory>
+  <memory name="status_sm_4" size="16#1000#" caching="WB">
+   <fill pattern="16#00#"/>
+  </memory>
   <include href="memory_xhci_dma.xml"/>
  </memory>
 
@@ -81,6 +93,7 @@
   <include href="subject_time.xml"/>
   <include href="subject_nic_sl.xml"/>
   <include href="subject_ps2.xml"/>
+  <include href="subject_controller.xml"/>
 
   <subject name="dbgserver">
    <events>
@@ -105,6 +118,7 @@
     <map logical="log_channel10" physical="debuglog_subject10"/>
     <map logical="log_channel11" physical="debuglog_subject11"/>
     <map logical="log_channel12" physical="debuglog_subject12"/>
+    <map logical="log_channel13" physical="debuglog_controller"/>
     <include href="subject_dbgserver_common.xml"/>
    </component>
   </subject>
@@ -138,8 +152,7 @@
      <map logical="buffer" physical="buffer"/>
      <map logical="ports" physical="ports"/>
     </map>
-    <map logical="reset_slot_1_sm" physical="reset_sm_1"/>
-    <map logical="reset_slot_1_linux" physical="reset_slot_1"/>
+    <map logical="slot_control_1" physical="slot_control_1"/>
     <map logical="shutdown" physical="system_poweroff"/>
     <map logical="reboot" physical="system_reboot"/>
    </component>
@@ -299,6 +312,7 @@
    </events>
    <monitor>
     <state subject="nic_linux_1" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
+    <loader logical="reload" subject="nic_sm_1" virtualAddress="16#0000#"/>
    </monitor>
    <component ref="sm">
     <map logical="time_info" physical="time_info"/>
@@ -309,6 +323,8 @@
     </if>
     <map logical="resume_subject" physical="resume_linux_3"/>
     <map logical="handle_subject_trap" physical="trap_to_sm_3"/>
+    <map logical="status" physical="status_sm_3"/>
+    <map logical="control" physical="control_sm_3"/>
    </component>
   </subject>
 
@@ -407,6 +423,7 @@
    </events>
    <monitor>
     <state subject="nic_linux_2" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
+    <loader logical="reload" subject="nic_sm_2" virtualAddress="16#0000#"/>
    </monitor>
    <component ref="sm">
     <map logical="time_info" physical="time_info"/>
@@ -417,6 +434,8 @@
     </if>
     <map logical="resume_subject" physical="resume_linux_4"/>
     <map logical="handle_subject_trap" physical="trap_to_sm_4"/>
+    <map logical="status" physical="status_sm_4"/>
+    <map logical="control" physical="control_sm_4"/>
    </component>
   </subject>
 

@@ -14,5 +14,7 @@
   <map logical="cmos_rtc" physical="cmos_rtc">
    <map logical="ports" physical="ports"/>
   </map>
+  <map logical="status" physical="status_time"/>
+  <map logical="control" physical="control_time"/>
  </component>
 </subject>

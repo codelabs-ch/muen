@@ -8,7 +8,8 @@
    <minorFrame subject="nic_linux" ticks="20"/>
   </cpu>
   <cpu id="1">
-   <minorFrame subject="time" ticks="20"/>
+   <minorFrame subject="time" ticks="10"/>
+   <minorFrame subject="controller" ticks="10"/>
    <minorFrame subject="dbgserver" ticks="30"/>
    <minorFrame subject="vt" ticks="25"/>
    <minorFrame subject="storage_linux" ticks="75"/>

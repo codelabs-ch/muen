@@ -1,0 +1,5 @@
+<library name="libmuinit">
+ <depends>
+  <library ref="libmucontrol"/>
+ </depends>
+</library>

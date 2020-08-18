@@ -18,7 +18,7 @@
  </events>                                                                                                                                               </events>
  <channels>                                                                                                                                              <channels>
 --
-   <sibling ref="lnx"/>                                                                                                                                    <sibling ref="lnx"/>
+   <component ref="c3"/>                                                                                                                                   <component ref="c3"/>
   </subject>                                                                                                                                              </subject>
                                                                                                                                                      >    <subject name="mugenschedcfg_auto_idle_0" profile="native">
                                                                                                                                                      >     <vcpu>

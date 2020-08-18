@@ -126,6 +126,11 @@ is
 
    -------------------------------------------------------------------------
 
+   function Index (Iter : Resource_Iterator_Type) return Resource_Index_Type
+   is (Iter.Resource_Idx);
+
+   -------------------------------------------------------------------------
+
    function Name_Data_Equal (Left, Right : Name_Data_Type) return Boolean
    is
    begin

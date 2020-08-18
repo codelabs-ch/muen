@@ -14,6 +14,7 @@
 		<if variable="pciconf_emulation_enabled" value="true">
 			<library ref="libmudm"/>
 		</if>
+		<library ref="muinit"/>
 	</depends>
 	<requires>
 		<events>

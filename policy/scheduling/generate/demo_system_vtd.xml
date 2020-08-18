@@ -9,6 +9,7 @@
  <subjects>
   <subject level="4" name="tau0"/>
   <subject level="4" name="ps2" cpu="0"/>
+  <subject level="4" name="controller" cpu="0"/>
   <subject level="3" name="vt" cpu="1"/>
   <subject level="1" name="nic_linux" cpu="0"/>
   <subject level="1" name="storage_linux" cpu="1"/>
@@ -69,6 +70,7 @@
    <subjects>
     <subject ref="time"/>
     <subject ref="ps2"/>
+    <subject ref="controller"/>
     <subject ref="vt"/>
     <subject ref="nic_linux"/>
     <subject ref="storage_linux"/>

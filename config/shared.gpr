@@ -55,10 +55,12 @@ abstract project Shared is
       "-Wall",
       "-Werror");
 
-   Spark_Linker_Switches :=
+   Common_Linker_Switches :=
      ("-nostdlib",
       "-n",
-      "-T", Linker_Script,
       "-Wl,--gc-sections");
+
+   Spark_Linker_Switches :=
+     ("-T", Linker_Script) & Common_Linker_Switches;
 
 end Shared;

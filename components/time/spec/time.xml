@@ -1,6 +1,7 @@
 <component name="time" profile="native">
 	<depends>
 		<library ref="libdebuglog"/>
+		<library ref="libmucontrol"/>
 	</depends>
 	<requires>
 		<vcpu>

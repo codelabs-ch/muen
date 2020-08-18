@@ -18,6 +18,7 @@
 
 with "../libdebuglog/libdebuglog";
 with "../libmusinfo/libmusinfo";
+with "../libmucontrol/libmucontrol";
 
 project Example extends "../component_spark" is
 

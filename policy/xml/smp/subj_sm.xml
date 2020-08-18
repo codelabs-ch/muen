@@ -18,11 +18,14 @@
  </events>
  <monitor>
   <state subject="linux_core" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true" attrset="subject"/>
+  <loader logical="reload" subject="sm_core" virtualAddress="16#0000#" attrset="subject"/>
  </monitor>
  <component ref="sm">
   <map logical="time_info" physical="time_info"/>
   <map logical="debuglog" physical="debuglog_subject" attrset="physical" attrvalue="f=str(dbgchannel_end + i)"/>
   <map logical="resume_subject" physical="resume_linux_" attrset="physical"/>
   <map logical="handle_subject_trap" physical="trap_to_sm_" attrset="physical"/>
+  <map logical="status" physical="status_sm_" attrset="physical"/>
+  <map logical="control" physical="control_sm_" attrset="physical"/>
  </component>
 </subject>

@@ -1,0 +1,8 @@
+<library name="libmucontrol">
+ <requires>
+  <memory>
+   <memory logical="control" size="16#1000#" virtualAddress="16#000f_ff00_0000#" writable="false" executable="false"/>
+   <memory logical="status" size="16#1000#" virtualAddress="16#000f_ff00_1000#" writable="true" executable="false"/>
+  </memory>
+ </requires>
+</library>

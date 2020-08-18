@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2016  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2020  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2020  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,17 +16,19 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Musinfo.Instance;
+with Ctrlr.Lifecycle;
 
-package Loader.Process_Target
+package body Ctrlr
 is
-   use type Musinfo.Resource_Kind;
 
-   --  Process given target sinfo memory resource.
-   procedure Process
-     (Sinfo_Mem :     Musinfo.Resource_Type;
-      Success   : out Boolean)
-   with
-      Pre => Musinfo.Instance.Is_Valid and Sinfo_Mem.Kind = Musinfo.Res_Memory;
+   -------------------------------------------------------------------------
 
-end Loader.Process_Target;
+   procedure Run
+   is
+   begin
+      for I in Managed_Subjects_Range loop
+         Lifecycle.Process (ID => I);
+      end loop;
+   end Run;
+
+end Ctrlr;

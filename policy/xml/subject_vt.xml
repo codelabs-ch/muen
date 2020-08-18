@@ -19,8 +19,7 @@
    <map logical="buffer" physical="buffer"/>
    <map logical="ports" physical="ports"/>
   </map>
-  <map logical="reset_slot_1_sm" physical="reset_sm_1"/>
-  <map logical="reset_slot_1_linux" physical="reset_slot_1"/>
+  <map logical="slot_control_1" physical="slot_control_1"/>
   <map logical="shutdown" physical="system_poweroff"/>
   <map logical="reboot" physical="system_reboot"/>
  </component>

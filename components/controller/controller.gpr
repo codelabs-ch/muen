@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2016  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2020  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2020  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,10 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package Loader
-is
+with "../libdebuglog/libdebuglog";
+with "../libmucontroltypes/libmucontroltypes";
 
-   Target_Sinfo_Address : constant := 16#000f_0000_0000#;
-   Target_Sinfo_Offset  : constant := 16#0001_0000_0000#;
+project Controller extends "../component_spark" is
 
-end Loader;
+   Extra_Dirs := Component_Spark.Src_Dirs
+     & "../../common/strings/impl";
+
+   for Languages use ("Ada", "Asm");
+   for Source_Dirs use ("generated", "src") & Extra_Dirs;
+   for Object_Dir use "obj/" & Component_Spark.Build_Mode;
+   for Main use ("controller");
+
+end Controller;

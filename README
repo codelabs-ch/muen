@@ -85,6 +85,7 @@ The Muen platform includes re-usable components which implement common services:
 * Device Manager (DM) written in SPARK 2014
 * Subject Monitor (SM) written in SPARK 2014
 * Subject Loader (SL) written in SPARK 2014
+* Subject Lifecycle Controller written in SPARK 2014
 * Timeserver subject written in SPARK 2014
 * Debugserver subject written in Ada 2012
 * PS/2 driver subject written in Ada 2012

@@ -39,6 +39,9 @@ pragma Unreferenced (Interrupt_Handler);
 with Example_Component.Config;
 with Example_Component.Events;
 
+with Mucontrol.Command.Instance;
+with Mucontrol.Status.Instance;
+
 procedure Example
 is
    Request_Valid : Boolean;
@@ -69,6 +72,11 @@ begin
    pragma Debug (Example_Component.Config.Print_Vcpu_Speed,
                  Log.Put_Line (Item => "VCPU running with " & SK.Strings.Img
                                (Musinfo.Instance.TSC_Khz) & " Khz"));
+
+   Log.Put_Line (Item => "Current Status: " & SK.Strings.Img
+                 (Item => SK.Word64 (Mucontrol.Status.Instance.Get)));
+   Log.Put_Line (Item => "Current Epoch : " & SK.Strings.Img
+                 (Item => SK.Word64 (Mucontrol.Command.Instance.Get_Epoch)));
 
    --  Enable interrupts.
 

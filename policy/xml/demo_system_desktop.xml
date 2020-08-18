@@ -22,6 +22,18 @@
   <memory name="linux|ram_3" size="16#f000_0000#" caching="WB"/>
   <memory name="crash_audit" physicalAddress="16#0001_0000_0000#" size="16#1000#" caching="UC" type="subject_crash_audit"/>
   <include href="memory_xhci_dma.xml"/>
+  <memory name="control_sm" size="16#1000#" caching="WB">
+   <fill pattern="16#ff#"/>
+  </memory>
+  <memory name="control_time" size="16#1000#" caching="WB">
+   <fill pattern="16#ff#"/>
+  </memory>
+  <memory name="status_sm" size="16#1000#" caching="WB">
+   <fill pattern="16#00#"/>
+  </memory>
+  <memory name="status_time" size="16#1000#" caching="WB">
+   <fill pattern="16#00#"/>
+  </memory>
  </memory>
 
  <deviceDomains>
@@ -86,12 +98,15 @@
    </events>
    <monitor>
     <state subject="linux" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
+    <loader logical="reload" subject="sm" virtualAddress="16#0000#"/>
    </monitor>
    <component ref="sm">
     <map logical="time_info" physical="time_info"/>
     <map logical="debuglog" physical="debuglog_subject1"/>
     <map logical="resume_subject" physical="resume_linux"/>
     <map logical="handle_subject_trap" physical="trap_to_sm"/>
+    <map logical="status" physical="status_sm"/>
+    <map logical="control" physical="control_sm"/>
    </component>
   </subject>
 

@@ -19,6 +19,7 @@
 with "../libdebuglog/libdebuglog";
 with "../libmutime/libmutime";
 with "../libmusinfo/libmusinfo";
+with "../libmucontrol/libmucontrol";
 
 project Time extends "../component_spark" is
 

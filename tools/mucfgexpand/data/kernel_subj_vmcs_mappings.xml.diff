@@ -5,6 +5,7 @@
                                                                                                                                                      >     <cpu id="0">
                                                                                                                                                      >      <memory executable="false" logical="lnx|vmcs" physical="lnx|vmcs" virtualAddress="16#0080_1000#" writable="true"/>
                                                                                                                                                      >      <memory executable="false" logical="subject1|vmcs" physical="subject1|vmcs" virtualAddress="16#0080_2000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="subject3|vmcs" physical="subject3|vmcs" virtualAddress="16#0080_5000#" writable="true"/>
                                                                                                                                                      >     </cpu>
                                                                                                                                                      >     <cpu id="1">
                                                                                                                                                      >      <memory executable="false" logical="subject2|vmcs" physical="subject2|vmcs" virtualAddress="16#0080_3000#" writable="true"/>
@@ -35,3 +36,9 @@
   <subject name="lnx_core_1">                                                                                                                        |    <subject cpu="1" globalId="4" name="lnx_core_1">
    <vcpu>                                                                                                                                                  <vcpu>
     <registers>                                                                                                                                             <registers>
+--
+   <sibling ref="lnx"/>                                                                                                                                    <sibling ref="lnx"/>
+  </subject>                                                                                                                                              </subject>
+  <subject name="subject3">                                                                                                                          |    <subject cpu="0" globalId="5" name="subject3">
+   <events>                                                                                                                                                <events>
+    <source>                                                                                                                                                <source>

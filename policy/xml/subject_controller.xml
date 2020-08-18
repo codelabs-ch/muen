@@ -1,0 +1,27 @@
+<subject name="controller">
+ <events>
+  <source>
+   <group name="vmx_exit">
+    <default physical="system_panic">
+     <system_panic/>
+    </default>
+   </group>
+  </source>
+ </events>
+ <component ref="controller">
+  <map logical="debuglog" physical="debuglog_controller"/>
+  <map logical="control_1" physical="control_time"/>
+  <map logical="control_2" physical="control_sm_1"/>
+  <map logical="control_3" physical="control_sm_2"/>
+  <map logical="control_4" physical="control_example"/>
+  <map logical="control_5" physical="control_linux_1"/>
+  <map logical="status_1" physical="status_time"/>
+  <map logical="status_2" physical="status_sm_1"/>
+  <map logical="status_3" physical="status_sm_2"/>
+  <map logical="status_4" physical="status_example"/>
+  <map logical="status_5" physical="status_linux_1"/>
+  <map logical="slot_control_1" physical="slot_control_1"/>
+  <map logical="reset_slot_1_sm" physical="reset_sm_1"/>
+  <map logical="reset_slot_1_linux" physical="reset_slot_1"/>
+ </component>
+</subject>

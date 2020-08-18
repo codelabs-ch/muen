@@ -24,5 +24,11 @@
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="lnx_core_1|msrbm" size="16#1000#" type="system_msrbm">
                                                                                                                                                      >     <fill pattern="16#00#"/>
                                                                                                                                                      >    </memory>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="subject3|iobm" size="16#2000#" type="system_iobm">
+                                                                                                                                                     >     <fill pattern="16#00#"/>
+                                                                                                                                                     >    </memory>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="subject3|msrbm" size="16#1000#" type="system_msrbm">
+                                                                                                                                                     >     <fill pattern="16#00#"/>
+                                                                                                                                                     >    </memory>
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>

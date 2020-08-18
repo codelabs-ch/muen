@@ -167,16 +167,16 @@
   <memory alignment="16#1000#" caching="WB" name="dummy_2" physicalAddress="16#4000#" size="16#2000#" type="subject"/>
   <memory alignment="16#1000#" caching="WB" name="dummy_3" physicalAddress="16#5000#" size="16#3000#" type="subject"/>
   <memory alignment="16#1000#" caching="WB" name="dummy_4" physicalAddress="16#6000#" size="16#3000#" type="subject"/>
-  <memory alignment="16#1000#" caching="WB" name="dummy_5_dst" size="16#2000#" type="subject">
-   <hashRef memory="dummy_5"/>
+  <memory alignment="16#1000#" caching="WB" name="dummy_5" size="16#2000#" type="subject">
+   <hashRef memory="dummy_5_src"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="dummy_5" physicalAddress="16#9000#" size="16#2000#" type="subject">
+  <memory alignment="16#1000#" caching="WB" name="dummy_5_src" physicalAddress="16#9000#" size="16#2000#" type="subject">
    <file filename="foofile" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="dummy_6_dst" size="16#1000#" type="subject">
-   <hashRef memory="dummy_6"/>
+  <memory alignment="16#1000#" caching="WB" name="dummy_6" size="16#1000#" type="subject">
+   <hashRef memory="dummy_6_src"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="dummy_6" physicalAddress="16#b000#" size="16#1000#" type="subject">
+  <memory alignment="16#1000#" caching="WB" name="dummy_6_src" physicalAddress="16#b000#" size="16#1000#" type="subject">
    <file filename="barfile" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="initramfs" physicalAddress="16#c000#" size="16#4000#" type="subject">
@@ -185,10 +185,10 @@
   <memory alignment="16#1000#" caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>
   <memory alignment="16#1000#" caching="WB" name="rmrr1" physicalAddress="16#da08_3000#" size="16#0001_d000#" type="device_rmrr"/>
   <memory alignment="16#1000#" caching="WB" name="rmrr2" physicalAddress="16#dd00_0000#" size="16#0001_0000#" type="device_rmrr"/>
-  <memory alignment="16#1000#" caching="WB" name="lnx|binary_dst" size="16#1000#" type="subject_binary">
-   <hashRef memory="lnx|binary"/>
-  </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|binary" size="16#1000#" type="subject_binary">
+   <hashRef memory="lnx|binary_src"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="lnx|binary_src" size="16#1000#" type="subject_binary">
    <file filename="lnx_bin" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="subject1|binary" size="16#1000#" type="subject_binary">
@@ -199,6 +199,22 @@
   </memory>
   <memory alignment="16#1000#" caching="WB" name="subject2|stack" size="16#2000#" type="subject">
    <fill pattern="16#00#"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="subject3|binary" size="16#1000#" type="subject_binary">
+   <file filename="c3_bin" offset="none"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="subject3|resource_1" size="16#2000#" type="subject">
+   <hashRef memory="subject3|resource_1_src"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="subject3|resource_1_src" size="16#2000#" type="subject">
+   <file filename="somedata" offset="none"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="subject3|resource_2" size="16#1000#" type="subject">
+   <hashRef memory="subject3|resource_2_src"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="subject3|resource_2_src" size="16#1000#" type="subject">
+   <file filename="somedata" offset="none"/>
+   <hash value="16#ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="data_channel" size="16#1000#" type="subject_channel">
    <fill pattern="16#00#"/>
@@ -263,21 +279,25 @@
   <memory alignment="16#1000#" caching="WB" name="subject1|state" size="16#1000#" type="subject_state"/>
   <memory alignment="16#1000#" caching="WB" name="subject2|state" size="16#1000#" type="subject_state"/>
   <memory alignment="16#1000#" caching="WB" name="lnx_core_1|state" size="16#1000#" type="subject_state"/>
+  <memory alignment="16#1000#" caching="WB" name="subject3|state" size="16#1000#" type="subject_state"/>
   <memory alignment="16#1000#" caching="WB" name="tau0|timed_event" size="16#1000#" type="subject_timed_event"/>
   <memory alignment="16#1000#" caching="WB" name="lnx|timed_event" size="16#1000#" type="subject_timed_event"/>
   <memory alignment="16#1000#" caching="WB" name="subject1|timed_event" size="16#1000#" type="subject_timed_event"/>
   <memory alignment="16#1000#" caching="WB" name="subject2|timed_event" size="16#1000#" type="subject_timed_event"/>
   <memory alignment="16#1000#" caching="WB" name="lnx_core_1|timed_event" size="16#1000#" type="subject_timed_event"/>
+  <memory alignment="16#1000#" caching="WB" name="subject3|timed_event" size="16#1000#" type="subject_timed_event"/>
   <memory alignment="16#1000#" caching="WB" name="tau0|interrupts" size="16#1000#" type="subject_interrupts"/>
   <memory alignment="16#1000#" caching="WB" name="lnx|interrupts" size="16#1000#" type="subject_interrupts"/>
   <memory alignment="16#1000#" caching="WB" name="subject1|interrupts" size="16#1000#" type="subject_interrupts"/>
   <memory alignment="16#1000#" caching="WB" name="subject2|interrupts" size="16#1000#" type="subject_interrupts"/>
   <memory alignment="16#1000#" caching="WB" name="lnx_core_1|interrupts" size="16#1000#" type="subject_interrupts"/>
+  <memory alignment="16#1000#" caching="WB" name="subject3|interrupts" size="16#1000#" type="subject_interrupts"/>
   <memory alignment="16#1000#" caching="WB" name="tau0|fpu" size="16#1000#" type="kernel_fpu"/>
   <memory alignment="16#1000#" caching="WB" name="lnx|fpu" size="16#1000#" type="kernel_fpu"/>
   <memory alignment="16#1000#" caching="WB" name="subject1|fpu" size="16#1000#" type="kernel_fpu"/>
   <memory alignment="16#1000#" caching="WB" name="subject2|fpu" size="16#1000#" type="kernel_fpu"/>
   <memory alignment="16#1000#" caching="WB" name="lnx_core_1|fpu" size="16#1000#" type="kernel_fpu"/>
+  <memory alignment="16#1000#" caching="WB" name="subject3|fpu" size="16#1000#" type="kernel_fpu"/>
   <memory alignment="16#1000#" caching="WB" name="sys_interface" size="16#1000#" type="kernel_interface">
    <fill pattern="16#00#"/>
   </memory>
@@ -289,6 +309,7 @@
   <memory alignment="16#1000#" caching="WB" name="subject1|vmcs" size="16#1000#" type="kernel_vmcs"/>
   <memory alignment="16#1000#" caching="WB" name="subject2|vmcs" size="16#1000#" type="kernel_vmcs"/>
   <memory alignment="16#1000#" caching="WB" name="lnx_core_1|vmcs" size="16#1000#" type="kernel_vmcs"/>
+  <memory alignment="16#1000#" caching="WB" name="subject3|vmcs" size="16#1000#" type="kernel_vmcs"/>
   <memory alignment="16#1000#" caching="WB" name="tau0|iobm" size="16#2000#" type="system_iobm">
    <fill pattern="16#00#"/>
   </memory>
@@ -319,10 +340,17 @@
   <memory alignment="16#1000#" caching="WB" name="lnx_core_1|msrbm" size="16#1000#" type="system_msrbm">
    <fill pattern="16#00#"/>
   </memory>
+  <memory alignment="16#1000#" caching="WB" name="subject3|iobm" size="16#2000#" type="system_iobm">
+   <fill pattern="16#00#"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="subject3|msrbm" size="16#1000#" type="system_msrbm">
+   <fill pattern="16#00#"/>
+  </memory>
   <memory alignment="16#1000#" caching="WB" name="scheduling_group_info_1" size="16#1000#" type="subject_scheduling_info"/>
   <memory alignment="16#1000#" caching="WB" name="scheduling_group_info_2" size="16#1000#" type="subject_scheduling_info"/>
   <memory alignment="16#1000#" caching="WB" name="scheduling_group_info_3" size="16#1000#" type="subject_scheduling_info"/>
   <memory alignment="16#1000#" caching="WB" name="scheduling_group_info_4" size="16#1000#" type="subject_scheduling_info"/>
+  <memory alignment="16#1000#" caching="WB" name="scheduling_group_info_5" size="16#1000#" type="subject_scheduling_info"/>
   <memory alignment="16#1000#" caching="WB" name="tau0|sinfo" size="16#8000#" type="subject_info">
    <file filename="tau0_sinfo" offset="none" size="16#8000#"/>
   </memory>
@@ -338,10 +366,13 @@
   <memory alignment="16#1000#" caching="WB" name="lnx_core_1|sinfo" size="16#8000#" type="subject_info">
    <file filename="lnx_core_1_sinfo" offset="none" size="16#8000#"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|zp_dst" size="16#2000#" type="subject_zeropage">
-   <hashRef memory="lnx|zp"/>
+  <memory alignment="16#1000#" caching="WB" name="subject3|sinfo" size="16#8000#" type="subject_info">
+   <file filename="subject3_sinfo" offset="none" size="16#8000#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|zp" size="16#2000#" type="subject_zeropage">
+   <hashRef memory="lnx|zp_src"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="lnx|zp_src" size="16#2000#" type="subject_zeropage">
    <file filename="lnx_zp" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|acpi_rsdp" size="16#1000#" type="subject_acpi_rsdp">
@@ -386,6 +417,9 @@
    <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx_core_1|pt" size="16#e000#" type="system_pt">
+   <fill pattern="16#00#"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="subject3|pt" size="16#a000#" type="system_pt">
    <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="vtd_root" size="16#1000#" type="system_vtd_root">
@@ -467,15 +501,21 @@
     <memory executable="false" logical="interrupt_stack" physical="kernel_interrupt_stack_0" virtualAddress="16#0012_9000#" writable="true"/>
     <memory executable="false" logical="lnx|state" physical="lnx|state" virtualAddress="16#0040_1000#" writable="true"/>
     <memory executable="false" logical="subject1|state" physical="subject1|state" virtualAddress="16#0040_2000#" writable="true"/>
+    <memory executable="false" logical="subject3|state" physical="subject3|state" virtualAddress="16#0040_5000#" writable="true"/>
     <memory executable="false" logical="lnx|timed_event" physical="lnx|timed_event" virtualAddress="16#0050_1000#" writable="true"/>
     <memory executable="false" logical="subject1|timed_event" physical="subject1|timed_event" virtualAddress="16#0050_2000#" writable="true"/>
+    <memory executable="false" logical="subject3|timed_event" physical="subject3|timed_event" virtualAddress="16#0050_5000#" writable="true"/>
     <memory executable="false" logical="lnx|interrupts" physical="lnx|interrupts" virtualAddress="16#0060_1000#" writable="true"/>
     <memory executable="false" logical="subject1|interrupts" physical="subject1|interrupts" virtualAddress="16#0060_2000#" writable="true"/>
+    <memory executable="false" logical="subject3|interrupts" physical="subject3|interrupts" virtualAddress="16#0060_5000#" writable="true"/>
     <memory executable="false" logical="lnx|vmcs" physical="lnx|vmcs" virtualAddress="16#0080_1000#" writable="true"/>
     <memory executable="false" logical="subject1|vmcs" physical="subject1|vmcs" virtualAddress="16#0080_2000#" writable="true"/>
+    <memory executable="false" logical="subject3|vmcs" physical="subject3|vmcs" virtualAddress="16#0080_5000#" writable="true"/>
     <memory executable="false" logical="lnx|fpu" physical="lnx|fpu" virtualAddress="16#00a0_1000#" writable="true"/>
     <memory executable="false" logical="subject1|fpu" physical="subject1|fpu" virtualAddress="16#00a0_2000#" writable="true"/>
+    <memory executable="false" logical="subject3|fpu" physical="subject3|fpu" virtualAddress="16#00a0_5000#" writable="true"/>
     <memory executable="false" logical="scheduling_group_info_1" physical="scheduling_group_info_1" virtualAddress="16#0090_0000#" writable="true"/>
+    <memory executable="false" logical="scheduling_group_info_4" physical="scheduling_group_info_4" virtualAddress="16#0090_3000#" writable="true"/>
     <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#0020_0000#" writable="true"/>
     <memory executable="false" logical="lnx|msrstore" physical="lnx|msrstore" virtualAddress="16#0070_1000#" writable="true"/>
    </cpu>
@@ -504,7 +544,7 @@
     <memory executable="false" logical="lnx_core_1|fpu" physical="lnx_core_1|fpu" virtualAddress="16#00a0_4000#" writable="true"/>
     <memory executable="false" logical="scheduling_group_info_2" physical="scheduling_group_info_2" virtualAddress="16#0090_1000#" writable="true"/>
     <memory executable="false" logical="scheduling_group_info_3" physical="scheduling_group_info_3" virtualAddress="16#0090_2000#" writable="true"/>
-    <memory executable="false" logical="scheduling_group_info_4" physical="scheduling_group_info_4" virtualAddress="16#0090_3000#" writable="true"/>
+    <memory executable="false" logical="scheduling_group_info_5" physical="scheduling_group_info_5" virtualAddress="16#0090_4000#" writable="true"/>
     <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#0020_0000#" writable="true"/>
     <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
     <memory executable="false" logical="subject2|msrstore" physical="subject2|msrstore" virtualAddress="16#0070_3000#" writable="true"/>
@@ -1108,10 +1148,10 @@
    <bootparams>muen_sinfo=0xe00000000 possible_cpus=2</bootparams>
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
-    <memory executable="false" logical="file_1" physical="dummy_5_dst" virtualAddress="16#0002_0000#" writable="true"/>
-    <memory executable="false" logical="file_2" physical="dummy_6_dst" virtualAddress="16#0003_0000#" writable="true"/>
+    <memory executable="false" logical="file_1" physical="dummy_5" virtualAddress="16#0002_0000#" writable="true"/>
+    <memory executable="false" logical="file_2" physical="dummy_6" virtualAddress="16#0003_0000#" writable="true"/>
     <memory executable="false" logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false"/>
-    <memory executable="true" logical="binary" physical="lnx|binary_dst" virtualAddress="16#2000#" writable="true"/>
+    <memory executable="true" logical="binary" physical="lnx|binary" virtualAddress="16#2000#" writable="true"/>
     <memory executable="false" logical="channel_1" physical="data_channel" virtualAddress="16#6000#" writable="false"/>
     <memory executable="false" logical="channel_2" physical="data_channel2" virtualAddress="16#7000#" writable="false"/>
     <memory executable="false" logical="channel_3" physical="data_channel3" virtualAddress="16#9000#" writable="true"/>
@@ -1120,7 +1160,7 @@
     <memory executable="false" logical="sinfo" physical="lnx|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
     <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_1" virtualAddress="16#000e_0000_8000#" writable="false"/>
     <memory executable="false" logical="timed_event" physical="lnx|timed_event" virtualAddress="16#000e_0001_0000#" writable="true"/>
-    <memory executable="false" logical="zero_page" physical="lnx|zp_dst" virtualAddress="16#0000#" writable="true"/>
+    <memory executable="false" logical="zero_page" physical="lnx|zp" virtualAddress="16#0000#" writable="true"/>
     <memory executable="false" logical="acpi_rsdp" physical="lnx|acpi_rsdp" virtualAddress="16#000e_0000#" writable="false"/>
     <memory executable="false" logical="acpi_xsdt" physical="lnx|acpi_xsdt" virtualAddress="16#000e_1000#" writable="false"/>
     <memory executable="false" logical="acpi_fadt" physical="lnx|acpi_fadt" virtualAddress="16#000e_2000#" writable="false"/>
@@ -1458,23 +1498,23 @@
     <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_1" virtualAddress="16#000e_0000_8000#" writable="false"/>
     <memory executable="false" logical="timed_event" physical="subject1|timed_event" virtualAddress="16#000e_0001_0000#" writable="true"/>
     <memory executable="false" logical="lnx_dummy" physical="dummy" virtualAddress="16#0001_0000_3000#" writable="true"/>
-    <memory executable="false" logical="lnx_file_1" physical="dummy_5_dst" virtualAddress="16#0001_0002_0000#" writable="true"/>
-    <memory executable="false" logical="lnx_file_1_src" physical="dummy_5" virtualAddress="16#7000_0000_0000#" writable="false"/>
-    <memory executable="false" logical="lnx_file_2" physical="dummy_6_dst" virtualAddress="16#0001_0003_0000#" writable="true"/>
-    <memory executable="false" logical="lnx_file_2_src" physical="dummy_6" virtualAddress="16#7000_0000_2000#" writable="false"/>
+    <memory executable="false" logical="lnx_file_1" physical="dummy_5" virtualAddress="16#0001_0002_0000#" writable="true"/>
+    <memory executable="false" logical="lnx_file_1_src" physical="dummy_5_src" virtualAddress="16#7000_0000_0000#" writable="false"/>
+    <memory executable="false" logical="lnx_file_2" physical="dummy_6" virtualAddress="16#0001_0003_0000#" writable="true"/>
+    <memory executable="false" logical="lnx_file_2_src" physical="dummy_6_src" virtualAddress="16#7000_0000_2000#" writable="false"/>
     <memory executable="false" logical="lnx_initramfs" physical="initramfs" virtualAddress="16#0001_9000_0000#" writable="false"/>
-    <memory executable="false" logical="lnx_binary" physical="lnx|binary_dst" virtualAddress="16#0001_0000_2000#" writable="true"/>
-    <memory executable="false" logical="lnx_binary_src" physical="lnx|binary" virtualAddress="16#7000_0000_3000#" writable="false"/>
+    <memory executable="false" logical="lnx_binary" physical="lnx|binary" virtualAddress="16#0001_0000_2000#" writable="true"/>
+    <memory executable="false" logical="lnx_binary_src" physical="lnx|binary_src" virtualAddress="16#7000_0000_3000#" writable="false"/>
     <memory executable="false" logical="lnx_channel_1" physical="data_channel" virtualAddress="16#0001_0000_6000#" writable="false"/>
     <memory executable="false" logical="lnx_channel_2" physical="data_channel2" virtualAddress="16#0001_0000_7000#" writable="false"/>
     <memory executable="false" logical="lnx_channel_3" physical="data_channel3" virtualAddress="16#0001_0000_9000#" writable="true"/>
     <memory executable="false" logical="lnx_channel_4" physical="data_channel4" virtualAddress="16#0001_0000_a000#" writable="true"/>
     <memory executable="false" logical="lnx_channel_5" physical="data_channel5" virtualAddress="16#0001_0000_b000#" writable="true"/>
-    <memory executable="false" logical="monitor_sinfo_lnx" physical="lnx|sinfo" virtualAddress="16#000f_0000_0000#" writable="false"/>
+    <memory executable="false" logical="lnx_sinfo" physical="lnx|sinfo" virtualAddress="16#000f_0000_0000#" writable="false"/>
     <memory executable="false" logical="lnx_sched_group_info" physical="scheduling_group_info_1" virtualAddress="16#000f_0000_8000#" writable="false"/>
     <memory executable="false" logical="lnx_timed_event" physical="lnx|timed_event" virtualAddress="16#000f_0001_0000#" writable="true"/>
-    <memory executable="false" logical="lnx_zero_page" physical="lnx|zp_dst" virtualAddress="16#0001_0000_0000#" writable="true"/>
-    <memory executable="false" logical="lnx_zero_page_src" physical="lnx|zp" virtualAddress="16#7000_0000_4000#" writable="false"/>
+    <memory executable="false" logical="lnx_zero_page" physical="lnx|zp" virtualAddress="16#0001_0000_0000#" writable="true"/>
+    <memory executable="false" logical="lnx_zero_page_src" physical="lnx|zp_src" virtualAddress="16#7000_0000_4000#" writable="false"/>
     <memory executable="false" logical="lnx_acpi_rsdp" physical="lnx|acpi_rsdp" virtualAddress="16#0001_000e_0000#" writable="false"/>
     <memory executable="false" logical="lnx_acpi_xsdt" physical="lnx|acpi_xsdt" virtualAddress="16#0001_000e_1000#" writable="false"/>
     <memory executable="false" logical="lnx_acpi_fadt" physical="lnx|acpi_fadt" virtualAddress="16#0001_000e_2000#" writable="false"/>
@@ -2337,7 +2377,7 @@
    <memory>
     <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>
     <memory executable="false" logical="sinfo" physical="lnx_core_1|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
-    <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_4" virtualAddress="16#000e_0000_8000#" writable="false"/>
+    <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_5" virtualAddress="16#000e_0000_8000#" writable="false"/>
     <memory executable="false" logical="timed_event" physical="lnx_core_1|timed_event" virtualAddress="16#000e_0001_0000#" writable="true"/>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
     <memory executable="false" logical="file_1" physical="dummy_5" virtualAddress="16#0002_0000#" writable="true"/>
@@ -2556,6 +2596,381 @@
    </events>
    <sibling ref="lnx"/>
   </subject>
+  <subject cpu="0" globalId="5" localId="2" name="subject3">
+   <vcpu>
+    <vmx>
+     <controls>
+      <pin>
+       <ExternalInterruptExiting>1</ExternalInterruptExiting>
+       <NMIExiting>1</NMIExiting>
+       <VirtualNMIs>0</VirtualNMIs>
+       <ActivateVMXTimer>1</ActivateVMXTimer>
+       <ProcessPostedInterrupts>0</ProcessPostedInterrupts>
+      </pin>
+      <proc>
+       <InterruptWindowExiting>0</InterruptWindowExiting>
+       <UseTSCOffsetting>0</UseTSCOffsetting>
+       <HLTExiting>0</HLTExiting>
+       <INVLPGExiting>1</INVLPGExiting>
+       <MWAITExiting>1</MWAITExiting>
+       <RDPMCExiting>1</RDPMCExiting>
+       <RDTSCExiting>1</RDTSCExiting>
+       <CR3LoadExiting>1</CR3LoadExiting>
+       <CR3StoreExiting>1</CR3StoreExiting>
+       <CR8LoadExiting>1</CR8LoadExiting>
+       <CR8StoreExiting>1</CR8StoreExiting>
+       <UseTPRShadow>0</UseTPRShadow>
+       <NMIWindowExiting>0</NMIWindowExiting>
+       <MOVDRExiting>1</MOVDRExiting>
+       <UnconditionalIOExiting>0</UnconditionalIOExiting>
+       <UseIOBitmaps>1</UseIOBitmaps>
+       <MonitorTrapFlag>0</MonitorTrapFlag>
+       <UseMSRBitmaps>1</UseMSRBitmaps>
+       <MONITORExiting>1</MONITORExiting>
+       <PAUSEExiting>0</PAUSEExiting>
+       <Activate2ndaryControls>1</Activate2ndaryControls>
+      </proc>
+      <proc2>
+       <VirtualAPICAccesses>0</VirtualAPICAccesses>
+       <EnableEPT>0</EnableEPT>
+       <DescriptorTableExiting>0</DescriptorTableExiting>
+       <EnableRDTSCP>0</EnableRDTSCP>
+       <Virtualizex2APICMode>0</Virtualizex2APICMode>
+       <EnableVPID>0</EnableVPID>
+       <WBINVDExiting>1</WBINVDExiting>
+       <UnrestrictedGuest>0</UnrestrictedGuest>
+       <APICRegisterVirtualization>0</APICRegisterVirtualization>
+       <VirtualInterruptDelivery>0</VirtualInterruptDelivery>
+       <PAUSELoopExiting>0</PAUSELoopExiting>
+       <RDRANDExiting>0</RDRANDExiting>
+       <EnableINVPCID>0</EnableINVPCID>
+       <EnableVMFunctions>0</EnableVMFunctions>
+      </proc2>
+      <entry>
+       <LoadDebugControls>0</LoadDebugControls>
+       <IA32eModeGuest>1</IA32eModeGuest>
+       <EntryToSMM>0</EntryToSMM>
+       <DeactiveDualMonitorTreatment>0</DeactiveDualMonitorTreatment>
+       <LoadIA32PERFGLOBALCTRL>0</LoadIA32PERFGLOBALCTRL>
+       <LoadIA32PAT>0</LoadIA32PAT>
+       <LoadIA32EFER>0</LoadIA32EFER>
+      </entry>
+      <exit>
+       <SaveDebugControls>0</SaveDebugControls>
+       <HostAddressspaceSize>1</HostAddressspaceSize>
+       <LoadIA32PERFGLOBALCTRL>0</LoadIA32PERFGLOBALCTRL>
+       <AckInterruptOnExit>1</AckInterruptOnExit>
+       <SaveIA32PAT>0</SaveIA32PAT>
+       <LoadIA32PAT>0</LoadIA32PAT>
+       <SaveIA32EFER>0</SaveIA32EFER>
+       <LoadIA32EFER>0</LoadIA32EFER>
+       <SaveVMXTimerValue>0</SaveVMXTimerValue>
+      </exit>
+     </controls>
+     <masks>
+      <exception>
+       <DivideError>1</DivideError>
+       <Debug>1</Debug>
+       <Breakpoint>1</Breakpoint>
+       <Overflow>1</Overflow>
+       <BOUNDRangeExceeded>1</BOUNDRangeExceeded>
+       <InvalidOpcode>1</InvalidOpcode>
+       <DeviceNotAvailable>1</DeviceNotAvailable>
+       <DoubleFault>1</DoubleFault>
+       <CoprocessorSegmentOverrun>1</CoprocessorSegmentOverrun>
+       <InvalidTSS>1</InvalidTSS>
+       <SegmentNotPresent>1</SegmentNotPresent>
+       <StackSegmentFault>1</StackSegmentFault>
+       <GeneralProtection>1</GeneralProtection>
+       <PageFault>1</PageFault>
+       <x87FPUFloatingPointError>1</x87FPUFloatingPointError>
+       <AlignmentCheck>1</AlignmentCheck>
+       <MachineCheck>1</MachineCheck>
+       <SIMDFloatingPointException>1</SIMDFloatingPointException>
+      </exception>
+      <cr0>
+       <ProtectionEnable>1</ProtectionEnable>
+       <MonitorCoprocessor>1</MonitorCoprocessor>
+       <Emulation>1</Emulation>
+       <TaskSwitched>1</TaskSwitched>
+       <ExtensionType>1</ExtensionType>
+       <NumericError>1</NumericError>
+       <WriteProtect>1</WriteProtect>
+       <AlignmentMask>1</AlignmentMask>
+       <NotWritethrough>1</NotWritethrough>
+       <CacheDisable>1</CacheDisable>
+       <Paging>1</Paging>
+      </cr0>
+      <cr4>
+       <Virtual8086>1</Virtual8086>
+       <ProtectedVirtualInts>1</ProtectedVirtualInts>
+       <TimeStampDisable>1</TimeStampDisable>
+       <DebuggingExtensions>1</DebuggingExtensions>
+       <PageSizeExtensions>1</PageSizeExtensions>
+       <PhysicalAddressExtension>1</PhysicalAddressExtension>
+       <MachineCheckEnable>1</MachineCheckEnable>
+       <PageGlobalEnable>1</PageGlobalEnable>
+       <PerfCounterEnable>1</PerfCounterEnable>
+       <OSSupportFXSAVE>1</OSSupportFXSAVE>
+       <OSSupportSIMDExceptions>1</OSSupportSIMDExceptions>
+       <UMInstructionPrevention>1</UMInstructionPrevention>
+       <VMXEnable>1</VMXEnable>
+       <SMXEnable>1</SMXEnable>
+       <FSGSBASEEnable>1</FSGSBASEEnable>
+       <PCIDEnable>1</PCIDEnable>
+       <XSAVEEnable>1</XSAVEEnable>
+       <SMEPEnable>1</SMEPEnable>
+       <SMAPEnable>1</SMAPEnable>
+       <ProtectionKeyEnable>1</ProtectionKeyEnable>
+      </cr4>
+     </masks>
+    </vmx>
+    <msrs/>
+    <registers>
+     <gpr>
+      <rip>16#0020_0000#</rip>
+      <rsp>16#3000#</rsp>
+      <rax>16#0000#</rax>
+      <rbx>16#0000#</rbx>
+      <rcx>16#0000#</rcx>
+      <rdx>16#0000#</rdx>
+      <rdi>16#0000#</rdi>
+      <rsi>16#0000#</rsi>
+      <rbp>16#0000#</rbp>
+      <r08>16#0000#</r08>
+      <r09>16#0000#</r09>
+      <r10>16#0000#</r10>
+      <r11>16#0000#</r11>
+      <r12>16#0000#</r12>
+      <r13>16#0000#</r13>
+      <r14>16#0000#</r14>
+      <r15>16#0000#</r15>
+     </gpr>
+     <cr0>
+      <ProtectionEnable>1</ProtectionEnable>
+      <MonitorCoprocessor>1</MonitorCoprocessor>
+      <Emulation>0</Emulation>
+      <TaskSwitched>0</TaskSwitched>
+      <ExtensionType>1</ExtensionType>
+      <NumericError>1</NumericError>
+      <WriteProtect>1</WriteProtect>
+      <AlignmentMask>0</AlignmentMask>
+      <NotWritethrough>0</NotWritethrough>
+      <CacheDisable>0</CacheDisable>
+      <Paging>1</Paging>
+     </cr0>
+     <cr4>
+      <Virtual8086>0</Virtual8086>
+      <ProtectedVirtualInts>0</ProtectedVirtualInts>
+      <TimeStampDisable>0</TimeStampDisable>
+      <DebuggingExtensions>0</DebuggingExtensions>
+      <PageSizeExtensions>0</PageSizeExtensions>
+      <PhysicalAddressExtension>1</PhysicalAddressExtension>
+      <MachineCheckEnable>1</MachineCheckEnable>
+      <PageGlobalEnable>0</PageGlobalEnable>
+      <PerfCounterEnable>0</PerfCounterEnable>
+      <OSSupportFXSAVE>1</OSSupportFXSAVE>
+      <OSSupportSIMDExceptions>0</OSSupportSIMDExceptions>
+      <UMInstructionPrevention>0</UMInstructionPrevention>
+      <VMXEnable>1</VMXEnable>
+      <SMXEnable>0</SMXEnable>
+      <FSGSBASEEnable>0</FSGSBASEEnable>
+      <PCIDEnable>0</PCIDEnable>
+      <XSAVEEnable>0</XSAVEEnable>
+      <SMEPEnable>0</SMEPEnable>
+      <SMAPEnable>0</SMAPEnable>
+      <ProtectionKeyEnable>0</ProtectionKeyEnable>
+     </cr4>
+     <segments>
+      <cs access="16#a09b#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0008#"/>
+      <ds access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <es access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <fs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <gs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+      <ss access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+      <tr access="16#008b#" base="16#0000#" limit="16#ffff#" selector="16#0018#"/>
+      <ldtr access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+     </segments>
+    </registers>
+   </vcpu>
+   <bootparams/>
+   <memory>
+    <memory executable="true" logical="binary" physical="subject3|binary" virtualAddress="16#0020_0000#" writable="false"/>
+    <memory executable="false" logical="resource_1" physical="subject3|resource_1" virtualAddress="16#0020_1000#" writable="true"/>
+    <memory executable="false" logical="resource_2" physical="subject3|resource_2" virtualAddress="16#0040_0000#" writable="true"/>
+    <memory executable="false" logical="sinfo" physical="subject3|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
+    <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_4" virtualAddress="16#000e_0000_8000#" writable="false"/>
+    <memory executable="false" logical="timed_event" physical="subject3|timed_event" virtualAddress="16#000e_0001_0000#" writable="true"/>
+    <memory executable="false" logical="subject3_resource_1_src" physical="subject3|resource_1_src" virtualAddress="16#7000_0000_0000#" writable="false"/>
+    <memory executable="false" logical="subject3_resource_2_src" physical="subject3|resource_2_src" virtualAddress="16#7000_0000_2000#" writable="false"/>
+   </memory>
+   <devices/>
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <event id="0" logical="default_event_0" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="2" logical="default_event_2" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="3" logical="default_event_3" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="4" logical="default_event_4" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="5" logical="default_event_5" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="6" logical="default_event_6" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="8" logical="default_event_8" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="9" logical="default_event_9" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="10" logical="default_event_10" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="11" logical="default_event_11" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="12" logical="default_event_12" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="13" logical="default_event_13" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="14" logical="default_event_14" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="15" logical="default_event_15" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="16" logical="default_event_16" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="17" logical="default_event_17" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="18" logical="default_event_18" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="19" logical="default_event_19" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="20" logical="default_event_20" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="21" logical="default_event_21" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="22" logical="default_event_22" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="23" logical="default_event_23" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="24" logical="default_event_24" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="25" logical="default_event_25" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="26" logical="default_event_26" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="27" logical="default_event_27" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="28" logical="default_event_28" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="29" logical="default_event_29" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="30" logical="default_event_30" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="31" logical="default_event_31" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="32" logical="default_event_32" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="33" logical="default_event_33" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="34" logical="default_event_34" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="36" logical="default_event_36" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="37" logical="default_event_37" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="39" logical="default_event_39" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="40" logical="default_event_40" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="43" logical="default_event_43" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="44" logical="default_event_44" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="45" logical="default_event_45" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="46" logical="default_event_46" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="47" logical="default_event_47" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="48" logical="default_event_48" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="49" logical="default_event_49" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="50" logical="default_event_50" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="51" logical="default_event_51" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="53" logical="default_event_53" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="54" logical="default_event_54" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="55" logical="default_event_55" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="56" logical="default_event_56" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="57" logical="default_event_57" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="58" logical="default_event_58" physical="system_panic">
+       <system_panic/>
+      </event>
+      <event id="59" logical="default_event_59" physical="system_panic">
+       <system_panic/>
+      </event>
+     </group>
+    </source>
+   </events>
+  </subject>
  </subjects>
  <scheduling tickRate="10000">
   <majorFrame>
@@ -2579,7 +2994,7 @@
     <minorFrame barrier="2" subject="lnx" ticks="40"/>
     <minorFrame barrier="3" subject="lnx" ticks="20"/>
     <minorFrame barrier="none" subject="lnx" ticks="10"/>
-    <minorFrame barrier="4" subject="lnx" ticks="10"/>
+    <minorFrame barrier="4" subject="subject3" ticks="10"/>
    </cpu>
    <cpu id="1">
     <minorFrame barrier="1" subject="tau0" ticks="10"/>

@@ -46,6 +46,7 @@
   <include href="subject_nic_sl.xml"/>
   <include href="subject_ps2.xml"/>
   <include href="subject_example.xml"/>
+  <include href="subject_controller.xml"/>
 
   <if variable="pciconf_emulation_enabled" value="true">
    <include href="subject_nic_dm.xml"/>
@@ -70,9 +71,10 @@
     <map logical="log_channel5" physical="debuglog_subject5"/>
     <map logical="log_channel6" physical="debuglog_subject6"/>
     <map logical="log_channel_example" physical="debuglog_example"/>
+    <map logical="log_channel_7" physical="debuglog_controller"/>
     <if variable="pciconf_emulation_enabled" value="true">
-     <map logical="log_channel7" physical="debuglog_subject7"/>
-     <map logical="log_channel8" physical="debuglog_subject8"/>
+     <map logical="log_channel8" physical="debuglog_subject7"/>
+     <map logical="log_channel9" physical="debuglog_subject8"/>
     </if>
     <if variable="dbgserver_sink_shmem" value="true">
      <map logical="debug_shm_sink_memory" physical="debug_shm_sink_memory"/>

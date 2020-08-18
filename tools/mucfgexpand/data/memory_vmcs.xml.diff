@@ -4,5 +4,6 @@
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="subject1|vmcs" size="16#1000#" type="kernel_vmcs"/>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="subject2|vmcs" size="16#1000#" type="kernel_vmcs"/>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="lnx_core_1|vmcs" size="16#1000#" type="kernel_vmcs"/>
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="subject3|vmcs" size="16#1000#" type="kernel_vmcs"/>
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>

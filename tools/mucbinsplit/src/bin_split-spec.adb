@@ -41,11 +41,8 @@ is
       File_Name       :        String;
       Hash            :        String := "";
       Size            :        Interfaces.Unsigned_64;
-      Virtual_Address :        Interfaces.Unsigned_64;
-      Reloadable      :        Boolean := False)
+      Virtual_Address :        Interfaces.Unsigned_64)
    is
-      use type Interfaces.Unsigned_64;
-
       Memory_Node : constant DOM.Core.Element
         := Create_Memory_Node
           (Spec            => Spec,
@@ -59,7 +56,6 @@ is
         := DOM.Core.Documents.Create_Element
           (Doc      => Spec.Doc,
            Tag_Name => "file");
-      Hash_Node : DOM.Core.Element;
    begin
       Muxml.Utils.Append_Child
         (Node      => Memory_Node,
@@ -76,59 +72,20 @@ is
          Value => "none");
 
       if Hash /= "" then
-         Hash_Node := DOM.Core.Documents.Create_Element
-           (Doc      => Spec.Doc,
-            Tag_Name => "hash");
-         Muxml.Utils.Append_Child
-           (Node      => Memory_Node,
-            New_Child => Hash_Node);
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Hash_Node,
-            Name  => "value",
-            Value => Hash);
-      end if;
-
-      if Reloadable and Writable then
-         --  Swap out with target region:
-         --  * Add "_src" suffix to logical name
-         --  * Clear writable flag
-         --  * Set different address
-
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Memory_Node,
-            Name  => "logical",
-            Value => Logical & "_src");
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Memory_Node,
-            Name  => "writable",
-            Value => "false");
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Memory_Node,
-            Name  => "virtualAddress",
-            Value => Mutools.Utils.To_Hex
-              (Number => Virtual_Address or 16#ffff_8000_0000_0000#));
          declare
-            Target_Mem_Node : constant DOM.Core.Element
-              := Create_Memory_Node
-                (Spec            => Spec,
-                 Logical         => Logical,
-                 Writable        => Writable,
-                 Executable      => Executable,
-                 Size            => Size,
-                 Virtual_Address => Virtual_Address);
+            Hash_Node : constant DOM.Core.Element
+              := DOM.Core.Documents.Create_Element
+                (Doc      => Spec.Doc,
+                 Tag_Name => "hash");
          begin
-            if Hash /= "" then
-               Hash_Node := DOM.Core.Documents.Create_Element
-                 (Doc      => Spec.Doc,
-                  Tag_Name => "hash");
-               DOM.Core.Elements.Set_Attribute
-                 (Elem  => Hash_Node,
-                  Name  => "value",
-                  Value => Hash);
-               Muxml.Utils.Append_Child
-                 (Node      => Target_Mem_Node,
-                  New_Child => Hash_Node);
-            end if;
+            Muxml.Utils.Append_Child
+              (Node      => Memory_Node,
+               New_Child => Hash_Node);
+
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Hash_Node,
+               Name  => "value",
+               Value => Hash);
          end;
       end if;
    end Add_File_Entry;

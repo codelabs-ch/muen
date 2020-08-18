@@ -68,193 +68,64 @@ package body Bin_Split.Spec.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Add_File_Entry (Gnattest_T : in out Test);
-   procedure Test_Add_File_Entry_b74ecf (Gnattest_T : in out Test) renames Test_Add_File_Entry;
---  id:2.2/b74ecf0e5078d38a/Add_File_Entry/1/0/
+   procedure Test_Add_File_Entry_f30ecc (Gnattest_T : in out Test) renames Test_Add_File_Entry;
+--  id:2.2/f30eccc8f250fb29/Add_File_Entry/1/0/
    procedure Test_Add_File_Entry (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
-      ----------------------------------------------------------------------
+      Filename : constant String := "test";
+      Hash     : constant String := "3827eeabc";
 
-      procedure Add_Entry
-      is
-         Filename : constant String := "test";
-         Hash     : constant String := "3827eeabc";
-
-         Spec : Muxml.XML_Data_Type;
-      begin
-         Muxml.Parse (Data => Spec,
-                      Kind => Muxml.Component,
-                      File => "data/test_cspec.xml");
-
-         Add_File_Entry
-           (Spec            => Spec,
-            Logical         => "section_name",
-            Writable        => True,
-            Executable      => False,
-            File_Name       => Filename,
-            Size            => 16#0700#,
-            Virtual_Address => 16#0400#,
-            Hash            => Hash);
-
-         declare
-            use type DOM.Core.Node;
-
-            File_Node : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Doc   => Spec.Doc,
-                 XPath => "/component/provides/memory"
-                 & "[@logical='section_name']/file");
-            Hash_Node : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Doc   => Spec.Doc,
-                 XPath => "/component/provides/memory"
-                 & "[@logical='section_name']/hash");
-         begin
-            Assert (Condition => File_Node /= null,
-                    Message   => "File entry not created");
-            Assert (Condition => DOM.Core.Elements.Get_Attribute
-                    (Elem => File_Node,
-                     Name => "filename") = Filename,
-                    Message   => "Filename mismatch");
-            Assert (Condition => DOM.Core.Elements.Get_Attribute
-                    (Elem => File_Node,
-                     Name => "offset") = "none",
-                    Message   => "File offset mismatch");
-
-            Assert (Condition => Hash_Node /= null,
-                    Message   => "Hash entry not created");
-            Assert (Condition => DOM.Core.Elements.Get_Attribute
-                    (Elem => Hash_Node,
-                     Name => "value") = Hash,
-                    Message   => "Hash value mismatch");
-         end;
-      end Add_Entry;
-
-      ----------------------------------------------------------------------
-
-      procedure Add_Entry_Reloadable
-      is
-         Filename : constant String := "test";
-         Hash     : constant String := "3827eeabc";
-         Size     : constant := 16#7000#;
-         VAddr    : constant := 16#0001_0000#;
-
-         Spec : Muxml.XML_Data_Type;
-      begin
-         Muxml.Parse (Data => Spec,
-                      Kind => Muxml.Component,
-                      File => "data/test_cspec.xml");
-
-         Add_File_Entry
-           (Spec            => Spec,
-            Logical         => "reload",
-            Writable        => True,
-            Executable      => False,
-            File_Name       => Filename,
-            Size            => Size,
-            Virtual_Address => VAddr,
-            Hash            => Hash,
-            Reloadable      => True);
-
-         declare
-            use type Interfaces.Unsigned_64;
-            use type DOM.Core.Node;
-
-            Src_Mem : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Doc   => Spec.Doc,
-                 XPath => "/component/provides/memory"
-                 & "[@logical='reload_src']");
-            Src_File_Node : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Doc   => Src_Mem,
-                 XPath => "file");
-            Src_Hash_Node : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Doc   => Src_Mem,
-                 XPath => "hash");
-            Dst_Mem       : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Doc   => Spec.Doc,
-                 XPath => "/component/provides/memory"
-                 & "[@logical='reload']");
-            Dst_File_Node : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Doc   => Dst_Mem,
-                 XPath => "file");
-            Dst_Hash_Node : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Doc   => Dst_Mem,
-                 XPath => "hash");
-         begin
-            Assert (Condition => Src_Mem /= null,
-                    Message   => "Source memory region not created");
-            Assert (Condition => not Boolean'Value
-                    (DOM.Core.Elements.Get_Attribute
-                       (Elem => Src_Mem,
-                        Name => "writable")),
-                    Message   => "Source memory region is writable");
-            Assert (Condition => Interfaces.Unsigned_64'Value
-                    (DOM.Core.Elements.Get_Attribute
-                       (Elem => Src_Mem,
-                        Name => "size")) = Size,
-                    Message   => "Source memory region size mismatch");
-            Assert (Condition => Interfaces.Unsigned_64'Value
-                    (DOM.Core.Elements.Get_Attribute
-                       (Elem => Src_Mem,
-                        Name => "virtualAddress"))
-                    = VAddr + 16#ffff_8000_0000_0000#,
-                    Message   => "Source memory region address mismatch");
-
-            Assert (Condition => Src_File_Node /= null,
-                    Message   => "Source file entry not created");
-            Assert (Condition => DOM.Core.Elements.Get_Attribute
-                    (Elem => Src_File_Node,
-                     Name => "filename") = Filename,
-                    Message   => "Source filename mismatch");
-            Assert (Condition => DOM.Core.Elements.Get_Attribute
-                    (Elem => Src_File_Node,
-                     Name => "offset") = "none",
-                    Message   => "Source file offset mismatch");
-            Assert (Condition => Src_Hash_Node /= null,
-                    Message   => "Source hash entry not created");
-            Assert (Condition => DOM.Core.Elements.Get_Attribute
-                    (Elem => Src_Hash_Node,
-                     Name => "value") = Hash,
-                    Message   => "Source hash value mismatch");
-
-            Assert (Condition => Dst_Mem /= null,
-                    Message   => "Dst memory region not created");
-            Assert (Condition => Boolean'Value
-                    (DOM.Core.Elements.Get_Attribute
-                       (Elem => Dst_Mem,
-                        Name => "writable")),
-                    Message   => "Dst memory region is not writable");
-            Assert (Condition => Interfaces.Unsigned_64'Value
-                    (DOM.Core.Elements.Get_Attribute
-                       (Elem => Dst_Mem,
-                        Name => "size")) = Size,
-                    Message   => "Dst memory region size mismatch");
-            Assert (Condition => Interfaces.Unsigned_64'Value
-                    (DOM.Core.Elements.Get_Attribute
-                       (Elem => Dst_Mem,
-                        Name => "virtualAddress")) = VAddr,
-                    Message   => "Dst memory region address mismatch");
-            Assert (Condition => Dst_File_Node = null,
-                    Message   => "Dst file entry created");
-            Assert (Condition => Dst_Hash_Node /= null,
-                    Message   => "Dst hash entry not created");
-            Assert (Condition => DOM.Core.Elements.Get_Attribute
-                    (Elem => Dst_Hash_Node,
-                     Name => "value") = Hash,
-                    Message   => "Dst hash value mismatch");
-         end;
-      end Add_Entry_Reloadable;
+      Spec : Muxml.XML_Data_Type;
    begin
-      Add_Entry;
-      Add_Entry_Reloadable;
+      Muxml.Parse (Data => Spec,
+                   Kind => Muxml.Component,
+                   File => "data/test_cspec.xml");
+
+      Add_File_Entry
+        (Spec            => Spec,
+         Logical         => "section_name",
+         Writable        => True,
+         Executable      => False,
+         File_Name       => Filename,
+         Size            => 16#0700#,
+         Virtual_Address => 16#0400#,
+         Hash            => Hash);
+
+      declare
+         use type DOM.Core.Node;
+
+         File_Node : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Spec.Doc,
+              XPath => "/component/provides/memory"
+              & "[@logical='section_name']/file");
+         Hash_Node : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Spec.Doc,
+              XPath => "/component/provides/memory"
+              & "[@logical='section_name']/hash");
+      begin
+         Assert (Condition => File_Node /= null,
+                 Message   => "File entry not created");
+         Assert (Condition => DOM.Core.Elements.Get_Attribute
+                 (Elem => File_Node,
+                  Name => "filename") = Filename,
+                 Message   => "Filename mismatch");
+         Assert (Condition => DOM.Core.Elements.Get_Attribute
+                 (Elem => File_Node,
+                  Name => "offset") = "none",
+                 Message   => "File offset mismatch");
+
+         Assert (Condition => Hash_Node /= null,
+                 Message   => "Hash entry not created");
+         Assert (Condition => DOM.Core.Elements.Get_Attribute
+                 (Elem => Hash_Node,
+                  Name => "value") = Hash,
+                 Message   => "Hash value mismatch");
+      end;
 --  begin read only
    end Test_Add_File_Entry;
 --  end read only

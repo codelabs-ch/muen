@@ -35,8 +35,10 @@ is
       Entry_Point    : Interfaces.Unsigned_64;
       Status_Address : Interfaces.Unsigned_64;
       Status_Value   : Interfaces.Unsigned_64;
+      Stack_Address  : Interfaces.Unsigned_64;
+      Stack_Size     : Interfaces.Unsigned_64;
    end record
-   with Size => 3 * 64;
+   with Size => 5 * 64;
 
    --  Initialize subject memory. Return run information required by assembler.
    procedure Run (Run_Info : out Run_Info_Type)

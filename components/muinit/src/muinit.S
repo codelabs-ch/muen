@@ -35,8 +35,8 @@ _main:
 	push %rbx
 	push %rax
 	push %r15
-	// Space for return values
-	sub $0x18, %rsp
+	// Space for return values: 5 x 8 bytes (see Run_Info_Type).
+	sub $0x28, %rsp
 	mov %rsp, %rdi
 	call init_main
 	pop %r15

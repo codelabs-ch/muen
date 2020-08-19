@@ -1,4 +1,4 @@
-COMPONENT = libdebuglog
+COMPONENT = libmudebuglog
 
 CSPEC_TARGETS     = $(GEN_DIR)/config.xml
 COMPONENT_TARGETS = cspecs

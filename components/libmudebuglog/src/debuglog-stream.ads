@@ -31,14 +31,14 @@ with Muchannel_Constants;
 with Debuglog.Types;
 with Debuglog.Constants;
 
-with Libdebuglog_Component.Channels;
+with Libmudebuglog_Component.Channels;
 
 pragma Elaborate_All (Muchannel);
 
 package Debuglog.Stream is new Muchannel
   (Element_Type => Types.Data_Type,
    Elements     =>
-     (Libdebuglog_Component.Channels.Debuglog_Size
+     (Libmudebuglog_Component.Channels.Debuglog_Size
       - Muchannel_Constants.Header_Size) / (Types.Data_Type'Size / 8),
    Null_Element => Types.Null_Data,
    Protocol     => Constants.Protocol_Number);

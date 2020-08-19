@@ -7,9 +7,9 @@ COMPONENTS_SPARK := \
 	libmudm \
 	libmucontroltypes \
 	libmucontrol \
+	libmudebuglog \
 	libmuinit \
 	libmutime \
-	libdebuglog \
 	libmusinfo \
 	libxhcidbg \
 	controller \

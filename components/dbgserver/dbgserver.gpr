@@ -16,7 +16,7 @@
 --
 
 with "../libxhcidbg/libxhcidbg";
-with "../libdebuglog/libdebuglog";
+with "../libmudebuglog/libmudebuglog";
 with "../libmusinfo/libmusinfo";
 with "generated/dbg_config";
 

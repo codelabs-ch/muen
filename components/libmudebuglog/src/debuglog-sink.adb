@@ -30,14 +30,14 @@ with System;
 with Debuglog.Types;
 with Debuglog.Stream.Writer_Instance;
 
-with Libdebuglog_Component.Channels;
+with Libmudebuglog_Component.Channels;
 
 package body Debuglog.Sink
 with
    Refined_State => (State => (Message_Channel, Message_Buffer, Message_Index))
 is
 
-   package Cspecs renames Libdebuglog_Component.Channels;
+   package Cspecs renames Libmudebuglog_Component.Channels;
 
    Message_Channel : Stream.Channel_Type
    with

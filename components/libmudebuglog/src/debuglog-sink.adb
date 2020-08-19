@@ -45,8 +45,8 @@ is
       Size    => Cspecs.Debuglog_Size * 8,
       Async_Readers;
 
-   Message_Buffer : Types.Data_Type     := Types.Null_Data;
-   Message_Index  : Types.Message_Index := Types.Message_Index'First;
+   Message_Buffer : Types.Data_Type;
+   Message_Index  : Types.Message_Index;
 
    -------------------------------------------------------------------------
 

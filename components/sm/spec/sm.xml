@@ -10,7 +10,7 @@
 	</config>
 	<depends>
 		<library ref="libmutime"/>
-		<library ref="libdebuglog"/>
+		<library ref="libmudebuglog"/>
 		<if variable="pciconf_emulation_enabled" value="true">
 			<library ref="libmudm"/>
 		</if>

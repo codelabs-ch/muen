@@ -1,6 +1,6 @@
 <component name="vt" profile="native">
 	<depends>
-		<library ref="libdebuglog"/>
+		<library ref="libmudebuglog"/>
 	</depends>
 	<requires>
 		<memory>

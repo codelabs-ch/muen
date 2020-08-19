@@ -1,6 +1,6 @@
 <component name="ps2_drv" profile="native">
 	<depends>
-		<library ref="libdebuglog"/>
+		<library ref="libmudebuglog"/>
 	</depends>
 	<requires>
 		<channels>

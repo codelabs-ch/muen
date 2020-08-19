@@ -16,9 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libdebuglog/libdebuglog";
+with "../libmudebuglog/libmudebuglog";
 with "../libmutime/libmutime";
 with "../libmudm/libmudm";
+with "../libmucontrol/libmucontrol";
 with "generated/config";
 
 project Sm extends "../component_spark" is

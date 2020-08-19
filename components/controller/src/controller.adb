@@ -23,7 +23,12 @@ with Ctrlr;
 procedure Controller
 is
 begin
+   Debuglog.Client.Init (Epoch => 1);
    Debuglog.Client.Put_Line (Item => "Controller running");
+   pragma Annotate
+     (GNATprove, False_Positive,
+      """Client.State"" might not be initialized after elaboration of main",
+      "Explicitly initialized with prior call to Client.Init.");
 
    loop
       Ctrlr.Run;

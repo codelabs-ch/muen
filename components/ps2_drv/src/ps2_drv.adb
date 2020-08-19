@@ -33,6 +33,8 @@ procedure PS2_Drv
 is
    I8042_Success, Mouse_Success : Boolean;
 begin
+   Log.Text_IO.Init (Epoch => 1);
+
    SK.Interrupt_Tables.Initialize
      (Stack_Addr => Component_Constants.Interrupt_Stack_Address);
    PS2.Output.Init;

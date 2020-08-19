@@ -28,13 +28,13 @@
 with "../libmusinfo/libmusinfo";
 with "../libmuchannel/libmuchannel";
 
-library project Libdebuglog extends "../library_spark" is
+library project Libmudebuglog extends "../library_spark" is
 
    for Languages use ("Ada");
    for Source_Dirs use ("generated", "src");
    for Object_Dir use "obj/" & Library_Spark.Build_Mode;
    for Library_Dir use "lib/" & Library_Spark.Build_Mode;
-   for Library_Name use "debuglog";
+   for Library_Name use "mudebuglog";
    for Library_Kind use "static";
 
-end Libdebuglog;
+end Libmudebuglog;

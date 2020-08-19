@@ -16,12 +16,18 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with SK;
 
 with Debuglog.Client;
 
 package Dev_Mngr.Debug_Ops
 is
+
+   procedure Init
+     (Epoch : Interfaces.Unsigned_64)
+      renames Debuglog.Client.Init;
 
    procedure Put (Item : Character) renames Debuglog.Client.Put;
    procedure Put (Item : String)    renames Debuglog.Client.Put;

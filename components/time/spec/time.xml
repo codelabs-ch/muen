@@ -1,6 +1,6 @@
 <component name="time" profile="native">
 	<depends>
-		<library ref="libdebuglog"/>
+		<library ref="libmudebuglog"/>
 		<library ref="libmucontrol"/>
 	</depends>
 	<requires>

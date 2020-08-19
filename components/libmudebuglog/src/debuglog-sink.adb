@@ -30,14 +30,14 @@ with System;
 with Debuglog.Types;
 with Debuglog.Stream.Writer_Instance;
 
-with Libdebuglog_Component.Channels;
+with Libmudebuglog_Component.Channels;
 
 package body Debuglog.Sink
 with
    Refined_State => (State => (Message_Channel, Message_Buffer, Message_Index))
 is
 
-   package Cspecs renames Libdebuglog_Component.Channels;
+   package Cspecs renames Libmudebuglog_Component.Channels;
 
    Message_Channel : Stream.Channel_Type
    with
@@ -45,8 +45,8 @@ is
       Size    => Cspecs.Debuglog_Size * 8,
       Async_Readers;
 
-   Message_Buffer : Types.Data_Type     := Types.Null_Data;
-   Message_Index  : Types.Message_Index := Types.Message_Index'First;
+   Message_Buffer : Types.Data_Type;
+   Message_Index  : Types.Message_Index;
 
    -------------------------------------------------------------------------
 
@@ -74,6 +74,24 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Init (Epoch : Interfaces.Unsigned_64)
+   with
+      Refined_Global  => (Output => (Message_Buffer, Message_Channel,
+                                     Message_Index)),
+      Refined_Depends => (Message_Channel  => (Epoch),
+                          (Message_Buffer,
+                           Message_Index)  => null)
+   is
+   begin
+      Message_Index  := Types.Message_Index'First;
+      Message_Buffer := Types.Null_Data;
+      Stream.Writer_Instance.Initialize
+        (Channel => Message_Channel,
+         Epoch   => Stream.Header_Field_Type (Epoch));
+   end Init;
+
+   -------------------------------------------------------------------------
+
    procedure Write_Character (Item : Character)
    with
       Refined_Global  => (Input    => Musinfo.Instance.Scheduling_Info,
@@ -98,7 +116,5 @@ is
          end if;
       end if;
    end Write_Character;
-begin
-   Stream.Writer_Instance.Initialize (Channel => Message_Channel,
-                                      Epoch   => 1);
+
 end Debuglog.Sink;

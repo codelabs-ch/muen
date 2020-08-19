@@ -19,6 +19,8 @@
 with SK.CPU;
 with SK.Interrupt_Tables;
 
+with Log;
+
 with Component_Constants;
 with Interrupt_Handler;
 pragma Unreferenced (Interrupt_Handler);
@@ -28,6 +30,7 @@ with Mux.Terminals;
 procedure VT
 is
 begin
+   Log.Text_IO.Init (Epoch => 1);
    SK.Interrupt_Tables.Initialize
      (Stack_Addr => Component_Constants.Interrupt_Stack_Address);
    Mux.Terminals.Initialize;

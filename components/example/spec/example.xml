@@ -6,7 +6,7 @@
 		<string name="greeter" value="Subject running"/>
 	</config>
 	<depends>
-		<library ref="libdebuglog"/>
+		<library ref="libmudebuglog"/>
 		<library ref="muinit"/>
 	</depends>
 	<requires>

@@ -1,4 +1,4 @@
-<library name="libdebuglog">
+<library name="libmudebuglog">
 	<include href="config.xml"/>
 	<requires>
 		<channels>

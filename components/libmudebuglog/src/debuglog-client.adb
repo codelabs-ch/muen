@@ -38,6 +38,10 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Init (Epoch : Interfaces.Unsigned_64) renames Sink.Init;
+
+   -------------------------------------------------------------------------
+
    procedure New_Line
    is
    begin

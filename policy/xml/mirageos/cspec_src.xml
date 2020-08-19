@@ -1,6 +1,6 @@
 <component name="unikernel" profile="native">
  <depends>
-  <library ref="libdebuglog"/>
+  <library ref="libmudebuglog"/>
   <library ref="libmutime"/>
  </depends>
  <requires>

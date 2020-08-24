@@ -73,10 +73,10 @@
 
  <channels>
   <include href="common_channels.xml"/>
+  <channel name="debuglog_subject8" size="$logchannel_size"/>
   <channel name="debuglog_subject9" size="$logchannel_size"/>
   <channel name="debuglog_subject10" size="$logchannel_size"/>
   <channel name="debuglog_subject11" size="$logchannel_size"/>
-  <channel name="debuglog_subject12" size="$logchannel_size"/>
   <channel name="nic_dm_request_1" size="16#1000#" hasEvent="switch"/>
   <channel name="nic_dm_request_2" size="16#1000#" hasEvent="switch"/>
   <channel name="nic_dm_response_1" size="16#1000#" hasEvent="switch"/>
@@ -117,8 +117,7 @@
     <map logical="log_channel9" physical="debuglog_subject9"/>
     <map logical="log_channel10" physical="debuglog_subject10"/>
     <map logical="log_channel11" physical="debuglog_subject11"/>
-    <map logical="log_channel12" physical="debuglog_subject12"/>
-    <map logical="log_channel13" physical="debuglog_controller"/>
+    <map logical="log_channel12" physical="debuglog_controller"/>
     <include href="subject_dbgserver_common.xml"/>
    </component>
   </subject>
@@ -316,7 +315,7 @@
    </monitor>
    <component ref="sm">
     <map logical="time_info" physical="time_info"/>
-    <map logical="debuglog" physical="debuglog_subject9"/>
+    <map logical="debuglog" physical="debuglog_subject8"/>
     <if variable="pciconf_emulation_enabled" value="true">
      <map logical="dm_pciconf_req" physical="nic_dm_request_1"/>
      <map logical="dm_pciconf_res" physical="nic_dm_response_1"/>
@@ -345,7 +344,7 @@
     </source>
    </events>
    <component ref="dm">
-    <map logical="debuglog" physical="debuglog_subject11"/>
+    <map logical="debuglog" physical="debuglog_subject10"/>
     <map logical="request" physical="nic_dm_request_1"/>
     <map logical="response" physical="nic_dm_response_1"/>
    </component>
@@ -427,7 +426,7 @@
    </monitor>
    <component ref="sm">
     <map logical="time_info" physical="time_info"/>
-    <map logical="debuglog" physical="debuglog_subject10"/>
+    <map logical="debuglog" physical="debuglog_subject9"/>
     <if variable="pciconf_emulation_enabled" value="true">
      <map logical="dm_pciconf_req" physical="nic_dm_request_2"/>
      <map logical="dm_pciconf_res" physical="nic_dm_response_2"/>
@@ -456,7 +455,7 @@
     </source>
    </events>
    <component ref="dm">
-    <map logical="debuglog" physical="debuglog_subject12"/>
+    <map logical="debuglog" physical="debuglog_subject11"/>
     <map logical="request" physical="nic_dm_request_2"/>
     <map logical="response" physical="nic_dm_response_2"/>
    </component>

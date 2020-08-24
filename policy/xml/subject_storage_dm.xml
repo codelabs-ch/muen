@@ -17,7 +17,7 @@
   </source>
  </events>
  <component ref="dm">
-  <map logical="debuglog" physical="debuglog_subject8"/>
+  <map logical="debuglog" physical="debuglog_subject7"/>
   <map logical="request" physical="storage_dm_request"/>
   <map logical="response" physical="storage_dm_response"/>
  </component>

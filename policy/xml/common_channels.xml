@@ -13,11 +13,10 @@
  <channel name="debuglog_subject3" size="$logchannel_size"/>
  <channel name="debuglog_subject4" size="$logchannel_size"/>
  <channel name="debuglog_subject5" size="$logchannel_size"/>
- <channel name="debuglog_subject6" size="$logchannel_size"/>
 
  <if variable="pciconf_emulation_enabled" value="true">
+  <channel name="debuglog_subject6" size="$logchannel_size"/>
   <channel name="debuglog_subject7" size="$logchannel_size"/>
-  <channel name="debuglog_subject8" size="$logchannel_size"/>
 
   <channel name="nic_dm_request" size="16#1000#" hasEvent="switch"/>
   <channel name="nic_dm_response" size="16#1000#" hasEvent="switch"/>

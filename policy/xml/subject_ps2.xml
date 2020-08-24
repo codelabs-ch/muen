@@ -10,7 +10,7 @@
  </events>
  <component ref="ps2_drv">
   <map logical="input_events" physical="input_events"/>
-  <map logical="debuglog" physical="debuglog_subject6"/>
+  <map logical="debuglog" physical="debuglog_subject5"/>
   <map logical="ps2" physical="ps2">
    <map logical="kbd_irq" physical="kbd_irq"/>
    <map logical="mouse_irq" physical="mouse_irq"/>

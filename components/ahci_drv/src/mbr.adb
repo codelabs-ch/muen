@@ -100,6 +100,18 @@ is
       Stop_Parsing  : Boolean := True;
       Partition     : Partition_Entry_Type;
       EBR_Base      : Interfaces.Unsigned_32 := 0;
+
+      function Is_EBR (T : Interfaces.Unsigned_8) return Boolean
+      is
+      begin
+         for EBR of Partitions.EBR_Partition_Types loop
+            if T = EBR then
+               return True;
+            end if;
+         end loop;
+         return False;
+      end Is_EBR;
+
    begin
       Part_Table.Count := 0;
       Parse_Loop : loop
@@ -129,7 +141,7 @@ is
             Partition := MBR_Entry.Partition_1_4 (I);
             if Partition.Partition_Type /= Partitions.PARTITION_TYPE_EMPTY
             then
-               if Partition.Partition_Type /= Partitions.PARTITION_TYPE_EBR
+               if not Is_EBR (Partition.Partition_Type)
                then
                   --  for normal partitions the start_lba gives the LBA
                   --  relative to the start of the current EBR LBA

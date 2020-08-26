@@ -20,7 +20,9 @@ with Interfaces;
 package Partitions
 is
    PARTITION_TYPE_EMPTY : constant := 16#00#;
-   PARTITION_TYPE_EBR   : constant := 16#05#;
+
+   type EBR_Partition_Types_Type is array (1 .. 3) of Interfaces.Unsigned_8;
+   EBR_Partition_Types : EBR_Partition_Types_Type := (16#05#, 16#0f#, 16#85#);
 
    type Partition_Element_Type is record
       Start_Lba      : Interfaces.Unsigned_64;

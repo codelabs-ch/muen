@@ -95,11 +95,13 @@ is
       Ret           : Ahci.Status_Type;
       Sig           : Interfaces.Unsigned_16;
       Sector        : Interfaces.Unsigned_64 := 0;
-      Start         : Integer := 0;
+      Start_Lba     : Interfaces.Unsigned_64 := 0;
       Found         : Integer := 0;
       Stop_Parsing  : Boolean := True;
       Partition     : Partition_Entry_Type;
       EBR_Base      : Interfaces.Unsigned_32 := 0;
+      Max_Entries   : Integer := 4;
+      Add_Entry     : Boolean := True;
 
       function Is_EBR (T : Interfaces.Unsigned_8) return Boolean
       is
@@ -135,9 +137,11 @@ is
          end if;
 
          Found := 0;
+         --  stop parsing if there is no EBR Entry pointing to the next sector
+         --  with a table
          Stop_Parsing := True;
 
-         for I in Natural range 1 .. 4 loop
+         for I in Natural range 1 .. Max_Entries loop
             Partition := MBR_Entry.Partition_1_4 (I);
             if Partition.Partition_Type /= Partitions.PARTITION_TYPE_EMPTY
             then
@@ -145,36 +149,45 @@ is
                then
                   --  for normal partitions the start_lba gives the LBA
                   --  relative to the start of the current EBR LBA
-                  Part_Table.Entries (Part_Table.Count + Found).Start_Lba :=
+                  Start_Lba :=
                      Interfaces.Unsigned_64 (Partition.LBA_First_Sector) +
                      Sector;
+                  Add_Entry := True; --  allways add non EBR entries
                else
                   --  for EBR sector is relative addressed to start of ebr
-                  Part_Table.Entries (Part_Table.Count + Found).Start_Lba :=
+                  Start_Lba :=
                      Interfaces.Unsigned_64 (Partition.LBA_First_Sector +
                      EBR_Base);
+                  Add_Entry := False;
+
                   if EBR_Base = 0 then
+                     --  this is the first EBR. Setup EBR Base and add these
+                     --  entry to  Partition table like fdisk did. From now on
+                     --  only look at the first two table entries.
                      EBR_Base := Partition.LBA_First_Sector;
+                     Add_Entry := True;
+                     Max_Entries := 2;
                   end if;
 
                   --  the next partiton table is at
-                  Sector :=
-                     Part_Table.Entries (Part_Table.Count + Found).Start_Lba;
-
+                  Sector := Start_Lba;
                   Stop_Parsing := False;
+
                end if;
 
-               Part_Table.Entries (Part_Table.Count + Found).Sector_Cnt :=
-                  Interfaces.Unsigned_64 (Partition.Sector_Cnt);
-               Part_Table.Entries (Part_Table.Count + Found).Partition_Type :=
-                  Partition.Partition_Type;
-               Found := Found + 1;
+               if Add_Entry then
+                  Part_Table.Entries (Part_Table.Count + Found).Start_Lba
+                     := Start_Lba;
+                  Part_Table.Entries (Part_Table.Count + Found).Sector_Cnt
+                     := Interfaces.Unsigned_64 (Partition.Sector_Cnt);
+                  Part_Table.Entries (Part_Table.Count + Found).Partition_Type
+                     := Partition.Partition_Type;
+                  Found := Found + 1;
+               end if;
             end if;
          end loop;
          Part_Table.Count := Part_Table.Count + Found;
          exit Parse_Loop when Stop_Parsing;
-
-         Start := Start + Found;
       end loop Parse_Loop;
    end Parse;
 end Mbr;

@@ -102,6 +102,8 @@ is
    procedure Expand_Expr_Cond (Data : Muxml.XML_Data_Type)
    is
    begin
+      Mucfgcheck.Config.Config_Boolean_Values (XML_Data => Data);
+      Mucfgcheck.Config.Config_Integer_Values (XML_Data => Data);
       Mucfgcheck.Config.Expression_Config_Var_Refs (XML_Data => Data);
       Mucfgcheck.Config.Expression_Integer_Values (XML_Data => Data);
       Mucfgcheck.Config.Expression_Boolean_Values (XML_Data => Data);

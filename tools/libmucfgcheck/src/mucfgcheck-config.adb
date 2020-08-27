@@ -144,6 +144,18 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Check_Config_Integer_Values is new Check_Type_Values
+     (Value_Type => Integer,
+      Typename   => "integer",
+      XPath      => "/*/config/",
+      Value_Kind => "config variable",
+      Name       => Config_Var_Name);
+
+   procedure Config_Integer_Values
+     (XML_Data : Muxml.XML_Data_Type) renames Check_Config_Integer_Values;
+
+   -------------------------------------------------------------------------
+
    procedure Check_Boolean_Values is new Check_Type_Values
      (Value_Type => Boolean,
       Typename   => "boolean",

@@ -138,7 +138,7 @@ Finally, emulate the system:
 The unikernel does not produce any VGA output but you should see the following
 messages in the log:
 
-  $ tools/scripts/mulog-subject.py 8 emulate/serial.out
+  $ tools/scripts/mulog-subject.py 7 emulate/serial.out
 
 
 ```

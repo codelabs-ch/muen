@@ -88,7 +88,8 @@ SPARK_OPTS =                     \
 	--no-inlining                \
 	-Xbuild=prove                \
 	$(SPARK_MEMCACHED_OPTION)    \
-	-j$(NUM_CPUS)
+	-j$(NUM_CPUS)                \
+	$(SPARK_EXTRA_OPTS)
 
 SPARK_LEVEL         ?= 2
 SPARK_MODE          ?= all

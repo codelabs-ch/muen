@@ -125,7 +125,15 @@ package body Paging.Tables.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       Table : Page_Table_Type := Null_Table;
-      Dummy : Entries.Table_Entry_Type;
+      Dummy : constant Entries.Table_Entry_Type
+        := Entries.Create (Dst_Index   => 5,
+                           Dst_Address => 16#1000#,
+                           Readable    => True,
+                           Writable    => True,
+                           Executable  => False,
+                           Maps_Page   => True,
+                           Global      => False,
+                           Caching     => WB);
    begin
       Assert (Condition => Count (Table => Table) = 0,
               Message   => "Null table not empty");
@@ -312,7 +320,15 @@ package body Paging.Tables.Test_Data.Tests is
       use type Interfaces.Unsigned_64;
 
       Table : Page_Table_Type;
-      Dummy : Entries.Table_Entry_Type;
+      Dummy : constant Entries.Table_Entry_Type
+        := Entries.Create (Dst_Index   => 5,
+                           Dst_Address => 16#1000#,
+                           Readable    => True,
+                           Writable    => True,
+                           Executable  => False,
+                           Maps_Page   => True,
+                           Global      => False,
+                           Caching     => WB);
    begin
       Add_Entry (Table => Table,
                  Index => 1,

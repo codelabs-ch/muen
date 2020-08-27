@@ -29,12 +29,18 @@ with Mutools.System_Config;
 package body Mucfgcheck.Config
 is
 
+   --  Returns the name of the config variable given by the node.
+   function Config_Var_Name (Node : DOM.Core.Node) return String;
+
    --  Returns the name of the expression of which the given node is a part of.
    function Expression_Name (Node : DOM.Core.Node) return String;
 
    generic
       type Value_Type is (<>);
-      Typename : String;
+      Typename   : String;
+      XPath      : String;
+      Value_Kind : String;
+      with function Name (Node : DOM.Core.Node) return String;
    procedure Check_Type_Values (Policy : Muxml.XML_Data_Type);
 
    -------------------------------------------------------------------------
@@ -44,7 +50,7 @@ is
       Values : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
-           XPath => "/*/expressions//" & Typename);
+           XPath => XPath & Typename);
    begin
       for I in Natural range 0 .. DOM.Core.Nodes.Length (List => Values) - 1
       loop
@@ -60,8 +66,8 @@ is
          begin
             if Val_Str'Length = 0 then
                raise Validation_Error with Mutools.Utils.Capitalize (Typename)
-                 & " without value attribute in expression '" & Expression_Name
-                 (Node => Val_Node) & "'";
+                 & " without value attribute in " & Value_Kind
+                 & " '" & Name (Node => Val_Node) & "'";
             end if;
 
             declare
@@ -72,8 +78,8 @@ is
                when Constraint_Error =>
                   raise Validation_Error with Mutools.Utils.Capitalize
                     (Typename) & " with invalid value '" & Val_Str
-                    & "' in expression '"
-                    & Expression_Name (Node => Val_Node) & "'";
+                    & "' in " & Value_Kind &  " '"
+                    & Name (Node => Val_Node) & "'";
             end;
          end;
       end loop;
@@ -117,9 +123,45 @@ is
 
    -------------------------------------------------------------------------
 
+   function Config_Var_Name (Node : DOM.Core.Node) return String
+   is
+   begin
+      return DOM.Core.Elements.Get_Attribute (Elem => Node,
+                                              Name => "name");
+   end Config_Var_Name;
+
+   -------------------------------------------------------------------------
+
+   procedure Check_Config_Boolean_Values is new Check_Type_Values
+     (Value_Type => Boolean,
+      Typename   => "boolean",
+      XPath      => "/*/config/",
+      Value_Kind => "config variable",
+      Name       => Config_Var_Name);
+
+   procedure Config_Boolean_Values
+     (XML_Data : Muxml.XML_Data_Type) renames Check_Config_Boolean_Values;
+
+   -------------------------------------------------------------------------
+
+   procedure Check_Config_Integer_Values is new Check_Type_Values
+     (Value_Type => Integer,
+      Typename   => "integer",
+      XPath      => "/*/config/",
+      Value_Kind => "config variable",
+      Name       => Config_Var_Name);
+
+   procedure Config_Integer_Values
+     (XML_Data : Muxml.XML_Data_Type) renames Check_Config_Integer_Values;
+
+   -------------------------------------------------------------------------
+
    procedure Check_Boolean_Values is new Check_Type_Values
      (Value_Type => Boolean,
-      Typename   => "boolean");
+      Typename   => "boolean",
+      XPath      => "/*/expressions//",
+      Value_Kind => "expression",
+      Name       => Expression_Name);
 
    procedure Expression_Boolean_Values
      (XML_Data : Muxml.XML_Data_Type) renames Check_Boolean_Values;
@@ -128,7 +170,10 @@ is
 
    procedure Check_Integer_Values is new Check_Type_Values
      (Value_Type => Integer,
-      Typename   => "integer");
+      Typename   => "integer",
+      XPath      => "/*/expressions//",
+      Value_Kind => "expression",
+      Name       => Expression_Name);
 
    procedure Expression_Integer_Values
      (XML_Data : Muxml.XML_Data_Type) renames Check_Integer_Values;

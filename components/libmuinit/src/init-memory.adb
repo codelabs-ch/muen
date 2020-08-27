@@ -134,7 +134,10 @@ is
       Stack_Found, Text_Found : Boolean;
    begin
       Stack_Found := False;
-      Text_Found := False;
+      Text_Found  := False;
+      Text_Base   := 0;
+      Stack_Base  := 0;
+      Stack_Size  := 0;
 
       Process_Memregions :
       while Musinfo.Instance.Has_Element (Iter => Iter)

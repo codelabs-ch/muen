@@ -29,6 +29,9 @@ with Mutools.System_Config;
 package body Mucfgcheck.Config
 is
 
+   --  Returns the name of the config variable given by the node.
+   function Config_Var_Name (Node : DOM.Core.Node) return String;
+
    --  Returns the name of the expression of which the given node is a part of.
    function Expression_Name (Node : DOM.Core.Node) return String;
 
@@ -117,6 +120,27 @@ is
          end;
       end loop;
    end Conditional_Config_Var_Refs;
+
+   -------------------------------------------------------------------------
+
+   function Config_Var_Name (Node : DOM.Core.Node) return String
+   is
+   begin
+      return DOM.Core.Elements.Get_Attribute (Elem => Node,
+                                              Name => "name");
+   end Config_Var_Name;
+
+   -------------------------------------------------------------------------
+
+   procedure Check_Config_Boolean_Values is new Check_Type_Values
+     (Value_Type => Boolean,
+      Typename   => "boolean",
+      XPath      => "/*/config/",
+      Value_Kind => "config variable",
+      Name       => Config_Var_Name);
+
+   procedure Config_Boolean_Values
+     (XML_Data : Muxml.XML_Data_Type) renames Check_Config_Boolean_Values;
 
    -------------------------------------------------------------------------
 

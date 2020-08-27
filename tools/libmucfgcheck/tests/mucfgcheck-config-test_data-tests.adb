@@ -73,6 +73,50 @@ package body Mucfgcheck.Config.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Config_Boolean_Values (Gnattest_T : in out Test);
+   procedure Test_Config_Boolean_Values_7f9172 (Gnattest_T : in out Test) renames Test_Config_Boolean_Values;
+--  id:2.2/7f917295e735f62f/Config_Boolean_Values/1/0/
+   procedure Test_Config_Boolean_Values (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.None,
+                   File => "data/test_policy_src.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Config_Boolean_Values (XML_Data => Data);
+
+      --  Set non-boolean value.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/config/boolean[@name='feature_enabled']",
+         Name  => "value",
+         Value => "foobar");
+
+      begin
+         Config_Boolean_Values (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Boolean with invalid value 'foobar' in config variable "
+                    & "'feature_enabled'",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Config_Boolean_Values;
+--  end read only
+
+
+--  begin read only
    procedure Test_Expression_Config_Var_Refs (Gnattest_T : in out Test);
    procedure Test_Expression_Config_Var_Refs_ea351f (Gnattest_T : in out Test) renames Test_Expression_Config_Var_Refs;
 --  id:2.2/ea351faa18a7216f/Expression_Config_Var_Refs/1/0/

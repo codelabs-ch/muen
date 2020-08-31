@@ -143,6 +143,12 @@
  </platform>
  <memory>
   <memory alignment="16#0020_0000#" caching="WB" name="linux|ram" physicalAddress="16#0080_0000#" size="16#0f60_0000#" type="subject"/>
+  <memory alignment="16#1000#" caching="WB" name="linux|buffer"  physicalAddress="16#000f_f000#" size="16#1000#" type="subject_device">
+   <hashRef memory="linux|buffer_src"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="linux|buffer_src" physicalAddress="16#000f_e000#" size="16#1000#" type="subject_device">
+   <file filename="initial_content" offset="none"/>
+  </memory>
   <memory alignment="16#1000#" caching="WB" name="kernel_text" physicalAddress="16#0010_0000#" size="16#0001_0000#" type="kernel_binary">
    <file filename="kernel" offset="16#0000#"/>
   </memory>
@@ -342,6 +348,7 @@
   <domain id="1" name="linux_domain">
    <memory>
     <memory executable="false" logical="linux|ram" physical="linux|ram" virtualAddress="16#00a0_0000#" writable="true"/>
+    <memory executable="false" logical="buffer" physical="linux|buffer" virtualAddress="16#0020_0000#" writable="true"/>
     <memory executable="false" logical="rmrr1" physical="rmrr1" virtualAddress="16#bb80_0000#" writable="true"/>
    </memory>
    <devices>
@@ -2228,9 +2235,11 @@
     <memory executable="false" logical="timer" physical="linux|timed_event" virtualAddress="16#000e_0000_0000#" writable="true"/>
     <memory executable="false" logical="linux_keyboard" physical="linux_keyboard" virtualAddress="16#3000#" writable="false"/>
     <memory executable="false" logical="linux_console" physical="linux_console" virtualAddress="16#4000#" writable="true"/>
+    <memory executable="false" logical="buffer" physical="linux|buffer" virtualAddress="16#1000_0000#" writable="true"/>
     <memory executable="false" logical="initramfs1" physical="initramfs1" virtualAddress="16#1009_0000#" writable="false"/>
     <memory executable="false" logical="initramfs2" physical="initramfs2" virtualAddress="16#1009_1000#" writable="false"/>
     <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_2" virtualAddress="16#000e_0000_9000#" writable="false"/>
+    <memory executable="false" logical="buffer_src" physical="linux|buffer_src" virtualAddress="16#7000_1000_0000#" writable="false"/>
    </memory>
    <devices>
     <device logical="ttyS0" physical="serial">

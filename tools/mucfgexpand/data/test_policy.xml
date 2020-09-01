@@ -178,7 +178,7 @@
   <memory caching="WB" name="dummy_5" physicalAddress="16#9000#" size="16#2000#">
    <file filename="foofile" offset="none"/>
   </memory>
-  <memory caching="WB" name="dummy_6" physicalAddress="16#b000#" size="16#1000#">
+  <memory caching="WC" name="dummy_6" physicalAddress="16#b000#" size="16#1000#">
    <file filename="barfile" offset="none"/>
   </memory>
   <memory caching="WB" name="initramfs" physicalAddress="16#c000#" size="16#4000#">

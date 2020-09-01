@@ -67,8 +67,6 @@
   <event name="timer_linux_4" mode="self"/>
   <event name="nic_linux_smp_signal_sm_01" mode="asap"/>
   <event name="nic_linux_smp_signal_sm_02" mode="asap"/>
-  <event name="virtual_console_3" mode="asap"/>
-  <event name="virtual_console_4" mode="asap"/>
  </events>
 
  <channels>
@@ -94,6 +92,7 @@
   <include href="subject_nic_sl.xml"/>
   <include href="subject_ps2.xml"/>
   <include href="subject_controller.xml"/>
+  <include href="subject_vt.xml"/>
 
   <subject name="dbgserver">
    <events>
@@ -119,41 +118,6 @@
     <map logical="log_channel11" physical="debuglog_subject11"/>
     <map logical="log_channel12" physical="debuglog_controller"/>
     <include href="subject_dbgserver_common.xml"/>
-   </component>
-  </subject>
-
-  <subject name="vt">
-   <events>
-    <source>
-     <group name="vmx_exit">
-      <default physical="system_panic">
-       <system_panic/>
-      </default>
-     </group>
-    </source>
-    <target>
-     <event logical="nic_linux_core_1" physical="virtual_console_3">
-      <inject_interrupt vector="34"/>
-     </event>
-     <event logical="nic_linux_core_2" physical="virtual_console_4">
-      <inject_interrupt vector="34"/>
-     </event>
-    </target>
-   </events>
-   <component ref="vt">
-    <map logical="NIC Linux" physical="virtual_console_1"/>
-    <map logical="Storage Linux" physical="virtual_console_2"/>
-    <map logical="input_events" physical="input_events"/>
-    <map logical="input_device_1" physical="virtual_input_1"/>
-    <map logical="input_device_2" physical="virtual_input_2"/>
-    <map logical="debuglog" physical="debuglog_subject1"/>
-    <map logical="vga" physical="vga">
-     <map logical="buffer" physical="buffer"/>
-     <map logical="ports" physical="ports"/>
-    </map>
-    <map logical="slot_control_1" physical="slot_control_1"/>
-    <map logical="shutdown" physical="system_poweroff"/>
-    <map logical="reboot" physical="system_reboot"/>
    </component>
   </subject>
 
@@ -274,7 +238,6 @@
       <default physical="trap_to_sm_3"/>
      </group>
      <group name="vmcall">
-      <event id="1" logical="virtual_console" physical="virtual_console_3"/>
       <event id="31" logical="timer" physical="timer_linux_3"/>
      </group>
     </source>
@@ -385,7 +348,6 @@
       <default physical="trap_to_sm_4"/>
      </group>
      <group name="vmcall">
-      <event id="1" logical="virtual_console" physical="virtual_console_4"/>
       <event id="31" logical="timer" physical="timer_linux_4"/>
      </group>
     </source>

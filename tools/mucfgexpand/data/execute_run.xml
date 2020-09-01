@@ -173,7 +173,7 @@
   <memory alignment="16#1000#" caching="WB" name="dummy_5_src" physicalAddress="16#9000#" size="16#2000#" type="subject">
    <file filename="foofile" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="dummy_6" size="16#1000#" type="subject">
+  <memory alignment="16#1000#" caching="WC" name="dummy_6" size="16#1000#" type="subject">
    <hashRef memory="dummy_6_src"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="dummy_6_src" physicalAddress="16#b000#" size="16#1000#" type="subject">

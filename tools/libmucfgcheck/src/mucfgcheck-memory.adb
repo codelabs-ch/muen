@@ -364,7 +364,7 @@ is
       Nodes      : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/memory/memory[contains(string(@type),'device')]");
+           XPath => "/system/memory/memory[starts-with(@type,'device')]");
       Virt_Nodes : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,

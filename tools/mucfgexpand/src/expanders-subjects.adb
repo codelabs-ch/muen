@@ -2382,6 +2382,10 @@ is
                                 (Elem  => Phys_Mem,
                                  Name  => "name",
                                  Value => Src_Phys_Name);
+                              DOM.Core.Elements.Set_Attribute
+                                (Elem  => Phys_Mem,
+                                 Name  => "caching",
+                                 Value => "WB");
 
                               --  Map new source region into loader.
 

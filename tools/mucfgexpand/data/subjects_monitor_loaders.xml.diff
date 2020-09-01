@@ -9,7 +9,7 @@
   <memory caching="WC" name="dummy_6" physicalAddress="16#b000#" size="16#1000#">                                                                    |    <memory caching="WC" name="dummy_6" size="16#1000#">
                                                                                                                                                      >     <hashRef memory="dummy_6_src"/>
                                                                                                                                                      >    </memory>
-                                                                                                                                                     >    <memory caching="WC" name="dummy_6_src" physicalAddress="16#b000#" size="16#1000#">
+                                                                                                                                                     >    <memory caching="WB" name="dummy_6_src" physicalAddress="16#b000#" size="16#1000#">
    <file filename="barfile" offset="none"/>                                                                                                                <file filename="barfile" offset="none"/>
   </memory>                                                                                                                                               </memory>
 --

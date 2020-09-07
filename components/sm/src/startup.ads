@@ -22,7 +22,7 @@ package Startup
 is
 
    --  Initialize runtime environment of monitored subject.
-   procedure Setup_Monitored_Subject
+   procedure Setup_Monitored_Subject (Success : out Boolean)
    with
       Pre => Musinfo.Instance.Is_Valid;
 

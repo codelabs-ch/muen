@@ -46,10 +46,16 @@ is
 
    procedure Process (Action : out Types.Subject_Action_Type)
    is
-      Is_BSP : Boolean;
-      CR4    : SK.Word64;
+      Is_BSP, Success : Boolean;
+      CR4 : SK.Word64;
    begin
-      Startup.Setup_Monitored_Subject;
+      Startup.Setup_Monitored_Subject (Success => Success);
+      if not Success then
+         pragma Debug (Debug_Ops.Put_Line
+                       (Item => "Linux setup error, halting subject"));
+         Action := Types.Subject_Halt;
+         return;
+      end if;
 
       --  Check if subject state was invalid due to expected use case.
 

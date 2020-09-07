@@ -30,12 +30,13 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Setup_Monitored_Subject
+   procedure Setup_Monitored_Subject (Success : out Boolean)
    is
       use type Musinfo.Resource_Type;
 
       Event : Musinfo.Resource_Type;
    begin
+      Success := True;
       Event := Musinfo.Instance.Resource_By_Name
         (Name => Musinfo.Utils.To_Name (Str => Reset_Event_Name),
          Kind => Musinfo.Res_Event);

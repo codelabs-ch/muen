@@ -20,8 +20,6 @@ with SK.Bitops;
 with SK.Constants;
 with SK.CPU;
 
-with Startup;
-
 with Debug_Ops;
 
 package body Exit_Handlers.Invalid_Guest_State

@@ -40,6 +40,7 @@ with Sm_Component.Events;
 with Time;
 with Types;
 with Interrupt_Handler;
+with Startup;
 with Subject_Info;
 with Exit_Handlers.CPUID;
 with Exit_Handlers.EPT_Violation;
@@ -60,7 +61,7 @@ procedure Sm
 with
    Global => (Input  => (Musinfo.Instance.State, Mutime.Info.State,
                          Musinfo.Instance.Scheduling_Info,
-                         Mucontrol.Command.Instance.State),
+                         Mucontrol.Command.Instance.State, Startup.State),
               In_Out => (Devices.RTC.State, Mudm.Client.State,
                          Devices.UART8250.State, Exit_Handlers.RDTSC.State,
                          Mutime.Info.Valid, Subject_Info.State,

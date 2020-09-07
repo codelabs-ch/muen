@@ -20,6 +20,7 @@ with X86_64;
 
 with Musinfo.Instance;
 
+with Startup;
 with Subject_Info;
 with Types;
 
@@ -30,7 +31,7 @@ is
    procedure Process (Action : out Types.Subject_Action_Type)
    with
       Pre    => Musinfo.Instance.Is_Valid,
-      Global => (Input  => Musinfo.Instance.State,
+      Global => (Input  => (Musinfo.Instance.State, Startup.State),
                  In_Out => (Subject_Info.State, X86_64.State));
 
 end Exit_Handlers.Invalid_Guest_State;

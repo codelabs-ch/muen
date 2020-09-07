@@ -27,6 +27,8 @@ with Mucontrol.Status;
 with Debug_Ops;
 
 package body Startup
+with
+   Refined_State => (State => Linux_Status)
 is
 
    Reset_Event_Name  : constant String := "reset_linux";
@@ -43,6 +45,12 @@ is
    -------------------------------------------------------------------------
 
    procedure Setup_Monitored_Subject (Success : out Boolean)
+   with
+      Refined_Global  => ((Input  => (Linux_Status, Musinfo.Instance.State),
+                           In_Out => X86_64.State)),
+      Refined_Depends => (Success      => (Linux_Status,
+                                           Musinfo.Instance.State),
+                          X86_64.State =>+ Musinfo.Instance.State)
    is
       use type Musinfo.Resource_Type;
 

@@ -16,14 +16,22 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with X86_64;
+
 with Musinfo.Instance;
 
 package Startup
+with
+   Abstract_State => (State with External => Async_Writers)
 is
 
    --  Initialize runtime environment of monitored subject.
-   procedure Setup_Monitored_Subject
+   procedure Setup_Monitored_Subject (Success : out Boolean)
    with
-      Pre => Musinfo.Instance.Is_Valid;
+      Global  => (Input  => (State, Musinfo.Instance.State),
+                  In_Out => X86_64.State),
+      Depends => (Success      => (State, Musinfo.Instance.State),
+                  X86_64.State =>+ Musinfo.Instance.State),
+      Pre     => Musinfo.Instance.Is_Valid;
 
 end Startup;

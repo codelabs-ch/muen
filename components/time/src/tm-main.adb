@@ -121,7 +121,7 @@ is
            (Item => "Time successfully published, halting"));
 
       Mucontrol.Status.Instance.Set
-        (New_Status => Mucontrol.Status.STATE_FINISHED);
+        (New_State => Mucontrol.Status.STATE_FINISHED);
       SK.CPU.Stop;
    end Run;
 

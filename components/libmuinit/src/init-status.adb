@@ -52,7 +52,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Set
-     (New_Status : Mucontrol.Status.Status_Type)
+     (New_State : Mucontrol.Status.State_Type)
       renames Mucontrol.Status.Instance.Set;
 
    -------------------------------------------------------------------------

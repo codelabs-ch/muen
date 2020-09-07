@@ -31,34 +31,34 @@ with Interfaces;
 package Mucontrol.Status
 is
 
-   type Status_Type is new Interfaces.Unsigned_64
+   type State_Type is new Interfaces.Unsigned_64
      with Size => 64;
 
    --  Waiting for initial command.
-   STATE_INITIAL      : constant Status_Type := 16#0000#;
+   STATE_INITIAL      : constant State_Type := 16#0000#;
    --  Synchronized with command.
-   STATE_SYNCED       : constant Status_Type := 16#0001#;
+   STATE_SYNCED       : constant State_Type := 16#0001#;
    --  Erasing writable memory regions.
-   STATE_ERASING      : constant Status_Type := 16#0002#;
+   STATE_ERASING      : constant State_Type := 16#0002#;
    --  All writable memory regions have been erased.
-   STATE_ERASED       : constant Status_Type := 16#0003#;
+   STATE_ERASED       : constant State_Type := 16#0003#;
    --  Preparing writable memory regions.
-   STATE_PREPARING    : constant Status_Type := 16#0004#;
+   STATE_PREPARING    : constant State_Type := 16#0004#;
    --  All writable memory regions have been prepared with their initial
    --  content.
-   STATE_PREPARED     : constant Status_Type := 16#0005#;
+   STATE_PREPARED     : constant State_Type := 16#0005#;
    --  Validating hashes of all memory regions.
-   STATE_VALIDATING   : constant Status_Type := 16#0006#;
+   STATE_VALIDATING   : constant State_Type := 16#0006#;
    --  Hashes of all memory regions have been validated.
-   STATE_VALIDATED    : constant Status_Type := 16#0007#;
+   STATE_VALIDATED    : constant State_Type := 16#0007#;
    --  Initializing remaining environment for subject execution.
-   STATE_INITIALIZING : constant Status_Type := 16#0008#;
+   STATE_INITIALIZING : constant State_Type := 16#0008#;
    --  Subject is running.
-   STATE_RUNNING      : constant Status_Type := 16#0009#;
+   STATE_RUNNING      : constant State_Type := 16#0009#;
    --  Subject has finished its task and halted further execution.
-   STATE_FINISHED     : constant Status_Type := 16#000a#;
+   STATE_FINISHED     : constant State_Type := 16#000a#;
    --  Error occurred.
-   STATE_ERROR        : constant Status_Type := 16#8000_0000_0000_0000#;
+   STATE_ERROR        : constant State_Type := 16#8000_0000_0000_0000#;
 
    type Diagnostics_Type is new Interfaces.Unsigned_64
      with Size => 64;
@@ -75,8 +75,8 @@ is
      (Padding_Start_Byte .. Page_Size - 1) of Interfaces.Unsigned_8
      with Size => Padding_Size;
 
-   type Status_Page_Type is record
-      Status      : Status_Type with Atomic;
+   type Status_Interface_Type is record
+      State       : State_Type with Atomic;
       Watchdog    : Interfaces.Unsigned_64;
       Diagnostics : Diagnostics_Type;
       Reserved    : Padding_Type;
@@ -86,8 +86,8 @@ is
        Size        => Page_Size * 8,
        Volatile;
 
-   for Status_Page_Type use record
-      Status      at  0 range 0 .. 63;
+   for Status_Interface_Type use record
+      State       at  0 range 0 .. 63;
       Watchdog    at  8 range 0 .. 63;
       Diagnostics at 16 range 0 .. 63;
       Reserved    at Padding_Start_Byte range 0 .. Padding_Size - 1;

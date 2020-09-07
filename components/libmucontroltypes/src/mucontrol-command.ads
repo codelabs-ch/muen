@@ -59,7 +59,7 @@ is
      (Padding_Start_Byte .. Page_Size - 1) of Interfaces.Unsigned_8
      with Size => Padding_Size;
 
-   type Command_Page_Type is record
+   type Command_Interface_Type is record
       Command           : Command_Type with Atomic;
       Epoch             : Interfaces.Unsigned_64;
       Watchdog_Interval : Interfaces.Unsigned_64;
@@ -70,7 +70,7 @@ is
        Size        => Page_Size * 8,
        Volatile;
 
-   for Command_Page_Type use record
+   for Command_Interface_Type use record
       Command           at  0 range 0 .. 63;
       Epoch             at  8 range 0 .. 63;
       Watchdog_Interval at 16 range 0 .. 63;

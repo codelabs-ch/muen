@@ -1,4 +1,7 @@
 <subject name="nic_sm">
+ <memory>
+  <memory executable="false" logical="status_linux" physical="status_linux_1" virtualAddress="16#0200_0000#" writable="false"/>
+ </memory>
  <events>
   <source>
    <group name="vmx_exit">

@@ -38,7 +38,7 @@ begin
    loop
       Init.Run.Initialize (Success => Success);
       if Success then
-         Init.Status.Set (New_Status => Mucontrol.Status.STATE_RUNNING);
+         Init.Status.Set (New_State => Mucontrol.Status.STATE_RUNNING);
       end if;
       SK.Hypercall.Trigger_Event (Number => Sl_Component.Events.Start_ID);
    end loop;

@@ -33,15 +33,15 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Status
+   function Get_State
      (ID : Managed_Subjects_Range)
-      return Mucontrol.Status.Status_Type
+      return Mucontrol.Status.State_Type
    is
-      Cur_Value : constant Mucontrol.Status.Status_Type
-        := Status_Pages (ID).Status;
+      Cur_Value : constant Mucontrol.Status.State_Type
+        := Status_Pages (ID).State;
    begin
       return Cur_Value;
-   end Get_Status;
+   end Get_State;
 
    -------------------------------------------------------------------------
 

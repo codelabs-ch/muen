@@ -35,16 +35,16 @@ is
 
    procedure Error
    is
-      Cur_Status : Status_Type := Status_Page.Status;
+      Cur_State : State_Type := Status_Page.State;
    begin
-      Cur_Status := Cur_Status or STATE_ERROR;
-      Status_Page.Status := Cur_Status;
+      Cur_State := Cur_State or STATE_ERROR;
+      Status_Page.State := Cur_State;
    end Error;
 
    -------------------------------------------------------------------------
 
-   function Get return Status_Type
-   is (Status_Page.Status);
+   function Get return State_Type
+   is (Status_Page.State);
 
    -------------------------------------------------------------------------
 
@@ -61,7 +61,7 @@ is
    procedure Initialize
    is
    begin
-      Status_Page := (Status      => STATE_INITIAL,
+      Status_Page := (State       => STATE_INITIAL,
                       Watchdog    => 0,
                       Diagnostics => DIAG_OK,
                       Reserved    => (others => 0));
@@ -69,10 +69,10 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set (New_Status : Status_Type)
+   procedure Set (New_State : State_Type)
    is
    begin
-      Status_Page.Status := New_Status;
+      Status_Page.State := New_State;
    end Set;
 
    -------------------------------------------------------------------------

@@ -25,10 +25,10 @@ with Mucontrol.Status;
 package Ctrlr.Status
 is
 
-   --  Returns the current status for subject specified by ID.
-   function Get_Status
+   --  Returns the current state for subject specified by ID.
+   function Get_State
      (ID : Managed_Subjects_Range)
-      return Mucontrol.Status.Status_Type
+      return Mucontrol.Status.State_Type
    with Volatile_Function;
 
    --  Returns the current watchdog value for subject specified by ID.
@@ -48,7 +48,7 @@ private
    package Cspecs renames Controller_Component.Memory_Arrays;
 
    type Status_Array is array (Managed_Subjects_Range)
-     of Mucontrol.Status.Status_Page_Type
+     of Mucontrol.Status.Status_Interface_Type
    with
       Object_Size => Cspecs.Status_Element_Size * Cspecs.Status_Element_Count
         * 8;

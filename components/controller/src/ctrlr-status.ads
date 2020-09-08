@@ -48,7 +48,7 @@ private
    package Cspecs renames Controller_Component.Memory_Arrays;
 
    type Status_Array is array (Managed_Subjects_Range)
-     of Mucontrol.Status.Status_Page_Type
+     of Mucontrol.Status.Status_Interface_Type
    with
       Object_Size => Cspecs.Status_Element_Size * Cspecs.Status_Element_Count
         * 8;

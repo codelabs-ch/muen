@@ -90,7 +90,7 @@ private
 
    package Cspec renames Libmucontrol_Component.Memory;
 
-   Status_Page : Status_Page_Type
+   Status_Page : Status_Interface_Type
    with
       Import,
       Async_Readers,

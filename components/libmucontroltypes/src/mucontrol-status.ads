@@ -75,7 +75,7 @@ is
      (Padding_Start_Byte .. Page_Size - 1) of Interfaces.Unsigned_8
      with Size => Padding_Size;
 
-   type Status_Page_Type is record
+   type Status_Interface_Type is record
       State       : State_Type with Atomic;
       Watchdog    : Interfaces.Unsigned_64;
       Diagnostics : Diagnostics_Type;
@@ -86,7 +86,7 @@ is
        Size        => Page_Size * 8,
        Volatile;
 
-   for Status_Page_Type use record
+   for Status_Interface_Type use record
       State       at  0 range 0 .. 63;
       Watchdog    at  8 range 0 .. 63;
       Diagnostics at 16 range 0 .. 63;

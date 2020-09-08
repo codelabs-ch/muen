@@ -77,7 +77,7 @@ private
      := Interfaces.Unsigned_64 (Managed_Subjects_Range'Last) * Page_Size * 8;
 
    type Command_Array is array (Managed_Subjects_Range)
-     of Mucontrol.Command.Command_Page_Type
+     of Mucontrol.Command.Command_Interface_Type
        with
          Size        => Array_Size,
          Object_Size => Array_Size;

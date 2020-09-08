@@ -70,7 +70,7 @@ private
 
    package Cspec renames Libmucontrol_Component.Memory;
 
-   Command_Page : Command_Page_Type
+   Command_Page : Command_Interface_Type
    with
       Import,
       Async_Writers,

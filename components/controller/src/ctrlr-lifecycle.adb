@@ -32,13 +32,13 @@ with Ctrlr.Status;
 package body Ctrlr.Lifecycle
 is
 
-   use type  Mucontrol.Status.Status_Type;
+   use type  Mucontrol.Status.State_Type;
 
    --  Returns True if the given subject status designates an error.
    function Has_Error
-     (Subject_Status : Mucontrol.Status.Status_Type)
+     (Subject_State : Mucontrol.Status.State_Type)
       return Boolean
-   is ((Subject_Status and Mucontrol.Status.STATE_ERROR) > 0);
+   is ((Subject_State and Mucontrol.Status.STATE_ERROR) > 0);
 
    --  Returns True if all runtime dependencies for the subject specified by ID
    --  are met.
@@ -93,16 +93,16 @@ is
 
    procedure Dump_Status (ID : Managed_Subjects_Range)
    is
-      Cur_Status      : constant Interfaces.Unsigned_64
-        := Interfaces.Unsigned_64 (Status.Get_Status (ID => ID));
+      Cur_State       : constant Interfaces.Unsigned_64
+        := Interfaces.Unsigned_64 (Status.Get_State (ID => ID));
       Cur_Diagnostics : constant Interfaces.Unsigned_64
         := Interfaces.Unsigned_64 (Status.Get_Diagnostics (ID => ID));
       Cur_WD_Value    : constant Interfaces.Unsigned_64
         := Status.Get_Watchdog (ID => ID);
    begin
       Debuglog.Client.Put (Item => SK.Strings.Img (SK.Byte (ID)));
-      Debuglog.Client.Put (Item => ": Status  ");
-      Debuglog.Client.Put (Item => SK.Strings.Img (Cur_Status));
+      Debuglog.Client.Put (Item => ": State   ");
+      Debuglog.Client.Put (Item => SK.Strings.Img (Cur_State));
       Debuglog.Client.Put (Item => ", Diagnostics ");
       Debuglog.Client.Put (Item => SK.Strings.Img (Cur_Diagnostics));
       Debuglog.Client.Put (Item => ", WD ");
@@ -150,9 +150,9 @@ is
    -------------------------------------------------------------------------
 
    function Get_Next_State
-     (ID             : Managed_Subjects_Range;
-      Subject_Status : Mucontrol.Status.Status_Type;
-      Control_Era    : Interfaces.Unsigned_64)
+     (ID            : Managed_Subjects_Range;
+      Subject_State : Mucontrol.Status.State_Type;
+      Control_Era   : Interfaces.Unsigned_64)
      return Run_State_Type
    is
       use type Interfaces.Unsigned_64;
@@ -169,12 +169,12 @@ is
                   Next_State := FSM_Self_Control;
                end if;
             else
-               if Subject_Status = Mucontrol.Status.STATE_INITIAL then
+               if Subject_State = Mucontrol.Status.STATE_INITIAL then
                   Next_State := FSM_Syncing;
                end if;
             end if;
          when FSM_Syncing =>
-            if Subject_Status = Mucontrol.Status.STATE_SYNCED then
+            if Subject_State = Mucontrol.Status.STATE_SYNCED then
                if Config.Instance (ID).Initial_Erase then
                   Next_State := FSM_Erasing;
                else
@@ -182,32 +182,32 @@ is
                end if;
             end if;
          when FSM_Erasing =>
-            if Subject_Status = Mucontrol.Status.STATE_ERASED then
+            if Subject_State = Mucontrol.Status.STATE_ERASED then
                Next_State := FSM_Preparing;
-            elsif Has_Error (Subject_Status => Subject_Status) then
+            elsif Has_Error (Subject_State => Subject_State) then
                Next_State := FSM_Error;
             end if;
          when FSM_Preparing =>
-            if Subject_Status = Mucontrol.Status.STATE_PREPARED then
+            if Subject_State = Mucontrol.Status.STATE_PREPARED then
                Next_State := FSM_Validating;
-            elsif Has_Error (Subject_Status => Subject_Status) then
+            elsif Has_Error (Subject_State => Subject_State) then
                Next_State := FSM_Error;
             end if;
          when FSM_Validating =>
-            if Subject_Status = Mucontrol.Status.STATE_VALIDATED
+            if Subject_State = Mucontrol.Status.STATE_VALIDATED
               and then Run_Dependencies_Satisfied (ID => ID)
             then
                Next_State := FSM_Running;
-            elsif Has_Error (Subject_Status => Subject_Status) then
+            elsif Has_Error (Subject_State => Subject_State) then
                Next_State := FSM_Error;
             end if;
          when FSM_Running
             | FSM_Self_Control =>
             if States (ID).Current_Era /= Control_Era then
                Next_State := FSM_Resetting;
-            elsif Subject_Status = Mucontrol.Status.STATE_FINISHED then
+            elsif Subject_State = Mucontrol.Status.STATE_FINISHED then
                Next_State := FSM_Finished;
-            elsif Has_Error (Subject_Status => Subject_Status) then
+            elsif Has_Error (Subject_State => Subject_State) then
                Next_State := FSM_Error;
             end if;
          when FSM_Finished
@@ -281,16 +281,16 @@ is
 
    procedure Process (ID : Managed_Subjects_Range)
    is
-      Cur_Status : Mucontrol.Status.Status_Type;
-      Cur_Era    : Interfaces.Unsigned_64;
-      New_State  : Run_State_Type;
+      Cur_State : Mucontrol.Status.State_Type;
+      Cur_Era   : Interfaces.Unsigned_64;
+      New_State : Run_State_Type;
    begin
-      Cur_Status := Status.Get_Status (ID => ID);
-      Cur_Era    := Slot_Control.Get_Current_Era (ID => ID);
-      New_State  := Get_Next_State
-        (ID             => ID,
-         Subject_Status => Cur_Status,
-         Control_Era    => Cur_Era);
+      Cur_State := Status.Get_State (ID => ID);
+      Cur_Era   := Slot_Control.Get_Current_Era (ID => ID);
+      New_State := Get_Next_State
+        (ID            => ID,
+         Subject_State => Cur_State,
+         Control_Era   => Cur_Era);
 
       if New_State /= States (ID).Current_State then
          Perform_Transition (ID        => ID,

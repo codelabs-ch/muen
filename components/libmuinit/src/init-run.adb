@@ -53,17 +53,17 @@ is
 
       Commands.Wait_For_Sync (Success => Success);
       if Success then
-         Status.Set (New_Status => Mucontrol.Status.STATE_SYNCED);
+         Status.Set (New_State => Mucontrol.Status.STATE_SYNCED);
          Commands.Wait_For_Erase_Or_Prepare (Success => Success,
                                              Erase   => Do_Erase);
          if Success then
             if Do_Erase then
-               Status.Set (New_Status => Mucontrol.Status.STATE_ERASING);
+               Status.Set (New_State => Mucontrol.Status.STATE_ERASING);
 
                --  Erase writable regions.
 
                Memory.Clear_Writable;
-               Status.Set (New_Status => Mucontrol.Status.STATE_ERASED);
+               Status.Set (New_State => Mucontrol.Status.STATE_ERASED);
                Commands.Wait_For_Prepare (Success => Success);
                if not Success then
                   Status.Error
@@ -71,7 +71,7 @@ is
                   return;
                end if;
             end if;
-            Status.Set (New_Status => Mucontrol.Status.STATE_PREPARING);
+            Status.Set (New_State => Mucontrol.Status.STATE_PREPARING);
 
             --  Set up memory region content.
 
@@ -80,10 +80,10 @@ is
                Status.Error;
                return;
             end if;
-            Status.Set (New_Status => Mucontrol.Status.STATE_PREPARED);
+            Status.Set (New_State => Mucontrol.Status.STATE_PREPARED);
             Commands.Wait_For_Validate (Success => Success);
             if Success then
-               Status.Set (New_Status => Mucontrol.Status.STATE_VALIDATING);
+               Status.Set (New_State => Mucontrol.Status.STATE_VALIDATING);
 
                --  Verify hashes of all memory regions.
 
@@ -92,14 +92,14 @@ is
                   Status.Error;
                   return;
                end if;
-               Status.Set (New_Status => Mucontrol.Status.STATE_VALIDATED);
+               Status.Set (New_State => Mucontrol.Status.STATE_VALIDATED);
                Commands.Wait_For_Run (Success => Success);
                if not Success then
                   Status.Error
                     (Diagnostic => Mucontrol.Status.DIAG_UNEXPECTED_CMD);
                else
                   Status.Set
-                    (New_Status => Mucontrol.Status.STATE_INITIALIZING);
+                    (New_State => Mucontrol.Status.STATE_INITIALIZING);
                end if;
             end if;
          else

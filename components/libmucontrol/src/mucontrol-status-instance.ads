@@ -44,8 +44,8 @@ is
       Global  => (Output => State),
       Depends => (State => null);
 
-   --  Get current subject status.
-   function Get return Status_Type
+   --  Get current subject state.
+   function Get return State_Type
    with
       Global => (Input => State),
       Volatile_Function;
@@ -62,11 +62,11 @@ is
       Global => (Input => State),
       Volatile_Function;
 
-   --  Set subject status to given value.
-   procedure Set (New_Status : Status_Type)
+   --  Set subject state to given value.
+   procedure Set (New_State : State_Type)
    with
       Global  => (In_Out => State),
-      Depends => (State  =>+ New_Status);
+      Depends => (State  =>+ New_State);
 
    --  Set error in subject status.
    procedure Error

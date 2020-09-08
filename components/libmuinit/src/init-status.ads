@@ -34,8 +34,8 @@ is
    --  Initialize subject status.
    procedure Initialize;
 
-   --  Set subject status to given value.
-   procedure Set (New_Status : Mucontrol.Status.Status_Type);
+   --  Set subject state to given value.
+   procedure Set (New_State : Mucontrol.Status.State_Type);
 
    --  Set diagnostic to given value.
    procedure Set_Diagnostics (Value : Mucontrol.Status.Diagnostics_Type);

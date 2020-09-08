@@ -25,10 +25,10 @@ with Mucontrol.Status;
 package Ctrlr.Status
 is
 
-   --  Returns the current status for subject specified by ID.
-   function Get_Status
+   --  Returns the current state for subject specified by ID.
+   function Get_State
      (ID : Managed_Subjects_Range)
-      return Mucontrol.Status.Status_Type
+      return Mucontrol.Status.State_Type
    with Volatile_Function;
 
    --  Returns the current watchdog value for subject specified by ID.

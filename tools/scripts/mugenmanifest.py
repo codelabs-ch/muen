@@ -13,7 +13,8 @@ if len(sys.argv) != 3:
 parser = etree.XMLParser(remove_blank_text=True)
 doc = etree.parse(sys.argv[1], parser).getroot()
 nodes = doc.xpath('/system/memory/memory[file|fill]')
-nodes = sorted(nodes, key=lambda c: c.get('physicalAddress'))
+nodes = sorted(nodes, key=lambda c:
+               muutils.ada_hex_to_int(c.get('physicalAddress')))
 
 
 with open(sys.argv[2], 'wb') as f:

@@ -41,13 +41,13 @@ with SK.Crash_Audit;
 package SK.Scheduler
 with
    Abstract_State => State,
-   Initializes    => (State => CPU_Info.CPU_ID)
+   Initializes    => State
 is
 
    --  Returns the subject ID of the currently active scheduling group.
    function Get_Current_Subject_ID return Skp.Global_Subject_ID_Type
    with
-      Global => (Input => State);
+      Global => (Input => (State, CPU_Info.CPU_ID));
 
    --  Init scheduler.
    procedure Init
@@ -67,7 +67,7 @@ is
    procedure Set_VMX_Exit_Timer
    with
       Global =>
-        (Input  => (State, CPU_Info.APIC_ID),
+        (Input  => (State, CPU_Info.APIC_ID, CPU_Info.CPU_ID),
          In_Out => (Crash_Audit.State, X86_64.State));
 
    --  Handle_Vmx_Exit could be private if spark/init.adb did not need access.
@@ -77,8 +77,9 @@ is
      (Subject_Registers : in out SK.CPU_Registers_Type)
    with
       Global     =>
-         (Input  => (CPU_Info.APIC_ID, CPU_Info.Is_BSP, Interrupt_Tables.State,
-                     MCE.State, Tau0_Interface.State, VMX.Exit_Address),
+         (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, CPU_Info.Is_BSP,
+                     Interrupt_Tables.State, MCE.State, Tau0_Interface.State,
+                     VMX.Exit_Address),
           In_Out => (State, Crash_Audit.State, FPU.State, IO_Apic.State,
                      MP.Barrier, Subjects.State, Scheduling_Info.State,
                      Subjects_Events.State, Subjects_Interrupts.State,
@@ -113,12 +114,6 @@ private
    --  IDs of active subjects per scheduling group.
    Scheduling_Groups : Skp.Scheduling.Scheduling_Group_Array
      := Skp.Scheduling.Scheduling_Groups
-   with
-      Part_Of => State;
-
-   --  Scheduling plan of the executing CPU.
-   Scheduling_Plan : constant Skp.Scheduling.Major_Frame_Array
-     := Skp.Scheduling.Scheduling_Plans (CPU_Info.CPU_ID)
    with
       Part_Of => State;
 

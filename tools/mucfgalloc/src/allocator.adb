@@ -230,9 +230,19 @@ is
       Map    : in out Alloc.Map.Map_Type)
    is
    begin
+
+      --  Allocate system fills first to increase the chance that especially
+      --  system_pt regions are below 4 GiG (which is required and validated).
+
       Allocate_Variable_Regions
         (Policy => Policy,
-         Path   => "/system/memory/*[not (@physicalAddress) and (fill)]",
+         Path   => "/system/memory/*[not (@physicalAddress) and (fill)"
+         & " and starts-with(@type,'system')]",
+         Map    => Map);
+      Allocate_Variable_Regions
+        (Policy => Policy,
+         Path   => "/system/memory/*[not (@physicalAddress) and (fill)"
+         & " and not (starts-with(@type,'system'))]",
          Map    => Map);
    end Allocate_Variable_Fill_Regions;
 

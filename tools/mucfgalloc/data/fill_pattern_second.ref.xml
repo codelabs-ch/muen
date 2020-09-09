@@ -23,7 +23,9 @@
   <kernelDiagnostics type="none"/>
  </platform>
  <memory>
-  <memory alignment="16#1000#" caching="WB" name="mem1" physicalAddress="16#0002_0000#" size="16#0001_0000#" type="system"/>
+  <memory alignment="16#1000#" caching="WB" name="mem1" physicalAddress="16#0002_0000#" size="16#0001_0000#" type="kernel">
+   <fill pattern="16#ff#"/>
+  </memory>
   <memory alignment="16#1000#" caching="WB" name="mem2" physicalAddress="16#0003_0000#" size="16#0001_0000#" type="system"/>
   <memory alignment="16#1000#" caching="WB" name="mem3" physicalAddress="16#0000#" size="16#0001_0000#" type="system">
    <file filename="test" offset="none"/>

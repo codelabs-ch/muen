@@ -46,6 +46,7 @@
   <memory alignment="16#1000#" name="lnx|text" size="16#d000#" physicalAddress="16#3000#" caching="WB" type="subject_binary"/>
   <memory alignment="16#1000#" name="lnx|zp" size="16#1000#" physicalAddress="16#1000#" caching="WB" type="subject_zeropage">
    <file filename="lnx.zp" offset="none"/>
+   <hash value="none"/>
   </memory>
   <memory alignment="16#1000#" name="lnx|initramfs" size="16#9000#" physicalAddress="16#f000#" caching="WB" type="subject_initrd">
    <file filename="initramfs.cpio.gz" offset="none"/>

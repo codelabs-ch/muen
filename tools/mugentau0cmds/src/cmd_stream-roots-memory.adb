@@ -300,7 +300,9 @@ is
                                      Value => U (Trim (Level'Img))),
                                     (Attr  => U ("caching"),
                                      Value => U (Caching)),
-                                    (if Hash'Length > 0 and then Has_Content
+                                    (if Hash'Length > 0
+                                     and then Hash /= "none"
+                                     and then Has_Content
                                      then
                                        (Attr  => U ("hash"),
                                         Value => U (Hash))

@@ -345,7 +345,7 @@
   <lockMemoryRegion region="236"/>
   <activatePagesMR region="236" baseVirtualAddress="16#0000#" count=" 1"/>
   <activateMemoryRegion region="236"/>
-  <createMemoryRegion region="237" level="1" caching="WB" hash="16#10b41af268f8e7474b020c2d456e133014e03289ebdc227bf79f6b51db16bd7c#"/>
+  <createMemoryRegion region="237" level="1" caching="WB"/>
   <clearPages basePage="16#01a5_0000#" count="1"/>
   <appendPagesMRFile region="237" basePage="16#01a5_0000#" count="1" filename="sl_data" baseOffset="16#0000#"/>
   <lockMemoryRegion region="237"/>

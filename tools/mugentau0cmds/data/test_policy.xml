@@ -448,7 +448,7 @@
   </memory>
   <memory alignment="16#1000#" caching="WB" name="nic_sl|data" physicalAddress="16#01a5_0000#" size="16#1000#" type="subject_binary">
    <file filename="sl_data" offset="none" size="16#00b2#"/>
-   <hash value="16#10b41af268f8e7474b020c2d456e133014e03289ebdc227bf79f6b51db16bd7c#"/>
+   <hash value="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="nic_sl|stack" physicalAddress="16#01da_0000#" size="16#4000#" type="subject_binary">
    <fill pattern="16#00#"/>

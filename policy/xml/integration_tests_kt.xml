@@ -18,15 +18,19 @@
   <include href="common_memory.xml"/>
   <memory name="control_sm_3" size="16#1000#" caching="WB">
    <fill pattern="16#ff#"/>
+   <hash value="none"/>
   </memory>
   <memory name="control_sm_4" size="16#1000#" caching="WB">
    <fill pattern="16#ff#"/>
+   <hash value="none"/>
   </memory>
   <memory name="status_sm_3" size="16#1000#" caching="WB">
    <fill pattern="16#00#"/>
+   <hash value="none"/>
   </memory>
   <memory name="status_sm_4" size="16#1000#" caching="WB">
    <fill pattern="16#00#"/>
+   <hash value="none"/>
   </memory>
   <include href="memory_xhci_dma.xml"/>
  </memory>

@@ -7,8 +7,12 @@
   </xs:restriction>
  </xs:simpleType>
 
+ <xs:simpleType name="optionalHashType">
+  <xs:union memberTypes="hash256DigestType noneType"/>
+ </xs:simpleType>
+
  <xs:complexType name="hash256Type">
-  <xs:attribute name="value" type="hash256DigestType" use="required"/>
+  <xs:attribute name="value" type="optionalHashType" use="required"/>
  </xs:complexType>
 
  <xs:complexType name="hashRefType">

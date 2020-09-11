@@ -46,7 +46,4 @@ is
    --  Returns True if the given region designates the status region.
    function Is_Status (Region : Musinfo.Memregion_Type) return Boolean;
 
-   --  Returns True if the given region designates the control region.
-   function Is_Control (Region : Musinfo.Memregion_Type) return Boolean;
-
 end Init.Utils;

@@ -56,15 +56,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Is_Control (Region : Musinfo.Memregion_Type) return Boolean
-   is
-      use type Interfaces.Unsigned_64;
-   begin
-      return Region.Address = Libmucontrol_Component.Memory.Control_Address;
-   end Is_Control;
-
-   -------------------------------------------------------------------------
-
    function Is_Stack (Region : Musinfo.Memregion_Type) return Boolean
    is
       use type Interfaces.Unsigned_64;

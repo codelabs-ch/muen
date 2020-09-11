@@ -52,8 +52,7 @@ is
    function Should_Process (Resource : Musinfo.Resource_Type) return Boolean
    is (Resource.Kind = Musinfo.Res_Memory
        and then not Utils.Is_Stack (Region => Resource.Mem_Data)
-       and then not Utils.Is_Status (Region => Resource.Mem_Data)
-       and then not Utils.Is_Control (Region => Resource.Mem_Data))
+       and then not Utils.Is_Status (Region => Resource.Mem_Data))
    with
       Post =>
         (if Should_Process'Result then Resource.Kind = Musinfo.Res_Memory);

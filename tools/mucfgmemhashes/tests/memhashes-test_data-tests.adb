@@ -72,7 +72,7 @@ package body Memhashes.Test_Data.Tests is
       Assert (Condition => DOM.Core.Nodes.Length
               (List => McKae.XML.XPath.XIA.XPath_Query
                (N     => Policy.Doc,
-                XPath => "/system/memory/memory/hash")) = 3,
+                XPath => "/system/memory/memory/hash")) = 4,
               Message   => "Generated hashes mismatch");
 
       --  Existing hashes should only be checked instead of adding additional
@@ -83,7 +83,7 @@ package body Memhashes.Test_Data.Tests is
       Assert (Condition => DOM.Core.Nodes.Length
               (List => McKae.XML.XPath.XIA.XPath_Query
                (N     => Policy.Doc,
-                XPath => "/system/memory/memory/hash")) = 3,
+                XPath => "/system/memory/memory/hash")) = 4,
               Message   => "Regenerated hashes mismatch");
 
       Muxml.Utils.Set_Attribute

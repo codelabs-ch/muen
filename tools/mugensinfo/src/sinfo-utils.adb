@@ -149,10 +149,15 @@ is
       Hash    : Musinfo.Hash_Type    := Musinfo.No_Hash;
    begin
       if Hash_Node /= null then
-         Hash := Utils.To_Hash
-           (Hex => DOM.Core.Elements.Get_Attribute
+         declare
+            Hash_Val : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => Hash_Node,
-               Name => "value"));
+               Name => "value");
+         begin
+            if Hash_Val /= "none" then
+               Hash := Utils.To_Hash (Hex => Hash_Val);
+            end if;
+         end;
       end if;
 
       if Fill_Node /= null then

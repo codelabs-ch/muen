@@ -87,7 +87,15 @@ is
                Muxml.Utils.Append_Child (Node      => Mem_Node,
                                          New_Child => Hash_Node);
             else
-               if Hash_Str /= DOM.Core.Elements.Get_Attribute
+               if DOM.Core.Elements.Get_Attribute
+                 (Elem => Hash_Node,
+                  Name => "value") = "none"
+               then
+                  Mulog.Log (Msg => "Skipping region with hash none: '"
+                             & DOM.Core.Elements.Get_Attribute
+                               (Elem => Mem_Node,
+                                Name => "name") & "'");
+               elsif Hash_Str /= DOM.Core.Elements.Get_Attribute
                  (Elem => Hash_Node,
                   Name => "value")
                then

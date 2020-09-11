@@ -22,10 +22,12 @@ def create_phys_memory(mem):
         control = etree.Element("memory", name="control_sm_" + str(i),
                                 size="16#1000#", caching="WB")
         control.append(etree.Element("fill", pattern="16#ff#"))
+        control.append(etree.Element("hash", value="none"))
         mem.append(control)
         status = etree.Element("memory", name="status_sm_" + str(i),
                                size="16#1000#", caching="WB")
         status.append(etree.Element("fill", pattern="16#00#"))
+        status.append(etree.Element("hash", value="none"))
         mem.append(status)
 
 

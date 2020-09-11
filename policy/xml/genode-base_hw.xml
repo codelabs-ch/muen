@@ -6,7 +6,7 @@
   <boolean name="dbgserver_sink_pcspkr" value="false"/>
   <boolean name="dbgserver_sink_shmem" value="false"/>
   <boolean name="pciconf_emulation_enabled" value="false"/>
-  <string name="logchannel_size" value="16#0010_0000#"/>
+  <string name="logchannel_size" value="16#000f_0000#"/>
  </config>
 
  <include href="common_expressions.xml"/>

@@ -236,7 +236,7 @@ is
       pragma Debug (Intr_Status.INFS,
          Debug_Ops.Put_Line ("err: Interface Non-Fatal Error"));
       pragma Debug (Intr_Status.IFS,
-         Debug_Ops.Put_Line ("err: Interface Fata Error"));
+         Debug_Ops.Put_Line ("err: Interface Fatal Error"));
       pragma Debug (Intr_Status.HBDS,
          Debug_Ops.Put_Line ("err: Host Bus Data Error"));
       pragma Debug (Intr_Status.OFS,

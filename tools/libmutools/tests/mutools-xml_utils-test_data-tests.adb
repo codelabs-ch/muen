@@ -1133,23 +1133,31 @@ package body Mutools.XML_Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Get_Switch_Sources (Gnattest_T : in out Test);
-   procedure Test_Get_Switch_Sources_e0b744 (Gnattest_T : in out Test) renames Test_Get_Switch_Sources;
---  id:2.2/e0b744f992ef1869/Get_Switch_Sources/1/0/
+   procedure Test_Get_Switch_Sources_bec022 (Gnattest_T : in out Test) renames Test_Get_Switch_Sources;
+--  id:2.2/bec02284d574640c/Get_Switch_Sources/1/0/
    procedure Test_Get_Switch_Sources (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
       Policy  : Muxml.XML_Data_Type;
-      Sources : DOM.Core.Node_List;
+      Events, Src_Events, Sources : DOM.Core.Node_List;
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/switch_events.xml");
+      Events := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/events/event[@mode='switch']");
+      Src_Events := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/subjects/subject/events/source/group"
+           & "/*[self::event or self::default]");
 
       Sources := Get_Switch_Sources
-        (Data   => Policy,
-         Target => Muxml.Utils.Get_Element
+        (Physical_Events => Events,
+         Source_Events   => Src_Events,
+         Target          => Muxml.Utils.Get_Element
            (Doc   => Policy.Doc,
             XPath => "/system/subjects/subject[@name='subj1']"));
       Assert (Condition => DOM.Core.Nodes.Length (List => Sources) = 1,
@@ -1160,9 +1168,10 @@ package body Mutools.XML_Utils.Test_Data.Tests is
                Name => "name") = "subj3",
               Message   => "Subj1 source switch mismatch");
 
-      Sources := Get_Switch_Sources
-        (Data   => Policy,
-         Target => Muxml.Utils.Get_Element
+      Sources :=  Get_Switch_Sources
+        (Physical_Events => Events,
+         Source_Events   => Src_Events,
+         Target          => Muxml.Utils.Get_Element
            (Doc   => Policy.Doc,
             XPath => "/system/subjects/subject[@name='subj3']"));
       Assert (Condition => DOM.Core.Nodes.Length (List => Sources) = 2,

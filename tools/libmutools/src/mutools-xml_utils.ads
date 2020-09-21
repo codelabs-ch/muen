@@ -182,8 +182,9 @@ is
    --  Return the list of subjects that can trigger a switch to the given
    --  target subject.
    function Get_Switch_Sources
-     (Data   : Muxml.XML_Data_Type;
-      Target : DOM.Core.Node)
+     (Physical_Events : DOM.Core.Node_List;
+      Source_Events   : DOM.Core.Node_List;
+      Target          : DOM.Core.Node)
       return DOM.Core.Node_List;
 
    --  Returns the number of CPUs that are active in a given system policy.

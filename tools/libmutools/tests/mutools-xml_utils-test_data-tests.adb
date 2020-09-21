@@ -1205,47 +1205,69 @@ package body Mutools.XML_Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Get_Executing_CPU (Gnattest_T : in out Test);
-   procedure Test_Get_Executing_CPU_1c35bd (Gnattest_T : in out Test) renames Test_Get_Executing_CPU;
---  id:2.2/1c35bd06b291292c/Get_Executing_CPU/1/0/
+   procedure Test_Get_Executing_CPU_92e387 (Gnattest_T : in out Test) renames Test_Get_Executing_CPU;
+--  id:2.2/92e387b4d71b98ec/Get_Executing_CPU/1/0/
    procedure Test_Get_Executing_CPU (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
       Data : Muxml.XML_Data_Type;
+      Events, Src_Events, Sources, Minor_Frames : DOM.Core.Node_List;
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_Src,
                    File => "data/switch-event-chains.xml");
+      Events := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Data.Doc,
+         XPath => "/system/events/event[@mode='switch']");
+      Src_Events := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject/events/source/group"
+           & "/*[self::event or self::default]");
+      Minor_Frames := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/scheduling/majorFrame/cpu/minorFrame");
+
 
       Assert (Condition => Get_Executing_CPU
-              (Data    => Data,
+              (Physical_Events => Events,
+               Source_Events   => Src_Events,
+               Minor_Frames    => Minor_Frames,
                Subject => Muxml.Utils.Get_Element
                  (Doc   => Data.Doc,
                   XPath => "/system/subjects/subject[@name='subj1']")) = 0,
               Message   => "Subj1 CPU mismatch");
 
       Assert (Condition => Get_Executing_CPU
-              (Data    => Data,
-               Subject => Muxml.Utils.Get_Element
+              (Physical_Events => Events,
+               Source_Events   => Src_Events,
+               Minor_Frames    => Minor_Frames,
+               Subject         => Muxml.Utils.Get_Element
                  (Doc   => Data.Doc,
                   XPath => "/system/subjects/subject[@name='subj2']")) = 0,
               Message   => "Subj2 CPU mismatch");
       Assert (Condition => Get_Executing_CPU
-              (Data    => Data,
-               Subject => Muxml.Utils.Get_Element
+              (Physical_Events => Events,
+               Source_Events   => Src_Events,
+               Minor_Frames    => Minor_Frames,
+               Subject         => Muxml.Utils.Get_Element
                  (Doc   => Data.Doc,
                   XPath => "/system/subjects/subject[@name='subj3']")) = 0,
               Message   => "Subj3 CPU mismatch");
       Assert (Condition => Get_Executing_CPU
-              (Data    => Data,
-               Subject => Muxml.Utils.Get_Element
+              (Physical_Events => Events,
+               Source_Events   => Src_Events,
+               Minor_Frames    => Minor_Frames,
+               Subject         => Muxml.Utils.Get_Element
                  (Doc   => Data.Doc,
                   XPath => "/system/subjects/subject[@name='subj4']")) = 0,
               Message   => "Subj4 CPU mismatch (1)");
       Assert (Condition => Get_Executing_CPU
-              (Data    => Data,
-               Subject => Muxml.Utils.Get_Element
+              (Physical_Events => Events,
+               Source_Events   => Src_Events,
+               Minor_Frames    => Minor_Frames,
+               Subject         => Muxml.Utils.Get_Element
                  (Doc   => Data.Doc,
                   XPath => "/system/subjects/subject[@name='subj5']")) = 1,
               Message   => "Subj5 CPU mismatch");
@@ -1255,12 +1277,17 @@ package body Mutools.XML_Utils.Test_Data.Tests is
          XPath => "/system/events/event[@name='to_subj4_from_subj2']",
          Name  => "mode",
          Value => "ipi");
+      Events := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Data.Doc,
+         XPath => "/system/events/event[@mode='switch']");
 
       --  Must not change CPU of subj4 since it is still executable via subj3.
 
       Assert (Condition => Get_Executing_CPU
-              (Data    => Data,
-               Subject => Muxml.Utils.Get_Element
+              (Physical_Events => Events,
+               Source_Events   => Src_Events,
+               Minor_Frames    => Minor_Frames,
+               Subject         => Muxml.Utils.Get_Element
                  (Doc   => Data.Doc,
                   XPath => "/system/subjects/subject[@name='subj4']")) = 0,
               Message   => "Subj4 CPU mismatch (2)");
@@ -1270,10 +1297,15 @@ package body Mutools.XML_Utils.Test_Data.Tests is
          XPath => "/system/events/event[@name='to_subj3_from_subj2']",
          Name  => "mode",
          Value => "ipi");
+      Events := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Data.Doc,
+         XPath => "/system/events/event[@mode='switch']");
 
       Assert (Condition => Get_Executing_CPU
-              (Data    => Data,
-               Subject => Muxml.Utils.Get_Element
+              (Physical_Events => Events,
+               Source_Events   => Src_Events,
+               Minor_Frames    => Minor_Frames,
+               Subject         => Muxml.Utils.Get_Element
                  (Doc   => Data.Doc,
                   XPath => "/system/subjects/subject[@name='subj3']")) = -1,
               Message   => "Subj3 CPU mismatch (2)");

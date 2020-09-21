@@ -909,7 +909,20 @@ is
 
    procedure Runnability (XML_Data : Muxml.XML_Data_Type)
    is
-      Subjects   : constant DOM.Core.Node_List
+      Minor_Frames : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/scheduling/majorFrame/cpu/minorFrame");
+      Physical_Events : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/events/event[@mode='switch']");
+      Source_Events : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/events/source/group"
+           & "/*[self::event or self::default]");
+      Subjects : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/subjects/subject");
@@ -930,8 +943,10 @@ is
                        & "'");
 
             if Mutools.XML_Utils.Get_Executing_CPU
-              (Data    => XML_Data,
-               Subject => Subject) = -1
+              (Minor_Frames    => Minor_Frames,
+               Physical_Events => Physical_Events,
+               Source_Events   => Source_Events,
+               Subject         => Subject) = -1
             then
                raise Validation_Error with "Subject '" & Subj_Name & "' is "
                  & "neither referenced in the scheduling plan nor "

@@ -194,8 +194,10 @@ is
    --  given XML policy. If no CPU can execute the given subject -1 is
    --  returned.
    function Get_Executing_CPU
-     (Data    : Muxml.XML_Data_Type;
-      Subject : DOM.Core.Node)
+     (Physical_Events : DOM.Core.Node_List;
+      Source_Events   : DOM.Core.Node_List;
+      Minor_Frames    : DOM.Core.Node_List;
+      Subject         : DOM.Core.Node)
       return Integer;
 
    --  Returns True if the given node references a PCI device.

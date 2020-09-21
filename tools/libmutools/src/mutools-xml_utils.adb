@@ -221,7 +221,7 @@ is
                  (Devices_Node => Mmconf_Devices_Node,
                   Addr         => Phys_Addr)
                then
-                  Mapping_Addr := Mutools.XML_Utils.Calculate_PCI_Cfg_Address
+                  Mapping_Addr := Calculate_PCI_Cfg_Address
                     (Base_Address => Mmconf_Virt_Base,
                      PCI_Node     => Mmconf_Device_PCI_Node);
                end if;
@@ -648,7 +648,7 @@ is
 
                   declare
                      Src_Subjs    : constant DOM.Core.Node_List
-                       := Mutools.XML_Utils.Get_Switch_Sources
+                       := Get_Switch_Sources
                          (Physical_Events => Physical_Events,
                           Source_Events   => Source_Events,
                           Target          => Subject);

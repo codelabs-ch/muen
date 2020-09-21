@@ -2171,7 +2171,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
 
-      Mutools.XML_Utils.Add_Memory_Region
+      Add_Memory_Region
         (Policy      => Data,
          Name        => "linux|bin",
          Address     => "16#0011_4000#",

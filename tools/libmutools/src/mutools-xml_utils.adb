@@ -594,6 +594,16 @@ is
 
       use type Subject_CPU_Package.Cursor;
 
+      Physical_Events : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/events/event[@mode='switch']");
+      Source_Events   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject/events/source/group"
+           & "/*[self::event or self::default]");
+
       Minor_Frames : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -639,8 +649,9 @@ is
                   declare
                      Src_Subjs    : constant DOM.Core.Node_List
                        := Mutools.XML_Utils.Get_Switch_Sources
-                         (Data   => Data,
-                          Target => Subject);
+                         (Physical_Events => Physical_Events,
+                          Source_Events   => Source_Events,
+                          Target          => Subject);
                      Switch_Count : constant Integer
                        := DOM.Core.Nodes.Length (List => Src_Subjs);
                   begin
@@ -1063,6 +1074,15 @@ is
      (Data : Muxml.XML_Data_Type)
       return ID_Map_Array
    is
+      Physical_Events : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/events/event[@mode='switch']");
+      Source_Events : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject/events/source/group"
+           & "/*[self::event or self::default]");
       Subjects : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -1104,8 +1124,9 @@ is
 
          declare
             Switch_Srcs : constant DOM.Core.Node_List
-              := Get_Switch_Sources (Data   => Data,
-                                     Target => Subject);
+              := Get_Switch_Sources (Physical_Events => Physical_Events,
+                                     Source_Events   => Source_Events,
+                                     Target          => Subject);
          begin
             Visited_Subjects (Subject_ID) := True;
             for I in 0 .. DOM.Core.Nodes.Length (List => Switch_Srcs) - 1 loop
@@ -1167,19 +1188,11 @@ is
    -------------------------------------------------------------------------
 
    function Get_Switch_Sources
-     (Data   : Muxml.XML_Data_Type;
-      Target : DOM.Core.Node)
+     (Physical_Events : DOM.Core.Node_List;
+      Source_Events   : DOM.Core.Node_List;
+      Target          : DOM.Core.Node)
       return DOM.Core.Node_List
    is
-      Events        : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Data.Doc,
-           XPath => "/system/events/event[@mode='switch']");
-      Source_Events : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Data.Doc,
-           XPath => "/system/subjects/subject/events/source/group"
-           & "/*[self::event or self::default]");
       Target_Events : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Target,
@@ -1197,7 +1210,7 @@ is
                     Index => I));
             Event   : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Nodes     => Events,
+                (Nodes     => Physical_Events,
                  Ref_Attr  => "name",
                  Ref_Value => Ev_Name);
          begin

@@ -582,8 +582,10 @@ is
    -------------------------------------------------------------------------
 
    function Get_Executing_CPU
-     (Data    : Muxml.XML_Data_Type;
-      Subject : DOM.Core.Node)
+     (Physical_Events : DOM.Core.Node_List;
+      Source_Events   : DOM.Core.Node_List;
+      Minor_Frames    : DOM.Core.Node_List;
+      Subject         : DOM.Core.Node)
       return Integer
    is
       package Subject_CPU_Package is new Ada.Containers.Hashed_Maps
@@ -593,21 +595,6 @@ is
          Equivalent_Keys => Ada.Strings.Unbounded."=");
 
       use type Subject_CPU_Package.Cursor;
-
-      Physical_Events : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Data.Doc,
-           XPath => "/system/events/event[@mode='switch']");
-      Source_Events   : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Data.Doc,
-           XPath => "/system/subjects/subject/events/source/group"
-           & "/*[self::event or self::default]");
-
-      Minor_Frames : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Data.Doc,
-           XPath => "/system/scheduling/majorFrame/cpu/minorFrame");
 
       --  Subject to CPU mapping.
       Subj_CPU_Map : Subject_CPU_Package.Map;

@@ -235,6 +235,19 @@ is
 
    procedure Add_CPU_IDs (Data : in out Muxml.XML_Data_Type)
    is
+      Minor_Frames : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/scheduling/majorFrame/cpu/minorFrame");
+      Physical_Events : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/events/event[@mode='switch']");
+      Source_Events : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject/events/source/group"
+           & "/*[self::event or self::default]");
       Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -254,8 +267,10 @@ is
                  Name => "name");
             CPU_ID     : constant Integer
               := Mutools.XML_Utils.Get_Executing_CPU
-                (Data    => Data,
-                 Subject => Subj_Node);
+                (Physical_Events => Physical_Events,
+                 Source_Events   => Source_Events,
+                 Minor_Frames    => Minor_Frames,
+                 Subject         => Subj_Node);
             CPU_ID_Str : constant String
               := Ada.Strings.Fixed.Trim (Source => CPU_ID'Img,
                                          Side   => Ada.Strings.Left);

@@ -7,7 +7,7 @@
  </config>
  <mappings>
   <aliases>
-   <alias name="serial_device_1" physical="signal_processing_controller_10">
+   <alias name="serial_device_1" physical="signal_processing_controller_9">
     <resource name="mem" physical="mem1"/>
    </alias>
    <alias name="nic_1" physical="ethernet_controller_1">
@@ -33,7 +33,7 @@
   </classes>
  </mappings>
  <kernelDiagnostics type="hsuart">
-  <device physical="signal_processing_controller_10">
+  <device physical="signal_processing_controller_9">
    <memory physical="mem1"/>
   </device>
  </kernelDiagnostics>

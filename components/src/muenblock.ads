@@ -24,37 +24,32 @@ is
    with
       Pack;
 
-   type Request_Kind_Type is
-      (None,               --  Do nothing
-       Read,               --  Read count blocks
-       Write,              --  Write count blocks
-       Discard,            --  Discard/zero count blocks
-       Sync,
-       Barrier,            --  Enforce media write/barrier etc.
-       Get_SMART,          --  Return SMART read Data (raw)
-       Media_Blocks,       --  Return number of Blocks of device
-       Block_Length,       --  Return block size of device
-       Max_Requests,       --  Return maximum number of requests in flight
-       Max_Blocks_Count,   --  Return max number of blocks per
-                           --   read/write/discard request
-       Max_Devices,        --  Return number of devices
-       Reset)              --  Assure that no requests are pending upon return
-      with Size => 2 * 8;
+   type Request_Kind_Type is new Interfaces.Unsigned_16;
 
-   for Request_Kind_Type use
-      (None               => 16#0000#,
-       Read               => 16#0001#,
-       Write              => 16#0002#,
-       Discard            => 16#0003#,
-       Sync               => 16#0004#,
-       Barrier            => 16#0005#,
-       Get_SMART          => 16#0006#,
-       Media_Blocks       => 16#0010#,
-       Block_Length       => 16#0011#,
-       Max_Requests       => 16#0019#,
-       Max_Blocks_Count   => 16#001a#,
-       Max_Devices        => 16#001b#,
-       Reset              => 16#001f#);
+   --  Do nothing
+   None             : constant Request_Kind_Type := 16#0000#;
+   --  Read count blocks
+   Read             : constant Request_Kind_Type := 16#0001#;
+   --  Write count blocks
+   Write            : constant Request_Kind_Type := 16#0002#;
+   --  Discard/zero count blocks
+   Discard          : constant Request_Kind_Type := 16#0003#;
+   --  Tell the device to flush all outstanding writes
+   Sync             : constant Request_Kind_Type := 16#0004#;
+   --  Return SMART read Data (raw)
+   Get_SMART        : constant Request_Kind_Type := 16#0005#;
+   --  Return number of Blocks of device
+   Media_Blocks     : constant Request_Kind_Type := 16#0010#;
+   --  Return block size of device
+   Block_Length     : constant Request_Kind_Type := 16#0011#;
+   --  Return maximum number of requests in flight
+   Max_Requests     : constant Request_Kind_Type := 16#0019#;
+   --  Return max number of blocks per read/write/discard request
+   Max_Blocks_Count : constant Request_Kind_Type := 16#001a#;
+   --  Return number of devices
+   Max_Devices      : constant Request_Kind_Type := 16#001b#;
+   --  Assure that no requests are pending upon return
+   Reset            : constant Request_Kind_Type := 16#001f#;
 
    Block_Request_Type_Size : constant := 2 + 2 + 4 + 8 + 8 + 8;
    type Block_Request_Type is record

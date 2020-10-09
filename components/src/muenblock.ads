@@ -30,7 +30,6 @@ is
        Write,              --  Write count blocks
        Discard,            --  Discard/zero count blocks
        Sync,
-       Barrier,            --  Enforce media write/barrier etc.
        Get_SMART,          --  Return SMART read Data (raw)
        Media_Blocks,       --  Return number of Blocks of device
        Block_Length,       --  Return block size of device
@@ -47,8 +46,7 @@ is
        Write              => 16#0002#,
        Discard            => 16#0003#,
        Sync               => 16#0004#,
-       Barrier            => 16#0005#,
-       Get_SMART          => 16#0006#,
+       Get_SMART          => 16#0005#,
        Media_Blocks       => 16#0010#,
        Block_Length       => 16#0011#,
        Max_Requests       => 16#0019#,

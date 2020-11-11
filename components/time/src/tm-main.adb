@@ -77,8 +77,14 @@ is
 
       if not Success then
          pragma Debug (Debuglog.Client.Put_Line
-                       (Item => "Error: Unable to convert RTC date/time"));
-         SK.CPU.Stop;
+                       (Item => "Error: Unable to convert RTC date/time, "
+                        & "setting it to 01-01-2000"));
+
+        --  Clients might watch null value to detect published time, therefore
+        --  set it to something non-zero.
+
+         Date_Time      := Mutime.Epoch;
+         Date_Time.Year := 2000;
       end if;
 
       declare

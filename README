@@ -57,15 +57,7 @@ The following list outlines the most-prominent features of the Muen kernel:
   - Native 64-bit SPARK 2014 subjects
   - Linux 32/64-bit VMs
   - SMP for Linux VMs
-  - Genode x86_64 base-hw system <<genode>>
-  - Windows 32-bit VMs
   - MirageOS unikernels <<mirageos>>
-
-Muen supports the hardware-accelerated virtualization of Microsoft Windows
-through the use of a fully de-privileged variant of VirtualBox <<vbox>> running
-inside a strongly isolated VM subject on top of Genode's base-hw kernel. See
-the release notes of the Genode OS Framework version 16.08 <<genode_muen>> for
-more information about this exciting feature.
 
 
 Tau0
@@ -332,9 +324,6 @@ References
 - [[[lnxcr3]]]        Linux KVM GUEST_CR3 fix, https://patchwork.kernel.org/patch/11165185/
 - [[[ipxe]]]          iPXE boot firmware, https://ipxe.org/
 - [[[amt]]]           Intel AMT SoL client + tools, https://www.kraxel.org/cgit/amtterm/
-- [[[genode]]]        Genode OS Framework, https://genode.org/
-- [[[genode_muen]]]   Genode 16.08 release notes, https://genode.org/documentation/release-notes/16.08
-- [[[vbox]]]          VirtualBox, https://www.virtualbox.org
 - [[[mirageos]]]      MirageOS, https://mirage.io
 - [[[muenblock]]]     Muenblock Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenblock.git
 - [[[muenfs]]]        Muenfs Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenfs.git

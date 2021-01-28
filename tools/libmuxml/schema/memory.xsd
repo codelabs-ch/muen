@@ -92,7 +92,7 @@
 
  <xs:complexType name="memoryRefsType">
   <xs:sequence>
-   <xs:element name="memory" type="memRefType" minOccurs="1" maxOccurs="unbounded"/>
+   <xs:element name="memory" type="memRefType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
  </xs:complexType>
 

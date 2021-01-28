@@ -65,7 +65,7 @@
  </xs:complexType>
 
  <xs:complexType name="logicalChannelsType">
-  <xs:choice minOccurs="1" maxOccurs="unbounded">
+  <xs:choice minOccurs="0" maxOccurs="unbounded">
    <xs:element name="reader" type="logicalChannelReaderType"/>
    <xs:element name="writer" type="logicalChannelWriterType"/>
    <xs:element name="array"  type="channelArrayType"/>
@@ -74,7 +74,7 @@
 
  <xs:complexType name="logicalMemoryType">
   <xs:sequence>
-   <xs:choice minOccurs="1" maxOccurs="unbounded">
+   <xs:choice minOccurs="0" maxOccurs="unbounded">
     <xs:element name="memory" type="logicalMemType"/>
     <xs:element name="array"  type="memoryArrayType"/>
    </xs:choice>

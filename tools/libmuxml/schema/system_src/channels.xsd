@@ -14,7 +14,7 @@
  </xs:complexType>
 
  <xs:complexType name="channelReferencesType">
-  <xs:choice minOccurs="1" maxOccurs="unbounded">
+  <xs:choice minOccurs="0" maxOccurs="unbounded">
    <xs:element name="reader" type="channelReaderType"/>
    <xs:element name="writer" type="channelWriterType"/>
   </xs:choice>

@@ -3,10 +3,10 @@
                                                                                                                                                      >   <kernel>
                                                                                                                                                      >    <memory>
                                                                                                                                                      >     <cpu id="0">
-                                                                                                                                                     >      <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#0020_0000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#0040_0000#" writable="true"/>
                                                                                                                                                      >     </cpu>
                                                                                                                                                      >     <cpu id="1">
-                                                                                                                                                     >      <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#0020_0000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#0040_0000#" writable="true"/>
                                                                                                                                                      >     </cpu>
                                                                                                                                                      >    </memory>
                                                                                                                                                      >    <devices/>

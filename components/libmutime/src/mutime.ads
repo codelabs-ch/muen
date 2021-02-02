@@ -71,6 +71,7 @@ is
       return Timestamp_Type;
 
    use type Interfaces.Integer_64;
+   use type Interfaces.Unsigned_64;
 
    --  Types used for safe signed timestamp arithmetic.
    subtype Integer_62 is Interfaces.Integer_64 range -2 ** 61 .. 2 ** 61 - 1;
@@ -88,6 +89,13 @@ is
    function Get_Value
      (Timestamp : Timestamp_Type)
       return Interfaces.Unsigned_64;
+
+   --  Return timestamp for given Unsigned_64 value.
+   function From_Value
+     (Value : Interfaces.Unsigned_64)
+      return Timestamp_Type
+   with
+      Pre => Value <= 253402300799000000;
 
 private
 

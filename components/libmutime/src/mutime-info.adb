@@ -51,8 +51,6 @@ is
       Correction     : out Integer_63;
       Timestamp      : out Timestamp_Type)
    is
-      use type Interfaces.Unsigned_64;
-
       --  TSC tick rate in MHz from 1 Mhz to 100 Ghz.
       subtype TSC_Tick_Rate_Mhz_Type is Integer_62 range 1 .. 100000;
 

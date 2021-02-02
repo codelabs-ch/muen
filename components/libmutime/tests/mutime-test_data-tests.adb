@@ -287,6 +287,24 @@ package body Mutime.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_From_Value (Gnattest_T : in out Test);
+   procedure Test_From_Value_fe1110 (Gnattest_T : in out Test) renames Test_From_Value;
+--  id:2.2/fe111030db9aac1c/From_Value/1/0/
+   procedure Test_From_Value (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      T : Timestamp_Type := 123;
+   begin
+      Assert (Condition => From_Value (Value => 123) = T,
+              Message   => "Timestamp mismatch");
+--  begin read only
+   end Test_From_Value;
+--  end read only
+
+
+--  begin read only
    procedure Test_Get_Month_And_Day (Gnattest_T : in out Test);
    procedure Test_Get_Month_And_Day_7c71b5 (Gnattest_T : in out Test) renames Test_Get_Month_And_Day;
 --  id:2.2/7c71b57f9ae57aa9/Get_Month_And_Day/1/0/

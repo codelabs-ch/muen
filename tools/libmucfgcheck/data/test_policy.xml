@@ -974,7 +974,9 @@
       </cr4>
      </masks>
     </vmx>
-    <msrs/>
+    <msrs>
+     <msr end="16#c000_0102#" mode="r" start="16#c000_0102#"/>
+    </msrs>
     <registers>
      <gpr>
       <rip>16#4000#</rip>

@@ -42,6 +42,38 @@ package body Stackcheck.Cmd_Line.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure Accept_Dynamic_Default_Off_Test
+      is
+         Args        : aliased GNAT.OS_Lib.Argument_List
+           := (1 => new String'("-P"),
+               2 => new String'("data/sm.gpr"),
+               3 => new String'("-l"),
+               4 => new String'("4096"));
+
+         Test_Parser : GNAT.Command_Line.Opt_Parser;
+      begin
+         GNAT.Command_Line.Initialize_Option_Scan
+           (Parser       => Test_Parser,
+            Command_Line => Args'Unchecked_Access);
+
+         Parser := Test_Parser;
+
+         Init (Description => "Test run");
+
+         for A in Args'Range loop
+            GNAT.OS_Lib.Free (X => Args (A));
+         end loop;
+
+         Assert (Condition => GPR_File = "data/sm.gpr",
+                 Message   => "Project file mismatch");
+         Assert (Condition => Stack_Limit = 4096,
+                 Message   => "Stack limit mismatch");
+         Assert (Condition => not Allow_Dynamic,
+                 Message   => "Allow dynamic set");
+      end Accept_Dynamic_Default_Off_Test;
+
+      ----------------------------------------------------------------------
+
       procedure Invalid_Switch
       is
          Args        : aliased GNAT.OS_Lib.Argument_List
@@ -173,7 +205,8 @@ package body Stackcheck.Cmd_Line.Test_Data.Tests is
            := (1 => new String'("-P"),
                2 => new String'("data/sm.gpr"),
                3 => new String'("-l"),
-               4 => new String'("4096"));
+               4 => new String'("4096"),
+               5 => new String'("-d"));
 
          Test_Parser : GNAT.Command_Line.Opt_Parser;
       begin
@@ -193,6 +226,8 @@ package body Stackcheck.Cmd_Line.Test_Data.Tests is
                  Message   => "Project file mismatch");
          Assert (Condition => Stack_Limit = 4096,
                  Message   => "Stack limit mismatch");
+         Assert (Condition => Allow_Dynamic,
+                 Message   => "Allow dynamic not set");
       end Positive_Test;
    begin
       Invalid_Switch;
@@ -200,6 +235,7 @@ package body Stackcheck.Cmd_Line.Test_Data.Tests is
       Null_Argument;
       No_Limit;
       Positive_Test;
+      Accept_Dynamic_Default_Off_Test;
 --  begin read only
    end Test_Init;
 --  end read only
@@ -242,6 +278,24 @@ package body Stackcheck.Cmd_Line.Test_Data.Tests is
               Message   => "Stack limit mismatch");
 --  begin read only
    end Test_Get_Stack_Limit;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Get_Allow_Dynamic (Gnattest_T : in out Test);
+   procedure Test_Get_Allow_Dynamic_1c138e (Gnattest_T : in out Test) renames Test_Get_Allow_Dynamic;
+--  id:2.2/1c138e0bab5feb27/Get_Allow_Dynamic/1/0/
+   procedure Test_Get_Allow_Dynamic (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Allow_Dynamic := True;
+      Assert (Condition => Get_Allow_Dynamic = True,
+              Message   => "Allow dynamic mismatch");
+--  begin read only
+   end Test_Get_Allow_Dynamic;
 --  end read only
 
 --  begin read only

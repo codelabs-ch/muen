@@ -78,14 +78,18 @@ package body Stackcheck.Input.Test_Data.Tests is
    begin
       declare
          Sub : Types.Subprogram_Type
-           := Types.Create (Name        => "exit_handlers__cpuid__process",
-                            Stack_Usage => 32);
+           := Types.Create (Name          => "exit_handlers__cpuid__process",
+                            Stack_Usage   => 32,
+                            Dynamic_Stack => False,
+                            Bounded_Stack => False);
       begin
          Types.Add_Call (Subprogram  => Sub,
                          Callee_Name => "debug_ops__put_value64");
          Ref_Nodes (2) := Sub;
-         Ref_Nodes (1) := Types.Create (Name        => "foobar",
-                                        Stack_Usage => 4096);
+         Ref_Nodes (1) := Types.Create (Name          => "foobar",
+                                        Stack_Usage   => 4096,
+                                        Dynamic_Stack => False,
+                                        Bounded_Stack => False);
       end;
 
       Parse_Line (Data  => "",

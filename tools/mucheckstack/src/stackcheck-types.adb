@@ -165,8 +165,10 @@ is
    -------------------------------------------------------------------------
 
    function Create
-     (Name        : String;
-      Stack_Usage : Natural)
+     (Name          : String;
+      Stack_Usage   : Natural;
+      Dynamic_Stack : Boolean;
+      Bounded_Stack : Boolean)
       return Subprogram_Type
    is
    begin
@@ -175,7 +177,9 @@ is
                               Done_Flag       => False,
                               Own_Stack_Usage => Stack_Usage,
                               Max_Stack_Usage => Stack_Usage,
-                              Calls           => LOSC.Empty_List);
+                              Calls           => LOSC.Empty_List,
+                              Dynamic_Flag    => Dynamic_Stack,
+                              Bounded_Flag    => Bounded_Stack);
    end Create;
 
    -------------------------------------------------------------------------
@@ -230,6 +234,22 @@ is
    begin
       return Subprogram.Own_Stack_Usage;
    end Get_Own_Stack_Usage;
+
+   -------------------------------------------------------------------------
+
+   function Has_Bounded_Stack (Node : Subprogram_Type) return Boolean
+   is
+   begin
+      return Node.Bounded_Flag;
+   end Has_Bounded_Stack;
+
+   -------------------------------------------------------------------------
+
+   function Has_Dynamic_Stack (Node : Subprogram_Type) return Boolean
+   is
+   begin
+      return Node.Dynamic_Flag;
+   end Has_Dynamic_Stack;
 
    -------------------------------------------------------------------------
 

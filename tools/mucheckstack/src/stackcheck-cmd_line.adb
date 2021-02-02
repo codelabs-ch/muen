@@ -27,6 +27,11 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Allow_Dynamic return Boolean
+   is (Allow_Dynamic);
+
+   -------------------------------------------------------------------------
+
    function Get_GPR_File return String
    is (To_String (GPR_File));
 
@@ -39,9 +44,10 @@ is
 
    procedure Init (Description : String)
    is
-      Cmdline : Mutools.Cmd_Line.Config_Type;
-      P_File  : aliased GNAT.Strings.String_Access;
-      Stack_L : aliased Integer := -1;
+      Cmdline   : Mutools.Cmd_Line.Config_Type;
+      P_File    : aliased GNAT.Strings.String_Access;
+      Stack_L   : aliased Integer := -1;
+      Allow_Dyn : aliased Boolean := False;
    begin
       GNAT.Command_Line.Set_Usage
         (Config => Cmdline.Data,
@@ -63,6 +69,12 @@ is
          Default     => -1);
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
+         Output      => Allow_Dyn'Access,
+         Switch      => "-d",
+         Long_Switch => "--allow-dynamic",
+         Help        => "Allow subprograms with dynamic unbounded stacks");
+      GNAT.Command_Line.Define_Switch
+        (Config      => Cmdline.Data,
          Switch      => "-h",
          Long_Switch => "--help",
          Help        => "Display usage and exit");
@@ -75,7 +87,8 @@ is
             GPR_File := To_Unbounded_String (P_File.all);
          end if;
 
-         Stack_Limit := Stack_L;
+         Stack_Limit   := Stack_L;
+         Allow_Dynamic := Allow_Dyn;
 
          GNAT.Strings.Free (X => P_File);
 

@@ -32,12 +32,16 @@ is
    --  Return stack limit (in bytes).
    function Get_Stack_Limit return Natural;
 
+   --  Return True when subprograms with dynamic stacks are allowed.
+   function Get_Allow_Dynamic return Boolean;
+
    Invalid_Cmd_Line : exception;
 
 private
 
-   GPR_File    : Ada.Strings.Unbounded.Unbounded_String;
-   Stack_Limit : Integer;
+   GPR_File      : Ada.Strings.Unbounded.Unbounded_String;
+   Stack_Limit   : Integer;
+   Allow_Dynamic : Boolean;
 
    Parser : GNAT.Command_Line.Opt_Parser
      := GNAT.Command_Line.Command_Line_Parser;

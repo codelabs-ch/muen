@@ -30,8 +30,10 @@ is
 
    --  Create subprogram with given information.
    function Create
-     (Name        : String;
-      Stack_Usage : Natural)
+     (Name          : String;
+      Stack_Usage   : Natural;
+      Dynamic_Stack : Boolean;
+      Bounded_Stack : Boolean)
       return Subprogram_Type;
 
    --  Returns the name of the given subprogram.
@@ -78,6 +80,12 @@ is
    procedure Set_Done
      (Node  : in out Subprogram_Type;
       State :        Boolean);
+
+   --  Returns True if the subprogram node's stack is dynamic.
+   function Has_Dynamic_Stack (Node : Subprogram_Type) return Boolean;
+
+   --  Returns True if the subprogram node's stack is dynamic, but bounded.
+   function Has_Bounded_Stack (Node : Subprogram_Type) return Boolean;
 
    --  Representation of a control-flow graph.
    type Control_Flow_Graph_Type is private;
@@ -140,6 +148,8 @@ private
       Own_Stack_Usage : Natural;
       Max_Stack_Usage : Natural;
       Calls           : LOSC.List;
+      Dynamic_Flag    : Boolean;
+      Bounded_Flag    : Boolean;
    end record;
 
    Null_Subprogram : constant Subprogram_Type
@@ -148,7 +158,9 @@ private
          Done_Flag       => False,
          Own_Stack_Usage => 0,
          Max_Stack_Usage => 0,
-         Calls           => LOSC.Empty_List);
+         Calls           => LOSC.Empty_List,
+         Dynamic_Flag    => False,
+         Bounded_Flag    => False);
 
    function Equal_Name (Left, Right : Subprogram_Type) return Boolean
    is (Left.Name = Right.Name);

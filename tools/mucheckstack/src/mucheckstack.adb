@@ -27,12 +27,17 @@ with Stackcheck.Types;
 
 procedure Mucheckstack
 is
-   Error : Boolean;
+   Error    : Boolean;
+   Overflow : Boolean;
+   Dynamic  : Boolean;
 begin
    Stackcheck.Cmd_Line.Init (Description => "Muen stack usage checker");
    Stackcheck.Run (Project_File => Stackcheck.Cmd_Line.Get_GPR_File,
                    Limit        => Stackcheck.Cmd_Line.Get_Stack_Limit,
-                   Overflow     => Error);
+                   Overflow     => Overflow,
+                   Dynamic      => Dynamic);
+   Error := Overflow or
+     (Dynamic and not Stackcheck.Cmd_Line.Get_Allow_Dynamic);
 
    Ada.Command_Line.Set_Exit_Status
      (Code => (if Error then Ada.Command_Line.Failure

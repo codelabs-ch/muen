@@ -32,10 +32,10 @@ is
    is
       use type Interfaces.Unsigned_64;
 
-      Timestamp  : Mutime.Timestamp_Type;
-      Date_Time  : Mutime.Date_Time_Type;
-      Sched      : Mutime.Integer_62;
-      Correction : Mutime.Integer_63;
+      Timestamp         : Mutime.Timestamp_Type;
+      Date_Time         : Mutime.Date_Time_Type;
+      Sched             : Mutime.Integer_62;
+      Correction_Unused : Mutime.Integer_63;
 
       TSC_Schedule_Start : constant Interfaces.Unsigned_64
         := Musinfo.Instance.TSC_Schedule_Start;
@@ -53,11 +53,11 @@ is
 
       Mutime.Info.Get_Current_Time
         (Schedule_Ticks => Sched,
-         Correction     => Correction,
+         Correction     => Correction_Unused,
          Timestamp      => Timestamp);
       pragma Debug (Debug_Ops.Put_Line
                     (Item => "Correction to boot timestamp (microsecs) "
-                     & SK.Strings.Img (SK.Word64 (Correction))));
+                     & SK.Strings.Img (SK.Word64 (Correction_Unused))));
 
       Mutime.Split (Timestamp => Timestamp,
                     Date_Time => Date_Time);

@@ -55,7 +55,9 @@ is
       Depends => (Valid => State);
 
    --  Return validity status of time info page.
-   function Is_Valid return Boolean;
+   function Is_Valid return Boolean
+   with
+      Global => (Input => Valid);
 
    --  Calculate current timestamp using the information stored in the time
    --  info record and the specified CPU ticks. The procedure returns the
@@ -91,6 +93,8 @@ private
    with
       Part_Of => Valid;
 
-   function Is_Valid return Boolean is (State_Valid);
+   function Is_Valid return Boolean is (State_Valid)
+   with
+      Refined_Global => (Input => State_Valid);
 
 end Mutime.Info;

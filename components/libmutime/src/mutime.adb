@@ -115,8 +115,6 @@ is
       Right : Interfaces.Unsigned_64)
       return Timestamp_Type
    is
-      use type Interfaces.Unsigned_64;
-
       L : constant Interfaces.Unsigned_64 := Interfaces.Unsigned_64 (Left);
    begin
       if Right < L then
@@ -125,6 +123,16 @@ is
          return 0;
       end if;
    end "-";
+
+   -------------------------------------------------------------------------
+
+   function From_Value
+     (Value : Interfaces.Unsigned_64)
+      return Timestamp_Type
+   is
+   begin
+      return Timestamp_Type (Value);
+   end From_Value;
 
    -------------------------------------------------------------------------
 

@@ -1066,8 +1066,9 @@ is
               := DOM.Core.Elements.Get_Attribute (Elem => Cur_Subj,
                                                   Name => "name");
             MSRs       : constant DOM.Core.Node_List
-              := XPath_Query (N     => Cur_Subj,
-                              XPath => "vcpu/msrs/msr");
+              := XPath_Query
+                (N     => Cur_Subj,
+                 XPath => "vcpu/msrs/msr[@mode='rw' or @mode='w']");
             Controls   : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Cur_Subj,

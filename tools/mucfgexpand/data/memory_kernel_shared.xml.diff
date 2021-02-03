@@ -6,7 +6,7 @@
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="kernel_global_data" physicalAddress="16#0012_b000#" size="16#1000#" type="kernel_binary">
                                                                                                                                                      >     <file filename="kernel" offset="16#0002_b000#"/>
                                                                                                                                                      >    </memory>
-                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="kernel_ro" physicalAddress="16#0012_f000#" size="16#0008_0000#" type="kernel_binary">
+                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="kernel_ro" physicalAddress="16#0012_f000#" size="16#002c_0000#" type="kernel_binary">
                                                                                                                                                      >     <file filename="kernel" offset="16#0002_f000#"/>
                                                                                                                                                      >    </memory>
  </memory>                                                                                                                                               </memory>

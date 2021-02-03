@@ -31,30 +31,35 @@ package body Stackcheck.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Run (Gnattest_T : in out Test);
-   procedure Test_Run_81ffbb (Gnattest_T : in out Test) renames Test_Run;
---  id:2.2/81ffbb75b0753062/Run/1/0/
+   procedure Test_Run_3551ad (Gnattest_T : in out Test) renames Test_Run;
+--  id:2.2/3551ad94a6d87236/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
-      Failure : Boolean;
+      Failure, Dynamic_Stack : Boolean;
    begin
       Run (Project_File => "data/testci",
-           Limit        => 224,
-           Overflow     => Failure);
+           Limit        => 240,
+           Overflow     => Failure,
+           Dynamic      => Dynamic_Stack);
       Assert (Condition => not Failure,
-              Message   => "Failure with limit 224");
+              Message   => "Failure with limit 240");
+      Assert (Condition => Dynamic_Stack,
+              Message   => "Dynamic stack not detected");
 
       Run (Project_File => "data/testci",
-           Limit        => 223,
-           Overflow     => Failure);
+           Limit        => 239,
+           Overflow     => Failure,
+           Dynamic      => Dynamic_Stack);
       Assert (Condition => Failure,
-              Message   => "No failure with limit 223");
+              Message   => "No failure with limit 239");
 
       Run (Project_File => "data/testci",
            Limit        => 0,
-           Overflow     => Failure);
+           Overflow     => Failure,
+           Dynamic      => Dynamic_Stack);
       Assert (Condition => Failure,
               Message   => "No failure with limit 0");
 --  begin read only

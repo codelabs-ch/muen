@@ -36,6 +36,8 @@ is
 
    Epoch_Timestamp : constant Timestamp_Type;
 
+   Timestamp_Last : constant := 253402300799000000;
+
    type Year_Type is range 1970 .. 9999;
    type Month_Type is range 1 .. 12;
    type Day_Type is range 1 .. 31;
@@ -71,6 +73,7 @@ is
       return Timestamp_Type;
 
    use type Interfaces.Integer_64;
+   use type Interfaces.Unsigned_64;
 
    --  Types used for safe signed timestamp arithmetic.
    subtype Integer_62 is Interfaces.Integer_64 range -2 ** 61 .. 2 ** 61 - 1;
@@ -89,11 +92,18 @@ is
      (Timestamp : Timestamp_Type)
       return Interfaces.Unsigned_64;
 
+   --  Return timestamp for given Unsigned_64 value.
+   function From_Value
+     (Value : Interfaces.Unsigned_64)
+      return Timestamp_Type
+   with
+      Pre => Value <= Timestamp_Last;
+
 private
 
    --  Range of allowed timestamps spanning the time in microseconds from
    --  1970-01-01T00:00:00+00:00 to 9999-12-31T23:59:59+00:00.
-   type Timestamp_Type is range 0 .. 253402300799000000
+   type Timestamp_Type is range 0 .. Timestamp_Last
      with
        Size => 64;
 

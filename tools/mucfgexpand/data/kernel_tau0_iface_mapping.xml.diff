@@ -10,7 +10,7 @@
                                                                                                                                                      >    <memory>
                                                                                                                                                      >     <cpu id="0"/>
                                                                                                                                                      >     <cpu id="1">
-                                                                                                                                                     >      <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
+                                                                                                                                                     >      <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#003f_f000#" writable="false"/>
                                                                                                                                                      >     </cpu>
                                                                                                                                                      >    </memory>
                                                                                                                                                      >    <devices/>

@@ -36,7 +36,8 @@ is
    procedure Run
      (Project_File :     String;
       Limit        :     Natural;
-      Overflow     : out Boolean)
+      Overflow     : out Boolean;
+      Dynamic      : out Boolean)
    is
       CIs       : constant Files.Path_Names
         := Files.Get_Control_Flow_Info_Files (GPR_File => Project_File);
@@ -48,9 +49,31 @@ is
       --  Parse control flow information in given file.
       procedure Parse_File (File : Ada.Text_IO.File_Type);
 
+      --  Check whether given subprogram node has an unbounded dynamic stack.
+      --  If so, then log the subprogram and set Dynamic to True.
+      procedure Check_For_Dynamic_Stack (Node : in out Types.Subprogram_Type);
+
       --  Check given subprogram node if its worst-case stack usage is larger
       --  than the maximum specified by the user.
       procedure Check_Stack_Usage (Node : in out Types.Subprogram_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_For_Dynamic_Stack (Node : in out Types.Subprogram_Type)
+      is
+         Has_Unbounded_Dynamic : constant Boolean
+           := Types.Has_Dynamic_Stack (Node => Node) and
+           not Types.Has_Bounded_Stack (Node => Node);
+      begin
+         if Has_Unbounded_Dynamic then
+            Mulog.Log (Msg => "Subprogram "
+                       & Utils.Entity_To_Ada_Name
+                         (Str => Types.Get_Name (Subprogram => Node))
+                       & " has unbounded dynamic stack");
+         end if;
+
+         Dynamic := Dynamic or Has_Unbounded_Dynamic;
+      end Check_For_Dynamic_Stack;
 
       ----------------------------------------------------------------------
 
@@ -98,11 +121,19 @@ is
       --  RTS.
 
       Types.Add_Node (Graph      => CFG,
-                      Subprogram => Types.Create (Name        => "memcmp",
-                                                  Stack_Usage => 0));
+                      Subprogram => Types.Create (Name          => "memcmp",
+                                                  Stack_Usage   => 0,
+                                                  Dynamic_Stack => False,
+                                                  Bounded_Stack => False));
       Types.Add_Node (Graph      => CFG,
-                      Subprogram => Types.Create (Name        => "memcpy",
-                                                  Stack_Usage => 0));
+                      Subprogram => Types.Create (Name          => "memcpy",
+                                                  Stack_Usage   => 0,
+                                                  Dynamic_Stack => False,
+                                                  Bounded_Stack => False));
+
+      Dynamic := False;
+      Types.Iterate (Graph   => CFG,
+                     Process => Check_For_Dynamic_Stack'Access);
 
       Types.Calculate_Stack_Usage (Graph => CFG);
 

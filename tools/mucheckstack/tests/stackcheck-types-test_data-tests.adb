@@ -31,8 +31,8 @@ package body Stackcheck.Types.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Create (Gnattest_T : in out Test);
-   procedure Test_Create_649a54 (Gnattest_T : in out Test) renames Test_Create;
---  id:2.2/649a54a5f4f87611/Create/1/0/
+   procedure Test_Create_d99214 (Gnattest_T : in out Test) renames Test_Create;
+--  id:2.2/d9921475068012ef/Create/1/0/
    procedure Test_Create (Gnattest_T : in out Test) is
 --  end read only
 
@@ -44,8 +44,10 @@ package body Stackcheck.Types.Test_Data.Tests is
       Ref_Usage : constant Natural := 55;
       Sub       : Subprogram_Type;
    begin
-      Sub := Create (Name        => Ref_Name,
-                     Stack_Usage => Ref_Usage);
+      Sub := Create (Name          => Ref_Name,
+                     Stack_Usage   => Ref_Usage,
+                     Dynamic_Stack => False,
+                     Bounded_Stack => True);
       Assert (Condition => To_String (Sub.Name) = Ref_Name,
               Message   => "Name mismatch");
       Assert (Condition => Sub.Own_Stack_Usage = Ref_Usage,
@@ -54,6 +56,10 @@ package body Stackcheck.Types.Test_Data.Tests is
               Message   => "Max stack usage mismatch");
       Assert (Condition => Sub.Calls = LOSC.Empty_List,
               Message   => "Calls mismatch");
+      Assert (Condition => not Sub.Dynamic_Flag,
+              Message   => "Dynamic flag set");
+      Assert (Condition => Sub.Bounded_Flag,
+              Message   => "Bounded flag not set");
 --  begin read only
    end Test_Create;
 --  end read only
@@ -329,6 +335,52 @@ package body Stackcheck.Types.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Has_Dynamic_Stack (Gnattest_T : in out Test);
+   procedure Test_Has_Dynamic_Stack_213825 (Gnattest_T : in out Test) renames Test_Has_Dynamic_Stack;
+--  id:2.2/2138254609846327/Has_Dynamic_Stack/1/0/
+   procedure Test_Has_Dynamic_Stack (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Sub : Subprogram_Type;
+   begin
+      Sub.Dynamic_Flag := False;
+      Assert (Condition => not Has_Dynamic_Stack (Node => Sub),
+              Message   => "Node has dynamic stack");
+
+      Sub.Dynamic_Flag := True;
+      Assert (Condition => Has_Dynamic_Stack (Node => Sub),
+              Message   => "Node has no dynamic stack");
+--  begin read only
+   end Test_Has_Dynamic_Stack;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Has_Bounded_Stack (Gnattest_T : in out Test);
+   procedure Test_Has_Bounded_Stack_97bb73 (Gnattest_T : in out Test) renames Test_Has_Bounded_Stack;
+--  id:2.2/97bb731cd7c05c01/Has_Bounded_Stack/1/0/
+   procedure Test_Has_Bounded_Stack (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Sub : Subprogram_Type;
+   begin
+      Sub.Bounded_Flag := False;
+      Assert (Condition => not Has_Bounded_Stack (Node => Sub),
+              Message   => "Node has bounded stack");
+
+      Sub.Bounded_Flag := True;
+      Assert (Condition => Has_Bounded_Stack (Node => Sub),
+              Message   => "Node has no bounded stack");
+--  begin read only
+   end Test_Has_Bounded_Stack;
+--  end read only
+
+
+--  begin read only
    procedure Test_Add_Node (Gnattest_T : in out Test);
    procedure Test_Add_Node_e8151f (Gnattest_T : in out Test) renames Test_Add_Node;
 --  id:2.2/e8151fee1de82d38/Add_Node/1/0/
@@ -340,8 +392,10 @@ package body Stackcheck.Types.Test_Data.Tests is
       use type Ada.Containers.Count_Type;
 
       Cfg : Control_Flow_Graph_Type;
-      Sub : constant Subprogram_Type := Create (Name        => "Foobar",
-                                                Stack_Usage => 42);
+      Sub : constant Subprogram_Type := Create (Name          => "Foobar",
+                                                Stack_Usage   => 42,
+                                                Dynamic_Stack => False,
+                                                Bounded_Stack => False);
    begin
       Add_Node (Graph      => Cfg,
                 Subprogram => Sub);
@@ -378,8 +432,10 @@ package body Stackcheck.Types.Test_Data.Tests is
 
       Ref_Use : constant Natural := 153;
       Graph   : Control_Flow_Graph_Type;
-      Sub     : Subprogram_Type := Create (Name        => "Foobar",
-                                           Stack_Usage => 55);
+      Sub     : Subprogram_Type := Create (Name          => "Foobar",
+                                           Stack_Usage   => 55,
+                                           Dynamic_Stack => False,
+                                           Bounded_Stack => False);
 
       --  Set max stack usage of given node to reference value.
       procedure Set (Node : in out Subprogram_Type);
@@ -432,12 +488,18 @@ package body Stackcheck.Types.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       Ref_Nodes : array (1 .. 3) of Subprogram_Type
-        := (Create (Name        => "bar",
-                    Stack_Usage => 8096),
-            Create (Name        => "foobar",
-                    Stack_Usage => 0),
-            Create (Name        => "foo",
-                    Stack_Usage => 75));
+        := (Create (Name          => "bar",
+                    Stack_Usage   => 8096,
+                    Dynamic_Stack => False,
+                    Bounded_Stack => False),
+            Create (Name          => "foobar",
+                    Stack_Usage   => 0,
+                    Dynamic_Stack => False,
+                    Bounded_Stack => False),
+            Create (Name          => "foo",
+                    Stack_Usage   => 75,
+                    Dynamic_Stack => False,
+                    Bounded_Stack => False));
 
       Cur_Idx : Natural := 1;
       Graph   : Control_Flow_Graph_Type;
@@ -485,8 +547,10 @@ package body Stackcheck.Types.Test_Data.Tests is
       Graph : Control_Flow_Graph_Type;
    begin
       Graph.Nodes.Insert (Key      => To_Unbounded_String ("foobar"),
-                          New_Item => Create (Name        => "foobar",
-                                              Stack_Usage => 27345));
+                          New_Item => Create (Name          => "foobar",
+                                              Stack_Usage   => 27345,
+                                              Dynamic_Stack => False,
+                                              Bounded_Stack => False));
 
       Add_Call (Graph       => Graph,
                 Source_Name => "foobar",
@@ -540,8 +604,10 @@ package body Stackcheck.Types.Test_Data.Tests is
       Graph : Control_Flow_Graph_Type;
       Sub   : Subprogram_Type;
    begin
-      Sub := Create (Name        => "Foo",
-                     Stack_Usage => 12);
+      Sub := Create (Name          => "Foo",
+                     Stack_Usage   => 12,
+                     Dynamic_Stack => False,
+                     Bounded_Stack => False);
       Sub.Max_Stack_Usage := 55;
       Graph.Nodes.Insert (Key      => Sub.Name,
                           New_Item => Sub);
@@ -589,14 +655,18 @@ package body Stackcheck.Types.Test_Data.Tests is
       --                               \    |
       --                                \-> C ( 8 bytes)
       Add_Node (Graph      => Graph,
-                Subprogram => Create (Name        => "Main",
-                                      Stack_Usage => 0));
+                Subprogram => Create (Name          => "Main",
+                                      Stack_Usage   => 0,
+                                      Dynamic_Stack => False,
+                                      Bounded_Stack => False));
       Add_Call (Graph       => Graph,
                 Source_Name => "Main",
                 Target_Name => "A");
       Add_Node (Graph      => Graph,
-                Subprogram => Create (Name        => "A",
-                                      Stack_Usage => 12));
+                Subprogram => Create (Name          => "A",
+                                      Stack_Usage   => 12,
+                                      Dynamic_Stack => False,
+                                      Bounded_Stack => False));
       Add_Call (Graph       => Graph,
                 Source_Name => "A",
                 Target_Name => "B");
@@ -604,14 +674,18 @@ package body Stackcheck.Types.Test_Data.Tests is
                 Source_Name => "A",
                 Target_Name => "C");
       Add_Node (Graph      => Graph,
-                Subprogram => Create (Name        => "B",
-                                      Stack_Usage => 44));
+                Subprogram => Create (Name          => "B",
+                                      Stack_Usage   => 44,
+                                      Dynamic_Stack => False,
+                                      Bounded_Stack => False));
       Add_Call (Graph       => Graph,
                 Source_Name => "B",
                 Target_Name => "C");
       Add_Node (Graph      => Graph,
-                Subprogram => Create (Name        => "C",
-                                      Stack_Usage => 8));
+                Subprogram => Create (Name          => "C",
+                                      Stack_Usage   => 8,
+                                      Dynamic_Stack => False,
+                                      Bounded_Stack => False));
       Calculate_Stack_Usage (Graph => Graph);
 
       Assert (Condition => Get_Max_Stack_Usage (Graph     => Graph,
@@ -637,20 +711,26 @@ package body Stackcheck.Types.Test_Data.Tests is
          --             \--- Z (4 bytes)
 
          Add_Node (Graph      => Graph,
-                   Subprogram => Create (Name        => "X",
-                                         Stack_Usage => 24));
+                   Subprogram => Create (Name          => "X",
+                                         Stack_Usage   => 24,
+                                         Dynamic_Stack => False,
+                                         Bounded_Stack => False));
          Add_Call (Graph       => Graph,
                    Source_Name => "X",
                    Target_Name => "Y");
          Add_Node (Graph      => Graph,
-                   Subprogram => Create (Name        => "Y",
-                                         Stack_Usage => 0));
+                   Subprogram => Create (Name          => "Y",
+                                         Stack_Usage   => 0,
+                                         Dynamic_Stack => False,
+                                         Bounded_Stack => False));
          Add_Call (Graph       => Graph,
                    Source_Name => "Y",
                    Target_Name => "Z");
          Add_Node (Graph      => Graph,
-                   Subprogram => Create (Name        => "Z",
-                                         Stack_Usage => 4));
+                   Subprogram => Create (Name          => "Z",
+                                         Stack_Usage   => 4,
+                                         Dynamic_Stack => False,
+                                         Bounded_Stack => False));
          Add_Call (Graph       => Graph,
                    Source_Name => "Z",
                    Target_Name => "X");

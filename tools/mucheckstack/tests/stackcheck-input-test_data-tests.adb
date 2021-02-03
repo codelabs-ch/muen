@@ -78,14 +78,18 @@ package body Stackcheck.Input.Test_Data.Tests is
    begin
       declare
          Sub : Types.Subprogram_Type
-           := Types.Create (Name        => "exit_handlers__cpuid__process",
-                            Stack_Usage => 32);
+           := Types.Create (Name          => "exit_handlers__cpuid__process",
+                            Stack_Usage   => 32,
+                            Dynamic_Stack => False,
+                            Bounded_Stack => False);
       begin
          Types.Add_Call (Subprogram  => Sub,
                          Callee_Name => "debug_ops__put_value64");
          Ref_Nodes (2) := Sub;
-         Ref_Nodes (1) := Types.Create (Name        => "foobar",
-                                        Stack_Usage => 4096);
+         Ref_Nodes (1) := Types.Create (Name          => "foobar",
+                                        Stack_Usage   => 4096,
+                                        Dynamic_Stack => False,
+                                        Bounded_Stack => False);
       end;
 
       Parse_Line (Data  => "",
@@ -135,6 +139,13 @@ package body Stackcheck.Input.Test_Data.Tests is
       Str_3 : constant String
         := "node: { title: ""exit_handlers__foo__process"" label: ""Process"
         & "\nsm/src/exit_handlers-foo.adb:12:4\n8 bytes (static)"" }";
+      Str_4 : constant String
+        := "node: { title: ""stackcheck__run"" label: ""Run"
+        & "\n/src/stackcheck.adb:36:4\n1008 bytes (dynamic)"" }";
+      Str_5 : constant String
+        := "node: { title: ""msrstore__tables__to_stream"" label: ""To_Stream"
+        & "\n/src/msrstore-tables.adb:40:4\n8240 bytes (dynamic,bounded)"" }";
+
       No_Size : constant String
         := "node: { title: ""foo"" label: ""Process\n bytes (static)"" }";
       No_Name : constant String
@@ -177,6 +188,10 @@ package body Stackcheck.Input.Test_Data.Tests is
       Assert (Condition => Types.Get_Name (Subprogram => Sub)
               = "exit_handlers__cpuid__process",
               Message   => "Name mismatch (1)");
+      Assert (Condition => not Types.Has_Dynamic_Stack (Node => Sub),
+              Message   => "Stack dynamic (1)");
+      Assert (Condition => not Types.Has_Bounded_Stack (Node => Sub),
+              Message   => "Stack bounded (1)");
 
       Parse_Node (Data       => Str_2,
                   Valid      => Valid,
@@ -188,6 +203,10 @@ package body Stackcheck.Input.Test_Data.Tests is
       Assert (Condition => Types.Get_Name (Subprogram => Sub)
               = "debuglog__sink__rdtsc",
               Message   => "Name mismatch (2)");
+      Assert (Condition => not Types.Has_Dynamic_Stack (Node => Sub),
+              Message   => "Stack dynamic (2)");
+      Assert (Condition => not Types.Has_Bounded_Stack (Node => Sub),
+              Message   => "Stack bounded (2)");
 
       Parse_Node (Data       => Str_3,
                   Valid      => Valid,
@@ -199,6 +218,40 @@ package body Stackcheck.Input.Test_Data.Tests is
       Assert (Condition => Types.Get_Name (Subprogram => Sub)
               = "exit_handlers__foo__process",
               Message   => "Name mismatch (3)");
+      Assert (Condition => not Types.Has_Dynamic_Stack (Node => Sub),
+              Message   => "Stack dynamic (3)");
+      Assert (Condition => not Types.Has_Bounded_Stack (Node => Sub),
+              Message   => "Stack bounded (3)");
+
+      Parse_Node (Data       => Str_4,
+                  Valid      => Valid,
+                  Subprogram => Sub);
+      Assert (Condition => Valid,
+              Message   => "String not valid (4)");
+      Assert (Condition => Types.Get_Own_Stack_Usage (Subprogram => Sub) = 1008,
+              Message   => "Stack usage mismatch (4)");
+      Assert (Condition => Types.Get_Name (Subprogram => Sub)
+              = "stackcheck__run",
+              Message   => "Name mismatch (4)");
+      Assert (Condition => Types.Has_Dynamic_Stack (Node => Sub),
+              Message   => "Stack not dynamic (4)");
+      Assert (Condition => not Types.Has_Bounded_Stack (Node => Sub),
+              Message   => "Stack bounded (4)");
+
+      Parse_Node (Data       => Str_5,
+                  Valid      => Valid,
+                  Subprogram => Sub);
+      Assert (Condition => Valid,
+              Message   => "String not valid (5)");
+      Assert (Condition => Types.Get_Own_Stack_Usage (Subprogram => Sub) = 8240,
+              Message   => "Stack usage mismatch (5)");
+      Assert (Condition => Types.Get_Name (Subprogram => Sub)
+              = "msrstore__tables__to_stream",
+              Message   => "Name mismatch (5)");
+      Assert (Condition => Types.Has_Dynamic_Stack (Node => Sub),
+              Message   => "Stack not dynamic (5)");
+      Assert (Condition => Types.Has_Bounded_Stack (Node => Sub),
+              Message   => "Stack not bounded (5)");
 --  begin read only
    end Test_Parse_Node;
 --  end read only

@@ -169,11 +169,13 @@ is
       Valid      : out Boolean;
       Subprogram : out Types.Subprogram_Type)
    is
-      Marker    : constant String := " bytes (";
-      Title_Tag : constant String := "title: """;
-      Cur_Idx   : Natural;
-      Name      : Ada.Strings.Unbounded.Unbounded_String;
-      Usage     : Natural;
+      Marker        : constant String := " bytes (";
+      Title_Tag     : constant String := "title: """;
+      Cur_Idx       : Natural;
+      Name          : Ada.Strings.Unbounded.Unbounded_String;
+      Usage         : Natural;
+      Dynamic_Stack : Boolean;
+      Bounded_Stack : Boolean;
    begin
       Valid      := False;
       Subprogram := Types.Null_Subprogram;
@@ -225,8 +227,37 @@ is
          Name := To_Unbounded_String (Title);
       end Extract_Title;
 
-      Subprogram := Types.Create (Name        => To_String (Name),
-                                  Stack_Usage => Usage);
+      Extract_Dynamic :
+      declare
+         Dynamic_Tag : constant String := "(dynamic";
+
+         Idx : constant Natural
+           := Ada.Strings.Fixed.Index
+             (Source  => Data,
+              Pattern => Dynamic_Tag,
+              From    => Cur_Idx + Marker'Length - 1);
+      begin
+         Dynamic_Stack := Idx /= 0;
+      end Extract_Dynamic;
+
+      Extract_Bounded :
+      declare
+         Bounded_Tag : constant String := "bounded)";
+
+         Idx : constant Natural
+           := Ada.Strings.Fixed.Index
+             (Source  => Data,
+              Pattern => Bounded_Tag,
+              From    => Cur_Idx + Marker'Length);
+      begin
+         Bounded_Stack := Idx /= 0;
+      end Extract_Bounded;
+
+      Subprogram := Types.Create (Name          => To_String (Name),
+                                  Stack_Usage   => Usage,
+                                  Dynamic_Stack => Dynamic_Stack,
+                                  Bounded_Stack => Bounded_Stack);
+
       Valid := True;
    end Parse_Node;
 

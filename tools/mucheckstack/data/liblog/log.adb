@@ -25,8 +25,9 @@ is
 
    procedure Str (Msg : String)
    is
+      Copy : String := Msg;
    begin
-      for C of Msg loop
+      for C of Copy loop
          Char (C => C);
       end loop;
    end Str;

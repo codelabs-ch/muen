@@ -41,18 +41,20 @@ package body Stackcheck.Test_Data.Tests is
       Failure, Dynamic_Stack : Boolean;
    begin
       Run (Project_File => "data/testci",
-           Limit        => 224,
+           Limit        => 240,
            Overflow     => Failure,
            Dynamic      => Dynamic_Stack);
       Assert (Condition => not Failure,
-              Message   => "Failure with limit 224");
+              Message   => "Failure with limit 240");
+      Assert (Condition => Dynamic_Stack,
+              Message   => "Dynamic stack not detected");
 
       Run (Project_File => "data/testci",
-           Limit        => 223,
+           Limit        => 239,
            Overflow     => Failure,
            Dynamic      => Dynamic_Stack);
       Assert (Condition => Failure,
-              Message   => "No failure with limit 223");
+              Message   => "No failure with limit 239");
 
       Run (Project_File => "data/testci",
            Limit        => 0,

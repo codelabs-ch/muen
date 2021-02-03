@@ -21,10 +21,10 @@ $(OBJ_DIR)/prove/gnatprove/gnatprove.out: $(COMPONENT_TARGETS) $(PROOF_TARGETS)
 
 stackcheck_release: $(OBJ_DIR)/$(COMPONENT) $(wildcard $(OBJ_DIR)/release/*.ci)
 	@$(E) $(COMPONENT) "Check stack (release)" \
-		"build=release $(MUCHECKSTACK) -P$(COMPONENT) -l$(STACK_SIZE)"
+		"build=release $(MUCHECKSTACK) -P$(COMPONENT) -l$(STACK_SIZE) $(STACK_OPTS)"
 stackcheck_debug: $(OBJ_DIR)/$(COMPONENT) $(wildcard $(OBJ_DIR)/debug/*.ci)
 	@$(E) $(COMPONENT) "Check stack (debug)" \
-		"build=debug $(MUCHECKSTACK) -P$(COMPONENT) -l$(STACK_SIZE)"
+		"build=debug $(MUCHECKSTACK) -P$(COMPONENT) -l$(STACK_SIZE) $(STACK_OPTS)"
 
 check: $(STACK_CHECK)
 

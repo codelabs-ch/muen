@@ -59,9 +59,13 @@ is
       Effective_Writes,
       Address => System'To_Address (Skp.Hardware.Ioapic_1_Mem1 + IO_APIC_DAT);
 
-   Global_IO_APIC_Lock : Locks.Spin_Lock_Type := Locks.Free_Lock
+   Global_IO_APIC_Lock : Locks.Spin_Lock_Type
    with
       Linker_Section => Constants.Global_Data_Section;
+   pragma Annotate
+     (GNATprove, Intentional,
+      "might not be initialized",
+      "Lock is shared across CPUs and initialized by BSP during elaboration.");
 
    -------------------------------------------------------------------------
 
@@ -165,4 +169,14 @@ is
       Locks.Release (Lock => Global_IO_APIC_Lock);
    end Unmask_IRQ;
 
+   -------------------------------------------------------------------------
+
+begin
+   if CPU_Info.Is_BSP then
+
+      --  The lock is a single instance shared by all CPUs. So it must only be
+      --  initialized by a single CPU, i.e. BSP.
+
+      Locks.Initialize (Lock => Global_IO_APIC_Lock);
+   end if;
 end SK.IO_Apic;

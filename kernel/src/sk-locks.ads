@@ -25,6 +25,11 @@ is
 
    Free_Lock : constant Spin_Lock_Type;
 
+   --  Initialize lock.
+   procedure Initialize (Lock : out Spin_Lock_Type)
+   with
+      Post => State (Lock) = Free;
+
    --  Spin until Mutex is acquired.
    procedure Acquire (Lock : in out Spin_Lock_Type)
    with

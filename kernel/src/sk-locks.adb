@@ -46,6 +46,14 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Initialize (Lock : out Spin_Lock_Type)
+   is
+   begin
+      Lock.State := Free;
+   end Initialize;
+
+   -------------------------------------------------------------------------
+
    procedure Release (Lock : in out Spin_Lock_Type)
    with SPARK_Mode => Off
    is

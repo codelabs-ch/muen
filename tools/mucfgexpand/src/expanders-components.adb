@@ -16,8 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Containers.Hashed_Maps;
 with Ada.Strings.Fixed;
-with Ada.Strings.Unbounded;
+with Ada.Strings.Unbounded.Equal_Case_Insensitive;
+with Ada.Strings.Unbounded.Hash_Case_Insensitive;
 
 with Interfaces;
 
@@ -592,13 +594,23 @@ is
           (N     => Data.Doc,
            XPath => "/system/components/library");
 
+      package Deps_Map is new Ada.Containers.Hashed_Maps
+        (Key_Type        => Ada.Strings.Unbounded.Unbounded_String,
+         Element_Type    => DOM.Core.Node,
+         Hash            => Ada.Strings.Unbounded.Hash_Case_Insensitive,
+         Equivalent_Keys => Ada.Strings.Unbounded.Equal_Case_Insensitive,
+         "="             => DOM.Core."=");
+
       --  Merge all child nodes of right into child nodes of left. If no child
       --  with given tag name exists in left, it is created. Child nodes are
       --  assumed to be sequences.
       procedure Merge_Childs (Left, Right : DOM.Core.Node);
 
-      --  Recursively resolve dependencies of given component/library node.
-      procedure Resolve_Depends (Node : DOM.Core.Node);
+      --  Recursively resolve dependencies of given component/library node by
+      --  adding their names to the Resolved map.
+      procedure Resolve_Depends
+        (Node     :        DOM.Core.Node;
+         Resolved : in out Deps_Map.Map);
 
       ----------------------------------------------------------------------
 
@@ -681,13 +693,12 @@ is
 
       ----------------------------------------------------------------------
 
-      procedure Resolve_Depends (Node : DOM.Core.Node)
+      procedure Resolve_Depends
+        (Node     :        DOM.Core.Node;
+         Resolved : in out Deps_Map.Map)
       is
          use type DOM.Core.Node;
 
-         Name : constant String
-           := DOM.Core.Elements.Get_Attribute (Elem => Node,
-                                               Name => "name");
          Deps_Node : constant DOM.Core.Node
            := Muxml.Utils.Get_Element (Doc   => Node,
                                        XPath => "depends");
@@ -709,25 +720,19 @@ is
                Dep_Name : constant String
                  := DOM.Core.Elements.Get_Attribute (Elem => Cur_Dep,
                                                      Name => "ref");
-               Lib_Node : constant DOM.Core.Node
-                 := Muxml.Utils.Get_Element (Nodes     => Libraries,
-                                             Ref_Attr  => "name",
-                                             Ref_Value => Dep_Name);
+               Dep_Node : DOM.Core.Node;
             begin
-               Resolve_Depends (Node => Lib_Node);
-
-               Mulog.Log (Msg => "Adding library '" & Dep_Name
-                          & "' resources to component '" & Name & "'");
-               Merge_Childs (Left  => Node,
-                             Right => Lib_Node);
-
-               declare
-                  Dummy : DOM.Core.Node;
-               begin
-                  Dummy := DOM.Core.Nodes.Remove_Child
-                    (N         => Deps_Node,
-                     Old_Child => Cur_Dep);
-               end;
+               if not Resolved.Contains (Key => U (Dep_Name)) then
+                  Dep_Node := Muxml.Utils.Get_Element
+                    (Nodes     => Libraries,
+                     Ref_Attr  => "name",
+                     Ref_Value => Dep_Name);
+                  Resolved.Insert (Key      => U (Dep_Name),
+                                   New_Item => Dep_Node);
+                  Resolve_Depends
+                    (Node     => Dep_Node,
+                     Resolved => Resolved);
+               end if;
             end;
          end loop;
       end Resolve_Depends;
@@ -735,7 +740,7 @@ is
       Components : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/components/*[depends/library]");
+           XPath => "/system/components/component[depends/library]");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Components) - 1 loop
          declare
@@ -743,8 +748,32 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Components,
                  Index => I);
+            Comp_Name : constant String
+              := DOM.Core.Elements.Get_Attribute (Elem => Comp_Node,
+                                                  Name => "name");
+            Resolved_Libs : Deps_Map.Map;
+            Cur_Lib : Deps_Map.Cursor;
          begin
-            Resolve_Depends (Node => Comp_Node);
+            Resolve_Depends (Node     => Comp_Node,
+                             Resolved => Resolved_Libs);
+
+            Cur_Lib := Resolved_Libs.First;
+            while Deps_Map.Has_Element (Position => Cur_Lib) loop
+               declare
+                  Lib_Name : constant String
+                    := Ada.Strings.Unbounded.To_String
+                      (Deps_Map.Key (Position => Cur_Lib));
+                  Lib_Node : constant DOM.Core.Node
+                    := Deps_Map.Element (Position => Cur_Lib);
+               begin
+                  Mulog.Log (Msg => "Adding library '" & Lib_Name
+                             & "' resources to component '" & Comp_Name & "'");
+                  Merge_Childs
+                    (Left  => Comp_Node,
+                     Right => Lib_Node);
+                  Deps_Map.Next (Position => Cur_Lib);
+               end;
+            end loop;
          end;
       end loop;
    end Add_Library_Resources;

@@ -292,6 +292,7 @@
   </component>
   <component name="c1" profile="native">
    <depends>
+    <library ref="l0"/>
     <library ref="l1"/>
    </depends>
    <requires>

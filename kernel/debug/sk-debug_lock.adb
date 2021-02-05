@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.CPU_Info;
 with SK.Constants;
 with SK.Locks;
 
@@ -42,4 +43,14 @@ is
       Locks.Release (Lock => Global_Debug_Lock);
    end Release;
 
+   -------------------------------------------------------------------------
+
+begin
+   if CPU_Info.Is_BSP then
+
+      --  The lock is a single instance shared by all CPUs. So it must only be
+      --  initialized by a single CPU, i.e. BSP.
+
+      Locks.Initialize (Lock => Global_Debug_Lock);
+   end if;
 end SK.Debug_Lock;

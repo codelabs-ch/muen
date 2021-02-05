@@ -21,9 +21,7 @@ is
 
    type Lock_State_Type is (Free, Locked);
 
-   type Spin_Lock_Type is private;
-
-   Free_Lock : constant Spin_Lock_Type;
+   type Spin_Lock_Type is limited private;
 
    --  Initialize lock.
    procedure Initialize (Lock : out Spin_Lock_Type)
@@ -50,15 +48,14 @@ private
       Locked => 1);
    for Lock_State_Type'Size use 32;
 
-   --  Spin lock is implemented as record with a field holding the lock value
-   --  since such data types are guaranteed to be passed by reference.
-   type Spin_Lock_Type is record
+   --  Spin lock is implemented as limited record with a field holding the lock
+   --  value since such data types are guaranteed to be passed by reference,
+   --  see Ada RM 6.2, 7/3.
+   type Spin_Lock_Type is limited record
       State : Lock_State_Type;
    end record;
 
    function State (Lock : Spin_Lock_Type) return Lock_State_Type
    is (Lock.State);
-
-   Free_Lock : constant Spin_Lock_Type := (State => Free);
 
 end SK.Locks;

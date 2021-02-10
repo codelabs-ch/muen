@@ -19,6 +19,7 @@
 with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded.Hash;
 with Ada.Containers.Hashed_Maps;
+with Ada.Containers.Hashed_Sets;
 with Ada.Containers.Ordered_Multisets;
 with Ada.Containers.Generic_Constrained_Array_Sort;
 
@@ -727,6 +728,19 @@ is
      (Data : Muxml.XML_Data_Type)
       return ID_Map_Array
    is
+      function U
+        (Source : String)
+         return Ada.Strings.Unbounded.Unbounded_String
+         renames Ada.Strings.Unbounded.To_Unbounded_String;
+
+      package Unbounded_Set_Package is new Ada.Containers.Hashed_Sets
+        (Element_Type        => Ada.Strings.Unbounded.Unbounded_String,
+         Hash                => Ada.Strings.Unbounded.Hash,
+         Equivalent_Elements => Ada.Strings.Unbounded."=",
+         "="                 => Ada.Strings.Unbounded."=");
+
+      Processed : Unbounded_Set_Package.Set;
+
       Subjects      : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -754,34 +768,40 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Minor_Frame,
                  Name => "subject");
-            Subject_ID_Str : constant String
-              := Muxml.Utils.Get_Attribute
-                (Nodes     => Subjects,
-                 Ref_Attr  => "name",
-                 Ref_Value => Subject_Name,
-                 Attr_Name => "globalId");
-            Subject_ID : Natural;
          begin
-            if Subject_ID_Str'Length = 0 then
-               raise Missing_Subject with "Subject '" & Subject_Name
-                 & "' referenced in scheduling plan not present";
-            end if;
+            if not Processed.Contains (Item => U (Subject_Name)) then
+               declare
+                  Subject_ID_Str : constant String
+                    := Muxml.Utils.Get_Attribute
+                      (Nodes     => Subjects,
+                       Ref_Attr  => "name",
+                       Ref_Value => Subject_Name,
+                       Attr_Name => "globalId");
+                  Subject_ID     : Natural;
+               begin
+                  if Subject_ID_Str'Length = 0 then
+                     raise Missing_Subject with "Subject '" & Subject_Name
+                       & "' referenced in scheduling plan not present";
+                  end if;
 
-            Subject_ID := Natural'Value (Subject_ID_Str);
-            if Subject_ID not in Subject_To_Group_ID'Range then
-               raise Invalid_Subject_ID with "Subject '" & Subject_Name
-                 & "' referenced in scheduling plan has invalid ID "
-                 & Subject_ID_Str & ", not in range"
-                 & Subject_ID_Range'First'Img & ".."
-                 & Subject_ID_Range'Last'Img;
-            end if;
+                  Subject_ID := Natural'Value (Subject_ID_Str);
+                  if Subject_ID not in Subject_To_Group_ID'Range then
+                     raise Invalid_Subject_ID with "Subject '" & Subject_Name
+                       & "' referenced in scheduling plan has invalid ID "
+                       & Subject_ID_Str & ", not in range"
+                       & Subject_ID_Range'First'Img & ".."
+                       & Subject_ID_Range'Last'Img;
+                  end if;
 
-            if Subject_To_Group_ID (Subject_ID) = No_Group then
+                  if Subject_To_Group_ID (Subject_ID) = No_Group then
 
-               --  Subject belongs to new scheduling group.
+                     --  Subject belongs to new scheduling group.
 
-               Subject_To_Group_ID (Subject_ID) := Next_Free_Group_ID;
-               Next_Free_Group_ID := Next_Free_Group_ID + 1;
+                     Subject_To_Group_ID (Subject_ID) := Next_Free_Group_ID;
+                     Next_Free_Group_ID := Next_Free_Group_ID + 1;
+                  end if;
+               end;
+               Processed.Insert (New_Item => U (Subject_Name));
             end if;
          end;
       end loop;

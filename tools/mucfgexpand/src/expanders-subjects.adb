@@ -2551,7 +2551,7 @@ is
       Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/subjects/subject/channels/..");
+           XPath => "/system/subjects/subject[channels]");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          Muxml.Utils.Remove_Child

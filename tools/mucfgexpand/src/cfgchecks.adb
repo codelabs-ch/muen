@@ -2370,15 +2370,21 @@ is
 
    procedure Tau0_Presence_In_Scheduling (XML_Data : Muxml.XML_Data_Type)
    is
-      Tau0_Node : constant DOM.Core.Node_List
+      use type DOM.Core.Node;
+
+      Minor_Frames : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/scheduling/majorFrame/cpu/minorFrame"
-           & "[@subject='tau0']");
+           XPath => "/system/scheduling/majorFrame/cpu/minorFrame");
+      Tau0_Node    : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Nodes     => Minor_Frames,
+           Ref_Attr  => "subject",
+           Ref_Value => "tau0");
    begin
       Mulog.Log
         (Msg => "Checking presence of tau0 subject in scheduling plan");
-      if DOM.Core.Nodes.Length (List => Tau0_Node) = 0 then
+      if Tau0_Node = null then
          raise Mucfgcheck.Validation_Error with "Subject tau0 not present in "
            & "scheduling plan";
       end if;

@@ -64,6 +64,14 @@ is
 
    procedure Add_Channel_Events (Data : in out Muxml.XML_Data_Type)
    is
+      Writers  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject/channels/writer");
+      Readers  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject/channels/reader");
       Channels : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -90,14 +98,14 @@ is
                  Name => "hasEvent");
             Writer_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Doc   => Data.Doc,
-                 XPath => "/system/subjects/subject/channels/writer"
-                 & "[@physical='" & Channel_Name & "']");
+                (Nodes     => Writers,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Channel_Name);
             Reader_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Doc   => Data.Doc,
-                 XPath => "/system/subjects/subject/channels/reader"
-                 & "[@physical='" & Channel_Name & "']");
+                (Nodes     => Readers,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Channel_Name);
             Writer_Subj_Source_Group, Reader_Subj_Target_Node : DOM.Core.Node;
          begin
             XML_Utils.Create_Physical_Event_Node
@@ -1842,21 +1850,29 @@ is
 
    procedure Add_Tau0 (Data : in out Muxml.XML_Data_Type)
    is
-      Tau0_CPU : constant String
-        := Muxml.Utils.Get_Attribute
-          (Doc   => Data.Doc,
-           XPath => "/system/scheduling/majorFrame/cpu/"
-           & "minorFrame[@subject='tau0']/..",
-           Name  => "id");
+      Minor_Frames  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/scheduling/majorFrame/cpu/minorFrame");
+      CPU_Node      : constant DOM.Core.Node
+        := DOM.Core.Nodes.Parent_Node
+          (N => Muxml.Utils.Get_Element
+               (Nodes     => Minor_Frames,
+                Ref_Attr  => "subject",
+                Ref_Value => "tau0"));
+      Tau0_CPU      : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => CPU_Node,
+           Name => "id");
       Subjects_Node : constant DOM.Core.Node
         := Muxml.Utils.Get_Element
           (Doc   => Data.Doc,
            XPath => "/system/subjects");
-      Tau0_Node : DOM.Core.Node
+      Tau0_Node     : DOM.Core.Node
         := DOM.Core.Documents.Create_Element
           (Doc      => Data.Doc,
            Tag_Name => "subject");
-      Mem_Node  : constant DOM.Core.Node
+      Mem_Node      : constant DOM.Core.Node
         := DOM.Core.Documents.Create_Element
           (Doc      => Data.Doc,
            Tag_Name => "memory");
@@ -2543,7 +2559,7 @@ is
       Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/subjects/subject/channels/..");
+           XPath => "/system/subjects/subject[channels]");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          Muxml.Utils.Remove_Child

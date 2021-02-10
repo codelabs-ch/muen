@@ -1428,9 +1428,8 @@ is
          return;
       end if;
 
-      For_Each_Match (XML_Data     => XML_Data,
-                      Source_XPath => XPath,
-                      Ref_XPath    => XPath,
+      For_Each_Match (Source_Nodes => Nodes,
+                      Ref_Nodes    => Nodes,
                       Log_Message  => "VMXON region(s) for consecutiveness",
                       Error        => Error_Msg'Access,
                       Match        => Is_Adjacent_Region'Access);
@@ -1470,9 +1469,13 @@ is
 
    procedure VMXON_Region_Size (XML_Data : Muxml.XML_Data_Type)
    is
-      Nodes : constant DOM.Core.Node_List := XPath_Query
+      All_Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/memory/memory[@type='system_vmxon']");
+         XPath => "/system/memory/memory");
+      Nodes     : constant DOM.Core.Node_List
+        := Muxml.Utils.Get_Elements (Nodes     => All_Nodes,
+                                     Ref_Attr  => "type",
+                                     Ref_Value => "system_vmxon");
    begin
       Check_Attribute (Nodes     => Nodes,
                        Node_Type => "VMXON memory",

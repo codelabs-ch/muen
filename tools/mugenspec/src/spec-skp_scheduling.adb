@@ -16,8 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Containers.Hashed_Maps;
+
 with Ada.Strings.Fixed;
-with Ada.Strings.Unbounded;
+with Ada.Strings.Unbounded.Hash;
 
 with Interfaces;
 
@@ -38,10 +40,19 @@ is
 
    use Ada.Strings.Unbounded;
 
+   package Subject_ID_Map is new Ada.Containers.Hashed_Maps
+     (Key_Type        => Ada.Strings.Unbounded.Unbounded_String,
+      Element_Type    => Natural,
+      Hash            => Ada.Strings.Unbounded.Hash,
+      Equivalent_Keys => Ada.Strings.Unbounded."=");
+
    --  Returns the sum of all tick values of the given minor frames.
    function Sum_Ticks
      (Minor_Frames : DOM.Core.Node_List)
       return Interfaces.Unsigned_64;
+
+   --  Return the subject ID map for the given subject nodes.
+   function To_Map (Subjects : DOM.Core.Node_List) return Subject_ID_Map.Map;
 
    -------------------------------------------------------------------------
 
@@ -71,6 +82,31 @@ is
 
       return Sum;
    end Sum_Ticks;
+
+   -------------------------------------------------------------------------
+
+   function To_Map (Subjects : DOM.Core.Node_List) return Subject_ID_Map.Map
+   is
+   begin
+      return Map : Subject_ID_Map.Map do
+         for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+            declare
+               Subj_Node : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item (List  => Subjects,
+                                         Index => I);
+            begin
+               Map.Insert
+                 (Key      => To_Unbounded_String
+                    (DOM.Core.Elements.Get_Attribute
+                         (Elem => Subj_Node,
+                          Name => "name")),
+                  New_Item => Natural'Value (DOM.Core.Elements.Get_Attribute
+                    (Elem => Subj_Node,
+                     Name => "globalId")));
+            end;
+         end loop;
+      end return;
+   end To_Map;
 
    -------------------------------------------------------------------------
 
@@ -114,10 +150,13 @@ is
       Max_Barrier_Count  : Natural;
       Majors             : DOM.Core.Node_List;
       Buffer             : Unbounded_String;
+      Minor_Buffer       : Unbounded_String;
       Major_Info_Buffer  : Unbounded_String;
       Sched_Group_Buffer : Unbounded_String;
       Tmpl               : Mutools.Templates.Template_Type;
 
+      Subject_IDs          : constant Subject_ID_Map.Map
+        := To_Map (Subjects => Subjects);
       Subject_To_Group_ID  : constant MXU.ID_Map_Array
         := MXU.Get_Subject_To_Scheduling_Group_Map (Data => Policy);
       Sched_Groups_To_Subj : constant MXU.ID_Map_Array
@@ -243,6 +282,8 @@ is
            & " Minor_Frames => Minor_Frame_Array'("
            & ASCII.LF;
 
+         Minor_Buffer := Null_Unbounded_String;
+
          for I in 1 .. Minor_Count loop
             Write_Minor_Frame (Minor        => DOM.Core.Nodes.Item
                                (List  => Minors,
@@ -251,9 +292,11 @@ is
                                Cycles_Count => Minor_Frame_Deadline);
 
             if I < Minor_Count then
-               Buffer := Buffer & "," & ASCII.LF;
+               Minor_Buffer := Minor_Buffer & "," & ASCII.LF;
             end if;
          end loop;
+
+         Buffer := Buffer & Minor_Buffer;
 
          if Minor_Count < Max_Minor_Count then
             Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
@@ -342,23 +385,19 @@ is
            (Elem => Minor,
             Name => "subject");
          Subject_ID : constant Natural
-           := Natural'Value
-             (Muxml.Utils.Get_Attribute
-                (Nodes     => Subjects,
-                 Ref_Attr  => "name",
-                 Ref_Value => Subject,
-                 Attr_Name => "globalId"));
+           := Subject_IDs.Element
+             (Key => To_Unbounded_String (Source => Subject));
       begin
          Cycles_Count := Cycles_Count + Ticks;
 
-         Buffer := Buffer & Indent (N => 4) & Index'Img
+         Minor_Buffer := Minor_Buffer & Indent (N => 4) & Index'Img
            & " => Minor_Frame_Type'(Group_ID =>"
            & Subject_To_Group_ID (Subject_ID)'Img
            & "," & ASCII.LF;
-         Buffer := Buffer & Indent (N => 12) & "Barrier  => "
+         Minor_Buffer := Minor_Buffer & Indent (N => 12) & "Barrier  => "
            & (if Barrier = "none" then "No_Barrier" else Barrier)
            & "," & ASCII.LF;
-         Buffer := Buffer & Indent (N => 12) & "Deadline =>"
+         Minor_Buffer := Minor_Buffer & Indent (N => 12) & "Deadline =>"
            & Cycles_Count'Img & ")";
       end Write_Minor_Frame;
    begin
@@ -410,26 +449,17 @@ is
          end if;
       end loop;
 
-      declare
-         Major_Frames      : constant DOM.Core.Node_List
-           := McKae.XML.XPath.XIA.XPath_Query
-             (N     => Scheduling,
-              XPath => "majorFrame");
-         Major_Frame_Count : constant Natural
-           := DOM.Core.Nodes.Length (List => Major_Frames);
-      begin
-         for I in 0 .. Major_Frame_Count - 1 loop
-            Write_Major_Frame_Info
-              (Index       => I,
-               Major_Frame => DOM.Core.Nodes.Item
-                 (List  => Major_Frames,
-                  Index => I));
+      for I in 0 .. Major_Count - 1 loop
+         Write_Major_Frame_Info
+           (Index       => I,
+            Major_Frame => DOM.Core.Nodes.Item
+              (List  => Majors,
+               Index => I));
 
-            if I < Major_Frame_Count - 1 then
-               Major_Info_Buffer := Major_Info_Buffer & "," & ASCII.LF;
-            end if;
-         end loop;
-      end;
+         if I < Major_Count - 1 then
+            Major_Info_Buffer := Major_Info_Buffer & "," & ASCII.LF;
+         end if;
+      end loop;
 
       for I in Sched_Groups_To_Subj'Range loop
          Sched_Group_Buffer := Sched_Group_Buffer & Indent (N => 3)

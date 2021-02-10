@@ -74,40 +74,55 @@ is
 
    procedure Crash_Audit_Write_Access (XML_Data : Muxml.XML_Data_Type)
    is
-      Pairs : constant Muxml.Utils.Matching_Pairs_Type
-        := Muxml.Utils.Get_Matching
-          (XML_Data       => XML_Data,
-           Left_XPath     => "/system/subjects/subject/memory/memory"
-           & "[@writable='true']",
-           Right_XPath    => "/system/memory/memory"
-           & "[@type='subject_crash_audit']",
-           Match_Multiple => False,
-           Match          => Mutools.Match.Is_Valid_Reference'Access);
+      Mappings : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/memory/memory"
+           & "[@writable='true']");
+      Crash_Regions : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory[@type='subject_crash_audit']");
    begin
       Mulog.Log (Msg => "Checking write access to crash audit region");
 
-      if DOM.Core.Nodes.Length (List => Pairs.Left) > 0 then
+      for I in 0 .. DOM.Core.Nodes.Length (List => Crash_Regions) - 1 loop
          declare
-            Mem_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => Pairs.Left,
-                 Index => 0);
-            Mem_Logical : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Mem_Node,
-                 Name => "logical");
-            Subj_Name : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Muxml.Utils.Ancestor_Node
-                   (Node  => Mem_Node,
-                    Level => 2),
-                 Name => "name");
+            Crash_Reg : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => Crash_Regions,
+               Index => I);
+            Name      : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Crash_Reg,
+               Name => "name");
+            Cur_Maps : constant DOM.Core.Node_List
+              := Muxml.Utils.Get_Elements (Nodes     => Mappings,
+                                           Ref_Attr  => "physical",
+                                           Ref_Value => Name);
          begin
-            raise Validation_Error with "Logical memory node '" & Mem_Logical
-              & "' of subject '" & Subj_Name & "' declares illegal write "
-              & "access to crash audit region";
+            if DOM.Core.Nodes.Length (List => Cur_Maps) > 0 then
+               declare
+                  Mem_Node    : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => Cur_Maps,
+                       Index => 0);
+                  Mem_Logical : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Mem_Node,
+                       Name => "logical");
+                  Subj_Name   : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Muxml.Utils.Ancestor_Node
+                           (Node  => Mem_Node,
+                            Level => 2),
+                       Name => "name");
+               begin
+                  raise Validation_Error with "Logical memory node '"
+                    & Mem_Logical & "' of subject '" & Subj_Name
+                    & "' declares illegal write access to crash audit region";
+               end;
+            end if;
          end;
-      end if;
+      end loop;
    end Crash_Audit_Write_Access;
 
    -------------------------------------------------------------------------

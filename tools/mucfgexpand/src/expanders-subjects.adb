@@ -64,6 +64,14 @@ is
 
    procedure Add_Channel_Events (Data : in out Muxml.XML_Data_Type)
    is
+      Writers  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject/channels/writer");
+      Readers  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject/channels/reader");
       Channels : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -90,14 +98,14 @@ is
                  Name => "hasEvent");
             Writer_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Doc   => Data.Doc,
-                 XPath => "/system/subjects/subject/channels/writer"
-                 & "[@physical='" & Channel_Name & "']");
+                (Nodes     => Writers,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Channel_Name);
             Reader_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Doc   => Data.Doc,
-                 XPath => "/system/subjects/subject/channels/reader"
-                 & "[@physical='" & Channel_Name & "']");
+                (Nodes     => Readers,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Channel_Name);
             Writer_Subj_Source_Group, Reader_Subj_Target_Node : DOM.Core.Node;
          begin
             XML_Utils.Create_Physical_Event_Node

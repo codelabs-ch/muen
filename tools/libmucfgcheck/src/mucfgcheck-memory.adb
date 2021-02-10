@@ -1428,9 +1428,8 @@ is
          return;
       end if;
 
-      For_Each_Match (XML_Data     => XML_Data,
-                      Source_XPath => XPath,
-                      Ref_XPath    => XPath,
+      For_Each_Match (Source_Nodes => Nodes,
+                      Ref_Nodes    => Nodes,
                       Log_Message  => "VMXON region(s) for consecutiveness",
                       Error        => Error_Msg'Access,
                       Match        => Is_Adjacent_Region'Access);

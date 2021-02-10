@@ -17,8 +17,9 @@
 --
 
 with Ada.Exceptions;
-with Ada.Directories;
-with Ada.Direct_IO;
+with Ada.Streams.Stream_IO;
+
+with Mutools.Files;
 
 package body Mutools.Templates
 is
@@ -70,26 +71,24 @@ is
      (Template : Template_Type;
       Filename : String)
    is
-      subtype Content_String is String (1 .. Length (Template.Data));
-      package FIO is new Ada.Direct_IO (Content_String);
+      package SIO renames Ada.Streams.Stream_IO;
 
-      Input_File : FIO.File_Type;
+      Output_File   : SIO.File_Type;
+      Output_Stream : SIO.Stream_Access;
    begin
-      if Ada.Directories.Exists (Name => Filename) then
-         Ada.Directories.Delete_File (Name => Filename);
-      end if;
+      Files.Open (Filename => Filename,
+                  File     => Output_File,
+                  Writable => True);
 
-      FIO.Create (File => Input_File,
-                  Mode => FIO.Out_File,
-                  Name => Filename);
-      FIO.Write (File => Input_File,
-                 Item => To_String (Template.Data));
-      FIO.Close (File => Input_File);
+      Output_Stream := SIO.Stream (File => Output_File);
+      String'Write (Output_Stream,
+                    To_String (Template.Data));
+      SIO.Close (File => Output_File);
 
    exception
       when E : others =>
-         if FIO.Is_Open (File => Input_File) then
-            FIO.Close (File => Input_File);
+         if SIO.Is_Open (File => Output_File) then
+            SIO.Close (File => Output_File);
          end if;
          raise IO_Error with "Unable to write template to '"
            & Filename & "' - " & Ada.Exceptions.Exception_Message (X => E);

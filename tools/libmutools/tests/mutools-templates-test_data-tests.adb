@@ -103,9 +103,22 @@ package body Mutools.Templates.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Out_File : constant String := "obj";
+      T        : Template_Type;
    begin
-      Assert (Condition => True,
-              Message   => "Tested in Replace");
+      begin
+         Write (Template => T,
+                Filename => Out_File);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : IO_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Unable to write template to 'obj' - Unable to open file"
+                    & " 'obj' - obj: Is a directory",
+                    Message   => "Exception message mismatch");
+      end;
 --  begin read only
    end Test_Write;
 --  end read only

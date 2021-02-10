@@ -878,7 +878,7 @@ is
          return Ref_Name = Event_Name;
       end Match_Event_Name;
    begin
-      Mucfgcheck.For_Each_Match
+      For_Each_Match
         (XML_Data     => XML_Data,
          Source_XPath => "/system/subjects/subject/events//*[@physical]",
          Ref_XPath    => "/system/events/event",

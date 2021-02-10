@@ -16,8 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Containers.Hashed_Maps;
+
 with Ada.Strings.Fixed;
-with Ada.Strings.Unbounded;
+with Ada.Strings.Unbounded.Hash;
 
 with Interfaces;
 
@@ -38,10 +40,19 @@ is
 
    use Ada.Strings.Unbounded;
 
+   package Subject_ID_Map is new Ada.Containers.Hashed_Maps
+     (Key_Type        => Ada.Strings.Unbounded.Unbounded_String,
+      Element_Type    => Natural,
+      Hash            => Ada.Strings.Unbounded.Hash,
+      Equivalent_Keys => Ada.Strings.Unbounded."=");
+
    --  Returns the sum of all tick values of the given minor frames.
    function Sum_Ticks
      (Minor_Frames : DOM.Core.Node_List)
       return Interfaces.Unsigned_64;
+
+   --  Return the subject ID map for the given subject nodes.
+   function To_Map (Subjects : DOM.Core.Node_List) return Subject_ID_Map.Map;
 
    -------------------------------------------------------------------------
 
@@ -71,6 +82,31 @@ is
 
       return Sum;
    end Sum_Ticks;
+
+   -------------------------------------------------------------------------
+
+   function To_Map (Subjects : DOM.Core.Node_List) return Subject_ID_Map.Map
+   is
+   begin
+      return Map : Subject_ID_Map.Map do
+         for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+            declare
+               Subj_Node : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item (List  => Subjects,
+                                         Index => I);
+            begin
+               Map.Insert
+                 (Key      => To_Unbounded_String
+                    (DOM.Core.Elements.Get_Attribute
+                         (Elem => Subj_Node,
+                          Name => "name")),
+                  New_Item => Natural'Value (DOM.Core.Elements.Get_Attribute
+                    (Elem => Subj_Node,
+                     Name => "globalId")));
+            end;
+         end loop;
+      end return;
+   end To_Map;
 
    -------------------------------------------------------------------------
 
@@ -118,6 +154,8 @@ is
       Sched_Group_Buffer : Unbounded_String;
       Tmpl               : Mutools.Templates.Template_Type;
 
+      Subject_IDs          : constant Subject_ID_Map.Map
+        := To_Map (Subjects => Subjects);
       Subject_To_Group_ID  : constant MXU.ID_Map_Array
         := MXU.Get_Subject_To_Scheduling_Group_Map (Data => Policy);
       Sched_Groups_To_Subj : constant MXU.ID_Map_Array
@@ -342,12 +380,8 @@ is
            (Elem => Minor,
             Name => "subject");
          Subject_ID : constant Natural
-           := Natural'Value
-             (Muxml.Utils.Get_Attribute
-                (Nodes     => Subjects,
-                 Ref_Attr  => "name",
-                 Ref_Value => Subject,
-                 Attr_Name => "globalId"));
+           := Subject_IDs.Element
+             (Key => To_Unbounded_String (Source => Subject));
       begin
          Cycles_Count := Cycles_Count + Ticks;
 

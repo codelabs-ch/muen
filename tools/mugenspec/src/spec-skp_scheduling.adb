@@ -444,26 +444,17 @@ is
          end if;
       end loop;
 
-      declare
-         Major_Frames      : constant DOM.Core.Node_List
-           := McKae.XML.XPath.XIA.XPath_Query
-             (N     => Scheduling,
-              XPath => "majorFrame");
-         Major_Frame_Count : constant Natural
-           := DOM.Core.Nodes.Length (List => Major_Frames);
-      begin
-         for I in 0 .. Major_Frame_Count - 1 loop
-            Write_Major_Frame_Info
-              (Index       => I,
-               Major_Frame => DOM.Core.Nodes.Item
-                 (List  => Major_Frames,
-                  Index => I));
+      for I in 0 .. Major_Count - 1 loop
+         Write_Major_Frame_Info
+           (Index       => I,
+            Major_Frame => DOM.Core.Nodes.Item
+              (List  => Majors,
+               Index => I));
 
-            if I < Major_Frame_Count - 1 then
-               Major_Info_Buffer := Major_Info_Buffer & "," & ASCII.LF;
-            end if;
-         end loop;
-      end;
+         if I < Major_Count - 1 then
+            Major_Info_Buffer := Major_Info_Buffer & "," & ASCII.LF;
+         end if;
+      end loop;
 
       for I in Sched_Groups_To_Subj'Range loop
          Sched_Group_Buffer := Sched_Group_Buffer & Indent (N => 3)

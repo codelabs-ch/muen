@@ -26,7 +26,6 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
-with Mutools.Match;
 with Mutools.Types;
 
 package body Mucfgcheck.Events
@@ -204,48 +203,49 @@ is
           (N     => XML_Data.Doc,
            XPath => "/system/subjects/subject/events/source/group/"
            & "event[system_reboot|system_panic|system_poweroff|unmask_irq]");
-      Pairs : constant Muxml.Utils.Matching_Pairs_Type
-        := Muxml.Utils.Get_Matching
-          (Left_Nodes  => Actions,
-           Right_Nodes => McKae.XML.XPath.XIA.XPath_Query
-             (N     => XML_Data.Doc,
-              XPath => "/system/events/event[@mode!='kernel']"),
-           Match       => Mutools.Match.Is_Valid_Reference'Access);
+      Non_Kernel_Events : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/events/event[@mode!='kernel']");
+      Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Actions);
    begin
       Mulog.Log (Msg => "Checking physical event reference of"
                  & DOM.Core.Nodes.Length (List => Actions)'Img
                  & " system action(s)");
 
-      if DOM.Core.Nodes.Length (List => Pairs.Left) > 0 then
+      for I in Natural range 0 .. Count - 1 loop
          declare
-            Ev_Node : constant DOM.Core.Node
+            use type DOM.Core.Node;
+
+            Ev_Node      : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
-                (List  => Pairs.Left,
-                 Index => 0);
-            Ev_Name : constant String
+                (List  => Actions,
+                 Index => I);
+            Ev_Name      : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Ev_Node,
                  Name => "logical");
             Phys_Ev_Name : constant String
               := DOM.Core.Elements.Get_Attribute
-                (Elem => DOM.Core.Nodes.Item
-                   (List  => Pairs.Right,
-                    Index => 0),
-                 Name => "name");
-            Subj_Node : constant DOM.Core.Node
-              := Muxml.Utils.Ancestor_Node
-                (Node  => Ev_Node,
-                 Level => 4);
-            Subj_Name : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Subj_Node,
-                 Name => "name");
+                (Elem => Ev_Node,
+                 Name => "physical");
          begin
-            raise Validation_Error with "System action for event '"
-              & Ev_Name & "' of subject '" & Subj_Name & "' does not reference"
-              & " physical kernel-mode event '" & Phys_Ev_Name & "'";
+            if Muxml.Utils.Get_Element (Nodes     => Non_Kernel_Events,
+                                        Ref_Attr  => "name",
+                                        Ref_Value => Phys_Ev_Name) /= null
+            then
+               raise Validation_Error with "System action for event '"
+                 & Ev_Name & "' of subject '"
+                 & DOM.Core.Elements.Get_Attribute
+                 (Elem => Muxml.Utils.Ancestor_Node
+                    (Node  => Ev_Node,
+                     Level => 4),
+                  Name => "name") & "' does not reference"
+                 & " physical kernel-mode event '" & Phys_Ev_Name & "'";
+            end if;
          end;
-      end if;
+      end loop;
    end Kernel_Mode_System_Actions;
 
    -------------------------------------------------------------------------

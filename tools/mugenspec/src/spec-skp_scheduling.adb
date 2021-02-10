@@ -150,6 +150,7 @@ is
       Max_Barrier_Count  : Natural;
       Majors             : DOM.Core.Node_List;
       Buffer             : Unbounded_String;
+      Minor_Buffer       : Unbounded_String;
       Major_Info_Buffer  : Unbounded_String;
       Sched_Group_Buffer : Unbounded_String;
       Tmpl               : Mutools.Templates.Template_Type;
@@ -281,6 +282,8 @@ is
            & " Minor_Frames => Minor_Frame_Array'("
            & ASCII.LF;
 
+         Minor_Buffer := Null_Unbounded_String;
+
          for I in 1 .. Minor_Count loop
             Write_Minor_Frame (Minor        => DOM.Core.Nodes.Item
                                (List  => Minors,
@@ -289,9 +292,11 @@ is
                                Cycles_Count => Minor_Frame_Deadline);
 
             if I < Minor_Count then
-               Buffer := Buffer & "," & ASCII.LF;
+               Minor_Buffer := Minor_Buffer & "," & ASCII.LF;
             end if;
          end loop;
+
+         Buffer := Buffer & Minor_Buffer;
 
          if Minor_Count < Max_Minor_Count then
             Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
@@ -385,14 +390,14 @@ is
       begin
          Cycles_Count := Cycles_Count + Ticks;
 
-         Buffer := Buffer & Indent (N => 4) & Index'Img
+         Minor_Buffer := Minor_Buffer & Indent (N => 4) & Index'Img
            & " => Minor_Frame_Type'(Group_ID =>"
            & Subject_To_Group_ID (Subject_ID)'Img
            & "," & ASCII.LF;
-         Buffer := Buffer & Indent (N => 12) & "Barrier  => "
+         Minor_Buffer := Minor_Buffer & Indent (N => 12) & "Barrier  => "
            & (if Barrier = "none" then "No_Barrier" else Barrier)
            & "," & ASCII.LF;
-         Buffer := Buffer & Indent (N => 12) & "Deadline =>"
+         Minor_Buffer := Minor_Buffer & Indent (N => 12) & "Deadline =>"
            & Cycles_Count'Img & ")";
       end Write_Minor_Frame;
    begin

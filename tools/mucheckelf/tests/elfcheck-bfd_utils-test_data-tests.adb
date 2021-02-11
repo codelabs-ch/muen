@@ -31,8 +31,8 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Check_Section (Gnattest_T : in out Test);
-   procedure Test_Check_Section_490406 (Gnattest_T : in out Test) renames Test_Check_Section;
---  id:2.2/490406d12bf9e77a/Check_Section/1/0/
+   procedure Test_Check_Section_9bbc4c (Gnattest_T : in out Test) renames Test_Check_Section;
+--  id:2.2/9bbc4c18ad2928d7/Check_Section/1/0/
    procedure Test_Check_Section (Gnattest_T : in out Test) is
 --  end read only
 
@@ -53,9 +53,16 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
                            Descriptor => Fd);
          S := Bfd.Sections.Find_Section (File => Fd,
                                          Name => ".text");
-         Check_Section (Policy      => Policy,
-                        Region_Name => "nonexistent",
-                        Section     => S);
+         Check_Section
+           (Physical_Mem => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Policy.Doc,
+               XPath => "/system/memory/memory"),
+            Virtual_Mem  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Policy.Doc,
+               XPath => "//memory[@physical]"),
+            Region_Name  => "nonexistent",
+            Section      => S);
+
          Bfd.Files.Close (File => Fd);
          Assert (Condition => False,
                  Message   => "Exception expected (1)");
@@ -94,9 +101,15 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
             & "[@physical='kernel_text']",
             Name  => "physical",
             Value => "nonexistent");
-         Check_Section (Policy      => Policy,
-                        Region_Name => "kernel_text",
-                        Section     => S);
+         Check_Section
+           (Physical_Mem => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Policy.Doc,
+               XPath => "/system/memory/memory"),
+            Virtual_Mem  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Policy.Doc,
+               XPath => "//memory[@physical]"),
+            Region_Name  => "kernel_text",
+            Section      => S);
          Bfd.Files.Close (File => Fd);
          Assert (Condition => False,
                  Message   => "Exception expected (2)");
@@ -128,9 +141,15 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
          S := Bfd.Sections.Find_Section (File => Fd,
                                          Name => ".text");
          Bfd.Files.Close (File => Fd);
-         Check_Section (Policy      => Policy,
-                        Region_Name => "kernel_text",
-                        Section     => S);
+         Check_Section
+           (Physical_Mem => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Policy.Doc,
+               XPath => "/system/memory/memory"),
+            Virtual_Mem  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Policy.Doc,
+               XPath => "//memory[@physical]"),
+            Region_Name  => "kernel_text",
+            Section      => S);
 
       exception
          when others =>

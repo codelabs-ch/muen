@@ -307,8 +307,8 @@ package body Expanders.XML_Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Calculate_PT_Size (Gnattest_T : in out Test);
-   procedure Test_Calculate_PT_Size_310d80 (Gnattest_T : in out Test) renames Test_Calculate_PT_Size;
---  id:2.2/310d8086d72be4ec/Calculate_PT_Size/1/0/
+   procedure Test_Calculate_PT_Size_89916d (Gnattest_T : in out Test) renames Test_Calculate_PT_Size;
+--  id:2.2/89916dc68e6c5c5e/Calculate_PT_Size/1/0/
    procedure Test_Calculate_PT_Size (Gnattest_T : in out Test) is
 --  end read only
 
@@ -327,6 +327,12 @@ package body Expanders.XML_Utils.Test_Data.Tests is
            (Policy             => Policy,
             Paging_Levels      => 4,
             Large_Pages        => True,
+            Physical_Memory    => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Policy.Doc,
+               XPath => "/system/memory/memory"),
+            Physical_Devices   => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Policy.Doc,
+               XPath => "/system/hardware/devices/device"),
             Dev_Virt_Mem_XPath => "/system/kernel/devices/device/memory",
             Virt_Mem_XPath     => "/system/kernel/memory/cpu[@id='0']/memory")
          = 16#6000#,

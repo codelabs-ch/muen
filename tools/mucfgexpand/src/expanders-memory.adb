@@ -130,6 +130,14 @@ is
    is
       CPU_Count : constant Positive
         := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Data);
+      Physical_Mem : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/memory/memory");
+      Physical_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/hardware/devices/device");
    begin
 
       --  Validate that there are no overlapping kernel memory mappings and
@@ -149,6 +157,8 @@ is
                 (Policy             => Data,
                  Paging_Levels      => 4,
                  Large_Pages        => False,
+                 Physical_Memory    => Physical_Mem,
+                 Physical_Devices   => Physical_Devs,
                  Dev_Virt_Mem_XPath => "/system/kernel/devices/device/memory",
                  Virt_Mem_XPath     => "/system/kernel/memory/cpu[@id='" &
                    CPU_Str & "']/memory");
@@ -567,6 +577,14 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/subjects/subject");
+      Physical_Mem : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/memory/memory");
+      Physical_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/hardware/devices/device");
    begin
 
       --  Validate that there are no overlapping subject memory mappings and
@@ -590,6 +608,8 @@ is
                 (Policy             => Data,
                  Paging_Levels      => 4,
                  Large_Pages        => False,
+                 Physical_Memory    => Physical_Mem,
+                 Physical_Devices   => Physical_Devs,
                  Dev_Virt_Mem_XPath => "/system/subjects/subject[@name='"
                  & Subj_Name & "']/devices/device/memory",
                  Virt_Mem_XPath     => "/system/subjects/subject[@name='"

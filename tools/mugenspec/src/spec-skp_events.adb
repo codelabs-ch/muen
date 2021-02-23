@@ -312,6 +312,7 @@ is
           (N     => Policy.Doc,
            XPath => "/system/subjects/subject/events/target/event");
 
+      Ev_Buf : Unbounded_String;
       Buffer : Unbounded_String;
       Tmpl   : Mutools.Templates.Template_Type;
 
@@ -361,12 +362,12 @@ is
       begin
          if not (Action_Kind = "No_Action" and Vector_Str = "Invalid_Vector")
          then
-            Buffer := Buffer & Indent (N => 3)  & " "
+            Ev_Buf := Ev_Buf & Indent (N => 3)  & " "
               & Event_ID & " => ";
-            Buffer := Buffer & "Target_Event_Type'(" & ASCII.LF
+            Ev_Buf := Ev_Buf & "Target_Event_Type'(" & ASCII.LF
               & Indent (N => 4) & "Kind   => "
               & Mutools.Utils.To_Ada_Identifier (Str => Action_Kind) & ",";
-            Buffer := Buffer & ASCII.LF & Indent (N => 4)
+            Ev_Buf := Ev_Buf & ASCII.LF & Indent (N => 4)
               & "Vector => " & Vector_Str & ")";
             Added := True;
          else
@@ -534,30 +535,30 @@ is
          Target_Added : Boolean;
          Skip_Count : Natural := 0;
       begin
-         Buffer := Buffer & Indent (N => 2) & Subj_ID
+         Ev_Buf := To_Unbounded_String (Indent (N => 2)) & Subj_ID
            & " => Subject_Events_Type'(" & ASCII.LF
            & Indent & "    Source_Traps  => ";
 
          Add_Traps (Traps  => Traps,
-                    Buffer => Buffer);
+                    Buffer => Ev_Buf);
 
-         Buffer := Buffer & ASCII.LF
+         Ev_Buf := Ev_Buf & ASCII.LF
            & Indent & "    Source_Events => ";
 
          if Src_Ev_Count = 0 then
-            Buffer := Buffer & "Null_Source_Event_Table,";
+            Ev_Buf := Ev_Buf & "Null_Source_Event_Table,";
          else
             Add_Source_Events (Events => Src_Events,
-                               Buffer => Buffer);
+                               Buffer => Ev_Buf);
          end if;
 
-         Buffer := Buffer & ASCII.LF
+         Ev_Buf := Ev_Buf & ASCII.LF
            & Indent & "    Target_Events => ";
 
          if Target_Ev_Count = 0 then
-            Buffer := Buffer & "Null_Target_Event_Table)";
+            Ev_Buf := Ev_Buf & "Null_Target_Event_Table)";
          else
-            Buffer := Buffer & "Target_Event_Table_Type'(" & ASCII.LF;
+            Ev_Buf := Ev_Buf & "Target_Event_Table_Type'(" & ASCII.LF;
             for I in 0 .. Target_Ev_Count - 1 loop
                Add_Event_Action_Entry (Event => DOM.Core.Nodes.Item
                                        (List  => Target_Events,
@@ -566,7 +567,7 @@ is
                if Target_Added and
                  (I < Target_Ev_Count - 1 or else Skip_Count > 0)
                then
-                  Buffer := Buffer & "," & ASCII.LF;
+                  Ev_Buf := Ev_Buf & "," & ASCII.LF;
                end if;
                if not Target_Added then
                   Skip_Count := Skip_Count + 1;
@@ -575,13 +576,13 @@ is
 
             if Target_Ev_Count /= Max_Event_Count then
                if Skip_Count = 0 then
-                  Buffer := Buffer & "," & ASCII.LF;
+                  Ev_Buf := Ev_Buf & "," & ASCII.LF;
                end if;
 
-               Buffer := Buffer & Indent (N => 3)
+               Ev_Buf := Ev_Buf & Indent (N => 3)
                  & " others => Null_Target_Event";
             end if;
-            Buffer := Buffer & "))";
+            Ev_Buf := Ev_Buf & "))";
          end if;
       end Write_Subject_Event_Spec;
    begin
@@ -611,8 +612,9 @@ is
               (List  => Subjects,
                Index => I));
          if I < Subj_Count - 1 then
-            Buffer := Buffer & "," & ASCII.LF;
+            Ev_Buf := Ev_Buf & "," & ASCII.LF;
          end if;
+         Buffer := Buffer & Ev_Buf;
       end loop;
 
       Mutools.Templates.Replace

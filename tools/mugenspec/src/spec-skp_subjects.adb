@@ -157,8 +157,9 @@ is
       Subj_Count  : constant Natural
         := DOM.Core.Nodes.Length (List => Subjects);
 
-      Buffer : Unbounded_String;
-      Tmpl   : Mutools.Templates.Template_Type;
+      Buffer   : Unbounded_String;
+      Subj_Buf : Unbounded_String;
+      Tmpl     : Mutools.Templates.Template_Type;
 
       --  Append SPARK specification of given subject to template buffer.
       procedure Write_Subject_Spec (Subject : DOM.Core.Node);
@@ -323,7 +324,7 @@ is
             end;
          end if;
 
-         Buffer := Buffer & Indent (N => 2) & Subj_ID
+         Subj_Buf := To_Unbounded_String (Indent (N => 2)) & Subj_ID
            & " => Subject_Spec_Type'("
            & ASCII.LF
            & Indent & "    CPU_ID             => " & CPU_ID & ","
@@ -333,21 +334,21 @@ is
            (Doc   => Subject,
             XPath => "vcpu/vmx/controls/proc2/EnableEPT") = "1"
          then
-            Buffer := Buffer
+            Subj_Buf := Subj_Buf
               & Indent & "    PML4_Address       => 0,"
               & ASCII.LF
               & Indent & "    EPT_Pointer        => "
               & Mutools.Utils.To_Hex (Number => PML4_Addr + EPT_Flags)
               & ",";
          else
-            Buffer := Buffer
+            Subj_Buf := Subj_Buf
               & Indent & "    PML4_Address       => "
               & Mutools.Utils.To_Hex (Number => PML4_Addr) & ","
               & ASCII.LF
               & Indent & "    EPT_Pointer        => 0,";
          end if;
 
-         Buffer := Buffer & ASCII.LF
+         Subj_Buf := Subj_Buf & ASCII.LF
            & Indent & "    VMCS_Address       => "
            & Mutools.Utils.To_Hex (Number => VMCS_Addr) & ","
            & ASCII.LF
@@ -367,13 +368,13 @@ is
            & Mutools.Utils.To_Hex (Number => Entry_Addr) & ","
            & ASCII.LF;
 
-         Add_GPRs (Buffer => Buffer,
+         Add_GPRs (Buffer => Subj_Buf,
                    GPRs   => GPR_Node);
 
-         Add_Segment_Regs (Buffer   => Buffer,
+         Add_Segment_Regs (Buffer   => Subj_Buf,
                            Seg_Regs => Segments_Node);
 
-         Buffer := Buffer
+         Subj_Buf := Subj_Buf
            & Indent & "    CR0_Value          => "
            & Mutools.Utils.To_Hex (Number => VMX.Get_CR0 (Fields => CR0_Value))
            & "," & ASCII.LF
@@ -434,8 +435,9 @@ is
                Index => I));
 
          if I < Subj_Count - 1 then
-            Buffer := Buffer & "," & ASCII.LF;
+            Subj_Buf := Subj_Buf & "," & ASCII.LF;
          end if;
+         Buffer := Buffer & Subj_Buf;
       end loop;
 
       Mutools.Templates.Replace

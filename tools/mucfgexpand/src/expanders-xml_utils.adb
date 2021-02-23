@@ -127,6 +127,8 @@ is
      (Policy             : Muxml.XML_Data_Type;
       Paging_Levels      : Paging.Paging_Level;
       Large_Pages        : Boolean;
+      Physical_Memory    : DOM.Core.Node_List;
+      Physical_Devices   : DOM.Core.Node_List;
       Dev_Virt_Mem_XPath : String;
       Virt_Mem_XPath     : String)
       return Interfaces.Unsigned_64
@@ -143,14 +145,6 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => Virt_Mem_XPath);
-      Physical_Mem  : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Policy.Doc,
-           XPath => "/system/memory/memory");
-      Physical_Devs : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Policy.Doc,
-           XPath => "/system/hardware/devices/device");
    begin
       Paging.Layouts.Set_Large_Page_Support (Mem_Layout => Layout,
                                              State      => Large_Pages);
@@ -167,7 +161,7 @@ is
                  Name => "physical");
             Physical : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Nodes     => Physical_Mem,
+                (Nodes     => Physical_Memory,
                  Ref_Attr  => "name",
                  Ref_Value => Physical_Name);
             Virtual_Address : constant Interfaces.Unsigned_64
@@ -214,7 +208,7 @@ is
             Physical_Mem : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Muxml.Utils.Get_Element
-                   (Nodes     => Physical_Devs,
+                   (Nodes     => Physical_Devices,
                     Ref_Attr  => "name",
                     Ref_Value => Dev_Name),
                  XPath => "memory[@name='" & Physical_Mem_Name & "']");

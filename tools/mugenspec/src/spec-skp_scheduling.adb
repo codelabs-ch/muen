@@ -151,6 +151,7 @@ is
       Majors             : DOM.Core.Node_List;
       Buffer             : Unbounded_String;
       Minor_Buffer       : Unbounded_String;
+      Major_Buffer       : Unbounded_String;
       Major_Info_Buffer  : Unbounded_String;
       Sched_Group_Buffer : Unbounded_String;
       Tmpl               : Mutools.Templates.Template_Type;
@@ -274,15 +275,13 @@ is
            (List => Minors);
          Minor_Frame_Deadline : Interfaces.Unsigned_64 := 0;
       begin
-         Buffer := Buffer & Indent (N => 2)
+         Major_Buffer :=  To_Unbounded_String (Indent (N => 2))
            & Index'Img & " => Major_Frame_Type'"
            & ASCII.LF & Indent (N => 3)
            & "(Length       =>" & Minor_Count'Img & ","
            & ASCII.LF & Indent (N => 3)
            & " Minor_Frames => Minor_Frame_Array'("
            & ASCII.LF;
-
-         Minor_Buffer := Null_Unbounded_String;
 
          for I in 1 .. Minor_Count loop
             Write_Minor_Frame (Minor        => DOM.Core.Nodes.Item
@@ -294,16 +293,15 @@ is
             if I < Minor_Count then
                Minor_Buffer := Minor_Buffer & "," & ASCII.LF;
             end if;
+            Major_Buffer := Major_Buffer & Minor_Buffer;
          end loop;
 
-         Buffer := Buffer & Minor_Buffer;
-
          if Minor_Count < Max_Minor_Count then
-            Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
+            Major_Buffer := Major_Buffer & "," & ASCII.LF & Indent (N => 3)
               & Indent & " others => Null_Minor_Frame";
          end if;
 
-         Buffer := Buffer & "))";
+         Major_Buffer := Major_Buffer & "))";
       end Write_Major_Frame;
 
       ----------------------------------------------------------------------
@@ -390,7 +388,7 @@ is
       begin
          Cycles_Count := Cycles_Count + Ticks;
 
-         Minor_Buffer := Minor_Buffer & Indent (N => 4) & Index'Img
+         Minor_Buffer := To_Unbounded_String (Indent (N => 4)) & Index'Img
            & " => Minor_Frame_Type'(Group_ID =>"
            & Subject_To_Group_ID (Subject_ID)'Img
            & "," & ASCII.LF;
@@ -437,9 +435,10 @@ is
                                   Index  => I);
 
                if I < Major_Count - 1 then
-                  Buffer := Buffer & "," & ASCII.LF;
+                  Major_Buffer := Major_Buffer & "," & ASCII.LF;
                end if;
             end;
+            Buffer := Buffer & Major_Buffer;
          end loop;
 
          Buffer := Buffer & ")";

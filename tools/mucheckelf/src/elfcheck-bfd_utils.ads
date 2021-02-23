@@ -20,7 +20,7 @@ with Interfaces;
 
 with Bfd.Sections;
 
-with Muxml;
+with DOM.Core;
 
 package Elfcheck.Bfd_Utils
 is
@@ -29,10 +29,11 @@ is
    --  identified by name. An exception is raised if a property does not fit
    --  the requirements. If Mapped is False, the VMA is not validated.
    procedure Check_Section
-     (Policy      : Muxml.XML_Data_Type;
-      Region_Name : String;
-      Section     : Bfd.Sections.Section;
-      Mapped      : Boolean := True);
+     (Physical_Mem : DOM.Core.Node_List;
+      Virtual_Mem  : DOM.Core.Node_List;
+      Region_Name  : String;
+      Section      : Bfd.Sections.Section;
+      Mapped       : Boolean := True);
 
    --  Check that the given entry point address matches the expected kernel
    --  entry point. An exception is raised if they do not match.

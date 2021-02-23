@@ -18,6 +18,9 @@
 
 with Interfaces;
 
+with DOM.Core;
+with McKae.XML.XPath.XIA;
+
 with Muxml;
 with Mulog;
 
@@ -78,6 +81,8 @@ is
    procedure Run (Policy_File, ELF_Binary : String)
    is
       Policy   : Muxml.XML_Data_Type;
+      Phys_Mem : DOM.Core.Node_List;
+      Virt_Mem : DOM.Core.Node_List;
       Fd       : Bfd.Files.File_Type;
       Sections : Bfd.Sections.Section_Iterator;
    begin
@@ -85,6 +90,13 @@ is
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
                    File => Policy_File);
+
+      Phys_Mem := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Policy.Doc,
+         XPath => "/system/memory/memory");
+      Virt_Mem := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Policy.Doc,
+         XPath => "//memory[@physical]");
 
       Mulog.Log (Msg => "Checking binary '" & ELF_Binary & "'");
       Mutools.Bfd.Open (Filename   => ELF_Binary,
@@ -111,10 +123,11 @@ is
                end if;
 
                Bfd_Utils.Check_Section
-                 (Policy      => Policy,
-                  Region_Name => S (Mapping.Region_Name),
-                  Section     => Section,
-                  Mapped      => Mapping.Mapped);
+                 (Physical_Mem => Phys_Mem,
+                  Virtual_Mem  => Virt_Mem,
+                  Region_Name  => S (Mapping.Region_Name),
+                  Section      => Section,
+                  Mapped       => Mapping.Mapped);
                Mapping.Present := True;
             end if;
          end;

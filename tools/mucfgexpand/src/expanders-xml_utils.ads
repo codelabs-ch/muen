@@ -79,6 +79,8 @@ is
      (Policy             : Muxml.XML_Data_Type;
       Paging_Levels      : Paging.Paging_Level;
       Large_Pages        : Boolean;
+      Physical_Memory    : DOM.Core.Node_List;
+      Physical_Devices   : DOM.Core.Node_List;
       Dev_Virt_Mem_XPath : String;
       Virt_Mem_XPath     : String)
       return Interfaces.Unsigned_64;

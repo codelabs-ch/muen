@@ -137,6 +137,7 @@ is
       Mucfgcheck.Config.Expression_Integer_Values (XML_Data => Policy);
       Mucfgcheck.Config.Expression_Boolean_Values (XML_Data => Policy);
 
+      Mulog.Log (Msg => "Processing expressions");
       Mutools.Expressions.Expand (Policy => Policy);
       Muxml.Utils.Remove_Elements
         (Doc   => Policy.Doc,
@@ -145,8 +146,10 @@ is
       --  Check conditional references after expression evaluation.
 
       Mucfgcheck.Config.Conditional_Config_Var_Refs (XML_Data => Policy);
+      Mulog.Log (Msg => "Processing conditionals");
       Mutools.Conditionals.Expand (Policy => Policy);
 
+      Mulog.Log (Msg => "Processing attributes");
       Mutools.Substitutions.Process_Attributes (Data => Policy);
 
       Muxml.Write

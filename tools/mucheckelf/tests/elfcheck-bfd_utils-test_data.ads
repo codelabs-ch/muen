@@ -7,6 +7,8 @@ with AUnit.Test_Fixtures;
 
 with Ada.Exceptions;
 
+with McKae.XML.XPath.XIA;
+
 with Muxml.Utils;
 
 with Mutools.Bfd;

@@ -265,6 +265,11 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/deviceDomains/domain");
+      Physical_Mem  : DOM.Core.Node_List;
+      Physical_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/hardware/devices/device");
    begin
 
       --  DMAR root table.
@@ -334,6 +339,10 @@ is
          end loop;
       end;
 
+      Physical_Mem := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Data.Doc,
+         XPath => "/system/memory/memory");
+
       --  Second-level address translation tables for each domain.
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Domains) - 1 loop
@@ -353,6 +362,8 @@ is
                     Paging_Levels      =>
                       Mutools.XML_Utils.Get_IOMMU_Paging_Levels (Data => Data),
                     Large_Pages        => False,
+                    Physical_Memory    => Physical_Mem,
+                    Physical_Devices   => Physical_Devs,
                     Dev_Virt_Mem_XPath => "none",
                     Virt_Mem_XPath     => "/system/deviceDomains/domain"
                     & "[@name='" & Name & "']/memory/memory"));

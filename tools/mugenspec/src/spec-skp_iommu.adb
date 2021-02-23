@@ -24,6 +24,8 @@ with Interfaces;
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
+with McKae.XML.XPath.XIA;
+
 with Mulog;
 with Muxml.Utils;
 with Mutools.Match;
@@ -391,16 +393,20 @@ is
       end Get_Base_Addr;
 
       Filename  : constant String := Output_Dir & "/skp-iommu.ads";
+      Phys_Mem  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/memory/memory");
       Root_Addr : constant String
-        := Muxml.Utils.Get_Attribute
-          (Doc   => Policy.Doc,
-           XPath => "/system/memory/memory[@type='system_vtd_root']",
-           Name  => "physicalAddress");
+        := Muxml.Utils.Get_Attribute (Nodes     => Phys_Mem,
+                                      Ref_Attr  => "type",
+                                      Ref_Value => "system_vtd_root",
+                                      Attr_Name => "physicalAddress");
       IRT_Phys_Addr_Str : constant String
-        := Muxml.Utils.Get_Attribute
-          (Doc   => Policy.Doc,
-           XPath => "/system/memory/memory[@type='system_vtd_ir']",
-           Name  => "physicalAddress");
+        := Muxml.Utils.Get_Attribute (Nodes     => Phys_Mem,
+                                      Ref_Attr  => "type",
+                                      Ref_Value => "system_vtd_ir",
+                                      Attr_Name => "physicalAddress");
       IRT_Phys_Addr : Interfaces.Unsigned_64
         := Interfaces.Unsigned_64'Value (IRT_Phys_Addr_Str);
       IOMMUs : constant Muxml.Utils.Matching_Pairs_Type

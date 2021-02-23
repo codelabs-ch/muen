@@ -19,8 +19,6 @@
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
-with McKae.XML.XPath.XIA;
-
 with Mulog;
 with Muxml.Utils;
 with Mutools.Utils;
@@ -46,19 +44,19 @@ is
    -------------------------------------------------------------------------
 
    procedure Check_Section
-     (Policy      : Muxml.XML_Data_Type;
-      Region_Name : String;
-      Section     : Bfd.Sections.Section;
-      Mapped      : Boolean := True)
+     (Physical_Mem : DOM.Core.Node_List;
+      Virtual_Mem  : DOM.Core.Node_List;
+      Region_Name  : String;
+      Section      : Bfd.Sections.Section;
+      Mapped       : Boolean := True)
    is
       use type DOM.Core.Node;
 
       Section_Name  : constant String := Bfd.Sections.Get_Name (S => Section);
-      Physical_Node : constant DOM.Core.Node
-        := Muxml.Utils.Get_Element
-          (Doc   => Policy.Doc,
-           XPath => "/system/memory/memory[@name='"
-           & Region_Name & "']");
+      Physical_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+        (Nodes     => Physical_Mem,
+         Ref_Attr  => "name",
+         Ref_Value => Region_Name);
       LMA, Size     : Interfaces.Unsigned_64;
    begin
       if Physical_Node = null then
@@ -90,9 +88,9 @@ is
 
       declare
          Virtual_Regions : constant DOM.Core.Node_List
-           := McKae.XML.XPath.XIA.XPath_Query
-             (N     => Policy.Doc,
-              XPath => "//memory[@physical='" & Region_Name & "']");
+           := Muxml.Utils.Get_Elements (Nodes     => Virtual_Mem,
+                                        Ref_Attr  => "physical",
+                                        Ref_Value => Region_Name);
          Count : constant Natural
            := DOM.Core.Nodes.Length (List => Virtual_Regions);
       begin

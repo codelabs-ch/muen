@@ -90,7 +90,7 @@
  </kernel>
 
  <subjects>
-  <subject globalId="0" localId="0" name="linux" cpu="0">
+  <subject globalId="0" localId="0" name="linux" cpu="0" schedGroupId="1">
    <vcpu>
     <vmx>
      <controls>
@@ -323,7 +323,7 @@
    <events/>
   </subject>
 
-  <subject globalId="1" localId="0" name="subject1" cpu="1">
+  <subject globalId="1" localId="0" name="subject1" cpu="1" schedGroupId="1">
    <vcpu>
     <vmx>
      <controls>

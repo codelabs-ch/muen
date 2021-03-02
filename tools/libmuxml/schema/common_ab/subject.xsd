@@ -12,7 +12,7 @@
   </xs:sequence>
   <xs:attribute name="globalId"     type="xs:nonNegativeInteger" use="required"/>
   <xs:attribute name="localId"      type="xs:nonNegativeInteger" use="required"/>
-  <xs:attribute name="schedGroupId" type="xs:nonNegativeInteger" use="optional"/>
+  <xs:attribute name="schedGroupId" type="xs:nonNegativeInteger" use="required"/>
   <xs:attribute name="cpu"          type="xs:nonNegativeInteger" use="required"/>
   <xs:attributeGroup ref="subjectBaseAttrs"/>
  </xs:complexType>

@@ -81,7 +81,7 @@
   </devices>
  </kernel>
  <subjects>
-  <subject cpu="0" globalId="0" localId="0" name="lnx">
+  <subject cpu="0" globalId="0" localId="0" name="lnx" schedGroupId="1">
    <vcpu>
     <vmx>
      <controls>
@@ -287,7 +287,7 @@
    <devices/>
    <events/>
   </subject>
-  <subject cpu="1" globalId="1" localId="0" name="subject1">
+  <subject cpu="1" globalId="1" localId="0" name="subject1" schedGroupId="1">
    <vcpu>
     <vmx>
      <controls>

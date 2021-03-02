@@ -32,7 +32,7 @@
   <devices/>
  </kernel>
  <subjects>
-  <subject cpu="0" globalId="0" localId="0" name="s1">
+  <subject cpu="0" globalId="0" localId="0" name="s1" schedGroupId="1">
    <vcpu>
     <vmx>
      <controls>

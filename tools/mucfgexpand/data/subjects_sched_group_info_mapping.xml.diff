@@ -17,7 +17,7 @@
 --
  </components>                                                                                                                                           </components>
  <subjects>                                                                                                                                              <subjects>
-  <subject name="lnx">                                                                                                                               |    <subject cpu="1" globalId="0" name="tau0" profile="native">
+  <subject name="lnx">                                                                                                                               |    <subject cpu="1" globalId="0" name="tau0" profile="native" schedGroupId="2">
                                                                                                                                                      >     <vcpu>
                                                                                                                                                      >      <vmx>
                                                                                                                                                      >       <controls>
@@ -232,7 +232,7 @@
                                                                                                                                                      >      </source>
                                                                                                                                                      >     </events>
                                                                                                                                                      >    </subject>
-                                                                                                                                                     >    <subject globalId="1" name="lnx">
+                                                                                                                                                     >    <subject globalId="1" name="lnx" schedGroupId="1">
                                                                                                                                                      >     <vcpu/>
                                                                                                                                                      >     <bootparams/>
    <memory>                                                                                                                                                <memory>
@@ -246,7 +246,7 @@
 --
    <component ref="linux"/>                                                                                                                                <component ref="linux"/>
   </subject>                                                                                                                                              </subject>
-  <subject name="subject1">                                                                                                                          |    <subject globalId="2" name="subject1">
+  <subject name="subject1">                                                                                                                          |    <subject globalId="2" name="subject1" schedGroupId="1">
                                                                                                                                                      >     <vcpu/>
                                                                                                                                                      >     <bootparams/>
    <memory>                                                                                                                                                <memory>
@@ -257,7 +257,7 @@
 --
    </component>                                                                                                                                            </component>
   </subject>                                                                                                                                              </subject>
-  <subject name="subject2">                                                                                                                          |    <subject globalId="3" name="subject2">
+  <subject name="subject2">                                                                                                                          |    <subject globalId="3" name="subject2" schedGroupId="3">
    <vcpu>                                                                                                                                                  <vcpu>
     <msrs>                                                                                                                                                  <msrs>
 --
@@ -272,7 +272,7 @@
 --
    </component>                                                                                                                                            </component>
   </subject>                                                                                                                                              </subject>
-  <subject name="lnx_core_1">                                                                                                                        |    <subject globalId="4" name="lnx_core_1">
+  <subject name="lnx_core_1">                                                                                                                        |    <subject globalId="4" name="lnx_core_1" schedGroupId="5">
    <vcpu>                                                                                                                                                  <vcpu>
     <registers>                                                                                                                                             <registers>
 --
@@ -289,7 +289,7 @@
 --
    <sibling ref="lnx"/>                                                                                                                                    <sibling ref="lnx"/>
   </subject>                                                                                                                                              </subject>
-  <subject name="subject3">                                                                                                                          |    <subject globalId="5" name="subject3">
+  <subject name="subject3">                                                                                                                          |    <subject globalId="5" name="subject3" schedGroupId="4">
                                                                                                                                                      >     <vcpu/>
                                                                                                                                                      >     <bootparams/>
                                                                                                                                                      >     <memory>

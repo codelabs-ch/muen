@@ -398,7 +398,7 @@
   </devices>
  </kernel>
  <subjects>
-  <subject cpu="0" globalId="0" localId="0" name="tau0">
+  <subject cpu="0" globalId="0" localId="0" name="tau0" schedGroupId="1">
    <vcpu>
     <vmx>
      <controls>
@@ -605,7 +605,7 @@
    <devices/>
    <events/>
   </subject>
-  <subject cpu="0" globalId="1" localId="1" name="vt">
+  <subject cpu="0" globalId="1" localId="1" name="vt" schedGroupId="2">
    <vcpu>
     <vmx>
      <controls>
@@ -842,7 +842,7 @@
     </target>
    </events>
   </subject>
-  <subject cpu="0" globalId="2" localId="2" name="nic_sm">
+  <subject cpu="0" globalId="2" localId="2" name="nic_sm" schedGroupId="3">
    <vcpu>
     <vmx>
      <controls>
@@ -1064,7 +1064,7 @@
     </target>
    </events>
   </subject>
-  <subject cpu="1" globalId="3" localId="0" name="storage_sm">
+  <subject cpu="1" globalId="3" localId="0" name="storage_sm" schedGroupId="6">
    <vcpu>
     <vmx>
      <controls>
@@ -1286,7 +1286,7 @@
     </target>
    </events>
   </subject>
-  <subject cpu="1" globalId="4" localId="1" name="time">
+  <subject cpu="1" globalId="4" localId="1" name="time" schedGroupId="4">
    <vcpu>
     <vmx>
      <controls>
@@ -1498,7 +1498,7 @@
    </devices>
    <events/>
   </subject>
-  <subject cpu="1" globalId="5" localId="2" name="dbgserver">
+  <subject cpu="1" globalId="5" localId="2" name="dbgserver" schedGroupId="5">
    <vcpu>
     <vmx>
      <controls>
@@ -1712,7 +1712,7 @@
    </devices>
    <events/>
   </subject>
-  <subject cpu="0" globalId="6" localId="3" name="nic_linux">
+  <subject cpu="0" globalId="6" localId="3" name="nic_linux" schedGroupId="3">
    <vcpu>
     <vmx>
      <controls>
@@ -2022,7 +2022,7 @@
     </target>
    </events>
   </subject>
-  <subject cpu="1" globalId="7" localId="3" name="storage_linux">
+  <subject cpu="1" globalId="7" localId="3" name="storage_linux" schedGroupId="6">
    <vcpu>
     <vmx>
      <controls>
@@ -2330,7 +2330,7 @@
     </target>
    </events>
   </subject>
-  <subject cpu="0" globalId="8" localId="4" name="example">
+  <subject cpu="0" globalId="8" localId="4" name="example" schedGroupId="3">
    <vcpu>
     <vmx>
      <controls>

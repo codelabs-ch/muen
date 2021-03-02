@@ -342,6 +342,48 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Scheduling_Group_IDs (Gnattest_T : in out Test);
+   procedure Test_Scheduling_Group_IDs_a95cac (Gnattest_T : in out Test) renames Test_Scheduling_Group_IDs;
+--  id:2.2/a95cac081e2db180/Scheduling_Group_IDs/1/0/
+   procedure Test_Scheduling_Group_IDs (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Must not raise an exception.
+
+      Scheduling_Group_IDs (XML_Data => Data);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='time']",
+         Name  => "schedGroupId",
+         Value => "2");
+
+      begin
+         Scheduling_Group_IDs (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'time' has unexpected scheduling group ID: "
+                    & "2 /= 3",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Scheduling_Group_IDs;
+--  end read only
+
+
+--  begin read only
    procedure Test_Logical_Device_Name_Uniqueness (Gnattest_T : in out Test);
    procedure Test_Logical_Device_Name_Uniqueness_aaba9c (Gnattest_T : in out Test) renames Test_Logical_Device_Name_Uniqueness;
 --  id:2.2/aaba9caac93471a1/Logical_Device_Name_Uniqueness/1/0/

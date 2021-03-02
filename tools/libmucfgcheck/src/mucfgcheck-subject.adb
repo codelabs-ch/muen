@@ -973,6 +973,52 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Scheduling_Group_IDs (XML_Data : Muxml.XML_Data_Type)
+   is
+      Subject_To_Group_Map : constant Mutools.XML_Utils.ID_Map_Array
+        := Mutools.XML_Utils.Get_Subject_To_Scheduling_Group_Map
+          (Data => XML_Data);
+      Subjects : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject");
+   begin
+      Mulog.Log (Msg => "Checking scheduling group IDs of"
+                 & Subject_To_Group_Map'Length'Img & " subject(s)");
+
+      for I in Subject_To_Group_Map'Range loop
+         declare
+            Subj_ID : constant String
+              := Ada.Strings.Fixed.Trim (Source => I'Img,
+                                         Side   => Ada.Strings.Left);
+            Subject : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Subjects,
+                 Ref_Attr  => "globalId",
+                 Ref_Value => Subj_ID);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subject,
+                 Name => "name");
+            Subj_Sched_Group_ID : constant Natural
+              := Natural'Value
+                (DOM.Core.Elements.Get_Attribute
+                     (Elem => Subject,
+                      Name => "schedGroupId"));
+         begin
+            if Subj_Sched_Group_ID = 0 or else
+              Subj_Sched_Group_ID /= Subject_To_Group_Map (I)
+            then
+               raise Validation_Error with "Subject '" & Subj_Name & "' has "
+                 & "unexpected scheduling group ID:" & Subj_Sched_Group_ID'Img
+                 & " /=" & Subject_To_Group_Map (I)'Img;
+            end if;
+         end;
+      end loop;
+   end Scheduling_Group_IDs;
+
+   -------------------------------------------------------------------------
+
    procedure Shared_Device_Same_PCI_Element (XML_Data : Muxml.XML_Data_Type)
    is
       Logical_Devs : constant DOM.Core.Node_List

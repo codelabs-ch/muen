@@ -1136,9 +1136,6 @@ is
    procedure Subject_Sched_Group_Info_Mappings
      (XML_Data : Muxml.XML_Data_Type)
    is
-      Subj_Sched_Grp_Map : constant Mutools.XML_Utils.ID_Map_Array
-        := Mutools.XML_Utils.Get_Subject_To_Scheduling_Group_Map
-          (Data => XML_Data);
       Subjects : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
@@ -1156,14 +1153,10 @@ is
             Subject : constant DOM.Core.Node
               := DOM.Core.Nodes.Item (List  => Subjects,
                                       Index => I);
-            Subj_ID : constant Natural := Natural'Value
-              (DOM.Core.Elements.Get_Attribute
-                 (Elem => Subject,
-                  Name => "globalId"));
             Sched_Grp_ID : constant String
-              := Ada.Strings.Fixed.Trim
-                (Source => Subj_Sched_Grp_Map (Subj_ID)'Img,
-                 Side   => Ada.Strings.Left);
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subject,
+                 Name => "schedGroupId");
             Sched_Grp_Region_Name : constant String
               := "scheduling_group_info_" & Sched_Grp_ID;
             Sched_Info_Mapping : constant DOM.Core.Node

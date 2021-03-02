@@ -571,7 +571,7 @@
   </devices>
  </kernel>
  <subjects>
-  <subject cpu="1" globalId="0" localId="0" name="tau0">
+  <subject cpu="1" globalId="0" localId="0" name="tau0" schedGroupId="2">
    <vcpu>
     <vmx>
      <controls>
@@ -944,7 +944,7 @@
     </source>
    </events>
   </subject>
-  <subject cpu="0" globalId="1" localId="0" name="lnx">
+  <subject cpu="0" globalId="1" localId="0" name="lnx" schedGroupId="1">
    <vcpu>
     <vmx>
      <controls>
@@ -1276,7 +1276,7 @@
     </target>
    </events>
   </subject>
-  <subject cpu="0" globalId="2" localId="1" name="subject1">
+  <subject cpu="0" globalId="2" localId="1" name="subject1" schedGroupId="1">
    <vcpu>
     <vmx>
      <controls>
@@ -1758,7 +1758,7 @@
     </target>
    </events>
   </subject>
-  <subject cpu="1" globalId="3" localId="1" name="subject2">
+  <subject cpu="1" globalId="3" localId="1" name="subject2" schedGroupId="3">
    <vcpu>
     <vmx>
      <controls>
@@ -2172,7 +2172,7 @@
     </target>
    </events>
   </subject>
-  <subject cpu="1" globalId="4" localId="2" name="lnx_core_1">
+  <subject cpu="1" globalId="4" localId="2" name="lnx_core_1" schedGroupId="5">
    <vcpu>
     <vmx>
      <controls>
@@ -2596,7 +2596,7 @@
    </events>
    <sibling ref="lnx"/>
   </subject>
-  <subject cpu="0" globalId="5" localId="2" name="subject3">
+  <subject cpu="0" globalId="5" localId="2" name="subject3" schedGroupId="4">
    <vcpu>
     <vmx>
      <controls>

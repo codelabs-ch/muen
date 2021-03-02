@@ -54,7 +54,7 @@
  </kernel>
 
  <subjects>
-  <subject globalId="0" localId="0" name="lnx" cpu="0">
+  <subject globalId="0" localId="0" name="lnx" cpu="0" schedGroupId="1">
    <vcpu>
     <vmx>
      <controls>

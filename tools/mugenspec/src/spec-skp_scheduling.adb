@@ -51,7 +51,7 @@ is
      (Minor_Frames : DOM.Core.Node_List)
       return Interfaces.Unsigned_64;
 
-   --  Return the subject ID map for the given subject nodes.
+   --  Return the subject scheduling group ID map for the given subject nodes.
    function To_Map (Subjects : DOM.Core.Node_List) return Subject_ID_Map.Map;
 
    -------------------------------------------------------------------------
@@ -102,7 +102,7 @@ is
                           Name => "name")),
                   New_Item => Natural'Value (DOM.Core.Elements.Get_Attribute
                     (Elem => Subj_Node,
-                     Name => "globalId")));
+                     Name => "schedGroupId")));
             end;
          end loop;
       end return;
@@ -156,10 +156,8 @@ is
       Sched_Group_Buffer : Unbounded_String;
       Tmpl               : Mutools.Templates.Template_Type;
 
-      Subject_IDs          : constant Subject_ID_Map.Map
+      Subject_To_Group_ID  : constant Subject_ID_Map.Map
         := To_Map (Subjects => Subjects);
-      Subject_To_Group_ID  : constant MXU.ID_Map_Array
-        := MXU.Get_Subject_To_Scheduling_Group_Map (Data => Policy);
       Sched_Groups_To_Subj : constant MXU.ID_Map_Array
         := MXU.Get_Initial_Scheduling_Group_Subjects (Data => Policy);
 
@@ -252,14 +250,24 @@ is
       function Get_Subject_To_Sched_Group_Mapping return String
       is
          Buffer : Unbounded_String;
+         Subj_Count : constant Natural
+           := DOM.Core.Nodes.Length (List => Subjects);
       begin
-         for I in Subject_To_Group_ID'Range loop
-            Buffer := Buffer & Indent (N => 3)
-              & I'Img & " =>" & Subject_To_Group_ID (I)'Img;
+         for I in 0 .. Subj_Count - 1 loop
+            declare
+               Sched_Group_Id : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => DOM.Core.Nodes.Item (List  => Subjects,
+                                                 Index => I),
+                    Name => "schedGroupId");
+            begin
+               Buffer := Buffer & Indent (N => 3)
+                 & I'Img & " => " & Sched_Group_Id;
 
-            if I < Subject_To_Group_ID'Last then
-               Buffer := Buffer & "," & ASCII.LF;
-            end if;
+               if I < Subj_Count - 1 then
+                  Buffer := Buffer & "," & ASCII.LF;
+               end if;
+            end;
          end loop;
 
          return To_String (Buffer);
@@ -379,18 +387,18 @@ is
              (Elem => Minor,
               Name => "barrier");
 
-         Subject    : constant String := DOM.Core.Elements.Get_Attribute
+         Subject : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Minor,
             Name => "subject");
-         Subject_ID : constant Natural
-           := Subject_IDs.Element
+         Sched_Group_ID : constant Natural
+           := Subject_To_Group_ID.Element
              (Key => To_Unbounded_String (Source => Subject));
       begin
          Cycles_Count := Cycles_Count + Ticks;
 
          Minor_Buffer := To_Unbounded_String (Indent (N => 4)) & Index'Img
            & " => Minor_Frame_Type'(Group_ID =>"
-           & Subject_To_Group_ID (Subject_ID)'Img
+           & Sched_Group_ID'Img
            & "," & ASCII.LF;
          Minor_Buffer := Minor_Buffer & Indent (N => 12) & "Barrier  => "
            & (if Barrier = "none" then "No_Barrier" else Barrier)

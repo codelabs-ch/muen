@@ -1189,7 +1189,7 @@
   </devices>
  </kernel>
  <subjects>
-  <subject cpu="0" globalId="0" localId="0" name="tau0">
+  <subject cpu="0" globalId="0" localId="0" name="tau0" schedGroupId="1">
    <vcpu>
     <vmx>
      <controls>
@@ -1397,7 +1397,7 @@
    <devices/>
    <events/>
   </subject>
-  <subject cpu="1" globalId="1" localId="0" name="vt">
+  <subject cpu="1" globalId="1" localId="0" name="vt" schedGroupId="2">
    <vcpu>
     <vmx>
      <controls>
@@ -1644,7 +1644,7 @@
     </target>
    </events>
   </subject>
-  <subject cpu="0" globalId="2" localId="1" name="nic_sm">
+  <subject cpu="0" globalId="2" localId="1" name="nic_sm" schedGroupId="1">
    <vcpu>
     <vmx>
      <controls>
@@ -1881,7 +1881,7 @@
     </target>
    </events>
   </subject>
-  <subject cpu="1" globalId="3" localId="1" name="storage_sm">
+  <subject cpu="1" globalId="3" localId="1" name="storage_sm" schedGroupId="1">
    <vcpu>
     <vmx>
      <controls>
@@ -2112,7 +2112,7 @@
     </target>
    </events>
   </subject>
-  <subject cpu="1" globalId="4" localId="2" name="time">
+  <subject cpu="1" globalId="4" localId="2" name="time" schedGroupId="1">
    <vcpu>
     <vmx>
      <controls>
@@ -2329,7 +2329,7 @@
    </devices>
    <events/>
   </subject>
-  <subject cpu="0" globalId="5" localId="2" name="nic_sl">
+  <subject cpu="0" globalId="5" localId="2" name="nic_sl" schedGroupId="1">
    <vcpu>
     <vmx>
      <controls>
@@ -2588,7 +2588,7 @@
     </target>
    </events>
   </subject>
-  <subject cpu="1" globalId="6" localId="3" name="dbgserver">
+  <subject cpu="1" globalId="6" localId="3" name="dbgserver" schedGroupId="1">
    <vcpu>
     <vmx>
      <controls>
@@ -2818,7 +2818,7 @@
    </devices>
    <events/>
   </subject>
-  <subject cpu="0" globalId="7" localId="3" name="ps2">
+  <subject cpu="0" globalId="7" localId="3" name="ps2" schedGroupId="1">
    <vcpu>
     <vmx>
      <controls>
@@ -3044,7 +3044,7 @@
     </source>
    </events>
   </subject>
-  <subject cpu="0" globalId="8" localId="4" name="nic_dm">
+  <subject cpu="0" globalId="8" localId="4" name="nic_dm" schedGroupId="1">
    <vcpu>
     <vmx>
      <controls>
@@ -3271,7 +3271,7 @@
     </target>
    </events>
   </subject>
-  <subject cpu="1" globalId="9" localId="4" name="storage_dm">
+  <subject cpu="1" globalId="9" localId="4" name="storage_dm" schedGroupId="1">
    <vcpu>
     <vmx>
      <controls>
@@ -3493,7 +3493,7 @@
     </target>
    </events>
   </subject>
-  <subject cpu="0" globalId="10" localId="5" name="nic_linux">
+  <subject cpu="0" globalId="10" localId="5" name="nic_linux" schedGroupId="1">
    <vcpu>
     <vmx>
      <controls>
@@ -3816,7 +3816,7 @@
     </target>
    </events>
   </subject>
-  <subject cpu="1" globalId="11" localId="5" name="storage_linux">
+  <subject cpu="1" globalId="11" localId="5" name="storage_linux" schedGroupId="1">
    <vcpu>
     <vmx>
      <controls>

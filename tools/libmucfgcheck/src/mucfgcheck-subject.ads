@@ -44,6 +44,10 @@ is
    --  itself scheduled.
    procedure Runnability (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that subject scheduling group IDs match values as determined by
+   --  the scheduling plan and handover events.
+   procedure Scheduling_Group_IDs (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that logical names of subject devices are unique.
    procedure Logical_Device_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 

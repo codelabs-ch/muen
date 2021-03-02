@@ -1613,6 +1613,10 @@ is
             Mulog.Log (Msg => "Adding mapping of scheduling group "
                        &  Group_ID_Str & " info region to subject '"
                        & Subj_Name & "'");
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Subject,
+               Name  => "schedGroupId",
+               Value => Group_ID_Str);
             Muxml.Utils.Append_Child
               (Node      => Subj_Mem_Node,
                New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node

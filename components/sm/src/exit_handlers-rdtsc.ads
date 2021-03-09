@@ -18,11 +18,9 @@
 
 with Subject_Info;
 with Types;
+with Musinfo.Instance;
 
 package Exit_Handlers.RDTSC
-with
-   Abstract_State => State,
-   Initializes    => State
 is
 
    use type Types.Subject_Action_Type;
@@ -30,8 +28,12 @@ is
    --  Emulate RDTSC instruction.
    procedure Process (Action : out Types.Subject_Action_Type)
    with
-      Global  => (In_Out => (State, Subject_Info.State)),
-      Depends => (Action => null, (State, Subject_Info.State) =>+ State),
+      Global  => (Proof_In => Musinfo.Instance.State,
+                  Input    => Musinfo.Instance.Scheduling_Info,
+                  In_Out   => Subject_Info.State),
+      Depends => (Action             => null,
+                  Subject_Info.State =>+ Musinfo.Instance.Scheduling_Info),
+      Pre     => Musinfo.Instance.Is_Valid,
       Post    => Action = Types.Subject_Continue;
 
 end Exit_Handlers.RDTSC;

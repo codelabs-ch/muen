@@ -126,16 +126,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function From_Value
-     (Value : Interfaces.Unsigned_64)
-      return Timestamp_Type
-   is
-   begin
-      return Timestamp_Type (Value);
-   end From_Value;
-
-   -------------------------------------------------------------------------
-
    procedure Get_Month_And_Day
      (Days      :     Day_Of_Year_Type;
       Leap_Year :     Boolean;
@@ -156,16 +146,6 @@ is
          end if;
       end loop;
    end Get_Month_And_Day;
-
-   -------------------------------------------------------------------------
-
-   function Get_Value
-     (Timestamp : Timestamp_Type)
-      return Interfaces.Unsigned_64
-   is
-   begin
-      return Interfaces.Unsigned_64 (Timestamp);
-   end Get_Value;
 
    -------------------------------------------------------------------------
 

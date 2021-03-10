@@ -112,7 +112,7 @@ is
          pragma Debug
            (Debuglog.Client.Put_Line
               (Item => "Mutime timestamp " & SK.Strings.Img
-                   (Mutime.Get_Value (Timestamp => Timestamp))));
+                   (Interfaces.Unsigned_64 (Timestamp))));
          pragma Debug
            (Debuglog.Client.Put_Line
               (Item => "Exporting time information to clients"));

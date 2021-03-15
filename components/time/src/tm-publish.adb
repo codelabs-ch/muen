@@ -53,9 +53,13 @@ is
    begin
       for T of Time_Export loop
          T := Mutime.Info.Time_Info_Type'
-           (TSC_Time_Base      => TSC_Time_Base,
+           (TSC_Time_Base      => Mutime.Epoch_Timestamp,
             TSC_Tick_Rate_Hz   => TSC_Tick_Rate,
             Timezone_Microsecs => Timezone);
+
+         --  Write last -> indicates time info validity.
+
+         T.TSC_Time_Base := TSC_Time_Base;
       end loop;
    end Update;
 

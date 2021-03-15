@@ -45,6 +45,31 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Get_Boot_Time
+     (Timestamp : out Timestamp_Type)
+   with
+      Refined_Global  => (Proof_In => State_Valid,
+                          Input    => Time_Info),
+      Refined_Depends => (Timestamp => Time_Info)
+   is
+      Time : constant Time_Info_Type := Time_Info;
+   begin
+      Get_Boot_Time (TI        => Time,
+                     Timestamp => Timestamp);
+   end Get_Boot_Time;
+
+   -------------------------------------------------------------------------
+
+   procedure Get_Boot_Time
+     (TI        :     Time_Info_Type;
+      Timestamp : out Timestamp_Type)
+   is
+   begin
+      Timestamp := TI.TSC_Time_Base;
+   end Get_Boot_Time;
+
+   -------------------------------------------------------------------------
+
    procedure Get_Current_Time
      (TI             :     Time_Info_Type;
       Schedule_Ticks :     Integer_62;

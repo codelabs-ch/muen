@@ -75,6 +75,15 @@ is
       Depends => ((Correction, Timestamp) => (Schedule_Ticks, State)),
       Pre     => Is_Valid;
 
+   --  Return time at system boot.
+   procedure Get_Boot_Time
+     (Timestamp : out Timestamp_Type)
+   with
+      Global  => (Proof_In => Valid,
+                  Input    => State),
+      Depends => (Timestamp => State),
+      Pre     => Is_Valid;
+
 private
 
    for Time_Info_Type use record
@@ -90,6 +99,12 @@ private
       Timestamp      : out Timestamp_Type)
    with
       Depends => ((Correction, Timestamp) => (Schedule_Ticks, TI));
+
+   procedure Get_Boot_Time
+     (TI        :     Time_Info_Type;
+      Timestamp : out Timestamp_Type)
+   with
+      Depends => (Timestamp => TI);
 
    State_Valid : Boolean := False
    with

@@ -88,6 +88,31 @@ package body Mutime.Info.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_1_Get_Boot_Time (Gnattest_T : in out Test);
+   procedure Test_Get_Boot_Time_8ad4c1 (Gnattest_T : in out Test) renames Test_1_Get_Boot_Time;
+--  id:2.2/8ad4c1d1687c803d/Get_Boot_Time/1/0/
+   procedure Test_1_Get_Boot_Time (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      T  : Time_Info_Type
+        := (TSC_Time_Base      => 1234567,
+            TSC_Tick_Rate_Hz   => 1 * 10 ** 9,
+            Timezone_Microsecs => 0);
+      Timestamp : Timestamp_Type;
+   begin
+      Get_Boot_Time (TI        => T,
+                     Timestamp => Timestamp);
+
+      Assert (Condition => Timestamp = 1234567,
+              Message   => "Timestamp mismatch");
+--  begin read only
+   end Test_1_Get_Boot_Time;
+--  end read only
+
+
+--  begin read only
    procedure Test_1_Get_Current_Time (Gnattest_T : in out Test);
    procedure Test_Get_Current_Time_cea631 (Gnattest_T : in out Test) renames Test_1_Get_Current_Time;
 --  id:2.2/cea6319c99ce0b67/Get_Current_Time/1/0/
@@ -119,6 +144,23 @@ package body Mutime.Info.Test_Data.Tests is
               Message   => "Timestamp mismatch");
 --  begin read only
    end Test_1_Get_Current_Time;
+--  end read only
+
+
+--  begin read only
+   procedure Test_2_Get_Boot_Time (Gnattest_T : in out Test);
+   procedure Test_Get_Boot_Time_7d002a (Gnattest_T : in out Test) renames Test_2_Get_Boot_Time;
+--  id:2.2/7d002a3b4ef43af3/Get_Boot_Time/0/0/
+   procedure Test_2_Get_Boot_Time (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Assert (Condition => True,
+              Message   => "Tested with Test_1_Get_Boot_Time");
+--  begin read only
+   end Test_2_Get_Boot_Time;
 --  end read only
 
 --  begin read only

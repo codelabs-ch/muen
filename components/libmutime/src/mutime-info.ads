@@ -39,8 +39,10 @@ is
      Interfaces.Unsigned_64 range 1000000 .. 100000000000;
 
    type Time_Info_Type is record
-      --  Time when TSC was zero
-      TSC_Time_Base      : Timestamp_Type;
+      --  Mutime timestamp when TSC was zero. A TSC_Time_Base value of zero
+      --  indicates that the time info is not (yet) valid. Use Update_Validity
+      --  and Is_Valid operations to check.
+      TSC_Time_Base      : Timestamp_Type with Atomic;
       --  TSC Ticks in Hz
       TSC_Tick_Rate_Hz   : TSC_Tick_Rate_Hz_Type;
       --  Timezone offset in microseconds
@@ -73,6 +75,15 @@ is
       Depends => ((Correction, Timestamp) => (Schedule_Ticks, State)),
       Pre     => Is_Valid;
 
+   --  Return time at system boot.
+   procedure Get_Boot_Time
+     (Timestamp : out Timestamp_Type)
+   with
+      Global  => (Proof_In => Valid,
+                  Input    => State),
+      Depends => (Timestamp => State),
+      Pre     => Is_Valid;
+
 private
 
    for Time_Info_Type use record
@@ -88,6 +99,12 @@ private
       Timestamp      : out Timestamp_Type)
    with
       Depends => ((Correction, Timestamp) => (Schedule_Ticks, TI));
+
+   procedure Get_Boot_Time
+     (TI        :     Time_Info_Type;
+      Timestamp : out Timestamp_Type)
+   with
+      Depends => (Timestamp => TI);
 
    State_Valid : Boolean := False
    with

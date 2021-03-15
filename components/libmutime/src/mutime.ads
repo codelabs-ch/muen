@@ -31,12 +31,14 @@ with Interfaces;
 package Mutime
 is
 
-   --  Time in microseconds since 1970-01-01T00:00:00+00:00.
-   type Timestamp_Type is private;
+   --  Range of allowed timestamps spanning the time in microseconds from
+   --  1970-01-01T00:00:00+00:00 to 9999-12-31T23:59:59+00:00.
+   type Timestamp_Type is new Interfaces.Unsigned_64 range
+     0 .. 253402300799000000
+       with
+         Size => 64;
 
    Epoch_Timestamp : constant Timestamp_Type;
-
-   Timestamp_Last : constant := 253402300799000000;
 
    type Year_Type is range 1970 .. 9999;
    type Month_Type is range 1 .. 12;
@@ -87,25 +89,7 @@ is
       Right : Integer_63)
       return Timestamp_Type;
 
-   --  Return timestamp as Unsigned_64 value.
-   function Get_Value
-     (Timestamp : Timestamp_Type)
-      return Interfaces.Unsigned_64;
-
-   --  Return timestamp for given Unsigned_64 value.
-   function From_Value
-     (Value : Interfaces.Unsigned_64)
-      return Timestamp_Type
-   with
-      Pre => Value <= Timestamp_Last;
-
 private
-
-   --  Range of allowed timestamps spanning the time in microseconds from
-   --  1970-01-01T00:00:00+00:00 to 9999-12-31T23:59:59+00:00.
-   type Timestamp_Type is range 0 .. Timestamp_Last
-     with
-       Size => 64;
 
    Epoch_Timestamp : constant Timestamp_Type := 0;
 

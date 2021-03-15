@@ -39,8 +39,10 @@ is
      Interfaces.Unsigned_64 range 1000000 .. 100000000000;
 
    type Time_Info_Type is record
-      --  Time when TSC was zero
-      TSC_Time_Base      : Timestamp_Type;
+      --  Mutime timestamp when TSC was zero. A TSC_Time_Base value of zero
+      --  indicates that the time info is not (yet) valid. Use Update_Validity
+      --  and Is_Valid operations to check.
+      TSC_Time_Base      : Timestamp_Type with Atomic;
       --  TSC Ticks in Hz
       TSC_Tick_Rate_Hz   : TSC_Tick_Rate_Hz_Type;
       --  Timezone offset in microseconds

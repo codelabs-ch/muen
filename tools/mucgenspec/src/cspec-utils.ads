@@ -53,6 +53,7 @@ is
    function Get_Name_Types_Str return String;
 
    Attribute_Error : exception;
+   Array_Error     : exception;
 
 private
 

@@ -315,11 +315,16 @@ is
    is
       Res, Addr, Size : Unbounded_String;
 
-      Child_Count : constant Positive := DOM.Core.Nodes.Length
+      Child_Count : constant Natural := DOM.Core.Nodes.Length
         (List => McKae.XML.XPath.XIA.XPath_Query
            (N     => Arr,
             XPath => "*"));
    begin
+      if Child_Count = 0 then
+         raise Array_Error with Array_Kind & " array '" & S (Logical)
+           & "' has no child elements";
+      end if;
+
       Array_Attrs_As_String
         (Arr          => Arr,
          Array_Kind   => Array_Kind,

@@ -30,6 +30,7 @@ project Kernel is
    Extra_Dirs := ("../common/crash_audit");
    Extra_Languages := ();
    Extra_Warning_Switches := ();
+   Extra_Compiler_Switches := ();
    Preprocessor_Switches := ();
 
    case Build_Mode is
@@ -48,6 +49,7 @@ project Kernel is
          Preprocessor_Switches :=
            ("-gnateDRelease_Warnings=Warnings");
          Extra_Warning_Switches := Shared.Build_Warning_Switches;
+         Extra_Compiler_Switches := ("-O2");
 
       when "prove" =>
          Extra_Dirs := Extra_Dirs
@@ -88,6 +90,7 @@ project Kernel is
    package Compiler is
       for Default_Switches ("Ada") use Shared.No_FPU_Switches
         & Shared.Spark_Compiler_Switches
+        & Extra_Compiler_Switches
         & Preprocessor_Switches
         & Shared.Warning_Switches
         & Extra_Warning_Switches;

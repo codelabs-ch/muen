@@ -107,7 +107,7 @@ $(ISOFILE): $(ISO_FILES_SRC)
 	@for i in $$(seq 1 $(QEMU_SERIAL_WAIT)); do \
 		sleep 1; \
 		echo -n .; \
-		boot=$$(cat serial.out 2>/dev/null | grep 'Booting Muen'); \
+		boot=$$(cat serial.out 2>/dev/null | grep 'DBG-LOG'); \
 		if [ -n "$$boot" ]; then \
 			echo " OK"; echo; \
 			echo "    SSH: ssh -p $(QEMU_SSH_PORT) root@localhost"; \

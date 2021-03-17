@@ -44,6 +44,7 @@ exception
       | Muxml.Validation_Error
       | Mucfgcheck.Validation_Error
       | Cspec.Component_Not_Found
+      | Cspec.Utils.Array_Error
       | Cspec.Utils.Attribute_Error =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "Spec generation failed, aborting");

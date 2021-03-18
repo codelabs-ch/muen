@@ -385,6 +385,10 @@ is
 
    procedure PCI_Device_References (XML_Data : Muxml.XML_Data_Type)
    is
+      Phys_Devs : constant  DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/devices/device");
       Nodes : constant  DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
@@ -407,9 +411,9 @@ is
                  Name => "physical");
             Phys_Dev : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Doc   => XML_Data.Doc,
-                 XPath => "/system/hardware/devices/device[@name='" & Dev_Name
-                 & "']");
+                (Nodes     => Phys_Devs,
+                 Ref_Attr  => "name",
+                 Ref_Value => Dev_Name);
             PCI_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Phys_Dev,

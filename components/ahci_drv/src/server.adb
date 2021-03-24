@@ -256,7 +256,8 @@ is
 
    procedure Finish_Current_Request
       (Port_Idx : PC.Ports_Array_Range;
-       Dev_Idx  : PC.Devices_Range)
+       Dev_Idx  : PC.Devices_Range;
+       SendResp : Boolean := True)
    is
       use type Ahci.Status_Type;
 
@@ -340,7 +341,9 @@ is
       loop
          Response.Request_Tag
             := Ports (Port_Idx).Devs (Dev_Idx).Current.Tags (I);
-         Send_Response (Ports (Port_Idx).Chan_Idx, Response);
+         if SendResp then
+            Send_Response (Ports (Port_Idx).Chan_Idx, Response);
+         end if;
       end loop;
 
       Ports (Port_Idx).Devs (Dev_Idx).Current := Null_Current;
@@ -354,6 +357,7 @@ is
        Request  : MB.Block_Request_Type)
    is
       use type Ahci.Status_Type;
+      use type Resp_Chn.Header_Field_Type;
       Ret : Ahci.Status_Type;
       Response  : MB.Block_Response_Type;
    begin
@@ -389,7 +393,7 @@ is
          when MB.Reset =>
             for I in Ports (Port_Idx).Devs'Range loop
                if Ports (Port_Idx).Devs (I).Is_Valid then
-                  Finish_Current_Request (Port_Idx, I);
+                  Finish_Current_Request (Port_Idx, I, False);
                end if;
             end loop;
             Response.Status_Code := 0;

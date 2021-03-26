@@ -14,4 +14,6 @@ include ../contrib.git.mk
 install: $(BUILDDIR)/share/gpr/xia.gpr
 
 $(BUILDDIR)/share/gpr/xia.gpr: install_default
-	cp $(BUILDDIR)/share/gpr/XIA.gpr $@
+	if [ ! -L $(BUILDDIR)/share/gpr/xia.gpr ]; then \
+		ln -s $(BUILDDIR)/share/gpr/XIA.gpr $@; \
+	fi

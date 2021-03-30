@@ -357,9 +357,9 @@ is
        Request  : MB.Block_Request_Type)
    is
       use type Ahci.Status_Type;
-      use type Resp_Chn.Header_Field_Type;
-      Ret : Ahci.Status_Type;
-      Response  : MB.Block_Response_Type;
+
+      Ret      : Ahci.Status_Type;
+      Response : MB.Block_Response_Type;
    begin
       Response.Request_Kind := Request.Request_Kind;
       Response.Device_Id    := Request.Device_Id;

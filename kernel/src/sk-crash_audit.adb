@@ -18,6 +18,8 @@
 
 with System.Machine_Code;
 
+with Interfaces;
+
 with Skp.Kernel;
 
 with SK.Dump;
@@ -76,6 +78,25 @@ is
          Volatile => True,
          Clobber  => "cc");
    end Get_And_Inc;
+
+   -------------------------------------------------------------------------
+
+   --  Atomically increment Crash_Count.
+   procedure Atomic_Inc_Crash_Count
+   with
+      Global => (In_Out => Instance);
+
+   procedure Atomic_Inc_Crash_Count
+   with
+      SPARK_Mode => Off
+   is
+   begin
+      System.Machine_Code.Asm
+        (Template => "lock incq %0",
+         Outputs  => (Interfaces.Unsigned_64'Asm_Output
+                       ("=m", Instance.Header.Crash_Count)),
+         Volatile => True);
+   end Atomic_Inc_Crash_Count;
 
    -------------------------------------------------------------------------
 
@@ -139,9 +160,8 @@ is
       pragma Unreferenced (Audit);
       --  Audit token authorizes to finalize crash dump and restart.
 
-      Next    : constant Positive               := Global_Next_Slot;
-      Boots   : constant Interfaces.Unsigned_64 := Instance.Header.Boot_Count;
-      Crashes : constant Interfaces.Unsigned_64 := Instance.Header.Crash_Count;
+      Next  : constant Positive               := Global_Next_Slot;
+      Boots : constant Interfaces.Unsigned_64 := Instance.Header.Boot_Count;
    begin
       if Next > Positive (Dumpdata_Length'Last) then
          Instance.Header.Dump_Count := Dumpdata_Length'Last;
@@ -153,8 +173,8 @@ is
          Instance.Header.Version_String (I) := Version.Version_String (I);
       end loop;
 
-      Instance.Header.Generation  := Boots   + 1;
-      Instance.Header.Crash_Count := Crashes + 1;
+      Instance.Header.Generation := Boots + 1;
+      Atomic_Inc_Crash_Count;
 
       Delays.U_Delay (US => Reset_Delay);
       pragma Debug (Dump.Print_Message

@@ -26,7 +26,6 @@ SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REFS="/mnt/1/files"
 SHACMD="sha256sum -c sha256sum"
 SSH="ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no lnx2"
-CHROOT=/mnt/1/stretch-chroot
 
 perform_tests() {
 	execute "cd $REFS"

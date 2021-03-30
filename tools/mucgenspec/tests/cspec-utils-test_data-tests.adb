@@ -419,6 +419,21 @@ package body Cspec.Utils.Test_Data.Tests is
          Name  => "writable",
          Value => "true");
 
+      begin
+         declare
+            Dummy : constant String := To_Memory_Array_Str (Arr => Arr);
+         begin
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+         end;
+
+      exception
+         when E : Array_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Memory array 'Input' has no child elements",
+                    Message   => "Exception message mismatch");
+      end;
+
       Node := DOM.Core.Documents.Create_Element
         (Doc      => Data.Doc,
          Tag_Name => "memory");
@@ -500,6 +515,22 @@ package body Cspec.Utils.Test_Data.Tests is
         (Elem  => Node,
          Name  => "logical",
          Value => "tau0");
+
+      begin
+         declare
+            Dummy : constant String := To_Channel_Array_Str (Arr => Arr);
+         begin
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+         end;
+
+      exception
+         when E : Array_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Channel array 'Input' has no child elements",
+                    Message   => "Exception message mismatch");
+      end;
+
       Node := DOM.Core.Nodes.Append_Child
         (N         => Arr,
          New_Child => Node);

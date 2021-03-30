@@ -32,7 +32,14 @@
  <memory>
   <memory alignment="16#1000#" caching="WB" name="trampoline" size="16#1000#" type="system"/>
  </memory>
- <deviceDomains/>
+ <deviceDomains>
+  <domain id="1" name="linux_domain">
+   <memory>
+    <memory executable="true" logical="dma" physical="linux|ram" virtualAddress="16#00a0_0000#" writable="true"/>
+   </memory>
+   <devices/>
+  </domain>
+ </deviceDomains>
  <events>
   <event mode="ipi" name="xv6_keyboard"/>
  </events>

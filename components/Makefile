@@ -17,6 +17,7 @@ COMPONENTS_SPARK := \
 	dm \
 	example \
 	idle \
+	isolation_tests \
 	muinit \
 	ps2_drv \
 	sl \

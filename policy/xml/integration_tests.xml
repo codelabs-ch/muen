@@ -15,6 +15,7 @@
  <memory>
   <include href="common_memory.xml"/>
   <include href="memory_xhci_dma.xml"/>
+  <memory name="isolation_tests_state" size="16#1000#" caching="WB"/>
  </memory>
 
  <deviceDomains>
@@ -182,6 +183,7 @@
    </events>
    <component ref="isolation_tests">
     <map logical="debuglog" physical="debuglog_isolation_tests"/>
+    <map logical="result_state" physical="isolation_tests_state"/>
    </component>
   </subject>
  </subjects>

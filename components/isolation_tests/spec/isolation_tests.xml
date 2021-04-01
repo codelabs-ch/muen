@@ -1,0 +1,5 @@
+<component name="isolation_tests" profile="native">
+	<depends>
+		<library ref="libmudebuglog"/>
+	</depends>
+</component>

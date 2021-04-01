@@ -27,6 +27,7 @@
 
  <channels>
   <include href="common_channels.xml"/>
+  <channel name="debuglog_isolation_tests" size="$logchannel_size"/>
  </channels>
 
  <subjects>
@@ -55,6 +56,7 @@
     <map logical="log_channel4" physical="debuglog_subject4"/>
     <map logical="log_channel5" physical="debuglog_subject5"/>
     <map logical="log_channel6" physical="debuglog_controller"/>
+    <map logical="log_channel7" physical="debuglog_isolation_tests"/>
     <include href="subject_dbgserver_common.xml"/>
    </component>
   </subject>
@@ -165,6 +167,21 @@
    <component ref="linux">
     <map logical="lowmem" physical="storage_linux|lowmem"/>
     <map logical="ram" physical="storage_linux|ram"/>
+   </component>
+  </subject>
+
+  <subject name="isolation_tests">
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <default physical="system_panic">
+       <system_panic/>
+      </default>
+     </group>
+    </source>
+   </events>
+   <component ref="isolation_tests">
+    <map logical="debuglog" physical="debuglog_isolation_tests"/>
    </component>
   </subject>
  </subjects>

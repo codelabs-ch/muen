@@ -1,4 +1,8 @@
 <component name="isolation_tests" profile="native">
+	<config>
+		<integer name="log_entry_max" value="128"/>
+		<integer name="log_buffer_size" value="65535"/>
+	</config>
 	<depends>
 		<library ref="libmudebuglog"/>
 	</depends>

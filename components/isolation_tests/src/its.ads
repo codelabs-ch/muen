@@ -19,4 +19,9 @@
 package ITS
 is
 
+   subtype Bounded_String_Range is Natural range 1 .. 255;
+   subtype Bounded_String is String (Bounded_String_Range);
+
+   Null_String : constant Bounded_String := (others => ASCII.NUL);
+
 end ITS;

@@ -22,4 +22,7 @@ is
    --  Write access to read-only memory region.
    procedure Write_To_Read_Only_Region;
 
+   --  Write access to unmapped memory region.
+   procedure Write_To_Unmapped_Region;
+
 end ITS.Memory;

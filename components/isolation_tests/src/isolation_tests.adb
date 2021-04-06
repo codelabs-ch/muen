@@ -29,6 +29,7 @@ begin
    Debuglog.Client.Init (Epoch => 1);
 
    ITS.Memory.Write_To_Read_Only_Region;
+   ITS.Memory.Write_To_Unmapped_Region;
 
    --  Output log buffer.
 

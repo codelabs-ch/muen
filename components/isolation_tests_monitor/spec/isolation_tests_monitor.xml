@@ -1,0 +1,15 @@
+<component name="isolation_tests_monitor" profile="native">
+	<requires>
+		<memory>
+		   <memory logical="result_state" size="16#1000#" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
+		</memory>
+		<events>
+			<source>
+				<event id="1" logical="resume_tests"/>
+			</source>
+			<target>
+				<event logical="trap_to_monitor"/>
+			</target>
+		</events>
+	</requires>
+</component>

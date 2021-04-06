@@ -20,10 +20,21 @@ with SK.CPU;
 
 with Debuglog.Client;
 
+with ITS.Log_Buffer;
+with ITS.Memory;
+
 procedure Isolation_Tests
 is
 begin
    Debuglog.Client.Init (Epoch => 1);
+
+   ITS.Memory.Write_To_Read_Only_Region;
+
+   --  Output log buffer.
+
+   for I in ITS.Log_Buffer.Log_Entries_Range loop
+      ITS.Log_Buffer.Print_Entry (ID => I);
+   end loop;
 
    SK.CPU.Hlt;
 end Isolation_Tests;

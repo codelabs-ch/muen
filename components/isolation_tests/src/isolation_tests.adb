@@ -20,7 +20,7 @@ with SK.CPU;
 
 with Debuglog.Client;
 
-with ITS.Log_Buffer;
+with ITS.Results;
 with ITS.Memory;
 
 procedure Isolation_Tests
@@ -31,11 +31,7 @@ begin
    ITS.Memory.Write_To_Read_Only_Region;
    ITS.Memory.Write_To_Unmapped_Region;
 
-   --  Output log buffer.
-
-   for I in ITS.Log_Buffer.Log_Entries_Range loop
-      ITS.Log_Buffer.Print_Entry (ID => I);
-   end loop;
+   ITS.Results.Report;
 
    SK.CPU.Hlt;
 end Isolation_Tests;

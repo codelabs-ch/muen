@@ -10,5 +10,10 @@
 		<memory>
 		   <memory logical="result_state" size="16#1000#" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
 		</memory>
+		<events>
+			<target>
+				<event logical="resume_tests"/>
+			</target>
+		</events>
 	</requires>
 </component>

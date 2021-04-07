@@ -239,11 +239,15 @@ is
          else
             Log.Put_Line (":red:`Failed`");
          end if;
-
-         Log.Put_Line ("   * - :blue:`Output`");
-         Log.Put_Line      ("     - ::");
          Log.New_Line;
-         Log_Buffer.Print_Entry (ID => Test.Log_Entry);
+
+         Log.Put_Line ("**Test Log**");
+         Log.New_Line;
+         Log.Put_Line (".. code-block:: none");
+         Log.Put_Line ("   :linenos:");
+         Log.New_Line;
+         Log_Buffer.Print_Entry (ID     => Test.Log_Entry,
+                                 Prefix => "   ");
          Log.New_Line;
          Log.New_Line;
       end Print_Result;

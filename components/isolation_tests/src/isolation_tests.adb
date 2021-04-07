@@ -22,9 +22,10 @@ with Musinfo.Instance;
 
 with Debuglog.Client;
 
-with ITS.Results;
+with ITS.IO_Ports;
 with ITS.Memory;
 with ITS.MSRs;
+with ITS.Results;
 
 procedure Isolation_Tests
 is
@@ -43,6 +44,9 @@ begin
    ITS.MSRs.Write_To_Read_Only_Register;
    ITS.MSRs.Write_To_Disallowed_Register;
    ITS.MSRs.Read_From_Disallowed_Register;
+
+   ITS.IO_Ports.Write_To_Disallowed_IO_Port;
+   ITS.IO_Ports.Read_From_Disallowed_IO_Port;
 
    ITS.Results.Report;
 

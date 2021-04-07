@@ -24,4 +24,24 @@ is
 
    Null_String : constant Bounded_String := (others => ASCII.NUL);
 
+   function Compilation_ISO_Date return String
+   with
+      Import,
+      Convention => Intrinsic;
+
+   function Compilation_Time return String
+   with
+      Import,
+      Convention => Intrinsic;
+
+   function Enclosing_Entity return String
+   with
+      Import,
+      Convention => Intrinsic;
+
+   function Source_Location return String
+   with
+      Import,
+      Convention => Intrinsic;
+
 end ITS;

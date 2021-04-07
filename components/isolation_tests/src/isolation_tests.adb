@@ -24,6 +24,7 @@ with Debuglog.Client;
 
 with ITS.Results;
 with ITS.Memory;
+with ITS.MSRs;
 
 procedure Isolation_Tests
 is
@@ -38,6 +39,10 @@ begin
    ITS.Memory.Write_To_Read_Only_Region;
    ITS.Memory.Write_To_Unmapped_Region;
    ITS.Memory.Read_From_Unmapped_Region;
+
+   ITS.MSRs.Write_To_Read_Only_Register;
+   ITS.MSRs.Write_To_Disallowed_Register;
+   ITS.MSRs.Read_From_Disallowed_Register;
 
    ITS.Results.Report;
 

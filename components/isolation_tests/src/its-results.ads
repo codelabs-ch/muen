@@ -16,24 +16,31 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with ITS.Log_Buffer;
 
 package ITS.Results
 is
 
+   use type Interfaces.Unsigned_64;
+
    --  Append new test result with given parameters. The last reported result
    --  will be overwritten if the result storage is full.
    procedure Append
-     (Title       : String;
-      Description : String;
-      Expected    : String;
-      Success     : Boolean;
-      Log_Entry   : Log_Buffer.Ext_Log_Entries_Range)
+     (Title           : String;
+      Description     : String;
+      Expected        : String;
+      Success         : Boolean;
+      Start_Timestamp : Interfaces.Unsigned_64;
+      End_Timestamp   : Interfaces.Unsigned_64;
+      Log_Entry       : Log_Buffer.Ext_Log_Entries_Range)
    with
       Pre =>
         Title'Length in Bounded_String'Range and
         Description'Length in Bounded_String'Range and
-        Expected'Length in Bounded_String'Range;
+        Expected'Length in Bounded_String'Range and
+        End_Timestamp > Start_Timestamp;
 
    --  Output test results to log.
    procedure Report;

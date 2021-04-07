@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Interfaces;
-
 with SK.Strings;
 
 with Debuglog.Client;
@@ -37,6 +35,8 @@ is
       Expected_Desc     : Bounded_String;
       Expected_Desc_Len : Bounded_String_Range;
       Result            : Boolean;
+      Start_Timestamp   : Interfaces.Unsigned_64;
+      End_Timestamp     : Interfaces.Unsigned_64;
       Log_Entry         : Log_Buffer.Ext_Log_Entries_Range;
    end record;
 
@@ -48,6 +48,8 @@ is
          Expected_Desc     => Null_String,
          Expected_Desc_Len => Bounded_String_Range'First,
          Result            => False,
+         Start_Timestamp   => 0,
+         End_Timestamp     => 0,
          Log_Entry         => Log_Buffer.Null_Entry_Index);
 
    type Ext_Test_Cases_Range is new Natural range 0 .. Max_Tests;
@@ -64,11 +66,13 @@ is
    -------------------------------------------------------------------------
 
    procedure Append
-     (Title       : String;
-      Description : String;
-      Expected    : String;
-      Success     : Boolean;
-      Log_Entry   : Log_Buffer.Ext_Log_Entries_Range)
+     (Title           : String;
+      Description     : String;
+      Expected        : String;
+      Success         : Boolean;
+      Start_Timestamp : Interfaces.Unsigned_64;
+      End_Timestamp   : Interfaces.Unsigned_64;
+      Log_Entry       : Log_Buffer.Ext_Log_Entries_Range)
    is
       New_Test : Test_Case_Type;
    begin
@@ -94,6 +98,8 @@ is
           := Expected;
       New_Test.Expected_Desc_Len := Expected'Length;
       New_Test.Result := Success;
+      New_Test.Start_Timestamp := Start_Timestamp;
+      New_Test.End_Timestamp := End_Timestamp;
       New_Test.Log_Entry := Log_Entry;
       Tests (Current_Test_Case) := New_Test;
    end Append;

@@ -21,6 +21,8 @@ with Interfaces;
 with SK.Constants;
 with SK.Strings;
 
+with Musinfo.Instance;
+
 with ITS.Log_Buffer;
 with ITS.Results;
 with ITS.Subject_State;
@@ -56,7 +58,10 @@ is
       Result          : SK.Subject_State_Type;
       Success         : Boolean;
       Unused_Byte     : Interfaces.Unsigned_8;
+      Start, Stop     : Interfaces.Unsigned_64;
    begin
+      Start := Musinfo.Instance.TSC_Schedule_Start;
+
       ITS.Subject_State.Result_State := SK.Null_Subject_State;
 
       Log_Buffer.Start_Entry (ID => Log_ID);
@@ -86,11 +91,14 @@ is
       Success := Result.Exit_Reason = SK.Constants.EXIT_REASON_EXCEPTION_NMI
         and then Result.Exit_Qualification = Memory_Address;
 
-      Results.Append (Title       => Title,
-                      Description => Description,
-                      Expected    => Expected_Result,
-                      Success     => Success,
-                      Log_Entry   => Log_ID);
+      Stop := Musinfo.Instance.TSC_Schedule_End;
+      Results.Append (Title           => Title,
+                      Description     => Description,
+                      Expected        => Expected_Result,
+                      Success         => Success,
+                      Start_Timestamp => Start,
+                      End_Timestamp   => Stop,
+                      Log_Entry       => Log_ID);
    end Read_From_Unmapped_Region;
 
    -------------------------------------------------------------------------
@@ -116,7 +124,9 @@ is
       Log_ID          : Log_Buffer.Ext_Log_Entries_Range;
       Result          : SK.Subject_State_Type;
       Success         : Boolean;
+      Start, Stop     : Interfaces.Unsigned_64;
    begin
+      Start := Musinfo.Instance.TSC_Schedule_Start;
       ITS.Subject_State.Result_State := SK.Null_Subject_State;
 
       Log_Buffer.Start_Entry (ID => Log_ID);
@@ -146,11 +156,14 @@ is
       Success := Result.Exit_Reason = SK.Constants.EXIT_REASON_EXCEPTION_NMI
         and then Result.Exit_Qualification = Memory_Address;
 
-      Results.Append (Title       => Title,
-                      Description => Description,
-                      Expected    => Expected_Result,
-                      Success     => Success,
-                      Log_Entry   => Log_ID);
+      Stop := Musinfo.Instance.TSC_Schedule_End;
+      Results.Append (Title           => Title,
+                      Description     => Description,
+                      Expected        => Expected_Result,
+                      Success         => Success,
+                      Start_Timestamp => Start,
+                      End_Timestamp   => Stop,
+                      Log_Entry       => Log_ID);
    end Write_To_Read_Only_Region;
 
    -------------------------------------------------------------------------
@@ -175,7 +188,9 @@ is
       Log_ID          : Log_Buffer.Ext_Log_Entries_Range;
       Result          : SK.Subject_State_Type;
       Success         : Boolean;
+      Start, Stop     : Interfaces.Unsigned_64;
    begin
+      Start := Musinfo.Instance.TSC_Schedule_Start;
       ITS.Subject_State.Result_State := SK.Null_Subject_State;
 
       Log_Buffer.Start_Entry (ID => Log_ID);
@@ -205,11 +220,14 @@ is
       Success := Result.Exit_Reason = SK.Constants.EXIT_REASON_EXCEPTION_NMI
         and then Result.Exit_Qualification = Memory_Address;
 
-      Results.Append (Title       => Title,
-                      Description => Description,
-                      Expected    => Expected_Result,
-                      Success     => Success,
-                      Log_Entry   => Log_ID);
+      Stop := Musinfo.Instance.TSC_Schedule_End;
+      Results.Append (Title           => Title,
+                      Description     => Description,
+                      Expected        => Expected_Result,
+                      Success         => Success,
+                      Start_Timestamp => Start,
+                      End_Timestamp   => Stop,
+                      Log_Entry       => Log_ID);
    end Write_To_Unmapped_Region;
 
 end ITS.Memory;

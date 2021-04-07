@@ -139,6 +139,32 @@ is
 
       ----------------------------------------------------------------------
 
+      procedure Print_Build_Info
+      is
+      begin
+         Log.Put_Line ("Build Information");
+         Log.Put_Line ("*****************");
+         Log.New_Line;
+         Log.Put_Line (".. list-table::");
+         Log.Put_Line ("   :widths: 20 80");
+         Log.New_Line;
+         Log.Put_Line ("   * - :blue:`Key`");
+         Log.Put      ("     - :blue:`Value`");
+         Log.New_Line;
+         Log.Put_Line ("   * - Compiler");
+         Log.Put      ("     - ");
+         Log.Put_Line (Standard'Compiler_Version);
+         Log.Put_Line ("   * - Compilation Date");
+         Log.Put      ("     - ");
+         Log.Put_Line (Compilation_ISO_Date);
+         Log.Put_Line ("   * - Compilation Time");
+         Log.Put      ("     - ");
+         Log.Put_Line (Compilation_Time);
+         Log.New_Line;
+      end Print_Build_Info;
+
+      ----------------------------------------------------------------------
+
       procedure Print_Summary
       is
       begin
@@ -222,6 +248,7 @@ is
          Log.New_Line;
       end Print_Result;
    begin
+      Print_Build_Info;
       Print_Summary;
 
       for I in Test_Cases_Range'First .. Current_Test_Case loop

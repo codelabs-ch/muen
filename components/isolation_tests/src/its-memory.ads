@@ -16,16 +16,24 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Musinfo.Instance;
+
 package ITS.Memory
 is
 
    --  Write access to read-only memory region.
-   procedure Write_To_Read_Only_Region;
+   procedure Write_To_Read_Only_Region
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
    --  Write access to unmapped memory region.
-   procedure Write_To_Unmapped_Region;
+   procedure Write_To_Unmapped_Region
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
    --  Read access to unmapped memory region.
-   procedure Read_From_Unmapped_Region;
+   procedure Read_From_Unmapped_Region
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
 end ITS.Memory;

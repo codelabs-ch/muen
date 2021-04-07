@@ -18,6 +18,8 @@
 
 with SK.CPU;
 
+with Musinfo.Instance;
+
 with Debuglog.Client;
 
 with ITS.Results;
@@ -27,6 +29,11 @@ procedure Isolation_Tests
 is
 begin
    Debuglog.Client.Init (Epoch => 1);
+
+   if not Musinfo.Instance.Is_Valid then
+      Debuglog.Client.Put_Line (Item => "Error: Sinfo data not valid");
+      SK.CPU.Stop;
+   end if;
 
    ITS.Memory.Write_To_Read_Only_Region;
    ITS.Memory.Write_To_Unmapped_Region;

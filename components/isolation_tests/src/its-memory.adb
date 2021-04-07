@@ -21,8 +21,6 @@ with Interfaces;
 with SK.Constants;
 with SK.Strings;
 
-with Musinfo.Instance;
-
 with ITS.Log_Buffer;
 with ITS.Results;
 with ITS.Subject_State;

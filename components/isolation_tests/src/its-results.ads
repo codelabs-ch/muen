@@ -18,6 +18,8 @@
 
 with Interfaces;
 
+with Musinfo.Instance;
+
 with ITS.Log_Buffer;
 
 package ITS.Results
@@ -43,6 +45,8 @@ is
         End_Timestamp > Start_Timestamp;
 
    --  Output test results to log.
-   procedure Report;
+   procedure Report
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
 end ITS.Results;

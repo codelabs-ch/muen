@@ -25,4 +25,7 @@ is
    --  Write access to unmapped memory region.
    procedure Write_To_Unmapped_Region;
 
+   --  Read access to unmapped memory region.
+   procedure Read_From_Unmapped_Region;
+
 end ITS.Memory;

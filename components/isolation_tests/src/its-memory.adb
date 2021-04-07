@@ -35,6 +35,66 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Read_From_Unmapped_Region
+   is
+      use type Interfaces.Unsigned_32;
+      use type Interfaces.Unsigned_64;
+
+      Memory_Address  : constant Interfaces.Unsigned_64 := 0;
+      Title           : constant String
+        := "Read Access to unmapped Memory";
+      Description     : constant String
+        := "This test verifies that an attempted read access to an unmapped "
+        & "memory region is prohibited and results in a trap indicating an "
+        & "exception.";
+      Expected_Result : constant String
+        := "VM-Exit with reason 'Exception or non-maskable interrupt (NMI)' "
+        & "(0) and qualification containing the memory address "
+        & SK.Strings.Img (Item => Memory_Address)
+        & " where the read access was attempted.";
+      Log_ID          : Log_Buffer.Ext_Log_Entries_Range;
+      Result          : SK.Subject_State_Type;
+      Success         : Boolean;
+      Unused_Byte     : Interfaces.Unsigned_8;
+   begin
+      ITS.Subject_State.Result_State := SK.Null_Subject_State;
+
+      Log_Buffer.Start_Entry (ID => Log_ID);
+      Log_Buffer.Put_Line (Str => "Reading from memory address "
+                           & SK.Strings.Img (Item => Memory_Address) & ".");
+      ITS.Utils.Read_Byte (Address => Memory_Address,
+                           Value   => Unused_Byte);
+      Log_Buffer.New_Line;
+      Result := ITS.Subject_State.Result_State;
+
+      Log_Buffer.Put_Line (Str => ".:[ Assertions ]:.");
+      Log_Buffer.New_Line;
+      Log_Buffer.Put_Line (Str => "> Exit Reason");
+      Log_Buffer.Put_Line
+        (Str => "  Expected : "
+         & SK.Strings.Img
+           (Item => SK.Word32 (SK.Constants.EXIT_REASON_EXCEPTION_NMI)));
+      Log_Buffer.Put_Line (Str => "  Result   : "
+                           & SK.Strings.Img (Item => Result.Exit_Reason));
+      Log_Buffer.New_Line;
+      Log_Buffer.Put_Line (Str => "> Exit Qualification");
+      Log_Buffer.Put_Line
+        (Str => "  Expected : " & SK.Strings.Img (Item => Memory_Address));
+      Log_Buffer.Put_Line
+        (Str => "  Result   : "
+         & SK.Strings.Img (Item => Result.Exit_Qualification));
+      Success := Result.Exit_Reason = SK.Constants.EXIT_REASON_EXCEPTION_NMI
+        and then Result.Exit_Qualification = Memory_Address;
+
+      Results.Append (Title       => Title,
+                      Description => Description,
+                      Expected    => Expected_Result,
+                      Success     => Success,
+                      Log_Entry   => Log_ID);
+   end Read_From_Unmapped_Region;
+
+   -------------------------------------------------------------------------
+
    procedure Write_To_Read_Only_Region
    is
       use type Interfaces.Unsigned_32;

@@ -30,6 +30,7 @@ begin
 
    ITS.Memory.Write_To_Read_Only_Region;
    ITS.Memory.Write_To_Unmapped_Region;
+   ITS.Memory.Read_From_Unmapped_Region;
 
    ITS.Results.Report;
 

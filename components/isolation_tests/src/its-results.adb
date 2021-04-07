@@ -18,6 +18,8 @@
 
 with SK.Strings;
 
+with Musinfo.Instance;
+
 with Debuglog.Client;
 
 package body ITS.Results
@@ -111,6 +113,17 @@ is
 
       ----------------------------------------------------------------------
 
+      function To_Millis
+        (Diff : Interfaces.Unsigned_64)
+         return Interfaces.Unsigned_64
+      is
+         Khz : constant Interfaces.Unsigned_64 := Musinfo.Instance.TSC_Khz;
+      begin
+         return Diff / Khz;
+      end To_Millis;
+
+      ----------------------------------------------------------------------
+
       procedure Put_No_Leading_Zeros (Str : String)
       is
          Leading : Boolean := True;
@@ -179,6 +192,14 @@ is
          Log.Put_Line
            (Test.Expected_Desc
               (Test.Expected_Desc'First .. Test.Expected_Desc_Len));
+
+         Log.Put_Line ("   * - :blue:`Duration`");
+         Log.Put      ("     - ");
+         Put_No_Leading_Zeros
+           (Str => SK.Strings.Img_Dec
+              (Item => To_Millis
+                   (Diff => Test.End_Timestamp - Test.Start_Timestamp)));
+         Log.Put_Line (" ms");
 
          Log.Put_Line ("   * - :blue:`Status`");
          Log.Put      ("     - ");

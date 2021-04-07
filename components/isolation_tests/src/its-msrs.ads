@@ -26,4 +26,9 @@ is
    with
       Pre => Musinfo.Instance.Is_Valid;
 
+   --  Write access to disallowed MSR.
+   procedure Write_To_Disallowed_Register
+   with
+      Pre => Musinfo.Instance.Is_Valid;
+
 end ITS.MSRs;

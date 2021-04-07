@@ -31,6 +31,59 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Write_To_Disallowed_Register
+   is
+      use type Interfaces.Unsigned_32;
+
+      MSR_Address     : constant Interfaces.Unsigned_32 := 16#c000_1000#;
+      Title           : constant String
+        := "Write Access to disallowed MSR";
+      Description     : constant String
+        := "This test verifies that an attempted write access to a disallowed "
+        & "Model-Specific Register is prohibited and results in a trap "
+        & "indicating a WRMSR.";
+      Expected_Result : constant String
+        := "VM-Exit with reason 'WRMSR' (32).";
+      Log_ID          : Log_Buffer.Ext_Log_Entries_Range;
+      Result          : SK.Subject_State_Type;
+      Success         : Boolean;
+      Start, Stop     : Interfaces.Unsigned_64;
+   begin
+      Start := Musinfo.Instance.TSC_Schedule_Start;
+      ITS.Subject_State.Result_State := SK.Null_Subject_State;
+
+      Log_Buffer.Start_Entry (ID => Log_ID);
+      Log_Buffer.Put_Line (Str => "Writing 0xfa to MSR "
+                           & SK.Strings.Img (Item => MSR_Address) & ".");
+      Log_Buffer.New_Line;
+      SK.CPU.Write_MSR64 (Register => MSR_Address,
+                          Value    => 16#fa#);
+      Result := ITS.Subject_State.Result_State;
+
+      Log_Buffer.Put_Line (Str => ".:[ Assertions ]:.");
+      Log_Buffer.New_Line;
+      Log_Buffer.Put_Line (Str => "> Exit Reason");
+      Log_Buffer.Put_Line
+        (Str => "  Expected : "
+         & SK.Strings.Img
+           (Item => SK.Word32 (SK.Constants.EXIT_REASON_WRMSR)));
+      Log_Buffer.Put_Line
+        (Str => "  Result   : " & SK.Strings.Img (Item => Result.Exit_Reason));
+
+      Success := Result.Exit_Reason = SK.Constants.EXIT_REASON_WRMSR;
+
+      Stop := Musinfo.Instance.TSC_Schedule_End;
+      Results.Append (Title           => Title,
+                      Description     => Description,
+                      Expected        => Expected_Result,
+                      Success         => Success,
+                      Start_Timestamp => Start,
+                      End_Timestamp   => Stop,
+                      Log_Entry       => Log_ID);
+   end Write_To_Disallowed_Register;
+
+   -------------------------------------------------------------------------
+
    procedure Write_To_Read_Only_Register
    is
       use type Interfaces.Unsigned_32;

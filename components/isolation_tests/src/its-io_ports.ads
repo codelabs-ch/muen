@@ -26,4 +26,9 @@ is
    with
       Pre => Musinfo.Instance.Is_Valid;
 
+   --  Read access to disallowed I/O port.
+   procedure Read_From_Disallowed_IO_Port
+   with
+      Pre => Musinfo.Instance.Is_Valid;
+
 end ITS.IO_Ports;

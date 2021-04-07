@@ -31,6 +31,73 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Read_From_Disallowed_IO_Port
+   is
+      use type Interfaces.Unsigned_32;
+      use type Interfaces.Unsigned_64;
+
+      IO_Port         : constant Interfaces.Unsigned_16 := 16#ffff#;
+      Title           : constant String
+        := "Read Access to disallowed I/O Port";
+      Description     : constant String
+        := "This test verifies that an attempted read access to a disallowed "
+        & "I/O port is prohibited and results in a trap indicating an "
+        & "I/O instructon.";
+      Expected_Result : constant String
+        := "VM-Exit with reason 'I/O instruction' (30) and qualification "
+        & "(0xffff0008) designating a byte-sized read from port "
+        & SK.Strings.Img (Item => IO_Port)
+        & " where the read access was attempted, see "
+        & "Intel SDM Vol. 3C, '27.2.1 Basic VM-Exit Information', table 27-5.";
+      Ref_Quali       : constant Interfaces.Unsigned_64 := 16#ffff_0008#;
+      Log_ID          : Log_Buffer.Ext_Log_Entries_Range;
+      Result          : SK.Subject_State_Type;
+      Success         : Boolean;
+      Start, Stop     : Interfaces.Unsigned_64;
+      Unused_Value    : Interfaces.Unsigned_8;
+   begin
+      Start := Musinfo.Instance.TSC_Schedule_Start;
+      ITS.Subject_State.Result_State := SK.Null_Subject_State;
+
+      Log_Buffer.Start_Entry (ID => Log_ID);
+      Log_Buffer.Put_Line (Str => "Reading from I/O port "
+                           & SK.Strings.Img (Item => IO_Port) & ".");
+      Log_Buffer.New_Line;
+      SK.IO.Inb (Port  => IO_Port,
+                 Value => Unused_Value);
+      Result := ITS.Subject_State.Result_State;
+
+      Log_Buffer.Put_Line (Str => ".:[ Assertions ]:.");
+      Log_Buffer.New_Line;
+      Log_Buffer.Put_Line (Str => "> Exit Reason");
+      Log_Buffer.Put_Line
+        (Str => "  Expected : "
+         & SK.Strings.Img
+           (Item => SK.Word32 (SK.Constants.EXIT_REASON_IO_INSTRUCTION)));
+      Log_Buffer.Put_Line
+        (Str => "  Result   : " & SK.Strings.Img (Item => Result.Exit_Reason));
+      Log_Buffer.New_Line;
+      Log_Buffer.Put_Line (Str => "> Exit Qualification");
+      Log_Buffer.Put_Line (Str => "  Expected : "
+                           & SK.Strings.Img (Item => Ref_Quali));
+      Log_Buffer.Put_Line
+        (Str => "  Result   : "
+         & SK.Strings.Img (Item => Result.Exit_Qualification));
+      Success := Result.Exit_Reason = SK.Constants.EXIT_REASON_IO_INSTRUCTION
+        and then Result.Exit_Qualification = Ref_Quali;
+
+      Stop := Musinfo.Instance.TSC_Schedule_End;
+      Results.Append (Title           => Title,
+                      Description     => Description,
+                      Expected        => Expected_Result,
+                      Success         => Success,
+                      Start_Timestamp => Start,
+                      End_Timestamp   => Stop,
+                      Log_Entry       => Log_ID);
+   end Read_From_Disallowed_IO_Port;
+
+   -------------------------------------------------------------------------
+
    procedure Write_To_Disallowed_IO_Port
    is
       use type Interfaces.Unsigned_32;

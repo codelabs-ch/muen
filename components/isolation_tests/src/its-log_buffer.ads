@@ -43,7 +43,10 @@ is
    procedure Put_Line (Str : String);
    procedure New_Line;
 
-   --  Print entry specified by ID to debuglog.
-   procedure Print_Entry (ID : Log_Entries_Range);
+   --  Print entry specified by ID to debuglog. Prefix is prepended to each new
+   --  line.
+   procedure Print_Entry
+     (ID     : Log_Entries_Range;
+      Prefix : String := "");
 
 end ITS.Log_Buffer;

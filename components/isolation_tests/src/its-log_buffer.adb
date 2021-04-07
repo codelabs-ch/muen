@@ -69,12 +69,21 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Print_Entry (ID : Log_Entries_Range)
+   procedure Print_Entry
+     (ID     : Log_Entries_Range;
+      Prefix : String := "")
    is
       Cur_Entry : constant Log_Entry := Log_Entries (ID);
    begin
+      if Cur_Entry.End_Idx >= Cur_Entry.Start_Idx then
+         Debuglog.Client.Put (Item => Prefix);
+      end if;
+
       for I in Natural range Cur_Entry.Start_Idx .. Cur_Entry.End_Idx loop
          Debuglog.Client.Put (Item => Buffer (I));
+         if Buffer (I) = ASCII.LF then
+            Debuglog.Client.Put (Item => Prefix);
+         end if;
       end loop;
    end Print_Entry;
 

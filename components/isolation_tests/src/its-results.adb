@@ -161,6 +161,13 @@ is
               (Interfaces.Unsigned_64 (Current_Test_Case - Success_Count)));
          Log.New_Line;
          Log.New_Line;
+         if Current_Test_Case = Success_Count then
+            Log.Put_Line ("**All isolation tests PASSED.**");
+         else
+            Log.Put_Line ("**Some isolation tests FAILED.**");
+         end if;
+         Log.New_Line;
+         Log.New_Line;
       end Print_Summary;
 
       ----------------------------------------------------------------------

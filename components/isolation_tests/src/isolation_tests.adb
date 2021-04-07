@@ -22,6 +22,7 @@ with Musinfo.Instance;
 
 with Debuglog.Client;
 
+with ITS.Events;
 with ITS.IO_Ports;
 with ITS.Memory;
 with ITS.MSRs;
@@ -47,6 +48,8 @@ begin
 
    ITS.IO_Ports.Write_To_Disallowed_IO_Port;
    ITS.IO_Ports.Read_From_Disallowed_IO_Port;
+
+   ITS.Events.Trigger_Invalid_Event;
 
    ITS.Results.Report;
 

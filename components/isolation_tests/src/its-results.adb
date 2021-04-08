@@ -181,17 +181,21 @@ is
          Log.Put_Line ("Test Results");
          Log.Put_Line ("************");
          Log.New_Line;
-         Log.Put ("Tests Total  : ");
+         Log.Put_Line (".. list-table::");
+         Log.Put_Line ("   :widths: 20 80");
+         Log.New_Line;
+         Log.Put_Line ("   * - :blue:`Tests Total`");
+         Log.Put      ("     - ");
          Put_No_Leading_Zeros
            (SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Current_Test_Case)));
          Log.New_Line;
-         Log.New_Line;
-         Log.Put ("Tests Passed : ");
+         Log.Put_Line ("   * - :green:`Tests Passed`");
+         Log.Put      ("     - ");
          Put_No_Leading_Zeros
            (SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Success_Count)));
          Log.New_Line;
-         Log.New_Line;
-         Log.Put ("Tests Failed : ");
+         Log.Put_Line ("   * - :red:`Tests Failed`");
+         Log.Put      ("     - ");
          Put_No_Leading_Zeros
            (SK.Strings.Img_Dec
               (Interfaces.Unsigned_64 (Current_Test_Case - Success_Count)));

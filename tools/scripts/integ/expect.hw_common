@@ -1,5 +1,6 @@
 serial.out;100%
 serial.out;*** '.*/integtest' DONE
+serial.out;All isolation tests PASSED
 
 serial.out;muenfs: registered file virtual_keyboard - start 0x0000000000003000, size 0x00001000, access ro
 serial.out;Muen channel marker found in file '/muenfs/virtual_keyboard'

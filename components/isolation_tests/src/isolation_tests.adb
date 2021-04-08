@@ -23,6 +23,7 @@ with Musinfo.Instance;
 with Debuglog.Client;
 
 with ITS.Events;
+with ITS.Instructions;
 with ITS.IO_Ports;
 with ITS.Memory;
 with ITS.MSRs;
@@ -50,6 +51,11 @@ begin
    ITS.IO_Ports.Read_From_Disallowed_IO_Port;
 
    ITS.Events.Trigger_Invalid_Event;
+
+   ITS.Instructions.Execute_RDTSC;
+   ITS.Instructions.Execute_VMXOFF;
+   ITS.Instructions.Write_To_CR0;
+   ITS.Instructions.Write_To_CR3;
 
    ITS.Results.Report;
 

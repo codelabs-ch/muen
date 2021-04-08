@@ -33,6 +33,7 @@ is
      (Title           : String;
       Description     : String;
       Expected        : String;
+      Source_Info     : String;
       Success         : Boolean;
       Start_Timestamp : Interfaces.Unsigned_64;
       End_Timestamp   : Interfaces.Unsigned_64;
@@ -42,6 +43,7 @@ is
         Title'Length in Bounded_String'Range and
         Description'Length in Bounded_String'Range and
         Expected'Length in Bounded_String'Range and
+        Source_Info'Length in Bounded_String'Range and
         End_Timestamp > Start_Timestamp;
 
    --  Output test results to log.

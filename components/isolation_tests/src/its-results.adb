@@ -34,6 +34,8 @@ is
       Description_Len   : Bounded_String_Range;
       Expected_Desc     : Bounded_String;
       Expected_Desc_Len : Bounded_String_Range;
+      Source_Info       : Bounded_String;
+      Source_Info_Len   : Bounded_String_Range;
       Result            : Boolean;
       Start_Timestamp   : Interfaces.Unsigned_64;
       End_Timestamp     : Interfaces.Unsigned_64;
@@ -47,6 +49,8 @@ is
          Description_Len   => Bounded_String_Range'First,
          Expected_Desc     => Null_String,
          Expected_Desc_Len => Bounded_String_Range'First,
+         Source_Info       => Null_String,
+         Source_Info_Len   => Bounded_String_Range'First,
          Result            => False,
          Start_Timestamp   => 0,
          End_Timestamp     => 0,
@@ -69,6 +73,7 @@ is
      (Title           : String;
       Description     : String;
       Expected        : String;
+      Source_Info     : String;
       Success         : Boolean;
       Start_Timestamp : Interfaces.Unsigned_64;
       End_Timestamp   : Interfaces.Unsigned_64;
@@ -97,6 +102,11 @@ is
            New_Test.Expected_Desc'First + Expected'Length - 1)
           := Expected;
       New_Test.Expected_Desc_Len := Expected'Length;
+      New_Test.Source_Info
+        (New_Test.Source_Info'First ..
+           New_Test.Source_Info'First + Source_Info'Length - 1)
+          := Source_Info;
+      New_Test.Source_Info_Len := Source_Info'Length;
       New_Test.Result := Success;
       New_Test.Start_Timestamp := Start_Timestamp;
       New_Test.End_Timestamp := End_Timestamp;
@@ -231,6 +241,11 @@ is
               (Item => To_Millis
                    (Diff => Test.End_Timestamp - Test.Start_Timestamp)));
          Log.Put_Line (" ms");
+
+         Log.Put_Line ("   * - :blue:`Source`");
+         Log.Put      ("     - ");
+         Log.Put_Line
+           (Test.Source_Info (Test.Source_Info'First .. Test.Source_Info_Len));
 
          Log.Put_Line ("   * - :blue:`Status`");
          Log.Put      ("     - ");

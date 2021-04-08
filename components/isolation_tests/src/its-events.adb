@@ -49,6 +49,8 @@ is
       Result          : SK.Subject_State_Type;
       Success         : Boolean;
       Start, Stop     : Interfaces.Unsigned_64;
+      Src_Info        : constant String
+        := Enclosing_Entity & ", " & Source_Location;
    begin
       Start := Musinfo.Instance.TSC_Schedule_Start;
       ITS.Subject_State.Result_State := SK.Null_Subject_State;
@@ -77,13 +79,15 @@ is
       Success := Result.Exit_Reason = Exit_Marker;
 
       Stop := Musinfo.Instance.TSC_Schedule_End;
-      Results.Append (Title           => Title,
-                      Description     => Description,
-                      Expected        => Expected_Result,
-                      Success         => Success,
-                      Start_Timestamp => Start,
-                      End_Timestamp   => Stop,
-                      Log_Entry       => Log_ID);
+      Results.Append
+        (Title           => Title,
+         Description     => Description,
+         Expected        => Expected_Result,
+         Source_Info     => Src_Info,
+         Success         => Success,
+         Start_Timestamp => Start,
+         End_Timestamp   => Stop,
+         Log_Entry       => Log_ID);
    end Trigger_Invalid_Event;
 
 end ITS.Events;

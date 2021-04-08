@@ -31,6 +31,11 @@ is
    with
       Pre => Musinfo.Instance.Is_Valid;
 
+   --  Write to Control-Register 0 (e.g. disable Paging).
+   procedure Write_To_CR0
+   with
+      Pre => Musinfo.Instance.Is_Valid;
+
    --  Write to Control-Register 3 (i.e. change pagetables).
    procedure Write_To_CR3
    with

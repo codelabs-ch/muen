@@ -148,6 +148,76 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Write_To_CR0
+   is
+      use type Interfaces.Unsigned_32;
+      use type Interfaces.Unsigned_64;
+
+      CR0_Value       : constant Interfaces.Unsigned_64 := 16#0001_0033#;
+      Title           : constant String
+        := "Write to CR0";
+      Description     : constant String
+        := "This test verifies that an attempted write to the CR0 control "
+        & "register is prohibited and results in a trap indicating "
+        & "control-register access.";
+      Expected_Result : constant String
+        := "VM-Exit with reason 'Control-register accesses' (28) and "
+        & "qualification (0) designating a write to CR0, see "
+        & "Intel SDM Vol. 3C, '27.2.1 Basic VM-Exit Information', table 27-3.";
+      Ref_Quali       : constant Interfaces.Unsigned_64 := 16#0000#;
+      Log_ID          : Log_Buffer.Ext_Log_Entries_Range;
+      Result          : SK.Subject_State_Type;
+      Success         : Boolean;
+      Start, Stop     : Interfaces.Unsigned_64;
+      Src_Info        : constant String
+        := Enclosing_Entity & ", " & Source_Location;
+   begin
+      Start := Musinfo.Instance.TSC_Schedule_Start;
+      ITS.Subject_State.Result_State := SK.Null_Subject_State;
+
+      Log_Buffer.Start_Entry (ID => Log_ID);
+      Log_Buffer.Put_Line (Str => "Executing mov to cr0.");
+      Log_Buffer.New_Line;
+      System.Machine_Code.Asm
+        (Template => "movq %0, %%cr0",
+         Inputs   => (Interfaces.Unsigned_64'Asm_Input ("r", CR0_Value)),
+         Volatile => True);
+
+      Result := ITS.Subject_State.Result_State;
+
+      Log_Buffer.Put_Line (Str => ".:[ Assertions ]:.");
+      Log_Buffer.New_Line;
+      Log_Buffer.Put_Line (Str => "> Exit Reason");
+      Log_Buffer.Put_Line
+        (Str => "  Expected : " & SK.Strings.Img
+           (Item => Interfaces.Unsigned_32
+                (SK.Constants.EXIT_REASON_CR_ACCESS)));
+      Log_Buffer.Put_Line
+        (Str => "  Result   : " & SK.Strings.Img (Item => Result.Exit_Reason));
+      Log_Buffer.New_Line;
+      Log_Buffer.Put_Line (Str => "> Exit Qualification");
+      Log_Buffer.Put_Line (Str => "  Expected : "
+                           & SK.Strings.Img (Item => Ref_Quali));
+      Log_Buffer.Put_Line
+        (Str => "  Result   : "
+         & SK.Strings.Img (Item => Result.Exit_Qualification));
+      Success := Result.Exit_Reason = SK.Constants.EXIT_REASON_CR_ACCESS
+        and then Result.Exit_Qualification = Ref_Quali;
+
+      Stop := Musinfo.Instance.TSC_Schedule_End;
+      Results.Append
+        (Title           => Title,
+         Description     => Description,
+         Expected        => Expected_Result,
+         Source_Info     => Src_Info,
+         Success         => Success,
+         Start_Timestamp => Start,
+         End_Timestamp   => Stop,
+         Log_Entry       => Log_ID);
+   end Write_To_CR0;
+
+   -------------------------------------------------------------------------
+
    procedure Write_To_CR3
    is
       use type Interfaces.Unsigned_32;

@@ -26,4 +26,9 @@ is
    with
       Pre => Musinfo.Instance.Is_Valid;
 
+   --  Disable VMX.
+   procedure Execute_VMXOFF
+   with
+      Pre => Musinfo.Instance.Is_Valid;
+
 end ITS.Instructions;

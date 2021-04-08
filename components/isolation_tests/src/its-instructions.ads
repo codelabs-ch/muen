@@ -31,4 +31,9 @@ is
    with
       Pre => Musinfo.Instance.Is_Valid;
 
+   --  Write to Control-Register 3 (i.e. change pagetables).
+   procedure Write_To_CR3
+   with
+      Pre => Musinfo.Instance.Is_Valid;
+
 end ITS.Instructions;

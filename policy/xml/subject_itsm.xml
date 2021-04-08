@@ -1,0 +1,19 @@
+<subject name="isolation_tests_monitor">
+ <events>
+  <source>
+   <group name="vmx_exit">
+    <default physical="system_panic">
+     <system_panic/>
+    </default>
+   </group>
+  </source>
+ </events>
+ <monitor>
+  <state subject="isolation_tests" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
+ </monitor>
+ <component ref="isolation_tests_monitor">
+  <map logical="result_state" physical="isolation_tests_state"/>
+  <map logical="trap_to_monitor" physical="trap_to_isolation_tests_monitor"/>
+  <map logical="resume_tests" physical="resume_isolation_tests"/>
+ </component>
+</subject>

@@ -1,0 +1,15 @@
+<subject name="isolation_tests">
+ <events>
+  <source>
+   <group name="vmx_exit">
+    <default physical="trap_to_isolation_tests_monitor"/>
+   </group>
+  </source>
+ </events>
+ <component ref="isolation_tests">
+  <map logical="debuglog" physical="debuglog_isolation_tests"/>
+  <map logical="result_state" physical="isolation_tests_state"/>
+  <map logical="resume_tests" physical="resume_isolation_tests"/>
+  <map logical="read_only" physical="isolation_tests_read_only"/>
+ </component>
+</subject>

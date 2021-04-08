@@ -1,0 +1,25 @@
+<component name="isolation_tests" profile="native">
+	<config>
+		<integer name="log_entry_max" value="128"/>
+		<integer name="log_buffer_size" value="65535"/>
+	</config>
+	<depends>
+		<library ref="libmudebuglog"/>
+	</depends>
+	<requires>
+		<vcpu>
+			<msrs>
+				<msr end="16#0174#" mode="r" start="16#0174#"/>
+			</msrs>
+		</vcpu>
+		<memory>
+		   <memory logical="read_only" size="16#1000#" virtualAddress="16#1000_0000#" writable="false" executable="false"/>
+		   <memory logical="result_state" size="16#1000#" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
+		</memory>
+		<events>
+			<target>
+				<event logical="resume_tests"/>
+			</target>
+		</events>
+	</requires>
+</component>

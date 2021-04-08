@@ -34,6 +34,7 @@ is
       Description     : String;
       Expected        : String;
       Source_Info     : String;
+      Testsuite       : String;
       Success         : Boolean;
       Start_Timestamp : Interfaces.Unsigned_64;
       End_Timestamp   : Interfaces.Unsigned_64;
@@ -44,6 +45,7 @@ is
         Description'Length in Bounded_String'Range and
         Expected'Length in Bounded_String'Range and
         Source_Info'Length in Bounded_String'Range and
+        Testsuite'Length in Bounded_String'Range and
         End_Timestamp > Start_Timestamp;
 
    --  Output test results to log.

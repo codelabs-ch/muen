@@ -31,6 +31,8 @@ with ITS.Subject_State;
 package body ITS.Instructions
 is
 
+   Testsuite_Name : constant String := Enclosing_Entity;
+
    ------------------------------------------------------------------------
 
    procedure Execute_RDTSC
@@ -79,6 +81,7 @@ is
          Description     => Description,
          Expected        => Expected_Result,
          Source_Info     => Src_Info,
+         Testsuite       => Testsuite_Name,
          Success         => Success,
          Start_Timestamp => Start,
          End_Timestamp   => Stop,
@@ -140,6 +143,7 @@ is
          Description     => Description,
          Expected        => Expected_Result,
          Source_Info     => Src_Info,
+         Testsuite       => Testsuite_Name,
          Success         => Success,
          Start_Timestamp => Start,
          End_Timestamp   => Stop,
@@ -210,6 +214,7 @@ is
          Description     => Description,
          Expected        => Expected_Result,
          Source_Info     => Src_Info,
+         Testsuite       => Testsuite_Name,
          Success         => Success,
          Start_Timestamp => Start,
          End_Timestamp   => Stop,
@@ -281,6 +286,7 @@ is
          Description     => Description,
          Expected        => Expected_Result,
          Source_Info     => Src_Info,
+         Testsuite       => Testsuite_Name,
          Success         => Success,
          Start_Timestamp => Start,
          End_Timestamp   => Stop,

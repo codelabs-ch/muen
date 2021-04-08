@@ -28,6 +28,8 @@ with ITS.Subject_State;
 package body ITS.Events
 is
 
+   Testsuite_Name : constant String := Enclosing_Entity;
+
    -------------------------------------------------------------------------
 
    procedure Trigger_Invalid_Event
@@ -84,6 +86,7 @@ is
          Description     => Description,
          Expected        => Expected_Result,
          Source_Info     => Src_Info,
+         Testsuite       => Testsuite_Name,
          Success         => Success,
          Start_Timestamp => Start,
          End_Timestamp   => Stop,

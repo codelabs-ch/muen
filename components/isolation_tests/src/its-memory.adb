@@ -33,6 +33,8 @@ is
 
    package Cspecs renames Isolation_Tests_Component.Memory;
 
+   Testsuite_Name : constant String := Enclosing_Entity;
+
    -------------------------------------------------------------------------
 
    procedure Read_From_Unmapped_Region
@@ -97,6 +99,7 @@ is
          Description     => Description,
          Expected        => Expected_Result,
          Source_Info     => Src_Info,
+         Testsuite       => Testsuite_Name,
          Success         => Success,
          Start_Timestamp => Start,
          End_Timestamp   => Stop,
@@ -166,6 +169,7 @@ is
          Description     => Description,
          Expected        => Expected_Result,
          Source_Info     => Src_Info,
+         Testsuite       => Testsuite_Name,
          Success         => Success,
          Start_Timestamp => Start,
          End_Timestamp   => Stop,
@@ -234,6 +238,7 @@ is
          Description     => Description,
          Expected        => Expected_Result,
          Source_Info     => Src_Info,
+         Testsuite       => Testsuite_Name,
          Success         => Success,
          Start_Timestamp => Start,
          End_Timestamp   => Stop,

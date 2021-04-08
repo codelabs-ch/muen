@@ -36,6 +36,8 @@ is
       Expected_Desc_Len : Bounded_String_Range;
       Source_Info       : Bounded_String;
       Source_Info_Len   : Bounded_String_Range;
+      Testsuite         : Bounded_String;
+      Testsuite_Len     : Bounded_String_Range;
       Result            : Boolean;
       Start_Timestamp   : Interfaces.Unsigned_64;
       End_Timestamp     : Interfaces.Unsigned_64;
@@ -51,6 +53,8 @@ is
          Expected_Desc_Len => Bounded_String_Range'First,
          Source_Info       => Null_String,
          Source_Info_Len   => Bounded_String_Range'First,
+         Testsuite         => Null_String,
+         Testsuite_Len     => Bounded_String_Range'First,
          Result            => False,
          Start_Timestamp   => 0,
          End_Timestamp     => 0,
@@ -74,6 +78,7 @@ is
       Description     : String;
       Expected        : String;
       Source_Info     : String;
+      Testsuite       : String;
       Success         : Boolean;
       Start_Timestamp : Interfaces.Unsigned_64;
       End_Timestamp   : Interfaces.Unsigned_64;
@@ -107,6 +112,11 @@ is
            New_Test.Source_Info'First + Source_Info'Length - 1)
           := Source_Info;
       New_Test.Source_Info_Len := Source_Info'Length;
+      New_Test.Testsuite
+        (New_Test.Testsuite'First ..
+           New_Test.Testsuite'First + Testsuite'Length - 1)
+          := Testsuite;
+      New_Test.Testsuite_Len := Testsuite'Length;
       New_Test.Result := Success;
       New_Test.Start_Timestamp := Start_Timestamp;
       New_Test.End_Timestamp := End_Timestamp;
@@ -118,6 +128,9 @@ is
 
    procedure Report
    is
+
+      Cur_Testsuite     : Bounded_String       := Null_String;
+      Cur_Testsuite_Len : Bounded_String_Range := Bounded_String_Range'First;
 
       ----------------------------------------------------------------------
 
@@ -215,10 +228,25 @@ is
       procedure Print_Result (Test : Test_Case_Type)
       is
       begin
+         if Test.Testsuite_Len /= Cur_Testsuite_Len
+           or else Test.Testsuite (Test.Testsuite'First .. Test.Testsuite_Len)
+           /= Cur_Testsuite (Cur_Testsuite'First .. Cur_Testsuite_Len)
+         then
+            Cur_Testsuite_Len := Test.Testsuite_Len;
+            Cur_Testsuite := Test.Testsuite;
+            Log.Put_Line
+              (Cur_Testsuite (Cur_Testsuite'First .. Cur_Testsuite_Len));
+            for I in Natural range 1 .. Cur_Testsuite_Len loop
+               Log.Put ("=");
+            end loop;
+            Log.New_Line;
+            Log.New_Line;
+         end if;
+
          Log.Put_Line
            (Test.Title (Test.Title'First .. Test.Title_Len));
          for I in Natural range 1 .. Test.Title_Len loop
-            Log.Put ("=");
+            Log.Put ("-");
          end loop;
          Log.New_Line;
 

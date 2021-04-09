@@ -34,8 +34,6 @@ is
 
    procedure Trigger_Invalid_Event
    is
-      use type Interfaces.Unsigned_32;
-
       Exit_Marker     : constant Interfaces.Unsigned_32 := 16#1234_5678#;
       Event_Nr        : constant Interfaces.Unsigned_8 := 16#ff#;
       Title           : constant String

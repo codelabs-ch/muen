@@ -35,9 +35,6 @@ is
 
    procedure Read_From_Disallowed_IO_Port
    is
-      use type Interfaces.Unsigned_32;
-      use type Interfaces.Unsigned_64;
-
       IO_Port         : constant Interfaces.Unsigned_16 := 16#ffff#;
       Title           : constant String
         := "Read Access to disallowed I/O Port";
@@ -107,9 +104,6 @@ is
 
    procedure Write_To_Disallowed_IO_Port
    is
-      use type Interfaces.Unsigned_32;
-      use type Interfaces.Unsigned_64;
-
       IO_Port         : constant Interfaces.Unsigned_16 := 16#64#;
       Title           : constant String
         := "Write Access to disallowed I/O Port";

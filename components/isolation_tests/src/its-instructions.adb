@@ -37,8 +37,6 @@ is
 
    procedure Execute_RDTSC
    is
-      use type Interfaces.Unsigned_32;
-
       Title           : constant String
         := "Execute RDTSC Instruction";
       Description     : constant String
@@ -92,8 +90,6 @@ is
 
    procedure Execute_VMXOFF
    is
-      use type Interfaces.Unsigned_32;
-
       EXIT_REASON_VMXOFF : constant Interfaces.Unsigned_32 := 26;
 
       Title           : constant String
@@ -154,9 +150,6 @@ is
 
    procedure Write_To_CR0
    is
-      use type Interfaces.Unsigned_32;
-      use type Interfaces.Unsigned_64;
-
       CR0_Value       : constant Interfaces.Unsigned_64 := 16#0001_0033#;
       Title           : constant String
         := "Write to CR0";
@@ -225,9 +218,6 @@ is
 
    procedure Write_To_CR3
    is
-      use type Interfaces.Unsigned_32;
-      use type Interfaces.Unsigned_64;
-
       CR3_Value       : constant Interfaces.Unsigned_64 := 16#fefe_0000#;
 
       Title           : constant String

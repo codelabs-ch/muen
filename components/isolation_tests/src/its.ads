@@ -16,8 +16,16 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 package ITS
 is
+
+   pragma Warnings (Off, "use clause for type * has no effect",
+                    Reason => "Simplify type usage in child packages");
+   use type Interfaces.Unsigned_32;
+   use type Interfaces.Unsigned_64;
+   pragma Warnings (On, "use clause for type * has no effect");
 
    subtype Bounded_String_Range is Natural range 1 .. 255;
    subtype Bounded_String is String (Bounded_String_Range);

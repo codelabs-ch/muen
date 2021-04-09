@@ -25,8 +25,6 @@ with ITS.Log_Buffer;
 package ITS.Results
 is
 
-   use type Interfaces.Unsigned_64;
-
    --  Append new test result with given parameters. The last reported result
    --  will be overwritten if the result storage is full.
    procedure Append

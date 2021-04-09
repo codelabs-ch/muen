@@ -35,8 +35,6 @@ is
 
    procedure Read_From_Disallowed_Register
    is
-      use type Interfaces.Unsigned_32;
-
       MSR_Address     : constant Interfaces.Unsigned_32 := 16#0010#;
       Title           : constant String
         := "Read Access to disallowed MSR";
@@ -94,8 +92,6 @@ is
 
    procedure Write_To_Disallowed_Register
    is
-      use type Interfaces.Unsigned_32;
-
       MSR_Address     : constant Interfaces.Unsigned_32 := 16#c000_1000#;
       Title           : constant String
         := "Write Access to disallowed MSR";
@@ -152,8 +148,6 @@ is
 
    procedure Write_To_Read_Only_Register
    is
-      use type Interfaces.Unsigned_32;
-
       MSR_Address     : constant Interfaces.Unsigned_32 := 16#0174#;
       Title           : constant String
         := "Write Access to read-only MSR";

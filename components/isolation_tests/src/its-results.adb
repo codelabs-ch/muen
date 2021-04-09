@@ -190,6 +190,10 @@ is
 
       procedure Print_Summary
       is
+         Note_SDM_Ref : constant String
+           := "   Some test cases/results contain references to the Intel "
+           & "Software Developer's Manual (SDM). The referenced document "
+           & "version is May 2019.";
       begin
          Log.Put_Line ("Test Results");
          Log.Put_Line ("************");
@@ -219,6 +223,10 @@ is
          else
             Log.Put_Line ("**Some isolation tests FAILED.**");
          end if;
+         Log.New_Line;
+
+         Log.Put_Line (".. note::");
+         Log.Put_Line (Note_SDM_Ref);
          Log.New_Line;
          Log.New_Line;
       end Print_Summary;

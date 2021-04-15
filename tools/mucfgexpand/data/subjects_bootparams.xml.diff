@@ -1,0 +1,6 @@
+ <subjects>                                                                                                                                              <subjects>
+  <subject name="lnx">                                                                                                                                    <subject name="lnx">
+   <bootparams>hostname=lnx</bootparams>                                                                                                             |     <bootparams>hostname=lnx debug</bootparams>
+   <bootparams>debug</bootparams>                                                                                                                    <
+   <memory>                                                                                                                                                <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>

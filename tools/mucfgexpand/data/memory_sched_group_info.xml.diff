@@ -237,8 +237,8 @@
                                                                                                                                                      >     </events>
                                                                                                                                                      >    </subject>
                                                                                                                                                      >    <subject globalId="1" name="lnx">
-   <memory>                                                                                                                                                <memory>
-    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
+   <bootparams>hostname=lnx</bootparams>                                                                                                                   <bootparams>hostname=lnx</bootparams>
+   <bootparams>debug</bootparams>                                                                                                                          <bootparams>debug</bootparams>
 --
    <component ref="linux"/>                                                                                                                                <component ref="linux"/>
   </subject>                                                                                                                                              </subject>

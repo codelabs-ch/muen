@@ -21,9 +21,8 @@
  <subjects>                                                                                                                                              <subjects>
   <subject name="lnx">                                                                                                                                    <subject name="lnx">
                                                                                                                                                      >     <vcpu/>
-                                                                                                                                                     >     <bootparams/>
-   <memory>                                                                                                                                                <memory>
-    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
+   <bootparams>hostname=lnx</bootparams>                                                                                                                   <bootparams>hostname=lnx</bootparams>
+   <bootparams>debug</bootparams>                                                                                                                          <bootparams>debug</bootparams>
 --
     <memory executable="false" logical="file_2" physical="dummy_6" virtualAddress="16#0003_0000#" writable="true"/>                                         <memory executable="false" logical="file_2" physical="dummy_6" virtualAddress="16#0003_0000#" writable="true"/>
     <memory executable="false" logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false"/>                                   <memory executable="false" logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false"/>

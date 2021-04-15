@@ -2562,6 +2562,67 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Merge_Bootparams (Data : in out Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject[bootparams]");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes,
+                                      Index => I);
+            Param_Nodes : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Subj_Node,
+                 XPath => "bootparams");
+            Param_Count : constant Natural
+              := DOM.Core.Nodes.Length (List => Param_Nodes);
+         begin
+            if Param_Count > 1 then
+               Mulog.Log (Msg => "Merging" & Param_Count'Img & " bootparams of"
+                          & " subject '" & DOM.Core.Elements.Get_Attribute
+                            (Elem => Subj_Node,
+                             Name => "name") & "'");
+               declare
+                  First_Node : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item (List  => Param_Nodes,
+                                            Index => 0);
+                  Cur_Node   : DOM.Core.Node;
+                  Text_Node  : DOM.Core.Node;
+                  Param_Str  : Unbounded_String;
+               begin
+                  for J in reverse 0 .. Param_Count - 1 loop
+                     Cur_Node := DOM.Core.Nodes.Item (List  => Param_Nodes,
+                                                      Index => J);
+                     if DOM.Core.Nodes.Has_Child_Nodes (N => Cur_Node) then
+                        DOM.Core.Nodes.Normalize (N => Cur_Node);
+                        Text_Node := DOM.Core.Nodes.First_Child
+                          (N => Cur_Node);
+                        Param_Str := DOM.Core.Nodes.Node_Value (N => Text_Node)
+                          & Param_Str;
+                     end if;
+                     if J /= 0 then
+                        Param_Str := " " & Param_Str;
+                        Cur_Node := DOM.Core.Nodes.Remove_Child
+                          (N         => Subj_Node,
+                           Old_Child => Cur_Node);
+                     end if;
+                  end loop;
+
+                  DOM.Core.Nodes.Set_Node_Value
+                    (N     => DOM.Core.Nodes.First_Child (N => First_Node),
+                     Value => To_String (Param_Str));
+               end;
+            end if;
+         end;
+      end loop;
+   end Merge_Bootparams;
+
+   -------------------------------------------------------------------------
+
    procedure Remove_Channel_Elements (Data : in out Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List

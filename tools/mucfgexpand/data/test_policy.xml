@@ -403,6 +403,8 @@
  </components>
  <subjects>
   <subject name="lnx">
+   <bootparams>hostname=lnx</bootparams>
+   <bootparams>debug</bootparams>
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
     <memory executable="false" logical="file_1" physical="dummy_5" virtualAddress="16#0002_0000#" writable="true"/>

@@ -14,8 +14,8 @@
  </components>                                                                                                                                           </components>
  <subjects>                                                                                                                                              <subjects>
   <subject name="lnx">                                                                                                                               |    <subject cpu="0" name="lnx">
-   <memory>                                                                                                                                                <memory>
-    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
+   <bootparams>hostname=lnx</bootparams>                                                                                                                   <bootparams>hostname=lnx</bootparams>
+   <bootparams>debug</bootparams>                                                                                                                          <bootparams>debug</bootparams>
 --
     <target>                                                                                                                                                <target>
      <event logical="handover_from_subject1" physical="handover_to_lnx"/>                                                                                    <event logical="handover_from_subject1" physical="handover_to_lnx"/>

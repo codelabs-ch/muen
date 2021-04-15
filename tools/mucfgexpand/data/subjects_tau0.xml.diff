@@ -232,4 +232,4 @@
                                                                                                                                                      >     </events>
                                                                                                                                                      >    </subject>
   <subject name="lnx">                                                                                                                                    <subject name="lnx">
-   <memory>                                                                                                                                                <memory>
+   <bootparams>hostname=lnx</bootparams>                                                                                                                   <bootparams>hostname=lnx</bootparams>

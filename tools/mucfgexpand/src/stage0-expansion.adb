@@ -44,6 +44,7 @@ is
       pragma Unreferenced (Data);
    begin
       Procs.Register (Process => Subjects.Add_Missing_Elements'Access);
+      Procs.Register (Process => Subjects.Merge_Bootparams'Access);
       Procs.Register (Process => Platform.Add_Section_Skeleton'Access);
 
       Procs.Register (Process => Platform.Add_Subject_Device_Resources'Access);

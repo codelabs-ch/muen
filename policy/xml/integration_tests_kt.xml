@@ -17,6 +17,8 @@
 
  <memory>
   <include href="common_memory.xml"/>
+  <include href="memory_xhci_dma.xml"/>
+  <include href="memory_ahci.xml"/>
   <memory name="control_sm_3" size="16#1000#" caching="WB">
    <fill pattern="16#ff#"/>
    <hash value="none"/>
@@ -33,8 +35,11 @@
    <fill pattern="16#00#"/>
    <hash value="none"/>
   </memory>
-  <include href="memory_xhci_dma.xml"/>
-  <memory name="muenblock" size="16#0100_0000#" caching="WB" type="subject_device"/>
+  <if variable="muenblock_enabled" value="true">
+   <memory name="blockdev_shm1" size="16#0100_0000#" caching="WB" type="subject_device"/>
+   <memory name="blockdev_shm2" size="16#0100_0000#" caching="WB" type="subject_device"/>
+   <memory name="blockdev_xhci_shm1" size="16#0100_0000#" caching="WB" type="subject_device"/>
+  </if>
   <memory name="isolation_tests_state" size="16#1000#" caching="WB"/>
   <memory name="isolation_tests_read_only" size="16#1000#" caching="WB"/>
  </memory>
@@ -54,12 +59,21 @@
    <memory>
     <memory logical="dma1" physical="storage_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
     <memory logical="dma2" physical="storage_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
-    <memory logical="muenblock" physical="muenblock" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
+    <memory logical="blockdev_xhci_shm1" physical="blockdev_xhci_shm1" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
    </memory>
    <devices>
     <device logical="xhci" physical="usb_controller_1"/>
-    <device logical="sata" physical="sata_controller_1"/>
     <device logical="nic3" physical="ethernet_controller_3"/>
+   </devices>
+  </domain>
+  <domain name="ahci_domain">
+   <memory>
+    <memory logical="dma" physical="ahci_dma" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
+    <memory logical="blockdev_shm1" physical="blockdev_shm1" virtualAddress="16#a100_0000#" writable="true" executable="false"/>
+    <memory logical="blockdev_shm2" physical="blockdev_shm2" virtualAddress="16#a200_0000#" writable="true" executable="false"/>
+   </memory>
+   <devices>
+   <device logical="storage_controller" physical="storage_controller"/>
    </devices>
   </domain>
  </deviceDomains>
@@ -78,6 +92,8 @@
   <event name="nic_linux_smp_signal_sm_02" mode="asap"/>
   <event name="trap_to_isolation_tests_monitor" mode="switch"/>
   <event name="resume_isolation_tests" mode="switch"/>
+  <event name="example_yield" mode="switch"/>
+  <event name="example_self" mode="self"/>
  </events>
 
  <channels>
@@ -87,14 +103,20 @@
   <channel name="debuglog_subject10" size="$logchannel_size"/>
   <channel name="debuglog_subject11" size="$logchannel_size"/>
   <channel name="debuglog_isolation_tests" size="$logchannel_size"/>
+  <channel name="debuglog_ahci_drv" size="$logchannel_size"/>
+  <channel name="debuglog_example" size="$logchannel_size"/>
   <channel name="nic_dm_request_1" size="16#1000#" hasEvent="switch"/>
   <channel name="nic_dm_request_2" size="16#1000#" hasEvent="switch"/>
   <channel name="nic_dm_response_1" size="16#1000#" hasEvent="switch"/>
   <channel name="nic_dm_response_2" size="16#1000#" hasEvent="switch"/>
-  <channel name="blockdev_request1" size="16#0010_0000#" hasEvent="asap"/>
-  <channel name="blockdev_response1" size="16#0010_0000#" hasEvent="asap"/>
-  <channel name="blockdev_request2" size="16#0010_0000#" hasEvent="asap"/>
-  <channel name="blockdev_response2" size="16#0010_0000#" hasEvent="asap"/>
+  <channel name="blockdev_xhci_request1" size="16#8000#" hasEvent="asap"/>
+  <channel name="blockdev_xhci_response1" size="16#4000#" hasEvent="asap"/>
+  <channel name="blockdev_request1" size="16#8000#" hasEvent="asap"/>
+  <channel name="blockdev_response1" size="16#4000#" hasEvent="asap"/>
+  <channel name="blockdev_request2" size="16#8000#" hasEvent="asap"/>
+  <channel name="blockdev_response2" size="16#4000#" hasEvent="asap"/>
+  <channel name="example_request" size="16#1000#" hasEvent="switch"/>
+  <channel name="example_response" size="16#1000#" hasEvent="switch"/>
  </channels>
 
  <subjects>
@@ -107,6 +129,8 @@
   <include href="subject_vt.xml"/>
   <include href="subject_its.xml"/>
   <include href="subject_itsm.xml"/>
+  <include href="subject_ahci.xml"/>
+  <include href="subject_example.xml"/>
 
   <subject name="dbgserver">
    <events>
@@ -132,6 +156,8 @@
     <map logical="log_channel11" physical="debuglog_subject11"/>
     <map logical="log_channel12" physical="debuglog_controller"/>
     <map logical="log_channel13" physical="debuglog_isolation_tests"/>
+    <map logical="log_channel14" physical="debuglog_ahci_drv"/>
+    <map logical="log_channel15" physical="debuglog_example"/>
     <include href="subject_dbgserver_common.xml"/>
    </component>
   </subject>
@@ -155,7 +181,8 @@
    <bootparams>console=hvc console=ttyS0 pci=noearly hostname=nic_linux muen-input.channel=virtual_keyboard debug</bootparams>
    <memory>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
-    <memory logical="muenblock" physical="muenblock" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
+    <memory logical="blockdev_xhci_shm1" physical="blockdev_xhci_shm1" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
+    <memory logical="blockdev_shm1" physical="blockdev_shm1" virtualAddress="16#a100_0000#" writable="true" executable="false"/>
    </memory>
    <devices>
     <device logical="serial" physical="com_2">
@@ -211,10 +238,10 @@
     <writer logical="testchannel_1" physical="testchannel_1" virtualAddress="16#000e_00f0_1000#"/>
     <reader logical="testchannel_4" physical="testchannel_4" virtualAddress="16#000e_00f0_2000#"/>
     <writer logical="testchannel_3" physical="testchannel_3" virtualAddress="16#000e_0100_2000#"/>
-    <writer logical="blockdev_request1" physical="blockdev_request1" virtualAddress="16#000e_01f0_0000#" event="3"/>
-    <reader logical="blockdev_response1" physical="blockdev_response1" virtualAddress="16#000e_0200_0000#" vector="101"/>
-    <writer logical="blockdev_request2" physical="blockdev_request2" virtualAddress="16#000e_0210_0000#" event="4"/>
-    <reader logical="blockdev_response2" physical="blockdev_response2" virtualAddress="16#000e_0220_0000#" vector="102"/>
+    <writer logical="blockdev_xhci_request1" physical="blockdev_xhci_request1" virtualAddress="16#000e_01f0_0000#" event="3"/>
+    <reader logical="blockdev_xhci_response1" physical="blockdev_xhci_response1" virtualAddress="16#000e_01f0_8000#" vector="101"/>
+    <writer logical="blockdev_request1" physical="blockdev_request1" virtualAddress="16#000e_01f0_c000#" event="4"/>
+    <reader logical="blockdev_response1" physical="blockdev_response1" virtualAddress="16#000e_01f1_4000#" vector="102"/>
    </channels>
    <component ref="linux">
     <map logical="lowmem" physical="nic_linux|lowmem"/>
@@ -443,7 +470,7 @@
    <bootparams>console=hvc console=ttyS0 pci=noearly hostname=storage_linux debug</bootparams>
    <memory>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
-    <memory logical="muenblock" physical="muenblock" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
+    <memory logical="muenblock" physical="blockdev_xhci_shm1" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
    </memory>
    <devices>
     <device logical="xhci" physical="$pciconf_emulation_xhci_physdev">
@@ -452,19 +479,6 @@
       <msi logical="xhci_msi1" physical="msi1"/>
      </irq>
      <memory logical="mmio" physical="mem1" writable="true" executable="false"/>
-    </device>
-    <device logical="ahci" physical="sata_controller_1">
-     <pci bus="16#00#" device="16#1f#" function="0"/>
-     <irq logical="irq" physical="irq1" vector="59">
-      <msi logical="ahci_msi1" physical="msi1"/>
-     </irq>
-     <memory logical="mmio" physical="mem1" writable="true" executable="false"/>
-     <memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
-     <ioPort logical="port1" physical="ioport1"/>
-     <ioPort logical="port2" physical="ioport2"/>
-     <ioPort logical="port3" physical="ioport3"/>
-     <ioPort logical="port4" physical="ioport4"/>
-     <ioPort logical="port5" physical="ioport5"/>
     </device>
     <device logical="nic" physical="ethernet_controller_3">
      <pci bus="16#00#" device="16#1e#" function="0"/>
@@ -490,6 +504,7 @@
      <event logical="timer" physical="timer_linux_2">
       <inject_interrupt vector="236"/>
      </event>
+     <event logical="from_example_subject" physical="example_yield"/>
     </target>
    </events>
    <channels>
@@ -500,10 +515,10 @@
     <writer logical="testchannel_2" physical="testchannel_2" virtualAddress="16#000e_00f0_1000#"/>
     <reader logical="testchannel_3" physical="testchannel_3" virtualAddress="16#000e_00f0_2000#"/>
     <writer logical="testchannel_4" physical="testchannel_4" virtualAddress="16#000e_0100_2000#"/>
-    <reader logical="blockdev_request1" physical="blockdev_request1" virtualAddress="16#000e_01f0_0000#" vector="101"/>
-    <writer logical="blockdev_response1" physical="blockdev_response1" virtualAddress="16#000e_0200_0000#" event="3"/>
-    <reader logical="blockdev_request2" physical="blockdev_request2" virtualAddress="16#000e_0210_0000#" vector="102"/>
-    <writer logical="blockdev_response2" physical="blockdev_response2" virtualAddress="16#000e_0220_0000#" event="4"/>
+    <reader logical="blockdev_request1" physical="blockdev_xhci_request1" virtualAddress="16#000e_0210_0000#" vector="102"/>
+    <writer logical="blockdev_response1" physical="blockdev_xhci_response1" virtualAddress="16#000e_0210_8000#" event="4"/>
+    <reader logical="example_response" physical="example_response" virtualAddress="16#000e_0210_c000#"/>
+    <writer logical="example_request" physical="example_request" virtualAddress="16#000e_0211_4000#" event="2"/>
    </channels>
    <component ref="linux">
     <map logical="lowmem" physical="storage_linux|lowmem"/>

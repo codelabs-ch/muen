@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BLKDEV=sdc
+BLKDEV=sda
 
 echo none > /sys/class/block/${BLKDEV}/queue/scheduler
 

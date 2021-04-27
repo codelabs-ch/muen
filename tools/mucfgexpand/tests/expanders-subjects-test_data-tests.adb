@@ -243,6 +243,7 @@ package body Expanders.Subjects.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename => "obj/subjects_channel_events.xml",
          Ref_Diff => "data/subjects_channel_events.xml.diff",
+         Pre      => Prepare_Channel_Events'Access,
          Expander => Add_Channel_Events'Access);
       Missing_Endpoint;
 --  begin read only

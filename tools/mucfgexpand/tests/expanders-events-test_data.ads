@@ -5,7 +5,7 @@
 
 with AUnit.Test_Fixtures;
 
-with Expanders.Subjects;
+with Expanders.Subjects.Test_Data;
 
 with Test_Utils.Expander;
 

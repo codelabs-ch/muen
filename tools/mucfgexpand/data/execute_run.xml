@@ -478,6 +478,10 @@
   <event mode="kernel" name="system_panic"/>
   <event mode="async" name="data_channel"/>
   <event mode="switch" name="data_channel2"/>
+  <event mode="async" name="chan_array1"/>
+  <event mode="async" name="chan_array2"/>
+  <event mode="async" name="chan_array3"/>
+  <event mode="async" name="chan_array4"/>
   <event mode="kernel" name="tau0_panic"/>
   <event mode="kernel" name="unmask_irq19"/>
   <event mode="kernel" name="unmask_irq20"/>
@@ -1526,20 +1530,20 @@
    <devices>
     <device logical="wlan" physical="wlan1">
      <pci bus="16#00#" device="16#01#" function="0"/>
-     <irq logical="msi_interrupt" physical="msi1" vector="34"/>
+     <irq logical="msi_interrupt" physical="msi1" vector="35"/>
      <memory executable="false" logical="memory" physical="mmio1" virtualAddress="16#d1c0_0000#" writable="true"/>
      <memory executable="false" logical="memory" physical="mmconf" virtualAddress="16#f800_8000#" writable="true"/>
     </device>
     <device logical="nic1" physical="nic1">
      <pci bus="16#00#" device="16#19#" function="0"/>
-     <irq logical="irq" physical="irq" vector="35"/>
+     <irq logical="irq" physical="irq" vector="36"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d252_0000#" writable="true"/>
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d262_0000#" writable="true"/>
      <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#dead_beef#" writable="true"/>
     </device>
     <device logical="nic2" physical="nic2">
      <pci bus="16#00#" device="16#19#" function="1"/>
-     <irq logical="irq" physical="irq" vector="36"/>
+     <irq logical="irq" physical="irq" vector="38"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d272_0000#" writable="true"/>
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d282_0000#" writable="true"/>
     </device>
@@ -1576,10 +1580,12 @@
       <event id="20" logical="foo" physical="foo_subject1"/>
       <event id="1" logical="primary_data" physical="data_channel"/>
       <event id="1" logical="secondary_data" physical="data_channel2"/>
-      <event id="0" logical="unmask_irq_35" physical="unmask_irq20">
+      <event id="16" logical="output1" physical="chan_array3"/>
+      <event id="17" logical="output2" physical="chan_array4"/>
+      <event id="0" logical="unmask_irq_36" physical="unmask_irq20">
        <unmask_irq number="20"/>
       </event>
-      <event id="2" logical="unmask_irq_36" physical="unmask_irq21">
+      <event id="2" logical="unmask_irq_38" physical="unmask_irq21">
        <unmask_irq number="21"/>
       </event>
      </group>
@@ -1754,6 +1760,12 @@
      </event>
      <event id="63" logical="self_reset" physical="foo_subject1">
       <reset/>
+     </event>
+     <event id="2" logical="input1" physical="chan_array1">
+      <inject_interrupt vector="32"/>
+     </event>
+     <event id="3" logical="input2" physical="chan_array2">
+      <inject_interrupt vector="33"/>
      </event>
     </target>
    </events>
@@ -2160,6 +2172,8 @@
       <event id="1" logical="shutdown" physical="system_poweroff">
        <system_poweroff/>
       </event>
+      <event id="32" logical="output1" physical="chan_array1"/>
+      <event id="12" logical="c2" physical="chan_array2"/>
       <event id="0" logical="unmask_irq_34" physical="unmask_irq22">
        <unmask_irq number="22"/>
       </event>
@@ -2168,6 +2182,12 @@
     <target>
      <event id="0" logical="ping_from_lnx" physical="ping_subject2">
       <inject_interrupt vector="32"/>
+     </event>
+     <event id="1" logical="c3" physical="chan_array3">
+      <inject_interrupt vector="128"/>
+     </event>
+     <event id="2" logical="c4" physical="chan_array4">
+      <inject_interrupt vector="129"/>
      </event>
     </target>
    </events>

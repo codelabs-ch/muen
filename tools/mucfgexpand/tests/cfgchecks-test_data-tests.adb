@@ -15,6 +15,7 @@ with System.Assertions;
 --
 --  end read only
 with Mucfgcheck.Validation_Errors;
+with Expanders.Subjects.Test_Data;
 --  begin read only
 --  end read only
 package body Cfgchecks.Test_Data.Tests is
@@ -885,6 +886,7 @@ package body Cfgchecks.Test_Data.Tests is
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
+      Expanders.Subjects.Test_Data.Prepare_Channel_Events (Data => Policy);
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
          XPath => "/system/subjects/subject/channels/writer"
@@ -894,7 +896,7 @@ package body Cfgchecks.Test_Data.Tests is
 
       Channel_Writer_Has_Event_ID (XML_Data => Policy);
       Assert (Condition => Mucfgcheck.Validation_Errors.Contains
-              (Msg =>"Missing 'event' attribute for writer of channel "
+              (Msg => "Missing 'event' attribute for writer of channel "
                & "'data_channel'"),
               Message   => "Exception mismatch");
 --  begin read only
@@ -916,6 +918,7 @@ package body Cfgchecks.Test_Data.Tests is
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
+      Expanders.Subjects.Test_Data.Prepare_Channel_Events (Data => Policy);
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
          XPath => "/system/subjects/subject/channels/reader"

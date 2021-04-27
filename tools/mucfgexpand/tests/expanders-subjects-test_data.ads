@@ -49,4 +49,7 @@ package Expanders.Subjects.Test_Data is
    --  Inject Mugenschedcfg idle subject.
    procedure Inject_Idle_Subject (Data : in out Muxml.XML_Data_Type);
 
+   --  Prepare subject channels for event expansion.
+   procedure Prepare_Channel_Events (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Subjects.Test_Data;

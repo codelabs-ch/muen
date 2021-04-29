@@ -8,6 +8,7 @@
   <boolean name="muenblock_enabled" value="true"/>
   <boolean name="pciconf_emulation_enabled" value="true"/>
   <boolean name="pciconf_emulation_xhci_enabled" value="true"/>
+  <boolean name="example_blk_write" value="true"/>
   <string name="pciconf_emulation_nic_devid" value="16#1f#"/>
   <string name="pciconf_emulation_nic_physdev" value="ethernet_controller_2"/>
   <string name="pciconf_emulation_xhci_devid" value="16#01#"/>

@@ -469,6 +469,106 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Component_Channel_Event (XML_Data : Muxml.XML_Data_Type)
+   is
+      Components    : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/components/component");
+      Phys_Channels : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/channels/channel");
+      Subjects      : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject[component]");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subj_Node     : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Subj_Name     : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+            Comp_Name     : constant String
+              := Muxml.Utils.Get_Attribute
+                (Doc   => Subj_Node,
+                 XPath => "component",
+                 Name  => "ref");
+            Comp_Node     : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Components,
+                 Ref_Attr  => "name",
+                 Ref_Value => Comp_Name);
+            Comp_Channels : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Node,
+                 XPath => "requires/channels/*[self::reader or self::writer]");
+            Channel_Count : constant Natural
+              := DOM.Core.Nodes.Length (Comp_Channels);
+
+            --  Check equality of logical and physical channel event.
+            procedure Check_Channel_Event
+              (Logical_Resource  : DOM.Core.Node;
+               Physical_Resource : DOM.Core.Node);
+
+            ----------------------------------------------------------------
+
+            procedure Check_Channel_Event
+              (Logical_Resource  : DOM.Core.Node;
+               Physical_Resource : DOM.Core.Node)
+            is
+               Log_Has_Event : constant Boolean
+                 := DOM.Core.Elements.Get_Attribute (Elem => Logical_Resource,
+                                                     Name => "event") /= ""
+                 or DOM.Core.Elements.Get_Attribute (Elem => Logical_Resource,
+                                                     Name => "vector") /= "";
+               Log_Channel_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Logical_Resource,
+                    Name => "logical");
+               Phys_Has_Event : constant Boolean
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Physical_Resource,
+                    Name => "hasEvent") /= "";
+               Phys_Channel_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Physical_Resource,
+                    Name => "name");
+            begin
+               if Log_Has_Event and then not Phys_Has_Event then
+                  Mucfgcheck.Validation_Errors.Insert
+                    (Msg   => "Component '"
+                     & Comp_Name & "' referenced by subject '" & Subj_Name
+                     & "' requests logical channel '" & Log_Channel_Name
+                     & "' with" & (if Log_Has_Event then "" else "out")
+                     & " event but mapped physical channel '"
+                     & Phys_Channel_Name & "' has"
+                     & (if Phys_Has_Event then "" else " no") & " event");
+               end if;
+            end Check_Channel_Event;
+         begin
+            if Channel_Count > 0 then
+               Mulog.Log (Msg => "Checking events of" & Channel_Count'Img
+                          & " component '" & Comp_Name & "' channel(s) "
+                          & "referenced by subject '" & Subj_Name & "'");
+
+               Check_Component_Resources
+                 (Logical_Resources  => Comp_Channels,
+                  Physical_Resources => Phys_Channels,
+                  Subject            => Subj_Node,
+                  Check_Resource     => Check_Channel_Event'Access);
+            end if;
+         end;
+      end loop;
+   end Component_Channel_Event;
+
+   -------------------------------------------------------------------------
+
    procedure Component_Channel_Name_Uniqueness
      (XML_Data : Muxml.XML_Data_Type)
    is

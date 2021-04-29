@@ -35,7 +35,7 @@ is
    procedure Self_References (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate that notification entries switch to a subject running on the
-   --  same core.
+   --  same core and in the same scheduling group.
    procedure Switch_Same_Core (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate that target subjects of IPI notification entries run on

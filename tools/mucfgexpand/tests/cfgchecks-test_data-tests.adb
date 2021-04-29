@@ -15,6 +15,8 @@ with System.Assertions;
 --
 --  end read only
 with Mucfgcheck.Validation_Errors;
+with Expanders.Channels;
+with Expanders.Subjects.Test_Data;
 --  begin read only
 --  end read only
 package body Cfgchecks.Test_Data.Tests is
@@ -885,6 +887,7 @@ package body Cfgchecks.Test_Data.Tests is
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
+      Expanders.Subjects.Test_Data.Prepare_Channel_Events (Data => Policy);
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
          XPath => "/system/subjects/subject/channels/writer"
@@ -894,7 +897,7 @@ package body Cfgchecks.Test_Data.Tests is
 
       Channel_Writer_Has_Event_ID (XML_Data => Policy);
       Assert (Condition => Mucfgcheck.Validation_Errors.Contains
-              (Msg =>"Missing 'event' attribute for writer of channel "
+              (Msg => "Missing 'event' attribute for writer of channel "
                & "'data_channel'"),
               Message   => "Exception mismatch");
 --  begin read only
@@ -916,6 +919,7 @@ package body Cfgchecks.Test_Data.Tests is
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
+      Expanders.Subjects.Test_Data.Prepare_Channel_Events (Data => Policy);
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
          XPath => "/system/subjects/subject/channels/reader"
@@ -1582,6 +1586,45 @@ package body Cfgchecks.Test_Data.Tests is
               Message   => "Exception mismatch");
 --  begin read only
    end Test_Component_Channel_Name_Uniqueness;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Component_Channel_Event (Gnattest_T : in out Test);
+   procedure Test_Component_Channel_Event_41519c (Gnattest_T : in out Test) renames Test_Component_Channel_Event;
+--  id:2.2/41519c5a874c2bbf/Component_Channel_Event/1/0/
+   procedure Test_Component_Channel_Event (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Expanders.Components.Add_Channel_Arrays (Data => Policy);
+
+      --  Positive tests, must not raise an exception.
+
+      Component_Channel_Event (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/channels/channel[@name='chan_array1']",
+         Name  => "hasEvent",
+         Value => "");
+
+      Component_Channel_Event (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg => "Component 'c2' referenced by subject 'subject2' "
+               & "requests logical channel 'output1' with event but "
+               & "mapped physical channel 'chan_array1' has no event"),
+              Message   => "Exception mismatch");
+--  begin read only
+   end Test_Component_Channel_Event;
 --  end read only
 
 

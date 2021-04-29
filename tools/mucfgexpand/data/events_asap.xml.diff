@@ -8,14 +8,99 @@
   <event mode="kernel" name="system_panic"/>                                                                                                              <event mode="kernel" name="system_panic"/>
                                                                                                                                                      >    <event mode="async" name="data_channel"/>
                                                                                                                                                      >    <event mode="switch" name="data_channel2"/>
+                                                                                                                                                     >    <event mode="async" name="chan_array1"/>
+                                                                                                                                                     >    <event mode="async" name="chan_array2"/>
+                                                                                                                                                     >    <event mode="async" name="chan_array3"/>
+                                                                                                                                                     >    <event mode="async" name="chan_array4"/>
  </events>                                                                                                                                               </events>
  <channels>                                                                                                                                              <channels>
+--
+      <writer logical="output2"/>                                                                                                                             <writer logical="output2"/>
+     </array>                                                                                                                                                </array>
+                                                                                                                                                     >       <reader logical="input1" size="16#1000#" vector="32" virtualAddress="16#0001_0000#"/>
+                                                                                                                                                     >       <reader logical="input2" size="16#1000#" vector="33" virtualAddress="16#0001_1000#"/>
+                                                                                                                                                     >       <writer event="16" logical="output1" size="16#2000#" virtualAddress="16#0002_0000#"/>
+                                                                                                                                                     >       <writer event="17" logical="output2" size="16#2000#" virtualAddress="16#0002_2000#"/>
+    </channels>                                                                                                                                             </channels>
+    <events>                                                                                                                                                <events>
+--
+    <library ref="l0"/>                                                                                                                                     <library ref="l0"/>
+    <library ref="l1"/>                                                                                                                                     <library ref="l1"/>
+                                                                                                                                                     >      <library ref="l0"/>
+   </depends>                                                                                                                                              </depends>
+                                                                                                                                                     >     <config>
+                                                                                                                                                     >      <string name="library_config_var" value="config_val_l0"/>
+                                                                                                                                                     >     </config>
+   <requires>                                                                                                                                              <requires>
+    <memory>                                                                                                                                                <memory>
+     <memory executable="false" logical="control_data" size="16#2000#" virtualAddress="16#a000#" writable="false"/>                                          <memory executable="false" logical="control_data" size="16#2000#" virtualAddress="16#a000#" writable="false"/>
+    </memory>                                                                                                                                               </memory>
+                                                                                                                                                     >      <memory>
+                                                                                                                                                     >       <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>
+                                                                                                                                                     >       <array elementSize="16#3000#" executable="false" logical="memarray" virtualAddressBase="16#5000_0000#" writable="true">
+                                                                                                                                                     >        <memory logical="mem1"/>
+                                                                                                                                                     >        <memory logical="mem2"/>
+                                                                                                                                                     >       </array>
+                                                                                                                                                     >      </memory>
+    <devices>                                                                                                                                               <devices>
+     <device logical="storage_device">                                                                                                                       <device logical="storage_device">
+--
+      <ioPort end="16#50a7#" logical="port_3" start="16#50a0#"/>                                                                                              <ioPort end="16#50a7#" logical="port_3" start="16#50a0#"/>
+     </device>                                                                                                                                               </device>
+                                                                                                                                                     >       <device logical="some_dev">
+                                                                                                                                                     >        <irq logical="irq" vector="21"/>
+                                                                                                                                                     >        <memory executable="false" logical="mmio1" size="16#0001_0000#" virtualAddress="16#2000_f000#" writable="true"/>
+                                                                                                                                                     >        <ioPort end="16#50c8#" logical="port" start="16#50c0#"/>
+                                                                                                                                                     >       </device>
+    </devices>                                                                                                                                              </devices>
+    <events>                                                                                                                                                <events>
+--
+       <system_poweroff/>                                                                                                                                      <system_poweroff/>
+      </event>                                                                                                                                                </event>
+                                                                                                                                                     >        <event id="20" logical="foo"/>
+     </source>                                                                                                                                               </source>
+     <target>                                                                                                                                                <target>
+--
+       <inject_interrupt vector="37"/>                                                                                                                         <inject_interrupt vector="37"/>
+      </event>                                                                                                                                                </event>
+                                                                                                                                                     >        <event id="63" logical="self_reset">
+                                                                                                                                                     >         <reset/>
+                                                                                                                                                     >        </event>
+     </target>                                                                                                                                               </target>
+    </events>                                                                                                                                               </events>
+                                                                                                                                                     >      <channels>
+                                                                                                                                                     >       <reader logical="chan1" size="16#1000#" virtualAddress="16#2000#"/>
+                                                                                                                                                     >       <array elementSize="16#1000#" logical="input_arr" vectorBase="32" virtualAddressBase="16#0001_0000#">
+                                                                                                                                                     >        <reader logical="input1"/>
+                                                                                                                                                     >        <reader logical="input2"/>
+                                                                                                                                                     >       </array>
+                                                                                                                                                     >       <array elementSize="16#2000#" eventBase="16" logical="output_arr" virtualAddressBase="16#0002_0000#">
+                                                                                                                                                     >        <writer logical="output1"/>
+                                                                                                                                                     >        <writer logical="output2"/>
+                                                                                                                                                     >       </array>
+                                                                                                                                                     >       <reader logical="input1" size="16#1000#" vector="32" virtualAddress="16#0001_0000#"/>
+                                                                                                                                                     >       <reader logical="input2" size="16#1000#" vector="33" virtualAddress="16#0001_1000#"/>
+                                                                                                                                                     >       <writer event="16" logical="output1" size="16#2000#" virtualAddress="16#0002_0000#"/>
+                                                                                                                                                     >       <writer event="17" logical="output2" size="16#2000#" virtualAddress="16#0002_2000#"/>
+                                                                                                                                                     >      </channels>
+   </requires>                                                                                                                                             </requires>
+   <provides>                                                                                                                                              <provides>
+--
+     <reader logical="primary_data" size="16#1000#" virtualAddress="16#3000#"/>                                                                              <reader logical="primary_data" size="16#1000#" virtualAddress="16#3000#"/>
+     <reader logical="secondary_data" size="16#1000#" virtualAddress="16#4000#"/>                                                                            <reader logical="secondary_data" size="16#1000#" virtualAddress="16#4000#"/>
+     <array elementSize="16#1000#" logical="input_arr" eventBase="32" virtualAddressBase="16#0001_0000#">                                            |       <array elementSize="16#1000#" eventBase="32" logical="input_arr" virtualAddressBase="16#0001_0000#">
+      <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
+     </array>                                                                                                                                                </array>
+                                                                                                                                                     >       <writer event="32" logical="output1" size="16#1000#" virtualAddress="16#0001_0000#"/>
+    </channels>                                                                                                                                             </channels>
+    <devices>                                                                                                                                               <devices>
 --
  </components>                                                                                                                                           </components>
  <subjects>                                                                                                                                              <subjects>
   <subject name="lnx">                                                                                                                               |    <subject cpu="0" name="lnx">
-   <memory>                                                                                                                                                <memory>
-    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
+                                                                                                                                                     >     <vcpu/>
+   <bootparams>hostname=lnx</bootparams>                                                                                                                   <bootparams>hostname=lnx</bootparams>
+   <bootparams>debug</bootparams>                                                                                                                          <bootparams>debug</bootparams>
 --
     <target>                                                                                                                                                <target>
      <event logical="handover_from_subject1" physical="handover_to_lnx"/>                                                                                    <event logical="handover_from_subject1" physical="handover_to_lnx"/>
@@ -29,6 +114,8 @@
    <component ref="linux"/>                                                                                                                                <component ref="linux"/>
   </subject>                                                                                                                                              </subject>
   <subject name="subject1">                                                                                                                          |    <subject cpu="0" name="subject1">
+                                                                                                                                                     >     <vcpu/>
+                                                                                                                                                     >     <bootparams/>
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
 --
@@ -36,8 +123,31 @@
       <event id="5" logical="ping" physical="ping_subject2"/>                                                                                                 <event id="5" logical="ping" physical="ping_subject2"/>
                                                                                                                                                      >        <event id="1" logical="primary_data" physical="data_channel"/>
                                                                                                                                                      >        <event id="1" logical="secondary_data" physical="data_channel2"/>
+                                                                                                                                                     >        <event id="16" logical="output1" physical="chan_array3"/>
+                                                                                                                                                     >        <event id="17" logical="output2" physical="chan_array4"/>
      </group>                                                                                                                                                </group>
      <group name="vmx_exit">                                                                                                                                 <group name="vmx_exit">
+--
+      <inject_interrupt vector="32"/>                                                                                                                         <inject_interrupt vector="32"/>
+     </event>                                                                                                                                                </event>
+                                                                                                                                                     >       <event logical="input1" physical="chan_array1">
+                                                                                                                                                     >        <inject_interrupt vector="32"/>
+                                                                                                                                                     >       </event>
+                                                                                                                                                     >       <event logical="input2" physical="chan_array2">
+                                                                                                                                                     >        <inject_interrupt vector="33"/>
+                                                                                                                                                     >       </event>
+    </target>                                                                                                                                               </target>
+   </events>                                                                                                                                               </events>
+--
+    <writer event="1" logical="primary_data" physical="data_channel" virtualAddress="16#3000#"/>                                                            <writer event="1" logical="primary_data" physical="data_channel" virtualAddress="16#3000#"/>
+    <writer event="1" logical="secondary_data" physical="data_channel2" virtualAddress="16#5000#"/>                                                         <writer event="1" logical="secondary_data" physical="data_channel2" virtualAddress="16#5000#"/>
+                                                                                                                                                     >      <reader logical="chan1" physical="data_channel5" size="16#1000#" virtualAddress="16#2000#"/>
+                                                                                                                                                     >      <reader logical="input1" physical="chan_array1" size="16#1000#" vector="32" virtualAddress="16#0001_0000#"/>
+                                                                                                                                                     >      <reader logical="input2" physical="chan_array2" size="16#1000#" vector="33" virtualAddress="16#0001_1000#"/>
+                                                                                                                                                     >      <writer event="16" logical="output1" physical="chan_array3" size="16#2000#" virtualAddress="16#0002_0000#"/>
+                                                                                                                                                     >      <writer event="17" logical="output2" physical="chan_array4" size="16#2000#" virtualAddress="16#0002_2000#"/>
+   </channels>                                                                                                                                             </channels>
+   <monitor>                                                                                                                                               <monitor>
 --
    </component>                                                                                                                                            </component>
   </subject>                                                                                                                                              </subject>
@@ -45,14 +155,69 @@
    <vcpu>                                                                                                                                                  <vcpu>
     <msrs>                                                                                                                                                  <msrs>
 --
+    </msrs>                                                                                                                                                 </msrs>
+   </vcpu>                                                                                                                                                 </vcpu>
+                                                                                                                                                     >     <bootparams/>
+   <memory>                                                                                                                                                <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+--
+      </event>                                                                                                                                                </event>
+     </group>                                                                                                                                                </group>
+                                                                                                                                                     >       <group name="vmcall">
+                                                                                                                                                     >        <event id="32" logical="output1" physical="chan_array1"/>
+                                                                                                                                                     >        <event id="12" logical="c2" physical="chan_array2"/>
+                                                                                                                                                     >       </group>
+    </source>                                                                                                                                               </source>
+    <target>                                                                                                                                                <target>
+--
+      <inject_interrupt vector="32"/>                                                                                                                         <inject_interrupt vector="32"/>
+     </event>                                                                                                                                                </event>
+                                                                                                                                                     >       <event logical="c3" physical="chan_array3">
+                                                                                                                                                     >        <inject_interrupt vector="128"/>
+                                                                                                                                                     >       </event>
+                                                                                                                                                     >       <event logical="c4" physical="chan_array4">
+                                                                                                                                                     >        <inject_interrupt vector="129"/>
+                                                                                                                                                     >       </event>
+    </target>                                                                                                                                               </target>
+   </events>                                                                                                                                               </events>
+   <channels>                                                                                                                                              <channels>
+    <writer logical="c2" physical="chan_array2" virtualAddress="16#0001_4000#" event="12"/>                                                          |      <writer event="12" logical="c2" physical="chan_array2" virtualAddress="16#0001_4000#"/>
+    <reader logical="c3" physical="chan_array3" virtualAddress="16#0001_5000#" vector="128"/>                                                        |      <reader logical="c3" physical="chan_array3" vector="128" virtualAddress="16#0001_5000#"/>
+    <reader logical="c4" physical="chan_array4" virtualAddress="16#0001_7000#" vector="129"/>                                                        |      <reader logical="c4" physical="chan_array4" vector="129" virtualAddress="16#0001_7000#"/>
+                                                                                                                                                     >      <reader logical="primary_data" physical="data_channel3" size="16#1000#" virtualAddress="16#3000#"/>
+                                                                                                                                                     >      <reader logical="secondary_data" physical="data_channel4" size="16#1000#" virtualAddress="16#4000#"/>
+                                                                                                                                                     >      <writer event="32" logical="output1" physical="chan_array1" size="16#1000#" virtualAddress="16#0001_0000#"/>
+   </channels>                                                                                                                                             </channels>
+   <component ref="c2">                                                                                                                                    <component ref="c2">
+--
    </component>                                                                                                                                            </component>
   </subject>                                                                                                                                              </subject>
   <subject name="lnx_core_1">                                                                                                                        |    <subject cpu="1" name="lnx_core_1">
    <vcpu>                                                                                                                                                  <vcpu>
     <registers>                                                                                                                                             <registers>
 --
+    </registers>                                                                                                                                            </registers>
+   </vcpu>                                                                                                                                                 </vcpu>
+                                                                                                                                                     >     <bootparams/>
+   <memory>                                                                                                                                                <memory>
+    <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>                                        <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>
+   </memory>                                                                                                                                               </memory>
+                                                                                                                                                     >     <devices/>
+   <events>                                                                                                                                                <events>
+    <source>                                                                                                                                                <source>
+--
    <sibling ref="lnx"/>                                                                                                                                    <sibling ref="lnx"/>
   </subject>                                                                                                                                              </subject>
   <subject name="subject3">                                                                                                                          |    <subject cpu="0" name="subject3">
+                                                                                                                                                     >     <vcpu/>
+                                                                                                                                                     >     <bootparams/>
+                                                                                                                                                     >     <memory/>
+                                                                                                                                                     >     <devices/>
    <events>                                                                                                                                                <events>
     <source>                                                                                                                                                <source>
+--
+    </source>                                                                                                                                               </source>
+   </events>                                                                                                                                               </events>
+                                                                                                                                                     >     <channels/>
+   <monitor>                                                                                                                                               <monitor>
+    <loader logical="reload" subject="subject3" virtualAddress="16#0000#"/>                                                                                 <loader logical="reload" subject="subject3" virtualAddress="16#0000#"/>

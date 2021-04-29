@@ -1,3 +1,9 @@
+     <reader logical="primary_data" size="16#1000#" virtualAddress="16#3000#"/>                                                                              <reader logical="primary_data" size="16#1000#" virtualAddress="16#3000#"/>
+     <reader logical="secondary_data" size="16#1000#" virtualAddress="16#4000#"/>                                                                            <reader logical="secondary_data" size="16#1000#" virtualAddress="16#4000#"/>
+     <array elementSize="16#1000#" logical="input_arr" eventBase="32" virtualAddressBase="16#0001_0000#">                                            |       <array elementSize="16#1000#" eventBase="32" logical="input_arr" virtualAddressBase="16#0001_0000#">
+      <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
+     </array>                                                                                                                                                </array>
+--
   </component>                                                                                                                                            </component>
  </components>                                                                                                                                           </components>
                                                                                                                                                      >   <kernel>
@@ -16,8 +22,8 @@
                                                                                                                                                      >   </kernel>
  <subjects>                                                                                                                                              <subjects>
   <subject name="lnx">                                                                                                                               |    <subject cpu="0" globalId="1" name="lnx">
-   <memory>                                                                                                                                                <memory>
-    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
+   <bootparams>hostname=lnx</bootparams>                                                                                                                   <bootparams>hostname=lnx</bootparams>
+   <bootparams>debug</bootparams>                                                                                                                          <bootparams>debug</bootparams>
 --
    <component ref="linux"/>                                                                                                                                <component ref="linux"/>
   </subject>                                                                                                                                              </subject>
@@ -30,6 +36,14 @@
   <subject name="subject2">                                                                                                                          |    <subject cpu="1" globalId="3" name="subject2">
    <vcpu>                                                                                                                                                  <vcpu>
     <msrs>                                                                                                                                                  <msrs>
+--
+   </events>                                                                                                                                               </events>
+   <channels>                                                                                                                                              <channels>
+    <writer logical="c2" physical="chan_array2" virtualAddress="16#0001_4000#" event="12"/>                                                          |      <writer event="12" logical="c2" physical="chan_array2" virtualAddress="16#0001_4000#"/>
+    <reader logical="c3" physical="chan_array3" virtualAddress="16#0001_5000#" vector="128"/>                                                        |      <reader logical="c3" physical="chan_array3" vector="128" virtualAddress="16#0001_5000#"/>
+    <reader logical="c4" physical="chan_array4" virtualAddress="16#0001_7000#" vector="129"/>                                                        |      <reader logical="c4" physical="chan_array4" vector="129" virtualAddress="16#0001_7000#"/>
+   </channels>                                                                                                                                             </channels>
+   <component ref="c2">                                                                                                                                    <component ref="c2">
 --
    </component>                                                                                                                                            </component>
   </subject>                                                                                                                                              </subject>

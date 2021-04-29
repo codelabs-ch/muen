@@ -78,6 +78,8 @@ is
       Check_Procs.Register
         (Process => Subject_Event_Exports'Access);
       Check_Procs.Register
+        (Process => Component_Channel_Event'Access);
+      Check_Procs.Register
         (Process => Component_Channel_Size'Access);
       Check_Procs.Register
         (Process => Component_Memory_Size'Access);

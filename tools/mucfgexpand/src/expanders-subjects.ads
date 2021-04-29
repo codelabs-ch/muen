@@ -99,6 +99,9 @@ is
    --  like sinfo are excluded from the merge.
    procedure Add_Sibling_Memory (Data : in out Muxml.XML_Data_Type);
 
+   --  Merge subject bootparams XML elements.
+   procedure Merge_Bootparams (Data : in out Muxml.XML_Data_Type);
+
    --  Remove subject monitor elements.
    procedure Remove_Monitors (Data : in out Muxml.XML_Data_Type);
 

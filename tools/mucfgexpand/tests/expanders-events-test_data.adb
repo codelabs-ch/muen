@@ -27,7 +27,7 @@ package body Expanders.Events.Test_Data is
    is
    begin
       Subjects.Add_CPU_IDs (Data => Data);
-      Subjects.Add_Channel_Events (Data => Data);
+      Subjects.Test_Data.Prepare_Channel_Events (Data => Data);
    end Prepare_Asap_Events;
 
 end Expanders.Events.Test_Data;

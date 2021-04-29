@@ -35,11 +35,13 @@ is
 
    use McKae.XML.XPath.XIA;
 
-   --  Check event destinations of subjects with given notification mode.
+   --  Check event destinations of subjects with given notification mode and
+   --  test function.
    procedure Check_Event_Destination
      (XML_Data  : Muxml.XML_Data_Type;
       Mode      : String;
-      Test      : Test_Function_2;
+      Test      : not null access function
+        (Source, Dest : DOM.Core.Node) return Boolean;
       Error_Msg : String);
 
    -------------------------------------------------------------------------
@@ -47,7 +49,8 @@ is
    procedure Check_Event_Destination
      (XML_Data  : Muxml.XML_Data_Type;
       Mode      : String;
-      Test      : Test_Function_2;
+      Test      : not null access function
+        (Source, Dest : DOM.Core.Node) return Boolean;
       Error_Msg : String)
    is
       Nodes : constant DOM.Core.Node_List
@@ -111,13 +114,13 @@ is
                    (Elem => Dst_Subj,
                     Name => "cpu"));
          begin
-            if not Test (Src_Subj_CPU, Dst_Subj_CPU) then
+            if not Test (Src_Subj, Dst_Subj) then
                Validation_Errors.Insert
                  (Msg => "Destination subject '"
-                  & Dst_Subj_Name & "' (CPU" & Dst_Subj_CPU'Img & ") in "
-                  & "subject's '" & Src_Subj_Name & "' (CPU" & Src_Subj_CPU'Img
-                  & ") " & Mode & " notification '" & Event_Name & "' "
-                  & "invalid - " & Error_Msg);
+                 & Dst_Subj_Name & "' (CPU" & Dst_Subj_CPU'Img & ") in "
+                 & "subject's '" & Src_Subj_Name & "' (CPU" & Src_Subj_CPU'Img
+                 & ") " & Mode & " notification '" & Event_Name & "' "
+                 & "invalid - " & Error_Msg);
             end if;
          end;
       end loop;
@@ -127,10 +130,30 @@ is
 
    procedure IPI_Different_Core (XML_Data : Muxml.XML_Data_Type)
    is
+      --  Returns True if the source and dest subject specify different CPUs.
+      function Has_Different_CPU (Source, Dest : DOM.Core.Node) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Has_Different_CPU (Source, Dest : DOM.Core.Node) return Boolean
+      is
+         Src_Subj_CPU : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => Source,
+                 Name => "cpu"));
+         Dst_Subj_CPU : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => Dest,
+                 Name => "cpu"));
+      begin
+         return Src_Subj_CPU /= Dst_Subj_CPU;
+      end Has_Different_CPU;
    begin
       Check_Event_Destination (XML_Data  => XML_Data,
                                Mode      => "ipi",
-                               Test      => Not_Equals'Access,
+                               Test      => Has_Different_CPU'Access,
                                Error_Msg => "must run on different CPU");
    end IPI_Different_Core;
 
@@ -919,11 +942,49 @@ is
 
    procedure Switch_Same_Core (XML_Data : Muxml.XML_Data_Type)
    is
+      --  Returns True if the source and dest subject specify the same CPU and
+      --  scheduling groups.
+      function Has_Same_CPU_and_Sched_Group
+        (Source, Dest : DOM.Core.Node)
+         return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Has_Same_CPU_and_Sched_Group
+        (Source, Dest : DOM.Core.Node)
+         return Boolean
+      is
+         Src_Subj_CPU : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => Source,
+                 Name => "cpu"));
+         Src_Subj_Sched_Group : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => Source,
+                 Name => "schedGroupId"));
+         Dst_Subj_CPU : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => Dest,
+                 Name => "cpu"));
+         Dst_Subj_Sched_Group : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => Dest,
+                 Name => "schedGroupId"));
+      begin
+         return Src_Subj_CPU = Dst_Subj_CPU
+           and Src_Subj_Sched_Group = Dst_Subj_Sched_Group;
+      end Has_Same_CPU_and_Sched_Group;
    begin
-      Check_Event_Destination (XML_Data  => XML_Data,
-                               Mode      => "switch",
-                               Test      => Equals'Access,
-                               Error_Msg => "must run on the same CPU");
+      Check_Event_Destination
+        (XML_Data  => XML_Data,
+         Mode      => "switch",
+         Test      => Has_Same_CPU_and_Sched_Group'Access,
+         Error_Msg => "must run on the same CPU and be in the "
+         & "same scheduling group");
    end Switch_Same_Core;
 
    -------------------------------------------------------------------------

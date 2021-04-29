@@ -169,7 +169,8 @@
  </components>
  <subjects>
   <subject name="tau0">
-   <bootparams/>
+   <bootparams>First param</bootparams>
+   <bootparams>Second param</bootparams>
    <memory>
     <memory executable="true" logical="text" physical="tau0-text" virtualAddress="16#0000#" writable="false"/>
    </memory>

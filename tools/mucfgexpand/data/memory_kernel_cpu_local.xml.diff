@@ -41,9 +41,15 @@
  </events>                                                                                                                                               </events>
  <channels>                                                                                                                                              <channels>
 --
+     <reader logical="primary_data" size="16#1000#" virtualAddress="16#3000#"/>                                                                              <reader logical="primary_data" size="16#1000#" virtualAddress="16#3000#"/>
+     <reader logical="secondary_data" size="16#1000#" virtualAddress="16#4000#"/>                                                                            <reader logical="secondary_data" size="16#1000#" virtualAddress="16#4000#"/>
+     <array elementSize="16#1000#" logical="input_arr" eventBase="32" virtualAddressBase="16#0001_0000#">                                            |       <array elementSize="16#1000#" eventBase="32" logical="input_arr" virtualAddressBase="16#0001_0000#">
+      <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
+     </array>                                                                                                                                                </array>
+--
  <subjects>                                                                                                                                              <subjects>
   <subject name="lnx">                                                                                                                                    <subject name="lnx">
-                                                                                                                                                     >     <vcpu>
+   <bootparams>hostname=lnx</bootparams>                                                                                                             |     <vcpu>
                                                                                                                                                      >      <vmx>
                                                                                                                                                      >       <controls>
                                                                                                                                                      >        <pin>
@@ -243,9 +249,9 @@
                                                                                                                                                      >       </segments>
                                                                                                                                                      >      </registers>
                                                                                                                                                      >     </vcpu>
-                                                                                                                                                     >     <bootparams>muen_sinfo=0xe00000000 possible_cpus=2</bootparams>
+                                                                                                                                                     >     <bootparams>hostname=lnx muen_sinfo=0xe00000000 possible_cpus=2</bootparams>
+   <bootparams>debug</bootparams>                                                                                                                          <bootparams>debug</bootparams>
    <memory>                                                                                                                                                <memory>
-    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
 --
     <memory executable="false" logical="file_2" physical="dummy_6" virtualAddress="16#0003_0000#" writable="true"/>                                         <memory executable="false" logical="file_2" physical="dummy_6" virtualAddress="16#0003_0000#" writable="true"/>
     <memory executable="false" logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false"/>                                   <memory executable="false" logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false"/>
@@ -683,6 +689,14 @@
                                                                                                                                                      >     <bootparams/>
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+--
+   </events>                                                                                                                                               </events>
+   <channels>                                                                                                                                              <channels>
+    <writer logical="c2" physical="chan_array2" virtualAddress="16#0001_4000#" event="12"/>                                                          |      <writer event="12" logical="c2" physical="chan_array2" virtualAddress="16#0001_4000#"/>
+    <reader logical="c3" physical="chan_array3" virtualAddress="16#0001_5000#" vector="128"/>                                                        |      <reader logical="c3" physical="chan_array3" vector="128" virtualAddress="16#0001_5000#"/>
+    <reader logical="c4" physical="chan_array4" virtualAddress="16#0001_7000#" vector="129"/>                                                        |      <reader logical="c4" physical="chan_array4" vector="129" virtualAddress="16#0001_7000#"/>
+   </channels>                                                                                                                                             </channels>
+   <component ref="c2">                                                                                                                                    <component ref="c2">
 --
   <subject name="lnx_core_1">                                                                                                                             <subject name="lnx_core_1">
    <vcpu>                                                                                                                                                  <vcpu>

@@ -37,6 +37,18 @@ package body Expanders.Subjects.Test_Data is
 
    -------------------------------------------------------------------------
 
+   procedure Prepare_Channel_Events (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Add_Missing_Elements (Data => Data);
+      Components.Add_Library_Resources (Data => Data);
+      Components.Add_Channel_Arrays (Data => Data);
+      Components.Add_Channels (Data => Data);
+      Add_Channel_Events (Data => Data);
+   end Prepare_Channel_Events;
+
+   -------------------------------------------------------------------------
+
    procedure Prepare_Loader_Expansion (Data : in out Muxml.XML_Data_Type)
    is
    begin

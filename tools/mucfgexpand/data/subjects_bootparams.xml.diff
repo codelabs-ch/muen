@@ -1,20 +1,15 @@
-    <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>                                                                 <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
-    <ioPort end="16#50c8#" name="port1" start="16#50c0#"/>                                                                                                  <ioPort end="16#50c8#" name="port1" start="16#50c0#"/>
-    <reservedMemory ref="rmrr2"/>                                                                                                                    <
-   </device>                                                                                                                                               </device>
-   <device name="nic1">                                                                                                                                    <device name="nic1">
---
-    <memory caching="UC" name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#"/>                                                                     <memory caching="UC" name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#"/>
-    <memory caching="UC" name="mmconf" physicalAddress="16#e030_2000#" size="16#1000#"/>                                                                    <memory caching="UC" name="mmconf" physicalAddress="16#e030_2000#" size="16#1000#"/>
-    <reservedMemory ref="rmrr1"/>                                                                                                                    <
-   </device>                                                                                                                                               </device>
-   <device name="nic2">                                                                                                                                    <device name="nic2">
---
      <reader logical="primary_data" size="16#1000#" virtualAddress="16#3000#"/>                                                                              <reader logical="primary_data" size="16#1000#" virtualAddress="16#3000#"/>
      <reader logical="secondary_data" size="16#1000#" virtualAddress="16#4000#"/>                                                                            <reader logical="secondary_data" size="16#1000#" virtualAddress="16#4000#"/>
      <array elementSize="16#1000#" logical="input_arr" eventBase="32" virtualAddressBase="16#0001_0000#">                                            |       <array elementSize="16#1000#" eventBase="32" logical="input_arr" virtualAddressBase="16#0001_0000#">
       <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
      </array>                                                                                                                                                </array>
+--
+ <subjects>                                                                                                                                              <subjects>
+  <subject name="lnx">                                                                                                                                    <subject name="lnx">
+   <bootparams>hostname=lnx</bootparams>                                                                                                             |     <bootparams>hostname=lnx debug</bootparams>
+   <bootparams>debug</bootparams>                                                                                                                    <
+   <memory>                                                                                                                                                <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
 --
    </events>                                                                                                                                               </events>
    <channels>                                                                                                                                              <channels>

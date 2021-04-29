@@ -243,6 +243,7 @@ package body Expanders.Subjects.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename => "obj/subjects_channel_events.xml",
          Ref_Diff => "data/subjects_channel_events.xml.diff",
+         Pre      => Prepare_Channel_Events'Access,
          Expander => Add_Channel_Events'Access);
       Missing_Endpoint;
 --  begin read only
@@ -641,6 +642,25 @@ package body Expanders.Subjects.Test_Data.Tests is
          Expander => Add_Sibling_Memory'Access);
 --  begin read only
    end Test_Add_Sibling_Memory;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Merge_Bootparams (Gnattest_T : in out Test);
+   procedure Test_Merge_Bootparams_8099d9 (Gnattest_T : in out Test) renames Test_Merge_Bootparams;
+--  id:2.2/8099d96b018a8e2b/Merge_Bootparams/1/0/
+   procedure Test_Merge_Bootparams (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename => "obj/subjects_bootparams.xml",
+         Ref_Diff => "data/subjects_bootparams.xml.diff",
+         Expander => Merge_Bootparams'Access);
+--  begin read only
+   end Test_Merge_Bootparams;
 --  end read only
 
 

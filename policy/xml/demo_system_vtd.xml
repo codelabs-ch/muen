@@ -5,6 +5,7 @@
   <boolean name="dbgserver_serial_enabled" value="true"/>
   <boolean name="dbgserver_sink_pcspkr" value="false"/>
   <boolean name="dbgserver_sink_shmem" value="false"/>
+  <boolean name="linux_debug" value="false"/>
   <boolean name="muenblock_enabled" value="true"/>
   <boolean name="pciconf_emulation_enabled" value="true"/>
   <boolean name="pciconf_emulation_xhci_enabled" value="false"/>
@@ -92,6 +93,9 @@
 
   <subject name="nic_linux">
    <bootparams>console=hvc console=ttyS0 pci=noearly hostname=nic_linux</bootparams>
+   <if variable="linux_debug" value="true">
+    <bootparams>debug</bootparams>
+   </if>
    <memory>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
     <if variable="muenblock_enabled" value="true">
@@ -161,6 +165,9 @@
 
   <subject name="storage_linux">
    <bootparams>console=hvc console=ttyS0 pci=noearly hostname=storage_linux</bootparams>
+   <if variable="linux_debug" value="true">
+    <bootparams>debug</bootparams>
+   </if>
    <memory>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
     <if variable="muenblock_enabled" value="true">

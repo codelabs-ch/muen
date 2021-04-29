@@ -283,6 +283,9 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       Assert (Condition => Validation_Errors.Is_Empty,
               Message   => "Unexpected error in positive test");
 
+
+      --  Switch between subjects on different CPUs.
+
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/subjects/subject/events/source/group/"
@@ -293,9 +296,26 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       Switch_Same_Core (XML_Data => Data);
       Assert (Condition => Validation_Errors.Contains
               (Msg => "Destination subject 'linux' (CPU 1) in subject's 'vt' "
-               & "(CPU 0) switch notification 'resume_linux' invalid - "
-               & "must run on the same CPU"),
-              Message   => "Exception mismatch");
+                    & "(CPU 0) switch notification 'resume_linux' invalid - "
+                    & "must run on the same CPU and be in the same scheduling "
+                    & "group"),
+              Message   => "Exception mismatch (1)");
+
+      --  Switch between subjects in different scheduling groups.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='vt']",
+         Name  => "cpu",
+         Value => "1");
+
+      Switch_Same_Core (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Destination subject 'linux' (CPU 1) in subject's 'vt' "
+               & "(CPU 1) switch notification 'resume_linux' invalid - "
+               & "must run on the same CPU and be in the same scheduling "
+               & "group"),
+              Message   => "Exception mismatch (2)");
 --  begin read only
    end Test_Switch_Same_Core;
 --  end read only

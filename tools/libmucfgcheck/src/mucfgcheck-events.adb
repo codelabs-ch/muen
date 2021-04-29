@@ -942,31 +942,49 @@ is
 
    procedure Switch_Same_Core (XML_Data : Muxml.XML_Data_Type)
    is
-      --  Returns True if the source and dest subject specify the same CPUs.
-      function Has_Same_CPU (Source, Dest : DOM.Core.Node) return Boolean;
+      --  Returns True if the source and dest subject specify the same CPU and
+      --  scheduling groups.
+      function Has_Same_CPU_and_Sched_Group
+        (Source, Dest : DOM.Core.Node)
+         return Boolean;
 
       ----------------------------------------------------------------------
 
-      function Has_Same_CPU (Source, Dest : DOM.Core.Node) return Boolean
+      function Has_Same_CPU_and_Sched_Group
+        (Source, Dest : DOM.Core.Node)
+         return Boolean
       is
          Src_Subj_CPU : constant Interfaces.Unsigned_64
            := Interfaces.Unsigned_64'Value
              (DOM.Core.Elements.Get_Attribute
                 (Elem => Source,
                  Name => "cpu"));
+         Src_Subj_Sched_Group : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => Source,
+                 Name => "schedGroupId"));
          Dst_Subj_CPU : constant Interfaces.Unsigned_64
            := Interfaces.Unsigned_64'Value
              (DOM.Core.Elements.Get_Attribute
                 (Elem => Dest,
                  Name => "cpu"));
+         Dst_Subj_Sched_Group : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => Dest,
+                 Name => "schedGroupId"));
       begin
-         return Src_Subj_CPU = Dst_Subj_CPU;
-      end Has_Same_CPU;
+         return Src_Subj_CPU = Dst_Subj_CPU
+           and Src_Subj_Sched_Group = Dst_Subj_Sched_Group;
+      end Has_Same_CPU_and_Sched_Group;
    begin
-      Check_Event_Destination (XML_Data  => XML_Data,
-                               Mode      => "switch",
-                               Test      => Has_Same_CPU'Access,
-                               Error_Msg => "must run on the same CPU");
+      Check_Event_Destination
+        (XML_Data  => XML_Data,
+         Mode      => "switch",
+         Test      => Has_Same_CPU_and_Sched_Group'Access,
+         Error_Msg => "must run on the same CPU and be in the "
+         & "same scheduling group");
    end Switch_Same_Core;
 
    -------------------------------------------------------------------------

@@ -22,7 +22,7 @@ is
    --  Suspend execution of caller for at least Usec microseconds.
    procedure U_Delay (Usec : Natural);
 
-      --  Suspend execution of caller for at least Usec miliseconds.
+   --  Suspend execution of caller for at least Msec miliseconds.
    procedure M_Delay (Msec : Natural);
 
 end Ahci.Delays;

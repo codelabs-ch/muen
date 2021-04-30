@@ -40,6 +40,8 @@ is
          Wait_Owner : loop
             Bohc := Instance.BIOS_HO_Status_Ctrl;
             exit Wait_Owner when Bohc.OOS and not Bohc.BOS;
+
+            pragma Loop_Invariant (not (Bohc.OOS and not Bohc.BOS));
          end loop Wait_Owner;
       end if;
    end Enable;
@@ -59,6 +61,8 @@ is
       Wait_Reset : loop
          Ctrl := Instance.Global_Host_Control;
          exit Wait_Reset when Ctrl.HR = False;
+
+         pragma Loop_Invariant (Ctrl.HR);
       end loop Wait_Reset;
    end Reset;
 

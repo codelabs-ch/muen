@@ -95,16 +95,17 @@ is
        Part_Table : out Partition_Table_Type)
    is
       use type Ahci.Status_Type;
-      Ret           : Ahci.Status_Type;
-      Sig           : Interfaces.Unsigned_16;
-      Sector        : Interfaces.Unsigned_64 := 0;
-      Start_Lba     : Interfaces.Unsigned_64 := 0;
-      Found         : Integer := 0;
-      Stop_Parsing  : Boolean := True;
-      Partition     : Partition_Entry_Type;
-      EBR_Base      : Interfaces.Unsigned_32 := 0;
-      Max_Entries   : Integer := 4;
-      Add_Entry     : Boolean := True;
+
+      Ret          : Ahci.Status_Type;
+      Sig          : Interfaces.Unsigned_16;
+      Sector       : Interfaces.Unsigned_64 := 0;
+      Start_Lba    : Interfaces.Unsigned_64;
+      Found        : Integer;
+      Stop_Parsing : Boolean;
+      Partition    : Partition_Entry_Type;
+      EBR_Base     : Interfaces.Unsigned_32 := 0;
+      Max_Entries  : Integer := 4;
+      Add_Entry    : Boolean;
 
       ---------------------------------------------------------------------
 

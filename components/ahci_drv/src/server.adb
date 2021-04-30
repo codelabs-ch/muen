@@ -364,6 +364,7 @@ is
       Response.Request_Kind := Request.Request_Kind;
       Response.Device_Id    := Request.Device_Id;
       Response.Request_Tag  := Request.Request_Tag;
+      Response.Status_Code  := 0;
 
       case Request.Request_Kind is
          when MB.Media_Blocks =>

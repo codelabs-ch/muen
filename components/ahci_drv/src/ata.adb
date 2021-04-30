@@ -169,6 +169,8 @@ is
        Start   :     Interfaces.Unsigned_64;
        Count   :     Interfaces.Unsigned_32;
        Ret_Val : out Ahci.Status_Type)
+   with
+      SPARK_Mode => Off
    is
       use type Ahci.Unsigned_48;
 
@@ -678,6 +680,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Convert_Ata_String (Src : in out String)
+   with
+      SPARK_Mode => Off
    is
       Tmp  : Character;
       Pos  : Natural          := Src'First;
@@ -696,6 +700,8 @@ is
 
    procedure Identify_Device
       (Port_ID   : Ahci.Port_Range)
+   with
+      SPARK_Mode => Off
    is
       use type Ahci.Unsigned_2;
 

@@ -20,6 +20,8 @@ with System;
 
 with Interfaces;
 
+with Musinfo;
+
 with Ahci_Drv_Component.Devices;
 
 package Ahci.Ports
@@ -47,7 +49,10 @@ is
    procedure Execute
       (ID      :     Port_Range;
        Timeout :     Integer;
-       Success : out Boolean);
+       Success : out Boolean)
+   with
+      Pre => Timeout >= Natural (Musinfo.TSC_Tick_Rate_Khz_Type'First)
+             and Timeout <= Natural (Musinfo.TSC_Tick_Rate_Khz_Type'Last);
 
    --  Test if the port is active (device detected)
    procedure Is_Active
@@ -118,6 +123,10 @@ is
       TFES       at 16#00# range 30 .. 30;
       CPDS       at 16#00# range 31 .. 31;
    end record;
+
+   Null_Port_Interrupt_Status : constant Port_Interrupt_Status_Type
+     := (Reserved_1 => (others => False),
+         others     => False);
 
    type Port_Interrupt_Enable_Type is record
       DHRE       : Boolean;

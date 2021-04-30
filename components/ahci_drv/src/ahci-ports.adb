@@ -19,13 +19,13 @@
 
 with SK.Strings;
 
+with Musinfo.Instance;
+
 with Ahci.Delays;
 
 with Debug_Ops;
 
 with Interfaces;
-
-with Musinfo.Instance;
 
 use type Interfaces.Unsigned_16;
 use type Interfaces.Unsigned_32;
@@ -53,6 +53,8 @@ is
          Instance (ID).SATA_Error := Sata_Error;
       end if;
       if Clear.Intr then
+         Intr_Status := Null_Port_Interrupt_Status;
+
          Intr_Status.DHRS := True;
          Intr_Status.PSS  := True;
          Intr_Status.DSS  := True;
@@ -70,6 +72,7 @@ is
          Instance (ID).Interrupt_Status := Intr_Status;
       end if;
    end Clear_Errors;
+
    -------------------------------------------------------------------------
 
    procedure Enable
@@ -176,8 +179,10 @@ is
       Error            : Boolean;
       Clear            : Clear_Error_Type := (others => False);
       Now              : Interfaces.Unsigned_64;
+      TSC_Sched_End    : constant Interfaces.Unsigned_64
+        := Musinfo.Instance.TSC_Schedule_End;
       End_Time         : constant Interfaces.Unsigned_64
-        := Musinfo.Instance.TSC_Schedule_End +
+        := TSC_Sched_End +
             Musinfo.TSC_Tick_Rate_Khz_Type (Timeout) *
                Musinfo.Instance.TSC_Khz * 1000;
    begin
@@ -322,6 +327,8 @@ is
       for I in Natural range 1 .. 100 loop
          Is_Active (ID, Active);
          exit when Active;
+
+         pragma Loop_Invariant (not Active);
       end loop;
 
    end Spin_Up;
@@ -381,10 +388,9 @@ is
          pragma Debug (Cmd_List_Running, Debug_Ops.Put_Line (
             "Cmd_List_Running enabled"));
          Reset (ID, Success);
-         if not Success then
-            pragma Debug (Debug_Ops.Put_Line ("Unable to reset Port!"));
-            --  TODO: HBA Reset
-         end if;
+         pragma Debug (not Success, Debug_Ops.Put_Line
+                       ("Unable to reset Port!"));
+         --  TODO: HBA Reset
       end if;
    end Stop;
 

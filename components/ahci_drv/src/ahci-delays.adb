@@ -31,18 +31,26 @@ is
    --  scaled by given unit.
    procedure Sleep
      (Amount : Interfaces.Unsigned_64;
-      Unit   : Interfaces.Unsigned_64);
+      Unit   : Interfaces.Unsigned_64)
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
    --  Returns Timestamp counter frequency in Hz.
-   function TSC_Hz return Interfaces.Unsigned_64;
+   function TSC_Hz return Interfaces.Unsigned_64
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
    --  Suspend execution of caller until the given deadline specified in TSC
    --  ticks has passed.
-   procedure Sleep_Until (Deadline : Interfaces.Unsigned_64);
+   procedure Sleep_Until (Deadline : Interfaces.Unsigned_64)
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
    -------------------------------------------------------------------------
 
    procedure M_Delay (Msec : Natural)
+   with
+      SPARK_Mode => Off
    is
    begin
       Sleep (Amount => Interfaces.Unsigned_64 (Msec),
@@ -54,6 +62,8 @@ is
    procedure Sleep
      (Amount : Interfaces.Unsigned_64;
       Unit   : Interfaces.Unsigned_64)
+   with
+      SPARK_Mode => Off
    is
       Now   : constant Interfaces.Unsigned_64
         := Musinfo.Instance.TSC_Schedule_End;
@@ -66,6 +76,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Sleep_Until (Deadline : Interfaces.Unsigned_64)
+   with
+      SPARK_Mode => Off
    is
       Now : Interfaces.Unsigned_64;
    begin
@@ -84,6 +96,8 @@ is
    -------------------------------------------------------------------------
 
    procedure U_Delay (Usec : Natural)
+   with
+      SPARK_Mode => Off
    is
    begin
       Sleep (Amount => Interfaces.Unsigned_64 (Usec),

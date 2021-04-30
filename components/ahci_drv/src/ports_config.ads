@@ -81,11 +81,11 @@ package Ports_Config is
          Devices  => (
             Device'(Ahci_Port => Device_ID, Partition => No_Partition),
             others => Null_Device)),
-   Port_Config_Type'(
-      Chan_Idx => 1,
-      Devices  => (
-         Device'(Ahci_Port => Device_ID, Partition => 2),
-         others => Null_Device))
-         );
+       Port_Config_Type'(
+          Chan_Idx => 1,
+          Devices  => (
+             Device'(Ahci_Port => Device_ID, Partition => 4),
+             others => Null_Device))
+      );
 
 end Ports_Config;

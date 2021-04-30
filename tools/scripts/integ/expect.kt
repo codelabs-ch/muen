@@ -69,4 +69,7 @@ serial.out;Pciconf 16#0008#: MSI(X) cap ID 16#05# @ offset 16#80#
 serial.out;Pciconf 16#0008#: Registering xHCI handoff quirk for vendor 16#8086# device 16#1e31# class 16#000c0330#
 serial.out;64 bytes from 192.168.254.1: seq=.* ttl=.* time=.* ms
 serial.out;MUENBLOCKINTEGPASSED
+serial.out;example: Wrote 16#00040000# bytes in.* ticks
+serial.out;example: Read 16#00040000# bytes in.* ticks
+serial.out;example: Muenblock example done
 serial.out;*** '.*/integtest_kt' DONE

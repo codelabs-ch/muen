@@ -29,6 +29,7 @@ COMPONENTS_SPARK := \
 
 # components to proof
 COMPONENTS_PROOF := \
+	ahci_drv \
 	controller \
 	dm \
 	sm \

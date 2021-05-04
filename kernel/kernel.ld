@@ -25,7 +25,6 @@ SECTIONS
 	.text :
 	{
 		image_start = .;
-		KEEP (multiboot.o(.multiboot))
 		*(.text .text.*)
 		trampoline_src = .;
 	}

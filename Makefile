@@ -35,7 +35,7 @@ tau0: policy-compile rts
 tau0_static:	## Build system resource manager Tau0
 	$(MAKE) -C components $@
 
-pack:		## Build and create Muen system image (Multiboot)
+pack:		## Build and create Muen system image
 pack: kernel tau0 tau0_static components
 	$(MAKE) -C $@
 

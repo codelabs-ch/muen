@@ -14,7 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with Mucfgcheck.Validation_Errors;
 --  begin read only
 --  end read only
 package body Mucfgcheck.Memory.Test_Data.Tests is
@@ -49,18 +49,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "name",
          Value => "foobar");
 
-      begin
-         VMXON_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VMXON region 'kernel_0|vmxon' for logical CPU 0 not "
-                    & "found",
-                    Message   => "Exception mismatch");
-      end;
+      VMXON_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VMXON region 'kernel_0|vmxon' for logical CPU 0 not "
+               & "found"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_VMXON_Region_Presence;
 --  end read only
@@ -86,18 +79,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "size",
          Value => "16#0001_0012#");
 
-      begin
-         VMXON_Region_Size (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'size => 16#0001_0012#' of 'kernel_0|vmxon' "
-                    & "VMXON memory element not 4K",
-                    Message   => "Exception mismatch");
-      end;
+      VMXON_Region_Size (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Attribute 'size => 16#0001_0012#' of 'kernel_0|vmxon' "
+               & "VMXON memory element not 4K"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_VMXON_Region_Size;
 --  end read only
@@ -123,18 +109,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "physicalAddress",
          Value => "16#0010_0000#");
 
-      begin
-         VMXON_In_Lowmem (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'physicalAddress => 16#0010_0000#' of "
-                    & "'kernel_1|vmxon' VMXON memory element not below 1 MiB",
-                    Message   => "Exception mismatch");
-      end;
+      VMXON_In_Lowmem (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Attribute 'physicalAddress => 16#0010_0000#' of "
+               & "'kernel_1|vmxon' VMXON memory element not below 1 MiB"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_VMXON_In_Lowmem;
 --  end read only
@@ -160,18 +139,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "physicalAddress",
          Value => "16#a000#");
 
-      begin
-         VMXON_Consecutiveness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Memory region 'kernel_0|vmxon' not adjacent to other"
-                    & " VMXON regions",
-                    Message   => "Exception mismatch");
-      end;
+      VMXON_Consecutiveness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Memory region 'kernel_0|vmxon' not adjacent to other"
+               & " VMXON regions"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_VMXON_Consecutiveness;
 --  end read only
@@ -195,6 +167,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       VMCS_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Missing VMCS region.
 
@@ -204,17 +178,10 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "name",
          Value => "foobar");
 
-      begin
-         VMCS_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VMCS region 'linux|vmcs' for subject 'linux' not found",
-                    Message   => "Exception mismatch");
-      end;
+      VMCS_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VMCS region 'linux|vmcs' for subject 'linux' not found"),
+              Message   => "Exception mismatch");
 
       --  VMCS region with incorrect region type.
 
@@ -224,17 +191,10 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "type",
          Value => "system");
 
-      begin
-         VMCS_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VMCS region 'vt|vmcs' for subject 'vt' not found",
-                    Message   => "Exception mismatch");
-      end;
+      VMCS_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VMCS region 'vt|vmcs' for subject 'vt' not found"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_VMCS_Region_Presence;
 --  end read only
@@ -260,18 +220,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "size",
          Value => "16#0001_0013#");
 
-      begin
-         VMCS_Region_Size (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'size => 16#0001_0013#' of 'sm|vmcs' "
-                    & "VMCS memory element not 4K",
-                    Message   => "Exception mismatch");
-      end;
+      VMCS_Region_Size (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Attribute 'size => 16#0001_0013#' of 'sm|vmcs' "
+               & "VMCS memory element not 4K"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_VMCS_Region_Size;
 --  end read only
@@ -297,18 +250,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "name",
          Value => "kernel_1|vmxon");
 
-      begin
-         Physical_Memory_Name_Uniqueness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Multiple physical memory regions with name"
-                    & " 'kernel_1|vmxon'",
-                    Message   => "Exception mismatch");
-      end;
+      Physical_Memory_Name_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Multiple physical memory regions with name"
+               & " 'kernel_1|vmxon'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Physical_Memory_Name_Uniqueness;
 --  end read only
@@ -332,6 +278,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Physical_Memory_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Invalid kernel memory reference.
 
@@ -347,10 +295,10 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical memory 'kernel_text' referenced by logical "
-                    & "memory 'text' not found",
+            when Validation_Errors.Validation_Error =>
+            Assert (Condition => Validation_Errors.Contains
+                    (Msg => "Physical memory 'kernel_text' referenced by logical "
+                     & "memory 'text' not found"),
                     Message   => "Exception mismatch");
       end;
 
@@ -368,10 +316,10 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical memory 'linux|ram' referenced by logical "
-                    & "memory 'linux|ram' not found",
+         when Validation_Errors.Validation_Error =>
+            Assert (Condition => Validation_Errors.Contains
+                    (Msg => "Physical memory 'linux|ram' referenced by logical "
+                     & "memory 'linux|ram' not found"),
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -399,18 +347,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "physicalAddress",
          Value => "16#0010_0023#");
 
-      begin
-         Physical_Address_Alignment (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical address of memory region 'kernel_text' does "
-                    & "not honor alignment 16#1000#",
-                    Message   => "Exception mismatch");
-      end;
+      Physical_Address_Alignment (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Physical address of memory region 'kernel_text' does "
+               & "not honor alignment 16#1000#"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Physical_Address_Alignment;
 --  end read only
@@ -436,18 +377,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "virtualAddress",
          Value => "16#000e_0500#");
 
-      begin
-         Virtual_Address_Alignment (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'virtualAddress => 16#000e_0500#' of 'binary'"
-                    & " logical memory element not page aligned",
-                    Message   => "Exception mismatch");
-      end;
+      Virtual_Address_Alignment (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Attribute 'virtualAddress => 16#000e_0500#' of 'binary'"
+               & " logical memory element not page aligned"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Virtual_Address_Alignment;
 --  end read only
@@ -471,6 +405,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Region_Size (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Set invalid memory region size.
 
@@ -480,18 +416,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "size",
          Value => "16#0042#");
 
-      begin
-         Region_Size (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'size => 16#0042#' of 'kernel_text' physical "
-                    & "memory element not multiple of page size (4K)",
-                    Message   => "Exception mismatch");
-      end;
+      Region_Size (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Attribute 'size => 16#0042#' of 'kernel_text' physical "
+               & "memory element not multiple of page size (4K)"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Region_Size;
 --  end read only
@@ -515,44 +444,31 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Entity_Name_Encoding (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
-      begin
-         Muxml.Utils.Set_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/memory/memory[@name='kernel_0|vmxon']",
-            Name  => "name",
-            Value => "kernel_5|vmxon");
-         Entity_Name_Encoding (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='kernel_0|vmxon']",
+         Name  => "name",
+         Value => "kernel_5|vmxon");
+      Entity_Name_Encoding (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Entity 'kernel_5' encoded in memory region "
+               & "'kernel_5|vmxon' does not exist or is invalid"),
+              Message   => "Exception mismatch (1)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Entity 'kernel_5' encoded in memory region "
-                    & "'kernel_5|vmxon' does not exist or is invalid",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='kernel_5|vmxon']",
+         Name  => "name",
+         Value => "kernel_31|vmxon");
 
-      Multidigit_Kernel_Entity :
-      begin
-         Muxml.Utils.Set_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/memory/memory[@name='kernel_5|vmxon']",
-            Name  => "name",
-            Value => "kernel_31|vmxon");
-
-         Entity_Name_Encoding (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Entity 'kernel_31' encoded in memory region "
-                    & "'kernel_31|vmxon' does not exist or is invalid",
-                    Message   => "Exception mismatch (2)");
-      end Multidigit_Kernel_Entity;
+      Entity_Name_Encoding (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Entity 'kernel_31' encoded in memory region "
+               & "'kernel_31|vmxon' does not exist or is invalid"),
+              Message   => "Exception mismatch (2)");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -560,9 +476,13 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "cpuCores",
          Value => "32");
 
+      Validation_Errors.Clear;
+
       --  Valid kernel CPU number encoding, must not raise an exception.
 
       Entity_Name_Encoding (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 --  begin read only
    end Test_Entity_Name_Encoding;
 --  end read only
@@ -589,18 +509,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
             Name  => "size",
             Value => "16#1000_0000#");
 
-         begin
-            Physical_Memory_Overlap (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Overlap of physical or device memory region "
-                       & "'linux|ram' and 'kernel_text'",
-                       Message   => "Exception mismatch");
-         end;
+         Physical_Memory_Overlap (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Overlap of physical or device memory region "
+                  & "'linux|ram' and 'kernel_text'"),
+                 Message   => "Exception mismatch");
       end;
 
       declare
@@ -615,18 +528,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
             Name  => "physicalAddress",
             Value => "16#000b_7000#");
 
-         begin
-            Physical_Memory_Overlap (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Overlap of physical or device memory region "
-                       & "'kernel_text' and 'buffer'",
-                       Message   => "Exception mismatch");
-         end;
+         Physical_Memory_Overlap (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Overlap of physical or device memory region "
+                  & "'kernel_text' and 'buffer'"),
+                 Message   => "Exception mismatch");
       end;
 --  begin read only
    end Test_Physical_Memory_Overlap;
@@ -652,6 +558,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Uncached_Crash_Audit_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Node := Muxml.Utils.Get_Element
         (Doc   => Data.Doc,
@@ -661,34 +569,20 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "caching",
          Value => "WC");
 
-      begin
-         Uncached_Crash_Audit_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Crash audit region caching is WC instead of UC",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Uncached_Crash_Audit_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Crash audit region caching is WC instead of UC"),
+              Message   => "Exception mismatch (1)");
 
       Node := DOM.Core.Nodes.Remove_Child
         (N         => Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
             XPath => "/system/memory"),
          Old_Child => Node);
-      begin
-         Uncached_Crash_Audit_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "One crash audit region expected, found 0",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Uncached_Crash_Audit_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "One crash audit region expected, found 0"),
+              Message   => "Exception mismatch (2)");
 --  begin read only
    end Test_Uncached_Crash_Audit_Presence;
 --  end read only
@@ -712,6 +606,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Crash_Audit_After_Image (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -719,18 +615,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "physicalAddress",
          Value => "16#2000#");
 
-      begin
-         Crash_Audit_After_Image (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Crash audit region @16#2000# within system image with "
-                    & "end address 16#cafe_6000#",
-                    Message   => "Exception mismatch");
-      end;
+      Crash_Audit_After_Image (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Crash audit region @16#2000# within system image with "
+               & "end address 16#cafe_6000#"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Crash_Audit_After_Image;
 --  end read only
@@ -754,6 +643,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Kernel_Data_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -761,18 +652,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "name",
          Value => "foobar");
 
-      begin
-         Kernel_Data_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Kernel data region 'kernel_data_0' for logical CPU 0"
-                    & " not found",
-                    Message   => "Exception mismatch");
-      end;
+      Kernel_Data_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Kernel data region 'kernel_data_0' for logical CPU 0"
+               & " not found"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Kernel_Data_Region_Presence;
 --  end read only
@@ -796,6 +680,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Kernel_BSS_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -803,18 +689,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "name",
          Value => "foobar");
 
-      begin
-         Kernel_BSS_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Kernel BSS region 'kernel_bss_0' for logical CPU 0"
-                    & " not found",
-                    Message   => "Exception mismatch");
-      end;
+      Kernel_BSS_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Kernel BSS region 'kernel_bss_0' for logical CPU 0"
+               & " not found"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Kernel_BSS_Region_Presence;
 --  end read only
@@ -840,18 +719,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "name",
          Value => "foobar");
 
-      begin
-         Kernel_Stack_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Kernel stack region 'kernel_stack_0' for logical CPU 0"
-                    & " not found",
-                    Message   => "Exception mismatch");
-      end;
+      Kernel_Stack_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Kernel stack region 'kernel_stack_0' for logical CPU 0"
+               & " not found"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Kernel_Stack_Region_Presence;
 --  end read only
@@ -875,6 +747,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Kernel_Intr_Stack_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -882,18 +756,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "name",
          Value => "foobar");
 
-      begin
-         Kernel_Intr_Stack_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Kernel interrupt stack region "
-                    & "'kernel_interrupt_stack_0' for logical CPU 0 not found",
-                    Message   => "Exception mismatch");
-      end;
+      Kernel_Intr_Stack_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Kernel interrupt stack region "
+               & "'kernel_interrupt_stack_0' for logical CPU 0 not found"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Kernel_Intr_Stack_Region_Presence;
 --  end read only
@@ -919,18 +786,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "name",
          Value => "foobar");
 
-      begin
-         Kernel_PT_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Kernel pagetable region 'kernel_0|pt' for logical CPU 0"
-                    & " not found",
-                    Message   => "Exception mismatch");
-      end;
+      Kernel_PT_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Kernel pagetable region 'kernel_0|pt' for logical CPU 0"
+               & " not found"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Kernel_PT_Region_Presence;
 --  end read only
@@ -956,18 +816,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "physicalAddress",
          Value => "16#0001_0000_0000#");
 
-      begin
-         Kernel_PT_Below_4G (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Kernel PT region 'kernel_0|pt' for logical CPU 0 not "
-                    & "below 4G",
-                    Message   => "Exception mismatch");
-      end;
+      Kernel_PT_Below_4G (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Kernel PT region 'kernel_0|pt' for logical CPU 0 not "
+               & "below 4G"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Kernel_PT_Below_4G;
 --  end read only
@@ -991,6 +844,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Kernel_Sched_Group_Info_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Kernel scheduling group info mapping with wrong virtual base
       --  address.
@@ -1001,19 +856,12 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          & "[@physical='scheduling_group_info_4']",
          Name  => "virtualAddress",
          Value => "16#beef_0000#");
-      begin
-         Kernel_Sched_Group_Info_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Kernel mapping for info region of scheduling group 4 at"
-                    & " unexpected kernel virtual address 16#beef_0000#, "
-                    & "should be 16#00a0_3000#",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Kernel_Sched_Group_Info_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Kernel mapping for info region of scheduling group 4 at"
+               & " unexpected kernel virtual address 16#beef_0000#, "
+               & "should be 16#00a0_3000#"),
+              Message   => "Exception mismatch (1)");
 
       --  Kernel and scheduling group of different CPU.
 
@@ -1022,18 +870,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='tau0']",
          Name  => "cpu",
          Value => "0");
-      begin
-         Kernel_Sched_Group_Info_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Info region of scheduling group 4 mapped by kernel "
-                    & "running on CPU 3, should be CPU 0",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Kernel_Sched_Group_Info_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Info region of scheduling group 4 mapped by kernel "
+               & "running on CPU 3, should be CPU 0"),
+              Message   => "Exception mismatch (2)");
 
       --  Multiple kernel scheduling group info mappings.
 
@@ -1042,18 +883,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          XPath => "/system/kernel/memory/cpu/memory[@physical='vt|state']",
          Name  => "physical",
          Value => "scheduling_group_info_4");
-      begin
-         Kernel_Sched_Group_Info_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (3)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Info region of scheduling group 4 has multiple "
-                    & "kernel mappings: 2",
-                    Message   => "Exception mismatch (3)");
-      end;
+      Kernel_Sched_Group_Info_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Info region of scheduling group 4 has multiple "
+               & "kernel mappings: 2"),
+              Message   => "Exception mismatch (3)");
 
       --  Missing kernel scheduling group info mapping.
 
@@ -1068,15 +902,10 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
             Old_Child => Node);
 
          Kernel_Sched_Group_Info_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (4)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "No kernel mapping for info region of scheduling group"
-                    & " 1",
-                    Message   => "Exception mismatch (4)");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "No kernel mapping for info region of scheduling group"
+                  & " 1"),
+                 Message   => "Exception mismatch (4)");
       end;
 --  begin read only
    end Test_Kernel_Sched_Group_Info_Mappings;
@@ -1101,6 +930,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Subject_State_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Missing subject state region.
 
@@ -1110,18 +941,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "name",
          Value => "foobar");
 
-      begin
-         Subject_State_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject state region 'vt|state' with size 16#1000# for "
-                    & "subject 'vt' not found",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Subject_State_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject state region 'vt|state' with size "
+               & "16#1000# for subject 'vt' not found"),
+              Message   => "Exception mismatch (1)");
 
       --  Subject state region with incorrect region type.
 
@@ -1131,18 +955,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "type",
          Value => "subject");
 
-      begin
-         Subject_State_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject state region 'tau0|state' with size 16#1000# "
-                    & "for subject 'tau0' not found",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Subject_State_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject state region 'tau0|state' with size "
+               & "16#1000# for subject 'tau0' not found"),
+              Message   => "Exception mismatch (2)");
 --  begin read only
    end Test_Subject_State_Region_Presence;
 --  end read only
@@ -1166,6 +983,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Subject_Interrupts_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Missing subject interrupts region.
 
@@ -1175,18 +994,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "name",
          Value => "foobar");
 
-      begin
-         Subject_Interrupts_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject interrupts region 'linux|interrupts' with size "
-                    & "16#1000# for subject 'linux' not found",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Subject_Interrupts_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject interrupts region 'linux|interrupts' with size "
+               & "16#1000# for subject 'linux' not found"),
+              Message   => "Exception mismatch (1)");
 
       --  Subject interrupts region with incorrect region type.
 
@@ -1196,18 +1008,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "type",
          Value => "subject");
 
-      begin
-         Subject_Interrupts_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject interrupts region 'tau0|interrupts' with size "
-                    & "16#1000# for subject 'tau0' not found",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Subject_Interrupts_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject interrupts region 'tau0|interrupts' with size "
+               & "16#1000# for subject 'tau0' not found"),
+              Message   => "Exception mismatch (2)");
 --  begin read only
    end Test_Subject_Interrupts_Region_Presence;
 --  end read only
@@ -1233,18 +1038,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "type",
          Value => "kernel");
 
-      begin
-         Kernel_Memory_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Kernel memory region 'vt|bin' mapped by logical memory "
-                    & "region 'binary' of subject 'vt'",
-                    Message   => "Exception mismatch");
-      end;
+      Kernel_Memory_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Kernel memory region 'vt|bin' mapped by logical memory "
+               & "region 'binary' of subject 'vt'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Kernel_Memory_Mappings;
 --  end read only
@@ -1270,18 +1068,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "type",
          Value => "system");
 
-      begin
-         System_Memory_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "System memory region 'vt|bin' is mapped by logical "
-                    & "memory region 'binary'",
-                    Message   => "Exception mismatch");
-      end;
+      System_Memory_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "System memory region 'vt|bin' is mapped by logical "
+               & "memory region 'binary'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_System_Memory_Mappings;
 --  end read only
@@ -1305,6 +1096,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Device_Memory_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -1312,18 +1105,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "type",
          Value => "device_rmrr");
 
-      begin
-         Device_Memory_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Device memory region 'vt|bin' is mapped by logical "
-                    & "memory region 'binary' (Owner name: 'subjects')",
-                    Message   => "Exception mismatch");
-      end;
+      Device_Memory_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Device memory region 'vt|bin' is mapped by logical "
+               & "memory region 'binary' (Owner name: 'subjects')"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Device_Memory_Mappings;
 --  end read only
@@ -1347,6 +1133,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Subject_State_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Kernel subject state mappings with different virtual base addresses.
 
@@ -1355,19 +1143,12 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          XPath => "/system/kernel/memory/cpu/memory[@logical='linux|state']",
          Name  => "virtualAddress",
          Value => "16#cafe_0000#");
-      begin
-         Subject_State_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject state memory region 'linux|state' mapped at "
-                    & "unexpected kernel virtual address 16#cafe_0000#, should"
-                    & " be 16#001e_4000#",
-                    Message   => "Exception mismatch");
-      end;
+      Subject_State_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject state memory region 'linux|state' mapped at "
+               & "unexpected kernel virtual address 16#cafe_0000#, should"
+               & " be 16#001e_4000#"),
+              Message   => "Exception mismatch");
 
       --  Kernel and subject with different CPU.
 
@@ -1376,19 +1157,12 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']",
          Name  => "cpu",
          Value => "0");
-      begin
-         Subject_State_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject state memory region 'linux|state' mapped by "
-                    & "kernel and subject 'linux' with different CPU ID: "
-                    & "1 /= 0",
-                    Message   => "Exception mismatch");
-      end;
+      Subject_State_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject state memory region 'linux|state' mapped by "
+               & "kernel and subject 'linux' with different CPU ID: "
+               & "1 /= 0"),
+              Message   => "Exception mismatch");
 
       --  Multiple kernel subject state mappings.
 
@@ -1398,18 +1172,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          & "'sm|timed_event']",
          Name  => "physical",
          Value => "vt|state");
-      begin
-         Subject_State_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject state memory region 'vt|state' has multiple "
-                    & "kernel mappings: 2",
-                    Message   => "Exception mismatch");
-      end;
+      Subject_State_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject state memory region 'vt|state' has multiple "
+               & "kernel mappings: 2"),
+              Message   => "Exception mismatch");
 
       --  No kernel subject state mapping.
 
@@ -1424,18 +1191,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          XPath => "/system/kernel/memory/cpu/memory[@logical='vt|state']",
          Name  => "physical",
          Value => "nonexistent");
-      begin
-         Subject_State_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject state memory region 'vt|state' is not mapped by"
-                    & " any kernel",
-                    Message   => "Exception mismatch");
-      end;
+      Subject_State_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject state memory region 'vt|state' is not mapped by"
+               & " any kernel"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Subject_State_Mappings;
 --  end read only
@@ -1459,6 +1219,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Subject_Interrupts_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Kernel subject interrupts mapping with wrong virtual base addresses.
 
@@ -1468,20 +1230,12 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          & "[@logical='sm|interrupts']",
          Name  => "virtualAddress",
          Value => "16#beef_0000#");
-      begin
-         Subject_Interrupts_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject interrupts memory region 'sm|interrupts' mapped"
-                    & " at unexpected kernel virtual address 16#beef_0000#,"
-                    & " should be 16#0060_3000#",
-                    Message   => "Exception mismatch (1)");
-      end;
-
+      Subject_Interrupts_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject interrupts memory region 'sm|interrupts' mapped"
+               & " at unexpected kernel virtual address 16#beef_0000#,"
+               & " should be 16#0060_3000#"),
+              Message   => "Exception mismatch (1)");
 
       --  Kernel and subject with different CPU.
 
@@ -1490,19 +1244,12 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='sm']",
          Name  => "cpu",
          Value => "0");
-      begin
-         Subject_Interrupts_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject interrupts memory region 'sm|interrupts' "
-                    & "mapped by kernel and subject 'sm' with different "
-                    & "CPU ID: 1 /= 0",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Subject_Interrupts_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject interrupts memory region 'sm|interrupts' "
+               & "mapped by kernel and subject 'sm' with different "
+               & "CPU ID: 1 /= 0"),
+              Message   => "Exception mismatch (2)");
 
       --  Multiple kernel subject interrupt mappings.
 
@@ -1511,18 +1258,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          XPath => "/system/kernel/memory/cpu/memory[@physical='vt|state']",
          Name  => "physical",
          Value => "sm|interrupts");
-      begin
-         Subject_Interrupts_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (3)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject interrupts memory region 'sm|interrupts' has "
-                    & "multiple kernel mappings: 2",
-                    Message   => "Exception mismatch (3)");
-      end;
+      Subject_Interrupts_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject interrupts memory region 'sm|interrupts' has "
+               & "multiple kernel mappings: 2"),
+              Message   => "Exception mismatch (3)");
 
       --  Missing kernel subject interrupts mapping.
 
@@ -1537,15 +1277,10 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
             Old_Child => Node);
 
          Subject_Interrupts_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (4)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject interrupts memory region 'vt|interrupts' is "
-                    & "not mapped by any kernel",
-                    Message   => "Exception mismatch (4)");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Subject interrupts memory region 'vt|interrupts' is "
+                  & "not mapped by any kernel"),
+                 Message   => "Exception mismatch (4)");
       end;
 --  begin read only
    end Test_Subject_Interrupts_Mappings;
@@ -1570,6 +1305,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Subject_MSR_Store_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Kernel subject MSR store mapping with wrong virtual base addresses.
 
@@ -1579,20 +1316,12 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          & "[@logical='linux|msrstore']",
          Name  => "virtualAddress",
          Value => "16#beef_0000#");
-      begin
-         Subject_MSR_Store_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject MSR store memory region 'linux|msrstore' mapped"
-                    & " at unexpected kernel virtual address 16#beef_0000#,"
-                    & " should be 16#0080_4000#",
-                    Message   => "Exception mismatch (1)");
-      end;
-
+      Subject_MSR_Store_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject MSR store memory region 'linux|msrstore' mapped"
+               & " at unexpected kernel virtual address 16#beef_0000#,"
+               & " should be 16#0080_4000#"),
+              Message   => "Exception mismatch (1)");
 
       --  Kernel and subject with different CPU.
 
@@ -1601,19 +1330,12 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']",
          Name  => "cpu",
          Value => "0");
-      begin
-         Subject_MSR_Store_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject MSR store memory region 'linux|msrstore' "
-                    & "mapped by kernel and subject 'linux' with different "
-                    & "CPU ID: 1 /= 0",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Subject_MSR_Store_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject MSR store memory region 'linux|msrstore' "
+               & "mapped by kernel and subject 'linux' with different "
+               & "CPU ID: 1 /= 0"),
+              Message   => "Exception mismatch (2)");
 
       --  Multiple kernel subject MSR store mappings.
 
@@ -1622,18 +1344,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          XPath => "/system/kernel/memory/cpu/memory[@physical='vt|state']",
          Name  => "physical",
          Value => "linux|msrstore");
-      begin
-         Subject_MSR_Store_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (3)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject MSR store memory region 'linux|msrstore' has "
-                    & "multiple kernel mappings: 2",
-                    Message   => "Exception mismatch (3)");
-      end;
+      Subject_MSR_Store_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject MSR store memory region 'linux|msrstore' has "
+               & "multiple kernel mappings: 2"),
+              Message   => "Exception mismatch (3)");
 
       --  Missing kernel subject MSR store mapping.
 
@@ -1648,15 +1363,10 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
             Old_Child => Node);
 
          Subject_MSR_Store_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (4)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject MSR store memory region 'time|msrstore' is "
-                    & "not mapped by any kernel",
-                    Message   => "Exception mismatch (4)");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Subject MSR store memory region 'time|msrstore' is "
+                  & "not mapped by any kernel"),
+                 Message   => "Exception mismatch (4)");
       end;
 --  begin read only
    end Test_Subject_MSR_Store_Mappings;
@@ -1681,6 +1391,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Subject_Timed_Event_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Kernel timed event mappings with different virtual base addresses.
 
@@ -1690,19 +1402,12 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          & "linux|timed_event']",
          Name  => "virtualAddress",
          Value => "16#ffff_f000#");
-      begin
-         Subject_Timed_Event_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Timed event memory region 'linux|timed_event' mapped at"
-                    & " unexpected kernel virtual address 16#ffff_f000#,"
-                    & " should be 16#0040_4000#",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Subject_Timed_Event_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Timed event memory region 'linux|timed_event' mapped at"
+               & " unexpected kernel virtual address 16#ffff_f000#,"
+               & " should be 16#0040_4000#"),
+               Message   => "Exception mismatch (1)");
 
       --  Kernel and subject with different CPU.
 
@@ -1711,19 +1416,12 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']",
          Name  => "cpu",
          Value => "0");
-      begin
-         Subject_Timed_Event_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Timed event memory region 'linux|timed_event' mapped by"
-                    & " kernel and subject 'linux' with different CPU ID:"
-                    & " 1 /= 0",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Subject_Timed_Event_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Timed event memory region 'linux|timed_event' mapped by"
+               & " kernel and subject 'linux' with different CPU ID:"
+               & " 1 /= 0"),
+              Message   => "Exception mismatch (2)");
 
       --  Multiple kernel timed event mappings.
 
@@ -1732,18 +1430,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          XPath => "/system/kernel/memory/cpu/memory[@physical='vt|state']",
          Name  => "physical",
          Value => "sm|timed_event");
-      begin
-         Subject_Timed_Event_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (3)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Timed event memory region 'sm|timed_event' has multiple"
-                    & " kernel mappings: 2",
-                    Message   => "Exception mismatch (3)");
-      end;
+      Subject_Timed_Event_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Timed event memory region 'sm|timed_event' has multiple"
+               & " kernel mappings: 2"),
+              Message   => "Exception mismatch (3)");
 
       --  No kernel timed event mapping.
 
@@ -1758,18 +1449,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          XPath => "/system/kernel/memory/cpu/memory[@logical='vt|state']",
          Name  => "physical",
          Value => "nonexistent");
-      begin
-         Subject_Timed_Event_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (4)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Timed event memory region 'sm|timed_event' is not"
-                    & " mapped by any kernel",
-                    Message   => "Exception mismatch (4)");
-      end;
+      Subject_Timed_Event_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Timed event memory region 'sm|timed_event' is not"
+               & " mapped by any kernel"),
+              Message   => "Exception mismatch (4)");
 --  begin read only
    end Test_Subject_Timed_Event_Mappings;
 --  end read only
@@ -1793,6 +1477,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Subject_VMCS_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Kernel subject VMCS mappings with different virtual base addresses.
 
@@ -1801,19 +1487,12 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          XPath => "/system/kernel/memory/cpu/memory[@logical='linux|vmcs']",
          Name  => "virtualAddress",
          Value => "16#cafe_0000#");
-      begin
-         Subject_VMCS_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VMCS memory region 'linux|vmcs' mapped at unexpected "
-                    & "kernel virtual address 16#cafe_0000#, should be "
-                    & "16#002e_4000#",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Subject_VMCS_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VMCS memory region 'linux|vmcs' mapped at unexpected "
+               & "kernel virtual address 16#cafe_0000#, should be "
+               & "16#002e_4000#"),
+              Message   => "Exception mismatch (1)");
 
       --  Kernel and subject with different CPU.
 
@@ -1822,19 +1501,12 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']",
          Name  => "cpu",
          Value => "0");
-      begin
-         Subject_VMCS_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-    exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VMCS memory region 'linux|vmcs' mapped by "
-                    & "kernel and subject 'linux' with different CPU ID: "
-                    & "1 /= 0",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Subject_VMCS_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VMCS memory region 'linux|vmcs' mapped by "
+               & "kernel and subject 'linux' with different CPU ID: "
+               & "1 /= 0"),
+              Message   => "Exception mismatch (2)");
 
       --  Multiple kernel subject VMCS mappings.
 
@@ -1844,18 +1516,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          & "'sm|timed_event']",
          Name  => "physical",
          Value => "vt|vmcs");
-      begin
-         Subject_VMCS_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (3)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VMCS memory region 'vt|vmcs' has multiple kernel "
-                    & "mappings: 2",
-                    Message   => "Exception mismatch (3)");
-      end;
+      Subject_VMCS_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VMCS memory region 'vt|vmcs' has multiple kernel "
+               & "mappings: 2"),
+              Message   => "Exception mismatch (3)");
 
       --  No kernel subject VMCS mapping.
 
@@ -1870,18 +1535,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          XPath => "/system/kernel/memory/cpu/memory[@logical='vt|vmcs']",
          Name  => "physical",
          Value => "nonexistent");
-      begin
-         Subject_VMCS_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (4)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VMCS memory region 'vt|vmcs' is not mapped by"
-                    & " any kernel",
-                    Message   => "Exception mismatch (4)");
-      end;
+      Subject_VMCS_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VMCS memory region 'vt|vmcs' is not mapped by"
+               & " any kernel"),
+              Message   => "Exception mismatch (4)");
 --  begin read only
    end Test_Subject_VMCS_Mappings;
 --  end read only
@@ -1905,6 +1563,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Subject_FPU_State_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Kernel subject FPU state mappings with different virtual base
       --  addresses.
@@ -1914,19 +1574,12 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          XPath => "/system/kernel/memory/cpu/memory[@logical='linux|fpu']",
          Name  => "virtualAddress",
          Value => "16#cafe_0000#");
-      begin
-         Subject_FPU_State_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject FPU state memory region 'linux|fpu' mapped at "
-                    & "unexpected kernel virtual address 16#cafe_0000#, should"
-                    & " be 16#00b0_4000#",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Subject_FPU_State_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject FPU state memory region 'linux|fpu' mapped at "
+               & "unexpected kernel virtual address 16#cafe_0000#, should"
+               & " be 16#00b0_4000#"),
+              Message   => "Exception mismatch (1)");
 
       --  Kernel and subject with different CPU.
 
@@ -1935,19 +1588,12 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']",
          Name  => "cpu",
          Value => "0");
-      begin
-         Subject_FPU_State_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-    exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject FPU state memory region 'linux|fpu' mapped by "
-                    & "kernel and subject 'linux' with different CPU ID: "
-                    & "1 /= 0",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Subject_FPU_State_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject FPU state memory region 'linux|fpu' mapped by "
+               & "kernel and subject 'linux' with different CPU ID: "
+               & "1 /= 0"),
+              Message   => "Exception mismatch (2)");
 
       --  Multiple kernel subject FPU state mappings.
 
@@ -1957,18 +1603,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          & "'sm|timed_event']",
          Name  => "physical",
          Value => "vt|fpu");
-      begin
-         Subject_FPU_State_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (3)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject FPU state memory region 'vt|fpu' has multiple "
-                    & "kernel mappings: 2",
-                    Message   => "Exception mismatch (3)");
-      end;
+      Subject_FPU_State_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject FPU state memory region 'vt|fpu' has multiple "
+               & "kernel mappings: 2"),
+              Message   => "Exception mismatch (3)");
 
       --  No kernel subject FPU state mapping.
 
@@ -1983,18 +1622,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          XPath => "/system/kernel/memory/cpu/memory[@logical='vt|fpu']",
          Name  => "physical",
          Value => "nonexistent");
-      begin
-         Subject_FPU_State_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (4)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject FPU state memory region 'vt|fpu' is not mapped "
-                    & "by any kernel",
-                    Message   => "Exception mismatch (4)");
-      end;
+      Subject_FPU_State_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject FPU state memory region 'vt|fpu' is not mapped "
+               & "by any kernel"),
+              Message   => "Exception mismatch (4)");
 --  begin read only
    end Test_Subject_FPU_State_Mappings;
 --  end read only
@@ -2018,6 +1650,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Subject_FPU_State_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Missing subject FPU state region.
 
@@ -2027,18 +1661,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "name",
          Value => "foobar");
 
-      begin
-         Subject_FPU_State_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject fpu region 'linux|fpu' with size 16#1000# for "
-                    & "subject 'linux' not found",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Subject_FPU_State_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject fpu region 'linux|fpu' with size 16#1000# "
+               & "for subject 'linux' not found"),
+              Message   => "Exception mismatch (1)");
 
       --  Subject FPU state region with incorrect region type.
 
@@ -2048,18 +1675,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "type",
          Value => "subject");
 
-      begin
-         Subject_FPU_State_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject fpu region 'tau0|fpu' with size 16#1000# for "
-                    & "subject 'tau0' not found",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Subject_FPU_State_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject fpu region 'tau0|fpu' with size 16#1000# "
+               & "for subject 'tau0' not found"),
+              Message   => "Exception mismatch (2)");
 --  begin read only
    end Test_Subject_FPU_State_Region_Presence;
 --  end read only
@@ -2083,6 +1703,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Subject_Timed_Event_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Missing subject timed event region.
 
@@ -2092,18 +1714,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "name",
          Value => "foobar");
 
-      begin
-         Subject_Timed_Event_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject timed_event region 'vt|timed_event' with size "
-                    & "16#1000# for subject 'vt' not found",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Subject_Timed_Event_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject timed_event region 'vt|timed_event' with "
+               & "size 16#1000# for subject 'vt' not found"),
+              Message   => "Exception mismatch (1)");
 
       --  Subject timed event region with incorrect region type.
 
@@ -2113,18 +1728,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "type",
          Value => "subject");
 
-      begin
-         Subject_Timed_Event_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject timed_event region 'tau0|timed_event' with size"
-                    & " 16#1000# for subject 'tau0' not found",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Subject_Timed_Event_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject timed_event region 'tau0|timed_event' "
+               & "with size 16#1000# for subject 'tau0' not found"),
+              Message   => "Exception mismatch (2)");
 --  begin read only
    end Test_Subject_Timed_Event_Region_Presence;
 --  end read only
@@ -2148,6 +1756,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Subject_IOBM_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Missing subject IOBM state region.
 
@@ -2157,18 +1767,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "name",
          Value => "foobar");
 
-      begin
-         Subject_IOBM_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject iobm region 'linux|iobm' with size 16#2000# for"
-                    & " subject 'linux' not found",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Subject_IOBM_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject iobm region 'linux|iobm' with size "
+               & "16#2000# for subject 'linux' not found"),
+              Message   => "Exception mismatch (1)");
 
       --  Subject IOBM region with incorrect region size.
 
@@ -2178,18 +1781,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "size",
          Value => "16#1000#");
 
-      begin
-         Subject_IOBM_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject iobm region 'time|iobm' with size 16#2000# for"
-                    & " subject 'time' not found",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Subject_IOBM_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject iobm region 'time|iobm' with size "
+               & "16#2000# for subject 'time' not found"),
+              Message   => "Exception mismatch (2)");
 
       --  Subject IOBM region with incorrect region type.
 
@@ -2199,18 +1795,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "type",
          Value => "subject");
 
-      begin
-         Subject_IOBM_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (3)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject iobm region 'tau0|iobm' with size 16#2000# for"
-                    & " subject 'tau0' not found",
-                    Message   => "Exception mismatch (3)");
-      end;
+      Subject_IOBM_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject iobm region 'tau0|iobm' with size "
+               & "16#2000# for subject 'tau0' not found"),
+              Message   => "Exception mismatch (3)");
 --  begin read only
    end Test_Subject_IOBM_Region_Presence;
 --  end read only
@@ -2234,6 +1823,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Subject_MSRBM_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Missing subject MSRBM state region.
 
@@ -2243,18 +1834,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "name",
          Value => "foobar");
 
-      begin
-         Subject_MSRBM_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject msrbm region 'linux|msrbm' with size 16#1000# "
-                    & "for subject 'linux' not found",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Subject_MSRBM_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject msrbm region 'linux|msrbm' with size 16#1000# "
+               & "for subject 'linux' not found"),
+              Message   => "Exception mismatch (1)");
 
       --  Subject MSRBM region with incorrect region type.
 
@@ -2264,18 +1848,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "type",
          Value => "subject");
 
-      begin
-         Subject_MSRBM_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject msrbm region 'tau0|msrbm' with size 16#1000# "
-                    & "for subject 'tau0' not found",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Subject_MSRBM_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject msrbm region 'tau0|msrbm' with size 16#1000# "
+               & "for subject 'tau0' not found"),
+              Message   => "Exception mismatch (2)");
 --  begin read only
    end Test_Subject_MSRBM_Region_Presence;
 --  end read only
@@ -2299,6 +1876,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Subject_MSR_Store_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Missing subject MSR store region.
 
@@ -2308,18 +1887,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "name",
          Value => "foobar");
 
-      begin
-         Subject_MSR_Store_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject MSR store region 'linux|msrstore' with size "
-                    & "16#1000# for subject 'linux' not found",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Subject_MSR_Store_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject MSR store region 'linux|msrstore' with size "
+               & "16#1000# for subject 'linux' not found"),
+              Message   => "Exception mismatch (1)");
 
       --  Subject MSR store region with incorrect size.
 
@@ -2334,18 +1906,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "size",
          Value => "16#0000#");
 
-      begin
-         Subject_MSR_Store_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject MSR store region 'linux|msrstore' with size "
-                    & "16#1000# for subject 'linux' not found",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Subject_MSR_Store_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject MSR store region 'linux|msrstore' with size "
+               & "16#1000# for subject 'linux' not found"),
+              Message   => "Exception mismatch (2)");
 
       --  Subject MSR store region with incorrect region type.
 
@@ -2360,18 +1925,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "type",
          Value => "subject");
 
-      begin
-         Subject_MSR_Store_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (3)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject MSR store region 'linux|msrstore' with size "
-                    & "16#1000# for subject 'linux' not found",
-                    Message   => "Exception mismatch (3)");
-      end;
+      Subject_MSR_Store_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject MSR store region 'linux|msrstore' with size "
+               & "16#1000# for subject 'linux' not found"),
+              Message   => "Exception mismatch (3)");
 --  begin read only
    end Test_Subject_MSR_Store_Region_Presence;
 --  end read only
@@ -2395,6 +1953,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Scheduling_Group_Info_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Missing sched group info region.
 
@@ -2404,18 +1964,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "name",
          Value => "foobar");
 
-      begin
-         Scheduling_Group_Info_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Scheduling group info region of scheduling group 1 not"
-                    & " found",
-                    Message   => "Exception mismatch");
-      end;
+      Scheduling_Group_Info_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Scheduling group info region of scheduling group 1 not"
+               & " found"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Scheduling_Group_Info_Region_Presence;
 --  end read only
@@ -2439,6 +1992,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Subject_Sched_Group_Info_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Missing scheduling group info region mapping.
 
@@ -2449,18 +2004,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "physical",
          Value => "foobar");
 
-      begin
-         Subject_Sched_Group_Info_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'vt' has no mapping for info region of "
-                    & "scheduling group 1",
-                    Message   => "Exception mismatch");
-      end;
+      Subject_Sched_Group_Info_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject 'vt' has no mapping for info region of "
+               & "scheduling group 1"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Subject_Sched_Group_Info_Mappings;
 --  end read only
@@ -2484,6 +2032,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       VTd_Root_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -2491,18 +2041,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "size",
          Value => "16#0012#");
 
-      begin
-         VTd_Root_Region_Size (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'size => 16#0012#' of 'vtd_root' VT-d root "
-                    & "table element not 4K",
-                    Message   => "Exception mismatch");
-      end;
+      VTd_Root_Region_Size (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Attribute 'size => 16#0012#' of 'vtd_root' VT-d root "
+               & "table element not 4K"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_VTd_Root_Region_Size;
 --  end read only
@@ -2528,18 +2071,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "size",
          Value => "16#002a#");
 
-      begin
-         VTd_Context_Region_Size (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'size => 16#002a#' of 'vtd_context_bus_3' VT-d "
-                    & "context table element not 4K",
-                    Message   => "Exception mismatch");
-      end;
+      VTd_Context_Region_Size (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Attribute 'size => 16#002a#' of 'vtd_context_bus_3' VT-d "
+               & "context table element not 4K"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_VTd_Context_Region_Size;
 --  end read only
@@ -2565,17 +2101,10 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "type",
          Value => "subject");
 
-      begin
-         VTd_Root_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VT-d root table memory region not found",
-                    Message   => "Exception mismatch");
-      end;
+      VTd_Root_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VT-d root table memory region not found"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_VTd_Root_Region_Presence;
 --  end read only
@@ -2599,6 +2128,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       VTd_IRT_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -2606,17 +2137,10 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Name  => "type",
          Value => "subject");
 
-      begin
-         VTd_IRT_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VT-d interrupt remapping table memory region not found",
-                    Message   => "Exception mismatch");
-      end;
+      VTd_IRT_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VT-d interrupt remapping table memory region not found"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_VTd_IRT_Region_Presence;
 --  end read only

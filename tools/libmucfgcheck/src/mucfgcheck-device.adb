@@ -31,6 +31,7 @@ with Mutools.Match;
 with Mutools.XML_Utils;
 
 with Mucfgcheck.Utils;
+with Mucfgcheck.Validation_Errors;
 
 package body Mucfgcheck.Device
 is
@@ -91,9 +92,10 @@ is
             Name => "name");
       begin
          if Left_Name = Right_Name then
-            raise Validation_Error with "Device '" & Dev_Name & "' has"
-              & " multiple " & Resource_Type & "s with name '"
-              & Left_Name & "'";
+            Validation_Errors.Insert
+              (Msg => "Device '" & Dev_Name & "' has"
+               & " multiple " & Resource_Type & "s with name '"
+               & Left_Name & "'");
          end if;
       end Check_Names;
    begin
@@ -155,9 +157,10 @@ is
               := DOM.Core.Nodes.Length (List => IRQs);
          begin
             if Length > Count then
-               raise Validation_Error with "Device '" & Dev_Name & "' "
-                 & "specifies more than" & Count'Img & " " & IRQ_Kind
-                 & " IRQ(s)";
+               Validation_Errors.Insert
+                 (Msg => "Device '" & Dev_Name & "' "
+                  & "specifies more than" & Count'Img & " " & IRQ_Kind
+                  & " IRQ(s)");
             elsif Length /= 0 then
                Check_Attribute
                  (Nodes     => IRQs,
@@ -212,11 +215,17 @@ is
    procedure Device_Memory_References (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          Log_Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
@@ -228,9 +237,11 @@ is
            (Elem => Node,
             Name => "physical");
       begin
-         return "Physical device memory '" & Phys_Name
-           & "' referenced by logical device memory '" & Logical_Name
-           & "' of logical device '" & Log_Dev_Name & "' not found";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Physical device memory '" & Phys_Name
+            & "' referenced by logical device memory '" & Logical_Name
+            & "' of logical device '" & Log_Dev_Name & "' not found");
+         Fatal := True;
       end Error_Msg;
    begin
       For_Each_Match
@@ -279,9 +290,10 @@ is
                  (Elem => Cur_Subject,
                   Name => "name");
             begin
-               raise Validation_Error with "Logical PCI devices '" & Left_Name
-                 & "' and '" & Right_Name & "' of subject '"
-                 & Subj_Name & "' have identical BDF";
+               Validation_Errors.Insert
+                 (Msg => "Logical PCI devices '" & Left_Name
+                  & "' and '" & Right_Name & "' of subject '"
+                  & Subj_Name & "' have identical BDF");
             end;
          end if;
       end Check_Inequality;
@@ -352,9 +364,11 @@ is
                  (Elem => Cur_Subject,
                   Name => "name");
             begin
-               raise Validation_Error with "Logical devices '" & Left_Logical
-                 & "' and '" & Right_Logical & "' of subject '" & Subj_Name
-                 & "' reference same physical device '" & Left_Physical & "'";
+               Validation_Errors.Insert
+                 (Msg => "Logical devices '" & Left_Logical & "' and '"
+                  & Right_Logical & "' of subject '" & Subj_Name
+                  & "' reference same physical device '"
+                  & Left_Physical & "'");
             end;
          end if;
       end Check_Inequality;
@@ -416,14 +430,15 @@ is
                           Level => 3),
                        Name => "name");
                begin
-                  raise Validation_Error with "Logical PCI device '"
-                    & Log_Dev_Name & "' of subject '" & Subj_Name
-                    & "' specifies invalid bus number "
-                    & Mutools.Utils.To_Hex
-                    (Number     => Bus_Nr,
-                     Normalize  => True,
-                     Byte_Short => True)
-                    & " should be 16#00#";
+                  Validation_Errors.Insert
+                    (Msg => "Logical PCI device '"
+                     & Log_Dev_Name & "' of subject '" & Subj_Name
+                     & "' specifies invalid bus number "
+                     & Mutools.Utils.To_Hex
+                       (Number     => Bus_Nr,
+                        Normalize  => True,
+                        Byte_Short => True)
+                     & " should be 16#00#");
                end;
             end if;
          end;
@@ -435,11 +450,17 @@ is
    procedure IO_Port_References (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          Log_Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
@@ -451,9 +472,11 @@ is
            (Elem => Node,
             Name => "physical");
       begin
-         return "Physical I/O port '" & Phys_Name
-           & "' referenced by logical I/O port '" & Logical_Name
-           & "' of logical device '" & Log_Dev_Name & "' not found";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Physical I/O port '" & Phys_Name
+            & "' referenced by logical I/O port '" & Logical_Name
+            & "' of logical device '" & Log_Dev_Name & "' not found");
+         Fatal := True;
       end Error_Msg;
    begin
       For_Each_Match
@@ -504,8 +527,10 @@ is
                Name => "logical");
          begin
             if S_Addr > E_Addr then
-               raise Validation_Error with "I/O port '" & Name & Logical_Name
-                 & "' start " & S_Addr_Str & " larger than end " & E_Addr_Str;
+               Validation_Errors.Insert
+                 (Msg => "I/O port '" & Name & Logical_Name
+                  & "' start " & S_Addr_Str & " larger than end "
+                  & E_Addr_Str);
             end if;
          end;
       end loop;
@@ -556,9 +581,10 @@ is
                    (Elem => DOM.Core.Nodes.Parent_Node (N => Right),
                     Name => "name");
             begin
-               raise Validation_Error with "Devices '" & Left_Dev_Name
-                 & "' and '" & Right_Dev_Name & "' have overlapping I/O "
-                 & "port(s)";
+               Validation_Errors.Insert
+                 (Msg => "Devices '" & Left_Dev_Name
+                  & "' and '" & Right_Dev_Name & "' have overlapping I/O "
+                  & "port(s)");
             end;
          end if;
       end Check_Inequality;
@@ -650,10 +676,11 @@ is
                     Ref_Value => Phys_Name);
             begin
                if Phys_Dev = null then
-                  raise Validation_Error with "Logical " & Device_Type
-                    & " device '" & Log_Name & "' of subject '" & Subj_Name
-                    & "' references physical non-" & Device_Type
-                    & " device '" & Phys_Name & "'";
+                  Validation_Errors.Insert
+                    (Msg => "Logical " & Device_Type
+                     & " device '" & Log_Name & "' of subject '" & Subj_Name
+                     & "' references physical non-" & Device_Type
+                     & " device '" & Phys_Name & "'");
                end if;
             end;
          end loop;
@@ -690,8 +717,9 @@ is
                    (Elem => DOM.Core.Nodes.Parent_Node (N => Right),
                     Name => "name");
             begin
-               raise Validation_Error with "PCI devices '" & Left_Name
-                 & "' and '" & Right_Name & "' have identical BDF";
+               Validation_Errors.Insert
+                 (Msg => "PCI devices '" & Left_Name
+                  & "' and '" & Right_Name & "' have identical BDF");
             end;
          end if;
       end Check_Inequality;
@@ -783,10 +811,11 @@ is
                                (Elem => Prev_Phys_Node,
                                 Name => "name");
                         begin
-                           raise Validation_Error with "Physical devices '"
-                             & Prev_Phys_Name & "' and '" & Phys_Name & "' are"
-                             & " part of a PCI multi-function device and must "
-                             & "be assigned to the same subject";
+                           Validation_Errors.Insert
+                             (Msg => "Physical devices '"
+                              & Prev_Phys_Name & "' and '" & Phys_Name
+                              & "' are part of a PCI multi-function device "
+                              & "and must be assigned to the same subject");
                         end;
                      end if;
 
@@ -801,18 +830,19 @@ is
                                (Elem => Prev_Log_Node,
                                 Name => "logical");
                         begin
-                           raise Validation_Error with "Logical devices '"
-                             & Prev_Log_Name & "' and '" & Log_Name & "' are"
-                             & " part of a PCI multi-function device and must"
-                             & " have the same logical device number: "
-                             & Mutools.Utils.To_Hex
-                             (Number     => Interfaces.Unsigned_64
-                                (Prev_Log_Dev),
-                              Byte_Short => True) & " /= "
-                             & Mutools.Utils.To_Hex
-                             (Number     => Interfaces.Unsigned_64
-                                (Log_Dev_Nr),
-                              Byte_Short => True);
+                           Validation_Errors.Insert
+                             (Msg => "Logical devices '"
+                              & Prev_Log_Name & "' and '" & Log_Name & "' are"
+                              & " part of a PCI multi-function device and must"
+                              & " have the same logical device number: "
+                              & Mutools.Utils.To_Hex
+                                (Number     => Interfaces.Unsigned_64
+                                     (Prev_Log_Dev),
+                                 Byte_Short => True) & " /= "
+                              & Mutools.Utils.To_Hex
+                                (Number     => Interfaces.Unsigned_64
+                                     (Log_Dev_Nr),
+                                 Byte_Short => True));
                         end;
                      end if;
                   end if;
@@ -860,8 +890,9 @@ is
             Name => "name");
       begin
          if Left_Name = Right_Name then
-            raise Validation_Error with "Multiple physical devices, aliases or"
-              & " classes with name '" & Left_Name & "'";
+            Validation_Errors.Insert
+              (Msg => "Multiple physical devices, aliases or"
+               & " classes with name '" & Left_Name & "'");
          end if;
       end Check_Inequality;
    begin
@@ -884,11 +915,17 @@ is
    procedure Physical_Device_References (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          Logical_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
@@ -897,12 +934,14 @@ is
            (Elem => Node,
             Name => "physical");
       begin
-         return "Physical device '" & Phys_Name & "' referenced by logical"
-           & " device '" & Logical_Name & "' not found";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Physical device '" & Phys_Name & "' referenced by logical"
+            & " device '" & Logical_Name & "' not found");
+         Fatal := True;
       end Error_Msg;
    begin
       For_Each_Match (XML_Data     => XML_Data,
-                      Source_XPath => "//device[@physical]",
+                      Source_XPath => "//device[@physical and @logical]",
                       Ref_XPath    => "/system/hardware/devices/device",
                       Log_Message  => "physical device reference(s)",
                       Error        => Error_Msg'Access,
@@ -972,14 +1011,20 @@ is
            & "[pci/@msi='true' and count(irq) > 1]");
 
       --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       --  Returns True if the left and right numbers are adjacent.
       function Is_Adjacent_Number (Left, Right : DOM.Core.Node) return Boolean;
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
@@ -988,8 +1033,10 @@ is
            (Elem => Node,
             Name => "name");
       begin
-         return "MSI IRQ '" & IRQ_Name & "' of physical device '" & Dev_Name
-           & "' not adjacent to other IRQs";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("MSI IRQ '" & IRQ_Name & "' of physical device '" & Dev_Name
+            & "' not adjacent to other IRQs");
+         Fatal := False;
       end Error_Msg;
 
       ----------------------------------------------------------------------
@@ -1033,11 +1080,17 @@ is
    procedure Physical_IRQ_References (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          Log_Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
@@ -1049,9 +1102,11 @@ is
            (Elem => Node,
             Name => "physical");
       begin
-         return "Physical IRQ '" & Phys_Name & "' referenced by logical IRQ '"
-           & Logical_Name & "' of logical device '" & Log_Dev_Name
-           & "' not found";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Physical IRQ '" & Phys_Name & "' referenced by logical IRQ '"
+            & Logical_Name & "' of logical device '" & Log_Dev_Name
+            & "' not found");
+         Fatal := False;
       end Error_Msg;
    begin
       For_Each_Match
@@ -1108,12 +1163,14 @@ is
          if Left_Number = Right_Number then
             if Left_Dev_Name = Right_Dev_Name and then Left_Name = Right_Name
             then
-               raise Validation_Error with "Multiple assignment of IRQ '"
-                 & Left_Dev_Name & "->" & Left_Name & "'";
+               Validation_Errors.Insert
+                 (Msg => "Multiple assignment of IRQ '"
+                  & Left_Dev_Name & "->" & Left_Name & "'");
             else
-               raise Validation_Error with "Devices '" & Left_Dev_Name
-                 & "' and '" & Right_Dev_Name & "' share IRQ"
-                 & Left_Number'Img;
+               Validation_Errors.Insert
+                 (Msg => "Devices '" & Left_Dev_Name
+                  & "' and '" & Right_Dev_Name & "' share IRQ"
+                  & Left_Number'Img);
             end if;
          end if;
       end Check_Inequality;

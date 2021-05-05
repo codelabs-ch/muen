@@ -28,6 +28,8 @@ with Mulog;
 with Muxml.Utils;
 with Mutools.Types;
 
+with Mucfgcheck.Validation_Errors;
+
 package body Mucfgcheck.Events
 is
 
@@ -110,11 +112,12 @@ is
                     Name => "cpu"));
          begin
             if not Test (Src_Subj_CPU, Dst_Subj_CPU) then
-               raise Validation_Error with "Destination subject '"
-                 & Dst_Subj_Name & "' (CPU" & Dst_Subj_CPU'Img & ") in "
-                 & "subject's '" & Src_Subj_Name & "' (CPU" & Src_Subj_CPU'Img
-                 & ") " & Mode & " notification '" & Event_Name & "' "
-                 & "invalid - " & Error_Msg;
+               Validation_Errors.Insert
+                 (Msg => "Destination subject '"
+                  & Dst_Subj_Name & "' (CPU" & Dst_Subj_CPU'Img & ") in "
+                  & "subject's '" & Src_Subj_Name & "' (CPU" & Src_Subj_CPU'Img
+                  & ") " & Mode & " notification '" & Event_Name & "' "
+                  & "invalid - " & Error_Msg);
             end if;
          end;
       end loop;
@@ -185,9 +188,10 @@ is
                           Level => 4),
                        Name => "name");
                begin
-                  raise Validation_Error with "Kernel-mode source event '"
-                    & Ev_Logical & "' of subject '" & Subj_Name & "' does not"
-                    & " specify mandatory event action";
+                  Validation_Errors.Insert
+                    (Msg => "Kernel-mode source event '"
+                     & Ev_Logical & "' of subject '" & Subj_Name & "' does not"
+                     & " specify mandatory event action");
                end;
             end if;
          end;
@@ -235,14 +239,15 @@ is
                                         Ref_Attr  => "name",
                                         Ref_Value => Phys_Ev_Name) /= null
             then
-               raise Validation_Error with "System action for event '"
-                 & Ev_Name & "' of subject '"
-                 & DOM.Core.Elements.Get_Attribute
-                 (Elem => Muxml.Utils.Ancestor_Node
-                    (Node  => Ev_Node,
-                     Level => 4),
-                  Name => "name") & "' does not reference"
-                 & " physical kernel-mode event '" & Phys_Ev_Name & "'";
+               Validation_Errors.Insert
+                 (Msg => "System action for event '"
+                  & Ev_Name & "' of subject '"
+                  & DOM.Core.Elements.Get_Attribute
+                    (Elem => Muxml.Utils.Ancestor_Node
+                         (Node  => Ev_Node,
+                          Level => 4),
+                     Name => "name") & "' does not reference"
+                  & " physical kernel-mode event '" & Phys_Ev_Name & "'");
             end if;
          end;
       end loop;
@@ -305,9 +310,10 @@ is
               Ref_Value => IRQ_Nr);
       begin
          if Assigned and then Unmask_Ev = null then
-            raise Validation_Error with "No event with unmask_irq action "
-              & "and matching number " & IRQ_Nr & " for IRQ '" & Dev_Name
-              & "->" & IRQ_Name & "'";
+            Validation_Errors.Insert
+              (Msg => "No event with unmask_irq action "
+               & "and matching number " & IRQ_Nr & " for IRQ '" & Dev_Name
+               & "->" & IRQ_Name & "'");
          end if;
 
          if not Assigned and then Unmask_Ev /= null then
@@ -320,9 +326,10 @@ is
                                                      Level => 5),
                   Name => "name");
             begin
-               raise Validation_Error with "Event " & Ev_Name & " of subject '"
-                 & Subj_Name & "' has unmask_irq action "
-                 & "for unassigned IRQ '" & Dev_Name & "->" & IRQ_Name & "'";
+               Validation_Errors.Insert
+                 (Msg => "Event " & Ev_Name & " of subject '"
+                  & Subj_Name & "' has unmask_irq action "
+                  & "for unassigned IRQ '" & Dev_Name & "->" & IRQ_Name & "'");
             end;
          end if;
       end Check_IRQ_Unmask_Event;
@@ -410,8 +417,9 @@ is
             Name => "name");
       begin
          if Left_Name = Right_Name then
-            raise Validation_Error with "Multiple physical events with name '"
-              & Left_Name & "'";
+            Validation_Errors.Insert
+              (Msg => "Multiple physical events with name '"
+               & Left_Name & "'");
          end if;
       end Check_Inequality;
    begin
@@ -469,9 +477,10 @@ is
                  Name => "name");
          begin
             if Target_Action = null then
-               raise Validation_Error with "Self-event '" & Target_Logical
-                 & "' of subject '" & Subj_Name & "' does not specify an "
-                 & "action";
+               Validation_Errors.Insert
+                 (Msg => "Self-event '" & Target_Logical
+                  & "' of subject '" & Subj_Name & "' does not specify an "
+                  & "action");
             end if;
          end;
       end loop;
@@ -532,14 +541,17 @@ is
          begin
             if Ev_Mode = "self" then
                if Dst_Subj /= Src_Subj then
-                  raise Validation_Error with "Reference to other subject in "
-                    & "self-event '" & Dst_Event_Name & "' of subject '"
-                    & Src_Subj_Name & "'";
+                  Validation_Errors.Insert
+                    (Msg => "Reference to other subject in "
+                     & "self-event '" & Dst_Event_Name & "' of subject '"
+                     & Src_Subj_Name & "'");
                end if;
             else
                if Dst_Subj = Src_Subj then
-                  raise Validation_Error with "Reference to self in event '"
-                    & Dst_Event_Name & "' of subject '" & Src_Subj_Name & "'";
+                  Validation_Errors.Insert
+                    (Msg => "Reference to self in event '"
+                     & Dst_Event_Name & "' of subject '"
+                     & Src_Subj_Name & "'");
                end if;
             end if;
          end;
@@ -581,9 +593,10 @@ is
               Name => "logical");
       begin
          if Left_ID = Right_ID then
-            raise Validation_Error with "Subject '" & To_String (Subj_Name)
-              & "' source events '" & Left_Name & "' and '" & Right_Name
-              & "' share ID" & Left_ID'Img;
+            Validation_Errors.Insert
+              (Msg => "Subject '" & To_String (Subj_Name)
+               & "' source events '" & Left_Name & "' and '" & Right_Name
+               & "' share ID" & Left_ID'Img);
          end if;
       end Check_Inequality;
 
@@ -670,9 +683,10 @@ is
               (Group => Event_Group,
                ID    => Event_ID)
             then
-               raise Validation_Error with "Subject '" & Subj_Name & "': ID"
-                 & Event_ID'Img & " of event '" & Event_Name & "' invalid for "
-                 & "group " & Event_Group'Img;
+               Validation_Errors.Insert
+                 (Msg => "Subject '" & Subj_Name & "': ID"
+                  & Event_ID'Img & " of event '" & Event_Name
+                  & "' invalid for " & "group " & Event_Group'Img);
             end if;
          end;
       end loop;
@@ -726,22 +740,25 @@ is
                     Ref_Value => Event_Name));
          begin
             if Source_Count = 0 then
-               raise Mucfgcheck.Validation_Error with "Invalid number of "
-                 & "sources for event '" & Event_Name & "':"
-                 & Source_Count'Img;
+               Validation_Errors.Insert
+                 (Msg => "Invalid number of "
+                  & "sources for event '" & Event_Name & "':"
+                  & Source_Count'Img);
             end if;
 
             if Kernel_Mode then
                if Target_Count > 0 then
-                  raise Mucfgcheck.Validation_Error with "Invalid number of "
-                    & "targets for kernel-mode event '" & Event_Name & "':"
-                    & Target_Count'Img & " (no target allowed)";
+                  Validation_Errors.Insert
+                    (Msg => "Invalid number of "
+                     & "targets for kernel-mode event '" & Event_Name & "':"
+                     & Target_Count'Img & " (no target allowed)");
                end if;
             else
                if Target_Count /= 1 then
-                  raise Mucfgcheck.Validation_Error with "Invalid number of "
-                    & "targets for event '" & Event_Name & "':"
-                    & Target_Count'Img;
+                  Validation_Errors.Insert
+                    (Msg => "Invalid number of "
+                     & "targets for event '" & Event_Name & "':"
+                     & Target_Count'Img);
                end if;
             end if;
 
@@ -806,8 +823,10 @@ is
             Mulog.Log (Msg => "Checking 'vmx_exit' group source event "
                        & "completeness for subject '" & Subj_Name & "'");
             if Vmx_Exit_Grp = null then
-               raise Validation_Error with "Subject '" & Subj_Name
-                 & "' does not specify any source event in 'vmx_exit' group";
+               Validation_Errors.Insert
+                 (Msg => "Subject '" & Subj_Name
+                  & "' does not specify any source event in 'vmx_exit' group");
+               return;
             end if;
 
             Src_Events := XPath_Query
@@ -825,9 +844,10 @@ is
                          (Source => Ev_ID'Img,
                           Side   => Ada.Strings.Left)) = null
                   then
-                     raise Validation_Error with "Subject '" & Subj_Name
-                       & "' does not specify 'vmx_exit' group source event "
-                       & "with ID" & Ev_ID'Img;
+                     Validation_Errors.Insert
+                       (Msg => "Subject '" & Subj_Name
+                        & "' does not specify 'vmx_exit' group source event "
+                        & "with ID" & Ev_ID'Img);
                   end if;
                end loop;
             end if;
@@ -840,14 +860,20 @@ is
    procedure Subject_Event_References (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       --  Match name of reference and event.
       function Match_Event_Name (Left, Right : DOM.Core.Node) return Boolean;
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          Ref_Event_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
@@ -860,8 +886,10 @@ is
                Level => (if Parent_Tag = "group" then 4 else 3)),
             Name => "name");
       begin
-         return "Event '" & Ref_Event_Name & "' referenced by subject '"
-           & Subj_Name & "' does not exist";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Event '" & Ref_Event_Name & "' referenced by subject '"
+            & Subj_Name & "' does not exist");
+         Fatal := False;
       end Error_Msg;
 
       ----------------------------------------------------------------------
@@ -933,9 +961,10 @@ is
               Name => "logical");
       begin
          if Left_ID = Right_ID then
-            raise Validation_Error with "Subject '" & To_String (Subj_Name)
-              & "' target events '" & Left_Name & "' and '" & Right_Name
-              & "' share ID" & Left_ID'Img;
+            Validation_Errors.Insert
+              (Msg => "Subject '" & To_String (Subj_Name)
+               & "' target events '" & Left_Name & "' and '" & Right_Name
+               & "' share ID" & Left_ID'Img);
          end if;
       end Check_Inequality;
 

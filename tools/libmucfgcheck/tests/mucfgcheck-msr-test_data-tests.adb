@@ -14,7 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with Mucfgcheck.Validation_Errors;
 --  begin read only
 --  end read only
 package body Mucfgcheck.MSR.Test_Data.Tests is
@@ -50,18 +50,11 @@ package body Mucfgcheck.MSR.Test_Data.Tests is
          Name  => "end",
          Value => "16#0170#");
 
-      begin
          Start_Smaller_End (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "MSR start 16#0174# larger than end 16#0170#"
-                    & " (Subject 'linux')",
-                    Message   => "Exception mismatch");
-      end;
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "MSR start 16#0174# larger than end 16#0170#"
+               & " (Subject 'linux')"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Start_Smaller_End;
 --  end read only
@@ -85,6 +78,8 @@ package body Mucfgcheck.MSR.Test_Data.Tests is
       --  Positve test.
 
       Check_Whitelist (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -93,18 +88,11 @@ package body Mucfgcheck.MSR.Test_Data.Tests is
          Name  => "end",
          Value => "16#0177#");
 
-      begin
-         Check_Whitelist (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "MSR start 16#0174# and end 16#0177# not in MSR "
-                    & "whitelist (Subject 'linux')",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Check_Whitelist (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "MSR start 16#0174# and end 16#0177# not in MSR "
+               & "whitelist (Subject 'linux')"),
+              Message   => "Exception mismatch (1)");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -119,18 +107,11 @@ package body Mucfgcheck.MSR.Test_Data.Tests is
          Name  => "start",
          Value => "16#0173#");
 
-      begin
-         Check_Whitelist (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "MSR start 16#0173# and end 16#0176# not in MSR "
-                    & "whitelist (Subject 'linux')",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Check_Whitelist (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "MSR start 16#0173# and end 16#0176# not in MSR "
+               & "whitelist (Subject 'linux')"),
+              Message   => "Exception mismatch (2)");
 
       --  Start|End in whitelist, but not the total range.
 
@@ -147,18 +128,11 @@ package body Mucfgcheck.MSR.Test_Data.Tests is
          Name  => "end",
          Value => "16#01d9#");
 
-      begin
-         Check_Whitelist (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (3)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "MSR start 16#0174# and end 16#01d9# not in MSR "
-                    & "whitelist (Subject 'linux')",
-                    Message   => "Exception mismatch (3)");
-      end;
+      Check_Whitelist (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "MSR start 16#0174# and end 16#01d9# not in MSR "
+               & "whitelist (Subject 'linux')"),
+              Message   => "Exception mismatch (3)");
 --  begin read only
    end Test_Check_Whitelist;
 --  end read only

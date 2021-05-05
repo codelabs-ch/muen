@@ -28,7 +28,9 @@ with Muxml.Utils;
 with Mutools.Utils;
 with Mutools.XML_Utils;
 with Mutools.Constants;
+
 with Mucfgcheck.Utils;
+with Mucfgcheck.Validation_Errors;
 
 package body Mucfgcheck.Hardware
 is
@@ -66,11 +68,13 @@ is
                  & " " & Device_Type & " memory region(s)");
 
       if Dev_Count < Min_Count then
-         raise Mucfgcheck.Validation_Error with Device_Type & " count is"
-           & Dev_Count'Img & " but must be at least" & Min_Count'Img;
+         Validation_Errors.Insert
+           (Msg => Device_Type & " count is"
+            & Dev_Count'Img & " but must be at least" & Min_Count'Img);
       elsif Max_Count /= 0 and then Dev_Count > Max_Count then
-         raise Mucfgcheck.Validation_Error with Device_Type & " count is"
-           & Dev_Count'Img & " but must not be larger than" & Max_Count'Img;
+         Validation_Errors.Insert
+           (Msg => Device_Type & " count is"
+            & Dev_Count'Img & " but must not be larger than" & Max_Count'Img);
       end if;
 
       for I in 0 .. Dev_Count - 1 loop
@@ -91,11 +95,13 @@ is
               := DOM.Core.Nodes.Length (List => Memory);
          begin
             if Mem_Count < 1 then
-               raise Mucfgcheck.Validation_Error with Device_Type & " device '"
-                 & Dev_Name & "' has no memory region";
+               Validation_Errors.Insert
+                 (Msg => Device_Type & " device '"
+                  & Dev_Name & "' has no memory region");
             elsif Mem_Count > 1 then
-               raise Mucfgcheck.Validation_Error with Device_Type & " device '"
-                 & Dev_Name & "' has multiple memory regions";
+               Validation_Errors.Insert
+                 (Msg => Device_Type & " device '"
+                  & Dev_Name & "' has multiple memory regions");
             end if;
          end;
       end loop;
@@ -117,9 +123,10 @@ is
       Mulog.Log (Msg => "Checking CPU core count");
 
       if Active_CPUs > Physical_CPUs then
-         raise Validation_Error with "System requires" & Active_CPUs'Img
-           & " but hardware only provides" & Physical_CPUs'Img
-           & " CPU(s)";
+         Validation_Errors.Insert
+           (Msg => "System requires" & Active_CPUs'Img
+            & " but hardware only provides" & Physical_CPUs'Img
+            & " CPU(s)");
       end if;
    end CPU_Count;
 
@@ -143,24 +150,37 @@ is
       Mulog.Log (Msg => "Checking CPU configuration and BSP presence");
 
       if Sub_Node_Count /= Physical_CPUs then
-         raise Validation_Error with "Hardware processor element requires"
-           & Physical_CPUs'Img & " CPU sub-elements, but" & Sub_Node_Count'Img
-           & " given";
+         Validation_Errors.Insert
+           (Msg => "Hardware processor element requires"
+            & Physical_CPUs'Img & " CPU sub-elements, but" & Sub_Node_Count'Img
+            & " given");
       end if;
 
       Consecutive_CPU_IDs :
       declare
 
          --  Returns the error message for a given reference node.
-         function Error_Msg (Node : DOM.Core.Node) return String;
+         procedure Error_Msg
+           (Node    :     DOM.Core.Node;
+            Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+            Fatal   : out Boolean);
 
          --  Returns True if the left and right numbers are adjacent.
          function Is_Adjacent (Left, Right : DOM.Core.Node) return Boolean;
 
          -------------------------------------------------------------------
 
-         function Error_Msg (Node : DOM.Core.Node) return String
-         is ("Processor CPU IDs not consecutive");
+         procedure Error_Msg
+           (Node    :     DOM.Core.Node;
+            Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+            Fatal   : out Boolean)
+         is
+            pragma Unreferenced (Node);
+         begin
+            Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+              ("Processor CPU IDs not consecutive");
+            Fatal := False;
+         end Error_Msg;
 
          -------------------------------------------------------------------
 
@@ -193,8 +213,8 @@ is
               XPath => "/system/hardware/processor/cpu[@cpuId='0']");
       begin
          if Node = null then
-            raise Validation_Error with "CPU sub-element with CPU ID 0 not "
-              & "found";
+            Validation_Errors.Insert
+              (Msg => "CPU sub-element with CPU ID 0 not found");
          end if;
       end CPU_ID_0;
 
@@ -211,8 +231,8 @@ is
               & "@cpuId <" & Active_CPUs'Img & "]");
       begin
          if BSP = null then
-            raise Validation_Error with "CPU with APIC ID 0 not present in "
-              & "active CPU set";
+            Validation_Errors.Insert
+              (Msg => "CPU with APIC ID 0 not present in active CPU set");
          end if;
       end BSP_Presence;
 
@@ -233,8 +253,9 @@ is
                     Name => "apicId");
          begin
             if Natural'Value (APIC_ID) mod 2 /= 0 then
-               raise Validation_Error with "Processor CPU sub-element with "
-                 & "CPU ID " & CPU_ID & " has uneven APIC ID " & APIC_ID;
+               Validation_Errors.Insert
+                 (Msg => "Processor CPU sub-element with "
+                  & "CPU ID " & CPU_ID & " has uneven APIC ID " & APIC_ID);
             end if;
          end;
       end loop Even_APIC_ID;
@@ -274,8 +295,10 @@ is
             if SID_Cap = null or else DOM.Core.Nodes.Node_Value
               (N => DOM.Core.Nodes.First_Child (N => SID_Cap))'Length = 0
             then
-               raise Validation_Error with "Source ID capability of I/O APIC '"
-                 & Name & "' is not set";
+               Validation_Errors.Insert
+                 (Msg => "Source ID capability of I/O APIC '"
+                  & Name & "' is not set");
+               return;
             end if;
 
             declare
@@ -287,9 +310,10 @@ is
 
             exception
                when others =>
-                  raise Validation_Error with "Source ID capability of I/O "
-                    & "APIC '" & Name & "' set to invalid value '"
-                    & SID_Str & "'";
+                  Validation_Errors.Insert
+                    (Msg => "Source ID capability of I/O "
+                     & "APIC '" & Name & "' set to invalid value '"
+                     & SID_Str & "'");
             end;
          end;
       end loop;
@@ -344,8 +368,8 @@ is
             if Agaw = null or else DOM.Core.Nodes.Node_Value
               (N => DOM.Core.Nodes.First_Child (N => Agaw))'Length = 0
             then
-               raise Validation_Error with "AGAW capability of IOMMU '"
-                 & Name & "' is not set";
+               Validation_Errors.Insert
+                 (Msg => "AGAW capability of IOMMU '" & Name & "' is not set");
             end if;
 
             declare
@@ -353,16 +377,18 @@ is
                  (N => DOM.Core.Nodes.First_Child (N => Agaw));
             begin
                if Agaw_Str /= "39" and then Agaw_Str /= "48" then
-                  raise Validation_Error with "AGAW capability of IOMMU '"
-                    & Name & "' set to invalid value '" & Agaw_Str & "'";
+                  Validation_Errors.Insert
+                    (Msg => "AGAW capability of IOMMU '"
+                     & Name & "' set to invalid value '" & Agaw_Str & "'");
                end if;
 
                if Last_Agaw = Null_Unbounded_String then
                   Last_Agaw := To_Unbounded_String (Agaw_Str);
                elsif Last_Agaw /= Agaw_Str then
-                  raise Validation_Error with "IOMMUs have different AGAW "
-                    & "capabilities set ('" & To_String (Last_Agaw) & "' vs. '"
-                    & Agaw_Str & "')";
+                  Validation_Errors.Insert
+                    (Msg => "IOMMUs have different AGAW "
+                     & "capabilities set ('" & To_String (Last_Agaw)
+                     & "' vs. '" & Agaw_Str & "')");
                end if;
             end;
          end;
@@ -413,8 +439,9 @@ is
             if Fro_Cap = null or else DOM.Core.Nodes.Node_Value
               (N => DOM.Core.Nodes.First_Child (N => Fro_Cap))'Length = 0
             then
-               raise Validation_Error with "Capability 'fr_offset' of IOMMU '"
-                 & Name & "' is not set";
+               Validation_Errors.Insert
+                 (Msg => "Capability 'fr_offset' of IOMMU '"
+                  & Name & "' is not set");
             end if;
 
             begin
@@ -424,18 +451,20 @@ is
 
             exception
                when others =>
-                  raise Validation_Error with "Capability 'fr_offset' of "
-                    & "IOMMU '" & Name & "' not in allowed range"
-                    & Fr_Offset_Range'First'Img & " .."
-                    & Fr_Offset_Range'Last'Img;
+                  Validation_Errors.Insert
+                    (Msg => "Capability 'fr_offset' of "
+                     & "IOMMU '" & Name & "' not in allowed range"
+                     & Fr_Offset_Range'First'Img & " .."
+                     & Fr_Offset_Range'Last'Img);
             end;
 
             if Iotlb_Inv_Cap = null or else DOM.Core.Nodes.Node_Value
               (N => DOM.Core.Nodes.First_Child (N => Iotlb_Inv_Cap))'Length = 0
             then
-               raise Validation_Error with "Capability "
-                 & "'iotlb_invalidate_offset' of IOMMU '" & Name
-                 & "' is not set";
+               Validation_Errors.Insert
+                 (Msg => "Capability "
+                  & "'iotlb_invalidate_offset' of IOMMU '" & Name
+                  & "' is not set");
             end if;
 
             begin
@@ -445,11 +474,12 @@ is
 
             exception
                when others =>
-                  raise Validation_Error with "Capability "
-                    & "'iotlb_invalidate_offset' of IOMMU '" & Name
-                    & "' not in allowed range"
-                    & Iotlb_Inv_Offset_Range'First'Img & " .."
-                    & Iotlb_Inv_Offset_Range'Last'Img;
+                  Validation_Errors.Insert
+                    (Msg => "Capability "
+                     & "'iotlb_invalidate_offset' of IOMMU '" & Name
+                     & "' not in allowed range"
+                     & Iotlb_Inv_Offset_Range'First'Img & " .."
+                     & Iotlb_Inv_Offset_Range'Last'Img);
             end;
          end;
       end loop;
@@ -523,10 +553,11 @@ is
                  & " memory block(s)");
 
       if Mem_Sum > Block_Sum then
-         raise Validation_Error with "Allocated " & Mutools.Utils.To_Hex
-           (Number => Mem_Sum) & " bytes of physical memory but only "
-           & Mutools.Utils.To_Hex (Number => Block_Sum)
-           & " bytes available by the hardware";
+         Validation_Errors.Insert
+           (Msg => "Allocated " & Mutools.Utils.To_Hex
+              (Number => Mem_Sum) & " bytes of physical memory but only "
+            & Mutools.Utils.To_Hex (Number => Block_Sum)
+            & " bytes available by the hardware");
       end if;
    end Memory_Space;
 
@@ -546,7 +577,8 @@ is
    begin
       Mulog.Log (Msg => "Checking PCI configuration space address");
       if PCI_Dev_Count > 0 and then Cfg_Address'Length = 0 then
-         raise Validation_Error with "Missing PCI configuration space address";
+         Validation_Errors.Insert
+           (Msg => "Missing PCI configuration space address");
       end if;
    end PCI_Config_Space_Address;
 
@@ -586,8 +618,9 @@ is
          end;
       end if;
 
-      raise Validation_Error with "System board device with reset/poweroff "
-        & "configuration missing or incomplete";
+      Validation_Errors.Insert
+        (Msg => "System board device with reset/poweroff configuration "
+         & "missing or incomplete");
    end System_Board_Presence;
 
 end Mucfgcheck.Hardware;

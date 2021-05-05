@@ -14,7 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with Mucfgcheck.Validation_Errors;
 --  begin read only
 --  end read only
 package body Mucfgcheck.Kernel.Test_Data.Tests is
@@ -47,6 +47,8 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       CPU_Local_Data_Address_Equality (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -55,19 +57,12 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
          Name  => "virtualAddress",
          Value => "16#0021_9000#");
 
-      begin
-         CPU_Local_Data_Address_Equality (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'virtualAddress => 16#0011_0000#' of "
-                    & "'kernel_data_1' kernel CPU-local data element "
-                    & "differs",
-                    Message   => "Exception mismatch");
-      end;
+      CPU_Local_Data_Address_Equality (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Attribute 'virtualAddress => 16#0011_0000#' of "
+               & "'kernel_data_1' kernel CPU-local data element "
+               & "differs"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_CPU_Local_Data_Address_Equality;
 --  end read only
@@ -91,6 +86,8 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       CPU_Local_BSS_Address_Equality (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -99,19 +96,12 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
          Name  => "virtualAddress",
          Value => "16#0021_9000#");
 
-      begin
-         CPU_Local_BSS_Address_Equality (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'virtualAddress => 16#0011_1000#' of "
-                    & "'kernel_bss_1' kernel CPU-local BSS element "
-                    & "differs",
-                    Message   => "Exception mismatch");
-      end;
+      CPU_Local_BSS_Address_Equality (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Attribute 'virtualAddress => 16#0011_1000#' of "
+               & "'kernel_bss_1' kernel CPU-local BSS element "
+               & "differs"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_CPU_Local_BSS_Address_Equality;
 --  end read only
@@ -135,6 +125,8 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Global_Data_Address_Equality (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -143,19 +135,12 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
          Name  => "virtualAddress",
          Value => "16#0021_9000#");
 
-      begin
-         Global_Data_Address_Equality (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'virtualAddress => 16#0011_9000#' of "
-                    & "'kernel_global_data' kernel global data element "
-                    & "differs",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Global_Data_Address_Equality (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Attribute 'virtualAddress => 16#0011_9000#' of "
+               & "'kernel_global_data' kernel global data element "
+               & "differs"),
+              Message   => "Exception mismatch (1)");
 
        Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -164,18 +149,11 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
          Name  => "physical",
          Value => "foo");
 
-      begin
-         Global_Data_Address_Equality (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Required kernel global data mappings not present "
-                    & "(expected 4, found 3)",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Global_Data_Address_Equality (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Required kernel global data mappings not present "
+               & "(expected 4, found 3)"),
+              Message   => "Exception mismatch (2)");
 --  begin read only
    end Test_Global_Data_Address_Equality;
 --  end read only
@@ -199,6 +177,8 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Stack_Address_Equality (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -207,18 +187,11 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
          Name  => "virtualAddress",
          Value => "16#0031_0000#");
 
-      begin
-         Stack_Address_Equality (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'virtualAddress => 16#0031_0000#' of "
-                    & "'kernel_stack_1' kernel stack memory element differs",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Stack_Address_Equality (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Attribute 'virtualAddress => 16#0031_0000#' of "
+               & "'kernel_stack_1' kernel stack memory element differs"),
+              Message   => "Exception mismatch (1)");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -233,19 +206,12 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
          Name  => "virtualAddress",
          Value => "16#0051_0000#");
 
-      begin
-         Stack_Address_Equality (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'virtualAddress => 16#0051_0000#' of "
-                    & "'kernel_interrupt_stack_1' kernel interrupt stack "
-                    & "memory element differs",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Stack_Address_Equality (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Attribute 'virtualAddress => 16#0051_0000#' of "
+               & "'kernel_interrupt_stack_1' kernel interrupt stack "
+               & "memory element differs"),
+              Message   => "Exception mismatch (2)");
 --  begin read only
    end Test_Stack_Address_Equality;
 --  end read only
@@ -269,6 +235,8 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Crash_Audit_Address_Equality (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -277,18 +245,11 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
          Name  => "virtualAddress",
          Value => "16#0021_0000#");
 
-      begin
-         Crash_Audit_Address_Equality (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'virtualAddress => 16#000e_0001_9000#' of"
-                    & " 'crash_audit' crash audit region element differs",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Crash_Audit_Address_Equality (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Attribute 'virtualAddress => 16#000e_0001_9000#' of"
+               & " 'crash_audit' crash audit region element differs"),
+              Message   => "Exception mismatch (1)");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -297,18 +258,11 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
          Name  => "physical",
          Value => "something");
 
-      begin
-         Crash_Audit_Address_Equality (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Required crash audit mappings not present (expected 4, "
-                    & "found 3)",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Crash_Audit_Address_Equality (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Required crash audit mappings not present (expected 4, "
+               & "found 3)"),
+              Message   => "Exception mismatch (2)");
 --  begin read only
    end Test_Crash_Audit_Address_Equality;
 --  end read only
@@ -332,6 +286,8 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Stack_Layout (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  No stack region on CPU 2.
 
@@ -341,17 +297,10 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
          & "[@logical='stack']",
          Name  => "logical",
          Value => "X");
-      begin
-         Stack_Layout (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "CPU 2 has no stack region mapping",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Stack_Layout (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "CPU 2 has no stack region mapping"),
+              Message   => "Exception mismatch (1)");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/kernel/memory/cpu[@id='2']/memory"
@@ -367,17 +316,10 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
          & "[@logical='interrupt_stack']",
          Name  => "logical",
          Value => "X");
-      begin
-         Stack_Layout (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "CPU 2 has no interrupt stack region mapping",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Stack_Layout (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "CPU 2 has no interrupt stack region mapping"),
+              Message   => "Exception mismatch (2)");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/kernel/memory/cpu[@id='2']/memory"
@@ -393,18 +335,11 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
          & "[@logical='bss']",
          Name  => "virtualAddress",
          Value => "16#0011_2000#");
-      begin
-         Stack_Layout (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (3)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Expected unmapped page on CPU 3 below kernel stack @ "
-                    & "16#0011_3000#, found 'bss'",
-                    Message   => "Exception mismatch (3)");
-      end;
+      Stack_Layout (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Expected unmapped page on CPU 3 below kernel stack @ "
+               & "16#0011_3000#, found 'bss'"),
+              Message   => "Exception mismatch (3)");
 
       --  No guard page above stack on CPU 3.
 
@@ -414,18 +349,11 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
          & "[@logical='bss']",
          Name  => "virtualAddress",
          Value => "16#0011_4000#");
-      begin
-         Stack_Layout (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (4)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Expected unmapped page on CPU 3 above kernel stack @ "
-                    & "16#0011_3fff#, found 'bss'",
-                    Message   => "Exception mismatch (4)");
-      end;
+      Stack_Layout (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Expected unmapped page on CPU 3 above kernel stack @ "
+               & "16#0011_3fff#, found 'bss'"),
+               Message   => "Exception mismatch (4)");
 
       --  No guard page below interrupt stack on CPU 3.
 
@@ -435,18 +363,11 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
          & "[@logical='bss']",
          Name  => "virtualAddress",
          Value => "16#0011_5000#");
-      begin
-         Stack_Layout (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (5)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Expected unmapped page on CPU 3 below kernel stack @ "
-                    & "16#0011_6000#, found 'bss'",
-                    Message   => "Exception mismatch (5)");
-      end;
+      Stack_Layout (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Expected unmapped page on CPU 3 below kernel stack @ "
+               & "16#0011_6000#, found 'bss'"),
+              Message   => "Exception mismatch (5)");
 
       --  No guard page above interrupt stack on CPU 3.
 
@@ -456,18 +377,11 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
          & "[@logical='bss']",
          Name  => "virtualAddress",
          Value => "16#0011_7000#");
-      begin
-         Stack_Layout (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (6)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Expected unmapped page on CPU 3 above kernel stack @ "
-                    & "16#0011_6fff#, found 'bss'",
-                    Message   => "Exception mismatch (6)");
-      end;
+      Stack_Layout (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Expected unmapped page on CPU 3 above kernel stack @ "
+               & "16#0011_6fff#, found 'bss'"),
+              Message   => "Exception mismatch (6)");
 --  begin read only
    end Test_Stack_Layout;
 --  end read only
@@ -493,18 +407,11 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
          Name  => "virtualAddress",
          Value => "16#0021_0000#");
 
-      begin
-         IOMMU_Consecutiveness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Mapping of MMIO region of IOMMU 'iommu_1' not adjacent "
-                    & "to other IOMMU regions",
-                    Message   => "Exception mismatch");
-      end;
+      IOMMU_Consecutiveness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Mapping of MMIO region of IOMMU 'iommu_1' not adjacent "
+               & "to other IOMMU regions"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_IOMMU_Consecutiveness;
 --  end read only
@@ -534,15 +441,10 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
                                    Child_Name => "cpu");
 
          CPU_Memory_Section_Count (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Invalid number of kernel memory CPU section(s), 3 "
-                    & "present but 4 required",
-                    Message   => "Exception mismatch");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Invalid number of kernel memory CPU section(s), 3 "
+                  & "present but 4 required"),
+                 Message   => "Exception mismatch");
       end;
 --  begin read only
    end Test_CPU_Memory_Section_Count;
@@ -567,6 +469,8 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Virtual_Memory_Overlap (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -575,18 +479,11 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
          Name  => "virtualAddress",
          Value => "16#0010_0000#");
 
-      begin
-         Virtual_Memory_Overlap (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Overlap of virtual memory region 'text' and 'data' "
-                    & "of kernel running on CPU 1",
-                    Message   => "Exception mismatch");
-      end;
+      Virtual_Memory_Overlap (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Overlap of virtual memory region 'text' and 'data' "
+               & "of kernel running on CPU 1"),
+              Message   => "Exception mismatch");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -595,18 +492,11 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
          Name  => "virtualAddress",
          Value => "16#001f_c000#");
 
-      begin
-         Virtual_Memory_Overlap (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Overlap of virtual memory region 'tau0_interface' "
-                    & "and 'ioapic->mmio' of kernel running on CPU 0",
-                    Message   => "Exception mismatch");
-      end;
+      Virtual_Memory_Overlap (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Overlap of virtual memory region 'tau0_interface' "
+               & "and 'ioapic->mmio' of kernel running on CPU 0"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Virtual_Memory_Overlap;
 --  end read only
@@ -634,6 +524,8 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       System_Board_Reference (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Node := DOM.Core.Nodes.Remove_Child
         (N         => Board,
@@ -642,18 +534,11 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
             XPath => "/system/kernel/devices/device/ioPort"
             & "[@logical='reset_port']"));
 
-      begin
-         System_Board_Reference (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Kernel system board reference does not provide logical"
-                    & " reset port",
-                    Message   => "Exception mismatch (1)");
-      end;
+      System_Board_Reference (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Kernel system board reference does not provide logical"
+               & " reset port"),
+              Message   => "Exception mismatch (1)");
 
       Node := DOM.Core.Nodes.Append_Child
         (N         => Board,
@@ -665,18 +550,11 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
             XPath => "/system/kernel/devices/device/ioPort"
             & "[@logical='poweroff_port']"));
 
-      begin
-         System_Board_Reference (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Kernel system board reference does not provide logical"
-                    & " poweroff port",
-                    Message   => "Exception mismatch (2)");
-      end;
+      System_Board_Reference (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Kernel system board reference does not provide logical"
+               & " poweroff port"),
+              Message   => "Exception mismatch (2)");
 
       Node := DOM.Core.Nodes.Remove_Child
         (N         => Muxml.Utils.Get_Element
@@ -684,17 +562,10 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
             XPath => "/system/kernel/devices"),
          Old_Child => Board);
 
-      begin
-         System_Board_Reference (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (3)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Kernel system board reference not present",
-                    Message   => "Exception mismatch (3)");
-      end;
+      System_Board_Reference (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Kernel system board reference not present"),
+              Message   => "Exception mismatch (3)");
 --  begin read only
    end Test_System_Board_Reference;
 --  end read only
@@ -718,27 +589,29 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Diagnostics_Device_Reference (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Resource name mismatch
 
-      begin
-         Muxml.Utils.Set_Attribute
+      Muxml.Utils.Set_Attribute
            (Doc   => Data.Doc,
             XPath => "/system/kernel/devices/device[@physical='debugconsole']"
             & "/ioPort",
             Name  => "physical",
             Value => "nonexistent");
 
+      begin
          Diagnostics_Device_Reference (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected (Resource name)");
+                 Message   => "Exception expected");
 
       exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Kernel debug console reference to physical Ioport "
-                    & "'nonexistent' not specified by platform kernel "
-                    & "diagnostics device",
+            when Validation_Errors.Validation_Error =>
+            Assert (Condition => Validation_Errors.Contains
+                    (Msg => "Kernel debug console reference to physical Ioport "
+                     & "'nonexistent' not specified by platform kernel "
+                     & "diagnostics device"),
                     Message   => "Exception mismatch (Resource name)");
       end;
 
@@ -764,58 +637,44 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
 
          Diagnostics_Device_Reference (XML_Data => Data);
          Assert (Condition => False,
-                 Message   => "Exception expected (Resource type)");
+                 Message   => "Exception expected");
 
       exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Kernel debug console reference to physical Memory "
-                    & "'port' not specified by platform kernel "
-                    & "diagnostics device",
+         when Validation_Errors.Validation_Error =>
+            Assert (Condition => Validation_Errors.Contains
+                    (Msg => "Kernel debug console reference to physical Memory "
+                     & "'port' not specified by platform kernel "
+                     & "diagnostics device"),
                     Message   => "Exception mismatch (Resource type)");
       end;
 
       --  Resource count mismatch
 
-      begin
-         Muxml.Utils.Remove_Elements
-           (Doc   => Data.Doc,
-            XPath => "/system/kernel/devices/device"
-            & "[@physical='debugconsole']/*");
+      Muxml.Utils.Remove_Elements
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/devices/device"
+         & "[@physical='debugconsole']/*");
 
-         Diagnostics_Device_Reference (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Resource count)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Kernel debug console and platform diagnostics device "
-                    & "resource count mismatch: 0 /= 1",
-                    Message   => "Exception mismatch (Resource count)");
-      end;
+      Diagnostics_Device_Reference (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Kernel debug console and platform diagnostics device "
+               & "resource count mismatch: 0 /= 1"),
+              Message   => "Exception mismatch (Resource count)");
 
       --  Device name mismatch
 
-      begin
-         Muxml.Utils.Set_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/kernel/devices/device[@physical='debugconsole']",
-            Name  => "physical",
-            Value => "nonexistent");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/devices/device[@physical='debugconsole']",
+         Name  => "physical",
+         Value => "nonexistent");
 
-         Diagnostics_Device_Reference (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Device name)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Kernel debug console and platform diagnostics device "
-                    & "physical reference mismatch: nonexistent /= "
-                    & "debugconsole",
-                    Message   => "Exception mismatch (Resource count)");
-      end;
+      Diagnostics_Device_Reference (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Kernel debug console and platform diagnostics device "
+               & "physical reference mismatch: nonexistent /= "
+               & "debugconsole"),
+              Message   => "Exception mismatch (Resource count)");
 --  begin read only
    end Test_Diagnostics_Device_Reference;
 --  end read only

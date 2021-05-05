@@ -14,7 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with Mucfgcheck.Validation_Errors;
 --  begin read only
 --  end read only
 package body Mucfgcheck.Config.Test_Data.Tests is
@@ -47,6 +47,8 @@ package body Mucfgcheck.Config.Test_Data.Tests is
       --  Positive test, must not raise exception.
 
       Name_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Duplicate config entry.
 
@@ -56,17 +58,10 @@ package body Mucfgcheck.Config.Test_Data.Tests is
          Name  => "name",
          Value => "feature_enabled");
 
-      begin
-         Name_Uniqueness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Multiple config variables with name 'feature_enabled'",
-                    Message   => "Exception mismatch");
-      end;
+      Name_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Multiple config variables with name 'feature_enabled'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Name_Uniqueness;
 --  end read only
@@ -90,6 +85,8 @@ package body Mucfgcheck.Config.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Config_Boolean_Values (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Set non-boolean value.
 
@@ -99,18 +96,11 @@ package body Mucfgcheck.Config.Test_Data.Tests is
          Name  => "value",
          Value => "foobar");
 
-      begin
-         Config_Boolean_Values (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Boolean with invalid value 'foobar' in config variable "
-                    & "'feature_enabled'",
-                    Message   => "Exception mismatch");
-      end;
+      Config_Boolean_Values (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Boolean with invalid value 'foobar' in config variable "
+               & "'feature_enabled'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Config_Boolean_Values;
 --  end read only
@@ -134,6 +124,8 @@ package body Mucfgcheck.Config.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Config_Integer_Values (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Set non-numeric value.
 
@@ -143,18 +135,11 @@ package body Mucfgcheck.Config.Test_Data.Tests is
          Name  => "value",
          Value => "foobar");
 
-      begin
-         Config_Integer_Values (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Integer with invalid value 'foobar' in config variable "
-                    & "'session_count'",
-                    Message   => "Exception mismatch");
-      end;
+      Config_Integer_Values (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Integer with invalid value 'foobar' in config variable "
+               & "'session_count'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Config_Integer_Values;
 --  end read only
@@ -178,6 +163,8 @@ package body Mucfgcheck.Config.Test_Data.Tests is
       --  Must not raise an exception.
 
       Expression_Config_Var_Refs (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Set reference to nonexistent config var.
 
@@ -188,18 +175,11 @@ package body Mucfgcheck.Config.Test_Data.Tests is
          Name  => "name",
          Value => "nonexistent");
 
-      begin
-         Expression_Config_Var_Refs (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Config variable 'nonexistent' referenced in expression "
-                    & "'session2_enabled' not defined",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Expression_Config_Var_Refs (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Config variable 'nonexistent' referenced in expression "
+               & "'session2_enabled' not defined"),
+              Message   => "Exception mismatch (1)");
 
       --  Remove name attribute from variable reference.
 
@@ -210,18 +190,11 @@ package body Mucfgcheck.Config.Test_Data.Tests is
          Name  => "name",
          Value => "");
 
-      begin
-         Expression_Config_Var_Refs (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Config variable without name attribute in expression "
-                    & "'session2_enabled'",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Expression_Config_Var_Refs (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Config variable without name attribute in expression "
+               & "'session2_enabled'"),
+              Message   => "Exception mismatch (2)");
 --  begin read only
    end Test_Expression_Config_Var_Refs;
 --  end read only
@@ -245,6 +218,8 @@ package body Mucfgcheck.Config.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Expression_Integer_Values (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Set non-integer value.
 
@@ -255,18 +230,11 @@ package body Mucfgcheck.Config.Test_Data.Tests is
          Name  => "value",
          Value => "foobar");
 
-      begin
-         Expression_Integer_Values (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Integer with invalid value 'foobar' in expression "
-                    & "'session2_enabled'",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Expression_Integer_Values (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Integer with invalid value 'foobar' in expression "
+               & "'session2_enabled'"),
+              Message   => "Exception mismatch (1)");
 
       --  Remove value attribute from integer element.
 
@@ -277,18 +245,11 @@ package body Mucfgcheck.Config.Test_Data.Tests is
          Name  => "value",
          Value => "");
 
-      begin
-         Expression_Integer_Values (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Integer without value attribute in expression "
-                    & "'session2_enabled'",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Expression_Integer_Values (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Integer without value attribute in expression "
+               & "'session2_enabled'"),
+              Message   => "Exception mismatch (2)");
 --  begin read only
    end Test_Expression_Integer_Values;
 --  end read only
@@ -312,6 +273,8 @@ package body Mucfgcheck.Config.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Expression_Boolean_Values (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Set non-boolean value.
 
@@ -322,18 +285,11 @@ package body Mucfgcheck.Config.Test_Data.Tests is
          Name  => "value",
          Value => "foobar");
 
-      begin
-         Expression_Boolean_Values (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Boolean with invalid value 'foobar' in expression "
-                    & "'and_expr'",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Expression_Boolean_Values (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Boolean with invalid value 'foobar' in expression "
+               & "'and_expr'"),
+              Message   => "Exception mismatch (1)");
 
       --  Remove value attribute from integer element.
 
@@ -344,18 +300,11 @@ package body Mucfgcheck.Config.Test_Data.Tests is
          Name  => "value",
          Value => "");
 
-      begin
-         Expression_Boolean_Values (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Boolean without value attribute in expression "
-                    & "'and_expr'",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Expression_Boolean_Values (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Boolean without value attribute in expression "
+               & "'and_expr'"),
+              Message   => "Exception mismatch (2)");
 --  begin read only
    end Test_Expression_Boolean_Values;
 --  end read only
@@ -379,6 +328,8 @@ package body Mucfgcheck.Config.Test_Data.Tests is
       --  Must not raise an exception.
 
       Conditional_Config_Var_Refs (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Set reference to nonexistent config var.
 
@@ -388,18 +339,11 @@ package body Mucfgcheck.Config.Test_Data.Tests is
          Name  => "variable",
          Value => "nonexistent");
 
-      begin
-         Conditional_Config_Var_Refs (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Config variable 'nonexistent' referenced by conditional"
-                    & " not defined",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Conditional_Config_Var_Refs (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Config variable 'nonexistent' referenced by conditional"
+               & " not defined"),
+              Message   => "Exception mismatch (1)");
 
       --  Remove variable attribute from variable reference.
 
@@ -409,17 +353,10 @@ package body Mucfgcheck.Config.Test_Data.Tests is
          Name  => "variable",
          Value => "");
 
-      begin
-         Conditional_Config_Var_Refs (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Conditional without variable attribute",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Conditional_Config_Var_Refs (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Conditional without variable attribute"),
+              Message   => "Exception mismatch (2)");
 --  begin read only
    end Test_Conditional_Config_Var_Refs;
 --  end read only

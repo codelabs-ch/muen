@@ -35,6 +35,7 @@ with Mutools.Match;
 with Mutools.Constants;
 
 with Mucfgcheck.Utils;
+with Mucfgcheck.Validation_Errors;
 
 package body Mucfgcheck.Subject
 is
@@ -116,9 +117,10 @@ is
                             Level => 2),
                        Name => "name");
                begin
-                  raise Validation_Error with "Logical memory node '"
-                    & Mem_Logical & "' of subject '" & Subj_Name
-                    & "' declares illegal write access to crash audit region";
+                  Validation_Errors.Insert
+                    (Msg => "Logical memory node '" & Mem_Logical
+                     & "' of subject '" & Subj_Name & "' declares illegal "
+                     & "write access to crash audit region");
                end;
             end if;
          end;
@@ -205,12 +207,13 @@ is
                              PCI_Node     => PCI);
                      begin
                         if Cfg_Addr /= Addr then
-                           raise Validation_Error with "PCI mmconf region of "
-                             & "subject '" & Subj_Name & "' logical device '"
-                             & Dev_Name & "' is "
-                             & Mutools.Utils.To_Hex (Number => Addr)
-                             & " but should be "
-                             & Mutools.Utils.To_Hex (Number => Cfg_Addr);
+                           Validation_Errors.Insert
+                             (Msg => "PCI mmconf region of "
+                              & "subject '" & Subj_Name & "' logical device '"
+                              & Dev_Name & "' is "
+                              & Mutools.Utils.To_Hex (Number => Addr)
+                              & " but should be "
+                              & Mutools.Utils.To_Hex (Number => Cfg_Addr));
                         end if;
                      end;
                   end loop;
@@ -253,8 +256,9 @@ is
             Name => "name");
       begin
          if Left_ID = Right_ID then
-            raise Validation_Error with "Subjects '" & Left_Name & "' and '"
-              & Right_Name & "' have identical global ID" & Left_ID'Img;
+            Validation_Errors.Insert
+              (Msg => "Subjects '" & Left_Name & "' and '"
+               & Right_Name & "' have identical global ID" & Left_ID'Img);
          end if;
       end Check_Global_ID_Inequality;
    begin
@@ -274,18 +278,26 @@ is
       function Is_Adjacent_Region (Left, Right : DOM.Core.Node) return Boolean;
 
       --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "logical");
       begin
-         return "Initramfs region '" & Name & "' not adjacent to other "
-           & "initramfs regions";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Initramfs region '" & Name & "' not adjacent to other "
+            & "initramfs regions");
+         Fatal := False;
       end Error_Msg;
 
       ----------------------------------------------------------------------
@@ -395,9 +407,10 @@ is
             Name => "name");
       begin
          if Left_ID = Right_ID then
-            raise Validation_Error with "Subjects '" & Left_Name & "' and '"
-              & Right_Name & "' running on CPU" & Cur_CPU'Img
-              & " have identical local ID" & Left_ID'Img;
+            Validation_Errors.Insert
+              (Msg => "Subjects '" & Left_Name & "' and '"
+               & Right_Name & "' running on CPU" & Cur_CPU'Img
+               & " have identical local ID" & Left_ID'Img);
          end if;
       end Check_Local_ID_Inequality;
    begin
@@ -452,8 +465,9 @@ is
             Name => "logical");
       begin
          if Left_Logical = Right_Logical then
-            raise Validation_Error with "devices with identical logical names"
-              & " '" & Left_Logical & "'";
+            raise Validation_Errors.Validation_Error with
+              "devices with identical logical names" & " '"
+              & Left_Logical & "'";
          end if;
       end Check_Logical_Name_Inequality;
    begin
@@ -482,9 +496,10 @@ is
             end if;
 
          exception
-            when E : Validation_Error =>
-               raise Validation_Error with "Subject '" & Subj_Name & "' has "
-                 & Ada.Exceptions.Exception_Message (X => E);
+            when E : Validation_Errors.Validation_Error =>
+               Validation_Errors.Insert
+                 (Msg => "Subject '" & Subj_Name & "' has "
+                  & Ada.Exceptions.Exception_Message (X => E));
          end;
       end loop;
    end Logical_Device_Name_Uniqueness;
@@ -505,14 +520,20 @@ is
            & "[pci and count(irq) > 1]");
 
       --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       --  Returns True if the left and right vectors are adjacent.
       function Is_Adjacent_Vector (Left, Right : DOM.Core.Node) return Boolean;
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Muxml.Utils.Ancestor_Node
@@ -526,8 +547,10 @@ is
            (Elem => Node,
             Name => "logical");
       begin
-         return "MSI IRQ '" & IRQ_Name & "' of logical device '" & Dev_Name
-           & "' of subject '" & Subj_Name & "' not adjacent to other IRQs";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("MSI IRQ '" & IRQ_Name & "' of logical device '" & Dev_Name
+            & "' of subject '" & Subj_Name & "' not adjacent to other IRQs");
+         Fatal := False;
       end Error_Msg;
 
       ----------------------------------------------------------------------
@@ -700,10 +723,11 @@ is
                   if Ev_Log_Name (Ev_Log_Name'First .. Delim_Idx)
                     /= "unmask_irq_"
                   then
-                     raise Validation_Error with "Logical event '"
-                       & Ev_Log_Name & "' of subject '" & Subj_Name & "' "
-                       & "has unexpected logical name: must have the form "
-                       & "'unmask_irq_$VECTORNR'";
+                     Validation_Errors.Insert
+                       (Msg => "Logical event '"
+                        & Ev_Log_Name & "' of subject '" & Subj_Name & "' "
+                        & "has unexpected logical name: must have the form "
+                        & "'unmask_irq_$VECTORNR'");
                   end if;
 
                   declare
@@ -713,10 +737,12 @@ is
 
                   exception
                      when Constraint_Error =>
-                        raise Validation_Error with "Logical event '"
-                          & Ev_Log_Name & "' of subject '" & Subj_Name
-                          & "' has invalid suffix '" & Vector_Nr & "': must "
-                          & "match number of corresponding logical IRQ vector";
+                        Validation_Errors.Insert
+                          (Msg => "Logical event '"
+                           & Ev_Log_Name & "' of subject '" & Subj_Name
+                           & "' has invalid suffix '" & Vector_Nr & "': must "
+                           & "match number of corresponding logical IRQ "
+                           & "vector");
                   end;
 
                   Log_IRQ := Muxml.Utils.Get_Element
@@ -728,12 +754,14 @@ is
                         Exp_Vec : constant String
                           := Get_Expected_Vector (IRQ_Number => Ev_IRQ_Nr);
                      begin
-                        raise Validation_Error with "Logical event '"
-                          & Ev_Log_Name & "' of subject '" & Subj_Name & "' "
-                          & "references invalid logical IRQ with vector "
-                          & Vector_Nr & " as logical name suffix"
-                          & (if Exp_Vec'Length = 0 then ""
-                             else ": expected " & Exp_Vec);
+                        Validation_Errors.Insert
+                          (Msg => "Logical event '"
+                           & Ev_Log_Name & "' of subject '" & Subj_Name & "' "
+                           & "references invalid logical IRQ with vector "
+                           & Vector_Nr & " as logical name suffix"
+                           & (if Exp_Vec'Length = 0 then ""
+                             else ": expected " & Exp_Vec));
+                        return;
                      end;
                   end if;
 
@@ -770,13 +798,14 @@ is
                         Name => "number");
                   begin
                      if Ev_IRQ_Nr /= Phys_IRQ_Nr then
-                        raise Validation_Error with "Logical event '"
-                          & Ev_Log_Name & "' of subject '" & Subj_Name & "' "
-                          & "referencing logical IRQ " & Log_Dev_Name & "->"
-                          & Log_IRQ_Name & " has unmask action number "
-                          & "different from physical IRQ " & Phys_Dev_Name
-                          & "->" & Phys_IRQ_Name & ": " & Ev_IRQ_Nr
-                          & ", expected " & Phys_IRQ_Nr;
+                        Validation_Errors.Insert
+                          (Msg => "Logical event '"
+                           & Ev_Log_Name & "' of subject '" & Subj_Name & "' "
+                           & "referencing logical IRQ " & Log_Dev_Name & "->"
+                           & Log_IRQ_Name & " has unmask action number "
+                           & "different from physical IRQ " & Phys_Dev_Name
+                           & "->" & Phys_IRQ_Name & ": " & Ev_IRQ_Nr
+                           & ", expected " & Phys_IRQ_Nr);
                      end if;
                   end;
                end;
@@ -828,10 +857,11 @@ is
               := Mutools.Types.Memory_Kind'Value (Mem_Type_Str);
          begin
             if Memory_Type not in Mutools.Types.Subject_Memory then
-               raise Validation_Error with "Logical memory region '"
-                 & Virt_Name & "' of subject '" & Subject_Name & "' mapping "
-                 & "physical region '" & Phys_Name & "' has invalid type "
-                 & Mem_Type_Str;
+               Validation_Errors.Insert
+                 (Msg => "Logical memory region '"
+                  & Virt_Name & "' of subject '" & Subject_Name & "' mapping "
+                  & "physical region '" & Phys_Name & "' has invalid type "
+                  & Mem_Type_Str);
             end if;
          end;
       end loop;
@@ -866,9 +896,10 @@ is
             Name => "name");
       begin
          if Left_Name = Right_Name then
-            raise Validation_Error with "Subjects with global ID " & Left_ID
-              & " and " & Right_ID & " have identical name '"
-              & Left_Name & "'";
+            Validation_Errors.Insert
+              (Msg => "Subjects with global ID " & Left_ID
+               & " and " & Right_ID & " have identical name '"
+               & Left_Name & "'");
          end if;
       end Check_Name_Inequality;
    begin
@@ -915,8 +946,9 @@ is
             end;
          end loop;
 
-         raise Validation_Error with "IOMMU device referenced by subject"
-           & (if Count > 1 then "s" else "") & To_String (Source => Names);
+         Validation_Errors.Insert
+           (Msg => "IOMMU device referenced by subject"
+            & (if Count > 1 then "s" else "") & To_String (Source => Names));
       end if;
    end No_IOMMU_Device_References;
 
@@ -963,9 +995,10 @@ is
                Source_Events   => Source_Events,
                Subject         => Subject) = -1
             then
-               raise Validation_Error with "Subject '" & Subj_Name & "' is "
-                 & "neither referenced in the scheduling plan nor "
-                 & "schedulable via switch events";
+               Validation_Errors.Insert
+                 (Msg => "Subject '" & Subj_Name & "' is "
+                  & "neither referenced in the scheduling plan nor "
+                  & "schedulable via switch events");
             end if;
          end;
       end loop;
@@ -1009,9 +1042,10 @@ is
             if Subj_Sched_Group_ID = 0 or else
               Subj_Sched_Group_ID /= Subject_To_Group_Map (I)
             then
-               raise Validation_Error with "Subject '" & Subj_Name & "' has "
-                 & "unexpected scheduling group ID:" & Subj_Sched_Group_ID'Img
-                 & " /=" & Subject_To_Group_Map (I)'Img;
+               Validation_Errors.Insert
+                 (Msg => "Subject '" & Subj_Name & "' has "
+                  & "unexpected scheduling group ID:" & Subj_Sched_Group_ID'Img
+                  & " /=" & Subject_To_Group_Map (I)'Img);
             end if;
          end;
       end loop;
@@ -1082,8 +1116,9 @@ is
            or else Left_Device /= Right_Device
            or else Left_Func /= Right_Func
          then
-            raise Validation_Error with "Shared logical devices '" & Left_Name
-              & "|" & Right_Name & "' specify different PCI elements";
+            Validation_Errors.Insert
+              (Msg => "Shared logical devices '" & Left_Name
+               & "|" & Right_Name & "' specify different PCI elements");
          end if;
       end Check_PCI_Attrs;
    begin
@@ -1259,9 +1294,10 @@ is
                 (MSR  => Mutools.Constants.IA32_DEBUGCTL,
                  MSRs => MSRs)
             then
-               raise Validation_Error with "VM-Entry control "
-                 & "'Load debug controls' of subject '" & Subj_Name
-                 & "' invalid: must be 1";
+               Validation_Errors.Insert
+                 (Msg => "VM-Entry control "
+                  & "'Load debug controls' of subject '" & Subj_Name
+                  & "' invalid: must be 1");
             end if;
 
             --  Non-EPT subjects execute in IA-32e mode.
@@ -1273,9 +1309,10 @@ is
                                     XPath => "IA32eModeGuest",
                                     Value => "0")
             then
-               raise Validation_Error with "VM-Entry control "
-                 & "'IA-32e mode guest' of subject '" & Subj_Name
-                 & "' invalid: must be 1";
+               Validation_Errors.Insert
+                 (Msg => "VM-Entry control "
+                  & "'IA-32e mode guest' of subject '" & Subj_Name
+                  & "' invalid: must be 1");
             end if;
 
             --  Any other value leads to VM-Entry failure.
@@ -1284,9 +1321,10 @@ is
                                  XPath => "EntryToSMM",
                                  Value => "1")
             then
-               raise Validation_Error with "VM-Entry control "
-                 & "'Entry to SMM' of subject '" & Subj_Name
-                 & "' invalid: must be 0";
+               Validation_Errors.Insert
+                 (Msg => "VM-Entry control "
+                  & "'Entry to SMM' of subject '" & Subj_Name
+                  & "' invalid: must be 0");
             end if;
 
             --  Any other value leads to VM-Entry failure.
@@ -1295,9 +1333,10 @@ is
                                  XPath => "DeactiveDualMonitorTreatment",
                                  Value => "1")
             then
-               raise Validation_Error with "VM-Entry control "
-                 & "'Deactivate dual-monitor treatment' of subject '"
-                 & Subj_Name & "' invalid: must be 0";
+               Validation_Errors.Insert
+                 (Msg => "VM-Entry control "
+                  & "'Deactivate dual-monitor treatment' of subject '"
+                  & Subj_Name & "' invalid: must be 0");
             end if;
 
             --  Access to IA32_PERF_GLOBAL_CTRL not allowed.
@@ -1306,9 +1345,10 @@ is
                                  XPath => "LoadIA32PERFGLOBALCTRL",
                                  Value => "1")
             then
-               raise Validation_Error with "VM-Entry control "
-                 & "'Load IA32_PERF_GLOBAL_CTRL' of subject '" & Subj_Name
-                 & "' invalid: must be 0";
+               Validation_Errors.Insert
+                 (Msg => "VM-Entry control "
+                  & "'Load IA32_PERF_GLOBAL_CTRL' of subject '" & Subj_Name
+                  & "' invalid: must be 0");
             end if;
 
             --  Access to IA32_PAT not allowed.
@@ -1317,9 +1357,10 @@ is
                                  XPath => "LoadIA32PAT",
                                  Value => "1")
             then
-               raise Validation_Error with "VM-Entry control "
-                 & "'Load IA32_PAT' of subject '" & Subj_Name
-                 & "' invalid: must be 0";
+               Validation_Errors.Insert
+                 (Msg => "VM-Entry control "
+                  & "'Load IA32_PAT' of subject '" & Subj_Name
+                  & "' invalid: must be 0");
             end if;
 
             --  IA32_EFER must be handled if subject has access.
@@ -1331,9 +1372,10 @@ is
                 (MSR  => Mutools.Constants.IA32_EFER,
                  MSRs => MSRs)
             then
-               raise Validation_Error with "VM-Entry control "
-                 & "'Load IA32_EFER' of subject '" & Subj_Name
-                 & "' invalid: must be 1";
+               Validation_Errors.Insert
+                 (Msg => "VM-Entry control "
+                  & "'Load IA32_EFER' of subject '" & Subj_Name
+                  & "' invalid: must be 1");
             end if;
          end;
       end loop;
@@ -1374,9 +1416,10 @@ is
                 (MSR  => Mutools.Constants.IA32_DEBUGCTL,
                  MSRs => MSRs)
             then
-               raise Validation_Error with "VM-Exit control "
-                 & "'Save debug controls' of subject '" & Subj_Name
-                 & "' invalid: must be 1";
+               Validation_Errors.Insert
+                 (Msg => "VM-Exit control "
+                  & "'Save debug controls' of subject '" & Subj_Name
+                  & "' invalid: must be 1");
             end if;
 
             --  Host address-space size must be set since kernel executes in
@@ -1386,9 +1429,10 @@ is
                                  XPath => "HostAddressspaceSize",
                                  Value => "0")
             then
-               raise Validation_Error with "VM-Exit control "
-                 & "'Host address-space size' of subject '" & Subj_Name
-                 & "' invalid: must be 1";
+               Validation_Errors.Insert
+                 (Msg => "VM-Exit control "
+                  & "'Host address-space size' of subject '" & Subj_Name
+                  & "' invalid: must be 1");
             end if;
 
             --  Access to IA32_PERF_GLOBAL_CTRL not allowed.
@@ -1397,9 +1441,10 @@ is
                                  XPath => "LoadIA32PERFGLOBALCTRL",
                                  Value => "1")
             then
-               raise Validation_Error with "VM-Exit control "
-                 & "'Load IA32_PERF_GLOBAL_CTRL' of subject '" & Subj_Name
-                 & "' invalid: must be 0";
+               Validation_Errors.Insert
+                 (Msg => "VM-Exit control "
+                  & "'Load IA32_PERF_GLOBAL_CTRL' of subject '" & Subj_Name
+                  & "' invalid: must be 0");
             end if;
 
             --  Interrupt acknowledging on exit is required for interrupt
@@ -1409,9 +1454,10 @@ is
                                  XPath => "AckInterruptOnExit",
                                  Value => "0")
             then
-               raise Validation_Error with "VM-Exit control "
-                 & "'Acknowledge interrupt on exit' of subject '" & Subj_Name
-                 & "' invalid: must be 1";
+               Validation_Errors.Insert
+                 (Msg => "VM-Exit control "
+                  & "'Acknowledge interrupt on exit' of subject '" & Subj_Name
+                  & "' invalid: must be 1");
             end if;
 
             --  Access to IA32_PAT is not allowed.
@@ -1420,18 +1466,20 @@ is
                                  XPath => "SaveIA32PAT",
                                  Value => "1")
             then
-               raise Validation_Error with "VM-Exit control "
-                 & "'Save IA32_PAT' of subject '" & Subj_Name
-                 & "' invalid: must be 0";
+               Validation_Errors.Insert
+                 (Msg => "VM-Exit control "
+                  & "'Save IA32_PAT' of subject '" & Subj_Name
+                  & "' invalid: must be 0");
             end if;
 
             if Is_Element_Value (Node  => VMExit_Ctrl,
                                  XPath => "LoadIA32PAT",
                                  Value => "1")
             then
-               raise Validation_Error with "VM-Exit control "
-                 & "'Load IA32_PAT' of subject '" & Subj_Name
-                 & "' invalid: must be 0";
+               Validation_Errors.Insert
+                 (Msg => "VM-Exit control "
+                  & "'Load IA32_PAT' of subject '" & Subj_Name
+                  & "' invalid: must be 0");
             end if;
 
             --  IA32_EFER must be handled if subject has access.
@@ -1444,18 +1492,20 @@ is
                                     XPath => "SaveIA32EFER",
                                     Value => "0")
                then
-                  raise Validation_Error with "VM-Exit control "
-                    & "'Save IA32_EFER' of subject '" & Subj_Name
-                    & "' invalid: must be 1";
+                  Validation_Errors.Insert
+                    (Msg => "VM-Exit control "
+                     & "'Save IA32_EFER' of subject '" & Subj_Name
+                     & "' invalid: must be 1");
                end if;
 
                if Is_Element_Value (Node  => VMExit_Ctrl,
                                     XPath => "LoadIA32EFER",
                                     Value => "0")
                then
-                  raise Validation_Error with "VM-Exit control "
-                    & "'Load IA32_EFER' of subject '" & Subj_Name
-                    & "' invalid: must be 1";
+                  Validation_Errors.Insert
+                    (Msg => "VM-Exit control "
+                     & "'Load IA32_EFER' of subject '" & Subj_Name
+                     & "' invalid: must be 1");
                end if;
             end if;
 
@@ -1466,9 +1516,10 @@ is
                                  XPath => "SaveVMXTimerValue",
                                  Value => "1")
             then
-               raise Validation_Error with "VM-Exit control "
-                 & "'Save VMX-preemption timer value' of subject '" & Subj_Name
-                 & "' invalid: must be 0";
+               Validation_Errors.Insert
+                 (Msg => "VM-Exit control "
+                  & "'Save VMX-preemption timer value' of subject '"
+                  & Subj_Name & "' invalid: must be 0");
             end if;
          end;
       end loop;
@@ -1520,18 +1571,18 @@ is
                               XPath => "entry/EntryToSMM",
                               Value => "1")
          then
-            raise Validation_Error
-              with "VMX control 'entry to SMM' of subject '" & Subject_Name
-              & "' is 1";
+            Validation_Errors.Insert
+              (Msg => "VMX control 'entry to SMM' of subject '"
+               & Subject_Name & "' is 1");
          end if;
 
          if Is_Element_Value (Node  => Ctrls,
                               XPath => "entry/DeactiveDualMonitorTreatment",
                               Value => "1")
          then
-            raise Validation_Error
-              with "VMX control 'deactivate dual-monitor treatment' of "
-              & "subject '" & Subject_Name & "' is 1";
+            Validation_Errors.Insert
+              (Msg => "VMX control 'deactivate dual-monitor treatment' of "
+               & "subject '" & Subject_Name & "' is 1");
          end if;
 
          --  The "entry to SMM" and "deactivate dual-monitor treatment"
@@ -1563,9 +1614,10 @@ is
                        Attr_Name => "physicalAddress"));
             begin
                if (IOBM_Addr and Bit_Mask) /= 0 then
-                  raise Validation_Error with "Address of I/O Bitmap of "
-                    & "subject '" & Subject_Name & "' invalid: bits 11:0 must "
-                    & "be zero";
+                  Validation_Errors.Insert
+                    (Msg => "Address of I/O Bitmap of "
+                     & "subject '" & Subject_Name
+                     & "' invalid: bits 11:0 must be zero");
                end if;
             end;
          end if;
@@ -1586,9 +1638,10 @@ is
                        Attr_Name => "physicalAddress"));
             begin
                if (MSRBM_Addr and Bit_Mask) /= 0 then
-                  raise Validation_Error with "Address of MSR Bitmap of "
-                    & "subject '" & Subject_Name & "' invalid: bits 11:0 must "
-                    & "be zero";
+                  Validation_Errors.Insert
+                    (Msg => "Address of MSR Bitmap of "
+                     & "subject '" & Subject_Name & "' invalid: bits 11:0 "
+                     & "must be zero");
                end if;
             end;
          end if;
@@ -1600,9 +1653,9 @@ is
                                  XPath => "pin/VirtualNMIs",
                                  Value => "1")
          then
-            raise Validation_Error
-              with "VMX control 'NMI-Exiting' is 0 for subject '"
-              & Subject_Name & "' but 'Virtual NMIs' is 1";
+            Validation_Errors.Insert
+              (Msg => "VMX control 'NMI-Exiting' is 0 for subject '"
+               & Subject_Name & "' but 'Virtual NMIs' is 1");
          end if;
 
          if not Is_Element_Value (Node  => Ctrls,
@@ -1612,9 +1665,9 @@ is
                                  XPath => "proc/NMIWindowExiting",
                                  Value => "1")
          then
-            raise Validation_Error
-              with "VMX control 'Virtual NMIs' is 0 for subject '"
-              & Subject_Name & "' but 'NMI-window exiting' is 1";
+            Validation_Errors.Insert
+              (Msg => "VMX control 'Virtual NMIs' is 0 for subject '"
+               & Subject_Name & "' but 'NMI-window exiting' is 1");
          end if;
 
          if not Is_Element_Value (Node  => Ctrls,
@@ -1625,24 +1678,25 @@ is
                                  XPath => "proc2/Virtualizex2APICMode",
                                  Value => "1")
             then
-               raise Validation_Error
-                 with "VMX control 'Use TPR Shadow' is 0 for subject '"
-                 & Subject_Name & "' but 'Virtualize x2APIC mode' is 1";
+               Validation_Errors.Insert
+                 (Msg => "VMX control 'Use TPR Shadow' is 0 for subject '"
+                  & Subject_Name & "' but 'Virtualize x2APIC mode' is 1");
             elsif Is_Element_Value
               (Node  => Ctrls,
                XPath => "proc2/APICRegisterVirtualization",
                Value => "1")
             then
-               raise Validation_Error
-                 with "VMX control 'Use TPR Shadow' is 0 for subject '"
-                 & Subject_Name & "' but 'APIC-register virtualization' is 1";
+               Validation_Errors.Insert
+                 (Msg => "VMX control 'Use TPR Shadow' is 0 for subject '"
+                  & Subject_Name & "' but 'APIC-register virtualization' "
+                  & "is 1");
             elsif Is_Element_Value (Node  => Ctrls,
                                     XPath => "proc2/VirtualInterruptDelivery",
                                     Value => "1")
             then
-               raise Validation_Error
-                 with "VMX control 'Use TPR Shadow' is 0 for subject '"
-                 & Subject_Name & "' but 'virtual-interrupt delivery' is 1";
+               Validation_Errors.Insert
+                 (Msg => "VMX control 'Use TPR Shadow' is 0 for subject '"
+                  & Subject_Name & "' but 'virtual-interrupt delivery' is 1");
             end if;
          end if;
 
@@ -1653,9 +1707,10 @@ is
                                  XPath => "proc2/VirtualAPICAccesses",
                                  Value => "1")
          then
-            raise Validation_Error
-              with "VMX control 'Virtualize x2APIC mode' is 1 for subject"
-              & " '" & Subject_Name & "' but 'virtualize APIC accesses' is 1";
+            Validation_Errors.Insert
+              (Msg => "VMX control 'Virtualize x2APIC mode' is 1 for subject"
+               & " '" & Subject_Name & "' but 'virtualize APIC accesses' "
+               & "is 1");
          end if;
 
          if Is_Element_Value (Node  => Ctrls,
@@ -1665,10 +1720,10 @@ is
                                      XPath => "pin/ExternalInterruptExiting",
                                      Value => "1")
          then
-            raise Validation_Error
-              with "VMX control 'virtual-interrupt delivery' is 1 for "
-              & "subject '" & Subject_Name & "' but 'external-interrupt "
-              & "exiting' is 0";
+            Validation_Errors.Insert
+              (Msg => "VMX control 'virtual-interrupt delivery' is 1 for "
+               & "subject '" & Subject_Name & "' but 'external-interrupt "
+               & "exiting' is 0");
          end if;
 
          if Is_Element_Value (Node  => Ctrls,
@@ -1679,18 +1734,18 @@ is
                                      XPath => "proc2/VirtualInterruptDelivery",
                                      Value => "1")
             then
-               raise Validation_Error
-                 with "VMX control 'process posted interrupts' is 1 for "
-                 & "subject '" & Subject_Name & "' but 'virtual-interrupt "
-                 & "delivery' is 0";
+               Validation_Errors.Insert
+                 (Msg => "VMX control 'process posted interrupts' is 1 for "
+                  & "subject '" & Subject_Name & "' but 'virtual-interrupt "
+                  & "delivery' is 0");
             elsif not Is_Element_Value (Node  => Ctrls,
                                         XPath => "exit/AckInterruptOnExit",
                                         Value => "1")
             then
-               raise Validation_Error
-                 with "VMX control 'process posted interrupts' is 1 for "
-                 & "subject '" & Subject_Name & "' but 'acknowledge interrupt"
-                 & " on exit' is 0";
+               Validation_Errors.Insert
+                 (Msg => "VMX control 'process posted interrupts' is 1 for "
+                  & "subject '" & Subject_Name & "' but 'acknowledge interrupt"
+                  & " on exit' is 0");
             end if;
          end if;
 
@@ -1701,9 +1756,9 @@ is
                                      XPath => "proc2/EnableEPT",
                                      Value => "1")
          then
-            raise Validation_Error
-              with "VMX control 'unrestricted guest' is 1 for "
-              & "subject '" & Subject_Name & "' but 'Enable EPT' is 0";
+            Validation_Errors.Insert
+              (Msg => "VMX control 'unrestricted guest' is 1 for "
+               & "subject '" & Subject_Name & "' but 'Enable EPT' is 0");
          end if;
       end Check_VM_Execution_Control_Fields;
 
@@ -1721,10 +1776,10 @@ is
                                  XPath => "exit/SaveVMXTimerValue",
                                  Value => "1")
          then
-            raise Validation_Error
-              with "VMX control 'activate VMX-preemption timer' is 0 for "
-              & "subject '" & Subject_Name & "' but 'save VMX-preemtion timer "
-              & "value' is 1";
+            Validation_Errors.Insert
+              (Msg => "VMX control 'activate VMX-preemption timer' is 0 for "
+               & "subject '" & Subject_Name & "' but 'save VMX-preemtion timer"
+               & " value' is 1");
          end if;
 
          declare
@@ -1755,8 +1810,9 @@ is
                      Ref_Value => Subject_Name & "|msrstore",
                      Attr_Name => "physicalAddress"));
                if (MSR_Store_Addr and Bit_Mask) /= 0 then
-                  raise Validation_Error with "MSR Store address of subject '"
-                    & Subject_Name & "' invalid: bits 3:0 must be zero";
+                  Validation_Errors.Insert
+                    (Msg => "MSR Store address of subject '"
+                     & Subject_Name & "' invalid: bits 3:0 must be zero");
                end if;
             end if;
          end;
@@ -1817,9 +1873,10 @@ is
                                  XPath => "ExternalInterruptExiting",
                                  Value => "0")
             then
-               raise Validation_Error with "Pin-Based control "
-                 & "'External-Interrupt exiting' of subject '" & Subj_Name
-                 & "' invalid: must be 1";
+               Validation_Errors.Insert
+                 (Msg => "Pin-Based control "
+                  & "'External-Interrupt exiting' of subject '" & Subj_Name
+                  & "' invalid: must be 1");
             end if;
 
             --  NMI exiting must be 1 as NMIs are handled by kernel.
@@ -1828,8 +1885,9 @@ is
                                  XPath => "NMIExiting",
                                  Value => "0")
             then
-               raise Validation_Error with "Pin-Based control 'NMI exiting' "
-                 & "of subject '" & Subj_Name & "' invalid: must be 1";
+               Validation_Errors.Insert
+                 (Msg => "Pin-Based control 'NMI exiting' "
+                  & "of subject '" & Subj_Name & "' invalid: must be 1");
             end if;
 
             --  Virtual NMIs are not supported.
@@ -1838,8 +1896,9 @@ is
                                  XPath => "VirtualNMIs",
                                  Value => "1")
             then
-               raise Validation_Error with "Pin-Based control 'Virtual NMIs' "
-                 & "of subject '" & Subj_Name & "' invalid: must be 0";
+               Validation_Errors.Insert
+                 (Msg => "Pin-Based control 'Virtual NMIs' "
+                  & "of subject '" & Subj_Name & "' invalid: must be 0");
             end if;
 
             --  VMX-preemption timer is required for scheduling.
@@ -1848,9 +1907,10 @@ is
                                  XPath => "ActivateVMXTimer",
                                  Value => "0")
             then
-               raise Validation_Error with "Pin-Based control 'Activate "
-                 & "VMX-preemption timer' of subject '" & Subj_Name
-                 & "' invalid: must be 1";
+               Validation_Errors.Insert
+                 (Msg => "Pin-Based control 'Activate "
+                  & "VMX-preemption timer' of subject '" & Subj_Name
+                  & "' invalid: must be 1");
             end if;
 
             --  Posted Interrupts are not supported.
@@ -1859,9 +1919,10 @@ is
                                  XPath => "ProcessPostedInterrupts",
                                  Value => "1")
             then
-               raise Validation_Error with "Pin-Based control 'Process posted"
-                 & " interrupts' of subject '" & Subj_Name
-                 & "' invalid: must be 0";
+               Validation_Errors.Insert
+                 (Msg => "Pin-Based control 'Process posted"
+                  & " interrupts' of subject '" & Subj_Name
+                  & "' invalid: must be 0");
             end if;
          end;
       end loop;
@@ -1897,9 +1958,10 @@ is
                                  XPath => "VirtualAPICAccesses",
                                  Value => "1")
             then
-               raise Validation_Error with "Secondary Processor-Based control "
-                 & "'Virtualize APIC accesses' of subject '" & Subj_Name
-                 & "' invalid: must be 0";
+               Validation_Errors.Insert
+                 (Msg => "Secondary Processor-Based control "
+                  & "'Virtualize APIC accesses' of subject '" & Subj_Name
+                  & "' invalid: must be 0");
             end if;
 
             --  x2APIC Virtualization not implemented.
@@ -1908,9 +1970,10 @@ is
                                  XPath => "Virtualizex2APICMode",
                                  Value => "1")
             then
-               raise Validation_Error with "Secondary Processor-Based control "
-                 & "'Virtualize x2APIC mode' of subject '" & Subj_Name
-                 & "' invalid: must be 0";
+               Validation_Errors.Insert
+                 (Msg => "Secondary Processor-Based control "
+                  & "'Virtualize x2APIC mode' of subject '" & Subj_Name
+                  & "' invalid: must be 0");
             end if;
 
             --  VPID not implemented.
@@ -1919,9 +1982,10 @@ is
                                  XPath => "EnableVPID",
                                  Value => "1")
             then
-               raise Validation_Error with "Secondary Processor-Based control "
-                 & "'Enable VPID' of subject '" & Subj_Name
-                 & "' invalid: must be 0";
+               Validation_Errors.Insert
+                 (Msg => "Secondary Processor-Based control "
+                  & "'Enable VPID' of subject '" & Subj_Name
+                  & "' invalid: must be 0");
             end if;
 
             --  Direct execution of WBINVD is not allowed.
@@ -1930,9 +1994,10 @@ is
                                  XPath => "WBINVDExiting",
                                  Value => "0")
             then
-               raise Validation_Error with "Secondary Processor-Based control "
-                 & "'WBINVD exiting' of subject '" & Subj_Name
-                 & "' invalid: must be 1";
+               Validation_Errors.Insert
+                 (Msg => "Secondary Processor-Based control "
+                  & "'WBINVD exiting' of subject '" & Subj_Name
+                  & "' invalid: must be 1");
             end if;
 
             --  APIC-register virtualization not implemented.
@@ -1941,9 +2006,10 @@ is
                                  XPath => "APICRegisterVirtualization",
                                  Value => "1")
             then
-               raise Validation_Error with "Secondary Processor-Based control "
-                 & "'APIC-register virtualization' of subject '" & Subj_Name
-                 & "' invalid: must be 0";
+               Validation_Errors.Insert
+                 (Msg => "Secondary Processor-Based control "
+                  & "'APIC-register virtualization' of subject '" & Subj_Name
+                  & "' invalid: must be 0");
             end if;
 
             --  Virtual-interrupt delivery not implemented.
@@ -1952,9 +2018,10 @@ is
                                  XPath => "VirtualInterruptDelivery",
                                  Value => "1")
             then
-               raise Validation_Error with "Secondary Processor-Based control "
-                 & "'Virtual-interrupt delivery' of subject '" & Subj_Name
-                 & "' invalid: must be 0";
+               Validation_Errors.Insert
+                 (Msg => "Secondary Processor-Based control "
+                  & "'Virtual-interrupt delivery' of subject '" & Subj_Name
+                  & "' invalid: must be 0");
             end if;
 
             --  Direct execution of INVPCID is not allowed.
@@ -1963,9 +2030,10 @@ is
                                  XPath => "EnableINVPCID",
                                  Value => "1")
             then
-               raise Validation_Error with "Secondary Processor-Based control "
-                 & "'Enable INVPCID' of subject '" & Subj_Name
-                 & "' invalid: must be 0";
+               Validation_Errors.Insert
+                 (Msg => "Secondary Processor-Based control "
+                  & "'Enable INVPCID' of subject '" & Subj_Name
+                  & "' invalid: must be 0");
             end if;
 
             --  VMFUNC is not supported.
@@ -1974,9 +2042,10 @@ is
                                  XPath => "EnableVMFunctions",
                                  Value => "1")
             then
-               raise Validation_Error with "Secondary Processor-Based control "
-                 & "'Enable VM functions' of subject '" & Subj_Name
-                 & "' invalid: must be 0";
+               Validation_Errors.Insert
+                 (Msg => "Secondary Processor-Based control "
+                  & "'Enable VM functions' of subject '" & Subj_Name
+                  & "' invalid: must be 0");
             end if;
          end;
       end loop;
@@ -2013,9 +2082,10 @@ is
                                  XPath => "InterruptWindowExiting",
                                  Value => "1")
             then
-               raise Validation_Error with "Processor-Based control "
-                 & "'Interrupt-window exiting' of subject '" & Subj_Name
-                 & "' invalid: must be 0";
+               Validation_Errors.Insert
+                 (Msg => "Processor-Based control "
+                  & "'Interrupt-window exiting' of subject '" & Subj_Name
+                  & "' invalid: must be 0");
             end if;
 
             --  TSC Offsetting is not supported.
@@ -2024,9 +2094,10 @@ is
                                  XPath => "UseTSCOffsetting",
                                  Value => "1")
             then
-               raise Validation_Error with "Processor-Based control "
-                 & "'Use TSC offsetting' of subject '" & Subj_Name
-                 & "' invalid: must be 0";
+               Validation_Errors.Insert
+                 (Msg => "Processor-Based control "
+                  & "'Use TSC offsetting' of subject '" & Subj_Name
+                  & "' invalid: must be 0");
             end if;
 
             --  Direct execution of INVLPG is not supported.
@@ -2035,9 +2106,10 @@ is
                                  XPath => "INVLPGExiting",
                                  Value => "0")
             then
-               raise Validation_Error with "Processor-Based control "
-                 & "'INVLPG exiting' of subject '" & Subj_Name
-                 & "' invalid: must be 1";
+               Validation_Errors.Insert
+                 (Msg => "Processor-Based control "
+                  & "'INVLPG exiting' of subject '" & Subj_Name
+                  & "' invalid: must be 1");
             end if;
 
             --  Direct execution of MWAIT is not supported.
@@ -2046,9 +2118,10 @@ is
                                  XPath => "MWAITExiting",
                                  Value => "0")
             then
-               raise Validation_Error with "Processor-Based control "
-                 & "'MWAIT exiting' of subject '" & Subj_Name
-                 & "' invalid: must be 1";
+               Validation_Errors.Insert
+                 (Msg => "Processor-Based control "
+                  & "'MWAIT exiting' of subject '" & Subj_Name
+                  & "' invalid: must be 1");
             end if;
 
             --  Setting CR3 must be restricted if EPT is disabled.
@@ -2060,9 +2133,10 @@ is
                                     XPath => "CR3LoadExiting",
                                     Value => "0")
             then
-               raise Validation_Error with "Processor-Based control "
-                 & "'CR3-load exiting' of subject '" & Subj_Name
-                 & "' invalid: must be 1";
+               Validation_Errors.Insert
+                 (Msg => "Processor-Based control "
+                  & "'CR3-load exiting' of subject '" & Subj_Name
+                  & "' invalid: must be 1");
             end if;
 
             --  Access to CR8/TPR is restricted.
@@ -2071,18 +2145,20 @@ is
                                  XPath => "CR8LoadExiting",
                                  Value => "0")
             then
-               raise Validation_Error with "Processor-Based control "
-                 & "'CR8-load exiting' of subject '" & Subj_Name
-                 & "' invalid: must be 1";
+               Validation_Errors.Insert
+                 (Msg => "Processor-Based control "
+                  & "'CR8-load exiting' of subject '" & Subj_Name
+                  & "' invalid: must be 1");
             end if;
 
             if Is_Element_Value (Node  => Proc_Ctrl,
                                  XPath => "CR8StoreExiting",
                                  Value => "0")
             then
-               raise Validation_Error with "Processor-Based control "
-                 & "'CR8-store exiting' of subject '" & Subj_Name
-                 & "' invalid: must be 1";
+               Validation_Errors.Insert
+                 (Msg => "Processor-Based control "
+                  & "'CR8-store exiting' of subject '" & Subj_Name
+                  & "' invalid: must be 1");
             end if;
 
             --  TPR virtualization is not implemented.
@@ -2091,9 +2167,10 @@ is
                                  XPath => "UseTPRShadow",
                                  Value => "1")
             then
-               raise Validation_Error with "Processor-Based control "
-                 & "'Use TPR shadow' of subject '" & Subj_Name
-                 & "' invalid: must be 0";
+               Validation_Errors.Insert
+                 (Msg => "Processor-Based control "
+                  & "'Use TPR shadow' of subject '" & Subj_Name
+                  & "' invalid: must be 0");
             end if;
 
             --  NMI-window exiting is not supported.
@@ -2102,9 +2179,10 @@ is
                                  XPath => "NMIWindowExiting",
                                  Value => "1")
             then
-               raise Validation_Error with "Processor-Based control "
-                 & "'NMI-window exiting' of subject '" & Subj_Name
-                 & "' invalid: must be 0";
+               Validation_Errors.Insert
+                 (Msg => "Processor-Based control "
+                  & "'NMI-window exiting' of subject '" & Subj_Name
+                  & "' invalid: must be 0");
             end if;
 
             --  Restrict access to debug registers.
@@ -2113,9 +2191,10 @@ is
                                  XPath => "MOVDRExiting",
                                  Value => "0")
             then
-               raise Validation_Error with "Processor-Based control "
-                 & "'MOV-DR exiting' of subject '" & Subj_Name
-                 & "' invalid: must be 1";
+               Validation_Errors.Insert
+                 (Msg => "Processor-Based control "
+                  & "'MOV-DR exiting' of subject '" & Subj_Name
+                  & "' invalid: must be 1");
             end if;
 
             --  Restrict access to I/O ports.
@@ -2124,9 +2203,10 @@ is
                                  XPath => "UseIOBitmaps",
                                  Value => "0")
             then
-               raise Validation_Error with "Processor-Based control "
-                 & "'Use I/O bitmaps' of subject '" & Subj_Name
-                 & "' invalid: must be 1";
+               Validation_Errors.Insert
+                 (Msg => "Processor-Based control "
+                  & "'Use I/O bitmaps' of subject '" & Subj_Name
+                  & "' invalid: must be 1");
             end if;
 
             --  Restrict access to MSRs.
@@ -2135,9 +2215,10 @@ is
                                  XPath => "UseMSRBitmaps",
                                  Value => "0")
             then
-               raise Validation_Error with "Processor-Based control "
-                 & "'Use MSR bitmaps' of subject '" & Subj_Name
-                 & "' invalid: must be 1";
+               Validation_Errors.Insert
+                 (Msg => "Processor-Based control "
+                  & "'Use MSR bitmaps' of subject '" & Subj_Name
+                  & "' invalid: must be 1");
             end if;
 
             --  Secondary controls enable required features like EPT etc.
@@ -2146,9 +2227,10 @@ is
                                  XPath => "Activate2ndaryControls",
                                  Value => "0")
             then
-               raise Validation_Error with "Processor-Based control "
-                 & "'Activate secondary controls' of subject '" & Subj_Name
-                 & "' invalid: must be 1";
+               Validation_Errors.Insert
+                 (Msg => "Processor-Based control "
+                  & "'Activate secondary controls' of subject '" & Subj_Name
+                  & "' invalid: must be 1");
             end if;
          end;
       end loop;
@@ -2184,18 +2266,20 @@ is
                                  XPath => "NotWritethrough",
                                  Value => "0")
             then
-               raise Validation_Error with "VMX CR0 guest/host mask control "
-                 & "'Not Write-through' of subject '" & Subj_Name
-                 & "' invalid: must be 1";
+               Validation_Errors.Insert
+                 (Msg => "VMX CR0 guest/host mask control "
+                  & "'Not Write-through' of subject '" & Subj_Name
+                  & "' invalid: must be 1");
             end if;
 
             if Is_Element_Value (Node  => CR0_Mask,
                                  XPath => "CacheDisable",
                                  Value => "0")
             then
-               raise Validation_Error with "VMX CR0 guest/host mask control "
-                 & "'Cache Disable' of subject '" & Subj_Name
-                 & "' invalid: must be 1";
+               Validation_Errors.Insert
+                 (Msg => "VMX CR0 guest/host mask control "
+                  & "'Cache Disable' of subject '" & Subj_Name
+                  & "' invalid: must be 1");
             end if;
          end;
       end loop;
@@ -2233,9 +2317,10 @@ is
                                     XPath => "PhysicalAddressExtension",
                                     Value => "0")
             then
-               raise Validation_Error with "VMX CR4 guest/host mask control "
-                 & "'Physical Address Extension' of subject '" & Subj_Name
-                 & "' invalid: must be 1";
+               Validation_Errors.Insert
+                 (Msg => "VMX CR4 guest/host mask control "
+                  & "'Physical Address Extension' of subject '" & Subj_Name
+                  & "' invalid: must be 1");
             end if;
 
             --  Machine-Check Enable is required for MCE handling.
@@ -2244,9 +2329,10 @@ is
                                  XPath => "MachineCheckEnable",
                                  Value => "0")
             then
-               raise Validation_Error with "VMX CR4 guest/host mask control "
-                 & "'Machine-Check Enable' of subject '" & Subj_Name
-                 & "' invalid: must be 1";
+               Validation_Errors.Insert
+                 (Msg => "VMX CR4 guest/host mask control "
+                  & "'Machine-Check Enable' of subject '" & Subj_Name
+                  & "' invalid: must be 1");
             end if;
          end;
       end loop;
@@ -2281,9 +2367,10 @@ is
                                  XPath => "MachineCheck",
                                  Value => "0")
             then
-               raise Validation_Error with "VMX Exception bitmap control "
-                 & "'Machine Check' of subject '" & Subj_Name
-                 & "' invalid: must be 1";
+               Validation_Errors.Insert
+                 (Msg => "VMX Exception bitmap control "
+                  & "'Machine Check' of subject '" & Subj_Name
+                  & "' invalid: must be 1");
             end if;
          end;
       end loop;

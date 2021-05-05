@@ -23,6 +23,8 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 
+with Mucfgcheck.Validation_Errors;
+
 package body Mucfgcheck
 is
 
@@ -57,9 +59,10 @@ is
               := Interfaces.Unsigned_64'Value (Attr_Str);
          begin
             if not Test (A => Attr_Value, B => B) then
-               raise Validation_Error with "Attribute '" & Attr & " => "
-                 & Attr_Str & "' of '" & Name & "' " & Node_Type  & " element "
-                 & Error_Msg;
+               Validation_Errors.Insert
+                 (Msg => "Attribute '" & Attr & " => "
+                  & Attr_Str & "' of '" & Name & "' " & Node_Type
+                  & " element " & Error_Msg);
             end if;
          end;
       end loop;
@@ -99,9 +102,9 @@ is
               := Interfaces.Unsigned_64'Value (Attr_Str);
          begin
             if not Test (A => Attr_Value, B => B, C => C) then
-               raise Validation_Error with "Attribute '" & Attr & " => "
-                 & Attr_Str & "' of '" & Name & "' " & Node_Type  & " element "
-                 & Error_Msg;
+               Validation_Errors.Insert
+                 (Msg => "Attribute '" & Attr & " => " & Attr_Str & "' of '"
+                  & Name & "' " & Node_Type  & " element " & Error_Msg);
             end if;
          end;
       end loop;
@@ -154,9 +157,9 @@ is
              (Right_Addr < Left_Addr
               and then Right_Addr + Right_Size > Left_Addr)
          then
-            raise Validation_Error with "Overlap of " & Region_Type
-              & " '" & Left_Name & "' and '" & Right_Name & "'"
-              & Add_Msg;
+            Validation_Errors.Insert
+              (Msg => "Overlap of " & Region_Type & " '" & Left_Name
+               & "' and '" & Right_Name & "'" & Add_Msg);
          end if;
       end Check_Overlap;
    begin
@@ -205,8 +208,10 @@ is
      (Source_Nodes : DOM.Core.Node_List;
       Ref_Nodes    : DOM.Core.Node_List;
       Log_Message  : String;
-      Error        : not null access function
-        (Node : DOM.Core.Node) return String;
+      Error        : not null access procedure
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
       Match        : not null access function
         (Left, Right : DOM.Core.Node) return Boolean)
    is
@@ -235,7 +240,17 @@ is
             end loop Find_Match;
 
             if not Match_Found then
-               raise Validation_Error with Error (Node => Node);
+               declare
+                  Err_Str : Ada.Strings.Unbounded.Unbounded_String;
+                  Fatal   : Boolean;
+               begin
+                  Error (Node    => Node,
+                         Err_Str => Err_Str,
+                         Fatal   => Fatal);
+                  Validation_Errors.Insert
+                    (Msg   => Ada.Strings.Unbounded.To_String (Err_Str),
+                     Fatal => Fatal);
+               end;
             end if;
          end;
       end loop;
@@ -248,8 +263,10 @@ is
       Source_XPath : String;
       Ref_XPath    : String;
       Log_Message  : String;
-      Error        : not null access function
-        (Node : DOM.Core.Node) return String;
+      Error        : not null access procedure
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
       Match        : not null access function
         (Left, Right : DOM.Core.Node) return Boolean)
    is

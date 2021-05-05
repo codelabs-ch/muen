@@ -14,7 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with Mucfgcheck.Validation_Errors;
 --  begin read only
 --  end read only
 package body Mucfgcheck.Hardware.Test_Data.Tests is
@@ -50,18 +50,11 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
          Name  => "size",
          Value => "16#1000#");
 
-      begin
-         Memory_Space (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Allocated 16#13ed_b000# bytes of physical memory but "
-                    & "only 16#042a_1000# bytes available by the hardware",
-                    Message   => "Exception mismatch");
-      end;
+      Memory_Space (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Allocated 16#13ed_b000# bytes of physical memory but "
+               & "only 16#042a_1000# bytes available by the hardware"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Memory_Space;
 --  end read only
@@ -87,18 +80,11 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
          Name  => "size",
          Value => "16#1000_0000#");
 
-      begin
-         Memory_Block_Overlap (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Overlap of hardware memory block 'base_mem' and"
-                    & " 'extended_mem_1'",
-                    Message   => "Exception mismatch");
-      end;
+      Memory_Block_Overlap (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Overlap of hardware memory block 'base_mem' and"
+               & " 'extended_mem_1'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Memory_Block_Overlap;
 --  end read only
@@ -122,6 +108,8 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Memory_Block_Size (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Set invalid memory block size.
 
@@ -131,18 +119,11 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
          Name  => "size",
          Value => "16#0123#");
 
-      begin
-         Memory_Block_Size (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'size => 16#0123#' of 'base_mem' hardware "
-                    & "memory block element not multiple of page size (4K)",
-                    Message   => "Exception mismatch");
-      end;
+      Memory_Block_Size (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Attribute 'size => 16#0123#' of 'base_mem' hardware "
+               & "memory block element not multiple of page size (4K)"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Memory_Block_Size;
 --  end read only
@@ -168,18 +149,10 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
          Name  => "pciConfigAddress",
          Value => "");
 
-      begin
-         PCI_Config_Space_Address (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Missing PCI configuration space address",
-                    Message   => "Exception mismatch");
-      end;
-
+      PCI_Config_Space_Address (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Missing PCI configuration space address"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_PCI_Config_Space_Address;
 --  end read only
@@ -205,17 +178,10 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
          Name  => "cpuCores",
          Value => "2");
 
-      begin
-         CPU_Count (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "System requires 4 but hardware only provides 2 CPU(s)",
-                    Message   => "Exception mismatch");
-      end;
+      CPU_Count (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "System requires 4 but hardware only provides 2 CPU(s)"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_CPU_Count;
 --  end read only
@@ -239,6 +205,8 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       CPU_Sub_Elements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -246,17 +214,10 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
          Name  => "apicId",
          Value => "23");
 
-      begin
-         CPU_Sub_Elements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "CPU with APIC ID 0 not present in active CPU set",
-                    Message   => "Exception mismatch (1)");
-      end;
+      CPU_Sub_Elements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "CPU with APIC ID 0 not present in active CPU set"),
+              Message   => "Exception mismatch (1)");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -269,18 +230,11 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
          Name  => "cpuCores",
          Value => "5");
 
-      begin
-         CPU_Sub_Elements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Hardware processor element requires 5 CPU sub-elements, "
-                    & "but 4 given",
-                    Message   => "Exception mismatch (2)");
-      end;
+      CPU_Sub_Elements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Hardware processor element requires 5 CPU sub-elements, "
+               & "but 4 given"),
+              Message   => "Exception mismatch (2)");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -293,17 +247,10 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
          Name  => "cpuId",
          Value => "22");
 
-      begin
-         CPU_Sub_Elements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (3)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Processor CPU IDs not consecutive",
-                    Message   => "Exception mismatch (3)");
-      end;
+      CPU_Sub_Elements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Processor CPU IDs not consecutive"),
+              Message   => "Exception mismatch (3)");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -316,18 +263,11 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
          Name  => "apicId",
          Value => "1");
 
-      begin
-         CPU_Sub_Elements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (4)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Processor CPU sub-element with CPU ID 2 has uneven APIC"
-                    & " ID 1",
-                    Message   => "Exception mismatch (4)");
-      end;
+      CPU_Sub_Elements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Processor CPU sub-element with CPU ID 2 has uneven APIC"
+               & " ID 1"),
+              Message   => "Exception mismatch (4)");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -340,17 +280,10 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
          Name  => "cpuId",
          Value => "4");
 
-      begin
-         CPU_Sub_Elements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (5)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "CPU sub-element with CPU ID 0 not found",
-                    Message   => "Exception mismatch (5)");
-      end;
+      CPU_Sub_Elements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "CPU sub-element with CPU ID 0 not found"),
+              Message   => "Exception mismatch (5)");
 --  begin read only
    end Test_CPU_Sub_Elements;
 --  end read only
@@ -374,44 +307,30 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       IOAPIC_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
-      Missing_Memory:
-      begin
-         Muxml.Utils.Remove_Elements
-           (Doc   => Data.Doc,
-            XPath => "/system/hardware/devices/device[@name='ioapic']"
-            & "/memory");
+      Muxml.Utils.Remove_Elements
+        (Doc   => Data.Doc,
+         XPath => "/system/hardware/devices/device[@name='ioapic']"
+         & "/memory");
 
-         IOAPIC_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
+      IOAPIC_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "I/O APIC device 'ioapic' has no memory region"),
+              Message   => "Exception mismatch (1)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "I/O APIC device 'ioapic' has no memory region",
-                    Message   => "Exception mismatch (1)");
-      end Missing_Memory;
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/hardware/devices/device/capabilities/"
+         & "capability[@name='ioapic']",
+         Name  => "name",
+         Value => "foo");
 
-      Too_Few_Devices:
-      begin
-         Muxml.Utils.Set_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/hardware/devices/device/capabilities/"
-            & "capability[@name='ioapic']",
-            Name  => "name",
-            Value => "foo");
-
-         IOAPIC_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "I/O APIC count is 0 but must be at least 1",
-                    Message   => "Exception mismatch (2)");
-      end Too_Few_Devices;
+      IOAPIC_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "I/O APIC count is 0 but must be at least 1"),
+              Message   => "Exception mismatch (2)");
 --  begin read only
    end Test_IOAPIC_Presence;
 --  end read only
@@ -436,6 +355,8 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       IOAPIC_Cap_SID (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Invalid SID value.
 
@@ -446,34 +367,20 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
 
       DOM.Core.Nodes.Set_Node_Value (N     => Cap,
                                      Value => "16#10000#");
-      begin
-         IOAPIC_Cap_SID (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Source ID capability of I/O APIC 'ioapic' set to "
-                    & "invalid value '16#10000#'",
-                    Message   => "Exception mismatch (1)");
-      end;
+      IOAPIC_Cap_SID (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Source ID capability of I/O APIC 'ioapic' set to "
+               & "invalid value '16#10000#'"),
+              Message   => "Exception mismatch (1)");
 
       --  SID value not set.
 
       DOM.Core.Nodes.Set_Node_Value (N     => Cap,
                                      Value => "");
-      begin
-         IOAPIC_Cap_SID (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Source ID capability of I/O APIC 'ioapic' is not set",
-                    Message   => "Exception mismatch (2)");
-      end;
+      IOAPIC_Cap_SID (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Source ID capability of I/O APIC 'ioapic' is not set"),
+              Message   => "Exception mismatch (2)");
 
       --  SID capability not present.
 
@@ -481,17 +388,11 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
         (Doc   => Data.Doc,
          XPath => "/system/hardware/devices/device[@name='ioapic']"
          & "/capabilities/capability[@name='source_id']");
-      begin
-         IOAPIC_Cap_SID (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (3)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Source ID capability of I/O APIC 'ioapic' is not set",
-                    Message   => "Exception mismatch (3)");
-      end;
+      IOAPIC_Cap_SID (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Source ID capability of I/O APIC 'ioapic' is not set"),
+              Message   => "Exception mismatch (3)");
 --  begin read only
    end Test_IOAPIC_Cap_SID;
 --  end read only
@@ -515,23 +416,18 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       IOMMU_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
-      Missing_Memory:
-      begin
-         Muxml.Utils.Remove_Elements
-           (Doc   => Data.Doc,
-            XPath => "/system/hardware/devices/device[@name='iommu_2']"
-            & "/memory");
-         IOMMU_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
+      Muxml.Utils.Remove_Elements
+        (Doc   => Data.Doc,
+         XPath => "/system/hardware/devices/device[@name='iommu_2']"
+         & "/memory");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "IOMMU device 'iommu_2' has no memory region",
-                    Message   => "Exception mismatch (1)");
-      end Missing_Memory;
+      IOMMU_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "IOMMU device 'iommu_2' has no memory region"),
+              Message   => "Exception mismatch (1)");
 
       Too_Many_Devices:
       declare
@@ -577,35 +473,22 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
          end loop;
 
          IOMMU_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "IOMMU count is 11 but must not be larger than 8",
-                    Message   => "Exception mismatch (2)");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "IOMMU count is 11 but must not be larger than 8"),
+                 Message   => "Exception mismatch (2)");
       end Too_Many_Devices;
 
-      Too_Few_Devices:
-      begin
-         Muxml.Utils.Set_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/hardware/devices/device/capabilities/"
-            & "capability[@name='iommu']",
-            Name  => "name",
-            Value => "foo");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/hardware/devices/device/capabilities/"
+         & "capability[@name='iommu']",
+         Name  => "name",
+         Value => "foo");
 
-         IOMMU_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (3)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "IOMMU count is 0 but must be at least 1",
-                    Message   => "Exception mismatch (3)");
-      end Too_Few_Devices;
+      IOMMU_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "IOMMU count is 0 but must be at least 1"),
+              Message   => "Exception mismatch (3)");
 --  begin read only
    end Test_IOMMU_Presence;
 --  end read only
@@ -630,6 +513,8 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       IOMMU_Cap_Agaw (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Unknown AGAW value.
 
@@ -640,51 +525,30 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
 
       DOM.Core.Nodes.Set_Node_Value (N     => Cap,
                                      Value => "51");
-      begin
-         IOMMU_Cap_Agaw (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "AGAW capability of IOMMU 'iommu_1' set to invalid "
-                    & "value '51'",
-                    Message   => "Exception mismatch");
-      end;
+      IOMMU_Cap_Agaw (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "AGAW capability of IOMMU 'iommu_1' set to invalid "
+               & "value '51'"),
+              Message   => "Exception mismatch");
 
       --  AGAW value not set.
 
       DOM.Core.Nodes.Set_Node_Value (N     => Cap,
                                      Value => "");
-      begin
-         IOMMU_Cap_Agaw (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "AGAW capability of IOMMU 'iommu_1' is not set",
-                    Message   => "Exception mismatch");
-      end;
+      IOMMU_Cap_Agaw (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "AGAW capability of IOMMU 'iommu_1' is not set"),
+              Message   => "Exception mismatch");
 
       --  Differing AGAW values.
 
       DOM.Core.Nodes.Set_Node_Value (N     => Cap,
                                      Value => "48");
-      begin
-         IOMMU_Cap_Agaw (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "IOMMUs have different AGAW capabilities set ('48' vs. "
-                    & "'39')",
-                    Message   => "Exception mismatch");
-      end;
+      IOMMU_Cap_Agaw (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "IOMMUs have different AGAW capabilities set ('48' vs. "
+               & "'39')"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_IOMMU_Cap_Agaw;
 --  end read only
@@ -709,6 +573,8 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       IOMMU_Cap_Register_Offsets (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Cap := Muxml.Utils.Get_Element
         (Doc   => Data.Doc,
@@ -719,17 +585,10 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
 
       DOM.Core.Nodes.Set_Node_Value (N     => Cap,
                                      Value => "");
-      begin
-         IOMMU_Cap_Register_Offsets (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Capability 'fr_offset' of IOMMU 'iommu_1' is not set",
-                    Message   => "Exception mismatch (1)");
-      end;
+      IOMMU_Cap_Register_Offsets (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Capability 'fr_offset' of IOMMU 'iommu_1' is not set"),
+              Message   => "Exception mismatch (1)");
       DOM.Core.Nodes.Set_Node_Value (N     => Cap,
                                      Value => "512");
 
@@ -737,18 +596,11 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
 
       DOM.Core.Nodes.Set_Node_Value (N     => Cap,
                                      Value => "16369");
-      begin
-         IOMMU_Cap_Register_Offsets (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Capability 'fr_offset' of IOMMU 'iommu_1' not in "
-                    & "allowed range 0 .. 16368",
-                    Message   => "Exception mismatch (2)");
-      end;
+      IOMMU_Cap_Register_Offsets (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Capability 'fr_offset' of IOMMU 'iommu_1' not in "
+               & "allowed range 0 .. 16368"),
+              Message   => "Exception mismatch (2)");
       DOM.Core.Nodes.Set_Node_Value (N     => Cap,
                                      Value => "512");
 
@@ -761,18 +613,11 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
 
       DOM.Core.Nodes.Set_Node_Value (N     => Cap,
                                      Value => "");
-      begin
-         IOMMU_Cap_Register_Offsets (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (3)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Capability 'iotlb_invalidate_offset' of IOMMU 'iommu_1'"
-                    & " is not set",
-                    Message   => "Exception mismatch (3)");
-      end;
+      IOMMU_Cap_Register_Offsets (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Capability 'iotlb_invalidate_offset' of IOMMU 'iommu_1'"
+               & " is not set"),
+              Message   => "Exception mismatch (3)");
       DOM.Core.Nodes.Set_Node_Value (N     => Cap,
                                      Value => "264");
 
@@ -780,18 +625,11 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
 
       DOM.Core.Nodes.Set_Node_Value (N     => Cap,
                                      Value => "16377");
-      begin
-         IOMMU_Cap_Register_Offsets (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (4)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Capability 'iotlb_invalidate_offset' of IOMMU 'iommu_1'"
-                    & " not in allowed range 0 .. 16376",
-                    Message   => "Exception mismatch");
-      end;
+      IOMMU_Cap_Register_Offsets (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Capability 'iotlb_invalidate_offset' of IOMMU 'iommu_1'"
+               & " not in allowed range 0 .. 16376"),
+              Message   => "Exception mismatch");
       DOM.Core.Nodes.Set_Node_Value (N     => Cap,
                                      Value => "264");
 --  begin read only
@@ -817,6 +655,8 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
       --  Positive tests, must not raise an exception.
 
       System_Board_Presence (XML_Data => Policy);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Remove_Child
         (Node       => Muxml.Utils.Get_Element
@@ -825,18 +665,11 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
             & "capability/@name='systemboard']"),
          Child_Name => "capabilities");
 
-      begin
-         System_Board_Presence (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "System board device with reset/poweroff configuration "
-                    & "missing or incomplete",
-                    Message   => "Exception mismatch");
-      end;
+      System_Board_Presence (XML_Data => Policy);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "System board device with reset/poweroff configuration "
+               & "missing or incomplete"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_System_Board_Presence;
 --  end read only

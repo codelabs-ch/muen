@@ -26,6 +26,8 @@ with Mutools.Match;
 with Mutools.Types;
 with Muxml.Utils;
 
+with Mucfgcheck.Validation_Errors;
+
 package body Mucfgcheck.Platform
 is
 
@@ -34,11 +36,17 @@ is
    procedure Alias_Physical_Device_References (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          Alias_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
@@ -47,8 +55,10 @@ is
            (Elem => Node,
             Name => "physical");
       begin
-         return "Physical device '" & Phys_Name & "' referenced by device "
-           & "alias '" & Alias_Name & "' not found";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Physical device '" & Phys_Name & "' referenced by device "
+            & "alias '" & Alias_Name & "' not found");
+         Fatal := True;
       end Error_Msg;
    begin
       For_Each_Match
@@ -66,11 +76,17 @@ is
      (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          Alias_Name     : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
@@ -82,9 +98,11 @@ is
            (Elem => Node,
             Name => "physical");
       begin
-         return "Physical device resource '" & Phys_Res_Name
-           & "' referenced by alias resource '" & Alias_Res_Name
-           & "' of device alias '" & Alias_Name & "' not found";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Physical device resource '" & Phys_Res_Name
+            & "' referenced by alias resource '" & Alias_Res_Name
+            & "' of device alias '" & Alias_Name & "' not found");
+         Fatal := True;
       end Error_Msg;
    begin
       For_Each_Match
@@ -101,11 +119,17 @@ is
    procedure Class_Physical_Device_References (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          Class_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
@@ -114,8 +138,10 @@ is
            (Elem => Node,
             Name => "physical");
       begin
-         return "Physical device '" & Phys_Name & "' referenced by device "
-           & "class '" & Class_Name & "' not found";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Physical device '" & Phys_Name & "' referenced by device "
+            & "class '" & Class_Name & "' not found");
+         Fatal := True;
       end Error_Msg;
    begin
       For_Each_Match
@@ -158,8 +184,10 @@ is
       Mulog.Log (Msg => "Checking kernel diagnostics device references");
 
       if Phys_Dev = null then
-         raise Validation_Error with "Physical device '" & Phys_Name
-           & "' designated as kernel diagnostics device not found";
+         Validation_Errors.Insert
+           (Msg => "Physical device '" & Phys_Name
+            & "' designated as kernel diagnostics device not found");
+         return;
       end if;
 
       declare
@@ -188,18 +216,21 @@ is
                                              Ref_Value => Phys_Res_Name);
             begin
                if Phys_Res = null then
-                  raise Validation_Error with "Physical device resource '"
-                    & Phys_Name & "->" & Phys_Res_Name & "' referenced by "
-                    & "kernel diagnostics device not found";
+                  Validation_Errors.Insert
+                    (Msg => "Physical device resource '"
+                     & Phys_Name & "->" & Phys_Res_Name & "' referenced by "
+                     & "kernel diagnostics device not found");
+                  return;
                end if;
 
                if Diag_Res_Type /= DOM.Core.Nodes.Node_Name (N => Phys_Res)
                then
-                  raise Validation_Error with "Physical device resource '"
-                    & Phys_Name & "->" & Phys_Res_Name & "' referenced by "
-                    & "kernel diagnostics device has different type: "
-                    & Diag_Res_Type & " /= "
-                    & DOM.Core.Nodes.Node_Name (N => Phys_Res);
+                  Validation_Errors.Insert
+                    (Msg => "Physical device resource '"
+                     & Phys_Name & "->" & Phys_Res_Name & "' referenced by "
+                     & "kernel diagnostics device has different type: "
+                     & Diag_Res_Type & " /= "
+                     & DOM.Core.Nodes.Node_Name (N => Phys_Res));
                end if;
             end;
          end loop;
@@ -263,8 +294,9 @@ is
       is
       begin
          if Diag_Device /= null then
-            raise Validation_Error with "Kernel diagnostics device of type '"
-              & Diag_Type_Str & "' must not specify device reference";
+            Validation_Errors.Insert
+              (Msg => "Kernel diagnostics device of type '"
+               & Diag_Type_Str & "' must not specify device reference");
          end if;
       end Check_Diag_None;
 
@@ -285,8 +317,10 @@ is
       is
       begin
          if Diag_Device = null then
-            raise Validation_Error with "Kernel diagnostics device of type '"
-              & Diag_Type_Str & "' must specify device reference";
+            Validation_Errors.Insert
+              (Msg => "Kernel diagnostics device of type '"
+               & Diag_Type_Str & "' must specify device reference");
+            return;
          end if;
 
          declare
@@ -299,17 +333,19 @@ is
             Dev_Res : DOM.Core.Node;
          begin
             if Dev_Res_Count /= 1 then
-               raise Validation_Error with "Kernel diagnostics device of type "
-                 & "'" & Diag_Type_Str & "' must specify exactly one device "
-                 & "resource reference";
+               Validation_Errors.Insert
+                 (Msg => "Kernel diagnostics device of type "
+                  & "'" & Diag_Type_Str & "' must specify exactly one device "
+                  & "resource reference");
             end if;
 
             Dev_Res := DOM.Core.Nodes.Item (List  => Dev_Resources,
                                             Index => 0);
             if DOM.Core.Nodes.Node_Name (N => Dev_Res) /= Res_Kind then
-               raise Validation_Error with "Kernel diagnostics device of type "
-                 & "'" & Diag_Type_Str & "' must specify " & Res_Kind
-                 & " device resource reference";
+               Validation_Errors.Insert
+                 (Msg => "Kernel diagnostics device of type "
+                  & "'" & Diag_Type_Str & "' must specify " & Res_Kind
+                  & " device resource reference");
             end if;
          end;
       end Check_Diag_Uart_Common;
@@ -320,8 +356,10 @@ is
       is
       begin
          if Diag_Device = null then
-            raise Validation_Error with "Kernel diagnostics device of type '"
-              & Diag_Type_Str & "' must specify device reference";
+            Validation_Errors.Insert
+              (Msg => "Kernel diagnostics device of type '"
+               & Diag_Type_Str & "' must specify device reference");
+            return;
          end if;
 
          declare
@@ -334,25 +372,29 @@ is
             Dev_Res : DOM.Core.Node;
          begin
             if Dev_Res_Count /= 2 then
-               raise Validation_Error with "Kernel diagnostics device of type "
-                 & "'" & Diag_Type_Str & "' must specify exactly two device "
-                 & "resource references";
+               Validation_Errors.Insert
+                 (Msg => "Kernel diagnostics device of type "
+                  & "'" & Diag_Type_Str & "' must specify exactly two device "
+                  & "resource references");
+               return;
             end if;
 
             Dev_Res := DOM.Core.Nodes.Item (List  => Dev_Resources,
                                             Index => 0);
             if DOM.Core.Nodes.Node_Name (N => Dev_Res) /= "memory" then
-               raise Validation_Error with "Kernel diagnostics device of type "
-                 & "'" & Diag_Type_Str & "' must specify a memory device "
-                 & "resource reference";
+               Validation_Errors.Insert
+                 (Msg => "Kernel diagnostics device of type "
+                  & "'" & Diag_Type_Str & "' must specify a memory device "
+                  & "resource reference");
             end if;
 
             Dev_Res := DOM.Core.Nodes.Item (List  => Dev_Resources,
                                             Index => 1);
             if DOM.Core.Nodes.Node_Name (N => Dev_Res) /= "ioPort" then
-               raise Validation_Error with "Kernel diagnostics device of type "
-                 & "'" & Diag_Type_Str & "' must specify an I/O port device "
-                 & "resource reference";
+               Validation_Errors.Insert
+                 (Msg => "Kernel diagnostics device of type "
+                  & "'" & Diag_Type_Str & "' must specify an I/O port device "
+                  & "resource reference");
             end if;
          end;
       end Check_Diag_Vga;
@@ -440,10 +482,11 @@ is
                              Level => 2),
                           Name => "name");
                   begin
-                     raise Validation_Error with "Logical device '"
-                       & Logical_Name & "' of subject '" & Subject_Name
-                       & "' references resource '" & Res_Name & "' that is not"
-                       & " provided by device alias '" & Alias_Name & "'";
+                     Validation_Errors.Insert
+                       (Msg => "Logical device '"
+                        & Logical_Name & "' of subject '" & Subject_Name
+                        & "' references resource '" & Res_Name & "' that is "
+                        & "not provided by device alias '" & Alias_Name & "'");
                   end;
                end if;
             end;

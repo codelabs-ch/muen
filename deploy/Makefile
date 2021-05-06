@@ -36,7 +36,7 @@ $(HTTP_DIR)/memdisk: memdisk.tar.xz | $(HTTP_DIR)
 	@tar xfJ $< -C $(HTTP_DIR)
 
 .server: | $(HTTP_DIR)
-	@(cd $(HTTP_DIR) && python -m SimpleHTTPServer $(DEPLOY_PORT) >$(HTTP_LOG) 2>&1 & echo "$$!" > $@)
+	@(cd $(HTTP_DIR) && python3 -m RangeHTTPServer $(DEPLOY_PORT) >$(HTTP_LOG) 2>&1 & echo "$$!" > $@)
 	@sleep 1
 	@if [ "$(HTTP_STATE)" != "" ]; then                                   \
 		echo HTTP start failed, check '$(HTTP_LOG)'; rm .server | exit 1; \

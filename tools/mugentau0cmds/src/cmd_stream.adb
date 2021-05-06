@@ -102,9 +102,6 @@ is
 
       Utils.Append_Command
         (Stream_Doc => Stream_Doc,
-         Name       => "writeImage");
-      Utils.Append_Command
-        (Stream_Doc => Stream_Doc,
          Name       => "writeImageCmdStream",
          Attrs      =>
            (1 => (Attr  => U ("entryPoint"),

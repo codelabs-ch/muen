@@ -190,7 +190,7 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
          when E : ELF_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Unexpected kernel entry address 16#1000#, expected "
-                    & "16#0010_0020#",
+                    & "16#0010_0000#",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

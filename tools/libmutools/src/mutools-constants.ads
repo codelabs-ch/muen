@@ -50,7 +50,7 @@ is
    Hardware_Max_IRQ_Number : constant := 220;
 
    --  Muen kernel entry point address.
-   Kernel_Entry_Point : constant := 16#0010_0020#;
+   Kernel_Entry_Point : constant := 16#0010_0000#;
 
    --  Base address of subject PCI config space.
    Subject_PCI_Config_Space_Addr : constant := 16#f800_0000#;

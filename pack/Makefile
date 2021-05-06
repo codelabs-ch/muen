@@ -1,5 +1,5 @@
 IMG_NAME = muen.img
-IMG_TAU0 = $(OBJ_DIR)/$(IMG_NAME)
+IMG_TAU0 = $(OBJ_DIR)/$(IMG_NAME).cmds
 
 include ../Makeconf
 

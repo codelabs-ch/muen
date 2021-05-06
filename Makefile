@@ -35,7 +35,7 @@ tau0: policy-compile rts
 tau0_static:	## Build system resource manager Tau0
 	$(MAKE) -C components $@
 
-pack:		## Build and create Muen system image (Multiboot)
+pack:		## Build and create Muen system image
 pack: kernel tau0 tau0_static components
 	$(MAKE) -C $@
 
@@ -48,7 +48,7 @@ tools_install:
 
 deploy:		## Build and deploy Muen system to hardware target
 deploy: HARDWARE=hardware/lenovo-t430s.xml
-deploy: pack
+deploy: iso
 	$(MAKE) -C $@
 
 emulate:	## Build and run Muen system in KVM

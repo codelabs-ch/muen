@@ -155,6 +155,29 @@ execute_n()
 	failed
 }
 
+set_buildvars()
+{
+	IFS='|' read -ra build_vars <<< "$1"
+
+	local i
+	for i in "${build_vars[@]}"
+	do
+		log "Exporting build variable '$i'"
+		export "$i"
+	done
+}
+
+unset_buildvars()
+{
+	IFS='|' read -ra build_vars <<< "$1"
+
+	local i
+	for i in "${build_vars[@]}"
+	do
+		unset `echo $i | cut -d\= -f1`
+	done
+}
+
 ssh_exec()
 {
 	local lnx1_login=$1
@@ -178,11 +201,6 @@ emulate()
 
 	export CURRENT_EMUL_LOGDIR=$1
 
-	if [ ! -z "$qemu_extra_opts" ]; then
-		export QEMU_EXTRA_OPTS="$6"
-		log "Using QEMU_EXTRA_OPTS '$QEMU_EXTRA_OPTS'"
-	fi
-
 	SAVE_ARTIFACTS=1
 	execute "$MAKE emulate HARDWARE=$hardware SYSTEM=$system"
 
@@ -201,7 +219,6 @@ emulate()
 	fi
 
 	unset CURRENT_EMUL_LOGDIR
-	unset QEMU_EXTRA_OPTS
 }
 
 deploy_to_emul()
@@ -213,13 +230,15 @@ deploy_to_emul()
 		hardware=`echo $item | cut -d\; -f2`
 		integscript=`echo $item | cut -d\; -f3`
 		expect=`echo $item | cut -d\; -f4`
-		qemu_extra_opts="`echo $item | cut -d\; -f5`"
+		buildvars=`echo $item | cut -d\; -f5`
 		target_logdir=$(hw_targetlogdir "$system" "$hardware")
 		execute "mkdir -p $target_logdir"
 
 		log "Deploying to QEMU/KVM: system '$system', config '$hardware'"
 
-		emulate $target_logdir $system $hardware $integscript $expect "$qemu_extra_opts"
+		set_buildvars "$buildvars"
+		emulate $target_logdir $system $hardware $integscript $expect
+		unset_buildvars "$buildvars"
 	done
 }
 
@@ -286,6 +305,7 @@ deploy_to_hardware()
 		hardware=`echo $item | cut -d\; -f3`
 		integscript=`echo $item | cut -d\; -f4`
 		expect=`echo $item | cut -d\; -f5`
+		buildvars=`echo $item | cut -d\; -f6`
 		target_logdir=$(hw_targetlogdir "$system" "$hardware")
 		execute "mkdir -p $target_logdir"
 
@@ -304,7 +324,9 @@ deploy_to_hardware()
 			capture_output $target_logdir "$LOG_CMD_AMT $ip"
 		fi
 
+		set_buildvars "$buildvars"
 		hw_deploy $target_logdir $system $hardware $integscript $expect
+		unset_buildvars "$buildvars"
 	done
 }
 
@@ -322,6 +344,10 @@ acquire_file_lock
 execute "cd $WORKDIR"
 execute "$MAKE -C deploy clean"
 execute "$MAKE -C emulate clean"
+
+# Build GRUB2 for both pc and efi
+execute "$MAKE -C contrib/grub"
+execute "$MAKE -C contrib/grub MUEN_EFI=1"
 
 deploy_to_emul
 deploy_to_hardware

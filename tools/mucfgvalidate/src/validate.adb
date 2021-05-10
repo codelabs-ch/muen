@@ -29,6 +29,7 @@ with Mucfgcheck.Hardware;
 with Mucfgcheck.Platform;
 with Mucfgcheck.Events;
 with Mucfgcheck.Device_Domains;
+with Mucfgcheck.Validation_Errors;
 
 with Validate.XML_Processors;
 
@@ -360,6 +361,7 @@ is
         (Msg => "Registered validators" & XML_Processors.Get_Count'Img);
 
       XML_Processors.Run (Data => Data);
+      Mucfgcheck.Validation_Errors.Check;
 
       Mulog.Log (Msg => "Successfully validated policy '" & Policy & "'");
    end Run;

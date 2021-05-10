@@ -21,7 +21,7 @@ with Ada.Exceptions;
 
 with Mulog;
 with Muxml;
-with Mucfgcheck;
+with Mucfgcheck.Validation_Errors;
 
 with Memhashes.Cmd_Line;
 
@@ -38,12 +38,17 @@ exception
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : Muxml.XML_Input_Error
       | Muxml.Validation_Error
-      | Mucfgcheck.Validation_Error
       | Memhashes.Hasher_Error =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "Processing failed, aborting");
       Mulog.Log (Level => Mulog.Error,
                  Msg   => Ada.Exceptions.Exception_Message (X => E));
+      Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
+   when Mucfgcheck.Validation_Errors.Validation_Error =>
+      Mulog.Log (Level => Mulog.Error,
+                 Msg   => "Semantic check failed, aborting");
+      Mulog.Log (Level => Mulog.Error,
+                 Msg   => Mucfgcheck.Validation_Errors.Get_Error_Message);
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : others =>
       Mulog.Log (Level => Mulog.Error,

@@ -16,10 +16,13 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
+
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
 with Mucfgcheck.Files;
+with Mucfgcheck.Validation_Errors;
 
 package body Memhashes.Pre_Checks
 is
@@ -37,7 +40,10 @@ is
    procedure Hash_References (Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       --  Returns True if the left node's 'memory' attribute matches the 'name'
       --  attribute of the right node.
@@ -45,7 +51,10 @@ is
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          use type DOM.Core.Node;
 
@@ -58,8 +67,10 @@ is
              (Elem => Node,
               Name => "memory");
       begin
-         return "Physical memory region '" & Ref_Name & "' referenced by "
-           & "hashRef of memory region '" & Name & "' does not exist";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Physical memory region '" & Ref_Name & "' referenced by "
+            & "hashRef of memory region '" & Name & "' does not exist");
+         Fatal := False;
       end Error_Msg;
 
       ----------------------------------------------------------------------
@@ -104,6 +115,7 @@ is
    begin
       Mucfgcheck.Files.Set_Input_Directory (Dir => Input_Dir);
       Check_Procs.Run (Data => Data);
+      Mucfgcheck.Validation_Errors.Check;
    end Run;
 
 end Memhashes.Pre_Checks;

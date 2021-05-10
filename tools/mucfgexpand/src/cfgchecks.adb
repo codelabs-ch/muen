@@ -30,7 +30,7 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
-with Mucfgcheck;
+with Mucfgcheck.Validation_Errors;
 with Mutools.Match;
 with Mutools.Utils;
 with Mutools.XML_Utils;
@@ -156,15 +156,17 @@ is
             if (Has_Event'Length > 0 and then Reader_Count /= 1)
               or (Has_Event'Length = 0 and then Reader_Count < 1)
             then
-               raise Mucfgcheck.Validation_Error with "Invalid number of "
-                 & "readers for channel '" & Channel_Name & "':"
-                 & Reader_Count'Img;
+               Mucfgcheck.Validation_Errors.Insert
+                 (Msg => "Invalid number of "
+                  & "readers for channel '" & Channel_Name & "':"
+                  & Reader_Count'Img);
             end if;
 
             if Writer_Count /= 1 then
-               raise Mucfgcheck.Validation_Error with "Invalid number of "
-                 & "writers for channel '" & Channel_Name & "':"
-                 & Writer_Count'Img;
+               Mucfgcheck.Validation_Errors.Insert
+                 (Msg => "Invalid number of "
+                  & "writers for channel '" & Channel_Name & "':"
+                  & Writer_Count'Img);
             end if;
          end;
       end loop;
@@ -204,9 +206,10 @@ is
             Name => Attr_Name);
       begin
          if Left_Attr = Right_Attr then
-            raise Mucfgcheck.Validation_Error with Mutools.Utils.Capitalize
-              (Description) & " " & Attr_Name & " '" & Left_Attr
-              & "' is not unique";
+            Mucfgcheck.Validation_Errors.Insert
+              (Msg => Mutools.Utils.Capitalize
+                 (Description) & " " & Attr_Name & " '" & Left_Attr
+               & "' is not unique");
          end if;
       end Check_Inequality;
    begin
@@ -258,9 +261,9 @@ is
               (Elem => Node,
                Name => Attr_Name) = ""
             then
-               raise Mucfgcheck.Validation_Error with "Missing '" & Attr_Name
-                 & "' attribute for " & Endpoint & " of channel '"
-                 & Channel_Name & "'";
+               Mucfgcheck.Validation_Errors.Insert
+                 (Msg => "Missing '" & Attr_Name & "' attribute for "
+                  & Endpoint & " of channel '" & Channel_Name & "'");
             end if;
          end;
       end loop;
@@ -322,10 +325,12 @@ is
                  Ref_Value => Log_Name);
          begin
             if Mapping = null then
-               raise Mucfgcheck.Validation_Error with "Subject '" & Subj_Name
-                 & "' does not map logical " & Resource_Type & " '" & Log_Name
-                 & "' as requested by referenced component '" & Comp_Name
-                 & "'";
+               Mucfgcheck.Validation_Errors.Insert
+                 (Msg => "Subject '" & Subj_Name
+                  & "' does not map logical " & Resource_Type & " '" & Log_Name
+                  & "' as requested by referenced component '" & Comp_Name
+                  & "'");
+               return;
             end if;
 
             declare
@@ -340,10 +345,12 @@ is
                     Ref_Value => Phys_Name);
             begin
                if Phys_Res = null then
-                  raise Mucfgcheck.Validation_Error with "Physical "
-                    & Resource_Type & " '" & Phys_Name & "' referenced by "
-                    & "mapping of component logical resource '" & Log_Name
-                    & "' by subject" & " '" & Subj_Name & "' does not exist";
+                  Mucfgcheck.Validation_Errors.Insert
+                    (Msg => "Physical "
+                     & Resource_Type & " '" & Phys_Name & "' referenced by "
+                     & "mapping of component logical resource '" & Log_Name
+                     & "' by subject" & " '" & Subj_Name & "' does not exist");
+                  return;
                end if;
 
                Additional_Check (Logical_Resource  => Log_Res,
@@ -422,13 +429,15 @@ is
             Name => Attr);
       begin
          if Left_Name = Right_Name then
-            raise Mucfgcheck.Validation_Error with "Multiple " & Attr
-              & " resource mappings with name '" & Left_Name & "' in subject '"
-              & DOM.Core.Elements.Get_Attribute
-              (Elem => Muxml.Utils.Ancestor_Node
-                 (Node  => Left,
-                  Level => 2),
-               Name => "name") & "'";
+            Mucfgcheck.Validation_Errors.Insert
+              (Msg => "Multiple " & Attr
+               & " resource mappings with name '" & Left_Name
+               & "' in subject '"
+               & DOM.Core.Elements.Get_Attribute
+                 (Elem => Muxml.Utils.Ancestor_Node
+                      (Node  => Left,
+                       Level => 2),
+                  Name => "name") & "'");
          end if;
       end Check_Inequality;
 
@@ -487,9 +496,10 @@ is
             Name => "logical");
       begin
          if Left_Name = Right_Name then
-            raise Mucfgcheck.Validation_Error with "Multiple channels with "
-              & "name '" & Left_Name & "' in component '"
-              & To_String (Component_Name) & "'";
+            Mucfgcheck.Validation_Errors.Insert
+              (Msg => "Multiple channels with "
+               & "name '" & Left_Name & "' in component '"
+               & To_String (Component_Name) & "'");
          end if;
       end Check_Inequality;
    begin
@@ -596,12 +606,13 @@ is
                if Interfaces.Unsigned_64'Value (Log_Channel_Size)
                  /= Interfaces.Unsigned_64'Value (Phys_Channel_Size)
                then
-                  raise Mucfgcheck.Validation_Error with "Component '"
-                    & Comp_Name & "' referenced by subject '" & Subj_Name
-                    & "' requests size " & Log_Channel_Size & " for "
-                    & "logical channel '" & Log_Channel_Name & "' but "
-                    & "linked physical channel '" & Phys_Channel_Name
-                    & "' " & "has size " & Phys_Channel_Size;
+                  Mucfgcheck.Validation_Errors.Insert
+                    (Msg => "Component '"
+                     & Comp_Name & "' referenced by subject '" & Subj_Name
+                     & "' requests size " & Log_Channel_Size & " for "
+                     & "logical channel '" & Log_Channel_Name & "' but "
+                     & "linked physical channel '" & Phys_Channel_Name
+                     & "' " & "has size " & Phys_Channel_Size);
                end if;
             end Check_Channel_Size;
          begin
@@ -743,14 +754,16 @@ is
                        or Interfaces.Unsigned_64'Value (Log_Dev_Port_End)
                        /= Interfaces.Unsigned_64'Value (Phys_Dev_Port_End)
                      then
-                        raise Mucfgcheck.Validation_Error with "Component '"
-                          & Comp_Name & "' referenced by subject '" & Subj_Name
-                          & "' requests I/O range " & Log_Dev_Port_Start
-                          & ".." & Log_Dev_Port_End & " for '" & Log_Dev_Name
-                          & "->" & Log_Dev_Port_Name
-                          & "' but physical device '" & Phys_Dev_Name & "->"
-                          & Phys_Dev_Port_Name & "' " & "has "
-                          & Phys_Dev_Port_Start & ".." & Phys_Dev_Port_End;
+                        Mucfgcheck.Validation_Errors.Insert
+                          (Msg => "Component '"
+                           & Comp_Name & "' referenced by subject '"
+                           & Subj_Name & "' requests I/O range "
+                           & Log_Dev_Port_Start & ".." & Log_Dev_Port_End
+                           & " for '" & Log_Dev_Name & "->"
+                           & Log_Dev_Port_Name & "' but physical device '"
+                           & Phys_Dev_Name & "->" & Phys_Dev_Port_Name & "' "
+                           & "has " & Phys_Dev_Port_Start & ".."
+                           & Phys_Dev_Port_End);
                      end if;
                   end;
                end loop;
@@ -881,14 +894,15 @@ is
                      if Interfaces.Unsigned_64'Value (Log_Dev_Mem_Size)
                        /= Interfaces.Unsigned_64'Value (Phys_Dev_Mem_Size)
                      then
-                        raise Mucfgcheck.Validation_Error with "Component '"
-                          & Comp_Name & "' referenced by subject '" & Subj_Name
-                          & "' requests size " & Log_Dev_Mem_Size & " for "
-                          & "logical device memory '" & Log_Dev_Name & "->"
-                          & Log_Dev_Mem_Name & "' but linked physical device"
-                          & " memory '" & Phys_Dev_Name & "->"
-                          & Phys_Dev_Mem_Name & "' " & "has size "
-                          & Phys_Dev_Mem_Size;
+                        Mucfgcheck.Validation_Errors.Insert
+                          (Msg => "Component '"
+                           & Comp_Name & "' referenced by subject '"
+                           & Subj_Name & "' requests size " & Log_Dev_Mem_Size
+                           & " for " & "logical device memory '" & Log_Dev_Name
+                           & "->" & Log_Dev_Mem_Name & "' but linked physical "
+                           & "device memory '" & Phys_Dev_Name & "->"
+                           & Phys_Dev_Mem_Name & "' " & "has size "
+                           & Phys_Dev_Mem_Size);
                      end if;
                   end;
                end loop;
@@ -961,7 +975,7 @@ is
          end if;
 
          if Active_Nodes.Contains (Item => U (Source => Name)) then
-            raise Mucfgcheck.Validation_Error with Name;
+            raise Mucfgcheck.Validation_Errors.Validation_Error with Name;
          end if;
 
          Active_Nodes.Insert (New_Item => U (Source => Name));
@@ -985,8 +999,9 @@ is
                Resolve_Depends (Node => Lib_Node);
 
             exception
-               when E : Mucfgcheck.Validation_Error =>
-                  raise Mucfgcheck.Validation_Error with Name & "->" &
+               when E : Mucfgcheck.Validation_Errors.Validation_Error =>
+                  raise Mucfgcheck.Validation_Errors.Validation_Error
+                    with Name & "->" &
                     Ada.Exceptions.Exception_Message (X => E);
             end;
          end loop;
@@ -1008,10 +1023,10 @@ is
       end loop;
 
    exception
-      when E : Mucfgcheck.Validation_Error =>
-         raise Mucfgcheck.Validation_Error with
-           "Cyclic component dependency detected: "
-           & Ada.Exceptions.Exception_Message (X => E);
+      when E : Mucfgcheck.Validation_Errors.Validation_Error =>
+         Mucfgcheck.Validation_Errors.Insert
+           (Msg => "Cyclic component dependency detected: "
+            & Ada.Exceptions.Exception_Message (X => E));
    end Component_Library_Cyclic_References;
 
    -------------------------------------------------------------------------
@@ -1019,11 +1034,17 @@ is
    procedure Component_Library_References (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          Ref_Name  : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
@@ -1034,8 +1055,10 @@ is
                Level => 2),
             Name => "name");
       begin
-         return "Library '" & Ref_Name & "' referenced by component '"
-           & Comp_Name & "' does not exist";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Library '" & Ref_Name & "' referenced by component '"
+            & Comp_Name & "' does not exist");
+         Fatal := True;
       end Error_Msg;
    begin
       Mucfgcheck.For_Each_Match
@@ -1124,12 +1147,13 @@ is
                if Interfaces.Unsigned_64'Value (Log_Mem_Size)
                  /= Interfaces.Unsigned_64'Value (Phys_Mem_Size)
                then
-                  raise Mucfgcheck.Validation_Error with "Component '"
-                    & Comp_Name & "' referenced by subject '" & Subj_Name
-                    & "' requests size " & Log_Mem_Size & " for logical "
-                    & "memory '" & Log_Mem_Name & "' but linked physical "
-                    & "memory region '" & Phys_Mem_Name & "' " & "has size "
-                    & Phys_Mem_Size;
+                  Mucfgcheck.Validation_Errors.Insert
+                    (Msg => "Component '"
+                     & Comp_Name & "' referenced by subject '" & Subj_Name
+                     & "' requests size " & Log_Mem_Size & " for logical "
+                     & "memory '" & Log_Mem_Name & "' but linked physical "
+                     & "memory region '" & Phys_Mem_Name & "' " & "has size "
+                     & Phys_Mem_Size);
                end if;
             end Check_Mem_Size;
          begin
@@ -1247,12 +1271,13 @@ is
                                (Elem => Ref_Domain,
                                 Name => "name");
                         begin
-                           raise Mucfgcheck.Validation_Error with "Device '"
-                             & Dev_Name & "' referencing reserved memory "
-                             & "region '" & Region_Name & "' assigned to "
-                             & "different device domain than other device(s) "
-                             & "referencing the same region: '" & Ref_Dom_Name
-                             & "' vs '" & Cur_Dom_Name & "'";
+                           Mucfgcheck.Validation_Errors.Insert
+                             (Msg => "Device '"
+                              & Dev_Name & "' referencing reserved memory "
+                              & "region '" & Region_Name & "' assigned to "
+                              & "different device domain than other device(s) "
+                              & "referencing the same region: '" & Ref_Dom_Name
+                              & "' vs '" & Cur_Dom_Name & "'");
                         end;
                      end if;
                   end if;
@@ -1275,9 +1300,10 @@ is
       Mulog.Log (Msg => "Checking presence of '" & Attr_Path & "' attribute");
 
       if DOM.Core.Nodes.Length (List => Attr) /= 1 then
-         raise Mucfgcheck.Validation_Error with "Required "
-           & "'" & Attr_Path & "' attribute not found, add it or use "
-           & "mucfgmerge tool";
+         Mucfgcheck.Validation_Errors.Insert
+           (Msg => "Required "
+            & "'" & Attr_Path & "' attribute not found, add it or use "
+            & "mucfgmerge tool");
       end if;
    end Hardware_CPU_Count_Presence;
 
@@ -1380,24 +1406,25 @@ is
                     := DOM.Core.Nodes.Length (List => MSI_IRQs);
                begin
                   if Legacy_IRQ_Count > 0 and then MSI_IRQ_Count > 0 then
-                     raise Mucfgcheck.Validation_Error with "Logical device '"
-                       & Log_Dev_Name & "' of subject '" & Subj_Name
-                       & "' declares both legacy and MSI IRQ resources";
+                     Mucfgcheck.Validation_Errors.Insert
+                       (Msg => "Logical device '"
+                        & Log_Dev_Name & "' of subject '" & Subj_Name
+                        & "' declares both legacy and MSI IRQ resources");
                   elsif Legacy_IRQ_Count > 0 then
                      if J = 0 then
                         Legacy_IRQ_Mode := True;
                      elsif not Legacy_IRQ_Mode then
-                        raise Mucfgcheck.Validation_Error with
-                          "Physical device '" & Phys_Name & "' has both legacy"
-                          & " and MSI IRQ references";
+                        Mucfgcheck.Validation_Errors.Insert
+                          (Msg => "Physical device '" & Phys_Name
+                           & "' has both legacy and MSI IRQ references");
                      end if;
                   else
                      if J = 0 then
                         Legacy_IRQ_Mode := False;
                      elsif Legacy_IRQ_Mode then
-                        raise Mucfgcheck.Validation_Error with
-                          "Physical device '" & Phys_Name & "' has both legacy"
-                          & " and MSI IRQ references";
+                        Mucfgcheck.Validation_Errors.Insert
+                          (Msg   => "Physical device '" & Phys_Name
+                           & "' has both legacy and MSI IRQ references");
                      end if;
                   end if;
                end;
@@ -1428,11 +1455,17 @@ is
      (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          Ref_Region_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
@@ -1441,8 +1474,10 @@ is
            (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
             Name => "name");
       begin
-         return "Reserved region '" & Ref_Region_Name & "' referenced by "
-           & "device '" & Dev_Name & "' does not exist";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Reserved region '" & Ref_Region_Name & "' referenced by "
+            & "device '" & Dev_Name & "' does not exist");
+         Fatal := True;
       end Error_Msg;
    begin
       Mucfgcheck.For_Each_Match
@@ -1537,11 +1572,17 @@ is
    procedure Subject_Channel_References (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          Ref_Channel_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
@@ -1552,8 +1593,10 @@ is
                Level => 2),
             Name => "name");
       begin
-         return "Channel '" & Ref_Channel_Name & "' referenced by subject '"
-           & Subj_Name & "' does not exist";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Channel '" & Ref_Channel_Name & "' referenced by "
+            & "subject '" & Subj_Name & "' does not exist");
+         Fatal := True;
       end Error_Msg;
    begin
       Mucfgcheck.For_Each_Match
@@ -1570,11 +1613,17 @@ is
    procedure Subject_Component_References (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          Ref_Comp_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
@@ -1583,8 +1632,10 @@ is
            (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
             Name => "name");
       begin
-         return "Component '" & Ref_Comp_Name & "' referenced by subject '"
-           & Subj_Name & "' does not exist";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Component '" & Ref_Comp_Name & "' referenced by subject '"
+            & Subj_Name & "' does not exist");
+         Fatal := True;
       end Error_Msg;
    begin
       Mucfgcheck.For_Each_Match
@@ -1680,10 +1731,11 @@ is
                        Ref_Value => Log_Name);
                begin
                   if Comp_Res = null then
-                     raise Mucfgcheck.Validation_Error with "Subject '"
-                       & Subj_Name & "' maps logical resource '" & Log_Name
-                       & "' which is not requested by component '"
-                       & Comp_Name & "'";
+                     Mucfgcheck.Validation_Errors.Insert
+                       (Msg => "Subject '"
+                        & Subj_Name & "' maps logical resource '" & Log_Name
+                        & "' which is not requested by component '"
+                        & Comp_Name & "'");
                   end if;
                end;
             end loop;
@@ -1795,32 +1847,36 @@ is
                           Ref_Value => Phys_Res_Name);
                   begin
                      if Phys_Res_Name'Length = 0 then
-                        raise Mucfgcheck.Validation_Error with "Subject '"
-                          & Subj_Name & "' does not map logical device "
-                          & "resource '" & Log_Dev_Name & "->" & Log_Res_Name
-                          & "' as requested by referenced component '"
-                          & Comp_Name & "'";
+                        Mucfgcheck.Validation_Errors.Insert
+                          (Msg => "Subject '"
+                           & Subj_Name & "' does not map logical device "
+                           & "resource '" & Log_Dev_Name & "->" & Log_Res_Name
+                           & "' as requested by referenced component '"
+                           & Comp_Name & "'");
                      end if;
 
                      if Phys_Res = null then
-                        raise Mucfgcheck.Validation_Error with "Physical "
-                          & "device resource '" & Phys_Dev_Name & "->"
-                          & Phys_Res_Name & "' referenced by "
-                          & "mapping of component logical resource '"
-                          & Log_Dev_Name & "->" & Log_Res_Name
-                          & "' by subject" & " '" & Subj_Name
-                          & "' does not exist";
+                        Mucfgcheck.Validation_Errors.Insert
+                          (Msg => "Physical "
+                           & "device resource '" & Phys_Dev_Name & "->"
+                           & Phys_Res_Name & "' referenced by "
+                           & "mapping of component logical resource '"
+                           & Log_Dev_Name & "->" & Log_Res_Name
+                           & "' by subject" & " '" & Subj_Name
+                           & "' does not exist");
+                        return;
                      end if;
 
                      if DOM.Core.Nodes.Node_Name (N => Log_Res)
                        /= DOM.Core.Nodes.Node_Name (N => Phys_Res)
                      then
-                        raise Mucfgcheck.Validation_Error with "Physical "
-                          & "device resource '" & Phys_Dev_Name & "->"
-                          & Phys_Res_Name & "' and component logical resource"
-                          & " '" & Log_Dev_Name & "->" & Log_Res_Name
-                          & "' mapped by subject" & " '" & Subj_Name
-                          & "' have different type";
+                        Mucfgcheck.Validation_Errors.Insert
+                          (Msg => "Physical "
+                           & "device resource '" & Phys_Dev_Name & "->"
+                           & Phys_Res_Name & "' and component logical resource"
+                           & " '" & Log_Dev_Name & "->" & Log_Res_Name
+                           & "' mapped by subject" & " '" & Subj_Name
+                           & "' have different type");
                      end if;
                   end;
                end loop;
@@ -2007,12 +2063,13 @@ is
                                (Elem => Log_MSI,
                                 Name => "logical");
                         begin
-                           raise Mucfgcheck.Validation_Error with "Logical "
-                             & "device '" & Log_Dev_Name & "->" & Log_IRQ_Name
-                             & "->" & Log_MSI_Name & "' of subject '"
-                             & Subj_Name & "' references non-existent physical"
-                             & " device MSI '" & Phys_Dev_Name & "->"
-                             & Phys_IRQ_Name & "->" & Phys_MSI_Name & "'";
+                           Mucfgcheck.Validation_Errors.Insert
+                             (Msg => "Logical "
+                              & "device '" & Log_Dev_Name & "->" & Log_IRQ_Name
+                              & "->" & Log_MSI_Name & "' of subject '"
+                              & Subj_Name & "' references non-existent "
+                              & "physical device MSI '" & Phys_Dev_Name & "->"
+                              & Phys_IRQ_Name & "->" & Phys_MSI_Name & "'");
                         end;
                      end if;
                   end;
@@ -2123,12 +2180,13 @@ is
                                                           Level => 2),
                        Name => "name");
                begin
-                  raise Mucfgcheck.Validation_Error with "Loader mapping '"
-                    & Ldr_Logical & "' of subject '" & Subject_Name & "' not "
-                    & "in valid range " & Mutools.Utils.To_Hex
-                    (Number => Valid_Address_Range'First)
-                    & " .. " & Mutools.Utils.To_Hex
-                    (Number => Valid_Address_Range'Last);
+                  Mucfgcheck.Validation_Errors.Insert
+                    (Msg => "Loader mapping '"
+                     & Ldr_Logical & "' of subject '" & Subject_Name & "' not "
+                     & "in valid range " & Mutools.Utils.To_Hex
+                       (Number => Valid_Address_Range'First)
+                     & " .. " & Mutools.Utils.To_Hex
+                       (Number => Valid_Address_Range'Last));
                end;
             end if;
          end;
@@ -2140,11 +2198,17 @@ is
    procedure Subject_Monitor_References (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          Ref_Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
@@ -2155,8 +2219,10 @@ is
                Level => 2),
             Name => "name");
       begin
-         return "Subject '" & Ref_Subj_Name & "' referenced by subject monitor"
-           & " '" & Subj_Name & "' does not exist";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Subject '" & Ref_Subj_Name & "' referenced by subject monitor"
+            & " '" & Subj_Name & "' does not exist");
+         Fatal := True;
       end Error_Msg;
    begin
       Mucfgcheck.For_Each_Match
@@ -2213,9 +2279,10 @@ is
                        XPath => "sibling",
                        Name  => "ref");
                begin
-                  raise Mucfgcheck.Validation_Error with "Subject '"
-                    & Subj_Name & "' which is a sibling of '" & Sib_Name
-                    & "' specifies boot parameters";
+                  Mucfgcheck.Validation_Errors.Insert
+                    (Msg => "Subject '"
+                     & Subj_Name & "' which is a sibling of '" & Sib_Name
+                     & "' specifies boot parameters");
                end;
             end if;
          end;
@@ -2296,21 +2363,23 @@ is
                    (Left  => Left,
                     Right => Right)
                then
-                  raise Mucfgcheck.Validation_Error with "Linux sibling '"
-                    & Left_Subj_Name & "' logical device '" & Left_Dev_Name
-                    & "' PCI BDF not equal to logical device '"
-                    & Right_Dev_Name & "' of sibling '" & Right_Subj_Name
-                    & "' referencing same physdev";
+                  Mucfgcheck.Validation_Errors.Insert
+                    (Msg => "Linux sibling '"
+                     & Left_Subj_Name & "' logical device '" & Left_Dev_Name
+                     & "' PCI BDF not equal to logical device '"
+                     & Right_Dev_Name & "' of sibling '" & Right_Subj_Name
+                     & "' referencing same physdev");
                elsif Left_Phys_Dev_Name /= Right_Phys_Dev_Name and then
                  Mutools.XML_Utils.Equal_BDFs
                    (Left  => Left,
                     Right => Right)
                then
-                  raise Mucfgcheck.Validation_Error with "Logical device '"
-                    & Left_Dev_Name & "' of Linux sibling '"
-                    & Left_Subj_Name & "' has equal PCI BDF with logical "
-                    & "device '" & Right_Dev_Name & "' of sibling '"
-                    & Right_Subj_Name & "'";
+                  Mucfgcheck.Validation_Errors.Insert
+                    (Msg => "Logical device '"
+                     & Left_Dev_Name & "' of Linux sibling '"
+                     & Left_Subj_Name & "' has equal PCI BDF with logical "
+                     & "device '" & Right_Dev_Name & "' of sibling '"
+                     & Right_Subj_Name & "'");
                end if;
             end Check_BDF;
          begin
@@ -2340,11 +2409,17 @@ is
    procedure Subject_Sibling_References (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          Ref_Sib_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
@@ -2353,8 +2428,10 @@ is
            (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
             Name => "name");
       begin
-         return "Sibling '" & Ref_Sib_Name & "' referenced by subject '"
-           & Subj_Name & "' does not exist";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Sibling '" & Ref_Sib_Name & "' referenced by subject '"
+            & Subj_Name & "' does not exist");
+         Fatal := True;
       end Error_Msg;
    begin
       Mucfgcheck.For_Each_Match
@@ -2385,8 +2462,8 @@ is
       Mulog.Log
         (Msg => "Checking presence of tau0 subject in scheduling plan");
       if Tau0_Node = null then
-         raise Mucfgcheck.Validation_Error with "Subject tau0 not present in "
-           & "scheduling plan";
+         Mucfgcheck.Validation_Errors.Insert
+           (Msg => "Subject tau0 not present in scheduling plan");
       end if;
    end Tau0_Presence_In_Scheduling;
 

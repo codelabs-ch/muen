@@ -37,7 +37,7 @@ with Mutools.Types;
 with Mutools.XML_Utils;
 with Mutools.Constants;
 with Mucfgvcpu;
-with Mucfgcheck;
+with Mucfgcheck.Validation_Errors;
 
 with Expanders.Config;
 with Expanders.Types;
@@ -114,8 +114,10 @@ is
                Mode   => Channel_Mode);
 
             if Writer_Node = null then
-               raise Mucfgcheck.Validation_Error with "No writer for channel '"
-                 & Channel_Name & "'";
+               Mucfgcheck.Validation_Errors.Insert
+                 (Msg   => "No writer for channel '"
+                  & Channel_Name & "'",
+                  Fatal => True);
             end if;
             Writer_Subj_Source_Group
               := XML_Utils.Add_Optional_Events_Source_Group
@@ -125,8 +127,10 @@ is
                     Level => 2),
                  Group   => Mutools.Types.Vmcall);
             if Reader_Node = null then
-               raise Mucfgcheck.Validation_Error with "No reader for channel '"
-                 & Channel_Name & "'";
+               Mucfgcheck.Validation_Errors.Insert
+                 (Msg   => "No reader for channel '"
+                  & Channel_Name & "'",
+                  Fatal => True);
             end if;
             Reader_Subj_Target_Node
               := XML_Utils.Add_Optional_Events_Target

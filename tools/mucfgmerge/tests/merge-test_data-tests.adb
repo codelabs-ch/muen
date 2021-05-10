@@ -14,7 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with Mucfgcheck.Validation_Errors;
 --  begin read only
 --  end read only
 package body Merge.Test_Data.Tests is
@@ -51,10 +51,10 @@ package body Merge.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Multiple config variables with name "
-                    & "'supports_xhci_debug'",
+         when Mucfgcheck.Validation_Errors.Validation_Error =>
+            Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+                    (Msg => "Multiple config variables with name "
+                     & "'supports_xhci_debug'"),
                     Message   => "Exception message mismatch");
       end Duplicate_Config_Value;
 
@@ -112,7 +112,10 @@ package body Merge.Test_Data.Tests is
          Ada.Directories.Delete_File (Name => Output);
       end Positive_Test;
    begin
+      Mucfgcheck.Validation_Errors.Clear;
       Duplicate_Config_Value;
+      Mucfgcheck.Validation_Errors.Clear;
+
       Include_Path;
       No_Additional_Hw;
       Positive_Test;

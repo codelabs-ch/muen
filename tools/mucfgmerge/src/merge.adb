@@ -27,6 +27,7 @@ with Mutools.Expressions;
 with Mutools.Conditionals;
 with Mutools.Substitutions;
 with Mucfgcheck.Config;
+with Mucfgcheck.Validation_Errors;
 
 with Mergers;
 with Merge.Checks;
@@ -51,6 +52,7 @@ is
                    Kind => Muxml.System_Config,
                    File => Config_File);
       Checks.Required_Config_Values (Policy => Config);
+      Mucfgcheck.Validation_Errors.Check;
 
       Mulog.Log (Msg => "Using include path '" & Local_Include_Path & "'");
 
@@ -136,6 +138,7 @@ is
       Mucfgcheck.Config.Expression_Config_Var_Refs (XML_Data => Policy);
       Mucfgcheck.Config.Expression_Integer_Values (XML_Data => Policy);
       Mucfgcheck.Config.Expression_Boolean_Values (XML_Data => Policy);
+      Mucfgcheck.Validation_Errors.Check;
 
       Mulog.Log (Msg => "Processing expressions");
       Mutools.Expressions.Expand (Policy => Policy);
@@ -146,6 +149,7 @@ is
       --  Check conditional references after expression evaluation.
 
       Mucfgcheck.Config.Conditional_Config_Var_Refs (XML_Data => Policy);
+      Mucfgcheck.Validation_Errors.Check;
       Mulog.Log (Msg => "Processing conditionals");
       Mutools.Conditionals.Expand (Policy => Policy);
 

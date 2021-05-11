@@ -14,7 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with Mucfgcheck.Validation_Errors;
 --  begin read only
 --  end read only
 package body Mucfgcheck.Subject.Test_Data.Tests is
@@ -47,6 +47,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Name_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -54,18 +56,11 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          Name  => "name",
          Value => "linux");
 
-      begin
-         Name_Uniqueness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   =>"Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subjects with global ID 1 and 4 have identical name "
-                    & "'linux'",
-                    Message   => "Exception mismatch");
-      end;
+      Name_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subjects with global ID 1 and 4 have identical name "
+               & "'linux'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Name_Uniqueness;
 --  end read only
@@ -89,6 +84,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       CPU_ID (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -96,18 +93,11 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          Name  => "cpu",
          Value => "7");
 
-      begin
-         CPU_ID (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   =>"Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'cpu => 7' of 'linux' subject element not in "
-                    & "valid range 0 .. 3",
-                    Message   => "Exception mismatch");
-      end;
+      CPU_ID (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Attribute 'cpu => 7' of 'linux' subject element not in "
+               & "valid range 0 .. 3"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_CPU_ID;
 --  end read only
@@ -131,6 +121,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Global_ID_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -138,17 +130,10 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          Name  => "globalId",
          Value => "0");
 
-      begin
-         Global_ID_Uniqueness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   =>"Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subjects 'tau0' and 'sm' have identical global ID 0",
-                    Message   => "Exception mismatch");
-      end;
+      Global_ID_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subjects 'tau0' and 'sm' have identical global ID 0"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Global_ID_Uniqueness;
 --  end read only
@@ -172,6 +157,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Local_ID_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -179,18 +166,11 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          Name  => "localId",
          Value => "0");
 
-      begin
-         Local_ID_Uniqueness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   =>"Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subjects 'sm' and 'linux' running on CPU 1 have "
-                    & "identical local ID 0",
-                    Message   => "Exception mismatch");
-      end;
+      Local_ID_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subjects 'sm' and 'linux' running on CPU 1 have "
+               & "identical local ID 0"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Local_ID_Uniqueness;
 --  end read only
@@ -214,6 +194,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Memory_Types (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -221,18 +203,11 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          Name  => "type",
          Value => "system_pt");
 
-      begin
-         Memory_Types (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   =>"Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Logical memory region 'binary' of subject 'vt' mapping "
-                    & "physical region 'vt|bin' has invalid type system_pt",
-                    Message   => "Exception mismatch");
-      end;
+      Memory_Types (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Logical memory region 'binary' of subject 'vt' mapping "
+               & "physical region 'vt|bin' has invalid type system_pt"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Memory_Types;
 --  end read only
@@ -256,6 +231,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       No_IOMMU_Device_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -264,17 +241,10 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          Name  => "physical",
          Value => "iommu_1");
 
-      begin
-         No_IOMMU_Device_References (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "IOMMU device referenced by subject 'vt'",
-                    Message   => "Exception mismatch");
-      end;
+      No_IOMMU_Device_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "IOMMU device referenced by subject 'vt'"),
+               Message   => "Exception mismatch");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -283,17 +253,10 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          Name  => "physical",
          Value => "iommu_2");
 
-      begin
-         No_IOMMU_Device_References (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "IOMMU device referenced by subjects 'vt', 'linux'",
-                    Message   => "Exception mismatch");
-      end;
+      No_IOMMU_Device_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "IOMMU device referenced by subjects 'vt', 'linux'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_No_IOMMU_Device_References;
 --  end read only
@@ -317,6 +280,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       --  Must not raise an exception.
 
       Runnability (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -324,18 +289,11 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          Name  => "mode",
          Value => "ipi");
 
-      begin
-         Runnability (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'sm' is neither referenced in the scheduling"
-                    & " plan nor schedulable via switch events",
-                    Message   => "Exception mismatch");
-      end;
+      Runnability (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject 'sm' is neither referenced in the scheduling"
+               & " plan nor schedulable via switch events"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Runnability;
 --  end read only
@@ -359,6 +317,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       --  Must not raise an exception.
 
       Scheduling_Group_IDs (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -366,18 +326,11 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          Name  => "schedGroupId",
          Value => "2");
 
-      begin
-         Scheduling_Group_IDs (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'time' has unexpected scheduling group ID: "
-                    & "2 /= 3",
-                    Message   => "Exception mismatch");
-      end;
+      Scheduling_Group_IDs (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject 'time' has unexpected scheduling group ID: "
+               & "2 /= 3"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Scheduling_Group_IDs;
 --  end read only
@@ -401,6 +354,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Logical_Device_Name_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -409,18 +364,11 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          Name  => "logical",
          Value => "wireless");
 
-      begin
-         Logical_Device_Name_Uniqueness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'vt' has devices with identical logical names"
-                    & " 'wireless'",
-                    Message   => "Exception mismatch");
-      end;
+      Logical_Device_Name_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject 'vt' has devices with identical logical names"
+               & " 'wireless'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Logical_Device_Name_Uniqueness;
 --  end read only
@@ -444,26 +392,21 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Logical_IRQ_MSI_Consecutiveness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
-      begin
-         Muxml.Utils.Set_Attribute
+      Muxml.Utils.Set_Attribute
            (Doc   => Data.Doc,
             XPath => "/system/subjects/subject/devices/device"
             & "[@physical='xhci']/irq",
             Name  => "vector",
             Value => "254");
 
-         Logical_IRQ_MSI_Consecutiveness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "MSI IRQ 'xhci_irq1' of logical device 'xhci' of subject"
-                    & " 'linux' not adjacent to other IRQs",
-                    Message   => "Exception mismatch");
-      end;
+      Logical_IRQ_MSI_Consecutiveness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "MSI IRQ 'xhci_irq1' of logical device 'xhci' of subject"
+               & " 'linux' not adjacent to other IRQs"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Logical_IRQ_MSI_Consecutiveness;
 --  end read only
@@ -487,152 +430,106 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Logical_Unmask_Event (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
-      begin
+      --  Set mistmatching physical IRQ number as suffix.
 
-         --  Set mistmatching physical IRQ number as suffix.
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/source/group/"
+         & "event[@logical='unmask_irq_57']/unmask_irq",
+         Name  => "number",
+         Value => "37");
 
-         Muxml.Utils.Set_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject/events/source/group/"
-            & "event[@logical='unmask_irq_57']/unmask_irq",
-            Name  => "number",
-            Value => "37");
+      Logical_Unmask_Event (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Logical event 'unmask_irq_57' of subject 'vt' "
+               & "referencing logical IRQ wireless->irq has unmask action"
+               & " number different from physical IRQ wireless->irq: 37, "
+               & "expected 21"),
+              Message   => "Exception mismatch (IRQ mismatch 1)");
 
-         Logical_Unmask_Event (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (IRQ mismatch 1)");
+      --  Set mistmatching logical IRQ number as suffix
+      --  (unresolvable vector).
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Logical event 'unmask_irq_57' of subject 'vt' "
-                    & "referencing logical IRQ wireless->irq has unmask action"
-                    & " number different from physical IRQ wireless->irq: 37, "
-                    & "expected 21",
-                    Message   => "Exception mismatch (IRQ mismatch 1)");
-      end;
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/source/group/"
+         & "event[@logical='unmask_irq_57']",
+         Name  => "logical",
+         Value => "unmask_irq_255");
 
-      begin
+      Logical_Unmask_Event (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Logical event 'unmask_irq_255' of subject 'vt' "
+               & "references invalid logical IRQ with vector 255 as "
+               & "logical name suffix"),
+              Message   => "Exception mismatch (IRQ mismatch 2)");
 
-         --  Set mistmatching logical IRQ number as suffix
-         --  (unresolvable vector).
+      --  Mistmatching logical IRQ number as suffix (resolvable vector).
 
-         Muxml.Utils.Set_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject/events/source/group/"
-            & "event[@logical='unmask_irq_57']",
-            Name  => "logical",
-            Value => "unmask_irq_255");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/source/group/"
+         & "event[@logical='unmask_irq_255']/unmask_irq",
+         Name  => "number",
+         Value => "21");
 
-         Logical_Unmask_Event (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (IRQ mismatch 2)");
+      Logical_Unmask_Event (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Logical event 'unmask_irq_255' of subject 'vt' "
+               & "references invalid logical IRQ with vector 255 as "
+               & "logical name suffix: expected 57"),
+              Message   => "Exception mismatch (IRQ mismatch 3)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Logical event 'unmask_irq_255' of subject 'vt' "
-                    & "references invalid logical IRQ with vector 255 as "
-                    & "logical name suffix",
-                    Message   => "Exception mismatch (IRQ mismatch 2)");
-      end;
+      --  Additionally, make expected logical IRQ number non-resolvable.
 
-      begin
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/devices/device"
+         & "/irq[@logical='wlan_irq']",
+         Name  => "physical",
+         Value => "nonexistent");
 
-         --  Mistmatching logical IRQ number as suffix (resolvable vector).
+      Logical_Unmask_Event (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Logical event 'unmask_irq_255' of subject 'vt' "
+               & "references invalid logical IRQ with vector 255 as "
+               & "logical name suffix"),
+              Message   => "Exception mismatch (IRQ mismatch 4)");
 
-         Muxml.Utils.Set_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject/events/source/group/"
-            & "event[@logical='unmask_irq_255']/unmask_irq",
-            Name  => "number",
-            Value => "21");
+      --  Set non-numeric suffix.
 
-         Logical_Unmask_Event (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (IRQ mismatch 3)");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/source/group/"
+         & "event[starts-with(@logical,'unmask_irq')]",
+         Name  => "logical",
+         Value => "unmask_irq_foobar");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Logical event 'unmask_irq_255' of subject 'vt' "
-                    & "references invalid logical IRQ with vector 255 as "
-                    & "logical name suffix: expected 57",
-                    Message   => "Exception mismatch (IRQ mismatch 3)");
-      end;
+      Logical_Unmask_Event (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Logical event 'unmask_irq_foobar' of subject 'vt' "
+               & "has invalid suffix 'foobar': must match number of "
+               & "corresponding logical IRQ vector"),
+              Message   => "Exception mismatch (Non-numeric suffix)");
 
-      begin
+      --  Set non-matching prefix.
 
-         --  Additionally, make expected logical IRQ number non-resolvable.
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/source/group/"
+         & "event[starts-with(@logical,'unmask_irq')]",
+         Name  => "logical",
+         Value => "foobar_irq");
 
-         Muxml.Utils.Set_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject/devices/device"
-            & "/irq[@logical='wlan_irq']",
-            Name  => "physical",
-            Value => "nonexistent");
-
-         Logical_Unmask_Event (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (IRQ mismatch 4)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Logical event 'unmask_irq_255' of subject 'vt' "
-                    & "references invalid logical IRQ with vector 255 as "
-                    & "logical name suffix",
-                    Message   => "Exception mismatch (IRQ mismatch 4)");
-      end;
-
-      begin
-
-         --  Set non-numeric suffix.
-
-         Muxml.Utils.Set_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject/events/source/group/"
-            & "event[starts-with(@logical,'unmask_irq')]",
-            Name  => "logical",
-            Value => "unmask_irq_foobar");
-
-         Logical_Unmask_Event (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Non-numeric suffix)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Logical event 'unmask_irq_foobar' of subject 'vt' "
-                    & "has invalid suffix 'foobar': must match number of "
-                    & "corresponding logical IRQ vector",
-                    Message   => "Exception mismatch (Non-numeric suffix)");
-      end;
-
-      begin
-
-         --  Set non-matching prefix.
-
-         Muxml.Utils.Set_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject/events/source/group/"
-            & "event[starts-with(@logical,'unmask_irq')]",
-            Name  => "logical",
-            Value => "foobar_irq");
-
-         Logical_Unmask_Event (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Unexpected prefix)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Logical event 'foobar_irq' of subject 'vt' has "
-                    & "unexpected logical name: must have the form "
-                    & "'unmask_irq_$VECTORNR'",
-                    Message   => "Exception mismatch (Unexpected prefix)");
-      end;
+      Logical_Unmask_Event (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Logical event 'foobar_irq' of subject 'vt' has "
+               & "unexpected logical name: must have the form "
+               & "'unmask_irq_$VECTORNR'"),
+              Message   => "Exception mismatch (Unexpected prefix)");
 --  begin read only
    end Test_Logical_Unmask_Event;
 --  end read only
@@ -656,6 +553,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Virtual_Memory_Overlap (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -664,18 +563,11 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          Name  => "virtualAddress",
          Value => "16#0000#");
 
-      begin
-         Virtual_Memory_Overlap (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Overlap of virtual memory region 'binary' and "
-                    & "'zero_page' of subject 'linux'",
-                    Message   => "Exception mismatch");
-      end;
+      Virtual_Memory_Overlap (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Overlap of virtual memory region 'binary' and "
+               & "'zero_page' of subject 'linux'"),
+              Message   => "Exception mismatch");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -684,18 +576,11 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          Name  => "virtualAddress",
          Value => "16#000b_7000#");
 
-      begin
-         Virtual_Memory_Overlap (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Overlap of virtual memory region 'binary' and "
-                    & "'vga->buffer' of subject 'vt'",
-                    Message   => "Exception mismatch");
-      end;
+      Virtual_Memory_Overlap (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Overlap of virtual memory region 'binary' and "
+               & "'vga->buffer' of subject 'vt'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Virtual_Memory_Overlap;
 --  end read only
@@ -719,6 +604,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Initramfs_Consecutiveness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -726,18 +613,11 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          Name  => "size",
          Value => "16#2000#");
 
-      begin
-         Initramfs_Consecutiveness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Initramfs region 'initramfs1' not adjacent to other "
-                    & "initramfs regions",
-                    Message   => "Exception mismatch");
-      end;
+      Initramfs_Consecutiveness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Initramfs region 'initramfs1' not adjacent to other "
+               & "initramfs regions"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Initramfs_Consecutiveness;
 --  end read only
@@ -761,6 +641,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Crash_Audit_Write_Access (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -769,18 +651,11 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          Name  => "writable",
          Value => "true");
 
-      begin
-         Crash_Audit_Write_Access (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Logical memory node 'crash_audit' of subject 'tau0' "
-                    & "declares illegal write access to crash audit region",
-                    Message   => "Exception mismatch");
-      end;
+      Crash_Audit_Write_Access (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Logical memory node 'crash_audit' of subject 'tau0' "
+               & "declares illegal write access to crash audit region"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Crash_Audit_Write_Access;
 --  end read only
@@ -804,6 +679,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Device_Mmconf_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -812,19 +689,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          Name  => "virtualAddress",
          Value => "16#dead_beef#");
 
-      begin
-         Device_Mmconf_Mappings (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "PCI mmconf region of subject 'vt' logical device "
-                    & "'wireless' is 16#dead_beef# but should be "
-                    & "16#f80d_0000#",
-                    Message   => "Exception mismatch");
-      end;
+      Device_Mmconf_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "PCI mmconf region of subject 'vt' logical device "
+               & "'wireless' is 16#dead_beef# but should be "
+               & "16#f80d_0000#"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Device_Mmconf_Mappings;
 --  end read only
@@ -848,6 +718,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Shared_Device_Same_PCI_Element (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -856,18 +728,11 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          Name  => "physical",
          Value => "wireless");
 
-      begin
-         Shared_Device_Same_PCI_Element (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Shared logical devices 'wireless|xhci' specify "
-                    & "different PCI elements",
-                    Message   => "Exception mismatch");
-      end;
+      Shared_Device_Same_PCI_Element (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Shared logical devices 'wireless|xhci' specify "
+               & "different PCI elements"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Shared_Device_Same_PCI_Element;
 --  end read only
@@ -897,15 +762,10 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
             & "controls/entry/DeactiveDualMonitorTreatment",
             Value => "1");
          VMX_Controls_Entry_Checks (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Dual-Monitor)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VMX control 'deactivate dual-monitor treatment' of "
-                    & "subject 'linux' is 1",
-                    Message   => "Exception mismatch (Dual-Monitor)");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "VMX control 'deactivate dual-monitor treatment' of "
+                  & "subject 'linux' is 1"),
+                 Message   => "Exception mismatch (Dual-Monitor)");
       end Dual_Monitor_Treatment;
 
       ----------------------------------------------------------------------
@@ -923,14 +783,9 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
             & "controls/entry/EntryToSMM",
             Value => "1");
          VMX_Controls_Entry_Checks (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Entry to SMM)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VMX control 'entry to SMM' of subject 'linux' is 1",
-                    Message   => "Exception mismatch (Entry to SMM)");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "VMX control 'entry to SMM' of subject 'linux' is 1"),
+                 Message   => "Exception mismatch (Entry to SMM)");
       end Entry_To_SMM;
 
       ----------------------------------------------------------------------
@@ -949,15 +804,10 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
             Value => "16#0001_0001#");
 
          VMX_Controls_Entry_Checks (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (IOBM)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Address of I/O Bitmap of subject 'linux' invalid: bits "
-                    & "11:0 must be zero",
-                    Message   => "Exception mismatch (IOBM)");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Address of I/O Bitmap of subject 'linux' invalid: bits "
+                  & "11:0 must be zero"),
+                 Message   => "Exception mismatch (IOBM)");
       end IO_Bitmap_Address;
 
       ----------------------------------------------------------------------
@@ -976,15 +826,10 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
             Value => "16#0001_0001#");
 
          VMX_Controls_Entry_Checks (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (MSRBM)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Address of MSR Bitmap of subject 'linux' invalid: bits "
-                    & "11:0 must be zero",
-                    Message   => "Exception mismatch (MSRBM)");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Address of MSR Bitmap of subject 'linux' invalid: bits "
+                  & "11:0 must be zero"),
+                 Message   => "Exception mismatch (MSRBM)");
       end MSR_Bitmap_Address;
 
       ----------------------------------------------------------------------
@@ -1003,15 +848,10 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
             Value => "16#0001_0001#");
 
          VMX_Controls_Entry_Checks (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (MSR Store)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "MSR Store address of subject 'linux' invalid: bits "
-                    & "3:0 must be zero",
-                    Message   => "Exception mismatch (MSR Store)");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "MSR Store address of subject 'linux' invalid: bits "
+                  & "3:0 must be zero"),
+                 Message   => "Exception mismatch (MSR Store)");
       end MSR_Storage_Address;
 
       ----------------------------------------------------------------------
@@ -1035,15 +875,10 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
             Value => "1");
 
          VMX_Controls_Entry_Checks (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (NMI Exiting)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VMX control 'NMI-Exiting' is 0 for subject "
-                    & "'linux' but 'Virtual NMIs' is 1",
-                    Message   => "Exception mismatch (NMI Exiting)");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "VMX control 'NMI-Exiting' is 0 for subject "
+                  & "'linux' but 'Virtual NMIs' is 1"),
+                 Message   => "Exception mismatch (NMI Exiting)");
       end NMI_Exiting;
 
       ----------------------------------------------------------------------
@@ -1052,6 +887,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       is
          Data : Muxml.XML_Data_Type;
       begin
+         Validation_Errors.Clear;
+
          Muxml.Parse (Data => Data,
                       Kind => Muxml.Format_B,
                       File => "data/test_policy.xml");
@@ -1059,6 +896,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          --  Positive test, must not raise an exception.
 
          VMX_Controls_Entry_Checks (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Is_Empty,
+                 Message   => "Unexpected error in positive test");
       end Positive_Test;
 
       ----------------------------------------------------------------------
@@ -1075,19 +914,13 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
             XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
             & "controls/pin/ProcessPostedInterrupts",
             Value => "1");
-         begin
-            VMX_Controls_Entry_Checks (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (Posted Int 1)");
 
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "VMX control 'process posted interrupts' is 1 for "
-                       & "subject 'linux' but 'virtual-interrupt delivery' is"
-                       & " 0",
-                       Message   => "Exception mismatch (Posted Int 1)");
-         end;
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "VMX control 'process posted interrupts' is 1 for "
+                  & "subject 'linux' but 'virtual-interrupt delivery' is"
+                  & " 0"),
+                 Message   => "Exception mismatch (Posted Int 1)");
 
          Muxml.Utils.Set_Element_Value
            (Doc   => Data.Doc,
@@ -1109,19 +942,13 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
             XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
             & "controls/exit/AckInterruptOnExit",
             Value => "0");
-         begin
-            VMX_Controls_Entry_Checks (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (Posted Int 2)");
 
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "VMX control 'process posted interrupts' is 1 for "
-                       & "subject 'linux' but 'acknowledge interrupt on exit' "
-                       & "is 0",
-                       Message   => "Exception mismatch (Posted Int 2)");
-         end;
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "VMX control 'process posted interrupts' is 1 for "
+                  & "subject 'linux' but 'acknowledge interrupt on exit' "
+                  & "is 0"),
+                 Message   => "Exception mismatch (Posted Int 2)");
       end Posted_Interrupts;
 
       ----------------------------------------------------------------------
@@ -1145,16 +972,11 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
             Value => "1");
 
          VMX_Controls_Entry_Checks (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (VMX-preemption timer)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VMX control 'activate VMX-preemption timer' is 0 for "
-                    & "subject 'linux' but 'save VMX-preemtion timer value' "
-                    & "is 1",
-                    Message   => "Exception mismatch (VMX-preemption timer)");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "VMX control 'activate VMX-preemption timer' is 0 for "
+                  & "subject 'linux' but 'save VMX-preemtion timer value' "
+                  & "is 1"),
+                 Message   => "Exception mismatch (VMX-preemption timer)");
       end Preemption_Timer;
 
       ----------------------------------------------------------------------
@@ -1171,54 +993,36 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
             XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
             & "controls/proc2/VirtualInterruptDelivery",
             Value => "1");
-         begin
-            VMX_Controls_Entry_Checks (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (TPR Shadow 1)");
 
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "VMX control 'Use TPR Shadow' is 0 for subject "
-                       & "'linux' but 'virtual-interrupt delivery' is 1",
-                       Message   => "Exception mismatch (TPR Shadow 1)");
-         end;
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "VMX control 'Use TPR Shadow' is 0 for subject "
+                  & "'linux' but 'virtual-interrupt delivery' is 1"),
+                 Message   => "Exception mismatch (TPR Shadow 1)");
 
          Muxml.Utils.Set_Element_Value
            (Doc   => Data.Doc,
             XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
             & "controls/proc2/APICRegisterVirtualization",
             Value => "1");
-         begin
-            VMX_Controls_Entry_Checks (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (TPR Shadow 2)");
 
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "VMX control 'Use TPR Shadow' is 0 for subject "
-                       & "'linux' but 'APIC-register virtualization' is 1",
-                       Message   => "Exception mismatch (TPR Shadow 2)");
-         end;
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "VMX control 'Use TPR Shadow' is 0 for subject "
+                  & "'linux' but 'APIC-register virtualization' is 1"),
+                 Message   => "Exception mismatch (TPR Shadow 2)");
 
          Muxml.Utils.Set_Element_Value
            (Doc   => Data.Doc,
             XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
             & "controls/proc2/Virtualizex2APICMode",
             Value => "1");
-         begin
-            VMX_Controls_Entry_Checks (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (TPR Shadow 3)");
 
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "VMX control 'Use TPR Shadow' is 0 for subject"
-                       & " 'linux' but 'Virtualize x2APIC mode' is 1",
-                       Message   => "Exception mismatch (TPR Shadow 3)");
-         end;
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "VMX control 'Use TPR Shadow' is 0 for subject"
+                  & " 'linux' but 'Virtualize x2APIC mode' is 1"),
+                 Message   => "Exception mismatch (TPR Shadow 3)");
       end TPR_Shadow;
 
       ----------------------------------------------------------------------
@@ -1242,15 +1046,10 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
             Value => "0");
 
          VMX_Controls_Entry_Checks (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Unrestricted Guest)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VMX control 'unrestricted guest' is 1 for subject "
-                    & "'linux' but 'Enable EPT' is 0",
-                    Message   => "Exception mismatch (Unrestricted Guest)");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "VMX control 'unrestricted guest' is 1 for subject "
+                  & "'linux' but 'Enable EPT' is 0"),
+                 Message   => "Exception mismatch (Unrestricted Guest)");
       end Unrestricted_Guest;
 
       ----------------------------------------------------------------------
@@ -1279,15 +1078,10 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
             Value => "0");
 
          VMX_Controls_Entry_Checks (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Virtual INT delivery)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VMX control 'virtual-interrupt delivery' is 1 for "
-                    & "subject 'linux' but 'external-interrupt exiting' is 0",
-                    Message   => "Exception mismatch (Virtual INT delivery)");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "VMX control 'virtual-interrupt delivery' is 1 for "
+                  & "subject 'linux' but 'external-interrupt exiting' is 0"),
+                 Message   => "Exception mismatch (Virtual INT delivery)");
       end Virtual_Interrupt_Delivery;
 
       ----------------------------------------------------------------------
@@ -1311,15 +1105,10 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
             Value => "1");
 
          VMX_Controls_Entry_Checks (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Virtual NMIs)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VMX control 'Virtual NMIs' is 0 for subject 'linux' but"
-                    & " 'NMI-window exiting' is 1",
-                    Message   => "Exception mismatch (Virtual NMIs)");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "VMX control 'Virtual NMIs' is 0 for subject 'linux' but"
+                  & " 'NMI-window exiting' is 1"),
+                 Message   => "Exception mismatch (Virtual NMIs)");
       end Virtual_NMIs;
 
       ----------------------------------------------------------------------
@@ -1346,18 +1135,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
             XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
             & "controls/proc2/VirtualAPICAccesses",
             Value => "1");
-         begin
-            VMX_Controls_Entry_Checks (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (Virt x2APIC Mode)");
 
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "VMX control 'Virtualize x2APIC mode' is 1 for "
-                       & "subject 'linux' but 'virtualize APIC accesses' is 1",
-                       Message   => "Exception mismatch (Virt x2APIC Mode)");
-         end;
+         VMX_Controls_Entry_Checks (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "VMX control 'Virtualize x2APIC mode' is 1 for "
+                  & "subject 'linux' but 'virtualize APIC accesses' is 1"),
+                 Message   => "Exception mismatch (Virt x2APIC Mode)");
       end Virtualize_x2APIC_Mode;
    begin
       Positive_Test;
@@ -1397,6 +1180,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       VMX_Controls_Pin_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Posted-Interrupt Processing.
 
@@ -1405,18 +1190,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/pin/ProcessPostedInterrupts",
          Value => "1");
-      begin
-         VMX_Controls_Pin_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Posted Int)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Pin-Based control 'Process posted interrupts' of "
-                    & "subject 'linux' invalid: must be 0",
-                    Message   => "Exception mismatch (Posted Int)");
-      end;
+      VMX_Controls_Pin_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Pin-Based control 'Process posted interrupts' of "
+               & "subject 'linux' invalid: must be 0"),
+              Message   => "Exception mismatch (Posted Int)");
 
       --  VMX-preemption timer.
 
@@ -1425,18 +1204,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/pin/ActivateVMXTimer",
          Value => "0");
-      begin
-         VMX_Controls_Pin_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (VMX Timer)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Pin-Based control 'Activate VMX-preemption timer' of "
-                    & "subject 'linux' invalid: must be 1",
-                    Message   => "Exception mismatch (VMX Timer)");
-      end;
+      VMX_Controls_Pin_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Pin-Based control 'Activate VMX-preemption timer' of "
+               & "subject 'linux' invalid: must be 1"),
+              Message   => "Exception mismatch (VMX Timer)");
 
       --  Virtual NMIs.
 
@@ -1445,18 +1218,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/pin/VirtualNMIs",
          Value => "1");
-      begin
-         VMX_Controls_Pin_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Virtual NMIs)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Pin-Based control 'Virtual NMIs' of subject 'linux' "
-                    & "invalid: must be 0",
-                    Message   => "Exception mismatch (Virtual NMIs)");
-      end;
+      VMX_Controls_Pin_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Pin-Based control 'Virtual NMIs' of subject 'linux' "
+               & "invalid: must be 0"),
+              Message   => "Exception mismatch (Virtual NMIs)");
 
       --  NMI exiting.
 
@@ -1465,18 +1232,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/pin/NMIExiting",
          Value => "0");
-      begin
-         VMX_Controls_Pin_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (NMI Exiting)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Pin-Based control 'NMI exiting' of subject 'linux' "
-                    & "invalid: must be 1",
-                    Message   => "Exception mismatch (NMI Exiting)");
-      end;
+      VMX_Controls_Pin_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Pin-Based control 'NMI exiting' of subject 'linux' "
+               & "invalid: must be 1"),
+              Message   => "Exception mismatch (NMI Exiting)");
 
       --  External-interrupt exiting.
 
@@ -1485,18 +1246,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/pin/ExternalInterruptExiting",
          Value => "0");
-      begin
-         VMX_Controls_Pin_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (ExtInt)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Pin-Based control 'External-Interrupt exiting' of "
-                    & "subject 'linux' invalid: must be 1",
-                    Message   => "Exception mismatch (ExtInt)");
-      end;
+      VMX_Controls_Pin_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Pin-Based control 'External-Interrupt exiting' of "
+               & "subject 'linux' invalid: must be 1"),
+              Message   => "Exception mismatch (ExtInt)");
 --  begin read only
    end Test_VMX_Controls_Pin_Requirements;
 --  end read only
@@ -1520,6 +1275,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       VMX_Controls_Proc_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Secondary Proc controls.
 
@@ -1528,18 +1285,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/proc/Activate2ndaryControls",
          Value => "0");
-      begin
-         VMX_Controls_Proc_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2ndary Proc Ctrls)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Processor-Based control 'Activate secondary controls' "
-                    & "of subject 'linux' invalid: must be 1",
-                    Message   => "Exception mismatch (2ndary Proc Ctrls)");
-      end;
+      VMX_Controls_Proc_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Processor-Based control 'Activate secondary controls' "
+               & "of subject 'linux' invalid: must be 1"),
+              Message   => "Exception mismatch (2ndary Proc Ctrls)");
 
       --  MSR bitmaps.
 
@@ -1548,18 +1299,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/proc/UseMSRBitmaps",
          Value => "0");
-      begin
-         VMX_Controls_Proc_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (MSR Bitmaps)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Processor-Based control 'Use MSR bitmaps' of "
-                    & "subject 'linux' invalid: must be 1",
-                    Message   => "Exception mismatch (MSR Bitmaps)");
-      end;
+      VMX_Controls_Proc_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Processor-Based control 'Use MSR bitmaps' of "
+               & "subject 'linux' invalid: must be 1"),
+              Message   => "Exception mismatch (MSR Bitmaps)");
 
       --  I/O bitmaps.
 
@@ -1568,18 +1313,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/proc/UseIOBitmaps",
          Value => "0");
-      begin
-         VMX_Controls_Proc_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (I/O Bitmaps)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Processor-Based control 'Use I/O bitmaps' of "
-                    & "subject 'linux' invalid: must be 1",
-                    Message   => "Exception mismatch (I/O Bitmaps)");
-      end;
+      VMX_Controls_Proc_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Processor-Based control 'Use I/O bitmaps' of "
+               & "subject 'linux' invalid: must be 1"),
+              Message   => "Exception mismatch (I/O Bitmaps)");
 
       --  MOV-DR exiting.
 
@@ -1588,18 +1327,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/proc/MOVDRExiting",
          Value => "0");
-      begin
-         VMX_Controls_Proc_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (MOV DR)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Processor-Based control 'MOV-DR exiting' of "
-                    & "subject 'linux' invalid: must be 1",
-                    Message   => "Exception mismatch (MOV DR)");
-      end;
+      VMX_Controls_Proc_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Processor-Based control 'MOV-DR exiting' of "
+               & "subject 'linux' invalid: must be 1"),
+              Message   => "Exception mismatch (MOV DR)");
 
       --  NMI-window exiting.
 
@@ -1608,18 +1341,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/proc/NMIWindowExiting",
          Value => "1");
-      begin
-         VMX_Controls_Proc_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (NMI Window)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Processor-Based control 'NMI-window exiting' of "
-                    & "subject 'linux' invalid: must be 0",
-                    Message   => "Exception mismatch (NMI Window)");
-      end;
+      VMX_Controls_Proc_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Processor-Based control 'NMI-window exiting' of "
+               & "subject 'linux' invalid: must be 0"),
+              Message   => "Exception mismatch (NMI Window)");
 
       --  TPR Shadow.
 
@@ -1628,18 +1355,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/proc/UseTPRShadow",
          Value => "1");
-      begin
-         VMX_Controls_Proc_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (TPR Shadow)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Processor-Based control 'Use TPR shadow' of "
-                    & "subject 'linux' invalid: must be 0",
-                    Message   => "Exception mismatch (TPR Shadow)");
-      end;
+      VMX_Controls_Proc_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Processor-Based control 'Use TPR shadow' of "
+               & "subject 'linux' invalid: must be 0"),
+              Message   => "Exception mismatch (TPR Shadow)");
 
       --  CR8-store exiting.
 
@@ -1648,18 +1369,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/proc/CR8StoreExiting",
          Value => "0");
-      begin
-         VMX_Controls_Proc_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (CR8-store exiting)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Processor-Based control 'CR8-store exiting' of "
-                    & "subject 'linux' invalid: must be 1",
-                    Message   => "Exception mismatch (CR8-store exiting)");
-      end;
+      VMX_Controls_Proc_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Processor-Based control 'CR8-store exiting' of "
+               & "subject 'linux' invalid: must be 1"),
+              Message   => "Exception mismatch (CR8-store exiting)");
 
       --  CR8-load exiting.
 
@@ -1668,18 +1383,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/proc/CR8LoadExiting",
          Value => "0");
-      begin
-         VMX_Controls_Proc_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (CR8-load exiting)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Processor-Based control 'CR8-load exiting' of "
-                    & "subject 'linux' invalid: must be 1",
-                    Message   => "Exception mismatch (CR8-load exiting)");
-      end;
+      VMX_Controls_Proc_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Processor-Based control 'CR8-load exiting' of "
+               & "subject 'linux' invalid: must be 1"),
+              Message   => "Exception mismatch (CR8-load exiting)");
 
       --  CR3-load exiting.
 
@@ -1688,18 +1397,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='sm']/vcpu/vmx/"
          & "controls/proc/CR3LoadExiting",
          Value => "0");
-      begin
-         VMX_Controls_Proc_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (CR3-load exiting)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Processor-Based control 'CR3-load exiting' of "
-                    & "subject 'sm' invalid: must be 1",
-                    Message   => "Exception mismatch (CR3-load exiting)");
-      end;
+      VMX_Controls_Proc_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Processor-Based control 'CR3-load exiting' of "
+               & "subject 'sm' invalid: must be 1"),
+               Message   => "Exception mismatch (CR3-load exiting)");
       Muxml.Utils.Set_Element_Value
         (Doc   => Data.Doc,
          XPath => "/system/subjects/subject[@name='sm']/vcpu/vmx/"
@@ -1713,18 +1416,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/proc/MWAITExiting",
          Value => "0");
-      begin
-         VMX_Controls_Proc_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (MWAIT exiting)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Processor-Based control 'MWAIT exiting' of "
-                    & "subject 'linux' invalid: must be 1",
-                    Message   => "Exception mismatch (MWAIT exiting)");
-      end;
+      VMX_Controls_Proc_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Processor-Based control 'MWAIT exiting' of "
+               & "subject 'linux' invalid: must be 1"),
+              Message   => "Exception mismatch (MWAIT exiting)");
 
       --  INVLPG exiting.
 
@@ -1733,18 +1430,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/proc/INVLPGExiting",
          Value => "0");
-      begin
-         VMX_Controls_Proc_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (INVLPG exiting)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Processor-Based control 'INVLPG exiting' of "
-                    & "subject 'linux' invalid: must be 1",
-                    Message   => "Exception mismatch (INVLPG exiting)");
-      end;
+      VMX_Controls_Proc_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Processor-Based control 'INVLPG exiting' of "
+               & "subject 'linux' invalid: must be 1"),
+              Message   => "Exception mismatch (INVLPG exiting)");
 
       --  TSC Offsetting.
 
@@ -1753,18 +1444,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/proc/UseTSCOffsetting",
          Value => "1");
-      begin
-         VMX_Controls_Proc_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (TSC Offsetting)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Processor-Based control 'Use TSC offsetting' of "
-                    & "subject 'linux' invalid: must be 0",
-                    Message   => "Exception mismatch (TSC Offsetting)");
-      end;
+      VMX_Controls_Proc_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Processor-Based control 'Use TSC offsetting' of "
+               & "subject 'linux' invalid: must be 0"),
+              Message   => "Exception mismatch (TSC Offsetting)");
 
       --  Interrupt-window exiting.
 
@@ -1773,18 +1458,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/proc/InterruptWindowExiting",
          Value => "1");
-      begin
-         VMX_Controls_Proc_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Int Window)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Processor-Based control 'Interrupt-window exiting' of "
-                    & "subject 'linux' invalid: must be 0",
-                    Message   => "Exception mismatch (Int Window)");
-      end;
+      VMX_Controls_Proc_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Processor-Based control 'Interrupt-window exiting' of "
+               & "subject 'linux' invalid: must be 0"),
+              Message   => "Exception mismatch (Int Window)");
 --  begin read only
    end Test_VMX_Controls_Proc_Requirements;
 --  end read only
@@ -1808,6 +1487,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       VMX_Controls_Proc2_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  VM Functions.
 
@@ -1816,19 +1497,13 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/proc2/EnableVMFunctions",
          Value => "1");
-      begin
-         VMX_Controls_Proc2_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (VMFUNC)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Secondary Processor-Based control "
-                    & "'Enable VM functions' of subject 'linux' "
-                    & "invalid: must be 0",
-                    Message   => "Exception mismatch (VMFUNC)");
-      end;
+      VMX_Controls_Proc2_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Secondary Processor-Based control "
+               & "'Enable VM functions' of subject 'linux' "
+               & "invalid: must be 0"),
+              Message   => "Exception mismatch (VMFUNC)");
 
       --  INVPCID.
 
@@ -1837,19 +1512,13 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/proc2/EnableINVPCID",
          Value => "1");
-      begin
-         VMX_Controls_Proc2_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (INVPCID)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Secondary Processor-Based control "
-                    & "'Enable INVPCID' of subject 'linux' "
-                    & "invalid: must be 0",
-                    Message   => "Exception mismatch (INVPCID)");
-      end;
+      VMX_Controls_Proc2_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Secondary Processor-Based control "
+               & "'Enable INVPCID' of subject 'linux' "
+               & "invalid: must be 0"),
+              Message   => "Exception mismatch (INVPCID)");
 
       --  Virtual-interrupt delivery.
 
@@ -1858,19 +1527,13 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/proc2/VirtualInterruptDelivery",
          Value => "1");
-      begin
-         VMX_Controls_Proc2_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Virt Int Delivery)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Secondary Processor-Based control "
-                    & "'Virtual-interrupt delivery' of subject 'linux' "
-                    & "invalid: must be 0",
-                    Message   => "Exception mismatch (Virt Int Delivery)");
-      end;
+      VMX_Controls_Proc2_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Secondary Processor-Based control "
+               & "'Virtual-interrupt delivery' of subject 'linux' "
+               & "invalid: must be 0"),
+              Message   => "Exception mismatch (Virt Int Delivery)");
 
       --  APIC-register virtualization.
 
@@ -1879,19 +1542,13 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/proc2/APICRegisterVirtualization",
          Value => "1");
-      begin
-         VMX_Controls_Proc2_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (APIC Reg Virt)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Secondary Processor-Based control "
-                    & "'APIC-register virtualization' of subject 'linux' "
-                    & "invalid: must be 0",
-                    Message   => "Exception mismatch (APIC Reg Virt)");
-      end;
+      VMX_Controls_Proc2_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Secondary Processor-Based control "
+               & "'APIC-register virtualization' of subject 'linux' "
+               & "invalid: must be 0"),
+              Message   => "Exception mismatch (APIC Reg Virt)");
 
       --  WBINVD exiting.
 
@@ -1900,19 +1557,13 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/proc2/WBINVDExiting",
          Value => "0");
-      begin
-         VMX_Controls_Proc2_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (WBINVD)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Secondary Processor-Based control "
-                    & "'WBINVD exiting' of subject 'linux' "
-                    & "invalid: must be 1",
-                    Message   => "Exception mismatch (WBINVD)");
-      end;
+      VMX_Controls_Proc2_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Secondary Processor-Based control "
+               & "'WBINVD exiting' of subject 'linux' "
+               & "invalid: must be 1"),
+              Message   => "Exception mismatch (WBINVD)");
 
       --  VPID.
 
@@ -1921,19 +1572,13 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/proc2/EnableVPID",
          Value => "1");
-      begin
-         VMX_Controls_Proc2_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (VPID)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Secondary Processor-Based control "
-                    & "'Enable VPID' of subject 'linux' "
-                    & "invalid: must be 0",
-                    Message   => "Exception mismatch (VPID)");
-      end;
+      VMX_Controls_Proc2_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Secondary Processor-Based control "
+               & "'Enable VPID' of subject 'linux' "
+               & "invalid: must be 0"),
+              Message   => "Exception mismatch (VPID)");
 
       --  Virtualize x2APIC mode.
 
@@ -1942,19 +1587,13 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/proc2/Virtualizex2APICMode",
          Value => "1");
-      begin
-         VMX_Controls_Proc2_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Virt x2APIC mode)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Secondary Processor-Based control "
-                    & "'Virtualize x2APIC mode' of subject 'linux' "
-                    & "invalid: must be 0",
-                    Message   => "Exception mismatch (Virt x2APIC mode)");
-      end;
+      VMX_Controls_Proc2_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Secondary Processor-Based control "
+               & "'Virtualize x2APIC mode' of subject 'linux' "
+               & "invalid: must be 0"),
+              Message   => "Exception mismatch (Virt x2APIC mode)");
 
       --  Virtualize APIC Accesses.
 
@@ -1963,19 +1602,13 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/proc2/VirtualAPICAccesses",
          Value => "1");
-      begin
-         VMX_Controls_Proc2_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Virt APIC access)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Secondary Processor-Based control "
-                    & "'Virtualize APIC accesses' of subject 'linux' "
-                    & "invalid: must be 0",
-                    Message   => "Exception mismatch (Virt APIC access)");
-      end;
+      VMX_Controls_Proc2_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Secondary Processor-Based control "
+               & "'Virtualize APIC accesses' of subject 'linux' "
+               & "invalid: must be 0"),
+              Message   => "Exception mismatch (Virt APIC access)");
 --  begin read only
    end Test_VMX_Controls_Proc2_Requirements;
 --  end read only
@@ -1999,6 +1632,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       VM_Exit_Controls_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Save VMX-preemption timer.
 
@@ -2007,18 +1642,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/exit/SaveVMXTimerValue",
          Value => "1");
-      begin
-         VM_Exit_Controls_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (VMX-preempt timer)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VM-Exit control 'Save VMX-preemption timer value' of "
-                    & "subject 'linux' invalid: must be 0",
-                    Message   => "Exception mismatch (VMX-preempt timer)");
-      end;
+      VM_Exit_Controls_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VM-Exit control 'Save VMX-preemption timer value' of "
+               & "subject 'linux' invalid: must be 0"),
+              Message   => "Exception mismatch (VMX-preempt timer)");
 
       declare
          Node : DOM.Core.Node
@@ -2049,18 +1678,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/exit/LoadIA32EFER",
          Value => "0");
-      begin
-         VM_Exit_Controls_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Load IA32_EFER)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VM-Exit control 'Load IA32_EFER' of subject"
-                    & " 'linux' invalid: must be 1",
-                    Message   => "Exception mismatch (Load IA32_EFER)");
-      end;
+      VM_Exit_Controls_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VM-Exit control 'Load IA32_EFER' of subject"
+               & " 'linux' invalid: must be 1"),
+              Message   => "Exception mismatch (Load IA32_EFER)");
 
       --  Save IA32_EFER.
 
@@ -2069,18 +1692,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/exit/SaveIA32EFER",
          Value => "0");
-      begin
-         VM_Exit_Controls_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Save IA32_EFER)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VM-Exit control 'Save IA32_EFER' of subject"
-                    & " 'linux' invalid: must be 1",
-                    Message   => "Exception mismatch (Save IA32_EFER)");
-      end;
+      VM_Exit_Controls_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VM-Exit control 'Save IA32_EFER' of subject"
+               & " 'linux' invalid: must be 1"),
+              Message   => "Exception mismatch (Save IA32_EFER)");
 
       --  Load IA32_PAT.
 
@@ -2089,18 +1706,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/exit/LoadIA32PAT",
          Value => "1");
-      begin
-         VM_Exit_Controls_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Load IA32_PAT)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VM-Exit control 'Load IA32_PAT' of subject"
-                    & " 'linux' invalid: must be 0",
-                    Message   => "Exception mismatch (Load IA32_PAT)");
-      end;
+      VM_Exit_Controls_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VM-Exit control 'Load IA32_PAT' of subject"
+               & " 'linux' invalid: must be 0"),
+              Message   => "Exception mismatch (Load IA32_PAT)");
 
       --  Save IA32_PAT.
 
@@ -2109,18 +1720,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/exit/SaveIA32PAT",
          Value => "1");
-      begin
-         VM_Exit_Controls_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Save IA32_PAT)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VM-Exit control 'Save IA32_PAT' of subject"
-                    & " 'linux' invalid: must be 0",
-                    Message   => "Exception mismatch (Save IA32_PAT)");
-      end;
+      VM_Exit_Controls_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VM-Exit control 'Save IA32_PAT' of subject"
+               & " 'linux' invalid: must be 0"),
+              Message   => "Exception mismatch (Save IA32_PAT)");
 
       --  Acknowledge interrupt on exit.
 
@@ -2129,18 +1734,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/exit/AckInterruptOnExit",
          Value => "0");
-      begin
-         VM_Exit_Controls_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Ack INT)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VM-Exit control 'Acknowledge interrupt on exit' of "
-                    & "subject 'linux' invalid: must be 1",
-                    Message   => "Exception mismatch (Ack INT)");
-      end;
+      VM_Exit_Controls_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VM-Exit control 'Acknowledge interrupt on exit' of "
+               & "subject 'linux' invalid: must be 1"),
+              Message   => "Exception mismatch (Ack INT)");
 
       --  Load IA32_PERF_GLOBAL_CTRL.
 
@@ -2149,18 +1748,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/exit/LoadIA32PERFGLOBALCTRL",
          Value => "1");
-      begin
-         VM_Exit_Controls_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (IA32_PERF_GLOBAL_CTRL)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VM-Exit control 'Load IA32_PERF_GLOBAL_CTRL' of subject"
-                    & " 'linux' invalid: must be 0",
-                    Message   => "Exception mismatch (IA32_PERF_GLOBAL_CTRL)");
-      end;
+      VM_Exit_Controls_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VM-Exit control 'Load IA32_PERF_GLOBAL_CTRL' of subject"
+               & " 'linux' invalid: must be 0"),
+              Message   => "Exception mismatch (IA32_PERF_GLOBAL_CTRL)");
 
       --  Host address-space size.
 
@@ -2169,18 +1762,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/exit/HostAddressspaceSize",
          Value => "0");
-      begin
-         VM_Exit_Controls_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Host Addr Space Size)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VM-Exit control 'Host address-space size' of subject "
-                    & "'linux' invalid: must be 1",
-                    Message   => "Exception mismatch (Host Addr Space Size)");
-      end;
+      VM_Exit_Controls_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VM-Exit control 'Host address-space size' of subject "
+               & "'linux' invalid: must be 1"),
+              Message   => "Exception mismatch (Host Addr Space Size)");
 
       --  Save IA32_DEBUGCTL.
 
@@ -2206,15 +1793,10 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
             New_Child => Node);
 
          VM_Exit_Controls_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (IA32_DEBUGCTL)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VM-Exit control 'Save debug controls' of subject "
-                    & "'linux' invalid: must be 1",
-                    Message   => "Exception mismatch (IA32_DEBUGCTL)");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "VM-Exit control 'Save debug controls' of subject "
+                  & "'linux' invalid: must be 1"),
+                 Message   => "Exception mismatch (IA32_DEBUGCTL)");
       end;
 --  begin read only
    end Test_VM_Exit_Controls_Requirements;
@@ -2239,6 +1821,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       VM_Entry_Controls_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Load IA32_EFER.
 
@@ -2269,15 +1853,10 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
             Value => "0");
 
          VM_Entry_Controls_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Load IA32_EFER)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VM-Entry control 'Load IA32_EFER' of subject"
-                    & " 'linux' invalid: must be 1",
-                    Message   => "Exception mismatch (Load IA32_EFER)");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "VM-Entry control 'Load IA32_EFER' of subject"
+                  & " 'linux' invalid: must be 1"),
+                 Message   => "Exception mismatch (Load IA32_EFER)");
       end;
 
       --  Load IA32_PAT.
@@ -2287,18 +1866,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/entry/LoadIA32PAT",
          Value => "1");
-      begin
-         VM_Entry_Controls_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (IA32_PAT)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VM-Entry control 'Load IA32_PAT' of "
-                    & "subject 'linux' invalid: must be 0",
-                    Message   => "Exception mismatch (IA32_PAT)");
-      end;
+      VM_Entry_Controls_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VM-Entry control 'Load IA32_PAT' of "
+               & "subject 'linux' invalid: must be 0"),
+              Message   => "Exception mismatch (IA32_PAT)");
 
       --  Load IA32_PERF_GLOBAL_CTRL.
 
@@ -2307,18 +1880,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/entry/LoadIA32PERFGLOBALCTRL",
          Value => "1");
-      begin
-         VM_Entry_Controls_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (IA32_PERF_GLOBAL_CTRL)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VM-Entry control 'Load IA32_PERF_GLOBAL_CTRL' of "
-                    & "subject 'linux' invalid: must be 0",
-                    Message   => "Exception mismatch (IA32_PERF_GLOBAL_CTRL)");
-      end;
+      VM_Entry_Controls_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VM-Entry control 'Load IA32_PERF_GLOBAL_CTRL' of "
+               & "subject 'linux' invalid: must be 0"),
+              Message   => "Exception mismatch (IA32_PERF_GLOBAL_CTRL)");
 
       --  Dual-Monitor treatment.
 
@@ -2327,18 +1894,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/entry/DeactiveDualMonitorTreatment",
          Value => "1");
-      begin
-         VM_Entry_Controls_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Dual-Monitor)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VM-Entry control 'Deactivate dual-monitor treatment' of"
-                    & " subject 'linux' invalid: must be 0",
-                    Message   => "Exception mismatch (Dual-Monitor)");
-      end;
+      VM_Entry_Controls_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VM-Entry control 'Deactivate dual-monitor treatment' of"
+               & " subject 'linux' invalid: must be 0"),
+              Message   => "Exception mismatch (Dual-Monitor)");
 
       --  Entry to SMM.
 
@@ -2347,18 +1908,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "controls/entry/EntryToSMM",
          Value => "1");
-      begin
-         VM_Entry_Controls_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Entry to SMM)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VM-Entry control 'Entry to SMM' of subject "
-                    & "'linux' invalid: must be 0",
-                    Message   => "Exception mismatch (Entry to SMM)");
-      end;
+      VM_Entry_Controls_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VM-Entry control 'Entry to SMM' of subject "
+               & "'linux' invalid: must be 0"),
+              Message   => "Exception mismatch (Entry to SMM)");
 
       --  IA-32e guest mode.
 
@@ -2367,18 +1922,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='vt']/vcpu/vmx/"
          & "controls/entry/IA32eModeGuest",
          Value => "0");
-      begin
-         VM_Entry_Controls_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (IA-32e guest)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VM-Entry control 'IA-32e mode guest' of subject "
-                    & "'vt' invalid: must be 1",
-                    Message   => "Exception mismatch (IA-32e guest)");
-      end;
+      VM_Entry_Controls_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VM-Entry control 'IA-32e mode guest' of subject "
+               & "'vt' invalid: must be 1"),
+              Message   => "Exception mismatch (IA-32e guest)");
       Muxml.Utils.Set_Element_Value
         (Doc   => Data.Doc,
          XPath => "/system/subjects/subject[@name='vt']/vcpu/vmx/"
@@ -2409,15 +1958,10 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
             New_Child => Node);
 
          VM_Entry_Controls_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (IA32_DEBUGCTL)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VM-Entry control 'Load debug controls' of subject "
-                    & "'linux' invalid: must be 1",
-                    Message   => "Exception mismatch (IA32_DEBUGCTL)");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "VM-Entry control 'Load debug controls' of subject "
+                  & "'linux' invalid: must be 1"),
+                 Message   => "Exception mismatch (IA32_DEBUGCTL)");
       end;
 --  begin read only
    end Test_VM_Entry_Controls_Requirements;
@@ -2442,6 +1986,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       VMX_CR0_Mask_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Cache Disable.
 
@@ -2450,19 +1996,13 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "masks/cr0/CacheDisable",
          Value => "0");
-      begin
-         VMX_CR0_Mask_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (CD)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VMX CR0 guest/host mask control "
-                    & "'Cache Disable' of subject 'linux' "
-                    & "invalid: must be 1",
-                    Message   => "Exception mismatch (CD)");
-      end;
+      VMX_CR0_Mask_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VMX CR0 guest/host mask control "
+               & "'Cache Disable' of subject 'linux' "
+               & "invalid: must be 1"),
+              Message   => "Exception mismatch (CD)");
 
       --  Not Write-through.
 
@@ -2471,19 +2011,13 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='linux']/vcpu/vmx/"
          & "masks/cr0/NotWritethrough",
          Value => "0");
-      begin
-         VMX_CR0_Mask_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (NW)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VMX CR0 guest/host mask control "
-                    & "'Not Write-through' of subject 'linux' "
-                    & "invalid: must be 1",
-                    Message   => "Exception mismatch (NW)");
-      end;
+      VMX_CR0_Mask_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VMX CR0 guest/host mask control "
+               & "'Not Write-through' of subject 'linux' "
+               & "invalid: must be 1"),
+              Message   => "Exception mismatch (NW)");
 --  begin read only
    end Test_VMX_CR0_Mask_Requirements;
 --  end read only
@@ -2507,6 +2041,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       VMX_CR4_Mask_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  MCE.
 
@@ -2515,19 +2051,13 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='vt']/vcpu/vmx/"
          & "masks/cr4/MachineCheckEnable",
          Value => "0");
-      begin
-         VMX_CR4_Mask_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (MCE)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VMX CR4 guest/host mask control "
-                    & "'Machine-Check Enable' of subject 'vt' "
-                    & "invalid: must be 1",
-                    Message   => "Exception mismatch (MCE)");
-      end;
+      VMX_CR4_Mask_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VMX CR4 guest/host mask control "
+               & "'Machine-Check Enable' of subject 'vt' "
+               & "invalid: must be 1"),
+               Message   => "Exception mismatch (MCE)");
 
       --  PAE.
 
@@ -2536,19 +2066,13 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='vt']/vcpu/vmx/"
          & "masks/cr4/PhysicalAddressExtension",
          Value => "0");
-      begin
-         VMX_CR4_Mask_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (PAE)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VMX CR4 guest/host mask control "
-                    & "'Physical Address Extension' of subject 'vt' "
-                    & "invalid: must be 1",
-                    Message   => "Exception mismatch (PAE)");
-      end;
+      VMX_CR4_Mask_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VMX CR4 guest/host mask control "
+               & "'Physical Address Extension' of subject 'vt' "
+               & "invalid: must be 1"),
+              Message   => "Exception mismatch (PAE)");
 --  begin read only
    end Test_VMX_CR4_Mask_Requirements;
 --  end read only
@@ -2572,6 +2096,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       VMX_Exception_Bitmap_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  #MC.
 
@@ -2580,18 +2106,12 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
          XPath => "/system/subjects/subject[@name='vt']/vcpu/vmx/"
          & "masks/exception/MachineCheck",
          Value => "0");
-      begin
-         VMX_Exception_Bitmap_Requirements (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (#MC)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VMX Exception bitmap control 'Machine Check' of subject"
-                    & " 'vt' invalid: must be 1",
-                    Message   => "Exception mismatch (#MC)");
-      end;
+      VMX_Exception_Bitmap_Requirements (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "VMX Exception bitmap control 'Machine Check' of subject"
+               & " 'vt' invalid: must be 1"),
+              Message   => "Exception mismatch (#MC)");
 --  begin read only
    end Test_VMX_Exception_Bitmap_Requirements;
 --  end read only

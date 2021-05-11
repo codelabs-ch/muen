@@ -14,7 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with Mucfgcheck.Validation_Errors;
 --  begin read only
 --  end read only
 package body Mucfgcheck.Device_Domains.Test_Data.Tests is
@@ -50,18 +50,11 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
          Name  => "physical",
          Value => "wireless");
 
-      begin
-         Device_Reference_Uniqueness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Device domains 'linux_domain' and 'wireless_domain' "
-                    & "reference same physical device 'wireless'",
-                    Message   => "Exception mismatch");
-      end;
+      Device_Reference_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Device domains 'linux_domain' and 'wireless_domain' "
+               & "reference same physical device 'wireless'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Device_Reference_Uniqueness;
 --  end read only
@@ -99,15 +92,10 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
                Executable    => False));
 
          Domain_Memory_Overlap (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Overlap of domain memory region 'linux|ram' and 'dma'"
-                    & " of device domain 'linux_domain'",
-                    Message   => "Exception mismatch");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Overlap of domain memory region 'linux|ram' and 'dma'"
+                  & " of device domain 'linux_domain'"),
+                 Message   => "Exception mismatch");
       end;
 --  begin read only
    end Test_Domain_Memory_Overlap;
@@ -136,18 +124,11 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
          Name  => "physical",
          Value => "wireless_dma");
 
-      begin
-         Memory_Reference_Uniqueness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Device domains 'linux_domain' and 'wireless_domain' "
-                    & "reference same physical memory region 'wireless_dma'",
-                    Message   => "Exception mismatch");
-      end;
+      Memory_Reference_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Device domains 'linux_domain' and 'wireless_domain' "
+               & "reference same physical memory region 'wireless_dma'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Memory_Reference_Uniqueness;
 --  end read only
@@ -175,19 +156,12 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
          Name  => "virtualAddress",
          Value => "16#1000#");
 
-      begin
-         Memory_Mapping_Address_Equality (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical memory region 'linux|ram' referenced by device"
-                    &" domain 'linux_domain' and subject 'linux' not mapped at"
-                    & " the same address: 16#1000# /= 16#0090_0000#",
-                    Message   => "Exception mismatch");
-      end;
+      Memory_Mapping_Address_Equality (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Physical memory region 'linux|ram' referenced by device"
+               &" domain 'linux_domain' and subject 'linux' not mapped at"
+               & " the same address: 16#1000# /= 16#0090_0000#"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Memory_Mapping_Address_Equality;
 --  end read only
@@ -214,18 +188,11 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
          Name  => "type",
          Value => "system_pt");
 
-      begin
-         Domain_Memory_Type (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Device domain memory 'wireless_dma' has invalid memory"
-                    & " type SYSTEM_PT",
-                    Message   => "Exception mismatch");
-      end;
+      Domain_Memory_Type (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Device domain memory 'wireless_dma' has invalid memory"
+               & " type SYSTEM_PT"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Domain_Memory_Type;
 --  end read only
@@ -253,18 +220,11 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
          Name  => "physical",
          Value => "keyboard");
 
-      begin
-         PCI_Device_References (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical device 'keyboard' referenced by device domain "
-                    & "'linux_domain' is not a PCI device",
-                    Message   => "Exception mismatch");
-      end;
+      PCI_Device_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Physical device 'keyboard' referenced by device domain "
+               & "'linux_domain' is not a PCI device"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_PCI_Device_References;
 --  end read only
@@ -291,18 +251,11 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
          Name  => "name",
          Value => "domain_without_pt");
 
-      begin
-         Domain_PT_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "No file-backed PT region for device domain "
-                    & "'domain_without_pt' found",
-                    Message   => "Exception mismatch");
-      end;
+      Domain_PT_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "No file-backed PT region for device domain "
+               & "'domain_without_pt' found"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Domain_PT_Region_Presence;
 --  end read only
@@ -329,18 +282,11 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
          Name  => "type",
          Value => "subject");
 
-      begin
-         PCI_Bus_Context_Region_Presence (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "No VT-d context table memory region found for PCI bus "
-                    & "16#03#",
-                    Message   => "Exception mismatch");
-      end;
+      PCI_Bus_Context_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "No VT-d context table memory region found for PCI bus "
+               & "16#03#"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_PCI_Bus_Context_Region_Presence;
 --  end read only

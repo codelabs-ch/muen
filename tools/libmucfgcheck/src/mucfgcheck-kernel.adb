@@ -30,6 +30,7 @@ with Mutools.Utils;
 with Mutools.XML_Utils;
 
 with Mucfgcheck.Utils;
+with Mucfgcheck.Validation_Errors;
 
 package body Mucfgcheck.Kernel
 is
@@ -96,9 +97,10 @@ is
       Mulog.Log (Msg => "Checking kernel memory CPU section count");
 
       if Section_Count < Active_CPUs then
-         raise Validation_Error with "Invalid number of kernel memory CPU "
-           & "section(s)," & Section_Count'Img & " present but"
-           & Active_CPUs'Img & " required";
+         Validation_Errors.Insert
+           (Msg => "Invalid number of kernel memory CPU "
+            & "section(s)," & Section_Count'Img & " present but"
+            & Active_CPUs'Img & " required");
       end if;
    end CPU_Memory_Section_Count;
 
@@ -132,9 +134,10 @@ is
               Name => "virtualAddress"));
    begin
       if Count /= CPU_Count then
-         raise Validation_Error with "Required crash audit mappings not "
-           & "present (expected" &  CPU_Count'Img & ", found" & Count'Img
-           & ")";
+         Validation_Errors.Insert
+           (Msg => "Required crash audit mappings not "
+            & "present (expected" &  CPU_Count'Img & ", found" & Count'Img
+            & ")");
       end if;
 
       Check_Attribute (Nodes     => Mappings,
@@ -168,7 +171,10 @@ is
            XPath => "/system/kernel/devices/device[@logical='debugconsole']");
 
       --  Returns error message for given device resource node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       --  Returns True if the physical attribute and node name of Left and
       --  Right are identical.
@@ -178,7 +184,10 @@ is
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          Res_Kind : constant String
            := Mutools.Utils.To_Ada_Identifier
@@ -187,9 +196,11 @@ is
            := DOM.Core.Elements.Get_Attribute (Elem => Node,
                                                Name => "physical");
       begin
-         return "Kernel debug console reference to physical " & Res_Kind & " '"
-           & Phys_Name & "' not specified by platform kernel diagnostics "
-           & "device";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Kernel debug console reference to physical " & Res_Kind & " '"
+            & Phys_Name & "' not specified by platform kernel diagnostics "
+            & "device");
+         Fatal := True;
       end Error_Msg;
 
       ----------------------------------------------------------------------
@@ -240,15 +251,17 @@ is
            := DOM.Core.Nodes.Length (List => Debug_Dev_Res);
       begin
          if Diag_Phys_Dev_Name /= Debug_Phys_Dev_Name then
-            raise Validation_Error with "Kernel debug console and platform "
-              & "diagnostics device physical reference mismatch: "
-              & Debug_Phys_Dev_Name & " /= " & Diag_Phys_Dev_Name;
+            Validation_Errors.Insert
+              (Msg => "Kernel debug console and platform "
+               & "diagnostics device physical reference mismatch: "
+               & Debug_Phys_Dev_Name & " /= " & Diag_Phys_Dev_Name);
          end if;
 
          if Diag_Dev_Res_Count /= Debug_Dev_Res_Count then
-            raise Validation_Error with "Kernel debug console and platform "
-              & "diagnostics device resource count mismatch:"
-              & Debug_Dev_Res_Count'Img & " /=" & Diag_Dev_Res_Count'Img;
+            Validation_Errors.Insert
+              (Msg => "Kernel debug console and platform "
+               & "diagnostics device resource count mismatch:"
+               & Debug_Dev_Res_Count'Img & " /=" & Diag_Dev_Res_Count'Img);
          end if;
 
          For_Each_Match
@@ -282,9 +295,10 @@ is
               Name => "virtualAddress"));
    begin
       if Map_Count /= CPU_Count then
-         raise Validation_Error with "Required kernel global data mappings not"
-           & " present (expected" &  CPU_Count'Img & ", found" & Map_Count'Img
-           & ")";
+         Validation_Errors.Insert
+           (Msg => "Required kernel global data mappings not"
+            & " present (expected" &  CPU_Count'Img & ", found" & Map_Count'Img
+            & ")");
       end if;
 
       Check_Attribute (Nodes     => Nodes,
@@ -314,18 +328,26 @@ is
          return Boolean;
 
       --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
             Name => "physical");
       begin
-         return "Mapping of MMIO region of IOMMU '" & Name & "' not adjacent "
-           & "to other IOMMU regions";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Mapping of MMIO region of IOMMU '" & Name & "' not adjacent "
+            & "to other IOMMU regions");
+         Fatal := False;
       end Error_Msg;
 
       ----------------------------------------------------------------------
@@ -491,13 +513,14 @@ is
                   Physical_Memory => Phys_Mem,
                   Logical_Memory  => Virt_Mem);
                if Node /= null then
-                  raise Validation_Error with "Expected unmapped page on CPU"
-                    & I'Img & " below kernel stack @ "
-                    & Mutools.Utils.To_Hex (Number => Stack_Addr)
-                    & ", found '"
-                    & DOM.Core.Elements.Get_Attribute
-                    (Elem => Node,
-                     Name => "logical") & "'";
+                  Validation_Errors.Insert
+                    (Msg => "Expected unmapped page on CPU"
+                     & I'Img & " below kernel stack @ "
+                     & Mutools.Utils.To_Hex (Number => Stack_Addr)
+                     & ", found '"
+                     & DOM.Core.Elements.Get_Attribute
+                       (Elem => Node,
+                        Name => "logical") & "'");
                end if;
 
                --  Check guard page above.
@@ -507,28 +530,31 @@ is
                   Physical_Memory => Phys_Mem,
                   Logical_Memory  => Virt_Mem);
                if Node /= null then
-                  raise Validation_Error with "Expected unmapped page on CPU"
-                    & I'Img & " above kernel stack @ "
-                    & Mutools.Utils.To_Hex
-                    (Number => Stack_Addr + Stack_Size - 1)
-                    & ", found '"
-                    & DOM.Core.Elements.Get_Attribute
-                    (Elem => Node,
-                     Name => "logical") & "'";
+                  Validation_Errors.Insert
+                    (Msg => "Expected unmapped page on CPU"
+                     & I'Img & " above kernel stack @ "
+                     & Mutools.Utils.To_Hex
+                       (Number => Stack_Addr + Stack_Size - 1)
+                     & ", found '"
+                     & DOM.Core.Elements.Get_Attribute
+                       (Elem => Node,
+                        Name => "logical") & "'");
                end if;
             end Check_Guards;
          begin
             if Stack_Node = null then
-               raise Validation_Error with "CPU" & I'Img & " has no stack "
-                 & "region mapping";
+               Validation_Errors.Insert
+                 (Msg => "CPU" & I'Img & " has no stack region mapping");
+            else
+               Check_Guards (Stack_Node => Stack_Node);
             end if;
             if Intr_Stack_Node = null then
-               raise Validation_Error with "CPU" & I'Img & " has no interrupt "
-                 & "stack region mapping";
+               Validation_Errors.Insert
+                 (Msg => "CPU" & I'Img & " has no interrupt stack region "
+                  & "mapping");
+            else
+               Check_Guards (Stack_Node => Intr_Stack_Node);
             end if;
-
-            Check_Guards (Stack_Node => Stack_Node);
-            Check_Guards (Stack_Node => Intr_Stack_Node);
          end;
       end loop;
    end Stack_Layout;
@@ -548,8 +574,8 @@ is
       Mulog.Log (Msg => "Checking kernel system board reference");
 
       if DOM.Core.Nodes.Length (List => Pairs.Right) /= 1 then
-         raise Validation_Error with "Kernel system board reference not "
-           & "present";
+         Validation_Errors.Insert
+           (Msg => "Kernel system board reference not present");
       end if;
 
       declare
@@ -569,12 +595,14 @@ is
               XPath => "ioPort[@logical='poweroff_port']");
       begin
          if Reset_Port = null then
-            raise Validation_Error with "Kernel system board reference does "
-              & "not provide logical reset port";
+            Validation_Errors.Insert
+              (Msg => "Kernel system board reference does not provide logical "
+               & "reset port");
          end if;
          if Poweroff_Port = null then
-            raise Validation_Error with "Kernel system board reference does "
-              & "not provide logical poweroff port";
+            Validation_Errors.Insert
+              (Msg => "Kernel system board reference does "
+               & "not provide logical poweroff port");
          end if;
       end;
    end System_Board_Reference;

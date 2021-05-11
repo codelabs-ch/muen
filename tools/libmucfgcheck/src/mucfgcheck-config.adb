@@ -26,6 +26,8 @@ with Muxml.Utils;
 with Mutools.Utils;
 with Mutools.System_Config;
 
+with Mucfgcheck.Validation_Errors;
+
 package body Mucfgcheck.Config
 is
 
@@ -65,9 +67,10 @@ is
                  Name => "value");
          begin
             if Val_Str'Length = 0 then
-               raise Validation_Error with Mutools.Utils.Capitalize (Typename)
-                 & " without value attribute in " & Value_Kind
-                 & " '" & Name (Node => Val_Node) & "'";
+               Validation_Errors.Insert
+                 (Msg => Mutools.Utils.Capitalize (Typename)
+                  & " without value attribute in " & Value_Kind
+                  & " '" & Name (Node => Val_Node) & "'");
             end if;
 
             declare
@@ -76,10 +79,11 @@ is
                Dummy := Value_Type'Value (Val_Str);
             exception
                when Constraint_Error =>
-                  raise Validation_Error with Mutools.Utils.Capitalize
-                    (Typename) & " with invalid value '" & Val_Str
-                    & "' in " & Value_Kind &  " '"
-                    & Name (Node => Val_Node) & "'";
+                  Validation_Errors.Insert
+                    (Msg => Mutools.Utils.Capitalize
+                       (Typename) & " with invalid value '" & Val_Str
+                     & "' in " & Value_Kind &  " '"
+                     & Name (Node => Val_Node) & "'");
             end;
          end;
       end loop;
@@ -106,16 +110,17 @@ is
                  Name => "variable");
          begin
             if Ref_Name'Length = 0 then
-               raise Validation_Error with "Conditional without variable "
-                 & "attribute";
+               Validation_Errors.Insert
+                 (Msg => "Conditional without variable attribute");
             end if;
 
             if not Mutools.System_Config.Has_Value
               (Data => XML_Data,
                Name => Ref_Name)
             then
-               raise Validation_Error with "Config variable '" & Ref_Name
-                 & "' referenced by conditional not defined";
+               Validation_Errors.Insert
+                 (Msg => "Config variable '" & Ref_Name
+                  & "' referenced by conditional not defined");
             end if;
          end;
       end loop;
@@ -205,9 +210,10 @@ is
                  Name => "name");
          begin
             if Ref_Name'Length = 0 then
-               raise Validation_Error with "Config variable without name "
-                 & "attribute in expression '" & Expression_Name (Node => Ref)
-                 & "'";
+               Validation_Errors.Insert
+                 (Msg => "Config variable without name "
+                  & "attribute in expression '" & Expression_Name (Node => Ref)
+                  & "'");
             end if;
 
             if Muxml.Utils.Get_Element
@@ -215,9 +221,10 @@ is
                Ref_Attr  => "name",
                Ref_Value => Ref_Name) = null
             then
-               raise Validation_Error with "Config variable '" & Ref_Name
-                 & "' referenced in expression '"
-                 & Expression_Name (Node => Ref) & "' not defined";
+               Validation_Errors.Insert
+                 (Msg => "Config variable '" & Ref_Name
+                  & "' referenced in expression '"
+                  & Expression_Name (Node => Ref) & "' not defined");
             end if;
          end;
       end loop;
@@ -244,8 +251,8 @@ is
          exit when Cur_Node = null;
       end loop;
 
-      raise Validation_Error with "Unable to get expression name for '"
-        & DOM.Core.Nodes.Node_Name (N => Node) & "'";
+      raise Validation_Errors.Validation_Error with "Unable to get expression "
+        & "name for '" & DOM.Core.Nodes.Node_Name (N => Node) & "'";
    end Expression_Name;
 
    -------------------------------------------------------------------------
@@ -272,8 +279,9 @@ is
             Name => "name");
       begin
          if Left_Name = Right_Name then
-            raise Validation_Error with "Multiple config variables with name '"
-              & Left_Name & "'";
+            Validation_Errors.Insert
+              (Msg => "Multiple config variables with name '"
+               & Left_Name & "'");
          end if;
       end Check_Name_Inequality;
    begin

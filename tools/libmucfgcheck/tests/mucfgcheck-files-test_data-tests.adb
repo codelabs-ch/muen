@@ -14,7 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with Mucfgcheck.Validation_Errors;
 --  begin read only
 --  end read only
 package body Mucfgcheck.Files.Test_Data.Tests is
@@ -112,6 +112,8 @@ package body Mucfgcheck.Files.Test_Data.Tests is
          File_Name   => "test_policy.xml",
          File_Offset => "none");
       Files_Exist (Data => Policy);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Add entry with invalid filename.
 
@@ -126,18 +128,11 @@ package body Mucfgcheck.Files.Test_Data.Tests is
          File_Name   => "nonexistent",
          File_Offset => "none");
 
-      begin
-         Files_Exist (Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "File 'data/nonexistent' referenced by physical memory "
-                    & "region 'linux|acpi_rsdp' not found",
-                    Message   => "Exception mismatch");
-      end;
+      Files_Exist (Data => Policy);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "File 'data/nonexistent' referenced by physical memory "
+               & "region 'linux|acpi_rsdp' not found"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Files_Exist;
 --  end read only
@@ -178,18 +173,11 @@ package body Mucfgcheck.Files.Test_Data.Tests is
             File_Name   => "testfile",
             File_Offset => "none");
 
-         begin
-            Files_Size (Data => Policy);
-            Assert (Condition => False,
-                    Message   => "Exception expected");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "File 'data/testfile' too large for physical memory"
-                       & " region 'linux|acpi_rsdp': 16#001e# > 16#0000#",
-                       Message   => "Exception mismatch");
-         end;
+         Files_Size (Data => Policy);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "File 'data/testfile' too large for physical memory"
+                  & " region 'linux|acpi_rsdp': 16#001e# > 16#0000#"),
+                 Message   => "Exception mismatch");
       end File_Larger_Than_Memory;
 
       ----------------------------------------------------------------------
@@ -218,19 +206,12 @@ package body Mucfgcheck.Files.Test_Data.Tests is
             File_Name   => "testfile",
             File_Offset => "16#ffff#");
 
-         begin
-            Files_Size (Data => Policy);
-            Assert (Condition => False,
-                    Message   => "Exception expected");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Offset of file 'data/testfile' referenced by "
-                       & "physical memory region 'linux|acpi_rsdp' larger than "
-                       & "file size: 16#ffff# > 16#001e#",
-                       Message   => "Exception mismatch");
-         end;
+         Files_Size (Data => Policy);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Offset of file 'data/testfile' referenced by "
+                  & "physical memory region 'linux|acpi_rsdp' larger than "
+                  & "file size: 16#ffff# > 16#001e#"),
+                 Message   => "Exception mismatch");
       end Offset_Larger_Than_File;
    begin
       File_Larger_Than_Memory;

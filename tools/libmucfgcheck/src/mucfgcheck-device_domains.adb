@@ -27,6 +27,8 @@ with Mutools.Types;
 with Mutools.Utils;
 with Mutools.XML_Utils;
 
+with Mucfgcheck.Validation_Errors;
+
 package body Mucfgcheck.Device_Domains
 is
 
@@ -65,9 +67,10 @@ is
                                                      Level => 2),
                   Name => "name");
             begin
-               raise Validation_Error with "Device domains '" & L_Dom_Name
-                 & "' and '" & R_Dom_Name & "' "
-                 & "reference same physical device '" & Left_Name & "'";
+               Validation_Errors.Insert
+                 (Msg => "Device domains '" & L_Dom_Name
+                  & "' and '" & R_Dom_Name & "' "
+                  & "reference same physical device '" & Left_Name & "'");
             end;
          end if;
       end Check_Inequality;
@@ -155,8 +158,9 @@ is
                     Attr_Name => "type"));
          begin
             if not (Mem_Type in Mutools.Types.DMA_Memory) then
-               raise Validation_Error with "Device domain memory '"
-                 & Phys_Name & "' has invalid memory type " & Mem_Type'Img;
+               Validation_Errors.Insert
+                 (Msg => "Device domain memory '"
+                  & Phys_Name & "' has invalid memory type " & Mem_Type'Img);
             end if;
          end;
       end loop;
@@ -197,8 +201,9 @@ is
                  Ref_Value => "vtd_" & Dom_Name & "_pt");
          begin
             if PT_Node = null then
-               raise Validation_Error with "No file-backed PT region for "
-                 & "device domain '" & Dom_Name & "' found";
+               Validation_Errors.Insert
+                 (Msg => "No file-backed PT region for "
+                  & "device domain '" & Dom_Name & "' found");
             end if;
          end;
       end loop;
@@ -265,11 +270,12 @@ is
                                 Level => 2),
                              Name => "name");
                      begin
-                        raise Validation_Error with "Physical memory region '"
-                          & Phys_Name & "' referenced by device domain '"
-                          & Dom_Name  & "' and subject '" & Subj_Name & "' not"
-                          & " mapped at the same address: " & Dom_Mem_Addr
-                          & " /= " & Mem_Ref_Addr;
+                        Validation_Errors.Insert
+                          (Msg => "Physical memory region '"
+                           & Phys_Name & "' referenced by device domain '"
+                           & Dom_Name & "' and subject '" & Subj_Name
+                           & "' not mapped at the same address: "
+                           & Dom_Mem_Addr & " /= " & Mem_Ref_Addr);
                      end;
                   end if;
                end;
@@ -311,9 +317,11 @@ is
                                                      Level => 2),
                   Name => "name");
             begin
-               raise Validation_Error with "Device domains '" & L_Dom_Name
-                 & "' and '" & R_Dom_Name & "' "
-                 & "reference same physical memory region '" & Left_Name & "'";
+               Validation_Errors.Insert
+                 (Msg => "Device domains '" & L_Dom_Name
+                  & "' and '" & R_Dom_Name & "' "
+                  & "reference same physical memory region '"
+                  & Left_Name & "'");
             end;
          end if;
       end Check_Inequality;
@@ -371,10 +379,11 @@ is
                     Ref_Value => "vtd_context_bus_" & Bus_Nr_Hex);
             begin
                if Ctx_Node = null then
-                  raise Validation_Error with "No VT-d context table memory "
-                    & "region found for PCI bus "
-                    & Mutools.Utils.To_Hex (Number     => Bus_Nr,
-                                            Byte_Short => True);
+                  Validation_Errors.Insert
+                    (Msg => "No VT-d context table memory "
+                     & "region found for PCI bus "
+                     & Mutools.Utils.To_Hex (Number     => Bus_Nr,
+                                             Byte_Short => True));
                end if;
             end;
          end loop;
@@ -427,9 +436,10 @@ is
                                                           Level => 2),
                        Name => "name");
                begin
-                  raise Validation_Error with "Physical device '" & Dev_Name
-                    & "' referenced by device domain '" & Dom_Name  & "' is "
-                    & "not a PCI device";
+                  Validation_Errors.Insert
+                    (Msg => "Physical device '" & Dev_Name
+                     & "' referenced by device domain '" & Dom_Name  & "' is "
+                     & "not a PCI device");
                end;
             end if;
          end;

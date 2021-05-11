@@ -14,7 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with Mucfgcheck.Validation_Errors;
 --  begin read only
 --  end read only
 package body Mucfgcheck.Test_Data.Tests is
@@ -243,25 +243,19 @@ package body Mucfgcheck.Test_Data.Tests is
          B         => 16#1000#,
          Error_Msg => "not equal 16#1000#");
 
-      begin
-         Check_Attribute
-           (Nodes     => Nodes,
-            Node_Type => "test",
-            Attr      => "address",
-            Name_Attr => "name",
-            Test      => Equals'Access,
-            B         => 16#2000#,
-            Error_Msg => "not equal 16#2000#");
-         Assert (Condition => False,
-                 Message   => "Exception expected");
+      Check_Attribute
+        (Nodes     => Nodes,
+         Node_Type => "test",
+         Attr      => "address",
+         Name_Attr => "name",
+         Test      => Equals'Access,
+         B         => 16#2000#,
+         Error_Msg => "not equal 16#2000#");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'address => 16#1000#' of 'mem1' test element "
-                    & "not equal 16#2000#",
-                    Message   => "Exception mismatch");
-      end;
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Attribute 'address => 16#1000#' of 'mem1' test element "
+               & "not equal 16#2000#"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_1_Check_Attribute;
 --  end read only
@@ -323,26 +317,19 @@ package body Mucfgcheck.Test_Data.Tests is
          C         => 16#1000#,
          Error_Msg => "not in range 0 .. 16#1000#");
 
-      begin
-         Check_Attribute
-           (Nodes     => Nodes,
-            Node_Type => "test",
-            Attr      => "address",
-            Name_Attr => "name",
-            Test      => In_Range'Access,
-            B         => 16#2000#,
-            C         => 16#3000#,
-            Error_Msg => "not in range 16#2000# .. 16#3000#");
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'address => 16#1000#' of 'mem1' test element "
-                    & "not in range 16#2000# .. 16#3000#",
-                    Message   => "Exception mismatch");
-      end;
+      Check_Attribute
+        (Nodes     => Nodes,
+         Node_Type => "test",
+         Attr      => "address",
+         Name_Attr => "name",
+         Test      => In_Range'Access,
+         B         => 16#2000#,
+         C         => 16#3000#,
+         Error_Msg => "not in range 16#2000# .. 16#3000#");
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Attribute 'address => 16#1000#' of 'mem1' test element "
+               & "not in range 16#2000# .. 16#3000#"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_2_Check_Attribute;
 --  end read only
@@ -413,20 +400,13 @@ package body Mucfgcheck.Test_Data.Tests is
         (Doc      => Data.Doc,
          Tag_Name => "memory");
 
-      begin
-         Check_Memory_Overlap
-           (Nodes        => Nodes,
-            Region_Type  => "physical memory region",
-            Address_Attr => "address");
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Overlap of physical memory region 'mem2' and 'mem3'",
-                    Message   => "Exception mismatch");
-      end;
+      Check_Memory_Overlap
+        (Nodes        => Nodes,
+         Region_Type  => "physical memory region",
+         Address_Attr => "address");
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Overlap of physical memory region 'mem2' and 'mem3'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Check_Memory_Overlap;
 --  end read only
@@ -531,22 +511,32 @@ package body Mucfgcheck.Test_Data.Tests is
 
 --  begin read only
    procedure Test_2_For_Each_Match (Gnattest_T : in out Test);
-   procedure Test_For_Each_Match_a833c4 (Gnattest_T : in out Test) renames Test_2_For_Each_Match;
---  id:2.2/a833c458f46804fd/For_Each_Match/0/0/
+   procedure Test_For_Each_Match_fdf71f (Gnattest_T : in out Test) renames Test_2_For_Each_Match;
+--  id:2.2/fdf71f298f86f73c/For_Each_Match/0/0/
    procedure Test_2_For_Each_Match (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
+      Fatal_Value : Boolean := False;
+
       --  Return test error message.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
       begin
-         return "Name mismatch";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Name mismatch");
+         Fatal := Fatal_Value;
       end Error_Msg;
 
       Data                   : Muxml.XML_Data_Type;
@@ -596,6 +586,22 @@ package body Mucfgcheck.Test_Data.Tests is
          Error        => Error_Msg'Access,
          Match        => Match_Name'Access);
 
+      For_Each_Match
+        (Source_Nodes => Source_Nodes,
+         Ref_Nodes    => No_Nodes,
+         Log_Message  => "attribute matches",
+         Error        => Error_Msg'Access,
+         Match        => Match_Name'Access);
+      Assert (Condition => Validation_Errors.Contains
+                (Msg => "Name mismatch"),
+              Message   => "Exception mismatch");
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Name mismatch"),
+              Message   => "Exception mismatch");
+
+      Validation_Errors.Clear;
+
+      Fatal_Value := True;
       begin
          For_Each_Match
            (Source_Nodes => Source_Nodes,
@@ -607,9 +613,9 @@ package body Mucfgcheck.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Name mismatch",
+         when Validation_Errors.Validation_Error =>
+            Assert (Condition => Validation_Errors.Contains
+                    (Msg => "Name mismatch"),
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -619,22 +625,30 @@ package body Mucfgcheck.Test_Data.Tests is
 
 --  begin read only
    procedure Test_1_For_Each_Match (Gnattest_T : in out Test);
-   procedure Test_For_Each_Match_86b711 (Gnattest_T : in out Test) renames Test_1_For_Each_Match;
---  id:2.2/86b7111f1d089f0c/For_Each_Match/1/0/
+   procedure Test_For_Each_Match_711fd6 (Gnattest_T : in out Test) renames Test_1_For_Each_Match;
+--  id:2.2/711fd6b48bcba219/For_Each_Match/1/0/
    procedure Test_1_For_Each_Match (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
       --  Return test error message.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
       begin
-         return "Name mismatch";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Name mismatch");
+         Fatal := False;
       end Error_Msg;
 
       Data         : Muxml.XML_Data_Type;
@@ -678,23 +692,16 @@ package body Mucfgcheck.Test_Data.Tests is
          Error        => Error_Msg'Access,
          Match        => Match_Name'Access);
 
-      begin
-         For_Each_Match
-           (XML_Data     => Data,
-            Source_XPath => "/parent/*",
-            Ref_XPath    => "/parent/nonexistent",
-            Log_Message  => "attribute matches",
-            Error        => Error_Msg'Access,
-            Match        => Match_Name'Access);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Name mismatch",
-                    Message   => "Exception mismatch");
-      end;
+      For_Each_Match
+        (XML_Data     => Data,
+         Source_XPath => "/parent/*",
+         Ref_XPath    => "/parent/nonexistent",
+         Log_Message  => "attribute matches",
+         Error        => Error_Msg'Access,
+         Match        => Match_Name'Access);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Name mismatch"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_1_For_Each_Match;
 --  end read only

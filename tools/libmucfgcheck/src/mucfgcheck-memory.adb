@@ -32,6 +32,7 @@ with Mutools.XML_Utils;
 with Mutools.Match;
 
 with Mucfgcheck.Utils;
+with Mucfgcheck.Validation_Errors;
 
 package body Mucfgcheck.Memory
 is
@@ -107,12 +108,13 @@ is
               := Base_Addr + Interfaces.Unsigned_64
                 (Subject_ID * Mutools.Constants.Page_Size);
          begin
-            raise Validation_Error with Mutools.Utils.Capitalize
-              (Str => Region_Type) &  " memory region '" & Mapping_Name
-              & "' mapped at unexpected kernel virtual address "
-              & Mutools.Utils.To_Hex (Number => Mapping_Addr)
-              & ", should be "
-              & Mutools.Utils.To_Hex (Number => Expected_Addr);
+            Validation_Errors.Insert
+              (Msg => Mutools.Utils.Capitalize
+                 (Str => Region_Type) &  " memory region '" & Mapping_Name
+               & "' mapped at unexpected kernel virtual address "
+               & Mutools.Utils.To_Hex (Number => Mapping_Addr)
+               & ", should be "
+               & Mutools.Utils.To_Hex (Number => Expected_Addr));
          end;
       end if;
    end Check_Kernel_Mapping_Address;
@@ -152,9 +154,10 @@ is
                  Ref_Value => Mem_Name);
          begin
             if Node = null then
-               raise Validation_Error with Mutools.Utils.Capitalize
-                 (Str => Region_Kind) & " region '" & Mem_Name
-                 & "' for logical CPU " & CPU_Str & " not found";
+               Validation_Errors.Insert
+                 (Msg => Mutools.Utils.Capitalize
+                    (Str => Region_Kind) & " region '" & Mem_Name
+                  & "' for logical CPU " & CPU_Str & " not found");
             end if;
          end;
       end loop;
@@ -207,13 +210,16 @@ is
               := DOM.Core.Nodes.Length (List => Kernel_Mem);
          begin
             if Kernel_Map_Count = 0 then
-               raise Validation_Error with Mutools.Utils.Capitalize
-                 (Str => Mapping_Name) & " memory region '" & Phys_Name
-                 & "' is not mapped by any kernel";
+               Validation_Errors.Insert
+                 (Msg => Mutools.Utils.Capitalize
+                    (Str => Mapping_Name) & " memory region '" & Phys_Name
+                  & "' is not mapped by any kernel");
+               return;
             elsif Kernel_Map_Count > 1 then
-               raise Validation_Error with Mutools.Utils.Capitalize
-                 (Str => Mapping_Name) & " memory region '" & Phys_Name
-                 & "' has multiple kernel mappings:" & Kernel_Map_Count'Img;
+               Validation_Errors.Insert
+                 (Msg => Mutools.Utils.Capitalize
+                    (Str => Mapping_Name) & " memory region '" & Phys_Name
+                  & "' has multiple kernel mappings:" & Kernel_Map_Count'Img);
             end if;
 
             declare
@@ -249,13 +255,14 @@ is
                        Name => "globalId"));
             begin
                if Kernel_CPU_ID /= Subj_CPU_ID then
-                  raise Validation_Error with Mutools.Utils.Capitalize
-                    (Str => Mapping_Name) & " memory region '" & Phys_Name
-                    & "' mapped by kernel and subject '"
-                    & DOM.Core.Elements.Get_Attribute (Elem => Subj_Node,
-                                                       Name => "name")
-                    & "' with different CPU ID:" & Kernel_CPU_ID'Img & " /="
-                    & Subj_CPU_ID'Img;
+                  Validation_Errors.Insert
+                    (Msg => Mutools.Utils.Capitalize
+                       (Str => Mapping_Name) & " memory region '" & Phys_Name
+                     & "' mapped by kernel and subject '"
+                     & DOM.Core.Elements.Get_Attribute (Elem => Subj_Node,
+                                                        Name => "name")
+                     & "' with different CPU ID:" & Kernel_CPU_ID'Img & " /="
+                     & Subj_CPU_ID'Img);
                end if;
 
                --  The virtual base address calculated from the first mapping
@@ -283,14 +290,20 @@ is
       Region_Size  : Interfaces.Unsigned_64 := Mutools.Constants.Page_Size)
    is
       --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       --  Returns True if the physical memory region name and size match.
       function Match_Region_Attrs (Left, Right : DOM.Core.Node) return Boolean;
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          Subj_Name : constant String
            := DOM.Core.Elements.Get_Attribute
@@ -298,9 +311,11 @@ is
               Name => "name");
          Ref_Name  : constant String := Subj_Name & "|" & Region_Type;
       begin
-         return "Subject " & Region_Type & " region '" & Ref_Name
-           & "' with size " & Mutools.Utils.To_Hex (Number => Region_Size)
-           & " for subject '" & Subj_Name & "' not found";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Subject " & Region_Type & " region '" & Ref_Name
+            & "' with size " & Mutools.Utils.To_Hex (Number => Region_Size)
+            & " for subject '" & Subj_Name & "' not found");
+         Fatal := False;
       end Error_Msg;
 
       ----------------------------------------------------------------------
@@ -351,9 +366,10 @@ is
         := Mutools.XML_Utils.Get_Image_Size (Policy => XML_Data);
    begin
       if Addr < Imgsize then
-         raise Validation_Error with "Crash audit region @"
-           & Mutools.Utils.To_Hex (Number => Addr) & " within system image "
-           & "with end address " & Mutools.Utils.To_Hex (Number => Imgsize);
+         Validation_Errors.Insert
+           (Msg => "Crash audit region @"
+            & Mutools.Utils.To_Hex (Number => Addr) & " within system image "
+            & "with end address " & Mutools.Utils.To_Hex (Number => Imgsize));
       end if;
    end Crash_Audit_After_Image;
 
@@ -404,11 +420,12 @@ is
                           Level => 3));
                begin
                   if Owner_Name /= "deviceDomains" then
-                     raise Validation_Error with "Device memory region '"
-                       & Phys_Name & "' is mapped by logical memory region '"
-                       & Virt_Name & "'"
-                       & (if Owner_Name'Length > 0 then " (Owner name: '"
-                          & Owner_Name & "')" else "");
+                     Validation_Errors.Insert
+                       (Msg => "Device memory region '"
+                        & Phys_Name & "' is mapped by logical memory region '"
+                        & Virt_Name & "'"
+                        & (if Owner_Name'Length > 0 then " (Owner name: '"
+                          & Owner_Name & "')" else ""));
                   end if;
                end;
             end if;
@@ -481,9 +498,10 @@ is
             if not Is_Valid_Kernel_Entity (Name => Entity_Name)
               and then Subject = null
             then
-               raise Validation_Error with "Entity '" & Entity_Name & "' "
-                 & "encoded in memory region '" & Ref_Name & "' does not "
-                 & "exist or is invalid";
+               Validation_Errors.Insert
+                 (Msg => "Entity '" & Entity_Name & "' "
+                  & "encoded in memory region '" & Ref_Name & "' does not "
+                  & "exist or is invalid");
             end if;
          end;
       end loop;
@@ -596,9 +614,10 @@ is
                   if not (Mem_Type = Mutools.Types.Kernel_Interface
                           and then Subj_Name = "tau0")
                   then
-                     raise Validation_Error with "Kernel memory region '"
-                       & Phys_Name & "' mapped by logical memory region '"
-                       & Virt_Name & "' of subject '" & Subj_Name & "'";
+                     Validation_Errors.Insert
+                       (Msg => "Kernel memory region '"
+                        & Phys_Name & "' mapped by logical memory region '"
+                        & Virt_Name & "' of subject '" & Subj_Name & "'");
                   end if;
                end;
             end if;
@@ -647,8 +666,9 @@ is
                     Name => "size"));
          begin
             if Address + Size >= 2 ** 32 then
-               raise Validation_Error with "Kernel PT region '" & Mem_Name
-                 & "' for logical CPU " & CPU_Str & " not below 4G";
+               Validation_Errors.Insert
+                 (Msg => "Kernel PT region '" & Mem_Name
+                  & "' for logical CPU " & CPU_Str & " not below 4G");
             end if;
          end;
       end loop;
@@ -719,12 +739,15 @@ is
                   Attr_Name => "cpu"));
          begin
             if Mappings_Count = 0 then
-               raise Validation_Error with "No kernel mapping for info region"
-                 & " of scheduling group " & Sched_Grp_ID;
+               Validation_Errors.Insert
+                 (Msg => "No kernel mapping for info region"
+                  & " of scheduling group " & Sched_Grp_ID);
+               return;
             elsif Mappings_Count > 1 then
-               raise Validation_Error with "Info region of scheduling group "
-                 & Sched_Grp_ID & " has multiple kernel mappings:"
-                 & Mappings_Count'Img;
+               Validation_Errors.Insert
+                 (Msg => "Info region of scheduling group "
+                  & Sched_Grp_ID & " has multiple kernel mappings:"
+                  & Mappings_Count'Img);
             end if;
 
             declare
@@ -735,12 +758,12 @@ is
                      Name => "id"));
             begin
                if Kernel_CPU_ID /= Subj_CPU_ID then
-                  raise Validation_Error with
-                    "Info region of scheduling group"
-                    & " " & Sched_Grp_ID
-                    & " mapped by kernel running on CPU"
-                    & Kernel_CPU_ID'Img & ", should be CPU"
-                    & Subj_CPU_ID'Img;
+                  Validation_Errors.Insert
+                    (Msg => "Info region of scheduling group"
+                     & " " & Sched_Grp_ID
+                     & " mapped by kernel running on CPU"
+                     & Kernel_CPU_ID'Img & ", should be CPU"
+                     & Subj_CPU_ID'Img);
                end if;
             end;
 
@@ -757,11 +780,12 @@ is
                if Sched_Info_Base_Address = 0 then
                   Sched_Info_Base_Address := Virtual_Address;
                elsif Virtual_Address /= Ref_Address then
-                  raise Validation_Error with "Kernel mapping for info region "
-                    & "of scheduling group" & I'Img & " at unexpected kernel "
-                    & "virtual address " & Mutools.Utils.To_Hex
-                    (Number => Virtual_Address) & ", should be "
-                    & Mutools.Utils.To_Hex (Number => Ref_Address);
+                  Validation_Errors.Insert
+                    (Msg => "Kernel mapping for info region "
+                     & "of scheduling group" & I'Img & " at unexpected kernel "
+                     & "virtual address " & Mutools.Utils.To_Hex
+                       (Number => Virtual_Address) & ", should be "
+                     & Mutools.Utils.To_Hex (Number => Ref_Address));
                end if;
             end;
          end;
@@ -814,9 +838,10 @@ is
                     (Elem => Mem_Node,
                      Name => "name");
                begin
-                  raise Validation_Error with "Physical address of memory "
-                    & "region '" & Name & "' does not honor alignment "
-                    & Mutools.Utils.To_Hex (Number => Alignment);
+                  Validation_Errors.Insert
+                    (Msg => "Physical address of memory "
+                     & "region '" & Name & "' does not honor alignment "
+                     & Mutools.Utils.To_Hex (Number => Alignment));
                end;
             end if;
          end;
@@ -846,8 +871,9 @@ is
             Name => "name");
       begin
          if Left_Name = Right_Name then
-            raise Validation_Error with "Multiple physical memory regions with"
-              & " name '" & Left_Name & "'";
+            Validation_Errors.Insert
+              (Msg => "Multiple physical memory regions with"
+               & " name '" & Left_Name & "'");
          end if;
       end Check_Inequality;
    begin
@@ -882,11 +908,17 @@ is
    procedure Physical_Memory_References (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          Logical_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
@@ -895,9 +927,11 @@ is
            (Elem => Node,
             Name => "physical");
       begin
-         return "Physical memory '" & Refname
-           & "' referenced by logical memory '" & Logical_Name
-           & "' not found";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Physical memory '" & Refname
+            & "' referenced by logical memory '" & Logical_Name
+            & "' not found");
+         Fatal := True;
       end Error_Msg;
    begin
       For_Each_Match
@@ -958,8 +992,9 @@ is
                  Ref_Value => Name);
          begin
             if Mem = null then
-               raise Validation_Error with "Scheduling group info region of "
-                 & "scheduling group" & I'Img & " not found";
+               Validation_Errors.Insert
+                 (Msg => "Scheduling group info region of "
+                  & "scheduling group" & I'Img & " not found");
             end if;
          end;
       end loop;
@@ -1108,11 +1143,12 @@ is
                     or else Interfaces.Unsigned_64'Value (Size_Str)
                     /= Mutools.Constants.Page_Size
                   then
-                     raise Validation_Error with "Subject MSR store region '"
-                       & Subj_Name & "|msrstore' with size "
-                       & Mutools.Utils.To_Hex
-                       (Number => Mutools.Constants.Page_Size)
-                       & " for subject '" & Subj_Name & "' not found";
+                     Validation_Errors.Insert
+                       (Msg => "Subject MSR store region '"
+                        & Subj_Name & "|msrstore' with size "
+                        & Mutools.Utils.To_Hex
+                          (Number => Mutools.Constants.Page_Size)
+                        & " for subject '" & Subj_Name & "' not found");
                   end if;
                end;
             end if;
@@ -1171,9 +1207,10 @@ is
                     := DOM.Core.Elements.Get_Attribute (Elem => Subject,
                                                         Name => "name");
                begin
-                  raise Validation_Error with "Subject '" & Subj_Name
-                    & "' has no mapping for info region of scheduling group "
-                    & Sched_Grp_ID;
+                  Validation_Errors.Insert
+                    (Msg => "Subject '" & Subj_Name
+                     & "' has no mapping for info region of scheduling group "
+                     & Sched_Grp_ID);
                end;
             end if;
          end;
@@ -1269,10 +1306,11 @@ is
                  Ref_Value => Phys_Name);
          begin
             if Virt_Mem /= null then
-               raise Validation_Error with "System memory region '"
-                 & Phys_Name & "' is mapped by logical memory region '"
-                 & DOM.Core.Elements.Get_Attribute (Elem => Virt_Mem,
-                                                    Name => "logical") & "'";
+               Validation_Errors.Insert
+                 (Msg => "System memory region '"
+                  & Phys_Name & "' is mapped by logical memory region '"
+                  & DOM.Core.Elements.Get_Attribute (Elem => Virt_Mem,
+                                                     Name => "logical") & "'");
             end if;
          end;
       end loop;
@@ -1289,8 +1327,9 @@ is
       Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
    begin
       if Count /= 1 then
-         raise Validation_Error with "One crash audit region expected, found"
-           & Count'Img;
+         Validation_Errors.Insert
+           (Msg => "One crash audit region expected, found" & Count'Img);
+         return;
       end if;
 
       declare
@@ -1303,8 +1342,9 @@ is
               Name => "caching");
       begin
          if Caching /= "UC" then
-            raise Validation_Error with "Crash audit region caching is "
-              & Caching & " instead of UC";
+            Validation_Errors.Insert
+              (Msg => "Crash audit region caching is " & Caching
+               & " instead of UC");
          end if;
       end;
    end Uncached_Crash_Audit_Presence;
@@ -1331,14 +1371,20 @@ is
    procedure VMCS_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       --  Returns True if the physical memory region name matches.
       function Match_Region_Name (Left, Right : DOM.Core.Node) return Boolean;
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          Subj_Name : constant String
            := DOM.Core.Elements.Get_Attribute
@@ -1346,8 +1392,10 @@ is
               Name => "name");
          Ref_Name  : constant String := Subj_Name & "|vmcs";
       begin
-         return "VMCS region '" & Ref_Name & "' for subject '" & Subj_Name
-           & "' not found";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("VMCS region '" & Ref_Name & "' for subject '" & Subj_Name
+            & "' not found");
+         Fatal := False;
       end Error_Msg;
 
       ----------------------------------------------------------------------
@@ -1403,18 +1451,26 @@ is
          XPath => XPath);
 
       --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "name");
       begin
-         return "Memory region '" & Name & "' not adjacent to other VMXON"
-           & " regions";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Memory region '" & Name & "' not adjacent to other VMXON"
+            & " regions");
+         Fatal := False;
       end Error_Msg;
    begin
       if DOM.Core.Nodes.Length (List => Nodes) < 2 then
@@ -1511,8 +1567,8 @@ is
                  & " memory region");
 
       if Region = null then
-         raise Validation_Error
-           with "VT-d interrupt remapping table memory region not found";
+         Validation_Errors.Insert
+           (Msg => "VT-d interrupt remapping table memory region not found");
       end if;
    end VTd_IRT_Region_Presence;
 
@@ -1528,7 +1584,8 @@ is
       Mulog.Log (Msg => "Checking presence of VT-d root table region");
 
       if DOM.Core.Nodes.Length (List => Nodes) /= 1 then
-         raise Validation_Error with "VT-d root table memory region not found";
+         Validation_Errors.Insert
+           (Msg => "VT-d root table memory region not found");
       end if;
    end VTd_Root_Region_Presence;
 

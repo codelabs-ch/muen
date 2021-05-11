@@ -31,6 +31,7 @@ with Mutools.Expressions;
 with Mutools.Conditionals;
 with Mutools.Substitutions;
 with Mucfgcheck.Config;
+with Mucfgcheck.Validation_Errors;
 
 with Cspec.Utils;
 with Cspec.Generators;
@@ -114,6 +115,8 @@ is
 
       Mucfgcheck.Config.Conditional_Config_Var_Refs (XML_Data => Data);
       Mutools.Conditionals.Expand (Policy => Data);
+
+      Mucfgcheck.Validation_Errors.Check;
    end Expand_Expr_Cond;
 
    -------------------------------------------------------------------------

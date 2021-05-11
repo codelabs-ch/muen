@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
+
 with DOM.Core;
 
 with Interfaces;
@@ -107,8 +109,10 @@ is
      (Source_Nodes : DOM.Core.Node_List;
       Ref_Nodes    : DOM.Core.Node_List;
       Log_Message  : String;
-      Error        : not null access function
-        (Node : DOM.Core.Node) return String;
+      Error        : not null access procedure
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
       Match        : not null access function
         (Left, Right : DOM.Core.Node) return Boolean);
 
@@ -121,15 +125,15 @@ is
       Source_XPath : String;
       Ref_XPath    : String;
       Log_Message  : String;
-      Error        : not null access function
-        (Node : DOM.Core.Node) return String;
+      Error        : not null access procedure
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
       Match        : not null access function
         (Left, Right : DOM.Core.Node) return Boolean);
 
    --  Returns True if the left node's 'subject' attribute matches the 'name'
    --  attribute of the right node.
    function Match_Subject_Name (Left, Right : DOM.Core.Node) return Boolean;
-
-   Validation_Error : exception;
 
 end Mucfgcheck;

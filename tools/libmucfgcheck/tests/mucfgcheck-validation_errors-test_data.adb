@@ -5,7 +5,7 @@
 
 with Mucfgcheck.Validation_Errors;
 
-package body Mucfgcheck.Files.Test_Data is
+package body Mucfgcheck.Validation_Errors.Test_Data is
 
    procedure Set_Up (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
@@ -17,6 +17,4 @@ package body Mucfgcheck.Files.Test_Data is
       pragma Unreferenced (Gnattest_T);
    begin
       Validation_Errors.Clear;
-   end Tear_Down;
-
-end Mucfgcheck.Files.Test_Data;
+   end Tear_Down;end Mucfgcheck.Validation_Errors.Test_Data;

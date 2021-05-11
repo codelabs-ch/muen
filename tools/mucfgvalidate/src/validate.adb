@@ -29,6 +29,7 @@ with Mucfgcheck.Hardware;
 with Mucfgcheck.Platform;
 with Mucfgcheck.Events;
 with Mucfgcheck.Device_Domains;
+with Mucfgcheck.Validation_Errors;
 
 with Validate.XML_Processors;
 
@@ -41,12 +42,34 @@ is
    is
       use Mucfgcheck;
    begin
+
+      --  Check references first, some of these are fatal if not correct.
+
+      XML_Processors.Register
+        (Process => Memory.Physical_Memory_References'Access);
+      XML_Processors.Register
+        (Process => Device.Physical_Device_References'Access);
+      XML_Processors.Register
+        (Process => Device.Legacy_Device_References'Access);
+      XML_Processors.Register
+        (Process => Device.PCI_Device_References'Access);
+      XML_Processors.Register
+        (Process => Device.Physical_IRQ_References'Access);
+      XML_Processors.Register
+        (Process => Device.IO_Port_References'Access);
+      XML_Processors.Register
+        (Process => Device.Device_Memory_References'Access);
+      XML_Processors.Register
+        (Process => Scheduling.Subject_References'Access);
+      XML_Processors.Register
+        (Process => Events.Subject_Event_References'Access);
+      XML_Processors.Register
+        (Process => Events.Subject_Event_References'Access);
+
       XML_Processors.Register
         (Process => Config.Name_Uniqueness'Access);
       XML_Processors.Register
         (Process => Memory.Physical_Memory_Name_Uniqueness'Access);
-      XML_Processors.Register
-        (Process => Memory.Physical_Memory_References'Access);
       XML_Processors.Register
         (Process => Memory.VMXON_Region_Presence'Access);
       XML_Processors.Register
@@ -134,17 +157,9 @@ is
       XML_Processors.Register
         (Process => Device.Physical_Device_Name_Uniqueness'Access);
       XML_Processors.Register
-        (Process => Device.Physical_Device_References'Access);
-      XML_Processors.Register
-        (Process => Device.Legacy_Device_References'Access);
-      XML_Processors.Register
-        (Process => Device.PCI_Device_References'Access);
-      XML_Processors.Register
         (Process => Device.Physical_IRQ_Uniqueness'Access);
       XML_Processors.Register
         (Process => Device.Device_IRQ_Name_Uniqueness'Access);
-      XML_Processors.Register
-        (Process => Device.Physical_IRQ_References'Access);
       XML_Processors.Register
         (Process => Device.Physical_IRQ_Constraints_ISA'Access);
       XML_Processors.Register
@@ -158,13 +173,9 @@ is
       XML_Processors.Register
         (Process => Device.Device_IO_Port_Name_Uniqueness'Access);
       XML_Processors.Register
-        (Process => Device.IO_Port_References'Access);
-      XML_Processors.Register
         (Process => Device.IO_Port_Uniqueness'Access);
       XML_Processors.Register
         (Process => Device.Device_Memory_Name_Uniqueness'Access);
-      XML_Processors.Register
-        (Process => Device.Device_Memory_References'Access);
       XML_Processors.Register
         (Process => Device.Device_Reference_Uniqueness'Access);
       XML_Processors.Register
@@ -177,8 +188,6 @@ is
         (Process => Device.Device_References_PCI_Bus_Number'Access);
       XML_Processors.Register
         (Process => Scheduling.CPU_Element_Count'Access);
-      XML_Processors.Register
-        (Process => Scheduling.Subject_References'Access);
       XML_Processors.Register
         (Process => Scheduling.Subject_CPU_Affinity'Access);
       XML_Processors.Register
@@ -260,8 +269,6 @@ is
       XML_Processors.Register
         (Process => Events.Source_Targets'Access);
       XML_Processors.Register
-        (Process => Events.Subject_Event_References'Access);
-      XML_Processors.Register
         (Process => Events.Self_References'Access);
       XML_Processors.Register
         (Process => Events.Switch_Same_Core'Access);
@@ -332,8 +339,6 @@ is
       XML_Processors.Register
         (Process => Device_Domains.Domain_Memory_Type'Access);
       XML_Processors.Register
-        (Process => Device_Domains.PCI_Device_References'Access);
-      XML_Processors.Register
         (Process => Device_Domains.Domain_PT_Region_Presence'Access);
       XML_Processors.Register
         (Process => Device_Domains.PCI_Bus_Context_Region_Presence'Access);
@@ -356,6 +361,7 @@ is
         (Msg => "Registered validators" & XML_Processors.Get_Count'Img);
 
       XML_Processors.Run (Data => Data);
+      Mucfgcheck.Validation_Errors.Check;
 
       Mulog.Log (Msg => "Successfully validated policy '" & Policy & "'");
    end Run;

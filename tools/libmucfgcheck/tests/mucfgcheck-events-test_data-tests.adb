@@ -14,7 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with Mucfgcheck.Validation_Errors;
 --  begin read only
 --  end read only
 package body Mucfgcheck.Events.Test_Data.Tests is
@@ -47,6 +47,8 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Physical_Event_Name_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -54,17 +56,10 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          Name  => "name",
          Value => "resume_linux");
 
-      begin
-         Physical_Event_Name_Uniqueness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Multiple physical events with name 'resume_linux'",
-                    Message   => "Exception mismatch");
-      end;
+      Physical_Event_Name_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Multiple physical events with name 'resume_linux'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Physical_Event_Name_Uniqueness;
 --  end read only
@@ -88,6 +83,8 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Source_Targets (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       declare
          Node : DOM.Core.Node
@@ -117,15 +114,10 @@ package body Mucfgcheck.Events.Test_Data.Tests is
             New_Child => Node);
 
          Source_Targets (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Invalid number of targets for kernel-mode event "
-                    & "'system_reboot': 1 (no target allowed)",
-                    Message   => "Exception mismatch (target)");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Invalid number of targets for kernel-mode event "
+                  & "'system_reboot': 1 (no target allowed)"),
+                 Message   => "Exception mismatch (target)");
             Node := DOM.Core.Nodes.Remove_Child
               (N         => Target_Node,
                Old_Child => Node);
@@ -142,14 +134,9 @@ package body Mucfgcheck.Events.Test_Data.Tests is
             Child_Name => "event");
 
          Source_Targets (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Invalid number of targets for event 'trap_to_sm': 0",
-                    Message   => "Exception mismatch (target)");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Invalid number of targets for event 'trap_to_sm': 0"),
+                 Message   => "Exception mismatch (target)");
       end;
 
       Muxml.Utils.Set_Attribute
@@ -158,17 +145,10 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          Name  => "name",
          Value => "new_event");
 
-      begin
-         Source_Targets (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (3)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Invalid number of sources for event 'new_event': 0",
-                    Message   => "Exception mismatch (source)");
-      end;
+      Source_Targets (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Invalid number of sources for event 'new_event': 0"),
+              Message   => "Exception mismatch (source)");
 --  begin read only
    end Test_Source_Targets;
 --  end read only
@@ -192,6 +172,8 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Subject_Event_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -200,18 +182,11 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          Name  => "physical",
          Value => "nonexistent_dst");
 
-      begin
-         Subject_Event_References (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Event 'nonexistent_dst' referenced by subject 'sm' does"
-                    & " not exist",
-                    Message   => "Exception mismatch (target)");
-      end;
+      Subject_Event_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Event 'nonexistent_dst' referenced by subject 'sm' does"
+               & " not exist"),
+              Message   => "Exception mismatch (target)");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -220,18 +195,11 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          Name  => "physical",
          Value => "nonexistent_src");
 
-      begin
-         Subject_Event_References (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Event 'nonexistent_src' referenced by subject 'sm' does"
-                    & " not exist",
-                    Message   => "Exception mismatch (source)");
-      end;
+      Subject_Event_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Event 'nonexistent_src' referenced by subject 'sm' does"
+               & " not exist"),
+              Message   => "Exception mismatch (source)");
 --  begin read only
    end Test_Subject_Event_References;
 --  end read only
@@ -255,6 +223,8 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Self_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -263,18 +233,11 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          Name  => "physical",
          Value => "linux_keyboard");
 
-      begin
-         Self_References (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Reference to self in event 'linux_keyboard' of subject "
-                    & "'vt'",
-                    Message   => "Exception mismatch");
-      end;
+      Self_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Reference to self in event 'linux_keyboard' of subject "
+               & "'vt'"),
+              Message   => "Exception mismatch");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -289,18 +252,11 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          Name  => "mode",
          Value => "self");
 
-      begin
-         Self_References (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Reference to other subject in self-event "
-                    & "'linux_console' of subject 'linux'",
-                    Message   => "Exception mismatch");
-      end;
+      Self_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Reference to other subject in self-event "
+               & "'linux_console' of subject 'linux'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Self_References;
 --  end read only
@@ -324,6 +280,8 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Switch_Same_Core (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -332,19 +290,12 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          Name  => "physical",
          Value => "resume_linux");
 
-      begin
-         Switch_Same_Core (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Destination subject 'linux' (CPU 1) in subject's 'vt' "
-                    & "(CPU 0) switch notification 'resume_linux' invalid - "
-                    & "must run on the same CPU",
-                    Message   => "Exception mismatch");
-      end;
+      Switch_Same_Core (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Destination subject 'linux' (CPU 1) in subject's 'vt' "
+               & "(CPU 0) switch notification 'resume_linux' invalid - "
+               & "must run on the same CPU"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Switch_Same_Core;
 --  end read only
@@ -368,6 +319,8 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       IPI_Different_Core (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -375,19 +328,13 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          Name  => "mode",
          Value => "ipi");
 
-      begin
-         IPI_Different_Core (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
+      IPI_Different_Core (XML_Data => Data);
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Destination subject 'sm' (CPU 1) in subject's 'linux' "
-                    & "(CPU 1) ipi notification 'trap_to_sm' invalid - must run"
-                    & " on different CPU",
-                    Message   => "Exception mismatch");
-      end;
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Destination subject 'sm' (CPU 1) in subject's 'linux' "
+               & "(CPU 1) ipi notification 'trap_to_sm' invalid - must run"
+               & " on different CPU"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_IPI_Different_Core;
 --  end read only
@@ -411,6 +358,8 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Target_Event_ID_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -419,18 +368,11 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          Name  => "id",
          Value => "1");
 
-      begin
-         Target_Event_ID_Uniqueness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'linux' target events 'resume_after_trap' and "
-                    & "'channel_event_linux_keyboard' share ID 1",
-                    Message   => "Exception mismatch");
-      end;
+      Target_Event_ID_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject 'linux' target events 'resume_after_trap' and "
+               & "'channel_event_linux_keyboard' share ID 1"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Target_Event_ID_Uniqueness;
 --  end read only
@@ -454,6 +396,8 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Source_Group_Event_ID_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -462,18 +406,11 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          Name  => "id",
          Value => "1");
 
-      begin
-         Source_Group_Event_ID_Uniqueness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'sm' source events 'resume_linux' and "
-                    & "'channel_event_sm_console' share ID 1",
-                    Message   => "Exception mismatch");
-      end;
+      Source_Group_Event_ID_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject 'sm' source events 'resume_linux' and "
+               & "'channel_event_sm_console' share ID 1"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Source_Group_Event_ID_Uniqueness;
 --  end read only
@@ -497,6 +434,8 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Source_Group_Event_ID_Validity (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -505,18 +444,11 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          Name  => "id",
          Value => "256");
 
-      begin
-         Source_Group_Event_ID_Validity (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'sm': ID 256 of event 'resume_linux' invalid "
-                    & "for group VMCALL",
-                    Message   => "Exception mismatch");
-      end;
+      Source_Group_Event_ID_Validity (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject 'sm': ID 256 of event 'resume_linux' invalid "
+               & "for group VMCALL"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Source_Group_Event_ID_Validity;
 --  end read only
@@ -540,24 +472,19 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Source_VMX_Exit_Event_Completeness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Remove_Elements
         (Doc   => Data.Doc,
          XPath => "/system/subjects/subject[@name='sm']/events/source/"
          & "group[@name='vmx_exit']/event[@id='23']");
 
-      begin
-         Source_VMX_Exit_Event_Completeness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'sm' does not specify 'vmx_exit' group source "
-                    & "event with ID 23",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Source_VMX_Exit_Event_Completeness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject 'sm' does not specify 'vmx_exit' group source "
+               & "event with ID 23"),
+              Message   => "Exception mismatch (1)");
 
       Muxml.Utils.Add_Child
         (Parent     => Muxml.Utils.Get_Element
@@ -568,24 +495,21 @@ package body Mucfgcheck.Events.Test_Data.Tests is
 
       --  Must not raise an exception because of <default/> presence.
 
+      Validation_Errors.Clear;
       Source_VMX_Exit_Event_Completeness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Remove_Elements
         (Doc   => Data.Doc,
          XPath => "/system/subjects/subject[@name='sm']/events/source/"
          & "group[@name='vmx_exit']");
-      begin
-         Source_VMX_Exit_Event_Completeness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'sm' does not specify any source event in "
-                    & "'vmx_exit' group",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Source_VMX_Exit_Event_Completeness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject 'sm' does not specify any source event in "
+               & "'vmx_exit' group"),
+              Message   => "Exception mismatch (2)");
 --  begin read only
    end Test_Source_VMX_Exit_Event_Completeness;
 --  end read only
@@ -609,6 +533,8 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Self_Event_Action (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -628,18 +554,11 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          Name  => "mode",
          Value => "self");
 
-      begin
-         Self_Event_Action (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Self-event 'channel_event_linux_console' of subject "
-                    & "'vt' does not specify an action",
-                    Message   => "Exception mismatch");
-      end;
+      Self_Event_Action (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Self-event 'channel_event_linux_console' of subject "
+               & "'vt' does not specify an action"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Self_Event_Action;
 --  end read only
@@ -673,18 +592,11 @@ package body Mucfgcheck.Events.Test_Data.Tests is
                & "event[system_poweroff]"),
             Child_Name => "system_poweroff");
 
-         begin
-            Kernel_Mode_Event_Actions (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (Poweroff)");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Kernel-mode source event 'system_poweroff' of subject"
-                       & " 'vt' does not specify mandatory event action",
-                       Message   => "Exception mismatch (Poweroff)");
-         end;
+         Kernel_Mode_Event_Actions (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Kernel-mode source event 'system_poweroff' of subject"
+                  & " 'vt' does not specify mandatory event action"),
+                 Message   => "Exception mismatch (Poweroff)");
       end Missing_System_Poweroff;
 
       ----------------------------------------------------------------------
@@ -704,18 +616,11 @@ package body Mucfgcheck.Events.Test_Data.Tests is
                & "group/event[system_panic]"),
             Child_Name => "system_panic");
 
-         begin
-            Kernel_Mode_Event_Actions (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (Panic)");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Kernel-mode source event 'panic' of subject"
-                       & " 'vt' does not specify mandatory event action",
-                       Message   => "Exception mismatch (Panic)");
-         end;
+         Kernel_Mode_Event_Actions (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Kernel-mode source event 'panic' of subject"
+                  & " 'vt' does not specify mandatory event action"),
+                 Message   => "Exception mismatch (Panic)");
       end Missing_System_Panic;
 
       ----------------------------------------------------------------------
@@ -735,18 +640,11 @@ package body Mucfgcheck.Events.Test_Data.Tests is
                & "event[system_reboot]"),
             Child_Name => "system_reboot");
 
-         begin
-            Kernel_Mode_Event_Actions (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (Reboot)");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Kernel-mode source event 'system_reboot' of subject "
-                       & "'vt' does not specify mandatory event action",
-                       Message   => "Exception mismatch (Reboot)");
-         end;
+         Kernel_Mode_Event_Actions (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Kernel-mode source event 'system_reboot' of subject "
+                  & "'vt' does not specify mandatory event action"),
+                 Message   => "Exception mismatch (Reboot)");
       end Missing_System_Reboot;
 
       ----------------------------------------------------------------------
@@ -766,18 +664,11 @@ package body Mucfgcheck.Events.Test_Data.Tests is
                & "event[unmask_irq]"),
             Child_Name => "unmask_irq");
 
-         begin
-            Kernel_Mode_Event_Actions (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (Unmask IRQ)");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Kernel-mode source event 'unmask_irq_57' of "
-                       & "subject 'vt' does not specify mandatory event action",
-                       Message   => "Exception mismatch (Unmask IRQ)");
-         end;
+         Kernel_Mode_Event_Actions (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Kernel-mode source event 'unmask_irq_57' of "
+                  & "subject 'vt' does not specify mandatory event action"),
+                 Message   => "Exception mismatch (Unmask IRQ)");
       end Missing_Unmask_Irq;
 
       ----------------------------------------------------------------------
@@ -793,6 +684,8 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          --  Positive test, must not raise an exception.
 
          Kernel_Mode_Event_Actions (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Is_Empty,
+                 Message   => "Unexpected error in positive test");
       end Positive_Test;
    begin
       Positive_Test;
@@ -823,6 +716,8 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Kernel_Mode_System_Actions (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -830,19 +725,12 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          Name  => "mode",
          Value => "ipi");
 
-      begin
-         Kernel_Mode_System_Actions (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "System action for event 'system_reboot' of subject 'vt'"
-                    & " does not reference physical kernel-mode event "
-                    & "'system_reboot'",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Kernel_Mode_System_Actions (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "System action for event 'system_reboot' of subject 'vt'"
+               & " does not reference physical kernel-mode event "
+               & "'system_reboot'"),
+              Message   => "Exception mismatch (1)");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -855,19 +743,12 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          Name  => "mode",
          Value => "ipi");
 
-      begin
-         Kernel_Mode_System_Actions (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "System action for event 'system_poweroff' of subject "
-                    & "'vt' does not reference physical kernel-mode event "
-                    & "'system_poweroff'",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Kernel_Mode_System_Actions (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "System action for event 'system_poweroff' of subject "
+               & "'vt' does not reference physical kernel-mode event "
+               & "'system_poweroff'"),
+              Message   => "Exception mismatch (2)");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -880,19 +761,12 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          Name  => "mode",
          Value => "ipi");
 
-      begin
-         Kernel_Mode_System_Actions (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (3)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "System action for event 'panic' of subject 'tau0' does "
-                    & "not reference physical kernel-mode event "
-                    & "'system_panic'",
-                    Message   => "Exception mismatch (3)");
-      end;
+      Kernel_Mode_System_Actions (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "System action for event 'panic' of subject 'tau0' does "
+               & "not reference physical kernel-mode event "
+               & "'system_panic'"),
+              Message   => "Exception mismatch (3)");
 --  begin read only
    end Test_Kernel_Mode_System_Actions;
 --  end read only
@@ -925,18 +799,11 @@ package body Mucfgcheck.Events.Test_Data.Tests is
                & "event[unmask_irq]"),
             Child_Name => "unmask_irq");
 
-         begin
-            Level_Triggered_Unmask_IRQ_Action (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (Missing event)");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "No event with unmask_irq action and matching number "
-                       & "21 for IRQ 'wireless->irq'",
-                       Message   => "Exception mismatch (Missing event)");
-         end;
+         Level_Triggered_Unmask_IRQ_Action (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "No event with unmask_irq action and matching number "
+                  & "21 for IRQ 'wireless->irq'"),
+                 Message   => "Exception mismatch (Missing event)");
       end Missing_Event;
 
       ----------------------------------------------------------------------
@@ -952,6 +819,8 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          --  Positive test, must not raise an exception.
 
          Level_Triggered_Unmask_IRQ_Action (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Is_Empty,
+                 Message   => "Unexpected error in positive test");
       end Positive_Test;
 
       ----------------------------------------------------------------------
@@ -969,18 +838,11 @@ package body Mucfgcheck.Events.Test_Data.Tests is
             XPath => "/system/subjects/subject/devices/"
             & "device[@physical='wireless']/irq");
 
-         begin
-            Level_Triggered_Unmask_IRQ_Action (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (Unassigned IRQ)");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Event unmask_irq_57 of subject 'vt' has unmask_irq "
-                       & "action for unassigned IRQ 'wireless->irq'",
-                       Message   => "Exception mismatch (Unassigned IRQ)");
-         end;
+         Level_Triggered_Unmask_IRQ_Action (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Event unmask_irq_57 of subject 'vt' has unmask_irq "
+                  & "action for unassigned IRQ 'wireless->irq'"),
+                 Message   => "Exception mismatch (Unassigned IRQ)");
       end Unassigned_IRQ_Event;
 
       ----------------------------------------------------------------------
@@ -1000,18 +862,11 @@ package body Mucfgcheck.Events.Test_Data.Tests is
             Name  => "number",
             Value => "0");
 
-         begin
-            Level_Triggered_Unmask_IRQ_Action (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (Number mismatch)");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "No event with unmask_irq action and matching number "
-                       & "21 for IRQ 'wireless->irq'",
-                       Message   => "Exception mismatch (Number mismatch)");
-         end;
+         Level_Triggered_Unmask_IRQ_Action (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "No event with unmask_irq action and matching number "
+                  & "21 for IRQ 'wireless->irq'"),
+                 Message   => "Exception mismatch (Number mismatch)");
       end Unmask_Nr_Mismatch;
    begin
       Positive_Test;

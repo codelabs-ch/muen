@@ -14,7 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with Mucfgcheck.Validation_Errors;
 --  begin read only
 --  end read only
 package body Expanders.Subjects.Test_Data.Tests is
@@ -211,15 +211,14 @@ package body Expanders.Subjects.Test_Data.Tests is
          begin
             Add_Channel_Events (Data => Policy);
             Assert (Condition => False,
-                    Message   => "Exception expected (reader)");
+                    Message   => "Exception expected (1)");
 
          exception
-            when E : Mucfgcheck.Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "No reader for channel 'data_channel'",
+            when Mucfgcheck.Validation_Errors.Validation_Error =>
+               Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+                       (Msg =>"No reader for channel 'data_channel'"),
                        Message   => "Exception message mismatch (reader)");
          end;
-
 
          --  Remove writer of channel with event.
 
@@ -231,12 +230,12 @@ package body Expanders.Subjects.Test_Data.Tests is
          begin
             Add_Channel_Events (Data => Policy);
             Assert (Condition => False,
-                    Message   => "Exception expected (writer)");
+                    Message   => "Exception expected (2)");
 
          exception
-            when E : Mucfgcheck.Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "No writer for channel 'data_channel'",
+            when Mucfgcheck.Validation_Errors.Validation_Error =>
+               Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+                       (Msg =>"No writer for channel 'data_channel'"),
                        Message   => "Exception message mismatch (writer)");
          end;
       end Missing_Endpoint;

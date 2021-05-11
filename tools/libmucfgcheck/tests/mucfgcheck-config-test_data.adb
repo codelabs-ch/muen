@@ -3,18 +3,20 @@
 --  automatically. Contents of this package can be modified in any way
 --  except for sections surrounded by a 'read only' marker.
 
+with Mucfgcheck.Validation_Errors;
+
 package body Mucfgcheck.Config.Test_Data is
 
    procedure Set_Up (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
    begin
-      null;
+      Validation_Errors.Clear;
    end Set_Up;
 
    procedure Tear_Down (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
    begin
-      null;
+      Validation_Errors.Clear;
    end Tear_Down;
 
 end Mucfgcheck.Config.Test_Data;

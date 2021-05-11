@@ -26,6 +26,8 @@ with McKae.XML.XPath.XIA;
 with Mulog;
 with Mutools.Utils;
 
+with Mucfgcheck.Validation_Errors;
+
 package body Mucfgcheck.Files
 is
 
@@ -57,8 +59,9 @@ is
                  Name => "name");
          begin
             if not Ada.Directories.Exists (Name => Path) then
-               raise Validation_Error with "File '" & Path & "' referenced by "
-                 & "physical memory region '" & Mem_Name & "' not found";
+               Validation_Errors.Insert
+                 (Msg => "File '" & Path & "' referenced by "
+                  & "physical memory region '" & Mem_Name & "' not found");
             end if;
          end;
       end loop;
@@ -105,19 +108,21 @@ is
          begin
             if Offset_Str = "none" then
                if File_Size > Mem_Size then
-                  raise Validation_Error with "File '" & Path
-                    & "' too large for physical memory region '" & Mem_Name
-                    & "': " & Mutools.Utils.To_Hex (Number => File_Size)
-                    & " > " & Mutools.Utils.To_Hex (Number => Mem_Size);
+                  Validation_Errors.Insert
+                    (Msg => "File '" & Path
+                     & "' too large for physical memory region '" & Mem_Name
+                     & "': " & Mutools.Utils.To_Hex (Number => File_Size)
+                     & " > " & Mutools.Utils.To_Hex (Number => Mem_Size));
                end if;
             else
                Offset := Interfaces.Unsigned_64'Value (Offset_Str);
                if Offset > File_Size then
-                  raise Validation_Error with "Offset of file '" & Path
-                    & "' referenced by physical memory region '" & Mem_Name
-                    & "' larger than file size: "
-                    & Mutools.Utils.To_Hex (Number => Offset) & " > "
-                    & Mutools.Utils.To_Hex (Number => File_Size);
+                  Validation_Errors.Insert
+                    (Msg => "Offset of file '" & Path
+                     & "' referenced by physical memory region '" & Mem_Name
+                     & "' larger than file size: "
+                     & Mutools.Utils.To_Hex (Number => Offset) & " > "
+                     & Mutools.Utils.To_Hex (Number => File_Size));
                end if;
             end if;
          end;

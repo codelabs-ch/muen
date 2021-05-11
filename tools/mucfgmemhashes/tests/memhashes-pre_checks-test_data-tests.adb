@@ -14,7 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with Mucfgcheck.Validation_Errors;
 --  begin read only
 --  end read only
 package body Memhashes.Pre_Checks.Test_Data.Tests is
@@ -52,18 +52,11 @@ package body Memhashes.Pre_Checks.Test_Data.Tests is
          Name  => "memory",
          Value => "nonexistent");
 
-      begin
-         Hash_References (Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical memory region 'nonexistent' referenced by "
-                    & "hashRef of memory region 'dst1' does not exist",
-                    Message   => "Exception mismatch");
-      end;
+      Hash_References (Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg => "Physical memory region 'nonexistent' referenced by "
+               & "hashRef of memory region 'dst1' does not exist"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Hash_References;
 --  end read only

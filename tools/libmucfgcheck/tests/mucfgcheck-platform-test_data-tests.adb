@@ -14,7 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with Mucfgcheck.Validation_Errors;
 --  begin read only
 --  end read only
 package body Mucfgcheck.Platform.Test_Data.Tests is
@@ -47,6 +47,8 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
       --  Positive tests, must not raise an exception.
 
       Alias_Physical_Device_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -60,10 +62,10 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical device 'nonexistent' referenced by device "
-                    & "alias 'nic' not found",
+         when Validation_Errors.Validation_Error =>
+            Assert (Condition => Validation_Errors.Contains
+                    (Msg => "Physical device 'nonexistent' referenced by device "
+                     & "alias 'nic' not found"),
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -89,6 +91,8 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
       --  Positive tests, must not raise an exception.
 
       Alias_Physical_Device_Resource_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -103,10 +107,10 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical device resource 'nonexistent' referenced by "
-                    & "alias resource 'mem1' of device alias 'nic' not found",
+         when Validation_Errors.Validation_Error =>
+            Assert (Condition => Validation_Errors.Contains
+                    (Msg => "Physical device resource 'nonexistent' referenced by "
+                     & "alias resource 'mem1' of device alias 'nic' not found"),
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -132,6 +136,8 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
       --  Positive tests, must not raise an exception.
 
       Class_Physical_Device_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -146,10 +152,10 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical device 'nonexistent' referenced by device "
-                    & "class 'network_devices' not found",
+         when Validation_Errors.Validation_Error =>
+            Assert (Condition => Validation_Errors.Contains
+                    (Msg => "Physical device 'nonexistent' referenced by device "
+                     & "class 'network_devices' not found"),
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -210,6 +216,8 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
       --  Positive tests, must not raise an exception.
 
       Subject_Alias_Resource_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Nonexistent_IO_Port:
       declare
@@ -231,59 +239,42 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
             New_Child => IO_Port);
 
          Subject_Alias_Resource_References (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Logical device 'eth0' of subject 'linux' references "
-                    & "resource 'nonexistent_ioport' that is not provided by "
-                    & "device alias 'nic'",
-                    Message   => "Exception mismatch");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Logical device 'eth0' of subject 'linux' references "
+                  & "resource 'nonexistent_ioport' that is not provided by "
+                  & "device alias 'nic'"),
+                 Message   => "Exception mismatch");
       end Nonexistent_IO_Port;
 
-      Nonexistent_Memory:
-      begin
-         Muxml.Utils.Set_Attribute
-           (Doc   => Dev_Node,
-            XPath => "memory[@physical='mem2']",
-            Name  => "physical",
-            Value => "nonexistent_mem");
+      --  Nonexistent memory
 
-         Subject_Alias_Resource_References (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Dev_Node,
+         XPath => "memory[@physical='mem2']",
+         Name  => "physical",
+         Value => "nonexistent_mem");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Logical device 'eth0' of subject 'linux' references "
-                    & "resource 'nonexistent_mem' that is not provided by "
-                    & "device alias 'nic'",
-                    Message   => "Exception mismatch");
-      end Nonexistent_Memory;
+      Subject_Alias_Resource_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Logical device 'eth0' of subject 'linux' references "
+               & "resource 'nonexistent_mem' that is not provided by "
+               & "device alias 'nic'"),
+              Message   => "Exception mismatch");
 
-      Nonexistent_Irq:
-      begin
-         Muxml.Utils.Set_Attribute
-           (Doc   => Dev_Node,
-            XPath => "irq[@physical='interrupt']",
-            Name  => "physical",
-            Value => "nonexistent_irq");
+      --  Nonexistent IRQ
 
-         Subject_Alias_Resource_References (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Dev_Node,
+         XPath => "irq[@physical='interrupt']",
+         Name  => "physical",
+         Value => "nonexistent_irq");
 
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Logical device 'eth0' of subject 'linux' references "
-                    & "resource 'nonexistent_irq' that is not provided by "
-                    & "device alias 'nic'",
-                    Message   => "Exception mismatch");
-      end Nonexistent_Irq;
+      Subject_Alias_Resource_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Logical device 'eth0' of subject 'linux' references "
+               & "resource 'nonexistent_irq' that is not provided by "
+               & "device alias 'nic'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Subject_Alias_Resource_References;
 --  end read only
@@ -314,18 +305,11 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
             Name  => "physical",
             Value => "nonexistent");
 
-         begin
-            Kernel_Diagnostics_Device_Reference (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (1)");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Physical device 'nonexistent' designated as kernel "
-                       & "diagnostics device not found",
-                       Message   => "Exception mismatch (1)");
-         end;
+         Kernel_Diagnostics_Device_Reference (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Physical device 'nonexistent' designated as kernel "
+                  & "diagnostics device not found"),
+                 Message   => "Exception mismatch (1)");
       end Invalid_Reference;
 
       ----------------------------------------------------------------------
@@ -344,18 +328,11 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
             Name  => "physical",
             Value => "nonexistent");
 
-         begin
-            Kernel_Diagnostics_Device_Reference (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (2)");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Physical device resource 'debugconsole->nonexistent'"
-                       & " referenced by kernel diagnostics device not found",
-                       Message   => "Exception mismatch (2)");
-         end;
+         Kernel_Diagnostics_Device_Reference (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Physical device resource 'debugconsole->nonexistent'"
+                  & " referenced by kernel diagnostics device not found"),
+                 Message   => "Exception mismatch (2)");
       end Invalid_Resource_Reference;
 
       ----------------------------------------------------------------------
@@ -382,19 +359,12 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                XPath => "/system/platform/kernelDiagnostics/device"),
             New_Child => Node);
 
-         begin
-            Kernel_Diagnostics_Device_Reference (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (3)");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Physical device resource 'debugconsole->port' "
-                       & "referenced by kernel diagnostics device has "
-                       & "different type: memory /= ioPort",
-                       Message   => "Exception mismatch (3)");
-         end;
+         Kernel_Diagnostics_Device_Reference (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Physical device resource 'debugconsole->port' "
+                  & "referenced by kernel diagnostics device has "
+                  & "different type: memory /= ioPort"),
+                 Message   => "Exception mismatch (3)");
       end Invalid_Resource_Type;
 
       ----------------------------------------------------------------------
@@ -425,6 +395,8 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
          --  Positive tests, must not raise an exception.
 
          Kernel_Diagnostics_Device_Reference (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Is_Empty,
+                 Message   => "Unexpected error in positive test");
       end Positive_Test;
    begin
       Positive_Test;
@@ -502,18 +474,11 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                XPath => "/system/platform/kernelDiagnostics"),
             Child_Name => "device");
 
-         begin
-            Kernel_Diagnostics_Type_Resources (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (None device ref)");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Kernel diagnostics device of type 'none' must not "
-                       & "specify device reference",
-                       Message   => "Exception mismatch (None device ref)");
-         end;
+         Kernel_Diagnostics_Type_Resources (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Kernel diagnostics device of type 'none' must not "
+                  & "specify device reference"),
+                 Message   => "Exception mismatch (None device ref)");
       end None_Device_Reference;
 
       ----------------------------------------------------------------------
@@ -529,6 +494,8 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
          --  Positive tests, must not raise an exception.
 
          Kernel_Diagnostics_Type_Resources (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Is_Empty,
+                 Message   => "Unexpected error in positive test");
       end None_Positive_Test;
 
       ----------------------------------------------------------------------
@@ -547,18 +514,11 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                XPath => "/system/platform/kernelDiagnostics"),
             Child_Name => "device");
 
-         begin
-            Kernel_Diagnostics_Type_Resources (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (Uart device ref)");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Kernel diagnostics device of type 'uart' must "
-                       & "specify device reference",
-                       Message   => "Exception mismatch (Uart device ref)");
-         end;
+         Kernel_Diagnostics_Type_Resources (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Kernel diagnostics device of type 'uart' must "
+                  & "specify device reference"),
+                 Message   => "Exception mismatch (Uart device ref)");
       end Uart_Device_Reference;
 
       ----------------------------------------------------------------------
@@ -582,15 +542,10 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                Child_Name => "memory");
 
             Kernel_Diagnostics_Type_Resources (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (Uart res count)");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Kernel diagnostics device of type 'uart' must "
-                       & "specify exactly one device resource reference",
-                       Message   => "Exception mismatch (Uart res count)");
+            Assert (Condition => Validation_Errors.Contains
+                    (Msg => "Kernel diagnostics device of type 'uart' must "
+                     & "specify exactly one device resource reference"),
+                    Message   => "Exception mismatch (Uart res count)");
          end;
       end Uart_Resource_Count_Mismatch;
 
@@ -617,15 +572,10 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                Child_Name => "memory");
 
             Kernel_Diagnostics_Type_Resources (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (Uart resource type)");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Kernel diagnostics device of type 'uart' must "
-                       & "specify ioPort device resource reference",
-                       Message   => "Exception mismatch (Uart resource type)");
+            Assert (Condition => Validation_Errors.Contains
+                    (Msg => "Kernel diagnostics device of type 'uart' must "
+                     & "specify ioPort device resource reference"),
+                    Message   => "Exception mismatch (Uart resource type)");
          end;
       end Uart_Resource_Mismatch;
 
@@ -635,6 +585,8 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
       is
          Data : Muxml.XML_Data_Type;
       begin
+         Validation_Errors.Clear;
+
          Muxml.Parse (Data => Data,
                       Kind => Muxml.Format_B,
                       File => "data/test_policy.xml");
@@ -642,6 +594,8 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
          --  Positive tests, must not raise an exception.
 
          Kernel_Diagnostics_Type_Resources (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Is_Empty,
+                 Message   => "Unexpected error in positive test");
       end Uart_Positive_Test;
 
 
@@ -662,18 +616,11 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                XPath => "/system/platform/kernelDiagnostics"),
             Child_Name => "device");
 
-         begin
-            Kernel_Diagnostics_Type_Resources (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (Vga device ref)");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Kernel diagnostics device of type 'vga' must "
-                       & "specify device reference",
-                       Message   => "Exception mismatch (Vga device ref)");
-         end;
+         Kernel_Diagnostics_Type_Resources (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Kernel diagnostics device of type 'vga' must "
+                  & "specify device reference"),
+                 Message   => "Exception mismatch (Vga device ref)");
       end Vga_Device_Reference;
 
       ----------------------------------------------------------------------
@@ -700,33 +647,21 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                   Tag_Name => "memory"));
 
             Kernel_Diagnostics_Type_Resources (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (Vga res count 3)");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Kernel diagnostics device of type 'vga' must "
-                       & "specify exactly two device resource references",
-                       Message   => "Exception mismatch (Vga res count 3)");
+            Assert (Condition => Validation_Errors.Contains
+                    (Msg => "Kernel diagnostics device of type 'vga' must "
+                     & "specify exactly two device resource references"),
+                    Message   => "Exception mismatch (Vga res count 3)");
          end;
 
-         begin
-            Muxml.Utils.Remove_Elements
-              (Doc   => Data.Doc,
-               XPath => "/system/platform/kernelDiagnostics/device/*");
+         Muxml.Utils.Remove_Elements
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/kernelDiagnostics/device/*");
 
-            Kernel_Diagnostics_Type_Resources (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (Vga res count 0)");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Kernel diagnostics device of type 'vga' must "
-                       & "specify exactly two device resource references",
-                       Message   => "Exception mismatch (Vga res count 0)");
-         end;
+         Kernel_Diagnostics_Type_Resources (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Kernel diagnostics device of type 'vga' must "
+                  & "specify exactly two device resource references"),
+                 Message   => "Exception mismatch (Vga res count 0)");
       end Vga_Resource_Count_Mismatch;
 
       ----------------------------------------------------------------------
@@ -755,15 +690,10 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                   Tag_Name => "memory"));
 
             Kernel_Diagnostics_Type_Resources (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (Vga resource port)");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Kernel diagnostics device of type 'vga' must "
-                       & "specify an I/O port device resource reference",
-                       Message   => "Exception mismatch (Vga resource port)");
+            Assert (Condition => Validation_Errors.Contains
+                    (Msg => "Kernel diagnostics device of type 'vga' must "
+                     & "specify an I/O port device resource reference"),
+                    Message   => "Exception mismatch (Vga resource port)");
          end;
 
          declare
@@ -788,15 +718,10 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                   Tag_Name => "ioPort"));
 
             Kernel_Diagnostics_Type_Resources (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (Vga resource mem)");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Kernel diagnostics device of type 'vga' must "
-                       & "specify a memory device resource reference",
-                       Message   => "Exception mismatch (Vga resource mem)");
+            Assert (Condition => Validation_Errors.Contains
+                    (Msg => "Kernel diagnostics device of type 'vga' must "
+                     & "specify a memory device resource reference"),
+                    Message   => "Exception mismatch (Vga resource mem)");
          end;
       end Vga_Resource_Mismatch;
 
@@ -806,6 +731,8 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
       is
          Data : Muxml.XML_Data_Type;
       begin
+         Validation_Errors.Clear;
+
          Muxml.Parse (Data => Data,
                       Kind => Muxml.Format_B,
                       File => "data/test_policy.xml");
@@ -814,6 +741,8 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
          --  Positive tests, must not raise an exception.
 
          Kernel_Diagnostics_Type_Resources (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Is_Empty,
+                 Message   => "Unexpected error in positive test");
       end Vga_Positive_Test;
 
       ----------------------------------------------------------------------
@@ -832,19 +761,12 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
             Name  => "type",
             Value => "hsuart");
 
-         begin
-            Kernel_Diagnostics_Type_Resources (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected (Hsuart resource type)");
-
-         exception
-            when E : Validation_Error =>
-               Assert
-                 (Condition => Ada.Exceptions.Exception_Message (X => E)
-                  = "Kernel diagnostics device of type 'hsuart' must specify "
-                  & "memory device resource reference",
-                  Message   => "Exception mismatch (Hsuart resource type)");
-         end;
+         Kernel_Diagnostics_Type_Resources (XML_Data => Data);
+         Assert
+           (Condition => Validation_Errors.Contains
+              (Msg => "Kernel diagnostics device of type 'hsuart' must specify "
+               & "memory device resource reference"),
+            Message   => "Exception mismatch (Hsuart resource type)");
       end Hsuart_Resource_Mismatch;
    begin
       None_Positive_Test;

@@ -14,7 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with Mucfgcheck.Validation_Errors;
 --  begin read only
 --  end read only
 package body Mucfgcheck.Device.Test_Data.Tests is
@@ -55,10 +55,10 @@ package body Mucfgcheck.Device.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical device 'nonexistent' referenced by logical"
-                    & " device 'ioapic' not found",
+         when Validation_Errors.Validation_Error =>
+            Assert (Condition => Validation_Errors.Contains
+                    (Msg => "Physical device 'nonexistent' referenced by logical"
+                     & " device 'ioapic' not found"),
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -98,18 +98,11 @@ package body Mucfgcheck.Device.Test_Data.Tests is
             Name  => "name",
             Value => "nic");
 
-         begin
-            Physical_Device_Name_Uniqueness (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Multiple physical devices, aliases or classes with "
-                       & "name 'nic'",
-                       Message   => "Exception mismatch");
-         end;
+         Physical_Device_Name_Uniqueness (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Multiple physical devices, aliases or classes with "
+                  & "name 'nic'"),
+                 Message   => "Exception mismatch");
       end Duplicate_Alias_Name;
 
       ----------------------------------------------------------------------
@@ -127,18 +120,11 @@ package body Mucfgcheck.Device.Test_Data.Tests is
             Name  => "name",
             Value => "network_devices");
 
-         begin
-            Physical_Device_Name_Uniqueness (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Multiple physical devices, aliases or classes with "
-                       & "name 'network_devices'",
-                       Message   => "Exception mismatch");
-         end;
+         Physical_Device_Name_Uniqueness (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Multiple physical devices, aliases or classes with "
+                  & "name 'network_devices'"),
+                 Message   => "Exception mismatch");
       end Duplicate_Class_Name;
 
       ----------------------------------------------------------------------
@@ -156,18 +142,11 @@ package body Mucfgcheck.Device.Test_Data.Tests is
             Name  => "name",
             Value => "vga");
 
-         begin
-            Physical_Device_Name_Uniqueness (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Multiple physical devices, aliases or classes with "
-                       & "name 'vga'",
-                       Message   => "Exception mismatch");
-         end;
+         Physical_Device_Name_Uniqueness (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Multiple physical devices, aliases or classes with "
+                  & "name 'vga'"),
+                 Message   => "Exception mismatch");
       end Duplicate_Physical_Device_Name;
 
       ----------------------------------------------------------------------
@@ -185,18 +164,11 @@ package body Mucfgcheck.Device.Test_Data.Tests is
             Name  => "name",
             Value => "usb");
 
-         begin
-            Physical_Device_Name_Uniqueness (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Multiple physical devices, aliases or classes with "
-                       & "name 'usb'",
-                       Message   => "Exception mismatch");
-         end;
+         Physical_Device_Name_Uniqueness (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Multiple physical devices, aliases or classes with "
+                  & "name 'usb'"),
+                  Message   => "Exception mismatch");
       end Identical_Alias_And_Class_Name;
 
       ----------------------------------------------------------------------
@@ -214,18 +186,11 @@ package body Mucfgcheck.Device.Test_Data.Tests is
             Name  => "name",
             Value => "ethernet");
 
-         begin
-            Physical_Device_Name_Uniqueness (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Multiple physical devices, aliases or classes with "
-                       & "name 'ethernet'",
-                       Message   => "Exception mismatch");
-         end;
+         Physical_Device_Name_Uniqueness (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Multiple physical devices, aliases or classes with "
+                  & "name 'ethernet'"),
+                 Message   => "Exception mismatch");
       end Identical_Alias_And_Physical_Device_Name;
 
       ----------------------------------------------------------------------
@@ -243,18 +208,11 @@ package body Mucfgcheck.Device.Test_Data.Tests is
             Name  => "name",
             Value => "xhci");
 
-         begin
-            Physical_Device_Name_Uniqueness (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Multiple physical devices, aliases or classes with "
-                       & "name 'xhci'",
-                       Message   => "Exception mismatch");
-         end;
+         Physical_Device_Name_Uniqueness (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Multiple physical devices, aliases or classes with "
+                  & "name 'xhci'"),
+                  Message   => "Exception mismatch");
       end Identical_Class_And_Physical_Device_Name;
 
       ----------------------------------------------------------------------
@@ -270,6 +228,8 @@ package body Mucfgcheck.Device.Test_Data.Tests is
          -- Positive test, must not raise an exception.
 
          Physical_Device_Name_Uniqueness (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Is_Empty,
+                 Message   => "Unexpected error in positive test");
       end Positive_Test;
    begin
       Positive_Test;
@@ -309,14 +269,9 @@ package body Mucfgcheck.Device.Test_Data.Tests is
             Value => "20");
 
          Physical_IRQ_Uniqueness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Duplicate IRQ)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Devices 'wireless' and 'ethernet' share IRQ 20",
-                    Message   => "Exception mismatch (Duplicate IRQ)");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Devices 'wireless' and 'ethernet' share IRQ 20"),
+                 Message   => "Exception mismatch (Duplicate IRQ)");
       end Duplicate_IRQ;
 
       ----------------------------------------------------------------------
@@ -336,14 +291,9 @@ package body Mucfgcheck.Device.Test_Data.Tests is
             Value => "ethernet");
 
          Physical_IRQ_Uniqueness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected (Duplicate Ref)");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Multiple assignment of IRQ 'ethernet->irq'",
-                    Message   => "Exception mismatch (Duplicate Ref)");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Multiple assignment of IRQ 'ethernet->irq'"),
+                 Message   => "Exception mismatch (Duplicate Ref)");
       end Duplicate_Reference;
 
       ----------------------------------------------------------------------
@@ -386,6 +336,8 @@ package body Mucfgcheck.Device.Test_Data.Tests is
          --  Positive test, must not raise an exception.
 
          Physical_IRQ_Uniqueness (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Is_Empty,
+                 Message   => "Unexpected error in positive test");
       end Positive_Test;
    begin
       Positive_Test;
@@ -418,18 +370,11 @@ package body Mucfgcheck.Device.Test_Data.Tests is
          Name  => "physical",
          Value => "nonexistent");
 
-      begin
-         Physical_IRQ_References (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical IRQ 'nonexistent' referenced by logical IRQ"
-                    & " 'kbd_irq' of logical device 'keyboard' not found",
-                    Message   => "Exception mismatch");
-      end;
+      Physical_IRQ_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Physical IRQ 'nonexistent' referenced by logical IRQ"
+               & " 'kbd_irq' of logical device 'keyboard' not found"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Physical_IRQ_References;
 --  end read only
@@ -454,6 +399,8 @@ package body Mucfgcheck.Device.Test_Data.Tests is
                       Kind => Muxml.Format_B,
                       File => "data/test_policy.xml");
          Physical_IRQ_Constraints_ISA (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Is_Empty,
+                 Message   => "Unexpected error in positive test");
       end Positive_Test;
 
       ----------------------------------------------------------------------
@@ -481,14 +428,10 @@ package body Mucfgcheck.Device.Test_Data.Tests is
             end loop;
 
             Physical_IRQ_Constraints_ISA (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Device 'keyboard' specifies more than 16 ISA IRQ(s)",
-                       Message   => "Exception mismatch");
+            Assert (Condition => Validation_Errors.Contains
+                    (Msg => "Device 'keyboard' specifies more than 16 ISA "
+                     & "IRQ(s)"),
+                    Message   => "Exception mismatch");
          end;
       end Count_Constraint;
 
@@ -507,19 +450,12 @@ package body Mucfgcheck.Device.Test_Data.Tests is
             Name  => "number",
             Value => "16");
 
-         begin
-            Physical_IRQ_Constraints_ISA (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Attribute 'number => 16' of 'kbd_irq' ISA IRQ "
-                       & "element not in allowed range 0 .. 15 (device "
-                       & "'keyboard')",
-                       Message   => "Exception mismatch");
-         end;
+         Physical_IRQ_Constraints_ISA (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Attribute 'number => 16' of 'kbd_irq' ISA IRQ "
+                  & "element not in allowed range 0 .. 15 (device "
+                  & "'keyboard')"),
+                 Message   => "Exception mismatch");
       end Range_Constraint;
    begin
       Positive_Test;
@@ -549,6 +485,8 @@ package body Mucfgcheck.Device.Test_Data.Tests is
                       Kind => Muxml.Format_B,
                       File => "data/test_policy.xml");
          Physical_IRQ_Constraints_PCI_LSI (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Is_Empty,
+                 Message   => "Unexpected error in positive test");
       end Positive_Test;
 
       ----------------------------------------------------------------------
@@ -576,15 +514,10 @@ package body Mucfgcheck.Device.Test_Data.Tests is
             end loop;
 
             Physical_IRQ_Constraints_PCI_LSI (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Device 'ethernet' specifies more than 4 PCI LSI "
-                       & "IRQ(s)",
-                       Message   => "Exception mismatch");
+            Assert (Condition => Validation_Errors.Contains
+                    (Msg => "Device 'ethernet' specifies more than 4 PCI LSI "
+                     & "IRQ(s)"),
+                    Message   => "Exception mismatch");
          end;
       end Count_Constraint;
 
@@ -603,19 +536,12 @@ package body Mucfgcheck.Device.Test_Data.Tests is
             Name  => "number",
             Value => "24");
 
-         begin
-            Physical_IRQ_Constraints_PCI_LSI (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Attribute 'number => 24' of 'irq' PCI LSI IRQ "
-                       & "element not in allowed range 0 .. 23 (device "
-                       & "'ethernet')",
+         Physical_IRQ_Constraints_PCI_LSI (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Attribute 'number => 24' of 'irq' PCI LSI IRQ "
+                  & "element not in allowed range 0 .. 23 (device "
+                  & "'ethernet')"),
                  Message   => "Exception mismatch");
-         end;
       end Range_Constraint;
    begin
       Positive_Test;
@@ -645,6 +571,8 @@ package body Mucfgcheck.Device.Test_Data.Tests is
                       Kind => Muxml.Format_B,
                       File => "data/test_policy.xml");
          Physical_IRQ_Constraints_PCI_MSI (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Is_Empty,
+                 Message   => "Unexpected error in positive test");
       end Positive_Test;
 
       ----------------------------------------------------------------------
@@ -672,14 +600,10 @@ package body Mucfgcheck.Device.Test_Data.Tests is
             end loop;
 
             Physical_IRQ_Constraints_PCI_MSI (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Device 'xhci' specifies more than 197 PCI MSI IRQ(s)",
-                       Message   => "Exception mismatch");
+            Assert (Condition => Validation_Errors.Contains
+                    (Msg => "Device 'xhci' specifies more than 197 PCI MSI "
+                     & "IRQ(s)"),
+                    Message   => "Exception mismatch");
          end;
       end Count_Constraint;
 
@@ -698,19 +622,12 @@ package body Mucfgcheck.Device.Test_Data.Tests is
             Name  => "number",
             Value => "221");
 
-         begin
-            Physical_IRQ_Constraints_PCI_MSI (XML_Data => Data);
-            Assert (Condition => False,
-                    Message   => "Exception expected");
-
-         exception
-            when E : Validation_Error =>
-               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Attribute 'number => 221' of 'irq1' PCI MSI IRQ "
-                       & "element not in allowed range 24 .. 220 (device "
-                       & "'xhci')",
-                       Message   => "Exception mismatch");
-         end;
+         Physical_IRQ_Constraints_PCI_MSI (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Attribute 'number => 221' of 'irq1' PCI MSI IRQ "
+                  & "element not in allowed range 24 .. 220 (device "
+                  & "'xhci')"),
+                 Message   => "Exception mismatch");
       end Range_Constraint;
    begin
       Positive_Test;
@@ -739,6 +656,8 @@ package body Mucfgcheck.Device.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Physical_IRQ_MSI_Consecutiveness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       declare
          IRQ : DOM.Core.Node
@@ -757,15 +676,10 @@ package body Mucfgcheck.Device.Test_Data.Tests is
                                           Value => "67");
 
          Physical_IRQ_MSI_Consecutiveness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "MSI IRQ 'irq1' of physical device 'xhci' not adjacent "
-                    & "to other IRQs",
-                    Message   => "Exception mismatch");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "MSI IRQ 'irq1' of physical device 'xhci' not adjacent "
+                  & "to other IRQs"),
+                 Message   => "Exception mismatch");
       end;
 --  begin read only
    end Test_Physical_IRQ_MSI_Consecutiveness;
@@ -802,15 +716,10 @@ package body Mucfgcheck.Device.Test_Data.Tests is
                                    New_Child => Node);
 
          Device_IRQ_Name_Uniqueness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Device 'keyboard' has multiple IRQs with name "
-                    & "'kbd_irq'",
-                    Message   => "Exception mismatch");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Device 'keyboard' has multiple IRQs with name "
+                  & "'kbd_irq'"),
+                 Message   => "Exception mismatch");
       end;
 --  begin read only
    end Test_Device_IRQ_Name_Uniqueness;
@@ -847,15 +756,10 @@ package body Mucfgcheck.Device.Test_Data.Tests is
             Value => "16#50b8#");
 
          IO_Port_Start_Smaller_End (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "I/O port 'ports' start 16#ffff# larger than "
-                    & "end 16#50b8#",
-                    Message   => "Exception mismatch");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "I/O port 'ports' start 16#ffff# larger than "
+                  & "end 16#50b8#"),
+                 Message   => "Exception mismatch");
       end;
 --  begin read only
    end Test_IO_Port_Start_Smaller_End;
@@ -889,10 +793,10 @@ package body Mucfgcheck.Device.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical I/O port 'nonexistent' referenced by logical"
-                    & " I/O port 'ports' of logical device 'vga' not found",
+         when Validation_Errors.Validation_Error =>
+            Assert (Condition => Validation_Errors.Contains
+                    (Msg => "Physical I/O port 'nonexistent' referenced by logical"
+                     & " I/O port 'ports' of logical device 'vga' not found"),
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -918,28 +822,23 @@ package body Mucfgcheck.Device.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       IO_Port_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Single port overlap.
 
-      begin
-         Muxml.Utils.Set_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/hardware/devices/device[@name='cmos_rtc']/"
-            & "ioPort",
-            Name  => "end",
-            Value => "16#0080#");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/hardware/devices/device[@name='cmos_rtc']/"
+         & "ioPort",
+         Name  => "end",
+         Value => "16#0080#");
 
-         IO_Port_Uniqueness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Devices 'cmos_rtc' and 'port80' have overlapping I/O "
-                    & "port(s)",
-                    Message   => "Exception mismatch");
-      end;
+      IO_Port_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Devices 'cmos_rtc' and 'port80' have overlapping I/O "
+               & "port(s)"),
+              Message   => "Exception mismatch");
 
       --  Full range overlap.
 
@@ -952,15 +851,10 @@ package body Mucfgcheck.Device.Test_Data.Tests is
             Value => "16#0090#");
 
          IO_Port_Uniqueness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Devices 'keyboard' and 'cmos_rtc' have overlapping I/O "
-                    & "port(s)",
-                    Message   => "Exception mismatch");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Devices 'keyboard' and 'cmos_rtc' have overlapping I/O "
+                  & "port(s)"),
+                 Message   => "Exception mismatch");
       end;
 --  begin read only
    end Test_IO_Port_Uniqueness;
@@ -987,18 +881,11 @@ package body Mucfgcheck.Device.Test_Data.Tests is
          Name  => "name",
          Value => "port_60");
 
-      begin
-         Device_IO_Port_Name_Uniqueness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Device 'keyboard' has multiple I/O ports with name "
-                    & "'port_60'",
-                    Message   => "Exception mismatch");
-      end;
+      Device_IO_Port_Name_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Device 'keyboard' has multiple I/O ports with name "
+               & "'port_60'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Device_IO_Port_Name_Uniqueness;
 --  end read only
@@ -1036,15 +923,10 @@ package body Mucfgcheck.Device.Test_Data.Tests is
             New_Child => Node);
 
          Device_Memory_Name_Uniqueness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Device 'vga' has multiple memory regions with name"
-                    & " 'buffer'",
-                    Message   => "Exception mismatch");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Device 'vga' has multiple memory regions with name"
+                  & " 'buffer'"),
+                 Message   => "Exception mismatch");
       end;
 --  begin read only
    end Test_Device_Memory_Name_Uniqueness;
@@ -1077,11 +959,11 @@ package body Mucfgcheck.Device.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical device memory 'nonexistent' referenced by"
-                    & " logical device memory 'mmio' of logical device "
-                    & "'ioapic' not found",
+         when Validation_Errors.Validation_Error =>
+            Assert (Condition => Validation_Errors.Contains
+                    (Msg => "Physical device memory 'nonexistent' referenced by"
+                     & " logical device memory 'mmio' of logical device "
+                     & "'ioapic' not found"),
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -1109,17 +991,10 @@ package body Mucfgcheck.Device.Test_Data.Tests is
          Name  => "device",
          Value => "16#14#");
 
-      begin
-         PCI_Device_BDF_Uniqueness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "PCI devices 'xhci' and 'ethernet' have identical BDF",
-                    Message   => "Exception mismatch");
-      end;
+      PCI_Device_BDF_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "PCI devices 'xhci' and 'ethernet' have identical BDF"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_PCI_Device_BDF_Uniqueness;
 --  end read only
@@ -1143,6 +1018,8 @@ package body Mucfgcheck.Device.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Device_Reference_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -1151,18 +1028,11 @@ package body Mucfgcheck.Device.Test_Data.Tests is
          Name  => "physical",
          Value => "ethernet");
 
-      begin
-         Device_Reference_Uniqueness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Logical devices 'eth0' and 'eth1' of subject 'linux' "
-                    & "reference same physical device 'ethernet'",
-                    Message   => "Exception mismatch");
-      end;
+      Device_Reference_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Logical devices 'eth0' and 'eth1' of subject 'linux' "
+               & "reference same physical device 'ethernet'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Device_Reference_Uniqueness;
 --  end read only
@@ -1186,6 +1056,8 @@ package body Mucfgcheck.Device.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Device_Reference_BDF_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -1194,18 +1066,11 @@ package body Mucfgcheck.Device.Test_Data.Tests is
          Name  => "device",
          Value => "16#14#");
 
-      begin
-         Device_Reference_BDF_Uniqueness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Logical PCI devices 'xhci' and 'eth0' of subject "
-                    & "'linux' have identical BDF",
-                    Message   => "Exception mismatch");
-      end;
+      Device_Reference_BDF_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Logical PCI devices 'xhci' and 'eth0' of subject "
+               & "'linux' have identical BDF"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Device_Reference_BDF_Uniqueness;
 --  end read only
@@ -1229,6 +1094,8 @@ package body Mucfgcheck.Device.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       PCI_Device_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Remove_Child
         (Node       => Muxml.Utils.Get_Element
@@ -1236,18 +1103,11 @@ package body Mucfgcheck.Device.Test_Data.Tests is
             XPath => "/system/hardware/devices/device[@name='xhci']"),
          Child_Name => "pci");
 
-      begin
-         PCI_Device_References (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Logical PCI device 'xhci' of subject 'linux' references"
-                    & " physical non-PCI device 'xhci'",
-                    Message   => "Exception mismatch");
-      end;
+      PCI_Device_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Logical PCI device 'xhci' of subject 'linux' references"
+               & " physical non-PCI device 'xhci'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_PCI_Device_References;
 --  end read only
@@ -1271,7 +1131,8 @@ package body Mucfgcheck.Device.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       PCI_Multifunction_Device_Refs (XML_Data => Data);
-
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Check that no exception is raised when first function is not mapped.
 
@@ -1293,16 +1154,11 @@ package body Mucfgcheck.Device.Test_Data.Tests is
             Value => "16#1f#");
 
          PCI_Multifunction_Device_Refs (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E) =
-                      "Logical devices 'eth1' and 'eth0' are part of a PCI "
-                    & "multi-function device and must have the same logical "
-                    & "device number: 16#1f# /= 16#19#",
-                    Message   => "Exception mismatch");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Logical devices 'eth1' and 'eth0' are part of a PCI "
+                  & "multi-function device and must have the same logical "
+                  & "device number: 16#1f# /= 16#19#"),
+                 Message   => "Exception mismatch");
       end Logical_Device_Nr_Mismatch;
 
       Subject_Mismatch:
@@ -1322,16 +1178,11 @@ package body Mucfgcheck.Device.Test_Data.Tests is
                                           Value => "16#1#");
 
          PCI_Multifunction_Device_Refs (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E) =
-                      "Physical devices 'ethernet_2' and 'wireless' are part "
-                    & "of a PCI multi-function device and must be assigned "
-                    & "to the same subject",
-                    Message   => "Exception mismatch");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Physical devices 'ethernet_2' and 'wireless' are "
+                  & "part of a PCI multi-function device and must be assigned "
+                  & "to the same subject"),
+                 Message   => "Exception mismatch");
       end Subject_Mismatch;
 --  begin read only
    end Test_PCI_Multifunction_Device_Refs;
@@ -1356,6 +1207,8 @@ package body Mucfgcheck.Device.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Legacy_Device_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Remove_Child
         (Node       => Muxml.Utils.Get_Element
@@ -1364,18 +1217,11 @@ package body Mucfgcheck.Device.Test_Data.Tests is
             & "device[@physical='ethernet']"),
          Child_Name => "pci");
 
-      begin
-         Legacy_Device_References (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Logical legacy device 'eth0' of subject 'linux'"
-                    & " references physical non-legacy device 'ethernet'",
-                    Message   => "Exception mismatch");
-      end;
+      Legacy_Device_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Logical legacy device 'eth0' of subject 'linux'"
+               & " references physical non-legacy device 'ethernet'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Legacy_Device_References;
 --  end read only
@@ -1399,6 +1245,8 @@ package body Mucfgcheck.Device.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Device_References_PCI_Bus_Number (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -1407,18 +1255,11 @@ package body Mucfgcheck.Device.Test_Data.Tests is
          Name  => "bus",
          Value => "16#04#");
 
-      begin
-         Device_References_PCI_Bus_Number (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Logical PCI device 'xhci' of subject 'linux' specifies"
-                    & " invalid bus number 16#04# should be 16#00#",
-                    Message   => "Exception mismatch");
-      end;
+      Device_References_PCI_Bus_Number (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Logical PCI device 'xhci' of subject 'linux' specifies"
+               & " invalid bus number 16#04# should be 16#00#"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Device_References_PCI_Bus_Number;
 --  end read only
@@ -1444,18 +1285,11 @@ package body Mucfgcheck.Device.Test_Data.Tests is
          Name  => "size",
          Value => "16#2000#");
 
-      begin
-         IOMMU_Region_Size (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'size => 16#2000#' of 'mmio' IOMMU memory "
-                    & "region element not 4K",
-                    Message   => "Exception mismatch");
-      end;
+      IOMMU_Region_Size (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Attribute 'size => 16#2000#' of 'mmio' IOMMU memory "
+               & "region element not 4K"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_IOMMU_Region_Size;
 --  end read only

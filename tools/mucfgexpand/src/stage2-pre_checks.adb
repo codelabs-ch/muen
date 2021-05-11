@@ -23,6 +23,7 @@ with Mucfgcheck.Events;
 with Mucfgcheck.Hardware;
 with Mucfgcheck.Platform;
 with Mucfgcheck.Subject;
+with Mucfgcheck.Validation_Errors;
 
 with Cfgchecks;
 
@@ -114,6 +115,11 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Run (Data : Muxml.XML_Data_Type) renames Check_Procs.Run;
+   procedure Run (Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_Procs.Run (Data => Data);
+      Mucfgcheck.Validation_Errors.Check;
+   end Run;
 
 end Stage2.Pre_Checks;

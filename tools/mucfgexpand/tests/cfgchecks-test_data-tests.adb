@@ -14,7 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with Mucfgcheck.Validation_Errors;
 --  begin read only
 --  end read only
 package body Cfgchecks.Test_Data.Tests is
@@ -66,17 +66,10 @@ package body Cfgchecks.Test_Data.Tests is
          end loop;
       end;
 
-      begin
-         Tau0_Presence_In_Scheduling (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject tau0 not present in scheduling plan",
-                    Message   => "Exception mismatch");
-      end;
+      Tau0_Presence_In_Scheduling (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Subject tau0 not present in scheduling plan"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Tau0_Presence_In_Scheduling;
 --  end read only
@@ -100,6 +93,8 @@ package body Cfgchecks.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Subject_Monitor_References (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
@@ -114,10 +109,10 @@ package body Cfgchecks.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'nonexistent' referenced by subject monitor "
-                    & "'subject1' does not exist",
+         when Mucfgcheck.Validation_Errors.Validation_Error =>
+            Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+                    (Msg =>"Subject 'nonexistent' referenced by subject monitor "
+                     & "'subject1' does not exist"),
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -152,10 +147,10 @@ package body Cfgchecks.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Channel 'nonexistent' referenced by subject 'lnx' does"
-                    & " not exist",
+         when Mucfgcheck.Validation_Errors.Validation_Error =>
+            Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+                    (Msg =>"Channel 'nonexistent' referenced by subject 'lnx' "
+                     & "does not exist"),
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -185,6 +180,8 @@ package body Cfgchecks.Test_Data.Tests is
       --  Positive test, must not raise exception.
 
       Subject_Component_Resource_Mappings (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Add mapping of non-existent component resource.
 
@@ -195,18 +192,11 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "logical",
          Value => "nonexistent");
 
-      begin
-         Subject_Component_Resource_Mappings (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'subject1' maps logical resource 'nonexistent' "
-                    & "which is not requested by component 'c1'",
-                    Message   => "Exception mismatch");
-      end;
+      Subject_Component_Resource_Mappings (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Subject 'subject1' maps logical resource 'nonexistent' "
+               & "which is not requested by component 'c1'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Subject_Component_Resource_Mappings;
 --  end read only
@@ -230,6 +220,8 @@ package body Cfgchecks.Test_Data.Tests is
       --  Positive test, must not raise exception.
 
       Subject_Channel_Exports (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Invalid physical reference.
 
@@ -240,19 +232,12 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "physical",
          Value => "nonexistent");
 
-      begin
-         Subject_Channel_Exports (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical channel 'nonexistent' referenced by mapping of"
-                    & " component logical resource 'primary_data' by subject "
-                    & "'subject2' does not exist",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Subject_Channel_Exports (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Physical channel 'nonexistent' referenced by mapping of"
+               & " component logical resource 'primary_data' by subject "
+               & "'subject2' does not exist"),
+              Message   => "Exception mismatch (1)");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
@@ -270,19 +255,12 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "logical",
          Value => "nonexistent");
 
-      begin
-         Subject_Channel_Exports (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'subject2' does not map logical channel "
-                    & "'primary_data' as requested by referenced component "
-                    & "'c2'",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Subject_Channel_Exports (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Subject 'subject2' does not map logical channel "
+               & "'primary_data' as requested by referenced component "
+               & "'c2'"),
+              Message   => "Exception mismatch (2)");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
@@ -300,18 +278,11 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "logical",
          Value => "nonexistent");
 
-      begin
-         Subject_Channel_Exports (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected (3)");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'subject2' does not map logical channel "
-                    & "'output1' as requested by referenced component 'c2'",
-                    Message   => "Exception mismatch (3)");
-      end;
+      Subject_Channel_Exports (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Subject 'subject2' does not map logical channel "
+               & "'output1' as requested by referenced component 'c2'"),
+               Message   => "Exception mismatch (3)");
 --  begin read only
    end Test_Subject_Channel_Exports;
 --  end read only
@@ -335,6 +306,8 @@ package body Cfgchecks.Test_Data.Tests is
       --  Positive test, must not raise exception.
 
       Subject_Memory_Exports (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Invalid physical reference.
 
@@ -345,19 +318,12 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "physical",
          Value => "nonexistent");
 
-      begin
-         Subject_Memory_Exports (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical memory region 'nonexistent' referenced by "
-                    & "mapping of component logical resource 'control_data' by"
-                    & " subject 'subject1' does not exist",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Subject_Memory_Exports (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Physical memory region 'nonexistent' referenced by "
+               & "mapping of component logical resource 'control_data' by"
+               & " subject 'subject1' does not exist"),
+              Message   => "Exception mismatch (1)");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
@@ -375,19 +341,12 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "logical",
          Value => "nonexistent");
 
-      begin
-         Subject_Memory_Exports (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'subject1' does not map logical memory region "
-                    & "'control_data' as requested by referenced component "
-                    & "'c1'",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Subject_Memory_Exports (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Subject 'subject1' does not map logical memory region "
+               & "'control_data' as requested by referenced component "
+               & "'c1'"),
+              Message   => "Exception mismatch (2)");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
@@ -405,19 +364,12 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "logical",
          Value => "nonexistent");
 
-      begin
-         Subject_Memory_Exports (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected (3)");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'subject2' does not map logical memory region "
-                    & "'mem1' as requested by referenced component "
-                    & "'c2'",
-                    Message   => "Exception mismatch (3)");
-      end;
+      Subject_Memory_Exports (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Subject 'subject2' does not map logical memory region "
+               & "'mem1' as requested by referenced component "
+               & "'c2'"),
+              Message   => "Exception mismatch (3)");
 --  begin read only
    end Test_Subject_Memory_Exports;
 --  end read only
@@ -452,6 +404,8 @@ package body Cfgchecks.Test_Data.Tests is
       --  Positive test, must not raise exception.
 
       Subject_Device_Exports (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Device resource type mismatch.
 
@@ -462,19 +416,12 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "physical",
          Value => "ioport1");
 
-      begin
-         Subject_Device_Exports (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical device resource 'sata_controller->ioport1' and"
-                    & " component logical resource 'storage_device->mmio1' "
-                    & "mapped by subject 'subject1' have different type",
-                    Message   => "Exception mismatch");
-      end;
+      Subject_Device_Exports (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Physical device resource 'sata_controller->ioport1' and"
+               & " component logical resource 'storage_device->mmio1' "
+               & "mapped by subject 'subject1' have different type"),
+              Message   => "Exception mismatch");
 
       --  Invalid physical device resource reference.
 
@@ -485,20 +432,13 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "physical",
          Value => "nonexistent");
 
-      begin
-         Subject_Device_Exports (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical device resource 'sata_controller->nonexistent'"
-                    & " referenced by mapping of component logical resource "
-                    & "'storage_device->mmio1' by subject 'subject1' does not "
-                    & "exist",
-                    Message   => "Exception mismatch");
-      end;
+      Subject_Device_Exports (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Physical device resource 'sata_controller->nonexistent'"
+               & " referenced by mapping of component logical resource "
+               & "'storage_device->mmio1' by subject 'subject1' does not "
+               & "exist"),
+              Message   => "Exception mismatch");
 
       --  Missing component device resource mapping.
 
@@ -509,19 +449,12 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "logical",
          Value => "nonexistent");
 
-      begin
-         Subject_Device_Exports (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'subject1' does not map logical device resource"
-                    & " 'storage_device->mmio1' as requested by referenced "
-                    & "component 'c1'",
-                    Message   => "Exception mismatch");
-      end;
+      Subject_Device_Exports (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Subject 'subject1' does not map logical device resource"
+               & " 'storage_device->mmio1' as requested by referenced "
+               & "component 'c1'"),
+              Message   => "Exception mismatch");
 
       --  Invalid physical device reference.
 
@@ -532,19 +465,12 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "physical",
          Value => "nonexistent");
 
-      begin
-         Subject_Device_Exports (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical device 'nonexistent' referenced by mapping of"
-                    & " component logical resource 'storage_device' by subject"
-                    & " 'subject1' does not exist",
-                    Message   => "Exception mismatch");
-      end;
+      Subject_Device_Exports (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Physical device 'nonexistent' referenced by mapping of"
+               & " component logical resource 'storage_device' by subject"
+               & " 'subject1' does not exist"),
+              Message   => "Exception mismatch");
 
       --  Missing component device mapping.
 
@@ -555,19 +481,12 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "logical",
          Value => "nonexistent");
 
-      begin
-         Subject_Device_Exports (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'subject1' does not map logical device "
-                    & "'storage_device' as requested by referenced component "
-                    & "'c1'",
-                    Message   => "Exception mismatch");
-      end;
+      Subject_Device_Exports (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Subject 'subject1' does not map logical device "
+               & "'storage_device' as requested by referenced component "
+               & "'c1'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Subject_Device_Exports;
 --  end read only
@@ -591,6 +510,8 @@ package body Cfgchecks.Test_Data.Tests is
       --  Positive test, must not raise exception.
 
       Subject_Event_Exports (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Invalid physical reference.
 
@@ -601,19 +522,12 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "physical",
          Value => "nonexistent");
 
-      begin
-         Subject_Event_Exports (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical event 'nonexistent' referenced by "
-                    & "mapping of component logical resource 'handover' by"
-                    & " subject 'subject1' does not exist",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Subject_Event_Exports (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Physical event 'nonexistent' referenced by "
+               & "mapping of component logical resource 'handover' by"
+               & " subject 'subject1' does not exist"),
+              Message   => "Exception mismatch (1)");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
@@ -631,18 +545,11 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "logical",
          Value => "nonexistent");
 
-      begin
-         Subject_Event_Exports (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'subject1' does not map logical event "
-                    & "'handover' as requested by referenced component 'c1'",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Subject_Event_Exports (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Subject 'subject1' does not map logical event "
+               & "'handover' as requested by referenced component 'c1'"),
+              Message   => "Exception mismatch (2)");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
@@ -660,19 +567,12 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "logical",
          Value => "nonexistent");
 
-      begin
-         Subject_Event_Exports (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected (3)");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'subject1' does not map logical event "
-                    & "'trigger_timer' as requested by referenced component"
-                    & " 'c1'",
-                    Message   => "Exception mismatch (3)");
-      end;
+      Subject_Event_Exports (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Subject 'subject1' does not map logical event "
+               & "'trigger_timer' as requested by referenced component"
+               & " 'c1'"),
+              Message   => "Exception mismatch (3)");
 --  begin read only
    end Test_Subject_Event_Exports;
 --  end read only
@@ -695,7 +595,9 @@ package body Cfgchecks.Test_Data.Tests is
 
       --  Positive test, must not raise an exception.
 
-        Subject_Resource_Maps_Logical_Uniqueness (XML_Data => Policy);
+      Subject_Resource_Maps_Logical_Uniqueness (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
@@ -704,18 +606,11 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "logical",
          Value => "primary_data");
 
-      begin
-         Subject_Resource_Maps_Logical_Uniqueness (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Multiple logical resource mappings with name "
-                    & "'primary_data' in subject 'subject2'",
-                    Message   => "Exception mismatch");
-      end;
+      Subject_Resource_Maps_Logical_Uniqueness (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Multiple logical resource mappings with name "
+               & "'primary_data' in subject 'subject2'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Subject_Resource_Maps_Logical_Uniqueness;
 --  end read only
@@ -739,6 +634,8 @@ package body Cfgchecks.Test_Data.Tests is
       --  Positive tests, must not raise an exception.
 
       Subject_IRQ_MSI_Name_Uniqueness (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
@@ -747,18 +644,11 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "logical",
          Value => "msi1");
 
-      begin
-         Subject_IRQ_MSI_Name_Uniqueness (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'lnx' device 'xhci' MSI IRQ logical 'msi1' is "
-                    & "not unique",
-                    Message   => "Exception mismatch");
-      end;
+      Subject_IRQ_MSI_Name_Uniqueness (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Subject 'lnx' device 'xhci' MSI IRQ logical 'msi1' is "
+               & "not unique"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Subject_IRQ_MSI_Name_Uniqueness;
 --  end read only
@@ -782,6 +672,8 @@ package body Cfgchecks.Test_Data.Tests is
       --  Positive tests, must not raise an exception.
 
       Subject_IRQ_MSI_References (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
@@ -790,19 +682,12 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "physical",
          Value => "msi_nonexistent");
 
-      begin
-         Subject_IRQ_MSI_References (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Logical device 'xhci->irq1->msi1' of subject 'lnx' "
-                    & "references non-existent physical device MSI "
-                    & "'xhci->irq1->msi_nonexistent'",
-                    Message   => "Exception mismatch");
-      end;
+      Subject_IRQ_MSI_References (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Logical device 'xhci->irq1->msi1' of subject 'lnx' "
+               & "references non-existent physical device MSI "
+               & "'xhci->irq1->msi_nonexistent'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Subject_IRQ_MSI_References;
 --  end read only
@@ -826,6 +711,8 @@ package body Cfgchecks.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Subject_Monitor_Loader_Addresses (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
@@ -834,19 +721,12 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "virtualAddress",
          Value => "16#1000#");
 
-      begin
-         Subject_Monitor_Loader_Addresses (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Loader mapping 'monitor_loader_lnx' of subject "
-                    & "'subject1' not in valid range 16#0001_0000_0000# "
-                    & ".. 16#6fff_ffff_ffff#",
-                    Message   => "Exception mismatch");
-      end;
+      Subject_Monitor_Loader_Addresses (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Loader mapping 'monitor_loader_lnx' of subject "
+               & "'subject1' not in valid range 16#0001_0000_0000# "
+               & ".. 16#6fff_ffff_ffff#"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Subject_Monitor_Loader_Addresses;
 --  end read only
@@ -925,9 +805,13 @@ package body Cfgchecks.Test_Data.Tests is
             end loop;
          end;
 
+         Mucfgcheck.Validation_Errors.Clear;
          Channel_Reader_Writer (XML_Data => Policy);
 
          --  Must not raise an exception.
+
+         Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+                 Message   => "Unexpected error in positive test");
 
       end Multiple_Readers;
 
@@ -948,15 +832,10 @@ package body Cfgchecks.Test_Data.Tests is
             Value => "nonexistent");
 
          Channel_Reader_Writer (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Invalid number of readers for channel 'data_channel':"
-                    & " 0",
-                    Message   => "Exception mismatch (reader)");
+         Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+                 (Msg =>"Invalid number of readers for channel 'data_channel':"
+                  & " 0"),
+                 Message   => "Exception mismatch (reader)");
       end No_Reader;
 
       ----------------------------------------------------------------------
@@ -976,15 +855,10 @@ package body Cfgchecks.Test_Data.Tests is
             Value => "nonexistent");
 
          Channel_Reader_Writer (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Invalid number of writers for channel 'data_channel':"
-                    & " 0",
-                    Message   => "Exception mismatch (writer)");
+         Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+                 (Msg =>"Invalid number of writers for channel 'data_channel':"
+                  & " 0"),
+                 Message   => "Exception mismatch (writer)");
       end No_Writer;
 
       Policy : Muxml.XML_Data_Type;
@@ -1018,18 +892,11 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "event",
          Value => "");
 
-      begin
-         Channel_Writer_Has_Event_ID (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Missing 'event' attribute for writer of channel "
-                    & "'data_channel'",
-                    Message   => "Exception mismatch");
-      end;
+      Channel_Writer_Has_Event_ID (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Missing 'event' attribute for writer of channel "
+               & "'data_channel'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Channel_Writer_Has_Event_ID;
 --  end read only
@@ -1056,19 +923,12 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "vector",
          Value => "");
 
-      begin
-         Channel_Reader_Has_Event_Vector
-           (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Missing 'vector' attribute for reader of channel "
-                    & "'data_channel'",
-                    Message   => "Exception mismatch");
-      end;
+      Channel_Reader_Has_Event_Vector
+        (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Missing 'vector' attribute for reader of channel "
+               & "'data_channel'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Channel_Reader_Has_Event_Vector;
 --  end read only
@@ -1092,18 +952,11 @@ package body Cfgchecks.Test_Data.Tests is
         (Node       => DOM.Core.Documents.Get_Element (Doc => Policy.Doc),
          Child_Name => "hardware");
 
-      begin
-         Hardware_CPU_Count_Presence (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Required '/system/hardware/processor/@cpuCores' "
-                    & "attribute not found, add it or use mucfgmerge tool",
-                    Message   => "Exception mismatch");
-      end;
+      Hardware_CPU_Count_Presence (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Required '/system/hardware/processor/@cpuCores' "
+               & "attribute not found, add it or use mucfgmerge tool"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Hardware_CPU_Count_Presence;
 --  end read only
@@ -1127,6 +980,8 @@ package body Cfgchecks.Test_Data.Tests is
       --  Positive tests, must not raise an exception.
 
       Hardware_Reserved_Memory_Region_Name_Uniqueness (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
@@ -1134,17 +989,10 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "name",
          Value => "rmrr1");
 
-      begin
-         Hardware_Reserved_Memory_Region_Name_Uniqueness (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Reserved memory region name 'rmrr1' is not unique",
-                    Message   => "Exception mismatch");
-      end;
+      Hardware_Reserved_Memory_Region_Name_Uniqueness (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Reserved memory region name 'rmrr1' is not unique"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Hardware_Reserved_Memory_Region_Name_Uniqueness;
 --  end read only
@@ -1168,6 +1016,8 @@ package body Cfgchecks.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Hardware_Reserved_Memory_Region_References (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
@@ -1182,10 +1032,10 @@ package body Cfgchecks.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Reserved region 'nonexistent' referenced by device "
-                    & "'nic1' does not exist",
+            when Mucfgcheck.Validation_Errors.Validation_Error =>
+            Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+                    (Msg =>"Reserved region 'nonexistent' referenced by device "
+                     & "'nic1' does not exist"),
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -1211,6 +1061,8 @@ package body Cfgchecks.Test_Data.Tests is
       --  Positive tests, must not raise an exception.
 
       Hardware_IRQ_MSI_Name_Uniqueness (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
@@ -1219,17 +1071,10 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "name",
          Value => "msi1");
 
-      begin
-         Hardware_IRQ_MSI_Name_Uniqueness (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Device 'xhci' MSI IRQ name 'msi1' is not unique",
-                    Message   => "Exception mismatch");
-      end;
+      Hardware_IRQ_MSI_Name_Uniqueness (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Device 'xhci' MSI IRQ name 'msi1' is not unique"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Hardware_IRQ_MSI_Name_Uniqueness;
 --  end read only
@@ -1257,6 +1102,8 @@ package body Cfgchecks.Test_Data.Tests is
       --  Positive tests, must not raise an exception.
 
       Hardware_IRQ_Type_Consistency (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       declare
          IRQ_Node  : constant DOM.Core.Node
@@ -1281,15 +1128,10 @@ package body Cfgchecks.Test_Data.Tests is
                                    New_Child => MSI_Node);
 
          Hardware_IRQ_Type_Consistency (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical device 'wlan3' has both legacy and MSI IRQ "
-                    & "references",
-                    Message   => "Exception mismatch (1)");
+         Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+                 (Msg =>"Physical device 'wlan3' has both legacy and MSI IRQ "
+                  & "references"),
+                 Message   => "Exception mismatch (1)");
       end;
 
       Muxml.Utils.Remove_Elements
@@ -1320,15 +1162,10 @@ package body Cfgchecks.Test_Data.Tests is
                                    New_Child => MSI_Node);
 
          Hardware_IRQ_Type_Consistency (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical device 'wlan3' has both legacy and MSI IRQ "
-                    & "references",
-                    Message   => "Exception mismatch (2)");
+         Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+                 (Msg =>"Physical device 'wlan3' has both legacy and MSI IRQ "
+                  & "references"),
+                 Message   => "Exception mismatch (2)");
       end;
 
       declare
@@ -1354,15 +1191,10 @@ package body Cfgchecks.Test_Data.Tests is
                                    New_Child => IRQ_Node);
 
          Hardware_IRQ_Type_Consistency (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected (3)");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Logical device 'wifi' of subject 'lnx' declares both "
-                    & "legacy and MSI IRQ resources",
-                    Message   => "Exception mismatch (3)");
+         Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+                 (Msg =>"Logical device 'wifi' of subject 'lnx' declares both "
+                  & "legacy and MSI IRQ resources"),
+                 Message   => "Exception mismatch (3)");
       end;
 --  begin read only
    end Test_Hardware_IRQ_Type_Consistency;
@@ -1387,6 +1219,8 @@ package body Cfgchecks.Test_Data.Tests is
       --  Positive tests, must not raise an exception.
 
       Device_RMRR_Domain_Assignment (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       declare
          Node : DOM.Core.Node := Muxml.Utils.Get_Element
@@ -1413,20 +1247,13 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "mapReservedMemory",
          Value => "true");
 
-      begin
-         Device_RMRR_Domain_Assignment (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Device 'nic1' referencing reserved memory region "
-                    & "'rmrr1' assigned to different device domain than other "
-                    & "device(s) referencing the same region: 'nic1_domain' vs"
-                    & " 'xhci_domain'",
-                    Message   => "Exception mismatch");
-      end;
+      Device_RMRR_Domain_Assignment (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Device 'nic1' referencing reserved memory region "
+               & "'rmrr1' assigned to different device domain than other "
+               & "device(s) referencing the same region: 'nic1_domain' vs"
+               & " 'xhci_domain'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Device_RMRR_Domain_Assignment;
 --  end read only
@@ -1458,10 +1285,10 @@ package body Cfgchecks.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Component 'nonexistent' referenced by subject 'lnx' "
-                    & "does not exist",
+         when Mucfgcheck.Validation_Errors.Validation_Error =>
+            Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+                    (Msg =>"Component 'nonexistent' referenced by subject 'lnx' "
+                     & "does not exist"),
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -1487,6 +1314,8 @@ package body Cfgchecks.Test_Data.Tests is
       --  Positive tests, must not raise an exception.
 
       Subject_Sibling_References (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
@@ -1500,10 +1329,10 @@ package body Cfgchecks.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Sibling 'lxn' referenced by subject 'lnx_core_1' does "
-                    & "not exist",
+         when Mucfgcheck.Validation_Errors.Validation_Error =>
+            Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+                    (Msg =>"Sibling 'lxn' referenced by subject 'lnx_core_1' does "
+                     & "not exist"),
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -1530,6 +1359,8 @@ package body Cfgchecks.Test_Data.Tests is
       --  Positive tests, must not raise an exception.
 
       Subject_Sibling_Device_BDFs (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
@@ -1559,19 +1390,12 @@ package body Cfgchecks.Test_Data.Tests is
             XPath => "/system/subjects/subject[@name='lnx_core_1']/devices"),
          New_Child => Dev);
 
-      begin
-         Subject_Sibling_Device_BDFs (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Linux sibling 'lnx' logical device 'wifi' PCI BDF not "
-                    & "equal to logical device 'wlan' of sibling 'lnx_core_1' "
-                    & "referencing same physdev",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Subject_Sibling_Device_BDFs (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Linux sibling 'lnx' logical device 'wifi' PCI BDF not "
+               & "equal to logical device 'wlan' of sibling 'lnx_core_1' "
+               & "referencing same physdev"),
+              Message   => "Exception mismatch (1)");
 
       --  Different physical device, same BDFs.
 
@@ -1592,19 +1416,12 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "function",
          Value => "2");
 
-      begin
-         Subject_Sibling_Device_BDFs (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Logical device 'wlan2' of Linux sibling 'lnx' has equal"
-                    & " PCI BDF with logical device 'wlan' of sibling "
-                    & "'lnx_core_1'",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Subject_Sibling_Device_BDFs (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Logical device 'wlan2' of Linux sibling 'lnx' has equal"
+               & " PCI BDF with logical device 'wlan' of sibling "
+               & "'lnx_core_1'"),
+              Message   => "Exception mismatch (2)");
 --  begin read only
    end Test_Subject_Sibling_Device_BDFs;
 --  end read only
@@ -1629,6 +1446,8 @@ package body Cfgchecks.Test_Data.Tests is
       --  Positive tests, must not raise an exception.
 
       Subject_Sibling_Bootparams (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       declare
          Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
@@ -1653,18 +1472,11 @@ package body Cfgchecks.Test_Data.Tests is
            (Doc  => Policy.Doc,
             Data => "console=ttyS3"));
 
-      begin
-         Subject_Sibling_Bootparams (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-    exception
-       when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'lnx_core_1' which is a sibling of 'lnx' "
-                    & "specifies boot parameters",
-                    Message   => "Exception mismatch");
-      end;
+      Subject_Sibling_Bootparams (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Subject 'lnx_core_1' which is a sibling of 'lnx' "
+               & "specifies boot parameters"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Subject_Sibling_Bootparams;
 --  end read only
@@ -1688,6 +1500,8 @@ package body Cfgchecks.Test_Data.Tests is
       --  Positive tests, must not raise an exception.
 
       Library_Name_Uniqueness (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
@@ -1695,17 +1509,10 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "name",
          Value => "l1");
 
-      begin
-         Library_Name_Uniqueness (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Library name 'l1' is not unique",
-                    Message   => "Exception mismatch");
-      end;
+      Library_Name_Uniqueness (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Library name 'l1' is not unique"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Library_Name_Uniqueness;
 --  end read only
@@ -1729,6 +1536,8 @@ package body Cfgchecks.Test_Data.Tests is
       --  Positive tests, must not raise an exception.
 
       Component_Name_Uniqueness (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
@@ -1736,17 +1545,10 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "name",
          Value => "c1");
 
-      begin
-         Component_Name_Uniqueness (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Component name 'c1' is not unique",
-                    Message   => "Exception mismatch");
-      end;
+      Component_Name_Uniqueness (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Component name 'c1' is not unique"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Component_Name_Uniqueness;
 --  end read only
@@ -1773,18 +1575,11 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "logical",
          Value => "primary_data");
 
-      begin
-         Component_Channel_Name_Uniqueness (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Multiple channels with name 'primary_data' in component"
-                    & " 'c2'",
-                    Message   => "Exception mismatch");
-      end;
+      Component_Channel_Name_Uniqueness (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Multiple channels with name 'primary_data' in component"
+               & " 'c2'"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Component_Channel_Name_Uniqueness;
 --  end read only
@@ -1810,20 +1605,13 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "size",
          Value => "16#4000#");
 
-      begin
-         Component_Channel_Size (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Component 'c2' referenced by subject 'subject2' "
-                    & "requests size 16#1000# for logical channel "
-                    & "'primary_data' but linked physical channel "
-                    & "'data_channel3' has size 16#4000#",
-                    Message   => "Exception mismatch");
-      end;
+      Component_Channel_Size (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Component 'c2' referenced by subject 'subject2' "
+               & "requests size 16#1000# for logical channel "
+               & "'primary_data' but linked physical channel "
+               & "'data_channel3' has size 16#4000#"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Component_Channel_Size;
 --  end read only
@@ -1847,6 +1635,8 @@ package body Cfgchecks.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Component_Memory_Size (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Memory size mismatch.
 
@@ -1856,20 +1646,13 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "size",
          Value => "16#f000#");
 
-      begin
-         Component_Memory_Size (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Component 'c1' referenced by subject 'subject1' "
-                    & "requests size 16#2000# for logical memory "
-                    & "'control_data' but linked physical memory region "
-                    & "'dummy_2' has size 16#f000#",
-                    Message   => "Exception mismatch");
-      end;
+      Component_Memory_Size (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Component 'c1' referenced by subject 'subject1' "
+               & "requests size 16#2000# for logical memory "
+               & "'control_data' but linked physical memory region "
+               & "'dummy_2' has size 16#f000#"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Component_Memory_Size;
 --  end read only
@@ -1903,6 +1686,8 @@ package body Cfgchecks.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Component_Device_Memory_Size (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Device memory size mismatch.
 
@@ -1913,20 +1698,13 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "size",
          Value => "16#beef#");
 
-      begin
-         Component_Device_Memory_Size (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Component 'c1' referenced by subject 'subject1' "
-                    & "requests size 16#4000# for logical device memory "
-                    & "'storage_device->mmio1' but linked physical device "
-                    & "memory 'sata_controller->mem1' has size 16#beef#",
-                    Message   => "Exception mismatch");
-      end;
+      Component_Device_Memory_Size (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Component 'c1' referenced by subject 'subject1' "
+               & "requests size 16#4000# for logical device memory "
+               & "'storage_device->mmio1' but linked physical device "
+               & "memory 'sata_controller->mem1' has size 16#beef#"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Component_Device_Memory_Size;
 --  end read only
@@ -1960,6 +1738,8 @@ package body Cfgchecks.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Component_Device_IO_Port_Range (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Device I/O port start mismatch.
 
@@ -1970,20 +1750,13 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "start",
          Value => "16#03f8#");
 
-      begin
-         Component_Device_IO_Port_Range (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected (1)");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Component 'c1' referenced by subject 'subject1' "
-                    & "requests I/O range 16#50a0#..16#50a7# for "
-                    & "'storage_device->port_3' but physical device "
-                    & "'sata_controller->ioport3' has 16#03f8#..16#50a7#",
-                    Message   => "Exception mismatch (1)");
-      end;
+      Component_Device_IO_Port_Range (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Component 'c1' referenced by subject 'subject1' "
+               & "requests I/O range 16#50a0#..16#50a7# for "
+               & "'storage_device->port_3' but physical device "
+               & "'sata_controller->ioport3' has 16#03f8#..16#50a7#"),
+              Message   => "Exception mismatch (1)");
 
       --  Device I/O port end mismatch.
 
@@ -1994,20 +1767,13 @@ package body Cfgchecks.Test_Data.Tests is
          Name  => "end",
          Value => "16#beef#");
 
-      begin
-         Component_Device_IO_Port_Range (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected (2)");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Component 'c1' referenced by subject 'subject1' "
-                    & "requests I/O range 16#50a8#..16#50af# for "
-                    & "'storage_device->port_1' but physical device " &
-                      "'sata_controller->ioport1' has 16#50a8#..16#beef#",
-                    Message   => "Exception mismatch (2)");
-      end;
+      Component_Device_IO_Port_Range (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Component 'c1' referenced by subject 'subject1' "
+               & "requests I/O range 16#50a8#..16#50af# for "
+               & "'storage_device->port_1' but physical device " &
+                 "'sata_controller->ioport1' has 16#50a8#..16#beef#"),
+              Message   => "Exception mismatch (2)");
 --  begin read only
    end Test_Component_Device_IO_Port_Range;
 --  end read only
@@ -2031,6 +1797,8 @@ package body Cfgchecks.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Component_Library_References (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
@@ -2044,10 +1812,10 @@ package body Cfgchecks.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Library 'nonexistent' referenced by component 'c1' does"
-                    & " not exist",
+         when Mucfgcheck.Validation_Errors.Validation_Error =>
+            Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+                    (Msg =>"Library 'nonexistent' referenced by component 'c1' "
+                     & "does not exist"),
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -2073,6 +1841,8 @@ package body Cfgchecks.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Component_Library_Cyclic_References (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       declare
          Lib_Node  : constant DOM.Core.Node
@@ -2098,14 +1868,9 @@ package body Cfgchecks.Test_Data.Tests is
                                     Ref_Child => "devices");
 
          Component_Library_Cyclic_References (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Cyclic component dependency detected: l0->l1->l0",
-                    Message   => "Exception mismatch");
+         Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+                 (Msg =>"Cyclic component dependency detected: l0->l1->l0"),
+                 Message   => "Exception mismatch");
       end;
 --  begin read only
    end Test_Component_Library_Cyclic_References;

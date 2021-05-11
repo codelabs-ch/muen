@@ -14,7 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with Mucfgcheck.Validation_Errors;
 --  begin read only
 --  end read only
 package body Mucfgcheck.Scheduling.Test_Data.Tests is
@@ -55,15 +55,10 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
          pragma Unreferenced (Node);
 
          CPU_Element_Count (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   =>"Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "CPU element count 4 of major frame 2 invalid, active "
-                    & "CPU count is 3",
-                    Message   => "Exception mismatch");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "CPU element count 4 of major frame 2 invalid, active "
+                  & "CPU count is 3"),
+                 Message   => "Exception mismatch");
       end;
 --  begin read only
    end Test_CPU_Element_Count;
@@ -94,13 +89,13 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
       begin
          Subject_References (XML_Data => Data);
          Assert (Condition => False,
-                 Message   =>"Exception expected");
+                 Message   => "Exception expected");
 
       exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'nonexistent' referenced in scheduling plan not"
-                    & " found",
+         when Validation_Errors.Validation_Error =>
+            Assert (Condition => Validation_Errors.Contains
+                    (Msg => "Subject 'nonexistent' referenced in scheduling plan not"
+                     & " found"),
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -129,18 +124,11 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
          Name  => "subject",
          Value => "linux");
 
-      begin
-         Subject_CPU_Affinity (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   =>"Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'linux' scheduled on wrong CPU 0,"
-                    & " should be 1",
-                    Message   => "Exception mismatch");
-      end;
+      Subject_CPU_Affinity (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject 'linux' scheduled on wrong CPU 0,"
+               & " should be 1"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Subject_CPU_Affinity;
 --  end read only
@@ -164,6 +152,8 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
       --  Positive tests, must not raise an exception.
 
       Major_Frame_Ticks (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -172,18 +162,11 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
          Name  => "ticks",
          Value => "42");
 
-      begin
-         Major_Frame_Ticks (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   =>"Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "CPU 1 of major frame 0 specifies invalid tick count "
-                    & "180, should be 162",
-                    Message   => "Exception mismatch");
-      end;
+      Major_Frame_Ticks (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "CPU 1 of major frame 0 specifies invalid tick count "
+               & "180, should be 162"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Major_Frame_Ticks;
 --  end read only
@@ -207,47 +190,35 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Barrier_ID (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Set duplicate barrier ID.
 
-      begin
-         Muxml.Utils.Set_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/scheduling/majorFrame/barriers/barrier[@id='3']",
-            Name  => "id",
-            Value => "2");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/scheduling/majorFrame/barriers/barrier[@id='3']",
+         Name  => "id",
+         Value => "2");
 
-         Barrier_ID (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Major frame 0 has multiple barriers with ID 2",
-                    Message   => "Exception mismatch");
-      end;
+      Barrier_ID (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Major frame 0 has multiple barriers with ID 2"),
+              Message   => "Exception mismatch");
 
       --  Set invalid barrier ID (i.e. larger than barrier count).
 
-      begin
-         Muxml.Utils.Set_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/scheduling/majorFrame/barriers/barrier",
-            Name  => "id",
-            Value => "42");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/scheduling/majorFrame/barriers/barrier",
+         Name  => "id",
+         Value => "42");
 
-         Barrier_ID (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Barrier of major frame 0 has invalid ID 42, must be in "
-                    & "range 1 .. 4",
-                    Message   => "Exception mismatch");
-      end;
+      Barrier_ID (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Barrier of major frame 0 has invalid ID 42, must be in "
+               & "range 1 .. 4"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Barrier_ID;
 --  end read only
@@ -271,27 +242,22 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Barrier_Size (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Set invalid barrier size (i.e. larger than CPU count).
 
-      begin
-         Muxml.Utils.Set_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/scheduling/majorFrame/barriers/barrier",
-            Name  => "size",
-            Value => "42");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/scheduling/majorFrame/barriers/barrier",
+         Name  => "size",
+         Value => "42");
 
-         Barrier_Size (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Minor frame barrier with invalid size 42, must not "
-                    & "exceed 4",
-                    Message   => "Exception mismatch");
-      end;
+      Barrier_Size (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Minor frame barrier with invalid size 42, must not "
+               & "exceed 4"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Barrier_Size;
 --  end read only
@@ -315,27 +281,22 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Minor_Frame_Sync_Points (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Set invalid barrier size.
 
-      begin
-         Muxml.Utils.Set_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/scheduling/majorFrame/barriers/barrier[@size='3']",
-            Name  => "size",
-            Value => "2");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/scheduling/majorFrame/barriers/barrier[@size='3']",
+         Name  => "size",
+         Value => "2");
 
-         Minor_Frame_Sync_Points (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Barrier 1 of major frame 0 has invalid size 2, should"
-                    &" be 3",
-                    Message   => "Exception mismatch");
-      end;
+      Minor_Frame_Sync_Points (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Barrier 1 of major frame 0 has invalid size 2, should"
+               &" be 3"),
+              Message   => "Exception mismatch");
 
       --  Remove barrier element.
 
@@ -350,14 +311,9 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
             Child_Name => "barrier");
 
          Minor_Frame_Sync_Points (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Major frame 0 has invalid barrier count 3, should be 4",
-                    Message   => "Exception mismatch");
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Major frame 0 has invalid barrier count 3, should be 4"),
+                 Message   => "Exception mismatch");
       end;
 --  begin read only
    end Test_Minor_Frame_Sync_Points;
@@ -382,50 +338,38 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
       --  Positive test, must not raise an exception.
 
       Minor_Frame_Barrier_Refs (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
 
       --  Change barrier reference.
 
-      begin
-         Muxml.Utils.Set_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/scheduling/majorFrame/cpu/"
-            & "minorFrame[@barrier='3'][1]",
-            Name  => "barrier",
-            Value => "4");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/scheduling/majorFrame/cpu/"
+         & "minorFrame[@barrier='3'][1]",
+         Name  => "barrier",
+         Value => "4");
 
-         Minor_Frame_Barrier_Refs (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "References to barrier 3 of major frame 0 do not match "
-                    & "barrier size: 3 /= 4",
-                    Message   => "Exception mismatch");
-      end;
+      Minor_Frame_Barrier_Refs (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "References to barrier 3 of major frame 0 do not match "
+               & "barrier size: 3 /= 4"),
+              Message   => "Exception mismatch");
 
       --  Set barrier reference that is too large.
 
-      begin
-         Muxml.Utils.Set_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/scheduling/majorFrame/cpu/"
-            & "minorFrame[@barrier='1']",
-            Name  => "barrier",
-            Value => "42");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/scheduling/majorFrame/cpu/"
+         & "minorFrame[@barrier='1']",
+         Name  => "barrier",
+         Value => "42");
 
-         Minor_Frame_Barrier_Refs (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Minor frame 0 of CPU 0 in major frame 0 references "
-                    & "invalid barrier 42, must be less than 4",
-                    Message   => "Exception mismatch");
-      end;
+      Minor_Frame_Barrier_Refs (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Minor frame 0 of CPU 0 in major frame 0 references "
+               & "invalid barrier 42, must be less than 4"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Minor_Frame_Barrier_Refs;
 --  end read only

@@ -25,6 +25,8 @@ with Mulog;
 with Muxml.Utils;
 with Mutools.XML_Utils;
 
+with Mucfgcheck.Validation_Errors;
+
 package body Mucfgcheck.Scheduling
 is
 
@@ -67,14 +69,17 @@ is
                         Name => "id"));
                begin
                   if Barrier_ID > Barrier_Count then
-                     raise Validation_Error with "Barrier of major frame"
-                       & I'Img & " has invalid ID" & Barrier_ID'Img
-                       & ", must be in range 1 .." & Barrier_Count'Img;
+                     Validation_Errors.Insert
+                       (Msg => "Barrier of major frame"
+                        & I'Img & " has invalid ID" & Barrier_ID'Img
+                        & ", must be in range 1 .." & Barrier_Count'Img);
+                     return;
                   end if;
 
                   if IDs_Present (Barrier_ID) then
-                     raise Validation_Error with "Major frame" & I'Img
-                       & " has multiple barriers with ID" & Barrier_ID'Img;
+                     Validation_Errors.Insert
+                       (Msg => "Major frame" & I'Img
+                        & " has multiple barriers with ID" & Barrier_ID'Img);
                   end if;
 
                   IDs_Present (Barrier_ID) := True;
@@ -116,8 +121,9 @@ is
                   Name => "size"));
          begin
             if Size > CPU_Count then
-               raise Validation_Error with "Minor frame barrier with invalid"
-                 & " size" & Size'Img & ", must not exceed" & CPU_Count'Img;
+               Validation_Errors.Insert
+                 (Msg => "Minor frame barrier with invalid"
+                  & " size" & Size'Img & ", must not exceed" & CPU_Count'Img);
             end if;
          end;
       end loop;
@@ -145,10 +151,11 @@ is
                               XPath => "cpu");
          begin
             if DOM.Core.Nodes.Length (List => CPUs) /= CPU_Count then
-               raise Validation_Error with "CPU element count"
-                 & DOM.Core.Nodes.Length (List => CPUs)'Img
-                 & " of major frame" & Natural'Image (I + 1) & " invalid,"
-                 & " active CPU count is" & CPU_Count'Img;
+               Validation_Errors.Insert
+                 (Msg => "CPU element count"
+                  & DOM.Core.Nodes.Length (List => CPUs)'Img
+                  & " of major frame" & Natural'Image (I + 1) & " invalid,"
+                  & " active CPU count is" & CPU_Count'Img);
             end if;
          end;
       end loop;
@@ -199,9 +206,10 @@ is
                if Ref_Ticks = 0 then
                   Ref_Ticks := CPU_Ticks;
                elsif Ref_Ticks /= CPU_Ticks then
-                  raise Validation_Error with "CPU" & J'Img & " of major frame"
-                    & I'Img & " specifies invalid tick count" & CPU_Ticks'Img
-                    & ", should be" & Ref_Ticks'Img;
+                  Validation_Errors.Insert
+                    (Msg => "CPU" & J'Img & " of major frame"
+                     & I'Img & " specifies invalid tick count" & CPU_Ticks'Img
+                     & ", should be" & Ref_Ticks'Img);
                end if;
             end loop;
          end;
@@ -260,11 +268,13 @@ is
                                      (N => Minor_Frame),
                                    Name => "id");
                            begin
-                              raise Validation_Error with "Minor frame" & J'Img
-                                & " of CPU " & CPU_ID & " in major frame"
-                                & I'Img & " references invalid barrier"
-                                & Ref_Idx'Img & ", must be less than"
-                                & Barrier_Count'Img;
+                              Validation_Errors.Insert
+                                (Msg => "Minor frame" & J'Img
+                                 & " of CPU " & CPU_ID & " in major frame"
+                                 & I'Img & " references invalid barrier"
+                                 & Ref_Idx'Img & ", must be less than"
+                                 & Barrier_Count'Img);
+                              return;
                            end;
                         end if;
 
@@ -290,11 +300,12 @@ is
                           Name => "size"));
                begin
                   if Barrier_Size /= Barrier_Refs (Barrier_ID) then
-                     raise Validation_Error with "References to barrier"
-                       & Barrier_ID'Img & " of major frame" & I'Img
-                       & " do not match barrier size:"
-                       & Barrier_Refs (Barrier_ID)'Img
-                       & " /=" & Barrier_Size'Img;
+                     Validation_Errors.Insert
+                       (Msg => "References to barrier"
+                        & Barrier_ID'Img & " of major frame" & I'Img
+                        & " do not match barrier size:"
+                        & Barrier_Refs (Barrier_ID)'Img
+                        & " /=" & Barrier_Size'Img);
                   end if;
                end;
             end loop;
@@ -365,10 +376,11 @@ is
 
                if Sync_Point_Count /= DOM.Core.Nodes.Length (List => Barriers)
                then
-                  raise Validation_Error with "Major frame" & I'Img & " has "
-                    & "invalid barrier count" & DOM.Core.Nodes.Length
-                    (List => Barriers)'Img & ", should be"
-                    & Sync_Point_Count'Img;
+                  Validation_Errors.Insert
+                    (Msg => "Major frame" & I'Img & " has "
+                     & "invalid barrier count" & DOM.Core.Nodes.Length
+                       (List => Barriers)'Img & ", should be"
+                     & Sync_Point_Count'Img);
                end if;
             end;
 
@@ -388,10 +400,11 @@ is
                         Name => "size"));
                begin
                   if Barrier_Size /= Sync_Points (Barrier_ID) then
-                     raise Validation_Error with "Barrier" & Barrier_ID'Img
-                       & " of " & "major frame" & I'Img & " has "
-                       & "invalid size" & Barrier_Size'Img & ", should be"
-                       & Sync_Points (Barrier_ID)'Img;
+                     Validation_Errors.Insert
+                       (Msg => "Barrier" & Barrier_ID'Img
+                        & " of " & "major frame" & I'Img & " has "
+                        & "invalid size" & Barrier_Size'Img & ", should be"
+                        & Sync_Points (Barrier_ID)'Img);
                   end if;
                end;
             end loop;
@@ -404,14 +417,20 @@ is
    procedure Subject_CPU_Affinity (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       --  Returns True if the minor frame CPU id matches.
       function Match_CPU_ID (Left, Right : DOM.Core.Node) return Boolean;
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          Frame_CPU_ID : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
@@ -426,8 +445,10 @@ is
            (Elem => Subject,
             Name => "cpu");
       begin
-         return "Subject '" & Subj_Name & "' scheduled on wrong CPU "
-           & Frame_CPU_ID & ", should be " & Subj_CPU_ID;
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Subject '" & Subj_Name & "' scheduled on wrong CPU "
+            & Frame_CPU_ID & ", should be " & Subj_CPU_ID);
+         Fatal := False;
       end Error_Msg;
 
       ----------------------------------------------------------------------
@@ -462,18 +483,26 @@ is
    procedure Subject_References (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
 
       ----------------------------------------------------------------------
 
-      function Error_Msg (Node : DOM.Core.Node) return String
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
       is
          Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "subject");
       begin
-         return "Subject '" & Subj_Name
-           & "' referenced in scheduling plan not found";
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Subject '" & Subj_Name
+            & "' referenced in scheduling plan not found");
+         Fatal := True;
       end Error_Msg;
    begin
       For_Each_Match

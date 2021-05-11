@@ -27,6 +27,8 @@ with Mulog;
 with Muxml.Utils;
 with Mutools.Constants;
 
+with Mucfgcheck.Validation_Errors;
+
 package body Mucfgcheck.MSR
 is
 
@@ -84,9 +86,10 @@ is
                or (S_Addr in MSR_Whitelist_3 and E_Addr in MSR_Whitelist_3)
                or (S_Addr in MSR_Whitelist_4 and E_Addr in MSR_Whitelist_4))
             then
-               raise Validation_Error with "MSR start " & S_Addr_Str
-                 & " and end " & E_Addr_Str & " not in MSR whitelist"
-                 & " (Subject '" & Subj_Name & "')";
+               Validation_Errors.Insert
+                 (Msg => "MSR start " & S_Addr_Str
+                  & " and end " & E_Addr_Str & " not in MSR whitelist"
+                  & " (Subject '" & Subj_Name & "')");
 
             end if;
          end;
@@ -128,9 +131,10 @@ is
               := Interfaces.Unsigned_32'Value (E_Addr_Str);
          begin
             if S_Addr > E_Addr then
-               raise Validation_Error with "MSR start " & S_Addr_Str
-                 & " larger than end " & E_Addr_Str & " (Subject '" & Name
-                 & "')";
+               Validation_Errors.Insert
+                 (Msg => "MSR start " & S_Addr_Str
+                  & " larger than end " & E_Addr_Str & " (Subject '" & Name
+                  & "')");
             end if;
          end;
       end loop;

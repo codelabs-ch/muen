@@ -295,7 +295,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-            when Validation_Errors.Validation_Error =>
+         when Validation_Errors.Validation_Error =>
             Assert (Condition => Validation_Errors.Contains
                     (Msg => "Physical memory 'kernel_text' referenced by logical "
                      & "memory 'text' not found"),

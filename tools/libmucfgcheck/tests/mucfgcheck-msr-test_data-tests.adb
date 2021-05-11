@@ -50,7 +50,7 @@ package body Mucfgcheck.MSR.Test_Data.Tests is
          Name  => "end",
          Value => "16#0170#");
 
-         Start_Smaller_End (XML_Data => Data);
+      Start_Smaller_End (XML_Data => Data);
       Assert (Condition => Validation_Errors.Contains
               (Msg => "MSR start 16#0174# larger than end 16#0170#"
                & " (Subject 'linux')"),

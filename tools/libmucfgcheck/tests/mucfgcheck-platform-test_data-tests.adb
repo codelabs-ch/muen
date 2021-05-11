@@ -107,7 +107,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-            when Validation_Errors.Validation_Error =>
+         when Validation_Errors.Validation_Error =>
             Assert (Condition => Validation_Errors.Contains
                     (Msg => "Physical device resource 'nonexistent' referenced by "
                      & "alias resource 'mem1' of device alias 'nic' not found"),
@@ -152,7 +152,7 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-            when Validation_Errors.Validation_Error =>
+         when Validation_Errors.Validation_Error =>
             Assert (Condition => Validation_Errors.Contains
                     (Msg => "Physical device 'nonexistent' referenced by device "
                      & "class 'network_devices' not found"),

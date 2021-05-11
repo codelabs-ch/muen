@@ -273,7 +273,7 @@ is
                         Validation_Errors.Insert
                           (Msg => "Physical memory region '"
                            & Phys_Name & "' referenced by device domain '"
-                           & Dom_Name  & "' and subject '" & Subj_Name
+                           & Dom_Name & "' and subject '" & Subj_Name
                            & "' not mapped at the same address: "
                            & Dom_Mem_Addr & " /= " & Mem_Ref_Addr);
                      end;

@@ -793,7 +793,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-            when Validation_Errors.Validation_Error =>
+         when Validation_Errors.Validation_Error =>
             Assert (Condition => Validation_Errors.Contains
                     (Msg => "Physical I/O port 'nonexistent' referenced by logical"
                      & " I/O port 'ports' of logical device 'vga' not found"),
@@ -959,7 +959,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-            when Validation_Errors.Validation_Error =>
+         when Validation_Errors.Validation_Error =>
             Assert (Condition => Validation_Errors.Contains
                     (Msg => "Physical device memory 'nonexistent' referenced by"
                      & " logical device memory 'mmio' of logical device "

@@ -185,7 +185,7 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       Subject_Event_References (XML_Data => Data);
       Assert (Condition => Validation_Errors.Contains
               (Msg => "Event 'nonexistent_dst' referenced by subject 'sm' does"
-                     & " not exist"),
+               & " not exist"),
               Message   => "Exception mismatch (target)");
 
       Muxml.Utils.Set_Attribute

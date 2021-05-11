@@ -607,7 +607,7 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-            when Validation_Errors.Validation_Error =>
+         when Validation_Errors.Validation_Error =>
             Assert (Condition => Validation_Errors.Contains
                     (Msg => "Kernel debug console reference to physical Ioport "
                      & "'nonexistent' not specified by platform kernel "

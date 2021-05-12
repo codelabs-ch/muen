@@ -1948,27 +1948,27 @@ is
 
             --  VPID not implemented.
 
-            if Is_Element_Value (Node  => Proc2_Ctrl,
-                                 XPath => "EnableVPID",
-                                 Value => "1")
-            then
-               Validation_Errors.Insert
-                 (Msg => "Secondary Processor-Based control "
-                  & "'Enable VPID' of subject '" & Subj_Name
-                  & "' invalid: must be 0");
-            end if;
+--            if Is_Element_Value (Node  => Proc2_Ctrl,
+--                                 XPath => "EnableVPID",
+--                                 Value => "1")
+--            then
+--               Validation_Errors.Insert
+--                 (Msg => "Secondary Processor-Based control "
+--                  & "'Enable VPID' of subject '" & Subj_Name
+--                  & "' invalid: must be 0");
+--            end if;
 
             --  Direct execution of WBINVD is not allowed.
 
-            if Is_Element_Value (Node  => Proc2_Ctrl,
-                                 XPath => "WBINVDExiting",
-                                 Value => "0")
-            then
-               Validation_Errors.Insert
-                 (Msg => "Secondary Processor-Based control "
-                  & "'WBINVD exiting' of subject '" & Subj_Name
-                  & "' invalid: must be 1");
-            end if;
+--            if Is_Element_Value (Node  => Proc2_Ctrl,
+--                                 XPath => "WBINVDExiting",
+--                                 Value => "0")
+--            then
+--               Validation_Errors.Insert
+--                 (Msg => "Secondary Processor-Based control "
+--                  & "'WBINVD exiting' of subject '" & Subj_Name
+--                  & "' invalid: must be 1");
+--            end if;
 
             --  APIC-register virtualization not implemented.
 
@@ -1996,15 +1996,15 @@ is
 
             --  Direct execution of INVPCID is not allowed.
 
-            if Is_Element_Value (Node  => Proc2_Ctrl,
-                                 XPath => "EnableINVPCID",
-                                 Value => "1")
-            then
-               Validation_Errors.Insert
-                 (Msg => "Secondary Processor-Based control "
-                  & "'Enable INVPCID' of subject '" & Subj_Name
-                  & "' invalid: must be 0");
-            end if;
+--            if Is_Element_Value (Node  => Proc2_Ctrl,
+--                                 XPath => "EnableINVPCID",
+--                                 Value => "1")
+--            then
+--               Validation_Errors.Insert
+--                 (Msg => "Secondary Processor-Based control "
+--                  & "'Enable INVPCID' of subject '" & Subj_Name
+--                  & "' invalid: must be 0");
+--            end if;
 
             --  VMFUNC is not supported.
 
@@ -2072,15 +2072,15 @@ is
 
             --  Direct execution of INVLPG is not supported.
 
-            if Is_Element_Value (Node  => Proc_Ctrl,
-                                 XPath => "INVLPGExiting",
-                                 Value => "0")
-            then
-               Validation_Errors.Insert
-                 (Msg => "Processor-Based control "
-                  & "'INVLPG exiting' of subject '" & Subj_Name
-                  & "' invalid: must be 1");
-            end if;
+--            if Is_Element_Value (Node  => Proc_Ctrl,
+--                                 XPath => "INVLPGExiting",
+--                                 Value => "0")
+--            then
+--               Validation_Errors.Insert
+--                 (Msg => "Processor-Based control "
+--                  & "'INVLPG exiting' of subject '" & Subj_Name
+--                  & "' invalid: must be 1");
+--            end if;
 
             --  Direct execution of MWAIT is not supported.
 

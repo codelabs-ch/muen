@@ -92,7 +92,7 @@ include ../cspecs.mk
 $(GEN_DIR)/$(COMPONENT).xml: $(INITRAMFS) $(MODS_INITRAMFS) | $(GEN_DIR)
 $(GEN_DIR)/$(COMPONENT).xml: spec/$(COMPONENT).xml $(OBJ_DIR)/bzImage $(POLICY_SRC)
 	@$(E) linux "Generate XML spec" \
-		"$(GENCSPEC) $(OBJ_DIR)/bzImage $< --out_spec $@ --initramfs $(MODS_INITRAMFS) --src_policy $(POLICY_SRC)" $(LOG)
+		"$(GENCSPEC) $(OBJ_DIR)/bzImage $< --out_spec $@ --src_policy $(POLICY_SRC)" $(LOG)
 
 $(POLICY_OBJ_DIR)/linux: $(POLICY_OBJ_DIR)/bzImage $(POLICY_OBJ_DIR)/$(INITRAMFS_BASE)
 $(POLICY_OBJ_DIR)/linux: $(POLICY_OBJ_DIR)/$(MODS_INITRAMFS_BASE)

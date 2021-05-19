@@ -36,8 +36,7 @@ is
    --  Returns the current command for subject specified by ID.
    function Get_Command
      (ID : Managed_Subjects_Range)
-      return Mucontrol.Command.Command_Type
-     with Volatile_Function;
+      return Mucontrol.Command.Command_Type;
 
    --  Sets the command of subject specified by ID to the given value.
    procedure Set_Command
@@ -47,8 +46,7 @@ is
    --  Returns the current epoch for subject specified by ID.
    function Get_Epoch
      (ID : Managed_Subjects_Range)
-      return Interfaces.Unsigned_64
-     with Volatile_Function;
+      return Interfaces.Unsigned_64;
 
    --  Sets the epoch of subject specified by ID to the given value.
    procedure Set_Epoch
@@ -58,8 +56,7 @@ is
    --  Returns the current watchdog interval for subject specified by ID.
    function Get_Watchdog_Interval
      (ID : Managed_Subjects_Range)
-      return Interfaces.Unsigned_64
-     with Volatile_Function;
+      return Interfaces.Unsigned_64;
 
    --  Sets the watchdog interval of subject specified by ID to the given
    --  value.

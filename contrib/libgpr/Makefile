@@ -1,7 +1,6 @@
 PKG = libgpr
 SRC = https://github.com/AdaCore/gprbuild.git
-# Current head of branch 20.2
-REV = de1c2905801bbb086ea572b1dc0b2270bf3f388a
+REV = a902fba777393e36f718f55e179f4c2322baee01
 
 BUILD_OPTS = prefix=$(BUILDDIR) libgpr.build.static
 

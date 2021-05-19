@@ -13,7 +13,7 @@
   <memory>
    <memory logical="dma1" physical="storage_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
    <memory logical="dma2" physical="storage_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
-   <if variable="muenblock_enabled" value="true">
+   <if variable="ahci_drv_enabled" value="true">
     <memory logical="dma" physical="ahci_dma" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
     <memory logical="blockdev_shm1" physical="blockdev_shm1" virtualAddress="16#a100_0000#" writable="true" executable="false"/>
     <memory logical="blockdev_shm2" physical="blockdev_shm2" virtualAddress="16#a200_0000#" writable="true" executable="false"/>

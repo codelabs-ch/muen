@@ -92,7 +92,7 @@ begin
    Log.Put_Line (Item => "Current Status: " & SK.Strings.Img
                  (Item => SK.Word64 (Mucontrol.Status.Instance.Get)));
    Log.Put_Line (Item => "Current Epoch : " & SK.Strings.Img
-                 (Item => SK.Word64 (Mucontrol.Command.Instance.Get_Epoch)));
+                 (Item => Cur_Epoch));
 
    --  Enable interrupts.
 

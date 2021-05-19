@@ -47,20 +47,17 @@ is
    --  Get current subject state.
    function Get return State_Type
    with
-      Global => (Input => State),
-      Volatile_Function;
+      Global => (Input => State);
 
    --  Get current diagnostics value.
    function Get_Diagnostics return Diagnostics_Type
    with
-      Global => (Input => State),
-      Volatile_Function;
+      Global => (Input => State);
 
    --  Get current watchdog value.
    function Get_Watchdog return Interfaces.Unsigned_64
    with
-      Global => (Input => State),
-      Volatile_Function;
+      Global => (Input => State);
 
    --  Set subject state to given value.
    procedure Set (New_State : State_Type)

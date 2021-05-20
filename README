@@ -74,6 +74,7 @@ Components
 ~~~~~~~~~~
 The Muen platform includes re-usable components which implement common services:
 
+* AHCI (SATA) driver subject written in SPARK 2014
 * Device Manager (DM) written in SPARK 2014
 * Subject Monitor (SM) written in SPARK 2014
 * Subject Loader (SL) written in SPARK 2014

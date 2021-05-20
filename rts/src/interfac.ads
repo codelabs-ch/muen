@@ -58,6 +58,9 @@ package Interfaces is
    type Unsigned_16 is mod 2 ** 16;
    for Unsigned_16'Size use 16;
 
+   type Unsigned_24 is mod 2 ** 24;
+   for Unsigned_24'Size use 24;
+
    type Unsigned_32 is mod 2 ** 32;
    for Unsigned_32'Size use 32;
 

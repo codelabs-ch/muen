@@ -1,4 +1,4 @@
 #!/bin/bash
 
 modprobe muenblock-client \
-   connections=1:blockdev_request1:blockdev_response1:muenblock:9570208dca77db19:9851be3282fef0dc
+   connections=1:blockdev_xhci_request1:blockdev_xhci_response1:blockdev_xhci_shm1:9570208dca77db19:9851be3282fef0dc

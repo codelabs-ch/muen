@@ -12,6 +12,7 @@ COMPONENTS_SPARK := \
 	libmutime \
 	libmusinfo \
 	libxhcidbg \
+	ahci_drv \
 	controller \
 	dbgserver \
 	dm \
@@ -28,9 +29,9 @@ COMPONENTS_SPARK := \
 
 # components to proof
 COMPONENTS_PROOF := \
+	ahci_drv \
 	controller \
 	dm \
-	example \
 	sm \
 	time
 

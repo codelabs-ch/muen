@@ -6,7 +6,7 @@
   <boolean name="dbgserver_sink_pcspkr" value="false"/>
   <boolean name="dbgserver_sink_shmem" value="false"/>
   <boolean name="linux_debug" value="false"/>
-  <boolean name="muenblock_enabled" value="true"/>
+  <boolean name="ahci_drv_enabled" value="true"/>
   <boolean name="pciconf_emulation_enabled" value="true"/>
   <boolean name="pciconf_emulation_xhci_enabled" value="false"/>
   <string name="pciconf_emulation_nic_devid" value="16#01#"/>
@@ -19,8 +19,10 @@
  <memory>
   <include href="common_memory.xml"/>
   <include href="memory_xhci_dma.xml"/>
-  <if variable="muenblock_enabled" value="true">
-   <memory name="muenblock" size="16#0100_0000#" caching="WB" type="subject_device"/>
+  <include href="memory_ahci.xml"/>
+  <if variable="ahci_drv_enabled" value="true">
+   <memory name="blockdev_shm1" size="16#0100_0000#" caching="WB" type="subject_device"/>
+   <memory name="blockdev_shm2" size="16#0100_0000#" caching="WB" type="subject_device"/>
   </if>
  </memory>
 
@@ -38,12 +40,15 @@
  <channels>
   <include href="common_channels.xml"/>
 
+  <channel name="debuglog_ahci_drv" size="$logchannel_size"/>
   <channel name="debuglog_example" size="$logchannel_size"/>
   <channel name="example_request" size="16#1000#" hasEvent="switch"/>
   <channel name="example_response" size="16#1000#" hasEvent="switch"/>
-  <if variable="muenblock_enabled" value="true">
+  <if variable="ahci_drv_enabled" value="true">
    <channel name="blockdev_request1"  size="16#0000_8000#" hasEvent="asap"/>
    <channel name="blockdev_response1" size="16#0000_4000#" hasEvent="asap"/>
+   <channel name="blockdev_request2"  size="16#0000_8000#" hasEvent="asap"/>
+   <channel name="blockdev_response2" size="16#0000_4000#" hasEvent="asap"/>
   </if>
  </channels>
 
@@ -56,6 +61,7 @@
   <include href="subject_ps2.xml"/>
   <include href="subject_example.xml"/>
   <include href="subject_controller.xml"/>
+  <include href="subject_ahci.xml"/>
 
   <if variable="pciconf_emulation_enabled" value="true">
    <include href="subject_nic_dm.xml"/>
@@ -80,6 +86,7 @@
     <map logical="log_channel5" physical="debuglog_subject5"/>
     <map logical="log_channel_example" physical="debuglog_example"/>
     <map logical="log_channel_6" physical="debuglog_controller"/>
+    <map logical="log_ahci_drv" physical="debuglog_ahci_drv"/>
     <if variable="pciconf_emulation_enabled" value="true">
      <map logical="log_channel7" physical="debuglog_subject6"/>
      <map logical="log_channel8" physical="debuglog_subject7"/>
@@ -98,9 +105,6 @@
    </if>
    <memory>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
-    <if variable="muenblock_enabled" value="true">
-     <memory logical="muenblock" physical="muenblock" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
-    </if>
    </memory>
    <devices>
     <device logical="eth0" physical="nic_1">
@@ -148,11 +152,6 @@
     <reader logical="testchannel_4" physical="testchannel_4" virtualAddress="16#000e_00f0_2000#"/>
     <writer logical="testchannel_3" physical="testchannel_3" virtualAddress="16#000e_0100_2000#"/>
 
-    <if variable="muenblock_enabled" value="true">
-     <writer logical="blockdev_request1" physical="blockdev_request1" virtualAddress="16#000e_01f0_0000#" event="3"/>
-     <reader logical="blockdev_response1" physical="blockdev_response1" virtualAddress="16#000e_0200_0000#" vector="101"/>
-    </if>
-
     <if variable="dbgserver_sink_shmem" value="true">
      <reader logical="debug_shm_sink_memory" physical="debug_shm_sink_memory" virtualAddress="16#000e_0200_0000#"/>
     </if>
@@ -170,14 +169,11 @@
    </if>
    <memory>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
-    <if variable="muenblock_enabled" value="true">
-     <memory logical="muenblock" physical="muenblock" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
+    <if variable="ahci_drv_enabled" value="true">
+     <memory logical="muenblock" physical="blockdev_shm1" virtualAddress="16#a100_0000#" writable="true" executable="false"/>
     </if>
    </memory>
    <devices>
-    <device logical="storage_controller" physical="storage_controller">
-     <pci bus="16#00#" device="16#1f#" function="0"/>
-    </device>
     <if variable="dbgserver_sink_xhcidbg" value="false">
      <device logical="xhci" physical="usb_controller_1"/>
     </if>
@@ -217,9 +213,9 @@
     <reader logical="testchannel_3" physical="testchannel_3" virtualAddress="16#000e_00f0_2000#"/>
     <writer logical="testchannel_4" physical="testchannel_4" virtualAddress="16#000e_0100_2000#"/>
 
-    <if variable="muenblock_enabled" value="true">
-     <reader logical="blockdev_request1" physical="blockdev_request1" virtualAddress="16#000e_01f0_0000#" vector="50"/>
-     <writer logical="blockdev_response1" physical="blockdev_response1" virtualAddress="16#000e_0200_0000#" event="3"/>
+    <if variable="ahci_drv_enabled" value="true">
+     <writer logical="blockdev_request1" physical="blockdev_request1" virtualAddress="16#000e_01f0_0000#" event="3"/>
+     <reader logical="blockdev_response1" physical="blockdev_response1" virtualAddress="16#000e_0200_0000#" vector="101"/>
     </if>
    </channels>
    <component ref="linux">

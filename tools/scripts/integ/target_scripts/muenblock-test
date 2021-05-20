@@ -47,6 +47,14 @@ perform_tests() {
 	sync
 }
 
+test_title() {
+	echo
+	echo "****** $1"
+	echo
+}
+
+test_title "lnx1 -> lnx2 XHCI"
+
 execute "$SSH muenblock-server"
 
 execute "mkdir -p /mnt/1"
@@ -64,7 +72,7 @@ execute "fsck -n /dev/muendiska"
 execute "fsck -n /dev/muendiskb"
 execute "rmmod muenblock_client"
 
-# Same, without restarting the server
+test_title "lnx1 -> lnx2 XHCI [no server restart]"
 
 execute "muenblock-client"
 execute "sleep 2"
@@ -80,7 +88,7 @@ execute "rmmod muenblock_client"
 
 execute "$SSH rmmod muenblock_server"
 
-# Complete blockdev exported
+test_title "lnx1 -> lnx2 XHCI [complete blockdev]"
 
 execute "sleep 2"
 execute "$SSH muenblock-server-all"
@@ -93,7 +101,7 @@ execute "mount /dev/muendiska2 /mnt/2"
 perform_tests
 execute "umount /mnt/2"
 
-# ext* on lvm on crypt
+test_title "lnx1 -> lnx2 XHCI [ext/LVM/crypt]"
 
 execute "muenblock-lvops"
 execute "umount /mnt/1"
@@ -102,5 +110,24 @@ execute "fsck -n /dev/muendiska2"
 
 execute "rmmod muenblock_client"
 execute "$SSH rmmod muenblock_server"
+
+test_title "lnx1 -> ahci_drv AHCI"
+
+execute "muenblock-client-native"
+execute "sleep 2"
+execute "mount /dev/muendiska1 /mnt/1"
+execute "mount /dev/muendiska2 /mnt/2"
+
+perform_tests
+execute "umount /mnt/2"
+
+test_title "lnx1 -> ahci_drv AHCI [ext/LVM/crypt]"
+
+execute "muenblock-lvops"
+execute "umount /mnt/1"
+execute "fsck -n /dev/muendiska1"
+execute "fsck -n /dev/muendiska2"
+
+execute "rmmod muenblock_client"
 
 echo "MUENBLOCKINTEGPASSED"

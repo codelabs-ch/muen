@@ -19,6 +19,7 @@
 with "../libmudebuglog/libmudebuglog";
 with "../libmusinfo/libmusinfo";
 with "../libmucontrol/libmucontrol";
+with "generated/example_config";
 
 project Example extends "../component_spark" is
 
@@ -26,6 +27,13 @@ project Example extends "../component_spark" is
    Extra_Dirs := Extra_Dirs
      & "../../common/strings/impl"
      & "../../common/mutimedevents";
+
+   case example_config.blk_write_test is
+      when "true"  =>
+         Extra_Dirs := Extra_Dirs & "src/blkwrite/enabled";
+      when "false" =>
+         Extra_Dirs := Extra_Dirs & "src/blkwrite/disabled";
+   end case;
 
    for Languages use ("Ada", "Asm");
    for Source_Dirs use ("generated", "src") & Extra_Dirs;

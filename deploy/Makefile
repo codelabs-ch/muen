@@ -19,8 +19,9 @@ HTTP_STATE = $(cat $(HTTP_LOG))
 
 all: deploy
 
-deploy: .server
-deploy: $(HTTP_DIR)/boot.cfg $(HTTP_DIR)/$(IMG_NAME) $(HTTP_DIR)/memdisk
+setup: $(HTTP_DIR)/boot.cfg $(HTTP_DIR)/$(IMG_NAME) $(HTTP_DIR)/memdisk
+
+deploy: .server setup
 deploy: $(TARGET_START)
 
 shutdown: $(TARGET_SHUTDOWN)

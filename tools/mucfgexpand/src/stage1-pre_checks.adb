@@ -30,7 +30,6 @@ is
    is
    begin
       Check_Procs.Clear;
-      Mucfgcheck.Validation_Errors.Clear;
    end Clear;
 
    -------------------------------------------------------------------------

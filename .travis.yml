@@ -35,6 +35,9 @@ install:
   - sudo chown -R 1000:1000 ${CCACHE_HOST}
   - df -alh
   - ccache -z
+  - DOCKER_LOGIN() {
+    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin;
+    }
   - DOCKER_PULL() { docker pull
     ${DOCKER_IMG}:${DISTRO_NAME}-${DISTRO_VERSION}_muen-${DOCKER_CACHE_BRANCH} || true;
     }
@@ -49,7 +52,6 @@ install:
     }
   - DOCKER_PUSH() {
     if [ "$TRAVIS_BRANCH" = "master" ] || [ "$TRAVIS_BRANCH" = "devel" ]; then
-    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin;
     docker push ${DOCKER_IMG}:${DISTRO_NAME}-${DISTRO_VERSION}_muen-${TRAVIS_BRANCH};
     if [ "$TRAVIS_BRANCH" = "devel" ] && [ "$DISTRO_NAME" = "debian" ]; then
     docker push ${DOCKER_IMG}:latest;
@@ -74,6 +76,7 @@ jobs:
         - sudo chown -R 1000:1000 ${TRAVIS_BUILD_DIR}
         - export DISTRO_NAME=debian
         - export DISTRO_VERSION=buster
+        - DOCKER_LOGIN
         - DOCKER_PULL
         - DOCKER_BUILD
         - DOCKER_PUSH
@@ -84,11 +87,13 @@ jobs:
         - sudo chown -R 1000:1000 ${TRAVIS_BUILD_DIR}
         - export DISTRO_NAME=ubuntu
         - export DISTRO_VERSION=bionic
+        - DOCKER_LOGIN
         - DOCKER_PULL
         - DOCKER_BUILD
         - DOCKER_PUSH
         - DOCKER_RUN
     - script:
+        - DOCKER_LOGIN
         - docker pull codelabsch/muen-mirageos || true
         - docker build --cache-from codelabsch/muen-mirageos
           --tag codelabsch/muen-mirageos:latest

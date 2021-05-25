@@ -377,8 +377,7 @@ is
          end if;
          Request.Request_Tag    := 16#1000# + Requests_Cnt;
          Request.Buffer_Offset  := Buffer_Offset + Offset;
-         Request.Device_Offset  :=
-            Start_Sector + Offset;
+         Request.Device_Offset  := Start_Sector + Offset;
          Request.Request_Length := Now * Device_Info (Device_Id).Sector_Size;
 
          Send_Request (Request);

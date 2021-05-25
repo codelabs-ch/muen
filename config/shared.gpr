@@ -34,13 +34,13 @@ abstract project Shared is
       "-ffunction-sections");
 
    Spark_Compiler_Switches := Common_Compiler_Switches
-     & ("-gnatyyBdgIOSux-s",
+     & ("-gnatyyBdgIOSux-s-c-m",
         "-mindirect-branch=thunk-extern",
         "-gnatp");
 
    Common_Ada_Compiler_Switches := Common_Compiler_Switches
      & ("-gnat12",
-        "-gnatyyBdgIoSux",
+        "-gnatyyBdgIoSux-c-m",
         "-gnatVa",
         "-gnatf",
         "-gnato");

@@ -15,10 +15,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with System;
+
+with Musinfo.Instance;
+
 with Muenblock_Client;
 with Example_Component.Channels;
-
-with System;
 
 package Muenblock_Example
 is
@@ -31,6 +33,8 @@ is
          Example_Component.Channels.Blockdev_Request2_Event,
        Devices_Cnt_Max      => 1);
 
-   procedure Show;
+   procedure Show
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
 end Muenblock_Example;

@@ -66,6 +66,8 @@ is
    -------------------------------------------------------------------------
 
    procedure SMART_Dump_Data
+   with
+      Pre => Musinfo.Instance.Is_Valid
    is
       use type Interfaces.Unsigned_8;
       Attribute : SMART_Attribute_Type;
@@ -94,13 +96,14 @@ is
    procedure Show
    is
       use type Interfaces.Unsigned_64;
-      Res : Interfaces.Unsigned_64 := 0;
+
+      Res : Interfaces.Unsigned_64;
 
       Sector_Cnt  : Interfaces.Unsigned_64;
       Sector_Size : Interfaces.Unsigned_64;
       Max_Sectors : Interfaces.Unsigned_64;
       Valid       : Boolean;
-      Wrt_Success : Boolean := True;
+      Wrt_Success : Boolean;
    begin
       Log.Put_Line ("Muenblock example start");
       Muenblock_Client_Instance.Init (Timeout_MS => 5000);
@@ -141,6 +144,11 @@ is
 
       if Res /= 0 then
          SMART_Dump_Data;
+      end if;
+
+      if Sector_Size = 0 then
+         Log.Put_Line ("Sector size is 0");
+         return;
       end if;
 
       Muenblock_Example.Write_Ops.Run

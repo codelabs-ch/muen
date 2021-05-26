@@ -14,9 +14,9 @@
 --  You should have received a copy of the GNU General Public License
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
+with System;
 
 with Interfaces;
-with System;
 
 with Muenblock;
 
@@ -34,8 +34,8 @@ package Muenblock_Client
 is
    use type Interfaces.Unsigned_16;
 
-   type Device_Range_Type is new Interfaces.Unsigned_16
-      range 0 .. Devices_Cnt_Max - 1;
+   type Device_Range_Type is new Interfaces.Unsigned_16 range
+     0 .. Devices_Cnt_Max - 1;
 
    -------------------------------------------------------------------
 

@@ -15,18 +15,18 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Debuglog.Client;
-with Musinfo.Instance;
+with Interfaces;
+
 with SK.Strings;
 with SK.Hypercall;
 with SK.CPU;
 
+with Debuglog.Client;
+with Musinfo.Instance;
 with Muenblock.Request_Channel;
 with Muenblock.Response_Channel;
 with Muenblock.Request_Channel.Writer_Instance;
 with Muenblock.Response_Channel.Reader;
-
-with Interfaces;
 
 use type Interfaces.Unsigned_32;
 use type Interfaces.Unsigned_64;
@@ -36,6 +36,9 @@ is
    package MB       renames Muenblock;
    package Req_Chn  renames MB.Request_Channel;
    package Resp_Chn renames MB.Response_Channel;
+
+   type Device_Count_Type is new Interfaces.Unsigned_16 range
+     0 .. Devices_Cnt_Max;
 
    Request_Channel : Req_Chn.Channel_Type
    with
@@ -72,13 +75,18 @@ is
 
    --  Number of attached devices on the channel handled by this instance of
    --  MB client
-   Devices_Cnt : Device_Range_Type := Device_Range_Type'First;
+   Devices_Cnt : Device_Count_Type := Device_Count_Type'First;
+
+   --  Receive data from AHCI driver.
+   procedure Receive
+     (Response : out MB.Block_Response_Type;
+      Error    : out Boolean);
 
    -------------------------------------------------------------------------
 
    procedure Receive
-      (Response : out MB.Block_Response_Type;
-       Error    : out Boolean)
+     (Response : out MB.Block_Response_Type;
+      Error    : out Boolean)
    with
       SPARK_Mode => Off
    is
@@ -150,12 +158,12 @@ is
    -------------------------------------------------------------------------
 
    --  Returns the number of devices on this channel pair
-   procedure Get_Devices_Cnt (Cnt : out Device_Range_Type)
+   procedure Get_Devices_Cnt (Cnt : out Device_Count_Type)
    is
       use type MB.Request_Kind_Type;
 
       Request  : MB.Block_Request_Type  := MB.Null_Request;
-      Response : MB.Block_Response_Type := MB.Null_Response;
+      Response : MB.Block_Response_Type;
       Error    : Boolean;
    begin
       Request.Request_Kind := MB.Max_Devices;
@@ -169,13 +177,13 @@ is
          and (Response.Request_Tag = 1)
       then
          if Response.Status_Code <=
-               Interfaces.Unsigned_64 (Device_Range_Type'Last) + 1
+           Interfaces.Unsigned_64 (Device_Count_Type'Last)
          then
-            Cnt := Device_Range_Type (Response.Status_Code);
+            Cnt := Device_Count_Type (Response.Status_Code);
          else
             Debuglog.Client.Put_Line
-               (Item => "More devices than we can handle!");
-            Cnt := Device_Range_Type'Last;
+              (Item => "More devices than we can handle!");
+            Cnt := Device_Count_Type'Last;
          end if;
       end if;
    end Get_Devices_Cnt;
@@ -191,7 +199,7 @@ is
        Valid       : out Boolean)
    is
       Request  : MB.Block_Request_Type  := MB.Null_Request;
-      Response : MB.Block_Response_Type := MB.Null_Response;
+      Response : MB.Block_Response_Type;
       Error    : Boolean;
    begin
       Sector_Cnt  := Interfaces.Unsigned_64'Last;
@@ -199,7 +207,9 @@ is
       Max_Sectors := Interfaces.Unsigned_64'Last;
       Valid       := False;
 
-      if (Devices_Cnt = 0) or (Device_Id > (Devices_Cnt - 1)) then
+      if (Devices_Cnt = 0)
+        or (Device_Count_Type (Device_Id) > (Devices_Cnt - 1))
+      then
          return;
       end if;
 
@@ -258,7 +268,7 @@ is
       use type MB.Request_Kind_Type;
 
       Request  : MB.Block_Request_Type  := MB.Null_Request;
-      Response : MB.Block_Response_Type := MB.Null_Response;
+      Response : MB.Block_Response_Type;
       Tag      : constant Interfaces.Unsigned_32 := 16#534d4152#;
       Error    : Boolean;
    begin
@@ -286,7 +296,6 @@ is
    with
       SPARK_Mode => Off
    is
-      Valid  : Boolean;
       Active : Boolean;
    begin
       Req_Chn.Writer_Instance.Initialize
@@ -304,6 +313,7 @@ is
             Channel => Response_Channel,
             Result => Active);
          exit Wait_Active when Active;
+         pragma Loop_Invariant (not Active);
       end loop Wait_Active;
 
       declare
@@ -333,13 +343,17 @@ is
       end if;
 
       --  fill device Info
-      for I in Device_Range_Type loop
-         Get_Device_Info (Device_Id   => I,
-                          Sector_Cnt  => Device_Info (I).Sector_Cnt,
-                          Sector_Size => Device_Info (I).Sector_Size,
-                          Max_Sectors => Device_Info (I).Max_Sectors,
-                          Valid       => Valid);
-      end loop;
+      declare
+         Unused_Valid : Boolean;
+      begin
+         for I in Device_Range_Type loop
+            Get_Device_Info (Device_Id   => I,
+                             Sector_Cnt  => Device_Info (I).Sector_Cnt,
+                             Sector_Size => Device_Info (I).Sector_Size,
+                             Max_Sectors => Device_Info (I).Max_Sectors,
+                             Valid       => Unused_Valid);
+         end loop;
+      end;
    end Init;
 
    -------------------------------------------------------------------------
@@ -358,11 +372,13 @@ is
       Offset       : Interfaces.Unsigned_64 := 0;
       Request      : MB.Block_Request_Type;
       Requests_Cnt : Interfaces.Unsigned_32 := 0;
-      Response     : MB.Block_Response_Type := MB.Null_Response;
+      Response     : MB.Block_Response_Type;
    begin
       Result := 0;
 
-      if (Devices_Cnt = 0) or (Device_Id > (Devices_Cnt - 1)) then
+      if (Devices_Cnt = 0)
+        or (Device_Count_Type (Device_Id) > (Devices_Cnt - 1))
+      then
          return;
       end if;
 
@@ -457,13 +473,18 @@ is
    begin
       Result := 1;
 
-      if (Devices_Cnt = 0) or (Device_Id > (Devices_Cnt - 1)) then
+      if (Devices_Cnt = 0)
+        or (Device_Count_Type (Device_Id) > (Devices_Cnt - 1))
+      then
          return;
       end if;
 
-      Request.Request_Kind := MB.Sync;
-      Request.Device_Id    := Interfaces.Unsigned_16 (Device_Id);
-      Request.Request_Tag  := 21;
+      Request := (Request_Kind   => MB.Sync,
+                  Device_Id      => Interfaces.Unsigned_16 (Device_Id),
+                  Request_Tag    => 21,
+                  Request_Length => 0,
+                  Device_Offset  => 0,
+                  Buffer_Offset  => 0);
 
       Send_Request (Request);
 

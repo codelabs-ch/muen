@@ -24,7 +24,7 @@ is
        Async_Writers,
        Address => System'To_Address
          (Example_Component.Memory.Blockdev_Shm2_Address
-          + (Test_Data_Type'Size / 8));
+          + (Interfaces.Unsigned_64'Mod (Test_Data_Type'Size) / 8));
 
    -------------------------------------------------------------------------
 
@@ -32,15 +32,15 @@ is
      (Sector_Size :     Interfaces.Unsigned_64;
       Success     : out Boolean)
    is
-      use type Interfaces.Unsigned_64;
-
       Start_Time           : SK.Word64;
       End_Time             : SK.Word64;
-      Res                  : Interfaces.Unsigned_64 := 0;
+      Res                  : Interfaces.Unsigned_64;
       Test_Data_Sector_Cnt : Interfaces.Unsigned_64;
    begin
       Success := False;
-      Test_Data_Sector_Cnt := Test_Data_Type'Size / 8 / Sector_Size;
+
+      Test_Data_Sector_Cnt := Interfaces.Unsigned_64'Mod
+        (Test_Data_Type'Size) / 8 / Sector_Size;
 
       Muenblock_Client_Instance.Discard
         (Device_Id    => 0,
@@ -68,11 +68,11 @@ is
 
       if Res /= Test_Data_Sector_Cnt then
          Log.Put_Line ("Write failed! "
-                       & SK.Strings.Img (Interfaces.Unsigned_32 (Res)));
+                       & SK.Strings.Img (Interfaces.Unsigned_32'Mod (Res)));
          return;
       else
          Log.Put_Line ("Wrote "
-                       & SK.Strings.Img (Interfaces.Unsigned_32
+                       & SK.Strings.Img (Interfaces.Unsigned_32'Mod
                          (Test_Data_Type'Size / 8))
                        & " bytes in "
                        & SK.Strings.Img ((End_Time - Start_Time))
@@ -92,14 +92,14 @@ is
       Muenblock_Client_Instance.Read
         (Device_Id     => 0,
          Start_Sector  => 0,
-         Buffer_Offset => Test_Data_Type'Size / 8,
+         Buffer_Offset => Interfaces.Unsigned_64'Mod (Test_Data_Type'Size) / 8,
          Sector_Cnt    => Test_Data_Sector_Cnt,
          Result        => Res);
 
       End_Time := Musinfo.Instance.TSC_Schedule_Start;
 
       Log.Put_Line ("Read "
-                    & SK.Strings.Img (Interfaces.Unsigned_32
+                    & SK.Strings.Img (Interfaces.Unsigned_32'Mod
                       (Test_Data_Type'Size / 8))
                     & " bytes in "
                     & SK.Strings.Img ((End_Time - Start_Time))
@@ -107,7 +107,7 @@ is
 
       if Res /= Test_Data_Sector_Cnt then
          Log.Put_Line ("Read failed! "
-                       & SK.Strings.Img (Interfaces.Unsigned_32 (Res)));
+                       & SK.Strings.Img (Interfaces.Unsigned_32'Mod (Res)));
          return;
       end if;
 

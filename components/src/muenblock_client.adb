@@ -74,7 +74,7 @@ is
    --  MB client
    Devices_Cnt : Device_Range_Type := Device_Range_Type'First;
 
-   --------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Receive
       (Response : out MB.Block_Response_Type;
@@ -135,7 +135,7 @@ is
       end loop Wait_Data;
    end Receive;
 
-   --------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Send_Request (Request : MB.Block_Request_Type)
    is
@@ -147,7 +147,7 @@ is
       SK.Hypercall.Trigger_Event (Number => Event_Number);
    end Send_Request;
 
-   --------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    --  Returns the number of devices on this channel pair
    procedure Get_Devices_Cnt (Cnt : out Device_Range_Type)
@@ -180,7 +180,7 @@ is
       end if;
    end Get_Devices_Cnt;
 
-   --------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    --  Get Number of Sectors and Sector Size of a given Device
    procedure Get_Device_Info
@@ -248,7 +248,7 @@ is
       Device_Info (Device_Id).Valid := True;
    end Get_Device_Info;
 
-   --------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Get_SMART
       (Device_Id     :     Device_Range_Type;
@@ -280,7 +280,7 @@ is
       end if;
    end Get_SMART;
 
-   --------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Init (Timeout_MS : Integer := Integer'Last)
    with
@@ -342,7 +342,7 @@ is
       end loop;
    end Init;
 
-   --------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure RW
       (Device_Id     :     Device_Range_Type;
@@ -407,7 +407,7 @@ is
       Result := Sector_Cnt;
    end RW;
 
-   --------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Discard
       (Device_Id     :     Device_Range_Type;
@@ -425,7 +425,7 @@ is
       Result := Result - Sector_Cnt;
    end Discard;
 
-   --------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Read
       (Device_Id     :     Device_Range_Type;
@@ -443,7 +443,7 @@ is
           Result        => Result);
    end Read;
 
-   --------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Sync
       (Device_Id :     Device_Range_Type;
@@ -477,7 +477,7 @@ is
 
    end Sync;
 
-   --------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Write
       (Device_Id     :     Device_Range_Type;

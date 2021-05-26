@@ -232,7 +232,7 @@ is
          Padding => 0,
          Address => 0,
          Size    => 0,
-         Hash    => (others => 0));
+         Hash    => No_Hash);
 
    type Byte_Array is array (Positive range <>) of Interfaces.Unsigned_8;
 

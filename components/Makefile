@@ -32,6 +32,7 @@ COMPONENTS_PROOF := \
 	ahci_drv \
 	controller \
 	dm \
+	example \
 	sm \
 	time
 

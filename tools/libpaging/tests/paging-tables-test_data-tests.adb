@@ -41,7 +41,16 @@ package body Paging.Tables.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       Table : Page_Table_Type;
-      Dummy : Entries.Table_Entry_Type;
+      Dummy : Entries.Table_Entry_Type
+        := Entries.Create
+          (Dst_Index   => 24,
+           Dst_Address => 16#1000#,
+           Readable    => True,
+           Writable    => False,
+           Executable  => True,
+           Maps_Page   => True,
+           Global      => False,
+           Caching     => UC);
    begin
       Assert (Condition => Table.Length = 0,
               Message   => "Table not empty");

@@ -44,6 +44,15 @@ RUN git clone https://github.com/AdaCore/gnat_community_install_script.git /tmp/
 	&& sh /tmp/gnat_script/install_package.sh /tmp/gnat_installer.bin /opt/gnat \
 	&& rm -rf /tmp/gnat*
 
+ENV PATH /opt/gnat/bin:$PATH
+
+# Install gnattest tool
+RUN git clone https://github.com/codelabs-ch/libadalang-tools.git /tmp/libadalang-tools \
+	&& cd /tmp/libadalang-tools \
+	&& make bin \
+	&& cp bin/gnattest /usr/local/bin \
+	&& rm -rf /tmp/libadalang-tools
+
 # amtc tool
 RUN git clone https://github.com/schnoddelbotz/amtc.git /tmp/amtc \
 	&& cd /tmp/amtc \

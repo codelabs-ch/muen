@@ -56,7 +56,15 @@ exception
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : others =>
       Mulog.Log (Level => Mulog.Error,
-                 Msg   => "Unexpected exception");
+                 Msg   => "Exception detected");
+      if not Mucfgcheck.Validation_Errors.Is_Empty then
+         Mulog.Log (Level => Mulog.Error,
+                    Msg   => "Semantic errors found");
+         Mulog.Log (Level => Mulog.Error,
+                    Msg   => Mucfgcheck.Validation_Errors.Get_Error_Message);
+      end if;
+      Mulog.Log (Level => Mulog.Error,
+                 Msg   => "Exception information:");
       Mulog.Log (Level => Mulog.Error,
                  Msg   => Ada.Exceptions.Exception_Information (X => E));
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);

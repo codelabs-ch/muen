@@ -1,31 +1,31 @@
 <tau0>
  <commands>
-  <createLegacyDevice device="15"/>
-  <addIOPortRangeDevice device="15" from="16#03c0#" to="16#03df#"/>
-  <addMemoryDevice device="15" caching="WC" address="16#000a_0000#" size="32"/>
-  <activateDevice device="15"/>
-  <createLegacyDevice device="16"/>
-  <addIOPortRangeDevice device="16" from="16#0060#" to="16#0060#"/>
-  <addIOPortRangeDevice device="16" from="16#0064#" to="16#0064#"/>
-  <addIRQDevice device="16" irq="1"/>
-  <addIRQDevice device="16" irq="12"/>
-  <activateDevice device="16"/>
-  <createLegacyDevice device="17"/>
-  <addIOPortRangeDevice device="17" from="16#0070#" to="16#0071#"/>
-  <activateDevice device="17"/>
-  <createLegacyDevice device="18"/>
-  <addIOPortRangeDevice device="18" from="16#0cf9#" to="16#0cf9#"/>
-  <addIOPortRangeDevice device="18" from="16#1804#" to="16#1804#"/>
-  <activateDevice device="18"/>
-  <createLegacyDevice device="19"/>
-  <addMemoryDevice device="19" caching="UC" address="16#fec0_0000#" size="1"/>
-  <activateDevice device="19"/>
-  <createLegacyDevice device="20"/>
-  <addMemoryDevice device="20" caching="UC" address="16#fed9_0000#" size="1"/>
-  <activateDevice device="20"/>
-  <createLegacyDevice device="21"/>
-  <addMemoryDevice device="21" caching="UC" address="16#fed9_1000#" size="1"/>
-  <activateDevice device="21"/>
+  <createLegacyDevice device="0"/>
+  <addIOPortRangeDevice device="0" from="16#03c0#" to="16#03df#"/>
+  <addMemoryDevice device="0" caching="WC" address="16#000a_0000#" size="32"/>
+  <activateDevice device="0"/>
+  <createLegacyDevice device="1"/>
+  <addIOPortRangeDevice device="1" from="16#0060#" to="16#0060#"/>
+  <addIOPortRangeDevice device="1" from="16#0064#" to="16#0064#"/>
+  <addIRQDevice device="1" irq="1"/>
+  <addIRQDevice device="1" irq="12"/>
+  <activateDevice device="1"/>
+  <createLegacyDevice device="2"/>
+  <addIOPortRangeDevice device="2" from="16#0070#" to="16#0071#"/>
+  <activateDevice device="2"/>
+  <createLegacyDevice device="3"/>
+  <addIOPortRangeDevice device="3" from="16#0cf9#" to="16#0cf9#"/>
+  <addIOPortRangeDevice device="3" from="16#1804#" to="16#1804#"/>
+  <activateDevice device="3"/>
+  <createLegacyDevice device="4"/>
+  <addMemoryDevice device="4" caching="UC" address="16#fec0_0000#" size="1"/>
+  <activateDevice device="4"/>
+  <createLegacyDevice device="5"/>
+  <addMemoryDevice device="5" caching="UC" address="16#fed9_0000#" size="1"/>
+  <activateDevice device="5"/>
+  <createLegacyDevice device="6"/>
+  <addMemoryDevice device="6" caching="UC" address="16#fed9_1000#" size="1"/>
+  <activateDevice device="6"/>
  </commands>
 </tau0>
 

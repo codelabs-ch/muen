@@ -31,8 +31,6 @@ with Cmd_Stream.Constants;
 package body Cmd_Stream.Devices
 is
 
-   Current_Device : Natural := 0;
-
    --  Create physical device for device node with specified command and
    --  attributes. The first attribute is expected to be 'device'.
    procedure Create_Physical_Device

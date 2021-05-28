@@ -1,28 +1,28 @@
 <subject name="example">
-	<events>
-		<source>
-			<group name="vmx_exit">
-				<default physical="system_panic">
-					<system_panic/>
-				</default>
-			</group>
-		</source>
-	</events>
-	<monitor>
-		<state subject="storage_linux" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
-		<loader logical="reload" subject="example" virtualAddress="16#0000#"/>
-	</monitor>
-	<component ref="example">
-		<map logical="example_request" physical="example_request"/>
-		<map logical="example_response" physical="example_response"/>
-		<map logical="blockdev_request2" physical="blockdev_request2"/>
-		<map logical="blockdev_response2" physical="blockdev_response2"/>
-		<map logical="blockdev_shm2" physical="blockdev_shm2"/>
-		<map logical="debuglog" physical="debuglog_example"/>
-		<map logical="yield" physical="example_yield"/>
-		<map logical="timer" physical="example_self"/>
-		<map logical="inject_timer" physical="example_self"/>
-		<map logical="control" physical="control_example"/>
-		<map logical="status" physical="status_example"/>
-	</component>
+ <events>
+  <source>
+   <group name="vmx_exit">
+    <default physical="system_panic">
+     <system_panic/>
+    </default>
+   </group>
+  </source>
+ </events>
+ <monitor>
+  <state subject="storage_linux" logical="monitor_state" virtualAddress="16#001e_0000#" writable="true"/>
+  <loader logical="reload" subject="example" virtualAddress="16#0000#"/>
+ </monitor>
+ <component ref="example">
+  <map logical="example_request" physical="example_request"/>
+  <map logical="example_response" physical="example_response"/>
+  <map logical="blockdev_request2" physical="blockdev_request2"/>
+  <map logical="blockdev_response2" physical="blockdev_response2"/>
+  <map logical="blockdev_shm2" physical="blockdev_shm2"/>
+  <map logical="debuglog" physical="debuglog_example"/>
+  <map logical="yield" physical="example_yield"/>
+  <map logical="timer" physical="example_self"/>
+  <map logical="inject_timer" physical="example_self"/>
+  <map logical="control" physical="control_example"/>
+  <map logical="status" physical="status_example"/>
+ </component>
 </subject>

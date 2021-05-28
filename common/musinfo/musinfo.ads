@@ -189,7 +189,6 @@ is
       Subject_Crash_Audit     => 17,
       Kernel_Interface        => 18);
 
-   --  @Interface
    --  A memory region is described by its kind, content, memory address, size,
    --  and flags. Regions of type fill and file may optionally provide a hash
    --  of the content.
@@ -433,6 +432,8 @@ is
       --D @Interface
       --D Number of active sinfo records
       Resource_Count : Interfaces.Unsigned_16;
+      --D @Interface
+      --D 8-bit padding
       Padding        : Interfaces.Unsigned_8;
       --D @Interface
       --D Array of sinfo records.

@@ -29,9 +29,9 @@ is
      (GNATprove, Off,
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "This global variable is effectively read-only.");
-   --D @Lst Reqbegin
    --D @Interface
    --D Example request channel. Used to illustrate a service component.
+   --D @Lst Reqbegin
    Request : Foo.Message_Type
      with
        Volatile,

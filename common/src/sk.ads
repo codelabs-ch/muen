@@ -139,14 +139,13 @@ is
      (CPU_Regs_Size + Segment_Regs_Size + 2 * Seg_Type_Size + 4 * 4 + 13 * 8);
 
    --D @Interface
-   --D Subject state storage.
-   --D TODO: Expand CPU regs.
-   --D TODO: Note about "segments":
-   --D Contain "visible" and "hidden" parts; Intel SDM Vol. 3A, "3.4.3 Segment
-   --D Registers".
+   --D The Muen SK stores the subject state of each running subject into a
+   --D variable of this type on VM exit. Also, subject monitors are able to
+   --D inspect the state of the monitored subject using this variable.
    type Subject_State_Type is record
       --D @Interface
-      --D General purpose registers (GPRs).
+      --D CPU registers CR2, RAX, RBX, RCX, RDX, RDI, RSI, RBP, R08-R15
+      --D (64 bits each).
       Regs                : CPU_Registers_Type;
       --D @Interface
       --D Exit reason; Intel SDM Vol. 3C, "24.9.1 Basic VM-Exit Information".
@@ -221,23 +220,9 @@ is
       --D Guest IA32\_SYSENTER\_EIP MSR; Intel SDM Vol. 3C, "24.4.1 Guest
       --D Register State".
       SYSENTER_EIP       : Word64;
-      --D TODO: manually specify via Notes
       --D @Interface
-      --D Guest CS segment register.
-      --D @Interface
-      --D Guest SS segment register.
-      --D @Interface
-      --D Guest DS segment register.
-      --D @Interface
-      --D Guest ES segment register.
-      --D @Interface
-      --D Guest FS segment register.
-      --D @Interface
-      --D Guest GS segment register.
-      --D @Interface
-      --D Guest task register (TR).
-      --D @Interface
-      --D Guest local descriptor table register (LDTR).
+      --D Guest segment registers CS, SS, DS, ES, FS, GS, TR and LDTR.
+      --D Intel SDM Vol. 3C, "24.4.1 Guest Register State".
       Segment_Regs       : Segment_Registers_Type;
       --D @Interface
       --D Guest global descriptor table register (GDDTR).

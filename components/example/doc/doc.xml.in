@@ -3,12 +3,35 @@
  <version>0.6</version>
 
  <latex_preamble>
-  \usepackage{listings}
+  \usepackage{titlepic}
+  \titlepic{\includegraphics[scale=0.4]{../../../doc/images/muen.pdf}}
+
+  \usepackage{tocloft}
+  \setcounter{tocdepth}{1}
+
+  \usepackage[head=30pt, lmargin=3.0cm, rmargin=3.0cm, bmargin=1.9cm, tmargin=3.2cm]{geometry}
+
+  \usepackage{hyperref}
+  \hypersetup{
+  pdftitle={Muen Component Specification},
+  pdfsubject={Muen},
+  pdfauthor={Adrian-Ken Rueegsegger, Reto Buerki},
+  unicode=true,
+  pdffitwindow=true,
+  bookmarks=true,
+  bookmarksnumbered=false,
+  bookmarksopen=false,
+  breaklinks=true,
+  pdfborder={0 0 0},
+  backref=false,
+  colorlinks=true,
+  }
 
   \definecolor{mygreen}{rgb}{0,0.6,0}
   \definecolor{mygray}{rgb}{0.5,0.5,0.5}
   \definecolor{mymauve}{rgb}{0.58,0,0.82}
 
+  \usepackage{listings}
   \lstset{
   backgroundcolor=\color{white},
   basicstyle=\footnotesize\ttfamily,
@@ -35,6 +58,16 @@
   tabsize=2,
   title=\lstname
   }
+
+  \usepackage[T1]{fontenc}
+  \usepackage{courier}
+  \newcommand{\tablefont} {\fontfamily{pcr}\fontsize{8pt}{9pt}\selectfont}
+  \let\oldlongtable\longtable
+  \let\endoldlongtable\endlongtable
+  \renewenvironment{longtable}{%
+     \tablefont
+     \oldlongtable
+  }{\endoldlongtable}
 
   \newenvironment{warning}
   {\par
@@ -163,7 +196,7 @@
     of the example component are mapped to physical channels of the system
     policy via \texttt{map} elements. The \texttt{debuglog} channel is not
     directly visible in the \ref{code-subject-comp-map} listing, as it is added
-    by the dependency to the libdebuglog library (which is declared in the
+    by the dependency to the libmudebuglog library (which is declared in the
     listing \texttt{depends} section).
 
     Also, the requested source and target events are mapped to global system
@@ -193,14 +226,14 @@
     seen as a static library in generic OS terms.
 
     A Muen \emph{component library} provides a library specification, like the
-    example provided in listing \ref{code-libdebuglog-cspec}. Muen components
+    example provided in listing \ref{code-libmudebuglog-cspec}. Muen components
     declare a dependency to a library in the XML specification as outlined in
     section \ref{intro-component}.  If the library in question is written in
     SPARK/Ada, the component project also declares the dependency in its GNAT
     project file. After that, the functionality provided by the software library
     is accessible from the component source code.
 
-    \lstinputlisting[label=code-libdebuglog-cspec,caption=Libdebuglog library specification XML,language=XML]{../../libdebuglog/spec/libdebuglog.xml}
+    \lstinputlisting[label=code-libmudebuglog-cspec,caption=Libmudebuglog library specification XML,language=XML]{../../libmudebuglog/spec/libmudebuglog.xml}
 
     Similar to actual components, the library \texttt{requires} certain
     resources to function. In this case, a \texttt{debuglog} channel is expected
@@ -217,11 +250,11 @@
     system policy. This task is component-specific and can be implemented via
     various solutions, e.g. an XSLT transform or a python script to name just
     two. In this case, the size of the debugserver log channels is extracted
-    from the system policy, see listing \ref{code-libdebuglog-config-cspec}.
+    from the system policy, see listing \ref{code-libmudebuglog-config-cspec}.
     More specifically, it contains the value for the \texttt{\$logchannel\_size}
-    variable mentioned before in listing \ref{code-libdebuglog-cspec}.
+    variable mentioned before in listing \ref{code-libmudebuglog-cspec}.
 
-    \lstinputlisting[label=code-libdebuglog-config-cspec,caption=Libdebuglog generated config.xml,language=XML]{../../libdebuglog/generated/config.xml}
+    \lstinputlisting[label=code-libmudebuglog-config-cspec,caption=Libmudebuglog generated config.xml,language=XML]{../../libmudebuglog/generated/config.xml}
    </text>
   </section>
  </section>
@@ -431,9 +464,10 @@
    faulting subject after handling of the event.
 
    The system policy allows the configuration of a monitor subject as seen in
-   listing \ref{genode-monitor-policy}.
+   listing \ref{monitor-policy}.
 
-   \lstinputlisting[linerange=138-142,label=genode-monitor-policy,caption=Subject Monitor (SM) configuration in the policy,language=XML]{../../../policy/xml/genode-base_hw.xml}
+   \lstinputlisting[linerange=11-14,label=monitor-policy,caption=Subject Monitor
+   (SM) configuration in the policy,language=XML]{../../../policy/xml/subject_example.xml}
 
    The policy writer defines the access permissions to the monitored subject
    state. The following state items are available:
@@ -446,6 +480,10 @@
 
    It is possible to define multiple state items per type, referencing different
    subjects.
+
+   The self-referencing \texttt{loader} element shown in listing
+   \ref{monitor-policy} is part of the subject lifecycle mechanism explained in
+   section TODO.
 
    The following subsections introduce each state configuration shortly, before
    the actual interface API is presented. See the Muen System Specification
@@ -528,18 +566,15 @@
     The SM component has the CPU register state of the associated monitored
     Linux VM mapped. Since the SM for Muen Linux is quite simple, it only maps
     the CPU register state, the timed event/interrupt pages and loader
-    functionality is not required to fulfill its task:
-
-    \lstinputlisting[linerange=19-21,label=sm-monitor-policy,caption=SM
-    configuration for Linux VM,language=XML]{../../../policy/xml/subject_nic_sm.xml}
+    functionality is not required to fulfill its task.
 
     SM declares a package-level \texttt{State} variable of type
     \texttt{SK.Subject\_State\_Type}, as specified in section
     \ref{Subject_Info.Stateexample}. The address of the variable in memory must
     be set using the Ada \texttt{Address} aspect, with the value as configured
-    in listing \ref{sm-monitor-policy}. The \texttt{Volatile} aspect must be
-    used as well, to tell the compiler that the value of this variable might
-    suddenly change.
+    in the SM component \texttt{monitor/state} specification. The
+    \texttt{Volatile} aspect must be used as well, to tell the compiler that the
+    value of this variable might suddenly change.
 
     Using the \texttt{State} variable, SM is able to inspect and alter the
     subject CPU register state of the monitored subject after a trap. For

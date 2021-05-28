@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+private with Interfaces;
+
 with DOM.Core;
 
 with Cmd_Stream.Utils;
@@ -30,5 +32,10 @@ is
       Phys_Memory :        DOM.Core.Node_List);
 
    Missing_Filesize : exception;
+
+private
+
+   --  Address of next free Tau0 private page.
+   Next_Priv_Page : Interfaces.Unsigned_64 := 16#4000_0000_0000#;
 
 end Cmd_Stream.Roots.Memory;

@@ -8,11 +8,13 @@ package body Cmd_Stream.Roots.Memory.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
    begin
-      null;
+      Current_PT   := 0;
+      Current_Root := 0;
    end Set_Up;
 
    procedure Tear_Down (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
    begin
-      null;
+      Current_PT   := 0;
+      Current_Root := 0;
    end Tear_Down;end Cmd_Stream.Roots.Memory.Test_Data;

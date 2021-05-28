@@ -10,6 +10,7 @@ package body Cmd_Stream.Roots.Memory.Test_Data is
    begin
       Current_PT   := 0;
       Current_Root := 0;
+      Next_Priv_Page := 16#4000_0000_0000#;
    end Set_Up;
 
    procedure Tear_Down (Gnattest_T : in out Test) is
@@ -17,4 +18,5 @@ package body Cmd_Stream.Roots.Memory.Test_Data is
    begin
       Current_PT   := 0;
       Current_Root := 0;
+      Next_Priv_Page := 16#4000_0000_0000#;
    end Tear_Down;end Cmd_Stream.Roots.Memory.Test_Data;

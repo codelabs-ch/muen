@@ -19,8 +19,8 @@
  <memory>
   <include href="common_memory.xml"/>
   <include href="memory_xhci_dma.xml"/>
-  <include href="memory_ahci.xml"/>
   <if variable="ahci_drv_enabled" value="true">
+   <include href="memory_ahci.xml"/>
    <memory name="blockdev_shm1" size="16#0100_0000#" caching="WB" type="subject_device"/>
    <memory name="blockdev_shm2" size="16#0100_0000#" caching="WB" type="subject_device"/>
   </if>
@@ -40,11 +40,11 @@
  <channels>
   <include href="common_channels.xml"/>
 
-  <channel name="debuglog_ahci_drv" size="$logchannel_size"/>
   <channel name="debuglog_example" size="$logchannel_size"/>
   <channel name="example_request" size="16#1000#" hasEvent="switch"/>
   <channel name="example_response" size="16#1000#" hasEvent="switch"/>
   <if variable="ahci_drv_enabled" value="true">
+   <channel name="debuglog_ahci_drv" size="$logchannel_size"/>
    <channel name="blockdev_request1"  size="16#0000_8000#" hasEvent="asap"/>
    <channel name="blockdev_response1" size="16#0000_4000#" hasEvent="asap"/>
    <channel name="blockdev_request2"  size="16#0000_8000#" hasEvent="asap"/>
@@ -61,7 +61,9 @@
   <include href="subject_ps2.xml"/>
   <include href="subject_example.xml"/>
   <include href="subject_controller.xml"/>
-  <include href="subject_ahci.xml"/>
+  <if variable="ahci_drv_enabled" value="true">
+   <include href="subject_ahci.xml"/>
+  </if>
 
   <if variable="pciconf_emulation_enabled" value="true">
    <include href="subject_nic_dm.xml"/>
@@ -86,7 +88,9 @@
     <map logical="log_channel5" physical="debuglog_subject5"/>
     <map logical="log_channel_example" physical="debuglog_example"/>
     <map logical="log_channel_6" physical="debuglog_controller"/>
-    <map logical="log_ahci_drv" physical="debuglog_ahci_drv"/>
+    <if variable="ahci_drv_enabled" value="true">
+     <map logical="log_ahci_drv" physical="debuglog_ahci_drv"/>
+    </if>
     <if variable="pciconf_emulation_enabled" value="true">
      <map logical="log_channel7" physical="debuglog_subject6"/>
      <map logical="log_channel8" physical="debuglog_subject7"/>

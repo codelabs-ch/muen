@@ -15,14 +15,16 @@
  <component ref="example">
   <map logical="example_request" physical="example_request"/>
   <map logical="example_response" physical="example_response"/>
-  <map logical="blockdev_request2" physical="blockdev_request2"/>
-  <map logical="blockdev_response2" physical="blockdev_response2"/>
-  <map logical="blockdev_shm2" physical="blockdev_shm2"/>
   <map logical="debuglog" physical="debuglog_example"/>
   <map logical="yield" physical="example_yield"/>
   <map logical="timer" physical="example_self"/>
   <map logical="inject_timer" physical="example_self"/>
   <map logical="control" physical="control_example"/>
   <map logical="status" physical="status_example"/>
+  <if variable="ahci_drv_enabled" value="true">
+   <map logical="blockdev_request2" physical="blockdev_request2"/>
+   <map logical="blockdev_response2" physical="blockdev_response2"/>
+   <map logical="blockdev_shm2" physical="blockdev_shm2"/>
+  </if>
  </component>
 </subject>

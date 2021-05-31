@@ -28,6 +28,13 @@ project Example extends "../component_spark" is
      & "../../common/strings/impl"
      & "../../common/mutimedevents";
 
+   case example_config.ahci_drv_enabled is
+      when "true"  =>
+         Extra_Dirs := Extra_Dirs & "src/muenblock_client/enabled";
+      when "false" =>
+         Extra_Dirs := Extra_Dirs & "src/muenblock_client/disabled";
+   end case;
+
    case example_config.blk_write_test is
       when "true"  =>
          Extra_Dirs := Extra_Dirs & "src/blkwrite/enabled";

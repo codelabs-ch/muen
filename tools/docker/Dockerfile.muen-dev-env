@@ -40,8 +40,8 @@ RUN apt-get update && \
 
 # Install AdaCore toolchain
 RUN git clone https://github.com/AdaCore/gnat_community_install_script.git /tmp/gnat_script \
-	&& curl -sSL "https://www.codelabs.ch/download/ada/gnat-community-2019-20190517-x86_64-linux-bin" -o /tmp/gnat_installer.bin \
-	&& sh /tmp/gnat_script/install_package.sh /tmp/gnat_installer.bin /opt/gnat \
+	&& curl -sSL "https://community.download.adacore.com/v1/f3a99d283f7b3d07293b2e1d07de00e31e332325?filename=gnat-2021-20210519-x86_64-linux-bin" -o /tmp/gnat_installer.bin \
+	&& sh /tmp/gnat_script/install_package.sh /tmp/gnat_installer.bin /opt/gnat com.adacore,com.adacore.gnat,com.adacore.libadalang,com.adacore.spark2014_discovery \
 	&& rm -rf /tmp/gnat*
 
 ENV PATH /opt/gnat/bin:$PATH

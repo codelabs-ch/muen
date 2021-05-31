@@ -3,6 +3,30 @@
  <version>0.6</version>
 
  <latex_preamble>
+  \usepackage{titlepic}
+  \titlepic{\includegraphics[scale=0.4]{../../../doc/images/muen.pdf}}
+
+  \usepackage{tocloft}
+  \setcounter{tocdepth}{1}
+
+  \usepackage[head=30pt, lmargin=3.0cm, rmargin=3.0cm, bmargin=1.9cm, tmargin=3.2cm]{geometry}
+
+  \usepackage{hyperref}
+  \hypersetup{
+  pdftitle={Muen System Specification},
+  pdfsubject={Muen},
+  pdfauthor={Adrian-Ken Rueegsegger, Reto Buerki},
+  unicode=true,
+  pdffitwindow=true,
+  bookmarks=true,
+  bookmarksnumbered=false,
+  bookmarksopen=false,
+  breaklinks=true,
+  pdfborder={0 0 0},
+  backref=false,
+  colorlinks=true,
+  }
+
   \usepackage{listings}
   \usepackage{pifont,mdframed}
   \usepackage{tikz}
@@ -38,13 +62,31 @@
   title=\lstname
   }
 
+  \usepackage[T1]{fontenc}
+  \usepackage{courier}
+  \newcommand{\tablefont} {\fontfamily{pcr}\fontsize{8pt}{9pt}\selectfont}
+  \let\oldlongtable\longtable
+  \let\endoldlongtable\endlongtable
+  \renewenvironment{longtable}{%
+     \tablefont
+     \oldlongtable
+  }{\endoldlongtable}
+
   \newenvironment{warning}
-  {\par\begin{mdframed}[linewidht=1pt,linecolor=red]
+  {\par\begin{mdframed}[linewidth=1pt,linecolor=red]
   \begin{list}{}{\leftmargin=1cm
   \labelwidth=\leftmargin}\item[\color{red}\Large\ding{43}]}
   {\end{list}\end{mdframed}\par}
 
-  \input{tikzstyle}
+  \tikzstyle{commonbox}=[rectangle, draw=black, rounded corners, text centered, anchor=north]
+  \tikzstyle{graybox}=[commonbox, fill=Gray!20]
+  \tikzstyle{shadowbox}=[commonbox, drop shadow]
+  \tikzstyle{greenbox}=[shadowbox, fill=YellowGreen!50]
+  \tikzstyle{apribox}=[shadowbox, fill=Apricot!50]
+  \tikzstyle{bluebox}=[shadowbox, fill=CornflowerBlue!50]
+  \tikzstyle{redbox}=[shadowbox, fill=Red!50]
+  \tikzstyle{blackbox}=[shadowbox, fill=Black!65, text=White]
+  \tikzstyle{arrow}=[->, thick]
  </latex_preamble>
 
  <xsd id="system_src.xsd" label="Policy Schema Documentation" priority="10" section="schema" file="generated/system_src.xsd" type="systemType" />
@@ -339,8 +381,8 @@
     invariants hold after the transition. If not, the command is rejected and
     the build aborts.
 
-    See the project README or the webpage (TODO) for more information about
-    the current state of $\tau0$.
+    See the project README or the webpage\footnote{https://muen.sk/tau0.html}
+    for more information about the current state of $\tau0$.
    </text>
   </section>
 

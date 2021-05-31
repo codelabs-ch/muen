@@ -70,7 +70,6 @@
  </xs:complexType>
 
  <xs:complexType name="channelReferencesType">
-  <xs:choice minOccurs="0" maxOccurs="unbounded">
   <xs:annotation>
    <xs:documentation>
     The \texttt{channel} section of a subject declares references to
@@ -81,6 +80,7 @@
     \ref{lst:annotated-policy} for an example section.
    </xs:documentation>
   </xs:annotation>
+  <xs:choice minOccurs="0" maxOccurs="unbounded">
    <xs:element name="reader" type="channelReaderType"/>
    <xs:element name="writer" type="channelWriterType"/>
   </xs:choice>

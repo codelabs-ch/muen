@@ -218,7 +218,7 @@
     <xs:attribute name="type" type="subjectMemoryKindType" use="optional">
      <xs:annotation>
       <xs:documentation>
-       Memory type (e.g. \texttt{subject_binary}).
+       Memory type (e.g. \texttt{subject\_binary}).
       </xs:documentation>
      </xs:annotation>
     </xs:attribute>
@@ -227,7 +227,6 @@
  </xs:complexType>
 
  <xs:complexType name="logicalChannelsType">
-  <xs:choice minOccurs="0" maxOccurs="unbounded">
   <xs:annotation>
    <xs:documentation>
     Components and libraries use the \texttt{channels} sub-section of
@@ -237,6 +236,7 @@
     \ref{lst:annotated-policy} for an example specification.
    </xs:documentation>
   </xs:annotation>
+  <xs:choice minOccurs="0" maxOccurs="unbounded">
    <xs:element name="reader" type="logicalChannelReaderType"/>
    <xs:element name="writer" type="logicalChannelWriterType"/>
    <xs:element name="array"  type="channelArrayType"/>
@@ -633,6 +633,11 @@
  </xs:complexType>
 
  <xs:complexType name="baseLogicalEventType">
+  <xs:annotation>
+   <xs:documentation>
+    Logical event base.
+   </xs:documentation>
+  </xs:annotation>
   <xs:attribute name="logical" type="nameType" use="required">
    <xs:annotation>
     <xs:documentation>
@@ -671,7 +676,13 @@
   <xs:complexContent>
    <xs:extension base="baseLogicalEventType">
     <xs:group ref="targetEventActionsGroup" minOccurs="0" maxOccurs="1"/>
-     <xs:attribute name="id" type="xs:nonNegativeInteger" use="optional"/>
+    <xs:attribute name="id" type="xs:nonNegativeInteger" use="optional">
+     <xs:annotation>
+      <xs:documentation>
+       ID of target event entry.
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>

@@ -139,7 +139,7 @@ is
    procedure System_Memory_Mappings (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_mem, Priority => 0
-   --D Validate that memory of type 'device' (e.g. device_rmrr) is only
+   --D Validate that memory of type 'device' (e.g. device\_rmrr) is only
    --D mapped by device domains.
    procedure Device_Memory_Mappings (XML_Data : Muxml.XML_Data_Type);
 

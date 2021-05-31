@@ -23,6 +23,11 @@
  </xs:complexType>
 
  <xs:complexType name="baseDefaultEventType">
+  <xs:annotation>
+   <xs:documentation>
+    Base default event.
+   </xs:documentation>
+  </xs:annotation>
   <xs:attribute name="physical" type="nameType" use="required">
    <xs:annotation>
     <xs:documentation>

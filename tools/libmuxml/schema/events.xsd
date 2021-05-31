@@ -100,14 +100,37 @@
  </xs:complexType>
 
  <xs:complexType name="baseEventType">
-  <xs:attribute name="logical"  type="nameType" use="required"/>
-  <xs:attribute name="physical" type="nameType" use="required"/>
+  <xs:attribute name="logical"  type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical event name.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="physical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Physical event name.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="baseEventWithIDType">
+  <xs:annotation>
+   <xs:documentation>
+    Base event with ID.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="baseEventType">
-    <xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
+    <xs:attribute name="id" type="xs:nonNegativeInteger" use="required">
+     <xs:annotation>
+      <xs:documentation>
+       ID of event.
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>

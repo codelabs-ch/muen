@@ -13,6 +13,11 @@
  </xs:simpleType>
 
  <xs:simpleType name="optionalHashType">
+  <xs:annotation>
+   <xs:documentation>
+    Allows the specification of a hash digest or \texttt{none}.
+   </xs:documentation>
+  </xs:annotation>
   <xs:union memberTypes="hash256DigestType noneType"/>
  </xs:simpleType>
 

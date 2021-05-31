@@ -28,6 +28,7 @@ abstract project Shared is
      ("-fcallgraph-info=su",
       "-g",
       "-gnatef",
+      "-gnatd_h",            --  Workaround for [U528-019]
       "-fstrict-aliasing",
       "-fdata-sections",
       "-ffunction-sections");

@@ -154,7 +154,8 @@ is
 
    LBA_Range_Entry_Max : constant Integer := Ahci.DMA_Mem_Size / 8 - 1;
    type LBA_Range is range 0 .. LBA_Range_Entry_Max;
-   type LBA_Range_List_Type is array (LBA_Range) of LBA_Range_Type;
+   type LBA_Range_List_Type is array (LBA_Range) of LBA_Range_Type
+   with Object_Size => Ahci.DMA_Mem_Size * 8;
 
    pragma Warnings
      (GNATprove, Off,
@@ -634,6 +635,8 @@ is
       Obsolete_85_3      at 6 range 15 .. 15;
    end record;
 
+   Ata_Identify_Response_Size : constant := 512 * 8;
+
    type Ata_Identify_Response_Type is record
       Unused_1            : Ahci.Word_Array (0 .. 22);
       FW                  : String (1 ..  8);
@@ -655,7 +658,8 @@ is
       Unused_9            : Ahci.Word_Array (170 .. 255);
    end record
    with
-      Size => 512 * 8;
+      Object_Size => Ata_Identify_Response_Size,
+      Size        => Ata_Identify_Response_Size;
 
    for Ata_Identify_Response_Type use record
       Unused_1            at   0 * 2 range 0 .. 23 * 16 - 1;

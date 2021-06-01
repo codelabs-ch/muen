@@ -47,9 +47,13 @@ is
 
    package CSpecs renames Ahci_Drv_Component.Channel_Arrays;
 
-   type Request_Channel_Array
-   is array (PC.Channel_Range)
-      of Req_Chn.Channel_Type;
+   Request_Channels_Size : constant := CSpecs.Blockdev_Request_Element_Count
+     * CSpecs.Blockdev_Request_Element_Size * 8;
+
+   type Request_Channel_Array is
+     array (PC.Channel_Range) of Req_Chn.Channel_Type
+     with
+       Object_Size => Request_Channels_Size;
 
    type Request_Reader_Array
    is array (PC.Channel_Range)
@@ -64,8 +68,7 @@ is
       Volatile,
       Async_Writers,
       Address => System'To_Address (CSpecs.Blockdev_Request_Address_Base),
-      Size    => CSpecs.Blockdev_Request_Element_Count
-         * CSpecs.Blockdev_Request_Element_Size * 8;
+      Size    => Request_Channels_Size;
    pragma Warnings
      (GNATprove, On,
       "writing * is assumed to have no effects on other non-volatile objects");
@@ -73,9 +76,13 @@ is
    Request_Readers : Request_Reader_Array
       := (others => Req_Chn.Reader.Null_Reader);
 
+   Response_Channels_Size : constant := CSpecs.Blockdev_Response_Element_Count
+     * CSpecs.Blockdev_Response_Element_Size * 8;
+
    type Response_Chan_Array is
-      array (PC.Channel_Range)
-      of Resp_Chn.Channel_Type;
+     array (PC.Channel_Range) of Resp_Chn.Channel_Type
+     with
+       Object_Size => Response_Channels_Size;
 
    pragma Warnings
      (GNATprove, Off,
@@ -92,8 +99,7 @@ is
       Volatile,
       Async_Readers,
       Address => System'To_Address (CSpecs.Blockdev_Response_Address_Base),
-      Size    => CSpecs.Blockdev_Response_Element_Count
-         * CSpecs.Blockdev_Response_Element_Size * 8;
+      Size    => Response_Channels_Size;
    pragma Warnings
      (GNATprove, On,
       "writing * is assumed to have no effects on other non-volatile objects");

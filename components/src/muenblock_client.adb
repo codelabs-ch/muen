@@ -40,6 +40,12 @@ is
    type Device_Count_Type is new Interfaces.Unsigned_16 range
      0 .. Devices_Cnt_Max;
 
+   Request_Channel_Size : constant
+     := (MB.Block_Request_Type_Size * MB.Request_Channel_Elements + 64) * 8;
+
+   subtype Request_Channel_Type is Req_Chn.Channel_Type
+     with Object_Size => Request_Channel_Size;
+
    pragma Warnings
      (GNATprove, Off,
       "indirect writes to * through a potential alias are ignored",
@@ -50,7 +56,7 @@ is
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
-   Request_Channel : Req_Chn.Channel_Type
+   Request_Channel : Request_Channel_Type
    with
       Volatile,
       Async_Readers,
@@ -62,11 +68,17 @@ is
      (GNATprove, On,
       "indirect writes to * through a potential alias are ignored");
 
+   Response_Channel_Size : constant
+     := (MB.Block_Response_Size * MB.Response_Channel_Elements + 64) * 8;
+
+   subtype Response_Channel_Type is Resp_Chn.Channel_Type
+     with Object_Size => Response_Channel_Size;
+
    pragma Warnings
      (GNATprove, Off,
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "This global variable is effectively read-only.");
-   Response_Channel : Resp_Chn.Channel_Type
+   Response_Channel : Response_Channel_Type
    with
       Volatile,
       Async_Writers,

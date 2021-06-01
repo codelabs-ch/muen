@@ -362,6 +362,8 @@ is
       Reserved at 16#00# range 29 .. 31;
    end record;
 
+   Port_Registers_Size : constant := 16#80# * 8;
+
    type Port_Registers_Type is record
       Cmd_List_Base_Addr       : Interfaces.Unsigned_32;
       Cmd_List_Base_Upper_Addr : Interfaces.Unsigned_32;
@@ -385,7 +387,7 @@ is
       Vendor_Specific          : Byte_Array (16#70# .. 16#7f#);
    end record
    with
-      Size => 16#80# * 8;
+      Size => Port_Registers_Size;
 
    for Port_Registers_Type use record
       Cmd_List_Base_Addr       at 16#00# range 0 ..  31;
@@ -417,9 +419,12 @@ is
    SIG_SEMB  : constant := 16#c33c0101#;
    SIG_PM    : constant := 16#96690101#;
 
+   Ports_Array_Size : constant := (Port_Range'Last + 1) * Port_Registers_Size;
+
    type Ports_Array is array (Port_Range) of Port_Registers_Type
    with
-      Pack;
+      Pack,
+      Object_Size => Ports_Array_Size;
 
    pragma Warnings
      (GNATprove, Off,

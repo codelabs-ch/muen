@@ -68,13 +68,16 @@ is
    with
       Pack;
 
+   MBR_Type_Size : constant := 512 * 8;
+
    type MBR_Type is record
       Bootstrap_Code : Ahci.Byte_Array (0 .. 445);
       Partition_1_4  : Partition_Array (1 .. 4);
       Boot_Signature : Interfaces.Unsigned_16;
    end record
    with
-      Size => 512 * 8;
+      Object_Size => MBR_Type_Size,
+      Size        => MBR_Type_Size;
 
    for MBR_Type use record
       Bootstrap_Code at 16#000# range 0 .. 446 * 8 - 1;

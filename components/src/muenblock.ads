@@ -120,8 +120,8 @@ is
    --  Muenblock Channel Protocol ID
    Protocol : constant := 16#5155_6844_5351_6f3d#;
 
-   --  Number of request / responsens in request / response channel
-   --  need to honor the muchannel header size (64 byte)
+   --  Number of request / responses in request / response channel
+   --  need to honor the muchannel header size (64 bytes)
    --  -> 2 elements on request /  4 elements on response channels
    Request_Channel_Elements  : constant := 1022;
    Response_Channel_Elements : constant := 1020;

@@ -45,7 +45,7 @@ is
       Success : out Boolean);
 
    --  Execute commandslot
-   --  Timeout: abort command if no response from device withing Timeout sec
+   --  Timeout: abort command if no response from device within Timeout sec
    procedure Execute
       (ID      :     Port_Range;
        Timeout :     Integer;

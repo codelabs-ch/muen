@@ -101,7 +101,8 @@ is
    end record
    with
       Pack,
-      Size => 256 * 8;
+      Object_Size => 256 * 8,
+      Size        => 256 * 8;
 
    Instance : Config_Space
    with

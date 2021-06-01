@@ -225,6 +225,8 @@ is
       Reserved at 0 range 5 .. 31;
    end record;
 
+   Generic_Host_Control_Size : constant := 16#2c# * 8;
+
    type Generic_Host_Control_Type is record
       Host_Capabilities     : HBA_Caps_Type;
       Global_Host_Control   : Global_HBA_Control_Type;
@@ -239,7 +241,8 @@ is
       BIOS_HO_Status_Ctrl   : BIOS_HO_Status_Type;
    end record
    with
-      Size => 16#2c# * 8;
+      Object_Size => Generic_Host_Control_Size,
+      Size        => Generic_Host_Control_Size;
 
    for Generic_Host_Control_Type use record
       Host_Capabilities     at 16#00# range 0 .. 31;

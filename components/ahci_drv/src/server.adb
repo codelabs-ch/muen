@@ -55,6 +55,10 @@ is
    is array (PC.Channel_Range)
       of Req_Chn.Reader.Reader_Type;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "This global variable is effectively read-only.");
    Request_Channels : Request_Channel_Array
    with
       Volatile,
@@ -62,6 +66,9 @@ is
       Address => System'To_Address (CSpecs.Blockdev_Request_Address_Base),
       Size    => CSpecs.Blockdev_Request_Element_Count
          * CSpecs.Blockdev_Request_Element_Size * 8;
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
    Request_Readers : Request_Reader_Array
       := (others => Req_Chn.Reader.Null_Reader);
@@ -70,6 +77,16 @@ is
       array (PC.Channel_Range)
       of Resp_Chn.Channel_Type;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "indirect writes to * through a potential alias are ignored",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    Response_Channels : Response_Chan_Array
    with
       Volatile,
@@ -77,6 +94,12 @@ is
       Address => System'To_Address (CSpecs.Blockdev_Response_Address_Base),
       Size    => CSpecs.Blockdev_Response_Element_Count
          * CSpecs.Blockdev_Response_Element_Size * 8;
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
+   pragma Warnings
+     (GNATprove, On,
+      "indirect writes to * through a potential alias are ignored");
 
    --  Combine requests from the client to maximize the request length to the
    --  device. We need to store the request tags to answer the requests after

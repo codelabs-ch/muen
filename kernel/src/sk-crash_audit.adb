@@ -57,6 +57,11 @@ is
    with
       Object_Size => Page_Size * 8;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    Instance : Crash_Audit_Page
    with
       Volatile,
@@ -64,6 +69,9 @@ is
       Async_Readers,
       Async_Writers,
       Address => System'To_Address (Skp.Kernel.Crash_Audit_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
    pragma Compile_Time_Error
      (Instance'Size <= Skp.Kernel.Crash_Audit_Size,

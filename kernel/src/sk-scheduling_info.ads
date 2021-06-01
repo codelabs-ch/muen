@@ -62,6 +62,11 @@ private
       Object_Size    => Page_Size * 8
            * Word64 (Skp.Scheduling.Scheduling_Group_Range'Last);
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    --  Scheduling group info regions.
    Sched_Info : Sched_Info_Array
    with
@@ -70,5 +75,8 @@ private
       Async_Writers,
       Part_Of => State,
       Address => System'To_Address (Skp.Kernel.Sched_Group_Info_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
 end SK.Scheduling_Info;

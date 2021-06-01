@@ -87,6 +87,16 @@ private
 
    package Cspec renames Libmucontrol_Component.Memory;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "indirect writes to * through a potential alias are ignored",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    Status_Page : Status_Interface_Type
    with
       Import,
@@ -94,5 +104,11 @@ private
       Part_Of => State,
       Size    => Cspec.Status_Size * 8,
       Address => System'To_Address (Cspec.Status_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
+   pragma Warnings
+     (GNATprove, On,
+      "indirect writes to * through a potential alias are ignored");
 
 end Mucontrol.Status.Instance;

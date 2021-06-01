@@ -421,6 +421,11 @@ is
    with
       Pack;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    Instance : Ports_Array
    with
       Volatile,
@@ -428,5 +433,8 @@ is
       Async_Writers,
       Address => System'To_Address
         (Ahci_Controller_Ahci_Registers_Address + 16#100#);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
 end Ahci.Ports;

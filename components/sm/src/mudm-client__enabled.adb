@@ -37,19 +37,42 @@ with
    Refined_State => (State => (Request, Response))
 is
 
+   pragma Warnings
+     (GNATprove, Off,
+      "indirect writes to * through a potential alias are ignored",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    Request : Mudm.Emul_Message_Type := Null_Emul_Message
    with
       Volatile,
       Async_Readers,
       Address => System'To_Address
         (Libmudm_Component.Channels.Dm_Pciconf_Req_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
+   pragma Warnings
+     (GNATprove, On,
+      "indirect writes to * through a potential alias are ignored");
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "This global variable is effectively read-only.");
    Response : Mudm.Emul_Message_Type
    with
       Volatile,
       Async_Writers,
       Address => System'To_Address
         (Libmudm_Component.Channels.Dm_Pciconf_Res_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
    -------------------------------------------------------------------------
 

@@ -37,11 +37,18 @@ is
 
    package Cspecs renames Libmutime_Component.Channels;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "This global variable is effectively read-only.");
    Time_Info : Time_Info_Type
    with
       Volatile,
       Async_Writers,
       Address => System'To_Address (Cspecs.Time_Info_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
    -------------------------------------------------------------------------
 

@@ -40,17 +40,40 @@ is
    type Device_Count_Type is new Interfaces.Unsigned_16 range
      0 .. Devices_Cnt_Max;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "indirect writes to * through a potential alias are ignored",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    Request_Channel : Req_Chn.Channel_Type
    with
       Volatile,
       Async_Readers,
       Address => Req_Channel_Address;
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
+   pragma Warnings
+     (GNATprove, On,
+      "indirect writes to * through a potential alias are ignored");
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "This global variable is effectively read-only.");
    Response_Channel : Resp_Chn.Channel_Type
    with
       Volatile,
       Async_Writers,
       Address => Resp_Channel_Address;
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
    Reader : Resp_Chn.Reader.Reader_Type
       := Resp_Chn.Reader.Null_Reader;

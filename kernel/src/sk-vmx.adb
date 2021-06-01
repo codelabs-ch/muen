@@ -59,12 +59,20 @@ is
       Object_Size => (Skp.Global_Subject_ID_Type'Last + 1) * Page_Size * 8,
       Independent_Components;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    VMCS : VMCS_Array
    with
       Volatile,
       Async_Readers,
       Async_Writers,
       Address => System'To_Address (Skp.Kernel.Subj_VMCS_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
    --  Allocate crash audit entry for given VMX error and trigger system
    --  restart.

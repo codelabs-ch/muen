@@ -25,11 +25,18 @@ with
    Refined_State => (State => Request)
 is
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "This global variable is effectively read-only.");
    Request : Mudm.Emul_Message_Type
    with
       Volatile,
       Async_Writers,
       Address => System'To_Address (Dm_Component.Channels.Request_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
    -------------------------------------------------------------------------
 

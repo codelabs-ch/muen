@@ -56,12 +56,19 @@ is
 
    type SMART_Attribute_Table_Type is
       array (Integer range 1 .. 30) of SMART_Attribute_Type;
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "This global variable is effectively read-only.");
    SMART_Attribute_Table : SMART_Attribute_Table_Type
    with
       Volatile,
       Async_Writers,
       Address => System'To_Address
          (Example_Component.Memory.Blockdev_Shm2_Address + 2);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
    -------------------------------------------------------------------------
 

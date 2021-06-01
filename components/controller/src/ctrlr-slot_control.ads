@@ -47,11 +47,18 @@ private
    end record
    with Object_Size => Cspecs.Slot_Control_1_Size * 8;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "This global variable is effectively read-only.");
    Slot_Control_1 : Slot_Control_Type
    with
       Volatile,
       Async_Writers,
       Address => System'To_Address (Cspecs.Slot_Control_1_Address),
       Size    => Cspecs.Slot_Control_1_Size * 8;
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
 end Ctrlr.Slot_Control;

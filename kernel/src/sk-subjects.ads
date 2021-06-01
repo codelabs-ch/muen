@@ -135,6 +135,16 @@ private
       Object_Size    => (Skp.Global_Subject_ID_Type'Last + 1) * Page_Size * 8,
       Alignment      => Page_Size;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "indirect writes to * through a potential alias are ignored",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    --  Descriptors used to manage subject states.
    --  TODO: Model access rules
    --  TODO: Handle initialization
@@ -146,5 +156,11 @@ private
      (GNATprove, Intentional,
       "not initialized",
       "Subject states are initialized by their owning CPU. Not yet modeled");
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
+   pragma Warnings
+     (GNATprove, On,
+      "indirect writes to * through a potential alias are ignored");
 
 end SK.Subjects;

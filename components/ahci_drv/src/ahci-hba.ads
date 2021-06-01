@@ -255,11 +255,19 @@ is
       BIOS_HO_Status_Ctrl   at 16#28# range 0 .. 31;
    end record;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    Instance : Generic_Host_Control_Type
    with
       Volatile,
       Async_Readers,
       Async_Writers,
       Address => System'To_Address (Ahci_Controller_Ahci_Registers_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
 end Ahci.HBA;

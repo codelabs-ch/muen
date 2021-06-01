@@ -82,11 +82,18 @@ is
       Boot_Signature at 16#1fe# range 0 .. 2 * 8 - 1;
    end record;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "This global variable is effectively read-only.");
    MBR_Entry : MBR_Type
    with
       Async_Writers,
       Volatile,
       Address => System'To_Address (Ahci.DMA_Mem_Base_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
    -------------------------------------------------------------------------
 

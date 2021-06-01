@@ -156,6 +156,11 @@ is
    type LBA_Range is range 0 .. LBA_Range_Entry_Max;
    type LBA_Range_List_Type is array (LBA_Range) of LBA_Range_Type;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    LBA_Range_List : LBA_Range_List_Type
    with
       Volatile,
@@ -163,6 +168,9 @@ is
       Async_Writers,
       Address => System'To_Address (Ahci.DMA_Mem_Base_Address),
       Size    => Ahci.DMA_Mem_Size * 8;
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
    procedure Discard_Sectors
       (ID      :     Ahci.Port_Range;
@@ -670,12 +678,20 @@ is
       Unused_9            at 170 * 2 range 0 .. 86 * 16 - 1;
    end record;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    Ata_Identify_Response : Ata_Identify_Response_Type
    with
       Volatile,
       Async_Readers,
       Async_Writers,
       Address => System'To_Address (Ahci.DMA_Mem_Base_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
    -------------------------------------------------------------------------
 

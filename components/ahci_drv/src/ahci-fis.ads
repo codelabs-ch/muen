@@ -263,11 +263,20 @@ is
    end record;
 
    type FIS_Array_Type is array (Port_Range) of Received_FIS_Type;
+
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    Fis_Array : FIS_Array_Type
    with
       Volatile,
       Async_Readers,
       Async_Writers,
       Address => System'To_Address (Fis_Base_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
 end Ahci.FIS;

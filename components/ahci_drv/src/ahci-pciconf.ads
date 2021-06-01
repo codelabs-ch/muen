@@ -104,11 +104,19 @@ is
       Object_Size => 256 * 8,
       Size        => 256 * 8;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    Instance : Config_Space
    with
       Volatile,
       Async_Readers,
       Async_Writers,
       Address => System'To_Address (Spec.Ahci_Controller_Mmconf_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
 end Ahci.Pciconf;

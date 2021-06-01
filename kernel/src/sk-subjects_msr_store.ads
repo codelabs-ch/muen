@@ -85,6 +85,11 @@ private
       Alignment      => Page_Size,
       Object_Size    => (Skp.Global_Subject_ID_Type'Last + 1) * Page_Size * 8;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    MSR_Storage : MSR_Storage_Array
    with
       Volatile,
@@ -92,5 +97,8 @@ private
       Async_Readers,
       Part_Of => State,
       Address => System'To_Address (Skp.Kernel.Subj_MSR_Store_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
 end SK.Subjects_MSR_Store;

@@ -73,6 +73,11 @@ private
       Alignment      => Page_Size,
       Object_Size => (Skp.Global_Subject_ID_Type'Last + 1) * Page_Size * 8;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    --  Subject timed event pages.
    Subject_Events : Subject_Event_Array
    with
@@ -81,5 +86,8 @@ private
       Async_Writers,
       Part_Of => State,
       Address => System'To_Address (Skp.Kernel.Subj_Timed_Events_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
 end SK.Timed_Events;

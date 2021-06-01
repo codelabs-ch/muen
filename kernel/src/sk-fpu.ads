@@ -86,6 +86,16 @@ private
       Alignment      => Page_Size,
       Object_Size    => Page_Size * 8 * (Skp.Global_Subject_ID_Type'Last + 1);
 
+   pragma Warnings
+     (GNATprove, Off,
+      "indirect writes to * through a potential alias are ignored",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    Subject_FPU_States : Subject_FPU_State_Array
    with
       Part_Of => State,
@@ -94,5 +104,11 @@ private
      (GNATprove, Intentional,
       "not initialized",
       "Subject FPU states are initialized by their owning CPU.");
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
+   pragma Warnings
+     (GNATprove, On,
+      "indirect writes to * through a potential alias are ignored");
 
 end SK.FPU;

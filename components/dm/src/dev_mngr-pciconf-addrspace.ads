@@ -94,6 +94,11 @@ private
          * SK.Page_Size * 8,
       Pack;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    Space : Addrspace_Type
    with
       Import,
@@ -103,5 +108,8 @@ private
       Part_Of => Memory,
       Address => System'To_Address (Mudm.Config.MMConf_Base_Address),
       Size    => Interfaces."*" (Mudm.Config.MMConf_Size, 8);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
 end Dev_Mngr.Pciconf.Addrspace;

@@ -43,6 +43,11 @@ is
    RED_INT_MASK     : constant := 16;
    RED_INTFORMAT    : constant := 48;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    Register_Select : SK.Word32
    with
       Volatile,
@@ -58,6 +63,9 @@ is
       Async_Readers,
       Effective_Writes,
       Address => System'To_Address (Skp.Hardware.Ioapic_1_Mem1 + IO_APIC_DAT);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
    Global_IO_APIC_Lock : Locks.Spin_Lock_Type
    with

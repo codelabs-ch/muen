@@ -52,12 +52,28 @@ is
            * Cspecs.Export_Channels_Element_Count * 8,
          Component_Size => Cspecs.Export_Channels_Element_Size * 8;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "indirect writes to * through a potential alias are ignored",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    Time_Export : Time_Info_Array
      with
        Volatile,
        Async_Readers,
        Effective_Writes,
        Address => System'To_Address (Cspecs.Export_Channels_Address_Base);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
+   pragma Warnings
+     (GNATprove, On,
+      "indirect writes to * through a potential alias are ignored");
 
    -------------------------------------------------------------------------
 

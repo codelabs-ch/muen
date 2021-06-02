@@ -4,7 +4,7 @@
 	\node[commonnode, bottom color=kernelcolor, minimum width=8cm] (kernel) {Muen Separation Kernel};
 
 	% Subjects
-	\tikzstyle{vmmnode} = [commonnode, minimum height=15ex, bottom color=guestcolor]
+	\tikzstyle{vmmnode} = [commonnode, minimum height=15ex, minimum width=18ex, bottom color=guestcolor]
 
 	\node[vmmnode, above=6ex of kernel] (linuxvm) {};
 	\path (linuxvm.north) node[anchor=north] {\small Linux VM};

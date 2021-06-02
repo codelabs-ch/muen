@@ -1,15 +1,49 @@
 <doc name="Muen Separation Kernel">
- <author>Adrian-Ken Rüegsegger, Reto Bürki</author>
+ <author>Adrian-Ken Rueegsegger, Reto Buerki</author>
  <version>0.6</version>
 
  <latex_preamble>
+  \usepackage{titlepic}
+  \titlepic{\includegraphics[scale=0.4]{../../doc/images/muen.pdf}}
+
+  \usepackage{tocloft}
+  \setcounter{tocdepth}{1}
+
+  \usepackage[head=30pt, lmargin=3.0cm, rmargin=3.0cm, bmargin=1.9cm, tmargin=3.2cm]{geometry}
+
   \usepackage{acronym}
+
   \usepackage{pgfgantt}
+
+  \usepackage{hyperref}
+  \hypersetup{
+  pdftitle={Muen Kernel Specification},
+  pdfsubject={Muen},
+  pdfauthor={Adrian-Ken Rueegsegger, Reto Buerki},
+  unicode=true,
+  pdffitwindow=true,
+  bookmarksnumbered=false,
+  bookmarksopen=false,
+  breaklinks=true,
+  pdfborder={0 0 0},
+  colorlinks=true,
+  }
+
+  \usepackage[T1]{fontenc}
+  \usepackage{courier}
+  \newcommand{\tablefont} {\fontfamily{pcr}\fontsize{8pt}{9pt}\selectfont}
+  \let\oldlongtable\longtable
+  \let\endoldlongtable\endlongtable
+  \renewenvironment{longtable}{%
+     \tablefont
+     \oldlongtable
+  }{\endoldlongtable}
 
   \begin{tikzfadingfrompicture}[name=flow fade]
    \shade[left color=transparent!0,
            right color=transparent!60] (0,0) rectangle (2,2);
   \end{tikzfadingfrompicture}
+
   \input{tikzstyle}
  </latex_preamble>
 
@@ -93,9 +127,10 @@
      \centering
      \input{graph_arch}
      \label{fig-muenarch}
-     \caption{Execution of VMs and native Subjects on top of the Muen SK. The
-      Kernel is the only software running in the privileged Intel VT-x root mode
-       while all Subjects execute in unprivileged non-root mode.}
+     \caption[Execution of VMs and native Subjects]{Execution of VMs and native
+      Subjects on top of the Muen SK. The Kernel is the only software running in
+      the privileged Intel VT-x root mode while all Subjects execute in
+      unprivileged non-root mode.}
     \end{figure}
 
     The Muen SK is the only part of the system running in VMX
@@ -122,7 +157,8 @@
     \begin{figure}[ht]
      \centering
      \input{graph_sk0}
-     \caption{Complexity reduction of Muen SK compared to a classical, monolithical Kernel.}
+     \caption[Complexity reduction of Muen SK]{Complexity reduction of Muen SK
+     compared to a classical, monolithical Kernel.}
      \label{fig:sksubs}
     \end{figure}
 

@@ -76,6 +76,11 @@
   {\end{list}\par}
  </latex_preamble>
 
+ <description scope="config" name="ahci_drv_enabled">
+  This knob controls whether or not the muenblock client code is enabled in the
+  example component.
+ </description>
+
  <description scope="config" name="greeter">
   String configuration option example
  </description>

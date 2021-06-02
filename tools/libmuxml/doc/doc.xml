@@ -281,8 +281,8 @@
    % XXX: Update graph: Component specs can also be parameterized
 
    The CSPECs mechanism outlined in the Muen Component Specification document
-   \cite{muen:component_specification} can be used by components to generate
-   source specifications (e.g.  in SPARK/Ada) from the component description.
+   \cite{muen:component-spec} can be used by components to generate source
+   specifications (e.g.  in SPARK/Ada) from the component description.
    Furthermore, a component might expand its own component description with
    information extracted from system information, or it might use the
    \texttt{mucbinsplit} tool (\ref{tools-mucbinsplit}) to fill in the memory
@@ -996,8 +996,8 @@
       SPARK, C and GNAT project file (GPR) format. Created output includes
       constant values for memory addresses, device resources, scheduling plans,
       etc. See the description of the \texttt{Skp} package hierarchy in the Muen
-      Kernel Specification document \cite{muen:kernel_specification} for the
-      exact information these packages provide.
+      Kernel Specification document \cite{muen:kernel-spec} for the exact
+      information these packages provide.
      </text>
     </section>
 

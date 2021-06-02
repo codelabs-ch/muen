@@ -300,7 +300,7 @@
     During the component build process, the component specification in XML
     format outlined in section \ref{intro-component} and \ref{intro-libraries}
     is translated to SPARK/Ada specifications using the \texttt{mucgenspec}
-    tool, see \cite{muen:system_specification}.
+    tool, see \cite{muen:system-spec}.
 
     The generated packages in the \texttt{Example\_Component} hierarchy contain
     resource properties as constants for SPARK/Ada. These constants can be used
@@ -325,7 +325,7 @@
     The information is provided by mapping the subject info and scheduling info
     pages into the virtual address space of a subject. This task is performed
     automatically by the \texttt{mucfgexpand} tool during the system build (see
-    \cite{muen:system_specification} for more information).
+    \cite{muen:system-spec} for more information).
 
     A component must verify the validity of the sinfo page by calling the
     appropriate validation method. In a verified SPARK/Ada component, it must be
@@ -362,8 +362,8 @@
     information mapped into its address space. These tasks are performed by
     \texttt{mugenzp} and \texttt{mucfgexpand} respectively.
 
-    See again the Muen System Specification \cite{muen:system_specification} for
-    more information about the involved tools.
+    See again the Muen System Specification \cite{muen:system-spec} for more
+    information about the involved tools.
 
     Similar methods might be applied by other guest operating systems when
     porting them to Muen.
@@ -408,10 +408,10 @@
    VMX preemption timer of a subject, as this is the mechanism used by the SK to
    preempt subjects according to the scheduling plan.
 
-   See the Muen System Specification \cite{muen:system_specification} document
-   for the specification of all elements of a VCPU profile. The current VCPU
-   profiles for VM and native Muen components can be found in the Appendix,
-   section \ref{appendix-vcpu}.
+   See the Muen System Specification \cite{muen:system-spec} document for the
+   specification of all elements of a VCPU profile. The current VCPU profiles
+   for VM and native Muen components can be found in the Appendix, section
+   \ref{appendix-vcpu}.
   </text>
  </section>
 
@@ -487,8 +487,8 @@
 
    The following subsections introduce each state configuration shortly, before
    the actual interface API is presented. See the Muen System Specification
-   \cite{muen:system_specification} for more details on the \texttt{monitor}
-   element and its implications.
+   \cite{muen:system-spec} for more details on the \texttt{monitor} element and
+   its implications.
   </text>
 
   <section id="subject-monitoring-state" label="Register State" priority="0">
@@ -550,9 +550,9 @@
     instruction or to (periodically) check the memory contents of the monitored
     subject against hash sums.
 
-    See the Muen System Specification \cite{muen:system_specification} for the
-    definition of the loader element with an in-depth description of the
-    mechanism (element \texttt{loader}, type \texttt{loaderSubjectRefType}).
+    See the Muen System Specification \cite{muen:system-spec} for the definition
+    of the loader element with an in-depth description of the mechanism (element
+    \texttt{loader}, type \texttt{loaderSubjectRefType}).
    </text>
   </section>
 

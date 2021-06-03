@@ -59,10 +59,24 @@ is
      (Padding_Start_Byte .. Page_Size - 1) of Interfaces.Unsigned_8
      with Size => Padding_Size;
 
+   --D @Interface
    type Command_Interface_Type is record
+      --D @Interface
+      --D Current command written by the controller subject.
       Command           : Command_Type with Atomic;
+      --D @Interface
+      --D Current epoch written by the controller subject. It is incremented on
+      --D each reset of the subject.
       Epoch             : Interfaces.Unsigned_64;
+      --D @Interface
+      --D Current watchdog interval written by the controller subject. To
+      --D indicate liveness to the controller, a subject must update the
+      --D watchdog field within the given interval. This functionality is
+      --D disabled if the field is set to \texttt{WD\_DISABLED}.
       Watchdog_Interval : Interfaces.Unsigned_64;
+      --D @Interface
+      --D Padding of the command interface to the full memory page so every bit
+      --D of memory is captured by this type.
       Reserved          : Padding_Type;
    end record
      with

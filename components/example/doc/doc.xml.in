@@ -662,6 +662,7 @@
    \item Traps (VM Exits)
    \item Hypercalls
    \item Subject Monitoring (\ref{Subject_Info.Stateexample})
+   \item Subject Lifecycle (\ref{Mucontrol.Command.Instance.Command_Pageexample}, \ref{Mucontrol.Status.Instance.Status_Pageexample})
    \end{itemize}
 
    Of course, it depends on the system policy of the actual system whether a

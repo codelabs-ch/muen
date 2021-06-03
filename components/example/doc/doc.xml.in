@@ -488,7 +488,7 @@
 
    The self-referencing \texttt{loader} element shown in listing
    \ref{monitor-policy} is part of the subject lifecycle mechanism explained in
-   section TODO.
+   section \ref{subject-lifecycle}.
 
    The following subsections introduce each state configuration shortly, before
    the actual interface API is presented. See the Muen System Specification
@@ -633,6 +633,147 @@
     The monitored subject then continues execution in the scheduling slot of SM
     until the next trap occurs.
    </text>
+  </section>
+ </section>
+
+ <section id="subject-lifecycle" label="Subject Lifecycle" priority="0">
+  <text priority="0">
+   The subject lifecycle management concept provides a lightweight mechanism to
+   intialize and reset native subjects. It allows to set up the memory resource
+   of a subject to a well-known state prior to the start of executing the
+   subject code.
+
+   Initialization of subject runtime environment is performed by a dedicated
+   setup stub that runs before the effective subject code starts execution. To
+   enable external management and synchronization, the current lifecycle state
+   is reported via a so called \emph{Status Page} (detailed description see
+   \ref{Mucontrol.Status.Instance.Status_Pageexample}). Commands are read from
+   a \emph{Command Page} (see \ref{Mucontrol.Command.Instance.Command_Pageexample}).
+   The commands are written by an external control/management subject
+   (controller) that orchestrates all subjects under its purview.
+
+   A watchdog (WD) timer mechanism instructs a subject to update a value on the
+   status page in regular intervals. This enables the controller subject to
+   determine if a subject is alive or has become stuck. The watchdog value must
+   be updated within the desired period during regular subject execution,
+   outside of the initialization code/stub.
+
+   The current epoch value, communicated as part of the command interface,
+   differs between subject restarts.
+  </text>
+
+  <section id="subject-lifecycle-policy_config_compilation" label="Policy / Config / Compilation" priority="0">
+   <text priority="0">
+    On the policy level, the initialization stub is treated as a library. To
+    activate the init/reset functionality, a component simply declares a
+    dependency in the component XML spec.
+   </text>
+   <section id="subject-lifecycle-policy_config_compilation-memory" label="Memory" priority="0">
+    <text priority="0">
+     Read-only copies of writable memory regions and matching hashes must be
+     specified in the subject specification. The monitor/loader mechanism with a
+     reference to self can be used so the mappings are swapped/complemented with
+     read-only source regions. This way all necessary regions are made
+     reloadable by the expander.
+    </text>
+   </section>
+   <section id="subject-lifecycle-policy_config_compilation-entry" label="Entry Point" priority="0">
+    <text priority="0">
+     The RIP is set in the XML specification of the \texttt{Muinit} library.
+     Since \texttt{Mucbinsplit} will not overwrite an already present vCPU
+     \texttt{rip} value, no other change is necessary.  After initialization, a
+     jump to the start address of the text memory region is performed to start
+     execution of the actual subject code.
+
+     The text memory region is defined as follows:
+     \begin{itemize}
+     \item Logical name: text
+     \item Type: subject\_binary
+     \item Executable: True
+     \item Writable: False
+     \item Content: file-backed
+     \end{itemize}
+    </text>
+   </section>
+   <section id="subject-lifecycle-policy_config_compilation-compilation" label="Compilation" priority="0">
+    <text priority="0">
+     While on the policy level, the initialization code is treated as a library,
+     on the source level it is compiled and linked as an independent binary.
+     This avoids mixing of text, data etc of the init and the actual component
+     code, which is beneficial for certification. Additionally, the
+     initialization can perform a complete reset of the component memory without
+     interfering with its own state.
+
+     The initialization code is linked to a different address
+     (\verb!16#0010_0000#!) than regular Ada/SPARK component binaries
+     (\verb!16#0020_0000#!) to enable co-existence in the same address space.
+    </text>
+   </section>
+  </section>
+  <section id="subject-lifecycle-interfaces" label="Command and Status Interface" priority="0">
+   <text priority="0">
+    The initialization code implements a simple state machine by waiting for a
+    specific, expected command, executing the associated action and then
+    reporting completion of said action by updating the status.
+
+    A special command value \verb!Mucontrol.Commands.CMD_SELF_CTRL! designates that the
+    initialization code should not wait for further instructions but instead
+    perform initialization in one go.
+
+    A watchdog interval of \verb!Mucontrol.Commands.WD_DISABLED! designates that watchdog
+    functionality is disabled.
+
+    For the detailed specification of the \emph{Command Interface} see section
+    \ref{Mucontrol.Command.Instance.Command_Pageexample}. The \emph{Status Interface} is
+    specified in section \ref{Mucontrol.Status.Instance.Status_Pageexample}.
+   </text>
+  </section>
+  <section id="subject-lifecycle-operation" label="Operation" priority="0">
+   <text priority="0">
+    This section gives a description the high-level operation.
+    \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{subject_init_fsm}
+    \label{fig-subject_init_fsm}
+    \caption{Subject Initialization State Machine}
+    \end{figure}
+
+    The Subject Initialization Stub implements the finite state machine depicted
+    in figure ~\ref{fig-subject_init_fsm}. Transitions are perfomed when the
+    init code is in the given state and the specified command is read from the
+    command interface. Table \ref{tab-lifecycle-fsm-commands} list the commands
+    issued by the controller and the action performed by the Subject
+    Initialization code.
+
+    \begin{table}[h!]
+     \begin{center}
+      \begin{tabular}{|l|p{0.7\linewidth}|}
+       \hline
+       \textbf{Command} &amp; \textbf{Action}\\
+       \hline
+       Sync &amp;	Set status to SYNCED and wait for next command\\
+       Erase	&amp;	Zeroize writable memory regions\\
+       Prepare	&amp; Set initial content of writable memory regions by copying data from corresponding read-only regions with matching hash\\
+       Validate	&amp; Calculate and compare hashes for all memory regions that specify a hash. Report failure if a hash mismatch is detected\\
+       Run	&amp; Set initial register values, clean up stack, set status running and jump to subject code\\
+       Self-Control &amp;	Perform all initialization steps and start running subject code without further command processing\\
+       \hline
+      \end{tabular}
+      \caption{Commands and their associated actions}
+      \label{tab-lifecycle-fsm-commands}
+     \end{center}
+    \end{table}
+
+    \begin{warning}
+    Since the Status Interface is writable by the potentially untrustworthy
+    component code, its contents can only be relied upon after the delivery of
+    the reset event up until setting command to \verb!CMD_RUN! and observing
+    the status \verb!STATE_RUNNING!. The reset event assures that the init code
+    is executed and that the component cannot simply fake transitions by
+    operating on the status page.
+    \end{warning}
+   </text>
+   <section id="subject-lifecycle-operation-init" label="Initialization" priority="0"/>
   </section>
  </section>
 

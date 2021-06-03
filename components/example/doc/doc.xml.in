@@ -182,8 +182,8 @@
 
     In order to simplify the integrators job, the \texttt{mucbinsplit} tool can
     be used to generate the component binary regions with the correct
-    permissions automatically. See again the system specification document for a
-    detailed description of the tool.
+    permissions automatically. See the \emph{Muen System Specification}
+    \cite{muen:system-spec} document for a detailed description of the tool.
    </text>
   </section>
 
@@ -243,11 +243,11 @@
     Similar to actual components, the library \texttt{requires} certain
     resources to function. In this case, a \texttt{debuglog} channel is expected
     at the given \texttt{virtualAddress} with the specified \texttt{size}. Note
-    that the size is provided by variable. The library intends to write to this
-    shared memory channel as a channel \texttt{writer}. A component depending on
-    this this library inherits the requested resource from the library, and the
-    system integrator must map them to physical system resources at the subject
-    level.
+    that the size is provided by a variable. The library intends to write to
+    this shared memory channel as a channel \texttt{writer}. A component
+    depending on this library inherits the requested resource from the
+    library, and the system integrator must map them to physical system
+    resources at the subject level as seen in the previous section.
 
     The example XML specification also contains an \texttt{include} directive
     for another XML file: \texttt{config.xml}. This mechanism is used to
@@ -430,7 +430,7 @@
    as illustration.
   </text>
   <text priority="0">
-   As listed in the previous table, the following configuration types are
+   As listed in the table above, the following configuration types are
    supported:
 
    \begin{itemize}
@@ -480,7 +480,7 @@
    \item State\\CPU register state of monitored subject
    \item Timed Events\\Timed events of monitored subject
    \item Interrupts\\Interrupts of monitored subject
-   \item Loader\\Loader mechanism used to reset monitored subject to initial state.
+   \item Loader\\Loader mechanism used to reset monitored subject to initial state
    \end{itemize}
 
    It is possible to define multiple state items per type, referencing different
@@ -579,7 +579,8 @@
     be set using the Ada \texttt{Address} aspect, with the value as configured
     in the SM component \texttt{monitor/state} specification. The
     \texttt{Volatile} aspect must be used as well, to tell the compiler that the
-    value of this variable might suddenly change.
+    value of this variable may change outside of the programming language
+    boundary.
 
     Using the \texttt{State} variable, SM is able to inspect and alter the
     subject CPU register state of the monitored subject after a trap. For
@@ -601,13 +602,13 @@
     \lstinputlisting[linerange=Smexitbegin-Smexitend,label=code-sm-exit-reason,caption=Determining
     the exit reason,language=Ada]{../../sm/src/sm.adb}
 
-    If it determines that the exit was caused by the execution of
-    \texttt{CPUID}, it calls the exit handler for this exit reason. It does the
-    same for other exit reasons of interest. If there is no handler for a
-    specific exit reason, execution of the monitored subject is halted by
-    stopping the vCPU. This is done by calling \texttt{SK.CPU.Stop}, which
-    executes \texttt{cli; hlt} in a loop. By not returning to the monitored
-    subject, the cooperative scheduling group is now in a halted state.
+    If it concludes that the exit was caused by the execution of \texttt{CPUID},
+    it calls the exit handler for this exit reason. It does the same for other
+    exit reasons of interest. If there is no handler for a specific exit reason,
+    execution of the monitored subject is halted by stopping the vCPU. This is
+    done by calling \texttt{SK.CPU.Stop}, which executes \texttt{cli; hlt} in a
+    loop. By not returning to the monitored subject, the cooperative scheduling
+    group is now in a halted state.
 
     The \texttt{CPUID.Process} procedure called on a \texttt{CPUID} exit
     emulates a vCPU with certain features.  Therefore, depending on the

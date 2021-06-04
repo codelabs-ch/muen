@@ -27,7 +27,7 @@ is
    --D @UL Id => validators_dev, Section => validation-dev, Priority => 0
 
    --D @Item List => validators_dev, Priority => 0
-   --D Validate that devices referenced by logical devices exists.
+   --D Validate that devices referenced by logical devices exist.
    procedure Physical_Device_References (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_dev, Priority => 0
@@ -40,7 +40,7 @@ is
    procedure Physical_IRQ_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_dev, Priority => 0
-   --D Validate that physical device IRQs referenced by logical IRQs exists.
+   --D Validate that physical device IRQs referenced by logical IRQs exist.
    procedure Physical_IRQ_References (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_dev, Priority => 0
@@ -68,7 +68,7 @@ is
    procedure IO_Port_Start_Smaller_End (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_dev, Priority => 0
-   --D Validate that physical I/O ports referenced by logical I/O ports exists.
+   --D Validate that physical I/O ports referenced by logical I/O ports exist.
    procedure IO_Port_References (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_dev, Priority => 0

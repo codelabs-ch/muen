@@ -19,7 +19,8 @@
     parts by the toolchain into format A and B accordingly.
 
     See line \ref{lst:af-lineref-system} and following in listing
-    \ref{lst:annotated-policy} for an annotated system policy example.
+    \ref{lst:annotated-policy} on page \pageref{lst:annotated-policy} for an
+    annotated system policy example.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>

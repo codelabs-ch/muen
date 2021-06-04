@@ -105,9 +105,8 @@
    description in multiple steps to the final system description, resolving
    abstractions which exist to make life simpler and less error-prone to the
    integrator. Additionally, the toolchain also creates various build artifacts
-   which are incorporated into the final system image by the final system
-   composition step. Section \ref{integration} gives an overview of the system
-   integration process.
+   which are incorporated into the system image. Section \ref{integration} gives
+   an overview of the system integration process.
 
    The Muen SK can be regarded as a policy enforcement engine, in the sense that
    it has no knowledge about the actual content of the generated data structures
@@ -123,11 +122,13 @@
    introduced in section \ref{tau0-concept}.
 
    Section \ref{toolchain} explains every tool and the system image composer in
-   detail. It also presents the usage of each tool.
+   detail. It also presents the usage of each tool. Section \ref{validation}
+   then outlines all semantic checks performed on the system policy primarily by
+   the validation tool, but also by other tools in the toolchain.
 
-   Section \ref{schema} specifies the XML-schema and structure of the source
-   format of the Muen system policy. Explanations and examples illustrate how to
-   configure a component-based system with the Muen SK.
+   Finally section \ref{schema} specifies the XML-schema and structure of the
+   source format of the Muen system policy. Explanations and examples illustrate
+   how to configure a component-based system with the Muen SK.
   </text>
  </section>
 
@@ -280,9 +281,9 @@
    % XXX: Describe/introduce component specification
    % XXX: Update graph: Component specs can also be parameterized
 
-   The CSPECs mechanism outlined in the Muen Component Specification document
-   \cite{muen:component-spec} can be used by components to generate source
-   specifications (e.g.  in SPARK/Ada) from the component description.
+   The CSPECs mechanism outlined in the \emph{Muen Component Specification}
+   document \cite{muen:component-spec} can be used by components to generate
+   source specifications (e.g.  in SPARK/Ada) from the component description.
    Furthermore, a component might expand its own component description with
    information extracted from system information, or it might use the
    \texttt{mucbinsplit} tool (\ref{tools-mucbinsplit}) to fill in the memory
@@ -348,7 +349,7 @@
    image by assembling the input files and generating data structures such as
    page tables, all while checking that invariants necessary for correct
    isolation are valid. An example for such an invariant is that no subject
-   memory mapping may reference a memory region containing paging structure.
+   memory mapping may reference a memory region containing paging structures.
 
    For the dynamic case, the goal is to have a trusted $\tau0$ subject with
    additional privileges to interact with the Muen SK over a special $\tau0$
@@ -362,7 +363,7 @@
    hard isolation must be formally proven. This process is currently ongoing.
   </text>
 
-  <section id="tau0-static" label="Static mode of operation" priority="0">
+  <section id="tau0-static" label="Static Mode of Operation" priority="0">
    <text priority="0">
     The static variant is the one which is currently implemented. $\tau0$ runs
     at integration time and assembles the system image by constructing the
@@ -371,8 +372,9 @@
     VMs (\ref{tools-mugenacpi}).
 
     Static $\tau0$ fulfills its task by creating the system image in memory
-    while processing the commands from the command stream. See
-    \ref{tools-mugentau0cmds} for an example command stream.
+    while processing the commands from the command stream. See listing
+    \ref{lst:cmdstream} on page \pageref{lst:cmdstream} for an example command
+    stream.
 
     $\tau0$ is written in SPARK/Ada and it applies memory typization to formally
     prove aspects of the system. Command processing starts from a well-known
@@ -411,8 +413,9 @@
   <section id="toolchain-overview" label="Overview" priority="0">
    <text priority="0">
     While the previous section \ref{integration} presented an overview of the
-    system integration process, this section focuses on the detailed description
-    of the tools forming the Muen toolchain.
+    system integration process and section \ref{tau0-concept} introduced the
+    $\tau0$ concept, this section focuses on the detailed description of the
+    tools forming the Muen toolchain.
 
     The tool-based processing of the Muen system policy can be divided into the
     following steps:
@@ -476,11 +479,11 @@
      numeric equality/inequality and logical operators. They are evaluated to
      boolean config values prior to processing conditionals.
 
-     The use of conditionals enables selective activation of parts of the
-     source policy depending on the value of a given config variable. This
-     allows flexible customization of a system during policy compilation time
-     by setting the value of a config variable or formulating an appropriate
-     boolean expression.
+     The use of conditionals enables selective activation of parts of the source
+     policy depending on the value of a given config variable. This allows
+     flexible customization of a system during policy compilation by setting the
+     value of a config variable or formulating an appropriate boolean
+     expression.
 
      Config variable substitution enables the policy writer to set the value of
      attributes to those of referenced config values. Attributes that start
@@ -513,7 +516,7 @@
      used to extract ELF sections of the component binary into separate files.
      It automatically extends the component specification by adding a
      corresponding memory region with the appropriate access rights (e.g.
-     executable, writable).
+     executable, writable) for text, rodata, data, bss and stack sections.
     </text>
    </section>
 
@@ -608,7 +611,8 @@
      \item ACPI tables
      \item Linux zero-page (ZP) regions
      \end{itemize}
-     \item Regions for Solo5 unikernels
+     \item Regions for Solo5\footnote{\url{https://github.com/Solo5/solo5}}
+     unikernels
      \begin{itemize}
      \item Solo5 boot info
      \end{itemize}
@@ -626,7 +630,7 @@
    <section id="toolchain-image-creation" label="Image Creation" priority="0">
     <text priority="0">
      The system image composer assembles the final system image. This task is
-     perfomed by $\tau0$ static explained in the previous section
+     perfomed by $\tau0$ static introduced in the previous section
      \ref{tau0-static}. The usage of it is specified in \ref{tools-tau0-static}.
     </text>
    </section>
@@ -753,7 +757,7 @@
      that the hardware provides an IOMMU device and that all references to
      subjects are resolvable. See \ref{validation} for a complete list of all
      executed checks. The tool aborts with a non-zero exit status and an
-     explanatory message to the user if a check fails.
+     explanatory message to the user if checks fail.
 
      \begin{description} \itemsep1pt \parskip0pt
      \item[Name] \hfill \\
@@ -768,8 +772,8 @@
 
    <section id="tools-mucfgmemhashes" label="Hasher" priority="0">
     <text priority="0">
-     The Mucfgmemhashes tool is used to add memory integrity hashes to a given
-     policy.
+     The \texttt{mucfgmemhashes} tool is used to add memory integrity hashes to
+     a given policy.
 
      \begin{description} \itemsep1pt \parskip0pt
      \item[Name] \hfill \\
@@ -780,9 +784,9 @@
      System policy in format B with memory integrity hashes
      \end{description}
 
-     The \texttt{Mucfgmemhashes} tool appends a hash to all memory regions
-     with fill and file content. It must run after all files have been
-     generated by the structure generator tools.
+     The tool appends a hash to all memory regions with fill and file content.
+     It must run after all files have been generated by the structure generator
+     tools.
 
      The actual hash is generated using the SHA-256 algorithm and is intended
      to be used to verify the integrity of memory regions during runtime.
@@ -799,21 +803,22 @@
      From an abstract point of view, the \texttt{hashRef} element is a way to
      link multiple memory regions by declaring that the hash of the content is
      the same.  The hash may serve as an indicator on how to reconstruct the
-     (initial) content of a memory region. This mechanism is used by the subject
-     loader (SL) during subject init and reset operation. The subject loader
-     expansion step remaps writable memory regions of the loadee (the subject
-     under loader control) to SL and replaces the original regions with new
-     ones containing a hash reference to the associated pyhsical memory region.
-     This way SL is able to determine the intended content of the target memory
-     region by looking up the region in its sinfo page using the hash value as
-     key.
+     (initial) content of a memory region. This mechanism is used by e.g. the
+     subject loader (SL) during subject init and reset operation. The subject
+     loader expansion step remaps writable memory regions of the loadee (the
+     subject under loader control) to SL and replaces the original regions with
+     new ones containing a hash reference to the associated pyhsical memory
+     region.  This way SL is able to determine the intended content of the
+     target memory region by looking up the region in its sinfo page using the
+     hash value as key.
     </text>
    </section>
 
    <section id="tools-mugentau0cmds" label="Tau0 Command Stream Generator" priority="0">
     <text priority="0">
-     Creates an XML command stream for $\tau0$ to let it compose the system
-     image specified by the system policy given as input.
+     The \texttt{mugentau0cmds} tool creates an XML command stream for $\tau0$
+     to let it compose the system image specified by the system policy given as
+     input.
 
      The tool reads the policy in format B and transforms it to a stream of
      sequential commands as shown in the following listing:
@@ -855,8 +860,6 @@
      \item[Output] \hfill \\
      Muen system image
      \item[Output format] \hfill \\
-     Multiboot image\footnote{\url{https://www.gnu.org/software/grub/manual/multiboot/multiboot.html}},
-     bootable by any compliant bootloader.
      Command Stream Loader (CSL)
      image\footnote{\url{https://www.codelabs.ch/download/bsbsc-spec.pdf}},
      bootable by any compliant bootloader.
@@ -1042,7 +1045,8 @@
       \item[Output] \hfill \\
       Subject info data in binary format
       \item[Output format] \hfill \\
-      As specified in \texttt{common/musinfo/musinfo.ads}
+      As specified in \cite{muen:component-spec} and
+      \texttt{common/musinfo/musinfo.ads}
       \end{description}
 
       The Sinfo page is used to export subject information data extracted from
@@ -1062,7 +1066,7 @@
 
    <section id="tools-mucheckelf" label="Kernel ELF Checker" priority="0">
     <text priority="0">
-     The \texttt{Mucheckelf} tool enforces that the format of a given Muen
+     The \texttt{mucheckelf} tool enforces that the format of a given Muen
      kernel ELF binary matches the kernel memory layout specified in a system
      policy. Furthermore, the ELF kernel entry point is compared to the expected
      value.
@@ -1089,7 +1093,7 @@
 
    <section id="tools-mucheckstack" label="Stack Usage Checker" priority="0">
     <text priority="0">
-     The \texttt{Mucheckstack} tool statically calculates the worst-case stack
+     The \texttt{mucheckstack} tool statically calculates the worst-case stack
      usage of a native Ada/SPARK component or the Muen kernel compiled with
      the -fcallgraph-info
      switch\footnote{\url{https://www.adacore.com/uploads/technical-papers/Stack\_Analysis.pdf}}.
@@ -1120,7 +1124,7 @@
    <section id="tools-mugenhwcfg" label="Hardware Config Generator" priority="0">
     <text priority="0">
      The
-     \texttt{Mugenhwcfg}\footnote{\url{https://git.codelabs.ch/?p=muen/mugenhwcfg.git}}
+     \texttt{mugenhwcfg}\footnote{\url{https://git.codelabs.ch/?p=muen/mugenhwcfg.git}}
      tool has been created to automate the process of gathering all necessary
      hardware information. To collect data for a new target hardware all that
      is required is to run the tool on a common Linux distribution. See the
@@ -1175,7 +1179,7 @@
    <section id="tools-mugenschedcfg" label="Scheduling Plan Generator" priority="0">
     <text priority="0">
      The
-     \texttt{Mugenschedcfg}\footnote{\url{https://git.codelabs.ch/?p=muen/mugenschedcfg.git}}
+     \texttt{mugenschedcfg}\footnote{\url{https://git.codelabs.ch/?p=muen/mugenschedcfg.git}}
      tool generates scheduling plans for Muen based on a given scheduling
      configuration.  The configuration allows the user to specify the
      following scheduling properties:

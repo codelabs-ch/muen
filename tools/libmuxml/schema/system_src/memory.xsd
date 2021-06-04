@@ -174,7 +174,7 @@
     mapped into a subject, they must be adjacent (\ref{validation-subj}).
 
     The \texttt{mugenzp} tool (\ref{tools-mugenzp}) extracts the virtual address
-    and size of a subject-mapped \texttt{subject\_initrd} region and stores the
+    and size of a subject-mapped region of this memory type and stores the
     values in the generated Linux zero-page (ZP) backing file.
     \item \texttt{subject\_bios}~\\
     Indicates to subjects that the memory region is reserved for BIOS/firmware

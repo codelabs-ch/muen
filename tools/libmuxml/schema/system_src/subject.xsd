@@ -68,8 +68,8 @@
 
     In more detail, the \texttt{loader} monitor element instructs the expander
     tool to map all memory regions of the referenced subject into the address
-    space of the monitor subject, using \texttt{virtualAddress} as offset in the
-    address space of the loader.
+    space of the monitor subject, using the specified \texttt{virtualAddress} as
+    offset in the address space of the loader.
 
     If a memory region of the loaded subject is writable and file-backed, the
     region is replaced with an empty region and linked via the \texttt{hashRef}

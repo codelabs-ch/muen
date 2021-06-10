@@ -7,6 +7,8 @@ XSL_TFM_GPR = misc/gpr.xsl
 
 include ../component_spark.mk
 
+SPARK_OPTS += --subdirs=..
+
 spec/example.xml: spec/example.xsl $(POLICY_SRC)
 	@$(E) $(COMPONENT) "Generate $@" "xsltproc -o $@ $< $(POLICY_SRC)"
 

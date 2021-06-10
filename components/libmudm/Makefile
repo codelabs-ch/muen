@@ -1,5 +1,5 @@
 COMPONENT = libmudm
 
-COMPONENT_TARGETS = cspecs
+COMPONENT_TARGETS = $(CSPECS)
 
 include ../library_spark.mk

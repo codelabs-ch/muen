@@ -16,7 +16,7 @@ CSPEC_INST_DEPS += $(MUCBINSPLIT) $(COMP_BIN)
 endif
 endif
 
-cspecs: $(GEN_DIR)/$(COMPONENT).xml
+CSPECS = $(GEN_DIR)/$(COMPONENT).xml
 
 $(POLICY_CSPEC_DIR):
 	@mkdir -p $@

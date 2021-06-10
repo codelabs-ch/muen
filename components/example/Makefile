@@ -1,7 +1,7 @@
 COMPONENT = example
 
 CSPEC_TARGETS     = spec/example.xml $(GEN_DIR)/example_config.gpr
-COMPONENT_TARGETS = cspecs
+COMPONENT_TARGETS = $(CSPECS)
 
 XSL_TFM_GPR = misc/gpr.xsl
 

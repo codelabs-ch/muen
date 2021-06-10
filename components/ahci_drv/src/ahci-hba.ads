@@ -232,7 +232,7 @@ is
       Ports_Implemented     : Bit_Array (0 .. 31);
       Version               : Version_Type;
       CCC_Control           : CCC_Control_Type;
-      CCC_Ports             : Bit_Array (1 .. 31);
+      CCC_Ports             : Bit_Array (0 .. 31);
       Enclosure_Mgmt_Loc    : EM_Location_Type;
       Enclosure_Mgmt_Ctrl   : EM_Control_Type;
       Host_Capabilities_Ext : HBA_Caps_Ext_Type;

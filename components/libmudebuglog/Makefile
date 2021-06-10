@@ -1,8 +1,7 @@
 COMPONENT = libmudebuglog
 
 CSPEC_TARGETS     = $(GEN_DIR)/config.xml
-COMPONENT_TARGETS = cspecs
-COMPONENT_TARGETS = cspecs
+COMPONENT_TARGETS = $(CSPECS)
 
 XSL_TFM_COMMON_CFG = ../xslt/config.xsl
 XSL_TFM_CFG        = misc/config.xsl

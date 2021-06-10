@@ -1,6 +1,6 @@
 COMPONENT = sl
 
-COMPONENT_TARGETS = cspecs
+COMPONENT_TARGETS = $(CSPECS)
 INSTALL_TARGETS = $(OBJ_DIR)/.adjust-cspec
 
 CSPEC_SCRIPT = misc/adjust-xml-spec.py

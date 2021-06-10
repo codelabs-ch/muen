@@ -1,6 +1,6 @@
 COMPONENT = isolation_tests
 
-COMPONENT_TARGETS = cspecs
+COMPONENT_TARGETS = $(CSPECS)
 
 NO_PROOF = true
 

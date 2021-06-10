@@ -44,4 +44,9 @@ is
      (Policy     : in out Muxml.XML_Data_Type;
       Stream_Doc : in out Utils.Stream_Document_Type);
 
+private
+
+   --  Current device ID.
+   Current_Device : Natural := 0;
+
 end Cmd_Stream.Devices;

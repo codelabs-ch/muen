@@ -2,7 +2,7 @@ COMPONENT = dbgserver
 
 CSPEC_TARGETS     = $(GEN_DIR)/config.xml $(GEN_DIR)/dbg_config.gpr $(GEN_DIR)/logchannels.xml
 CSPEC_TARGETS    += $(GEN_DIR)/dbg-subject_list.ads
-COMPONENT_TARGETS = cspecs
+COMPONENT_TARGETS = $(CSPECS)
 NO_PROOF          = true
 
 XSL_TFM_COMMON_CFG = ../xslt/config.xsl

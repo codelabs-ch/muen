@@ -60,7 +60,7 @@ is
    --  The Regs field of the subject state is returned to the caller.
    procedure Restore_State
      (ID   :     Skp.Global_Subject_ID_Type;
-      Regs : out SK.CPU_Registers_Type)
+      Regs : out CPU_Registers_Type)
    with
       Global  => (Input  => (State, CPU_Info.APIC_ID),
                   In_Out => (Crash_Audit.State, X86_64.State)),
@@ -82,7 +82,7 @@ is
    procedure Save_State
      (ID          : Skp.Global_Subject_ID_Type;
       Exit_Reason : Word64;
-      Regs        : SK.CPU_Registers_Type)
+      Regs        : CPU_Registers_Type)
    with
       Global  => (Input  => CPU_Info.APIC_ID,
                   In_Out => (State, Crash_Audit.State, X86_64.State)),
@@ -122,7 +122,7 @@ private
       Reason => "Reserved memory size is bigger than actual size of type");
    pragma Warnings (GNAT, Off, "*padded by * bits");
    type Subject_State_Array is array
-     (Skp.Global_Subject_ID_Type) of SK.Subject_State_Type
+     (Skp.Global_Subject_ID_Type) of Subject_State_Type
    with
       Independent_Components,
       Component_Size => Page_Size * 8,

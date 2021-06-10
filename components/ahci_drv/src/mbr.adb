@@ -160,7 +160,7 @@ is
                   Start_Lba :=
                      Interfaces.Unsigned_64 (Partition.LBA_First_Sector) +
                      Sector;
-                  Add_Entry := True; --  allways add non EBR entries
+                  Add_Entry := True; --  always add non EBR entries
                else
                   --  for EBR sector is relative addressed to start of ebr
                   Start_Lba :=
@@ -177,7 +177,7 @@ is
                      Max_Entries := 2;
                   end if;
 
-                  --  the next partiton table is at
+                  --  the next partition table is at
                   Sector := Start_Lba;
                   Stop_Parsing := False;
 

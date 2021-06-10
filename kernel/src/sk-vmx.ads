@@ -31,7 +31,7 @@ with
 is
 
    --  Physical memory address of VMX exit handler.
-   Exit_Address : constant SK.Word64
+   Exit_Address : constant Word64
    with
       Import,
       Convention => C,
@@ -45,48 +45,48 @@ is
 
    --  Reset VMCS of subject specified by ID.
    procedure Reset
-     (VMCS_Address : SK.Word64;
+     (VMCS_Address : Word64;
       Subject_ID   : Skp.Global_Subject_ID_Type)
    with
       Global => (Input  => CPU_Info.APIC_ID,
                  In_Out => (VMCS_State, Crash_Audit.State, X86_64.State));
 
    --  Load VMCS with given address.
-   procedure Load (VMCS_Address : SK.Word64)
+   procedure Load (VMCS_Address : Word64)
    with
       Global => (Input  => CPU_Info.APIC_ID,
                  In_Out => (Crash_Audit.State, X86_64.State));
 
    --  Read value from specified field of the current, active VMCS.
    procedure VMCS_Read
-     (Field :     SK.Word16;
-      Value : out SK.Word64)
+     (Field :     Word16;
+      Value : out Word64)
    with
       Global => (Input  => CPU_Info.APIC_ID,
                  In_Out => (Crash_Audit.State, X86_64.State));
 
    --  Write given value to the specified field of the current, active VMCS.
    procedure VMCS_Write
-     (Field : SK.Word16;
-      Value : SK.Word64)
+     (Field : Word16;
+      Value : Word64)
    with
       Global => (Input  => CPU_Info.APIC_ID,
                  In_Out => (Crash_Audit.State, X86_64.State));
 
    --  Setup control fields of the currently active VMCS.
    procedure VMCS_Setup_Control_Fields
-     (IO_Bitmap_Address  : SK.Word64;
-      MSR_Bitmap_Address : SK.Word64;
-      MSR_Store_Address  : SK.Word64;
-      MSR_Count          : SK.Word32;
-      Ctls_Exec_Pin      : SK.Word32;
-      Ctls_Exec_Proc     : SK.Word32;
-      Ctls_Exec_Proc2    : SK.Word32;
-      Ctls_Exit          : SK.Word32;
-      Ctls_Entry         : SK.Word32;
-      CR0_Mask           : SK.Word64;
-      CR4_Mask           : SK.Word64;
-      Exception_Bitmap   : SK.Word32)
+     (IO_Bitmap_Address  : Word64;
+      MSR_Bitmap_Address : Word64;
+      MSR_Store_Address  : Word64;
+      MSR_Count          : Word32;
+      Ctls_Exec_Pin      : Word32;
+      Ctls_Exec_Proc     : Word32;
+      Ctls_Exec_Proc2    : Word32;
+      Ctls_Exit          : Word32;
+      Ctls_Entry         : Word32;
+      CR0_Mask           : Word64;
+      CR4_Mask           : Word64;
+      Exception_Bitmap   : Word32)
    with
       Global => (Input  => CPU_Info.APIC_ID,
                  In_Out => (Crash_Audit.State, X86_64.State));
@@ -100,8 +100,8 @@ is
 
    --  Setup guest fields of the currently active VMCS.
    procedure VMCS_Setup_Guest_Fields
-     (PML4_Address : SK.Word64;
-      EPT_Pointer  : SK.Word64)
+     (PML4_Address : Word64;
+      EPT_Pointer  : Word64)
    with
       Global => (Input  => CPU_Info.APIC_ID,
                  In_Out => (Crash_Audit.State, X86_64.State));

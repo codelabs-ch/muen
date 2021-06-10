@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Interfaces;
-
 with DOM.Core.Elements;
 with DOM.Core.Nodes;
 
@@ -33,9 +31,6 @@ package body Cmd_Stream.Roots.Memory
 is
 
    package CU renames Cmd_Stream.Utils;
-
-   --  Address of next free Tau0 private page.
-   Next_Priv_Page : Interfaces.Unsigned_64 := 16#4000_0000_0000#;
 
    --  Generate command stream for page tables of memory region specified by
    --  ID, size and level.
@@ -59,6 +54,7 @@ is
       Region_Attr  :        CU.Attribute_Type;
       Base_Address :        Interfaces.Unsigned_64;
       Size         :        Interfaces.Unsigned_64);
+
    -------------------------------------------------------------------------
 
    procedure Add_Content

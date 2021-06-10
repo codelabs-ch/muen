@@ -1,6 +1,5 @@
 --
---  Copyright (C) 2019  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2019  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2020 secunet Security Networks AG
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,26 +15,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-private with Interfaces;
-
-with DOM.Core;
-
-with Cmd_Stream.Utils;
-
-package Cmd_Stream.Roots.Memory
+package Muenblock_Example
 is
 
-   --  Generate command stream to create memory regions and their associated
-   --  page tables of given system policy.
-   procedure Create_Memory_Regions
-     (Stream_Doc  : in out Utils.Stream_Document_Type;
-      Phys_Memory :        DOM.Core.Node_List);
+   procedure Show is null;
 
-   Missing_Filesize : exception;
-
-private
-
-   --  Address of next free Tau0 private page.
-   Next_Priv_Page : Interfaces.Unsigned_64 := 16#4000_0000_0000#;
-
-end Cmd_Stream.Roots.Memory;
+end Muenblock_Example;

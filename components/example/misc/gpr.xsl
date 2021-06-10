@@ -9,6 +9,7 @@
  <xsl:template match="system/*"/>
 
  <xsl:template match="/system/config">
+  <xsl:variable name="blkAHCIDrvEnabled" select="boolean[@name='ahci_drv_enabled']/@value"/>
   <xsl:variable name="blkWriteTestValue" select="boolean[@name='example_blk_write']/@value"/>
   <xsl:variable name="blkWriteTest">
    <xsl:choose>
@@ -25,6 +26,10 @@
   <xsl:call-template name="configBooleanWithParams">
    <xsl:with-param name="name" select="'blk_write_test'"/>
    <xsl:with-param name="value" select="$blkWriteTest"/>
+  </xsl:call-template>
+  <xsl:call-template name="configBooleanWithParams">
+   <xsl:with-param name="name" select="'ahci_drv_enabled'"/>
+   <xsl:with-param name="value" select="$blkAHCIDrvEnabled"/>
   </xsl:call-template>
   <xsl:call-template name="gprFooter"/>
  </xsl:template>

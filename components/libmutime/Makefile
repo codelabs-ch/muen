@@ -1,6 +1,6 @@
 COMPONENT = libmutime
 
-COMPONENT_TARGETS = cspecs
+COMPONENT_TARGETS = $(CSPECS)
 
 include ../library_spark.mk
 

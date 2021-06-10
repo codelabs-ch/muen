@@ -23,21 +23,35 @@ with "generated/example_config";
 
 project Example extends "../component_spark" is
 
-   Extra_Dirs := Component_Spark.Src_Dirs;
-   Extra_Dirs := Extra_Dirs
+   Src_Dirs := Component_Spark.Src_Dirs
+     & "src"
+     & "generated"
      & "../../common/strings/impl"
      & "../../common/mutimedevents";
+   Obj_Suffix := "/";
+
+   case example_config.ahci_drv_enabled is
+      when "true"  =>
+         Src_Dirs   := Src_Dirs & "src/muenblock_client/enabled";
+         Obj_Suffix := Obj_Suffix & "ahci_drv_on";
+      when "false" =>
+         Src_Dirs   := Src_Dirs & "src/muenblock_client/disabled";
+         Obj_Suffix := Obj_Suffix & "ahci_drv_off";
+   end case;
 
    case example_config.blk_write_test is
       when "true"  =>
-         Extra_Dirs := Extra_Dirs & "src/blkwrite/enabled";
+         Src_Dirs   := Src_Dirs & "src/blkwrite/enabled";
+         Obj_Suffix := Obj_Suffix & "_ahci_write_on";
       when "false" =>
-         Extra_Dirs := Extra_Dirs & "src/blkwrite/disabled";
+         Src_Dirs   := Src_Dirs & "src/blkwrite/disabled";
+         Obj_Suffix := Obj_Suffix & "_ahci_write_off";
    end case;
 
    for Languages use ("Ada", "Asm");
-   for Source_Dirs use ("generated", "src") & Extra_Dirs;
-   for Object_Dir use "obj/" & Component_Spark.Build_Mode;
+   for Source_Dirs use Src_Dirs;
+   for Object_Dir use "obj/" & Component_Spark.Build_Mode & Obj_Suffix;
+   for Exec_Dir use "obj/" & Component_Spark.Build_Mode;
    for Main use ("example");
 
 end Example;

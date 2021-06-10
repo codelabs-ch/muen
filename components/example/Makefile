@@ -1,11 +1,16 @@
 COMPONENT = example
 
-CSPEC_TARGETS     = $(GEN_DIR)/example_config.gpr
-COMPONENT_TARGETS = cspecs
+CSPEC_TARGETS     = spec/example.xml $(GEN_DIR)/example_config.gpr
+COMPONENT_TARGETS = $(CSPECS)
 
 XSL_TFM_GPR = misc/gpr.xsl
 
 include ../component_spark.mk
+
+SPARK_OPTS += --subdirs=..
+
+spec/example.xml: spec/example.xsl $(POLICY_SRC)
+	@$(E) $(COMPONENT) "Generate $@" "xsltproc -o $@ $< $(POLICY_SRC)"
 
 $(GEN_DIR)/example_config.gpr: $(XSL_TFM_GPR) $(POLICY_SRC)
 	@$(E) $(COMPONENT) "Generate example_config.gpr" "xsltproc -o $@ --stringparam \

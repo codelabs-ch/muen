@@ -37,21 +37,11 @@ package body Cmd_Stream.Roots.Test_Data.Tests is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
-
-      State : constant Positive := Allocate_Root;
    begin
-      Current_Root := 0;
       Assert (Condition => Allocate_Root = 0,
               Message   => "Root not 0");
       Assert (Condition => Allocate_Root = 1,
               Message   => "Root not 1");
-
-      Current_Root := State;
-
-   exception
-      when others =>
-         Current_Root := State;
-         raise;
 --  begin read only
    end Test_Allocate_Root;
 --  end read only
@@ -65,21 +55,11 @@ package body Cmd_Stream.Roots.Test_Data.Tests is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
-
-      State : constant Positive := Allocate_Page_Table;
    begin
-      Current_PT := 0;
       Assert (Condition => Allocate_Page_Table = 0,
               Message   => "PT not 0");
       Assert (Condition => Allocate_Page_Table = 1,
               Message   => "PT not 1");
-
-      Current_PT := State;
-
-   exception
-      when others =>
-         Current_PT := State;
-         raise;
 --  begin read only
    end Test_Allocate_Page_Table;
 --  end read only

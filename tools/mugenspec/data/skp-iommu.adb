@@ -15,7 +15,7 @@ is
        Address => System'To_Address (16#001f_d000#);
    pragma Annotate
      (GNATprove, Intentional,
-      "object with constraints on bit representation is unsuitable for alias*",
+      "object is unsuitable for aliasing via address clause",
       "Only necessary registers of MMIO device are specified.");
    pragma Warnings (On);
 

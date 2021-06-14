@@ -28,7 +28,7 @@
 
 package Mutime.Info
 with
-   Abstract_State => (Valid, (State with External => Async_Writers))
+   Abstract_State => (State with External => Async_Writers)
 is
 
    subtype Timezone_Type is Integer_62 range
@@ -38,51 +38,46 @@ is
    subtype TSC_Tick_Rate_Hz_Type is
      Interfaces.Unsigned_64 range 1000000 .. 100000000000;
 
+   Time_Info_Size : constant := 24;
+
    type Time_Info_Type is record
       --  Mutime timestamp when TSC was zero. A TSC_Time_Base value of zero
       --  indicates that the time info is not (yet) valid. Use Update_Validity
       --  and Is_Valid operations to check.
-      TSC_Time_Base      : Timestamp_Type with Atomic;
+      TSC_Time_Base      : Timestamp_Type'Base with Atomic;
       --  TSC Ticks in Hz
-      TSC_Tick_Rate_Hz   : TSC_Tick_Rate_Hz_Type;
+      TSC_Tick_Rate_Hz   : TSC_Tick_Rate_Hz_Type'Base;
       --  Timezone offset in microseconds
-      Timezone_Microsecs : Timezone_Type;
-   end record;
-
-   --  Update time info validity flag.
-   procedure Update_Validity
-   with
-      Global  => (Input  => State,
-                  Output => Valid),
-      Depends => (Valid => State);
+      Timezone_Microsecs : Timezone_Type'Base;
+   end record
+   with Size => Time_Info_Size * 8;
 
    --  Return validity status of time info page.
    function Is_Valid return Boolean
    with
-      Global => (Input => Valid);
+      Global => (Input => State),
+      Volatile_Function;
 
    --  Calculate current timestamp using the information stored in the time
    --  info record and the specified CPU ticks. The procedure returns the
    --  timestamp and the calculated correction to the time base in
-   --  microseconds.
+   --  microseconds if Success is True.
    procedure Get_Current_Time
      (Schedule_Ticks :     Integer_62;
       Correction     : out Integer_63;
-      Timestamp      : out Timestamp_Type)
+      Timestamp      : out Timestamp_Type;
+      Success        : out Boolean)
    with
-      Global  => (Proof_In => Valid,
-                  Input    => State),
-      Depends => ((Correction, Timestamp) => (Schedule_Ticks, State)),
-      Pre     => Is_Valid;
+      Global  => (Input => State),
+      Depends => ((Correction, Timestamp) => (Schedule_Ticks, State),
+                   Success                => State);
 
    --  Return time at system boot.
    procedure Get_Boot_Time
      (Timestamp : out Timestamp_Type)
    with
-      Global  => (Proof_In => Valid,
-                  Input    => State),
-      Depends => (Timestamp => State),
-      Pre     => Is_Valid;
+      Global  => (Input => State),
+      Depends => (Timestamp => State);
 
 private
 
@@ -91,6 +86,12 @@ private
       TSC_Tick_Rate_Hz   at  8 range 0 .. 63;
       Timezone_Microsecs at 16 range 0 .. 63;
    end record;
+   for Time_Info_Type'Object_Size use Time_Info_Size * 8;
+
+   function Valid (TI : Time_Info_Type) return Boolean
+   is (TI.TSC_Time_Base in Timestamp_Type
+       and TI.TSC_Tick_Rate_Hz in TSC_Tick_Rate_Hz_Type
+       and TI.Timezone_Microsecs in Timezone_Type);
 
    procedure Get_Current_Time
      (TI             :     Time_Info_Type;
@@ -98,20 +99,14 @@ private
       Correction     : out Integer_63;
       Timestamp      : out Timestamp_Type)
    with
-      Depends => ((Correction, Timestamp) => (Schedule_Ticks, TI));
+      Depends => ((Correction, Timestamp) => (Schedule_Ticks, TI)),
+      Pre     => Valid (TI => TI);
 
    procedure Get_Boot_Time
      (TI        :     Time_Info_Type;
       Timestamp : out Timestamp_Type)
    with
-      Depends => (Timestamp => TI);
-
-   State_Valid : Boolean := False
-   with
-      Part_Of => Valid;
-
-   function Is_Valid return Boolean is (State_Valid)
-   with
-      Refined_Global => (Input => State_Valid);
+      Depends => (Timestamp => TI),
+      Pre     => Valid (TI => TI);
 
 end Mutime.Info;

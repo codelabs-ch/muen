@@ -36,6 +36,7 @@ is
       Date_Time         : Mutime.Date_Time_Type;
       Sched             : Mutime.Integer_62;
       Correction_Unused : Mutime.Integer_63;
+      Success           : Boolean;
 
       TSC_Schedule_Start : constant Interfaces.Unsigned_64
         := Musinfo.Instance.TSC_Schedule_Start;
@@ -54,13 +55,21 @@ is
       Mutime.Info.Get_Current_Time
         (Schedule_Ticks => Sched,
          Correction     => Correction_Unused,
-         Timestamp      => Timestamp);
-      pragma Debug (Debug_Ops.Put_Line
-                    (Item => "Correction to boot timestamp (microsecs) "
-                     & SK.Strings.Img (SK.Word64 (Correction_Unused))));
+         Timestamp      => Timestamp,
+         Success        => Success);
+      if Success then
+         pragma Debug (Debug_Ops.Put_Line
+                      (Item => "Correction to boot timestamp (microsecs) "
+                        & SK.Strings.Img (SK.Word64 (Correction_Unused))));
+         Mutime.Split (Timestamp => Timestamp,
+                       Date_Time => Date_Time);
+      else
+         Date_Time := Mutime.Epoch;
+         pragma Debug
+           (Debug_Ops.Put_Line
+              (Item => "Error: Unable to get current time, using epoch"));
+      end if;
 
-      Mutime.Split (Timestamp => Timestamp,
-                    Date_Time => Date_Time);
       return Date_Time;
    end Get_Date_Time;
 
@@ -68,6 +77,7 @@ is
 
    procedure Initialize
    is
+      Time_Valid : Boolean;
    begin
       if not Musinfo.Instance.Is_Valid then
          pragma Debug (Debug_Ops.Put_Line
@@ -75,19 +85,17 @@ is
          SK.CPU.Stop;
       end if;
 
-      Mutime.Info.Update_Validity;
-      if not Mutime.Info.Is_Valid then
+      Time_Valid := Mutime.Info.Is_Valid;
+      if not Time_Valid then
          pragma Debug
            (Debug_Ops.Put_Line
               (Item => "Absolute time not yet available, waiting ..."));
-         while not Mutime.Info.Is_Valid loop
+         while not Time_Valid loop
+            Time_Valid := Mutime.Info.Is_Valid;
             SK.CPU.Pause;
-            Mutime.Info.Update_Validity;
          end loop;
       end if;
-      pragma Debug
-        (Debug_Ops.Put_Line
-           (Item => "Absolute time available"));
+      pragma Debug (Debug_Ops.Put_Line (Item => "Absolute time available"));
    end Initialize;
 
 end Time;

@@ -37,10 +37,17 @@ is
 
    Linux_Status_Address : constant := 16#0200_0000#;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "This global variable is effectively read-only.");
    Linux_Status : Mucontrol.Status.Status_Interface_Type
    with
       Async_Writers,
       Address => System'To_Address (Linux_Status_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
    -------------------------------------------------------------------------
 

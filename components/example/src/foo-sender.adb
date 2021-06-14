@@ -27,12 +27,28 @@ with
    Refined_State => (State => Response)
 is
 
+   pragma Warnings
+     (GNATprove, Off,
+      "indirect writes to * through a potential alias are ignored",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    Response : Foo.Message_Type
      with
        Volatile,
        Async_Readers,
        Address => System'To_Address
          (Example_Component.Channels.Example_Response_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
+   pragma Warnings
+     (GNATprove, On,
+      "indirect writes to * through a potential alias are ignored");
 
    -------------------------------------------------------------------------
 

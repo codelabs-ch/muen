@@ -33,10 +33,11 @@ with Musinfo;
 package Mudm
 is
 
-   type Emul_Req_Op_Type is
-     (Emul_Req_Invalid,
-      Emul_Req_Read,
-      Emul_Req_Write);
+   type Emul_Req_Op_Type is new Interfaces.Unsigned_8;
+
+   Emul_Req_Invalid : constant := 0;
+   Emul_Req_Read    : constant := 1;
+   Emul_Req_Write   : constant := 2;
 
    type Offset_Type is new Interfaces.Unsigned_8;
 
@@ -46,11 +47,20 @@ is
       Op     : Emul_Req_Op_Type;
       Value  : Interfaces.Unsigned_32;
       Result : Interfaces.Unsigned_32;
-   end record;
+   end record
+   with Object_Size => 96;
 
    Null_Emul_Message : constant Emul_Message_Type;
 
 private
+
+   for Emul_Message_Type use record
+      SID    at 0 range 0 .. 15;
+      Offset at 2 range 0 .. 7;
+      Op     at 3 range 0 .. 7;
+      Value  at 4 range 0 .. 31;
+      Result at 8 range 0 .. 31;
+   end record;
 
    Null_Emul_Message : constant Emul_Message_Type
      := (SID    => 0,

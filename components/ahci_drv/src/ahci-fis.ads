@@ -235,6 +235,8 @@ is
       Reserved_5     at 16 range 16 .. 31;
    end record;
 
+   Received_FIS_Size : constant := 256 * 8;
+
    --  Serial ATA AHCI 1.3.1 Specification, section 4.2.1.
    type Received_FIS_Type is record
       DSFIS     : DMA_Setup_FIS_Type;
@@ -248,7 +250,7 @@ is
       Reserved4 : Byte_Array (0 .. 95);
    end record
    with
-      Size => 256 * 8;
+      Size => Received_FIS_Size;
 
    for Received_FIS_Type use record
       DSFIS     at 16#00# range 0 .. 28 * 8 - 1;
@@ -262,12 +264,24 @@ is
       Reserved4 at 16#A0# range 0 .. 96 * 8 - 1;
    end record;
 
-   type FIS_Array_Type is array (Port_Range) of Received_FIS_Type;
+   FIS_Array_Size : constant := (Port_Range'Last + 1) * Received_FIS_Size;
+
+   type FIS_Array_Type is array (Port_Range) of Received_FIS_Type
+   with Object_Size => FIS_Array_Size;
+
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    Fis_Array : FIS_Array_Type
    with
       Volatile,
       Async_Readers,
       Async_Writers,
       Address => System'To_Address (Fis_Base_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
 end Ahci.FIS;

@@ -68,13 +68,16 @@ is
    with
       Pack;
 
+   MBR_Type_Size : constant := 512 * 8;
+
    type MBR_Type is record
       Bootstrap_Code : Ahci.Byte_Array (0 .. 445);
       Partition_1_4  : Partition_Array (1 .. 4);
       Boot_Signature : Interfaces.Unsigned_16;
    end record
    with
-      Size => 512 * 8;
+      Object_Size => MBR_Type_Size,
+      Size        => MBR_Type_Size;
 
    for MBR_Type use record
       Bootstrap_Code at 16#000# range 0 .. 446 * 8 - 1;
@@ -82,11 +85,18 @@ is
       Boot_Signature at 16#1fe# range 0 .. 2 * 8 - 1;
    end record;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "This global variable is effectively read-only.");
    MBR_Entry : MBR_Type
    with
       Async_Writers,
       Volatile,
       Address => System'To_Address (Ahci.DMA_Mem_Base_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
    -------------------------------------------------------------------------
 

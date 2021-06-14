@@ -70,6 +70,10 @@ private
 
    package Cspec renames Libmucontrol_Component.Memory;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "Instance is exclusively mapped to external interface.");
    Command_Page : Command_Interface_Type
    with
       Import,
@@ -77,5 +81,8 @@ private
       Part_Of => State,
       Size    => Cspec.Control_Size * 8,
       Address => System'To_Address (Cspec.Control_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
 end Mucontrol.Command.Instance;

@@ -34,6 +34,8 @@ is
    type Unsigned_48 is mod 2 ** 48;
    for Unsigned_48'Size use 48;
 
+   SMART_Attribute_Size : constant := 12;
+
    type SMART_Attribute_Type is record
       ID       : Interfaces.Unsigned_8;
       Flags    : Interfaces.Unsigned_16;
@@ -43,7 +45,7 @@ is
       Reserved : Interfaces.Unsigned_8;
    end record
    with
-      Size => 12 * 8;
+      Size => SMART_Attribute_Size * 8;
 
    for SMART_Attribute_Type use record
       ID       at 0 range 0 .. 7;
@@ -55,13 +57,22 @@ is
    end record;
 
    type SMART_Attribute_Table_Type is
-      array (Integer range 1 .. 30) of SMART_Attribute_Type;
+     array (Integer range 1 .. 30) of SMART_Attribute_Type
+     with Object_Size => SMART_Attribute_Size * 30 * 8;
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "This global variable is effectively read-only.");
    SMART_Attribute_Table : SMART_Attribute_Table_Type
    with
       Volatile,
       Async_Writers,
+      Size    => SMART_Attribute_Size * 30 * 8,
       Address => System'To_Address
          (Example_Component.Memory.Blockdev_Shm2_Address + 2);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
    -------------------------------------------------------------------------
 

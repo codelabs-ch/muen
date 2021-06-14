@@ -25,8 +25,6 @@ with
    Refined_State => (State => Pending_Interrupts)
 is
 
-   Null_Interrupts : constant Interrupts_Array := (others => 0);
-
    procedure Find_Highest_Bit_Set is new Bitops.Find_Highest_Bit_Set
      (Search_Range => Bitops.Word64_Pos);
 
@@ -74,9 +72,9 @@ is
               Pos    => Pos);
 
       declare
-         Val : constant Word64 := Pending_Interrupts (Subject) (Word);
+         Val : constant Word64 := Pending_Interrupts (Subject).Data (Word);
       begin
-         Pending_Interrupts (Subject) (Word)
+         Pending_Interrupts (Subject).Data (Word)
            := Bitops.Bit_Clear (Value => Val,
                                 Pos   => Pos);
       end;
@@ -90,7 +88,8 @@ is
       Refined_Depends => (Pending_Interrupts =>+ Subject)
    is
    begin
-      Pending_Interrupts (Subject) := Null_Interrupts;
+      Pending_Interrupts (Subject) := (Data    => (others => 0),
+                                       Padding => (others => 0));
    end Init_Interrupts;
 
    -------------------------------------------------------------------------
@@ -110,9 +109,9 @@ is
               Pos    => Pos);
 
       declare
-         Val : constant Word64 := Pending_Interrupts (Subject) (Word);
+         Val : constant Word64 := Pending_Interrupts (Subject).Data (Word);
       begin
-         Pending_Interrupts (Subject) (Word)
+         Pending_Interrupts (Subject).Data (Word)
            := Bitops.Bit_Set (Value => Val,
                               Pos   => Pos);
       end;
@@ -132,7 +131,7 @@ is
    begin
       Search_Interrupt_Words :
       for Interrupt_Word in reverse Interrupt_Word_Type loop
-         Field := Pending_Interrupts (Subject) (Interrupt_Word);
+         Field := Pending_Interrupts (Subject).Data (Interrupt_Word);
 
          Find_Highest_Bit_Set
            (Field => Field,
@@ -160,7 +159,7 @@ is
 
       Search_Interrupt_Words :
       for Interrupt_Word in reverse Interrupt_Word_Type loop
-         Field := Pending_Interrupts (Subject) (Interrupt_Word);
+         Field := Pending_Interrupts (Subject).Data (Interrupt_Word);
 
          Find_Highest_Bit_Set
            (Field => Field,

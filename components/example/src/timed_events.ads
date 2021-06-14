@@ -25,10 +25,18 @@ is
 
    Timed_Evt_Addr : constant := 16#000e_0001_0000#;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    Timed_Evt : Mutimedevents.Timed_Event_Interface_Type
      with
        Import,
        Volatile,
        Address => System'To_Address (Timed_Evt_Addr);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
 end Timed_Events;

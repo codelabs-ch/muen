@@ -35,7 +35,7 @@ is
      (Info   :     Types.IO_Info_Type;
       Action : out Types.Subject_Action_Type)
    with
-      Global  => (Proof_In => (Mutime.Info.Valid, Musinfo.Instance.State),
+      Global  => (Proof_In => Musinfo.Instance.State,
                   Input    => (Mutime.Info.State,
                                Musinfo.Instance.Scheduling_Info),
                   In_Out   => (State, Subject_Info.State)),
@@ -44,7 +44,7 @@ is
                                   Musinfo.Instance.Scheduling_Info),
           Subject_Info.State =>+ (Info, State),
           Action             =>  null),
-      Pre     => Musinfo.Instance.Is_Valid and Mutime.Info.Is_Valid,
+      Pre     => Musinfo.Instance.Is_Valid,
       Post    => Action = Types.Subject_Continue;
 
 end Devices.RTC;

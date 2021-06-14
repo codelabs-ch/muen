@@ -30,24 +30,6 @@ package body Mutime.Info.Test_Data.Tests is
 --  end read only
 
 --  begin read only
-   procedure Test_Update_Validity (Gnattest_T : in out Test);
-   procedure Test_Update_Validity_8a415a (Gnattest_T : in out Test) renames Test_Update_Validity;
---  id:2.2/8a415a2498577666/Update_Validity/1/0/
-   procedure Test_Update_Validity (Gnattest_T : in out Test) is
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-   begin
-      Assert (Condition => True,
-              Message   => "Not easily testable due to TI object with "
-              & "Address clause");
---  begin read only
-   end Test_Update_Validity;
---  end read only
-
-
---  begin read only
    procedure Test_Is_Valid (Gnattest_T : in out Test);
    procedure Test_Is_Valid_f361e9 (Gnattest_T : in out Test) renames Test_Is_Valid;
 --  id:2.2/f361e911d85a7ba5/Is_Valid/1/0/
@@ -57,14 +39,8 @@ package body Mutime.Info.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-      State_Valid := False;
-      Assert
-        (Condition => not Is_Valid,
-         Message   => "State valid");
-      State_Valid := True;
-      Assert
-        (Condition => Is_Valid,
-         Message   => "State not valid");
+      Assert (Condition => True,
+              Message   => "Tested with Test_Valid");
 --  begin read only
    end Test_Is_Valid;
 --  end read only
@@ -72,8 +48,8 @@ package body Mutime.Info.Test_Data.Tests is
 
 --  begin read only
    procedure Test_2_Get_Current_Time (Gnattest_T : in out Test);
-   procedure Test_Get_Current_Time_201366 (Gnattest_T : in out Test) renames Test_2_Get_Current_Time;
---  id:2.2/201366884977c714/Get_Current_Time/0/0/
+   procedure Test_Get_Current_Time_7024f2 (Gnattest_T : in out Test) renames Test_2_Get_Current_Time;
+--  id:2.2/7024f2e671a6d9a3/Get_Current_Time/0/0/
    procedure Test_2_Get_Current_Time (Gnattest_T : in out Test) is
 --  end read only
 
@@ -109,6 +85,41 @@ package body Mutime.Info.Test_Data.Tests is
               Message   => "Timestamp mismatch");
 --  begin read only
    end Test_1_Get_Boot_Time;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Valid (Gnattest_T : in out Test);
+   procedure Test_Valid_b7cce7 (Gnattest_T : in out Test) renames Test_Valid;
+--  id:2.2/b7cce7d60dedeb4c/Valid/1/0/
+   procedure Test_Valid (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      TI : Time_Info_Type;
+   begin
+      TI := (TSC_Time_Base      => Timestamp_Type'First,
+             TSC_Tick_Rate_Hz   => TSC_Tick_Rate_Hz_Type'First,
+             Timezone_Microsecs => Timezone_Type'First);
+      Assert (Condition => Valid (TI => TI),
+              Message   => "Time info not valid");
+
+      TI.TSC_Time_Base := Timestamp_Type'Base'Last;
+      Assert (Condition => not Valid (TI => TI),
+              Message   => "Time info valid (TSC Time Base)");
+      TI.TSC_Time_Base := Timestamp_Type'First;
+
+      TI.TSC_Tick_Rate_Hz := TSC_Tick_Rate_Hz_Type'Base'Last;
+      Assert (Condition => not Valid (TI => TI),
+              Message   => "Time info valid (TSC Tick Rate)");
+      TI.TSC_Tick_Rate_Hz := TSC_Tick_Rate_Hz_Type'First;
+
+      TI.Timezone_Microsecs := Timezone_Type'Base'Last;
+      Assert (Condition => not Valid (TI => TI),
+              Message   => "Time info valid (Timezone)");
+--  begin read only
+   end Test_Valid;
 --  end read only
 
 

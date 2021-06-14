@@ -36,8 +36,7 @@ is
    --  Returns the current command for subject specified by ID.
    function Get_Command
      (ID : Managed_Subjects_Range)
-      return Mucontrol.Command.Command_Type
-     with Volatile_Function;
+      return Mucontrol.Command.Command_Type;
 
    --  Sets the command of subject specified by ID to the given value.
    procedure Set_Command
@@ -47,8 +46,7 @@ is
    --  Returns the current epoch for subject specified by ID.
    function Get_Epoch
      (ID : Managed_Subjects_Range)
-      return Interfaces.Unsigned_64
-     with Volatile_Function;
+      return Interfaces.Unsigned_64;
 
    --  Sets the epoch of subject specified by ID to the given value.
    procedure Set_Epoch
@@ -58,8 +56,7 @@ is
    --  Returns the current watchdog interval for subject specified by ID.
    function Get_Watchdog_Interval
      (ID : Managed_Subjects_Range)
-      return Interfaces.Unsigned_64
-     with Volatile_Function;
+      return Interfaces.Unsigned_64;
 
    --  Sets the watchdog interval of subject specified by ID to the given
    --  value.
@@ -82,11 +79,27 @@ private
          Size        => Array_Size,
          Object_Size => Array_Size;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "indirect writes to * through a potential alias are ignored",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    Command_Pages : Command_Array
      with
        Import,
        Async_Readers,
        Size    => Array_Size,
        Address => System'To_Address (Cspecs.Control_Address_Base);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
+   pragma Warnings
+     (GNATprove, On,
+      "indirect writes to * through a potential alias are ignored");
 
 end Ctrlr.Commands;

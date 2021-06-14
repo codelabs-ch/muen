@@ -47,20 +47,17 @@ is
    --  Get current subject state.
    function Get return State_Type
    with
-      Global => (Input => State),
-      Volatile_Function;
+      Global => (Input => State);
 
    --  Get current diagnostics value.
    function Get_Diagnostics return Diagnostics_Type
    with
-      Global => (Input => State),
-      Volatile_Function;
+      Global => (Input => State);
 
    --  Get current watchdog value.
    function Get_Watchdog return Interfaces.Unsigned_64
    with
-      Global => (Input => State),
-      Volatile_Function;
+      Global => (Input => State);
 
    --  Set subject state to given value.
    procedure Set (New_State : State_Type)
@@ -90,6 +87,16 @@ private
 
    package Cspec renames Libmucontrol_Component.Memory;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "indirect writes to * through a potential alias are ignored",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    Status_Page : Status_Interface_Type
    with
       Import,
@@ -97,5 +104,11 @@ private
       Part_Of => State,
       Size    => Cspec.Status_Size * 8,
       Address => System'To_Address (Cspec.Status_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
+   pragma Warnings
+     (GNATprove, On,
+      "indirect writes to * through a potential alias are ignored");
 
 end Mucontrol.Status.Instance;

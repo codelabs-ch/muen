@@ -122,24 +122,36 @@ is
       Prdt at 16#80# range 0 .. 1023;
    end record;
 
-   type Command_Lists_Array_Type is array (Port_Range)
-      of Ahci.Commands.Command_List_Type;
+   type Command_Lists_Array_Type is
+     array (Port_Range) of Ahci.Commands.Command_List_Type
+     with Object_Size => Command_Lists_Size * 8;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    Command_Lists : Command_Lists_Array_Type
    with
       Volatile,
       Async_Readers,
       Async_Writers,
+      Size    => Command_Lists_Size * 8,
       Address => System'To_Address (Ahci.Command_Lists_Address);
 
-   type Command_Table_Array_Type is array (Port_Range)
-      of Ahci.Commands.Command_Table_Type;
+   type Command_Table_Array_Type is
+     array (Port_Range) of Ahci.Commands.Command_Table_Type
+     with Object_Size => Command_Table_Size * 8;
 
    Command_Table : Command_Table_Array_Type
    with
       Volatile,
       Async_Readers,
       Async_Writers,
+      Size    => Command_Table_Size * 8,
       Address => System'To_Address (Ahci.Command_Table_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
 end Ahci.Commands;

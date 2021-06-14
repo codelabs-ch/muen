@@ -70,11 +70,6 @@ begin
    if not Musinfo.Instance.Is_Valid then
       Debuglog.Client.Put_Line
         (Item => "Error: Muen subject info (sinfo) not valid -> HLT");
-      pragma Annotate
-        (GNATprove, False_Positive,
-         """Client.State"" might not be initialized after elaboration of main",
-         "Explicitly initialized with prior call to Client.Init.");
-
       SK.CPU.Stop;
    end if;
 

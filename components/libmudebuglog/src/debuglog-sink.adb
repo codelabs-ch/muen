@@ -39,11 +39,32 @@ is
 
    package Cspecs renames Libmudebuglog_Component.Channels;
 
-   Message_Channel : Stream.Channel_Type
+   --  Workaround for [T611-019]: Size of channel cannot be set in generic.
+   --  See also https://github.com/AdaCore/ada-spark-rfcs/issues/75
+   subtype CT is Stream.Channel_Type
+     with Object_Size => Cspecs.Debuglog_Size * 8;
+
+   pragma Warnings
+     (GNATprove, Off,
+      "indirect writes to * through a potential alias are ignored",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
+   Message_Channel : CT
    with
       Address => System'To_Address (Cspecs.Debuglog_Address),
       Size    => Cspecs.Debuglog_Size * 8,
       Async_Readers;
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
+   pragma Warnings
+     (GNATprove, On,
+      "indirect writes to * through a potential alias are ignored");
 
    Message_Buffer : Types.Data_Type;
    Message_Index  : Types.Message_Index;

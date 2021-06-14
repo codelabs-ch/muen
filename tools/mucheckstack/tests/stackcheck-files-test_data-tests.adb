@@ -107,8 +107,8 @@ package body Stackcheck.Files.Test_Data.Tests is
       exception
          when E : IO_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "invalid.gpr:1:06: unknown project file: "
-                    & """nonexistent""",
+                    = "invalid.gpr:1:06: imported project file "
+                    & """nonexistent"" not found",
                     Message   => "Exception message mismatch (1)");
       end;
 

@@ -86,7 +86,8 @@ SPARK_OPTS =                     \
 	--prover=$(SPARK_PROVERS)    \
 	--timeout=$(SPARK_TIMEOUT)   \
 	--mode=$(SPARK_MODE)         \
-	--no-counterexample          \
+	--output=$(SPARK_OUTPUT)     \
+	--counterexamples=off        \
 	--no-inlining                \
 	-Xbuild=prove                \
 	$(SPARK_MEMCACHED_OPTION)    \
@@ -95,6 +96,7 @@ SPARK_OPTS =                     \
 
 SPARK_LEVEL         ?= 2
 SPARK_MODE          ?= all
+SPARK_OUTPUT        ?= oneline
 SPARK_PROVERS       ?= z3,cvc4,alt-ergo
 SPARK_REPORT        ?= all
 SPARK_TIMEOUT       ?= 10

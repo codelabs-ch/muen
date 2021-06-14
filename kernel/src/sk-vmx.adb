@@ -31,6 +31,8 @@ with
    Refined_State => (VMCS_State => VMCS)
 is
 
+   VMCS_Header_Size : constant := 8;
+
    --  VMCS region format, see Intel SDM Vol. 3C, "24.2 Format of the VMCS
    --  Region".
    type VMCS_Header_Type is record
@@ -38,10 +40,11 @@ is
       Abort_Indicator : Word32;
    end record
    with
-      Size => 8 * 8;
+      Size => VMCS_Header_Size * 8;
 
-   type VMCS_Data is array (1 .. Page_Size - (VMCS_Header_Type'Size / 8))
-     of Byte;
+   type VMCS_Data is array (VMCS_Header_Size + 1 .. Page_Size) of Byte
+   with
+      Size => (Page_Size - VMCS_Header_Size) * 8;
 
    type VMCS_Region_Type is record
       Header : VMCS_Header_Type;
@@ -53,14 +56,23 @@ is
 
    type VMCS_Array is array (Skp.Global_Subject_ID_Type) of VMCS_Region_Type
    with
+      Object_Size => (Skp.Global_Subject_ID_Type'Last + 1) * Page_Size * 8,
       Independent_Components;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    VMCS : VMCS_Array
    with
       Volatile,
       Async_Readers,
       Async_Writers,
       Address => System'To_Address (Skp.Kernel.Subj_VMCS_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
    --  Allocate crash audit entry for given VMX error and trigger system
    --  restart.

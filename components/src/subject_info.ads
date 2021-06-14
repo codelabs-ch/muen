@@ -25,11 +25,19 @@ with
    Initializes => State
 is
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    State : SK.Subject_State_Type
      with
        Volatile,
        Async_Writers,
        Async_Readers,
        Address => System'To_Address (16#1e_0000#);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
 end Subject_Info;

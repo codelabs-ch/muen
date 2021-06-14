@@ -116,23 +116,35 @@ is
 
 private
 
-   pragma Warnings
-     (Off,
-      "component size overrides size clause for ""Subject_State_Type""",
-      Reason => "Reserved memory size is bigger than actual size of type");
-   pragma Warnings (GNAT, Off, "*padded by * bits");
+   type Padding_Type is array (Subj_State_Size + 1 .. Page_Size) of Byte
+   with
+      Size => (Page_Size - Subj_State_Size) * 8;
+
+   type Subjects_State_Page is record
+      Data    : Subject_State_Type;
+      Padding : Padding_Type;
+   end record
+   with
+      Size => Page_Size * 8;
+
    type Subject_State_Array is array
-     (Skp.Global_Subject_ID_Type) of Subject_State_Type
+     (Skp.Global_Subject_ID_Type) of Subjects_State_Page
    with
       Independent_Components,
       Component_Size => Page_Size * 8,
+      Object_Size    => (Skp.Global_Subject_ID_Type'Last + 1) * Page_Size * 8,
       Alignment      => Page_Size;
-   pragma Warnings (GNAT, On, "*padded by * bits");
-   pragma Warnings
-     (On,
-      "component size overrides size clause for ""Subject_State_Type""",
-      Reason => "Reserved memory size is bigger than actual size of type");
 
+   pragma Warnings
+     (GNATprove, Off,
+      "indirect writes to * through a potential alias are ignored",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    --  Descriptors used to manage subject states.
    --  TODO: Model access rules
    --  TODO: Handle initialization
@@ -144,5 +156,11 @@ private
      (GNATprove, Intentional,
       "not initialized",
       "Subject states are initialized by their owning CPU. Not yet modeled");
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
+   pragma Warnings
+     (GNATprove, On,
+      "indirect writes to * through a potential alias are ignored");
 
 end SK.Subjects;

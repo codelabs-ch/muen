@@ -30,8 +30,9 @@ is
    is
    begin
       for I in MSR_Entry_Range loop
-         MSR_Storage (Subject)(I).Data := 0;
+         MSR_Storage (Subject).MSRs (I).Data := 0;
       end loop;
+      MSR_Storage (Subject).Padding := (others => 0);
    end Clear_MSRs;
 
 end SK.Subjects_MSR_Store;

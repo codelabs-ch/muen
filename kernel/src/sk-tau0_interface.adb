@@ -25,11 +25,19 @@ with
    Refined_State => (State => New_Major)
 is
 
-   New_Major : Skp.Scheduling.Major_Frame_Range
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
+   New_Major : Skp.Scheduling.Major_Frame_Range'Base
    with
       Atomic,
       Async_Writers,
       Address => System'To_Address (Skp.Kernel.Tau0_Iface_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
    -------------------------------------------------------------------------
 
@@ -41,6 +49,10 @@ is
    is
    begin
       ID := New_Major;
+      pragma Annotate
+        (GNATprove, Intentional,
+         "range check might fail",
+         "Tau0 always provides valid major frame values.");
    end Get_Major_Frame;
 
 end SK.Tau0_Interface;

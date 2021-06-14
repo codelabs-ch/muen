@@ -163,7 +163,8 @@ is
    end record
    with
       Pack,
-      Size => Subj_State_Size * 8;
+      Size        => Subj_State_Size * 8,
+      Object_Size => Subj_State_Size * 8;
 
    Null_Subject_State : constant Subject_State_Type;
 

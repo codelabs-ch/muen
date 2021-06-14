@@ -32,30 +32,40 @@ with Libmutime_Component.Channels;
 
 package body Mutime.Info
 with
-   Refined_State => (Valid => State_Valid, State => Time_Info)
+   Refined_State => (State => Time_Info)
 is
 
    package Cspecs renames Libmutime_Component.Channels;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "This global variable is effectively read-only.");
    Time_Info : Time_Info_Type
    with
       Volatile,
       Async_Writers,
       Address => System'To_Address (Cspecs.Time_Info_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
    -------------------------------------------------------------------------
 
    procedure Get_Boot_Time
      (Timestamp : out Timestamp_Type)
    with
-      Refined_Global  => (Proof_In => State_Valid,
-                          Input    => Time_Info),
+      Refined_Global  => (Input => Time_Info),
       Refined_Depends => (Timestamp => Time_Info)
    is
       Time : constant Time_Info_Type := Time_Info;
    begin
-      Get_Boot_Time (TI        => Time,
-                     Timestamp => Timestamp);
+      if Valid (TI => Time) then
+         Get_Boot_Time (TI        => Time,
+                        Timestamp => Timestamp);
+      else
+         Timestamp := Timestamp_Type'First;
+      end if;
    end Get_Boot_Time;
 
    -------------------------------------------------------------------------
@@ -99,28 +109,37 @@ is
    procedure Get_Current_Time
      (Schedule_Ticks :     Integer_62;
       Correction     : out Integer_63;
-      Timestamp      : out Timestamp_Type)
+      Timestamp      : out Timestamp_Type;
+      Success        : out Boolean)
    with
-      Refined_Global  => (Proof_In => State_Valid,
-                          Input    => Time_Info),
+      Refined_Global  => (Input => Time_Info),
       Refined_Depends => ((Correction, Timestamp) => (Schedule_Ticks,
-                                                      Time_Info))
+                                                      Time_Info),
+                          Success                 => Time_Info)
    is
       Time : constant Time_Info_Type := Time_Info;
    begin
-      Get_Current_Time (TI             => Time,
-                        Schedule_Ticks => Schedule_Ticks,
-                        Correction     => Correction,
-                        Timestamp      => Timestamp);
+      Success := Valid (TI => Time);
+      if Success then
+         Get_Current_Time (TI             => Time,
+                           Schedule_Ticks => Schedule_Ticks,
+                           Correction     => Correction,
+                           Timestamp      => Timestamp);
+      else
+         Correction := Integer_63'First;
+         Timestamp := Timestamp_Type'First;
+      end if;
    end Get_Current_Time;
 
    -------------------------------------------------------------------------
 
-   procedure Update_Validity
+   function Is_Valid return Boolean
+   with
+      Refined_Global => (Input => Time_Info)
    is
       Time : constant Time_Info_Type := Time_Info;
    begin
-      State_Valid := Time.TSC_Time_Base /= 0;
-   end Update_Validity;
+      return Valid (TI => Time);
+   end Is_Valid;
 
 end Mutime.Info;

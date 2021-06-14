@@ -53,6 +53,10 @@ private
       Object_Size => Cspecs.Status_Element_Size * Cspecs.Status_Element_Count
         * 8;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "This global variable is effectively read-only.");
    Status_Pages : Status_Array
    with
       Import,
@@ -61,5 +65,8 @@ private
       Address => System'To_Address (Cspecs.Status_Address_Base),
       Size    => Cspecs.Status_Element_Size * Cspecs.Status_Element_Count
         * 8;
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
 end Ctrlr.Status;

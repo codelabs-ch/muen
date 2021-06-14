@@ -62,23 +62,41 @@ is
 
 private
 
-   Interrupt_Count : constant := 256;
-   Bits_In_Word    : constant := 64;
-   Interrupt_Words : constant := Interrupt_Count / Bits_In_Word;
+   Interrupt_Count      : constant := 256;
+   Bits_In_Word         : constant := 64;
+   Interrupt_Words      : constant := Interrupt_Count / Bits_In_Word;
+   Interrupt_Array_Size : constant := Interrupt_Count / 8;
 
    type Interrupt_Word_Type is range 0 .. (Interrupt_Words - 1);
 
-   type Interrupts_Array is array (Interrupt_Word_Type) of Word64;
+   type Interrupts_Array is array (Interrupt_Word_Type) of Word64
+   with
+      Size => Interrupt_Array_Size * 8;
 
-   pragma Warnings (GNAT, Off, "*padded by * bits");
+   type Padding_Type is array (1 .. Page_Size - Interrupt_Array_Size) of Byte
+   with
+      Size => (Page_Size - Interrupt_Array_Size) * 8;
+
+   type Interrupt_Page is record
+      Data    : Interrupts_Array;
+      Padding : Padding_Type;
+   end record
+   with
+      Size => Page_Size * 8;
+
    type Pending_Interrupts_Array is
-     array (Skp.Global_Subject_ID_Type) of Interrupts_Array
+     array (Skp.Global_Subject_ID_Type) of Interrupt_Page
    with
       Independent_Components,
       Component_Size => Page_Size * 8,
+      Object_Size    => (Skp.Global_Subject_ID_Type'Last + 1) * Page_Size * 8,
       Alignment      => Page_Size;
-   pragma Warnings (GNAT, On, "*padded by * bits");
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    Pending_Interrupts : Pending_Interrupts_Array
    with
       Volatile,
@@ -86,5 +104,8 @@ private
       Async_Readers,
       Part_Of => State,
       Address => System'To_Address (Skp.Kernel.Subj_Interrupts_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
 end SK.Subjects_Interrupts;

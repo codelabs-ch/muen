@@ -41,21 +41,32 @@ is
 
 private
 
-   pragma Warnings
-     (Off,
-      "component size overrides size clause for ""Scheduling_Info_Type""",
-      Reason => "Reserved memory size is bigger than actual size of type");
-   pragma Warnings (GNAT, Off, "*padded by * bits");
+   type Padding_Type is
+     array (Muschedinfo.Scheduling_Info_Size + 1 .. Page_Size) of Byte
+   with
+      Size => (Page_Size - Muschedinfo.Scheduling_Info_Size) * 8;
+
+   type Sched_Info_Page_Type is record
+      Data    : Muschedinfo.Scheduling_Info_Type;
+      Padding : Padding_Type;
+   end record
+   with
+      Size => Page_Size * 8;
+
    type Sched_Info_Array is array (Skp.Scheduling.Scheduling_Group_Range)
-     of Muschedinfo.Scheduling_Info_Type
+     of Sched_Info_Page_Type
    with
       Independent_Components,
       Component_Size => Page_Size * 8,
-      Alignment      => Page_Size;
-   pragma Warnings (GNAT, On, "*padded by * bits");
-   pragma Warnings
-     (On, "component size overrides size clause for ""Scheduling_Info_Type""");
+      Alignment      => Page_Size,
+      Object_Size    => Page_Size * 8
+           * Word64 (Skp.Scheduling.Scheduling_Group_Range'Last);
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    --  Scheduling group info regions.
    Sched_Info : Sched_Info_Array
    with
@@ -64,5 +75,8 @@ private
       Async_Writers,
       Part_Of => State,
       Address => System'To_Address (Skp.Kernel.Sched_Group_Info_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
 end SK.Scheduling_Info;

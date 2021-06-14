@@ -225,6 +225,8 @@ is
       Reserved at 0 range 5 .. 31;
    end record;
 
+   Generic_Host_Control_Size : constant := 16#2c# * 8;
+
    type Generic_Host_Control_Type is record
       Host_Capabilities     : HBA_Caps_Type;
       Global_Host_Control   : Global_HBA_Control_Type;
@@ -239,7 +241,8 @@ is
       BIOS_HO_Status_Ctrl   : BIOS_HO_Status_Type;
    end record
    with
-      Size => 16#2c# * 8;
+      Object_Size => Generic_Host_Control_Size,
+      Size        => Generic_Host_Control_Size;
 
    for Generic_Host_Control_Type use record
       Host_Capabilities     at 16#00# range 0 .. 31;
@@ -255,11 +258,19 @@ is
       BIOS_HO_Status_Ctrl   at 16#28# range 0 .. 31;
    end record;
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    Instance : Generic_Host_Control_Type
    with
       Volatile,
       Async_Readers,
       Async_Writers,
       Address => System'To_Address (Ahci_Controller_Ahci_Registers_Address);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
 end Ahci.HBA;

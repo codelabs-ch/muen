@@ -18,6 +18,8 @@
 
 with System;
 
+with Interfaces;
+
 with Time_Component.Channel_Arrays;
 
 package body Tm.Publish
@@ -27,21 +29,51 @@ is
 
    package Cspecs renames Time_Component.Channel_Arrays;
 
-   pragma Warnings (GNAT, Off, "*32576 bits*");
+   type Padding_Type is array
+     (Mutime.Info.Time_Info_Size + 1 .. Cspecs.Export_Channels_Element_Size)
+     of Interfaces.Unsigned_8
+   with
+      Size =>
+        (Cspecs.Export_Channels_Element_Size - Mutime.Info.Time_Info_Size) * 8;
+
+   type Time_Info_Page is record
+      Data    : Mutime.Info.Time_Info_Type;
+      Padding : Padding_Type;
+   end record
+   with
+      Size => Cspecs.Export_Channels_Element_Size * 8;
+
    type Time_Info_Array is array (1 .. Cspecs.Export_Channels_Element_Count)
-     of Mutime.Info.Time_Info_Type
+     of Time_Info_Page
        with
          Size           => Cspecs.Export_Channels_Element_Size
            * Cspecs.Export_Channels_Element_Count * 8,
+         Object_Size    => Cspecs.Export_Channels_Element_Size
+           * Cspecs.Export_Channels_Element_Count * 8,
          Component_Size => Cspecs.Export_Channels_Element_Size * 8;
-   pragma Warnings (GNAT, On, "*32576 bits*");
 
+   pragma Warnings
+     (GNATprove, Off,
+      "indirect writes to * through a potential alias are ignored",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
    Time_Export : Time_Info_Array
      with
        Volatile,
        Async_Readers,
        Effective_Writes,
        Address => System'To_Address (Cspecs.Export_Channels_Address_Base);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
+   pragma Warnings
+     (GNATprove, On,
+      "indirect writes to * through a potential alias are ignored");
 
    -------------------------------------------------------------------------
 
@@ -52,22 +84,24 @@ is
    is
    begin
       for T of Time_Export loop
-         T := Mutime.Info.Time_Info_Type'
-           (TSC_Time_Base      => Mutime.Epoch_Timestamp,
-            TSC_Tick_Rate_Hz   => TSC_Tick_Rate,
-            Timezone_Microsecs => Timezone);
+         T := (Data    => Mutime.Info.Time_Info_Type'
+                 (TSC_Time_Base      => Mutime.Epoch_Timestamp,
+                  TSC_Tick_Rate_Hz   => TSC_Tick_Rate,
+                  Timezone_Microsecs => Timezone),
+               Padding => (others => 0));
 
          --  Write last -> indicates time info validity.
 
-         T.TSC_Time_Base := TSC_Time_Base;
+         T.Data.TSC_Time_Base := TSC_Time_Base;
       end loop;
    end Update;
 
 begin
    for T of Time_Export loop
-      T := Mutime.Info.Time_Info_Type'
-        (TSC_Time_Base      => Mutime.Epoch_Timestamp,
-         TSC_Tick_Rate_Hz   => 1000000,
-         Timezone_Microsecs => 0);
+      T := (Data    => Mutime.Info.Time_Info_Type'
+              (TSC_Time_Base      => Mutime.Epoch_Timestamp,
+               TSC_Tick_Rate_Hz   => 1000000,
+               Timezone_Microsecs => 0),
+            Padding => (others => 0));
    end loop;
 end Tm.Publish;

@@ -1,7 +1,6 @@
 PKG = gnatcoll
 SRC = https://github.com/AdaCore/gnatcoll-core.git
-# Current head of branch 20.2
-REV = d71d4fce1438dd645c546892a8c8a6a5e65a856d
+REV = 70c851f7a25b1984ecd539fa152bd00f9eaf76f9
 
 define CMD_CONFIGURE
 $(MAKE) -C $(WRK) ENABLE_SHARED=no prefix=$(BUILDDIR) setup

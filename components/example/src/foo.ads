@@ -36,7 +36,7 @@ is
       Data : Data_Array;
    end record
      with
-       Size => (2 + 2048) * 8;
+       Object_Size => (2 + 2048) * 8;
 
    Null_Message : constant Message_Type;
 

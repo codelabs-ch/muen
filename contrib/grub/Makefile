@@ -9,7 +9,9 @@ PATCHES = \
 	patches/0003-include-grub-file.h-Add-GRUB_FILE_TYPE_SBS.patch \
 	patches/0004-pgp-Do-not-verify-GRUB_FILE_TYPE_SBS-files.patch \
 	patches/0005-grub-shell-Improve-mkrescue_args-handling.patch \
-	patches/0006-Implement-Signed-Block-Stream-SBS-loader.patch
+	patches/0006-Implement-Signed-Block-Stream-SBS-loader.patch \
+	patches/mdraid1x_linux-Fix-gcc10-error-Werror-array-bounds.patch \
+	patches/zfs-Fix-gcc10-error-Werror-zero-length-bounds.patch
 
 define CMD_DL
 	cp $(SRC) $(TMP)

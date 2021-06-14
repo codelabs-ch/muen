@@ -189,7 +189,7 @@ is
       Local_Cmd_Status := Instance (ID).Command_And_Status;
       Local_Cmd_Issue := Instance (ID).Command_Issue;
 
-      if Local_Cmd_Status.CR = False or Local_Cmd_Issue (0) then
+      if (Local_Cmd_Status.CR = False) or Local_Cmd_Issue (0) then
          pragma Debug (Debug_Ops.Put_Line ("Busy.." &
             SK.Strings.Img (Interfaces.Unsigned_32 (ID))));
             Success := False;

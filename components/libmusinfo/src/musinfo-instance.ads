@@ -163,12 +163,22 @@ private
    Subject_Info_Virtual_Addr : constant := 16#000e_0000_0000#;
    Subject_Info_Size         : constant := 16#8000#;
 
+   pragma Warnings (Off);  --  Only emitted by recent GNATprove versions.
    Object : Subject_Info_Type
    with
       Import,
       Part_Of => State,
       Address => System'To_Address (Subject_Info_Virtual_Addr);
+   pragma Annotate
+     (GNATprove, Intentional,
+      "object is unsuitable for aliasing via address clause",
+      "Sinfo is generated at integration time.");
+   pragma Warnings (On);
 
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "This global variable is effectively read-only.");
    Sched_Info : Muschedinfo.Scheduling_Info_Type
    with
       Import,
@@ -177,6 +187,9 @@ private
       Part_Of => Scheduling_Info,
       Address => System'To_Address
         (Subject_Info_Virtual_Addr + Subject_Info_Size);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
    function Create_Resource_Iterator
      return Utils.Resource_Iterator_Type

@@ -67,9 +67,9 @@ is
    function Get_Mapping (Name : String) return Section_Mapping_Access
    is
    begin
-      for M of Section_Map loop
-         if M.Section_Name = Name then
-            return M'Access;
+      for I in Section_Map'Range loop
+         if Section_Map (I).Section_Name = Name then
+            return Section_Map (I)'Access;
          end if;
       end loop;
 

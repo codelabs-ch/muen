@@ -165,9 +165,9 @@ environment listed in the following table.
 | Operating systems      | Debian GNU/Linux 10 x86_64 +
                            Ubuntu 18.04 x86_64
 | Linux kernel/KVM       | >= 5.2.0 with GUEST_CR3 fix <<lnxcr3>>
-| Ada compiler           | GNAT Community 2019
-| GCC version            | 8.3.1 20190518 for GNAT Community 2019
-| SPARK version          | GNAT Community 2019
+| Ada compiler           | GNAT Community 2021
+| GCC version            | 10.3.1 20210520 for GNAT Community 2021
+| SPARK version          | GNAT Community 2021
 | Emulator               | qemu-system-x86_64 (>= 3.1.0)
 | Intel AMT SoL client   | amtterm (>= commit 0ece513...)
 | Intel vPro AMT / WSMan | amtc (github.com/schnoddelbotz/amtc)
@@ -195,16 +195,16 @@ The first step to build Muen is to install the required packages. See the
 current list of required packages.
 
 The Ada and SPARK packages currently available in Debian and Ubuntu are too old
-to build Muen. GNAT Community 2019 for x86 GNU Linux (64-bit) from AdaCore
+to build Muen. GNAT Community 2021 for x86 GNU Linux (64-bit) from AdaCore
 must be installed instead. It can be downloaded from the following location:
 
   https://www.adacore.com/download
 
-Extend your `PATH` to make the GNAT Community 2019 compiler and tools
+Extend your `PATH` to make the GNAT Community 2021 compiler and tools
 visible to the Muen build system (assuming that they are installed below
 `/opt`):
 
-  $ export PATH=/opt/GNAT/2019/bin:$PATH
+  $ export PATH=/opt/GNAT/2021/bin:$PATH
 
 Docker
 ~~~~~~

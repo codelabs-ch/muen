@@ -297,10 +297,10 @@ When booting from the created stick the first NIC (net0) is configured as follow
   Netmask    : 255.255.255.0
   Gateway    : 192.168.254.1
 
-After initialization of the network adapter iPXE tries to download and boot the
-system image from the following URL:
+After initialization of the network adapter iPXE tries to download and
+chainload the iPXE configuration from the following URL:
 
-  http://192.168.254.1:8000/muen.img
+  http://192.168.254.1:8000/boot.cfg
 
 The development machine must be connected to the target hardware via an
 interface with IP address 192.168.254.1. To actually serve the created system

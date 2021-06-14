@@ -830,7 +830,19 @@
     operating on the status page.
     \end{warning}
    </text>
-   <section id="subject-lifecycle-operation-init" label="Initialization" priority="0"/>
+   <section id="subject-lifecycle-operation-init" label="Initialization" priority="0">
+    <text priority="100">
+     \begin{info}
+     On \verb!CMD_SELF_CTRL! the subject may perform all of the above steps,
+     without further synchronization/waiting for additional commands.
+     \end{info}
+     \begin{warning}
+     Since the Assembley uses a a few registers to perform stack clearing etc,
+     the registers R10-R15 will not retain their initial value. A component or
+     subject must not make use of the initial values of these registers.
+     \end{warning}
+    </text>
+   </section>
    <section id="subject-lifecycle-operation-vm" label="VM Components" priority="10">
     <text priority="0">
      For VM subjects, the same procedure as for native subjects is not viable

@@ -74,6 +74,12 @@
   \begin{list}{}{\leftmargin=1cm
   \labelwidth=\leftmargin}\item[\color{red}\Large\ding{43}]}
   {\end{list}\par}
+
+  \newenvironment{info}
+  {\par
+  \begin{list}{}{\leftmargin=1cm
+  \labelwidth=\leftmargin}\item[\color{blue}\Large\ding{43}]}
+  {\end{list}\par}
  </latex_preamble>
 
  <description scope="config" name="ahci_drv_enabled">

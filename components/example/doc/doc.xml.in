@@ -780,6 +780,72 @@
     \end{warning}
    </text>
    <section id="subject-lifecycle-operation-init" label="Initialization" priority="0"/>
+   <section id="subject-lifecycle-operation-vm" label="VM Components" priority="10">
+    <text priority="0">
+     For VM subjects, the same procedure as for native subjects is not viable
+     (e.g. 2 level page tables would require IA32-e mode transition and
+     creation of initial page tables etc.). Thus, we build on the existing
+     loader concept. One simplification is that a loader only needs to support a
+     single VM subject and no native subjects.
+
+     Since the subject loader (SL) in effect performs the same functionality as
+     the initialization/reset stub for native subjects, it directly operates on
+     the status and command pages which are associated with the VM subject. It
+     has no status/command pages for itself. The necessary Status and Command
+     pages are added to the loader component XML spec by declaring a library
+     dependency on \verb$libmucontrol$.
+
+     Since the Loader, the corresponding Linux subject as well as the associated
+     SM are part of the same scheduling group, a form of light cooperation
+     between SM and SL is necessary. The initialization process is as follows:
+
+     \begin{enumerate}
+     \item SM starts execution of its own initialization code. Synchronization
+           with the controller component happens as described above. The
+           Controller can force handover to SM by resetting Linux state
+     \item After successful setup, SM enters main loop with "Invalid guest
+           state" as Linux exit reason.
+     \item SM checks if Linux reset event is available. If SM Sinfo does not
+           contain \verb$Reset_Linux$ event \rightarrow go to step 9.
+     \item Trigger \verb$Reset_Linux$ event. This results in handover to Linux
+           with reset target action. The initial Linux state has
+           \verb$CR4.VMXE = 0$, which triggers an immediate handover back to SM
+           due to "Invalid guest state".
+     \item Trigger \verb$Load_Linux$ event to handover execution to SL.
+     \item SL syncs with controller component.
+     \item SL performs Linux memory initialization using the same code as the
+           native subject initialization, reused via the Libmuinit library.
+     \item After successful setup of Linux memory, SL triggers a handover to SM.
+     \item SM inspects Linux Status Interface filled in by SL to check that no
+           error occured.
+     \item If Linux State has Error bit set, print error message and halt
+           subject execution.
+     \item Check if SM is monitoring an AP Linux (\verb$CR0.PE = 0$): wait for
+           wakeup event.
+     \item SM makes Linux runnable by setting \verb$CR4.VMXE$ in Linux subject
+           state.
+     \item SM triggers handover to Linux thereby starting its execution.
+     \end{enumerate}
+
+     Except for the handover events passing on the thread of execution (without
+     interrupt injection), SL and SM do not communicate directly.
+
+     \begin{info}
+      With this division of labor between SM and SL each subject has somewhat
+      complementary privileges regarding the Linux subject: SM has access to the
+      subject state while SL only has access to Linux's memory.
+     \end{info}
+     \begin{info}
+      SL itself does not need reset functionality since it does not keep any
+      state. This also enables 1:1 reuse of Libmuinit just as Muinit does.
+     \end{info}
+     \begin{info}
+      SM maps the Linux Status page read-only to check for error conditions on
+      loading Linux by SL. This avoids having an additional signalisation
+      mechanism between SM and SL.
+     \end{info}
+    </text>
+   </section>
   </section>
  </section>
 

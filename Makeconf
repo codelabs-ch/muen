@@ -87,7 +87,7 @@ SPARK_OPTS =                     \
 	--timeout=$(SPARK_TIMEOUT)   \
 	--mode=$(SPARK_MODE)         \
 	--output=$(SPARK_OUTPUT)     \
-	--no-counterexample          \
+	--counterexamples=off        \
 	--no-inlining                \
 	-Xbuild=prove                \
 	$(SPARK_MEMCACHED_OPTION)    \

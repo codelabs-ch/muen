@@ -672,7 +672,7 @@
    <text priority="0">
     On the policy level, the initialization stub is treated as a library. To
     activate the init/reset functionality, a component simply declares a
-    dependency in the component XML spec.
+    dependency in the component XML spec, see \ref{subject-lifecycle-usage-cspec}.
    </text>
    <section id="subject-lifecycle-policy_config_compilation-memory" label="Memory" priority="0">
     <text priority="0">
@@ -733,6 +733,57 @@
     \ref{Mucontrol.Command.Instance.Command_Pageexample}. The \emph{Status Interface} is
     specified in section \ref{Mucontrol.Status.Instance.Status_Pageexample}.
    </text>
+  </section>
+  <section id="subject-lifecycle-usage" label="Usage" priority="0">
+   <text priority="0">
+    This section describes the XML adjustment which are required to make a
+    component / subject reloadable.
+   </text>
+   <section id="subject-lifecycle-usage-system_policy" label="System Policy" priority="0">
+    <text priority="0">
+     Add physical memory regions to back new control and status pages.
+
+     \lstinputlisting[label=subject-lifecycle-usage-policy-memory,caption=Declaration of Control and Status memory regions,language=XML]{restart-memory.xml}
+
+     If a subject is placed under self-control, the fill pattern of the control
+     page can be set to \verb!16#ff#!. In that case the corresponding status
+     page must have fill pattern \verb!16#00#! to ensure proper initialization
+     as the self-controlled subject may not access the status page at all.
+     Since both memory regions are used during initialization, the hash of these
+     two regions is set to none. With this, they are skipped during hash
+     validation without having to implement some form of special-casing in the
+     init stub.
+
+     Add a physical reset event.
+
+     \lstinputlisting[label=subject-lifecycle-usage-policy-event,caption=Declaration of the Reset event,language=XML]{restart-event.xml}
+    </text>
+   </section>
+   <section id="subject-lifecycle-usage-cspec" label="Component Specification" priority="0">
+    <text priority="0">
+     Add a dependency to \verb!Muinit!.
+
+     \lstinputlisting[label=subject-lifecycle-usage-cspec-dep,caption=Dependency declaration,language=XML]{restart-cspec.xml}
+
+     If a component requires access to the status and command pages during
+     execution, i.e. beyond the initialization, also add a dependency on
+     \verb!libmucontrol!. Examples for this use case are updating the Watchdog Timer
+     Value or Time subject setting the runtime status to \verb!STATE_FINISHED! after
+     successfully publishing time information.
+    </text>
+   </section>
+   <section id="subject-lifecycle-usage-subject" label="Subject Specification" priority="0">
+    <text priority="0">
+     On the subject level, the following steps are necessary:
+     \begin{itemize}
+     \item Add mappings for Control and Status memory regions.
+     \item Map reset event with ID 63 to give it the highest priority. This makes sure that if a reset event is pending it will be performed upon the next entry into the subject.
+     \item Add loader element with reference to the subject itself.
+     \end{itemize}
+
+     \lstinputlisting[,label=subject-lifecycle-usage-subject_spec,caption=Adjustments to Subject Specification,language=XML]{restart-subject.xml}
+    </text>
+   </section>
   </section>
   <section id="subject-lifecycle-operation" label="Operation" priority="0">
    <text priority="0">

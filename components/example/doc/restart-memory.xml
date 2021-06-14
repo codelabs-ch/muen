@@ -1,0 +1,11 @@
+...
+<memory>
+ <memory name="control_foobar" size="16#1000#" caching="WB">
+  <fill pattern="16#00#/>
+  <hash value="none/>
+ </memory>
+ <memory name="status_foobar" size="16#1000#" caching="WB">
+  <hash value="none/>
+ </memory>
+</memory>
+...

@@ -1,0 +1,4 @@
+<events>
+ <event name="reset_foobar" mode="asap"/>
+ ...
+</events>

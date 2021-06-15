@@ -140,12 +140,13 @@
     \end{itemize}
 
     The component specification declares the binary program file including the
-    virtual memory location as well as the logical view of the \emph{expected}
-    execution environment. This environment is defined in terms of logical
-    resources. Component resources can be of the type:
+    virtual memory location as provided, file-backed memory regions, as well as
+    the logical view of the \emph{expected} execution environment. This
+    environment is defined in terms of logical resources. Component resources
+    can be of the type:
 
     \begin{itemize}
-    \item Binary file
+    \item Provided memory regions with optional content
     \item Channel
     \item Logical memory
     \item Logical device
@@ -177,14 +178,14 @@
     event.
 
     An integrator must link the logical resources of a component specification
-    with the actual system policy. How this is done is explained in the
-    following section \ref{intro-subjects}.
+    with the actual system policy. How this is done is explained in section
+    \ref{intro-subjects}.
 
     The \texttt{provides} section specifies memory regions which are provided by
     the component. Such regions will be added to the physical memory regions of
     the system and linked into the subject referencing the component. Usually,
     the provided regions consist of the component binary, but it is possible to
-    provide arbitrary regions.
+    provide arbitrary regions, with or without content.
 
     In order to simplify the integrators job, the \texttt{mucbinsplit} tool can
     be used to generate the component binary regions with the correct
@@ -208,7 +209,7 @@
     policy via \texttt{map} elements. The \texttt{debuglog} channel is not
     directly visible in the \ref{code-subject-comp-map} listing, as it is added
     by the dependency to the libmudebuglog library (which is declared in the
-    listing \texttt{depends} section).
+    component XML listing \texttt{depends} section).
 
     Also, the requested source and target events are mapped to global system
     events.
@@ -218,10 +219,10 @@
 
     Note that subjects do not need to have all resources specified in their
     component description. Instead, extra resources such as device and/or memory
-    mappings can be implicitly assigned to a subject. This is useful for
-    components which are able to enumerate the available resources at runtime by
-    using configuration mechanism like PCI configuration space enumeration, ACPI
-    or the Muen subject information page API specified in section
+    mappings can be assigned to a subject. This is useful for components which
+    are able to enumerate the available resources at runtime by using
+    configuration mechanism like PCI configuration space enumeration, ACPI or
+    the Muen subject information page API specified in section
     \ref{Musinfo.Instance.Objectexample}.
    </text>
   </section>
@@ -246,20 +247,20 @@
 
     \lstinputlisting[label=code-libmudebuglog-cspec,caption=Libmudebuglog library specification XML,language=XML]{../../libmudebuglog/spec/libmudebuglog.xml}
 
-    Similar to actual components, the library \texttt{requires} certain
-    resources to function. In this case, a \texttt{debuglog} channel is expected
-    at the given \texttt{virtualAddress} with the specified \texttt{size}. Note
-    that the size is provided by a variable. The library intends to write to
-    this shared memory channel as a channel \texttt{writer}. A component
-    depending on this library inherits the requested resource from the
-    library, and the system integrator must map them to physical system
-    resources at the subject level as seen in the previous section.
+    Similar to components, the library \texttt{requires} certain resources to
+    operate. In this case, a \texttt{debuglog} channel is expected at the given
+    \texttt{virtualAddress} with the specified \texttt{size}. Note that the size
+    is provided by a variable. The library intends to write to this shared
+    memory channel as a channel \texttt{writer}. A component depending on this
+    library inherits the requested resource from the library, and the system
+    integrator must map them to physical system resources at the subject level
+    as seen in the previous section.
 
     The example XML specification also contains an \texttt{include} directive
     for another XML file: \texttt{config.xml}. This mechanism is used to
     generate configuration settings during the build depending on the actual
     system policy. This task is component-specific and can be implemented via
-    various solutions, e.g. an XSLT transform or a python script to name just
+    various solutions, e.g. an XSLT transform or a Python script to name just
     two. In this case, the size of the debugserver log channels is extracted
     from the system policy, see listing \ref{code-libmudebuglog-config-cspec}.
     More specifically, it contains the value for the \texttt{\$logchannel\_size}
@@ -296,14 +297,14 @@
    This is possible via the sinfo API introduced in section \ref{intro-sinfo}
    and specified in detail in section \ref{Musinfo.Instance.Objectexample}.
 
-   While resources can be discovered via the sinfo and CSPECS mechanisms, there
-   exist OS-specific discovery mechanisms which are also supported by the Muen
-   platform. These mechanisms are described in section
-   \ref{intro-os-specific-discovery}.
+   While resources can be discovered via the sinfo and Component Specifications
+   (CSPECS) mechanisms, there exist OS-specific mechanisms to determine
+   available resources, which are also supported by the Muen platform. These
+   mechanisms are described in section \ref{intro-os-specific-discovery}.
 
    It is also possible to combine multiple methods as needed, like it is done in
    the example component or in the Muen Linux guest operating system where both
-   generated ACPI tables and the sinfo API is used to discover resources.
+   generated ACPI tables and the sinfo API are employed to discover resources.
   </text>
 
   <section id="cspecs" label="CSPECS Mechanism" priority="0">
@@ -321,7 +322,7 @@
     \lstinputlisting[linerange=Reqbegin-Reqend,label=code-receiver,caption=Usage of CSPECS constants,language=Ada]{../src/foo-receiver.adb}
 
     The Ada record type representing the example request channel data is placed
-    at the exact location specified in the component XML specification using Ada
+    at the memory location designated in the component XML specification using Ada
     \texttt{Address} and \texttt{Volatile} aspects in combination with the
     CSPECs generated resource constants.
    </text>
@@ -381,10 +382,10 @@
     information mapped into its address space. These tasks are performed by
     \texttt{mugenzp} and \texttt{mucfgexpand} respectively.
 
-    See again the Muen System Specification \cite{muen:system-spec} for more
+    Refer to the Muen System Specification \cite{muen:system-spec} for more
     information about the involved tools.
 
-    Similar methods might be applied by other guest operating systems when
+    Similar methods might be employed by other guest operating systems when
     porting them to Muen.
   </text>
   </section>
@@ -404,18 +405,18 @@
    \item CR4 host/guest ownership
    \end{itemize}
    \item Direct MSR access
-   \item Initial register values
+   \item Initial register and segment values
    \end{itemize}
 
    VCPU profiles are assigned in the component specification at integration time
-   and enforced by the SK. Muen differentiates two VCPU profiles which have
+   and enforced by the SK. Muen differentiates two vCPU profiles which have
    different settings of the above:
    \begin{itemize}
-   \item VCPU for native subjects
-   \item VCPU for VM subjects
+   \item vCPU for native subjects
+   \item vCPU for VM subjects
    \end{itemize}
 
-   The VCPU profile of a native subject is much more restrictive, as Muen native
+   The vCPU profile of a native subject is much more restrictive, as Muen native
    subjects are written in SPARK/Ada with a zero-footprint (ZFP) runtime where
    absence of runtime errors is proven. Exception occurrence for such a
    component is a critical error which should be treated accordingly.
@@ -428,7 +429,7 @@
    preempt subjects according to the scheduling plan.
 
    See the Muen System Specification \cite{muen:system-spec} document for the
-   specification of all elements of a VCPU profile. The current VCPU profiles
+   specification of all elements of a vCPU profile. The current vCPU profiles
    for VM and native Muen components can be found in the Appendix, section
    \ref{appendix-vcpu}.
   </text>
@@ -453,13 +454,13 @@
    \item String
    \end{itemize}
 
-   A component uses the generated constants to parameterize certain parts of the
-   code. Listing \ref{code-config-opts} shows how the configuration options from
-   the table above are used in the code of the \emph{example} component.
+   A component can use the generated constants to parameterize certain parts of
+   the code. Listing \ref{code-config-opts} shows how the configuration options
+   from the table above are used in the code of the \emph{example} component.
 
    \lstinputlisting[linerange=Configbegin-Configend,label=code-config-opts,caption=Code parameterization using config options,language=Ada]{../src/example.adb}
 
-   The example serial number and the VCPU speed are only printed if the
+   The example serial number and the vCPU speed are only printed if the
    respective \texttt{boolean} configuration options are set to \texttt{true} in
    the component specification XML.\footnote{\texttt{pragma Debug} only executes
    the statement after the colon if the boolean expression before the colon is
@@ -469,7 +470,7 @@
 
  <section id="subject-monitoring" label="Subject Monitoring" priority="0">
   <text priority="0">
-   The subject monitoring concept is used to have a designated subject handle
+   The subject monitoring concept consists of having a designated subject handle
    traps of another subject. This is useful for example to implement a
    trap-and-emulate approach for VM subjects or a debugger.
 
@@ -478,7 +479,7 @@
    event. A potential trap is the execution of \texttt{CPUID} instruction for
    example\footnote{CPUID always traps in VMX non-root mode}.
 
-   Handling of such an event can range from ignoring it to real device
+   Handling of such an event can range from ignoring it to fully-fledged device
    emulation using a device model. Execution might be handed back to the
    faulting subject after handling of the event.
 
@@ -515,7 +516,8 @@
     The CPU register state of the monitored subject is mapped into the monitor
     subject address space at the \texttt{virtualAddress} specified. The
     \texttt{writable} attribute specifies whether write access of the monitor
-    subject is allowed.
+    subject is allowed. A monitor with write access can alter the CPU register
+    state of the monitored subject at runtime.
 
     The SM register interface API is specified in section
     \ref{Subject_Info.Stateexample}.
@@ -525,7 +527,7 @@
   <section id="subject-monitoring-timed-evt" label="Timed Events" priority="0">
    <text priority="0">
     The timed events page of the monitored subject is mapped into the monitor
-    subject address space at the \texttt{virtualAddress} specified. The
+    subject address space at the specified \texttt{virtualAddress}. The
     \texttt{writable} attribute defines whether write access of the monitor
     subject is allowed. The programming interface is the same as for the SM
     subject itself, see section \ref{Timed_Events.Timed_Evtexample}.
@@ -546,13 +548,13 @@
   <section id="subject-monitoring-timed-intrs" label="Interrupts" priority="0">
    <text priority="0">
     The subject interrupts page of the monitored subject is mapped into the
-    monitor subject address space at the \texttt{virtualAddress} specified. The
-    \texttt{writable} attribute specifies whether write access by the monitor
+    monitor subject address space at the specified \texttt{virtualAddress}. The
+    \texttt{writable} attribute designates whether write access by the monitor
     subject is allowed.
 
     The interrupts page contains an array of four 64-bit words, which designate
     the 256 interrupts to inject into the monitored subject.  The subject
-    monitor uses this mechanism to inject arbitrary interrupts into the
+    monitor can use this mechanism to inject arbitrary interrupts into the
     monitored subject (if write access is granted).
    </text>
   </section>
@@ -560,7 +562,7 @@
   <section id="subject-monitoring-timed-ldr" label="Loader" priority="0">
    <text priority="0">
     The memory regions of the monitored subject are mapped into the monitor
-    subject address space at the specified offset \texttt{virtualAddress}. The
+    subject address space at the specified \texttt{virtualAddress}. The
     \texttt{writable} attribute specifies whether write access to these regions
     is allowed for the SM.
 
@@ -601,14 +603,15 @@
     illustrative purposes, it is assumed that the monitored subject executes the
     \texttt{CPUID} instruction, which always traps in VMX non-root mode. The
     policy is setup so that a handover from the monitored subject to SM occurs
-    in this case. The following snipped shows the \texttt{events} node of the
-    monitored subject:
+    in this case. The following snippet shows the XML \texttt{events} section of
+    the monitored subject:
 
     \lstinputlisting[caption=CPUID event,language=XML]{sm_policy_trap.xml}
 
-    On \texttt{CPUID} in the monitored subject, the kernel inspects the events
-    table of the subject after exit and, according to its static configuration,
-    hands over execution to SM.
+    On \texttt{CPUID}\footnote{Event IDs correspond to the VMX Basic Exit
+    Reason, Intel SDM Vol. 3D, Appendix C} in the monitored subject, the kernel
+    inspects the events table of the subject after exit and, according to its
+    static configuration, hands over execution to SM.
 
     SM first examines the exit reason of the associated subject, by using the
     aformentioned \texttt{State} variable:
@@ -644,8 +647,8 @@
     \lstinputlisting[linerange=Smresumebegin-Smresumeend,label=code-sm-resume,caption=End
     of SM main loop,language=Ada]{../../sm/src/sm.adb}
 
-    The monitored subject then continues execution in the scheduling slot of SM
-    until the next trap occurs.
+    The monitored subject then continues execution at the instruction following
+    \texttt{cpuid} in the scheduling slot of SM until the next trap occurs.
    </text>
   </section>
  </section>
@@ -923,7 +926,7 @@
  <section id="verification_conditions_spark2014" label="Verification" priority="0">
   <text priority="-10">
    Muen is very well suited to work with verified SPARK/Ada components. The
-   native VCPU profile is used to run such components as guest on top of the
+   native vCPU profile is used to run such components as guest on top of the
    kernel.  The table below shows the verification results for the example
    component.
   </text>
@@ -969,8 +972,8 @@
  <section id="appendix" label="Appendix" priority="1000">
   <section id="appendix-vcpu" label="VCPU Profiles" priority="0">
    <text priority="0">
-    \lstinputlisting[caption=Native VCPU,language=XML]{../../../tools/libmucfgvcpu/profiles/native.xml}
-    \lstinputlisting[caption=VM VCPU,language=XML]{../../../tools/libmucfgvcpu/profiles/vm.xml}
+    \lstinputlisting[caption=Native vCPU,language=XML]{../../../tools/libmucfgvcpu/profiles/native.xml}
+    \lstinputlisting[caption=VM vCPU,language=XML]{../../../tools/libmucfgvcpu/profiles/vm.xml}
    </text>
   </section>
  </section>

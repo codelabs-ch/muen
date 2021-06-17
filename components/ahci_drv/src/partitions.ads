@@ -35,10 +35,13 @@ is
        Sector_Cnt     => 0,
        Partition_Type => 0);
 
-   type Partition_Array_Type
-   is array (Integer range 0 .. 127)
-      of Partition_Element_Type;
+   subtype Partition_Array_Length is Natural range 0 .. 128;
+   subtype Partition_Array_Range is Partition_Array_Length range 0 .. 127;
+
+   type Partition_Array_Type is array (Partition_Array_Range)
+     of Partition_Element_Type;
 
    Null_Partition_Array : Partition_Array_Type :=
       (others => Null_Partition_Element);
+
 end Partitions;

@@ -15,10 +15,14 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Musinfo.Instance;
+
 package Ahci.Device
 is
    --  Do devices initialisation. Search for attached devices and query device.
-   procedure Init;
+   procedure Init
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
    --  Read / Write 'Count' Sectors to the device starting at sector 'Start'.
    --  Returns number of Bytes written.
@@ -28,7 +32,9 @@ is
        Start   :     Interfaces.Unsigned_64; --  Start Sector
        Count   :     Interfaces.Unsigned_32; --  Number of Sectors
        Address :     Interfaces.Unsigned_64; --  Buffer Address
-       Ret_Val : out Status_Type);
+       Ret_Val : out Status_Type)
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
    --  Send Discard-Command to the device to discard 'Count' sectors
    --  starting at 'Start' sector.
@@ -36,12 +42,16 @@ is
       (ID      :     Port_Range;
        Start   :     Interfaces.Unsigned_64; --  Start Sector
        Count   :     Interfaces.Unsigned_32; --  Number of Sectors
-       Ret_Val : out Status_Type);
+       Ret_Val : out Status_Type)
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
    --  Send Sync-Command to the device.
    procedure Sync
       (ID      : Port_Range;
-       Ret_Val : out Status_Type);
+       Ret_Val : out Status_Type)
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
    type SMART_Status_Type is (OK, Threshold_Exceeded, Undefined);
 
@@ -49,10 +59,15 @@ is
       (ID      : Port_Range;
        Address :     Interfaces.Unsigned_64; --  Buffer Address
        Status  : out SMART_Status_Type;
-       Ret_Val : out Status_Type);
+       Ret_Val : out Status_Type)
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
    --  Returns a Bit_Array where 'found' devices are 'True'.
-   procedure Get_Attached_Devices (Dev : out Bit_Array);
+   subtype Port_Status_Type is Bit_Array
+     (Natural (Port_Range'First) .. Natural (Port_Range'Last));
+
+   procedure Get_Attached_Devices (Dev : out Port_Status_Type);
 
    --  Get maximum number of Sectors per R/W/Discard request.
    function Get_Max_Sector_Count (ID : Port_Range)

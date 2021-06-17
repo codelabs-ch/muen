@@ -17,6 +17,8 @@
 
 with Interfaces;
 
+with Musinfo.Instance;
+
 with Ahci;
 with Ahci.Device;
 
@@ -26,7 +28,9 @@ is
       (ID      :     Ahci.Port_Range;
        Start   :     Interfaces.Unsigned_64;
        Count   :     Interfaces.Unsigned_32;
-       Ret_Val : out Ahci.Status_Type);
+       Ret_Val : out Ahci.Status_Type)
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
    function Get_Max_Sector_Count (ID : Ahci.Port_Range)
       return Interfaces.Unsigned_32;
@@ -37,19 +41,27 @@ is
        Start   :     Interfaces.Unsigned_64; --  Start Sector
        Count   :     Interfaces.Unsigned_32; --  Number of Sectors
        Address :     Interfaces.Unsigned_64; --  DMA Buffer address
-       Ret_Val : out Ahci.Status_Type);
+       Ret_Val : out Ahci.Status_Type)
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
    procedure Sync
       (ID      :     Ahci.Port_Range;
-       Ret_Val : out Ahci.Status_Type);
+       Ret_Val : out Ahci.Status_Type)
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
    procedure Identify_Device
-      (Port_ID   : Ahci.Port_Range);
+      (Port_ID : Ahci.Port_Range)
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
    procedure Get_SMART
       (ID      :     Ahci.Port_Range;
        Address :     Interfaces.Unsigned_64; --  DMA Buffer address
        Status  : out Ahci.Device.SMART_Status_Type;
-       Ret_Val : out Ahci.Status_Type);
+       Ret_Val : out Ahci.Status_Type)
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
 end Ata;

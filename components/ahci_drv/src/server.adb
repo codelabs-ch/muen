@@ -168,20 +168,17 @@ is
    --------------------------------------------------------------------
 
    procedure Init
-   with
-      SPARK_Mode => Off
    is
       use type Ahci.Port_Range;
-      use type PC.Ports_Array_Range;
-      use type PC.Devices_Range;
       use type PC.Device;
 
       ID             : Ahci.Port_Range := 0;
       Mbr_Not_Read   : Boolean         := True;
-      Port_Idx       : PC.Ports_Array_Range := Ports_Array'First;
-      Dev_Idx        : PC.Devices_Range := Internal_Device_Array_Type'First;
+      Port           : PC.Port_Config_Type;
+      Dev            : PC.Device;
       Devs           : Ahci.Bit_Array (0 .. Integer (Ahci.Port_Range'Last));
-      Mbr_Partitions : Mbr.Partition_Table_Type;
+      Mbr_Partitions : Mbr.Partition_Table_Type
+        := Mbr.Null_Partition_Table;
    begin
       --  Init all attached devices, setup memory regions,...
       Ahci.Device.Init;
@@ -189,10 +186,11 @@ is
 
       --  Check if the configured device / partition is available
       --  and setup partition offsets.
-      for Port of PC.Port_Config loop
+      for Port_Idx in PC.Port_Config'Range loop
+         Port := PC.Port_Config (Port_Idx);
          Ports (Port_Idx).Chan_Idx := Port.Chan_Idx;
-         Dev_Idx := Internal_Device_Array_Type'First;
-         for Dev of Port.Devices loop
+         for Dev_Idx in Port.Devices'Range loop
+            Dev := Port.Devices (Dev_Idx);
             if Dev = PC.Null_Device then
                goto Next_Dev;
             end if;
@@ -240,12 +238,19 @@ is
                Ports (Port_Idx).Devs (Dev_Idx).Ahci_Port := Dev.Ahci_Port;
             end if;
             <<Next_Dev>>
-            Dev_Idx := Dev_Idx + 1;
          end loop;
-         Port_Idx := Port_Idx + 1;
       end loop;
 
-      --  initialize all writer channels
+      --  Initialize all writer channels
+      --
+      --  TODO: Somehow this is not recognized by SPARK as write:
+      --
+      --  medium: "server.response_channels" might not be written after
+      --  elaboration of main program "Ahci_Drv"[#0].
+      --
+      --  This message goes away if Response_Channels is annotated with
+      --  Async_Writers. Might be a SPARK bug.
+
       for Chn of Response_Channels loop
          Resp_Chn.Writer_Instance.Initialize
             (Channel => Chn,
@@ -287,6 +292,9 @@ is
       (Port_Idx : PC.Ports_Array_Range;
        Dev_Idx  : PC.Devices_Range;
        SendResp : Boolean := True)
+   with
+      Pre  => Musinfo.Instance.Is_Valid,
+      Post => Ports (Port_Idx).Devs (Dev_Idx).Current = Null_Current
    is
       use type Ahci.Status_Type;
 
@@ -298,19 +306,29 @@ is
       Start_Sec   : constant Interfaces.Unsigned_64
                      := Ports (Port_Idx).Devs (Dev_Idx).Current.Device_Offset +
                         Ports (Port_Idx).Devs (Dev_Idx).Sector_Offset;
-      Sec_Cnt     : constant Interfaces.Unsigned_32
-         := Interfaces.Unsigned_32 (
-               Ports (Port_Idx).Devs (Dev_Idx).Current.Request_Length /
-               Interfaces.Unsigned_64 (Sector_Size));
+      Sec_Cnt     : Interfaces.Unsigned_32;
       Response    : MB.Block_Response_Type;
       Address     : constant Interfaces.Unsigned_64
                      := Ports (Port_Idx).Devs (Dev_Idx).Current.Buffer_Offset +
                               Get_Shm_Buffer_Base (Ports (Port_Idx).Chan_Idx);
    begin
+      if Ports (Port_Idx).Devs (Dev_Idx).Current.Tag_Idx
+        = Tag_Array_Range'First
+        or else Sector_Size = 0
+      then
+         Ports (Port_Idx).Devs (Dev_Idx).Current := Null_Current;
 
-      if Ports (Port_Idx).Devs (Dev_Idx).Current = Null_Current then
+         pragma Debug
+           (Sector_Size = 0, Debug_Ops.Put_Line
+              ("Finish_Current_Request with zero sector size for device "
+               & "with ID " & SK.Strings.Img (Interfaces.Unsigned_64
+                 (Dev_Id))));
          return;
       end if;
+
+      Sec_Cnt := Interfaces.Unsigned_32'Mod
+        (Ports (Port_Idx).Devs (Dev_Idx).Current.Request_Length /
+             Interfaces.Unsigned_64 (Sector_Size));
 
       if ((Ports (Port_Idx).Devs (Dev_Idx).Current.Device_Offset
                and Interfaces.Unsigned_64 ((Sector_Size - 1))) = 0)
@@ -341,6 +359,7 @@ is
                    Count   => Sec_Cnt,
                    Ret_Val => Ret);
             when others =>
+               Ports (Port_Idx).Devs (Dev_Idx).Current := Null_Current;
                return;
          end case;
       else
@@ -365,8 +384,9 @@ is
       Response.Status_Code
          := Ahci.Status_To_Unsigned64 (Ret);
 
-      for I in Tag_Array_Range
-         range 0 .. Ports (Port_Idx).Devs (Dev_Idx).Current.Tag_Idx - 1
+      for I in Tag_Array_Range range
+        Tag_Array_Range'First ..
+          Ports (Port_Idx).Devs (Dev_Idx).Current.Tag_Idx - 1
       loop
          Response.Request_Tag
             := Ports (Port_Idx).Devs (Dev_Idx).Current.Tags (I);
@@ -384,6 +404,8 @@ is
       (Port_Idx : PC.Ports_Array_Range;
        Dev_Idx  : PC.Devices_Range;
        Request  : MB.Block_Request_Type)
+   with
+      Pre => Musinfo.Instance.Is_Valid
    is
       use type Ahci.Status_Type;
 
@@ -484,6 +506,8 @@ is
       (Port_Idx : PC.Ports_Array_Range;
        Dev_Idx  : PC.Devices_Range;
        Request  : MB.Block_Request_Type)
+   with
+      Pre => Musinfo.Instance.Is_Valid
    is
       use type MB.Request_Kind_Type;
       use type Interfaces.Unsigned_16;
@@ -505,7 +529,10 @@ is
       --  Therefore we must check for each new request if it's contiguous
       --  with the requests in-flight or if we have to finish the last
       --  requests first and start a new request.
-      if (Request.Request_Kind
+      if Ports (Port_Idx).Devs (Dev_Idx).Current.Tag_Idx
+          /= Tag_Array_Range'First
+        and then
+          ((Request.Request_Kind
             /= Ports (Port_Idx).Devs (Dev_Idx).Current.Request_Kind)
          or (Request.Buffer_Offset
             /= Ports (Port_Idx).Devs (Dev_Idx).Current.Buffer_Offset +
@@ -516,7 +543,7 @@ is
          or (Ports (Port_Idx).Devs (Dev_Idx).Current.Tag_Idx
             = Tag_Array_Range'Last)
          or (Request.Device_Id
-            /= Ports (Port_Idx).Devs (Dev_Idx).Current.Device_Id)
+            /= Ports (Port_Idx).Devs (Dev_Idx).Current.Device_Id))
       then
          Finish_Current_Request (Port_Idx, Dev_Idx);
       end if;
@@ -549,13 +576,47 @@ is
    procedure Process_Request
       (Port_Idx : PC.Ports_Array_Range;
        Request  : MB.Block_Request_Type)
+   with
+      Pre => Musinfo.Instance.Is_Valid
    is
-      Dev_Idx : constant PC.Devices_Range
-         := PC.Devices_Range (Request.Device_Id);
+      use type Interfaces.Unsigned_16;
+
+      Dev_Idx : PC.Devices_Range;
    begin
       --  pragma Debug (Debug_Ops.Put_Line ("Received request on port: " &
       --       SK.Strings.Img (Interfaces.Unsigned_32 (Port_Idx))));
       --  pragma Debug (Debug_Ops.Print_Request (Request));
+
+      if Request.Device_Id > Interfaces.Unsigned_16 (PC.Devices_Range'Last)
+      then
+         pragma Debug
+           (Debug_Ops.Put_Line ("Request on port: " &
+              SK.Strings.Img (Interfaces.Unsigned_32 (Port_Idx))
+            & " -  invalid device ID, ignoring request"));
+
+         declare
+            Response : MB.Block_Response_Type;
+         begin
+            Response.Request_Kind := Request.Request_Kind;
+            Response.Request_Tag  := Request.Request_Tag;
+            Response.Device_Id    := Request.Device_Id;
+
+            case Request.Request_Kind is
+               when MB.None | MB.Read | MB.Write | MB.Discard | MB.Sync
+                  | MB.Reset =>
+                  Response.Status_Code := 1;
+               when  others =>
+                  Response.Status_Code := 0;
+            end case;
+
+            Send_Response
+              (Chan_Idx => Ports (Port_Idx).Chan_Idx,
+               Response => Response);
+         end;
+         return;
+      end if;
+
+      Dev_Idx := PC.Devices_Range (Request.Device_Id);
 
       case Request.Request_Kind is
          when MB.Read | MB.Write | MB.Discard =>
@@ -579,6 +640,8 @@ is
 
    procedure Finish_Current_Requests
       (Port_Idx : PC.Ports_Array_Range)
+   with
+      Pre => Musinfo.Instance.Is_Valid
    is
    begin
       for Dev_Idx in Ports (Port_Idx).Devs'Range loop
@@ -592,6 +655,8 @@ is
 
    procedure Process_Port
       (Port_Idx : PC.Ports_Array_Range)
+   with
+      Pre => Musinfo.Instance.Is_Valid
    is
       use type Req_Chn.Reader.Result_Type;
 

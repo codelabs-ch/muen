@@ -70,9 +70,12 @@ is
 
    MBR_Type_Size : constant := 512 * 8;
 
+   subtype Partition_1_4_Range is Natural range 1 .. 4;
+   subtype Partition_1_4_Array is Partition_Array (Partition_1_4_Range);
+
    type MBR_Type is record
       Bootstrap_Code : Ahci.Byte_Array (0 .. 445);
-      Partition_1_4  : Partition_Array (1 .. 4);
+      Partition_1_4  : Partition_1_4_Array;
       Boot_Signature : Interfaces.Unsigned_16;
    end record
    with
@@ -114,7 +117,7 @@ is
       Stop_Parsing : Boolean;
       Partition    : Partition_Entry_Type;
       EBR_Base     : Interfaces.Unsigned_32 := 0;
-      Max_Entries  : Integer := 4;
+      Max_Entries  : Partition_1_4_Range := 4;
       Add_Entry    : Boolean;
 
       ---------------------------------------------------------------------
@@ -133,15 +136,16 @@ is
       ---------------------------------------------------------------------
 
    begin
-      Part_Table.Count := 0;
+      Part_Table := Null_Partition_Table;
       Parse_Loop : loop
          --  read sector containing a MBR / EBR entry
-         Ahci.Device.RW_Sectors (ID => ID,
-            RW       => Ahci.Read,
-            Start    => Sector,
-            Count    => 1,
-            Address  => Ahci.DMA_Mem_Base_Address,
-            Ret_Val  => Ret);
+         Ahci.Device.RW_Sectors
+           (ID      => ID,
+            RW      => Ahci.Read,
+            Start   => Sector,
+            Count   => 1,
+            Address => Ahci.DMA_Mem_Base_Address,
+            Ret_Val => Ret);
 
          Sig := MBR_Entry.Boot_Signature;
          if Ret /= Ahci.OK or Sig /= 16#aa55# then
@@ -150,7 +154,7 @@ is
 
             pragma Debug (Sig /= 16#aa55#,
                Debug_Ops.Put_Line ("Signature invalid"));
-            Part_Table.Count := -1;
+            Part_Table.Count := 0;
             return;
          end if;
 
@@ -191,6 +195,16 @@ is
                   Sector := Start_Lba;
                   Stop_Parsing := False;
 
+               end if;
+
+               if Part_Table.Count + Found not in
+                 Partitions.Partition_Array_Range
+               then
+                  pragma Debug
+                    (Debug_Ops.Put_Line
+                       ("MBR: Not enough entries to store partition table"));
+                  Part_Table := Null_Partition_Table;
+                  return;
                end if;
 
                if Add_Entry then

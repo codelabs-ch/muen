@@ -79,9 +79,11 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Get_Attached_Devices (Dev : out Bit_Array)
+   procedure Get_Attached_Devices (Dev : out Port_Status_Type)
    is
    begin
+      Dev := (others => False);
+
       for I in Port_Range loop
          Dev (Integer (I)) := Devices (I).Signature /= Empty;
       end loop;
@@ -132,6 +134,8 @@ is
    is
       Signature : constant Signature_Type := Devices (ID).Signature;
    begin
+      Status := Undefined;
+
       case Signature is
          when Sata =>
             Ata.Get_SMART (ID => ID,
@@ -148,6 +152,8 @@ is
 
    procedure Identify_Device
       (Port_ID : Port_Range)
+   with
+      Pre => Musinfo.Instance.Is_Valid
    is
       Sig : Interfaces.Unsigned_32;
    begin
@@ -168,6 +174,8 @@ is
 
    procedure Probe
       (Port_ID : Port_Range)
+   with
+      Pre => Musinfo.Instance.Is_Valid
    is
       use type Interfaces.Unsigned_64;
 
@@ -186,7 +194,7 @@ is
       is (Interfaces.Unsigned_32 (Interfaces.Shift_Right (I, 32)));
 
       function Lower (I : Interfaces.Unsigned_64) return Interfaces.Unsigned_32
-      is (Interfaces.Unsigned_32 (I));
+      is (Interfaces.Unsigned_32 (I and 16#ffff_ffff#));
    begin
 
       if HBA_Caps.SSS then
@@ -231,7 +239,7 @@ is
          + Interfaces.Unsigned_64 (Port_ID) * Cmd_Table_Size;
       Commands.Command_Lists (Port_ID)(0).CTBA
          := Unsigned_25 (Interfaces.Shift_Right
-               (Interfaces.Unsigned_32 (Address), 7));
+               (Interfaces.Unsigned_32'Mod (Address), 7));
       Commands.Command_Lists (Port_ID)(0).CTBAU := Upper (Address);
 
       Ports.Start (ID => Port_ID); -- start cmd engine + fre

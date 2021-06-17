@@ -20,8 +20,6 @@ with Interfaces;
 
 with SK.CPU;
 
-with Musinfo.Instance;
-
 package body Ahci.Delays
 is
 
@@ -33,7 +31,10 @@ is
      (Amount : Interfaces.Unsigned_64;
       Unit   : Interfaces.Unsigned_64)
    with
-      Pre => Musinfo.Instance.Is_Valid;
+      Global => (Input  => (Musinfo.Instance.State,
+                            Musinfo.Instance.Scheduling_Info),
+                 In_Out => Time_Passes),
+      Pre    => Musinfo.Instance.Is_Valid and then Unit > 0;
 
    --  Returns Timestamp counter frequency in Hz.
    function TSC_Hz return Interfaces.Unsigned_64
@@ -44,13 +45,14 @@ is
    --  ticks has passed.
    procedure Sleep_Until (Deadline : Interfaces.Unsigned_64)
    with
-      Pre => Musinfo.Instance.Is_Valid;
+      Global => (Proof_In => Musinfo.Instance.State,
+                 Input    => Musinfo.Instance.Scheduling_Info,
+                 In_Out   => Time_Passes),
+      Pre    => Musinfo.Instance.Is_Valid;
 
    -------------------------------------------------------------------------
 
    procedure M_Delay (Msec : Natural)
-   with
-      SPARK_Mode => Off
    is
    begin
       Sleep (Amount => Interfaces.Unsigned_64 (Msec),
@@ -62,8 +64,6 @@ is
    procedure Sleep
      (Amount : Interfaces.Unsigned_64;
       Unit   : Interfaces.Unsigned_64)
-   with
-      SPARK_Mode => Off
    is
       Now   : constant Interfaces.Unsigned_64
         := Musinfo.Instance.TSC_Schedule_End;
@@ -96,8 +96,6 @@ is
    -------------------------------------------------------------------------
 
    procedure U_Delay (Usec : Natural)
-   with
-      SPARK_Mode => Off
    is
    begin
       Sleep (Amount => Interfaces.Unsigned_64 (Usec),

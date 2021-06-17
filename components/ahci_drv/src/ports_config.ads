@@ -49,7 +49,7 @@ package Ports_Config is
    --  zero based partition Number
    type Device is record
       Ahci_Port : Ahci.Port_Range;
-      Partition : Integer;
+      Partition : Natural;
    end record;
 
    Null_Device : Device :=

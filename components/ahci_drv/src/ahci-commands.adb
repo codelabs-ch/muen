@@ -65,7 +65,7 @@ is
          else
             Bytes := Bytes_Per_Prdt;
          end if;
-         Low  := Unsigned_31
+         Low  := Unsigned_31'Mod
             (Interfaces.Shift_Right
                (Address + Interfaces.Unsigned_64 (Address_Offset), 1));
          High := Interfaces.Unsigned_32 (Interfaces.Shift_Right

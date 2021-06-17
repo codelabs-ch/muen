@@ -20,10 +20,13 @@ with Interfaces;
 
 with SK.CPU;
 
+with Musinfo.Instance;
+
 with Ahci;
 with Ahci.Constants;
 with Ahci.HBA;
 with Ahci.Pciconf;
+
 with Server;
 
 with Debug_Ops;
@@ -35,6 +38,12 @@ begin
    pragma Debug (Debug_Ops.Put_Line (Item => "AHCI driver subject running"));
    pragma Debug (Debug_Ops.Print_PCI_Device_Info);
    pragma Debug (Debug_Ops.Print_PCI_Capabilities);
+
+   if not Musinfo.Instance.Is_Valid then
+      pragma Debug
+        (Debug_Ops.Put_Line ("Sinfo invalid! Halting vCPU"));
+      SK.CPU.Stop;
+   end if;
 
    --  enable PCI Bus master, memory and io space. This might habe been already
    --  done by BIOS but coreboot usually leaves BM disabled.

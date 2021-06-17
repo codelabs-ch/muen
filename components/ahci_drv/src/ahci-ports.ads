@@ -20,13 +20,12 @@ with System;
 
 with Interfaces;
 
-with Musinfo;
+with Musinfo.Instance;
 
 with Ahci_Drv_Component.Devices;
 
 package Ahci.Ports
 is
-
    use Ahci_Drv_Component.Devices;
 
    type Clear_Error_Type is record
@@ -42,17 +41,20 @@ is
    --  Enable port specified by ID.
    procedure Enable
      (ID      :     Port_Range;
-      Success : out Boolean);
+      Success : out Boolean)
+   with
+      Pre => Musinfo.Instance.Is_Valid;
+
+   subtype Execute_Timeout_Type is Natural range 1 .. 60;
 
    --  Execute commandslot
    --  Timeout: abort command if no response from device within Timeout sec
    procedure Execute
       (ID      :     Port_Range;
-       Timeout :     Integer;
+       Timeout :     Execute_Timeout_Type;
        Success : out Boolean)
    with
-      Pre => Timeout >= Natural (Musinfo.TSC_Tick_Rate_Khz_Type'First)
-             and Timeout <= Natural (Musinfo.TSC_Tick_Rate_Khz_Type'Last);
+      Pre => Musinfo.Instance.Is_Valid;
 
    --  Test if the port is active (device detected)
    procedure Is_Active
@@ -65,7 +67,9 @@ is
    --  Reset port specified by ID.
    procedure Reset
      (ID      :     Port_Range;
-      Success : out Boolean);
+      Success : out Boolean)
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
    --  Spin up device
    procedure Spin_Up (ID : Port_Range);
@@ -74,7 +78,9 @@ is
    procedure Start (ID : Port_Range);
 
    --  Stop command processing of command list for port specified by ID.
-   procedure Stop (ID : Port_Range);
+   procedure Stop (ID : Port_Range)
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
    --  Serial ATA AHCI 1.3.1 Specification, section 3.3.
 

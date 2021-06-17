@@ -68,7 +68,7 @@ is
    -------------------------------------------------------------------------
 
    function To_Byte (LWord : Interfaces.Unsigned_64;
-                     Pos   : Integer)
+                     Pos   : Natural)
        return Interfaces.Unsigned_8
        with Pre => Pos < 8
    is
@@ -79,7 +79,7 @@ is
    end To_Byte;
 
    function To_Byte (DWord : Interfaces.Unsigned_32;
-                     Pos   : Integer)
+                     Pos   : Natural)
        return Interfaces.Unsigned_8
        with Pre => Pos < 4
    is
@@ -90,7 +90,7 @@ is
    end To_Byte;
 
    function To_Byte (Word : Interfaces.Unsigned_16;
-                     Pos  : Integer)
+                     Pos  : Natural)
        return Interfaces.Unsigned_8
        with Pre => Pos < 2
    is
@@ -178,15 +178,13 @@ is
        Start   :     Interfaces.Unsigned_64;
        Count   :     Interfaces.Unsigned_32;
        Ret_Val : out Ahci.Status_Type)
-   with
-      SPARK_Mode => Off
    is
       use type Ahci.Unsigned_48;
 
       Cnt     : Interfaces.Unsigned_32 := Count;
       Now     : Interfaces.Unsigned_16;
       Length  : Interfaces.Unsigned_32 := 0;
-      Sec     : Ahci.Unsigned_48 := Ahci.Unsigned_48 (Start);
+      Sec     : Ahci.Unsigned_48;
       Len     : Interfaces.Unsigned_32;
       Idx     : LBA_Range := LBA_Range'First;
       Success : Boolean;
@@ -196,9 +194,12 @@ is
             ((Start >= 16#1_0000_0000_0000#) or (Count > 64 * 1024)))
          or (not Ahci.Devices (ID).Support_48Bit)
       then
-            Ret_Val := Ahci.ENOTSUP;
-            return;
+         Ret_Val := Ahci.ENOTSUP;
+         return;
       end if;
+
+      Sec := Ahci.Unsigned_48 (Start);
+
       --  build a list of LBA Range entries as described in
       --  ATA Attachment 8 ATA/ATAP Command Set 7.22.3.6
       while Cnt /= 0 loop
@@ -212,6 +213,13 @@ is
          LBA_Range_List (Idx).Length := Now;
 
          Length := Length + (LBA_Range_Type'Size / 8);
+         if Idx = LBA_Range'Last then
+            pragma Debug
+              (Debug_Ops.Put_Line
+                 ("Discard_Sectors: Error constructing LBA entries (1)"));
+            Ret_Val := Ahci.ENOTSUP;
+            return;
+         end if;
          Idx := Idx + 1;
          Cnt := Cnt - Interfaces.Unsigned_32 (Now);
          Sec := Sec + Ahci.Unsigned_48 (Now);
@@ -221,6 +229,13 @@ is
       while (Idx mod 64) /= 0 loop
          LBA_Range_List (Idx).LBA    := 0;
          LBA_Range_List (Idx).Length := 0;
+         if Idx = LBA_Range'Last then
+            pragma Debug
+              (Debug_Ops.Put_Line
+                 ("Discard_Sectors: Error constructing LBA entries (2)"));
+            Ret_Val := Ahci.ENOTSUP;
+            return;
+         end if;
          Idx := Idx + 1;
          Length := Length + (LBA_Range_Type'Size / 8);
       end loop;
@@ -231,6 +246,7 @@ is
 
       if Len /= Length then
          Ret_Val := Ahci.EIO;
+         return;
       end if;
 
       Setup_H2D_Cmd (ID       => ID,
@@ -300,7 +316,7 @@ is
 
       Cmd   := Cmd_Table (RW, Ahci.Devices (ID).Support_48Bit);
       Bytes := Interfaces.Shift_Left
-                  (Count, Ahci.Devices (ID).Sector_Size_Shift);
+        (Count, Ahci.Devices (ID).Sector_Size_Shift);
 
       Ahci.Commands.Cmd_Slot_Prepare (ID, Bytes, Address, RW);
 
@@ -379,6 +395,8 @@ is
        Feature :     Interfaces.Unsigned_16;
        Address :     Interfaces.Unsigned_64 := Ahci.DMA_Mem_Base_Address;
        Ret_Val : out Ahci.Status_Type)
+   with
+      Pre => Musinfo.Instance.Is_Valid
    is
       RW      : constant Ahci.RW_Type := Ahci.Read;
       Length  : Interfaces.Unsigned_32 := 512;
@@ -460,6 +478,8 @@ is
       (ID      :     Ahci.Port_Range;
        Enable  :     Boolean;
        Ret_Val : out Ahci.Status_Type)
+   with
+      Pre => Musinfo.Instance.Is_Valid
    is
       Feature : Interfaces.Unsigned_16;
    begin
@@ -699,6 +719,13 @@ is
 
    -------------------------------------------------------------------------
 
+   pragma $Release_Warnings
+     (Off, "procedure ""Convert_Ata_String"" is not referenced",
+      Reason => "Only used in debug output");
+   procedure Convert_Ata_String (Src : in out String);
+   pragma $Release_Warnings
+     (On, "procedure ""Convert_Ata_String"" is not referenced");
+
    procedure Convert_Ata_String (Src : in out String)
    with
       SPARK_Mode => Off
@@ -719,16 +746,14 @@ is
    -------------------------------------------------------------------------
 
    procedure Identify_Device
-      (Port_ID   : Ahci.Port_Range)
-   with
-      SPARK_Mode => Off
+      (Port_ID : Ahci.Port_Range)
    is
       use type Ahci.Unsigned_2;
 
       Length              : Interfaces.Unsigned_32 :=  512;
       Success             : Boolean;
-      FW                  : String (1 ..  8);
-      Model               : String (1 .. 40);
+      Unused_FW           : String (1 ..  8);
+      Unused_Model        : String (1 .. 40);
       Sector_Size         : Sector_Size_Type;
       Sector_Size_Bytes   : Interfaces.Unsigned_32;
       Logical_Sector_Size : Interfaces.Unsigned_32;
@@ -755,15 +780,15 @@ is
                           Success => Success);
 
       if Success then
-         FW := Ata_Identify_Response.FW;
-         Convert_Ata_String (FW);
-         Model := Ata_Identify_Response.Model;
-         Convert_Ata_String (Model);
+         Unused_FW := Ata_Identify_Response.FW;
+         pragma Debug (Convert_Ata_String (Unused_FW));
+         Unused_Model := Ata_Identify_Response.Model;
+         pragma Debug (Convert_Ata_String (Unused_Model));
 
          Ahci.Devices (Port_ID).Signature := Ahci.Sata;
 
          pragma Debug (Debug_Ops.Put_Line
-            ("ata: device found: " & Model & " [" & FW & "]"));
+            ("ata: device found: " & Unused_Model & " [" & Unused_FW & "]"));
 
          Ahci.Devices (Port_ID).Support_48Bit :=
             Ata_Identify_Response.Cmds_Features.Support_48Bit;
@@ -793,11 +818,15 @@ is
          Ahci.Devices (Port_ID).Sector_Size_Shift := 0;
          Sector_Size_Bytes := Ahci.Devices (Port_ID).Sector_Size;
 
-         Get_Shift : loop
+         Get_Shift :
+         for I in 1 .. 33 loop
             Sector_Size_Bytes := Sector_Size_Bytes / 2;
             exit Get_Shift when Sector_Size_Bytes = 0;
             Ahci.Devices (Port_ID).Sector_Size_Shift :=
-               Ahci.Devices (Port_ID).Sector_Size_Shift + 1;
+              Ahci.Devices (Port_ID).Sector_Size_Shift + 1;
+
+            pragma Loop_Invariant
+              (Ahci.Devices (Port_ID).Sector_Size_Shift <= I);
          end loop Get_Shift;
 
          pragma Debug (Debug_Ops.Put_Line

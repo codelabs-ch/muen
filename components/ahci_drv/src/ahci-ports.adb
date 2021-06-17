@@ -19,8 +19,6 @@
 
 with SK.Strings;
 
-with Musinfo.Instance;
-
 with Ahci.Delays;
 
 with Debug_Ops;
@@ -135,6 +133,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Recover_Errors (ID : Port_Range)
+   with
+      Pre => Musinfo.Instance.Is_Valid
    is
       Tfd         : constant Port_Task_File_Data_Type :=
                         Instance (ID).Task_File_Data;
@@ -168,7 +168,7 @@ is
 
    procedure Execute
       (ID      :     Port_Range;
-       Timeout :     Integer;
+       Timeout :     Execute_Timeout_Type;
        Success : out Boolean)
    is
       use type Interfaces.Unsigned_64;
@@ -182,9 +182,8 @@ is
       TSC_Sched_End    : constant Interfaces.Unsigned_64
         := Musinfo.Instance.TSC_Schedule_End;
       End_Time         : constant Interfaces.Unsigned_64
-        := TSC_Sched_End +
-            Musinfo.TSC_Tick_Rate_Khz_Type (Timeout) *
-               Musinfo.Instance.TSC_Khz * 1000;
+        := TSC_Sched_End + Interfaces.Unsigned_64 (Timeout)
+        * Musinfo.Instance.TSC_Khz * 1000;
    begin
       Local_Cmd_Status := Instance (ID).Command_And_Status;
       Local_Cmd_Issue := Instance (ID).Command_Issue;
@@ -200,7 +199,7 @@ is
       Local_Cmd_Issue (0) := True;
       Instance (ID).Command_Issue := Local_Cmd_Issue;
 
-      --  wait command execution (Up to 5s)
+      --  wait command execution
       Wait : loop
          Local_Cmd_Issue := Instance (ID).Command_Issue;
          Local_Int_Status := Instance (ID).Interrupt_Status;
@@ -273,7 +272,7 @@ is
       Cmd_List_Running : Boolean;
       Device_Detection : Unsigned_4;
       Command_Status   : Port_Command_Status_Type
-                           := Instance (ID).Command_And_Status;
+        := Instance (ID).Command_And_Status;
       Sata_Ctrl        : Port_SATA_Control_Type;
    begin
       pragma Debug (Debug_Ops.Put_Line ("Reset Port" &
@@ -363,7 +362,7 @@ is
       Fis_Receive_Enabled : Boolean;
       Success             : Boolean;
       Status              : Port_Command_Status_Type
-                              := Instance (ID).Command_And_Status;
+        := Instance (ID).Command_And_Status;
    begin
 
       --  Serial ATA AHCI 1.3.1 Specification, section 10.1.2.

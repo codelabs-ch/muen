@@ -106,7 +106,7 @@ is
       Support_Discard   : Boolean;
       Support_SMART     : Boolean;
       Sector_Size       : Interfaces.Unsigned_32;
-      Sector_Size_Shift : Integer;
+      Sector_Size_Shift : Natural;
       Number_Of_Sectors : Interfaces.Unsigned_64;
    end record;
 

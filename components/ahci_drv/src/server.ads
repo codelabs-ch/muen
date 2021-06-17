@@ -15,12 +15,19 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Musinfo.Instance;
+
 package Server
 is
+
    --  Init all devices / channels.
-   procedure Init;
+   procedure Init
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
    --  Processing loop. Should never return.
-   procedure Process;
+   procedure Process
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
 end Server;

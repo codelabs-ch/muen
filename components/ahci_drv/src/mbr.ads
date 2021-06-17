@@ -15,22 +15,27 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Musinfo.Instance;
+
 with Ahci;
 with Partitions;
 
 package Mbr
 is
    type Partition_Table_Type is record
-      Count   : Integer;   -- number of valid entries
+      Count   : Partitions.Partition_Array_Length; -- number of valid entries
       Entries : Partitions.Partition_Array_Type;
    end record;
 
    Null_Partition_Table : Partition_Table_Type :=
-      (Count   => Integer'Last,
+      (Count   => Partitions.Partition_Array_Length'First,
        Entries => Partitions.Null_Partition_Array);
 
    --  Parse the MBR (in Sector 0) of the given device
    procedure Parse
       (ID         :     Ahci.Port_Range;
-       Part_Table : out Partition_Table_Type);
+       Part_Table : out Partition_Table_Type)
+   with
+      Pre => Musinfo.Instance.Is_Valid;
+
 end Mbr;

@@ -16,13 +16,30 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Musinfo.Instance;
+
 package Ahci.Delays
 is
 
+   --  Used to model time passing.
+   Time_Passes : Interfaces.Unsigned_64 := 0
+   with
+      Ghost;
+
    --  Suspend execution of caller for at least Usec microseconds.
-   procedure U_Delay (Usec : Natural);
+   procedure U_Delay (Usec : Natural)
+   with
+      Pre    => Musinfo.Instance.Is_Valid,
+      Global => (Input  => (Musinfo.Instance.State,
+                            Musinfo.Instance.Scheduling_Info),
+                 In_Out => Time_Passes);
 
    --  Suspend execution of caller for at least Msec milliseconds.
-   procedure M_Delay (Msec : Natural);
+   procedure M_Delay (Msec : Natural)
+   with
+      Pre     => Musinfo.Instance.Is_Valid,
+       Global => (Input  => (Musinfo.Instance.State,
+                             Musinfo.Instance.Scheduling_Info),
+                  In_Out => Time_Passes);
 
 end Ahci.Delays;

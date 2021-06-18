@@ -99,16 +99,19 @@ package body Mutime.Info.Test_Data.Tests is
 
       TI : Time_Info_Type;
    begin
-      TI := (TSC_Time_Base      => Timestamp_Type'First,
+      TI := (TSC_Time_Base      => 1,
              TSC_Tick_Rate_Hz   => TSC_Tick_Rate_Hz_Type'First,
              Timezone_Microsecs => Timezone_Type'First);
       Assert (Condition => Valid (TI => TI),
               Message   => "Time info not valid");
 
+      TI.TSC_Time_Base := Timestamp_Type'First;
+      Assert (Condition => not Valid (TI => TI),
+              Message   => "Time info valid (TSC Time Base 0)");
       TI.TSC_Time_Base := Timestamp_Type'Base'Last;
       Assert (Condition => not Valid (TI => TI),
-              Message   => "Time info valid (TSC Time Base)");
-      TI.TSC_Time_Base := Timestamp_Type'First;
+              Message   => "Time info valid (TSC Time Base Last)");
+      TI.TSC_Time_Base := 1;
 
       TI.TSC_Tick_Rate_Hz := TSC_Tick_Rate_Hz_Type'Base'Last;
       Assert (Condition => not Valid (TI => TI),

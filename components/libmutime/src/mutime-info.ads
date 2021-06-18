@@ -90,8 +90,11 @@ private
 
    function Valid (TI : Time_Info_Type) return Boolean
    is (TI.TSC_Time_Base in Timestamp_Type
+       and TI.TSC_Time_Base /= 0
        and TI.TSC_Tick_Rate_Hz in TSC_Tick_Rate_Hz_Type
-       and TI.Timezone_Microsecs in Timezone_Type);
+       and TI.Timezone_Microsecs in Timezone_Type)
+   with
+      Post => (if Valid'Result then TI.TSC_Time_Base /= 0);
 
    procedure Get_Current_Time
      (TI             :     Time_Info_Type;

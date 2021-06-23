@@ -460,7 +460,7 @@
      expected. If for some unforeseen reason (e.g.  non-maskable interrupt NMI)
      an exception occurs, it indicates a serious error. In that case, a crash
      audit record is filled with the appropriate error information and the
-     system is haltedi. Refer to section \ref{impl_crash_audit} for a detailed
+     system is halted. Refer to section \ref{impl_crash_audit} for a detailed
      description of the Crash Audit implementation.
 
      In the case of an exception being caused by the execution of a subject, the

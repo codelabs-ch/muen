@@ -164,12 +164,7 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Clears the Fault recording register and the Primary Fault Overflow flag
-   --  of the specified IOMMU.
    procedure Clear_Fault_Record (IOMMU : IOMMU_Device_Range)
-   with
-      Global  => (In_Out => Skp.IOMMU.State),
-      Depends => (Skp.IOMMU.State =>+ IOMMU)
    is
       Fault_Recording : Reg_Fault_Recording_Type;
       Fault_Status    : Reg_Fault_Status_Type;

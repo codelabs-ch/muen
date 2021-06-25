@@ -236,31 +236,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Process_Fault
-   is
-      Status : Reg_Fault_Status_Type;
-   begin
-      for I in IOMMU_Device_Range loop
-         Status := Read_Fault_Status (Index => (I));
-
-         if Status.PPF = 1 then
-            declare
-               Dummy : Reg_Fault_Recording_Type;
-            begin
-               Dummy := Read_Fault_Recording (Index => I);
-               pragma Debug (SK.VTd.Dump.Print_VTd_Fault
-                             (IOMMU  => I,
-                              Status => Status,
-                              Fault  => Dummy));
-            end;
-
-            Clear_Fault_Record (IOMMU => I);
-         end if;
-      end loop;
-   end Process_Fault;
-
-   -------------------------------------------------------------------------
-
    --  Set address of root table for IOMMU with given index.
    procedure Set_Root_Table_Address
      (IOMMU   :     IOMMU_Device_Range;

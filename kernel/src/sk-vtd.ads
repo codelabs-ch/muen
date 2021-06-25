@@ -45,11 +45,6 @@ is
                                       Skp.IOMMU.State, X86_64.State),
                   Skp.IOMMU.State =>+ null);
 
-   --  Process fault reported by IOMMU.
-   procedure Process_Fault
-   with
-      Global => (In_Out => Skp.IOMMU.State);
-
 private
 
    --  Clears the Fault recording register and the Primary Fault Overflow flag

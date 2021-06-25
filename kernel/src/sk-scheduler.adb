@@ -22,7 +22,7 @@ with Skp.Subjects;
 
 with SK.CPU;
 with SK.Apic;
-with SK.VTd;
+with SK.VTd.Debug;
 with SK.Power;
 with SK.Dump;
 with SK.Subjects.Debug;
@@ -630,7 +630,7 @@ is
       end if;
 
       pragma Debug (Vector = SK.Constants.VTd_Fault_Vector,
-                    VTd.Process_Fault);
+                    VTd.Debug.Process_Fault);
       pragma Debug (Vector < Skp.Interrupts.Remap_Offset,
                     Dump.Print_Message
                       (Msg => "IRQ with invalid vector "

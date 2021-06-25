@@ -602,7 +602,7 @@ is
    procedure Handle_Irq (Vector : SK.Byte)
    with
       Global => (In_Out => (IO_Apic.State, Subjects_Interrupts.State,
-                            Skp.IOMMU.State, X86_64.State))
+                            X86_64.State))
    is
       Vect_Nr : Skp.Interrupts.Remapped_Vector_Type;
       Route   : Skp.Interrupts.Vector_Route_Type;

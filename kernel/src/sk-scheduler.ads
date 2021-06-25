@@ -16,7 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Skp.IOMMU;
 with Skp.Scheduling;
 
 with X86_64;
@@ -73,8 +72,7 @@ is
    --  Handle_Vmx_Exit could be private if spark/init.adb did not need access.
 
    --  VMX exit handler.
-   procedure Handle_Vmx_Exit
-     (Subject_Registers : in out SK.CPU_Registers_Type)
+   procedure Handle_Vmx_Exit (Subject_Registers : in out SK.CPU_Registers_Type)
    with
       Global     =>
          (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, CPU_Info.Is_BSP,
@@ -84,7 +82,7 @@ is
                      MP.Barrier, Subjects.State, Scheduling_Info.State,
                      Subjects_Events.State, Subjects_Interrupts.State,
                      Subjects_MSR_Store.State, Timed_Events.State,
-                     VMX.VMCS_State, Skp.IOMMU.State, X86_64.State)),
+                     VMX.VMCS_State, X86_64.State)),
       Pre        => MCE.Valid_State,
       Export,
       Convention => C,

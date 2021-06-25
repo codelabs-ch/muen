@@ -22,7 +22,7 @@ with Skp.Subjects;
 
 with SK.CPU;
 with SK.Apic;
-with SK.VTd;
+with SK.VTd.Debug;
 with SK.Power;
 with SK.Dump;
 with SK.Subjects.Debug;
@@ -602,37 +602,35 @@ is
    procedure Handle_Irq (Vector : SK.Byte)
    with
       Global => (In_Out => (IO_Apic.State, Subjects_Interrupts.State,
-                            Skp.IOMMU.State, X86_64.State))
+                            X86_64.State))
    is
       Vect_Nr : Skp.Interrupts.Remapped_Vector_Type;
       Route   : Skp.Interrupts.Vector_Route_Type;
    begin
       if Vector >= Skp.Interrupts.Remap_Offset
-        and then Vector /= SK.Constants.IPI_Vector
+        and then Vector < SK.Constants.VTd_Fault_Vector
       then
-         if Vector = SK.Constants.VTd_Fault_Vector then
-            VTd.Process_Fault;
-         else
-            Vect_Nr := Skp.Interrupts.Remapped_Vector_Type (Vector);
-            Route   := Skp.Interrupts.Vector_Routing (Vect_Nr);
-            if Route.Subject in Skp.Global_Subject_ID_Type then
-               Subjects_Interrupts.Insert_Interrupt
-                 (Subject => Route.Subject,
-                  Vector  => SK.Byte (Route.Vector));
-            end if;
-
-            if Vect_Nr in Skp.Interrupts.Mask_IRQ_Type then
-               IO_Apic.Mask_IRQ
-                 (RTE_Index => Skp.Interrupts.RTE_Index_Type (Vector - 32));
-            end if;
-
-            pragma Debug (Route.Subject not in Skp.Global_Subject_ID_Type,
-                          Dump.Print_Message
-                            (Msg => "Spurious IRQ vector "
-                             & Strings.Img (Vector)));
+         Vect_Nr := Skp.Interrupts.Remapped_Vector_Type (Vector);
+         Route   := Skp.Interrupts.Vector_Routing (Vect_Nr);
+         if Route.Subject in Skp.Global_Subject_ID_Type then
+            Subjects_Interrupts.Insert_Interrupt
+              (Subject => Route.Subject,
+               Vector  => SK.Byte (Route.Vector));
          end if;
+
+         if Vect_Nr in Skp.Interrupts.Mask_IRQ_Type then
+            IO_Apic.Mask_IRQ
+              (RTE_Index => Skp.Interrupts.RTE_Index_Type (Vector - 32));
+         end if;
+
+         pragma Debug (Route.Subject not in Skp.Global_Subject_ID_Type,
+                       Dump.Print_Message
+                         (Msg => "Spurious IRQ vector "
+                          & Strings.Img (Vector)));
       end if;
 
+      pragma Debug (Vector = SK.Constants.VTd_Fault_Vector,
+                    VTd.Debug.Process_Fault);
       pragma Debug (Vector < Skp.Interrupts.Remap_Offset,
                     Dump.Print_Message
                       (Msg => "IRQ with invalid vector "

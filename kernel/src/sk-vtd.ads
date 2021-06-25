@@ -45,9 +45,13 @@ is
                                       Skp.IOMMU.State, X86_64.State),
                   Skp.IOMMU.State =>+ null);
 
-   --  Process fault reported by IOMMU.
-   procedure Process_Fault
+private
+
+   --  Clears the Fault recording register and the Primary Fault Overflow flag
+   --  of the specified IOMMU.
+   procedure Clear_Fault_Record (IOMMU : Skp.IOMMU.IOMMU_Device_Range)
    with
-      Global => (In_Out => Skp.IOMMU.State);
+      Global  => (In_Out => Skp.IOMMU.State),
+      Depends => (Skp.IOMMU.State =>+ IOMMU);
 
 end SK.VTd;

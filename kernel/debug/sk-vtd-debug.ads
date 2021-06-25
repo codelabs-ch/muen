@@ -28,11 +28,9 @@ is
 
    --  Sets the fault interrupt vector and destination APIC ID of the specified
    --  IOMMU to the given values.
-   procedure Setup_Fault_Interrupt
-     (IOMMU  : Skp.IOMMU.IOMMU_Device_Range;
-      Vector : SK.Byte)
+   procedure Setup_Fault_Interrupt (IOMMU : Skp.IOMMU.IOMMU_Device_Range)
    with
       Global  => (In_Out => Skp.IOMMU.State),
-      Depends => (Skp.IOMMU.State =>+ (IOMMU, Vector));
+      Depends => (Skp.IOMMU.State =>+ (IOMMU));
 
 end SK.VTd.Debug;

@@ -20,9 +20,6 @@ with SK.KC;
 with SK.VTd.Debug;
 with SK.VTd.Dump;
 with SK.Strings;
-pragma $Release_Warnings (Off, "unit * is not referenced");
-with SK.Constants;
-pragma $Release_Warnings (On, "unit * is not referenced");
 
 package body SK.VTd
 is
@@ -488,9 +485,7 @@ is
          Set_Fault_Event_Mask (IOMMU  => I,
                                Enable => True);
          Clear_Fault_Record (IOMMU => I);
-         pragma Debug (Debug.Setup_Fault_Interrupt
-                       (IOMMU  => I,
-                        Vector => SK.Constants.VTd_Fault_Vector));
+         pragma Debug (Debug.Setup_Fault_Interrupt (IOMMU => I));
          pragma Debug (Set_Fault_Event_Mask (IOMMU  => I,
                                              Enable => False));
 

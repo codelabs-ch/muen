@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.Constants;
 with SK.VTd.Dump;
 
 package body SK.VTd.Debug
@@ -50,9 +51,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Setup_Fault_Interrupt
-     (IOMMU  : IOMMU_Device_Range;
-      Vector : SK.Byte)
+   procedure Setup_Fault_Interrupt (IOMMU : IOMMU_Device_Range)
    is
       Fault_Event_Addr : Reg_Fault_Event_Address_Type;
       Fault_Event_Data : Reg_Fault_Event_Data_Type;
@@ -65,7 +64,7 @@ is
          Value => Fault_Event_Addr);
 
       Fault_Event_Data.EIMD := 0;
-      Fault_Event_Data.IMD  := SK.Word16 (Vector);
+      Fault_Event_Data.IMD  := SK.Word16 (SK.Constants.VTd_Fault_Vector);
       Write_Fault_Event_Data
         (Index => IOMMU,
          Value => Fault_Event_Data);

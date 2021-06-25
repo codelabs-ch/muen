@@ -48,4 +48,27 @@ is
       end loop;
    end Process_Fault;
 
+   -------------------------------------------------------------------------
+
+   procedure Setup_Fault_Interrupt
+     (IOMMU  : IOMMU_Device_Range;
+      Vector : SK.Byte)
+   is
+      Fault_Event_Addr : Reg_Fault_Event_Address_Type;
+      Fault_Event_Data : Reg_Fault_Event_Data_Type;
+   begin
+      Fault_Event_Addr := Read_Fault_Event_Address (Index => IOMMU);
+
+      Fault_Event_Addr.APIC_ID := 0;
+      Write_Fault_Event_Address
+        (Index => IOMMU,
+         Value => Fault_Event_Addr);
+
+      Fault_Event_Data.EIMD := 0;
+      Fault_Event_Data.IMD  := SK.Word16 (Vector);
+      Write_Fault_Event_Data
+        (Index => IOMMU,
+         Value => Fault_Event_Data);
+   end Setup_Fault_Interrupt;
+
 end SK.VTd.Debug;

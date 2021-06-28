@@ -55,6 +55,7 @@ MUCHECKELF     ?= $(TOP_DIR)/tools/mucheckelf/bin/mucheckelf
 MUCHECKSTACK   ?= $(TOP_DIR)/tools/mucheckstack/bin/mucheckstack
 MUCGENSPEC     ?= $(TOP_DIR)/tools/mucgenspec/bin/mucgenspec
 MUGENACPI      ?= $(TOP_DIR)/tools/mugenacpi/bin/mugenacpi
+MUGENMANIFEST  ?= $(TOP_DIR)/tools/scripts/mugenmanifest.py
 MUGENMSRSTORE  ?= $(TOP_DIR)/tools/mugenmsrstore/bin/mugenmsrstore
 MUGENSCHEDCFG  ?= $(MUGENSCHEDCFG_DIR)/bin/mugenschedcfg
 MUGENSINFO     ?= $(TOP_DIR)/tools/mugensinfo/bin/mugensinfo

@@ -28,7 +28,10 @@
 
 with Interfaces;
 
---  Muen timed events data structures.
+--D @Interface
+--D The Muen timed events mechanism implements a synthetic timer which can be
+--D used by subjects to trigger events when a specified timestamp has passed.
+--D This package contains declarations for the timed event data structures.
 package Mutimedevents
 is
 

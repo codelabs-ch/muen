@@ -76,6 +76,9 @@ is
      (GNATprove, On,
       "writing * is assumed to have no effects on other non-volatile objects");
 
+   --D @Interface
+   --D Spinlock guarding against concurrent access to the I/O APIC by kernels
+   --D running on different CPUs.
    Global_IO_APIC_Lock : Locks.Spin_Lock_Type
    with
       Linker_Section => Constants.Global_Data_Section;

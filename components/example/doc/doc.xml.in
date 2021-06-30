@@ -568,7 +568,7 @@
 
     Besides potential other use-cases, the loader concept can be applied to
     reset a subject to its initial state, perform decoding of a trapping
-    instruction or to (periodically) check the memory contents of the monitored
+    instruction or to (periodically) check the memory content of the monitored
     subject against hash sums.
 
     See the Muen System Specification \cite{muen:system-spec} for the definition
@@ -657,10 +657,9 @@
   <text priority="0">
    The subject lifecycle management concept provides a lightweight mechanism to
    intialize and reset native subjects. It allows to set up the memory resource
-   of a subject to a well-known state prior to the start of executing the
-   subject code.
+   of a subject to a well-known state prior to the execution of subject code.
 
-   Initialization of subject runtime environment is performed by a dedicated
+   The initialization of the subject runtime environment is performed by a dedicated
    setup stub that runs before the effective subject code starts execution. To
    enable external management and synchronization, the current lifecycle state
    is reported via a so called \emph{Status Page} (detailed description see
@@ -683,7 +682,7 @@
    <text priority="0">
     On the policy level, the initialization stub is treated as a library. To
     activate the init/reset functionality, a component simply declares a
-    dependency in the component XML spec, see \ref{subject-lifecycle-usage-cspec}.
+    dependency in the component XML specification, see \ref{subject-lifecycle-usage-cspec}.
    </text>
    <section id="subject-lifecycle-policy_config_compilation-memory" label="Memory" priority="0">
     <text priority="0">
@@ -747,7 +746,7 @@
   </section>
   <section id="subject-lifecycle-usage" label="Usage" priority="0">
    <text priority="0">
-    This section describes the XML adjustment which are required to make a
+    This section describes the XML adjustments which are required to make a
     component / subject reloadable.
    </text>
    <section id="subject-lifecycle-usage-system_policy" label="System Policy" priority="0">
@@ -779,8 +778,8 @@
      If a component requires access to the status and command pages during
      execution, i.e. beyond the initialization, also add a dependency on
      \verb!libmucontrol!. Examples for this use case are updating the Watchdog Timer
-     Value or Time subject setting the runtime status to \verb!STATE_FINISHED! after
-     successfully publishing time information.
+     Value or Time subject of the demo system setting the runtime status to
+     \verb!STATE_FINISHED! after successfully publishing time information.
     </text>
    </section>
    <section id="subject-lifecycle-usage-subject" label="Subject Specification" priority="0">
@@ -798,7 +797,7 @@
   </section>
   <section id="subject-lifecycle-operation" label="Operation" priority="0">
    <text priority="0">
-    This section gives a description the high-level operation.
+    This section gives a description of the high-level operation.
     \begin{figure}[ht]
     \centering
     \includegraphics[width=\textwidth]{subject_init_fsm}
@@ -809,7 +808,7 @@
     The Subject Initialization Stub implements the finite state machine depicted
     in figure ~\ref{fig-subject_init_fsm}. Transitions are perfomed when the
     init code is in the given state and the specified command is read from the
-    command interface. Table \ref{tab-lifecycle-fsm-commands} list the commands
+    command interface. Table \ref{tab-lifecycle-fsm-commands} lists the commands
     issued by the controller and the action performed by the Subject
     Initialization code.
 
@@ -834,7 +833,7 @@
 
     \begin{warning}
     Since the Status Interface is writable by the potentially untrustworthy
-    component code, its contents can only be relied upon after the delivery of
+    component code, its content can only be relied upon after the delivery of
     the reset event up until setting command to \verb!CMD_RUN! and observing
     the status \verb!STATE_RUNNING!. The reset event assures that the init code
     is executed and that the component cannot simply fake transitions by
@@ -866,8 +865,8 @@
      the initialization/reset stub for native subjects, it directly operates on
      the status and command pages which are associated with the VM subject. It
      has no status/command pages for itself. The necessary Status and Command
-     pages are added to the loader component XML spec by declaring a library
-     dependency on \verb$libmucontrol$.
+     pages are added to the loader component XML specification by declaring a
+     library dependency on \verb$libmucontrol$.
 
      Since the Loader, the corresponding Linux subject as well as the associated
      SM are part of the same scheduling group, a form of light cooperation
@@ -876,7 +875,7 @@
      \begin{enumerate}
      \item SM starts execution of its own initialization code. Synchronization
            with the controller component happens as described above. The
-           Controller can force handover to SM by resetting Linux state
+           Controller can force handover to SM by resetting Linux state.
      \item After successful setup, SM enters main loop with "Invalid guest
            state" as Linux exit reason.
      \item SM checks if Linux reset event is available. If SM Sinfo does not

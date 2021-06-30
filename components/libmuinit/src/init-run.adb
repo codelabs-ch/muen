@@ -102,7 +102,7 @@ is
 
             --D @Item List => subject-lifecycle-operation-init-steps, Priority => 30
             --D Set up writable memory regions that have initial content by
-            --D either copying the contents from a read-only source region or
+            --D either copying the content from a read-only source region or
             --D filling them with a pattern.
             Memory.Setup_Writable (Success => Success);
             if not Success then

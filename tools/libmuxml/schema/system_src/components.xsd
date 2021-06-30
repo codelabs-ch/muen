@@ -24,17 +24,16 @@
  <xs:complexType name="componentType">
   <xs:annotation>
    <xs:documentation>
-    A component is a piece of software which shall be executed by the SK. They
-    represent the building blocks of a component-based system and can be
-    regarded as templates for executable entities instantiated by subjects.
+    A component is a piece of software which shall be executed by the SK.
+    Components represent the building blocks of a component-based system and can
+    be regarded as templates for executable entities instantiated by subjects.
 
-    The specification of a component declares the binary program file including
-    the virtual memory location as well as the view of the expected execution
-    environment. The component environment is therefore defined by the following
-    resources:
+    The specification of a component declares the \emph{binary program} by means
+    of (file-backed memory) regions. It also specifies the component's view of
+    the expected execution environment. A component may request the following
+    resources from the system:
 
     \begin{itemize}
-    \item Binary file
     \item Logical channels
     \item Logical memory regions
     \item Logical devices
@@ -79,12 +78,12 @@
     On the source code level, a library is included by mechanisms provided by
     the respective programming language. Note that the component library code is
     \emph{not} shared between components but lives in the isolated execution
-    environment of a subject instantiating the component.
+    environment of a subject instantiating the component (i.e. statically linked
+    libraries).
 
-    Libraries can request the same resources as ordinary components, but the
-    binary element is omitted in the specification. A subject instantiating the
-    component must also map the resources requested by libraries the component
-    depends on.
+    Libraries can request the same resources as ordinary components. A subject
+    instantiating the component must also map the resources requested by
+    libraries the component depends on.
 
     See line \ref{lst:af-lineref-complib} in listing \ref{lst:annotated-policy}
     for example library specifications.
@@ -113,7 +112,7 @@
     the ones specified by the component or library. Libraries can depend on
     other libraries.
 
-    A subject realizing this component must then correctly map all component and
+    A subject realizing this component must correctly map all component and
     library resource requirements to physical resources in order to fulfill the
     expectations.
 
@@ -187,7 +186,6 @@
      <xs:annotation>
       <xs:documentation>
        Virtual address in component address space.
-       Binary filename.
       </xs:documentation>
      </xs:annotation>
     </xs:attribute>
@@ -393,7 +391,7 @@
     size, address and optional notification vector.
 
     See line \ref{lst:af-lineref-compreq-channel-reader} in listing
-    \ref{lst:annotated-policy} for an example channel reader spec fication.
+    \ref{lst:annotated-policy} for an example channel reader specification.
    </xs:documentation>
   </xs:annotation>
   <xs:attribute name="logical" type="nameType" use="required">
@@ -413,7 +411,7 @@
   <xs:attribute name="size" type="word64Type" use="required">
    <xs:annotation>
     <xs:documentation>
-     Expected size of channel. Must be a multiple of page sizeyy (4K).
+     Expected size of channel. Must be a multiple of page size (4K).
     </xs:documentation>
    </xs:annotation>
   </xs:attribute>
@@ -453,7 +451,7 @@
   <xs:attribute name="size" type="word64Type" use="required">
    <xs:annotation>
     <xs:documentation>
-     Expected size of channel. Must be a multiple of page sizeyy (4K).
+     Expected size of channel. Must be a multiple of page size (4K).
     </xs:documentation>
    </xs:annotation>
   </xs:attribute>
@@ -574,7 +572,7 @@
     The \texttt{events} sub-section of the \texttt{requires} section is used to
     specify expected events with optional event actions.
 
-    A component can specify both source events and target events.
+    A component can specify both source as well as target events.
 
     See line \ref{lst:af-lineref-compreq-evts} in listing
     \ref{lst:annotated-policy} for an example specification.

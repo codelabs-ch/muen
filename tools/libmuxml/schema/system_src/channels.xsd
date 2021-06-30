@@ -12,12 +12,12 @@
     Channels are declared globally and have an unique name to be unambiguous.
 
     Note that channels are a policy source format abstraction. The toolchain
-    resolves this concept into subjects by adding the appropriate memory
-    regions and events.
+    resolves this concept into memory regions and events as well as the
+    appropriate subject mappings.
 
     For documentation about linking physical channels to subjects see section
     \ref{system_src.xsd:channelReferencesType}. For documentation about
-    declaring requested channels in components see secion
+    declaring requested channels in components see section
     \ref{system_src.xsd:logicalChannelsType}. For information how to map a
     physical channel with a logical component channel at subject level, see
     section \ref{system_src.xsd:resourceMappingType}.
@@ -39,7 +39,7 @@
     Besides the \texttt{name} and \texttt{size} of the channel, the optional
     \texttt{hasEvent} attribute can be set to declare that the given channel
     requests an associated event. The expander tool will then automatically
-    create a global event with the requested event type.
+    create a global event of the requested event type.
 
     See line \ref{lst:af-lineref-channel} in listing \ref{lst:annotated-policy}
     for an example channel declaration.
@@ -132,17 +132,17 @@
   <xs:annotation>
    <xs:documentation>
     A channel \texttt{writer} element references a global communication channel
-    as reader endpoint, i.e. the channel is mapped with write permissions into
+    as writer endpoint, i.e. the channel is mapped with write permissions into
     the subject address space.
 
     See line \ref{lst:af-lineref-subj-channels-writer} in listing
-    \ref{lst:annotated-policy} for an example reader declaration.
+    \ref{lst:annotated-policy} for an example writer declaration.
    </xs:documentation>
   </xs:annotation>
   <xs:attribute name="logical" type="nameType" use="required">
    <xs:annotation>
     <xs:documentation>
-     Logical name of reader channel.
+     Logical name of writer channel.
     </xs:documentation>
    </xs:annotation>
   </xs:attribute>

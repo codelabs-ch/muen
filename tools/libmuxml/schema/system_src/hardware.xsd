@@ -10,10 +10,10 @@
     resources to be allocated to subjects.
 
     The \texttt{hardware} element is the top-level element of the hardware
-    specification in the system policy.  Data required by a hardware description
-    includes the amount of available physical memory blocks including reserved
-    memory regions (RMRR), the number of physical CPU cores and hardware device
-    resources.
+    specification in the system policy. Information provided by a hardware
+    description includes the amount of available physical memory blocks
+    including reserved memory regions (RMRR), the number of physical CPU cores
+    and hardware device resources.
 
     The Muen toolchain provides a handy tool to automate the cumbersome process
     of gathering hardware resource data from a running Linux system:

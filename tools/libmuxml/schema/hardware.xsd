@@ -232,8 +232,8 @@
     A device \texttt{capability} is used to assign additional information to a
     device. Such a capability might be used by the Muen toolchain to perform
     certain actions on devices with a given capability (e.g. \texttt{ioapic}). A
-    system integrator might use this facility to define its own capabilities
-    used by custom tools.
+    system integrator may use this facility to define its own capabilities used
+    by custom tools.
 
     A capability element can have an optional value.
 
@@ -257,7 +257,7 @@
  <xs:simpleType name="deviceDescriptionType">
   <xs:annotation>
    <xs:documentation>
-    Device description (freetext).
+    Device description (free text).
    </xs:documentation>
   </xs:annotation>
   <xs:restriction base="xs:string"/>

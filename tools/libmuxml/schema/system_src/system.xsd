@@ -16,7 +16,7 @@
 
     This is the \emph{source format} of the Muen system policy. It allows for
     abstractions, such as channels, which are broken down into their constituent
-    parts by the toolchain into format A and B accordingly.
+    parts by the toolchain in format A and B accordingly.
 
     See line \ref{lst:af-lineref-system} and following in listing
     \ref{lst:annotated-policy} on page \pageref{lst:annotated-policy} for an

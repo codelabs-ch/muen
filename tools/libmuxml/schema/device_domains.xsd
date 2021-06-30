@@ -14,9 +14,7 @@
     attribute so RMRR regions referenced by the device are also mapped into
     the device domain.
 
-    Device domains are isolated from each other by the use of Intel VT-d. Thus
-    they can only be specified and enforced on systems that provide at least one
-    IOMMU.
+    Device domains are isolated from each other by the use of Intel VT-d.
 
     See line \ref{lst:af-lineref-devdom} in listing \ref{lst:annotated-policy}
     for a device domain example.

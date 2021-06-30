@@ -40,7 +40,7 @@ is
    procedure Global_ID_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_subj
-   --D Validate pre-CPU uniqueness of local subject IDs.
+   --D Validate per-CPU uniqueness of local subject IDs.
    procedure Local_ID_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_subj

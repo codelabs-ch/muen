@@ -1241,8 +1241,11 @@
      specified output path.
     </text>
    </section>
-  </section>
- </section> <!-- toolchain-additional-tools -->
+
+   <!-- XXX: Add description of muwalkpt -->
+   <!-- XXX: Add description of mugenmanifest -->
+  </section> <!-- toolchain-additional-tools -->
+ </section> <!-- toolchain -->
 
  <section id="validation" label="Policy Validation" priority="0">
   <text priority="0">

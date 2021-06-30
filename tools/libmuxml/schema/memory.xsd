@@ -14,7 +14,7 @@
   <xs:annotation>
    <xs:documentation>
     Memory alignment constraint for memory region. Taken into account by
-    allocator tool and checked by validator.
+    the allocator tool and checked by the validator.
    </xs:documentation>
   </xs:annotation>
   <xs:restriction base="word64Type">
@@ -180,8 +180,8 @@
 
     Attributes with an asterisk are optional. While alignment and memory type
     are set to a default value if not specified, the physical address is filled
-    in by the allocator tool, which allocates all memory regions and fixes the
-    physical memory layout.
+    in by the allocator tool, which allocates all memory regions and finalizes
+    the physical memory layout.
 
     Additionally, the content of a region can be declared as backed by a file or
     filled with a pattern.
@@ -205,7 +205,7 @@
    <xs:documentation>
     A \texttt{memory} element maps a physical memory region into the address
     space of a device domain or subject entity. The region will be accessible
-    for the entity at the specified \texttt{virtualAdress} with permissions
+    to the entity at the specified \texttt{virtualAdress} with permissions
     defined by the \texttt{executable} and \texttt{writable} attributes.
 
     See line \ref{lst:af-lineref-memref} in listing \ref{lst:annotated-policy}

@@ -50,7 +50,7 @@
     From an abstract point of view, the \texttt{hashRef} element is a way to
     link multiple memory regions by declaring that the hash of the content is
     the same. This concept is e.g. used by the subject loader mechanism to
-    restore writable memory regions to the initial state.
+    restore writable memory regions to their initial state.
    </xs:documentation>
   </xs:annotation>
   <xs:attribute name="memory" type="nameType" use="required">

@@ -101,9 +101,9 @@
  <xs:complexType name="kernelDiagType">
   <xs:annotation>
    <xs:documentation>
-    The Muen SK can be instructed to output debugging information during
-    runtime. The platform diagnostics device specifies which device the kernel
-    is to use for this purpose.
+    The debug build Muen SK can be instructed to output debugging information
+    during runtime. The platform diagnostics device specifies which device the
+    kernel is to use for this purpose.
 
     The presence of this device and the necessary resources are checked by the
     validator tool.
@@ -129,7 +129,8 @@
    <xs:documentation>
     Type of diagnostics device. While \texttt{none} disables kernel diagnostics
     output, \texttt{uart} specifies an Universal Asynchronous
-    Receiver-Transmitter serial device.
+    Receiver-Transmitter serial device. \texttt{hsuart} is a High-Speed UART
+    with memory mapped I/O.
 
     \texttt{vga} outputs the kernel diagnostics information to a VGA console,
     which is mainly useful for initial bring-up of a new hardware platform with

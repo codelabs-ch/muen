@@ -25,8 +25,8 @@
     Kernel events are special in that they are targeted at the kernel. The
     currently supported events are system reboot and shutdown.
 
-    For documentation about linking physical events to source- and
-    target-subjects, see section \ref{system_src.xsd:subjectEventsType}.
+    For documentation about linking physical events to source and target
+    subjects, see section \ref{system_src.xsd:subjectEventsType}.
 
     See line \ref{lst:af-lineref-events} in listing \ref{lst:annotated-policy}
     for an example events section.
@@ -171,7 +171,7 @@
     event. Such events are useful to implement para-virtualized timers in VM
     subjects for example. A subject sends itself a delayed event, using the
     timed event mechanism. Note that a self event must always have a target
-    action assigned, checked by validator.
+    action assigned, which is checked by the validator.
     \item \texttt{switch}~\\
     The switch mode facilitates suspension of execution of the source subject
     and switching to the target. This can only happen between subjects running

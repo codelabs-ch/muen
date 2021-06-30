@@ -18,7 +18,7 @@
     of the Muen SK and the Intel VT-x/VT-d architecture. The
     \texttt{mucfgvalidate} tool checks that requirements for safe execution of
     Muen are met, i.e. invalid settings are detected and a meaningful error
-    message will be presented.
+    message is presented.
     \end{warning}
    </xs:documentation>
   </xs:annotation>
@@ -51,7 +51,7 @@
     of the Muen SK and the Intel VT-x/VT-d architecture. The
     \texttt{mucfgvalidate} tool checks that requirements for safe execution of
     Muen are met, i.e. invalid settings are detected and a meaningful error
-    message will be presented.
+    message is presented.
     \end{warning}
    </xs:documentation>
   </xs:annotation>
@@ -101,7 +101,7 @@
     of the Muen SK and the Intel VT-x/VT-d architecture. The
     \texttt{mucfgvalidate} tool checks that requirements for safe execution of
     Muen are met, i.e. invalid settings are detected and a meaningful error
-    message will be presented.
+    message is presented.
     \end{warning}
    </xs:documentation>
   </xs:annotation>
@@ -139,7 +139,7 @@
     of the Muen SK and the Intel VT-x/VT-d architecture. The
     \texttt{mucfgvalidate} tool checks that requirements for safe execution of
     Muen are met, i.e. invalid settings are detected and a meaningful error
-    message will be presented.
+    message is presented.
     \end{warning}
    </xs:documentation>
   </xs:annotation>
@@ -170,7 +170,7 @@
     of the Muen SK and the Intel VT-x/VT-d architecture. The
     \texttt{mucfgvalidate} tool checks that requirements for safe execution of
     Muen are met, i.e. invalid settings are detected and a meaningful error
-    message will be presented.
+    message is presented.
     \end{warning}
    </xs:documentation>
   </xs:annotation>

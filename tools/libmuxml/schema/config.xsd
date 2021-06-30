@@ -85,7 +85,7 @@
     merged into the global system configuration. Component configuration values
     allow the parameterization of component-local functionality.
 
-    Besides component parameterization, configuration options are used in
+    Besides component parameterization, configuration options can be used in
     \texttt{if} conditionals, as shown in the following example.
 
     <![CDATA[

@@ -121,7 +121,7 @@
   <xs:attribute name="virtualAddress" type="word64Type" use="required">
    <xs:annotation>
     <xs:documentation>
-     Address to map requested subject state.
+     Address to map requested subject address space.
     </xs:documentation>
    </xs:annotation>
   </xs:attribute>

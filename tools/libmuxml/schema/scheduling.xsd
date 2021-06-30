@@ -4,7 +4,7 @@
  <xs:complexType name="schedulingType">
   <xs:annotation>
    <xs:documentation>
-    The Muen SK implements a static, cyclic scheduler. The \texttt{scheduling}
+    The Muen SK implements a fixed, cyclic scheduler. The \texttt{scheduling}
     element is used to specify such a static plan by means of a major frame. A
     major frame consist of an arbitrary number of minor frames.  Minor frames in
     turn specify a duration in number of ticks a subject is scheduled before
@@ -32,10 +32,6 @@
     given amount of ticks. The subject name identifies the \emph{initial}
     subject of a minor frame but any member of the scheduling group of the given
     subject may be executed during that minor frame.
-
-    Note: The current Tau0 algorithm to switch major frames is very simple. It
-    just switches to the next frame if a counter reaches the constant number
-    $2^{20}$.
 
     See line \ref{lst:af-lineref-sched} in listing \ref{lst:annotated-policy}
     for an example scheduling plan.

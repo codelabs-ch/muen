@@ -80,7 +80,7 @@ is
    procedure Device_IO_Port_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_dev
-   --D Validate that device memory names are unique.
+   --D Validate that device memory names are unique per device.
    procedure Device_Memory_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_dev

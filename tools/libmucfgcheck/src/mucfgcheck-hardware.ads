@@ -34,7 +34,7 @@ is
    procedure Memory_Block_Overlap (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_hw
-   --D Validate size of memory blocks.
+   --D Validate that the size of memory blocks is a multiple of page size.
    procedure Memory_Block_Size (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_hw

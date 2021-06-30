@@ -24,8 +24,8 @@
     <xs:attribute name="alignment" type="alignmentType" use="optional">
      <xs:annotation>
       <xs:documentation>
-       Alignment to consider if physical address is to be allocated
-       automatically.
+       Alignment the physical address of the memory region must honor (checked
+       by the validator tool).
       </xs:documentation>
      </xs:annotation>
     </xs:attribute>
@@ -59,7 +59,7 @@
 
        Note that host physical memory below 1 MiB is considered special, the
        attribute must be set to false. Only unmapped memory of type
-       \emph{system} is allowed in that special zone.
+       \emph{system} is allowed in that special memory block.
       </xs:documentation>
      </xs:annotation>
     </xs:attribute>
@@ -92,9 +92,9 @@
    <xs:documentation>
     The \texttt{file} child element designates a file-backed memory region.
 
-    The \texttt{filename} attribute specifies the filename to use as content for
-    the physical memory region, the \texttt{offset} attribute is \texttt{none}
-    by default but can be customized to include a partial file.
+    The \texttt{filename} attribute specifies the name of the file to use as
+    content for the physical memory region, the \texttt{offset} attribute is
+    \texttt{none} by default but can be customized to include a partial file.
 
     See line \ref{lst:af-lineref-memory-file} in listing
     \ref{lst:annotated-policy} for a file-backed memory region example.
@@ -137,11 +137,12 @@
     \texttt{mugenzp} tool used for Linux VMs (\ref{tools-mugenzp}) exports such
     regions as \texttt{E820\_RAM} in the ZP E820 memory map.
     \item \texttt{subject\_info}~\\
-    Subject info (sinfo) region. Provided to all subjects in order to query
-    information about the execution environment. The file backing of this region
-    is created by the \texttt{mugensinfo} tool (\ref{tools-mugensinfo}).
+    Subject info (sinfo) region provided to all subjects. The sinfo region is
+    used to query information about the execution environment. The file backing
+    of this region is created by the \texttt{mugensinfo} tool
+    (\ref{tools-mugensinfo}).
     \item \texttt{subject\_state}~\\
-    Subject register state. Mapped into the SK kernel executing the given
+    Subject execution state. Mapped into the SK kernel executing the given
     subject, kernels running on other CPUs have no access. Accessible by subject
     monitors running on the same CPU if specified in the policy. Validator
     enforces that each subject has an associated \texttt{subject\_state} region

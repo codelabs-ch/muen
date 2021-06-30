@@ -158,7 +158,7 @@ is
       --D     Section  => 'system_src.xsd:processorType',
       --D     Priority => 0).
 
-      --D @Item(List => cpu_subs_checks, Priority => 0).
+      --D @Item(List => cpu_subs_checks).
       --D A node exists for every physical core of the system
 
       if Sub_Node_Count /= Physical_CPUs then
@@ -168,7 +168,7 @@ is
             & " given");
       end if;
 
-      --D @Item(List => cpu_subs_checks, Priority => 0).
+      --D @Item(List => cpu_subs_checks).
       --D The optional \texttt{cpuId} attribute of all elements must be
       --D consecutive
 
@@ -219,7 +219,7 @@ is
          end if;
       end Consecutive_CPU_IDs;
 
-      --D @Item(List => cpu_subs_checks, Priority => 0).
+      --D @Item(List => cpu_subs_checks).
       --D If specified, a node with \texttt{cpuId} value \texttt{0} must exist
 
       CPU_ID_0 :
@@ -237,7 +237,7 @@ is
          end if;
       end CPU_ID_0;
 
-      --D @Item(List => cpu_subs_checks, Priority => 0).
+      --D @Item(List => cpu_subs_checks).
       --D A node with \texttt{apicId} value \texttt{0} must exist and, if
       --D specified, it must have a \texttt{cpuId} value within the active CPU
       --D range, i.e. the BSP is part of the system scheduling plan
@@ -260,7 +260,7 @@ is
          end if;
       end BSP_Presence;
 
-      --D @Item(List => cpu_subs_checks, Priority => 0).
+      --D @Item(List => cpu_subs_checks).
       --D All \texttt{apicId} attributes must have even numbers
 
       Even_APIC_ID :

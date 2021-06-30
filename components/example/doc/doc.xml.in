@@ -357,9 +357,9 @@
     \begin{info}
     It should be noted that sinfo as well as scheduling info are read-only data
     structures mapped into a subjects address space. Accessing this information
-    via the respective APIs essential results in reading the corresponding value
-    from memory. \emph{No direct interaction with other parts of the system,
-    including and in particluar the Muen Kernel, occurs}.
+    via the respective APIs essentially results in reading the corresponding
+    value from memory. \emph{No direct interaction with other parts of the
+    system, including and in particluar the Muen kernel, occurs}.
     \end{info}
    </text>
   </section>

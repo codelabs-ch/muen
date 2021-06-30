@@ -2,55 +2,204 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:simpleType name="vectorType">
+  <xs:annotation>
+   <xs:documentation>
+    Vector number.
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="xs:nonNegativeInteger">
    <xs:maxInclusive value="255"/>
   </xs:restriction>
  </xs:simpleType>
 
  <xs:simpleType name="irqNumberType">
+  <xs:annotation>
+   <xs:documentation>
+    IRQ number. High IRQs are reserved for kernel usage.
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="xs:nonNegativeInteger">
    <xs:maxInclusive value="220"/>
   </xs:restriction>
  </xs:simpleType>
 
  <xs:complexType name="ioPortType">
-  <xs:attribute name="name"  type="nameType"   use="required"/>
-  <xs:attribute name="start" type="word16Type" use="required"/>
-  <xs:attribute name="end"   type="word16Type" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{ioPort} element specifies a device I/O port resource from
+    \texttt{start} octet up to and including \texttt{end} octet. A single
+    byte-accessed port is designated by specifying the same \texttt{start} and
+    \texttt{end} values.
+
+    See line \ref{lst:af-lineref-device-ioport} in listing
+    \ref{lst:annotated-policy} for an example device IRQ declaration.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="name" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of I/O port resource.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="start" type="word16Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Start port of this resource.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="end" type="word16Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     End port of this resource.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="irqType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{irq} element specifies a device IRQ resource.
+
+    The specified IRQ number is one of:
+    \begin{itemize}
+    \item Legacy IRQ (ISA)~\\
+    Range \texttt{0 .. 15}.
+    \item PCI INTx IRQ, line-signaled~\\
+    Range \texttt{0 .. Max\_LSI\_IRQ}, whereas \texttt{Max\_LSI\_IRQ} is defined
+    by the hardware I/O APIC configuration \texttt{gsi\_base} +
+    \texttt{max\_redirection\_entry} of I/O APIC with \texttt{max(gsi\_base)}.
+    \texttt{gsi\_base} and \texttt{max\_redirection\_entry} are I/O APIC device
+    capabilities.
+    \end{itemize}
+
+    \texttt{msi} sub-elements are present if the device supports MSI interrupts.
+    The element count designates the number of supported MSI interrrupts.
+
+    See line \ref{lst:af-lineref-device-irq} in listing
+    \ref{lst:annotated-policy} for an example device IRQ declaration.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="msi" type="msiIrqType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
-  <xs:attribute name="name"   type="nameType"      use="required"/>
-  <xs:attribute name="number" type="irqNumberType" use="required"/>
+  <xs:attribute name="name" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of device IRQ resource.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="number" type="irqNumberType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Legacy or PCI line-based IRQ.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="msiIrqType">
-  <xs:attribute name="name" type="nameType" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    There are two different interrupt types which devices may trigger:
+    legacy/PCI LSI IRQs and Message Signaled Interrupts (MSI). The legacy/PCI
+    LSI IRQ is specified by the number attribute of the \texttt{irq} element.
+    For MSIs, each \texttt{msi} element defines an MSI IRQ that may be assigned
+    to subjects. Each MSI may be individually routed.
+
+    See line \ref{lst:af-lineref-device-irq-msi} in listing
+    \ref{lst:annotated-policy} for example device MSI elements.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="name" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of MSI resource.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="devicesRefType">
+  <xs:annotation>
+   <xs:documentation>
+    List of device references. Used to grant a subject access to hardware
+    devices and their resources.
+
+    See line \ref{lst:af-lineref-devicerefs} in listing \ref{lst:annotated-policy}
+    for example device references.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="device" type="deviceRefType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
  </xs:complexType>
 
  <xs:complexType name="deviceRefType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{device} element allows a subject access to devices referenced
+    via the \texttt{physical} attribute.
+
+    For PCI devices only a single virtual bus is provided (bus 0). The
+    \texttt{pci} element may be used to place the device at a specific location
+    (BDF).  If no other logical device resources of the device are specified,
+    then the expander tool will map all physical devices resources into the
+    subject.  When logical device resources are explicitly specified, then only
+    access to those are actually granted.  The physical attribute must be either
+    a reference to an existing physical device, device alias or device class.
+    Validators check that this is the case.
+
+    See line \ref{lst:af-lineref-deviceref} in listing \ref{lst:annotated-policy}
+    for an example reference.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="pci"    type="pciAddressType"  minOccurs="0" maxOccurs="1"/>
    <xs:element name="irq"    type="irqRefType"      minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="memory" type="devMemRefType"   minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="ioPort" type="physicalRefType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
-  <xs:attribute name="logical"  type="nameType" use="required"/>
-  <xs:attribute name="physical" type="nameType" use="required"/>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical device name.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="physical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of physical device to reference.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="physicalRefType">
-  <xs:attribute name="logical"  type="nameType" use="required"/>
-  <xs:attribute name="physical" type="nameType" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    References a physical resource given by the \texttt{physical} attribute, and
+    assigns a \texttt{logical} name to it.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical name for resource reference.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="physical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of physical resource.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
 </xs:schema>

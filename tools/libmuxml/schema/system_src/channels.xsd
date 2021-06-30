@@ -2,18 +2,84 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:complexType name="channelsType">
+  <xs:annotation>
+   <xs:documentation>
+    Inter-subject communication is specified by so called channels. These
+    channels represent directed information flows since they have a single
+    writer and possibly multiple readers. Optionally a channel can have an
+    associated notification event (doorbell interrupt).
+
+    Channels are declared globally and have an unique name to be unambiguous.
+
+    Note that channels are a policy source format abstraction. The toolchain
+    resolves this concept into memory regions and events as well as the
+    appropriate subject mappings.
+
+    For documentation about linking physical channels to subjects see section
+    \ref{system_src.xsd:channelReferencesType}. For documentation about
+    declaring requested channels in components see section
+    \ref{system_src.xsd:logicalChannelsType}. For information how to map a
+    physical channel with a logical component channel at subject level, see
+    section \ref{system_src.xsd:resourceMappingType}.
+
+    See line \ref{lst:af-lineref-channels} in listing \ref{lst:annotated-policy}
+    for an example channel section.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="channel" type="channelType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
  </xs:complexType>
 
  <xs:complexType name="channelType">
-  <xs:attribute name="name"     type="nameType"       use="required"/>
-  <xs:attribute name="size"     type="memorySizeType" use="required"/>
-  <xs:attribute name="hasEvent" type="eventModeType"  use="optional"/>
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{channel} element declares a physical channel.
+
+    Besides the \texttt{name} and \texttt{size} of the channel, the optional
+    \texttt{hasEvent} attribute can be set to declare that the given channel
+    requests an associated event. The expander tool will then automatically
+    create a global event of the requested event type.
+
+    See line \ref{lst:af-lineref-channel} in listing \ref{lst:annotated-policy}
+    for an example channel declaration.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="name" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Channel name.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="size" type="memorySizeType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Size of the channel in bytes. Must be a multiple of page size (4K).
+     Enforced by validator.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="hasEvent" type="eventModeType" use="optional">
+   <xs:annotation>
+    <xs:documentation>
+     Associated event type (if any).
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="channelReferencesType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{channel} section of a subject declares references to
+    communication channels. The referenced channels become accessible to the
+    requesting subject either as reader or writer endpoint.
+
+    See line \ref{lst:af-lineref-subj-channels} in listing
+    \ref{lst:annotated-policy} for an example section.
+   </xs:documentation>
+  </xs:annotation>
   <xs:choice minOccurs="0" maxOccurs="unbounded">
    <xs:element name="reader" type="channelReaderType"/>
    <xs:element name="writer" type="channelWriterType"/>
@@ -21,17 +87,87 @@
  </xs:complexType>
 
  <xs:complexType name="channelReaderType">
-  <xs:attribute name="logical"        type="nameType"   use="required"/>
-  <xs:attribute name="physical"       type="nameType"   use="required"/>
-  <xs:attribute name="virtualAddress" type="word64Type" use="required"/>
-  <xs:attribute name="vector"         type="vectorType" use="optional"/>
+  <xs:annotation>
+   <xs:documentation>
+    A channel \texttt{reader} element references a global communication channel
+    as reader endpoint, i.e. the channel is mapped read-only into the subject
+    address space.
+
+    See line \ref{lst:af-lineref-subj-channels-reader} in listing
+    \ref{lst:annotated-policy} for an example reader declaration.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical name of reader channel.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="physical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of physical channel.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="virtualAddress" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Address of mapping in subject address space.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="vector" type="vectorType" use="optional">
+   <xs:annotation>
+    <xs:documentation>
+     Associated vector. Must be set if a physical channel with \texttt{hasEvent}
+     mode \texttt{!= switch} is referenced (enforced by validator).
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="channelWriterType">
-  <xs:attribute name="logical"        type="nameType"              use="required"/>
-  <xs:attribute name="physical"       type="nameType"              use="required"/>
-  <xs:attribute name="virtualAddress" type="word64Type"            use="required"/>
-  <xs:attribute name="event"          type="xs:nonNegativeInteger" use="optional"/>
+  <xs:annotation>
+   <xs:documentation>
+    A channel \texttt{writer} element references a global communication channel
+    as writer endpoint, i.e. the channel is mapped with write permissions into
+    the subject address space.
+
+    See line \ref{lst:af-lineref-subj-channels-writer} in listing
+    \ref{lst:annotated-policy} for an example writer declaration.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical name of writer channel.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="physical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of physical channel.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="virtualAddress" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Address of mapping in subject address space.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="event" type="xs:nonNegativeInteger" use="optional">
+   <xs:annotation>
+    <xs:documentation>
+     Associated event number. Must be set if a physical channel with
+     \texttt{hasEvent} attribute is referenced.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
 </xs:schema>

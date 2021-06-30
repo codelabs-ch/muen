@@ -106,7 +106,21 @@ is
               := Interfaces.Unsigned_64 (Ada.Directories.Size (Name => Path));
             Offset     : Interfaces.Unsigned_64 := 0;
          begin
+
+            --D @Text(Section  => 'system_src.xsd:fileContentType',
+            --D       Priority => 0).
+            --D The following checks on the file content are performed.
+            --D @UL(Id       => 'validators_file_content',
+            --D     Section  => 'system_src.xsd:fileContentType',
+            --D     Priority => 0).
+
             if Offset_Str = "none" then
+
+               --D @Item(List     => 'validators_file_content',
+               --D       Priority => 0).
+               --D If \texttt{offset} is \texttt{none}, the size of the file
+               --D must be less than the memory region size.
+
                if File_Size > Mem_Size then
                   Validation_Errors.Insert
                     (Msg => "File '" & Path
@@ -115,6 +129,13 @@ is
                      & " > " & Mutools.Utils.To_Hex (Number => Mem_Size));
                end if;
             else
+
+               --D @Item(List     => 'validators_file_content',
+               --D       Priority => 0).
+               --D If \texttt{offset} is not \texttt{none}, the offset must be
+               --D less than the file size. The file size is \emph{not} checked
+               --D but the memory region size is used as upper bound.
+
                Offset := Interfaces.Unsigned_64'Value (Offset_Str);
                if Offset > File_Size then
                   Validation_Errors.Insert

@@ -2,17 +2,65 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:complexType name="devMemRefType">
+  <xs:annotation>
+   <xs:documentation>
+    The device \texttt{memory} element maps the device memory region referenced
+    via the \texttt{physical} attribute into the subject address space at
+    address \texttt{virtualAddress}. The \texttt{executable}, \texttt{writable}
+    attributes define the access permissions for the subject.
+
+    See line \ref{lst:af-lineref-deviceref-mem} in listing
+    \ref{lst:annotated-policy} for an example device memory reference.
+   </xs:documentation>
+  </xs:annotation>
   <xs:attributeGroup ref="memRefBaseAttrs"/>
-  <xs:attribute name="virtualAddress" type="word64Type" use="optional"/>
+  <xs:attribute name="virtualAddress" type="word64Type" use="optional">
+   <xs:annotation>
+    <xs:documentation>
+     Address of mapping in subject address space. If none is specified, an
+     identity mapping is applied by the expander tool.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="irqRefType">
+  <xs:annotation>
+   <xs:documentation>
+    The device \texttt{irq} element assigns the referenced physical IRQ to the
+    subject, i.e. if the device triggers the referenced physical IRQ, the
+    specified \texttt{vector} number will be injected into the subject by the
+    SK.
+
+    The presence of \texttt{msi} sub-elements enforces MSI mode (the default for
+    MSI-capable devices and automatic device resource expansion).
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="msi" type="physicalRefType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
-  <xs:attribute name="logical"  type="nameType"   use="required"/>
-  <xs:attribute name="physical" type="nameType"   use="required"/>
-  <xs:attribute name="vector"   type="vectorType" use="optional"/>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical IRQ name.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="physical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of physical device IRQ.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="vector" type="vectorType" use="optional">
+   <xs:annotation>
+    <xs:documentation>
+     Vector to inject into subject if device triggers IRQ. Will be allocated by
+     the expander if none is specified.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
 </xs:schema>

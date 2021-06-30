@@ -2,6 +2,27 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:complexType name="hardwareType">
+  <xs:annotation>
+   <xs:documentation>
+    Systems running the Muen SK perform static resource allocation at
+    integration time. This means that all available hardware resources of a
+    target machine must be defined in the system policy in order for these
+    resources to be allocated to subjects.
+
+    The \texttt{hardware} element is the top-level element of the hardware
+    specification in the system policy. Information provided by a hardware
+    description includes the amount of available physical memory blocks
+    including reserved memory regions (RMRR), the number of physical CPU cores
+    and hardware device resources.
+
+    The Muen toolchain provides a handy tool to automate the cumbersome process
+    of gathering hardware resource data from a running Linux system:
+    \texttt{mugenhwcfg}\footnote{https://git.codelabs.ch/?p=muen/mugenhwcfg.git}.
+
+    See line \ref{lst:af-lineref-hw} in listing \ref{lst:annotated-policy} for
+    an example hardware section.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="processor" type="processorType"      minOccurs="0" maxOccurs="1"/>
    <xs:element name="memory"    type="physicalMemoryType" minOccurs="0" maxOccurs="1"/>

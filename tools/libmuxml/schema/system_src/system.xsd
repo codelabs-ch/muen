@@ -4,6 +4,25 @@
  <xs:include schemaLocation="./components.xsd"/>
 
  <xs:complexType name="systemType">
+  <xs:annotation>
+   <xs:documentation>
+    A Muen system policy specifies all hardware resources such as physical
+    memory, devices, CPU time, etc and how these resources are accessed by the
+    separation kernel, the subjects and devices.
+
+    The \texttt{system} section is the top-level element in the Muen system
+    policy.  It contains various sub-elements which specify all aspects of a
+    concrete system.
+
+    This is the \emph{source format} of the Muen system policy. It allows for
+    abstractions, such as channels, which are broken down into their constituent
+    parts by the toolchain in format A and B accordingly.
+
+    See line \ref{lst:af-lineref-system} and following in listing
+    \ref{lst:annotated-policy} on page \pageref{lst:annotated-policy} for an
+    annotated system policy example.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="config"        type="configType"        minOccurs="1" maxOccurs="1"/>
    <xs:element name="hardware"      type="hardwareType"      minOccurs="1" maxOccurs="1"/>

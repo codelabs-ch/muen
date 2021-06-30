@@ -1,0 +1,148 @@
+digraph build {
+
+  subgraph {
+    node [shape=box, color=red]
+
+    params [label="Build\nParameters"]
+    systemdescr [label="System\nDescription"]
+    ghwdescr [label="Generated\nHardware\nDescription"]
+    hwdescr [label="Hardware\nDescription"]
+    platformdescr [label="Platform\ndescription"]
+    kernel [label="Kernel\nSource"]
+    cd [label="Component\nDescription"]
+    csrc [label="Component\nSource"]
+  }
+
+  subgraph {
+    node [shape=box, color=blue]
+
+    psd [label="Parameterized\nSystem\nDescription"]
+    phd [label="Parameterized\nHardware\nDescription"]
+    ppd [label="Parameterized\nPlatform\nDescription"]
+    si [label="System\nInformation"]
+
+    cdx [label="Expanded\nComponent\nDescription"]
+
+    cb [label="Component\nBinary"]
+    kb [label="Kernel\nBinary"]
+
+    p1 [label="Policy (src)"]
+    p2 [label="Policy (src)"]
+    p3 [label="Policy (A)"]
+    p4 [label="Policy (B)"]
+
+    p_cmd [label="Command Stream"]
+
+    structs [label="Generated\nStructures"]
+
+    ks [label="Kernel\nSpecs (.ads)"]
+    cs [label="Component\nSpecs (.ads)"]
+    sa [label="Subject\nArtifacts"]
+  }
+
+  subgraph {
+    node [shape=oval, color=black, style="filled", fillcolor=lightgray]
+
+    pda [label="Apply\nParameters"]
+    sda [label="Apply\nParameters"]
+    hda [label="Apply\nParameters"]
+
+    cbuild [label="Build"]
+
+    p1tosi [label="Extract"]
+    p2merge [label="Merge"]
+    expand [label="Expand"]
+    allocate [label="Allocate"]
+    generate [label="Generate\nStructures"]
+    cmdstream [label="Generate\nCommand\nStream"]
+    kbuild [label="Build"]
+
+    csg [label="Component\nSpecification\nGeneration"]
+    ksg [label="Generate Kernel\nSpec"]
+    sag [label="Generate Subject\nArtifacts"]
+
+    validate [label="Validate\nPolicy\nInvariants"]
+    merge [label="Create\nImage"]
+
+  }
+
+  img [shape=box,label="Boot\nImage", color=green]
+
+  params -> pda
+  params -> sda
+  params -> hda
+  systemdescr -> sda
+  ghwdescr -> hda
+  hwdescr -> hda
+  platformdescr -> pda
+
+  pda -> ppd
+  sda -> psd
+  hda -> phd
+
+  psd -> p1
+  phd -> p1
+  ppd -> p1
+
+  p1 -> p1tosi
+  p1tosi -> si
+
+  p1 -> p2merge
+  cdx -> p2merge
+
+  p2merge -> p2
+
+  p2 -> expand
+  expand -> p3
+
+  p3 -> allocate
+  allocate -> p4
+
+  p4 -> validate
+
+  kernel -> kbuild
+  validate -> ksg
+  validate ->  sag
+  ksg -> ks
+  sag -> sa
+  ks -> kbuild
+
+  kbuild -> kb
+
+  validate -> cmdstream
+  cmdstream -> p_cmd
+  p_cmd -> generate
+
+  p4 -> merge
+  kb -> merge
+  sa -> merge
+  structs -> merge
+  cb -> merge
+
+  si -> csg [style="dashed"]
+  params -> csg [style="dashed"]
+
+  subgraph cluster_component {
+    style=filled
+    color=gray95
+    label=Component
+    labeljust=l
+
+    cd -> csg
+    cs -> cbuild
+    csg -> cs
+    csrc -> cbuild
+    cbuild -> cdx
+    cbuild -> cb
+  }
+
+  subgraph cluster_tau0 {
+    style=filled
+    color=gray95
+    label=Tau0
+
+    labeljust=l
+    generate -> structs
+    merge -> img
+  }
+}

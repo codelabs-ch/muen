@@ -2,14 +2,47 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:complexType name="majorFrameType">
+  <xs:annotation>
+   <xs:documentation>
+    A major frame consists of a sequence of minor frames for a given CPU. When
+    the end of a major frame is reached, all CPUs synchronize and the scheduler
+    starts over from the beginning using the first minor frame again. This means
+    that major frames are repeated in a cyclic fashion until a different major
+    frame is designated via the Tau0 interface.
+
+    See line \ref{lst:af-lineref-sched-major} in listing
+    \ref{lst:annotated-policy} for an example major frame.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="cpu" type="cpuType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>
  </xs:complexType>
 
  <xs:complexType name="minorFrameType">
-  <xs:attribute name="subject" type="nameType"           use="required"/>
-  <xs:attribute name="ticks"   type="xs:positiveInteger" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    A minor frame specifies the number of scheduling ticks a subject is allowed
+    to run on the CPU specified by the parent \texttt{cpu} element.
+
+    See line \ref{lst:af-lineref-sched-minor} in listing
+    \ref{lst:annotated-policy} for an example minor frame.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="subject" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of scheduled subject.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="ticks" type="xs:positiveInteger" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Number of scheduling ticks in minor frame.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
 </xs:schema>

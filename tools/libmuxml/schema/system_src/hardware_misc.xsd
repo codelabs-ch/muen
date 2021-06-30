@@ -2,6 +2,20 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:complexType name="physicalMemoryType">
+  <xs:annotation>
+   <xs:documentation>
+    The hardware \texttt{memory} element specifies the available physical memory
+    blocks including reserved memory regions (RMRR, see Intel VT-d Specification,
+    "8.4 Reserved Memory Region Reporting Structure").
+
+    Only memory blocks reported by the BIOS E820 map as non-\emph{reserved} must
+    be configured in this section, e.g. \emph{usable} or \emph{ACPI NVS},
+    \emph{ACPI data}.
+
+    See line \ref{lst:af-lineref-hw-memory} in listing \ref{lst:annotated-policy}
+    for an example memory element.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="memoryBlock"    type="memoryBlockType"       minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="reservedMemory" type="reservedMemRegionType" minOccurs="0" maxOccurs="unbounded"/>
@@ -9,6 +23,28 @@
  </xs:complexType>
 
  <xs:complexType name="deviceType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{device} element specifies a physical device and its associated
+    resources. There are three main device resource types:
+
+    \begin{itemize}
+    \item IRQ
+    \item I/O port range
+    \item Memory
+    \end{itemize}
+
+    The presence of a PCI element indicates whether the device is a PCI or a
+    legacy device.
+
+    Capabilities can be used to convey additional device-specific information.
+    The base address of the memory mapped PCI config space is defined by the
+    \texttt{pciConfigAddress} attribute.
+
+    See line \ref{lst:af-lineref-hw-device} in listing \ref{lst:annotated-policy}
+    for an example device declaration.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="deviceBaseType">
     <xs:sequence>
@@ -19,6 +55,24 @@
  </xs:complexType>
 
  <xs:complexType name="pciType">
+  <xs:annotation>
+   <xs:documentation>
+    PCI(e) devices are specified using the \texttt{pci} element.
+
+    The element provides the following information:
+    \begin{itemize}
+    \item PCI device address (BDF)
+    \item Identification
+    \item IOMMU group information
+    \end{itemize}
+
+    The location of the PCI device in the PCI topology is specified by the Bus,
+    Device, Function triplet (BDF).
+
+    See line \ref{lst:af-lineref-hw-device-pci} in listing
+    \ref{lst:annotated-policy} for an example PCI element declaration.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="pciAddressType">
     <xs:sequence>
@@ -30,8 +84,25 @@
  </xs:complexType>
 
  <xs:complexType name="cpuCoreType">
-  <xs:attribute name="apicId" type="xs:unsignedByte" use="required"/>
-  <xs:attribute name="cpuId"  type="xs:unsignedByte" use="optional"/>
+  <xs:annotation>
+   <xs:documentation>
+    Specification of one physical CPU core.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="apicId" type="xs:unsignedByte" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     CPU local APIC ID, see Intel SDM Vol. 3A, "10.4.6 Local APIC ID".
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="cpuId"  type="xs:unsignedByte" use="optional">
+   <xs:annotation>
+    <xs:documentation>
+     Unique CPU ID.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
 </xs:schema>

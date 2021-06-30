@@ -3,79 +3,264 @@
 
  <xs:complexType name="deviceBaseType">
   <xs:sequence>
-   <xs:element name="description"  type="xs:string"        minOccurs="0" maxOccurs="1"/>
-   <xs:element name="pci"          type="pciType"          minOccurs="0" maxOccurs="1"/>
-   <xs:element name="irq"          type="irqType"          minOccurs="0" maxOccurs="unbounded"/>
-   <xs:element name="memory"       type="deviceMemoryType" minOccurs="0" maxOccurs="unbounded"/>
-   <xs:element name="ioPort"       type="ioPortType"       minOccurs="0" maxOccurs="unbounded"/>
-   <xs:element name="capabilities" type="capabilitiesType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="description"  type="deviceDescriptionType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="pci"          type="pciType"               minOccurs="0" maxOccurs="1"/>
+   <xs:element name="irq"          type="irqType"               minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="memory"       type="deviceMemoryType"      minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="ioPort"       type="ioPortType"            minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="capabilities" type="capabilitiesType"      minOccurs="0" maxOccurs="1"/>
   </xs:sequence>
-  <xs:attribute name="name" type="nameType" use="required"/>
+  <xs:attribute name="name" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Unique device name.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="pciAddressType">
-  <xs:attribute name="bus"      type="byteType"              use="required"/>
-  <xs:attribute name="device"   type="pciDeviceNumberType"   use="required"/>
-  <xs:attribute name="function" type="pciFunctionNumberType" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    PCI Bus, Device, Function triplet (BDF).
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="bus" type="byteType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     PCI Bus number.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="device" type="pciDeviceNumberType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     PCI Device number.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="function" type="pciFunctionNumberType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     PCI Function number.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:simpleType name="pciDeviceNumberType">
+  <xs:annotation>
+   <xs:documentation>
+    PCI Device number.
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="xs:string">
    <xs:pattern value="16#[0|1][0-9a-fA-F]#"/>
   </xs:restriction>
  </xs:simpleType>
 
  <xs:simpleType name="pciFunctionNumberType">
+  <xs:annotation>
+   <xs:documentation>
+    PCI Function number.
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="xs:nonNegativeInteger">
    <xs:maxInclusive value="7"/>
   </xs:restriction>
  </xs:simpleType>
 
  <xs:complexType name="deviceIdentificationType">
-  <xs:attribute name="classcode"  type="word16Type" use="required"/>
-  <xs:attribute name="vendorId"   type="word16Type" use="required"/>
-  <xs:attribute name="deviceId"   type="word16Type" use="required"/>
-  <xs:attribute name="revisionId" type="byteType"   use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{identification} element specifies the PCI device class, device,
+    revision and vendor ID.
+
+    For more information, consult the PCI Local Bus Specification,
+    "Configuration Space Decoding".
+
+    See line \ref{lst:af-lineref-hw-device-pci-id} in listing
+    \ref{lst:annotated-policy} for an example PCI identification.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="classcode"  type="word16Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     PCI device class.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="vendorId"   type="word16Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     PCI vendor ID.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="deviceId"   type="word16Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     PCI device ID.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="revisionId" type="byteType"   use="required">
+   <xs:annotation>
+    <xs:documentation>
+     PCI device revison ID.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="iommuGroupType">
-  <xs:attribute name="id"  type="xs:nonNegativeInteger" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    Devices in the same IOMMU group cannot be properly isolated from each other
+    because they may perform inter-device transactions directly, without going
+    through the IOMMU.
+
+    Note that this information is currently not used by the toolchain. It is a
+    hint to the system integrator whether two devices can be properly isolated
+    from each other or not.
+
+    See line \ref{lst:af-lineref-hw-device-iommugroup} in listing
+    \ref{lst:annotated-policy} for an example IOMMU group declaration.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="id"  type="xs:nonNegativeInteger" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     IOMMU group number.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="devicesType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{devices} element enumerates all devices provided by the hardware platform.
+    Different kinds of devices, be it PCI(e) or legacy (non-PCI), can be
+    declared in this section.
+
+    See line \ref{lst:af-lineref-hw-devices} in listing \ref{lst:annotated-policy}
+    for an example devices enumeration.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="device" type="deviceType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
-  <xs:attribute name="pciConfigAddress" type="word64Type" use="optional"/>
+  <xs:attribute name="pciConfigAddress" type="word64Type" use="optional">
+   <xs:annotation>
+    <xs:documentation>
+     Physical base address of the PCI configuration space region.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="processorType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{processor} element specifies the number of CPU cores, the
+    processor speed in MHz and the Intel VMX preemption timer rate.
+
+    Since Intel CPUs can have arbitrary APIC identifiers, the APIC IDs of all
+    physical CPUs are enumerated here. The APIC ID is required for interrupt and
+    IPI routing.
+
+    See line \ref{lst:af-lineref-processor} in listing \ref{lst:annotated-policy}
+    for an example processor element.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="cpu" type="cpuCoreType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>
-  <xs:attribute name="cpuCores"     type="xs:positiveInteger" use="required"/>
-  <xs:attribute name="speed"        type="xs:positiveInteger" use="required"/>
-  <xs:attribute name="vmxTimerRate" type="vmxTimerRateType"   use="required"/>
+  <xs:attribute name="cpuCores" type="xs:positiveInteger" use="required">
+  <xs:annotation>
+   <xs:documentation>
+    Number of available CPU cores. Note that this value designates physical,
+    hardware cores, not Hyper-Threading (HT) \emph{threads}. HT is disabled on
+    Muen.
+   </xs:documentation>
+  </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="speed" type="xs:positiveInteger" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Tick rate of CPU cores in MHz.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="vmxTimerRate" type="vmxTimerRateType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     The VMX-premption timer counts down at a rate proportional to that of the
+     timestamp counter (TSC). This value specifies this proportion, see Intel
+     SDM Vol. 3C, "25.5.1 VMX-Preemption Timer" for more details.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:simpleType name="vmxTimerRateType">
+  <xs:annotation>
+   <xs:documentation>
+    VMX-preemption timer count down rate.
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="xs:nonNegativeInteger">
    <xs:maxInclusive value="31"/>
   </xs:restriction>
  </xs:simpleType>
 
  <xs:complexType name="capabilitiesType">
+  <xs:annotation>
+   <xs:documentation>
+    List of device capabilities.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="capability" type="capabilityType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>
  </xs:complexType>
 
  <xs:complexType name="capabilityType">
+  <xs:annotation>
+   <xs:documentation>
+    A device \texttt{capability} is used to assign additional information to a
+    device. Such a capability might be used by the Muen toolchain to perform
+    certain actions on devices with a given capability (e.g. \texttt{ioapic}). A
+    system integrator may use this facility to define its own capabilities used
+    by custom tools.
+
+    A capability element can have an optional value.
+
+    See line \ref{lst:af-lineref-dev-cap} in listing \ref{lst:annotated-policy}
+    for example capabilities.
+   </xs:documentation>
+  </xs:annotation>
   <xs:simpleContent>
    <xs:extension base="xs:string">
-    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="name" type="xs:string" use="required">
+     <xs:annotation>
+      <xs:documentation>
+       Capability name (free text).
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
    </xs:extension>
   </xs:simpleContent>
  </xs:complexType>
+
+ <xs:simpleType name="deviceDescriptionType">
+  <xs:annotation>
+   <xs:documentation>
+    Device description (free text).
+   </xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:string"/>
+ </xs:simpleType>
 
 </xs:schema>

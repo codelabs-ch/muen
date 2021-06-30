@@ -2,6 +2,26 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:complexType name="pinCtrlType">
+  <xs:annotation>
+   <xs:documentation>
+    Configures Intel VMX pin-based VM-execution controls. These controls
+    constitute a 32-bit vector that governs the handling of asynchronous events
+    (for example: interrupts) while running in VMX non-root mode.
+
+    See Intel SDM Vol. 3C, "24.6.1 Pin-Based VM-Execution Controls" for more
+    details and the meaning of the different bit-fields.
+
+    \begin{warning}
+    Deviating from the settings provided by the component vCPU profile might
+    result in unexpected system behavior. A system integrator changing any of
+    these values must have a thorough understanding of both the runtime behavior
+    of the Muen SK and the Intel VT-x/VT-d architecture. The
+    \texttt{mucfgvalidate} tool checks that requirements for safe execution of
+    Muen are met, i.e. invalid settings are detected and a meaningful error
+    message is presented.
+    \end{warning}
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="ExternalInterruptExiting" type="bitValueType" minOccurs="0" maxOccurs="1"/>
    <xs:element name="VirtualNMIs"              type="bitValueType" minOccurs="0" maxOccurs="1"/>
@@ -11,6 +31,30 @@
  </xs:complexType>
 
  <xs:complexType name="procCtrlType">
+  <xs:annotation>
+   <xs:documentation>
+    The processor-based VM-execution controls constitute two 32-bit vectors that
+    govern the handling of synchronous events, mainly those caused by the
+    execution of specific instructions. These are the \emph{primary
+    processor-based} VM-execution controls and the \emph{secondary
+    processor-based} VM-execution controls.
+
+    The \texttt{proc} element configures the primary processor-based
+    VM-execution controls, see Intel SDM Vol. 3C, "24.6.2 Processor-Based
+    VM-Execution Controls" for more details and the meaning of the different
+    bit-fields.
+
+    \begin{warning}
+    Deviating from the settings provided by the component vCPU profile might
+    result in unexpected system behavior. A system integrator changing any of
+    these values must have a thorough understanding of both the runtime behavior
+    of the Muen SK and the Intel VT-x/VT-d architecture. The
+    \texttt{mucfgvalidate} tool checks that requirements for safe execution of
+    Muen are met, i.e. invalid settings are detected and a meaningful error
+    message is presented.
+    \end{warning}
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="InterruptWindowExiting" type="bitValueType" minOccurs="0" maxOccurs="1"/>
    <xs:element name="UseTSCOffsetting"       type="bitValueType" minOccurs="0" maxOccurs="1"/>
@@ -37,6 +81,30 @@
  </xs:complexType>
 
  <xs:complexType name="proc2CtrlType">
+  <xs:annotation>
+   <xs:documentation>
+    The processor-based VM-execution controls constitute two 32-bit vectors that
+    govern the handling of synchronous events, mainly those caused by the
+    execution of specific instructions. These are the \emph{primary
+    processor-based} VM-execution controls and the \emph{secondary
+    processor-based} VM-execution controls.
+
+    The \texttt{proc2} element configures the secondary processor-based
+    VM-execution controls, see Intel SDM Vol. 3C, "24.6.2 Processor-Based
+    VM-Execution Controls" for more details and the meaning of the different
+    bit-fields.
+
+    \begin{warning}
+    Deviating from the settings provided by the component vCPU profile might
+    result in unexpected system behavior. A system integrator changing any of
+    these values must have a thorough understanding of both the runtime behavior
+    of the Muen SK and the Intel VT-x/VT-d architecture. The
+    \texttt{mucfgvalidate} tool checks that requirements for safe execution of
+    Muen are met, i.e. invalid settings are detected and a meaningful error
+    message is presented.
+    \end{warning}
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="VirtualAPICAccesses"        type="bitValueType" minOccurs="0" maxOccurs="1"/>
    <xs:element name="EnableEPT"                  type="bitValueType" minOccurs="0" maxOccurs="1"/>
@@ -56,6 +124,25 @@
  </xs:complexType>
 
  <xs:complexType name="vmEntryCtrlType">
+  <xs:annotation>
+   <xs:documentation>
+    Configures Intel VMX VM-entry controls. These controls constitute a 32-bit
+    vector that governs the basic operation of VM entries.
+
+    See Intel SDM Vol. 3C, "24.8.1 VM-Entry Controls" for more details and the
+    meaning of the different bit-fields.
+
+    \begin{warning}
+    Deviating from the settings provided by the component vCPU profile might
+    result in unexpected system behavior. A system integrator changing any of
+    these values must have a thorough understanding of both the runtime behavior
+    of the Muen SK and the Intel VT-x/VT-d architecture. The
+    \texttt{mucfgvalidate} tool checks that requirements for safe execution of
+    Muen are met, i.e. invalid settings are detected and a meaningful error
+    message is presented.
+    \end{warning}
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="LoadDebugControls"            type="bitValueType" minOccurs="0" maxOccurs="1"/>
    <xs:element name="IA32eModeGuest"               type="bitValueType" minOccurs="0" maxOccurs="1"/>
@@ -68,6 +155,25 @@
  </xs:complexType>
 
  <xs:complexType name="vmExitCtrlType">
+  <xs:annotation>
+   <xs:documentation>
+    Configures Intel VMX VM-exit controls. These controls constitute a 32-bit
+    vector that governs the basic operation of VM exits.
+
+    See Intel SDM Vol. 3C, "24.7.1 VM-Exit Controls" for more details and the
+    meaning of the different bit-fields.
+
+    \begin{warning}
+    Deviating from the settings provided by the component vCPU profile might
+    result in unexpected system behavior. A system integrator changing any of
+    these values must have a thorough understanding of both the runtime behavior
+    of the Muen SK and the Intel VT-x/VT-d architecture. The
+    \texttt{mucfgvalidate} tool checks that requirements for safe execution of
+    Muen are met, i.e. invalid settings are detected and a meaningful error
+    message is presented.
+    \end{warning}
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="SaveDebugControls"      type="bitValueType" minOccurs="0" maxOccurs="1"/>
    <xs:element name="HostAddressspaceSize"   type="bitValueType" minOccurs="0" maxOccurs="1"/>
@@ -82,6 +188,12 @@
  </xs:complexType>
 
  <xs:complexType name="cr0Type">
+  <xs:annotation>
+   <xs:documentation>
+    Allows to set initial values of the CR0 control register or bits in the CR0
+    guest/host ownership mask.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="ProtectionEnable"   type="bitValueType" minOccurs="0" maxOccurs="1"/>
    <xs:element name="MonitorCoprocessor" type="bitValueType" minOccurs="0" maxOccurs="1"/>
@@ -94,6 +206,12 @@
  </xs:complexType>
 
  <xs:complexType name="cr4Type">
+  <xs:annotation>
+   <xs:documentation>
+    Allows to set initial values of the CR4 control register or bits in the CR4
+    guest/host ownership mask.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="Virtual8086"              type="bitValueType" minOccurs="0" maxOccurs="1"/>
    <xs:element name="ProtectedVirtualInts"     type="bitValueType" minOccurs="0" maxOccurs="1"/>
@@ -117,6 +235,19 @@
  </xs:complexType>
 
  <xs:complexType name="exceptionType">
+  <xs:annotation>
+   <xs:documentation>
+    Configures Intel VMX exception bitmap. The exception bitmap is a 32-bit
+    field that contains one bit for each exception. When an exception occurs,
+    its vector is used to select a bit in this field. If the bit is 1, the
+    exception causes a VM exit. If the bit is 0, the exception is delivered
+    normally through the IDT, using the descriptor corresponding to the
+    exception’s vector.
+
+    See Intel SDM Vol. 3C, "24.6.3 Exception Bitmap" for more details on the
+    exception bitmap configuration.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="DivideError"                type="bitValueType" minOccurs="0" maxOccurs="1"/>
    <xs:element name="Debug"                      type="bitValueType" minOccurs="0" maxOccurs="1"/>
@@ -139,6 +270,16 @@
  </xs:complexType>
 
  <xs:complexType name="vcpuType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{vcpu} element controls the execution behavior of the virtual CPU
+    (vCPU). A default vCPU profile is selected by the component profile, but CPU
+    execution settings can be customized both at component and subject level.
+
+    See line \ref{lst:af-lineref-vcpu} in listing \ref{lst:annotated-policy}
+    for an example on how to customize a vCPU profile.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="vmx"       type="vmxType"       minOccurs="0" maxOccurs="1"/>
    <xs:element name="msrs"      type="msrsType"      minOccurs="0" maxOccurs="1"/>
@@ -147,6 +288,11 @@
  </xs:complexType>
 
  <xs:complexType name="vmxType">
+  <xs:annotation>
+   <xs:documentation>
+    Controls Intel VMX vCPU settings.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="controls" type="controlsType" minOccurs="0" maxOccurs="1"/>
    <xs:element name="masks"    type="masksType"    minOccurs="0" maxOccurs="1"/>
@@ -154,6 +300,18 @@
  </xs:complexType>
 
  <xs:complexType name="controlsType">
+  <xs:annotation>
+   <xs:documentation>
+    Configures the following Intel VMX settings:
+    \begin{itemize}
+    \item Pin-Based VM-Execution Controls
+    \item Primary Processor-Based VM-Execution Controls
+    \item Secondary Processor-Based VM-Execution Controls
+    \item VM-Entry Controls
+    \item VM-Exit Controls
+    \end{itemize}
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="pin"   type="pinCtrlType"     minOccurs="0" maxOccurs="1"/>
    <xs:element name="proc"  type="procCtrlType"    minOccurs="0" maxOccurs="1"/>
@@ -164,6 +322,19 @@
  </xs:complexType>
 
  <xs:complexType name="masksType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{masks} element configures the Intel VMX CR0/CR4 guest/host masks
+    and the guest/host exception bitmap.
+
+    In general, bits set to 1 in a guest/host mask correspond to bits
+    \emph{owned} by the host, causing a VM exit if the associated event occurs.
+
+    Reading from host owned bits in CR0/CR4 does not result in a VM exit but the
+    value of the CR0/CR4 read shadow is returned instead (see Intel SDM Vol. 3C,
+    "24.6.6 Guest/Host Masks and Read Shadows for CR0 and CR4").
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="exception" type="exceptionType" minOccurs="0" maxOccurs="1"/>
    <xs:element name="cr0"       type="cr0Type"       minOccurs="0" maxOccurs="1"/>
@@ -172,6 +343,12 @@
  </xs:complexType>
 
  <xs:complexType name="registersType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{registers} element specifies the initial value of
+    general-purpose (GPR), CR0/CR4 and segment registers.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="gpr"      type="gprType"      minOccurs="0" maxOccurs="1"/>
    <xs:element name="cr0"      type="cr0Type"      minOccurs="0" maxOccurs="1"/>
@@ -181,6 +358,12 @@
  </xs:complexType>
 
  <xs:complexType name="gprType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{gpr} element specifies the initial values of subject
+    general-purpose registers (GPRs).
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="rip" type="word64Type" minOccurs="0" maxOccurs="1"/>
    <xs:element name="rsp" type="word64Type" minOccurs="0" maxOccurs="1"/>
@@ -203,6 +386,12 @@
  </xs:complexType>
 
  <xs:complexType name="segmentsType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{segments} element specifies the initial values of
+    subject segment registers.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="cs" type="segmentType" minOccurs="0" maxOccurs="1"/>
    <xs:element name="ds" type="segmentType" minOccurs="0" maxOccurs="1"/>

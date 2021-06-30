@@ -2,6 +2,19 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:complexType name="componentsType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{components} element holds a list of components and component
+    libraries.
+
+    Note that components are a policy source format abstraction. The toolchain
+    resolves this concept into subjects by adding the appropriate memory
+    regions, events and devices.
+
+    See line \ref{lst:af-lineref-components} in listing \ref{lst:annotated-policy}
+    for an example components section.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="library"   type="libraryType"   minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="component" type="componentType" minOccurs="1" maxOccurs="unbounded"/>
@@ -9,30 +22,115 @@
  </xs:complexType>
 
  <xs:complexType name="componentType">
+  <xs:annotation>
+   <xs:documentation>
+    A component is a piece of software which shall be executed by the SK.
+    Components represent the building blocks of a component-based system and can
+    be regarded as templates for executable entities instantiated by subjects.
+
+    The specification of a component declares the \emph{binary program} by means
+    of (file-backed memory) regions. It also specifies the component's view of
+    the expected execution environment. A component may request the following
+    resources from the system:
+
+    \begin{itemize}
+    \item Logical channels
+    \item Logical memory regions
+    \item Logical devices
+    \item Logical events
+    \end{itemize}
+
+    Components are identified by name and specify a profile. The profile
+    controls the settings of the virtual CPU (vCPU).
+
+    See line \ref{lst:af-lineref-component} in listing \ref{lst:annotated-policy}
+    for an example component.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="libraryType">
-    <xs:attribute name="profile" type="componentProfileType" use="required"/>
+    <xs:attribute name="profile" type="componentProfileType" use="required">
+     <xs:annotation>
+      <xs:documentation>
+       Component profile.
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>
 
  <xs:complexType name="libraryType">
+  <xs:annotation>
+   <xs:documentation>
+    A component library is a specialized component specification which is used
+    to share common resources required for library code to operate. Component
+    libraries can be included by multiple components in order to share
+    functionality. An example is a logging service provided by a dedicated
+    component, whereas the logging client is provided as a library with a shared
+    memory channel for the actual log messages.
+
+    A component specification declares library dependencies to request the
+    library resources from the system through the inclusion of the library
+    specification in the \texttt{depends} section. This way components inherit
+    the resources of libraries.
+
+    On the source code level, a library is included by mechanisms provided by
+    the respective programming language. Note that the component library code is
+    \emph{not} shared between components but lives in the isolated execution
+    environment of a subject instantiating the component (i.e. statically linked
+    libraries).
+
+    Libraries can request the same resources as ordinary components. A subject
+    instantiating the component must also map the resources requested by
+    libraries the component depends on.
+
+    See line \ref{lst:af-lineref-complib} in listing \ref{lst:annotated-policy}
+    for example library specifications.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="config"   type="configType"            minOccurs="0" maxOccurs="1"/>
    <xs:element name="depends"  type="libraryDepsType"       minOccurs="0" maxOccurs="1"/>
    <xs:element name="requires" type="requiredResourcesType" minOccurs="0" maxOccurs="1"/>
    <xs:element name="provides" type="providedResourcesType" minOccurs="0" maxOccurs="1"/>
   </xs:sequence>
-  <xs:attribute name="name" type="nameType" use="required"/>
+  <xs:attribute name="name" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Component/library name.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="libraryDepsType">
+  <xs:annotation>
+   <xs:documentation>
+    Components and libraries are allowed to declare dependencies to other
+    libraries. All resources required by the included library are merged with
+    the ones specified by the component or library. Libraries can depend on
+    other libraries.
+
+    A subject realizing this component must correctly map all component and
+    library resource requirements to physical resources in order to fulfill the
+    expectations.
+
+    See line \ref{lst:af-lineref-compdeps} in listing \ref{lst:annotated-policy}
+    for an example dependency section.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="library" type="namedRefType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>
  </xs:complexType>
 
  <xs:complexType name="requiredResourcesType">
+  <xs:annotation>
+   <xs:documentation>
+    Declaration of resources a component or library requires to operate.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="vcpu"     type="vcpuType"            minOccurs="0" maxOccurs="1"/>
    <xs:element name="memory"   type="logicalMemoryType"   minOccurs="0" maxOccurs="1"/>
@@ -43,28 +141,75 @@
  </xs:complexType>
 
  <xs:complexType name="providedResourcesType">
+  <xs:annotation>
+   <xs:documentation>
+    Components usually come in the form of an executable file. To this end, the
+    \texttt{provides} section specifies the memory regions of the component
+    binary executable with their content.
+
+    From a security perspective, it is often desirable to provide the different
+    binary section as separate memory regions with the appropriate access
+    rights, i.e. only the text section is executable, rodata is not writable and
+    so on.
+
+    Memory specified in this sections are expanded to mapped physical regions
+    for each subject that instantiates this component.
+
+    Note: the Mucbinsplit tool can be used to extract these section from an ELF
+    binary into separate files and automatically add the corresponding memory
+    elements to the component specification.
+
+    See line \ref{lst:af-lineref-compprov} in listing \ref{lst:annotated-policy}
+    for an example \texttt{provides} section.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="memory" type="providedMemType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>
  </xs:complexType>
 
- <xs:complexType name="binaryType">
-  <xs:attribute name="filename"       type="xs:string"      use="required"/>
-  <xs:attribute name="size"           type="memorySizeType" use="required"/>
-  <xs:attribute name="virtualAddress" type="word64Type"     use="required"/>
- </xs:complexType>
-
  <xs:complexType name="providedMemType">
+  <xs:annotation>
+   <xs:documentation>
+    A \texttt{memory} element in the \texttt{provides} section declares memory
+    region provided by the component. Mostly used to provide (a part) of the
+    component binary.
+
+    See line \ref{lst:af-lineref-compprov-mem} in listing
+    \ref{lst:annotated-policy} for an example specification.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="memoryBaseType">
     <xs:attributeGroup ref="memBaseAttrs"/>
-    <xs:attribute name="virtualAddress" type="word64Type"            use="required"/>
-    <xs:attribute name="type"           type="subjectMemoryKindType" use="optional"/>
+    <xs:attribute name="virtualAddress" type="word64Type" use="required">
+     <xs:annotation>
+      <xs:documentation>
+       Virtual address in component address space.
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="type" type="subjectMemoryKindType" use="optional">
+     <xs:annotation>
+      <xs:documentation>
+       Memory type (e.g. \texttt{subject\_binary}).
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>
 
  <xs:complexType name="logicalChannelsType">
+  <xs:annotation>
+   <xs:documentation>
+    Components and libraries use the \texttt{channels} sub-section of
+    \texttt{requires} to specify expected communication channels.
+
+    See line \ref{lst:af-lineref-compreq-chan} in listing
+    \ref{lst:annotated-policy} for an example specification.
+   </xs:documentation>
+  </xs:annotation>
   <xs:choice minOccurs="0" maxOccurs="unbounded">
    <xs:element name="reader" type="logicalChannelReaderType"/>
    <xs:element name="writer" type="logicalChannelWriterType"/>
@@ -73,6 +218,15 @@
  </xs:complexType>
 
  <xs:complexType name="logicalMemoryType">
+  <xs:annotation>
+   <xs:documentation>
+    In this section, components can specify expected memory mappings with given
+    access rights and region size.
+
+    See line \ref{lst:af-lineref-compreq-memarray} in listing
+    \ref{lst:annotated-policy} for an example specification.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:choice minOccurs="0" maxOccurs="unbounded">
     <xs:element name="memory" type="logicalMemType"/>
@@ -82,68 +236,279 @@
  </xs:complexType>
 
  <xs:complexType name="logicalMemType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{memory} element requests a memory region with the specified
+    \texttt{size} and permissions from the system. The region is expected to be
+    placed at the address given via the \texttt{virtualAddress} attribute.
+
+    See line \ref{lst:af-lineref-compreq-mem} in listing
+    \ref{lst:annotated-policy} for an example specification.
+   </xs:documentation>
+  </xs:annotation>
   <xs:attributeGroup ref="memBaseAttrs"/>
-  <xs:attribute name="size"           type="word64Type" use="required"/>
-  <xs:attribute name="virtualAddress" type="word64Type" use="required"/>
+  <xs:attribute name="size" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Size of memory in bytes. Must be a multiple of page size (4K).
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="virtualAddress" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Expected address of memory mapping.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="logicalDevicesType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{devices} sub-section of the \texttt{requires} section is used to
+    specify expected devices with their associated resources.
+
+    See line \ref{lst:af-lineref-compreq-devs} in listing
+    \ref{lst:annotated-policy} for an example specification.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="device" type="logicalDeviceType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
  </xs:complexType>
 
  <xs:complexType name="logicalDeviceType">
+  <xs:annotation>
+   <xs:documentation>
+    A \texttt{device} element specifies an expected logical device with its
+    resources. Possible resources are \texttt{irq}, \texttt{memory} and
+    \texttt{ioPort}.
+
+    See line \ref{lst:af-lineref-compreq-dev} in listing
+    \ref{lst:annotated-policy} for an example specification.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="irq"    type="logicalIrqType"    minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="memory" type="logicalMemType"    minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="ioPort" type="logicalIoPortType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
-  <xs:attribute name="logical" type="nameType" use="required"/>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical device name.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="logicalIrqType">
+  <xs:annotation>
+   <xs:documentation>
+    An \texttt{irq} element of a logical device reference requests an IRQ with
+    given number from the system policy. The specified number will be injected
+    when the device requires attention for the associated logical function.
+
+    See line \ref{lst:af-lineref-compreq-dev-irq} in listing
+    \ref{lst:annotated-policy} for an example IRQ reference.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="msi" type="logicalMsiIrqType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
-  <xs:attribute name="logical" type="nameType"   use="required"/>
-  <xs:attribute name="vector"  type="vectorType" use="required"/>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical name of IRQ resource.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="vector" type="vectorType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Expected IRQ number.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="logicalMsiIrqType">
-  <xs:attribute name="logical" type="nameType" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    The presence of \texttt{msi} child elements of an \texttt{irq} device
+    resource specifies that the component expects the device to be operated in
+    MSI mode. The number of elements defines the expected MSI vector number
+    count to be provided by the referenced device.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of MSI resource.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="logicalIoPortType">
-  <xs:attribute name="logical" type="nameType"   use="required"/>
-  <xs:attribute name="start"   type="word16Type" use="required"/>
-  <xs:attribute name="end"     type="word16Type" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{ioPort} element requests a device I/O port resource with given
+    range \texttt{start .. end} from the system.
+
+    See line \ref{lst:af-lineref-compreq-dev-port} in listing
+    \ref{lst:annotated-policy} for an example I/O port reference.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical I/O port name.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="start" type="word16Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     I/O port start address.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="end" type="word16Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     I/O port end address.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="logicalChannelReaderType">
-  <xs:attribute name="logical"        type="nameType"   use="required"/>
-  <xs:attribute name="virtualAddress" type="word64Type" use="required"/>
-  <xs:attribute name="size"           type="word64Type" use="required"/>
-  <xs:attribute name="vector"         type="vectorType" use="optional"/>
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{reader} element requests a read-only channel of the specified
+    size, address and optional notification vector.
+
+    See line \ref{lst:af-lineref-compreq-channel-reader} in listing
+    \ref{lst:annotated-policy} for an example channel reader specification.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical name of reader channel.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="virtualAddress" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Expected address of channel memory mapping.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="size" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Expected size of channel. Must be a multiple of page size (4K).
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="vector" type="vectorType" use="optional">
+   <xs:annotation>
+    <xs:documentation>
+     Notification vector.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="logicalChannelWriterType">
-  <xs:attribute name="logical"        type="nameType"              use="required"/>
-  <xs:attribute name="virtualAddress" type="word64Type"            use="required"/>
-  <xs:attribute name="size"           type="word64Type"            use="required"/>
-  <xs:attribute name="event"          type="xs:nonNegativeInteger" use="optional"/>
- </xs:complexType>
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{writer} element requests a channel with write permissions of the
+    specified size, address and optional notification event number.
+
+    See line \ref{lst:af-lineref-compreq-channel-writer} in listing
+    \ref{lst:annotated-policy} for an example channel writer specification.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical name of writer channel.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="virtualAddress" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Expected address of channel memory mapping.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="size" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Expected size of channel. Must be a multiple of page size (4K).
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="event" type="xs:nonNegativeInteger" use="optional">
+  <xs:annotation>
+   <xs:documentation>
+    Notification event number.
+   </xs:documentation>
+  </xs:annotation>
+ </xs:attribute>
+</xs:complexType>
 
  <xs:attributeGroup name="arrayBaseAttrs">
-  <xs:attribute name="virtualAddressBase" type="word64Type" use="required"/>
-  <xs:attribute name="elementSize"        type="word64Type" use="required"/>
+  <xs:attribute name="virtualAddressBase" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Expected address of memory mapping.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="elementSize" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Size of one array element in bytes. Must be a multiple of page size (4K).
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:attributeGroup>
 
  <xs:complexType name="arrayEntryType">
-  <xs:attribute name="logical" type="nameType" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    Array entries specify the number of array elements and assign a logical name
+    to each element.
+
+    See line \ref{lst:af-lineref-compreq-array-entry} in listing
+    \ref{lst:annotated-policy} for an example array entry declaration.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical name of array entry.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="memoryArrayType">
+  <xs:annotation>
+   <xs:documentation>
+    The memory array abstraction simplifies the declaration of consecutive
+    memory mappings with a given base address, region size and
+    \texttt{executable} and \texttt{writable} attributes. The child elements
+    declare the number of expected regions.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="memory" type="arrayEntryType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>
@@ -152,17 +517,67 @@
  </xs:complexType>
 
  <xs:complexType name="channelArrayType">
+  <xs:annotation>
+   <xs:documentation>
+    The channel array abstraction simplifies the declaration of consecutive
+    channel mappings with a given base address, channel size and optional
+    event/vector bases. The child elements declare the number of expected
+    channels and either the \texttt{reader} or \texttt{writer} role.
+
+    See line \ref{lst:af-lineref-compreq-chanarr} in listing
+    \ref{lst:annotated-policy} for an example specification.
+   </xs:documentation>
+  </xs:annotation>
   <xs:choice>
    <xs:element name="reader" type="arrayEntryType" minOccurs="1" maxOccurs="unbounded"/>
    <xs:element name="writer" type="arrayEntryType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:choice>
   <xs:attributeGroup ref="arrayBaseAttrs"/>
-  <xs:attribute name="logical"    type="nameType"              use="required"/>
-  <xs:attribute name="eventBase"  type="xs:nonNegativeInteger" use="optional"/>
-  <xs:attribute name="vectorBase" type="vectorType"            use="optional"/>
- </xs:complexType>
+  <xs:attribute name="logical" type="nameType" use="required">
+  <xs:annotation>
+   <xs:documentation>
+    Logical channel array name.
+   </xs:documentation>
+  </xs:annotation>
+ </xs:attribute>
+ <xs:attribute name="eventBase" type="xs:nonNegativeInteger" use="optional">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{eventBase} attribute specifies the event number of the first
+    element in the array. This number is incremented for all further elements
+    in the array (\texttt{eventBase + 1}).
+
+    Note that this attribute is only taken into consideration for a writer
+    array.
+   </xs:documentation>
+  </xs:annotation>
+ </xs:attribute>
+ <xs:attribute name="vectorBase" type="vectorType" use="optional">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{vectorBase} attribute specifies the vector number of the first
+    element in the array. This number is incremented for all further elements
+    in the array (\texttt{vectorBase + 1}).
+
+    Note that this attribute is only taken into consideration for a reader
+    array.
+   </xs:documentation>
+  </xs:annotation>
+ </xs:attribute>
+</xs:complexType>
 
  <xs:complexType name="logicalEventsType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{events} sub-section of the \texttt{requires} section is used to
+    specify expected events with optional event actions.
+
+    A component can specify both source as well as target events.
+
+    See line \ref{lst:af-lineref-compreq-evts} in listing
+    \ref{lst:annotated-policy} for an example specification.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="source" type="logicalEventSourceType" minOccurs="0" maxOccurs="1"/>
    <xs:element name="target" type="logicalEventTargetType" minOccurs="0" maxOccurs="1"/>
@@ -170,40 +585,89 @@
  </xs:complexType>
 
  <xs:complexType name="logicalEventSourceType">
+  <xs:annotation>
+   <xs:documentation>
+    Specifies expected source events.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="event" type="logicalSourceEventEntryType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>
  </xs:complexType>
 
  <xs:complexType name="logicalEventTargetType">
+  <xs:annotation>
+   <xs:documentation>
+    Specifies expected event targets.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="event" type="logicalTargetEventEntryType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>
  </xs:complexType>
 
  <xs:complexType name="baseLogicalEventType">
-  <xs:attribute name="logical" type="nameType" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    Logical event base.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical name of event.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="logicalSourceEventEntryType">
+  <xs:annotation>
+   <xs:documentation>
+    An entry in the component's source event list.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="baseLogicalEventType">
      <xs:group ref="sourceEventActionsGroup" minOccurs="0" maxOccurs="1"/>
-     <xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
+     <xs:attribute name="id" type="xs:nonNegativeInteger" use="required">
+      <xs:annotation>
+       <xs:documentation>
+        ID of source event.
+       </xs:documentation>
+      </xs:annotation>
+     </xs:attribute>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>
 
  <xs:complexType name="logicalTargetEventEntryType">
+  <xs:annotation>
+   <xs:documentation>
+    An entry in the component's target event list.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="baseLogicalEventType">
     <xs:group ref="targetEventActionsGroup" minOccurs="0" maxOccurs="1"/>
-     <xs:attribute name="id" type="xs:nonNegativeInteger" use="optional"/>
+    <xs:attribute name="id" type="xs:nonNegativeInteger" use="optional">
+     <xs:annotation>
+      <xs:documentation>
+       ID of target event entry.
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>
 
  <xs:simpleType name="componentProfileType">
+  <xs:annotation>
+   <xs:documentation>
+    The component profile defines default vCPU settings and triggers profile
+    specific actions in the expander tool.
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="xs:string">
    <xs:enumeration value="native"/>
    <xs:enumeration value="vm"/>

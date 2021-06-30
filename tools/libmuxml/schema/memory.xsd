@@ -2,10 +2,21 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:simpleType name="memorySizeType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{memorySizeType} is used to declare memory sizes.
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="word64Type"/>
  </xs:simpleType>
 
  <xs:simpleType name="alignmentType">
+  <xs:annotation>
+   <xs:documentation>
+    Memory alignment constraint for memory region. Taken into account by
+    the allocator tool and checked by the validator.
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="word64Type">
    <xs:enumeration value="16#1000#"/>
    <xs:enumeration value="16#0020_0000#"/>
@@ -14,6 +25,20 @@
  </xs:simpleType>
 
  <xs:simpleType name="cachingType">
+  <xs:annotation>
+   <xs:documentation>
+    Memory caching type, see Intel SDM Vol. 3A, "11.3 Methods of Caching
+    Available".
+
+    \begin{itemize}
+    \item Strong Uncacheable (UC)
+    \item Write Combining (WC)
+    \item Write Through (WT)
+    \item Write Back (WB)
+    \item Write Protected (WP)
+    \end{itemize}
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="xs:string">
    <xs:pattern value="UC|WC|WT|WB|WP"/>
   </xs:restriction>
@@ -58,53 +83,189 @@
  </xs:simpleType>
 
  <xs:complexType name="memoryBlockBaseType" abstract="true">
-  <xs:attribute name="name"            type="nameType"       use="required"/>
-  <xs:attribute name="physicalAddress" type="word64Type"     use="required"/>
-  <xs:attribute name="size"            type="memorySizeType" use="required"/>
+  <xs:attribute name="name" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of memory block.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="physicalAddress" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Start address of memory block.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="size" type="memorySizeType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Size of memory block.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="deviceMemoryType">
+  <xs:annotation>
+   <xs:documentation>
+    A device \texttt{memory} element specifies a memory region which is used to
+    interact with the associated device.
+
+    For PCI devices, the specified region is programmed into one device BAR
+    (Base Address Register) by system firmware. See the PCI Local Bus
+    Specification or the PCI Express Base Specification for more details.
+
+    See line \ref{lst:af-lineref-devmem} in listing \ref{lst:annotated-policy}
+    for an example device memory declaration.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="memoryBlockBaseType">
-    <xs:attribute name="caching" type="cachingType" use="required"/>
+    <xs:attribute name="caching" type="cachingType" use="required">
+     <xs:annotation>
+      <xs:documentation>
+       Device memory caching type.
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>
 
  <xs:simpleType name="optionalOffsetType">
+  <xs:annotation>
+   <xs:documentation>
+    Optional file offset value in bytes.
+   </xs:documentation>
+  </xs:annotation>
   <xs:union memberTypes="word64Type noneType"/>
  </xs:simpleType>
 
  <xs:complexType name="fillContentType">
-  <xs:attribute name="pattern" type="byteType" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{fill} element designates a memory region which is initialized
+    with the given pattern.
+
+    See line \ref{lst:af-lineref-memory-fill} in listing
+    \ref{lst:annotated-policy} for a file-backed memory region example.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="pattern" type="byteType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Fill pattern (hex).
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="memRegionsType">
+  <xs:annotation>
+   <xs:documentation>
+    This section declares all physical memory regions (RAM) and thus the
+    physical memory layout of the system. Regions declared in this section can
+    be assigned to subjects and device domains.
+
+    Memory regions are defined by the following attributes:
+    \begin{itemize}
+    \item Name
+    \item Caching type
+    \item Size
+    \item Physical address*
+    \item Alignment*
+    \item Memory type*
+    \end{itemize}
+
+    Attributes with an asterisk are optional. While alignment and memory type
+    are set to a default value if not specified, the physical address is filled
+    in by the allocator tool, which allocates all memory regions and finalizes
+    the physical memory layout.
+
+    Additionally, the content of a region can be declared as backed by a file or
+    filled with a pattern.
+
+    Note: The caching type is an attribute of the physical memory region by
+    design to avoid inconsistent typing, even though the Intel Page Attribute
+    Table (PAT) mechanism allows to set it for each memory mapping, see Intel
+    SDM Vol. 3A, "11.12.4 Programming the PAT".
+
+    See line \ref{lst:af-lineref-physmem} in listing \ref{lst:annotated-policy}
+    for an example memory region section.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="memory" type="memoryType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>
  </xs:complexType>
 
  <xs:complexType name="memRefType">
+  <xs:annotation>
+   <xs:documentation>
+    A \texttt{memory} element maps a physical memory region into the address
+    space of a device domain or subject entity. The region will be accessible
+    to the entity at the specified \texttt{virtualAdress} with permissions
+    defined by the \texttt{executable} and \texttt{writable} attributes.
+
+    See line \ref{lst:af-lineref-memref} in listing \ref{lst:annotated-policy}
+    for an example of such a mapping.
+   </xs:documentation>
+  </xs:annotation>
   <xs:attributeGroup ref="memRefBaseAttrs"/>
-  <xs:attribute name="virtualAddress" type="word64Type" use="required"/>
+  <xs:attribute name="virtualAddress" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Address in entity address space where the physical memory region is mapped.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="memoryRefsType">
+  <xs:annotation>
+   <xs:documentation>
+    List of physical memory region references.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="memory" type="memRefType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
  </xs:complexType>
 
  <xs:attributeGroup name="memBaseAttrs">
-  <xs:attribute name="logical"    type="nameType"    use="required"/>
-  <xs:attribute name="writable"   type="booleanType" use="required"/>
-  <xs:attribute name="executable" type="booleanType" use="required"/>
+  <xs:attribute name="logical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical name of mapping.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="writable" type="booleanType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Defines if the mapped memory is writable.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="executable" type="booleanType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Defines if the memory region contents are executable by the processor.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:attributeGroup>
 
  <xs:attributeGroup name="memRefBaseAttrs">
   <xs:attributeGroup ref="memBaseAttrs"/>
-  <xs:attribute name="physical" type="nameType" use="required"/>
+  <xs:attribute name="physical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of referenced physical memory region.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:attributeGroup>
 
  <xs:complexType name="memoryBaseType" abstract="true">
@@ -118,14 +279,32 @@
     <xs:element name="hashRef" type="hashRefType"/>
    </xs:choice>
   </xs:sequence>
-  <xs:attribute name="size" type="memorySizeType" use="required"/>
+  <xs:attribute name="size" type="memorySizeType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Size of region. Must be a multiple of page size (4K). Enforced by validator.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="physicalMemBaseType">
   <xs:complexContent>
    <xs:extension base="memoryBaseType">
-    <xs:attribute name="name"    type="nameType"    use="required"/>
-    <xs:attribute name="caching" type="cachingType" use="required"/>
+    <xs:attribute name="name"    type="nameType"    use="required">
+     <xs:annotation>
+      <xs:documentation>
+       Name of region.
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="caching" type="cachingType" use="required">
+     <xs:annotation>
+      <xs:documentation>
+       Caching type to use for memory region.
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>

@@ -274,7 +274,17 @@ is
 
    procedure Add_Missing_Attributes (Data : in out Muxml.XML_Data_Type)
    is
-      Align : constant String := "16#1000#";
+      --D @Text(Section  => 'system_src.xsd:memoryType',
+      --D       New_Line => True,
+      --D       Priority => 0).
+      --D If no explicit \texttt{alignment} attribute is specified, it is set
+      --D to \texttt{16\#1000\#} by the expander.
+      --D If no explicit \texttt{type} attribute is specified, it is set
+      --D to \texttt{subject} by the expander.
+
+      Default_Align : constant String := "16#1000#";
+      Default_Type  : constant String := "subject";
+
       Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -297,7 +307,7 @@ is
                DOM.Core.Elements.Set_Attribute
                  (Elem  => Mem,
                   Name  => "alignment",
-                  Value => Align);
+                  Value => Default_Align);
             end if;
 
             if DOM.Core.Elements.Get_Attribute
@@ -307,7 +317,7 @@ is
                DOM.Core.Elements.Set_Attribute
                  (Elem  => Mem,
                   Name  => "type",
-                  Value => "subject");
+                  Value => Default_Type);
             end if;
          end;
       end loop;

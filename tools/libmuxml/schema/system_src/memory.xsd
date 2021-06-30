@@ -2,35 +2,210 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:complexType name="memoryType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{memoryType} specifies a physical memory region by name, size and
+    caching.
+
+    If no explicit physical address is specified for the region, the
+    \texttt{mucfgalloc} tool will allocate a free one in usable memory, honoring
+    the optional \texttt{alignment} attribute.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="physicalMemBaseType">
-    <xs:attribute name="type"            type="subjectMemoryKindType" use="optional"/>
-    <xs:attribute name="alignment"       type="alignmentType"         use="optional"/>
-    <xs:attribute name="physicalAddress" type="word64Type"            use="optional"/>
+    <xs:attribute name="type" type="subjectMemoryKindType" use="optional">
+     <xs:annotation>
+      <xs:documentation>
+       Optional subject memory type.
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="alignment" type="alignmentType" use="optional">
+     <xs:annotation>
+      <xs:documentation>
+       Alignment the physical address of the memory region must honor (checked
+       by the validator tool).
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="physicalAddress" type="word64Type" use="optional">
+     <xs:annotation>
+      <xs:documentation>
+       Physical address of memory region.
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>
 
  <xs:complexType name="memoryBlockType">
+  <xs:annotation>
+   <xs:documentation>
+    Consecutive block of memory provided by the hardware.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="memoryBlockBaseType">
-    <xs:attribute name="allocatable" type="booleanType" use="optional"/>
+    <xs:attribute name="allocatable" type="booleanType" use="optional">
+     <xs:annotation>
+      <xs:documentation>
+       Indication to a physical memory allocator that this block allows
+       allocation of physical memory regions. If this attribute is false, an
+       allocator should only place fixed memory regions in this range, i.e.
+       memory regions with the \texttt{physicalAddress} attribute set by the
+       integrator.
+
+       Note that host physical memory below 1 MiB is considered special, the
+       attribute must be set to false. Only unmapped memory of type
+       \emph{system} is allowed in that special memory block.
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>
 
  <xs:complexType name="reservedMemRegionType">
+  <xs:annotation>
+   <xs:documentation>
+    A \texttt{reservedMemory} element is a special memory block declaration. It
+    specifies a reserved memory region as outlined in the Intel VT-d
+    Specification, "8.4 Reserved Memory Region Reporting Structure" (RMRR).
+
+    Reserved memory regions are BIOS allocated memory ranges that may be DMA
+    targets for certain legacy device use-cases. Devices that require access to
+    such a region refer to it by name.
+
+    See line \ref{lst:af-lineref-rmrr-block} in listing \ref{lst:annotated-policy}
+    for an example RMRR element.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="memoryBlockBaseType"/>
   </xs:complexContent>
  </xs:complexType>
 
  <xs:complexType name="fileContentType">
-  <xs:attribute name="filename" type="xs:string"          use="required"/>
-  <xs:attribute name="offset"   type="optionalOffsetType" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{file} child element designates a file-backed memory region.
+
+    The \texttt{filename} attribute specifies the name of the file to use as
+    content for the physical memory region, the \texttt{offset} attribute is
+    \texttt{none} by default but can be customized to include a partial file.
+
+    See line \ref{lst:af-lineref-memory-file} in listing
+    \ref{lst:annotated-policy} for a file-backed memory region example.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="filename" type="xs:string" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Filename of file to (partially) include. Note that the actual file
+     processed by the toolchain also depends on the working directory passed as
+     command line option to the specific tool.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="offset" type="optionalOffsetType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Read file offset in bytes.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:simpleType name="subjectMemoryKindType">
+  <xs:annotation>
+   <xs:documentation>
+    Subject memory type to categorize memory assigned to a subject. The
+    validator tool checks that a subject only maps memory regions of types
+    outlined in this section (\ref{validation-subj}).
+
+    Also used by build tools to lookup certain elements by type. For example,
+    the \texttt{mugenzp} tool looks for subject memory of type
+    \texttt{subject\_zeropage} to process all Linux zero-pages in the policy.
+
+    The following memory types are currently supported:
+
+    \begin{itemize}
+    \item \texttt{subject}~\\
+    Generic subject memory, used e.g. for RAM regions of VM subjects.  The
+    \texttt{mugenzp} tool used for Linux VMs (\ref{tools-mugenzp}) exports such
+    regions as \texttt{E820\_RAM} in the ZP E820 memory map.
+    \item \texttt{subject\_info}~\\
+    Subject info (sinfo) region provided to all subjects. The sinfo region is
+    used to query information about the execution environment. The file backing
+    of this region is created by the \texttt{mugensinfo} tool
+    (\ref{tools-mugensinfo}).
+    \item \texttt{subject\_state}~\\
+    Subject execution state. Mapped into the SK kernel executing the given
+    subject, kernels running on other CPUs have no access. Accessible by subject
+    monitors running on the same CPU if specified in the policy. Validator
+    enforces that each subject has an associated \texttt{subject\_state} region
+    and that it is mapped at the expected virtual address in the executing
+    kernel (\ref{validation-subj}).
+    \item \texttt{subject\_binary}~\\
+    Subject executable as a whole or separate subject executable regions (text,
+    rodata, data, bss, stack) with access rights (writable/executable). The
+    \texttt{mucbinsplit} tool automatically creates a component
+    \texttt{provides} section with separate binary regions and associated
+    backing files from a component binary (\ref{tools-mucbinsplit}).
+    \item \texttt{subject\_channel}~\\
+    Physical memory region used as shared channel between two subjects. The
+    expander tool transforms channels in system policy source format to memory
+    regions with this type in system policy format A/B, as described in section
+    \ref{system_src.xsd:channelsType}.
+    \item \texttt{subject\_crash\_audit}~\\
+    Memory region used by crash audit facility to store system crash information
+    into slots, see \cite{muen:kernel-spec}. This information is preserved after
+    a crash by performing a system warm start. Validators enforce that
+    \begin{itemize}
+    \item Region is present and uncached, \ref{validation-mem}
+    \item Region does not overlap with image, \ref{validation-mem}
+    \item Kernel mappings are present and correct, \ref{validation-knl}
+    \item No subject has write access to this region, \ref{validation-subj}
+    \end{itemize}
+    \item \texttt{subject\_initrd}~\\
+    Physical memory of this type designates an \emph{initial ramdisk}. This
+    memory type is mostly used by Linux VMs. If multiple initrd regions are
+    mapped into a subject, they must be adjacent (\ref{validation-subj}).
+
+    The \texttt{mugenzp} tool (\ref{tools-mugenzp}) extracts the virtual address
+    and size of a subject-mapped region of this memory type and stores the
+    values in the generated Linux zero-page (ZP) backing file.
+    \item \texttt{subject\_bios}~\\
+    Indicates to subjects that the memory region is reserved for BIOS/firmware
+    and must not be used as regular RAM.
+    \item \texttt{subject\_acpi\_*}~\\
+    Indicates to subjects that the memory region contains an ACPI table. See the
+    ACPI specification for more information about RSDP, XSDT, FADT and DSDT ACPI
+    tables. The \texttt{mugenzp} tool (\ref{tools-mugenzp}) exports such regions
+    as \texttt{E820\_ACPI} in the ZP E820 memory map.
+    \item \texttt{subject\_zeropage}~\\
+    Indicates to Linux subjects that the memory region contains a zero-page. See
+    the Linux kernel Zero Page documentation for more information.
+    \item \texttt{subject\_solo5\_boot\_info}~\\
+    Indicates to a VM running Solo5/Mirage that the memory region contains a
+    boot info structure. The file-backing of such a region may be created using
+    the \texttt{mugensolo5} tool (\ref{tools-mugensolo5}).
+    \item \texttt{subject\_device}~\\
+    Designates a memory region which is allowed to be added to a subject and a
+    device domain. The difference to the \texttt{subject} memory type is that
+    the region is not exported as \texttt{E820\_RAM} but \texttt{E820\_RESERVED}
+    to Linux subjects. Therefore, such a region is useful to implement custom
+    drivers without interference from Linux DMA zone handling.
+    \item \texttt{subject\_timed\_event}~\\
+    Region designates a subject timed event page, as described in
+    \cite{muen:component-spec}. The expander tool creates a physical memory
+    region for each subject and maps it into the associated subject and the SK
+    kernel executing this subject.
+    \end{itemize}
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="memoryKindType">
    <xs:enumeration value="subject"/>
    <xs:enumeration value="subject_info"/>

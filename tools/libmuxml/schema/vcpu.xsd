@@ -2,6 +2,11 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:simpleType name="bitValueType">
+  <xs:annotation>
+   <xs:documentation>
+    The value of one bit, either 1 (True) 0 (False).
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="xs:nonNegativeInteger">
    <xs:minInclusive value="0"/>
    <xs:maxInclusive value="1"/>
@@ -9,6 +14,11 @@
  </xs:simpleType>
 
  <xs:simpleType name="msrModeType">
+  <xs:annotation>
+   <xs:documentation>
+    MSR access rights.
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="xs:string">
    <xs:enumeration value="r"/>
    <xs:enumeration value="w"/>
@@ -17,28 +27,106 @@
  </xs:simpleType>
 
  <xs:simpleType name="msrAddressType">
+  <xs:annotation>
+   <xs:documentation>
+    Start/end address value for MSRs in the low or high range:
+    \begin{itemize}
+    \item Low  : \texttt{16\#0000\_0000\# .. 16\#0000\_1fff\#}
+    \item High : \texttt{16\#C000\_0000\# .. 16\#C000\_1fff\#}
+    \end{itemize}
+
+    See also Intel SDM Vol. 3C, "24.6.9 MSR-Bitmap Address".
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="xs:string">
    <xs:pattern value="16#([cC0]000_)?[01]([0-9a-fA-F]{3})#"/>
   </xs:restriction>
  </xs:simpleType>
 
  <xs:complexType name="msrType">
-  <xs:attribute name="start" type="msrAddressType" use="required"/>
-  <xs:attribute name="end"   type="msrAddressType" use="required"/>
-  <xs:attribute name="mode"  type="msrModeType"    use="required"/>
- </xs:complexType>
+  <xs:annotation>
+   <xs:documentation>
+    An \texttt{msr} element allows a subject direct access to the specified
+    model-specific register (MSR).
+
+    \begin{warning}
+    Deviating from the settings provided by the component vCPU profile might
+    result in unexpected system behavior. A system integrator granting direct
+    access to MSRs must be aware of the potential side-effects.
+    \end{warning}
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="start" type="msrAddressType" use="required">
+  <xs:annotation>
+   <xs:documentation>
+    MSR start address.
+   </xs:documentation>
+  </xs:annotation>
+ </xs:attribute>
+ <xs:attribute name="end" type="msrAddressType" use="required">
+  <xs:annotation>
+   <xs:documentation>
+    MSR end address.
+   </xs:documentation>
+  </xs:annotation>
+ </xs:attribute>
+ <xs:attribute name="mode" type="msrModeType" use="required">
+  <xs:annotation>
+   <xs:documentation>
+    MSR access permissions.
+   </xs:documentation>
+  </xs:annotation>
+ </xs:attribute>
+</xs:complexType>
 
  <xs:complexType name="msrsType">
+  <xs:annotation>
+   <xs:documentation>
+    List of model-specific registers (MSRs) a subject is allowed to access. The
+    settings in this section are translated to the MSR bitmaps of the associated
+    subject (as described by Intel SDM Vol.  3C, "24.6.9 MSR-Bitmap Address").
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="msr" type="msrType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
  </xs:complexType>
 
  <xs:complexType name="segmentType">
-  <xs:attribute name="selector" type="word16Type" use="required"/>
-  <xs:attribute name="base"     type="word64Type" use="required"/>
-  <xs:attribute name="limit"    type="word32Type" use="required"/>
-  <xs:attribute name="access"   type="word32Type" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    Initial value of a segment register, including hidden part. See Intel SDM
+    Vol. 3A, "3.4.3 Segment Registers" for more details on segment registers.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="selector" type="word16Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Segment selector value.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="base" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Segment base address.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="limit" type="word32Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Segment limit.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="access" type="word32Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Segment access information.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
 </xs:schema>

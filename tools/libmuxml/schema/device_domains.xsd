@@ -2,12 +2,35 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:complexType name="deviceDomainsType">
+  <xs:annotation>
+   <xs:documentation>
+    The physical memory accessible by PCI devices is specified by so called
+    device domains. Such domains define memory mappings of physical memory
+    regions for one or multiple devices. Device references select a subset of
+    hardware devices provided by the hardware/platform. Devices may be
+    referenced by device name, alias or device class.
+
+    Device references can optionally set the \texttt{mapReservedMemory}
+    attribute so RMRR regions referenced by the device are also mapped into
+    the device domain.
+
+    Device domains are isolated from each other by the use of Intel VT-d.
+
+    See line \ref{lst:af-lineref-devdom} in listing \ref{lst:annotated-policy}
+    for a device domain example.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="domain" type="deviceDomainType" minOccurs="0" maxOccurs="255"/>
   </xs:sequence>
  </xs:complexType>
 
  <xs:complexType name="devsRefType">
+  <xs:annotation>
+   <xs:documentation>
+    Device domain device references.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="device" type="devRefType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>

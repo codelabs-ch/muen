@@ -20,30 +20,43 @@ with Muxml;
 
 package Mucfgcheck.Scheduling
 is
+   --D @Section Id => validation-sched, Label => Scheduling, Parent => validation
+   --D @Text Section => validation-sched
+   --D The following checks are performed to verify the correctness of the
+   --D scheduling configuration in the system policy.
+   --D @UL Id => validators_sched, Section => validation-sched
 
-   --  Validate that each major frame specifies the same number of CPUs.
+   --D @Item List => validators_sched
+   --D Validate that each major frame specifies the same number of CPUs.
    procedure CPU_Element_Count (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate subject references.
+   --D @Item List => validators_sched
+   --D Validate subject references.
    procedure Subject_References (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that subjects are scheduled on the correct logical CPU.
+   --D @Item List => validators_sched
+   --D Validate that subjects are scheduled on the correct logical CPU.
    procedure Subject_CPU_Affinity (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate tick counts in major frame.
+   --D @Item List => validators_sched
+   --D Validate tick counts in major frame.
    procedure Major_Frame_Ticks (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that barrier IDs do not exceed barrier count and are unique.
+   --D @Item List => validators_sched
+   --D Validate that barrier IDs do not exceed barrier count and are unique.
    procedure Barrier_ID (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that barrier sizes do not exceed the number of logical CPUs.
+   --D @Item List => validators_sched
+   --D Validate that barrier sizes do not exceed the number of logical CPUs.
    procedure Barrier_Size (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that the barrier sizes and count of a major frame corresponds
-   --  to the minor frame synchronization points.
+   --D @Item List => validators_sched
+   --D Validate that the barrier sizes and count of a major frame corresponds
+   --D to the minor frame synchronization points.
    procedure Minor_Frame_Sync_Points (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that minor frame barrier references are valid.
+   --D @Item List => validators_sched
+   --D Validate that minor frame barrier references are valid.
    procedure Minor_Frame_Barrier_Refs (XML_Data : Muxml.XML_Data_Type);
 
 end Mucfgcheck.Scheduling;

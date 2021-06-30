@@ -3,9 +3,7 @@
 
  <xsl:param name="format"/>
 
- <xsl:output method="xml" indent="yes"/>
-
- <xsl:strip-space elements="*"/>
+ <xsl:output method="xml"/>
 
  <xsl:template match="/">
   <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">

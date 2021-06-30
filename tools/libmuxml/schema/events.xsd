@@ -2,24 +2,96 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:complexType name="eventsType">
+  <xs:annotation>
+   <xs:documentation>
+    Events are an activity caused by a subject (source) that impacts a second
+    subject (target) or is directed at the kernel. Events are declared globally
+    and have a unique name to be unambiguous. An event must have a single source
+    and one target.
+
+    Subjects can use events to either deliver an interrupt, hand over execution to
+    or reset the state of a target subject. The first kind of event provides a
+    basic notification mechanism and enables the implementation of event-driven
+    services. The second type facilitates suspension of execution of the source
+    subject and switching to the target. Such a construct is used to pass the
+    thread of execution on to a different subject, e.g. invocation of a debugger
+    subject if an error occurs in the source subject. The third kind is used to
+    faciliate the restart of subjects.
+
+    An event can also have the same source and target, which is called
+    \emph{self} event. Such events are useful to implement para-virtualized
+    timers in VM subjects for example.
+
+    Kernel events are special in that they are targeted at the kernel. The
+    currently supported events are system reboot and shutdown.
+
+    For documentation about linking physical events to source and target
+    subjects, see section \ref{system_src.xsd:subjectEventsType}.
+
+    See line \ref{lst:af-lineref-events} in listing \ref{lst:annotated-policy}
+    for an example events section.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="event" type="eventType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
  </xs:complexType>
 
  <xs:complexType name="eventSourceType">
+  <xs:annotation>
+   <xs:documentation>
+    The event \texttt{source} element specifies events that are allowed to be
+    triggered by the associated subject.
+
+    Source events are divided into two groups: \texttt{vmx\_exit} and
+    \texttt{vmcall}.  For event group \texttt{vmx\_exit} the id attribute
+    specifies the trap number while in the \texttt{vmcall} group it designates
+    the hypercall number.
+
+    The \texttt{vmx\_exit} group is translated to a lookup table for handling
+    VMX exit traps as defined by Intel SDM Vol. 3D, "Appendix C VMX Basic Exit
+    Reasons".  The \texttt{vmcall} group on the other hand is translated into a
+    lookup table to handle hypercalls.
+
+    See line \ref{lst:af-lineref-subj-events-source} in listing
+    \ref{lst:annotated-policy} for an example event source section.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="group" type="eventGroupType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>
  </xs:complexType>
 
  <xs:complexType name="eventTargetType">
+  <xs:annotation>
+   <xs:documentation>
+    The event \texttt{target} element specifies events that the subject is an
+    \emph{endpoint} of.
+
+    See line \ref{lst:af-lineref-subj-events-target} in listing
+    \ref{lst:annotated-policy} for an example event target section.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="event" type="targetEventEntryType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>
  </xs:complexType>
 
  <xs:complexType name="sourceEventEntryType">
+  <xs:annotation>
+   <xs:documentation>
+    A source \texttt{event} entry specifies a source event node, i.e. it
+    registers a handler for the given event \texttt{id}. These IDs, depending on
+    the event group, are either hypercall numbers or VMX basic exit reasons.
+
+    It is possible to assign event actions to event source entries. Currently
+    supported source event actions are \texttt{system\_reboot} and
+    \texttt{system\_poweroff}, which both have the kernel itself as endpoint.
+
+    See line \ref{lst:af-lineref-events-source-entry} in listing
+    \ref{lst:annotated-policy} for a source event entry example.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="baseEventWithIDType">
     <xs:group ref="sourceEventActionsGroup" minOccurs="0" maxOccurs="1"/>
@@ -28,19 +100,47 @@
  </xs:complexType>
 
  <xs:complexType name="baseEventType">
-  <xs:attribute name="logical"  type="nameType" use="required"/>
-  <xs:attribute name="physical" type="nameType" use="required"/>
+  <xs:attribute name="logical"  type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Logical event name.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="physical" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Physical event name.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="baseEventWithIDType">
+  <xs:annotation>
+   <xs:documentation>
+    Base event with ID.
+   </xs:documentation>
+  </xs:annotation>
   <xs:complexContent>
    <xs:extension base="baseEventType">
-    <xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
+    <xs:attribute name="id" type="xs:nonNegativeInteger" use="required">
+     <xs:annotation>
+      <xs:documentation>
+       ID of event.
+      </xs:documentation>
+     </xs:annotation>
+    </xs:attribute>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>
 
  <xs:simpleType name="eventGroupNameType">
+  <xs:annotation>
+   <xs:documentation>
+    Supported event groups.
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="xs:string">
    <xs:enumeration value="vmx_exit"/>
    <xs:enumeration value="vmcall"/>
@@ -48,19 +148,93 @@
  </xs:simpleType>
 
  <xs:complexType name="eventType">
-  <xs:attribute name="name" type="nameType"      use="required"/>
-  <xs:attribute name="mode" type="eventModeType" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{eventType} specifies an event by name and mode.
+
+    The following event modes are currently supported:
+    \begin{itemize}
+    \item \texttt{asap}~\\
+    The asap event is an abstraction to state that the event should be delivered
+    as soon as possible, depending on the CPU of the target subject. If the
+    target runs on another CPU core, this mode is expanded to mode \emph{ipi},
+    which is only available in policy formats A and B, instructing the kernel to
+    preempt the kernel running the target subject and inject the event
+    immediately. If the target subject runs on the same core as the source
+    subject, the mode is expanded to mode \emph{async}.
+    \item \texttt{async}~\\
+    Async events trigger no preemption at the target subject. The event is
+    marked as pending in the target subject's pending event table and inserted
+    on the next VM exit/entry cycle of the target subject.
+    \item \texttt{self}~\\
+    An event can also have the same source and target, which is called a self
+    event. Such events are useful to implement para-virtualized timers in VM
+    subjects for example. A subject sends itself a delayed event, using the
+    timed event mechanism. Note that a self event must always have a target
+    action assigned, which is checked by the validator.
+    \item \texttt{switch}~\\
+    The switch mode facilitates suspension of execution of the source subject
+    and switching to the target. This can only happen between subjects running
+    on the same core. Such a construct is used to pass the thread of execution
+    on to a different subject, e.g. invocation of a debugger subject if an error
+    occurs in the source subject.
+    \item \texttt{kernel}~\\
+    These kinds of events are directed at the kernel an thus only specify a
+    source since the target is the kernel. They are used to enable specific
+    subjects to unmask level-triggered IRQs and trigger a system reboot,
+    poweroff or explicit panic (crash audit slot allocation and reboot).
+    \end{itemize}
+
+    See line \ref{lst:af-lineref-events-entry} in listing
+    \ref{lst:annotated-policy} for an example global event declaration.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="name" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of the event.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="mode" type="eventModeType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Mode of the event.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="eventActionInjectInterruptType">
-  <xs:attribute name="vector" type="vectorType" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    Instructs the SK to inject a guest interrupt with given vector on event
+    occurrence.
+
+    See line \ref{lst:af-lineref-events-injintr} in listing
+    \ref{lst:annotated-policy} for an example declaration.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="vector" type="vectorType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Vector to inject on event occurrence.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="eventActionUnmaskIrqType">
   <xs:attribute name="number" type="irqNumberType" use="required"/>
  </xs:complexType>
 
- <xs:complexType name="eventActionNoParamType"/>
+ <xs:complexType name="eventActionNoParamType">
+  <xs:annotation>
+   <xs:documentation>
+    Source/target event action without parameters.
+   </xs:documentation>
+  </xs:annotation>
+ </xs:complexType>
 
  <xs:group name="sourceEventActionsGroup">
   <xs:choice>

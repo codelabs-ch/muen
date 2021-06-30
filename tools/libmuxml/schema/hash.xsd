@@ -2,21 +2,64 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:simpleType name="hash256DigestType">
+  <xs:annotation>
+   <xs:documentation>
+    256-Bits (32 octets) hash digest in hexadecimal (Ada notation).
+   </xs:documentation>
+  </xs:annotation>
   <xs:restriction base="xs:string">
    <xs:pattern value="16#[0-9a-fA-F]{64}#"/>
   </xs:restriction>
  </xs:simpleType>
 
  <xs:simpleType name="optionalHashType">
+  <xs:annotation>
+   <xs:documentation>
+    Allows the specification of a hash digest or \texttt{none}.
+   </xs:documentation>
+  </xs:annotation>
   <xs:union memberTypes="hash256DigestType noneType"/>
  </xs:simpleType>
 
  <xs:complexType name="hash256Type">
-  <xs:attribute name="value" type="optionalHashType" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{hash} child element of a memory region designates a 256-bit hash
+    over the memory content.
+
+    The Mucfgmemhashes tool in the Muen toolchain generates such a hash-sum for
+    every content-backed memory region in a given policy.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="value" type="optionalHashType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     256-Bits message digest over file-backed memory content.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="hashRefType">
-  <xs:attribute name="memory" type="nameType" use="required"/>
+  <xs:annotation>
+   <xs:documentation>
+    The optional \texttt{hashRef} child element of a physical memory region
+    instructs the Mucfgmemhashes tool to copy the hash element of the referenced
+    memory region after message digest generation.
+
+    From an abstract point of view, the \texttt{hashRef} element is a way to
+    link multiple memory regions by declaring that the hash of the content is
+    the same. This concept is e.g. used by the subject loader mechanism to
+    restore writable memory regions to their initial state.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="memory" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of referenced physical memory region.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
 </xs:schema>

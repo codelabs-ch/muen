@@ -20,15 +20,24 @@ with Muxml;
 
 package Mucfgcheck.MSR
 is
+   --D @Section Id => validation-msr, Label => Model Specific Registers (MSR), Parent => validation
+   --D @Text Section => validation-msr
+   --D The following checks are performed to verify Model Specific Register
+   --D (MSR) specifications in the system policy.
+   --D @UL Id => validators_msr, Section => validation-msr
 
-   --  Validate that all MSR start addresses are smaller than end addresses.
+   --D @Item List => validators_msr
+   --D Validate that all MSR start addresses are smaller than end addresses.
    procedure Start_Smaller_End (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that subject MSRs are in the allowed list:
-   --  - IA32_SYSENTER_CS/ESP/EIP
-   --  - IA32_DEBUGCTL
-   --  - IA32_EFER/STAR/LSTAR/CSTAR/FMASK
-   --  - IA32_FS_BASE/GS_BASE/KERNEL_GS_BASE
+   --D @Item List => validators_msr
+   --D Validate that subject MSRs are in the allowed list:
+   --D \begin{itemize}
+   --D \item \texttt{IA32\_SYSENTER\_CS/ESP/EIP}
+   --D \item \texttt{IA32\_DEBUGCTL}
+   --D \item \texttt{IA32\_EFER/STAR/LSTAR/CSTAR/FMASK}
+   --D \item \texttt{IA32\_FS\_BASE/GS\_BASE/KERNEL\_GS\_BASE}
+   --D \end{itemize}
    procedure Check_Whitelist (XML_Data : Muxml.XML_Data_Type);
 
 end Mucfgcheck.MSR;

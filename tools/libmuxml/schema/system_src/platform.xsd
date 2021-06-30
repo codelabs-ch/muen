@@ -2,6 +2,18 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
  <xs:complexType name="platformType">
+  <xs:annotation>
+   <xs:documentation>
+    To enable an uniform view of the hardware resources across different
+    physical machines from the system integrators perspective, the platform
+    description layer is interposed between the hardware resource description
+    and the rest of the system policy. This allows to build a Muen system for
+    different physical target machines using the same system policy.
+
+    See line \ref{lst:af-lineref-platform} in listing \ref{lst:annotated-policy}
+    for an example platform section.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="config"            type="configType"     minOccurs="0" maxOccurs="1"/>
    <xs:element name="mappings"          type="mappingsType"   minOccurs="0" maxOccurs="1"/>
@@ -10,6 +22,15 @@
  </xs:complexType>
 
  <xs:complexType name="mappingsType">
+  <xs:annotation>
+   <xs:documentation>
+    Platform device alias and class mappings section. Used to assign a stable
+    name to a hardware device or to group (multiple) devices under a given name.
+
+    See line \ref{lst:af-lineref-platform-mappings} in listing
+    \ref{lst:annotated-policy} for an example platform mappings section.
+   </xs:documentation>
+  </xs:annotation>
   <xs:sequence>
    <xs:element name="aliases" type="aliasesType"    minOccurs="0" maxOccurs="1"/>
    <xs:element name="classes" type="devClassesType" minOccurs="0" maxOccurs="1"/>

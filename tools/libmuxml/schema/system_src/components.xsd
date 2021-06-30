@@ -169,30 +169,6 @@
   </xs:sequence>
  </xs:complexType>
 
- <xs:complexType name="binaryType">
-  <xs:attribute name="filename" type="xs:string" use="required">
-   <xs:annotation>
-    <xs:documentation>
-     Binary filename.
-    </xs:documentation>
-   </xs:annotation>
-  </xs:attribute>
-  <xs:attribute name="size" type="memorySizeType" use="required">
-   <xs:annotation>
-    <xs:documentation>
-     Binary size.
-    </xs:documentation>
-   </xs:annotation>
-  </xs:attribute>
-  <xs:attribute name="virtualAddress" type="word64Type" use="required">
-   <xs:annotation>
-    <xs:documentation>
-     Virtual base address of binary in component address space.
-    </xs:documentation>
-   </xs:annotation>
-  </xs:attribute>
- </xs:complexType>
-
  <xs:complexType name="providedMemType">
   <xs:annotation>
    <xs:documentation>

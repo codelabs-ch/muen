@@ -620,6 +620,9 @@ __iommu_x_types_repr__
    pragma Warnings (On, "*-bit gap before component *");
    pragma Warnings (On, "memory layout out of order");
 
+   --D @Interface
+   --D Definition of VT-d IOMMU layout for all programmable IOMMU(s) of the
+   --D system.
    type IOMMUs_Type is record
 __iommu_record_fields__
    end record

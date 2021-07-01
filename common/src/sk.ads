@@ -99,8 +99,16 @@ is
    with
       Size => (XSAVE_Area_Size - XSAVE_Legacy_Header_Size) * 8;
 
+   --D @Interface
+   --D XSAVE area used to save the FPU state. see Intel SDM Vol. 1,
+   --D "13.4 XSAVE Area".
    type XSAVE_Area_Type is record
+      --D @Interface
+      --D Legacy region of the XSAVE area excluding the SSE register state.
       Legacy_Header   : XSAVE_Legacy_Header_Type;
+      --D @Interface
+      --D Extended region of XSAVE area including XSAVE header as well as SSE
+      --D register state.
       Extended_Region : XSAVE_Extended_Region_Type;
    end record
    with

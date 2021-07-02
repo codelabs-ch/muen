@@ -49,7 +49,6 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:text>&#10;</xsl:text>
 		<xsl:call-template name="configString">
 			<xsl:with-param name="name" select="'logchannel_size'"/>
 			<xsl:with-param name="value" select="$logChannelSize"/>

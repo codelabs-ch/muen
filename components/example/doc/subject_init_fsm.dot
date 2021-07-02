@@ -1,0 +1,27 @@
+digraph subject_init_fsm {
+	node [shape = doublecircle]; Initial;
+	node [shape = point ]; Start
+
+	node [shape = circle];
+	Start        -> Initial;
+	Initial      -> Synced       [ label = "SYNC" ];
+	Synced       -> Erasing      [ label = "ERASE" ];
+	Erasing      -> Erased;
+	Erased       -> Preparing    [ label = "PREPARE" ];
+	Synced       -> Preparing    [ label = "PREPARE" ];
+	Preparing    -> Prepared;
+	Prepared     -> Validating   [ label = "VALIDATE" ];
+	Validating   -> Validated;
+	Validated    -> Initializing [ label = "RUN"];
+	Initializing -> Running;
+	Running      -> Finished;
+	Erasing      -> Error;
+	Preparing    -> Error;
+	Validating   -> Error;
+	Running      -> Error;
+	Finished     -> Error;
+	Error        -> Reset;
+	Running      -> Reset;
+	Finished     -> Reset;
+	Reset        -> Initial;
+}

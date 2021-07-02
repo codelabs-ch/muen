@@ -44,8 +44,13 @@ is
      with
        Size => Padding_Bits;
 
+   --D @Interface
    type Timed_Event_Interface_Type is record
+      --D @Interface
+      --D TSC value when to trigger the event.
       TSC_Trigger_Value : Interfaces.Unsigned_64;
+      --D @Interface
+      --D Number of event to trigger.
       Event_Nr          : Unsigned_6;
       Padding           : Padding_Type;
    end record

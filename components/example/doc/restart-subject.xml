@@ -1,0 +1,18 @@
+<subject name="foobar">
+ ...
+ <events>
+  <target>
+   <event id="63" logical="reset" physical="reset_foobar">
+    <reset/>
+   </event>
+   ...
+  </target>
+ </events>
+ <monitor>
+  <loader subject="foobar" logical="reload" virtualAddress="16#0000#"/>
+ </monitor>
+ <component ref="foo">
+  <map logical="control" physical="control_foobar"/>
+  <map logical="status" physical="status_foobar"/>
+ </component>
+</subject>

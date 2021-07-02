@@ -74,6 +74,13 @@ private
      (GNATprove, Off,
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "Instance is exclusively mapped to external interface.");
+   --D @Interface
+   --D The command page is written by a control subject and read by any subject
+   --D that includes the initialization and reset functionality. Aside from the
+   --D current command, the current epoch value and the watchdog timer interval
+   --D are reported. Subjects should read these fields only after
+   --D synchronization with the controller subject or if Command is read as
+   --D \texttt{CMD\_SELF\_CTRL}.
    Command_Page : Command_Interface_Type
    with
       Import,

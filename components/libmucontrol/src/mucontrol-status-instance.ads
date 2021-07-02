@@ -97,6 +97,26 @@ private
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
+   --D @Interface
+   --D The status page is written by a subject that includes the initialization
+   --D and reset functionality and read by the control subject. It is used to
+   --D report the current state of the initialization/reset process. Subjects
+   --D may use unreserved state numbers to indicate custom runtime information.
+   --D As an example: a subject may set state to \verb!16#1000#! after some
+   --D information has been written to a shared memory region to indicate
+   --D availability of said information.
+   --D
+   --D An error is designated by the most significant bit of State. If it is
+   --D set, then an error condition is present. By or\-ing
+   --D \verb!STATE_ERROR!, the current state value is preserved, which can be
+   --D helpful for debugging purposes since it directly designates the failure
+   --D state.
+   --D
+   --D The watchdog field is used to report liveliness of the subject by writing
+   --D a new timestamp value within the WD interval specified on the command
+   --D page.
+   --D The diagnostics field can be used to report additional debug information,
+   --D e.g. when transitioning to an error state.
    Status_Page : Status_Interface_Type
    with
       Import,

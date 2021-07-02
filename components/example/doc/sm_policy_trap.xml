@@ -1,0 +1,9 @@
+<events>
+ <source>
+  <group name="vmx_exit">
+   ...
+   <event id="10" logical="cpuid" physical="trap_to_sm_1"/>
+   ...
+  </group>
+ </source>
+</events>

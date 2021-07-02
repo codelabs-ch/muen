@@ -23,6 +23,10 @@ is
 
    -------------------------------------------------------------------------
 
+   --D @Text Section => interfaces_hypercall, Priority => 20
+   --D Internally, the \texttt{vmcall} instruction with the event number in
+   --D register RAX is used on the x86\_64 architecture to initiate a
+   --D hypercall into the kernel.
    procedure Trigger_Event (Number : SK.Byte)
    with
       SPARK_Mode => Off

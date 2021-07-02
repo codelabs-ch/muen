@@ -37,6 +37,8 @@ is
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
+   --D @Interface
+   --D Example response channel. Used to illustrate a service component.
    Response : Foo.Message_Type
      with
        Volatile,

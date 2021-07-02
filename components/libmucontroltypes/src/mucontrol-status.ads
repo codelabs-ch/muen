@@ -75,10 +75,21 @@ is
      (Padding_Start_Byte .. Page_Size - 1) of Interfaces.Unsigned_8
      with Size => Padding_Size;
 
+   --D @Interface
    type Status_Interface_Type is record
+      --D @Interface
+      --D Current state reported by the subject.
       State       : State_Type with Atomic;
+      --D @Interface
+      --D Current watchdog timestamp reported by the subject.
       Watchdog    : Interfaces.Unsigned_64;
+      --D @Interface
+      --D Current diagnostics value reported by the subject. Its meaning depends
+      --D on the current state.
       Diagnostics : Diagnostics_Type;
+      --D @Interface
+      --D Padding of the status interface to the full memory page so every bit
+      --D of memory is captured by this type.
       Reserved    : Padding_Type;
    end record
      with

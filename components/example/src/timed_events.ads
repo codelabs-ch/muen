@@ -30,6 +30,12 @@ is
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
+   --D @Interface
+   --D Timed events allow a subject to trigger a policy defined event at a given
+   --D CPU tick count.
+   --D
+   --D This is useful to implement synthetic timers using the event injection
+   --D mechanism of the kernel, among other things.
    Timed_Evt : Mutimedevents.Timed_Event_Interface_Type
      with
        Import,

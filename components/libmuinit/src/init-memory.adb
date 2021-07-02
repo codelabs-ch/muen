@@ -101,6 +101,12 @@ is
    begin
       Process_Memregions :
       while Musinfo.Instance.Has_Element (Iter => Iter) loop
+         --D @Item List => subject-lifecycle-operation-init-steps, Priority => 25
+         --D For every writable memory region except for the stack, the status
+         --D interface, mapped subject states and timed event regions, erase
+         --D their content by filling the entire region with zeros.
+         --D The Sinfo index of the region currently being processed is set as
+         --D diagnostics value.
          Status.Set_Diagnostics
            (Value => Mucontrol.Status.Diagnostics_Type
               (Musinfo.Utils.Index (Iter => Iter)));

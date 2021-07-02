@@ -164,6 +164,17 @@ private
    Subject_Info_Size         : constant := 16#8000#;
 
    pragma Warnings (Off);  --  Only emitted by recent GNATprove versions.
+   --D @Interface
+   --D A subject information record provides means to retrieve information
+   --D about the execution environment.
+   --D
+   --D Subject resources are exported as variant records, which are all
+   --D explicitly padded in order to guarantee an exact layout and proper
+   --D initialization of unused space in smaller variants. The padding size of
+   --D each variant is determined by the size of the largest variant.
+   --D
+   --D See the \texttt{musinfo.ads} SPARK/Ada specification file for the exact
+   --D layout of each record variant.
    Object : Subject_Info_Type
    with
       Import,
@@ -179,6 +190,11 @@ private
      (GNATprove, Off,
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "This global variable is effectively read-only.");
+
+   --D @Interface
+   --D The Subject Scheduling Information (schedinfo) mechanism exports coarse
+   --D grained scheduling information to subjects. More specifically, the start
+   --D and end ticks of the current minor frame are exported.
    Sched_Info : Muschedinfo.Scheduling_Info_Type
    with
       Import,

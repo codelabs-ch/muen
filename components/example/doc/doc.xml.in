@@ -61,7 +61,7 @@
 
   \usepackage[T1]{fontenc}
   \usepackage{courier}
-  \newcommand{\tablefont} {\fontfamily{pcr}\fontsize{8pt}{9pt}\selectfont}
+  \newcommand{\tablefont} {\fontfamily{pcr}\fontsize{7pt}{8pt}\selectfont}
   \let\oldlongtable\longtable
   \let\endoldlongtable\endlongtable
   \renewenvironment{longtable}{%

@@ -67,7 +67,7 @@ is
       Commands.Wait_For_Sync (Success => Success);
       if Success then
          --D @Item List => subject-lifecycle-operation-init-steps, Priority => 15
-         --D On Success, set status to \verb!STATE_SYNCED! and wait for the
+         --D On Success, set status to \verb!STATE_SYNCED! and wait for either the
          --D \emph{Erase} or \emph{Prepare} command.
          Status.Set (New_State => Mucontrol.Status.STATE_SYNCED);
          Commands.Wait_For_Erase_Or_Prepare (Success => Success,
@@ -81,7 +81,7 @@ is
 
                --D @Item List => subject-lifecycle-operation-init-steps, Priority => 25
                --D Erase all writable memory regions by clearing them with
-               --D zeros. Then, set status to \verb!STATE_ERASED! and wait for
+               --D zeros. Then, set the status to \verb!STATE_ERASED! and wait for
                --D the \emph{Prepare} command.
                Memory.Clear_Writable;
                Status.Set (New_State => Mucontrol.Status.STATE_ERASED);
@@ -154,7 +154,7 @@ is
                else
                   --D @Item List => subject-lifecycle-operation-init-steps, Priority => 40
                   --D On Success, set status to \verb!STATE_INITIALIZING!.
-                  --D The state final transition to \verb!STATE_RUNNING! is done
+                  --D The final transition to \verb!STATE_RUNNING! state is done
                   --D just prior to jumping to the code of the component that
                   --D has just been initialized/reset.
                   Status.Set

@@ -430,13 +430,13 @@ is
       --D Subject name
       Name           : Name_Type;
       --D @Interface
-      --D Number of active sinfo records
+      --D Number of active resource records
       Resource_Count : Interfaces.Unsigned_16;
       --D @Interface
       --D 8-bit padding
       Padding        : Interfaces.Unsigned_8;
       --D @Interface
-      --D Array of sinfo records.
+      --D Array of resource records.
       Resources      : Resource_Array;
    end record
      with

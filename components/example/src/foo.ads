@@ -32,7 +32,7 @@ is
    Null_Data : constant Data_Array;
 
    --D @Interface
-   --D Example type used to transfer data in a shared memory region.
+   --D Example type used to transfer data via a shared memory region.
    type Message_Type is record
       --D @Interface
       --D Example modular type field, designating the size of data.

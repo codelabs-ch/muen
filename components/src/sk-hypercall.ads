@@ -20,7 +20,9 @@ with X86_64;
 
 --D @Section Id => interfaces_hypercall, Label => Hypercalls, Parent => interface_section, Priority => 0
 --D @Text Section => interfaces_hypercall, Priority => 0
---D The SK.Hypercall package is used to trigger hypercalls into the Muen SK. Components are only able to trigger events which are defined in the system policy.
+--D The SK.Hypercall package is used to trigger hypercalls into the Muen SK.
+--D Components are only able to trigger events which are defined in the system
+--D policy.
 package SK.Hypercall
 is
 

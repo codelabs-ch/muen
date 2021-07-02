@@ -57,8 +57,8 @@ is
    --D @Interface
    --D Shared memory channel to the debug server (dbgserver) subject.
    --D Implemented using the writer provided by the Libmuchannel library.
-   --D Components may use Libdebuglog Debuglog.Client.Put* operations to
-   --D transfer logging information to the dbgserver for output.
+   --D Components may use Libmudebuglog Debuglog.Client.Put* operations to
+   --D transfer logging information to the dbgserver.
    Message_Channel : CT
    with
       Address => System'To_Address (Cspecs.Debuglog_Address),

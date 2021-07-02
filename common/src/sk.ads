@@ -141,7 +141,7 @@ is
    --D @Interface
    --D The Muen SK stores the subject state of each running subject into a
    --D variable of this type on VM exit. Also, subject monitors are able to
-   --D inspect the state of the monitored subject using this variable.
+   --D inspect the state of the monitored subject using this record.
    type Subject_State_Type is record
       --D @Interface
       --D CPU registers CR2, RAX, RBX, RCX, RDX, RDI, RSI, RBP, R08-R15
@@ -225,7 +225,7 @@ is
       --D Intel SDM Vol. 3C, "24.4.1 Guest Register State".
       Segment_Regs       : Segment_Registers_Type;
       --D @Interface
-      --D Guest global descriptor table register (GDDTR).
+      --D Guest global descriptor table register (GDTR).
       GDTR               : Segment_Type;
       --D @Interface
       --D Guest interrupt descriptor table register (IDTR).

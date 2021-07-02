@@ -174,7 +174,7 @@ private
    --D each variant is determined by the size of the largest variant.
    --D
    --D See the \texttt{musinfo.ads} SPARK/Ada specification file for the exact
-   --D layout of each variant record.
+   --D layout of each record variant.
    Object : Subject_Info_Type
    with
       Import,
@@ -194,8 +194,7 @@ private
    --D @Interface
    --D The Subject Scheduling Information (schedinfo) mechanism exports coarse
    --D grained scheduling information to subjects. More specifically, the start
-   --D and end ticks of the currently active scheduling minor frame are
-   --D exported.
+   --D and end ticks of the current minor frame are exported.
    Sched_Info : Muschedinfo.Scheduling_Info_Type
    with
       Import,

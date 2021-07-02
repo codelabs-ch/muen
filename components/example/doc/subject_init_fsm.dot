@@ -1,6 +1,4 @@
 digraph subject_init_fsm {
-	rankdir=LR;
-
 	node [shape = doublecircle]; Initial;
 	node [shape = point ]; Start
 

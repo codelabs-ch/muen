@@ -409,6 +409,9 @@
      \emph{current major frame ID}. The value is exclusively written by the BSP
      while it is used by all cores to determine the currently active major
      frame, see \ref{SK.Scheduler.Global_Current_Major_Frame_ID}.
+
+     Refer to \cite{muen:system-spec} for a description of $\tau$0 as well as
+     the motivation behind it.
     </text>
    </section>
    <section id="overview_interrupts" label="Interrupts" priority="0">

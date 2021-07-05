@@ -45,6 +45,12 @@
   \end{tikzfadingfrompicture}
 
   \input{tikzstyle}
+
+  \newenvironment{info}
+  {\par
+  \begin{list}{}{\leftmargin=1cm
+  \labelwidth=\leftmargin}\item[\color{blue}\Large\ding{43}]}
+  {\end{list}\par}
  </latex_preamble>
 
  <section id="introduction" label="Introduction" priority="0">

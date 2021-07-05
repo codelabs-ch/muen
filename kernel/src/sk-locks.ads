@@ -18,7 +18,8 @@
 
 --D @Interface
 --D This package implements a spinlock which can be used to synchronize access
---D to a shared resource like the kernel console for debug builds.
+--D to a shared resource like the I/O APIC or the kernel console in debug
+--D builds.
 package SK.Locks
 is
 

@@ -26,7 +26,7 @@ with SK.Interrupt_Tables;
 
 --D @Interface
 --D This package implements subprograms to enter VMX root operation as well as
---D for higher level access and management D of VMX structures such as VMCS and
+--D for higher level access and management of VMX structures such as VMCS and
 --D VMXON regions, see Intel SDM Vol. 3C, "Chapter 24 Virtual Machine Control
 --D Structures" \cite{intelsdm}.
 package SK.VMX

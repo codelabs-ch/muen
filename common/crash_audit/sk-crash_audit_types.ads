@@ -17,7 +17,7 @@
 --
 
 --D @Interface
---D This package specifies all data types an records related to the crash audit
+--D This package specifies all data types and records related to the crash audit
 --D facility.
 package SK.Crash_Audit_Types
 is

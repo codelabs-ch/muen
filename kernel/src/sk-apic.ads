@@ -23,7 +23,7 @@ with Skp;
 --D @Interface
 --D This package contains subprograms to interact with the local APIC, see Intel
 --D SDM Vol. 3A, "Chapter 10 Advanced Programmable Interrupt Controller (APIC)"
---D \cite{intelsdm}. The APIC is a per-CPU interruptD controller which is
+--D \cite{intelsdm}. The APIC is a per-CPU interrupt controller which is
 --D required for interrupt processing and sending of interprocessor Interrupts
 --D (IPIs).
 --D

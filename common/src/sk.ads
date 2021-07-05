@@ -152,6 +152,7 @@ is
    --D The Muen SK stores the subject state of each running subject into a
    --D variable of this type on VM exit. Also, subject monitors are able to
    --D inspect the state of the monitored subject using this record.
+   --D On VM entry, the subject state us restored from this data structure.
    type Subject_State_Type is record
       --D @Interface
       --D CPU registers CR2, RAX, RBX, RCX, RDX, RDI, RSI, RBP, R08-R15

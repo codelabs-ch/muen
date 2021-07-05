@@ -894,6 +894,12 @@
    </text>
   </section>
   <section id="verification_conditions_spark2014" label="SPARK 2014">
+   <text priority="0">
+    This section shows the summary of the verification results for all checks
+    performed by SPARK/GNATprove in the Muen kernel project. For a detailed
+    description of each line of the summary table please refer to the SPARK 2014
+    user guide~\footnote{\url{https://docs.adacore.com/spark2014-docs/html/ug/en/source/how_to_view_gnatprove_output.html\#the-analysis-results-summary-file}}.
+   </text>
   </section>
  </section>
 

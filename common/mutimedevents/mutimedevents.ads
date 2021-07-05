@@ -48,8 +48,8 @@ is
        Size => Padding_Bits;
 
    --D @Interface
-   --D Scheduling info records provide scheduling information to subjects at
-   --D runtime.
+   --D Timed events enable subjects to trigger events at a given time in the
+   --D future.
    type Timed_Event_Interface_Type is record
       --D @Interface
       --D CPU tick count to fire the event designated by the event number

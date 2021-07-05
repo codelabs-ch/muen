@@ -50,9 +50,9 @@ is
       & "interfaces. Non-overlap is checked during system build.");
    --D @Interface
    --D I/O Register Select Register (IOREGSEL).
-   --D This register selects the I/O APIC Register to be read/written. The data
-   --D is then read from or written to the selected register through the IOWIN
-   --D Register, see \cite{ioapic} section 3.1.1.
+   --D This memory-mapped register selects the I/O APIC Register to be
+   --D read/written. The data is then read from or written to the selected
+   --D register through the IOWIN Register, see \cite{ioapic} section 3.1.1.
    Register_Select : SK.Word32
    with
       Volatile,
@@ -63,8 +63,9 @@ is
 
    --D @Interface
    --D I/O Window Register (IOWIN).
-   --D This register is used to write to and read from the register selected by
-   --D the IOREGSEL Register, see  \cite{ioapic} section 3.1.2.
+   --D This memory-mapped register is used to write to and read from the
+   --D register selected by the IOREGSEL Register, see  \cite{ioapic} section
+   --D 3.1.2.
    Window : SK.Word32
    with
       Volatile,

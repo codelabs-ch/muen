@@ -794,6 +794,11 @@
     Enforcement that only the configured interrupts are raised is done by the
     IOMMU Interrupt Remapping functionality, see section
     \ref{kernel_devs_iommu}.
+
+    \begin{info}
+    Note that IRQs raised via the I/O APIC are \emph{also} routed through the
+    IOMMU and thus affected by interrupt remapping.
+    \end{info}
    </text>
   </section>
   <section id="kernel_devs_iommu" label="IOMMU" priority="0">

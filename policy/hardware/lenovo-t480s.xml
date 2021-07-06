@@ -1,20 +1,20 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- ==========================================
-     Generated with mugenhwcfg (commit v0.5-104-ga9b83af)
-     Linux kernel version: 4.13.0+
-     Distribution: Mugenhwcfg stick/1.0
+     Generated with mugenhwcfg (commit v0.5-117-gd63a29e)
+     Linux kernel version: 4.19.0-8-amd64
+     Distribution: Debian GNU/Linux 10 (buster)
      Product information:
        Vendor: LENOVO
-       Name: 20L8S05900
+       Name: 20L8S05A00
        Product Version: ThinkPad T480s
      Board information:
        Vendor: LENOVO
-       Name: 20L8S05900
-       Version: SDK0J40697 WIN
+       Name: 20L8S05A00
+       Version: Not Defined
      BIOS information:
        Vendor: LENOVO
-       Version: N22ET56W (1.33 )
-       Date: 07/18/2019
+       Version: N22ET68W (1.45 )
+       Date: 05/06/2021
      ========================================== -->
 
 
@@ -28,9 +28,9 @@
   <memory>
     <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#0000#" size="16#0009_d000#"/>
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0010_0000#" size="16#3ff0_0000#"/>
-    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#4040_0000#" size="16#2b2d_1000#"/>
-    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#7056_d000#" size="16#1000#"/>
-    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#7b52_c000#" size="16#0006_e000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#4040_0000#" size="16#2b30_1000#"/>
+    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#7059_7000#" size="16#1000#"/>
+    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#7b53_8000#" size="16#0006_2000#"/>
     <memoryBlock allocatable="false" name="ACPI Tables" physicalAddress="16#7b59_a000#" size="16#0006_5000#"/>
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0001_0000_0000#" size="16#0003_7e80_0000#"/>
     <reservedMemory name="rmrr1" physicalAddress="16#7aa9_f000#" size="16#0002_0000#"/>
@@ -186,7 +186,7 @@
     <device name="isa_bridge_1">
       <pci bus="16#00#" device="16#1f#" function="0">
         <identification classcode="16#0601#" deviceId="16#9d4e#" revisionId="16#21#" vendorId="16#8086#"/>
-        <iommuGroup id="9"/>
+        <iommuGroup id="11"/>
       </pci>
       <memory caching="UC" name="mmconf" physicalAddress="16#f80f_8000#" size="16#1000#"/>
     </device>
@@ -194,7 +194,7 @@
       <description>Intel Corporation Sunrise Point-LP PMC</description>
       <pci bus="16#00#" device="16#1f#" function="2">
         <identification classcode="16#0580#" deviceId="16#9d21#" revisionId="16#21#" vendorId="16#8086#"/>
-        <iommuGroup id="9"/>
+        <iommuGroup id="11"/>
       </pci>
       <memory caching="UC" name="mem1" physicalAddress="16#dc24_c000#" size="16#4000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#f80f_a000#" size="16#1000#"/>
@@ -203,7 +203,7 @@
       <description>Intel Corporation Sunrise Point-LP HD Audio</description>
       <pci bus="16#00#" device="16#1f#" function="3">
         <identification classcode="16#0403#" deviceId="16#9d71#" revisionId="16#21#" vendorId="16#8086#"/>
-        <iommuGroup id="9"/>
+        <iommuGroup id="11"/>
       </pci>
       <irq name="irq1" number="16">
         <msi name="msi1"/>
@@ -216,7 +216,7 @@
       <description>Intel Corporation Sunrise Point-LP SMBus</description>
       <pci bus="16#00#" device="16#1f#" function="4">
         <identification classcode="16#0c05#" deviceId="16#9d23#" revisionId="16#21#" vendorId="16#8086#"/>
-        <iommuGroup id="9"/>
+        <iommuGroup id="11"/>
       </pci>
       <irq name="irq1" number="16"/>
       <memory caching="UC" name="mem1" physicalAddress="16#dc25_4000#" size="16#1000#"/>
@@ -227,7 +227,7 @@
       <description>Intel Corporation Ethernet Connection (4) I219-LM</description>
       <pci bus="16#00#" device="16#1f#" function="6">
         <identification classcode="16#0200#" deviceId="16#15d7#" revisionId="16#21#" vendorId="16#8086#"/>
-        <iommuGroup id="9"/>
+        <iommuGroup id="11"/>
       </pci>
       <irq name="irq1" number="16">
         <msi name="msi1"/>
@@ -239,7 +239,7 @@
       <description>Intel Corporation JHL6240 Thunderbolt 3 NHI (Low Power) [Alpine Ridge LP 2016]</description>
       <pci bus="16#06#" device="16#00#" function="0">
         <identification classcode="16#0880#" deviceId="16#15bf#" revisionId="16#01#" vendorId="16#8086#"/>
-        <iommuGroup id="7"/>
+        <iommuGroup id="13"/>
       </pci>
       <irq name="irq1" number="16">
         <msi name="msi1"/>
@@ -266,7 +266,7 @@
     <device name="usb_controller_2">
       <pci bus="16#3c#" device="16#00#" function="0">
         <identification classcode="16#0c03#" deviceId="16#15c1#" revisionId="16#01#" vendorId="16#8086#"/>
-        <iommuGroup id="7"/>
+        <iommuGroup id="15"/>
       </pci>
       <irq name="irq1" number="16">
         <msi name="msi1"/>
@@ -285,7 +285,7 @@
       <description>Intel Corporation Wireless 8265 / 8275</description>
       <pci bus="16#3d#" device="16#00#" function="0">
         <identification classcode="16#0280#" deviceId="16#24fd#" revisionId="16#78#" vendorId="16#8086#"/>
-        <iommuGroup id="7"/>
+        <iommuGroup id="16"/>
       </pci>
       <irq name="irq1" number="18">
         <msi name="msi1"/>
@@ -296,7 +296,7 @@
     <device name="non-volatile_memory_controller_1">
       <pci bus="16#3e#" device="16#00#" function="0">
         <identification classcode="16#0108#" deviceId="16#a808#" revisionId="16#00#" vendorId="16#144d#"/>
-        <iommuGroup id="8"/>
+        <iommuGroup id="17"/>
       </pci>
       <irq name="irq1" number="16">
         <msi name="msi1"/>

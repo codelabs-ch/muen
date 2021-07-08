@@ -66,7 +66,8 @@ is
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
    --D @Interface
-   --D Crash Audit Dump Store.
+   --D Crash Audit Store. It provides storage space for multiple data sets of
+   --D crash audit information and associated meta data.
    Instance : Crash_Audit_Page
    with
       Volatile,

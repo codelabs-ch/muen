@@ -769,7 +769,16 @@
   </section>
  </section>
 
- <section id="interface_section" label="Kernel State" priority="0"/>
+ <section id="interface_section" label="Kernel State" priority="0">
+  <text priority="0">
+   This section lists kernel data structures that are placed at specific memory
+   addresses and used to maintain runtime state such as per-subject state
+   descriptors. Furthermore external interfaces, e.g. for interaction with
+   devices such as IOMMUs and I/O APIC are specified.
+   The description includes the purpose as well as the memory representation of
+   these interfaces.
+  </text>
+ </section>
 
  <section id="cpu_global_variables_section" label="CPU-Global State" priority="0"/>
 

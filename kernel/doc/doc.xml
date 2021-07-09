@@ -780,7 +780,13 @@
   </text>
  </section>
 
- <section id="cpu_global_variables_section" label="CPU-Global State" priority="0"/>
+ <section id="cpu_global_variables_section" label="CPU-Global State" priority="0">
+  <text priority="0">
+   This section lists global data structures that are shared across CPU cores,
+   describing their purpose. All the instances presented below fall into the
+   data model category described in section \ref{datamodel_global}.
+  </text>
+ </section>
 
  <section id="kernel_devices" label="Devices" priority="0">
   <text priority="0">

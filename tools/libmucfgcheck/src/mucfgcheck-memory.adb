@@ -1174,6 +1174,22 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Subject_PT_Region_Presence (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+
+      --  The size of PT regions depends on the virtual address space so it
+      --  cannot be asserted.
+
+      Check_Subject_Region_Presence
+        (XML_Data     => XML_Data,
+         Region_Type  => "pt",
+         Region_Class => "system",
+         Region_Size  => 0);
+   end Subject_PT_Region_Presence;
+
+   -------------------------------------------------------------------------
+
    procedure Subject_Sched_Group_Info_Mappings
      (XML_Data : Muxml.XML_Data_Type)
    is

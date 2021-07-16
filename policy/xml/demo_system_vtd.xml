@@ -103,7 +103,7 @@
   </subject>
 
   <subject name="nic_linux">
-   <bootparams>console=hvc console=ttyS0 pci=noearly hostname=nic_linux</bootparams>
+   <bootparams>console=hvc console=ttyS0 hostname=nic_linux</bootparams>
    <if variable="linux_debug" value="true">
     <bootparams>debug</bootparams>
    </if>
@@ -167,7 +167,7 @@
   </subject>
 
   <subject name="storage_linux">
-   <bootparams>console=hvc console=ttyS0 pci=noearly hostname=storage_linux</bootparams>
+   <bootparams>console=hvc console=ttyS0 hostname=storage_linux</bootparams>
    <if variable="linux_debug" value="true">
     <bootparams>debug</bootparams>
    </if>

@@ -56,7 +56,8 @@ is
       Region_Type  : String);
 
    --  Check presence of physical per-subject memory region with specified
-   --  region type, class and size.
+   --  region type, class and size. If size is specified as 0, then the region
+   --  size is not checked.
    procedure Check_Subject_Region_Presence
      (XML_Data     : Muxml.XML_Data_Type;
       Region_Type  : String;
@@ -313,7 +314,10 @@ is
       begin
          Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
            ("Subject " & Region_Type & " region '" & Ref_Name
-            & "' with size " & Mutools.Utils.To_Hex (Number => Region_Size)
+            & "'"
+            & (if Region_Size > 0 then
+                   " with size " & Mutools.Utils.To_Hex (Number => Region_Size)
+              else "")
             & " for subject '" & Subj_Name & "' not found");
          Fatal := False;
       end Error_Msg;
@@ -336,7 +340,8 @@ is
                 (Elem => Right,
                  Name => "size"));
       begin
-         return Ref_Name = Mem_Name and then Region_Size = Mem_Size;
+         return Ref_Name = Mem_Name and then
+           (Region_Size = 0 or else Region_Size = Mem_Size);
       end Match_Region_Attrs;
    begin
       For_Each_Match

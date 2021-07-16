@@ -263,8 +263,8 @@ is
          Entry_Point : Interfaces.Unsigned_64;
       begin
          if Entry_Point_Str'Length > 0 then
-            Mulog.Log (Msg => "Entry point address provided in compoent spec: "
-                       & Entry_Point_Str);
+            Mulog.Log (Msg => "Entry point address provided in component spec:"
+                       & " " & Entry_Point_Str);
          else
             Entry_Point := Get_Start_Address (Descriptor => Descriptor);
             Mulog.Log (Msg => "Setting entry point to " & Mutools.Utils.To_Hex

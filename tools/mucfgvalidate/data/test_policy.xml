@@ -82,6 +82,7 @@
   <memory alignment="16#1000#" name="linux|fpu" size="16#1000#" physicalAddress="16#0080_0000#" caching="WB" type="kernel_fpu"/>
   <memory alignment="16#1000#" name="linux|iobm" size="16#2000#" physicalAddress="16#0080_1000#" caching="WB" type="system_iobm"/>
   <memory alignment="16#1000#" name="linux|msrbm" size="16#1000#" physicalAddress="16#0080_3000#" caching="WB" type="system_msrbm"/>
+  <memory alignment="16#1000#" name="linux|pt" size="16#f000#" physicalAddress="16#0090_0000#" caching="WB" type="system_pt"/>
   <memory alignment="16#1000#" name="scheduling_group_info_1" size="16#1000#" physicalAddress="16#2151_8000#" caching="WB" type="subject_scheduling_info"/>
   <memory alignment="16#1000#" name="crash_audit" size="16#1000#" physicalAddress="16#ab00_0000#" caching="UC" type="subject_crash_audit"/>
   <memory alignment="16#1000#" caching="WB" name="vtd_root" physicalAddress="16#001f_5000#" size="16#1000#" type="system_vtd_root">

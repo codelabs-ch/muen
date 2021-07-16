@@ -78,7 +78,7 @@
      </controls>
     </vmx>
    </vcpu>
-   <bootparams>console=hvc console=ttyS0 pci=noearly hostname=nic_linux muen-input.channel=virtual_keyboard debug</bootparams>
+   <bootparams>console=hvc console=ttyS0 hostname=nic_linux muen-input.channel=virtual_keyboard debug</bootparams>
    <memory>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
    </memory>
@@ -130,7 +130,7 @@
   </subject>
 
   <subject name="storage_linux">
-   <bootparams>console=hvc console=ttyS0 pci=noearly hostname=storage_linux debug</bootparams>
+   <bootparams>console=hvc console=ttyS0 hostname=storage_linux debug</bootparams>
    <memory>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
    </memory>

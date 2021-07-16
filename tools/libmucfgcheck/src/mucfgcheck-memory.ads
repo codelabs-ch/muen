@@ -208,6 +208,10 @@ is
      (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_mem
+   --D Validate that a subject pagetable memory region exists for each subject.
+   procedure Subject_PT_Region_Presence (XML_Data : Muxml.XML_Data_Type);
+
+   --D @Item List => validators_mem
    --D Validate that a scheduling group info memory region exists for each
    --D scheduling group.
    procedure Scheduling_Group_Info_Region_Presence

@@ -127,6 +127,8 @@ is
       XML_Processors.Register
         (Process => Memory.Subject_FPU_State_Region_Presence'Access);
       XML_Processors.Register
+        (Process => Memory.Subject_PT_Region_Presence'Access);
+      XML_Processors.Register
         (Process => Memory.Scheduling_Group_Info_Region_Presence'Access);
       XML_Processors.Register
         (Process => Memory.Kernel_Memory_Mappings'Access);

@@ -9,7 +9,7 @@ FILES := $(filter-out %_sinfo, $(FILES))
 FILES := $(addprefix $(POLICY_OBJ_DIR)/, $(FILES))
 endif
 
-all: $(IMG_TAU0)
+all: $(IMG_TAU0) $(POLICY_B_MANI)
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
@@ -26,6 +26,9 @@ $(POLICY_B_CMDS): $(POLICY_B_HASH) $(MUGENTAU0CMDS)
 $(IMG_TAU0): $(POLICY_B_CMDS) $(TAU0_STATIC)
 	@$(E) pack "Generate image" \
 		"$(TAU0_STATIC) -i $(POLICY_OBJ_DIR) -o $(OBJ_DIR) -n $(IMG_NAME) $(POLICY_B_CMDS)"
+
+$(POLICY_B_MANI): $(POLICY_B_HASH) $(MUGENMANIFEST)
+	@$(E) pack "Generate policy manifest" "$(MUGENMANIFEST) $< $@"
 
 clean:
 	rm -rf $(OBJ_DIR)

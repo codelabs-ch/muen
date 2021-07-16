@@ -1936,6 +1936,59 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Subject_PT_Region_Presence (Gnattest_T : in out Test);
+   procedure Test_Subject_PT_Region_Presence_36dee9 (Gnattest_T : in out Test) renames Test_Subject_PT_Region_Presence;
+--  id:2.2/36dee9799baab6c9/Subject_PT_Region_Presence/1/0/
+   procedure Test_Subject_PT_Region_Presence (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Subject_PT_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
+
+      --  Missing subject PT region.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='linux|pt']",
+         Name  => "name",
+         Value => "foobar");
+
+      Subject_PT_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject pt region 'linux|pt' for subject 'linux' not "
+               & "found"),
+              Message   => "Exception mismatch (1)");
+
+      --  Subject PT region with incorrect region type.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='tau0|pt']",
+         Name  => "type",
+         Value => "subject");
+
+      Subject_PT_Region_Presence (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject pt region 'tau0|pt' for subject 'tau0' not "
+               & "found"),
+              Message   => "Exception mismatch (2)");
+--  begin read only
+   end Test_Subject_PT_Region_Presence;
+--  end read only
+
+
+--  begin read only
    procedure Test_Scheduling_Group_Info_Region_Presence (Gnattest_T : in out Test);
    procedure Test_Scheduling_Group_Info_Region_Presence_54e535 (Gnattest_T : in out Test) renames Test_Scheduling_Group_Info_Region_Presence;
 --  id:2.2/54e5352eb4c027ff/Scheduling_Group_Info_Region_Presence/1/0/

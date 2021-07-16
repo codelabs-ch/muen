@@ -5,3 +5,4 @@ generated
 .*.swp
 *~
 *.pyc
+.clang-format

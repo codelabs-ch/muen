@@ -9,7 +9,7 @@
  <xsl:template match="system/*"/>
 
  <xsl:template match="/system/config">
-  <xsl:variable name="blkAHCIDrvEnabled" select="boolean[@name='ahci_drv_enabled']/@value"/>
+  <xsl:variable name="blkAHCIDrvEnabled" select="boolean[@name='ahci_drv_active']/@value"/>
   <xsl:variable name="blkWriteTestValue" select="boolean[@name='example_blk_write']/@value"/>
   <xsl:variable name="blkWriteTest">
    <xsl:choose>

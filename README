@@ -107,14 +107,23 @@ Documentation
 ~~~~~~~~~~~~~
 The following detailed project documentation is available:
 
-* Muen project report +
+* Muen System Specification +
+  https://muen.sk/muen-system-spec.pdf
+
+* Muen Kernel Specification +
+  https://muen.sk/muen-kernel-spec.pdf
+
+* Muen Component Specification +
+  https://muen.sk/muen-component-spec.pdf
+
+* Bootloader Signed Block Stream of Commands Specification +
+  https://muen.sk/bsbsc-spec.pdf
+
+* Original Muen master thesis +
   https://muen.sk/muen-report.pdf
 
 * Muen project presentation +
   https://muen.sk/muen-slides.pdf
-
-* Muen toolchain document +
-  https://muen.sk/muen-toolchain.pdf
 
 * Presentation given at High Integrity Software Conference HIS 2014 +
   http://www.slideshare.net/AdaCore/slides-his-2014secunethsr

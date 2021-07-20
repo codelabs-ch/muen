@@ -113,6 +113,78 @@
     packages that make up the kernel code base is given.
    </text>
   </section>
+  <section id="intro_source_code" label="Source code" priority="0">
+   <text priority="0">
+    This section gives a short overview of the Muen source code. It describes
+    where and how to download it as well as a brief description of the source
+    tree layout.
+   </text>
+   <section id="intro_source_code_get" label="Obtaining the Source Code" priority="0">
+    <text priority="0">
+     The source code of the Muen project is hosted in the official Git
+     repository which is located at \url{https://git.codelabs.ch/muen.git}. \\
+
+     To obtain the source, clone the Git repository as follows: \\
+
+     \verb!git clone --recursive https://git.codelabs.ch/muen.git!
+    </text>
+   </section>
+   <section id="intro_source_code_layout" label="Source-Tree Layout" priority="0">
+    <text priority="0">
+     The top-level directory of the Muen source tree contains a README file which
+     gives a good overview of the key aspects of the Muen project. Furthermore
+     it gives practical advice on how to get started including references to
+     further resources.
+
+     In the following, a brief description of each sub-directory and what it
+     contains is given:
+
+     \begin{description}
+        \item[common/] \hfill \\
+        Source code packages shared between the kernel and components.
+        \item[components/] \hfill \\
+        Implementations of various Components and Libraries, such as device
+        drivers (e.g. AHCI, PS/2) or Subject Monitor for Muen Linux. These are
+        utilized to realize different Muen Systems and can be reused in any
+        component-based system running on top of Muen.
+        \item[config/] \hfill \\
+        Compiler and Proof tool configuration used when building the Muen tools,
+        Components as well as the kernel.
+        \item[contrib/] \hfill \\
+        Third-party software required for building some tools and components.
+        \item[deploy/] \hfill \\
+        This directory contains build system facilities to enable the simple
+        deployment of Muen system images to supported hardware platforms. Refer
+        to the README for further details.
+        \item[doc/] \hfill \\
+        Contains documents describing different elements of the Muen project.
+        The Master Thesis \emph{An x86/64 Separation Kernel for High Assurance}
+        originally written in 2013 is also located in this directory.
+        \item[emulate/] \hfill \\
+        This directory contains build system facilities to enable the emulation
+        of Muen system images under nested QEMU/KVM. Refer to the README for
+        further details.
+        \item[kernel/] \hfill \\
+        This directory contains the implementation of the Muen Separation Kernel.
+        \item[pack/] \hfill \\
+        This directory contains build system facilities for the assembly of
+        bootable Muen System Images.
+        \item[policy/] \hfill \\
+        Provides various Muen System Policies such das the Demo System, as well
+        as Specifications for a selection of Hardware Platforms.
+        \item[projects/] \hfill \\
+        Support utilities used by the Muen Build Process are located in this
+        sub-directory.
+        \item[rts/] \hfill \\
+        Zero-Footprint Ada Runtime used by the Muen SK as well as native
+        Ada/SPARK Component implementations.
+        \item[tools/] \hfill \\
+        Contains the Muen toolchain used for building and assembling a Muen
+        System Image. For further details, refer to \cite{muen:system-spec}.
+     \end{description}
+    </text>
+   </section>
+  </section>
  </section>
 
  <section id="overview" label="Overview" priority="0">

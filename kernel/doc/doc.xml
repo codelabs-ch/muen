@@ -997,6 +997,42 @@
    implementation, the content of these sections is extracted from source code
    annotations.
   </text>
+  <section id="implementation_entry_points" label="Kernel Entry Points" priority="-20">
+   <text priority="0">
+    As already mentioned in section \ref{overview_operation} the kernel
+    control-flow is kept very simple and only has two entry points with the
+    following (symbol) names:
+    \begin{itemize}
+     \item Startup: \verb!kernel_entry_point! (Assembler) \rightarrow \verb!sk_initialize! (SPARK)
+     \item Scheduler Loop: \verb!vmx_exit_handler! (Assembler) \rightarrow \verb!handle_vmx_exit! (SPARK)
+    \end{itemize}
+
+    The assembler symbol is where the respective code flow starts which after
+    some low-level steps then calls the mentioned SPARK subprogram.
+   </text>
+   <section id="implementation_entry_points_startup" label="System Startup" priority="0">
+    <text priority="0">
+     After loading the Muen System Image, a bootloader start execution of the
+     Muen code at the entry point \verb!kernel_entry_point! in file
+     \verb!kernel/src/asm/init.S!. After low-level system/CPU initialization,
+     the procedure \verb!SK.Kernel.Initialize! in
+     \verb!kernel/src/sk-kernel.ads! is called via the exported symbol
+     \verb!sk_initialize!. Section \ref{impl_kernel_init} describes the kernel
+     initialization process performed by this procedure.
+    </text>
+   </section>
+   <section id="implementation_entry_points_scheduler" label="Scheduler Loop" priority="0">
+    <text priority="0">
+     Whenever a VM-Exit occurs, the CPU passes the thread of execution from the subject
+     code running in VMX non-root mode to the kernel \verb!handle_vmx_exit!
+     found in file \verb!kernel/src/sk-scheduler.ads!. The hardware stores the
+     execution state of the subject in the VMCS, transitions to VMX root-mode by
+     restoring the host state of the kernel and starts execution at the Exit
+     handler. Section \ref{impl_exit_handler} describes the main scheduler loop
+     of the Muen kernel.
+    </text>
+   </section>
+  </section>
   <section id="impl_subjects_state" label="Subject State Management" priority="-2">
    <text priority="0">
     This section describes how the state of subjects is managed by the kernel.

@@ -990,6 +990,15 @@
   </section>
  </section>
 
+ <section id="implementation" label="Implementation" priority="0">
+  <text priority="0">
+   This chapter describes the implementation of the Muen Kernel. To
+   avoid/minimize divergence between this documentation and the actual
+   implementation, the content of these sections is extracted from source code
+   annotations.
+  </text>
+ </section>
+
  <section id="acronyms" label="Acronyms" priority="1000.0">
   <text priority="0">
    \begin{acronym}

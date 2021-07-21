@@ -345,7 +345,8 @@ is
    --D @Section Id => impl_subject_init, Label => Subject Initialization, Parent => impl_kernel_init_sched, Priority => 20
    --D @Text Section => impl_subject_init, Priority => 0
    --D Clear all state associated with the subject specified by ID and
-   --D initialize to the values of the subject policy.
+   --D initialize to the values of the subject according to the policy. These
+   --D steps are performed during startup and whenever a subject is reset.
    --D @OL Id => subject_init_steps, Section => impl_subject_init, Priority => 10
    procedure Init_Subject (ID : Skp.Global_Subject_ID_Type)
    with

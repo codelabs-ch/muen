@@ -520,8 +520,8 @@ is
 
       if Found then
          --D @Text Section => impl_handle_target_event, Priority => 0
-         --D If an event is pending, it is consumed by looking up the event
-         --D action as specified by the policy.
+         --D If an event is pending, it is consumed by looking up the target
+         --D event and its action as specified by the policy.
          --D @UL Id => impl_handle_target_event_actions, Section => impl_handle_target_event, Priority => 0
          declare
             Cur_Event : constant Skp.Events.Target_Event_Type
@@ -713,7 +713,9 @@ is
       --D First the event number of the hypercall is checked. If it is valid
       --D then the corresponding subject source event as specified by the
       --D policy is looked up and processed, see
-      --D \ref{impl_handle_source_event}.
+      --D \ref{impl_handle_source_event}. Note that events that are not
+      --D specified in the policy are ignored since these are initialized to
+      --D source events that have no action and an invalid target subject.
       if Valid_Event_Nr then
          Event := Skp.Events.Get_Source_Event
            (Subject_ID => Current_Subject,

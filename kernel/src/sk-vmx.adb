@@ -498,7 +498,7 @@ is
       VMCS_Write (Field => Constants.GUEST_CR3,
                   Value => PML4_Address);
       --D @Item List => impl_vmcs_setup_guest_steps, Priority => 0
-      --D Set EPT pointer field to policy-defined value.
+      --D Set EPT pointer field to policy-defined address value.
       VMCS_Write (Field => Constants.EPT_POINTER,
                   Value => EPT_Pointer);
    end VMCS_Setup_Guest_Fields;

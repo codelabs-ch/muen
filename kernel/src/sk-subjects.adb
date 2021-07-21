@@ -399,7 +399,6 @@ is
 
    -------------------------------------------------------------------------
 
-   --D @Section Id => impl_subjects_state, Label => Subject State Management, Parent => implementation, Priority => 0
    --D @Section Id => impl_subjects_state_save, Label => State Saving, Parent => impl_subjects_state, Priority => 0
    --D @Text Section => impl_subjects_state_save, Priority => 0
    --D Saving the state of a subject with given ID means that the state values

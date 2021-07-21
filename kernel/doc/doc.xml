@@ -997,6 +997,18 @@
    implementation, the content of these sections is extracted from source code
    annotations.
   </text>
+  <section id="impl_subjects_state" label="Subject State Management" priority="-2">
+   <text priority="0">
+    This section describes how the state of subjects is managed by the kernel.
+    While the subject is running, it may execute allowed CPU instructions until
+    a VM exit into the kernel occurs. At this point, the CPU stores the current
+    execution state in the associated VMCS. To enable subject monitors to change
+    the state of monitored subjects, the kernel saves values from the VMCS to
+    the associate subject state data structure in memory (see section
+    \ref{SK.Subjects.Descriptors}). Prior to executing a subject, the subject
+    state has to be restored back into the associated VMCS.
+   </text>
+  </section>
  </section>
 
  <section id="acronyms" label="Acronyms" priority="1000.0">

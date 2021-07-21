@@ -239,6 +239,12 @@ is
 
    -------------------------------------------------------------------------
 
+   --D @Section Id => impl_subjects_state_reset, Label => State Resetting, Parent => impl_subjects_state, Priority => 25
+   --D @Text Section => impl_subjects_state_reset, Priority => 0
+   --D Resetting the state of a subject with given ID means that all state
+   --D values are set to those specified in the policy. Fields that are not set
+   --D by the policy are cleared to zero, except for RFLAGS which is initialized
+   --D to \verb!Constants.RFLAGS_Default_Value!.
    procedure Reset_State
      (ID       : Skp.Global_Subject_ID_Type;
       GPRs     : CPU_Registers_Type;

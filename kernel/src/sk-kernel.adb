@@ -33,6 +33,9 @@ is
 
    --D @Section Id => impl_kernel_init, Label => Initialization, Parent => implementation, Priority => -10
    --D @Text Section => impl_kernel_init, Priority => 0
+   --D The \verb!SK.Kernel.Initialize! procedure is the Ada/SPARK entry point
+   --D into the kernel. It is invoked from Assembler code after low-level system
+   --D initialization has been performed.
    --D Kernel initialization consists of the following steps:
    --D @OL Id => impl_kernel_init_steps, Section => impl_kernel_init, Priority => 10
    procedure Initialize (Subject_Registers : out SK.CPU_Registers_Type)
@@ -51,7 +54,7 @@ is
 
       if CPU_Info.Is_BSP then
          --D @Item List => impl_kernel_init_steps, Priority => 0
-         --D Setup crash audit (BSP-only)
+         --D Setup crash audit (BSP-only).
          Crash_Audit.Init;
       end if;
 
@@ -63,7 +66,7 @@ is
       begin
          --D @Item List => impl_kernel_init_steps, Priority => 0
          --D Validate required CPU (\ref{impl_kernel_init_check_state}),
-         --D FPU, MCE and VT-d features
+         --D FPU, MCE and VT-d features.
          System_State.Check_State
            (Is_Valid => Valid_Sys_State,
             Ctx      => Init_Ctx.Sys_Ctx);
@@ -169,8 +172,14 @@ is
       end;
 
       --D @Text Section => impl_kernel_init, Priority => 20
-      --D Subject registers are returned by the initialization code and the
-      --D calling assembler code will start executing the first subject.
+      --D Registers of the first subject to schedule are returned by the
+      --D initialization procedure to the calling assember code. The assembly
+      --D then restores the subject register values prior to launching the first
+      --D subject.
+      --D This is done this way so the initialization code as well as the main
+      --D VMX exit handler (\ref{impl_exit_handler}) operate the same way and
+      --D the Assembler code in charge of resuming subject execution can be
+      --D shared, which further simplifies the code flow.
    end Initialize;
 
 end SK.Kernel;

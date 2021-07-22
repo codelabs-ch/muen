@@ -676,6 +676,11 @@ is
 
    --  Handle hypercall with given event number.
    --D @Section Id => hypercall_handling, Label => Hypercall Handling, Parent => impl_exit_handler, Priority => 20
+   --D @Text Section => hypercall_handling, Priority => 0
+   --D Hypercalls can be triggered by subjects executing the \verb!vmcall!
+   --D instruction in guest privilege level 0, which is assured by means of a
+   --D precondition check. If subject user space tries to invoke hypercalls, it
+   --D is treated as a trap with the corresponding exit reason.
    procedure Handle_Hypercall
      (Current_Subject    : Skp.Global_Subject_ID_Type;
       Unchecked_Event_Nr : Word64)

@@ -127,19 +127,24 @@ is
 
    --D @Section Id => impl_crash_audit, Label => Crash Audit, Parent => implementation, Priority => 0
    --D @Section Id => impl_crash_audit_init, Label => Initialization, Parent => impl_crash_audit, Priority => 0
+   --D @Text Section => impl_crash_audit_init, Priority => 0
+   --D Initialization of the Crash Audit facility puts the Crash Audit Store in
+   --D a well-defined state in order to be ready for the addition of new Audit
+   --D Entries in case of a crash.
+   --D @OL Id => impl_crash_audit_init_steps, Section => impl_crash_audit_init, Priority => 0
    procedure Init
    is
       H : constant Header_Type := Instance.Crash_Info.Header;
    begin
       if H.Version_Magic /= Crash_Magic then
-         --D @Text Section => impl_crash_audit_init, Priority => 0
+         --D @Item List => impl_crash_audit_init_steps, Priority => 0
          --D Initialize the audit instance to the well-known empty state if the
          --D crash audit does not have a matching version number.
          Instance.Crash_Info := Null_Dump;
          pragma Debug (Dump.Print_Message
                        (Msg => "Crash audit: Initialized"));
       else
-         --D @Text Section => impl_crash_audit_init, Priority => 0
+         --D @Item List => impl_crash_audit_init_steps, Priority => 0
          --D Increase the boot counter but retain current audit data, if it is
          --D already initialized,
          Instance.Crash_Info.Header.Boot_Count := H.Boot_Count + 1;
@@ -163,15 +168,16 @@ is
    --D Allocate a global crash audit entry termed \emph{slot}. For a full
    --D description of the crash audit entry data structure see section
    --D \ref{SK.Crash_Audit_Types}.
+   --D @OL Id => impl_crash_audit_alloc_steps, Section => impl_crash_audit_alloc, Priority => 0
    procedure Allocate (Audit : out Entry_Type)
    is
       S : Positive;
    begin
-      --D @Text Section => impl_crash_audit_alloc, Priority => 0
+      --D @Item List => impl_crash_audit_alloc_steps, Priority => 0
       --D Initialize the audit entry.
       Audit := Null_Entry;
 
-      --D @Text Section => impl_crash_audit_alloc, Priority => 0
+      --D @Item List => impl_crash_audit_alloc_steps, Priority => 0
       --D Atomically get and increment the audit slot index. If no free audit
       --D slot is available, halt execution.
       Get_And_Inc (Slot => S);
@@ -183,7 +189,7 @@ is
          CPU.Stop;
       end if;
 
-      --D @Text Section => impl_crash_audit_alloc, Priority => 0
+      --D @Item List => impl_crash_audit_alloc_steps, Priority => 0
       --D Set index of current audit slot.
       Audit.Slot := Dumpdata_Index (S);
       pragma Debug (Dump.Print_Message
@@ -192,14 +198,14 @@ is
                      & " - Allocated record "
                      & Strings.Img (Byte (Audit.Slot))));
 
-      --D @Text Section => impl_crash_audit_alloc, Priority => 0
+      --D @Item List => impl_crash_audit_alloc_steps, Priority => 0
       --D Clear crash dump fields of current audit slot.
       Instance.Crash_Info.Data (Audit.Slot) := Null_Dumpdata;
 
-      --D @Text Section => impl_crash_audit_alloc, Priority => 0
+      --D @Item List => impl_crash_audit_alloc_steps, Priority => 0
       --D Set crash data APIC ID to this CPU.
       Instance.Crash_Info.Data (Audit.Slot).APIC_ID := Byte (CPU_Info.APIC_ID);
-      --D @Text Section => impl_crash_audit_alloc, Priority => 0
+      --D @Item List => impl_crash_audit_alloc_steps, Priority => 0
       --D Set crash data timestamp to the current TSC value.
       Instance.Crash_Info.Data (Audit.Slot).TSC_Value := CPU.RDTSC;
    end Allocate;
@@ -209,6 +215,7 @@ is
    --D @Section Id => impl_crash_audit_final, Label => Finalization, Parent => impl_crash_audit, Priority => 10
    --D @Text Section => impl_crash_audit_final, Priority => 0
    --D Finalize the given audit slot.
+   --D @OL Id => impl_crash_audit_final_steps, Section => impl_crash_audit_final, Priority => 0
    procedure Finalize (Audit : Entry_Type)
    is
       pragma Unreferenced (Audit);
@@ -219,31 +226,31 @@ is
         := Instance.Crash_Info.Header.Boot_Count;
    begin
       if Next > Positive (Dumpdata_Length'Last) then
-         --D @Text Section => impl_crash_audit_final, Priority => 0
+         --D @Item List => impl_crash_audit_final_steps, Priority => 0
          --D Set active crash dump count to the last index if the next slot
          --D index is too large.
          Instance.Crash_Info.Header.Dump_Count := Dumpdata_Length'Last;
       else
-         --D @Text Section => impl_crash_audit_final, Priority => 0
+         --D @Item List => impl_crash_audit_final_steps, Priority => 0
          --D Set active crash dump count to the current slot index.
          Instance.Crash_Info.Header.Dump_Count := Dumpdata_Length (Next - 1);
       end if;
 
       for I in Version.Version_String'Range loop
-         --D @Text Section => impl_crash_audit_final, Priority => 0
+         --D @Item List => impl_crash_audit_final_steps, Priority => 0
          --D Set the version string in the header to the current version.
          Instance.Crash_Info.Header.Version_String (I)
            := Version.Version_String (I);
       end loop;
 
-      --D @Text Section => impl_crash_audit_final, Priority => 0
+      --D @Item List => impl_crash_audit_final_steps, Priority => 0
       --D Increase the generation and crash counters.
       Instance.Crash_Info.Header.Generation := Boots + 1;
-      --D @Text Section => impl_crash_audit_final, Priority => 0
+      --D @Item List => impl_crash_audit_final_steps, Priority => 0
       --D Increase the crash counter.
       Atomic_Inc_Crash_Count;
 
-      --D @Text Section => impl_crash_audit_final, Priority => 0
+      --D @Item List => impl_crash_audit_final_steps, Priority => 0
       --D Pause for a given amount before rebooting the system to enable
       --D potentially simultaneously faulting cores to finish writing their
       --D crash audit entries.

@@ -629,11 +629,36 @@
 
      Subjects can trigger events \emph{statically} defined in the policy. If
      there is a valid event number, the kernel executes the action defined by
-     the event. Invalid event numbers are ignored.
+     the event. Invalid event numbers are ignored. Events can be thought of as a
+     very static form of \emph{hypercalls}, that can be actively invoked by a
+     subject.
 
      When so-called \emph{traps} occur, e.g. access to an unauthorized memory
      region, a trap table also specified in the policy is consulted. Similar to
-     handling of events, the defined action is executed.
+     handling of events, the defined action is executed. In contrast to events,
+     traps generally happen whenever a subject performs an action that is
+     disallowed by the policy, e.g. attempt to read the Timestamp Counter (TSC).
+     A trap always interrupts subject execution and invokes the kernel.
+
+     Several types of traps are directly handled by the kernel as they are used
+     to implement kernel functionality. These traps are:
+
+     \begin{description}
+      \item[External Interrupt] \hfill \\
+       Processing of external device interrupts
+      \item[VMX-preeption timer expired] \hfill \\
+       Main kernel timer used for scheduler implementation.
+      \item[Interrupt window] \hfill \\
+       Mechanism for delivery of pending subject interrupts.
+      \item[Exception or non-maskable interrupt (NMI)] \hfill \\
+       Handling of Machine-Check Exceptions (MCEs) and NMIs.
+      \item[VM-entry failure due to machine-check event] \hfill \\
+       Further handling of MCEs.
+     \end{description}
+
+     Detailed description of the implementation is given in section
+     \ref{impl_exit_handler}. For a list of all VM exit reasons, refer to Intel
+     SDM Vol. 3D, "Appendix C VMX Basic Exit Reasons" \cite{intelsdm}.
 
      The last interaction option is the \emph{timed event} mechanism. Each
      subject can define an event number and a time at which the event should be

@@ -53,8 +53,16 @@ is
    with
       Size => (Page_Size - Crash_Audit_Types.Dump_Type_Size) * 8;
 
+   --D @Interface
+   --D A crash audit page consist of the crash dump data and is padded to
+   --D a full 4K memory page. Explicit padding makes sure the entirety of the
+   --D memory is covered and initialized.
    type Crash_Audit_Page is record
+      --D @Interface
+      --D Crash information containing the entire crash audit dump data.
       Crash_Info : Crash_Audit_Types.Dump_Type;
+      --D @Interface
+      --D Padding to fill the memory page.
       Padding    : Padding_Type;
    end record
    with

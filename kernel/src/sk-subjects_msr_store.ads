@@ -74,8 +74,16 @@ private
    with
       Size => (Page_Size - MSR_Storage_Table_Size) * 8;
 
+   --D @Interface
+   --D A subject MSR storage page consist of the MSR data and is padded to a
+   --D full 4K memory page. Explicit padding makes sure the entirety of the
+   --D memory is covered and initialized.
    type MSR_Storage_Page is record
+      --D @Interface
+      --D MSR data as saved and restored by the CPU/hardware.
       MSRs    : MSR_Storage_Table;
+      --D @Interface
+      --D Padding to fill the memory page.
       Padding : Padding_Type;
    end record
    with

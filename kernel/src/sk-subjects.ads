@@ -125,8 +125,16 @@ private
    with
       Size => (Page_Size - Subj_State_Size) * 8;
 
+   --D @Interface
+   --D A subject state page consist of the subject state data and is padded to
+   --D a full 4K memory page. Explicit padding makes sure the entirety of the
+   --D memory is covered and initialized.
    type Subjects_State_Page is record
+      --D @Interface
+      --D State information (e.g. register values) of the associated subject.
       Data    : Subject_State_Type;
+      --D @Interface
+      --D Padding to fill the memory page.
       Padding : Padding_Type;
    end record
    with

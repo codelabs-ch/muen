@@ -62,8 +62,17 @@ private
    with
       Size => Page_Size * 8 - Mutimedevents.Timed_Event_Interface_Size;
 
+   --D @Interface
+   --D A subject timed event page consist of the timed event data and is padded
+   --D to a full 4K memory page. Explicit padding makes sure the entirety of the
+   --D memory is covered and initialized.
    type Timed_Event_Page is record
+      --D @Interface
+      --D Timed event data (i.e. timestamp when to trigger the event and the
+      --D number of the event to trigger).
       Data    : Mutimedevents.Timed_Event_Interface_Type;
+      --D @Interface
+      --D Padding to fill the memory page.
       Padding : Padding_Type;
    end record
    with

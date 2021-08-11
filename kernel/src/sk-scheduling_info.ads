@@ -48,8 +48,16 @@ private
    with
       Size => (Page_Size - Muschedinfo.Scheduling_Info_Size) * 8;
 
+   --D @Interface
+   --D A scheduling info page consist of the scheduling data and is padded to
+   --D a full 4K memory page. Explicit padding makes sure the entirety of the
+   --D memory is covered and initialized.
    type Sched_Info_Page_Type is record
+      --D @Interface
+      --D Scheduling information (i.e. minor frame start/end timestamp).
       Data    : Muschedinfo.Scheduling_Info_Type;
+      --D @Interface
+      --D Padding to fill the memory page.
       Padding : Padding_Type;
    end record
    with

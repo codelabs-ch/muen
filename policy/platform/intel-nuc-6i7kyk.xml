@@ -1,5 +1,6 @@
 <platform>
  <config>
+  <boolean name="ahci_supported" value="true"/>
   <boolean name="serial_supported" value="false"/>
   <boolean name="hsuart_supported" value="false"/>
   <boolean name="xhcidbg_supported" value="true"/>

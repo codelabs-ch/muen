@@ -1,4 +1,10 @@
 <expressions>
+ <expression name="ahci_drv_active">
+  <and>
+   <variable name="ahci_drv_enabled"/>
+   <variable name="ahci_supported"/>
+  </and>
+ </expression>
  <expression name="dbgserver_sink_serial">
   <and>
    <variable name="dbgserver_serial_enabled"/>

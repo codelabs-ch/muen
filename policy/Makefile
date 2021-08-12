@@ -65,7 +65,10 @@ ifeq (,$(SCHED_CONFIG))
 SCHED_CONFIG = $(wildcard scheduling/static/$(SYSTEM_NAME).xml)
 endif
 ifeq (,$(SCHED_CONFIG))
-SCHED_CONFIG    = $(wildcard scheduling/generate/$(SYSTEM_NAME).xml)
+SCHED_CONFIG = $(wildcard scheduling/generate/$(SYSTEM_NAME)-$(SCHED_PLATFORM))
+ifeq (,$(SCHED_CONFIG))
+SCHED_CONFIG = $(wildcard scheduling/generate/$(SYSTEM_NAME).xml)
+endif
 SCHED_CPUS      = $(shell xmllint --xpath 'string(/hardware/processor/@cpuCores)' $(HARDWARE))
 SCHED_PLAN_PDF ?= $(POLICY_OBJ_DIR)/scheduling_plans.pdf
 SCHED_PLAN_RAW ?= $(POLICY_OBJ_DIR)/scheduling_plans

@@ -1,6 +1,13 @@
 --  Disable line length check
 pragma Style_Checks ("-m");
 
+--D @Interface
+--D The \texttt{Skp} package hierarchy is a codified static representation of
+--D the system policy. All the values are derived from the system policy and
+--D parameterize the Muen SK on the source level.
+--D \paragraph*{}
+--D This package contains numeric constants and range type definitions
+--D derived from the system policy.
 package Skp
 is
 

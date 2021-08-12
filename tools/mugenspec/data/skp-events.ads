@@ -2,6 +2,9 @@ with Skp.Interrupts;
 
 with SK;
 
+--D @Interface
+--D This package contains subject source/target event as well as trap
+--D definitions as specified by the system policy.
 package Skp.Events
 is
 

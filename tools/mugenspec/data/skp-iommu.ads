@@ -1,5 +1,11 @@
 with SK;
 
+--D @Interface
+--D This package contains constant definitions and subprograms to interface
+--D with IOMMUs for hardware-dependent devices. The values are derived from the
+--D system policy. The generation of the code is necessary because there exist
+--D hardware platforms with multiple IOMMUs that have different memory layouts,
+--D i.e. Fault Reporting and IOTLB Registers offsets.
 package Skp.IOMMU
 with
    Abstract_State =>
@@ -7,12 +13,24 @@ with
    Initializes    => State
 is
 
+   --D @Interface
+   --D Physical memory address of DMAR root table.
    Root_Table_Address    : constant := 16#0030_0000#;
+   --D @Interface
+   --D Physical memory address of IR table.
    IR_Table_Phys_Address : constant := 16#0301#;
+   --D @Interface
+   --D Size of the IR table. The number of entries in the IRT is
+   --D $2^{\text{IR\_Table\_Size}+1}$.
    IR_Table_Size         : constant := 7;
 
+   --D @Interface
+   --D Expected Actual Guest Address Width used during setup to check against
+   --D Supported Adjusted Guest Address Widths of IOMMUs.
    Cap_AGAW_Bit          : constant := 2;
 
+   --D @Interface
+   --D Type defining range of active IOMMU devices.
    type IOMMU_Device_Range is range 1 .. 2;
 
    --  Basic types
@@ -539,6 +557,9 @@ private
 
    IOMMU_Common_Size : constant := 192 * 8;
 
+   --D @Interface
+   --D Common register definitions that are the same for IOMMUs of any
+   --D generation, see Intel VT-d Specification, "10.4 Register Descriptions".
    type IOMMU_Common_Type is record
       Version             : Reg_Version_Type;
       Reserved_1          : SK.Word32;
@@ -577,9 +598,21 @@ private
       IRT_Address         at 16#b8# range 0 .. 63;
    end record;
 
+   --D @Interface
+   --D Definition of VT-d IOMMU register layout for programming IOMMU devices
+   --D using memory-mapped register access.
    type IOMMU_X_Type is record
       Common           : IOMMU_Common_Type;
+      --D @Interface
+      --D IOTLB registers used for IOTLB invalidation. They have a variable
+      --D offset depending on the specific IOMMU device, see Intel VT-d
+      --D Specification, "10.4.8 IOTLB Registers".
       IOTLB_Invalidate : Reg_IOTLB_Invalidate;
+      --D @Interface
+      --D Fault recording registers used providing error information on VT-d
+      --D faults. Their number and offset varies depending on the specific
+      --D IOMMU device, see Intel VT-d Specification, "10.4.14 Fault Recording
+      --D Registers [n]".
       Fault_Recording  : Reg_Fault_Recording_Type;
    end record;
 
@@ -607,10 +640,21 @@ private
    pragma Warnings (On, "*-bit gap before component *");
    pragma Warnings (On, "memory layout out of order");
 
+   --D @Interface
+   --D Definition of VT-d IOMMU layout for all programmable IOMMU(s) of the
+   --D system.
    type IOMMUs_Type is record
+      --D @Interface
+      --D Memory-mapped registers of IOMMU 1.
       IOMMU_1 : IOMMU_1_Type;
+      --D @Interface
+      --D Padding for IOMMU 1 to 4K.
       Padding_1 : Bit_Array (1 .. SK.Page_Size * 8 - IOMMU_1_Type_Size);
+      --D @Interface
+      --D Memory-mapped registers of IOMMU 2.
       IOMMU_2 : IOMMU_2_Type;
+      --D @Interface
+      --D Padding for IOMMU 2 to 4K.
       Padding_2 : Bit_Array (1 .. SK.Page_Size * 8 - IOMMU_2_Type_Size);
    end record
      with

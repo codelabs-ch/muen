@@ -804,6 +804,10 @@
     running on different CPUs. Global data is shared explicitly and is
     designated as such by placing it in a dedicated \texttt{.globaldata} linker
     section.
+    One special case of a global data structure is the crash audit storage:
+    while it is shared by all CPUs it may also be made accessible to subjects,
+    e.g. for processing of crash information. Thus it is treated separately and
+    not placed into the \texttt{.globaldata} linker section.
 
     Kernel data can be categorized as follows:
     \begin{enumerate}
@@ -812,8 +816,13 @@
      \item Global data, shared by all CPUs
     \end{enumerate}
 
-    The following sections provide explanations for each of these categories and
-    their initialization.
+    Aside from these data structures, there are also interfaces used by the
+    kernel to interact with external entities, such as memory-mapped devices
+    like the IOMMU. The Tau0 interface is in the same category, as it is used by
+    Tau0 to communicate with the kernel.
+
+    The following sections provide explanations for each of the main kernel data
+    categories.
    </text>
   </section>
 

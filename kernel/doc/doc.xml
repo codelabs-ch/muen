@@ -873,6 +873,72 @@
    The description includes the purpose as well as the memory representation of
    these interfaces.
   </text>
+  <section id="Skp.IOMMU.IOMMUs" label="Skp.IOMMU.IOMMUs" priority="0">
+   <text priority="0">
+    External interface used to access and program IOMMU(s), see also section
+    \ref{kernel_devs_iommu}.
+   </text>
+  </section>
+  <section id="SK.IO_Apic.Register_Select" label="SK.IO_Apic.Register_Select" priority="0">
+   <text priority="0">
+    External interface used in conjunction with \ref{SK.IO_Apic.Window} to
+    access and program the I/O APIC, see also section \ref{kernel_devs_apic}.
+   </text>
+  </section>
+  <section id="SK.IO_Apic.Window" label="SK.IO_Apic.Window" priority="0">
+   <text priority="0">
+    External interface used in conjunction with \ref{SK.IO_Apic.Register_Select}
+    to access and program the I/O APIC, see also section \ref{kernel_devs_apic}.
+   </text>
+  </section>
+  <section id="SK.Crash_Audit.Instance" label="SK.Crash_Audit.Instance" priority="0">
+   <text priority="0">
+    Global crash audit information data structure. It is \emph{not} put in the
+    CPU-Global section since it may be accessible by subjects (e.g. for
+    outputting crash information). Additionally the memory type of the region
+    must be Uncached (UC) so the content survives a warm start/system reboot.
+   </text>
+  </section>
+  <section id="SK.Tau0_Interface.New_Major" label="SK.Tau0_Interface.New_Major" priority="0">
+   <text priority="0">
+    External interface to \tau0.
+   </text>
+  </section>
+  <section id="SK.FPU.Subject_FPU_States" label="SK.FPU.Subject_FPU_States" priority="0">
+   <text priority="0">
+    Local subject-related data, see section \ref{datamodel_local_subject}.
+   </text>
+  </section>
+  <section id="SK.Scheduling_Info.Sched_Info" label="SK.Scheduling_Info.Sched_Info" priority="0">
+   <text priority="0">
+    Local subject-related data, see section \ref{datamodel_local_subject}.
+   </text>
+  </section>
+  <section id="SK.Subjects.Descriptors" label="SK.Subjects.Descriptors" priority="0">
+   <text priority="0">
+    Local subject-related data, see section \ref{datamodel_local_subject}.
+   </text>
+  </section>
+  <section id="SK.Subjects_Interrupts.Pending_Interrupts" label="SK.Subjects_Interrupts.Pending_Interrupts" priority="0">
+   <text priority="0">
+    Local subject-related data, see section \ref{datamodel_local_subject}.
+   </text>
+  </section>
+  <section id="SK.Subjects_MSR_Store.MSR_Storage" label="SK.Subjects_MSR_Store.MSR_Storage" priority="0">
+   <text priority="0">
+    Local subject-related data, see section \ref{datamodel_local_subject}.
+   </text>
+  </section>
+  <section id="SK.Timed_Events.Subject_Events" label="SK.Timed_Events.Subject_Events" priority="0">
+   <text priority="0">
+    Local subject-related data, see section \ref{datamodel_local_subject}.
+   </text>
+  </section>
+  <section id="SK.VMX.VMCS" label="SK.VMX.VMCS" priority="0">
+   <text priority="0">
+    Local subject-related data, see section \ref{datamodel_local_subject}.
+   </text>
+  </section>
  </section>
 
  <section id="cpu_global_variables_section" label="CPU-Global State" priority="0">

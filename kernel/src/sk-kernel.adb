@@ -34,8 +34,8 @@ is
    --D @Section Id => impl_kernel_init, Label => Initialization, Parent => implementation, Priority => -10
    --D @Text Section => impl_kernel_init, Priority => 0
    --D The \verb!SK.Kernel.Initialize! procedure is the Ada/SPARK entry point
-   --D into the kernel. It is invoked from Assembler code after low-level system
-   --D initialization has been performed.
+   --D into the kernel during the boot phase. It is invoked from Assembler code
+   --D after low-level system initialization has been performed.
    --D Kernel initialization consists of the following steps:
    --D @OL Id => impl_kernel_init_steps, Section => impl_kernel_init, Priority => 10
    procedure Initialize (Subject_Registers : out SK.CPU_Registers_Type)
@@ -108,32 +108,32 @@ is
          end if;
 
          --D @Item List => impl_kernel_init_steps, Priority => 0
-         --D Enable hardware features (FPU, APIC, MCE)
+         --D Enable hardware features (FPU, APIC, MCE).
          FPU.Enable;
          Apic.Enable;
          MCE.Enable;
 
          if CPU_Info.Is_BSP then
             --D @Item List => impl_kernel_init_steps, Priority => 0
-            --D Setup of Multicore memory barries (BSP-only)
+            --D Setup of Multicore memory barries (BSP-only).
             MP.Initialize_All_Barrier;
 
             --D @Item List => impl_kernel_init_steps, Priority => 0
-            --D Disable legacy PIC/PIT (BSP-only)
+            --D Disable legacy PIC/PIT (BSP-only).
             Interrupts.Disable_Legacy_PIT;
             Interrupts.Disable_Legacy_PIC;
 
             --D @Item List => impl_kernel_init_steps, Priority => 0
-            --D Setup of VT-d DMAR and IR (BSP-only)
+            --D Setup of VT-d DMAR and IR (BSP-only).
             VTd.Initialize;
             VTd.Interrupts.Setup_IRQ_Routing;
 
             --D @Item List => impl_kernel_init_steps, Priority => 0
-            --D Initialize subject pending events. (BSP-only)
+            --D Initialize subject pending events (BSP-only).
             Subjects_Events.Initialize;
 
             --D @Item List => impl_kernel_init_steps, Priority => 0
-            --D Wake up application processors. (BSP-only)
+            --D Wake up application processors (BSP-only).
             Apic.Start_AP_Processors;
          end if;
 

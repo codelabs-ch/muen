@@ -72,11 +72,11 @@ is
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
    --D @Interface
-   --D Virtual Machine Control Structure (VMCS) is used by hardware to manage
-   --D the VM state of each subject designated by ID. The VM state is saved and
-   --D restored on each VM-exit and entry according to the VM-controls and as
-   --D specified in Intel SDM Vol. 3C, "Chapter 24 Virtual Machine Control
-   --D Structures" \cite{intelsdm}.
+   --D A Virtual Machine Control Structure (VMCS) is used by the hardware to
+   --D manage the VM state of each subject designated by ID. The VM state is
+   --D saved and restored on each VM-exit and entry according to the VM-controls
+   --D and as specified in Intel SDM Vol. 3C, "Chapter 24 Virtual Machine
+   --D Control Structures" \cite{intelsdm}.
    VMCS : VMCS_Array
    with
       Volatile,
@@ -334,16 +334,16 @@ is
                   Value => 0);
 
       --D @Item List => impl_vmcs_setup_ctrl_steps, Priority => 0
-      --D Write policy-defined I/O Bitmap address to the corresponding VMCS
+      --D Write policy-defined I/O bitmap address to the corresponding VMCS
       --D fields. I/O bitmap B is expected to be located in the next memory page
-      --D after bitmap A.
+      --D after bitmap A (which is enforced by the validtor).
       VMCS_Write (Field => Constants.IO_BITMAP_A,
                   Value => IO_Bitmap_Address);
       VMCS_Write (Field => Constants.IO_BITMAP_B,
                   Value => IO_Bitmap_Address + Page_Size);
 
       --D @Item List => impl_vmcs_setup_ctrl_steps, Priority => 0
-      --D Write policy-defined MSR Bitmap address to the corresponding VMCS
+      --D Write policy-defined MSR bitmap address to the corresponding VMCS
       --D field.
       VMCS_Write (Field => Constants.MSR_BITMAP,
                   Value => MSR_Bitmap_Address);
@@ -472,7 +472,7 @@ is
                   Value => Skp.Kernel.Stack_Address);
       --D @Item List => impl_vmcs_setup_host_steps, Priority => 0
       --D Set host RIP field to exit address which points to
-      --D \texttt{vmx\_exit\_hander} declared in Assembly.
+      --D \texttt{vmx\_exit\_hander} declared in assembly.
       VMCS_Write (Field => Constants.HOST_RIP,
                   Value => Exit_Address);
       --D @Item List => impl_vmcs_setup_host_steps, Priority => 0
@@ -490,7 +490,9 @@ is
    begin
       --D @OL Id => impl_vmcs_setup_guest_steps, Section => impl_vmcs_setup_guest, Priority => 10
       --D @Item List => impl_vmcs_setup_guest_steps, Priority => 0
-      --D Set VMCS link pointer field to \texttt{16\#ffffffff\_ffffffff\#}.
+      --D Set VMCS link pointer field to \texttt{16\#ffffffff\_ffffffff\#} since
+      --D "VMCS shadowing" is not used, see Intel SDM Vol. 3C,
+      --D "24.4.2 Guest Non-Register State".
       VMCS_Write (Field => Constants.VMCS_LINK_POINTER,
                   Value => Word64'Last);
       --D @Item List => impl_vmcs_setup_guest_steps, Priority => 0
@@ -603,7 +605,7 @@ is
       --D the address of the VMXON region assigned to the CPU. VMXON regions are
       --D laid out in memory consecutively like an array and each CPU uses its
       --D CPU\_ID as index. VMXON regions are not mapped into the kernel address
-      --D space, as they are cleared and initialized during boot in Assembly
+      --D space, as they are cleared and initialized during boot in assembly
       --D (\texttt{init.S}). No further access is required.
       --D The requirements for executing the \texttt{vmxon} instruction are
       --D assured when the VMX feature is enabled see

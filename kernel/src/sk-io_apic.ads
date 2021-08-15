@@ -25,8 +25,8 @@ with SK.CPU_Info;
 --D SDM Vol. 3A, "Chapter 10 Advanced Programmable Interrupt Controller (APIC)"
 --D \cite{intelsdm}. The I/O APIC is part of the chipset and it receives
 --D external interrupts from the system and devices. It routes them to the local
---D APICs/CPUs according to the Interrupt Routing Table which is programmed
---D according to the system policy.
+--D APICs according to the Interrupt Routing Table which is programmed as
+--D specified by the system policy.
 package SK.IO_Apic
 with
    Abstract_State =>

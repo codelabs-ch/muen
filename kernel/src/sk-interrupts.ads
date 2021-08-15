@@ -24,8 +24,8 @@ with SK.Crash_Audit_Types;
 with SK.MCE;
 
 --D @Interface
---D This package provides procedures to disable legacy Programmable Interrupt
---D Controller (PIC) and the Programmable Interrupt Timer (PIT).
+--D This package provides procedures to disable the legacy Programmable
+--D Interrupt Controller (PIC) and the Programmable Interrupt Timer (PIT).
 --D Moreover, an interrupt handler which is invoked if an exception occurs
 --D during kernel execution is provided.
 package SK.Interrupts

@@ -145,7 +145,7 @@ is
 
          if Interrupt_Pending then
             --D @Text Section => impl_inject_interrupt, Priority => 10
-            --D Consume the pending interrupt, by writing the corresponding
+            --D Consume the pending interrupt by writing the corresponding
             --D vector to the VM-entry interruption-information and setting the
             --D valid bit, see Intel SDM Vol. 3C, "26.6 Event Injection".
             VMX.VMCS_Write
@@ -157,7 +157,7 @@ is
 
       --D @Text Section => impl_inject_interrupt, Priority => 10
       --D Then, check if the subject has more pending interrupts and activate
-      --D Interrupt window if required, see Intel SDM Vol. 3C, "26.7.5
+      --D interrupt window exiting if required, see Intel SDM Vol. 3C, "26.7.5
       --D Interrupt-Window Exiting and Virtual-Interrupt Delivery".
       Subjects_Interrupts.Has_Pending_Interrupt
         (Subject           => Subject_ID,
@@ -214,7 +214,7 @@ is
          --D @Text Section => impl_handle_timer_expiry, Priority => 10
          --D \paragraph{}
          --D In case of a regular minor frame switch, sync on minor frame
-         --D barrier if necessary and switch to next minor frame in current
+         --D barrier if necessary and switch to next minor frame in the current
          --D major frame.
          declare
             Current_Barrier : constant Skp.Scheduling.Barrier_Index_Range
@@ -233,7 +233,6 @@ is
          --D If the end of the major frame has been reached, switch to the first
          --D minor frame. Sync all CPU cores and then let the BSP update the
          --D next major frame ID as designated by Tau0.
-
          Next_Minor_ID := Skp.Scheduling.Minor_Frame_Range'First;
 
          MP.Wait_For_All;
@@ -252,8 +251,8 @@ is
 
                --D @Text Section => impl_handle_timer_expiry, Priority => 10
                --D Calculate next major frame start by incrementing the current
-               --D global start timestamp by period of the major frame that
-               --D just ended.
+               --D global start timestamp by the length (also called period) of
+               --D the major frame that just ended.
                Next_Major_Start := Global_Current_Major_Start_Cycles
                  + Skp.Scheduling.Major_Frames (Current_Major_ID).Period;
 
@@ -272,7 +271,6 @@ is
                   --D If the major frame has changed, set the corresponding
                   --D minor frame barrier configuration as specified by the
                   --D system policy.
-
                   MP.Set_Minor_Frame_Barrier_Config
                     (Config => Skp.Scheduling.Major_Frames
                        (Next_Major_ID).Barrier_Config);
@@ -366,21 +364,21 @@ is
         := Skp.Subjects.Get_MSR_Count (Subject_ID => ID);
    begin
       --D @Item List => subject_init_steps, Priority => 0
-      --D Reset FPU state for subject with given ID
+      --D Reset FPU state for subject with given ID.
       FPU.Reset_State (ID => ID);
       --D @Item List => subject_init_steps, Priority => 0
-      --D Clear pending events of subject with given ID
+      --D Clear pending events of subject with given ID.
       Subjects_Events.Clear_Events (Subject => ID);
       --D @Item List => subject_init_steps, Priority => 0
-      --D Initialize pending interrupts of subject with given ID
+      --D Initialize pending interrupts of subject with given ID.
       Subjects_Interrupts.Init_Interrupts (Subject => ID);
       --D @Item List => subject_init_steps, Priority => 0
-      --D Initialize timed event of subject with given ID
+      --D Initialize timed event of subject with given ID.
       Timed_Events.Init_Event (Subject => ID);
 
       if MSR_Count > 0 then
          --D @Item List => subject_init_steps, Priority => 0
-         --D Clear all MSRs in MSR storage area if subject has access to MSRs
+         --D Clear all MSRs in MSR storage area if subject has access to MSRs.
          Subjects_MSR_Store.Clear_MSRs (Subject => ID);
       end if;
 
@@ -630,7 +628,7 @@ is
          when Skp.Events.System_Panic =>
             --D @Item List => impl_handle_source_event_actions, Priority => 0
             --D If the designated action is system panic, then the system panic
-            --D handler is invoked, see \ref{impl_handle_system_panic}.
+            --D handler is invoked.
             Handle_System_Panic (Subject => Subject);
          when Skp.Events.Unmask_Irq      =>
             --D @Item List => impl_handle_source_event_actions, Priority => 0
@@ -679,8 +677,9 @@ is
    --D @Text Section => hypercall_handling, Priority => 0
    --D Hypercalls can be triggered by subjects executing the \verb!vmcall!
    --D instruction in guest privilege level 0, which is assured by means of a
-   --D precondition check. If subject user space tries to invoke hypercalls, it
-   --D is treated as a trap with the corresponding exit reason.
+   --D precondition check. If subject user space/ring-3 tries to invoke
+   --D hypercalls, the VM-Exit is handled as a trap with exit reason
+   --D \verb!VMCALL!, see \verb!Handle_Trap!.
    procedure Handle_Hypercall
      (Current_Subject    : Skp.Global_Subject_ID_Type;
       Unchecked_Event_Nr : Word64)
@@ -765,16 +764,17 @@ is
    begin
       --D @Text Section => impl_handle_irq, Priority => 0
       --D First the vector of the external interrupt is validated. If it is an
-      --D IPI no further action is taken since the purpose was to force a VM
-      --D exit of the currently executing subject. A subsequent subject VM entry
-      --D leads to the evaluation of pending target events and subject
-      --D interrupts.
+      --D IPI or VT-d fault vector, no further action is taken since the purpose
+      --D was to force a VM exit of the currently executing subject. A
+      --D subsequent subject VM entry leads to the evaluation of pending target
+      --D events and subject interrupts.
       if Vector >= Skp.Interrupts.Remap_Offset
         and then Vector < SK.Constants.VTd_Fault_Vector
       then
          --D @Text Section => impl_handle_irq, Priority => 0
          --D \paragraph{}
-         --D Consult the vector routing table to determine the target subject
+         --D If the vector is valid and neither an IPI nor VT-d fault vector,
+         --D consult the vector routing table to determine the target subject
          --D and vector as specified by the policy and insert the target
          --D vector by marking it as pending. Note that there is no
          --D switching to the destination of the IRQ. The interrupt will be
@@ -863,7 +863,6 @@ is
       --D First the trap number is checked. If it is outside the valid trap
       --D range an appropriate crash audit record is written and an error
       --D condition is signaled.
-
       Valid_Trap_Nr := Trap_Nr <= SK.Word16 (Skp.Events.Trap_Range'Last);
       if not Valid_Trap_Nr then
          Panic_Unknown_Trap;
@@ -889,7 +888,6 @@ is
 
       --D @Text Section => impl_handle_trap, Priority => 20
       --D If the trap triggered a handover event, load the new VMCS.
-
       if Current_Subject /= Next_Subject_ID then
          VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
                    (Subject_ID => Next_Subject_ID));
@@ -932,7 +930,6 @@ is
          --D \paragraph{}
          --D Check if timed event has expired and handle source event if
          --D necessary.
-
          Timed_Events.Get_Event (Subject           => Event_Subj,
                                  TSC_Trigger_Value => Trigger_Value,
                                  Event_Nr          => Event_Nr);
@@ -949,7 +946,6 @@ is
 
       --D @Text Section => impl_handle_timer_expiry, Priority => 20
       --D If the new minor frame designates a different subject, load its VMCS.
-
       if Current_Subject /= Next_Subject_ID then
 
          --  New minor frame contains different subject -> Load VMCS.
@@ -1081,7 +1077,7 @@ is
 
       --D @Text Section => impl_exit_handler, Priority => 0
       --D \paragraph{}
-      --D Finally, the VMX preemption timer is armed, the FPU and subject state
+      --D Finally, the VMX preemption timer is armed, the FPU and subject states
       --D are restored, see \ref{impl_subjects_state_restore}. Additionally, to
       --D ensure the precondition of \texttt{Subjects.Restore\_State}, the state
       --D is filtered beforehand, see \ref{impl_subjects_state_filter}.

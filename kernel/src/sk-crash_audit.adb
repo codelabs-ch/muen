@@ -136,9 +136,9 @@ is
    --D @Section Id => impl_crash_audit, Label => Crash Audit, Parent => implementation, Priority => 0
    --D @Section Id => impl_crash_audit_init, Label => Initialization, Parent => impl_crash_audit, Priority => 0
    --D @Text Section => impl_crash_audit_init, Priority => 0
-   --D Initialization of the Crash Audit facility puts the Crash Audit Store in
-   --D a well-defined state in order to be ready for the addition of new Audit
-   --D Entries in case of a crash.
+   --D Initialization of the Crash Audit facility puts the crash audit store in
+   --D a well-defined state in order to be ready for the addition of new audit
+   --D entries in case of a crash.
    --D @OL Id => impl_crash_audit_init_steps, Section => impl_crash_audit_init, Priority => 0
    procedure Init
    is
@@ -154,7 +154,7 @@ is
       else
          --D @Item List => impl_crash_audit_init_steps, Priority => 0
          --D Increase the boot counter but retain current audit data, if it is
-         --D already initialized,
+         --D already initialized.
          Instance.Crash_Info.Header.Boot_Count := H.Boot_Count + 1;
          pragma Debug
            (Dump.Print_Message
@@ -252,7 +252,7 @@ is
       end loop;
 
       --D @Item List => impl_crash_audit_final_steps, Priority => 0
-      --D Increase the generation and crash counters.
+      --D Increase the generation.
       Instance.Crash_Info.Header.Generation := Boots + 1;
       --D @Item List => impl_crash_audit_final_steps, Priority => 0
       --D Increase the crash counter.

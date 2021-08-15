@@ -111,8 +111,8 @@ private
       & "interfaces. Non-overlap is checked during system build.");
    --D @Interface
    --D Bitmap of the currently pending subject interrupts. The CPU executing
-   --D the associated subject consumes (one) pending interrupts prior to
-   --D resuming the subject if it is in a state to accept interrupts.
+   --D the associated subject consumes one pending interrupt prior to resuming
+   --D the subject if it is in a state to accept interrupts.
    Pending_Interrupts : Pending_Interrupts_Array
    with
       Volatile,

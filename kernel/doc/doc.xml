@@ -11,8 +11,6 @@
 
   \usepackage[head=30pt, lmargin=3.0cm, rmargin=3.0cm, bmargin=1.9cm, tmargin=3.2cm]{geometry}
 
-  \usepackage{acronym}
-
   \usepackage{pgfgantt}
 
   \usepackage{hyperref}
@@ -1070,17 +1068,6 @@
     state has to be restored back into the associated VMCS.
    </text>
   </section>
- </section>
-
- <section id="acronyms" label="Acronyms" priority="1000.0">
-  <text priority="0">
-   \begin{acronym}
-    \acro{APIC}[APIC]{Advanced Programmable Interrupt Controller}
-    \acro{AP}[AP]{Application Processor}
-    \acro{BSP}[BSP]{Bootstrap Processor}
-    \acro{SK}[SK]{Separation Kernel}
-   \end{acronym}
-  </text>
  </section>
 
 </doc>

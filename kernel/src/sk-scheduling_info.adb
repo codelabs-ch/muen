@@ -29,7 +29,11 @@ is
       TSC_Schedule_End   : SK.Word64)
    is
    begin
+      --D @Interface
+      --D Set minor frame start timestamp to given TSC start value.
       Sched_Info (ID).Data.TSC_Schedule_Start := TSC_Schedule_Start;
+      --D @Interface
+      --D Set minor frame end timestamp to given TSC end value.
       Sched_Info (ID).Data.TSC_Schedule_End   := TSC_Schedule_End;
    end Set_Scheduling_Info;
 

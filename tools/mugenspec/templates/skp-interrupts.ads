@@ -1,5 +1,8 @@
 with SK;
 
+--D @Interface
+--D This package contains IRQ and vector routing definitions as specified by
+--D the system policy.
 package Skp.Interrupts
 is
 

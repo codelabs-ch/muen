@@ -48,6 +48,11 @@ is
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
+   --D @Interface
+   --D I/O Register Select Register (IOREGSEL).
+   --D This memory-mapped register selects the I/O APIC register to be
+   --D read/written. The data is then read from or written to the selected
+   --D register through the IOWIN register, see \cite{ioapic} section 3.1.1.
    Register_Select : SK.Word32
    with
       Volatile,
@@ -56,6 +61,11 @@ is
       Effective_Writes,
       Address => System'To_Address (Skp.Hardware.Ioapic_1_Mem1 + IO_APIC_IND);
 
+   --D @Interface
+   --D I/O Window Register (IOWIN).
+   --D This memory-mapped register is used to write to and read from the
+   --D register selected by the IOREGSEL register, see  \cite{ioapic} section
+   --D 3.1.2.
    Window : SK.Word32
    with
       Volatile,
@@ -67,6 +77,9 @@ is
      (GNATprove, On,
       "writing * is assumed to have no effects on other non-volatile objects");
 
+   --D @Interface
+   --D Spinlock guarding against concurrent access to the I/O APIC by kernels
+   --D running on different CPUs.
    Global_IO_APIC_Lock : Locks.Spin_Lock_Type
    with
       Linker_Section => Constants.Global_Data_Section;

@@ -24,6 +24,11 @@ with SK.CPU_Info;
 with SK.Crash_Audit;
 with SK.Interrupt_Tables;
 
+--D @Interface
+--D This package implements subprograms to enter VMX root operation as well as
+--D for higher level access and management of VMX structures such as VMCS and
+--D VMXON regions, see Intel SDM Vol. 3C, "Chapter 24 Virtual Machine Control
+--D Structures" \cite{intelsdm}.
 package SK.VMX
 with
    Abstract_State =>
@@ -37,13 +42,19 @@ is
       Convention => C,
       Link_Name  => "vmx_exit_handler_ptr";
 
-   --  Enter VMX root operation.
+   --D @Section Id => impl_vmcs_enter_root_mode, Label => Entering VMX root mode, Parent => impl_vmcs
+   --D @Text Section => impl_vmcs_enter_root_mode
+   --D Bring CPU into VMX root operation.
    procedure Enter_Root_Mode
    with
       Global => (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID),
                  In_Out => (Crash_Audit.State, X86_64.State));
 
-   --  Reset VMCS of subject specified by ID.
+   --D @Section Id => impl_vmcs_reset, Label => VMCS Reset, Parent => impl_vmcs
+   --D @Text Section => impl_vmcs_reset
+   --D Resetting a VMCS located at a specific physical memory address associated
+   --D with a specific subject means clearing all data and initializing the VMCS
+   --D for (re)use.
    procedure Reset
      (VMCS_Address : Word64;
       Subject_ID   : Skp.Global_Subject_ID_Type)
@@ -73,7 +84,11 @@ is
       Global => (Input  => CPU_Info.APIC_ID,
                  In_Out => (Crash_Audit.State, X86_64.State));
 
-   --  Setup control fields of the currently active VMCS.
+   --D @Section Id => impl_vmcs, Label => VMCS Management, Parent => implementation
+   --D @Section Id => impl_vmcs_setup_ctrl, Label => VM-Control Fields Setup, Parent => impl_vmcs
+   --D @Text Section => impl_vmcs_setup_ctrl
+   --D Setup control fields of the currently active VMCS. These fields govern
+   --D VMX non-root operation as well as VM Exit and Entry behavior.
    procedure VMCS_Setup_Control_Fields
      (IO_Bitmap_Address  : Word64;
       MSR_Bitmap_Address : Word64;
@@ -91,14 +106,23 @@ is
       Global => (Input  => CPU_Info.APIC_ID,
                  In_Out => (Crash_Audit.State, X86_64.State));
 
-   --  Setup host fields of the currently active VMCS.
+   --D @Section Id => impl_vmcs_setup_host, Label => Host-State Fields Setup, Parent => impl_vmcs
+   --D @Text Section => impl_vmcs_setup_host
+   --D Setup host-state fields of the currently active VMCS. Processor state is
+   --D loaded from these fields on every VM exit, see Intel SDM Vol. 3C,
+   --D "27.5 Loading Host State".
    procedure VMCS_Setup_Host_Fields
    with
       Global => (Input  => (Exit_Address, CPU_Info.APIC_ID,
                             Interrupt_Tables.State),
                  In_Out => (Crash_Audit.State, X86_64.State));
 
-   --  Setup guest fields of the currently active VMCS.
+   --D @Section Id => impl_vmcs_setup_guest, Label => Guest-State Fields Setup, Parent => impl_vmcs
+   --D @Text Section => impl_vmcs_setup_guest
+   --D Setup guest-state fields of the currently active VMCS. Processor state is
+   --D loaded from these fields on every VM entry (Intel SDM Vol. 3C,
+   --D "27.3 Saving Guest State") and stored on very VM exit (Intel SDM Vol. 3C,
+   --D "26.3.2 Loading Guest State").
    procedure VMCS_Setup_Guest_Fields
      (PML4_Address : Word64;
       EPT_Pointer  : Word64)

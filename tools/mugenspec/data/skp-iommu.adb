@@ -6,6 +6,9 @@ with
 is
 
    pragma Warnings (Off);  --  Only emitted by recent GNATprove versions.
+   --D @Interface
+   --D Memory-mapped interface to IOMMUs, see Intel Virtualization Technology
+   --D for Directed I/O, section 10.4 \cite{intelvtd}.
    IOMMUs : IOMMUs_Type
      with
        Volatile,

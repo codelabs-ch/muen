@@ -1,0 +1,18 @@
+\begin{ganttchart}[
+	vgrid={*9{dotted},*1{dashed},*9{dotted}},
+	hgrid,
+	y unit title=0.75cm,
+	title label anchor/.style={below=-1.5ex}]{1}{20}
+	\gantttitle{Major frame 1}{10}
+	\gantttitle{Major frame 2}{10} \\
+	\ganttbar[bar/.append style={top color=white, bottom color=kernelcolor}]{CPU0}{1}{10}
+	\ganttbar[bar/.append style={top color=white, bottom color=kernelcolor}]{}{11}{20} \\
+	\ganttbar[bar/.append style={top color=white, bottom color=usercolor}]{CPU1}{1}{2}
+	\ganttbar[bar/.append style={top color=white, bottom color=guestcolor}]{}{3}{6}
+	\ganttbar[bar/.append style={top color=white, bottom color=usercolor}]{}{7}{8}
+	\ganttbar[bar/.append style={top color=white, bottom color=guestcolor}]{}{9}{10}
+	\ganttbar[bar/.append style={top color=white, bottom color=usercolor}]{}{11}{12}
+	\ganttbar[bar/.append style={top color=white, bottom color=guestcolor}]{}{13}{16}
+	\ganttbar[bar/.append style={top color=white, bottom color=usercolor}]{}{17}{18}
+	\ganttbar[bar/.append style={top color=white, bottom color=guestcolor}]{}{19}{20}
+\end{ganttchart}

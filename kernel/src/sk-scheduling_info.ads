@@ -24,6 +24,8 @@ private with Skp.Kernel;
 
 with Skp.Scheduling;
 
+--D @Interface
+--D This package provides access to per-group scheduling information.
 package SK.Scheduling_Info
 with
    Abstract_State => (State with External => (Async_Readers, Async_Writers)),
@@ -46,8 +48,16 @@ private
    with
       Size => (Page_Size - Muschedinfo.Scheduling_Info_Size) * 8;
 
+   --D @Interface
+   --D A scheduling info page consist of the scheduling data and is padded to
+   --D a full 4K memory page. Explicit padding makes sure the entirety of the
+   --D memory is covered and initialized.
    type Sched_Info_Page_Type is record
+      --D @Interface
+      --D Scheduling information (i.e. minor frame start/end timestamp).
       Data    : Muschedinfo.Scheduling_Info_Type;
+      --D @Interface
+      --D Padding to fill the memory page.
       Padding : Padding_Type;
    end record
    with
@@ -67,7 +77,11 @@ private
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
-   --  Scheduling group info regions.
+   --D @Interface
+   --D Scheduling group info regions which provide the start and end timestamp
+   --D of the current minor frame. Each scheduling group has their own,
+   --D independent information which is mapped read-only into the address space
+   --D of all subjects belonging to that group.
    Sched_Info : Sched_Info_Array
    with
       Volatile,

@@ -20,6 +20,8 @@ with Skp.Scheduling;
 
 with SK.CPU_Info;
 
+--D @Interface
+--D This package provides cross-core CPU synchronization facilities.
 package SK.MP
 with
    Abstract_State =>

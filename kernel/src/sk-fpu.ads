@@ -26,13 +26,18 @@ with Skp;
 
 with SK.Crash_Audit_Types;
 
+--D @Interface
+--D This package contains subprograms to interact with the FPU, i.e. to check
+--D its state, enable it during startup and save as well as restore the
+--D hardware FPU state to/from memory.
 package SK.FPU
 with
    Abstract_State => State,
    Initializes    => State
 is
 
-   --  Check validity of FPU state and return results.
+   --  Check validity of FPU state and return results. Is_Valid is set to True
+   --  if the hardware supports the required FPU features.
    procedure Check_State
      (Is_Valid : out Boolean;
       Ctx      : out Crash_Audit_Types.FPU_Init_Context_Type)
@@ -96,6 +101,14 @@ private
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
+
+   --D @Interface
+   --D The FPU state array stores the hardware FPU state of each subject in a
+   --D separate save area.
+   --D Prior to the execution of a subject, its FPU state is loaded from the
+   --D associated storage area into the FPU.
+   --D On exit from a subject, the hardware FPU state is stored to the same
+   --D area. Note that Muen performs \emph{eager} FPU state switching.
    Subject_FPU_States : Subject_FPU_State_Array
    with
       Part_Of => State,

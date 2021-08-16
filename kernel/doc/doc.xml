@@ -1,0 +1,1200 @@
+<doc name="Muen Separation Kernel">
+ <author>Adrian-Ken Rueegsegger, Reto Buerki</author>
+ <version>0.6</version>
+
+ <latex_preamble>
+  \usepackage{titlepic}
+  \titlepic{\includegraphics[scale=0.4]{../../doc/images/muen.pdf}}
+
+  \usepackage{tocloft}
+  \setcounter{tocdepth}{1}
+
+  \usepackage[head=30pt, lmargin=3.0cm, rmargin=3.0cm, bmargin=1.9cm, tmargin=3.2cm]{geometry}
+
+  \usepackage{pgfgantt}
+
+  \usepackage{hyperref}
+  \hypersetup{
+  pdftitle={Muen Kernel Specification},
+  pdfsubject={Muen},
+  pdfauthor={Adrian-Ken Rueegsegger, Reto Buerki},
+  unicode=true,
+  pdffitwindow=true,
+  bookmarksnumbered=false,
+  bookmarksopen=false,
+  breaklinks=true,
+  pdfborder={0 0 0},
+  colorlinks=true,
+  }
+
+  \usepackage[T1]{fontenc}
+  \usepackage{courier}
+  \newcommand{\tablefont} {\fontfamily{pcr}\fontsize{7pt}{8pt}\selectfont}
+  \let\oldlongtable\longtable
+  \let\endoldlongtable\endlongtable
+  \renewenvironment{longtable}{%
+     \tablefont
+     \oldlongtable
+  }{\endoldlongtable}
+
+  \begin{tikzfadingfrompicture}[name=flow fade]
+   \shade[left color=transparent!0,
+           right color=transparent!60] (0,0) rectangle (2,2);
+  \end{tikzfadingfrompicture}
+
+  \input{tikzstyle}
+
+  \newenvironment{info}
+  {\par
+  \begin{list}{}{\leftmargin=1cm
+  \labelwidth=\leftmargin}\item[\color{blue}\Large\ding{43}]}
+  {\end{list}\par}
+ </latex_preamble>
+
+ <section id="introduction" label="Introduction" priority="0">
+  <text priority="0">
+   This document describes the Muen Separation Kernel (SK). It is intended to
+   provide information and ultimately give a better understanding of the SK
+   design and its implementation. Additionally a short overview of related
+   topics such as system policy and integration is given. References for
+   further reading are included as well. The Muen System Specification
+   \cite{muen:system-spec} as well as the Muen Component Specification
+   \cite{muen:component-spec} in particular should be viewed as the main
+   complementary documents to this one. All three documents taken together make
+   up the main documentation of the entire Muen project.
+
+   The reader is expected to be familiar with concepts related to system-level
+   software such as operating systems/microkernels, component-based systems as
+   well as software development principles.
+
+   Large parts of this document are generated based on annotations in the SK
+   source code\footnote{Version: //{str:SK.Version.Version_String}}.
+  </text>
+  <section id="intro_structure" label="Document Structure" priority="0">
+   <text priority="0">
+    First, a high-level overview of the architecture, design and basic operation
+    of the Muen Separation Kernel is provided in chapter \ref{overview}. The
+    motivation for the architecture and the approach how kernel functionality is
+    minimized and complexity is avoided are described. Next, the concepts of the
+    system policy and configuration are quickly introduced. An overview of the
+    operation of the kernel and its main functional building blocks are
+    presented in sections \ref{overview_operation} through
+    \ref{overview_crash_audit}. Chapter \ref{overview} closes with a discussion
+    how subjects can interact and how covert channels can be avoided or limited
+    in bandwidth on Muen systems.
+
+    Chapter \ref{datamodel} describes how multicore support is realized by Muen
+    and how kernel data is structured. This provides the reader with
+    documentation on what different degrees of data sharing between CPU cores
+    there are, what levels of coupling through data structures exist and how
+    the data is initialized.
+
+    The following chapters \ref{interface_section} and
+    \ref{cpu_global_variables_section} document all kernel data structures
+    grouped by the categories introduced in the previous chapter. The purpose of
+    each data structure is given as well as its type and layout.
+
+    Next, the kernel's direct use of devices is described. Aside from the
+    interrupt controller and IOMMU, Muen's use of the VMX-preemption timer is
+    presented as well as how diagnostics information is provided by the debug
+    build of the kernel.
+
+    Chapter \ref{implementation} describes the kernel implementation in detail.
+    Aside from kernel initialization and exit handling the crash audit, subject
+    state and VMCS management are documented. Then an enumeration of all Ada
+    packages that make up the kernel code base is given.
+
+    A quick introduction of SPARK and the verification process as well as tools
+    is given in chapter \ref{verification_and_validation}. Furthermore, a
+    summary of verification conditions of the SPARK proofs for the Muen SK
+    \footnote{based on the same version this document was generated from} is
+    presented.
+   </text>
+  </section>
+  <section id="intro_source_code" label="Source Code" priority="0">
+   <text priority="0">
+    This section gives a short overview of the Muen source code. It describes
+    where and how to download it and presents a brief description of the source
+    tree layout.
+   </text>
+   <section id="intro_source_code_get" label="Obtaining the Source Code" priority="0">
+    <text priority="0">
+     The source code of the Muen project is hosted in the official Git
+     repository which is located at \url{https://git.codelabs.ch/muen.git}. \\
+
+     To obtain the source, clone the Git repository as follows: \\
+
+     \verb!git clone --recursive https://git.codelabs.ch/muen.git!
+    </text>
+   </section>
+   <section id="intro_source_code_layout" label="Source-Tree Layout" priority="0">
+    <text priority="0">
+     The top-level directory of the Muen source tree contains a README file which
+     gives a good overview of the key aspects of the Muen project. Furthermore
+     it gives practical advice on how to get started including references to
+     further resources.
+
+     In the following, a brief description of each sub-directory and what it
+     contains is given:
+
+     \begin{description}
+        \item[common/] \hfill \\
+        Source code packages shared between the kernel and components.
+        \item[components/] \hfill \\
+        Implementations of various components and libraries, such as device
+        drivers (e.g. AHCI, PS/2) or Subject Monitor for Muen Linux. These are
+        utilized to realize different Muen Systems and can be reused in any
+        component-based system running on top of Muen.
+        \item[config/] \hfill \\
+        Compiler and Proof tool configuration used when building the Muen tools,
+        Components as well as the kernel.
+        \item[contrib/] \hfill \\
+        Third-party software required for building some tools and components.
+        \item[deploy/] \hfill \\
+        This directory contains build system facilities to enable the simple
+        deployment of Muen system images to supported hardware platforms. Refer
+        to the README for further details.
+        \item[doc/] \hfill \\
+        Contains documents describing different elements of the Muen project.
+        The Master Thesis \emph{An x86/64 Separation Kernel for High Assurance}
+        originally written in 2013 is also located in this directory.
+        \item[emulate/] \hfill \\
+        This directory contains build system facilities to enable the emulation
+        of Muen systems under nested QEMU/KVM. Refer to the README for
+        further details.
+        \item[kernel/] \hfill \\
+        This directory contains the implementation of the Muen Separation Kernel.
+        \item[pack/] \hfill \\
+        This directory contains build system facilities for the assembly of
+        bootable Muen system images.
+        \item[policy/] \hfill \\
+        Provides various Muen system policies such as the demo system, as well
+        as specifications for a selection of hardware platforms.
+        \item[projects/] \hfill \\
+        Support utilities used by the Muen build process are located in this
+        sub-directory.
+        \item[rts/] \hfill \\
+        Zero-Footprint Ada runtime used by the Muen SK as well as native
+        Ada/SPARK component implementations.
+        \item[tools/] \hfill \\
+        Contains the Muen toolchain used for building and assembling a Muen
+        system image. For further details, refer to \cite{muen:system-spec}.
+     \end{description}
+    </text>
+   </section>
+  </section>
+ </section>
+
+ <section id="overview" label="Overview" priority="0">
+  <text priority="0">
+   This section gives an overview of the design and architecture of the Muen
+   Separation Kernel.
+  </text>
+  <section id="overview_architecture" label="System Architecture" priority="0">
+   <text priority="0">
+    Muen is an open-source Separation Kernel implemented in the SPARK
+    programming language, which has been shown to be free from certain bug
+    classes through the application of formal methods. It leverages the
+    virtualization extensions provided by the hardware platform to securely
+    isolate subjects and devices.
+
+    \begin{figure}[ht]
+     \centering
+     \input{graph_arch}
+     \label{fig-muenarch}
+     \caption[Execution of VMs and native subjects]{Execution of VMs and native
+      subjects on top of the Muen SK. The kernel is the only software running in
+      the privileged Intel VT-x root mode while all Subjects execute in
+      unprivileged non-root mode.}
+    \end{figure}
+
+    The Muen SK is the only part of the system running in VMX
+    root mode: all subjects, be it fully-fledged VMs or small, native subjects,
+    execute with lower privileges in non-root mode. By design, no code is
+    executed in user-space (ring 3) of VMX root mode. This enables Muen to
+    completely avoid code for handling Syscalls/Ring-3-to-Ring-0 transitions,
+    significantly reducing the code size and complexity.
+
+    Deterministic runtime behavior of the SK is achieved by avoiding
+    long-running code paths and preemption of kernel code. During kernel
+    execution, external interrupts are disabled and the proof of absence of
+    runtime errors assures that no exceptions occur. Furthermore, the absence of
+    any kind of dynamic resource management and the fixed, cyclic scheduler
+    contribute to the highly deterministic runtime behavior of the kernel.
+
+    The sole purpose of the kernel is to provide temporal and spatial
+    isolation for subjects running on top of it. By design, all non-essential
+    functionality has been removed from the kernel. This results in a
+    significant reduction of code size and complexity. Figure \ref{fig:sksubs}
+    illustrates parts that usually make up an Operating System and the subset
+    that is implemented by the Muen SK.
+
+    \begin{figure}[ht]
+     \centering
+     \input{graph_sk0}
+     \caption[Complexity reduction of Muen SK]{Complexity reduction of Muen SK
+     compared to a classical, monolithical Kernel.}
+     \label{fig:sksubs}
+    \end{figure}
+
+    Since resource allocation is static, there is no need for resource
+    management at runtime. Additionally, Muen does not provide a complex
+    hypercall API. Subjects can only trigger events, such as sending a signal to
+    a specific subject, that have been defined in their entirety in the policy
+    at integration time.  Virtualization events such as traps are not handled by
+    the SK but instead reflected to components as specified in the policy.
+
+    Static configuration also frees the kernel from any policy decisions: the
+    runtime behavior is precisely specified in the system policy which, in turn,
+    enables detailed analysis of the system prior to its execution.
+
+    Further functionality must be implemented in unprivileged subjects. Complex,
+    abstracted IPC mechanisms, which are usually provided by classical
+    microkernels, are not part of the Muen kernel.
+
+    In addition to the minimization of kernel functionality, care is also taken to
+    ensure that the implementation is made as comprehensible and understandable
+    as possible. In particular, the use of complicated algorithms or complex
+    language constructs is deliberately avoided.
+   </text>
+  </section>
+   <section id="overview_policy" label="Policy" priority="0">
+    <text priority="0">
+     This section gives a short description of the Muen system policy and how
+     it relates to the kernel. A detailed description of the Muen System
+     Specification can be found in the corresponding document
+     \cite{muen:system-spec}.
+
+     In the context of Muen, integration of a system is defined as the process
+     of assembling a runnable system image out of constituent parts, such as
+     compiled kernel and subject code, generated data structures (e.g.
+     page tables), etc following a system description.
+
+     The configuration of a Muen system takes place during the integration by
+     means of a \emph{policy} in XML format. The policy includes a declaration
+     of all existing hardware resources of the target platform, the subjects to
+     be executed with their assigned resources as well as the scheduling plan.
+     The plan specifies exactly when a subject should run on which CPU and for
+     how long.
+
+     Information flows between subjects are defined in their entirety in the
+     policy. So-called memory channels declare directional writer/reader
+     relationships and assignment of physical memory or devices for shared
+     usage is also possible. Unassigned resources are not available during
+     runtime.
+
+     From the information specified in the policy, the Muen toolchain
+     generates the actual configuration of the
+     hardware, which is merely applied by the kernel at runtime. For example,
+     the page tables for a subject are generated, which the kernel applies
+     accordingly, when the associated subject is executed. The SK has no
+     knowledge of the exact layout of the page tables and which memory areas are
+     accessible to a subject. In fact, these data structures are not even mapped
+     into the address space of the kernel since they remain static and do not
+     need to be accessed.
+
+     As part of the integration, numerous validations are carried out. Each
+     check ensures a specific functional or security-relevant system property,
+     such as for example accessibility of sensitive system memory to subjects.
+     These properties can, where desirable, be manually audited or visualized.
+    </text>
+   </section>
+   <section id="overview_config" label="Configuration" priority="0">
+    <text priority="0">
+     Relevant aspects of the system are transformed by the \texttt{mugenspec}
+     tool to data structures in the form of SPARK source files, which are
+     represented by the Ada package hierarchy \texttt{Skp}. These include for
+     example IRQ routing information, scheduling plans, initial subject state
+     etc, see section \ref{Skp} for detailed documentation.
+
+     Whenever the kernel needs to perform a policy decision, it simply consults
+     the corresponding table, which contains the necessary information. For
+     example when a hardware interrupt is raised, the kernel performs a lookup
+     in the \texttt{Skp.Interrupts.Vector\_Routing} array using the IRQ number
+     as index. The entry specifies which subject the recipient of the interrupt
+     is, as well as the vector number to inject. With this information, the
+     kernel can mark the corresponding interrupt as pending and resume regular
+     operation.
+
+     More information regarding the policy processing by the Muen toolchain can
+     be found in the Muen System Specification document \cite{muen:system-spec}.
+    </text>
+   </section>
+   <section id="overview_operation" label="Kernel Operation" priority="0">
+    <text priority="0">
+     The Muen kernel has two main entry points: system initialization and the
+     scheduler loop. Upon start of a system the kernel puts the CPU in the
+     appropriate state by setting up the MMU and transitioning into VMX
+     root-mode. After setting up the interrupt controllers, IOMMU and when all active
+     CPU cores are ready, the execution of the initial subject is started by
+     means of a VM-Entry. Detailed description of kernel initialization is
+     given in section \ref{impl_kernel_init}.
+
+     On VM-Exit the hardware invokes the scheduler subprogram since it has been
+     set as the kernel entry point in the subject VMCS data structure. The
+     kernel synchronizes data from the VMCS to the subject state data structure
+     in memory. After handling the exit condition, the next subject is prepared
+     by synchronizing the VMCS with values from the subject state and execution
+     is started by performing a VM-entry. The kernel control-flow is illustrated
+     by figure \ref{fig:kernel-operation}. A detailed description of the
+     implementation is given in section \ref{impl_exit_handler}.
+
+     \begin{figure}[h]
+      \centering
+      \input{graph_operation}
+      \caption{Kernel control-flow}
+      \label{fig:kernel-operation}
+     \end{figure}
+    </text>
+   </section>
+   <section id="overview_separation" label="Separation of Subjects" priority="0">
+    <text priority="0">
+     The kernel implements the communication policy by separating subjects
+     spatially and temporally. It does not have to perform any policy decisions
+     because it is static and does not change. Thus, the Muen SK can be seen as
+     a policy enforcement engine.
+
+     Spatial separation of main memory is enforced through the use of hardware
+     memory protection (MMU and IOMMU). The corresponding page tables are made
+     active whenever a subject is executed. As a consequence, subjects have only
+     access to the memory resources assigned to them.
+     DMA-capable devices are restricted to the memory allowed by the system
+     policy. This is enforced by the IOMMU via DMA Remapping (DMAR).
+
+     Architectural state, such as processor and FPU registers, is saved to an
+     associated memory region when subjects change. The state of the subject to
+     be executed is completely restored. An in-depth description of the
+     implementation is given in section \ref{impl_subjects_state}.
+
+     Access rights to model-specific registers (MSRs) as well as I/O ports of
+     devices are determined via MSR and I/O bitmaps, see Intel SDM Vol. 3C,
+     "24.6 VM-Execution Control Fields" \cite{intelsdm}.
+     Unauthorized access is intercepted by the processor and the execution of
+     the subject is interrupted. The incident is handled according to the exit
+     handling of the subject specified in the policy by looking up the
+     appropriate action in the subject's VM-Exit event table.
+
+     Device interrupts are also protected by hardware: by using interrupt
+     remapping, devices can only generate the interrupt vectors assigned in the
+     policy.
+
+     Temporal isolation of subjects is implemented by the scheduler, described
+     in the following section \ref{overview_scheduling}.
+    </text>
+   </section>
+   <section id="overview_scheduling" label="Scheduling" priority="0">
+    <text priority="0">
+     This section presents the design and operation of the Muen kernel scheduler
+     and the chosen scheduling algorithm.
+
+     Scheduling is defined as the process of selecting a subject and giving it
+     access to its assigned system resources for a certain amount of time. The
+     main resource is processor time, which enables a subject to execute
+     instructions in order to perform its task.
+
+     A key objective of the scheduler is to provide temporal isolation by
+     preventing any interference between subjects. To achieve this, scheduling
+     is done in a fixed, cyclic and preemptive manner according to a plan
+     specified in the system policy.
+
+     Subjects are executed for a fixed amount of time, before being forcefully
+     preempted by the scheduler. Preemption means that regardless of what
+     operations a subject is currently performing, its execution is suspended
+     when the allotted time quantum has been consumed. Suspension means the
+     current state like CPU register contents is saved to the data structure
+     associated with the subject. After a subject has been suspended, the
+     scheduler restores the state and executes the next subject for a given
+     amount of time.
+
+     Scheduling information is declared in a \emph{scheduling plan}. Such a plan
+     is part of the policy and specifies in what order subjects are executed on
+     which CPU core and for how long (see \ref{Skp.Scheduling}). The task of
+     the scheduler is to enforce a given scheduling regime.
+
+     A scheduling plan is specified in terms of frames. A \emph{major frame}
+     consists of a sequence of minor frames. When the end of a major frame is
+     reached, the scheduler starts over from the beginning and uses the first
+     minor frame in a cyclic fashion. This means that major frames are
+     repetitive. A \emph{minor frame} specifies a subject and a precise amount
+     of time. This information is directly applied and enforced by the scheduler.
+
+     Figure \ref{fig:example-major-frame} illustrates the structure of a major
+     frame.  The major frame consists of four minor frames. Minor frame 2 has
+     twice the amount of ticks than the other minor frames, which have identical
+     length. Time progresses on the horizontal axis from left to right.
+
+     When the major frame starts, subject 1 is scheduled for the length of minor
+     frame 1, followed by a switch to subject 2. After that the two subjects are
+     again scheduled in alternating fashion.
+
+     \begin{figure}[ht]
+      \centering
+      \input{graph_major_frame}
+      \caption{Example major frame}
+      \label{fig:example-major-frame}
+     \end{figure}
+
+     On systems with multiple CPU cores, a scheduling plan must specify a
+     sequence of minor frames for each processor core. For any given major
+     frame, the sum of all minor frame time slices of a given CPU core must
+     amount to the same time duration, i.e. a major frame has the same length
+     on all cores. In order for the cores to not run out of sync, all CPUs
+     synchronize by means of a barrier prior to starting a new major frame.
+     Additionally, CPUs that switch minor frames at the same time also
+     synchronize the execution of the next minor frame.
+
+     An example of a scheduling plan for multiple CPUs is depicted in
+     figure \ref{fig:example-scheduling-plan}. It illustrates a system with two
+     CPUs that execute various subjects indicated by different colors.
+
+     \begin{figure}[ht]
+      \centering
+      \input{graph_scheduling_plan}
+      \caption{Example scheduling plan}
+      \label{fig:example-scheduling-plan}
+     \end{figure}
+
+     CPU0 is executing the same subject for the whole duration of the major
+     frame. The second CPU is executing two subjects (blue
+     and green) in alternating order. As can be seen, subject green is granted
+     more CPU cycles than subject blue. All CPUs of the system wait on a barrier
+     at the beginning of a new major frame.  This guarantees that all logical
+     CPUs of a system are in-sync when major frames change.
+
+     The scheduler is also kept simple by the fact that subjects never migrate
+     between cores: they can only be scheduled on one particular CPU. This
+     invariant is checked and enforced during the policy validation step
+     (see \cite{muen:system-spec}).
+
+     Since a system performs diverse tasks with different resource requirements,
+     there is a need for some flexibility with regards to scheduling. To provide
+     this degree of freedom while keeping the kernel complexity low, multiple
+     scheduling plans can be specified in the system policy. By defining a
+     distinct plan for each anticipated workload in the policy, the scheduling
+     regimes are fixed at integration time.
+
+     The privileged subject $\tau$0 is allowed to elect and activate one of the
+     scheduling plans. It specifies the active scheduling plan using a global
+     variable called \texttt{New\_Major} which currently makes up the entirety of
+     the $\tau$0-Kernel interface, see \ref{SK.Tau0_Interface.New_Major}. On
+     major frame change, the BSP copies this value to the global
+     \emph{current major frame ID}. The value is exclusively written by the BSP
+     while it is used by all cores to determine the currently active major
+     frame, see \ref{SK.Scheduler.Global_Current_Major_Frame_ID}.
+
+     Refer to \cite{muen:system-spec} for a description of $\tau$0 as well as
+     the motivation behind it.
+    </text>
+   </section>
+   <section id="overview_interrupts" label="Interrupts" priority="0">
+    <text priority="0">
+     Devices can generate hardware interrupts that must be delivered to the
+     subject that controls the device. The system policy defines which hardware
+     interrupt is assigned to what subject and what vector should be injected if
+     such an interrupt occurs.
+
+     Since resource allocation is static, a global mapping of hardware interrupt
+     to destination subject including the interrupt vector to deliver, is
+     generated at integration time, see the \texttt{Skp.Interrupts} package in
+     section \ref{Skp.Interrupts}. The kernel uses the \texttt{Vector\_Routing}
+     array at runtime to determine the destination subject that constitutes the
+     final recipient of the interrupt.
+
+     The IRQ trigger mode is also designated by the \texttt{Skp.Interrupts}
+     package. Masking of the IRQ is done by the kernel for level-triggered IRQs.
+     A subject can unmask the IRQ by triggering an event that has the
+     corresponding unmask IRQ action specified in the policy.
+
+     Each subject has a bitmap of 256 pending interrupts, each entry
+     corresponding to the vector number of the interrupt. An interrupt is
+     forwarded to a subject by setting the correct bit in the data structure
+     associated with the destination subject. Once execution of a subject is
+     resumed, the kernel checks the pending interrupts and, if one is pending,
+     injects it, which completes the delivery of the interrupt. If multiple
+     interrupts are pending, the one with the highest vector number is
+     processed.
+
+     Subjects can control interrupt injection by setting or clearing the
+     \emph{Interrupt enable flag} \footnote{RFLAGS.IF}. As long as the flag is
+     clear, the kernel will not inject any pending interrupts. A subject can use
+     the \texttt{cli} and \texttt{sti} instructions to clear/set the flag.
+
+     To simplify the kernel control flow, the VMX External-interrupt exiting
+     feature is used, see Intel SDM Vol. 3C, "24.6.1 Pin-Based VM-Execution
+     Controls". With this control set, an external interrupt results in a VM
+     exit. This means that instead of a separate interrupt handler routine, the
+     same kernel entry point as any other VM exit is invoked by the hardware.
+     The appropriate VM exit reason set by the hardware designates that the
+     cause was an external interrupt and the interrupt handler routine is
+     executed.  The "Acknowledge Interrupt on Exit" VM-Exit control is
+     leveraged, so the hardware acknowledges the interrupt controller and stores
+     the interrupt vector in the VM-exit interruption-information field, see
+     Intel SDM Vol. 3C, "24.7.1 VM-Exit Controls".
+
+     Thus, interrupt handling is implemented as specified in Intel SDM Vol. 3C,
+     "33.3.3.3 Processing of External Interrupts by VMM".
+
+     Spurious or invalid interrupts that have no valid interrupt to subject
+     mapping are ignored by the kernel.
+    </text>
+   </section>
+   <section id="overview_exceptions" label="Exceptions" priority="0">
+    <text priority="0">
+     We distinguish hardware exceptions that occur in VMX non-root mode, while
+     executing a subject, and in VMX root mode when the kernel is operating.
+
+     As the kernel is implemented in the SPARK programming language
+     (see section \ref{verification_spark}) with a prove of absence of runtime
+     errors, exceptions during regular operation in VMX root-mode are not
+     expected. If for some unexpected reason (e.g.  non-maskable interrupt NMI)
+     an exception occurs, it indicates a serious error. In that case, a crash
+     audit record is filled with the appropriate error information and the
+     system is halted. Refer to section \ref{impl_crash_audit} for a detailed
+     description of the Crash Audit implementation.
+
+     In the case of an exception being caused by the execution of a subject, the
+     kind of exception handling depends on the vCPU profile of the running
+     subject. The vCPU configuration of each subject is specified as part of the
+     system policy. If the subject is \emph{not} allowed to handle a particular
+     exception itself, then a VM exit occurs with the exit reason indicating the
+     cause. The kernel handles the trap like any other exit and consults the
+     subject's trap table to determine the appropriate action as specified in
+     the policy, e.g. switching to a monitor subject.
+
+     Subjects may be allowed to process exceptions themselves, e.g. a VM subject
+     performing its own page fault handling. In this case, an exception is
+     directly delivered to the subject's exception handler via the subject's
+     IDT. The kernel is not involved at all in this case.
+    </text>
+   </section>
+   <section id="overview_crash_audit" label="Crash Audit" priority="0">
+    <text priority="0">
+     Every software system should provide a mechanism for auditing important
+     events. However, overly intricate audit implementations can quickly lead to
+     complexity throughout the code base. In case of the Muen kernel, only two
+     important events that require auditing have been identified: one is
+     \emph{kernel started} and the other is a \emph{fatal error condition}
+     resulting in an emergency halt.
+
+     Note that on the system level, there are certainly many more audit-worthy
+     events. However these can be handled by appropriate error handling routines
+     inside subjects, or by dedicated audit subjects using existing mechanisms
+     (e.g. events). The kernel does not need to provide any additional,
+     audit-specific functionality.
+
+     The first event is inherent in the execution of the kernel after a
+     successful system start. If there is an error during early machine
+     initialization before the actual Muen-based system starts execution, then
+     there is no way for the kernel to recognize and report such an event.
+     However, once the kernel does start execution, the successful system start
+     has occurred so in that sense the event becomes self-evident through
+     running code.
+
+     The crash audit mechanism is in charge of covering the second case and thus
+     handling fatal, unrecoverable errors which lead to immediate system halt
+     and subsequent system reset. Its main purpose is to record information
+     regarding the error condition and the current system state to enable
+     administrators to identify and determine the cause of the issue.
+
+     Audit information is stored in a dedicated, uncached memory region which
+     retains its contents across system reboots. This region is mapped by all
+     kernel instances on each CPU. Read access may be granted to a subject to
+     enable audit readout for further processing, e.g. debug server outputting
+     the information via serial log. Note that processing of the audit
+     information may also be done outside of a Muen system, e.g. by a crash
+     audit aware boot loader.
+
+     When a fatal crash occurs, the kernel allocates a free audit entry, sets
+     the appropriate reason for the current cause and fills the remaining
+     context fields with relevant data. Multiple cores may experience a fatal
+     failure condition at the same time (e.g. faulty hardware resulting in
+     Machine-Check Exceptions broadcastet to all CPU cores). Since each kernel
+     instance performs audit entry reservation atomically, this scenario is
+     supported.
+
+     After a reboot, the crash audit entries may be inspected. Entries are
+     identified as current, when the boot count of the header and the generation
+     in the given entry match. Otherwise, the audit entry contains stale
+     information from a previous crash which has already been processed. This
+     enables reliable identification of current audit entries to avoid duplicate
+     processing.
+    </text>
+   </section>
+   <section id="overview_interaction" label="Subject Interaction" priority="0">
+    <text priority="0">
+     Compared to applications or virtual machines running on classical kernels
+     (e.g. monolithic or microkernel), subjects have very limited means to
+     influence the overall system. Only the resources assigned in the policy are
+     accessible and the interaction with the SK is limited to the following
+     mechanisms.
+
+     Subjects can trigger events \emph{statically} defined in the policy. If
+     there is a valid event number, the kernel executes the action defined by
+     the event. Invalid event numbers are ignored. Events can be thought of as a
+     very static form of \emph{hypercalls}, that can be actively invoked by a
+     subject.
+
+     When so-called \emph{traps} occur, e.g. access to an unauthorized memory
+     region, a trap table also specified in the policy is consulted. Similar to
+     handling of events, the defined action is executed. In contrast to events,
+     traps generally happen whenever a subject performs an action that is
+     disallowed by the policy, e.g. attempt to read the Timestamp Counter (TSC).
+     A trap always interrupts subject execution and invokes the kernel.
+
+     Several types of traps are directly handled by the kernel as they are used
+     to implement kernel functionality. These traps are:
+
+     \begin{description}
+      \item[External Interrupt] \hfill \\
+       Processing of external device interrupts
+      \item[VMX-preeption timer expired] \hfill \\
+       Main kernel timer used for scheduler implementation.
+      \item[Interrupt window] \hfill \\
+       Mechanism for delivery of pending subject interrupts.
+      \item[Exception or non-maskable interrupt (NMI)] \hfill \\
+       Handling of Machine-Check Exceptions (MCEs) and NMIs.
+      \item[VM-entry failure due to machine-check event] \hfill \\
+       Further handling of MCEs.
+     \end{description}
+
+     A detailed description of the implementation is given in section
+     \ref{impl_exit_handler}. For a list of all VM exit reasons, refer to Intel
+     SDM Vol. 3D, "Appendix C VMX Basic Exit Reasons" \cite{intelsdm}.
+
+     The last interaction option is the \emph{timed event} mechanism. Each
+     subject can define an event number and a time at which the event should be
+     triggered. At the beginning of each time slice, the kernel checks whether
+     the event trigger value belonging to the subject to be executed has
+     expired. If this is the case, the event designated by the event number is
+     treated in the same way as the regular event mechanism.
+
+     An important use case for traps and events that enable to change the
+     currently active subject, is running a subject that depends on a monitor
+     subject for emulation of certain operations, e.g. serial device emulation.
+     In this scenario, whenever a subject performs an operation that triggers a
+     trap the policy specifies an event of mode \emph{switch} with the target
+     being the monitor subject. This instructs the kernel to hand over execution
+     to the monitor, in effect reflecting the trap. The monitor subject can then
+     determine the cause for the trap based on the information available in the
+     subject state that is mapped into the monitor's address space. It can then
+     emulate the appropriate action by changing the subject's state and finally
+     hand over execution back by triggering an event that has been specified in
+     the policy to resume the origin subject. Prior to resumption the kernel
+     will synchronize the subject state to the VMCS, effectively continuing
+     execution of the origin subject with the new, adjusted state.
+
+     Through the use of the event mechanism, the vast majority of traps is
+     handed over to a second subject to process. Only a few event actions are
+     handled directly by the kernel: unmask IRQ, system panic, reboot and
+     poweroff, see also \ref{impl_handle_source_event}.
+    </text>
+   </section>
+   <section id="overview_covert_channels" label="Avoidance of Covert Channels" priority="0">
+    <text priority="0">
+     So called \emph{side channels} allow attackers to deduce information about
+     internal, secret state of an unsuspecting subject by observing e.g. the
+     memory consumption or changes in the micro-architectural state of the
+     hardware. The victim process is unintentionally leaking sensitive
+     information through the side channel, which is used by the attacker to
+     infer data it is not supposed to have access to.
+
+     A collaborating sender/receiver pair can use a side channel to transfer
+     information past the system's security mechanism, which is called a
+     \emph{covert channel}. The simplicity of SKs enables the explicit
+     consideration of the problem of covert channels, which are classified as
+     data or timing channels.
+
+     In a data channel, information may for example be hidden in metadata, such
+     as using individual memory bits in an unconventional manner. The information
+     to be transmitted is encoded by means of these bits, the receiver knows the
+     special coding and is able to extract the data.
+
+     Time channels use temporal variance of operations to transmit information.
+     The receiver measures this variance and can thereby extract data bits. If a
+     particular operation can be carried out quickly, then this is e.g.
+     interpreted as 1; otherwise a 0 is assumed.
+
+     As a general rule, only the required resources with minimal rights are
+     available to both the kernel as well as subjects. This has the effect that
+     the exposure of data is greatly reduced, minimizing the information which
+     could be transferred via side channels. See also section
+     \ref{datamodel_multicore} for further information on how data is handled in
+     the Muen kernel.
+
+     Data channels can be largely avoided or eliminated by careful assignment of
+     resources to subjects in the system policy. On the other hand, timing
+     channels require careful consideration of all shared resources and, in many
+     cases, can only be limited in capacity by means of a suitable system
+     structure.
+
+     Muen offers the possibility to provide subjects with a coarse-grained time
+     source, i.e. removing direct access to the hardware Time-Stamp Counter
+     (TSC). Due to the low temporal resolution, observing a side channel is made
+     significantly more difficult and thus the achievable transmission rate in
+     practice is greatly reduced. In addition, subjects are preferably only
+     assigned a single CPU, which prevents them from easily constructing a high
+     resolution time source. The timed event mechanism also offers limited
+     accuracy, since such events are only evaluated at the beginning of a minor
+     frame.
+
+     Deterministic scheduling can be leveraged to ensure that the amount of
+     shared hardware (e.g. L1 cache, Branch Predictor Cache, Translation
+     Lookaside-Buffer, etc.) between specific subjects is reduced. By
+     appropriate configuration, it can be guaranteed that two subjects are not
+     running on the same physical CPU or not concurrently on separate CPUs. If subjects
+     are executed at different times, the observability of side channels and
+     their bandwidth is limited since the sender and receiver must always
+     alternate encoding and decoding of data. This also applies to subjects
+     running on the same physical core, even though they still share a lot of
+     hardware state. To further reduce bandwidth in this case, the integrator
+     may explicitly schedule a subject, which "scrubs" the (micro-)architectural
+     state, between the execution of other subjects.  Thus, the exact control
+     over scheduling of subject enables system integrators to reduce the risk of
+     side channels.
+
+     Furthermore, on Muen systems, Hyper-Threading is always disabled because
+     hardware threads share much more (micro-)architectural state than physical
+     CPU cores.
+    </text>
+   </section>
+  </section>
+
+ <section id="datamodel" label="Data Model" priority="0">
+  <section id="datamodel_multicore" label="Multicore Support" priority="0">
+   <text priority="0">
+    Modern computers have an increasing number of CPU cores per processor. To
+    utilize the hardware to its full potential, the Muen SK provides Multicore
+    support.
+
+    In a multicore system, a physical CPU provides more than one processor core
+    in a single package. Additionally, systems equipped with Intel's
+    Hyper-Threading Technology (HTT) have two or more \emph{logical CPUs} per
+    core. A logical CPU is an execution unit of the processor that runs an
+    application or a kernel process.
+
+    Since HyperThreads located on the same CPU core share big parts of the
+    micro-architectural state without effective means of isolation, Muen does
+    not use HTT. It effectively disables HTT by only executing one hardware
+    thread per physical CPU core.
+
+    In MP systems, one processor termed \emph{bootstrap processor} (BSP) is
+    responsible for system initialization, while the other processors, called
+    \emph{application processors} (APs), wait for an initialization sequence as
+    specified by Intel \cite{intelsdm}.
+
+    At the basis of the multicore design is the symmetric execution of the
+    kernel on each CPU core. This means that all cores execute an instance of
+    exactly the same Muen kernel code. The only difference being, that parts of
+    the system bring up code are exclusively run by the BSP.
+
+    An important aspect of Muen's multicore design is that subjects are pinned
+    to a specific CPU core. Subjects do not migrate between cores and are
+    exclusively executed on the core defined by the associated subject
+    specification in the system policy. This removes complexity from the kernel
+    and the overall system by thwarting potential isolation issues which could
+    be caused by the transfer of subjects and their state between cores. This
+    design decision further simplifies the kernel implementation since no
+    complex cross-core synchronization and migration algorithm has to be devised
+    and implemented. Furthermore, each core can be restricted to only have
+    access to the data structures associated with subjects it is tasked to
+    execute.
+
+    Since each CPU executes a distinct instance of the Muen kernel, by default,
+    all kernel data is CPU-local, meaning it is not shared between kernels
+    running on different CPUs. Global data is shared explicitly and is
+    designated as such by placing it in a dedicated \texttt{.globaldata} linker
+    section.
+    One special case of a global data structure is the crash audit storage:
+    while it is shared by all CPUs it may also be made accessible to subjects,
+    e.g. for processing of crash information. Thus it is treated separately and
+    not placed into the \texttt{.globaldata} linker section.
+
+    Kernel data can be categorized as follows:
+    \begin{enumerate}
+     \item CPU-local data
+     \item CPU-local, subject-related data
+     \item Global data, shared by all CPUs
+    \end{enumerate}
+
+    Aside from these data structures, there are also interfaces used by the
+    kernel to interact with external entities, such as memory-mapped devices
+    like the IOMMU. The Tau0 interface is in the same category, as it is used by
+    Tau0 to communicate with the kernel.
+
+    The following sections provide explanations for each of the main kernel data
+    categories.
+   </text>
+  </section>
+
+  <section id="datamodel_cpulocal" label="CPU-local Data" priority="0">
+   <text priority="0">
+    Library level data structures without special aspects (e.g. address clauses)
+    are private, meaning each CPU has their own, local copy. This is achieved by
+    providing each CPU with separate copies of the necessary binary sections
+    (\texttt{.data} and \texttt{.bss}). Only the memory regions of sections
+    belonging to a given CPU are mapped into the address space of that
+    particular kernel.
+   </text>
+   <section id="datamodel_cpulocal_init" label="Initialization" priority="0">
+    <text priority="0">
+     Initialization of CPU-local data is performed by each CPU during
+     Elaboration~\footnote{For a definition of elaboration, see Ada Reference
+      Manual, 3.11.} via a call to adainit in the assembly startup code.
+    </text>
+   </section>
+  </section>
+  <section id="datamodel_local_subject" label="Local Subject-related Data" priority="0">
+   <text priority="0">
+    Data structures associated with subjects, such as subject state or timed
+    events, are implemented as arrays where each element is associated with a
+    particular subject. The global subject ID is used as an index into the array
+    to link an element to a specific subject. The array elements are dimensioned
+    to 4K so they can be mapped as independent memory pages.
+
+    These arrays are placed at specific virtual memory addresses. Only the
+    elements belonging to subjects executed by a given CPU are mapped into the
+    address space of that particular kernel. The correctness of the correspondence
+    of subject and array element/index is checked by the validator tool.
+    </text>
+   <section id="datamodel_local_subject_init" label="Initialization" priority="0">
+    <text priority="0">
+     Each element is initialized by the executing CPU when the
+     \texttt{SK.Scheduler.Init\_Subject} procedure is executed during system
+     initialization.
+    </text>
+   </section>
+  </section>
+  <section id="datamodel_global" label="Global Shared Data" priority="0">
+   <text priority="0">
+    Some data is accessed by all CPUs. This data is located in a separate,
+    distinct linker section (\texttt{.globaldata}) which is backed by a single
+    physical memory region, shared across all CPUs. Each kernel has a mapping of
+    this region at the same memory location.
+
+    Variable instances that are shared globally are placed in the linker section
+    \texttt{.globaldata} via use of the Ada \texttt{Linker\_Section} aspect. By
+    convention, concerned variables are prefixed with \texttt{Global\_}.
+   </text>
+   <section id="datamodel_global_init" label="Initialization" priority="0">
+    <text priority="0">
+     Initialization of global shared data is performed either via static
+     initialization (if possible) or using explicit initialization procedures
+     that are only executed by a single CPU, i.e. the BSP.
+    </text>
+   </section>
+  </section>
+ </section>
+
+ <section id="interface_section" label="Kernel State" priority="0">
+  <text priority="0">
+   This section lists kernel data structures that are placed at specific memory
+   addresses and used to maintain runtime state such as per-subject state
+   descriptors. Furthermore external interfaces, e.g. for interaction with
+   devices such as IOMMUs and I/O APIC are specified.
+   The description includes the purpose as well as the memory representation of
+   these interfaces.
+  </text>
+  <section id="interface_cpu_local" label="Per-CPU data" priority="0">
+   <text priority="0">
+    Objects of category 1 in the kernel data model have a per-CPU copy and are
+    distinct to each kernel running on a different CPU. Instances of these data
+    structures are listed in this section.
+   </text>
+   <section id="SK.Scheduler.Current_Minor_Frame_ID" label="SK.Scheduler.Current_Minor_Frame_ID" priority="0"/>
+   <section id="SK.Scheduler.Scheduling_Groups" label="SK.Scheduler.SK.Scheduler.Scheduling_Groups" priority="0"/>
+   <section id="SK.Interrupt_Tables.Instance" label="SK.Interrupt_Tables.Instance" priority="0"/>
+  </section>
+  <section id="Skp.IOMMU.IOMMUs" label="Skp.IOMMU.IOMMUs" priority="0">
+   <text priority="0">
+    External interface used to access and program IOMMU(s), see also section
+    \ref{kernel_devs_iommu}.
+   </text>
+  </section>
+  <section id="SK.IO_Apic.Register_Select" label="SK.IO_Apic.Register_Select" priority="0">
+   <text priority="0">
+    External interface used in conjunction with \ref{SK.IO_Apic.Window} to
+    access and program the I/O APIC, see also section \ref{kernel_devs_apic}.
+   </text>
+  </section>
+  <section id="SK.IO_Apic.Window" label="SK.IO_Apic.Window" priority="0">
+   <text priority="0">
+    External interface used in conjunction with \ref{SK.IO_Apic.Register_Select}
+    to access and program the I/O APIC, see also section \ref{kernel_devs_apic}.
+   </text>
+  </section>
+  <section id="SK.Crash_Audit.Instance" label="SK.Crash_Audit.Instance" priority="0">
+   <text priority="0">
+    Global crash audit information data structure. It is \emph{not} put in the
+    CPU-Global section since it may be accessible by subjects (e.g. for
+    outputting crash information). Additionally the memory type of the region
+    must be Uncached (UC) so the content survives a warm start/system reboot.
+   </text>
+  </section>
+  <section id="SK.Tau0_Interface.New_Major" label="SK.Tau0_Interface.New_Major" priority="0">
+   <text priority="0">
+    External interface to \tau0.
+   </text>
+  </section>
+  <section id="SK.FPU.Subject_FPU_States" label="SK.FPU.Subject_FPU_States" priority="0">
+   <text priority="0">
+    Local subject-related data, see section \ref{datamodel_local_subject}.
+   </text>
+  </section>
+  <section id="SK.Scheduling_Info.Sched_Info" label="SK.Scheduling_Info.Sched_Info" priority="0">
+   <text priority="0">
+    Local subject-related data, see section \ref{datamodel_local_subject}.
+   </text>
+  </section>
+  <section id="SK.Subjects.Descriptors" label="SK.Subjects.Descriptors" priority="0">
+   <text priority="0">
+    Local subject-related data, see section \ref{datamodel_local_subject}.
+   </text>
+  </section>
+  <section id="SK.Subjects_Interrupts.Pending_Interrupts" label="SK.Subjects_Interrupts.Pending_Interrupts" priority="0">
+   <text priority="0">
+    Local subject-related data, see section \ref{datamodel_local_subject}.
+   </text>
+  </section>
+  <section id="SK.Subjects_MSR_Store.MSR_Storage" label="SK.Subjects_MSR_Store.MSR_Storage" priority="0">
+   <text priority="0">
+    Local subject-related data, see section \ref{datamodel_local_subject}.
+   </text>
+  </section>
+  <section id="SK.Timed_Events.Subject_Events" label="SK.Timed_Events.Subject_Events" priority="0">
+   <text priority="0">
+    Local subject-related data, see section \ref{datamodel_local_subject}.
+   </text>
+  </section>
+  <section id="SK.VMX.VMCS" label="SK.VMX.VMCS" priority="0">
+   <text priority="0">
+    Local subject-related data, see section \ref{datamodel_local_subject}.
+   </text>
+  </section>
+ </section>
+
+ <section id="cpu_global_variables_section" label="CPU-Global State" priority="0">
+  <text priority="0">
+   This section lists global data structures that are shared across CPU cores
+   via the \texttt{globaldata} linker section, describing their purpose. All the
+   instances presented below fall into the data model category 3 described in
+   section \ref{datamodel_global}.
+
+   Aspects are Ada/SPARK language level constructs that determine operational
+   properties of variable instances. The following aspects are referenced in
+   this chapter:
+
+   \begin{description}
+    \item[Async\_Readers] \hfill \\
+     A component external to the program might read a value written to the
+     object at any time, see SPARK 2014 Reference Manual, section 7.1.2
+     \cite{SPARK2014}.
+    \item[Async\_Writers] \hfill \\
+     A component external to the program might update the value of an object at
+     any time, see SPARK 2014 Reference Manual, section 7.1.2 \cite{SPARK2014}.
+    \item[Volatile] \hfill \\
+     The compiler is instructed to include each read and update of a volatile
+     object, see Ada Language Reference Manual, C.6/20 \cite{Ada2012}.
+   \end{description}
+  </text>
+ </section>
+
+ <section id="kernel_devices" label="Devices" priority="0">
+  <text priority="0">
+   This section describes what I/O devices the kernel uses and for what purpose.
+  </text>
+  <section id="kernel_devs_apic" label="Interrupt Controllers" priority="0">
+   <text priority="0">
+    The kernel controls and programs all interrupt controllers since it must
+    ensure that only IRQs according to the policy are generated and routed to the
+    assigned subject, and thus CPU. On x86, there are three different interrupt
+    controllers that must be considered: PIC, APIC and I/O APIC.
+
+    The legacy PIC is disabled since only the APIC and I/O APIC are used. The
+    APIC is CPU-local and is setup during system initialization by each CPU
+    core. The I/O APIC and its interrupt routing table is programmed by the BSP
+    according to the system policy.
+
+    During normal operation, the APIC is accessed to acknowledge
+    End-Of-Interrupt (EOI) whenever an IRQ is handled, in order to unblock
+    processing of other interrupts. In case of level-triggered IRQs, the I/O
+    APIC is used to mask and unmask the corresponding redirection table entries.
+
+    Enforcement that only the configured interrupts are raised is done by the
+    IOMMU Interrupt Remapping functionality, see section
+    \ref{kernel_devs_iommu}.
+
+    \begin{info}
+    Note that IRQs raised via the I/O APIC are \emph{also} routed through the
+    IOMMU and thus affected by interrupt remapping.
+    \end{info}
+   </text>
+  </section>
+  <section id="kernel_devs_iommu" label="IOMMU" priority="0">
+   <text priority="0">
+    The IOMMU performs two critical functions to constrain devices to only
+    access resources and raise interrupts as defined in the system policy: DMA
+    Remapping and Interrupt Remapping.
+
+    DMA Remapping (DMAR) performs address translation for device memory access,
+    analogous how the MMU operates for subjects. Each DMA request is identified
+    by the device source ID which is associated with the VT-d page tables
+    generated for the given device. During startup, the kernel installs the
+    pre-generated data structure and activates DMAR by programming
+    the IOMMU. For further information see Intel VT-d Specification, "3 DMA
+    Remapping" \cite{intelvtd}.
+
+    The IOMMU Interrupt Remapping (IR) feature with the remapping table
+    generated during integration assures that only the correct interrupt vectors are
+    raised according to the policy for all assigned IRQs and that all other,
+    non-assigned IRQs are blocked. During setup, the kernel installs the
+    remapping table and enables IR. For further information see Intel VT-d
+    Specification, "5 Interrupt Remapping" \cite{intelvtd}.
+   </text>
+  </section>
+  <section id="kernel_devs_timer" label="Timer" priority="0">
+   <text priority="0">
+    Muen uses the VMX-preemption timer as the timing source to realize
+    preemption of subjects when a minor frame expires. It is a per-CPU timer,
+    which is programmed by writing a countdown value in the corresponding VMCS
+    field. In VMX non-root mode, the VMX-preemption timer counts down at a rate
+    proportional to the TSC and causes a VM-exit when the counter reaches zero.
+    For further documentation see Intel SDM Vol. 3C, "25.5.1 VMX-Preemption
+    Timer".
+
+    Note that Muen only supports systems that have the "Invariant TSC" feature,
+    see Intel SDM Vol. 3B, "17.17.1 Invariant TSC".
+   </text>
+  </section>
+  <section id="kernel_devs_debug" label="Diagnostics" priority="0">
+   <text priority="0">
+    The debug build of the Muen SK provides additional debug information at
+    runtime via an I/O device. This output can provide system integrators
+    and developers with additional information, e.g. in an unexpected error case,
+    the crash audit information is output via the I/O device on top of
+    writing it to the crash audit memory region. Which hardware device the kernel
+    uses for diagnostics, if any, is specified in the system policy.
+
+    All debug output statements in the kernel are enclosed in \texttt{pragma
+    Debug}. This has the effect that none of them are present in the release
+    version of the kernel as they are automatically removed by the compiler.
+   </text>
+  </section>
+ </section>
+
+ <section id="verification_and_validation" label="Verification" priority="20">
+  <text priority="0">
+   This section describes the formal methods and techniques applied to the
+   verification of Muen.
+  </text>
+  <section id="verification_spark" label="SPARK" priority="-10">
+   <text priority="0">
+    SPARK is the primary technology used for the formal verification of Muen and
+    particularly trustworthy components such as $\tau$0. It enables data and
+    information flow analysis as well as the proof of absence of runtime errors.
+    The necessary proofs are produced by the SPARK GNATprove tools which in turn
+    use automated theorem provers, like the Z3 SMT
+    solver\footnote{\url{https://github.com/Z3Prover/z3}} for example.
+    Application of the GNATprove tools guarantees that the SPARK language rules
+    are adhered to at all time and that the analyzed source code is valid.
+
+    The proof of advanced functional features is realized with the help of the
+    interactive theorem prover
+    Isabelle\footnote{\url{https://isabelle.in.tum.de}}. Abstract properties
+    are formalized in Isabelle/HOL. These possibly complex, external
+    specifications are linked to the SPARK implementation by so-called
+    \emph{Ghost Code}. The GNATprove tool generates verification conditions in
+    the Why3 language, which are imported into Isabelle by means of a driver.
+    This way, the correspondence of the SPARK source code to an abstract, formal
+    specification can be shown.
+
+    The interaction of the tools used for the verification is shown
+    schematically in figure \ref{fig:spark-toolchain}.
+
+    \begin{figure}[ht]
+     \centering
+     \input{graph_spark}
+     \caption{Toolchain for the verification of SPARK programs.}
+     \label{fig:spark-toolchain}
+    \end{figure}
+   </text>
+  </section>
+  <section id="verification_conditions_spark2014" label="SPARK 2014">
+   <text priority="0">
+    This section shows the summary of the verification results for all checks
+    performed by SPARK/GNATprove in the Muen kernel project. For a detailed
+    description of each line of the summary table please refer to the SPARK 2014
+    user guide~\footnote{\url{https://docs.adacore.com/spark2014-docs/html/ug/en/source/how_to_view_gnatprove_output.html\#the-analysis-results-summary-file}}.
+   </text>
+  </section>
+ </section>
+
+ <section id="implementation" label="Implementation" priority="0">
+  <text priority="0">
+   This chapter describes the implementation of the Muen Kernel. To
+   avoid/minimize divergence between this documentation and the actual
+   implementation, the content of these sections is extracted from source code
+   annotations.
+  </text>
+  <section id="implementation_entry_points" label="Kernel Entry Points" priority="-20">
+   <text priority="0">
+    As already mentioned in section \ref{overview_operation} the kernel
+    control-flow is kept very simple and only has two entry points with the
+    following (symbol) names:
+    \begin{itemize}
+     \item Startup: \verb!kernel_entry_point! (Assembler) \rightarrow \verb!sk_initialize! (SPARK)
+     \item Scheduler Loop: \verb!vmx_exit_handler! (Assembler) \rightarrow \verb!handle_vmx_exit! (SPARK)
+    \end{itemize}
+
+    The assembler symbol is where the respective code flow starts which after
+    some low-level steps then calls the mentioned SPARK subprogram.
+   </text>
+   <section id="implementation_entry_points_startup" label="System Startup" priority="0">
+    <text priority="0">
+     After loading the Muen system image, a bootloader starts execution of the
+     Muen code at the entry point \verb!kernel_entry_point! in file
+     \verb!kernel/src/asm/init.S!. After low-level system/CPU initialization,
+     the procedure \verb!SK.Kernel.Initialize! in
+     \verb!kernel/src/sk-kernel.ads! is called via the exported symbol
+     \verb!sk_initialize!. Section \ref{impl_kernel_init} describes the kernel
+     initialization process performed by this procedure.
+    </text>
+   </section>
+   <section id="implementation_entry_points_scheduler" label="Scheduler Loop" priority="0">
+    <text priority="0">
+     Whenever a VM-Exit occurs, the CPU passes the thread of execution from the subject
+     code running in VMX non-root mode to the kernel \verb!handle_vmx_exit! procedure
+     found in file \verb!kernel/src/sk-scheduler.ads!. The hardware stores the
+     execution state of the subject in the VMCS, transitions to VMX root-mode by
+     restoring the host state of the kernel and starts execution at the Exit
+     handler. Section \ref{impl_exit_handler} describes the main scheduler loop
+     of the Muen kernel.
+    </text>
+   </section>
+  </section>
+  <section id="impl_subjects_state" label="Subject State Management" priority="-2">
+   <text priority="0">
+    This section describes how the state of subjects is managed by the kernel.
+    While the subject is running, it may execute allowed CPU instructions until
+    a VM exit into the kernel occurs. At this point, the CPU stores the current
+    execution state in the associated VMCS. To enable subject monitors to change
+    the state of monitored subjects, the kernel saves values from the VMCS to
+    the associate subject state data structure in memory (see section
+    \ref{SK.Subjects.Descriptors}). Prior to executing a subject, the subject
+    state has to be restored back into the associated VMCS.
+   </text>
+  </section>
+  <section id="impl_vmcs" label="VMCS Management" priority="0">
+   <text priority="0">
+    This section describes how the VMCS structures associated with subjects are
+    managed by the kernel. A VMCS controls the execution environment of a
+    subject, e.g. what hardware features/privileged instructions a subject may
+    execute etc. While transitioning between VMX root and non-root mode, the
+    hardware automatically saves and restores the state to/from the current
+    VMCS depending on how it has been configured. Part of the kernel's duties is
+    to set up the VMCS according to the subject specification in the system
+    policy.
+   </text>
+  </section>
+ </section>
+
+</doc>

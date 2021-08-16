@@ -24,6 +24,10 @@ with SK.CPU_Info;
 with SK.Crash_Audit;
 with SK.Crash_Audit_Types;
 
+--D @Interface
+--D This package provides facilities to interact with the IOMMU as specified by
+--D Intel \cite{intelvtd}. It is required for DMA and Interrupt Remapping to
+--D isolate hardware devices according to the system policy.
 package SK.VTd
 is
 

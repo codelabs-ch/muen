@@ -1,3 +1,6 @@
+--D @Interface
+--D This package contains virtual addresses of various kernel data structure
+--D mappings as specified by the system policy.
 package Skp.Kernel
 is
 

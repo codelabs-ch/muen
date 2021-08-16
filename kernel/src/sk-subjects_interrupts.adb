@@ -74,6 +74,9 @@ is
       declare
          Val : constant Word64 := Pending_Interrupts (Subject).Data (Word);
       begin
+         --D @Interface
+         --D Clear pending interrupt bit corresponding to the specified vector
+         --D of a specific subject
          Pending_Interrupts (Subject).Data (Word)
            := Bitops.Bit_Clear (Value => Val,
                                 Pos   => Pos);
@@ -88,6 +91,8 @@ is
       Refined_Depends => (Pending_Interrupts =>+ Subject)
    is
    begin
+      --D @Interface
+      --D Set pending interrupts of a given subject to \textt{Null\_Interrupts}.
       Pending_Interrupts (Subject) := (Data    => (others => 0),
                                        Padding => (others => 0));
    end Init_Interrupts;
@@ -111,6 +116,8 @@ is
       declare
          Val : constant Word64 := Pending_Interrupts (Subject).Data (Word);
       begin
+         --D @Interface
+         --D Set pending interrupt bit corresponding to the specified vector
          Pending_Interrupts (Subject).Data (Word)
            := Bitops.Bit_Set (Value => Val,
                               Pos   => Pos);
@@ -131,6 +138,9 @@ is
    begin
       Search_Interrupt_Words :
       for Interrupt_Word in reverse Interrupt_Word_Type loop
+         --D @Interface
+         --D Read current pending interrupt word of specific subject into Field
+         --D variable.
          Field := Pending_Interrupts (Subject).Data (Interrupt_Word);
 
          Find_Highest_Bit_Set
@@ -159,6 +169,9 @@ is
 
       Search_Interrupt_Words :
       for Interrupt_Word in reverse Interrupt_Word_Type loop
+         --D @Interface
+         --D Read current pending interrupt word of specific subject into Field
+         --D variable.
          Field := Pending_Interrupts (Subject).Data (Interrupt_Word);
 
          Find_Highest_Bit_Set

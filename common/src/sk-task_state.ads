@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+--D @Interface
+--D This package implements types and subprograms to manage Task-State Segments.
 package SK.Task_State
 is
 

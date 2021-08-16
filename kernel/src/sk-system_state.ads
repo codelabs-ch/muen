@@ -20,6 +20,9 @@ with X86_64;
 
 with SK.Crash_Audit_Types;
 
+--D @Interface
+--D This package provides subprograms to check the state and features of the
+--D hardware.
 package SK.System_State
 is
 
@@ -30,9 +33,12 @@ is
    with
       Global => (Input => X86_64.State);
 
-   --  Enable VMX feature (if disabled). Call this procedure after checking the
-   --  validity of the overall system state to make sure the VMX feature
-   --  control MSR (IA32_FEATURE_CONTROL) is setup correctly.
+   --D @Section Id => impl_vmcs_enable_vmx, Label => Enabling VMX, Parent => impl_vmcs, Priority => -10
+   --D @Text Section => impl_vmcs_enable_vmx
+   --D Enable the VMX feature if it is not already enabled, e.g. by the BIOS.
+   --D To ensure that the VMX feature control MSR
+   --D (\texttt{IA32\_FEATURE\_CONTROL}) is setup correctly, this action is
+   --D only performed after checking the validity of the overall system state.
    procedure Enable_VMX_Feature
    with
       Global  => (In_Out => X86_64.State),

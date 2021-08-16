@@ -22,6 +22,10 @@ private with Skp.Kernel;
 
 with Skp.Subjects;
 
+--D @Interface
+--D This package provides facilities for managing subject MSR storage areas.
+--D The MSR storage area specifies which MSRs must be saved/restored by the
+--D hardware when entering/exiting a subject.
 package SK.Subjects_MSR_Store
 with
    Abstract_State => (State with External => (Async_Writers, Async_Readers)),
@@ -70,8 +74,16 @@ private
    with
       Size => (Page_Size - MSR_Storage_Table_Size) * 8;
 
+   --D @Interface
+   --D A subject MSR storage page consist of the MSR data and is padded to a
+   --D full 4K memory page. Explicit padding makes sure the entirety of the
+   --D memory is covered and initialized.
    type MSR_Storage_Page is record
+      --D @Interface
+      --D MSR data as saved and restored by the CPU/hardware.
       MSRs    : MSR_Storage_Table;
+      --D @Interface
+      --D Padding to fill the memory page.
       Padding : Padding_Type;
    end record
    with
@@ -90,6 +102,11 @@ private
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
+   --D @Interface
+   --D MSR save/restore storage area of each subject identified by ID. Hardware
+   --D saves and restores MSRs on each VM-Entry and Exit as specified by Intel
+   --D SDM Vol. 3C, "24.7.2 VM-Exit Controls for MSRs" and Intel SDM Vol. 3C,
+   --D "24.8.2 VM-Entry Controls for MSRs" \cite{intelsdm}.
    MSR_Storage : MSR_Storage_Array
    with
       Volatile,

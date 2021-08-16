@@ -18,6 +18,8 @@
 
 with X86_64;
 
+--D @Interface
+--D This package provides facilities for rebooting or powering off the system.
 package SK.Power
 is
 

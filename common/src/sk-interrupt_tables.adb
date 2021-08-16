@@ -78,6 +78,10 @@ is
      := (Limit => 0,
          Base  => 0);
 
+   --D @Text Section => SK.Interrupt_Tables.Instance
+   --D Descriptor tables instance consisting of Global Descriptor Table (GDT),
+   --D Interrupt Descriptor Table (IDT), Task State Segment (TSS) as well as
+   --D GDT and IDT descriptors.
    Instance : Manager_Type
      := (GDT            => (others => 0),
          IDT            => (others => Descriptors.Null_Gate),

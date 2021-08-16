@@ -18,6 +18,8 @@
 
 with X86_64;
 
+--D @Interface
+--D Package providing access to low-level CPU instructions.
 package SK.CPU
 is
 

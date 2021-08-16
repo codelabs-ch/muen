@@ -22,6 +22,10 @@ private with Skp.Kernel;
 
 with Skp;
 
+--D @Interface
+--D This package provides facilities for managing subject interrupts. An
+--D interrupt is identified by the vector number and can be marked as pending.
+--D Pending interrupts are injected upon resumption of a subject.
 package SK.Subjects_Interrupts
 with
    Abstract_State => (State with External => (Async_Writers, Async_Readers)),
@@ -77,8 +81,16 @@ private
    with
       Size => (Page_Size - Interrupt_Array_Size) * 8;
 
+   --D @Interface
+   --D An subject interrupt page consist of the pending interrupt data and is
+   --D padded to a full 4K memory page. Explicit padding makes sure the entirety
+   --D of the memory is covered and initialized.
    type Interrupt_Page is record
+      --D @Interface
+      --D Pending interrupts stored in the form of a bitmap.
       Data    : Interrupts_Array;
+      --D @Interface
+      --D Padding to fill the memory page.
       Padding : Padding_Type;
    end record
    with
@@ -97,6 +109,10 @@ private
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
+   --D @Interface
+   --D Bitmap of the currently pending subject interrupts. The CPU executing
+   --D the associated subject consumes one pending interrupt prior to resuming
+   --D the subject if it is in a state to accept interrupts.
    Pending_Interrupts : Pending_Interrupts_Array
    with
       Volatile,

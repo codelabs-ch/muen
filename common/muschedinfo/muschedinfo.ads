@@ -28,6 +28,11 @@
 
 with Interfaces;
 
+--D @Interface
+--D The Subject Scheduling Information (schedinfo) mechanism exports coarse
+--D grained scheduling information to subjects. More specifically, the start
+--D and end CPU ticks of the current minor frame are exported and made
+--D accessible to subjects.
 package Muschedinfo
 is
 

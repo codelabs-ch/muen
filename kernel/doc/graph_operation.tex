@@ -1,0 +1,14 @@
+\begin{tikzpicture}[minimum height=0.6cm]
+	\node (sch) [commonnode, bottom color=kernelcolor]                {Handle\_Vmx\_Exit};
+	\node (knl) [commonnode, bottom color=kernelcolor, left=of sch]   {Initialize};
+	\node (pln) [component, above=of sch, bottom color=usercolor] {Scheduling Plan};
+	\node (sub) [commonnode, bottom color=guestcolor, right=of sch] {Subject};
+	\node[gray, font=\scriptsize] at (0.8,2.3) {VMX root};
+	\node[gray, font=\scriptsize] at (2.6,2.3) {VMX non-root};
+
+	\draw[->] (pln) to (sch);
+	\draw[->] (knl) to[bend right=65] node[auto] {VM enter} (sub);
+	\draw[->] (sch) to[bend right=65] node[auto] {VM enter} (sub);
+	\draw[->] (sub) to[bend right=65] node[auto] {VM exit}  (sch);
+	\draw[thin, dotted, gray] (1.6,-1.5) to (1.6,2.5);
+\end{tikzpicture}

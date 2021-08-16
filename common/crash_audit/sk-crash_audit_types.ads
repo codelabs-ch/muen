@@ -16,6 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+--D @Interface
+--D This package specifies all data types and records related to the crash audit
+--D facility.
 package SK.Crash_Audit_Types
 is
 
@@ -32,17 +35,26 @@ is
    with
       Size => 6;
 
-   --  xxd -l 8 -p /dev/random with highest 2 bytes for counter
+   --D @Interface
+   --D The magic constant is used to identify the crash audit data structure
+   --D and format. It must be adjusted whenever the audit record format is
+   --D changed in an incompatible way. The two highest bytes are therefore
+   --D used as counter.
    Crash_Magic : constant := 16#0100_0df7_50d5_0e9a#;
 
    subtype Version_Str_Range is Positive range 1 .. 64;
 
+   --D @Interface
+   --D The version string is defined as a fixed-length string of size 64.
    type Version_String_Type is new String (Version_Str_Range)
    with
       Size => Version_Str_Range'Last * 8;
 
    Null_Version_String : constant Version_String_Type := (others => ASCII.NUL);
 
+   --D @Interface
+   --D This constant specifies the maximum number of audit slots which can be
+   --D allocated/stored by the crash audit.
    Max_Dumps : constant := 3;
 
    type Dumpdata_Length is range 0 .. Max_Dumps
@@ -53,15 +65,35 @@ is
 
    Header_Type_Size : constant := 8 + 64 + (3 * 8) + 4 + 2 + 1 + 1;
 
+   --D @Interface
+   --D The crash audit header specifies meta data required for the management
+   --D of crash audit data.
    type Header_Type is record
+      --D @Interface
+      --D Version and format identifier of crash audit data.
       Version_Magic  : Interfaces.Unsigned_64;
+      --D @Interface
+      --D String representation of version identifier.
       Version_String : Version_String_Type;
+      --D @Interface
+      --D Generation counter used to identify if crash audit contains active
+      --D data, i.e. when Generation = Boot_Count.
       Generation     : Interfaces.Unsigned_64;
+      --D @Interface
+      --D Number of system boots since last power-off/cold boot.
       Boot_Count     : Interfaces.Unsigned_64;
+      --D @Interface
+      --D Number of observed crashes record by crash audit.
       Crash_Count    : Interfaces.Unsigned_64;
+      --D @Interface
+      --D CRC32 checksum (currently unused).
       Crc32          : Interfaces.Unsigned_32;
       Padding        : Interfaces.Unsigned_16;
+      --D @Interface
+      --D Number of allocated crash audit entries.
       Dump_Count     : Dumpdata_Length'Base;
+      --D @Interface
+      --D Maximum number of available crash audit entries.
       Max_Dump_Count : Dumpdata_Index'Base;
    end record
    with
@@ -123,6 +155,9 @@ is
    subtype VTd_Reason_Range is Reason_Type range
      VTd_Unable_To_Set_DMAR_Root_Table .. VTd_Unable_To_Disable_QI;
 
+   --D @Interface
+   --D Bitmap identifying which information contexts contain valid crash
+   --D information.
    type Validity_Flags_Type is record
       Ex_Context   : Boolean;
       MCE_Context  : Boolean;
@@ -139,15 +174,33 @@ is
 
    Isr_Ctx_Size : constant := CPU_Regs_Size + 7 * 8;
 
-   --  ISR execution environment state.
+   --D @Interface
+   --D Interrupt Service Routine execution environment state.
    type Isr_Context_Type is record
+      --D @Interface
+      --D Value of CPU registers on interrupt occurrence.
       Regs       : CPU_Registers_Type;
+      --D @Interface
+      --D Interrupt vector number.
       Vector     : Interfaces.Unsigned_64;
+      --D @Interface
+      --D Interrupt error code for interrupts that have an error code, see
+      --D Intel SDM Vol. 3A, "6.13 Error Code".
       Error_Code : Interfaces.Unsigned_64;
+      --D @Interface
+      --D Instruction pointer value on interrupt occurrence.
       RIP        : Interfaces.Unsigned_64;
+      --D @Interface
+      --D Code Segment value on interrupt occurrence.
       CS         : Interfaces.Unsigned_64;
+      --D @Interface
+      --D RFLAGS status register value on interrupt occurrence.
       RFLAGS     : Interfaces.Unsigned_64;
+      --D @Interface
+      --D Stack pointer value on interrupt occurrence.
       RSP        : Interfaces.Unsigned_64;
+      --D @Interface
+      --D Stack Segment value on interrupt occurrence.
       SS         : Interfaces.Unsigned_64;
    end record
    with
@@ -158,8 +211,15 @@ is
 
    Ex_Ctx_Size : constant := Isr_Ctx_Size + 3 * 8;
 
+   --D @Interface
+   --D Exception execution environment state.
    type Exception_Context_Type is record
+      --D @Interface
+      --D Interrupt Service Routine execution environment state on exception
+      --D occurrence.
       ISR_Ctx       : Isr_Context_Type;
+      --D @Interface
+      --D Control register values on exception occurrence.
       CR0, CR3, CR4 : Interfaces.Unsigned_64;
    end record
    with
@@ -183,11 +243,25 @@ is
 
    MCE_Ctx_Size : constant := 8 + 1 + 3 * MCE_Max_Banks * 8;
 
+   --D @Interface
+   --D Machine-Check Exception execution environment state.
    type MCE_Context_Type is record
+      --D @Interface
+      --D Value of Machine-Check global status register on MCE occurrence.
       MCG_Status : Interfaces.Unsigned_64;
+      --D @Interface
+      --D Number of present MCE reporting banks.
       Bank_Count : Bank_Index_Ext_Range'Base;
+      --D @Interface
+      --D Status register value for each present MCE bank.
       MCi_Status : Banks_Array;
+      --D @Interface
+      --D Address of the memory location that produced the MCE for each present
+      --D MCE bank.
       MCi_Addr   : Banks_Array;
+      --D @Interface
+      --D Address of the memory location that produced the MCE for each present
+      --D MCE bank.
       MCi_Misc   : Banks_Array;
    end record
    with
@@ -210,12 +284,25 @@ is
    Subj_Ctx_Size : constant
      := 2 + 1 + 1 + 4 + 4 + Subj_State_Size + XSAVE_Legacy_Header_Size;
 
+   --D @Interface
+   --D Subject execution state.
    type Subj_Context_Type is record
+      --D @Interface
+      --D ID of subject being executed on crash occurrence.
       Subject_ID      : Interfaces.Unsigned_16;
+      --D @Interface
+      --D Bitmap designating context fields containing valid audit data.
       Field_Validity  : Subj_Ctx_Validity_Flags_Type;
       Padding         : Interfaces.Unsigned_8;
+      --D @Interface
+      --D Subject interrupt information.
       Intr_Info       : Interfaces.Unsigned_32;
+      --D @Interface
+      --D Subject interrupt error code.
       Intr_Error_Code : Interfaces.Unsigned_32;
+      --D @Interface
+      --D Subject state descriptor containing the execution state like register
+      --D values etc.
       Descriptor      : Subject_State_Type;
       FPU_Registers   : XSAVE_Legacy_Header_Type;
    end record
@@ -241,12 +328,28 @@ is
 
    VTx_Ctx_Size : constant := 1 + 3 * 8 + 2 + 1;
 
+   --D @Interface
+   --D VT-x execution information.
    type VTx_Context_Type is record
+      --D @Interface
+      --D Bitmap designating context fields containing valid audit data.
       Field_Validity       : VTx_Ctx_Validity_Flags_Type;
+      --D @Interface
+      --D Physical address of VMCS that was active on crash occurrence.
       VMCS_Address_Active  : Interfaces.Unsigned_64;
+      --D @Interface
+      --D Physical address of VMCS that was operated upon on crash occurrence.
       VMCS_Address_Request : Interfaces.Unsigned_64;
+      --D @Interface
+      --D Identifier of VMCS Field that was operated upon on crash occurrence,
+      --D see Intel SDM Vol. 3D, "Appendix B Field Encoding in VMCS".
       VMCS_Field           : Interfaces.Unsigned_16;
+      --D @Interface
+      --D Value of VMCS Field that was operated upon on crash occurrence.
       VMCS_Field_Value     : Interfaces.Unsigned_64;
+      --D @Interface
+      --D VM instruction error number, see Intel SDM Vol. 3C,
+      --D "30.4 VM Instruction Error Numbers".
       VM_Instr_Error       : Interfaces.Unsigned_8;
    end record
    with
@@ -257,16 +360,38 @@ is
 
    Sys_Init_Ctx_Size : constant := 2;
 
+   --D @Interface
+   --D System initialization validity check information.
    type System_Init_Context_Type is record
+      --D @Interface
+      --D VMX operation supported by hardware.
       VMX_Support             : Boolean;
+      --D @Interface
+      --D VMX operation enabled or feature control is not locked.
       Not_VMX_Disabled_Locked : Boolean;
+      --D @Interface
+      --D CPU is in protected mode.
       Protected_Mode          : Boolean;
+      --D @Interface
+      --D Paging is enabled
       Paging                  : Boolean;
+      --D @Interface
+      --D CPU is in IA32-e (long) mode.
       IA_32e_Mode             : Boolean;
+      --D @Interface
+      --D X2Apic supported by hardware.
       Apic_Support            : Boolean;
+      --D @Interface
+      --D CR0 value is valid for VMX operation on this hardware.
       CR0_Valid               : Boolean;
+      --D @Interface
+      --D CR4 value is valid for VMX operation on this hardware.
       CR4_Valid               : Boolean;
+      --D @Interface
+      --D Virtual-8086 mode disabled.
       Not_Virtual_8086        : Boolean;
+      --D @Interface
+      --D Hardware has Invariant TSC.
       Invariant_TSC           : Boolean;
       Padding                 : Bit_6_Type;
    end record
@@ -278,8 +403,14 @@ is
 
    FPU_Init_Ctx_Size : constant := 1;
 
+   --D @Interface
+   --D FPU initialization validity check information.
    type FPU_Init_Context_Type is record
+      --D @Interface
+      --D XSAVE instruction supported by hardware.
       XSAVE_Support : Boolean;
+      --D @Interface
+      --D XSAVE area fits in subject FPU state memory region.
       Area_Size     : Boolean;
       Padding       : Bit_6_Type;
    end record
@@ -291,9 +422,17 @@ is
 
    MCE_Init_Ctx_Size : constant := 1;
 
+   --D @Interface
+   --D Machine-Check exception initialization validity check information.
    type MCE_Init_Context_Type is record
+      --D @Interface
+      --D Machine-Check Exceptions supported by hardware.
       MCE_Support   : Boolean;
+      --D @Interface
+      --D Machine-Check Architecture supported by hardware.
       MCA_Support   : Boolean;
+      --D @Interface
+      --D Number of MCE error reporting banks is supported.
       Bank_Count_OK : Boolean;
       Padding       : Bit_5_Type;
    end record
@@ -305,14 +444,32 @@ is
 
    VTd_IOMMU_Status_Size : constant := 1;
 
+   --D @Interface
+   --D VT-d initialization validity check information.
    type VTd_IOMMU_Status_Type is record
+      --D @Interface
+      --D IOMMU version is supported.
       Version_Support        : Boolean;
+      --D @Interface
+      --D IOMMU supports a large enough number of domains.
       Nr_Domains_OK          : Boolean;
+      --D @Interface
+      --D IOMMU actual guest address width is supported.
       AGAW_Support           : Boolean;
+      --D @Interface
+      --D IOMMU supports interrupt remapping.
       IR_Support             : Boolean;
+      --D @Interface
+      --D IOMMU supports extended interrupt mode.
       EIM_Support            : Boolean;
+      --D @Interface
+      --D Number of fault reporting registers matches expected value.
       NFR_Match              : Boolean;
+      --D @Interface
+      --D Offset of fault reporting registers matches expected value.
       FR_Offset_Match        : Boolean;
+      --D @Interface
+      --D Offset of IOTLB invalidate register matches expected value.
       IOTLB_Inv_Offset_Match : Boolean;
    end record
    with
@@ -336,8 +493,14 @@ is
 
    VTd_Init_Context_Type_Size : constant := 1 + VTd_IOMMU_Status_Array_Size;
 
+   --D @Interface
+   --D VT-d initialization check information for all present IOMMUs.
    type VTd_Init_Context_Type is record
+      --D @Interface
+      --D Number of reported IOMMUs.
       IOMMU_Count : Byte;
+      --D @Interface
+      --D Status of each reported IOMMU.
       Status      : VTd_IOMMU_Status_Array;
    end record
    with
@@ -350,6 +513,8 @@ is
      := (Sys_Init_Ctx_Size + FPU_Init_Ctx_Size
          + MCE_Init_Ctx_Size + VTd_Init_Context_Type_Size);
 
+   --D @Interface
+   --D Kernel initialization check information.
    type Init_Context_Type is record
       Sys_Ctx : System_Init_Context_Type;
       FPU_Ctx : FPU_Init_Context_Type;
@@ -365,15 +530,35 @@ is
    Dumpdata_Size : constant := 8 + 8 + 1 + 1 + Ex_Ctx_Size + MCE_Ctx_Size
      + Subj_Ctx_Size + Init_Ctx_Size + VTx_Ctx_Size;
 
+   --D @Interface
+   --D The dump data record type specifies a single crash audit entry.
    type Dumpdata_Type is record
+      --D @Interface
+      --D TSC timestamp when the audit record was written.
       TSC_Value         : Interfaces.Unsigned_64;
+      --D @Interface
+      --D Reason designating the cause of the crash.
       Reason            : Reason_Type;
+      --D @Interface
+      --D ID of CPU on which the crash occurred.
       APIC_ID           : Interfaces.Unsigned_8;
+      --D @Interface
+      --D Bitmap designating which contexts contain further valid data.
       Field_Validity    : Validity_Flags_Type;
+      --D @Interface
+      --D Audit data related to exception occurrence.
       Exception_Context : Exception_Context_Type;
+      --D @Interface
+      --D Audit data related to Machine-Check Exception.
       MCE_Context       : MCE_Context_Type;
+      --D @Interface
+      --D Audit data related to subject, which was executed at the time of the crash.
       Subject_Context   : Subj_Context_Type;
+      --D @Interface
+      --D Audit data related to system initialization errors.
       Init_Context      : Init_Context_Type;
+      --D @Interface
+      --D Audit data related to fatal VT-x errors.
       VTx_Context       : VTx_Context_Type;
    end record
    with
@@ -394,8 +579,17 @@ is
 
    Dump_Type_Size : constant := Header_Type_Size + Dumpdata_Array_Size;
 
+   --D @Interface
+   --D The dump record type specifies the entire crash audit data structure.
    type Dump_Type is record
+      --D @Interface
+      --D Audit header containing meta information for the management of the
+      --D crash audit data.
       Header : Header_Type;
+      --D @Interface
+      --D Array of crash audit slots. The header field \texttt{Max\_Dump\_Count}
+      --D specifies the array length while \texttt{Dump\_Count} identifies how
+      --D many slots are currently filled with audit information.
       Data   : Dumpdata_Array;
    end record
    with

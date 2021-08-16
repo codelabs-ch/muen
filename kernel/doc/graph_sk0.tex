@@ -1,0 +1,19 @@
+\begin{tikzpicture}
+	\matrix[row sep=1mm, column sep=1mm, inner sep=1mm, minimum width=2cm, minimum height=1.5cm] (x) {
+		\node[greenbox, align=left] (aa){\small Init}; &
+		\node[greenbox, align=left] (ab){\small Signaling}; &
+		\node[greenbox, align=left] (bb){\small Scheduler}; &
+		\node[greenbox, align=left] (cc){\small VT-x \\ \small VT-d}; &
+		\node[dashbox,  align=left] (dd){\small Caps/ \\ \small Perms}; \\
+		\node[dashbox,  align=left] (aa){\small Page \\ \small Tables}; &
+		\node[dashbox,  align=left] (ab){\small Message \\ \small Passing}; &
+		\node[dashbox,  align=left] (bb){\small Schedule \\ \small Planning}; &
+		\node[dashbox,  align=left] (cc){\small Memory \\ \small Allocator}; &
+		\node[dashbox,  align=left] (dd){\small Device \\ \small Allocator}; \\
+		\node[dashbox,  align=left] (a){\small Device \\ \small Drivers}; &
+		\node[dashbox,  align=left] (b){\small User \\ \small Interface}; &
+		\node[dashbox,  align=left] (c){\small File \\ \small System}; &
+		\node[dashbox,  align=left] (d){\small VM \\ \small Monitor}; &
+		\node[dashbox,  align=left] (){\small Posix \\ \small Interface}; \\
+	};
+\end{tikzpicture}

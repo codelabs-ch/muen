@@ -18,6 +18,11 @@
 
 with X86_64;
 
+--D @Interface
+--D This package implements subprograms corresponding to low-level Intel VT-x
+--D instructions. They are required for the management of VMX data structures
+--D such as VMXON and VMCS regions, see Intel SDM Vol. 3C, "Chapter 30 VMX
+--D Instruction Reference" \cite{intelsdm}.
 package SK.CPU.VMX
 is
 

@@ -22,6 +22,12 @@ with SK.CPU_Info;
 
 private with SK.Constants;
 
+--D @Interface
+--D This package provides facilities for managing subject target events. Each
+--D subject has a fixed number of events that can be marked as pending. Events
+--D are processed prior to resuming the execution of the associated subject.
+--D Pending events are marked by their ID, which is used as a lookup index into
+--D the static policy event array.
 package SK.Subjects_Events
 with
    Abstract_State => (State with External => (Async_Writers, Async_Readers))
@@ -61,7 +67,12 @@ is
 
 private
 
+   --D @Interface
+   --D 64-bit atomic type, where each bit represents a pending event with the
+   --D event number corresponding to the bit position.
    type Atomic64_Type is record
+      --D @Interface
+      --D 64-bits accessible atomically to enable concurrent access.
       Bits : Word64 with Atomic;
    end record
    with
@@ -78,6 +89,13 @@ private
    with
       Independent_Components;
 
+   --D @Interface
+   --D Bitmap of the currently pending subject target events. Each subject has
+   --D a corresponding pending events data structure which may be accessed
+   --D asynchronously by all CPU cores. The CPU executing the associated
+   --D subject consumes pending events while all CPUs may mark target events as
+   --D pending if allowed by the policy. Data consistency is established via
+   --D atomic access.
    Global_Pending_Events : Pending_Events_Array
    with
       Volatile,

@@ -28,7 +28,10 @@
 
 with Interfaces;
 
---  Muen timed events data structures.
+--D @Interface
+--D The Muen timed events mechanism implements a synthetic timer which can be
+--D used by subjects to trigger events when a specified timestamp has passed.
+--D This package contains declarations for the timed event data structures.
 package Mutimedevents
 is
 
@@ -45,9 +48,12 @@ is
        Size => Padding_Bits;
 
    --D @Interface
+   --D Timed events enable subjects to trigger events at a given time in the
+   --D future.
    type Timed_Event_Interface_Type is record
       --D @Interface
-      --D TSC value when to trigger the event.
+      --D CPU tick count to fire the event designated by the event number
+      --D field.
       TSC_Trigger_Value : Interfaces.Unsigned_64;
       --D @Interface
       --D Number of event to trigger.

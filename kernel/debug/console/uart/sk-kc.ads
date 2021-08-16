@@ -21,7 +21,10 @@ with SK.Console_UART;
 
 pragma Elaborate (SK.Console);
 
---  Kernel debug console.
+--D @Interface
+--D Kernel debug console implementation.
+--D Note: implementation is only present in debug builds. In release versios
+--D this package is empty.
 package SK.KC is new SK.Console
   (Initialize      => Console_UART.Init,
    Output_New_Line => Console_UART.New_Line,

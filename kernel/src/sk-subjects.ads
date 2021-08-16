@@ -28,6 +28,11 @@ with SK.CPU_Info;
 with SK.Crash_Audit;
 with SK.Crash_Audit_Types;
 
+--D @Interface
+--D This package provides facilities for managing subject states. Each subject
+--D has a corresponding in-memory representation of its current execution state
+--D which is synchronized with virtualization data structures used by hardware
+--D when executing a subject.
 package SK.Subjects
 with
    Abstract_State => State,
@@ -120,8 +125,16 @@ private
    with
       Size => (Page_Size - Subj_State_Size) * 8;
 
+   --D @Interface
+   --D A subject state page consist of the subject state data and is padded to
+   --D a full 4K memory page. Explicit padding makes sure the entirety of the
+   --D memory is covered and initialized.
    type Subjects_State_Page is record
+      --D @Interface
+      --D State information (e.g. register values) of the associated subject.
       Data    : Subject_State_Type;
+      --D @Interface
+      --D Padding to fill the memory page.
       Padding : Padding_Type;
    end record
    with
@@ -145,9 +158,12 @@ private
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
-   --  Descriptors used to manage subject states.
    --  TODO: Model access rules
    --  TODO: Handle initialization
+   --D @Interface
+   --D Descriptors used to manage subject states. Each subject has an
+   --D associated descriptor, identified by subject ID, which stores its state,
+   --D e.g. register values.
    Descriptors : Subject_State_Array
    with
       Part_Of => State,

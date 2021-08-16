@@ -25,10 +25,14 @@ with SK.Apic;
 pragma Elaborate_All (SK.Apic, X86_64);
 pragma Unreferenced (X86_64);
 
+--D @Interface
+--D This package provides CPU identification information which allows the
+--D kernel to uniquely identify on which CPU it is executing.
 package SK.CPU_Info
 is
 
-   --  ID of the local CPU.
+   --  ID of the local CPU. It is set by early boot code and only read at
+   --  runtime.
    CPU_ID : constant Skp.CPU_Range
    with
       Import,
@@ -39,6 +43,8 @@ is
    APIC_ID : constant Skp.APIC_ID_Type
      := Skp.CPU_To_APIC_ID (CPU_ID);
 
+   --  Is only set to True for the bootstrap processor which performs the
+   --  initial system bring up.
    Is_BSP : constant Boolean := Apic.Is_BSP;
 
 end SK.CPU_Info;

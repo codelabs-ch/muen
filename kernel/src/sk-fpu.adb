@@ -102,6 +102,9 @@ is
                                                    Subject_FPU_States))
    is
    begin
+      --D @Interface
+      --D Set FPU state of subject with specified ID to
+      --D \texttt{Null\_FPU\_State}.
       Subject_FPU_States (ID) := Null_FPU_State;
       Restore_State (ID => ID);
       CPU.Fninit;

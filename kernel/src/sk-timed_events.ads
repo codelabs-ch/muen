@@ -24,6 +24,10 @@ private with Mutimedevents;
 
 with Skp.Events;
 
+--D @Interface
+--D This package provide facilities to manage timed events of each subject.
+--D Timed events allow a subject to trigger a policy defined event at a given
+--D time specified as CPU tick value.
 package SK.Timed_Events
 with
    Abstract_State => (State with External => (Async_Writers, Async_Readers)),
@@ -58,8 +62,17 @@ private
    with
       Size => Page_Size * 8 - Mutimedevents.Timed_Event_Interface_Size;
 
+   --D @Interface
+   --D A subject timed event page consist of the timed event data and is padded
+   --D to a full 4K memory page. Explicit padding makes sure the entirety of the
+   --D memory is covered and initialized.
    type Timed_Event_Page is record
+      --D @Interface
+      --D Timed event data (i.e. timestamp when to trigger the event and the
+      --D number of the event to trigger).
       Data    : Mutimedevents.Timed_Event_Interface_Type;
+      --D @Interface
+      --D Padding to fill the memory page.
       Padding : Padding_Type;
    end record
    with
@@ -78,7 +91,10 @@ private
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
-   --  Subject timed event pages.
+   --D @Interface
+   --D Subject timed events array. Each subject has an associated timed event,
+   --D identified by subject ID, which it can use to trigger a policy-defined
+   --D event at a specified timestamp.
    Subject_Events : Subject_Event_Array
    with
       Volatile,

@@ -87,6 +87,8 @@ is
    is
    begin
       for Subj_ID in Skp.Global_Subject_ID_Type'Range loop
+         --D @Interface
+         --D Set pending events of all subjects to zero.
          Global_Pending_Events (Subj_ID) := Atomic64_Type'(Bits => 0);
       end loop;
    end Initialize;
@@ -113,6 +115,8 @@ is
       Refined_Depends => (Global_Pending_Events =>+ Subject)
    is
    begin
+      --D @Interface
+      --D Set pending events of subject with given ID to zero.
       Global_Pending_Events (Subject) := Atomic64_Type'(Bits => 0);
    end Clear_Events;
 
@@ -134,6 +138,8 @@ is
       Bit_Pos : Bitops.Word64_Pos;
    begin
       Event := 0;
+      --D @Interface
+      --D Read current pending events of specific subject into Bits variable.
       Bits  := Global_Pending_Events (Subject).Bits;
 
       Find_Highest_Bit_Set

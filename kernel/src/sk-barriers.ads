@@ -16,6 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+--D @Interface
+--D This package implements a sense barrier which can be used as a
+--D synchronization primitive.
 package SK.Barriers
 is
 

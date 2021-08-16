@@ -46,8 +46,15 @@ is
    with
       Size => (Page_Size - VMCS_Header_Size) * 8;
 
+   --D @Interface
+   --D Virtual-Machine Control Structure as specified in Intel SDM Vol. 3C,
+   --D "Chapter 24 Virtual Machine Control Structures".
    type VMCS_Region_Type is record
+      --D @Interface
+      --D Header comprised of VMCS revision identifier and VMX-abort indicator.
       Header : VMCS_Header_Type;
+      --D @Interface
+      --D VMCS data which is declared as implementation-specific by Intel.
       Data   : VMCS_Data;
    end record
    with
@@ -64,6 +71,12 @@ is
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
+   --D @Interface
+   --D A Virtual Machine Control Structure (VMCS) is used by the hardware to
+   --D manage the VM state of each subject designated by ID. The VM state is
+   --D saved and restored on each VM-exit and entry according to the VM-controls
+   --D and as specified in Intel SDM Vol. 3C, "Chapter 24 Virtual Machine
+   --D Control Structures" \cite{intelsdm}.
    VMCS : VMCS_Array
    with
       Volatile,
@@ -248,9 +261,15 @@ is
    is
       Default0, Default1, Value : Word32;
    begin
-
-      --  Pin-based controls.
-
+      --D @OL Id => impl_vmcs_setup_ctrl_steps, Section => impl_vmcs_setup_ctrl, Priority => 10
+      --D @Item List => impl_vmcs_setup_ctrl_steps
+      --D Read Default0 and Default1 from the
+      --D \texttt{IA32\_VMX\_TRUE\_PINBASED\_CTLS} MSR. Combine them with the
+      --D policy-defined value by setting the defaults for reserved control bits
+      --D according to Intel SDM Vol. 3D,
+      --D "A.3.1 Pin-Based VM-Execution Controls". Then, set the Pin-Based
+      --D VM-Execution controls by writing the value to the corresponding VMCS
+      --D field.
       CPU.Get_MSR (Register => Constants.IA32_VMX_TRUE_PINBASED_CTLS,
                    Low      => Default0,
                    High     => Default1);
@@ -260,8 +279,14 @@ is
       VMCS_Write (Field => Constants.PIN_BASED_EXEC_CONTROL,
                   Value => Word64 (Value));
 
-      --  Primary processor-based controls.
-
+      --D @Item List => impl_vmcs_setup_ctrl_steps
+      --D Read Default0 and Default1 from the
+      --D \texttt{IA32\_VMX\_TRUE\_PROCBASED\_CTLS} MSR. Combine them with the
+      --D policy-defined value by setting the defaults for reserved control bits
+      --D according to Intel SDM Vol. 3D,
+      --D "A.3.2 Primary Processor-Based VM-Execution Controls". Then, set the
+      --D Processor-Based VM-Execution controls by writing the value to the
+      --D corresponding VMCS field.
       CPU.Get_MSR (Register => Constants.IA32_VMX_TRUE_PROCBASED_CTLS,
                    Low      => Default0,
                    High     => Default1);
@@ -271,8 +296,14 @@ is
       VMCS_Write (Field => Constants.CPU_BASED_EXEC_CONTROL,
                   Value => Word64 (Value));
 
-      --  Secondary processor-based controls.
-
+      --D @Item List => impl_vmcs_setup_ctrl_steps
+      --D Read Default0 and Default1 from the
+      --D \texttt{IA32\_VMX\_PROCBASED\_CTLS2} MSR. Combine them with the
+      --D policy-defined value by setting the defaults for reserved control bits
+      --D according to Intel SDM Vol. 3D,
+      --D "A.3.3 Secondary Processor-Based VM-Execution Controls". Then, set the
+      --D secondary processor-based VM-Execution controls by writing the value
+      --D to the corresponding VMCS field.
       CPU.Get_MSR (Register => Constants.IA32_VMX_PROCBASED_CTLS2,
                    Low      => Default0,
                    High     => Default1);
@@ -282,38 +313,45 @@ is
       VMCS_Write (Field => Constants.CPU_BASED_EXEC_CONTROL2,
                   Value => Word64 (Value));
 
-      --  Exception bitmap.
-
+      --D @Item List => impl_vmcs_setup_ctrl_steps
+      --D Write policy-defined exception bitmap value to the corresponding
+      --D VMCS field.
       VMCS_Write (Field => Constants.EXCEPTION_BITMAP,
                   Value => Word64 (Exception_Bitmap));
 
-      --  Write access to CR0/CR4.
-
+      --D @Item List => impl_vmcs_setup_ctrl_steps
+      --D Write policy-defined CR0 and CR4 mask values to the corresponding
+      --D VMCS fields.
       VMCS_Write (Field => Constants.CR0_MASK,
                   Value => CR0_Mask);
       VMCS_Write (Field => Constants.CR4_MASK,
                   Value => CR4_Mask);
 
-      --  Explicitly set CR3-target count to 0 to always force CR3-load
-      --  exiting.
-
+      --D @Item List => impl_vmcs_setup_ctrl_steps
+      --D Explicitly set CR3-target count to 0 to always force CR3-load
+      --D exiting, by writing zero to the corresponding VMCS field.
       VMCS_Write (Field => Constants.CR3_TARGET_COUNT,
                   Value => 0);
 
-      --  I/O bitmaps.
-
+      --D @Item List => impl_vmcs_setup_ctrl_steps
+      --D Write policy-defined I/O bitmap address to the corresponding VMCS
+      --D fields. I/O bitmap B is expected to be located in the next memory page
+      --D after bitmap A (which is enforced by the validtor).
       VMCS_Write (Field => Constants.IO_BITMAP_A,
                   Value => IO_Bitmap_Address);
       VMCS_Write (Field => Constants.IO_BITMAP_B,
                   Value => IO_Bitmap_Address + Page_Size);
 
-      --  MSR bitmaps.
-
+      --D @Item List => impl_vmcs_setup_ctrl_steps
+      --D Write policy-defined MSR bitmap address to the corresponding VMCS
+      --D field.
       VMCS_Write (Field => Constants.MSR_BITMAP,
                   Value => MSR_Bitmap_Address);
 
-      --  MSR store.
-
+      --D @Item List => impl_vmcs_setup_ctrl_steps
+      --D Write policy-defined MSR store address to the VM-Exit MSR store and
+      --D the VM-Entry MSR load address VMCS fields. Also set the VM-Exit MSR
+      --D store and VM-Entry load count fields to the policy-defined MSR count.
       VMCS_Write (Field => Constants.VM_EXIT_MSR_STORE_ADDRESS,
                   Value => MSR_Store_Address);
       VMCS_Write (Field => Constants.VM_ENTRY_MSR_LOAD_ADDRESS,
@@ -323,8 +361,12 @@ is
       VMCS_Write (Field => Constants.VM_ENTRY_MSR_LOAD_COUNT,
                   Value => Word64 (MSR_Count));
 
-      --  VM-exit controls.
-
+      --D @Item List => impl_vmcs_setup_ctrl_steps
+      --D Read Default0 and Default1 from the
+      --D \texttt{IA32\_VMX\_TRUE\_EXIT\_CTLS} MSR. Combine them with the
+      --D policy-defined value by setting the defaults for reserved control bits
+      --D according to Intel SDM Vol. 3D, "A.4 VM-Exit Controls". Then, set the
+      --D VM-Exit controls by writing the value to the corresponding VMCS field.
       CPU.Get_MSR (Register => Constants.IA32_VMX_TRUE_EXIT_CTLS,
                    Low      => Default0,
                    High     => Default1);
@@ -334,8 +376,13 @@ is
       VMCS_Write (Field => Constants.VM_EXIT_CONTROLS,
                   Value => Word64 (Value));
 
-      --  VM-entry controls.
-
+      --D @Item List => impl_vmcs_setup_ctrl_steps
+      --D Read Default0 and Default1 from the
+      --D \texttt{IA32\_VMX\_TRUE\_ENTRY\_CTLS} MSR. Combine them with the
+      --D policy-defined value by setting the defaults for reserved control bits
+      --D according to Intel SDM Vol. 3D, "A.5 VM-Entry Controls". Then, set the
+      --D VM-Entry controls by writing the value to the corresponding VMCS
+      --D field.
       CPU.Get_MSR (Register => Constants.IA32_VMX_TRUE_ENTRY_CTLS,
                    Low      => Default0,
                    High     => Default1);
@@ -359,25 +406,46 @@ is
       IA32_EFER : constant Word64 := CPU.Get_MSR64
         (Register => Constants.IA32_EFER);
    begin
+      --D @OL Id => impl_vmcs_setup_host_steps, Section => impl_vmcs_setup_host, Priority => 10
+      --D @Item List => impl_vmcs_setup_host_steps
+      --D Set host CS segment selector field to \texttt{SEL\_KERN\_CODE}.
       VMCS_Write (Field => Constants.HOST_SEL_CS,
                   Value => Constants.SEL_KERN_CODE);
+      --D @Item List => impl_vmcs_setup_host_steps
+      --D Set host DS segment selector field to \texttt{SEL\_KERN\_DATA}.
       VMCS_Write (Field => Constants.HOST_SEL_DS,
                   Value => Constants.SEL_KERN_DATA);
+      --D @Item List => impl_vmcs_setup_host_steps
+      --D Set host ES segment selector field to \texttt{SEL\_KERN\_DATA}.
       VMCS_Write (Field => Constants.HOST_SEL_ES,
                   Value => Constants.SEL_KERN_DATA);
+      --D @Item List => impl_vmcs_setup_host_steps
+      --D Set host SS segment selector field to \texttt{SEL\_KERN\_DATA}.
       VMCS_Write (Field => Constants.HOST_SEL_SS,
                   Value => Constants.SEL_KERN_DATA);
+      --D @Item List => impl_vmcs_setup_host_steps
+      --D Set host FS segment selector field to \texttt{SEL\_KERN\_DATA}.
       VMCS_Write (Field => Constants.HOST_SEL_FS,
                   Value => Constants.SEL_KERN_DATA);
+      --D @Item List => impl_vmcs_setup_host_steps
+      --D Set host FS segment selector field to \texttt{SEL\_KERN\_DATA}.
       VMCS_Write (Field => Constants.HOST_SEL_GS,
                   Value => Constants.SEL_KERN_DATA);
+      --D @Item List => impl_vmcs_setup_host_steps
+      --D Set host TR segment selector field to \texttt{SEL\_TSS}.
       VMCS_Write (Field => Constants.HOST_SEL_TR,
                   Value => Constants.SEL_TSS);
 
+      --D @Item List => impl_vmcs_setup_host_steps
+      --D Set host CR0 field to current control register 0 value.
       VMCS_Write (Field => Constants.HOST_CR0,
                   Value => CR0);
+      --D @Item List => impl_vmcs_setup_host_steps
+      --D Set host CR3 field to current control register 3 value.
       VMCS_Write (Field => Constants.HOST_CR3,
                   Value => CR3);
+      --D @Item List => impl_vmcs_setup_host_steps
+      --D Set host CR4 field to current control register 4 value.
       VMCS_Write (Field => Constants.HOST_CR4,
                   Value => CR4);
 
@@ -385,17 +453,30 @@ is
         (GDT => GDT_Base,
          IDT => IDT_Base,
          TSS => TSS_Base);
+      --D @Item List => impl_vmcs_setup_host_steps
+      --D Set host GDTR base address field to current GDT base address.
       VMCS_Write (Field => Constants.HOST_BASE_GDTR,
                   Value => GDT_Base);
+      --D @Item List => impl_vmcs_setup_host_steps
+      --D Set host IDT base address field to current IDT base address.
       VMCS_Write (Field => Constants.HOST_BASE_IDTR,
                   Value => IDT_Base);
+      --D @Item List => impl_vmcs_setup_host_steps
+      --D Set host TR base address field to current TSS base address.
       VMCS_Write (Field => Constants.HOST_BASE_TR,
                   Value => TSS_Base);
 
+      --D @Item List => impl_vmcs_setup_host_steps
+      --D Set host RSP field to top of kernel stack as specified by the policy.
       VMCS_Write (Field => Constants.HOST_RSP,
                   Value => Skp.Kernel.Stack_Address);
+      --D @Item List => impl_vmcs_setup_host_steps
+      --D Set host RIP field to exit address which points to
+      --D \texttt{vmx\_exit\_hander} declared in assembly.
       VMCS_Write (Field => Constants.HOST_RIP,
                   Value => Exit_Address);
+      --D @Item List => impl_vmcs_setup_host_steps
+      --D Set host IA32\_EFER field to current IA32\_EFER value.
       VMCS_Write (Field => Constants.HOST_IA32_EFER,
                   Value => IA32_EFER);
    end VMCS_Setup_Host_Fields;
@@ -407,10 +488,19 @@ is
       EPT_Pointer  : Word64)
    is
    begin
+      --D @OL Id => impl_vmcs_setup_guest_steps, Section => impl_vmcs_setup_guest, Priority => 10
+      --D @Item List => impl_vmcs_setup_guest_steps
+      --D Set VMCS link pointer field to \texttt{16\#ffffffff\_ffffffff\#} since
+      --D "VMCS shadowing" is not used, see Intel SDM Vol. 3C,
+      --D "24.4.2 Guest Non-Register State".
       VMCS_Write (Field => Constants.VMCS_LINK_POINTER,
                   Value => Word64'Last);
+      --D @Item List => impl_vmcs_setup_guest_steps
+      --D Set guest CR3 field to policy-defined PML4 address value.
       VMCS_Write (Field => Constants.GUEST_CR3,
                   Value => PML4_Address);
+      --D @Item List => impl_vmcs_setup_guest_steps
+      --D Set EPT pointer field to policy-defined address value.
       VMCS_Write (Field => Constants.EPT_POINTER,
                   Value => EPT_Pointer);
    end VMCS_Setup_Guest_Fields;
@@ -449,23 +539,35 @@ is
    is
       Rev_ID, Unused_High : Word32;
    begin
-
-      --  Invalidate current VMCS and force CPU to sync data to VMCS memory.
-
+      --D @OL Id => impl_vmcs_reset_steps, Section => impl_vmcs_reset, Priority => 10
+      --D @Item List => impl_vmcs_reset_steps
+      --D Make the VMCS inactive, not current and clear to force the CPU to
+      --D synchronize any cached data to the VMCS memory designated by the
+      --D physical memory address.
       Clear (VMCS_Address => VMCS_Address);
 
-      --  MSR IA32_VMX_BASIC definition, see Intel SDM Vol. 3D, "A.1 Basic VMX
-      --  Information".
-
+      --D @Item List => impl_vmcs_reset_steps
+      --D Read \texttt{IA32\_VMX\_BASIC} MSR to determine the VMCS revision
+      --D identifier of the processor.
       CPU.Get_MSR (Register => Constants.IA32_VMX_BASIC,
                    Low      => Rev_ID,
                    High     => Unused_High);
+      --D @Item List => impl_vmcs_reset_steps
+      --D Set VMCS revision ID field to CPU value and the abort indicator to 0.
+      --D Note, that bit 31 of the MSR is always 0 which means, the
+      --D shadow-VMCS indicator will always be cleared, see Intel SDM Vol. 3D,
+      --D "A.1 Basic VMX Information".
       VMCS (Subject_ID).Header := (Revision_ID     => Rev_ID,
                                    Abort_Indicator => 0);
+      --D @Item List => impl_vmcs_reset_steps
+      --D Set all remaining VMCS data to zero, see Intel SDM Vol. 3C,
+      --D "24.2 Format of the VMCS Region".
       VMCS (Subject_ID).Data   := (others => 0);
 
-      --  Clear VMCS and set some initial values.
-
+      --D @Item List => impl_vmcs_reset_steps
+      --D Execute VMCLEAR instruction again to initialize
+      --D implementation-specific information in the VMCS region, see Intel SDM
+      --D Vol. 3C, "24.11.3 Initializing a VMCS".
       Clear (VMCS_Address => VMCS_Address);
    end Reset;
 
@@ -498,10 +600,20 @@ is
       Success : Boolean;
       CR4     : constant Word64 := CPU.Get_CR4;
    begin
+      --D @Text Section => impl_vmcs_enter_root_mode, Priority => 10
+      --D First, set \texttt{CR4.VMXE} bit. Then, execute \texttt{vmxon} with
+      --D the address of the VMXON region assigned to the CPU. VMXON regions are
+      --D laid out in memory consecutively like an array and each CPU uses its
+      --D CPU\_ID as index. VMXON regions are not mapped into the kernel address
+      --D space, as they are cleared and initialized during boot in assembly
+      --D (\texttt{init.S}). No further access is required.
+      --D The requirements for executing the \texttt{vmxon} instruction are
+      --D assured when the VMX feature is enabled see
+      --D \ref{impl_vmcs_enable_vmx}. For further reference see Intel SDM Vol.
+      --D 3C, "23.7 Enabling and Entering VMX Operation".
       CPU.Set_CR4 (Value => Bitops.Bit_Set
                    (Value => CR4,
                     Pos   => Constants.CR4_VMXE_FLAG));
-
       CPU.VMX.VMXON
         (Region  => Skp.Vmxon_Address + Get_CPU_Offset,
          Success => Success);

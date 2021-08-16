@@ -1069,6 +1069,18 @@
     state has to be restored back into the associated VMCS.
    </text>
   </section>
+  <section id="impl_vmcs" label="VMCS Management" priority="0">
+   <text priority="0">
+    This section describes how the VMCS structures associated with subjects are
+    managed by the kernel. A VMCS controls the execution environment of a
+    subject, e.g. what hardware features/privileged instructions a subject may
+    execute etc. While transitioning between VMX root and non-root mode, the
+    hardware automatically saves and restores the state to/from the current
+    VMCS depending on how it has been configured. Part of the kernel's duties is
+    to set up the VMCS according to the subject specification in the system
+    policy.
+   </text>
+  </section>
  </section>
 
 </doc>

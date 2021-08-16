@@ -968,6 +968,23 @@
    via the \texttt{globaldata} linker section, describing their purpose. All the
    instances presented below fall into the data model category 3 described in
    section \ref{datamodel_global}.
+
+   Aspects are Ada/SPARK language level constructs that determine operational
+   properties of variable instances. The following aspects are referenced in
+   this chapter:
+
+   \begin{description}
+    \item[Async\_Readers] \hfill \\
+     A component external to the program might read a value written to the
+     object at any time, see SPARK 2014 Reference Manual, section 7.1.2
+     \cite{SPARK2014}.
+    \item[Async\_Writers] \hfill \\
+     A component external to the program might update the value of an object at
+     any time, see SPARK 2014 Reference Manual, section 7.1.2 \cite{SPARK2014}.
+    \item[Volatile] \hfill \\
+     The compiler is instructed to include each read and update of a volatile
+     object, see Ada Language Reference Manual, C.6/20 \cite{Ada2012}.
+   \end{description}
   </text>
  </section>
 

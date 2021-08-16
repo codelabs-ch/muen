@@ -33,8 +33,8 @@ is
    with
       Global => (Input => X86_64.State);
 
-   --D @Section Id => impl_vmcs_enable_vmx, Label => Enabling VMX, Parent => impl_vmcs, Priority => 0
-   --D @Text Section => impl_vmcs_enable_vmx, Priority => 0
+   --D @Section Id => impl_vmcs_enable_vmx, Label => Enabling VMX, Parent => impl_vmcs, Priority => -10
+   --D @Text Section => impl_vmcs_enable_vmx
    --D Enable the VMX feature if it is not already enabled, e.g. by the BIOS.
    --D To ensure that the VMX feature control MSR
    --D (\texttt{IA32\_FEATURE\_CONTROL}) is setup correctly, this action is

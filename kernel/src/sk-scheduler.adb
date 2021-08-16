@@ -341,7 +341,7 @@ is
    -------------------------------------------------------------------------
 
    --D @Section Id => impl_subject_init, Label => Subject Initialization, Parent => impl_kernel_init_sched, Priority => 20
-   --D @Text Section => impl_subject_init, Priority => 0
+   --D @Text Section => impl_subject_init
    --D Clear all state associated with the subject specified by ID and
    --D initialize to the values of the subject according to the policy. These
    --D steps are performed during startup and whenever a subject is reset.
@@ -363,31 +363,31 @@ is
       MSR_Count : constant SK.Word32
         := Skp.Subjects.Get_MSR_Count (Subject_ID => ID);
    begin
-      --D @Item List => subject_init_steps, Priority => 0
+      --D @Item List => subject_init_steps
       --D Reset FPU state for subject with given ID.
       FPU.Reset_State (ID => ID);
-      --D @Item List => subject_init_steps, Priority => 0
+      --D @Item List => subject_init_steps
       --D Clear pending events of subject with given ID.
       Subjects_Events.Clear_Events (Subject => ID);
-      --D @Item List => subject_init_steps, Priority => 0
+      --D @Item List => subject_init_steps
       --D Initialize pending interrupts of subject with given ID.
       Subjects_Interrupts.Init_Interrupts (Subject => ID);
-      --D @Item List => subject_init_steps, Priority => 0
+      --D @Item List => subject_init_steps
       --D Initialize timed event of subject with given ID.
       Timed_Events.Init_Event (Subject => ID);
 
       if MSR_Count > 0 then
-         --D @Item List => subject_init_steps, Priority => 0
+         --D @Item List => subject_init_steps
          --D Clear all MSRs in MSR storage area if subject has access to MSRs.
          Subjects_MSR_Store.Clear_MSRs (Subject => ID);
       end if;
 
-      --D @Item List => subject_init_steps, Priority => 0
+      --D @Item List => subject_init_steps
       --D Reset VMCS of subject and make it active by loading it.
       VMX.Reset (VMCS_Address => VMCS_Addr,
                  Subject_ID   => ID);
       VMX.Load  (VMCS_Address => VMCS_Addr);
-      --D @Item List => subject_init_steps, Priority => 0
+      --D @Item List => subject_init_steps
       --D Set VMCS control fields according to policy.
       VMX.VMCS_Setup_Control_Fields
         (IO_Bitmap_Address  => Skp.Subjects.Get_IO_Bitmap_Address
@@ -408,15 +408,15 @@ is
            (Subject_ID => ID),
          Exception_Bitmap   => Skp.Subjects.Get_Exception_Bitmap
            (Subject_ID => ID));
-      --D @Item List => subject_init_steps, Priority => 0
+      --D @Item List => subject_init_steps
       --D Setup VMCS host fields.
       VMX.VMCS_Setup_Host_Fields;
-      --D @Item List => subject_init_steps, Priority => 0
+      --D @Item List => subject_init_steps
       --D Setup VMCS guest fields according to policy.
       VMX.VMCS_Setup_Guest_Fields
         (PML4_Address => Skp.Subjects.Get_PML4_Address (Subject_ID => ID),
          EPT_Pointer  => Skp.Subjects.Get_EPT_Pointer (Subject_ID => ID));
-      --D @Item List => subject_init_steps, Priority => 0
+      --D @Item List => subject_init_steps
       --D Reset CPU state of subject according to policy.
       Subjects.Reset_State
         (ID       => ID,
@@ -431,16 +431,16 @@ is
    -------------------------------------------------------------------------
 
    --D @Section Id => impl_kernel_init_sched, Label => Scheduler Initialization, Parent => impl_kernel_init, Priority => 10
-   --D @Text Section => impl_kernel_init_sched, Priority => 0
+   --D @Text Section => impl_kernel_init_sched
    --D Scheduler initialization is performed by each CPU and consists of the
    --D following steps:
-   --D @OL Id => impl_kernel_init_sched_steps, Section => impl_kernel_init_sched, Priority => 0
+   --D @OL Id => impl_kernel_init_sched_steps, Section => impl_kernel_init_sched
    procedure Init
    is
       use type Skp.CPU_Range;
    begin
 
-      --D @Item List => impl_kernel_init_sched_steps, Priority => 0
+      --D @Item List => impl_kernel_init_sched_steps
       --D Setup VMCS and state of each subject running on this logical CPU,
       --D see \ref{impl_subject_init}.
       for I in Skp.Global_Subject_ID_Type loop
@@ -456,11 +456,11 @@ is
          Current_VMCS_Addr : constant SK.Word64
            := Skp.Subjects.Get_VMCS_Address (Subject_ID => Current_Subject);
       begin
-         --D @Item List => impl_kernel_init_sched_steps, Priority => 0
+         --D @Item List => impl_kernel_init_sched_steps
          --D Load VMCS of initial subject.
          VMX.Load (VMCS_Address => Current_VMCS_Addr);
 
-         --D @Item List => impl_kernel_init_sched_steps, Priority => 0
+         --D @Item List => impl_kernel_init_sched_steps
          --D Set start and end timestamp of initial minor frame for
          --D the scheduling group of the first subject based on current
          --D TSC.
@@ -475,13 +475,13 @@ is
 
          if CPU_Info.Is_BSP then
 
-            --D @Item List => impl_kernel_init_sched_steps, Priority => 0
+            --D @Item List => impl_kernel_init_sched_steps
             --D Set global minor frame barriers config (BSP-only).
             MP.Set_Minor_Frame_Barrier_Config
               (Config => Skp.Scheduling.Major_Frames
                  (Skp.Scheduling.Major_Frame_Range'First).Barrier_Config);
 
-            --D @Item List => impl_kernel_init_sched_steps, Priority => 0
+            --D @Item List => impl_kernel_init_sched_steps
             --D Set initial major frame start time to now.
             Global_Current_Major_Start_Cycles := Now;
          end if;
@@ -491,7 +491,7 @@ is
    -------------------------------------------------------------------------
 
    --D @Section Id => impl_handle_target_event, Label => Target Event Handling, Parent => impl_exit_handler, Priority => 60
-   --D @Text Section => impl_handle_target_event, Priority => 0
+   --D @Text Section => impl_handle_target_event
    --D Target events are actions performed prior to resuming execution of a
    --D given subject.
    procedure Handle_Pending_Target_Event
@@ -508,7 +508,7 @@ is
       Found    : Boolean;
       Event_ID : Skp.Events.Event_Range;
    begin
-      --D @Text Section => impl_handle_target_event, Priority => 0
+      --D @Text Section => impl_handle_target_event
       --D First, check if the subject specified by ID has a target event pending
       --D by consulting the subject events data.
       Subjects_Events.Consume_Event
@@ -517,10 +517,10 @@ is
          Event   => Event_ID);
 
       if Found then
-         --D @Text Section => impl_handle_target_event, Priority => 0
+         --D @Text Section => impl_handle_target_event
          --D If an event is pending, it is consumed by looking up the target
          --D event and its action as specified by the policy.
-         --D @UL Id => impl_handle_target_event_actions, Section => impl_handle_target_event, Priority => 0
+         --D @UL Id => impl_handle_target_event_actions, Section => impl_handle_target_event
          declare
             Cur_Event : constant Skp.Events.Target_Event_Type
               := Skp.Events.Get_Target_Event (Subject_ID => Subject_ID,
@@ -529,11 +529,11 @@ is
             case Skp.Events.Get_Kind (Target_Event => Cur_Event)
             is
                when Skp.Events.No_Action        => null;
-                  --D @Item List => impl_handle_target_event_actions, Priority => 0
+                  --D @Item List => impl_handle_target_event_actions
                   --D If the designated action is no action, then nothing is
                   --D done.
                when Skp.Events.Inject_Interrupt =>
-                  --D @Item List => impl_handle_target_event_actions, Priority => 0
+                  --D @Item List => impl_handle_target_event_actions
                   --D If the designated action is interrupt injection, then the
                   --D interrupt with the vector specified in the policy is
                   --D marked as pending for the subject.
@@ -542,7 +542,7 @@ is
                      Vector  => SK.Byte (Skp.Events.Get_Vector
                        (Target_Event => Cur_Event)));
                when Skp.Events.Reset            =>
-                  --D @Item List => impl_handle_target_event_actions, Priority => 0
+                  --D @Item List => impl_handle_target_event_actions
                   --D If the designated action is subject reset, then the
                   --D subject state is initialized, see \ref{impl_subject_init}.
                   Init_Subject (ID => Subject_ID);
@@ -562,7 +562,7 @@ is
    is
       S : Crash_Audit_Types.Subj_Context_Type;
    begin
-      --D @Text Section => impl_handle_system_panic, Priority => 0
+      --D @Text Section => impl_handle_system_panic
       --D A system panic action triggered by a source event of a given subject
       --D is handled by creating a crash audit entry with the state of the
       --D triggering subject and invoking the crash audit facility.
@@ -579,7 +579,7 @@ is
    -------------------------------------------------------------------------
 
    --D @Section Id => impl_handle_source_event, Label => Source Event Handling, Parent => impl_exit_handler, Priority => 50
-   --D @Text Section => impl_handle_source_event, Priority => 0
+   --D @Text Section => impl_handle_source_event
    --D Source events are actions performed when a given subject triggers a trap
    --D or a hypercall. Source events can also be triggered by the timed event
    --D mechanism.
@@ -599,39 +599,39 @@ is
 
       Dst_CPU : Skp.CPU_Range;
    begin
-      --D @Text Section => impl_handle_source_event, Priority => 0
+      --D @Text Section => impl_handle_source_event
       --D First, the next subject to be executed is initialized to the current
       --D one. A handover event may change this but otherwise the same subject
       --D is to be executed next.
       Next_Subject := Subject;
 
-      --D @Text Section => impl_handle_source_event, Priority => 0
+      --D @Text Section => impl_handle_source_event
       --D Then the operation corresponding to the given source event action is
       --D performed.
       --D @UL Id => impl_handle_source_event_actions, Section => impl_handle_source_event, Priority => 10
       case Event.Source_Action
       is
          when Skp.Events.No_Action       => null;
-            --D @Item List => impl_handle_source_event_actions, Priority => 0
+            --D @Item List => impl_handle_source_event_actions
             --D If the designated action is no action, then nothing is
             --D done.
          when Skp.Events.System_Reboot   =>
-            --D @Item List => impl_handle_source_event_actions, Priority => 0
+            --D @Item List => impl_handle_source_event_actions
             --D If the designated action is system reboot, then a reboot with
             --D power-cycle is initiated.
             Power.Reboot (Power_Cycle => True);
          when Skp.Events.System_Poweroff =>
-            --D @Item List => impl_handle_source_event_actions, Priority => 0
+            --D @Item List => impl_handle_source_event_actions
             --D If the designated action is system poweroff, then a shutdown is
             --D initiated.
             Power.Shutdown;
          when Skp.Events.System_Panic =>
-            --D @Item List => impl_handle_source_event_actions, Priority => 0
+            --D @Item List => impl_handle_source_event_actions
             --D If the designated action is system panic, then the system panic
             --D handler is invoked.
             Handle_System_Panic (Subject => Subject);
          when Skp.Events.Unmask_Irq      =>
-            --D @Item List => impl_handle_source_event_actions, Priority => 0
+            --D @Item List => impl_handle_source_event_actions
             --D If the designated action is unmask IRQ, then use I/O APIC to
             --D unmask the IRQ designated by the event's IRQ number.
             IO_Apic.Unmask_IRQ
@@ -674,7 +674,7 @@ is
 
    --  Handle hypercall with given event number.
    --D @Section Id => hypercall_handling, Label => Hypercall Handling, Parent => impl_exit_handler, Priority => 20
-   --D @Text Section => hypercall_handling, Priority => 0
+   --D @Text Section => hypercall_handling
    --D Hypercalls can be triggered by subjects executing the \verb!vmcall!
    --D instruction in guest privilege level 0, which is assured by means of a
    --D precondition check. If subject user space/ring-3 tries to invoke
@@ -713,7 +713,7 @@ is
       Event           : Skp.Events.Source_Event_Type;
       Next_Subject_ID : Skp.Global_Subject_ID_Type := Current_Subject;
    begin
-      --D @Text Section => hypercall_handling, Priority => 0
+      --D @Text Section => hypercall_handling
       --D First the event number of the hypercall is checked. If it is valid
       --D then the corresponding subject source event as specified by the
       --D policy is looked up and processed, see
@@ -736,7 +736,7 @@ is
                       (Current_Subject => Current_Subject,
                        Event_Nr        => Unchecked_Event_Nr));
 
-      --D @Text Section => hypercall_handling, Priority => 0
+      --D @Text Section => hypercall_handling
       --D After handling the source event, the instruction pointer of the
       --D current subject is incremented so execution resumes after the
       --D \texttt{vmcall} instruction.
@@ -762,7 +762,7 @@ is
       Vect_Nr : Skp.Interrupts.Remapped_Vector_Type;
       Route   : Skp.Interrupts.Vector_Route_Type;
    begin
-      --D @Text Section => impl_handle_irq, Priority => 0
+      --D @Text Section => impl_handle_irq
       --D First the vector of the external interrupt is validated. If it is an
       --D IPI or VT-d fault vector, no further action is taken since the purpose
       --D was to force a VM exit of the currently executing subject. A
@@ -771,7 +771,7 @@ is
       if Vector >= Skp.Interrupts.Remap_Offset
         and then Vector < SK.Constants.VTd_Fault_Vector
       then
-         --D @Text Section => impl_handle_irq, Priority => 0
+         --D @Text Section => impl_handle_irq
          --D \paragraph{}
          --D If the vector is valid and neither an IPI nor VT-d fault vector,
          --D consult the vector routing table to determine the target subject
@@ -788,7 +788,7 @@ is
                Vector  => SK.Byte (Route.Vector));
          end if;
 
-         --D @Text Section => impl_handle_irq, Priority => 0
+         --D @Text Section => impl_handle_irq
          --D \paragraph{}
          --D If the interrupt vector designates an IRQ that must be masked,
          --D instruct the I/O APIC to mask the corresponding redirection
@@ -811,7 +811,7 @@ is
                       (Msg => "IRQ with invalid vector "
                        & Strings.Img (Vector)));
 
-      --D @Text Section => impl_handle_irq, Priority => 0
+      --D @Text Section => impl_handle_irq
       --D \paragraph{}
       --D Finally, signal to the local APIC that the interrupt servicing has
       --D completed and other IRQs may be issued once interrupts are re-enabled.
@@ -859,7 +859,7 @@ is
                 Subj_Ctx => S);
       end Panic_Unknown_Trap;
    begin
-      --D @Text Section => impl_handle_trap, Priority => 0
+      --D @Text Section => impl_handle_trap
       --D First the trap number is checked. If it is outside the valid trap
       --D range an appropriate crash audit record is written and an error
       --D condition is signaled.
@@ -868,7 +868,7 @@ is
          Panic_Unknown_Trap;
       end if;
 
-      --D @Text Section => impl_handle_trap, Priority => 0
+      --D @Text Section => impl_handle_trap
       --D \paragraph{}
       --D If the trap number is valid then the corresponding subject trap entry
       --D as specified by the policy is looked up. Note that the policy
@@ -878,7 +878,7 @@ is
         (Subject_ID => Current_Subject,
          Trap_Nr    => Skp.Events.Trap_Range (Trap_Nr));
 
-      --D @Text Section => impl_handle_trap, Priority => 0
+      --D @Text Section => impl_handle_trap
       --D The source event designated by the policy trap entry is processed,
       --D see \ref{impl_handle_source_event}.
       Handle_Source_Event
@@ -897,7 +897,7 @@ is
    -------------------------------------------------------------------------
 
    --D @Section Id => impl_handle_timer_expiry, Label => Timer Expiry, Parent => impl_exit_handler, Priority => 40
-   --D @Text Section => impl_handle_timer_expiry, Priority => 0
+   --D @Text Section => impl_handle_timer_expiry
    --D The VMX timer expiration designates the end of a minor frame. Handle the
    --D timer expiry by updating the current scheduling information and checking
    --D if a timed event has expired as well.
@@ -958,7 +958,7 @@ is
    -------------------------------------------------------------------------
 
    --D @Section Id => impl_exit_handler, Label => VMX Exit Handling, Parent => implementation, Priority => -5
-   --D @Text Section => impl_exit_handler, Priority => 0
+   --D @Text Section => impl_exit_handler
    --D The VMX exit handle procedure \texttt{Handle\_Vmx\_Exit} is the main
    --D subprogram of the kernel.
    --D It is invoked whenever the execution of a subject stops and an exit into
@@ -985,7 +985,7 @@ is
                      Value => Exit_Reason);
       Basic_Exit_Reason := SK.Word16 (Exit_Reason and 16#ffff#);
 
-      --D @Text Section => impl_exit_handler, Priority => 0
+      --D @Text Section => impl_exit_handler
       --D The \texttt{Handle\_Vmx\_Exit} procedure first saves the state of the
       --D subject that has just trapped into the exit handler, along with the
       --D register values and the exit reason, see
@@ -1000,7 +1000,7 @@ is
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
                      Value => Exit_Interruption_Info);
 
-      --D @Text Section => impl_exit_handler, Priority => 0
+      --D @Text Section => impl_exit_handler
       --D Then, the exit reason is examined and depending on the cause the
       --D corresponding handler is called.
       --D \paragraph{}
@@ -1063,19 +1063,19 @@ is
                       Trap_Nr         => Basic_Exit_Reason);
       end if;
 
-      --D @Text Section => impl_exit_handler, Priority => 0
+      --D @Text Section => impl_exit_handler
       --D \paragraph{}
       --D Once the exit has been dealt with, the execution of the next subject
       --D is prepared. A pending target event, if present, is handled see
       --D \ref{impl_handle_target_event}.
       Current_Subject := Get_Current_Subject_ID;
       Handle_Pending_Target_Event (Subject_ID => Current_Subject);
-      --D @Text Section => impl_exit_handler, Priority => 0
+      --D @Text Section => impl_exit_handler
       --D Then, a pending interrupt, if present, is prepared for injection, see
       --D \ref{impl_inject_interrupt}.
       Inject_Interrupt (Subject_ID => Current_Subject);
 
-      --D @Text Section => impl_exit_handler, Priority => 0
+      --D @Text Section => impl_exit_handler
       --D \paragraph{}
       --D Finally, the VMX preemption timer is armed, the FPU and subject states
       --D are restored, see \ref{impl_subjects_state_restore}. Additionally, to
@@ -1087,7 +1087,7 @@ is
       Subjects.Restore_State
         (ID   => Current_Subject,
          Regs => Subject_Registers);
-      --D @Text Section => impl_exit_handler, Priority => 0
+      --D @Text Section => impl_exit_handler
       --D The register values of the subject to be executed are returned by the
       --D procedure. The calling assembler code then performs an entry to
       --D VMX non-root mode, thereby instructing the hardware to resume

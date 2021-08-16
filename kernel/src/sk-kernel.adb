@@ -32,7 +32,7 @@ is
    -------------------------------------------------------------------------
 
    --D @Section Id => impl_kernel_init, Label => Initialization, Parent => implementation, Priority => -10
-   --D @Text Section => impl_kernel_init, Priority => 0
+   --D @Text Section => impl_kernel_init
    --D The \verb!SK.Kernel.Initialize! procedure is the Ada/SPARK entry point
    --D into the kernel during the boot phase. It is invoked from Assembler code
    --D after low-level system initialization has been performed.
@@ -41,7 +41,7 @@ is
    procedure Initialize (Subject_Registers : out SK.CPU_Registers_Type)
    is
    begin
-      --D @Item List => impl_kernel_init_steps, Priority => 0
+      --D @Item List => impl_kernel_init_steps
       --D Initialize interrupt table (GDT, IDT) and setup interrupt stack.
       Interrupt_Tables.Initialize
         (Stack_Addr => Skp.Kernel.Intr_Stack_Address);
@@ -53,7 +53,7 @@ is
                      & Standard'Compiler_Version & ")"));
 
       if CPU_Info.Is_BSP then
-         --D @Item List => impl_kernel_init_steps, Priority => 0
+         --D @Item List => impl_kernel_init_steps
          --D Setup crash audit (BSP-only).
          Crash_Audit.Init;
       end if;
@@ -64,7 +64,7 @@ is
          Valid_Sys_State, Valid_FPU_State, Valid_MCE_State,
          Valid_VTd_State : Boolean;
       begin
-         --D @Item List => impl_kernel_init_steps, Priority => 0
+         --D @Item List => impl_kernel_init_steps
          --D Validate required CPU (\ref{impl_kernel_init_check_state}),
          --D FPU, MCE and VT-d features.
          System_State.Check_State
@@ -91,7 +91,7 @@ is
                pragma Debug (KC.Put_Line
                              (Item => "System initialisation error"));
 
-               --D @Item List => impl_kernel_init_steps, Priority => 0
+               --D @Item List => impl_kernel_init_steps
                --D If a required feature is not present, allocate a crash audit
                --D entry designating a system initialization failure and
                --D provide initialization context information.
@@ -107,53 +107,53 @@ is
             end;
          end if;
 
-         --D @Item List => impl_kernel_init_steps, Priority => 0
+         --D @Item List => impl_kernel_init_steps
          --D Enable hardware features (FPU, APIC, MCE).
          FPU.Enable;
          Apic.Enable;
          MCE.Enable;
 
          if CPU_Info.Is_BSP then
-            --D @Item List => impl_kernel_init_steps, Priority => 0
+            --D @Item List => impl_kernel_init_steps
             --D Setup of Multicore memory barries (BSP-only).
             MP.Initialize_All_Barrier;
 
-            --D @Item List => impl_kernel_init_steps, Priority => 0
+            --D @Item List => impl_kernel_init_steps
             --D Disable legacy PIC/PIT (BSP-only).
             Interrupts.Disable_Legacy_PIT;
             Interrupts.Disable_Legacy_PIC;
 
-            --D @Item List => impl_kernel_init_steps, Priority => 0
+            --D @Item List => impl_kernel_init_steps
             --D Setup of VT-d DMAR and IR (BSP-only).
             VTd.Initialize;
             VTd.Interrupts.Setup_IRQ_Routing;
 
-            --D @Item List => impl_kernel_init_steps, Priority => 0
+            --D @Item List => impl_kernel_init_steps
             --D Initialize subject pending events (BSP-only).
             Subjects_Events.Initialize;
 
-            --D @Item List => impl_kernel_init_steps, Priority => 0
+            --D @Item List => impl_kernel_init_steps
             --D Wake up application processors (BSP-only).
             Apic.Start_AP_Processors;
          end if;
 
-         --D @Item List => impl_kernel_init_steps, Priority => 0
+         --D @Item List => impl_kernel_init_steps
          --D Synchronize all CPUs to make sure APs have performed all steps up
          --D until this point.
          MP.Wait_For_All;
 
-         --D @Item List => impl_kernel_init_steps, Priority => 0
+         --D @Item List => impl_kernel_init_steps
          --D Enable VMX, enter VMX root-mode and initialize scheduler.
          System_State.Enable_VMX_Feature;
          VMX.Enter_Root_Mode;
          Scheduler.Init;
 
-         --D @Item List => impl_kernel_init_steps, Priority => 0
+         --D @Item List => impl_kernel_init_steps
          --D Synchronize all logical CPUs prior to setting VMX preemption
          --D timer.
          MP.Wait_For_All;
 
-         --D @Item List => impl_kernel_init_steps, Priority => 0
+         --D @Item List => impl_kernel_init_steps
          --D Arm VMX Exit timer of scheduler for preemption on end of initial
          --D minor frame.
          Scheduler.Set_VMX_Exit_Timer;
@@ -162,7 +162,7 @@ is
             Current_Subject : constant Skp.Global_Subject_ID_Type
               := Scheduler.Get_Current_Subject_ID;
          begin
-            --D @Item List => impl_kernel_init_steps, Priority => 0
+            --D @Item List => impl_kernel_init_steps
             --D Prepare state of initial subject for execution.
             Subjects.Filter_State (ID => Current_Subject);
             Subjects.Restore_State

@@ -894,6 +894,16 @@
    The description includes the purpose as well as the memory representation of
    these interfaces.
   </text>
+  <section id="interface_cpu_local" label="Per-CPU data" priority="0">
+   <text priority="0">
+    Objects of category 1 in the kernel data model have a per-CPU copy and are
+    distinct to each kernel running on a different CPU. Instances of these data
+    structures are listed in this section.
+   </text>
+   <section id="SK.Scheduler.Current_Minor_Frame_ID" label="SK.Scheduler.Current_Minor_Frame_ID" priority="0"/>
+   <section id="SK.Scheduler.Scheduling_Groups" label="SK.Scheduler.SK.Scheduler.Scheduling_Groups" priority="0"/>
+   <section id="SK.Interrupt_Tables.Instance" label="SK.Interrupt_Tables.Instance" priority="0"/>
+  </section>
   <section id="Skp.IOMMU.IOMMUs" label="Skp.IOMMU.IOMMUs" priority="0">
    <text priority="0">
     External interface used to access and program IOMMU(s), see also section

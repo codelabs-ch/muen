@@ -113,14 +113,14 @@ private
       Linker_Section => Constants.Global_Data_Section,
       Part_Of        => State;
 
-   --D @Interface
+   --D @Text Section => SK.Scheduler.Current_Minor_Frame_ID
    --D ID of currently active minor frame.
    Current_Minor_Frame_ID : Skp.Scheduling.Minor_Frame_Range
      := Skp.Scheduling.Minor_Frame_Range'First
    with
       Part_Of => State;
 
-   --D @Interface
+   --D @Text Section => SK.Scheduler.Scheduling_Groups
    --D IDs of active subjects per scheduling group. The array stores the ID of
    --D the current active subject for each scheduling group.
    Scheduling_Groups : Skp.Scheduling.Scheduling_Group_Array

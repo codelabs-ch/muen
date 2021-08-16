@@ -358,6 +358,9 @@
      memory protection (MMU and IOMMU). The corresponding page tables are made
      active whenever a subject is executed. As a consequence, subjects have only
      access to the memory resources assigned to them.
+     DMA-capable devices are restricted to the memory allowed by the system
+     policy. This is enforced by the IOMMU via DMA Remapping (DMAR).
+
      Architectural state, such as processor and FPU registers, is saved to an
      associated memory region when subjects change. The state of the subject to
      be executed is completely restored. An in-depth description of the
@@ -665,7 +668,8 @@
      expired. If this is the case, the event designated by the event number is
      treated in the same way as the regular event mechanism.
 
-     An important use case is running a subject that depends on a monitor
+     An important use case for traps and events that enable to change the
+     currently active subject, is running a subject that depends on a monitor
      subject for emulation of certain operations, e.g. serial device emulation.
      In this scenario, whenever a subject performs an operation that triggers a
      trap the policy specifies an event of mode \emph{switch} with the target
@@ -687,10 +691,18 @@
    </section>
    <section id="overview_covert_channels" label="Avoidance of Covert Channels" priority="0">
     <text priority="0">
-     The simplicity of SKs enables the explicit consideration of the problem of
-     covert channels. Such channels allow a collaborating sender/receiver pair
-     to transfer information past the system's security mechanisms. Covert
-     channels are classified as data or timing channels.
+     So called \emph{side channels} allow attackers to deduce information about
+     internal, secret state of an unsuspecting subject by observing e.g. the
+     memory consumption or changes in the micro-architectural state of the
+     hardware. The victim process is unintentionally leaking sensitive
+     information through the side channel, which is used by the attacker to
+     infer data it is not supposed to have access to.
+
+     A collaborating sender/receiver pair can use a side channel to transfer
+     information past the system's security mechanism, which is called a
+     \emph{covert channel}. The simplicity of SKs enables the explicit
+     consideration of the problem of covert channels, which are classified as
+     data or timing channels.
 
      In a data channel, information may for example be hidden in metadata, such
      as using individual memory bits in an unconventional manner. The information

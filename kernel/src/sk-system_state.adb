@@ -55,8 +55,8 @@ is
             Pos   => Constants.IA32_FCTRL_VMX_FLAG);
 
          --D @Item List => impl_vmcs_enable_vmx_steps
-         --D Finally, lock the MSR by setting the locked flag and writing the
-         --D value back to the \texttt{IA32\_FEATURE\_CONTROL} MSR.
+         --D Finally, lock the \texttt{IA32\_FEATURE\_CONTROL} register by
+         --D setting the locked flag and writing the value back to the  MSR.
          MSR_Feature_Control := Bitops.Bit_Set
            (Value => MSR_Feature_Control,
             Pos   => Constants.IA32_FCTRL_LOCKED_FLAG);

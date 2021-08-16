@@ -515,9 +515,9 @@
      processed.
 
      Subjects can control interrupt injection by setting or clearing the
-     \emph{Interrupt enable flag} (RFLAGS.IF). As long as the flag is clear, the
-     kernel will not inject any pending interrupts. A subject can use the
-     \texttt{cli} and \texttt{sti} instructions to clear/set the flag.
+     \emph{Interrupt enable flag} \footnote{RFLAGS.IF}. As long as the flag is
+     clear, the kernel will not inject any pending interrupts. A subject can use
+     the \texttt{cli} and \texttt{sti} instructions to clear/set the flag.
 
      To simplify the kernel control flow, the VMX External-interrupt exiting
      feature is used, see Intel SDM Vol. 3C, "24.6.1 Pin-Based VM-Execution
@@ -858,8 +858,8 @@
     </text>
    <section id="datamodel_local_subject_init" label="Initialization" priority="0">
     <text priority="0">
-     Each element is initialized by the executing CPU when processing the
-     \texttt{SK.Scheduler.Init\_Subject} procedure during system
+     Each element is initialized by the executing CPU when the
+     \texttt{SK.Scheduler.Init\_Subject} procedure is executed during system
      initialization.
     </text>
    </section>

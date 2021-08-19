@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import argparse
 from lxml import etree
@@ -104,6 +104,6 @@ src_policy = etree.parse(src_policy_path, xml_parser).getroot()
 
 names = extract_subject_names(src_policy)
 
-with open(out_path, 'wb') as out_file:
+with open(out_path, 'w') as out_file:
     print("Writing Ada package '" + pkg_name + "' file to '" + out_path + "'")
     write_spec(names, pkg_name, out_file)

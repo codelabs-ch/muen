@@ -18,9 +18,6 @@ FROM ${distro_name}:${distro_version}
 LABEL maintainer "Adrian-Ken Rueegsegger <ken@codelabs.ch>"
 LABEL description "This image provides the build environment for the Muen project"
 
-ENV CC ccache gcc
-ENV CXX ccache g++
-
 # Required packages
 ARG packages="acpica-tools amtterm autoconf automake autopoint bc binutils-dev \
 bison bzip2 ca-certificates ccache cpio curl file flex git-core gnupg gnuplot \
@@ -76,7 +73,7 @@ RUN pip3 install wheel \
 # Setup environment
 ENV HOME /home/user
 ENV LANG C.UTF-8
-ENV PATH /opt/gnat/bin:$PATH
+ENV PATH /usr/lib/ccache:/opt/gnat/bin:$PATH
 
 RUN useradd --create-home --home-dir $HOME user -G dialout
 

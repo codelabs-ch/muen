@@ -53,17 +53,18 @@ RUN git clone https://github.com/codelabs-ch/libadalang-tools.git /tmp/libadalan
 # amtc tool
 RUN git clone https://github.com/schnoddelbotz/amtc.git /tmp/amtc \
 	&& cd /tmp/amtc \
-	&& make amtc \
+	&& make -j`nproc` amtc \
 	&& cp src/amtc /usr/local/bin \
 	&& rm -rf /tmp/amtc
 
-# Install solo5-elftool
-RUN curl -sSL "https://github.com/Solo5/solo5/releases/download/v0.6.5/solo5-v0.6.5.tar.gz" -o /tmp/solo5-v0.6.5.tar.gz \
-	&& tar -C /tmp/ -zxf /tmp/solo5-v0.6.5.tar.gz \
-	&& cd /tmp/solo5-v0.6.5 \
-	&& ./configure.sh --only-tools \
+# Install solo5. test_hello.muen is required by Github Actions CI.
+RUN curl -sSL "https://github.com/Solo5/solo5/releases/download/v0.6.5/solo5-v0.6.5.tar.gz" -o /opt/solo5-v0.6.5.tar.gz \
+	&& tar -C /opt -zxf /opt/solo5-v0.6.5.tar.gz \
+	&& cd /opt/solo5-v0.6.5 \
+	&& ./configure.sh \
+	&& make -j`nproc`\
 	&& make install-tools \
-	&& rm -rf /tmp/solo5*
+	&& rm /opt/solo5-v0.6.5.tar.gz
 
 # Python modules
 RUN pip3 install wheel \

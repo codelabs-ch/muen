@@ -313,6 +313,10 @@ is
          Dev_Name : String;
          Assigned : Boolean);
 
+      --  Check if there are unmask events without corresponding assigned device
+      --  IRQs.
+      procedure Check_Unmatched_Events;
+
       ----------------------------------------------------------------------
 
       procedure Check_IRQ_Unmask_Event
@@ -332,29 +336,63 @@ is
               Ref_Attr  => "number",
               Ref_Value => IRQ_Nr);
       begin
-         if Assigned and then Unmask_Ev = null then
-            Validation_Errors.Insert
-              (Msg => "No event with unmask_irq action "
-               & "and matching number " & IRQ_Nr & " for IRQ '" & Dev_Name
-               & "->" & IRQ_Name & "'");
-         end if;
-
-         if not Assigned and then Unmask_Ev /= null then
-            declare
-               Ev_Name : constant String := DOM.Core.Elements.Get_Attribute
-                 (Elem => DOM.Core.Nodes.Parent_Node (N => Unmask_Ev),
-                  Name => "logical");
-               Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
-                 (Elem => Muxml.Utils.Ancestor_Node (Node  => Unmask_Ev,
-                                                     Level => 5),
-                  Name => "name");
-            begin
+         if Assigned then
+            if Unmask_Ev = null then
                Validation_Errors.Insert
-                 (Msg => "Event " & Ev_Name & " of subject '" & Subj_Name
-                  & "' has unmask_irq action for unassigned IRQ " & IRQ_Nr);
-            end;
+                 (Msg => "No event with unmask_irq action "
+                  & "and matching number " & IRQ_Nr & " for IRQ '" & Dev_Name
+                  & "->" & IRQ_Name & "'");
+            else
+
+               --  Mark matched event.
+
+               DOM.Core.Elements.Set_Attribute
+                 (Elem  => Unmask_Ev,
+                  Name  => "assigned",
+                  Value => "true");
+            end if;
          end if;
       end Check_IRQ_Unmask_Event;
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Unmatched_Events
+      is
+      begin
+         for I in 0 .. DOM.Core.Nodes.Length (List => Unmask_Events) - 1 loop
+            declare
+               Unmask_Ev : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item (List  => Unmask_Events,
+                                         Index => I);
+               Assigned : constant String
+                 := DOM.Core.Elements.Get_Attribute (Elem => Unmask_Ev,
+                                                     Name => "assigned");
+            begin
+               if Assigned'Length = 0 then
+                  declare
+                     Ev_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => DOM.Core.Nodes.Parent_Node (N => Unmask_Ev),
+                          Name => "logical");
+                     Subj_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Muxml.Utils.Ancestor_Node (Node  => Unmask_Ev,
+                                                             Level => 5),
+                          Name => "name");
+                     IRQ_Number : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Unmask_Ev,
+                          Name => "number");
+                  begin
+                     Validation_Errors.Insert
+                       (Msg => "Event " & Ev_Name & " of subject '" & Subj_Name
+                        & "' has unmask_irq action for unassigned IRQ "
+                        & IRQ_Number);
+                  end;
+               end if;
+            end;
+         end loop;
+      end Check_Unmatched_Events;
 
       ----------------------------------------------------------------------
 
@@ -413,6 +451,8 @@ is
             end loop;
          end;
       end loop;
+
+      Check_Unmatched_Events;
    end Level_Triggered_Unmask_IRQ_Action;
 
    -------------------------------------------------------------------------

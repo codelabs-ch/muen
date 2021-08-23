@@ -82,6 +82,14 @@
     <memory caching="UC" name="mmio" physicalAddress="16#d1c0_0000#" size="16#2000#"/>
     <memory caching="UC" name="mmconf" physicalAddress="16#f830_0000#" size="16#1000#"/>
    </device>
+   <device name="wireless_2">
+    <pci bus="16#03#" device="16#14#" function="0" msi="false">
+     <identification classcode="16#0c05#" deviceId="16#3c33#" revisionId="16#02#" vendorId="16#8088#"/>
+    </pci>
+    <irq name="irq" number="21"/>
+    <memory caching="UC" name="mmio" physicalAddress="16#d1c0_2000#" size="16#2000#"/>
+    <memory caching="UC" name="mmconf" physicalAddress="16#f83a_0000#" size="16#1000#"/>
+   </device>
    <device name="iommu_1">
     <memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
     <capabilities>

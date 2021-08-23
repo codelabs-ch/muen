@@ -861,7 +861,7 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          Level_Triggered_Unmask_IRQ_Action (XML_Data => Data);
          Assert (Condition => Validation_Errors.Contains
                  (Msg => "Event unmask_irq_57 of subject 'vt' has unmask_irq "
-                  & "action for unassigned IRQ 'wireless->irq'"),
+                  & "action for unassigned IRQ 21"),
                  Message   => "Exception mismatch (Unassigned IRQ)");
       end Unassigned_IRQ_Event;
 

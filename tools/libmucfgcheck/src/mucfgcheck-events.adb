@@ -350,9 +350,8 @@ is
                   Name => "name");
             begin
                Validation_Errors.Insert
-                 (Msg => "Event " & Ev_Name & " of subject '"
-                  & Subj_Name & "' has unmask_irq action "
-                  & "for unassigned IRQ '" & Dev_Name & "->" & IRQ_Name & "'");
+                 (Msg => "Event " & Ev_Name & " of subject '" & Subj_Name
+                  & "' has unmask_irq action for unassigned IRQ " & IRQ_Nr);
             end;
          end if;
       end Check_IRQ_Unmask_Event;

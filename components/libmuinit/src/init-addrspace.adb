@@ -49,10 +49,23 @@ is
       type Data_Array is array (Block_Range) of LSC.SHA256.Block_Type
       with Pack;
 
+      pragma Warnings
+        (GNATprove, Off,
+         "indirect writes to * through a potential alias are ignored",
+         Reason => "Access to source memory region should only be granted "
+         & "within the scheduling group.");
       Src_Memory : constant Data_Array
         with
           Import,
           Address => System'To_Address (Source.Address);
+      pragma Annotate
+        (GNATprove, Intentional,
+         "object is unsuitable for aliasing via address clause",
+         "Memory size information in Sinfo is generated at integration time"
+          & "based on policy.");
+      pragma Warnings
+        (GNATprove, On,
+         "indirect writes to * through a potential alias are ignored");
 
       --  Convert SHA256 hash to musinfo hash.
       function To_Musinfo_Hash is new Ada.Unchecked_Conversion

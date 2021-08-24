@@ -33,6 +33,7 @@ COMPONENTS_PROOF := \
 	controller \
 	dm \
 	example \
+	muinit \
 	sl \
 	sm \
 	time

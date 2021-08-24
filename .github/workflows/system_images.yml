@@ -44,6 +44,9 @@ jobs:
             system: integration_tests_kt.xml
             hardware: kontron-ktqm77.xml
           # additional distros
+          - distro: debian-bullseye
+            system: demo_system_vtd.xml
+            hardware: lenovo-t430s.xml
           - distro: ubuntu-focal
             system: demo_system_vtd.xml
             hardware: lenovo-t430s.xml

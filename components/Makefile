@@ -33,6 +33,7 @@ COMPONENTS_PROOF := \
 	controller \
 	dm \
 	example \
+	sl \
 	sm \
 	time
 

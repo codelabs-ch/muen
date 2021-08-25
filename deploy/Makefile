@@ -10,6 +10,7 @@ TARGET_SHUTDOWN ?= target_shutdown_$(TARGET_PWR_MECH)
 
 PING_CMD    ?= ping -c 3
 DEPLOY_PORT ?= 8000
+BOOT_CFG    ?= boot.cfg
 TARGET_IP   ?= 192.168.254.2
 
 TARGET_EGNAME ?= eg1
@@ -31,7 +32,7 @@ $(HTTP_DIR):
 
 $(HTTP_DIR)/$(IMG_NAME): $(IMG_SRC) | $(HTTP_DIR)
 	@cp $< $@
-$(HTTP_DIR)/boot.cfg: boot.cfg | $(HTTP_DIR)
+$(HTTP_DIR)/boot.cfg: $(BOOT_CFG) | $(HTTP_DIR)
 	@cp $< $@
 $(HTTP_DIR)/memdisk: memdisk.tar.xz | $(HTTP_DIR)
 	@tar xfJ $< -C $(HTTP_DIR)

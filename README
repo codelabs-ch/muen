@@ -172,7 +172,8 @@ environment listed in the following table.
 
 |===================================================================
 | Operating systems      | Debian GNU/Linux 10 x86_64 +
-                           Ubuntu 18.04 x86_64
+                           Debian GNU/Linux 11 x86_64 +
+                           Ubuntu 20.04 x86_64
 | Linux kernel/KVM       | >= 5.2.0 with GUEST_CR3 fix <<lnxcr3>>
 | Ada compiler           | GNAT Community 2021
 | GCC version            | 10.3.1 20210520 for GNAT Community 2021

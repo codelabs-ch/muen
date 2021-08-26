@@ -65,10 +65,14 @@ jobs:
         name: Prepare
         id: vars
         run: |
+          # fetch devel info
+          git fetch --depth=1 origin devel
+
           DISTRO_NAME="${DISTRO_NAME_VERSION%-*}"
           DISTRO_VERSION="${DISTRO_NAME_VERSION#*-}"
           GIT_BRANCH="${GITHUB_REF#refs/heads/}"
           DOCKER_TAG="${DISTRO_NAME}-${DISTRO_VERSION}_muen-${GIT_BRANCH}"
+          DEVEL_REV=`git rev-parse origin/devel`
           LNX_REV=`git submodule status -- components/linux/src | \
             sed -rn 's/^-([a-f0-9]+).*/\1/p'`
 
@@ -77,20 +81,20 @@ jobs:
           echo git_branch::${GIT_BRANCH}
           echo docker_tag::${DOCKER_TAG}
           echo runner_uid::${UID}
-          echo lnx_rev::${LNX_REV}
+          echo devel_rev::${DEVEL_REV}
 
           echo ::set-output name=distro_name::${DISTRO_NAME}
           echo ::set-output name=distro_version::${DISTRO_VERSION}
           echo ::set-output name=git_branch::${GIT_BRANCH}
           echo ::set-output name=docker_tag::${DOCKER_TAG}
           echo ::set-output name=runner_uid::${UID}
-          echo ::set-output name=lnx_rev::${LNX_REV}
+          echo ::set-output name=devel_rev::${DEVEL_REV}
       -
         name: Setup Linux submodule cache
         uses: actions/cache@v2
         with:
           path: .git/modules/components/linux/src
-          key: linux-submod-${{ steps.vars.outputs.lnx_rev }}
+          key: linux-submod-${{ steps.vars.outputs.devel_rev }}
           restore-keys: |
             linux-submod-
       -
@@ -112,7 +116,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /tmp/.buildx-cache
-          key: buildx-${{ steps.vars.outputs.distro_name }}-${{ steps.vars.outputs.distro_version }}-${{ github.sha }}
+          key: buildx-${{ steps.vars.outputs.distro_name }}-${{ steps.vars.outputs.distro_version }}-${{ steps.vars.outputs.devel_rev }}
           restore-keys: |
             buildx-${{ steps.vars.outputs.distro_name }}-${{ steps.vars.outputs.distro_version }}-
             buildx-${{ steps.vars.outputs.distro_name }}-
@@ -121,7 +125,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.CCACHE_HOST }}
-          key: ccache-${{ matrix.distro }}-${{ github.sha }}
+          key: ccache-${{ matrix.distro }}-${{ steps.vars.outputs.devel_rev }}
           restore-keys: |
             ccache-${{ matrix.distro }}-
             ccache-

@@ -24,7 +24,7 @@ GRUB_TARGET   := x86_64
 endif
 
 define CMD_CONFIGURE
-	cd $(WRK) && ./autogen.sh && ./configure \
+	cd $(WRK) && PYTHON=python3 ./autogen.sh && ./configure \
 		--prefix=$(BUILDDIR)/$(GRUB_TARGET)-$(GRUB_PLATFORM) \
 		--disable-device-mapper \
 		--disable-grub-mount \

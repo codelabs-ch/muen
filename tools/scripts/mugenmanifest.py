@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys
 from lxml import etree
@@ -7,7 +7,7 @@ import _paths
 import muutils
 
 if len(sys.argv) != 3:
-    print sys.argv[0] + ' <policy_b> <manifest>'
+    print(sys.argv[0] + ' <policy_b> <manifest>')
     sys.exit(1)
 
 parser = etree.XMLParser(remove_blank_text=True)
@@ -17,7 +17,7 @@ nodes = sorted(nodes, key=lambda c:
                muutils.ada_hex_to_int(c.get('physicalAddress')))
 
 
-with open(sys.argv[2], 'wb') as f:
+with open(sys.argv[2], 'w') as f:
     f.write(
         '[Name;PhysicalAddress;MemorySize;Offset;ContentSize;Usage;Type;'
         'Content]\n')

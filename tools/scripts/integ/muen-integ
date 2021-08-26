@@ -271,7 +271,7 @@ hw_deploy()
 	execute "sleep 3"
 
 	date -u +%Y%m%d > $ROOT/current_date
-	cd $ROOT; python -m SimpleHTTPServer 10000 >$target_logdir/http.out 2>&1 &
+	cd $ROOT; PYTHONUNBUFFERED=1 python3 -m http.server 10000 >$target_logdir/http.out 2>&1 &
 	local pid_http=$!
 	KILL_ON_EXIT_PIDS+=($pid_http)
 	cd $WORKDIR

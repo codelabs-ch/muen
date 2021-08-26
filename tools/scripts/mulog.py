@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 import sys
 import re
@@ -32,4 +32,4 @@ for line in lines:
         formatted.append(line)
 
 for line in formatted:
-    print line
+    print(line)

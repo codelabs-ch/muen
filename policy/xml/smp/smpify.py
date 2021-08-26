@@ -1,16 +1,16 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys
 from copy import deepcopy
 from lxml import etree
 
 if len(sys.argv) != 2:
-    print sys.argv[0] + " <linux_cores>"
+    print(sys.argv[0] + " <linux_cores>")
     sys.exit(1)
 
 cores = int(sys.argv[1])
 if cores < 2:
-    print "Core count must be >= 2"
+    print("Core count must be >= 2")
     sys.exit(1)
 cores -= 1
 

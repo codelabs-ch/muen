@@ -31,7 +31,7 @@ def int_to_ada_hex(value):
         val = val.rjust(int(math.ceil(len(val) / 4.0) * 4), '0')
         hexvalue = "16#"
         for index in range(0, len(val)):
-            if ((index % 4) is 0) and (index is not 0):
+            if ((index % 4) == 0) and (index != 0):
                 hexvalue += "_"
 
             hexvalue += val[index]

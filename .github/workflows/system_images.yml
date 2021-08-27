@@ -96,7 +96,7 @@ jobs:
           path: .git/modules/components/linux/src
           key: linux-submod-${{ secrets.CACHE_VERSION }}-${{ steps.vars.outputs.devel_rev }}
           restore-keys: |
-            linux-submod-${{ secrets.CACHE_VERSION }}
+            linux-submod-${{ secrets.CACHE_VERSION }}-
       -
         name: Submodule config and init/update
         run: |
@@ -116,10 +116,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /tmp/.buildx-cache
-          key: buildx-${{ secrets.CACHE_VERSION }}-${{ steps.vars.outputs.distro_name }}-${{ steps.vars.outputs.distro_version }}-${{ steps.vars.outputs.devel_rev }}
+          key: buildx-${{ secrets.CACHE_VERSION }}-${{ matrix.distro }}-${{ steps.vars.outputs.devel_rev }}
           restore-keys: |
-            buildx-${{ secrets.CACHE_VERSION }}-${{ steps.vars.outputs.distro_name }}-${{ steps.vars.outputs.distro_version }}-
-            buildx-${{ secrets.CACHE_VERSION }}-${{ steps.vars.outputs.distro_name }}-
+            buildx-${{ secrets.CACHE_VERSION }}-${{ matrix.distro }}-
       -
         name: Setup ccache
         uses: actions/cache@v2
@@ -128,7 +127,6 @@ jobs:
           key: ccache-${{ secrets.CACHE_VERSION }}-${{ matrix.distro }}-${{ steps.vars.outputs.devel_rev }}
           restore-keys: |
             ccache-${{ secrets.CACHE_VERSION }}-${{ matrix.distro }}-
-            ccache-${{ secrets.CACHE_VERSION }}
       -
         name: Configure ccache max_size
         run: |

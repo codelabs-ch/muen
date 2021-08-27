@@ -1,6 +1,8 @@
-REV = 235a23452f7c5104ce6270a84f9794f497d496aa
+REV = 9a2d16944c02030bfd72805543cb48a38f3e8de2
 PKG = ada-bfd
 SRC = https://github.com/stcarrez/ada-bfd.git
+
+BUILD_OPTS = -j1
 
 define CMD_CONFIGURE
 	cd $(WRK) && ./configure --prefix=$(BUILDDIR)

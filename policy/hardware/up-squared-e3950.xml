@@ -129,6 +129,9 @@
         <identification classcode="16#0106#" deviceId="16#5ae3#" revisionId="16#0b#" vendorId="16#8086#"/>
         <iommuGroup id="4"/>
       </pci>
+      <irq name="irq1" number="22"> <!-- FAKE IRQ -->
+        <msi name="msi1"/>
+      </irq>
       <memory caching="UC" name="mem1" physicalAddress="16#9161_4000#" size="16#2000#"/>
       <memory caching="UC" name="mem2" physicalAddress="16#9163_9000#" size="16#1000#"/>
       <memory caching="UC" name="mem3" physicalAddress="16#9163_8000#" size="16#1000#"/>

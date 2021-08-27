@@ -1,0 +1,219 @@
+name: Build demo system images
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
+    strategy:
+      matrix:
+        # test system/hardware permutations
+        distro:
+          - debian-buster
+        system:
+          - integration_tests.xml
+          - demo_system_vtd.xml
+          - mirage-solo5.xml
+        hardware:
+          - cirrus7-nimbus.xml
+          - intel-nuc-5i5myhe.xml
+          - intel-nuc-6cayh.xml
+          - intel-nuc-6i7kyk.xml
+          - kontron-ktqm77.xml
+          - lenovo-t430s.xml
+          - lenovo-t440s.xml
+          - lenovo-t480s.xml
+          - lenovo-x260.xml
+          - qemu-kvm-efi.xml
+          - up-squared-e3950-coreboot.xml
+          - up-squared-e3950.xml
+        include:
+          # specific combinations
+          - distro: debian-buster
+            system: demo_system_desktop.xml
+            hardware: lenovo-t480s.xml
+          - distro: debian-buster
+            system: demo_system_desktop_smp.xml
+            hardware: lenovo-t480s.xml
+          - distro: debian-buster
+            system: integration_tests_kt.xml
+            hardware: kontron-ktqm77.xml
+          # additional distros
+          - distro: debian-bullseye
+            system: demo_system_vtd.xml
+            hardware: lenovo-t430s.xml
+          - distro: ubuntu-focal
+            system: demo_system_vtd.xml
+            hardware: lenovo-t430s.xml
+    env:
+      BUILD_OUTPUT_VERBOSE: 1
+      BUILD_OUTPUT_SYNC: line
+      CCACHE_HOST: ${{ github.workspace }}/.ccache
+      CCACHE_CONTAINER: /home/user/.ccache
+      CCACHE_COMPILERCHECK: content
+      DISTRO_NAME_VERSION: ${{ matrix.distro }}
+    steps:
+      -
+        name: Checkout repository
+        uses: actions/checkout@v2
+      -
+        name: Prepare
+        id: vars
+        run: |
+          # fetch devel info
+          git fetch --depth=1 origin devel
+
+          DISTRO_NAME="${DISTRO_NAME_VERSION%-*}"
+          DISTRO_VERSION="${DISTRO_NAME_VERSION#*-}"
+          GIT_BRANCH="${GITHUB_REF#refs/heads/}"
+          DOCKER_TAG="${DISTRO_NAME}-${DISTRO_VERSION}_muen-${GIT_BRANCH}"
+          DEVEL_REV=`git rev-parse origin/devel`
+          LNX_REV=`git submodule status -- components/linux/src | \
+            sed -rn 's/^-([a-f0-9]+).*/\1/p'`
+
+          echo distro_name::${DISTRO_NAME}
+          echo distro_version::${DISTRO_VERSION}
+          echo git_branch::${GIT_BRANCH}
+          echo docker_tag::${DOCKER_TAG}
+          echo runner_uid::${UID}
+          echo devel_rev::${DEVEL_REV}
+
+          echo ::set-output name=distro_name::${DISTRO_NAME}
+          echo ::set-output name=distro_version::${DISTRO_VERSION}
+          echo ::set-output name=git_branch::${GIT_BRANCH}
+          echo ::set-output name=docker_tag::${DOCKER_TAG}
+          echo ::set-output name=runner_uid::${UID}
+          echo ::set-output name=devel_rev::${DEVEL_REV}
+      -
+        name: Setup Linux submodule cache
+        uses: actions/cache@v2
+        with:
+          path: .git/modules/components/linux/src
+          key: linux-submod-${{ secrets.CACHE_VERSION }}-${{ steps.vars.outputs.devel_rev }}
+          restore-keys: |
+            linux-submod-${{ secrets.CACHE_VERSION }}-
+      -
+        name: Submodule config and init/update
+        run: |
+          git config --file=.gitmodules submodule.components/linux/src.url https://github.com/codelabs-ch/linux.git
+          git config --file=.gitmodules submodule.components/tau0-static.url https://git.codelabs.ch/muen/tau0.git
+          git config --file=.gitmodules submodule.tools/mugenschedcfg.url https://git.codelabs.ch/muen/mugenschedcfg.git
+          git config --file=.gitmodules submodule.tools/sbs.url https://git.codelabs.ch/sbs-tools.git
+          git config --file=.gitmodules submodule.components/libxhcidbg.url https://git.codelabs.ch/libxhcidbg.git
+          git config --file=.gitmodules submodule.components/linux/modules/muenfs.url https://git.codelabs.ch/muen/linux/muenfs.git
+          git config --file=.gitmodules submodule.components/linux/modules/muennet.url https://git.codelabs.ch/muen/linux/muennet.git
+          git config --file=.gitmodules submodule.components/linux/modules/muenblock.url https://git.codelabs.ch/muen/linux/muenblock.git
+          git config --file=.gitmodules submodule.components/linux/modules/muenevents.url https://git.codelabs.ch/muen/linux/muenevents.git
+          git submodule update --init --depth=1 -- components/linux/src
+          git submodule update --init
+      -
+        name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: buildx-${{ secrets.CACHE_VERSION }}-${{ matrix.distro }}-${{ steps.vars.outputs.devel_rev }}
+          restore-keys: |
+            buildx-${{ secrets.CACHE_VERSION }}-${{ matrix.distro }}-
+      -
+        name: Setup ccache
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.CCACHE_HOST }}
+          key: ccache-${{ secrets.CACHE_VERSION }}-${{ matrix.distro }}-${{ steps.vars.outputs.devel_rev }}
+          restore-keys: |
+            ccache-${{ secrets.CACHE_VERSION }}-${{ matrix.distro }}-
+      -
+        name: Configure ccache max_size
+        run: |
+          mkdir -p ${{ env.CCACHE_HOST }}
+          echo "max_size = 1.0G" > ${{ env.CCACHE_HOST }}/ccache.conf
+      -
+        name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v1
+        with:
+          driver-opts: network=host
+      -
+        name: Build Docker image
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./tools/docker/Dockerfile.muen-dev-env
+          build-args: |
+            distro_name=${{ steps.vars.outputs.distro_name }}
+            distro_version=${{ steps.vars.outputs.distro_version }}
+          platforms: linux/amd64
+          push: true
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
+          tags: |
+            localhost:5000/muen-dev-env:${{ steps.vars.outputs.docker_tag }}
+      -
+        # Workaround for growing cache, see docker/build-push-action doc.
+        name: Move Docker cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+      -
+        name: Build Muen system image
+        uses: addnab/docker-run-action@v3
+        with:
+          image: localhost:5000/muen-dev-env:${{ steps.vars.outputs.docker_tag }}
+          shell: bash
+          options: |
+            -u ${{ steps.vars.outputs.runner_uid }}
+            -v ${{ github.workspace }}:/mnt
+            -v ${{ env.CCACHE_HOST }}:${{ env.CCACHE_CONTAINER }}
+            -e BUILD_OUTPUT_VERBOSE
+            -e BUILD_OUTPUT_SYNC
+            -e CCACHE_COMPILERCHECK
+            -e SYSTEM=xml/${{ matrix.system }}
+            -e HARDWARE=hardware/${{ matrix.hardware }}
+            -w /mnt
+          run: |
+            cat /etc/issue
+            ccache -z
+
+            if [ $SYSTEM == 'xml/mirage-solo5.xml' ]; then \
+              tools/scripts/solo5-muen-gencspec.py \
+                /opt/solo5-v0.6.5/tests/test_hello/test_hello.muen \
+                policy/xml/mirageos/cspec_src.xml policy/obj \
+                --out_spec policy/xml/mirageos/component_unikernel.xml; \
+            fi
+
+            # make must be last run command (exit code matters)
+            make -j`nproc` iso HARDWARE=$HARDWARE SYSTEM=$SYSTEM && ccache -s
+      -
+        name: Log in to Docker Hub
+        if: steps.vars.outputs.git_branch == 'master' || steps.vars.outputs.git_branch == 'devel'
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      -
+        name: Push to Docker Hub 1
+        if: |
+          matrix.system == 'demo_system_vtd.xml' &&
+          matrix.hardware == 'lenovo-t430s.xml' &&
+          (steps.vars.outputs.git_branch == 'master' || steps.vars.outputs.git_branch == 'devel')
+        run: |
+          docker tag localhost:5000/muen-dev-env:${{ steps.vars.outputs.docker_tag }} \
+            codelabsch/muen-dev-env:${{ steps.vars.outputs.docker_tag }}
+          docker push codelabsch/muen-dev-env:${{ steps.vars.outputs.docker_tag }}
+      -
+        name: Push to Docker Hub 2
+        if: |
+          matrix.system == 'demo_system_vtd.xml' &&
+          matrix.hardware == 'lenovo-t430s.xml' &&
+          steps.vars.outputs.distro_name == 'debian' &&
+          steps.vars.outputs.distro_version == 'buster' &&
+          steps.vars.outputs.git_branch == 'devel'
+        run: |
+          docker tag localhost:5000/muen-dev-env:${{ steps.vars.outputs.docker_tag }} \
+            codelabsch/muen-dev-env:latest
+          docker push codelabsch/muen-dev-env:latest

@@ -1,12 +1,15 @@
-FROM ocaml/opam2
+FROM ocaml/opam:debian-10-ocaml-4.11
 
 LABEL maintainer "Reto Buerki <reet@codelabs.ch>"
 LABEL description "Build environment for Muen-enabled MirageOS/Solo5 Unipi website unikernel"
 
-RUN opam depext -y mirage.3.7.6
-RUN opam install -y mirage.3.7.6
+RUN cd /home/opam/opam-repository \
+	&& git pull origin master \
+	&& opam update \
+	&& opam depext -y mirage.3.10.4 \
+	&& opam install -y mirage.3.10.4
 
 RUN git clone https://github.com/mirage/mirage-skeleton
-RUN git clone -b with-kv https://github.com/hannesm/unipi.git
+RUN git clone -b with-kv https://github.com/roburio/unipi.git
 
 CMD [ "bash" ]

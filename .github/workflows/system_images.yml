@@ -152,9 +152,15 @@ jobs:
           platforms: linux/amd64
           push: true
           cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
           tags: |
             localhost:5000/muen-dev-env:${{ steps.vars.outputs.docker_tag }}
+      -
+        # Workaround for growing cache, see docker/build-push-action doc.
+        name: Move Docker cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
       -
         name: Build Muen system image
         uses: addnab/docker-run-action@v3

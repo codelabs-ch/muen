@@ -586,7 +586,7 @@ is
       Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/subjects/subject");
+           XPath => "/system/subjects/subject[not(sibling)]");
       Physical_Mem : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,

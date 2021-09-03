@@ -25,9 +25,6 @@
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="subject2|pt" size="16#4000#" type="system_pt">
                                                                                                                                                      >     <fill pattern="16#00#"/>
                                                                                                                                                      >    </memory>
-                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="lnx_core_1|pt" size="16#4000#" type="system_pt">
-                                                                                                                                                     >     <fill pattern="16#00#"/>
-                                                                                                                                                     >    </memory>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="subject3|pt" size="16#0000#" type="system_pt">
                                                                                                                                                      >     <fill pattern="16#00#"/>
                                                                                                                                                      >    </memory>

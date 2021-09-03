@@ -61,12 +61,16 @@ signed using the following command (as described by the
 http://ipxe.org/crypto#code_signing[iPXE homepage]):
 
 ```
-openssl cms -sign -binary -noattr -in $IMAGE -signer $SIGN_CERT \
+openssl cms -sign -binary -noattr -in muen.iso -signer $SIGN_CERT \
+  -inkey $SIGN_KEY -certfile $CA -outform DER -out $SIG
+
+openssl cms -sign -binary -noattr -in memdisk -signer $SIGN_CERT \
   -inkey $SIGN_KEY -certfile $CA -outform DER -out $SIG
 ```
 
-Then the image and associated signature is uploaded to a webserver which is
-reachable by the target system.
+`memdisk` is a small kernel extracted from syslinux required to reliably boot
+the ISO image via HTTP(S). The files and associated signatures are uploaded to
+a webserver which is reachable by the target system.
 
 === iPXE Image Verification
 
@@ -90,10 +94,10 @@ index 3c14a2cd..0c67a39d 100644
 
 The following script instructs iPXE to only boot images which are deemed
 trusted (i.e. which have a valid signature). Besides the general networking
-setup steps, it fetches the Muen system image containing our MirageOS webserver
-subject from a given URL and then verifies the associated signature. The
-`imgstat` command is for debugging purposes and displays the current image
-state before booting into the verified Muen system.
+setup steps, it fetches the `memdisk` kernel and the Muen system image
+containing our MirageOS webserver subject from a given URL and then verifies
+the associated signatures. The `imgstat` command is for debugging purposes and
+displays the current image state before booting the verified Muen system.
 
 ```
 #!ipxe
@@ -104,14 +108,19 @@ ifopen net0
 set net0/ip 192.168.199.4
 set net0/netmask 255.255.255.0
 set net0/gateway 192.168.199.1
-set dns 192.168.199.1
-imgfetch http://192.168.199.2/muen.img
-imgverify muen.img http://192.168.199.2/muen.img.sig
+
+kernel http://192.168.199.2/memdisk
+initrd http://192.168.199.2/muen.iso
+
+imgverify memdisk http://192.168.199.2/memdisk.sig
+imgverify muen.iso http://192.168.199.2/muen.iso.sig
 imgstat
-boot muen.img
+
+imgargs memdisk iso raw
+boot
 ```
 
-The image is signed using a certificate issued by our own private CA. In order
+The files are signed using a certificate issued by our own private CA. In order
 for iPXE to successfully verify such a signature, we need to embed and trust
 the appropriate certificates.  The `CERT` and `TRUST` environment variables can
 be used for this:

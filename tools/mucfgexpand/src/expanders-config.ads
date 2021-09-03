@@ -45,6 +45,7 @@ is
    Subject_FPU_States_Virtual_Addr  : constant := 16#00c0_0000#;
 
    Subject_Sinfo_Region_Size        : constant := 16#8000#;
+   Sched_Group_Info_Region_Size     : constant := 16#1000#;
 
    Subject_Loader_Source_Base_Addr  : constant := 16#7000_0000_0000#;
 

@@ -1638,98 +1638,215 @@ is
 
    procedure Add_Sibling_Memory (Data : in out Muxml.XML_Data_Type)
    is
+      package Cfg renames Expanders.Config;
+
       Origins : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/subjects/subject[not(sibling)]");
-      Subjects : constant DOM.Core.Node_List
+      Sibling_Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/subjects/subject[sibling]");
+           XPath => "/system/subjects/subject/sibling");
    begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+      for I in 0 .. DOM.Core.Nodes.Length (List => Origins) - 1 loop
          declare
-            Subj_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item (List  => Subjects,
-                                      Index => I);
-            Subj_Mem_Node : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Doc   => Subj_Node,
-                 XPath => "memory");
-            Subj_Name : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Subj_Node,
-                 Name => "name");
-            Sib_Ref : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Muxml.Utils.Get_Element
-                   (Doc   => Subj_Node,
-                    XPath => "sibling"),
-                 Name => "ref");
+            use type Interfaces.Unsigned_64;
+
             Origin_Node : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Nodes     => Origins,
-                 Ref_Attr  => "name",
-                 Ref_Value => Sib_Ref);
-            Origin_Mem_Orig : constant DOM.Core.Node_List
-              := McKae.XML.XPath.XIA.XPath_Query
-                (N     => Origin_Node,
-                 XPath => "memory/memory");
-            Mem_To_Add : DOM.Core.Node_List;
-
-            Exclude : constant array (Positive range <>) of Unbounded_String
-              := (1 => To_Unbounded_String ("sinfo"),
-                  2 => To_Unbounded_String ("timed_event"),
-                  3 => To_Unbounded_String ("sched_group_info"));
-
-            --  Returns True if the given logical memory region must be
-            --  excluded from the merge.
-            function To_Exclude (Logical : String) return Boolean;
-
-            ----------------------------------------------------------------
-
-            function To_Exclude (Logical : String) return Boolean
-            is
-            begin
-               for E of Exclude loop
-                  if Logical = E then
-                     return True;
-                  end if;
-               end loop;
-
-               return False;
-            end To_Exclude;
+              := DOM.Core.Nodes.Item (List  => Origins,
+                                      Index => I);
+            Origin_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Origin_Node,
+                 Name => "name");
+            Origin_Mem : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element (Doc   => Origin_Node,
+                                          XPath => "memory");
+            Siblings :  constant DOM.Core.Node_List
+              := Muxml.Utils.Get_Elements
+                (Nodes     => Sibling_Nodes,
+                 Ref_Attr  => "ref",
+                 Ref_Value => Origin_Name);
+            Sibling_Count : constant Natural
+              := DOM.Core.Nodes.Length (List => Siblings);
          begin
-            Mulog.Log (Msg => "Adding sibling memory to subject '"
-                       & Subj_Name & "'");
-
-            for J in 0 .. DOM.Core.Nodes.Length (List => Origin_Mem_Orig) - 1
-            loop
+            for J in 0 .. Sibling_Count - 1 loop
                declare
-                  M : constant DOM.Core.Node
+                  Sibling : constant DOM.Core.Node
                     := DOM.Core.Nodes.Item
-                      (List  => Origin_Mem_Orig,
+                      (List  => Siblings,
                        Index => J);
+                  Sib_Subj : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Parent_Node (N => Sibling);
+                  Sib_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute (Elem => Sib_Subj,
+                                                        Name => "name");
+                  Sib_ID  : constant Interfaces.Unsigned_64
+                    := Interfaces.Unsigned_64 (J) + 1;
+                  Sib_Mem : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element (Doc   => Sib_Subj,
+                                                XPath => "memory");
+                  Sib_Mems : constant DOM.Core.Node_List
+                    := McKae.XML.XPath.XIA.XPath_Query
+                      (N     => Sib_Mem,
+                       XPath => "memory");
                begin
-                  if not To_Exclude
-                    (Logical => DOM.Core.Elements.Get_Attribute
-                       (Elem => M,
-                        Name => "logical"))
-                  then
-                     DOM.Core.Append_Node (List => Mem_To_Add,
-                                           N    => M);
-                  end if;
+                  for K in 0 .. DOM.Core.Nodes.Length (List => Sib_Mems) - 1
+                  loop
+                     declare
+                        M : constant DOM.Core.Node := DOM.Core.Nodes.Item
+                          (List  => Sib_Mems,
+                           Index => K);
+                        Logical_Name : constant String
+                          := DOM.Core.Elements.Get_Attribute
+                            (Elem => M,
+                             Name => "logical");
+                     begin
+                        if Logical_Name = "sinfo" then
+                           Mulog.Log (Msg => "Adding sinfo region of sibling '"
+                                      & Sib_Name & "' to subject '"
+                                      & Origin_Name & "'");
+
+                           --  Set virtual address of sibling sinfo region to
+                           --  place it at the expected slot in the consecutive
+                           --  array of sinfo regions.
+
+                           DOM.Core.Elements.Set_Attribute
+                             (Elem  => M,
+                              Name  => "virtualAddress",
+                              Value => Mutools.Utils.To_Hex
+                                (Number => Config.Subject_Info_Virtual_Addr
+                                 + Sib_ID
+                                 * (Cfg.Subject_Sinfo_Region_Size
+                                   + Cfg.Sched_Group_Info_Region_Size)));
+
+                           --  Remove mapping from sibling and add it to origin
+                           --  subject.
+
+                           Muxml.Utils.Append_Child
+                             (Node      => Origin_Mem,
+                              New_Child => DOM.Core.Nodes.Remove_Child
+                                (N         => Sib_Mem,
+                                 Old_Child => M));
+                        elsif Logical_Name = "sched_group_info" then
+                           Mulog.Log (Msg => "Adding scheduling group info "
+                                      & "region of sibling '" & Sib_Name
+                                      & "' to subject '" & Origin_Name & "'");
+
+                           --  Set virtual address of sibling sched info region
+                           --  to place it at the expected slot in the
+                           --  consecutive array of sinfo+sched_group_info
+                           --  regions. Since sched_group_info region is always
+                           --  placed right after the sinfo region, the address
+                           --  is calculated by calculating the sinfo region
+                           --  address of the *next* subject and subtracting the
+                           --  sched_info_region size.
+
+                           DOM.Core.Elements.Set_Attribute
+                             (Elem  => M,
+                              Name  => "virtualAddress",
+                              Value => Mutools.Utils.To_Hex
+                                (Number => Config.Subject_Info_Virtual_Addr
+                                 + (Sib_ID + 1)
+                                 * (Cfg.Subject_Sinfo_Region_Size
+                                   + Cfg.Sched_Group_Info_Region_Size)
+                                 - Cfg.Sched_Group_Info_Region_Size));
+
+                           --  Remove mapping from sibling and add it to origin
+                           --  subject.
+
+                           Muxml.Utils.Append_Child
+                             (Node      => Origin_Mem,
+                              New_Child => DOM.Core.Nodes.Remove_Child
+                                (N         => Sib_Mem,
+                                 Old_Child => M));
+                        elsif Logical_Name = "timed_event" then
+                           Mulog.Log (Msg => "Adding timed event region of "
+                                      & "sibling '" & Sib_Name
+                                      & "' to subject '" & Origin_Name & "'");
+                           DOM.Core.Elements.Set_Attribute
+                             (Elem  => M,
+                              Name  => "logical",
+                              Value => Logical_Name & Ada.Strings.Fixed.Trim
+                                (Source => Sib_ID'Img,
+                                 Side   => Ada.Strings.Left));
+
+                           --  Set virtual address of sibling timed event region
+                           --  to place it at the expected slot in the
+                           --  consecutive array of sinfo regions. For systems
+                           --  with many siblings the sinfo/sched group info
+                           --  mappings may overlap with the timed event virtual
+                           --  address. Thus, add an offset to prevent overlap.
+
+                           DOM.Core.Elements.Set_Attribute
+                             (Elem  => M,
+                              Name  => "virtualAddress",
+                              Value => Mutools.Utils.To_Hex
+                                (Number =>
+                                     Config.Subject_Timed_Event_Virtual_Addr
+                                 + Config.Sibling_Timed_Event_Offset
+                                 + Sib_ID * MC.Page_Size));
+                           Muxml.Utils.Append_Child
+                             (Node      => Origin_Mem,
+                              New_Child => DOM.Core.Nodes.Remove_Child
+                                (N         => Sib_Mem,
+                                 Old_Child => M));
+                        end if;
+                     end;
+                  end loop;
                end;
             end loop;
 
-            for J in 0 .. DOM.Core.Nodes.Length (List => Mem_To_Add) - 1 loop
-               Muxml.Utils.Append_Child
-                 (Node      => Subj_Mem_Node,
-                  New_Child => DOM.Core.Nodes.Clone_Node
-                    (N    => DOM.Core.Nodes.Item
-                         (List  => Mem_To_Add,
-                          Index => J),
-                     Deep => False));
+            if Sibling_Count > 0 then
+               declare
+                  TE_Node : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
+                      (Doc   => Origin_Mem,
+                       XPath => "memory[@logical='timed_event']");
+               begin
+                  Mulog.Log (Msg => "Adjusting timed event region of subject '"
+                             & Origin_Name & "'");
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => TE_Node,
+                     Name  => "logical",
+                     Value => "timed_event0");
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => TE_Node,
+                     Name  => "virtualAddress",
+                     Value => Mutools.Utils.To_Hex
+                       (Number => Config.Subject_Timed_Event_Virtual_Addr
+                        + Config.Sibling_Timed_Event_Offset));
+               end;
+            end if;
+
+            for J in 0 .. Sibling_Count - 1 loop
+               declare
+                  Sibling : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => Siblings,
+                       Index => J);
+                  Sib_Subj : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Parent_Node (N => Sibling);
+                  Sib_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute (Elem => Sib_Subj,
+                                                        Name => "name");
+                  Sib_Mem : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element (Doc   => Sib_Subj,
+                                                XPath => "memory");
+                  Old_Mem_Node : DOM.Core.Node;
+               begin
+                  Mulog.Log (Msg => "Replacing memory of sibling " & Sib_Name
+                             & " with origin subject '" & Origin_Name & "'");
+
+                  Old_Mem_Node := DOM.Core.Nodes.Replace_Child
+                    (N         => Sib_Subj,
+                     New_Child => DOM.Core.Nodes.Clone_Node
+                       (N    => Origin_Mem,
+                        Deep => True),
+                     Old_Child => Sib_Mem);
+                  DOM.Core.Nodes.Free (N => Old_Mem_Node);
+               end;
             end loop;
          end;
       end loop;

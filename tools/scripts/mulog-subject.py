@@ -28,7 +28,7 @@ elif len(sys.argv) == 2:
     f = sys.stdin
 else:
     filename = sys.argv[2]
-    f = open(filename)
+    f = open(filename, 'r', encoding='utf-8', errors='replace')
 
 subject_id = int(sys.argv[1], 0)
 

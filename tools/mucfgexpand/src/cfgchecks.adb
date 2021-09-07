@@ -2506,6 +2506,49 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Subject_Sibling_Memory (XML_Data : Muxml.XML_Data_Type)
+   is
+      Siblings : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject[sibling]");
+   begin
+      for I in 0 ..  DOM.Core.Nodes.Length (List => Siblings) - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            Subj_Node  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Siblings,
+                 Index => I);
+            Memory : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query (N     => Subj_Node,
+                                                  XPath => "memory/memory");
+         begin
+            if DOM.Core.Nodes.Length (List => Memory) > 0 then
+               declare
+                  Subj_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Subj_Node,
+                       Name => "name");
+                  Sib_Name  : constant String
+                    := Muxml.Utils.Get_Attribute
+                      (Doc   => Subj_Node,
+                       XPath => "sibling",
+                       Name  => "ref");
+               begin
+                  Mucfgcheck.Validation_Errors.Insert
+                    (Msg => "Subject '"
+                     & Subj_Name & "' which is a sibling of '" & Sib_Name
+                     & "' specifies additional memory");
+               end;
+            end if;
+         end;
+      end loop;
+   end Subject_Sibling_Memory;
+
+   -------------------------------------------------------------------------
+
    procedure Subject_Sibling_References (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.

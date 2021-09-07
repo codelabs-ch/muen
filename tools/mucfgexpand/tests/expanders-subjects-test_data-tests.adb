@@ -639,6 +639,7 @@ package body Expanders.Subjects.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename => "obj/subjects_sibling_memory.xml",
          Ref_Diff => "data/subjects_sibling_memory.xml.diff",
+         Pre      => Prepare_Sibling_Mappings'Access,
          Expander => Add_Sibling_Memory'Access);
 --  begin read only
    end Test_Add_Sibling_Memory;

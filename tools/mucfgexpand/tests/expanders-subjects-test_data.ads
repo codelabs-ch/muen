@@ -52,4 +52,7 @@ package Expanders.Subjects.Test_Data is
    --  Prepare subject channels for event expansion.
    procedure Prepare_Channel_Events (Data : in out Muxml.XML_Data_Type);
 
+   --  Prepare subjects for sibling memory expansion.
+   procedure Prepare_Sibling_Mappings (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Subjects.Test_Data;

@@ -292,10 +292,9 @@
     </registers>                                                                                                                                            </registers>
    </vcpu>                                                                                                                                                 </vcpu>
                                                                                                                                                      >     <bootparams/>
-   <memory>                                                                                                                                                <memory>
-    <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>                                        <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>
+                                                                                                                                                     >     <memory>
                                                                                                                                                      >      <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_5" virtualAddress="16#000e_0000_8000#" writable="false"/>
-   </memory>                                                                                                                                               </memory>
+                                                                                                                                                     >     </memory>
                                                                                                                                                      >     <devices/>
    <events>                                                                                                                                                <events>
     <source>                                                                                                                                                <source>

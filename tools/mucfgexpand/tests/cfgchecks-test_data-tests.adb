@@ -1468,6 +1468,8 @@ package body Cfgchecks.Test_Data.Tests is
          --  Empty bootparams should not raise an exception.
 
          Subject_Sibling_Bootparams (XML_Data => Policy);
+         Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+                 Message   => "Unexpected error with empty bootparams");
       end;
 
       Muxml.Utils.Append_Child

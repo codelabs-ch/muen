@@ -77,6 +77,16 @@ package body Expanders.Subjects.Test_Data is
       Add_Global_IDs (Data => Data);
    end Prepare_Sched_Info_Mappings;
 
+   -------------------------------------------------------------------------
+
+   procedure Prepare_Sibling_Mappings (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Prepare_Sched_Info_Mappings (Data => Data);
+      Add_CPU_IDs (Data => Data);
+      Add_Sched_Group_Info_Mappings (Data => Data);
+      Add_Timed_Event_Mappings (Data => Data);
+   end Prepare_Sibling_Mappings;
 
    -------------------------------------------------------------------------
 

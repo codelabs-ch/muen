@@ -152,7 +152,7 @@ is
       Procs.Register (Process => Kernel.Add_Subj_MSR_Store_Mappings'Access);
 
       --  All kernel/subject memory regions and mappings must exist and specify
-      --  and alignment to add PTs.
+      --  an alignment to add PTs.
 
       Procs.Register (Process => Memory.Add_Kernel_PTs'Access);
       Procs.Register (Process => Memory.Add_Subject_PTs'Access);

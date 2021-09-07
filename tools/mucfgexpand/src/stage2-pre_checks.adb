@@ -91,6 +91,7 @@ is
         (Process => Subject_Monitor_Loader_Addresses'Access);
       Check_Procs.Register (Process => Subject_Channel_References'Access);
       Check_Procs.Register (Process => Subject_Sibling_Bootparams'Access);
+      Check_Procs.Register (Process => Subject_Sibling_Memory'Access);
       Check_Procs.Register (Process => Subject_Sibling_Device_BDFs'Access);
       Check_Procs.Register (Process => Channel_Reader_Writer'Access);
       Check_Procs.Register (Process => Channel_Writer_Has_Event_ID'Access);

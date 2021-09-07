@@ -21,5 +21,6 @@ is
 
    Subject_Info_Virtual_Addr        : constant := 16#000e_0000_0000#;
    Subject_Timed_Event_Virtual_Addr : constant := 16#000e_0001_0000#;
+   Sibling_Timed_Event_Offset       : constant := 16#0080_0000#;
 
 end Expanders.Subjects.Config;

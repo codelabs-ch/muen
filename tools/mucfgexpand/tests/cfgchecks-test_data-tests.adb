@@ -1468,6 +1468,8 @@ package body Cfgchecks.Test_Data.Tests is
          --  Empty bootparams should not raise an exception.
 
          Subject_Sibling_Bootparams (XML_Data => Policy);
+         Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+                 Message   => "Unexpected error with empty bootparams");
       end;
 
       Muxml.Utils.Append_Child
@@ -1483,6 +1485,63 @@ package body Cfgchecks.Test_Data.Tests is
               Message   => "Exception mismatch");
 --  begin read only
    end Test_Subject_Sibling_Bootparams;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Subject_Sibling_Memory (Gnattest_T : in out Test);
+   procedure Test_Subject_Sibling_Memory_e48e0a (Gnattest_T : in out Test) renames Test_Subject_Sibling_Memory;
+--  id:2.2/e48e0a90af3ef8b3/Subject_Sibling_Memory/1/0/
+   procedure Test_Subject_Sibling_Memory (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+      Memory : DOM.Core.Node;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      --  Positive tests, must not raise an exception.
+
+      Subject_Sibling_Memory (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
+
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Policy.Doc,
+            XPath => "/system/subjects/subject/sibling[@ref='lnx']/..");
+      begin
+         Memory := DOM.Core.Documents.Create_Element
+           (Doc      => Policy.Doc,
+            Tag_Name => "memory");
+         Muxml.Utils.Insert_Before (Parent    => Node,
+                                    New_Child => Memory,
+                                    Ref_Child => "events");
+
+         --  Empty memory section should not raise an exception.
+
+         Subject_Sibling_Memory (XML_Data => Policy);
+         Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+                 Message   => "Unexpected error with empty memory section");
+      end;
+
+      Muxml.Utils.Append_Child
+        (Node      => Memory,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Policy.Doc,
+            Tag_Name => "memory"));
+
+      Subject_Sibling_Memory (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Subject 'lnx_core_1' which is a sibling of 'lnx' "
+               & "specifies additional memory"),
+              Message   => "Exception mismatch");
+--  begin read only
+   end Test_Subject_Sibling_Memory;
 --  end read only
 
 

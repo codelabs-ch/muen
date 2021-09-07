@@ -57,12 +57,14 @@ is
 
    --  Check presence of physical per-subject memory region with specified
    --  region type, class and size. If size is specified as 0, then the region
-   --  size is not checked.
+   --  size is not checked. If Omit_Siblings is True, then sibling subjects are
+   --  excluded from the check.
    procedure Check_Subject_Region_Presence
-     (XML_Data     : Muxml.XML_Data_Type;
-      Region_Type  : String;
-      Region_Class : String := "subject";
-      Region_Size  : Interfaces.Unsigned_64 := Mutools.Constants.Page_Size);
+     (XML_Data      : Muxml.XML_Data_Type;
+      Region_Type   : String;
+      Region_Class  : String := "subject";
+      Region_Size   : Interfaces.Unsigned_64 := Mutools.Constants.Page_Size;
+      Omit_Siblings : Boolean := False);
 
    --  Check presence of physical kernel memory region with given name prefix
    --  and suffix for each CPU. The specified region kind is used in log
@@ -285,11 +287,14 @@ is
    -------------------------------------------------------------------------
 
    procedure Check_Subject_Region_Presence
-     (XML_Data     : Muxml.XML_Data_Type;
-      Region_Type  : String;
-      Region_Class : String := "subject";
-      Region_Size  : Interfaces.Unsigned_64 := Mutools.Constants.Page_Size)
+     (XML_Data      : Muxml.XML_Data_Type;
+      Region_Type   : String;
+      Region_Class  : String := "subject";
+      Region_Size   : Interfaces.Unsigned_64 := Mutools.Constants.Page_Size;
+      Omit_Siblings : Boolean := False)
    is
+      XPath_Suffix : constant String
+        := (if Omit_Siblings then "[not(sibling)]" else "");
       --  Returns the error message for a given reference node.
       procedure Error_Msg
         (Node    :     DOM.Core.Node;
@@ -346,7 +351,7 @@ is
    begin
       For_Each_Match
         (XML_Data     => XML_Data,
-         Source_XPath => "/system/subjects/subject",
+         Source_XPath => "/system/subjects/subject" & XPath_Suffix,
          Ref_XPath    => "/system/memory/memory[@type='"
          & Region_Class & "_" & Region_Type & "']",
          Log_Message  => "subject " & Region_Type & " region(s) for presence",
@@ -1182,10 +1187,11 @@ is
       --  cannot be asserted.
 
       Check_Subject_Region_Presence
-        (XML_Data     => XML_Data,
-         Region_Type  => "pt",
-         Region_Class => "system",
-         Region_Size  => 0);
+        (XML_Data      => XML_Data,
+         Region_Type   => "pt",
+         Region_Class  => "system",
+         Region_Size   => 0,
+         Omit_Siblings => True);
    end Subject_PT_Region_Presence;
 
    -------------------------------------------------------------------------

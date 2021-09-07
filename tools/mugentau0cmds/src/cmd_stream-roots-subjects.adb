@@ -279,11 +279,15 @@ is
       for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
             use type Interfaces.Unsigned_64;
+            use type DOM.Core.Node;
 
             Subj : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => Subjects,
                  Index => I);
+            Is_Sibling : constant Boolean
+              := (Muxml.Utils.Get_Element (Doc   => Subj,
+                                           XPath => "sibling") /= null);
             Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subj,
@@ -358,20 +362,27 @@ is
             Assign_MSRs (Stream_Doc => Stream_Doc,
                          Subj_Attr  => Subj_Attr,
                          Subj_Node  => Subj);
-            Utils.Assign_Memory
-              (Stream_Doc    => Stream_Doc,
-               Physical_Mem  => Phys_Mem,
-               Physical_Devs => Phys_Devs,
-               Logical_Mem   => McKae.XML.XPath.XIA.XPath_Query
-                 (N     => Subj,
-                  XPath => "memory/memory"),
-               Logical_Devs  => McKae.XML.XPath.XIA.XPath_Query
-                 (N     => Subj,
-                  XPath => "devices/device[memory]"),
-               Object_Attr   => Subj_Attr,
-               Object_Kind   => "Subject",
-               Entity_Name   => Name & "|pt",
-               Paging_Levels => 4);
+            if not Is_Sibling then
+               Utils.Assign_Memory
+                 (Stream_Doc    => Stream_Doc,
+                  Physical_Mem  => Phys_Mem,
+                  Physical_Devs => Phys_Devs,
+                  Logical_Mem   => McKae.XML.XPath.XIA.XPath_Query
+                    (N     => Subj,
+                     XPath => "memory/memory"),
+                  Logical_Devs  => McKae.XML.XPath.XIA.XPath_Query
+                    (N     => Subj,
+                     XPath => "devices/device[memory]"),
+                  Object_Attr   => Subj_Attr,
+                  Object_Kind   => "Subject",
+                  Entity_Name   => Name & "|pt",
+                  Paging_Levels => 4);
+            else
+               Cmd_Stream.Utils.Append_Command
+                 (Stream_Doc => Stream_Doc,
+                  Name       => "lockSubject",
+                  Attrs      => (1 => Subj_Attr));
+            end if;
 
             CU.Append_Command
               (Stream_Doc => Stream_Doc,

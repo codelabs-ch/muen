@@ -944,10 +944,9 @@
     </registers>                                                                                                                                            </registers>
    </vcpu>                                                                                                                                                 </vcpu>
                                                                                                                                                      >     <bootparams/>
-   <memory>                                                                                                                                                <memory>
-    <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>                                        <memory executable="false" logical="own_mem" physical="dummy_6" virtualAddress="16#1003_0000#" writable="true"/>
+                                                                                                                                                     >     <memory>
                                                                                                                                                      >      <memory executable="false" logical="sinfo" physical="lnx_core_1|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
-   </memory>                                                                                                                                               </memory>
+                                                                                                                                                     >     </memory>
                                                                                                                                                      >     <devices>
                                                                                                                                                      >      <device logical="xhci" physical="xhci">
                                                                                                                                                      >       <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>

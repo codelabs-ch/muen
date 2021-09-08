@@ -1,8 +1,0 @@
-library project Bfdada is
-   for Source_Dirs use ("../build/share/ada/adainclude/bfdada");
-   for Library_Name use "ada-bfd";
-   for Library_Dir use "../build/lib";
-   for Library_ALI_Dir use "../build/lib/ada/adalib/bfdada";
-   for Library_Kind use "static";
-   for Externally_Built use "true";
-end Bfdada;

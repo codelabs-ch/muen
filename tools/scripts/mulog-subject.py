@@ -28,7 +28,7 @@ elif len(sys.argv) == 2:
     f = sys.stdin
 else:
     filename = sys.argv[2]
-    f = open(filename)
+    f = open(filename, 'r', encoding='utf-8', errors='replace')
 
 subject_id = int(sys.argv[1], 0)
 
@@ -47,7 +47,7 @@ while line:
         if line[8] != '>' and add_newline is True:
             print('\n', end='')
 
-        print(line.rstrip('\n')[9:].translate(None, '\r\01'), end='')
+        print(line.rstrip('\n')[9:].translate('\r\01'), end='')
 
         if not_split(len(line)):
             print('\n', end='')

@@ -17,7 +17,7 @@ def append(prefix, line):
 
 filename = sys.argv[1]
 
-f = open(filename)
+f = open(filename, 'r', encoding='utf-8', errors='replace')
 lines = [line.rstrip('\r\n') for line in f]
 f.close()
 

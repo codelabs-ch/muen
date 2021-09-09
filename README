@@ -188,6 +188,7 @@ chance similar hardware works out-of-the box if the microarchitecture is Ivy
 Bridge or newer.
 
 |===================================================================
+| iBASE MI995VF-X27              | Coffee Lake | Xeon E-2176M
 | Lenovo ThinkPad T480s          | Kaby Lake   | i7-8650U
 | Lenovo ThinkPad X260           | Skylake     | i7-6500U
 | Intel NUC 6i7KYK               | Skylake     | i7-6770HQ

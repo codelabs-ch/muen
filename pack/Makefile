@@ -3,6 +3,10 @@ IMG_TAU0 = $(OBJ_DIR)/$(IMG_NAME).cmds
 
 include ../Makeconf
 
+ifneq (,$(TAU0_SKIP_HASHING))
+SKIP_HASH = --skip-hashing
+endif
+
 ifneq (,$(wildcard $(POLICY_B)))
 FILES := $(shell xmllint --xpath '//file/@filename' $(POLICY_B) | sed -rn 's/filename="([^"]+)"/\1/pg')
 FILES := $(filter-out %_sinfo, $(FILES))
@@ -25,7 +29,7 @@ $(POLICY_B_CMDS): $(POLICY_B_HASH) $(MUGENTAU0CMDS)
 
 $(IMG_TAU0): $(POLICY_B_CMDS) $(TAU0_STATIC)
 	@$(E) pack "Generate image" \
-		"$(TAU0_STATIC) -i $(POLICY_OBJ_DIR) -o $(OBJ_DIR) -n $(IMG_NAME) $(POLICY_B_CMDS)"
+		"$(TAU0_STATIC) -i $(POLICY_OBJ_DIR) -o $(OBJ_DIR) $(SKIP_HASH) -n $(IMG_NAME) $(POLICY_B_CMDS)"
 
 $(POLICY_B_MANI): $(POLICY_B_HASH) $(MUGENMANIFEST)
 	@$(E) pack "Generate policy manifest" "$(MUGENMANIFEST) $< $@"

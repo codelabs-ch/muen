@@ -286,55 +286,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Memory_Reference_Uniqueness (XML_Data : Muxml.XML_Data_Type)
-   is
-      Nodes : constant DOM.Core.Node_List := XPath_Query
-        (N     => XML_Data.Doc,
-         XPath => "/system/deviceDomains/domain/memory/memory");
-
-      --  Check inequality of memory reference physical names.
-      procedure Check_Inequality (Left, Right : DOM.Core.Node);
-
-      ----------------------------------------------------------------------
-
-      procedure Check_Inequality (Left, Right : DOM.Core.Node)
-      is
-         Left_Name  : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Left,
-            Name => "physical");
-         Right_Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Right,
-            Name => "physical");
-      begin
-         if Left_Name = Right_Name then
-            declare
-               L_Dom_Name : constant String := DOM.Core.Elements.Get_Attribute
-                 (Elem => Muxml.Utils.Ancestor_Node (Node  => Left,
-                                                     Level => 2),
-                  Name => "name");
-               R_Dom_Name : constant String := DOM.Core.Elements.Get_Attribute
-                 (Elem => Muxml.Utils.Ancestor_Node (Node  => Right,
-                                                     Level => 2),
-                  Name => "name");
-            begin
-               Validation_Errors.Insert
-                 (Msg => "Device domains '" & L_Dom_Name
-                  & "' and '" & R_Dom_Name & "' "
-                  & "reference same physical memory region '"
-                  & Left_Name & "'");
-            end;
-         end if;
-      end Check_Inequality;
-   begin
-      Mulog.Log (Msg => "Checking uniqueness of" & DOM.Core.Nodes.Length
-                 (List => Nodes)'Img & " security domain memory reference(s)");
-
-      Compare_All (Nodes      => Nodes,
-                   Comparator => Check_Inequality'Access);
-   end Memory_Reference_Uniqueness;
-
-   -------------------------------------------------------------------------
-
    procedure PCI_Bus_Context_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
       Ctx_Nodes : constant DOM.Core.Node_List

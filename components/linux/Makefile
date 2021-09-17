@@ -1,6 +1,6 @@
 include ../../Makeconf
 
-KERNEL_VERSION ?= 5.4
+KERNEL_VERSION ?= 5.10
 LINUX_CONFIG   ?= config/linux64-$(KERNEL_VERSION)
 
 INITRAMFS_BASE := initramfs.cpio.gz
@@ -8,7 +8,7 @@ INITRAMFS_REV  := c34ca7cf78d5796e74ada78c5b7f37f3174c12c1
 INITRAMFS      ?= $(OBJ_DIR)/$(INITRAMFS_BASE)
 SITE           ?= https://github.com/codelabs-ch/buildroot-muen/raw/$(INITRAMFS_REV)/
 
-SRC_BZIMAGE = src/arch/x86/boot/bzImage
+SRC_BZIMAGE = src/arch/x86/boot/vmlinux.bin
 GENCSPEC    = misc/linux-muen-gencspec.py
 EXTRA_MODS  = $(notdir $(wildcard modules/*))
 
@@ -38,7 +38,7 @@ $(SRC_BZIMAGE): src/.config
 	@$(E) linux Build "$(LINUX_FLAGS) $(MAKE) -C src" $(LOG)
 
 $(OBJ_DIR)/bzImage: $(SRC_BZIMAGE) | $(OBJ_DIR)
-	@$(E) linux "Patch" "$(MULNXBZPATCH) $< $@" $(LOG)
+	@$(E) linux "Copy" "cp $< $@" $(LOG)
 
 $(OBJ_DIR)/.mods-build: $(SRC_BZIMAGE) | $(OBJ_DIR)
 	@$(E) linux "Build kernel modules" \

@@ -12,6 +12,10 @@ DESCRIPTION = 'Linux XML component spec generator'
 LINUX_VIRTUAL_ADDRESS = "16#0040_0000#"
 INITRAMFS_VIRTUAL_ADDRESS = 0x90000000
 
+# See arch/x86/include/asm/boot.h
+BOOT_HEAP_SIZE = 0x10000
+BOOT_STACK_SIZE = 0x4000
+
 
 def add_provides_memory(xml_spec, name, region_type, address, filename, size,
                         executable, writable):
@@ -126,6 +130,7 @@ src_spec = etree.parse(src_spec_path, xml_parser).getroot()
 print("Processing Linux binary '" + src_bin_path + "'")
 binary_name = os.path.basename(src_bin_path)
 binary_size = os.path.getsize(src_bin_path)
+binary_size += BOOT_HEAP_SIZE + BOOT_STACK_SIZE
 add_provides_memory(src_spec,
                     "binary",
                     "subject_binary",

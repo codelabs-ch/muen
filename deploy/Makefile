@@ -10,6 +10,7 @@ TARGET_PWR_MECH ?= amt
 TARGET_START    ?= target_start_$(TARGET_PWR_MECH)
 TARGET_SHUTDOWN ?= target_shutdown_$(TARGET_PWR_MECH)
 
+HTTP_CMD    ?= python3 -m RangeHTTPServer $(DEPLOY_PORT)
 PING_CMD    ?= ping -c 3
 DEPLOY_PORT ?= 8000
 BOOT_CFG    ?= boot.cfg
@@ -40,7 +41,7 @@ $(HTTP_DIR)/memdisk: memdisk.tar.xz | $(HTTP_DIR)
 	@tar xfJ $< -C $(HTTP_DIR)
 
 .server: | $(HTTP_DIR)
-	@(cd $(HTTP_DIR) && python3 -m RangeHTTPServer $(DEPLOY_PORT) 2>$(HTTP_ERR_LOG) >$(HTTP_LOG) & echo "$$!" > $@)
+	@(cd $(HTTP_DIR) && $(HTTP_CMD) 2>$(HTTP_ERR_LOG) >$(HTTP_LOG) & echo "$$!" > $@)
 	@sleep 1
 	@if [ "$(HTTP_STATE)" != "" ]; then                                   \
 		echo HTTP start failed, check '$(HTTP_ERR_LOG)'; rm .server | exit 1; \

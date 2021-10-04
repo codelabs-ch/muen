@@ -10,7 +10,13 @@ TARGET_PWR_MECH ?= amt
 TARGET_START    ?= target_start_$(TARGET_PWR_MECH)
 TARGET_SHUTDOWN ?= target_shutdown_$(TARGET_PWR_MECH)
 
-HTTP_CMD    ?= python3 -m RangeHTTPServer $(DEPLOY_PORT)
+ifeq ($(MUEN_LIGHTTPD),)
+HTTP_CMD   ?= python3 -m RangeHTTPServer $(DEPLOY_PORT)
+else
+HTTP_CMD   ?= /usr/sbin/lighttpd -f ./lighttpd.conf -D
+SERVER_DEPS = $(HTTP_DIR)/lighttpd.conf
+endif
+
 PING_CMD    ?= ping -c 3
 DEPLOY_PORT ?= 8000
 BOOT_CFG    ?= boot.cfg
@@ -39,8 +45,11 @@ $(HTTP_DIR)/boot.cfg: $(BOOT_CFG) | $(HTTP_DIR)
 	@cp $< $@
 $(HTTP_DIR)/memdisk: memdisk.tar.xz | $(HTTP_DIR)
 	@tar xfJ $< -C $(HTTP_DIR)
+$(HTTP_DIR)/lighttpd.conf: lighttpd.conf | $(HTTP_DIR)
+	@sed -e "s#HTTP_DIR#$(HTTP_DIR)#g" $< > $@
+	@sed -i "s#DEPLOY_PORT#$(DEPLOY_PORT)#g" $@
 
-.server: | $(HTTP_DIR)
+.server: $(SERVER_DEPS) | $(HTTP_DIR)
 	@(cd $(HTTP_DIR) && $(HTTP_CMD) 2>$(HTTP_ERR_LOG) >$(HTTP_LOG) & echo "$$!" > $@)
 	@sleep 1
 	@if [ "$(HTTP_STATE)" != "" ]; then                                   \

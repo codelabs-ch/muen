@@ -23,7 +23,7 @@ ARG packages="acpica-tools amtterm autoconf automake autopoint bc binutils-dev \
 bison bzip2 ca-certificates ccache cpio curl file flex git-core gnupg gnuplot \
 inotify-tools kmod lcov libc6-dev libcurl4-gnutls-dev libelf-dev \
 libfreetype6-dev libiberty-dev libncurses-dev libseccomp-dev libssl-dev \
-libxml2-utils make mtools openssh-client patch picocom pkg-config \
+libxml2-utils lighttpd make mtools openssh-client patch picocom pkg-config \
 python3-minimal python3-lxml python3-colorlog python3-setuptools python3-pip \
 qemu-system-x86 rsync screen tidy unzip vim wget xfonts-unifont xorriso \
 xsltproc xz-utils zlib1g-dev"

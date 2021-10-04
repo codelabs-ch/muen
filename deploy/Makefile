@@ -48,7 +48,7 @@ $(HTTP_DIR)/memdisk: memdisk.tar.xz | $(HTTP_DIR)
 
 clean:
 	@kill `cat .server 2>/dev/null` 2>/dev/null || true
-	@rm -f .server $(HTTP_LOG)
+	@rm -f .server
 	@rm -rf $(HTTP_DIR)
 
 target_start_amt:

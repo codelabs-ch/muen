@@ -1,7 +1,9 @@
 IMG_NAME = muen.iso
 IMG_SRC  = $(CURDIR)/../emulate/$(IMG_NAME)
-HTTP_DIR = $(CURDIR)/http
-HTTP_LOG = $(HTTP_DIR)/http.log
+
+HTTP_DIR     = $(CURDIR)/http
+HTTP_LOG     = $(HTTP_DIR)/http.log
+HTTP_ERR_LOG = $(HTTP_DIR)/error.log
 
 TARGET_PWR_MECH ?= amt
 
@@ -16,7 +18,7 @@ TARGET_IP   ?= 192.168.254.2
 TARGET_EGNAME ?= eg1
 TARGET_EPCIP  ?= 192.168.254.254
 
-HTTP_STATE = $(cat $(HTTP_LOG))
+HTTP_STATE = `cat $(HTTP_ERR_LOG)`
 
 all: deploy
 
@@ -38,10 +40,10 @@ $(HTTP_DIR)/memdisk: memdisk.tar.xz | $(HTTP_DIR)
 	@tar xfJ $< -C $(HTTP_DIR)
 
 .server: | $(HTTP_DIR)
-	@(cd $(HTTP_DIR) && python3 -m RangeHTTPServer $(DEPLOY_PORT) >$(HTTP_LOG) 2>&1 & echo "$$!" > $@)
+	@(cd $(HTTP_DIR) && python3 -m RangeHTTPServer $(DEPLOY_PORT) 2>$(HTTP_ERR_LOG) >$(HTTP_LOG) & echo "$$!" > $@)
 	@sleep 1
 	@if [ "$(HTTP_STATE)" != "" ]; then                                   \
-		echo HTTP start failed, check '$(HTTP_LOG)'; rm .server | exit 1; \
+		echo HTTP start failed, check '$(HTTP_ERR_LOG)'; rm .server | exit 1; \
 	fi
 
 clean:

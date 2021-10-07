@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- ==========================================
      Generated with mugenhwcfg (commit v0.5-117-gd63a29e)
-     Linux kernel version: 4.19.0-8-amd64
+     Linux kernel version: 4.19.0-17-amd64
      Distribution: Debian GNU/Linux 10 (buster)
      Product information:
        Vendor: Intel(R) Client Systems
@@ -10,11 +10,11 @@
      Board information:
        Vendor: Intel Corporation
        Name: NUC6CAYB
-       Version: J23203-409
+       Version: J23203-402
      BIOS information:
        Vendor: Intel Corp.
-       Version: AYAPLCEL.86A.0066.2020.0107.1027
-       Date: 01/07/2020
+       Version: AYAPLCEL.86A.0070.2021.0901.1556
+       Date: 09/01/2021
      Log:
        * WARNING *: Unable to resolve device class 0c80. Please update pci.ids (-u) and
        try again
@@ -34,16 +34,16 @@
     <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#0000#" size="16#0003_f000#"/>
     <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#0004_0000#" size="16#0005_e000#"/>
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0010_0000#" size="16#0ff0_0000#"/>
-    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#1215_1000#" size="16#64fe_e000#"/>
-    <memoryBlock allocatable="false" name="ACPI Tables" physicalAddress="16#7926_4000#" size="16#0001_b000#"/>
-    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#7927_f000#" size="16#0040_3000#"/>
-    <memoryBlock allocatable="false" name="Unknown E820 type" physicalAddress="16#799c_2000#" size="16#0006_5000#"/>
-    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#79a2_7000#" size="16#0038_1000#"/>
-    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#79da_8000#" size="16#1000#"/>
-    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#79dd_3000#" size="16#00c0_c000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#1215_1000#" size="16#64fe_9000#"/>
+    <memoryBlock allocatable="false" name="ACPI Tables" physicalAddress="16#7925_f000#" size="16#0001_b000#"/>
+    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#7927_a000#" size="16#0040_4000#"/>
+    <memoryBlock allocatable="false" name="Unknown E820 type" physicalAddress="16#799b_e000#" size="16#0006_5000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#79a2_3000#" size="16#0038_1000#"/>
+    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#79da_4000#" size="16#1000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#79dc_f000#" size="16#00c1_0000#"/>
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#7a9e_1000#" size="16#0061_f000#"/>
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0001_0000_0000#" size="16#0001_8000_0000#"/>
-    <reservedMemory name="rmrr1" physicalAddress="16#791f_f000#" size="16#0002_0000#"/>
+    <reservedMemory name="rmrr1" physicalAddress="16#791f_a000#" size="16#0002_0000#"/>
     <reservedMemory name="rmrr2" physicalAddress="16#7b80_0000#" size="16#0480_0000#"/>
   </memory>
   <devices pciConfigAddress="16#e000_0000#">

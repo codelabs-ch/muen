@@ -127,14 +127,6 @@ is
          Sector_Type'Write (Stream (File => File_Out), Sector);
       end loop;
       Close (File => File_In);
-
-      --  Extend bzImage file with size of boot heap/stack, which is expected
-      --  to be usable during boot, see arch/x86/include/asm/boot.h.
-
-      Set_Index (File => File_Out,
-                 To   => Index (File => File_Out) + 16#c000#);
-      Write (File => File_Out,
-             Item => (1 => 0));
       Close (File => File_Out);
    end Patch;
 

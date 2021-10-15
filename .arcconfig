@@ -2,8 +2,8 @@
 	"project_id" : "Muen Separation Kernel",
 	"conduit_uri" : "https://dev.codelabs.ch/",
 	"git.default-relative-commit" : "devel",
-	"arc.land.onto.default" : "devel",
+	"arc.land.onto" : [ "devel" ],
+	"arc.land.strategy" : "merge",
 	"unit.engine" : "GNATtestEngine",
-	"repository.callsign" : "M",
-	"history.immutable" : true
+	"repository.callsign" : "M"
 }

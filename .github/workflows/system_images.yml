@@ -70,22 +70,22 @@ jobs:
 
           DISTRO_NAME="${DISTRO_NAME_VERSION%-*}"
           DISTRO_VERSION="${DISTRO_NAME_VERSION#*-}"
-          GIT_BRANCH="${GITHUB_REF#refs/heads/}"
-          DOCKER_TAG="${DISTRO_NAME}-${DISTRO_VERSION}_muen-${GIT_BRANCH}"
+          GIT_NAME="${GITHUB_REF#refs/*/}"
+          DOCKER_TAG="${DISTRO_NAME}-${DISTRO_VERSION}_muen-${GIT_NAME}"
           DEVEL_REV=`git rev-parse origin/devel`
           LNX_REV=`git submodule status -- components/linux/src | \
             sed -rn 's/^-([a-f0-9]+).*/\1/p'`
 
           echo distro_name::${DISTRO_NAME}
           echo distro_version::${DISTRO_VERSION}
-          echo git_branch::${GIT_BRANCH}
+          echo git_name::${GIT_NAME}
           echo docker_tag::${DOCKER_TAG}
           echo runner_uid::${UID}
           echo devel_rev::${DEVEL_REV}
 
           echo ::set-output name=distro_name::${DISTRO_NAME}
           echo ::set-output name=distro_version::${DISTRO_VERSION}
-          echo ::set-output name=git_branch::${GIT_BRANCH}
+          echo ::set-output name=git_name::${GIT_NAME}
           echo ::set-output name=docker_tag::${DOCKER_TAG}
           echo ::set-output name=runner_uid::${UID}
           echo ::set-output name=devel_rev::${DEVEL_REV}
@@ -190,7 +190,7 @@ jobs:
             make -j`nproc` iso HARDWARE=$HARDWARE SYSTEM=$SYSTEM && ccache -s
       -
         name: Log in to Docker Hub
-        if: steps.vars.outputs.git_branch == 'master' || steps.vars.outputs.git_branch == 'devel'
+        if: steps.vars.outputs.git_name == 'master' || steps.vars.outputs.git_name == 'devel'
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -200,7 +200,7 @@ jobs:
         if: |
           matrix.system == 'demo_system_vtd.xml' &&
           matrix.hardware == 'lenovo-t430s.xml' &&
-          (steps.vars.outputs.git_branch == 'master' || steps.vars.outputs.git_branch == 'devel')
+          (steps.vars.outputs.git_name == 'master' || steps.vars.outputs.git_name == 'devel')
         run: |
           docker tag localhost:5000/muen-dev-env:${{ steps.vars.outputs.docker_tag }} \
             codelabsch/muen-dev-env:${{ steps.vars.outputs.docker_tag }}
@@ -212,7 +212,7 @@ jobs:
           matrix.hardware == 'lenovo-t430s.xml' &&
           steps.vars.outputs.distro_name == 'debian' &&
           steps.vars.outputs.distro_version == 'buster' &&
-          steps.vars.outputs.git_branch == 'devel'
+          steps.vars.outputs.git_name == 'devel'
         run: |
           docker tag localhost:5000/muen-dev-env:${{ steps.vars.outputs.docker_tag }} \
             codelabsch/muen-dev-env:latest

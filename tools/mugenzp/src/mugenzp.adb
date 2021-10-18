@@ -38,7 +38,9 @@ begin
 exception
    when Mutools.Cmd_Line.Invalid_Cmd_Line =>
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
-   when E : Muxml.XML_Input_Error | Muxml.Validation_Error =>
+   when E : Muxml.XML_Input_Error
+      | Muxml.Validation_Error
+      | Zp.Generator.Missing_Kernel_Load_Region =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "Processing failed, aborting");
       Mulog.Log (Level => Mulog.Error,

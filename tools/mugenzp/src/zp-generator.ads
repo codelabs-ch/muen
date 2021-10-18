@@ -27,4 +27,6 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);
 
+   Missing_Kernel_Load_Region : exception;
+
 end Zp.Generator;

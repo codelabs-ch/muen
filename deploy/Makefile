@@ -1,12 +1,21 @@
 IMG_NAME = muen.iso
 IMG_SRC  = $(CURDIR)/../emulate/$(IMG_NAME)
-HTTP_DIR = $(CURDIR)/http
-HTTP_LOG = $(HTTP_DIR)/http.log
+
+HTTP_DIR     = $(CURDIR)/http
+HTTP_LOG     = $(HTTP_DIR)/http.log
+HTTP_ERR_LOG = $(HTTP_DIR)/error.log
 
 TARGET_PWR_MECH ?= amt
 
 TARGET_START    ?= target_start_$(TARGET_PWR_MECH)
 TARGET_SHUTDOWN ?= target_shutdown_$(TARGET_PWR_MECH)
+
+ifeq ($(MUEN_LIGHTTPD),)
+HTTP_CMD   ?= python3 -m RangeHTTPServer $(DEPLOY_PORT)
+else
+HTTP_CMD   ?= /usr/sbin/lighttpd -f ./lighttpd.conf -D
+SERVER_DEPS = $(HTTP_DIR)/lighttpd.conf
+endif
 
 PING_CMD    ?= ping -c 3
 DEPLOY_PORT ?= 8000
@@ -16,7 +25,7 @@ TARGET_IP   ?= 192.168.254.2
 TARGET_EGNAME ?= eg1
 TARGET_EPCIP  ?= 192.168.254.254
 
-HTTP_STATE = $(cat $(HTTP_LOG))
+HTTP_STATE = `cat $(HTTP_ERR_LOG)`
 
 all: deploy
 
@@ -36,17 +45,20 @@ $(HTTP_DIR)/boot.cfg: $(BOOT_CFG) | $(HTTP_DIR)
 	@cp $< $@
 $(HTTP_DIR)/memdisk: memdisk.tar.xz | $(HTTP_DIR)
 	@tar xfJ $< -C $(HTTP_DIR)
+$(HTTP_DIR)/lighttpd.conf: lighttpd.conf | $(HTTP_DIR)
+	@sed -e "s#HTTP_DIR#$(HTTP_DIR)#g" $< > $@
+	@sed -i "s#DEPLOY_PORT#$(DEPLOY_PORT)#g" $@
 
-.server: | $(HTTP_DIR)
-	@(cd $(HTTP_DIR) && python3 -m RangeHTTPServer $(DEPLOY_PORT) >$(HTTP_LOG) 2>&1 & echo "$$!" > $@)
+.server: $(SERVER_DEPS) | $(HTTP_DIR)
+	@(cd $(HTTP_DIR) && $(HTTP_CMD) 2>$(HTTP_ERR_LOG) >$(HTTP_LOG) & echo "$$!" > $@)
 	@sleep 1
 	@if [ "$(HTTP_STATE)" != "" ]; then                                   \
-		echo HTTP start failed, check '$(HTTP_LOG)'; rm .server | exit 1; \
+		echo HTTP start failed, check '$(HTTP_ERR_LOG)'; rm .server | exit 1; \
 	fi
 
 clean:
 	@kill `cat .server 2>/dev/null` 2>/dev/null || true
-	@rm -f .server $(HTTP_LOG)
+	@rm -f .server
 	@rm -rf $(HTTP_DIR)
 
 target_start_amt:

@@ -14,7 +14,9 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
+with Ada.Exceptions;
 
+with Muxml.Utils;
 --  begin read only
 --  end read only
 package body Zp.Generator.Test_Data.Tests is
@@ -51,6 +53,26 @@ package body Zp.Generator.Test_Data.Tests is
                Filename2 => "obj/lnx.zp"),
               Message   => "Data differs");
       Ada.Directories.Delete_File (Name => "obj/lnx.zp");
+
+
+      --  Missing mapping at kernel load region address.
+
+      Muxml.Utils.Remove_Elements
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/memory/memory[@logical='ram']");
+      begin
+         Write (Output_Dir => "obj",
+                Policy     => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Missing_Kernel_Load_Region =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Linux subject 'lnx' has no memory mapping at kernel "
+                    & "load address 16#0100_0000#",
+                    Message   => "Exception message mismatch");
+      end;
 --  begin read only
    end Test_Write;
 --  end read only

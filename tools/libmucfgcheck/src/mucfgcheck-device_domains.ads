@@ -35,10 +35,6 @@ is
    procedure Domain_Memory_Overlap (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_devdom
-   --D Validate that domain memory references are unique.
-   procedure Memory_Reference_Uniqueness (XML_Data : Muxml.XML_Data_Type);
-
-   --D @Item List => validators_devdom
    --D Validate that domain memory referenced by subjects is mapped at the same
    --D virtual address.
    procedure Memory_Mapping_Address_Equality (XML_Data : Muxml.XML_Data_Type);

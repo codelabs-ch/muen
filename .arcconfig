@@ -5,5 +5,6 @@
 	"arc.land.onto" : [ "devel" ],
 	"arc.land.strategy" : "merge",
 	"unit.engine" : "GNATtestEngine",
-	"repository.callsign" : "M"
+	"repository.callsign" : "M",
+	"history.immutable" : true
 }

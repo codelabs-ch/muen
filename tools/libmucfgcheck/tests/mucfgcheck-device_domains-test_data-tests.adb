@@ -103,38 +103,6 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Memory_Reference_Uniqueness (Gnattest_T : in out Test);
-   procedure Test_Memory_Reference_Uniqueness_8ea57c (Gnattest_T : in out Test) renames Test_Memory_Reference_Uniqueness;
---  id:2.2/8ea57cd45d32c239/Memory_Reference_Uniqueness/1/0/
-   procedure Test_Memory_Reference_Uniqueness (Gnattest_T : in out Test) is
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      Data : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => "data/test_policy.xml");
-
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/deviceDomains/domain/memory/memory"
-         & "[@physical='linux|ram']",
-         Name  => "physical",
-         Value => "wireless_dma");
-
-      Memory_Reference_Uniqueness (XML_Data => Data);
-      Assert (Condition => Validation_Errors.Contains
-              (Msg => "Device domains 'linux_domain' and 'wireless_domain' "
-               & "reference same physical memory region 'wireless_dma'"),
-              Message   => "Exception mismatch");
---  begin read only
-   end Test_Memory_Reference_Uniqueness;
---  end read only
-
-
---  begin read only
    procedure Test_Memory_Mapping_Address_Equality (Gnattest_T : in out Test);
    procedure Test_Memory_Mapping_Address_Equality_7d613d (Gnattest_T : in out Test) renames Test_Memory_Mapping_Address_Equality;
 --  id:2.2/7d613d8e75d60137/Memory_Mapping_Address_Equality/1/0/

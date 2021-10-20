@@ -25,6 +25,7 @@ is
    -- Interrupt vectors --
    -----------------------
 
+   GP_Exception_Vector          : constant := 13;
    VTd_Fault_Vector             : constant := 253;
    IPI_Vector                   : constant := 254;
 

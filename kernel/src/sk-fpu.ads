@@ -81,12 +81,20 @@ is
       Global  => (Input => State),
       Depends => (Regs  => (ID, State));
 
+   --  Get the XCR0 value of active FPU features.
+   function Get_Active_XCR0_Features return Word64
+   with
+      Global => (Input => State);
+
 private
 
    --  Active FPU features that are supported by the hardware and are enabled.
    Active_XCR0_Features : Word64 := 0
    with
       Part_Of => State;
+
+   function Get_Active_XCR0_Features return Word64
+   is (Active_XCR0_Features);
 
    type Subject_FPU_State_Array is array
      (Skp.Global_Subject_ID_Type) of SK.XSAVE_Area_Type

@@ -83,6 +83,11 @@ is
 
 private
 
+   --  Active FPU features that are supported by the hardware and are enabled.
+   Active_XCR0_Features : Word64 := 0
+   with
+      Part_Of => State;
+
    type Subject_FPU_State_Array is array
      (Skp.Global_Subject_ID_Type) of SK.XSAVE_Area_Type
    with

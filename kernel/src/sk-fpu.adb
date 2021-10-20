@@ -25,22 +25,20 @@ with SK.Strings;
 
 package body SK.FPU
 with
-   Refined_State => (State => (Subject_FPU_States, XCR0))
+   Refined_State => (State => (Subject_FPU_States, Active_XCR0_Features))
 is
 
    Null_FPU_State : constant XSAVE_Area_Type
      := (Legacy_Header   => Null_XSAVE_Legacy_Header,
          Extended_Region => (others => 0));
 
-   XCR0 : Word64 := 0;
-
    -------------------------------------------------------------------------
 
    procedure Enable
    with
       Refined_Global  => (In_Out => X86_64.State,
-                          Output => XCR0),
-      Refined_Depends => ((XCR0, X86_64.State) => X86_64.State)
+                          Output => Active_XCR0_Features),
+      Refined_Depends => ((Active_XCR0_Features, X86_64.State) => X86_64.State)
    is
       CR4 : Word64;
       EAX, Unused_EBX, Unused_ECX, EDX : Word32;
@@ -61,12 +59,13 @@ is
          ECX => Unused_ECX,
          EDX => EDX);
 
-      XCR0 := Word64 (EAX) + Word64 (EDX) * 2 ** 32;
-      XCR0 := XCR0 and Constants.XCR0_Supported_Features_Mask;
+      Active_XCR0_Features := Word64 (EAX) + Word64 (EDX) * 2 ** 32;
+      Active_XCR0_Features
+        := Active_XCR0_Features and Constants.XCR0_Supported_Features_Mask;
       pragma Debug (Dump.Print_Message
-                    (Msg  => "XCR0: " & Strings.Img (XCR0)));
+                    (Msg  => "XCR0: " & Strings.Img (Active_XCR0_Features)));
       CPU.XSETBV (Register => 0,
-                  Value    => XCR0);
+                  Value    => Active_XCR0_Features);
    end Enable;
 
    -------------------------------------------------------------------------
@@ -87,10 +86,11 @@ is
 
    procedure Reset_State (ID : Skp.Global_Subject_ID_Type)
    with
-      Refined_Global  => (Input  => XCR0,
+      Refined_Global  => (Input  => Active_XCR0_Features,
                           In_Out => (Subject_FPU_States, X86_64.State)),
       Refined_Depends => ((Subject_FPU_States,
-                           X86_64.State)       => (ID, XCR0, X86_64.State,
+                           X86_64.State)       => (ID, Active_XCR0_Features,
+                                                   X86_64.State,
                                                    Subject_FPU_States))
    is
    begin
@@ -108,26 +108,28 @@ is
 
    procedure Restore_State (ID : Skp.Global_Subject_ID_Type)
    with
-     Refined_Global  => (Input  => (Subject_FPU_States, XCR0),
+     Refined_Global  => (Input  => (Subject_FPU_States, Active_XCR0_Features),
                          In_Out => X86_64.State),
-     Refined_Depends => (X86_64.State =>+ (ID, Subject_FPU_States, XCR0))
+     Refined_Depends => (X86_64.State =>+ (ID, Subject_FPU_States,
+                                           Active_XCR0_Features))
    is
    begin
       CPU.XRSTOR (Source => Subject_FPU_States (ID),
-                  State  => XCR0);
+                  State  => Active_XCR0_Features);
    end Restore_State;
 
    -------------------------------------------------------------------------
 
    procedure Save_State (ID : Skp.Global_Subject_ID_Type)
    with
-      Refined_Global  => (Input  => (X86_64.State, XCR0),
+      Refined_Global  => (Input  => (X86_64.State, Active_XCR0_Features),
                           In_Out => Subject_FPU_States),
-      Refined_Depends => (Subject_FPU_States =>+ (ID, XCR0, X86_64.State))
+      Refined_Depends => (Subject_FPU_States =>+ (ID, Active_XCR0_Features,
+                          X86_64.State))
    is
    begin
       CPU.XSAVE (Target => Subject_FPU_States (ID),
-                 State  => XCR0);
+                 State  => Active_XCR0_Features);
    end Save_State;
 
    -------------------------------------------------------------------------

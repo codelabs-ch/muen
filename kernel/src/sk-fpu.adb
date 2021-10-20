@@ -32,14 +32,6 @@ is
      := (Legacy_Header   => Null_XSAVE_Legacy_Header,
          Extended_Region => (others => 0));
 
-   --  FPU features that shall be enabled if supported by the hardware.
-   XCR0_Supported_Features_Mask : constant := 2 ** Constants.XCR0_FPU_STATE_FLAG
-     + 2 ** Constants.XCR0_SSE_STATE_FLAG
-     + 2 ** Constants.XCR0_AVX_STATE_FLAG
-     + 2 ** Constants.XCR0_OPMASK_STATE_FLAG
-     + 2 ** Constants.XCR0_ZMM_HI256_STATE_FLAG
-     + 2 ** Constants.XCR0_HI16_ZMM_STATE_FLAG;
-
    XCR0 : Word64 := 0;
 
    -------------------------------------------------------------------------
@@ -70,7 +62,7 @@ is
          EDX => EDX);
 
       XCR0 := Word64 (EAX) + Word64 (EDX) * 2 ** 32;
-      XCR0 := XCR0 and XCR0_Supported_Features_Mask;
+      XCR0 := XCR0 and Constants.XCR0_Supported_Features_Mask;
       pragma Debug (Dump.Print_Message
                     (Msg  => "XCR0: " & Strings.Img (XCR0)));
       CPU.XSETBV (Register => 0,

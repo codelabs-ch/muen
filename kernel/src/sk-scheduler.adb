@@ -20,6 +20,7 @@ with Skp.Events;
 with Skp.Interrupts;
 with Skp.Subjects;
 
+with SK.Bitops;
 with SK.CPU;
 with SK.Apic;
 with SK.VTd.Debug;
@@ -820,6 +821,102 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Handle Xsetbv trap of current subject by validating new XCR0 value and
+   --  setting the corresponding register in the associated FPU state.
+   --D @Section Id => impl_handle_xsetbv, Label => Xsetbv handling, Parent => impl_exit_handler, Priority => 80
+   procedure Handle_Xsetbv
+     (Current_Subject : Skp.Global_Subject_ID_Type;
+      RAX, RDX, RCX   : Word64)
+   is
+      Supported : constant Word64 := FPU.Get_Active_XCR0_Features;
+      Index     : constant Word32 := Word32'Mod (RCX);
+      New_Value : constant Word64 := Word64 (Word32'Mod (RDX)) * 2 ** 32
+        + Word64 (Word32'Mod (RAX));
+   begin
+      --D @Text Section => impl_handle_xsetbv
+      --D Subjects can toggle FPU features by writing to XCR0 using the
+      --D \verb!xsetbv! instruction. The provided value is validated according
+      --D to Intel SDM Vol. 1,
+      --D "13.3 Enabling the XSAVE Feature Set and XSAVE-Enabled Features":
+      --D @OL Id => impl_handle_xsetbv_checks, Section => impl_handle_xsetbv, Priority => 10
+      --D @Item List => impl_handle_xsetbv_checks
+      --D Privilege Level (CPL0) must be 0.
+      if not Subjects.Is_CPL_0 (ID => Current_Subject)
+        --D @Item List => impl_handle_xsetbv_checks
+        --D Register index must be 0, only XCR0 is supported.
+        or else Index /= 0
+        --D @Item List => impl_handle_xsetbv_checks
+        --D Only bits that we support must be set.
+        or else ((Supported or New_Value) /= Supported)
+          --D @Item List => impl_handle_xsetbv_checks
+          --D XCR0_FPU_STATE_FLAG must always be set
+        or else not Bitops.Bit_Test
+          (Value => New_Value,
+           Pos   => Constants.XCR0_FPU_STATE_FLAG)
+        --D @Item List => impl_handle_xsetbv_checks
+        --D If XCR0_AVX_STATE_FLAG is set then XCR0_SSE_STATE_FLAG must be set as
+        --D well.
+        or else (Bitops.Bit_Test
+                 (Value => New_Value,
+                  Pos   => Constants.XCR0_AVX_STATE_FLAG)
+                 and not Bitops.Bit_Test
+                   (Value => New_Value,
+                    Pos   => Constants.XCR0_SSE_STATE_FLAG))
+        --D @Item List => impl_handle_xsetbv_checks
+        --D If any of XCR0_OPMASK_STATE_FLAG or XCR0_ZMM_HI256_STATE_FLAG
+        --D or XCR0_HI16_ZMM_STATE_FLAG are set then all must be set.
+        or else ((Bitops.Bit_Test
+                  (Value => New_Value,
+                   Pos   => Constants.XCR0_OPMASK_STATE_FLAG)
+                  or Bitops.Bit_Test
+                    (Value => New_Value,
+                     Pos   => Constants.XCR0_ZMM_HI256_STATE_FLAG)
+                  or Bitops.Bit_Test
+                    (Value => New_Value,
+                     Pos   => Constants.XCR0_ZMM_HI256_STATE_FLAG))
+                 and not
+                   (Bitops.Bit_Test
+                        (Value => New_Value,
+                         Pos   => Constants.XCR0_OPMASK_STATE_FLAG)
+                    and Bitops.Bit_Test
+                      (Value => New_Value,
+                       Pos   => Constants.XCR0_ZMM_HI256_STATE_FLAG)
+                    and Bitops.Bit_Test
+                      (Value => New_Value,
+                       Pos   => Constants.XCR0_ZMM_HI256_STATE_FLAG)))
+        --D @Item List => impl_handle_xsetbv_checks
+        --D If AVX512 is set then XCR0_AVX_STATE_FLAG must be set as well.
+        or else (Bitops.Bit_Test
+                 (Value => New_Value,
+                  Pos   => Constants.XCR0_OPMASK_STATE_FLAG)
+                 and not Bitops.Bit_Test
+                   (Value => New_Value,
+                    Pos   => Constants.XCR0_AVX_STATE_FLAG))
+      then
+
+         --D @Text Section => impl_handle_xsetbv
+         --D If the value is invalid, inject a #GP exception. Note that
+         --D effectively the inserted event has type \emph{external interrupt}.
+         --D While it would not work in general but in this specific case the
+         --D exception error code is 0.
+
+         Subjects_Interrupts.Insert_Interrupt
+           (Subject => Current_Subject,
+            Vector  => Constants.GP_Exception_Vector);
+      else
+
+         --D @Text Section => impl_handle_xsetbv
+         --D If the value is valid, set the corresponding subject XCR0 value,
+         --D increment the subject RIP and resume execution.
+
+         FPU.Set_XCR0 (ID    => Current_Subject,
+                       Value => New_Value);
+         Subjects.Increment_RIP (ID => Current_Subject);
+      end if;
+   end Handle_Xsetbv;
+
+   -------------------------------------------------------------------------
+
    --  Handle trap with given number using trap table of current subject.
    --D @Section Id => impl_handle_trap, Label => Trap Handling, Parent => impl_exit_handler, Priority => 30
    procedure Handle_Trap
@@ -1058,6 +1155,11 @@ is
             Error (Reason  => Crash_Audit_Types.Hardware_VMentry_MCE,
                    MCE_Ctx => Ctx);
          end;
+      elsif Basic_Exit_Reason = Constants.EXIT_REASON_XSETBV then
+         Handle_Xsetbv (Current_Subject => Current_Subject,
+                        RAX             => Subject_Registers.RAX,
+                        RDX             => Subject_Registers.RDX,
+                        RCX             => Subject_Registers.RCX);
       else
          Handle_Trap (Current_Subject => Current_Subject,
                       Trap_Nr         => Basic_Exit_Reason);

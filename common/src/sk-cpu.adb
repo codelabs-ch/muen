@@ -412,7 +412,7 @@ is
       --  XCR0)".
 
       System.Machine_Code.Asm
-        (Template => "xsave64 %0",
+        (Template => "xsaveopt64 %0",
          Inputs   => (Word32'Asm_Input ("a", Low_Dword),
                       Word32'Asm_Input ("d", High_Dword)),
          Outputs  => (XSAVE_Area_Type'Asm_Output ("=m", Target)),

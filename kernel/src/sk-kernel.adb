@@ -1099,6 +1099,8 @@ is
          Apic.Enable;
          MCE.Enable;
 
+         Power.Enable_HWP;
+
          if CPU_Info.Is_BSP then
             --D @Item List => impl_kernel_init_steps
             --D Setup of Multicore memory barries (BSP-only).

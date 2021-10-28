@@ -42,4 +42,10 @@ is
       Depends => (X86_64.State =>+ null),
       No_Return;
 
+   --  Enable Intel Hardware-Controlled Performance States.
+   procedure Enable_HWP
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ null);
+
 end SK.Power;

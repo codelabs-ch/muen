@@ -100,6 +100,12 @@ is
    IA32_VMX_TRUE_EXIT_CTLS      : constant := 16#48f#;
    IA32_VMX_TRUE_ENTRY_CTLS     : constant := 16#490#;
 
+   --  HWP MSRs
+
+   IA32_PM_ENABLE               : constant := 16#770#;
+   IA32_HWP_CAPABILITIES        : constant := 16#771#;
+   IA32_HWP_REQUEST             : constant := 16#774#;
+
    ----------
    -- VMCS --
    ----------

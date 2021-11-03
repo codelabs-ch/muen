@@ -48,7 +48,7 @@ package body Paging.Maps.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      Map   : Page_Table_Map;
+      Map : Page_Table_Map;
    begin
       Assert (Condition => not Contains
               (Map          => Map,
@@ -296,6 +296,93 @@ package body Paging.Maps.Test_Data.Tests is
               Message   => "Map not cleared");
 --  begin read only
    end Test_Clear;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Less_Than (Gnattest_T : in out Test);
+   procedure Test_Less_Than_09852d (Gnattest_T : in out Test) renames Test_Less_Than;
+--  id:2.2/09852d0198349189/Less_Than/1/0/
+   procedure Test_Less_Than (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      L : Table_Map_Type := (Index => 25,
+                             Data  => null);
+      R : Table_Map_Type := (Index => 26,
+                             Data  => null);
+   begin
+      Assert (Condition => L < R,
+              Message   => "L not less than R");
+      Assert (Condition => not (R < L),
+              Message   => "R less than L");
+      Assert (Condition => not (L < L),
+              Message   => "L less than L");
+--  begin read only
+   end Test_Less_Than;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Equal (Gnattest_T : in out Test);
+   procedure Test_Equal_fde263 (Gnattest_T : in out Test) renames Test_Equal;
+--  id:2.2/fde2631a430b99d4/Equal/1/0/
+   procedure Test_Equal (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      L : Table_Map_Type := (Index => 25,
+                             Data  => null);
+      R : Table_Map_Type := L;
+   begin
+      Assert (Condition => L = R,
+              Message   => "Not equal (1)");
+
+      --  Table pointer is irrelevant.
+      R.Data := new Tables.Page_Table_Type;
+      Assert (Condition => L = R,
+              Message   => "Not equal (1)");
+      Free (R.Data);
+      R.Data := null;
+
+      R.Index := 55;
+      Assert (Condition => L /= R,
+              Message   => "Equal");
+
+   exception
+      when others =>
+         if R.Data /= null then
+            Free (R.Data);
+         end if;
+--  begin read only
+   end Test_Equal;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Finalize (Gnattest_T : in out Test);
+   procedure Test_Finalize_98fe7a (Gnattest_T : in out Test) renames Test_Finalize;
+--  id:2.2/98fe7a3eb5feb280/Finalize/1/0/
+   procedure Test_Finalize (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Ada.Containers.Count_Type;
+
+      Map : Page_Table_Map;
+   begin
+      Add_Entry (Map          => Map,
+                 Table_Number => 2,
+                 Entry_Index  => 3,
+                 Table_Entry  => Test_Entry);
+      Finalize (Map => Map);
+      Assert (Condition => Map.Tables.Length = 0,
+              Message   => "Finalized map not empty");
+--  begin read only
+   end Test_Finalize;
 --  end read only
 
 --  begin read only

@@ -18,7 +18,9 @@
 
 with Interfaces;
 
-private with Ada.Containers.Ordered_Maps;
+private with Ada.Containers.Ordered_Sets;
+private with Ada.Finalization;
+private with Ada.Unchecked_Deallocation;
 
 with Paging.Entries;
 with Paging.Tables;
@@ -27,7 +29,7 @@ package Paging.Maps
 is
 
    --  A page table container.
-   type Page_Table_Map is private;
+   type Page_Table_Map is limited private;
 
    --  Returns True if the map contains a table with specified number, which in
    --  turn contains an entry with given index.
@@ -85,13 +87,31 @@ is
 
 private
 
-   package Tables_Map_Package is new Ada.Containers.Ordered_Maps
-     (Key_Type     => Table_Range,
-      Element_Type => Tables.Page_Table_Type,
-      "="          => Tables."=");
+   type Table_Pointer is access Tables.Page_Table_Type;
 
-   type Page_Table_Map is record
-      Tables : Tables_Map_Package.Map;
+   procedure Free is new Ada.Unchecked_Deallocation
+     (Object => Tables.Page_Table_Type,
+      Name   => Table_Pointer);
+
+   type Table_Map_Type is record
+      Index : Table_Range   := 0;
+      Data  : Table_Pointer := null;
    end record;
+
+   function "<" (Left, Right : Table_Map_Type) return Boolean
+   is (Left.Index < Right.Index);
+
+   function "=" (Left, Right : Table_Map_Type) return Boolean
+   is (Left.Index = Right.Index);
+
+   package Tables_Map_Package is new Ada.Containers.Ordered_Sets
+     (Element_Type => Table_Map_Type);
+
+   type Page_Table_Map is new Ada.Finalization.Limited_Controlled with record
+      Tables : Tables_Map_Package.Set;
+   end record;
+
+   overriding
+   procedure Finalize (Map : in out Page_Table_Map);
 
 end Paging.Maps;

@@ -29,9 +29,9 @@ is
 
    --  A memory layout is a collection of logical to physical memory mappings
    --  managed in several levels of paging structures.
-   type Memory_Layout_Type (Levels : Paging_Level) is private;
+   type Memory_Layout_Type (Levels : Paging_Level) is limited private;
 
-   Null_Layout : constant Memory_Layout_Type;
+   function Null_Layout return Memory_Layout_Type;
 
    --  Set physical address of memory layout paging structures.
    procedure Set_Address
@@ -104,14 +104,15 @@ private
 
    type Tables_Array is array (Paging_Level range <>) of Maps.Page_Table_Map;
 
-   type Memory_Layout_Type (Levels : Paging_Level) is record
+   type Memory_Layout_Type (Levels : Paging_Level) is limited record
       Use_Large_Pages : Boolean := True;
       Level_1_Table   : Tables.Page_Table_Type;
       Structures      : Tables_Array (2 .. Levels);
    end record;
 
-   Null_Layout : constant Memory_Layout_Type := (Levels          => 4,
-                                                 Use_Large_Pages => True,
-                                                 others          => <>);
+   function Null_Layout return Memory_Layout_Type
+   is ((Levels          => 4,
+        Use_Large_Pages => True,
+        others          => <>));
 
 end Paging.Layouts;

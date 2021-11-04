@@ -33,8 +33,7 @@ is
    procedure Add_Entry
      (Table : in out Page_Table_Type;
       Index :        Entry_Range;
-      E     :        Entries.Table_Entry_Type)
-   with Pre => E /= Entries.Null_Table_Entry;
+      E     :        Entries.Table_Entry_Type);
 
    --  Get entry with given index from pagetable. An exception is raised if no
    --  entry with the specified index exists.

@@ -328,14 +328,16 @@ is
       is
          pragma Unreferenced (Index);
 
-         Dst_Idx : constant Table_Range := TEntry.Get_Dst_Table_Index;
+         Dst_Idx : constant Table_Range
+           := Entries.Get_Dst_Table_Index (TEntry);
          Address : constant Interfaces.Unsigned_64
            := Maps.Get_Table_Address
              (Map          => Mem_Layout.Structures
                 (Mem_Layout.Structures'First),
               Table_Number => Dst_Idx);
       begin
-         TEntry.Set_Dst_Address (Address => Address);
+         Entries.Set_Dst_Address (E       => TEntry,
+                                  Address => Address);
       end Adjust_Level_1;
 
       ----------------------------------------------------------------------
@@ -362,16 +364,17 @@ is
             Dst_Idx : Table_Range;
             Address : Interfaces.Unsigned_64;
          begin
-            if TEntry.Maps_Page then
+            if Entries.Maps_Page (TEntry) then
                return;
             end if;
 
-            Dst_Idx := TEntry.Get_Dst_Table_Index;
+            Dst_Idx := Entries.Get_Dst_Table_Index (TEntry);
             Address := Maps.Get_Table_Address
               (Map          => Mem_Layout.Structures (Cur_Level + 1),
                Table_Number => Dst_Idx);
 
-            TEntry.Set_Dst_Address (Address => Address);
+            Entries.Set_Dst_Address (E       => TEntry,
+                                     Address => Address);
          end Adjust_Entry;
       begin
          Tables.Update (Table   => Table,

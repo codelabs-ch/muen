@@ -339,14 +339,14 @@ is
       is
       begin
          Raw_Table (Index) := Create_Dir_Entry
-           (Address      => TEntry.Get_Dst_Address,
-            Writable     => TEntry.Is_Writable,
-            User_Access  => TEntry.Is_Readable,
-            Present      => TEntry.Is_Present,
-            Map_Page     => TEntry.Maps_Page,
-            Global       => TEntry.Is_Global,
-            Caching      => TEntry.Get_Caching,
-            Exec_Disable => not TEntry.Is_Executable);
+           (Address      => Entries.Get_Dst_Address (TEntry),
+            Writable     => Entries.Is_Writable (TEntry),
+            User_Access  => Entries.Is_Readable (TEntry),
+            Present      => Entries.Is_Present (TEntry),
+            Map_Page     => Entries.Maps_Page (TEntry),
+            Global       => Entries.Is_Global (TEntry),
+            Caching      => Entries.Get_Caching (TEntry),
+            Exec_Disable => not Entries.Is_Executable (TEntry));
       end Add_To_Raw_Table;
    begin
       Tables.Iterate (Table   => Table,
@@ -375,14 +375,14 @@ is
       is
       begin
          Raw_Table (Index) := Create_Dir_Entry
-           (Address      => TEntry.Get_Dst_Address,
-            Writable     => TEntry.Is_Writable,
-            User_Access  => TEntry.Is_Readable,
-            Present      => TEntry.Is_Present,
-            Map_Page     => TEntry.Maps_Page,
-            Global       => TEntry.Is_Global,
-            Caching      => TEntry.Get_Caching,
-            Exec_Disable => not TEntry.Is_Executable);
+           (Address      => Entries.Get_Dst_Address (TEntry),
+            Writable     => Entries.Is_Writable (TEntry),
+            User_Access  => Entries.Is_Readable (TEntry),
+            Present      => Entries.Is_Present (TEntry),
+            Map_Page     => Entries.Maps_Page (TEntry),
+            Global       => Entries.Is_Global (TEntry),
+            Caching      => Entries.Get_Caching (TEntry),
+            Exec_Disable => not Entries.Is_Executable (TEntry));
       end Add_To_Raw_Table;
    begin
       Tables.Iterate (Table   => Table,
@@ -409,16 +409,16 @@ is
         (Index  : Entry_Range;
          TEntry : Entries.Table_Entry_Type)
       is
-         PAT : constant PAT_Entry := PAT_Mapping (TEntry.Get_Caching);
+         PAT : constant PAT_Entry := PAT_Mapping (Entries.Get_Caching (TEntry));
       begin
          Raw_Table (Index) := Create_Entry
-           (Address       => TEntry.Get_Dst_Address,
-            Writable      => TEntry.Is_Writable,
-            User_Access   => TEntry.Is_Readable,
-            Present       => TEntry.Is_Present,
+           (Address       => Entries.Get_Dst_Address (TEntry),
+            Writable      => Entries.Is_Writable (TEntry),
+            User_Access   => Entries.Is_Readable (TEntry),
+            Present       => Entries.Is_Present (TEntry),
             Writethrough  => PAT.PWT,
             Cache_Disable => PAT.PCD,
-            Exec_Disable  => not TEntry.Is_Executable);
+            Exec_Disable  => not Entries.Is_Executable (TEntry));
       end Add_To_Raw_Table;
    begin
       Tables.Iterate (Table   => Table,
@@ -445,17 +445,18 @@ is
         (Index  : Entry_Range;
          TEntry : Entries.Table_Entry_Type)
       is
-         PAT    : constant PAT_Entry := PAT_Mapping (TEntry.Get_Caching);
+         PAT    : constant PAT_Entry
+           := PAT_Mapping (Entries.Get_Caching (TEntry));
          Result : Interfaces.Unsigned_64;
       begin
          Result := Create_Entry
-           (Address       => TEntry.Get_Dst_Address,
-            Writable      => TEntry.Is_Writable,
-            User_Access   => TEntry.Is_Readable,
-            Present       => TEntry.Is_Present,
+           (Address       => Entries.Get_Dst_Address (TEntry),
+            Writable      => Entries.Is_Writable (TEntry),
+            User_Access   => Entries.Is_Readable (TEntry),
+            Present       => Entries.Is_Present (TEntry),
             Writethrough  => PAT.PWT,
             Cache_Disable => PAT.PCD,
-            Exec_Disable  => not TEntry.Is_Executable);
+            Exec_Disable  => not Entries.Is_Executable (TEntry));
 
          if PAT.PAT then
             Result := Mutools.Utils.Bit_Set
@@ -463,7 +464,7 @@ is
                Pos   => PTE_PAT_Flag);
          end if;
 
-         if TEntry.Is_Global then
+         if Entries.Is_Global (TEntry) then
             Result := Mutools.Utils.Bit_Set
               (Value => Result,
                Pos   => Global_Flag);

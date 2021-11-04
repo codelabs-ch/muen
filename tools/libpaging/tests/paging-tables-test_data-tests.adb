@@ -14,9 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
-with Paging.Entries.Table_Entry_Type_Test_Data;
-
+with Paging.Entries.Test_Data;
 --  begin read only
 --  end read only
 package body Paging.Tables.Test_Data.Tests is
@@ -56,7 +54,7 @@ package body Paging.Tables.Test_Data.Tests is
               Message   => "Table not empty");
       Add_Entry (Table => Table,
                  Index => 0,
-                 E     => Entries.Table_Entry_Type_Test_Data.Test_Entry);
+                 E     => Entries.Test_Data.Test_Entry);
       Assert (Condition => Table.Length = 1,
               Message   => "Entry not added");
 
@@ -64,7 +62,7 @@ package body Paging.Tables.Test_Data.Tests is
 
       Add_Entry (Table => Table,
                  Index => 0,
-                 E     => Entries.Table_Entry_Type_Test_Data.Test_Entry);
+                 E     => Entries.Test_Data.Test_Entry);
 
       begin
          Add_Entry (Table => Table,

@@ -27,9 +27,11 @@ with Paging.IA32e;
 package body Ptwalk
 is
 
+   package PE renames Paging.Entries;
+
    type Entry_Deserializer is not null access procedure
      (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
-      Table_Entry : out Paging.Entries.Table_Entry_Type);
+      Table_Entry : out PE.Table_Entry_Type);
 
    type Deserializer_Array is array (Paging.Paging_Level)
      of Entry_Deserializer;
@@ -102,21 +104,22 @@ is
          Table_Entry => PT_Entry);
 
       Mulog.Log (Msg => " Level" & Level'Img & ": "
-                 & Mutools.Utils.To_Hex (Number => PT_Entry.Get_Dst_Address)
+                 & Mutools.Utils.To_Hex
+                   (Number => PE.Get_Dst_Address (PT_Entry))
                  & " "
-                 & (if PT_Entry.Is_Present then "P" else "-")
-                 & (if PT_Entry.Is_Readable then "R" else "-")
-                 & (if PT_Entry.Is_Writable then "W" else "-")
-                 & (if PT_Entry.Is_Executable then "X" else "-")
-                 & ", " & PT_Entry.Get_Caching'Img
-                 & (if PT_Entry.Maps_Page then ", maps page" else ""));
+                 & (if PE.Is_Present (PT_Entry) then "P" else "-")
+                 & (if PE.Is_Readable (PT_Entry) then "R" else "-")
+                 & (if PE.Is_Writable (PT_Entry) then "W" else "-")
+                 & (if PE.Is_Executable (PT_Entry) then "X" else "-")
+                 & ", " & PE.Get_Caching (PT_Entry)'Img
+                 & (if PE.Maps_Page (PT_Entry) then ", maps page" else ""));
 
-      if not PT_Entry.Is_Present or else PT_Entry.Maps_Page
+      if not PE.Is_Present (PT_Entry) or else PE.Maps_Page (PT_Entry)
       then
-         Success := PT_Entry.Is_Present and PT_Entry.Maps_Page;
+         Success := PE.Is_Present (PT_Entry) and PE.Maps_Page (PT_Entry);
          Translated_Addr
            := (if not Success then 0
-               else PT_Entry.Get_Dst_Address + Paging.Get_Offset
+               else PE.Get_Dst_Address (PT_Entry) + Paging.Get_Offset
                  (Address => Virtual_Address,
                   Level   => Level));
          return;
@@ -127,7 +130,7 @@ is
                PT_Pointer      => PT_Pointer,
                PT_Type         => PT_Type,
                Level           => Level + 1,
-               PT_Address      => PT_Entry.Get_Dst_Address,
+               PT_Address      => PE.Get_Dst_Address (PT_Entry),
                Success         => Success,
                Translated_Addr => Translated_Addr);
    end Do_Walk;

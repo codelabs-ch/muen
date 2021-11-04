@@ -22,7 +22,7 @@ package Paging.Entries
 is
 
    --  Table entry type.
-   type Table_Entry_Type is tagged private;
+   type Table_Entry_Type is private;
 
    Null_Table_Entry : constant Table_Entry_Type;
 
@@ -79,7 +79,7 @@ is
 
 private
 
-   type Table_Entry_Type is tagged record
+   type Table_Entry_Type is record
       Dst_Table_Index : Table_Range;
       Dst_Address     : Interfaces.Unsigned_64;
       Present         : Boolean;
@@ -89,7 +89,8 @@ private
       Maps_Page       : Boolean;
       Global          : Boolean;
       Caching         : Caching_Type;
-   end record;
+   end record
+   with Pack;
 
    Null_Table_Entry : constant Table_Entry_Type
      := (Dst_Table_Index => 0,

@@ -79,23 +79,12 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Event_Node,
                  Name => "name");
-            Src_Node : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
+            Src_Nodes : constant DOM.Core.Node_List
+              := Muxml.Utils.Get_Elements
                 (Nodes     => Sources,
                  Ref_Attr  => "physical",
                  Ref_Value => Event_Name);
-            Src_Subj : constant DOM.Core.Node
-              := Muxml.Utils.Ancestor_Node (Node  => Src_Node,
-                                            Level => 4);
-            Src_Subj_Name : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Src_Subj,
-                 Name => "name");
-            Src_Subj_CPU : constant Interfaces.Unsigned_64
-              := Interfaces.Unsigned_64'Value
-                (DOM.Core.Elements.Get_Attribute
-                   (Elem => Src_Subj,
-                    Name => "cpu"));
+
             Dst_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Nodes     => Targets,
@@ -114,14 +103,34 @@ is
                    (Elem => Dst_Subj,
                     Name => "cpu"));
          begin
-            if not Test (Src_Subj, Dst_Subj) then
-               Validation_Errors.Insert
-                 (Msg => "Destination subject '"
-                 & Dst_Subj_Name & "' (CPU" & Dst_Subj_CPU'Img & ") in "
-                 & "subject's '" & Src_Subj_Name & "' (CPU" & Src_Subj_CPU'Img
-                 & ") " & Mode & " notification '" & Event_Name & "' "
-                 & "invalid - " & Error_Msg);
-            end if;
+            for J in 0 .. DOM.Core.Nodes.Length (List => Src_Nodes) - 1 loop
+               declare
+                  Src_Node : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item (List  => Src_Nodes,
+                                            Index => J);
+                  Src_Subj : constant DOM.Core.Node
+                    := Muxml.Utils.Ancestor_Node (Node  => Src_Node,
+                                                  Level => 4);
+                  Src_Subj_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Src_Subj,
+                       Name => "name");
+                  Src_Subj_CPU : constant Interfaces.Unsigned_64
+                    := Interfaces.Unsigned_64'Value
+                      (DOM.Core.Elements.Get_Attribute
+                         (Elem => Src_Subj,
+                          Name => "cpu"));
+               begin
+                  if not Test (Src_Subj, Dst_Subj) then
+                     Validation_Errors.Insert
+                       (Msg => "Destination subject '"
+                        & Dst_Subj_Name & "' (CPU" & Dst_Subj_CPU'Img & ") in "
+                        & "subject's '" & Src_Subj_Name & "' (CPU"
+                        & Src_Subj_CPU'Img & ") " & Mode & " notification '"
+                        & Event_Name & "' invalid - " & Error_Msg);
+                  end if;
+               end;
+            end loop;
          end;
       end loop;
    end Check_Event_Destination;

@@ -63,8 +63,6 @@ is
         (Process => Scheduling.Subject_References'Access);
       XML_Processors.Register
         (Process => Events.Subject_Event_References'Access);
-      XML_Processors.Register
-        (Process => Events.Subject_Event_References'Access);
 
       XML_Processors.Register
         (Process => Config.Name_Uniqueness'Access);

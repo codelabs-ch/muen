@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<system>
+ <config>
+  <integer name="session_count" value="4"/>
+  <string name="no_caching" value="UC"/>
+ </config>
+ <expressions>
+  <expression name="session2_enabled">
+   <gt>
+    <variable name="session_count"/>
+    <integer value="1"/>
+   </gt>
+  </expression>
+ </expressions>
+ <hardware>
+  <processor cpuCores="2" speed="50" vmxTimerRate="0">
+   <cpu apicId="0"/>
+   <cpu apicId="2"/>
+  </processor>
+  <memory>
+   <memoryBlock allocatable="true" name="ram_2" physicalAddress="16#9900_0000#" size="16#2000#"/>
+  </memory>
+  <devices>
+   <device name="debugconsole">
+    <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
+   </device>
+  </devices>
+ </hardware>
+ <platform>
+  <mappings>
+   <aliases>
+    <alias name="debugconsole" physical="serial_1"/>
+   </aliases>
+   <classes>
+    <class name="usb">
+     <device physical="ehci"/>
+     <device physical="xhci"/>
+    </class>
+   </classes>
+  </mappings>
+  <kernelDiagnostics type="uart">
+   <device physical="debugconsole">
+    <ioPort physical="serial"/>
+   </device>
+  </kernelDiagnostics>
+ </platform>
+ <memory>
+  <if value="true" variable="session2_enabled">
+   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
+  </if>
+  <memory caching="$no_caching" name="extra_mem" physicalAddress="16#2000#" size="16#1000#"/>
+ </memory>
+ <events/>
+ <components>
+  <component name="linux" profile="linux">
+   <provides>
+    <memory executable="true" logical="binary" size="16#1000#" virtualAddress="16#2000#" writable="true">
+     <file filename="lnx_bin" offset="none"/>
+    </memory>
+   </provides>
+  </component>
+ </components>
+ <subjects>
+  <subject name="lnx">
+   <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+    <memory executable="false" logical="extra_mem" physical="extra_mem" virtualAddress="16#f000_0000#" writable="true"/>
+   </memory>
+   <devices>
+    <device logical="usb" physical="usb_conitroller_1">
+    </device>
+   </devices>
+   <events/>
+   <component ref="linux"/>
+  </subject>
+ </subjects>
+ <scheduling tickRate="10000">
+  <majorFrame>
+   <cpu id="0">
+    <minorFrame subject="lnx" ticks="80"/>
+   </cpu>
+  </majorFrame>
+ </scheduling>
+</system>
+

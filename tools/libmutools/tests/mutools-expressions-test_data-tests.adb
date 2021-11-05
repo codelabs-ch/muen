@@ -7,6 +7,8 @@
 
 with AUnit.Assertions; use AUnit.Assertions;
 with System.Assertions;
+with Ada.Strings.Unbounded;
+with Mutools.System_Config;
 
 --  begin read only
 --  id:2.2/00/
@@ -87,8 +89,8 @@ package body Mutools.Expressions.Test_Data.Tests is
                  (Filename1 => "data/config_expressions.xml",
                   Filename2 => Output),
                  Message   => "Policy mismatch: " & Output);
-
-         Ada.Directories.Delete_File (Name => Output);
+         --DBG
+         --Ada.Directories.Delete_File (Name => Output);
       end Positive_Test;
    begin
       Positive_Test;
@@ -252,10 +254,104 @@ package body Mutools.Expressions.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Expression (Gnattest_T : in out Test);
-   procedure Test_Expression_a0f744 (Gnattest_T : in out Test) renames Test_Expression;
---  id:2.2/a0f744435817e29a/Expression/1/0/
-   procedure Test_Expression (Gnattest_T : in out Test) is
+   procedure Test_String_Value (Gnattest_T : in out Test);
+   procedure Test_String_Value_f74087 (Gnattest_T : in out Test) renames Test_String_Value;
+--  id:2.2/f740879297b0eec4/String_Value/1/0/
+   procedure Test_String_Value (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      ----------------------------------------------------------------------
+
+      procedure Positive_Test
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/test_policy_src_concatenation.xml");
+         Assert (Condition => "ram" = String_Value
+                 (Policy => Data,
+                  Node   => Muxml.Utils.Get_Element
+                    (Doc   => Data.Doc,
+                     XPath => "/system/expressions/expression"
+                     & "[@name='compositeName']/concatenation/variable")),
+                 Message   => "Integer value mismatch (1)");
+         Assert (Condition => "1" = String_Value
+                 (Policy => Data,
+                  Node   => Muxml.Utils.Get_Element
+                    (Doc   => Data.Doc,
+                     XPath => "/system/expressions/expression"
+                     & "[@name='compositeName']/concatenation/string")),
+                 Message   => "Integer value mismatch (2)");
+      end Positive_Test;
+
+      ----------------------------------------------------------------------
+
+      procedure Invalid_String
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+          Muxml.Parse (Data => Data,
+                       Kind => Muxml.None,
+                       File => "data/test_policy_src_concatenation.xml");
+         declare
+
+            Node : DOM.Core.Node
+                 :=  Muxml.Utils.Get_Element
+                       (Doc   => Data.Doc,
+                        XPath => "/system/expressions/expression"
+                        & "[@name='truth']/boolean");
+            Dummy : Ada.Strings.Unbounded.Unbounded_String;
+         begin
+            Dummy :=  Ada.Strings.Unbounded.To_Unbounded_String
+                         (String_Value (Policy => Data,
+                                        Node   => Node));
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+         exception
+            when E : Invalid_Expression =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Invalid string type 'boolean'",
+                       Message   => "Exception message mismatch");
+         end;
+
+         declare
+            Node : DOM.Core.Node
+                 :=  Muxml.Utils.Get_Element
+                       (Doc   => Data.Doc,
+                        XPath => "/system/expressions/expression"
+                        & "[@name='session2_enabled']/gt/variable");
+            Dummy : Ada.Strings.Unbounded.Unbounded_String;
+         begin
+            Dummy :=  Ada.Strings.Unbounded.To_Unbounded_String
+                         (String_Value (Policy => Data,
+                                        Node   => Node));
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+         exception
+            when E : Mutools.System_Config.Not_Found =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "No string config option 'session_count' found",
+                       Message   => "Exception message mismatch");
+         end;
+      end Invalid_String;
+
+
+   begin
+      Positive_Test;
+      Invalid_String;
+--  begin read only
+   end Test_String_Value;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Boolean_Expression (Gnattest_T : in out Test);
+   procedure Test_Boolean_Expression_959f9e (Gnattest_T : in out Test) renames Test_Boolean_Expression;
+--  id:2.2/959f9e9a477bb3b1/Boolean_Expression/1/0/
+   procedure Test_Boolean_Expression (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -267,24 +363,24 @@ package body Mutools.Expressions.Test_Data.Tests is
          Data : Muxml.XML_Data_Type;
       begin
          Muxml.Parse
-           (Data => Data,
-            Kind => Muxml.None,
-            File => "data/test_policy_src.xml");
+            (Data => Data,
+             Kind => Muxml.None,
+             File => "data/test_policy_src.xml");
 
          Muxml.Utils.Remove_Elements
-           (Doc   => Data.Doc,
-            XPath => "/system/expressions/expression[@name='session2_enabled']"
-            & "/gt/variable");
+            (Doc   => Data.Doc,
+             XPath => "/system/expressions/expression[@name='session2_enabled']"
+             & "/gt/variable");
 
          declare
             Dummy : Boolean;
          begin
-            Dummy := Expression
-              (Policy => Data,
-               Node   => Muxml.Utils.Get_Element
-                 (Doc   => Data.Doc,
-                  XPath => "/system/expressions/expression"
-                  & "[@name='session2_enabled']/gt"));
+            Dummy := Boolean_Expression
+               (Policy => Data,
+                Node   => Muxml.Utils.Get_Element
+                (Doc   => Data.Doc,
+                 XPath => "/system/expressions/expression"
+                 & "[@name='session2_enabled']/gt"));
             Assert (Condition => False,
                     Message   => "Exception expected (missing child gt)");
 
@@ -304,24 +400,24 @@ package body Mutools.Expressions.Test_Data.Tests is
          Data : Muxml.XML_Data_Type;
       begin
          Muxml.Parse
-           (Data => Data,
-            Kind => Muxml.None,
-            File => "data/test_policy_src.xml");
+            (Data => Data,
+             Kind => Muxml.None,
+             File => "data/test_policy_src.xml");
 
          Muxml.Utils.Remove_Elements
-           (Doc   => Data.Doc,
-            XPath => "/system/expressions/expression[@name='is_below_max']"
-            & "/lt/variable");
+            (Doc   => Data.Doc,
+             XPath => "/system/expressions/expression[@name='is_below_max']"
+             & "/lt/variable");
 
          declare
             Dummy : Boolean;
          begin
-            Dummy := Expression
-              (Policy => Data,
-               Node   => Muxml.Utils.Get_Element
-                 (Doc   => Data.Doc,
-                  XPath => "/system/expressions/expression"
-                  & "[@name='is_below_max']/lt"));
+            Dummy := Boolean_Expression
+               (Policy => Data,
+                Node   => Muxml.Utils.Get_Element
+                (Doc   => Data.Doc,
+                 XPath => "/system/expressions/expression"
+                 & "[@name='is_below_max']/lt"));
             Assert (Condition => False,
                     Message   => "Exception expected (missing child lt)");
 
@@ -341,24 +437,24 @@ package body Mutools.Expressions.Test_Data.Tests is
          Data : Muxml.XML_Data_Type;
       begin
          Muxml.Parse
-           (Data => Data,
-            Kind => Muxml.None,
-            File => "data/test_policy_src.xml");
+            (Data => Data,
+             Kind => Muxml.None,
+             File => "data/test_policy_src.xml");
 
          Muxml.Utils.Remove_Elements
-           (Doc   => Data.Doc,
-            XPath => "/system/expressions/expression[@name='iommu_disabled']"
-            & "/not/variable");
+            (Doc   => Data.Doc,
+             XPath => "/system/expressions/expression[@name='iommu_disabled']"
+             & "/not/variable");
 
          declare
             Dummy : Boolean;
          begin
-            Dummy := Expression
-              (Policy => Data,
-               Node   => Muxml.Utils.Get_Element
-                 (Doc   => Data.Doc,
-                  XPath => "/system/expressions/expression"
-                  & "[@name='iommu_disabled']/not"));
+            Dummy := Boolean_Expression
+               (Policy => Data,
+                Node   => Muxml.Utils.Get_Element
+                (Doc   => Data.Doc,
+                 XPath => "/system/expressions/expression"
+                 & "[@name='iommu_disabled']/not"));
             Assert (Condition => False,
                     Message   => "Exception expected (missing child not)");
 
@@ -378,24 +474,24 @@ package body Mutools.Expressions.Test_Data.Tests is
          Data : Muxml.XML_Data_Type;
       begin
          Muxml.Parse
-           (Data => Data,
-            Kind => Muxml.None,
-            File => "data/test_policy_src.xml");
+            (Data => Data,
+             Kind => Muxml.None,
+             File => "data/test_policy_src.xml");
 
          Muxml.Utils.Remove_Elements
-           (Doc   => Data.Doc,
-            XPath => "/system/expressions/expression[@name='session2_enabled']"
-            & "/gt");
+            (Doc   => Data.Doc,
+             XPath => "/system/expressions/expression[@name='session2_enabled']"
+             & "/gt");
 
          declare
             Dummy : Boolean;
          begin
-            Dummy := Expression
-              (Policy => Data,
-               Node   => Muxml.Utils.Get_Element
-                 (Doc   => Data.Doc,
-                  XPath => "/system/expressions/expression"
-                  & "[@name='session2_enabled']"));
+            Dummy := Boolean_Expression
+               (Policy => Data,
+                Node   => Muxml.Utils.Get_Element
+                (Doc   => Data.Doc,
+                 XPath => "/system/expressions/expression"
+                 & "[@name='session2_enabled']"));
             Assert (Condition => False,
                     Message   => "Exception expected (missing op)");
 
@@ -414,29 +510,29 @@ package body Mutools.Expressions.Test_Data.Tests is
          Data : Muxml.XML_Data_Type;
       begin
          Muxml.Parse
-           (Data => Data,
-            Kind => Muxml.None,
-            File => "data/test_policy_src.xml");
+            (Data => Data,
+             Kind => Muxml.None,
+             File => "data/test_policy_src.xml");
 
          declare
             Expr  : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Doc   => Data.Doc,
-                 XPath => "/system/expressions/expression"
-                 & "[@name='session2_enabled']");
+               := Muxml.Utils.Get_Element
+               (Doc   => Data.Doc,
+                XPath => "/system/expressions/expression"
+                & "[@name='session2_enabled']");
             Dummy : Boolean;
          begin
             Muxml.Utils.Remove_Child
-              (Node       => Expr,
-               Child_Name => "gt");
+               (Node       => Expr,
+                Child_Name => "gt");
             Muxml.Utils.Append_Child
-              (Node      => Expr,
-               New_Child => DOM.Core.Documents.Create_Element
-                 (Doc      => Data.Doc,
-                  Tag_Name => "invalid_term"));
+               (Node      => Expr,
+                New_Child => DOM.Core.Documents.Create_Element
+                (Doc      => Data.Doc,
+                 Tag_Name => "invalid_term"));
 
-            Dummy := Expression (Policy => Data,
-                                 Node   => Expr);
+            Dummy := Boolean_Expression (Policy => Data,
+                                         Node   => Expr);
             Assert (Condition => False,
                     Message   => "Exception expected (invalid term)");
 
@@ -457,24 +553,24 @@ package body Mutools.Expressions.Test_Data.Tests is
          Data : Muxml.XML_Data_Type;
       begin
          Muxml.Parse
-           (Data => Data,
-            Kind => Muxml.None,
-            File => "data/test_policy_src.xml");
+            (Data => Data,
+             Kind => Muxml.None,
+             File => "data/test_policy_src.xml");
 
          Muxml.Utils.Remove_Elements
-           (Doc   => Data.Doc,
-            XPath => "/system/expressions/expression[@name='nested_expr']"
-            & "/and/expression[@name='sub_expression']/or/expression");
+            (Doc   => Data.Doc,
+             XPath => "/system/expressions/expression[@name='nested_expr']"
+             & "/and/expression[@name='sub_expression']/or/expression");
 
          declare
             Dummy : Boolean;
          begin
-            Dummy := Expression
-              (Policy => Data,
-               Node   => Muxml.Utils.Get_Element
-                 (Doc   => Data.Doc,
-                  XPath => "/system/expressions/expression/and/expression"
-                  & "[@name='sub_expression']"));
+            Dummy := Boolean_Expression
+               (Policy => Data,
+                Node   => Muxml.Utils.Get_Element
+                (Doc   => Data.Doc,
+                 XPath => "/system/expressions/expression/and/expression"
+                 & "[@name='sub_expression']"));
             Assert (Condition => False,
                     Message   => "Exception expected (invalid expr eval)");
 
@@ -495,51 +591,51 @@ package body Mutools.Expressions.Test_Data.Tests is
          Data : Muxml.XML_Data_Type;
       begin
          Muxml.Parse
-           (Data => Data,
-            Kind => Muxml.None,
-            File => "data/test_policy_src.xml");
+            (Data => Data,
+             Kind => Muxml.None,
+             File => "data/test_policy_src.xml");
 
-         Assert (Condition => Expression
+         Assert (Condition => Boolean_Expression
                  (Policy => Data,
                   Node   => Muxml.Utils.Get_Element
-                    (Doc   => Data.Doc,
-                     XPath => "/system/expressions/expression"
-                     & "[@name='session2_enabled']")),
+                  (Doc   => Data.Doc,
+                   XPath => "/system/expressions/expression"
+                   & "[@name='session2_enabled']")),
                  Message   => "Expression value mismatch (1)");
-         Assert (Condition => not Expression
+         Assert (Condition => not Boolean_Expression
                  (Policy => Data,
                   Node   => Muxml.Utils.Get_Element
-                    (Doc   => Data.Doc,
-                     XPath => "/system/expressions/expression"
-                     & "[@name='session2_disabled']")),
+                  (Doc   => Data.Doc,
+                   XPath => "/system/expressions/expression"
+                   & "[@name='session2_disabled']")),
                  Message   => "Expression value mismatch (2)");
-         Assert (Condition => Expression
+         Assert (Condition => Boolean_Expression
                  (Policy => Data,
                   Node   => Muxml.Utils.Get_Element
-                    (Doc   => Data.Doc,
-                     XPath => "/system/expressions/expression"
-                     & "[@name='int_values']")),
+                  (Doc   => Data.Doc,
+                   XPath => "/system/expressions/expression"
+                   & "[@name='int_values']")),
                  Message   => "Expression value mismatch (3)");
 
          Muxml.Utils.Set_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/config/integer[@name='session_count']",
-            Name  => "value",
-            Value => "1");
+            (Doc   => Data.Doc,
+             XPath => "/system/config/integer[@name='session_count']",
+             Name  => "value",
+             Value => "1");
 
-         Assert (Condition => not Expression
+         Assert (Condition => not Boolean_Expression
                  (Policy => Data,
                   Node   => Muxml.Utils.Get_Element
-                    (Doc   => Data.Doc,
-                     XPath => "/system/expressions/expression"
-                     & "[@name='session2_enabled']")),
+                  (Doc   => Data.Doc,
+                   XPath => "/system/expressions/expression"
+                   & "[@name='session2_enabled']")),
                  Message   => "Expression value mismatch (4)");
-         Assert (Condition => Expression
+         Assert (Condition => Boolean_Expression
                  (Policy => Data,
                   Node   => Muxml.Utils.Get_Element
-                    (Doc   => Data.Doc,
-                     XPath => "/system/expressions/expression"
-                     & "[@name='session2_disabled']")),
+                  (Doc   => Data.Doc,
+                   XPath => "/system/expressions/expression"
+                   & "[@name='session2_disabled']")),
                  Message   => "Expression value mismatch (5)");
       end Positive_Test;
    begin
@@ -550,9 +646,120 @@ package body Mutools.Expressions.Test_Data.Tests is
       Not_Missing_Child;
       Invalid_Expression_Term;
       Invalid_Expression_Evaluation;
---  begin read only
-   end Test_Expression;
---  end read only
+
+      --  begin read only
+   end Test_Boolean_Expression;
+   --  end read only
+
+   --  begin read only
+   procedure Test_String_Expression (Gnattest_T : in out Test);
+   procedure Test_String_Expression_1b0a9f (Gnattest_T : in out Test) renames Test_String_Expression;
+   --  id:2.2/1b0a9f52602f5a02/String_Expression/1/0/
+   procedure Test_String_Expression (Gnattest_T : in out Test) is
+      --  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      ----------------------------------------------------------------------
+
+      procedure Positive_Test
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/test_policy_src_concatenation.xml");
+         Assert (Condition => "1ramram_foo" = String_Expression
+                   (Policy => Data,
+                    Node   => Muxml.Utils.Get_Element
+                       (Doc   => Data.Doc,
+                        XPath => "/system/expressions/expression"
+                        & "[@name='compositeName']")),
+                 Message   => "Expression value mismatch");
+      end Positive_Test;
+
+      ----------------------------------------------------------------------
+
+      procedure No_Child
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/test_policy_src_concatenation.xml");
+         Muxml.Utils.Remove_Elements
+            (Doc   => Data.Doc,
+             XPath => "/system/expressions/expression"
+             & "[@name='compositeName']/concatenation/*");
+         declare
+            Dummy : Ada.Strings.Unbounded.Unbounded_String;
+         begin
+            Dummy :=  Ada.Strings.Unbounded.To_Unbounded_String
+               (String_Expression
+                   (Policy => Data,
+                    Node   => Muxml.Utils.Get_Element
+                                (Doc   => Data.Doc,
+                                 XPath => "/system/expressions/expression"
+                                          & "[@name='compositeName']")));
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+         exception
+            when E : Invalid_Expression =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                          = "Concatenation-expression 'compositeName' "
+                            & "has less than two children",
+                       Message   => "Exception message mismatch "
+                       & "(invalid concatenation)");
+         end;
+      end No_Child;
+
+      ----------------------------------------------------------------------
+
+      procedure One_Child
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/test_policy_src_concatenation.xml");
+         Muxml.Utils.Remove_Elements
+            (Doc   => Data.Doc,
+             XPath => "/system/expressions/expression"
+             & "[@name='compositeName']/concatenation/variable");
+         Muxml.Utils.Remove_Elements
+            (Doc   => Data.Doc,
+             XPath => "/system/expressions/expression"
+             & "[@name='compositeName']/concatenation/string[@value='1']");
+         declare
+            Dummy : Ada.Strings.Unbounded.Unbounded_String;
+         begin
+            Dummy :=  Ada.Strings.Unbounded.To_Unbounded_String
+               (String_Expression
+                   (Policy => Data,
+                    Node   => Muxml.Utils.Get_Element
+                                (Doc   => Data.Doc,
+                                 XPath => "/system/expressions/expression"
+                                          & "[@name='compositeName']")));
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+         exception
+            when E : Invalid_Expression =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                          = "Concatenation-expression 'compositeName' "
+                            & "has less than two children",
+                       Message   => "Exception message mismatch "
+                       & "(invalid concatenation)");
+         end;
+      end One_Child;
+
+   begin
+      Positive_Test;
+      No_Child;
+      One_Child;
+
+      --  begin read only
+   end Test_String_Expression;
+   --  end read only
 
 --  begin read only
 --  id:2.2/02/

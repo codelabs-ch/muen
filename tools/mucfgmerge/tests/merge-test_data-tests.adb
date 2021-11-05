@@ -7,7 +7,6 @@
 
 with AUnit.Assertions; use AUnit.Assertions;
 with System.Assertions;
-
 --  begin read only
 --  id:2.2/00/
 --
@@ -53,10 +52,32 @@ package body Merge.Test_Data.Tests is
       exception
          when Mucfgcheck.Validation_Errors.Validation_Error =>
             Assert (Condition => Mucfgcheck.Validation_Errors.Contains
-                    (Msg => "Multiple config variables with name "
+                    (Msg => "The names given to config variables "
+                     & "and expressions are not unique. Conflicting value: "
                      & "'supports_xhci_debug'"),
                     Message   => "Exception message mismatch");
       end Duplicate_Config_Value;
+
+      ----------------------------------------------------------------------
+
+      procedure Duplicate_Config_Value_Due_To_Template
+      is
+         Output : constant String := "obj/duplicate_cfg_template.xml";
+      begin
+         Run (Config_File  => "data/config_templateNameCollision.xml",
+              Output_File  => Output,
+              Include_Path => "");
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when Mucfgcheck.Validation_Errors.Validation_Error =>
+            Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+                    (Msg => "The names given to config variables and "
+                     & "expressions are not unique. "
+                     & "Conflicting value: 't3_memory_name'"),
+                    Message   => "Exception message mismatch");
+      end Duplicate_Config_Value_Due_To_Template;
 
       ----------------------------------------------------------------------
 
@@ -100,12 +121,12 @@ package body Merge.Test_Data.Tests is
       is
          Output : constant String := "obj/run.xml";
       begin
-         Run (Config_File  => "data/test_config.xml",
+         Run (Config_File  => "data/config_with_templateAmend.xml",
               Output_File  => Output,
               Include_Path => "data");
 
          Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => "data/run.xml",
+                 (Filename1 => "data/output_templateAmend.xml",
                   Filename2 => Output),
                  Message   => "Policy mismatch: " & Output);
 
@@ -114,6 +135,8 @@ package body Merge.Test_Data.Tests is
    begin
       Mucfgcheck.Validation_Errors.Clear;
       Duplicate_Config_Value;
+      Mucfgcheck.Validation_Errors.Clear;
+      Duplicate_Config_Value_Due_To_Template;
       Mucfgcheck.Validation_Errors.Clear;
 
       Include_Path;

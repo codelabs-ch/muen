@@ -2770,6 +2770,7 @@ is
                         Cur_Node := DOM.Core.Nodes.Remove_Child
                           (N         => Subj_Node,
                            Old_Child => Cur_Node);
+                        DOM.Core.Nodes.Free (N => Cur_Node);
                      end if;
                   end loop;
 

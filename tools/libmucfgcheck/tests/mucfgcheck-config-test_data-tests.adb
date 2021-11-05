@@ -7,6 +7,9 @@
 
 with AUnit.Assertions; use AUnit.Assertions;
 with System.Assertions;
+--DBG-START
+with Ada.Text_IO;
+--DBG-END
 
 --  begin read only
 --  id:2.2/00/
@@ -59,8 +62,14 @@ package body Mucfgcheck.Config.Test_Data.Tests is
          Value => "feature_enabled");
 
       Name_Uniqueness (XML_Data => Data);
+      --DBG-START
+      --Ada.Text_IO.Put_Line ("DBG: names given to config-vars:"
+      --                      & Mucfgcheck.Validation_Errors.Get_Error_Message);
+      --Variable 'nonexistent' referenced in expression 'session2_enabled' not defined
+      --DBG-END
       Assert (Condition => Validation_Errors.Contains
-              (Msg => "Multiple config variables with name 'feature_enabled'"),
+              (Msg => "The names given to config variables and expressions "
+               & "are not unique. Conflicting value: 'feature_enabled'"),
               Message   => "Exception mismatch");
 --  begin read only
    end Test_Name_Uniqueness;
@@ -176,8 +185,13 @@ package body Mucfgcheck.Config.Test_Data.Tests is
          Value => "nonexistent");
 
       Expression_Config_Var_Refs (XML_Data => Data);
+      --DBG-START
+      --Ada.Text_IO.Put_Line ("DBG: val-err:"
+      --                      & Mucfgcheck.Validation_Errors.Get_Error_Message);
+      --Variable 'nonexistent' referenced in expression 'session2_enabled' not defined
+      --DBG-END
       Assert (Condition => Validation_Errors.Contains
-              (Msg => "Config variable 'nonexistent' referenced in expression "
+              (Msg => "Variable 'nonexistent' referenced in expression "
                & "'session2_enabled' not defined"),
               Message   => "Exception mismatch (1)");
 
@@ -191,8 +205,13 @@ package body Mucfgcheck.Config.Test_Data.Tests is
          Value => "");
 
       Expression_Config_Var_Refs (XML_Data => Data);
+      --DBG-START
+      --Ada.Text_IO.Put_Line ("DBG: val-err:"
+      --                      & Mucfgcheck.Validation_Errors.Get_Error_Message);
+      --Variable 'nonexistent' referenced in expression 'session2_enabled' not defined
+      --DBG-END
       Assert (Condition => Validation_Errors.Contains
-              (Msg => "Config variable without name attribute in expression "
+              (Msg => "Variable without name attribute in expression "
                & "'session2_enabled'"),
               Message   => "Exception mismatch (2)");
 --  begin read only

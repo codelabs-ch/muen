@@ -501,6 +501,20 @@ is
 
    -------------------------------------------------------------------------
 
+   function Has_Attribute
+      (Node      : DOM.Core.Node;
+       Attr_Name : String)
+      return Boolean
+   is
+      use type DOM.Core.Node;
+   begin
+      return null /= DOM.Core.Nodes.Get_Named_Item
+         (Map  => DOM.Core.Nodes.Attributes (N => Node),
+          Name => Attr_Name);
+   end Has_Attribute;
+
+   -------------------------------------------------------------------------
+
    procedure Insert_Before
      (Parent    : DOM.Core.Node;
       New_Child : DOM.Core.Node;
@@ -720,6 +734,7 @@ is
                   Node := DOM.Core.Nodes.Remove_Child
                     (N         => DOM.Core.Nodes.Parent_Node (N => Node),
                      Old_Child => Node);
+                  DOM.Core.Nodes.Free (N => Node);
                end;
             end loop;
          end;

@@ -84,6 +84,20 @@
    <events/>
    <component ref="linux"/>
   </subject>
+  <subject name="uniquenesTests">
+    <car name="c1" id="c1">
+      <id name="c1"/>
+      <wheel name="left" id="w1">
+	<pressure>
+	  <measurement id="m1c1">
+	    <integer value="10"/>
+	  </measurement>
+	</pressure>
+      </wheel>
+    </car>
+    <boat id="c1b1"/>
+    <id name="hi3"/>
+  </subject>
  </subjects>
  <scheduling tickRate="10000">
   <partitions>

@@ -1,0 +1,23 @@
+<platform>
+ <config>
+  <boolean name="supports_xhci_debug" value="false"/>
+  <integer name="some_numeric_value" value="23"/>
+  <string name="platform_id" value="foobar"/>
+ </config>
+ <mappings>
+  <aliases>
+   <alias name="wireless" physical="wlan1">
+    <resource name="interrupt" physical="irq1"/>
+    <resource name="memory" physical="mmio1"/>
+   </alias>
+   <alias name="nic" physical="ethernet_controller_1"/>
+  </aliases>
+  <classes>
+   <class name="network_adapters">
+    <device physical="nic1"/>
+    <device physical="wlan1"/>
+   </class>
+  </classes>
+ </mappings>
+ <kernelDiagnostics type="none"/>
+</platform>

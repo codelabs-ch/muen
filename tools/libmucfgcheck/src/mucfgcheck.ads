@@ -138,5 +138,12 @@ is
 
    --  Returns True if the left and right node's 'name' attribute match.
    function Match_Name (Left, Right : DOM.Core.Node) return Boolean;
-
+   
+   --  Check that for any two elements in the given list
+   --  the values of the attributes with the given name are distinct
+   procedure Attr_Uniqueness
+         (Nodes     : DOM.Core.Node_List;
+          Attr_Name : String;
+          Error_Msg : String);
+   
 end Mucfgcheck;

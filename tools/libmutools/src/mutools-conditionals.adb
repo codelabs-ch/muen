@@ -85,6 +85,7 @@ is
                Dummy := DOM.Core.Nodes.Remove_Child
                  (N         => Parent,
                   Old_Child => Cur_Child);
+               DOM.Core.Nodes.Free (N => Dummy);
             end;
          end if;
 
@@ -129,10 +130,7 @@ is
       loop
          Cur_Child := DOM.Core.Nodes.First_Child (N => Node);
          exit when Cur_Child = null;
-
-         Cur_Child := DOM.Core.Nodes.Remove_Child
-           (N         => Node,
-            Old_Child => Cur_Child);
+         -- Insert_Before can be used to move nodes (by specification)
          Cur_Child := DOM.Core.Nodes.Insert_Before
            (N         => Parent,
             New_Child => Cur_Child,

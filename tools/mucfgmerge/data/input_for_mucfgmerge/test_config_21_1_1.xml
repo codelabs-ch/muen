@@ -1,0 +1,8 @@
+<system>
+ <config>
+  <string name="system" value="system/system_policy_21.xml"/>
+  <string name="hardware" value="hw/hardware_1.xml"/>
+  <string name="additional_hardware" value="hw/additional_hw_1.xml"/>
+  <string name="platform" value="platform/platform_1.xml"/>
+ </config>
+</system>

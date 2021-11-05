@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hardware>
+ <processor cpuCores="2" speed="50" vmxTimerRate="0">
+   <cpu apicId="0"/>
+   <cpu apicId="2"/>
+ </processor>
+ <memory>
+  <memoryBlock allocatable="true" name="ram_2" physicalAddress="16#9900_0000#" size="16#2000#"/>
+ </memory>
+ <devices>
+  <device name="debugconsole">
+   <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
+  </device>
+ </devices>
+</hardware>
+

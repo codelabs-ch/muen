@@ -23,12 +23,14 @@ with Mulog;
 with Mutools.System_Config;
 with Mutools.Strings;
 with Mutools.XML_Utils;
+with Mutools.XML_Templates;
+with Mutools.Amend;
 with Mutools.Expressions;
 with Mutools.Conditionals;
 with Mutools.Substitutions;
 with Mucfgcheck.Config;
+with Mucfgcheck.Templates;
 with Mucfgcheck.Validation_Errors;
-
 with Mergers;
 with Merge.Checks;
 with Merge.Utils;
@@ -138,6 +140,17 @@ is
       Mucfgcheck.Config.Expression_Config_Var_Refs (XML_Data => Policy);
       Mucfgcheck.Config.Expression_Integer_Values (XML_Data => Policy);
       Mucfgcheck.Config.Expression_Boolean_Values (XML_Data => Policy);
+      Mucfgcheck.Templates.Name_Uniqueness (XML_Data => Policy);
+      Mucfgcheck.Templates.Template_Integrity (XML_Data => Policy);
+      Mucfgcheck.Validation_Errors.Check;
+
+      Mulog.Log (Msg => "Processing templates");
+      Mutools.XML_Templates.Expand (XML_Data => Policy);
+
+      -- Check uniqueness of variable names in config block as well as
+      -- names of expression again (templates may introduce duplicates)
+
+      Mucfgcheck.Config.Name_Uniqueness (XML_Data => Policy);
       Mucfgcheck.Validation_Errors.Check;
 
       Mulog.Log (Msg => "Processing expressions");
@@ -146,15 +159,22 @@ is
         (Doc   => Policy.Doc,
          XPath => "/system/expressions");
 
-      --  Check conditional references after expression evaluation.
+      Mulog.Log (Msg => "Processing attributes");
+      Mutools.Substitutions.Process_Attributes (Data => Policy);
+
+      --  Check conditional references after expression evaluation as
+      --  conditionals may refer to expressions
 
       Mucfgcheck.Config.Conditional_Config_Var_Refs (XML_Data => Policy);
       Mucfgcheck.Validation_Errors.Check;
       Mulog.Log (Msg => "Processing conditionals");
       Mutools.Conditionals.Expand (Policy => Policy);
 
-      Mulog.Log (Msg => "Processing attributes");
-      Mutools.Substitutions.Process_Attributes (Data => Policy);
+      --  Amend statements must be evaluated after conditionals as <amend> might
+      --  be inside of a conditional 'C' and have effects outside of C;
+
+      Mulog.Log (Msg => "Processing amend");
+      Mutools.Amend.Expand (XML_Data => Policy);
 
       Muxml.Write
         (File => Output_File,

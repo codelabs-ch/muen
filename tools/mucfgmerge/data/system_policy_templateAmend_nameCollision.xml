@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<system>
+ <config>
+  <integer name="session_count" value="4"/>
+  <string  name="no_caching" value="UC"/>
+  <string  name="sizeOfExtraMem" value="16#8000_9999#"/>
+ </config>
+ <template name="template_memory">
+   <parameters>
+      <integer name="id1"/>
+      <string name="logical_eventReboot" defaultValue="system_reboot"/>
+      <string name="memory_name"/>
+   </parameters>
+   <expressions>
+      <expression name="isId1_20">
+         <eq>
+            <variable name="id1"/>
+            <integer value="20"/>
+         </eq>
+      </expression>
+   </expressions>
+   <body>
+      <memory>
+         <if value="true" variable="isId1_20">
+            <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
+         </if>
+         <memory caching="$no_caching" name="$memory_name" physicalAddress="16#2000#" size="16#1000#"/>
+      </memory>
+      <if variable="no_caching" value="UC">
+         <amend xpath="/system/hardware/memory">
+               <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="$sizeOfExtraMem"/>
+         </amend>
+      </if>
+   </body>
+</template>
+<template name="big_dev_template">
+   <parameters>
+      <integer name="param1"/>
+   </parameters>
+   <body>
+      <if variable="param1" value="22">
+         <amend xpath="/system/hardware/devices">
+             <device name="ioapic_new">
+                  <memory caching="UC" name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#"/>
+                  <useTemplate name="oneline_mem_template"/>
+             </device>
+         </amend>
+      </if>
+   </body>
+</template>
+<expressions>
+  <expression name="t3_memory_name">
+    <concatenation>
+      <string value="collision_"/>
+      <variable name="no_caching"/>
+    </concatenation>
+  </expression>
+  <expression name="session2_enabled">
+   <gt>
+    <variable name="session_count"/>
+    <integer value="1"/>
+   </gt>
+  </expression>
+ </expressions>
+ <hardware>
+  <memory>
+   <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
+  </memory>
+  <devices>
+   <device name="ioapic">
+    <memory caching="UC" name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#"/>
+    <useTemplate name="oneline_mem_template"/>
+   </device>
+   <useTemplate name="big_dev_template">
+           <parameter name="param1" value="22"/>
+   </useTemplate>
+  </devices>
+ </hardware>
+ <platform>
+  <mappings>
+   <aliases>
+    <alias name="debugconsole" physical="serial_1"/>
+   </aliases>
+   <classes>
+    <class name="usb">
+     <device physical="ehci"/>
+     <device physical="xhci"/>
+    </class>
+   </classes>
+  </mappings>
+  <kernelDiagnostics type="uart">
+   <device physical="debugconsole">
+    <ioPort physical="serial"/>
+   </device>
+  </kernelDiagnostics>
+ </platform>
+ <useTemplate name="template_memory">
+   <parameter name="id1" value="20"/>
+   <parameter name="memory_name" value="extra_mem"/>
+ </useTemplate>
+ <events/>
+ <components>
+  <component name="linux" profile="linux">
+   <provides>
+    <memory executable="true" logical="binary" size="16#1000#" virtualAddress="16#2000#" writable="true">
+     <file filename="lnx_bin" offset="none"/>
+    </memory>
+   </provides>
+  </component>
+ </components>
+ <subjects>
+  <subject name="lnx">
+   <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+    <memory executable="false" logical="extra_mem" physical="extra_mem" virtualAddress="16#f000_0000#" writable="true"/>
+
+<template name="oneline_mem_template">
+   <parameters/>
+   <body>
+        <memory caching="UC" name="mmio" physicalAddress="16#fec0_9999#" size="16#1000#"/>
+   </body>
+</template>
+
+   </memory>
+   <devices>
+      <device logical="usb" physical="usb_conitroller_1">
+      </device>
+   </devices>
+   <events/>
+   <component ref="linux"/>
+  </subject>
+ </subjects>
+ <scheduling tickRate="10000">
+  <majorFrame>
+   <cpu id="0">
+    <minorFrame subject="lnx" ticks="80"/>
+   </cpu>
+  </majorFrame>
+ </scheduling>
+</system>

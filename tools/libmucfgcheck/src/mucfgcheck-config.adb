@@ -22,11 +22,12 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 
 with Mulog;
-with Muxml.Utils;
+--with Muxml.Utils;
 with Mutools.Utils;
 with Mutools.System_Config;
 
 with Mucfgcheck.Validation_Errors;
+with Ada.Containers.Indefinite_Ordered_Sets;
 
 package body Mucfgcheck.Config
 is
@@ -187,45 +188,81 @@ is
 
    procedure Expression_Config_Var_Refs (XML_Data : Muxml.XML_Data_Type)
    is
+      package String_Sets is new Ada.Containers.Indefinite_Ordered_Sets
+         (Element_Type => String);
+      use String_Sets;
+
       Config_Vars : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => "/*/config/*");
-      Refs : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => "/*/expressions//variable");
+                  := McKae.XML.XPath.XIA.XPath_Query
+                        (N     => XML_Data.Doc,
+                         XPath => "/*/config/*");
+      Exprs       : constant DOM.Core.Node_List
+                  := McKae.XML.XPath.XIA.XPath_Query
+                        (N     => XML_Data.Doc,
+                         XPath => "/*/expressions/expression");
+      Known_Names : Set;
+
    begin
-      for I in Natural range 0 .. DOM.Core.Nodes.Length (List => Refs) - 1 loop
+      for I in 0 .. DOM.Core.Nodes.Length (List => Config_Vars) - 1 loop
+         declare
+            Config_Var : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Item
+                       (List  => Config_Vars,
+                        Index => I);
+         begin
+            -- duplicate names will be detected in the uniquess-tests
+            -- but may be present at this stage.
+            -- Include avoids exceptions in these cases
+            Known_Names.Include (DOM.Core.Elements.Get_Attribute
+                                   (Elem => Config_Var,
+                                    Name => "name"));
+         end;
+      end loop;
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Exprs) - 1 loop
          declare
             use type DOM.Core.Node;
 
-            Ref : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => Refs,
-                 Index => I);
-            Ref_Name : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Ref,
-                 Name => "name");
+            Expr      : constant DOM.Core.Node
+                      := DOM.Core.Nodes.Item
+                            (List  => Exprs,
+                             Index => I);
+            Expr_Name  : constant String
+                      := DOM.Core.Elements.Get_Attribute
+                            (Elem => Expr,
+                             Name => "name");
+            Expr_Vars : constant DOM.Core.Node_List
+                      := McKae.XML.XPath.XIA.XPath_Query
+                        (N     => Expr,
+                         XPath => ".//variable");
          begin
-            if Ref_Name'Length = 0 then
-               Validation_Errors.Insert
-                 (Msg => "Config variable without name "
-                  & "attribute in expression '" & Expression_Name (Node => Ref)
-                  & "'");
-            end if;
-
-            if Muxml.Utils.Get_Element
-              (Nodes     => Config_Vars,
-               Ref_Attr  => "name",
-               Ref_Value => Ref_Name) = null
-            then
-               Validation_Errors.Insert
-                 (Msg => "Config variable '" & Ref_Name
-                  & "' referenced in expression '"
-                  & Expression_Name (Node => Ref) & "' not defined");
-            end if;
+            for J in 0 .. DOM.Core.Nodes.Length (List => Expr_Vars) - 1 loop
+               declare
+                  Var      : constant DOM.Core.Node
+                           := DOM.Core.Nodes.Item
+                                 (List  => Expr_Vars,
+                                  Index => J);
+                  Var_Name : constant String
+                           := DOM.Core.Elements.Get_Attribute
+                                 (Elem => Var,
+                                  Name => "name");
+               begin
+                  if Var_Name'Length = 0 then
+                     Validation_Errors.Insert
+                        (Msg => "Variable without name attribute in expression '"
+                         & Expr_Name
+                         & "'");
+                  elsif not Known_Names.Contains (Var_Name) then
+                     Validation_Errors.Insert
+                        (Msg => "Variable '"
+                         & Var_Name
+                         & "' referenced in expression '"
+                         & Expr_Name
+                         & "' not defined");
+                  end if;
+               end;
+            end loop;
+            Known_Names.Include (Expr_Name);
          end;
       end loop;
    end Expression_Config_Var_Refs;
@@ -259,37 +296,19 @@ is
 
    procedure Name_Uniqueness (XML_Data : Muxml.XML_Data_Type)
    is
-      Cfg_Values : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => "/*/config/*");
-
-      --  Check that names of Left and Right differ.
-      procedure Check_Name_Inequality (Left, Right : DOM.Core.Node);
-
-      ----------------------------------------------------------------------
-
-      procedure Check_Name_Inequality (Left, Right : DOM.Core.Node)
-      is
-         Left_Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Left,
-            Name => "name");
-         Right_Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Right,
-            Name => "name");
-      begin
-         if Left_Name = Right_Name then
-            Validation_Errors.Insert
-              (Msg => "Multiple config variables with name '"
-               & Left_Name & "'");
-         end if;
-      end Check_Name_Inequality;
+      Cfg_Expr_Values : constant DOM.Core.Node_List
+         := McKae.XML.XPath.XIA.XPath_Query
+               (N     => XML_Data.Doc,
+                XPath => "/*/config/* | /*/expressions/expression");
    begin
-      Mulog.Log (Msg => "Checking uniqueness of" & DOM.Core.Nodes.Length
-                 (List => Cfg_Values)'Img & " config variable name(s)");
-
-      Compare_All (Nodes      => Cfg_Values,
-                   Comparator => Check_Name_Inequality'Access);
+      Mulog.Log (Msg => "Checking uniqueness of"
+                 & DOM.Core.Nodes.Length (List =>  Cfg_Expr_Values)'Img
+                 & " config and expression name(s)");
+      Mucfgcheck.Attr_Uniqueness
+         (Nodes     => Cfg_Expr_Values,
+          Attr_Name => "name",
+          Error_Msg => "The names given to config variables and expressions "
+                        & "are not unique.");
    end Name_Uniqueness;
 
 end Mucfgcheck.Config;

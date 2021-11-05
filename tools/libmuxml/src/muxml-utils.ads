@@ -25,6 +25,12 @@ with DOM.Core.Nodes;
 package Muxml.Utils
 is
 
+   -- Returns True if and only if Node has an attribute called with name Name.
+   function Has_Attribute
+      (Node      : DOM.Core.Node;
+       Attr_Name : String)
+       return Boolean;
+
    --  Searches the element specified by an XPath in the given document and
    --  returns the attribute given by name as string. If no such attribute or
    --  element exists, an empty string is returned.

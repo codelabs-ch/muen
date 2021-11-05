@@ -28,6 +28,40 @@ with Mucfgcheck.Validation_Errors;
 package body Mucfgcheck
 is
 
+   procedure Attr_Uniqueness
+      (Nodes     : DOM.Core.Node_List;
+       Attr_Name : String;
+       Error_Msg : String)
+   is
+      -- Check if the value of Attr_Name is not equal for Left and Right node
+      procedure Check_Inequality (Left, Right : DOM.Core.Node);
+
+      ------------------------------------------------------------------
+
+      procedure Check_Inequality (Left, Right : DOM.Core.Node)
+      is
+         Left_Value : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                          (Elem => Left,
+                           Name => Attr_Name);
+         Right_Value : constant String
+                     := DOM.Core.Elements.Get_Attribute
+                           (Elem => Right,
+                            Name => Attr_Name);
+      begin
+         if Left_Value = Right_Value then
+            Validation_Errors.Insert (Msg => Error_Msg
+                                      & " Conflicting value: '"
+                                      & Left_Value
+                                      & "'");
+         end if;
+      end Check_Inequality;
+
+   begin
+      Compare_All (Nodes      => Nodes,
+                   Comparator => Check_Inequality'Access);
+   end Attr_Uniqueness;
+
    -------------------------------------------------------------------------
 
    procedure Check_Attribute

@@ -109,6 +109,7 @@ is
                Dummy_vCPU_Node := DOM.Core.Nodes.Remove_Child
                  (N         => Subj_Node,
                   Old_Child => Subj_VCPU_Node);
+               DOM.Core.Nodes.Free (N => Dummy_vCPU_Node);
             end;
          end;
       end loop;

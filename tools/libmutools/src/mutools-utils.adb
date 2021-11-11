@@ -158,6 +158,20 @@ is
 
    -------------------------------------------------------------------------
 
+   function Is_Global_MSR (MSR : Interfaces.Unsigned_64) return Boolean
+   is
+   begin
+      case MSR is
+         when Constants.MSR_PLATFORM_INFO
+            | Constants.IA32_THERM_STATUS
+            | Constants.IA32_TEMPERATURE_TARGET
+            | Constants.IA32_PACKAGE_THERM_STATUS => return True;
+         when others                              => return False;
+      end case;
+   end Is_Global_MSR;
+
+   -------------------------------------------------------------------------
+
    function Is_Managed_By_VMX
      (MSR                    : Interfaces.Unsigned_64;
       DEBUGCTL_Control       : Boolean;

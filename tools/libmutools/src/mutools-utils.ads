@@ -83,6 +83,10 @@ is
       EFER_Control           : Boolean)
       return Boolean;
 
+   --  Returns True if the given MSR is a global/system-wide MSR and must not be
+   --  saved/restored.
+   function Is_Global_MSR (MSR : Interfaces.Unsigned_64) return Boolean;
+
    --  Searches the specified directories and returns the full path to the
    --  file with given name. An exception is raised if none of the specified
    --  directories contains such a file.

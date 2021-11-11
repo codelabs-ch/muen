@@ -54,7 +54,15 @@ is
               3 => (Start_Address => MC.IA32_EFER,
                     End_Address   => MC.IA32_FMASK),
               4 => (Start_Address => MC.IA32_FS_BASE,
-                    End_Address   => MC.IA32_KERNEL_GS_BASE));
+                    End_Address   => MC.IA32_KERNEL_GS_BASE),
+              5 => (Start_Address => MC.MSR_PLATFORM_INFO,
+                    End_Address   => MC.MSR_PLATFORM_INFO),
+              6 => (Start_Address => MC.IA32_THERM_STATUS,
+                    End_Address   => MC.IA32_THERM_STATUS),
+              7 => (Start_Address => MC.IA32_TEMPERATURE_TARGET,
+                    End_Address   => MC.IA32_TEMPERATURE_TARGET),
+              8 => (Start_Address => MC.IA32_PACKAGE_THERM_STATUS,
+                    End_Address   => MC.IA32_PACKAGE_THERM_STATUS));
 
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,

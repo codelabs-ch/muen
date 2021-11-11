@@ -1014,7 +1014,25 @@ package body Mutools.XML_Utils.Test_Data.Tests is
                PAT_Control            => False,
                PERFGLOBALCTRL_Control => False,
                EFER_Control           => True) = 6,
-              Message   => "MSR count mismatch");
+              Message   => "MSR count mismatch (1)");
+
+      Append_MSR (Doc       => Data.Doc,
+                  List      => MSRs,
+                  MSR_Start => "16#00ce#",
+                  MSR_End   => "16#00ce#",
+                  Mode      => "r");
+      Append_MSR (Doc       => Data.Doc,
+                  List      => MSRs,
+                  MSR_Start => "16#01a2#",
+                  MSR_End   => "16#01a2#",
+                  Mode      => "rw");
+      Assert (Condition => Calculate_MSR_Count
+              (MSRs                   => MSRs,
+               DEBUGCTL_Control       => False,
+               PAT_Control            => False,
+               PERFGLOBALCTRL_Control => False,
+               EFER_Control           => True) = 6,
+              Message   => "MSR count mismatch (2)");
 --  begin read only
    end Test_Calculate_MSR_Count;
 --  end read only

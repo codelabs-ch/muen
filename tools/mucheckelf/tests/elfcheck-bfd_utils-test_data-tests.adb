@@ -140,7 +140,6 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
                            Descriptor => Fd);
          S := Bfd.Sections.Find_Section (File => Fd,
                                          Name => ".text");
-         Bfd.Files.Close (File => Fd);
          Check_Section
            (Physical_Mem => McKae.XML.XPath.XIA.XPath_Query
               (N     => Policy.Doc,
@@ -150,6 +149,7 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
                XPath => "//memory[@physical]"),
             Region_Name  => "kernel_text",
             Section      => S);
+         Bfd.Files.Close (File => Fd);
 
       exception
          when others =>

@@ -116,6 +116,19 @@
   </subject>
 
   <subject name="linux">
+   <vcpu>
+    <msrs>
+     <msr end="16#00ce#" mode="r" start="16#00ce#"/>  <!-- MSR_PLATFORM_INFO                   -->
+     <msr end="16#01a2#" mode="rw" start="16#01a2#"/> <!-- IA32_TEMPERATUR_TARGET              -->
+     <msr end="16#0606#" mode="r" start="16#0606#"/>  <!-- MSR_RAPL_POWER_UNIT                 -->
+     <msr end="16#0611#" mode="rw" start="16#0610#"/> <!-- MSR_PKG_[POWER_LIMIT|ENERGY_STATUS] -->
+     <msr end="16#0619#" mode="r" start="16#0619#"/>  <!-- MSR_DRAM_ENERGY_STATUS              -->
+     <msr end="16#0641#" mode="r" start="16#0641#"/>  <!-- MSR_PP1_ENERGY_STATUS               -->
+     <msr end="16#064b#" mode="rw" start="16#064b#"/> <!-- MSR_CONFIG_TDP_CONTROL              -->
+     <msr end="16#0771#" mode="rw" start="16#0770#"/> <!-- IA32_[PM_ENABLE|HWP_CAPABILITIES]   -->
+     <msr end="16#0774#" mode="rw" start="16#0774#"/> <!-- IA32_HWP_REQUEST                    -->
+    </msrs>
+   </vcpu>
    <bootparams>console=ttyS0 console=tty0 hostname=linux drm.debug=0x2 i8042.nopnp=1</bootparams>
    <memory>
     <memory logical="ram_2" physical="linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="true"/>

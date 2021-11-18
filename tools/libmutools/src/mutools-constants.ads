@@ -39,12 +39,21 @@ is
    IA32_GS_BASE              : constant := 16#c000_0101#;
    IA32_KERNEL_GS_BASE       : constant := 16#c000_0102#;
 
-   --  Thermal MSRs
+   --  Power/Thermal MSRs
 
    MSR_PLATFORM_INFO         : constant := 16#0000_00ce#;
    IA32_THERM_STATUS         : constant := 16#0000_019c#;
    IA32_TEMPERATURE_TARGET   : constant := 16#0000_01a2#;
    IA32_PACKAGE_THERM_STATUS : constant := 16#0000_01b1#;
+   MSR_RAPL_POWER_UNIT       : constant := 16#0000_0606#;
+   MSR_PKG_POWER_LIMIT       : constant := 16#0000_0610#;
+   MSR_PKG_ENERGY_STATUS     : constant := 16#0000_0611#;
+   MSR_DRAM_ENERGY_STATUS    : constant := 16#0000_0619#;
+   MSR_PP1_ENERGY_STATUS     : constant := 16#0000_0641#;
+   MSR_CONFIG_TDP_CONTROL    : constant := 16#0000_064b#;
+   IA32_PM_ENABLE            : constant := 16#0000_0770#;
+   IA32_HWP_CAPABILITIES     : constant := 16#0000_0771#;
+   IA32_HWP_REQUEST          : constant := 16#0000_0774#;
 
    --  Size of a single MSR-Store entry in bytes, see Intel SDM Vol. 3C,
    --  "24.7.2 VM-Exit Controls for MSRs".

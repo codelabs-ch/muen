@@ -165,7 +165,16 @@ is
          when Constants.MSR_PLATFORM_INFO
             | Constants.IA32_THERM_STATUS
             | Constants.IA32_TEMPERATURE_TARGET
-            | Constants.IA32_PACKAGE_THERM_STATUS => return True;
+            | Constants.IA32_PACKAGE_THERM_STATUS
+            | Constants.MSR_RAPL_POWER_UNIT
+            | Constants.MSR_PKG_POWER_LIMIT
+            | Constants.MSR_PKG_ENERGY_STATUS
+            | Constants.MSR_DRAM_ENERGY_STATUS
+            | Constants.MSR_PP1_ENERGY_STATUS
+            | Constants.MSR_CONFIG_TDP_CONTROL
+            | Constants.IA32_PM_ENABLE
+            | Constants.IA32_HWP_CAPABILITIES
+            | Constants.IA32_HWP_REQUEST          => return True;
          when others                              => return False;
       end case;
    end Is_Global_MSR;

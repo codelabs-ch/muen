@@ -41,6 +41,15 @@ is
    --D \item \texttt{IA32\_THERM\_STATUS}
    --D \item \texttt{IA32\_TEMPERATURE\_TARGET}
    --D \item \texttt{IA32\_PACKAGE\_THERM\_STATUS}
+   --D \item \texttt{MSR\_RAPL\_POWER\_UNIT}
+   --D \item \texttt{MSR\_PKG\_POWER\_LIMIT}
+   --D \item \texttt{MSR\_PKG\_ENERGY\_STATUS}
+   --D \item \texttt{MSR\_DRAM\_ENERGY\_STATUS}
+   --D \item \texttt{MSR\_PP1\_ENERGY\_STATUS}
+   --D \item \texttt{MSR\_CONFIG\_TDP_CONTROL}
+   --D \item \texttt{IA32\_PM\_ENABLE}
+   --D \item \texttt{IA32\_HWP\_CAPABILITIES}
+   --D \item \texttt{IA32\_HWP\_REQUEST}
    --D \end{itemize}
    procedure Check_Whitelist (XML_Data : Muxml.XML_Data_Type);
 

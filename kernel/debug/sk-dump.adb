@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with System;
+
 with SK.KC;
 with SK.Debug_Lock;
 with SK.CPU_Info;
@@ -33,6 +35,26 @@ is
      (New_Line   => KC.New_Line,
       Put_Line   => KC.Put_Line,
       Put_String => KC.Put_String);
+
+   -------------------------------------------------------------------------
+
+   procedure Dump_Page (Address : SK.Word64)
+   is
+      Mem_Page : array (0 .. SK.Page_Size - 1) of SK.Byte
+      with
+         Address => System'To_Address (Address);
+   begin
+      for I in Mem_Page'Range loop
+         if I mod 16 = 0 then
+            KC.New_Line;
+            KC.Put_String (Item => SK.Strings.Img (SK.Word16 (I)) & ": ");
+         end if;
+         KC.Put_String
+           (Item => SK.Strings.Img_Nobase (Item => Mem_Page (I)) & " ");
+      end loop;
+      KC.New_Line;
+      KC.New_Line;
+   end Dump_Page;
 
    -------------------------------------------------------------------------
 

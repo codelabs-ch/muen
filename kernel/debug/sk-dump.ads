@@ -75,4 +75,7 @@ is
      (Reason  : Crash_Audit_Types.VTx_Reason_Range;
       Context : Crash_Audit_Types.VTx_Context_Type);
 
+   --  Dump contents of the 4K memory page with given address.
+   procedure Dump_Page (Address : SK.Word64);
+
 end SK.Dump;

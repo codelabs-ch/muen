@@ -22,6 +22,7 @@ with Ada.Command_Line;
 with Mucfgcheck.Validation_Errors;
 with Mulog;
 with Muxml;
+with Mutools.System_Config;
 
 with Cspec.Utils;
 with Cspec.Cmd_Line;
@@ -42,6 +43,7 @@ exception
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : Muxml.XML_Input_Error
       | Muxml.Validation_Error
+      | Mutools.System_Config.Not_Found
       | Cspec.Component_Not_Found
       | Cspec.Utils.Array_Error
       | Cspec.Utils.Attribute_Error =>

@@ -301,6 +301,36 @@ package body Mucfgcheck.Events.Test_Data.Tests is
                     & "group"),
               Message   => "Exception mismatch (1)");
 
+      --  Error must still be raised even if multiple sources exist and the
+      --  first one is valid while the second is not.
+
+      declare
+
+         SM_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='sm']");
+         Subjects : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects");
+         VT_Node : constant DOM.Core.Node
+           := DOM.Core.Nodes.Remove_Child
+             (N         => Subjects,
+              Old_Child => Muxml.Utils.Get_Element
+                (Doc   => Data.Doc,
+                 XPath => "/system/subjects/subject[@name='vt']"));
+      begin
+         Muxml.Utils.Append_Child (Node      => Subjects,
+                                   New_Child => VT_Node);
+
+         Switch_Same_Core (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Destination subject 'linux' (CPU 1) in subject's 'vt' "
+                  & "(CPU 0) switch notification 'resume_linux' invalid - "
+                  & "must run on the same CPU and be in the same scheduling "
+                  & "group"),
+                 Message   => "Exception mismatch (2)");
+      end;
+
       --  Switch between subjects in different scheduling groups.
 
       Muxml.Utils.Set_Attribute
@@ -315,7 +345,7 @@ package body Mucfgcheck.Events.Test_Data.Tests is
                & "(CPU 1) switch notification 'resume_linux' invalid - "
                & "must run on the same CPU and be in the same scheduling "
                & "group"),
-              Message   => "Exception mismatch (2)");
+              Message   => "Exception mismatch (3)");
 --  begin read only
    end Test_Switch_Same_Core;
 --  end read only
@@ -341,6 +371,40 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       IPI_Different_Core (XML_Data => Data);
       Assert (Condition => Validation_Errors.Is_Empty,
               Message   => "Unexpected error in positive test");
+
+      declare
+         Evt_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='sm']"
+            & "/events/source/group[@name='vmcall']");
+         Node : DOM.Core.Node
+           := DOM.Core.Documents.Create_Element
+             (Doc      => Data.Doc,
+              Tag_Name => "event");
+      begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "id",
+            Value => "22");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "logical",
+            Value => "foo");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "physical",
+            Value => "linux_keyboard");
+         Node := DOM.Core.Nodes.Append_Child
+           (N         => Evt_Node,
+            New_Child => Node);
+
+         IPI_Different_Core (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "Destination subject 'linux' (CPU 1) in subject's 'sm'"
+                  & " (CPU 1) ipi notification 'linux_keyboard' invalid - must"
+                  & " run on different CPU"),
+                 Message   => "Exception mismatch (masked ipi target error)");
+      end;
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,

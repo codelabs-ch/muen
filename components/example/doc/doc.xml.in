@@ -441,6 +441,14 @@
    specification of all elements of a vCPU profile. The current vCPU profiles
    for VM and native Muen components can be found in the Appendix, section
    \ref{appendix-vcpu}.
+
+   \begin{warning}
+   When assigning access to MSRs, it is imperative to carefully review the
+   potential impact the Model-Specific Register can have. This is particularly
+   true for global MSRs that are not handled per-subject (e.g. in contrast to
+   IA32_EFER). Furthermore, only a small portion of MSRs are declared as
+   architectural, see Intel SDMs.
+   \end{warning}
   </text>
  </section>
 

@@ -49,7 +49,7 @@ def add_subject_channel_mappings(doc, comp_channels, subject_name):
 
 def add_linux_channels(doc, comp_channels, subject_name):
     """
-    Add logcal channels for given component channels to Linux subject.
+    Add logical channels for given component channels to Linux subject.
     """
     subj_channels = doc.xpath("/system/subjects/subject[@name='" + LINUX_NAME
                               + "']/channels")[0]

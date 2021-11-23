@@ -202,6 +202,20 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Set_XCR0
+     (ID    : Skp.Global_Subject_ID_Type;
+      Value : Word64)
+   with
+      Refined_Global  => (In_Out => Subject_FPU_States),
+      Refined_Depends => (Subject_FPU_States  =>+ (ID, Value)),
+      Refined_Post    => Subject_FPU_States (ID).XCR0 = Value
+   is
+   begin
+      Subject_FPU_States (ID).XCR0 := Value;
+   end Set_XCR0;
+
+   -------------------------------------------------------------------------
+
    procedure Write_XCR0 (Value : Word64)
    with
       Refined_Global  => (In_Out => (Current_XCR0, X86_64.State)),

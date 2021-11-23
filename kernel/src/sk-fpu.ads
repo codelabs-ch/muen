@@ -85,6 +85,14 @@ is
    with
       Global => (Input => State);
 
+   --  Set XCR0 of subject with given ID to specified value.
+   procedure Set_XCR0
+     (ID    : Skp.Global_Subject_ID_Type;
+      Value : Word64)
+   with
+      Global  => (In_Out => State),
+      Depends => (State =>+ (ID, Value));
+
 private
 
    --  Set the XCR0 register to the given value. The value of the physical XCR0

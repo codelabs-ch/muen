@@ -74,7 +74,8 @@ is
 
    --  Size of XSAVE storage area in bytes. Must be at least as large as
    --  described in Intel SDM Vol. 1, "13.4 XSAVE Area".
-   XSAVE_Area_Size          : constant := Page_Size;
+   FPU_Info_Size            : constant := 64;
+   XSAVE_Area_Size          : constant := Page_Size - FPU_Info_Size;
    XSAVE_Legacy_Header_Size : constant := 32;
 
    --  For layout of XSAVE legacy region see Intel SDM Vol. 1,

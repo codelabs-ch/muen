@@ -22,8 +22,8 @@ MAX_NAME_LEN = 63
 ABI_TARGET = "muen"
 ABI_VERSION = 2
 
-chanSize = 0x100000
-chanAddr = 0xe0000000
+chan_size = 0x100000
+chan_addr = 0xe0000000
 comp_name = ""
 
 
@@ -126,6 +126,7 @@ def add_elf_memory(xml_spec, binary, filename):
 def add_ram_memory(xml_spec, binary, binary_end, ram_size_mb):
     """
     Add RAM memory region of given size and set RSP to top of RAM in XML spec.
+    Returns the virtual end address of the RAM memory region.
     """
     print("* Adding RAM region with size " + str(ram_size_mb) + " MB")
     ram_size = ram_size_mb * 2 ** 20
@@ -142,21 +143,24 @@ def add_ram_memory(xml_spec, binary, binary_end, ram_size_mb):
     rsp.text = muutils.int_to_ada_hex(binary_end + ram_size - 8)
     print("* Setting RSP to " + rsp.text)
 
+    return binary_end + ram_size
+
 
 def add_channel(name, channels):
     """
     Add channel reader/writer XML elements for Solo5 device with given name.
     """
-    global chanAddr, chanSize
-    print("* Adding channels for device '" + name + "'")
+    global chan_addr, chan_size
+    print("* Adding channels for device '" + name + "' @ "
+          + muutils.int_to_ada_hex(chan_addr))
     channels.append(etree.Element("reader", logical=name + "|in",
-                    virtualAddress=muutils.int_to_ada_hex(chanAddr),
-                    size=muutils.int_to_ada_hex(chanSize)))
-    chanAddr += chanSize
+                    virtualAddress=muutils.int_to_ada_hex(chan_addr),
+                    size=muutils.int_to_ada_hex(chan_size)))
+    chan_addr += chan_size
     channels.append(etree.Element("writer", logical=name + "|out",
-                    virtualAddress=muutils.int_to_ada_hex(chanAddr),
-                    size=muutils.int_to_ada_hex(chanSize)))
-    chanAddr += chanSize
+                    virtualAddress=muutils.int_to_ada_hex(chan_addr),
+                    size=muutils.int_to_ada_hex(chan_size)))
+    chan_addr += chan_size
 
 
 def validate_solo5_abi(raw_abi):
@@ -233,7 +237,7 @@ comp_name = src_spec.attrib['name'].lower()
 add_bootparams(src_spec, boot_params)
 set_rip(src_spec, binary)
 end_address = add_elf_memory(src_spec, binary, binary_name)
-add_ram_memory(src_spec, binary, end_address, ram_size_mb)
+chan_addr = add_ram_memory(src_spec, binary, end_address, ram_size_mb)
 
 print("Extracting Solo5 ABI information from unikernel binary")
 try:

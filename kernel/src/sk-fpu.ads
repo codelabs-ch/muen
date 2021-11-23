@@ -96,13 +96,37 @@ private
    function Get_Active_XCR0_Features return Word64
    is (Active_XCR0_Features);
 
+   type Padding_Type is array (1 .. FPU_Info_Size - 8) of Byte
+     with Size => (FPU_Info_Size - 8) * 8;
+
+   --D @Interface
+   --D The FPU state consist of the subject XCR0 value and the hardware-managed
+   --D XSAVE area which is used to store the FPU state.
+   type FPU_State_Type is record
+      --D @Interface
+      --D Extended Control Register 0 (XCR0).
+      XCR0       : Word64;
+      --D @Interface
+      --D Padding in order to guarantee 64-byte alignment of XSAVE area.
+      Padding    : Padding_Type;
+      --D @Interface
+      --D XSAVE area used to save the FPU state.
+      XSAVE_Area : XSAVE_Area_Type;
+   end record
+   with Object_Size => Page_Size * 8;
+
+   for FPU_State_Type use record
+      XCR0       at  0 range  0 .. 63;
+      Padding    at  8 range  0 .. 56 * 8 - 1;
+      XSAVE_Area at 64 range  0 .. XSAVE_Area_Size * 8 - 1;
+   end record;
+
    type Subject_FPU_State_Array is array
-     (Skp.Global_Subject_ID_Type) of SK.XSAVE_Area_Type
+     (Skp.Global_Subject_ID_Type) of FPU_State_Type
    with
       Independent_Components,
-      Component_Size => Page_Size * 8,
-      Alignment      => Page_Size,
-      Object_Size    => Page_Size * 8 * (Skp.Global_Subject_ID_Type'Last + 1);
+      Alignment   => Page_Size,
+      Object_Size => Page_Size * 8 * (Skp.Global_Subject_ID_Type'Last + 1);
 
    pragma Warnings
      (GNATprove, Off,

@@ -28,9 +28,11 @@ with
    Refined_State => (State => (Subject_FPU_States, Active_XCR0_Features))
 is
 
-   Null_FPU_State : constant XSAVE_Area_Type
-     := (Legacy_Header   => Null_XSAVE_Legacy_Header,
-         Extended_Region => (others => 0));
+   Null_FPU_State : constant FPU_State_Type
+     := (XCR0       => 0,
+         Padding    => (others => 0),
+         XSAVE_Area => (Legacy_Header   => Null_XSAVE_Legacy_Header,
+                        Extended_Region => (others => 0)));
 
    -------------------------------------------------------------------------
 
@@ -76,10 +78,10 @@ is
    with
       Refined_Global  => (Input => Subject_FPU_States),
       Refined_Depends => (Regs  => (ID, Subject_FPU_States)),
-      Refined_Post    => Regs = Subject_FPU_States (ID).Legacy_Header
+      Refined_Post    => Regs = Subject_FPU_States (ID).XSAVE_Area.Legacy_Header
    is
    begin
-      Regs := Subject_FPU_States (ID).Legacy_Header;
+      Regs := Subject_FPU_States (ID).XSAVE_Area.Legacy_Header;
    end Get_Registers;
 
    -------------------------------------------------------------------------
@@ -98,6 +100,7 @@ is
       --D Set FPU state of subject with specified ID to
       --D \texttt{Null\_FPU\_State}.
       Subject_FPU_States (ID) := Null_FPU_State;
+      Subject_FPU_States (ID).XCR0 := Active_XCR0_Features;
       Restore_State (ID => ID);
       CPU.Fninit;
       CPU.Ldmxcsr (Value => Constants.MXCSR_Default_Value);
@@ -114,7 +117,7 @@ is
                                            Active_XCR0_Features))
    is
    begin
-      CPU.XRSTOR (Source => Subject_FPU_States (ID),
+      CPU.XRSTOR (Source => Subject_FPU_States (ID).XSAVE_Area,
                   State  => Active_XCR0_Features);
    end Restore_State;
 
@@ -128,7 +131,7 @@ is
                           X86_64.State))
    is
    begin
-      CPU.XSAVE (Target => Subject_FPU_States (ID),
+      CPU.XSAVE (Target => Subject_FPU_States (ID).XSAVE_Area,
                  State  => Active_XCR0_Features);
    end Save_State;
 

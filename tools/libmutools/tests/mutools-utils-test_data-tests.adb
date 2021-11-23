@@ -371,6 +371,38 @@ package body Mutools.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Is_Global_MSR (Gnattest_T : in out Test);
+   procedure Test_Is_Global_MSR_3674b7 (Gnattest_T : in out Test) renames Test_Is_Global_MSR;
+--  id:2.2/3674b7df59301ff5/Is_Global_MSR/1/0/
+   procedure Test_Is_Global_MSR (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Assert (Condition => not Is_Global_MSR (MSR => 1),
+              Message   => "MSR '1' allowed as passthrough");
+      Assert (Condition => not Is_Global_MSR (MSR => Constants.IA32_EFER),
+              Message   => "IA32_EFER allowed as passthrough");
+      Assert (Condition => not Is_Global_MSR
+              (MSR => Interfaces.Unsigned_64'Last),
+              Message   => "MSR '1' allowed as passthrough");
+      Assert (Condition => Is_Global_MSR (MSR => Constants.MSR_PLATFORM_INFO),
+              Message   => "MSR_PLATFORM_INFO not passthrough");
+      Assert (Condition => Is_Global_MSR (MSR => Constants.IA32_THERM_STATUS),
+              Message   => "IA32_THERM_STATUS not passthrough");
+      Assert (Condition => Is_Global_MSR
+              (MSR => Constants.IA32_TEMPERATURE_TARGET),
+              Message   => "IA32_TEMPERATURE_TARGET not passthrough");
+      Assert (Condition => Is_Global_MSR
+              (MSR => Constants.IA32_PACKAGE_THERM_STATUS),
+              Message   => "IA32_PACKAGE_THERM_STATUS not passthrough");
+--  begin read only
+   end Test_Is_Global_MSR;
+--  end read only
+
+
+--  begin read only
    procedure Test_Lookup_File (Gnattest_T : in out Test);
    procedure Test_Lookup_File_007216 (Gnattest_T : in out Test) renames Test_Lookup_File;
 --  id:2.2/0072162147f78f0f/Lookup_File/1/0/

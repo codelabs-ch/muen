@@ -40,14 +40,43 @@ is
 
    procedure Check_Whitelist (XML_Data : Muxml.XML_Data_Type)
    is
-      subtype MSR_Whitelist_1 is Interfaces.Unsigned_32 range
-        MC.IA32_SYSENTER_CS .. MC.IA32_SYSENTER_EIP;
-      subtype MSR_Whitelist_2 is Interfaces.Unsigned_32 range
-        MC.IA32_DEBUGCTL .. MC.IA32_DEBUGCTL;
-      subtype MSR_Whitelist_3 is Interfaces.Unsigned_32 range
-        MC.IA32_EFER .. MC.IA32_FMASK;
-      subtype MSR_Whitelist_4 is Interfaces.Unsigned_32 range
-        MC.IA32_FS_BASE .. MC.IA32_KERNEL_GS_BASE;
+      type MSR_Whitelist_Entry_Type is record
+         Start_Address : Interfaces.Unsigned_32;
+         End_Address   : Interfaces.Unsigned_32;
+      end record;
+
+      MSR_Whitelist : constant array (Natural range <>)
+        of MSR_Whitelist_Entry_Type
+          := (1  => (Start_Address => MC.IA32_SYSENTER_CS,
+                     End_Address   => MC.IA32_SYSENTER_EIP),
+              2  => (Start_Address => MC.IA32_DEBUGCTL,
+                     End_Address   => MC.IA32_DEBUGCTL),
+              3  => (Start_Address => MC.IA32_EFER,
+                     End_Address   => MC.IA32_FMASK),
+              4  => (Start_Address => MC.IA32_FS_BASE,
+                     End_Address   => MC.IA32_KERNEL_GS_BASE),
+              5  => (Start_Address => MC.MSR_PLATFORM_INFO,
+                     End_Address   => MC.MSR_PLATFORM_INFO),
+              6  => (Start_Address => MC.IA32_THERM_STATUS,
+                     End_Address   => MC.IA32_THERM_STATUS),
+              7  => (Start_Address => MC.IA32_TEMPERATURE_TARGET,
+                     End_Address   => MC.IA32_TEMPERATURE_TARGET),
+              8  => (Start_Address => MC.IA32_PACKAGE_THERM_STATUS,
+                     End_Address   => MC.IA32_PACKAGE_THERM_STATUS),
+              9  => (Start_Address => MC.MSR_RAPL_POWER_UNIT,
+                     End_Address   => MC.MSR_RAPL_POWER_UNIT),
+              10 => (Start_Address => MC.MSR_PKG_POWER_LIMIT,
+                     End_Address   => MC.MSR_PKG_ENERGY_STATUS),
+              11 => (Start_Address => MC.MSR_DRAM_ENERGY_STATUS,
+                     End_Address   => MC.MSR_DRAM_ENERGY_STATUS),
+              12 => (Start_Address => MC.MSR_PP1_ENERGY_STATUS,
+                     End_Address   => MC.MSR_PP1_ENERGY_STATUS),
+              13 => (Start_Address => MC.MSR_CONFIG_TDP_CONTROL,
+                     End_Address   => MC.MSR_CONFIG_TDP_CONTROL),
+              14 => (Start_Address => MC.IA32_PM_ENABLE,
+                     End_Address   => MC.IA32_HWP_CAPABILITIES),
+              15 => (Start_Address => MC.IA32_HWP_REQUEST,
+                     End_Address   => MC.IA32_HWP_REQUEST));
 
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
@@ -79,18 +108,23 @@ is
                Name => "end");
             E_Addr : constant Interfaces.Unsigned_32
               := Interfaces.Unsigned_32'Value (E_Addr_Str);
+            Valid_Range : Boolean := False;
          begin
-            if not
-              ((S_Addr in MSR_Whitelist_1 and E_Addr in MSR_Whitelist_1)
-               or (S_Addr in MSR_Whitelist_2 and E_Addr in MSR_Whitelist_2)
-               or (S_Addr in MSR_Whitelist_3 and E_Addr in MSR_Whitelist_3)
-               or (S_Addr in MSR_Whitelist_4 and E_Addr in MSR_Whitelist_4))
-            then
+            Check_MSR_Range :
+            for E of MSR_Whitelist loop
+               if S_Addr in E.Start_Address .. E.End_Address
+                 and E_Addr in E.Start_Address .. E.End_Address
+               then
+                  Valid_Range := True;
+                  exit Check_MSR_Range;
+               end if;
+            end loop Check_MSR_Range;
+
+            if not Valid_Range then
                Validation_Errors.Insert
                  (Msg => "MSR start " & S_Addr_Str
                   & " and end " & E_Addr_Str & " not in MSR whitelist"
                   & " (Subject '" & Subj_Name & "')");
-
             end if;
          end;
       end loop;

@@ -307,6 +307,7 @@ is
                   PAT_Control            => PAT_Control,
                   PERFGLOBALCTRL_Control => PERFGLOBALCTRL_Control,
                   EFER_Control           => EFER_Control)
+                 and not Utils.Is_Global_MSR (MSR => Register)
                then
                   MSR_Count := MSR_Count + 1;
                end if;

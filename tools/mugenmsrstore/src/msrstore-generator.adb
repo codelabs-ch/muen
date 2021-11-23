@@ -173,6 +173,8 @@ is
                   PAT_Control            => PAT_Control,
                   PERFGLOBALCTRL_Control => PERFGLOBALCTRL_Control,
                   EFER_Control           => EFER_Control)
+                 and not Mutools.Utils.Is_Global_MSR
+                   (MSR => Interfaces.Unsigned_64 (Reg))
                then
                   Tables.Append_Entry (Store => Store,
                                        Index => Reg,

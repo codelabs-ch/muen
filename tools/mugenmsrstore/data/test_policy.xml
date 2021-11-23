@@ -177,7 +177,9 @@
     </vmx>
     <msrs>
      <msr start="16#0010#" end="16#0010#" mode="r"/>
+     <msr start="16#00ce#" end="16#00ce#" mode="r"/>
      <msr start="16#0174#" end="16#0176#" mode="rw"/>
+     <msr start="16#01a2#" end="16#01a2#" mode="rw"/>
      <msr start="16#c000_0080#" end="16#c000_0084#" mode="rw"/>
      <msr start="16#c000_0100#" end="16#c000_0102#" mode="rw"/>
     </msrs>

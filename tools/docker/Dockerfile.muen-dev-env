@@ -12,7 +12,7 @@
 
 # Base image
 ARG distro_name=debian
-ARG distro_version=buster
+ARG distro_version=bullseye
 FROM ${distro_name}:${distro_version}
 
 LABEL maintainer "Adrian-Ken Rueegsegger <ken@codelabs.ch>"

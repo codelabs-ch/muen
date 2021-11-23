@@ -25,7 +25,8 @@ with SK.Strings;
 
 package body SK.FPU
 with
-   Refined_State => (State => (Subject_FPU_States, Active_XCR0_Features))
+   Refined_State => (State => (Subject_FPU_States, Active_XCR0_Features,
+                               Current_XCR0))
 is
 
    Null_FPU_State : constant FPU_State_Type
@@ -66,8 +67,7 @@ is
         := Active_XCR0_Features and Constants.XCR0_Supported_Features_Mask;
       pragma Debug (Dump.Print_Message
                     (Msg  => "XCR0: " & Strings.Img (Active_XCR0_Features)));
-      CPU.XSETBV (Register => 0,
-                  Value    => Active_XCR0_Features);
+      Write_XCR0 (Value => Active_XCR0_Features);
    end Enable;
 
    -------------------------------------------------------------------------
@@ -185,5 +185,21 @@ is
 
       Is_Valid := Ctx.XSAVE_Support and Ctx.Area_Size;
    end Check_State;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_XCR0 (Value : Word64)
+   with
+      Refined_Global  => (In_Out => (Current_XCR0, X86_64.State)),
+      Refined_Depends => ((Current_XCR0,
+                           X86_64.State) =>+ (Current_XCR0, Value))
+   is
+   begin
+      if Current_XCR0 /= Value then
+         Current_XCR0 := Value;
+         CPU.XSETBV (Register => 0,
+                     Value    => Current_XCR0);
+      end if;
+   end Write_XCR0;
 
 end SK.FPU;

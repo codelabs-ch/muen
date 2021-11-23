@@ -88,8 +88,19 @@ is
 
 private
 
+   --  Set the XCR0 register to the given value. The value of the physical XCR0
+   --  is only update if it differs from the current value.
+   procedure Write_XCR0 (Value : Word64)
+   with
+      Global  => (In_Out => (State, X86_64.State)),
+      Depends => ((State, X86_64.State) =>+ (Value, State));
+
    --  Active FPU features that are supported by the hardware and are enabled.
    Active_XCR0_Features : Word64 := 0
+   with
+      Part_Of => State;
+
+   Current_XCR0 : Word64 := 0
    with
       Part_Of => State;
 

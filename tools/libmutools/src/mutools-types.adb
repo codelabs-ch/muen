@@ -32,10 +32,10 @@ is
       subtype Reserved_VMX_Exit_IDs_Type is Natural
         with Static_Predicate => Reserved_VMX_Exit_IDs_Type in 35 | 38 | 42;
 
-      --  Kernel reserved IDs. Used internally by the SK.
+      --  Kernel reserved IDs. Used internally/Handled by the SK.
       subtype Reserved_Kernel_IDs_Type is Natural
-        with Static_Predicate => Reserved_Kernel_IDs_Type in 1 | 7 | 41 | 52;
-
+        with Static_Predicate => Reserved_Kernel_IDs_Type in
+          1 | 7 | 41 | 52 | 55;
    begin
       return ID <= Get_Max_ID (Group => Group) and then
         (case Group is

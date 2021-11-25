@@ -42,8 +42,8 @@ is
           26 | 27 | 28 | 29 | 30 | 31 |
           32 | 33 | 34 | 36 | 37 | 39 |
           40 | 43 | 44 | 45 | 46 | 47 |
-          49 | 50 | 51 | 53 | 54 | 55 |
-          56 | 57 | 58 | 59 => (
+          49 | 50 | 51 | 53 | 54 | 56 |
+          57 | 58 | 59 => (
             Source_Action  => No_Action,
             Target_Subject => 2,
             Target_Event   => Invalid_Target_Event,
@@ -51,7 +51,7 @@ is
             Send_IPI       => False,
             IRQ_Number     => 0),
            1 |  7 | 35 | 38 | 41 | 42 |
-          52 => (
+          52 | 55 => (
             Source_Action  => System_Panic,
             Target_Subject => Invalid_Subject,
             Target_Event   => Invalid_Target_Event,
@@ -119,7 +119,7 @@ is
           32 | 33 | 34 | 36 | 37 | 39 |
           40 | 43 | 44 | 45 | 46 | 47 |
           48 | 49 | 50 | 51 | 53 | 54 |
-          55 | 56 | 57 | 58 | 59 => (
+          56 | 57 | 58 | 59 => (
             Source_Action  => No_Action,
             Target_Subject => 0,
             Target_Event   => 0,
@@ -127,7 +127,7 @@ is
             Send_IPI       => False,
             IRQ_Number     => 0),
            1 |  7 | 35 | 38 | 41 | 42 |
-          52 => (
+          52 | 55 => (
             Source_Action  => System_Panic,
             Target_Subject => Invalid_Subject,
             Target_Event   => Invalid_Target_Event,

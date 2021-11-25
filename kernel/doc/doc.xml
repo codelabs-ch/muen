@@ -647,7 +647,7 @@
      \begin{description}
       \item[External Interrupt] \hfill \\
        Processing of external device interrupts
-      \item[VMX-preeption timer expired] \hfill \\
+      \item[VMX-preemption timer expired] \hfill \\
        Main kernel timer used for scheduler implementation.
       \item[Interrupt window] \hfill \\
        Mechanism for delivery of pending subject interrupts.

@@ -655,6 +655,9 @@
        Handling of Machine-Check Exceptions (MCEs) and NMIs.
       \item[VM-entry failure due to machine-check event] \hfill \\
        Further handling of MCEs.
+      \item[Xsetbv instruction] \hfill \\
+       Handling of XCR0 register which controls the extended processor/FPU
+       features and state.
      \end{description}
 
      A detailed description of the implementation is given in section

@@ -72,11 +72,20 @@ is
    --  Size of one page (4k).
    Page_Size : constant := 4096;
 
+   --  Used for storing additional FPU state information which is not part of
+   --  the hardware-managed XSAVE area.
+   FPU_Info_Size               : constant := 64;
    --  Size of XSAVE storage area in bytes. Must be at least as large as
    --  described in Intel SDM Vol. 1, "13.4 XSAVE Area".
-   FPU_Info_Size            : constant := 64;
-   XSAVE_Area_Size          : constant := Page_Size - FPU_Info_Size;
-   XSAVE_Legacy_Header_Size : constant := 32;
+   XSAVE_Area_Size             : constant := Page_Size - FPU_Info_Size;
+   XSAVE_Legacy_Header_Size    : constant := 32;
+   XSAVE_Legacy_Regs_Size      : constant := 384;
+   XSAVE_Legacy_Reserved_Size  : constant := 96;
+   XSAVE_Header_Start          : constant := XSAVE_Legacy_Header_Size
+     + XSAVE_Legacy_Regs_Size + XSAVE_Legacy_Reserved_Size;
+   XSAVE_Header_Size           : constant := 64;
+   XSAVE_Extended_Region_Start : constant := XSAVE_Header_Start
+     + XSAVE_Header_Size;
 
    --  For layout of XSAVE legacy region see Intel SDM Vol. 1,
    --  "13.4.1 Legacy Region of an XSAVE Area".
@@ -96,9 +105,36 @@ is
 
    Null_XSAVE_Legacy_Header : constant XSAVE_Legacy_Header_Type;
 
-   type XSAVE_Extended_Region_Type is array (32 .. XSAVE_Area_Size - 1) of Byte
+   type XSAVE_Legacy_Registers_Type is array
+     (1 .. XSAVE_Legacy_Regs_Size) of Byte
+     with Size => XSAVE_Legacy_Regs_Size * 8;
+
+   type XSAVE_Legacy_Reserved_Type is array
+     (1 .. XSAVE_Legacy_Reserved_Size) of Byte
    with
-      Size => (XSAVE_Area_Size - XSAVE_Legacy_Header_Size) * 8;
+      Size => XSAVE_Legacy_Reserved_Size * 8;
+
+   type XSAVE_Header_Reserved_Type is array (1 .. XSAVE_Header_Size - 16)
+     of Byte
+       with Size => (XSAVE_Header_Size - 16) * 8;
+
+   --D @Interface
+   --D XSAVE Header as specified in Intel SDM Vol. 1, "13.4.2 XSAVE Header".
+   type XSAVE_Header_Type is record
+      XSTATE_BV : Word64;
+      XCOMP_BV  : Word64;
+      Reserved  : XSAVE_Header_Reserved_Type;
+   end record
+     with Size => XSAVE_Header_Size * 8;
+
+   Null_XSAVE_Header : constant XSAVE_Header_Type;
+
+   --D @Interface
+   --D Storage area for extended FPU state.
+   type XSAVE_Extended_Region_Type is array
+     (1 .. XSAVE_Area_Size - XSAVE_Extended_Region_Start) of Byte
+     with
+       Size => (XSAVE_Area_Size - XSAVE_Extended_Region_Start) * 8;
 
    --D @Interface
    --D XSAVE area used to save the FPU state. see Intel SDM Vol. 1,
@@ -106,11 +142,19 @@ is
    type XSAVE_Area_Type is record
       --D @Interface
       --D Legacy region of the XSAVE area excluding the SSE register state.
-      Legacy_Header   : XSAVE_Legacy_Header_Type;
+      Legacy_Header    : XSAVE_Legacy_Header_Type;
       --D @Interface
-      --D Extended region of XSAVE area including XSAVE header as well as SSE
-      --D register state.
-      Extended_Region : XSAVE_Extended_Region_Type;
+      --D Legacy SSE/XMM register state region of the XSAVE area.
+      Legacy_Registers : XSAVE_Legacy_Registers_Type;
+      --D @Interface
+      --D Reserved/Unused part of the legacy region.
+      Legacy_Reserved  : XSAVE_Legacy_Reserved_Type;
+      --D @Interface
+      --D XSAVE Header of the XSAVE area.
+      XSAVE_Header     : XSAVE_Header_Type;
+      --D @Interface
+      --D Extended region of XSAVE area.
+      Extended_Region  : XSAVE_Extended_Region_Type;
    end record
    with
       Pack,
@@ -273,6 +317,12 @@ private
       MXCSR_Mask at 28 range  0 .. 31;
    end record;
 
+   for XSAVE_Header_Type use record
+      XSTATE_BV at  0 range 0 ..  63;
+      XCOMP_BV  at  8 range 0 ..  63;
+      Reserved  at 16 range 0 .. 383;
+   end record;
+
    for Segment_Type use record
       Selector      at  0 range 0 .. 63;
       Base          at  8 range 0 .. 63;
@@ -314,6 +364,11 @@ private
          FDP        => 0,
          MXCSR      => 0,
          MXCSR_Mask => 0);
+
+   Null_XSAVE_Header : constant XSAVE_Header_Type
+     := (XSTATE_BV => 0,
+         XCOMP_BV  => 0,
+         Reserved  => (others => 0));
 
    Null_CPU_Regs : constant CPU_Registers_Type
      := CPU_Registers_Type'(others => 0);

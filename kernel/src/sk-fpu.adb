@@ -213,8 +213,22 @@ is
       Refined_Depends => (Subject_FPU_States  =>+ (ID, Value)),
       Refined_Post    => Subject_FPU_States (ID).XCR0 = Value
    is
+      XSTATE_BV    : constant Word64
+        := Subject_FPU_States (ID).XSAVE_Area.XSAVE_Header.XSTATE_BV;
+      Cleared_Bits : constant Word64 := (Value xor XSTATE_BV) and XSTATE_BV;
    begin
       Subject_FPU_States (ID).XCR0 := Value;
+      if Cleared_Bits > 0 then
+
+         --  To ensure that extended processor state that is being disabled does
+         --  not incur a performance penalty, make sure the associated XSAVE
+         --  state components are set to their initial value upon the next
+         --  XRSTOR, see Intel SDM Vol. 3A, "13.5.3 Enable the Use Of XSAVE
+         --  Feature Set And XSAVE State Components".
+
+         Subject_FPU_States (ID).XSAVE_Area.XSAVE_Header.XSTATE_BV
+           := XSTATE_BV - Cleared_Bits;
+      end if;
    end Set_XCR0;
 
    -------------------------------------------------------------------------

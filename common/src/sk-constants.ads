@@ -247,7 +247,11 @@ is
 
    --  MXCSR Control and Status Register default initial value, see Intel SDM
    --  Vol. 3A, "9.1.1 Processor State After Reset".
-   MXCSR_Default_Value : constant := 16#1f80#;
+   MXCSR_Default_Value      : constant := 16#1f80#;
+   MXCSR_Mask_Default_Value : constant := 16#ffff#;
+   --  FCW initial value, see Intel SDM Vol. 1,
+   --  "13.6 Processor Tracking of XSAVE-Managed State"
+   FCW_Default_Value        : constant := 16#037f#;
 
    --  Segment selector values.
 

@@ -94,25 +94,25 @@ is
    procedure Reset_State (ID : Skp.Global_Subject_ID_Type)
    with
       Refined_Global  => (Input  => Active_XCR0_Features,
-                          In_Out => (Subject_FPU_States, Current_XCR0,
-                                     X86_64.State)),
-      Refined_Depends => ((Subject_FPU_States,
-                           X86_64.State)       => (ID, Active_XCR0_Features,
-                                                   X86_64.State, Current_XCR0,
-                                                   Subject_FPU_States),
-                          Current_XCR0         =>+ (ID, Active_XCR0_Features,
-                                                    Subject_FPU_States))
+                          In_Out => Subject_FPU_States),
+      Refined_Depends => (Subject_FPU_States =>+ (ID, Active_XCR0_Features,
+                                                   Subject_FPU_States))
    is
    begin
       --D @Interface
       --D Set FPU state of subject with specified ID to
-      --D \texttt{Null\_FPU\_State}.
+      --D \texttt{Null\_FPU\_State} and set XCR0, FCW and MXCSR fields to their
+      --D initial values, see Intel SDM Vol. 1,
+      --D "13.6 Processor Tracking of XSAVE-Managed State" and Intel SDM Vol.
+      --D 3A, "9.1.1 Processor State After Reset".
       Subject_FPU_States (ID) := Null_FPU_State;
       Subject_FPU_States (ID).XCR0 := Active_XCR0_Features;
-      Restore_State (ID => ID);
-      CPU.Fninit;
-      CPU.Ldmxcsr (Value => Constants.MXCSR_Default_Value);
-      Save_State (ID => ID);
+      Subject_FPU_States (ID).XSAVE_Area.Legacy_Header.FCW
+        := Constants.FCW_Default_Value;
+      Subject_FPU_States (ID).XSAVE_Area.Legacy_Header.MXCSR
+        := Constants.MXCSR_Default_Value;
+      Subject_FPU_States (ID).XSAVE_Area.Legacy_Header.MXCSR_Mask
+        := Constants.MXCSR_Mask_Default_Value;
    end Reset_State;
 
    -------------------------------------------------------------------------

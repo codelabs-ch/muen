@@ -68,8 +68,8 @@ is
    --  Processor State After Reset", table 9-1, column INIT.
    procedure Reset_State (ID : Skp.Global_Subject_ID_Type)
    with
-      Global  => (In_Out => (State, X86_64.State)),
-      Depends => ((State, X86_64.State) => (ID, State, X86_64.State));
+      Global  => (In_Out => State),
+      Depends => (State =>+ ID);
 
    --  Get FPU XSAVE Legacy registers from save area of subject specified by
    --  ID.

@@ -67,18 +67,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Fninit
-   with
-      SPARK_Mode => Off
-   is
-   begin
-      System.Machine_Code.Asm
-        (Template => "fninit",
-         Volatile => True);
-   end Fninit;
-
-   -------------------------------------------------------------------------
-
    function Get_CR0 return SK.Word64
    with
       SPARK_Mode => Off
@@ -195,19 +183,6 @@ is
         (Template => "hlt",
          Volatile => True);
    end Hlt;
-
-   -------------------------------------------------------------------------
-
-   procedure Ldmxcsr (Value : Word32)
-   with
-      SPARK_Mode => Off
-   is
-   begin
-      System.Machine_Code.Asm
-        (Template => "ldmxcsr %0",
-         Inputs   => (Word32'Asm_Input ("m", Value)),
-         Volatile => True);
-   end Ldmxcsr;
 
    -------------------------------------------------------------------------
 

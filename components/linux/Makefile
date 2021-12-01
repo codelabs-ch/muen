@@ -34,7 +34,7 @@ LOG = $(OBJ_DIR)/log.obj
 all: build $(INITRAMFS)
 
 $(SRC_BZIMAGE): src/.config
-	@$(E) linux Oldconfig "$(LINUX_FLAGS) $(MAKE) oldconfig -C src" $(LOG)
+	@$(E) linux Olddefconfig "$(LINUX_FLAGS) $(MAKE) olddefconfig -C src" $(LOG)
 	@$(E) linux Build "$(LINUX_FLAGS) $(MAKE) -C src" $(LOG)
 
 $(OBJ_DIR)/bzImage: $(SRC_BZIMAGE) | $(OBJ_DIR)

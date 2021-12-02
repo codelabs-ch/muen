@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e -u -o pipefail
+
 if [ $# -ne 3 ]; then
 	echo "usage: xml2ada <package> <in_file> <out_file>"
 	exit 1

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e -u -o pipefail
+
 if [ ! $# -eq 2 ]; then
 	echo "Usage: $0 <config_file> <build ID>"
 	exit 1

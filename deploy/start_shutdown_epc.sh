@@ -5,6 +5,8 @@
 #
 # [1] - http://wiki.gude.info/FAQ_EPC_CmdLine#Beispiele
 
+set -e -u -o pipefail
+
 DEVICE=$1
 ACTION=$2
 WGET="wget --quiet --delete-after"

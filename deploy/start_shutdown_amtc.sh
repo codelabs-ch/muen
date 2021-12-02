@@ -5,6 +5,8 @@
 #
 # [1] - https://github.com/schnoddelbotz/amtc
 
+set -e -u -o pipefail
+
 TARGET_HOST=$1
 ACTION=$2
 AMTC=amtc

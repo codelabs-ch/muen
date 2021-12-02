@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e -u -o pipefail
+
 SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TOP=${SCRIPTDIR}/../..
 MOUNT=type=bind,source=${TOP},target=/home/user/muen

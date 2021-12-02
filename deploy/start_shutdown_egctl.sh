@@ -5,6 +5,8 @@
 #
 # [1] - https://github.com/unterwulf/egctl
 
+set -e -u -o pipefail
+
 DEVICE=$1
 ACTION=$2
 EGCTL=egctl

@@ -99,7 +99,7 @@ logger.debug("Executing '" + cmd + "'")
 console.flush()
 
 with open(logfile, 'a+') as f:
-    child = subprocess.Popen(['/bin/bash', '-o', 'pipefail', '-c', cmd],
+    child = subprocess.Popen(['/bin/bash', '-u', '-e', '-o', 'pipefail', '-c', cmd],
                              stdout=f, stderr=subprocess.STDOUT,
                              close_fds=False)
     try:

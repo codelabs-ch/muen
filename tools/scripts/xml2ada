@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ $# -ne 3 ]; then
 	echo "usage: xml2ada <package> <in_file> <out_file>"

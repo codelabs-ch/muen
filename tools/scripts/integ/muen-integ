@@ -199,7 +199,7 @@ emulate()
 	local system=$2
 	local hardware=$3
 	local intscr=$4
-	local expect=$5
+	local expect=${5-}
 
 	export CURRENT_EMUL_LOGDIR=$1
 
@@ -267,7 +267,7 @@ hw_deploy()
 	local system=$2
 	local hardware=$3
 	local intscr=$4
-	local expect=$5
+	local expect=${5-}
 
 	execute "$MAKE -C kernel clean"
 	execute "$MAKE deploy HARDWARE=$hardware SYSTEM=$system"

@@ -125,8 +125,8 @@ is
          or Sata_Error.DIAG /= 0
       then
          Error := True;
-         pragma Debug (Debug_Ops.Print_Port_Error (ID));
-         pragma Debug (Debug_Ops.Dump_Port_Regs (ID));
+         Debug_Ops.Print_Port_Error (ID);
+         Debug_Ops.Dump_Port_Regs (ID);
       end if;
    end Check_Error;
 
@@ -210,7 +210,9 @@ is
                      or (Now >= End_Time);
       end loop Wait;
 
-      pragma Debug (Now > End_Time, Debug_Ops.Put_Line ("TimeOut!"));
+      if Now > End_Time then
+         Debug_Ops.Put_Line ("TimeOut!");
+      end if;
       Check_Error (ID, Error);
 
       if Error then
@@ -224,10 +226,10 @@ is
       if (Local_Cmd_Issue (0) = True)
          or (Local_Int_Status.TFES = True)
       then
-         pragma Debug (Debug_Ops.Put_Line (
-            "AHCI: Timeout during command execution!"));
+         Debug_Ops.Put_Line
+           ("AHCI: Timeout during command execution!");
          Success := False;
-         pragma Debug (Debug_Ops.Dump_Port_Regs (ID));
+         Debug_Ops.Dump_Port_Regs (ID);
       else
          Success := True;
       end if;
@@ -275,8 +277,8 @@ is
         := Instance (ID).Command_And_Status;
       Sata_Ctrl        : Port_SATA_Control_Type;
    begin
-      pragma Debug (Debug_Ops.Put_Line ("Reset Port" &
-         SK.Strings.Img (Interfaces.Unsigned_8 (ID))));
+      Debug_Ops.Put_Line
+        ("Reset Port" & SK.Strings.Img (Interfaces.Unsigned_8 (ID)));
       --  Serial ATA AHCI 1.3.1 Specification, section 10.4.2.
       Command_Status.ST := False;
       Instance (ID).Command_And_Status := Command_Status;
@@ -287,10 +289,12 @@ is
          Delays.M_Delay (Msec => 1);
       end loop;
 
-      pragma Debug (Cmd_List_Running,
-                    Debug_Ops.Put_Line ("Port " & SK.Strings.Img
-                      (Item => Interfaces.Unsigned_8 (ID))
-                      & ": Command list still running, issuing reset anyway"));
+      if Cmd_List_Running then
+         Debug_Ops.Put_Line
+           ("Port " & SK.Strings.Img
+              (Item => Interfaces.Unsigned_8 (ID))
+            & ": Command list still running, issuing reset anyway");
+      end if;
 
       Sata_Ctrl := Instance (ID).SATA_Control;
       Sata_Ctrl.DET := 1;

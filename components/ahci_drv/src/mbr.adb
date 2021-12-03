@@ -149,11 +149,13 @@ is
 
          Sig := MBR_Entry.Boot_Signature;
          if Ret /= Ahci.OK or Sig /= 16#aa55# then
-            pragma Debug (Ret /= Ahci.OK,
-               Debug_Ops.Put_Line ("Read failed"));
+            if Ret /= Ahci.OK then
+               Debug_Ops.Put_Line ("Read failed");
+            end if;
 
-            pragma Debug (Sig /= 16#aa55#,
-               Debug_Ops.Put_Line ("Signature invalid"));
+            if Sig /= 16#aa55# then
+               Debug_Ops.Put_Line ("Signature invalid");
+            end if;
             Part_Table.Count := 0;
             return;
          end if;
@@ -200,9 +202,8 @@ is
                if Part_Table.Count + Found not in
                  Partitions.Partition_Array_Range
                then
-                  pragma Debug
-                    (Debug_Ops.Put_Line
-                       ("MBR: Not enough entries to store partition table"));
+                  Debug_Ops.Put_Line
+                    ("MBR: Not enough entries to store partition table");
                   Part_Table := Null_Partition_Table;
                   return;
                end if;

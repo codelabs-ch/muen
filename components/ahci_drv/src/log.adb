@@ -28,7 +28,7 @@ with Ahci.Ports;
 with Ahci.HBA;
 with Ahci_Drv_Component.Devices;
 
-package body Debug_Ops
+package body Log
 with
    SPARK_Mode => Off
 is
@@ -256,19 +256,16 @@ is
          Put_Line ("err: Task File Error");
       end if;
       if Intr_Status.TFES then
-         Put_Line ("TF Err: "
-                             & SK.Strings.Img (T_F_Status.ERR));
+         Put_Line ("TF Err: " & SK.Strings.Img (T_F_Status.ERR));
       end if;
       if Intr_Status.PCS then
          Put_Line ("err: Port Connect Change Status");
       end if;
       if Sata_Error.ERR /= 0 then
-         Put_Line ("err: Sata Err: "
-                             & SK.Strings.Img (Sata_Error.ERR));
+         Put_Line ("err: Sata Err: " & SK.Strings.Img (Sata_Error.ERR));
       end if;
       if Sata_Error.DIAG /= 0 then
-         Put_Line ("err: Sata DIAG: "
-                             & SK.Strings.Img (Sata_Error.DIAG));
+         Put_Line ("err: Sata DIAG: " & SK.Strings.Img (Sata_Error.DIAG));
       end if;
    end Print_Port_Error;
 
@@ -385,4 +382,4 @@ is
 
    procedure Put_String (Item : String) renames Debuglog.Client.Put;
 
-end Debug_Ops;
+end Log;

@@ -16,7 +16,7 @@
 --
 
 with Interfaces;
-with Debug_Ops;
+with Log;
 with System;
 
 with Ahci.Device;
@@ -150,11 +150,11 @@ is
          Sig := MBR_Entry.Boot_Signature;
          if Ret /= Ahci.OK or Sig /= 16#aa55# then
             if Ret /= Ahci.OK then
-               Debug_Ops.Put_Line ("Read failed");
+               Log.Put_Line ("Read failed");
             end if;
 
             if Sig /= 16#aa55# then
-               Debug_Ops.Put_Line ("Signature invalid");
+               Log.Put_Line ("Signature invalid");
             end if;
             Part_Table.Count := 0;
             return;
@@ -202,7 +202,7 @@ is
                if Part_Table.Count + Found not in
                  Partitions.Partition_Array_Range
                then
-                  Debug_Ops.Put_Line
+                  Log.Put_Line
                     ("MBR: Not enough entries to store partition table");
                   Part_Table := Null_Partition_Table;
                   return;

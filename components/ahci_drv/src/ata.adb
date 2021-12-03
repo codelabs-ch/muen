@@ -15,7 +15,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Debug_Ops;
+with Log;
 with Interfaces;
 with SK.Strings;
 with System;
@@ -214,7 +214,7 @@ is
 
          Length := Length + (LBA_Range_Type'Size / 8);
          if Idx = LBA_Range'Last then
-            Debug_Ops.Put_Line
+            Log.Put_Line
               ("Discard_Sectors: Error constructing LBA entries (1)");
             Ret_Val := Ahci.ENOTSUP;
             return;
@@ -229,7 +229,7 @@ is
          LBA_Range_List (Idx).LBA    := 0;
          LBA_Range_List (Idx).Length := 0;
          if Idx = LBA_Range'Last then
-            Debug_Ops.Put_Line
+            Log.Put_Line
               ("Discard_Sectors: Error constructing LBA entries (2)");
             Ret_Val := Ahci.ENOTSUP;
             return;
@@ -260,8 +260,8 @@ is
       if Success then
          Ret_Val := Ahci.OK;
       else
-         Debug_Ops.Dump_Cmd_List (ID, 8);
-         Debug_Ops.Dump_Cmd_Table (ID, 40);
+         Log.Dump_Cmd_List (ID, 8);
+         Log.Dump_Cmd_Table (ID, 40);
          Ret_Val := Ahci.EIO;
       end if;
    end Discard_Sectors;
@@ -337,14 +337,14 @@ is
                           Timeout => 30,
                           Success => Success);
       if not Success then
-         Debug_Ops.Dump_Cmd_List (ID, 8);
-         Debug_Ops.Dump_Cmd_Table (ID, 40);
+         Log.Dump_Cmd_List (ID, 8);
+         Log.Dump_Cmd_Table (ID, 40);
       end if;
 
       Bytes_IO := Ahci.Commands.Command_Lists (ID)(0).PRDBC;
       if Bytes_IO /= Bytes then
-         Debug_Ops.Put_Line ("Bytes_IO: " & SK.Strings.Img (Bytes_IO)
-                             & "/=" & SK.Strings.Img (Bytes));
+         Log.Put_Line ("Bytes_IO: " & SK.Strings.Img (Bytes_IO)
+                       & "/=" & SK.Strings.Img (Bytes));
       end if;
 
       if Success and (Bytes_IO = Bytes)
@@ -385,7 +385,7 @@ is
       if Success then
          Ret_Val := Ahci.OK;
       else
-         Debug_Ops.Put_Line ("Flush Cache failed!");
+         Log.Put_Line ("Flush Cache failed!");
          Ret_Val := Ahci.EIO;
       end if;
    end Sync;
@@ -784,14 +784,13 @@ is
 
          Ahci.Devices (Port_ID).Signature := Ahci.Sata;
 
-         Debug_Ops.Put_Line
-           ("ata: device found: " & Model & " [" & FW & "]");
+         Log.Put_Line ("ata: device found: " & Model & " [" & FW & "]");
 
          Ahci.Devices (Port_ID).Support_48Bit :=
             Ata_Identify_Response.Cmds_Features.Support_48Bit;
 
          if Ahci.Devices (Port_ID).Support_48Bit then
-            Debug_Ops.Put_Line ("ata: Support for LBA-48 enabled.");
+            Log.Put_Line ("ata: Support for LBA-48 enabled.");
          end if;
 
          if Ahci.Devices (Port_ID).Support_48Bit then
@@ -827,10 +826,10 @@ is
               (Ahci.Devices (Port_ID).Sector_Size_Shift <= I);
          end loop Get_Shift;
 
-         Debug_Ops.Put_Line
+         Log.Put_Line
            ("ata: Sector Size:" & SK.Strings.Img (
             Ahci.Devices (Port_ID).Sector_Size));
-         Debug_Ops.Put_Line
+         Log.Put_Line
            ("ata: Sector Size Shift:" & SK.Strings.Img (
             Interfaces.Unsigned_32 (
               Ahci.Devices (Port_ID).Sector_Size_Shift)));
@@ -838,13 +837,13 @@ is
          Ahci.Devices (Port_ID).Support_Discard :=
            Ata_Identify_Response.DSM_Support (0);
          if Ahci.Devices (Port_ID).Support_Discard then
-            Debug_Ops.Put_Line ("ata: Trim supported");
+            Log.Put_Line ("ata: Trim supported");
          end if;
 
          Ahci.Devices (Port_ID).Support_SMART :=
            Ata_Identify_Response.Cmds_Features.SMART_Supported;
          if Ahci.Devices (Port_ID).Support_SMART then
-            Debug_Ops.Put_Line ("ata: SMART supported");
+            Log.Put_Line ("ata: SMART supported");
          end if;
 
          declare

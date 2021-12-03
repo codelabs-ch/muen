@@ -22,7 +22,7 @@ with Ahci;
 with Mbr;
 with Muenblock;
 
-package Debug_Ops
+package Log
 is
    procedure Dump_Cmd_Table
      (ID  : Ahci.Port_Range;
@@ -61,4 +61,4 @@ is
    --  Output HBA memory registers.
    procedure Print_HBA_Memory_Regs;
 
-end Debug_Ops;
+end Log;

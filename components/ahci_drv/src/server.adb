@@ -15,7 +15,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Debug_Ops;
+with Log;
 with SK.Hypercall;
 with SK.Strings;
 with Interfaces;
@@ -197,7 +197,7 @@ is
                goto Next_Dev;
             end if;
             if not Devs (Integer (Dev.Ahci_Port)) then
-               Debug_Ops.Put_Line
+               Log.Put_Line
                  ("WARNING: configured Device not available!");
                goto Next_Dev;
             end if;
@@ -207,10 +207,10 @@ is
                ID := Dev.Ahci_Port;
                --  MBR?
                Mbr.Parse (ID, Mbr_Partitions);
-               Debug_Ops.Put_Line
+               Log.Put_Line
                  ("Partitions of Device "
                   & SK.Strings.Img (Interfaces.Unsigned_8 (ID)));
-               Debug_Ops.Print_MBR_Partition_Table (Mbr_Partitions);
+               Log.Print_MBR_Partition_Table (Mbr_Partitions);
                Mbr_Not_Read := False;
             end if;
 
@@ -321,7 +321,7 @@ is
          Ports (Port_Idx).Devs (Dev_Idx).Current := Null_Current;
 
          if Sector_Size = 0 then
-            Debug_Ops.Put_Line
+            Log.Put_Line
               ("Finish_Current_Request with zero sector size for device "
                & "with ID " & SK.Strings.Img (Interfaces.Unsigned_64
                  (Dev_Id)));
@@ -366,14 +366,14 @@ is
                return;
          end case;
       else
-         Debug_Ops.Put_Line
+         Log.Put_Line
            ("Device Offset not aligned to Sector Size!" &
               SK.Strings.Img
               (Ports (Port_Idx).Devs (Dev_Idx).Current.Device_Offset));
       end if;
 
       if Ret /= Ahci.OK then
-         Debug_Ops.Put_Line
+         Log.Put_Line
            ("RW failed: Sector: "
             & SK.Strings.Img (Start_Sec)
             & " Number of Sectors: "
@@ -498,7 +498,7 @@ is
             end if;
 
          when others =>
-            Debug_Ops.Put_Line ("simple_req: unknown!");
+            Log.Put_Line ("simple_req: unknown!");
       end case;
 
       Send_Response (Ports (Port_Idx).Chan_Idx, Response);
@@ -589,13 +589,13 @@ is
    begin
       pragma Debug
         (Unused_Debug_Requests,
-         Debug_Ops.Put_Line ("Received request on port: "
+         Log.Put_Line ("Received request on port: "
            & SK.Strings.Img (Interfaces.Unsigned_32 (Port_Idx))));
-      pragma Debug (Unused_Debug_Requests, Debug_Ops.Print_Request (Request));
+      pragma Debug (Unused_Debug_Requests, Log.Print_Request (Request));
 
       if Request.Device_Id > Interfaces.Unsigned_16 (PC.Devices_Range'Last)
       then
-         Debug_Ops.Put_Line
+         Log.Put_Line
            ("Request on port: " &
               SK.Strings.Img (Interfaces.Unsigned_32 (Port_Idx))
             & " -  invalid device ID, ignoring request");
@@ -636,7 +636,7 @@ is
                | MB.Sync =>
             Process_Simple_Request (Port_Idx, Dev_Idx, Request);
          when others =>
-            Debug_Ops.Put_Line ("Unknown request!");
+            Log.Put_Line ("Unknown request!");
       end case;
 
    end Process_Request;
@@ -676,19 +676,19 @@ is
                 Result  => Res);
          case Res is
             when Req_Chn.Reader.Incompatible_Interface =>
-               pragma Debug (Debug_Ops.Put_Line
+               pragma Debug (Log.Put_Line
                  (Item => "Request channel: Incompatible interface"
                   & " detected"));
             when Req_Chn.Reader.Epoch_Changed =>
-               pragma Debug (Debug_Ops.Put_Line
+               pragma Debug (Log.Put_Line
                  (Item => "Request channel: Epoch changed"));
             when Req_Chn.Reader.No_Data =>
                Finish_Current_Requests (Port_Idx);
             when Req_Chn.Reader.Overrun_Detected =>
-               pragma Debug (Debug_Ops.Put_Line
+               pragma Debug (Log.Put_Line
                  (Item => "Overrun!"));
             when Req_Chn.Reader.Inactive =>
-               pragma Debug (Debug_Ops.Put_Line
+               pragma Debug (Log.Put_Line
                   (Item => "Request channel: Inactive"));
             when Req_Chn.Reader.Success =>
                Process_Request (Port_Idx, Request);

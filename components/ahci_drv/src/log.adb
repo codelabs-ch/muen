@@ -28,7 +28,7 @@ with Ahci.Ports;
 with Ahci.HBA;
 with Ahci_Drv_Component.Devices;
 
-package body Debug_Ops
+package body Log
 with
    SPARK_Mode => Off
 is
@@ -98,14 +98,18 @@ is
    is
    begin
       for I in Integer range 0 .. Table.Count - 1 loop
-         pragma Debug (Debug_Ops.Put_Line ("Partition " &
-            SK.Strings.Img (Interfaces.Unsigned_32 (I))));
-         pragma Debug (Debug_Ops.Put_Line (" Start LBA : " &
-            SK.Strings.Img (Table.Entries (I).Start_Lba)));
-         pragma Debug (Debug_Ops.Put_Line (" Count     : " &
-            SK.Strings.Img (Table.Entries (I).Sector_Cnt)));
-         pragma Debug (Debug_Ops.Put_Line (" Type      : " &
-            SK.Strings.Img (Table.Entries (I).Partition_Type)));
+         Put_Line
+           ("Partition " & SK.Strings.Img
+              (Interfaces.Unsigned_32 (I)));
+         Put_Line
+           (" Start LBA : " & SK.Strings.Img
+              (Table.Entries (I).Start_Lba));
+         Put_Line
+           (" Count     : " & SK.Strings.Img
+              (Table.Entries (I).Sector_Cnt));
+         Put_Line
+           (" Type      : " & SK.Strings.Img
+              (Table.Entries (I).Partition_Type));
       end loop;
    end Print_MBR_Partition_Table;
 
@@ -114,20 +118,20 @@ is
    procedure Print_Request (Request : Muenblock.Block_Request_Type)
    is
    begin
-      pragma Debug (Debug_Ops.Put_Line ("Request: "));
-      pragma Debug (Debug_Ops.Put_Line (
-         " Kind: " & SK.Strings.Img
-            (Interfaces.Unsigned_16 (Request.Request_Kind))));
-      pragma Debug (Debug_Ops.Put_Line (
-         " Device_ID     : " & SK.Strings.Img (Request.Device_Id)));
-      pragma Debug (Debug_Ops.Put_Line (
-         " Request_Tag   : " & SK.Strings.Img (Request.Request_Tag)));
-      pragma Debug (Debug_Ops.Put_Line (
-         " Request_Length: " & SK.Strings.Img (Request.Request_Length)));
-      pragma Debug (Debug_Ops.Put_Line (
-         " Device_Offset : " & SK.Strings.Img (Request.Device_Offset)));
-      pragma Debug (Debug_Ops.Put_Line (
-         " Buffer_Offset : " & SK.Strings.Img (Request.Buffer_Offset)));
+      Put_Line ("Request: ");
+      Put_Line
+        (" Kind: " & SK.Strings.Img
+           (Interfaces.Unsigned_16 (Request.Request_Kind)));
+      Put_Line
+        (" Device_ID     : " & SK.Strings.Img (Request.Device_Id));
+      Put_Line
+        (" Request_Tag   : " & SK.Strings.Img (Request.Request_Tag));
+      Put_Line
+        (" Request_Length: " & SK.Strings.Img (Request.Request_Length));
+      Put_Line
+        (" Device_Offset : " & SK.Strings.Img (Request.Device_Offset));
+      Put_Line
+        (" Buffer_Offset : " & SK.Strings.Img (Request.Buffer_Offset));
    end Print_Request;
 
    -------------------------------------------------------------------------
@@ -151,10 +155,11 @@ is
    begin
       for I in Integer range Start .. Start + Len loop
          Local32 := Cmd_Table_Buf (I);
-         pragma Debug (Debug_Ops.Put_Line ("Cmd Table ["
+         Put_Line
+           ("Cmd Table ["
             & SK.Strings.Img (Interfaces.Unsigned_8 (I))
             & "] "
-            & SK.Strings.Img (Local32)));
+            & SK.Strings.Img (Local32));
          Local32 := Local32 + 1;
       end loop;
    end Dump_Cmd_Table;
@@ -181,10 +186,11 @@ is
    begin
       for I in Integer range Start .. Start + Len loop
          Local32 := Cmd_List_Buf (I);
-         pragma Debug (Debug_Ops.Put_Line ("Cmd List ["
+         Put_Line
+           ("Cmd List ["
             & SK.Strings.Img (Interfaces.Unsigned_8 (I))
             & "] "
-            & SK.Strings.Img (Local32)));
+            & SK.Strings.Img (Local32));
          Local32 := Local32 + 1;
       end loop;
    end Dump_Cmd_List;
@@ -209,11 +215,11 @@ is
       Local32 : Interfaces.Unsigned_32;
       Start   : constant Integer := Integer (ID) * 16#20#;
    begin
-      pragma Debug (Debug_Ops.Put_Line ("Dumping Port  " & SK.Strings.Img (
-         Interfaces.Unsigned_32 (ID))));
+      Put_Line ("Dumping Port  " & SK.Strings.Img (
+                Interfaces.Unsigned_32 (ID)));
       for I in Integer range Start .. 17 + Start loop
          Local32 := Port_Regs (I);
-         pragma Debug (Debug_Ops.Put_Line (SK.Strings.Img (Local32)));
+         Put_Line (SK.Strings.Img (Local32));
          Local32 := Local32 + 1;
       end loop;
    end Dump_Port_Regs;
@@ -224,36 +230,43 @@ is
    is
       use Ahci.Ports;
 
-      Sata_Error  : constant Port_SATA_Error_Type :=
-                        Ahci.Ports.Instance (ID).SATA_Error;
-      Intr_Status : constant Port_Interrupt_Status_Type :=
-                        Ahci.Ports.Instance (ID).Interrupt_Status;
-      T_F_Status  : constant Port_Task_File_Data_Type :=
-                        Ahci.Ports.Instance (ID).Task_File_Data;
+      Sata_Error  : constant Port_SATA_Error_Type
+        := Ahci.Ports.Instance (ID).SATA_Error;
+      Intr_Status : constant Port_Interrupt_Status_Type
+        := Ahci.Ports.Instance (ID).Interrupt_Status;
+      T_F_Status  : constant Port_Task_File_Data_Type
+        := Ahci.Ports.Instance (ID).Task_File_Data;
    begin
-      pragma Debug (Intr_Status.OFS,
-         Debug_Ops.Put_Line ("err: Overflow"));
-      pragma Debug (Intr_Status.INFS,
-         Debug_Ops.Put_Line ("err: Interface Non-Fatal Error"));
-      pragma Debug (Intr_Status.IFS,
-         Debug_Ops.Put_Line ("err: Interface Fatal Error"));
-      pragma Debug (Intr_Status.HBDS,
-         Debug_Ops.Put_Line ("err: Host Bus Data Error"));
-      pragma Debug (Intr_Status.OFS,
-         Debug_Ops.Put_Line ("err: Host Bus Fatal Error"));
-      pragma Debug (Intr_Status.TFES,
-         Debug_Ops.Put_Line ("err: Task File Error"));
-      pragma Debug (Intr_Status.TFES,
-         Debug_Ops.Put_Line ("TF Err: " &
-             SK.Strings.Img (T_F_Status.ERR)));
-      pragma Debug (Intr_Status.PCS,
-         Debug_Ops.Put_Line ("err: Port Connect Change Status"));
-      pragma Debug (Sata_Error.ERR /= 0,
-         Debug_Ops.Put_Line ("err: Sata Err: " &
-            SK.Strings.Img (Sata_Error.ERR)));
-      pragma Debug (Sata_Error.DIAG /= 0,
-         Debug_Ops.Put_Line ("err: Sata DIAG: " &
-            SK.Strings.Img (Sata_Error.DIAG)));
+      if Intr_Status.OFS then
+         Put_Line ("err: Overflow");
+      end if;
+      if Intr_Status.INFS then
+         Put_Line ("err: Interface Non-Fatal Error");
+      end if;
+      if Intr_Status.IFS then
+         Put_Line ("err: Interface Fatal Error");
+      end if;
+      if Intr_Status.HBDS then
+         Put_Line ("err: Host Bus Data Error");
+      end if;
+      if Intr_Status.OFS then
+         Put_Line ("err: Host Bus Fatal Error");
+      end if;
+      if Intr_Status.TFES then
+         Put_Line ("err: Task File Error");
+      end if;
+      if Intr_Status.TFES then
+         Put_Line ("TF Err: " & SK.Strings.Img (T_F_Status.ERR));
+      end if;
+      if Intr_Status.PCS then
+         Put_Line ("err: Port Connect Change Status");
+      end if;
+      if Sata_Error.ERR /= 0 then
+         Put_Line ("err: Sata Err: " & SK.Strings.Img (Sata_Error.ERR));
+      end if;
+      if Sata_Error.DIAG /= 0 then
+         Put_Line ("err: Sata DIAG: " & SK.Strings.Img (Sata_Error.DIAG));
+      end if;
    end Print_Port_Error;
 
    -------------------------------------------------------------------------
@@ -369,4 +382,4 @@ is
 
    procedure Put_String (Item : String) renames Debuglog.Client.Put;
 
-end Debug_Ops;
+end Log;

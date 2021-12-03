@@ -15,7 +15,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Debug_Ops;
+with Log;
 with Interfaces;
 with SK.Strings;
 with System;
@@ -214,9 +214,8 @@ is
 
          Length := Length + (LBA_Range_Type'Size / 8);
          if Idx = LBA_Range'Last then
-            pragma Debug
-              (Debug_Ops.Put_Line
-                 ("Discard_Sectors: Error constructing LBA entries (1)"));
+            Log.Put_Line
+              ("Discard_Sectors: Error constructing LBA entries (1)");
             Ret_Val := Ahci.ENOTSUP;
             return;
          end if;
@@ -230,9 +229,8 @@ is
          LBA_Range_List (Idx).LBA    := 0;
          LBA_Range_List (Idx).Length := 0;
          if Idx = LBA_Range'Last then
-            pragma Debug
-              (Debug_Ops.Put_Line
-                 ("Discard_Sectors: Error constructing LBA entries (2)"));
+            Log.Put_Line
+              ("Discard_Sectors: Error constructing LBA entries (2)");
             Ret_Val := Ahci.ENOTSUP;
             return;
          end if;
@@ -258,12 +256,12 @@ is
       Ahci.Ports.Execute (ID      => ID,
                           Timeout => 30,
                           Success => Success);
-      pragma Debug (not Success, Debug_Ops.Dump_Cmd_List (ID, 8));
-      pragma Debug (not Success, Debug_Ops.Dump_Cmd_Table (ID, 40));
 
       if Success then
          Ret_Val := Ahci.OK;
       else
+         Log.Dump_Cmd_List (ID, 8);
+         Log.Dump_Cmd_Table (ID, 40);
          Ret_Val := Ahci.EIO;
       end if;
    end Discard_Sectors;
@@ -338,13 +336,17 @@ is
       Ahci.Ports.Execute (ID      => ID,
                           Timeout => 30,
                           Success => Success);
-      pragma Debug (not Success, Debug_Ops.Dump_Cmd_List (ID, 8));
-      pragma Debug (not Success, Debug_Ops.Dump_Cmd_Table (ID, 40));
+      if not Success then
+         Log.Dump_Cmd_List (ID, 8);
+         Log.Dump_Cmd_Table (ID, 40);
+      end if;
 
       Bytes_IO := Ahci.Commands.Command_Lists (ID)(0).PRDBC;
-      pragma Debug (Bytes_IO /= Bytes,
-         Debug_Ops.Put_Line ("Bytes_IO: " & SK.Strings.Img (Bytes_IO) &
-            "/=" & SK.Strings.Img (Bytes)));
+      if Bytes_IO /= Bytes then
+         Log.Put_Line ("Bytes_IO: " & SK.Strings.Img (Bytes_IO)
+                       & "/=" & SK.Strings.Img (Bytes));
+      end if;
+
       if Success and (Bytes_IO = Bytes)
       then
          Ret_Val := Ahci.OK;
@@ -380,10 +382,10 @@ is
       Ahci.Ports.Execute (ID      => ID,
                           Timeout => 60,
                           Success => Success);
-      pragma Debug (not Success, Debug_Ops.Put_Line ("Flush Cache failed!"));
       if Success then
          Ret_Val := Ahci.OK;
       else
+         Log.Put_Line ("Flush Cache failed!");
          Ret_Val := Ahci.EIO;
       end if;
    end Sync;
@@ -719,12 +721,7 @@ is
 
    -------------------------------------------------------------------------
 
-   pragma $Release_Warnings
-     (Off, "procedure ""Convert_Ata_String"" is not referenced",
-      Reason => "Only used in debug output");
    procedure Convert_Ata_String (Src : in out String);
-   pragma $Release_Warnings
-     (On, "procedure ""Convert_Ata_String"" is not referenced");
 
    procedure Convert_Ata_String (Src : in out String)
    with
@@ -752,8 +749,8 @@ is
 
       Length              : Interfaces.Unsigned_32 :=  512;
       Success             : Boolean;
-      Unused_FW           : String (1 ..  8);
-      Unused_Model        : String (1 .. 40);
+      FW                  : String (1 ..  8);
+      Model               : String (1 .. 40);
       Sector_Size         : Sector_Size_Type;
       Sector_Size_Bytes   : Interfaces.Unsigned_32;
       Logical_Sector_Size : Interfaces.Unsigned_32;
@@ -780,21 +777,21 @@ is
                           Success => Success);
 
       if Success then
-         Unused_FW := Ata_Identify_Response.FW;
-         pragma Debug (Convert_Ata_String (Unused_FW));
-         Unused_Model := Ata_Identify_Response.Model;
-         pragma Debug (Convert_Ata_String (Unused_Model));
+         FW := Ata_Identify_Response.FW;
+         Convert_Ata_String (FW);
+         Model := Ata_Identify_Response.Model;
+         Convert_Ata_String (Model);
 
          Ahci.Devices (Port_ID).Signature := Ahci.Sata;
 
-         pragma Debug (Debug_Ops.Put_Line
-            ("ata: device found: " & Unused_Model & " [" & Unused_FW & "]"));
+         Log.Put_Line ("ata: device found: " & Model & " [" & FW & "]");
 
          Ahci.Devices (Port_ID).Support_48Bit :=
             Ata_Identify_Response.Cmds_Features.Support_48Bit;
 
-         pragma Debug (Ahci.Devices (Port_ID).Support_48Bit,
-            Debug_Ops.Put_Line ("ata: Support for LBA-48 enabled."));
+         if Ahci.Devices (Port_ID).Support_48Bit then
+            Log.Put_Line ("ata: Support for LBA-48 enabled.");
+         end if;
 
          if Ahci.Devices (Port_ID).Support_48Bit then
             Number_Of_Sectors := Ata_Identify_Response.Number_Of_Sectors_2;
@@ -829,23 +826,25 @@ is
               (Ahci.Devices (Port_ID).Sector_Size_Shift <= I);
          end loop Get_Shift;
 
-         pragma Debug (Debug_Ops.Put_Line
-               ("ata: Sector Size:" & SK.Strings.Img (
-                  Ahci.Devices (Port_ID).Sector_Size)));
-         pragma Debug (Debug_Ops.Put_Line
-               ("ata: Sector Size Shift:" & SK.Strings.Img (
-                  Interfaces.Unsigned_32 (
-                     Ahci.Devices (Port_ID).Sector_Size_Shift))));
+         Log.Put_Line
+           ("ata: Sector Size:" & SK.Strings.Img (
+            Ahci.Devices (Port_ID).Sector_Size));
+         Log.Put_Line
+           ("ata: Sector Size Shift:" & SK.Strings.Img (
+            Interfaces.Unsigned_32 (
+              Ahci.Devices (Port_ID).Sector_Size_Shift)));
 
          Ahci.Devices (Port_ID).Support_Discard :=
-            Ata_Identify_Response.DSM_Support (0);
-         pragma Debug (Ahci.Devices (Port_ID).Support_Discard,
-            Debug_Ops.Put_Line ("ata: Trim supported"));
+           Ata_Identify_Response.DSM_Support (0);
+         if Ahci.Devices (Port_ID).Support_Discard then
+            Log.Put_Line ("ata: Trim supported");
+         end if;
 
          Ahci.Devices (Port_ID).Support_SMART :=
-            Ata_Identify_Response.Cmds_Features.SMART_Supported;
-         pragma Debug (Ahci.Devices (Port_ID).Support_SMART,
-            Debug_Ops.Put_Line ("ata: SMART supported"));
+           Ata_Identify_Response.Cmds_Features.SMART_Supported;
+         if Ahci.Devices (Port_ID).Support_SMART then
+            Log.Put_Line ("ata: SMART supported");
+         end if;
 
          declare
             Ret_Val       : Ahci.Status_Type;

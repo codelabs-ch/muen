@@ -22,7 +22,7 @@ with Ahci.Delays;
 with Ahci.HBA;
 with Ahci.Ports;
 
-with Debug_Ops;
+with Log;
 with Interfaces;
 
 with SK.Strings;
@@ -198,7 +198,7 @@ is
    begin
 
       if HBA_Caps.SSS then
-         pragma Debug (Debug_Ops.Put_Line ("HBA supports staged spin up"));
+         Log.Put_Line ("HBA supports staged spin up");
          Ports.Spin_Up (ID => Port_ID);
       end if;
 
@@ -260,9 +260,11 @@ is
 
       Identify_Device (Port_ID => Port_ID);
 
-      pragma Debug (Devices (Port_ID).Signature = Sata,
-         Debug_Ops.Put_Line ("Sata device found on Port " &
-         SK.Strings.Img (Interfaces.Unsigned_8 (Port_ID))));
+      if Devices (Port_ID).Signature = Sata then
+         Log.Put_Line
+           ("Sata device found on Port "
+            & SK.Strings.Img (Interfaces.Unsigned_8 (Port_ID)));
+      end if;
    end Probe;
 
    -------------------------------------------------------------------------

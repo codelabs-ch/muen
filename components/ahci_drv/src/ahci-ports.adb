@@ -21,7 +21,7 @@ with SK.Strings;
 
 with Ahci.Delays;
 
-with Debug_Ops;
+with Log;
 
 with Interfaces;
 
@@ -125,8 +125,8 @@ is
          or Sata_Error.DIAG /= 0
       then
          Error := True;
-         pragma Debug (Debug_Ops.Print_Port_Error (ID));
-         pragma Debug (Debug_Ops.Dump_Port_Regs (ID));
+         Log.Print_Port_Error (ID);
+         Log.Dump_Port_Regs (ID);
       end if;
    end Check_Error;
 
@@ -189,7 +189,7 @@ is
       Local_Cmd_Issue := Instance (ID).Command_Issue;
 
       if (Local_Cmd_Status.CR = False) or Local_Cmd_Issue (0) then
-         pragma Debug (Debug_Ops.Put_Line ("Busy.." &
+         pragma Debug (Log.Put_Line ("Busy.." &
             SK.Strings.Img (Interfaces.Unsigned_32 (ID))));
             Success := False;
             return;
@@ -210,7 +210,9 @@ is
                      or (Now >= End_Time);
       end loop Wait;
 
-      pragma Debug (Now > End_Time, Debug_Ops.Put_Line ("TimeOut!"));
+      if Now > End_Time then
+         Log.Put_Line ("TimeOut!");
+      end if;
       Check_Error (ID, Error);
 
       if Error then
@@ -224,10 +226,9 @@ is
       if (Local_Cmd_Issue (0) = True)
          or (Local_Int_Status.TFES = True)
       then
-         pragma Debug (Debug_Ops.Put_Line (
-            "AHCI: Timeout during command execution!"));
+         Log.Put_Line ("AHCI: Timeout during command execution!");
          Success := False;
-         pragma Debug (Debug_Ops.Dump_Port_Regs (ID));
+         Log.Dump_Port_Regs (ID);
       else
          Success := True;
       end if;
@@ -275,8 +276,8 @@ is
         := Instance (ID).Command_And_Status;
       Sata_Ctrl        : Port_SATA_Control_Type;
    begin
-      pragma Debug (Debug_Ops.Put_Line ("Reset Port" &
-         SK.Strings.Img (Interfaces.Unsigned_8 (ID))));
+      Log.Put_Line
+        ("Reset Port" & SK.Strings.Img (Interfaces.Unsigned_8 (ID)));
       --  Serial ATA AHCI 1.3.1 Specification, section 10.4.2.
       Command_Status.ST := False;
       Instance (ID).Command_And_Status := Command_Status;
@@ -287,10 +288,12 @@ is
          Delays.M_Delay (Msec => 1);
       end loop;
 
-      pragma Debug (Cmd_List_Running,
-                    Debug_Ops.Put_Line ("Port " & SK.Strings.Img
-                      (Item => Interfaces.Unsigned_8 (ID))
-                      & ": Command list still running, issuing reset anyway"));
+      if Cmd_List_Running then
+         Log.Put_Line
+           ("Port " & SK.Strings.Img
+              (Item => Interfaces.Unsigned_8 (ID))
+            & ": Command list still running, issuing reset anyway");
+      end if;
 
       Sata_Ctrl := Instance (ID).SATA_Control;
       Sata_Ctrl.DET := 1;
@@ -382,12 +385,12 @@ is
       end loop;
 
       if Fis_Receive_Enabled or Cmd_List_Running then
-         pragma Debug (Fis_Receive_Enabled, Debug_Ops.Put_Line (
+         pragma Debug (Fis_Receive_Enabled, Log.Put_Line (
             "Fis Receive Still enabled"));
-         pragma Debug (Cmd_List_Running, Debug_Ops.Put_Line (
+         pragma Debug (Cmd_List_Running, Log.Put_Line (
             "Cmd_List_Running enabled"));
          Reset (ID, Success);
-         pragma Debug (not Success, Debug_Ops.Put_Line
+         pragma Debug (not Success, Log.Put_Line
                        ("Unable to reset Port!"));
          --  TODO: HBA Reset
       end if;

@@ -29,19 +29,18 @@ with Ahci.Pciconf;
 
 with Server;
 
-with Debug_Ops;
+with Log;
 
 procedure Ahci_Drv
 is
 begin
-   pragma Debug (Debug_Ops.Init (Epoch => 1));
-   pragma Debug (Debug_Ops.Put_Line (Item => "AHCI driver subject running"));
-   pragma Debug (Debug_Ops.Print_PCI_Device_Info);
-   pragma Debug (Debug_Ops.Print_PCI_Capabilities);
+   Log.Init (Epoch => 1);
+   Log.Put_Line (Item => "AHCI driver subject running");
+   Log.Print_PCI_Device_Info;
+   Log.Print_PCI_Capabilities;
 
    if not Musinfo.Instance.Is_Valid then
-      pragma Debug
-        (Debug_Ops.Put_Line ("Sinfo invalid! Halting vCPU"));
+      Log.Put_Line ("Sinfo invalid! Halting vCPU");
       SK.CPU.Stop;
    end if;
 
@@ -65,17 +64,14 @@ begin
    begin
 
       if Class_Code = Ahci.Constants.AHCI_Class_Code then
-         pragma Debug
-            (Debug_Ops.Put_Line (Item => "AHCI controller present"));
+         Log.Put_Line (Item => "AHCI controller present");
          Ahci.HBA.Reset;
          Ahci.HBA.Enable;
-         pragma Debug
-            (Debug_Ops.Put_Line (Item => "HBA enabled"));
+         Log.Put_Line (Item => "HBA enabled");
 
          Server.Init;
          Server.Process;
-         pragma Debug
-            (Debug_Ops.Put_Line ("Server exited. Should not happen."));
+         Log.Put_Line ("Server exited. Should not happen.");
       end if;
    end;
 

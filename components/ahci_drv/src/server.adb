@@ -15,7 +15,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Debug_Ops;
+with Log;
 with SK.Hypercall;
 with SK.Strings;
 with Interfaces;
@@ -165,6 +165,8 @@ is
         Is_Valid      => False,
         Current       => Null_Current))));
 
+   Unused_Debug_Requests : constant Boolean := False;
+
    --------------------------------------------------------------------
 
    procedure Init
@@ -195,8 +197,8 @@ is
                goto Next_Dev;
             end if;
             if not Devs (Integer (Dev.Ahci_Port)) then
-               pragma Debug (Debug_Ops.Put_Line
-                  ("WARNING: configured Device not available!"));
+               Log.Put_Line
+                 ("WARNING: configured Device not available!");
                goto Next_Dev;
             end if;
             --  parse the mbr if the device changed or we have not parsed it
@@ -205,10 +207,10 @@ is
                ID := Dev.Ahci_Port;
                --  MBR?
                Mbr.Parse (ID, Mbr_Partitions);
-               pragma Debug (Debug_Ops.Put_Line ("Partitions of Device " &
-                  SK.Strings.Img (Interfaces.Unsigned_8 (ID))));
-               pragma Debug (Debug_Ops.Print_MBR_Partition_Table (
-                  Mbr_Partitions));
+               Log.Put_Line
+                 ("Partitions of Device "
+                  & SK.Strings.Img (Interfaces.Unsigned_8 (ID)));
+               Log.Print_MBR_Partition_Table (Mbr_Partitions);
                Mbr_Not_Read := False;
             end if;
 
@@ -318,11 +320,12 @@ is
       then
          Ports (Port_Idx).Devs (Dev_Idx).Current := Null_Current;
 
-         pragma Debug
-           (Sector_Size = 0, Debug_Ops.Put_Line
+         if Sector_Size = 0 then
+            Log.Put_Line
               ("Finish_Current_Request with zero sector size for device "
                & "with ID " & SK.Strings.Img (Interfaces.Unsigned_64
-                 (Dev_Id))));
+                 (Dev_Id)));
+         end if;
          return;
       end if;
 
@@ -363,19 +366,21 @@ is
                return;
          end case;
       else
-         pragma Debug (Debug_Ops.Put_Line
-            ("Device Offset not aligned to Sector Size!" &
-             SK.Strings.Img
-                (Ports (Port_Idx).Devs (Dev_Idx).Current.Device_Offset)));
+         Log.Put_Line
+           ("Device Offset not aligned to Sector Size!" &
+              SK.Strings.Img
+              (Ports (Port_Idx).Devs (Dev_Idx).Current.Device_Offset));
       end if;
 
-      pragma Debug (Ret /= Ahci.OK,
-         Debug_Ops.Put_Line ("RW failed: Sector: " &
-            SK.Strings.Img (Start_Sec) &
-            " Number of Sectors: " &
-            SK.Strings.Img (Sec_Cnt) &
-            " Ret: " &
-            SK.Strings.Img (Ahci.Status_To_Unsigned64 (Ret))));
+      if Ret /= Ahci.OK then
+         Log.Put_Line
+           ("RW failed: Sector: "
+            & SK.Strings.Img (Start_Sec)
+            & " Number of Sectors: "
+            & SK.Strings.Img (Sec_Cnt)
+            & " Ret: "
+            & SK.Strings.Img (Ahci.Status_To_Unsigned64 (Ret)));
+      end if;
 
       Response.Request_Kind
          := Ports (Port_Idx).Devs (Dev_Idx).Current.Request_Kind;
@@ -493,8 +498,7 @@ is
             end if;
 
          when others =>
-            pragma Debug (Debug_Ops.Put_Line ("simple_req: unknown!"));
-            null;
+            Log.Put_Line ("simple_req: unknown!");
       end case;
 
       Send_Response (Ports (Port_Idx).Chan_Idx, Response);
@@ -583,16 +587,18 @@ is
 
       Dev_Idx : PC.Devices_Range;
    begin
-      --  pragma Debug (Debug_Ops.Put_Line ("Received request on port: " &
-      --       SK.Strings.Img (Interfaces.Unsigned_32 (Port_Idx))));
-      --  pragma Debug (Debug_Ops.Print_Request (Request));
+      pragma Debug
+        (Unused_Debug_Requests,
+         Log.Put_Line ("Received request on port: "
+           & SK.Strings.Img (Interfaces.Unsigned_32 (Port_Idx))));
+      pragma Debug (Unused_Debug_Requests, Log.Print_Request (Request));
 
       if Request.Device_Id > Interfaces.Unsigned_16 (PC.Devices_Range'Last)
       then
-         pragma Debug
-           (Debug_Ops.Put_Line ("Request on port: " &
+         Log.Put_Line
+           ("Request on port: " &
               SK.Strings.Img (Interfaces.Unsigned_32 (Port_Idx))
-            & " -  invalid device ID, ignoring request"));
+            & " -  invalid device ID, ignoring request");
 
          declare
             Response : MB.Block_Response_Type;
@@ -630,8 +636,7 @@ is
                | MB.Sync =>
             Process_Simple_Request (Port_Idx, Dev_Idx, Request);
          when others =>
-            pragma Debug (Debug_Ops.Put_Line ("unknown request!"));
-            null;
+            Log.Put_Line ("Unknown request!");
       end case;
 
    end Process_Request;
@@ -671,19 +676,19 @@ is
                 Result  => Res);
          case Res is
             when Req_Chn.Reader.Incompatible_Interface =>
-               pragma Debug (Debug_Ops.Put_Line
+               pragma Debug (Log.Put_Line
                  (Item => "Request channel: Incompatible interface"
                   & " detected"));
             when Req_Chn.Reader.Epoch_Changed =>
-               pragma Debug (Debug_Ops.Put_Line
+               pragma Debug (Log.Put_Line
                  (Item => "Request channel: Epoch changed"));
             when Req_Chn.Reader.No_Data =>
                Finish_Current_Requests (Port_Idx);
             when Req_Chn.Reader.Overrun_Detected =>
-               pragma Debug (Debug_Ops.Put_Line
+               pragma Debug (Log.Put_Line
                  (Item => "Overrun!"));
             when Req_Chn.Reader.Inactive =>
-               pragma Debug (Debug_Ops.Put_Line
+               pragma Debug (Log.Put_Line
                   (Item => "Request channel: Inactive"));
             when Req_Chn.Reader.Success =>
                Process_Request (Port_Idx, Request);

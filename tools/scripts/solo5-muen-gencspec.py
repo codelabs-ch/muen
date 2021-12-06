@@ -32,7 +32,7 @@ def add_bootparams(xml_spec, bootparams):
     Add bootparams config value to XML spec.
     """
     section = src_spec.xpath("/component/config")
-    if len(section) is 0:
+    if len(section) == 0:
         comp = src_spec.xpath("/component")[0]
         config = etree.Element("config")
         comp.insert(0, config)

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+PARENT=$1
+CHILD_DEV=$2
+MARK=$3
+IP=$4
+
+muennet_cfg add_child $PARENT $CHILD_DEV
+muennet_cfg add_mark $CHILD_DEV $MARK
+
+iptables -t mangle -A OUTPUT -s $IP/32 -j MARK --set-mark $MARK
+
+ifconfig $CHILD_DEV up
+ifconfig $CHILD_DEV $IP

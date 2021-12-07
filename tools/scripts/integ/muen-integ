@@ -302,7 +302,7 @@ hw_deploy()
 	KILL_ON_EXIT_PIDS+=($pid_http)
 	cd $WORKDIR
 
-	ssh_exec root@192.168.254.100 22 30 $integscript $ssh_wait
+	ssh_exec root@192.168.254.100 22 100 $integscript $ssh_wait
 
 	# give serial output some time to reach the target logdir
 	execute "sleep 2"

@@ -20,12 +20,7 @@ with SK.Strings;
 
 with Debug_Ops;
 
-pragma $Release_Warnings
-  (Off, "unit ""Sm_Component.Config"" is not referenced",
-   Reason => "Only used to control debug output");
 with Sm_Component.Config;
-pragma $Release_Warnings
-  (On, "unit ""Sm_Component.Config"" is not referenced");
 
 package body Exit_Handlers.CPUID
 is
@@ -50,9 +45,9 @@ is
             --  Get vendor ID.
 
             --  Return the vendor ID for a GenuineIntel processor and set
-            --  the highest valid CPUID number to 7.
+            --  the highest valid CPUID number to 0xd.
 
-            State.Regs.RAX := 7;
+            State.Regs.RAX := 16#d#;
             State.Regs.RBX := 16#756e_6547#;
             State.Regs.RCX := 16#6c65_746e#;
             State.Regs.RDX := 16#4965_6e69#;
@@ -79,6 +74,18 @@ is
             --  Bit 25 - AESNI
             --  Bit 30 - RDRAND
             State.Regs.RCX := 16#4298_2203#;
+
+            pragma Warnings (Off);
+            if Sm_Component.Config.Sm_Announce_Xsave then
+               pragma Warnings (On);
+               declare
+                  Cur_RCX : constant SK.Word64 := State.Regs.RCX;
+               begin
+                  --  Bit 26 - XSAVE
+                  --  Bit 27 - OSXSAVE
+                  State.Regs.RCX := Cur_RCX or 16#0c00_0000#;
+               end;
+            end if;
 
             --  Bit  0 -   FPU: x87 enabled
             --  Bit  3 -   PSE: Page Size Extensions
@@ -126,6 +133,34 @@ is
 
             State.Regs.RCX := 0;
             State.Regs.RDX := 0;
+         when 16#d# =>
+            State.Regs.RAX := 0;
+            State.Regs.RBX := 0;
+            State.Regs.RCX := 0;
+            State.Regs.RDX := 0;
+
+            pragma Warnings (Off);
+            if Sm_Component.Config.Sm_Announce_Xsave then
+               pragma Warnings (On);
+               if RCX = 0 then
+
+                  --  Bit  0 - x87 state
+                  --  Bit  1 - SSE state
+                  State.Regs.RAX := 16#0003#;
+                  State.Regs.RBX := 16#0240#;
+                  State.Regs.RCX := 16#0240#;
+                  State.Regs.RDX := 0;
+               elsif RCX = 1 then
+
+                  --  Bit  0 - XSAVEOPT
+                  --  Bit  1 - XSAVEC
+                  --  Bit  2 - XGETBV
+                  State.Regs.RAX := 16#0007#;
+                  State.Regs.RBX := 16#0240#;
+                  State.Regs.RCX := 16#0000#;
+                  State.Regs.RDX := 0;
+               end if;
+            end if;
          when 16#8000_0000# =>
 
             --  Get Highest Extended Function Supported.

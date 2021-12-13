@@ -488,7 +488,6 @@
       <event id="51" logical="exception" physical="s2_handover"/>
       <event id="53" logical="exception" physical="s2_handover"/>
       <event id="54" logical="exception" physical="s2_handover"/>
-      <event id="55" logical="exception" physical="s2_handover"/>
       <event id="56" logical="exception" physical="s2_handover"/>
       <event id="57" logical="exception" physical="s2_handover"/>
       <event id="58" logical="exception" physical="s2_handover"/>
@@ -884,9 +883,6 @@
      <event id="54" logical="exception" physical="system_panic">
       <system_panic/>
      </event>
-     <event id="55" logical="exception" physical="system_panic">
-      <system_panic/>
-     </event>
      <event id="56" logical="exception" physical="system_panic">
       <system_panic/>
      </event>
@@ -1168,7 +1164,7 @@
       <!-- reserved (kernel) -->
       <event id="53" logical="invvpid" physical="tau0_handover"/>
       <event id="54" logical="wbinvd" physical="tau0_handover"/>
-      <event id="55" logical="xsetbv" physical="tau0_handover"/>
+      <!-- reserved (kernel) -->
       <event id="56" logical="apic_write" physical="tau0_handover"/>
       <event id="57" logical="rdrand" physical="tau0_handover"/>
       <event id="58" logical="invpcid" physical="tau0_handover"/>
@@ -1539,9 +1535,6 @@
        <system_panic/>
       </event>
       <event id="54" logical="exception" physical="system_panic">
-       <system_panic/>
-      </event>
-      <event id="55" logical="exception" physical="system_panic">
        <system_panic/>
       </event>
       <event id="56" logical="exception" physical="system_panic">

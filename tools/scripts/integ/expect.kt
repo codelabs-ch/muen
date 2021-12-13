@@ -46,3 +46,6 @@ serial.out;example: Wrote 16#00040000# bytes in.* ticks
 serial.out;example: Read 16#00040000# bytes in.* ticks
 serial.out;example: Muenblock example done
 serial.out;*** '.*/integtest_kt' DONE
+serial.out;x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
+serial.out;x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
+serial.out;x86/fpu: Enabled xstate features 0x3, context size is 576 bytes, using 'standard' format.

@@ -25,30 +25,28 @@ with SK.Strings;
 
 package body SK.FPU
 with
-   Refined_State => (State => (Subject_FPU_States, XCR0))
+   Refined_State => (State => (Subject_FPU_States, Active_XCR0_Features,
+                               Current_XCR0))
 is
 
-   Null_FPU_State : constant XSAVE_Area_Type
-     := (Legacy_Header   => Null_XSAVE_Legacy_Header,
-         Extended_Region => (others => 0));
-
-   --  FPU features that shall be enabled if supported by the hardware.
-   XCR0_Features : constant := 2 ** Constants.XCR0_FPU_STATE_FLAG
-     + 2 ** Constants.XCR0_SSE_STATE_FLAG
-     + 2 ** Constants.XCR0_AVX_STATE_FLAG
-     + 2 ** Constants.XCR0_OPMASK_STATE_FLAG
-     + 2 ** Constants.XCR0_ZMM_HI256_STATE_FLAG
-     + 2 ** Constants.XCR0_HI16_ZMM_STATE_FLAG;
-
-   XCR0 : Word64 := 0;
+   Null_FPU_State : constant FPU_State_Type
+     := (XCR0       => 0,
+         Padding    => (others => 0),
+         XSAVE_Area => (Legacy_Header    => Null_XSAVE_Legacy_Header,
+                        Legacy_Registers => (others => 0),
+                        Legacy_Reserved  => (others => 0),
+                        XSAVE_Header     => Null_XSAVE_Header,
+                        Extended_Region  => (others => 0)));
 
    -------------------------------------------------------------------------
 
    procedure Enable
    with
-      Refined_Global  => (In_Out => X86_64.State,
-                          Output => XCR0),
-      Refined_Depends => ((XCR0, X86_64.State) => X86_64.State)
+      Refined_Global  => (In_Out => (Current_XCR0, X86_64.State),
+                          Output => Active_XCR0_Features),
+      Refined_Depends => (Active_XCR0_Features => X86_64.State,
+                          (Current_XCR0,
+                           X86_64.State)       => (Current_XCR0, X86_64.State))
    is
       CR4 : Word64;
       EAX, Unused_EBX, Unused_ECX, EDX : Word32;
@@ -69,12 +67,12 @@ is
          ECX => Unused_ECX,
          EDX => EDX);
 
-      XCR0 := Word64 (EAX) + Word64 (EDX) * 2 ** 32;
-      XCR0 := XCR0 and XCR0_Features;
+      Active_XCR0_Features := Word64 (EAX) + Word64 (EDX) * 2 ** 32;
+      Active_XCR0_Features
+        := Active_XCR0_Features and Constants.XCR0_Supported_Features_Mask;
       pragma Debug (Dump.Print_Message
-                    (Msg  => "XCR0: " & Strings.Img (XCR0)));
-      CPU.XSETBV (Register => 0,
-                  Value    => XCR0);
+                    (Msg  => "XCR0: " & Strings.Img (Active_XCR0_Features)));
+      Write_XCR0 (Value => Active_XCR0_Features);
    end Enable;
 
    -------------------------------------------------------------------------
@@ -85,57 +83,73 @@ is
    with
       Refined_Global  => (Input => Subject_FPU_States),
       Refined_Depends => (Regs  => (ID, Subject_FPU_States)),
-      Refined_Post    => Regs = Subject_FPU_States (ID).Legacy_Header
+      Refined_Post    => Regs = Subject_FPU_States (ID).XSAVE_Area.Legacy_Header
    is
    begin
-      Regs := Subject_FPU_States (ID).Legacy_Header;
+      Regs := Subject_FPU_States (ID).XSAVE_Area.Legacy_Header;
    end Get_Registers;
 
    -------------------------------------------------------------------------
 
    procedure Reset_State (ID : Skp.Global_Subject_ID_Type)
    with
-      Refined_Global  => (Input  => XCR0,
-                          In_Out => (Subject_FPU_States, X86_64.State)),
-      Refined_Depends => ((Subject_FPU_States,
-                           X86_64.State)       => (ID, XCR0, X86_64.State,
+      Refined_Global  => (Input  => Active_XCR0_Features,
+                          In_Out => Subject_FPU_States),
+      Refined_Depends => (Subject_FPU_States =>+ (ID, Active_XCR0_Features,
                                                    Subject_FPU_States))
    is
    begin
       --D @Interface
       --D Set FPU state of subject with specified ID to
-      --D \texttt{Null\_FPU\_State}.
+      --D \texttt{Null\_FPU\_State} and set XCR0, FCW and MXCSR fields to their
+      --D initial values, see Intel SDM Vol. 1,
+      --D "13.6 Processor Tracking of XSAVE-Managed State" and Intel SDM Vol.
+      --D 3A, "9.1.1 Processor State After Reset".
       Subject_FPU_States (ID) := Null_FPU_State;
-      Restore_State (ID => ID);
-      CPU.Fninit;
-      CPU.Ldmxcsr (Value => Constants.MXCSR_Default_Value);
-      Save_State (ID => ID);
+      Subject_FPU_States (ID).XCR0 := Active_XCR0_Features;
+      Subject_FPU_States (ID).XSAVE_Area.Legacy_Header.FCW
+        := Constants.FCW_Default_Value;
+      Subject_FPU_States (ID).XSAVE_Area.Legacy_Header.MXCSR
+        := Constants.MXCSR_Default_Value;
+      Subject_FPU_States (ID).XSAVE_Area.Legacy_Header.MXCSR_Mask
+        := Constants.MXCSR_Mask_Default_Value;
    end Reset_State;
 
    -------------------------------------------------------------------------
 
    procedure Restore_State (ID : Skp.Global_Subject_ID_Type)
    with
-     Refined_Global  => (Input  => (Subject_FPU_States, XCR0),
-                         In_Out => X86_64.State),
-     Refined_Depends => (X86_64.State =>+ (ID, Subject_FPU_States, XCR0))
+     Refined_Global  => (Input  => (Subject_FPU_States, Active_XCR0_Features),
+                         In_Out => (Current_XCR0, X86_64.State)),
+     Refined_Depends => ((Current_XCR0,
+                          X86_64.State) =>+ (ID, Subject_FPU_States,
+                                             Current_XCR0,
+                                             Active_XCR0_Features))
    is
    begin
-      CPU.XRSTOR (Source => Subject_FPU_States (ID),
-                  State  => XCR0);
+      Write_XCR0 (Value => Active_XCR0_Features);
+      CPU.XRSTOR (Source => Subject_FPU_States (ID).XSAVE_Area,
+                  State  => Active_XCR0_Features);
+      Write_XCR0 (Value => Subject_FPU_States (ID).XCR0);
    end Restore_State;
 
    -------------------------------------------------------------------------
 
    procedure Save_State (ID : Skp.Global_Subject_ID_Type)
    with
-      Refined_Global  => (Input  => (X86_64.State, XCR0),
-                          In_Out => Subject_FPU_States),
-      Refined_Depends => (Subject_FPU_States =>+ (ID, XCR0, X86_64.State))
+      Refined_Global  => (Input  => Active_XCR0_Features,
+                          In_Out => (Current_XCR0, Subject_FPU_States,
+                                     X86_64.State)),
+      Refined_Depends => (Subject_FPU_States =>+ (ID, Active_XCR0_Features,
+                                                  Current_XCR0, X86_64.State),
+                          (Current_XCR0,
+                           X86_64.State)     =>+ (Active_XCR0_Features,
+                                                  Current_XCR0))
    is
    begin
-      CPU.XSAVE (Target => Subject_FPU_States (ID),
-                 State  => XCR0);
+      Write_XCR0 (Value => Active_XCR0_Features);
+      CPU.XSAVE (Target => Subject_FPU_States (ID).XSAVE_Area,
+                 State  => Active_XCR0_Features);
    end Save_State;
 
    -------------------------------------------------------------------------
@@ -188,5 +202,49 @@ is
 
       Is_Valid := Ctx.XSAVE_Support and Ctx.Area_Size;
    end Check_State;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_XCR0
+     (ID    : Skp.Global_Subject_ID_Type;
+      Value : Word64)
+   with
+      Refined_Global  => (In_Out => Subject_FPU_States),
+      Refined_Depends => (Subject_FPU_States  =>+ (ID, Value)),
+      Refined_Post    => Subject_FPU_States (ID).XCR0 = Value
+   is
+      XSTATE_BV    : constant Word64
+        := Subject_FPU_States (ID).XSAVE_Area.XSAVE_Header.XSTATE_BV;
+      Cleared_Bits : constant Word64 := (Value xor XSTATE_BV) and XSTATE_BV;
+   begin
+      Subject_FPU_States (ID).XCR0 := Value;
+      if Cleared_Bits > 0 then
+
+         --  To ensure that extended processor state that is being disabled does
+         --  not incur a performance penalty, make sure the associated XSAVE
+         --  state components are set to their initial value upon the next
+         --  XRSTOR, see Intel SDM Vol. 3A, "13.5.3 Enable the Use Of XSAVE
+         --  Feature Set And XSAVE State Components".
+
+         Subject_FPU_States (ID).XSAVE_Area.XSAVE_Header.XSTATE_BV
+           := XSTATE_BV - Cleared_Bits;
+      end if;
+   end Set_XCR0;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_XCR0 (Value : Word64)
+   with
+      Refined_Global  => (In_Out => (Current_XCR0, X86_64.State)),
+      Refined_Depends => ((Current_XCR0,
+                           X86_64.State) =>+ (Current_XCR0, Value))
+   is
+   begin
+      if Current_XCR0 /= Value then
+         Current_XCR0 := Value;
+         CPU.XSETBV (Register => 0,
+                     Value    => Current_XCR0);
+      end if;
+   end Write_XCR0;
 
 end SK.FPU;

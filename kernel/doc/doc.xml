@@ -647,7 +647,7 @@
      \begin{description}
       \item[External Interrupt] \hfill \\
        Processing of external device interrupts
-      \item[VMX-preeption timer expired] \hfill \\
+      \item[VMX-preemption timer expired] \hfill \\
        Main kernel timer used for scheduler implementation.
       \item[Interrupt window] \hfill \\
        Mechanism for delivery of pending subject interrupts.
@@ -655,6 +655,9 @@
        Handling of Machine-Check Exceptions (MCEs) and NMIs.
       \item[VM-entry failure due to machine-check event] \hfill \\
        Further handling of MCEs.
+      \item[Xsetbv instruction] \hfill \\
+       Handling of XCR0 register which controls the extended processor/FPU
+       features and state.
      \end{description}
 
      A detailed description of the implementation is given in section

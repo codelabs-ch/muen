@@ -834,9 +834,6 @@
       <event id="54" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
-      <event id="55" logical="panic" physical="system_panic">
-       <system_panic/>
-      </event>
       <event id="56" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
@@ -1237,9 +1234,6 @@
       <event id="54" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
-      <event id="55" logical="panic" physical="system_panic">
-       <system_panic/>
-      </event>
       <event id="56" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
@@ -1626,9 +1620,6 @@
       <event id="54" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
-      <event id="55" logical="panic" physical="system_panic">
-       <system_panic/>
-      </event>
       <event id="56" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
@@ -2002,9 +1993,6 @@
       <event id="54" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
-      <event id="55" logical="panic" physical="system_panic">
-       <system_panic/>
-      </event>
       <event id="56" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
@@ -2331,7 +2319,6 @@
       <event id="51" logical="default_event_51" physical="trap_to_sm"/>
       <event id="53" logical="default_event_53" physical="trap_to_sm"/>
       <event id="54" logical="default_event_54" physical="trap_to_sm"/>
-      <event id="55" logical="default_event_55" physical="trap_to_sm"/>
       <event id="56" logical="default_event_56" physical="trap_to_sm"/>
       <event id="57" logical="default_event_57" physical="trap_to_sm"/>
       <event id="58" logical="default_event_58" physical="trap_to_sm"/>

@@ -56,4 +56,24 @@
 		<xsl:text>&#10;</xsl:text>
 	</xsl:template>
 
+ <xsl:template name="extractConfigBoolean">
+  <xsl:param name="name"/>
+  <xsl:param name="defaultValue"/>
+  <xsl:variable name="value" select="/system/config/boolean[@name=$name]/@value"/>
+  <xsl:choose>
+   <xsl:when test="$value!=''">
+    <xsl:call-template name="configBoolean">
+     <xsl:with-param name="name" select="$name"/>
+     <xsl:with-param name="value" select="$value"/>
+    </xsl:call-template>
+   </xsl:when>
+   <xsl:otherwise>
+    <xsl:call-template name="configBoolean">
+     <xsl:with-param name="name" select="$name"/>
+     <xsl:with-param name="value" select="$defaultValue"/>
+    </xsl:call-template>
+   </xsl:otherwise>
+  </xsl:choose>
+ </xsl:template>
+
 </xsl:stylesheet>

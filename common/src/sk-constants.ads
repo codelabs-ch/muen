@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2021  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2021  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ is
    -- Interrupt vectors --
    -----------------------
 
+   GP_Exception_Vector          : constant := 13;
    VTd_Fault_Vector             : constant := 253;
    IPI_Vector                   : constant := 254;
 
@@ -49,12 +50,9 @@ is
    XCR0_FPU_STATE_FLAG          : constant := 0;
    XCR0_SSE_STATE_FLAG          : constant := 1;
    XCR0_AVX_STATE_FLAG          : constant := 2;
-   XCR0_BNDREG_STATE_FLAG       : constant := 3;
-   XCR0_BNDCSR_TATE_FLAG        : constant := 4;
    XCR0_OPMASK_STATE_FLAG       : constant := 5;
    XCR0_ZMM_HI256_STATE_FLAG    : constant := 6;
    XCR0_HI16_ZMM_STATE_FLAG     : constant := 7;
-   XCR0_PKRU_STATE_FLAG         : constant := 9;
 
    CPUID_FEATURE_VMX_FLAG       : constant := 5;
    CPUID_FEATURE_MCE            : constant := 7;
@@ -234,6 +232,7 @@ is
    EXIT_REASON_EPT_VIOLATION     : constant := 48;
    EXIT_REASON_TIMER_EXPIRY      : constant := 52;
    EXIT_REASON_WBINVD            : constant := 54;
+   EXIT_REASON_XSETBV            : constant := 55;
 
    Global_Data_Section : constant String := ".globaldata";
 
@@ -245,7 +244,11 @@ is
 
    --  MXCSR Control and Status Register default initial value, see Intel SDM
    --  Vol. 3A, "9.1.1 Processor State After Reset".
-   MXCSR_Default_Value : constant := 16#1f80#;
+   MXCSR_Default_Value      : constant := 16#1f80#;
+   MXCSR_Mask_Default_Value : constant := 16#ffff#;
+   --  FCW initial value, see Intel SDM Vol. 1,
+   --  "13.6 Processor Tracking of XSAVE-Managed State"
+   FCW_Default_Value        : constant := 16#037f#;
 
    --  Segment selector values.
 
@@ -256,5 +259,14 @@ is
    --  By default, RFLAGS only has the reserved bit 1 set and all others are 0,
    --  see Intel SDM Vol. 3A, "9.1.1 Processor State After Reset".
    RFLAGS_Default_Value : constant := 2;
+
+   --  FPU features that shall be enabled if supported by the hardware, see
+   --  Intel SDM Vol. 1, "13.5 XSAVE-Managed State".
+   XCR0_Supported_Features_Mask : constant := 2 ** XCR0_FPU_STATE_FLAG
+     + 2 ** XCR0_SSE_STATE_FLAG
+     + 2 ** XCR0_AVX_STATE_FLAG
+     + 2 ** XCR0_OPMASK_STATE_FLAG
+     + 2 ** XCR0_ZMM_HI256_STATE_FLAG
+     + 2 ** XCR0_HI16_ZMM_STATE_FLAG;
 
 end SK.Constants;

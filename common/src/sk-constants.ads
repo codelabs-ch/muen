@@ -260,7 +260,8 @@ is
    --  see Intel SDM Vol. 3A, "9.1.1 Processor State After Reset".
    RFLAGS_Default_Value : constant := 2;
 
-   --  FPU features that shall be enabled if supported by the hardware.
+   --  FPU features that shall be enabled if supported by the hardware, see
+   --  Intel SDM Vol. 1, "13.5 XSAVE-Managed State".
    XCR0_Supported_Features_Mask : constant := 2 ** XCR0_FPU_STATE_FLAG
      + 2 ** XCR0_SSE_STATE_FLAG
      + 2 ** XCR0_AVX_STATE_FLAG

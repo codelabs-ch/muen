@@ -1,0 +1,13 @@
+#!/bin/bash
+
+SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. $SCRIPTDIR/func.sh
+
+SSH="ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no lnx2"
+
+execute "$SSH muennet-child-setup net0 child1 24 192.168.10.14"
+execute "muennet-child-setup net0 child1 24 192.168.10.13"
+execute "ping -c 3 -I child1 192.168.10.14"
+execute "cat /sys/kernel/debug/muennet/child1/info"
+execute "muennet_cfg del_mark child1 24"
+execute "muennet_cfg del_child child1"

@@ -20,6 +20,8 @@ sysbench --test=cpu --cpu-max-prime=10000 run >$OUTPUT 2>&1
 ping -c 3 $PEER >$OUTPUT 2>&1
 cat /sys/kernel/debug/muennet/net0/info >$OUTPUT
 
+muennet-child-test >$OUTPUT 2>&1
+
 muenfs-marker /muenfs/virtual_keyboard >$OUTPUT 2>&1
 muenfs-test /muenfs/testchannel_1 >$OUTPUT 2>&1
 muenfs-test /muenfs/testchannel_2 >$OUTPUT 2>&1

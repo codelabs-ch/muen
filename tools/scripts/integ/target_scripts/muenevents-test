@@ -6,6 +6,6 @@ modprobe muenevents
 mkdir -p $MOUNTDIR
 mount -t muenevents none $MOUNTDIR
 
-find $MOUNTDIR -type f -exec echo -n {}" " \; -exec cat {} \;
+taskset 0x1 find $MOUNTDIR -type f -exec echo -n {}" " \; -exec cat {} \;
 
 umount $MOUNTDIR

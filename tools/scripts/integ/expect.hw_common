@@ -9,16 +9,22 @@ serial.out;TEST of file /muenfs/testchannel_2: OK
 
 serial.out;/muenevents/timer 31
 
-serial.out;net0: Using protocol 2, channel/element size 0x100000/0x5e3 bytes
+serial.out;net0: Using protocol 2, channel/element size 0x100000/0x5e4 bytes
 serial.out;in/out: testchannel_4:testchannel_3
 serial.out;flags: net_hdr
 serial.out;writer is enabled
-serial.out;writer.element_size: 1507
+serial.out;writer.element_size: 1508
 serial.out;reader is enabled
-serial.out;reader.element_size: 1507
+serial.out;reader.element_size: 1508
 serial.out;stats.rx_errors: 0
 serial.out;stats.rx_over_errors: 0
 serial.out;stats.rx_frame_errors: 0
+
+serial.out;64 bytes from 192.168.10.14: seq=2 ttl=64*
+serial.out;stats.rx_packets: 3
+serial.out;stats.rx_bytes: 252
+serial.out;stats.tx_packets: 3
+serial.out;stats.tx_bytes: 276
 
 serial.out;Current date/time matches expected value
 

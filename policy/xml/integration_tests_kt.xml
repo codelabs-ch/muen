@@ -44,6 +44,8 @@
   </if>
   <memory name="isolation_tests_state" size="16#1000#" caching="WB"/>
   <memory name="isolation_tests_read_only" size="16#1000#" caching="WB"/>
+  <memory name="nic_linux|ram_2" size="16#1000_0000#" caching="WB"/>
+  <memory name="storage_linux|ram_2" size="16#1000_0000#" caching="WB"/>
  </memory>
 
  <deviceDomains>
@@ -51,6 +53,7 @@
    <memory>
     <memory logical="dma1" physical="nic_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
     <memory logical="dma2" physical="nic_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
+    <memory logical="dma3" physical="nic_linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="false"/>
    </memory>
    <devices>
     <device logical="nic1" physical="ethernet_controller_1"/>
@@ -61,6 +64,7 @@
    <memory>
     <memory logical="dma1" physical="storage_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
     <memory logical="dma2" physical="storage_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
+    <memory logical="dma3" physical="storage_linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="false"/>
     <memory logical="blockdev_xhci_shm1" physical="blockdev_xhci_shm1" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
    </memory>
    <devices>
@@ -182,6 +186,7 @@
    </vcpu>
    <bootparams>console=hvc console=ttyS0 hostname=nic_linux muen-input.channel=virtual_keyboard debug</bootparams>
    <memory>
+    <memory logical="ram_2" physical="nic_linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="true"/>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
     <memory logical="blockdev_xhci_shm1" physical="blockdev_xhci_shm1" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
     <memory logical="blockdev_shm1" physical="blockdev_shm1" virtualAddress="16#a100_0000#" writable="true" executable="false"/>
@@ -471,6 +476,7 @@
   <subject name="storage_linux">
    <bootparams>console=hvc console=ttyS0 hostname=storage_linux debug</bootparams>
    <memory>
+    <memory logical="ram_2" physical="storage_linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="true"/>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
     <memory logical="muenblock" physical="blockdev_xhci_shm1" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
    </memory>

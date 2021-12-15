@@ -3,6 +3,7 @@
 	"conduit_uri" : "https://dev.codelabs.ch/",
 	"git.default-relative-commit" : "devel",
 	"arc.land.onto" : [ "devel" ],
+	"arc.land.onto.default": "devel",
 	"arc.land.strategy" : "merge",
 	"unit.engine" : "GNATtestEngine",
 	"repository.callsign" : "M",

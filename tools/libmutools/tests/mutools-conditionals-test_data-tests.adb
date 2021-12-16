@@ -14,7 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with McKae.XML.XPath.XIA;
 --  begin read only
 --  end read only
 package body Mutools.Conditionals.Test_Data.Tests is
@@ -100,8 +100,8 @@ package body Mutools.Conditionals.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Evaluate (Gnattest_T : in out Test);
-   procedure Test_Evaluate_6dd7a2 (Gnattest_T : in out Test) renames Test_Evaluate;
---  id:2.2/6dd7a238e46c8db9/Evaluate/1/0/
+   procedure Test_Evaluate_7e0758 (Gnattest_T : in out Test) renames Test_Evaluate;
+--  id:2.2/7e07583f3175aa13/Evaluate/1/0/
    procedure Test_Evaluate (Gnattest_T : in out Test) is
 --  end read only
 
@@ -109,14 +109,18 @@ package body Mutools.Conditionals.Test_Data.Tests is
 
       use type DOM.Core.Node;
 
-      Data : Muxml.XML_Data_Type;
+      Data   : Muxml.XML_Data_Type;
+      Config : DOM.Core.Node_List;
    begin
       Muxml.Parse
         (Data => Data,
          Kind => Muxml.None,
          File => "data/test_policy_src.xml");
 
-      Evaluate (Policy => Data,
+      Config := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Data.Doc,
+         XPath => "/system/config/*");
+      Evaluate (Config => Config,
                 Parent => Muxml.Utils.Get_Element
                   (Doc   => Data.Doc,
                    XPath => "/system/memory"));
@@ -132,7 +136,7 @@ package body Mutools.Conditionals.Test_Data.Tests is
          Name  => "value",
          Value => "false");
 
-      Evaluate (Policy => Data,
+      Evaluate (Config => Config,
                 Parent => Muxml.Utils.Get_Element
                   (Doc   => Data.Doc,
                    XPath => "/system/subjects/subject[@name='lnx']/memory"));
@@ -142,7 +146,7 @@ package body Mutools.Conditionals.Test_Data.Tests is
                & "memory/memory[@name='extra_mem']") = null,
               Message   => "Conditional evaluation failed (2)");
 
-      Evaluate (Policy => Data,
+      Evaluate (Config => Config,
                 Parent => Muxml.Utils.Get_Element
                   (Doc   => Data.Doc,
                    XPath => "/system/subjects/subject[@name='lnx']"));

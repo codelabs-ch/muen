@@ -288,6 +288,9 @@
       <default physical="trap_to_sm_3"/>
      </group>
      <group name="vmcall">
+      <event id="30" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
       <event id="31" logical="timer" physical="timer_linux_3"/>
      </group>
     </source>

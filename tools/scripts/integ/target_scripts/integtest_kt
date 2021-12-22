@@ -26,3 +26,7 @@ date_print "*** '$0' DONE"
 
 # run common integration tests
 $SCRIPTDIR/integtest
+
+# trigger system panic to exercise crash audit
+mount -t muenevents none /muenevents
+screen -dm bash -c "sleep 2 && echo 1 > /muenevents/panic"

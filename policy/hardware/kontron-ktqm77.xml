@@ -38,6 +38,7 @@
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0001_0000_0000#" size="16#0003_1e60_0000#"/>
     <reservedMemory name="rmrr1" physicalAddress="16#da4d_7000#" size="16#f000#"/>
     <reservedMemory name="rmrr2" physicalAddress="16#db80_0000#" size="16#0420_0000#"/>
+    <reservedMemory name="rmrr_legacy_manual" physicalAddress="16#da4d_2000#" size="16#2000#"/>
   </memory>
   <devices pciConfigAddress="16#f800_0000#">
     <device name="system_board">
@@ -184,6 +185,7 @@
       <memory caching="UC" name="mem1" physicalAddress="16#f7f3_8000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#f80d_0000#" size="16#1000#"/>
       <reservedMemory ref="rmrr1"/>
+      <reservedMemory ref="rmrr_legacy_manual"/>
     </device>
     <device name="audio_device_1">
       <description>Intel Corporation 7 Series/C216 Chipset Family High Definition Audio Controller</description>
@@ -207,6 +209,7 @@
       <memory caching="UC" name="mem1" physicalAddress="16#f7f3_7000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#f80e_8000#" size="16#1000#"/>
       <reservedMemory ref="rmrr1"/>
+      <reservedMemory ref="rmrr_legacy_manual"/>
     </device>
     <device name="isa_bridge_1">
       <description>Intel Corporation QM77 Express Chipset LPC Controller</description>

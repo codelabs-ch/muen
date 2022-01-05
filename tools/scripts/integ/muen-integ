@@ -184,12 +184,17 @@ ssh_exec()
 	local ssh_port=$2
 	local connect_attempts=$3
 	local script=$4
+	local ssh_wait=$5
 
 	execute_n "$SSH -p $ssh_port -i $SSH_KEY $lnx1_login mkdir -p /usr/local/bin" $connect_attempts 1
 	execute "$SCP -P $ssh_port -i $SSH_KEY $SCRIPTDIR/target_scripts/* $lnx1_login:/usr/local/bin"
 	execute_n "$SSH -p $ssh_port -i $SSH_KEY $lnx1_login $SSH $LNX2_LOGIN mkdir -p /usr/local/bin" $connect_attempts 1
 	execute "$SSH -p $ssh_port -i $SSH_KEY $lnx1_login $SCP /usr/local/bin $LNX2_LOGIN:/usr/local"
 	execute "$SSH -p $ssh_port -i $SSH_KEY $lnx1_login $script"
+	if [ ! -z "$ssh_wait" ]; then
+		log "Waiting $ssh_wait seconds after integscript"
+		sleep $ssh_wait
+	fi
 }
 
 emulate()
@@ -266,6 +271,7 @@ hw_deploy()
 	local hardware=$3
 	local intscr=$4
 	local expect=$5
+	local ssh_wait=$6
 
 	execute "$MAKE -C kernel clean"
 	execute "$MAKE deploy HARDWARE=$hardware SYSTEM=$system"
@@ -279,7 +285,7 @@ hw_deploy()
 	KILL_ON_EXIT_PIDS+=($pid_http)
 	cd $WORKDIR
 
-	ssh_exec root@192.168.254.100 22 20 $integscript
+	ssh_exec root@192.168.254.100 22 20 $integscript $ssh_wait
 
 	# give serial output some time to reach the target logdir
 	execute "sleep 2"
@@ -309,6 +315,7 @@ deploy_to_hardware()
 		integscript=`echo $item | cut -d\; -f4`
 		expect=`echo $item | cut -d\; -f5`
 		buildvars=`echo $item | cut -d\; -f6`
+		ssh_wait=`echo $item | cut -d\; -f7`
 		target_logdir=$(hw_targetlogdir "$system" "$hardware")
 		execute "mkdir -p $target_logdir"
 
@@ -328,7 +335,7 @@ deploy_to_hardware()
 		fi
 
 		set_buildvars "$buildvars"
-		hw_deploy $target_logdir $system $hardware $integscript $expect
+		hw_deploy $target_logdir $system $hardware $integscript "$expect" "$ssh_wait"
 		unset_buildvars "$buildvars"
 	done
 }

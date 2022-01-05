@@ -82,6 +82,12 @@
    <device logical="storage_controller" physical="storage_controller"/>
    </devices>
   </domain>
+  <domain name="legacy">
+   <devices>
+   <device logical="usb_controller_2" physical="usb_controller_2" mapReservedMemory="true"/>
+   <device logical="usb_controller_3" physical="usb_controller_3" mapReservedMemory="true"/>
+   </devices>
+  </domain>
  </deviceDomains>
 
  <events>
@@ -288,6 +294,9 @@
       <default physical="trap_to_sm_3"/>
      </group>
      <group name="vmcall">
+      <event id="30" logical="panic" physical="system_panic">
+       <system_panic/>
+      </event>
       <event id="31" logical="timer" physical="timer_linux_3"/>
      </group>
     </source>

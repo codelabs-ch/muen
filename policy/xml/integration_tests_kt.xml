@@ -82,6 +82,12 @@
    <device logical="storage_controller" physical="storage_controller"/>
    </devices>
   </domain>
+  <domain name="legacy">
+   <devices>
+   <device logical="usb_controller_2" physical="usb_controller_2" mapReservedMemory="true"/>
+   <device logical="usb_controller_3" physical="usb_controller_3" mapReservedMemory="true"/>
+   </devices>
+  </domain>
  </deviceDomains>
 
  <events>

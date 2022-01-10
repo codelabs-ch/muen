@@ -21,7 +21,7 @@
   <memory name="linux|ram" size="16#1000_0000#" caching="WB"/>
   <memory name="linux|ram_2" size="16#6800_0000#" caching="WB"/>
   <memory name="linux|ram_3" size="16#f000_0000#" caching="WB"/>
-  <memory name="crash_audit" physicalAddress="16#0001_0000_0000#" size="16#1000#" caching="UC" type="subject_crash_audit"/>
+  <memory name="crash_audit" physicalAddress="16#0001_00a1_1000#" size="16#1000#" caching="UC" type="subject_crash_audit"/>
   <include href="memory_xhci_dma.xml"/>
   <memory name="control_sm" size="16#1000#" caching="WB">
    <fill pattern="16#ff#"/>

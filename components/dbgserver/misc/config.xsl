@@ -45,7 +45,9 @@
     </xsl:otherwise>
    </xsl:choose>
    <xsl:text>&#10;</xsl:text>
-   <xsl:call-template name="extractLogChannelSize"/>
+   <xsl:call-template name="extractConfigString">
+    <xsl:with-param name="name" select="'logchannel_size'"/>
+   </xsl:call-template>
    <xsl:text>&lt;/include&gt;&#10;</xsl:text>
   </xsl:if>
  </xsl:template>

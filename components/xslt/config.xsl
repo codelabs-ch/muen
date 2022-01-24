@@ -37,23 +37,20 @@
 		<xsl:text>&#10;</xsl:text>
 	</xsl:template>
 
-	<xsl:template name="extractLogChannelSize">
-		<xsl:variable name="configSize" select="/system/config/string[@name='logchannel_size']/@value"/>
-		<xsl:variable name="logChannelSize">
-			<xsl:choose>
-				<xsl:when test="$configSize!=''">
-					<xsl:value-of select="$configSize"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:message terminate="yes">Unable to extract logchannel size, logchannel_size config variable missing</xsl:message>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:call-template name="configString">
-			<xsl:with-param name="name" select="'logchannel_size'"/>
-			<xsl:with-param name="value" select="$logChannelSize"/>
-		</xsl:call-template>
-		<xsl:text>&#10;</xsl:text>
+	<xsl:template name="extractConfigString">
+		<xsl:param name="name"/>
+		<xsl:variable name="value" select="/system/config/string[@name=$name]/@value"/>
+		<xsl:choose>
+			<xsl:when test="$value!=''">
+				<xsl:call-template name="configString">
+					<xsl:with-param name="name" select="$name"/>
+					<xsl:with-param name="value" select="$value"/>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:message terminate="yes">Unable to extract string, config variable <xsl:value-of select="$name"/> missing</xsl:message>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
  <xsl:template name="extractConfigBoolean">

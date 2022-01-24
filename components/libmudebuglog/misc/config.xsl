@@ -9,7 +9,9 @@
 	<xsl:template match="text()"/>
 	<xsl:template match="/">
 		<xsl:call-template name="configHeader"/>
-		<xsl:call-template name="extractLogChannelSize"/>
+		<xsl:call-template name="extractConfigString">
+			<xsl:with-param name="name" select="'logchannel_size'"/>
+		</xsl:call-template>
 		<xsl:call-template name="configFooter"/>
 	</xsl:template>
 

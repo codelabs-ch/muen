@@ -1,4 +1,6 @@
 TOP_DIR := $(patsubst %/,%,$(dir $(realpath $(filter %Makeconf, $(MAKEFILE_LIST)))))
+SHELL := /bin/bash
+
 SRC_DIR = $(CURDIR)/src
 OBJ_DIR = $(CURDIR)/obj
 GEN_DIR = $(CURDIR)/generated

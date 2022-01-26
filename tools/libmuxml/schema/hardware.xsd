@@ -158,6 +158,13 @@
     </xs:documentation>
    </xs:annotation>
   </xs:attribute>
+  <xs:attribute name="pciConfigSize" type="word64Type" use="optional">
+   <xs:annotation>
+    <xs:documentation>
+     Size of the PCI configuration space region.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
  </xs:complexType>
 
  <xs:complexType name="processorType">
@@ -170,12 +177,17 @@
     physical CPUs are enumerated here. The APIC ID is required for interrupt and
     IPI routing.
 
+    The \texttt{processor} element also lists register values for all CPUID
+    leaves of the hardware target, and some MSR values of interest.
+
     See line \ref{lst:af-lineref-processor} in listing \ref{lst:annotated-policy}
     for an example processor element.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>
    <xs:element name="cpu" type="cpuCoreType" minOccurs="1" maxOccurs="unbounded"/>
+   <xs:element name="cpuid" type="cpuIDValueType" minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="msr" type="msrValueType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
   <xs:attribute name="cpuCores" type="xs:positiveInteger" use="required">
   <xs:annotation>
@@ -214,6 +226,86 @@
    <xs:maxInclusive value="31"/>
   </xs:restriction>
  </xs:simpleType>
+
+ <xs:complexType name="cpuIDValueType">
+  <xs:annotation>
+   <xs:documentation>
+    Register values for a CPUID leaf, see Intel SDM Vol. 2A, "3.2
+    Instructions (A-L)", CPUID.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="leaf" type="word32Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     CPUID leaf.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="subleaf" type="byteType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     CPUID subleaf.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="eax" type="word32Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     EAX register value of this leaf.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="ebx" type="word32Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     EBX register value of this leaf.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="ecx" type="word32Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     ECX register value of this leaf.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="edx" type="word32Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     EDX register value of this leaf.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+ </xs:complexType>
+
+ <xs:complexType name="msrValueType">
+  <xs:annotation>
+   <xs:documentation>
+    Register value of an MSR of interest.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="address" type="word32Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     MSR address.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="name" type="xs:string" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of MSR.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="regval" type="word64Type" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Register value.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+ </xs:complexType>
 
  <xs:complexType name="capabilitiesType">
   <xs:annotation>

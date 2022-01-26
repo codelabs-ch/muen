@@ -7,6 +7,8 @@
   <processor cpuCores="2" speed="2900" vmxTimerRate="5">
    <cpu apicId="0"/>
    <cpu apicId="2" cpuId="1"/>
+   <cpuid eax="16#0000_000d#" ebx="16#756e_6547#" ecx="16#6c65_746e#" edx="16#4965_6e69#" leaf="16#0000_0000#" subleaf="16#00#"/>
+   <msr address="16#0000_003a#" name="IA32_FEATURE_CONTROL" regval="16#0000_0000_0010_0005#"/>
   </processor>
   <memory>
    <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>

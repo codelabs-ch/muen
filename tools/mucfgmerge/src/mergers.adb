@@ -219,7 +219,9 @@ is
          Section_List_Tags => (1 => U ("device"),
                                2 => U ("memoryBlock"),
                                3 => U ("reservedMemory"),
-                               4 => U ("cpu")),
+                               4 => U ("cpu"),
+                               5 => U ("cpuid"),
+                               6 => U ("msr")),
          Section_Ref_Names => (1 => U ("platform"),
                                2 => U ("memory")),
          Add_Missing_Elems => Add_Missing_HW_Elements'Access);

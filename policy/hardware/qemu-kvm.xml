@@ -1,23 +1,27 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- ==========================================
-     Generated with mugenhwcfg (commit v0.5-118-ga22610d)
-     Linux kernel version: 4.13.0+
-     Distribution: Mugenhwcfg stick/1.0
+     Generated with mugenhwcfg (commit v0.6-24-g7d2fb8a)
+     Linux kernel version: 5.10.0-11-amd64
+     Distribution: Debian GNU/Linux 11 (bullseye)
      Product information:
        Vendor: QEMU
        Name: Standard PC (Q35 + ICH9, 2009)
-       Product Version: pc-q35-3.1
+       Product Version: pc-q35-5.2
      Board information:
      BIOS information:
        Vendor: SeaBIOS
-       Version: 1.12.0-1
+       Version: 1.14.0-2
        Date: 04/01/2014
      Log:
        * WARNING *: Skipping invalid IRQ resource for device 0000:00:03.0: None
+       * WARNING *: Skipping invalid IRQ resource for device 0000:00:04.0: None
        * WARNING *: Skipping invalid IRQ resource for device 0000:00:1f.2: None
        * WARNING *: Skipping invalid IRQ resource for device 0000:00:1f.3: None
        * WARNING *: Skipping invalid IRQ resource for device 0000:01:00.0: None
-       * WARNING *: Tool version in output description could not be obtained.
+       * WARNING *: Board information in output description could not be obtained:
+       [Errno 2] No such file or directory: '/sys/devices/virtual/dmi/id/board_vendor'
+       * MANUAL  *: Changed name of ethernet_controller_1 to ethernet_controller_2
+       * MANUAL  *: Changed name of ethernet_controller_2 to ethernet_controller_1
      ========================================== -->
 
 
@@ -25,13 +29,76 @@
   <processor cpuCores="2" speed="2112" vmxTimerRate="5">
     <cpu apicId="0"/>
     <cpu apicId="2"/>
+    <cpuid eax="16#0000_000d#" ebx="16#756e_6547#" ecx="16#6c65_746e#" edx="16#4965_6e69#" leaf="16#0000_0000#" subleaf="16#00#"/>
+    <cpuid eax="16#0003_06a9#" ebx="16#0004_0800#" ecx="16#ffb8_2223#" edx="16#178b_fbff#" leaf="16#0000_0001#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0001#" ebx="16#0000_0000#" ecx="16#0000_004d#" edx="16#002c_307d#" leaf="16#0000_0002#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0003#" subleaf="16#00#"/>
+    <cpuid eax="16#0400_0121#" ebx="16#01c0_003f#" ecx="16#0000_003f#" edx="16#0000_0001#" leaf="16#0000_0004#" subleaf="16#00#"/>
+    <cpuid eax="16#0400_0122#" ebx="16#01c0_003f#" ecx="16#0000_003f#" edx="16#0000_0001#" leaf="16#0000_0004#" subleaf="16#01#"/>
+    <cpuid eax="16#0400_4143#" ebx="16#03c0_003f#" ecx="16#0000_0fff#" edx="16#0000_0001#" leaf="16#0000_0004#" subleaf="16#02#"/>
+    <cpuid eax="16#0400_c163#" ebx="16#03c0_003f#" ecx="16#0000_3fff#" edx="16#0000_0006#" leaf="16#0000_0004#" subleaf="16#03#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0003#" edx="16#0000_0000#" leaf="16#0000_0005#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0004#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0006#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0281#" ecx="16#0000_0000#" edx="16#0400_0000#" leaf="16#0000_0007#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0008#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0009#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_000a#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0001#" ebx="16#0000_0002#" ecx="16#0000_0100#" edx="16#0000_0000#" leaf="16#0000_000b#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0002#" ebx="16#0000_0004#" ecx="16#0000_0201#" edx="16#0000_0000#" leaf="16#0000_000b#" subleaf="16#01#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_000c#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0007#" ebx="16#0000_0340#" ecx="16#0000_0340#" edx="16#0000_0000#" leaf="16#0000_000d#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0001#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_000d#" subleaf="16#01#"/>
+    <cpuid eax="16#0000_0100#" ebx="16#0000_0240#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_000d#" subleaf="16#02#"/>
+    <cpuid eax="16#4000_0010#" ebx="16#4b4d_564b#" ecx="16#564b_4d56#" edx="16#0000_004d#" leaf="16#4000_0000#" subleaf="16#00#"/>
+    <cpuid eax="16#0100_007b#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_0001#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_0002#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_0003#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_0004#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_0005#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_0006#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_0007#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_0008#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_0009#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_000a#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_000b#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_000c#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_000d#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_000e#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_000f#" subleaf="16#00#"/>
+    <cpuid eax="16#0020_39fe#" ebx="16#000f_4240#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_0010#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0007#" ebx="16#0000_0340#" ecx="16#0000_0340#" edx="16#0000_0000#" leaf="16#2000_0000#" subleaf="16#00#"/>
+    <cpuid eax="16#8000_0008#" ebx="16#756e_6547#" ecx="16#6c65_746e#" edx="16#4965_6e69#" leaf="16#8000_0000#" subleaf="16#00#"/>
+    <cpuid eax="16#0003_06a9#" ebx="16#0000_0000#" ecx="16#0000_0001#" edx="16#2810_0800#" leaf="16#8000_0001#" subleaf="16#00#"/>
+    <cpuid eax="16#6574_6e49#" ebx="16#6558_206c#" ecx="16#4520_6e6f#" edx="16#3231_2d33#" leaf="16#8000_0002#" subleaf="16#00#"/>
+    <cpuid eax="16#7620_7878#" ebx="16#4928_2032#" ecx="16#4220_7976#" edx="16#6764_6972#" leaf="16#8000_0003#" subleaf="16#00#"/>
+    <cpuid eax="16#4920_2c65#" ebx="16#2953_5242#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#8000_0004#" subleaf="16#00#"/>
+    <cpuid eax="16#01ff_01ff#" ebx="16#01ff_01ff#" ecx="16#4002_0140#" edx="16#4002_0140#" leaf="16#8000_0005#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#4200_4200#" ecx="16#0200_8140#" edx="16#0080_8140#" leaf="16#8000_0006#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0100#" leaf="16#8000_0007#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_3028#" ebx="16#0000_0000#" ecx="16#0000_2003#" edx="16#0000_0000#" leaf="16#8000_0008#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0007#" ebx="16#0000_0340#" ecx="16#0000_0340#" edx="16#0000_0000#" leaf="16#8086_0000#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0007#" ebx="16#0000_0340#" ecx="16#0000_0340#" edx="16#0000_0000#" leaf="16#c000_0000#" subleaf="16#00#"/>
+    <msr address="16#0000_003a#" name="IA32_FEATURE_CONTROL" regval="16#0000_0000_0000_0005#"/>
+    <msr address="16#0000_01a0#" name="IA32_MISC_ENABLE" regval="16#0000_0000_0000_0001#"/>
+    <msr address="16#0000_0480#" name="IA32_VMX_BASIC" regval="16#00d8_1000_11e5_7ed0#"/>
+    <msr address="16#0000_0481#" name="IA32_VMX_PINBASED_CTLS" regval="16#0000_007f_0000_0016#"/>
+    <msr address="16#0000_0482#" name="IA32_VMX_PROCBASED_CTLS" regval="16#fff9_fffe_0401_e172#"/>
+    <msr address="16#0000_0483#" name="IA32_VMX_EXIT_CTLS" regval="16#007f_ffff_0003_6dff#"/>
+    <msr address="16#0000_0484#" name="IA32_VMX_ENTRY_CTLS" regval="16#0000_f3ff_0000_11ff#"/>
+    <msr address="16#0000_0485#" name="IA32_VMX_MISC" regval="16#0000_0000_0000_0065#"/>
+    <msr address="16#0000_048b#" name="IA32_VMX_PROCBASED_CTLS2" regval="16#0000_08ff_0000_0000#"/>
+    <msr address="16#0000_048c#" name="IA32_VMX_EPT_VPID_CAP" regval="16#0000_0f01_0613_4041#"/>
+    <msr address="16#0000_048d#" name="IA32_VMX_TRUE_PINBASED_CTLS" regval="16#0000_007f_0000_0016#"/>
+    <msr address="16#0000_048e#" name="IA32_VMX_TRUE_PROCBASED_CTLS" regval="16#fff9_fffe_0400_6172#"/>
+    <msr address="16#0000_048f#" name="IA32_VMX_TRUE_EXIT_CTLS" regval="16#007f_ffff_0003_6dfb#"/>
+    <msr address="16#0000_0490#" name="IA32_VMX_TRUE_ENTRY_CTLS" regval="16#0000_f3ff_0000_11fb#"/>
   </processor>
   <memory>
     <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#0000#" size="16#0009_f000#"/>
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0010_0000#" size="16#7fed_e000#"/>
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0001_0000_0000#" size="16#c000_0000#"/>
   </memory>
-  <devices pciConfigAddress="16#b000_0000#">
+  <devices pciConfigAddress="16#b000_0000#" pciConfigSize="16#1000_0000#">
     <device name="system_board">
       <ioPort end="16#0cf9#" name="reset" start="16#0cf9#"/>
       <ioPort end="16#0604#" name="pm1a_cnt" start="16#0604#"/>
@@ -100,7 +167,7 @@
       <description>Realtek Semiconductor Co., Ltd. RTL-8100/8101L/8139 PCI Fast Ethernet Adapter</description>
       <pci bus="16#00#" device="16#04#" function="0">
         <identification classcode="16#0200#" deviceId="16#8139#" revisionId="16#20#" vendorId="16#10ec#"/>
-        <iommuGroup id="2"/>
+        <iommuGroup id="4"/>
       </pci>
       <irq name="irq1" number="20"/>
       <memory caching="UC" name="mem1" physicalAddress="16#fea5_5000#" size="16#1000#"/>
@@ -112,7 +179,7 @@
       <description>Intel Corporation 82801IB (ICH9) LPC Interface Controller</description>
       <pci bus="16#00#" device="16#1f#" function="0">
         <identification classcode="16#0601#" deviceId="16#2918#" revisionId="16#02#" vendorId="16#8086#"/>
-        <iommuGroup id="4"/>
+        <iommuGroup id="5"/>
       </pci>
       <memory caching="UC" name="mmconf" physicalAddress="16#b00f_8000#" size="16#1000#"/>
     </device>
@@ -120,7 +187,7 @@
       <description>Intel Corporation 82801IR/IO/IH (ICH9R/DO/DH) 6 port SATA Controller [AHCI mode]</description>
       <pci bus="16#00#" device="16#1f#" function="2">
         <identification classcode="16#0106#" deviceId="16#2922#" revisionId="16#02#" vendorId="16#8086#"/>
-        <iommuGroup id="4"/>
+        <iommuGroup id="5"/>
       </pci>
       <irq name="irq1" number="16"> <!-- fake legacy IRQ number -->
        <msi name="msi1"/>
@@ -133,7 +200,7 @@
       <description>Intel Corporation 82801I (ICH9 Family) SMBus Controller</description>
       <pci bus="16#00#" device="16#1f#" function="3">
         <identification classcode="16#0c05#" deviceId="16#2930#" revisionId="16#02#" vendorId="16#8086#"/>
-        <iommuGroup id="4"/>
+        <iommuGroup id="5"/>
       </pci>
       <memory caching="UC" name="mmconf" physicalAddress="16#b00f_b000#" size="16#1000#"/>
       <ioPort end="16#073f#" name="ioport1" start="16#0700#"/>

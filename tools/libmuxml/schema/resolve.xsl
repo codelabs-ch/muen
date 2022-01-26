@@ -3,7 +3,7 @@
 
  <xsl:param name="format"/>
 
- <xsl:output method="xml"/>
+ <xsl:output method="xml" indent="yes"/>
 
  <xsl:template match="/">
   <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">

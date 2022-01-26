@@ -80,7 +80,7 @@ is
 
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "//msr");
+         XPath => "//msrs/msr");
    begin
       Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length (List => Nodes)'Img
                  & " MSR range(s) against whitelist");
@@ -138,7 +138,7 @@ is
 
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "//msr");
+         XPath => "//msrs/msr");
    begin
       Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length (List => Nodes)'Img
                  & " MSR range(s) for start <= end");

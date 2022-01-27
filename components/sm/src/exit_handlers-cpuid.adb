@@ -17,16 +17,60 @@
 --
 
 with SK.Strings;
+with SK.Constants;
+with SK.Bitops;
 
 with Debug_Ops;
 
 with CPU_Values;
+
+pragma $Release_Warnings
+  (Off, "unit ""Sm_Component.Config"" is not referenced",
+   Reason => "Only used to control debug output");
 with Sm_Component.Config;
+pragma $Release_Warnings
+  (On, "unit ""Sm_Component.Config"" is not referenced");
 
 package body Exit_Handlers.CPUID
 is
 
    use Subject_Info;
+
+   --  Return size of enabled features in XSAVE area.
+   function Get_XSAVE_Area_Size (Features : SK.Byte) return SK.Word32;
+
+   -------------------------------------------------------------------------
+
+   function Get_XSAVE_Area_Size (Features : SK.Byte) return SK.Word32
+   is
+      use type SK.Word32;
+
+      --  Legacy region + xsave header size, see Intel SDM Vol. 1,
+      --  "13.4 XSAVE Area".
+      Base_Size : constant := 16#240#;
+
+      Values : CPU_Values.CPUID_Values_Type;
+      Calc   : SK.Word32 := 0;
+      Res    : Boolean;
+   begin
+      for I in SK.Word64 range 2 .. 7 loop
+         if SK.Bitops.Bit_Test
+           (Value => SK.Word64 (Features),
+            Pos   => I)
+         then
+            CPU_Values.Get_CPU_CPUID_Values
+              (Leaf    => 16#d#,
+               Subleaf => SK.Byte (I),
+               Result  => Values,
+               Success => Res);
+            if Res then
+               Calc := Calc + Values.EAX;
+            end if;
+         end if;
+      end loop;
+
+      return Base_Size + Calc;
+   end Get_XSAVE_Area_Size;
 
    -------------------------------------------------------------------------
 
@@ -82,26 +126,18 @@ is
          --  Bit  0 - Streaming SIMD Extensions 3 (SSE3)
          --  Bit  1 - PCLMULQDQ
          --  Bit  9 - Supplemental Streaming SIMD Extensions 3 (SSSE3)
+         --  Bit 12 - FMA
          --  Bit 13 - CMPXCHG16B
          --  Bit 19 - SSE4.1
          --  Bit 20 - SSE4.2
          --  Bit 22 - POPCNT Instruction
          --  Bit 25 - AESNI
+         --  Bit 27 - OSXSAVE
+         --  Bit 28 - AVX
+         --  Bit 26 - XSAVE
+         --  Bit 29 - F16C
          --  Bit 30 - RDRAND
-         State.Regs.RCX := SK.Word64 (Values.ECX) and 16#4298_2203#;
-
-         --  TODO: remove, announce if present
-         pragma Warnings (Off);
-         if Sm_Component.Config.Sm_Announce_Xsave then
-            pragma Warnings (On);
-            declare
-               Cur_RCX : constant SK.Word64 := State.Regs.RCX;
-            begin
-               --  Bit 26 - XSAVE
-               --  Bit 27 - OSXSAVE
-               State.Regs.RCX := Cur_RCX or 16#0c00_0000#;
-            end;
-         end if;
+         State.Regs.RCX := SK.Word64 (Values.ECX) and 16#7e98_3203#;
 
          --  Bit  0 -   FPU: x87 enabled
          --  Bit  3 -   PSE: Page Size Extensions
@@ -139,33 +175,35 @@ is
          State.Regs.RCX := 0;
          State.Regs.RDX := 0;
       elsif RAX = 16#d# then
-         State.Regs.RAX := 0;
-         State.Regs.RBX := 0;
-         State.Regs.RCX := 0;
-         State.Regs.RDX := 0;
+         if RCX = 0 then
+            declare
+               use type SK.Word32;
 
-         pragma Warnings (Off);
-         if Sm_Component.Config.Sm_Announce_Xsave then
-            pragma Warnings (On);
-            if RCX = 0 then
+               Enabled   : constant SK.Byte
+                 := SK.Byte
+                   (Values.EAX and SK.Constants.XCR0_Supported_Features_Mask);
+               Area_Size : constant SK.Word32
+                 := Get_XSAVE_Area_Size (Features => Enabled);
+            begin
+               State.Regs.RAX := SK.Word64 (Enabled);
+               State.Regs.RBX := SK.Word64 (Area_Size);
+               State.Regs.RCX := SK.Word64 (Area_Size);
+            end;
+         elsif RCX = 1 then
 
-               --  Bit  0 - x87 state
-               --  Bit  1 - SSE state
-               State.Regs.RAX := 16#0003#;
-               State.Regs.RBX := 16#0240#;
-               State.Regs.RCX := 16#0240#;
-               State.Regs.RDX := 0;
-            elsif RCX = 1 then
-
-               --  Bit  0 - XSAVEOPT
-               --  Bit  1 - XSAVEC
-               --  Bit  2 - XGETBV
-               State.Regs.RAX := 16#0007#;
-               State.Regs.RBX := 16#0240#;
-               State.Regs.RCX := 16#0000#;
-               State.Regs.RDX := 0;
-            end if;
+            --  Bit  0 - XSAVEOPT
+            --  Bit  1 - XSAVEC
+            --  Bit  2 - XGETBV
+            State.Regs.RAX := 16#0007#;
+            State.Regs.RBX := SK.Word64 (Values.EBX);
+            State.Regs.RCX := SK.Word64 (Values.ECX);
+         else
+            State.Regs.RAX := SK.Word64 (Values.EAX);
+            State.Regs.RBX := SK.Word64 (Values.EBX);
+            State.Regs.RCX := SK.Word64 (Values.ECX);
          end if;
+
+         State.Regs.RDX := SK.Word64 (Values.EDX);
       elsif RAX = 16#8000_0000#  then
 
          --  Get Highest Extended Function Supported.

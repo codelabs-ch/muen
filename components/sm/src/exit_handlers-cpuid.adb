@@ -73,15 +73,11 @@ is
       elsif RAX = 1 then
          --D @Lst Smcpuidend
 
-         --  Processor Info and Feature Bits.
-         --                            Model IVB
-         --                      IVB  / Stepping 9
-         --                      /-\ | /
-         State.Regs.RAX := 16#0003_06A9#;
+         State.Regs.RAX := SK.Word64 (Values.EAX);
 
-         --     CFLUSH size (in 8B)
-         --                        \
-         State.Regs.RBX := 16#0000_0800#; --  FIXME use real CPU's value
+         -- Bits 07..00 - Brand Index
+         -- Bits 15..08 - CLFLUSH line size
+         State.Regs.RBX := SK.Word64 (Values.EBX) and 16#ffff#;
 
          --  Bit  0 - Streaming SIMD Extensions 3 (SSE3)
          --  Bit  1 - PCLMULQDQ
@@ -92,7 +88,7 @@ is
          --  Bit 22 - POPCNT Instruction
          --  Bit 25 - AESNI
          --  Bit 30 - RDRAND
-         State.Regs.RCX := 16#4298_2203#;
+         State.Regs.RCX := SK.Word64 (Values.ECX) and 16#4298_2203#;
 
          --  TODO: remove, announce if present
          pragma Warnings (Off);
@@ -121,7 +117,7 @@ is
          --  Bit 24 -  FXSR: FX SAVE/RESTORE
          --  Bit 25 -   SSE: SSE support
          --  Bit 26 -  SSE2: SSE2 support
-         State.Regs.RDX := 16#0788_a979#;
+         State.Regs.RDX := SK.Word64 (Values.EDX) and 16#0788_a979#;
       elsif RAX = 2 then
 
          --  Return Cache and TLB Descriptor information of a Pentium 4

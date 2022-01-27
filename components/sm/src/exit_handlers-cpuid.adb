@@ -122,7 +122,7 @@ is
 
          --  Structured Extended Feature Flags.
 
-         --  Max supported subleaf is 0.
+         --  Cap supported subleafs.
          State.Regs.RAX := 0;
 
          if RCX = 0 then
@@ -131,7 +131,7 @@ is
 
             --  Bit  0 - FSGSBASE
             --  Bit  9 - REP MOVSB/STOSB
-            State.Regs.RBX := 16#0000_0201#;
+            State.Regs.RBX := SK.Word64 (Values.EBX) and 16#0000_0201#;
          else
             State.Regs.RBX := 0;
          end if;

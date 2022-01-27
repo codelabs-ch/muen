@@ -185,7 +185,7 @@ is
 
          --  Get Highest Extended Function Supported.
 
-         State.Regs.RAX := 16#8000_0001#;
+         State.Regs.RAX := 16#8000_0004#;
          State.Regs.RBX := 0;
          State.Regs.RCX := 0;
          State.Regs.RDX := 0;
@@ -200,6 +200,11 @@ is
          --  Bit 20 - NX: Execute Disable Bit available
          --  Bit 29 - LM: Long Mode
          State.Regs.RDX := 16#2010_0000#;
+      elsif RAX >= 16#8000_0002# and then RAX <= 16#8000_0004# then
+         State.Regs.RAX := SK.Word64 (Values.EAX);
+         State.Regs.RBX := SK.Word64 (Values.EBX);
+         State.Regs.RCX := SK.Word64 (Values.ECX);
+         State.Regs.RDX := SK.Word64 (Values.EDX);
       else
          pragma Debug (Sm_Component.Config.Debug_Cpuid,
                        Debug_Ops.Put_Line

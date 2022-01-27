@@ -119,16 +119,10 @@ is
          --  Bit 26 -  SSE2: SSE2 support
          State.Regs.RDX := SK.Word64 (Values.EDX) and 16#0788_a979#;
       elsif RAX = 2 then
-
-         --  Return Cache and TLB Descriptor information of a Pentium 4
-         --  processor (values taken from [1]).
-         --
-         --  [1] - http://x86.renejeschke.de/html/file_module_x86_id_45.html
-
-         State.Regs.RAX := 16#665b_5001#;
-         State.Regs.RBX := 0;
-         State.Regs.RCX := 0;
-         State.Regs.RDX := 16#007a_7000#;
+         State.Regs.RAX := SK.Word64 (Values.EAX);
+         State.Regs.RBX := SK.Word64 (Values.EBX);
+         State.Regs.RCX := SK.Word64 (Values.ECX);
+         State.Regs.RDX := SK.Word64 (Values.EDX);
       elsif RAX = 7 then
 
          --  Structured Extended Feature Flags.

@@ -118,11 +118,6 @@ is
          --  Bit 25 -   SSE: SSE support
          --  Bit 26 -  SSE2: SSE2 support
          State.Regs.RDX := SK.Word64 (Values.EDX) and 16#0788_a979#;
-      elsif RAX = 2 then
-         State.Regs.RAX := SK.Word64 (Values.EAX);
-         State.Regs.RBX := SK.Word64 (Values.EBX);
-         State.Regs.RCX := SK.Word64 (Values.ECX);
-         State.Regs.RDX := SK.Word64 (Values.EDX);
       elsif RAX = 7 then
 
          --  Structured Extended Feature Flags.
@@ -190,7 +185,11 @@ is
          --  Bit 20 - NX: Execute Disable Bit available
          --  Bit 29 - LM: Long Mode
          State.Regs.RDX := 16#2010_0000#;
-      elsif RAX >= 16#8000_0002# and then RAX <= 16#8000_0004# then
+      elsif
+        (RAX >= 16#8000_0002# and then RAX <= 16#8000_0004#)
+        or else RAX = 2
+        or else RAX = 4
+      then
          State.Regs.RAX := SK.Word64 (Values.EAX);
          State.Regs.RBX := SK.Word64 (Values.EBX);
          State.Regs.RCX := SK.Word64 (Values.ECX);

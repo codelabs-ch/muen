@@ -174,22 +174,15 @@ is
          State.Regs.RBX := 0;
          State.Regs.RCX := 0;
          State.Regs.RDX := 0;
-      elsif RAX = 16#8000_0001# then
-
-         --  Get Extended CPU Features
-
-         State.Regs.RAX := 0;
-         State.Regs.RBX := 0;
-         State.Regs.RCX := 0;
-
-         --  Bit 20 - NX: Execute Disable Bit available
-         --  Bit 29 - LM: Long Mode
-         State.Regs.RDX := 16#2010_0000#;
       elsif
-        (RAX >= 16#8000_0002# and then RAX <= 16#8000_0004#)
-        or else RAX = 2
+        RAX = 2
         or else RAX = 4
+        or else RAX = 16#8000_0001#
+        or else (RAX >= 16#8000_0002# and then RAX <= 16#8000_0004#)
       then
+
+         --  Passthrough values.
+
          State.Regs.RAX := SK.Word64 (Values.EAX);
          State.Regs.RBX := SK.Word64 (Values.EBX);
          State.Regs.RCX := SK.Word64 (Values.ECX);

@@ -140,20 +140,25 @@ is
          State.Regs.RCX := SK.Word64 (Values.ECX) and 16#7e98_3203#;
 
          --  Bit  0 -   FPU: x87 enabled
+         --  Bit  1 -   VME: Virtual-8086 Mode Enhancement
+         --  Bit  2 -    DE: Debugging Extensions
          --  Bit  3 -   PSE: Page Size Extensions
          --  Bit  4 -   TSC: Time Stamp Counter
          --  Bit  5 -   MSR: RD/WR MSR
          --  Bit  6 -   PAE: PAE and 64bit page tables
          --  Bit  8 -   CX8: CMPXCHG8B Instruction
          --  Bit 11 -   SEP: SYSENTER/SYSEXIT Instructions
+         --  Bit 12 -  MTRR: Memory Type Range Registers
          --  Bit 13 -   PGE: Page Global Bit
          --  Bit 15 -  CMOV: Conditional Move Instructions
+         --  Bit 17 - PSE36: 36-Bit Page Size Extension
          --  Bit 19 - CLFSH: CLFLUSH Instruction
          --  Bit 23 -   MMX: MMX support
          --  Bit 24 -  FXSR: FX SAVE/RESTORE
          --  Bit 25 -   SSE: SSE support
          --  Bit 26 -  SSE2: SSE2 support
-         State.Regs.RDX := SK.Word64 (Values.EDX) and 16#0788_a979#;
+         --  Bit 27 -    SS: Self Snoop
+         State.Regs.RDX := SK.Word64 (Values.EDX) and 16#0f8a_b97f#;
       elsif RAX = 7 then
 
          --  Structured Extended Feature Flags.

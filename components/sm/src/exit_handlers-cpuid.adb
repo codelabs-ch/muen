@@ -162,12 +162,14 @@ is
          State.Regs.RAX := 0;
 
          if RCX = 0 then
-
-            --  Sub-leaf 0.
-
             --  Bit  0 - FSGSBASE
+            --  Bit  3 - BMI1
+            --  Bit  5 - AVX2
+            --  Bit  8 - BMI2
             --  Bit  9 - REP MOVSB/STOSB
-            State.Regs.RBX := SK.Word64 (Values.EBX) and 16#0000_0201#;
+            --  Bit 19 - ADX
+            --  Bit 23 - CLFLUSHOPT
+            State.Regs.RBX := SK.Word64 (Values.EBX) and 16#0088_0329#;
          else
             State.Regs.RBX := 0;
          end if;

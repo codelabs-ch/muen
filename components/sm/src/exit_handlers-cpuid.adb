@@ -172,9 +172,17 @@ is
             --  Bit  5 - AVX2
             --  Bit  8 - BMI2
             --  Bit  9 - REP MOVSB/STOSB
+            --  Bit 16 - AVX512F
+            --  Bit 17 - AVX512DQ
+            --  Bit 18 - RDSEED
             --  Bit 19 - ADX
+            --  Bit 21 - AVX512_IFMA
             --  Bit 23 - CLFLUSHOPT
-            State.Regs.RBX := SK.Word64 (Values.EBX) and 16#0088_0329#;
+            --  Bit 28 - AVX512CD
+            --  Bit 29 - SHA
+            --  Bit 30 - AVX512BW
+            --  Bit 31 - AVX512VL
+            State.Regs.RBX := SK.Word64 (Values.EBX) and 16#f0af_0329#;
          else
             State.Regs.RBX := 0;
          end if;

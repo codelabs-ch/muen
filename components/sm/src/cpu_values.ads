@@ -39,6 +39,13 @@ is
       Result   : out CPUID_Values_Type;
       Success  : out Boolean);
 
+   --  Return register value of MSR given by address. Returns False if the
+   --  address is unknown.
+   procedure Get_MSR_Value
+     (Address :     SK.Word32;
+      Regval  : out SK.Word64;
+      Success : out Boolean);
+
 private
 
    type CPUID_Entry_Type is record
@@ -49,6 +56,11 @@ private
       EBX         : SK.Word32;
       ECX         : SK.Word32;
       EDX         : SK.Word32;
+   end record;
+
+   type MSR_Entry_Type is record
+      Addr   : SK.Word32;
+      Regval : SK.Word64;
    end record;
 
 end CPU_Values;

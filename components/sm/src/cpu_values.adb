@@ -58,4 +58,24 @@ is
       end loop;
    end Get_CPUID_Values;
 
+   -------------------------------------------------------------------------
+
+   procedure Get_MSR_Value
+     (Address :     SK.Word32;
+      Regval  : out SK.Word64;
+      Success : out Boolean)
+   is
+      use type SK.Word32;
+   begin
+      Success := False;
+      Regval  := 0;
+
+      for M of CPU_Values.Target.MSR loop
+         if M.Addr = Address then
+            Regval  := M.Regval;
+            Success := True;
+         end if;
+      end loop;
+   end Get_MSR_Value;
+
 end CPU_Values;

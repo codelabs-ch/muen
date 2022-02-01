@@ -594,6 +594,13 @@ is
                       Old_Name  => Old_Name,
                       New_Name  => New_Name);
 
+                  Rename_NonDollar_Refs
+                     (Parent    => Root_Node,
+                      XPath     => ".//case",
+                      Attr_Name => "variable",
+                      Old_Name  => Old_Name,
+                      New_Name  => New_Name);
+
                   Rename_Dollar_Refs
                      (Parent    => Root_Node,
                       Old_Name  => Old_Name,

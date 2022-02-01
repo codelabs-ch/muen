@@ -30,13 +30,13 @@ is
 
    Invalid_Expression : exception;
 
-private
    --  A string-vector is used to store a backtrace of the recursive path
    --  used for evaluation. The backtrace is used for cycle detection
    --  and to report a useful error in case of a cycle.
    package String_Vector is new Ada.Containers.Indefinite_Vectors
       (Element_Type => String,
        Index_Type   => Natural);
+private
    use all type String_Vector.Vector;
 
    --  Returns the value of the config variable reference or boolean element
@@ -113,11 +113,19 @@ private
        Var_Name : String)
       return DOM.Core.Node;
 
-   -- determine whether the given expression defines a Boolean or a
-   -- string value
+   -- determine whether the given expression defines a Boolean, a
+   -- string value, or a case statement
    function  Get_Expr_Type
       (Expr :  DOM.Core.Node)
       return String;
+
+   -- provides all functionality for 'Expand', except for the outer loop,
+   -- i.e., it checks which type the given Node has and calls the
+   -- responsible evaluation function on that node.
+   procedure Expand_Single_Node
+      (Policy    :        Muxml.XML_Data_Type;
+       Node      :        DOM.Core.Node;
+       Backtrace : in out String_Vector.Vector);
 
    -- handles the addition of a string to the backtrace and handles errors
    procedure Add_To_Backtrace

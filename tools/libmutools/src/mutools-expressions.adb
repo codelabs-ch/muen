@@ -27,6 +27,7 @@ with McKae.XML.XPath.XIA;
 with Mulog;
 with Mutools.System_Config;
 
+with Mutools.Expressions.Case_Expression;
 package body Mutools.Expressions
 is
    -------------------------------------------------------------------------
@@ -56,7 +57,8 @@ is
                (Source   => Path,
                 New_Item => Name);
 
-            raise Invalid_Expression with "Resolving the value of node with name"
+            raise Invalid_Expression with
+               "Resolving the value of node with name '"
                & Name
                & "' lead to cyclic dependency: "
                & Ada.Strings.Unbounded.To_String (Path);
@@ -92,8 +94,8 @@ is
          when Bool_Boolean  =>
             Result := Boolean'Value
               (DOM.Core.Elements.Get_Attribute
-                 (Elem => Node,
-                  Name => "value"));
+                                     (Elem => Node,
+                                      Name => "value"));
          when Bool_Variable =>
             declare
                Var_Name : constant String
@@ -304,6 +306,7 @@ is
        Backtrace : in out String_Vector.Vector)
       return Boolean
    is
+      use all type Mutools.Expressions.Case_Expression.Variable_Type;
       Node_Type : constant String
          := DOM.Core.Nodes.Node_Name (N => Node);
       Node_Name : constant String
@@ -345,21 +348,42 @@ is
          end;
 
       elsif Node_Type = "expression" then
-         if Get_Expr_Type (Expr => Node) /= "boolean" then
+         if Get_Expr_Type (Expr => Node) = "case" then
+            declare
+               Result_Case : Mutools.Expressions.Case_Expression.Value_Type_Tuple;
+            begin
+               Mutools.Expressions.Case_Expression.Case_Expression_Evaluation
+                  (Policy        => Policy,
+                   Expr_Node     => Node,
+                   Value_Of_Case => Result_Case,
+                   Backtrace     => Backtrace);
+               if Result_Case.Value_Type /=
+                  Mutools.Expressions.Case_Expression.Boolean_Type
+               then
+                  raise Muxml.Validation_Error with
+                     "A Boolean variable or expression points to expression with name '"
+                     & Node_Name
+                     & "' which is not Boolean valued";
+               end if;
+               Result := Result_Case.Bool_Value;
+            end;
+
+         elsif Get_Expr_Type (Expr => Node) = "boolean" then
+            Result :=  Boolean_Expression (Policy => Policy,
+                                           Node => Node,
+                                           Backtrace => Backtrace);
+            Mulog.Log (Msg => "Expanding expression '" & Node_Name
+                       & "' with value '" & Result'Image & "'");
+            System_Config.Set_Value (Data  => Policy,
+                                     Name  => Node_Name,
+                                     Value => Result);
+         else
             raise Muxml.Validation_Error with
                "A Boolean variable or expression points to expression with name '"
                & Node_Name
                & "' which is not Boolean valued";
          end if;
 
-         Result :=  Boolean_Expression (Policy => Policy,
-                                        Node => Node,
-                                        Backtrace => Backtrace);
-         Mulog.Log (Msg => "Expanding expression '" & Node_Name
-                    & "' with value '" & Result'Image & "'");
-         System_Config.Set_Value (Data  => Policy,
-                                  Name  => Node_Name,
-                                  Value => Result);
       else
          raise Muxml.Validation_Error with
             "A Boolean variable or expression points to node with type '"
@@ -380,6 +404,8 @@ is
        Backtrace : in out String_Vector.Vector)
       return Integer
    is
+      use all type Mutools.Expressions.Case_Expression.Variable_Type;
+
       Node_Type : constant String
          := DOM.Core.Nodes.Node_Name (N => Node);
       Node_Name : constant String
@@ -421,10 +447,31 @@ is
          end;
 
       elsif Node_Type = "expression" then
-         raise Muxml.Validation_Error with
-            "An integer variable or expression points to expression with name '"
-            & Node_Name
-            & "' which is not integer valued";
+         if Get_Expr_Type (Expr => Node) = "case" then
+            declare
+               Result_Case : Mutools.Expressions.Case_Expression.Value_Type_Tuple;
+            begin
+               Mutools.Expressions.Case_Expression.Case_Expression_Evaluation
+                  (Policy        => Policy,
+                   Expr_Node     => Node,
+                   Value_Of_Case => Result_Case,
+                   Backtrace     => Backtrace);
+               if Result_Case.Value_Type /=
+                  Mutools.Expressions.Case_Expression.Integer_Type
+               then
+                  raise Muxml.Validation_Error with
+                     "An Integer variable or expression points to expression with name '"
+                     & Node_Name
+                     & "' which is not integer valued";
+               end if;
+               Result := Result_Case.Int_Value;
+            end;
+         else
+            raise Muxml.Validation_Error with
+               "An integer variable or expression points to expression with name '"
+               & Node_Name
+               & "' which is not integer valued";
+         end if;
       else
          raise Muxml.Validation_Error with
             "An integer variable or expression points to node with type '"
@@ -446,6 +493,7 @@ is
       return String
    is
       package ASU renames Ada.Strings.Unbounded;
+      use all type Mutools.Expressions.Case_Expression.Variable_Type;
 
       Node_Type : constant String
          := DOM.Core.Nodes.Node_Name (N => Node);
@@ -491,22 +539,45 @@ is
          end;
 
       elsif Node_Type = "expression" then
-         if Get_Expr_Type (Expr => Node) /= "string" then
+         if Get_Expr_Type (Expr => Node) = "case" then
+            declare
+               Result_Case : Mutools.Expressions.Case_Expression.Value_Type_Tuple;
+            begin
+               Mutools.Expressions.Case_Expression.Case_Expression_Evaluation
+                  (Policy        => Policy,
+                   Expr_Node     => Node,
+                   Value_Of_Case => Result_Case,
+                   Backtrace     => Backtrace);
+
+               if Result_Case.Value_Type /=
+                  Mutools.Expressions.Case_Expression.String_Type
+               then
+                  raise Muxml.Validation_Error with
+                     "A String variable or expression points to expression "
+                     & "with name '"
+                     & Node_Name
+                     & "' which is not String valued";
+               end if;
+               Result :=  ASU.To_Unbounded_String
+                  (Result_Case.String_Value.Element);
+            end;
+
+         elsif Get_Expr_Type (Expr => Node) = "string" then
+            Result :=  ASU.To_Unbounded_String
+               (String_Expression (Policy => Policy,
+                                   Node => Node,
+                                   Backtrace => Backtrace));
+            Mulog.Log (Msg => "Expanding expression '" & Node_Name
+                       & "' with value '" & ASU.To_String (Result) & "'");
+            System_Config.Set_Value (Data  => Policy,
+                                     Name  => Node_Name,
+                                     Value => ASU.To_String (Result));
+         else
             raise Muxml.Validation_Error with
                "A string variable or expression points to expression with name '"
                & Node_Name
                & "' which is not string valued";
          end if;
-
-         Result :=  ASU.To_Unbounded_String
-                       (String_Expression (Policy => Policy,
-                                           Node => Node,
-                                           Backtrace => Backtrace));
-         Mulog.Log (Msg => "Expanding expression '" & Node_Name
-                    & "' with value '" & ASU.To_String (Result) & "'");
-         System_Config.Set_Value (Data  => Policy,
-                                  Name  => Node_Name,
-                                  Value => ASU.To_String (Result));
       else
          raise Muxml.Validation_Error with
             "A string variable or expression points to node with type '"
@@ -532,6 +603,31 @@ is
                                & "/*/config/integer | "
                                & "/*/config/string | "
                                & "/*/expressions/expression");
+
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Vars_Exprs) - 1 loop
+         declare
+            Var      : constant DOM.Core.Node
+                     := DOM.Core.Nodes.Item (List  => Vars_Exprs,
+                                             Index => I);
+         begin
+            Expand_Single_Node
+               (Policy    => Policy,
+                Node      => Var,
+                Backtrace => Backtrace);
+         end;
+      end loop;
+   end Expand;
+
+   -------------------------------------------------------------------------
+
+   procedure Expand_Single_Node
+      (Policy    :        Muxml.XML_Data_Type;
+       Node      :        DOM.Core.Node;
+       Backtrace : in out String_Vector.Vector)
+   is
+      Node_Type : constant String
+         :=  DOM.Core.Nodes.Node_Name (N => Node);
 
       ----------------------------------------------------------------------
 
@@ -564,46 +660,51 @@ is
       end Discard;
 
    begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Vars_Exprs) - 1 loop
-         declare
-            Var      : constant DOM.Core.Node
-                     := DOM.Core.Nodes.Item (List  => Vars_Exprs,
-                                             Index => I);
-            Var_Type : constant String
-                     :=  DOM.Core.Nodes.Node_Name (N => Var);
-
-         begin
-            if    Var_Type = "boolean" then
-               Discard (Evaluate_Boolean (Policy => Policy,
-                                          Node   => Var,
-                                          Backtrace => Backtrace));
-            elsif Var_Type = "integer" then
-               Discard (Evaluate_Integer (Policy => Policy,
-                                          Node   => Var,
-                                          Backtrace => Backtrace));
-            elsif Var_Type = "string" then
-               Discard (Evaluate_String (Policy => Policy,
-                                         Node   => Var,
-                                         Backtrace => Backtrace));
-            elsif Var_Type = "expression" then
-               if Get_Expr_Type (Expr => Var) = "boolean" then
-                  Discard (Evaluate_Boolean (Policy => Policy,
-                                             Node   => Var,
-                                             Backtrace => Backtrace));
-               else
-                  Discard (Evaluate_String (Policy => Policy,
-                                            Node   => Var,
-                                            Backtrace => Backtrace));
-               end if;
-            else
-               raise Invalid_Expression
-                  with "Invalid config-variable or expression with type '"
-                       & Var_Type & "'";
-            end if;
-         end;
-      end loop;
-
-   end Expand;
+      if    Node_Type = "boolean" then
+         Discard (Evaluate_Boolean (Policy => Policy,
+                                    Node   => Node,
+                                    Backtrace => Backtrace));
+      elsif Node_Type = "integer" then
+         Discard (Evaluate_Integer (Policy => Policy,
+                                    Node   => Node,
+                                    Backtrace => Backtrace));
+      elsif Node_Type = "string" then
+         Discard (Evaluate_String (Policy => Policy,
+                                   Node   => Node,
+                                   Backtrace => Backtrace));
+      elsif Node_Type = "expression" then
+         if Get_Expr_Type (Expr => Node) = "boolean" then
+            Discard (Evaluate_Boolean (Policy => Policy,
+                                       Node   => Node,
+                                       Backtrace => Backtrace));
+         elsif Get_Expr_Type (Expr => Node) = "case" then
+            declare
+               Dummy : Mutools.Expressions.Case_Expression.Value_Type_Tuple;
+               Node_Name : constant String
+                  := DOM.Core.Elements.Get_Attribute
+                  (Elem => Node,
+                   Name => "name");
+            begin
+               Add_To_Backtrace (Backtrace => Backtrace, Name => Node_Name);
+               Mutools.Expressions.Case_Expression.Case_Expression_Evaluation
+                  (Policy        => Policy,
+                   Expr_Node     => Node,
+                   Value_Of_Case => Dummy,
+                   Backtrace     => Backtrace);
+               pragma Unreferenced (Dummy);
+               String_Vector.Delete_Last (Container => Backtrace);
+            end;
+         else
+            Discard (Evaluate_String (Policy => Policy,
+                                      Node   => Node,
+                                      Backtrace => Backtrace));
+         end if;
+      else
+         raise Invalid_Expression
+            with "Invalid config-variable or expression with type '"
+            & Node_Type & "'";
+      end if;
+   end Expand_Single_Node;
 
    -------------------------------------------------------------------------
 
@@ -663,6 +764,8 @@ is
 
       if DOM.Core.Nodes.Node_Name (N => First_Child) = "concatenation" then
          return "string";
+      elsif DOM.Core.Nodes.Node_Name (N => First_Child) = "case" then
+         return "case";
       else
          return "boolean";
       end if;

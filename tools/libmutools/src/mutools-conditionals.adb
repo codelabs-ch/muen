@@ -24,19 +24,23 @@ with DOM.Core.Nodes;
 with McKae.XML.XPath.XIA;
 
 with Muxml.Utils;
+with Mutools.Expressions;
+with Mutools.Expressions.Case_Expression;
 
 package body Mutools.Conditionals
 is
 
    --  Transfer all children from specified node to parent.
    procedure Transfer_Children
-     (Parent : DOM.Core.Node;
-      Node   : DOM.Core.Node);
+      (Old_Parent   : DOM.Core.Node;
+       New_Parent   : DOM.Core.Node;
+       Ref_In_New_Parent : DOM.Core.Node);
 
    -------------------------------------------------------------------------
 
    procedure Evaluate
-     (Config : DOM.Core.Node_List;
+      (Policy : Muxml.XML_Data_Type;
+       Config : DOM.Core.Node_List;
       Parent : DOM.Core.Node)
    is
       use type DOM.Core.Node;
@@ -48,7 +52,8 @@ is
 
          --  Recursively evaluate children before processing conditional.
 
-         Evaluate (Config => Config,
+         Evaluate (Policy => Policy,
+                   Config => Config,
                    Parent => Cur_Child);
 
          --  Get next child before potentially removing current child from
@@ -78,13 +83,40 @@ is
                  (Left  => Value,
                   Right => Cfg_Value)
                then
-                  Transfer_Children (Parent => Parent,
-                                     Node   => Cur_Child);
+                  Transfer_Children
+                     (Old_Parent   => Cur_Child,
+                      New_Parent   => Parent,
+                      Ref_In_New_Parent => Cur_Child);
                end if;
 
                Dummy := DOM.Core.Nodes.Remove_Child
                  (N         => Parent,
                   Old_Child => Cur_Child);
+               DOM.Core.Nodes.Free (N => Dummy);
+            end;
+         elsif DOM.Core.Nodes.Node_Name (N => Cur_Child) = "case" then
+            declare
+               Dummy, Matching_Option_Node : DOM.Core.Node;
+               -- we need the backtrace only for syntactial reasons
+               Backtrace : Mutools.Expressions.String_Vector.Vector;
+
+            begin
+               Mutools.Expressions.Case_Expression.Evaluate_Case_Node_Frame
+                  (Policy          => Policy,
+                   Case_Node       => Cur_Child,
+                   Guarantee_Match => False,
+                   Return_Node     => Matching_Option_Node,
+                   Backtrace       => Backtrace);
+               if Matching_Option_Node /= null then
+                  Transfer_Children
+                     (Old_Parent        => Matching_Option_Node,
+                      New_Parent        => Parent,
+                      Ref_In_New_Parent =>  Cur_Child);
+               end if;
+
+               Dummy := DOM.Core.Nodes.Remove_Child
+                  (N         => Parent,
+                   Old_Child => Cur_Child);
                DOM.Core.Nodes.Free (N => Dummy);
             end;
          end if;
@@ -111,7 +143,8 @@ is
               := DOM.Core.Nodes.Item (List  => Sections,
                                       Index => I);
          begin
-            Evaluate (Config => Config_Nodes,
+            Evaluate (Policy => Policy,
+                      Config => Config_Nodes,
                       Parent => Cur_Section);
          end;
       end loop;
@@ -120,21 +153,22 @@ is
    -------------------------------------------------------------------------
 
    procedure Transfer_Children
-     (Parent : DOM.Core.Node;
-      Node   : DOM.Core.Node)
+      (Old_Parent   : DOM.Core.Node;
+       New_Parent   : DOM.Core.Node;
+       Ref_In_New_Parent : DOM.Core.Node)
    is
       use type DOM.Core.Node;
 
       Cur_Child : DOM.Core.Node;
    begin
       loop
-         Cur_Child := DOM.Core.Nodes.First_Child (N => Node);
+         Cur_Child := DOM.Core.Nodes.First_Child (N => Old_Parent);
          exit when Cur_Child = null;
          -- Insert_Before can be used to move nodes (by specification)
          Cur_Child := DOM.Core.Nodes.Insert_Before
-           (N         => Parent,
+           (N         => New_Parent,
             New_Child => Cur_Child,
-            Ref_Child => Node);
+            Ref_Child => Ref_In_New_Parent);
       end loop;
    end Transfer_Children;
 

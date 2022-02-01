@@ -30,7 +30,8 @@ private
 
    --  Recursively evaluate all conditionals of given parent node.
    procedure Evaluate
-     (Config : DOM.Core.Node_List;
-      Parent : DOM.Core.Node);
+      (Policy : Muxml.XML_Data_Type;
+       Config : DOM.Core.Node_List;
+       Parent : DOM.Core.Node);
 
 end Mutools.Conditionals;

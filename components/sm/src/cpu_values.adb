@@ -23,7 +23,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Get_CPU_CPUID_Values
+   procedure Get_CPUID_Values
      (Leaf    :     SK.Word32;
       Subleaf :     SK.Byte;
       Result  : out CPUID_Values_Type;
@@ -56,6 +56,6 @@ is
             end if;
          end if;
       end loop;
-   end Get_CPU_CPUID_Values;
+   end Get_CPUID_Values;
 
 end CPU_Values;

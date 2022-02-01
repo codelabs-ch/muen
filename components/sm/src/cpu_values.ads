@@ -33,7 +33,7 @@ is
    --  Return CPUID values of hardware target for given leaf/subleaf.
    --  Returns False if the leaf/subleaf is not found, or if the request
    --  is outside of the supported leaf range.
-   procedure Get_CPU_CPUID_Values
+   procedure Get_CPUID_Values
      (Leaf     :     SK.Word32;
       Subleaf  :     SK.Byte;
       Result   : out CPUID_Values_Type;

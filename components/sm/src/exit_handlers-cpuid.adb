@@ -20,9 +20,9 @@ with SK.Strings;
 with SK.Constants;
 with SK.Bitops;
 
-with Debug_Ops;
-
 with CPU_Values;
+
+with Debug_Ops;
 
 pragma $Release_Warnings
   (Off, "unit ""Sm_Component.Config"" is not referenced",
@@ -58,7 +58,7 @@ is
            (Value => SK.Word64 (Features),
             Pos   => I)
          then
-            CPU_Values.Get_CPU_CPUID_Values
+            CPU_Values.Get_CPUID_Values
               (Leaf    => 16#d#,
                Subleaf => SK.Byte (I),
                Result  => Values,
@@ -91,7 +91,7 @@ is
       State.Regs.RCX := 0;
       State.Regs.RDX := 0;
 
-      CPU_Values.Get_CPU_CPUID_Values
+      CPU_Values.Get_CPUID_Values
         (Leaf    => SK.Word32'Mod (RAX),
          Subleaf => SK.Byte'Mod (RCX),
          Result  => Values,

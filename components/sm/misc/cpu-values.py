@@ -15,11 +15,12 @@ def write_spec(policy, package_name, f):
     """
     Write CPU config to given file.
     """
+    f.write("private package " + package_name + "\n")
+    f.write("is\n\n")
+
     cpuid = policy.xpath("/system/hardware/processor/cpuid")
     count = len(cpuid)
 
-    f.write("private package " + package_name + "\n\n")
-    f.write("is\n\n")
     f.write("   CPUID : constant array (Positive range <>) of CPUID_Entry_Type\n")
     f.write("     := (\n");
     for idx, c in enumerate(cpuid, start=1):
@@ -35,8 +36,24 @@ def write_spec(policy, package_name, f):
             f.write(",\n")
         else:
             f.write("\n")
-    f.write("        );\n");
+    f.write("        );\n\n");
+
+    msr = policy.xpath("/system/hardware/processor/msr")
+    count = len(msr)
+
+    f.write("   MSR : constant array (Positive range <>) of MSR_Entry_Type\n")
+    f.write("     := (\n");
+    for idx, c in enumerate(msr, start=1):
+        f.write("         " + str(idx) + " => ("
+                + c.get("address") + ", " + c.get("regval") + ")")
+        if idx < count:
+            f.write(",\n")
+        else:
+            f.write("\n")
+    f.write("        );\n\n");
+
     f.write("end " + package_name + ";\n")
+    f.close()
 
 
 def parse_args():

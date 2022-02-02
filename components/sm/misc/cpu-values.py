@@ -21,11 +21,13 @@ def write_spec(policy, package_name, f):
     cpuid = policy.xpath("/system/hardware/processor/cpuid")
     count = len(cpuid)
 
-    f.write("   CPUID : constant array (Positive range <>) of CPUID_Entry_Type\n")
-    f.write("     := (\n");
+    f.write("   CPUID : constant array (Positive range <>) of "
+            "CPUID_Entry_Type\n")
+    f.write("     := (\n")
     for idx, c in enumerate(cpuid, start=1):
         leaf = c.get("leaf")
-        subleaf_count = len(c.xpath("/system/hardware/processor/cpuid[@leaf='" + leaf + "']"))
+        subleaf_count = len(c.xpath("/system/hardware/processor/cpuid[@leaf='"
+                                    + leaf + "']"))
         has_subleaf = "True" if subleaf_count > 1 else "False"
         f.write("         " + str(idx) + " => ("
                 + leaf + ", " + has_subleaf + ", "
@@ -36,13 +38,13 @@ def write_spec(policy, package_name, f):
             f.write(",\n")
         else:
             f.write("\n")
-    f.write("        );\n\n");
+    f.write("        );\n\n")
 
     msr = policy.xpath("/system/hardware/processor/msr")
     count = len(msr)
 
     f.write("   MSR : constant array (Positive range <>) of MSR_Entry_Type\n")
-    f.write("     := (\n");
+    f.write("     := (\n")
     for idx, c in enumerate(msr, start=1):
         f.write("         " + str(idx) + " => ("
                 + c.get("address") + ", " + c.get("regval") + ")")
@@ -50,7 +52,7 @@ def write_spec(policy, package_name, f):
             f.write(",\n")
         else:
             f.write("\n")
-    f.write("        );\n\n");
+    f.write("        );\n\n")
 
     f.write("end " + package_name + ";\n")
     f.close()

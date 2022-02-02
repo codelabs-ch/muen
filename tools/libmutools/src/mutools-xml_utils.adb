@@ -1369,18 +1369,25 @@ is
       use type DOM.Core.Node;
 
       Base     : Interfaces.Unsigned_64;
-      Size     : constant Interfaces.Unsigned_64 := 16#1000_0000#;
+      Size     : Interfaces.Unsigned_64;
+
       Base_Str : constant String
         := (if Devices_Node = null then "" else
                DOM.Core.Elements.Get_Attribute
               (Elem => Devices_Node,
                Name => "pciConfigAddress"));
+      Size_Str : constant String
+        := (if Devices_Node = null then "" else
+               DOM.Core.Elements.Get_Attribute
+              (Elem => Devices_Node,
+               Name => "pciConfigSize"));
    begin
-      if Base_Str'Length = 0 then
+      if Base_Str'Length = 0 or else Size_Str'Length = 0 then
          return False;
       end if;
 
       Base := Interfaces.Unsigned_64'Value (Base_Str);
+      Size := Interfaces.Unsigned_64'Value (Size_Str);
       return Addr >= Base and then Addr < Base + Size;
    end Is_Physical_Mmconf_Region;
 

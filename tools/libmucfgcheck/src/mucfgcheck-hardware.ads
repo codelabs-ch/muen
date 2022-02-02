@@ -38,9 +38,9 @@ is
    procedure Memory_Block_Size (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_hw
-   --D Validate that PCI config space address is specified if PCI devices are
-   --D present.
-   procedure PCI_Config_Space_Address (XML_Data : Muxml.XML_Data_Type);
+   --D Validate that PCI config space address and size are specified if PCI
+   --D devices are present.
+   procedure PCI_Config_Space (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_hw
    --D Validate that the hardware provides enough physical CPU cores.

@@ -130,10 +130,10 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_PCI_Config_Space_Address (Gnattest_T : in out Test);
-   procedure Test_PCI_Config_Space_Address_4663d9 (Gnattest_T : in out Test) renames Test_PCI_Config_Space_Address;
---  id:2.2/4663d97b4d1f43a4/PCI_Config_Space_Address/1/0/
-   procedure Test_PCI_Config_Space_Address (Gnattest_T : in out Test) is
+   procedure Test_PCI_Config_Space (Gnattest_T : in out Test);
+   procedure Test_PCI_Config_Space_e31e81 (Gnattest_T : in out Test) renames Test_PCI_Config_Space;
+--  id:2.2/e31e81fc3ac03484/PCI_Config_Space/1/0/
+   procedure Test_PCI_Config_Space (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -143,18 +143,31 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      PCI_Config_Space (XML_Data => Data);
+
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/hardware/devices",
          Name  => "pciConfigAddress",
          Value => "");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/hardware/devices",
+         Name  => "pciConfigSize",
+         Value => "");
 
-      PCI_Config_Space_Address (XML_Data => Data);
+      PCI_Config_Space (XML_Data => Data);
       Assert (Condition => Validation_Errors.Contains
               (Msg => "Missing PCI configuration space address"),
-              Message   => "Exception mismatch");
+              Message   => "Exception mismatch (address)");
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Missing PCI configuration space size"),
+              Message   => "Exception mismatch (size)");
 --  begin read only
-   end Test_PCI_Config_Space_Address;
+   end Test_PCI_Config_Space;
 --  end read only
 
 

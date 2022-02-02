@@ -309,6 +309,10 @@ package body Mutools.XML_Utils.Test_Data.Tests is
            (Elem  => Devices,
             Name  => "pciConfigAddress",
             Value => "16#e000_0000#");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Devices,
+            Name  => "pciConfigSize",
+            Value => "16#1000_0000#");
 
          Dev := DOM.Core.Documents.Create_Element
            (Doc      => Policy.Doc,
@@ -2304,15 +2308,34 @@ package body Mutools.XML_Utils.Test_Data.Tests is
       DOM.Core.Elements.Set_Attribute (Elem  => Devices,
                                        Name  => "pciConfigAddress",
                                        Value => "16#0500_0000#");
+      DOM.Core.Elements.Set_Attribute (Elem  => Devices,
+                                       Name  => "pciConfigSize",
+                                       Value => "16#3000#");
 
       Assert (Condition => Is_Physical_Mmconf_Region
               (Devices_Node => Devices,
+               Addr         => 16#0500_0000#),
+              Message   => "Unable to detect Mmconf region (1)");
+      Assert (Condition => Is_Physical_Mmconf_Region
+              (Devices_Node => Devices,
                Addr         => 16#0500_2000#),
-              Message   => "Unable to detect Mmconf region");
+              Message   => "Unable to detect Mmconf region (2)");
+      Assert (Condition => not Is_Physical_Mmconf_Region
+              (Devices_Node => Devices,
+               Addr         => 16#0500_3000#),
+              Message   => "Incorrect Mmconf region (1)");
+      Assert (Condition => not Is_Physical_Mmconf_Region
+              (Devices_Node => Devices,
+               Addr         => 16#14ff_f000#),
+              Message   => "Incorrect Mmconf region (2)");
       Assert (Condition => not Is_Physical_Mmconf_Region
               (Devices_Node => Devices,
                Addr         => 16#1500_0000#),
-              Message   => "Incorrect Mmconf region");
+              Message   => "Incorrect Mmconf region (3)");
+      Assert (Condition => not Is_Physical_Mmconf_Region
+              (Devices_Node => Devices,
+               Addr         => 16#04ff_f000#),
+              Message   => "Incorrect Mmconf region (4)");
 --  begin read only
    end Test_Is_Physical_Mmconf_Region;
 --  end read only

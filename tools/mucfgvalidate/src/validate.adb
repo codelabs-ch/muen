@@ -297,7 +297,7 @@ is
       XML_Processors.Register
         (Process => Hardware.Memory_Block_Size'Access);
       XML_Processors.Register
-        (Process => Hardware.PCI_Config_Space_Address'Access);
+        (Process => Hardware.PCI_Config_Space'Access);
       XML_Processors.Register
         (Process => Hardware.CPU_Count'Access);
       XML_Processors.Register

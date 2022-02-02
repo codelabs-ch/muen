@@ -590,24 +590,34 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure PCI_Config_Space_Address (XML_Data : Muxml.XML_Data_Type)
+   procedure PCI_Config_Space (XML_Data : Muxml.XML_Data_Type)
    is
       Cfg_Address   : constant String := Muxml.Utils.Get_Attribute
         (Doc   => XML_Data.Doc,
          XPath => "/system/hardware/devices",
          Name  => "pciConfigAddress");
+      Cfg_Size      : constant String := Muxml.Utils.Get_Attribute
+        (Doc   => XML_Data.Doc,
+         XPath => "/system/hardware/devices",
+         Name  => "pciConfigSize");
       PCI_Dev_Count : constant Natural
         := DOM.Core.Nodes.Length
           (List => XPath_Query
              (N     => XML_Data.Doc,
               XPath => "/system/hardware/devices/device/pci"));
    begin
-      Mulog.Log (Msg => "Checking PCI configuration space address");
-      if PCI_Dev_Count > 0 and then Cfg_Address'Length = 0 then
-         Validation_Errors.Insert
-           (Msg => "Missing PCI configuration space address");
+      Mulog.Log (Msg => "Checking PCI configuration space address & size");
+      if PCI_Dev_Count > 0 then
+         if Cfg_Address'Length = 0 then
+            Validation_Errors.Insert
+              (Msg => "Missing PCI configuration space address");
+         end if;
+         if Cfg_Size'Length = 0 then
+            Validation_Errors.Insert
+              (Msg => "Missing PCI configuration space size");
+         end if;
       end if;
-   end PCI_Config_Space_Address;
+   end PCI_Config_Space;
 
    -------------------------------------------------------------------------
 

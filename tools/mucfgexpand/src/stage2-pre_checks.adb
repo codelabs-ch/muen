@@ -65,7 +65,7 @@ is
       Check_Procs.Register
         (Process => MC.Device.IO_Port_Uniqueness'Access);
       Check_Procs.Register
-        (Process => MC.Hardware.PCI_Config_Space_Address'Access);
+        (Process => MC.Hardware.PCI_Config_Space'Access);
       Check_Procs.Register
         (Process => MC.Hardware.CPU_Sub_Elements'Access);
       Check_Procs.Register

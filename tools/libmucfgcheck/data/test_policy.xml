@@ -16,7 +16,7 @@
    <memoryBlock allocatable="true" name="extended_mem_1" physicalAddress="16#0010_0000#" size="16#8000_0000#"/>
    <memoryBlock allocatable="false" name="rmrr1" physicalAddress="16#bb80_0000#" size="16#0420_0000#"/>
   </memory>
-  <devices pciConfigAddress="16#f800_0000#">
+  <devices pciConfigAddress="16#f800_0000#" pciConfigSize="16#1000_0000#">
    <device name="serial">
     <ioPort end="16#03ff#" name="port1" start="16#03f8#"/>
    </device>

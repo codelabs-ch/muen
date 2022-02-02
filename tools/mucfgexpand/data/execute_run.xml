@@ -12,7 +12,7 @@
    <memoryBlock allocatable="false" name="rmrr1" physicalAddress="16#da08_3000#" size="16#0001_d000#"/>
    <memoryBlock allocatable="false" name="rmrr2" physicalAddress="16#dd00_0000#" size="16#0001_0000#"/>
   </memory>
-  <devices pciConfigAddress="16#e000_0000#">
+  <devices pciConfigAddress="16#e000_0000#" pciConfigSize="16#1000_0000#">
    <device name="debugconsole">
     <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
    </device>

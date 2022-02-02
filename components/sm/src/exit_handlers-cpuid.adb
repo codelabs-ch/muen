@@ -17,15 +17,60 @@
 --
 
 with SK.Strings;
+with SK.Constants;
+with SK.Bitops;
+
+with CPU_Values;
 
 with Debug_Ops;
 
+pragma $Release_Warnings
+  (Off, "unit ""Sm_Component.Config"" is not referenced",
+   Reason => "Only used to control debug output");
 with Sm_Component.Config;
+pragma $Release_Warnings
+  (On, "unit ""Sm_Component.Config"" is not referenced");
 
 package body Exit_Handlers.CPUID
 is
 
    use Subject_Info;
+
+   --  Return size of enabled features in XSAVE area.
+   function Get_XSAVE_Area_Size (Features : SK.Byte) return SK.Word32;
+
+   -------------------------------------------------------------------------
+
+   function Get_XSAVE_Area_Size (Features : SK.Byte) return SK.Word32
+   is
+      use type SK.Word32;
+
+      --  Legacy region + xsave header size, see Intel SDM Vol. 1,
+      --  "13.4 XSAVE Area".
+      Base_Size : constant := 16#240#;
+
+      Values : CPU_Values.CPUID_Values_Type;
+      Calc   : SK.Word32 := 0;
+      Res    : Boolean;
+   begin
+      for I in SK.Word64 range 2 .. 7 loop
+         if SK.Bitops.Bit_Test
+           (Value => SK.Word64 (Features),
+            Pos   => I)
+         then
+            CPU_Values.Get_CPUID_Values
+              (Leaf    => 16#d#,
+               Subleaf => SK.Byte (I),
+               Result  => Values,
+               Success => Res);
+            if Res then
+               Calc := Calc + Values.EAX;
+            end if;
+         end if;
+      end loop;
+
+      return Base_Size + Calc;
+   end Get_XSAVE_Area_Size;
 
    -------------------------------------------------------------------------
 
@@ -36,97 +81,118 @@ is
       --D @Lst Smcpuidbegin
       RAX : constant SK.Word64 := State.Regs.RAX;
       RCX : constant SK.Word64 := State.Regs.RCX;
+
+      Values : CPU_Values.CPUID_Values_Type;
+      Res    : Boolean;
    begin
-      Action := Types.Subject_Continue;
+      Action         := Types.Subject_Continue;
+      State.Regs.RAX := 0;
+      State.Regs.RBX := 0;
+      State.Regs.RCX := 0;
+      State.Regs.RDX := 0;
+
+      CPU_Values.Get_CPUID_Values
+        (Leaf    => SK.Word32'Mod (RAX),
+         Subleaf => SK.Byte'Mod (RCX),
+         Result  => Values,
+         Success => Res);
+      if not Res then
+         pragma Debug (Sm_Component.Config.Debug_Cpuid,
+                       Debug_Ops.Put_Line
+                         (Item => "Ignoring unknown CPUID leaf "
+                          & SK.Strings.Img (RAX)
+                          & ", subleaf " & SK.Strings.Img (RCX)));
+         return;
+      end if;
 
       case RAX is
          when 0 =>
 
-            --  Get vendor ID.
-
-            --  Return the vendor ID for a GenuineIntel processor and set
-            --  the highest valid CPUID number to 0xd.
+            --  Cap highest valid CPUID number.
 
             State.Regs.RAX := 16#d#;
-            State.Regs.RBX := 16#756e_6547#;
-            State.Regs.RCX := 16#6c65_746e#;
-            State.Regs.RDX := 16#4965_6e69#;
+
+            State.Regs.RBX := SK.Word64 (Values.EBX);
+            State.Regs.RCX := SK.Word64 (Values.ECX);
+            State.Regs.RDX := SK.Word64 (Values.EDX);
          when 1 =>
             --D @Lst Smcpuidend
 
-            --  Processor Info and Feature Bits.
-            --                            Model IVB
-            --                      IVB  / Stepping 9
-            --                      /-\ | /
-            State.Regs.RAX := 16#0003_06A9#;
+            State.Regs.RAX := SK.Word64 (Values.EAX);
 
-            --     CFLUSH size (in 8B)
-            --                        \
-            State.Regs.RBX := 16#0000_0800#; --  FIXME use real CPU's value
+            -- Bits 07..00 - Brand Index
+            -- Bits 15..08 - CLFLUSH line size
+            State.Regs.RBX := SK.Word64 (Values.EBX) and 16#ffff#;
 
             --  Bit  0 - Streaming SIMD Extensions 3 (SSE3)
             --  Bit  1 - PCLMULQDQ
             --  Bit  9 - Supplemental Streaming SIMD Extensions 3 (SSSE3)
+            --  Bit 12 - FMA
             --  Bit 13 - CMPXCHG16B
             --  Bit 19 - SSE4.1
             --  Bit 20 - SSE4.2
             --  Bit 22 - POPCNT Instruction
             --  Bit 25 - AESNI
+            --  Bit 27 - OSXSAVE
+            --  Bit 28 - AVX
+            --  Bit 26 - XSAVE
+            --  Bit 29 - F16C
             --  Bit 30 - RDRAND
-            State.Regs.RCX := 16#4298_2203#;
-
-            pragma Warnings (Off);
-            if Sm_Component.Config.Sm_Announce_Xsave then
-               pragma Warnings (On);
-               declare
-                  Cur_RCX : constant SK.Word64 := State.Regs.RCX;
-               begin
-                  --  Bit 26 - XSAVE
-                  --  Bit 27 - OSXSAVE
-                  State.Regs.RCX := Cur_RCX or 16#0c00_0000#;
-               end;
-            end if;
+            State.Regs.RCX := SK.Word64 (Values.ECX) and 16#7e98_3203#;
 
             --  Bit  0 -   FPU: x87 enabled
+            --  Bit  1 -   VME: Virtual-8086 Mode Enhancement
+            --  Bit  2 -    DE: Debugging Extensions
             --  Bit  3 -   PSE: Page Size Extensions
             --  Bit  4 -   TSC: Time Stamp Counter
             --  Bit  5 -   MSR: RD/WR MSR
             --  Bit  6 -   PAE: PAE and 64bit page tables
             --  Bit  8 -   CX8: CMPXCHG8B Instruction
             --  Bit 11 -   SEP: SYSENTER/SYSEXIT Instructions
+            --  Bit 12 -  MTRR: Memory Type Range Registers
             --  Bit 13 -   PGE: Page Global Bit
             --  Bit 15 -  CMOV: Conditional Move Instructions
+            --  Bit 17 - PSE36: 36-Bit Page Size Extension
             --  Bit 19 - CLFSH: CLFLUSH Instruction
             --  Bit 23 -   MMX: MMX support
             --  Bit 24 -  FXSR: FX SAVE/RESTORE
             --  Bit 25 -   SSE: SSE support
             --  Bit 26 -  SSE2: SSE2 support
-            State.Regs.RDX := 16#0788_a979#;
-         when 2 =>
+            --  Bit 27 -    SS: Self Snoop
+            State.Regs.RDX := SK.Word64 (Values.EDX) and 16#0f8a_b97f#;
+         when 4 =>
 
-            --  Return Cache and TLB Descriptor information of a Pentium 4
-            --  processor (values taken from [1]).
-            --
-            --  [1] - http://x86.renejeschke.de/html/file_module_x86_id_45.html
+            --  Mask out APIC ID information. Otherwise Linux deduces topology
+            --  from this information.
 
-            State.Regs.RAX := 16#665b_5001#;
-            State.Regs.RBX := 0;
-            State.Regs.RCX := 0;
-            State.Regs.RDX := 16#007a_7000#;
+            State.Regs.RAX := SK.Word64 (Values.EAX) and 16#3ff#;
+            State.Regs.RBX := SK.Word64 (Values.EBX);
+            State.Regs.RCX := SK.Word64 (Values.ECX);
+            State.Regs.RCX := SK.Word64 (Values.ECX);
          when 7 =>
 
             --  Structured Extended Feature Flags.
 
-            --  Max supported subleaf is 0.
+            --  Cap supported subleaves.
             State.Regs.RAX := 0;
 
             if RCX = 0 then
-
-               --  Sub-leaf 0.
-
                --  Bit  0 - FSGSBASE
+               --  Bit  3 - BMI1
+               --  Bit  5 - AVX2
+               --  Bit  8 - BMI2
                --  Bit  9 - REP MOVSB/STOSB
-               State.Regs.RBX := 16#0000_0201#;
+               --  Bit 16 - AVX512F
+               --  Bit 17 - AVX512DQ
+               --  Bit 18 - RDSEED
+               --  Bit 19 - ADX
+               --  Bit 21 - AVX512_IFMA
+               --  Bit 23 - CLFLUSHOPT
+               --  Bit 28 - AVX512CD
+               --  Bit 29 - SHA
+               --  Bit 30 - AVX512BW
+               --  Bit 31 - AVX512VL
+               State.Regs.RBX := SK.Word64 (Values.EBX) and 16#f0af_0329#;
             else
                State.Regs.RBX := 0;
             end if;
@@ -134,61 +200,57 @@ is
             State.Regs.RCX := 0;
             State.Regs.RDX := 0;
          when 16#d# =>
-            State.Regs.RAX := 0;
-            State.Regs.RBX := 0;
-            State.Regs.RCX := 0;
-            State.Regs.RDX := 0;
+            if RCX = 0 then
+               declare
+                  use type SK.Word32;
 
-            pragma Warnings (Off);
-            if Sm_Component.Config.Sm_Announce_Xsave then
-               pragma Warnings (On);
-               if RCX = 0 then
+                  Enabled   : constant SK.Byte
+                    := SK.Byte
+                      (Values.EAX and SK.Constants.XCR0_Supported_Features_Mask);
+                  Area_Size : constant SK.Word32
+                    := Get_XSAVE_Area_Size (Features => Enabled);
+               begin
+                  State.Regs.RAX := SK.Word64 (Enabled);
+                  State.Regs.RBX := SK.Word64 (Area_Size);
+                  State.Regs.RCX := SK.Word64 (Area_Size);
+               end;
+            elsif RCX = 1 then
 
-                  --  Bit  0 - x87 state
-                  --  Bit  1 - SSE state
-                  State.Regs.RAX := 16#0003#;
-                  State.Regs.RBX := 16#0240#;
-                  State.Regs.RCX := 16#0240#;
-                  State.Regs.RDX := 0;
-               elsif RCX = 1 then
-
-                  --  Bit  0 - XSAVEOPT
-                  --  Bit  1 - XSAVEC
-                  --  Bit  2 - XGETBV
-                  State.Regs.RAX := 16#0007#;
-                  State.Regs.RBX := 16#0240#;
-                  State.Regs.RCX := 16#0000#;
-                  State.Regs.RDX := 0;
-               end if;
+               --  Bit  0 - XSAVEOPT
+               --  Bit  1 - XSAVEC
+               --  Bit  2 - XGETBV
+               State.Regs.RAX := 16#0007#;
+               State.Regs.RBX := SK.Word64 (Values.EBX);
+               State.Regs.RCX := SK.Word64 (Values.ECX);
+            else
+               State.Regs.RAX := SK.Word64 (Values.EAX);
+               State.Regs.RBX := SK.Word64 (Values.EBX);
+               State.Regs.RCX := SK.Word64 (Values.ECX);
             end if;
+
+            State.Regs.RDX := SK.Word64 (Values.EDX);
          when 16#8000_0000# =>
 
             --  Get Highest Extended Function Supported.
 
-            State.Regs.RAX := 16#8000_0001#;
+            State.Regs.RAX := 16#8000_0004#;
             State.Regs.RBX := 0;
             State.Regs.RCX := 0;
             State.Regs.RDX := 0;
-         when 16#8000_0001# =>
+         when 2 | 16#8000_0001# .. 16#8000_0004# =>
 
-            --  Get Extended CPU Features
+            --  Passthrough values.
 
-            State.Regs.RAX := 0;
-            State.Regs.RBX := 0;
-            State.Regs.RCX := 0;
-
-            --  Bit 20 - NX: Execute Disable Bit available
-            --  Bit 29 - LM: Long Mode
-            State.Regs.RDX := 16#2010_0000#;
+            State.Regs.RAX := SK.Word64 (Values.EAX);
+            State.Regs.RBX := SK.Word64 (Values.EBX);
+            State.Regs.RCX := SK.Word64 (Values.ECX);
+            State.Regs.RDX := SK.Word64 (Values.EDX);
          when others =>
             pragma Debug (Sm_Component.Config.Debug_Cpuid,
                           Debug_Ops.Put_Line
-                            (Item => "Ignoring unknown CPUID function "
-                             & SK.Strings.Img (RAX)));
-            State.Regs.RAX := 0;
-            State.Regs.RBX := 0;
-            State.Regs.RCX := 0;
-            State.Regs.RDX := 0;
+                            (Item => "Ignoring unsupported CPUID leaf "
+                             & SK.Strings.Img (RAX)
+                             & ", subleaf " & SK.Strings.Img (RCX)));
       end case;
    end Process;
 

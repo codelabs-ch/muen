@@ -14,6 +14,8 @@ DATE=$(date -u +%Y%m%d)
 
 date_print "*** Starting '$0'"
 
+cat /proc/cpuinfo >$OUTPUT 2>&1
+
 # cpu benchmark
 sysbench --test=cpu --cpu-max-prime=10000 run >$OUTPUT 2>&1
 

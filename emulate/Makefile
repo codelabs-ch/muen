@@ -53,7 +53,7 @@ QEMU_OPTS += \
 	-drive file=$(ISOFILE),index=0,media=disk,format=raw \
 	-serial file:serial.out \
 	-machine q35,accel=kvm,kernel-irqchip=split \
-	-cpu host,+invtsc \
+	-cpu IvyBridge-IBRS,+invtsc,+vmx \
 	-m $(QEMU_MEM) \
 	-smp cores=2,threads=2,sockets=1 \
 	-device intel-iommu,intremap=on,device-iotlb=on \

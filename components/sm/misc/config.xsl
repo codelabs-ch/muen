@@ -28,10 +28,6 @@
 				<xsl:text>&#10;</xsl:text>
 			</xsl:if>
 		</xsl:for-each>
-		<xsl:call-template name="extractConfigBoolean">
-			<xsl:with-param name="name" select="'sm_announce_xsave'"/>
-			<xsl:with-param name="defaultValue" select="'false'"/>
-		</xsl:call-template>
 		<xsl:text>&#10;</xsl:text>
 	</xsl:template>
 

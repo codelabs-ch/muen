@@ -19,6 +19,8 @@
 with SK.Constants;
 with SK.Strings;
 
+with CPU_Values;
+
 with Debug_Ops;
 
 pragma $Release_Warnings
@@ -38,7 +40,11 @@ is
 
    procedure Process (Action : out Types.Subject_Action_Type)
    is
+      use type SK.Word32;
       use type SK.Word64;
+
+      Res    : Boolean;
+      Regval : SK.Word64;
 
       RAX : constant SK.Word64 := State.Regs.RAX;
       RCX : constant SK.Word64 := State.Regs.RCX;
@@ -47,22 +53,25 @@ is
    begin
       Action := Types.Subject_Continue;
 
-      case MSR is
-         when IA32_MISC_ENABLE =>
+      CPU_Values.Get_MSR_Value
+        (Address => MSR,
+         Regval  => Regval,
+         Success => Res);
 
-            --  Bit  0: Fast string operations
-            --  Bit 11: Branch Trace Storage Unavailable
-            --  Bit 12: Precise Event Based Sampling (PEBS) Unavailable
+      if Res and then MSR = IA32_MISC_ENABLE then
 
-            State.Regs.RAX := 16#1801#;
-            State.Regs.RDX := 0;
-         when others =>
-            pragma Debug (Sm_Component.Config.Debug_Rdmsr,
-                          Debug_Ops.Put_Line
-                            (Item => "RDMSR " & SK.Strings.Img (MSR)));
-            State.Regs.RAX := RAX and not 16#ffff_ffff#;
-            State.Regs.RDX := RDX and not 16#ffff_ffff#;
-      end case;
+         --  Bit  0: Fast string operations
+         --  Bit 11: Branch Trace Storage Unavailable
+         --  Bit 12: Precise Event Based Sampling (PEBS) Unavailable
+         State.Regs.RAX := Regval and 16#1801#;
+         State.Regs.RDX := 0;
+      else
+         pragma Debug (Sm_Component.Config.Debug_Rdmsr,
+                       Debug_Ops.Put_Line
+                         (Item => "RDMSR " & SK.Strings.Img (MSR)));
+         State.Regs.RAX := RAX and not 16#ffff_ffff#;
+         State.Regs.RDX := RDX and not 16#ffff_ffff#;
+      end if;
    end Process;
 
 end Exit_Handlers.RDMSR;

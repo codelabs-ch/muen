@@ -159,6 +159,15 @@ is
          --  Bit 26 -  SSE2: SSE2 support
          --  Bit 27 -    SS: Self Snoop
          State.Regs.RDX := SK.Word64 (Values.EDX) and 16#0f8a_b97f#;
+      elsif RAX = 4 then
+
+         --  Mask out APIC ID information. Otherwise Linux deduces topology
+         --  from this information.
+
+         State.Regs.RAX := SK.Word64 (Values.EAX) and 16#3ff#;
+         State.Regs.RBX := SK.Word64 (Values.EBX);
+         State.Regs.RCX := SK.Word64 (Values.ECX);
+         State.Regs.RCX := SK.Word64 (Values.ECX);
       elsif RAX = 7 then
 
          --  Structured Extended Feature Flags.

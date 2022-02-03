@@ -15,8 +15,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
----with Ada.Text_IO;
 with Ada.Strings.Unbounded;
+
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
@@ -53,8 +53,8 @@ is
    is
       Children  : constant DOM.Core.Node_List
          := McKae.XML.XPath.XIA.XPath_Query
-         (N     => Expr_Node,
-          XPath => "./case");
+              (N     => Expr_Node,
+               XPath => "./case");
       Node_Name : constant String
          := DOM.Core.Elements.Get_Attribute
               (Elem => Expr_Node,
@@ -120,13 +120,84 @@ is
       Child_Type : Variable_Type;
       Return_Node : DOM.Core.Node;
 
+      ----------------------------------------------------------------------
+
+      -- assign the value of Child to Child_Value
+      procedure Evaluate_When_Child
+         (Policy      :        Muxml.XML_Data_Type;
+          Child       :        DOM.Core.Node;
+          Child_Value :    out Value_Type_Tuple;
+          Backtrace   : in out String_Vector.Vector);
+
+      ----------------------------------------------------------------------
+
+      procedure Evaluate_When_Child
+         (Policy      :        Muxml.XML_Data_Type;
+          Child       :        DOM.Core.Node;
+          Child_Value :    out Value_Type_Tuple;
+          Backtrace   : in out String_Vector.Vector)
+      is
+         Child_Name : constant String
+            := DOM.Core.Nodes.Node_Name (N => Child);
+         Def_Node   : DOM.Core.Node;
+      begin
+         if Child_Name = "case" then
+            Evaluate_Case_Node
+               (Policy        => Policy,
+                Case_Node     => Child,
+                Value_Of_Case => Child_Value,
+                Backtrace     => Backtrace);
+
+         elsif Child_Name = "variable" then
+            Def_Node := Get_Defining_Node
+               (Policy   => Policy,
+                Var_Name => DOM.Core.Elements.Get_Attribute
+                   (Elem => Child,
+                    Name => "name"));
+            Expand_Single_Node
+               (Policy    => Policy,
+                Node      => Def_Node,
+                Backtrace => Backtrace);
+
+            -- now we know that the defining node is not an expression
+            Def_Node := Get_Defining_Node
+               (Policy   => Policy,
+                Var_Name => DOM.Core.Elements.Get_Attribute
+                   (Elem => Child,
+                    Name => "name"));
+            Get_Type_And_Value
+               (Node => Def_Node,
+                Type_And_Value => Child_Value);
+
+         elsif Child_Name = "boolean"
+            or Child_Name = "integer"
+            or Child_Name = "string"
+         then
+            Get_Type_And_Value
+               (Node => Child,
+                Type_And_Value => Child_Value);
+         else
+            raise Invalid_Expression with
+               "When-Node inside of Case contains illegal node with name '"
+               &  DOM.Core.Nodes.Node_Name (N => Child)
+               & "'";
+         end if;
+      end Evaluate_When_Child;
+
    begin
-      -- rufe Evaluate_Case_Node_Frame auf und merke die Node
-      Evaluate_Case_Node_Frame (Policy          => Policy,
-                                Case_Node       => Case_Node,
-                                Guarantee_Match => True,
-                                Return_Node     => Return_Node,
-                                Backtrace       => Backtrace);
+      -- assign the Return_Node to the when-child that matches
+      Evaluate_Case_Node_Frame (Policy      => Policy,
+                                Case_Node   => Case_Node,
+                                Return_Node => Return_Node,
+                                Backtrace   => Backtrace);
+      if Return_Node = null then
+         raise Invalid_Expression with
+            "Found case-node in expression where none of the actuals "
+            & "matches. Case-variable has name '"
+            & DOM.Core.Elements.Get_Attribute (Elem => Case_Node,
+                                               Name => "variable")
+            & "'";
+      end if;
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Children) - 1 loop
          declare
@@ -137,7 +208,7 @@ is
                := McKae.XML.XPath.XIA.XPath_Query
                (N     => Child,
                 XPath => "./*");
-            Child_Child, Def_Node : DOM.Core.Node;
+            Child_Child : DOM.Core.Node;
             Child_Value : Value_Type_Tuple;
          begin
             if DOM.Core.Nodes.Length (List => Child_Children) /= 1 then
@@ -148,59 +219,16 @@ is
             end if;
             Child_Child := DOM.Core.Nodes.Item (List  => Child_Children,
                                                 Index => 0);
-            declare
-               Child_Name : constant String
-                  := DOM.Core.Nodes.Node_Name (N => Child_Child);
-            begin
-               if Child_Name = "case" then
-                  Evaluate_Case_Node
-                     (Policy        => Policy,
-                      Case_Node     => Child_Child,
-                      Value_Of_Case => Child_Value,
-                      Backtrace     => Backtrace);
-
-               elsif Child_Name = "variable" then
-                  Def_Node := Get_Defining_Node
-                     (Policy   => Policy,
-                      Var_Name => DOM.Core.Elements.Get_Attribute
-                      (Elem => Child_Child,
-                       Name => "name"));
-                  Expand_Single_Node
-                     (Policy    => Policy,
-                      Node      => Def_Node,
-                      Backtrace => Backtrace);
-
-                  -- now we know that the defining node is not an expression
-                  Def_Node := Get_Defining_Node
-                     (Policy   => Policy,
-                      Var_Name => DOM.Core.Elements.Get_Attribute
-                      (Elem => Child_Child,
-                       Name => "name"));
-                  Get_Type_And_Value
-                     (Node => Def_Node,
-                      Type_And_Value => Child_Value);
-
-               elsif Child_Name = "boolean"
-                  or Child_Name = "integer"
-                  or Child_Name = "string"
-               then
-                  Get_Type_And_Value
-                     (Node => Child_Child,
-                      Type_And_Value => Child_Value);
-               else
-                  raise Invalid_Expression with
-                     "When-Node inside of Case contains illegal node with name '"
-                     &  DOM.Core.Nodes.Node_Name (N => Child_Child)
-                     & "'";
-               end if;
-            end;
+            Evaluate_When_Child
+               (Policy      => Policy,
+                Child       => Child_Child,
+                Child_Value => Child_Value,
+                Backtrace   => Backtrace);
 
             if Child = Return_Node then
                Value_Of_Case :=  Child_Value;
             end if;
 
-            ---Ada.Text_IO.Put_Line ("DEBUG: child_child: "
-            ---                      & To_String (VTT => Child_Value));
             -- check that all options are of the same type
             if I = 0 then
                Child_Type := Child_Value.Value_Type;
@@ -219,22 +247,101 @@ is
    -------------------------------------------------------------------------
 
    procedure Evaluate_Case_Node_Frame
-      (Policy          :        Muxml.XML_Data_Type;
-       Case_Node       :        DOM.Core.Node;
-       Guarantee_Match :        Boolean;
-       Return_Node     :    out DOM.Core.Node;
-       Backtrace       : in out String_Vector.Vector)
+      (Policy              :        Muxml.XML_Data_Type;
+       Case_Node           :        DOM.Core.Node;
+       Return_Node         :    out DOM.Core.Node;
+       Backtrace           : in out String_Vector.Vector)
    is
       use all type DOM.Core.Node;
       Case_Variable_Name : constant String
          := DOM.Core.Elements.Get_Attribute (Elem => Case_Node,
                                              Name => "variable");
-      Node : DOM.Core.Node;
+
       Case_Variable_Value : Value_Type_Tuple;
+      Node : DOM.Core.Node;
       Case_Children : constant DOM.Core.Node_List
          := McKae.XML.XPath.XIA.XPath_Query
          (N     => Case_Node,
           XPath => "./when | ./others");
+
+      ---------------------------------------------------------------------
+
+      -- Evaluate a when-option which is not a reference and write result to
+      -- When_Variable_Value
+      procedure  Evaluate_Explicit_When_Option
+         (Policy              :        Muxml.XML_Data_Type;
+          When_Node_RawValue  :        String;
+          Case_Variable_Value :        Value_Type_Tuple;
+          When_Variable_Value :    out Value_Type_Tuple;
+          Backtrace           : in out String_Vector.Vector);
+
+      ---------------------------------------------------------------------
+
+      procedure  Evaluate_Explicit_When_Option
+         (Policy              :        Muxml.XML_Data_Type;
+          When_Node_RawValue  :        String;
+          Case_Variable_Value :        Value_Type_Tuple;
+          When_Variable_Value :    out Value_Type_Tuple;
+          Backtrace           : in out String_Vector.Vector)
+      is
+         Node : DOM.Core.Node;
+      begin
+         -- start evaluation of the given when-value
+         if When_Node_RawValue'Length > 0
+            and then When_Node_RawValue (When_Node_RawValue'First) = '$'
+         then
+            -- make sure the node has been evaluated
+            Node := Get_Defining_Node
+               (Policy   => Policy,
+                Var_Name => When_Node_RawValue
+                   (When_Node_RawValue'First + 1 .. When_Node_RawValue'Last));
+            Expand_Single_Node (Policy    => Policy,
+                                Node      => Node,
+                                Backtrace => Backtrace);
+            Node := Get_Defining_Node
+               (Policy   => Policy,
+                Var_Name => When_Node_RawValue
+                   (When_Node_RawValue'First + 1 .. When_Node_RawValue'Last));
+
+            Get_Type_And_Value
+               (Node => Node,
+                Type_And_Value => When_Variable_Value);
+            if When_Variable_Value.Value_Type /= Case_Variable_Value.Value_Type then
+               raise  Invalid_Expression with
+                  "Found case node where variable types do not match. "
+                  & "Case-variable type is '"
+                  & Case_Variable_Value.Value_Type'Image
+                  & "' when-variable type is '"
+                  & When_Variable_Value.Value_Type'Image
+                  & "'";
+            end if;
+         else
+            -- in this case we have a 'constant' without type
+            When_Variable_Value.Value_Type
+               := Case_Variable_Value.Value_Type;
+
+            begin
+               if Case_Variable_Value.Value_Type = Boolean_Type then
+                  When_Variable_Value.Bool_Value
+                     := Boolean'Value (When_Node_RawValue);
+               elsif Case_Variable_Value.Value_Type = Integer_Type then
+                  When_Variable_Value.Int_Value
+                     := Integer'Value (When_Node_RawValue);
+               else
+                  When_Variable_Value.String_Value
+                     := String_Holder_Type.To_Holder (When_Node_RawValue);
+               end if;
+            exception
+               when Constraint_Error =>
+                  raise Invalid_Expression with
+                     "Found when-node with value '"
+                     & When_Node_RawValue
+                     & "' which cannot be cast to "
+                     & Case_Variable_Value.Value_Type'Image;
+            end;
+         end if;
+      end Evaluate_Explicit_When_Option;
+
    begin
       Return_Node := null;
 
@@ -293,60 +400,13 @@ is
                raise  Invalid_Expression with
                   "Found when-node without 'value' attribute";
             else
-               -- start evaluation of the given when-value
-               if When_Node_RawValue'Length > 0
-                  and then When_Node_RawValue (When_Node_RawValue'First) = '$'
-               then
-                  -- make sure the node has been evaluated
-                  Node := Get_Defining_Node
-                     (Policy   => Policy,
-                      Var_Name => When_Node_RawValue
-                      (When_Node_RawValue'First + 1 .. When_Node_RawValue'Last));
-                  Expand_Single_Node (Policy    => Policy,
-                                      Node      => Node,
-                                      Backtrace => Backtrace);
-                  Node := Get_Defining_Node
-                     (Policy   => Policy,
-                      Var_Name => When_Node_RawValue
-                      (When_Node_RawValue'First + 1 .. When_Node_RawValue'Last));
+               Evaluate_Explicit_When_Option
+                  (Policy              => Policy,
+                   When_Node_RawValue  => When_Node_RawValue,
+                   Case_Variable_Value => Case_Variable_Value,
+                   When_Variable_Value => When_Variable_Value,
+                   Backtrace           => Backtrace);
 
-                  Get_Type_And_Value
-                     (Node => Node,
-                      Type_And_Value => When_Variable_Value);
-                  if When_Variable_Value.Value_Type /= Case_Variable_Value.Value_Type then
-                     raise  Invalid_Expression with
-                        "Found case node where variable types do not match. "
-                        & "Case-variable type is '"
-                        & Case_Variable_Value.Value_Type'Image
-                        & "' when-variable type is '"
-                        & When_Variable_Value.Value_Type'Image
-                        & "'";
-                  end if;
-               else
-                  -- in this case we have a 'constant' without type
-                  When_Variable_Value.Value_Type
-                     := Case_Variable_Value.Value_Type;
-
-                  begin
-                     if Case_Variable_Value.Value_Type = Boolean_Type then
-                        When_Variable_Value.Bool_Value
-                           := Boolean'Value (When_Node_RawValue);
-                     elsif Case_Variable_Value.Value_Type = Integer_Type then
-                        When_Variable_Value.Int_Value
-                           := Integer'Value (When_Node_RawValue);
-                     else
-                        When_Variable_Value.String_Value
-                           := String_Holder_Type.To_Holder (When_Node_RawValue);
-                     end if;
-                  exception
-                     when Constraint_Error =>
-                        raise Invalid_Expression with
-                           "Found when-node with value '"
-                           & When_Node_RawValue
-                           & "' which cannot be cast to "
-                           & Case_Variable_Value.Value_Type'Image;
-                  end;
-               end if;
                if "=" (L => When_Variable_Value, R => Case_Variable_Value) then
                   if Return_Node = null then
                      Return_Node := When_Node;
@@ -362,12 +422,6 @@ is
          end;
       end loop;
 
-      if Guarantee_Match and Return_Node = null then
-         raise Invalid_Expression with
-            "Found case-node where none of the actuals matches case value '"
-            & To_String (VTT => Case_Variable_Value)
-            & "'";
-      end if;
    end Evaluate_Case_Node_Frame;
 
    -------------------------------------------------------------------------

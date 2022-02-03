@@ -258,7 +258,9 @@ is
                          & Var_Name
                          & "' referenced in expression '"
                          & Expr_Name
-                         & "' not defined");
+                         & "' not defined (before expression '"
+                         & Expr_Name
+                         & "')");
                   end if;
                end;
             end loop;

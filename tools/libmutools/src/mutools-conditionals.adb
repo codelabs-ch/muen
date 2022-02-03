@@ -46,7 +46,8 @@ is
       use type DOM.Core.Node;
 
       Next_Child : DOM.Core.Node;
-      Cur_Child  : DOM.Core.Node := DOM.Core.Nodes.First_Child (N => Parent);
+      Cur_Child  : DOM.Core.Node
+                 := DOM.Core.Nodes.First_Child (N => Parent);
    begin
       while Cur_Child /= null loop
 
@@ -64,39 +65,40 @@ is
          if DOM.Core.Nodes.Node_Name (N => Cur_Child) = "if" then
             declare
                Value     : constant String
-                 := DOM.Core.Elements.Get_Attribute
-                   (Elem => Cur_Child,
-                    Name => "value");
+                         := DOM.Core.Elements.Get_Attribute
+                              (Elem => Cur_Child,
+                               Name => "value");
                Cfg_Name  : constant String
-                 := DOM.Core.Elements.Get_Attribute
-                   (Elem => Cur_Child,
-                    Name => "variable");
+                         := DOM.Core.Elements.Get_Attribute
+                              (Elem => Cur_Child,
+                               Name => "variable");
                Cfg_Value : constant String
-                 := Muxml.Utils.Get_Attribute
-                   (Nodes     => Config,
-                    Ref_Attr  => "name",
-                    Ref_Value => Cfg_Name,
-                    Attr_Name => "value");
+                         := Muxml.Utils.Get_Attribute
+                              (Nodes     => Config,
+                               Ref_Attr  => "name",
+                               Ref_Value => Cfg_Name,
+                               Attr_Name => "value");
                Dummy     : DOM.Core.Node;
             begin
                if Ada.Strings.Fixed.Equal_Case_Insensitive
-                 (Left  => Value,
-                  Right => Cfg_Value)
+                    (Left  => Value,
+                     Right => Cfg_Value)
                then
                   Transfer_Children
-                     (Old_Parent   => Cur_Child,
-                      New_Parent   => Parent,
+                     (Old_Parent        => Cur_Child,
+                      New_Parent        => Parent,
                       Ref_In_New_Parent => Cur_Child);
                end if;
 
                Dummy := DOM.Core.Nodes.Remove_Child
-                 (N         => Parent,
-                  Old_Child => Cur_Child);
+                          (N         => Parent,
+                           Old_Child => Cur_Child);
                DOM.Core.Nodes.Free (N => Dummy);
             end;
          elsif DOM.Core.Nodes.Node_Name (N => Cur_Child) = "case" then
             declare
                Dummy, Matching_Option_Node : DOM.Core.Node;
+
                -- we need the backtrace only for syntactial reasons
                Backtrace : Mutools.Expressions.String_Vector.Vector;
 
@@ -104,7 +106,6 @@ is
                Mutools.Expressions.Case_Expression.Evaluate_Case_Node_Frame
                   (Policy          => Policy,
                    Case_Node       => Cur_Child,
-                   Guarantee_Match => False,
                    Return_Node     => Matching_Option_Node,
                    Backtrace       => Backtrace);
                if Matching_Option_Node /= null then
@@ -115,8 +116,8 @@ is
                end if;
 
                Dummy := DOM.Core.Nodes.Remove_Child
-                  (N         => Parent,
-                   Old_Child => Cur_Child);
+                          (N         => Parent,
+                           Old_Child => Cur_Child);
                DOM.Core.Nodes.Free (N => Dummy);
             end;
          end if;
@@ -130,18 +131,19 @@ is
    procedure Expand (Policy : Muxml.XML_Data_Type)
    is
       Config_Nodes : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Policy.Doc,
-           XPath => "/*/config/*");
-      Sections : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query (N     => Policy.Doc,
-                                            XPath => "/*");
+                   := McKae.XML.XPath.XIA.XPath_Query
+                        (N     => Policy.Doc,
+                         XPath => "/*/config/*");
+      Sections     : constant DOM.Core.Node_List
+                   := McKae.XML.XPath.XIA.XPath_Query
+                        (N     => Policy.Doc,
+                         XPath => "/*");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Sections) - 1 loop
          declare
             Cur_Section : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item (List  => Sections,
-                                      Index => I);
+                        := DOM.Core.Nodes.Item (List  => Sections,
+                                                Index => I);
          begin
             Evaluate (Policy => Policy,
                       Config => Config_Nodes,
@@ -164,6 +166,7 @@ is
       loop
          Cur_Child := DOM.Core.Nodes.First_Child (N => Old_Parent);
          exit when Cur_Child = null;
+
          -- Insert_Before can be used to move nodes (by specification)
          Cur_Child := DOM.Core.Nodes.Insert_Before
            (N         => New_Parent,

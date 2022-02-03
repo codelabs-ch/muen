@@ -23,9 +23,9 @@ with Muxml;
 package Mutools.Expressions
 is
 
-   --  Expand all expressions in the specified policy to boolean or string
-   --  config values.
-   --  This includes the substitutions of $-referenced variables.
+   --  Expand all expressions in the specified policy to config values.
+   --  This includes the substitutions of $-referenced variables within
+   --  expressions and within the config section
    procedure Expand (Policy : Muxml.XML_Data_Type);
 
    Invalid_Expression : exception;
@@ -36,10 +36,11 @@ is
    package String_Vector is new Ada.Containers.Indefinite_Vectors
       (Element_Type => String,
        Index_Type   => Natural);
+
 private
    use all type String_Vector.Vector;
 
-   --  Returns the value of the config variable reference or boolean element
+   --  Returns the value of the config variable reference or <boolean>-element
    --  given as node.
    function Bool_Value
      (Policy    :        Muxml.XML_Data_Type;
@@ -47,7 +48,7 @@ private
       Backtrace : in out String_Vector.Vector)
       return Boolean;
 
-   --  Returns the value of the config variable reference or integer element
+   --  Returns the value of the config variable reference or <integer>-element
    --  given as node.
    function Int_Value
      (Policy    :        Muxml.XML_Data_Type;
@@ -55,7 +56,7 @@ private
       Backtrace : in out String_Vector.Vector)
      return Integer;
 
-   --  Returns the value of the config variable reference or integer element
+   --  Returns the value of the config variable reference or <string>-element
    --  given as node.
    function String_Value
      (Policy    :        Muxml.XML_Data_Type;
@@ -64,7 +65,7 @@ private
       return String;
 
    --  Returns the Boolean value of a Boolean expression or config variable
-   --  given as node and adds value to config section.
+   --  given as node and adds name-value entry to config section.
    --  Resolves dependencies recusively.
    function Evaluate_Boolean
      (Policy    :        Muxml.XML_Data_Type;
@@ -73,7 +74,7 @@ private
       return Boolean;
 
    --  Returns the integer value of an integer expression or config variable
-   --  given as node and adds value to config section.
+   --  given as node and adds name-value entry to config section.
    --  Resolves dependencies recusively.
    function Evaluate_Integer
      (Policy    :        Muxml.XML_Data_Type;
@@ -82,7 +83,7 @@ private
      return Integer;
 
    --  Returns the string value of a string expression or config variable
-   --  given as node and adds value to config section.
+   --  given as node and adds name-value entry to config section.
    --  Resolves dependencies recusively.
    function Evaluate_String
      (Policy    :        Muxml.XML_Data_Type;
@@ -113,8 +114,8 @@ private
        Var_Name : String)
       return DOM.Core.Node;
 
-   -- determine whether the given expression defines a Boolean, a
-   -- string value, or a case statement
+   -- determine whether the given expression-node defines a Boolean value, a
+   -- string value, or is of unknown type (in case of a case statement)
    function  Get_Expr_Type
       (Expr :  DOM.Core.Node)
       return String;

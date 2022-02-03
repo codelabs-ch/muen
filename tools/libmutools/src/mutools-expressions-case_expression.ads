@@ -24,6 +24,8 @@ is
    package String_Holder_Type is new Ada.Containers.Indefinite_Holders
       (Element_Type => String);
 
+   -- container for values of case-expressions
+   -- as their type can only be determined during evaluation
    type Value_Type_Tuple is record
       Bool_Value     : Boolean;
       Int_Value      : Integer;
@@ -31,41 +33,22 @@ is
       Value_Type     : Variable_Type;
    end record;
 
-   -- check if L and R have the same Value_Type and if their entries
-   -- corresponding to that value are equal
+   -- check if L and R have the same Value_Type and if their value in
+   -- that type are equal
    function "=" (L, R : Value_Type_Tuple) return Boolean;
 
    -- return a string representation of VTT, including Type and its value
    function To_String (VTT : Value_Type_Tuple) return String;
 
-   -- Check some assumptions for the given <case>-Node
-   --   and return the 'when'-child that matches.
+   -- Evaluate 'case' and 'when'-nodes, but not the children of 'when'-nodes.
+   -- Return_Node is the matching 'when'-node and null if no child matches.
    -- This function is used for <case>-statements inside
    --   and outside of expressions.
-   -- Return_Node is Null if no child matches.
-   -- If Guarantee_Match is True, formal requirements to guarantee a match are
-   --   checked (e.g. existence of 'when others')
-   --   and an exception is raised if these are not met.
-   -- The following always raise an exception:
-   --  (0) there is no when statement
-   --  (1) the case variable is Boolean and the options are
-   --     "true", "false", "others"  (should not contain "others")
-   --  (2) 'when others' is not the last option
-   --  (3) there are two options (excluding 'others') which have the same
-   --      actual value.
    procedure Evaluate_Case_Node_Frame
       (Policy          :        Muxml.XML_Data_Type;
        Case_Node       :        DOM.Core.Node;
-       Guarantee_Match :        Boolean;
        Return_Node     :    out DOM.Core.Node;
        Backtrace       : in out String_Vector.Vector);
-
-   -- Evaluate a Case-Statement within an expression recursively.
-   procedure Evaluate_Case_Node
-      (Policy        :        Muxml.XML_Data_Type;
-       Case_Node     :        DOM.Core.Node;
-       Value_Of_Case :    out Value_Type_Tuple;
-       Backtrace     : in out String_Vector.Vector);
 
    -- Evaluate an Expression of type "Case", i.e., an expression containing
    -- <case> as its child.
@@ -77,13 +60,20 @@ is
        Backtrace     : in out String_Vector.Vector);
 
 private
-      -- can be called on nodes like <boolean value="foo"/> as well as
+      -- To be called on nodes like <boolean value="foo"/> as well as
       --   config-variable entries like <boolean name="varname" value="foo"/>
-      --   independet of the type of the variable.
-      -- fills Type_And_Value with the respective type-value tuple.
+      --   (independet of the type of the variable)
+      -- Sets Type_And_Value with the respective type-value tuple.
       -- If value begins with '$', an error will be reported.
       procedure Get_Type_And_Value
          (Node           :     DOM.Core.Node;
           Type_And_Value : out Value_Type_Tuple);
+
+   -- Evaluate a Case-Statement within an expression recursively.
+   procedure Evaluate_Case_Node
+      (Policy        :        Muxml.XML_Data_Type;
+       Case_Node     :        DOM.Core.Node;
+       Value_Of_Case :    out Value_Type_Tuple;
+       Backtrace     : in out String_Vector.Vector);
 
 end Mutools.Expressions.Case_Expression;

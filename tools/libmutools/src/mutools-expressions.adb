@@ -26,8 +26,8 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Mutools.System_Config;
-
 with Mutools.Expressions.Case_Expression;
+
 package body Mutools.Expressions
 is
    -------------------------------------------------------------------------
@@ -134,9 +134,9 @@ is
          Expr_Ne, Expr_Not, Expr_Or, Expr_Variable);
 
       Children  : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Node,
-           XPath => "*");
+                := McKae.XML.XPath.XIA.XPath_Query
+                     (N     => Node,
+                      XPath => "*");
       Expr      : Expression_Kind;
       Result    : Boolean;
 
@@ -170,8 +170,8 @@ is
                             Node   => C (Children, 0),
                             Backtrace => Backtrace),
                     Y => Boolean_Expression
-                           (Policy => Policy,
-                            Node   => C (Children, 1),
+                           (Policy    => Policy,
+                            Node      => C (Children, 1),
                             Backtrace => Backtrace));
       end Eval_Booleans;
 
@@ -180,13 +180,15 @@ is
       function Eval_Expr return Boolean
       is
          Expr_Name : constant String
-           := DOM.Core.Elements.Get_Attribute
-                (Elem => Node,
-                 Name => "name");
+                   := DOM.Core.Elements.Get_Attribute
+                        (Elem => Node,
+                         Name => "name");
       begin
          if C (Children, 0) = null then
-            raise Invalid_Expression with "Expression '" & Expr_Name
-              & "': Missing operator";
+            raise Invalid_Expression with
+               "Expression '"
+               & Expr_Name
+               & "': Missing operator";
          end if;
 
          begin
@@ -196,8 +198,11 @@ is
                       Backtrace => Backtrace);
          exception
             when E : Invalid_Expression =>
-               raise Invalid_Expression with "Expression '" & Expr_Name
-                 & "': " & Ada.Exceptions.Exception_Message (X => E);
+               raise Invalid_Expression with
+                  "Expression '"
+                  & Expr_Name
+                  & "': "
+                  & Ada.Exceptions.Exception_Message (X => E);
          end;
       end Eval_Expr;
 
@@ -207,8 +212,10 @@ is
       is
       begin
          if C (Children, 0) = null or else C (Children, 1) = null then
-            raise Invalid_Expression with "Operator '" & Op_Name
-              & "' requires two child elements";
+            raise Invalid_Expression with
+               "Operator '"
+               & Op_Name
+               & "' requires two child elements";
          end if;
          return Op (X => Int_Value
                            (Policy    => Policy,
@@ -226,8 +233,8 @@ is
       is
       begin
          if C (Children, 0) = null then
-            raise Invalid_Expression with "Operator 'not' requires one child"
-              & " element";
+            raise Invalid_Expression with
+               "Operator 'not' requires one child element";
          end if;
 
          return not Boolean_Expression
@@ -276,8 +283,10 @@ is
            ("Expr_" &  DOM.Core.Nodes.Node_Name (N => Node));
       exception
          when Constraint_Error =>
-            raise Invalid_Expression with "Invalid expression term '"
-              & DOM.Core.Nodes.Node_Name (N => Node) & "'";
+            raise Invalid_Expression with
+               "Invalid expression term '"
+               & DOM.Core.Nodes.Node_Name (N => Node)
+               & "'";
       end;
 
       case Expr is
@@ -308,11 +317,11 @@ is
    is
       use all type Mutools.Expressions.Case_Expression.Variable_Type;
       Node_Type : constant String
-         := DOM.Core.Nodes.Node_Name (N => Node);
+                := DOM.Core.Nodes.Node_Name (N => Node);
       Node_Name : constant String
-         := DOM.Core.Elements.Get_Attribute
-                             (Elem => Node,
-                              Name => "name");
+                := DOM.Core.Elements.Get_Attribute
+                     (Elem => Node,
+                      Name => "name");
       Result : Boolean;
 
    begin
@@ -361,7 +370,8 @@ is
                   Mutools.Expressions.Case_Expression.Boolean_Type
                then
                   raise Muxml.Validation_Error with
-                     "A Boolean variable or expression points to expression with name '"
+                     "A Boolean variable or expression points to expression"
+                     & " with name '"
                      & Node_Name
                      & "' which is not Boolean valued";
                end if;
@@ -372,14 +382,18 @@ is
             Result :=  Boolean_Expression (Policy => Policy,
                                            Node => Node,
                                            Backtrace => Backtrace);
-            Mulog.Log (Msg => "Expanding expression '" & Node_Name
-                       & "' with value '" & Result'Image & "'");
+            Mulog.Log (Msg => "Expanding expression '"
+                       & Node_Name
+                       & "' with value '"
+                       & Result'Image
+                       & "'");
             System_Config.Set_Value (Data  => Policy,
                                      Name  => Node_Name,
                                      Value => Result);
          else
             raise Muxml.Validation_Error with
-               "A Boolean variable or expression points to expression with name '"
+               "A Boolean variable or expression points to expression"
+               & " with name '"
                & Node_Name
                & "' which is not Boolean valued";
          end if;
@@ -407,12 +421,12 @@ is
       use all type Mutools.Expressions.Case_Expression.Variable_Type;
 
       Node_Type : constant String
-         := DOM.Core.Nodes.Node_Name (N => Node);
+                := DOM.Core.Nodes.Node_Name (N => Node);
       Node_Name : constant String
-         := DOM.Core.Elements.Get_Attribute
-              (Elem => Node,
-               Name => "name");
-      Result : Integer;
+                := DOM.Core.Elements.Get_Attribute
+                     (Elem => Node,
+                      Name => "name");
+      Result    : Integer;
 
    begin
       Add_To_Backtrace (Backtrace => Backtrace,
@@ -423,23 +437,26 @@ is
                        :=  DOM.Core.Elements.Get_Attribute
                              (Elem => Node,
                               Name => "value");
-            Next_Node : DOM.Core.Node;
+            Next_Node  : DOM.Core.Node;
          begin
             if Node_Value (Node_Value'First) /= '$' then
                Result := System_Config.Get_Value
-                  (Data  => Policy,
-                   Name  => Node_Name);
+                           (Data  => Policy,
+                            Name  => Node_Name);
             else
                Next_Node := Get_Defining_Node
-                  (Policy   => Policy,
-                   Var_Name => Node_Value
-                   (Node_Value'First + 1 .. Node_Value'Last));
+                              (Policy   => Policy,
+                               Var_Name => Node_Value
+                                  (Node_Value'First + 1 .. Node_Value'Last));
                Result := Evaluate_Integer
                   (Policy    => Policy,
                    Node      => Next_Node,
                    Backtrace => Backtrace);
-               Mulog.Log (Msg => "Expanding config-variable '" & Node_Name
-                    & "' with value '" & Result'Image & "'");
+               Mulog.Log (Msg => "Expanding config-variable '"
+                          & Node_Name
+                          & "' with value '"
+                          & Result'Image
+                          & "'");
                System_Config.Set_Value (Data  => Policy,
                                         Name  => Node_Name,
                                         Value => Result);
@@ -460,7 +477,8 @@ is
                   Mutools.Expressions.Case_Expression.Integer_Type
                then
                   raise Muxml.Validation_Error with
-                     "An Integer variable or expression points to expression with name '"
+                     "An integer variable or expression points to expression"
+                     & " with name '"
                      & Node_Name
                      & "' which is not integer valued";
                end if;
@@ -468,7 +486,8 @@ is
             end;
          else
             raise Muxml.Validation_Error with
-               "An integer variable or expression points to expression with name '"
+               "An integer variable or expression points to expression"
+               & " with name '"
                & Node_Name
                & "' which is not integer valued";
          end if;
@@ -496,12 +515,12 @@ is
       use all type Mutools.Expressions.Case_Expression.Variable_Type;
 
       Node_Type : constant String
-         := DOM.Core.Nodes.Node_Name (N => Node);
+                := DOM.Core.Nodes.Node_Name (N => Node);
       Node_Name : constant String
-         := DOM.Core.Elements.Get_Attribute
-              (Elem => Node,
-               Name => "name");
-      Result : ASU.Unbounded_String;
+                := DOM.Core.Elements.Get_Attribute
+                     (Elem => Node,
+                      Name => "name");
+      Result    : ASU.Unbounded_String;
 
    begin
       Add_To_Backtrace (Backtrace => Backtrace,
@@ -518,15 +537,19 @@ is
             if Node_Value'Length > 0 then
                if Node_Value (Node_Value'First) = '$' then
                   Next_Node := Get_Defining_Node
-                     (Policy   => Policy,
-                      Var_Name => Node_Value
-                      (Node_Value'First + 1 .. Node_Value'Last));
-                  Result := ASU.To_Unbounded_String (Evaluate_String
-                                                     (Policy    => Policy,
-                                                      Node      => Next_Node,
-                                                      Backtrace => Backtrace));
-                  Mulog.Log (Msg => "Expanding config-variable '" & Node_Name
-                             & "' with value '" & ASU.To_String (Result) & "'");
+                                 (Policy   => Policy,
+                                  Var_Name => Node_Value
+                                     (Node_Value'First + 1 .. Node_Value'Last));
+                  Result := ASU.To_Unbounded_String
+                     (Evaluate_String
+                        (Policy    => Policy,
+                         Node      => Next_Node,
+                         Backtrace => Backtrace));
+                  Mulog.Log (Msg => "Expanding config-variable '"
+                             & Node_Name
+                             & "' with value '"
+                             & ASU.To_String (Result)
+                             & "'");
                   System_Config.Set_Value (Data  => Policy,
                                            Name  => Node_Name,
                                            Value => ASU.To_String (Result));
@@ -567,8 +590,11 @@ is
                (String_Expression (Policy => Policy,
                                    Node => Node,
                                    Backtrace => Backtrace));
-            Mulog.Log (Msg => "Expanding expression '" & Node_Name
-                       & "' with value '" & ASU.To_String (Result) & "'");
+            Mulog.Log (Msg => "Expanding expression '"
+                       & Node_Name
+                       & "' with value '"
+                       & ASU.To_String (Result)
+                       & "'");
             System_Config.Set_Value (Data  => Policy,
                                      Name  => Node_Name,
                                      Value => ASU.To_String (Result));
@@ -595,7 +621,6 @@ is
    procedure Expand (Policy : Muxml.XML_Data_Type)
    is
       Backtrace  : String_Vector.Vector;
-
       Vars_Exprs : constant DOM.Core.Node_List
                  := McKae.XML.XPath.XIA.XPath_Query
                       (N     => Policy.Doc,
@@ -661,21 +686,21 @@ is
 
    begin
       if    Node_Type = "boolean" then
-         Discard (Evaluate_Boolean (Policy => Policy,
-                                    Node   => Node,
+         Discard (Evaluate_Boolean (Policy    => Policy,
+                                    Node      => Node,
                                     Backtrace => Backtrace));
       elsif Node_Type = "integer" then
-         Discard (Evaluate_Integer (Policy => Policy,
-                                    Node   => Node,
+         Discard (Evaluate_Integer (Policy    => Policy,
+                                    Node      => Node,
                                     Backtrace => Backtrace));
       elsif Node_Type = "string" then
-         Discard (Evaluate_String (Policy => Policy,
-                                   Node   => Node,
+         Discard (Evaluate_String (Policy    => Policy,
+                                   Node      => Node,
                                    Backtrace => Backtrace));
       elsif Node_Type = "expression" then
          if Get_Expr_Type (Expr => Node) = "boolean" then
-            Discard (Evaluate_Boolean (Policy => Policy,
-                                       Node   => Node,
+            Discard (Evaluate_Boolean (Policy    => Policy,
+                                       Node      => Node,
                                        Backtrace => Backtrace));
          elsif Get_Expr_Type (Expr => Node) = "case" then
             declare
@@ -700,9 +725,10 @@ is
                                       Backtrace => Backtrace));
          end if;
       else
-         raise Invalid_Expression
-            with "Invalid config-variable or expression with type '"
-            & Node_Type & "'";
+         raise Invalid_Expression with
+            "Invalid config-variable or expression with type '"
+            & Node_Type
+            & "'";
       end if;
    end Expand_Single_Node;
 
@@ -733,7 +759,8 @@ is
                                      Index => 0);
       else
          raise Muxml.Validation_Error with
-            "A variable or expression points to '" & Var_Name
+            "A variable or expression points to '"
+            & Var_Name
             & "' which does not exit";
       end if;
    end Get_Defining_Node;
@@ -746,7 +773,7 @@ is
       use type DOM.Core.Node_Types;
 
       First_Child : DOM.Core.Node
-         := DOM.Core.Nodes.First_Child (N => Expr);
+                  := DOM.Core.Nodes.First_Child (N => Expr);
    begin
       while DOM.Core.Nodes.Node_Type (N => First_Child)
          /= DOM.Core.Element_Node loop
@@ -755,10 +782,11 @@ is
       end loop;
 
       if First_Child = null then
-         raise Invalid_Expression with "Expression with name "
+         raise Invalid_Expression with
+            "Expression with name "
             & DOM.Core.Elements.Get_Attribute
-            (Elem => Expr,
-             Name => "name")
+                (Elem => Expr,
+                 Name => "name")
             & " is empty.";
       end if;
 
@@ -789,8 +817,10 @@ is
            ("Int_" & DOM.Core.Nodes.Node_Name (N => Node));
       exception
          when Constraint_Error =>
-            raise Invalid_Expression with "Invalid integer type '"
-              & DOM.Core.Nodes.Node_Name (N => Node) & "'";
+            raise Invalid_Expression with
+               "Invalid integer type '"
+               & DOM.Core.Nodes.Node_Name (N => Node)
+               & "'";
       end;
 
       case Int_Type is
@@ -850,11 +880,11 @@ is
                                            Index => I);
          begin
             Ada.Strings.Unbounded.Append
-               (Source   => Result,
-                New_Item => ASU.To_Unbounded_String
-                                 (String_Value (Policy    => Policy,
-                                                Node      => Child,
-                                                Backtrace => Backtrace)));
+              (Source   => Result,
+               New_Item => ASU.To_Unbounded_String
+                             (String_Value (Policy    => Policy,
+                                            Node      => Child,
+                                            Backtrace => Backtrace)));
          end;
       end loop;
       return ASU.To_String (Result);
@@ -878,9 +908,9 @@ is
       elsif Node_Name = "variable" then
          declare
             Var_Name : constant String
-               := DOM.Core.Elements.Get_Attribute
-               (Elem => Node,
-                Name => "name");
+                     := DOM.Core.Elements.Get_Attribute
+                          (Elem => Node,
+                           Name => "name");
          begin
             return Evaluate_String
                (Policy    => Policy,
@@ -889,8 +919,10 @@ is
                 Backtrace => Backtrace);
          end;
       else
-         raise Invalid_Expression with "Invalid string type '"
-               & DOM.Core.Nodes.Node_Name (N => Node) & "'";
+         raise Invalid_Expression with
+            "Invalid string type '"
+            & DOM.Core.Nodes.Node_Name (N => Node)
+            & "'";
       end if;
    end String_Value;
 

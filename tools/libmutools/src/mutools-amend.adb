@@ -21,15 +21,13 @@ with DOM.Core.Elements;
 with DOM.Core.Documents.Local;
 with Ada.Strings.Maps;
 with Ada.Strings.Fixed;
+
 with McKae.XML.XPath.XIA;
 with Mutools.Amend.Ordering;
 with Ada.Containers.Indefinite_Vectors;
 
 package body Mutools.Amend
 is
-   -- use all type  String_To_StringVector.Map;
-   -- use all type  String_To_String.Map;
-
    procedure Expand
       (XML_Data : Muxml.XML_Data_Type)
    is
@@ -74,7 +72,7 @@ is
             Amend_Children := DOM.Core.Nodes.Child_Nodes
                                  (N => Amend_Statement);
             for C in 0 .. DOM.Core.Nodes.Length
-                             (List => Amend_Children) - 1 loop
+                            (List => Amend_Children) - 1 loop
                Recursive_Merge (Parent    => Target_Node,
                                 New_Child => DOM.Core.Nodes.Item
                                                 (List  => Amend_Children,
@@ -98,12 +96,12 @@ is
       use type DOM.Core.Node;
       use all type DOM.Core.Node_Types;
 
-      L_Tagtype   : constant DOM.Core.Node_Types
+      L_Node_Type : constant DOM.Core.Node_Types
                   := DOM.Core.Nodes.Node_Type (N => L);
-      R_Tagtype   : constant DOM.Core.Node_Types
+      R_Node_Type : constant DOM.Core.Node_Types
                   := DOM.Core.Nodes.Node_Type (N => R);
-      L_Tagname   : constant String := DOM.Core.Nodes.Node_Name (N => L);
-      R_Tagname   : constant String := DOM.Core.Nodes.Node_Name (N => R);
+      L_Node_Name : constant String := DOM.Core.Nodes.Node_Name (N => L);
+      R_Node_Name : constant String := DOM.Core.Nodes.Node_Name (N => R);
       L_Attr_List : constant DOM.Core.Named_Node_Map
                   := DOM.Core.Nodes.Attributes (N => L);
       R_Attr_List : constant DOM.Core.Named_Node_Map
@@ -111,8 +109,8 @@ is
       Length      : constant Natural
                   := DOM.Core.Nodes.Length (Map => L_Attr_List);
    begin
-      if    L_Tagtype /= R_Tagtype
-         or L_Tagname /= R_Tagname
+      if    L_Node_Type /= R_Node_Type
+         or L_Node_Name /= R_Node_Name
          or Length /= DOM.Core.Nodes.Length (Map => R_Attr_List)
       then
          return False;
@@ -140,7 +138,7 @@ is
       end loop;
 
       -- for text nodes
-      if L_Tagtype = Text_Node then
+      if L_Node_Type = Text_Node then
          return     DOM.Core.Nodes.Node_Value (N => L)
                  =  DOM.Core.Nodes.Node_Value (N => R);
       end if;
@@ -156,25 +154,26 @@ is
    is
       use type DOM.Core.Node;
       use all type DOM.Core.Node_Types;
-      use all type  Mutools.Amend.Ordering.Insert_Index;
+      use all type Mutools.Amend.Ordering.Insert_Index;
 
       package Node_Vector is new Ada.Containers.Indefinite_Vectors
          (Index_Type   => Natural,
           Element_Type => DOM.Core.Node);
 
       New_Child_Type : constant DOM.Core.Node_Types
-         := DOM.Core.Nodes.Node_Type (N => New_Child);
-      Dummy              : DOM.Core.Node;
+                     := DOM.Core.Nodes.Node_Type (N => New_Child);
+      Dummy          : DOM.Core.Node;
       pragma Unreferenced (Dummy);
 
       ---------------------------------------------------------------------
 
-      -- return a vector with the the names of the anchestors of Node,
+      -- return a vector with the names of the ancestors of Node,
       -- starting with the name of Node
-      function Get_Anchestor_Names (Node : DOM.Core.Node)
+      function Get_Ancestor_Names (Node : DOM.Core.Node)
                return  Mutools.Amend.Ordering.String_Vector.Vector;
 
       ---------------------------------------------------------------------
+
       -- check if the given node has only one child which is a text child
       -- returns 1 if there is exactly 1 child and that is an essential text-node
       -- returns 0 if there is no child or exactly 1 text-node-child which
@@ -184,11 +183,11 @@ is
 
       ---------------------------------------------------------------------
 
-      -- insert element-node New_Child  into parent
-      -- uses siblings (=children of Parent) to determine insertion position
+      -- insert element-node New_Child into parent
+      -- uses siblings (i.e., children of Parent) to determine insertion position
       procedure Insert
-         (Parent    : DOM.Core.Node;
-          New_Child : DOM.Core.Node;
+         (Parent         : DOM.Core.Node;
+          New_Child      : DOM.Core.Node;
           Siblings_Names : Mutools.Amend.Ordering.String_Vector.Vector;
           Siblings_Nodes : Node_Vector.Vector);
 
@@ -201,7 +200,8 @@ is
       ---------------------------------------------------------------------
 
       -- insert New_Child into Parent
-      -- for New_Child not being a "special case"
+      -- used only if New_Child is not a "special case",
+      -- (i.e., covered by Merge_Text_Branch)
       procedure Merge_Regular_Element
          (Parent    : DOM.Core.Node;
           New_Child : DOM.Core.Node);
@@ -217,12 +217,12 @@ is
 
       ---------------------------------------------------------------------
 
-      function Get_Anchestor_Names (Node : DOM.Core.Node)
+      function Get_Ancestor_Names (Node : DOM.Core.Node)
                return  Mutools.Amend.Ordering.String_Vector.Vector
       is
          Output : Mutools.Amend.Ordering.String_Vector.Vector;
          Parent : DOM.Core.Node
-            := DOM.Core.Nodes.Parent_Node (Node);
+                := DOM.Core.Nodes.Parent_Node (Node);
       begin
          Output.Append (DOM.Core.Nodes.Node_Name (N => Node));
          while Parent /= null loop
@@ -230,18 +230,18 @@ is
             Parent := DOM.Core.Nodes.Parent_Node (Parent);
          end loop;
          return Output;
-      end Get_Anchestor_Names;
+      end Get_Ancestor_Names;
 
       ---------------------------------------------------------------------
 
       function Has_Only_Text_Child (Node : DOM.Core.Node) return Integer
       is
          Children : constant DOM.Core.Node_List
-            := DOM.Core.Nodes.Child_Nodes
-            (N => Node);
-         Length : constant Natural
-            :=  DOM.Core.Nodes.Length (List => Children);
-         Child :  DOM.Core.Node;
+                  := DOM.Core.Nodes.Child_Nodes
+                       (N => Node);
+         Length   : constant Natural
+                  :=  DOM.Core.Nodes.Length (List => Children);
+         Child    :  DOM.Core.Node;
       begin
          if Length > 1 then
             return -1;
@@ -249,8 +249,8 @@ is
             return 0;
          else
             Child := DOM.Core.Nodes.Item
-                  (List  => Children,
-                   Index => 0);
+                       (List  => Children,
+                        Index => 0);
             if DOM.Core.Nodes.Node_Type (N => Child) = Text_Node then
                if Is_Essential_Textnode (N => Child) then
                   return 1;
@@ -267,46 +267,48 @@ is
       ---------------------------------------------------------------------
 
       procedure Insert
-         (Parent    : DOM.Core.Node;
-          New_Child : DOM.Core.Node;
+         (Parent         : DOM.Core.Node;
+          New_Child      : DOM.Core.Node;
           Siblings_Names : Mutools.Amend.Ordering.String_Vector.Vector;
           Siblings_Nodes : Node_Vector.Vector)
       is
-         Anchestors : constant Mutools.Amend.Ordering.String_Vector.Vector
-            := Get_Anchestor_Names (Node => Parent);
-         Index : constant Mutools.Amend.Ordering.Insert_Index
-            := Mutools.Amend.Ordering.Get_Insert_Index
-            (Anchestors => Anchestors,
-             New_Child  => DOM.Core.Nodes.Node_Name (N => New_Child),
-             Siblings   => Siblings_Names);
+         Ancestors   : constant Mutools.Amend.Ordering.String_Vector.Vector
+                      := Get_Ancestor_Names (Node => Parent);
+         Query_Result : constant Mutools.Amend.Ordering.Insert_Query_Result_Type
+                      := Mutools.Amend.Ordering.Get_Insert_Index
+                        (Ancestors => Ancestors,
+                         New_Child  => DOM.Core.Nodes.Node_Name (N => New_Child),
+                         Siblings   => Siblings_Names);
       begin
-         if Index = -2 then
+         if Query_Result = Mutools.Amend.Ordering.No_Legal_Index then
             raise Muxml.Validation_Error with
                "Could not find valid place to insert '"
                & DOM.Core.Nodes.Node_Name (N => New_Child)
                & "' into node with name '"
                & DOM.Core.Nodes.Node_Name (N => Parent)
                & "'";
-         elsif Index = -1 then
+         elsif Query_Result = Mutools.Amend.Ordering.No_Unique_Index then
             raise Muxml.Validation_Error with
                "Insufficient information to insert '"
                & DOM.Core.Nodes.Node_Name (N => New_Child)
                & "' into node with name '"
                & DOM.Core.Nodes.Node_Name (N => Parent)
                & "'";
-         elsif Integer (Index) = Integer (Siblings_Names.Length) then
+         elsif Query_Result = Mutools.Amend.Ordering.
+            Insert_Query_Result_Type (Siblings_Names.Length)
+         then
             Dummy := DOM.Core.Nodes.Append_Child
                (N         => Parent,
                 New_Child => DOM.Core.Documents.Local.Clone_Node
-                (N    => New_Child,
-                 Deep => True));
+                               (N    => New_Child,
+                                Deep => True));
          else
             Dummy := DOM.Core.Nodes.Insert_Before
                (N         => Parent,
                 New_Child => DOM.Core.Documents.Local.Clone_Node
-                (N    => New_Child,
-                 Deep => True),
-                Ref_Child => Siblings_Nodes (Integer (Index)));
+                               (N    => New_Child,
+                                Deep => True),
+                Ref_Child => Siblings_Nodes (Integer (Query_Result)));
          end if;
       end Insert;
 
@@ -315,16 +317,16 @@ is
       function Is_Essential_Textnode (N : DOM.Core.Node) return Boolean
       is
          Whitespace : constant Ada.Strings.Maps.Character_Set
-            := Ada.Strings.Maps.To_Set
-            ("" & Character'Val (9)    -- horizontal tab
-                & Character'Val (10)   -- line feed
-                & Character'Val (13)   -- carriage return
-                & Character'Val (32)); -- space
+                    := Ada.Strings.Maps.To_Set
+                         ("" & Character'Val (9)    -- horizontal tab
+                          & Character'Val (10)   -- line feed
+                          & Character'Val (13)   -- carriage return
+                          & Character'Val (32)); -- space
 
-         Node_Type : constant DOM.Core.Node_Types
-            := DOM.Core.Nodes.Node_Type (N => N);
+         Node_Type  : constant DOM.Core.Node_Types
+                    := DOM.Core.Nodes.Node_Type (N => N);
          Node_Value : constant DOM.Core.DOM_String
-            := DOM.Core.Nodes.Node_Value (N => N);
+                    := DOM.Core.Nodes.Node_Value (N => N);
       begin
          if Node_Type /= Text_Node then
             return False;
@@ -345,21 +347,22 @@ is
          (Parent    : DOM.Core.Node;
           New_Child : DOM.Core.Node)
       is
-         Parent_Children : constant DOM.Core.Node_List
-            := DOM.Core.Nodes.Child_Nodes
-            (N => Parent);
+         --consider all children of parent which are not <amend>
+         Parent_Children    : constant DOM.Core.Node_List
+                            := McKae.XML.XPath.XIA.XPath_Query
+                             (N     => Parent,
+                              XPath => "./*[not(self::amend)]");
          New_Child_Children : constant DOM.Core.Node_List
-            := DOM.Core.Nodes.Child_Nodes
-            (N => New_Child);
-         Siblings_Names : Mutools.Amend.Ordering.String_Vector.Vector;
-         Siblings_Nodes : Node_Vector.Vector;
-         Parent_Child : DOM.Core.Node;
+                            := DOM.Core.Nodes.Child_Nodes
+                                 (N => New_Child);
+         Siblings_Names     : Mutools.Amend.Ordering.String_Vector.Vector;
+         Siblings_Nodes     : Node_Vector.Vector;
+         Parent_Child       : DOM.Core.Node;
 
       begin
          -- in all other cases we use the first child of Parent that fits
          -- and append new nodes at the end
-         for I in 0 .. DOM.Core.Nodes.Length
-            (List => Parent_Children) - 1 loop
+         for I in 0 .. DOM.Core.Nodes.Length (List => Parent_Children) - 1 loop
             Parent_Child := DOM.Core.Nodes.Item
                (List  => Parent_Children,
                 Index => I);
@@ -373,14 +376,15 @@ is
                         (List  => New_Child_Children,
                          Index => J);
                   begin
-                     Recursive_Merge (Parent    => Parent_Child,
-                                      New_Child => New_Child_Child);
+                        Recursive_Merge (Parent    => Parent_Child,
+                                         New_Child => New_Child_Child);
                   end;
                end loop;
                return;
             end if;
 
-            Siblings_Names.Append (DOM.Core.Nodes.Node_Name (N => Parent_Child));
+            Siblings_Names.Append (DOM.Core.Nodes.Node_Name
+                                      (N => Parent_Child));
             Siblings_Nodes.Append (Parent_Child);
          end loop;
 
@@ -398,12 +402,14 @@ is
          (Parent    : DOM.Core.Node;
           New_Child : DOM.Core.Node)
       is
+         --consider all children of parent which are not <amend>
          Parent_Children : constant DOM.Core.Node_List
-            := DOM.Core.Nodes.Child_Nodes
-            (N => Parent);
+            := McKae.XML.XPath.XIA.XPath_Query
+            (N     => Parent,
+             XPath => "./*[not(self::amend)]");
          Parent_Child, Parent_Child_Marked : DOM.Core.Node;
-         Siblings_Names : Mutools.Amend.Ordering.String_Vector.Vector;
-         Siblings_Nodes : Node_Vector.Vector;
+         Siblings_Names  : Mutools.Amend.Ordering.String_Vector.Vector;
+         Siblings_Nodes  : Node_Vector.Vector;
       begin
          for I in 0 .. DOM.Core.Nodes.Length
             (List => Parent_Children) - 1 loop
@@ -413,12 +419,12 @@ is
 
             if Nodes_Equal (L => Parent_Child, R => New_Child) then
                if Has_Only_Text_Child (Node => Parent_Child) = 1 then
-                  if   DOM.Core.Nodes.Node_Value
-                     (N => DOM.Core.Nodes.First_Child
-                      (N => Parent_Child))
+                  if DOM.Core.Nodes.Node_Value
+                       (N => DOM.Core.Nodes.First_Child
+                               (N => Parent_Child))
                      = DOM.Core.Nodes.Node_Value
-                     (N => DOM.Core.Nodes.First_Child
-                      (N => (New_Child)))
+                         (N => DOM.Core.Nodes.First_Child
+                                 (N => (New_Child)))
                   then
                      return;
                   end if;
@@ -426,7 +432,9 @@ is
                   Parent_Child_Marked := Parent_Child;
                end if;
             end if;
-            Siblings_Names.Append (DOM.Core.Nodes.Node_Name (N => Parent_Child));
+
+            Siblings_Names.Append (DOM.Core.Nodes.Node_Name
+                                      (N => Parent_Child));
             Siblings_Nodes.Append (Parent_Child);
          end loop;
 
@@ -434,12 +442,14 @@ is
             declare
                Parent_Child_Child : constant DOM.Core.Node
                   := DOM.Core.Nodes.Item
-                  (List  => DOM.Core.Nodes.Child_Nodes (N => Parent_Child_Marked),
-                   Index => 0);
+                       (List  => DOM.Core.Nodes.Child_Nodes
+                                   (N => Parent_Child_Marked),
+                        Index => 0);
                New_Child_Child : constant DOM.Core.Node
-                  := DOM.Core.Nodes.Item
-                  (List  => DOM.Core.Nodes.Child_Nodes (N => New_Child),
-                   Index => 0);
+                               := DOM.Core.Nodes.Item
+                                    (List  => DOM.Core.Nodes.Child_Nodes
+                                                (N => New_Child),
+                                     Index => 0);
             begin
                if Parent_Child_Child /= null then
                   DOM.Core.Nodes.Set_Node_Value
@@ -448,10 +458,10 @@ is
                   return;
                else
                   Dummy := DOM.Core.Nodes.Append_Child
-                     (N         => Parent_Child_Marked,
-                      New_Child => DOM.Core.Documents.Local.Clone_Node
-                      (N    => New_Child_Child,
-                       Deep => True));
+                             (N         => Parent_Child_Marked,
+                              New_Child => DOM.Core.Documents.Local.Clone_Node
+                                             (N    => New_Child_Child,
+                                              Deep => True));
                   return;
                end if;
             end;

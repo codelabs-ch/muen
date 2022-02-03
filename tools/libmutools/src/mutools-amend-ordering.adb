@@ -15,69 +15,47 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Muxml.system_src_schema;
-with Muxml.Utils;
---with Mulog;
-with DOM.Core.Nodes;
-with DOM.Core.Elements;
 with Ada.Strings.Unbounded;
 with Ada.Strings.Fixed;
----with Ada.Text_IO;
+with Ada.Characters.Latin_1;
+
+with DOM.Core.Nodes;
+with DOM.Core.Elements;
+
+with Muxml.system_src_schema;
+with Muxml.Utils;
+
 with McKae.XML.XPath.XIA;
 
 package body Mutools.Amend.Ordering
 is
+   -- the package extracts schema-information at elaboration time and stores
+   -- its results in Order_Info
    Order_Info : Order_Information;
 
    ------------------------------------------------------------------------
 
-   function "=" (L, R : String_Vector.Vector) return Boolean
-   is
-      use all type Ada.Containers.Count_Type;
-   begin
-      if L.Length /= R.Length then
-         return False;
-      end if;
-      for I in L.First_Index .. L.Last_Index loop
-         if L (I) /= R (I) then
-            return False;
-         end if;
-      end loop;
-      return True;
-   end "=";
-
-   ------------------------------------------------------------------------
-
-   function "=" (L, R : Vector_Tuple) return Boolean
-   is
-   begin
-      return L.Node_Names = R.Node_Names and L.Type_Names = R.Type_Names;
-   end "=";
-
-   ------------------------------------------------------------------------
-
    function Get_Insert_Index
-      (Anchestors : String_Vector.Vector;
+      (Ancestors : String_Vector.Vector;
        New_Child  : String;
        Siblings   : String_Vector.Vector)
-      return Insert_Index
+      return Insert_Query_Result_Type
    is
       Child_Order : String_Vector.Vector;
-      Index_NC, Index_Sib : String_Vector.Extended_Index;
 
       ---------------------------------------------------------------------
 
-      -- determine the type of the first anchestor
-      -- by going back in the Anchestor-list until some anchestor has a
+      -- determine the type of the first ancestor
+      -- by going back in the Ancestor-list until some ancestor has a
       -- unique type and then trace that type forward
       function Get_Parent_Type
-         (Anchestors : String_Vector.Vector)
+         (Ancestors : String_Vector.Vector)
          return String;
 
       ---------------------------------------------------------------------
 
       function Get_Parent_Type
-         (Anchestors : String_Vector.Vector)
+         (Ancestors : String_Vector.Vector)
          return String
       is
          package ASU renames Ada.Strings.Unbounded;
@@ -87,14 +65,12 @@ is
             renames ASU.To_String;
 
          Index_Unique, Index : String_Vector.Extended_Index
-            := String_Vector.No_Index;
-         Parent_Type : ASU.Unbounded_String;
-         Children : Vector_Tuple;
+                             := String_Vector.No_Index;
+         Parent_Type         : ASU.Unbounded_String;
+         Children            : Vector_Tuple;
       begin
-         ---Ada.Text_IO.Put_Line ("anchestors: " & To_String (Anchestors));
-
-         for I in Anchestors.First_Index .. Anchestors.Last_Index loop
-            if Order_Info.Tag_To_Type.Contains (Anchestors (I)) then
+         for I in Ancestors.First_Index .. Ancestors.Last_Index loop
+            if Order_Info.Name_To_Type.Contains (Ancestors (I)) then
                Index_Unique := I;
                exit;
             end if;
@@ -102,31 +78,21 @@ is
 
          if Index_Unique = String_Vector.No_Index then
             raise Insufficient_Information with
-               "Cannot determine type of any anchestor.";
+               "Cannot determine type of any ancestor.";
          end if;
-         ---Ada.Text_IO.Put_Line ("Index_Unique: " & Index_Unique'Image
-         ---                      & " First: " &  Anchestors.First_Index'Image);
 
-         Parent_Type := U (Order_Info.Tag_To_Type
-                           (Anchestors (Index_Unique)).First_Element);
-         ---Ada.Text_IO.Put_Line ("Parent_Type: " & S (Parent_Type));
+         Parent_Type := U (Order_Info.Name_To_Type
+                           (Ancestors (Index_Unique)).First_Element);
 
-         for I in reverse Anchestors.First_Index .. Index_Unique - 1 loop
-            ---Ada.Text_IO.Put_Line ("I: " & I'Image);
-
+         for I in reverse Ancestors.First_Index .. Index_Unique - 1 loop
             Children := Order_Info.Type_To_Children (S (Parent_Type));
-            ---Ada.Text_IO.Put_Line ("Children: " & To_String (Children.Node_Names));
+            Index := Children.Node_Names.Find_Index (Ancestors (I));
 
-            Index := Children.Node_Names.Find_Index (Anchestors (I));
-            ---Ada.Text_IO.Put_Line ("index in anchestor trace: "
-            ---                      & Index'Image
-            ---                      & Anchestors (I));
             if Index = String_Vector.No_Index then
                raise Validation_Error with
-                  "Anchestors sequence given to Get_Parent_Type violates schema";
+                  "Ancestors sequence given to Get_Parent_Type violates schema";
             end if;
             Parent_Type := U (Children.Type_Names (Index));
-            ---Ada.Text_IO.Put_Line ("Parent_Type: " & S (Parent_Type));
          end loop;
 
          return S (Parent_Type);
@@ -135,45 +101,48 @@ is
       ---------------------------------------------------------------------
 
    begin
-      if Anchestors.Is_Empty then
+      if Ancestors.Is_Empty then
          -- this is not supported on purpose (to avoid mistakes)
          raise Not_Implemented with
-            "Get_Insert_Index called with empty anchestor list.";
+            "Get_Insert_Index called with empty ancestor list.";
       end if;
 
-      ---Ada.Text_IO.Put_Line ("DEBUG: Parent Type: " & Get_Parent_Type (Anchestors));
-
       -- get type of the parent
-      if Order_Info.Tag_To_Type.Contains (Anchestors.First_Element) then
+      if Order_Info.Name_To_Type.Contains (Ancestors.First_Element) then
          Child_Order := Order_Info.Type_To_Children
-            (Order_Info.Tag_To_Type (Anchestors.First_Element).First_Element).Node_Names;
-
-         ---Ada.Text_IO.Put_Line ("DEBUG: Took quick path for: " & Anchestors.First_Element);
+            (Order_Info.Name_To_Type (Ancestors.First_Element).First_Element)
+            .Node_Names;
       else
          begin
             Child_Order := Order_Info.Type_To_Children
-               (Get_Parent_Type (Anchestors)).Node_Names;
-            ---Ada.Text_IO.Put_Line ("DEBUG: Slow path for: " & Anchestors.First_Element);
+               (Get_Parent_Type (Ancestors)).Node_Names;
          exception
             when Insufficient_Information =>
-               return Insert_Index (-1);
+               return No_Unique_Index;
          end;
       end if;
 
-      -- get index of the new_child in the child-list of the parent
-      Index_NC := Child_Order.Find_Index (Item => New_Child);
-      if Index_NC = String_Vector.No_Index then
-         return Insert_Index (-2);
-      end if;
-
-      -- find index of first sibling which occurs after New_Child in
-      -- the child-list of Parent
-      for I in Siblings.First_Index .. Siblings.Last_Index loop
-         Index_Sib := Child_Order.Find_Index (Item => Siblings (I));
-         if Index_Sib > Index_NC then
-            return Insert_Index (I);
+      declare
+         -- get index of the new_child in the child-list of the parent
+         New_Child_Index : constant String_Vector.Extended_Index
+                         := Child_Order.Find_Index (Item => New_Child);
+         Sibling_Index   : String_Vector.Extended_Index;
+      begin
+         if New_Child_Index = String_Vector.No_Index then
+            return No_Legal_Index;
          end if;
-      end loop;
+
+         -- find index of first sibling which occurs after New_Child in
+         -- the child-list of Parent
+         for I in Siblings.First_Index .. Siblings.Last_Index loop
+            Sibling_Index := Child_Order.Find_Index (Item => Siblings (I));
+            if Sibling_Index = String_Vector.No_Index then
+               return No_Legal_Index;
+            elsif Sibling_Index > New_Child_Index then
+               return Insert_Index (I);
+            end if;
+         end loop;
+      end;
 
       -- default return value: 'behind the last element'
       return Insert_Index (Siblings.Length);
@@ -194,20 +163,33 @@ is
 
       Schema      : Muxml.XML_Data_Type;
       Schema_Node : DOM.Core.Node; -- the root node of the actual schema
-      Simple_XMLTypes, Elem_And_Container_Tags, Elem_Container_Tags
+      Simple_XMLTypes, Elem_And_Container_Names, Elem_Container_Names
                   : String_Vector.Vector;
+
+      -- backtrace is accessed as a global variable (within
+      --   Init_Order_Information)
+      -- it stores the evaluation-path and is used for cycle detection
       Backtrace   : Node_Vector.Vector;
 
       ---------------------------------------------------------------------
 
-      -- check that:
-      --   there is only one namespace
-      --   there are no elements "import", "include", " redefine", "example"
-      --      or "any"
-      --   there is no <attribute> element with name='substitutionGroup'
-      procedure Check_NS_And_Tag_Assumptions
+      -- check that there is only one namespace
+      procedure Check_Namespace
          (Schema_Node : DOM.Core.Node;
           Schema_XML_Data : String);
+
+      ---------------------------------------------------------------------
+
+      -- check that there are no nodes named
+      -- "import", "include", " redefine", "example" or "any"
+      procedure Check_Forbidden_Element_Names
+         (Schema_Node : DOM.Core.Node);
+
+      ---------------------------------------------------------------------
+
+      -- check that no attribute-node defines a substitution group
+      procedure Check_Substitution_Group
+         (Schema_Node : DOM.Core.Node);
 
       ---------------------------------------------------------------------
 
@@ -216,23 +198,28 @@ is
 
       ---------------------------------------------------------------------
 
+      -- delete elements of Order_Info.Name_To_Type with more than one entry
+      procedure Delete_Nonuniqe_From_Name_To_Type;
+
+      ---------------------------------------------------------------------
+
       -- recursive evaluation of a node to get a vector with information
       -- about potential children.
       -- The name of the function specifies the type of node it is meant for
-      --   (except for "Grouptags", which is a wrapper)
+      --   (except for "Container_Wrapper", which is a wrapper)
       function Eval_ComplexContent
          (Node : DOM.Core.Node) return Vector_Tuple;
       function Eval_Element
          (Node : DOM.Core.Node) return Vector_Tuple;
       function Eval_Extension
          (Node : DOM.Core.Node) return Vector_Tuple;
-      function Eval_Grouptags
+      function Eval_Container_Wrapper
          (Node : DOM.Core.Node) return Vector_Tuple;
       function Eval_Group
          (Node : DOM.Core.Node) return Vector_Tuple;
       function Eval_Restriction
          (Node : DOM.Core.Node) return Vector_Tuple;
-      function Eval_SeqChoAll
+      function Eval_Sequence_Choice_All
          (Node : DOM.Core.Node) return Vector_Tuple;
 
       -- Head of recursive evaluation of a fixed type
@@ -243,9 +230,15 @@ is
       -- Writes map entries and initiates evaluation of types of children
       procedure Eval_Entrypoint (Type_Name : String);
 
+      -- search for a node called "element" within the schema, add it to
+      -- the lists and evaluate its type
+      procedure Find_Root_Element_Node_And_Recurse
+         (Schema_Node : DOM.Core.Node);
+
       -- get the value of attribute Name of Node.
       -- An empty string is returned if the attribute does not exist.
-      function Get_Attr (Node : DOM.Core.Node; Name : String) return String;
+      function Get_Attr (Node : DOM.Core.Node; Name : String) return String
+         renames DOM.Core.Elements.Get_Attribute;
 
       -- get list of all children which are of type "Element_Node"
       -- (as defined in DOM.Core.Nodes.Node_Type)
@@ -255,8 +248,8 @@ is
       -- return node defining a group of type "Name_Attr"
       function Get_Group_Definition (Name_Attr : String) return DOM.Core.Node;
 
-      -- return a node with tag "Node_Name" with attribute "name=Name_Attrib"
-      -- if Name_Attr is empty, it is not considered
+      -- return a node with name "Node_Name" with attribute "name=Name_Attr"
+      -- if Node_Name is empty, it is not considered
       function Get_Toplevel_Definition
          (Name_Attr : String;
           Node_Name : String := "")
@@ -277,7 +270,7 @@ is
       ---------------------------------------------------------------------
 
       -- Remove last element from backtrace
-      procedure Pop_From_Backtrace;
+      procedure Pop_From_Backtrace renames Backtrace.Delete_Last;
 
       ---------------------------------------------------------------------
 
@@ -292,11 +285,10 @@ is
 
       ---------------------------------------------------------------------
 
-      procedure Check_NS_And_Tag_Assumptions
-         (Schema_Node : DOM.Core.Node;
-          Schema_XML_Data : String)
+      procedure Check_Forbidden_Element_Names
+         (Schema_Node : DOM.Core.Node)
       is
-         Bad_Nodes : DOM.Core.Node_List
+         Bad_Nodes : constant DOM.Core.Node_List
             := McKae.XML.XPath.XIA.XPath_Query
             (N     => Schema_Node,
              XPath => "//*[local-name(.)='import'] | "
@@ -304,60 +296,72 @@ is
              & "//*[local-name(.)='redefine'] | "
              & "//*[local-name(.)='example'] | "
              & "//*[local-name(.)='any']");
-
       begin
-         -- check namespaces
-         --- workaround: The namespace declarations are not attributes of
-         --- the root node. It seems impossible to access all declared
-         --- namespaces via the DOM-interface. Hence, we do it by hand.
-         declare
-            Whitespace : constant String
-               := "" & Character'Val (9)    -- horizontal tab
-                     & Character'Val (10)   -- line feed
-                     & Character'Val (13)   -- carriage return
-                     & Character'Val (32); -- space
-
-            Schema_Start : constant String
-               := "<" & DOM.Core.Nodes.Node_Name (Schema_Node);
-            L_Bound : constant Natural
-               := Schema_Start'Length +
-                   Ada.Strings.Fixed.Index (Source => Schema_XML_Data,
-                                            Pattern => Schema_Start,
-                                            From => 1);
-            R_Bound : constant Natural
-               := Ada.Strings.Fixed.Index
-               (Source => Schema_XML_Data,
-                Pattern => ">",
-                From => L_Bound) - 1;
-            Count : Natural := 0;
-         begin
-            if L_Bound = 0 or R_Bound = 0 then
-               raise Validation_Error with
-                  "Cound not find schema-node for namespace-checking";
-            end if;
-            for I in Whitespace'Range loop
-               Count := Count +
-                  Ada.Strings.Fixed.Count
-                  (Source  => Schema_XML_Data (L_Bound .. R_Bound),
-                   Pattern => "" & Whitespace (I) & "xmlns");
-            end loop;
-            if Count > 1 then
-               raise Not_Implemented with
-                  "Schema declares multiple namespaces.";
-            end if;
-         end;
-
          -- check forbidden element names
          if  DOM.Core.Nodes.Length (List => Bad_Nodes) > 0 then
             raise Not_Implemented with
                "Schema contains elements named "
                & "'import', 'include', 'redefine', 'example' or 'any'";
          end if;
+      end Check_Forbidden_Element_Names;
 
-         -- check that no attribute-node defines a substitution group
-         Bad_Nodes   := McKae.XML.XPath.XIA.XPath_Query
+      ---------------------------------------------------------------------
+
+      -- check namespaces
+      --- workaround: The namespace declarations are not attributes of
+      --- the root node. It seems impossible to access all declared
+      --- namespaces via the DOM-interface. Hence, we do it by hand.
+      procedure Check_Namespace
+         (Schema_Node : DOM.Core.Node;
+          Schema_XML_Data : String)
+      is
+         Whitespace : constant String
+            := ""
+            & Ada.Characters.Latin_1.HT     -- horizontal tab
+            & Ada.Characters.Latin_1.LF     -- line feed
+            & Ada.Characters.Latin_1.CR     -- carriage return
+            & Ada.Characters.Latin_1.Space; -- space
+
+         Schema_Start : constant String
+            := "<" & DOM.Core.Nodes.Node_Name (Schema_Node);
+         Left_Bound : constant Natural
+            := Schema_Start'Length +
+            Ada.Strings.Fixed.Index (Source => Schema_XML_Data,
+                                     Pattern => Schema_Start,
+                                     From => 1);
+         Right_Bound : constant Natural
+            := Ada.Strings.Fixed.Index
+            (Source => Schema_XML_Data,
+             Pattern => ">",
+             From => Left_Bound) - 1;
+         Count : Natural := 0;
+      begin
+         if Left_Bound = Schema_Start'Length or Right_Bound = 0 then
+            raise Validation_Error with
+               "Coud not find schema-node for namespace-checking";
+         end if;
+         for I in Whitespace'Range loop
+            Count := Count +
+               Ada.Strings.Fixed.Count
+               (Source  => Schema_XML_Data (Left_Bound .. Right_Bound),
+                Pattern => "" & Whitespace (I) & "xmlns");
+         end loop;
+         if Count > 1 then
+            raise Not_Implemented with
+               "Schema declares multiple namespaces.";
+         end if;
+      end Check_Namespace;
+
+      ---------------------------------------------------------------------
+
+      procedure Check_Substitution_Group
+         (Schema_Node : DOM.Core.Node)
+      is
+         Bad_Nodes : constant DOM.Core.Node_List
+            := McKae.XML.XPath.XIA.XPath_Query
             (N     => Schema_Node,
              XPath => "//*[local-name(.)='attribute']");
+      begin
          for I in 0 .. DOM.Core.Nodes.Length (List => Bad_Nodes) - 1 loop
             declare
                Node : constant DOM.Core.Node
@@ -373,8 +377,7 @@ is
                end if;
             end;
          end loop;
-
-      end Check_NS_And_Tag_Assumptions;
+      end Check_Substitution_Group;
 
       ---------------------------------------------------------------------
 
@@ -384,7 +387,7 @@ is
          Index : String_Vector.Extended_Index;
       begin
          for Cursor in Order_Info.Type_To_Children.Iterate loop
-            Names := String_To_VectorTuple.Element (Cursor).Node_Names;
+            Names := String_To_Vector_Tuple.Element (Cursor).Node_Names;
             Index := Names.First_Index;
             while Index < Names.Last_Index loop
                if String_Vector.Find_Index
@@ -394,7 +397,7 @@ is
                then
                   raise Not_Implemented with
                      "Node_Names for Key '"
-                     & String_To_VectorTuple.Key (Cursor)
+                     & String_To_Vector_Tuple.Key (Cursor)
                      & "' of Order_Info contain entry '"
                      & Names (Index)
                      & "' at least twice. Name must be unique within one type";
@@ -406,13 +409,29 @@ is
 
       ---------------------------------------------------------------------
 
+      procedure Delete_Nonuniqe_From_Name_To_Type
+      is
+         Key_To_Del : String_Vector.Vector;
+      begin
+         for Cursor in Order_Info.Name_To_Type.Iterate loop
+            if String_To_String_Vector.Element (Cursor).Length > 1 then
+               Key_To_Del.Append
+                  (New_Item => String_To_String_Vector.Key (Cursor));
+            end if;
+         end loop;
+
+         for K of Key_To_Del loop
+            Order_Info.Name_To_Type.Delete (K);
+         end loop;
+      end Delete_Nonuniqe_From_Name_To_Type;
+
+      ---------------------------------------------------------------------
+
       function Eval_ComplexContent
          (Node : DOM.Core.Node) return Vector_Tuple
       is
          Empty_Vectors : Vector_Tuple;
       begin
-         ---Ada.Text_IO.Put_Line ("DEBUG: Begin ComplexContent. Name=" &  Name (Node => Node));
-
          for Child of Get_Element_Children (Node => Node) loop
             if Name (Node => Child) = "restriction" then
                return Eval_Restriction (Node => Child);
@@ -427,13 +446,39 @@ is
 
       ---------------------------------------------------------------------
 
+      function Eval_Container_Wrapper
+         (Node : DOM.Core.Node) return Vector_Tuple
+      is
+         Node_Name : constant String := Name (Node => Node);
+      begin
+         if Node_Name = "element" then
+            return Eval_Element (Node => Node);
+
+         elsif Node_Name = "sequence"
+            or Node_Name = "choice"
+            or Node_Name = "all"
+         then
+            return Eval_Sequence_Choice_All (Node => Node);
+
+         elsif Node_Name = "group" then
+            return Eval_Group (Node => Node);
+         else
+            raise Validation_Error with
+               "Evaluation of Eval_Container_Wrapper found node with name '"
+               & Node_Name
+               & "' which is unknown.";
+         end if;
+
+      end Eval_Container_Wrapper;
+
+      ---------------------------------------------------------------------
+
       function Eval_Element
          (Node : DOM.Core.Node) return Vector_Tuple
       is
          Output : Vector_Tuple;
       begin
          Push_To_Backtrace (Node => Node);
-         ---Ada.Text_IO.Put_Line ("DEBUG: Begin Element. Name=" &  Name (Node => Node));
 
          if    not Muxml.Utils.Has_Attribute (Node => Node, Attr_Name => "name")
             or not Muxml.Utils.Has_Attribute (Node => Node, Attr_Name => "type")
@@ -461,9 +506,8 @@ is
       is
          Types_Vector, Names_Vector : String_Vector.Vector;
          VT : Vector_Tuple;
-      begin
-         ---Ada.Text_IO.Put_Line ("DEBUG: Begin Entrypoint.");
 
+      begin
          if Order_Info.Type_To_Children.Contains (Key => Type_Name) then
             return;
          end if;
@@ -483,16 +527,16 @@ is
          for I in Types_Vector.First_Index .. Types_Vector.Last_Index loop
             Eval_Entrypoint (Type_Name => Types_Vector (I));
 
-            if not Order_Info.Tag_To_Type.Contains (Key => Names_Vector (I)) then
-               Order_Info.Tag_To_Type.Insert
+            if not Order_Info.Name_To_Type.Contains (Key => Names_Vector (I)) then
+               Order_Info.Name_To_Type.Insert
                   (Key      => Names_Vector (I),
                    New_Item => String_Vector.To_Vector
                                  (New_Item => Types_Vector (I),
                                   Length => 1));
-            elsif not Order_Info.Tag_To_Type (Names_Vector (I)).Contains
+            elsif not Order_Info.Name_To_Type (Names_Vector (I)).Contains
                (Item => Types_Vector (I))
             then
-               Order_Info.Tag_To_Type
+               Order_Info.Name_To_Type
                   (Names_Vector (I)).Append (New_Item => Types_Vector (I));
             end if;
          end loop;
@@ -506,8 +550,6 @@ is
          Output, Tuple : Vector_Tuple;
 
       begin
-         ---Ada.Text_IO.Put_Line ("DEBUG: Begin Extension. Name=" &  Name (Node => Node));
-
          if not Muxml.Utils.Has_Attribute (Node => Node, Attr_Name => "base") then
             raise Validation_Error with
                "Evaluation of schema found 'extension' "
@@ -516,8 +558,8 @@ is
 
          Output := Eval_Type_By_Name (Get_Attr (Node => Node, Name => "base"));
          for Child of Get_Element_Children (Node => Node) loop
-            if Elem_Container_Tags.Contains (Item => Name (Node => Child)) then
-               Tuple := Eval_Grouptags (Node => Child);
+            if Elem_Container_Names.Contains (Item => Name (Node => Child)) then
+               Tuple := Eval_Container_Wrapper (Node => Child);
                Output.Node_Names.Append (Tuple.Node_Names);
                Output.Type_Names.Append (Tuple.Type_Names);
             end if;
@@ -535,20 +577,18 @@ is
          Def_Node : DOM.Core.Node;
       begin
          Push_To_Backtrace (Node => Node);
-         ---Ada.Text_IO.Put_Line ("DEBUG: Begin Group. Name=" &  Name (Node => Node));
-
          if Muxml.Utils.Has_Attribute (Node => Node, Attr_Name => "ref") then
             Def_Node := Get_Group_Definition
                (Name_Attr => Get_Attr (Node => Node,
                                        Name => "ref"));
-            Output := Eval_Grouptags (Node => Def_Node);
+            Output := Eval_Container_Wrapper (Node => Def_Node);
             Pop_From_Backtrace;
             return Output;
 
          elsif Muxml.Utils.Has_Attribute (Node => Node, Attr_Name => "name") then
             for Child of Get_Element_Children (Node => Node) loop
-               if Elem_And_Container_Tags.Contains (Item => Name (Node => Child)) then
-                  Tuple := Eval_Grouptags (Node => Child);
+               if Elem_And_Container_Names.Contains (Item => Name (Node => Child)) then
+                  Tuple := Eval_Container_Wrapper (Node => Child);
                   Output.Node_Names.Append (Tuple.Node_Names);
                   Output.Type_Names.Append (Tuple.Type_Names);
                end if;
@@ -565,47 +605,15 @@ is
 
       ---------------------------------------------------------------------
 
-      function Eval_Grouptags
-         (Node : DOM.Core.Node) return Vector_Tuple
-      is
-         Node_Name : constant String := Name (Node => Node);
-      begin
-         ---Ada.Text_IO.Put_Line ("DEBUG: Begin Grouptags. Name=" &  Name (Node => Node));
-
-         if Node_Name = "element" then
-            return Eval_Element (Node => Node);
-
-         elsif Node_Name = "sequence"
-            or Node_Name = "choice"
-            or Node_Name = "all"
-         then
-            return Eval_SeqChoAll (Node => Node);
-
-         elsif Node_Name = "group" then
-            return Eval_Group (Node => Node);
-         else
-            raise Validation_Error with
-               "Evaluation of Grouptags found node with name '"
-               & Node_Name
-               & "' which is unknown.";
-         end if;
-
-         -- dummy statement to supress compiler warning
-         -- return Vector_Tuple.Vector;
-      end Eval_Grouptags;
-
-      ---------------------------------------------------------------------
-
       function Eval_Restriction
          (Node : DOM.Core.Node) return Vector_Tuple
       is
          Empty_Tuple : Vector_Tuple;
-      begin
-         ---Ada.Text_IO.Put_Line ("DEBUG: Begin Restriction. Name=" &  Name (Node => Node));
 
+      begin
          for Child of Get_Element_Children (Node => Node) loop
-            if Elem_Container_Tags.Contains (Name (Node => Child)) then
-               return Eval_Grouptags (Node => Child);
+            if Elem_Container_Names.Contains (Name (Node => Child)) then
+               return Eval_Container_Wrapper (Node => Child);
             end if;
          end loop;
 
@@ -614,19 +622,16 @@ is
 
       ---------------------------------------------------------------------
 
-      function Eval_SeqChoAll
+      function Eval_Sequence_Choice_All
          (Node : DOM.Core.Node) return Vector_Tuple
       is
          Output, Tuple : Vector_Tuple;
       begin
          Push_To_Backtrace (Node => Node);
-         ---Ada.Text_IO.Put_Line ("DEBUG: Begin SeqChoAll. Name=" &  Name (Node => Node));
 
          for Child of Get_Element_Children (Node => Node) loop
-            if Elem_And_Container_Tags.Contains (Item => Name (Node => Child)) then
-               ---Ada.Text_IO.Put_Line ("DEBUG: SeqChoAll. Name=" & Name (Node => Child));
-
-               Tuple := Eval_Grouptags (Node => Child);
+            if Elem_And_Container_Names.Contains (Item => Name (Node => Child)) then
+               Tuple := Eval_Container_Wrapper (Node => Child);
                Output.Node_Names.Append (New_Item => Tuple.Node_Names);
                Output.Type_Names.Append (New_Item => Tuple.Type_Names);
             end if;
@@ -634,7 +639,7 @@ is
          Pop_From_Backtrace;
          return Output;
 
-      end Eval_SeqChoAll;
+      end Eval_Sequence_Choice_All;
 
       ---------------------------------------------------------------------
 
@@ -647,7 +652,6 @@ is
             raise Not_Implemented with
                "Schema contains elements with type 'any' or 'anyType'";
          end if;
-         ---Ada.Text_IO.Put_Line ("DEBUG: Begin Type_By_Name. Type=" & Type_Name);
 
          if Order_Info.Type_To_Children.Contains (Key => Type_Name) then
             return Order_Info.Type_To_Children.Element (Key => Type_Name);
@@ -664,8 +668,8 @@ is
                   return Empty_Vector;
                elsif Name (Node => Child) = "complexContent" then
                   return Eval_ComplexContent (Node => Child);
-               elsif Elem_Container_Tags.Contains (Name (Node => Child)) then
-                  return Eval_Grouptags (Node => Child);
+               elsif Elem_Container_Names.Contains (Name (Node => Child)) then
+                  return Eval_Container_Wrapper (Node => Child);
                end if;
             end loop;
             return Empty_Vector;
@@ -681,11 +685,52 @@ is
 
       ---------------------------------------------------------------------
 
-      function Get_Attr (Node : DOM.Core.Node; Name : String) return String
+      procedure Find_Root_Element_Node_And_Recurse
+         (Schema_Node : DOM.Core.Node)
       is
+         Found : Boolean := False;
       begin
-         return DOM.Core.Elements.Get_Attribute (Elem => Node, Name => Name);
-      end Get_Attr;
+         for Child of Get_Element_Children (Node => Schema_Node) loop
+            if Name (Node => Child) = "element" then
+               if Found then
+                  raise Not_Implemented with
+                     "The schema allows two root elements";
+               end if;
+               Found := True;
+
+               -- insert root element in types dictionary
+               Order_Info.Type_To_Children.Insert
+                  (Key => "schemaRoot",
+                   New_Item => Eval_Element (Node => Child));
+
+               -- insert root element in node-names-dictionary
+               Order_Info.Name_To_Type.Insert
+                  (Key      =>  Order_Info.Type_To_Children
+                             ("schemaRoot").Node_Names.First_Element,
+                   New_Item => String_Vector.To_Vector
+                                 (New_Item => Order_Info.Type_To_Children
+                                    ("schemaRoot").Type_Names.First_Element,
+                                  Length   => 1));
+
+               -- evaluate the root element
+               -- assignment before calling Eval is neccessarry
+               -- in order to drop the reference to Order_Info which prevents
+               -- tampering with Order_Info within Eval
+               declare
+                  Type_Name : constant String
+                     := Order_Info.Type_To_Children
+                     ("schemaRoot").Type_Names.First_Element;
+               begin
+                  Eval_Entrypoint (Type_Name =>  Type_Name);
+               end;
+            end if;
+         end loop;
+         if not Found then
+            raise Not_Implemented with
+               "The schema does not contain an 'element' node "
+               & "at root level";
+         end if;
+      end Find_Root_Element_Node_And_Recurse;
 
       ---------------------------------------------------------------------
 
@@ -724,21 +769,21 @@ is
           Node_Name : String := "")
          return DOM.Core.Node
       is
-         Def_Tags : String_Vector.Vector;
+         Def_Names : String_Vector.Vector;
          Child : DOM.Core.Node;
       begin
          if Node_Name /= "" then
-            Def_Tags.Append (Node_Name);
+            Def_Names.Append (Node_Name);
          else
-            Def_Tags.Append ("simpleType");
-            Def_Tags.Append ("complexType");
+            Def_Names.Append ("simpleType");
+            Def_Names.Append ("complexType");
          end if;
 
          Child := DOM.Core.Nodes.First_Child (N => Schema_Node);
          while Child /= null loop
             if  DOM.Core.Nodes.Node_Type (N => Child)
                = DOM.Core.Element_Node
-               and then Def_Tags.Contains (Name (Child))
+               and then Def_Names.Contains (Name (Child))
                and then Muxml.Utils.Has_Attribute (Node => Child, Attr_Name => "name")
                and then Get_Attr (Node => Child, Name => "name") = Name_Attr
             then
@@ -835,14 +880,6 @@ is
 
       ---------------------------------------------------------------------
 
-      procedure Pop_From_Backtrace
-      is
-      begin
-         Backtrace.Delete_Last;
-      end Pop_From_Backtrace;
-
-      ---------------------------------------------------------------------
-
       procedure Push_To_Backtrace (Node : DOM.Core.Node)
       is
       begin
@@ -929,78 +966,24 @@ is
 
       Initialize_Vectors (Vec => Simple_XMLTypes,
                           Name => "simple_types");
-      Initialize_Vectors (Vec => Elem_And_Container_Tags,
+      Initialize_Vectors (Vec => Elem_And_Container_Names,
                           Name => "element_and_containers");
-      Initialize_Vectors (Vec => Elem_Container_Tags,
+      Initialize_Vectors (Vec => Elem_Container_Names,
                           Name => "containers");
 
-      Check_NS_And_Tag_Assumptions
-         (Schema_Node => Schema_Node,
-          Schema_XML_Data => Schema_XML_Data);
+      -- check assumption that are easy to check "a priori"
+      Check_Namespace (Schema_Node     => Schema_Node,
+                       Schema_XML_Data => Schema_XML_Data);
+      Check_Forbidden_Element_Names (Schema_Node => Schema_Node);
+      Check_Substitution_Group (Schema_Node => Schema_Node);
 
-      -- find root 'element'-node and recurse
-      declare
-         Found : Boolean := False;
-      begin
-         for Child of Get_Element_Children (Node => Schema_Node) loop
-            if Name (Node => Child) = "element" then
-               if Found then
-                  raise Not_Implemented with
-                     "The schema allows two root elements";
-               end if;
-               Found := True;
+      -- main evaluation
+      Find_Root_Element_Node_And_Recurse (Schema_Node => Schema_Node);
 
-               -- insert root element in types dictionary
-               Order_Info.Type_To_Children.Insert
-                  (Key => "schemaRoot",
-                   New_Item => Eval_Element (Node => Child));
-
-               -- insert root element in tags-dictionary
-               Order_Info.Tag_To_Type.Insert
-                  (Key =>  Order_Info.Type_To_Children
-                             ("schemaRoot").Node_Names.First_Element,
-                   New_Item => String_Vector.To_Vector
-                                  (New_Item => Order_Info.Type_To_Children
-                                    ("schemaRoot").Type_Names.First_Element,
-                                   Length => 1));
-
-               -- evaluate the root element
-               -- assignment before calling Eval is neccessarry
-               -- in order to drop the reference to Order_Info which prevents
-               -- tampering with Order_Info within Eval
-               declare
-                  Type_Name : constant String
-                     := Order_Info.Type_To_Children
-                     ("schemaRoot").Type_Names.First_Element;
-               begin
-                  Eval_Entrypoint (Type_Name =>  Type_Name);
-               end;
-            end if;
-         end loop;
-         if not Found then
-            raise Not_Implemented with
-               "The schema does not contain an 'element' node "
-               & "at root level";
-         end if;
-      end;
-
+      -- "a posteriori"-check
       Check_Unique_Names;
 
-      -- delete elements of Order_Info.tag_to_type with more than one entry
-      declare
-         Key_To_Del : String_Vector.Vector;
-      begin
-         for Cursor in Order_Info.Tag_To_Type.Iterate loop
-            if String_To_StringVector.Element (Cursor).Length > 1 then
-               Key_To_Del.Append
-                  (New_Item => String_To_StringVector.Key (Cursor));
-            end if;
-         end loop;
-
-         for K of Key_To_Del loop
-            Order_Info.Tag_To_Type.Delete (K);
-         end loop;
-      end;
+      Delete_Nonuniqe_From_Name_To_Type;
 
    end Init_Order_Information;
 
@@ -1009,8 +992,8 @@ is
    function To_String (OI : Order_Information) return String
    is
       package ASU renames Ada.Strings.Unbounded;
-      use all type String_To_VectorTuple.Cursor;
-      use all type String_To_StringVector.Cursor;
+      use all type String_To_Vector_Tuple.Cursor;
+      use all type String_To_String_Vector.Cursor;
       use Ada.Strings.Unbounded;
 
       function U (S : String) return ASU.Unbounded_String
@@ -1019,18 +1002,20 @@ is
       Output, Key : ASU.Unbounded_String
          := U ("");
       Newline : constant String
-         := "" & Character'Val (10) & Character'Val (13);
+         := "" & Ada.Characters.Latin_1.LF
+               & Ada.Characters.Latin_1.CR;
 
-      Cursor_VT : String_To_VectorTuple.Cursor
+      Cursor_VT : String_To_Vector_Tuple.Cursor
          := OI.Type_To_Children.First;
-      Cursor_SV : String_To_StringVector.Cursor
-         := OI.Tag_To_Type.First;
+      Cursor_SV : String_To_String_Vector.Cursor
+         := OI.Name_To_Type.First;
 
    begin
+      -- image of Type_To_Children
       Output := U ("{" & Newline);
 
-      while Cursor_VT /= String_To_VectorTuple.No_Element loop
-         Key := U (String_To_VectorTuple.Key (Cursor_VT));
+      while Cursor_VT /= String_To_Vector_Tuple.No_Element loop
+         Key := U (String_To_Vector_Tuple.Key (Cursor_VT));
 
          Output := Output
             & Key
@@ -1038,23 +1023,22 @@ is
             & To_String (OI.Type_To_Children (Cursor_VT))
             & Newline;
 
-         String_To_VectorTuple.Next (Cursor_VT);
+         String_To_Vector_Tuple.Next (Cursor_VT);
       end loop;
       Output := Output & "}" & Newline;
 
-      ----
-
+      -- image of Name_To_Type
       Output :=  Output & Newline & "{" & Newline;
-      while Cursor_SV /= String_To_StringVector.No_Element loop
-         Key := U (String_To_StringVector.Key (Cursor_SV));
+      while Cursor_SV /= String_To_String_Vector.No_Element loop
+         Key := U (String_To_String_Vector.Key (Cursor_SV));
 
          Output := Output
             & Key
             & " : "
-            & To_String (OI.Tag_To_Type (Cursor_SV))
+            & To_String (OI.Name_To_Type (Cursor_SV))
             & Newline;
 
-         String_To_StringVector.Next (Cursor_SV);
+         String_To_String_Vector.Next (Cursor_SV);
       end loop;
       Output := Output & "}";
 

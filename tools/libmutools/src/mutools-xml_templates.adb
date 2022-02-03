@@ -17,20 +17,19 @@
 
 with Ada.Strings.Unbounded;
 use Ada.Strings.Unbounded;
-
 with Ada.Strings;
 with Ada.Strings.Fixed;
 
 with Mulog;
 with Mutools.Mergers;
 with Muxml.Utils;
+with McKae.XML.XPath.XIA;
+
 with DOM.Core.Nodes;
 with DOM.Core.Attrs;
 with DOM.Core.Elements;
 with DOM.Core.Documents;
 with DOM.Core.Documents.Local;
-
-with McKae.XML.XPath.XIA;
 
 package body Mutools.XML_Templates
 is
@@ -71,7 +70,7 @@ is
    ------------------------------------------------------------------------
 
    procedure Compile_Template
-     (Template       :     DOM.Core.Node;
+      (Template       :     DOM.Core.Node;
       Template_Call  :     DOM.Core.Node;
       Running_Number :     Positive;
       Output         : out Muxml.XML_Data_Type)
@@ -80,14 +79,64 @@ is
 
       Trimmed_Number : constant String
                      := Ada.Strings.Fixed.Trim
-                           (Integer'Image (Running_Number), Ada.Strings.Left);
+                          (Source => Integer'Image (Running_Number),
+                           Side   => Ada.Strings.Left);
       Prefix         : constant String
                      := DOM.Core.Elements.Get_Attribute
-                           (Elem => Template_Call, Name => "namePrefix")
+                          (Elem => Template_Call,
+                           Name => "namePrefix")
                         & "t"
                         & Trimmed_Number
                         & "_";
       Root_Node      : DOM.Core.Node;
+
+      ---------------------------------------------------------------------
+
+      procedure Assign_Root_And_Config_Node
+         (Root_Nodes   :     DOM.Core.Node_List;
+          Root_Node    : out DOM.Core.Node;
+          Config_Nodes :     DOM.Core.Node_List;
+          Config_Node  : out DOM.Core.Node);
+
+      ---------------------------------------------------------------------
+
+      procedure Assign_Root_And_Config_Node
+         (Root_Nodes   :     DOM.Core.Node_List;
+          Root_Node    : out DOM.Core.Node;
+          Config_Nodes :     DOM.Core.Node_List;
+          Config_Node  : out DOM.Core.Node)
+      is
+      begin
+         case DOM.Core.Nodes.Length (List => Root_Nodes) is
+            when 1 =>
+               Root_Node := DOM.Core.Nodes.Item
+                               (List  => Root_Nodes,
+                                Index => 0);
+            when others =>
+               raise Muxml.Validation_Error with
+                  "No unique template node in new template document.";
+         end case;
+
+         case DOM.Core.Nodes.Length (List => Config_Nodes) is
+            when 0 =>
+               Config_Node := DOM.Core.Documents.Create_Element
+                            (Doc      => Output.Doc,
+                             Tag_Name => "config");
+
+               Config_Node := DOM.Core.Nodes.Insert_Before
+                            (N         => Root_Node,
+                             New_Child => Config_Node,
+                             Ref_Child => DOM.Core.Nodes.First_Child
+                                             (N => Root_Node));
+            when 1 =>
+               Config_Node := DOM.Core.Nodes.Item (List  => Config_Nodes,
+                                               Index => 0);
+            when others =>
+               raise Muxml.Validation_Error with
+                  "Found template with multiple 'config'-nodes.";
+         end case;
+      end Assign_Root_And_Config_Node;
+
    begin
       Create_XMLDocument_From_Node (New_Doc  => Output.Doc,
                                     Src_Node => Template);
@@ -96,7 +145,7 @@ is
                               := McKae.XML.XPath.XIA.XPath_Query
                                     (N     => Output.Doc,
                                      XPath => "/template");
-         Config_Blocks        : constant DOM.Core.Node_List
+         Config_Nodes        : constant DOM.Core.Node_List
                               := McKae.XML.XPath.XIA.XPath_Query
                                     (N     => Output.Doc,
                                      XPath => "/template/config");
@@ -111,40 +160,19 @@ is
          Parameters_Node_List : DOM.Core.Node_List;
          Config               : DOM.Core.Node;
       begin
-         case DOM.Core.Nodes.Length (List => Root_Nodes) is
-            when 1 =>
-               Root_Node := DOM.Core.Nodes.Item
-                               (List  => Root_Nodes,
-                                Index => 0);
-            when others =>
-               raise Muxml.Validation_Error with
-                  "No unique template node in new template document.";
-         end case;
 
-         case DOM.Core.Nodes.Length (List => Config_Blocks) is
-            when 0 =>
-               Config := DOM.Core.Documents.Create_Element
-                            (Doc      => Output.Doc,
-                             Tag_Name => "config");
-
-               Config := DOM.Core.Nodes.Insert_Before
-                            (N         => Root_Node,
-                             New_Child => Config,
-                             Ref_Child => DOM.Core.Nodes.First_Child
-                                             (N => Root_Node));
-            when 1 =>
-               Config := DOM.Core.Nodes.Item (List  => Config_Blocks,
-                                               Index => 0);
-            when others =>
-               raise Muxml.Validation_Error with
-                  "Found template with multiple config-tags.";
-         end case;
+         Assign_Root_And_Config_Node
+            (Root_Nodes   => Root_Nodes,
+             Root_Node    => Root_Node,
+             Config_Nodes => Config_Nodes,
+             Config_Node  => Config);
 
          Parameters_Node_List := McKae.XML.XPath.XIA.XPath_Query
                                     (N     => Params,
                                      XPath =>     ".//boolean "
                                               & "| .//integer "
-                                              & "| .//string ");
+                                     & "| .//string ");
+
          for I in 0 .. DOM.Core.Nodes.Length
                           (List => Parameters_Node_List) - 1  loop
             declare
@@ -173,6 +201,7 @@ is
 
                New_Config_Node  : DOM.Core.Node;
                Call_Value       : Unbounded_String;
+
             begin
                if (not Has_Call_Value) and (not Has_Default) then
                   raise Muxml.Validation_Error with
@@ -247,11 +276,98 @@ is
 
       Max_Rounds     : constant Positive := 100;
       Running_Number :          Positive := 1;
-      Round          :          Positive := 1;
+      Rounds         :          Positive := 1;
       Templates      : constant DOM.Core.Node_List
                      := McKae.XML.XPath.XIA.XPath_Query
                            (N     => XML_Data.Doc,
                             XPath => "//template");
+
+      ---------------------------------------------------------------------
+
+      -- given the processed template, substitute the call-node with the
+      -- call contents
+      procedure Substitute_Template_Call
+         (Compiled_Template :        Muxml.XML_Data_Type;
+          XML_Data          : in out Muxml.XML_Data_Type;
+          Template_Call     : in out DOM.Core.Node);
+
+      ---------------------------------------------------------------------
+
+      procedure Substitute_Template_Call
+         (Compiled_Template :        Muxml.XML_Data_Type;
+          XML_Data          : in out Muxml.XML_Data_Type;
+          Template_Call     : in out DOM.Core.Node)
+      is
+         Template_Config  : constant DOM.Core.Node
+            := Muxml.Utils.Get_Element
+            (Doc   => Compiled_Template.Doc,
+             XPath => "/template/config");
+         Template_Expressions : constant DOM.Core.Node
+            := Muxml.Utils.Get_Element
+            (Doc   => Compiled_Template.Doc,
+             XPath => "/template/expressions");
+         Template_Body : constant DOM.Core.Node
+            := Muxml.Utils.Get_Element
+            (Doc   => Compiled_Template.Doc,
+             XPath => "/template/body");
+
+         System_Config : constant DOM.Core.Node
+            := Muxml.Utils.Get_Element
+            (Doc   => XML_Data.Doc,
+             XPath => "/system/config");
+         System_Expressions : DOM.Core.Node
+            := Muxml.Utils.Get_Element
+            (Doc   => XML_Data.Doc,
+             XPath => "/system/expressions");
+         System_Root : constant DOM.Core.Node
+            := Muxml.Utils.Get_Element
+            (Doc   => XML_Data.Doc,
+             XPath => "/system");
+      begin
+         Mutools.Mergers.Merge_Config_Section
+            (Policy     => XML_Data,
+             New_Config => Template_Config,
+             Clone      => True);
+
+         if  Template_Expressions /= null then
+            if System_Expressions = null then
+               System_Expressions := DOM.Core.Documents.Create_Element
+                  (Doc      => XML_Data.Doc,
+                   Tag_Name => "expressions");
+               if System_Config = null then
+                  System_Expressions := DOM.Core.Nodes.Insert_Before
+                     (N         => System_Root,
+                      New_Child => System_Expressions,
+                      Ref_Child => DOM.Core.Nodes.First_Child
+                      (N => System_Root));
+               else
+                  System_Expressions := DOM.Core.Nodes.Insert_Before
+                     (N         => System_Root,
+                      New_Child => System_Expressions,
+                      Ref_Child => DOM.Core.Nodes.Next_Sibling
+                      (N => System_Config));
+               end if;
+            end if;
+
+            Adopt_All_Children
+               (Target => System_Expressions,
+                Parent_Of_Children => Template_Expressions,
+                Append_Mode => True);
+         end if;
+
+         Adopt_All_Children
+            (Target             => Template_Call,
+             Parent_Of_Children => Template_Body,
+             Append_Mode        => False);
+
+         -- remove the Template_Call from main document
+         Template_Call := DOM.Core.Nodes.Remove_Child
+            (N         => DOM.Core.Nodes.Parent_Node
+             (N => Template_Call),
+             Old_Child => Template_Call);
+         DOM.Core.Nodes.Free (N => Template_Call);
+      end Substitute_Template_Call;
+
    begin
       if DOM.Core.Nodes.Length (List => Templates) = 0
       then
@@ -277,13 +393,15 @@ is
          end;
       end loop;
 
-      while Round <= Max_Rounds loop
+      for Round in 1 .. Max_Rounds loop
+         -- store value for use outside of loop
+         Rounds := Round;
+
          declare
             Template_Calls : constant DOM.Core.Node_List
                            := McKae.XML.XPath.XIA.XPath_Query
                                  (N     => XML_Data.Doc,
                                   XPath => "//useTemplate");
-
          begin
             if DOM.Core.Nodes.Length (List => Template_Calls) = 0 then
                exit;
@@ -321,80 +439,13 @@ is
                       Output         => Compiled_Template);
                   Running_Number := Running_Number + 1;
 
-                  declare
-                     Template_Config  : constant DOM.Core.Node
-                                  := Muxml.Utils.Get_Element
-                                        (Doc   => Compiled_Template.Doc,
-                                         XPath => "/template/config");
-                     Template_Expressions : constant DOM.Core.Node
-                                 := Muxml.Utils.Get_Element
-                                       (Doc   => Compiled_Template.Doc,
-                                        XPath => "/template/expressions");
-                     Template_Body : constant DOM.Core.Node
-                                 := Muxml.Utils.Get_Element
-                                       (Doc   => Compiled_Template.Doc,
-                                        XPath => "/template/body");
-
-                     System_Config : constant DOM.Core.Node
-                                 := Muxml.Utils.Get_Element
-                                       (Doc   => XML_Data.Doc,
-                                        XPath => "/system/config");
-                     System_Expressions : DOM.Core.Node
-                                 := Muxml.Utils.Get_Element
-                                       (Doc   => XML_Data.Doc,
-                                        XPath => "/system/expressions");
-                     System_Root : constant DOM.Core.Node
-                                 := Muxml.Utils.Get_Element
-                                       (Doc   => XML_Data.Doc,
-                                        XPath => "/system");
-                  begin
-                     Mutools.Mergers.Merge_Config_Section
-                        (Policy     => XML_Data,
-                         New_Config => Template_Config,
-                         Clone      => True);
-
-                     if  Template_Expressions /= null then
-                        if System_Expressions = null then
-                           System_Expressions := DOM.Core.Documents.Create_Element
-                              (Doc      => XML_Data.Doc,
-                               Tag_Name => "expressions");
-                           if System_Config = null then
-                              System_Expressions := DOM.Core.Nodes.Insert_Before
-                                 (N         => System_Root,
-                                  New_Child => System_Expressions,
-                                  Ref_Child => DOM.Core.Nodes.First_Child
-                                               (N => System_Root));
-                           else
-                              System_Expressions := DOM.Core.Nodes.Insert_Before
-                                 (N         => System_Root,
-                                  New_Child => System_Expressions,
-                                  Ref_Child => DOM.Core.Nodes.Next_Sibling
-                                               (N => System_Config));
-                           end if;
-                        end if;
-
-                        Adopt_All_Children
-                           (Target => System_Expressions,
-                            Parent_Of_Children => Template_Expressions,
-                            Append_Mode => True);
-                     end if;
-
-                     Adopt_All_Children
-                           (Target             => Template_Call,
-                            Parent_Of_Children => Template_Body,
-                            Append_Mode        => False);
-
-                     -- remove the Template_Call from main document
-                     Template_Call := DOM.Core.Nodes.Remove_Child
-                        (N         => DOM.Core.Nodes.Parent_Node
-                                      (N => Template_Call),
-                         Old_Child => Template_Call);
-                     DOM.Core.Nodes.Free (N => Template_Call);
-                  end;
+                  Substitute_Template_Call
+                     (Compiled_Template => Compiled_Template,
+                      XML_Data          => XML_Data,
+                      Template_Call     => Template_Call);
                end;
             end loop;
          end;
-         Round := Round + 1;
       end loop;
 
       -- free memory of template definitions
@@ -408,7 +459,7 @@ is
          end loop;
       end;
 
-      if Round > Max_Rounds then
+      if Rounds > Max_Rounds then
          raise Muxml.Validation_Error with
             "Nesting-depth of templates greater than"
             & Integer'Image (Max_Rounds)
@@ -420,7 +471,7 @@ is
 
    procedure Prefix_Variables
       (Root_Node : DOM.Core.Node;
-       Prefix   : String)
+       Prefix    : String)
    is
       use type DOM.Core.Node;
 
@@ -437,8 +488,8 @@ is
       -- add the given Prefix to all "namePrefix" attributes in useTemplate
       -- statements in the subtree with root Parent
       procedure Prefix_NamePrefix
-                   (Parent :  DOM.Core.Node;
-                    Prefix :  String);
+                   (Parent : DOM.Core.Node;
+                    Prefix : String);
 
       ---------------------------------------------------------------------
 

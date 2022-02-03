@@ -84,7 +84,7 @@
     <reservedMemory name="rmrr1" physicalAddress="16#d9e7_a000#" size="16#f000#"/>
     <reservedMemory name="rmrr2" physicalAddress="16#dc00_0000#" size="16#0220_0000#"/>
   </memory>
-  <devices pciConfigAddress="16#f800_0000#">
+  <devices pciConfigAddress="16#f800_0000#" pciConfigSize="16#0400_0000#">
     <device name="system_board">
       <ioPort end="16#0cf9#" name="reset" start="16#0cf9#"/>
       <ioPort end="16#1804#" name="pm1a_cnt" start="16#1804#"/>

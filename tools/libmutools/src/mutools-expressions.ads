@@ -18,6 +18,7 @@
 
 private with DOM.Core;
 with Ada.Containers.Indefinite_Vectors;
+with Ada.Containers.Indefinite_Holders;
 with Muxml;
 
 package Mutools.Expressions
@@ -36,6 +37,23 @@ is
    package String_Vector is new Ada.Containers.Indefinite_Vectors
       (Element_Type => String,
        Index_Type   => Natural);
+
+   package String_Holder_Type is new Ada.Containers.Indefinite_Holders
+      (Element_Type => String);
+   type Fragment_Type is (Text_Type, Reference_Type);
+   type Fragment_Entry is record
+      Value      : String_Holder_Type.Holder;
+      Value_Type : Fragment_Type;
+   end record;
+
+   package Fragment_Vector is new Ada.Containers.Indefinite_Vectors
+      (Element_Type => Fragment_Entry,
+       Index_Type   => Natural);
+
+   -- Parse strings of the form "text1_${ref1}_text2_${ref2}" into a vector
+   -- of the form (("text1_", Text_Type), ("ref1", Reference_Type), ...)
+   function Parse_Dollar_Braced_References (Input_String : String)
+                                           return Fragment_Vector.Vector;
 
 private
    use all type String_Vector.Vector;

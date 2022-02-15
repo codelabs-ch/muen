@@ -18,6 +18,7 @@
 
 with Ada.Exceptions;
 with Ada.Strings.Unbounded;
+with Ada.Strings.Fixed;
 
 with DOM.Core.Elements;
 with DOM.Core.Nodes;
@@ -27,6 +28,7 @@ with McKae.XML.XPath.XIA;
 with Mulog;
 with Mutools.System_Config;
 with Mutools.Expressions.Case_Expression;
+with Muxml.Utils;
 
 package body Mutools.Expressions
 is
@@ -699,6 +701,9 @@ is
                                    Backtrace => Backtrace));
       elsif Node_Type = "expression" then
          if Get_Expr_Type (Expr => Node) = "boolean" then
+            -- Boolean_Expression has less overhead
+            -- but does not write its result.
+            -- TODO: refactor?
             Discard (Evaluate_Boolean (Policy    => Policy,
                                        Node      => Node,
                                        Backtrace => Backtrace));
@@ -720,8 +725,8 @@ is
                String_Vector.Delete_Last (Container => Backtrace);
             end;
          else
-            Discard (Evaluate_String (Policy => Policy,
-                                      Node   => Node,
+            Discard (Evaluate_String (Policy    => Policy,
+                                      Node      => Node,
                                       Backtrace => Backtrace));
          end if;
       else
@@ -790,7 +795,9 @@ is
             & " is empty.";
       end if;
 
-      if DOM.Core.Nodes.Node_Name (N => First_Child) = "concatenation" then
+      if DOM.Core.Nodes.Node_Name (N => First_Child) = "concatenation" or
+         DOM.Core.Nodes.Node_Name (N => First_Child) = "evalString"
+      then
          return "string";
       elsif DOM.Core.Nodes.Node_Name (N => First_Child) = "case" then
          return "case";
@@ -849,6 +856,111 @@ is
 
    -------------------------------------------------------------------------
 
+   function Parse_Dollar_Braced_References (Input_String : String)
+                                           return Fragment_Vector.Vector
+   is
+      Left_Index, Right_Index : Natural := Input_String'First;
+      Result : Fragment_Vector.Vector;
+      -----------------------------------------------------------------
+
+      -- check if S contains $ or { or }
+      function Has_Dollar_Or_Braces (Input : String) return Boolean;
+
+      function Has_Dollar_Or_Braces (Input : String) return Boolean
+      is
+      begin
+         return (0 /= Ada.Strings.Fixed.Index
+                    (Source  => Input,
+                     Pattern => "$",
+                     From    => Input'First)
+                    + Ada.Strings.Fixed.Index
+                    (Source  => Input,
+                     Pattern => "{",
+                     From    => Input'First)
+                    + Ada.Strings.Fixed.Index
+                    (Source  => Input,
+                     Pattern => "}",
+                     From    => Input'First));
+      end Has_Dollar_Or_Braces;
+
+   begin
+      Right_Index := Ada.Strings.Fixed.Index
+         (Source  => Input_String,
+          Pattern => "${",
+          From    => Left_Index);
+
+      while Right_Index /= 0 loop
+         declare
+            String_Fragment : constant String
+               := Input_String (Left_Index .. Right_Index - 1);
+         begin
+            if Has_Dollar_Or_Braces (Input => String_Fragment) then
+               raise Invalid_Expression with
+                  "EvalString got invaild value '" & Input_String & "'";
+            elsif String_Fragment'Length > 0 then
+               Fragment_Vector.Append
+                  (Container => Result,
+                   New_Item  => Fragment_Entry'
+                      (Value => String_Holder_Type.To_Holder (String_Fragment),
+                       Value_Type => Text_Type));
+            end if;
+         end;
+
+         Left_Index := Right_Index + String'("${")'Length;
+         Right_Index := Ada.Strings.Fixed.Index
+            (Source  => Input_String,
+             Pattern => "}",
+             From    => Left_Index);
+
+         if Right_Index = 0 then
+            raise Invalid_Expression with
+               "EvalString got invaild value '" & Input_String & "'";
+         end if;
+
+         declare
+            String_Fragment : constant String
+               := Input_String (Left_Index .. Right_Index - 1);
+         begin
+            if Has_Dollar_Or_Braces (Input => String_Fragment) then
+               raise Invalid_Expression with
+                  "EvalString got invaild value '" & Input_String & "'";
+            elsif String_Fragment'Length > 0 then
+               Fragment_Vector.Append
+                  (Container => Result,
+                   New_Item  => Fragment_Entry'
+                      (Value => String_Holder_Type.To_Holder (String_Fragment),
+                       Value_Type => Reference_Type));
+            end if;
+         end;
+
+         Left_Index  := Right_Index + String'("}")'Length;
+         Right_Index := Ada.Strings.Fixed.Index
+            (Source  => Input_String,
+             Pattern => "${",
+             From    => Left_Index);
+      end loop;
+
+      declare
+         String_Fragment : constant String
+            := Input_String (Left_Index .. Input_String'Last);
+      begin
+         if Has_Dollar_Or_Braces (Input => String_Fragment) then
+            raise Invalid_Expression with
+               "EvalString got invaild value '" & Input_String & "'";
+         elsif String_Fragment'Length > 0 then
+            Fragment_Vector.Append
+               (Container => Result,
+                New_Item  => Fragment_Entry'
+                   (Value => String_Holder_Type.To_Holder (String_Fragment),
+                    Value_Type => Text_Type));
+         end if;
+      end;
+
+      return Result;
+   end Parse_Dollar_Braced_References;
+
+   -------------------------------------------------------------------------
+
    function String_Expression
      (Policy    :        Muxml.XML_Data_Type;
       Node      :        DOM.Core.Node;
@@ -857,38 +969,153 @@ is
    is
       package ASU renames Ada.Strings.Unbounded;
 
-      -- we can assume that the first child is <concatenation>
-      -- as there is no other programm-path where String_Expression is called
       Children  : constant DOM.Core.Node_List
                 := McKae.XML.XPath.XIA.XPath_Query
                       (N     => Node,
-                       XPath => "./concatenation/*");
-      Result    : ASU.Unbounded_String;
-   begin
-      if DOM.Core.Nodes.Length (List => Children) < 2 then
-         raise Invalid_Expression with
-            "Concatenation-expression '"
-            & DOM.Core.Elements.Get_Attribute
-                (Elem => Node,
-                 Name => "name")
-            & "' has less than two children";
-      end if;
-      for I in 0 .. DOM.Core.Nodes.Length (List => Children) - 1 loop
-         declare
-            Child  : constant DOM.Core.Node
-                   := DOM.Core.Nodes.Item (List  => Children,
-                                           Index => I);
-         begin
-            Ada.Strings.Unbounded.Append
-              (Source   => Result,
-               New_Item => ASU.To_Unbounded_String
-                             (String_Value (Policy    => Policy,
-                                            Node      => Child,
-                                            Backtrace => Backtrace)));
-         end;
-      end loop;
-      return ASU.To_String (Result);
+                       XPath => "./*");
 
+      ---------------------------------------------------------------------
+
+      -- evaluate a <concatenation>-node within the expression
+      function Evaluate_Concatenation
+         (Policy    :        Muxml.XML_Data_Type;
+          Node      :        DOM.Core.Node;
+          Backtrace : in out String_Vector.Vector)
+         return String;
+
+      ---------------------------------------------------------------------
+
+      function Evaluate_Concatenation
+         (Policy    :        Muxml.XML_Data_Type;
+          Node      :        DOM.Core.Node;
+          Backtrace : in out String_Vector.Vector)
+         return String
+      is
+         Children  : constant DOM.Core.Node_List
+            := McKae.XML.XPath.XIA.XPath_Query
+            (N     => Node,
+             XPath => "./*");
+         Result    : ASU.Unbounded_String;
+      begin
+         if DOM.Core.Nodes.Length (List => Children) < 2 then
+            raise Invalid_Expression with
+               "Concatenation-expression '"
+               & DOM.Core.Elements.Get_Attribute
+               (Elem => Node,
+                Name => "name")
+               & "' has less than two children";
+         end if;
+         for I in 0 .. DOM.Core.Nodes.Length (List => Children) - 1 loop
+            declare
+               Child  : constant DOM.Core.Node
+                  := DOM.Core.Nodes.Item (List  => Children,
+                                          Index => I);
+            begin
+               Ada.Strings.Unbounded.Append
+                  (Source   => Result,
+                   New_Item => ASU.To_Unbounded_String
+                      (String_Value (Policy    => Policy,
+                                     Node      => Child,
+                                     Backtrace => Backtrace)));
+            end;
+         end loop;
+         return ASU.To_String (Result);
+      end Evaluate_Concatenation;
+
+      ---------------------------------------------------------------------
+
+      -- evaluate an <evalString>-node withing the expression
+      function Evaluate_Eval_String
+         (Policy    :        Muxml.XML_Data_Type;
+          Node      :        DOM.Core.Node;
+          Backtrace : in out String_Vector.Vector)
+         return String;
+
+      ---------------------------------------------------------------------
+
+      function Evaluate_Eval_String
+         (Policy    :        Muxml.XML_Data_Type;
+          Node      :        DOM.Core.Node;
+          Backtrace : in out String_Vector.Vector)
+         return String
+      is
+         Result    : ASU.Unbounded_String;
+         Input_String : constant String
+            := DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => "value");
+         Parsed_Fragments : constant Fragment_Vector.Vector
+            := Parse_Dollar_Braced_References (Input_String => Input_String);
+
+      begin
+         if not Muxml.Utils.Has_Attribute
+                  (Node      => Node,
+                   Attr_Name => "value")
+         then
+            raise Invalid_Expression with
+               "EvalString-expression '"
+               & DOM.Core.Elements.Get_Attribute
+               (Elem   => Node,
+                Name   => "name")
+               & "' has evalString child without value attribute.";
+         end if;
+
+         for Fragment of Parsed_Fragments loop
+            if Fragment.Value_Type = Text_Type then
+               ASU.Append (Source   => Result,
+                           New_Item => Fragment.Value.Element);
+            else
+               ASU.Append (Source   => Result,
+                           New_Item => Evaluate_String
+                              (Policy    => Policy,
+                               Node      => Get_Defining_Node
+                                  (Policy   => Policy,
+                                   Var_Name => Fragment.Value.Element),
+                               Backtrace => Backtrace));
+            end if;
+         end loop;
+
+         return ASU.To_String (Result);
+      end  Evaluate_Eval_String;
+
+   begin
+      if DOM.Core.Nodes.Length (List => Children) /= 1 then
+         raise Invalid_Expression with
+            "String-expression '"
+            & DOM.Core.Elements.Get_Attribute
+            (Elem => Node,
+             Name => "name")
+            & "' does not have one unique child";
+      end if;
+
+      declare
+         Child  : constant DOM.Core.Node
+            := DOM.Core.Nodes.Item (List  => Children,
+                                    Index => 0);
+         Child_Name : constant String
+            := DOM.Core.Nodes.Node_Name (N => Child);
+      begin
+         if Child_Name = "concatenation" then
+            return Evaluate_Concatenation
+               (Policy    => Policy,
+                Node      => Child,
+                Backtrace => Backtrace);
+         elsif Child_Name = "evalString" then
+            return Evaluate_Eval_String
+               (Policy    => Policy,
+                Node      => Child,
+                Backtrace => Backtrace);
+         else
+            raise Invalid_Expression with
+               "String-expression '"
+               & DOM.Core.Elements.Get_Attribute
+               (Elem => Node,
+                Name => "name")
+               & "' has an unknown child operation with name '"
+               & Child_Name
+               & "'";
+         end if;
+      end;
    end String_Expression;
 
    -------------------------------------------------------------------------

@@ -22,6 +22,7 @@ with Ada.Strings.Fixed;
 
 with Mulog;
 with Mutools.Mergers;
+with Mutools.Expressions;
 with Muxml.Utils;
 with McKae.XML.XPath.XIA;
 
@@ -555,6 +556,74 @@ is
          end loop;
       end Rename_Dollar_Refs;
 
+      ---------------------------------------------------------------------
+
+      -- rename references within the value of Attr_Name of the nodes
+      -- matching XPath which contain values of form
+      -- "text_${var1}_text_${var2}_text"
+      procedure  Rename_Dollar_Refs_With_Braces
+                   (Parent    : DOM.Core.Node;
+                    XPath     : String;
+                    Attr_Name : String;
+                    Old_Name  : String;
+                    New_Name  : String);
+
+      ---------------------------------------------------------------------
+
+      procedure  Rename_Dollar_Refs_With_Braces
+                   (Parent    : DOM.Core.Node;
+                    XPath     : String;
+                    Attr_Name : String;
+                    Old_Name  : String;
+                    New_Name  : String)
+
+      is
+         package ASU renames Ada.Strings.Unbounded;
+         use all type Mutools.Expressions.Fragment_Type;
+
+         Referencing_Nodes : constant DOM.Core.Node_List
+            := McKae.XML.XPath.XIA.XPath_Query
+            (N     => Parent,
+             XPath => XPath);
+      begin
+         for I in 0 .. DOM.Core.Nodes.Length
+            (List => Referencing_Nodes) - 1 loop
+            declare
+               Ref_Node : constant DOM.Core.Node
+                  := DOM.Core.Nodes.Item
+                  (List  => Referencing_Nodes,
+                   Index => I);
+               Input_String : constant String
+                  := DOM.Core.Elements.Get_Attribute
+                  (Elem => Ref_Node,
+                   Name => "value");
+               Parsed_Fragments : constant Mutools.Expressions.Fragment_Vector.Vector
+                  := Mutools.Expressions.Parse_Dollar_Braced_References
+                  (Input_String => Input_String);
+               New_Value : ASU.Unbounded_String;
+
+            begin
+               for Fragment of Parsed_Fragments loop
+                  if Fragment.Value_Type = Mutools.Expressions.Text_Type then
+                     ASU.Append (Source => New_Value,
+                                 New_Item => Fragment.Value.Element);
+                  elsif Fragment.Value.Element = Old_Name then
+                     ASU.Append (Source => New_Value,
+                                 New_Item => "${" & New_Name & "}");
+                  else
+                     ASU.Append (Source => New_Value,
+                                 New_Item => "${" & Fragment.Value.Element & "}");
+                  end if;
+               end loop;
+
+               DOM.Core.Elements.Set_Attribute
+                  (Elem  => Ref_Node,
+                   Name  => Attr_Name,
+                   Value => ASU.To_String (New_Value));
+            end;
+         end loop;
+      end Rename_Dollar_Refs_With_Braces;
+
       ----------------------------------------------------------------------
 
       -- for each node matching XPath relative to Parent and with attribute
@@ -649,6 +718,13 @@ is
                      (Parent    => Root_Node,
                       XPath     => ".//case",
                       Attr_Name => "variable",
+                      Old_Name  => Old_Name,
+                      New_Name  => New_Name);
+
+                  Rename_Dollar_Refs_With_Braces
+                     (Parent    => Root_Node,
+                      XPath     => ".//evalString",
+                      Attr_Name => "value",
                       Old_Name  => Old_Name,
                       New_Name  => New_Name);
 

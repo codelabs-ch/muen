@@ -17,6 +17,7 @@
 --
 
 private with DOM.Core;
+private with Mutools.Expressions;
 
 with Muxml;
 
@@ -30,8 +31,9 @@ private
 
    --  Recursively evaluate all conditionals of given parent node.
    procedure Evaluate
-      (Policy : Muxml.XML_Data_Type;
-       Config : DOM.Core.Node_List;
-       Parent : DOM.Core.Node);
+      (Policy      :        Muxml.XML_Data_Type;
+       Config      :        DOM.Core.Node_List;
+       Parent      :        DOM.Core.Node;
+       Node_Access : in out Mutools.Expressions.Access_Hashmaps_Type);
 
 end Mutools.Conditionals;

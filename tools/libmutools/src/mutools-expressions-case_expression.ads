@@ -45,35 +45,43 @@ is
    -- This function is used for <case>-statements inside
    --   and outside of expressions.
    procedure Evaluate_Case_Node_Frame
-      (Policy          :        Muxml.XML_Data_Type;
-       Case_Node       :        DOM.Core.Node;
-       Return_Node     :    out DOM.Core.Node;
-       Backtrace       : in out String_Vector.Vector);
+      (Case_Node   :        DOM.Core.Node;
+       Return_Node :    out DOM.Core.Node;
+       Backtrace   : in out String_Vector.Vector;
+       Node_Access : in out Access_Hashmaps_Type);
 
    -- Evaluate an Expression of type "Case", i.e., an expression containing
    -- <case> as its child.
-   -- Adds resulting value to config-section of Policy.
+   -- Adds resulting value to Node_Access.Output
    procedure Case_Expression_Evaluation
-      (Policy        :        Muxml.XML_Data_Type;
-       Expr_Node     :        DOM.Core.Node;
+      (Expr_Node     :        DOM.Core.Node;
        Value_Of_Case :    out Value_Type_Tuple;
-       Backtrace     : in out String_Vector.Vector);
+       Backtrace     : in out String_Vector.Vector;
+       Node_Access   : in out Access_Hashmaps_Type);
 
 private
-      -- To be called on nodes like <boolean value="foo"/> as well as
-      --   config-variable entries like <boolean name="varname" value="foo"/>
-      --   (independet of the type of the variable)
-      -- Sets Type_And_Value with the respective type-value tuple.
-      -- If value begins with '$', an error will be reported.
-      procedure Get_Type_And_Value
-         (Node           :     DOM.Core.Node;
-          Type_And_Value : out Value_Type_Tuple);
+   -- To be called on nodes like <boolean value="foo"/> as well as
+   --   config-variable entries like <boolean name="varname" value="foo"/>
+   --   (independet of the type of the variable)
+   -- Sets Type_And_Value with the respective type-value tuple.
+   -- If value begins with '$', an error will be reported.
+   procedure Get_Type_And_Value
+      (Node           :     DOM.Core.Node;
+       Type_And_Value : out Value_Type_Tuple);
 
    -- Evaluate a Case-Statement within an expression recursively.
    procedure Evaluate_Case_Node
-      (Policy        :        Muxml.XML_Data_Type;
-       Case_Node     :        DOM.Core.Node;
+      (Case_Node     :        DOM.Core.Node;
        Value_Of_Case :    out Value_Type_Tuple;
-       Backtrace     : in out String_Vector.Vector);
+       Backtrace     : in out String_Vector.Vector;
+       Node_Access   : in out Access_Hashmaps_Type);
+
+   -- assign the value of the variable or expression with name Ref_Name to
+   -- Result
+   procedure Get_Value_Of_Reference
+      (Ref_Name      :        String;
+       Result        :    out Value_Type_Tuple;
+       Backtrace     : in out String_Vector.Vector;
+       Node_Access   : in out Access_Hashmaps_Type);
 
 end Mutools.Expressions.Case_Expression;

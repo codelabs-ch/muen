@@ -56,18 +56,22 @@ is
                         & " template(s)");
       for I in 0 .. DOM.Core.Nodes.Length (List => Templates) - 1 loop
          declare
-            Template            : constant DOM.Core.Node
-                                := DOM.Core.Nodes.Item
-                                      (List  => Templates,
-                                       Index => I);
-            Template_Body       : constant DOM.Core.Node_List
-                                := McKae.XML.XPath.XIA.XPath_Query
-                                      (N     => Template,
-                                       XPath => "./body");
-            Template_Parameters : constant DOM.Core.Node_List
-                                := McKae.XML.XPath.XIA.XPath_Query
-                                      (N     => Template,
-                                       XPath => "./parameters");
+            Template             : constant DOM.Core.Node
+                                 := DOM.Core.Nodes.Item
+                                       (List  => Templates,
+                                        Index => I);
+            Template_Body        : constant DOM.Core.Node_List
+                                 := McKae.XML.XPath.XIA.XPath_Query
+                                       (N     => Template,
+                                        XPath => "./body");
+            Template_Parameters  : constant DOM.Core.Node_List
+                                 := McKae.XML.XPath.XIA.XPath_Query
+                                       (N     => Template,
+                                        XPath => "./parameters");
+            Template_Expressions : constant DOM.Core.Node_List
+                                 := McKae.XML.XPath.XIA.XPath_Query
+                                       (N     => Template,
+                                        XPath => "./expressions");
          begin
             case DOM.Core.Nodes.Length (List => Template_Body) is
                when 0 =>
@@ -91,6 +95,15 @@ is
                Mucfgcheck.Validation_Errors.Insert
                   (Msg => "Found template definition"
                           & " with multiple parameter blocks.");
+            end case;
+
+            case DOM.Core.Nodes.Length (List => Template_Expressions) is
+               when 0 | 1 =>
+                  null;
+               when others =>
+               Mucfgcheck.Validation_Errors.Insert
+                  (Msg => "Found template definition"
+                          & " with multiple expressions blocks.");
             end case;
          end;
       end loop;

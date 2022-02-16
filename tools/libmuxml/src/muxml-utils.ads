@@ -264,6 +264,14 @@ is
      with
        Pre => DOM.Core.Nodes.Length (List => Nodes) > 0;
 
+   -- return a child of parent which is of type "Element_Node"
+   -- and has the specified name
+   -- returns null if the number of such nodes is not 1
+   function Get_Unique_Element_Child
+      (Parent     : DOM.Core.Node;
+       Child_Name : String)
+      return DOM.Core.Node;
+
    --  Returns the sum of all values obtained by applying the given getter
    --  function on each node of the list.
    function Sum

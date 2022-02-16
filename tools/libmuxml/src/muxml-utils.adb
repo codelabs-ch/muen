@@ -20,6 +20,7 @@ with DOM.Core.Append_Node;
 with DOM.Core.Elements;
 with DOM.Core.Attrs;
 with DOM.Core.Documents.Local;
+with DOM.Core;
 
 with McKae.XML.XPath.XIA;
 
@@ -498,6 +499,36 @@ is
                            Match_Multiple => Match_Multiple,
                            Match          => Match);
    end Get_Matching;
+
+   -------------------------------------------------------------------------
+
+   function Get_Unique_Element_Child
+      (Parent     : DOM.Core.Node;
+       Child_Name : String)
+      return DOM.Core.Node
+   is
+      use all type DOM.Core.Node_Types;
+      use all type DOM.Core.Node;
+
+      Node : DOM.Core.Node
+         := DOM.Core.Nodes.First_Child (N => Parent);
+      Result : DOM.Core.Node
+         := null;
+   begin
+      while Node /= null loop
+         if DOM.Core.Nodes.Node_Type (N => Node) =  Element_Node
+            and then DOM.Core.Nodes.Node_Name (N => Node) = Child_Name
+         then
+            if Result = null then
+               Result := Node;
+            else
+               return null;
+            end if;
+         end if;
+         Node := DOM.Core.Nodes.Next_Sibling (N => Node);
+      end loop;
+      return Result;
+   end Get_Unique_Element_Child;
 
    -------------------------------------------------------------------------
 

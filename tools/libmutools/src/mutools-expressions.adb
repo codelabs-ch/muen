@@ -19,14 +19,15 @@
 with Ada.Exceptions;
 with Ada.Strings.Unbounded;
 with Ada.Strings.Fixed;
+with Ada.Characters.Handling;
 
+with DOM.Core.Documents;
 with DOM.Core.Elements;
 with DOM.Core.Nodes;
 
 with McKae.XML.XPath.XIA;
 
 with Mulog;
-with Mutools.System_Config;
 with Mutools.Expressions.Case_Expression;
 with Muxml.Utils;
 
@@ -73,9 +74,9 @@ is
    -------------------------------------------------------------------------
 
    function Bool_Value
-     (Policy    :        Muxml.XML_Data_Type;
-      Node      :        DOM.Core.Node;
-      Backtrace : in out String_Vector.Vector)
+     (Node        :        DOM.Core.Node;
+      Backtrace   : in out String_Vector.Vector;
+      Node_Access : in out Access_Hashmaps_Type)
       return Boolean
    is
       type Bool_Kind is (Bool_Boolean, Bool_Variable);
@@ -105,11 +106,15 @@ is
                              (Elem => Node,
                               Name => "name");
             begin
-               Result := Evaluate_Boolean
-                  (Policy    => Policy,
-                   Node      => Get_Defining_Node (Policy   => Policy,
-                                                   Var_Name => Var_Name),
-                   Backtrace => Backtrace);
+               if Node_Access.Output_Boolean.Contains (Var_Name) then
+                  Result := Node_Access.Output_Boolean (Var_Name);
+               else
+                  Result := Evaluate_Boolean
+                     (Node        => Get_Defining_Node (Var_Name    => Var_Name,
+                                                        Node_Access => Node_Access),
+                      Backtrace   => Backtrace,
+                      Node_Access => Node_Access);
+               end if;
             end;
       end case;
 
@@ -119,26 +124,15 @@ is
    -------------------------------------------------------------------------
 
    function Boolean_Expression
-     (Policy    :        Muxml.XML_Data_Type;
-      Node      :        DOM.Core.Node;
-      Backtrace : in out String_Vector.Vector)
+     (Node        :        DOM.Core.Node;
+      Backtrace   : in out String_Vector.Vector;
+      Node_Access : in out Access_Hashmaps_Type)
       return Boolean
    is
-      use type DOM.Core.Node;
-
-      function C
-        (List  : DOM.Core.Node_List;
-         Index : Natural)
-         return DOM.Core.Node renames DOM.Core.Nodes.Item;
-
       type Expression_Kind is
         (Expr_And, Expr_Boolean, Expr_Expression, Expr_Eq, Expr_Gt, Expr_Lt,
          Expr_Ne, Expr_Not, Expr_Or, Expr_Variable);
 
-      Children  : constant DOM.Core.Node_List
-                := McKae.XML.XPath.XIA.XPath_Query
-                     (N     => Node,
-                      XPath => "*");
       Expr      : Expression_Kind;
       Result    : Boolean;
 
@@ -163,18 +157,24 @@ is
       function Eval_Booleans return Boolean
       is
       begin
-         if C (Children, 0) = null or else C (Children, 1) = null then
+         if Get_Nth_Child_Node (Parent => Node, N => 1) = null
+            or else Get_Nth_Child_Node (Parent => Node, N => 2) = null
+         then
             raise Invalid_Expression with "Operator '" & Op_Name
               & "' requires two child elements";
          end if;
          return Op (X => Boolean_Expression
-                           (Policy => Policy,
-                            Node   => C (Children, 0),
-                            Backtrace => Backtrace),
+                       (Node        => Get_Nth_Child_Node
+                                          (Parent => Node,
+                                           N      => 1),
+                        Backtrace   => Backtrace,
+                        Node_Access => Node_Access),
                     Y => Boolean_Expression
-                           (Policy    => Policy,
-                            Node      => C (Children, 1),
-                            Backtrace => Backtrace));
+                       (Node        => Get_Nth_Child_Node
+                                          (Parent => Node,
+                                           N      => 2),
+                        Backtrace   => Backtrace,
+                        Node_Access => Node_Access));
       end Eval_Booleans;
 
       ----------------------------------------------------------------------
@@ -186,7 +186,7 @@ is
                         (Elem => Node,
                          Name => "name");
       begin
-         if C (Children, 0) = null then
+         if Get_Nth_Child_Node (Parent => Node, N => 1) = null then
             raise Invalid_Expression with
                "Expression '"
                & Expr_Name
@@ -195,9 +195,9 @@ is
 
          begin
             return Boolean_Expression
-                     (Policy => Policy,
-                      Node   => C (Children, 0),
-                      Backtrace => Backtrace);
+                     (Node        => Get_Nth_Child_Node (Parent => Node, N => 1),
+                      Backtrace   => Backtrace,
+                      Node_Access => Node_Access);
          exception
             when E : Invalid_Expression =>
                raise Invalid_Expression with
@@ -213,20 +213,26 @@ is
       function Eval_Integers return Boolean
       is
       begin
-         if C (Children, 0) = null or else C (Children, 1) = null then
+         if Get_Nth_Child_Node (Parent => Node, N => 1) = null
+            or else Get_Nth_Child_Node (Parent => Node, N => 2) = null
+         then
             raise Invalid_Expression with
                "Operator '"
                & Op_Name
                & "' requires two child elements";
          end if;
          return Op (X => Int_Value
-                           (Policy    => Policy,
-                            Node      => C (Children, 0),
-                            Backtrace => Backtrace),
+                       (Node        => Get_Nth_Child_Node
+                                         (Parent => Node,
+                                          N      => 1),
+                            Backtrace   => Backtrace,
+                            Node_Access => Node_Access),
                     Y => Int_Value
-                           (Policy    => Policy,
-                            Node      => C (Children, 1),
-                            Backtrace => Backtrace));
+                       (Node        => Get_Nth_Child_Node
+                                         (Parent => Node,
+                                          N      => 2),
+                            Backtrace   => Backtrace,
+                            Node_Access => Node_Access));
       end Eval_Integers;
 
       ----------------------------------------------------------------------
@@ -234,15 +240,15 @@ is
       function Eval_Not return Boolean
       is
       begin
-         if C (Children, 0) = null then
+         if Get_Nth_Child_Node (Parent => Node, N => 1) = null then
             raise Invalid_Expression with
                "Operator 'not' requires one child element";
          end if;
 
          return not Boolean_Expression
-                       (Policy => Policy,
-                        Node   => C (Children, 0),
-                        Backtrace => Backtrace);
+                       (Node        => Get_Nth_Child_Node (Parent => Node, N => 1),
+                        Backtrace   => Backtrace,
+                        Node_Access => Node_Access);
       end Eval_Not;
 
       ----------------------------------------------------------------------
@@ -301,9 +307,9 @@ is
          when Expr_Or         => Result := Eval_Or;
          when Expr_Expression => Result := Eval_Expr;
          when Expr_Boolean
-            | Expr_Variable   => Result := Bool_Value (Policy    => Policy,
-                                                       Node      => Node,
-                                                       Backtrace => Backtrace);
+            | Expr_Variable   => Result := Bool_Value (Node        => Node,
+                                                       Backtrace   => Backtrace,
+                                                       Node_Access => Node_Access);
       end case;
 
       return Result;
@@ -312,9 +318,9 @@ is
    -------------------------------------------------------------------------
 
    function Evaluate_Boolean
-      (Policy    :        Muxml.XML_Data_Type;
-       Node      :        DOM.Core.Node;
-       Backtrace : in out String_Vector.Vector)
+      (Node        :        DOM.Core.Node;
+       Backtrace   : in out String_Vector.Vector;
+       Node_Access : in out Access_Hashmaps_Type)
       return Boolean
    is
       use all type Mutools.Expressions.Case_Expression.Variable_Type;
@@ -338,36 +344,43 @@ is
             Next_Node : DOM.Core.Node;
          begin
             if Node_Value (Node_Value'First) /= '$' then
-               Result := System_Config.Get_Value
-                  (Data  => Policy,
-                   Name  => Node_Name);
+               Result := Boolean'Value (Node_Value);
+               Node_Access.Output_Boolean.Insert (Key      => Node_Name,
+                                                  New_Item => Result);
             else
-               Next_Node := Get_Defining_Node
-                  (Policy   => Policy,
-                   Var_Name => Node_Value
-                   (Node_Value'First + 1 .. Node_Value'Last));
-               Result := Evaluate_Boolean
-                  (Policy    => Policy,
-                   Node      => Next_Node,
-                   Backtrace => Backtrace);
-               Mulog.Log (Msg => "Expanding config-variable '" & Node_Name
-                    & "' with value '" & Result'Image & "'");
-               System_Config.Set_Value (Data  => Policy,
-                                        Name  => Node_Name,
-                                        Value => Result);
+               declare
+                  Reference : constant String
+                     := Node_Value (Node_Value'First + 1 .. Node_Value'Last);
+               begin
+                  if Node_Access.Output_Boolean.Contains (Reference) then
+                     Result := Node_Access.Output_Boolean (Reference);
+                  else
+                     Next_Node := Get_Defining_Node
+                        (Var_Name    => Reference,
+                         Node_Access => Node_Access);
+                     Result := Evaluate_Boolean
+                        (Node        => Next_Node,
+                         Backtrace   => Backtrace,
+                         Node_Access => Node_Access);
+                  end if;
+                  Mulog.Log (Msg => "Expanding config-variable '" & Node_Name
+                                & "' with value '" & Result'Image & "'");
+                  Node_Access.Output_Boolean.Insert (Key      => Node_Name,
+                                                     New_Item => Result);
+               end;
             end if;
          end;
 
       elsif Node_Type = "expression" then
-         if Get_Expr_Type (Expr => Node) = "case" then
+         if Get_Expr_Type (Expr => Node) = Case_Expr_Type then
             declare
                Result_Case : Mutools.Expressions.Case_Expression.Value_Type_Tuple;
             begin
                Mutools.Expressions.Case_Expression.Case_Expression_Evaluation
-                  (Policy        => Policy,
-                   Expr_Node     => Node,
+                  (Expr_Node     => Node,
                    Value_Of_Case => Result_Case,
-                   Backtrace     => Backtrace);
+                   Backtrace     => Backtrace,
+                   Node_Access   => Node_Access);
                if Result_Case.Value_Type /=
                   Mutools.Expressions.Case_Expression.Boolean_Type
                then
@@ -380,18 +393,44 @@ is
                Result := Result_Case.Bool_Value;
             end;
 
-         elsif Get_Expr_Type (Expr => Node) = "boolean" then
-            Result :=  Boolean_Expression (Policy => Policy,
-                                           Node => Node,
-                                           Backtrace => Backtrace);
+         elsif Get_Expr_Type (Expr => Node) = Boolean_Expr_Type then
+            Result :=  Boolean_Expression (Node        => Node,
+                                           Backtrace   => Backtrace,
+                                           Node_Access => Node_Access);
             Mulog.Log (Msg => "Expanding expression '"
                        & Node_Name
                        & "' with value '"
                        & Result'Image
-                       & "'");
-            System_Config.Set_Value (Data  => Policy,
-                                     Name  => Node_Name,
-                                     Value => Result);
+                          & "'");
+            Node_Access.Output_Boolean.Insert (Key      => Node_Name,
+                                               New_Item => Result);
+         elsif Get_Expr_Type (Expr => Node) = Variable_Expr_Type then
+            declare
+               Reference : constant String
+                  := DOM.Core.Elements.Get_Attribute
+                  (Elem =>  Get_Nth_Child_Node (Parent => Node, N => 1),
+                   Name => "name");
+               Next_Node : DOM.Core.Node;
+            begin
+               if Node_Access.Output_Boolean.Contains (Reference) then
+                     Result := Node_Access.Output_Boolean (Reference);
+               else
+                  Next_Node := Get_Defining_Node
+                     (Var_Name    => Reference,
+                      Node_Access => Node_Access);
+                  Result := Evaluate_Boolean
+                     (Node        => Next_Node,
+                      Backtrace   => Backtrace,
+                      Node_Access => Node_Access);
+               end if;
+               Mulog.Log (Msg => "Expanding expression '"
+                             & Node_Name
+                             & "' with value '"
+                             & Result'Image
+                             & "'");
+               Node_Access.Output_Boolean.Insert (Key      => Node_Name,
+                                                  New_Item => Result);
+            end;
          else
             raise Muxml.Validation_Error with
                "A Boolean variable or expression points to expression"
@@ -415,9 +454,9 @@ is
    -------------------------------------------------------------------------
 
    function Evaluate_Integer
-      (Policy    :        Muxml.XML_Data_Type;
-       Node      :        DOM.Core.Node;
-       Backtrace : in out String_Vector.Vector)
+      (Node       :        DOM.Core.Node;
+       Backtrace  : in out String_Vector.Vector;
+      Node_Access : in out Access_Hashmaps_Type)
       return Integer
    is
       use all type Mutools.Expressions.Case_Expression.Variable_Type;
@@ -442,39 +481,46 @@ is
             Next_Node  : DOM.Core.Node;
          begin
             if Node_Value (Node_Value'First) /= '$' then
-               Result := System_Config.Get_Value
-                           (Data  => Policy,
-                            Name  => Node_Name);
+               Result := Integer'Value (Node_Value);
+               Node_Access.Output_Integer.Insert (Key      => Node_Name,
+                                                  New_Item => Result);
             else
-               Next_Node := Get_Defining_Node
-                              (Policy   => Policy,
-                               Var_Name => Node_Value
-                                  (Node_Value'First + 1 .. Node_Value'Last));
-               Result := Evaluate_Integer
-                  (Policy    => Policy,
-                   Node      => Next_Node,
-                   Backtrace => Backtrace);
-               Mulog.Log (Msg => "Expanding config-variable '"
-                          & Node_Name
-                          & "' with value '"
-                          & Result'Image
-                          & "'");
-               System_Config.Set_Value (Data  => Policy,
-                                        Name  => Node_Name,
-                                        Value => Result);
+               declare
+                  Reference : constant String
+                     := Node_Value (Node_Value'First + 1 .. Node_Value'Last);
+               begin
+                  if Node_Access.Output_Integer.Contains (Reference) then
+                     Result := Node_Access.Output_Integer (Reference);
+                  else
+                     Next_Node := Get_Defining_Node
+                        (Var_Name    => Reference,
+                         Node_Access => Node_Access);
+                     Result := Evaluate_Integer
+                        (Node        => Next_Node,
+                         Backtrace   => Backtrace,
+                         Node_Access => Node_Access);
+                  end if;
+                  Mulog.Log (Msg => "Expanding config-variable '"
+                                & Node_Name
+                                & "' with value '"
+                                & Result'Image
+                                & "'");
+                  Node_Access.Output_Integer.Insert (Key      => Node_Name,
+                                                     New_Item => Result);
+               end;
             end if;
          end;
 
       elsif Node_Type = "expression" then
-         if Get_Expr_Type (Expr => Node) = "case" then
+         if Get_Expr_Type (Expr => Node) = Case_Expr_Type then
             declare
                Result_Case : Mutools.Expressions.Case_Expression.Value_Type_Tuple;
             begin
                Mutools.Expressions.Case_Expression.Case_Expression_Evaluation
-                  (Policy        => Policy,
-                   Expr_Node     => Node,
+                  (Expr_Node     => Node,
                    Value_Of_Case => Result_Case,
-                   Backtrace     => Backtrace);
+                   Backtrace     => Backtrace,
+                   Node_Access   => Node_Access);
                if Result_Case.Value_Type /=
                   Mutools.Expressions.Case_Expression.Integer_Type
                then
@@ -485,6 +531,33 @@ is
                      & "' which is not integer valued";
                end if;
                Result := Result_Case.Int_Value;
+            end;
+         elsif Get_Expr_Type (Expr => Node) = Variable_Expr_Type then
+            declare
+               Reference : constant String
+                  := DOM.Core.Elements.Get_Attribute
+                  (Elem =>  Get_Nth_Child_Node (Parent => Node, N => 1),
+                   Name => "name");
+               Next_Node : DOM.Core.Node;
+            begin
+               if Node_Access.Output_Integer.Contains (Reference) then
+                     Result := Node_Access.Output_Integer (Reference);
+               else
+                  Next_Node := Get_Defining_Node
+                     (Var_Name    => Reference,
+                      Node_Access => Node_Access);
+                  Result := Evaluate_Integer
+                     (Node        => Next_Node,
+                      Backtrace   => Backtrace,
+                      Node_Access => Node_Access);
+               end if;
+               Mulog.Log (Msg => "Expanding expression '"
+                             & Node_Name
+                             & "' with value '"
+                             & Result'Image
+                             & "'");
+               Node_Access.Output_Integer.Insert (Key      => Node_Name,
+                                                  New_Item => Result);
             end;
          else
             raise Muxml.Validation_Error with
@@ -508,9 +581,9 @@ is
    -------------------------------------------------------------------------
 
    function Evaluate_String
-      (Policy    :        Muxml.XML_Data_Type;
-       Node      :        DOM.Core.Node;
-       Backtrace : in out String_Vector.Vector)
+      (Node        :        DOM.Core.Node;
+       Backtrace   : in out String_Vector.Vector;
+       Node_Access : in out Access_Hashmaps_Type)
       return String
    is
       package ASU renames Ada.Strings.Unbounded;
@@ -538,41 +611,53 @@ is
          begin
             if Node_Value'Length > 0 then
                if Node_Value (Node_Value'First) = '$' then
-                  Next_Node := Get_Defining_Node
-                                 (Policy   => Policy,
-                                  Var_Name => Node_Value
-                                     (Node_Value'First + 1 .. Node_Value'Last));
-                  Result := ASU.To_Unbounded_String
-                     (Evaluate_String
-                        (Policy    => Policy,
-                         Node      => Next_Node,
-                         Backtrace => Backtrace));
-                  Mulog.Log (Msg => "Expanding config-variable '"
-                             & Node_Name
-                             & "' with value '"
-                             & ASU.To_String (Result)
-                             & "'");
-                  System_Config.Set_Value (Data  => Policy,
-                                           Name  => Node_Name,
-                                           Value => ASU.To_String (Result));
+                  declare
+                     Reference : constant String
+                        := Node_Value (Node_Value'First + 1 .. Node_Value'Last);
+                  begin
+                     if Node_Access.Output_String.Contains (Reference) then
+                        Result := ASU.To_Unbounded_String
+                           (Node_Access.Output_String (Reference));
+                     else
+                        Next_Node := Get_Defining_Node
+                           (Var_Name    => Reference,
+                            Node_Access => Node_Access);
+                        Result := ASU.To_Unbounded_String
+                           (Evaluate_String
+                               (Node        => Next_Node,
+                                Backtrace   => Backtrace,
+                                Node_Access => Node_Access));
+                     end if;
+                     Mulog.Log (Msg => "Expanding config-variable '"
+                                   & Node_Name
+                                   & "' with value '"
+                                   & ASU.To_String (Result)
+                                   & "'");
+                     Node_Access.Output_String.Insert
+                        (Key => Node_Name, New_Item => ASU.To_String (Result));
+                  end;
                else
                   Result := ASU.To_Unbounded_String (Node_Value);
+                  Node_Access.Output_String.Insert
+                     (Key => Node_Name, New_Item => ASU.To_String (Result));
                end if;
             else
                Result := ASU.To_Unbounded_String (Node_Value);
+               Node_Access.Output_String.Insert
+                  (Key => Node_Name, New_Item => ASU.To_String (Result));
             end if;
          end;
 
       elsif Node_Type = "expression" then
-         if Get_Expr_Type (Expr => Node) = "case" then
+         if Get_Expr_Type (Expr => Node) = Case_Expr_Type then
             declare
                Result_Case : Mutools.Expressions.Case_Expression.Value_Type_Tuple;
             begin
                Mutools.Expressions.Case_Expression.Case_Expression_Evaluation
-                  (Policy        => Policy,
-                   Expr_Node     => Node,
+                  (Expr_Node     => Node,
                    Value_Of_Case => Result_Case,
-                   Backtrace     => Backtrace);
+                   Backtrace     => Backtrace,
+                   Node_Access   => Node_Access);
 
                if Result_Case.Value_Type /=
                   Mutools.Expressions.Case_Expression.String_Type
@@ -586,20 +671,47 @@ is
                Result :=  ASU.To_Unbounded_String
                   (Result_Case.String_Value.Element);
             end;
-
-         elsif Get_Expr_Type (Expr => Node) = "string" then
+         elsif Get_Expr_Type (Expr => Node) = Variable_Expr_Type then
+            declare
+               Reference : constant String
+                  := DOM.Core.Elements.Get_Attribute
+                  (Elem =>  Get_Nth_Child_Node (Parent => Node, N => 1),
+                   Name => "name");
+               Next_Node : DOM.Core.Node;
+            begin
+               if Node_Access.Output_String.Contains (Reference) then
+                  Result := ASU.To_Unbounded_String
+                     (Node_Access.Output_String (Reference));
+               else
+                  Next_Node := Get_Defining_Node
+                     (Var_Name    => Reference,
+                      Node_Access => Node_Access);
+                  Result :=  ASU.To_Unbounded_String
+                     (Evaluate_String
+                         (Node        => Next_Node,
+                          Backtrace   => Backtrace,
+                          Node_Access => Node_Access));
+               end if;
+               Mulog.Log (Msg => "Expanding expression '"
+                             & Node_Name
+                             & "' with value '"
+                             & ASU.To_String (Result)
+                             & "'");
+               Node_Access.Output_String.Insert (Key      => Node_Name,
+                                                 New_Item => ASU.To_String (Result));
+            end;
+         elsif Get_Expr_Type (Expr => Node) = String_Expr_Type then
             Result :=  ASU.To_Unbounded_String
-               (String_Expression (Policy => Policy,
-                                   Node => Node,
-                                   Backtrace => Backtrace));
+               (String_Expression (Node        => Node,
+                                   Backtrace   => Backtrace,
+                                   Node_Access => Node_Access));
             Mulog.Log (Msg => "Expanding expression '"
                        & Node_Name
                        & "' with value '"
                        & ASU.To_String (Result)
-                       & "'");
-            System_Config.Set_Value (Data  => Policy,
-                                     Name  => Node_Name,
-                                     Value => ASU.To_String (Result));
+                          & "'");
+            Node_Access.Output_String.Insert
+                        (Key => Node_Name, New_Item => ASU.To_String (Result));
          else
             raise Muxml.Validation_Error with
                "A string variable or expression points to expression with name '"
@@ -630,28 +742,174 @@ is
                                & "/*/config/integer | "
                                & "/*/config/string | "
                                & "/*/expressions/expression");
+      Node_Access : Access_Hashmaps_Type;
+
+      ----------------------------------------------------------------------
+
+      -- delete the current content of /*/config and replace it with
+      -- the entries in Node_Access.Output_...
+      procedure Substitute_Config_Section
+         (Policy      :        Muxml.XML_Data_Type;
+          Node_Access : in out Access_Hashmaps_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Substitute_Config_Section
+         (Policy      :        Muxml.XML_Data_Type;
+          Node_Access : in out Access_Hashmaps_Type)
+      is
+         Config_Node_List : constant DOM.Core.Node_List
+            := McKae.XML.XPath.XIA.XPath_Query
+            (N     => Policy.Doc,
+             XPath => "/*/config");
+         Insert_Position, Config_Entry, Config_Node, System_Node, Dummy : DOM.Core.Node;
+         pragma Unreferenced (Dummy);
+      begin
+         if Node_Access.Output_Boolean.Is_Empty and
+            Node_Access.Output_Integer.Is_Empty and
+            Node_Access.Output_String.Is_Empty
+         then
+            return;
+         end if;
+
+         if DOM.Core.Nodes.Length (List => Config_Node_List) /= 0 then
+            Config_Node := DOM.Core.Nodes.Item
+               (List  => Config_Node_List,
+                Index => 0);
+            System_Node := DOM.Core.Nodes.Parent_Node (N => Config_Node);
+            Insert_Position := DOM.Core.Nodes.Next_Sibling (N => Config_Node);
+
+            Config_Node := DOM.Core.Nodes.Remove_Child
+               (N          => System_Node,
+                Old_Child  => Config_Node);
+            DOM.Core.Nodes.Free (N => Config_Node);
+
+         else
+            System_Node := DOM.Core.Nodes.Item
+               (List  => McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Policy.Doc,
+                    XPath => "/*"),
+                Index => 0);
+
+            if DOM.Core.Nodes.Has_Child_Nodes (N => System_Node) then
+               Insert_Position := DOM.Core.Nodes.First_Child (N => System_Node);
+            end if;
+
+         end if;
+
+         Config_Node :=  DOM.Core.Documents.Create_Element
+           (Doc      => Policy.Doc,
+            Tag_Name => "config");
+
+         if Insert_Position /= null then
+            Config_Node := DOM.Core.Nodes.Insert_Before
+               (N         => DOM.Core.Nodes.Parent_Node (N => Insert_Position),
+                New_Child => Config_Node,
+                Ref_Child => Insert_Position);
+         else
+            Config_Node := DOM.Core.Nodes.Append_Child
+               (N         => DOM.Core.Nodes.Parent_Node (N => System_Node),
+                New_Child => Config_Node);
+         end if;
+
+         for C in Node_Access.Output_Boolean.Iterate loop
+            Config_Entry := DOM.Core.Documents.Create_Element
+               (Doc      => Policy.Doc,
+                Tag_Name => "boolean");
+            DOM.Core.Elements.Set_Attribute
+               (Elem  => Config_Entry,
+                Name  => "name",
+                Value => Name_To_Boolean_Hashed_Map.Key (C));
+            DOM.Core.Elements.Set_Attribute
+               (Elem  => Config_Entry,
+                Name  => "value",
+                Value => Ada.Characters.Handling.To_Lower
+                   (Boolean'Image (Node_Access.Output_Boolean (C))));
+            Dummy := DOM.Core.Nodes.Append_Child
+               (N         => Config_Node,
+                New_Child => Config_Entry);
+         end loop;
+
+         for C in Node_Access.Output_Integer.Iterate loop
+            Config_Entry := DOM.Core.Documents.Create_Element
+               (Doc      => Policy.Doc,
+                Tag_Name => "integer");
+            DOM.Core.Elements.Set_Attribute
+               (Elem  => Config_Entry,
+                Name  => "name",
+                Value => Name_To_Integer_Hashed_Map.Key (C));
+            DOM.Core.Elements.Set_Attribute
+               (Elem  => Config_Entry,
+                Name  => "value",
+                Value => Ada.Strings.Fixed.Trim
+                   (Integer'Image (Node_Access.Output_Integer (C)),
+                    Ada.Strings.Both));
+            Dummy := DOM.Core.Nodes.Append_Child
+               (N         => Config_Node,
+                New_Child => Config_Entry);
+         end loop;
+
+         for C in Node_Access.Output_String.Iterate loop
+            Config_Entry := DOM.Core.Documents.Create_Element
+               (Doc      => Policy.Doc,
+                Tag_Name => "string");
+            DOM.Core.Elements.Set_Attribute
+               (Elem  => Config_Entry,
+                Name  => "name",
+                Value => Name_To_String_Hashed_Map.Key (C));
+            DOM.Core.Elements.Set_Attribute
+               (Elem  => Config_Entry,
+                Name  => "value",
+                Value => Node_Access.Output_String (C));
+            Dummy := DOM.Core.Nodes.Append_Child
+               (N         => Config_Node,
+                New_Child => Config_Entry);
+         end loop;
+
+      end Substitute_Config_Section;
 
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Vars_Exprs) - 1 loop
          declare
-            Var      : constant DOM.Core.Node
-                     := DOM.Core.Nodes.Item (List  => Vars_Exprs,
-                                             Index => I);
+            Node : constant DOM.Core.Node
+               := DOM.Core.Nodes.Item (List  => Vars_Exprs, Index => I);
+            Node_Name_Attr : constant String
+               := DOM.Core.Elements.Get_Attribute
+                  (Elem => Node,
+                   Name => "name");
          begin
-            Expand_Single_Node
-               (Policy    => Policy,
-                Node      => Var,
-                Backtrace => Backtrace);
+            Node_Access.Input.Insert (Key => Node_Name_Attr, New_Item => Node);
          end;
       end loop;
+
+      for C in Node_Access.Input.Iterate loop
+         declare
+            Key_Value : constant String
+               := Name_To_Node_Hashed_Map.Key (C);
+         begin
+            if     not Node_Access.Output_Boolean.Contains (Key_Value)
+               and not Node_Access.Output_Integer.Contains (Key_Value)
+               and not Node_Access.Output_String.Contains (Key_Value)
+            then
+               Expand_Single_Node
+                  (Node        => Node_Access.Input (C),
+                   Backtrace   => Backtrace,
+                   Node_Access => Node_Access);
+            end if;
+         end;
+      end loop;
+
+      Substitute_Config_Section (Policy      => Policy,
+                                 Node_Access => Node_Access);
+
    end Expand;
 
    -------------------------------------------------------------------------
 
    procedure Expand_Single_Node
-      (Policy    :        Muxml.XML_Data_Type;
-       Node      :        DOM.Core.Node;
-       Backtrace : in out String_Vector.Vector)
+      (Node        :        DOM.Core.Node;
+       Backtrace   : in out String_Vector.Vector;
+       Node_Access : in out Access_Hashmaps_Type)
    is
       Node_Type : constant String
          :=  DOM.Core.Nodes.Node_Name (N => Node);
@@ -665,12 +923,24 @@ is
 
       ----------------------------------------------------------------------
 
+      -- If Reference is in Node_Access.Output, then Node_Name is added
+      -- to Node_Access.Output with the same value and Success is true.
+      -- Otherwise Node_Access is unchanged and Success is false.
+      procedure Expand_If_Known
+         (Node_Name :     String;
+          Reference :     String;
+          Success   : out Boolean);
+
+      ----------------------------------------------------------------------
+
       procedure Discard (I : Boolean)
       is
          pragma Unreferenced (I);
       begin
          null;
       end Discard;
+
+      ----------------------------------------------------------------------
 
       procedure Discard (I : Integer)
       is
@@ -679,6 +949,8 @@ is
          null;
       end Discard;
 
+      ----------------------------------------------------------------------
+
       procedure Discard (I : String)
       is
          pragma Unreferenced (I);
@@ -686,28 +958,80 @@ is
          null;
       end Discard;
 
+      ----------------------------------------------------------------------
+
+      procedure Expand_If_Known
+         (Node_Name :     String;
+          Reference :     String;
+          Success   : out Boolean)
+      is
+      begin
+         Success := False;
+         if Node_Access.Output_Boolean.Contains (Reference) then
+            declare
+               Result : constant Boolean
+                  := Node_Access.Output_Boolean (Reference);
+            begin
+               Mulog.Log (Msg => "Expanding expression '"
+                          & Node_Name
+                          & "' with value '"
+                          & Result'Image
+                          & "'");
+               Node_Access.Output_Boolean.Insert (Key      => Node_Name,
+                                                  New_Item => Result);
+               Success := True;
+            end;
+         elsif Node_Access.Output_Integer.Contains (Reference) then
+            declare
+               Result : constant Integer
+                  := Node_Access.Output_Integer (Reference);
+            begin
+               Mulog.Log (Msg => "Expanding expression '"
+                             & Node_Name
+                             & "' with value '"
+                             & Result'Image
+                             & "'");
+               Node_Access.Output_Integer.Insert (Key      => Node_Name,
+                                                  New_Item => Result);
+               Success := True;
+            end;
+
+         elsif Node_Access.Output_String.Contains (Reference) then
+            declare
+               Result : constant String
+                  := Node_Access.Output_String (Reference);
+            begin
+               Mulog.Log (Msg => "Expanding expression '"
+                          & Node_Name
+                          & "' with value '"
+                          & Result
+                          & "'");
+               Node_Access.Output_String.Insert (Key      => Node_Name,
+                                                 New_Item => Result);
+               Success := True;
+            end;
+         end if;
+      end Expand_If_Known;
+
    begin
       if    Node_Type = "boolean" then
-         Discard (Evaluate_Boolean (Policy    => Policy,
-                                    Node      => Node,
-                                    Backtrace => Backtrace));
+         Discard (Evaluate_Boolean (Node        => Node,
+                                    Backtrace   => Backtrace,
+                                    Node_Access => Node_Access));
       elsif Node_Type = "integer" then
-         Discard (Evaluate_Integer (Policy    => Policy,
-                                    Node      => Node,
-                                    Backtrace => Backtrace));
+         Discard (Evaluate_Integer (Node        => Node,
+                                    Backtrace   => Backtrace,
+                                    Node_Access => Node_Access));
       elsif Node_Type = "string" then
-         Discard (Evaluate_String (Policy    => Policy,
-                                   Node      => Node,
-                                   Backtrace => Backtrace));
+         Discard (Evaluate_String (Node        => Node,
+                                   Backtrace   => Backtrace,
+                                   Node_Access => Node_Access));
       elsif Node_Type = "expression" then
-         if Get_Expr_Type (Expr => Node) = "boolean" then
-            -- Boolean_Expression has less overhead
-            -- but does not write its result.
-            -- TODO: refactor?
-            Discard (Evaluate_Boolean (Policy    => Policy,
-                                       Node      => Node,
-                                       Backtrace => Backtrace));
-         elsif Get_Expr_Type (Expr => Node) = "case" then
+         if Get_Expr_Type (Expr => Node) = Boolean_Expr_Type then
+            Discard (Evaluate_Boolean (Node        => Node,
+                                       Backtrace   => Backtrace,
+                                       Node_Access => Node_Access));
+         elsif Get_Expr_Type (Expr => Node) = Case_Expr_Type then
             declare
                Dummy : Mutools.Expressions.Case_Expression.Value_Type_Tuple;
                Node_Name : constant String
@@ -717,17 +1041,59 @@ is
             begin
                Add_To_Backtrace (Backtrace => Backtrace, Name => Node_Name);
                Mutools.Expressions.Case_Expression.Case_Expression_Evaluation
-                  (Policy        => Policy,
-                   Expr_Node     => Node,
+                  (Expr_Node     => Node,
                    Value_Of_Case => Dummy,
-                   Backtrace     => Backtrace);
+                   Backtrace     => Backtrace,
+                   Node_Access   => Node_Access);
                pragma Unreferenced (Dummy);
                String_Vector.Delete_Last (Container => Backtrace);
             end;
+         elsif Get_Expr_Type (Expr => Node) = Variable_Expr_Type then
+            declare
+               Reference : constant String
+                  := DOM.Core.Elements.Get_Attribute
+                  (Elem =>  Get_Nth_Child_Node (Parent => Node, N => 1),
+                   Name => "name");
+               Node_Name : constant String
+                  := DOM.Core.Elements.Get_Attribute
+                  (Elem => Node,
+                   Name => "name");
+               Success : Boolean;
+               Next_Node : DOM.Core.Node;
+            begin
+               Expand_If_Known
+                  (Node_Name => Node_Name,
+                   Reference => Reference,
+                   Success => Success);
+               if not Success then
+                  Next_Node := Get_Defining_Node
+                     (Var_Name    => Reference,
+                      Node_Access => Node_Access);
+                  Add_To_Backtrace (Backtrace => Backtrace, Name => Node_Name);
+                  Expand_Single_Node
+                     (Node        => Next_Node,
+                      Backtrace   => Backtrace,
+                      Node_Access => Node_Access);
+                  String_Vector.Delete_Last (Container => Backtrace);
+
+                  Expand_If_Known
+                     (Node_Name => Node_Name,
+                      Reference => Reference,
+                      Success => Success);
+                  if not Success then
+                     raise Program_Error with
+                        "Unexpected exception when expanding expression "
+                        & "with name '"
+                        & Node_Name
+                        & "'";
+                  end if;
+               end if;
+            end;
+
          else
-            Discard (Evaluate_String (Policy    => Policy,
-                                      Node      => Node,
-                                      Backtrace => Backtrace));
+            Discard (Evaluate_String (Node        => Node,
+                                      Backtrace   => Backtrace,
+                                      Node_Access => Node_Access));
          end if;
       else
          raise Invalid_Expression with
@@ -740,28 +1106,13 @@ is
    -------------------------------------------------------------------------
 
    function Get_Defining_Node
-      (Policy   : Muxml.XML_Data_Type;
-       Var_Name : String)
+      (Var_Name    :        String;
+       Node_Access : in out Access_Hashmaps_Type)
       return DOM.Core.Node
    is
-      Config_Vars : constant DOM.Core.Node_List
-                  := McKae.XML.XPath.XIA.XPath_Query
-                     (N     => Policy.Doc,
-                      XPath =>  "/*/config/boolean[@name='" & Var_Name & "'] | "
-                              & "/*/config/integer[@name='" & Var_Name & "'] | "
-                              & "/*/config/string[@name='"  & Var_Name & "']");
-      Exprs_Vars : constant DOM.Core.Node_List
-                 := McKae.XML.XPath.XIA.XPath_Query
-                   (N     => Policy.Doc,
-                    XPath =>  "/*/expressions/expression[@name='"
-                             & Var_Name & "']");
    begin
-      if DOM.Core.Nodes.Length (List => Config_Vars) > 0 then
-         return DOM.Core.Nodes.Item (List  => Config_Vars,
-                                     Index => 0);
-      elsif DOM.Core.Nodes.Length (List => Exprs_Vars) > 0 then
-         return DOM.Core.Nodes.Item (List  => Exprs_Vars,
-                                     Index => 0);
+      if Node_Access.Input.Contains (Var_Name) then
+         return Node_Access.Input (Var_Name);
       else
          raise Muxml.Validation_Error with
             "A variable or expression points to '"
@@ -772,20 +1123,11 @@ is
 
    ----------------------------------------------------------------------
 
-   function Get_Expr_Type (Expr : DOM.Core.Node) return String
+   function Get_Expr_Type (Expr : DOM.Core.Node) return Expression_Toplevel_Type
    is
-      use type DOM.Core.Node;
-      use type DOM.Core.Node_Types;
-
-      First_Child : DOM.Core.Node
-                  := DOM.Core.Nodes.First_Child (N => Expr);
+      First_Child : constant DOM.Core.Node
+                  :=  Get_Nth_Child_Node (Parent => Expr, N => 1);
    begin
-      while DOM.Core.Nodes.Node_Type (N => First_Child)
-         /= DOM.Core.Element_Node loop
-         First_Child := DOM.Core.Nodes.Next_Sibling (N => First_Child);
-         exit when  First_Child = null;
-      end loop;
-
       if First_Child = null then
          raise Invalid_Expression with
             "Expression with name "
@@ -794,24 +1136,85 @@ is
                  Name => "name")
             & " is empty.";
       end if;
+      declare
+         Child_Name : constant String := DOM.Core.Nodes.Node_Name (N => First_Child);
+      begin
+         if Child_Name = "concatenation" or
+            Child_Name = "evalString"
+         then
+            return String_Expr_Type;
+         elsif Child_Name = "eq" or
+            Child_Name = "ne" or
+            Child_Name = "gt" or
+            Child_Name = "lt" or
+            Child_Name = "and" or
+            Child_Name = "or" or
+            Child_Name = "not"
+         then
+            return Boolean_Expr_Type;
+         elsif Child_Name = "case" then
+            return Case_Expr_Type;
+         elsif Child_Name = "variable" then
+            return Variable_Expr_Type;
+         else
+            raise Invalid_Expression with
+               "Expression with name "
+               & DOM.Core.Elements.Get_Attribute
+               (Elem => Expr,
+                Name => "name")
+               & " begins with illegal operator "
+               & Child_Name;
+         end if;
+      end;
 
-      if DOM.Core.Nodes.Node_Name (N => First_Child) = "concatenation" or
-         DOM.Core.Nodes.Node_Name (N => First_Child) = "evalString"
-      then
-         return "string";
-      elsif DOM.Core.Nodes.Node_Name (N => First_Child) = "case" then
-         return "case";
-      else
-         return "boolean";
-      end if;
    end  Get_Expr_Type;
 
    -------------------------------------------------------------------------
 
+   function Get_Nth_Child_Node
+      (Parent : DOM.Core.Node;
+       N      : Positive)
+      return DOM.Core.Node
+   is
+      use type DOM.Core.Node_Types;
+
+      Child : DOM.Core.Node
+         := DOM.Core.Nodes.First_Child (N => Parent);
+
+      -- go to next sibling until an element-node is reached
+      -- does not change node if starting node is an element node
+      procedure Loop_Until_Element (N : in out DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Loop_Until_Element (N : in out DOM.Core.Node)
+      is
+      begin
+         while DOM.Core.Nodes.Node_Type (N => N)
+            /= DOM.Core.Element_Node
+         loop
+            N := DOM.Core.Nodes.Next_Sibling (N => N);
+            exit when  N = null;
+         end loop;
+      end Loop_Until_Element;
+
+   begin
+      Loop_Until_Element (N => Child);
+
+      for I in 2 .. N loop
+         Child := DOM.Core.Nodes.Next_Sibling (N => Child);
+         Loop_Until_Element (N => Child);
+      end loop;
+
+      return Child;
+   end Get_Nth_Child_Node;
+
+   -------------------------------------------------------------------------
+
    function Int_Value
-     (Policy    :        Muxml.XML_Data_Type;
-      Node      :        DOM.Core.Node;
-      Backtrace : in out String_Vector.Vector)
+     (Node        :        DOM.Core.Node;
+      Backtrace   : in out String_Vector.Vector;
+      Node_Access : in out Access_Hashmaps_Type)
       return Integer
    is
       type Int_Kind is (Int_Integer, Int_Variable);
@@ -843,11 +1246,16 @@ is
                              (Elem => Node,
                               Name => "name");
             begin
-               Result := Evaluate_Integer
-                  (Policy    => Policy,
-                   Node      => Get_Defining_Node (Policy   => Policy,
-                                                   Var_Name => Var_Name),
-                   Backtrace => Backtrace);
+               if Node_Access.Output_Integer.Contains (Var_Name) then
+                  Result := Node_Access.Output_Integer (Var_Name);
+               else
+                  Result := Evaluate_Integer
+                     (Node        => Get_Defining_Node
+                         (Var_Name    => Var_Name,
+                          Node_Access => Node_Access),
+                      Backtrace   => Backtrace,
+                      Node_Access => Node_Access);
+               end if;
             end;
       end case;
 
@@ -861,10 +1269,13 @@ is
    is
       Left_Index, Right_Index : Natural := Input_String'First;
       Result : Fragment_Vector.Vector;
+
       -----------------------------------------------------------------
 
       -- check if S contains $ or { or }
       function Has_Dollar_Or_Braces (Input : String) return Boolean;
+
+      -----------------------------------------------------------------
 
       function Has_Dollar_Or_Braces (Input : String) return Boolean
       is
@@ -962,9 +1373,9 @@ is
    -------------------------------------------------------------------------
 
    function String_Expression
-     (Policy    :        Muxml.XML_Data_Type;
-      Node      :        DOM.Core.Node;
-      Backtrace : in out String_Vector.Vector)
+     (Node        :        DOM.Core.Node;
+      Backtrace   : in out String_Vector.Vector;
+      Node_Access : in out Access_Hashmaps_Type)
      return String
    is
       package ASU renames Ada.Strings.Unbounded;
@@ -978,16 +1389,14 @@ is
 
       -- evaluate a <concatenation>-node within the expression
       function Evaluate_Concatenation
-         (Policy    :        Muxml.XML_Data_Type;
-          Node      :        DOM.Core.Node;
+         (Node      :        DOM.Core.Node;
           Backtrace : in out String_Vector.Vector)
          return String;
 
       ---------------------------------------------------------------------
 
       function Evaluate_Concatenation
-         (Policy    :        Muxml.XML_Data_Type;
-          Node      :        DOM.Core.Node;
+         (Node      :        DOM.Core.Node;
           Backtrace : in out String_Vector.Vector)
          return String
       is
@@ -1014,9 +1423,9 @@ is
                Ada.Strings.Unbounded.Append
                   (Source   => Result,
                    New_Item => ASU.To_Unbounded_String
-                      (String_Value (Policy    => Policy,
-                                     Node      => Child,
-                                     Backtrace => Backtrace)));
+                      (String_Value (Node        => Child,
+                                     Backtrace   => Backtrace,
+                                     Node_Access => Node_Access)));
             end;
          end loop;
          return ASU.To_String (Result);
@@ -1024,18 +1433,16 @@ is
 
       ---------------------------------------------------------------------
 
-      -- evaluate an <evalString>-node withing the expression
+      -- evaluate an <evalString>-node within the expression
       function Evaluate_Eval_String
-         (Policy    :        Muxml.XML_Data_Type;
-          Node      :        DOM.Core.Node;
+         (Node      :        DOM.Core.Node;
           Backtrace : in out String_Vector.Vector)
          return String;
 
       ---------------------------------------------------------------------
 
       function Evaluate_Eval_String
-         (Policy    :        Muxml.XML_Data_Type;
-          Node      :        DOM.Core.Node;
+         (Node      :        DOM.Core.Node;
           Backtrace : in out String_Vector.Vector)
          return String
       is
@@ -1065,13 +1472,25 @@ is
                ASU.Append (Source   => Result,
                            New_Item => Fragment.Value.Element);
             else
-               ASU.Append (Source   => Result,
-                           New_Item => Evaluate_String
-                              (Policy    => Policy,
-                               Node      => Get_Defining_Node
-                                  (Policy   => Policy,
-                                   Var_Name => Fragment.Value.Element),
-                               Backtrace => Backtrace));
+               declare
+                  Ref_Value : ASU.Unbounded_String;
+               begin
+                  if Node_Access.Output_String.Contains (Fragment.Value.Element)
+                  then
+                     Ref_Value := ASU.To_Unbounded_String
+                        (Node_Access.Output_String (Fragment.Value.Element));
+                  else
+                     Ref_Value :=  ASU.To_Unbounded_String
+                     (Evaluate_String
+                        (Node        => Get_Defining_Node
+                            (Var_Name    => Fragment.Value.Element,
+                             Node_Access => Node_Access),
+                         Backtrace   => Backtrace,
+                         Node_Access => Node_Access));
+                  end if;
+                  ASU.Append (Source   => Result,
+                              New_Item => Ref_Value);
+               end;
             end if;
          end loop;
 
@@ -1097,13 +1516,11 @@ is
       begin
          if Child_Name = "concatenation" then
             return Evaluate_Concatenation
-               (Policy    => Policy,
-                Node      => Child,
+               (Node      => Child,
                 Backtrace => Backtrace);
          elsif Child_Name = "evalString" then
             return Evaluate_Eval_String
-               (Policy    => Policy,
-                Node      => Child,
+               (Node      => Child,
                 Backtrace => Backtrace);
          else
             raise Invalid_Expression with
@@ -1121,9 +1538,9 @@ is
    -------------------------------------------------------------------------
 
    function String_Value
-     (Policy    :        Muxml.XML_Data_Type;
-      Node      :        DOM.Core.Node;
-      Backtrace : in out String_Vector.Vector)
+     (Node        :        DOM.Core.Node;
+      Backtrace   : in out String_Vector.Vector;
+      Node_Access : in out Access_Hashmaps_Type)
       return String
    is
       Node_Name : constant String
@@ -1139,11 +1556,15 @@ is
                           (Elem => Node,
                            Name => "name");
          begin
-            return Evaluate_String
-               (Policy    => Policy,
-                Node      => Get_Defining_Node (Policy   => Policy,
-                                                Var_Name => Var_Name),
-                Backtrace => Backtrace);
+            if Node_Access.Output_String.Contains (Var_Name) then
+               return Node_Access.Output_String (Var_Name);
+            else
+               return Evaluate_String
+                  (Node        => Get_Defining_Node (Var_Name    => Var_Name,
+                                                     Node_Access => Node_Access),
+                   Backtrace   => Backtrace,
+                   Node_Access => Node_Access);
+            end if;
          end;
       else
          raise Invalid_Expression with

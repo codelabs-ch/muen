@@ -21,6 +21,7 @@ with DOM.Core.Elements;
 with DOM.Core.Documents.Local;
 with Ada.Strings.Maps;
 with Ada.Strings.Fixed;
+with Ada.Exceptions;
 
 with McKae.XML.XPath.XIA;
 with Mutools.Amend.Ordering;
@@ -45,25 +46,37 @@ is
                             := DOM.Core.Nodes.Item
                                   (List  => Amend_Statements,
                                    Index => I);
-            Target_Nodes    : constant DOM.Core.Node_List
-                            := McKae.XML.XPath.XIA.XPath_Query
-                                  (N     => DOM.Core.Nodes.Parent_Node
-                                                   (N => Amend_Statement),
-                                   XPath => DOM.Core.Elements.Get_Attribute
-                                               (Elem => Amend_Statement,
-                                                Name => "xpath"));
+            Target_Nodes    : DOM.Core.Node_List;
             Target_Node     : DOM.Core.Node;
             Amend_Children  : DOM.Core.Node_List;
          begin
+            begin
+               Target_Nodes := McKae.XML.XPath.XIA.XPath_Query
+                  (N     => DOM.Core.Nodes.Parent_Node
+                      (N => Amend_Statement),
+                   XPath => DOM.Core.Elements.Get_Attribute
+                      (Elem => Amend_Statement,
+                       Name => "xpath"));
+            exception
+               when Error : others =>
+                  Ada.Exceptions.Raise_Exception
+                     (E =>  Ada.Exceptions.Exception_Identity (X => Error),
+                      Message => "XIA was evaluating XPath """
+                         & DOM.Core.Elements.Get_Attribute
+                         (Elem => Amend_Statement,
+                          Name => "xpath")
+                         & """ when reporting: "
+                         &  Ada.Exceptions.Exception_Message (X => Error));
+            end;
             if DOM.Core.Nodes.Length (List => Target_Nodes) /= 1 then
                raise Muxml.Validation_Error with
                   "Found"
                   & Integer'Image (DOM.Core.Nodes.Length (List => Target_Nodes))
-                  & " matches (instead of 1) for XPath "
+                  & " matches (instead of 1) for XPath """
                   & DOM.Core.Elements.Get_Attribute
                        (Elem => Amend_Statement,
                         Name => "xpath")
-                  & " in amend statement.";
+                  & """ in amend statement.";
             end if;
 
             Target_Node := DOM.Core.Nodes.Item
@@ -156,6 +169,9 @@ is
       use all type DOM.Core.Node_Types;
       use all type Mutools.Amend.Ordering.Insert_Index;
 
+      type Text_Child_Status_Type is
+         (Unique_Essential, None_Or_Not_Essential, Many_Or_Other_Type);
+
       package Node_Vector is new Ada.Containers.Indefinite_Vectors
          (Index_Type   => Natural,
           Element_Type => DOM.Core.Node);
@@ -179,7 +195,8 @@ is
       -- returns 0 if there is no child or exactly 1 text-node-child which
       --    contains only white-space
       -- returns -1 otherwise
-      function Has_Only_Text_Child (Node : DOM.Core.Node) return Integer;
+      function Has_Only_Text_Child (Node : DOM.Core.Node)
+                                   return Text_Child_Status_Type;
 
       ---------------------------------------------------------------------
 
@@ -234,7 +251,8 @@ is
 
       ---------------------------------------------------------------------
 
-      function Has_Only_Text_Child (Node : DOM.Core.Node) return Integer
+      function Has_Only_Text_Child (Node : DOM.Core.Node)
+                                   return Text_Child_Status_Type
       is
          Children : constant DOM.Core.Node_List
                   := DOM.Core.Nodes.Child_Nodes
@@ -244,21 +262,21 @@ is
          Child    :  DOM.Core.Node;
       begin
          if Length > 1 then
-            return -1;
+            return Many_Or_Other_Type;
          elsif Length = 0 then
-            return 0;
+            return None_Or_Not_Essential;
          else
             Child := DOM.Core.Nodes.Item
                        (List  => Children,
                         Index => 0);
             if DOM.Core.Nodes.Node_Type (N => Child) = Text_Node then
                if Is_Essential_Textnode (N => Child) then
-                  return 1;
+                  return Unique_Essential;
                else
-                  return 0;
+                  return None_Or_Not_Essential;
                end if;
             else
-               return -1;
+               return Many_Or_Other_Type;
             end if;
          end if;
 
@@ -347,47 +365,43 @@ is
          (Parent    : DOM.Core.Node;
           New_Child : DOM.Core.Node)
       is
-         --consider all children of parent which are not <amend>
-         Parent_Children    : constant DOM.Core.Node_List
-                            := McKae.XML.XPath.XIA.XPath_Query
-                             (N     => Parent,
-                              XPath => "./*[not(self::amend)]");
-         New_Child_Children : constant DOM.Core.Node_List
-                            := DOM.Core.Nodes.Child_Nodes
-                                 (N => New_Child);
          Siblings_Names     : Mutools.Amend.Ordering.String_Vector.Vector;
          Siblings_Nodes     : Node_Vector.Vector;
          Parent_Child       : DOM.Core.Node;
-
       begin
-         -- in all other cases we use the first child of Parent that fits
-         -- and append new nodes at the end
-         for I in 0 .. DOM.Core.Nodes.Length (List => Parent_Children) - 1 loop
-            Parent_Child := DOM.Core.Nodes.Item
-               (List  => Parent_Children,
-                Index => I);
 
-            if Nodes_Equal (L => Parent_Child, R => New_Child) then
-               for J in 0 ..  DOM.Core.Nodes.Length
-                  (List => New_Child_Children) - 1 loop
+         Parent_Child := DOM.Core.Nodes.First_Child (N => Parent);
+         while Parent_Child /= null loop
+            if DOM.Core.Nodes.Node_Type (N => Parent_Child) = Element_Node
+               and then DOM.Core.Nodes.Node_Name (N => Parent_Child) /= "amend"
+            then
+               if Nodes_Equal (L => Parent_Child, R => New_Child) then
                   declare
-                     New_Child_Child : constant DOM.Core.Node
-                        := DOM.Core.Nodes.Item
-                        (List  => New_Child_Children,
-                         Index => J);
+                     New_Child_Child : DOM.Core.Node
+                        := DOM.Core.Nodes.First_Child (N => New_Child);
                   begin
+                     while New_Child_Child /= null loop
                         Recursive_Merge (Parent    => Parent_Child,
                                          New_Child => New_Child_Child);
+
+                        New_Child_Child := DOM.Core.Nodes.Next_Sibling
+                           (N => New_Child_Child);
+                     end loop;
                   end;
-               end loop;
-               return;
+
+                  return;
+               end if;
+
+               Siblings_Names.Append (DOM.Core.Nodes.Node_Name
+                                         (N => Parent_Child));
+               Siblings_Nodes.Append (Parent_Child);
             end if;
 
-            Siblings_Names.Append (DOM.Core.Nodes.Node_Name
-                                      (N => Parent_Child));
-            Siblings_Nodes.Append (Parent_Child);
+            Parent_Child := DOM.Core.Nodes.Next_Sibling (N => Parent_Child);
          end loop;
 
+         -- as the 'return' above was not reached
+         -- none of the children of Parent matches
          Insert
             (Parent         => Parent,
              New_Child      => New_Child,
@@ -402,40 +416,41 @@ is
          (Parent    : DOM.Core.Node;
           New_Child : DOM.Core.Node)
       is
-         --consider all children of parent which are not <amend>
-         Parent_Children : constant DOM.Core.Node_List
-            := McKae.XML.XPath.XIA.XPath_Query
-            (N     => Parent,
-             XPath => "./*[not(self::amend)]");
          Parent_Child, Parent_Child_Marked : DOM.Core.Node;
          Siblings_Names  : Mutools.Amend.Ordering.String_Vector.Vector;
          Siblings_Nodes  : Node_Vector.Vector;
       begin
-         for I in 0 .. DOM.Core.Nodes.Length
-            (List => Parent_Children) - 1 loop
-            Parent_Child := DOM.Core.Nodes.Item
-               (List  => Parent_Children,
-                Index => I);
 
-            if Nodes_Equal (L => Parent_Child, R => New_Child) then
-               if Has_Only_Text_Child (Node => Parent_Child) = 1 then
-                  if DOM.Core.Nodes.Node_Value
-                       (N => DOM.Core.Nodes.First_Child
-                               (N => Parent_Child))
-                     = DOM.Core.Nodes.Node_Value
-                         (N => DOM.Core.Nodes.First_Child
-                                 (N => (New_Child)))
+         Parent_Child := DOM.Core.Nodes.First_Child (N => Parent);
+         while Parent_Child /= null loop
+            if DOM.Core.Nodes.Node_Type (N => Parent_Child) = Element_Node
+               and then DOM.Core.Nodes.Node_Name (N => Parent_Child) /= "amend"
+            then
+
+               if Nodes_Equal (L => Parent_Child, R => New_Child) then
+                  if Has_Only_Text_Child (Node => Parent_Child) = Unique_Essential
                   then
-                     return;
+                     if DOM.Core.Nodes.Node_Value
+                        (N => DOM.Core.Nodes.First_Child
+                            (N => Parent_Child))
+                        = DOM.Core.Nodes.Node_Value
+                        (N => DOM.Core.Nodes.First_Child
+                            (N => (New_Child)))
+                     then
+                        return;
+                     end if;
+                  elsif Has_Only_Text_Child (Node => Parent_Child)
+                     = None_Or_Not_Essential
+                  then
+                     Parent_Child_Marked := Parent_Child;
                   end if;
-               elsif Has_Only_Text_Child (Node => Parent_Child) = 0 then
-                  Parent_Child_Marked := Parent_Child;
                end if;
-            end if;
 
-            Siblings_Names.Append (DOM.Core.Nodes.Node_Name
-                                      (N => Parent_Child));
-            Siblings_Nodes.Append (Parent_Child);
+               Siblings_Names.Append (DOM.Core.Nodes.Node_Name
+                                         (N => Parent_Child));
+               Siblings_Nodes.Append (Parent_Child);
+            end if;
+            Parent_Child := DOM.Core.Nodes.Next_Sibling (N => Parent_Child);
          end loop;
 
          if Parent_Child_Marked /= null then
@@ -493,7 +508,7 @@ is
       elsif New_Child_Type = Comment_Node then
          return;
       elsif New_Child_Type = Element_Node then
-         if Has_Only_Text_Child (Node => New_Child) = 1 then
+         if Has_Only_Text_Child (Node => New_Child) = Unique_Essential then
             Merge_Text_Branch (Parent => Parent, New_Child => New_Child);
          else
             Merge_Regular_Element (Parent => Parent, New_Child => New_Child);

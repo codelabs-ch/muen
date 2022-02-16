@@ -19,9 +19,9 @@ with Ada.Strings.Unbounded;
 use Ada.Strings.Unbounded;
 with Ada.Strings;
 with Ada.Strings.Fixed;
+with Ada.Containers.Indefinite_Ordered_Sets;
 
 with Mulog;
-with Mutools.Mergers;
 with Mutools.Expressions;
 with Muxml.Utils;
 with McKae.XML.XPath.XIA;
@@ -72,9 +72,9 @@ is
 
    procedure Compile_Template
       (Template       :     DOM.Core.Node;
-      Template_Call  :     DOM.Core.Node;
-      Running_Number :     Positive;
-      Output         : out Muxml.XML_Data_Type)
+       Template_Call  :     DOM.Core.Node;
+       Running_Number :     Positive;
+       Output         : out Muxml.XML_Data_Type)
    is
       use type DOM.Core.Node;
 
@@ -93,6 +93,8 @@ is
 
       ---------------------------------------------------------------------
 
+      -- assign Root_Node and Config_Node
+      -- create Config_Node if necessary
       procedure Assign_Root_And_Config_Node
          (Root_Nodes   :     DOM.Core.Node_List;
           Root_Node    : out DOM.Core.Node;
@@ -158,8 +160,14 @@ is
                               := Muxml.Utils.Get_Element
                                     (Doc   => Output.Doc,
                                      XPath => "/template/parameters");
-         Parameters_Node_List : DOM.Core.Node_List;
+         Parameters_Node_List : constant DOM.Core.Node_List
+                              := McKae.XML.XPath.XIA.XPath_Query
+                                    (N     => Params,
+                                     XPath =>     ".//boolean "
+                                              & "| .//integer "
+                                              & "| .//string ");
          Config               : DOM.Core.Node;
+         Matching_Call_Param_Names : Mutools.Expressions.String_Vector.Vector;
       begin
 
          Assign_Root_And_Config_Node
@@ -167,12 +175,6 @@ is
              Root_Node    => Root_Node,
              Config_Nodes => Config_Nodes,
              Config_Node  => Config);
-
-         Parameters_Node_List := McKae.XML.XPath.XIA.XPath_Query
-                                    (N     => Params,
-                                     XPath =>     ".//boolean "
-                                              & "| .//integer "
-                                     & "| .//string ");
 
          for I in 0 .. DOM.Core.Nodes.Length
                           (List => Parameters_Node_List) - 1  loop
@@ -190,39 +192,63 @@ is
                                    (Elem => Param,
                                     Name => "defaultValue");
                Has_Default      : constant Boolean
-                  := null /= DOM.Core.Nodes.Get_Named_Item
-                             (Map  => DOM.Core.Nodes.Attributes (N => Param),
-                              Name => "defaultValue");
-               Has_Call_Value   : constant Boolean
-                  := Param_Name = Muxml.Utils.Get_Attribute
-                       (Nodes     => Call_Parameter_List,
+                  := Muxml.Utils.Has_Attribute
+                       (Node      => Param,
+                        Attr_Name => "defaultValue");
+
+               Matching_Call_Params : constant DOM.Core.Node_List
+                  := Muxml.Utils.Get_Elements
+                       (Nodes     =>  Call_Parameter_List,
                         Ref_Attr  => "name",
-                        Ref_Value => Param_Name,
-                        Attr_Name => "name");
+                        Ref_Value => Param_Name);
 
-               New_Config_Node  : DOM.Core.Node;
-               Call_Value       : Unbounded_String;
-
+               New_Config_Node : DOM.Core.Node;
+               Call_Value      : Unbounded_String;
             begin
-               if (not Has_Call_Value) and (not Has_Default) then
+               if DOM.Core.Nodes.Length (List => Matching_Call_Params) > 1
+                  or (not Has_Default and DOM.Core.Nodes.Length
+                         (List => Matching_Call_Params) = 0)
+               then
                   raise Muxml.Validation_Error with
                      "Parameter '"
                      & Param_Name
                      & "' in template '"
                      & DOM.Core.Elements.Get_Attribute
-                         (Elem => Template,
-                          Name => "name")
+                     (Elem => Template,
+                      Name => "name")
                      & "' has not been assigned by call.";
-               end if;
-               if Has_Call_Value then
-                  Call_Value := To_Unbounded_String
-                     (Muxml.Utils.Get_Attribute
-                      (Nodes     => Call_Parameter_List,
-                       Ref_Attr  => "name",
-                       Ref_Value => Param_Name,
-                       Attr_Name => "value"));
-               else
+               elsif DOM.Core.Nodes.Length (List => Matching_Call_Params) = 0 then
                   Call_Value := To_Unbounded_String (Default_Value);
+               else
+                  declare
+                     Call_Node : constant DOM.Core.Node
+                        := DOM.Core.Nodes.Item
+                        (List  => Matching_Call_Params,
+                         Index => 0);
+                  begin
+                     if not Muxml.Utils.Has_Attribute
+                        (Node      => Call_Node,
+                         Attr_Name => "value")
+                     then
+                        raise Muxml.Validation_Error with
+                           "Parameter '"
+                           & Param_Name
+                           & "' in call of template '"
+                           & DOM.Core.Elements.Get_Attribute
+                           (Elem => Template,
+                            Name => "name")
+                           & "' has no value attribute.";
+                     else
+                        Call_Value := To_Unbounded_String
+                           (DOM.Core.Elements.Get_Attribute
+                               (Elem => Call_Node,
+                                Name => "value"));
+
+                        Mutools.Expressions.String_Vector.Append
+                           (Container => Matching_Call_Param_Names,
+                            New_Item => Param_Name);
+                     end if;
+                  end;
                end if;
 
                New_Config_Node := DOM.Core.Nodes.Append_Child
@@ -240,13 +266,43 @@ is
             end;
          end loop;
 
+         -- check if all set parameters were used
+         for I in 0 .. DOM.Core.Nodes.Length
+            (List => Call_Parameter_List) - 1  loop
+            declare
+               Node : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                         (List  => Call_Parameter_List,
+                          Index => I);
+               Node_Name  : constant String
+                          := DOM.Core.Elements.Get_Attribute
+                                   (Elem => Node,
+                                    Name => "name");
+            begin
+               if not Mutools.Expressions.String_Vector.Contains
+                  (Container => Matching_Call_Param_Names,
+                   Item      => Node_Name)
+               then
+                  raise Muxml.Validation_Error with
+                     "Parameter '"
+                     & Node_Name
+                     & "' in call of template '"
+                     & DOM.Core.Elements.Get_Attribute
+                     (Elem => Template,
+                      Name => "name")
+                     & "' is unused";
+               end if;
+            end;
+         end loop;
+
          Params := DOM.Core.Nodes.Remove_Child (N         => Root_Node,
                                                 Old_Child => Params);
          DOM.Core.Nodes.Free (N => Params);
-      end;
 
-      Prefix_Variables (Root_Node => Root_Node,
-                        Prefix    => Prefix);
+         Prefix_Variables (Root_Node   => Root_Node,
+                           Config_Node => Config,
+                           Prefix      => Prefix);
+      end;
    end Compile_Template;
 
    -------------------------------------------------------------------------
@@ -325,10 +381,10 @@ is
             (Doc   => XML_Data.Doc,
              XPath => "/system");
       begin
-         Mutools.Mergers.Merge_Config_Section
-            (Policy     => XML_Data,
-             New_Config => Template_Config,
-             Clone      => True);
+         Adopt_All_Children
+            (Target             => System_Config,
+             Parent_Of_Children => Template_Config,
+             Append_Mode        => True);
 
          if  Template_Expressions /= null then
             if System_Expressions = null then
@@ -471,275 +527,355 @@ is
    ------------------------------------------------------------------------
 
    procedure Prefix_Variables
-      (Root_Node : DOM.Core.Node;
-       Prefix    : String)
+      (Root_Node   : DOM.Core.Node;
+       Config_Node : DOM.Core.Node;
+       Prefix      : String)
    is
       use type DOM.Core.Node;
+      use all type DOM.Core.Node_Types;
 
-      Defining_Nodes : constant DOM.Core.Node_List
-                     := McKae.XML.XPath.XIA.XPath_Query
-                          (N     => Root_Node,
-                           XPath =>     ".//boolean "
-                                    & "| .//integer "
-                                    & "| .//string "
-                                    & "| .//expression");
+      -- used to store defined names
+      package String_Set_Type is new Ada.Containers.Indefinite_Ordered_Sets
+         (Element_Type => String);
+
+      Expressions_Node : constant DOM.Core.Node
+         := Muxml.Utils.Get_Unique_Element_Child
+         (Parent    => Root_Node,
+          Child_Name => "expressions");
+
+      Current_Node  : DOM.Core.Node;
+      Defined_Names : String_Set_Type.Set;
+
+      ---------------------------------------------------------------------
+      -- go through the child-nodes of Parent and put the value of their
+      -- "name" attribute in the set of known names ("Names")
+      -- furthermore, these values are changed in the children
+      -- by prefixing them with the given string
+      procedure Gather_Names_And_Rename
+         (Parent :     DOM.Core.Node;
+          Prefix :     String;
+          Names  : out String_Set_Type.Set);
 
       ---------------------------------------------------------------------
 
-      -- add the given Prefix to all "namePrefix" attributes in useTemplate
-      -- statements in the subtree with root Parent
-      procedure Prefix_NamePrefix
-                   (Parent : DOM.Core.Node;
-                    Prefix : String);
-
-      ---------------------------------------------------------------------
-
-      procedure Prefix_NamePrefix
-                   (Parent : DOM.Core.Node;
-                    Prefix : String)
+      procedure Gather_Names_And_Rename
+         (Parent :     DOM.Core.Node;
+          Prefix :     String;
+          Names  : out String_Set_Type.Set)
       is
-         Use_Nodes : constant DOM.Core.Node_List
-                   := McKae.XML.XPath.XIA.XPath_Query
-                        (N     => Parent,
-                         XPath => ".//useTemplate");
+         Node : DOM.Core.Node
+            := DOM.Core.Nodes.First_Child (N => Parent);
+         Name_Attribute : constant String := "name";
       begin
-         for I in 0 .. DOM.Core.Nodes.Length (List => Use_Nodes) - 1 loop
-            declare
-               Use_Node : constant DOM.Core.Node
-                        := DOM.Core.Nodes.Item
-                              (List  => Use_Nodes,
-                               Index => I);
-               Old_Prefix : constant String
-                          := DOM.Core.Elements.Get_Attribute
-                                (Elem => Use_Node,
-                                 Name => "namePrefix");
-            begin
+         while Node /= null loop
+            if DOM.Core.Nodes.Node_Type (N => Node) =  Element_Node
+               and then Muxml.Utils.Has_Attribute
+               (Node      => Node,
+                Attr_Name => Name_Attribute)
+            then
+               Names.Include (DOM.Core.Elements.Get_Attribute
+                                 (Elem => Node,
+                                  Name => Name_Attribute));
                DOM.Core.Elements.Set_Attribute
-                  (Elem  => Use_Node,
-                   Name  => "namePrefix",
-                   Value => Prefix & Old_Prefix);
-            end;
+                  (Elem => Node,
+                   Name => Name_Attribute,
+                   Value => Prefix
+                      & DOM.Core.Elements.Get_Attribute
+                      (Elem => Node,
+                       Name => Name_Attribute));
+            end if;
+            Node := DOM.Core.Nodes.Next_Sibling (N => Node);
          end loop;
-      end Prefix_NamePrefix;
+      end Gather_Names_And_Rename;
 
       ---------------------------------------------------------------------
 
-      -- rename references of the form "...='$Old_Name'" to "...='$New_Name'"
-      procedure Rename_Dollar_Refs
-                   (Parent   : DOM.Core.Node;
-                    Old_Name : String;
-                    New_Name : String);
+      -- traverses the xml-tree depth-first
+      -- null is returned when there is no next node
+      function Next_Node (Current_Node : DOM.Core.Node) return DOM.Core.Node;
 
       ---------------------------------------------------------------------
 
-      procedure Rename_Dollar_Refs
-                   (Parent   : DOM.Core.Node;
-                    Old_Name : String;
-                    New_Name : String)
+      function Next_Node (Current_Node : DOM.Core.Node) return DOM.Core.Node
       is
-         Attr_List : constant DOM.Core.Node_List
-                   := McKae.XML.XPath.XIA.XPath_Query
-                         (N     => Parent,
-                          XPath => ".//@*[.='$" & Old_Name & "']");
+         ------------------------------------------------------------------
+
+         -- recursively go to the parent until some parent has a next sibling
+         -- and return that sibling
+         -- returns null if there is no such node
+         function Backtrack_Until_Sibling
+            (Node : DOM.Core.Node)
+            return DOM.Core.Node;
+
+         ------------------------------------------------------------------
+
+         function Backtrack_Until_Sibling
+            (Node : DOM.Core.Node)
+            return DOM.Core.Node
+         is
+         begin
+            if DOM.Core.Nodes.Next_Sibling (N => Node) /= null then
+               return DOM.Core.Nodes.Next_Sibling (N => Node);
+            elsif DOM.Core.Nodes.Parent_Node (N => Node) /= null then
+               return Backtrack_Until_Sibling
+                  (Node =>  DOM.Core.Nodes.Parent_Node (N => Node));
+            else
+               return null;
+            end if;
+         end Backtrack_Until_Sibling;
+
       begin
-         for I in 0 .. DOM.Core.Nodes.Length (List => Attr_List) - 1 loop
+         if Current_Node /= null then
+            if DOM.Core.Nodes.Has_Child_Nodes (N => Current_Node) then
+               return DOM.Core.Nodes.First_Child (N => Current_Node);
+            elsif DOM.Core.Nodes.Next_Sibling (N => Current_Node) /= null then
+               return DOM.Core.Nodes.Next_Sibling (N => Current_Node);
+            elsif DOM.Core.Nodes.Parent_Node (N => Current_Node) /= null then
+               return Backtrack_Until_Sibling
+                  (Node =>  DOM.Core.Nodes.Parent_Node
+                      (N => Current_Node));
+            else
+               return null;
+            end if;
+         else
+            return Current_Node;
+         end if;
+      end Next_Node;
+
+      ---------------------------------------------------------------------
+
+      -- rename references of the form "...='$Old_Name'"
+      procedure Prefix_Dollar_Refs
+         (Node        : DOM.Core.Node;
+          Prefix      : String;
+          Known_Names : String_Set_Type.Set);
+
+      ---------------------------------------------------------------------
+
+      procedure Prefix_Dollar_Refs
+         (Node        : DOM.Core.Node;
+          Prefix      : String;
+          Known_Names : String_Set_Type.Set)
+      is
+         Attr_Nodes : constant DOM.Core.Named_Node_Map
+            := DOM.Core.Nodes.Attributes (N => Node);
+
+      begin
+         for I in 0 .. DOM.Core.Nodes.Length (Map => Attr_Nodes) - 1 loop
             declare
-               Attr_Node  : constant DOM.Core.Node
-                          := DOM.Core.Nodes.Item
-                                (List  => Attr_List,
-                                 Index => I);
+               Attr : constant DOM.Core.Node
+                  :=  DOM.Core.Nodes.Item (Map => Attr_Nodes, Index => I);
+               Attr_Value : constant String
+                  := DOM.Core.Attrs.Value (Att => Attr);
             begin
-               DOM.Core.Attrs.Set_Value
-                  (Att   => Attr_Node,
-                   Value => "$" & New_Name);
+               if Attr_Value'Length > 0 and then
+                  Attr_Value (Attr_Value'First) = '$' and then
+                  Known_Names.Contains (Item => Attr_Value
+                                           (Attr_Value'First + 1 .. Attr_Value'Last))
+               then
+                  DOM.Core.Attrs.Set_Value
+                     (Att => Attr,
+                      Value => "$" & Prefix & Attr_Value
+                         (Attr_Value'First + 1 .. Attr_Value'Last));
+               end if;
             end;
          end loop;
-      end Rename_Dollar_Refs;
+      end  Prefix_Dollar_Refs;
 
       ---------------------------------------------------------------------
 
-      -- rename references within the value of Attr_Name of the nodes
-      -- matching XPath which contain values of form
-      -- "text_${var1}_text_${var2}_text"
-      procedure  Rename_Dollar_Refs_With_Braces
-                   (Parent    : DOM.Core.Node;
-                    XPath     : String;
-                    Attr_Name : String;
-                    Old_Name  : String;
-                    New_Name  : String);
+      -- prefix references within the value attribute of "evalString" nodes
+      -- these are of the form "foo${var_name}bar${var2}${var3}"
+      procedure Prefix_EvalString
+         (Node       : DOM.Core.Node;
+          Prefix     : String;
+          Known_Names : String_Set_Type.Set);
 
       ---------------------------------------------------------------------
 
-      procedure  Rename_Dollar_Refs_With_Braces
-                   (Parent    : DOM.Core.Node;
-                    XPath     : String;
-                    Attr_Name : String;
-                    Old_Name  : String;
-                    New_Name  : String)
-
+      procedure Prefix_EvalString
+         (Node       : DOM.Core.Node;
+          Prefix     : String;
+          Known_Names : String_Set_Type.Set)
       is
          package ASU renames Ada.Strings.Unbounded;
          use all type Mutools.Expressions.Fragment_Type;
 
-         Referencing_Nodes : constant DOM.Core.Node_List
-            := McKae.XML.XPath.XIA.XPath_Query
-            (N     => Parent,
-             XPath => XPath);
+         Input_String : constant String
+            := DOM.Core.Elements.Get_Attribute
+            (Elem => Node,
+             Name => "value");
+         Parsed_Fragments : constant Mutools.Expressions.Fragment_Vector.Vector
+            := Mutools.Expressions.Parse_Dollar_Braced_References
+            (Input_String => Input_String);
+         New_Value : ASU.Unbounded_String;
       begin
-         for I in 0 .. DOM.Core.Nodes.Length
-            (List => Referencing_Nodes) - 1 loop
-            declare
-               Ref_Node : constant DOM.Core.Node
-                  := DOM.Core.Nodes.Item
-                  (List  => Referencing_Nodes,
-                   Index => I);
-               Input_String : constant String
-                  := DOM.Core.Elements.Get_Attribute
-                  (Elem => Ref_Node,
-                   Name => "value");
-               Parsed_Fragments : constant Mutools.Expressions.Fragment_Vector.Vector
-                  := Mutools.Expressions.Parse_Dollar_Braced_References
-                  (Input_String => Input_String);
-               New_Value : ASU.Unbounded_String;
-
-            begin
-               for Fragment of Parsed_Fragments loop
-                  if Fragment.Value_Type = Mutools.Expressions.Text_Type then
-                     ASU.Append (Source => New_Value,
-                                 New_Item => Fragment.Value.Element);
-                  elsif Fragment.Value.Element = Old_Name then
-                     ASU.Append (Source => New_Value,
-                                 New_Item => "${" & New_Name & "}");
-                  else
-                     ASU.Append (Source => New_Value,
-                                 New_Item => "${" & Fragment.Value.Element & "}");
-                  end if;
-               end loop;
-
-               DOM.Core.Elements.Set_Attribute
-                  (Elem  => Ref_Node,
-                   Name  => Attr_Name,
-                   Value => ASU.To_String (New_Value));
-            end;
+         for Fragment of Parsed_Fragments loop
+            if Fragment.Value_Type = Mutools.Expressions.Text_Type then
+               ASU.Append (Source => New_Value,
+                           New_Item => Fragment.Value.Element);
+            elsif Known_Names.Contains (Item => Fragment.Value.Element) then
+               ASU.Append (Source => New_Value,
+                           New_Item => "${" & Prefix & Fragment.Value.Element & "}");
+            else
+               ASU.Append (Source => New_Value,
+                           New_Item => "${" & Fragment.Value.Element & "}");
+            end if;
          end loop;
-      end Rename_Dollar_Refs_With_Braces;
+
+         DOM.Core.Elements.Set_Attribute
+            (Elem  => Node,
+             Name  => "value",
+             Value => ASU.To_String (New_Value));
+      end Prefix_EvalString;
+
+      ---------------------------------------------------------------------
+
+      -- add the given Prefix to all "namePrefix" attributes in useTemplate
+      procedure Prefix_NamePrefix
+         (Node        : DOM.Core.Node;
+          Prefix      : String);
+
+      ---------------------------------------------------------------------
+
+      procedure Prefix_NamePrefix
+         (Node        : DOM.Core.Node;
+          Prefix      : String)
+      is
+         Old_Name : constant String
+            := DOM.Core.Elements.Get_Attribute (Elem => Node, Name => "namePrefix");
+      begin
+         DOM.Core.Elements.Set_Attribute
+            (Elem => Node,
+             Name => "namePrefix",
+             Value => Prefix & Old_Name);
+      end Prefix_NamePrefix;
 
       ----------------------------------------------------------------------
 
-      -- for each node matching XPath relative to Parent and with attribute
-      -- Attr_Name of value Old_Name: set that value to New_Name
-      procedure Rename_NonDollar_Refs
-                   (Parent    : DOM.Core.Node;
-                    XPath     : String;
-                    Attr_Name : String;
-                    Old_Name  : String;
-                    New_Name  : String);
+      -- prefix the value if the attribute with the given name
+      procedure Prefix_NonDollar_Reference
+         (Node        : DOM.Core.Node;
+          Attr_Name   : String;
+          Prefix      : String;
+          Known_Names : String_Set_Type.Set);
 
       ---------------------------------------------------------------------
 
-      procedure Rename_NonDollar_Refs
-                   (Parent    : DOM.Core.Node;
-                    XPath     : String;
-                    Attr_Name : String;
-                    Old_Name  : String;
-                    New_Name  : String)
+      procedure Prefix_NonDollar_Reference
+         (Node        : DOM.Core.Node;
+          Attr_Name   : String;
+          Prefix      : String;
+          Known_Names : String_Set_Type.Set)
+
       is
-         Referencing_Nodes : constant DOM.Core.Node_List
-             := McKae.XML.XPath.XIA.XPath_Query
-                  (N     => Parent,
-                   XPath => XPath);
-         Ref_Node          : DOM.Core.Node;
+         Attr_Value : constant String
+            := DOM.Core.Elements.Get_Attribute
+            (Elem => Node,
+             Name => Attr_Name);
       begin
-         for I in 0 .. DOM.Core.Nodes.Length
-                       (List => Referencing_Nodes) - 1 loop
-            Ref_Node := DOM.Core.Nodes.Item
-                           (List  => Referencing_Nodes,
-                            Index => I);
-            if Old_Name = DOM.Core.Elements.Get_Attribute
-                             (Elem => Ref_Node,
-                              Name => Attr_Name)
-            then
-               DOM.Core.Elements.Set_Attribute
-                  (Elem  => Ref_Node,
-                   Name  => Attr_Name,
-                   Value => New_Name);
-            end if;
-         end loop;
-      end Rename_NonDollar_Refs;
+         if Known_Names.Contains (Item => Attr_Value) then
+            DOM.Core.Elements.Set_Attribute
+               (Elem  => Node,
+                Name  => Attr_Name,
+                Value => Prefix & Attr_Value);
+         end if;
+      end Prefix_NonDollar_Reference;
 
       ---------------------------------------------------------------------
+
+      -- rename references of the form "...='$Some_Name'"
+      procedure Prefix_Text_Node
+         (Node        : DOM.Core.Node;
+          Prefix      : String;
+          Known_Names : String_Set_Type.Set);
+
+      ---------------------------------------------------------------------
+
+      procedure Prefix_Text_Node
+         (Node        : DOM.Core.Node;
+          Prefix      : String;
+          Known_Names : String_Set_Type.Set)
+      is
+         Text_Value : constant String
+            := DOM.Core.Nodes.Node_Value (N => Node);
+
+      begin
+         if Text_Value'Length > 0 and then
+            Text_Value (Text_Value'First) = '$' and then
+            Known_Names.Contains (Item =>  Text_Value
+                                     (Text_Value'First + 1 .. Text_Value'Last))
+         then
+            DOM.Core.Nodes.Set_Node_Value
+               (N     => Node,
+                Value => "$"
+                   & Prefix
+                   & Text_Value (Text_Value'First + 1 .. Text_Value'Last));
+         end if;
+      end Prefix_Text_Node;
 
    begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Defining_Nodes) - 1 loop
+      -- fill Defined_Names and rename the visited definitions
+      Gather_Names_And_Rename
+         (Parent => Config_Node,
+          Prefix => Prefix,
+          Names  => Defined_Names);
+
+      if Expressions_Node /= null then
+         Gather_Names_And_Rename
+            (Parent => Expressions_Node,
+             Prefix => Prefix,
+             Names  => Defined_Names);
+      end if;
+
+      Current_Node := Root_Node;
+      while Current_Node /= null loop
          declare
-            Def_Node  : constant DOM.Core.Node
-                      := DOM.Core.Nodes.Item
-                            (List  => Defining_Nodes,
-                             Index => I);
-            Name_Attr : constant DOM.Core.Node
-                      := DOM.Core.Nodes.Get_Named_Item
-                            (Map  => DOM.Core.Nodes.Attributes (N => Def_Node),
-                              Name => "name");
-
+            Node_Name : constant String
+               := DOM.Core.Nodes.Node_Name (N => Current_Node);
          begin
-            -- Get_Named_Item returns NULL if no node exists
-            --    (not an empty string) and can therefore distinguish
-            --    between ' name="" ' and no name attribute
+            if Node_Name = "if" or
+               Node_Name = "case"
+            then
+               Prefix_NonDollar_Reference
+                  (Node        => Current_Node,
+                   Attr_Name   => "variable",
+                   Prefix      => Prefix,
+                   Known_Names => Defined_Names);
 
-            -- if Name_Attr = null then this node does not define a variable
-            if Name_Attr /= null then
-               declare
-                  Old_Name : constant String
-                           := DOM.Core.Elements.Get_Attribute
-                                 (Elem => Def_Node,
-                                  Name => "name");
-                  New_Name : constant String := Prefix & Old_Name;
-               begin
-                  DOM.Core.Elements.Set_Attribute
-                     (Elem      => Def_Node,
-                      Name      => "name",
-                      Value     => New_Name);
+            elsif Node_Name = "variable" then
+               Prefix_NonDollar_Reference
+                  (Node        => Current_Node,
+                   Attr_Name   => "name",
+                   Prefix      => Prefix,
+                   Known_Names => Defined_Names);
 
-                  Rename_NonDollar_Refs
-                     (Parent    => Root_Node,
-                      XPath     => ".//variable",
-                      Attr_Name => "name",
-                      Old_Name  => Old_Name,
-                      New_Name  => New_Name);
+            elsif Node_Name = "evalString" then
+               Prefix_EvalString
+                  (Node        => Current_Node,
+                   Prefix      => Prefix,
+                   Known_Names => Defined_Names);
 
-                  Rename_NonDollar_Refs
-                     (Parent    => Root_Node,
-                      XPath     => ".//if",
-                      Attr_Name => "variable",
-                      Old_Name  => Old_Name,
-                      New_Name  => New_Name);
+            elsif Node_Name = "useTemplate" then
+               Prefix_NamePrefix
+                  (Node        => Current_Node,
+                   Prefix      => Prefix);
 
-                  Rename_NonDollar_Refs
-                     (Parent    => Root_Node,
-                      XPath     => ".//case",
-                      Attr_Name => "variable",
-                      Old_Name  => Old_Name,
-                      New_Name  => New_Name);
-
-                  Rename_Dollar_Refs_With_Braces
-                     (Parent    => Root_Node,
-                      XPath     => ".//evalString",
-                      Attr_Name => "value",
-                      Old_Name  => Old_Name,
-                      New_Name  => New_Name);
-
-                  Rename_Dollar_Refs
-                     (Parent    => Root_Node,
-                      Old_Name  => Old_Name,
-                      New_Name  => New_Name);
-               end;
+            else
+               if DOM.Core.Nodes.Node_Type (N => Current_Node) =  Text_Node then
+                  Prefix_Text_Node
+                     (Node        => Current_Node,
+                      Prefix      => Prefix,
+                      Known_Names => Defined_Names);
+               else
+                  Prefix_Dollar_Refs
+                     (Node        => Current_Node,
+                      Prefix      => Prefix,
+                      Known_Names => Defined_Names);
+               end if;
             end if;
          end;
+         Current_Node := Next_Node (Current_Node => Current_Node);
       end loop;
-
-      Prefix_NamePrefix
-         (Parent => Root_Node,
-          Prefix => Prefix);
    end Prefix_Variables;
-
 end Mutools.XML_Templates;

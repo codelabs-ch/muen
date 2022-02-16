@@ -16,15 +16,11 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Strings.Fixed.Equal_Case_Insensitive;
-
 with DOM.Core.Elements;
 with DOM.Core.Nodes;
 
 with McKae.XML.XPath.XIA;
 
-with Muxml.Utils;
-with Mutools.Expressions;
 with Mutools.Expressions.Case_Expression;
 
 package body Mutools.Conditionals
@@ -39,23 +35,86 @@ is
    -------------------------------------------------------------------------
 
    procedure Evaluate
-      (Policy : Muxml.XML_Data_Type;
-       Config : DOM.Core.Node_List;
-      Parent : DOM.Core.Node)
+      (Policy      :        Muxml.XML_Data_Type;
+       Config      :        DOM.Core.Node_List;
+       Parent      :        DOM.Core.Node;
+       Node_Access : in out Mutools.Expressions.Access_Hashmaps_Type)
    is
       use type DOM.Core.Node;
 
       Next_Child : DOM.Core.Node;
       Cur_Child  : DOM.Core.Node
-                 := DOM.Core.Nodes.First_Child (N => Parent);
+         := DOM.Core.Nodes.First_Child (N => Parent);
+
+      ----------------------------------------------------------------------
+
+      -- get the type of the given Config_Var, try to cast Value to that type
+      -- and return 'true' if and only if the result is equal to the value of
+      -- Config_Var
+      function Is_Value_Equal_After_Cast
+         (Config_Var_Name : String;
+          Value           : String;
+          Node_Access     : Mutools.Expressions.Access_Hashmaps_Type)
+         return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Is_Value_Equal_After_Cast
+         (Config_Var_Name : String;
+          Value           : String;
+          Node_Access     : Mutools.Expressions.Access_Hashmaps_Type)
+         return Boolean
+      is
+      begin
+         if Node_Access.Output_Boolean.Contains (Config_Var_Name) then
+            declare
+               Input_Value : Boolean;
+            begin
+               Input_Value := Boolean'Value (Value);
+               return Input_Value = Node_Access.Output_Boolean (Config_Var_Name);
+            exception
+               when Constraint_Error =>
+                  raise Mutools.Expressions.Invalid_Expression with
+                     "Cannot compare value '"
+                     & Value
+                     & "' to variable '"
+                     & Config_Var_Name
+                     & "' which is a Boolean (cast failed)";
+            end;
+         elsif Node_Access.Output_Integer.Contains (Config_Var_Name) then
+            declare
+               Input_Value : Integer;
+            begin
+               Input_Value := Integer'Value (Value);
+               return Input_Value = Node_Access.Output_Integer (Config_Var_Name);
+            exception
+               when Constraint_Error =>
+                  raise Mutools.Expressions.Invalid_Expression with
+                     "Cannot compare value '"
+                     & Value
+                     & "' to variable '"
+                     & Config_Var_Name
+                     & "' which is an Integer (cast failed)";
+            end;
+         elsif Node_Access.Output_String.Contains (Config_Var_Name) then
+            return Value = Node_Access.Output_String (Config_Var_Name);
+         else
+            raise Mutools.Expressions.Invalid_Expression with
+               "Cannot find variable with name '"
+               & Config_Var_Name
+               & "' in configuration";
+         end if;
+      end Is_Value_Equal_After_Cast;
+
    begin
       while Cur_Child /= null loop
 
          --  Recursively evaluate children before processing conditional.
 
-         Evaluate (Policy => Policy,
-                   Config => Config,
-                   Parent => Cur_Child);
+         Evaluate (Policy      => Policy,
+                   Config      => Config,
+                   Parent      => Cur_Child,
+                   Node_Access => Node_Access);
 
          --  Get next child before potentially removing current child from
          --  parent.
@@ -72,17 +131,12 @@ is
                          := DOM.Core.Elements.Get_Attribute
                               (Elem => Cur_Child,
                                Name => "variable");
-               Cfg_Value : constant String
-                         := Muxml.Utils.Get_Attribute
-                              (Nodes     => Config,
-                               Ref_Attr  => "name",
-                               Ref_Value => Cfg_Name,
-                               Attr_Name => "value");
                Dummy     : DOM.Core.Node;
             begin
-               if Ada.Strings.Fixed.Equal_Case_Insensitive
-                    (Left  => Value,
-                     Right => Cfg_Value)
+               if Is_Value_Equal_After_Cast
+                    (Config_Var_Name => Cfg_Name,
+                     Value => Value,
+                     Node_Access => Node_Access)
                then
                   Transfer_Children
                      (Old_Parent        => Cur_Child,
@@ -104,10 +158,10 @@ is
 
             begin
                Mutools.Expressions.Case_Expression.Evaluate_Case_Node_Frame
-                  (Policy          => Policy,
-                   Case_Node       => Cur_Child,
-                   Return_Node     => Matching_Option_Node,
-                   Backtrace       => Backtrace);
+                  (Case_Node   => Cur_Child,
+                   Return_Node => Matching_Option_Node,
+                   Backtrace   => Backtrace,
+                   Node_Access => Node_Access);
                if Matching_Option_Node /= null then
                   Transfer_Children
                      (Old_Parent        => Matching_Option_Node,
@@ -138,16 +192,54 @@ is
                    := McKae.XML.XPath.XIA.XPath_Query
                         (N     => Policy.Doc,
                          XPath => "/*");
+      Node_Access : Mutools.Expressions.Access_Hashmaps_Type;
    begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Config_Nodes) - 1 loop
+         declare
+            Node : constant DOM.Core.Node
+               := DOM.Core.Nodes.Item (List  => Config_Nodes, Index => I);
+            Node_Type : constant String
+               := DOM.Core.Nodes.Node_Name (N => Node);
+            Node_Name : constant String
+               := DOM.Core.Elements.Get_Attribute
+               (Elem => Node,
+                Name => "name");
+            Node_Raw_Value : constant String
+               := DOM.Core.Elements.Get_Attribute
+               (Elem => Node,
+                 Name => "value");
+         begin
+            if Node_Type = "boolean" then
+               Node_Access.Output_Boolean.Insert
+                  (Key      => Node_Name,
+                   New_Item => Boolean'Value (Node_Raw_Value));
+            elsif Node_Type = "integer" then
+               Node_Access.Output_Integer.Insert
+                  (Key      => Node_Name,
+                   New_Item => Integer'Value (Node_Raw_Value));
+            elsif Node_Type = "string" then
+               Node_Access.Output_String.Insert
+                  (Key      => Node_Name,
+                   New_Item => Node_Raw_Value);
+            else
+               raise Mutools.Expressions.Invalid_Expression with
+                  "Found invalid node with name '"
+                  & Node_Name
+                  & "' when loading config variables to expand conditionals";
+            end if;
+         end;
+      end loop;
+
       for I in 0 .. DOM.Core.Nodes.Length (List => Sections) - 1 loop
          declare
             Cur_Section : constant DOM.Core.Node
                         := DOM.Core.Nodes.Item (List  => Sections,
                                                 Index => I);
          begin
-            Evaluate (Policy => Policy,
-                      Config => Config_Nodes,
-                      Parent => Cur_Section);
+            Evaluate (Policy      => Policy,
+                      Config      => Config_Nodes,
+                      Parent      => Cur_Section,
+                      Node_Access => Node_Access);
          end;
       end loop;
    end Expand;

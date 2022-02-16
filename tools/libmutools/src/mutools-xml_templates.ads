@@ -25,6 +25,7 @@ is
    procedure Expand (XML_Data : in out Muxml.XML_Data_Type);
 
 private
+
    -- Creates a new XML-Docmunt containing only the given node
    procedure Create_XMLDocument_From_Node
       (New_Doc  : out DOM.Core.Document;
@@ -40,16 +41,17 @@ private
        Running_Number :     Positive;
        Output         : out Muxml.XML_Data_Type);
 
-   -- Searches for names of 'variables' in the following form:
-   --  (a) definitions of the form <boolean name="..." .../>
+   -- Searches for definitions of 'variables' in the following form:
+   --  (a) definitions of the form <boolean name="foo" .../>
    --      (also for integer and string)
-   --  (b) <expression name="...".. />
-   --  (c) <usetemplate namePrefix="..." .../>
-   -- These variables are then renamed in all children of the given
-   -- node
+   --  (b) <expression name="foo".. />
+   -- All occurances of these variable-names (as variables) and occurances of
+   --  <useTemplate namePrefix="foo" .../>
+   -- are then prefixed with the given prefix
    procedure Prefix_Variables
-      (Root_Node : DOM.Core.Node;
-       Prefix    : String);
+      (Root_Node   : DOM.Core.Node;
+       Config_Node : DOM.Core.Node;
+       Prefix      : String);
 
    -- Adopt and insert deep clones of all child nodes of
    -- Parent_Of_Children before Target

@@ -135,8 +135,6 @@ is
       Mergers.Merge_Platform_Config (Policy => Policy);
 
       Mucfgcheck.Config.Name_Uniqueness (XML_Data => Policy);
-      Mucfgcheck.Config.Config_Boolean_Values (XML_Data => Policy);
-      Mucfgcheck.Config.Config_Integer_Values (XML_Data => Policy);
       Mucfgcheck.Config.Expression_Config_Var_Refs (XML_Data => Policy);
       Mucfgcheck.Config.Expression_Integer_Values (XML_Data => Policy);
       Mucfgcheck.Config.Expression_Boolean_Values (XML_Data => Policy);
@@ -158,6 +156,13 @@ is
       Muxml.Utils.Remove_Elements
         (Doc   => Policy.Doc,
          XPath => "/system/expressions");
+
+      -- Check values of config variables after expansion of expressions
+      -- to make sure that $-references have been resolved already.
+
+      Mucfgcheck.Config.Config_Boolean_Values (XML_Data => Policy);
+      Mucfgcheck.Config.Config_Integer_Values (XML_Data => Policy);
+      Mucfgcheck.Validation_Errors.Check;
 
       Mulog.Log (Msg => "Processing attributes");
       Mutools.Substitutions.Process_Attributes (Data => Policy);

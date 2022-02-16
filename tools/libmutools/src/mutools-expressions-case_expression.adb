@@ -22,7 +22,6 @@ with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 with Mulog;
-with Mutools.System_Config;
 with Muxml.Utils;
 
 package body Mutools.Expressions.Case_Expression
@@ -46,10 +45,10 @@ is
    -------------------------------------------------------------------------
 
    procedure Case_Expression_Evaluation
-      (Policy        :        Muxml.XML_Data_Type;
-       Expr_Node     :        DOM.Core.Node;
+      (Expr_Node     :        DOM.Core.Node;
        Value_Of_Case :    out Value_Type_Tuple;
-       Backtrace     : in out String_Vector.Vector)
+       Backtrace     : in out String_Vector.Vector;
+       Node_Access   : in out Access_Hashmaps_Type)
    is
       Children  : constant DOM.Core.Node_List
          := McKae.XML.XPath.XIA.XPath_Query
@@ -76,30 +75,39 @@ is
                                         Index => 0);
 
       Evaluate_Case_Node
-         (Policy        => Policy,
-          Case_Node     => Case_Node,
+         (Case_Node     => Case_Node,
           Value_Of_Case => Value_Of_Case,
-          Backtrace     => Backtrace);
+          Backtrace     => Backtrace,
+          Node_Access   => Node_Access);
 
       case Value_Of_Case.Value_Type is
          when Boolean_Type =>
-            Mulog.Log (Msg => "Expanding expression '" & Node_Name
-                       & "' with value '" & Value_Of_Case.Bool_Value'Image & "'");
-            System_Config.Set_Value (Data  => Policy,
-                                     Name  => Node_Name,
-                                     Value => Value_Of_Case.Bool_Value);
+            Mulog.Log (Msg => "Expanding expression '"
+                          & Node_Name
+                          & "' with value '"
+                          & Value_Of_Case.Bool_Value'Image
+                          & "'");
+            Node_Access.Output_Boolean.Insert
+               (Key      => Node_Name,
+                New_Item => Value_Of_Case.Bool_Value);
          when Integer_Type =>
-            Mulog.Log (Msg => "Expanding expression '" & Node_Name
-                       & "' with value '" & Value_Of_Case.Int_Value'Image & "'");
-            System_Config.Set_Value (Data  => Policy,
-                                     Name  => Node_Name,
-                                     Value => Value_Of_Case.Int_Value);
+            Mulog.Log (Msg => "Expanding expression '"
+                          & Node_Name
+                          & "' with value '"
+                          & Value_Of_Case.Int_Value'Image
+                          & "'");
+            Node_Access.Output_Integer.Insert
+               (Key      => Node_Name,
+                New_Item => Value_Of_Case.Int_Value);
          when String_Type =>
-            Mulog.Log (Msg => "Expanding expression '" & Node_Name
-                       & "' with value '" & Value_Of_Case.String_Value.Element & "'");
-            System_Config.Set_Value (Data  => Policy,
-                                     Name  => Node_Name,
-                                     Value => Value_Of_Case.String_Value.Element);
+            Mulog.Log (Msg => "Expanding expression '"
+                          & Node_Name
+                          & "' with value '"
+                          & Value_Of_Case.String_Value.Element
+                          & "'");
+            Node_Access.Output_String.Insert
+               (Key      => Node_Name,
+                New_Item => Value_Of_Case.String_Value.Element);
       end case;
 
    end Case_Expression_Evaluation;
@@ -107,12 +115,11 @@ is
    -------------------------------------------------------------------------
 
    procedure Evaluate_Case_Node
-      (Policy        :        Muxml.XML_Data_Type;
-       Case_Node     :        DOM.Core.Node;
+      (Case_Node     :        DOM.Core.Node;
        Value_Of_Case :    out Value_Type_Tuple;
-       Backtrace     : in out String_Vector.Vector)
+       Backtrace     : in out String_Vector.Vector;
+       Node_Access   : in out Access_Hashmaps_Type)
    is
-      use all type DOM.Core.Node;
       Children  : constant DOM.Core.Node_List
          := McKae.XML.XPath.XIA.XPath_Query
          (N     => Case_Node,
@@ -124,51 +131,37 @@ is
 
       -- assign the value of Child to Child_Value
       procedure Evaluate_When_Child
-         (Policy      :        Muxml.XML_Data_Type;
-          Child       :        DOM.Core.Node;
+         (Child       :        DOM.Core.Node;
           Child_Value :    out Value_Type_Tuple;
-          Backtrace   : in out String_Vector.Vector);
+          Backtrace   : in out String_Vector.Vector;
+          Node_Access : in out Access_Hashmaps_Type);
 
       ----------------------------------------------------------------------
 
       procedure Evaluate_When_Child
-         (Policy      :        Muxml.XML_Data_Type;
-          Child       :        DOM.Core.Node;
+         (Child       :        DOM.Core.Node;
           Child_Value :    out Value_Type_Tuple;
-          Backtrace   : in out String_Vector.Vector)
+          Backtrace   : in out String_Vector.Vector;
+          Node_Access : in out Access_Hashmaps_Type)
       is
          Child_Name : constant String
             := DOM.Core.Nodes.Node_Name (N => Child);
-         Def_Node   : DOM.Core.Node;
       begin
          if Child_Name = "case" then
             Evaluate_Case_Node
-               (Policy        => Policy,
-                Case_Node     => Child,
+               (Case_Node     => Child,
                 Value_Of_Case => Child_Value,
-                Backtrace     => Backtrace);
+                Backtrace     => Backtrace,
+                Node_Access   => Node_Access);
 
          elsif Child_Name = "variable" then
-            Def_Node := Get_Defining_Node
-               (Policy   => Policy,
-                Var_Name => DOM.Core.Elements.Get_Attribute
-                   (Elem => Child,
-                    Name => "name"));
-            Expand_Single_Node
-               (Policy    => Policy,
-                Node      => Def_Node,
-                Backtrace => Backtrace);
-
-            -- now we know that the defining node is not an expression
-            Def_Node := Get_Defining_Node
-               (Policy   => Policy,
-                Var_Name => DOM.Core.Elements.Get_Attribute
-                   (Elem => Child,
-                    Name => "name"));
-            Get_Type_And_Value
-               (Node => Def_Node,
-                Type_And_Value => Child_Value);
-
+            Get_Value_Of_Reference
+               (Ref_Name    => DOM.Core.Elements.Get_Attribute
+                      (Elem    => Child,
+                       Name    => "name"),
+                Result      => Child_Value,
+                Backtrace   => Backtrace,
+                Node_Access => Node_Access);
          elsif Child_Name = "boolean"
             or Child_Name = "integer"
             or Child_Name = "string"
@@ -186,10 +179,10 @@ is
 
    begin
       -- assign the Return_Node to the when-child that matches
-      Evaluate_Case_Node_Frame (Policy      => Policy,
-                                Case_Node   => Case_Node,
+      Evaluate_Case_Node_Frame (Case_Node   => Case_Node,
                                 Return_Node => Return_Node,
-                                Backtrace   => Backtrace);
+                                Backtrace   => Backtrace,
+                                Node_Access => Node_Access);
       if Return_Node = null then
          raise Invalid_Expression with
             "Found case-node in expression where none of the actuals "
@@ -220,10 +213,10 @@ is
             Child_Child := DOM.Core.Nodes.Item (List  => Child_Children,
                                                 Index => 0);
             Evaluate_When_Child
-               (Policy      => Policy,
-                Child       => Child_Child,
+               (Child       => Child_Child,
                 Child_Value => Child_Value,
-                Backtrace   => Backtrace);
+                Backtrace   => Backtrace,
+                Node_Access => Node_Access);
 
             if Child = Return_Node then
                Value_Of_Case :=  Child_Value;
@@ -247,18 +240,15 @@ is
    -------------------------------------------------------------------------
 
    procedure Evaluate_Case_Node_Frame
-      (Policy              :        Muxml.XML_Data_Type;
-       Case_Node           :        DOM.Core.Node;
-       Return_Node         :    out DOM.Core.Node;
-       Backtrace           : in out String_Vector.Vector)
+      (Case_Node   :        DOM.Core.Node;
+       Return_Node :    out DOM.Core.Node;
+       Backtrace   : in out String_Vector.Vector;
+       Node_Access : in out Access_Hashmaps_Type)
    is
-      use all type DOM.Core.Node;
       Case_Variable_Name : constant String
          := DOM.Core.Elements.Get_Attribute (Elem => Case_Node,
                                              Name => "variable");
-
       Case_Variable_Value : Value_Type_Tuple;
-      Node : DOM.Core.Node;
       Case_Children : constant DOM.Core.Node_List
          := McKae.XML.XPath.XIA.XPath_Query
          (N     => Case_Node,
@@ -266,46 +256,40 @@ is
 
       ---------------------------------------------------------------------
 
-      -- Evaluate a when-option which is not a reference and write result to
-      -- When_Variable_Value
-      procedure  Evaluate_Explicit_When_Option
-         (Policy              :        Muxml.XML_Data_Type;
-          When_Node_RawValue  :        String;
+      -- Evaluate a when-option and write result to When_Variable_Value
+      procedure  Evaluate_When_Option
+         (When_Node_RawValue  :        String;
           Case_Variable_Value :        Value_Type_Tuple;
           When_Variable_Value :    out Value_Type_Tuple;
-          Backtrace           : in out String_Vector.Vector);
+          Backtrace           : in out String_Vector.Vector;
+          Node_Access         : in out Access_Hashmaps_Type);
 
       ---------------------------------------------------------------------
 
-      procedure  Evaluate_Explicit_When_Option
-         (Policy              :        Muxml.XML_Data_Type;
-          When_Node_RawValue  :        String;
+      procedure  Evaluate_When_Option
+         (When_Node_RawValue  :        String;
           Case_Variable_Value :        Value_Type_Tuple;
           When_Variable_Value :    out Value_Type_Tuple;
-          Backtrace           : in out String_Vector.Vector)
+          Backtrace           : in out String_Vector.Vector;
+          Node_Access         : in out Access_Hashmaps_Type)
       is
-         Node : DOM.Core.Node;
       begin
          -- start evaluation of the given when-value
          if When_Node_RawValue'Length > 0
             and then When_Node_RawValue (When_Node_RawValue'First) = '$'
          then
-            -- make sure the node has been evaluated
-            Node := Get_Defining_Node
-               (Policy   => Policy,
-                Var_Name => When_Node_RawValue
-                   (When_Node_RawValue'First + 1 .. When_Node_RawValue'Last));
-            Expand_Single_Node (Policy    => Policy,
-                                Node      => Node,
-                                Backtrace => Backtrace);
-            Node := Get_Defining_Node
-               (Policy   => Policy,
-                Var_Name => When_Node_RawValue
-                   (When_Node_RawValue'First + 1 .. When_Node_RawValue'Last));
+            declare
+               Ref_Name : constant String
+                  := When_Node_RawValue
+                  (When_Node_RawValue'First + 1 .. When_Node_RawValue'Last);
+            begin
+               Get_Value_Of_Reference
+                  (Ref_Name    => Ref_Name,
+                   Result      => When_Variable_Value,
+                   Backtrace   => Backtrace,
+                   Node_Access => Node_Access);
+            end;
 
-            Get_Type_And_Value
-               (Node => Node,
-                Type_And_Value => When_Variable_Value);
             if When_Variable_Value.Value_Type /= Case_Variable_Value.Value_Type then
                raise  Invalid_Expression with
                   "Found case node where variable types do not match. "
@@ -340,34 +324,24 @@ is
                      & Case_Variable_Value.Value_Type'Image;
             end;
          end if;
-      end Evaluate_Explicit_When_Option;
+      end Evaluate_When_Option;
 
    begin
       Return_Node := null;
 
       -- get type and value of case-variable
-      if not Muxml.Utils.Has_Attribute
-         (Node => Case_Node,
-          Attr_Name => "variable")
+      if not Muxml.Utils.Has_Attribute (Node      => Case_Node,
+                                        Attr_Name => "variable")
       then
          raise  Invalid_Expression with
             "Found case-node without 'variable' attribute";
       end if;
 
-      -- guarantee that Node has been evaluated
-      Node := Get_Defining_Node
-         (Policy   => Policy,
-          Var_Name => Case_Variable_Name);
-      Expand_Single_Node (Policy    => Policy,
-                          Node      => Node,
-                          Backtrace => Backtrace);
-      Node := Get_Defining_Node
-         (Policy   => Policy,
-          Var_Name => Case_Variable_Name);
-
-      Get_Type_And_Value
-         (Node => Node,
-          Type_And_Value => Case_Variable_Value);
+      Get_Value_Of_Reference
+         (Ref_Name    => Case_Variable_Name,
+          Result      => Case_Variable_Value,
+          Backtrace   => Backtrace,
+          Node_Access => Node_Access);
 
       -- get type and value of when-variables
       if DOM.Core.Nodes.Length (List => Case_Children) < 1 then
@@ -400,12 +374,12 @@ is
                raise  Invalid_Expression with
                   "Found when-node without 'value' attribute";
             else
-               Evaluate_Explicit_When_Option
-                  (Policy              => Policy,
-                   When_Node_RawValue  => When_Node_RawValue,
+               Evaluate_When_Option
+                  (When_Node_RawValue  => When_Node_RawValue,
                    Case_Variable_Value => Case_Variable_Value,
                    When_Variable_Value => When_Variable_Value,
-                   Backtrace           => Backtrace);
+                   Backtrace           => Backtrace,
+                   Node_Access         => Node_Access);
 
                if "=" (L => When_Variable_Value, R => Case_Variable_Value) then
                   if Return_Node = null then
@@ -424,7 +398,7 @@ is
 
    end Evaluate_Case_Node_Frame;
 
-   -------------------------------------------------------------------------
+   ----------------------------------------------------------------------
 
    procedure Get_Type_And_Value
       (Node           :     DOM.Core.Node;
@@ -467,6 +441,80 @@ is
             & "'";
       end if;
    end Get_Type_And_Value;
+
+   -------------------------------------------------------------------------
+
+   procedure Get_Value_Of_Reference
+      (Ref_Name      :        String;
+       Result        :    out Value_Type_Tuple;
+       Backtrace     : in out String_Vector.Vector;
+       Node_Access   : in out Access_Hashmaps_Type)
+   is
+      Found : Boolean;
+      Def_Node : DOM.Core.Node;
+
+      ----------------------------------------------------------------------
+
+      -- assign Result and set Found := 'True' if Node_Access.Output contains
+      -- the key Name
+      -- leave Result unchanged and set Found := 'False' otherwise
+      procedure Get_Value_If_Contained
+         (Name        :     String;
+          Result      : out Value_Type_Tuple;
+          Found       : out Boolean;
+          Node_Access :     Access_Hashmaps_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Get_Value_If_Contained
+         (Name        :     String;
+          Result      : out Value_Type_Tuple;
+          Found       : out Boolean;
+          Node_Access :     Access_Hashmaps_Type)
+      is
+      begin
+         Found := False;
+         if Node_Access.Output_Boolean.Contains (Name) then
+            Found := True;
+            Result.Value_Type := Boolean_Type;
+            Result.Bool_Value := Node_Access.Output_Boolean (Name);
+         elsif Node_Access.Output_Integer.Contains (Name) then
+            Found := True;
+            Result.Value_Type := Integer_Type;
+            Result.Int_Value := Node_Access.Output_Integer (Name);
+         elsif Node_Access.Output_String.Contains (Name) then
+            Found := True;
+            Result.Value_Type := String_Type;
+            Result.String_Value := String_Holder_Type.To_Holder
+               (Node_Access.Output_String (Name));
+         end if;
+      end Get_Value_If_Contained;
+
+   begin
+      Get_Value_If_Contained (Name        => Ref_Name,
+                              Result      => Result,
+                              Found       => Found,
+                              Node_Access => Node_Access);
+      if not Found then
+         Def_Node := Get_Defining_Node
+            (Var_Name    => Ref_Name,
+             Node_Access => Node_Access);
+         Expand_Single_Node
+            (Node        => Def_Node,
+             Backtrace   => Backtrace,
+             Node_Access => Node_Access);
+         Get_Value_If_Contained (Name        => Ref_Name,
+                                 Result      => Result,
+                                 Found       => Found,
+                                 Node_Access => Node_Access);
+      end if;
+      if not Found then
+         raise Invalid_Expression with
+            "Found Reference to non-existing variable with name '"
+            & Ref_Name
+            & "'";
+      end if;
+   end Get_Value_Of_Reference;
 
    -------------------------------------------------------------------------
 

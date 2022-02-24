@@ -28,6 +28,7 @@ abstract project Common is
 
    Src_Dirs := ("../../common/src", "../src");
    Extra_Warning_Switches := ();
+   Extra_Compiler_Switches := ();
    Preprocessor_Switches := ();
 
    case Build_Mode is
@@ -40,6 +41,7 @@ abstract project Common is
          Preprocessor_Switches :=
            ("-gnateDRelease_Warnings=Warnings");
          Extra_Warning_Switches := Shared.Build_Warning_Switches;
+         Extra_Compiler_Switches := ("-O2");
 
       when "prove" =>
          Preprocessor_Switches :=
@@ -63,6 +65,7 @@ abstract project Common is
    package Compiler is
       for Required_Switches ("Asm") use ("-x", "assembler-with-cpp");
       for Default_Switches ("Ada") use Shared.Spark_Compiler_Switches
+        & Extra_Compiler_Switches
         & Preprocessor_Switches
         & Shared.Warning_Switches
         & Extra_Warning_Switches;

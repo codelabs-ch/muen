@@ -37,7 +37,8 @@ POLICY_B_HASH ?= $(PACK_OBJ_DIR)/policy_b.xml
 POLICY_B_CMDS ?= $(PACK_OBJ_DIR)/policy_b_cmds.xml
 POLICY_B_MANI ?= $(PACK_OBJ_DIR)/policy_b.xml.manifest
 
-KERNEL_BUILD ?= debug
+KERNEL_BUILD    ?= debug
+COMPONENT_BUILD ?= debug
 
 MUGENSCHEDCFG_DIR ?= $(TOP_DIR)/tools/mugenschedcfg
 

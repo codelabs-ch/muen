@@ -1,4 +1,4 @@
-COMP_BIN = $(OBJ_DIR)/debug/$(COMPONENT)
+COMP_BIN = $(OBJ_DIR)/$(COMPONENT_BUILD)/$(COMPONENT)
 
 all: $(ALL)
 

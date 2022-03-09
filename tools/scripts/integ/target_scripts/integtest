@@ -21,6 +21,8 @@ sysbench --test=cpu --cpu-max-prime=10000 run >$OUTPUT 2>&1
 
 ping -c 3 $PEER >$OUTPUT 2>&1
 cat /sys/kernel/debug/muennet/net0/info >$OUTPUT
+OPERSTATE=$(cat /sys/class/net/net0/operstate)
+echo "net0: operstate $OPERSTATE" >$OUTPUT
 
 muennet-child-test >$OUTPUT 2>&1
 

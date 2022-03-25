@@ -207,6 +207,15 @@ is
       Depends => (Target => (X86_64.State, State)),
       Inline_Always;
 
+   --  Get current value of specified Extended Control Register (XCR).
+   procedure XGETBV
+     (Register :     SK.Word32;
+      Value    : out SK.Word64)
+   with
+      Global  => (Input => X86_64.State),
+      Depends => (Value => (X86_64.State, Register)),
+      Inline_Always;
+
    --  Set specified Extended Control Register (XCR) to given value.
    procedure XSETBV
      (Register : SK.Word32;

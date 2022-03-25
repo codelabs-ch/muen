@@ -251,7 +251,7 @@ is
       exception
          when Constraint_Error =>
             raise Invalid_Expression with "Invalid expression term '"
-              & DOM.Core.Nodes.Node_Name (N => Node)  & "'";
+              & DOM.Core.Nodes.Node_Name (N => Node) & "'";
       end;
 
       case Expr is

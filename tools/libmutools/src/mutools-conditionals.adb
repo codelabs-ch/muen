@@ -23,7 +23,7 @@ with DOM.Core.Nodes;
 
 with McKae.XML.XPath.XIA;
 
-with Mutools.System_Config;
+with Muxml.Utils;
 
 package body Mutools.Conditionals
 is
@@ -36,7 +36,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Evaluate
-     (Policy : Muxml.XML_Data_Type;
+     (Config : DOM.Core.Node_List;
       Parent : DOM.Core.Node)
    is
       use type DOM.Core.Node;
@@ -48,7 +48,7 @@ is
 
          --  Recursively evaluate children before processing conditional.
 
-         Evaluate (Policy => Policy,
+         Evaluate (Config => Config,
                    Parent => Cur_Child);
 
          --  Get next child before potentially removing current child from
@@ -67,9 +67,11 @@ is
                    (Elem => Cur_Child,
                     Name => "variable");
                Cfg_Value : constant String
-                 := System_Config.Get_Raw_Value
-                   (Data => Policy,
-                    Name => Cfg_Name);
+                 := Muxml.Utils.Get_Attribute
+                   (Nodes     => Config,
+                    Ref_Attr  => "name",
+                    Ref_Value => Cfg_Name,
+                    Attr_Name => "value");
                Dummy     : DOM.Core.Node;
             begin
                if Ada.Strings.Fixed.Equal_Case_Insensitive
@@ -94,6 +96,10 @@ is
 
    procedure Expand (Policy : Muxml.XML_Data_Type)
    is
+      Config_Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/*/config/*");
       Sections : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query (N     => Policy.Doc,
                                             XPath => "/*");
@@ -104,7 +110,7 @@ is
               := DOM.Core.Nodes.Item (List  => Sections,
                                       Index => I);
          begin
-            Evaluate (Policy => Policy,
+            Evaluate (Config => Config_Nodes,
                       Parent => Cur_Section);
          end;
       end loop;

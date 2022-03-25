@@ -237,7 +237,14 @@ is
             State.Regs.RBX := 0;
             State.Regs.RCX := 0;
             State.Regs.RDX := 0;
-         when 2 | 16#8000_0001# .. 16#8000_0004# =>
+         when 16#8000_0001# =>
+            State.Regs.RAX := SK.Word64 (Values.EAX);
+            State.Regs.RBX := SK.Word64 (Values.EBX);
+            State.Regs.RCX := SK.Word64 (Values.ECX);
+
+            --  Mask out Bit 27 - RDTSCP
+            State.Regs.RDX := SK.Word64 (Values.EDX) and 16#f7ff_ffff#;
+         when 2 | 16#8000_0002# .. 16#8000_0004# =>
 
             --  Passthrough values.
 

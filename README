@@ -94,11 +94,11 @@ The Muen platform includes a versatile toolchain which facilitates the
 specification and construction of component-based systems in different
 application domains.
 
-The <<mugenhwcfg>> tool for automated hardware description generation
-simplifies the addition of support for new target machines. Scheduling plans
-can be generated automatically from a scheduling configuration using the
-<<mugenschedcfg>> tool.
-
+The <<mugenhwcfg>> tool for automated hardware description generation simplifies
+the addition of support for new target machines. There is also a Debian
+Live-based bootable ISO <<mugenhwcfg-live>> to simplify the collection of
+hardware configurations from new targets. Scheduling plans can be generated
+automatically from a scheduling configuration using the <<mugenschedcfg>> tool.
 
 Resources
 ---------
@@ -332,15 +332,16 @@ the `HARDWARE` variable:
 
 References
 ----------
-- [[[lnxcr3]]]        Linux KVM GUEST_CR3 fix, https://patchwork.kernel.org/patch/11165185/
-- [[[ipxe]]]          iPXE boot firmware, https://ipxe.org/
-- [[[amt]]]           Intel AMT SoL client + tools, https://www.kraxel.org/cgit/amtterm/
-- [[[mirageos]]]      MirageOS, https://mirage.io
-- [[[muenblock]]]     Muenblock Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenblock.git
-- [[[muenfs]]]        Muenfs Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenfs.git
-- [[[muennet]]]       Muennet Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muennet.git
-- [[[mugenhwcfg]]]    Muen hardware config generator, https://git.codelabs.ch/?p=muen/mugenhwcfg.git
-- [[[mugenschedcfg]]] Muen scheduling plan generator, https://git.codelabs.ch/?p=muen/mugenschedcfg.git
+- [[[lnxcr3]]]          Linux KVM GUEST_CR3 fix, https://patchwork.kernel.org/patch/11165185/
+- [[[ipxe]]]            iPXE boot firmware, https://ipxe.org/
+- [[[amt]]]             Intel AMT SoL client + tools, https://www.kraxel.org/cgit/amtterm/
+- [[[mirageos]]]        MirageOS, https://mirage.io
+- [[[muenblock]]]       Muenblock Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenblock.git
+- [[[muenfs]]]          Muenfs Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenfs.git
+- [[[muennet]]]         Muennet Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muennet.git
+- [[[mugenhwcfg]]]      Muen hardware config generator, https://git.codelabs.ch/?p=muen/mugenhwcfg.git
+- [[[mugenhwcfg-live]]] Mugenhwcfg Live ISO, https://www.codelabs.ch/download/mugenhwcfg-live-amd64.hybrid.iso
+- [[[mugenschedcfg]]]   Muen scheduling plan generator, https://git.codelabs.ch/?p=muen/mugenschedcfg.git
 
 
 License

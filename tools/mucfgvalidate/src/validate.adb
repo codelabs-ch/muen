@@ -245,8 +245,6 @@ is
       XML_Processors.Register
         (Process => Subject.Device_Mmconf_Mappings'Access);
       XML_Processors.Register
-        (Process => Subject.Shared_Device_Same_PCI_Element'Access);
-      XML_Processors.Register
         (Process => Subject.VMX_Controls_Entry_Checks'Access);
       XML_Processors.Register
         (Process => Subject.VMX_Controls_Pin_Requirements'Access);

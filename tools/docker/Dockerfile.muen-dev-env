@@ -12,7 +12,7 @@
 
 # Base image
 ARG distro_name=debian
-ARG distro_version=buster
+ARG distro_version=bullseye
 FROM ${distro_name}:${distro_version}
 
 LABEL maintainer "Adrian-Ken Rueegsegger <ken@codelabs.ch>"
@@ -21,7 +21,7 @@ LABEL description "This image provides the build environment for the Muen projec
 # Required packages
 ARG packages="acpica-tools amtterm autoconf automake autopoint bc binutils-dev \
 bison bzip2 ca-certificates ccache cpio curl file flex git-core gnupg gnuplot \
-inotify-tools kmod lcov libc6-dev libcurl4-gnutls-dev libelf-dev \
+inotify-tools iputils-ping kmod lcov libc6-dev libcurl4-gnutls-dev libelf-dev \
 libfreetype6-dev libiberty-dev libncurses-dev libseccomp-dev libssl-dev \
 libxml2-utils lighttpd make mtools openssh-client patch picocom pkg-config \
 python3-minimal python3-lxml python3-colorlog python3-setuptools python3-pip \
@@ -68,7 +68,7 @@ RUN curl -sSL "https://github.com/Solo5/solo5/releases/download/v0.6.5/solo5-v0.
 
 # Python modules
 RUN pip3 install wheel \
-	&& pip3 install lief \
+	&& pip3 install 'lief==0.11.5' \
 	&& pip3 install rangehttpserver
 
 # Setup environment

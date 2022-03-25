@@ -701,44 +701,6 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Shared_Device_Same_PCI_Element (Gnattest_T : in out Test);
-   procedure Test_Shared_Device_Same_PCI_Element_13370a (Gnattest_T : in out Test) renames Test_Shared_Device_Same_PCI_Element;
---  id:2.2/13370a2d725ab242/Shared_Device_Same_PCI_Element/1/0/
-   procedure Test_Shared_Device_Same_PCI_Element (Gnattest_T : in out Test) is
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      Data : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => "data/test_policy.xml");
-
-      --  Positive test, must not raise an exception.
-
-      Shared_Device_Same_PCI_Element (XML_Data => Data);
-      Assert (Condition => Validation_Errors.Is_Empty,
-              Message   => "Unexpected error in positive test");
-
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/subjects/subject[@name='linux']/devices/device"
-         & "[@physical='xhci']",
-         Name  => "physical",
-         Value => "wireless");
-
-      Shared_Device_Same_PCI_Element (XML_Data => Data);
-      Assert (Condition => Validation_Errors.Contains
-              (Msg => "Shared logical devices 'wireless|xhci' specify "
-               & "different PCI elements"),
-              Message   => "Exception mismatch");
---  begin read only
-   end Test_Shared_Device_Same_PCI_Element;
---  end read only
-
-
---  begin read only
    procedure Test_VMX_Controls_Entry_Checks (Gnattest_T : in out Test);
    procedure Test_VMX_Controls_Entry_Checks_6dde9d (Gnattest_T : in out Test) renames Test_VMX_Controls_Entry_Checks;
 --  id:2.2/6dde9d8234a9c19e/VMX_Controls_Entry_Checks/1/0/

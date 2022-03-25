@@ -348,6 +348,24 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure XGETBV
+     (Register :     SK.Word32;
+      Value    : out SK.Word64)
+   with
+      SPARK_Mode => Off
+   is
+      Low_Dword, High_Dword : SK.Word32;
+   begin
+      System.Machine_Code.Asm
+        (Template => "xgetbv",
+         Inputs   => Word32'Asm_Input ("c", Register),
+         Outputs  => (Word32'Asm_Output ("=a", Low_Dword),
+                      Word32'Asm_Output ("=d", High_Dword)));
+      Value := Word64 (High_Dword) * 2 ** 32 + Word64 (Low_Dword);
+   end XGETBV;
+
+   -------------------------------------------------------------------------
+
    procedure XRSTOR
      (Source : XSAVE_Area_Type;
       State  : Word64)

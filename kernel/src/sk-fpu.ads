@@ -49,7 +49,7 @@ is
    procedure Enable
    with
       Global  => (In_Out => (State, X86_64.State)),
-      Depends => ((State, X86_64.State) => (State, X86_64.State));
+      Depends => ((State, X86_64.State) =>+ X86_64.State);
 
    --  Save current FPU state to save area of subject specified by ID.
    procedure Save_State (ID : Skp.Global_Subject_ID_Type)

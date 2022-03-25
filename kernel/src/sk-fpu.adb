@@ -42,11 +42,11 @@ is
 
    procedure Enable
    with
-      Refined_Global  => (In_Out => (Current_XCR0, X86_64.State),
-                          Output => Active_XCR0_Features),
-      Refined_Depends => (Active_XCR0_Features => X86_64.State,
-                          (Current_XCR0,
-                           X86_64.State)       => (Current_XCR0, X86_64.State))
+      Refined_Global  => (In_Out => X86_64.State,
+                          Output => (Current_XCR0, Active_XCR0_Features)),
+      Refined_Depends => ((Active_XCR0_Features,
+                           Current_XCR0,
+                           X86_64.State)        => X86_64.State)
    is
       CR4 : Word64;
       EAX, Unused_EBX, Unused_ECX, EDX : Word32;
@@ -72,6 +72,8 @@ is
         := Active_XCR0_Features and Constants.XCR0_Supported_Features_Mask;
       pragma Debug (Dump.Print_Message
                     (Msg  => "XCR0: " & Strings.Img (Active_XCR0_Features)));
+      CPU.XGETBV (Register => 0,
+                  Value    => Current_XCR0);
       Write_XCR0 (Value => Active_XCR0_Features);
    end Enable;
 

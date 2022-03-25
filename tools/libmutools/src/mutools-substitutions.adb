@@ -17,11 +17,12 @@
 --
 
 with DOM.Core.Attrs;
+with DOM.Core.Elements;
 with DOM.Core.Nodes;
 
 with McKae.XML.XPath.XIA;
 
-with Mutools.System_Config;
+with Muxml.Utils;
 
 package body Mutools.Substitutions
 is
@@ -30,6 +31,10 @@ is
 
    procedure Process_Attributes (Data : Muxml.XML_Data_Type)
    is
+      Config_Values : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/*/config/*");
       Attrs : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -37,6 +42,8 @@ is
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Attrs) - 1 loop
          declare
+            use type DOM.Core.Node;
+
             Attr_Node  : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => Attrs,
@@ -45,15 +52,18 @@ is
               := DOM.Core.Attrs.Value (Att => Attr_Node);
             Var_Name   : constant String
               := Attr_Value (Attr_Value'First + 1 .. Attr_Value'Last);
+            Cfg_Node   : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Config_Values,
+                 Ref_Attr  => "name",
+                 Ref_Value => Var_Name);
          begin
-            if System_Config.Has_Value (Data => Data,
-                                        Name => Var_Name)
-            then
+            if Cfg_Node /= null then
                DOM.Core.Attrs.Set_Value
                  (Att   => Attr_Node,
-                  Value => System_Config.Get_Raw_Value
-                    (Data => Data,
-                     Name => Var_Name));
+                  Value => DOM.Core.Elements.Get_Attribute
+                    (Elem => Cfg_Node,
+                     Name => "value"));
             end if;
          end;
       end loop;

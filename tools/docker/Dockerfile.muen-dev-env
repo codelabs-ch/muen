@@ -68,7 +68,7 @@ RUN curl -sSL "https://github.com/Solo5/solo5/releases/download/v0.6.5/solo5-v0.
 
 # Python modules
 RUN pip3 install wheel \
-	&& pip3 install lief \
+	&& pip3 install 'lief==0.11.5' \
 	&& pip3 install rangehttpserver
 
 # Setup environment

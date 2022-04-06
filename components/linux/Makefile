@@ -1,6 +1,6 @@
 include ../../Makeconf
 
-KERNEL_VERSION ?= 5.10
+KERNEL_VERSION ?= 5.15
 LINUX_CONFIG   ?= config/linux64-$(KERNEL_VERSION)
 
 INITRAMFS_BASE := initramfs.cpio.gz

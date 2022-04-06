@@ -32,5 +32,6 @@ is
    Reg_Century      : constant := 16#32#;
    Reg_Status_A     : constant := 16#0a#;
    Reg_Status_B     : constant := 16#0b#;
+   Reg_Status_D     : constant := 16#0d#;
 
 end Cmos_Rtc;

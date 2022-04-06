@@ -28,7 +28,7 @@ with Time;
 
 package body Devices.RTC
 with
-   Refined_State => (State => (Current_Register, Current_Time, Status_A))
+   Refined_State => (State => (Current_Register, Current_Time))
 is
 
    use Types;
@@ -36,10 +36,6 @@ is
    --  Time is in BCD, 24-hour format.
    Status_B : constant := 2#10#;
 
-   --  Status A UIP bit.
-   UIP_Bit : constant := 16#80#;
-
-   Status_A         : SK.Word64             := 0;
    Current_Register : SK.Byte               := 0;
    Current_Time     : Mutime.Date_Time_Type := Mutime.Epoch;
 
@@ -53,7 +49,7 @@ is
          (Proof_In => Musinfo.Instance.State,
           Input    => (Mutime.Info.State,
                        Musinfo.Instance.Scheduling_Info),
-          In_Out   => (Current_Register, Current_Time, Status_A,
+          In_Out   => (Current_Register, Current_Time,
                        Subject_Info.State))
    is
       use type SK.Word16;
@@ -97,21 +93,19 @@ is
                   Current_Register := CR.Reg_Year;
                when CR.Reg_Status_B =>
                   Current_Register := CR.Reg_Status_B;
+               when CR.Reg_Status_D =>
+                  Current_Register := CR.Reg_Status_D;
                when others => null;
             end case;
          when CR.Port_Data =>
             case Current_Register is
-               when CR.Reg_Status_A =>
+               when CR.Reg_Status_A | CR.Reg_Status_D =>
+                  Subject_Info.State.Regs.RAX := 0;
+               when CR.Reg_Seconds =>
 
-                  --  Client initiates RTC read, get date and time.
-                  --  Toggle UIP bit in status A to emulate update in progress
-                  --  behavior.
+                  --  Linux client initiates RTC read, get date and time.
 
                   Current_Time := Time.Get_Date_Time;
-
-                  Status_A := Status_A xor UIP_Bit;
-                  Subject_Info.State.Regs.RAX := Status_A;
-               when CR.Reg_Seconds =>
                   Subject_Info.State.Regs.RAX := SK.Word64
                     (Mutime.Utils.To_BCD
                        (Value => Interfaces.Unsigned_8

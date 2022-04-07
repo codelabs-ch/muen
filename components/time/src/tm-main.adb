@@ -21,10 +21,6 @@ with Interfaces;
 with SK.CPU;
 with SK.Strings;
 
-pragma $Release_Warnings (Off, "unit * is not referenced");
-with Debuglog.Client;
-pragma $Release_Warnings (On, "unit * is not referenced");
-
 with Mutime.Info;
 
 with Tm.Rtc;
@@ -42,12 +38,11 @@ is
       TSC_Value : Interfaces.Unsigned_64;
       Success   : Boolean;
    begin
-      pragma Debug (Debuglog.Client.Init (Epoch => 1));
-      pragma Debug (Debuglog.Client.Put_Line (Item => "Time subject running"));
+      Debuglog.Client.Init (Epoch => 1);
+      Debuglog.Client.Put_Line (Item => "Time subject running");
 
       if not Musinfo.Instance.Is_Valid then
-         pragma Debug (Debuglog.Client.Put_Line
-                       (Item => "Error: Sinfo data not valid"));
+         Debuglog.Client.Put_Line (Item => "Error: Sinfo data not valid");
          SK.CPU.Stop;
       end if;
 
@@ -56,29 +51,27 @@ is
       Rtc.Read_Time (T => Rtc_Time);
       TSC_Value := SK.CPU.RDTSC;
 
-      pragma Debug
-        (Debuglog.Client.Put_Line
-           (Item => "RTC date/time: "
-            & SK.Strings.Img_Nobase (Rtc_Time.Century)
-            & SK.Strings.Img_Nobase (Item => Rtc_Time.Year)
-            & "-" & SK.Strings.Img_Nobase (Rtc_Time.Month)
-            & "-" & SK.Strings.Img_Nobase (Rtc_Time.Day)
-            & "T" & SK.Strings.Img_Nobase (Rtc_Time.Hour)
-            & ":" & SK.Strings.Img_Nobase (Rtc_Time.Minute)
-            & ":" & SK.Strings.Img_Nobase (Rtc_Time.Second)));
+      Debuglog.Client.Put_Line
+        (Item => "RTC date/time: "
+         & SK.Strings.Img_Nobase (Rtc_Time.Century)
+         & SK.Strings.Img_Nobase (Item => Rtc_Time.Year)
+         & "-" & SK.Strings.Img_Nobase (Rtc_Time.Month)
+         & "-" & SK.Strings.Img_Nobase (Rtc_Time.Day)
+         & "T" & SK.Strings.Img_Nobase (Rtc_Time.Hour)
+         & ":" & SK.Strings.Img_Nobase (Rtc_Time.Minute)
+         & ":" & SK.Strings.Img_Nobase (Rtc_Time.Second));
 
-      pragma Debug (Debuglog.Client.Put_Line
-                    (Item => "RTC status B: " & SK.Strings.Img
-                     (Rtc_Time.Status_B)));
+      Debuglog.Client.Put_Line
+        (Item => "RTC status B: " & SK.Strings.Img (Rtc_Time.Status_B));
 
       Utils.To_Mutime (Rtc_Time  => Rtc_Time,
                        Date_Time => Date_Time,
                        Success   => Success);
 
       if not Success then
-         pragma Debug (Debuglog.Client.Put_Line
-                       (Item => "Error: Unable to convert RTC date/time, "
-                        & "setting it to 01-01-2000"));
+         Debuglog.Client.Put_Line
+           (Item => "Error: Unable to convert RTC date/time, "
+            & "setting it to 01-01-2000");
 
         --  Clients might watch null value to detect published time, therefore
         --  set it to something non-zero.
@@ -105,26 +98,21 @@ is
 
          Timestamp := Timestamp - Microsecs_Boot;
 
-         pragma Debug
-           (Debuglog.Client.Put_Line
-              (Item => "Microseconds since boot " & SK.Strings.Img
-                   (Microsecs_Boot)));
-         pragma Debug
-           (Debuglog.Client.Put_Line
-              (Item => "Mutime timestamp " & SK.Strings.Img
-                   (Interfaces.Unsigned_64 (Timestamp))));
-         pragma Debug
-           (Debuglog.Client.Put_Line
-              (Item => "Exporting time information to clients"));
+         Debuglog.Client.Put_Line
+           (Item => "Microseconds since boot " & SK.Strings.Img
+              (Microsecs_Boot));
+         Debuglog.Client.Put_Line
+           (Item => "Mutime timestamp " & SK.Strings.Img
+              (Interfaces.Unsigned_64 (Timestamp)));
+         Debuglog.Client.Put_Line
+           (Item => "Exporting time information to clients");
 
          Publish.Update (TSC_Time_Base => Timestamp,
                          TSC_Tick_Rate => TSC_Hz,
                          Timezone      => 0);
       end;
 
-      pragma Debug
-        (Debuglog.Client.Put_Line
-           (Item => "Time successfully published, halting"));
+      Debuglog.Client.Put_Line (Item => "Time successfully published, halting");
 
       Mucontrol.Status.Instance.Set
         (New_State => Mucontrol.Status.STATE_FINISHED);

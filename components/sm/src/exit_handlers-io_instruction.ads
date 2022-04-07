@@ -41,8 +41,9 @@ is
                               Devices.RTC.State, Debuglog.Client.State,
                               X86_64.State)),
       Depends =>
-       (Subject_Info.State       =>+ (Devices.RTC.State,
-                                      Devices.UART8250.State),
+       (Subject_Info.State       =>+ (Devices.RTC.State, Devices.UART8250.State,
+                                      Mutime.Info.State,
+                                      Musinfo.Instance.Scheduling_Info),
         (Debuglog.Client.State,
          Devices.UART8250.State,
          X86_64.State)           =>+ (Subject_Info.State,

@@ -18,16 +18,13 @@
 
 with Ada.Unchecked_Conversion;
 
+pragma $Release_Warnings
+  (Off, "unit * is not referenced",
+   Reason => "Only used for debug output");
 with SK.Strings;
-
 with Debug_Ops;
-
-pragma $Release_Warnings
-  (Off, "unit ""Sm_Component.Config"" is not referenced",
-   Reason => "Only used to control debug output");
 with Sm_Component.Config;
-pragma $Release_Warnings
-  (On, "unit ""Sm_Component.Config"" is not referenced");
+pragma $Release_Warnings (On, "unit * is not referenced");
 
 package body Exit_Handlers.CR_Access
 is

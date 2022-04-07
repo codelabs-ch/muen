@@ -16,14 +16,13 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+pragma $Release_Warnings
+  (Off, "unit * is not referenced",
+   Reason => "Only used for debug output");
 with SK.Strings;
-
-pragma $Release_Warnings (Off, "unit * is not referenced",
-                          Reason => "Only used for debug output");
+with Debug_Ops;
 with Sm_Component.Config;
 pragma $Release_Warnings (On, "unit * is not referenced");
-
-with Debug_Ops;
 
 package body Exit_Handlers.WRMSR
 is

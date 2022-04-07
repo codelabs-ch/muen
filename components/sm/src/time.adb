@@ -19,9 +19,13 @@
 with Interfaces;
 
 with SK.CPU;
-with SK.Strings;
 
+pragma $Release_Warnings
+  (Off, "unit * is not referenced",
+   Reason => "Only used for debug output");
+with SK.Strings;
 with Debug_Ops;
+pragma $Release_Warnings (On, "unit * is not referenced");
 
 package body Time
 is

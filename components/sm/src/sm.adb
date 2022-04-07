@@ -81,13 +81,13 @@ is
    RIP : SK.Word64;
 begin
    Debuglog.Client.Init (Epoch => Cur_Epoch);
-   pragma Debug (Debug_Ops.Put_Line (Item => "SM subject running"));
+   Debug_Ops.Put_Line (Item => "SM subject running");
    SK.Interrupt_Tables.Initialize
      (Stack_Addr => Component_Constants.Interrupt_Stack_Address);
    Time.Initialize;
 
    if not Musinfo.Instance.Is_Valid then
-      pragma Debug (Debug_Ops.Put_Line (Item => "Sinfo not valid"));
+      Debug_Ops.Put_Line (Item => "Sinfo not valid");
       SK.CPU.Stop;
    end if;
 
@@ -125,9 +125,7 @@ begin
       then
          Exit_Handlers.Invalid_Guest_State.Process (Action => Action);
       else
-         pragma Debug (Debug_Ops.Put_Line
-                       (Item => "Unhandled trap for associated subject"));
-
+         Debug_Ops.Put_Line (Item => "Unhandled trap for associated subject");
          Action := Types.Subject_Halt;
       end if;
 

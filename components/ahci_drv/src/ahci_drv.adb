@@ -59,11 +59,11 @@ begin
 
    declare
       use type Interfaces.Unsigned_24;
-      Class_Code : constant Interfaces.Unsigned_24
-        := Ahci.Pciconf.Instance.Header.Class_Code;
-   begin
 
-      if Class_Code = Ahci.Constants.AHCI_Class_Code then
+      Info : constant Ahci.Pciconf.Info_Record
+        := Ahci.Pciconf.Instance.Header.Info;
+   begin
+      if Info.Class_Code = Ahci.Constants.AHCI_Class_Code then
          Log.Put_Line (Item => "AHCI controller present");
          Ahci.HBA.Reset;
          Ahci.HBA.Enable;
@@ -72,6 +72,8 @@ begin
          Server.Init;
          Server.Process;
          Log.Put_Line ("Server exited. Should not happen.");
+      else
+         Log.Put_Line (Item => "AHCI controller not present");
       end if;
    end;
 

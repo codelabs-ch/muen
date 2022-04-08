@@ -68,19 +68,19 @@ is
         (Name => Musinfo.Utils.To_Name (Str => Reset_Event_Name),
          Kind => Musinfo.Res_Event);
       if Event = Musinfo.Null_Resource then
-         pragma Debug (Debug_Ops.Put_Line (Item => "No " & Reset_Event_Name
-                                           & " event present"));
+         Debug_Ops.Put_Line (Item => "No " & Reset_Event_Name
+                             & " event present");
          return;
       end if;
       SK.Hypercall.Trigger_Event (Number => Event.Evt_Data.Value);
-      pragma Debug (Debug_Ops.Put_Line (Item => "Linux reset"));
+      Debug_Ops.Put_Line (Item => "Linux reset");
 
       Event := Musinfo.Instance.Resource_By_Name
         (Name => Musinfo.Utils.To_Name (Str => Load_Event_Name),
          Kind => Musinfo.Res_Event);
       if Event = Musinfo.Null_Resource then
-         pragma Debug (Debug_Ops.Put_Line (Item => "No " & Load_Event_Name
-                                           & " event present"));
+         Debug_Ops.Put_Line (Item => "No " & Load_Event_Name
+                             & " event present");
          return;
       end if;
       SK.Hypercall.Trigger_Event (Number => Event.Evt_Data.Value);
@@ -97,14 +97,14 @@ is
          if Mem_Res = Musinfo.Null_Resource
            or else Mem_Res.Mem_Data.Address /= Linux_Status_Address
          then
-            pragma Debug
-              (Debug_Ops.Put_Line
-                 (Item => "Linux status page not mapped at "
-                  & SK.Strings.Img (SK.Word64 (Linux_Status_Address))));
-            pragma Debug
-              (Debug_Ops.Put_Line
+            Debug_Ops.Put_Line
+              (Item => "Linux status page not mapped at "
+               & SK.Strings.Img (SK.Word64 (Linux_Status_Address)));
+            if Mem_Res /= Musinfo.Null_Resource then
+               Debug_Ops.Put_Line
                  (Item => "Mapped at "
-                  & SK.Strings.Img (Mem_Res.Mem_Data.Address)));
+                  & SK.Strings.Img (Mem_Res.Mem_Data.Address));
+            end if;
             Success := False;
             return;
          end if;
@@ -113,19 +113,16 @@ is
          Unused_Diag := SK.Word64 (Linux_Status.Diagnostics);
 
          Success := (Cur_State = SK.Word64 (Mucontrol.Status.STATE_RUNNING));
-         pragma Debug (Success, Debug_Ops.Put_Line (Item => "Linux loaded"));
-         pragma Debug
-           (not Success,
+         if Success then
+            Debug_Ops.Put_Line (Item => "Linux loaded");
+         else
             Debug_Ops.Put_Line
-              (Item => "Unexpected status after loading Linux"));
-         pragma Debug
-           (not Success,
+              (Item => "Unexpected status after loading Linux");
             Debug_Ops.Put_Line (Item => "State      : "
-                                & SK.Strings.Img (Item => Cur_State)));
-         pragma Debug
-           (not Success,
+                                & SK.Strings.Img (Item => Cur_State));
             Debug_Ops.Put_Line (Item => "Diagnostics: "
-                                & SK.Strings.Img (Item => Unused_Diag)));
+                                & SK.Strings.Img (Item => Unused_Diag));
+         end if;
       end;
    end Setup_Monitored_Subject;
 

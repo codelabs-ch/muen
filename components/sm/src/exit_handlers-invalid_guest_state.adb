@@ -49,8 +49,7 @@ is
    begin
       Startup.Setup_Monitored_Subject (Success => Success);
       if not Success then
-         pragma Debug (Debug_Ops.Put_Line
-                       (Item => "Linux setup error, halting subject"));
+         Debug_Ops.Put_Line (Item => "Linux setup error, halting subject");
          Action := Types.Subject_Halt;
          return;
       end if;
@@ -61,8 +60,7 @@ is
       if SK.Bitops.Bit_Test (Value => CR4,
                              Pos   => SK.Constants.CR4_VMXE_FLAG)
       then
-         pragma Debug (Debug_Ops.Put_Line
-                       (Item => "Invalid guest state, halting subject"));
+         Debug_Ops.Put_Line (Item => "Invalid guest state, halting subject");
          Action := Types.Subject_Halt;
       else
 
@@ -71,13 +69,11 @@ is
 
          Is_BSP := Is_Protected_Mode_Enabled;
          if not Is_BSP then
-            pragma Debug (Debug_Ops.Put_Line
-                          (Item => "Waiting for AP wakeup event"));
+            Debug_Ops.Put_Line (Item => "Waiting for AP wakeup event");
             SK.CPU.Sti;
             SK.CPU.Hlt;
             SK.CPU.Cli;
-            pragma Debug (Debug_Ops.Put_Line
-                          (Item => "AP wakeup event received"));
+            Debug_Ops.Put_Line (Item => "AP wakeup event received");
          end if;
 
          --  Fix subject to make the state valid and runnable.

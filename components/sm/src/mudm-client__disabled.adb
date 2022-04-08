@@ -49,23 +49,18 @@ is
 
    -------------------------------------------------------------------------
 
-   pragma $Release_Warnings (Off, "formal parameter * is not referenced",
-                             Reason => "Only used for debug output");
    procedure Pciconf_Emulate_Write
      (SID    : Musinfo.SID_Type;
       Offset : Offset_Type;
       Value  : Interfaces.Unsigned_32)
    is
-      pragma $Release_Warnings (On, "formal parameter * is not referenced",
-                                Reason => "Only used for debug output");
    begin
-      pragma Debug
-        (Debug_Ops.Put_Line
-           (Item => "Error: Pciconf emulation write request for SID "
-            & SK.Strings.Img (SID) & " @ offset "
-            & SK.Strings.Img (SK.Byte (Offset)) & ", value "
-            & SK.Strings.Img (Value)
-            & " but pciconf emulation is disabled"));
+      Debug_Ops.Put_Line
+        (Item => "Error: Pciconf emulation write request for SID "
+         & SK.Strings.Img (SID) & " @ offset "
+         & SK.Strings.Img (SK.Byte (Offset)) & ", value "
+         & SK.Strings.Img (Value)
+         & " but pciconf emulation is disabled");
    end Pciconf_Emulate_Write;
 
 end Mudm.Client;

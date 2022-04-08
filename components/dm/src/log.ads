@@ -22,7 +22,7 @@ with SK;
 
 with Debuglog.Client;
 
-package Dev_Mngr.Debug_Ops
+package Log
 is
 
    procedure Init
@@ -39,10 +39,12 @@ is
 
    procedure Flush renames Debuglog.Client.Flush;
 
+   subtype Width_Index_Range is Natural range 0 .. 2;
+
    --  Check PCI config space write width and display message if it exceeds the
    --  maximum width specified by width index.
    procedure Check_Warn_PCI_Write_Width
      (Value     : SK.Word32;
-      Width_Idx : Natural);
+      Width_Idx : Width_Index_Range);
 
-end Dev_Mngr.Debug_Ops;
+end Log;

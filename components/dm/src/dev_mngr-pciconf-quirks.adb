@@ -18,7 +18,7 @@
 
 with SK.Strings;
 
-with Dev_Mngr.Debug_Ops;
+with Log;
 
 package body Dev_Mngr.Pciconf.Quirks
 is
@@ -92,13 +92,12 @@ is
          Device => Device,
          Class  => Class)
       then
-         pragma Debug
-           (Debug_Ops.Put_Line
-              (Item => "Pciconf " & SK.Strings.Img (Dev_State.SID)
-               & ": Registering xHCI handoff quirk for"
-               & " vendor " & SK.Strings.Img (Vendor)
-               & " device " & SK.Strings.Img (Device)
-               & " class "  & SK.Strings.Img (Class)));
+         Log.Put_Line
+           (Item => "Pciconf " & SK.Strings.Img (Dev_State.SID)
+            & ": Registering xHCI handoff quirk for"
+            & " vendor " & SK.Strings.Img (Vendor)
+            & " device " & SK.Strings.Img (Device)
+            & " class "  & SK.Strings.Img (Class));
          Append_Rule (Device => Dev_State,
                       Rule   => (Offset      => USB3_Intel_XUSB2PR,
                                  Read_Mask   => Read_No_Virt,

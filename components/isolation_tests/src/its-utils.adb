@@ -21,16 +21,16 @@ with System;
 package body ITS.Utils
 is
 
-   The_Memory : array (Interfaces.Unsigned_64'Range) of Interfaces.Unsigned_8
+   The_Memory : array (Memory_Address'Range) of Interfaces.Unsigned_8
    with
       Import,
       Volatile,
-      Address => System'To_Address (0);
+      Address => System'To_Address (1);
 
    -------------------------------------------------------------------------
 
    procedure Read_Byte
-     (Address :     Interfaces.Unsigned_64;
+     (Address :     Memory_Address;
       Value   : out Interfaces.Unsigned_8)
    is
    begin
@@ -40,7 +40,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Write_Byte
-     (Address : Interfaces.Unsigned_64;
+     (Address : Memory_Address;
       Value   : Interfaces.Unsigned_8)
    is
    begin

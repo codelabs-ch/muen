@@ -40,10 +40,10 @@ is
                                Musinfo.Instance.Scheduling_Info),
                   In_Out   => (State, Subject_Info.State)),
       Depends =>
-         (State              =>+ (Info, Mutime.Info.State, Subject_Info.State,
-                                  Musinfo.Instance.Scheduling_Info),
-          Subject_Info.State =>+ (Info, State),
-          Action             =>  null),
+         ((State,
+           Subject_Info.State) =>+ (Info, Mutime.Info.State, Subject_Info.State,
+                                    Musinfo.Instance.Scheduling_Info, State),
+          Action               =>  null),
       Pre     => Musinfo.Instance.Is_Valid,
       Post    => Action = Types.Subject_Continue;
 

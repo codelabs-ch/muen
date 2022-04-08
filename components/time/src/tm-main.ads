@@ -22,6 +22,8 @@ with Musinfo.Instance;
 
 with Mucontrol.Status.Instance;
 
+with Debuglog.Client;
+
 with Tm.Publish;
 
 package Tm.Main
@@ -32,6 +34,7 @@ is
    with
       Global => (Input  => Musinfo.Instance.State,
                  In_Out => (Publish.State, Mucontrol.Status.Instance.State,
-                            X86_64.State));
+                            X86_64.State),
+                 Output => Debuglog.Client.State);
 
 end Tm.Main;

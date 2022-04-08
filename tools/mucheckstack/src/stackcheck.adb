@@ -117,8 +117,8 @@ is
       Files.For_Each_File (Files   => CIs,
                            Process => Parse_File'Access);
 
-      --  Add stack usage information for mem[cmp|cpy] subprograms provided by
-      --  RTS.
+      --  Add stack usage information for mem[cmp|cpy|set] subprograms provided
+      --  by RTS.
 
       Types.Add_Node (Graph      => CFG,
                       Subprogram => Types.Create (Name          => "memcmp",
@@ -127,6 +127,11 @@ is
                                                   Bounded_Stack => False));
       Types.Add_Node (Graph      => CFG,
                       Subprogram => Types.Create (Name          => "memcpy",
+                                                  Stack_Usage   => 0,
+                                                  Dynamic_Stack => False,
+                                                  Bounded_Stack => False));
+      Types.Add_Node (Graph      => CFG,
+                      Subprogram => Types.Create (Name          => "memset",
                                                   Stack_Usage   => 0,
                                                   Dynamic_Stack => False,
                                                   Bounded_Stack => False));

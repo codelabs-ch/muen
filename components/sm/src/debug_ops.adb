@@ -58,13 +58,12 @@ is
          Pos   => High_Bit);
       if Found and then SK.Byte (High_Bit) > Max_Write_Widths (Width_Idx)
       then
-         pragma Debug
-           (Debug_Ops.Put_Line
-              (Item => "Pciconf: WARNING code @ RIP "
-               & SK.Strings.Img (RIP) & " tries to write bit position "
-               & SK.Strings.Img (SK.Byte (High_Bit))
-               & " instead of allowed max "
-               & SK.Strings.Img (Max_Write_Widths (Width_Idx))));
+         Debug_Ops.Put_Line
+           (Item => "Pciconf: WARNING code @ RIP "
+            & SK.Strings.Img (RIP) & " tries to write bit position "
+            & SK.Strings.Img (SK.Byte (High_Bit))
+            & " instead of allowed max "
+            & SK.Strings.Img (Max_Write_Widths (Width_Idx)));
       end if;
    end Check_Warn_PCI_Write_Width;
 

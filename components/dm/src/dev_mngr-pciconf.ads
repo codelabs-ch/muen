@@ -20,6 +20,8 @@ with Interfaces;
 
 with SK;
 
+with Debuglog.Client;
+
 with Musinfo.Instance;
 with Mudm;
 
@@ -38,7 +40,7 @@ is
       Result : out SK.Word32)
    with
       Global => (Input  => Musinfo.Instance.State,
-                 In_Out => State),
+                 In_Out => (State, Debuglog.Client.State)),
       Pre    => Musinfo.Instance.Is_Valid;
 
 private

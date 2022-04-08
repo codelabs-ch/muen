@@ -151,7 +151,7 @@ is
      (Device : out Device_Type;
       SID    :     Musinfo.SID_Type)
    with
-      Global => (In_Out => Addrspace.Memory);
+      Global => (In_Out => (Addrspace.Memory, Debuglog.Client.State));
 
    --  Return device for given SID. If no device with the specified SID is
    --  present, Null_Device is returned.
@@ -185,11 +185,11 @@ is
       Flags  :        SK.Byte);
 
    --  Perform virtualized read operation for specified device at given offset.
-   function Vread
-     (Device    : Device_Type;
-      Operation : Vread_Type;
-      Offset    : Mudm.Offset_Type)
-      return SK.Word32;
+   procedure Vread
+     (Device    :     Device_Type;
+      Operation :     Vread_Type;
+      Offset    :     Mudm.Offset_Type;
+      Value     : out SK.Word32);
 
    --  Return virtualized BAR value for specified device at given offset.
    function Read_BAR
@@ -205,7 +205,8 @@ is
       Offset    : Mudm.Offset_Type;
       Value     : SK.Word32)
    with
-      Global => (In_Out => (Device_DB, Addrspace.Memory));
+      Global => (In_Out => (Device_DB, Addrspace.Memory,
+                            Debuglog.Client.State));
 
    --  Write value to BAR at given offset.
    procedure Write_BAR
@@ -227,17 +228,18 @@ is
       Rule   :        Rule_Type)
    is
    begin
-      pragma Debug (Device.Rules (Device.Rules'Last) /= Null_Rule,
-                    Debug_Ops.Put_Line
-                      (Item => "Pciconf: WARNING rules array is full"));
+      if Device.Rules (Device.Rules'Last) /= Null_Rule then
+         Debug_Ops.Put_Line (Item => "Pciconf: WARNING rules array is full");
+      end if;
+
       for R of Device.Rules loop
          if R.Offset = Mudm.Offset_Type'Last or else Rule.Offset = R.Offset
          then
-            pragma Debug
-              (Rule.Offset = R.Offset,
+            if Rule.Offset = R.Offset then
                Debug_Ops.Put_Line
                  (Item => "Pciconf: WARNING overwriting rule for offset "
-                  & SK.Strings.Img (SK.Byte (R.Offset))));
+                  & SK.Strings.Img (SK.Byte (R.Offset)));
+            end if;
             R := Rule;
             exit;
          end if;
@@ -417,9 +419,9 @@ is
    is
       use type Musinfo.SID_Type;
    begin
-      pragma Debug (Device_DB (Device_DB'Last) /= Null_Device,
-                    Debug_Ops.Put_Line
-                      (Item => "Pciconf: WARNING device array is full"));
+      if Device_DB (Device_DB'Last) /= Null_Device then
+         Debug_Ops.Put_Line (Item => "Pciconf: WARNING device array is full");
+      end if;
 
       for D of Device_DB loop
          if D.SID = Musinfo.Null_SID or else D.SID = Device.SID then
@@ -449,28 +451,25 @@ is
 
    -------------------------------------------------------------------------
 
-   function Vread
-     (Device    : Device_Type;
-      Operation : Vread_Type;
-      Offset    : Mudm.Offset_Type)
-      return SK.Word32
+   procedure Vread
+     (Device    :     Device_Type;
+      Operation :     Vread_Type;
+      Offset    :     Mudm.Offset_Type;
+      Value     : out SK.Word32)
    is
-      Res : SK.Word32 := 0;
    begin
+      Value := 0;
       case Operation is
          when Vread_BAR =>
             if Offset in BAR_Offset_Type then
-               Res := Read_BAR (Device => Device,
+               Value := Read_BAR (Device => Device,
                                 Offset => Offset);
-            end if;
-            pragma Debug
-              (Offset not in BAR_Offset_Type,
+            else
                Debug_Ops.Put (Item => " [invalid BAR offset "
-                              & SK.Strings.Img (SK.Byte (Offset)) & "]"));
+                              & SK.Strings.Img (SK.Byte (Offset)) & "]");
+            end if;
          when Vread_None => null;
       end case;
-
-      return Res;
    end Vread;
 
    -------------------------------------------------------------------------
@@ -533,11 +532,10 @@ is
                  (Device => Device,
                   Offset => Offset,
                   Value  => Value);
-            end if;
-            pragma Debug
-              (Offset not in BAR_Offset_Type,
+            else
                Debug_Ops.Put (Item => " [invalid BAR offset "
-                              & SK.Strings.Img (SK.Byte (Offset)) & "]"));
+                              & SK.Strings.Img (SK.Byte (Offset)) & "]");
+            end if;
          when Vwrite_Command => Write_Command
               (SID   => Device.SID,
                Value => SK.Word16'Mod (Value));
@@ -584,12 +582,11 @@ is
               (SID    => SID,
                Offset => BAR_Offset,
                Value  => Device.BARs (I).Address);
-            pragma Debug
-              (Debug_Ops.Put_Line
-                 (Item => "Pciconf " & SK.Strings.Img (SID) & ":"
-                  & " BAR" & SK.Strings.Img_Nobase (SK.Byte (I))
-                  & " address " & SK.Strings.Img (Device.BARs (I).Address)
-                  & " size " & SK.Strings.Img (Device.BARs (I).Size)));
+            Debug_Ops.Put_Line
+              (Item => "Pciconf " & SK.Strings.Img (SID) & ":"
+               & " BAR" & SK.Strings.Img_Nobase (SK.Byte (I))
+               & " address " & SK.Strings.Img (Device.BARs (I).Address)
+               & " size " & SK.Strings.Img (Device.BARs (I).Size));
          end;
       end loop;
 
@@ -619,11 +616,10 @@ is
             if SK.Byte'Mod (Val) = MSI_Cap_ID
               or else SK.Byte'Mod (Val) = MSI_X_Cap_ID
             then
-               pragma Debug
-                 (Debug_Ops.Put_Line
-                    (Item => "Pciconf " & SK.Strings.Img (SID)
-                     & ": MSI(X) cap ID " & SK.Strings.Img (SK.Byte (Val))
-                     & " @ offset " & SK.Strings.Img (SK.Byte (Offset))));
+               Debug_Ops.Put_Line
+                 (Item => "Pciconf " & SK.Strings.Img (SID)
+                  & ": MSI(X) cap ID " & SK.Strings.Img (SK.Byte'Mod (Val))
+                  & " @ offset " & SK.Strings.Img (SK.Byte (Offset)));
                MSI_Ctrl := Addrspace.Read_Byte
                  (SID    => SID,
                   Offset => Offset + Field_MSI_Ctrl);
@@ -696,17 +692,14 @@ is
            (SID    => SID,
             Offset => Field_Header);
          if Header /= 0 then
-            pragma Debug
-              (Debug_Ops.Put_Line
-                 (Item => "Pciconf " & SK.Strings.Img (SID)
-                  & ": Unsupported header " & SK.Strings.Img (Header)));
+            Debug_Ops.Put_Line
+              (Item => "Pciconf " & SK.Strings.Img (SID)
+               & ": Unsupported header " & SK.Strings.Img (Header));
             return;
          end if;
 
-         pragma Debug
-           (Debug_Ops.Put_Line
-              (Item => "Pciconf " & SK.Strings.Img (SID)
-               & ": Initializing device"));
+         Debug_Ops.Put_Line (Item => "Pciconf " & SK.Strings.Img (SID)
+                             & ": Initializing device");
          Init (Device => Device,
                SID    => SID);
          Insert_Device (Device => Device);
@@ -717,12 +710,11 @@ is
          Device => Device);
 
       if Op = Mudm.Emul_Req_Read then
-         pragma Debug
-           (Debug_Ops.Put (Item => "Pciconf "
-                           & SK.Strings.Img (SID) & ": Read "));
+         Debug_Ops.Put (Item => "Pciconf " & SK.Strings.Img (SID) & ": Read ");
          declare
             Width : constant Access_Width_Type := Read_Widths
               (SK.Byte (Offset) mod 4);
+            Data  : SK.Word32;
          begin
 
             --  Read real value if not fully virtualized.
@@ -753,31 +745,30 @@ is
             --  Merge in virtualized bits.
 
             if Rule /= Null_Rule and then Rule.Vread /= Vread_None then
-               Result := Result or Vread
-                 (Device    => Device,
-                  Operation => Rule.Vread,
-                  Offset    => Offset);
+               Vread (Device    => Device,
+                      Operation => Rule.Vread,
+                      Offset    => Offset,
+                      Value     => Data);
+               Result := Result or Data;
             end if;
-            pragma Debug (Rule /= Null_Rule
-                          and Rule.Read_Mask = Read_All_Virt,
-                          Debug_Ops.Put (Item => "(ALLVIRT)"));
-            pragma Debug (Rule /= Null_Rule
-                          and Rule.Read_Mask /= Read_All_Virt
-                          and Rule.Read_Mask /= Read_No_Virt,
-                          Debug_Ops.Put (Item => "(VIRT)"));
-            pragma Debug (Debug_Ops.Put_Line
-                          (Item => " @ " & SK.Strings.Img
-                           (SK.Byte (Offset)) & ": "
-                           & SK.Strings.Img (Result)));
+            if Rule /= Null_Rule and Rule.Read_Mask = Read_All_Virt then
+               Debug_Ops.Put (Item => "(ALLVIRT)");
+            elsif Rule /= Null_Rule and Rule.Read_Mask /= Read_All_Virt
+              and Rule.Read_Mask /= Read_No_Virt
+            then
+               Debug_Ops.Put (Item => "(VIRT)");
+            end if;
+            Debug_Ops.Put_Line
+              (Item => " @ " & SK.Strings.Img (SK.Byte (Offset)) & ": "
+               & SK.Strings.Img (Result));
          end;
       elsif Op = Mudm.Emul_Req_Write then
-         pragma Debug
-           (Rule /= Null_Rule,
+         if Rule /= Null_Rule then
             Debug_Ops.Check_Warn_PCI_Write_Width
               (Value     => Value,
-               Width_Idx => Access_Width_Type'Pos (Rule.Write_Width)));
-         pragma Debug (Debug_Ops.Put (Item => "Pciconf " & SK.Strings.Img (SID)
-                                      & ": Write"));
+               Width_Idx => Access_Width_Type'Pos (Rule.Write_Width));
+         end if;
+         Debug_Ops.Put (Item => "Pciconf " & SK.Strings.Img (SID) & ": Write");
 
          case Rule.Write_Perm is
             when Write_Denied => null;
@@ -801,13 +792,14 @@ is
                        Operation => Rule.Vwrite,
                        Offset    => Offset,
                        Value     => SK.Word32'Mod (Value));
-               pragma Debug (Debug_Ops.Put (Item => " (ALLVIRT)"));
+               Debug_Ops.Put (Item => " (ALLVIRT)");
          end case;
-         pragma Debug (Rule.Write_Perm = Write_Denied,
-                       Debug_Ops.Put (Item => " (DENIED)"));
-         pragma Debug (Debug_Ops.Put_Line
-                       (Item => " @ " & SK.Strings.Img (SK.Byte (Offset))
-                        & ": " & SK.Strings.Img (Value)));
+         if Rule.Write_Perm = Write_Denied then
+            Debug_Ops.Put (Item => " (DENIED)");
+         end if;
+         Debug_Ops.Put_Line
+           (Item => " @ " & SK.Strings.Img (SK.Byte (Offset))
+            & ": " & SK.Strings.Img (Value));
       end if;
    end Emulate;
 

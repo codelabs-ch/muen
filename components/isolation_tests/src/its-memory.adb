@@ -39,7 +39,7 @@ is
 
    procedure Read_From_Unmapped_Region
    is
-      Memory_Address  : constant Interfaces.Unsigned_64 := 0;
+      Memory_Address  : constant Interfaces.Unsigned_64 := 16#0037#;
       Title           : constant String
         := "Read Access to unmapped Memory";
       Description     : constant String
@@ -108,7 +108,7 @@ is
    procedure Write_To_Read_Only_Region
    is
       Memory_Address  : constant Interfaces.Unsigned_64
-        := Cspecs.Read_Only_Address;
+        := Cspecs.Read_Only_Address + 16#0042#;
       Title           : constant String
         := "Write Access to read-only Memory";
       Description     : constant String
@@ -174,7 +174,7 @@ is
 
    procedure Write_To_Unmapped_Region
    is
-      Memory_Address  : constant Interfaces.Unsigned_64 := 0;
+      Memory_Address  : constant Interfaces.Unsigned_64 := 16#0928#;
       Title           : constant String
         := "Write Access to unmapped Memory";
       Description     : constant String

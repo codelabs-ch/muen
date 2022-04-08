@@ -21,14 +21,19 @@ with Interfaces;
 package ITS.Utils
 is
 
+   --  Addressable memory which explicitly exludes 0 since access to
+   --  Null_Address is undefined behavior.
+   subtype Memory_Address is
+     Interfaces.Unsigned_64 range 1 .. Interfaces.Unsigned_64'Last;
+
    --  Read byte value from given memory address.
    procedure Read_Byte
-     (Address :     Interfaces.Unsigned_64;
+     (Address :     Memory_Address;
       Value   : out Interfaces.Unsigned_8);
 
    --  Write byte value to given memory address.
    procedure Write_Byte
-     (Address : Interfaces.Unsigned_64;
+     (Address : Memory_Address;
       Value   : Interfaces.Unsigned_8);
 
 end ITS.Utils;

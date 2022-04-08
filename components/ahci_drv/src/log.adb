@@ -346,9 +346,9 @@ is
       Put_Line (Item => " Vendor ID  : " & SK.Strings.Img (Dummy16));
       Dummy16 := Instance.Header.Device_ID;
       Put_Line (Item => " Device ID  : " & SK.Strings.Img (Dummy16));
-      Dummy8 := Instance.Header.Revision_ID;
+      Dummy8 := Instance.Header.Info.Revision_ID;
       Put_Line (Item => " Revision   : " & SK.Strings.Img (Dummy8));
-      Dummy32 := Interfaces.Unsigned_32 (Instance.Header.Class_Code);
+      Dummy32 := Interfaces.Unsigned_32 (Instance.Header.Info.Class_Code);
       Put_Line (Item => " Class      : " & SK.Strings.Img (Dummy32));
       Dummy32 := Instance.Header.Base_Address_Register_5;
       Put_Line (Item => " ABAR       : " & SK.Strings.Img (Dummy32));

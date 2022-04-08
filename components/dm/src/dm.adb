@@ -22,10 +22,10 @@ with SK.Hypercall;
 with Mudm;
 with Musinfo.Instance;
 
-with Dev_Mngr.Debug_Ops;
 with Dev_Mngr.Receiver;
 with Dev_Mngr.Sender;
 with Dev_Mngr.Pciconf;
+with Log;
 
 with Dm_Component.Channels;
 
@@ -35,11 +35,11 @@ is
 
    Request, Response : Mudm.Emul_Message_Type;
 begin
-   Debug_Ops.Init (Epoch => 1);
-   Debug_Ops.Put_Line (Item => "DM subject running");
+   Log.Init (Epoch => 1);
+   Log.Put_Line (Item => "DM subject running");
 
    if not Musinfo.Instance.Is_Valid then
-      Debug_Ops.Put_Line (Item => "Error: Sinfo data not valid");
+      Log.Put_Line (Item => "Error: Sinfo data not valid");
       SK.CPU.Stop;
    end if;
 

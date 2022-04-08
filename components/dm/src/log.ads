@@ -22,7 +22,7 @@ with SK;
 
 with Debuglog.Client;
 
-package Dev_Mngr.Debug_Ops
+package Log
 is
 
    procedure Init
@@ -47,4 +47,4 @@ is
      (Value     : SK.Word32;
       Width_Idx : Width_Index_Range);
 
-end Dev_Mngr.Debug_Ops;
+end Log;

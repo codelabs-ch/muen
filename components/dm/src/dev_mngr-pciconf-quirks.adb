@@ -18,7 +18,7 @@
 
 with SK.Strings;
 
-with Dev_Mngr.Debug_Ops;
+with Log;
 
 package body Dev_Mngr.Pciconf.Quirks
 is
@@ -92,7 +92,7 @@ is
          Device => Device,
          Class  => Class)
       then
-         Debug_Ops.Put_Line
+         Log.Put_Line
            (Item => "Pciconf " & SK.Strings.Img (Dev_State.SID)
             & ": Registering xHCI handoff quirk for"
             & " vendor " & SK.Strings.Img (Vendor)

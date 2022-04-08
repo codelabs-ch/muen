@@ -19,9 +19,9 @@
 with SK.Bitops;
 with SK.Strings;
 
-with Dev_Mngr.Debug_Ops;
 with Dev_Mngr.Pciconf.Quirks;
 with Dev_Mngr.Pciconf.Addrspace;
+with Log;
 
 package body Dev_Mngr.Pciconf
 with
@@ -229,14 +229,14 @@ is
    is
    begin
       if Device.Rules (Device.Rules'Last) /= Null_Rule then
-         Debug_Ops.Put_Line (Item => "Pciconf: WARNING rules array is full");
+         Log.Put_Line (Item => "Pciconf: WARNING rules array is full");
       end if;
 
       for R of Device.Rules loop
          if R.Offset = Mudm.Offset_Type'Last or else Rule.Offset = R.Offset
          then
             if Rule.Offset = R.Offset then
-               Debug_Ops.Put_Line
+               Log.Put_Line
                  (Item => "Pciconf: WARNING overwriting rule for offset "
                   & SK.Strings.Img (SK.Byte (R.Offset)));
             end if;
@@ -420,7 +420,7 @@ is
       use type Musinfo.SID_Type;
    begin
       if Device_DB (Device_DB'Last) /= Null_Device then
-         Debug_Ops.Put_Line (Item => "Pciconf: WARNING device array is full");
+         Log.Put_Line (Item => "Pciconf: WARNING device array is full");
       end if;
 
       for D of Device_DB loop
@@ -465,8 +465,8 @@ is
                Value := Read_BAR (Device => Device,
                                 Offset => Offset);
             else
-               Debug_Ops.Put (Item => " [invalid BAR offset "
-                              & SK.Strings.Img (SK.Byte (Offset)) & "]");
+               Log.Put (Item => " [invalid BAR offset "
+                        & SK.Strings.Img (SK.Byte (Offset)) & "]");
             end if;
          when Vread_None => null;
       end case;
@@ -533,8 +533,8 @@ is
                   Offset => Offset,
                   Value  => Value);
             else
-               Debug_Ops.Put (Item => " [invalid BAR offset "
-                              & SK.Strings.Img (SK.Byte (Offset)) & "]");
+               Log.Put (Item => " [invalid BAR offset "
+                        & SK.Strings.Img (SK.Byte (Offset)) & "]");
             end if;
          when Vwrite_Command => Write_Command
               (SID   => Device.SID,
@@ -582,7 +582,7 @@ is
               (SID    => SID,
                Offset => BAR_Offset,
                Value  => Device.BARs (I).Address);
-            Debug_Ops.Put_Line
+            Log.Put_Line
               (Item => "Pciconf " & SK.Strings.Img (SID) & ":"
                & " BAR" & SK.Strings.Img_Nobase (SK.Byte (I))
                & " address " & SK.Strings.Img (Device.BARs (I).Address)
@@ -616,7 +616,7 @@ is
             if SK.Byte'Mod (Val) = MSI_Cap_ID
               or else SK.Byte'Mod (Val) = MSI_X_Cap_ID
             then
-               Debug_Ops.Put_Line
+               Log.Put_Line
                  (Item => "Pciconf " & SK.Strings.Img (SID)
                   & ": MSI(X) cap ID " & SK.Strings.Img (SK.Byte'Mod (Val))
                   & " @ offset " & SK.Strings.Img (SK.Byte (Offset)));
@@ -692,14 +692,14 @@ is
            (SID    => SID,
             Offset => Field_Header);
          if Header /= 0 then
-            Debug_Ops.Put_Line
+            Log.Put_Line
               (Item => "Pciconf " & SK.Strings.Img (SID)
                & ": Unsupported header " & SK.Strings.Img (Header));
             return;
          end if;
 
-         Debug_Ops.Put_Line (Item => "Pciconf " & SK.Strings.Img (SID)
-                             & ": Initializing device");
+         Log.Put_Line (Item => "Pciconf " & SK.Strings.Img (SID)
+                       & ": Initializing device");
          Init (Device => Device,
                SID    => SID);
          Insert_Device (Device => Device);
@@ -710,7 +710,7 @@ is
          Device => Device);
 
       if Op = Mudm.Emul_Req_Read then
-         Debug_Ops.Put (Item => "Pciconf " & SK.Strings.Img (SID) & ": Read ");
+         Log.Put (Item => "Pciconf " & SK.Strings.Img (SID) & ": Read ");
          declare
             Width : constant Access_Width_Type := Read_Widths
               (SK.Byte (Offset) mod 4);
@@ -752,23 +752,23 @@ is
                Result := Result or Data;
             end if;
             if Rule /= Null_Rule and Rule.Read_Mask = Read_All_Virt then
-               Debug_Ops.Put (Item => "(ALLVIRT)");
+               Log.Put (Item => "(ALLVIRT)");
             elsif Rule /= Null_Rule and Rule.Read_Mask /= Read_All_Virt
               and Rule.Read_Mask /= Read_No_Virt
             then
-               Debug_Ops.Put (Item => "(VIRT)");
+               Log.Put (Item => "(VIRT)");
             end if;
-            Debug_Ops.Put_Line
+            Log.Put_Line
               (Item => " @ " & SK.Strings.Img (SK.Byte (Offset)) & ": "
                & SK.Strings.Img (Result));
          end;
       elsif Op = Mudm.Emul_Req_Write then
          if Rule /= Null_Rule then
-            Debug_Ops.Check_Warn_PCI_Write_Width
+            Log.Check_Warn_PCI_Write_Width
               (Value     => Value,
                Width_Idx => Access_Width_Type'Pos (Rule.Write_Width));
          end if;
-         Debug_Ops.Put (Item => "Pciconf " & SK.Strings.Img (SID) & ": Write");
+         Log.Put (Item => "Pciconf " & SK.Strings.Img (SID) & ": Write");
 
          case Rule.Write_Perm is
             when Write_Denied => null;
@@ -792,12 +792,12 @@ is
                        Operation => Rule.Vwrite,
                        Offset    => Offset,
                        Value     => SK.Word32'Mod (Value));
-               Debug_Ops.Put (Item => " (ALLVIRT)");
+               Log.Put (Item => " (ALLVIRT)");
          end case;
          if Rule.Write_Perm = Write_Denied then
-            Debug_Ops.Put (Item => " (DENIED)");
+            Log.Put (Item => " (DENIED)");
          end if;
-         Debug_Ops.Put_Line
+         Log.Put_Line
            (Item => " @ " & SK.Strings.Img (SK.Byte (Offset))
             & ": " & SK.Strings.Img (Value));
       end if;

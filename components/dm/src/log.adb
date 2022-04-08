@@ -19,7 +19,7 @@
 with SK.Bitops;
 with SK.Strings;
 
-package body Dev_Mngr.Debug_Ops
+package body Log
 is
 
    --  Max. writable bit position for each access width. Used in PCI config
@@ -47,7 +47,7 @@ is
          Pos   => High_Bit);
       if Found and then SK.Byte (High_Bit) > Max_Write_Widths (Width_Idx)
       then
-         Debug_Ops.Put_Line
+         Put_Line
            (Item => "Pciconf: WARNING request to write bit position "
             & SK.Strings.Img (SK.Byte (High_Bit))
             & " instead of allowed max "
@@ -55,4 +55,4 @@ is
       end if;
    end Check_Warn_PCI_Write_Width;
 
-end Dev_Mngr.Debug_Ops;
+end Log;

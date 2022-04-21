@@ -2341,6 +2341,7 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/subjects/subject[monitor/loader]");
+      Src_Initrd_Mem : DOM.Core.Node_List;
    begin
       for I in 0 .. DCN.Length (List => Loader_Subjs) - 1 loop
          declare
@@ -2551,6 +2552,16 @@ is
                                  Name  => "caching",
                                  Value => "WB");
 
+                              if Phys_Type = "subject_initrd" then
+
+                                 --  Collect all source regions of tybe initrd
+                                 --  for post-processing, see below.
+
+                                 DOM.Core.Append_Node
+                                   (List => Src_Initrd_Mem,
+                                    N    => Phys_Mem);
+                              end if;
+
                               --  Add new source mapping to loader.
 
                               Muxml.Utils.Append_Child
@@ -2567,6 +2578,30 @@ is
             end loop;
          end;
       end loop;
+
+      if DOM.Core.Nodes.Length (List => Src_Initrd_Mem) > 0 then
+
+         --  Retype initrd source memory regions, since conceptually, they are
+         --  now just regular memory regions with content that is handled by
+         --  loader subjects. Tools (e.g. Mugenzp) only need to consider the
+         --  target initrd regions, since those are actually used as initrd
+         --  regions by the Linux subjects.
+         --  Also, adjusting the memory type of 'subject_initrd' regions has to
+         --  be done after all target memory regions have been created, since
+         --  the target region type is derived from the potentially shared
+         --  initrd source region.
+
+         Mulog.Log (Msg => "Retyping" & DOM.Core.Nodes.Length
+                    (List => Src_Initrd_Mem)'Img
+                    & "initrd memory regions to 'subject'");
+         for I in 0 ..  DOM.Core.Nodes.Length (List => Src_Initrd_Mem) - 1 loop
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => DOM.Core.Nodes.Item (List  => Src_Initrd_Mem,
+                                             Index => I),
+               Name  => "type",
+               Value => "subject");
+         end loop;
+      end if;
    end Handle_Loaders;
 
    -------------------------------------------------------------------------

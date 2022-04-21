@@ -2475,8 +2475,22 @@ is
                             (Nodes     => File_Memory,
                              Ref_Attr  => "name",
                              Ref_Value => Map_Phys_Name);
+                        Target_Phys_Name : constant String
+                          := Map_Phys_Name  & "_" & Loadee_Name;
                      begin
                         if Phys_Mem /= null then
+
+                           --  Update physical reference(s) to target region.
+
+                           DOM.Core.Elements.Set_Attribute
+                             (Elem  => Map_Node,
+                              Name  => "physical",
+                              Value => Target_Phys_Name);
+                           DOM.Core.Elements.Set_Attribute
+                             (Elem  => Loader_Mapping,
+                              Name  => "physical",
+                              Value => Target_Phys_Name);
+
                            declare
                               Phys_Size       : constant String
                                 := DOM.Core.Elements.Get_Attribute
@@ -2489,7 +2503,7 @@ is
                               Target_Phys_Mem : constant DOM.Core.Node
                                 := MXU.Create_Memory_Node
                                   (Policy      => Data,
-                                   Name        => Map_Phys_Name,
+                                   Name        => Target_Phys_Name,
                                    Address     => "",
                                    Size        => Phys_Size,
                                    Caching     =>
@@ -2505,13 +2519,11 @@ is
                                 := DOM.Core.Documents.Create_Element
                                   (Doc      => Data.Doc,
                                    Tag_Name => "hashRef");
-                              Src_Phys_Name   : constant String
-                                := Map_Phys_Name & "_src";
                               Src_Mapping     : constant DOM.Core.Node
                                 := MXU.Create_Virtual_Memory_Node
                                   (Policy        => Data,
                                    Logical_Name  => Log_Name & "_src",
-                                   Physical_Name => Src_Phys_Name,
+                                   Physical_Name => Map_Phys_Name,
                                    Address       => Mutools.Utils.To_Hex
                                      (Number => Current_Loader_Addr),
                                    Writable      => False,
@@ -2520,8 +2532,8 @@ is
                               Mulog.Log
                                 (Msg => "Swapping file-backed source "
                                  & "region '" & Map_Phys_Name
-                                 & "' with new source memory region '"
-                                 & Src_Phys_Name & "'");
+                                 & "' with target memory region '"
+                                 & Target_Phys_Name & "'");
 
                               Muxml.Utils.Append_Child
                                 (Node      => DCN.Insert_Before
@@ -2532,18 +2544,14 @@ is
                               DOM.Core.Elements.Set_Attribute
                                 (Elem  => Hash_Ref,
                                  Name  => "memory",
-                                 Value => Src_Phys_Name);
+                                 Value => Map_Phys_Name);
 
-                              DOM.Core.Elements.Set_Attribute
-                                (Elem  => Phys_Mem,
-                                 Name  => "name",
-                                 Value => Src_Phys_Name);
                               DOM.Core.Elements.Set_Attribute
                                 (Elem  => Phys_Mem,
                                  Name  => "caching",
                                  Value => "WB");
 
-                              --  Map new source region into loader.
+                              --  Add new source mapping to loader.
 
                               Muxml.Utils.Append_Child
                                 (Node      => Ldr_Mem_Node,

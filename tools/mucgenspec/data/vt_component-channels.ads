@@ -3,8 +3,6 @@ pragma Style_Checks (Off);
 package Vt_Component.Channels
 is
 
-   type Channel_Kind is (Channel_Reader, Channel_Writer);
-
    Console_1_Address : constant := 16#0010_0000#;
    Console_1_Size    : constant := 16#0001_0000#;
    Console_1_Kind    : constant Channel_Kind := Channel_Reader;

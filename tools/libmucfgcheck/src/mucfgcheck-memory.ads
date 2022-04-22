@@ -224,6 +224,11 @@ is
      (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_mem
+   --D Validate that subject channel memory regions have exactly one writable
+   --D and at least one readable mapping.
+   procedure Subject_Channel_Mappings (XML_Data : Muxml.XML_Data_Type);
+
+   --D @Item List => validators_mem
    --D Validate size of VT-d root table region.
    procedure VTd_Root_Region_Size (XML_Data : Muxml.XML_Data_Type);
 

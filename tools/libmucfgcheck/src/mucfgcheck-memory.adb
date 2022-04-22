@@ -1012,6 +1012,70 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Subject_Channel_Mappings (XML_Data : Muxml.XML_Data_Type)
+   is
+      Phys_Channels : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory[@type='subject_channel']");
+      Mem_Mappings  : constant  DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/memory/memory");
+      Channel_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Phys_Channels);
+   begin
+      Mulog.Log (Msg => "Checking" & Channel_Count'Img
+                 & " subject channel memory region(s) for correct mappings");
+
+      for I in 0 .. Channel_Count - 1 loop
+         declare
+            Cur_Phys_Chan : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Phys_Channels,
+                                      Index => I);
+            Cur_Phys_Name : constant String
+              := DOM.Core.Elements.Get_Attribute (Elem => Cur_Phys_Chan,
+                                                  Name => "name");
+            Cur_Mappings  : constant DOM.Core.Node_List
+              := Muxml.Utils.Get_Elements (Nodes     => Mem_Mappings,
+                                           Ref_Attr  => "physical",
+                                           Ref_Value => Cur_Phys_Name);
+            Map_Count : constant Natural
+              := DOM.Core.Nodes.Length (List => Cur_Mappings);
+
+            Writer_Count : Natural := 0;
+         begin
+            for J in 0 .. Map_Count - 1 loop
+               if DOM.Core.Elements.Get_Attribute
+                 (Elem => DOM.Core.Nodes.Item (List  => Cur_Mappings,
+                                               Index => J),
+                  Name => "writable") = "true"
+               then
+                  Writer_Count := Writer_Count + 1;
+               end if;
+            end loop;
+
+            if Writer_Count = 0 then
+               Validation_Errors.Insert
+                 (Msg => "Subject channel '" & Cur_Phys_Name
+                  & "' has no writer, should be 1.");
+            elsif Writer_Count > 1 then
+               Validation_Errors.Insert
+                 (Msg => "Subject channel '" & Cur_Phys_Name
+                  & "' has" & Writer_Count'Img & " writers, should be 1.");
+            end if;
+
+            if Map_Count <= Writer_Count then
+               Validation_Errors.Insert
+                 (Msg => "Subject channel '" & Cur_Phys_Name
+                  & "' has no reader, should be at least 1.");
+            end if;
+         end;
+      end loop;
+   end Subject_Channel_Mappings;
+
+   -------------------------------------------------------------------------
+
    procedure Subject_FPU_State_Mappings (XML_Data : Muxml.XML_Data_Type)
    is
    begin

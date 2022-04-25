@@ -50,7 +50,7 @@ package body Zp.Utils.Test_Data.Tests is
             2      => (addr   => 16#f000#,
                        size   => 16#9000#,
                        c_type => Constants.E820_RAM),
-            3      => (addr   => 16#0001_8000#,
+            3      => (addr   => 16#0001_0001_8000#,
                        size   => 16#000a_0000#,
                        c_type => Constants.E820_RESERVED),
             4      => (addr   => 16#0100_0000#,

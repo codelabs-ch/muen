@@ -331,6 +331,7 @@ is
         := Interfaces.C.Extensions.unsigned_long_long (Kernel_Load_Addr);
 
       Params.hdr.type_of_loader := 16#ff#;
+      Params.hdr.xloadflags     := 16#2#;       --  XLF_CAN_BE_LOADED_ABOVE_4G
 
       Params.e820_entries := Interfaces.C.unsigned_char
         (DOM.Core.Nodes.Length (List => Subject_Memory));
@@ -338,8 +339,15 @@ is
 
       --  Initramfs
 
-      Params.hdr.ramdisk_image := Interfaces.C.unsigned (Ramdisk_Address);
-      Params.hdr.ramdisk_size  := Interfaces.C.unsigned (Ramdisk_Size);
+      Params.hdr.ramdisk_image
+        := Interfaces.C.unsigned (Ramdisk_Address and 16#ffff_ffff#);
+      Params.hdr.ramdisk_size
+        := Interfaces.C.unsigned (Ramdisk_Size and 16#ffff_ffff#);
+
+      Params.ext_ramdisk_image := Interfaces.C.unsigned
+        (Ramdisk_Address / 2 ** 32);
+      Params.ext_ramdisk_size  := Interfaces.C.unsigned
+        (Ramdisk_Size / 2 ** 32);
 
       Params.hdr.init_size        := Interfaces.C.unsigned (Init_Size);
       Params.hdr.cmdline_size     := 16#0000_0fff#;

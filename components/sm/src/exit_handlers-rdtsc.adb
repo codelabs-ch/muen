@@ -16,7 +16,16 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK;
+with SK.Strings;
+
+pragma $Release_Warnings
+  (Off, "unit ""Sm_Component.Config"" is not referenced",
+   Reason => "Only used to control debug output");
+with Sm_Component.Config;
+pragma $Release_Warnings
+  (On, "unit ""Sm_Component.Config"" is not referenced");
+
+with Debug_Ops;
 
 package body Exit_Handlers.RDTSC
 is
@@ -31,6 +40,9 @@ is
    begin
       Action := Types.Subject_Continue;
 
+      pragma Debug (Sm_Component.Config.Debug_Rdtsc,
+                    Debug_Ops.Put_Line
+                      (Item => "RDTSC " & SK.Strings.Img (TSC)));
       Subject_Info.State.Regs.RAX := TSC and 16#ffff_ffff#;
       Subject_Info.State.Regs.RDX := TSC / 2 ** 32;
    end Process;

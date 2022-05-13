@@ -27,7 +27,7 @@ is
    is
       use type SK.Word64;
 
-      TSC : constant SK.Word64 := Musinfo.Instance.TSC_Schedule_Start;
+      TSC : constant SK.Word64 := Musinfo.Instance.TSC_Schedule_End;
    begin
       Action := Types.Subject_Continue;
 

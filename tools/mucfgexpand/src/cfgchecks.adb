@@ -41,7 +41,7 @@ is
    --  Check the existence of channel endpoint (reader or writer) event
    --  attributes given by name. The XPath query specifies which global
    --  channels should be checked.
-   procedure Check_Channel_Events_Attr
+   procedure Check_Channel_Endpoint_Events_Attr
      (XML_Data  : Muxml.XML_Data_Type;
       XPath     : String;
       Endpoint  : String;
@@ -99,7 +99,7 @@ is
    procedure Channel_Reader_Has_Event_Vector (XML_Data : Muxml.XML_Data_Type)
    is
    begin
-      Check_Channel_Events_Attr
+      Check_Channel_Endpoint_Events_Attr
         (XML_Data  => XML_Data,
          XPath     => "/system/channels/channel[@hasEvent!='switch']",
          Endpoint  => "reader",
@@ -177,7 +177,7 @@ is
    procedure Channel_Writer_Has_Event_ID (XML_Data : Muxml.XML_Data_Type)
    is
    begin
-      Check_Channel_Events_Attr
+      Check_Channel_Endpoint_Events_Attr
         (XML_Data  => XML_Data,
          XPath     => "/system/channels/channel[@hasEvent]",
          Endpoint  => "writer",
@@ -222,7 +222,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Check_Channel_Events_Attr
+   procedure Check_Channel_Endpoint_Events_Attr
      (XML_Data  : Muxml.XML_Data_Type;
       XPath     : String;
       Endpoint  : String;
@@ -267,7 +267,7 @@ is
             end if;
          end;
       end loop;
-   end Check_Channel_Events_Attr;
+   end Check_Channel_Endpoint_Events_Attr;
 
    -------------------------------------------------------------------------
 

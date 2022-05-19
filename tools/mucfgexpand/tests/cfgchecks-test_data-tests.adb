@@ -14,6 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
+with DOM.Core.Elements;
 with Mucfgcheck.Validation_Errors;
 with Expanders.Channels;
 with Expanders.Subjects.Test_Data;
@@ -932,6 +933,25 @@ package body Cfgchecks.Test_Data.Tests is
       Assert (Condition => Mucfgcheck.Validation_Errors.Contains
               (Msg =>"Missing 'vector' attribute for reader of channel "
                & "'data_channel'"),
+              Message   => "Exception mismatch");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/channels/reader"
+         & "[@physical='data_channel']",
+         Name  => "vector",
+         Value => "12");
+
+      DOM.Core.Elements.Remove_Attribute
+        (Elem => Muxml.Utils.Get_Element 
+          (Doc   => Policy.Doc,
+           XPath => "/system/channels/channel[@name='data_channel']"),
+         Name => "hasEvent");
+      Channel_Reader_Has_Event_Vector
+        (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg => "Logical channel reader 'channel_1' specifies event but "
+               & "referenced channel 'data_channel' is missing hasEvent "
+               & "attribute"),
               Message   => "Exception mismatch");
 --  begin read only
    end Test_Channel_Reader_Has_Event_Vector;

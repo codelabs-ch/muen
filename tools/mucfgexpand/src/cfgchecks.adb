@@ -47,6 +47,13 @@ is
       Endpoint  : String;
       Attr_Name : String);
 
+   --  Check the existence of physical channel hasEvent attributes for channel
+   --  reader/writer endpoints which specify event ID or vector.
+   procedure Check_Channel_Has_Event_Attr
+     (XML_Data  : Muxml.XML_Data_Type;
+      Endpoint  : String;
+      Attr_Name : String);
+
    procedure No_Check
      (Logical_Resource  : DOM.Core.Node;
       Physical_Resource : DOM.Core.Node;
@@ -102,6 +109,10 @@ is
       Check_Channel_Endpoint_Events_Attr
         (XML_Data  => XML_Data,
          XPath     => "/system/channels/channel[@hasEvent!='switch']",
+         Endpoint  => "reader",
+         Attr_Name => "vector");
+      Check_Channel_Has_Event_Attr
+        (XML_Data  => XML_Data,
          Endpoint  => "reader",
          Attr_Name => "vector");
    end Channel_Reader_Has_Event_Vector;
@@ -268,6 +279,59 @@ is
          end;
       end loop;
    end Check_Channel_Endpoint_Events_Attr;
+
+   -------------------------------------------------------------------------
+
+   procedure Check_Channel_Has_Event_Attr
+     (XML_Data  : Muxml.XML_Data_Type;
+      Endpoint  : String;
+      Attr_Name : String)
+   is
+      use type DOM.Core.Node;
+
+      Channels  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/channels/channel[@hasEvent]");
+      Endpoints : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/channels/" & Endpoint
+           & "[@" & Attr_Name & "]");
+   begin
+      Mulog.Log (Msg => "Checking 'hasEvent' attribute of"
+                 & DOM.Core.Nodes.Length (List => Endpoints)'Img
+                 & " " & Endpoint & "(s) with associated event");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Endpoints) - 1 loop
+         declare
+            Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Endpoints,
+                 Index => I);
+            Logical : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Node,
+                 Name => "logical");
+            Physical : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Node,
+                 Name => "physical");
+            Channel : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Channels,
+                 Ref_Attr  => "name",
+                 Ref_Value => Physical);
+         begin
+            if Channel = null then
+               Mucfgcheck.Validation_Errors.Insert
+                 (Msg => "Logical channel " & Endpoint & " '" & Logical
+                  & "' specifies event but referenced channel '" & Physical
+                  & "' is missing hasEvent attribute");
+            end if;
+         end;
+      end loop;
+   end Check_Channel_Has_Event_Attr;
 
    -------------------------------------------------------------------------
 

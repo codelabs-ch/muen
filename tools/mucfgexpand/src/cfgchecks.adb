@@ -193,6 +193,10 @@ is
          XPath     => "/system/channels/channel[@hasEvent]",
          Endpoint  => "writer",
          Attr_Name => "event");
+      Check_Channel_Has_Event_Attr
+        (XML_Data  => XML_Data,
+         Endpoint  => "writer",
+         Attr_Name => "event");
    end Channel_Writer_Has_Event_ID;
 
    -------------------------------------------------------------------------

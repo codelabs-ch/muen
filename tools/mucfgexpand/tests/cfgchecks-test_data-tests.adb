@@ -901,6 +901,24 @@ package body Cfgchecks.Test_Data.Tests is
               (Msg => "Missing 'event' attribute for writer of channel "
                & "'data_channel'"),
               Message   => "Exception mismatch");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/channels/writer"
+         & "[@physical='data_channel']",
+         Name  => "event",
+         Value => "1");
+      DOM.Core.Elements.Remove_Attribute
+        (Elem => Muxml.Utils.Get_Element
+          (Doc   => Policy.Doc,
+           XPath => "/system/channels/channel[@name='data_channel']"),
+         Name => "hasEvent");
+      Channel_Writer_Has_Event_ID (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg => "Logical channel writer 'primary_data' specifies event "
+               & "but referenced channel 'data_channel' is missing hasEvent "
+               & "attribute"),
+              Message   => "Exception mismatch");
 --  begin read only
    end Test_Channel_Writer_Has_Event_ID;
 --  end read only

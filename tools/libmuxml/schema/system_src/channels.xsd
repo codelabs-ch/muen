@@ -122,7 +122,8 @@
    <xs:annotation>
     <xs:documentation>
      Associated vector. Must be set if a physical channel with \texttt{hasEvent}
-     mode \texttt{!= switch} is referenced (enforced by validator).
+     mode \texttt{!= switch} is referenced (enforced by validator). The
+     vector attribute is optional in the case of mode \texttt{switch}.
     </xs:documentation>
    </xs:annotation>
   </xs:attribute>

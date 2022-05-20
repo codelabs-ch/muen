@@ -98,6 +98,10 @@ is
 private
    use all type String_Vector.Vector;
 
+   -- specifies whether or not the result of the expansion of
+   -- variables and expressions is output to the log (includes console)
+   Log_Expansion_Values : constant Boolean := False;
+
    --  Returns the value of the config variable reference or <boolean>-element
    --  given as node.
    function Bool_Value

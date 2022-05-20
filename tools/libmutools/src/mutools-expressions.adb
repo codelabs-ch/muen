@@ -363,8 +363,10 @@ is
                          Backtrace   => Backtrace,
                          Node_Access => Node_Access);
                   end if;
-                  Mulog.Log (Msg => "Expanding config-variable '" & Node_Name
-                                & "' with value '" & Result'Image & "'");
+                  if Log_Expansion_Values then
+                     Mulog.Log (Msg => "Expanding config-variable '" & Node_Name
+                                   & "' with value '" & Result'Image & "'");
+                  end if;
                   Node_Access.Output_Boolean.Insert (Key      => Node_Name,
                                                      New_Item => Result);
                end;
@@ -397,11 +399,13 @@ is
             Result :=  Boolean_Expression (Node        => Node,
                                            Backtrace   => Backtrace,
                                            Node_Access => Node_Access);
-            Mulog.Log (Msg => "Expanding expression '"
-                       & Node_Name
-                       & "' with value '"
-                       & Result'Image
-                          & "'");
+            if Log_Expansion_Values then
+               Mulog.Log (Msg => "Expanding expression '"
+                             & Node_Name
+                             & "' with value '"
+                             & Result'Image
+                             & "'");
+            end if;
             Node_Access.Output_Boolean.Insert (Key      => Node_Name,
                                                New_Item => Result);
          elsif Get_Expr_Type (Expr => Node) = Variable_Expr_Type then
@@ -423,11 +427,13 @@ is
                       Backtrace   => Backtrace,
                       Node_Access => Node_Access);
                end if;
-               Mulog.Log (Msg => "Expanding expression '"
-                             & Node_Name
-                             & "' with value '"
-                             & Result'Image
-                             & "'");
+               if Log_Expansion_Values then
+                  Mulog.Log (Msg => "Expanding expression '"
+                                & Node_Name
+                                & "' with value '"
+                                & Result'Image
+                                & "'");
+               end if;
                Node_Access.Output_Boolean.Insert (Key      => Node_Name,
                                                   New_Item => Result);
             end;
@@ -500,11 +506,13 @@ is
                          Backtrace   => Backtrace,
                          Node_Access => Node_Access);
                   end if;
-                  Mulog.Log (Msg => "Expanding config-variable '"
-                                & Node_Name
-                                & "' with value '"
-                                & Result'Image
-                                & "'");
+                  if Log_Expansion_Values then
+                     Mulog.Log (Msg => "Expanding config-variable '"
+                                   & Node_Name
+                                   & "' with value '"
+                                   & Result'Image
+                                   & "'");
+                  end if;
                   Node_Access.Output_Integer.Insert (Key      => Node_Name,
                                                      New_Item => Result);
                end;
@@ -551,11 +559,13 @@ is
                       Backtrace   => Backtrace,
                       Node_Access => Node_Access);
                end if;
-               Mulog.Log (Msg => "Expanding expression '"
-                             & Node_Name
-                             & "' with value '"
-                             & Result'Image
-                             & "'");
+               if Log_Expansion_Values then
+                  Mulog.Log (Msg => "Expanding expression '"
+                                & Node_Name
+                                & "' with value '"
+                                & Result'Image
+                                & "'");
+               end if;
                Node_Access.Output_Integer.Insert (Key      => Node_Name,
                                                   New_Item => Result);
             end;
@@ -628,11 +638,13 @@ is
                                 Backtrace   => Backtrace,
                                 Node_Access => Node_Access));
                      end if;
-                     Mulog.Log (Msg => "Expanding config-variable '"
-                                   & Node_Name
-                                   & "' with value '"
-                                   & ASU.To_String (Result)
-                                   & "'");
+                     if Log_Expansion_Values then
+                        Mulog.Log (Msg => "Expanding config-variable '"
+                                      & Node_Name
+                                      & "' with value '"
+                                      & ASU.To_String (Result)
+                                      & "'");
+                     end if;
                      Node_Access.Output_String.Insert
                         (Key => Node_Name, New_Item => ASU.To_String (Result));
                   end;
@@ -692,11 +704,13 @@ is
                           Backtrace   => Backtrace,
                           Node_Access => Node_Access));
                end if;
-               Mulog.Log (Msg => "Expanding expression '"
-                             & Node_Name
-                             & "' with value '"
-                             & ASU.To_String (Result)
-                             & "'");
+               if Log_Expansion_Values then
+                  Mulog.Log (Msg => "Expanding expression '"
+                                & Node_Name
+                                & "' with value '"
+                                & ASU.To_String (Result)
+                                & "'");
+               end if;
                Node_Access.Output_String.Insert (Key      => Node_Name,
                                                  New_Item => ASU.To_String (Result));
             end;
@@ -705,11 +719,13 @@ is
                (String_Expression (Node        => Node,
                                    Backtrace   => Backtrace,
                                    Node_Access => Node_Access));
-            Mulog.Log (Msg => "Expanding expression '"
-                       & Node_Name
-                       & "' with value '"
-                       & ASU.To_String (Result)
-                          & "'");
+            if Log_Expansion_Values then
+               Mulog.Log (Msg => "Expanding expression '"
+                             & Node_Name
+                             & "' with value '"
+                             & ASU.To_String (Result)
+                             & "'");
+            end if;
             Node_Access.Output_String.Insert
                         (Key => Node_Name, New_Item => ASU.To_String (Result));
          else
@@ -972,11 +988,13 @@ is
                Result : constant Boolean
                   := Node_Access.Output_Boolean (Reference);
             begin
-               Mulog.Log (Msg => "Expanding expression '"
-                          & Node_Name
-                          & "' with value '"
-                          & Result'Image
-                          & "'");
+               if Log_Expansion_Values then
+                  Mulog.Log (Msg => "Expanding expression '"
+                                & Node_Name
+                                & "' with value '"
+                                & Result'Image
+                                & "'");
+               end if;
                Node_Access.Output_Boolean.Insert (Key      => Node_Name,
                                                   New_Item => Result);
                Success := True;
@@ -986,11 +1004,13 @@ is
                Result : constant Integer
                   := Node_Access.Output_Integer (Reference);
             begin
-               Mulog.Log (Msg => "Expanding expression '"
-                             & Node_Name
-                             & "' with value '"
-                             & Result'Image
-                             & "'");
+               if Log_Expansion_Values then
+                  Mulog.Log (Msg => "Expanding expression '"
+                                & Node_Name
+                                & "' with value '"
+                                & Result'Image
+                                & "'");
+               end if;
                Node_Access.Output_Integer.Insert (Key      => Node_Name,
                                                   New_Item => Result);
                Success := True;
@@ -1001,11 +1021,13 @@ is
                Result : constant String
                   := Node_Access.Output_String (Reference);
             begin
-               Mulog.Log (Msg => "Expanding expression '"
-                          & Node_Name
-                          & "' with value '"
-                          & Result
-                          & "'");
+               if Log_Expansion_Values then
+                  Mulog.Log (Msg => "Expanding expression '"
+                                & Node_Name
+                                & "' with value '"
+                                & Result
+                                & "'");
+               end if;
                Node_Access.Output_String.Insert (Key      => Node_Name,
                                                  New_Item => Result);
                Success := True;

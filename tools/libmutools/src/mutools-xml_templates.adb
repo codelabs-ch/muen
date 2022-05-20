@@ -547,6 +547,7 @@ is
       Defined_Names : String_Set_Type.Set;
 
       ---------------------------------------------------------------------
+
       -- go through the child-nodes of Parent and put the value of their
       -- "name" attribute in the set of known names ("Names")
       -- furthermore, these values are changed in the children

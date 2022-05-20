@@ -82,29 +82,35 @@ is
 
       case Value_Of_Case.Value_Type is
          when Boolean_Type =>
-            Mulog.Log (Msg => "Expanding expression '"
-                          & Node_Name
-                          & "' with value '"
-                          & Value_Of_Case.Bool_Value'Image
-                          & "'");
+            if Mutools.Expressions.Log_Expansion_Values then
+               Mulog.Log (Msg => "Expanding expression '"
+                             & Node_Name
+                             & "' with value '"
+                             & Value_Of_Case.Bool_Value'Image
+                             & "'");
+            end if;
             Node_Access.Output_Boolean.Insert
                (Key      => Node_Name,
                 New_Item => Value_Of_Case.Bool_Value);
          when Integer_Type =>
-            Mulog.Log (Msg => "Expanding expression '"
-                          & Node_Name
-                          & "' with value '"
-                          & Value_Of_Case.Int_Value'Image
-                          & "'");
+            if Mutools.Expressions.Log_Expansion_Values then
+               Mulog.Log (Msg => "Expanding expression '"
+                             & Node_Name
+                             & "' with value '"
+                             & Value_Of_Case.Int_Value'Image
+                             & "'");
+            end if;
             Node_Access.Output_Integer.Insert
                (Key      => Node_Name,
                 New_Item => Value_Of_Case.Int_Value);
          when String_Type =>
-            Mulog.Log (Msg => "Expanding expression '"
-                          & Node_Name
-                          & "' with value '"
-                          & Value_Of_Case.String_Value.Element
-                          & "'");
+            if Mutools.Expressions.Log_Expansion_Values then
+               Mulog.Log (Msg => "Expanding expression '"
+                             & Node_Name
+                             & "' with value '"
+                             & Value_Of_Case.String_Value.Element
+                             & "'");
+            end if;
             Node_Access.Output_String.Insert
                (Key      => Node_Name,
                 New_Item => Value_Of_Case.String_Value.Element);

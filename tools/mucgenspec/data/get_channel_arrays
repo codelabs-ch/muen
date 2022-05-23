@@ -1,6 +1,7 @@
    Input_Arr_Address_Base  : constant := 16#0001_0000#;
    Input_Arr_Element_Size  : constant := 16#1000#;
    Input_Arr_Element_Count : constant := 2;
+   Input_Arr_Element_Kind  : constant Channel_Kind := Channel_Reader;
    Input_Arr_Vector_Base   : constant := 32;
 
    Input_Arr_Names : constant Name_Array (1 .. Input_Arr_Element_Count)
@@ -12,6 +13,7 @@
    Output_Arr_Address_Base  : constant := 16#0002_0000#;
    Output_Arr_Element_Size  : constant := 16#2000#;
    Output_Arr_Element_Count : constant := 3;
+   Output_Arr_Element_Kind  : constant Channel_Kind := Channel_Writer;
    Output_Arr_Event_Base    : constant := 16;
 
    Output_Arr_Names : constant Name_Array (1 .. Output_Arr_Element_Count)

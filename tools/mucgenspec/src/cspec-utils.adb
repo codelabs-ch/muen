@@ -361,6 +361,8 @@ is
               (Doc   => Arr,
                XPath => "*[self::reader or self::writer]"));
 
+         Res : Unbounded_String;
+
          --  Return string representation of reader attribute.
          function To_Reader_Str return Unbounded_String;
 
@@ -401,9 +403,13 @@ is
             return Res;
          end To_Writer_Str;
       begin
+         Res := ASCII.LF &
+           I & Logical & "_Element_Kind  : constant Channel_Kind := Channel_"
+           & Mutools.Utils.To_Ada_Identifier (Str => Kind'Img) & ";";
+
          case Kind is
-            when Reader => return To_Reader_Str;
-            when Writer => return To_Writer_Str;
+            when Reader => return Res & To_Reader_Str;
+            when Writer => return Res & To_Writer_Str;
          end case;
       end To_Reader_Writer_Str;
 

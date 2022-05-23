@@ -4,12 +4,15 @@ LABEL maintainer "Reto Buerki <reet@codelabs.ch>"
 LABEL description "Build environment for Muen-enabled MirageOS/Solo5 Unipi website unikernel"
 
 RUN cd /home/opam/opam-repository \
-	&& git pull origin master \
+	&& git fetch origin master \
+	&& git reset --hard f6d0d82cfc90013442c7bfe1dca3b07eba8201f4 \
 	&& opam update \
-	&& opam depext -y mirage.3.10.4 \
-	&& opam install -y mirage.3.10.4
+	&& opam depext -y mirage.3.10.8 \
+	&& opam install -y mirage.3.10.8
 
 RUN git clone https://github.com/mirage/mirage-skeleton
-RUN git clone -b with-kv https://github.com/roburio/unipi.git
+RUN git clone -b with-kv https://github.com/roburio/unipi.git \
+	&& cd unipi \
+	&& git reset --hard 4c99b1c19d69565a3c2022e18c89a8645511b4ce
 
 CMD [ "bash" ]

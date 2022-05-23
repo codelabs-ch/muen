@@ -481,14 +481,18 @@ package body Cspec.Utils.Test_Data.Tests is
         & "     := (" & ASCII.LF
         & "         1 => To_Name (Str => ""tau0"")" & ASCII.LF
         & "        );";
+      Chan_Rdr : constant String := ASCII.LF
+        & "   Input_Element_Kind  : constant Channel_Kind := Channel_Reader;";
 
       Ref1 : constant String :=
         "   Input_Address_Base  : constant := 16#f000#;" & ASCII.LF
         & "   Input_Element_Size  : constant := 16#1000#;" & ASCII.LF
         & "   Input_Element_Count : constant := 1;";
-      Ref2 : constant String := Ref1 & ASCII.LF
+      Ref2 : constant String := Ref1 & Chan_Rdr & ASCII.LF
         & "   Input_Vector_Base   : constant := 16;";
       Ref3 : constant String := Ref1 & ASCII.LF
+        & "   Input_Element_Kind  : constant Channel_Kind := Channel_Writer;"
+        & ASCII.LF
         & "   Input_Event_Base    : constant := 32;";
    begin
       Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
@@ -535,7 +539,7 @@ package body Cspec.Utils.Test_Data.Tests is
         (N         => Arr,
          New_Child => Node);
 
-      Assert (Condition => To_Channel_Array_Str (Arr => Arr) = Ref1 & Names,
+      Assert (Condition => To_Channel_Array_Str (Arr => Arr) = Ref1 & Chan_Rdr & Names,
               Message   => "String mismatch (1)");
 
       DOM.Core.Elements.Set_Attribute

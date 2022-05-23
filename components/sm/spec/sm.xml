@@ -6,6 +6,7 @@
 		<boolean name="debug_ept" value="false"/>
 		<boolean name="debug_rdmsr" value="false"/>
 		<boolean name="debug_wrmsr" value="false"/>
+		<boolean name="debug_rdtsc" value="false"/>
 		<include href="config.xml"/>
 	</config>
 	<depends>

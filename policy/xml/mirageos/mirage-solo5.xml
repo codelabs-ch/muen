@@ -6,7 +6,6 @@
     <boolean name="dbgserver_sink_shmem" value="false"/>
     <boolean name="ahci_drv_enabled" value="false"/>
     <boolean name="pciconf_emulation_enabled" value="false"/>
-    <boolean name="unikernel_net" value="true"/>
     <string name="logchannel_size" value="16#0002_0000#"/>
   </config>
   <include href="common_expressions.xml"/>

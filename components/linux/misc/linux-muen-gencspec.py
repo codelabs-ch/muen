@@ -42,10 +42,11 @@ def add_provides_memory(xml_spec, name, region_type, address, filename, size,
     provides.append(mem)
 
 
-def get_initramfs_address(xml_spec):
+def get_initramfs_attrs(xml_spec):
     """
     Return virtual address of initramfs so its mapped directly adjacent to the
-    existing initramfs.
+    existing initramfs. Also return whether the initramfs mapping is executable
+    and writable.
     """
     phys_regions = xml_spec.xpath("/system/memory/memory"
                                   + "[@type='subject_initrd']")
@@ -54,24 +55,35 @@ def get_initramfs_address(xml_spec):
         return None
 
     if len(phys_regions) == 0:
-        return muutils.int_to_ada_hex(INITRAMFS_VIRTUAL_ADDRESS)
+        return muutils.int_to_ada_hex(INITRAMFS_VIRTUAL_ADDRESS), False, False
 
     phys_name = phys_regions[0].attrib['name'].lower()
     mems = xml_spec.xpath("/system/subjects/subject/memory/memory[@physical='"
                           + phys_name + "']")
     if len(mems) == 0:
-        return muutils.int_to_ada_hex(INITRAMFS_VIRTUAL_ADDRESS)
+        return muutils.int_to_ada_hex(INITRAMFS_VIRTUAL_ADDRESS), False, False
 
     size = muutils.ada_hex_to_int(phys_regions[0].attrib['size'])
     virtual_address = mems[0].attrib['virtualAddress']
+    executable = mems[0].attrib['executable']
+    writable = mems[0].attrib['writable']
 
+    """
+    Check that all existing initramfs mappings are located at the same virtual
+    address. This is necessary to ensure consecutiveness for all Linux
+    subjects, since the additional initramfs is added to the component XML spec
+    and thus mapped at a specific virtual address in *all* Linux subjects.
+    Also, only set executable/writable to true if all mappings allow it.
+    """
     for mapping in mems:
         if mapping.attrib['virtualAddress'] != virtual_address:
             print("Warning: Initramfs mappings not at same virtual address.")
-            return None
+            return None, False, False
+        executable = executable and mapping.attrib['executable']
+        writable = writable and mapping.attrib['writable']
 
     new_address = muutils.ada_hex_to_int(virtual_address) + size
-    return muutils.int_to_ada_hex(new_address)
+    return muutils.int_to_ada_hex(new_address), executable, writable
 
 
 def parse_args():
@@ -143,7 +155,7 @@ add_provides_memory(src_spec,
 if src_initramfs_path is not None:
     print("Reading source system policy from '" + src_policy_path + "'")
     src_policy = etree.parse(src_policy_path, xml_parser).getroot()
-    initramfs_addr = get_initramfs_address(src_policy)
+    initramfs_addr, executable, writable = get_initramfs_attrs(src_policy)
 
     if initramfs_addr is None:
         print("Warning: Manually add mappings for " + src_initramfs_path)
@@ -157,8 +169,8 @@ if src_initramfs_path is not None:
                             initramfs_addr,
                             initramfs_name,
                             initramfs_size,
-                            "false",
-                            "false")
+                            executable,
+                            writable)
 
 
 with open(out_spec_path, 'wb') as out_spec:

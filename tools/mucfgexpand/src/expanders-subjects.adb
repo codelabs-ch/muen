@@ -2341,6 +2341,7 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/subjects/subject[monitor/loader]");
+      Src_Initrd_Mem : DOM.Core.Node_List;
    begin
       for I in 0 .. DCN.Length (List => Loader_Subjs) - 1 loop
          declare
@@ -2475,8 +2476,22 @@ is
                             (Nodes     => File_Memory,
                              Ref_Attr  => "name",
                              Ref_Value => Map_Phys_Name);
+                        Target_Phys_Name : constant String
+                          := Map_Phys_Name  & "_" & Loadee_Name;
                      begin
                         if Phys_Mem /= null then
+
+                           --  Update physical reference(s) to target region.
+
+                           DOM.Core.Elements.Set_Attribute
+                             (Elem  => Map_Node,
+                              Name  => "physical",
+                              Value => Target_Phys_Name);
+                           DOM.Core.Elements.Set_Attribute
+                             (Elem  => Loader_Mapping,
+                              Name  => "physical",
+                              Value => Target_Phys_Name);
+
                            declare
                               Phys_Size       : constant String
                                 := DOM.Core.Elements.Get_Attribute
@@ -2489,7 +2504,7 @@ is
                               Target_Phys_Mem : constant DOM.Core.Node
                                 := MXU.Create_Memory_Node
                                   (Policy      => Data,
-                                   Name        => Map_Phys_Name,
+                                   Name        => Target_Phys_Name,
                                    Address     => "",
                                    Size        => Phys_Size,
                                    Caching     =>
@@ -2505,13 +2520,11 @@ is
                                 := DOM.Core.Documents.Create_Element
                                   (Doc      => Data.Doc,
                                    Tag_Name => "hashRef");
-                              Src_Phys_Name   : constant String
-                                := Map_Phys_Name & "_src";
                               Src_Mapping     : constant DOM.Core.Node
                                 := MXU.Create_Virtual_Memory_Node
                                   (Policy        => Data,
                                    Logical_Name  => Log_Name & "_src",
-                                   Physical_Name => Src_Phys_Name,
+                                   Physical_Name => Map_Phys_Name,
                                    Address       => Mutools.Utils.To_Hex
                                      (Number => Current_Loader_Addr),
                                    Writable      => False,
@@ -2520,8 +2533,8 @@ is
                               Mulog.Log
                                 (Msg => "Swapping file-backed source "
                                  & "region '" & Map_Phys_Name
-                                 & "' with new source memory region '"
-                                 & Src_Phys_Name & "'");
+                                 & "' with target memory region '"
+                                 & Target_Phys_Name & "'");
 
                               Muxml.Utils.Append_Child
                                 (Node      => DCN.Insert_Before
@@ -2532,18 +2545,24 @@ is
                               DOM.Core.Elements.Set_Attribute
                                 (Elem  => Hash_Ref,
                                  Name  => "memory",
-                                 Value => Src_Phys_Name);
+                                 Value => Map_Phys_Name);
 
-                              DOM.Core.Elements.Set_Attribute
-                                (Elem  => Phys_Mem,
-                                 Name  => "name",
-                                 Value => Src_Phys_Name);
                               DOM.Core.Elements.Set_Attribute
                                 (Elem  => Phys_Mem,
                                  Name  => "caching",
                                  Value => "WB");
 
-                              --  Map new source region into loader.
+                              if Phys_Type = "subject_initrd" then
+
+                                 --  Collect all source regions of tybe initrd
+                                 --  for post-processing, see below.
+
+                                 DOM.Core.Append_Node
+                                   (List => Src_Initrd_Mem,
+                                    N    => Phys_Mem);
+                              end if;
+
+                              --  Add new source mapping to loader.
 
                               Muxml.Utils.Append_Child
                                 (Node      => Ldr_Mem_Node,
@@ -2559,6 +2578,30 @@ is
             end loop;
          end;
       end loop;
+
+      if DOM.Core.Nodes.Length (List => Src_Initrd_Mem) > 0 then
+
+         --  Retype initrd source memory regions, since conceptually, they are
+         --  now just regular memory regions with content that is handled by
+         --  loader subjects. Tools (e.g. Mugenzp) only need to consider the
+         --  target initrd regions, since those are actually used as initrd
+         --  regions by the Linux subjects.
+         --  Also, adjusting the memory type of 'subject_initrd' regions has to
+         --  be done after all target memory regions have been created, since
+         --  the target region type is derived from the potentially shared
+         --  initrd source region.
+
+         Mulog.Log (Msg => "Retyping" & DOM.Core.Nodes.Length
+                    (List => Src_Initrd_Mem)'Img
+                    & "initrd memory regions to 'subject'");
+         for I in 0 ..  DOM.Core.Nodes.Length (List => Src_Initrd_Mem) - 1 loop
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => DOM.Core.Nodes.Item (List  => Src_Initrd_Mem,
+                                             Index => I),
+               Name  => "type",
+               Value => "subject");
+         end loop;
+      end if;
    end Handle_Loaders;
 
    -------------------------------------------------------------------------

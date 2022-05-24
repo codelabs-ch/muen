@@ -258,7 +258,7 @@
     <memory logical="text" physical="lnx|text" writable="false" executable="true" virtualAddress="16#3000#"/>
     <memory logical="zero_page" physical="lnx|zp" writable="true" executable="false" virtualAddress="16#1000#"/>
     <memory logical="initramfs" physical="lnx|initramfs" writable="true" executable="true" virtualAddress="16#f000#"/>
-    <memory logical="initramfs2" physical="lnx|initramfs2" writable="true" executable="true" virtualAddress="16#0001_8000#"/>
+    <memory logical="initramfs2" physical="lnx|initramfs2" writable="false" executable="true" virtualAddress="16#0001_0001_8000#"/>
     <memory logical="ram" physical="lnx|ram" writable="true" executable="true" virtualAddress="16#0100_0000#"/>
     <memory logical="acpi_rsdp" physical="lnx|acpi_rsdp" writable="false" executable="false" virtualAddress="16#1000_0000#"/>
     <memory logical="console" physical="lnx_console" writable="true" executable="false" virtualAddress="16#ffff_f000#"/>

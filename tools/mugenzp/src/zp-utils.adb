@@ -90,6 +90,15 @@ is
                   C_Type := Constants.E820_RAM;
                when ACPI_Memory =>
                   C_Type := Constants.E820_ACPI;
+               when MT.Subject_Initrd =>
+                  if Boolean'Value (DOM.Core.Elements.Get_Attribute
+                                    (Elem => Virt_Node,
+                                     Name => "writable"))
+                  then
+                     C_Type := Constants.E820_RAM;
+                  else
+                     C_Type := Constants.E820_RESERVED;
+                  end if;
                when others =>
                   C_Type := Constants.E820_RESERVED;
             end case;

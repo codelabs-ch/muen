@@ -19,6 +19,10 @@
 with Ada.Characters.Handling;
 with Ada.Strings.Unbounded;
 
+with DOM.Core.Nodes;
+
+with McKae.XML.XPath.XIA;
+
 with Muxml.Utils;
 
 with Mulog;
@@ -44,6 +48,10 @@ is
 
       --  Returns all valid diagnostics device kinds as string.
       function Get_Diagnostics_Kind return String;
+
+      --  Returns the string "True" if the scheduling plan has multiple major
+      --  frames and "False" otherwise.
+      function Has_Multiple_Major_Frames return String;
 
       ----------------------------------------------------------------------
 
@@ -79,6 +87,21 @@ is
 
          return To_String (Source => Buf);
       end Get_Diagnostics_Kind;
+
+      ----------------------------------------------------------------------
+
+      function Has_Multiple_Major_Frames return String
+      is
+         Major_Frames : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Policy.Doc,
+              XPath => "/system/scheduling/majorFrame");
+         Multiple_Major_Frames_Present : constant Boolean
+           := DOM.Core.Nodes.Length (List => Major_Frames) > 1;
+      begin
+         return Mutools.Utils.To_Ada_Identifier
+           (Str => Multiple_Major_Frames_Present'Img);
+      end Has_Multiple_Major_Frames;
    begin
       Mulog.Log (Msg => "Writing policy project file to '" & Filename & "'");
 
@@ -93,6 +116,10 @@ is
         (Template => Tmpl,
          Pattern  => "__debug_device_type__",
          Content  => Get_Debug_Device_Type);
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__multiple_major_frames__",
+         Content  => Has_Multiple_Major_Frames);
       Mutools.Templates.Write
         (Template => Tmpl,
          Filename => Filename);

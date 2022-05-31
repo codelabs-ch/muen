@@ -463,7 +463,7 @@ is
          when Vread_BAR =>
             if Offset in BAR_Offset_Type then
                Value := Read_BAR (Device => Device,
-                                Offset => Offset);
+                                  Offset => Offset);
             else
                Log.Put (Item => " [invalid BAR offset "
                         & SK.Strings.Img (SK.Byte (Offset)) & "]");

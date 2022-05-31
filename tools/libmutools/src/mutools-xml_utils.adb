@@ -1407,6 +1407,19 @@ is
 
    -------------------------------------------------------------------------
 
+   function Is_Tau0_Scheduled (Data : Muxml.XML_Data_Type) return Boolean
+   is
+      Tau0_Minor_Frames : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/scheduling/majorFrame/cpu/minorFrame"
+           & "[@subject='tau0']");
+   begin
+      return DOM.Core.Nodes.Length (List => Tau0_Minor_Frames) > 0;
+   end Is_Tau0_Scheduled;
+
+   -------------------------------------------------------------------------
+
    procedure Merge_XIncludes
      (Policy       : in out Muxml.XML_Data_Type;
       Include_Dirs :        Strings.String_Array)

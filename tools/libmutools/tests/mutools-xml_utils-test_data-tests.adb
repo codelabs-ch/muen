@@ -2161,6 +2161,35 @@ package body Mutools.XML_Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Is_Tau0_Scheduled (Gnattest_T : in out Test);
+   procedure Test_Is_Tau0_Scheduled_4f84f8 (Gnattest_T : in out Test) renames Test_Is_Tau0_Scheduled;
+--  id:2.2/4f84f8e858e9a397/Is_Tau0_Scheduled/1/0/
+   procedure Test_Is_Tau0_Scheduled (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/scheduling.xml");
+      Assert (Condition => Is_Tau0_Scheduled (Data => Data),
+              Message   => "Tau0 is not scheduled");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/scheduling/majorFrame/cpu/minorFrame[@subject='tau0']",
+         Name  => "subject",
+         Value => "foobar");
+      Assert (Condition => not Is_Tau0_Scheduled (Data => Data),
+              Message   => "Tau0 is scheduled");
+--  begin read only
+   end Test_Is_Tau0_Scheduled;
+--  end read only
+
+
+--  begin read only
    procedure Test_Merge_XIncludes (Gnattest_T : in out Test);
    procedure Test_Merge_XIncludes_504615 (Gnattest_T : in out Test) renames Test_Merge_XIncludes;
 --  id:2.2/50461583a452b67a/Merge_XIncludes/1/0/

@@ -2119,6 +2119,48 @@ package body Mutools.XML_Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Has_Multiple_Major_Frames (Gnattest_T : in out Test);
+   procedure Test_Has_Multiple_Major_Frames_07b8ca (Gnattest_T : in out Test) renames Test_Has_Multiple_Major_Frames;
+--  id:2.2/07b8caa719665851/Has_Multiple_Major_Frames/1/0/
+   procedure Test_Has_Multiple_Major_Frames (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      ----------------------------------------------------------------------
+
+      procedure Multiple_Major_Frames
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/scheduling.xml");
+         Assert (Condition => Has_Multiple_Major_Frames (Data => Data),
+                 Message   => "Multiple major frames not detected");
+      end Multiple_Major_Frames;
+
+      ----------------------------------------------------------------------
+
+      procedure Single_Major_Frame
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_Src,
+                      File => "data/test_policy.xml");
+         Assert (Condition => not Has_Multiple_Major_Frames (Data => Data),
+                 Message   => "Multiple major frames detected");
+      end Single_Major_Frame;
+   begin
+      Multiple_Major_Frames;
+      Single_Major_Frame;
+--  begin read only
+   end Test_Has_Multiple_Major_Frames;
+--  end read only
+
+
+--  begin read only
    procedure Test_Merge_XIncludes (Gnattest_T : in out Test);
    procedure Test_Merge_XIncludes_504615 (Gnattest_T : in out Test) renames Test_Merge_XIncludes;
 --  id:2.2/50461583a452b67a/Merge_XIncludes/1/0/

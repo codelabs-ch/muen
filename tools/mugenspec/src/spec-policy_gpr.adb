@@ -19,15 +19,12 @@
 with Ada.Characters.Handling;
 with Ada.Strings.Unbounded;
 
-with DOM.Core.Nodes;
-
-with McKae.XML.XPath.XIA;
-
 with Muxml.Utils;
 
 with Mulog;
 with Mutools.Templates;
 with Mutools.Types;
+with Mutools.XML_Utils;
 
 with String_Templates;
 
@@ -92,15 +89,10 @@ is
 
       function Has_Multiple_Major_Frames return String
       is
-         Major_Frames : constant DOM.Core.Node_List
-           := McKae.XML.XPath.XIA.XPath_Query
-             (N     => Policy.Doc,
-              XPath => "/system/scheduling/majorFrame");
-         Multiple_Major_Frames_Present : constant Boolean
-           := DOM.Core.Nodes.Length (List => Major_Frames) > 1;
       begin
          return Mutools.Utils.To_Ada_Identifier
-           (Str => Multiple_Major_Frames_Present'Img);
+           (Str => Mutools.XML_Utils.Has_Multiple_Major_Frames
+              (Data => Policy)'Img);
       end Has_Multiple_Major_Frames;
    begin
       Mulog.Log (Msg => "Writing policy project file to '" & Filename & "'");

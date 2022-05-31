@@ -1301,6 +1301,20 @@ is
 
    -------------------------------------------------------------------------
 
+   function Has_Multiple_Major_Frames
+     (Data : Muxml.XML_Data_Type)
+      return Boolean
+   is
+      Major_Frames : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/scheduling/majorFrame");
+   begin
+      return DOM.Core.Nodes.Length (List => Major_Frames) > 1;
+   end Has_Multiple_Major_Frames;
+
+   -------------------------------------------------------------------------
+
    function Is_MSR_Accessible
      (MSR  : Interfaces.Unsigned_64;
       MSRs : DOM.Core.Node_List)

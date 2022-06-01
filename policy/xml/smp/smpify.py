@@ -109,7 +109,7 @@ def adjust_core_one(cpus):
             c.append(etree.Element("minorFrame", subject="linux_core1",
                      ticks="10"))
         c.append(etree.Element("minorFrame", subject="linux_core1",
-                 ticks="7"))
+                 ticks="8"))
 
 
 def create_additional_cores(majors):

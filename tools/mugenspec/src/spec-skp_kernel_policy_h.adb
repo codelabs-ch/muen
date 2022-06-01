@@ -276,35 +276,40 @@ is
         (Output_Dir : String;
          Policy     : Muxml.XML_Data_Type)
       is
+         First_Subject_Name : constant String
+           := Muxml.Utils.Get_Attribute
+             (Doc   =>  Policy.Doc,
+              XPath => "/system/subjects/subject[@globalId='0']",
+               Name  => "name");
          Subj_States_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
                XPath => "/system/kernel/memory/cpu/"
-               & "memory[@logical='tau0|state']",
+               & "memory[@logical='" & First_Subject_Name & "|state']",
                Name  => "virtualAddress"));
          Subj_Timed_Events_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
                XPath => "/system/kernel/memory/cpu/"
-               & "memory[@logical='tau0|timed_event']",
+               & "memory[@logical='" & First_Subject_Name & "|timed_event']",
                Name  => "virtualAddress"));
          Subj_VMCS_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
                XPath => "/system/kernel/memory/cpu/"
-               & "memory[@logical='tau0|vmcs']",
+               & "memory[@logical='" & First_Subject_Name & "|vmcs']",
                Name  => "virtualAddress"));
          Subj_Interrupts_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
                XPath => "/system/kernel/memory/cpu/"
-               & "memory[@logical='tau0|interrupts']",
+               & "memory[@logical='" & First_Subject_Name & "|interrupts']",
                Name  => "virtualAddress"));
          Subj_FPU_State_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
                XPath => "/system/kernel/memory/cpu/"
-               & "memory[@logical='tau0|fpu']",
+               & "memory[@logical='" & First_Subject_Name & "|fpu']",
                Name  => "virtualAddress"));
          Sched_Grp_Info_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute

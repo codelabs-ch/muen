@@ -58,11 +58,39 @@ package body Expanders.Subjects.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      ----------------------------------------------------------------------
+
+      procedure Without_Tau0
+      is
+         use type DOM.Core.Node;
+
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_Src,
+                      File => "data/test_policy.xml");
+
+         --  Remove tau0 from scheduling plan.
+
+         Muxml.Utils.Set_Attribute
+           (Doc   => Policy.Doc,
+            XPath => "/system/scheduling/majorFrame/cpu/minorFrame"
+            & "[@subject='tau0']",
+            Name  => "subject",
+            Value => "foo");
+
+         Add_Tau0 (Data => Policy);
+         Assert (Condition => Muxml.Utils.Get_Element
+                 (Doc   => Policy.Doc,
+                  XPath => "/system/subjects/subject[@name='tau0']") = null,
+                 Message   => "Expanded Tau0 present");
+      end Without_Tau0;
    begin
       Test_Utils.Expander.Run_Test
         (Filename => "obj/subjects_tau0.xml",
          Ref_Diff => "data/subjects_tau0.xml.diff",
          Expander => Add_Tau0'Access);
+      Without_Tau0;
 --  begin read only
    end Test_Add_Tau0;
 --  end read only
@@ -116,11 +144,37 @@ package body Expanders.Subjects.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      ----------------------------------------------------------------------
+
+      procedure No_Tau0
+      is
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_Src,
+                      File => "data/test_policy.xml");
+
+         --  Remove Tau0 from scheduling plan.
+
+         Muxml.Utils.Set_Attribute
+           (Doc   => Policy.Doc,
+            XPath => "/system/scheduling/majorFrame/cpu/"
+            & "minorFrame[@subject='tau0']",
+            Name  => "subject",
+            Value => "foobar");
+         Add_Global_IDs (Data => Policy);
+         Assert (Condition => Muxml.Utils.Get_Attribute
+                 (Doc   => Policy.Doc,
+                  XPath => "/system/subjects/subject[@globalId='0']",
+                  Name  => "name") = "lnx",
+                 Message   => "Subject with global ID 0 mismatch");
+      end No_Tau0;
    begin
       Test_Utils.Expander.Run_Test
         (Filename => "obj/subjects_global_ids.xml",
          Ref_Diff => "data/subjects_global_ids.xml.diff",
          Expander => Add_Global_IDs'Access);
+      No_Tau0;
 --  begin read only
    end Test_Add_Global_IDs;
 --  end read only

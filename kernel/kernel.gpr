@@ -68,6 +68,22 @@ project Kernel is
          ("-gnateDComplete_Proofs=On");
    end case;
 
+   case Policy.Has_Multiple_Major_Frames is
+      when "True" =>
+         case Build_Mode is
+            when "debug"
+               | "release" =>
+               Preprocessor_Switches := Preprocessor_Switches &
+               ("-gnateDMajor_Frame_Warnings=Ignored_Warnings");
+            when "prove" =>
+               Preprocessor_Switches := Preprocessor_Switches &
+               ("-gnateDMajor_Frame_Warnings=Warnings");
+         end case;
+      when "False" =>
+         Preprocessor_Switches := Preprocessor_Switches &
+         ("-gnateDMajor_Frame_Warnings=Warnings");
+   end case;
+
    for Languages use ("Ada") & Extra_Languages;
 
    for Source_Dirs use

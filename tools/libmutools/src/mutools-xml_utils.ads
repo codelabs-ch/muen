@@ -302,6 +302,14 @@ is
      (Data : Muxml.XML_Data_Type)
       return ID_Map_Array;
 
+   --  Returns True if the scheduling plan specifies multiple major frames.
+   function Has_Multiple_Major_Frames
+     (Data : Muxml.XML_Data_Type)
+      return Boolean;
+
+   --  Returns True if Tau0 is present in the scheduling plan.
+   function Is_Tau0_Scheduled (Data : Muxml.XML_Data_Type) return Boolean;
+
    --  Process XML Inclusions in the given XML policy. Inclusions are searched
    --  relative to the given include directories.
    procedure Merge_XIncludes

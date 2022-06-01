@@ -4,4 +4,9 @@ abstract project Policy is
 
    Debug_Type : Diagnostics_Kind := "uart";
 
+
+   type Boolean is ("True", "False");
+
+   Has_Multiple_Major_Frames : Boolean := "True";
+
 end Policy;

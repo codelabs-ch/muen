@@ -3,4 +3,9 @@ abstract project Policy is
    type Diagnostics_Kind is (__diagnostics_kind__);
 
 __debug_device_type__
+
+   type Boolean is ("True", "False");
+
+   Has_Multiple_Major_Frames : Boolean := "__multiple_major_frames__";
+
 end Policy;

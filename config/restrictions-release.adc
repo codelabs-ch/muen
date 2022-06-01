@@ -1,2 +1,5 @@
 pragma Check_Policy (Debug => Disable);
 pragma Warnings (Off, "unit ""SK.Version"" is not referenced");
+pragma Warnings (Off, "unrecognized pragma ""IGNORED_WARNINGS""",
+   Reason => "pragma Warnings which are not applicable to the build/proof "
+           & "stage are mapped to Ignored_Warnings");

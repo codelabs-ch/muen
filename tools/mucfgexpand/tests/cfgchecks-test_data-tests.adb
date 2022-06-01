@@ -47,32 +47,37 @@ package body Cfgchecks.Test_Data.Tests is
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
 
-      --  Remove all tau0 minor frames from scheduling plan.
+      --  Positive test, must not generate a validation error.
 
-      declare
-         Tau0_Nodes : constant DOM.Core.Node_List
-           := McKae.XML.XPath.XIA.XPath_Query
-             (N     => Policy.Doc,
-              XPath => "/system/scheduling/majorFrame/cpu/"
-              & "minorFrame[@subject='tau0']");
-      begin
-         for I in 0 .. DOM.Core.Nodes.Length (List => Tau0_Nodes) - 1 loop
-            declare
-               Node : DOM.Core.Node := DOM.Core.Nodes.Item
-                 (List  => Tau0_Nodes,
-                  Index => I);
-            begin
-               Node := DOM.Core.Nodes.Remove_Child
-                 (N         => DOM.Core.Nodes.Parent_Node (N => Node),
-                  Old_Child => Node);
-            end;
-         end loop;
-      end;
+      Tau0_Presence_In_Scheduling (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error (1)");
+
+      --  Remove all tau0 minor frame references from scheduling plan.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/scheduling/majorFrame/cpu/"
+         & "minorFrame[@subject='tau0']",
+         Name  => "subject",
+         Value => "foo");
 
       Tau0_Presence_In_Scheduling (XML_Data => Policy);
       Assert (Condition => Mucfgcheck.Validation_Errors.Contains
-              (Msg =>"Subject tau0 not present in scheduling plan"),
+              (Msg => "Tau0 subject not present but multiple major frames "
+               & "specified"),
               Message   => "Exception mismatch");
+
+      --  Remove all but one major frame.
+
+      Mucfgcheck.Validation_Errors.Clear;
+      Muxml.Utils.Remove_Elements
+        (Doc   => Policy.Doc,
+         XPath => "/system/scheduling/majorFrame"
+         & "[cpu/minorFrame/@subject='lnx_core_1']");
+      Tau0_Presence_In_Scheduling (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error (2)");
 --  begin read only
    end Test_Tau0_Presence_In_Scheduling;
 --  end read only

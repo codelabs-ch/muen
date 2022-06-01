@@ -1271,7 +1271,9 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/subjects/subject[not (@globalId)]");
-      Cur_ID : Positive := 1;
+      Cur_ID : Natural
+        := (if Mutools.XML_Utils.Is_Tau0_Scheduled (Data => Data)
+            then 1 else 0);
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
@@ -1975,163 +1977,171 @@ is
 
    procedure Add_Tau0 (Data : in out Muxml.XML_Data_Type)
    is
-      Minor_Frames  : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Data.Doc,
-           XPath => "/system/scheduling/majorFrame/cpu/minorFrame");
-      CPU_Node      : constant DOM.Core.Node
-        := DOM.Core.Nodes.Parent_Node
-          (N => Muxml.Utils.Get_Element
-               (Nodes     => Minor_Frames,
-                Ref_Attr  => "subject",
-                Ref_Value => "tau0"));
-      Tau0_CPU      : constant String
-        := DOM.Core.Elements.Get_Attribute
-          (Elem => CPU_Node,
-           Name => "id");
-      Subjects_Node : constant DOM.Core.Node
-        := Muxml.Utils.Get_Element
-          (Doc   => Data.Doc,
-           XPath => "/system/subjects");
-      Tau0_Node     : DOM.Core.Node
-        := DOM.Core.Documents.Create_Element
-          (Doc      => Data.Doc,
-           Tag_Name => "subject");
-      Mem_Node      : constant DOM.Core.Node
-        := DOM.Core.Documents.Create_Element
-          (Doc      => Data.Doc,
-           Tag_Name => "memory");
    begin
+      if not Mutools.XML_Utils.Is_Tau0_Scheduled (Data => Data) then
+         Mulog.Log (Msg => "Skipping addition of tau0 subject");
+         return;
+      end if;
+
       Mulog.Log (Msg => "Adding tau0 subject");
 
-      Tau0_Node := DOM.Core.Nodes.Insert_Before
-        (N         => Subjects_Node,
-         New_Child => Tau0_Node,
-         Ref_Child => DOM.Core.Nodes.First_Child (N => Subjects_Node));
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Tau0_Node,
-         Name  => "globalId",
-         Value => "0");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Tau0_Node,
-         Name  => "name",
-         Value => "tau0");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Tau0_Node,
-         Name  => "profile",
-         Value => "native");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Tau0_Node,
-         Name  => "cpu",
-         Value => Tau0_CPU);
-
       declare
-         VCPU_Node : DOM.Core.Node
+         Minor_Frames  : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Data.Doc,
+              XPath => "/system/scheduling/majorFrame/cpu/minorFrame");
+         CPU_Node      : constant DOM.Core.Node
+           := DOM.Core.Nodes.Parent_Node
+             (N => Muxml.Utils.Get_Element
+                (Nodes     => Minor_Frames,
+                 Ref_Attr  => "subject",
+                 Ref_Value => "tau0"));
+         Tau0_CPU      : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => CPU_Node,
+              Name => "id");
+         Subjects_Node : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Data.Doc,
+              XPath => "/system/subjects");
+         Tau0_Node     : DOM.Core.Node
            := DOM.Core.Documents.Create_Element
              (Doc      => Data.Doc,
-              Tag_Name => "vcpu");
+              Tag_Name => "subject");
+         Mem_Node      : constant DOM.Core.Node
+           := DOM.Core.Documents.Create_Element
+             (Doc      => Data.Doc,
+              Tag_Name => "memory");
       begin
+         Tau0_Node := DOM.Core.Nodes.Insert_Before
+           (N         => Subjects_Node,
+            New_Child => Tau0_Node,
+            Ref_Child => DOM.Core.Nodes.First_Child (N => Subjects_Node));
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Tau0_Node,
+            Name  => "globalId",
+            Value => "0");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Tau0_Node,
+            Name  => "name",
+            Value => "tau0");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Tau0_Node,
+            Name  => "profile",
+            Value => "native");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Tau0_Node,
+            Name  => "cpu",
+            Value => Tau0_CPU);
+
+         declare
+            VCPU_Node : DOM.Core.Node
+              := DOM.Core.Documents.Create_Element
+                (Doc      => Data.Doc,
+                 Tag_Name => "vcpu");
+         begin
+            Muxml.Utils.Append_Child
+              (Node      => Tau0_Node,
+               New_Child => VCPU_Node);
+            Mucfgvcpu.Set_VCPU_Profile
+              (Profile => Mucfgvcpu.Native,
+               Node    => VCPU_Node);
+         end;
+
          Muxml.Utils.Append_Child
            (Node      => Tau0_Node,
-            New_Child => VCPU_Node);
-         Mucfgvcpu.Set_VCPU_Profile
-           (Profile => Mucfgvcpu.Native,
-            Node    => VCPU_Node);
+            New_Child => DOM.Core.Documents.Create_Element
+              (Doc      => Data.Doc,
+               Tag_Name => "bootparams"));
+
+         Muxml.Utils.Append_Child
+           (Node      => Mem_Node,
+            New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+              (Policy        => Data,
+               Logical_Name  => "sys_interface",
+               Physical_Name => "sys_interface",
+               Address       => Mutools.Utils.To_Hex
+                 (Number => Expanders.Config.Tau0_Interface_Virtual_Addr),
+               Writable      => True,
+               Executable    => False));
+         Muxml.Utils.Append_Child
+           (Node      => Tau0_Node,
+            New_Child => Mem_Node);
+
+         Muxml.Utils.Append_Child
+           (Node      => Tau0_Node,
+            New_Child => DOM.Core.Documents.Create_Element
+              (Doc      => Data.Doc,
+               Tag_Name => "devices"));
+         Muxml.Utils.Append_Child
+           (Node      => Tau0_Node,
+            New_Child => DOM.Core.Documents.Create_Element
+              (Doc      => Data.Doc,
+               Tag_Name => "events"));
+         declare
+            Default_Ev : constant DOM.Core.Node
+              := DOM.Core.Documents.Create_Element
+                (Doc      => Data.Doc,
+                 Tag_Name => "default");
+            Ev_Node : constant DOM.Core.Node
+              := XML_Utils.Add_Optional_Events_Source_Group
+                (Policy  => Data,
+                 Subject => Tau0_Node,
+                 Group   => Mutools.Types.Vmx_Exit);
+         begin
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Default_Ev,
+               Name  => "physical",
+               Value => "tau0_panic");
+            Muxml.Utils.Add_Child
+              (Parent     => Default_Ev,
+               Child_Name => "system_panic");
+            Muxml.Utils.Append_Child (Node      => Ev_Node,
+                                      New_Child => Default_Ev);
+            XML_Utils.Create_Physical_Event_Node
+              (Policy => Data,
+               Name   => "tau0_panic",
+               Mode   => "kernel");
+         end;
+
+         Mutools.XML_Utils.Add_Memory_Region
+           (Policy       => Data,
+            Name         => "tau0|stack",
+            Address      => "",
+            Size         => "16#4000#",
+            Caching      => "WB",
+            Alignment    => "16#1000#",
+            Memory_Type  => "subject",
+            Fill_Pattern => "16#00#");
+         Muxml.Utils.Append_Child
+           (Node      => Mem_Node,
+            New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+              (Policy        => Data,
+               Logical_Name  => "stack",
+               Physical_Name => "tau0|stack",
+               Address       => "16#1000#",
+               Writable      => True,
+               Executable    => False));
+         Mutools.XML_Utils.Add_Memory_Region
+           (Policy      => Data,
+            Name        => "tau0|bin",
+            Address     => "",
+            Size        => "16#0001_0000#",
+            Caching     => "WB",
+            Alignment   => "16#1000#",
+            Memory_Type => "subject_binary",
+            File_Name   => "tau0",
+            File_Offset => "16#001f_f000#");
+         Muxml.Utils.Append_Child
+           (Node      => Mem_Node,
+            New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+              (Policy        => Data,
+               Logical_Name  => "binary",
+               Physical_Name => "tau0|bin",
+               Address       => "16#0020_0000#",
+               Writable      => True,
+               Executable    => True));
       end;
-
-      Muxml.Utils.Append_Child
-        (Node      => Tau0_Node,
-         New_Child => DOM.Core.Documents.Create_Element
-           (Doc      => Data.Doc,
-            Tag_Name => "bootparams"));
-
-      Muxml.Utils.Append_Child
-        (Node      => Mem_Node,
-         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
-           (Policy        => Data,
-            Logical_Name  => "sys_interface",
-            Physical_Name => "sys_interface",
-            Address       => Mutools.Utils.To_Hex
-              (Number => Expanders.Config.Tau0_Interface_Virtual_Addr),
-            Writable      => True,
-            Executable    => False));
-      Muxml.Utils.Append_Child
-        (Node      => Tau0_Node,
-         New_Child => Mem_Node);
-
-      Muxml.Utils.Append_Child
-        (Node      => Tau0_Node,
-         New_Child => DOM.Core.Documents.Create_Element
-           (Doc      => Data.Doc,
-            Tag_Name => "devices"));
-      Muxml.Utils.Append_Child
-        (Node      => Tau0_Node,
-         New_Child => DOM.Core.Documents.Create_Element
-           (Doc      => Data.Doc,
-            Tag_Name => "events"));
-      declare
-         Default_Ev : constant DOM.Core.Node
-           := DOM.Core.Documents.Create_Element
-             (Doc      => Data.Doc,
-              Tag_Name => "default");
-         Ev_Node : constant DOM.Core.Node
-           := XML_Utils.Add_Optional_Events_Source_Group
-           (Policy  => Data,
-            Subject => Tau0_Node,
-            Group   => Mutools.Types.Vmx_Exit);
-      begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Default_Ev,
-            Name  => "physical",
-            Value => "tau0_panic");
-         Muxml.Utils.Add_Child
-           (Parent     => Default_Ev,
-            Child_Name => "system_panic");
-         Muxml.Utils.Append_Child (Node      => Ev_Node,
-                                   New_Child => Default_Ev);
-         XML_Utils.Create_Physical_Event_Node
-           (Policy => Data,
-            Name   => "tau0_panic",
-            Mode   => "kernel");
-      end;
-
-      Mutools.XML_Utils.Add_Memory_Region
-        (Policy       => Data,
-         Name         => "tau0|stack",
-         Address      => "",
-         Size         => "16#4000#",
-         Caching      => "WB",
-         Alignment    => "16#1000#",
-         Memory_Type  => "subject",
-         Fill_Pattern => "16#00#");
-      Muxml.Utils.Append_Child
-        (Node      => Mem_Node,
-         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
-           (Policy        => Data,
-            Logical_Name  => "stack",
-            Physical_Name => "tau0|stack",
-            Address       => "16#1000#",
-            Writable      => True,
-            Executable    => False));
-      Mutools.XML_Utils.Add_Memory_Region
-        (Policy      => Data,
-         Name        => "tau0|bin",
-         Address     => "",
-         Size        => "16#0001_0000#",
-         Caching     => "WB",
-         Alignment   => "16#1000#",
-         Memory_Type => "subject_binary",
-         File_Name   => "tau0",
-         File_Offset => "16#001f_f000#");
-      Muxml.Utils.Append_Child
-        (Node      => Mem_Node,
-         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
-           (Policy        => Data,
-            Logical_Name  => "binary",
-            Physical_Name => "tau0|bin",
-            Address       => "16#0020_0000#",
-            Writable      => True,
-            Executable    => True));
    end Add_Tau0;
 
    -------------------------------------------------------------------------

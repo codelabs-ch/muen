@@ -266,8 +266,13 @@ is
                --D start time.
                Global_Current_Major_Start_Cycles := Next_Major_Start;
 
+               pragma $Major_Frame_Warnings
+                 (GNAT, Off,
+                  "condition can only be True if invalid values present");
                if Current_Major_ID /= Next_Major_ID then
-
+                  pragma $Major_Frame_Warnings
+                    (GNAT, On,
+                     "condition can only be True if invalid values present");
                   --D @Text Section => impl_handle_timer_expiry, Priority => 10
                   --D If the major frame has changed, set the corresponding
                   --D minor frame barrier configuration as specified by the

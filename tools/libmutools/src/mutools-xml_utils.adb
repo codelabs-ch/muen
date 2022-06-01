@@ -1301,6 +1301,20 @@ is
 
    -------------------------------------------------------------------------
 
+   function Has_Multiple_Major_Frames
+     (Data : Muxml.XML_Data_Type)
+      return Boolean
+   is
+      Major_Frames : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/scheduling/majorFrame");
+   begin
+      return DOM.Core.Nodes.Length (List => Major_Frames) > 1;
+   end Has_Multiple_Major_Frames;
+
+   -------------------------------------------------------------------------
+
    function Is_MSR_Accessible
      (MSR  : Interfaces.Unsigned_64;
       MSRs : DOM.Core.Node_List)
@@ -1390,6 +1404,19 @@ is
       Size := Interfaces.Unsigned_64'Value (Size_Str);
       return Addr >= Base and then Addr < Base + Size;
    end Is_Physical_Mmconf_Region;
+
+   -------------------------------------------------------------------------
+
+   function Is_Tau0_Scheduled (Data : Muxml.XML_Data_Type) return Boolean
+   is
+      Tau0_Minor_Frames : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/scheduling/majorFrame/cpu/minorFrame"
+           & "[@subject='tau0']");
+   begin
+      return DOM.Core.Nodes.Length (List => Tau0_Minor_Frames) > 0;
+   end Is_Tau0_Scheduled;
 
    -------------------------------------------------------------------------
 

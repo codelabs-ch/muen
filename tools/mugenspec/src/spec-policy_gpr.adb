@@ -24,6 +24,7 @@ with Muxml.Utils;
 with Mulog;
 with Mutools.Templates;
 with Mutools.Types;
+with Mutools.XML_Utils;
 
 with String_Templates;
 
@@ -44,6 +45,10 @@ is
 
       --  Returns all valid diagnostics device kinds as string.
       function Get_Diagnostics_Kind return String;
+
+      --  Returns the string "True" if the scheduling plan has multiple major
+      --  frames and "False" otherwise.
+      function Has_Multiple_Major_Frames return String;
 
       ----------------------------------------------------------------------
 
@@ -79,6 +84,16 @@ is
 
          return To_String (Source => Buf);
       end Get_Diagnostics_Kind;
+
+      ----------------------------------------------------------------------
+
+      function Has_Multiple_Major_Frames return String
+      is
+      begin
+         return Mutools.Utils.To_Ada_Identifier
+           (Str => Mutools.XML_Utils.Has_Multiple_Major_Frames
+              (Data => Policy)'Img);
+      end Has_Multiple_Major_Frames;
    begin
       Mulog.Log (Msg => "Writing policy project file to '" & Filename & "'");
 
@@ -93,6 +108,10 @@ is
         (Template => Tmpl,
          Pattern  => "__debug_device_type__",
          Content  => Get_Debug_Device_Type);
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__multiple_major_frames__",
+         Content  => Has_Multiple_Major_Frames);
       Mutools.Templates.Write
         (Template => Tmpl,
          Filename => Filename);

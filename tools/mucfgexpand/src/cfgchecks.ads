@@ -21,7 +21,8 @@ with Muxml;
 package Cfgchecks
 is
 
-   --  Check that tau0 is present in the scheduling plan.
+   --  Check if tau0 is present in the scheduling plan and if it is missing,
+   --  validate that only a single major frame has been specified.
    procedure Tau0_Presence_In_Scheduling (XML_Data : Muxml.XML_Data_Type);
 
    --  Check subject monitor references.

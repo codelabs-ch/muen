@@ -23,8 +23,10 @@ is
 
    type Barrier_Index_Range is range 0 .. __max_barrier_count__;
 
+   pragma Warnings (Off);
    subtype Barrier_Range is
      Barrier_Index_Range range 1 .. Barrier_Index_Range'Last;
+   pragma Warnings (On);
 
    No_Barrier : constant Barrier_Index_Range := Barrier_Index_Range'First;
 

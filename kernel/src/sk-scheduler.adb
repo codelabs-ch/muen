@@ -728,7 +728,9 @@ is
               := Policy.Scheduling_Plans (CPU_Info.CPU_ID)
                 (Current_Major_ID).Minor_Frames (Current_Minor_ID).Barrier;
          begin
+            pragma Warnings (Off);
             if Current_Barrier /= Policy.No_Barrier then
+               pragma Warnings (On);
                MP.Wait_On_Minor_Frame_Barrier (Index => Current_Barrier);
             end if;
          end;

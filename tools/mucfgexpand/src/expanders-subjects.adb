@@ -1576,6 +1576,9 @@ is
       Sched_Info_Virtual_Address : constant String := Mutools.Utils.To_Hex
         (Number => Config.Subject_Info_Virtual_Addr +
            Expanders.Config.Subject_Sinfo_Region_Size);
+      Sched_Info_Virtual_Address_BB : constant String := Mutools.Utils.To_Hex
+        (Number => 16#9000_0000# +
+           Expanders.Config.Subject_Sinfo_Region_Size);
 
       Subjects : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -1629,7 +1632,10 @@ is
                   Logical_Name  => "scheduling_info",
                   Physical_Name => "scheduling_info_"
                   & Partition_ID_Str,
-                  Address       => Sched_Info_Virtual_Address,
+                  Address       => (if Subj_Name = "bb" then
+                    Sched_Info_Virtual_Address_BB
+                  else
+                    Sched_Info_Virtual_Address),
                   Writable      => False,
                   Executable    => False));
          end;
@@ -1909,8 +1915,9 @@ is
                  (Policy        => Data,
                   Logical_Name  => "sinfo",
                   Physical_Name => Subj_Name & "|sinfo",
-                  Address       => Mutools.Utils.To_Hex
-                    (Number => Config.Subject_Info_Virtual_Addr),
+                  Address       => (if Subj_Name = "bb" then "16#9000_0000#"
+                  else Mutools.Utils.To_Hex
+                    (Number => Config.Subject_Info_Virtual_Addr)),
                   Writable      => False,
                   Executable    => False));
          end;
@@ -2184,8 +2191,9 @@ is
                  (Policy        => Data,
                   Logical_Name  => "timed_event",
                   Physical_Name => Subj_Name & "|timed_event",
-                  Address       => Mutools.Utils.To_Hex
-                    (Number => Config.Subject_Timed_Event_Virtual_Addr),
+                  Address       => (if Subj_Name = "bb" then "16#9001_0000#"
+                  else Mutools.Utils.To_Hex
+                    (Number => Config.Subject_Timed_Event_Virtual_Addr)),
                   Writable      => True,
                   Executable    => False));
          end;

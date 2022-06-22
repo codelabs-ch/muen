@@ -53,6 +53,7 @@
  </events>
 
  <channels>
+  <channel name="testchannel" size="16#1000#" hasEvent="asap"/>
   <channel name="time_info" size="16#1000#"/>
   <channel name="debuglog_subject_sm" size="$logchannel_size"/>
   <channel name="debuglog_subject4" size="$logchannel_size"/> <!-- time subject -->
@@ -94,6 +95,9 @@
     <source>
      <group name="vmx_exit">
       <default physical="trap_to_sm"/>
+      <event id="0" logical="exception" physical="system_panic">
+       <system_panic/>
+      </event>
      </group>
      <group name="vmcall">
       <event id="31" logical="timer" physical="timer_bb"/>
@@ -106,6 +110,9 @@
      </event>
     </target>
    </events>
+   <channels>
+    <reader logical="response" physical="testchannel" virtualAddress="16#0001_0000_0000#" vector="230"/>
+   </channels>
    <component ref="bb">
     <!-- XXX: Absolute time not yet used -->
     <map logical="time_info" physical="time_info"/>
@@ -132,6 +139,7 @@
     <map logical="control" physical="control_sm"/>
     <map logical="handle_subject_trap" physical="trap_to_sm"/>
     <map logical="resume_subject" physical="resume_bb"/>
+    <map logical="inject_something" physical="testchannel"/>
    </component>
   </subject>
 

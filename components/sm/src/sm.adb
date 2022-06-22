@@ -36,6 +36,7 @@ with Mudm.Client;
 with Component_Constants;
 
 with Sm_Component.Events;
+--  with Sm_Component.Channels;
 
 with Time;
 with Types;
@@ -79,6 +80,7 @@ is
    Action : Types.Subject_Action_Type;
    Exit_Reason, Instruction_Len : SK.Word32;
    RIP : SK.Word64;
+   Exit_Count : Natural := 0;
 begin
    Debuglog.Client.Init (Epoch => Cur_Epoch);
    Debug_Ops.Put_Line (Item => "SM subject running");
@@ -94,6 +96,7 @@ begin
    loop
       --D @Lst Smexitbegin
       Exit_Reason := State.Exit_Reason;
+      Exit_Count := Exit_Count + 1;
 
       if Exit_Reason = SK.Constants.EXIT_REASON_CPUID then
          Exit_Handlers.CPUID.Process (Action => Action);
@@ -128,6 +131,13 @@ begin
          Debug_Ops.Put_Line (Item => "Unhandled trap for associated subject");
          Action := Types.Subject_Halt;
       end if;
+
+      -- if Exit_Count /= Natural'Last and then Exit_Count > 100 then
+      --    Debug_Ops.Put_Line (Item => "INJECT");
+      --    Exit_Count := Natural'Last;
+      --    SK.Hypercall.Trigger_Event
+      --      (Number => Sm_Component.Channels.Inject_Something_Event);
+      -- end if;
 
       --D @Lst Smresumebegin
       case Action

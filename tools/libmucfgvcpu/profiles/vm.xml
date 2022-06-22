@@ -83,7 +83,7 @@
     <InvalidTSS>0</InvalidTSS>
     <SegmentNotPresent>0</SegmentNotPresent>
     <StackSegmentFault>0</StackSegmentFault>
-    <GeneralProtection>0</GeneralProtection>
+    <GeneralProtection>1</GeneralProtection>
     <PageFault>0</PageFault>
     <x87FPUFloatingPointError>0</x87FPUFloatingPointError>
     <AlignmentCheck>0</AlignmentCheck>

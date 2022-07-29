@@ -17,12 +17,15 @@
 
 with Muxml;
 with DOM.Core;
+with Ada.Strings.Unbounded;
+with Mutools.Xmldebuglog;
 
 package Mutools.XML_Templates
 is
 
    -- Expand all useTemplate-nodes and delete template definitions
-   procedure Expand (XML_Data : in out Muxml.XML_Data_Type);
+   procedure Expand (XML_Data     : in out Muxml.XML_Data_Type;
+                     Debug_Active :        Boolean);
 
 private
 
@@ -35,11 +38,13 @@ private
    -- the useTemplate-statement from Template_Call
    -- Running_Number is used to give the variables and expressions
    -- in the output unique names.
+   -- The returned prefix is the final prefixed used generate unique names.
    procedure Compile_Template
       (Template       :     DOM.Core.Node;
        Template_Call  :     DOM.Core.Node;
        Running_Number :     Positive;
-       Output         : out Muxml.XML_Data_Type);
+       Output         : out Muxml.XML_Data_Type;
+       Used_Prefix    : out Ada.Strings.Unbounded.Unbounded_String);
 
    -- Searches for definitions of 'variables' in the following form:
    --  (a) definitions of the form <boolean name="foo" .../>
@@ -54,12 +59,20 @@ private
        Prefix      : String);
 
    -- Adopt and insert deep clones of all child nodes of
-   -- Parent_Of_Children before Target
+   -- Parent_Of_Children before Target.
    -- If Append_Mode is true, the new children are appended
-   -- to the list of children of Target
+   -- to the list of children of Target.
+   -- If Use_Target_As_Parent_For_Log is True, then
+   -- entries in the xmldebuglog will be created for the new nodes and these
+   -- will inherit the transaction-history from the target. Also, the last
+   -- entry of the transaction log will be added to their history in this case.
    procedure Adopt_All_Children
       (Target             : DOM.Core.Node;
        Parent_Of_Children : DOM.Core.Node;
-       Append_Mode        : Boolean := False);
+       Append_Mode        : Boolean       := False;
+       Debug_Active       : Boolean       := False;
+       Anchestor_For_Log  : DOM.Core.Node := null;
+       Transaction_Index  : Mutools.Xmldebuglog.Transaction_Log_Index_Type
+                          := Mutools.Xmldebuglog.Null_Ref_Index);
 
 end Mutools.XML_Templates;

@@ -29,7 +29,30 @@ is
    function Has_Attribute
       (Node      : DOM.Core.Node;
        Attr_Name : String)
-       return Boolean;
+      return Boolean;
+
+   -- Returns the "next node" as if traversing the xml-tree depth-first.
+   -- In particular this function can be used to traverse the xml-tree starting
+   -- from the given node.
+   -- null is returned if there is no next node.
+   -- If Only_Element_Nodes is True, only nodes of type Element_Node are returned.
+   -- If Stop_Node is not null, Next_Node will return null if the path in the tree
+   -- from Current_Node to the next node includes Stop_Node
+   -- (except if Current_Node = Stop_Node, in which case it continues).
+   function Next_Node
+      (Current_Node       : DOM.Core.Node;
+       Only_Element_Nodes : Boolean       := False;
+       Stop_Node          : DOM.Core.Node := null)
+      return DOM.Core.Node;
+
+   -- Traverses the (sub)tree spanned by Root_Node depth-first using Next_Node.
+   -- Assumes that Current_Node is in the subtree of Root_Node (including the root).
+   -- Returns null when there is no next node in the tree.
+   function Next_Node_In_Subtree
+      (Root_Node          : DOM.Core.Node;
+       Current_Node       : DOM.Core.Node;
+       Only_Element_Nodes : Boolean := False)
+      return DOM.Core.Node;
 
    --  Searches the element specified by an XPath in the given document and
    --  returns the attribute given by name as string. If no such attribute or

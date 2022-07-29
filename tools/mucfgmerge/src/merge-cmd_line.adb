@@ -43,6 +43,14 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Debug_Level return Debug_Level_Type
+   is
+   begin
+      return Debug_Level;
+   end Get_Debug_Level;
+
+   -------------------------------------------------------------------------
+
    function Get_Include_Path return String
    is
    begin
@@ -63,8 +71,34 @@ is
    is
       use Ada.Strings.Unbounded;
 
-      Cmdline : Mutools.Cmd_Line.Config_Type;
-      Inc_Dir : aliased GNAT.Strings.String_Access;
+      Cmdline     : Mutools.Cmd_Line.Config_Type;
+      Inc_Dir     : aliased GNAT.Strings.String_Access;
+      Debug_Cmd   : aliased GNAT.Strings.String_Access;
+
+      ----------------------------------------------------------------------
+
+      procedure Read_Debug_Level (Input : String);
+
+      ----------------------------------------------------------------------
+
+      procedure Read_Debug_Level (Input : String)
+      is
+      begin
+         if Input'Length = 0 then
+            Debug_Level := NONE;
+         elsif Input'Length > 1 then
+            raise GNAT.Command_Line.Invalid_Parameter;
+         elsif Input (Input'First) = '0' then
+            Debug_Level := NONE;
+         elsif Input (Input'First) = '1' then
+            Debug_Level := VERBOSE_ERRORS;
+         elsif Input (Input'First) = '2' then
+            Debug_Level := VERBOSE_OUTPUT;
+         else
+            raise GNAT.Command_Line.Invalid_Parameter;
+         end if;
+      end Read_Debug_Level;
+
    begin
       GNAT.Command_Line.Set_Usage
         (Config => Cmdline.Data,
@@ -76,6 +110,14 @@ is
          Switch      => "-I:",
          Long_Switch => "--include-path:",
          Help        => "Colon-separated list of include paths");
+      GNAT.Command_Line.Define_Switch
+        (Config      => Cmdline.Data,
+         Output      => Debug_Cmd'Access,
+         Switch      => "-d:",
+         Long_Switch => "--debug-level:",
+         Help        => "0 .. no debug-info (default)," & ASCII.LF
+            & "                        " & "1 .. debug-info in errors," & ASCII.LF
+            & "                        " & "2 .. mode 1 plus debug-info in resulting xml document");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Switch      => "-h",
@@ -90,6 +132,9 @@ is
             Include_Path := To_Unbounded_String (Inc_Dir.all);
          end if;
          GNAT.Strings.Free (X => Inc_Dir);
+
+         Read_Debug_Level (Input => Debug_Cmd.all);
+         GNAT.Strings.Free (X => Debug_Cmd);
 
       exception
          when GNAT.Command_Line.Invalid_Switch |

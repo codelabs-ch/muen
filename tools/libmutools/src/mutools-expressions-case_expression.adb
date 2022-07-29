@@ -16,7 +16,7 @@
 --
 
 with Ada.Strings.Unbounded;
-
+with Ada.Strings.Fixed;
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
@@ -450,6 +450,43 @@ is
 
    -------------------------------------------------------------------------
 
+   -- assign Result and set Found := 'True' if Node_Access.Output contains
+   -- the key Name
+   -- leave Result unchanged and set Found := 'False' otherwise
+   procedure Get_Value_If_Contained
+      (Name        :     String;
+       Result      : out Value_Type_Tuple;
+       Found       : out Boolean;
+       Node_Access :     Access_Hashmaps_Type);
+
+   ----------------------------------------------------------------------
+
+   procedure Get_Value_If_Contained
+      (Name        :     String;
+       Result      : out Value_Type_Tuple;
+       Found       : out Boolean;
+       Node_Access :     Access_Hashmaps_Type)
+   is
+   begin
+      Found := False;
+      if Node_Access.Output_Boolean.Contains (Name) then
+         Found := True;
+         Result.Value_Type := Boolean_Type;
+         Result.Bool_Value := Node_Access.Output_Boolean (Name);
+      elsif Node_Access.Output_Integer.Contains (Name) then
+         Found := True;
+         Result.Value_Type := Integer_Type;
+         Result.Int_Value := Node_Access.Output_Integer (Name);
+      elsif Node_Access.Output_String.Contains (Name) then
+         Found := True;
+         Result.Value_Type := String_Type;
+         Result.String_Value := String_Holder_Type.To_Holder
+            (Node_Access.Output_String (Name));
+      end if;
+   end Get_Value_If_Contained;
+
+   ----------------------------------------------------------------------
+
    procedure Get_Value_Of_Reference
       (Ref_Name      :        String;
        Result        :    out Value_Type_Tuple;
@@ -460,41 +497,6 @@ is
       Def_Node : DOM.Core.Node;
 
       ----------------------------------------------------------------------
-
-      -- assign Result and set Found := 'True' if Node_Access.Output contains
-      -- the key Name
-      -- leave Result unchanged and set Found := 'False' otherwise
-      procedure Get_Value_If_Contained
-         (Name        :     String;
-          Result      : out Value_Type_Tuple;
-          Found       : out Boolean;
-          Node_Access :     Access_Hashmaps_Type);
-
-      ----------------------------------------------------------------------
-
-      procedure Get_Value_If_Contained
-         (Name        :     String;
-          Result      : out Value_Type_Tuple;
-          Found       : out Boolean;
-          Node_Access :     Access_Hashmaps_Type)
-      is
-      begin
-         Found := False;
-         if Node_Access.Output_Boolean.Contains (Name) then
-            Found := True;
-            Result.Value_Type := Boolean_Type;
-            Result.Bool_Value := Node_Access.Output_Boolean (Name);
-         elsif Node_Access.Output_Integer.Contains (Name) then
-            Found := True;
-            Result.Value_Type := Integer_Type;
-            Result.Int_Value := Node_Access.Output_Integer (Name);
-         elsif Node_Access.Output_String.Contains (Name) then
-            Found := True;
-            Result.Value_Type := String_Type;
-            Result.String_Value := String_Holder_Type.To_Holder
-               (Node_Access.Output_String (Name));
-         end if;
-      end Get_Value_If_Contained;
 
    begin
       Get_Value_If_Contained (Name        => Ref_Name,
@@ -524,19 +526,49 @@ is
 
    -------------------------------------------------------------------------
 
-   function To_String (VTT : Value_Type_Tuple) return String
+   function Get_Value_Of_Reference_Debug
+      (Ref_Name    : String;
+       Node_Access : Access_Hashmaps_Type)
+      return String
+   is
+      Result : Value_Type_Tuple;
+      Found  : Boolean;
+   begin
+      Get_Value_If_Contained
+         (Name        => Ref_Name,
+          Result     => Result,
+          Found      => Found,
+          Node_Access => Node_Access);
+
+      if not Found then
+         return "";
+      else
+         return To_String (VTT => Result, No_Type => True);
+      end if;
+   end Get_Value_Of_Reference_Debug;
+
+   -------------------------------------------------------------------------
+
+   function To_String
+      (VTT     : Value_Type_Tuple;
+       No_Type : Boolean := False)
+      return String
    is
       package ASU renames Ada.Strings.Unbounded;
       Output : ASU.Unbounded_String;
    begin
-      Output := ASU.To_Unbounded_String (VTT.Value_Type'Image & " ");
+      if not No_Type then
+         Output := ASU.To_Unbounded_String (VTT.Value_Type'Image & " ");
+      end if;
       case VTT.Value_Type is
          when Boolean_Type =>
             ASU.Append (Source => Output,
                         New_Item => VTT.Bool_Value'Image);
          when Integer_Type =>
             ASU.Append (Source => Output,
-                        New_Item => VTT.Int_Value'Image);
+                        New_Item => Ada.Strings.Fixed.Trim
+                           (Source => VTT.Int_Value'Image,
+                            Side   => Ada.Strings.Left));
          when String_Type =>
             ASU.Append (Source => Output,
                         New_Item => VTT.String_Value.Element);

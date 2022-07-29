@@ -51,7 +51,8 @@ is
       Section_Name      :        String;
       Section_List_Tags :        Muxml.Utils.Tags_Type;
       Section_Ref_Names :        Muxml.Utils.Tags_Type;
-      Add_Missing_Elems : not null access procedure (Node : DOM.Core.Node));
+      Add_Missing_Elems : not null access procedure (Node : DOM.Core.Node);
+      Add_Location      :        Boolean);
 
    procedure Merge_Config_Section
      (Policy     : in out Muxml.XML_Data_Type;
@@ -131,7 +132,8 @@ is
 
    procedure Merge_Hardware
      (Policy        : in out Muxml.XML_Data_Type;
-      Hardware_File :        String)
+      Hardware_File :        String;
+      Add_Location  :        Boolean)
    is
    begin
       Merge_Section
@@ -146,14 +148,16 @@ is
                                6 => U ("msr")),
          Section_Ref_Names => (1 => U ("platform"),
                                2 => U ("memory")),
-         Add_Missing_Elems => Add_Missing_HW_Elements'Access);
+         Add_Missing_Elems => Add_Missing_HW_Elements'Access,
+         Add_Location      => Add_Location);
    end Merge_Hardware;
 
    ---------------------------------------------------------------------
 
    procedure Merge_Platform
      (Policy        : in out Muxml.XML_Data_Type;
-      Platform_File :        String)
+      Platform_File :        String;
+      Add_Location  :        Boolean)
    is
    begin
       Merge_Section
@@ -165,7 +169,8 @@ is
                                3 => U ("class"),
                                4 => U ("device")),
          Section_Ref_Names => (1 => U ("memory")),
-         Add_Missing_Elems => Add_Missing_PL_Elements'Access);
+         Add_Missing_Elems => Add_Missing_PL_Elements'Access,
+         Add_Location      => Add_Location);
    end Merge_Platform;
 
    ---------------------------------------------------------------------
@@ -199,7 +204,8 @@ is
       Section_Name      :        String;
       Section_List_Tags :        Muxml.Utils.Tags_Type;
       Section_Ref_Names :        Muxml.Utils.Tags_Type;
-      Add_Missing_Elems : not null access procedure (Node : DOM.Core.Node))
+      Add_Missing_Elems : not null access procedure (Node : DOM.Core.Node);
+      Add_Location      :        Boolean)
    is
       use type DOM.Core.Node;
 
@@ -207,9 +213,10 @@ is
       Section_Node : DOM.Core.Node;
       Top_Node     : DOM.Core.Node;
    begin
-      Muxml.Parse (Data => Section,
-                   Kind => Muxml.None,
-                   File => Section_File);
+      Muxml.Parse (Data         => Section,
+                   Kind         => Muxml.None,
+                   File         => Section_File,
+                   Add_Location => Add_Location);
       Section_Node := Muxml.Utils.Get_Element
         (Doc   => Policy.Doc,
          XPath => "/system/" & Section_Name);

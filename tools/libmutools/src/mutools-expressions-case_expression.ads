@@ -38,7 +38,11 @@ is
    function "=" (L, R : Value_Type_Tuple) return Boolean;
 
    -- return a string representation of VTT, including Type and its value
-   function To_String (VTT : Value_Type_Tuple) return String;
+   -- When No_Type is true, the type is omitted in the output.
+   function To_String
+       (VTT     : Value_Type_Tuple;
+        No_Type : Boolean := False)
+       return String;
 
    -- Evaluate 'case' and 'when'-nodes, but not the children of 'when'-nodes.
    -- Return_Node is the matching 'when'-node and null if no child matches.
@@ -59,6 +63,16 @@ is
        Backtrace     : in out String_Vector.Vector;
        Node_Access   : in out Access_Hashmaps_Type);
 
+   -- This function is an interface for the debug-functionality.
+   -- Return the value of Ref_Name as a string.
+   -- If Ref_Name is not a valid key in Hashmap then the empty string
+   -- is returned (which is also a legal value for existing variables of type
+   -- string).
+   function Get_Value_Of_Reference_Debug
+      (Ref_Name    : String;
+       Node_Access : Access_Hashmaps_Type)
+      return String;
+
 private
    -- To be called on nodes like <boolean value="foo"/> as well as
    --   config-variable entries like <boolean name="varname" value="foo"/>
@@ -77,7 +91,7 @@ private
        Node_Access   : in out Access_Hashmaps_Type);
 
    -- assign the value of the variable or expression with name Ref_Name to
-   -- Result
+   -- Result. This triggers expansion of that node if neccessary.
    procedure Get_Value_Of_Reference
       (Ref_Name      :        String;
        Result        :    out Value_Type_Tuple;

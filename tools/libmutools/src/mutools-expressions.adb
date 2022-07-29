@@ -29,10 +29,13 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Mutools.Expressions.Case_Expression;
+with Mutools.Xmldebuglog;
 with Muxml.Utils;
 
 package body Mutools.Expressions
 is
+   Expr_Debug_Active : Boolean := False;
+
    -------------------------------------------------------------------------
 
    procedure Add_To_Backtrace
@@ -748,7 +751,8 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Expand (Policy : Muxml.XML_Data_Type)
+   procedure Expand (Policy       : Muxml.XML_Data_Type;
+                     Debug_Active : Boolean := False)
    is
       Backtrace  : String_Vector.Vector;
       Vars_Exprs : constant DOM.Core.Node_List
@@ -795,6 +799,9 @@ is
             System_Node := DOM.Core.Nodes.Parent_Node (N => Config_Node);
             Insert_Position := DOM.Core.Nodes.Next_Sibling (N => Config_Node);
 
+            if Expr_Debug_Active then
+               Mutools.Xmldebuglog.Remove_Log_Of_Subtree (Node  => Config_Node);
+            end if;
             Config_Node := DOM.Core.Nodes.Remove_Child
                (N          => System_Node,
                 Old_Child  => Config_Node);
@@ -885,6 +892,8 @@ is
       end Substitute_Config_Section;
 
    begin
+      Expr_Debug_Active := Debug_Active;
+
       for I in 0 .. DOM.Core.Nodes.Length (List => Vars_Exprs) - 1 loop
          declare
             Node : constant DOM.Core.Node
@@ -1123,6 +1132,32 @@ is
             & Node_Type
             & "'";
       end if;
+   exception
+      when E : others =>
+         if Expr_Debug_Active then
+            -- check if the exception got amended by a child-call already
+            declare
+               Debug_Info_Header : constant String
+                  := ". See above message for details.";
+               Has_Been_Amended : constant Boolean
+                  := (Ada.Strings.Fixed.Count
+                         (Source  => Ada.Exceptions.Exception_Message (X => E),
+                          Pattern => Debug_Info_Header) > 0);
+            begin
+               if Has_Been_Amended then
+                  raise;
+               else
+                  Mulog.Log (Msg => Mutools.Xmldebuglog.Get_Log_For_Error_Message (Node => Node));
+                  Ada.Exceptions.Raise_Exception
+                     (E       => Ada.Exceptions.Exception_Identity (X => E),
+                      Message => Ada.Exceptions.Exception_Message (X => E)
+                         & Debug_Info_Header);
+               end if;
+            end;
+         else
+            raise;
+         end if;
+
    end Expand_Single_Node;
 
    -------------------------------------------------------------------------

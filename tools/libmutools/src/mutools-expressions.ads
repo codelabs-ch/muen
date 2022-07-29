@@ -31,7 +31,8 @@ is
    --  Expand all expressions in the specified policy to config values.
    --  This includes the substitutions of $-referenced variables within
    --  expressions and within the config section
-   procedure Expand (Policy : Muxml.XML_Data_Type);
+   procedure Expand (Policy       : Muxml.XML_Data_Type;
+                     Debug_Active : Boolean := False);
 
    Invalid_Expression : exception;
 

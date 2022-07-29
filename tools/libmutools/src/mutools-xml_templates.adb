@@ -38,9 +38,14 @@ is
    procedure Adopt_All_Children
       (Target             : DOM.Core.Node;
        Parent_Of_Children : DOM.Core.Node;
-       Append_Mode        : Boolean := False)
+       Append_Mode        : Boolean       := False;
+       Debug_Active       : Boolean       := False;
+       Anchestor_For_Log  : DOM.Core.Node := null;
+       Transaction_Index  : Mutools.Xmldebuglog.Transaction_Log_Index_Type
+                          := Mutools.Xmldebuglog.Null_Ref_Index)
    is
       use type DOM.Core.Node;
+      use all type DOM.Core.Node_Types;
 
       Child     :  DOM.Core.Node
                 := DOM.Core.Nodes.First_Child (N => Parent_Of_Children);
@@ -64,6 +69,15 @@ is
                 Ref_Child => Target);
          end if;
 
+         if Debug_Active and
+            DOM.Core.Nodes.Node_Type (N => New_Child) = DOM.Core.Element_Node
+         then
+            Mutools.Xmldebuglog.Add_Log_For_Node
+               (Node      => New_Child,
+                Anchestor => Anchestor_For_Log,
+                TA_Number => Transaction_Index);
+         end if;
+
          Child := DOM.Core.Nodes.Next_Sibling (N => Child);
       end loop;
    end Adopt_All_Children;
@@ -74,7 +88,8 @@ is
       (Template       :     DOM.Core.Node;
        Template_Call  :     DOM.Core.Node;
        Running_Number :     Positive;
-       Output         : out Muxml.XML_Data_Type)
+       Output         : out Muxml.XML_Data_Type;
+       Used_Prefix    : out Unbounded_String)
    is
       use type DOM.Core.Node;
 
@@ -299,6 +314,7 @@ is
                                                 Old_Child => Params);
          DOM.Core.Nodes.Free (N => Params);
 
+         Used_Prefix := To_Unbounded_String (Prefix);
          Prefix_Variables (Root_Node   => Root_Node,
                            Config_Node => Config,
                            Prefix      => Prefix);
@@ -327,7 +343,8 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Expand (XML_Data : in out Muxml.XML_Data_Type)
+   procedure Expand (XML_Data     : in out Muxml.XML_Data_Type;
+                     Debug_Active :        Boolean)
    is
       use type DOM.Core.Node;
 
@@ -346,14 +363,18 @@ is
       procedure Substitute_Template_Call
          (Compiled_Template :        Muxml.XML_Data_Type;
           XML_Data          : in out Muxml.XML_Data_Type;
-          Template_Call     : in out DOM.Core.Node);
+          Template_Call     : in out DOM.Core.Node;
+          Debug_Active      :        Boolean;
+          Log_Index         :        Mutools.Xmldebuglog.Transaction_Log_Index_Type);
 
       ---------------------------------------------------------------------
 
       procedure Substitute_Template_Call
          (Compiled_Template :        Muxml.XML_Data_Type;
           XML_Data          : in out Muxml.XML_Data_Type;
-          Template_Call     : in out DOM.Core.Node)
+          Template_Call     : in out DOM.Core.Node;
+          Debug_Active      :        Boolean;
+          Log_Index         :        Mutools.Xmldebuglog.Transaction_Log_Index_Type)
       is
          Template_Config  : constant DOM.Core.Node
             := Muxml.Utils.Get_Element
@@ -381,10 +402,14 @@ is
             (Doc   => XML_Data.Doc,
              XPath => "/system");
       begin
+
          Adopt_All_Children
             (Target             => System_Config,
              Parent_Of_Children => Template_Config,
-             Append_Mode        => True);
+             Append_Mode        => True,
+             Debug_Active       => Debug_Active,
+             Anchestor_For_Log  => Template_Call,
+             Transaction_Index  => Log_Index);
 
          if  Template_Expressions /= null then
             if System_Expressions = null then
@@ -407,21 +432,31 @@ is
             end if;
 
             Adopt_All_Children
-               (Target => System_Expressions,
+               (Target             => System_Expressions,
                 Parent_Of_Children => Template_Expressions,
-                Append_Mode => True);
+                Append_Mode        => True,
+                Debug_Active       => Debug_Active,
+                Anchestor_For_Log  => Template_Call,
+                Transaction_Index  => Log_Index);
          end if;
 
          Adopt_All_Children
             (Target             => Template_Call,
              Parent_Of_Children => Template_Body,
-             Append_Mode        => False);
+             Append_Mode        => False,
+             Debug_Active       => Debug_Active,
+             Anchestor_For_Log  => Template_Call,
+             Transaction_Index  => Log_Index);
 
          -- remove the Template_Call from main document
+         if Debug_Active then
+            Mutools.Xmldebuglog.Remove_Log_Of_Subtree (Node => Template_Call);
+         end if;
          Template_Call := DOM.Core.Nodes.Remove_Child
             (N         => DOM.Core.Nodes.Parent_Node
              (N => Template_Call),
              Old_Child => Template_Call);
+
          DOM.Core.Nodes.Free (N => Template_Call);
       end Substitute_Template_Call;
 
@@ -481,6 +516,9 @@ is
                                   (Nodes     => Templates,
                                    Ref_Attr  => "name",
                                    Ref_Value => Called_Template_Name);
+                  Prefix : Unbounded_String;
+                  Log_Index : Mutools.Xmldebuglog.Transaction_Log_Index_Type
+                     := Mutools.Xmldebuglog.Null_Ref_Index;
                begin
                   if Template = null then
                      raise Muxml.Validation_Error with
@@ -489,17 +527,38 @@ is
                         & "'";
                   end if;
 
-                  Compile_Template
-                     (Template       => Template,
-                      Template_Call  => Template_Call,
-                      Running_Number => Running_Number,
-                      Output         => Compiled_Template);
+                  begin
+                     Compile_Template
+                        (Template       => Template,
+                         Template_Call  => Template_Call,
+                         Running_Number => Running_Number,
+                         Output         => Compiled_Template,
+                         Used_Prefix    => Prefix);
+                  exception
+                     when others =>
+                        if Debug_Active then
+                           Mulog.Log
+                              (Msg => " Error in Compile_Template. Debug-Information of call: "
+                                  & Mutools.Xmldebuglog.Get_Log_For_Error_Message (Node => Template_Call));
+                        end if;
+                        raise;
+                  end;
                   Running_Number := Running_Number + 1;
+
+                  if Debug_Active then
+                     Log_Index := Mutools.Xmldebuglog.Add_Usetemplate_Transaction
+                        (Usetemplate_Node => Template_Call,
+                         Prefix           => To_String (Prefix));
+                  end if;
 
                   Substitute_Template_Call
                      (Compiled_Template => Compiled_Template,
                       XML_Data          => XML_Data,
-                      Template_Call     => Template_Call);
+                      Template_Call     => Template_Call,
+                      Debug_Active      => Debug_Active,
+                      Log_Index         => Log_Index);
+
+                  DOM.Core.Nodes.Free (N => Compiled_Template.Doc);
                end;
             end loop;
          end;
@@ -588,60 +647,6 @@ is
             Node := DOM.Core.Nodes.Next_Sibling (N => Node);
          end loop;
       end Gather_Names_And_Rename;
-
-      ---------------------------------------------------------------------
-
-      -- traverses the xml-tree depth-first
-      -- null is returned when there is no next node
-      function Next_Node (Current_Node : DOM.Core.Node) return DOM.Core.Node;
-
-      ---------------------------------------------------------------------
-
-      function Next_Node (Current_Node : DOM.Core.Node) return DOM.Core.Node
-      is
-         ------------------------------------------------------------------
-
-         -- recursively go to the parent until some parent has a next sibling
-         -- and return that sibling
-         -- returns null if there is no such node
-         function Backtrack_Until_Sibling
-            (Node : DOM.Core.Node)
-            return DOM.Core.Node;
-
-         ------------------------------------------------------------------
-
-         function Backtrack_Until_Sibling
-            (Node : DOM.Core.Node)
-            return DOM.Core.Node
-         is
-         begin
-            if DOM.Core.Nodes.Next_Sibling (N => Node) /= null then
-               return DOM.Core.Nodes.Next_Sibling (N => Node);
-            elsif DOM.Core.Nodes.Parent_Node (N => Node) /= null then
-               return Backtrack_Until_Sibling
-                  (Node =>  DOM.Core.Nodes.Parent_Node (N => Node));
-            else
-               return null;
-            end if;
-         end Backtrack_Until_Sibling;
-
-      begin
-         if Current_Node /= null then
-            if DOM.Core.Nodes.Has_Child_Nodes (N => Current_Node) then
-               return DOM.Core.Nodes.First_Child (N => Current_Node);
-            elsif DOM.Core.Nodes.Next_Sibling (N => Current_Node) /= null then
-               return DOM.Core.Nodes.Next_Sibling (N => Current_Node);
-            elsif DOM.Core.Nodes.Parent_Node (N => Current_Node) /= null then
-               return Backtrack_Until_Sibling
-                  (Node =>  DOM.Core.Nodes.Parent_Node
-                      (N => Current_Node));
-            else
-               return null;
-            end if;
-         else
-            return Current_Node;
-         end if;
-      end Next_Node;
 
       ---------------------------------------------------------------------
 
@@ -876,7 +881,7 @@ is
                end if;
             end if;
          end;
-         Current_Node := Next_Node (Current_Node => Current_Node);
+         Current_Node := Muxml.Utils.Next_Node (Current_Node => Current_Node);
       end loop;
    end Prefix_Variables;
 end Mutools.XML_Templates;

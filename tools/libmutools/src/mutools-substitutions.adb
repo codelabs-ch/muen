@@ -23,13 +23,19 @@ with DOM.Core.Nodes;
 with McKae.XML.XPath.XIA;
 
 with Mutools.Expressions;
+with Mutools.Xmldebuglog;
+with Mulog;
+
+---mmmDEBUG
+--use all type DOM.Core.Node;
 
 package body Mutools.Substitutions
 is
 
    -------------------------------------------------------------------------
 
-   procedure Process_Attributes (Data : Muxml.XML_Data_Type)
+   procedure Process_Attributes (Data         : Muxml.XML_Data_Type;
+                                 Debug_Active : Boolean := False)
    is
       Config_Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -50,6 +56,7 @@ is
       generic
          with function Getter (Node : DOM.Core.Node) return String;
          with procedure Setter (Node : DOM.Core.Node; Value : String);
+         with function Owner (Node : DOM.Core.Node) return DOM.Core.Node;
       procedure Substitution_Loop (Node_List : DOM.Core.Node_List);
 
       ----------------------------------------------------------------------
@@ -105,12 +112,33 @@ is
                      (Node  => Node,
                       Value => Node_Access (Reference));
                else
+                  ---mmmDEBUG BEGIN
+                  --   DOM.Core.Nodes.Print (Node);
+                  --   Mulog.Log (Msg => DOM.Core.Nodes.Node_Type (Node)'Img);
+                  --   Mulog.Log (Msg => Boolean'Image
+                  --                 (DOM.Core.Nodes.Parent_Node (Node) = null));
+                  --   DOM.Core.Nodes.Print (DOM.Core.Attrs.Owner_Element (Node));
+                  ---mmmDEBUG END
+
+                  if Debug_Active then
+                     -- TODO: reinsert this code once V811-012 is resolved
+                     --     Mulog.Log (Msg => " Debug-Info for error: "
+                     --                   & ASCII.LF
+                     --                   & Mutools.Xmldebuglog.Get_Log_For_Error_Message
+                     --                   (Node => Owner (Node)));
+
+                     Mulog.Log (Msg => " Dummy-Debug-Info for error (wait for bug to be resolved)"
+                                   & ASCII.LF
+                                   & Mutools.Xmldebuglog.Get_Log_For_Error_Message
+                                   (Node => Node));
+                  end if;
+
                   raise Muxml.Validation_Error with
                      "Found attribute value or text-node with value '"
                      & Node_Value
                      & "' but no variable with name '"
                      & Reference
-                     & "' exists.";
+                     & "' exists";
                end if;
             end;
          end loop;
@@ -120,19 +148,21 @@ is
 
       procedure Substitute_Attributes is new Substitution_Loop
          (Getter => DOM.Core.Attrs.Value,
-          Setter => DOM.Core.Attrs.Set_Value);
+          Setter => DOM.Core.Attrs.Set_Value,
+          Owner  => DOM.Core.Attrs.Owner_Element);
 
       procedure Substitute_Text is new Substitution_Loop
          (Getter => DOM.Core.Nodes.Node_Value,
-          Setter => DOM.Core.Nodes.Set_Node_Value);
+          Setter => DOM.Core.Nodes.Set_Node_Value,
+          Owner  => DOM.Core.Nodes.Parent_Node);
 
    begin
       Populate_Node_Access
          (Config_Nodes => Config_Nodes,
           Node_Access   => Node_Access);
 
-      Substitute_Attributes (Node_List => Attribute_Nodes);
       Substitute_Text (Node_List => Text_Nodes);
+      Substitute_Attributes (Node_List => Attribute_Nodes);
 
    end Process_Attributes;
 

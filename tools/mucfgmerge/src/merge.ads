@@ -18,11 +18,19 @@
 
 package Merge
 is
+   -- Debugging levels:
+   -- NONE ............ Normal error messages without xml-traceback (i.e., why
+   --                   individual xml-nodes were created)
+   -- VERBOSE_ERRORS .. adds xml-traceback information to error messages
+   -- VERBOSE_OUTPUT .. VERBOSE_ERROR + xml-traceback information as comments in
+   --                   output file
+   type Debug_Level_Type is (NONE, VERBOSE_ERRORS, VERBOSE_OUTPUT);
 
    --  Start the merge process.
    procedure Run
      (Config_File  : String;
       Output_File  : String;
-      Include_Path : String);
+      Include_Path : String;
+      Debug_Level  : Debug_Level_Type);
 
 end Merge;

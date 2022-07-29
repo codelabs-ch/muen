@@ -25,15 +25,18 @@ package Mutools.Conditionals
 is
 
    --  Expand all conditionals in the specified policy.
-   procedure Expand (Policy : Muxml.XML_Data_Type);
+   procedure Expand
+      (Policy       : Muxml.XML_Data_Type;
+       Debug_Active : Boolean := False);
 
 private
 
    --  Recursively evaluate all conditionals of given parent node.
    procedure Evaluate
-      (Policy      :        Muxml.XML_Data_Type;
-       Config      :        DOM.Core.Node_List;
-       Parent      :        DOM.Core.Node;
-       Node_Access : in out Mutools.Expressions.Access_Hashmaps_Type);
+      (Policy       :        Muxml.XML_Data_Type;
+       Config       :        DOM.Core.Node_List;
+       Parent       :        DOM.Core.Node;
+       Node_Access  : in out Mutools.Expressions.Access_Hashmaps_Type;
+       Debug_Active :        Boolean);
 
 end Mutools.Conditionals;

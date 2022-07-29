@@ -1238,7 +1238,8 @@ is
 
    procedure Merge_XIncludes
      (Policy       : in out Muxml.XML_Data_Type;
-      Include_Dirs :        Strings.String_Array)
+      Include_Dirs :        Strings.String_Array;
+      Add_Location :        Boolean := False)
    is
       Inc_Group_Tag_Name : constant String := "include";
 
@@ -1270,12 +1271,14 @@ is
             Content : Muxml.XML_Data_Type;
             Content_Node : DOM.Core.Node;
          begin
-            Muxml.Parse (Data => Content,
-                         Kind => Muxml.None,
-                         File => Path);
+            Muxml.Parse (Data         => Content,
+                         Kind         => Muxml.None,
+                         File         => Path,
+                         Add_Location => Add_Location);
 
             Merge_XIncludes (Policy       => Content,
-                             Include_Dirs => Include_Dirs);
+                             Include_Dirs => Include_Dirs,
+                             Add_Location => Add_Location);
             declare
                use type DOM.Core.Node;
 

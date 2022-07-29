@@ -28,7 +28,8 @@ is
    --     Recursive_Merge(Parent,  C)
    --   delete <amend>-nodes
    procedure Expand
-      (XML_Data : Muxml.XML_Data_Type);
+      (XML_Data    : Muxml.XML_Data_Type;
+      Debug_Active : Boolean := False);
 
 private
 
@@ -41,8 +42,9 @@ private
    -- if no child matched:
    --     append New_Child to children of Parent and return (with deep cloning)
    procedure Recursive_Merge
-      (Parent    : DOM.Core.Node;
-       New_Child : DOM.Core.Node);
+      (Parent       : DOM.Core.Node;
+       New_Child    : DOM.Core.Node;
+       Debug_Active : Boolean);
 
    -- check if L and R have the same name and the same attributes
    --   (including values of attributes)

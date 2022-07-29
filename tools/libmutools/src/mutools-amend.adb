@@ -25,12 +25,14 @@ with Ada.Exceptions;
 
 with McKae.XML.XPath.XIA;
 with Mutools.Amend.Ordering;
+with Mutools.Xmldebuglog;
 with Ada.Containers.Indefinite_Vectors;
 
 package body Mutools.Amend
 is
    procedure Expand
-      (XML_Data : Muxml.XML_Data_Type)
+      (XML_Data    : Muxml.XML_Data_Type;
+      Debug_Active : Boolean := False)
    is
       Amend_Statements : constant DOM.Core.Node_List
                        := McKae.XML.XPath.XIA.XPath_Query
@@ -77,25 +79,56 @@ is
                        (Elem => Amend_Statement,
                         Name => "xpath")
                   & """ in amend statement.";
+
+            end if;
+            if Debug_Active then
+               -- before the nodes leave their place, we have push the
+               -- backtrace-info to the leefs of the subtree (because we need
+               -- their anchestors for that)
+               declare
+                  Log_Index : Mutools.Xmldebuglog.Transaction_Log_Index_Type;
+               begin
+                  Log_Index := Mutools.Xmldebuglog.Add_Amend_Transaction
+                     (Amend_Node => Amend_Statement,
+                      Xpath      => DOM.Core.Elements.Get_Attribute
+                         (Elem => Amend_Statement,
+                          Name => "xpath"));
+                  -- add log with dummy inheritance
+                  Mutools.Xmldebuglog.Add_Log_For_Node
+                     (Node      => Amend_Statement,
+                      Anchestor => Amend_Statement,
+                      TA_Number => Log_Index);
+
+                  Mutools.Xmldebuglog.Gather_Backtrace_Info
+                     (Node                => Amend_Statement,
+                      Examine_Only_Parent => False,
+                      Deep                => True);
+               end;
             end if;
 
             Target_Node := DOM.Core.Nodes.Item
-                              (List  => Target_Nodes,
-                               Index => 0);
+               (List  => Target_Nodes,
+                Index => 0);
             Amend_Children := DOM.Core.Nodes.Child_Nodes
-                                 (N => Amend_Statement);
+               (N => Amend_Statement);
+
             for C in 0 .. DOM.Core.Nodes.Length
-                            (List => Amend_Children) - 1 loop
+               (List => Amend_Children) - 1 loop
                Recursive_Merge (Parent    => Target_Node,
                                 New_Child => DOM.Core.Nodes.Item
-                                                (List  => Amend_Children,
-                                                 Index => C));
+                                   (List  => Amend_Children,
+                                    Index => C),
+                                Debug_Active => Debug_Active);
             end loop;
 
+            if Debug_Active then
+               Mutools.Xmldebuglog.Remove_Log_Of_Subtree (Node => Amend_Statement);
+            end if;
+
             Amend_Statement := DOM.Core.Nodes.Remove_Child
-                                  (N         => DOM.Core.Nodes.Parent_Node
-                                                   (N => Amend_Statement),
-                                   Old_Child => Amend_Statement);
+               (N         => DOM.Core.Nodes.Parent_Node
+                   (N => Amend_Statement),
+                Old_Child => Amend_Statement);
             DOM.Core.Nodes.Free (N => Amend_Statement);
          end;
       end loop;
@@ -162,8 +195,9 @@ is
    ------------------------------------------------------------------------
 
    procedure Recursive_Merge
-      (Parent    : DOM.Core.Node;
-       New_Child : DOM.Core.Node)
+      (Parent       : DOM.Core.Node;
+       New_Child    : DOM.Core.Node;
+       Debug_Active : Boolean)
    is
       use type DOM.Core.Node;
       use all type DOM.Core.Node_Types;
@@ -191,10 +225,10 @@ is
       ---------------------------------------------------------------------
 
       -- check if the given node has only one child which is a text child
-      -- returns 1 if there is exactly 1 child and that is an essential text-node
-      -- returns 0 if there is no child or exactly 1 text-node-child which
+      -- returns "Unique_Essential" if there is exactly 1 child and that is an essential text-node
+      -- returns "None_Or_Not_Essential" if there is no child or exactly 1 text-node-child which
       --    contains only white-space
-      -- returns -1 otherwise
+      -- returns "Many_Or_Other_Type" otherwise
       function Has_Only_Text_Child (Node : DOM.Core.Node)
                                    return Text_Child_Status_Type;
 
@@ -297,6 +331,7 @@ is
                         (Ancestors => Ancestors,
                          New_Child  => DOM.Core.Nodes.Node_Name (N => New_Child),
                          Siblings   => Siblings_Names);
+         Copy_Of_New_Child, Ref_Child : DOM.Core.Node;
       begin
          if Query_Result = Mutools.Amend.Ordering.No_Legal_Index then
             raise Muxml.Validation_Error with
@@ -315,19 +350,26 @@ is
          elsif Query_Result = Mutools.Amend.Ordering.
             Insert_Query_Result_Type (Siblings_Names.Length)
          then
-            Dummy := DOM.Core.Nodes.Append_Child
-               (N         => Parent,
-                New_Child => DOM.Core.Documents.Local.Clone_Node
-                               (N    => New_Child,
-                                Deep => True));
+            -- this triggers Insert_Before to append the new child at the end
+            Ref_Child := null;
          else
-            Dummy := DOM.Core.Nodes.Insert_Before
-               (N         => Parent,
-                New_Child => DOM.Core.Documents.Local.Clone_Node
-                               (N    => New_Child,
-                                Deep => True),
-                Ref_Child => Siblings_Nodes (Integer (Query_Result)));
+            Ref_Child := Siblings_Nodes (Integer (Query_Result));
          end if;
+
+         Copy_Of_New_Child := DOM.Core.Nodes.Insert_Before
+            (N         => Parent,
+             New_Child => DOM.Core.Documents.Local.Clone_Node
+                (N    => New_Child,
+                 Deep => True),
+             Ref_Child => Ref_Child);
+
+         if Debug_Active then
+            Mutools.Xmldebuglog.Copy_Log_Entry
+               (Old_Node => New_Child,
+                New_Node => Copy_Of_New_Child,
+                Deep     => True);
+         end if;
+
       end Insert;
 
       ---------------------------------------------------------------------
@@ -381,8 +423,9 @@ is
                         := DOM.Core.Nodes.First_Child (N => New_Child);
                   begin
                      while New_Child_Child /= null loop
-                        Recursive_Merge (Parent    => Parent_Child,
-                                         New_Child => New_Child_Child);
+                        Recursive_Merge (Parent       => Parent_Child,
+                                         New_Child    => New_Child_Child,
+                                         Debug_Active => Debug_Active);
 
                         New_Child_Child := DOM.Core.Nodes.Next_Sibling
                            (N => New_Child_Child);
@@ -453,6 +496,8 @@ is
             Parent_Child := DOM.Core.Nodes.Next_Sibling (N => Parent_Child);
          end loop;
 
+         -- there existed a fitting node in parent in which we insert the text
+         -- from new child
          if Parent_Child_Marked /= null then
             declare
                Parent_Child_Child : constant DOM.Core.Node
@@ -470,15 +515,24 @@ is
                   DOM.Core.Nodes.Set_Node_Value
                      (N     => Parent_Child_Child,
                       Value => DOM.Core.Nodes.Node_Value (N => New_Child_Child));
-                  return;
+
                else
                   Dummy := DOM.Core.Nodes.Append_Child
                              (N         => Parent_Child_Marked,
                               New_Child => DOM.Core.Documents.Local.Clone_Node
                                              (N    => New_Child_Child,
                                               Deep => True));
-                  return;
                end if;
+
+               if Debug_Active then
+                  Mutools.Xmldebuglog.Copy_Log_Entry
+                     (Old_Node => New_Child,
+                      New_Node => Parent_Child_Marked,
+                      Deep     => False);
+               end if;
+
+               return;
+
             end;
          else
             Insert

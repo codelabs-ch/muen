@@ -174,7 +174,28 @@ is
             | Constants.MSR_CONFIG_TDP_CONTROL
             | Constants.IA32_PM_ENABLE
             | Constants.IA32_HWP_CAPABILITIES
-            | Constants.IA32_HWP_REQUEST          => return True;
+            | Constants.IA32_HWP_REQUEST
+            | Constants.MSR_IA32_PMC0 | Constants.MSR_IA32_PMC1
+            | Constants.MSR_IA32_PMC2 | Constants.MSR_IA32_PMC3
+            | Constants.MSR_IA32_PMC4 | Constants.MSR_IA32_PMC5
+            | Constants.MSR_IA32_PMC6 | Constants.MSR_IA32_PMC7
+            | Constants.MSR_IA32_PERFEVTSEL0 | Constants.MSR_IA32_PERFEVTSEL1
+            | Constants.MSR_IA32_PERFEVTSEL2 | Constants.MSR_IA32_PERFEVTSEL3
+            | Constants.MSR_IA32_PERF_STATUS | Constants.MSR_IA32_PERF_CTL
+            | Constants.MSR_IA32_FIXED_CTR0 | Constants.MSR_IA32_FIXED_CTR1
+            | Constants.MSR_IA32_FIXED_CTR2
+            | Constants.MSR_IA32_PERF_CAPABILITIES
+            | Constants.MSR_IA32_FIXED_CTR_CTL
+            | Constants.MSR_IA32_PERF_GLOBAL_STATUS
+            | Constants.MSR_IA32_PERF_GLOBAL_CTRL
+            | Constants.MSR_IA32_PERF_GLOBAL_OVF_CTRL
+            | Constants.MSR_IA32_PERF_GLOBAL_STATUS_SET
+            | Constants.MSR_IA32_PERF_GLOBAL_INUSE
+            | Constants.MSR_IA32_A_PMC0 | Constants.MSR_IA32_A_PMC1
+            | Constants.MSR_IA32_A_PMC2 | Constants.MSR_IA32_A_PMC3
+            | Constants.MSR_IA32_A_PMC4 | Constants.MSR_IA32_A_PMC5
+            | Constants.MSR_IA32_A_PMC6 | Constants.MSR_IA32_A_PMC7
+            => return True;
          when others                              => return False;
       end case;
    end Is_Global_MSR;

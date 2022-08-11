@@ -127,6 +127,13 @@
      <msr end="16#064b#" mode="rw" start="16#064b#"/> <!-- MSR_CONFIG_TDP_CONTROL              -->
      <msr end="16#0771#" mode="rw" start="16#0770#"/> <!-- IA32_[PM_ENABLE|HWP_CAPABILITIES]   -->
      <msr end="16#0774#" mode="rw" start="16#0774#"/> <!-- IA32_HWP_REQUEST                    -->
+     <msr end="16#00c8#" mode="rw" start="16#00c1#"/> <!-- MSR_IA32_PMC[0-8]                      -->
+     <msr end="16#0189#" mode="rw" start="16#0186#"/> <!-- MSR_IA32_PERFEVTSEL[0-4]               -->
+     <msr end="16#0199#" mode="rw" start="16#0198#"/> <!-- MSR_IA32_PERF_[STATUS|CTL]             -->
+     <msr end="16#030b#" mode="rw" start="16#0309#"/> <!-- MSR_IA32_FIXED_CTR[0-2]                -->
+     <msr end="16#0345#" mode="rw" start="16#0345#"/> <!-- MSR_IA32_PERF_CAPABILITIES             -->
+     <msr end="16#0392#" mode="rw" start="16#038d#"/> <!-- MSR_IA32_[FIXED_CTR_CTL|PERF_GLOBAL_*] -->
+     <msr end="16#04c8#" mode="rw" start="16#04c1#"/> <!-- MSR_IA32_A_PMC[0-7]                    -->
     </msrs>
    </vcpu>
    <bootparams>console=ttyS0 console=tty0 hostname=linux drm.debug=0x2 i8042.nopnp=1</bootparams>

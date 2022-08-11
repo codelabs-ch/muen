@@ -55,6 +55,40 @@ is
    IA32_HWP_CAPABILITIES     : constant := 16#0000_0771#;
    IA32_HWP_REQUEST          : constant := 16#0000_0774#;
 
+   --  Performance counter/PMU MSRs
+   MSR_IA32_PMC0                   : constant := 16#00c1#;
+   MSR_IA32_PMC1                   : constant := 16#00c2#;
+   MSR_IA32_PMC2                   : constant := 16#00c3#;
+   MSR_IA32_PMC3                   : constant := 16#00c4#;
+   MSR_IA32_PMC4                   : constant := 16#00c5#;
+   MSR_IA32_PMC5                   : constant := 16#00c6#;
+   MSR_IA32_PMC6                   : constant := 16#00c7#;
+   MSR_IA32_PMC7                   : constant := 16#00c8#;
+   MSR_IA32_PERFEVTSEL0            : constant := 16#0186#;
+   MSR_IA32_PERFEVTSEL1            : constant := 16#0187#;
+   MSR_IA32_PERFEVTSEL2            : constant := 16#0188#;
+   MSR_IA32_PERFEVTSEL3            : constant := 16#0189#;
+   MSR_IA32_PERF_STATUS            : constant := 16#0198#;
+   MSR_IA32_PERF_CTL               : constant := 16#0199#;
+   MSR_IA32_FIXED_CTR0             : constant := 16#0309#;
+   MSR_IA32_FIXED_CTR1             : constant := 16#030a#;
+   MSR_IA32_FIXED_CTR2             : constant := 16#030b#;
+   MSR_IA32_PERF_CAPABILITIES      : constant := 16#0345#;
+   MSR_IA32_FIXED_CTR_CTL          : constant := 16#038d#;
+   MSR_IA32_PERF_GLOBAL_STATUS     : constant := 16#038e#;
+   MSR_IA32_PERF_GLOBAL_CTRL       : constant := 16#038f#;
+   MSR_IA32_PERF_GLOBAL_OVF_CTRL   : constant := 16#0390#;
+   MSR_IA32_PERF_GLOBAL_STATUS_SET : constant := 16#0391#;
+   MSR_IA32_PERF_GLOBAL_INUSE      : constant := 16#0392#;
+   MSR_IA32_A_PMC0                 : constant := 16#04c1#;
+   MSR_IA32_A_PMC1                 : constant := 16#04c2#;
+   MSR_IA32_A_PMC2                 : constant := 16#04c3#;
+   MSR_IA32_A_PMC3                 : constant := 16#04c4#;
+   MSR_IA32_A_PMC4                 : constant := 16#04c5#;
+   MSR_IA32_A_PMC5                 : constant := 16#04c6#;
+   MSR_IA32_A_PMC6                 : constant := 16#04c7#;
+   MSR_IA32_A_PMC7                 : constant := 16#04c8#;
+
    --  Size of a single MSR-Store entry in bytes, see Intel SDM Vol. 3C,
    --  "24.7.2 VM-Exit Controls for MSRs".
    MSR_Store_Entry_Size : constant := 16;

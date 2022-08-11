@@ -76,7 +76,21 @@ is
               14 => (Start_Address => MC.IA32_PM_ENABLE,
                      End_Address   => MC.IA32_HWP_CAPABILITIES),
               15 => (Start_Address => MC.IA32_HWP_REQUEST,
-                     End_Address   => MC.IA32_HWP_REQUEST));
+                     End_Address   => MC.IA32_HWP_REQUEST),
+              16 => (Start_Address => MC.MSR_IA32_PMC0,
+                     End_Address   => MC.MSR_IA32_PMC7),
+              17 => (Start_Address => MC.MSR_IA32_PERFEVTSEL0,
+                     End_Address   => MC.MSR_IA32_PERFEVTSEL3),
+              18 => (Start_Address => MC.MSR_IA32_PERF_STATUS,
+                     End_Address   => MC.MSR_IA32_PERF_CTL),
+              19 => (Start_Address => MC.MSR_IA32_FIXED_CTR0,
+                     End_Address   => MC.MSR_IA32_FIXED_CTR2),
+              20 => (Start_Address => MC.MSR_IA32_PERF_CAPABILITIES,
+                     End_Address   => MC.MSR_IA32_PERF_CAPABILITIES),
+              21 => (Start_Address => MC.MSR_IA32_FIXED_CTR_CTL,
+                     End_Address   => MC.MSR_IA32_PERF_GLOBAL_INUSE),
+              22 => (Start_Address => MC.MSR_IA32_A_PMC0,
+                     End_Address   => MC.MSR_IA32_A_PMC7));
 
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,

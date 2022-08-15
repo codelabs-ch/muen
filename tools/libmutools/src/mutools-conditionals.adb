@@ -270,7 +270,7 @@ is
             when others =>
                if Debug_Active then
                   Mulog.Log
-                     (Msg => " Error when evaluating conditionals. Debug-Information of node: "
+                     (Msg => "Error when evaluating conditionals. "
                          & Mutools.Xmldebuglog.Get_Log_For_Error_Message (Node => Cur_Child));
                end if;
                raise;

@@ -61,6 +61,11 @@ is
                        Name => "xpath"));
             exception
                when Error : others =>
+                  if Debug_Active then
+                     Mulog.Log (Msg => "Error when evaluating xpath. "
+                                   & Mutools.Xmldebuglog.Get_Log_For_Error_Message
+                                   (Node => Amend_Statement));
+                  end if;
                   Ada.Exceptions.Raise_Exception
                      (E =>  Ada.Exceptions.Exception_Identity (X => Error),
                       Message => "XIA was evaluating XPath """
@@ -71,6 +76,12 @@ is
                          &  Ada.Exceptions.Exception_Message (X => Error));
             end;
             if DOM.Core.Nodes.Length (List => Target_Nodes) /= 1 then
+               if Debug_Active then
+                     Mulog.Log (Msg => "Error when evaluating amend. "
+                                   & Mutools.Xmldebuglog.Get_Log_For_Error_Message
+                                   (Node => Amend_Statement));
+               end if;
+
                raise Muxml.Validation_Error with
                   "Found"
                   & Integer'Image (DOM.Core.Nodes.Length (List => Target_Nodes))

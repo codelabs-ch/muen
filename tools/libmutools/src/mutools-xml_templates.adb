@@ -527,22 +527,13 @@ is
                         & "'";
                   end if;
 
-                  begin
-                     Compile_Template
-                        (Template       => Template,
-                         Template_Call  => Template_Call,
-                         Running_Number => Running_Number,
-                         Output         => Compiled_Template,
-                         Used_Prefix    => Prefix);
-                  exception
-                     when others =>
-                        if Debug_Active then
-                           Mulog.Log
-                              (Msg => " Error in Compile_Template. Debug-Information of call: "
-                                  & Mutools.Xmldebuglog.Get_Log_For_Error_Message (Node => Template_Call));
-                        end if;
-                        raise;
-                  end;
+                  Compile_Template
+                     (Template       => Template,
+                      Template_Call  => Template_Call,
+                      Running_Number => Running_Number,
+                      Output         => Compiled_Template,
+                      Used_Prefix    => Prefix);
+
                   Running_Number := Running_Number + 1;
 
                   if Debug_Active then
@@ -559,6 +550,15 @@ is
                       Log_Index         => Log_Index);
 
                   DOM.Core.Nodes.Free (N => Compiled_Template.Doc);
+               exception
+                  when others =>
+                     if Debug_Active then
+                        Mulog.Log
+                           (Msg => "Error when compiling template. "
+                               & Mutools.Xmldebuglog.Get_Log_For_Error_Message
+                               (Node => Template_Call));
+                     end if;
+                     raise;
                end;
             end loop;
          end;

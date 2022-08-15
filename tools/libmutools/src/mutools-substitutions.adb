@@ -26,9 +26,6 @@ with Mutools.Expressions;
 with Mutools.Xmldebuglog;
 with Mulog;
 
----mmmDEBUG
---use all type DOM.Core.Node;
-
 package body Mutools.Substitutions
 is
 
@@ -94,7 +91,12 @@ is
 
       ----------------------------------------------------------------------
 
-      procedure Substitution_Loop (Node_List : DOM.Core.Node_List) is
+      procedure Substitution_Loop (Node_List : DOM.Core.Node_List)
+      is
+         -- TODO: remove these once V811-012 is resolved
+         use all type DOM.Core.Node;
+         use all type DOM.Core.Node_Types;
+
       begin
          for I in 0 .. DOM.Core.Nodes.Length (List => Node_List) - 1 loop
             declare
@@ -112,25 +114,51 @@ is
                      (Node  => Node,
                       Value => Node_Access (Reference));
                else
-                  ---mmmDEBUG BEGIN
-                  --   DOM.Core.Nodes.Print (Node);
-                  --   Mulog.Log (Msg => DOM.Core.Nodes.Node_Type (Node)'Img);
-                  --   Mulog.Log (Msg => Boolean'Image
-                  --                 (DOM.Core.Nodes.Parent_Node (Node) = null));
-                  --   DOM.Core.Nodes.Print (DOM.Core.Attrs.Owner_Element (Node));
-                  ---mmmDEBUG END
-
                   if Debug_Active then
                      -- TODO: reinsert this code once V811-012 is resolved
-                     --     Mulog.Log (Msg => " Debug-Info for error: "
+                     --     Mulog.Log (Msg => "Error when substituting $-reference. "
                      --                   & ASCII.LF
                      --                   & Mutools.Xmldebuglog.Get_Log_For_Error_Message
                      --                   (Node => Owner (Node)));
 
-                     Mulog.Log (Msg => " Dummy-Debug-Info for error (wait for bug to be resolved)"
-                                   & ASCII.LF
-                                   & Mutools.Xmldebuglog.Get_Log_For_Error_Message
-                                   (Node => Node));
+                     -- BEGIN: This is the workaround-code for the above
+                     if DOM.Core.Nodes.Node_Type (Node) = DOM.Core.Attribute_Node then
+                        declare
+                           Possible_Parents_List : constant DOM.Core.Node_List
+                              := McKae.XML.XPath.XIA.XPath_Query
+                              (N     => Data.Doc,
+                               XPath => "//*[@"
+                                  & DOM.Core.Attrs.Name (Node)
+                                  & "='"
+                                  & Node_Value
+                                  & "']");
+                           Parent                : DOM.Core.Node;
+                           Attr_List             : DOM.Core.Named_Node_Map;
+                           Possibly_Equal_Attr   : DOM.Core.Node;
+                        begin
+                           for I in 0 .. DOM.Core.Nodes.Length (List => Possible_Parents_List) - 1 loop
+                              Parent := DOM.Core.Nodes.Item
+                                 (List  => Possible_Parents_List,
+                                  Index => I);
+                              Attr_List := DOM.Core.Nodes.Attributes (Parent);
+                              for J in 0 ..   DOM.Core.Nodes.Length (Map => Attr_List) - 1 loop
+                                 Possibly_Equal_Attr := DOM.Core.Nodes.Item (Map => Attr_List, Index => J);
+                                 if Possibly_Equal_Attr = Node then
+                                    Mulog.Log (Msg => "Error when substituting $-reference. "
+                                                  & ASCII.LF
+                                                  & Mutools.Xmldebuglog.Get_Log_For_Error_Message
+                                                  (Node => Parent));
+                                 end if;
+                              end loop;
+                           end loop;
+                        end;
+                     else
+                        Mulog.Log (Msg => "Error when substituting $-reference. "
+                                        & ASCII.LF
+                                        & Mutools.Xmldebuglog.Get_Log_For_Error_Message
+                                        (Node => Owner (Node)));
+                     end if;
+                     -- END;
                   end if;
 
                   raise Muxml.Validation_Error with

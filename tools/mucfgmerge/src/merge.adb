@@ -226,9 +226,18 @@ is
       --  Amend statements must be evaluated after conditionals as <amend> might
       --  be inside of a conditional 'C' and have effects outside of C;
 
-      Mulog.Log (Msg => "Processing amend");
-      Mutools.Amend.Expand (XML_Data     => Policy,
-                            Debug_Active => Debug_Active);
+      begin
+         Mulog.Log (Msg => "Processing amend");
+         Mutools.Amend.Expand (XML_Data     => Policy,
+                               Debug_Active => Debug_Active);
+      exception
+         when others =>
+            Muxml.Write
+               (File => Output_File & "_Policy_Before_Exception.xml",
+                Kind => Muxml.None,
+                Data => Policy);
+            raise;
+      end;
 
       if Debug_Level = VERBOSE_OUTPUT then
          Mutools.Xmldebuglog.Add_Transaction_Log_As_Comment (Doc => Policy.Doc);

@@ -17,14 +17,23 @@
 --
 
 with Ada.Exceptions;
-with Ada.Streams.Stream_IO;
+
+with GNAT.Regpat;
 
 with Mutools.Files;
 
 package body Mutools.Templates
 is
 
-   use Ada.Strings.Unbounded;
+   package SIO renames Ada.Streams.Stream_IO;
+
+   -------------------------------------------------------------------------
+
+   procedure Close (Template : in out Stream_Template_Type)
+   is
+   begin
+      SIO.Close (Template.Fd);
+   end Close;
 
    -------------------------------------------------------------------------
 
@@ -33,6 +42,24 @@ is
    begin
       return T : Template_Type do
          T.Data := To_Unbounded_String (Content);
+      end return;
+   end Create;
+
+   -------------------------------------------------------------------------
+
+   function Create
+     (Content  : String;
+      Filename : String)
+      return Stream_Template_Type
+   is
+   begin
+      return S : Stream_Template_Type do
+         Tokenize (Data => Content,
+                   List => S.Tokens);
+         S.Pos := S.Tokens.First;
+         Files.Open (Filename => Filename,
+                     File     => S.Fd,
+                     Writable => True);
       end return;
    end Create;
 
@@ -67,12 +94,64 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Stream (Template : in out Stream_Template_Type)
+   is
+      use type USLP.Cursor;
+   begin
+      if Template.Pos /= USLP.No_Element then
+         Write
+           (Template => Template,
+            Item     => To_String (USLP.Element (Position => Template.Pos)));
+         Template.Pos := USLP.Next (Position => Template.Pos);
+      else
+         raise IO_Error with "Unable to stream: no content left";
+      end if;
+   end Stream;
+
+   -------------------------------------------------------------------------
+
+   procedure Tokenize
+     (Data :     String;
+      List : out USLP.List)
+   is
+      use type GNAT.Regpat.Match_Location;
+
+      Re  : constant GNAT.Regpat.Pattern_Matcher
+        := GNAT.Regpat.Compile ("(__[a-z0-9_]+__)");
+      M   : GNAT.Regpat.Match_Array (0 .. 1);
+      Idx : Positive := Data'First;
+   begin
+      List := USLP.Empty_List;
+
+      GNAT.Regpat.Match
+        (Self    => Re,
+         Data    => Data,
+         Matches => M);
+
+      while M (0) /= GNAT.Regpat.No_Match loop
+         List.Append (New_Item => To_Unbounded_String
+           (Data (Idx .. M (1).First - 1)));
+         Idx := M (1).Last + 1;
+
+         GNAT.Regpat.Match
+           (Self       => Re,
+            Data       => Data,
+            Data_First => Idx,
+            Matches    => M);
+      end loop;
+
+      if Idx < Data'Length then
+         List.Append (New_Item => To_Unbounded_String
+           (Data (Idx .. Data'Last)));
+      end if;
+   end Tokenize;
+
+   -------------------------------------------------------------------------
+
    procedure Write
      (Template : Template_Type;
       Filename : String)
    is
-      package SIO renames Ada.Streams.Stream_IO;
-
       Output_File   : SIO.File_Type;
       Output_Stream : SIO.Stream_Access;
    begin
@@ -92,6 +171,16 @@ is
          end if;
          raise IO_Error with "Unable to write template to '"
            & Filename & "' - " & Ada.Exceptions.Exception_Message (X => E);
+   end Write;
+
+   -------------------------------------------------------------------------
+
+   procedure Write
+     (Template : in out Stream_Template_Type;
+      Item     :        String)
+   is
+   begin
+      String'Write (SIO.Stream (Template.Fd), Item);
    end Write;
 
 end Mutools.Templates;

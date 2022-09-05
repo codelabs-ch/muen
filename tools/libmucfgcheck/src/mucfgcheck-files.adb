@@ -24,6 +24,7 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 
 with Mulog;
+with Mutools.Strings;
 with Mutools.Utils;
 
 with Mucfgcheck.Validation_Errors;
@@ -39,6 +40,8 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/memory/memory/file");
+      Input_Dirs : constant Mutools.Strings.String_Array
+        := Mutools.Strings.Tokenize (Str => Get_Input_Directory);
       Count : constant Natural := DOM.Core.Nodes.Length (List => File_Nodes);
    begin
       Mulog.Log (Msg => "Checking existence of" & Count'Img & " file(s)");
@@ -49,20 +52,31 @@ is
               := DOM.Core.Nodes.Item
                 (List  => File_Nodes,
                  Index => I);
-            Path : constant String
-              := Get_Input_Directory & "/" & DOM.Core.Elements.Get_Attribute
-              (Elem => File,
-               Name => "filename");
+            Filename : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => File,
+                 Name => "filename");
             Mem_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => DOM.Core.Nodes.Parent_Node (N => File),
                  Name => "name");
          begin
-            if not Ada.Directories.Exists (Name => Path) then
+            declare
+               Unused_Path : constant String
+                  := Mutools.Utils.Lookup_File (Filename    => Filename,
+                                                Directories => Input_Dirs);
+            begin
+
+               --  If no exception is raised, the file was found.
+
+               null;
+            end;
+
+         exception
+            when Mutools.Utils.File_Not_Found =>
                Validation_Errors.Insert
-                 (Msg => "File '" & Path & "' referenced by "
+                 (Msg => "File '" & Filename & "' referenced by "
                   & "physical memory region '" & Mem_Name & "' not found");
-            end if;
          end;
       end loop;
    end Files_Exist;
@@ -75,6 +89,8 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/memory/memory/file");
+      Input_Dirs : constant Mutools.Strings.String_Array
+        := Mutools.Strings.Tokenize (Str => Get_Input_Directory);
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => File_Nodes) - 1 loop
          declare
@@ -84,11 +100,14 @@ is
                  Index => I);
             Memory     : constant DOM.Core.Node
               := DOM.Core.Nodes.Parent_Node (N => File);
-            Path       : constant String
-              := Get_Input_Directory & "/"
-              & DOM.Core.Elements.Get_Attribute
-              (Elem => File,
-               Name => "filename");
+            Filename   : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => File,
+                 Name => "filename");
+            Path : constant String
+              := Mutools.Utils.Lookup_File
+                (Filename    => Filename,
+                 Directories => Input_Dirs);
             Mem_Name   : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Memory,

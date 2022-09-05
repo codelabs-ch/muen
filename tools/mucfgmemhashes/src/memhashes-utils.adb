@@ -22,6 +22,7 @@ with DOM.Core.Elements;
 
 with Muxml.Utils;
 with Mutools.Image;
+with Mutools.Strings;
 with Mutools.Utils;
 
 package body Memhashes.Utils
@@ -67,6 +68,11 @@ is
                  := DOM.Core.Elements.Get_Attribute
                    (Elem => Content_Node,
                     Name => "filename");
+               Path : constant String
+                 := Mutools.Utils.Lookup_File
+                   (Filename    => Filename,
+                    Directories => Mutools.Strings.Tokenize
+                      (Str => Input_Dir));
                Offset : Interfaces.Unsigned_64 := 0;
                Added  : Interfaces.Unsigned_64;
             begin
@@ -76,7 +82,7 @@ is
 
                Mutools.Image.Add_File
                  (Image   => Img,
-                  Path    => Input_Dir & "/" & Filename,
+                  Path    => Path,
                   Address => 0,
                   Size    => Interfaces.Unsigned_64 (Mem_Size),
                   Offset  => Offset,

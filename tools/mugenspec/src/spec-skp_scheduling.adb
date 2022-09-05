@@ -115,6 +115,7 @@ is
       Policy     : Muxml.XML_Data_Type)
    is
       package MXU renames Mutools.XML_Utils;
+      package TMPL renames Mutools.Templates;
 
       use type Interfaces.Unsigned_64;
 
@@ -149,12 +150,10 @@ is
       Max_Minor_Count    : Positive;
       Max_Barrier_Count  : Natural;
       Majors             : DOM.Core.Node_List;
-      Buffer             : Unbounded_String;
-      Minor_Buffer       : Unbounded_String;
-      Major_Buffer       : Unbounded_String;
-      Major_Info_Buffer  : Unbounded_String;
-      Sched_Group_Buffer : Unbounded_String;
-      Tmpl               : Mutools.Templates.Template_Type;
+      Template           : Mutools.Templates.Stream_Template_Type
+        := TMPL.Create
+          (Content  => String_Templates.skp_scheduling_ads,
+           Filename => Output_Dir & "/skp-scheduling.ads");
 
       Subject_To_Group_ID  : constant Subject_ID_Map.Map
         := To_Map (Subjects => Subjects);
@@ -283,13 +282,15 @@ is
            (List => Minors);
          Minor_Frame_Deadline : Interfaces.Unsigned_64 := 0;
       begin
-         Major_Buffer :=  To_Unbounded_String (Indent (N => 2))
-           & Index'Img & " => Major_Frame_Type'"
-           & ASCII.LF & Indent (N => 3)
-           & "(Length       =>" & Minor_Count'Img & ","
-           & ASCII.LF & Indent (N => 3)
-           & " Minor_Frames => Minor_Frame_Array'("
-           & ASCII.LF;
+         TMPL.Write
+           (Template => Template,
+            Item     => Indent (N => 2)
+            & Index'Img & " => Major_Frame_Type'"
+            & ASCII.LF & Indent (N => 3)
+            & "(Length       =>" & Minor_Count'Img & ","
+            & ASCII.LF & Indent (N => 3)
+            & " Minor_Frames => Minor_Frame_Array'("
+            & ASCII.LF);
 
          for I in 1 .. Minor_Count loop
             Write_Minor_Frame (Minor        => DOM.Core.Nodes.Item
@@ -299,17 +300,22 @@ is
                                Cycles_Count => Minor_Frame_Deadline);
 
             if I < Minor_Count then
-               Minor_Buffer := Minor_Buffer & "," & ASCII.LF;
+               TMPL.Write
+                 (Template => Template,
+                  Item     => "," & ASCII.LF);
             end if;
-            Major_Buffer := Major_Buffer & Minor_Buffer;
          end loop;
 
          if Minor_Count < Max_Minor_Count then
-            Major_Buffer := Major_Buffer & "," & ASCII.LF & Indent (N => 3)
-              & Indent & " others => Null_Minor_Frame";
+            TMPL.Write
+              (Template => Template,
+               Item     => "," & ASCII.LF & Indent (N => 3)
+               & Indent & " others => Null_Minor_Frame");
          end if;
 
-         Major_Buffer := Major_Buffer & "))";
+         TMPL.Write
+          (Template => Template,
+           Item     => "))");
       end Write_Major_Frame;
 
       ----------------------------------------------------------------------
@@ -331,13 +337,15 @@ is
          Cycles_Period : constant Interfaces.Unsigned_64
            := Ticks_Period * Timer_Factor;
       begin
-         Major_Info_Buffer := Major_Info_Buffer & Indent (N => 2)
+         TMPL.Write
+          (Template => Template,
+           Item     => Indent (N => 2)
            & Index'Img & " => Major_Frame_Info_Type'"
            & ASCII.LF & Indent (N => 3)
            & "(Period         =>" & Cycles_Period'Img & ","
            & ASCII.LF & Indent (N => 3)
            & " Barrier_Config => Barrier_Config_Array'("
-           & ASCII.LF;
+           & ASCII.LF);
 
          for I in 0 .. Barrier_Count - 1 loop
             declare
@@ -353,21 +361,29 @@ is
                    (Elem => Barrier,
                     Name => "size");
             begin
-               Major_Info_Buffer := Major_Info_Buffer & Indent (N => 4)
-                 & Barrier_ID & " => " & Barrier_Size;
+               TMPL.Write
+                 (Template => Template,
+                  Item     => Indent (N => 4) & Barrier_ID & " => "
+                  & Barrier_Size);
 
                if I < Max_Barrier_Count - 1 then
-                  Major_Info_Buffer := Major_Info_Buffer & "," & ASCII.LF;
+                  TMPL.Write
+                    (Template => Template,
+                     Item     => "," & ASCII.LF);
                end if;
             end;
          end loop;
 
          if Barrier_Count < Max_Barrier_Count or else Barrier_Count = 0 then
-            Major_Info_Buffer := Major_Info_Buffer & Indent (N => 4)
-              & "others => Barrier_Size_Type'First";
+            TMPL.Write
+              (Template => Template,
+               Item     => Indent (N => 4)
+               & "others => Barrier_Size_Type'First");
          end if;
 
-         Major_Info_Buffer := Major_Info_Buffer & "))";
+         TMPL.Write
+           (Template => Template,
+            Item     => "))");
       end Write_Major_Frame_Info;
 
       ----------------------------------------------------------------------
@@ -396,15 +412,16 @@ is
       begin
          Cycles_Count := Cycles_Count + Ticks;
 
-         Minor_Buffer := To_Unbounded_String (Indent (N => 4)) & Index'Img
-           & " => Minor_Frame_Type'(Group_ID =>"
-           & Sched_Group_ID'Img
-           & "," & ASCII.LF;
-         Minor_Buffer := Minor_Buffer & Indent (N => 12) & "Barrier  => "
-           & (if Barrier = "none" then "No_Barrier" else Barrier)
-           & "," & ASCII.LF;
-         Minor_Buffer := Minor_Buffer & Indent (N => 12) & "Deadline =>"
-           & Cycles_Count'Img & ")";
+         TMPL.Write
+           (Template => Template,
+            Item     => Indent (N => 4) & Index'Img
+            & " => Minor_Frame_Type'(Group_ID =>"
+            & Sched_Group_ID'Img
+            & "," & ASCII.LF
+            & Indent (N => 12) & "Barrier  => "
+            & (if Barrier = "none" then "No_Barrier" else Barrier)
+            & "," & ASCII.LF
+            & Indent (N => 12) & "Deadline =>" & Cycles_Count'Img & ")");
       end Write_Minor_Frame;
    begin
       Mulog.Log (Msg => "Writing scheduling spec for" & CPU_Count'Img
@@ -418,10 +435,38 @@ is
       Max_Minor_Count   := Get_Max_Minor_Count (Schedule => Scheduling);
       Max_Barrier_Count := Get_Max_Barrier_Count (Schedule => Scheduling);
 
+      TMPL.Stream (Template => Template);
+      TMPL.Write
+        (Template => Template,
+         Item     => Ada.Strings.Fixed.Trim
+           (Source => Timer_Rate'Img,
+            Side   => Ada.Strings.Left));
+      TMPL.Stream (Template => Template);
+      TMPL.Write
+        (Template => Template,
+         Item     => "1 .." & Natural'Image (Sched_Groups_To_Subj'Last));
+      TMPL.Stream (Template => Template);
+      TMPL.Write
+        (Template => Template,
+         Item     => Ada.Strings.Fixed.Trim
+           (Source => Max_Barrier_Count'Img,
+            Side   => Ada.Strings.Left));
+      TMPL.Stream (Template => Template);
+      TMPL.Write
+        (Template => Template,
+         Item     => "1 .." & Max_Minor_Count'Img);
+      TMPL.Stream (Template => Template);
+      TMPL.Write
+        (Template => Template,
+         Item     => "0 .." & Natural'Image (Major_Count - 1));
+      TMPL.Stream (Template => Template);
+
       for CPU in 0 .. CPU_Count - 1 loop
-         Buffer := Buffer & Indent
-           & " " & CPU'Img & " => Major_Frame_Array'("
-           & ASCII.LF;
+         TMPL.Write
+           (Template => Template,
+            Item     => Indent
+            & " " & CPU'Img & " => Major_Frame_Array'("
+            & ASCII.LF);
 
          for I in 0 .. Major_Count - 1 loop
             declare
@@ -443,18 +488,25 @@ is
                                   Index  => I);
 
                if I < Major_Count - 1 then
-                  Major_Buffer := Major_Buffer & "," & ASCII.LF;
+                  TMPL.Write
+                    (Template => Template,
+                     Item     => "," & ASCII.LF);
                end if;
             end;
-            Buffer := Buffer & Major_Buffer;
          end loop;
 
-         Buffer := Buffer & ")";
+         TMPL.Write
+           (Template => Template,
+            Item     => ")");
 
          if CPU < CPU_Count - 1 then
-            Buffer := Buffer & "," & ASCII.LF;
+            TMPL.Write
+              (Template => Template,
+               Item     => "," & ASCII.LF);
          end if;
       end loop;
+
+      TMPL.Stream (Template => Template);
 
       for I in 0 .. Major_Count - 1 loop
          Write_Major_Frame_Info
@@ -464,65 +516,33 @@ is
                Index => I));
 
          if I < Major_Count - 1 then
-            Major_Info_Buffer := Major_Info_Buffer & "," & ASCII.LF;
+            TMPL.Write
+              (Template => Template,
+               Item     => "," & ASCII.LF);
          end if;
       end loop;
+
+      TMPL.Stream (Template => Template);
 
       for I in Sched_Groups_To_Subj'Range loop
-         Sched_Group_Buffer := Sched_Group_Buffer & Indent (N => 3)
-           & I'Img & " =>" & Sched_Groups_To_Subj (I)'Img;
+         TMPL.Write
+           (Template => Template,
+            Item     => Indent (N => 3)
+            & I'Img & " =>" & Sched_Groups_To_Subj (I)'Img);
 
          if I < Sched_Groups_To_Subj'Last then
-            Sched_Group_Buffer := Sched_Group_Buffer & "," & ASCII.LF;
+            TMPL.Write
+              (Template => Template,
+               Item     => "," & ASCII.LF);
          end if;
       end loop;
 
-      Tmpl := Mutools.Templates.Create
-        (Content => String_Templates.skp_scheduling_ads);
-      Mutools.Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__scheduling_group_range__",
-         Content  => "1 .." & Natural'Image (Sched_Groups_To_Subj'Last));
-      Mutools.Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__minor_range__",
-         Content  => "1 .." & Max_Minor_Count'Img);
-      Mutools.Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__major_range__",
-         Content  => "0 .." & Natural'Image (Major_Count - 1));
-      Mutools.Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__scheduling_plans__",
-         Content  => To_String (Buffer));
-      Mutools.Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__max_barrier_count__",
-         Content  => Ada.Strings.Fixed.Trim
-           (Source => Max_Barrier_Count'Img,
-            Side   => Ada.Strings.Left));
-      Mutools.Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__major_frames_info__",
-         Content  => To_String (Major_Info_Buffer));
-      Mutools.Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__vmx_timer_rate__",
-         Content  => Ada.Strings.Fixed.Trim
-           (Source => Timer_Rate'Img,
-            Side   => Ada.Strings.Left));
-      Mutools.Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__scheduling_groups__",
-         Content  => To_String (Sched_Group_Buffer));
-      Mutools.Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__subj_to_scheduling_group__",
-         Content  => Get_Subject_To_Sched_Group_Mapping);
-
-      Mutools.Templates.Write
-        (Template => Tmpl,
-         Filename => Output_Dir & "/skp-scheduling.ads");
+      TMPL.Stream (Template => Template);
+      TMPL.Write
+        (Template => Template,
+         Item     => Get_Subject_To_Sched_Group_Mapping);
+      TMPL.Stream (Template => Template);
+      TMPL.Close (Template => Template);
    end Write;
 
 end Spec.Skp_Scheduling;

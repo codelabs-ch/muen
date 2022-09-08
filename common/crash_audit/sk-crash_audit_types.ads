@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.Exceptions;
+
 --D @Interface
 --D This package specifies all data types and records related to the crash audit
 --D facility.
@@ -172,44 +174,7 @@ is
 
    Null_Validity_Flags : constant Validity_Flags_Type;
 
-   Isr_Ctx_Size : constant := CPU_Regs_Size + 7 * 8;
-
-   --D @Interface
-   --D Interrupt Service Routine execution environment state.
-   type Isr_Context_Type is record
-      --D @Interface
-      --D Value of CPU registers on interrupt occurrence.
-      Regs       : CPU_Registers_Type;
-      --D @Interface
-      --D Interrupt vector number.
-      Vector     : Interfaces.Unsigned_64;
-      --D @Interface
-      --D Interrupt error code for interrupts that have an error code, see
-      --D Intel SDM Vol. 3A, "6.13 Error Code".
-      Error_Code : Interfaces.Unsigned_64;
-      --D @Interface
-      --D Instruction pointer value on interrupt occurrence.
-      RIP        : Interfaces.Unsigned_64;
-      --D @Interface
-      --D Code Segment value on interrupt occurrence.
-      CS         : Interfaces.Unsigned_64;
-      --D @Interface
-      --D RFLAGS status register value on interrupt occurrence.
-      RFLAGS     : Interfaces.Unsigned_64;
-      --D @Interface
-      --D Stack pointer value on interrupt occurrence.
-      RSP        : Interfaces.Unsigned_64;
-      --D @Interface
-      --D Stack Segment value on interrupt occurrence.
-      SS         : Interfaces.Unsigned_64;
-   end record
-   with
-      Pack,
-      Size => Isr_Ctx_Size * 8;
-
-   Null_Isr_Context : constant Isr_Context_Type;
-
-   Ex_Ctx_Size : constant := Isr_Ctx_Size + 3 * 8;
+   Ex_Ctx_Size : constant := Exceptions.Isr_Ctx_Size + 3 * 8;
 
    --D @Interface
    --D Exception execution environment state.
@@ -217,7 +182,7 @@ is
       --D @Interface
       --D Interrupt Service Routine execution environment state on exception
       --D occurrence.
-      ISR_Ctx       : Isr_Context_Type;
+      ISR_Ctx       : Exceptions.Isr_Context_Type;
       --D @Interface
       --D Control register values on exception occurrence.
       CR0, CR3, CR4 : Interfaces.Unsigned_64;
@@ -615,12 +580,8 @@ private
      := (Padding => 0,
          others  => False);
 
-   Null_Isr_Context : constant Isr_Context_Type
-     := (Regs   => Null_CPU_Regs,
-         others => 0);
-
    Null_Exception_Context : constant Exception_Context_Type
-     := (ISR_Ctx => Null_Isr_Context,
+     := (ISR_Ctx => Exceptions.Null_Isr_Context,
          others  => 0);
 
    Null_MCE_Context : constant MCE_Context_Type

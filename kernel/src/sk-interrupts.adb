@@ -16,9 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.CPU;
+with SK.Crash_Audit_Types;
 with SK.Dump;
 with SK.IO;
-with SK.CPU;
 
 package body SK.Interrupts
 is
@@ -99,7 +100,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Dispatch_Exception (Context : Crash_Audit_Types.Isr_Context_Type)
+   procedure Dispatch_Exception (Context : Exceptions.Isr_Context_Type)
    is
       A : Crash_Audit.Entry_Type;
       E : Crash_Audit_Types.Exception_Context_Type;

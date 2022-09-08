@@ -16,13 +16,13 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK;
+with SK.Exceptions;
 
 package Interrupt_Handler
 is
 
    --  Interrupt handler.
-   procedure Handle_Interrupt (Vector : SK.Byte)
+   procedure Handle_Interrupt (Context : SK.Exceptions.Isr_Context_Type)
    with
       Export,
       Convention => C,

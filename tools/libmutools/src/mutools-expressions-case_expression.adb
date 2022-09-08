@@ -377,7 +377,7 @@ is
                (Node => When_Node,
                 Attr_Name => "value")
             then
-               raise  Invalid_Expression with
+               raise Invalid_Expression with
                   "Found when-node without 'value' attribute";
             else
                Evaluate_When_Option

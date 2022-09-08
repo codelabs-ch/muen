@@ -34,7 +34,7 @@ is
    begin
       Mulog.Log (Msg => "Checking uniqueness of"
                         & DOM.Core.Nodes.Length (List => Nodes)'Img
-                        & " template name(s)");
+                        & " template names");
 
       Mucfgcheck.Attr_Uniqueness
          (Nodes     => Nodes,
@@ -86,9 +86,7 @@ is
 
             case DOM.Core.Nodes.Length (List => Template_Parameters) is
                when 0 =>
-                  Mucfgcheck.Validation_Errors.Insert
-                     (Msg => "Found template definition"
-                             & " without parameter declaration.");
+                  null;
                when 1 =>
                   null;
                when others =>

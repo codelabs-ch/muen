@@ -97,6 +97,52 @@ is
          use all type DOM.Core.Node;
          use all type DOM.Core.Node_Types;
 
+         ------------------------------------------------------------------
+
+         -- workaround for V811-012
+         -- replace this function by "Owner (Node)" once the bug is resolved
+         function Get_Parent (Node : DOM.Core.Node) return DOM.Core.Node;
+
+         ------------------------------------------------------------------
+
+         function Get_Parent (Node : DOM.Core.Node) return DOM.Core.Node
+         is
+         begin
+            if DOM.Core.Nodes.Node_Type (Node) = DOM.Core.Attribute_Node then
+               declare
+                  Possible_Parents_List : constant DOM.Core.Node_List
+                     := McKae.XML.XPath.XIA.XPath_Query
+                     (N     => Data.Doc,
+                      XPath => "//*[@"
+                         & DOM.Core.Attrs.Name (Node)
+                         & "='"
+                         & Getter (Node => Node)
+                         & "']");
+                  Parent                : DOM.Core.Node;
+                  Attr_List             : DOM.Core.Named_Node_Map;
+                  Possibly_Equal_Attr   : DOM.Core.Node;
+               begin
+                  for I in 0 .. DOM.Core.Nodes.Length (List => Possible_Parents_List) - 1 loop
+                     Parent := DOM.Core.Nodes.Item
+                        (List  => Possible_Parents_List,
+                         Index => I);
+                     Attr_List := DOM.Core.Nodes.Attributes (Parent);
+                     for J in 0 ..   DOM.Core.Nodes.Length (Map => Attr_List) - 1 loop
+                        Possibly_Equal_Attr := DOM.Core.Nodes.Item (Map => Attr_List, Index => J);
+                        if Possibly_Equal_Attr = Node then
+                           return Parent;
+                        end if;
+                     end loop;
+                  end loop;
+
+                  -- nothing found
+                  return null;
+               end;
+            else
+               return Owner (Node);
+            end if;
+         end Get_Parent;
+
       begin
          for I in 0 .. DOM.Core.Nodes.Length (List => Node_List) - 1 loop
             declare
@@ -110,55 +156,29 @@ is
                   := Node_Value (Node_Value'First + 1 .. Node_Value'Last);
             begin
                if Node_Access.Contains (Reference) then
-                  Setter
-                     (Node  => Node,
-                      Value => Node_Access (Reference));
+                  if DOM.Core.Nodes.Node_Type (Node) = DOM.Core.Attribute_Node
+                     and then DOM.Core.Attrs.Name (Node) = "variable"
+                  then
+                     if Debug_Active then
+                        Mulog.Log (Msg => Mutools.Xmldebuglog.Get_Log_For_Error_Message
+                                      (Node => Get_Parent (Node)));
+                     end if;
+
+                     raise Muxml.Validation_Error with
+                        "Error when substituting $-reference."
+                        & " Found $-reference in 'variable'-attribute."
+                        & " Value is '"
+                        & Node_Value
+                        & "'.";
+                  else
+                     Setter
+                        (Node  => Node,
+                         Value => Node_Access (Reference));
+                  end if;
                else
                   if Debug_Active then
-                     -- TODO: reinsert this code once V811-012 is resolved
-                     --     Mulog.Log (Msg => "Error when substituting $-reference. "
-                     --                   & ASCII.LF
-                     --                   & Mutools.Xmldebuglog.Get_Log_For_Error_Message
-                     --                   (Node => Owner (Node)));
-
-                     -- BEGIN: This is the workaround-code for the above
-                     if DOM.Core.Nodes.Node_Type (Node) = DOM.Core.Attribute_Node then
-                        declare
-                           Possible_Parents_List : constant DOM.Core.Node_List
-                              := McKae.XML.XPath.XIA.XPath_Query
-                              (N     => Data.Doc,
-                               XPath => "//*[@"
-                                  & DOM.Core.Attrs.Name (Node)
-                                  & "='"
-                                  & Node_Value
-                                  & "']");
-                           Parent                : DOM.Core.Node;
-                           Attr_List             : DOM.Core.Named_Node_Map;
-                           Possibly_Equal_Attr   : DOM.Core.Node;
-                        begin
-                           for I in 0 .. DOM.Core.Nodes.Length (List => Possible_Parents_List) - 1 loop
-                              Parent := DOM.Core.Nodes.Item
-                                 (List  => Possible_Parents_List,
-                                  Index => I);
-                              Attr_List := DOM.Core.Nodes.Attributes (Parent);
-                              for J in 0 ..   DOM.Core.Nodes.Length (Map => Attr_List) - 1 loop
-                                 Possibly_Equal_Attr := DOM.Core.Nodes.Item (Map => Attr_List, Index => J);
-                                 if Possibly_Equal_Attr = Node then
-                                    Mulog.Log (Msg => "Error when substituting $-reference. "
-                                                  & ASCII.LF
-                                                  & Mutools.Xmldebuglog.Get_Log_For_Error_Message
-                                                  (Node => Parent));
-                                 end if;
-                              end loop;
-                           end loop;
-                        end;
-                     else
-                        Mulog.Log (Msg => "Error when substituting $-reference. "
-                                        & ASCII.LF
-                                        & Mutools.Xmldebuglog.Get_Log_For_Error_Message
-                                        (Node => Owner (Node)));
-                     end if;
-                     -- END;
+                     Mulog.Log (Msg => Mutools.Xmldebuglog.Get_Log_For_Error_Message
+                                   (Node => Get_Parent (Node)));
                   end if;
 
                   raise Muxml.Validation_Error with

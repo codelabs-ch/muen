@@ -34,7 +34,7 @@ is
        New_Parent        : DOM.Core.Node;
        Ref_In_New_Parent : DOM.Core.Node;
        Debug_Active      : Boolean       := False;
-       Anchestor_For_Log : DOM.Core.Node := null;
+       Ancestor_For_Log : DOM.Core.Node := null;
        Transaction_Index : Mutools.Xmldebuglog.Transaction_Log_Index_Type
                          := Mutools.Xmldebuglog.Null_Ref_Index);
 
@@ -163,7 +163,7 @@ is
                          New_Parent        => Parent,
                          Ref_In_New_Parent => Cur_Child,
                          Debug_Active      => Debug_Active,
-                         Anchestor_For_Log => Cur_Child,
+                         Ancestor_For_Log => Cur_Child,
                          Transaction_Index => Log_Index);
                   else
                      if Debug_Active then
@@ -232,7 +232,7 @@ is
                          New_Parent        => Parent,
                          Ref_In_New_Parent => Cur_Child,
                          Debug_Active      => Debug_Active,
-                         Anchestor_For_Log => Cur_Child,
+                         Ancestor_For_Log => Cur_Child,
                          Transaction_Index => Log_Index);
                   else
                      if Debug_Active then
@@ -357,7 +357,7 @@ is
        New_Parent        : DOM.Core.Node;
        Ref_In_New_Parent : DOM.Core.Node;
        Debug_Active      : Boolean       := False;
-       Anchestor_For_Log : DOM.Core.Node := null;
+       Ancestor_For_Log : DOM.Core.Node := null;
        Transaction_Index : Mutools.Xmldebuglog.Transaction_Log_Index_Type
                          := Mutools.Xmldebuglog.Null_Ref_Index)
    is
@@ -377,7 +377,7 @@ is
          if Debug_Active then
             Mutools.Xmldebuglog.Add_Log_For_Node
                (Node      => Cur_Child,
-                Anchestor => Anchestor_For_Log,
+                Ancestor => Ancestor_For_Log,
                 TA_Number => Transaction_Index);
          end if;
       end loop;

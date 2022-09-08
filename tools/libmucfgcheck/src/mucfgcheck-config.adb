@@ -241,7 +241,7 @@ is
       begin
          if Var_Name'Length = 0 then
             Validation_Errors.Insert
-               (Msg => "Variable without name attribute in expression '"
+               (Msg => "Missing variable-reference in expression '"
                    & Expr_Name
                    & "'");
          elsif not Known_Names.Contains (Var_Name) then

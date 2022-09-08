@@ -15,18 +15,19 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Mulog;
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 with DOM.Core.Documents.Local;
 with Ada.Strings.Maps;
 with Ada.Strings.Fixed;
+with Ada.Strings.Unbounded;
 with Ada.Exceptions;
+with Ada.Containers.Indefinite_Vectors;
 
+with Mulog;
 with McKae.XML.XPath.XIA;
 with Mutools.Amend.Ordering;
 with Mutools.Xmldebuglog;
-with Ada.Containers.Indefinite_Vectors;
 
 package body Mutools.Amend
 is
@@ -41,7 +42,7 @@ is
    begin
       Mulog.Log (Msg => "Expanding "
          & DOM.Core.Nodes.Length (List => Amend_Statements)'Img
-         & " amend-statement(s).");
+         & " amend-statements");
       for I in 0 .. DOM.Core.Nodes.Length (List => Amend_Statements) - 1 loop
          declare
             Amend_Statement : DOM.Core.Node
@@ -95,7 +96,7 @@ is
             if Debug_Active then
                -- before the nodes leave their place, we have push the
                -- backtrace-info to the leefs of the subtree (because we need
-               -- their anchestors for that)
+               -- their ancestors for that)
                declare
                   Log_Index : Mutools.Xmldebuglog.Transaction_Log_Index_Type;
                begin
@@ -107,7 +108,7 @@ is
                   -- add log with dummy inheritance
                   Mutools.Xmldebuglog.Add_Log_For_Node
                      (Node      => Amend_Statement,
-                      Anchestor => Amend_Statement,
+                      Ancestor  => Amend_Statement,
                       TA_Number => Log_Index);
 
                   Mutools.Xmldebuglog.Gather_Backtrace_Info
@@ -125,11 +126,20 @@ is
 
             for C in 0 .. DOM.Core.Nodes.Length
                (List => Amend_Children) - 1 loop
-               Recursive_Merge (Parent    => Target_Node,
-                                New_Child => DOM.Core.Nodes.Item
-                                   (List  => Amend_Children,
-                                    Index => C),
-                                Debug_Active => Debug_Active);
+               begin
+                  Recursive_Merge (Parent    => Target_Node,
+                                   New_Child => DOM.Core.Nodes.Item
+                                      (List  => Amend_Children,
+                                       Index => C),
+                                   Debug_Active => Debug_Active);
+               exception
+                  when others =>
+                     if Debug_Active then
+                        Mulog.Log (Msg => Mutools.Xmldebuglog.Get_Log_For_Error_Message
+                                      (Node => Amend_Statement));
+                     end if;
+                     raise;
+               end;
             end loop;
 
             if Debug_Active then
@@ -276,6 +286,11 @@ is
       procedure Merge_Text_Branch
          (Parent    : DOM.Core.Node;
           New_Child : DOM.Core.Node);
+
+      ---------------------------------------------------------------------
+
+      -- get a string representation of Node, excluding its children
+      function Node_To_String (Node : DOM.Core.Node) return String;
 
       ---------------------------------------------------------------------
 
@@ -429,6 +444,15 @@ is
                and then DOM.Core.Nodes.Node_Name (N => Parent_Child) /= "amend"
             then
                if Nodes_Equal (L => Parent_Child, R => New_Child) then
+                  if Debug_Active then
+                     Mulog.Log (Msg => "Info: Amend skipped insertion of '"
+                                   & Mutools.Xmldebuglog.Get_Xpath
+                                   (Node => Parent)
+                                   & "/"
+                                   & Node_To_String (New_Child)
+                                   & "'");
+                  end if;
+
                   declare
                      New_Child_Child : DOM.Core.Node
                         := DOM.Core.Nodes.First_Child (N => New_Child);
@@ -553,6 +577,38 @@ is
                 Siblings_Nodes => Siblings_Nodes);
          end if;
       end Merge_Text_Branch;
+
+      ---------------------------------------------------------------------
+
+      function Node_To_String (Node : DOM.Core.Node) return String
+      is
+         package ASU renames Ada.Strings.Unbounded;
+
+         Attr_List : constant DOM.Core.Named_Node_Map
+            := DOM.Core.Nodes.Attributes (N => Node);
+         Node_Rep  : ASU.Unbounded_String;
+         Attr      : DOM.Core.Node;
+
+      begin
+         Node_Rep := ASU.To_Unbounded_String
+            ("<" & DOM.Core.Nodes.Node_Name (New_Child));
+
+         for I in 0 .. DOM.Core.Nodes.Length (Map => Attr_List) - 1 loop
+            Attr := DOM.Core.Nodes.Item (Map => Attr_List, Index => I);
+            ASU.Append
+               (Source   => Node_Rep,
+                New_Item => " "
+                   & DOM.Core.Nodes.Node_Name (N => Attr)
+                   & "="""
+                   & DOM.Core.Nodes.Node_Value (N => Attr)
+                   & """");
+         end loop;
+
+         ASU.Append (Source => Node_Rep,
+                     New_Item => ">");
+
+         return ASU.To_String (Node_Rep);
+      end Node_To_String;
 
    begin
       if New_Child_Type = Text_Node then

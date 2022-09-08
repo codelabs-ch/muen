@@ -52,13 +52,13 @@ is
    -- Return log-information for the given node as it is
    -- WARNING: the information stored in the entry for Node may not be complete!
    -- Depending on the current state, it might be neccessary to generate
-   -- the correct backtrace by examining the anchestors of Node, first.
+   -- the correct backtrace by examining the ancestors of Node, first.
    function Node_Backtrace_To_String (Node : DOM.Core.Node) return String;
 
    -- Gather Backtrace for Node and return a string meant for error messages.
    function Get_Log_For_Error_Message (Node : DOM.Core.Node) return String;
 
-   -- return names of anchestors of Node (in the form of an xpath to node)
+   -- return names of ancestors of Node (in the form of an xpath to node)
    -- Meant to work with element-nodes. Unspecified for other node-types.
    function Get_Xpath (Node : DOM.Core.Node) return String;
 
@@ -86,11 +86,11 @@ is
       return Transaction_Log_Index_Type;
 
    -- Add a Node_Backtrace entry for the given node (if not existent).
-   -- Inherits backrace-information from Anchestor and
+   -- Inherits backrace-information from Ancestor and
    -- adds TA_Number as last transaction that affected this node.
    procedure Add_Log_For_Node
       (Node      : DOM.Core.Node;
-       Anchestor : DOM.Core.Node;
+       Ancestor  : DOM.Core.Node;
        TA_Number : Transaction_Log_Index_Type);
 
    -- remove entry in Nodes_Backtrace_Log for Node, if it exists.
@@ -113,12 +113,12 @@ is
        New_Node : DOM.Core.Node;
        Deep     : Boolean);
 
-   -- Go to anchestors of Node and use their backtrace-log to write complete backtrace
+   -- Go to ancestors of Node and use their backtrace-log to write complete backtrace
    -- information to the log-entry for Node.
    -- If Deep is True, the same is done for all nodes in the subtree spanned
    -- by Node.
    -- If Examine_Only_Parent is True, only the direct parent of Node is examined
-   -- but no other anchestors.
+   -- but no other ancestors.
    procedure Gather_Backtrace_Info
       (Node                : DOM.Core.Node;
        Examine_Only_Parent : Boolean := False;
@@ -136,7 +136,7 @@ private
    --     That contains the origin of that node (filename + line + column)
    --     and a list of pointers to transactions that created or moved that node.
    --     However, the latter information is not completely stored in the list
-   --     of each node, but must be gathered by examining the nodes anchestors'
+   --     of each node, but must be gathered by examining the nodes ancestors'
    --     backtrace as well.
 
    package String_Holder_Type is new Ada.Containers.Indefinite_Holders
@@ -200,7 +200,7 @@ private
           Entries => (others => Null_Ref_Index));
 
    type Node_Backtrace_Type is record
-      Self                  : DOM.Core.Node; -- needed to determine anchestors
+      Self                  : DOM.Core.Node; -- needed to determine ancestors
       Origin_Of_Node        : Origin_Info_Type;
       Template_Backtrace    : Actions_Ref_Type;
       Conditional_Backtrace : Actions_Ref_Type;
@@ -209,8 +209,9 @@ private
    end record;
 
    -- Produce a hash for a DOM-Node.
-   -- This is done soly with the address that Node points to
+   -- The hash is produced soly from the address that Node points to
    -- (which is justifed as equality of nodes is checked the same way).
+   -- This hash-function does not claim any security properties.
    function Hash (Node : DOM.Core.Node) return Ada.Containers.Hash_Type;
 
    -- data type for node-backtrace log
@@ -232,18 +233,5 @@ private
    function Parse_Origin_Attribute
       (Node : DOM.Core.Node)
       return Origin_Info_Type;
-
-   --  name="node5", filename="/hallo/Pfad/foo",line="L1234"; amendTraceback=amend(D1,L1, xpath="");
-   --  conditionalTraceback=(if(D1,L2, var="inside_var", matched="foo"), case(var="myvar", matched=others/"bar"), if(D2,L3, var="outside_var"), ...);
-   --  templateTraceback=(useTemplate(D4,L4,name="foo",a=a,b=b, prefix=t23_), useTemplate(...), ...)
-
-   --  string-knoten aus expression (anch Auswertung):
-   --  file="foo.txt", line="L1",  varname="t123_myexpression"; templateTraceback=(useTemplate(...), useTemplate(...), ...)
-
-   --  Node_Name='schema',
-   --     Node_Origin=(Filename='mydoc.xml', Line='1', Column='2'),
-   --     Transaction(Kind='amend', Node_Origin=(...), Xpath='/hallo/hier'),
-   --     Transaction(Kind='if', Node_Origin=(...), Var_Name='crazyvarname', Var_Value='something', Matched=False),
-   --     Transaction(Kind='useTemplate', Node_Origin=(...), Template_Name='channels', Parameter_List(a='a', b='b', c='c), Prefix='t9_')
 
 end Mutools.Xmldebuglog;

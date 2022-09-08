@@ -40,7 +40,7 @@ is
        Parent_Of_Children : DOM.Core.Node;
        Append_Mode        : Boolean       := False;
        Debug_Active       : Boolean       := False;
-       Anchestor_For_Log  : DOM.Core.Node := null;
+       Ancestor_For_Log   : DOM.Core.Node := null;
        Transaction_Index  : Mutools.Xmldebuglog.Transaction_Log_Index_Type
                           := Mutools.Xmldebuglog.Null_Ref_Index)
    is
@@ -74,7 +74,7 @@ is
          then
             Mutools.Xmldebuglog.Add_Log_For_Node
                (Node      => New_Child,
-                Anchestor => Anchestor_For_Log,
+                Ancestor  => Ancestor_For_Log,
                 TA_Number => Transaction_Index);
          end if;
 
@@ -170,21 +170,17 @@ is
          Call_Parameter_List  : constant DOM.Core.Node_List
                               := McKae.XML.XPath.XIA.XPath_Query
                                     (N     => Template_Call,
-                                     XPath => ".//parameter");
-         Params               : DOM.Core.Node
-                              := Muxml.Utils.Get_Element
-                                    (Doc   => Output.Doc,
-                                     XPath => "/template/parameters");
+                                     XPath => "./parameter");
          Parameters_Node_List : constant DOM.Core.Node_List
                               := McKae.XML.XPath.XIA.XPath_Query
-                                    (N     => Params,
-                                     XPath =>     ".//boolean "
-                                              & "| .//integer "
-                                              & "| .//string ");
+                                    (N     => Output.Doc,
+                                     XPath =>     "/template/parameters/boolean "
+                                              & "| /template/parameters/integer "
+                                              & "| /template/parameters/string");
          Config               : DOM.Core.Node;
          Matching_Call_Param_Names : Mutools.Expressions.String_Vector.Vector;
-      begin
 
+      begin
          Assign_Root_And_Config_Node
             (Root_Nodes   => Root_Nodes,
              Root_Node    => Root_Node,
@@ -310,9 +306,18 @@ is
             end;
          end loop;
 
-         Params := DOM.Core.Nodes.Remove_Child (N         => Root_Node,
-                                                Old_Child => Params);
-         DOM.Core.Nodes.Free (N => Params);
+         declare
+            Params : DOM.Core.Node
+               := Muxml.Utils.Get_Element
+               (Doc   => Output.Doc,
+                XPath => "/template/parameters");
+         begin
+            if Params /= null then
+               Params := DOM.Core.Nodes.Remove_Child (N         => Root_Node,
+                                                      Old_Child => Params);
+               DOM.Core.Nodes.Free (N => Params);
+            end if;
+         end;
 
          Used_Prefix := To_Unbounded_String (Prefix);
          Prefix_Variables (Root_Node   => Root_Node,
@@ -408,7 +413,7 @@ is
              Parent_Of_Children => Template_Config,
              Append_Mode        => True,
              Debug_Active       => Debug_Active,
-             Anchestor_For_Log  => Template_Call,
+             Ancestor_For_Log   => Template_Call,
              Transaction_Index  => Log_Index);
 
          if  Template_Expressions /= null then
@@ -436,7 +441,7 @@ is
                 Parent_Of_Children => Template_Expressions,
                 Append_Mode        => True,
                 Debug_Active       => Debug_Active,
-                Anchestor_For_Log  => Template_Call,
+                Ancestor_For_Log   => Template_Call,
                 Transaction_Index  => Log_Index);
          end if;
 
@@ -445,7 +450,7 @@ is
              Parent_Of_Children => Template_Body,
              Append_Mode        => False,
              Debug_Active       => Debug_Active,
-             Anchestor_For_Log  => Template_Call,
+             Ancestor_For_Log   => Template_Call,
              Transaction_Index  => Log_Index);
 
          -- remove the Template_Call from main document
@@ -467,7 +472,7 @@ is
       else
          Mulog.Log (Msg => "Found " &
             Integer'Image (DOM.Core.Nodes.Length (List => Templates)) &
-            " template definition(s).");
+            " template definitions");
       end if;
 
       -- remove templates from the tree but do not free the nodes
@@ -716,6 +721,15 @@ is
             (Input_String => Input_String);
          New_Value : ASU.Unbounded_String;
       begin
+         if not Muxml.Utils.Has_Attribute
+            (Node      => Node,
+             Attr_Name => "value")
+         then
+            raise Mutools.Expressions.Invalid_Expression with
+               "String-expression"
+               & " has evalString child without 'value' attribute";
+         end if;
+
          for Fragment of Parsed_Fragments loop
             if Fragment.Value_Type = Mutools.Expressions.Text_Type then
                ASU.Append (Source => New_Value,

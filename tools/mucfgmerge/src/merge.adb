@@ -178,16 +178,6 @@ is
       Mucfgcheck.Config.Name_Uniqueness (XML_Data => Policy);
       Mucfgcheck.Validation_Errors.Check;
 
-      ---mmmDEBUG
-      --  if Debug_Level = VERBOSE_OUTPUT then
-      --     Mutools.Xmldebuglog.Add_Transaction_Log_As_Comment (Doc => Policy.Doc);
-      --     Mutools.Xmldebuglog.Add_Debug_Infos_As_Comments (Doc => Policy.Doc);
-      --     Muxml.Write
-      --        (File => Output_File & "_beforeExpandExpr.xml",
-      --         Kind => Muxml.None,
-      --         Data => Policy);
-      --  end if;
-
       Mulog.Log (Msg => "Processing expressions");
       Mutools.Expressions.Expand (Policy       => Policy,
                                   Debug_Active => Debug_Active);
@@ -231,11 +221,16 @@ is
          Mutools.Amend.Expand (XML_Data     => Policy,
                                Debug_Active => Debug_Active);
       exception
+         -- for exceptions during amends, the current state of Policy
+         -- is helpful for debugging. Hence, we write it.
+
          when others =>
-            Muxml.Write
-               (File => Output_File & "_Policy_Before_Exception.xml",
-                Kind => Muxml.None,
-                Data => Policy);
+            if Debug_Active then
+               Muxml.Write
+                  (File => Output_File & "_Policy_Before_Amend_Exception.xml",
+                   Kind => Muxml.None,
+                   Data => Policy);
+            end if;
             raise;
       end;
 

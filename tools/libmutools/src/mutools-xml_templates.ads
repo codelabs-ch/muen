@@ -71,7 +71,7 @@ private
        Parent_Of_Children : DOM.Core.Node;
        Append_Mode        : Boolean       := False;
        Debug_Active       : Boolean       := False;
-       Anchestor_For_Log  : DOM.Core.Node := null;
+       Ancestor_For_Log   : DOM.Core.Node := null;
        Transaction_Index  : Mutools.Xmldebuglog.Transaction_Log_Index_Type
                           := Mutools.Xmldebuglog.Null_Ref_Index);
 

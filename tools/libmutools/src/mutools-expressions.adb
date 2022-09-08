@@ -1329,7 +1329,7 @@ is
 
       -----------------------------------------------------------------
 
-      -- check if S contains $ or { or }
+      -- check if Input contains $ or { or }
       function Has_Dollar_Or_Braces (Input : String) return Boolean;
 
       -----------------------------------------------------------------
@@ -1513,15 +1513,12 @@ is
 
       begin
          if not Muxml.Utils.Has_Attribute
-                  (Node      => Node,
-                   Attr_Name => "value")
+            (Node      => Node,
+             Attr_Name => "value")
          then
             raise Invalid_Expression with
-               "EvalString-expression '"
-               & DOM.Core.Elements.Get_Attribute
-               (Elem   => Node,
-                Name   => "name")
-               & "' has evalString child without value attribute.";
+               "String-expression"
+               & " has evalString child without 'value' attribute";
          end if;
 
          for Fragment of Parsed_Fragments loop

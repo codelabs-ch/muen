@@ -30,9 +30,6 @@ with McKae.XML.XPath.XIA;
 package body Mutools.Xmldebuglog
 is
 
-   --function Address_To_Unsigned_64 is new Ada.Unchecked_Conversion
-   --   (Source => System.Address,
-   --    Target => Interfaces.Unsigned_64);
    function Node_To_Unsigned_64 is new Ada.Unchecked_Conversion
       (Source => DOM.Core.Node,
        Target => Interfaces.Unsigned_64);
@@ -77,6 +74,7 @@ is
       return Transaction_Log.Last_Index;
 
    end Add_Amend_Transaction;
+
    -------------------------------------------------------------------------
 
    function Add_Conditional_Transaction
@@ -143,7 +141,7 @@ is
 
    procedure Add_Log_For_Node
       (Node      : DOM.Core.Node;
-       Anchestor : DOM.Core.Node;
+       Ancestor  : DOM.Core.Node;
        TA_Number : Transaction_Log_Index_Type)
    is
       Success : Boolean;
@@ -162,7 +160,7 @@ is
       end if;
       Merge_Parent_Backtrace_Info
          (Node   => Node,
-          Parent => Anchestor);
+          Parent => Ancestor);
 
       case TA_Kind is
          when USETEMPLATE =>
@@ -499,12 +497,12 @@ is
 
    function Hash (Node : DOM.Core.Node) return Ada.Containers.Hash_Type
    is
-      -- use all type Interfaces.Unsigned_32;
       use all type Interfaces.Unsigned_64;
 
       pragma Compile_Time_Error
          (not (System.Address'Size = 64 and Ada.Containers.Hash_Type'Size = 32),
-          "Error: Implementation of hash assumes address size of 64 bit and hash size of 32 bit.");
+          "Error: Implementation of hash assumes "
+             & "address size of 64 bit and hash size of 32 bit.");
 
       Add_64 : constant Interfaces.Unsigned_64
          := Node_To_Unsigned_64 (Node);
@@ -556,7 +554,7 @@ is
             end loop;
 
             if not Found then
-               -- Actions on anchestors happend before actions specific to their
+               -- Actions on ancestors happend before actions specific to their
                -- children. Hence, these need be be at the beginning of the array.
                -- Hence, we shift array entries first.
                for I in reverse Actions_Index_Range'First ..
@@ -673,7 +671,8 @@ is
                     (Transaction_Log (NB.Amend_Backtrace)));
       end if;
 
-      -- append conditional-transactions (in reverse order, so the last Transaction comes first)
+      -- append conditional-transactions
+      -- (in reverse order, so the last transaction comes first)
       for I in reverse Actions_Index_Range'First ..
          Actions_Index_Range'First + NB.Conditional_Backtrace.Length - 1
       loop

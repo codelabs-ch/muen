@@ -19,6 +19,15 @@
   <library ref="muinit"/>
  </depends>
  <requires>
+  <vcpu>
+   <vmx>
+    <masks>
+     <exception>
+      <Breakpoint>0</Breakpoint>
+     </exception>
+    </masks>
+   </vmx>
+  </vcpu>
   <memory>
    <if variable="ahci_drv_enabled" value="true">
     <memory executable="false" logical="blockdev_shm2" size="16#0100_0000#" virtualAddress="16#a100_0000#" writable="true"/>

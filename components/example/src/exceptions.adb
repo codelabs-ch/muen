@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013-2022  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013-2022  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2022  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2022  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,24 +16,22 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK.Exceptions;
+with System.Machine_Code;
 
-with Musinfo.Instance;
-
-package Interrupt_Handler
+package body Exceptions
 is
 
-   --  Exception/Interrupt handler.
-   procedure Dispatch_Exception (Context : SK.Exceptions.Isr_Context_Type)
-   with
-      Export,
-      Convention => C,
-      Link_Name  => "dispatch_interrupt",
-      Pre        => Musinfo.Instance.Is_Valid;
+   -------------------------------------------------------------------------
 
-   --  Interrupt handler.
-   procedure Handle_Interrupt (Vector : SK.Byte)
+   procedure Trigger_Breakpoint
    with
-      Pre => Musinfo.Instance.Is_Valid;
+      SPARK_Mode => Off
+   is
+   begin
+      System.Machine_Code.Asm
+        (Template => "int3",
+         Clobber  => "memory",
+         Volatile => True);
+   end Trigger_Breakpoint;
 
-end Interrupt_Handler;
+end Exceptions;

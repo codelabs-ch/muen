@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2022  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2022  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -25,11 +25,11 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Handle_Interrupt (Vector : SK.Byte)
+   procedure Handle_Interrupt (Context : SK.Exceptions.Isr_Context_Type)
    is
    begin
       Log.Put_Line (Item => "Received vector " & SK.Strings.Img
-                    (Item => Vector));
+                    (Item => SK.Byte'Mod (Context.Vector)));
    end Handle_Interrupt;
 
 end Interrupt_Handler;

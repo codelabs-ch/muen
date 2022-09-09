@@ -41,9 +41,12 @@ is
                        & SK.Strings.Img (Item => Context.RIP));
          Log.Put_Line (Item => "                RSP "
                        & SK.Strings.Img (Item => Context.RSP));
+         Log.Put_Line (Item => "                RBP "
+                       & SK.Strings.Img (Item => Context.Regs.RBP));
          Log.Put_Line (Item => "         Error Code "
                        & SK.Strings.Img (Item => Context.Error_Code));
-
+         Exceptions.Print_Backtrace (RIP => Context.RIP,
+                                     RBP => Context.Regs.RBP);
          Exceptions.BP_Triggered := True;
 
          --  Hardware stores the RIP pointing to the instruction after int3 on

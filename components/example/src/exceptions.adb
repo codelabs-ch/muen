@@ -16,10 +16,42 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.Strings;
+
 with System.Machine_Code;
+
+with Backtraces;
+with Log;
 
 package body Exceptions
 is
+
+   -------------------------------------------------------------------------
+
+   procedure Print_Backtrace
+     (RIP : Interfaces.Unsigned_64;
+      RBP : Interfaces.Unsigned_64)
+   is
+
+      --  The array range is arbitrarily chosen but 10 seems high enough for the
+      --  call depth of this example test case.
+
+      Call_Traces : Backtraces.Call_Trace_Type (1 .. 10);
+      Last_Entry : Natural;
+   begin
+      Backtraces.Analyse_Stack
+        (RIP        => RIP,
+         RBP        => RBP,
+         Traces     => Call_Traces,
+         Last_Index => Last_Entry);
+
+      Log.Put_Line (Item => "Call Trace:");
+      for Idx in Call_Traces'First .. Last_Entry loop
+         Log.Put_Line
+           (Item => " [<"
+            & SK.Strings.Img (Item => Call_Traces (Idx)) & ">]");
+      end loop;
+   end Print_Backtrace;
 
    -------------------------------------------------------------------------
 

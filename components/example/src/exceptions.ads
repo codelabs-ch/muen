@@ -16,11 +16,18 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 package Exceptions
 is
 
    --  Trigger breakpoint exception (vector number 3).
    procedure Trigger_Breakpoint;
+
+   --  Print backtrace of System V ABI 64-bit call stack with given RBP value.
+   procedure Print_Backtrace
+     (RIP : Interfaces.Unsigned_64;
+      RBP : Interfaces.Unsigned_64);
 
    BP_Triggered : Boolean
    with Volatile;

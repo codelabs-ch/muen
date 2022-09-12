@@ -54,4 +54,12 @@ project Example extends "../component_spark" is
    for Exec_Dir use "obj/" & Component_Spark.Build_Mode;
    for Main use ("example");
 
+   package Compiler is
+      for Default_Switches ("Ada") use Common.Compiler'Default_Switches ("Ada")
+
+        --  Frame pointer is required for creating call trace when resolving
+        --  stack frames.
+        & ("-fno-omit-frame-pointer");
+   end Compiler;
+
 end Example;

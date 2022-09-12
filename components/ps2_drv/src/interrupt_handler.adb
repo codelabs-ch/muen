@@ -28,9 +28,11 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Handle_Interrupt (Vector : SK.Byte)
+   procedure Handle_Interrupt (Context : SK.Exceptions.Isr_Context_Type)
    is
       use type SK.Byte;
+
+      Vector : constant SK.Byte := SK.Byte'Mod (Context.Vector);
    begin
       if Vector = Ps2_Drv_Component.Devices.Ps2_Kbd_Irq
         or else Vector = Ps2_Drv_Component.Devices.Ps2_Mouse_Irq

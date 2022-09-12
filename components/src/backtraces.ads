@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013-2022  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013-2022  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2022  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2022  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,19 +16,18 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package body Interrupt_Handler
+with Interfaces;
+
+package Backtraces
 is
 
-   -------------------------------------------------------------------------
+   type Call_Trace_Type is array (Natural range <>) of Interfaces.Unsigned_64;
 
-   procedure Handle_Interrupt (Context : SK.Exceptions.Isr_Context_Type)
-   is
-   begin
+   --  Create backtrace of System V ABI 64-bit call stack with given RBP value.
+   procedure Analyse_Stack
+     (RIP        :     Interfaces.Unsigned_64;
+      RBP        :     Interfaces.Unsigned_64;
+      Traces     : out Call_Trace_Type;
+      Last_Index : out Natural);
 
-      --  The interrupt wakes up the SM moving it past the Hlt instruction, so
-      --  there is nothing else left to do.
-
-      null;
-   end Handle_Interrupt;
-
-end Interrupt_Handler;
+end Backtraces;

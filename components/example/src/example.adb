@@ -27,6 +27,8 @@ with Musinfo.Instance;
 
 with Component_Constants;
 
+with Exceptions;
+
 with Foo.Receiver;
 with Foo.Sender;
 
@@ -136,6 +138,21 @@ begin
       --  Print some register values of monitored subject.
 
       Log.Put_Line (Item => "Monitored subject RIP " & SK.Strings.Img (RIP));
+   end;
+
+   --  Trigger breakpoint exception and verify that corresponding handler/ISR
+   --  was executed including correct continuation of control flow.
+
+   Exceptions.BP_Triggered := False;
+   Exceptions.Trigger_Breakpoint;
+   declare
+      Triggered : constant Boolean := Exceptions.BP_Triggered;
+   begin
+      if Triggered then
+         Log.Put_Line (Item => "Breakpoint exception processed successfully");
+      else
+         Log.Put_Line (Item => "Error triggering #BP exception!");
+      end if;
    end;
 
    --  Give up CPU.

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013-2022  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013-2022  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2022  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2022  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,19 +16,20 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package body Interrupt_Handler
+with Interfaces;
+
+package Exceptions
 is
 
-   -------------------------------------------------------------------------
+   --  Trigger breakpoint exception (vector number 3).
+   procedure Trigger_Breakpoint;
 
-   procedure Handle_Interrupt (Context : SK.Exceptions.Isr_Context_Type)
-   is
-   begin
+   --  Print backtrace of System V ABI 64-bit call stack with given RBP value.
+   procedure Print_Backtrace
+     (RIP : Interfaces.Unsigned_64;
+      RBP : Interfaces.Unsigned_64);
 
-      --  The interrupt wakes up the SM moving it past the Hlt instruction, so
-      --  there is nothing else left to do.
+   BP_Triggered : Boolean
+   with Volatile;
 
-      null;
-   end Handle_Interrupt;
-
-end Interrupt_Handler;
+end Exceptions;

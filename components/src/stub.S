@@ -19,6 +19,8 @@
 .section .stub
 
 _main:
+	// Set RBP to null for backtracing
+	xor %rbp, %rbp
 	call main
 	// Should never return. Raise exception if ever reached.
 	ud2

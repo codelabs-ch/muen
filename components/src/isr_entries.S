@@ -31,6 +31,7 @@ isrlist:
 	push %r10
 	push %r9
 	push %r8
+	push %rbp
 	push %rsi
 	push %rdi
 	push %rdx
@@ -46,6 +47,7 @@ isrlist:
 	pop %rdx
 	pop %rdi
 	pop %rsi
+	pop %rbp
 	pop %r8
 	pop %r9
 	pop %r10
@@ -69,26 +71,64 @@ isrlist:
 	.previous
 .endm
 
-.macro interrupt vector
+.macro exception_with_code vector
 	isr_entry
+	push $\vector
+	jmp handle_all
+.endm
+
+.macro exception vector
+	isr_entry
+	push $0
 	push $\vector
 	jmp handle_all
 .endm
 
 handle_all:
 	save_regs
-	mov 0x70(%rsp), %rdi
+	mov %cr2, %rax
+	push %rax
+	mov %rsp, %rdi
 	call dispatch_interrupt
+	pop %rax
 	restore_regs
-	add $8, %rsp
+
+	// Move stack pointer to skip vector and error code
+	add $0x10, %rsp
+
 	iretq
 
-.rept 32
-	reserved_entry
+exception				0
+exception				1
+exception				2
+exception				3
+exception				4
+exception				5
+exception				6
+exception				7
+exception_with_code 	8
+exception				9
+exception_with_code		10
+exception_with_code		11
+exception_with_code		12
+exception_with_code		13
+exception_with_code		14
+exception				15
+exception				16
+exception_with_code		17
+exception				18
+exception				19
+exception				20
+exception_with_code		21
+
+.set cur_vector, 22
+.rept 31-21
+exception cur_vector
+.set cur_vector, cur_vector + 1
 .endr
 
 .set cur_vector, 32
 .rept 224
-	interrupt cur_vector
+	exception cur_vector
 .set cur_vector, cur_vector + 1
 .endr

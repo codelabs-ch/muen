@@ -45,7 +45,7 @@ is
      (Config_File  : String;
       Output_File  : String;
       Include_Path : String;
-      Debug_Level  : Debug_Level_Type)
+      Debug_Level  : Debug_Level_Type := NONE)
    is
       Local_Include_Path : constant String
          := Include_Path & (if Include_Path'Length > 0 then ":" else "") & ".";

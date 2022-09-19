@@ -30,13 +30,13 @@ is
    procedure Merge_Hardware
      (Policy        : in out Muxml.XML_Data_Type;
       Hardware_File :        String;
-      Add_Location  :        Boolean);
+      Add_Location  :        Boolean := False);
 
    --  Load platform section from specified file and merge with given policy.
    procedure Merge_Platform
      (Policy        : in out Muxml.XML_Data_Type;
       Platform_File :        String;
-      Add_Location  :        Boolean);
+      Add_Location  :        Boolean := False);
 
    --  Merge platform config into global config section of given policy. The
    --  platform config section is removed after the merge operation.

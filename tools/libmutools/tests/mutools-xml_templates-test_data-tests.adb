@@ -7,6 +7,12 @@
 
 with AUnit.Assertions; use AUnit.Assertions;
 with System.Assertions;
+--  begin read only
+--  id:2.2/00/
+--
+--  This section can be used to add with clauses if necessary.
+--
+--  end read only
 --with Ada.Directories;
 --with Ada.Exceptions;
 --with Test_Utils;
@@ -15,12 +21,6 @@ with DOM.Core.Nodes;
 with DOM.Core.Documents;
 
 with Muxml.Utils;
---  begin read only
---  id:2.2/00/
---
---  This section can be used to add with clauses if necessary.
---
---  end read only
 
 --  begin read only
 --  end read only

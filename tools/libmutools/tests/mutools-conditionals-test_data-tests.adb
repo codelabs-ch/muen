@@ -111,6 +111,7 @@ package body Mutools.Conditionals.Test_Data.Tests is
 
       Data   : Muxml.XML_Data_Type;
       Config : DOM.Core.Node_List;
+      Node_Access : Mutools.Expressions.Access_Hashmaps_Type;
    begin
       Muxml.Parse
         (Data => Data,
@@ -120,10 +121,13 @@ package body Mutools.Conditionals.Test_Data.Tests is
       Config := McKae.XML.XPath.XIA.XPath_Query
         (N     => Data.Doc,
          XPath => "/system/config/*");
-      Evaluate (Config => Config,
+      Evaluate (Policy => Data,
+                Config => Config,
                 Parent => Muxml.Utils.Get_Element
                   (Doc   => Data.Doc,
-                   XPath => "/system/memory"));
+                   XPath => "/system/memory"),
+                Node_Access => Node_Access,
+                Debug_Active => false);
       Assert (Condition => Muxml.Utils.Get_Element
               (Doc   => Data.Doc,
                XPath => "/system/memory/memory[@name='extra_mem']") /= null,
@@ -136,20 +140,27 @@ package body Mutools.Conditionals.Test_Data.Tests is
          Name  => "value",
          Value => "false");
 
-      Evaluate (Config => Config,
+      Evaluate (Policy => Data,
+                Config => Config,
                 Parent => Muxml.Utils.Get_Element
                   (Doc   => Data.Doc,
-                   XPath => "/system/subjects/subject[@name='lnx']/memory"));
+                   XPath =>
+                   "/system/subjects/subject[@name='lnx']/memory"),
+                Node_Access => Node_Access,
+                Debug_Active => false);
       Assert (Condition => Muxml.Utils.Get_Element
               (Doc   => Data.Doc,
                XPath => "/system/subjects/subject[@name='lnx']/"
                & "memory/memory[@name='extra_mem']") = null,
               Message   => "Conditional evaluation failed (2)");
 
-      Evaluate (Config => Config,
+      Evaluate (Policy => Data,
+                Config => Config,
                 Parent => Muxml.Utils.Get_Element
                   (Doc   => Data.Doc,
-                   XPath => "/system/subjects/subject[@name='lnx']"));
+                   XPath => "/system/subjects/subject[@name='lnx']"),
+                Node_Access => Node_Access,
+                Debug_Active => false);
       Assert (Condition => Muxml.Utils.Get_Element
               (Doc   => Data.Doc,
                XPath => "/system/subjects/subject[@name='lnx']/"

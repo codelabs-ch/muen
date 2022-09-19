@@ -133,7 +133,7 @@ is
    procedure Merge_Hardware
      (Policy        : in out Muxml.XML_Data_Type;
       Hardware_File :        String;
-      Add_Location  :        Boolean)
+      Add_Location  :        Boolean := False)
    is
    begin
       Merge_Section
@@ -157,7 +157,7 @@ is
    procedure Merge_Platform
      (Policy        : in out Muxml.XML_Data_Type;
       Platform_File :        String;
-      Add_Location  :        Boolean)
+      Add_Location  :        Boolean := False)
    is
    begin
       Merge_Section

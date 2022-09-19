@@ -7,6 +7,13 @@
 
 with AUnit.Assertions; use AUnit.Assertions;
 with System.Assertions;
+
+--  begin read only
+--  id:2.2/00/
+--
+--  This section can be used to add with clauses if necessary.
+--
+--  end read only
 with Ada.Exceptions;
 with Ada.Directories;
 
@@ -16,15 +23,6 @@ with DOM.Core.Elements;
 with Muxml.Utils;
 with Muxml;
 with Test_Utils;
-
-
---  begin read only
---  id:2.2/00/
---
---  This section can be used to add with clauses if necessary.
---
---  end read only
-
 --  begin read only
 --  end read only
 package body Mutools.Amend.Test_Data.Tests is
@@ -142,13 +140,15 @@ package body Mutools.Amend.Test_Data.Tests is
                 (Doc   => Data.Doc,
                  XPath => "/system/child2/session");
       Recursive_Merge (Parent    => Main,
-                       New_Child => Child1);
+                       New_Child => Child1,
+                       Debug_Active => false);
 
       Main := Muxml.Utils.Get_Element
                 (Doc   => Data.Doc,
                  XPath => "/system/hardware");
       Recursive_Merge (Parent    => Main,
-                       New_Child => Child2);
+                       New_Child => Child2,
+                       Debug_Active => false);
       Muxml.Write (Data => Data,
                    Kind => Muxml.None,
                    File => Output);

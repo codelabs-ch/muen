@@ -191,7 +191,7 @@ is
        Size => Segment_Regs_Size * 8;
 
    Subj_State_Size : constant :=
-     (CPU_Regs_Size + Segment_Regs_Size + 2 * Seg_Type_Size + 4 * 4 + 13 * 8);
+     (CPU_Regs_Size + Segment_Regs_Size + 2 * Seg_Type_Size + 5 * 4 + 13 * 8);
 
    --D @Interface
    --D The Muen SK stores the subject state of each running subject into a
@@ -213,6 +213,10 @@ is
       --D events to be blocked for a period of time. This field contains
       --D information about such blocking.
       Intr_State         : Word32;
+      --D @Interface
+      --D Guest activity state; Intel SDM Vol. 3C, "24.4.2 Guest Non-Register
+      --D State". This field identifies the logical processor's activity state.
+      Activity_State     : Word32;
       --D @Interface
       --D Guest IA32\_SYSENTER\_CS MSR; Intel SDM Vol. 3C, "24.4.1 Guest
       --D Register State".
@@ -384,6 +388,7 @@ private
        (Regs            => Null_CPU_Regs,
         Exit_Reason     => 0,
         Intr_State      => 0,
+        Activity_State  => 0,
         SYSENTER_CS     => 0,
         Instruction_Len => 0,
         Segment_Regs    => (CS   => Null_Segment,

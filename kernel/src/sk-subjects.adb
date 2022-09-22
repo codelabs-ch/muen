@@ -265,6 +265,7 @@ is
         (Regs            => GPRs,
          Exit_Reason     => 0,
          Intr_State      => 0,
+         Activity_State  => 0,
          SYSENTER_CS     => 0,
          Instruction_Len => 0,
          RIP             => RIP,

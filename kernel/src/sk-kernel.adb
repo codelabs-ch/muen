@@ -143,15 +143,17 @@ is
       Found    : Boolean;
       Event_ID : Skp.Events.Event_Range;
    begin
-      --D @Text Section => impl_handle_target_event
-      --D First, check if the subject specified by ID has a target event pending
-      --D by consulting the subject events data.
-      Subjects_Events.Consume_Event
-        (Subject => Subject_ID,
-         Found   => Found,
-         Event   => Event_ID);
+      loop
+         --D @Text Section => impl_handle_target_event
+         --D First, check if the subject specified by ID has a target event pending
+         --D by consulting the subject events data.
+         Subjects_Events.Consume_Event
+           (Subject => Subject_ID,
+            Found   => Found,
+            Event   => Event_ID);
 
-      if Found then
+         exit when not Found;
+
          --D @Text Section => impl_handle_target_event
          --D If an event is pending, it is consumed by looking up the target
          --D event and its action as specified by the policy.
@@ -183,7 +185,7 @@ is
                   Init_Subject (ID => Subject_ID);
             end case;
          end;
-      end if;
+      end loop;
    end Handle_Pending_Target_Event;
 
    -------------------------------------------------------------------------

@@ -71,4 +71,10 @@
   </xs:attribute>
  </xs:complexType>
 
+ <xs:complexType name="baseSchedulingGroupType">
+  <xs:sequence>
+   <xs:element name="subject" type="namedType" minOccurs="1" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
+
 </xs:schema>

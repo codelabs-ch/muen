@@ -29,4 +29,12 @@
   <xs:union memberTypes="xs:positiveInteger noneType"/>
  </xs:simpleType>
 
+ <xs:complexType name="schedulingGroupType">
+  <xs:complexContent>
+   <xs:extension base="baseSchedulingGroupType">
+    <xs:attribute name="id" type="xs:positiveInteger" use="optional"/>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
+
 </xs:schema>

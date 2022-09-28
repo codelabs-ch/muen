@@ -45,4 +45,21 @@
   </xs:attribute>
  </xs:complexType>
 
+ <xs:complexType name="schedulingGroupType">
+  <xs:annotation>
+   <xs:documentation>
+    The scheduling \texttt{group} element is used to specify a collection of
+    subjects that may cooperatively schedule each other via handover events.
+    Scheduling groups must contain at least one subject. As an example, a Linux
+    subject and its associated Subject Monitor form a scheduling group.
+
+    See line \ref{lst:af-lineref-sched-group} in listing
+    \ref{lst:annotated-policy} for an example scheduling group.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:complexContent>
+   <xs:extension base="baseSchedulingGroupType"/>
+  </xs:complexContent>
+ </xs:complexType>
+
 </xs:schema>

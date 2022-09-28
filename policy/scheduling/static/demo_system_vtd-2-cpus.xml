@@ -1,4 +1,69 @@
 <scheduling tickRate="100000">
+ <partitions>
+  <partition name="nic_linux">
+   <group>
+    <subject name="nic_linux"/>
+    <subject name="nic_sm"/>
+    <subject name="nic_sl"/>
+    <subject name="nic_dm"/>
+   </group>
+  </partition>
+  <partition name="ps2_driver">
+   <group>
+    <subject name="ps2"/>
+   </group>
+  </partition>
+  <partition name="controller">
+   <group>
+    <subject name="controller"/>
+   </group>
+  </partition>
+  <partition name="idle_0">
+   <group>
+    <subject name="mugenschedcfg_auto_idle_0"/>
+   </group>
+  </partition>
+  <partition name="storage_linux">
+   <group>
+    <subject name="example"/>
+    <subject name="storage_sm"/>
+    <subject name="storage_dm"/>
+    <subject name="storage_linux"/>
+   </group>
+  </partition>
+  <partition name="debugserver">
+   <group>
+    <subject name="dbgserver"/>
+   </group>
+  </partition>
+  <partition name="time">
+   <group>
+    <subject name="time"/>
+   </group>
+  </partition>
+  <if variable="ahci_drv_active" value="true">
+   <partition name="ahci_driver">
+    <group>
+     <subject name="ahci_drv"/>
+    </group>
+   </partition>
+  </if>
+  <partition name="vt">
+   <group>
+    <subject name="vt"/>
+   </group>
+  </partition>
+  <partition name="tau0">
+   <group>
+    <subject name="tau0"/>
+   </group>
+  </partition>
+  <partition name="idle_1">
+   <group>
+    <subject name="mugenschedcfg_auto_idle_1"/>
+   </group>
+  </partition>
+ </partitions>
  <majorFrame>
   <cpu id="0">
    <minorFrame subject="nic_linux" ticks="4"/>

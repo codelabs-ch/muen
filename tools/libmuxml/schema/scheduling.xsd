@@ -38,7 +38,7 @@
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>
-   <xs:element name="partitions" type="schedulingPartitionsType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="partitions" type="schedulingPartitionsType" minOccurs="1" maxOccurs="1"/>
    <xs:element name="majorFrame" type="majorFrameType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>
   <xs:attribute name="tickRate" type="xs:positiveInteger" use="required">

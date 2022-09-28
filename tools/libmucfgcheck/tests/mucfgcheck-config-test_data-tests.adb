@@ -7,10 +7,6 @@
 
 with AUnit.Assertions; use AUnit.Assertions;
 with System.Assertions;
---DBG-START
-with Ada.Text_IO;
---DBG-END
-
 --  begin read only
 --  id:2.2/00/
 --
@@ -18,6 +14,7 @@ with Ada.Text_IO;
 --
 --  end read only
 with Mucfgcheck.Validation_Errors;
+
 --  begin read only
 --  end read only
 package body Mucfgcheck.Config.Test_Data.Tests is
@@ -62,11 +59,10 @@ package body Mucfgcheck.Config.Test_Data.Tests is
          Value => "feature_enabled");
 
       Name_Uniqueness (XML_Data => Data);
-      --DBG-START
+      --DEBUG-START
       --Ada.Text_IO.Put_Line ("DBG: names given to config-vars:"
       --                      & Mucfgcheck.Validation_Errors.Get_Error_Message);
-      --Variable 'nonexistent' referenced in expression 'session2_enabled' not defined
-      --DBG-END
+      --DEBUG-END
       Assert (Condition => Validation_Errors.Contains
               (Msg => "The names given to config variables and expressions "
                & "are not unique. Conflicting value: 'feature_enabled'"),
@@ -169,13 +165,9 @@ package body Mucfgcheck.Config.Test_Data.Tests is
                    Kind => Muxml.None,
                    File => "data/test_policy_src.xml");
 
-      --  Must not raise an exception.
-
       Expression_Config_Var_Refs (XML_Data => Data);
       Assert (Condition => Validation_Errors.Is_Empty,
               Message   => "Unexpected error in positive test");
-
-      --  Set reference to nonexistent config var.
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -185,19 +177,13 @@ package body Mucfgcheck.Config.Test_Data.Tests is
          Value => "nonexistent");
 
       Expression_Config_Var_Refs (XML_Data => Data);
-      --DBG-START
-      --Ada.Text_IO.Put_Line ("DBG: val-err:"
-      --                      & Mucfgcheck.Validation_Errors.Get_Error_Message);
-      --Variable 'nonexistent' referenced in expression 'session2_enabled' not defined
-      --DBG-END
+
       Assert (Condition => Validation_Errors.Contains
               (Msg => "Variable 'nonexistent' referenced in expression "
                & "'session2_enabled' not defined"),
               Message   => "Exception mismatch (1)");
 
-      --  Remove name attribute from variable reference.
-
-      Muxml.Utils.Set_Attribute
+       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/expressions/expression/gt/variable"
          & "[@name='nonexistent']",
@@ -205,13 +191,8 @@ package body Mucfgcheck.Config.Test_Data.Tests is
          Value => "");
 
       Expression_Config_Var_Refs (XML_Data => Data);
-      --DBG-START
-      --Ada.Text_IO.Put_Line ("DBG: val-err:"
-      --                      & Mucfgcheck.Validation_Errors.Get_Error_Message);
-      --Variable 'nonexistent' referenced in expression 'session2_enabled' not defined
-      --DBG-END
       Assert (Condition => Validation_Errors.Contains
-              (Msg => "Variable without name attribute in expression "
+              (Msg => "Missing variable-reference in expression "
                & "'session2_enabled'"),
               Message   => "Exception mismatch (2)");
 --  begin read only

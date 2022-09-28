@@ -209,4 +209,10 @@ private
       (Backtrace : in out String_Vector.Vector;
        Name      :        String);
 
+   -- Populate Node_Access with elements from Config_And_Exprs
+   --  for fast access to name-node pairs
+   procedure Initialize_Node_Access
+      (Node_Access      : in out Mutools.Expressions.Access_Hashmaps_Type;
+       Config_And_Exprs :        DOM.Core.Node_List);
+
 end Mutools.Expressions;

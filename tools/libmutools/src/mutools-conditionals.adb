@@ -15,18 +15,28 @@
 --  You should have received a copy of the GNU General Public License
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
-
+with DOM.Core;
 with DOM.Core.Elements;
 with DOM.Core.Nodes;
 
 with McKae.XML.XPath.XIA;
 
 with Mulog;
+with Mutools.Expressions;
 with Mutools.Expressions.Case_Expression;
 with Mutools.Xmldebuglog;
 
 package body Mutools.Conditionals
 is
+   --  Recursively evaluate all conditionals of given parent node.
+   procedure Evaluate
+      (Policy       :        Muxml.XML_Data_Type;
+       Config       :        DOM.Core.Node_List;
+       Parent       :        DOM.Core.Node;
+       Node_Access  : in out Mutools.Expressions.Access_Hashmaps_Type;
+       Debug_Active :        Boolean);
+
+   -------------------------------------------------------------------------
 
    --  Transfer all children from specified node to parent.
    procedure Transfer_Children
@@ -293,47 +303,71 @@ is
                         (N     => Policy.Doc,
                          XPath => "/*");
       Node_Access : Mutools.Expressions.Access_Hashmaps_Type;
+
+      ----------------------------------------------------------------------
+
+      -- Populate Node_Access with elements from Config_Nodes
+      --  for fast access to name-values pairs
+      procedure Initialize_Node_Access
+         (Node_Access  : in out Mutools.Expressions.Access_Hashmaps_Type;
+          Config_Nodes :        DOM.Core.Node_List;
+          Debug_Active :        Boolean);
+
+      ----------------------------------------------------------------------
+
+      procedure Initialize_Node_Access
+         (Node_Access  : in out Mutools.Expressions.Access_Hashmaps_Type;
+          Config_Nodes :        DOM.Core.Node_List;
+          Debug_Active :        Boolean)
+      is
+      begin
+         for I in 0 .. DOM.Core.Nodes.Length (List => Config_Nodes) - 1 loop
+            declare
+               Node : constant DOM.Core.Node
+                  := DOM.Core.Nodes.Item (List  => Config_Nodes, Index => I);
+               Node_Type : constant String
+                  := DOM.Core.Nodes.Node_Name (N => Node);
+               Node_Name : constant String
+                  := DOM.Core.Elements.Get_Attribute
+                  (Elem => Node,
+                   Name => "name");
+               Node_Raw_Value : constant String
+                  := DOM.Core.Elements.Get_Attribute
+                  (Elem => Node,
+                   Name => "value");
+            begin
+               if Node_Type = "boolean" then
+                  Node_Access.Output_Boolean.Insert
+                     (Key      => Node_Name,
+                      New_Item => Boolean'Value (Node_Raw_Value));
+               elsif Node_Type = "integer" then
+                  Node_Access.Output_Integer.Insert
+                     (Key      => Node_Name,
+                      New_Item => Integer'Value (Node_Raw_Value));
+               elsif Node_Type = "string" then
+                  Node_Access.Output_String.Insert
+                     (Key      => Node_Name,
+                      New_Item => Node_Raw_Value);
+               else
+                  if Debug_Active then
+                     Mulog.Log (Msg => Mutools.Xmldebuglog.Get_Log_For_Error_Message
+                                   (Node => Node));
+                  end if;
+                  raise Mutools.Expressions.Invalid_Expression with
+                     "Found invalid node with name '"
+                     & Node_Name
+                     & "' when loading config variables to expand conditionals";
+               end if;
+            end;
+         end loop;
+      end Initialize_Node_Access;
+
    begin
       -- populate Node_Access for fast access to name-values pairs
-      for I in 0 .. DOM.Core.Nodes.Length (List => Config_Nodes) - 1 loop
-         declare
-            Node : constant DOM.Core.Node
-               := DOM.Core.Nodes.Item (List  => Config_Nodes, Index => I);
-            Node_Type : constant String
-               := DOM.Core.Nodes.Node_Name (N => Node);
-            Node_Name : constant String
-               := DOM.Core.Elements.Get_Attribute
-               (Elem => Node,
-                Name => "name");
-            Node_Raw_Value : constant String
-               := DOM.Core.Elements.Get_Attribute
-               (Elem => Node,
-                 Name => "value");
-         begin
-            if Node_Type = "boolean" then
-               Node_Access.Output_Boolean.Insert
-                  (Key      => Node_Name,
-                   New_Item => Boolean'Value (Node_Raw_Value));
-            elsif Node_Type = "integer" then
-               Node_Access.Output_Integer.Insert
-                  (Key      => Node_Name,
-                   New_Item => Integer'Value (Node_Raw_Value));
-            elsif Node_Type = "string" then
-               Node_Access.Output_String.Insert
-                  (Key      => Node_Name,
-                   New_Item => Node_Raw_Value);
-            else
-               if Debug_Active then
-                  Mulog.Log (Msg => Mutools.Xmldebuglog.Get_Log_For_Error_Message
-                                (Node => Node));
-               end if;
-               raise Mutools.Expressions.Invalid_Expression with
-                  "Found invalid node with name '"
-                  & Node_Name
-                  & "' when loading config variables to expand conditionals";
-            end if;
-         end;
-      end loop;
+      Initialize_Node_Access
+         (Node_Access  => Node_Access,
+          Config_Nodes => Config_Nodes,
+          Debug_Active => Debug_Active);
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Sections) - 1 loop
          declare

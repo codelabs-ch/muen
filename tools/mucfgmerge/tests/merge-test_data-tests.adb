@@ -66,7 +66,7 @@ package body Merge.Test_Data.Tests is
       begin
          Run (Config_File  => "data/config_templateNameCollision.xml",
               Output_File  => Output,
-              Include_Path => "");
+              Include_Path => "data/");
          Assert (Condition => False,
                  Message   => "Exception expected");
 
@@ -108,8 +108,8 @@ package body Merge.Test_Data.Tests is
               Include_Path => "");
 
          Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => "data/run_no_additional_hw.xml",
-                  Filename2 => Output),
+                    (Filename1 => "data/run_no_additional_hw.xml",
+                     Filename2 => Output),
                  Message   => "Policy mismatch: " & Output);
 
          Ada.Directories.Delete_File (Name => Output);

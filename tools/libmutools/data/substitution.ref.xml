@@ -20,7 +20,7 @@
   </mappings>
  </platform>
  <memory>
-  <memory caching="WB" name="$nonexistentcfgvar" size="16#1000#"/>
+  <memory caching="WB" name="foobar" size="16#1000#"/>
  </memory>
  <events/>
  <channels/>

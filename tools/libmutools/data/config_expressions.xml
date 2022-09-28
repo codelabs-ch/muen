@@ -1,27 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <system>
  <config>
-  <boolean name="feature_enabled" value="true"/>
-  <boolean name="session2_enabled" value="true"/>
+  <boolean name="not_false" value="true"/>
   <boolean name="session2_disabled" value="false"/>
-  <boolean name="int_values" value="true"/>
-  <boolean name="int_values_2" value="false"/>
-  <boolean name="is_below_max" value="true"/>
-  <boolean name="has_four_sessions" value="true"/>
-  <boolean name="two_is_two" value="true"/>
-  <boolean name="two_is_three" value="false"/>
-  <boolean name="has_not_three_sessions" value="true"/>
-  <boolean name="two_is_not_three" value="true"/>
-  <boolean name="two_is_not_two" value="false"/>
-  <boolean name="truth" value="true"/>
-  <boolean name="iommu_on" value="true"/>
-  <boolean name="iommu_disabled" value="false"/>
-  <boolean name="true" value="true"/>
-  <boolean name="and_expr" value="false"/>
-  <boolean name="and_expr_2" value="true"/>
-  <boolean name="or_expr" value="true"/>
   <boolean name="or_expr_2" value="false"/>
   <boolean name="nested_expr" value="true"/>
+  <boolean name="two_is_not_three" value="true"/>
+  <boolean name="two_is_not_two" value="false"/>
+  <boolean name="int_values_2" value="false"/>
+  <boolean name="has_not_three_sessions" value="true"/>
+  <boolean name="and_expr_2" value="true"/>
+  <boolean name="iommu_disabled" value="false"/>
+  <boolean name="is_below_max" value="true"/>
+  <boolean name="or_expr" value="true"/>
+  <boolean name="two_is_two" value="true"/>
+  <boolean name="has_four_sessions" value="true"/>
+  <boolean name="two_is_three" value="false"/>
+  <boolean name="and_expr" value="false"/>
+  <boolean name="session2_enabled" value="true"/>
+  <boolean name="feature_enabled" value="true"/>
+  <boolean name="int_values" value="true"/>
   <integer name="session_count" value="4"/>
  </config>
  <expressions>
@@ -91,18 +89,12 @@
     <integer value="2"/>
    </ne>
   </expression>
-  <expression name="truth">
-   <boolean value="true"/>
-  </expression>
-  <expression name="iommu_on">
-   <variable name="feature_enabled"/>
-  </expression>
   <expression name="iommu_disabled">
    <not>
     <variable name="feature_enabled"/>
    </not>
   </expression>
-  <expression name="true">
+  <expression name="not_false">
    <not>
     <boolean value="false"/>
    </not>

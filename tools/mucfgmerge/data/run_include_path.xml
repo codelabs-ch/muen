@@ -4,12 +4,12 @@
   <boolean name="supports_xhci_debug" value="true"/>
   <boolean name="session2_enabled" value="true"/>
   <integer name="session_count" value="4"/>
+  <string name="platform" value="platform.xml"/>
+  <string name="hardware" value="hw/hardware.xml"/>
   <string name="no_caching" value="UC"/>
   <string name="system" value="test_policy.xml"/>
-  <string name="hardware" value="hw/hardware.xml"/>
-  <string name="additional_hardware" value="add_hw.xml"/>
-  <string name="platform" value="platform.xml"/>
   <string name="test_string" value="platform_used_with_include_path"/>
+  <string name="additional_hardware" value="add_hw.xml"/>
  </config>
  <hardware>
   <processor cpuCores="4" speed="3000" vmxTimerRate="0">

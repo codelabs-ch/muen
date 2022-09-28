@@ -160,23 +160,6 @@ package body Mucfgcheck.Templates.Test_Data.Tests is
                       & " with multiple parameter blocks."),
               Message   => "Exception mismatch");
 
-      -- negative test: template without prameter block
-      Node := DOM.Core.Nodes.Remove_Child
-                 (N         => DOM.Core.Nodes.Parent_Node (N => Node),
-                  Old_Child => Node);
-      DOM.Core.Nodes.Free(Node);
-      New_Node := DOM.Core.Nodes.Remove_Child
-                     (N         => DOM.Core.Nodes.Parent_Node (N => New_Node),
-                      Old_Child => New_Node);
-      DOM.Core.Nodes.Free(New_Node);
-
-      Validation_Errors.Clear;
-      Template_Integrity (XML_Data => Data);
-      Assert (Condition =>  Validation_Errors.Contains
-              (Msg => "Found template definition"
-                      & " without parameter declaration."),
-              Message   => "Exception mismatch");
-
 --  begin read only
    end Test_Template_Integrity;
 --  end read only

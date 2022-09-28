@@ -894,18 +894,9 @@ is
    begin
       Expr_Debug_Active := Debug_Active;
 
-      for I in 0 .. DOM.Core.Nodes.Length (List => Vars_Exprs) - 1 loop
-         declare
-            Node : constant DOM.Core.Node
-               := DOM.Core.Nodes.Item (List  => Vars_Exprs, Index => I);
-            Node_Name_Attr : constant String
-               := DOM.Core.Elements.Get_Attribute
-                  (Elem => Node,
-                   Name => "name");
-         begin
-            Node_Access.Input.Insert (Key => Node_Name_Attr, New_Item => Node);
-         end;
-      end loop;
+      Initialize_Node_Access
+         (Node_Access      => Node_Access,
+          Config_And_Exprs => Vars_Exprs);
 
       for C in Node_Access.Input.Iterate loop
          declare
@@ -1268,6 +1259,27 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Initialize_Node_Access
+      (Node_Access      : in out Mutools.Expressions.Access_Hashmaps_Type;
+       Config_And_Exprs :        DOM.Core.Node_List)
+   is
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Config_And_Exprs) - 1 loop
+         declare
+            Node : constant DOM.Core.Node
+               := DOM.Core.Nodes.Item (List  => Config_And_Exprs, Index => I);
+            Node_Name_Attr : constant String
+               := DOM.Core.Elements.Get_Attribute
+               (Elem => Node,
+                Name => "name");
+         begin
+            Node_Access.Input.Insert (Key => Node_Name_Attr, New_Item => Node);
+         end;
+      end loop;
+   end Initialize_Node_Access;
+
+   -------------------------------------------------------------------------
+
    function Int_Value
      (Node        :        DOM.Core.Node;
       Backtrace   : in out String_Vector.Vector;
@@ -1467,7 +1479,7 @@ is
             raise Invalid_Expression with
                "Concatenation-expression '"
                & DOM.Core.Elements.Get_Attribute
-               (Elem => Node,
+               (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
                 Name => "name")
                & "' has less than two children";
          end if;

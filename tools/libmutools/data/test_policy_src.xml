@@ -71,18 +71,12 @@
     <integer value="2"/>
    </ne>
   </expression>
-  <expression name="truth">
-   <boolean value="true"/>
-  </expression>
-  <expression name="iommu_on">
-   <variable name="feature_enabled"/>
-  </expression>
   <expression name="iommu_disabled">
    <not>
     <variable name="feature_enabled"/>
    </not>
   </expression>
-  <expression name="true">
+  <expression name="not_false">
    <not>
     <boolean value="false"/>
    </not>
@@ -183,16 +177,16 @@
     </if>
    </memory>
    <if value="true" variable="feature_enabled">
-    <devices>
-     <device logical="usb" physical="usb_conitroller_1">
-      <if value="false" variable="feature_enabled">
-       <ioPort logical="port1" physical="port_60"/>
-      </if>
-     </device>
-     <if value="42" variable="session_count">
-      <device logical="nic" physical="ethernet_controller_1"/>
-     </if>
-    </devices>
+      <devices>
+         <device logical="usb" physical="usb_conitroller_1">
+            <if value="false" variable="feature_enabled">
+               <ioPort logical="port1" physical="port_60"/>
+            </if>
+         </device>
+         <if value="42" variable="session_count">
+            <device logical="nic" physical="ethernet_controller_1"/>
+         </if>
+      </devices>
    </if>
    <events/>
    <component ref="linux"/>

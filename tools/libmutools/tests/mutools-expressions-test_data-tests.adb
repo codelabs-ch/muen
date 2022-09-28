@@ -17,6 +17,8 @@ with System.Assertions;
 
 with Ada.Strings.Unbounded;
 with Mutools.System_Config;
+with McKae.XML.XPath.XIA;
+
 --  begin read only
 --  end read only
 package body Mutools.Expressions.Test_Data.Tests is
@@ -27,6 +29,33 @@ package body Mutools.Expressions.Test_Data.Tests is
 --  This section can be used to add global variables and other elements.
 --
 --  end read only
+
+   procedure Initialize_Node_Access_Testing
+      (Data        :        Muxml.XML_Data_Type;
+       Node_Access : in out Access_Hashmaps_Type);
+
+
+   procedure Initialize_Node_Access_Testing
+      (Data        :        Muxml.XML_Data_Type;
+       Node_Access : in out Access_Hashmaps_Type)
+   is
+      Config_And_Exprs : constant DOM.Core.Node_List
+         := McKae.XML.XPath.XIA.XPath_Query
+               (N     => Data.Doc,
+                XPath =>  "/*/config/boolean | "
+                   & "/*/config/integer | "
+                   & "/*/config/string | "
+                   & "/*/expressions/expression");
+   begin
+      Node_Access.Input.Clear;
+      Node_Access.Output_Boolean.Clear;
+      Node_Access.Output_Integer.Clear;
+      Node_Access.Output_String.Clear;
+
+      Initialize_Node_Access
+         (Node_Access      => Node_Access,
+          Config_And_Exprs => Config_And_Exprs);
+   end Initialize_Node_Access_Testing;
 
 --  begin read only
 --  end read only
@@ -89,8 +118,8 @@ package body Mutools.Expressions.Test_Data.Tests is
                  (Filename1 => "data/config_expressions.xml",
                   Filename2 => Output),
                  Message   => "Policy mismatch: " & Output);
-         --DBG
-         --Ada.Directories.Delete_File (Name => Output);
+
+         Ada.Directories.Delete_File (Name => Output);
       end Positive_Test;
    begin
       Positive_Test;
@@ -149,22 +178,24 @@ package body Mutools.Expressions.Test_Data.Tests is
 
       procedure Positive_Test
       is
-         Data : Muxml.XML_Data_Type;
-         Backtrace : String_Vector.Vector;
-         Node_Access :  Access_Hashmaps_Type;
+         Data             : Muxml.XML_Data_Type;
+         Backtrace        : String_Vector.Vector;
+         Node_Access      :  Access_Hashmaps_Type;
       begin
          Muxml.Parse
            (Data => Data,
             Kind => Muxml.None,
             File => "data/test_policy_src.xml");
 
-         Assert (Condition => Bool_Value
-                 (Backtrace => Backtrace,
-                  Node_Access => Node_Access,
-                  Node   => Muxml.Utils.Get_Element
-                    (Doc   => Data.Doc,
-                     XPath => "/system/expressions/expression"
-                     & "[@name='truth']/boolean")),
+         Initialize_Node_Access_Testing (Data => Data, Node_Access => Node_Access);
+
+         Assert (Condition => not Bool_Value
+                    (Backtrace   => Backtrace,
+                     Node_Access => Node_Access,
+                     Node        => Muxml.Utils.Get_Element
+                        (Doc   => Data.Doc,
+                         XPath => "/system/expressions/expression"
+                            & "[@name='not_false']/not/boolean")),
                  Message   => "Boolean value mismatch (1)");
 
          Assert (Condition => Bool_Value
@@ -173,7 +204,7 @@ package body Mutools.Expressions.Test_Data.Tests is
                   Node   => Muxml.Utils.Get_Element
                     (Doc   => Data.Doc,
                      XPath => "/system/expressions/expression"
-                     & "[@name='iommu_on']/variable")),
+                     & "[@name='iommu_disabled']/not/variable")),
                  Message   => "Boolean value mismatch (2)");
       end Positive_Test;
    begin
@@ -242,6 +273,8 @@ package body Mutools.Expressions.Test_Data.Tests is
             Kind => Muxml.None,
             File => "data/test_policy_src.xml");
 
+         Initialize_Node_Access_Testing (Data => Data, Node_Access => Node_Access);
+
          Assert (Condition => 4 = Int_Value
                  (Backtrace => Backtrace,
                   Node_Access => Node_Access,
@@ -287,6 +320,9 @@ package body Mutools.Expressions.Test_Data.Tests is
          Muxml.Parse (Data => Data,
                       Kind => Muxml.None,
                       File => "data/test_policy_src_concatenation.xml");
+
+         Initialize_Node_Access_Testing (Data => Data, Node_Access => Node_Access);
+
          Assert (Condition => "ram" = String_Value
                  (Backtrace => Backtrace,
                   Node_Access => Node_Access,
@@ -316,6 +352,7 @@ package body Mutools.Expressions.Test_Data.Tests is
           Muxml.Parse (Data => Data,
                        Kind => Muxml.None,
                        File => "data/test_policy_src_concatenation.xml");
+          Initialize_Node_Access_Testing (Data => Data, Node_Access => Node_Access);
          declare
 
             Node : DOM.Core.Node
@@ -346,6 +383,7 @@ package body Mutools.Expressions.Test_Data.Tests is
                         & "[@name='session2_enabled']/gt/variable");
             Dummy : Ada.Strings.Unbounded.Unbounded_String;
          begin
+
             Dummy :=  Ada.Strings.Unbounded.To_Unbounded_String
                          (String_Value (Backtrace => Backtrace,
                                         Node_Access => Node_Access,
@@ -353,13 +391,13 @@ package body Mutools.Expressions.Test_Data.Tests is
             Assert (Condition => False,
                     Message   => "Exception expected");
          exception
-            when E : Mutools.System_Config.Not_Found =>
+            when E : Muxml.Validation_Error =>
                Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "No string config option 'session_count' found",
+                          = "A string variable or expression points to node with "
+                          & "type 'integer' which is not string valued",
                        Message   => "Exception message mismatch");
          end;
       end Invalid_String;
-
 
    begin
       Positive_Test;
@@ -399,6 +437,7 @@ package body Mutools.Expressions.Test_Data.Tests is
          declare
             Dummy : Boolean;
          begin
+            Initialize_Node_Access_Testing (Data => Data, Node_Access => Node_Access);
             Dummy := Boolean_Expression
                (Backtrace => Backtrace,
                 Node_Access => Node_Access,
@@ -430,6 +469,7 @@ package body Mutools.Expressions.Test_Data.Tests is
             (Data => Data,
              Kind => Muxml.None,
              File => "data/test_policy_src.xml");
+         Initialize_Node_Access_Testing (Data => Data, Node_Access => Node_Access);
 
          Muxml.Utils.Remove_Elements
             (Doc   => Data.Doc,
@@ -470,6 +510,7 @@ package body Mutools.Expressions.Test_Data.Tests is
             (Data => Data,
              Kind => Muxml.None,
              File => "data/test_policy_src.xml");
+         Initialize_Node_Access_Testing (Data => Data, Node_Access => Node_Access);
 
          Muxml.Utils.Remove_Elements
             (Doc   => Data.Doc,
@@ -510,6 +551,7 @@ package body Mutools.Expressions.Test_Data.Tests is
             (Data => Data,
              Kind => Muxml.None,
              File => "data/test_policy_src.xml");
+         Initialize_Node_Access_Testing (Data => Data, Node_Access => Node_Access);
 
          Muxml.Utils.Remove_Elements
             (Doc   => Data.Doc,
@@ -549,6 +591,7 @@ package body Mutools.Expressions.Test_Data.Tests is
             (Data => Data,
              Kind => Muxml.None,
              File => "data/test_policy_src.xml");
+         Initialize_Node_Access_Testing (Data => Data, Node_Access => Node_Access);
 
          declare
             Expr  : constant DOM.Core.Node
@@ -595,6 +638,7 @@ package body Mutools.Expressions.Test_Data.Tests is
             (Data => Data,
              Kind => Muxml.None,
              File => "data/test_policy_src.xml");
+         Initialize_Node_Access_Testing (Data => Data, Node_Access => Node_Access);
 
          Muxml.Utils.Remove_Elements
             (Doc   => Data.Doc,
@@ -636,6 +680,7 @@ package body Mutools.Expressions.Test_Data.Tests is
             (Data => Data,
              Kind => Muxml.None,
              File => "data/test_policy_src.xml");
+         Initialize_Node_Access_Testing (Data => Data, Node_Access => Node_Access);
 
          Assert (Condition => Boolean_Expression
                  (Backtrace => Backtrace,
@@ -668,6 +713,10 @@ package body Mutools.Expressions.Test_Data.Tests is
              Name  => "value",
              Value => "1");
 
+         -- we have to reinitialize because function like Bool_Value lookup
+         -- values in Node_Access.Output. Hence, Set_Attribute has no effect
+         -- without reinitializing.
+         Initialize_Node_Access_Testing (Data => Data, Node_Access => Node_Access);
          Assert (Condition => not Boolean_Expression
                  (Backtrace => Backtrace,
                   Node_Access => Node_Access,
@@ -718,6 +767,8 @@ package body Mutools.Expressions.Test_Data.Tests is
          Muxml.Parse (Data => Data,
                       Kind => Muxml.None,
                       File => "data/test_policy_src_concatenation.xml");
+         Initialize_Node_Access_Testing (Data => Data, Node_Access => Node_Access);
+
          Assert (Condition => "1ramram_foo" = String_Expression
                    (Backtrace => Backtrace,
                     Node_Access => Node_Access,
@@ -739,6 +790,8 @@ package body Mutools.Expressions.Test_Data.Tests is
          Muxml.Parse (Data => Data,
                       Kind => Muxml.None,
                       File => "data/test_policy_src_concatenation.xml");
+         Initialize_Node_Access_Testing (Data => Data, Node_Access => Node_Access);
+
          Muxml.Utils.Remove_Elements
             (Doc   => Data.Doc,
              XPath => "/system/expressions/expression"
@@ -777,6 +830,8 @@ package body Mutools.Expressions.Test_Data.Tests is
          Muxml.Parse (Data => Data,
                       Kind => Muxml.None,
                       File => "data/test_policy_src_concatenation.xml");
+         Initialize_Node_Access_Testing (Data => Data, Node_Access => Node_Access);
+
          Muxml.Utils.Remove_Elements
             (Doc   => Data.Doc,
              XPath => "/system/expressions/expression"

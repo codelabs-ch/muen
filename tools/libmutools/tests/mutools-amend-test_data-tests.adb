@@ -18,6 +18,7 @@ with Ada.Exceptions;
 with Ada.Directories;
 
 with DOM.Core;
+with DOM.Core.Nodes;
 with DOM.Core.Documents;
 with DOM.Core.Elements;
 with Muxml.Utils;
@@ -96,10 +97,10 @@ package body Mutools.Amend.Test_Data.Tests is
          exception
             when E : Muxml.Validation_Error =>
                Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "No unique node for XPath "
-                       & "/system/platform/mappings/classes/class/device"
-                       &  " in amend statement.",
-                    Message   => "Exception message mismatch");
+                          = "Found 2 matches (instead of 1) for XPath "
+                          & """/system/platform/mappings/classes/class/device"" "
+                          & "in amend statement.",
+                       Message   => "Exception message mismatch");
          end;
 
       end XPath_Not_Unique;
@@ -123,46 +124,70 @@ package body Mutools.Amend.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       Data   : Muxml.XML_Data_Type;
-      Main, Child1, Child2 : DOM.Core.Node;
-      Output : constant String := "obj/output_amend.xml";
+      Main, Child, Dummy : DOM.Core.Node;
+      Output : constant String := "obj/tmp_output_recursive_merge.xml";
 
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.None,
-                   File => "data/amend_recursive_merge.xml");
+                   File => "data/amend_expand.xml");
       Main := Muxml.Utils.Get_Element
-                (Doc   => Data.Doc,
-                 XPath => "/");
-      Child1 := Muxml.Utils.Get_Element
-                (Doc   => Data.Doc,
-                 XPath => "/system/child1/system");
-      Child2 := Muxml.Utils.Get_Element
-                (Doc   => Data.Doc,
-                 XPath => "/system/child2/session");
-      Recursive_Merge (Parent    => Main,
-                       New_Child => Child1,
-                       Debug_Active => false);
+         (Doc   => Data.Doc,
+          XPath => "/system/subjects/subject[@name='linux1']/memory");
+
+      Child := DOM.Core.Documents.Create_Element
+         (Doc      => Data.Doc,
+          Tag_Name => "memory");
+      DOM.Core.Elements.Set_Attribute
+         (Elem  => Child,
+          Name  => "name",
+          Value => "merged_element");
+      Recursive_Merge
+         (Parent    => Main,
+          New_Child => Child,
+          Debug_Active => false);
 
       Main := Muxml.Utils.Get_Element
-                (Doc   => Data.Doc,
-                 XPath => "/system/hardware");
+         (Doc   => Data.Doc,
+          XPath => "/system/subjects/subject[@name='linux1']");
+      Child := DOM.Core.Documents.Create_Element
+         (Doc      => Data.Doc,
+          Tag_Name => "bootparams");
+      Dummy := DOM.Core.Nodes.Insert_Before
+         (N         => Child,
+          New_Child => DOM.Core.Documents.Create_Text_Node
+             (Doc  => Data.Doc,
+              Data => "merged text"),
+          Ref_Child => null);
+      Recursive_Merge
+         (Parent       => Main,
+          New_Child    => Child,
+          Debug_Active => false);
+
+      Child := Main;
+      Main  := Muxml.Utils.Get_Element
+         (Doc   => Data.Doc,
+          XPath => "/system/subjects");
+      DOM.Core.Elements.Set_Attribute
+         (Elem  => Child,
+          Name  => "name",
+          Value => "linux1_copy");
       Recursive_Merge (Parent    => Main,
-                       New_Child => Child2,
+                       New_Child => Child,
                        Debug_Active => false);
       Muxml.Write (Data => Data,
                    Kind => Muxml.None,
                    File => Output);
       Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => "data/output_amend.xml",
+                 (Filename1 => "data/output_recursive_merge.xml",
                   Filename2 => Output),
               Message   => "Policy mismatch: " & Output);
 
-      Ada.Directories.Delete_File (Name => Output);
+      --Ada.Directories.Delete_File (Name => Output);
 
 --  begin read only
    end Test_Recursive_Merge;
 --  end read only
-
 
 --  begin read only
    procedure Test_Nodes_Equal (Gnattest_T : in out Test);

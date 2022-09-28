@@ -1,22 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <system>
  <config>
+  <boolean name="t3_isId1_20" value="true"/>
   <boolean name="supports_xhci_debug" value="false"/>
   <boolean name="session2_enabled" value="true"/>
-  <boolean name="t3_isId1_20" value="true"/>
-  <integer name="session_count" value="4"/>
+  <integer name="t3_id1" value="20"/>
   <integer name="some_numeric_value" value="23"/>
   <integer name="t2_param1" value="22"/>
-  <integer name="t3_id1" value="20"/>
-  <string name="no_caching" value="UC"/>
-  <string name="sizeOfExtraMem" value="16#8000_9999#"/>
-  <string name="system" value="system_policy_templateAmend.xml"/>
-  <string name="hardware" value="hardware.xml"/>
-  <string name="additional_hardware" value="additional_hw.xml"/>
-  <string name="platform" value="platform.xml"/>
-  <string name="platform_id" value="foobar"/>
+  <integer name="session_count" value="4"/>
   <string name="t3_logical_eventReboot" value="system_reboot"/>
   <string name="t3_memory_name" value="extra_mem"/>
+  <string name="platform" value="platform.xml"/>
+  <string name="hardware" value="hardware.xml"/>
+  <string name="no_caching" value="UC"/>
+  <string name="platform_id" value="foobar"/>
+  <string name="system" value="system_policy_templateAmend.xml"/>
+  <string name="sizeOfExtraMem" value="16#8000_9999#"/>
+  <string name="additional_hardware" value="additional_hw.xml"/>
  </config>
  <hardware>
   <processor cpuCores="2" speed="50" vmxTimerRate="0">

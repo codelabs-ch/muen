@@ -1,4 +1,55 @@
 <scheduling tickRate="1000">
+ <partitions>
+  <partition name="tau0">
+   <group>
+    <subject name="tau0"/>
+   </group>
+  </partition>
+  <partition name="ps2_driver">
+   <group>
+    <subject name="ps2"/>
+   </group>
+  </partition>
+  <partition name="nic_linux">
+   <group>
+    <subject name="nic_linux"/>
+    <subject name="nic_sm"/>
+    <subject name="nic_sl"/>
+   </group>
+  </partition>
+  <partition name="unikernel">
+   <group>
+    <subject name="unikernel"/>
+    <subject name="unikernel_sm"/>
+   </group>
+  </partition>
+  <partition name="time">
+   <group>
+    <subject name="time"/>
+   </group>
+  </partition>
+  <partition name="controller">
+   <group>
+    <subject name="controller"/>
+   </group>
+  </partition>
+  <partition name="debugserver">
+   <group>
+    <subject name="dbgserver"/>
+   </group>
+  </partition>
+  <partition name="vt">
+   <group>
+    <subject name="vt"/>
+   </group>
+  </partition>
+  <partition name="storage_linux">
+   <group>
+    <subject name="storage_linux"/>
+    <subject name="storage_sm"/>
+   </group>
+  </partition>
+ </partitions>
  <majorFrame>
   <cpu id="0">
    <minorFrame subject="tau0" ticks="20"/>

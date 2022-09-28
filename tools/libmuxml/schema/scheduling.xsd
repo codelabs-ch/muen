@@ -77,4 +77,17 @@
   </xs:sequence>
  </xs:complexType>
 
+ <xs:complexType name="baseSchedulingPartitionType">
+  <xs:sequence>
+   <xs:element name="group" type="schedulingGroupType" minOccurs="1" maxOccurs="64"/>
+  </xs:sequence>
+  <xs:attribute name="name" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of the scheduling partition.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+ </xs:complexType>
+
 </xs:schema>

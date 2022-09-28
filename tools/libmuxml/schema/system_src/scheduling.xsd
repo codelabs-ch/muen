@@ -62,4 +62,27 @@
   </xs:complexContent>
  </xs:complexType>
 
+ <xs:complexType name="schedulingPartitionType">
+  <xs:annotation>
+   <xs:documentation>
+    The scheduling \texttt{partition} element is used to specify a collection of
+    scheduling groups consisting of subjects that require spatial but not
+    temporal isolation from each other. Within a scheduling partition, all
+    scheduling groups are scheduled round robin with preemption (i.e.
+    non-cooperatively) and the opportunity to yield and/or sleep. No
+    priorization is implemented on purpose to avoid any starvation issue
+    (Priorization with starvation protection cannot be implemented with low
+    complexity).
+
+    A scheduling partition must contain at least one scheduling group.
+
+    See line \ref{lst:af-lineref-sched-partition} in listing
+    \ref{lst:annotated-policy} for an example scheduling partition.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:complexContent>
+   <xs:extension base="baseSchedulingPartitionType"/>
+  </xs:complexContent>
+ </xs:complexType>
+
 </xs:schema>

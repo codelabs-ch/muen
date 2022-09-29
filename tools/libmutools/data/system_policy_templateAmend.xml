@@ -28,7 +28,8 @@
       </memory>
       <if variable="no_caching" value="UC">
          <amend xpath="/system/hardware/memory">
-               <memoryBlock allocatable="true" name="name" physicalAddress="16#0000#" size="$sizeOfExtraMem"/>
+            <memoryBlock allocatable="true" name="name" physicalAddress="16#0000#" size="$sizeOfExtraMem"/>
+            <useTemplate name="oneline_mem_template" namePrefix="myprefix"/>
          </amend>
       </if>
    </body>
@@ -109,7 +110,6 @@
     <memory executable="false" logical="extra_mem" physical="extra_mem" virtualAddress="16#0000_0000#" writable="true"/>
 
 <template name="oneline_mem_template">
-   <parameters/>
    <body>
         <memory caching="UC" name="mmio" physicalAddress="16#0000_0000#" size="16#0000#"/>
    </body>
@@ -123,6 +123,7 @@
    <events/>
    <component ref="linux"/>
   </subject>
+  <subject name="lnx2"/>
  </subjects>
  <scheduling tickRate="10">
   <majorFrame>

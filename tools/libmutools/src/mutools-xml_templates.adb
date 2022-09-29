@@ -580,9 +580,9 @@ is
          end loop;
       end;
 
-      if Rounds > Max_Rounds then
+      if Rounds >= Max_Rounds then
          raise Muxml.Validation_Error with
-            "Nesting-depth of templates greater than"
+            "Nesting-depth of templates is at least"
             & Integer'Image (Max_Rounds)
             & ". This may be due to cyclic template-inclusions.";
       end if;

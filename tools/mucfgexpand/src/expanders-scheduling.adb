@@ -165,4 +165,37 @@ is
       end loop;
    end Add_Barrier_Configs;
 
+   -------------------------------------------------------------------------
+
+   procedure Add_Partition_IDs (Data : in out Muxml.XML_Data_Type)
+   is
+      Partition_Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/scheduling/partitions/partition");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Partition_Nodes) - 1 loop
+         declare
+            Partition_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Partition_Nodes,
+                 Index => I);
+            Partition_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+              (Elem => Partition_Node,
+               Name => "name");
+            ID_Str : constant String := Ada.Strings.Fixed.Trim
+              (Source => Natural'Image (I + 1),
+               Side   => Ada.Strings.Left);
+         begin
+            Mulog.Log (Msg => "Setting ID of scheduling partition '"
+                       & Partition_Name & "' to " & ID_Str);
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Partition_Node,
+               Name  => "id",
+               Value => ID_Str);
+         end;
+      end loop;
+   end Add_Partition_IDs;
+
 end Expanders.Scheduling;

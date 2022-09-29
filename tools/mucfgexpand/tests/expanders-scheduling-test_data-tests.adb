@@ -30,6 +30,25 @@ package body Expanders.Scheduling.Test_Data.Tests is
 --  end read only
 
 --  begin read only
+   procedure Test_Add_Partition_IDs (Gnattest_T : in out Test);
+   procedure Test_Add_Partition_IDs_2c8af4 (Gnattest_T : in out Test) renames Test_Add_Partition_IDs;
+--  id:2.2/2c8af4fd310fd409/Add_Partition_IDs/1/0/
+   procedure Test_Add_Partition_IDs (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename => "obj/scheduling_partition_ids.xml",
+         Ref_Diff => "data/scheduling_partition_ids.xml.diff",
+         Expander => Add_Partition_IDs'Access);
+--  begin read only
+   end Test_Add_Partition_IDs;
+--  end read only
+
+
+--  begin read only
    procedure Test_Add_Barrier_Configs (Gnattest_T : in out Test);
    procedure Test_Add_Barrier_Configs_057525 (Gnattest_T : in out Test) renames Test_Add_Barrier_Configs;
 --  id:2.2/057525ba5aaf3024/Add_Barrier_Configs/1/0/

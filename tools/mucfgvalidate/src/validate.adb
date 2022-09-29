@@ -189,6 +189,8 @@ is
       XML_Processors.Register
         (Process => Scheduling.Partition_ID'Access);
       XML_Processors.Register
+        (Process => Scheduling.Group_ID'Access);
+      XML_Processors.Register
         (Process => Scheduling.Subject_CPU_Affinity'Access);
       XML_Processors.Register
         (Process => Scheduling.Major_Frame_Ticks'Access);

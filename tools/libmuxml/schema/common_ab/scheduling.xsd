@@ -40,7 +40,7 @@
  <xs:complexType name="schedulingPartitionType">
   <xs:complexContent>
    <xs:extension base="baseSchedulingPartitionType">
-    <xs:attribute name="id"  type="xs:positiveInteger"    use="optional"/>
+    <xs:attribute name="id"  type="xs:positiveInteger"    use="required"/>
     <xs:attribute name="cpu" type="xs:nonNegativeInteger" use="optional"/>
    </xs:extension>
   </xs:complexContent>

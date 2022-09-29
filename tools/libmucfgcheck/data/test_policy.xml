@@ -2344,6 +2344,29 @@
   </subject>
  </subjects>
  <scheduling tickRate="10000">
+  <partitions>
+   <partition cpu="0" id="1" name="vt">
+    <group id="1">
+     <subject name="vt"/>
+    </group>
+   </partition>
+   <partition cpu="1" id="2" name="linux">
+    <group id="2">
+     <subject name="sm"/>
+     <subject name="linux"/>
+    </group>
+   </partition>
+   <partition cpu="2" id="3" name="time">
+    <group id="3">
+     <subject name="time"/>
+    </group>
+   </partition>
+   <partition cpu="3" id="4" name="tau0">
+    <group id="4">
+     <subject name="tau0"/>
+    </group>
+   </partition>
+  </partitions>
   <majorFrame>
    <cpu id="0">
     <minorFrame barrier="1" subject="vt" ticks="60"/>

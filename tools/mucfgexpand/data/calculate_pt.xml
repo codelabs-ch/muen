@@ -493,6 +493,18 @@
   </subject>
  </subjects>
  <scheduling tickRate="10000">
+  <partitions>
+   <partition cpu="0" id="1" name="linux">
+    <group id="1">
+     <subject name="lnx"/>
+    </group>
+   </partition>
+   <partition cpu="1" id="2" name="s1">
+    <group id="2">
+     <subject name="subject1"/>
+    </group>
+   </partition>
+  </partitions>
   <majorFrame>
    <cpu id="0">
     <minorFrame barrier="none" subject="lnx" ticks="80"/>

@@ -626,6 +626,34 @@
   </subject>
  </subjects>
  <scheduling tickRate="10000">
+  <partitions>
+   <partition name="linux">
+    <group>
+     <subject name="lnx"/>
+     <subject name="subject1"/>
+    </group>
+   </partition>
+   <partition name="tau0">
+    <group>
+     <subject name="tau0"/>
+    </group>
+   </partition>
+   <partition name="s2">
+    <group>
+     <subject name="subject2"/>
+    </group>
+   </partition>
+   <partition name="s3">
+    <group>
+     <subject name="subject3"/>
+    </group>
+   </partition>
+   <partition name="linux_1">
+    <group>
+     <subject name="lnx_core_1"/>
+    </group>
+   </partition>
+  </partitions>
   <majorFrame>
    <cpu id="0">
     <minorFrame subject="lnx" ticks="60"/>

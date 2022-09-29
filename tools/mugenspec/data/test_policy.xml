@@ -1555,6 +1555,26 @@
   </subject>
  </subjects>
  <scheduling tickRate="1000">
+  <partitions>
+   <partition cpu="0" id="1" name="tau0">
+    <group id="1">
+     <subject name="tau0"/>
+    </group>
+   </partition>
+   <partition cpu="1" id="2" name="sp1">
+    <group id="2">
+     <subject name="subject1"/>
+    </group>
+   </partition>
+   <partition cpu="0" id="3" name="sp2">
+    <group id="3">
+     <subject name="subject2"/>
+    </group>
+    <group id="4">
+     <subject name="subject3"/>
+    </group>
+   </partition>
+  </partitions>
   <majorFrame>
    <cpu id="0">
     <minorFrame barrier="none" subject="tau0" ticks="1700"/>

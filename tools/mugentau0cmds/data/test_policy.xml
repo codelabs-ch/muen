@@ -4166,6 +4166,48 @@
   </subject>
  </subjects>
  <scheduling tickRate="10000">
+  <partitions>
+   <partition cpu="0" id="1" name="tau0">
+    <group id="1">
+     <subject name="tau0"/>
+    </group>
+   </partition>
+   <partition cpu="1" id="2" name="vt">
+    <group id="2">
+     <subject name="vt"/>
+    </group>
+   </partition>
+   <partition cpu="0" id="3" name="ps2_driver">
+    <group id="3">
+     <subject name="ps2_drv"/>
+    </group>
+   </partition>
+   <partition cpu="0" id="4" name="nic_linux">
+    <group id="4">
+     <subject name="nic_sm"/>
+     <subject name="nic_sl"/>
+     <subject name="nic_dm"/>
+     <subject name="nic_linux"/>
+    </group>
+   </partition>
+   <partition cpu="1" id="5" name="time">
+    <group id="5">
+     <subject name="time"/>
+    </group>
+   </partition>
+   <partition cpu="1" id="6" name="debugserver">
+    <group id="6">
+     <subject name="dbgserver"/>
+    </group>
+   </partition>
+   <partition cpu="1" id="7" name="storage_linux">
+    <group id="7">
+     <subject name="storage_sm"/>
+     <subject name="storage_dm"/>
+     <subject name="storage_linux"/>
+    </group>
+   </partition>
+  </partitions>
   <majorFrame>
    <cpu id="0">
     <minorFrame barrier="1" subject="tau0" ticks="20"/>

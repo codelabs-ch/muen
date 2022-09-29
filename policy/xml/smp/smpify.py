@@ -98,6 +98,16 @@ def create_subjects(subjects, parser):
             subjects.append(new_subj)
 
 
+def create_scheduling_partitions(partitions):
+    for i in range(1, cores + 1):
+        partition = etree.Element("partition", name="linux_core" + str(i))
+        group = etree.Element("group")
+        group.append(etree.Element("subject", name="linux_core" + str(i)))
+        group.append(etree.Element("subject", name="sm_core" + str(i)))
+        partition.append(group)
+        partitions.insert(i, partition)
+
+
 def adjust_core_one(cpus):
     for c in cpus:
         c.xpath("minorFrame[@subject='dbgserver']")[0].set("ticks", "1")
@@ -149,6 +159,7 @@ create_lnx_resources(doc.xpath("/system/subjects/subject[@name='linux']")[0])
 create_dbg_resources(
     doc.xpath("/system/subjects/subject[@name='dbgserver']")[0])
 create_subjects(doc.xpath("/system/subjects")[0], parser)
+create_scheduling_partitions(doc.xpath("/system/scheduling/partitions")[0])
 adjust_core_one(doc.xpath("/system/scheduling/majorFrame/cpu[@id='1']"))
 create_additional_cores(doc.xpath("/system/scheduling/majorFrame"))
 spread_devices()

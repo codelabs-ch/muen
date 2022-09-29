@@ -485,6 +485,44 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
    end Test_Minor_Frame_Barrier_Refs;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Minor_Frame_Partition_References (Gnattest_T : in out Test);
+   procedure Test_Minor_Frame_Partition_References_7a0b6a (Gnattest_T : in out Test) renames Test_Minor_Frame_Partition_References;
+--  id:2.2/7a0b6a9bd12ed03d/Minor_Frame_Partition_References/1/0/
+   procedure Test_Minor_Frame_Partition_References (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise validation error.
+
+      Minor_Frame_Partition_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected exception");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/scheduling/majorFrame/cpu/minorFrame[@partition='vt']",
+         Name  => "partition",
+         Value => "nonexistent");
+
+      Minor_Frame_Partition_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Scheduling partition 'nonexistent' referenced in "
+               & "scheduling plan not found"),
+              Message   => "Exception mismatch: "
+              & Validation_Errors.Get_Error_Message);
+--  begin read only
+   end Test_Minor_Frame_Partition_References;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

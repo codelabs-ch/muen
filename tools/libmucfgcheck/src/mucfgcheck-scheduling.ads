@@ -72,4 +72,8 @@ is
    --D Validate that minor frame barrier references are valid.
    procedure Minor_Frame_Barrier_Refs (XML_Data : Muxml.XML_Data_Type);
 
+   --D @Item List => validators_sched
+   --D Validate partition references in minor frames.
+   procedure Minor_Frame_Partition_References (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Scheduling;

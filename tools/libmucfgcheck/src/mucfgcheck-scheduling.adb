@@ -357,6 +357,46 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Minor_Frame_Partition_References (XML_Data : Muxml.XML_Data_Type)
+   is
+      Partitions : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/scheduling/partitions/partition");
+      Minors     : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/scheduling/majorFrame/cpu/minorFrame");
+   begin
+      Mulog.Log (Msg => "Checking scheduling partition references of"
+                 & DOM.Core.Nodes.Length (List => Minors)'Img
+                 & " minor frames");
+      for I in 0 .. DOM.Core.Nodes.Length (List => Minors) - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            Minor_Frame : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Minors,
+                 Index => I);
+            Ref_Name : constant String
+              := DOM.Core.Elements.Get_Attribute (Elem => Minor_Frame,
+                                                  Name => "partition");
+         begin
+            if Muxml.Utils.Get_Element (Nodes     => Partitions,
+                                        Ref_Attr  => "name",
+                                        Ref_Value => Ref_Name) = null
+            then
+               Validation_Errors.Insert
+                 (Msg => "Scheduling partition '" & Ref_Name
+                  & "' referenced in scheduling plan not found");
+            end if;
+         end;
+      end loop;
+   end Minor_Frame_Partition_References;
+
+   -------------------------------------------------------------------------
+
    procedure Minor_Frame_Sync_Points (XML_Data : Muxml.XML_Data_Type)
    is
       Majors : constant DOM.Core.Node_List

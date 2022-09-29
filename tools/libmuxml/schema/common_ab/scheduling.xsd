@@ -32,7 +32,7 @@
  <xs:complexType name="schedulingGroupType">
   <xs:complexContent>
    <xs:extension base="baseSchedulingGroupType">
-    <xs:attribute name="id" type="xs:positiveInteger" use="optional"/>
+    <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>

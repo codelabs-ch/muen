@@ -167,6 +167,38 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Group_IDs (Data : in out Muxml.XML_Data_Type)
+   is
+      Group_Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/scheduling/partitions/partition/group");
+      Group_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Group_Nodes);
+   begin
+      Mulog.Log (Msg => "Setting ID of" & Group_Count'Img
+                 & " scheduling group(s)");
+
+      for I in 0 .. Group_Count - 1 loop
+         declare
+            Group_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Group_Nodes,
+                 Index => I);
+            ID_Str : constant String := Ada.Strings.Fixed.Trim
+              (Source => Natural'Image (I + 1),
+               Side   => Ada.Strings.Left);
+         begin
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Group_Node,
+               Name  => "id",
+               Value => ID_Str);
+         end;
+      end loop;
+   end Add_Group_IDs;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Partition_IDs (Data : in out Muxml.XML_Data_Type)
    is
       Partition_Nodes : constant DOM.Core.Node_List

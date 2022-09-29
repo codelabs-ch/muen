@@ -2546,6 +2546,41 @@
   </subject>
  </subjects>
  <scheduling tickRate="10000">
+  <partitions>
+   <partition cpu="0" id="1" name="tau0">
+    <group id="1">
+     <subject name="tau0"/>
+    </group>
+   </partition>
+   <partition cpu="0" id="2" name="vt">
+    <group id="2">
+     <subject name="vt"/>
+    </group>
+   </partition>
+   <partition cpu="0" id="3" name="nic_linux">
+    <group id="3">
+     <subject name="nic_linux"/>
+     <subject name="example"/>
+     <subject name="nic_sm"/>
+    </group>
+   </partition>
+   <partition cpu="1" id="4" name="time">
+    <group id="4">
+     <subject name="time"/>
+    </group>
+   </partition>
+   <partition cpu="1" id="5" name="debugserver">
+    <group id="5">
+     <subject name="dbgserver"/>
+    </group>
+   </partition>
+   <partition cpu="1"  id="6" name="storage_linux">
+    <group id="6">
+     <subject name="storage_linux"/>
+     <subject name="storage_sm"/>
+    </group>
+   </partition>
+  </partitions>
   <majorFrame>
    <cpu id="0">
     <minorFrame barrier="1" subject="tau0" ticks="20"/>

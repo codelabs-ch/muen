@@ -263,9 +263,16 @@
   </subject>
  </subjects>
  <scheduling tickRate="10000">
+  <partitions>
+   <partition cpu="0" id="1" name="linux">
+    <group id="1">
+     <subject name="linux"/>
+    </group>
+   </partition>
+  </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame barrier="none" subject="vt" ticks="45"/>
+    <minorFrame barrier="none" subject="linux" ticks="45"/>
    </cpu>
    <barriers/>
   </majorFrame>

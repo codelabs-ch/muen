@@ -208,6 +208,44 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Subject_Scheduling_Group_Assignment (Gnattest_T : in out Test);
+   procedure Test_Subject_Scheduling_Group_Assignment_dc5519 (Gnattest_T : in out Test) renames Test_Subject_Scheduling_Group_Assignment;
+--  id:2.2/dc5519f198bfcf85/Subject_Scheduling_Group_Assignment/1/0/
+   procedure Test_Subject_Scheduling_Group_Assignment (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise validation error.
+
+      Subject_Scheduling_Group_Assignment (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected exception");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/scheduling/partitions/partition/group/"
+         & "subject[@name='vt']",
+         Name  => "name",
+         Value => "linux");
+
+      Subject_Scheduling_Group_Assignment (XML_Data => Data);
+      Assert
+        (Condition => Validation_Errors.Contains
+           (Msg => "Subject 'linux' assigned to multiple scheduling groups"),
+         Message   => "Exception mismatch");
+--  begin read only
+   end Test_Subject_Scheduling_Group_Assignment;
+--  end read only
+
+
+--  begin read only
    procedure Test_Major_Frame_Ticks (Gnattest_T : in out Test);
    procedure Test_Major_Frame_Ticks_88421f (Gnattest_T : in out Test) renames Test_Major_Frame_Ticks;
 --  id:2.2/88421f8587a3f303/Major_Frame_Ticks/1/0/

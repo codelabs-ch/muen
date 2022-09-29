@@ -47,6 +47,11 @@ is
    procedure Subject_CPU_Affinity (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_sched
+   --D Validate that subjects are part of exactly one scheduling group.
+   procedure Subject_Scheduling_Group_Assignment
+     (XML_Data : Muxml.XML_Data_Type);
+
+   --D @Item List => validators_sched
    --D Validate tick counts in major frame.
    procedure Major_Frame_Ticks (XML_Data : Muxml.XML_Data_Type);
 

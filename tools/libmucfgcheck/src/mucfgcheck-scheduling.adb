@@ -603,4 +603,45 @@ is
          Match        => Match_Subject_Name'Access);
    end Subject_References;
 
+   -------------------------------------------------------------------------
+
+   procedure Subject_Scheduling_Group_Assignment
+     (XML_Data : Muxml.XML_Data_Type)
+   is
+      Group_Subjects : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/scheduling/partitions/partition/group/subject");
+      Subj_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Group_Subjects);
+
+      --  Check that subject names of Left and Right differ.
+      procedure Check_Name_Inequality (Left, Right : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Name_Inequality (Left, Right : DOM.Core.Node)
+      is
+         Left_Name  : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "name");
+         Right_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "name");
+      begin
+         if Left_Name = Right_Name then
+            Validation_Errors.Insert
+              (Msg => "Subject '" & Left_Name
+               & "' assigned to multiple scheduling groups");
+         end if;
+      end Check_Name_Inequality;
+   begin
+      if Subj_Count > 1 then
+         Mulog.Log (Msg => "Checking assignment of" & Subj_Count'Img
+                    & " subjects to scheduling groups");
+         Compare_All (Nodes      => Group_Subjects,
+                      Comparator => Check_Name_Inequality'Access);
+      end if;
+   end Subject_Scheduling_Group_Assignment;
+
 end Mucfgcheck.Scheduling;

@@ -414,6 +414,53 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Partition_ID (XML_Data : Muxml.XML_Data_Type)
+   is
+      Partitions : constant DOM.Core.Node_List
+        := XPath_Query (N     => XML_Data.Doc,
+                        XPath => "/system/scheduling/partitions/partition");
+      Part_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Partitions);
+
+      --  Check that partition IDs of Left and Right differ.
+      procedure Check_ID_Inequality (Left, Right : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_ID_Inequality (Left, Right : DOM.Core.Node)
+      is
+         Left_ID    : constant Natural := Natural'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Left,
+               Name => "id"));
+         Left_Name  : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "name");
+         Right_ID   : constant Natural := Natural'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Right,
+               Name => "id"));
+         Right_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "name");
+      begin
+         if Left_ID = Right_ID then
+            Validation_Errors.Insert
+              (Msg => "Scheduling partition '" & Left_Name & "' and '"
+               & Right_Name & "' have identical ID" & Left_ID'Img);
+         end if;
+      end Check_ID_Inequality;
+   begin
+      if Part_Count > 1 then
+         Mulog.Log (Msg => "Checking uniqueness of" & Part_Count'Img
+                    & " scheduling partition IDs");
+         Compare_All (Nodes      => Partitions,
+                      Comparator => Check_ID_Inequality'Access);
+      end if;
+   end Partition_ID;
+
+   -------------------------------------------------------------------------
+
    procedure Subject_CPU_Affinity (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.

@@ -30,6 +30,43 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
 --  end read only
 
 --  begin read only
+   procedure Test_Partition_ID (Gnattest_T : in out Test);
+   procedure Test_Partition_ID_ebb7ed (Gnattest_T : in out Test) renames Test_Partition_ID;
+--  id:2.2/ebb7edd665351bb2/Partition_ID/1/0/
+   procedure Test_Partition_ID (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise validation error.
+
+      Partition_ID (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected exception");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/scheduling/partitions/partition[@id='3']",
+         Name  => "id",
+         Value => "2");
+
+      Partition_ID (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Scheduling partition 'linux' and 'time' have identical"
+               & " ID 2"),
+              Message   => "Exception mismatch");
+--  begin read only
+   end Test_Partition_ID;
+--  end read only
+
+
+--  begin read only
    procedure Test_CPU_Element_Count (Gnattest_T : in out Test);
    procedure Test_CPU_Element_Count_9baa01 (Gnattest_T : in out Test) renames Test_CPU_Element_Count;
 --  id:2.2/9baa01b30bb837f8/CPU_Element_Count/1/0/

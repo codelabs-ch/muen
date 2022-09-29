@@ -27,6 +27,10 @@ is
    --D @UL Id => validators_sched, Section => validation-sched
 
    --D @Item List => validators_sched
+   --D Validate that scheduling partition IDs are unique.
+   procedure Partition_ID (XML_Data : Muxml.XML_Data_Type);
+
+   --D @Item List => validators_sched
    --D Validate that each major frame specifies the same number of CPUs.
    procedure CPU_Element_Count (XML_Data : Muxml.XML_Data_Type);
 

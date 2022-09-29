@@ -67,6 +67,42 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Group_ID (Gnattest_T : in out Test);
+   procedure Test_Group_ID_cbcced (Gnattest_T : in out Test) renames Test_Group_ID;
+--  id:2.2/cbccedf8bd676276/Group_ID/1/0/
+   procedure Test_Group_ID (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise validation error.
+
+      Group_ID (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected exception");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/scheduling/partitions/partition/group[@id='2']",
+         Name  => "id",
+         Value => "1");
+
+      Group_ID (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Multiple scheduling groups with identical ID 1"),
+              Message   => "Exception mismatch");
+--  begin read only
+   end Test_Group_ID;
+--  end read only
+
+
+--  begin read only
    procedure Test_CPU_Element_Count (Gnattest_T : in out Test);
    procedure Test_CPU_Element_Count_9baa01 (Gnattest_T : in out Test) renames Test_CPU_Element_Count;
 --  id:2.2/9baa01b30bb837f8/CPU_Element_Count/1/0/

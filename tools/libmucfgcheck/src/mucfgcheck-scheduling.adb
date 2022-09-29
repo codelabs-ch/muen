@@ -163,6 +163,48 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Group_ID (XML_Data : Muxml.XML_Data_Type)
+   is
+      Groups : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/scheduling/partitions/partition/group");
+      Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Groups);
+
+      --  Check that scheduling group IDs of Left and Right differ.
+      procedure Check_ID_Inequality (Left, Right : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_ID_Inequality (Left, Right : DOM.Core.Node)
+      is
+         Left_ID    : constant Natural := Natural'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Left,
+               Name => "id"));
+         Right_ID   : constant Natural := Natural'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Right,
+               Name => "id"));
+      begin
+         if Left_ID = Right_ID then
+            Validation_Errors.Insert
+              (Msg => "Multiple scheduling groups with identical ID"
+               & Left_ID'Img);
+         end if;
+      end Check_ID_Inequality;
+   begin
+      if Count > 1 then
+         Mulog.Log (Msg => "Checking uniqueness of" & Count'Img
+                    & " scheduling group IDs");
+         Compare_All (Nodes      => Groups,
+                      Comparator => Check_ID_Inequality'Access);
+      end if;
+   end Group_ID;
+
+   -------------------------------------------------------------------------
+
    procedure Major_Frame_Ticks (XML_Data : Muxml.XML_Data_Type)
    is
       Ref_Ticks : Natural;

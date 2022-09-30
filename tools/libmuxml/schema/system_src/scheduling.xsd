@@ -36,6 +36,13 @@
     </xs:documentation>
    </xs:annotation>
   </xs:attribute>
+  <xs:attribute name="partition" type="nameType" use="optional">
+   <xs:annotation>
+    <xs:documentation>
+     Name of scheduled partition.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
   <xs:attribute name="ticks" type="xs:positiveInteger" use="required">
    <xs:annotation>
     <xs:documentation>

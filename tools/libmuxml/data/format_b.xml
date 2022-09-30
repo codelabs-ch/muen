@@ -291,8 +291,8 @@
   </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame barrier="none" subject="tau0" ticks="40"/>
-    <minorFrame barrier="none" subject="tau0" ticks="40"/>
+    <minorFrame barrier="none" partition="tau0" subject="tau0" ticks="40"/>
+    <minorFrame barrier="none" partition="tau0" subject="tau0" ticks="40"/>
    </cpu>
    <barriers>
     <barrier id="1" size="1"/>
@@ -300,7 +300,7 @@
   </majorFrame>
   <majorFrame>
    <cpu id="0">
-    <minorFrame barrier="none" subject="tau0" ticks="80"/>
+    <minorFrame barrier="none" partition="tau0" subject="tau0" ticks="80"/>
    </cpu>
    <barriers/>
   </majorFrame>

@@ -507,10 +507,10 @@
   </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame barrier="none" subject="lnx" ticks="80"/>
+    <minorFrame barrier="none" partition="linux" subject="lnx" ticks="80"/>
    </cpu>
    <cpu id="1">
-    <minorFrame barrier="none" subject="subject1" ticks="80"/>
+    <minorFrame barrier="none" partition="s1" subject="subject1" ticks="80"/>
    </cpu>
    <barriers/>
   </majorFrame>

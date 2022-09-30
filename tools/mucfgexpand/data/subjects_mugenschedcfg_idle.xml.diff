@@ -239,6 +239,6 @@
 --
   <majorFrame>                                                                                                                                            <majorFrame>
    <cpu id="0">                                                                                                                                            <cpu id="0">
-    <minorFrame subject="lnx" ticks="60"/>                                                                                                           |      <minorFrame subject="mugenschedcfg_auto_idle_0" ticks="60"/>
-    <minorFrame subject="lnx" ticks="20"/>                                                                                                                  <minorFrame subject="lnx" ticks="20"/>
+    <minorFrame partition="linux" subject="lnx" ticks="60"/>                                                                                         |      <minorFrame partition="linux" subject="mugenschedcfg_auto_idle_0" ticks="60"/>
+    <minorFrame partition="linux" subject="lnx" ticks="20"/>                                                                                                <minorFrame partition="linux" subject="lnx" ticks="20"/>
    </cpu>                                                                                                                                                  </cpu>

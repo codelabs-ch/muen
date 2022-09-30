@@ -53,7 +53,7 @@
  <scheduling tickRate="10000">
   <majorFrame>
    <cpu id="0">
-    <minorFrame subject="tau0" ticks="20"/>
+    <minorFrame partition="tau0" subject="tau0" ticks="20"/>
    </cpu>
   </majorFrame>
  </scheduling>

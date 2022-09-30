@@ -52,32 +52,32 @@
  </partitions>
  <majorFrame>
   <cpu id="0">
-   <minorFrame subject="tau0" ticks="20"/>
-   <minorFrame subject="ps2" ticks="10"/>
-   <minorFrame subject="nic_linux" ticks="80"/>
-   <minorFrame subject="unikernel" ticks="20"/>
-   <minorFrame subject="nic_linux" ticks="20"/>
+   <minorFrame partition="tau0" subject="tau0" ticks="20"/>
+   <minorFrame partition="ps2_driver" subject="ps2" ticks="10"/>
+   <minorFrame partition="nic_linux" subject="nic_linux" ticks="80"/>
+   <minorFrame partition="unikernel" subject="unikernel" ticks="20"/>
+   <minorFrame partition="nic_linux" subject="nic_linux" ticks="20"/>
   </cpu>
   <cpu id="1">
-   <minorFrame subject="time" ticks="10"/>
-   <minorFrame subject="controller" ticks="10"/>
-   <minorFrame subject="dbgserver" ticks="30"/>
-   <minorFrame subject="vt" ticks="25"/>
-   <minorFrame subject="storage_linux" ticks="75"/>
+   <minorFrame partition="time" subject="time" ticks="10"/>
+   <minorFrame partition="controller" subject="controller" ticks="10"/>
+   <minorFrame partition="debugserver" subject="dbgserver" ticks="30"/>
+   <minorFrame partition="vt" subject="vt" ticks="25"/>
+   <minorFrame partition="storage_linux" subject="storage_linux" ticks="75"/>
   </cpu>
  </majorFrame>
  <majorFrame>
   <cpu id="0">
-   <minorFrame subject="ps2" ticks="5"/>
-   <minorFrame subject="tau0" ticks="5"/>
-   <minorFrame subject="nic_linux" ticks="100"/>
-   <minorFrame subject="unikernel" ticks="20"/>
-   <minorFrame subject="nic_linux" ticks="20"/>
+   <minorFrame partition="ps2_driver" subject="ps2" ticks="5"/>
+   <minorFrame partition="tau0" subject="tau0" ticks="5"/>
+   <minorFrame partition="nic_linux" subject="nic_linux" ticks="100"/>
+   <minorFrame partition="unikernel" subject="unikernel" ticks="20"/>
+   <minorFrame partition="nic_linux" subject="nic_linux" ticks="20"/>
   </cpu>
   <cpu id="1">
-   <minorFrame subject="storage_linux" ticks="100"/>
-   <minorFrame subject="vt" ticks="20"/>
-   <minorFrame subject="dbgserver" ticks="30"/>
+   <minorFrame partition="storage_linux" subject="storage_linux" ticks="100"/>
+   <minorFrame partition="vt" subject="vt" ticks="20"/>
+   <minorFrame partition="debugserver" subject="dbgserver" ticks="30"/>
   </cpu>
  </majorFrame>
 </scheduling>

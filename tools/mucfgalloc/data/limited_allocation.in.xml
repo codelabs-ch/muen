@@ -252,7 +252,7 @@
   </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame barrier="none" subject="s1" ticks="100"/>
+    <minorFrame barrier="none" partition="sp1" subject="s1" ticks="100"/>
    </cpu>
    <barriers/>
   </majorFrame>

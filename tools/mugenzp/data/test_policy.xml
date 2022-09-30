@@ -278,8 +278,8 @@
   </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame barrier="none" subject="lnx" ticks="40"/>
-    <minorFrame barrier="none" subject="lnx" ticks="40"/>
+    <minorFrame barrier="none" partition="linux" subject="lnx" ticks="40"/>
+    <minorFrame barrier="none" partition="linux" subject="lnx" ticks="40"/>
    </cpu>
    <barriers/>
   </majorFrame>

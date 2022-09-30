@@ -228,20 +228,20 @@
   </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame subject="linux" ticks="10"/>
-    <minorFrame subject="linux" ticks="10"/>
-    <minorFrame subject="linux" ticks="10"/>
-    <minorFrame subject="linux" ticks="10"/>
-    <minorFrame subject="linux" ticks="10"/>
-    <minorFrame subject="linux" ticks="10"/>
-    <minorFrame subject="linux" ticks="10"/>
-    <minorFrame subject="linux" ticks="10"/>
-    <minorFrame subject="linux" ticks="10"/>
-    <minorFrame subject="linux" ticks="10"/>
+    <minorFrame partition="linux" subject="linux" ticks="10"/>
+    <minorFrame partition="linux" subject="linux" ticks="10"/>
+    <minorFrame partition="linux" subject="linux" ticks="10"/>
+    <minorFrame partition="linux" subject="linux" ticks="10"/>
+    <minorFrame partition="linux" subject="linux" ticks="10"/>
+    <minorFrame partition="linux" subject="linux" ticks="10"/>
+    <minorFrame partition="linux" subject="linux" ticks="10"/>
+    <minorFrame partition="linux" subject="linux" ticks="10"/>
+    <minorFrame partition="linux" subject="linux" ticks="10"/>
+    <minorFrame partition="linux" subject="linux" ticks="10"/>
    </cpu>
    <cpu id="1">
-    <minorFrame subject="time" ticks="10"/>
-    <minorFrame subject="dbgserver" ticks="90"/>
+    <minorFrame partition="time" subject="time" ticks="10"/>
+    <minorFrame partition="debugserver" subject="dbgserver" ticks="90"/>
    </cpu>
   </majorFrame>
  </scheduling>

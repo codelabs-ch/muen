@@ -2369,28 +2369,28 @@
   </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame barrier="1" subject="vt" ticks="60"/>
-    <minorFrame barrier="3" subject="vt" ticks="60"/>
-    <minorFrame barrier="none" subject="vt" ticks="60"/>
+    <minorFrame barrier="1" partition="vt" subject="vt" ticks="60"/>
+    <minorFrame barrier="3" partition="vt" subject="vt" ticks="60"/>
+    <minorFrame barrier="none" partition="vt" subject="vt" ticks="60"/>
    </cpu>
    <cpu id="1">
-    <minorFrame barrier="2" subject="linux" ticks="90"/>
-    <minorFrame barrier="3" subject="linux" ticks="30"/>
-    <minorFrame barrier="4" subject="linux" ticks="30"/>
-    <minorFrame barrier="none" subject="linux" ticks="30"/>
+    <minorFrame barrier="2" partition="linux" subject="linux" ticks="90"/>
+    <minorFrame barrier="3" partition="linux" subject="linux" ticks="30"/>
+    <minorFrame barrier="4" partition="linux" subject="linux" ticks="30"/>
+    <minorFrame barrier="none" partition="linux" subject="linux" ticks="30"/>
    </cpu>
    <cpu id="2">
-    <minorFrame barrier="none" subject="time" ticks="30"/>
-    <minorFrame barrier="1" subject="time" ticks="30"/>
-    <minorFrame barrier="2" subject="time" ticks="30"/>
-    <minorFrame barrier="3" subject="time" ticks="30"/>
-    <minorFrame barrier="4" subject="time" ticks="30"/>
-    <minorFrame barrier="none" subject="time" ticks="30"/>
+    <minorFrame barrier="none" partition="time" subject="time" ticks="30"/>
+    <minorFrame barrier="1" partition="time" subject="time" ticks="30"/>
+    <minorFrame barrier="2" partition="time" subject="time" ticks="30"/>
+    <minorFrame barrier="3" partition="time" subject="time" ticks="30"/>
+    <minorFrame barrier="4" partition="time" subject="time" ticks="30"/>
+    <minorFrame barrier="none" partition="time" subject="time" ticks="30"/>
    </cpu>
    <cpu id="3">
-    <minorFrame barrier="1" subject="tau0" ticks="60"/>
-    <minorFrame barrier="3" subject="tau0" ticks="60"/>
-    <minorFrame barrier="none" subject="tau0" ticks="60"/>
+    <minorFrame barrier="1" partition="tau0" subject="tau0" ticks="60"/>
+    <minorFrame barrier="3" partition="tau0" subject="tau0" ticks="60"/>
+    <minorFrame barrier="none" partition="tau0" subject="tau0" ticks="60"/>
    </cpu>
    <barriers>
     <barrier id="1" size="3"/>
@@ -2401,16 +2401,16 @@
   </majorFrame>
   <majorFrame>
    <cpu id="0">
-    <minorFrame barrier="none" subject="vt" ticks="120"/>
+    <minorFrame barrier="none" partition="vt" subject="vt" ticks="120"/>
    </cpu>
    <cpu id="1">
-    <minorFrame barrier="none" subject="linux" ticks="120"/>
+    <minorFrame barrier="none" partition="linux" subject="linux" ticks="120"/>
    </cpu>
    <cpu id="2">
-    <minorFrame barrier="none" subject="time" ticks="120"/>
+    <minorFrame barrier="none" partition="time" subject="time" ticks="120"/>
    </cpu>
    <cpu id="3">
-    <minorFrame barrier="none" subject="tau0" ticks="120"/>
+    <minorFrame barrier="none" partition="tau0" subject="tau0" ticks="120"/>
    </cpu>
    <barriers/>
   </majorFrame>

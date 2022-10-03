@@ -611,6 +611,10 @@ is
 
    procedure Subject_References (XML_Data : Muxml.XML_Data_Type)
    is
+
+      --  Returns True if the name of left and right are the same.
+      function Match_Name (Left, Right : DOM.Core.Node) return Boolean;
+
       --  Returns the error message for a given reference node.
       procedure Error_Msg
         (Node    :     DOM.Core.Node;
@@ -626,21 +630,44 @@ is
       is
          Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
-            Name => "subject");
+            Name => "name");
+         Group_ID : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+            Name => "id");
+         Part_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Muxml.Utils.Ancestor_Node (Node  => Node,
+                                               Level => 2),
+            Name => "name");
       begin
          Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
            ("Subject '" & Subj_Name
-            & "' referenced in scheduling plan not found");
+            & "' referenced by scheduling group " & Group_ID
+            & " of partition '" & Part_Name & "' not found");
          Fatal := True;
       end Error_Msg;
+
+      ----------------------------------------------------------------------
+
+      function Match_Name (Left, Right : DOM.Core.Node) return Boolean
+      is
+         Ref_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "name");
+         Subject_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "name");
+      begin
+         return Ref_Name = Subject_Name;
+      end Match_Name;
    begin
       For_Each_Match
         (XML_Data     => XML_Data,
-         Source_XPath => "/system/scheduling/majorFrame/cpu/minorFrame",
+         Source_XPath => "/system/scheduling/partitions/partition/group/"
+         & "subject",
          Ref_XPath    => "/system/subjects/subject",
-         Log_Message  => "subject reference(s) in scheduling plan",
+         Log_Message  => "subject reference(s) in scheduling groups",
          Error        => Error_Msg'Access,
-         Match        => Match_Subject_Name'Access);
+         Match        => Match_Name'Access);
    end Subject_References;
 
    -------------------------------------------------------------------------

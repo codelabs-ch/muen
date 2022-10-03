@@ -152,23 +152,27 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+
+      --  Positive test, must not raise a validation error.
+
+      Subject_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected exception");
+
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/scheduling/majorFrame/cpu/"
-         & "minorFrame[@subject='vt']",
-         Name  => "subject",
+         XPath => "/system/scheduling/partitions/partition/group/"
+         & "subject[@name='vt']",
+         Name  => "name",
          Value => "nonexistent");
-
       begin
          Subject_References (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
 
       exception
          when Validation_Errors.Validation_Error =>
             Assert (Condition => Validation_Errors.Contains
-                    (Msg => "Subject 'nonexistent' referenced in scheduling plan not"
-                     & " found"),
+                    (Msg => "Subject 'nonexistent' referenced by scheduling "
+                     & "group 1 of partition 'vt' not found"),
                     Message   => "Exception mismatch");
       end;
 --  begin read only

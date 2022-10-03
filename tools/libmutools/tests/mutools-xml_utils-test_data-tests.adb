@@ -2017,15 +2017,30 @@ package body Mutools.XML_Utils.Test_Data.Tests is
               Message   => "Subject to scheduling group ID mapping mismatch");
 
       --  Verify that cyclic switch events are handled correctly, i.e. do not
-      --  lead to infinite recursion.
+      --  lead to infinite recursion by making the example subject the initial
+      --  subject of the scheduling group. This results in the example subject
+      --  being used as starting point for constructing the scheduling groups
+      --  via handover event chains. Since the example subject only has one
+      --  switch event to/from nic_linux, this exercises that code path.
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
-         XPath => "/system/scheduling/majorFrame/cpu/"
-         & "minorFrame[@subject='nic_linux']",
-         Name  => "subject",
+         XPath => "/system/scheduling/partitions/partition/group/"
+         & "subject[@name='nic_linux']",
+         Name  => "name",
+         Value => "tmp");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/scheduling/partitions/partition/group/"
+         & "subject[@name='example']",
+         Name  => "name",
+         Value => "nic_linux");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/scheduling/partitions/partition/group/"
+         & "subject[@name='tmp']",
+         Name  => "name",
          Value => "example");
-
       declare
          task Worker
          is

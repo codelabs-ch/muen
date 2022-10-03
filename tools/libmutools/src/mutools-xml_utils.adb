@@ -19,7 +19,6 @@
 with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded.Hash;
 with Ada.Containers.Hashed_Maps;
-with Ada.Containers.Hashed_Sets;
 with Ada.Containers.Ordered_Multisets;
 with Ada.Containers.Generic_Constrained_Array_Sort;
 
@@ -689,102 +688,63 @@ is
      (Data : Muxml.XML_Data_Type)
       return ID_Map_Array
    is
-      function U
-        (Source : String)
-         return Ada.Strings.Unbounded.Unbounded_String
-         renames Ada.Strings.Unbounded.To_Unbounded_String;
-
-      package Unbounded_Set_Package is new Ada.Containers.Hashed_Sets
-        (Element_Type        => Ada.Strings.Unbounded.Unbounded_String,
-         Hash                => Ada.Strings.Unbounded.Hash,
-         Equivalent_Elements => Ada.Strings.Unbounded."=",
-         "="                 => Ada.Strings.Unbounded."=");
-
-      Processed : Unbounded_Set_Package.Set;
-
       Subjects      : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/subjects/subject");
       Subject_Count : constant Natural
         := DOM.Core.Nodes.Length (List => Subjects);
-      Minor_Frames  : constant DOM.Core.Node_List
+
+      Scheduling_Groups : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/scheduling/majorFrame/cpu/minorFrame");
+           XPath => "/system/scheduling/partitions/partition/group");
+      Sched_Group_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Scheduling_Groups);
 
       subtype Subject_ID_Range is Natural range 0 .. Subject_Count - 1;
+      subtype Sched_Group_ID_Range is Natural range 1 .. Sched_Group_Count;
 
-      No_Group            : constant Natural := 0;
-      Next_Free_Group_ID  : Positive         := 1;
-      Subject_To_Group_ID : ID_Map_Array (Subject_ID_Range)
-        := (others => No_Group);
+      Group_To_Subject_ID_Map : ID_Map_Array (Sched_Group_ID_Range)
+        := (others => Natural'Last);
    begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Minor_Frames) - 1 loop
+      for I in 1 .. DOM.Core.Nodes.Length (List => Scheduling_Groups) loop
          declare
-            Minor_Frame  : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item (List  => Minor_Frames,
-                                      Index => I);
+            Sched_Group : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Scheduling_Groups,
+                                      Index => I - 1);
+
+            --  Name of first element, i.e. initially scheduled subject.
             Subject_Name : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Minor_Frame,
-                 Name => "subject");
+              := Muxml.Utils.Get_Attribute (Doc   => Sched_Group,
+                                            XPath => "subject",
+                                            Name  => "name");
+            Subject_ID_Str : constant String
+              := Muxml.Utils.Get_Attribute
+                (Nodes     => Subjects,
+                 Ref_Attr  => "name",
+                 Ref_Value => Subject_Name,
+                 Attr_Name => "globalId");
+            Subject_ID : Natural;
          begin
-            if not Processed.Contains (Item => U (Subject_Name)) then
-               declare
-                  Subject_ID_Str : constant String
-                    := Muxml.Utils.Get_Attribute
-                      (Nodes     => Subjects,
-                       Ref_Attr  => "name",
-                       Ref_Value => Subject_Name,
-                       Attr_Name => "globalId");
-                  Subject_ID     : Natural;
-               begin
-                  if Subject_ID_Str'Length = 0 then
-                     raise Missing_Subject with "Subject '" & Subject_Name
-                       & "' referenced in scheduling plan not present";
-                  end if;
-
-                  Subject_ID := Natural'Value (Subject_ID_Str);
-                  if Subject_ID not in Subject_To_Group_ID'Range then
-                     raise Invalid_Subject_ID with "Subject '" & Subject_Name
-                       & "' referenced in scheduling plan has invalid ID "
-                       & Subject_ID_Str & ", not in range"
-                       & Subject_ID_Range'First'Img & ".."
-                       & Subject_ID_Range'Last'Img;
-                  end if;
-
-                  if Subject_To_Group_ID (Subject_ID) = No_Group then
-
-                     --  Subject belongs to new scheduling group.
-
-                     Subject_To_Group_ID (Subject_ID) := Next_Free_Group_ID;
-                     Next_Free_Group_ID := Next_Free_Group_ID + 1;
-                  end if;
-               end;
-               Processed.Insert (New_Item => U (Subject_Name));
+            if Subject_ID_Str'Length = 0 then
+               raise Missing_Subject with "Subject '" & Subject_Name
+                 & "' referenced in scheduling plan not present";
             end if;
+
+            Subject_ID := Natural'Value (Subject_ID_Str);
+            if Subject_ID not in Subject_ID_Range then
+               raise Invalid_Subject_ID with "Subject '" & Subject_Name
+                 & "' referenced in scheduling plan has invalid ID "
+                 & Subject_ID_Str & ", not in range"
+                 & Subject_ID_Range'First'Img & ".."
+                 & Subject_ID_Range'Last'Img;
+            end if;
+            Group_To_Subject_ID_Map (I) := Natural'Value (Subject_ID_Str);
          end;
       end loop;
 
-      declare
-         Group_To_Subject_ID_Map : ID_Map_Array (1 .. Next_Free_Group_ID - 1);
-      begin
-
-         --  Create reverse group ID to subject ID mapping.
-
-         for I in Subject_To_Group_ID'Range loop
-            declare
-               Group_ID : constant Natural := Subject_To_Group_ID (I);
-            begin
-               if Group_ID /= No_Group then
-                  Group_To_Subject_ID_Map (Group_ID) := I;
-               end if;
-            end;
-         end loop;
-
-         return Group_To_Subject_ID_Map;
-      end;
+      return Group_To_Subject_ID_Map;
    end Get_Initial_Scheduling_Group_Subjects;
 
    -------------------------------------------------------------------------

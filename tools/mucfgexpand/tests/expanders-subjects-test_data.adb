@@ -4,6 +4,7 @@
 --  except for sections surrounded by a 'read only' marker.
 
 with Mucfgcheck.Validation_Errors;
+with Expanders.Scheduling;
 
 package body Expanders.Subjects.Test_Data is
 
@@ -75,6 +76,7 @@ package body Expanders.Subjects.Test_Data is
       Add_Missing_Elements (Data => Data);
       Add_Tau0 (Data => Data);
       Add_Global_IDs (Data => Data);
+      Scheduling.Add_Group_IDs (Data => Data);
    end Prepare_Sched_Info_Mappings;
 
    -------------------------------------------------------------------------

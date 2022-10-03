@@ -57,6 +57,11 @@ is
      (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_sched
+   --D Validate that all subjects of a scheduling group are runnable.
+   procedure Subject_Scheduling_Group_Runnability
+     (XML_Data : Muxml.XML_Data_Type);
+
+   --D @Item List => validators_sched
    --D Validate tick counts in major frame.
    procedure Major_Frame_Ticks (XML_Data : Muxml.XML_Data_Type);
 

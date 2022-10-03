@@ -294,6 +294,44 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Subject_Scheduling_Group_Runnability (Gnattest_T : in out Test);
+   procedure Test_Subject_Scheduling_Group_Runnability_f0f137 (Gnattest_T : in out Test) renames Test_Subject_Scheduling_Group_Runnability;
+--  id:2.2/f0f13783f3f46037/Subject_Scheduling_Group_Runnability/1/0/
+   procedure Test_Subject_Scheduling_Group_Runnability (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise validation error.
+
+      Subject_Scheduling_Group_Runnability (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected exception");
+
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/events/event[@name='resume_linux']",
+         Name  => "mode",
+         Value => "ipi");
+
+      Subject_Scheduling_Group_Runnability (XML_Data => Data);
+      Assert
+        (Condition => Validation_Errors.Contains
+           (Msg => "Subject 'linux' of scheduling group 2 not runnable"),
+         Message   => "Exception mismatch");
+--  begin read only
+   end Test_Subject_Scheduling_Group_Runnability;
+--  end read only
+
+
+--  begin read only
    procedure Test_Major_Frame_Ticks (Gnattest_T : in out Test);
    procedure Test_Major_Frame_Ticks_88421f (Gnattest_T : in out Test) renames Test_Major_Frame_Ticks;
 --  id:2.2/88421f8587a3f303/Major_Frame_Ticks/1/0/

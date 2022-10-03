@@ -772,4 +772,69 @@ is
       end if;
    end Subject_Scheduling_Group_Assignment;
 
+   -------------------------------------------------------------------------
+
+   procedure Subject_Scheduling_Group_Runnability
+     (XML_Data : Muxml.XML_Data_Type)
+   is
+      Scheduling_Groups : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/scheduling/partitions/partition/group");
+      Subjects : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject");
+      SG_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Scheduling_Groups);
+      Subject_To_Group_Map : constant Mutools.XML_Utils.ID_Map_Array
+        := Mutools.XML_Utils.Get_Subject_To_Scheduling_Group_Map
+          (Data => XML_Data);
+   begin
+      for I in 0 .. SG_Count - 1 loop
+         declare
+            Scheduling_Group : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Scheduling_Groups,
+                                      Index => I);
+            Sched_Group_ID : constant Natural
+              := Natural'Value (DOM.Core.Elements.Get_Attribute
+                                (Elem => Scheduling_Group,
+                                 Name => "id"));
+            SG_Subjects : constant DOM.Core.Node_List
+              := XPath_Query
+                (N     => Scheduling_Group,
+                 XPath => "subject");
+            SG_Subjects_Count : constant Natural
+              := DOM.Core.Nodes.Length (List => SG_Subjects);
+         begin
+            Mulog.Log (Msg => "Checking runnability of"
+                       & SG_Subjects_Count'Img
+                       & " subject(s) of scheduling group" & Sched_Group_ID'Img);
+            for J in 0 .. SG_Subjects_Count - 1 loop
+               declare
+                  SG_Subject : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item (List  => SG_Subjects,
+                                            Index => J);
+                  Subject_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => SG_Subject,
+                       Name => "name");
+                  Subject_ID : constant Natural
+                    := Natural'Value (Muxml.Utils.Get_Attribute
+                      (Nodes     => Subjects,
+                       Ref_Attr  => "name",
+                       Ref_Value => Subject_Name,
+                       Attr_Name => "globalId"));
+               begin
+                  if Subject_To_Group_Map (Subject_ID) /= Sched_Group_ID then
+                     Validation_Errors.Insert
+                       (Msg => "Subject '" & Subject_Name & "' of scheduling "
+                        & "group" & Sched_Group_ID'Img & " not runnable");
+                  end if;
+               end;
+            end loop;
+         end;
+      end loop;
+   end Subject_Scheduling_Group_Runnability;
+
 end Mucfgcheck.Scheduling;

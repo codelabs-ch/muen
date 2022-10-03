@@ -285,14 +285,14 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/events/event[@name='trap_to_sm']",
-         Name  => "mode",
-         Value => "ipi");
+         XPath => "/system/scheduling/partitions/partition/group/"
+         & "subject[@name='sm']",
+         Name  => "name",
+         Value => "linux");
 
       Runnability (XML_Data => Data);
       Assert (Condition => Validation_Errors.Contains
-              (Msg => "Subject 'sm' is neither referenced in the scheduling"
-               & " plan nor schedulable via switch events"),
+              (Msg => "Subject 'sm' is not part of any scheduling group"),
               Message   => "Exception mismatch");
 --  begin read only
    end Test_Runnability;

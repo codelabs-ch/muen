@@ -956,19 +956,10 @@ is
 
    procedure Runnability (XML_Data : Muxml.XML_Data_Type)
    is
-      Minor_Frames : constant DOM.Core.Node_List
+      Scheduled_Subjects : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/scheduling/majorFrame/cpu/minorFrame");
-      Physical_Events : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => "/system/events/event[@mode='switch']");
-      Source_Events : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => "/system/subjects/subject/events/source/group"
-           & "/*[self::event or self::default]");
+           XPath => "/system/scheduling/partitions/partition/group/subject");
       Subjects : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
@@ -978,6 +969,8 @@ is
    begin
       for I in 0 .. Subj_Count - 1 loop
          declare
+            use type DOM.Core.Node;
+
             Subject   : constant DOM.Core.Node
               := DOM.Core.Nodes.Item (List  => Subjects,
                                       Index => I);
@@ -989,16 +982,14 @@ is
             Mulog.Log (Msg => "Checking runnability of subject '" & Subj_Name
                        & "'");
 
-            if Mutools.XML_Utils.Get_Executing_CPU
-              (Minor_Frames    => Minor_Frames,
-               Physical_Events => Physical_Events,
-               Source_Events   => Source_Events,
-               Subject         => Subject) = -1
+            if Muxml.Utils.Get_Element
+              (Nodes     => Scheduled_Subjects,
+               Ref_Attr  => "name",
+               Ref_Value => Subj_Name) = null
             then
                Validation_Errors.Insert
-                 (Msg => "Subject '" & Subj_Name & "' is "
-                  & "neither referenced in the scheduling plan nor "
-                  & "schedulable via switch events");
+                 (Msg => "Subject '" & Subj_Name
+                  & "' is not part of any scheduling group");
             end if;
          end;
       end loop;

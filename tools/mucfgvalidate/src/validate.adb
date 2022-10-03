@@ -197,6 +197,8 @@ is
       XML_Processors.Register
         (Process => Scheduling.Subject_Scheduling_Group_Assignment'Access);
       XML_Processors.Register
+        (Process => Scheduling.Subject_Scheduling_Group_Runnability'Access);
+      XML_Processors.Register
         (Process => Scheduling.Major_Frame_Ticks'Access);
       XML_Processors.Register
         (Process => Scheduling.Barrier_ID'Access);

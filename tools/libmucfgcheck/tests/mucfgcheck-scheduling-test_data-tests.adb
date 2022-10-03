@@ -238,12 +238,18 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+
+      -- Positive test, must not raise an exception.
+
+      Subject_CPU_Affinity (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected exception");
+
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/scheduling/majorFrame/cpu/"
-         & "minorFrame[@subject='vt']",
-         Name  => "subject",
-         Value => "linux");
+         XPath => "/system/scheduling/partitions/partition[@name='linux']",
+         Name  => "cpu",
+         Value => "0");
 
       Subject_CPU_Affinity (XML_Data => Data);
       Assert (Condition => Validation_Errors.Contains

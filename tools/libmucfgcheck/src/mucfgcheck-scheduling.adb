@@ -622,22 +622,23 @@ is
          Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
          Fatal   : out Boolean)
       is
-         Frame_CPU_ID : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
-            Name => "id");
-         Subj_Name    : constant String := DOM.Core.Elements.Get_Attribute
+         Partition_CPU_ID : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Muxml.Utils.Ancestor_Node (Node  => Node,
+                                               Level => 2),
+            Name => "cpu");
+         Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
-            Name => "subject");
-         Subject      : constant DOM.Core.Node := Muxml.Utils.Get_Element
+            Name => "name");
+         Subject : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc     => XML_Data.Doc,
             XPath   => "/system/subjects/subject[@name='" & Subj_Name & "']");
-         Subj_CPU_ID  : constant String := DOM.Core.Elements.Get_Attribute
+         Subj_CPU_ID : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Subject,
             Name => "cpu");
       begin
          Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
            ("Subject '" & Subj_Name & "' scheduled on wrong CPU "
-            & Frame_CPU_ID & ", should be " & Subj_CPU_ID);
+            & Partition_CPU_ID & ", should be " & Subj_CPU_ID);
          Fatal := False;
       end Error_Msg;
 
@@ -645,25 +646,27 @@ is
 
       function Match_CPU_ID (Left, Right : DOM.Core.Node) return Boolean
       is
-         Frame_CPU_ID   : constant Natural := Natural'Value
+         Partition_CPU_ID   : constant Natural := Natural'Value
            (DOM.Core.Elements.Get_Attribute
-              (Elem => DOM.Core.Nodes.Parent_Node (N => Left),
-               Name => "id"));
+              (Elem => Muxml.Utils.Ancestor_Node (Node  => Left,
+                                                  Level => 2),
+               Name => "cpu"));
          Subject_CPU_ID : constant Natural := Natural'Value
            (DOM.Core.Elements.Get_Attribute
               (Elem => Right,
                Name => "cpu"));
       begin
-         return Frame_CPU_ID = Subject_CPU_ID and then
-           Match_Subject_Name (Left  => Left,
-                               Right => Right);
+         return Partition_CPU_ID = Subject_CPU_ID and
+           Match_Name (Left  => Left,
+                       Right => Right);
       end Match_CPU_ID;
    begin
       For_Each_Match
         (XML_Data     => XML_Data,
-         Source_XPath => "/system/scheduling/majorFrame/cpu/minorFrame",
+         Source_XPath => "/system/scheduling/partitions/partition/group/"
+         & "subject",
          Ref_XPath    => "/system/subjects/subject",
-         Log_Message  => "minor frame(s) for subject CPU affinity",
+         Log_Message  => "scheduling partition(s) for subject CPU affinity",
          Error        => Error_Msg'Access,
          Match        => Match_CPU_ID'Access);
    end Subject_CPU_Affinity;

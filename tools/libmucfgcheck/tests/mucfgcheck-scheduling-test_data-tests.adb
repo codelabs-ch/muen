@@ -139,6 +139,50 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Partition_CPU_Affinity (Gnattest_T : in out Test);
+   procedure Test_Partition_CPU_Affinity_d83064 (Gnattest_T : in out Test) renames Test_Partition_CPU_Affinity;
+--  id:2.2/d830646cf41cb6ad/Partition_CPU_Affinity/1/0/
+   procedure Test_Partition_CPU_Affinity (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise a validation error.
+
+      Partition_CPU_Affinity (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected exception");
+
+      --  Partition 'linux' scheduled on multiple CPUs and partition 'time' not
+      --  scheduled at all.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/scheduling/majorFrame/cpu/"
+         & "minorFrame[@partition='time']",
+         Name  => "partition",
+         Value => "linux");
+
+      Partition_CPU_Affinity (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Partition 'linux' referenced by minor frame of CPU 2"
+               & ", should only be scheduled on CPU 1"),
+              Message   => "Exception mismatch");
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Partition 'time' not scheduled on any CPU"),
+              Message   => "Exception mismatch");
+--  begin read only
+   end Test_Partition_CPU_Affinity;
+--  end read only
+
+
+--  begin read only
    procedure Test_Subject_References (Gnattest_T : in out Test);
    procedure Test_Subject_References_8828a8 (Gnattest_T : in out Test) renames Test_Subject_References;
 --  id:2.2/8828a835f8aeaa87/Subject_References/1/0/

@@ -496,6 +496,67 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Partition_CPU_Affinity (XML_Data : Muxml.XML_Data_Type)
+   is
+      Minor_Frames : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/scheduling/majorFrame/cpu/minorFrame");
+      Partitions : constant DOM.Core.Node_List
+        := XPath_Query (N     => XML_Data.Doc,
+                        XPath => "/system/scheduling/partitions/partition");
+      Part_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Partitions);
+   begin
+      Mulog.Log (Msg => "Checking CPU affinity of" & Part_Count'Img
+                 & " scheduling partition(s)");
+      for I in 0 .. Part_Count - 1 loop
+         declare
+            Partition : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Partitions,
+                                      Index => I);
+            Partition_Name : constant String
+              := DOM.Core.Elements.Get_Attribute (Elem => Partition,
+                                                  Name => "name");
+            Part_CPU : constant String
+              := DOM.Core.Elements.Get_Attribute (Elem => Partition,
+                                                  Name => "cpu");
+            Part_Minor_Frames : constant DOM.Core.Node_List
+              := Muxml.Utils.Get_Elements (Nodes     => Minor_Frames,
+                                           Ref_Attr  => "partition",
+                                           Ref_Value => Partition_Name);
+            Part_Minor_Frames_Count : constant Natural
+              := DOM.Core.Nodes.Length (List => Part_Minor_Frames);
+         begin
+            if Part_Minor_Frames_Count = 0 then
+               Validation_Errors.Insert (Msg => "Partition '" & Partition_Name
+                                         & "' not scheduled on any CPU");
+            end if;
+
+            for J in 0 .. Part_Minor_Frames_Count - 1 loop
+               declare
+                  Minor_Frame : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item (List  => Part_Minor_Frames,
+                                            Index => J);
+                  CPU : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => DOM.Core.Nodes.Parent_Node (N => Minor_Frame),
+                       Name => "id");
+               begin
+                  if Part_CPU /= CPU then
+                     Validation_Errors.Insert
+                       (Msg => "Partition '" & Partition_Name & "' referenced "
+                        & "by minor frame of CPU " & CPU
+                        & ", should only be scheduled on CPU " & Part_CPU);
+                  end if;
+               end;
+            end loop;
+         end;
+      end loop;
+   end Partition_CPU_Affinity;
+
+   -------------------------------------------------------------------------
+
    procedure Partition_ID (XML_Data : Muxml.XML_Data_Type)
    is
       Partitions : constant DOM.Core.Node_List

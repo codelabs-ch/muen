@@ -39,6 +39,11 @@ is
    procedure CPU_Element_Count (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_sched
+   --D Validate that scheduling partitions are scheduled in at least one minor
+   --D frame and that all minor frame references are on the same logical CPU.
+   procedure Partition_CPU_Affinity (XML_Data : Muxml.XML_Data_Type);
+
+   --D @Item List => validators_sched
    --D Validate subject references.
    procedure Subject_References (XML_Data : Muxml.XML_Data_Type);
 

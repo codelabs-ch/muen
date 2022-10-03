@@ -167,6 +167,50 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_CPU_IDs (Data : in out Muxml.XML_Data_Type)
+   is
+      Minor_Frames : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/scheduling/majorFrame/cpu/minorFrame");
+      Partition_Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/scheduling/partitions/partition");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Partition_Nodes) - 1 loop
+         declare
+            Partition_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Partition_Nodes,
+                 Index => I);
+            Partition_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Partition_Node,
+                 Name => "name");
+            CPU : constant DOM.Core.Node
+              := DOM.Core.Nodes.Parent_Node
+                (N => Muxml.Utils.Get_Element
+                   (Nodes     => Minor_Frames,
+                    Ref_Attr  => "partition",
+                    Ref_Value => Partition_Name));
+            CPU_ID_Str : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => CPU,
+                 Name => "id");
+         begin
+            Mulog.Log (Msg => "Setting CPU of scheduling partition '"
+                       & Partition_Name & "' to " & CPU_ID_Str);
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Partition_Node,
+               Name  => "cpu",
+               Value => CPU_ID_Str);
+         end;
+      end loop;
+   end Add_CPU_IDs;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Group_IDs (Data : in out Muxml.XML_Data_Type)
    is
       Group_Nodes : constant DOM.Core.Node_List

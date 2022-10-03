@@ -68,6 +68,25 @@ package body Expanders.Scheduling.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Add_CPU_IDs (Gnattest_T : in out Test);
+   procedure Test_Add_CPU_IDs_cf5c89 (Gnattest_T : in out Test) renames Test_Add_CPU_IDs;
+--  id:2.2/cf5c8998ce7da859/Add_CPU_IDs/1/0/
+   procedure Test_Add_CPU_IDs (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename => "obj/scheduling_partition_cpu_ids.xml",
+         Ref_Diff => "data/scheduling_partition_cpu_ids.xml.diff",
+         Expander => Add_CPU_IDs'Access);
+--  begin read only
+   end Test_Add_CPU_IDs;
+--  end read only
+
+
+--  begin read only
    procedure Test_Add_Barrier_Configs (Gnattest_T : in out Test);
    procedure Test_Add_Barrier_Configs_057525 (Gnattest_T : in out Test) renames Test_Add_Barrier_Configs;
 --  id:2.2/057525ba5aaf3024/Add_Barrier_Configs/1/0/

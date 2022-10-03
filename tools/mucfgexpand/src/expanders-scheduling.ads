@@ -27,6 +27,9 @@ is
    --  Add scheduling group IDs.
    procedure Add_Group_IDs (Data : in out Muxml.XML_Data_Type);
 
+   --  Add CPU IDs to scheduling partitions.
+   procedure Add_CPU_IDs (Data : in out Muxml.XML_Data_Type);
+
    --  Add major frame barrier configurations.
    procedure Add_Barrier_Configs (Data : in out Muxml.XML_Data_Type);
 

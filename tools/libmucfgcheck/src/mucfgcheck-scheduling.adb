@@ -672,10 +672,6 @@ is
 
    procedure Subject_References (XML_Data : Muxml.XML_Data_Type)
    is
-
-      --  Returns True if the name of left and right are the same.
-      function Match_Name (Left, Right : DOM.Core.Node) return Boolean;
-
       --  Returns the error message for a given reference node.
       procedure Error_Msg
         (Node    :     DOM.Core.Node;
@@ -706,20 +702,6 @@ is
             & " of partition '" & Part_Name & "' not found");
          Fatal := True;
       end Error_Msg;
-
-      ----------------------------------------------------------------------
-
-      function Match_Name (Left, Right : DOM.Core.Node) return Boolean
-      is
-         Ref_Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Left,
-            Name => "name");
-         Subject_Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Right,
-            Name => "name");
-      begin
-         return Ref_Name = Subject_Name;
-      end Match_Name;
    begin
       For_Each_Match
         (XML_Data     => XML_Data,

@@ -2983,28 +2983,28 @@
  </subjects>
  <scheduling tickRate="10000">
   <partitions>
-   <partition id="1" name="linux">
+   <partition cpu="0" id="1" name="linux">
     <group id="1">
      <subject name="lnx"/>
      <subject name="subject1"/>
     </group>
    </partition>
-   <partition id="2" name="tau0">
+   <partition cpu="1" id="2" name="tau0">
     <group id="2">
      <subject name="tau0"/>
     </group>
    </partition>
-   <partition id="3" name="s2">
+   <partition cpu="1" id="3" name="s2">
     <group id="3">
      <subject name="subject2"/>
     </group>
    </partition>
-   <partition id="4" name="s3">
+   <partition cpu="0" id="4" name="s3">
     <group id="4">
      <subject name="subject3"/>
     </group>
    </partition>
-   <partition id="5" name="linux_1">
+   <partition cpu="1" id="5" name="linux_1">
     <group id="5">
      <subject name="lnx_core_1"/>
     </group>

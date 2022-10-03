@@ -2194,8 +2194,9 @@ package body Mutools.XML_Utils.Test_Data.Tests is
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/scheduling/majorFrame/cpu/minorFrame[@subject='tau0']",
-         Name  => "subject",
+         XPath => "/system/scheduling/partitions/partition/group/"
+         & "subject[@name='tau0']",
+         Name  => "name",
          Value => "foobar");
       Assert (Condition => not Is_Tau0_Scheduled (Data => Data),
               Message   => "Tau0 is scheduled");

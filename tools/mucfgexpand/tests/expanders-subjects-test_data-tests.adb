@@ -72,12 +72,10 @@ package body Expanders.Subjects.Test_Data.Tests is
 
          --  Remove tau0 from scheduling plan.
 
-         Muxml.Utils.Set_Attribute
+         Muxml.Utils.Remove_Elements
            (Doc   => Policy.Doc,
-            XPath => "/system/scheduling/majorFrame/cpu/minorFrame"
-            & "[@subject='tau0']",
-            Name  => "subject",
-            Value => "foo");
+            XPath => "/system/scheduling/partitions/partition/group/"
+            & "subject[@name='tau0']");
 
          Add_Tau0 (Data => Policy);
          Assert (Condition => Muxml.Utils.Get_Element
@@ -156,12 +154,10 @@ package body Expanders.Subjects.Test_Data.Tests is
 
          --  Remove Tau0 from scheduling plan.
 
-         Muxml.Utils.Set_Attribute
+         Muxml.Utils.Remove_Elements
            (Doc   => Policy.Doc,
-            XPath => "/system/scheduling/majorFrame/cpu/"
-            & "minorFrame[@subject='tau0']",
-            Name  => "subject",
-            Value => "foobar");
+            XPath => "/system/scheduling/partitions/partition/group/"
+            & "subject[@name='tau0']");
          Add_Global_IDs (Data => Policy);
          Assert (Condition => Muxml.Utils.Get_Attribute
                  (Doc   => Policy.Doc,

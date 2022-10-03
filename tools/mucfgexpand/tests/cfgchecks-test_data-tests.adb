@@ -53,14 +53,12 @@ package body Cfgchecks.Test_Data.Tests is
       Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
               Message   => "Unexpected error (1)");
 
-      --  Remove all tau0 minor frame references from scheduling plan.
+      --  Remove tau0 from scheduling plan.
 
-      Muxml.Utils.Set_Attribute
+      Muxml.Utils.Remove_Elements
         (Doc   => Policy.Doc,
-         XPath => "/system/scheduling/majorFrame/cpu/"
-         & "minorFrame[@subject='tau0']",
-         Name  => "subject",
-         Value => "foo");
+         XPath => "/system/scheduling/partitions/partition/group/"
+         & "subject[@name='tau0']");
 
       Tau0_Presence_In_Scheduling (XML_Data => Policy);
       Assert (Condition => Mucfgcheck.Validation_Errors.Contains
@@ -73,8 +71,7 @@ package body Cfgchecks.Test_Data.Tests is
       Mucfgcheck.Validation_Errors.Clear;
       Muxml.Utils.Remove_Elements
         (Doc   => Policy.Doc,
-         XPath => "/system/scheduling/majorFrame"
-         & "[cpu/minorFrame/@subject='lnx_core_1']");
+         XPath => "/system/scheduling/majorFrame[cpu/@id='1']");
       Tau0_Presence_In_Scheduling (XML_Data => Policy);
       Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
               Message   => "Unexpected error (2)");

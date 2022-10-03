@@ -1329,13 +1329,13 @@ is
 
    function Is_Tau0_Scheduled (Data : Muxml.XML_Data_Type) return Boolean
    is
-      Tau0_Minor_Frames : constant DOM.Core.Node_List
+      Tau0_Scheduling_Group_Refs : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/scheduling/majorFrame/cpu/minorFrame"
-           & "[@subject='tau0']");
+           XPath => "/system/scheduling/partitions/partition/group/"
+           & "subject[@name='tau0']");
    begin
-      return DOM.Core.Nodes.Length (List => Tau0_Minor_Frames) > 0;
+      return DOM.Core.Nodes.Length (List => Tau0_Scheduling_Group_Refs) > 0;
    end Is_Tau0_Scheduled;
 
    -------------------------------------------------------------------------

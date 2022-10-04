@@ -380,6 +380,8 @@
   <event mode="ipi" name="linux_console"/>
   <event mode="ipi" name="time_console"/>
   <event mode="ipi" name="sm_console"/>
+  <event mode="kernel" name="subject_sleep"/>
+  <event mode="kernel" name="subject_yield"/>
   <event mode="kernel" name="system_reboot"/>
   <event mode="kernel" name="system_panic"/>
   <event mode="kernel" name="system_poweroff"/>
@@ -864,7 +866,7 @@
       <proc>
        <InterruptWindowExiting>0</InterruptWindowExiting>
        <UseTSCOffsetting>0</UseTSCOffsetting>
-       <HLTExiting>0</HLTExiting>
+       <HLTExiting>1</HLTExiting>
        <INVLPGExiting>1</INVLPGExiting>
        <MWAITExiting>1</MWAITExiting>
        <RDPMCExiting>1</RDPMCExiting>
@@ -881,7 +883,7 @@
        <MonitorTrapFlag>0</MonitorTrapFlag>
        <UseMSRBitmaps>1</UseMSRBitmaps>
        <MONITORExiting>1</MONITORExiting>
-       <PAUSEExiting>0</PAUSEExiting>
+       <PAUSEExiting>1</PAUSEExiting>
        <Activate2ndaryControls>1</Activate2ndaryControls>
       </proc>
       <proc2>
@@ -1114,8 +1116,8 @@
       <event id="9" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
-      <event id="10" logical="panic" physical="system_panic">
-       <system_panic/>
+      <event id="10" logical="HLT" physical="subject_sleep">
+       <subject_sleep/>
       </event>
       <event id="11" logical="panic" physical="system_panic">
        <system_panic/>
@@ -1198,8 +1200,8 @@
       <event id="39" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
-      <event id="40" logical="panic" physical="system_panic">
-       <system_panic/>
+      <event id="40" logical="PAUSE" physical="subject_yield">
+       <subject_yield/>
       </event>
       <event id="43" logical="panic" physical="system_panic">
        <system_panic/>

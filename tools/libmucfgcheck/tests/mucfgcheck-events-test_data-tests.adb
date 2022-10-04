@@ -851,6 +851,41 @@ package body Mucfgcheck.Events.Test_Data.Tests is
                & "not reference physical kernel-mode event "
                & "'system_panic'"),
               Message   => "Exception mismatch (3)");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/events/event[@name='system_panic']",
+         Name  => "mode",
+         Value => "kernel");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/events/event[@name='subject_sleep']",
+         Name  => "mode",
+         Value => "ipi");
+
+      Kernel_Mode_System_Actions (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "System action for event 'HLT' of subject 'vt' does "
+               & "not reference physical kernel-mode event "
+               & "'subject_sleep'"),
+              Message   => "Exception mismatch (4)");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/events/event[@name='subject_sleep']",
+         Name  => "mode",
+         Value => "kernel");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/events/event[@name='subject_yield']",
+         Name  => "mode",
+         Value => "ipi");
+      Kernel_Mode_System_Actions (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "System action for event 'PAUSE' of subject 'vt' does "
+               & "not reference physical kernel-mode event "
+               & "'subject_yield'"),
+              Message   => "Exception mismatch (5)");
 --  begin read only
    end Test_Kernel_Mode_System_Actions;
 --  end read only

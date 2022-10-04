@@ -251,6 +251,8 @@ is
             --D @Item List => impl_handle_source_event_actions
             --D If the designated action is no action, then nothing is
             --D done.
+         when Skp.Events.Subject_Sleep   => null;
+         when Skp.Events.Subject_Yield   => null;
          when Skp.Events.System_Reboot   =>
             --D @Item List => impl_handle_source_event_actions
             --D If the designated action is system reboot, then a reboot with

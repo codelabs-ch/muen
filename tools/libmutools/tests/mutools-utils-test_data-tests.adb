@@ -487,7 +487,9 @@ package body Mutools.Utils.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       Ref_Str : constant String := "   type Event_Action_Kind is" & ASCII.LF
-        & "     (System_Reboot," & ASCII.LF
+        & "     (Subject_Sleep," & ASCII.LF
+        & "      Subject_Yield," & ASCII.LF
+        & "      System_Reboot," & ASCII.LF
         & "      System_Panic," & ASCII.LF
         & "      System_Poweroff," & ASCII.LF
         & "      Unmask_Irq," & ASCII.LF
@@ -497,7 +499,7 @@ package body Mutools.Utils.Test_Data.Tests is
         & ASCII.LF
         & "   subtype Source_Event_Action_Kind is Event_Action_Kind range"
         & ASCII.LF
-        & "     System_Reboot .. No_Action;"  & ASCII.LF
+        & "     Subject_Sleep .. No_Action;"  & ASCII.LF
         & ASCII.LF
         & "   subtype Target_Event_Action_Kind is Event_Action_Kind range"
         & ASCII.LF

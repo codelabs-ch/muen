@@ -205,6 +205,8 @@ is
       XML_Processors.Register
         (Process => Scheduling.Minor_Frame_Barrier_Refs'Access);
       XML_Processors.Register
+        (Process => Scheduling.Minor_Frame_Partition_References'Access);
+      XML_Processors.Register
         (Process => Kernel.CPU_Local_Data_Address_Equality'Access);
       XML_Processors.Register
         (Process => Kernel.CPU_Local_BSS_Address_Equality'Access);

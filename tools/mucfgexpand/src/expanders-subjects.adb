@@ -1398,8 +1398,8 @@ is
       Auto_Idle : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/scheduling/majorFrame/cpu/minorFrame"
-           & "[starts-with(@subject,'mugenschedcfg_auto_idle_')]");
+           XPath => "/system/scheduling/partitions/partition/group/subject"
+           & "[starts-with(@name,'mugenschedcfg_auto_idle_')]");
       Subjects_Node : constant DOM.Core.Node
         := Muxml.Utils.Get_Element
           (Doc   => Data.Doc,
@@ -1555,7 +1555,7 @@ is
                Name : constant String
                  := DOM.Core.Elements.Get_Attribute
                    (Elem => Node,
-                    Name => "subject");
+                    Name => "name");
             begin
                if not Processed.Contains (Item => To_Unbounded_String (Name))
                then

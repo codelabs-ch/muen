@@ -1986,20 +1986,17 @@ is
       Mulog.Log (Msg => "Adding tau0 subject");
 
       declare
-         Minor_Frames  : constant DOM.Core.Node_List
-           := McKae.XML.XPath.XIA.XPath_Query
-             (N     => Data.Doc,
-              XPath => "/system/scheduling/majorFrame/cpu/minorFrame");
-         CPU_Node      : constant DOM.Core.Node
-           := DOM.Core.Nodes.Parent_Node
-             (N => Muxml.Utils.Get_Element
-                (Nodes     => Minor_Frames,
-                 Ref_Attr  => "subject",
-                 Ref_Value => "tau0"));
+         Sched_Tau0    : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Data.Doc,
+              XPath => "/system/scheduling/partitions/partition/group/"
+              & "subject[@name='tau0']");
          Tau0_CPU      : constant String
            := DOM.Core.Elements.Get_Attribute
-             (Elem => CPU_Node,
-              Name => "id");
+             (Elem => Muxml.Utils.Ancestor_Node
+                (Node  => Sched_Tau0,
+                 Level => 2),
+              Name => "cpu");
          Subjects_Node : constant DOM.Core.Node
            := Muxml.Utils.Get_Element
              (Doc   => Data.Doc,

@@ -14,6 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
+with Expanders.Scheduling;
 with Mucfgcheck.Validation_Errors;
 --  begin read only
 --  end read only
@@ -87,6 +88,7 @@ package body Expanders.Subjects.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename => "obj/subjects_tau0.xml",
          Ref_Diff => "data/subjects_tau0.xml.diff",
+         Pre      => Scheduling.Add_CPU_IDs'Access,
          Expander => Add_Tau0'Access);
       Without_Tau0;
 --  begin read only

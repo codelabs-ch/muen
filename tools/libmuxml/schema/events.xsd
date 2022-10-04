@@ -238,6 +238,8 @@
 
  <xs:group name="sourceEventActionsGroup">
   <xs:choice>
+   <xs:element name="subject_sleep"   type="eventActionNoParamType"/>
+   <xs:element name="subject_yield"   type="eventActionNoParamType"/>
    <xs:element name="system_reboot"   type="eventActionNoParamType"/>
    <xs:element name="system_panic"    type="eventActionNoParamType"/>
    <xs:element name="system_poweroff" type="eventActionNoParamType"/>

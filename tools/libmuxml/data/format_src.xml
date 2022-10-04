@@ -85,6 +85,8 @@
  <events>
   <event mode="asap" name="xv6_keyboard"/>
   <event mode="kernel" name="panic"/>
+  <event mode="kernel" name="sleep"/>
+  <event mode="kernel" name="yield"/>
  </events>
  <channels>
   <channel hasEvent="asap" name="data_channel" size="16#1000#"/>
@@ -191,6 +193,12 @@
     <source>
      <group name="vmx_exit">
       <default physical="trap"/>
+      <event id="12" logical="sleep" physical="sleep">
+       <subject_sleep/>
+      </event>
+      <event id="40" logical="yield" physical="yield">
+       <subject_yield/>
+      </event>
       <event id="59" logical="bail_out" physical="panic">
        <system_panic/>
       </event>

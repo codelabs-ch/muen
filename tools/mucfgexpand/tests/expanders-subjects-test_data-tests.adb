@@ -191,7 +191,7 @@ package body Expanders.Subjects.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename => "obj/subjects_local_ids.xml",
          Ref_Diff => "data/subjects_local_ids.xml.diff",
-         Pre      => Add_CPU_IDs'Access,
+         Pre      => Prepare_Local_IDs'Access,
          Expander => Add_Local_IDs'Access);
 --  begin read only
    end Test_Add_Local_IDs;
@@ -354,6 +354,7 @@ package body Expanders.Subjects.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename => "obj/subjects_cpu_ids.xml",
          Ref_Diff => "data/subjects_cpu_ids.xml.diff",
+         Pre      => Scheduling.Add_CPU_IDs'Access,
          Expander => Add_CPU_IDs'Access);
 --  begin read only
    end Test_Add_CPU_IDs;

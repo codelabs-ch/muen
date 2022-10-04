@@ -247,19 +247,10 @@ is
 
    procedure Add_CPU_IDs (Data : in out Muxml.XML_Data_Type)
    is
-      Minor_Frames : constant DOM.Core.Node_List
+      Group_Subjects : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/scheduling/majorFrame/cpu/minorFrame");
-      Physical_Events : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Data.Doc,
-           XPath => "/system/events/event[@mode='switch']");
-      Source_Events : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Data.Doc,
-           XPath => "/system/subjects/subject/events/source/group"
-           & "/*[self::event or self::default]");
+           XPath => "/system/scheduling/partitions/partition/group/subject");
       Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -277,15 +268,17 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subj_Node,
                  Name => "name");
-            CPU_ID     : constant Integer
-              := Mutools.XML_Utils.Get_Executing_CPU
-                (Physical_Events => Physical_Events,
-                 Source_Events   => Source_Events,
-                 Minor_Frames    => Minor_Frames,
-                 Subject         => Subj_Node);
+            Sched_Part : constant DOM.Core.Node
+              := Muxml.Utils.Ancestor_Node
+                (Node  => Muxml.Utils.Get_Element
+                   (Nodes     => Group_Subjects,
+                    Ref_Attr  => "name",
+                    Ref_Value => Subj_Name),
+                 Level => 2);
             CPU_ID_Str : constant String
-              := Ada.Strings.Fixed.Trim (Source => CPU_ID'Img,
-                                         Side   => Ada.Strings.Left);
+              := DOM.Core.Elements.Get_Attribute
+                                (Elem => Sched_Part,
+                                 Name => "cpu");
          begin
             Mulog.Log (Msg => "Setting cpu of subject '" & Subj_Name
                        & "' to " & CPU_ID_Str);

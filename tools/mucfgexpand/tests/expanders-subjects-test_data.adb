@@ -60,6 +60,15 @@ package body Expanders.Subjects.Test_Data is
 
    -------------------------------------------------------------------------
 
+   procedure Prepare_Local_IDs (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Scheduling.Add_CPU_IDs (Data => Data);
+      Add_CPU_IDs (Data => Data);
+   end Prepare_Local_IDs;
+
+   -------------------------------------------------------------------------
+
    procedure Prepare_Profile (Data: in out Muxml.XML_Data_Type)
    is
    begin

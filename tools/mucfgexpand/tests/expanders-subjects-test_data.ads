@@ -55,4 +55,7 @@ package Expanders.Subjects.Test_Data is
    --  Prepare subjects for sibling memory expansion.
    procedure Prepare_Sibling_Mappings (Data : in out Muxml.XML_Data_Type);
 
+   --  Prepare subjects for local ID expansion step.
+   procedure Prepare_Local_IDs (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Subjects.Test_Data;

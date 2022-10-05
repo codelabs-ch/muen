@@ -36,6 +36,6 @@ is
 begin
    SK.Kernel.Initialize (Subject_Registers);
    loop
-      SK.Scheduler.Handle_Vmx_Exit (Subject_Registers);
+      SK.Kernel.Handle_Vmx_Exit (Subject_Registers);
    end loop;
 end Init;

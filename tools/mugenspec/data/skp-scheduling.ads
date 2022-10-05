@@ -9,6 +9,7 @@ is
 
    VMX_Timer_Rate : constant := 5;
 
+   type Scheduling_Partition_Range is range 1 .. 3;
    type Scheduling_Group_Range is range 1 .. 4;
 
    type Barrier_Index_Range is range 0 .. 3;

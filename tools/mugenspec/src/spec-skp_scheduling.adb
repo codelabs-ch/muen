@@ -155,6 +155,12 @@ is
           (Content  => String_Templates.skp_scheduling_ads,
            Filename => Output_Dir & "/skp-scheduling.ads");
 
+      Sched_Partition_Count : constant Natural
+        := DOM.Core.Nodes.Length
+          (List => McKae.XML.XPath.XIA.XPath_Query
+             (N     => Scheduling,
+              XPath => "partitions/partition"));
+
       Subject_To_Group_ID  : constant Subject_ID_Map.Map
         := To_Map (Subjects => Subjects);
       Sched_Groups_To_Subj : constant MXU.ID_Map_Array
@@ -441,6 +447,10 @@ is
          Item     => Ada.Strings.Fixed.Trim
            (Source => Timer_Rate'Img,
             Side   => Ada.Strings.Left));
+      TMPL.Stream (Template => Template);
+      TMPL.Write
+        (Template => Template,
+         Item     => "1 .." & Natural'Image (Sched_Partition_Count));
       TMPL.Stream (Template => Template);
       TMPL.Write
         (Template => Template,

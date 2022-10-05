@@ -187,6 +187,16 @@ is
           3 => 2,
           4 => 3);
 
+   type Subject_To_Sched_Partition_Array is array (Global_Subject_ID_Type)
+     of Scheduling_Partition_Range;
+
+   Subject_To_Scheduling_Partition : constant Subject_To_Sched_Partition_Array
+     := Subject_To_Sched_Partition_Array'(
+          0 => 1,
+          1 => 2,
+          2 => 3,
+          3 => 3);
+
    type Subject_To_Scheduling_Group_Array is array (Global_Subject_ID_Type)
      of Scheduling_Group_Range;
 
@@ -203,5 +213,12 @@ is
      return Scheduling_Group_Range
    is
      (Subject_To_Scheduling_Group (Subject_ID));
+
+   --  Returns the scheduling partition ID of the subject specified by ID.
+   function Get_Scheduling_Partition_ID
+     (Subject_ID : Global_Subject_ID_Type)
+     return Scheduling_Partition_Range
+   is
+     (Subject_To_Scheduling_Partition (Subject_ID));
 
 end Skp.Scheduling;

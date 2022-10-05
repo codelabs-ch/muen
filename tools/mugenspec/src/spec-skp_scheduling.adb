@@ -40,9 +40,14 @@ is
 
    use Ada.Strings.Unbounded;
 
+   type Scheduling_ID_Type is record
+      Partition_ID : Natural;
+      Group_ID     : Natural;
+   end record;
+
    package Subject_ID_Map is new Ada.Containers.Hashed_Maps
      (Key_Type        => Ada.Strings.Unbounded.Unbounded_String,
-      Element_Type    => Natural,
+      Element_Type    => Scheduling_ID_Type,
       Hash            => Ada.Strings.Unbounded.Hash,
       Equivalent_Keys => Ada.Strings.Unbounded."=");
 
@@ -51,7 +56,8 @@ is
      (Minor_Frames : DOM.Core.Node_List)
       return Interfaces.Unsigned_64;
 
-   --  Return the subject scheduling group ID map for the given subject nodes.
+   --  Return the subject scheduling partition & group ID map for the given
+   --  scheduling subject nodes.
    function To_Map (Subjects : DOM.Core.Node_List) return Subject_ID_Map.Map;
 
    -------------------------------------------------------------------------
@@ -94,15 +100,24 @@ is
                Subj_Node : constant DOM.Core.Node
                  := DOM.Core.Nodes.Item (List  => Subjects,
                                          Index => I);
+               Subj_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Subj_Node,
+                    Name => "name");
+               Group_ID_Str : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => DOM.Core.Nodes.Parent_Node (N => Subj_Node),
+                    Name => "id");
+               Partition_ID_Str : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Muxml.Utils.Ancestor_Node (Node  => Subj_Node,
+                                                       Level => 2),
+                    Name => "id");
             begin
                Map.Insert
-                 (Key      => To_Unbounded_String
-                    (DOM.Core.Elements.Get_Attribute
-                         (Elem => Subj_Node,
-                          Name => "name")),
-                  New_Item => Natural'Value (DOM.Core.Elements.Get_Attribute
-                    (Elem => Subj_Node,
-                     Name => "schedGroupId")));
+                 (Key      => To_Unbounded_String (Subj_Name),
+                  New_Item => (Partition_ID => Natural'Value (Partition_ID_Str),
+                               Group_ID     => Natural'Value (Group_ID_Str)));
             end;
          end loop;
       end return;
@@ -126,6 +141,10 @@ is
       Scheduling   : constant DOM.Core.Node := Muxml.Utils.Get_Element
         (Doc   => Policy.Doc,
          XPath => "/system/scheduling");
+      SG_Subjects  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Scheduling,
+           XPath => "partitions/partition/group/subject");
       Processor    : constant DOM.Core.Node := Muxml.Utils.Get_Element
         (Doc   => Policy.Doc,
          XPath => "/system/hardware/processor");
@@ -161,8 +180,8 @@ is
              (N     => Scheduling,
               XPath => "partitions/partition"));
 
-      Subject_To_Group_ID  : constant Subject_ID_Map.Map
-        := To_Map (Subjects => Subjects);
+      Subject_To_Sched_IDs : constant Subject_ID_Map.Map
+        := To_Map (Subjects => SG_Subjects);
       Sched_Groups_To_Subj : constant MXU.ID_Map_Array
         := MXU.Get_Initial_Scheduling_Group_Subjects (Data => Policy);
 
@@ -174,6 +193,9 @@ is
 
       --  Returns the subject to scheduling group mapping as string.
       function Get_Subject_To_Sched_Group_Mapping return String;
+
+      --  Returns the subject to scheduling partition mapping as string.
+      function Get_Subject_To_Sched_Partition_Mapping return String;
 
       --  Write major frame with given index and minor frames to buffer.
       procedure Write_Major_Frame
@@ -277,6 +299,38 @@ is
 
          return To_String (Buffer);
       end Get_Subject_To_Sched_Group_Mapping;
+
+      ----------------------------------------------------------------------
+
+      function Get_Subject_To_Sched_Partition_Mapping return String
+      is
+         Buffer : Unbounded_String;
+         Subj_Count : constant Natural
+           := DOM.Core.Nodes.Length (List => Subjects);
+      begin
+         for I in 0 .. Subj_Count - 1 loop
+            declare
+               Subj_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => DOM.Core.Nodes.Item (List  => Subjects,
+                                                 Index => I),
+                    Name => "name");
+               Sched_Part_ID : constant Natural
+                 := Subject_To_Sched_IDs.Element
+                   (Key => To_Unbounded_String
+                      (Source => Subj_Name)).Partition_ID;
+            begin
+               Buffer := Buffer & Indent (N => 3)
+                 & I'Img & " =>" & Sched_Part_ID'Img;
+
+               if I < Subj_Count - 1 then
+                  Buffer := Buffer & "," & ASCII.LF;
+               end if;
+            end;
+         end loop;
+
+         return To_String (Buffer);
+      end Get_Subject_To_Sched_Partition_Mapping;
 
       ----------------------------------------------------------------------
 
@@ -412,8 +466,8 @@ is
          Subject : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Minor,
             Name => "subject");
-         Sched_Group_ID : constant Natural
-           := Subject_To_Group_ID.Element
+         Sched_ID : constant Scheduling_ID_Type
+           := Subject_To_Sched_IDs.Element
              (Key => To_Unbounded_String (Source => Subject));
       begin
          Cycles_Count := Cycles_Count + Ticks;
@@ -422,7 +476,7 @@ is
            (Template => Template,
             Item     => Indent (N => 4) & Index'Img
             & " => Minor_Frame_Type'(Group_ID =>"
-            & Sched_Group_ID'Img
+            & Sched_ID.Group_ID'Img
             & "," & ASCII.LF
             & Indent (N => 12) & "Barrier  => "
             & (if Barrier = "none" then "No_Barrier" else Barrier)
@@ -547,6 +601,10 @@ is
          end if;
       end loop;
 
+      TMPL.Stream (Template => Template);
+      TMPL.Write
+        (Template => Template,
+         Item     => Get_Subject_To_Sched_Partition_Mapping);
       TMPL.Stream (Template => Template);
       TMPL.Write
         (Template => Template,

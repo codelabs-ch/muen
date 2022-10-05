@@ -17,7 +17,7 @@
             <string value="start_"/>
             <variable name="name2"/>
             <variable name="name1"/>
-            <string value="$foo"/>
+            <string value="foobar"/>
          </concatenation>
       </expression>
       <expression name="evalStringExpr1">

@@ -5,16 +5,7 @@
 
 with AUnit.Test_Fixtures;
 
-with Ada.Directories;
-with Ada.Exceptions;
-
-with DOM.Core.Documents;
-
-with Muxml.Utils;
-
-with Test_Utils;
-
-package Mutools.Expressions.Test_Data is
+package Mutools.Expressions.Case_Expression.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -24,8 +15,4 @@ package Mutools.Expressions.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-   procedure Initialize_Node_Access_Testing
-      (Data        :        Muxml.XML_Data_Type;
-       Node_Access : in out Access_Hashmaps_Type);
-
-end Mutools.Expressions.Test_Data;
+end Mutools.Expressions.Case_Expression.Test_Data;

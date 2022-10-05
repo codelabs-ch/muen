@@ -73,29 +73,4 @@ is
        Node_Access : Access_Hashmaps_Type)
       return String;
 
-private
-   -- To be called on nodes like <boolean value="foo"/> as well as
-   --   config-variable entries like <boolean name="varname" value="foo"/>
-   --   (independet of the type of the variable)
-   -- Sets Type_And_Value with the respective type-value tuple.
-   -- If value begins with '$', an error will be reported.
-   procedure Get_Type_And_Value
-      (Node           :     DOM.Core.Node;
-       Type_And_Value : out Value_Type_Tuple);
-
-   -- Evaluate a Case-Statement within an expression recursively.
-   procedure Evaluate_Case_Node
-      (Case_Node     :        DOM.Core.Node;
-       Value_Of_Case :    out Value_Type_Tuple;
-       Backtrace     : in out String_Vector.Vector;
-       Node_Access   : in out Access_Hashmaps_Type);
-
-   -- assign the value of the variable or expression with name Ref_Name to
-   -- Result. This triggers expansion of that node if neccessary.
-   procedure Get_Value_Of_Reference
-      (Ref_Name      :        String;
-       Result        :    out Value_Type_Tuple;
-       Backtrace     : in out String_Vector.Vector;
-       Node_Access   : in out Access_Hashmaps_Type);
-
 end Mutools.Expressions.Case_Expression;

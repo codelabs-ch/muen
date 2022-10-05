@@ -26,6 +26,36 @@ with Muxml.Utils;
 
 package body Mutools.Expressions.Case_Expression
 is
+   -- To be called on nodes like <boolean value="foo"/> as well as
+   --   config-variable entries like <boolean name="varname" value="foo"/>
+   --   (independet of the type of the variable)
+   -- Sets Type_And_Value with the respective type-value tuple.
+   -- If value begins with '$', an error will be reported.
+   procedure Get_Type_And_Value
+      (Node           :     DOM.Core.Node;
+       Type_And_Value : out Value_Type_Tuple);
+
+   -------------------------------------------------------------------------
+
+   -- Evaluate a Case-Statement within an expression recursively.
+   procedure Evaluate_Case_Node
+      (Case_Node     :        DOM.Core.Node;
+       Value_Of_Case :    out Value_Type_Tuple;
+       Backtrace     : in out String_Vector.Vector;
+       Node_Access   : in out Access_Hashmaps_Type);
+
+   -------------------------------------------------------------------------
+
+   -- assign the value of the variable or expression with name Ref_Name to
+   -- Result. This triggers expansion of that node if neccessary.
+   procedure Get_Value_Of_Reference
+      (Ref_Name      :        String;
+       Result        :    out Value_Type_Tuple;
+       Backtrace     : in out String_Vector.Vector;
+       Node_Access   : in out Access_Hashmaps_Type);
+
+   -------------------------------------------------------------------------
+
    function "=" (L, R : Value_Type_Tuple) return Boolean
    is
    begin
@@ -54,6 +84,7 @@ is
          := McKae.XML.XPath.XIA.XPath_Query
               (N     => Expr_Node,
                XPath => "./case");
+
       Node_Name : constant String
          := DOM.Core.Elements.Get_Attribute
               (Elem => Expr_Node,
@@ -67,7 +98,7 @@ is
             & DOM.Core.Elements.Get_Attribute
             (Elem => Expr_Node,
              Name => "name")
-            & "' has "
+            & "' has"
             & DOM.Core.Nodes.Length (List => Children)'Image
             & " case-child nodes. Should have exactly one.";
       end if;
@@ -212,7 +243,7 @@ is
          begin
             if DOM.Core.Nodes.Length (List => Child_Children) /= 1 then
                raise Invalid_Expression with
-                  "When-Node inside of Case has "
+                  "When-Node inside of Case has"
                   & DOM.Core.Nodes.Length (List => Child_Children)'Image
                   & " child nodes. Should have one.";
             end if;
@@ -418,16 +449,16 @@ is
    begin
       if not Muxml.Utils.Has_Attribute (Node => Node, Attr_Name => "value") then
          raise Invalid_Expression with
-            "Get_Type_And_Value called on node with name '"
+            "Found node with name '"
             & Node_Name
-            & "' which has no value";
+            & "' without necessary 'value' attribute";
       elsif Node_Value'Length > 0
          and then Node_Value (Node_Value'First) = '$'
       then
          raise Invalid_Expression with
-            "Get_Type_And_Value called on node with name '"
+            "Node with name '"
             & Node_Name
-            & "' which has value starting with '$'";
+            & "' must not have value starting with '$' within expressions";
       end if;
 
       if Node_Name = "boolean" then
@@ -442,9 +473,9 @@ is
             := String_Holder_Type.To_Holder (Node_Value);
       else
          raise Invalid_Expression with
-            "Get_Type_And_Value called on node with name '"
+            "Cannot determine type and value of node with name '"
             & Node_Name
-            & "'";
+            & "'. Invalid node name.";
       end if;
    end Get_Type_And_Value;
 
@@ -536,8 +567,8 @@ is
    begin
       Get_Value_If_Contained
          (Name        => Ref_Name,
-          Result     => Result,
-          Found      => Found,
+          Result      => Result,
+          Found       => Found,
           Node_Access => Node_Access);
 
       if not Found then

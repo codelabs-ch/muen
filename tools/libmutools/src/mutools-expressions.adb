@@ -36,6 +36,9 @@ package body Mutools.Expressions
 is
    Expr_Debug_Active : Boolean := False;
 
+   -- Throws an exception if the first character of Input is '$'
+   procedure Assure_First_Char_Not_Dollar (Input : String);
+
    -------------------------------------------------------------------------
 
    procedure Add_To_Backtrace
@@ -76,6 +79,19 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Assure_First_Char_Not_Dollar (Input : String)
+   is
+   begin
+      if Input /= "" and then Input (Input'First) = '$' then
+         raise Invalid_Expression with
+            "Argument with value '"
+            & Input
+            & "' must not start with '$' within expressions";
+      end if;
+   end Assure_First_Char_Not_Dollar;
+
+   -------------------------------------------------------------------------
+
    function Bool_Value
      (Node        :        DOM.Core.Node;
       Backtrace   : in out String_Vector.Vector;
@@ -98,10 +114,15 @@ is
 
       case Bool_Type is
          when Bool_Boolean  =>
-            Result := Boolean'Value
-              (DOM.Core.Elements.Get_Attribute
-                                     (Elem => Node,
-                                      Name => "value"));
+            declare
+               Value : constant String
+                  := DOM.Core.Elements.Get_Attribute
+                  (Elem => Node,
+                   Name => "value");
+            begin
+               Assure_First_Char_Not_Dollar (Input => Value);
+               Result := Boolean'Value (Value);
+            end;
          when Bool_Variable =>
             declare
                Var_Name : constant String
@@ -109,6 +130,8 @@ is
                              (Elem => Node,
                               Name => "name");
             begin
+               Assure_First_Char_Not_Dollar (Input => Var_Name);
+
                if Node_Access.Output_Boolean.Contains (Var_Name) then
                   Result := Node_Access.Output_Boolean (Var_Name);
                else
@@ -678,10 +701,10 @@ is
                   Mutools.Expressions.Case_Expression.String_Type
                then
                   raise Muxml.Validation_Error with
-                     "A String variable or expression points to expression "
+                     "A string variable or expression points to expression "
                      & "with name '"
                      & Node_Name
-                     & "' which is not String valued";
+                     & "' which is not string valued";
                end if;
                Result :=  ASU.To_Unbounded_String
                   (Result_Case.String_Value.Element);
@@ -785,13 +808,6 @@ is
          Insert_Position, Config_Entry, Config_Node, System_Node, Dummy : DOM.Core.Node;
          pragma Unreferenced (Dummy);
       begin
-         if Node_Access.Output_Boolean.Is_Empty and
-            Node_Access.Output_Integer.Is_Empty and
-            Node_Access.Output_String.Is_Empty
-         then
-            return;
-         end if;
-
          if DOM.Core.Nodes.Length (List => Config_Node_List) /= 0 then
             Config_Node := DOM.Core.Nodes.Item
                (List  => Config_Node_List,
@@ -1138,7 +1154,8 @@ is
                if Has_Been_Amended then
                   raise;
                else
-                  Mulog.Log (Msg => Mutools.Xmldebuglog.Get_Log_For_Error_Message (Node => Node));
+                  Mulog.Log (Msg => Mutools.Xmldebuglog.Get_Log_For_Error_Message
+                                (Node => Node));
                   Ada.Exceptions.Raise_Exception
                      (E       => Ada.Exceptions.Exception_Identity (X => E),
                       Message => Ada.Exceptions.Exception_Message (X => E)
@@ -1178,11 +1195,11 @@ is
    begin
       if First_Child = null then
          raise Invalid_Expression with
-            "Expression with name "
+            "Expression with name '"
             & DOM.Core.Elements.Get_Attribute
                 (Elem => Expr,
                  Name => "name")
-            & " is empty.";
+            & "' is empty";
       end if;
       declare
          Child_Name : constant String := DOM.Core.Nodes.Node_Name (N => First_Child);
@@ -1206,12 +1223,13 @@ is
             return Variable_Expr_Type;
          else
             raise Invalid_Expression with
-               "Expression with name "
+               "Expression with name '"
                & DOM.Core.Elements.Get_Attribute
                (Elem => Expr,
                 Name => "name")
-               & " begins with illegal operator "
-               & Child_Name;
+               & "' begins with illegal operator '"
+               & Child_Name
+               & "'";
          end if;
       end;
 
@@ -1238,8 +1256,8 @@ is
       procedure Loop_Until_Element (N : in out DOM.Core.Node)
       is
       begin
-         while DOM.Core.Nodes.Node_Type (N => N)
-            /= DOM.Core.Element_Node
+         while N /= null and then
+            DOM.Core.Nodes.Node_Type (N => N) /= DOM.Core.Element_Node
          loop
             N := DOM.Core.Nodes.Next_Sibling (N => N);
             exit when  N = null;
@@ -1250,6 +1268,7 @@ is
       Loop_Until_Element (N => Child);
 
       for I in 2 .. N loop
+         exit when Child = null;
          Child := DOM.Core.Nodes.Next_Sibling (N => Child);
          Loop_Until_Element (N => Child);
       end loop;
@@ -1273,7 +1292,18 @@ is
                (Elem => Node,
                 Name => "name");
          begin
-            Node_Access.Input.Insert (Key => Node_Name_Attr, New_Item => Node);
+            if Node_Name_Attr = "" then
+               if Expr_Debug_Active then
+                  Mulog.Log (Msg => Mutools.Xmldebuglog.Get_Log_For_Error_Message
+                                (Node => Node));
+               end if;
+               raise Invalid_Expression with
+                  "Found empty variable or expression name";
+            else
+               Node_Access.Input.Insert
+                  (Key => Node_Name_Attr,
+                   New_Item => Node);
+            end if;
          end;
       end loop;
    end Initialize_Node_Access;
@@ -1304,10 +1334,15 @@ is
 
       case Int_Type is
          when Int_Integer  =>
-            Result := Integer'Value
-              (DOM.Core.Elements.Get_Attribute
-                 (Elem => Node,
-                  Name => "value"));
+            declare
+               Value : constant String
+                  := DOM.Core.Elements.Get_Attribute
+                  (Elem => Node,
+                   Name => "value");
+            begin
+               Assure_First_Char_Not_Dollar (Input => Value);
+               Result := Integer'Value (Value);
+            end;
          when Int_Variable =>
             declare
                Var_Name : constant String
@@ -1315,6 +1350,7 @@ is
                              (Elem => Node,
                               Name => "name");
             begin
+               Assure_First_Char_Not_Dollar (Input => Var_Name);
                if Node_Access.Output_Integer.Contains (Var_Name) then
                   Result := Node_Access.Output_Integer (Var_Name);
                else
@@ -1404,7 +1440,8 @@ is
             if Has_Dollar_Or_Braces (Input => String_Fragment) then
                raise Invalid_Expression with
                   "EvalString got invaild value '" & Input_String & "'";
-            elsif String_Fragment'Length > 0 then
+            else
+               -- an empty reference is OK for the parser
                Fragment_Vector.Append
                   (Container => Result,
                    New_Item  => Fragment_Entry'
@@ -1613,8 +1650,16 @@ is
                 := DOM.Core.Nodes.Node_Name (N => Node);
    begin
       if Node_Name = "string" then
-         return DOM.Core.Elements.Get_Attribute (Elem => Node,
-                                                 Name => "value");
+         declare
+            Value : constant String
+               := DOM.Core.Elements.Get_Attribute
+               (Elem => Node,
+                Name => "value");
+         begin
+            Assure_First_Char_Not_Dollar (Input => Value);
+            return Value;
+         end;
+
       elsif Node_Name = "variable" then
          declare
             Var_Name : constant String
@@ -1622,6 +1667,7 @@ is
                           (Elem => Node,
                            Name => "name");
          begin
+            Assure_First_Char_Not_Dollar (Input => Var_Name);
             if Node_Access.Output_String.Contains (Var_Name) then
                return Node_Access.Output_String (Var_Name);
             else

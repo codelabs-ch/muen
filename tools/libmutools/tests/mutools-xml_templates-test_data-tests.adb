@@ -24,9 +24,6 @@ with DOM.Core.Elements;
 with DOM.Core.Documents;
 
 with Muxml.Utils;
--- mmmDEBUG Begin
-with Ada.Text_IO;        use Ada.Text_IO;
--- mmmDEBUG END
 
 --  begin read only
 --  end read only
@@ -283,7 +280,6 @@ package body Mutools.XML_Templates.Test_Data.Tests is
 
       exception
          when E : Muxml.Validation_Error =>
-            Put_Line ("mmmmException:" & Ada.Exceptions.Exception_Message (X => E));
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                        = "Parameter 'id1' in call of template 'template_memory'"
                        & " has no value attribute.",

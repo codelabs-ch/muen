@@ -55,7 +55,7 @@ package body Mutools.Conditionals.Test_Data.Tests is
 
          -- remove all IF-nodes
          -- the loop is necessary because nested IFs prevent usage of
-         -- functions such as Muxml.Utils.Remove.Remove_Elements
+         -- functions such as Muxml.Utils.Remove_Elements
          loop
             Node_List := McKae.XML.XPath.XIA.XPath_Query
                (N     => Data.Doc,
@@ -88,13 +88,13 @@ package body Mutools.Conditionals.Test_Data.Tests is
 
       procedure Positive_Test
       is
-         Output : constant String := "obj/config_conditionals.xml";
+         Output : constant String := "obj/output_test_policy_src_conditionals.xml";
          Data   : Muxml.XML_Data_Type;
       begin
          Muxml.Parse
            (Data => Data,
             Kind => Muxml.None,
-            File => "data/test_policy_src.xml");
+            File => "data/test_policy_src_conditionals.xml");
 
          Expand (Policy => Data);
 
@@ -102,7 +102,7 @@ package body Mutools.Conditionals.Test_Data.Tests is
                       Kind => Muxml.None,
                       File => Output);
          Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => "data/config_conditionals.xml",
+                 (Filename1 => "data/output_test_policy_src_conditionals.xml",
                   Filename2 => Output),
                  Message   => "Policy mismatch: " & Output);
 
@@ -111,17 +111,6 @@ package body Mutools.Conditionals.Test_Data.Tests is
    begin
       Positive_Test;
       No_Conditionals;
-
-      -- Planned Tests:
-      -- variable not found
-
-      -- cast of value not possible
-      --  including nested cases!
-      -- case_positive without others
-      -- case positive on others
-      -- case nothing matches
-      -- case types of vars not ok
-      -- ...
 
 --  begin read only
    end Test_Expand;

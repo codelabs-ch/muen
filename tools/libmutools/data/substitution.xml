@@ -5,6 +5,7 @@
   <integer name="session_count" value="4"/>
   <integer name="default_size" value="16#1000#"/>
   <string name="default_name" value="foobar"/>
+  <string name="options" value="video=true, color='grey'"/>
  </config>
  <hardware>
   <processor cpuCores="4" speed="50" vmxTimerRate="0"/>
@@ -46,6 +47,7 @@
  </components>
  <subjects>
   <subject name="$default_name">
+   <bootparams>$options</bootparams>
    <events/>
    <component ref="dbgserver"/>
   </subject>

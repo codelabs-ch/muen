@@ -510,7 +510,9 @@ is
       TMPL.Stream (Template => Template);
       TMPL.Write
         (Template => Template,
-         Item     => "1 .." & Natural'Image (Sched_Groups_To_Subj'Last));
+         Item     => Ada.Strings.Fixed.Trim
+           (Source => Natural'Image (Sched_Groups_To_Subj'Last),
+            Side   => Ada.Strings.Left));
       TMPL.Stream (Template => Template);
       TMPL.Write
         (Template => Template,

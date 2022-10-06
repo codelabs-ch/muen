@@ -10,7 +10,14 @@ is
    VMX_Timer_Rate : constant := __vmx_timer_rate__;
 
    type Scheduling_Partition_Range is range __scheduling_partition_range__;
-   type Scheduling_Group_Range is range __scheduling_group_range__;
+
+   type Extended_Scheduling_Group_Range is
+     range 0 .. __scheduling_group_count__;
+   subtype Scheduling_Group_Range is Extended_Scheduling_Group_Range
+     range 1 .. Extended_Scheduling_Group_Range'Last;
+
+   No_Group : constant Extended_Scheduling_Group_Range
+     := Extended_Scheduling_Group_Range'First;
 
    type Barrier_Index_Range is range 0 .. __max_barrier_count__;
 

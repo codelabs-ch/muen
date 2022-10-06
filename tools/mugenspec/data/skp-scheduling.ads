@@ -211,6 +211,35 @@ is
             2 => 2,
             3 => 2)));
 
+   type Scheduling_Group_Index_Range is
+      range 0 .. Max_Groups_Per_Partition - 1;
+   type Scheduling_Group_Map is array (Scheduling_Group_Index_Range)
+     of Extended_Scheduling_Group_Range;
+
+   type Scheduling_Partition_Config_Type is record
+      Last_Group_Index : Scheduling_Group_Index_Range;
+      Groups           : Scheduling_Group_Map;
+   end record;
+
+   type Scheduling_Partition_Config_Array is array (Scheduling_Partition_Range)
+     of Scheduling_Partition_Config_Type;
+
+   Scheduling_Partition_Config : constant Scheduling_Partition_Config_Array
+     := Scheduling_Partition_Config_Array'(
+          1 => (Last_Group_Index => 0,
+                Groups           => Scheduling_Group_Map'(
+                   0 => 1,
+                   others => No_Group)),
+          2 => (Last_Group_Index => 0,
+                Groups           => Scheduling_Group_Map'(
+                   0 => 2,
+                   others => No_Group)),
+          3 => (Last_Group_Index => 1,
+                Groups           => Scheduling_Group_Map'(
+                   0 => 3,
+                   1 => 4,
+                   others => No_Group)));
+
    type Scheduling_Group_Array is array (Scheduling_Group_Range)
      of Global_Subject_ID_Type;
 
@@ -254,5 +283,17 @@ is
      return Scheduling_Partition_Range
    is
      (Subject_To_Scheduling_Partition (Subject_ID));
+
+   --  Returns the scheduling group ID of the group specified by index in the
+   --  context of the given scheduling partition.
+   function Get_Scheduling_Group_ID
+     (Partition_ID : Scheduling_Partition_Range;
+      Group_Index  : Scheduling_Group_Index_Range)
+     return Scheduling_Group_Range
+   is
+     (Scheduling_Partition_Config (Partition_ID).Groups (Group_Index))
+   with
+      Pre => Group_Index <= Scheduling_Partition_Config
+           (Partition_ID).Last_Group_Index;
 
 end Skp.Scheduling;

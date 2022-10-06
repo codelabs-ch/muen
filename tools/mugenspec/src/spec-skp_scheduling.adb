@@ -143,6 +143,10 @@ is
       Scheduling   : constant DOM.Core.Node := Muxml.Utils.Get_Element
         (Doc   => Policy.Doc,
          XPath => "/system/scheduling");
+      Partitions   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Scheduling,
+           XPath => "partitions/partition");
       SG_Subjects  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Scheduling,
@@ -177,10 +181,7 @@ is
            Filename => Output_Dir & "/skp-scheduling.ads");
 
       Sched_Partition_Count : constant Natural
-        := DOM.Core.Nodes.Length
-          (List => McKae.XML.XPath.XIA.XPath_Query
-             (N     => Scheduling,
-              XPath => "partitions/partition"));
+        := DOM.Core.Nodes.Length (List => Partitions);
 
       Subject_To_Sched_IDs : constant Subject_ID_Map.Map
         := To_Map (Subjects => SG_Subjects);
@@ -216,6 +217,9 @@ is
         (Minor        :        DOM.Core.Node;
          Index        :        Natural;
          Cycles_Count : in out Interfaces.Unsigned_64);
+
+      --  Write the scheduling partition configuration to the template.
+      procedure Write_Scheduling_Partition_Config;
 
       ----------------------------------------------------------------------
 
@@ -487,6 +491,76 @@ is
             & "," & ASCII.LF
             & Indent (N => 12) & "Deadline     =>" & Cycles_Count'Img & ")");
       end Write_Minor_Frame;
+
+      ----------------------------------------------------------------------
+
+      procedure Write_Scheduling_Partition_Config
+      is
+      begin
+         for I in 1 .. Sched_Partition_Count loop
+            declare
+               Partition_Node : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item (List  => Partitions,
+                                         Index => I - 1);
+               Sched_Groups : constant DOM.Core.Node_List
+                 := McKae.XML.XPath.XIA.XPath_Query
+                         (N     => Partition_Node,
+                          XPath => "group");
+               Sched_Group_Count : constant Natural
+                 := DOM.Core.Nodes.Length (List => Sched_Groups);
+            begin
+               TMPL.Write
+                 (Template => Template,
+                  Item     => Indent (N => 3)
+                  & I'Img & " => (Last_Group_Index =>"
+                  & Natural'Image (Sched_Group_Count - 1)
+                  & "," & ASCII.LF);
+               TMPL.Write
+                 (Template => Template,
+                  Item     => Indent (N => 5)
+                  & " Groups           => Scheduling_Group_Map'(" & ASCII.LF);
+
+               for J in 0 .. Sched_Group_Count - 1 loop
+                  declare
+                     Sched_Group : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Item (List  => Sched_Groups,
+                                               Index => J);
+                     Sched_Group_ID_Str : constant String
+                       := DOM.Core.Elements.Get_Attribute (Elem => Sched_Group,
+                                                           Name => "id");
+                  begin
+                     TMPL.Write
+                       (Template => Template,
+                        Item     => Indent (N => 6) & J'Img & " => "
+                        & Sched_Group_ID_Str);
+
+                     if J < Sched_Group_Count - 1 then
+                        TMPL.Write
+                          (Template => Template,
+                           Item     => "," & ASCII.LF);
+                     end if;
+                  end;
+               end loop;
+
+               if Sched_Group_Count < Max_Groups_Per_Partition then
+                  TMPL.Write
+                    (Template => Template,
+                     Item     => "," & ASCII.LF
+                     & Indent (N => 6) & " others => No_Group");
+               end if;
+
+               TMPL.Write
+                 (Template => Template,
+                  Item     => "))");
+
+               if I < Sched_Partition_Count then
+                  TMPL.Write
+                    (Template => Template,
+                     Item     => "," & ASCII.LF);
+               end if;
+            end;
+         end loop;
+      end Write_Scheduling_Partition_Config;
    begin
       Mulog.Log (Msg => "Writing scheduling spec for" & CPU_Count'Img
                  & " CPUs to '" & Output_Dir & "/skp-scheduling.ads'");
@@ -597,6 +671,10 @@ is
                Item     => "," & ASCII.LF);
          end if;
       end loop;
+
+      TMPL.Stream (Template => Template);
+
+      Write_Scheduling_Partition_Config;
 
       TMPL.Stream (Template => Template);
 

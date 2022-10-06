@@ -9,6 +9,8 @@ is
 
    VMX_Timer_Rate : constant := __vmx_timer_rate__;
 
+   Max_Groups_Per_Partition : constant := __max_groups_per_partition__;
+
    type Scheduling_Partition_Range is range __scheduling_partition_range__;
 
    type Extended_Scheduling_Group_Range is

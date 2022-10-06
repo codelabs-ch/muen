@@ -134,6 +134,8 @@ is
 
       use type Interfaces.Unsigned_64;
 
+      Max_Groups_Per_Partition : constant := 64;
+
       Subjects     : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
@@ -502,6 +504,12 @@ is
         (Template => Template,
          Item     => Ada.Strings.Fixed.Trim
            (Source => Timer_Rate'Img,
+            Side   => Ada.Strings.Left));
+      TMPL.Stream (Template => Template);
+      TMPL.Write
+        (Template => Template,
+         Item     => Ada.Strings.Fixed.Trim
+           (Source => Max_Groups_Per_Partition'Img,
             Side   => Ada.Strings.Left));
       TMPL.Stream (Template => Template);
       TMPL.Write

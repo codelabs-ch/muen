@@ -20,15 +20,17 @@ is
    No_Barrier : constant Barrier_Index_Range := Barrier_Index_Range'First;
 
    type Minor_Frame_Type is record
-      Group_ID : Scheduling_Group_Range;
-      Barrier  : Barrier_Index_Range;
-      Deadline : SK.Word64;
+      Partition_ID : Scheduling_Partition_Range;
+      Group_ID     : Scheduling_Group_Range;
+      Barrier      : Barrier_Index_Range;
+      Deadline     : SK.Word64;
    end record;
 
    Null_Minor_Frame : constant Minor_Frame_Type := Minor_Frame_Type'
-     (Group_ID => Scheduling_Group_Range'First,
-      Barrier  => No_Barrier,
-      Deadline => 0);
+     (Partition_ID => Scheduling_Partition_Range'First,
+      Group_ID     => Scheduling_Group_Range'First,
+      Barrier      => No_Barrier,
+      Deadline     => 0);
 
    type Minor_Frame_Range is range __minor_range__;
 

@@ -475,13 +475,15 @@ is
          TMPL.Write
            (Template => Template,
             Item     => Indent (N => 4) & Index'Img
-            & " => Minor_Frame_Type'(Group_ID =>"
-            & Sched_ID.Group_ID'Img
+            & " => Minor_Frame_Type'(Partition_ID =>"
+            & Sched_ID.Partition_ID'Img
             & "," & ASCII.LF
-            & Indent (N => 12) & "Barrier  => "
+            & Indent (N => 12) & "Group_ID     =>" & Sched_ID.Group_ID'Img
+            & "," & ASCII.LF
+            & Indent (N => 12) & "Barrier      => "
             & (if Barrier = "none" then "No_Barrier" else Barrier)
             & "," & ASCII.LF
-            & Indent (N => 12) & "Deadline =>" & Cycles_Count'Img & ")");
+            & Indent (N => 12) & "Deadline     =>" & Cycles_Count'Img & ")");
       end Write_Minor_Frame;
    begin
       Mulog.Log (Msg => "Writing scheduling spec for" & CPU_Count'Img

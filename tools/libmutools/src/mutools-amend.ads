@@ -28,23 +28,10 @@ is
    --     Recursive_Merge(Parent,  C)
    --   delete <amend>-nodes
    procedure Expand
-      (XML_Data    : Muxml.XML_Data_Type;
-      Debug_Active : Boolean := False);
+      (XML_Data     : Muxml.XML_Data_Type;
+       Debug_Active : Boolean := False);
 
 private
-
-   -- merge New_Child into Parent such that parts of the child-tree
-   -- that already exist in Parent are not duplicated
-   -- In detail: for each child C of Parent:
-   --   check if tag name and all attributes of C and New_Child are equal
-   --     if yes: recursive function call on C and on each Child of New_Child
-   --     if no: goto next child C of Parent
-   -- if no child matched:
-   --     append New_Child to children of Parent and return (with deep cloning)
-   procedure Recursive_Merge
-      (Parent       : DOM.Core.Node;
-       New_Child    : DOM.Core.Node;
-       Debug_Active : Boolean);
 
    -- check if L and R have the same name and the same attributes
    --   (including values of attributes)

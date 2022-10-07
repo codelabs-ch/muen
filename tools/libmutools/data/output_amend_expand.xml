@@ -72,6 +72,23 @@
   <subject name="linux2">
    <bootparams>opt=2</bootparams>
   </subject>
+  <subject name="linux3">
+   <bootparams>amended=true</bootparams>
+   <devices>
+    <device logical="car" physical="car_1234"/>
+    <device logical="bus" physical="bus_1234"/>
+   </devices>
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <default physical="system_panic">
+       <system_panic/>
+      </default>
+     </group>
+    </source>
+   </events>
+   <component ref="foo"/>
+  </subject>
   <subject name="amended_subject"/>
  </subjects>
  <scheduling tickRate="10000">

@@ -40,8 +40,8 @@ package body Mutools.Amend.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Expand (Gnattest_T : in out Test);
-   procedure Test_Expand_150aa9 (Gnattest_T : in out Test) renames Test_Expand;
---  id:2.2/150aa91f5cdabaeb/Expand/1/0/
+   procedure Test_Expand_4a19b8 (Gnattest_T : in out Test) renames Test_Expand;
+--  id:2.2/4a19b878eb07fa84/Expand/1/0/
    procedure Test_Expand (Gnattest_T : in out Test) is
 --  end read only
 
@@ -71,25 +71,44 @@ package body Mutools.Amend.Test_Data.Tests is
 
       end Positive_Test;
 
+      ----------------------------------------------------------------------
+
+      procedure No_Amend_Statements
+      is
+         Data   : Muxml.XML_Data_Type;
+         Output : constant String := "obj/output_amend_expand_no_amend.xml";
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/amend_expand.xml");
+         Muxml.Utils.Remove_Elements (Doc => Data.Doc, XPath => "//amend");
+         Muxml.Write (Data => Data,
+                      Kind => Muxml.None,
+                      File => Output & ".ref");
+         Expand (XML_Data => Data);
+         Muxml.Write (Data => Data,
+                      Kind => Muxml.None,
+                      File => Output);
+         Assert (Condition => Test_Utils.Equal_Files
+                    (Filename1 => Output & ".ref",
+                     Filename2 => Output),
+                 Message   => "Policy mismatch: " & Output);
+      end No_Amend_Statements;
+
      ----------------------------------------------------------------------
 
       procedure XPath_Not_Unique
       is
          Data   : Muxml.XML_Data_Type;
-         Node   : DOM.Core.Node;
-         Output : constant String := "obj/output_amend_expand.xml";
       begin
          Muxml.Parse (Data => Data,
                       Kind => Muxml.None,
                       File => "data/amend_expand.xml");
-         Node := Muxml.Utils.Get_Element
-                   (Doc   => Data.Doc,
-                    XPath => "/system/amend[@xpath='/']");
-         DOM.Core.Elements.Set_Attribute
-            (Elem  => Node,
+         Muxml.Utils.Set_Attribute
+            (Doc   => Data.Doc,
+             XPath => "/system/amend[@xpath='/']",
              Name  => "xpath",
              Value => "/system/platform/mappings/classes/class/device");
-
          begin
             Expand (XML_Data => Data);
             Assert (Condition => False,
@@ -100,94 +119,147 @@ package body Mutools.Amend.Test_Data.Tests is
                           = "Found 2 matches (instead of 1) for XPath "
                           & """/system/platform/mappings/classes/class/device"" "
                           & "in amend statement.",
-                       Message   => "Exception message mismatch");
+                       Message   => "Exception message mismatch: " &
+                          Ada.Exceptions.Exception_Message (X => E) );
          end;
-
       end XPath_Not_Unique;
 
+     ----------------------------------------------------------------------
+
+      procedure XPath_Not_Found
+      is
+         Data   : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/amend_expand.xml");
+         Muxml.Utils.Set_Attribute
+            (Doc   => Data.Doc,
+             XPath => "/system/amend[@xpath='/']",
+             Name  => "xpath",
+             Value => "/system/doesnotexit");
+         begin
+            Expand (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+         exception
+            when E : Muxml.Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                          = "Found 0 matches (instead of 1) for XPath "
+                          & """/system/doesnotexit"" "
+                          & "in amend statement.",
+                       Message   => "Exception message mismatch: " &
+                          Ada.Exceptions.Exception_Message (X => E));
+         end;
+      end XPath_Not_Found;
+
+     ----------------------------------------------------------------------
+
+      procedure XPath_Syntax_Error
+      is
+         Data   : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/amend_expand.xml");
+         Muxml.Utils.Set_Attribute
+            (Doc   => Data.Doc,
+             XPath => "/system/amend[@xpath='/']",
+             Name  => "xpath",
+             Value => "/system/subjects/subject[@name='foo]");
+         begin
+            Expand (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+         exception
+            when E : Constraint_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                          = "XIA was evaluating XPath "
+                          & """/system/subjects/subject[@name='foo]"" when reporting: "
+                          & "Compare requires at most one of its operands "
+                          & "to be a Node List: AS_NODE_LIST, AS_NODE_LIST",
+                       Message   => "Exception message mismatch: " &
+                          Ada.Exceptions.Exception_Message (X => E));
+         end;
+      end XPath_Syntax_Error;
+
+     ----------------------------------------------------------------------
+
+      procedure Amend_On_Textnode
+      is
+         Data           : Muxml.XML_Data_Type;
+         Node, New_Node : DOM.Core.Node;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/amend_expand.xml");
+         Node := Muxml.Utils.Get_Element
+            (Doc   => Data.Doc,
+             XPath => "/system/amend[@xpath='/']");
+         New_Node := DOM.Core.Documents.Create_Text_Node
+            (Doc => Data.Doc,
+             Data => "Foobar");
+         Muxml.Utils.Append_Child
+           (Node      => Node,
+            New_Child => New_Node);
+         Muxml.Utils.Remove_Elements
+            (Doc => Data.Doc,
+             XPath => "/system/amend[@xpath='/']/system");
+         begin
+            Expand (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+         exception
+            when E : Muxml.Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                          = "Recursive_Merge got text-node with text 'Foobar'. "
+                          & "Cannot process isolated text-nodes. "
+                          & "Please add surrounding element-node.",
+                       Message   => "Exception message mismatch: " &
+                          Ada.Exceptions.Exception_Message (X => E));
+         end;
+      end Amend_On_Textnode;
+
+     ----------------------------------------------------------------------
+
+      procedure No_Legal_Insert_Position
+      is
+         Data           : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/amend_expand.xml");
+         Muxml.Utils.Set_Attribute
+            (Doc   => Data.Doc,
+             XPath => "/system/platform/amend[@xpath='/system/hardware']",
+             Name  => "xpath",
+             Value => "/system/subjects/subject[@name='linux1']/component");
+         begin
+            Expand (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+         exception
+            when E : Muxml.Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                          = "Could not find valid place to insert 'memory' "
+                          & "into node with name 'component'",
+                       Message   => "Exception message mismatch: " &
+                          Ada.Exceptions.Exception_Message (X => E));
+         end;
+      end No_Legal_Insert_Position;
    begin
       Positive_Test;
+      No_Amend_Statements;
       XPath_Not_Unique;
+      XPath_Not_Found;
+      XPath_Syntax_Error;
+      Amend_On_Textnode;
+      No_Legal_Insert_Position;
 
 --  begin read only
    end Test_Expand;
 --  end read only
 
-
---  begin read only
-   procedure Test_Recursive_Merge (Gnattest_T : in out Test);
-   procedure Test_Recursive_Merge_c8dad1 (Gnattest_T : in out Test) renames Test_Recursive_Merge;
---  id:2.2/c8dad126d0ec91d5/Recursive_Merge/1/0/
-   procedure Test_Recursive_Merge (Gnattest_T : in out Test) is
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      Data   : Muxml.XML_Data_Type;
-      Main, Child, Dummy : DOM.Core.Node;
-      Output : constant String := "obj/tmp_output_recursive_merge.xml";
-
-   begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.None,
-                   File => "data/amend_expand.xml");
-      Main := Muxml.Utils.Get_Element
-         (Doc   => Data.Doc,
-          XPath => "/system/subjects/subject[@name='linux1']/memory");
-
-      Child := DOM.Core.Documents.Create_Element
-         (Doc      => Data.Doc,
-          Tag_Name => "memory");
-      DOM.Core.Elements.Set_Attribute
-         (Elem  => Child,
-          Name  => "name",
-          Value => "merged_element");
-      Recursive_Merge
-         (Parent    => Main,
-          New_Child => Child,
-          Debug_Active => false);
-
-      Main := Muxml.Utils.Get_Element
-         (Doc   => Data.Doc,
-          XPath => "/system/subjects/subject[@name='linux1']");
-      Child := DOM.Core.Documents.Create_Element
-         (Doc      => Data.Doc,
-          Tag_Name => "bootparams");
-      Dummy := DOM.Core.Nodes.Insert_Before
-         (N         => Child,
-          New_Child => DOM.Core.Documents.Create_Text_Node
-             (Doc  => Data.Doc,
-              Data => "merged text"),
-          Ref_Child => null);
-      Recursive_Merge
-         (Parent       => Main,
-          New_Child    => Child,
-          Debug_Active => false);
-
-      Child := Main;
-      Main  := Muxml.Utils.Get_Element
-         (Doc   => Data.Doc,
-          XPath => "/system/subjects");
-      DOM.Core.Elements.Set_Attribute
-         (Elem  => Child,
-          Name  => "name",
-          Value => "linux1_copy");
-      Recursive_Merge (Parent    => Main,
-                       New_Child => Child,
-                       Debug_Active => false);
-      Muxml.Write (Data => Data,
-                   Kind => Muxml.None,
-                   File => Output);
-      Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => "data/output_recursive_merge.xml",
-                  Filename2 => Output),
-              Message   => "Policy mismatch: " & Output);
-
-      --Ada.Directories.Delete_File (Name => Output);
-
---  begin read only
-   end Test_Recursive_Merge;
---  end read only
 
 --  begin read only
    procedure Test_Nodes_Equal (Gnattest_T : in out Test);

@@ -29,9 +29,17 @@ with McKae.XML.XPath.XIA;
 
 package body Mutools.Amend.Ordering
 is
-   -- the package extracts schema-information at elaboration time and stores
-   -- its results in Order_Info
-   Order_Info : Order_Information;
+
+   ------------------------------------------------------------------------
+
+   -- return a string representation of a Vector_Tuple as tuples
+   -- proided that the entries of VT have the same length
+   function To_String (VT : Vector_Tuple) return String;
+
+   ------------------------------------------------------------------------
+
+   -- return a string representation of a String_Vector
+   function To_String (SV : String_Vector.Vector) return String;
 
    ------------------------------------------------------------------------
 
@@ -863,7 +871,6 @@ is
             Initialize_Vectors (Vec => Vec, Name => "containers");
 
          else
-            -- Program_Error (nur arcane stuff)
             raise Program_Error with
                "Unknown option " & Name & " for Initialize_Vectors ";
          end if;
@@ -905,7 +912,7 @@ is
                   end if;
                   Ada.Strings.Unbounded.Append
                      (Source   => Path,
-                      New_Item => " > ");
+                      New_Item => "/");
                end loop;
                Ada.Strings.Unbounded.Append
                   (Source   => Path,
@@ -1002,8 +1009,7 @@ is
       Output, Key : ASU.Unbounded_String
          := U ("");
       Newline : constant String
-         := "" & Ada.Characters.Latin_1.LF
-               & Ada.Characters.Latin_1.CR;
+         := "" & Ada.Characters.Latin_1.LF;
 
       Cursor_VT : String_To_Vector_Tuple.Cursor
          := OI.Type_To_Children.First;
@@ -1028,7 +1034,7 @@ is
       Output := Output & "}" & Newline;
 
       -- image of Name_To_Type
-      Output :=  Output & Newline & "{" & Newline;
+      Output :=  Output & "{" & Newline;
       while Cursor_SV /= String_To_String_Vector.No_Element loop
          Key := U (String_To_String_Vector.Key (Cursor_SV));
 

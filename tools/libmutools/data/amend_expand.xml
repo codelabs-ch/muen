@@ -89,6 +89,8 @@
 
   <subjects>
      <subject name="linux1">
+
+
         <bootparams>id=1</bootparams>
         <devices>
 	        <device logical="usb" physical="usb_conitroller_1">
@@ -105,8 +107,32 @@
         <events/>
         <component ref="linux"/>
      </subject>
-
      <subject name="linux2"/>
+     <subject name="linux3">
+        <amend xpath=".">
+           <events>
+              <source>
+                 <group name="vmx_exit">
+                    <default physical="system_panic">
+                       <system_panic/>
+                    </default>
+                 </group>
+              </source>
+           </events>
+           <!-- this comment will be gone -->
+           <component ref="foo"/>
+           <bootparams>amended=true</bootparams>
+
+        </amend>
+
+        <devices>
+           <device logical="car" physical="car_1234"/>
+           <device logical="bus" physical="bus_1234"/>
+        </devices>
+        <events>
+           <source/>
+        </events>
+     </subject>
 
   </subjects>
 

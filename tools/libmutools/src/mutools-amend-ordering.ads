@@ -87,6 +87,10 @@ private
       Name_To_Type     : String_To_String_Vector.Map;
    end record;
 
+   -- the package extracts schema-information at elaboration time and stores
+   -- its results in Order_Info
+   Order_Info : Order_Information;
+
    -- read the schema definition of the policy_src format and write the
    -- following to the internal package state:
    -- (1) a mapping of the form
@@ -99,12 +103,7 @@ private
 
    -- return a string representation of Order_Information
    function To_String (OI : Order_Information) return String;
-
-   -- return a string representation of a Vector_Tuple as tuples
-   -- proided that the entries of VT have the same length
-   function To_String (VT : Vector_Tuple) return String;
-
-   -- return a string representation of a String_Vector
-   function To_String (SV : String_Vector.Vector) return String;
+   -- More To_String functions are implemented in the body.
+   -- This function is in the spec because it is used in the unittests.
 
 end Mutools.Amend.Ordering;

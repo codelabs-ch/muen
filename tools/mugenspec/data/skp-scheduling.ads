@@ -240,11 +240,11 @@ is
                    1 => 4,
                    others => No_Group)));
 
-   type Scheduling_Group_Array is array (Scheduling_Group_Range)
+   type Scheduling_Group_Config_Array is array (Scheduling_Group_Range)
      of Global_Subject_ID_Type;
 
-   Scheduling_Groups : constant Scheduling_Group_Array
-     := Scheduling_Group_Array'(
+   Scheduling_Group_Config : constant Scheduling_Group_Config_Array
+     := Scheduling_Group_Config_Array'(
           1 => 0,
           2 => 1,
           3 => 2,

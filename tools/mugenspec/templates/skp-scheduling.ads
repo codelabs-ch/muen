@@ -98,11 +98,11 @@ __major_frames_info__);
      := Scheduling_Partition_Config_Array'(
 __scheduling_partitions__);
 
-   type Scheduling_Group_Array is array (Scheduling_Group_Range)
+   type Scheduling_Group_Config_Array is array (Scheduling_Group_Range)
      of Global_Subject_ID_Type;
 
-   Scheduling_Groups : constant Scheduling_Group_Array
-     := Scheduling_Group_Array'(
+   Scheduling_Group_Config : constant Scheduling_Group_Config_Array
+     := Scheduling_Group_Config_Array'(
 __scheduling_groups__);
 
    type Subject_To_Sched_Partition_Array is array (Global_Subject_ID_Type)

@@ -124,8 +124,8 @@ private
    --D @Text Section => SK.Scheduler.Scheduling_Groups
    --D IDs of active subjects per scheduling group. The array stores the ID of
    --D the current active subject for each scheduling group.
-   Scheduling_Groups : Skp.Scheduling.Scheduling_Group_Array
-     := Skp.Scheduling.Scheduling_Groups
+   Scheduling_Groups : Skp.Scheduling.Scheduling_Group_Config_Array
+     := Skp.Scheduling.Scheduling_Group_Config
    with
       Part_Of => State;
 

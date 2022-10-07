@@ -50,6 +50,15 @@ is
       Global  => (In_Out => State),
       Depends => (State =>+ (Event_ID, Subject));
 
+   --  Returns True if the specified subject has currently an event pending.
+   function Has_Pending_Event
+     (Subject : Skp.Global_Subject_ID_Type)
+      return Boolean
+   with
+      Global  => (Input => State),
+      Depends => (Has_Pending_Event'Result => (State, Subject)),
+      Volatile_Function;
+
    --  Consume an event of the subject given by ID. Returns False if no
    --  pending event is found.
    procedure Consume_Event

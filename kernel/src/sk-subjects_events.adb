@@ -90,4 +90,21 @@ is
       end if;
    end Consume_Event;
 
+   -----------------------------------------------------------------------
+
+   function Has_Pending_Event
+     (Subject : Skp.Global_Subject_ID_Type)
+      return Boolean
+  with
+      Refined_Global  => (Input => Global_Pending_Events),
+      Refined_Depends => (Has_Pending_Event'Result => (Global_Pending_Events,
+                                                       Subject))
+   is
+      Has_Event_Set : Boolean;
+   begin
+      Has_Event_Set := Atomics.Has_Bit_Set
+        (Atomic => Global_Pending_Events (Subject));
+      return Has_Event_Set;
+   end Has_Pending_Event;
+
 end SK.Subjects_Events;

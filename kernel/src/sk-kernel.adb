@@ -115,9 +115,8 @@ is
       --D Then, check if the subject has more pending interrupts and activate
       --D interrupt window exiting if required, see Intel SDM Vol. 3C, "26.7.5
       --D Interrupt-Window Exiting and Virtual-Interrupt Delivery".
-      Subjects_Interrupts.Has_Pending_Interrupt
-        (Subject           => Subject_ID,
-         Interrupt_Pending => Interrupt_Pending);
+      Interrupt_Pending := Subjects_Interrupts.Has_Pending_Interrupt
+        (Subject => Subject_ID);
       if Interrupt_Pending then
          VMX.VMCS_Set_Interrupt_Window (Value => True);
       end if;

@@ -126,29 +126,26 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Has_Pending_Interrupt
-     (Subject           :     Skp.Global_Subject_ID_Type;
-      Interrupt_Pending : out Boolean)
+   function Has_Pending_Interrupt
+     (Subject : Skp.Global_Subject_ID_Type)
+      return Boolean
    with
-      Refined_Global  => Pending_Interrupts,
-      Refined_Depends => (Interrupt_Pending => (Subject, Pending_Interrupts))
+      Refined_Global  => (Input => Pending_Interrupts)
    is
-      Field      : Word64;
-      Unused_Pos : Bitops.Word64_Pos;
+      Field             : Word64;
+      Interrupt_Pending : Boolean;
    begin
       Search_Interrupt_Words :
-      for Interrupt_Word in reverse Interrupt_Word_Type loop
+      for Interrupt_Word in Interrupt_Word_Type loop
          --D @Interface
          --D Read current pending interrupt word of specific subject into Field
          --D variable.
          Field := Pending_Interrupts (Subject).Data (Interrupt_Word);
-
-         Find_Highest_Bit_Set
-           (Field => Field,
-            Found => Interrupt_Pending,
-            Pos   => Unused_Pos);
+         Interrupt_Pending := Field /= 0;
          exit Search_Interrupt_Words when Interrupt_Pending;
       end loop Search_Interrupt_Words;
+
+      return Interrupt_Pending;
    end Has_Pending_Interrupt;
 
    -------------------------------------------------------------------------

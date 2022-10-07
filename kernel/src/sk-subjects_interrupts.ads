@@ -40,13 +40,13 @@ is
       Global  => (In_Out => State),
       Depends => (State =>+ (Vector, Subject));
 
-   --  Return True if the subject identified by ID has interrupt(s) pending.
-   procedure Has_Pending_Interrupt
-     (Subject           :     Skp.Global_Subject_ID_Type;
-      Interrupt_Pending : out Boolean)
+   --  Returns True if the subject identified by ID has interrupt(s) pending.
+   function Has_Pending_Interrupt
+     (Subject : Skp.Global_Subject_ID_Type)
+      return Boolean
    with
       Global  => (Input => State),
-      Depends => (Interrupt_Pending => (Subject, State));
+      Volatile_Function;
 
    --  Consume an interrupt of a subject given by ID. Returns False if no
    --  outstanding interrupt is found.

@@ -123,11 +123,41 @@ private
    with
       Part_Of => State;
 
+   --D @Interface
+   --D Runtime scheduling group information.
+   type Scheduling_Group_Type is record
+      --D @Interface
+      --D ID of currently active subject of scheduling group.
+      Active_Subject : Skp.Global_Subject_ID_Type;
+      --D @Interface
+      --D ID of scheduling group with next (later) expiring timer relative to
+      --D this group's timer.
+      Next_Timer     : Policy.Extended_Scheduling_Group_Range;
+      --D @Interface
+      --D ID of scheduling group with previous (earlier) expiring timer relative
+      --D to this group's timer.
+      Prev_Timer     : Policy.Extended_Scheduling_Group_Range;
+      --D @Interface
+      --D Timeout value of timed event of this scheduling group's active
+      --D subject. Corresponds to the TSC_Trigger_Value on the timed event page
+      --D of the active subject.
+      Timeout        : Word64;
+   end record;
+
+   Null_Scheduling_Group : constant Scheduling_Group_Type
+     := (Active_Subject => Skp.Global_Subject_ID_Type'First,
+         Next_Timer     => Policy.No_Group,
+         Prev_Timer     => Policy.No_Group,
+         Timeout        => Word64'Last);
+
+   type Scheduling_Group_Array is array
+     (Policy.Scheduling_Group_Range) of Scheduling_Group_Type;
+
    --D @Text Section => SK.Scheduler.Scheduling_Groups
    --D IDs of active subjects per scheduling group. The array stores the ID of
    --D the current active subject for each scheduling group.
-   Scheduling_Groups : Skp.Scheduling.Scheduling_Group_Config_Array
-     := Skp.Scheduling.Scheduling_Group_Config
+   Scheduling_Groups : Scheduling_Group_Array
+     := (others => Null_Scheduling_Group)
    with
       Part_Of => State;
 

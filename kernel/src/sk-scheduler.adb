@@ -40,7 +40,7 @@ is
       Refined_Post    => Scheduling_Groups
         (Policy.Scheduling_Plans (CPU_Info.CPU_ID)
          (Global_Current_Major_Frame_ID).Minor_Frames
-         (Current_Minor_Frame_ID).Group_ID) = Subject_ID
+         (Current_Minor_Frame_ID).Group_ID).Active_Subject = Subject_ID
    is
    begin
       --D @Interface
@@ -50,7 +50,7 @@ is
       Scheduling_Groups
         (Policy.Scheduling_Plans (CPU_Info.CPU_ID)
          (Global_Current_Major_Frame_ID).Minor_Frames
-         (Current_Minor_Frame_ID).Group_ID) := Subject_ID;
+         (Current_Minor_Frame_ID).Group_ID).Active_Subject := Subject_ID;
    end Set_Current_Subject_ID;
 
    -------------------------------------------------------------------------
@@ -65,13 +65,13 @@ is
           Scheduling_Groups
             (Policy.Scheduling_Plans (CPU_Info.CPU_ID)
              (Global_Current_Major_Frame_ID).Minor_Frames
-             (Current_Minor_Frame_ID).Group_ID)
+             (Current_Minor_Frame_ID).Group_ID).Active_Subject
    is
    begin
       return Scheduling_Groups
         (Policy.Scheduling_Plans (CPU_Info.CPU_ID)
          (Global_Current_Major_Frame_ID).Minor_Frames
-         (Current_Minor_Frame_ID).Group_ID);
+         (Current_Minor_Frame_ID).Group_ID).Active_Subject;
    end Get_Current_Subject_ID;
 
    -------------------------------------------------------------------------
@@ -243,6 +243,23 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Init_Scheduling_Groups
+   with
+      Global =>
+        (Output => Scheduling_Groups)
+   is
+   begin
+      for I in Scheduling_Groups'Range loop
+         Scheduling_Groups (I)
+           := (Active_Subject => Policy.Scheduling_Group_Config (I),
+               Next_Timer     => Policy.No_Group,
+               Prev_Timer     => Policy.No_Group,
+               Timeout        => SK.Word64'Last);
+      end loop;
+   end Init_Scheduling_Groups;
+
+   -------------------------------------------------------------------------
+
    --D @Section Id => impl_kernel_init_sched, Label => Scheduler Initialization, Parent => impl_kernel_init, Priority => 10
    --D @Text Section => impl_kernel_init_sched
    --D Scheduler initialization is performed by each CPU and consists of the
@@ -252,6 +269,10 @@ is
    is
       use type Skp.CPU_Range;
    begin
+      --D @Item List => impl_kernel_init_sched_steps
+      --D Initialize scheduling group data structures, i.e. set initially active
+      --D subjects.
+      Init_Scheduling_Groups;
 
       --D @Item List => impl_kernel_init_sched_steps
       --D Setup VMCS and state of each subject running on this logical CPU,

@@ -129,6 +129,12 @@ is
                                              Active_XCR0_Features))
    is
    begin
+      --D @Interface
+      --D Restore the full XSAVE state of the subject specified by ID by first
+      --D setting all active XCR0 feature bits and then executing XRSTOR.
+      --D After the full state has been loaded into the FPU, set XCR0 to the
+      --D FPU features that the subject has requested. This may be a subset of
+      --D all active FPU features.
       Write_XCR0 (Value => Active_XCR0_Features);
       CPU.XRSTOR (Source => Subject_FPU_States (ID).XSAVE_Area,
                   State  => Active_XCR0_Features);
@@ -149,6 +155,12 @@ is
                                                   Current_XCR0))
    is
    begin
+      --D @Interface
+      --D Save the full XSAVE state of the subject specified by ID by first
+      --D setting all active XCR0 feature bits and then executing XSAVE. XCR0 is
+      --D explicitly set to all active XCR0 feature bits so make sure the full
+      --D XSAVE-managed state is saved, even if the subject has some FPU
+      --D features disabled.
       Write_XCR0 (Value => Active_XCR0_Features);
       CPU.XSAVE (Target => Subject_FPU_States (ID).XSAVE_Area,
                  State  => Active_XCR0_Features);
@@ -243,6 +255,10 @@ is
    is
    begin
       if Current_XCR0 /= Value then
+
+         --  Only write to the physical XCR0 register if it is actually
+         --  different from the current XCR0 value.
+
          Current_XCR0 := Value;
          CPU.XSETBV (Register => 0,
                      Value    => Current_XCR0);

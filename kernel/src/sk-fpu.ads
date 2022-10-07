@@ -107,6 +107,8 @@ private
    with
       Part_Of => State;
 
+   --  Current value of XCR0. Used to determine if write to XCR0 register is
+   --  actually necessary or if it already contains that value.
    Current_XCR0 : Word64 := 0
    with
       Part_Of => State;

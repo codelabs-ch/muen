@@ -35,13 +35,19 @@ with SK.Timed_Events;
 with SK.VMX;
 with SK.Crash_Audit;
 
+private with SK.Atomics;
+
 --D @Interface
 --D This package implements the fixed-cyclic scheduler and additional, required
 --D functionality.
 package SK.Scheduler
 with
-   Abstract_State => State,
-   Initializes    => State
+   Abstract_State => (State,
+                      (Group_Activity_Indicator
+                       with External => (Async_Writers,
+                                         Async_Readers))),
+   Initializes    => (State,
+                      Group_Activity_Indicator => CPU_Info.Is_BSP)
 is
 
    --  Returns the subject ID of the currently active scheduling group.
@@ -122,6 +128,29 @@ private
      := Policy.Minor_Frame_Range'First
    with
       Part_Of => State;
+
+   pragma Compile_Time_Error
+     (Atomics.Bit_Pos'First /= Byte (Policy.Scheduling_Group_Index_Range'First),
+      "Atomic bitmap index and scheduling group index start differ");
+   pragma Compile_Time_Error
+     (Atomics.Bit_Pos'Last /= Byte (Policy.Scheduling_Group_Index_Range'Last),
+      "Atomic bitmap index and scheduling group index end differ");
+
+   type Scheduling_Group_Activity_Indicator_Array is
+     array (Policy.Scheduling_Partition_Range) of Atomics.Atomic64_Type;
+
+   --D @Text Section => SK.Scheduler.Global_Group_Activity_Indicator
+   --D Scheduling group activity indicator bitmap. Tracks the active scheduling
+   --D groups of each scheduling partition. The bitmap position to scheduling
+   --D group mapping is specified in the scheduling partition config of the
+   --D policy.
+   Global_Group_Activity_Indicator : Scheduling_Group_Activity_Indicator_Array
+   with
+      Volatile,
+      Async_Readers,
+      Async_Writers,
+      Linker_Section => Constants.Global_Data_Section,
+      Part_Of        => Group_Activity_Indicator;
 
    --D @Interface
    --D Runtime scheduling partition information.

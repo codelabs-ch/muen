@@ -23,10 +23,11 @@ with SK.Kernel;
 
 package body SK.Scheduler
 with
-   Refined_State => (State => (Current_Minor_Frame_ID,
-                               Global_Current_Major_Frame_ID,
-                               Global_Current_Major_Start_Cycles,
-                               Scheduling_Partitions, Scheduling_Groups))
+   Refined_State =>
+     (State => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
+                Global_Current_Major_Start_Cycles, Scheduling_Partitions,
+                Scheduling_Groups),
+      Group_Activity_Indicator => Global_Group_Activity_Indicator)
 is
 
    -------------------------------------------------------------------------
@@ -35,26 +36,24 @@ is
    --  specified by the current minor frame in the scheduling plan of the
    --  executing CPU.
    function Current_Scheduling_Partition_ID
-     return Skp.Scheduling.Scheduling_Partition_Range
-   is (Skp.Scheduling.Scheduling_Plans (CPU_Info.CPU_ID)
-        (Global_Current_Major_Frame_ID).Minor_Frames
+     return Policy.Scheduling_Partition_Range
+   is (Policy.Scheduling_Plans (CPU_Info.CPU_ID)
+       (Global_Current_Major_Frame_ID).Minor_Frames
        (Current_Minor_Frame_ID).Partition_ID);
 
    -------------------------------------------------------------------------
 
    --  Returns the ID of the currently active scheduling group which is
    --  specified by the current scheduling partition.
-   function Current_Scheduling_Group_ID
-     return Skp.Scheduling.Scheduling_Group_Range
+   function Current_Scheduling_Group_ID return Policy.Scheduling_Group_Range
    is
       Partition_ID : constant Policy.Scheduling_Partition_Range
         := Current_Scheduling_Partition_ID;
       Group_Index  : constant Policy.Scheduling_Group_Index_Range
         := Scheduling_Partitions (Partition_ID).Active_Group_Index;
    begin
-      return
-        Skp.Scheduling.Scheduling_Partition_Config
-          (Partition_ID).Groups (Group_Index);
+      return Policy.Scheduling_Partition_Config
+        (Partition_ID).Groups (Group_Index);
    end Current_Scheduling_Group_ID;
 
    -------------------------------------------------------------------------
@@ -341,4 +340,27 @@ is
       end;
    end Init;
 
+   -------------------------------------------------------------------------
+
+begin
+   if CPU_Info.Is_BSP then
+
+      --  The group indicator array is a single instance shared by all CPUs. So
+      --  it must only be initialized by a single CPU, i.e. BSP. This is done
+      --  during elaboration so gnatprove is able to show that the abstract
+      --  Global_Activity_Indicator state is properly initialized.
+
+      for I in Policy.Scheduling_Partition_Range loop
+         Atomics.Init (Atomic => Global_Group_Activity_Indicator (I));
+
+         --  Mark all defined groups of the partition as active.
+
+         for J in Policy.Scheduling_Group_Index_Range'First ..
+           Policy.Scheduling_Partition_Config (I).Last_Group_Index
+         loop
+            Atomics.Set (Atomic => Global_Group_Activity_Indicator (I),
+                         Bit    => Atomics.Bit_Pos (J));
+         end loop;
+      end loop;
+   end if;
 end SK.Scheduler;

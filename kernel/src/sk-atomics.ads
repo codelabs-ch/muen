@@ -49,6 +49,10 @@ is
       Found  : out Boolean;
       Bit    : out Bit_Pos);
 
+   --  Returns True if at least one bit in the atomic bitmap is set.
+   function Has_Bit_Set (Atomic : Atomic64_Type) return Boolean
+   with Volatile_Function;
+
 private
 
    type Atomic64_Type is record

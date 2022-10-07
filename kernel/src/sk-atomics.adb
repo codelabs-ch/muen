@@ -66,6 +66,15 @@ is
 
    -------------------------------------------------------------------------
 
+   function Has_Bit_Set (Atomic : Atomic64_Type) return Boolean
+   is
+      Bits : constant Word64 := Atomic.Bits;
+   begin
+      return Bits /= 0;
+   end Has_Bit_Set;
+
+   -------------------------------------------------------------------------
+
    procedure Init (Atomic : out Atomic64_Type)
    is
    begin

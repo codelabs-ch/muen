@@ -276,6 +276,8 @@ is
          Segment_Regs    => Segments,
          GDTR            => Null_Segment,
          IDTR            => Null_Segment,
+         Running         => True,
+         Padding         => 0,
          others          => 0);
    end Reset_State;
 

@@ -191,7 +191,11 @@ is
        Size => Segment_Regs_Size * 8;
 
    Subj_State_Size : constant :=
-     (CPU_Regs_Size + Segment_Regs_Size + 2 * Seg_Type_Size + 5 * 4 + 13 * 8);
+     (CPU_Regs_Size + Segment_Regs_Size + 2 * Seg_Type_Size + 5 * 4 + 13 * 8
+      + 1);
+
+   type Reserved_Type is mod 2 ** 7
+   with Size => 7;
 
    --D @Interface
    --D The Muen SK stores the subject state of each running subject into a
@@ -202,7 +206,7 @@ is
       --D @Interface
       --D CPU registers CR2, RAX, RBX, RCX, RDX, RDI, RSI, RBP, R08-R15
       --D (64 bits each).
-      Regs                : CPU_Registers_Type;
+      Regs               : CPU_Registers_Type;
       --D @Interface
       --D Exit reason; Intel SDM Vol. 3C, "24.9.1 Basic VM-Exit Information".
       --D This field encodes the reason for the VM exit.
@@ -290,6 +294,11 @@ is
       --D @Interface
       --D Guest interrupt descriptor table register (IDTR).
       IDTR               : Segment_Type;
+      --D @Interface
+      --D Flag used by the kernel to track whether the subject is running or
+      --D sleeping.
+      Running            : Boolean;
+      Padding            : Reserved_Type;
    end record
    with
       Pack,
@@ -401,6 +410,8 @@ private
                             LDTR => Null_Segment),
         GDTR            => Null_Segment,
         IDTR            => Null_Segment,
+        Running         => True,
+        Padding         => 0,
         others          => 0);
 
 end SK;

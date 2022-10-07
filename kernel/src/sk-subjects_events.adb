@@ -16,66 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with System.Machine_Code;
-
-with SK.Bitops;
-
 package body SK.Subjects_Events
 with
    Refined_State => (State => Global_Pending_Events)
 is
-
-   -------------------------------------------------------------------------
-
-   --  Clear event for specified subject in global events array.
-   procedure Atomic_Clear
-     (Subject_ID : Skp.Global_Subject_ID_Type;
-      Event_ID   : Byte)
-   with
-      Global  => (In_Out => Global_Pending_Events),
-      Depends => (Global_Pending_Events =>+ (Subject_ID, Event_ID));
-
-   procedure Atomic_Clear
-     (Subject_ID : Skp.Global_Subject_ID_Type;
-      Event_ID   : Byte)
-   with
-      SPARK_Mode => Off
-   is
-   begin
-      System.Machine_Code.Asm
-        (Template => "lock btr %0, (%1)",
-         Inputs   => (Word32'Asm_Input ("r", Word32 (Event_ID)),
-                      System.Address'Asm_Input
-                        ("r", Global_Pending_Events (Subject_ID)'Address)),
-         Clobber  => "memory",
-         Volatile => True);
-   end Atomic_Clear;
-
-   -------------------------------------------------------------------------
-
-   --  Set event for specified subject in global events array.
-   procedure Atomic_Set
-     (Subject_ID : Skp.Global_Subject_ID_Type;
-      Event_ID   : Byte)
-   with
-      Global  => (In_Out => Global_Pending_Events),
-      Depends => (Global_Pending_Events =>+ (Subject_ID, Event_ID));
-
-   procedure Atomic_Set
-     (Subject_ID : Skp.Global_Subject_ID_Type;
-      Event_ID   : Byte)
-   with
-      SPARK_Mode => Off
-   is
-   begin
-      System.Machine_Code.Asm
-        (Template => "lock bts %0, (%1)",
-         Inputs   => (Word32'Asm_Input ("r", Word32 (Event_ID)),
-                      System.Address'Asm_Input
-                        ("r", Global_Pending_Events (Subject_ID)'Address)),
-         Clobber  => "memory",
-         Volatile => True);
-   end Atomic_Set;
 
    -------------------------------------------------------------------------
 
@@ -89,7 +33,7 @@ is
       for Subj_ID in Skp.Global_Subject_ID_Type'Range loop
          --D @Interface
          --D Set pending events of all subjects to zero.
-         Global_Pending_Events (Subj_ID) := Atomic64_Type'(Bits => 0);
+         Atomics.Init (Atomic => Global_Pending_Events (Subj_ID));
       end loop;
    end Initialize;
 
@@ -103,8 +47,8 @@ is
       Refined_Depends => (Global_Pending_Events =>+ (Event_ID, Subject))
    is
    begin
-      Atomic_Set (Subject_ID => Subject,
-                  Event_ID   => Byte (Event_ID));
+      Atomics.Set (Atomic => Global_Pending_Events (Subject),
+                   Bit    => Byte (Event_ID));
    end Set_Event_Pending;
 
    -------------------------------------------------------------------------
@@ -117,7 +61,7 @@ is
    begin
       --D @Interface
       --D Set pending events of subject with given ID to zero.
-      Global_Pending_Events (Subject) := Atomic64_Type'(Bits => 0);
+      Atomics.Init (Atomic => Global_Pending_Events (Subject));
    end Clear_Events;
 
    -------------------------------------------------------------------------
@@ -131,26 +75,18 @@ is
       Refined_Depends => ((Event, Found, Global_Pending_Events) =>
                            (Global_Pending_Events, Subject))
    is
-      procedure Find_Highest_Bit_Set is new Bitops.Find_Highest_Bit_Set
-        (Search_Range => Bitops.Word64_Pos);
-
-      Bits    : Word64;
-      Bit_Pos : Bitops.Word64_Pos;
+      Bit_Pos : Atomics.Bit_Pos;
    begin
       Event := 0;
-      --D @Interface
-      --D Read current pending events of specific subject into Bits variable.
-      Bits  := Global_Pending_Events (Subject).Bits;
 
-      Find_Highest_Bit_Set
-        (Field => Bits,
-         Found => Found,
-         Pos   => Bit_Pos);
-
+      Atomics.Find_Highest_Bit_Set
+        (Atomic => Global_Pending_Events (Subject),
+         Found  => Found,
+         Bit    => Bit_Pos);
       if Found then
          Event := Skp.Events.Event_Range (Bit_Pos);
-         Atomic_Clear (Subject_ID => Subject,
-                       Event_ID   => Byte (Event));
+         Atomics.Clear (Atomic => Global_Pending_Events (Subject),
+                        Bit    => Byte (Event));
       end if;
    end Consume_Event;
 

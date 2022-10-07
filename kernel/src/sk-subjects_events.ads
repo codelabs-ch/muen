@@ -20,6 +20,7 @@ with Skp.Events;
 
 with SK.CPU_Info;
 
+private with SK.Atomics;
 private with SK.Constants;
 
 --D @Interface
@@ -67,25 +68,12 @@ is
 
 private
 
-   --D @Interface
-   --D 64-bit atomic type, where each bit represents a pending event with the
-   --D event number corresponding to the bit position.
-   type Atomic64_Type is record
-      --D @Interface
-      --D 64-bits accessible atomically to enable concurrent access.
-      Bits : Word64 with Atomic;
-   end record
-   with
-      Atomic,
-      Size      => 64,
-      Alignment => 8;
-
    pragma Compile_Time_Error
-     ((Atomic64_Type'Size < 2 ** Skp.Events.Event_Bits),
+     ((Atomics.Atomic64_Type'Size < 2 ** Skp.Events.Event_Bits),
       "Pending event bit size too small");
 
    type Pending_Events_Array is array (Skp.Global_Subject_ID_Type)
-     of Atomic64_Type
+     of Atomics.Atomic64_Type
    with
       Independent_Components;
 

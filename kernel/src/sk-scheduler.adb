@@ -251,7 +251,8 @@ is
    begin
       for I in Scheduling_Groups'Range loop
          Scheduling_Groups (I)
-           := (Active_Subject => Policy.Scheduling_Group_Config (I),
+           := (Active_Subject => Policy.Scheduling_Group_Config
+               (I).Initial_Subject,
                Next_Timer     => Policy.No_Group,
                Prev_Timer     => Policy.No_Group,
                Timeout        => SK.Word64'Last);

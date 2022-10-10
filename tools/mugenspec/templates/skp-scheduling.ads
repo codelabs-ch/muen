@@ -98,8 +98,13 @@ __major_frames_info__);
      := Scheduling_Partition_Config_Array'(
 __scheduling_partitions__);
 
+   type Scheduling_Group_Config_Type is record
+      Initial_Subject : Global_Subject_ID_Type;
+      Group_Index     : Scheduling_Group_Index_Range;
+   end record;
+
    type Scheduling_Group_Config_Array is array (Scheduling_Group_Range)
-     of Global_Subject_ID_Type;
+     of Scheduling_Group_Config_Type;
 
    Scheduling_Group_Config : constant Scheduling_Group_Config_Array
      := Scheduling_Group_Config_Array'(
@@ -144,5 +149,12 @@ __subj_to_scheduling_group__);
    with
       Pre => Group_Index <= Scheduling_Partition_Config
            (Partition_ID).Last_Group_Index;
+
+   --  Returns the scheduling group index of the group specified by ID.
+   function Get_Scheduling_Group_Index
+     (Group_ID : Scheduling_Group_Range)
+      return Scheduling_Group_Index_Range
+   is
+     (Scheduling_Group_Config (Group_ID).Group_Index);
 
 end Skp.Scheduling;

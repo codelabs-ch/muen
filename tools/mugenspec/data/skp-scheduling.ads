@@ -240,15 +240,24 @@ is
                    1 => 4,
                    others => No_Group)));
 
+   type Scheduling_Group_Config_Type is record
+      Initial_Subject : Global_Subject_ID_Type;
+      Group_Index     : Scheduling_Group_Index_Range;
+   end record;
+
    type Scheduling_Group_Config_Array is array (Scheduling_Group_Range)
-     of Global_Subject_ID_Type;
+     of Scheduling_Group_Config_Type;
 
    Scheduling_Group_Config : constant Scheduling_Group_Config_Array
      := Scheduling_Group_Config_Array'(
-          1 => 0,
-          2 => 1,
-          3 => 2,
-          4 => 3);
+          1 => (Initial_Subject => 0,
+                Group_Index     => 0),
+          2 => (Initial_Subject => 1,
+                Group_Index     => 0),
+          3 => (Initial_Subject => 2,
+                Group_Index     => 0),
+          4 => (Initial_Subject => 3,
+                Group_Index     => 1));
 
    type Subject_To_Sched_Partition_Array is array (Global_Subject_ID_Type)
      of Scheduling_Partition_Range;
@@ -295,5 +304,12 @@ is
    with
       Pre => Group_Index <= Scheduling_Partition_Config
            (Partition_ID).Last_Group_Index;
+
+   --  Returns the scheduling group index of the group specified by ID.
+   function Get_Scheduling_Group_Index
+     (Group_ID : Scheduling_Group_Range)
+      return Scheduling_Group_Index_Range
+   is
+     (Scheduling_Group_Config (Group_ID).Group_Index);
 
 end Skp.Scheduling;

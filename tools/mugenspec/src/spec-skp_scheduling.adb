@@ -187,6 +187,7 @@ is
         := To_Map (Subjects => SG_Subjects);
       Sched_Groups_To_Subj : constant MXU.ID_Map_Array
         := MXU.Get_Initial_Scheduling_Group_Subjects (Data => Policy);
+      Sched_Groups_To_Idx  : MXU.ID_Map_Array (Sched_Groups_To_Subj'Range);
 
       --  Returns the maximum count of barriers per major frame.
       function Get_Max_Barrier_Count (Schedule : DOM.Core.Node) return Natural;
@@ -217,6 +218,9 @@ is
         (Minor        :        DOM.Core.Node;
          Index        :        Natural;
          Cycles_Count : in out Interfaces.Unsigned_64);
+
+      --  Write the scheduling group configuration to the template.
+      procedure Write_Scheduling_Group_Config;
 
       --  Write the scheduling partition configuration to the template.
       procedure Write_Scheduling_Partition_Config;
@@ -494,6 +498,28 @@ is
 
       ----------------------------------------------------------------------
 
+      procedure Write_Scheduling_Group_Config
+      is
+      begin
+         for I in Sched_Groups_To_Subj'Range loop
+            TMPL.Write
+              (Template => Template,
+               Item     => Indent (N => 3)
+               & I'Img & " => (Initial_Subject =>"
+               & Sched_Groups_To_Subj (I)'Img  & "," & ASCII.LF
+               & Indent (N => 5) & " Group_Index     =>"
+               & Sched_Groups_To_Idx (I)'Img & ")");
+
+            if I < Sched_Groups_To_Subj'Last then
+               TMPL.Write
+                 (Template => Template,
+                  Item     => "," & ASCII.LF);
+            end if;
+         end loop;
+      end Write_Scheduling_Group_Config;
+
+      ----------------------------------------------------------------------
+
       procedure Write_Scheduling_Partition_Config
       is
       begin
@@ -539,6 +565,14 @@ is
                           (Template => Template,
                            Item     => "," & ASCII.LF);
                      end if;
+
+                     --  Add entry for scheduling group ID to group index
+                     --  mapping, which will be used by the scheduling group
+                     --  config writer procedure for generating the scheduling
+                     --  group config.
+
+                     Sched_Groups_To_Idx
+                       (Natural'Value (Sched_Group_ID_Str)) := J;
                   end;
                end loop;
 
@@ -678,18 +712,7 @@ is
 
       TMPL.Stream (Template => Template);
 
-      for I in Sched_Groups_To_Subj'Range loop
-         TMPL.Write
-           (Template => Template,
-            Item     => Indent (N => 3)
-            & I'Img & " =>" & Sched_Groups_To_Subj (I)'Img);
-
-         if I < Sched_Groups_To_Subj'Last then
-            TMPL.Write
-              (Template => Template,
-               Item     => "," & ASCII.LF);
-         end if;
-      end loop;
+      Write_Scheduling_Group_Config;
 
       TMPL.Stream (Template => Template);
       TMPL.Write

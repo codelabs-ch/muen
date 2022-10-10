@@ -210,6 +210,12 @@ is
    GUEST_SYSENTER_ESP           : constant := 16#6824#;
    GUEST_SYSENTER_EIP           : constant := 16#6826#;
 
+   --  Guest activity state, see Intel SDM Vol. 3C,
+   --  "24.4.2 Guest Non-Register State".
+
+   GUEST_ACTIVITY_ACTIVE : constant := 0;
+   GUEST_ACTIVITY_HLT    : constant := 1;
+
    --  VM entry/exit interruption-information flags
 
    VM_INTERRUPT_INFO_VALID      : constant := 16#8000_0000#;

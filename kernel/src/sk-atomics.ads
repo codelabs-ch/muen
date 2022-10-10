@@ -53,6 +53,13 @@ is
    function Has_Bit_Set (Atomic : Atomic64_Type) return Boolean
    with Volatile_Function;
 
+   --  Returns True if the bit with given position in the atomic bitmap is set.
+   function Bit_Test
+     (Atomic : Atomic64_Type;
+      Bit    : Bit_Pos)
+      return Boolean
+   with Volatile_Function;
+
 private
 
    type Atomic64_Type is record

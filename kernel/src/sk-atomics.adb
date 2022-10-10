@@ -25,6 +25,19 @@ is
 
    -------------------------------------------------------------------------
 
+   function Bit_Test
+     (Atomic : Atomic64_Type;
+      Bit    : Bit_Pos)
+     return Boolean
+   is
+      Bits : constant Word64 := Atomic.Bits;
+   begin
+      return SK.Bitops.Bit_Test (Value => Bits,
+                                 Pos   => SK.Bitops.Word64_Pos (Bit));
+   end Bit_Test;
+
+   -------------------------------------------------------------------------
+
    procedure Clear
      (Atomic : in out Atomic64_Type;
       Bit    :        Bit_Pos)

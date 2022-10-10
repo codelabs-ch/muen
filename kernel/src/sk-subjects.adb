@@ -305,6 +305,9 @@ is
       --D Restore guest interruptibility from \texttt{Intr\_State} field.
       VMX.VMCS_Write (Field => Constants.GUEST_INTERRUPTIBILITY,
                       Value => Word64 (Descriptors (ID).Data.Intr_State));
+      VMX.VMCS_Write (Field => Constants.GUEST_ACTIVITY_STATE,
+                      Value => Word64 (Descriptors (ID).Data.Activity_State));
+
       --D @Item List => impl_subjects_state_restore_steps
       --D Restore guest RIP from \texttt{RIP} field.
       VMX.VMCS_Write (Field => Constants.GUEST_RIP,
@@ -445,6 +448,10 @@ is
       VMX.VMCS_Read (Field => Constants.GUEST_INTERRUPTIBILITY,
                      Value => Value);
       Descriptors (ID).Data.Intr_State := Word32'Mod (Value);
+      VMX.VMCS_Read (Field => Constants.GUEST_ACTIVITY_STATE,
+                     Value => Value);
+      Descriptors (ID).Data.Activity_State := Word32'Mod (Value);
+
       --D @Item List => impl_subjects_state_save_steps
       --D Save VM-Exit instruction length to \texttt{Instruction\_Len} field.
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_INSTRUCTION_LEN,

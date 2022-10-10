@@ -69,6 +69,21 @@ is
       Global  => (In_Out => State),
       Depends => (State  =>+ ID);
 
+   --  Return guest activity state of subject with given ID.
+   function Get_Activity_State (ID : Skp.Global_Subject_ID_Type) return Word32
+   with
+      Global  => (Input => State),
+      Depends => (Get_Activity_State'Result => (ID, State));
+
+   --  Set guest activity state of subject with given ID to given value.
+   procedure Set_Activity_State
+     (ID    : Skp.Global_Subject_ID_Type;
+      Value : Word32)
+   with
+      Global  => (In_Out => State),
+      Depends => (State  =>+ (ID, Value)),
+      Post    => Get_Activity_State (ID) = Value;
+
    --  Returns True if required invariants hold for given subject state.
    function Valid_State (ID : Skp.Global_Subject_ID_Type) return Boolean
    with

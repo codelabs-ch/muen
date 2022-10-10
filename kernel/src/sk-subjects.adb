@@ -211,6 +211,18 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Activity_State
+     (ID : Skp.Global_Subject_ID_Type)
+      return SK.Word32
+   is (Descriptors (ID).Data.Activity_State)
+   with
+      Refined_Global  => (Input => Descriptors),
+      Refined_Depends => (Get_Activity_State'Result => (ID, Descriptors)),
+      Refined_Post    =>
+        Get_Activity_State'Result = Descriptors (ID).Data.Activity_State;
+
+   -------------------------------------------------------------------------
+
    procedure Increment_RIP (ID : Skp.Global_Subject_ID_Type)
    with
       Refined_Global  => (In_Out => Descriptors),
@@ -579,6 +591,20 @@ is
       --D Save subject registers to \texttt{Regs} field.
       Descriptors (ID).Data.Regs := Regs;
    end Save_State;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Activity_State
+     (ID    : Skp.Global_Subject_ID_Type;
+      Value : Word32)
+    with
+      Refined_Global  => (In_Out => Descriptors),
+      Refined_Depends => (Descriptors  =>+ (ID, Value)),
+      Refined_Post    => Descriptors (ID).Data.Activity_State = Value
+   is
+   begin
+      Descriptors (ID).Data.Activity_State := Value;
+   end Set_Activity_State;
 
    -------------------------------------------------------------------------
 

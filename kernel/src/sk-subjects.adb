@@ -241,6 +241,15 @@ is
 
    -------------------------------------------------------------------------
 
+   function Is_Running (ID : Skp.Global_Subject_ID_Type) return Boolean
+   is (Descriptors (ID).Data.Running)
+   with
+      Refined_Global => (Input => Descriptors),
+      Refined_Post   => Is_Running'Result =
+       (Descriptors (ID).Data.Running);
+
+   -------------------------------------------------------------------------
+
    --D @Section Id => impl_subjects_state_reset, Label => State Resetting, Parent => impl_subjects_state, Priority => 25
    --D @Text Section => impl_subjects_state_reset
    --D Resetting the state of a subject with given ID means that all state
@@ -570,6 +579,20 @@ is
       --D Save subject registers to \texttt{Regs} field.
       Descriptors (ID).Data.Regs := Regs;
    end Save_State;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Running
+     (ID    : Skp.Global_Subject_ID_Type;
+      Value : Boolean)
+   with
+      Refined_Global  => (In_Out => Descriptors),
+      Refined_Depends => (Descriptors  =>+ (ID, Value)),
+      Refined_Post    => Descriptors (ID).Data.Running = Value
+   is
+   begin
+      Descriptors (ID).Data.Running := Value;
+   end Set_Running;
 
    -------------------------------------------------------------------------
 

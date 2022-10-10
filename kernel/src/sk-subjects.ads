@@ -50,6 +50,19 @@ is
    with
       Global => (Input => State);
 
+   --  Returns True if the subject with given ID is running and not sleeping.
+   function Is_Running (ID : Skp.Global_Subject_ID_Type) return Boolean
+   with
+      Global => (Input => State);
+
+   --  Set running state of subject with given ID to given value.
+   procedure Set_Running
+     (ID    : Skp.Global_Subject_ID_Type;
+      Value : Boolean)
+   with
+      Global  => (In_Out => State),
+      Depends => (State  =>+ (ID, Value));
+
    --  Move instruction pointer of subject with given ID to next instruction.
    procedure Increment_RIP (ID : Skp.Global_Subject_ID_Type)
    with

@@ -14,6 +14,10 @@ with System.Assertions;
 --
 --  end read only
 with Mucfgcheck.Validation_Errors;
+with Muxml;
+with Ada.Text_IO;
+with Ada.Text_IO.Text_Streams;
+with DOM.Core.Nodes;
 --  begin read only
 --  end read only
 package body Merge.Test_Data.Tests is
@@ -24,7 +28,6 @@ package body Merge.Test_Data.Tests is
 --  This section can be used to add global variables and other elements.
 --
 --  end read only
-
 --  begin read only
 --  end read only
 
@@ -132,6 +135,58 @@ package body Merge.Test_Data.Tests is
 
          Ada.Directories.Delete_File (Name => Output);
       end Positive_Test;
+
+      ----------------------------------------------------------------------
+
+      procedure Positive_Test_With_Debugging
+      is
+         Output : constant String := "obj/output_config_with_templateAmend.xml";
+
+         -- parse as XML-file and write out with same name and without comments
+         procedure Remove_Comments (File : String)
+         is
+            Data : Muxml.XML_Data_Type;
+            Output_File : Ada.Text_IO.File_Type;
+         begin
+            Muxml.Parse (Data => Data,
+                         Kind => Muxml.None,
+                         File => File);
+            Ada.Text_IO.Create (File => Output_File,
+                             Mode => Ada.Text_IO.Out_File,
+                                Name => File);
+            DOM.Core.Nodes.Write
+               (Stream         => Ada.Text_IO.Text_Streams.Stream (Output_File),
+                N              => Data.Doc,
+                Print_Comments => False,
+                Pretty_Print   => True);
+            Ada.Text_IO.Close (Output_File);
+         end Remove_Comments;
+
+      begin
+         Run (Config_File  => "data/config_with_templateAmend.xml",
+              Output_File  => Output,
+              Include_Path => "data",
+              Debug_Level  => VERBOSE_ERRORS);
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/output_templateAmend.xml",
+                  Filename2 => Output),
+                 Message   => "Policy mismatch: " & Output);
+         Ada.Directories.Delete_File (Name => Output);
+
+         Run (Config_File  => "data/config_with_templateAmend.xml",
+              Output_File  => Output,
+              Include_Path => "data",
+              Debug_Level  => VERBOSE_OUTPUT);
+         Remove_Comments (File => Output);
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/output_templateAmend.xml",
+                  Filename2 => Output),
+                 Message   => "Policy mismatch: " & Output);
+
+         Ada.Directories.Delete_File (Name => Output);
+      end Positive_Test_With_Debugging;
+
+
    begin
       Mucfgcheck.Validation_Errors.Clear;
       Duplicate_Config_Value;
@@ -142,6 +197,7 @@ package body Merge.Test_Data.Tests is
       Include_Path;
       No_Additional_Hw;
       Positive_Test;
+      Positive_Test_With_Debugging;
 --  begin read only
    end Test_Run;
 --  end read only

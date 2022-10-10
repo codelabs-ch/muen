@@ -138,9 +138,10 @@ package body Merge.Cmd_Line.Test_Data.Tests is
       procedure Positive_Test
       is
          Args        : aliased GNAT.OS_Lib.Argument_List
-           := (1 => new String'("-I/tmp/component"),
-               2 => new String'("data/system_config.xml"),
-               3 => new String'("merged.xml"));
+            := (1 => new String'("-d1"),
+                2 => new String'("-I/tmp/component"),
+                3 => new String'("data/system_config.xml"),
+                4 => new String'("merged.xml"));
          Test_Parser : GNAT.Command_Line.Opt_Parser;
       begin
          GNAT.Command_Line.Initialize_Option_Scan
@@ -155,6 +156,8 @@ package body Merge.Cmd_Line.Test_Data.Tests is
             GNAT.OS_Lib.Free (X => Args (A));
          end loop;
 
+         Assert (Condition => Debug_Level = VERBOSE_ERRORS,
+                 Message   => "Config file mismatch");
          Assert (Condition => Config_File = "data/system_config.xml",
                  Message   => "Config file mismatch");
          Assert (Condition => Output_File = "merged.xml",
@@ -191,6 +194,26 @@ package body Merge.Cmd_Line.Test_Data.Tests is
               Message   => "Config file mismatch");
 --  begin read only
    end Test_Get_Config_File;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Get_Debug_Level (Gnattest_T : in out Test);
+   procedure Test_Get_Debug_Level_8135fc (Gnattest_T : in out Test) renames Test_Get_Debug_Level;
+--  id:2.2/8135fcd41dceba5f/Get_Debug_Level/1/0/
+   procedure Test_Get_Debug_Level (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+      Level : Debug_Level_Type
+         := VERBOSE_ERRORS;
+   begin
+      Debug_Level := Level;
+      Assert (Condition => Get_Debug_Level = Level,
+              Message   => "Debug level mismatch");
+
+--  begin read only
+   end Test_Get_Debug_Level;
 --  end read only
 
 

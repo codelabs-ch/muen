@@ -404,9 +404,79 @@ package body Mutools.System_Config.Test_Data.Tests is
 
 --  begin read only
    procedure Test_2_Set_Value (Gnattest_T : in out Test);
-   procedure Test_Set_Value_9fa904 (Gnattest_T : in out Test) renames Test_2_Set_Value;
---  id:2.2/9fa904c55ac3a46c/Set_Value/0/0/
+   procedure Test_Set_Value_186d51 (Gnattest_T : in out Test) renames Test_2_Set_Value;
+--  id:2.2/186d5105ae671aa2/Set_Value/0/0/
    procedure Test_2_Set_Value (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Set_Value (Data  => Policy,
+                 Name  => "number",
+                 Value => 423);
+      Assert (Condition => Muxml.Utils.Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => "/system/config/integer[@name='number']",
+               Name  => "value") = "423",
+              Message   => "Value mismatch (1)");
+
+      declare
+         Cfgs : constant DOM.Core.Node_List := McKae.XML.XPath.XIA.XPath_Query
+           (N     => Policy.Doc,
+            XPath => "/system/config/*");
+         Before : Boolean := True;
+      begin
+         for I in 0 .. DOM.Core.Nodes.Length (List => Cfgs) - 1 loop
+            declare
+               Cur_Node : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item
+                   (List  => Cfgs,
+                    Index => I);
+               Tag  : constant String := DOM.Core.Nodes.Node_Name
+                 (N => Cur_Node);
+               Name : constant String := DOM.Core.Elements.Get_Attribute
+                 (Elem => Cur_Node,
+                  Name => "name");
+            begin
+               if Name = "number" and then Tag = "integer" then
+                  Before := False;
+               elsif Before then
+                  Assert (Condition => Tag /= "string",
+                          Message   => "Set integer preceded by " & Tag
+                          & " element " & Name);
+               else
+                  Assert (Condition => Tag /= "boolean",
+                          Message   => "Set integer followed by " &  Tag
+                          & " element " & Name);
+               end if;
+            end;
+         end loop;
+      end;
+
+      Set_Value (Data  => Policy,
+                 Name  => "number",
+                 Value => -1);
+      Assert (Condition => Muxml.Utils.Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => "/system/config/integer[@name='number']",
+               Name  => "value") = "-1",
+              Message   => "Value mismatch (2)");
+
+--  begin read only
+   end Test_2_Set_Value;
+--  end read only
+
+
+--  begin read only
+   procedure Test_3_Set_Value (Gnattest_T : in out Test);
+   procedure Test_Set_Value_9fa904 (Gnattest_T : in out Test) renames Test_3_Set_Value;
+--  id:2.2/9fa904c55ac3a46c/Set_Value/0/0/
+   procedure Test_3_Set_Value (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -450,7 +520,7 @@ package body Mutools.System_Config.Test_Data.Tests is
              & "' instead of 'another_String'");
 
 --  begin read only
-   end Test_2_Set_Value;
+   end Test_3_Set_Value;
 --  end read only
 
 --  begin read only

@@ -38,7 +38,7 @@ is
                                      CPU_Info.CPU_ID),
                           In_Out => Scheduling_Groups),
       Refined_Post    => Scheduling_Groups
-        (Skp.Scheduling.Scheduling_Plans (CPU_Info.CPU_ID)
+        (Policy.Scheduling_Plans (CPU_Info.CPU_ID)
          (Global_Current_Major_Frame_ID).Minor_Frames
          (Current_Minor_Frame_ID).Group_ID) = Subject_ID
    is
@@ -48,7 +48,7 @@ is
       --D by using the current major and minor frame IDs as indexes into the
       --D scheduling plan.
       Scheduling_Groups
-        (Skp.Scheduling.Scheduling_Plans (CPU_Info.CPU_ID)
+        (Policy.Scheduling_Plans (CPU_Info.CPU_ID)
          (Global_Current_Major_Frame_ID).Minor_Frames
          (Current_Minor_Frame_ID).Group_ID) := Subject_ID;
    end Set_Current_Subject_ID;
@@ -63,13 +63,13 @@ is
       Refined_Post   =>
         Get_Current_Subject_ID'Result =
           Scheduling_Groups
-            (Skp.Scheduling.Scheduling_Plans (CPU_Info.CPU_ID)
+            (Policy.Scheduling_Plans (CPU_Info.CPU_ID)
              (Global_Current_Major_Frame_ID).Minor_Frames
              (Current_Minor_Frame_ID).Group_ID)
    is
    begin
       return Scheduling_Groups
-        (Skp.Scheduling.Scheduling_Plans (CPU_Info.CPU_ID)
+        (Policy.Scheduling_Plans (CPU_Info.CPU_ID)
          (Global_Current_Major_Frame_ID).Minor_Frames
          (Current_Minor_Frame_ID).Group_ID);
    end Get_Current_Subject_ID;
@@ -86,27 +86,26 @@ is
                     Global_Current_Major_Start_Cycles, MP.Barrier,
                     Scheduling_Info.State))
    is
-      use type Skp.Scheduling.Major_Frame_Range;
-      use type Skp.Scheduling.Minor_Frame_Range;
-      use type Skp.Scheduling.Barrier_Index_Range;
+      use type Policy.Major_Frame_Range;
+      use type Policy.Minor_Frame_Range;
+      use type Policy.Barrier_Index_Range;
 
       --D @Interface
       --D Save current global major frame ID to local constant to allow
       --D changing the global variable on major frame change.
-      Current_Major_ID     : constant Skp.Scheduling.Major_Frame_Range
+      Current_Major_ID     : constant Policy.Major_Frame_Range
         := Global_Current_Major_Frame_ID;
-      Current_Minor_ID     : constant Skp.Scheduling.Minor_Frame_Range
+      Current_Minor_ID     : constant Policy.Minor_Frame_Range
         := Current_Minor_Frame_ID;
-      Current_Major_Length : constant Skp.Scheduling.Minor_Frame_Range
-        := Skp.Scheduling.Scheduling_Plans (CPU_Info.CPU_ID)
-        (Current_Major_ID).Length;
+      Current_Major_Length : constant Policy.Minor_Frame_Range
+        := Policy.Scheduling_Plans (CPU_Info.CPU_ID) (Current_Major_ID).Length;
 
       --D @Interface
       --D Save current major frame CPU cycles for schedule info export.
       Current_Major_Frame_Start : constant SK.Word64
         := Global_Current_Major_Start_Cycles;
 
-      Next_Minor_ID : Skp.Scheduling.Minor_Frame_Range;
+      Next_Minor_ID : Policy.Minor_Frame_Range;
    begin
       if Current_Minor_ID < Current_Major_Length then
 
@@ -116,11 +115,11 @@ is
          --D barrier if necessary and switch to next minor frame in the current
          --D major frame.
          declare
-            Current_Barrier : constant Skp.Scheduling.Barrier_Index_Range
-              := Skp.Scheduling.Scheduling_Plans (CPU_Info.CPU_ID)
+            Current_Barrier : constant Policy.Barrier_Index_Range
+              := Policy.Scheduling_Plans (CPU_Info.CPU_ID)
                 (Current_Major_ID).Minor_Frames (Current_Minor_ID).Barrier;
          begin
-            if Current_Barrier /= Skp.Scheduling.No_Barrier then
+            if Current_Barrier /= Policy.No_Barrier then
                MP.Wait_On_Minor_Frame_Barrier (Index => Current_Barrier);
             end if;
          end;
@@ -132,7 +131,7 @@ is
          --D If the end of the major frame has been reached, switch to the first
          --D minor frame. Sync all CPU cores and then let the BSP update the
          --D next major frame ID as designated by Tau0.
-         Next_Minor_ID := Skp.Scheduling.Minor_Frame_Range'First;
+         Next_Minor_ID := Policy.Minor_Frame_Range'First;
 
          MP.Wait_For_All;
          if CPU_Info.Is_BSP then
@@ -143,7 +142,7 @@ is
                --  as it is only updated on the BSP. All other CPUs must get
                --  the value from CPU_Info.
 
-               Next_Major_ID    : Skp.Scheduling.Major_Frame_Range;
+               Next_Major_ID    : Policy.Major_Frame_Range;
                Next_Major_Start : SK.Word64;
             begin
                Tau0_Interface.Get_Major_Frame (ID => Next_Major_ID);
@@ -153,7 +152,7 @@ is
                --D global start timestamp by the length (also called period) of
                --D the major frame that just ended.
                Next_Major_Start := Global_Current_Major_Start_Cycles
-                 + Skp.Scheduling.Major_Frames (Current_Major_ID).Period;
+                 + Policy.Major_Frames (Current_Major_ID).Period;
 
                --D @Text Section => impl_handle_timer_expiry, Priority => 10
                --D Update the global major frame ID by setting it to the next
@@ -176,7 +175,7 @@ is
                   --D minor frame barrier configuration as specified by the
                   --D system policy.
                   MP.Set_Minor_Frame_Barrier_Config
-                    (Config => Skp.Scheduling.Major_Frames
+                    (Config => Policy.Major_Frames
                        (Next_Major_ID).Barrier_Config);
                end if;
             end;
@@ -199,13 +198,13 @@ is
       --  Set scheduling information of scheduling group.
 
       Scheduling_Info.Set_Scheduling_Info
-        (ID                 => Skp.Scheduling.Get_Scheduling_Group_ID
+        (ID                 => Policy.Get_Scheduling_Group_ID
            (Subject_ID => Next_Subject),
          TSC_Schedule_Start => Current_Major_Frame_Start +
-           Skp.Scheduling.Scheduling_Plans (CPU_Info.CPU_ID)
+           Policy.Scheduling_Plans (CPU_Info.CPU_ID)
              (Current_Major_ID).Minor_Frames (Current_Minor_ID).Deadline,
          TSC_Schedule_End   => Global_Current_Major_Start_Cycles +
-           Skp.Scheduling.Scheduling_Plans (CPU_Info.CPU_ID)
+           Policy.Scheduling_Plans (CPU_Info.CPU_ID)
              (Global_Current_Major_Frame_ID).Minor_Frames
              (Next_Minor_ID).Deadline);
    end Update_Scheduling_Info;
@@ -228,7 +227,7 @@ is
       --D major frame start timestamp and adding the current minor frame
       --D deadline, which is relative to major frame start.
       Deadline := Global_Current_Major_Start_Cycles +
-        Skp.Scheduling.Scheduling_Plans (CPU_Info.CPU_ID)
+        Policy.Scheduling_Plans (CPU_Info.CPU_ID)
         (Global_Current_Major_Frame_ID).Minor_Frames
         (Current_Minor_Frame_ID).Deadline;
 
@@ -239,7 +238,7 @@ is
       end if;
 
       VMX.VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
-                      Value => Cycles / 2 ** Skp.Scheduling.VMX_Timer_Rate);
+                      Value => Cycles / 2 ** Policy.VMX_Timer_Rate);
    end Set_VMX_Exit_Timer;
 
    -------------------------------------------------------------------------
@@ -279,21 +278,21 @@ is
          --D the scheduling group of the first subject based on current
          --D TSC.
          Scheduling_Info.Set_Scheduling_Info
-           (ID                 => Skp.Scheduling.Get_Scheduling_Group_ID
+           (ID                 => Policy.Get_Scheduling_Group_ID
               (Subject_ID => Current_Subject),
             TSC_Schedule_Start => Now,
-            TSC_Schedule_End   => Now + Skp.Scheduling.Scheduling_Plans
+            TSC_Schedule_End   => Now + Policy.Scheduling_Plans
               (CPU_Info.CPU_ID)
-                (Skp.Scheduling.Major_Frame_Range'First).Minor_Frames
-                (Skp.Scheduling.Minor_Frame_Range'First).Deadline);
+                (Policy.Major_Frame_Range'First).Minor_Frames
+                (Policy.Minor_Frame_Range'First).Deadline);
 
          if CPU_Info.Is_BSP then
 
             --D @Item List => impl_kernel_init_sched_steps
             --D Set global minor frame barriers config (BSP-only).
             MP.Set_Minor_Frame_Barrier_Config
-              (Config => Skp.Scheduling.Major_Frames
-                 (Skp.Scheduling.Major_Frame_Range'First).Barrier_Config);
+              (Config => Policy.Major_Frames
+                 (Policy.Major_Frame_Range'First).Barrier_Config);
 
             --D @Item List => impl_kernel_init_sched_steps
             --D Set initial major frame start time to now.

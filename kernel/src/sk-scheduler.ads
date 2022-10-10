@@ -95,6 +95,8 @@ is
 
 private
 
+   package Policy renames Skp.Scheduling;
+
    --D @Interface
    --D Current major frame start time in CPU cycles. It is exclusively written
    --D by BSP and only read by APs. Data consistency is established via global
@@ -108,16 +110,16 @@ private
    --D ID of currently active major frame. It is exclusively written by BSP and
    --D only read by APs. Data consistency is established via global
    --D synchronization barrier.
-   Global_Current_Major_Frame_ID : Skp.Scheduling.Major_Frame_Range
-     := Skp.Scheduling.Major_Frame_Range'First
+   Global_Current_Major_Frame_ID : Policy.Major_Frame_Range
+     := Policy.Major_Frame_Range'First
    with
       Linker_Section => Constants.Global_Data_Section,
       Part_Of        => State;
 
    --D @Text Section => SK.Scheduler.Current_Minor_Frame_ID
    --D ID of currently active minor frame.
-   Current_Minor_Frame_ID : Skp.Scheduling.Minor_Frame_Range
-     := Skp.Scheduling.Minor_Frame_Range'First
+   Current_Minor_Frame_ID : Policy.Minor_Frame_Range
+     := Policy.Minor_Frame_Range'First
    with
       Part_Of => State;
 

@@ -62,6 +62,26 @@ package body Muxml.XML_Data_Type_Test_Data.XML_Data_Type_Tests is
          end;
       end loop;
 
+      -- parser that adds location information
+      declare
+         Data     : XML_Data_Type;
+         Dst_File : constant String := "obj/format_src_with_location.xml";
+      begin
+         Parse (Data         => Data,
+                Kind         => Format_Src,
+                File         => "data/format_src.xml",
+                Add_Location => True);
+         Write (Data => Data,
+                Kind => Muxml.None,
+                File => Dst_File);
+         Assert
+            (Condition => Test_Utils.Equal_Files
+                (Filename1 => "data/src_with_location.xml",
+                 Filename2 => Dst_File),
+             Message => "Stored " & Dst_File & " XML differs from loaded one");
+         Ada.Directories.Delete_File (Name => Dst_File);
+      end;
+
       Load_Invalid_Format :
       declare
          Data : XML_Data_Type;

@@ -30,6 +30,21 @@ with
       Group_Activity_Indicator => Global_Group_Activity_Indicator)
 is
 
+   --  Returns True if the subject with the given ID is active and not sleeping.
+   function Is_Active (Subject_ID : Skp.Global_Subject_ID_Type) return Boolean
+   with Volatile_Function
+   is
+      Pending_Events     : constant Boolean
+        := Subjects_Events.Has_Pending_Event (Subject => Subject_ID);
+      Pending_Interrupts : constant Boolean
+        := Subjects_Interrupts.Has_Pending_Interrupt (Subject => Subject_ID);
+      Expired_Timer      : constant Boolean
+        := Timed_Events.Has_Expired (Subject => Subject_ID);
+   begin
+      return Pending_Events or Pending_Interrupts or Expired_Timer
+        or Subjects.Is_Running (ID => Subject_ID);
+   end Is_Active;
+
    -------------------------------------------------------------------------
 
    --  Returns the ID of the currently active scheduling partition which is

@@ -31,48 +31,66 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Returns the ID of the currently active scheduling partition which is
+   --  specified by the current minor frame in the scheduling plan of the
+   --  executing CPU.
+   function Current_Scheduling_Partition_ID
+     return Skp.Scheduling.Scheduling_Partition_Range
+   is (Skp.Scheduling.Scheduling_Plans (CPU_Info.CPU_ID)
+        (Global_Current_Major_Frame_ID).Minor_Frames
+       (Current_Minor_Frame_ID).Partition_ID);
+
+   -------------------------------------------------------------------------
+
+   --  Returns the ID of the currently active scheduling group which is
+   --  specified by the current scheduling partition.
+   function Current_Scheduling_Group_ID
+     return Skp.Scheduling.Scheduling_Group_Range
+   is
+      Partition_ID : constant Policy.Scheduling_Partition_Range
+        := Current_Scheduling_Partition_ID;
+      Group_Index  : constant Policy.Scheduling_Group_Index_Range
+        := Scheduling_Partitions (Partition_ID).Active_Group_Index;
+   begin
+      return
+        Skp.Scheduling.Scheduling_Partition_Config
+          (Partition_ID).Groups (Group_Index);
+   end Current_Scheduling_Group_ID;
+
+   -------------------------------------------------------------------------
+
    procedure Set_Current_Subject_ID (Subject_ID : Skp.Global_Subject_ID_Type)
    with
       Refined_Global  => (Input  => (Current_Minor_Frame_ID,
                                      Global_Current_Major_Frame_ID,
+                                     Scheduling_Partitions,
                                      CPU_Info.CPU_ID),
                           In_Out => Scheduling_Groups),
       Refined_Post    => Scheduling_Groups
-        (Policy.Scheduling_Plans (CPU_Info.CPU_ID)
-         (Global_Current_Major_Frame_ID).Minor_Frames
-         (Current_Minor_Frame_ID).Group_ID).Active_Subject = Subject_ID
+         (Current_Scheduling_Group_ID).Active_Subject = Subject_ID
    is
    begin
       --D @Interface
       --D Set active subject of current scheduling group, which is determined
       --D by using the current major and minor frame IDs as indexes into the
-      --D scheduling plan.
-      Scheduling_Groups
-        (Policy.Scheduling_Plans (CPU_Info.CPU_ID)
-         (Global_Current_Major_Frame_ID).Minor_Frames
-         (Current_Minor_Frame_ID).Group_ID).Active_Subject := Subject_ID;
+      --D scheduling plan and the resulting partition ID as index into the
+      --D scheduling partitions array.
+      Scheduling_Groups (Current_Scheduling_Group_ID).Active_Subject
+        := Subject_ID;
    end Set_Current_Subject_ID;
 
    -------------------------------------------------------------------------
 
    function Get_Current_Subject_ID return Skp.Global_Subject_ID_Type
+   is (Scheduling_Groups (Current_Scheduling_Group_ID).Active_Subject)
    with
       Refined_Global => (Input => (Current_Minor_Frame_ID,
                                    Global_Current_Major_Frame_ID,
-                                   Scheduling_Groups, CPU_Info.CPU_ID)),
+                                   Scheduling_Groups, Scheduling_Partitions,
+                                   CPU_Info.CPU_ID)),
       Refined_Post   =>
         Get_Current_Subject_ID'Result =
-          Scheduling_Groups
-            (Policy.Scheduling_Plans (CPU_Info.CPU_ID)
-             (Global_Current_Major_Frame_ID).Minor_Frames
-             (Current_Minor_Frame_ID).Group_ID).Active_Subject
-   is
-   begin
-      return Scheduling_Groups
-        (Policy.Scheduling_Plans (CPU_Info.CPU_ID)
-         (Global_Current_Major_Frame_ID).Minor_Frames
-         (Current_Minor_Frame_ID).Group_ID).Active_Subject;
-   end Get_Current_Subject_ID;
+           Scheduling_Groups (Current_Scheduling_Group_ID).Active_Subject;
 
    -------------------------------------------------------------------------
 
@@ -80,8 +98,8 @@ is
      (Next_Subject : out Skp.Global_Subject_ID_Type)
    with
       Refined_Global =>
-        (Input  => (Scheduling_Groups, CPU_Info.CPU_ID, CPU_Info.Is_BSP,
-                    Tau0_Interface.State),
+        (Input  => (Scheduling_Groups, Scheduling_Partitions, CPU_Info.CPU_ID,
+                    CPU_Info.Is_BSP, Tau0_Interface.State),
          In_Out => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
                     Global_Current_Major_Start_Cycles, MP.Barrier,
                     Scheduling_Info.State))

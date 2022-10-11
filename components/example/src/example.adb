@@ -216,11 +216,6 @@ begin
       end if;
    end;
 
-   --  Give up CPU.
-
-   Log.Put_Line (Item => "Yielding CPU");
-   SK.Hypercall.Trigger_Event (Number => Example_Component.Events.Yield_ID);
-
    --  Act as a service: process events from associated subject.
 
    declare
@@ -248,6 +243,11 @@ begin
 
             Foo.Sender.Send (Res => Response);
          end if;
+
+         --  Sleep until next notification via event.
+
+         SK.Hypercall.Trigger_Event
+           (Number => Example_Component.Events.Sleep_ID);
       end loop;
    end;
 end Example;

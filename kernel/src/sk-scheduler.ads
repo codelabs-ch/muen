@@ -95,9 +95,11 @@ is
      (Next_Subject : out Skp.Global_Subject_ID_Type)
    with
       Global =>
-        (Input  => (CPU_Info.CPU_ID, CPU_Info.Is_BSP,
-                    Tau0_Interface.State),
-         In_Out => (State, MP.Barrier, Scheduling_Info.State));
+        (Input  => (CPU_Info.CPU_ID, CPU_Info.Is_BSP, Tau0_Interface.State,
+                    Subjects_Events.State, Subjects_Interrupts.State,
+                    Timed_Events.State, X86_64.State),
+         In_Out => (State, Group_Activity_Indicator, MP.Barrier,
+                    Scheduling_Info.State, Subjects.State));
 
 private
 

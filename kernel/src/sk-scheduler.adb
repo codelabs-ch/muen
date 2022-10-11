@@ -30,6 +30,11 @@ with
       Group_Activity_Indicator => Global_Group_Activity_Indicator)
 is
 
+   use type Policy.Extended_Scheduling_Group_Range;
+   use type Policy.Scheduling_Group_Index_Range;
+
+   -------------------------------------------------------------------------
+
    --  Returns True if the subject with the given ID is active and not sleeping.
    function Is_Active (Subject_ID : Skp.Global_Subject_ID_Type) return Boolean
    with Volatile_Function
@@ -73,6 +78,135 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Returns the index of the successor scheduling group of the specified
+   --  group in the given partition.
+   function Successor_Group
+     (Partition_ID : Policy.Scheduling_Partition_Range;
+      Group_Index  : Policy.Scheduling_Group_Index_Range)
+      return Policy.Scheduling_Group_Index_Range
+   with
+      Global  => null,
+      Depends => (Successor_Group'Result => (Group_Index, Partition_ID)),
+      Post    =>
+         Successor_Group'Result <= Policy.Scheduling_Partition_Config
+           (Partition_ID).Last_Group_Index
+   is
+      Next_Group_Index : Policy.Scheduling_Group_Index_Range;
+   begin
+      if Group_Index < Policy.Scheduling_Partition_Config
+        (Partition_ID).Last_Group_Index
+      then
+         Next_Group_Index := Group_Index + 1;
+      else
+         Next_Group_Index := Policy.Scheduling_Group_Index_Range'First;
+      end if;
+      return Next_Group_Index;
+   end Successor_Group;
+
+   -------------------------------------------------------------------------
+
+   --  Find the next active schedduling group for the scheduling partition
+   --  specified by ID. No_Group is returned if no scheduling group is active
+   --  in the given partition. The group activity indicator of the partition is
+   --  updated as part of the scheduling group search.
+   procedure Find_Next_Active_Scheduling_Group
+     (Partition_ID     :     Policy.Scheduling_Partition_Range;
+      Next_Group       : out Policy.Extended_Scheduling_Group_Range;
+      Next_Group_Index : out Policy.Scheduling_Group_Index_Range)
+   with
+      Global  => (Input  => (Subjects.State,
+                             Subjects_Events.State,
+                             Subjects_Interrupts.State,
+                             Timed_Events.State,
+                             X86_64.State),
+                  In_Out => (Global_Group_Activity_Indicator,
+                             Scheduling_Groups,
+                             Scheduling_Partitions))
+   is
+      Current_SG_Index : constant Policy.Scheduling_Group_Index_Range
+        := Scheduling_Partitions (Partition_ID).Active_Group_Index;
+      Indicated_As_Active, Subject_Is_Active : Boolean;
+   begin
+      Next_Group := Policy.No_Group;
+      Next_Group_Index := Current_SG_Index;
+      loop
+         Next_Group_Index := Successor_Group
+           (Partition_ID => Partition_ID,
+            Group_Index  => Next_Group_Index);
+         Indicated_As_Active := Atomics.Bit_Test
+           (Atomic => Global_Group_Activity_Indicator (Partition_ID),
+            Bit    => Byte (Next_Group_Index));
+         if Indicated_As_Active then
+            Next_Group := Policy.Get_Scheduling_Group_ID
+              (Partition_ID => Partition_ID,
+               Group_Index  => Next_Group_Index);
+            Subject_Is_Active := Is_Active
+              (Subject_ID => Scheduling_Groups (Next_Group).Active_Subject);
+            if Subject_Is_Active then
+               return;
+            else
+               Atomics.Clear
+                 (Atomic => Global_Group_Activity_Indicator (Partition_ID),
+                  Bit    => Byte (Next_Group_Index));
+               Next_Group := Skp.Scheduling.No_Group;
+            end if;
+         end if;
+
+         --  Stop search if we end up back at the current scheduling group
+         --  since this means there is no active group in this partition.
+
+         exit when Next_Group_Index = Current_SG_Index;
+      end loop;
+   end Find_Next_Active_Scheduling_Group;
+
+   -------------------------------------------------------------------------
+
+   --  Update scheduling partition information by performing a scheduling
+   --  operation for the currently active scheduling partition.
+   procedure Update_Scheduling_Partition
+   with
+      Global => (Input  => (CPU_Info.CPU_ID, Current_Minor_Frame_ID,
+                            Global_Current_Major_Frame_ID,
+                            Subjects_Events.State, Subjects_Interrupts.State,
+                            Timed_Events.State, X86_64.State),
+                 In_Out => (Global_Group_Activity_Indicator, Scheduling_Groups,
+                            Scheduling_Partitions, Subjects.State))
+   is
+      Partition_ID   : constant Policy.Scheduling_Partition_Range
+        := Current_Scheduling_Partition_ID;
+      Next_Group     : Policy.Extended_Scheduling_Group_Range;
+      Next_Group_Idx : Policy.Scheduling_Group_Index_Range;
+   begin
+      Find_Next_Active_Scheduling_Group (Partition_ID     => Partition_ID,
+                                         Next_Group       => Next_Group,
+                                         Next_Group_Index => Next_Group_Idx);
+      if Next_Group /= Policy.No_Group then
+         if Scheduling_Partitions (Partition_ID).Sleeping then
+
+            --  Transition sleeping partition to active state.
+
+            Subjects.Set_Activity_State
+              (ID    => Scheduling_Groups (Next_Group).Active_Subject,
+               Value => Constants.GUEST_ACTIVITY_ACTIVE);
+            Scheduling_Partitions (Partition_ID).Sleeping := False;
+         end if;
+
+         --  Active subjects always have the running flag set.
+
+         Subjects.Set_Running
+           (ID    => Scheduling_Groups (Next_Group).Active_Subject,
+            Value => True);
+
+         --  Switch to next scheduling group by making it the active group of
+         --  the scheduling partition.
+
+         Scheduling_Partitions (Partition_ID).Active_Group_Index
+           := Next_Group_Idx;
+      end if;
+   end Update_Scheduling_Partition;
+
+   -------------------------------------------------------------------------
+
    procedure Set_Current_Subject_ID (Subject_ID : Skp.Global_Subject_ID_Type)
    with
       Refined_Global  => (Input  => (Current_Minor_Frame_ID,
@@ -112,11 +246,14 @@ is
      (Next_Subject : out Skp.Global_Subject_ID_Type)
    with
       Refined_Global =>
-        (Input  => (Scheduling_Groups, Scheduling_Partitions, CPU_Info.CPU_ID,
-                    CPU_Info.Is_BSP, Tau0_Interface.State),
+        (Input  => (CPU_Info.CPU_ID, CPU_Info.Is_BSP, Subjects_Events.State,
+                    Subjects_Interrupts.State, Tau0_Interface.State,
+                    Timed_Events.State, X86_64.State),
          In_Out => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
-                    Global_Current_Major_Start_Cycles, MP.Barrier,
-                    Scheduling_Info.State))
+                    Global_Current_Major_Start_Cycles,
+                    Global_Group_Activity_Indicator, MP.Barrier,
+                    Scheduling_Groups, Scheduling_Info.State,
+                    Scheduling_Partitions, Subjects.State))
    is
       use type Policy.Major_Frame_Range;
       use type Policy.Minor_Frame_Range;
@@ -218,6 +355,10 @@ is
       --  Update current minor frame globally.
 
       Current_Minor_Frame_ID := Next_Minor_ID;
+
+      --  Update scheduling partition.
+
+      Update_Scheduling_Partition;
 
       --  Subject switch.
 

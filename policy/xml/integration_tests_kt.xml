@@ -126,8 +126,8 @@
   <channel name="blockdev_response1" size="16#4000#" hasEvent="asap"/>
   <channel name="blockdev_request2" size="16#8000#" hasEvent="asap"/>
   <channel name="blockdev_response2" size="16#4000#" hasEvent="asap"/>
-  <channel name="example_request" size="16#1000#" hasEvent="switch"/>
-  <channel name="example_response" size="16#1000#" hasEvent="switch"/>
+  <channel name="example_request" size="16#1000#" hasEvent="asap"/>
+  <channel name="example_response" size="16#1000#" hasEvent="asap"/>
  </channels>
 
  <subjects>
@@ -533,7 +533,7 @@
     <writer logical="testchannel_4" physical="testchannel_4" virtualAddress="16#000e_0100_2000#"/>
     <reader logical="blockdev_request1" physical="blockdev_xhci_request1" virtualAddress="16#000e_0210_0000#" vector="102"/>
     <writer logical="blockdev_response1" physical="blockdev_xhci_response1" virtualAddress="16#000e_0210_8000#" event="4"/>
-    <reader logical="example_response" physical="example_response" virtualAddress="16#000e_0210_c000#"/>
+    <reader logical="example_response" physical="example_response" virtualAddress="16#000e_0210_c000#" vector="101"/>
     <writer logical="example_request" physical="example_request" virtualAddress="16#000e_0211_4000#" event="2"/>
    </channels>
    <component ref="linux">

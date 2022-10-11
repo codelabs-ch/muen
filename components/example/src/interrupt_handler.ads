@@ -36,4 +36,7 @@ is
    with
       Pre => Musinfo.Instance.Is_Valid;
 
+   Foo_Request_Pending : Boolean := False
+   with Atomic;
+
 end Interrupt_Handler;

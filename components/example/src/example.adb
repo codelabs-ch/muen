@@ -40,7 +40,6 @@ with Log;
 with Subject_Info;
 with Timed_Events;
 with Interrupt_Handler;
-pragma Unreferenced (Interrupt_Handler);
 
 with Example_Component.Config;
 with Example_Component.Events;
@@ -162,21 +161,31 @@ begin
 
    --  Act as a service: process events from associated subject.
 
-   loop
-      Foo.Receiver.Receive (Req => Request);
-      Request_Valid := Foo.Is_Valid (Msg => Request);
+   declare
+      Request_Pending : Boolean;
+   begin
+      loop
+         Request_Pending := Interrupt_Handler.Foo_Request_Pending;
 
-      if Request_Valid then
-         Log.Put_Line (Item => "Copying response");
-         Response := Request;
-      else
-         Log.Put_Line (Item => "Invalid request message size " & SK.Strings.Img
-                       (Request.Size));
-         Response := Foo.Null_Message;
-      end if;
+         if Request_Pending then
+            Interrupt_Handler.Foo_Request_Pending := False;
 
-      --  Send response and switch back to requester.
+            Foo.Receiver.Receive (Req => Request);
+            Request_Valid := Foo.Is_Valid (Msg => Request);
 
-      Foo.Sender.Send (Res => Response);
-   end loop;
+            if Request_Valid then
+               Log.Put_Line (Item => "Copying response");
+               Response := Request;
+            else
+               Log.Put_Line (Item => "Invalid request message size "
+                             & SK.Strings.Img (Request.Size));
+               Response := Foo.Null_Message;
+            end if;
+
+            --  Send response and notify requester.
+
+            Foo.Sender.Send (Res => Response);
+         end if;
+      end loop;
+   end;
 end Example;

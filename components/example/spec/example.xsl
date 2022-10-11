@@ -34,7 +34,7 @@
    </if>
   </memory>
   <channels>
-   <reader logical="example_request" size="16#1000#" virtualAddress="16#000A_0000#"/>
+   <reader logical="example_request" size="16#1000#" virtualAddress="16#000A_0000#" vector="42"/>
    <writer logical="example_response" size="16#1000#" virtualAddress="16#000B_0000#" event="1"/>
    <if variable="ahci_drv_enabled" value="true">
     <writer logical="blockdev_request2"  size="16#0000_8000#" virtualAddress="16#0030_0000#" event="51"/>

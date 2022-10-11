@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<system>
+ <config>
+  <boolean name="supports_xhci_debug" value="false"/>
+  <integer name="t3_id1" value="20"/>
+  <integer name="some_numeric_value" value="23"/>
+  <integer name="t2_param1" value="22"/>
+  <integer name="session_count" value="4"/>
+  <string name="t3_logical_eventReboot" value="system_reboot"/>
+  <string name="t3_memory_name" value="extra_mem"/>
+  <string name="platform" value="platform.xml"/>
+  <string name="hardware" value="hardware.xml"/>
+  <string name="no_caching" value="UC"/>
+  <string name="platform_id" value="foobar"/>
+  <string name="system" value="system_policy_no_expressions.xml"/>
+  <string name="sizeOfExtraMem" value="16#8000_9999#"/>
+  <string name="additional_hardware" value="additional_hw.xml"/>
+ </config>
+ <hardware>
+  <processor cpuCores="2" speed="50" vmxTimerRate="0">
+   <cpu apicId="0"/>
+   <cpu apicId="2"/>
+  </processor>
+  <memory>
+   <memoryBlock allocatable="true" name="ram_2" physicalAddress="16#9900_0000#" size="16#2000#"/>
+   <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
+   <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_9999#"/>
+  </memory>
+  <devices>
+   <device name="ps2">
+    <irq name="kbd_irq" number="1"/>
+    <irq name="mouse_irq" number="12"/>
+    <ioPort end="16#0060#" name="port_60" start="16#0060#"/>
+    <ioPort end="16#0064#" name="port_64" start="16#0064#"/>
+   </device>
+   <device name="debugconsole">
+    <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
+   </device>
+   <device name="ioapic">
+    <memory caching="UC" name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#"/>
+    <memory caching="UC" name="mmio" physicalAddress="16#fec0_9999#" size="16#1000#"/>
+   </device>
+   <device name="ioapic_new">
+    <memory caching="UC" name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#"/>
+    <memory caching="UC" name="mmio" physicalAddress="16#fec0_9999#" size="16#1000#"/>
+   </device>
+  </devices>
+ </hardware>
+ <platform>
+  <mappings>
+   <aliases>
+    <alias name="wireless" physical="wlan1">
+     <resource name="interrupt" physical="irq1"/>
+     <resource name="memory" physical="mmio1"/>
+    </alias>
+    <alias name="nic" physical="ethernet_controller_1"/>
+    <alias name="debugconsole" physical="serial_1"/>
+   </aliases>
+   <classes>
+    <class name="network_adapters">
+     <device physical="nic1"/>
+     <device physical="wlan1"/>
+    </class>
+    <class name="usb">
+     <device physical="ehci"/>
+     <device physical="xhci"/>
+    </class>
+   </classes>
+  </mappings>
+  <kernelDiagnostics type="uart">
+   <device physical="debugconsole">
+    <ioPort physical="serial"/>
+   </device>
+  </kernelDiagnostics>
+ </platform>
+ <memory>
+  <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
+  <memory caching="UC" name="extra_mem" physicalAddress="16#2000#" size="16#1000#"/>
+ </memory>
+ <events/>
+ <components>
+  <component name="linux" profile="linux">
+   <provides>
+    <memory executable="true" logical="binary" size="16#1000#" virtualAddress="16#2000#" writable="true">
+     <file filename="lnx_bin" offset="none"/>
+    </memory>
+   </provides>
+  </component>
+ </components>
+ <subjects>
+  <subject name="lnx">
+   <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+    <memory executable="false" logical="extra_mem" physical="extra_mem" virtualAddress="16#f000_0000#" writable="true"/>
+   </memory>
+   <devices>
+    <device logical="usb" physical="usb_conitroller_1">
+    </device>
+   </devices>
+   <events/>
+   <component ref="linux"/>
+  </subject>
+ </subjects>
+ <scheduling tickRate="10000">
+  <majorFrame>
+   <cpu id="0">
+    <minorFrame subject="lnx" ticks="80"/>
+   </cpu>
+  </majorFrame>
+ </scheduling>
+</system>
+

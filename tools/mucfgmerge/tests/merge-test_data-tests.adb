@@ -138,6 +138,25 @@ package body Merge.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure Positive_Test_No_Expressions
+      is
+         Output : constant String := "obj/run_no_expressions.xml";
+      begin
+         Run (Config_File  => "data/config_no_expressions.xml",
+              Output_File  => Output,
+              Include_Path => "data",
+              Debug_Level  => VERBOSE_ERRORS);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/run_no_expressions.xml",
+                  Filename2 => Output),
+                 Message   => "Policy mismatch: " & Output);
+
+         --Ada.Directories.Delete_File (Name => Output);
+      end Positive_Test_No_Expressions;
+
+      ----------------------------------------------------------------------
+
       procedure Positive_Test_With_Debugging
       is
          Output : constant String := "obj/output_config_with_templateAmend.xml";
@@ -198,6 +217,7 @@ package body Merge.Test_Data.Tests is
       No_Additional_Hw;
       Positive_Test;
       Positive_Test_With_Debugging;
+      Positive_Test_No_Expressions;
 --  begin read only
    end Test_Run;
 --  end read only

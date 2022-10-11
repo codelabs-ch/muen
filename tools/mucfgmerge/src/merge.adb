@@ -18,6 +18,7 @@
 
 with GNAT.Directory_Operations;
 
+with DOM.Core;
 with Muxml.Utils;
 with Mulog;
 with Mutools.System_Config;
@@ -183,14 +184,24 @@ is
                                   Debug_Active => Debug_Active);
 
       if Debug_Active then
-         Mutools.Xmldebuglog.Remove_Log_Of_Subtree
-            (Node  => Policy.Doc,
-             XPath => "/system/expressions");
+         declare
+            use all type DOM.Core.Node;
+
+            Expr : constant DOM.Core.Node
+               := Muxml.Utils.Get_Element
+               (Doc   => Policy.Doc,
+                XPath => "/system/expressions");
+         begin
+            if Expr /= null then
+               Mutools.Xmldebuglog.Remove_Log_Of_Subtree
+                  (Node  => Expr);
+            end if;
+         end;
       end if;
 
       Muxml.Utils.Remove_Elements
-        (Doc   => Policy.Doc,
-         XPath => "/system/expressions");
+         (Doc   => Policy.Doc,
+          XPath => "/system/expressions");
 
       -- Check values of config variables after expansion of expressions
       -- to make sure that $-references within <config> have been resolved.

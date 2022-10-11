@@ -78,6 +78,94 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Returns True if the given scheduling group is in the timer list of the
+   --  specified scheduling partition.
+   function Is_Group_In_Timer_List
+     (Partition_ID : Policy.Scheduling_Partition_Range;
+      Group_ID     : Policy.Scheduling_Group_Range)
+      return Boolean
+   is
+      List_Head : constant Policy.Extended_Scheduling_Group_Range
+        := Scheduling_Partitions (Partition_ID).Earliest_Timer;
+   begin
+      return List_Head = Group_ID or else
+        Scheduling_Groups (Group_ID).Prev_Timer /= Policy.No_Group;
+   end Is_Group_In_Timer_List;
+
+   -------------------------------------------------------------------------
+
+   --  Clear the global activity indicator of the scheduling group identified by
+   --  partition ID and scheduling group index. Also insert the timed event of
+   --  the active subject of the scheduling group into the sorted timer list of
+   --  the scheduling partition if it is not already in the list.
+   procedure Deactivate_Group
+     (Partition_ID : Policy.Scheduling_Partition_Range;
+      Group_Index  : Policy.Scheduling_Group_Index_Range;
+      Subject_ID   : Skp.Global_Subject_ID_Type)
+   is
+      --  Insert group with given ID and deadline into timed event list between
+      --  Prev and Next.
+      procedure Insert
+        (Partition : Policy.Scheduling_Partition_Range;
+         Group     : Policy.Scheduling_Group_Range;
+         Deadline  : Word64;
+         Prev      : Policy.Extended_Scheduling_Group_Range;
+         Next      : Policy.Extended_Scheduling_Group_Range)
+      is
+      begin
+         Scheduling_Groups (Group).Timeout    := Deadline;
+         Scheduling_Groups (Group).Prev_Timer := Prev;
+         Scheduling_Groups (Group).Next_Timer := Next;
+
+         if Prev = Policy.No_Group then
+            Scheduling_Partitions (Partition).Earliest_Timer := Group;
+         else
+            Scheduling_Groups (Prev).Next_Timer := Group;
+         end if;
+
+         if Next /= Policy.No_Group then
+            Scheduling_Groups (Next).Prev_Timer := Group;
+         end if;
+      end Insert;
+
+      ----------------------------------------------------------------------
+
+      Group_Deadline : constant Word64
+        := Timed_Events.Get_Trigger_Value (Subject => Subject_ID);
+      Group_ID       : constant Policy.Scheduling_Group_Range
+        := Policy.Get_Scheduling_Group_ID (Subject_ID => Subject_ID);
+      Prev_Group     : Policy.Extended_Scheduling_Group_Range
+        := Policy.No_Group;
+      Next_Group     : Policy.Extended_Scheduling_Group_Range
+        := Scheduling_Partitions (Partition_ID).Earliest_Timer;
+   begin
+      if not Is_Group_In_Timer_List (Partition_ID => Partition_ID,
+                                     Group_ID     => Group_ID)
+      then
+         Insert_Loop :
+         loop
+            if Next_Group = Policy.No_Group
+              or else Group_Deadline < Scheduling_Groups (Next_Group).Timeout
+            then
+               Insert (Partition => Partition_ID,
+                       Group     => Group_ID,
+                       Deadline  => Group_Deadline,
+                       Prev      => Prev_Group,
+                       Next      => Next_Group);
+               exit Insert_Loop;
+            end if;
+            Prev_Group := Next_Group;
+            Next_Group := Scheduling_Groups (Next_Group).Next_Timer;
+         end loop Insert_Loop;
+      end if;
+
+      Atomics.Clear
+        (Atomic => Global_Group_Activity_Indicator (Partition_ID),
+         Bit    => Atomics.Bit_Pos (Group_Index));
+   end Deactivate_Group;
+
+   -------------------------------------------------------------------------
+
    --  Returns the index of the successor scheduling group of the specified
    --  group in the given partition.
    function Successor_Group
@@ -145,9 +233,11 @@ is
             if Subject_Is_Active then
                return;
             else
-               Atomics.Clear
-                 (Atomic => Global_Group_Activity_Indicator (Partition_ID),
-                  Bit    => Byte (Next_Group_Index));
+               Deactivate_Group
+                 (Partition_ID => Partition_ID,
+                  Group_Index  => Next_Group_Index,
+                  Subject_ID   => Scheduling_Groups
+                    (Next_Group).Active_Subject);
                Next_Group := Skp.Scheduling.No_Group;
             end if;
          end if;

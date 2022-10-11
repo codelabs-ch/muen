@@ -401,8 +401,10 @@ is
    -------------------------------------------------------------------------
 
    procedure Reschedule_Partition
-     (Subject_ID : Skp.Global_Subject_ID_Type;
-      Sleep      : Boolean)
+     (Subject_ID      :     Skp.Global_Subject_ID_Type;
+      RIP_Incremented :     Boolean;
+      Sleep           :     Boolean;
+      Next_Subject    : out Skp.Global_Subject_ID_Type)
    is
       Partition_ID      : constant Policy.Scheduling_Partition_Range
         := Current_Scheduling_Partition_ID;
@@ -424,7 +426,9 @@ is
             Subject_ID   => Subject_ID);
       end if;
 
-      Subjects.Increment_RIP (ID => Subject_ID);
+      if not RIP_Incremented then
+         Subjects.Increment_RIP (ID => Subject_ID);
+      end if;
 
       Find_Next_Active_Scheduling_Group (Partition_ID     => Partition_ID,
                                          Next_Group       => Next_Group,
@@ -444,6 +448,7 @@ is
                                       Value => Constants.GUEST_ACTIVITY_HLT);
          Scheduling_Partitions (Partition_ID).Sleeping := True;
       end if;
+      Next_Subject := Get_Current_Subject_ID;
    end Reschedule_Partition;
 
    -------------------------------------------------------------------------

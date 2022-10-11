@@ -110,8 +110,10 @@ is
    --  yield/sleep instruction, the RIP of the subject is incremented when RIP
    --  Incremented is specified as False.
    procedure Reschedule_Partition
-     (Subject_ID : Skp.Global_Subject_ID_Type;
-      Sleep      : Boolean);
+     (Subject_ID      :     Skp.Global_Subject_ID_Type;
+      RIP_Incremented :     Boolean;
+      Sleep           :     Boolean;
+      Next_Subject    : out Skp.Global_Subject_ID_Type);
 
    --  Indicate that activity has occurred that might change the status of the
    --  subject given by ID. Same CPU specifies whether the subject is running

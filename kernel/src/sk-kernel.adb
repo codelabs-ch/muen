@@ -218,11 +218,13 @@ is
    --D @Text Section => impl_handle_source_event
    --D Source events are actions performed when a given subject triggers a trap
    --D or a hypercall. Source events can also be triggered by the timed event
-   --D mechanism.
+   --D mechanism. The RIP incremented parameter specifies if the caller will take
+   --D care of incrementing the RIP of the subject as part of the event handling.
    procedure Handle_Source_Event
-     (Subject      :     Skp.Global_Subject_ID_Type;
-      Event        :     Skp.Events.Source_Event_Type;
-      Next_Subject : out Skp.Global_Subject_ID_Type)
+     (Subject         :     Skp.Global_Subject_ID_Type;
+      Event           :     Skp.Events.Source_Event_Type;
+      RIP_Incremented :     Boolean;
+      Next_Subject    : out Skp.Global_Subject_ID_Type)
    with
       Global =>
         (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, FPU.State,
@@ -252,11 +254,17 @@ is
             --D If the designated action is no action, then nothing is
             --D done.
          when Skp.Events.Subject_Sleep   =>
-            Scheduler.Reschedule_Partition (Subject_ID => Subject,
-                                            Sleep      => True);
+            Scheduler.Reschedule_Partition
+              (Subject_ID      => Subject,
+               RIP_Incremented => RIP_Incremented,
+               Sleep           => True,
+               Next_Subject    => Next_Subject);
          when Skp.Events.Subject_Yield   =>
-            Scheduler.Reschedule_Partition (Subject_ID => Subject,
-                                            Sleep      => False);
+            Scheduler.Reschedule_Partition
+              (Subject_ID      => Subject,
+               RIP_Incremented => RIP_Incremented,
+               Sleep           => False,
+               Next_Subject    => Next_Subject);
          when Skp.Events.System_Reboot   =>
             --D @Item List => impl_handle_source_event_actions
             --D If the designated action is system reboot, then a reboot with
@@ -371,9 +379,10 @@ is
            (Subject_ID => Current_Subject,
             Event_Nr   => Event_Nr);
          Handle_Source_Event
-           (Subject      => Current_Subject,
-            Event        => Event,
-            Next_Subject => Next_Subject_ID);
+           (Subject         => Current_Subject,
+            Event           => Event,
+            RIP_Incremented => True,
+            Next_Subject    => Next_Subject_ID);
       end if;
 
       pragma Debug (not Valid_Event_Nr or else
@@ -599,11 +608,12 @@ is
                                  Event_Nr          => Event_Nr);
          if Trigger_Value <= TSC_Now then
             Handle_Source_Event
-              (Subject      => Event_Subj,
-               Event        => Skp.Events.Get_Source_Event
+              (Subject         => Event_Subj,
+               Event           => Skp.Events.Get_Source_Event
                  (Subject_ID => Event_Subj,
                   Event_Nr   => Skp.Events.Target_Event_Range (Event_Nr)),
-               Next_Subject => Next_Subject_ID);
+               RIP_Incremented => False,
+               Next_Subject    => Next_Subject_ID);
             Timed_Events.Clear_Event (Subject => Event_Subj);
          end if;
       end;
@@ -682,9 +692,10 @@ is
       --D The source event designated by the policy trap entry is processed,
       --D see \ref{impl_handle_source_event}.
       Handle_Source_Event
-        (Subject      => Current_Subject,
-         Event        => Trap_Entry,
-         Next_Subject => Next_Subject_ID);
+        (Subject         => Current_Subject,
+         Event           => Trap_Entry,
+         RIP_Incremented => False,
+         Next_Subject    => Next_Subject_ID);
 
       --D @Text Section => impl_handle_trap, Priority => 20
       --D If the trap triggered a handover event, load the new VMCS.

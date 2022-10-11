@@ -46,15 +46,6 @@ is
    -- transaction log
    procedure Add_Transaction_Log_As_Comment (Doc : DOM.Core.Document);
 
-   -- Return all entries of the transaction log, starting with the oldest transaction
-   function Transaction_Log_To_String return String;
-
-   -- Return log-information for the given node as it is
-   -- WARNING: the information stored in the entry for Node may not be complete!
-   -- Depending on the current state, it might be neccessary to generate
-   -- the correct backtrace by examining the ancestors of Node, first.
-   function Node_Backtrace_To_String (Node : DOM.Core.Node) return String;
-
    -- Gather Backtrace for Node and return a string meant for error messages.
    function Get_Log_For_Error_Message (Node : DOM.Core.Node) return String;
 
@@ -233,5 +224,14 @@ private
    function Parse_Origin_Attribute
       (Node : DOM.Core.Node)
       return Origin_Info_Type;
+
+   -- Return log-information for the given node as it is
+   -- WARNING: the information stored in the entry for Node may not be complete!
+   -- Depending on the current state, it might be neccessary to generate
+   -- the correct backtrace by examining the ancestors of Node, first.
+   function Node_Backtrace_To_String (Node : DOM.Core.Node) return String;
+
+   -- Return all entries of the transaction log, starting with the oldest transaction
+   function Transaction_Log_To_String return String;
 
 end Mutools.Xmldebuglog;

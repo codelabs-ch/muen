@@ -27,9 +27,6 @@ with Ada.Text_IO.Unbounded_IO;
 with Ada.Exceptions;
 with Ada.Text_IO;
 with Ada.Text_IO.Text_Streams;
--- mmmDEBUG Begin
-use Ada.Text_IO;
--- mmmDEBUG END
 
 --  begin read only
 --  end read only
@@ -46,17 +43,17 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
    -- open the given file and return its content as string
    function File_To_String (File_Name : String) return String
    is
-      File  : File_Type;
+      File  : Ada.Text_IO.File_Type;
       File_Content : Ada.Strings.Unbounded.Unbounded_String;
    begin
       Ada.Text_IO.Open (File => File,
-                        Mode => In_File,
+                        Mode => Ada.Text_IO.In_File,
                         Name => File_Name);
       loop
-         exit when End_Of_File (File => File);
+         exit when Ada.Text_IO.End_Of_File (File => File);
          File_Content := File_Content & Ada.Text_IO.Unbounded_IO.Get_Line (File => File);
       end loop;
-      Close (File => File);
+      Ada.Text_IO.Close (File => File);
 
       return To_String (File_Content);
    end File_To_String;
@@ -206,7 +203,7 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      File         : File_Type;
+      File         : Ada.Text_IO.File_Type;
       File_Content : Ada.Strings.Unbounded.Unbounded_String;
 
       procedure Positive_Test
@@ -217,7 +214,7 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
                                     (File_Name => "data/default_schema.xsd"));
 
          Ada.Text_IO.Create (File => File,
-                             Mode => Out_File,
+                             Mode => Ada.Text_IO.Out_File,
                              Name => "obj/default_ordering_maps.txt");
          Ada.Text_IO.Unbounded_IO.Put_Line
             (File => File,

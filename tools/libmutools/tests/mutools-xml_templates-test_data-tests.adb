@@ -195,12 +195,13 @@ package body Mutools.XML_Templates.Test_Data.Tests is
       Used_Prefix                 : Unbounded_String;
       Output_File_Name            : constant String
          := "obj/output_compiled_template.xml";
+
       procedure Set_Nodes
       is
       begin
          Muxml.Parse (Data => Data,
                       Kind => Muxml.None,
-                      File => "data/system_policy_templateAmend.xml");
+                      File => "data/system_policy_templateAmend_withEqualNames.xml");
          Template_Def := Muxml.Utils.Get_Element
             (Doc   => Data.Doc,
              XPath => "/system/template[@name='template_memory']");
@@ -392,9 +393,11 @@ package body Mutools.XML_Templates.Test_Data.Tests is
       procedure Positive_Test
       is
          Data, Template_Doc : Muxml.XML_Data_Type;
+         Output_File_Name   : constant String
+                            := "obj/output_prefixed_template.xml";
+         Locked_Attr        : Node_Set_Type.Set;
+
          Template_Def, Root_Node, Dummy, New_Config : DOM.Core.Node;
-         Output_File_Name            : constant String
-            := "obj/output_prefixed_template.xml";
       begin
          Muxml.Parse (Data => Data,
                       Kind => Muxml.None,
@@ -433,7 +436,8 @@ package body Mutools.XML_Templates.Test_Data.Tests is
          -- execute test
          Prefix_Variables (Root_Node   => Root_Node,
                            Config_Node =>  New_Config,
-                           Prefix      => "xprex_");
+                           Prefix      => "xprex_",
+                           Locked_Attr => Locked_Attr);
          Muxml.Write (Data => Template_Doc,
                       Kind => Muxml.None,
                       File => Output_File_Name);

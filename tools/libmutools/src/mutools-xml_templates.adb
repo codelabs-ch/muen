@@ -44,7 +44,6 @@ is
        Transaction_Index  : Mutools.Xmldebuglog.Transaction_Log_Index_Type
                           := Mutools.Xmldebuglog.Null_Ref_Index)
    is
-      use type DOM.Core.Node;
       use all type DOM.Core.Node_Types;
 
       Child     :  DOM.Core.Node
@@ -91,7 +90,6 @@ is
        Output         : out Muxml.XML_Data_Type;
        Used_Prefix    : out Unbounded_String)
    is
-      use type DOM.Core.Node;
 
       Trimmed_Number : constant String
                      := Ada.Strings.Fixed.Trim
@@ -105,6 +103,7 @@ is
                         & Trimmed_Number
                         & "_";
       Root_Node      : DOM.Core.Node;
+      Locked_Attr    : Node_Set_Type.Set;
 
       ---------------------------------------------------------------------
 
@@ -271,6 +270,14 @@ is
                   (Elem  => New_Config_Node,
                    Name  => "value",
                    Value => To_String (Call_Value));
+
+               -- Mark this attribute as "locked" to protect its value.
+               -- Otherwise a value of "$foo" might be changed to
+               -- "$t123_foo" if some local variable is called "foo"
+               Locked_Attr.Include (DOM.Core.Elements.Get_Attribute_Node
+                                       (Elem => New_Config_Node,
+                                        Name => "value"));
+
                DOM.Core.Elements.Remove_Attribute
                   (Elem  => New_Config_Node,
                    Name  => "defaultValue");
@@ -306,6 +313,7 @@ is
             end;
          end loop;
 
+         -- remove old 'parameters' node
          declare
             Params : DOM.Core.Node
                := Muxml.Utils.Get_Element
@@ -322,7 +330,8 @@ is
          Used_Prefix := To_Unbounded_String (Prefix);
          Prefix_Variables (Root_Node   => Root_Node,
                            Config_Node => Config,
-                           Prefix      => Prefix);
+                           Prefix      => Prefix,
+                           Locked_Attr => Locked_Attr);
       end;
    end Compile_Template;
 
@@ -351,8 +360,6 @@ is
    procedure Expand (XML_Data     : in out Muxml.XML_Data_Type;
                      Debug_Active :        Boolean)
    is
-      use type DOM.Core.Node;
-
       Max_Rounds     : constant Positive := 100;
       Running_Number :          Positive := 1;
       Rounds         :          Positive := 1;
@@ -593,9 +600,9 @@ is
    procedure Prefix_Variables
       (Root_Node   : DOM.Core.Node;
        Config_Node : DOM.Core.Node;
-       Prefix      : String)
+       Prefix      : String;
+       Locked_Attr : Node_Set_Type.Set)
    is
-      use type DOM.Core.Node;
       use all type DOM.Core.Node_Types;
 
       -- used to store defined names
@@ -656,6 +663,7 @@ is
       ---------------------------------------------------------------------
 
       -- rename references of the form "...='$Old_Name'"
+      -- to "...='$PrefixOld_Name'" if Old_Name is contained in Known_Names
       procedure Prefix_Dollar_Refs
          (Node        : DOM.Core.Node;
           Prefix      : String;
@@ -681,8 +689,10 @@ is
             begin
                if Attr_Value'Length > 0 and then
                   Attr_Value (Attr_Value'First) = '$' and then
-                  Known_Names.Contains (Item => Attr_Value
-                                           (Attr_Value'First + 1 .. Attr_Value'Last))
+                  Known_Names.Contains
+                  (Item => Attr_Value (Attr_Value'First + 1
+                                          .. Attr_Value'Last)) and then
+                  not Locked_Attr.Contains (Attr)
                then
                   DOM.Core.Attrs.Set_Value
                      (Att => Attr,
@@ -773,7 +783,8 @@ is
 
       ----------------------------------------------------------------------
 
-      -- prefix the value if the attribute with the given name
+      -- prefix the value of the attribute Attr_Name of Node with Prefix
+      -- if its current value is in Known_Names
       procedure Prefix_NonDollar_Reference
          (Node        : DOM.Core.Node;
           Attr_Name   : String;
@@ -804,7 +815,8 @@ is
 
       ---------------------------------------------------------------------
 
-      -- rename references of the form "...='$Some_Name'"
+      -- for a text-node Node with value "$Some_Name", set to value of Node
+      -- to "$PrefixSome_Name" if "Some_Name" is contained in Known_Names
       procedure Prefix_Text_Node
          (Node        : DOM.Core.Node;
           Prefix      : String;

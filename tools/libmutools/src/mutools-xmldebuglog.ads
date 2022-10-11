@@ -115,6 +115,12 @@ is
        Examine_Only_Parent : Boolean := False;
        Deep                : Boolean := False);
 
+   -- Produce a hash for a DOM-Node.
+   -- The hash is produced soly from the address that Node points to
+   -- (which is justifed as equality of nodes is checked the same way).
+   -- This hash-function does not claim any security properties.
+   function Hash (Node : DOM.Core.Node) return Ada.Containers.Hash_Type;
+
 private
    use all type DOM.Core.Node;
 
@@ -198,12 +204,6 @@ private
       -- Amend has at most one enty
       Amend_Backtrace       :  Transaction_Log_Index_Type := Null_Ref_Index;
    end record;
-
-   -- Produce a hash for a DOM-Node.
-   -- The hash is produced soly from the address that Node points to
-   -- (which is justifed as equality of nodes is checked the same way).
-   -- This hash-function does not claim any security properties.
-   function Hash (Node : DOM.Core.Node) return Ada.Containers.Hash_Type;
 
    -- data type for node-backtrace log
    package Nodes_Backtrace_Log_Type is new Ada.Containers.Hashed_Maps

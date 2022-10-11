@@ -15,10 +15,11 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Muxml;
 with DOM.Core;
 with Ada.Strings.Unbounded;
+with Ada.Containers.Indefinite_Hashed_Sets;
 with Mutools.Xmldebuglog;
+with Muxml;
 
 package Mutools.XML_Templates
 is
@@ -28,6 +29,7 @@ is
                      Debug_Active :        Boolean);
 
 private
+   use all type DOM.Core.Node;
 
    -- Creates a new XML-Docmunt containing only the given node
    procedure Create_XMLDocument_From_Node
@@ -46,17 +48,24 @@ private
        Output         : out Muxml.XML_Data_Type;
        Used_Prefix    : out Ada.Strings.Unbounded.Unbounded_String);
 
+   package Node_Set_Type is new Ada.Containers.Indefinite_Hashed_Sets
+      (Element_Type        => DOM.Core.Node,
+       Hash                => Mutools.Xmldebuglog.Hash,
+       Equivalent_Elements => "=");
+
    -- Searches for definitions of 'variables' in the following form:
    --  (a) definitions of the form <boolean name="foo" .../>
    --      (also for integer and string)
    --  (b) <expression name="foo".. />
    -- All occurances of these variable-names (as variables) and occurances of
    --  <useTemplate namePrefix="foo" .../>
-   -- are then prefixed with the given prefix
+   -- are then prefixed with the given prefix except if the (attribute)-node
+   -- with that reference is contained in Locked_Attr.
    procedure Prefix_Variables
       (Root_Node   : DOM.Core.Node;
        Config_Node : DOM.Core.Node;
-       Prefix      : String);
+       Prefix      : String;
+       Locked_Attr : Node_Set_Type.Set);
 
    -- Adopt and insert deep clones of all child nodes of
    -- Parent_Of_Children before Target.

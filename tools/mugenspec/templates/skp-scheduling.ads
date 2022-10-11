@@ -87,7 +87,12 @@ __major_frames_info__);
    type Scheduling_Partition_Config_Type is record
       Last_Group_Index : Scheduling_Group_Index_Range;
       Groups           : Scheduling_Group_Map;
-   end record;
+   end record
+     with Dynamic_Predicate =>
+       (for all I in Scheduling_Group_Index_Range =>
+          (if I <= Last_Group_Index then
+             Groups (I) /= No_Group
+          else Groups (I) = No_Group));
 
    type Scheduling_Partition_Config_Array is array (Scheduling_Partition_Range)
      of Scheduling_Partition_Config_Type;

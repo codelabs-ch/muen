@@ -25,10 +25,12 @@
   </partition>
   <partition name="storage_linux">
    <group>
-    <subject name="example"/>
+    <subject name="storage_linux"/>
     <subject name="storage_sm"/>
     <subject name="storage_dm"/>
-    <subject name="storage_linux"/>
+   </group>
+   <group>
+    <subject name="example"/>
    </group>
   </partition>
   <partition name="debugserver">

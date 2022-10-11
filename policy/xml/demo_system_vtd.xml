@@ -33,8 +33,9 @@
  <events>
   <include href="common_events.xml"/>
 
-  <event name="example_yield" mode="switch"/>
   <event name="example_self" mode="self"/>
+  <event name="subject_sleep" mode="kernel"/>
+  <event name="subject_yield" mode="kernel"/>
  </events>
 
  <channels>
@@ -193,7 +194,6 @@
     </source>
     <target>
      <event logical="resume_after_trap" physical="resume_linux_2"/>
-     <event logical="from_example_subject" physical="example_yield"/>
      <event id="63" logical="reset" physical="reset_linux_2">
       <reset/>
      </event>

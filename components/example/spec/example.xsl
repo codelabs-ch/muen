@@ -43,8 +43,13 @@
   </channels>
   <events>
    <source>
-    <event id="2" logical="yield"/>
+    <event id="2" logical="yield">
+     <subject_yield/>
+    </event>
     <event id="3" logical="timer"/>
+    <event id="4" logical="sleep">
+     <subject_sleep/>
+    </event>
    </source>
    <target>
     <event logical="inject_timer">

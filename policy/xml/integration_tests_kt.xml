@@ -103,8 +103,9 @@
   <event name="nic_linux_smp_signal_sm_02" mode="asap"/>
   <event name="trap_to_isolation_tests_monitor" mode="switch"/>
   <event name="resume_isolation_tests" mode="switch"/>
-  <event name="example_yield" mode="switch"/>
   <event name="example_self" mode="self"/>
+  <event name="subject_sleep" mode="kernel"/>
+  <event name="subject_yield" mode="kernel"/>
  </events>
 
  <channels>
@@ -520,7 +521,6 @@
      <event logical="timer" physical="timer_linux_2">
       <inject_interrupt vector="236"/>
      </event>
-     <event logical="from_example_subject" physical="example_yield"/>
     </target>
    </events>
    <channels>

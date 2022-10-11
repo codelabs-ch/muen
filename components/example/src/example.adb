@@ -130,6 +130,68 @@ begin
          & SK.Strings.Img (Minor_Start) & " .. " & SK.Strings.Img (Minor_End));
    end;
 
+   --  Trigger a self-event to wakeup from sleep with interrupts disabled. When
+   --  a sleeping subject becomes active execution will resume after the
+   --  instruction that triggered the sleep event. A subject can become active
+   --  for the following reasons:
+   --  - External interrupt was marked pending
+   --  - Target Event was marked pending
+   --  - Timed Event expired
+
+   SK.CPU.Cli;
+
+   declare
+      use type SK.Word64;
+
+      Minor_Start : constant SK.Word64 := Musinfo.Instance.TSC_Schedule_Start;
+      Minor_End   : constant SK.Word64 := Musinfo.Instance.TSC_Schedule_End;
+      Trigger     : constant SK.Word64 := Minor_End + 1000;
+   begin
+      Log.Put_Line
+        (Item => "Current minor frame ticks " &
+           SK.Strings.Img (Minor_Start) & " .. " & SK.Strings.Img (Minor_End));
+      Log.Put_Line (Item => "Triggering self-event");
+      Timed_Events.Timed_Evt.Event_Nr := Example_Component.Events.Timer_ID;
+      Timed_Events.Timed_Evt.TSC_Trigger_Value := Trigger;
+   end;
+
+   Log.Put_Line (Item => "Sleeping");
+   SK.Hypercall.Trigger_Event (Number => Example_Component.Events.Sleep_ID);
+
+   declare
+      Minor_Start : constant SK.Word64 := Musinfo.Instance.TSC_Schedule_Start;
+      Minor_End   : constant SK.Word64 := Musinfo.Instance.TSC_Schedule_End;
+   begin
+      Log.Put_Line
+        (Item => "Wakeup in frame "
+         & SK.Strings.Img (Minor_Start) & " .. " & SK.Strings.Img (Minor_End));
+   end;
+
+   --  Yield remaining time of current minor frame.
+
+   declare
+      use type SK.Word64;
+
+      Minor_End       : constant SK.Word64 := Musinfo.Instance.TSC_Schedule_End;
+      New_Minor_Start : SK.Word64;
+   begin
+      SK.Hypercall.Trigger_Event (Number => Example_Component.Events.Yield_ID);
+      New_Minor_Start := Musinfo.Instance.TSC_Schedule_Start;
+
+      if Minor_End <= New_Minor_Start then
+         Log.Put_Line (Item => "Successfully yielded minor frame");
+      else
+         Log.Put_Line (Item => "Error yielding CPU with last end "
+                       & SK.Strings.Img (Minor_End) & " and new start "
+                       & SK.Strings.Img (New_Minor_Start));
+      end if;
+   end;
+
+   --  Re-enable interrupts so they can be processed, e.g. when a new request is
+   --  placed into the Foo interface an interrupt will be injected.
+
+   SK.CPU.Sti;
+
    declare
       RIP : constant SK.Word64 := Subject_Info.State.RIP;
    begin

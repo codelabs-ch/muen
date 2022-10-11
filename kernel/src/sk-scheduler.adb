@@ -94,6 +94,45 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Set the global activity indicator of the scheduling group identified by
+   --  partition ID and scheduling group index. Also remove the now active
+   --  scheduling group from the sorted timer list of the scheduling partition.
+   procedure Activate_Group
+     (Partition_ID : Policy.Scheduling_Partition_Range;
+      Group_ID     : Policy.Scheduling_Group_Range)
+   is
+      Group_Index : constant Policy.Scheduling_Group_Index_Range
+        := Policy.Get_Scheduling_Group_Index (Group_ID => Group_ID);
+      Prev_Group  : constant Policy.Extended_Scheduling_Group_Range
+        := Scheduling_Groups (Group_ID).Prev_Timer;
+      Next_Group  : constant Policy.Extended_Scheduling_Group_Range
+        := Scheduling_Groups (Group_ID).Next_Timer;
+   begin
+
+      --  Remove group by linking previous to next group.
+
+      if Prev_Group = Policy.No_Group then
+         Scheduling_Partitions (Partition_ID).Earliest_Timer := Next_Group;
+      else
+         Scheduling_Groups (Prev_Group).Next_Timer := Next_Group;
+      end if;
+
+      if Next_Group /= Policy.No_Group then
+         Scheduling_Groups (Next_Group).Prev_Timer := Prev_Group;
+      end if;
+
+      --  Reset prev/next since this group is no longer in the timer list.
+
+      Scheduling_Groups (Group_ID).Prev_Timer := Policy.No_Group;
+      Scheduling_Groups (Group_ID).Next_Timer := Policy.No_Group;
+
+      Atomics.Set
+        (Atomic => Global_Group_Activity_Indicator (Partition_ID),
+         Bit    => Atomics.Bit_Pos (Group_Index));
+   end Activate_Group;
+
+   -------------------------------------------------------------------------
+
    --  Clear the global activity indicator of the scheduling group identified by
    --  partition ID and scheduling group index. Also insert the timed event of
    --  the active subject of the scheduling group into the sorted timer list of
@@ -285,6 +324,34 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Update the timer list by scannig all inactive scheduling groups of the
+   --  specified partition and activating all groups for which the timer is
+   --  expired.
+   procedure Update_Timer_List (Partition : Policy.Scheduling_Partition_Range)
+   is
+      Cur_Group : Policy.Extended_Scheduling_Group_Range
+        := Scheduling_Partitions (Partition).Earliest_Timer;
+      Now : constant Word64 := CPU.RDTSC;
+   begin
+      Find_Earliest_Non_Expire_Timer_Loop :
+      while Cur_Group /= Policy.No_Group loop
+         if Scheduling_Groups (Cur_Group).Timeout <= Now then
+            Activate_Group (Partition_ID => Partition,
+                            Group_ID     => Cur_Group);
+         else
+            exit Find_Earliest_Non_Expire_Timer_Loop;
+         end if;
+         Cur_Group := Scheduling_Groups (Cur_Group).Next_Timer;
+      end loop Find_Earliest_Non_Expire_Timer_Loop;
+
+      Scheduling_Partitions (Partition).Earliest_Timer := Cur_Group;
+      if Cur_Group /= Policy.No_Group then
+         Scheduling_Groups (Cur_Group).Prev_Timer := Policy.No_Group;
+      end if;
+   end Update_Timer_List;
+
+   -------------------------------------------------------------------------
+
    --  Update scheduling partition information by performing a scheduling
    --  operation for the currently active scheduling partition.
    procedure Update_Scheduling_Partition
@@ -301,6 +368,8 @@ is
       Next_Group     : Policy.Extended_Scheduling_Group_Range;
       Next_Group_Idx : Policy.Scheduling_Group_Index_Range;
    begin
+      Update_Timer_List (Partition => Partition_ID);
+
       Find_Next_Active_Scheduling_Group (Partition_ID     => Partition_ID,
                                          Next_Group       => Next_Group,
                                          Next_Group_Index => Next_Group_Idx);

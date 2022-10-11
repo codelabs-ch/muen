@@ -246,13 +246,13 @@
   </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame partition="tau0" subject="tau0" ticks="40"/>
-    <minorFrame partition="tau0" subject="tau0" ticks="40"/>
+    <minorFrame partition="tau0" ticks="40"/>
+    <minorFrame partition="tau0" ticks="40"/>
    </cpu>
   </majorFrame>
   <majorFrame>
    <cpu id="0">
-    <minorFrame partition="tau0" subject="tau0" ticks="80"/>
+    <minorFrame partition="tau0" ticks="80"/>
    </cpu>
   </majorFrame>
  </scheduling>

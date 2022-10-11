@@ -20,7 +20,7 @@
  </xs:complexType>
 
  <xs:complexType name="minorFrameType">
-  <xs:attribute name="subject"   type="nameType"               use="required"/>
+  <xs:attribute name="subject"   type="nameType"               use="optional"/>
   <xs:attribute name="partition" type="nameType"               use="required"/>
   <xs:attribute name="ticks"     type="xs:positiveInteger"     use="required"/>
   <xs:attribute name="barrier"   type="optionalBarrierRefType" use="required"/>

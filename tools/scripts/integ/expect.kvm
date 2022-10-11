@@ -9,7 +9,7 @@ serial.out;example: Current Epoch : 16#0000000000000001#
 serial.out;example: Triggering self-event
 serial.out;example: Halting
 serial.out;example: Received vector 16#25#
-serial.out;example: Monitored subject RIP 16#0000000000400000#
+serial.out;example: Monitored subject RIP 16#*#
 serial.out;example: Call Trace:
 serial.out;example:  \[<16#0000000000200008#>\]
 serial.out;example: Breakpoint exception processed successfully

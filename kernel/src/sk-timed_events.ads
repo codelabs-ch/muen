@@ -57,6 +57,15 @@ is
       Global  => (In_Out => State),
       Depends => (State =>+ Subject);
 
+   --  Get timed event trigger value of subject with given ID.
+   function Get_Trigger_Value
+     (Subject : Skp.Global_Subject_ID_Type)
+      return Word64
+   with
+      Global  => (Input => State),
+      Depends => (Get_Trigger_Value'Result => (State, Subject)),
+      Volatile_Function;
+
    --  Returns True if the timed event of subject with given ID has expired.
    function Has_Expired (Subject : Skp.Global_Subject_ID_Type) return Boolean
    with

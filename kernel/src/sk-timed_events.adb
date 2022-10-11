@@ -65,6 +65,17 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Trigger_Value
+     (Subject : Skp.Global_Subject_ID_Type)
+      return Word64
+   is (Subject_Events (Subject).Data.TSC_Trigger_Value)
+   with
+      Refined_Global  => (Input => Subject_Events),
+      Refined_Depends =>
+        (Get_Trigger_Value'Result => (Subject_Events, Subject));
+
+   -------------------------------------------------------------------------
+
    function Has_Expired (Subject : Skp.Global_Subject_ID_Type) return Boolean
    with
       Refined_Global  => (Input => (Subject_Events, X86_64.State)),

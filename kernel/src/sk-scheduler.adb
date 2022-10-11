@@ -251,6 +251,40 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Indicate_Activity
+     (Subject_ID : Skp.Global_Subject_ID_Type;
+      Same_CPU   : Boolean)
+   is
+      Partition_ID : constant Policy.Scheduling_Partition_Range
+        := Policy.Get_Scheduling_Partition_ID (Subject_ID => Subject_ID);
+      Group_ID     : constant Policy.Scheduling_Group_Range
+        := Policy.Get_Scheduling_Group_ID (Subject_ID => Subject_ID);
+      Group_Index  : constant Policy.Scheduling_Group_Index_Range
+        := Policy.Get_Scheduling_Group_Index (Group_ID);
+   begin
+      if Same_CPU then
+
+         --  Only indicate activity if the target subject is the active
+         --  subject of its scheduling group.
+
+         if Subject_ID = Scheduling_Groups (Group_ID).Active_Subject then
+            Atomics.Set
+              (Atomic => Global_Group_Activity_Indicator (Partition_ID),
+               Bit    => Byte (Group_Index));
+         end if;
+      else
+
+         --  Unconditionally indicate activity for target subject running
+         --  on different CPU cores.
+
+         Atomics.Set
+           (Atomic => Global_Group_Activity_Indicator (Partition_ID),
+            Bit    => Byte (Group_Index));
+      end if;
+   end Indicate_Activity;
+
+   -------------------------------------------------------------------------
+
    --  Update scheduling partition information by performing a scheduling
    --  operation for the currently active scheduling partition.
    procedure Update_Scheduling_Partition

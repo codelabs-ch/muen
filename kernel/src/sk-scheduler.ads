@@ -113,6 +113,13 @@ is
      (Subject_ID : Skp.Global_Subject_ID_Type;
       Sleep      : Boolean);
 
+   --  Indicate that activity has occurred that might change the status of the
+   --  subject given by ID. Same CPU specifies whether the subject is running
+   --  on this CPU core.
+   procedure Indicate_Activity
+     (Subject_ID : Skp.Global_Subject_ID_Type;
+      Same_CPU   : Boolean);
+
 private
 
    package Policy renames Skp.Scheduling;

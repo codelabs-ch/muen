@@ -230,6 +230,7 @@ is
          In_Out => (Crash_Audit.State, IO_Apic.State,
                      Scheduler.State, Subjects_Events.State, X86_64.State))
    is
+      use type Skp.CPU_Range;
       use type Skp.Events.Target_Event_Range;
 
       Dst_CPU : Skp.CPU_Range;
@@ -289,12 +290,17 @@ is
               (Subject  => Event.Target_Subject,
                Event_ID => Event.Target_Event);
 
+            Dst_CPU := Skp.Subjects.Get_CPU_ID
+              (Subject_ID => Event.Target_Subject);
+
+            Scheduler.Indicate_Activity
+              (Subject_ID => Event.Target_Subject,
+               Same_CPU   => Dst_CPU = CPU_Info.CPU_ID);
+
             if Event.Send_IPI then
                --D @Text Section => impl_handle_source_event, Priority => 20
                --D Additionally, send an IPI to the CPU running the target
                --D subject if specified by the policy.
-               Dst_CPU := Skp.Subjects.Get_CPU_ID
-                 (Subject_ID => Event.Target_Subject);
                Apic.Send_IPI (Vector => Constants.IPI_Vector,
                               CPU_ID => Dst_CPU);
             end if;

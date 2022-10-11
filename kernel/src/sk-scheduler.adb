@@ -297,6 +297,54 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Reschedule_Partition
+     (Subject_ID : Skp.Global_Subject_ID_Type;
+      Sleep      : Boolean)
+   is
+      Partition_ID      : constant Policy.Scheduling_Partition_Range
+        := Current_Scheduling_Partition_ID;
+      Next_Group        : Policy.Extended_Scheduling_Group_Range;
+      Next_Group_Idx    : Policy.Scheduling_Group_Index_Range;
+      Subject_Is_Active : Boolean;
+   begin
+      if Sleep then
+         Subjects.Set_Running (ID    => Subject_ID,
+                               Value => False);
+      end if;
+
+      Subject_Is_Active := Is_Active (Subject_ID => Subject_ID);
+      if not Subject_Is_Active then
+         Deactivate_Group
+           (Partition_ID => Partition_ID,
+            Group_Index  => Scheduling_Partitions
+              (Partition_ID).Active_Group_Index,
+            Subject_ID   => Subject_ID);
+      end if;
+
+      Subjects.Increment_RIP (ID => Subject_ID);
+
+      Find_Next_Active_Scheduling_Group (Partition_ID     => Partition_ID,
+                                         Next_Group       => Next_Group,
+                                         Next_Group_Index => Next_Group_Idx);
+      if Next_Group /= Policy.No_Group then
+
+         --  Switch to next scheduling group by making it the active group of
+         --  the scheduling partition.
+
+         Scheduling_Partitions
+           (Partition_ID).Active_Group_Index := Next_Group_Idx;
+      else
+
+         --  Transition active partition to sleep state.
+
+         Subjects.Set_Activity_State (ID    => Subject_ID,
+                                      Value => Constants.GUEST_ACTIVITY_HLT);
+         Scheduling_Partitions (Partition_ID).Sleeping := True;
+      end if;
+   end Reschedule_Partition;
+
+   -------------------------------------------------------------------------
+
    procedure Set_Current_Subject_ID (Subject_ID : Skp.Global_Subject_ID_Type)
    with
       Refined_Global  => (Input  => (Current_Minor_Frame_ID,

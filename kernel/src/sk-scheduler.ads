@@ -101,6 +101,18 @@ is
          In_Out => (State, Group_Activity_Indicator, MP.Barrier,
                     Scheduling_Info.State, Subjects.State));
 
+   --  Take scheduling decision for the current scheduling partition considering
+   --  whether the specified subject requested to Sleep or to Yield its
+   --  remaining time of the current minor frame. The next active scheduling
+   --  group in the partition will be switched to or if all are inactive, the
+   --  scheduling partition is put into sleep mode until the end of the minor
+   --  frame. To make sure execution of the subject resumes after the
+   --  yield/sleep instruction, the RIP of the subject is incremented when RIP
+   --  Incremented is specified as False.
+   procedure Reschedule_Partition
+     (Subject_ID : Skp.Global_Subject_ID_Type;
+      Sleep      : Boolean);
+
 private
 
    package Policy renames Skp.Scheduling;

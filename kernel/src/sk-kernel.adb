@@ -250,8 +250,12 @@ is
             --D @Item List => impl_handle_source_event_actions
             --D If the designated action is no action, then nothing is
             --D done.
-         when Skp.Events.Subject_Sleep   => null;
-         when Skp.Events.Subject_Yield   => null;
+         when Skp.Events.Subject_Sleep   =>
+            Scheduler.Reschedule_Partition (Subject_ID => Subject,
+                                            Sleep      => True);
+         when Skp.Events.Subject_Yield   =>
+            Scheduler.Reschedule_Partition (Subject_ID => Subject,
+                                            Sleep      => False);
          when Skp.Events.System_Reboot   =>
             --D @Item List => impl_handle_source_event_actions
             --D If the designated action is system reboot, then a reboot with

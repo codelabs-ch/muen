@@ -16,10 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Containers.Hashed_Maps;
-
 with Ada.Strings.Fixed;
-with Ada.Strings.Unbounded.Hash;
+with Ada.Strings.Unbounded;
 
 with Interfaces;
 
@@ -40,25 +38,10 @@ is
 
    use Ada.Strings.Unbounded;
 
-   type Scheduling_ID_Type is record
-      Partition_ID : Natural;
-      Group_ID     : Natural;
-   end record;
-
-   package Subject_ID_Map is new Ada.Containers.Hashed_Maps
-     (Key_Type        => Ada.Strings.Unbounded.Unbounded_String,
-      Element_Type    => Scheduling_ID_Type,
-      Hash            => Ada.Strings.Unbounded.Hash,
-      Equivalent_Keys => Ada.Strings.Unbounded."=");
-
    --  Returns the sum of all tick values of the given minor frames.
    function Sum_Ticks
      (Minor_Frames : DOM.Core.Node_List)
       return Interfaces.Unsigned_64;
-
-   --  Return the subject scheduling partition & group ID map for the given
-   --  scheduling subject nodes.
-   function To_Map (Subjects : DOM.Core.Node_List) return Subject_ID_Map.Map;
 
    -------------------------------------------------------------------------
 
@@ -88,40 +71,6 @@ is
 
       return Sum;
    end Sum_Ticks;
-
-   -------------------------------------------------------------------------
-
-   function To_Map (Subjects : DOM.Core.Node_List) return Subject_ID_Map.Map
-   is
-   begin
-      return Map : Subject_ID_Map.Map do
-         for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
-            declare
-               Subj_Node : constant DOM.Core.Node
-                 := DOM.Core.Nodes.Item (List  => Subjects,
-                                         Index => I);
-               Subj_Name : constant String
-                 := DOM.Core.Elements.Get_Attribute
-                   (Elem => Subj_Node,
-                    Name => "name");
-               Group_ID_Str : constant String
-                 := DOM.Core.Elements.Get_Attribute
-                   (Elem => DOM.Core.Nodes.Parent_Node (N => Subj_Node),
-                    Name => "id");
-               Partition_ID_Str : constant String
-                 := DOM.Core.Elements.Get_Attribute
-                   (Elem => Muxml.Utils.Ancestor_Node (Node  => Subj_Node,
-                                                       Level => 2),
-                    Name => "id");
-            begin
-               Map.Insert
-                 (Key      => To_Unbounded_String (Subj_Name),
-                  New_Item => (Partition_ID => Natural'Value (Partition_ID_Str),
-                               Group_ID     => Natural'Value (Group_ID_Str)));
-            end;
-         end loop;
-      end return;
-   end To_Map;
 
    -------------------------------------------------------------------------
 
@@ -183,8 +132,6 @@ is
       Sched_Partition_Count : constant Natural
         := DOM.Core.Nodes.Length (List => Partitions);
 
-      Subject_To_Sched_IDs : constant Subject_ID_Map.Map
-        := To_Map (Subjects => SG_Subjects);
       Sched_Groups_To_Subj : constant MXU.ID_Map_Array
         := MXU.Get_Initial_Scheduling_Group_Subjects (Data => Policy);
       Sched_Groups_To_Idx  : MXU.ID_Map_Array (Sched_Groups_To_Subj'Range);
@@ -325,13 +272,20 @@ is
                    (Elem => DOM.Core.Nodes.Item (List  => Subjects,
                                                  Index => I),
                     Name => "name");
-               Sched_Part_ID : constant Natural
-                 := Subject_To_Sched_IDs.Element
-                   (Key => To_Unbounded_String
-                      (Source => Subj_Name)).Partition_ID;
+               Part_Subj : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element
+                   (Nodes     => SG_Subjects,
+                    Ref_Attr  => "name",
+                    Ref_Value => Subj_Name);
+               Sched_Part_ID : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Muxml.Utils.Ancestor_Node
+                      (Node  => Part_Subj,
+                       Level => 2),
+                    Name => "id");
             begin
                Buffer := Buffer & Indent (N => 3)
-                 & I'Img & " =>" & Sched_Part_ID'Img;
+                 & I'Img & " => " & Sched_Part_ID;
 
                if I < Subj_Count - 1 then
                   Buffer := Buffer & "," & ASCII.LF;

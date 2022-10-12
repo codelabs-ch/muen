@@ -114,12 +114,12 @@ def adjust_core_one(cpus):
         c.xpath("minorFrame[@partition='time']")[0].set("ticks", "1")
         for i in range(4):
             c.insert(0, etree.Element("minorFrame", partition="linux_core1",
-                     subject="linux_core1", ticks="10"))
+                     ticks="10"))
         for i in range(5):
             c.append(etree.Element("minorFrame", partition="linux_core1",
-                     subject="linux_core1", ticks="10"))
+                     ticks="10"))
         c.append(etree.Element("minorFrame", partition="linux_core1",
-                 subject="linux_core1", ticks="8"))
+                 ticks="8"))
 
 
 def create_additional_cores(majors):
@@ -129,7 +129,7 @@ def create_additional_cores(majors):
             for j in range(10):
                 etree.SubElement(cpu, "minorFrame",
                                  partition="linux_core" + str(i),
-                                 subject="linux_core" + str(i), ticks="10")
+                                 ticks="10")
             m.append(cpu)
 
 

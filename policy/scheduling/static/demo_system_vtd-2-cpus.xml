@@ -68,417 +68,417 @@
  </partitions>
  <majorFrame>
   <cpu id="0">
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="ps2_driver" subject="ps2" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="controller" subject="controller" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="ps2_driver" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="controller" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
   </cpu>
   <cpu id="1">
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="2"/>
-   <minorFrame partition="time" subject="time" ticks="1"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="ahci_driver" subject="ahci_drv" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="ahci_driver" subject="ahci_drv" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="ahci_driver" subject="ahci_drv" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="2"/>
-   <minorFrame partition="ahci_driver" subject="ahci_drv" ticks="1"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="vt" subject="vt" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="vt" subject="vt" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="vt" subject="vt" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="2"/>
-   <minorFrame partition="vt" subject="vt" ticks="1"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="tau0" subject="tau0" ticks="1"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="1"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="1"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="1"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="1"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="ahci_driver" subject="ahci_drv" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="ahci_driver" subject="ahci_drv" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="ahci_driver" subject="ahci_drv" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="2"/>
-   <minorFrame partition="ahci_driver" subject="ahci_drv" ticks="1"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="vt" subject="vt" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="vt" subject="vt" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="vt" subject="vt" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="2"/>
-   <minorFrame partition="vt" subject="vt" ticks="1"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="1"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="1"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="1"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="3"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="2"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="debugserver" ticks="2"/>
+   <minorFrame partition="time" ticks="1"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="ahci_driver" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="ahci_driver" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="ahci_driver" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="debugserver" ticks="2"/>
+   <minorFrame partition="ahci_driver" ticks="1"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="vt" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="vt" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="vt" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="debugserver" ticks="2"/>
+   <minorFrame partition="vt" ticks="1"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="tau0" ticks="1"/>
+   <minorFrame partition="idle_1" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="debugserver" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="1"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="debugserver" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="1"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="debugserver" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="1"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="debugserver" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="1"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="ahci_driver" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="ahci_driver" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="ahci_driver" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="debugserver" ticks="2"/>
+   <minorFrame partition="ahci_driver" ticks="1"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="vt" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="vt" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="vt" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="debugserver" ticks="2"/>
+   <minorFrame partition="vt" ticks="1"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="debugserver" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="1"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="debugserver" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="1"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="debugserver" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="1"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="3"/>
+   <minorFrame partition="storage_linux" ticks="2"/>
+   <minorFrame partition="idle_1" ticks="3"/>
   </cpu>
  </majorFrame>
  <majorFrame>
   <cpu id="0">
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="ps2_driver" subject="ps2" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="controller" subject="controller" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="4"/>
-   <minorFrame partition="idle_0" subject="mugenschedcfg_auto_idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="ps2_driver" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="controller" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
+   <minorFrame partition="nic_linux" ticks="4"/>
+   <minorFrame partition="idle_0" ticks="1"/>
   </cpu>
   <cpu id="1">
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="1"/>
-   <minorFrame partition="time" subject="time" ticks="1"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="vt" subject="vt" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="ahci_driver" subject="ahci_drv" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="1"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="1"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="vt" subject="vt" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="ahci_driver" subject="ahci_drv" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="1"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="1"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="vt" subject="vt" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="ahci_driver" subject="ahci_drv" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="1"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="1"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="vt" subject="vt" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="ahci_driver" subject="ahci_drv" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="1"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="1"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="vt" subject="vt" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="ahci_driver" subject="ahci_drv" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="1"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="1"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="vt" subject="vt" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="ahci_driver" subject="ahci_drv" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="2"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="3"/>
-   <minorFrame partition="idle_1" subject="mugenschedcfg_auto_idle_1" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="debugserver" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="debugserver" ticks="1"/>
+   <minorFrame partition="time" ticks="1"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="vt" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="ahci_driver" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="idle_1" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="idle_1" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="idle_1" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="idle_1" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="debugserver" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="debugserver" ticks="1"/>
+   <minorFrame partition="idle_1" ticks="1"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="vt" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="ahci_driver" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="idle_1" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="idle_1" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="idle_1" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="idle_1" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="debugserver" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="debugserver" ticks="1"/>
+   <minorFrame partition="idle_1" ticks="1"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="vt" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="ahci_driver" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="idle_1" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="idle_1" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="idle_1" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="idle_1" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="debugserver" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="debugserver" ticks="1"/>
+   <minorFrame partition="idle_1" ticks="1"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="vt" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="ahci_driver" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="idle_1" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="idle_1" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="idle_1" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="idle_1" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="debugserver" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="debugserver" ticks="1"/>
+   <minorFrame partition="idle_1" ticks="1"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="vt" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="ahci_driver" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="idle_1" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="idle_1" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="idle_1" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="idle_1" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="debugserver" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="debugserver" ticks="1"/>
+   <minorFrame partition="idle_1" ticks="1"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="vt" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="ahci_driver" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="idle_1" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="idle_1" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="idle_1" ticks="2"/>
+   <minorFrame partition="storage_linux" ticks="3"/>
+   <minorFrame partition="idle_1" ticks="2"/>
   </cpu>
  </majorFrame>
 </scheduling>

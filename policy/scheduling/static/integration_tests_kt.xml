@@ -76,49 +76,49 @@
  </partitions>
  <majorFrame>
   <cpu id="0">
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="120"/>
-   <minorFrame partition="controller" subject="controller" ticks="10"/>
-   <minorFrame partition="tau0" subject="tau0" ticks="5"/>
-   <minorFrame partition="isolation_tests" subject="isolation_tests" ticks="5"/>
-   <minorFrame partition="ps2_driver" subject="ps2" ticks="10"/>
+   <minorFrame partition="nic_linux" ticks="120"/>
+   <minorFrame partition="controller" ticks="10"/>
+   <minorFrame partition="tau0" ticks="5"/>
+   <minorFrame partition="isolation_tests" ticks="5"/>
+   <minorFrame partition="ps2_driver" ticks="10"/>
   </cpu>
   <cpu id="1">
-   <minorFrame partition="time" subject="time" ticks="1"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="30"/>
-   <minorFrame partition="vt" subject="vt" ticks="19"/>
-   <minorFrame partition="ahci_driver" subject="ahci_drv" ticks="30"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="70"/>
+   <minorFrame partition="time" ticks="1"/>
+   <minorFrame partition="debugserver" ticks="30"/>
+   <minorFrame partition="vt" ticks="19"/>
+   <minorFrame partition="ahci_driver" ticks="30"/>
+   <minorFrame partition="storage_linux" ticks="70"/>
   </cpu>
   <cpu id="2">
-   <minorFrame partition="nic_linux_1" subject="nic_linux_1" ticks="75"/>
-   <minorFrame partition="nic_linux_1" subject="nic_linux_1" ticks="75"/>
+   <minorFrame partition="nic_linux_1" ticks="75"/>
+   <minorFrame partition="nic_linux_1" ticks="75"/>
   </cpu>
   <cpu id="3">
-   <minorFrame partition="nic_linux_2" subject="nic_linux_2" ticks="75"/>
-   <minorFrame partition="nic_linux_2" subject="nic_linux_2" ticks="75"/>
+   <minorFrame partition="nic_linux_2" ticks="75"/>
+   <minorFrame partition="nic_linux_2" ticks="75"/>
   </cpu>
  </majorFrame>
  <majorFrame>
   <cpu id="0">
-   <minorFrame partition="nic_linux" subject="nic_linux" ticks="140"/>
-   <minorFrame partition="ps2_driver" subject="ps2" ticks="4"/>
-   <minorFrame partition="tau0" subject="tau0" ticks="1"/>
-   <minorFrame partition="isolation_tests" subject="isolation_tests" ticks="2"/>
-   <minorFrame partition="controller" subject="controller" ticks="3"/>
+   <minorFrame partition="nic_linux" ticks="140"/>
+   <minorFrame partition="ps2_driver" ticks="4"/>
+   <minorFrame partition="tau0" ticks="1"/>
+   <minorFrame partition="isolation_tests" ticks="2"/>
+   <minorFrame partition="controller" ticks="3"/>
   </cpu>
   <cpu id="1">
-   <minorFrame partition="ahci_driver" subject="ahci_drv" ticks="30"/>
-   <minorFrame partition="storage_linux" subject="example" ticks="100"/>
-   <minorFrame partition="vt" subject="vt" ticks="10"/>
-   <minorFrame partition="debugserver" subject="dbgserver" ticks="10"/>
+   <minorFrame partition="ahci_driver" ticks="30"/>
+   <minorFrame partition="storage_linux" ticks="100"/>
+   <minorFrame partition="vt" ticks="10"/>
+   <minorFrame partition="debugserver" ticks="10"/>
   </cpu>
   <cpu id="2">
-   <minorFrame partition="nic_linux_1" subject="nic_linux_1" ticks="75"/>
-   <minorFrame partition="nic_linux_1" subject="nic_linux_1" ticks="75"/>
+   <minorFrame partition="nic_linux_1" ticks="75"/>
+   <minorFrame partition="nic_linux_1" ticks="75"/>
   </cpu>
   <cpu id="3">
-   <minorFrame partition="nic_linux_2" subject="nic_linux_2" ticks="75"/>
-   <minorFrame partition="nic_linux_2" subject="nic_linux_2" ticks="75"/>
+   <minorFrame partition="nic_linux_2" ticks="75"/>
+   <minorFrame partition="nic_linux_2" ticks="75"/>
   </cpu>
  </majorFrame>
 </scheduling>

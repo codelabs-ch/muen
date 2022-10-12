@@ -1359,16 +1359,16 @@
   </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame barrier="none" partition="vt" subject="vt" ticks="120"/>
+    <minorFrame barrier="none" partition="vt" ticks="120"/>
    </cpu>
    <cpu id="1">
-    <minorFrame barrier="none" partition="linux" subject="linux" ticks="120"/>
+    <minorFrame barrier="none" partition="linux" ticks="120"/>
    </cpu>
    <cpu id="2">
-    <minorFrame barrier="none" partition="time" subject="time" ticks="120"/>
+    <minorFrame barrier="none" partition="time" ticks="120"/>
    </cpu>
    <cpu id="3">
-    <minorFrame barrier="none" partition="tau0" subject="tau0" ticks="120"/>
+    <minorFrame barrier="none" partition="tau0" ticks="120"/>
    </cpu>
    <barriers/>
   </majorFrame>

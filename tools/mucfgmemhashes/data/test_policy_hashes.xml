@@ -275,7 +275,7 @@
   </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame barrier="none" partition="linux" subject="linux" ticks="45"/>
+    <minorFrame barrier="none" partition="linux" ticks="45"/>
    </cpu>
    <barriers/>
   </majorFrame>

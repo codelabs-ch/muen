@@ -92,7 +92,7 @@
   </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame partition="linux" subject="lnx" ticks="80"/>
+    <minorFrame partition="linux" ticks="80"/>
    </cpu>
   </majorFrame>
  </scheduling>

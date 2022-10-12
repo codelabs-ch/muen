@@ -135,15 +135,15 @@
   </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame partition="linux" subject="lnx" ticks="20"/>
-    <minorFrame partition="linux" subject="lnx" ticks="20"/>
-    <minorFrame partition="linux" subject="lnx" ticks="20"/>
-    <minorFrame partition="linux" subject="lnx" ticks="20"/>
+    <minorFrame partition="linux" ticks="20"/>
+    <minorFrame partition="linux" ticks="20"/>
+    <minorFrame partition="linux" ticks="20"/>
+    <minorFrame partition="linux" ticks="20"/>
    </cpu>
    <cpu id="1">
-    <minorFrame partition="linux" subject="subject1" ticks="40"/>
-    <minorFrame partition="linux" subject="tau0" ticks="20"/>
-    <minorFrame partition="linux" subject="tau0" ticks="20"/>
+    <minorFrame partition="linux" ticks="40"/>
+    <minorFrame partition="linux" ticks="20"/>
+    <minorFrame partition="linux" ticks="20"/>
    </cpu>
   </majorFrame>
  </scheduling>

@@ -156,11 +156,11 @@
   </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame partition="sp1" subject="subj1" ticks="80"/>
+    <minorFrame partition="sp1" ticks="80"/>
    </cpu>
    <cpu id="1">
-    <minorFrame partition="sp2" subject="subj5" ticks="40"/>
-    <minorFrame partition="sp2" subject="subj5" ticks="40"/>
+    <minorFrame partition="sp2" ticks="40"/>
+    <minorFrame partition="sp2" ticks="40"/>
    </cpu>
   </majorFrame>
  </scheduling>

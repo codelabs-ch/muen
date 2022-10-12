@@ -4210,15 +4210,15 @@
   </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame barrier="1" partition="tau0" subject="tau0" ticks="20"/>
-    <minorFrame barrier="none" partition="ps2_driver" subject="ps2" ticks="10"/>
-    <minorFrame barrier="none" partition="nic_linux" subject="nic_linux" ticks="120"/>
+    <minorFrame barrier="1" partition="tau0" ticks="20"/>
+    <minorFrame barrier="none" partition="ps2_driver" ticks="10"/>
+    <minorFrame barrier="none" partition="nic_linux" ticks="120"/>
    </cpu>
    <cpu id="1">
-    <minorFrame barrier="1" partition="time" subject="time" ticks="20"/>
-    <minorFrame barrier="none" partition="debugserver" subject="dbgserver" ticks="30"/>
-    <minorFrame barrier="none" partition="vt" subject="vt" ticks="25"/>
-    <minorFrame barrier="none" partition="storage_linux" subject="storage_linux" ticks="75"/>
+    <minorFrame barrier="1" partition="time" ticks="20"/>
+    <minorFrame barrier="none" partition="debugserver" ticks="30"/>
+    <minorFrame barrier="none" partition="vt" ticks="25"/>
+    <minorFrame barrier="none" partition="storage_linux" ticks="75"/>
    </cpu>
    <barriers>
     <barrier id="1" size="2"/>
@@ -4226,14 +4226,14 @@
   </majorFrame>
   <majorFrame>
    <cpu id="0">
-    <minorFrame barrier="none" partition="ps2_driver" subject="ps2" ticks="5"/>
-    <minorFrame barrier="none" partition="tau0" subject="tau0" ticks="5"/>
-    <minorFrame barrier="none" partition="nic_linux" subject="nic_linux" ticks="140"/>
+    <minorFrame barrier="none" partition="ps2_driver" ticks="5"/>
+    <minorFrame barrier="none" partition="tau0" ticks="5"/>
+    <minorFrame barrier="none" partition="nic_linux" ticks="140"/>
    </cpu>
    <cpu id="1">
-    <minorFrame barrier="none" partition="storage_linux" subject="storage_linux" ticks="100"/>
-    <minorFrame barrier="none" partition="vt" subject="vt" ticks="20"/>
-    <minorFrame barrier="none" partition="debugserver" subject="dbgserver" ticks="30"/>
+    <minorFrame barrier="none" partition="storage_linux" ticks="100"/>
+    <minorFrame barrier="none" partition="vt" ticks="20"/>
+    <minorFrame barrier="none" partition="debugserver" ticks="30"/>
    </cpu>
    <barriers/>
   </majorFrame>

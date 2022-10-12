@@ -500,10 +500,10 @@
   </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame barrier="none" partition="tau0" subject="tau0" ticks="1700"/>
+    <minorFrame barrier="none" partition="tau0" ticks="1700"/>
    </cpu>
    <cpu id="1">
-    <minorFrame barrier="none" partition="unikernels" subject="subject1" ticks="1700"/>
+    <minorFrame barrier="none" partition="unikernels" ticks="1700"/>
    </cpu>
    <barriers/>
   </majorFrame>

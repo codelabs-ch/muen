@@ -116,7 +116,7 @@
   </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame partition="sp1" subject="subj1" ticks="80"/>
+    <minorFrame partition="sp1" ticks="80"/>
    </cpu>
   </majorFrame>
  </scheduling>

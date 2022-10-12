@@ -2583,14 +2583,14 @@
   </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame barrier="1" partition="tau0" subject="tau0" ticks="20"/>
-    <minorFrame barrier="2" partition="vt" subject="vt" ticks="30"/>
-    <minorFrame barrier="none" partition="nic_linux" subject="nic_linux" ticks="100"/>
+    <minorFrame barrier="1" partition="tau0" ticks="20"/>
+    <minorFrame barrier="2" partition="vt" ticks="30"/>
+    <minorFrame barrier="none" partition="nic_linux" ticks="100"/>
    </cpu>
    <cpu id="1">
-    <minorFrame barrier="1" partition="time" subject="time" ticks="20"/>
-    <minorFrame barrier="2" partition="debugserver" subject="dbgserver" ticks="30"/>
-    <minorFrame barrier="none" partition="storage_linux" subject="storage_linux" ticks="100"/>
+    <minorFrame barrier="1" partition="time" ticks="20"/>
+    <minorFrame barrier="2" partition="debugserver" ticks="30"/>
+    <minorFrame barrier="none" partition="storage_linux" ticks="100"/>
    </cpu>
    <barriers>
     <barrier id="1" size="2"/>
@@ -2599,13 +2599,13 @@
   </majorFrame>
   <majorFrame>
    <cpu id="0">
-    <minorFrame barrier="none" partition="vt" subject="vt" ticks="25"/>
-    <minorFrame barrier="none" partition="tau0" subject="tau0" ticks="5"/>
-    <minorFrame barrier="none" partition="nic_linux" subject="nic_linux" ticks="120"/>
+    <minorFrame barrier="none" partition="vt" ticks="25"/>
+    <minorFrame barrier="none" partition="tau0" ticks="5"/>
+    <minorFrame barrier="none" partition="nic_linux" ticks="120"/>
    </cpu>
    <cpu id="1">
-    <minorFrame barrier="none" partition="storage_linux" subject="storage_linux" ticks="120"/>
-    <minorFrame barrier="none" partition="debugserver" subject="dbgserver" ticks="30"/>
+    <minorFrame barrier="none" partition="storage_linux" ticks="120"/>
+    <minorFrame barrier="none" partition="debugserver" ticks="30"/>
    </cpu>
    <barriers/>
   </majorFrame>

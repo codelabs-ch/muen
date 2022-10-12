@@ -1577,23 +1577,23 @@
   </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame barrier="none" partition="tau0" subject="tau0" ticks="1700"/>
+    <minorFrame barrier="none" partition="tau0" ticks="1700"/>
    </cpu>
    <cpu id="1">
-    <minorFrame barrier="none" partition="sp1" subject="subject1" ticks="1700"/>
+    <minorFrame barrier="none" partition="sp1" ticks="1700"/>
    </cpu>
    <barriers/>
   </majorFrame>
   <majorFrame>
    <cpu id="0">
-    <minorFrame barrier="none" partition="tau0" subject="tau0" ticks="500"/>
-    <minorFrame barrier="1" partition="sp2" subject="subject2" ticks="500"/>
-    <minorFrame barrier="none" partition="tau0" subject="tau0" ticks="500"/>
-    <minorFrame barrier="none" partition="sp2" subject="subject3" ticks="200"/>
+    <minorFrame barrier="none" partition="tau0" ticks="500"/>
+    <minorFrame barrier="1" partition="sp2" ticks="500"/>
+    <minorFrame barrier="none" partition="tau0" ticks="500"/>
+    <minorFrame barrier="none" partition="sp2" ticks="200"/>
    </cpu>
    <cpu id="1">
-    <minorFrame barrier="1" partition="sp1" subject="subject1" ticks="1000"/>
-    <minorFrame barrier="none" partition="sp1" subject="subject1" ticks="700"/>
+    <minorFrame barrier="1" partition="sp1" ticks="1000"/>
+    <minorFrame barrier="none" partition="sp1" ticks="700"/>
    </cpu>
    <barriers>
     <barrier id="1" size="2"/>
@@ -1601,23 +1601,23 @@
   </majorFrame>
   <majorFrame>
    <cpu id="0">
-    <minorFrame barrier="1" partition="tau0" subject="tau0" ticks="300"/>
-    <minorFrame barrier="2" partition="sp2" subject="subject2" ticks="200"/>
-    <minorFrame barrier="none" partition="tau0" subject="tau0" ticks="50"/>
-    <minorFrame barrier="none" partition="sp2" subject="subject2" ticks="75"/>
-    <minorFrame barrier="3" partition="tau0" subject="tau0" ticks="75"/>
-    <minorFrame barrier="none" partition="sp2" subject="subject2" ticks="200"/>
+    <minorFrame barrier="1" partition="tau0" ticks="300"/>
+    <minorFrame barrier="2" partition="sp2" ticks="200"/>
+    <minorFrame barrier="none" partition="tau0" ticks="50"/>
+    <minorFrame barrier="none" partition="sp2" ticks="75"/>
+    <minorFrame barrier="3" partition="tau0" ticks="75"/>
+    <minorFrame barrier="none" partition="sp2" ticks="200"/>
    </cpu>
    <cpu id="1">
-    <minorFrame barrier="none" partition="sp1" subject="subject1" ticks="100"/>
-    <minorFrame barrier="none" partition="sp1" subject="subject1" ticks="100"/>
-    <minorFrame barrier="1" partition="sp1" subject="subject1" ticks="100"/>
-    <minorFrame barrier="none" partition="sp1" subject="subject1" ticks="100"/>
-    <minorFrame barrier="2" partition="sp1" subject="subject1" ticks="100"/>
-    <minorFrame barrier="none" partition="sp1" subject="subject1" ticks="100"/>
-    <minorFrame barrier="3" partition="sp1" subject="subject1" ticks="100"/>
-    <minorFrame barrier="none" partition="sp1" subject="subject1" ticks="100"/>
-    <minorFrame barrier="none" partition="sp1" subject="subject1" ticks="100"/>
+    <minorFrame barrier="none" partition="sp1" ticks="100"/>
+    <minorFrame barrier="none" partition="sp1" ticks="100"/>
+    <minorFrame barrier="1" partition="sp1" ticks="100"/>
+    <minorFrame barrier="none" partition="sp1" ticks="100"/>
+    <minorFrame barrier="2" partition="sp1" ticks="100"/>
+    <minorFrame barrier="none" partition="sp1" ticks="100"/>
+    <minorFrame barrier="3" partition="sp1" ticks="100"/>
+    <minorFrame barrier="none" partition="sp1" ticks="100"/>
+    <minorFrame barrier="none" partition="sp1" ticks="100"/>
    </cpu>
    <barriers>
     <barrier id="1" size="2"/>

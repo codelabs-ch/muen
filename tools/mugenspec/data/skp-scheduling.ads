@@ -30,14 +30,12 @@ is
 
    type Minor_Frame_Type is record
       Partition_ID : Scheduling_Partition_Range;
-      Group_ID     : Scheduling_Group_Range;
       Barrier      : Barrier_Index_Range;
       Deadline     : SK.Word64;
    end record;
 
    Null_Minor_Frame : constant Minor_Frame_Type := Minor_Frame_Type'
      (Partition_ID => Scheduling_Partition_Range'First,
-      Group_ID     => Scheduling_Group_Range'First,
       Barrier      => No_Barrier,
       Deadline     => 0);
 
@@ -68,7 +66,6 @@ is
          (Length       => 1,
           Minor_Frames => Minor_Frame_Array'(
              1 => Minor_Frame_Type'(Partition_ID => 1,
-                                    Group_ID     => 1,
                                     Barrier      => No_Barrier,
                                     Deadline     => 4930000000),
              others => Null_Minor_Frame)),
@@ -76,19 +73,15 @@ is
          (Length       => 4,
           Minor_Frames => Minor_Frame_Array'(
              1 => Minor_Frame_Type'(Partition_ID => 1,
-                                    Group_ID     => 1,
                                     Barrier      => No_Barrier,
                                     Deadline     => 1450000000),
              2 => Minor_Frame_Type'(Partition_ID => 3,
-                                    Group_ID     => 3,
                                     Barrier      => 1,
                                     Deadline     => 2900000000),
              3 => Minor_Frame_Type'(Partition_ID => 1,
-                                    Group_ID     => 1,
                                     Barrier      => No_Barrier,
                                     Deadline     => 4350000000),
              4 => Minor_Frame_Type'(Partition_ID => 3,
-                                    Group_ID     => 4,
                                     Barrier      => No_Barrier,
                                     Deadline     => 4930000000),
              others => Null_Minor_Frame)),
@@ -96,27 +89,21 @@ is
          (Length       => 6,
           Minor_Frames => Minor_Frame_Array'(
              1 => Minor_Frame_Type'(Partition_ID => 1,
-                                    Group_ID     => 1,
                                     Barrier      => 1,
                                     Deadline     => 870000000),
              2 => Minor_Frame_Type'(Partition_ID => 3,
-                                    Group_ID     => 3,
                                     Barrier      => 2,
                                     Deadline     => 1450000000),
              3 => Minor_Frame_Type'(Partition_ID => 1,
-                                    Group_ID     => 1,
                                     Barrier      => No_Barrier,
                                     Deadline     => 1595000000),
              4 => Minor_Frame_Type'(Partition_ID => 3,
-                                    Group_ID     => 3,
                                     Barrier      => No_Barrier,
                                     Deadline     => 1812500000),
              5 => Minor_Frame_Type'(Partition_ID => 1,
-                                    Group_ID     => 1,
                                     Barrier      => 3,
                                     Deadline     => 2030000000),
              6 => Minor_Frame_Type'(Partition_ID => 3,
-                                    Group_ID     => 3,
                                     Barrier      => No_Barrier,
                                     Deadline     => 2610000000),
              others => Null_Minor_Frame))),
@@ -125,7 +112,6 @@ is
          (Length       => 1,
           Minor_Frames => Minor_Frame_Array'(
              1 => Minor_Frame_Type'(Partition_ID => 2,
-                                    Group_ID     => 2,
                                     Barrier      => No_Barrier,
                                     Deadline     => 4930000000),
              others => Null_Minor_Frame)),
@@ -133,11 +119,9 @@ is
          (Length       => 2,
           Minor_Frames => Minor_Frame_Array'(
              1 => Minor_Frame_Type'(Partition_ID => 2,
-                                    Group_ID     => 2,
                                     Barrier      => 1,
                                     Deadline     => 2900000000),
              2 => Minor_Frame_Type'(Partition_ID => 2,
-                                    Group_ID     => 2,
                                     Barrier      => No_Barrier,
                                     Deadline     => 4930000000),
              others => Null_Minor_Frame)),
@@ -145,39 +129,30 @@ is
          (Length       => 9,
           Minor_Frames => Minor_Frame_Array'(
              1 => Minor_Frame_Type'(Partition_ID => 2,
-                                    Group_ID     => 2,
                                     Barrier      => No_Barrier,
                                     Deadline     => 290000000),
              2 => Minor_Frame_Type'(Partition_ID => 2,
-                                    Group_ID     => 2,
                                     Barrier      => No_Barrier,
                                     Deadline     => 580000000),
              3 => Minor_Frame_Type'(Partition_ID => 2,
-                                    Group_ID     => 2,
                                     Barrier      => 1,
                                     Deadline     => 870000000),
              4 => Minor_Frame_Type'(Partition_ID => 2,
-                                    Group_ID     => 2,
                                     Barrier      => No_Barrier,
                                     Deadline     => 1160000000),
              5 => Minor_Frame_Type'(Partition_ID => 2,
-                                    Group_ID     => 2,
                                     Barrier      => 2,
                                     Deadline     => 1450000000),
              6 => Minor_Frame_Type'(Partition_ID => 2,
-                                    Group_ID     => 2,
                                     Barrier      => No_Barrier,
                                     Deadline     => 1740000000),
              7 => Minor_Frame_Type'(Partition_ID => 2,
-                                    Group_ID     => 2,
                                     Barrier      => 3,
                                     Deadline     => 2030000000),
              8 => Minor_Frame_Type'(Partition_ID => 2,
-                                    Group_ID     => 2,
                                     Barrier      => No_Barrier,
                                     Deadline     => 2320000000),
              9 => Minor_Frame_Type'(Partition_ID => 2,
-                                    Group_ID     => 2,
                                     Barrier      => No_Barrier,
                                     Deadline     => 2610000000)))));
 

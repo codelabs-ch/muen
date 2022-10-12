@@ -30,14 +30,12 @@ is
 
    type Minor_Frame_Type is record
       Partition_ID : Scheduling_Partition_Range;
-      Group_ID     : Scheduling_Group_Range;
       Barrier      : Barrier_Index_Range;
       Deadline     : SK.Word64;
    end record;
 
    Null_Minor_Frame : constant Minor_Frame_Type := Minor_Frame_Type'
      (Partition_ID => Scheduling_Partition_Range'First,
-      Group_ID     => Scheduling_Group_Range'First,
       Barrier      => No_Barrier,
       Deadline     => 0);
 

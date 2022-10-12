@@ -473,22 +473,22 @@ is
              (Elem => Minor,
               Name => "barrier");
 
-         Subject : constant String := DOM.Core.Elements.Get_Attribute
+         Partition_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Minor,
-            Name => "subject");
-         Sched_ID : constant Scheduling_ID_Type
-           := Subject_To_Sched_IDs.Element
-             (Key => To_Unbounded_String (Source => Subject));
+            Name => "partition");
+         Partition_ID : constant String
+           := Muxml.Utils.Get_Attribute
+             (Nodes     => Partitions,
+              Ref_Attr  => "name",
+              Ref_Value => Partition_Name,
+              Attr_Name => "id");
       begin
          Cycles_Count := Cycles_Count + Ticks;
 
          TMPL.Write
            (Template => Template,
             Item     => Indent (N => 4) & Index'Img
-            & " => Minor_Frame_Type'(Partition_ID =>"
-            & Sched_ID.Partition_ID'Img
-            & "," & ASCII.LF
-            & Indent (N => 12) & "Group_ID     =>" & Sched_ID.Group_ID'Img
+            & " => Minor_Frame_Type'(Partition_ID => " & Partition_ID
             & "," & ASCII.LF
             & Indent (N => 12) & "Barrier      => "
             & (if Barrier = "none" then "No_Barrier" else Barrier)

@@ -27,6 +27,7 @@ with
                   SK.MCE.State, SK.Tau0_Interface.State, SK.VMX.Exit_Address),
        In_Out => (SK.Crash_Audit.State, SK.FPU.State, SK.IO_Apic.State,
                   SK.Interrupt_Tables.State, SK.MP.Barrier, SK.Scheduler.State,
+                  SK.Scheduler.Group_Activity_Indicator,
                   SK.Scheduling_Info.State, SK.Subjects.State,
                   SK.Subjects_Events.State, SK.Subjects_Interrupts.State,
                   SK.Subjects_MSR_Store.State, SK.Timed_Events.State,

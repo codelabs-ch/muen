@@ -228,9 +228,11 @@ is
    with
       Global =>
         (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, FPU.State,
-                   Subjects.State),
+                    Subjects_Interrupts.State,
+                    Timed_Events.State),
          In_Out => (Crash_Audit.State, IO_Apic.State,
-                     Scheduler.State, Subjects_Events.State, X86_64.State))
+                    Scheduler.State, Scheduler.Group_Activity_Indicator,
+                    Subjects.State, Subjects_Events.State, X86_64.State))
    is
       use type Skp.CPU_Range;
       use type Skp.Events.Target_Event_Range;
@@ -340,8 +342,10 @@ is
       Unchecked_Event_Nr : Word64)
    with
       Global =>
-        (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, FPU.State),
+        (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, FPU.State,
+                    Subjects_Interrupts.State, Timed_Events.State),
          In_Out => (Crash_Audit.State, IO_Apic.State, Scheduler.State,
+                    Scheduler.Group_Activity_Indicator,
                     Subjects.State, Subjects_Events.State, X86_64.State)),
       Pre    => Subjects.Is_CPL_0 (ID => Current_Subject)
    is
@@ -580,9 +584,11 @@ is
      with
        Global =>
          (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, CPU_Info.Is_BSP,
-                     FPU.State, Subjects.State, Tau0_Interface.State),
+                     FPU.State, Subjects_Interrupts.State,
+                     Tau0_Interface.State),
           In_Out => (Crash_Audit.State, IO_Apic.State, MP.Barrier,
-                     Scheduler.State, Scheduling_Info.State,
+                     Scheduler.State, Scheduler.Group_Activity_Indicator,
+                     Scheduling_Info.State, Subjects.State,
                      Subjects_Events.State, Timed_Events.State, X86_64.State))
    is
       Next_Subject_ID : Skp.Global_Subject_ID_Type;
@@ -639,9 +645,10 @@ is
    with
       Global =>
         (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, FPU.State,
-                    Subjects.State),
+                    Subjects_Interrupts.State, Timed_Events.State),
          In_Out => (Crash_Audit.State, IO_Apic.State, Scheduler.State,
-                    Subjects_Events.State, X86_64.State))
+                    Scheduler.Group_Activity_Indicator,
+                    Subjects.State, Subjects_Events.State, X86_64.State))
    is
       Trap_Entry      : Skp.Events.Source_Event_Type;
       Next_Subject_ID : Skp.Global_Subject_ID_Type;

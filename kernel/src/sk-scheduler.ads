@@ -198,8 +198,15 @@ private
          Earliest_Timer     => Policy.No_Group,
          Sleeping           => False);
 
+   use type Policy.Scheduling_Group_Index_Range;
+
    type Scheduling_Partitions_Array is array
-     (Policy.Scheduling_Partition_Range) of Scheduling_Partition_Type;
+     (Policy.Scheduling_Partition_Range) of Scheduling_Partition_Type
+   with
+      Dynamic_Predicate =>
+         (for all I in Scheduling_Partitions_Array'Range =>
+            Scheduling_Partitions_Array (I).Active_Group_Index <=
+                  Policy.Scheduling_Partition_Config (I).Last_Group_Index);
 
    --D @Text Section => SK.Scheduler.Scheduling_Partitions
    --D Scheduling partitions information. The array stores the ID of

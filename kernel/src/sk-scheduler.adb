@@ -31,7 +31,6 @@ with
 is
 
    use type Policy.Extended_Scheduling_Group_Range;
-   use type Policy.Scheduling_Group_Index_Range;
 
    -------------------------------------------------------------------------
 
@@ -248,7 +247,11 @@ is
                              X86_64.State),
                   In_Out => (Global_Group_Activity_Indicator,
                              Scheduling_Groups,
-                             Scheduling_Partitions))
+                             Scheduling_Partitions)),
+      Post =>
+         (if Next_Group /= Policy.No_Group then
+            Next_Group_Index <= Policy.Scheduling_Partition_Config
+              (Partition_ID).Last_Group_Index)
    is
       Current_SG_Index : constant Policy.Scheduling_Group_Index_Range
         := Scheduling_Partitions (Partition_ID).Active_Group_Index;
@@ -664,8 +667,8 @@ is
 
    procedure Init_Scheduling_Groups
    with
-      Global =>
-        (Output => Scheduling_Groups)
+      Global  => (Output => Scheduling_Groups),
+      Depends => (Scheduling_Groups => null)
    is
    begin
       for I in Scheduling_Groups'Range loop

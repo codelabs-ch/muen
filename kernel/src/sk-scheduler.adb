@@ -26,7 +26,7 @@ with
    Refined_State => (State => (Current_Minor_Frame_ID,
                                Global_Current_Major_Frame_ID,
                                Global_Current_Major_Start_Cycles,
-                               Scheduling_Groups))
+                               Scheduling_Partitions, Scheduling_Groups))
 is
 
    -------------------------------------------------------------------------

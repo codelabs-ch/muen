@@ -124,6 +124,40 @@ private
       Part_Of => State;
 
    --D @Interface
+   --D Runtime scheduling partition information.
+   type Scheduling_Partition_Type is record
+       --D @Interface
+       --D Index of currently active scheduling group of scheduling partition.
+       --D The corresponding group ID is specified by the group map of the
+       --D partition.
+      Active_Group_Index : Policy.Scheduling_Group_Index_Range;
+      --D @Interface
+      --D ID of scheduling group with earliest timer deadline.
+      Earliest_Timer     : Policy.Extended_Scheduling_Group_Range;
+      --D @Interface
+      --D Flag indicating whether the scheduling partition is in the sleep
+      --D state, i.e. all active subjects of all scheduling groups of the
+      --D scheduling partition are asleep.
+      Sleeping           : Boolean;
+   end record;
+
+   Null_Scheduling_Partition : constant Scheduling_Partition_Type
+     := (Active_Group_Index => Policy.Scheduling_Group_Index_Range'First,
+         Earliest_Timer     => Policy.No_Group,
+         Sleeping           => False);
+
+   type Scheduling_Partitions_Array is array
+     (Policy.Scheduling_Partition_Range) of Scheduling_Partition_Type;
+
+   --D @Text Section => SK.Scheduler.Scheduling_Partitions
+   --D Scheduling partitions information. The array stores the ID of
+   --D the current active subject for each scheduling group.
+   Scheduling_Partitions : Scheduling_Partitions_Array
+     := (others => Null_Scheduling_Partition)
+   with
+      Part_Of => State;
+
+   --D @Interface
    --D Runtime scheduling group information.
    type Scheduling_Group_Type is record
       --D @Interface

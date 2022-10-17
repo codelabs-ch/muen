@@ -18,6 +18,8 @@
 
 with Interfaces;
 
+with Musinfo.Instance;
+
 package Exceptions
 is
 
@@ -27,7 +29,9 @@ is
    --  Print backtrace of System V ABI 64-bit call stack with given RBP value.
    procedure Print_Backtrace
      (RIP : Interfaces.Unsigned_64;
-      RBP : Interfaces.Unsigned_64);
+      RBP : Interfaces.Unsigned_64)
+   with
+      Pre => Musinfo.Instance.Is_Valid;
 
    BP_Triggered : Boolean
    with Volatile;

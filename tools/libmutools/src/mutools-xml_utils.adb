@@ -685,46 +685,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Image_Size
-     (Policy : Muxml.XML_Data_Type)
-      return Interfaces.Unsigned_64
-   is
-      Nodes    : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Policy.Doc,
-           XPath => "/system/memory/memory[file or fill]");
-      Img_Size : Interfaces.Unsigned_64 := 0;
-   begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
-         declare
-            use type Interfaces.Unsigned_64;
-
-            Node    : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => Nodes,
-                 Index => I);
-            Address : constant Interfaces.Unsigned_64
-              := Interfaces.Unsigned_64'Value
-                (DOM.Core.Elements.Get_Attribute
-                   (Elem => Node,
-                    Name => "physicalAddress"));
-            Size    : constant Interfaces.Unsigned_64
-              := Interfaces.Unsigned_64'Value
-                (DOM.Core.Elements.Get_Attribute
-                   (Elem => Node,
-                    Name => "size"));
-         begin
-            if Address + Size > Img_Size then
-               Img_Size := Address + Size;
-            end if;
-         end;
-      end loop;
-
-      return Img_Size;
-   end Get_Image_Size;
-
-   -------------------------------------------------------------------------
-
    function Get_Initial_Scheduling_Group_Subjects
      (Data : Muxml.XML_Data_Type)
       return ID_Map_Array

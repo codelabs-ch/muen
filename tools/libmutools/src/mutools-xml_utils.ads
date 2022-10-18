@@ -316,11 +316,6 @@ is
      (Policy       : in out Muxml.XML_Data_Type;
       Include_Dirs :        Strings.String_Array);
 
-   --  Return size of image specified by policy in bytes.
-   function Get_Image_Size
-     (Policy : Muxml.XML_Data_Type)
-      return Interfaces.Unsigned_64;
-
    --  Calculate the PCI config space window address of the device with BDF as
    --  specified by the PCI node and the given base address.
    function Calculate_PCI_Cfg_Address

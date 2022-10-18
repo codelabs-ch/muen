@@ -47,7 +47,7 @@ is
             Saved_RBP      => RBP);
    begin
       Traces := (others => 0);
-      Last_Index := 0;
+      Last_Index := Traces'First;
 
       for I in Traces'Range loop
          Traces (I) := Cur_Stack_Frame.Return_Address;

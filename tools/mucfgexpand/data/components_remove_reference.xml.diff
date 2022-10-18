@@ -1,9 +1,3 @@
-     <reader logical="primary_data" size="16#1000#" virtualAddress="16#3000#"/>                                                                              <reader logical="primary_data" size="16#1000#" virtualAddress="16#3000#"/>
-     <reader logical="secondary_data" size="16#1000#" virtualAddress="16#4000#"/>                                                                            <reader logical="secondary_data" size="16#1000#" virtualAddress="16#4000#"/>
-     <array elementSize="16#1000#" logical="input_arr" eventBase="32" virtualAddressBase="16#0001_0000#">                                            |       <array elementSize="16#1000#" eventBase="32" logical="input_arr" virtualAddressBase="16#0001_0000#">
-      <writer logical="output1"/>                                                                                                                             <writer logical="output1"/>
-     </array>                                                                                                                                                </array>
---
     <writer logical="channel_5" physical="data_channel5" virtualAddress="16#b000#"/>                                                                        <writer logical="channel_5" physical="data_channel5" virtualAddress="16#b000#"/>
    </channels>                                                                                                                                             </channels>
    <component ref="linux"/>                                                                                                                          <
@@ -50,11 +44,7 @@
   </subject>                                                                                                                                              </subject>
   <subject name="subject2">                                                                                                                               <subject name="subject2">
 --
-   </events>                                                                                                                                               </events>
-   <channels>                                                                                                                                              <channels>
-    <writer logical="c2" physical="chan_array2" virtualAddress="16#0001_4000#" event="12"/>                                                          |      <writer event="12" logical="c2" physical="chan_array2" virtualAddress="16#0001_4000#"/>
-    <reader logical="c3" physical="chan_array3" virtualAddress="16#0001_5000#" vector="128"/>                                                        |      <reader logical="c3" physical="chan_array3" vector="128" virtualAddress="16#0001_5000#"/>
-    <reader logical="c4" physical="chan_array4" virtualAddress="16#0001_7000#" vector="129"/>                                                        |      <reader logical="c4" physical="chan_array4" vector="129" virtualAddress="16#0001_7000#"/>
+    <reader logical="c4" physical="chan_array4" vector="129" virtualAddress="16#0001_7000#"/>                                                               <reader logical="c4" physical="chan_array4" vector="129" virtualAddress="16#0001_7000#"/>
    </channels>                                                                                                                                             </channels>
    <component ref="c2">                                                                                                                              <
     <map logical="primary_data" physical="data_channel3"/>                                                                                           <

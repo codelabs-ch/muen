@@ -5,7 +5,7 @@ LABEL description "Build environment for Muen-enabled MirageOS/Solo5 Unipi websi
 
 RUN cd /home/opam/opam-repository \
 	&& git fetch origin master \
-	&& git reset --hard f6d0d82cfc90013442c7bfe1dca3b07eba8201f4 \
+	&& git reset --hard 29e03eeba74168b3fbb0def4ecdb44d8a4b15fc5 \
 	&& opam update \
 	&& opam depext -y mirage.3.10.8 \
 	&& opam install -y mirage.3.10.8

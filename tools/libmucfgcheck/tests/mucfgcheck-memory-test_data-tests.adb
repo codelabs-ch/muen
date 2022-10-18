@@ -589,43 +589,6 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Crash_Audit_After_Image (Gnattest_T : in out Test);
-   procedure Test_Crash_Audit_After_Image_049f01 (Gnattest_T : in out Test) renames Test_Crash_Audit_After_Image;
---  id:2.2/049f01b4611c4049/Crash_Audit_After_Image/1/0/
-   procedure Test_Crash_Audit_After_Image (Gnattest_T : in out Test) is
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      Data : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => "data/test_policy.xml");
-
-      --  Positive test, must not raise an exception.
-
-      Crash_Audit_After_Image (XML_Data => Data);
-      Assert (Condition => Validation_Errors.Is_Empty,
-              Message   => "Unexpected error in positive test");
-
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/memory/memory[@type='subject_crash_audit']",
-         Name  => "physicalAddress",
-         Value => "16#2000#");
-
-      Crash_Audit_After_Image (XML_Data => Data);
-      Assert (Condition => Validation_Errors.Contains
-              (Msg => "Crash audit region @16#2000# within system image with "
-               & "end address 16#cafe_6000#"),
-              Message   => "Exception mismatch");
---  begin read only
-   end Test_Crash_Audit_After_Image;
---  end read only
-
-
---  begin read only
    procedure Test_Kernel_Data_Region_Presence (Gnattest_T : in out Test);
    procedure Test_Kernel_Data_Region_Presence_18a431 (Gnattest_T : in out Test) renames Test_Kernel_Data_Region_Presence;
 --  id:2.2/18a4312991eaca69/Kernel_Data_Region_Presence/1/0/

@@ -32,18 +32,32 @@ with SK.Subjects;
 with SK.Subjects_Events;
 with SK.Subjects_Interrupts;
 with SK.Subjects_MSR_Store;
+with SK.Tau0_Interface;
 with SK.Timed_Events;
 with SK.VMX;
 with SK.Crash_Audit;
 
 --D @Interface
---D This package implements kernel initialization and is the initial entry
---D point from the early boot code into the SPARK kernel implementation.
+--D This package implements kernel initialization which is the initial entry
+--D point from the early boot code into the SPARK kernel implementation. It
+--D also contains the VM exit handler procedure which implements the main
+--D kernel processing loop.
 package SK.Kernel
 is
 
+   --  Initialize subject with given ID.
+   procedure Init_Subject (ID : Skp.Global_Subject_ID_Type)
+   with
+      Global =>
+        (Input  => (CPU_Info.APIC_ID, Interrupt_Tables.State,
+                    VMX.Exit_Address),
+         In_Out => (Crash_Audit.State, FPU.State, Subjects.State,
+                    Subjects_Events.State, Subjects_Interrupts.State,
+                    Subjects_MSR_Store.State, Timed_Events.State,
+                    VMX.VMCS_State, X86_64.State));
+
    --  Kernel initialization.
-   procedure Initialize (Subject_Registers : out SK.CPU_Registers_Type)
+   procedure Initialize (Subject_Registers : out CPU_Registers_Type)
    with
       Global =>
         (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, CPU_Info.Is_BSP,
@@ -58,5 +72,22 @@ is
       Export,
       Convention => C,
       Link_Name  => "sk_initialize";
+
+   --  VMX exit handler.
+   procedure Handle_Vmx_Exit (Subject_Registers : in out CPU_Registers_Type)
+   with
+      Global     =>
+         (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, CPU_Info.Is_BSP,
+                     Interrupt_Tables.State, MCE.State, Tau0_Interface.State,
+                     VMX.Exit_Address),
+          In_Out => (Crash_Audit.State, FPU.State, IO_Apic.State, MP.Barrier,
+                     Scheduler.State, Subjects.State, Scheduling_Info.State,
+                     Subjects_Events.State, Subjects_Interrupts.State,
+                     Subjects_MSR_Store.State, Timed_Events.State,
+                     VMX.VMCS_State, X86_64.State)),
+      Pre        => MCE.Valid_State,
+      Export,
+      Convention => C,
+      Link_Name  => "handle_vmx_exit";
 
 end SK.Kernel;

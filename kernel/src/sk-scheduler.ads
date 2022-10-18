@@ -24,8 +24,6 @@ with SK.Constants;
 with SK.CPU_Info;
 with SK.FPU;
 with SK.Interrupt_Tables;
-with SK.IO_Apic;
-with SK.MCE;
 with SK.MP;
 with SK.Scheduling_Info;
 with SK.Subjects;
@@ -39,8 +37,7 @@ with SK.Crash_Audit;
 
 --D @Interface
 --D This package implements the fixed-cyclic scheduler and additional, required
---D functionality. It contains the exit handler procedure which implements the
---D main processing loop.
+--D functionality.
 package SK.Scheduler
 with
    Abstract_State => State,
@@ -51,6 +48,13 @@ is
    function Get_Current_Subject_ID return Skp.Global_Subject_ID_Type
    with
       Global => (Input => (State, CPU_Info.CPU_ID));
+
+   --  Set the currently active subject ID of the current scheduling group to
+   --  the given value.
+   procedure Set_Current_Subject_ID (Subject_ID : Skp.Global_Subject_ID_Type)
+   with
+      Global  => (Input  => CPU_Info.CPU_ID,
+                  In_Out => Scheduler.State);
 
    --  Init scheduler.
    procedure Init
@@ -73,24 +77,21 @@ is
         (Input  => (State, CPU_Info.APIC_ID, CPU_Info.CPU_ID),
          In_Out => (Crash_Audit.State, X86_64.State));
 
-   --  Handle_Vmx_Exit could be private if spark/init.adb did not need access.
-
-   --  VMX exit handler.
-   procedure Handle_Vmx_Exit (Subject_Registers : in out SK.CPU_Registers_Type)
+   --  Update scheduling information. If the end of the current major frame is
+   --  reached the major frame start time is updated by adding the period of
+   --  the just expired major frame to the current start value. Additionally,
+   --  the minor frame index is reset and the major frame is switched to the
+   --  one set by Tau0.
+   --  On regular minor frame switches the minor frame index is incremented by
+   --  one.
+   --  The ID of the next subject to schedule is returned to the caller.
+   procedure Update_Scheduling_Info
+     (Next_Subject : out Skp.Global_Subject_ID_Type)
    with
-      Global     =>
-         (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, CPU_Info.Is_BSP,
-                     Interrupt_Tables.State, MCE.State, Tau0_Interface.State,
-                     VMX.Exit_Address),
-          In_Out => (State, Crash_Audit.State, FPU.State, IO_Apic.State,
-                     MP.Barrier, Subjects.State, Scheduling_Info.State,
-                     Subjects_Events.State, Subjects_Interrupts.State,
-                     Subjects_MSR_Store.State, Timed_Events.State,
-                     VMX.VMCS_State, X86_64.State)),
-      Pre        => MCE.Valid_State,
-      Export,
-      Convention => C,
-      Link_Name  => "handle_vmx_exit";
+      Global =>
+        (Input  => (CPU_Info.CPU_ID, CPU_Info.Is_BSP,
+                    Tau0_Interface.State),
+         In_Out => (State, MP.Barrier, Scheduling_Info.State));
 
 private
 

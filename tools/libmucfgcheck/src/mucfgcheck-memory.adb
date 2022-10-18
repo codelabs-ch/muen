@@ -361,30 +361,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Crash_Audit_After_Image (XML_Data : Muxml.XML_Data_Type)
-   is
-      Node : constant DOM.Core.Node
-        := Muxml.Utils.Get_Element
-          (Doc   => XML_Data.Doc,
-           XPath => "/system/memory/memory[@type='subject_crash_audit']");
-      Addr : constant Interfaces.Unsigned_64
-        := Interfaces.Unsigned_64'Value
-          (DOM.Core.Elements.Get_Attribute
-             (Elem => Node,
-              Name => "physicalAddress"));
-      Imgsize : constant Interfaces.Unsigned_64
-        := Mutools.XML_Utils.Get_Image_Size (Policy => XML_Data);
-   begin
-      if Addr < Imgsize then
-         Validation_Errors.Insert
-           (Msg => "Crash audit region @"
-            & Mutools.Utils.To_Hex (Number => Addr) & " within system image "
-            & "with end address " & Mutools.Utils.To_Hex (Number => Imgsize));
-      end if;
-   end Crash_Audit_After_Image;
-
-   -------------------------------------------------------------------------
-
    procedure Device_Memory_Mappings (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes      : constant DOM.Core.Node_List

@@ -520,7 +520,7 @@ is
 
       --D @Interface
       --D Save current major frame CPU cycles for schedule info export.
-      Current_Major_Frame_Start : constant SK.Word64
+      Current_Major_Frame_Start : constant Word64
         := Global_Current_Major_Start_Cycles;
 
       Next_Minor_ID : Policy.Minor_Frame_Range;
@@ -561,7 +561,7 @@ is
                --  the value from CPU_Info.
 
                Next_Major_ID    : Policy.Major_Frame_Range;
-               Next_Major_Start : SK.Word64;
+               Next_Major_Start : Word64;
             begin
                Tau0_Interface.Get_Major_Frame (ID => Next_Major_ID);
 
@@ -635,9 +635,9 @@ is
 
    procedure Set_VMX_Exit_Timer
    is
-      Now      : constant SK.Word64 := CPU.RDTSC;
-      Deadline : SK.Word64;
-      Cycles   : SK.Word64;
+      Now      : constant Word64 := CPU.RDTSC;
+      Deadline : Word64;
+      Cycles   : Word64;
    begin
 
       --  Absolute deadline is given by start of major frame plus the number of
@@ -677,7 +677,7 @@ is
                (I).Initial_Subject,
                Next_Timer     => Policy.No_Group,
                Prev_Timer     => Policy.No_Group,
-               Timeout        => SK.Word64'Last);
+               Timeout        => Word64'Last);
       end loop;
    end Init_Scheduling_Groups;
 
@@ -707,10 +707,10 @@ is
       end loop;
 
       declare
-         Now               : constant SK.Word64 := CPU.RDTSC;
+         Now               : constant Word64 := CPU.RDTSC;
          Current_Subject   : constant Skp.Global_Subject_ID_Type
            := Get_Current_Subject_ID;
-         Current_VMCS_Addr : constant SK.Word64
+         Current_VMCS_Addr : constant Word64
            := Skp.Subjects.Get_VMCS_Address (Subject_ID => Current_Subject);
       begin
          --D @Item List => impl_kernel_init_sched_steps

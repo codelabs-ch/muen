@@ -176,6 +176,7 @@
   <event mode="switch" name="s2_handover"/>
   <event mode="self" name="s2_reset"/>
   <event mode="ipi" name="xv6_keyboard"/>
+  <event mode="async" name="s1_wakeup"/>
   <event mode="switch" name="tau0_handover"/>
   <event mode="kernel" name="system_reboot"/>
   <event mode="kernel" name="unmask_irq22"/>
@@ -499,6 +500,7 @@
       <event id="19" logical="system_reboot" physical="system_reboot">
        <system_reboot/>
       </event>
+      <event id="20" logical="s1_wakeup" physical="s1_wakeup"/>
      </group>
     </source>
     <target>
@@ -901,6 +903,7 @@
      <event id="0" logical="xv6_keyboard" physical="xv6_keyboard">
       <inject_interrupt vector="32"/>
      </event>
+     <event id="1" logical="wakeup" physical="s1_wakeup"/>
     </target>
    </events>
   </subject>

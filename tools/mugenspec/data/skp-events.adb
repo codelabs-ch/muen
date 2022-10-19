@@ -73,6 +73,13 @@ is
             Handover       => False,
             Send_IPI       => True,
             IRQ_Number     => 0),
+          20 => (
+            Source_Action  => No_Action,
+            Target_Subject => 1,
+            Target_Event   => Invalid_Target_Event,
+            Handover       => False,
+            Send_IPI       => False,
+            IRQ_Number     => 0),
           18 => (
             Source_Action  => No_Action,
             Target_Subject => 2,

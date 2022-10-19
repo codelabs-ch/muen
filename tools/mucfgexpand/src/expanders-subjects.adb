@@ -1571,19 +1571,20 @@ is
 
    procedure Add_Sched_Group_Info_Mappings (Data : in out Muxml.XML_Data_Type)
    is
-      package MXU renames Mutools.XML_Utils;
       use type Interfaces.Unsigned_64;
 
       Sched_Info_Virtual_Address : constant String := Mutools.Utils.To_Hex
         (Number => Config.Subject_Info_Virtual_Addr +
            Expanders.Config.Subject_Sinfo_Region_Size);
 
-      Subject_To_Group_Map : constant MXU.ID_Map_Array
-        := MXU.Get_Subject_To_Scheduling_Group_Map (Data => Data);
       Subjects : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/subjects/subject");
+      SG_Subjects :  constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/scheduling/partitions/partition/group/subject");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
@@ -1595,15 +1596,15 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subject,
                  Name => "name");
-            Subj_ID : constant Natural
-              := Natural'Value
-                (DOM.Core.Elements.Get_Attribute
-                   (Elem => Subject,
-                    Name => "globalId"));
+            SG_Subj : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => SG_Subjects,
+                 Ref_Attr  => "name",
+                 Ref_Value => Subj_Name);
             Group_ID_Str : constant String
-              := Ada.Strings.Fixed.Trim
-                (Source => Subject_To_Group_Map (Subj_ID)'Img,
-                 Side   => Ada.Strings.Left);
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => DOM.Core.Nodes.Parent_Node (N => SG_Subj),
+                 Name => "id");
             Subj_Mem_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Subject,

@@ -35,7 +35,9 @@ is
    --  Atomically clear bit at specified position of given atomic bitmap.
    procedure Clear
      (Atomic : in out Atomic64_Type;
-      Bit    :        Bit_Pos);
+      Bit    :        Bit_Pos)
+   with
+      Annotate => (GNATprove, Terminating);
 
    --  Set bit at specified position of given atomic bitmap.
    procedure Set

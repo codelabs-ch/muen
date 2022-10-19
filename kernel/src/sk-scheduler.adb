@@ -140,6 +140,8 @@ is
      (Partition_ID : Policy.Scheduling_Partition_Range;
       Group_Index  : Policy.Scheduling_Group_Index_Range;
       Subject_ID   : Skp.Global_Subject_ID_Type)
+   with
+      Annotate => (GNATprove, Terminating)
    is
       --  Insert group with given ID and deadline into timed event list between
       --  Prev and Next.

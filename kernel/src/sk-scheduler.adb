@@ -253,7 +253,8 @@ is
       Post =>
          (if Next_Group /= Policy.No_Group then
             Next_Group_Index <= Policy.Scheduling_Partition_Config
-              (Partition_ID).Last_Group_Index)
+              (Partition_ID).Last_Group_Index),
+      Annotate => (GNATprove, Terminating)
    is
       Current_SG_Index : constant Policy.Scheduling_Group_Index_Range
         := Scheduling_Partitions (Partition_ID).Active_Group_Index;

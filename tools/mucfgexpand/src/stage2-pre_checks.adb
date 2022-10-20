@@ -22,6 +22,7 @@ with Mucfgcheck.Device;
 with Mucfgcheck.Events;
 with Mucfgcheck.Hardware;
 with Mucfgcheck.Platform;
+with Mucfgcheck.Scheduling;
 with Mucfgcheck.Subject;
 with Mucfgcheck.Validation_Errors;
 
@@ -80,6 +81,10 @@ is
         (Process => MC.Events.Self_References'Access);
       Check_Procs.Register
         (Process => MC.Events.Source_VMX_Exit_Event_Completeness'Access);
+      Check_Procs.Register
+        (Process => MC.Scheduling.Subject_Scheduling_Group_Assignment'Access);
+      Check_Procs.Register
+        (Process => MC.Scheduling.Minor_Frame_Partition_References'Access);
       Check_Procs.Register
         (Process => MC.Subject.Runnability'Access);
       Check_Procs.Register

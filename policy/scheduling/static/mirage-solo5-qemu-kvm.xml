@@ -1,32 +1,83 @@
 <scheduling tickRate="1000">
+ <partitions>
+  <partition name="tau0">
+   <group>
+    <subject name="tau0"/>
+   </group>
+  </partition>
+  <partition name="ps2_driver">
+   <group>
+    <subject name="ps2"/>
+   </group>
+  </partition>
+  <partition name="nic_linux">
+   <group>
+    <subject name="nic_linux"/>
+    <subject name="nic_sm"/>
+    <subject name="nic_sl"/>
+   </group>
+  </partition>
+  <partition name="unikernel">
+   <group>
+    <subject name="unikernel"/>
+    <subject name="unikernel_sm"/>
+   </group>
+  </partition>
+  <partition name="time">
+   <group>
+    <subject name="time"/>
+   </group>
+  </partition>
+  <partition name="controller">
+   <group>
+    <subject name="controller"/>
+   </group>
+  </partition>
+  <partition name="debugserver">
+   <group>
+    <subject name="dbgserver"/>
+   </group>
+  </partition>
+  <partition name="vt">
+   <group>
+    <subject name="vt"/>
+   </group>
+  </partition>
+  <partition name="storage_linux">
+   <group>
+    <subject name="storage_linux"/>
+    <subject name="storage_sm"/>
+   </group>
+  </partition>
+ </partitions>
  <majorFrame>
   <cpu id="0">
-   <minorFrame subject="tau0" ticks="20"/>
-   <minorFrame subject="ps2" ticks="10"/>
-   <minorFrame subject="nic_linux" ticks="80"/>
-   <minorFrame subject="unikernel" ticks="20"/>
-   <minorFrame subject="nic_linux" ticks="20"/>
+   <minorFrame partition="tau0" ticks="20"/>
+   <minorFrame partition="ps2_driver" ticks="10"/>
+   <minorFrame partition="nic_linux" ticks="80"/>
+   <minorFrame partition="unikernel" ticks="20"/>
+   <minorFrame partition="nic_linux" ticks="20"/>
   </cpu>
   <cpu id="1">
-   <minorFrame subject="time" ticks="10"/>
-   <minorFrame subject="controller" ticks="10"/>
-   <minorFrame subject="dbgserver" ticks="30"/>
-   <minorFrame subject="vt" ticks="25"/>
-   <minorFrame subject="storage_linux" ticks="75"/>
+   <minorFrame partition="time" ticks="10"/>
+   <minorFrame partition="controller" ticks="10"/>
+   <minorFrame partition="debugserver" ticks="30"/>
+   <minorFrame partition="vt" ticks="25"/>
+   <minorFrame partition="storage_linux" ticks="75"/>
   </cpu>
  </majorFrame>
  <majorFrame>
   <cpu id="0">
-   <minorFrame subject="ps2" ticks="5"/>
-   <minorFrame subject="tau0" ticks="5"/>
-   <minorFrame subject="nic_linux" ticks="100"/>
-   <minorFrame subject="unikernel" ticks="20"/>
-   <minorFrame subject="nic_linux" ticks="20"/>
+   <minorFrame partition="ps2_driver" ticks="5"/>
+   <minorFrame partition="tau0" ticks="5"/>
+   <minorFrame partition="nic_linux" ticks="100"/>
+   <minorFrame partition="unikernel" ticks="20"/>
+   <minorFrame partition="nic_linux" ticks="20"/>
   </cpu>
   <cpu id="1">
-   <minorFrame subject="storage_linux" ticks="100"/>
-   <minorFrame subject="vt" ticks="20"/>
-   <minorFrame subject="dbgserver" ticks="30"/>
+   <minorFrame partition="storage_linux" ticks="100"/>
+   <minorFrame partition="vt" ticks="20"/>
+   <minorFrame partition="debugserver" ticks="30"/>
   </cpu>
  </majorFrame>
 </scheduling>

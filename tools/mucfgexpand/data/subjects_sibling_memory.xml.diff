@@ -316,3 +316,31 @@
                                                                                                                                                      >     <channels/>
    <monitor>                                                                                                                                               <monitor>
     <loader logical="reload" subject="subject3" virtualAddress="16#0000#"/>                                                                                 <loader logical="reload" subject="subject3" virtualAddress="16#0000#"/>
+--
+ <scheduling tickRate="10000">                                                                                                                           <scheduling tickRate="10000">
+  <partitions>                                                                                                                                            <partitions>
+   <partition name="linux">                                                                                                                          |     <partition cpu="0" name="linux">
+    <group>                                                                                                                                          |      <group id="1">
+     <subject name="lnx"/>                                                                                                                                   <subject name="lnx"/>
+     <subject name="subject1"/>                                                                                                                              <subject name="subject1"/>
+    </group>                                                                                                                                                </group>
+   </partition>                                                                                                                                            </partition>
+   <partition name="tau0">                                                                                                                           |     <partition cpu="1" name="tau0">
+    <group>                                                                                                                                          |      <group id="2">
+     <subject name="tau0"/>                                                                                                                                  <subject name="tau0"/>
+    </group>                                                                                                                                                </group>
+   </partition>                                                                                                                                            </partition>
+   <partition name="s2">                                                                                                                             |     <partition cpu="1" name="s2">
+    <group>                                                                                                                                          |      <group id="3">
+     <subject name="subject2"/>                                                                                                                              <subject name="subject2"/>
+    </group>                                                                                                                                                </group>
+   </partition>                                                                                                                                            </partition>
+   <partition name="s3">                                                                                                                             |     <partition cpu="0" name="s3">
+    <group>                                                                                                                                          |      <group id="4">
+     <subject name="subject3"/>                                                                                                                              <subject name="subject3"/>
+    </group>                                                                                                                                                </group>
+   </partition>                                                                                                                                            </partition>
+   <partition name="linux_1">                                                                                                                        |     <partition cpu="1" name="linux_1">
+    <group>                                                                                                                                          |      <group id="5">
+     <subject name="lnx_core_1"/>                                                                                                                            <subject name="lnx_core_1"/>
+    </group>                                                                                                                                                </group>

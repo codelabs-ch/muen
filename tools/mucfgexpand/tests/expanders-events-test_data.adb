@@ -3,6 +3,8 @@
 --  automatically. Contents of this package can be modified in any way
 --  except for sections surrounded by a 'read only' marker.
 
+with Expanders.Scheduling;
+
 package body Expanders.Events.Test_Data is
 
    -------------------------------------------------------------------------
@@ -26,6 +28,7 @@ package body Expanders.Events.Test_Data is
    procedure Prepare_Asap_Events (Data : in out Muxml.XML_Data_Type)
    is
    begin
+      Scheduling.Add_Partition_CPU_IDs (Data => Data);
       Subjects.Add_CPU_IDs (Data => Data);
       Subjects.Test_Data.Prepare_Channel_Events (Data => Data);
    end Prepare_Asap_Events;

@@ -16,7 +16,8 @@
   <map logical="example_request" physical="example_request"/>
   <map logical="example_response" physical="example_response"/>
   <map logical="debuglog" physical="debuglog_example"/>
-  <map logical="yield" physical="example_yield"/>
+  <map logical="sleep" physical="subject_sleep"/>
+  <map logical="yield" physical="subject_yield"/>
   <map logical="timer" physical="example_self"/>
   <map logical="inject_timer" physical="example_self"/>
   <map logical="control" physical="control_example"/>

@@ -191,7 +191,11 @@ is
        Size => Segment_Regs_Size * 8;
 
    Subj_State_Size : constant :=
-     (CPU_Regs_Size + Segment_Regs_Size + 2 * Seg_Type_Size + 4 * 4 + 13 * 8);
+     (CPU_Regs_Size + Segment_Regs_Size + 2 * Seg_Type_Size + 5 * 4 + 13 * 8
+      + 1);
+
+   type Reserved_Type is mod 2 ** 7
+   with Size => 7;
 
    --D @Interface
    --D The Muen SK stores the subject state of each running subject into a
@@ -202,7 +206,7 @@ is
       --D @Interface
       --D CPU registers CR2, RAX, RBX, RCX, RDX, RDI, RSI, RBP, R08-R15
       --D (64 bits each).
-      Regs                : CPU_Registers_Type;
+      Regs               : CPU_Registers_Type;
       --D @Interface
       --D Exit reason; Intel SDM Vol. 3C, "24.9.1 Basic VM-Exit Information".
       --D This field encodes the reason for the VM exit.
@@ -213,6 +217,10 @@ is
       --D events to be blocked for a period of time. This field contains
       --D information about such blocking.
       Intr_State         : Word32;
+      --D @Interface
+      --D Guest activity state; Intel SDM Vol. 3C, "24.4.2 Guest Non-Register
+      --D State". This field identifies the logical processor's activity state.
+      Activity_State     : Word32;
       --D @Interface
       --D Guest IA32\_SYSENTER\_CS MSR; Intel SDM Vol. 3C, "24.4.1 Guest
       --D Register State".
@@ -286,6 +294,11 @@ is
       --D @Interface
       --D Guest interrupt descriptor table register (IDTR).
       IDTR               : Segment_Type;
+      --D @Interface
+      --D Flag used by the kernel to track whether the subject is running or
+      --D sleeping.
+      Running            : Boolean;
+      Padding            : Reserved_Type;
    end record
    with
       Pack,
@@ -384,6 +397,7 @@ private
        (Regs            => Null_CPU_Regs,
         Exit_Reason     => 0,
         Intr_State      => 0,
+        Activity_State  => 0,
         SYSENTER_CS     => 0,
         Instruction_Len => 0,
         Segment_Regs    => (CS   => Null_Segment,
@@ -396,6 +410,8 @@ private
                             LDTR => Null_Segment),
         GDTR            => Null_Segment,
         IDTR            => Null_Segment,
+        Running         => True,
+        Padding         => 0,
         others          => 0);
 
 end SK;

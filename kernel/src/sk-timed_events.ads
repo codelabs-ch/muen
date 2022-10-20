@@ -24,6 +24,8 @@ private with Mutimedevents;
 
 with Skp.Events;
 
+with X86_64;
+
 --D @Interface
 --D This package provide facilities to manage timed events of each subject.
 --D Timed events allow a subject to trigger a policy defined event at a given
@@ -54,6 +56,22 @@ is
    with
       Global  => (In_Out => State),
       Depends => (State =>+ Subject);
+
+   --  Get timed event trigger value of subject with given ID.
+   function Get_Trigger_Value
+     (Subject : Skp.Global_Subject_ID_Type)
+      return Word64
+   with
+      Global  => (Input => State),
+      Depends => (Get_Trigger_Value'Result => (State, Subject)),
+      Volatile_Function;
+
+   --  Returns True if the timed event of subject with given ID has expired.
+   function Has_Expired (Subject : Skp.Global_Subject_ID_Type) return Boolean
+   with
+      Global  => (Input => (State, X86_64.State)),
+      Depends => (Has_Expired'Result => (State, Subject, X86_64.State)),
+      Volatile_Function;
 
 private
 

@@ -1334,18 +1334,41 @@
  </subjects>
 
  <scheduling tickRate="10000">
+  <partitions>
+   <partition cpu="0" id="1" name="vt">
+    <group id="1">
+     <subject name="vt"/>
+    </group>
+   </partition>
+   <partition cpu="1" id="2" name="linux">
+    <group id="2">
+    <subject name="linux"/>
+    <subject name="sm"/>
+    </group>
+   </partition>
+   <partition cpu="2" id="3" name="time">
+    <group id="3">
+     <subject name="time"/>
+    </group>
+   </partition>
+   <partition cpu="3" id="4" name="tau0">
+    <group id="4">
+     <subject name="tau0"/>
+    </group>
+   </partition>
+  </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame barrier="none" subject="vt" ticks="120"/>
+    <minorFrame barrier="none" partition="vt" ticks="120"/>
    </cpu>
    <cpu id="1">
-    <minorFrame barrier="none" subject="linux" ticks="120"/>
+    <minorFrame barrier="none" partition="linux" ticks="120"/>
    </cpu>
    <cpu id="2">
-    <minorFrame barrier="none" subject="time" ticks="120"/>
+    <minorFrame barrier="none" partition="time" ticks="120"/>
    </cpu>
    <cpu id="3">
-    <minorFrame barrier="none" subject="tau0" ticks="120"/>
+    <minorFrame barrier="none" partition="tau0" ticks="120"/>
    </cpu>
    <barriers/>
   </majorFrame>

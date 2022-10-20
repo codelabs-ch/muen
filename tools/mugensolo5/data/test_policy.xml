@@ -483,12 +483,27 @@
  </subjects>
 
  <scheduling tickRate="10000">
+  <partitions>
+   <partition cpu="0" id="1" name="tau0">
+    <group id="1">
+     <subject name="tau0"/>
+    </group>
+   </partition>
+   <partition cpu="1" id="2" name="unikernels">
+    <group id="2">
+     <subject name="unikernel1"/>
+    </group>
+    <group id="3">
+     <subject name="unikernel2"/>
+    </group>
+   </partition>
+  </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame barrier="none" subject="tau0" ticks="1700"/>
+    <minorFrame barrier="none" partition="tau0" ticks="1700"/>
    </cpu>
    <cpu id="1">
-    <minorFrame barrier="none" subject="subject1" ticks="1700"/>
+    <minorFrame barrier="none" partition="unikernels" ticks="1700"/>
    </cpu>
    <barriers/>
   </majorFrame>

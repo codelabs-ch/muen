@@ -4,6 +4,7 @@
 --  except for sections surrounded by a 'read only' marker.
 
 with Mucfgcheck.Validation_Errors;
+with Expanders.Scheduling;
 
 package body Expanders.Subjects.Test_Data is
 
@@ -30,8 +31,8 @@ package body Expanders.Subjects.Test_Data is
    begin
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/scheduling/majorFrame/cpu/minorFrame[1]",
-         Name  => "subject",
+         XPath => "/system/scheduling/partitions/partition/group/subject[1]",
+         Name  => "name",
          Value => "mugenschedcfg_auto_idle_0");
    end Inject_Idle_Subject;
 
@@ -59,6 +60,15 @@ package body Expanders.Subjects.Test_Data is
 
    -------------------------------------------------------------------------
 
+   procedure Prepare_Local_IDs (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Scheduling.Add_Partition_CPU_IDs (Data => Data);
+      Add_CPU_IDs (Data => Data);
+   end Prepare_Local_IDs;
+
+   -------------------------------------------------------------------------
+
    procedure Prepare_Profile (Data: in out Muxml.XML_Data_Type)
    is
    begin
@@ -72,9 +82,11 @@ package body Expanders.Subjects.Test_Data is
    procedure Prepare_Sched_Info_Mappings (Data : in out Muxml.XML_Data_Type)
    is
    begin
+      Scheduling.Add_Partition_CPU_IDs (Data => Data);
       Add_Missing_Elements (Data => Data);
       Add_Tau0 (Data => Data);
       Add_Global_IDs (Data => Data);
+      Scheduling.Add_Group_IDs (Data => Data);
    end Prepare_Sched_Info_Mappings;
 
    -------------------------------------------------------------------------

@@ -28,6 +28,14 @@ is
    Subject_Events : constant Subjects_Events_Array := Subjects_Events_Array'(
       0 => Subject_Events_Type'(
        Source_Traps  => Trap_Table_Type'(
+           1 |  7 | 35 | 38 | 41 | 42 |
+          52 | 55 => (
+            Source_Action  => System_Panic,
+            Target_Subject => Invalid_Subject,
+            Target_Event   => Invalid_Target_Event,
+            Handover       => False,
+            Send_IPI       => False,
+            IRQ_Number     => 0),
           48 => (
             Source_Action  => No_Action,
             Target_Subject => 2,
@@ -49,16 +57,22 @@ is
             Target_Event   => Invalid_Target_Event,
             Handover       => True,
             Send_IPI       => False,
-            IRQ_Number     => 0),
-           1 |  7 | 35 | 38 | 41 | 42 |
-          52 | 55 => (
-            Source_Action  => System_Panic,
+            IRQ_Number     => 0)),
+       Source_Events => Source_Event_Table_Type'(
+          19 => (
+            Source_Action  => System_Reboot,
             Target_Subject => Invalid_Subject,
             Target_Event   => Invalid_Target_Event,
             Handover       => False,
             Send_IPI       => False,
-            IRQ_Number     => 0)),
-       Source_Events => Source_Event_Table_Type'(
+            IRQ_Number     => 0),
+          20 => (
+            Source_Action  => No_Action,
+            Target_Subject => 1,
+            Target_Event   => 1,
+            Handover       => False,
+            Send_IPI       => False,
+            IRQ_Number     => 0),
           17 => (
             Source_Action  => No_Action,
             Target_Subject => 1,
@@ -71,13 +85,6 @@ is
             Target_Subject => 2,
             Target_Event   => Invalid_Target_Event,
             Handover       => True,
-            Send_IPI       => False,
-            IRQ_Number     => 0),
-          19 => (
-            Source_Action  => System_Reboot,
-            Target_Subject => Invalid_Subject,
-            Target_Event   => Invalid_Target_Event,
-            Handover       => False,
             Send_IPI       => False,
             IRQ_Number     => 0),
           others => Null_Source_Event),
@@ -111,6 +118,14 @@ is
           others => Null_Target_Event)),
       2 => Subject_Events_Type'(
        Source_Traps  => Trap_Table_Type'(
+           1 |  7 | 35 | 38 | 41 | 42 |
+          52 | 55 => (
+            Source_Action  => System_Panic,
+            Target_Subject => Invalid_Subject,
+            Target_Event   => Invalid_Target_Event,
+            Handover       => False,
+            Send_IPI       => False,
+            IRQ_Number     => 0),
            0 |  2 |  3 |  4 |  5 |  6 |
            8 |  9 | 10 | 11 | 12 | 13 |
           14 | 15 | 16 | 17 | 18 | 19 |
@@ -124,14 +139,6 @@ is
             Target_Subject => 0,
             Target_Event   => 0,
             Handover       => True,
-            Send_IPI       => False,
-            IRQ_Number     => 0),
-           1 |  7 | 35 | 38 | 41 | 42 |
-          52 | 55 => (
-            Source_Action  => System_Panic,
-            Target_Subject => Invalid_Subject,
-            Target_Event   => Invalid_Target_Event,
-            Handover       => False,
             Send_IPI       => False,
             IRQ_Number     => 0)),
        Source_Events => Source_Event_Table_Type'(

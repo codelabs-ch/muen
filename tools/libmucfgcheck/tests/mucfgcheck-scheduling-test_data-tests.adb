@@ -30,6 +30,79 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
 --  end read only
 
 --  begin read only
+   procedure Test_Partition_ID (Gnattest_T : in out Test);
+   procedure Test_Partition_ID_ebb7ed (Gnattest_T : in out Test) renames Test_Partition_ID;
+--  id:2.2/ebb7edd665351bb2/Partition_ID/1/0/
+   procedure Test_Partition_ID (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise validation error.
+
+      Partition_ID (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected exception");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/scheduling/partitions/partition[@id='3']",
+         Name  => "id",
+         Value => "2");
+
+      Partition_ID (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Scheduling partition 'linux' and 'time' have identical"
+               & " ID 2"),
+              Message   => "Exception mismatch");
+--  begin read only
+   end Test_Partition_ID;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Group_ID (Gnattest_T : in out Test);
+   procedure Test_Group_ID_cbcced (Gnattest_T : in out Test) renames Test_Group_ID;
+--  id:2.2/cbccedf8bd676276/Group_ID/1/0/
+   procedure Test_Group_ID (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise validation error.
+
+      Group_ID (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected exception");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/scheduling/partitions/partition/group[@id='2']",
+         Name  => "id",
+         Value => "1");
+
+      Group_ID (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Multiple scheduling groups with identical ID 1"),
+              Message   => "Exception mismatch");
+--  begin read only
+   end Test_Group_ID;
+--  end read only
+
+
+--  begin read only
    procedure Test_CPU_Element_Count (Gnattest_T : in out Test);
    procedure Test_CPU_Element_Count_9baa01 (Gnattest_T : in out Test) renames Test_CPU_Element_Count;
 --  id:2.2/9baa01b30bb837f8/CPU_Element_Count/1/0/
@@ -66,6 +139,50 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Partition_CPU_Affinity (Gnattest_T : in out Test);
+   procedure Test_Partition_CPU_Affinity_d83064 (Gnattest_T : in out Test) renames Test_Partition_CPU_Affinity;
+--  id:2.2/d830646cf41cb6ad/Partition_CPU_Affinity/1/0/
+   procedure Test_Partition_CPU_Affinity (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise a validation error.
+
+      Partition_CPU_Affinity (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected exception");
+
+      --  Partition 'linux' scheduled on multiple CPUs and partition 'time' not
+      --  scheduled at all.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/scheduling/majorFrame/cpu/"
+         & "minorFrame[@partition='time']",
+         Name  => "partition",
+         Value => "linux");
+
+      Partition_CPU_Affinity (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Partition 'linux' referenced by minor frame of CPU 2"
+               & ", should only be scheduled on CPU 1"),
+              Message   => "Exception mismatch");
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Partition 'time' not scheduled on any CPU"),
+              Message   => "Exception mismatch");
+--  begin read only
+   end Test_Partition_CPU_Affinity;
+--  end read only
+
+
+--  begin read only
    procedure Test_Subject_References (Gnattest_T : in out Test);
    procedure Test_Subject_References_8828a8 (Gnattest_T : in out Test) renames Test_Subject_References;
 --  id:2.2/8828a835f8aeaa87/Subject_References/1/0/
@@ -79,23 +196,27 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+
+      --  Positive test, must not raise a validation error.
+
+      Subject_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected exception");
+
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/scheduling/majorFrame/cpu/"
-         & "minorFrame[@subject='vt']",
-         Name  => "subject",
+         XPath => "/system/scheduling/partitions/partition/group/"
+         & "subject[@name='vt']",
+         Name  => "name",
          Value => "nonexistent");
-
       begin
          Subject_References (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
 
       exception
          when Validation_Errors.Validation_Error =>
             Assert (Condition => Validation_Errors.Contains
-                    (Msg => "Subject 'nonexistent' referenced in scheduling plan not"
-                     & " found"),
+                    (Msg => "Subject 'nonexistent' referenced by scheduling "
+                     & "group 1 of partition 'vt' not found"),
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -117,12 +238,18 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+
+      -- Positive test, must not raise an exception.
+
+      Subject_CPU_Affinity (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected exception");
+
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/scheduling/majorFrame/cpu/"
-         & "minorFrame[@subject='vt']",
-         Name  => "subject",
-         Value => "linux");
+         XPath => "/system/scheduling/partitions/partition[@name='linux']",
+         Name  => "cpu",
+         Value => "0");
 
       Subject_CPU_Affinity (XML_Data => Data);
       Assert (Condition => Validation_Errors.Contains
@@ -131,6 +258,82 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
               Message   => "Exception mismatch");
 --  begin read only
    end Test_Subject_CPU_Affinity;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Subject_Scheduling_Group_Assignment (Gnattest_T : in out Test);
+   procedure Test_Subject_Scheduling_Group_Assignment_dc5519 (Gnattest_T : in out Test) renames Test_Subject_Scheduling_Group_Assignment;
+--  id:2.2/dc5519f198bfcf85/Subject_Scheduling_Group_Assignment/1/0/
+   procedure Test_Subject_Scheduling_Group_Assignment (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise validation error.
+
+      Subject_Scheduling_Group_Assignment (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected exception");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/scheduling/partitions/partition/group/"
+         & "subject[@name='vt']",
+         Name  => "name",
+         Value => "linux");
+
+      Subject_Scheduling_Group_Assignment (XML_Data => Data);
+      Assert
+        (Condition => Validation_Errors.Contains
+           (Msg => "Subject 'linux' assigned to multiple scheduling groups"),
+         Message   => "Exception mismatch");
+--  begin read only
+   end Test_Subject_Scheduling_Group_Assignment;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Subject_Scheduling_Group_Runnability (Gnattest_T : in out Test);
+   procedure Test_Subject_Scheduling_Group_Runnability_f0f137 (Gnattest_T : in out Test) renames Test_Subject_Scheduling_Group_Runnability;
+--  id:2.2/f0f13783f3f46037/Subject_Scheduling_Group_Runnability/1/0/
+   procedure Test_Subject_Scheduling_Group_Runnability (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise validation error.
+
+      Subject_Scheduling_Group_Runnability (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected exception");
+
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/events/event[@name='resume_linux']",
+         Name  => "mode",
+         Value => "ipi");
+
+      Subject_Scheduling_Group_Runnability (XML_Data => Data);
+      Assert
+        (Condition => Validation_Errors.Contains
+           (Msg => "Subject 'linux' of scheduling group 2 not runnable"),
+         Message   => "Exception mismatch");
+--  begin read only
+   end Test_Subject_Scheduling_Group_Runnability;
 --  end read only
 
 
@@ -372,6 +575,44 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
               Message   => "Exception mismatch");
 --  begin read only
    end Test_Minor_Frame_Barrier_Refs;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Minor_Frame_Partition_References (Gnattest_T : in out Test);
+   procedure Test_Minor_Frame_Partition_References_7a0b6a (Gnattest_T : in out Test) renames Test_Minor_Frame_Partition_References;
+--  id:2.2/7a0b6a9bd12ed03d/Minor_Frame_Partition_References/1/0/
+   procedure Test_Minor_Frame_Partition_References (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise validation error.
+
+      Minor_Frame_Partition_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected exception");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/scheduling/majorFrame/cpu/minorFrame[@partition='vt']",
+         Name  => "partition",
+         Value => "nonexistent");
+
+      Minor_Frame_Partition_References (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Scheduling partition 'nonexistent' referenced in "
+               & "scheduling plan not found"),
+              Message   => "Exception mismatch: "
+              & Validation_Errors.Get_Error_Message);
+--  begin read only
+   end Test_Minor_Frame_Partition_References;
 --  end read only
 
 --  begin read only

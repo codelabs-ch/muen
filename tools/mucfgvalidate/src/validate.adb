@@ -187,7 +187,17 @@ is
       XML_Processors.Register
         (Process => Scheduling.CPU_Element_Count'Access);
       XML_Processors.Register
+        (Process => Scheduling.Partition_ID'Access);
+      XML_Processors.Register
+        (Process => Scheduling.Group_ID'Access);
+      XML_Processors.Register
+        (Process => Scheduling.Partition_CPU_Affinity'Access);
+      XML_Processors.Register
         (Process => Scheduling.Subject_CPU_Affinity'Access);
+      XML_Processors.Register
+        (Process => Scheduling.Subject_Scheduling_Group_Assignment'Access);
+      XML_Processors.Register
+        (Process => Scheduling.Subject_Scheduling_Group_Runnability'Access);
       XML_Processors.Register
         (Process => Scheduling.Major_Frame_Ticks'Access);
       XML_Processors.Register
@@ -198,6 +208,8 @@ is
         (Process => Scheduling.Minor_Frame_Sync_Points'Access);
       XML_Processors.Register
         (Process => Scheduling.Minor_Frame_Barrier_Refs'Access);
+      XML_Processors.Register
+        (Process => Scheduling.Minor_Frame_Partition_References'Access);
       XML_Processors.Register
         (Process => Kernel.CPU_Local_Data_Address_Equality'Access);
       XML_Processors.Register

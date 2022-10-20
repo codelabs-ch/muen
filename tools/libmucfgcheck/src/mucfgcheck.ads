@@ -136,4 +136,7 @@ is
    --  attribute of the right node.
    function Match_Subject_Name (Left, Right : DOM.Core.Node) return Boolean;
 
+   --  Returns True if the left and right node's 'name' attribute match.
+   function Match_Name (Left, Right : DOM.Core.Node) return Boolean;
+
 end Mucfgcheck;

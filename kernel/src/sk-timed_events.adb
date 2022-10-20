@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.CPU;
+
 package body SK.Timed_Events
 with
    Refined_State => (State => Subject_Events)
@@ -60,6 +62,32 @@ is
       Event_Nr          := Skp.Events.Event_Range
         (Subject_Events (Subject).Data.Event_Nr);
    end Get_Event;
+
+   -------------------------------------------------------------------------
+
+   function Get_Trigger_Value
+     (Subject : Skp.Global_Subject_ID_Type)
+      return Word64
+   is (Subject_Events (Subject).Data.TSC_Trigger_Value)
+   with
+      Refined_Global  => (Input => Subject_Events),
+      Refined_Depends =>
+        (Get_Trigger_Value'Result => (Subject_Events, Subject));
+
+   -------------------------------------------------------------------------
+
+   function Has_Expired (Subject : Skp.Global_Subject_ID_Type) return Boolean
+   with
+      Refined_Global  => (Input => (Subject_Events, X86_64.State)),
+      Refined_Depends =>
+         (Has_Expired'Result => (Subject_Events, Subject, X86_64.State))
+   is
+      Now               : constant Word64 := CPU.RDTSC;
+      Cur_Trigger_value : constant Word64
+        := Subject_Events (Subject).Data.TSC_Trigger_Value;
+   begin
+      return Cur_Trigger_value <= Now;
+   end Has_Expired;
 
    -------------------------------------------------------------------------
 

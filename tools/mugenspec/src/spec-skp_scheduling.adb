@@ -16,10 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Containers.Hashed_Maps;
-
 with Ada.Strings.Fixed;
-with Ada.Strings.Unbounded.Hash;
+with Ada.Strings.Unbounded;
 
 with Interfaces;
 
@@ -40,19 +38,10 @@ is
 
    use Ada.Strings.Unbounded;
 
-   package Subject_ID_Map is new Ada.Containers.Hashed_Maps
-     (Key_Type        => Ada.Strings.Unbounded.Unbounded_String,
-      Element_Type    => Natural,
-      Hash            => Ada.Strings.Unbounded.Hash,
-      Equivalent_Keys => Ada.Strings.Unbounded."=");
-
    --  Returns the sum of all tick values of the given minor frames.
    function Sum_Ticks
      (Minor_Frames : DOM.Core.Node_List)
       return Interfaces.Unsigned_64;
-
-   --  Return the subject scheduling group ID map for the given subject nodes.
-   function To_Map (Subjects : DOM.Core.Node_List) return Subject_ID_Map.Map;
 
    -------------------------------------------------------------------------
 
@@ -85,31 +74,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function To_Map (Subjects : DOM.Core.Node_List) return Subject_ID_Map.Map
-   is
-   begin
-      return Map : Subject_ID_Map.Map do
-         for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
-            declare
-               Subj_Node : constant DOM.Core.Node
-                 := DOM.Core.Nodes.Item (List  => Subjects,
-                                         Index => I);
-            begin
-               Map.Insert
-                 (Key      => To_Unbounded_String
-                    (DOM.Core.Elements.Get_Attribute
-                         (Elem => Subj_Node,
-                          Name => "name")),
-                  New_Item => Natural'Value (DOM.Core.Elements.Get_Attribute
-                    (Elem => Subj_Node,
-                     Name => "schedGroupId")));
-            end;
-         end loop;
-      end return;
-   end To_Map;
-
-   -------------------------------------------------------------------------
-
    procedure Write
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
@@ -119,6 +83,8 @@ is
 
       use type Interfaces.Unsigned_64;
 
+      Max_Groups_Per_Partition : constant := 64;
+
       Subjects     : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
@@ -126,6 +92,14 @@ is
       Scheduling   : constant DOM.Core.Node := Muxml.Utils.Get_Element
         (Doc   => Policy.Doc,
          XPath => "/system/scheduling");
+      Partitions   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Scheduling,
+           XPath => "partitions/partition");
+      SG_Subjects  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Scheduling,
+           XPath => "partitions/partition/group/subject");
       Processor    : constant DOM.Core.Node := Muxml.Utils.Get_Element
         (Doc   => Policy.Doc,
          XPath => "/system/hardware/processor");
@@ -155,10 +129,12 @@ is
           (Content  => String_Templates.skp_scheduling_ads,
            Filename => Output_Dir & "/skp-scheduling.ads");
 
-      Subject_To_Group_ID  : constant Subject_ID_Map.Map
-        := To_Map (Subjects => Subjects);
+      Sched_Partition_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Partitions);
+
       Sched_Groups_To_Subj : constant MXU.ID_Map_Array
         := MXU.Get_Initial_Scheduling_Group_Subjects (Data => Policy);
+      Sched_Groups_To_Idx  : MXU.ID_Map_Array (Sched_Groups_To_Subj'Range);
 
       --  Returns the maximum count of barriers per major frame.
       function Get_Max_Barrier_Count (Schedule : DOM.Core.Node) return Natural;
@@ -168,6 +144,9 @@ is
 
       --  Returns the subject to scheduling group mapping as string.
       function Get_Subject_To_Sched_Group_Mapping return String;
+
+      --  Returns the subject to scheduling partition mapping as string.
+      function Get_Subject_To_Sched_Partition_Mapping return String;
 
       --  Write major frame with given index and minor frames to buffer.
       procedure Write_Major_Frame
@@ -186,6 +165,12 @@ is
         (Minor        :        DOM.Core.Node;
          Index        :        Natural;
          Cycles_Count : in out Interfaces.Unsigned_64);
+
+      --  Write the scheduling group configuration to the template.
+      procedure Write_Scheduling_Group_Config;
+
+      --  Write the scheduling partition configuration to the template.
+      procedure Write_Scheduling_Partition_Config;
 
       ----------------------------------------------------------------------
 
@@ -248,9 +233,9 @@ is
 
       function Get_Subject_To_Sched_Group_Mapping return String
       is
-         Buffer : Unbounded_String;
          Subj_Count : constant Natural
            := DOM.Core.Nodes.Length (List => Subjects);
+         Buffer     : Unbounded_String;
       begin
          for I in 0 .. Subj_Count - 1 loop
             declare
@@ -271,6 +256,45 @@ is
 
          return To_String (Buffer);
       end Get_Subject_To_Sched_Group_Mapping;
+
+      ----------------------------------------------------------------------
+
+      function Get_Subject_To_Sched_Partition_Mapping return String
+      is
+         Buffer : Unbounded_String;
+         Subj_Count : constant Natural
+           := DOM.Core.Nodes.Length (List => Subjects);
+      begin
+         for I in 0 .. Subj_Count - 1 loop
+            declare
+               Subj_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => DOM.Core.Nodes.Item (List  => Subjects,
+                                                 Index => I),
+                    Name => "name");
+               Part_Subj : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element
+                   (Nodes     => SG_Subjects,
+                    Ref_Attr  => "name",
+                    Ref_Value => Subj_Name);
+               Sched_Part_ID : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Muxml.Utils.Ancestor_Node
+                      (Node  => Part_Subj,
+                       Level => 2),
+                    Name => "id");
+            begin
+               Buffer := Buffer & Indent (N => 3)
+                 & I'Img & " => " & Sched_Part_ID;
+
+               if I < Subj_Count - 1 then
+                  Buffer := Buffer & "," & ASCII.LF;
+               end if;
+            end;
+         end loop;
+
+         return To_String (Buffer);
+      end Get_Subject_To_Sched_Partition_Mapping;
 
       ----------------------------------------------------------------------
 
@@ -403,26 +427,128 @@ is
              (Elem => Minor,
               Name => "barrier");
 
-         Subject : constant String := DOM.Core.Elements.Get_Attribute
+         Partition_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Minor,
-            Name => "subject");
-         Sched_Group_ID : constant Natural
-           := Subject_To_Group_ID.Element
-             (Key => To_Unbounded_String (Source => Subject));
+            Name => "partition");
+         Partition_ID : constant String
+           := Muxml.Utils.Get_Attribute
+             (Nodes     => Partitions,
+              Ref_Attr  => "name",
+              Ref_Value => Partition_Name,
+              Attr_Name => "id");
       begin
          Cycles_Count := Cycles_Count + Ticks;
 
          TMPL.Write
            (Template => Template,
             Item     => Indent (N => 4) & Index'Img
-            & " => Minor_Frame_Type'(Group_ID =>"
-            & Sched_Group_ID'Img
+            & " => Minor_Frame_Type'(Partition_ID => " & Partition_ID
             & "," & ASCII.LF
-            & Indent (N => 12) & "Barrier  => "
+            & Indent (N => 12) & "Barrier      => "
             & (if Barrier = "none" then "No_Barrier" else Barrier)
             & "," & ASCII.LF
-            & Indent (N => 12) & "Deadline =>" & Cycles_Count'Img & ")");
+            & Indent (N => 12) & "Deadline     =>" & Cycles_Count'Img & ")");
       end Write_Minor_Frame;
+
+      ----------------------------------------------------------------------
+
+      procedure Write_Scheduling_Group_Config
+      is
+      begin
+         for I in Sched_Groups_To_Subj'Range loop
+            TMPL.Write
+              (Template => Template,
+               Item     => Indent (N => 3)
+               & I'Img & " => (Initial_Subject =>"
+               & Sched_Groups_To_Subj (I)'Img  & "," & ASCII.LF
+               & Indent (N => 5) & " Group_Index     =>"
+               & Sched_Groups_To_Idx (I)'Img & ")");
+
+            if I < Sched_Groups_To_Subj'Last then
+               TMPL.Write
+                 (Template => Template,
+                  Item     => "," & ASCII.LF);
+            end if;
+         end loop;
+      end Write_Scheduling_Group_Config;
+
+      ----------------------------------------------------------------------
+
+      procedure Write_Scheduling_Partition_Config
+      is
+      begin
+         for I in 1 .. Sched_Partition_Count loop
+            declare
+               Partition_Node : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item (List  => Partitions,
+                                         Index => I - 1);
+               Sched_Groups : constant DOM.Core.Node_List
+                 := McKae.XML.XPath.XIA.XPath_Query
+                         (N     => Partition_Node,
+                          XPath => "group");
+               Sched_Group_Count : constant Natural
+                 := DOM.Core.Nodes.Length (List => Sched_Groups);
+            begin
+               TMPL.Write
+                 (Template => Template,
+                  Item     => Indent (N => 3)
+                  & I'Img & " => (Last_Group_Index =>"
+                  & Natural'Image (Sched_Group_Count - 1)
+                  & "," & ASCII.LF);
+               TMPL.Write
+                 (Template => Template,
+                  Item     => Indent (N => 5)
+                  & " Groups           => Scheduling_Group_Map'(" & ASCII.LF);
+
+               for J in 0 .. Sched_Group_Count - 1 loop
+                  declare
+                     Sched_Group : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Item (List  => Sched_Groups,
+                                               Index => J);
+                     Sched_Group_ID_Str : constant String
+                       := DOM.Core.Elements.Get_Attribute (Elem => Sched_Group,
+                                                           Name => "id");
+                  begin
+                     TMPL.Write
+                       (Template => Template,
+                        Item     => Indent (N => 6) & J'Img & " => "
+                        & Sched_Group_ID_Str);
+
+                     if J < Sched_Group_Count - 1 then
+                        TMPL.Write
+                          (Template => Template,
+                           Item     => "," & ASCII.LF);
+                     end if;
+
+                     --  Add entry for scheduling group ID to group index
+                     --  mapping, which will be used by the scheduling group
+                     --  config writer procedure for generating the scheduling
+                     --  group config.
+
+                     Sched_Groups_To_Idx
+                       (Natural'Value (Sched_Group_ID_Str)) := J;
+                  end;
+               end loop;
+
+               if Sched_Group_Count < Max_Groups_Per_Partition then
+                  TMPL.Write
+                    (Template => Template,
+                     Item     => "," & ASCII.LF
+                     & Indent (N => 6) & " others => No_Group");
+               end if;
+
+               TMPL.Write
+                 (Template => Template,
+                  Item     => "))");
+
+               if I < Sched_Partition_Count then
+                  TMPL.Write
+                    (Template => Template,
+                     Item     => "," & ASCII.LF);
+               end if;
+            end;
+         end loop;
+      end Write_Scheduling_Partition_Config;
    begin
       Mulog.Log (Msg => "Writing scheduling spec for" & CPU_Count'Img
                  & " CPUs to '" & Output_Dir & "/skp-scheduling.ads'");
@@ -444,7 +570,19 @@ is
       TMPL.Stream (Template => Template);
       TMPL.Write
         (Template => Template,
-         Item     => "1 .." & Natural'Image (Sched_Groups_To_Subj'Last));
+         Item     => Ada.Strings.Fixed.Trim
+           (Source => Max_Groups_Per_Partition'Img,
+            Side   => Ada.Strings.Left));
+      TMPL.Stream (Template => Template);
+      TMPL.Write
+        (Template => Template,
+         Item     => "1 .." & Natural'Image (Sched_Partition_Count));
+      TMPL.Stream (Template => Template);
+      TMPL.Write
+        (Template => Template,
+         Item     => Ada.Strings.Fixed.Trim
+           (Source => Natural'Image (Sched_Groups_To_Subj'Last),
+            Side   => Ada.Strings.Left));
       TMPL.Stream (Template => Template);
       TMPL.Write
         (Template => Template,
@@ -524,19 +662,16 @@ is
 
       TMPL.Stream (Template => Template);
 
-      for I in Sched_Groups_To_Subj'Range loop
-         TMPL.Write
-           (Template => Template,
-            Item     => Indent (N => 3)
-            & I'Img & " =>" & Sched_Groups_To_Subj (I)'Img);
+      Write_Scheduling_Partition_Config;
 
-         if I < Sched_Groups_To_Subj'Last then
-            TMPL.Write
-              (Template => Template,
-               Item     => "," & ASCII.LF);
-         end if;
-      end loop;
+      TMPL.Stream (Template => Template);
 
+      Write_Scheduling_Group_Config;
+
+      TMPL.Stream (Template => Template);
+      TMPL.Write
+        (Template => Template,
+         Item     => Get_Subject_To_Sched_Partition_Mapping);
       TMPL.Stream (Template => Template);
       TMPL.Write
         (Template => Template,

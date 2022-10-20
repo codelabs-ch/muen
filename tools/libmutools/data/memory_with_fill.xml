@@ -129,17 +129,24 @@
   </subject>
  </subjects>
  <scheduling tickRate="10000">
+  <partitions>
+   <partition name="linux">
+    <group>
+     <subject name="lnx"/>
+    </group>
+   </partition>
+  </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame subject="lnx" ticks="20"/>
-    <minorFrame subject="lnx" ticks="20"/>
-    <minorFrame subject="lnx" ticks="20"/>
-    <minorFrame subject="lnx" ticks="20"/>
+    <minorFrame partition="linux" ticks="20"/>
+    <minorFrame partition="linux" ticks="20"/>
+    <minorFrame partition="linux" ticks="20"/>
+    <minorFrame partition="linux" ticks="20"/>
    </cpu>
    <cpu id="1">
-    <minorFrame subject="subject1" ticks="40"/>
-    <minorFrame subject="tau0" ticks="20"/>
-    <minorFrame subject="tau0" ticks="20"/>
+    <minorFrame partition="linux" ticks="40"/>
+    <minorFrame partition="linux" ticks="20"/>
+    <minorFrame partition="linux" ticks="20"/>
    </cpu>
   </majorFrame>
  </scheduling>

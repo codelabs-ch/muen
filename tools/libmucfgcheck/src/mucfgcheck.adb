@@ -288,6 +288,20 @@ is
 
    -------------------------------------------------------------------------
 
+   function Match_Name (Left, Right : DOM.Core.Node) return Boolean
+   is
+      Left_Name : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Left,
+         Name => "name");
+      Right_Name : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Right,
+         Name => "name");
+   begin
+      return Left_Name = Right_Name;
+   end Match_Name;
+
+   -------------------------------------------------------------------------
+
    function Match_Subject_Name (Left, Right : DOM.Core.Node) return Boolean
    is
       Ref_Name : constant String := DOM.Core.Elements.Get_Attribute

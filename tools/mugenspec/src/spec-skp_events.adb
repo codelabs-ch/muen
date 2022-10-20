@@ -181,7 +181,8 @@ is
               (Doc   => Event_Target,
                XPath => "*") /= null);
       Target_Event_ID : constant Natural
-        := (if Event_Target = null or not Has_Target_Action
+        := (if Event_Target = null or
+              (Notify_Mode = "switch" and not Has_Target_Action)
             then Invalid_Target_Event
             else Natural'Value (DOM.Core.Elements.Get_Attribute
               (Elem => Event_Target,

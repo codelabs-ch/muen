@@ -24,7 +24,9 @@ is
    type Trap_Range is range 0 .. 59;
 
    type Event_Action_Kind is
-     (System_Reboot,
+     (Subject_Sleep,
+      Subject_Yield,
+      System_Reboot,
       System_Panic,
       System_Poweroff,
       Unmask_Irq,
@@ -33,7 +35,7 @@ is
       Reset);
 
    subtype Source_Event_Action_Kind is Event_Action_Kind range
-     System_Reboot .. No_Action;
+     Subject_Sleep .. No_Action;
 
    subtype Target_Event_Action_Kind is Event_Action_Kind range
      No_Action .. Reset;

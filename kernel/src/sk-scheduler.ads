@@ -35,13 +35,19 @@ with SK.Timed_Events;
 with SK.VMX;
 with SK.Crash_Audit;
 
+private with SK.Atomics;
+
 --D @Interface
 --D This package implements the fixed-cyclic scheduler and additional, required
 --D functionality.
 package SK.Scheduler
 with
-   Abstract_State => State,
-   Initializes    => State
+   Abstract_State => (State,
+                      (Group_Activity_Indicator
+                       with External => (Async_Writers,
+                                         Async_Readers))),
+   Initializes    => (State,
+                      Group_Activity_Indicator => CPU_Info.Is_BSP)
 is
 
    --  Returns the subject ID of the currently active scheduling group.
@@ -89,11 +95,36 @@ is
      (Next_Subject : out Skp.Global_Subject_ID_Type)
    with
       Global =>
-        (Input  => (CPU_Info.CPU_ID, CPU_Info.Is_BSP,
-                    Tau0_Interface.State),
-         In_Out => (State, MP.Barrier, Scheduling_Info.State));
+        (Input  => (CPU_Info.CPU_ID, CPU_Info.Is_BSP, Tau0_Interface.State,
+                    Subjects_Events.State, Subjects_Interrupts.State,
+                    Timed_Events.State, X86_64.State),
+         In_Out => (State, Group_Activity_Indicator, MP.Barrier,
+                    Scheduling_Info.State, Subjects.State));
+
+   --  Take scheduling decision for the current scheduling partition considering
+   --  whether the specified subject requested to Sleep or to Yield its
+   --  remaining time of the current minor frame. The next active scheduling
+   --  group in the partition will be switched to or if all are inactive, the
+   --  scheduling partition is put into sleep mode until the end of the minor
+   --  frame. To make sure execution of the subject resumes after the
+   --  yield/sleep instruction, the RIP of the subject is incremented when RIP
+   --  Incremented is specified as False.
+   procedure Reschedule_Partition
+     (Subject_ID      :     Skp.Global_Subject_ID_Type;
+      RIP_Incremented :     Boolean;
+      Sleep           :     Boolean;
+      Next_Subject    : out Skp.Global_Subject_ID_Type);
+
+   --  Indicate that activity has occurred that might change the status of the
+   --  subject given by ID. Same CPU specifies whether the subject is running
+   --  on this CPU core.
+   procedure Indicate_Activity
+     (Subject_ID : Skp.Global_Subject_ID_Type;
+      Same_CPU   : Boolean);
 
 private
+
+   package Policy renames Skp.Scheduling;
 
    --D @Interface
    --D Current major frame start time in CPU cycles. It is exclusively written
@@ -108,24 +139,118 @@ private
    --D ID of currently active major frame. It is exclusively written by BSP and
    --D only read by APs. Data consistency is established via global
    --D synchronization barrier.
-   Global_Current_Major_Frame_ID : Skp.Scheduling.Major_Frame_Range
-     := Skp.Scheduling.Major_Frame_Range'First
+   Global_Current_Major_Frame_ID : Policy.Major_Frame_Range
+     := Policy.Major_Frame_Range'First
    with
       Linker_Section => Constants.Global_Data_Section,
       Part_Of        => State;
 
    --D @Text Section => SK.Scheduler.Current_Minor_Frame_ID
    --D ID of currently active minor frame.
-   Current_Minor_Frame_ID : Skp.Scheduling.Minor_Frame_Range
-     := Skp.Scheduling.Minor_Frame_Range'First
+   Current_Minor_Frame_ID : Policy.Minor_Frame_Range
+     := Policy.Minor_Frame_Range'First
    with
       Part_Of => State;
+
+   pragma Compile_Time_Error
+     (Atomics.Bit_Pos'First /= Byte (Policy.Scheduling_Group_Index_Range'First),
+      "Atomic bitmap index and scheduling group index start differ");
+   pragma Compile_Time_Error
+     (Atomics.Bit_Pos'Last /= Byte (Policy.Scheduling_Group_Index_Range'Last),
+      "Atomic bitmap index and scheduling group index end differ");
+
+   type Scheduling_Group_Activity_Indicator_Array is
+     array (Policy.Scheduling_Partition_Range) of Atomics.Atomic64_Type;
+
+   --D @Text Section => SK.Scheduler.Global_Group_Activity_Indicator
+   --D Scheduling group activity indicator bitmap. Tracks the active scheduling
+   --D groups of each scheduling partition. The bitmap position to scheduling
+   --D group mapping is specified in the scheduling partition config of the
+   --D policy.
+   Global_Group_Activity_Indicator : Scheduling_Group_Activity_Indicator_Array
+   with
+      Volatile,
+      Async_Readers,
+      Async_Writers,
+      Linker_Section => Constants.Global_Data_Section,
+      Part_Of        => Group_Activity_Indicator;
+
+   --D @Interface
+   --D Runtime scheduling partition information.
+   type Scheduling_Partition_Type is record
+       --D @Interface
+       --D Index of currently active scheduling group of scheduling partition.
+       --D The corresponding group ID is specified by the group map of the
+       --D partition.
+      Active_Group_Index : Policy.Scheduling_Group_Index_Range;
+      --D @Interface
+      --D ID of scheduling group with earliest timer deadline.
+      Earliest_Timer     : Policy.Extended_Scheduling_Group_Range;
+      --D @Interface
+      --D Flag indicating whether the scheduling partition is in the sleep
+      --D state, i.e. all active subjects of all scheduling groups of the
+      --D scheduling partition are asleep.
+      Sleeping           : Boolean;
+   end record;
+
+   Null_Scheduling_Partition : constant Scheduling_Partition_Type
+     := (Active_Group_Index => Policy.Scheduling_Group_Index_Range'First,
+         Earliest_Timer     => Policy.No_Group,
+         Sleeping           => False);
+
+   use type Policy.Scheduling_Group_Index_Range;
+
+   type Scheduling_Partitions_Array is array
+     (Policy.Scheduling_Partition_Range) of Scheduling_Partition_Type
+   with
+      Dynamic_Predicate =>
+         (for all I in Scheduling_Partitions_Array'Range =>
+            Scheduling_Partitions_Array (I).Active_Group_Index <=
+                  Policy.Scheduling_Partition_Config (I).Last_Group_Index);
+
+   --D @Text Section => SK.Scheduler.Scheduling_Partitions
+   --D Scheduling partitions information. The array stores the ID of
+   --D the current active subject for each scheduling group.
+   Scheduling_Partitions : Scheduling_Partitions_Array
+     := (others => Null_Scheduling_Partition)
+   with
+      Part_Of => State;
+
+   --D @Interface
+   --D Runtime scheduling group information.
+   type Scheduling_Group_Type is record
+      --D @Interface
+      --D ID of currently active subject of scheduling group.
+      Active_Subject : Skp.Global_Subject_ID_Type;
+      --D @Interface
+      --D ID of scheduling group with next (later) expiring timer relative to
+      --D this group's timer.
+      Next_Timer     : Policy.Extended_Scheduling_Group_Range;
+      --D @Interface
+      --D ID of scheduling group with previous (earlier) expiring timer relative
+      --D to this group's timer.
+      Prev_Timer     : Policy.Extended_Scheduling_Group_Range;
+      --D @Interface
+      --D Timeout value of timed event of this scheduling group's active
+      --D subject. Corresponds to the TSC_Trigger_Value on the timed event page
+      --D of the active subject.
+      Timeout        : Word64;
+   end record;
+
+   Null_Scheduling_Group : constant Scheduling_Group_Type
+     := (Active_Subject => Skp.Global_Subject_ID_Type'First,
+         Next_Timer     => Policy.No_Group,
+         Prev_Timer     => Policy.No_Group,
+         Timeout        => Word64'Last);
+
+   type Scheduling_Group_Array is array
+     (Policy.Scheduling_Group_Range) of Scheduling_Group_Type;
 
    --D @Text Section => SK.Scheduler.Scheduling_Groups
    --D IDs of active subjects per scheduling group. The array stores the ID of
    --D the current active subject for each scheduling group.
-   Scheduling_Groups : Skp.Scheduling.Scheduling_Group_Array
-     := Skp.Scheduling.Scheduling_Groups
+   Scheduling_Groups : Scheduling_Group_Array
+     := (others => Null_Scheduling_Group)
    with
       Part_Of => State;
 

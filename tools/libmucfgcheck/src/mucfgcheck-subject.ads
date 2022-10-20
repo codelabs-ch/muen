@@ -52,9 +52,8 @@ is
    procedure No_IOMMU_Device_References (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_subj
-   --D Validate that all subjects are runnable, i.e. directly referenced in
-   --D the scheduling plan or target of a switch event of a subject that is
-   --D itself scheduled.
+   --D Validate that all subjects are runnable, i.e. referenced in a scheduling
+   --D group.
    procedure Runnability (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_subj

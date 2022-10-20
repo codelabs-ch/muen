@@ -1226,117 +1226,6 @@ package body Mutools.XML_Utils.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Get_Executing_CPU (Gnattest_T : in out Test);
-   procedure Test_Get_Executing_CPU_92e387 (Gnattest_T : in out Test) renames Test_Get_Executing_CPU;
---  id:2.2/92e387b4d71b98ec/Get_Executing_CPU/1/0/
-   procedure Test_Get_Executing_CPU (Gnattest_T : in out Test) is
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      Data : Muxml.XML_Data_Type;
-      Events, Src_Events, Sources, Minor_Frames : DOM.Core.Node_List;
-   begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_Src,
-                   File => "data/switch-event-chains.xml");
-      Events := McKae.XML.XPath.XIA.XPath_Query
-        (N     => Data.Doc,
-         XPath => "/system/events/event[@mode='switch']");
-      Src_Events := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Data.Doc,
-           XPath => "/system/subjects/subject/events/source/group"
-           & "/*[self::event or self::default]");
-      Minor_Frames := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Data.Doc,
-           XPath => "/system/scheduling/majorFrame/cpu/minorFrame");
-
-
-      Assert (Condition => Get_Executing_CPU
-              (Physical_Events => Events,
-               Source_Events   => Src_Events,
-               Minor_Frames    => Minor_Frames,
-               Subject => Muxml.Utils.Get_Element
-                 (Doc   => Data.Doc,
-                  XPath => "/system/subjects/subject[@name='subj1']")) = 0,
-              Message   => "Subj1 CPU mismatch");
-
-      Assert (Condition => Get_Executing_CPU
-              (Physical_Events => Events,
-               Source_Events   => Src_Events,
-               Minor_Frames    => Minor_Frames,
-               Subject         => Muxml.Utils.Get_Element
-                 (Doc   => Data.Doc,
-                  XPath => "/system/subjects/subject[@name='subj2']")) = 0,
-              Message   => "Subj2 CPU mismatch");
-      Assert (Condition => Get_Executing_CPU
-              (Physical_Events => Events,
-               Source_Events   => Src_Events,
-               Minor_Frames    => Minor_Frames,
-               Subject         => Muxml.Utils.Get_Element
-                 (Doc   => Data.Doc,
-                  XPath => "/system/subjects/subject[@name='subj3']")) = 0,
-              Message   => "Subj3 CPU mismatch");
-      Assert (Condition => Get_Executing_CPU
-              (Physical_Events => Events,
-               Source_Events   => Src_Events,
-               Minor_Frames    => Minor_Frames,
-               Subject         => Muxml.Utils.Get_Element
-                 (Doc   => Data.Doc,
-                  XPath => "/system/subjects/subject[@name='subj4']")) = 0,
-              Message   => "Subj4 CPU mismatch (1)");
-      Assert (Condition => Get_Executing_CPU
-              (Physical_Events => Events,
-               Source_Events   => Src_Events,
-               Minor_Frames    => Minor_Frames,
-               Subject         => Muxml.Utils.Get_Element
-                 (Doc   => Data.Doc,
-                  XPath => "/system/subjects/subject[@name='subj5']")) = 1,
-              Message   => "Subj5 CPU mismatch");
-
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/events/event[@name='to_subj4_from_subj2']",
-         Name  => "mode",
-         Value => "ipi");
-      Events := McKae.XML.XPath.XIA.XPath_Query
-        (N     => Data.Doc,
-         XPath => "/system/events/event[@mode='switch']");
-
-      --  Must not change CPU of subj4 since it is still executable via subj3.
-
-      Assert (Condition => Get_Executing_CPU
-              (Physical_Events => Events,
-               Source_Events   => Src_Events,
-               Minor_Frames    => Minor_Frames,
-               Subject         => Muxml.Utils.Get_Element
-                 (Doc   => Data.Doc,
-                  XPath => "/system/subjects/subject[@name='subj4']")) = 0,
-              Message   => "Subj4 CPU mismatch (2)");
-
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/events/event[@name='to_subj3_from_subj2']",
-         Name  => "mode",
-         Value => "ipi");
-      Events := McKae.XML.XPath.XIA.XPath_Query
-        (N     => Data.Doc,
-         XPath => "/system/events/event[@mode='switch']");
-
-      Assert (Condition => Get_Executing_CPU
-              (Physical_Events => Events,
-               Source_Events   => Src_Events,
-               Minor_Frames    => Minor_Frames,
-               Subject         => Muxml.Utils.Get_Element
-                 (Doc   => Data.Doc,
-                  XPath => "/system/subjects/subject[@name='subj3']")) = -1,
-              Message   => "Subj3 CPU mismatch (2)");
---  begin read only
-   end Test_Get_Executing_CPU;
---  end read only
-
-
---  begin read only
    procedure Test_Is_PCI_Device_Reference (Gnattest_T : in out Test);
    procedure Test_Is_PCI_Device_Reference_c44529 (Gnattest_T : in out Test) renames Test_Is_PCI_Device_Reference;
 --  id:2.2/c4452982639ee4fa/Is_PCI_Device_Reference/1/0/
@@ -2017,15 +1906,30 @@ package body Mutools.XML_Utils.Test_Data.Tests is
               Message   => "Subject to scheduling group ID mapping mismatch");
 
       --  Verify that cyclic switch events are handled correctly, i.e. do not
-      --  lead to infinite recursion.
+      --  lead to infinite recursion by making the example subject the initial
+      --  subject of the scheduling group. This results in the example subject
+      --  being used as starting point for constructing the scheduling groups
+      --  via handover event chains. Since the example subject only has one
+      --  switch event to/from nic_linux, this exercises that code path.
 
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
-         XPath => "/system/scheduling/majorFrame/cpu/"
-         & "minorFrame[@subject='nic_linux']",
-         Name  => "subject",
+         XPath => "/system/scheduling/partitions/partition/group/"
+         & "subject[@name='nic_linux']",
+         Name  => "name",
+         Value => "tmp");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/scheduling/partitions/partition/group/"
+         & "subject[@name='example']",
+         Name  => "name",
+         Value => "nic_linux");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/scheduling/partitions/partition/group/"
+         & "subject[@name='tmp']",
+         Name  => "name",
          Value => "example");
-
       declare
          task Worker
          is
@@ -2179,8 +2083,9 @@ package body Mutools.XML_Utils.Test_Data.Tests is
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/scheduling/majorFrame/cpu/minorFrame[@subject='tau0']",
-         Name  => "subject",
+         XPath => "/system/scheduling/partitions/partition/group/"
+         & "subject[@name='tau0']",
+         Name  => "name",
          Value => "foobar");
       Assert (Condition => not Is_Tau0_Scheduled (Data => Data),
               Message   => "Tau0 is scheduled");

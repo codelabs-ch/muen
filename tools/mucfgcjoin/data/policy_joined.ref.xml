@@ -83,9 +83,16 @@
   </subject>
  </subjects>
  <scheduling tickRate="10000">
+  <partitions>
+   <partition name="tau0">
+    <group>
+     <subject name="tau0"/>
+    </group>
+   </partition>
+  </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame subject="tau0" ticks="20"/>
+    <minorFrame partition="tau0" ticks="20"/>
    </cpu>
   </majorFrame>
  </scheduling>

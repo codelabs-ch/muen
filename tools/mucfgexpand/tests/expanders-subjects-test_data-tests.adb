@@ -14,6 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
+with Expanders.Scheduling;
 with Mucfgcheck.Validation_Errors;
 --  begin read only
 --  end read only
@@ -72,12 +73,10 @@ package body Expanders.Subjects.Test_Data.Tests is
 
          --  Remove tau0 from scheduling plan.
 
-         Muxml.Utils.Set_Attribute
+         Muxml.Utils.Remove_Elements
            (Doc   => Policy.Doc,
-            XPath => "/system/scheduling/majorFrame/cpu/minorFrame"
-            & "[@subject='tau0']",
-            Name  => "subject",
-            Value => "foo");
+            XPath => "/system/scheduling/partitions/partition/group/"
+            & "subject[@name='tau0']");
 
          Add_Tau0 (Data => Policy);
          Assert (Condition => Muxml.Utils.Get_Element
@@ -89,6 +88,7 @@ package body Expanders.Subjects.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename => "obj/subjects_tau0.xml",
          Ref_Diff => "data/subjects_tau0.xml.diff",
+         Pre      => Scheduling.Add_Partition_CPU_IDs'Access,
          Expander => Add_Tau0'Access);
       Without_Tau0;
 --  begin read only
@@ -156,12 +156,10 @@ package body Expanders.Subjects.Test_Data.Tests is
 
          --  Remove Tau0 from scheduling plan.
 
-         Muxml.Utils.Set_Attribute
+         Muxml.Utils.Remove_Elements
            (Doc   => Policy.Doc,
-            XPath => "/system/scheduling/majorFrame/cpu/"
-            & "minorFrame[@subject='tau0']",
-            Name  => "subject",
-            Value => "foobar");
+            XPath => "/system/scheduling/partitions/partition/group/"
+            & "subject[@name='tau0']");
          Add_Global_IDs (Data => Policy);
          Assert (Condition => Muxml.Utils.Get_Attribute
                  (Doc   => Policy.Doc,
@@ -193,7 +191,7 @@ package body Expanders.Subjects.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename => "obj/subjects_local_ids.xml",
          Ref_Diff => "data/subjects_local_ids.xml.diff",
-         Pre      => Add_CPU_IDs'Access,
+         Pre      => Prepare_Local_IDs'Access,
          Expander => Add_Local_IDs'Access);
 --  begin read only
    end Test_Add_Local_IDs;
@@ -356,6 +354,7 @@ package body Expanders.Subjects.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename => "obj/subjects_cpu_ids.xml",
          Ref_Diff => "data/subjects_cpu_ids.xml.diff",
+         Pre      => Scheduling.Add_Partition_CPU_IDs'Access,
          Expander => Add_CPU_IDs'Access);
 --  begin read only
    end Test_Add_CPU_IDs;

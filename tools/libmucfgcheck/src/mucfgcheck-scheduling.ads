@@ -27,8 +27,21 @@ is
    --D @UL Id => validators_sched, Section => validation-sched
 
    --D @Item List => validators_sched
+   --D Validate that scheduling partition IDs are unique.
+   procedure Partition_ID (XML_Data : Muxml.XML_Data_Type);
+
+   --D @Item List => validators_sched
+   --D Validate that scheduling group IDs are unique.
+   procedure Group_ID (XML_Data : Muxml.XML_Data_Type);
+
+   --D @Item List => validators_sched
    --D Validate that each major frame specifies the same number of CPUs.
    procedure CPU_Element_Count (XML_Data : Muxml.XML_Data_Type);
+
+   --D @Item List => validators_sched
+   --D Validate that scheduling partitions are scheduled in at least one minor
+   --D frame and that all minor frame references are on the same logical CPU.
+   procedure Partition_CPU_Affinity (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_sched
    --D Validate subject references.
@@ -37,6 +50,16 @@ is
    --D @Item List => validators_sched
    --D Validate that subjects are scheduled on the correct logical CPU.
    procedure Subject_CPU_Affinity (XML_Data : Muxml.XML_Data_Type);
+
+   --D @Item List => validators_sched
+   --D Validate that subjects are part of exactly one scheduling group.
+   procedure Subject_Scheduling_Group_Assignment
+     (XML_Data : Muxml.XML_Data_Type);
+
+   --D @Item List => validators_sched
+   --D Validate that all subjects of a scheduling group are runnable.
+   procedure Subject_Scheduling_Group_Runnability
+     (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_sched
    --D Validate tick counts in major frame.
@@ -58,5 +81,9 @@ is
    --D @Item List => validators_sched
    --D Validate that minor frame barrier references are valid.
    procedure Minor_Frame_Barrier_Refs (XML_Data : Muxml.XML_Data_Type);
+
+   --D @Item List => validators_sched
+   --D Validate partition references in minor frames.
+   procedure Minor_Frame_Partition_References (XML_Data : Muxml.XML_Data_Type);
 
 end Mucfgcheck.Scheduling;

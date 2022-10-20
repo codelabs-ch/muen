@@ -238,7 +238,8 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/subjects/subject/events/source/group/"
-           & "event[system_reboot|system_panic|system_poweroff|unmask_irq]");
+           & "event[subject_sleep|subject_yield|system_reboot|system_panic"
+           & "|system_poweroff|unmask_irq]");
       Non_Kernel_Events : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,

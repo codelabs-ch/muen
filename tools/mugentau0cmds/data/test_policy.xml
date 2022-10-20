@@ -4166,17 +4166,59 @@
   </subject>
  </subjects>
  <scheduling tickRate="10000">
+  <partitions>
+   <partition cpu="0" id="1" name="tau0">
+    <group id="1">
+     <subject name="tau0"/>
+    </group>
+   </partition>
+   <partition cpu="1" id="2" name="vt">
+    <group id="2">
+     <subject name="vt"/>
+    </group>
+   </partition>
+   <partition cpu="0" id="3" name="ps2_driver">
+    <group id="3">
+     <subject name="ps2_drv"/>
+    </group>
+   </partition>
+   <partition cpu="0" id="4" name="nic_linux">
+    <group id="4">
+     <subject name="nic_sm"/>
+     <subject name="nic_sl"/>
+     <subject name="nic_dm"/>
+     <subject name="nic_linux"/>
+    </group>
+   </partition>
+   <partition cpu="1" id="5" name="time">
+    <group id="5">
+     <subject name="time"/>
+    </group>
+   </partition>
+   <partition cpu="1" id="6" name="debugserver">
+    <group id="6">
+     <subject name="dbgserver"/>
+    </group>
+   </partition>
+   <partition cpu="1" id="7" name="storage_linux">
+    <group id="7">
+     <subject name="storage_sm"/>
+     <subject name="storage_dm"/>
+     <subject name="storage_linux"/>
+    </group>
+   </partition>
+  </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame barrier="1" subject="tau0" ticks="20"/>
-    <minorFrame barrier="none" subject="ps2" ticks="10"/>
-    <minorFrame barrier="none" subject="nic_linux" ticks="120"/>
+    <minorFrame barrier="1" partition="tau0" ticks="20"/>
+    <minorFrame barrier="none" partition="ps2_driver" ticks="10"/>
+    <minorFrame barrier="none" partition="nic_linux" ticks="120"/>
    </cpu>
    <cpu id="1">
-    <minorFrame barrier="1" subject="time" ticks="20"/>
-    <minorFrame barrier="none" subject="dbgserver" ticks="30"/>
-    <minorFrame barrier="none" subject="vt" ticks="25"/>
-    <minorFrame barrier="none" subject="storage_linux" ticks="75"/>
+    <minorFrame barrier="1" partition="time" ticks="20"/>
+    <minorFrame barrier="none" partition="debugserver" ticks="30"/>
+    <minorFrame barrier="none" partition="vt" ticks="25"/>
+    <minorFrame barrier="none" partition="storage_linux" ticks="75"/>
    </cpu>
    <barriers>
     <barrier id="1" size="2"/>
@@ -4184,14 +4226,14 @@
   </majorFrame>
   <majorFrame>
    <cpu id="0">
-    <minorFrame barrier="none" subject="ps2" ticks="5"/>
-    <minorFrame barrier="none" subject="tau0" ticks="5"/>
-    <minorFrame barrier="none" subject="nic_linux" ticks="140"/>
+    <minorFrame barrier="none" partition="ps2_driver" ticks="5"/>
+    <minorFrame barrier="none" partition="tau0" ticks="5"/>
+    <minorFrame barrier="none" partition="nic_linux" ticks="140"/>
    </cpu>
    <cpu id="1">
-    <minorFrame barrier="none" subject="storage_linux" ticks="100"/>
-    <minorFrame barrier="none" subject="vt" ticks="20"/>
-    <minorFrame barrier="none" subject="dbgserver" ticks="30"/>
+    <minorFrame barrier="none" partition="storage_linux" ticks="100"/>
+    <minorFrame barrier="none" partition="vt" ticks="20"/>
+    <minorFrame barrier="none" partition="debugserver" ticks="30"/>
    </cpu>
    <barriers/>
   </majorFrame>

@@ -246,9 +246,16 @@
   </subject>
  </subjects>
  <scheduling tickRate="10000">
+  <partitions>
+   <partition cpu="0" id="1" name="sp1">
+    <group id="1">
+     <subject name="s1"/>
+    </group>
+   </partition>
+  </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame barrier="none" subject="s1" ticks="100"/>
+    <minorFrame barrier="none" partition="sp1" ticks="100"/>
    </cpu>
    <barriers/>
   </majorFrame>

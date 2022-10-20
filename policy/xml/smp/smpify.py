@@ -98,17 +98,27 @@ def create_subjects(subjects, parser):
             subjects.append(new_subj)
 
 
+def create_scheduling_partitions(partitions):
+    for i in range(1, cores + 1):
+        partition = etree.Element("partition", name="linux_core" + str(i))
+        group = etree.Element("group")
+        group.append(etree.Element("subject", name="linux_core" + str(i)))
+        group.append(etree.Element("subject", name="sm_core" + str(i)))
+        partition.append(group)
+        partitions.insert(i, partition)
+
+
 def adjust_core_one(cpus):
     for c in cpus:
-        c.xpath("minorFrame[@subject='dbgserver']")[0].set("ticks", "1")
-        c.xpath("minorFrame[@subject='time']")[0].set("ticks", "1")
+        c.xpath("minorFrame[@partition='debugserver']")[0].set("ticks", "1")
+        c.xpath("minorFrame[@partition='time']")[0].set("ticks", "1")
         for i in range(4):
-            c.insert(0, etree.Element("minorFrame", subject="linux_core1",
+            c.insert(0, etree.Element("minorFrame", partition="linux_core1",
                      ticks="10"))
         for i in range(5):
-            c.append(etree.Element("minorFrame", subject="linux_core1",
+            c.append(etree.Element("minorFrame", partition="linux_core1",
                      ticks="10"))
-        c.append(etree.Element("minorFrame", subject="linux_core1",
+        c.append(etree.Element("minorFrame", partition="linux_core1",
                  ticks="8"))
 
 
@@ -118,7 +128,8 @@ def create_additional_cores(majors):
             cpu = etree.Element("cpu", id=str(i))
             for j in range(10):
                 etree.SubElement(cpu, "minorFrame",
-                                 subject="linux_core" + str(i), ticks="10")
+                                 partition="linux_core" + str(i),
+                                 ticks="10")
             m.append(cpu)
 
 
@@ -149,6 +160,7 @@ create_lnx_resources(doc.xpath("/system/subjects/subject[@name='linux']")[0])
 create_dbg_resources(
     doc.xpath("/system/subjects/subject[@name='dbgserver']")[0])
 create_subjects(doc.xpath("/system/subjects")[0], parser)
+create_scheduling_partitions(doc.xpath("/system/scheduling/partitions")[0])
 adjust_core_one(doc.xpath("/system/scheduling/majorFrame/cpu[@id='1']"))
 create_additional_cores(doc.xpath("/system/scheduling/majorFrame"))
 spread_devices()

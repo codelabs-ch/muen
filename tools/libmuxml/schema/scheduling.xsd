@@ -38,6 +38,7 @@
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>
+   <xs:element name="partitions" type="schedulingPartitionsType" minOccurs="1" maxOccurs="1"/>
    <xs:element name="majorFrame" type="majorFrameType" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>
   <xs:attribute name="tickRate" type="xs:positiveInteger" use="required">
@@ -66,6 +67,40 @@
    <xs:annotation>
     <xs:documentation>
      ID of CPU.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+ </xs:complexType>
+
+ <xs:complexType name="schedulingPartitionsType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{partitions} element is used to specify all scheduling partitions of the
+    system.
+
+    See line \ref{lst:af-lineref-sched-parts} in listing
+    \ref{lst:annotated-policy} for an example partitions element.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:sequence>
+   <xs:element name="partition" type="schedulingPartitionType" minOccurs="1" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
+
+ <xs:complexType name="baseSchedulingGroupType">
+  <xs:sequence>
+   <xs:element name="subject" type="namedType" minOccurs="1" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
+
+ <xs:complexType name="baseSchedulingPartitionType">
+  <xs:sequence>
+   <xs:element name="group" type="schedulingGroupType" minOccurs="1" maxOccurs="64"/>
+  </xs:sequence>
+  <xs:attribute name="name" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of the scheduling partition.
     </xs:documentation>
    </xs:annotation>
   </xs:attribute>

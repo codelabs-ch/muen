@@ -1,49 +1,124 @@
 <scheduling tickRate="100000">
+ <partitions>
+  <partition name="nic_linux">
+   <group>
+    <subject name="nic_linux"/>
+    <subject name="nic_sm"/>
+    <subject name="nic_sl"/>
+    <subject name="nic_dm"/>
+   </group>
+  </partition>
+  <partition name="controller">
+   <group>
+    <subject name="controller"/>
+   </group>
+  </partition>
+  <partition name="tau0">
+   <group>
+    <subject name="tau0"/>
+   </group>
+  </partition>
+  <partition name="isolation_tests">
+   <group>
+    <subject name="isolation_tests"/>
+    <subject name="isolation_tests_monitor"/>
+   </group>
+  </partition>
+  <partition name="ps2_driver">
+   <group>
+    <subject name="ps2"/>
+   </group>
+  </partition>
+  <partition name="time">
+   <group>
+    <subject name="time"/>
+   </group>
+  </partition>
+  <partition name="debugserver">
+   <group>
+    <subject name="dbgserver"/>
+   </group>
+  </partition>
+  <partition name="vt">
+   <group>
+    <subject name="vt"/>
+   </group>
+  </partition>
+  <partition name="ahci_driver">
+   <group>
+    <subject name="ahci_drv"/>
+   </group>
+  </partition>
+  <partition name="storage_linux">
+   <group>
+    <subject name="example"/>
+   </group>
+   <group>
+    <subject name="storage_linux"/>
+    <subject name="storage_sm"/>
+    <subject name="storage_dm"/>
+   </group>
+  </partition>
+  <partition name="nic_linux_1">
+   <group>
+    <subject name="nic_linux_1"/>
+    <subject name="nic_sm_1"/>
+    <subject name="nic_dm_1"/>
+   </group>
+  </partition>
+  <partition name="nic_linux_2">
+   <group>
+    <subject name="nic_linux_2"/>
+    <subject name="nic_sm_2"/>
+    <subject name="nic_dm_2"/>
+   </group>
+  </partition>
+ </partitions>
  <majorFrame>
   <cpu id="0">
-   <minorFrame subject="nic_linux" ticks="120"/>
-   <minorFrame subject="controller" ticks="10"/>
-   <minorFrame subject="tau0" ticks="5"/>
-   <minorFrame subject="isolation_tests" ticks="5"/>
-   <minorFrame subject="ps2" ticks="10"/>
+   <minorFrame partition="nic_linux" ticks="120"/>
+   <minorFrame partition="controller" ticks="10"/>
+   <minorFrame partition="tau0" ticks="5"/>
+   <minorFrame partition="isolation_tests" ticks="5"/>
+   <minorFrame partition="ps2_driver" ticks="10"/>
   </cpu>
   <cpu id="1">
-   <minorFrame subject="time" ticks="1"/>
-   <minorFrame subject="dbgserver" ticks="30"/>
-   <minorFrame subject="vt" ticks="19"/>
-   <minorFrame subject="ahci_drv" ticks="30"/>
-   <minorFrame subject="example" ticks="70"/>
+   <minorFrame partition="time" ticks="1"/>
+   <minorFrame partition="debugserver" ticks="30"/>
+   <minorFrame partition="vt" ticks="19"/>
+   <minorFrame partition="ahci_driver" ticks="30"/>
+   <minorFrame partition="storage_linux" ticks="70"/>
   </cpu>
   <cpu id="2">
-   <minorFrame subject="nic_linux_1" ticks="75"/>
-   <minorFrame subject="nic_linux_1" ticks="75"/>
+   <minorFrame partition="nic_linux_1" ticks="75"/>
+   <minorFrame partition="nic_linux_1" ticks="75"/>
   </cpu>
   <cpu id="3">
-   <minorFrame subject="nic_linux_2" ticks="75"/>
-   <minorFrame subject="nic_linux_2" ticks="75"/>
+   <minorFrame partition="nic_linux_2" ticks="75"/>
+   <minorFrame partition="nic_linux_2" ticks="75"/>
   </cpu>
  </majorFrame>
  <majorFrame>
   <cpu id="0">
-   <minorFrame subject="nic_linux" ticks="140"/>
-   <minorFrame subject="ps2" ticks="4"/>
-   <minorFrame subject="tau0" ticks="1"/>
-   <minorFrame subject="isolation_tests" ticks="2"/>
-   <minorFrame subject="controller" ticks="3"/>
+   <minorFrame partition="nic_linux" ticks="140"/>
+   <minorFrame partition="ps2_driver" ticks="4"/>
+   <minorFrame partition="tau0" ticks="1"/>
+   <minorFrame partition="isolation_tests" ticks="2"/>
+   <minorFrame partition="controller" ticks="3"/>
   </cpu>
   <cpu id="1">
-   <minorFrame subject="ahci_drv" ticks="30"/>
-   <minorFrame subject="example" ticks="100"/>
-   <minorFrame subject="vt" ticks="10"/>
-   <minorFrame subject="dbgserver" ticks="10"/>
+   <minorFrame partition="ahci_driver" ticks="30"/>
+   <minorFrame partition="storage_linux" ticks="100"/>
+   <minorFrame partition="vt" ticks="10"/>
+   <minorFrame partition="debugserver" ticks="10"/>
   </cpu>
   <cpu id="2">
-   <minorFrame subject="nic_linux_1" ticks="75"/>
-   <minorFrame subject="nic_linux_1" ticks="75"/>
+   <minorFrame partition="nic_linux_1" ticks="75"/>
+   <minorFrame partition="nic_linux_1" ticks="75"/>
   </cpu>
   <cpu id="3">
-   <minorFrame subject="nic_linux_2" ticks="75"/>
-   <minorFrame subject="nic_linux_2" ticks="75"/>
+   <minorFrame partition="nic_linux_2" ticks="75"/>
+   <minorFrame partition="nic_linux_2" ticks="75"/>
   </cpu>
  </majorFrame>
 </scheduling>

@@ -105,9 +105,18 @@
   </subject>
  </subjects>
  <scheduling tickRate="10000">
+  <partitions>
+   <partition name="sp1">
+    <group>
+     <subject name="subj1"/>
+     <subject name="subj2"/>
+     <subject name="subj3"/>
+    </group>
+   </partition>
+  </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame subject="subj1" ticks="80"/>
+    <minorFrame partition="sp1" ticks="80"/>
    </cpu>
   </majorFrame>
  </scheduling>

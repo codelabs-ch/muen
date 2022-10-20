@@ -380,6 +380,8 @@
   <event mode="ipi" name="linux_console"/>
   <event mode="ipi" name="time_console"/>
   <event mode="ipi" name="sm_console"/>
+  <event mode="kernel" name="subject_sleep"/>
+  <event mode="kernel" name="subject_yield"/>
   <event mode="kernel" name="system_reboot"/>
   <event mode="kernel" name="system_panic"/>
   <event mode="kernel" name="system_poweroff"/>
@@ -864,7 +866,7 @@
       <proc>
        <InterruptWindowExiting>0</InterruptWindowExiting>
        <UseTSCOffsetting>0</UseTSCOffsetting>
-       <HLTExiting>0</HLTExiting>
+       <HLTExiting>1</HLTExiting>
        <INVLPGExiting>1</INVLPGExiting>
        <MWAITExiting>1</MWAITExiting>
        <RDPMCExiting>1</RDPMCExiting>
@@ -881,7 +883,7 @@
        <MonitorTrapFlag>0</MonitorTrapFlag>
        <UseMSRBitmaps>1</UseMSRBitmaps>
        <MONITORExiting>1</MONITORExiting>
-       <PAUSEExiting>0</PAUSEExiting>
+       <PAUSEExiting>1</PAUSEExiting>
        <Activate2ndaryControls>1</Activate2ndaryControls>
       </proc>
       <proc2>
@@ -1114,8 +1116,8 @@
       <event id="9" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
-      <event id="10" logical="panic" physical="system_panic">
-       <system_panic/>
+      <event id="10" logical="HLT" physical="subject_sleep">
+       <subject_sleep/>
       </event>
       <event id="11" logical="panic" physical="system_panic">
        <system_panic/>
@@ -1198,8 +1200,8 @@
       <event id="39" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
-      <event id="40" logical="panic" physical="system_panic">
-       <system_panic/>
+      <event id="40" logical="PAUSE" physical="subject_yield">
+       <subject_yield/>
       </event>
       <event id="43" logical="panic" physical="system_panic">
        <system_panic/>
@@ -2344,30 +2346,53 @@
   </subject>
  </subjects>
  <scheduling tickRate="10000">
+  <partitions>
+   <partition cpu="0" id="1" name="vt">
+    <group id="1">
+     <subject name="vt"/>
+    </group>
+   </partition>
+   <partition cpu="1" id="2" name="linux">
+    <group id="2">
+     <subject name="sm"/>
+     <subject name="linux"/>
+    </group>
+   </partition>
+   <partition cpu="2" id="3" name="time">
+    <group id="3">
+     <subject name="time"/>
+    </group>
+   </partition>
+   <partition cpu="3" id="4" name="tau0">
+    <group id="4">
+     <subject name="tau0"/>
+    </group>
+   </partition>
+  </partitions>
   <majorFrame>
    <cpu id="0">
-    <minorFrame barrier="1" subject="vt" ticks="60"/>
-    <minorFrame barrier="3" subject="vt" ticks="60"/>
-    <minorFrame barrier="none" subject="vt" ticks="60"/>
+    <minorFrame barrier="1" partition="vt" ticks="60"/>
+    <minorFrame barrier="3" partition="vt" ticks="60"/>
+    <minorFrame barrier="none" partition="vt" ticks="60"/>
    </cpu>
    <cpu id="1">
-    <minorFrame barrier="2" subject="linux" ticks="90"/>
-    <minorFrame barrier="3" subject="linux" ticks="30"/>
-    <minorFrame barrier="4" subject="linux" ticks="30"/>
-    <minorFrame barrier="none" subject="linux" ticks="30"/>
+    <minorFrame barrier="2" partition="linux" ticks="90"/>
+    <minorFrame barrier="3" partition="linux" ticks="30"/>
+    <minorFrame barrier="4" partition="linux" ticks="30"/>
+    <minorFrame barrier="none" partition="linux" ticks="30"/>
    </cpu>
    <cpu id="2">
-    <minorFrame barrier="none" subject="time" ticks="30"/>
-    <minorFrame barrier="1" subject="time" ticks="30"/>
-    <minorFrame barrier="2" subject="time" ticks="30"/>
-    <minorFrame barrier="3" subject="time" ticks="30"/>
-    <minorFrame barrier="4" subject="time" ticks="30"/>
-    <minorFrame barrier="none" subject="time" ticks="30"/>
+    <minorFrame barrier="none" partition="time" ticks="30"/>
+    <minorFrame barrier="1" partition="time" ticks="30"/>
+    <minorFrame barrier="2" partition="time" ticks="30"/>
+    <minorFrame barrier="3" partition="time" ticks="30"/>
+    <minorFrame barrier="4" partition="time" ticks="30"/>
+    <minorFrame barrier="none" partition="time" ticks="30"/>
    </cpu>
    <cpu id="3">
-    <minorFrame barrier="1" subject="tau0" ticks="60"/>
-    <minorFrame barrier="3" subject="tau0" ticks="60"/>
-    <minorFrame barrier="none" subject="tau0" ticks="60"/>
+    <minorFrame barrier="1" partition="tau0" ticks="60"/>
+    <minorFrame barrier="3" partition="tau0" ticks="60"/>
+    <minorFrame barrier="none" partition="tau0" ticks="60"/>
    </cpu>
    <barriers>
     <barrier id="1" size="3"/>
@@ -2378,16 +2403,16 @@
   </majorFrame>
   <majorFrame>
    <cpu id="0">
-    <minorFrame barrier="none" subject="vt" ticks="120"/>
+    <minorFrame barrier="none" partition="vt" ticks="120"/>
    </cpu>
    <cpu id="1">
-    <minorFrame barrier="none" subject="linux" ticks="120"/>
+    <minorFrame barrier="none" partition="linux" ticks="120"/>
    </cpu>
    <cpu id="2">
-    <minorFrame barrier="none" subject="time" ticks="120"/>
+    <minorFrame barrier="none" partition="time" ticks="120"/>
    </cpu>
    <cpu id="3">
-    <minorFrame barrier="none" subject="tau0" ticks="120"/>
+    <minorFrame barrier="none" partition="tau0" ticks="120"/>
    </cpu>
    <barriers/>
   </majorFrame>

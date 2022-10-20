@@ -1,31 +1,86 @@
 <scheduling tickRate="1000">
+ <partitions>
+  <partition name="tau0">
+   <group>
+    <subject name="tau0"/>
+   </group>
+  </partition>
+  <partition name="controller">
+   <group>
+    <subject name="controller"/>
+   </group>
+  </partition>
+  <partition name="ps2_driver">
+   <group>
+    <subject name="ps2"/>
+   </group>
+  </partition>
+  <partition name="nic_linux">
+   <group>
+    <subject name="nic_linux"/>
+    <subject name="nic_sm"/>
+    <subject name="nic_sl"/>
+    <subject name="nic_dm"/>
+   </group>
+  </partition>
+  <partition name="time">
+   <group>
+    <subject name="time"/>
+   </group>
+  </partition>
+  <partition name="debugserver">
+   <group>
+    <subject name="dbgserver"/>
+   </group>
+  </partition>
+  <partition name="vt">
+   <group>
+    <subject name="vt"/>
+   </group>
+  </partition>
+  <partition name="ahci_driver">
+   <group>
+    <subject name="ahci_drv"/>
+   </group>
+  </partition>
+  <partition name="storage_linux">
+   <group>
+    <subject name="storage_linux"/>
+    <subject name="storage_sm"/>
+    <subject name="storage_dm"/>
+   </group>
+   <group>
+    <subject name="example"/>
+   </group>
+  </partition>
+ </partitions>
  <majorFrame>
   <cpu id="0">
-   <minorFrame subject="tau0" ticks="10"/>
-   <minorFrame subject="controller" ticks="10"/>
-   <minorFrame subject="ps2" ticks="10"/>
-   <minorFrame subject="nic_linux" ticks="120"/>
+   <minorFrame partition="tau0" ticks="10"/>
+   <minorFrame partition="controller" ticks="10"/>
+   <minorFrame partition="ps2_driver" ticks="10"/>
+   <minorFrame partition="nic_linux" ticks="120"/>
   </cpu>
   <cpu id="1">
-   <minorFrame subject="time" ticks="20"/>
-   <minorFrame subject="dbgserver" ticks="30"/>
-   <minorFrame subject="vt" ticks="25"/>
-   <minorFrame subject="ahci_drv" ticks="40"/>
-   <minorFrame subject="example" ticks="35"/>
+   <minorFrame partition="time" ticks="20"/>
+   <minorFrame partition="debugserver" ticks="30"/>
+   <minorFrame partition="vt" ticks="25"/>
+   <minorFrame partition="ahci_driver" ticks="40"/>
+   <minorFrame partition="storage_linux" ticks="35"/>
   </cpu>
  </majorFrame>
  <majorFrame>
   <cpu id="0">
-   <minorFrame subject="ps2" ticks="5"/>
-   <minorFrame subject="tau0" ticks="3"/>
-   <minorFrame subject="controller" ticks="2"/>
-   <minorFrame subject="nic_linux" ticks="140"/>
+   <minorFrame partition="ps2_driver" ticks="5"/>
+   <minorFrame partition="tau0" ticks="3"/>
+   <minorFrame partition="controller" ticks="2"/>
+   <minorFrame partition="nic_linux" ticks="140"/>
   </cpu>
   <cpu id="1">
-   <minorFrame subject="example" ticks="50"/>
-   <minorFrame subject="vt" ticks="20"/>
-   <minorFrame subject="ahci_drv" ticks="50"/>
-   <minorFrame subject="example" ticks="30"/>
+   <minorFrame partition="storage_linux" ticks="50"/>
+   <minorFrame partition="vt" ticks="20"/>
+   <minorFrame partition="ahci_driver" ticks="50"/>
+   <minorFrame partition="storage_linux" ticks="30"/>
   </cpu>
  </majorFrame>
 </scheduling>

@@ -84,6 +84,22 @@
   </xs:attribute>
  </xs:complexType>
 
+ <xs:complexType name="namedType">
+  <xs:annotation>
+   <xs:documentation>
+    The \texttt{namedType} is used for simple elements in the policy, that only
+    specify a name.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="name" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of element.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+ </xs:complexType>
+
  <xs:simpleType name="noneType">
   <xs:annotation>
    <xs:documentation>

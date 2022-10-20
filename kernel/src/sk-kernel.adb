@@ -115,9 +115,8 @@ is
       --D Then, check if the subject has more pending interrupts and activate
       --D interrupt window exiting if required, see Intel SDM Vol. 3C, "26.7.5
       --D Interrupt-Window Exiting and Virtual-Interrupt Delivery".
-      Subjects_Interrupts.Has_Pending_Interrupt
-        (Subject           => Subject_ID,
-         Interrupt_Pending => Interrupt_Pending);
+      Interrupt_Pending := Subjects_Interrupts.Has_Pending_Interrupt
+        (Subject => Subject_ID);
       if Interrupt_Pending then
          VMX.VMCS_Set_Interrupt_Window (Value => True);
       end if;
@@ -219,18 +218,23 @@ is
    --D @Text Section => impl_handle_source_event
    --D Source events are actions performed when a given subject triggers a trap
    --D or a hypercall. Source events can also be triggered by the timed event
-   --D mechanism.
+   --D mechanism. The RIP incremented parameter specifies if the caller will take
+   --D care of incrementing the RIP of the subject as part of the event handling.
    procedure Handle_Source_Event
-     (Subject      :     Skp.Global_Subject_ID_Type;
-      Event        :     Skp.Events.Source_Event_Type;
-      Next_Subject : out Skp.Global_Subject_ID_Type)
+     (Subject         :     Skp.Global_Subject_ID_Type;
+      Event           :     Skp.Events.Source_Event_Type;
+      RIP_Incremented :     Boolean;
+      Next_Subject    : out Skp.Global_Subject_ID_Type)
    with
       Global =>
         (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, FPU.State,
-                   Subjects.State),
+                    Subjects_Interrupts.State,
+                    Timed_Events.State),
          In_Out => (Crash_Audit.State, IO_Apic.State,
-                     Scheduler.State, Subjects_Events.State, X86_64.State))
+                    Scheduler.State, Scheduler.Group_Activity_Indicator,
+                    Subjects.State, Subjects_Events.State, X86_64.State))
    is
+      use type Skp.CPU_Range;
       use type Skp.Events.Target_Event_Range;
 
       Dst_CPU : Skp.CPU_Range;
@@ -251,6 +255,18 @@ is
             --D @Item List => impl_handle_source_event_actions
             --D If the designated action is no action, then nothing is
             --D done.
+         when Skp.Events.Subject_Sleep   =>
+            Scheduler.Reschedule_Partition
+              (Subject_ID      => Subject,
+               RIP_Incremented => RIP_Incremented,
+               Sleep           => True,
+               Next_Subject    => Next_Subject);
+         when Skp.Events.Subject_Yield   =>
+            Scheduler.Reschedule_Partition
+              (Subject_ID      => Subject,
+               RIP_Incremented => RIP_Incremented,
+               Sleep           => False,
+               Next_Subject    => Next_Subject);
          when Skp.Events.System_Reboot   =>
             --D @Item List => impl_handle_source_event_actions
             --D If the designated action is system reboot, then a reboot with
@@ -284,12 +300,17 @@ is
               (Subject  => Event.Target_Subject,
                Event_ID => Event.Target_Event);
 
+            Dst_CPU := Skp.Subjects.Get_CPU_ID
+              (Subject_ID => Event.Target_Subject);
+
+            Scheduler.Indicate_Activity
+              (Subject_ID => Event.Target_Subject,
+               Same_CPU   => Dst_CPU = CPU_Info.CPU_ID);
+
             if Event.Send_IPI then
                --D @Text Section => impl_handle_source_event, Priority => 20
                --D Additionally, send an IPI to the CPU running the target
                --D subject if specified by the policy.
-               Dst_CPU := Skp.Subjects.Get_CPU_ID
-                 (Subject_ID => Event.Target_Subject);
                Apic.Send_IPI (Vector => Constants.IPI_Vector,
                               CPU_ID => Dst_CPU);
             end if;
@@ -321,8 +342,10 @@ is
       Unchecked_Event_Nr : Word64)
    with
       Global =>
-        (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, FPU.State),
+        (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, FPU.State,
+                    Subjects_Interrupts.State, Timed_Events.State),
          In_Out => (Crash_Audit.State, IO_Apic.State, Scheduler.State,
+                    Scheduler.Group_Activity_Indicator,
                     Subjects.State, Subjects_Events.State, X86_64.State)),
       Pre    => Subjects.Is_CPL_0 (ID => Current_Subject)
    is
@@ -360,9 +383,10 @@ is
            (Subject_ID => Current_Subject,
             Event_Nr   => Event_Nr);
          Handle_Source_Event
-           (Subject      => Current_Subject,
-            Event        => Event,
-            Next_Subject => Next_Subject_ID);
+           (Subject         => Current_Subject,
+            Event           => Event,
+            RIP_Incremented => True,
+            Next_Subject    => Next_Subject_ID);
       end if;
 
       pragma Debug (not Valid_Event_Nr or else
@@ -560,9 +584,11 @@ is
      with
        Global =>
          (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, CPU_Info.Is_BSP,
-                     FPU.State, Subjects.State, Tau0_Interface.State),
+                     FPU.State, Subjects_Interrupts.State,
+                     Tau0_Interface.State),
           In_Out => (Crash_Audit.State, IO_Apic.State, MP.Barrier,
-                     Scheduler.State, Scheduling_Info.State,
+                     Scheduler.State, Scheduler.Group_Activity_Indicator,
+                     Scheduling_Info.State, Subjects.State,
                      Subjects_Events.State, Timed_Events.State, X86_64.State))
    is
       Next_Subject_ID : Skp.Global_Subject_ID_Type;
@@ -588,11 +614,12 @@ is
                                  Event_Nr          => Event_Nr);
          if Trigger_Value <= TSC_Now then
             Handle_Source_Event
-              (Subject      => Event_Subj,
-               Event        => Skp.Events.Get_Source_Event
+              (Subject         => Event_Subj,
+               Event           => Skp.Events.Get_Source_Event
                  (Subject_ID => Event_Subj,
                   Event_Nr   => Skp.Events.Target_Event_Range (Event_Nr)),
-               Next_Subject => Next_Subject_ID);
+               RIP_Incremented => False,
+               Next_Subject    => Next_Subject_ID);
             Timed_Events.Clear_Event (Subject => Event_Subj);
          end if;
       end;
@@ -618,9 +645,10 @@ is
    with
       Global =>
         (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, FPU.State,
-                    Subjects.State),
+                    Subjects_Interrupts.State, Timed_Events.State),
          In_Out => (Crash_Audit.State, IO_Apic.State, Scheduler.State,
-                    Subjects_Events.State, X86_64.State))
+                    Scheduler.Group_Activity_Indicator,
+                    Subjects.State, Subjects_Events.State, X86_64.State))
    is
       Trap_Entry      : Skp.Events.Source_Event_Type;
       Next_Subject_ID : Skp.Global_Subject_ID_Type;
@@ -671,9 +699,10 @@ is
       --D The source event designated by the policy trap entry is processed,
       --D see \ref{impl_handle_source_event}.
       Handle_Source_Event
-        (Subject      => Current_Subject,
-         Event        => Trap_Entry,
-         Next_Subject => Next_Subject_ID);
+        (Subject         => Current_Subject,
+         Event           => Trap_Entry,
+         RIP_Incremented => False,
+         Next_Subject    => Next_Subject_ID);
 
       --D @Text Section => impl_handle_trap, Priority => 20
       --D If the trap triggered a handover event, load the new VMCS.
@@ -1053,7 +1082,7 @@ is
 
       --D @Text Section => impl_kernel_init, Priority => 20
       --D Registers of the first subject to schedule are returned by the
-      --D initialization procedure to the calling assember code. The assembly
+      --D initialization procedure to the calling assembler code. The assembly
       --D then restores the subject register values prior to launching the first
       --D subject.
       --D This is done this way so the initialization code as well as the main

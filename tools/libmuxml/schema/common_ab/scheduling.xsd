@@ -20,13 +20,30 @@
  </xs:complexType>
 
  <xs:complexType name="minorFrameType">
-  <xs:attribute name="subject" type="nameType"               use="required"/>
-  <xs:attribute name="ticks"   type="xs:positiveInteger"     use="required"/>
-  <xs:attribute name="barrier" type="optionalBarrierRefType" use="required"/>
+  <xs:attribute name="partition" type="nameType"               use="required"/>
+  <xs:attribute name="ticks"     type="xs:positiveInteger"     use="required"/>
+  <xs:attribute name="barrier"   type="optionalBarrierRefType" use="required"/>
  </xs:complexType>
 
  <xs:simpleType name="optionalBarrierRefType">
   <xs:union memberTypes="xs:positiveInteger noneType"/>
  </xs:simpleType>
+
+ <xs:complexType name="schedulingGroupType">
+  <xs:complexContent>
+   <xs:extension base="baseSchedulingGroupType">
+    <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
+
+ <xs:complexType name="schedulingPartitionType">
+  <xs:complexContent>
+   <xs:extension base="baseSchedulingPartitionType">
+    <xs:attribute name="id"  type="xs:positiveInteger"    use="required"/>
+    <xs:attribute name="cpu" type="xs:nonNegativeInteger" use="required"/>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
 
 </xs:schema>

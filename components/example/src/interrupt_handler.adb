@@ -20,6 +20,7 @@ with SK.CPU;
 with SK.Strings;
 
 with Exceptions;
+with Example_Component.Channels;
 
 with Log;
 
@@ -76,9 +77,13 @@ is
 
    procedure Handle_Interrupt (Vector : SK.Byte)
    is
+      use type SK.Byte;
    begin
       Log.Put_Line (Item => "Received vector " & SK.Strings.Img
                     (Item => Vector));
+      if Vector = Example_Component.Channels.Example_Request_Vector then
+         Foo_Request_Pending := True;
+      end if;
    end Handle_Interrupt;
 
 end Interrupt_Handler;

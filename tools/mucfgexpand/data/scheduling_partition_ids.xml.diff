@@ -1,0 +1,26 @@
+ <scheduling tickRate="10000">                                                                                                                           <scheduling tickRate="10000">
+  <partitions>                                                                                                                                            <partitions>
+   <partition name="linux">                                                                                                                          |     <partition id="1" name="linux">
+    <group>                                                                                                                                                 <group>
+     <subject name="lnx"/>                                                                                                                                   <subject name="lnx"/>
+--
+    </group>                                                                                                                                                </group>
+   </partition>                                                                                                                                            </partition>
+   <partition name="tau0">                                                                                                                           |     <partition id="2" name="tau0">
+    <group>                                                                                                                                                 <group>
+     <subject name="tau0"/>                                                                                                                                  <subject name="tau0"/>
+    </group>                                                                                                                                                </group>
+   </partition>                                                                                                                                            </partition>
+   <partition name="s2">                                                                                                                             |     <partition id="3" name="s2">
+    <group>                                                                                                                                                 <group>
+     <subject name="subject2"/>                                                                                                                              <subject name="subject2"/>
+    </group>                                                                                                                                                </group>
+   </partition>                                                                                                                                            </partition>
+   <partition name="s3">                                                                                                                             |     <partition id="4" name="s3">
+    <group>                                                                                                                                                 <group>
+     <subject name="subject3"/>                                                                                                                              <subject name="subject3"/>
+    </group>                                                                                                                                                </group>
+   </partition>                                                                                                                                            </partition>
+   <partition name="linux_1">                                                                                                                        |     <partition id="5" name="linux_1">
+    <group>                                                                                                                                                 <group>
+     <subject name="lnx_core_1"/>                                                                                                                            <subject name="lnx_core_1"/>

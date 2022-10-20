@@ -247,19 +247,10 @@ is
 
    procedure Add_CPU_IDs (Data : in out Muxml.XML_Data_Type)
    is
-      Minor_Frames : constant DOM.Core.Node_List
+      Group_Subjects : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/scheduling/majorFrame/cpu/minorFrame");
-      Physical_Events : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Data.Doc,
-           XPath => "/system/events/event[@mode='switch']");
-      Source_Events : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Data.Doc,
-           XPath => "/system/subjects/subject/events/source/group"
-           & "/*[self::event or self::default]");
+           XPath => "/system/scheduling/partitions/partition/group/subject");
       Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -277,15 +268,17 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subj_Node,
                  Name => "name");
-            CPU_ID     : constant Integer
-              := Mutools.XML_Utils.Get_Executing_CPU
-                (Physical_Events => Physical_Events,
-                 Source_Events   => Source_Events,
-                 Minor_Frames    => Minor_Frames,
-                 Subject         => Subj_Node);
+            Sched_Part : constant DOM.Core.Node
+              := Muxml.Utils.Ancestor_Node
+                (Node  => Muxml.Utils.Get_Element
+                   (Nodes     => Group_Subjects,
+                    Ref_Attr  => "name",
+                    Ref_Value => Subj_Name),
+                 Level => 2);
             CPU_ID_Str : constant String
-              := Ada.Strings.Fixed.Trim (Source => CPU_ID'Img,
-                                         Side   => Ada.Strings.Left);
+              := DOM.Core.Elements.Get_Attribute
+                                (Elem => Sched_Part,
+                                 Name => "cpu");
          begin
             Mulog.Log (Msg => "Setting cpu of subject '" & Subj_Name
                        & "' to " & CPU_ID_Str);
@@ -1405,8 +1398,8 @@ is
       Auto_Idle : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/scheduling/majorFrame/cpu/minorFrame"
-           & "[starts-with(@subject,'mugenschedcfg_auto_idle_')]");
+           XPath => "/system/scheduling/partitions/partition/group/subject"
+           & "[starts-with(@name,'mugenschedcfg_auto_idle_')]");
       Subjects_Node : constant DOM.Core.Node
         := Muxml.Utils.Get_Element
           (Doc   => Data.Doc,
@@ -1562,7 +1555,7 @@ is
                Name : constant String
                  := DOM.Core.Elements.Get_Attribute
                    (Elem => Node,
-                    Name => "subject");
+                    Name => "name");
             begin
                if not Processed.Contains (Item => To_Unbounded_String (Name))
                then
@@ -1578,19 +1571,20 @@ is
 
    procedure Add_Sched_Group_Info_Mappings (Data : in out Muxml.XML_Data_Type)
    is
-      package MXU renames Mutools.XML_Utils;
       use type Interfaces.Unsigned_64;
 
       Sched_Info_Virtual_Address : constant String := Mutools.Utils.To_Hex
         (Number => Config.Subject_Info_Virtual_Addr +
            Expanders.Config.Subject_Sinfo_Region_Size);
 
-      Subject_To_Group_Map : constant MXU.ID_Map_Array
-        := MXU.Get_Subject_To_Scheduling_Group_Map (Data => Data);
       Subjects : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/subjects/subject");
+      SG_Subjects :  constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/scheduling/partitions/partition/group/subject");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
@@ -1602,15 +1596,15 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subject,
                  Name => "name");
-            Subj_ID : constant Natural
-              := Natural'Value
-                (DOM.Core.Elements.Get_Attribute
-                   (Elem => Subject,
-                    Name => "globalId"));
+            SG_Subj : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => SG_Subjects,
+                 Ref_Attr  => "name",
+                 Ref_Value => Subj_Name);
             Group_ID_Str : constant String
-              := Ada.Strings.Fixed.Trim
-                (Source => Subject_To_Group_Map (Subj_ID)'Img,
-                 Side   => Ada.Strings.Left);
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => DOM.Core.Nodes.Parent_Node (N => SG_Subj),
+                 Name => "id");
             Subj_Mem_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Subject,
@@ -1986,20 +1980,17 @@ is
       Mulog.Log (Msg => "Adding tau0 subject");
 
       declare
-         Minor_Frames  : constant DOM.Core.Node_List
-           := McKae.XML.XPath.XIA.XPath_Query
-             (N     => Data.Doc,
-              XPath => "/system/scheduling/majorFrame/cpu/minorFrame");
-         CPU_Node      : constant DOM.Core.Node
-           := DOM.Core.Nodes.Parent_Node
-             (N => Muxml.Utils.Get_Element
-                (Nodes     => Minor_Frames,
-                 Ref_Attr  => "subject",
-                 Ref_Value => "tau0"));
+         Sched_Tau0    : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Data.Doc,
+              XPath => "/system/scheduling/partitions/partition/group/"
+              & "subject[@name='tau0']");
          Tau0_CPU      : constant String
            := DOM.Core.Elements.Get_Attribute
-             (Elem => CPU_Node,
-              Name => "id");
+             (Elem => Muxml.Utils.Ancestor_Node
+                (Node  => Sched_Tau0,
+                 Level => 2),
+              Name => "cpu");
          Subjects_Node : constant DOM.Core.Node
            := Muxml.Utils.Get_Element
              (Doc   => Data.Doc,

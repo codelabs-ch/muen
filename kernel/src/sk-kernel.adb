@@ -1082,7 +1082,7 @@ is
 
       --D @Text Section => impl_kernel_init, Priority => 20
       --D Registers of the first subject to schedule are returned by the
-      --D initialization procedure to the calling assember code. The assembly
+      --D initialization procedure to the calling assembler code. The assembly
       --D then restores the subject register values prior to launching the first
       --D subject.
       --D This is done this way so the initialization code as well as the main

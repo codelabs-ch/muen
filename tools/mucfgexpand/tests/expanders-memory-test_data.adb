@@ -50,7 +50,7 @@ package body Expanders.Memory.Test_Data is
    procedure Add_Tau0_And_Subject_IDs (Data : in out Muxml.XML_Data_Type)
    is
    begin
-      Scheduling.Add_CPU_IDs (Data => Data);
+      Scheduling.Add_Partition_CPU_IDs (Data => Data);
       Subjects.Add_Tau0 (Data => Data);
       Subjects.Add_Global_IDs (Data => Data);
    end Add_Tau0_And_Subject_IDs;

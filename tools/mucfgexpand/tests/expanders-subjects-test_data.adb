@@ -63,7 +63,7 @@ package body Expanders.Subjects.Test_Data is
    procedure Prepare_Local_IDs (Data : in out Muxml.XML_Data_Type)
    is
    begin
-      Scheduling.Add_CPU_IDs (Data => Data);
+      Scheduling.Add_Partition_CPU_IDs (Data => Data);
       Add_CPU_IDs (Data => Data);
    end Prepare_Local_IDs;
 
@@ -82,7 +82,7 @@ package body Expanders.Subjects.Test_Data is
    procedure Prepare_Sched_Info_Mappings (Data : in out Muxml.XML_Data_Type)
    is
    begin
-      Scheduling.Add_CPU_IDs (Data => Data);
+      Scheduling.Add_Partition_CPU_IDs (Data => Data);
       Add_Missing_Elements (Data => Data);
       Add_Tau0 (Data => Data);
       Add_Global_IDs (Data => Data);

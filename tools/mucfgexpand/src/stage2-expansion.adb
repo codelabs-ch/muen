@@ -55,7 +55,7 @@ is
 
       Procs.Register (Process => Scheduling.Add_Partition_IDs'Access);
       Procs.Register (Process => Scheduling.Add_Group_IDs'Access);
-      Procs.Register (Process => Scheduling.Add_CPU_IDs'Access);
+      Procs.Register (Process => Scheduling.Add_Partition_CPU_IDs'Access);
 
       --  Add tau0 and potential Mugenschedcfg idle subjects prior to
       --  subject-related memory expanders (state, VMCS and bitmaps).

@@ -35,7 +35,7 @@ package body Expanders.Kernel.Test_Data is
    procedure Pre_Sched_Group_Info_Mappings (Data : in out Muxml.XML_Data_Type)
    is
    begin
-      Scheduling.Add_CPU_IDs (Data => Data);
+      Scheduling.Add_Partition_CPU_IDs (Data => Data);
       Subjects.Add_Tau0 (Data => Data);
       Pre_Subj_Mappings (Data => Data);
    end Pre_Sched_Group_Info_Mappings;
@@ -45,7 +45,7 @@ package body Expanders.Kernel.Test_Data is
    procedure Pre_Subj_Mappings (Data : in out Muxml.XML_Data_Type)
    is
    begin
-      Scheduling.Add_CPU_IDs (Data => Data);
+      Scheduling.Add_Partition_CPU_IDs (Data => Data);
       Add_Section_Skeleton (Data => Data);
       Subjects.Add_Global_IDs (Data => Data);
       Subjects.Add_CPU_IDs (Data => Data);

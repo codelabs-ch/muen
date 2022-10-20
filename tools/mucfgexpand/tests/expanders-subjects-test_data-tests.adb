@@ -88,7 +88,7 @@ package body Expanders.Subjects.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename => "obj/subjects_tau0.xml",
          Ref_Diff => "data/subjects_tau0.xml.diff",
-         Pre      => Scheduling.Add_CPU_IDs'Access,
+         Pre      => Scheduling.Add_Partition_CPU_IDs'Access,
          Expander => Add_Tau0'Access);
       Without_Tau0;
 --  begin read only
@@ -354,7 +354,7 @@ package body Expanders.Subjects.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename => "obj/subjects_cpu_ids.xml",
          Ref_Diff => "data/subjects_cpu_ids.xml.diff",
-         Pre      => Scheduling.Add_CPU_IDs'Access,
+         Pre      => Scheduling.Add_Partition_CPU_IDs'Access,
          Expander => Add_CPU_IDs'Access);
 --  begin read only
    end Test_Add_CPU_IDs;

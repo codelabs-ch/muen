@@ -233,9 +233,9 @@ is
 
       function Get_Subject_To_Sched_Group_Mapping return String
       is
-         Buffer : Unbounded_String;
          Subj_Count : constant Natural
            := DOM.Core.Nodes.Length (List => Subjects);
+         Buffer     : Unbounded_String;
       begin
          for I in 0 .. Subj_Count - 1 loop
             declare

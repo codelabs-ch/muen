@@ -137,9 +137,9 @@ package body Muxml.Utils.Test_Data.Tests is
                   Only_Element_Nodes => True),
               Message   => "Node mismatch");
 
-      --  begin read only
+--  begin read only
    end Test_Next_Node;
-   --  end read only
+--  end read only
 
 
 --  begin read only

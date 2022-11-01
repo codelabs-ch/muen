@@ -693,9 +693,9 @@ package body Mutools.Expressions.Test_Data.Tests is
                     Message   => "Exception message mismatch");
       end;
 
-   --  begin read only
+--  begin read only
    end Test_Evaluate_Boolean;
-   --  end read only
+--  end read only
 
 
 --  begin read only
@@ -1584,7 +1584,7 @@ package body Mutools.Expressions.Test_Data.Tests is
          Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "A variable or expression points to 'name9' which does not exit",
                  Message   => "Exception message mismatch ");
-         --  begin read only
+--  begin read only
    end Test_Get_Defining_Node;
 --  end read only
 
@@ -1665,9 +1665,9 @@ package body Mutools.Expressions.Test_Data.Tests is
                     Message   => "Exception message mismatch ");
       end;
 
-   --  begin read only
+--  begin read only
    end Test_Get_Expr_Type;
-   --  end read only
+--  end read only
 
 
 --  begin read only
@@ -1714,7 +1714,7 @@ package body Mutools.Expressions.Test_Data.Tests is
               Message => "Node mismatch.");
 
 
-   --  begin read only
+--  begin read only
    end Test_Get_Nth_Child_Node;
 --  end read only
 
@@ -1803,7 +1803,7 @@ package body Mutools.Expressions.Test_Data.Tests is
                     Message   => "Exception message mismatch");
       end;
 
-   --  begin read only
+--  begin read only
    end Test_Expand_Single_Node;
 --  end read only
 

@@ -383,8 +383,8 @@ package body Mutools.XML_Templates.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Prefix_Variables (Gnattest_T : in out Test);
-   procedure Test_Prefix_Variables_31c9b3 (Gnattest_T : in out Test) renames Test_Prefix_Variables;
---  id:2.2/31c9b30a929b3f7a/Prefix_Variables/1/0/
+   procedure Test_Prefix_Variables_8fbb3b (Gnattest_T : in out Test) renames Test_Prefix_Variables;
+--  id:2.2/8fbb3bd221cbbff3/Prefix_Variables/1/0/
    procedure Test_Prefix_Variables (Gnattest_T : in out Test) is
 --  end read only
 

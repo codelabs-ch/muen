@@ -7,6 +7,7 @@
 
 with AUnit.Assertions; use AUnit.Assertions;
 with System.Assertions;
+
 --  begin read only
 --  id:2.2/00/
 --
@@ -752,7 +753,56 @@ package body Mucfgcheck.Test_Data.Tests is
               Message   => "Name matches");
 --  begin read only
    end Test_Match_Subject_Name;
-   --  end read only
+--  end read only
+
+
+--  begin read only
+   procedure Test_Match_Name (Gnattest_T : in out Test);
+   procedure Test_Match_Name_c4439a (Gnattest_T : in out Test) renames Test_Match_Name;
+--  id:2.2/c4439a65405d5bb8/Match_Name/1/0/
+   procedure Test_Match_Name (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data        : Muxml.XML_Data_Type;
+      Impl        : DOM.Core.DOM_Implementation;
+      Left, Right : DOM.Core.Node;
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Left := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "el1");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Left,
+         Name  => "name",
+         Value => "refname");
+      Right := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "el2");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Right,
+         Name  => "name",
+         Value => "refname");
+
+      Assert (Condition => Match_Name
+              (Left  => Left,
+               Right => Right),
+              Message   => "Name does not match");
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Right,
+         Name  => "name",
+         Value => "nonexistent");
+      Assert (Condition => not Match_Name
+              (Left  => Left,
+               Right => Right),
+              Message   => "Name matches");
+--  begin read only
+   end Test_Match_Name;
+--  end read only
+
 
 --  begin read only
    procedure Test_Attr_Uniqueness (Gnattest_T : in out Test);
@@ -824,54 +874,6 @@ package body Mucfgcheck.Test_Data.Tests is
 
 --  begin read only
    end Test_Attr_Uniqueness;
---  end read only
-
-
---  begin read only
-   procedure Test_Match_Name (Gnattest_T : in out Test);
-   procedure Test_Match_Name_c4439a (Gnattest_T : in out Test) renames Test_Match_Name;
---  id:2.2/c4439a65405d5bb8/Match_Name/1/0/
-   procedure Test_Match_Name (Gnattest_T : in out Test) is
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      Data        : Muxml.XML_Data_Type;
-      Impl        : DOM.Core.DOM_Implementation;
-      Left, Right : DOM.Core.Node;
-   begin
-      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
-
-      Left := DOM.Core.Documents.Create_Element
-        (Doc      => Data.Doc,
-         Tag_Name => "el1");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Left,
-         Name  => "name",
-         Value => "refname");
-      Right := DOM.Core.Documents.Create_Element
-        (Doc      => Data.Doc,
-         Tag_Name => "el2");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Right,
-         Name  => "name",
-         Value => "refname");
-
-      Assert (Condition => Match_Name
-              (Left  => Left,
-               Right => Right),
-              Message   => "Name does not match");
-
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Right,
-         Name  => "name",
-         Value => "nonexistent");
-      Assert (Condition => not Match_Name
-              (Left  => Left,
-               Right => Right),
-              Message   => "Name matches");
---  begin read only
-   end Test_Match_Name;
 --  end read only
 
 --  begin read only

@@ -550,7 +550,7 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
               Message => "String mismatch: " & To_String (OI => Order_Info));
       Init_Order_Information (Schema_XML_Data => Muxml.system_src_schema.Data);
 
-   --  begin read only
+--  begin read only
    end Test_To_String;
 --  end read only
 

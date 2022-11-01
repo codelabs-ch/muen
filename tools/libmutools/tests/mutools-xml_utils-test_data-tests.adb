@@ -2096,8 +2096,8 @@ package body Mutools.XML_Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Merge_XIncludes (Gnattest_T : in out Test);
-   procedure Test_Merge_XIncludes_504615 (Gnattest_T : in out Test) renames Test_Merge_XIncludes;
---  id:2.2/50461583a452b67a/Merge_XIncludes/1/0/
+   procedure Test_Merge_XIncludes_b77c38 (Gnattest_T : in out Test) renames Test_Merge_XIncludes;
+--  id:2.2/b77c38d7d9a53070/Merge_XIncludes/1/0/
    procedure Test_Merge_XIncludes (Gnattest_T : in out Test) is
 --  end read only
 

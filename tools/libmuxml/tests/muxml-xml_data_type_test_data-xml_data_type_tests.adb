@@ -31,8 +31,8 @@ package body Muxml.XML_Data_Type_Test_Data.XML_Data_Type_Tests is
 
 --  begin read only
    procedure Test_Parse (Gnattest_T : in out Test_XML_Data_Type);
-   procedure Test_Parse_8fecef (Gnattest_T : in out Test_XML_Data_Type) renames Test_Parse;
---  id:2.2/8fecefff65fd7cbb/Parse/1/0/
+   procedure Test_Parse_9c71fd (Gnattest_T : in out Test_XML_Data_Type) renames Test_Parse;
+--  id:2.2/9c71fd70f96ce34b/Parse/1/0/
    procedure Test_Parse (Gnattest_T : in out Test_XML_Data_Type) is
 --  end read only
 

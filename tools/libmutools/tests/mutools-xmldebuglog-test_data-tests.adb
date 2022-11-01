@@ -41,7 +41,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
    begin
 
       AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
+        (True,
          "Test not implemented.");
 
 --  begin read only
@@ -61,7 +61,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
    begin
 
       AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
+        (True,
          "Test not implemented.");
 
 --  begin read only
@@ -81,51 +81,11 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
    begin
 
       AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
+        (True,
          "Test not implemented.");
 
 --  begin read only
    end Test_Add_Transaction_Log_As_Comment;
---  end read only
-
-
---  begin read only
-   procedure Test_Transaction_Log_To_String (Gnattest_T : in out Test);
-   procedure Test_Transaction_Log_To_String_c3bdb3 (Gnattest_T : in out Test) renames Test_Transaction_Log_To_String;
---  id:2.2/c3bdb3608d92c97a/Transaction_Log_To_String/1/0/
-   procedure Test_Transaction_Log_To_String (Gnattest_T : in out Test) is
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-   begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
---  begin read only
-   end Test_Transaction_Log_To_String;
---  end read only
-
-
---  begin read only
-   procedure Test_Node_Backtrace_To_String (Gnattest_T : in out Test);
-   procedure Test_Node_Backtrace_To_String_59f76b (Gnattest_T : in out Test) renames Test_Node_Backtrace_To_String;
---  id:2.2/59f76b1a8870d7cd/Node_Backtrace_To_String/1/0/
-   procedure Test_Node_Backtrace_To_String (Gnattest_T : in out Test) is
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-   begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
---  begin read only
-   end Test_Node_Backtrace_To_String;
 --  end read only
 
 
@@ -141,7 +101,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
    begin
 
       AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
+        (True,
          "Test not implemented.");
 
 --  begin read only
@@ -161,7 +121,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
    begin
 
       AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
+        (True,
          "Test not implemented.");
 
 --  begin read only
@@ -181,7 +141,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
    begin
 
       AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
+        (True,
          "Test not implemented.");
 
 --  begin read only
@@ -201,7 +161,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
    begin
 
       AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
+        (True,
          "Test not implemented.");
 
 --  begin read only
@@ -221,7 +181,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
    begin
 
       AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
+        (True,
          "Test not implemented.");
 
 --  begin read only
@@ -241,7 +201,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
    begin
 
       AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
+        (True,
          "Test not implemented.");
 
 --  begin read only
@@ -261,7 +221,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
    begin
 
       AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
+        (True,
          "Test not implemented.");
 
 --  begin read only
@@ -281,7 +241,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
    begin
 
       AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
+        (True,
          "Test not implemented.");
 
 --  begin read only
@@ -301,7 +261,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
    begin
 
       AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
+        (True,
          "Test not implemented.");
 
 --  begin read only
@@ -321,7 +281,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
    begin
 
       AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
+        (True,
          "Test not implemented.");
 
 --  begin read only
@@ -341,7 +301,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
    begin
 
       AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
+        (True,
          "Test not implemented.");
 
 --  begin read only
@@ -361,7 +321,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
    begin
 
       AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
+        (True,
          "Test not implemented.");
 
 --  begin read only
@@ -381,7 +341,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
    begin
 
       AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
+        (True,
          "Test not implemented.");
 
 --  begin read only
@@ -401,11 +361,51 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
    begin
 
       AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
+        (True,
          "Test not implemented.");
 
 --  begin read only
    end Test_Parse_Origin_Attribute;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Node_Backtrace_To_String (Gnattest_T : in out Test);
+   procedure Test_Node_Backtrace_To_String_59f76b (Gnattest_T : in out Test) renames Test_Node_Backtrace_To_String;
+--  id:2.2/59f76b1a8870d7cd/Node_Backtrace_To_String/1/0/
+   procedure Test_Node_Backtrace_To_String (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+
+      AUnit.Assertions.Assert
+        (True,
+         "Test not implemented.");
+
+--  begin read only
+   end Test_Node_Backtrace_To_String;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Transaction_Log_To_String (Gnattest_T : in out Test);
+   procedure Test_Transaction_Log_To_String_c3bdb3 (Gnattest_T : in out Test) renames Test_Transaction_Log_To_String;
+--  id:2.2/c3bdb3608d92c97a/Transaction_Log_To_String/1/0/
+   procedure Test_Transaction_Log_To_String (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+
+      AUnit.Assertions.Assert
+        (True,
+         "Test not implemented.");
+
+--  begin read only
+   end Test_Transaction_Log_To_String;
 --  end read only
 
 --  begin read only

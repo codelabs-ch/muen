@@ -36,8 +36,8 @@ package body Mutools.Substitutions.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Process_Attributes (Gnattest_T : in out Test);
-   procedure Test_Process_Attributes_b56a16 (Gnattest_T : in out Test) renames Test_Process_Attributes;
---  id:2.2/b56a16e5501c94a3/Process_Attributes/1/0/
+   procedure Test_Process_Attributes_e39dfb (Gnattest_T : in out Test) renames Test_Process_Attributes;
+--  id:2.2/e39dfb99991cd9fc/Process_Attributes/1/0/
    procedure Test_Process_Attributes (Gnattest_T : in out Test) is
 --  end read only
 

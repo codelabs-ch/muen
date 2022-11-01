@@ -151,8 +151,8 @@ package body Mergers.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Merge_Hardware (Gnattest_T : in out Test);
-   procedure Test_Merge_Hardware_1be979 (Gnattest_T : in out Test) renames Test_Merge_Hardware;
---  id:2.2/1be9794c0d96dee0/Merge_Hardware/1/0/
+   procedure Test_Merge_Hardware_389a29 (Gnattest_T : in out Test) renames Test_Merge_Hardware;
+--  id:2.2/389a29bc7fa7bdf7/Merge_Hardware/1/0/
    procedure Test_Merge_Hardware (Gnattest_T : in out Test) is
 --  end read only
 
@@ -223,8 +223,8 @@ package body Mergers.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Merge_Platform (Gnattest_T : in out Test);
-   procedure Test_Merge_Platform_0cd3e6 (Gnattest_T : in out Test) renames Test_Merge_Platform;
---  id:2.2/0cd3e620cc856c4c/Merge_Platform/1/0/
+   procedure Test_Merge_Platform_f0ae51 (Gnattest_T : in out Test) renames Test_Merge_Platform;
+--  id:2.2/f0ae5195a9fcd493/Merge_Platform/1/0/
    procedure Test_Merge_Platform (Gnattest_T : in out Test) is
 --  end read only
 

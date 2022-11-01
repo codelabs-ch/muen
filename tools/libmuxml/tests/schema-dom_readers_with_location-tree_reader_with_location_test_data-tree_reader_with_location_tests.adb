@@ -15,6 +15,9 @@ with System.Assertions;
 --
 --  end read only
 
+with Muxml;
+with Muxml.Utils;
+
 --  begin read only
 --  end read only
 package body Schema.Dom_Readers_With_Location.Tree_Reader_With_Location_Test_Data.Tree_Reader_With_Location_Tests is
@@ -37,12 +40,29 @@ package body Schema.Dom_Readers_With_Location.Tree_Reader_With_Location_Test_Dat
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
-
+      Data : Muxml.XML_Data_Type;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Muxml.Parse (Data         => Data,
+                   Kind         => Muxml.Format_Src,
+                   File         => "data/format_src.xml",
+                   Add_Location => True);
+      declare
+         Output1 : constant String
+            :=  Muxml.Utils.Get_Attribute
+            (Doc   => Data.Doc,
+             XPath => "/system/config/string",
+             Name  => "originOfNode");
+         Output2 : constant String
+            :=  Muxml.Utils.Get_Attribute
+            (Doc   => Data.Doc,
+             XPath => "/system/platform",
+             Name  => "originOfNode");
+      begin
+         Assert (Condition => "format_src.xml:4:50" = Output1,
+                 Message => "String mismatch: " & Output1);
+         Assert (Condition => "format_src.xml:41:12" = Output2,
+                 Message => "String mismatch: " & Output2);
+      end;
 
 --  begin read only
    end Test_Start_Element;

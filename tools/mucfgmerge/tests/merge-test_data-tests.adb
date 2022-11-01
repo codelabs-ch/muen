@@ -7,6 +7,7 @@
 
 with AUnit.Assertions; use AUnit.Assertions;
 with System.Assertions;
+
 --  begin read only
 --  id:2.2/00/
 --
@@ -33,8 +34,8 @@ package body Merge.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Run (Gnattest_T : in out Test);
-   procedure Test_Run_e5a2dd (Gnattest_T : in out Test) renames Test_Run;
---  id:2.2/e5a2dd86b12d7902/Run/1/0/
+   procedure Test_Run_61a2f5 (Gnattest_T : in out Test) renames Test_Run;
+--  id:2.2/61a2f5aae9823bcb/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
 --  end read only
 

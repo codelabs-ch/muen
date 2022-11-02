@@ -47,7 +47,7 @@ is
    -------------------------------------------------------------------------
 
    -- assign the value of the variable or expression with name Ref_Name to
-   -- Result. This triggers expansion of that node if neccessary.
+   -- Result. This triggers expansion of that node if necessary.
    procedure Get_Value_Of_Reference
       (Ref_Name      :        String;
        Result        :    out Value_Type_Tuple;

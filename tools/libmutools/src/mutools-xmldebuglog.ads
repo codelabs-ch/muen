@@ -227,7 +227,7 @@ private
 
    -- Return log-information for the given node as it is
    -- WARNING: the information stored in the entry for Node may not be complete!
-   -- Depending on the current state, it might be neccessary to generate
+   -- Depending on the current state, it might be necessary to generate
    -- the correct backtrace by examining the ancestors of Node, first.
    function Node_Backtrace_To_String (Node : DOM.Core.Node) return String;
 

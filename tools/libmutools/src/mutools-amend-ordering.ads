@@ -37,7 +37,7 @@ is
    -- Ancestors is a list always containing the name of the parent P of
    --    New_Child. More names of ancestors may follow in order of distance
    --    (starting with the parent of P).
-   -- Siblings: names of children of P, in order of appearence in P.
+   -- Siblings: names of children of P, in order of appearance in P.
    --     Application-Note: It is legal to substitute consecutive subequences
    --     of equal names to one name. E.g.:
    --        ([...]^1, "channel", "channel", "channel", [...]^2)
@@ -55,7 +55,7 @@ is
    -- raised if the schema uses a construction which is not supported
    Not_Implemented : exception;
 
-   -- raised if the schema is not complient with
+   -- raised if the schema is not compliant with
    -- https://www.w3.org/TR/xmlschema-0/
    Validation_Error : exception;
 

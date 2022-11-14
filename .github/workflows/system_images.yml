@@ -14,7 +14,7 @@ jobs:
       matrix:
         # test system/hardware permutations
         distro:
-          - debian-buster
+          - debian-bullseye
         system:
           - integration_tests.xml
           - demo_system_vtd.xml
@@ -34,13 +34,13 @@ jobs:
           - up-squared-e3950.xml
         include:
           # specific combinations
-          - distro: debian-buster
+          - distro: debian-bullseye
             system: demo_system_desktop.xml
             hardware: lenovo-t480s.xml
-          - distro: debian-buster
+          - distro: debian-bullseye
             system: demo_system_desktop_smp.xml
             hardware: lenovo-t480s.xml
-          - distro: debian-buster
+          - distro: debian-bullseye
             system: integration_tests_kt.xml
             hardware: kontron-ktqm77.xml
           # additional distros

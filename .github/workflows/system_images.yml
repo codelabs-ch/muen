@@ -54,7 +54,7 @@ jobs:
       BUILD_OUTPUT_VERBOSE: 1
       BUILD_OUTPUT_SYNC: line
       CCACHE_HOST: ${{ github.workspace }}/.ccache
-      CCACHE_CONTAINER: /home/user/.ccache
+      CCACHE_DIR: /home/user/.ccache
       CCACHE_COMPILERCHECK: content
       DISTRO_NAME_VERSION: ${{ matrix.distro }}
     steps:
@@ -168,9 +168,10 @@ jobs:
           options: |
             -u ${{ steps.vars.outputs.runner_uid }}
             -v ${{ github.workspace }}:/mnt
-            -v ${{ env.CCACHE_HOST }}:${{ env.CCACHE_CONTAINER }}
+            -v ${{ env.CCACHE_HOST }}:${{ env.CCACHE_DIR }}
             -e BUILD_OUTPUT_VERBOSE
             -e BUILD_OUTPUT_SYNC
+            -e CCACHE_DIR
             -e CCACHE_COMPILERCHECK
             -e SYSTEM=xml/${{ matrix.system }}
             -e HARDWARE=hardware/${{ matrix.hardware }}

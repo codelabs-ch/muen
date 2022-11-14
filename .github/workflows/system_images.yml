@@ -211,7 +211,7 @@ jobs:
           matrix.system == 'demo_system_vtd.xml' &&
           matrix.hardware == 'lenovo-t430s.xml' &&
           steps.vars.outputs.distro_name == 'debian' &&
-          steps.vars.outputs.distro_version == 'buster' &&
+          steps.vars.outputs.distro_version == 'bullseye' &&
           steps.vars.outputs.git_name == 'devel'
         run: |
           docker tag localhost:5000/muen-dev-env:${{ steps.vars.outputs.docker_tag }} \

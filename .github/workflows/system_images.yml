@@ -83,12 +83,12 @@ jobs:
           echo runner_uid::${UID}
           echo devel_rev::${DEVEL_REV}
 
-          echo ::set-output name=distro_name::${DISTRO_NAME}
-          echo ::set-output name=distro_version::${DISTRO_VERSION}
-          echo ::set-output name=git_name::${GIT_NAME}
-          echo ::set-output name=docker_tag::${DOCKER_TAG}
-          echo ::set-output name=runner_uid::${UID}
-          echo ::set-output name=devel_rev::${DEVEL_REV}
+          echo "distro_name=${DISTRO_NAME}" >> $GITHUB_OUTPUT
+          echo "distro_version=${DISTRO_VERSION}" >> $GITHUB_OUTPUT
+          echo "git_name=${GIT_NAME}" >> $GITHUB_OUTPUT
+          echo "docker_tag=${DOCKER_TAG}" >> $GITHUB_OUTPUT
+          echo "runner_uid=${UID}" >> $GITHUB_OUTPUT
+          echo "devel_rev=${DEVEL_REV}" >> $GITHUB_OUTPUT
       -
         name: Setup Linux submodule cache
         uses: actions/cache@v2

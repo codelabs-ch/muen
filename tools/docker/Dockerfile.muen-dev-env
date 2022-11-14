@@ -76,7 +76,8 @@ ENV HOME /home/user
 ENV LANG C.UTF-8
 ENV PATH /usr/lib/ccache:/opt/gnat/bin:$PATH
 
-RUN useradd --create-home --home-dir $HOME user -G dialout
+RUN useradd --create-home --home-dir $HOME user -G dialout \
+	&& chmod 755 /home/user
 
 WORKDIR $HOME
 USER user

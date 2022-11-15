@@ -22,14 +22,14 @@ with Sax.Symbols;
 
 package Schema.Dom_Readers_With_Location
 is
-   -- this tree reader adds information about the location (within the file parsed)
-   -- of each element-node. The returned nodes have an additional attribute
-   -- containing the location information.
+   --  This tree reader adds information about the location (within the parsed
+   --  file) of each element-node. The returned nodes have an additional
+   --  attribute "originOfNode" containing the location information.
    type Tree_Reader_With_Location is new Schema.Dom_Readers.Tree_Reader with null record;
    overriding procedure Start_Element
-      (Handler     : in out Tree_Reader_With_Location;
-       NS          : Sax.Utils.XML_NS;
-       Local_Name  : Sax.Symbols.Symbol;
-       Atts        : Sax.Readers.Sax_Attribute_List);
+      (Handler    : in out Tree_Reader_With_Location;
+       NS         : Sax.Utils.XML_NS;
+       Local_Name : Sax.Symbols.Symbol;
+       Atts       : Sax.Readers.Sax_Attribute_List);
 
 end Schema.Dom_Readers_With_Location;

@@ -102,7 +102,6 @@
          </case>
       </expression>
 
-
       <expression name="session2_enabled">
          <gt>
             <variable name="session_count"/>

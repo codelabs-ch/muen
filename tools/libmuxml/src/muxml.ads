@@ -44,8 +44,8 @@ is
 
    --  Parse the contents of given file into the DOM data structure. The XML
    --  data is validated against the built-in system policy XML schema.
-   --  If Add_Location is True, the parser adds an attribute stating filename
-   --  and location within the file to each element-node.
+   --  If Add_Location is True, the parser adds an attribute "originOfNode"
+   --  stating filename and location within the file to each element-node.
    procedure Parse
      (Data         : out XML_Data_Type;
       Kind         :     Schema_Kind;

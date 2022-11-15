@@ -34,26 +34,26 @@ is
       (Source => DOM.Core.Node,
        Target => Interfaces.Unsigned_64);
 
-   ------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
-   -- Appent New_Item and return True if and only if this is possible.
+   --  Append New_Item and return True if and only if this is possible.
    function Append_To_Action_Ref
       (Log      : in out Actions_Ref_Type;
        New_Item :        Transaction_Log_Index_Type)
       return Boolean;
 
-   ------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
-   -- Amend backtrace-info of Node with the backtrace-info of Parent
-   -- If one of them does not have a log entry, nothing happens.
+   --  Amend backtrace-info of Node with the backtrace-info of Parent.
+   --  If one of them does not have a log entry, nothing happens.
    procedure Merge_Parent_Backtrace_Info
       (Node   : DOM.Core.Node;
        Parent : DOM.Core.Node);
 
    -------------------------------------------------------------------------
 
-   -- Returns the Origin_Info of node either from the log, or from the node
-   -- attribute (if no log-entry is found), or Null_Origin_Info otherwise
+   --  Returns the Origin_Info of node either from the log, or from the node
+   --  attribute (if no log-entry is found), or Null_Origin_Info otherwise.
    function Get_Origin_Info
       (Node : DOM.Core.Node)
       return Origin_Info_Type;
@@ -70,7 +70,7 @@ is
          (Container => Transaction_Log,
           New_Item  => (Transaction_Kind => AMEND,
                         Origin_Of_Node   => Get_Origin_Info (Node => Amend_Node),
-                        Xpath            =>  String_Holder_Type.To_Holder (Xpath)));
+                        Xpath            => String_Holder_Type.To_Holder (Xpath)));
       return Transaction_Log.Last_Index;
 
    end Add_Amend_Transaction;
@@ -90,12 +90,12 @@ is
       Transaction_Log_Type.Append
          (Container => Transaction_Log,
           New_Item  => (Transaction_Kind => CONDITIONAL,
-                        Origin_Of_Node => Get_Origin_Info (Node => Conditional_Node),
-                        Coditional_Kind => Coditional_Kind,
-                        Var_Name => String_Holder_Type.To_Holder (Var_Name),
-                        Var_Value => String_Holder_Type.To_Holder (Var_Value),
-                        Matched => Matched,
-                        Matched_Others => Matched_Others));
+                        Origin_Of_Node   => Get_Origin_Info (Node => Conditional_Node),
+                        Coditional_Kind  => Coditional_Kind,
+                        Var_Name         => String_Holder_Type.To_Holder (Var_Name),
+                        Var_Value        => String_Holder_Type.To_Holder (Var_Value),
+                        Matched          => Matched,
+                        Matched_Others   => Matched_Others));
       return Transaction_Log.Last_Index;
    end Add_Conditional_Transaction;
 
@@ -105,12 +105,12 @@ is
    is
       Node : DOM.Core.Node;
    begin
-      -- Get the root node and go through the tree
+      --  Get the root node and go through the tree.
       Node := DOM.Core.Documents.Get_Element (Doc => Doc);
       while Node /= null loop
-         -- update debug-information of that node
-         -- as we go through all nodes, we know that our parent is up-to-date
-         -- information and can use Examine_Only_Parent
+         --  Update debug-information of that node
+         --  as we go through all nodes, we know that our parent is up-to-date
+         --  information and can use Examine_Only_Parent.
          Gather_Backtrace_Info
             (Node                => Node,
              Examine_Only_Parent => True);
@@ -191,7 +191,7 @@ is
 
    procedure Add_Transaction_Log_As_Comment (Doc : DOM.Core.Document)
    is
-      -- first Element-Node of the document:
+      --  First Element-Node of the document:
       Node : constant DOM.Core.Node
          := DOM.Core.Documents.Get_Element (Doc => Doc);
       Comment_Node : constant DOM.Core.Node
@@ -213,16 +213,16 @@ is
        Prefix           : String)
       return Transaction_Log_Index_Type
    is
-      Template_Name   : constant String
+      Template_Name : constant String
          := DOM.Core.Elements.Get_Attribute
          (Elem => Usetemplate_Node,
           Name => "name");
-      Parameters      : Call_Parameter_List_Type.Vector;
+      Parameters : Call_Parameter_List_Type.Vector;
 
    begin
-      -- add parameters one by one
+      --  Add parameters one by one.
       declare
-         Call_Parameter_List  : constant DOM.Core.Node_List
+         Call_Parameter_List : constant DOM.Core.Node_List
             := McKae.XML.XPath.XIA.XPath_Query
             (N     => Usetemplate_Node,
              XPath => ".//parameter");
@@ -262,7 +262,7 @@ is
 
    end Add_Usetemplate_Transaction;
 
-   ------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    function Append_To_Action_Ref
       (Log      : in out Actions_Ref_Type;
@@ -281,6 +281,7 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Return a string representation of the key-value pairs in Params.
    function Call_Parameter_List_To_String
       (Params : Call_Parameter_List_Type.Vector)
       return String;
@@ -543,10 +544,10 @@ is
                (Actions_Index_Range'First + Remaining_New - 1);
             Found := False;
 
-            -- Ref may have some but not all array elements of New_Data already
-            -- e.g. if Merge_Parent_Backtrace_Info was called in the past
-            -- and new actions happend in between.
-            -- Hence, if the new element is already present, we omit it.
+            --  Ref may have some but not all array elements of New_Data already
+            --  e.g. if Merge_Parent_Backtrace_Info was called in the past
+            --  and new actions happend in between.
+            --  Hence, if the new element is already present, we omit it.
             for I in Actions_Index_Range'First .. Actions_Index_Range'First + Ref.Length - 1 loop
                if Ref.Entries (I) = Next_Element then
                   Found := True;
@@ -554,9 +555,10 @@ is
             end loop;
 
             if not Found then
-               -- Actions on ancestors happend before actions specific to their
-               -- children. Hence, these need be be at the beginning of the array.
-               -- Hence, we shift array entries first.
+               --  Actions on ancestors happend before actions specific to their
+               --  children.
+               --- Hence, these need to be at the beginning of the array.
+               --  Hence, we shift array entries first.
                for I in reverse Actions_Index_Range'First ..
                   Actions_Index_Range'First + Ref.Length - 1
                loop
@@ -576,7 +578,7 @@ is
       end Amend_Array;
 
    begin
-      -- check if both have a log-entry (abort otherwise)
+      --  Check if both have a log-entry (abort otherwise).
       if not Nodes_Backtrace_Log.Contains (Key => Node) or
          not Nodes_Backtrace_Log.Contains (Key => Parent)
       then
@@ -590,9 +592,9 @@ is
             renames Nodes_Backtrace_Log (Parent);
       begin
 
-         -- if Node has some amend transaction in its history:
-         -- abort, because the history of Node must be written before amend
-         --   is evaluated (no transaction can happen afterwards).
+         --  If Node has some amend transaction in its history:
+         --  Abort, because the history of Node must be written before amend
+         --  is evaluated (no transaction can happen afterwards).
          if Node_Backtrace.Amend_Backtrace /= Null_Ref_Index then
             return;
          end if;
@@ -612,7 +614,7 @@ is
    is
       Node : DOM.Core.Node;
    begin
-      -- Get the root node
+      --  Get the root node.
       Node := DOM.Core.Documents.Get_Element (Doc => Doc);
       while Node /= null loop
          if not Muxml.Utils.Has_Attribute (Node => Node, Attr_Name => "originOfNode") then
@@ -666,13 +668,13 @@ is
              & Origin_To_String (NB.Origin_Of_Node));
 
       if NB.Amend_Backtrace /= Null_Ref_Index then
-         Append (Source => Output,
+         Append (Source   => Output,
                  New_Item => ", " & Transaction_To_String
                     (Transaction_Log (NB.Amend_Backtrace)));
       end if;
 
-      -- append conditional-transactions
-      -- (in reverse order, so the last transaction comes first)
+      --  Append conditional-transactions
+      --  (in reverse order, so the last transaction comes first).
       for I in reverse Actions_Index_Range'First ..
          Actions_Index_Range'First + NB.Conditional_Backtrace.Length - 1
       loop
@@ -684,7 +686,7 @@ is
                                (NB.Conditional_Backtrace.Entries (I))));
       end loop;
 
-      -- append useTemplate-transactions
+      --  Append useTemplate-transactions.
       for I in reverse Actions_Index_Range'First ..
          Actions_Index_Range'First + NB.Template_Backtrace.Length - 1
       loop
@@ -737,26 +739,28 @@ is
          return Null_Origin_Info;
       else
          declare
-            Origin         : constant String
-               :=  DOM.Core.Elements.Get_Attribute
-               (Elem    => Node,
-                Name    => "originOfNode");
-            First_Index      : constant Natural
-               := Ada.Strings.Fixed.Index
-               (Source  => Origin,
-                Pattern => ":",
-                From    => Origin'First);
-            Second_Index    : constant Natural
-               := Ada.Strings.Fixed.Index
-               (Source  => Origin,
-                Pattern => ":",
-                From    => First_Index + 1);
-            Filename         : constant String
-               := Origin (Origin'First .. First_Index - 1);
-            Line             : constant Natural
-               := Natural'Value (Origin (First_Index + 1 .. Second_Index - 1));
-            Column           : constant Natural
-               := Natural'Value (Origin (Second_Index + 1 .. Origin'Last));
+            Origin       : constant String
+                         := DOM.Core.Elements.Get_Attribute
+                              (Elem    => Node,
+                               Name    => "originOfNode");
+            First_Index  : constant Natural
+                         := Ada.Strings.Fixed.Index
+                              (Source  => Origin,
+                               Pattern => ":",
+                               From    => Origin'First);
+            Second_Index : constant Natural
+                         := Ada.Strings.Fixed.Index
+                              (Source  => Origin,
+                               Pattern => ":",
+                               From    => First_Index + 1);
+            Filename     : constant String
+                         := Origin (Origin'First .. First_Index - 1);
+            Line         : constant Natural
+                         := Natural'Value
+                              (Origin (First_Index + 1 .. Second_Index - 1));
+            Column       : constant Natural
+                         := Natural'Value
+                              (Origin (Second_Index + 1 .. Origin'Last));
          begin
             return (File_Name => String_Holder_Type.To_Holder (Filename),
                     Line      => Line,
@@ -777,8 +781,9 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Remove_Log_Of_Subtree (Node  : DOM.Core.Node;
-                                    XPath : String := "")
+   procedure Remove_Log_Of_Subtree
+      (Node  : DOM.Core.Node;
+       XPath : String := "")
    is
       Root_Node    : DOM.Core.Node
          := Node;
@@ -806,8 +811,8 @@ is
       while Current_Node /= null loop
          Remove_Log_Of_Node (Node => Current_Node);
 
-         -- to look for non-element nodes is a precaution in case some got
-         -- a log-entry by mistake
+         --  To look for non-element nodes is a precaution in case some got
+         --  a log-entry by mistake.
          Current_Node := Muxml.Utils.Next_Node_In_Subtree
             (Root_Node          => Root_Node,
              Current_Node       => Current_Node,

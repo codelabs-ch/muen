@@ -36,7 +36,7 @@ package body Mutools.Expressions
 is
    Expr_Debug_Active : Boolean := False;
 
-   -- Throws an exception if the first character of Input is '$'
+   --  Throws an exception if the first character of Input is '$'.
    procedure Assure_First_Char_Not_Dollar (Input : String);
 
    -------------------------------------------------------------------------
@@ -248,17 +248,15 @@ is
                & "' requires two child elements";
          end if;
          return Op (X => Int_Value
-                       (Node        => Get_Nth_Child_Node
-                                         (Parent => Node,
-                                          N      => 1),
-                            Backtrace   => Backtrace,
-                            Node_Access => Node_Access),
+                       (Node        => Get_Nth_Child_Node (Parent => Node,
+                                                           N      => 1),
+                        Backtrace   => Backtrace,
+                        Node_Access => Node_Access),
                     Y => Int_Value
-                       (Node        => Get_Nth_Child_Node
-                                         (Parent => Node,
-                                          N      => 2),
-                            Backtrace   => Backtrace,
-                            Node_Access => Node_Access));
+                       (Node        => Get_Nth_Child_Node (Parent => Node,
+                                                           N      => 2),
+                        Backtrace   => Backtrace,
+                        Node_Access => Node_Access));
       end Eval_Integers;
 
       ----------------------------------------------------------------------
@@ -350,6 +348,7 @@ is
       return Boolean
    is
       use all type Mutools.Expressions.Case_Expression.Variable_Type;
+
       Node_Type : constant String
                 := DOM.Core.Nodes.Node_Name (N => Node);
       Node_Name : constant String
@@ -438,7 +437,7 @@ is
             declare
                Reference : constant String
                   := DOM.Core.Elements.Get_Attribute
-                  (Elem =>  Get_Nth_Child_Node (Parent => Node, N => 1),
+                  (Elem => Get_Nth_Child_Node (Parent => Node, N => 1),
                    Name => "name");
                Next_Node : DOM.Core.Node;
             begin
@@ -486,9 +485,9 @@ is
    -------------------------------------------------------------------------
 
    function Evaluate_Integer
-      (Node       :        DOM.Core.Node;
-       Backtrace  : in out String_Vector.Vector;
-      Node_Access : in out Access_Hashmaps_Type)
+      (Node        :        DOM.Core.Node;
+       Backtrace   : in out String_Vector.Vector;
+       Node_Access : in out Access_Hashmaps_Type)
       return Integer
    is
       use all type Mutools.Expressions.Case_Expression.Variable_Type;
@@ -570,7 +569,7 @@ is
             declare
                Reference : constant String
                   := DOM.Core.Elements.Get_Attribute
-                  (Elem =>  Get_Nth_Child_Node (Parent => Node, N => 1),
+                  (Elem => Get_Nth_Child_Node (Parent => Node, N => 1),
                    Name => "name");
                Next_Node : DOM.Core.Node;
             begin
@@ -713,7 +712,7 @@ is
             declare
                Reference : constant String
                   := DOM.Core.Elements.Get_Attribute
-                  (Elem =>  Get_Nth_Child_Node (Parent => Node, N => 1),
+                  (Elem => Get_Nth_Child_Node (Parent => Node, N => 1),
                    Name => "name");
                Next_Node : DOM.Core.Node;
             begin
@@ -789,8 +788,8 @@ is
 
       ----------------------------------------------------------------------
 
-      -- delete the current content of /*/config and replace it with
-      -- the entries in Node_Access.Output_...
+      --  Delete the current content of /*/config and replace it with
+      --  the entries in Node_Access.Output_... .
       procedure Substitute_Config_Section
          (Policy      :        Muxml.XML_Data_Type;
           Node_Access : in out Access_Hashmaps_Type);
@@ -955,9 +954,9 @@ is
 
       ----------------------------------------------------------------------
 
-      -- If Reference is in Node_Access.Output, then Node_Name is added
-      -- to Node_Access.Output with the same value and Success is true.
-      -- Otherwise Node_Access is unchanged and Success is false.
+      --  If Reference is in Node_Access.Output, then Node_Name is added
+      --  to Node_Access.Output with the same value and Success is true.
+      --  Otherwise Node_Access is unchanged and Success is false.
       procedure Expand_If_Known
          (Node_Name :     String;
           Reference :     String;
@@ -1090,7 +1089,7 @@ is
             declare
                Reference : constant String
                   := DOM.Core.Elements.Get_Attribute
-                  (Elem =>  Get_Nth_Child_Node (Parent => Node, N => 1),
+                  (Elem => Get_Nth_Child_Node (Parent => Node, N => 1),
                    Name => "name");
                Node_Name : constant String
                   := DOM.Core.Elements.Get_Attribute
@@ -1142,7 +1141,7 @@ is
    exception
       when E : others =>
          if Expr_Debug_Active then
-            -- check if the exception got amended by a child-call already
+            --  Check if the exception got amended by a child-call already.
             declare
                Debug_Info_Header : constant String
                   := ". See above message for details.";
@@ -1186,7 +1185,7 @@ is
       end if;
    end Get_Defining_Node;
 
-   ----------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    function Get_Expr_Type (Expr : DOM.Core.Node) return Expression_Toplevel_Type
    is
@@ -1247,8 +1246,8 @@ is
       Child : DOM.Core.Node
          := DOM.Core.Nodes.First_Child (N => Parent);
 
-      -- go to next sibling until an element-node is reached
-      -- does not change node if starting node is an element node
+      --  Go to next sibling until an element-node is reached.
+      --  Does not change node if starting node is an element node.
       procedure Loop_Until_Element (N : in out DOM.Core.Node);
 
       ----------------------------------------------------------------------
@@ -1369,18 +1368,19 @@ is
 
    -------------------------------------------------------------------------
 
-   function Parse_Dollar_Braced_References (Input_String : String)
-                                           return Fragment_Vector.Vector
+   function Parse_Dollar_Braced_References
+      (Input_String : String)
+      return Fragment_Vector.Vector
    is
       Left_Index, Right_Index : Natural := Input_String'First;
       Result : Fragment_Vector.Vector;
 
-      -----------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- check if Input contains $ or { or }
+      --  Check if Input contains $ or { or }.
       function Has_Dollar_Or_Braces (Input : String) return Boolean;
 
-      -----------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       function Has_Dollar_Or_Braces (Input : String) return Boolean
       is
@@ -1417,7 +1417,8 @@ is
                Fragment_Vector.Append
                   (Container => Result,
                    New_Item  => Fragment_Entry'
-                      (Value => String_Holder_Type.To_Holder (String_Fragment),
+                      (Value      => String_Holder_Type.To_Holder
+                                       (String_Fragment),
                        Value_Type => Text_Type));
             end if;
          end;
@@ -1441,11 +1442,12 @@ is
                raise Invalid_Expression with
                   "EvalString got invaild value '" & Input_String & "'";
             else
-               -- an empty reference is OK for the parser
+               --  An empty reference is OK for the parser.
                Fragment_Vector.Append
                   (Container => Result,
                    New_Item  => Fragment_Entry'
-                      (Value => String_Holder_Type.To_Holder (String_Fragment),
+                      (Value      => String_Holder_Type.To_Holder
+                                       (String_Fragment),
                        Value_Type => Reference_Type));
             end if;
          end;
@@ -1468,7 +1470,8 @@ is
             Fragment_Vector.Append
                (Container => Result,
                 New_Item  => Fragment_Entry'
-                   (Value => String_Holder_Type.To_Holder (String_Fragment),
+                   (Value      => String_Holder_Type.To_Holder
+                                    (String_Fragment),
                     Value_Type => Text_Type));
          end if;
       end;
@@ -1491,15 +1494,15 @@ is
                       (N     => Node,
                        XPath => "./*");
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- evaluate a <concatenation>-node within the expression
+      --  Evaluate a <concatenation>-node within the expression.
       function Evaluate_Concatenation
          (Node      :        DOM.Core.Node;
           Backtrace : in out String_Vector.Vector)
          return String;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       function Evaluate_Concatenation
          (Node      :        DOM.Core.Node;
@@ -1537,23 +1540,23 @@ is
          return ASU.To_String (Result);
       end Evaluate_Concatenation;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- evaluate an <evalString>-node within the expression
+      --  Evaluate an <evalString>-node within the expression.
       function Evaluate_Eval_String
          (Node      :        DOM.Core.Node;
           Backtrace : in out String_Vector.Vector)
          return String;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       function Evaluate_Eval_String
          (Node      :        DOM.Core.Node;
           Backtrace : in out String_Vector.Vector)
          return String
       is
-         Result    : ASU.Unbounded_String;
-         Input_String : constant String
+         Result           : ASU.Unbounded_String;
+         Input_String     : constant String
             := DOM.Core.Elements.Get_Attribute
                  (Elem => Node,
                   Name => "value");
@@ -1584,12 +1587,12 @@ is
                         (Node_Access.Output_String (Fragment.Value.Element));
                   else
                      Ref_Value :=  ASU.To_Unbounded_String
-                     (Evaluate_String
-                        (Node        => Get_Defining_Node
-                            (Var_Name    => Fragment.Value.Element,
-                             Node_Access => Node_Access),
-                         Backtrace   => Backtrace,
-                         Node_Access => Node_Access));
+                        (Evaluate_String
+                            (Node        => Get_Defining_Node
+                                (Var_Name    => Fragment.Value.Element,
+                                 Node_Access => Node_Access),
+                             Backtrace   => Backtrace,
+                             Node_Access => Node_Access));
                   end if;
                   ASU.Append (Source   => Result,
                               New_Item => Ref_Value);

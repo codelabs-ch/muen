@@ -14,11 +14,13 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-with Mucfgcheck.Validation_Errors;
-with Muxml;
 with Ada.Text_IO;
 with Ada.Text_IO.Text_Streams;
+
 with DOM.Core.Nodes;
+
+with Mucfgcheck.Validation_Errors;
+with Muxml;
 --  begin read only
 --  end read only
 package body Merge.Test_Data.Tests is
@@ -112,8 +114,8 @@ package body Merge.Test_Data.Tests is
               Include_Path => "");
 
          Assert (Condition => Test_Utils.Equal_Files
-                    (Filename1 => "data/run_no_additional_hw.xml",
-                     Filename2 => Output),
+                 (Filename1 => "data/run_no_additional_hw.xml",
+                  Filename2 => Output),
                  Message   => "Policy mismatch: " & Output);
 
          Ada.Directories.Delete_File (Name => Output);
@@ -153,7 +155,7 @@ package body Merge.Test_Data.Tests is
                   Filename2 => Output),
                  Message   => "Policy mismatch: " & Output);
 
-         --Ada.Directories.Delete_File (Name => Output);
+         Ada.Directories.Delete_File (Name => Output);
       end Positive_Test_No_Expressions;
 
       ----------------------------------------------------------------------
@@ -205,7 +207,6 @@ package body Merge.Test_Data.Tests is
 
          Ada.Directories.Delete_File (Name => Output);
       end Positive_Test_With_Debugging;
-
 
    begin
       Mucfgcheck.Validation_Errors.Clear;

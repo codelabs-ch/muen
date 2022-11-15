@@ -12,7 +12,6 @@
       <string name="lcbrace" value="{"/>
    </config>
 
-
    <hardware>
       <memory>
          <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>

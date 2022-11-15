@@ -24,7 +24,6 @@ with McKae.XML.XPath.XIA;
 with Mulog;
 with Mutools.Utils;
 with Mutools.Expressions;
---with Mutools.Expressions.Fragment_Type;
 
 with Mucfgcheck.Validation_Errors;
 with Ada.Strings.Hash;
@@ -215,6 +214,7 @@ is
    is
       package String_Sets is new Ada.Containers.Indefinite_Ordered_Sets
          (Element_Type => String);
+
       use String_Sets;
       use Mutools.Expressions;
 
@@ -228,13 +228,13 @@ is
                          XPath => "/*/expressions/expression");
       Known_Names : Set;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- report error if Var_Name is not in Known_Names
+      --  Report error if Var_Name is not in Known_Names.
 
       procedure Check_Name (Var_Name, Expr_Name : String);
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Check_Name (Var_Name, Expr_Name : String)
       is
@@ -285,26 +285,26 @@ is
          declare
             use type DOM.Core.Node;
 
-            Expr      : constant DOM.Core.Node
-                      := DOM.Core.Nodes.Item
-                            (List  => Exprs,
-                             Index => I);
-            Expr_Name  : constant String
-                      := DOM.Core.Elements.Get_Attribute
-                            (Elem => Expr,
-                             Name => "name");
-            Expr_Variable : constant DOM.Core.Node_List
-                      := McKae.XML.XPath.XIA.XPath_Query
-                        (N     => Expr,
-                         XPath => ".//variable");
-            Expr_Case : constant DOM.Core.Node_List
-                      := McKae.XML.XPath.XIA.XPath_Query
-                        (N     => Expr,
-                         XPath => ".//case");
+            Expr            : constant DOM.Core.Node
+                            := DOM.Core.Nodes.Item
+                                 (List  => Exprs,
+                                  Index => I);
+            Expr_Name       : constant String
+                            := DOM.Core.Elements.Get_Attribute
+                                 (Elem  => Expr,
+                                  Name  => "name");
+            Expr_Variable   : constant DOM.Core.Node_List
+                            := McKae.XML.XPath.XIA.XPath_Query
+                                 (N     => Expr,
+                                  XPath => ".//variable");
+            Expr_Case       : constant DOM.Core.Node_List
+                            := McKae.XML.XPath.XIA.XPath_Query
+                                 (N     => Expr,
+                                  XPath => ".//case");
             Expr_EvalString : constant DOM.Core.Node_List
-                      := McKae.XML.XPath.XIA.XPath_Query
-                        (N     => Expr,
-                         XPath => ".//evalString");
+                            := McKae.XML.XPath.XIA.XPath_Query
+                                 (N     => Expr,
+                                  XPath => ".//evalString");
          begin
             for J in 0 .. DOM.Core.Nodes.Length (List => Expr_Variable) - 1 loop
                declare
@@ -337,11 +337,11 @@ is
             for J in 0 .. DOM.Core.Nodes.Length (List => Expr_EvalString) - 1 loop
                declare
                   Node : constant DOM.Core.Node
-                       := DOM.Core.Nodes.Item
-                            (List  => Expr_EvalString,
-                             Index => J);
-                  Fragments : constant  Mutools.Expressions.Fragment_Vector.Vector
-                     := Mutools.Expressions.Parse_Dollar_Braced_References
+                     := DOM.Core.Nodes.Item
+                     (List  => Expr_EvalString,
+                      Index => J);
+                  Fragments : constant Fragment_Vector.Vector
+                     := Parse_Dollar_Braced_References
                           (DOM.Core.Elements.Get_Attribute
                               (Elem => Node,
                                Name => "value"));
@@ -393,7 +393,7 @@ is
                 XPath => "/*/config/* | /*/expressions/expression");
    begin
       Mulog.Log (Msg => "Checking uniqueness of"
-                 & DOM.Core.Nodes.Length (List =>  Cfg_Expr_Values)'Img
+                 & DOM.Core.Nodes.Length (List => Cfg_Expr_Values)'Img
                  & " config and expression name(s)");
       Mucfgcheck.Attr_Uniqueness
          (Nodes     => Cfg_Expr_Values,

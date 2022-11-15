@@ -1,6 +1,5 @@
 --
---  Copyright (C) 2014, 2016  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2022 secunet Security Networks AG
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,8 +15,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Muxml;
 with DOM.Core;
+
+with Muxml;
 
 package Mutools.Mergers
 is

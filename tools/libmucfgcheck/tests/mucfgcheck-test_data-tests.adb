@@ -720,7 +720,6 @@ package body Mucfgcheck.Test_Data.Tests is
       Impl        : DOM.Core.DOM_Implementation;
       Left, Right : DOM.Core.Node;
    begin
-
       Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 
       Left := DOM.Core.Documents.Create_Element
@@ -812,9 +811,9 @@ package body Mucfgcheck.Test_Data.Tests is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
-      Nodes     : DOM.Core.Node_List;
-      Data        : Muxml.XML_Data_Type;
-      Impl        : DOM.Core.DOM_Implementation;
+      Nodes : DOM.Core.Node_List;
+      Data  : Muxml.XML_Data_Type;
+      Impl  : DOM.Core.DOM_Implementation;
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.None,
@@ -849,7 +848,7 @@ package body Mucfgcheck.Test_Data.Tests is
 
       Nodes :=  McKae.XML.XPath.XIA.XPath_Query
                  (N     => Data.Doc,
-                  XPath => "//subject[@name='uniquenesTests']");
+                  XPath => "//subject[@name='uniquenessTests']");
       Attr_Uniqueness (Nodes => Nodes,
                        Attr_Name => "id",
                        Error_Msg => "Ids are not unique");
@@ -861,17 +860,15 @@ package body Mucfgcheck.Test_Data.Tests is
 
       Nodes :=  McKae.XML.XPath.XIA.XPath_Query
                  (N     => Data.Doc,
-                  XPath => "//subject[@name='uniquenesTests']/car "
-                  & "| //subject[@name='uniquenesTests']/car/id");
+                  XPath => "//subject[@name='uniquenessTests']/car "
+                  & "| //subject[@name='uniquenessTests']/car/id");
       Attr_Uniqueness (Nodes => Nodes,
                        Attr_Name => "name",
                        Error_Msg => "Names are not unique.");
-      Assert (Condition =>  Validation_Errors.Contains
+      Assert (Condition => Validation_Errors.Contains
               (Msg => "Names are not unique. "
                & "Conflicting value: 'c1'"),
               Message   => "Exception mismatch");
-
-
 --  begin read only
    end Test_Attr_Uniqueness;
 --  end read only

@@ -481,8 +481,8 @@ package body Mutools.System_Config.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      Policy : Muxml.XML_Data_Type;
-      Node   : DOM.Core.Node;
+      Policy    : Muxml.XML_Data_Type;
+      Node      : DOM.Core.Node;
       Node_List : DOM.Core.Node_List;
    begin
       Muxml.Parse (Data => Policy,

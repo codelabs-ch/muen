@@ -44,7 +44,7 @@ is
        New_Parent        : DOM.Core.Node;
        Ref_In_New_Parent : DOM.Core.Node;
        Debug_Active      : Boolean       := False;
-       Ancestor_For_Log : DOM.Core.Node := null;
+       Ancestor_For_Log  : DOM.Core.Node := null;
        Transaction_Index : Mutools.Xmldebuglog.Transaction_Log_Index_Type
                          := Mutools.Xmldebuglog.Null_Ref_Index);
 
@@ -65,9 +65,9 @@ is
 
       ----------------------------------------------------------------------
 
-      -- get the type of the given Config_Var, try to cast Value to that type
-      -- and return 'true' if and only if the result is equal to the value of
-      -- Config_Var
+      --  Get the type of the given Config_Var, try to cast Value to that type
+      --  and return 'true' if and only if the result is equal to the value of
+      --  Config_Var.
       function Is_Value_Equal_After_Cast
          (Config_Var_Name : String;
           Value           : String;
@@ -155,8 +155,8 @@ is
                begin
                   if Is_Value_Equal_After_Cast
                      (Config_Var_Name => Cfg_Name,
-                      Value => Value,
-                      Node_Access => Node_Access)
+                      Value           => Value,
+                      Node_Access     => Node_Access)
                   then
                      if Debug_Active then
                         Log_Index := Mutools.Xmldebuglog.Add_Conditional_Transaction
@@ -173,7 +173,7 @@ is
                          New_Parent        => Parent,
                          Ref_In_New_Parent => Cur_Child,
                          Debug_Active      => Debug_Active,
-                         Ancestor_For_Log => Cur_Child,
+                         Ancestor_For_Log  => Cur_Child,
                          Transaction_Index => Log_Index);
                   else
                      if Debug_Active then
@@ -200,7 +200,7 @@ is
                declare
                   Dummy, Matching_Option_Node : DOM.Core.Node;
 
-                  -- we need the backtrace only for syntactial reasons
+                  --  We need the backtrace only for syntactial reasons.
                   Backtrace : Mutools.Expressions.String_Vector.Vector;
                   Log_Index : Mutools.Xmldebuglog.Transaction_Log_Index_Type
                      := Mutools.Xmldebuglog.Null_Ref_Index;
@@ -242,7 +242,7 @@ is
                          New_Parent        => Parent,
                          Ref_In_New_Parent => Cur_Child,
                          Debug_Active      => Debug_Active,
-                         Ancestor_For_Log => Cur_Child,
+                         Ancestor_For_Log  => Cur_Child,
                          Transaction_Index => Log_Index);
                   else
                      if Debug_Active then
@@ -306,8 +306,8 @@ is
 
       ----------------------------------------------------------------------
 
-      -- Populate Node_Access with elements from Config_Nodes
-      --  for fast access to name-values pairs
+      --  Populate Node_Access with elements from Config_Nodes
+      --  for fast access to name-values pairs.
       procedure Initialize_Node_Access
          (Node_Access  : in out Mutools.Expressions.Access_Hashmaps_Type;
           Config_Nodes :        DOM.Core.Node_List;
@@ -363,7 +363,7 @@ is
       end Initialize_Node_Access;
 
    begin
-      -- populate Node_Access for fast access to name-values pairs
+      --  Populate Node_Access for fast access to name-values pairs.
       Initialize_Node_Access
          (Node_Access  => Node_Access,
           Config_Nodes => Config_Nodes,
@@ -391,7 +391,7 @@ is
        New_Parent        : DOM.Core.Node;
        Ref_In_New_Parent : DOM.Core.Node;
        Debug_Active      : Boolean       := False;
-       Ancestor_For_Log : DOM.Core.Node := null;
+       Ancestor_For_Log  : DOM.Core.Node := null;
        Transaction_Index : Mutools.Xmldebuglog.Transaction_Log_Index_Type
                          := Mutools.Xmldebuglog.Null_Ref_Index)
    is
@@ -403,7 +403,7 @@ is
          Cur_Child := DOM.Core.Nodes.First_Child (N => Old_Parent);
          exit when Cur_Child = null;
 
-         -- Insert_Before can be used to move nodes (by specification)
+         --  Insert_Before can be used to move nodes (by specification).
          Cur_Child := DOM.Core.Nodes.Insert_Before
             (N         => New_Parent,
              New_Child => Cur_Child,

@@ -23,7 +23,8 @@ is
 
    --  Substitutes all attribute values that reference valid config variables,
    --  e.g. <elem attr="$configvar"/>
-   procedure Process_Attributes (Data         : Muxml.XML_Data_Type;
-                                 Debug_Active : Boolean := False);
+   procedure Process_Attributes
+      (Data         : Muxml.XML_Data_Type;
+       Debug_Active : Boolean := False);
 
 end Mutools.Substitutions;

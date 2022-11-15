@@ -17,27 +17,29 @@
 
 with Ada.Strings.Unbounded;
 with Ada.Strings.Fixed;
+
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
+
 with Mulog;
 with Muxml.Utils;
 
 package body Mutools.Expressions.Case_Expression
 is
-   -- To be called on nodes like <boolean value="foo"/> as well as
-   --   config-variable entries like <boolean name="varname" value="foo"/>
-   --   (independet of the type of the variable)
-   -- Sets Type_And_Value with the respective type-value tuple.
-   -- If value begins with '$', an error will be reported.
+   --  To be called on nodes like <boolean value="foo"/> as well as
+   --  config-variable entries like <boolean name="varname" value="foo"/>
+   --  (independent of the type of the variable).
+   --  Sets Type_And_Value with the respective type-value tuple.
+   --  If value begins with '$', an error will be reported.
    procedure Get_Type_And_Value
       (Node           :     DOM.Core.Node;
        Type_And_Value : out Value_Type_Tuple);
 
    -------------------------------------------------------------------------
 
-   -- Evaluate a Case-Statement within an expression recursively.
+   --  Evaluate a Case-Statement within an expression recursively.
    procedure Evaluate_Case_Node
       (Case_Node     :        DOM.Core.Node;
        Value_Of_Case :    out Value_Type_Tuple;
@@ -46,13 +48,13 @@ is
 
    -------------------------------------------------------------------------
 
-   -- assign the value of the variable or expression with name Ref_Name to
-   -- Result. This triggers expansion of that node if necessary.
+   --  Assign the value of the variable or expression with name Ref_Name to
+   --  Result. This triggers expansion of that node if necessary.
    procedure Get_Value_Of_Reference
-      (Ref_Name      :        String;
-       Result        :    out Value_Type_Tuple;
-       Backtrace     : in out String_Vector.Vector;
-       Node_Access   : in out Access_Hashmaps_Type);
+      (Ref_Name    :        String;
+       Result      :    out Value_Type_Tuple;
+       Backtrace   : in out String_Vector.Vector;
+       Node_Access : in out Access_Hashmaps_Type);
 
    -------------------------------------------------------------------------
 
@@ -166,7 +168,7 @@ is
 
       ----------------------------------------------------------------------
 
-      -- assign the value of Child to Child_Value
+      --  Assign the value of Child to Child_Value.
       procedure Evaluate_When_Child
          (Child       :        DOM.Core.Node;
           Child_Value :    out Value_Type_Tuple;
@@ -204,7 +206,7 @@ is
             or Child_Name = "string"
          then
             Get_Type_And_Value
-               (Node => Child,
+               (Node           => Child,
                 Type_And_Value => Child_Value);
          else
             raise Invalid_Expression with
@@ -215,7 +217,7 @@ is
       end Evaluate_When_Child;
 
    begin
-      -- assign the Return_Node to the when-child that matches
+      --  Assign the Return_Node to the when-child that matches.
       Evaluate_Case_Node_Frame (Case_Node   => Case_Node,
                                 Return_Node => Return_Node,
                                 Backtrace   => Backtrace,
@@ -259,7 +261,7 @@ is
                Value_Of_Case :=  Child_Value;
             end if;
 
-            -- check that all options are of the same type
+            --  Check that all options are of the same type.
             if I = 0 then
                Child_Type := Child_Value.Value_Type;
             elsif Child_Type /= Child_Value.Value_Type then
@@ -291,9 +293,9 @@ is
          (N     => Case_Node,
           XPath => "./when | ./others");
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- Evaluate a when-option and write result to When_Variable_Value
+      --  Evaluate a when-option and write result to When_Variable_Value.
       procedure  Evaluate_When_Option
          (When_Node_RawValue  :        String;
           Case_Variable_Value :        Value_Type_Tuple;
@@ -301,7 +303,7 @@ is
           Backtrace           : in out String_Vector.Vector;
           Node_Access         : in out Access_Hashmaps_Type);
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure  Evaluate_When_Option
          (When_Node_RawValue  :        String;
@@ -311,7 +313,7 @@ is
           Node_Access         : in out Access_Hashmaps_Type)
       is
       begin
-         -- start evaluation of the given when-value
+         --  Start evaluation of the given when-value.
          if When_Node_RawValue'Length > 0
             and then When_Node_RawValue (When_Node_RawValue'First) = '$'
          then
@@ -337,7 +339,7 @@ is
                   & "'";
             end if;
          else
-            -- in this case we have a 'constant' without type
+            --  In this case we have a 'constant' without type.
             When_Variable_Value.Value_Type
                := Case_Variable_Value.Value_Type;
 
@@ -366,7 +368,7 @@ is
    begin
       Return_Node := null;
 
-      -- get type and value of case-variable
+      --  Get type and value of case-variable.
       if not Muxml.Utils.Has_Attribute (Node      => Case_Node,
                                         Attr_Name => "variable")
       then
@@ -380,7 +382,7 @@ is
           Backtrace   => Backtrace,
           Node_Access => Node_Access);
 
-      -- get type and value of when-variables
+      --  Get type and value of when-variables.
       if DOM.Core.Nodes.Length (List => Case_Children) < 1 then
          raise  Invalid_Expression with
             "Found case-node without when-children";
@@ -435,7 +437,7 @@ is
 
    end Evaluate_Case_Node_Frame;
 
-   ----------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Get_Type_And_Value
       (Node           :     DOM.Core.Node;
@@ -481,16 +483,16 @@ is
 
    -------------------------------------------------------------------------
 
-   -- assign Result and set Found := 'True' if Node_Access.Output contains
-   -- the key Name
-   -- leave Result unchanged and set Found := 'False' otherwise
+   --  Assign Result and set Found := 'True' if Node_Access.Output contains
+   --  the key Name.
+   --  Leave Result unchanged and set Found := 'False' otherwise.
    procedure Get_Value_If_Contained
       (Name        :     String;
        Result      : out Value_Type_Tuple;
        Found       : out Boolean;
        Node_Access :     Access_Hashmaps_Type);
 
-   ----------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Get_Value_If_Contained
       (Name        :     String;
@@ -516,13 +518,13 @@ is
       end if;
    end Get_Value_If_Contained;
 
-   ----------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Get_Value_Of_Reference
-      (Ref_Name      :        String;
-       Result        :    out Value_Type_Tuple;
-       Backtrace     : in out String_Vector.Vector;
-       Node_Access   : in out Access_Hashmaps_Type)
+      (Ref_Name    :        String;
+       Result      :    out Value_Type_Tuple;
+       Backtrace   : in out String_Vector.Vector;
+       Node_Access : in out Access_Hashmaps_Type)
    is
       Found : Boolean;
       Def_Node : DOM.Core.Node;

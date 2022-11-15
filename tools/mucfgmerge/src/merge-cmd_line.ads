@@ -28,7 +28,7 @@ is
    --  Return system config filename.
    function Get_Config_File return String;
 
-   --  Return the set debug level.
+   --  Return the debug level.
    function Get_Debug_Level return Debug_Level_Type;
 
    --  Return output filename.

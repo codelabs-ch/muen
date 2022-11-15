@@ -21,22 +21,20 @@ with DOM.Core;
 package Mutools.Amend
 is
 
-   -- Expands all amend-nodes.
-   -- For each <amend>-tag it does the following:
+   --  Expands all amend-nodes.
+   --  For each <amend>-tag it does the following:
    --   Check that the given XPath matches exactly one node "Parent"
    --   For each node C in the body of amend:
    --     Recursive_Merge(Parent,  C)
-   --   delete <amend>-nodes
+   --   Delete <amend>-nodes.
    procedure Expand
       (XML_Data     : Muxml.XML_Data_Type;
        Debug_Active : Boolean := False);
 
 private
 
-   -- check if L and R have the same name and the same attributes
-   --   (including values of attributes)
-   function Nodes_Equal
-      (L, R : DOM.Core.Node)
-      return Boolean;
+   --  Check if L and R have the same name and the same attributes
+   --  (including values of attributes).
+   function Nodes_Equal (L, R : DOM.Core.Node) return Boolean;
 
 end Mutools.Amend;

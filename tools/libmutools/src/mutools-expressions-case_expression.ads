@@ -24,50 +24,50 @@ is
    package String_Holder_Type is new Ada.Containers.Indefinite_Holders
       (Element_Type => String);
 
-   -- container for values of case-expressions
-   -- as their type can only be determined during evaluation
+   --  Container for values of case-expressions
+   --  as their type can only be determined during evaluation.
    type Value_Type_Tuple is record
-      Bool_Value     : Boolean;
-      Int_Value      : Integer;
-      String_Value   : String_Holder_Type.Holder;
-      Value_Type     : Variable_Type;
+      Bool_Value   : Boolean;
+      Int_Value    : Integer;
+      String_Value : String_Holder_Type.Holder;
+      Value_Type   : Variable_Type;
    end record;
 
-   -- check if L and R have the same Value_Type and if their value in
-   -- that type are equal
+   --  Check if L and R have the same Value_Type and if their value in
+   --  that type are equal.
    function "=" (L, R : Value_Type_Tuple) return Boolean;
 
-   -- return a string representation of VTT, including Type and its value
-   -- When No_Type is true, the type is omitted in the output.
+   --  Return a string representation of VTT, including Type and its value.
+   --  When No_Type is true, the type is omitted in the output.
    function To_String
        (VTT     : Value_Type_Tuple;
         No_Type : Boolean := False)
        return String;
 
-   -- Evaluate 'case' and 'when'-nodes, but not the children of 'when'-nodes.
-   -- Return_Node is the matching 'when'-node and null if no child matches.
-   -- This function is used for <case>-statements inside
-   --   and outside of expressions.
+   --  Evaluate 'case' and 'when'-nodes, but not the children of 'when'-nodes.
+   --  Return_Node is the matching 'when'-node and null if no child matches.
+   --  This function is used for <case>-statements inside
+   --  and outside of expressions.
    procedure Evaluate_Case_Node_Frame
       (Case_Node   :        DOM.Core.Node;
        Return_Node :    out DOM.Core.Node;
        Backtrace   : in out String_Vector.Vector;
        Node_Access : in out Access_Hashmaps_Type);
 
-   -- Evaluate an Expression of type "Case", i.e., an expression containing
-   -- <case> as its child.
-   -- Adds resulting value to Node_Access.Output
+   --  Evaluate an Expression of type "Case", i.e., an expression containing
+   --  <case> as its child.
+   --  Adds the resulting value to Node_Access.Output.
    procedure Case_Expression_Evaluation
       (Expr_Node     :        DOM.Core.Node;
        Value_Of_Case :    out Value_Type_Tuple;
        Backtrace     : in out String_Vector.Vector;
        Node_Access   : in out Access_Hashmaps_Type);
 
-   -- This function is an interface for the debug-functionality.
-   -- Return the value of Ref_Name as a string.
-   -- If Ref_Name is not a valid key in Hashmap then the empty string
-   -- is returned (which is also a legal value for existing variables of type
-   -- string).
+   --  This function is an interface for the debug-functionality.
+   --  Return the value of Ref_Name as a string.
+   --  If Ref_Name is not a valid key in Hashmap then the empty string
+   --  is returned (which is also a legal value for existing variables of type
+   --  string).
    function Get_Value_Of_Reference_Debug
       (Ref_Name    : String;
        Node_Access : Access_Hashmaps_Type)

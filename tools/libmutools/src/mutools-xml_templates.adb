@@ -81,7 +81,7 @@ is
       end loop;
    end Adopt_All_Children;
 
-   ------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Compile_Template
       (Template       :     DOM.Core.Node;
@@ -105,17 +105,17 @@ is
       Root_Node      : DOM.Core.Node;
       Locked_Attr    : Node_Set_Type.Set;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- assign Root_Node and Config_Node
-      -- create Config_Node if necessary
+      --  Assign Root_Node and Config_Node.
+      --  Create Config_Node if necessary.
       procedure Assign_Root_And_Config_Node
          (Root_Nodes   :     DOM.Core.Node_List;
           Root_Node    : out DOM.Core.Node;
           Config_Nodes :     DOM.Core.Node_List;
           Config_Node  : out DOM.Core.Node);
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Assign_Root_And_Config_Node
          (Root_Nodes   :     DOM.Core.Node_List;
@@ -147,7 +147,7 @@ is
                                              (N => Root_Node));
             when 1 =>
                Config_Node := DOM.Core.Nodes.Item (List  => Config_Nodes,
-                                               Index => 0);
+                                                   Index => 0);
             when others =>
                raise Muxml.Validation_Error with
                   "Found template with multiple 'config'-nodes.";
@@ -158,26 +158,26 @@ is
       Create_XMLDocument_From_Node (New_Doc  => Output.Doc,
                                     Src_Node => Template);
       declare
-         Root_Nodes           : constant DOM.Core.Node_List
-                              := McKae.XML.XPath.XIA.XPath_Query
-                                    (N     => Output.Doc,
-                                     XPath => "/template");
-         Config_Nodes        : constant DOM.Core.Node_List
-                              := McKae.XML.XPath.XIA.XPath_Query
-                                    (N     => Output.Doc,
-                                     XPath => "/template/config");
-         Call_Parameter_List  : constant DOM.Core.Node_List
-                              := McKae.XML.XPath.XIA.XPath_Query
-                                    (N     => Template_Call,
-                                     XPath => "./parameter");
-         Parameters_Node_List : constant DOM.Core.Node_List
-                              := McKae.XML.XPath.XIA.XPath_Query
-                                    (N     => Output.Doc,
-                                     XPath =>     "/template/parameters/boolean "
-                                              & "| /template/parameters/integer "
-                                              & "| /template/parameters/string");
-         Config               : DOM.Core.Node;
-         Matching_Call_Param_Names : Mutools.Expressions.String_Vector.Vector;
+         Root_Nodes                : constant DOM.Core.Node_List
+            := McKae.XML.XPath.XIA.XPath_Query
+            (N     => Output.Doc,
+             XPath => "/template");
+         Config_Nodes              : constant DOM.Core.Node_List
+            := McKae.XML.XPath.XIA.XPath_Query
+            (N     => Output.Doc,
+             XPath => "/template/config");
+         Call_Parameter_List       : constant DOM.Core.Node_List
+            := McKae.XML.XPath.XIA.XPath_Query
+            (N     => Template_Call,
+             XPath => "./parameter");
+         Parameters_Node_List      : constant DOM.Core.Node_List
+            := McKae.XML.XPath.XIA.XPath_Query
+            (N     => Output.Doc,
+             XPath =>     "/template/parameters/boolean "
+                & "| /template/parameters/integer "
+                & "| /template/parameters/string");
+         Config                    : DOM.Core.Node;
+         Matching_Call_Param_Names : Mutools.String_Vector.Vector;
 
       begin
          Assign_Root_And_Config_Node
@@ -208,7 +208,7 @@ is
 
                Matching_Call_Params : constant DOM.Core.Node_List
                   := Muxml.Utils.Get_Elements
-                       (Nodes     =>  Call_Parameter_List,
+                       (Nodes     => Call_Parameter_List,
                         Ref_Attr  => "name",
                         Ref_Value => Param_Name);
 
@@ -256,7 +256,7 @@ is
 
                         Mutools.Expressions.String_Vector.Append
                            (Container => Matching_Call_Param_Names,
-                            New_Item => Param_Name);
+                            New_Item  => Param_Name);
                      end if;
                   end;
                end if;
@@ -388,7 +388,7 @@ is
                            (N     => XML_Data.Doc,
                             XPath => "//template");
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       -- given the processed template, substitute the call-node with the
       -- call contents
@@ -399,7 +399,7 @@ is
           Debug_Active      :        Boolean;
           Log_Index         :        Mutools.Xmldebuglog.Transaction_Log_Index_Type);
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Substitute_Template_Call
          (Compiled_Template :        Muxml.XML_Data_Type;
@@ -408,7 +408,7 @@ is
           Debug_Active      :        Boolean;
           Log_Index         :        Mutools.Xmldebuglog.Transaction_Log_Index_Type)
       is
-         Template_Config  : constant DOM.Core.Node
+         Template_Config : constant DOM.Core.Node
             := Muxml.Utils.Get_Element
             (Doc   => Compiled_Template.Doc,
              XPath => "/template/config");
@@ -615,7 +615,7 @@ is
       end if;
    end Expand;
 
-   ------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Prefix_Variables
       (Root_Node   : DOM.Core.Node;
@@ -637,7 +637,7 @@ is
       Current_Node  : DOM.Core.Node;
       Defined_Names : String_Set_Type.Set;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       -- go through the child-nodes of Parent and put the value of their
       -- "name" attribute in the set of known names ("Names")
@@ -648,7 +648,7 @@ is
           Prefix :     String;
           Names  : out String_Set_Type.Set);
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Gather_Names_And_Rename
          (Parent :     DOM.Core.Node;
@@ -680,7 +680,7 @@ is
          end loop;
       end Gather_Names_And_Rename;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       -- rename references of the form "...='$Old_Name'"
       -- to "...='$PrefixOld_Name'" if Old_Name is contained in Known_Names
@@ -689,7 +689,7 @@ is
           Prefix      : String;
           Known_Names : String_Set_Type.Set);
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Prefix_Dollar_Refs
          (Node        : DOM.Core.Node;
@@ -723,16 +723,16 @@ is
          end loop;
       end  Prefix_Dollar_Refs;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       -- prefix references within the value attribute of "evalString" nodes
       -- these are of the form "foo${var_name}bar${var2}${var3}"
       procedure Prefix_EvalString
-         (Node       : DOM.Core.Node;
-          Prefix     : String;
+         (Node        : DOM.Core.Node;
+          Prefix      : String;
           Known_Names : String_Set_Type.Set);
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Prefix_EvalString
          (Node       : DOM.Core.Node;
@@ -779,14 +779,14 @@ is
              Value => ASU.To_String (New_Value));
       end Prefix_EvalString;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       -- add the given Prefix to all "namePrefix" attributes in useTemplate
       procedure Prefix_NamePrefix
-         (Node        : DOM.Core.Node;
-          Prefix      : String);
+         (Node   : DOM.Core.Node;
+          Prefix : String);
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Prefix_NamePrefix
          (Node        : DOM.Core.Node;
@@ -811,7 +811,7 @@ is
           Prefix      : String;
           Known_Names : String_Set_Type.Set);
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Prefix_NonDollar_Reference
          (Node        : DOM.Core.Node;
@@ -833,7 +833,7 @@ is
          end if;
       end Prefix_NonDollar_Reference;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       -- for a text-node Node with value "$Some_Name", set to value of Node
       -- to "$PrefixSome_Name" if "Some_Name" is contained in Known_Names
@@ -842,7 +842,7 @@ is
           Prefix      : String;
           Known_Names : String_Set_Type.Set);
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Prefix_Text_Node
          (Node        : DOM.Core.Node;
@@ -855,7 +855,7 @@ is
       begin
          if Text_Value'Length > 0 and then
             Text_Value (Text_Value'First) = '$' and then
-            Known_Names.Contains (Item =>  Text_Value
+            Known_Names.Contains (Item => Text_Value
                                      (Text_Value'First + 1 .. Text_Value'Last))
          then
             DOM.Core.Nodes.Set_Node_Value

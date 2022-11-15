@@ -53,22 +53,23 @@ package body Mutools.Expressions.Case_Expression.Test_Data.Tests is
                              Int_Value    => 0,
                              String_Value => String_Holder_Type.To_Holder ("foobar"),
                              Value_Type   => Integer_Type);
+
       Assert (Condition => L = L,
-              Message => "Equality expected");
+              Message   => "Equality expected");
       Assert (Condition => L = R,
-              Message => "Equality expected");
+              Message   => "Equality expected");
 
       R.Value_Type := String_Type;
       Assert (Condition => L /= R,
-              Message => "Inequality expected");
+              Message   => "Inequality expected");
 
       L.Value_Type := String_Type;
       Assert (Condition => L /= R,
-              Message => "Inequality expected");
+              Message   => "Inequality expected");
 
       L.String_Value := String_Holder_Type.To_Holder ("foobar");
       Assert (Condition => L = R,
-              Message => "Equality expected");
+              Message   => "Equality expected");
 
 --  begin read only
    end Test_Equal;
@@ -96,13 +97,13 @@ package body Mutools.Expressions.Case_Expression.Test_Data.Tests is
 
       L.Value_Type := String_Type;
       Assert (Condition => "STRING_TYPE foo" = To_String (L),
-              Message => "Strings not equal: " & "'INTEGER_TYPE foo'  '"
+              Message   => "Strings not equal: " & "'INTEGER_TYPE foo'  '"
                  & To_String (L)
                  & "'");
 
       L.Value_Type := Boolean_Type;
       Assert (Condition => "BOOLEAN_TYPE TRUE" = To_String (L),
-              Message => "Strings not equal: " & "'BOOLEAN_TYPE TRUE'  '"
+              Message   => "Strings not equal: " & "'BOOLEAN_TYPE TRUE'  '"
                  & To_String (L)
                  & "'");
 
@@ -150,7 +151,7 @@ package body Mutools.Expressions.Case_Expression.Test_Data.Tests is
              Backtrace   => Backtrace,
              Node_Access => Node_Access);
          Assert (Condition => Ret_Node = Ref_Node,
-                 Message => "Node mismatch");
+                 Message   => "Node mismatch");
 
          -- others matches
          In_Node := Muxml.Utils.Get_Element
@@ -171,7 +172,7 @@ package body Mutools.Expressions.Case_Expression.Test_Data.Tests is
              Backtrace   => Backtrace,
              Node_Access => Node_Access);
          Assert (Condition => Ret_Node = Ref_Node,
-                 Message => "Node mismatch");
+                 Message   => "Node mismatch");
 
          -- nothing matches
          In_Node := Muxml.Utils.Get_Element
@@ -192,7 +193,7 @@ package body Mutools.Expressions.Case_Expression.Test_Data.Tests is
              Backtrace   => Backtrace,
              Node_Access => Node_Access);
          Assert (Condition => Ret_Node = null,
-                 Message => "Node mismatch");
+                 Message   => "Node mismatch");
       end Positive_Test;
 
       ----------------------------------------------------------------------

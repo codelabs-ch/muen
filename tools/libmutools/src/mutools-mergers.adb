@@ -1,6 +1,5 @@
 --
---  Copyright (C) 2014, 2016  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014, 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2022 secunet Security Networks AG
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -17,9 +16,12 @@
 --
 
 with Ada.Strings.Unbounded;
+
 with DOM.Core.Nodes;
 with DOM.Core.Documents.Local;
+
 with McKae.XML.XPath.XIA;
+
 with Muxml.Utils;
 
 package body Mutools.Mergers
@@ -28,6 +30,8 @@ is
      (Source : String)
       return Ada.Strings.Unbounded.Unbounded_String
       renames Ada.Strings.Unbounded.To_Unbounded_String;
+
+   -------------------------------------------------------------------------
 
    procedure Merge_Config_Section
      (Policy     : in out Muxml.XML_Data_Type;

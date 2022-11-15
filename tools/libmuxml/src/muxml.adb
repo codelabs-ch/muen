@@ -23,13 +23,13 @@ with Ada.Text_IO.Text_Streams;
 with DOM.Core.Nodes;
 with Schema.Dom_Readers;
 with Schema.Validators;
+with Schema.Dom_Readers_With_Location;
+with Sax.Readers;
 with Input_Sources.File;
 with Input_Sources.Strings.Local;
-with Sax.Readers;
 with Unicode.CES.Utf8;
-with DOM;
+
 with Muxml.Grammar;
-with Schema.Dom_Readers_With_Location;
 
 package body Muxml
 is
@@ -67,7 +67,7 @@ is
 
       ----------------------------------------------------------------------
 
-      -- do the actual parsing, depending on the actual type of Reader
+      --  Do the actual parsing, depending on the actual type of Reader.
       procedure Do_Parse (Reader : in out DR.Tree_Reader'Class);
 
       ----------------------------------------------------------------------

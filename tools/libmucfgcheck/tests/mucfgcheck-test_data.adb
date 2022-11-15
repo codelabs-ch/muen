@@ -5,7 +5,7 @@
 
 package body Mucfgcheck.Test_Data is
 
-   ----------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Set_Up (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
@@ -13,7 +13,7 @@ package body Mucfgcheck.Test_Data is
       null;
    end Set_Up;
 
-   ----------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Tear_Down (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
@@ -21,7 +21,7 @@ package body Mucfgcheck.Test_Data is
       null;
    end Tear_Down;
 
-   ----------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    function Create_Mem_Node
      (Doc     : DOM.Core.Document;
@@ -50,7 +50,7 @@ package body Mucfgcheck.Test_Data is
       end return;
    end Create_Mem_Node;
 
-   ----------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    function Match_Name (Left, Right : DOM.Core.Node) return Boolean
    is

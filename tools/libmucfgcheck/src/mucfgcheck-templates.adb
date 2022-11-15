@@ -42,7 +42,7 @@ is
           Error_Msg => "Template names are not unique.");
    end Name_Uniqueness;
 
-   ------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Template_Integrity (XML_Data : Muxml.XML_Data_Type)
    is
@@ -76,7 +76,7 @@ is
             case DOM.Core.Nodes.Length (List => Template_Body) is
                when 0 =>
                   Mucfgcheck.Validation_Errors.Insert
-                  (Msg => "Found template definition without body.");
+                     (Msg => "Found template definition without body.");
                when 1 =>
                   null;
                when others =>
@@ -85,9 +85,7 @@ is
             end case;
 
             case DOM.Core.Nodes.Length (List => Template_Parameters) is
-               when 0 =>
-                  null;
-               when 1 =>
+               when 0 | 1 =>
                   null;
                when others =>
                Mucfgcheck.Validation_Errors.Insert
@@ -99,9 +97,9 @@ is
                when 0 | 1 =>
                   null;
                when others =>
-               Mucfgcheck.Validation_Errors.Insert
-                  (Msg => "Found template definition"
-                          & " with multiple expressions blocks.");
+                  Mucfgcheck.Validation_Errors.Insert
+                     (Msg => "Found template definition"
+                           & " with multiple expressions blocks.");
             end case;
          end;
       end loop;

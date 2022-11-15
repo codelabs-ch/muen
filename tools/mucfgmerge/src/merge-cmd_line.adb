@@ -71,9 +71,9 @@ is
    is
       use Ada.Strings.Unbounded;
 
-      Cmdline     : Mutools.Cmd_Line.Config_Type;
-      Inc_Dir     : aliased GNAT.Strings.String_Access;
-      Debug_Cmd   : aliased GNAT.Strings.String_Access;
+      Cmdline   : Mutools.Cmd_Line.Config_Type;
+      Inc_Dir   : aliased GNAT.Strings.String_Access;
+      Debug_Cmd : aliased GNAT.Strings.String_Access;
 
       ----------------------------------------------------------------------
 

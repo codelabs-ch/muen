@@ -483,7 +483,7 @@ is
       return Mem_Node;
    end Create_Virtual_Memory_Node;
 
-   ----------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    function Equal_BDFs (Left, Right : DOM.Core.Node) return Boolean
    is

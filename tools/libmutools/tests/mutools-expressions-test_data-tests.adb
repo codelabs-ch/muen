@@ -148,23 +148,23 @@ package body Mutools.Expressions.Test_Data.Tests is
 
       Text_Foo : constant Fragment_Entry
          := Fragment_Entry'
-         (Value => String_Holder_Type.To_Holder ("foo"),
+         (Value      => String_Holder_Type.To_Holder ("foo"),
           Value_Type => Text_Type);
       Ref_Foo : constant Fragment_Entry
          := Fragment_Entry'
-         (Value => String_Holder_Type.To_Holder ("foo"),
+         (Value      => String_Holder_Type.To_Holder ("foo"),
           Value_Type => Reference_Type);
       Ref_Bar : constant Fragment_Entry
          := Fragment_Entry'
-         (Value => String_Holder_Type.To_Holder ("bar"),
+         (Value      => String_Holder_Type.To_Holder ("bar"),
           Value_Type => Reference_Type);
       Text_Special_Char : constant Fragment_Entry
          := Fragment_Entry'
-         (Value => String_Holder_Type.To_Holder ("stuff _'["),
+         (Value      => String_Holder_Type.To_Holder ("stuff _'["),
           Value_Type => Text_Type);
       Ref_Special_Char : constant Fragment_Entry
          := Fragment_Entry'
-         (Value => String_Holder_Type.To_Holder ("stuff _'["),
+         (Value      => String_Holder_Type.To_Holder ("stuff _'["),
           Value_Type => Reference_Type);
 
       Output, Correct_Output : Fragment_Vector.Vector;
@@ -176,7 +176,7 @@ package body Mutools.Expressions.Test_Data.Tests is
       begin
          for Element of Vector loop
             Ada.Strings.Unbounded.Append
-               (Source => Output,
+               (Source   => Output,
                 New_Item => To_Unbounded_String
                    ("(" & Element.Value_Type'Img & ", " & Element.Value.Element & ") "));
          end loop;
@@ -301,11 +301,11 @@ package body Mutools.Expressions.Test_Data.Tests is
 
       procedure Invalid_Boolean
       is
-         Impl : DOM.Core.DOM_Implementation;
-         Data : Muxml.XML_Data_Type;
-         Node : DOM.Core.Node;
-         Backtrace : String_Vector.Vector;
-         Node_Access :  Access_Hashmaps_Type;
+         Impl        : DOM.Core.DOM_Implementation;
+         Data        : Muxml.XML_Data_Type;
+         Node        : DOM.Core.Node;
+         Backtrace   : String_Vector.Vector;
+         Node_Access : Access_Hashmaps_Type;
       begin
          Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 
@@ -319,9 +319,9 @@ package body Mutools.Expressions.Test_Data.Tests is
          declare
             Dummy : Boolean;
          begin
-            Dummy := Bool_Value (Backtrace => Backtrace,
+            Dummy := Bool_Value (Backtrace   => Backtrace,
                                  Node_Access => Node_Access,
-                                 Node   => Node);
+                                 Node        => Node);
             Assert (Condition => False,
                     Message   => "Exception expected");
 
@@ -337,9 +337,9 @@ package body Mutools.Expressions.Test_Data.Tests is
 
       procedure Positive_Test
       is
-         Data             : Muxml.XML_Data_Type;
-         Backtrace        : String_Vector.Vector;
-         Node_Access      :  Access_Hashmaps_Type;
+         Data        : Muxml.XML_Data_Type;
+         Backtrace   : String_Vector.Vector;
+         Node_Access : Access_Hashmaps_Type;
       begin
          Muxml.Parse
            (Data => Data,
@@ -360,12 +360,12 @@ package body Mutools.Expressions.Test_Data.Tests is
                  Message   => "Boolean value mismatch (1)");
 
          Assert (Condition => Bool_Value
-                 (Backtrace => Backtrace,
+                 (Backtrace   => Backtrace,
                   Node_Access => Node_Access,
-                  Node   => Muxml.Utils.Get_Element
-                    (Doc   => Data.Doc,
-                     XPath => "/system/expressions/expression"
-                     & "[@name='iommu_disabled']/not/variable")),
+                  Node        => Muxml.Utils.Get_Element
+                     (Doc   => Data.Doc,
+                      XPath => "/system/expressions/expression"
+                         & "[@name='iommu_disabled']/not/variable")),
                  Message   => "Boolean value mismatch (2)");
       end Positive_Test;
    begin
@@ -389,11 +389,11 @@ package body Mutools.Expressions.Test_Data.Tests is
 
       procedure Invalid_Integer
       is
-         Impl : DOM.Core.DOM_Implementation;
-         Data : Muxml.XML_Data_Type;
-         Node : DOM.Core.Node;
-         Backtrace : String_Vector.Vector;
-         Node_Access :  Access_Hashmaps_Type;
+         Impl        : DOM.Core.DOM_Implementation;
+         Data        : Muxml.XML_Data_Type;
+         Node        : DOM.Core.Node;
+         Backtrace   : String_Vector.Vector;
+         Node_Access : Access_Hashmaps_Type;
       begin
          Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 
@@ -407,9 +407,9 @@ package body Mutools.Expressions.Test_Data.Tests is
          declare
             Dummy : Integer;
          begin
-            Dummy := Int_Value (Backtrace => Backtrace,
+            Dummy := Int_Value (Backtrace   => Backtrace,
                                 Node_Access => Node_Access,
-                                Node   => Node);
+                                Node        => Node);
             Assert (Condition => False,
                     Message   => "Exception expected");
 
@@ -425,9 +425,9 @@ package body Mutools.Expressions.Test_Data.Tests is
 
       procedure Positive_Test
       is
-         Data : Muxml.XML_Data_Type;
-         Backtrace : String_Vector.Vector;
-         Node_Access :  Access_Hashmaps_Type;
+         Data        : Muxml.XML_Data_Type;
+         Backtrace   : String_Vector.Vector;
+         Node_Access : Access_Hashmaps_Type;
       begin
          Muxml.Parse
            (Data => Data,
@@ -439,20 +439,20 @@ package body Mutools.Expressions.Test_Data.Tests is
              Node_Access => Node_Access);
 
          Assert (Condition => 4 = Int_Value
-                 (Backtrace => Backtrace,
+                 (Backtrace   => Backtrace,
                   Node_Access => Node_Access,
-                  Node   => Muxml.Utils.Get_Element
-                    (Doc   => Data.Doc,
-                     XPath => "/system/expressions/expression"
-                     & "[@name='session2_enabled']/gt/variable")),
+                  Node        => Muxml.Utils.Get_Element
+                     (Doc   => Data.Doc,
+                      XPath => "/system/expressions/expression"
+                         & "[@name='session2_enabled']/gt/variable")),
                  Message   => "Integer value mismatch (1)");
          Assert (Condition => 1 = Int_Value
-                 (Backtrace => Backtrace,
+                 (Backtrace   => Backtrace,
                   Node_Access => Node_Access,
-                  Node   => Muxml.Utils.Get_Element
-                    (Doc   => Data.Doc,
-                     XPath => "/system/expressions/expression"
-                     & "[@name='session2_enabled']/gt/integer")),
+                  Node        => Muxml.Utils.Get_Element
+                     (Doc   => Data.Doc,
+                      XPath => "/system/expressions/expression"
+                         & "[@name='session2_enabled']/gt/integer")),
                  Message   => "Integer value mismatch (2)");
       end Positive_Test;
    begin
@@ -476,8 +476,8 @@ package body Mutools.Expressions.Test_Data.Tests is
 
       procedure Positive_Test
       is
-         Data : Muxml.XML_Data_Type;
-         Backtrace : String_Vector.Vector;
+         Data        : Muxml.XML_Data_Type;
+         Backtrace   : String_Vector.Vector;
          Node_Access :  Access_Hashmaps_Type;
       begin
          Muxml.Parse (Data => Data,
@@ -489,20 +489,20 @@ package body Mutools.Expressions.Test_Data.Tests is
              Node_Access => Node_Access);
 
          Assert (Condition => "ram" = String_Value
-                 (Backtrace => Backtrace,
-                  Node_Access => Node_Access,
-                  Node   => Muxml.Utils.Get_Element
-                    (Doc   => Data.Doc,
-                     XPath => "/system/expressions/expression"
-                     & "[@name='compositeName']/concatenation/variable")),
+                    (Backtrace   => Backtrace,
+                     Node_Access => Node_Access,
+                     Node        => Muxml.Utils.Get_Element
+                        (Doc   => Data.Doc,
+                         XPath => "/system/expressions/expression"
+                            & "[@name='compositeName']/concatenation/variable")),
                  Message   => "Integer value mismatch (1)");
          Assert (Condition => "1" = String_Value
-                 (Backtrace => Backtrace,
-                  Node_Access => Node_Access,
-                  Node   => Muxml.Utils.Get_Element
-                    (Doc   => Data.Doc,
-                     XPath => "/system/expressions/expression"
-                     & "[@name='compositeName']/concatenation/string")),
+                    (Backtrace   => Backtrace,
+                     Node_Access => Node_Access,
+                     Node        => Muxml.Utils.Get_Element
+                        (Doc   => Data.Doc,
+                         XPath => "/system/expressions/expression"
+                            & "[@name='compositeName']/concatenation/string")),
                  Message   => "Integer value mismatch (2)");
       end Positive_Test;
 
@@ -510,9 +510,9 @@ package body Mutools.Expressions.Test_Data.Tests is
 
       procedure Invalid_String
       is
-         Data : Muxml.XML_Data_Type;
-         Backtrace : String_Vector.Vector;
-         Node_Access :  Access_Hashmaps_Type;
+         Data        : Muxml.XML_Data_Type;
+         Backtrace   : String_Vector.Vector;
+         Node_Access : Access_Hashmaps_Type;
       begin
           Muxml.Parse (Data => Data,
                        Kind => Muxml.None,
@@ -530,9 +530,9 @@ package body Mutools.Expressions.Test_Data.Tests is
             Dummy : Ada.Strings.Unbounded.Unbounded_String;
          begin
             Dummy :=  Ada.Strings.Unbounded.To_Unbounded_String
-                         (String_Value (Backtrace => Backtrace,
+                         (String_Value (Backtrace   => Backtrace,
                                         Node_Access => Node_Access,
-                                        Node   => Node));
+                                        Node        => Node));
             Assert (Condition => False,
                     Message   => "Exception expected");
          exception
@@ -552,9 +552,9 @@ package body Mutools.Expressions.Test_Data.Tests is
          begin
 
             Dummy :=  Ada.Strings.Unbounded.To_Unbounded_String
-                         (String_Value (Backtrace => Backtrace,
+                         (String_Value (Backtrace   => Backtrace,
                                         Node_Access => Node_Access,
-                                        Node   => Node));
+                                        Node        => Node));
             Assert (Condition => False,
                     Message   => "Exception expected");
          exception
@@ -597,7 +597,7 @@ package body Mutools.Expressions.Test_Data.Tests is
              Node_Access => Node_Access);
 
       -- Positive_Test: Expression_Case
-      Assert (Condition =>  Evaluate_Boolean
+      Assert (Condition => Evaluate_Boolean
                  (Node        => Muxml.Utils.Get_Element
                      (Doc   => Data.Doc,
                       XPath => "/system/expressions/expression[@name='case2_bool']"),
@@ -967,9 +967,9 @@ package body Mutools.Expressions.Test_Data.Tests is
 
       procedure Gt_Missing_Child
       is
-         Data : Muxml.XML_Data_Type;
-         Backtrace : String_Vector.Vector;
-         Node_Access :  Access_Hashmaps_Type;
+         Data        : Muxml.XML_Data_Type;
+         Backtrace   : String_Vector.Vector;
+         Node_Access : Access_Hashmaps_Type;
       begin
          Muxml.Parse
             (Data => Data,
@@ -988,12 +988,12 @@ package body Mutools.Expressions.Test_Data.Tests is
                (Data        => Data,
                 Node_Access => Node_Access);
             Dummy := Boolean_Expression
-               (Backtrace => Backtrace,
+               (Backtrace   => Backtrace,
                 Node_Access => Node_Access,
-                Node   => Muxml.Utils.Get_Element
-                (Doc   => Data.Doc,
-                 XPath => "/system/expressions/expression"
-                 & "[@name='session2_enabled']/gt"));
+                Node        => Muxml.Utils.Get_Element
+                   (Doc   => Data.Doc,
+                    XPath => "/system/expressions/expression"
+                       & "[@name='session2_enabled']/gt"));
             Assert (Condition => False,
                     Message   => "Exception expected (missing child gt)");
 
@@ -1010,9 +1010,9 @@ package body Mutools.Expressions.Test_Data.Tests is
 
       procedure Lt_Missing_Child
       is
-         Data : Muxml.XML_Data_Type;
-         Backtrace : String_Vector.Vector;
-         Node_Access :  Access_Hashmaps_Type;
+         Data        : Muxml.XML_Data_Type;
+         Backtrace   : String_Vector.Vector;
+         Node_Access : Access_Hashmaps_Type;
       begin
          Muxml.Parse
             (Data => Data,
@@ -1031,12 +1031,12 @@ package body Mutools.Expressions.Test_Data.Tests is
             Dummy : Boolean;
          begin
             Dummy := Boolean_Expression
-               (Backtrace => Backtrace,
+               (Backtrace   => Backtrace,
                 Node_Access => Node_Access,
-                Node   => Muxml.Utils.Get_Element
-                (Doc   => Data.Doc,
-                 XPath => "/system/expressions/expression"
-                 & "[@name='is_below_max']/lt"));
+                Node        => Muxml.Utils.Get_Element
+                   (Doc   => Data.Doc,
+                    XPath => "/system/expressions/expression"
+                       & "[@name='is_below_max']/lt"));
             Assert (Condition => False,
                     Message   => "Exception expected (missing child lt)");
 
@@ -1053,9 +1053,9 @@ package body Mutools.Expressions.Test_Data.Tests is
 
       procedure Not_Missing_Child
       is
-         Data : Muxml.XML_Data_Type;
-         Backtrace : String_Vector.Vector;
-         Node_Access :  Access_Hashmaps_Type;
+         Data        : Muxml.XML_Data_Type;
+         Backtrace   : String_Vector.Vector;
+         Node_Access : Access_Hashmaps_Type;
       begin
          Muxml.Parse
             (Data => Data,
@@ -1074,12 +1074,12 @@ package body Mutools.Expressions.Test_Data.Tests is
             Dummy : Boolean;
          begin
             Dummy := Boolean_Expression
-               (Backtrace => Backtrace,
+               (Backtrace   => Backtrace,
                 Node_Access => Node_Access,
-                Node   => Muxml.Utils.Get_Element
-                (Doc   => Data.Doc,
-                 XPath => "/system/expressions/expression"
-                 & "[@name='iommu_disabled']/not"));
+                Node        => Muxml.Utils.Get_Element
+                   (Doc   => Data.Doc,
+                    XPath => "/system/expressions/expression"
+                       & "[@name='iommu_disabled']/not"));
             Assert (Condition => False,
                     Message   => "Exception expected (missing child not)");
 
@@ -1096,9 +1096,9 @@ package body Mutools.Expressions.Test_Data.Tests is
 
       procedure Missing_Operator
       is
-         Data : Muxml.XML_Data_Type;
-         Backtrace : String_Vector.Vector;
-         Node_Access :  Access_Hashmaps_Type;
+         Data        : Muxml.XML_Data_Type;
+         Backtrace   : String_Vector.Vector;
+         Node_Access : Access_Hashmaps_Type;
       begin
          Muxml.Parse
             (Data => Data,
@@ -1117,12 +1117,12 @@ package body Mutools.Expressions.Test_Data.Tests is
             Dummy : Boolean;
          begin
             Dummy := Boolean_Expression
-               (Backtrace => Backtrace,
+               (Backtrace   => Backtrace,
                 Node_Access => Node_Access,
-                Node   => Muxml.Utils.Get_Element
-                (Doc   => Data.Doc,
-                 XPath => "/system/expressions/expression"
-                 & "[@name='session2_enabled']"));
+                Node        => Muxml.Utils.Get_Element
+                   (Doc   => Data.Doc,
+                    XPath => "/system/expressions/expression"
+                       & "[@name='session2_enabled']"));
             Assert (Condition => False,
                     Message   => "Exception expected (missing op)");
 
@@ -1138,9 +1138,9 @@ package body Mutools.Expressions.Test_Data.Tests is
 
       procedure Invalid_Expression_Term
       is
-         Data : Muxml.XML_Data_Type;
-         Backtrace : String_Vector.Vector;
-         Node_Access :  Access_Hashmaps_Type;
+         Data        : Muxml.XML_Data_Type;
+         Backtrace   : String_Vector.Vector;
+         Node_Access : Access_Hashmaps_Type;
       begin
          Muxml.Parse
             (Data => Data,
@@ -1167,9 +1167,9 @@ package body Mutools.Expressions.Test_Data.Tests is
                 (Doc      => Data.Doc,
                  Tag_Name => "invalid_term"));
 
-            Dummy := Boolean_Expression (Backtrace => Backtrace,
+            Dummy := Boolean_Expression (Backtrace   => Backtrace,
                                          Node_Access => Node_Access,
-                                         Node   => Expr);
+                                         Node        => Expr);
             Assert (Condition => False,
                     Message   => "Exception expected (invalid term)");
 
@@ -1187,9 +1187,9 @@ package body Mutools.Expressions.Test_Data.Tests is
 
       procedure Invalid_Expression_Evaluation
       is
-         Data : Muxml.XML_Data_Type;
-         Backtrace : String_Vector.Vector;
-         Node_Access :  Access_Hashmaps_Type;
+         Data        : Muxml.XML_Data_Type;
+         Backtrace   : String_Vector.Vector;
+         Node_Access : Access_Hashmaps_Type;
       begin
          Muxml.Parse
             (Data => Data,
@@ -1208,12 +1208,12 @@ package body Mutools.Expressions.Test_Data.Tests is
             Dummy : Boolean;
          begin
             Dummy := Boolean_Expression
-               (Backtrace => Backtrace,
+               (Backtrace   => Backtrace,
                 Node_Access => Node_Access,
-                Node   => Muxml.Utils.Get_Element
-                (Doc   => Data.Doc,
-                 XPath => "/system/expressions/expression/and/expression"
-                 & "[@name='sub_expression']"));
+                Node        => Muxml.Utils.Get_Element
+                   (Doc   => Data.Doc,
+                    XPath => "/system/expressions/expression/and/expression"
+                       & "[@name='sub_expression']"));
             Assert (Condition => False,
                     Message   => "Exception expected (invalid expr eval)");
 
@@ -1231,9 +1231,9 @@ package body Mutools.Expressions.Test_Data.Tests is
 
       procedure Positive_Test
       is
-         Data : Muxml.XML_Data_Type;
-         Backtrace : String_Vector.Vector;
-         Node_Access :  Access_Hashmaps_Type;
+         Data        : Muxml.XML_Data_Type;
+         Backtrace   : String_Vector.Vector;
+         Node_Access : Access_Hashmaps_Type;
       begin
          Muxml.Parse
             (Data => Data,
@@ -1244,28 +1244,28 @@ package body Mutools.Expressions.Test_Data.Tests is
              Node_Access => Node_Access);
 
          Assert (Condition => Boolean_Expression
-                 (Backtrace => Backtrace,
-                  Node_Access => Node_Access,
-                  Node   => Muxml.Utils.Get_Element
-                  (Doc   => Data.Doc,
-                   XPath => "/system/expressions/expression"
-                   & "[@name='session2_enabled']")),
+                    (Backtrace   => Backtrace,
+                     Node_Access => Node_Access,
+                     Node        => Muxml.Utils.Get_Element
+                        (Doc   => Data.Doc,
+                         XPath => "/system/expressions/expression"
+                            & "[@name='session2_enabled']")),
                  Message   => "Expression value mismatch (1)");
          Assert (Condition => not Boolean_Expression
-                 (Backtrace => Backtrace,
-                  Node_Access => Node_Access,
-                  Node   => Muxml.Utils.Get_Element
-                  (Doc   => Data.Doc,
-                   XPath => "/system/expressions/expression"
-                   & "[@name='session2_disabled']")),
+                    (Backtrace   => Backtrace,
+                     Node_Access => Node_Access,
+                     Node        => Muxml.Utils.Get_Element
+                        (Doc   => Data.Doc,
+                         XPath => "/system/expressions/expression"
+                            & "[@name='session2_disabled']")),
                  Message   => "Expression value mismatch (2)");
          Assert (Condition => Boolean_Expression
-                 (Backtrace => Backtrace,
-                  Node_Access => Node_Access,
-                  Node   => Muxml.Utils.Get_Element
-                  (Doc   => Data.Doc,
-                   XPath => "/system/expressions/expression"
-                   & "[@name='int_values']")),
+                    (Backtrace   => Backtrace,
+                     Node_Access => Node_Access,
+                     Node        => Muxml.Utils.Get_Element
+                        (Doc   => Data.Doc,
+                         XPath => "/system/expressions/expression"
+                            & "[@name='int_values']")),
                  Message   => "Expression value mismatch (3)");
 
          Muxml.Utils.Set_Attribute
@@ -1281,20 +1281,20 @@ package body Mutools.Expressions.Test_Data.Tests is
             (Data        => Data,
              Node_Access => Node_Access);
          Assert (Condition => not Boolean_Expression
-                 (Backtrace => Backtrace,
-                  Node_Access => Node_Access,
-                  Node   => Muxml.Utils.Get_Element
-                  (Doc   => Data.Doc,
-                   XPath => "/system/expressions/expression"
-                   & "[@name='session2_enabled']")),
+                    (Backtrace   => Backtrace,
+                     Node_Access => Node_Access,
+                     Node        => Muxml.Utils.Get_Element
+                        (Doc   => Data.Doc,
+                         XPath => "/system/expressions/expression"
+                            & "[@name='session2_enabled']")),
                  Message   => "Expression value mismatch (4)");
          Assert (Condition => Boolean_Expression
-                 (Backtrace => Backtrace,
-                  Node_Access => Node_Access,
-                  Node   => Muxml.Utils.Get_Element
-                  (Doc   => Data.Doc,
-                   XPath => "/system/expressions/expression"
-                   & "[@name='session2_disabled']")),
+                    (Backtrace   => Backtrace,
+                     Node_Access => Node_Access,
+                     Node        => Muxml.Utils.Get_Element
+                        (Doc   => Data.Doc,
+                         XPath => "/system/expressions/expression"
+                            & "[@name='session2_disabled']")),
                  Message   => "Expression value mismatch (5)");
       end Positive_Test;
    begin
@@ -1324,9 +1324,9 @@ package body Mutools.Expressions.Test_Data.Tests is
 
       procedure Positive_Test
       is
-         Data : Muxml.XML_Data_Type;
-         Backtrace : String_Vector.Vector;
-         Node_Access :  Access_Hashmaps_Type;
+         Data        : Muxml.XML_Data_Type;
+         Backtrace   : String_Vector.Vector;
+         Node_Access : Access_Hashmaps_Type;
       begin
          Muxml.Parse (Data => Data,
                       Kind => Muxml.None,
@@ -1336,18 +1336,18 @@ package body Mutools.Expressions.Test_Data.Tests is
              Node_Access => Node_Access);
 
          Assert (Condition => "start_mynamemynamefoobar" = String_Expression
-                   (Backtrace => Backtrace,
-                    Node_Access => Node_Access,
-                    Node   => Muxml.Utils.Get_Element
-                       (Doc   => Data.Doc,
-                        XPath => "/system/expressions/expression"
-                        & "[@name='myconcatenation']")),
+                    (Backtrace   => Backtrace,
+                     Node_Access => Node_Access,
+                     Node        => Muxml.Utils.Get_Element
+                        (Doc   => Data.Doc,
+                         XPath => "/system/expressions/expression"
+                            & "[@name='myconcatenation']")),
                  Message   => "Expression value mismatch");
 
          Assert (Condition => "/path/../to/*[@name='stuff']//node" = String_Expression
-                    (Backtrace => Backtrace,
+                    (Backtrace   => Backtrace,
                      Node_Access => Node_Access,
-                     Node   => Muxml.Utils.Get_Element
+                     Node        => Muxml.Utils.Get_Element
                         (Doc   => Data.Doc,
                          XPath => "/system/expressions/expression"
                             & "[@name='evalStringExpr2']")),
@@ -1358,9 +1358,9 @@ package body Mutools.Expressions.Test_Data.Tests is
 
       procedure Concat_No_Child
       is
-         Data : Muxml.XML_Data_Type;
-         Backtrace : String_Vector.Vector;
-         Node_Access :  Access_Hashmaps_Type;
+         Data        : Muxml.XML_Data_Type;
+         Backtrace   : String_Vector.Vector;
+         Node_Access : Access_Hashmaps_Type;
       begin
          Muxml.Parse (Data => Data,
                       Kind => Muxml.None,
@@ -1400,9 +1400,9 @@ package body Mutools.Expressions.Test_Data.Tests is
 
       procedure Concat_One_Child
       is
-         Data : Muxml.XML_Data_Type;
-         Backtrace : String_Vector.Vector;
-         Node_Access :  Access_Hashmaps_Type;
+         Data        : Muxml.XML_Data_Type;
+         Backtrace   : String_Vector.Vector;
+         Node_Access : Access_Hashmaps_Type;
       begin
          Muxml.Parse (Data => Data,
                       Kind => Muxml.None,
@@ -1424,12 +1424,12 @@ package body Mutools.Expressions.Test_Data.Tests is
          begin
             Dummy :=  Ada.Strings.Unbounded.To_Unbounded_String
                (String_Expression
-                   (Backtrace => Backtrace,
+                   (Backtrace   => Backtrace,
                     Node_Access => Node_Access,
-                    Node   => Muxml.Utils.Get_Element
-                                (Doc   => Data.Doc,
-                                 XPath => "/system/expressions/expression"
-                                          & "[@name='compositeName']")));
+                    Node        => Muxml.Utils.Get_Element
+                       (Doc   => Data.Doc,
+                        XPath => "/system/expressions/expression"
+                           & "[@name='compositeName']")));
             Assert (Condition => False,
                     Message   => "Exception expected");
          exception
@@ -1446,9 +1446,9 @@ package body Mutools.Expressions.Test_Data.Tests is
 
       procedure Eval_String_Ref_To_Empty
       is
-         Data : Muxml.XML_Data_Type;
-         Backtrace : String_Vector.Vector;
-         Node_Access :  Access_Hashmaps_Type;
+         Data        : Muxml.XML_Data_Type;
+         Backtrace   : String_Vector.Vector;
+         Node_Access : Access_Hashmaps_Type;
       begin
          Muxml.Parse (Data => Data,
                       Kind => Muxml.None,
@@ -1468,9 +1468,9 @@ package body Mutools.Expressions.Test_Data.Tests is
          begin
             Dummy :=  Ada.Strings.Unbounded.To_Unbounded_String
                (String_Expression
-                   (Backtrace => Backtrace,
+                   (Backtrace   => Backtrace,
                     Node_Access => Node_Access,
-                    Node   => Muxml.Utils.Get_Element
+                    Node        => Muxml.Utils.Get_Element
                        (Doc   => Data.Doc,
                         XPath => "/system/expressions/expression"
                            & "[@name='evalStringExpr1']")));
@@ -1489,9 +1489,9 @@ package body Mutools.Expressions.Test_Data.Tests is
 
       procedure No_String_Expr
       is
-         Data : Muxml.XML_Data_Type;
-         Backtrace : String_Vector.Vector;
-         Node_Access :  Access_Hashmaps_Type;
+         Data        : Muxml.XML_Data_Type;
+         Backtrace   : String_Vector.Vector;
+         Node_Access : Access_Hashmaps_Type;
       begin
          Muxml.Parse (Data => Data,
                       Kind => Muxml.None,
@@ -1505,9 +1505,9 @@ package body Mutools.Expressions.Test_Data.Tests is
          begin
             Dummy :=  Ada.Strings.Unbounded.To_Unbounded_String
                (String_Expression
-                   (Backtrace => Backtrace,
+                   (Backtrace   => Backtrace,
                     Node_Access => Node_Access,
-                    Node   => Muxml.Utils.Get_Element
+                    Node        => Muxml.Utils.Get_Element
                        (Doc   => Data.Doc,
                         XPath => "/system/expressions/expression"
                            & "[@name='session2_enabled']")));
@@ -1544,7 +1544,7 @@ package body Mutools.Expressions.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       Data        : Muxml.XML_Data_Type;
-      Node_Access :  Access_Hashmaps_Type;
+      Node_Access : Access_Hashmaps_Type;
       Node        : DOM.Core.Node;
    begin
       -- Positive test
@@ -1560,25 +1560,25 @@ package body Mutools.Expressions.Test_Data.Tests is
           XPath => "/system/expressions/expression"
              & "[@name='foobar']");
       Assert (Condition => Node = Get_Defining_Node
-                 (Var_Name => "foobar",
+                 (Var_Name    => "foobar",
                   Node_Access => Node_Access),
-              Message => "Node mismatch.");
+              Message   => "Node mismatch.");
 
       Node := Muxml.Utils.Get_Element
          (Doc   => Data.Doc,
           XPath => "/system/config/string[@name='name1']");
       Assert (Condition => Node = Get_Defining_Node
-                 (Var_Name => "name1",
+                 (Var_Name    => "name1",
                   Node_Access => Node_Access),
-              Message => "Node mismatch.");
+              Message   => "Node mismatch.");
 
       -- negative test
       Assert (Condition => Node = Get_Defining_Node
-                 (Var_Name => "name9",
+                 (Var_Name    => "name9",
                   Node_Access => Node_Access),
-              Message => "Node mismatch.");
+              Message   => "Node mismatch.");
       Assert (Condition => False,
-              Message => "Exception expected");
+              Message   => "Exception expected");
    exception
       when E : Muxml.Validation_Error =>
          Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
@@ -1598,8 +1598,8 @@ package body Mutools.Expressions.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      Data        : Muxml.XML_Data_Type;
-      Node        : DOM.Core.Node;
+      Data : Muxml.XML_Data_Type;
+      Node : DOM.Core.Node;
 
    begin
       -- Positive tests
@@ -1610,27 +1610,23 @@ package body Mutools.Expressions.Test_Data.Tests is
       Node := Muxml.Utils.Get_Element
          (Doc   => Data.Doc,
           XPath => "/system/expressions/expression[@name='myconcatenation']");
-      Assert (Condition => String_Expr_Type = Get_Expr_Type
-                 (Expr => Node),
-              Message => "Type mismatch.");
+      Assert (Condition => String_Expr_Type = Get_Expr_Type (Expr => Node),
+              Message   => "Type mismatch.");
       Node := Muxml.Utils.Get_Element
          (Doc   => Data.Doc,
           XPath => "/system/expressions/expression[@name='evalStringExpr1']");
-      Assert (Condition => String_Expr_Type = Get_Expr_Type
-                 (Expr => Node),
-              Message => "Type mismatch.");
+      Assert (Condition => String_Expr_Type = Get_Expr_Type (Expr => Node),
+              Message   => "Type mismatch.");
       Node := Muxml.Utils.Get_Element
          (Doc   => Data.Doc,
           XPath => "/system/expressions/expression[@name='case2_bool']");
-      Assert (Condition => Case_Expr_Type = Get_Expr_Type
-                 (Expr => Node),
-              Message => "Type mismatch.");
+      Assert (Condition => Case_Expr_Type = Get_Expr_Type (Expr => Node),
+              Message   => "Type mismatch.");
       Node := Muxml.Utils.Get_Element
          (Doc   => Data.Doc,
           XPath => "/system/expressions/expression[@name='int_values_2']");
-      Assert (Condition => Boolean_Expr_Type = Get_Expr_Type
-                 (Expr => Node),
-              Message => "Type mismatch.");
+      Assert (Condition => Boolean_Expr_Type = Get_Expr_Type (Expr => Node),
+              Message   => "Type mismatch.");
 
       --negative tests
       declare
@@ -1641,7 +1637,7 @@ package body Mutools.Expressions.Test_Data.Tests is
              XPath => "/system/expressions");
          Dummy := Get_Expr_Type (Expr => Node);
          Assert (Condition => False,
-                 Message => "Exception expected");
+                 Message   => "Exception expected");
       exception
          when E : Invalid_Expression =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
@@ -1657,7 +1653,7 @@ package body Mutools.Expressions.Test_Data.Tests is
                 & "concatenation/variable[@name='name1']");
          Dummy := Get_Expr_Type (Expr => Node);
          Assert (Condition => False,
-                 Message => "Exception expected");
+                 Message   => "Exception expected");
       exception
          when E : Invalid_Expression =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
@@ -1679,8 +1675,8 @@ package body Mutools.Expressions.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      Data        : Muxml.XML_Data_Type;
-      Node        : DOM.Core.Node;
+      Data : Muxml.XML_Data_Type;
+      Node : DOM.Core.Node;
 
    begin
       -- Positive tests
@@ -1712,8 +1708,6 @@ package body Mutools.Expressions.Test_Data.Tests is
                       XPath => "/system/config/string[@name='name1']"),
                   N      => 1),
               Message => "Node mismatch.");
-
-
 --  begin read only
    end Test_Get_Nth_Child_Node;
 --  end read only
@@ -1729,7 +1723,7 @@ package body Mutools.Expressions.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       Data        : Muxml.XML_Data_Type;
-      Node_Access :  Access_Hashmaps_Type;
+      Node_Access : Access_Hashmaps_Type;
       Backtrace   : String_Vector.Vector;
       Node        : DOM.Core.Node;
    begin
@@ -1740,7 +1734,6 @@ package body Mutools.Expressions.Test_Data.Tests is
             (Data        => Data,
              Node_Access => Node_Access);
 
-
       -- positive tests
       Node := Muxml.Utils.Get_Element
             (Doc   => Data.Doc,
@@ -1750,9 +1743,9 @@ package body Mutools.Expressions.Test_Data.Tests is
           Backtrace   => Backtrace,
           Node_Access => Node_Access);
       Assert (Condition => Node_Access.Output_Boolean.Contains ("session2_enabled"),
-              Message => "Missing containment in output");
+              Message   => "Missing containment in output");
       Assert (Condition => Node_Access.Output_Boolean ("session2_enabled") = True,
-              Message => "Value mismatch.");
+              Message   => "Value mismatch.");
 
       Node := Muxml.Utils.Get_Element
             (Doc   => Data.Doc,
@@ -1762,9 +1755,9 @@ package body Mutools.Expressions.Test_Data.Tests is
           Backtrace   => Backtrace,
           Node_Access => Node_Access);
       Assert (Condition => Node_Access.Output_String.Contains ("name3"),
-              Message => "Missing containment in output");
+              Message   => "Missing containment in output");
       Assert (Condition => Node_Access.Output_String ("name3") = "myname",
-              Message => "Value mismatch.");
+              Message   => "Value mismatch.");
 
       Node := Muxml.Utils.Get_Element
          (Doc   => Data.Doc,
@@ -1777,9 +1770,9 @@ package body Mutools.Expressions.Test_Data.Tests is
           Backtrace   => Backtrace,
           Node_Access => Node_Access);
       Assert (Condition => Node_Access.Output_Integer.Contains ("session_count"),
-              Message => "Missing containment in output");
+              Message   => "Missing containment in output");
       Assert (Condition => Node_Access.Output_Integer ("session_count") = 4,
-              Message => "Value mismatch.");
+              Message   => "Value mismatch.");
 
       --- negative test
       -- attempt to expand text-node
@@ -1817,7 +1810,7 @@ package body Mutools.Expressions.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      Backtrace   : String_Vector.Vector;
+      Backtrace : String_Vector.Vector;
    begin
       -- add two elements to empty backtrace
       Add_To_Backtrace (Backtrace => Backtrace, Name => "n1");
@@ -1834,12 +1827,12 @@ package body Mutools.Expressions.Test_Data.Tests is
       Assert (Condition => String_Vector.Contains
                  (Container => Backtrace,
                   Item      => "n3"),
-              Message => "Containment mismatch");
+              Message   => "Containment mismatch");
 
       -- trigger exception by adding an element already contained
       Add_To_Backtrace (Backtrace => Backtrace, Name => "n1");
       Assert (Condition => False,
-              Message => "Exception expected");
+              Message   => "Exception expected");
 
    exception
       when E : Invalid_Expression =>
@@ -1878,21 +1871,21 @@ package body Mutools.Expressions.Test_Data.Tests is
          (Node_Access      => Node_Access,
           Config_And_Exprs => Config_And_Exprs);
       Assert (Condition => Node_Access.Input.Contains ("feature_enabled"),
-              Message => "Containment mismatch");
+              Message   => "Containment mismatch");
       Assert (Condition => Node_Access.Input.Contains ("dependent_feature"),
-              Message => "Containment mismatch");
+              Message   => "Containment mismatch");
       Assert (Condition => Node_Access.Input.Contains ("scount"),
-              Message => "Containment mismatch");
+              Message   => "Containment mismatch");
       Assert (Condition => Node_Access.Input.Contains ("session_count"),
-              Message => "Containment mismatch");
+              Message   => "Containment mismatch");
 
       -- check that Node_Access.Output is empty
       Assert (Condition => Node_Access.Output_Boolean.Is_Empty,
-              Message => "Containment mismatch");
+              Message   => "Containment mismatch");
       Assert (Condition => Node_Access.Output_Integer.Is_Empty,
-              Message => "Containment mismatch");
+              Message   => "Containment mismatch");
       Assert (Condition => Node_Access.Output_String.Is_Empty,
-              Message => "Containment mismatch");
+              Message   => "Containment mismatch");
 
       -- attempt to add variable with empty name
       Muxml.Utils.Set_Attribute
@@ -1907,7 +1900,7 @@ package body Mutools.Expressions.Test_Data.Tests is
          (Node_Access      => Node_Access,
           Config_And_Exprs => Config_And_Exprs);
       Assert (Condition => False,
-              Message => "Exception expected");
+              Message   => "Exception expected");
    exception
       when E : Invalid_Expression =>
          Assert (Condition => Ada.Exceptions.Exception_Message (X => E)

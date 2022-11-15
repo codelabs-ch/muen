@@ -48,9 +48,10 @@ package body Mutools.XML_Templates.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      Data   : Muxml.XML_Data_Type;
+      Data    : Muxml.XML_Data_Type;
       Output1 : constant String := "obj/output_system_policy_templateAmend.xml";
       Output2 : constant String := "obj/output_test_policy_src.xml";
+
       procedure Positive_Test
       is
       begin
@@ -142,8 +143,9 @@ package body Mutools.XML_Templates.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       use type DOM.Core.Node;
-      Data, Output   : Muxml.XML_Data_Type;
-      Node   : DOM.Core.Node;
+
+      Data, Output : Muxml.XML_Data_Type;
+      Node         : DOM.Core.Node;
    begin
       -- positive test: parse some input, choose a node,
       --   create document, write, compare to fixed file
@@ -435,7 +437,7 @@ package body Mutools.XML_Templates.Test_Data.Tests is
 
          -- execute test
          Prefix_Variables (Root_Node   => Root_Node,
-                           Config_Node =>  New_Config,
+                           Config_Node => New_Config,
                            Prefix      => "xprex_",
                            Locked_Attr => Locked_Attr);
          Muxml.Write (Data => Template_Doc,
@@ -466,7 +468,7 @@ package body Mutools.XML_Templates.Test_Data.Tests is
       procedure Positive_Test
       is
          Data             : Muxml.XML_Data_Type;
-         Target, Source   :   DOM.Core.Node;
+         Target, Source   : DOM.Core.Node;
          Output_File_Name : constant String
             := "obj/output_adopt_children.xml";
       begin

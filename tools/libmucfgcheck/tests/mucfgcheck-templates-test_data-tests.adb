@@ -62,14 +62,14 @@ package body Mucfgcheck.Templates.Test_Data.Tests is
                        XPath => "//template[@name='oneline_mem_template']"),
           Index => 0);
       DOM.Core.Elements.Set_Attribute
-         (Elem => Node,
-          Name => "name",
+         (Elem  => Node,
+          Name  => "name",
           Value => "big_dev_template");
       Validation_Errors.Clear;
       Name_Uniqueness (XML_Data => Data);
-      Assert (Condition =>  Validation_Errors.Contains
-                               (Msg => "Template names are not unique. "
-                                & "Conflicting value: 'big_dev_template'"),
+      Assert (Condition => Validation_Errors.Contains
+                             (Msg => "Template names are not unique. "
+                                 & "Conflicting value: 'big_dev_template'"),
               Message   => "Exception mismatch");
 
 --  begin read only
@@ -116,9 +116,9 @@ package body Mucfgcheck.Templates.Test_Data.Tests is
 
       Validation_Errors.Clear;
       Template_Integrity (XML_Data => Data);
-      Assert (Condition =>  Validation_Errors.Contains
-                               (Msg => "Found template definition "
-                                       & "with multiple bodies."),
+      Assert (Condition => Validation_Errors.Contains
+                             (Msg => "Found template definition "
+                                 & "with multiple bodies."),
               Message   => "Exception mismatch");
 
       -- negative test: template without body
@@ -132,7 +132,7 @@ package body Mucfgcheck.Templates.Test_Data.Tests is
 
       Validation_Errors.Clear;
       Template_Integrity (XML_Data => Data);
-      Assert (Condition =>  Validation_Errors.Contains
+      Assert (Condition => Validation_Errors.Contains
                               (Msg => "Found template definition without body."),
               Message   => "Exception mismatch");
 
@@ -155,7 +155,7 @@ package body Mucfgcheck.Templates.Test_Data.Tests is
 
       Validation_Errors.Clear;
       Template_Integrity (XML_Data => Data);
-      Assert (Condition =>  Validation_Errors.Contains
+      Assert (Condition => Validation_Errors.Contains
               (Msg => "Found template definition"
                       & " with multiple parameter blocks."),
               Message   => "Exception mismatch");

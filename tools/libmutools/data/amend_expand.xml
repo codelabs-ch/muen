@@ -1,146 +1,136 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <system>
-  <config>
-    <integer name="session_count" value="4"/>
-    <string  name="no_caching" value="UC"/>
-  </config>
+   <config>
+      <integer name="session_count" value="4"/>
+      <string  name="no_caching" value="UC"/>
+   </config>
 
-  <amend xpath="/">
-    <system>
-       <subjects>
-          <subject name="amended_subject"/>
-       </subjects>
-    </system>
-  </amend>
+   <amend xpath="/">
+      <system>
+         <subjects>
+            <subject name="amended_subject"/>
+         </subjects>
+      </system>
+   </amend>
 
+   <hardware>
+      <memory>
+         <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#0000#" size="16#0010_0000#"/>
+         <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
+      </memory>
+      <devices>
+         <device name="ioapic">
+	         <memory caching="UC" name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#"/>
+         </device>
+      </devices>
+   </hardware>
 
+   <platform>
+      <mappings>
+         <aliases>
+	         <alias name="debugconsole" physical="serial_1"/>
+         </aliases>
+         <classes>
+	         <class name="usb">
+	            <device physical="ehci"/>
+	            <device physical="xhci"/>
+	         </class>
+         </classes>
+      </mappings>
+      <kernelDiagnostics type="uart">
+         <device physical="debugconsole">
+	         <ioPort physical="serial"/>
+         </device>
+      </kernelDiagnostics>
 
+      <amend xpath="/system/hardware">
+         <memory>
+            <memoryBlock  allocatable="false" name="System RAM" physicalAddress="16#0000#" size="16#0010_0000#"/>
+            <memoryBlock  allocatable="false" name="System RAM" physicalAddress="16#FFFF#" size="16#0010_0000#"/>
+         </memory>
+      </amend>
+   </platform>
 
-  <hardware>
-     <memory>
-        <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#0000#" size="16#0010_0000#"/>
-        <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
-     </memory>
-    <devices>
-      <device name="ioapic">
-	      <memory caching="UC" name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#"/>
-      </device>
-    </devices>
-  </hardware>
+   <memory>
+      <if value="true" variable="dummy_enabled">
+         <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
+      </if>
+      <memory caching="$no_caching" name="extra_mem" physicalAddress="16#2000#" size="16#1000#"/>
+   </memory>
 
-  <platform>
-     <mappings>
-        <aliases>
-	        <alias name="debugconsole" physical="serial_1"/>
-        </aliases>
-        <classes>
-	        <class name="usb">
-	           <device physical="ehci"/>
-	           <device physical="xhci"/>
-	        </class>
-        </classes>
-     </mappings>
-     <kernelDiagnostics type="uart">
-        <device physical="debugconsole">
-	        <ioPort physical="serial"/>
-        </device>
-     </kernelDiagnostics>
+   <events/>
 
-     <amend xpath="/system/hardware">
-        <memory>
-           <memoryBlock  allocatable="false" name="System RAM" physicalAddress="16#0000#" size="16#0010_0000#"/>
-           <memoryBlock  allocatable="false" name="System RAM" physicalAddress="16#FFFF#" size="16#0010_0000#"/>
-        </memory>
-     </amend>
-  </platform>
+   <components>
+      <component name="linux" profile="linux">
+         <depends>
+            <library ref="my_lib_name"/>
+         </depends>
+         <provides>
+	         <memory executable="true" logical="binary" size="16#1000#" virtualAddress="16#2000#" writable="true">
+	            <file filename="linux_bin" offset="none"/>
+	         </memory>
 
-  <memory>
-     <if value="true" variable="dummy_enabled">
-        <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
-     </if>
-     <memory caching="$no_caching" name="extra_mem" physicalAddress="16#2000#" size="16#1000#"/>
-  </memory>
+         </provides>
+         <amend xpath="./depends">
+            <library ref="amended_lib_entry"/>
+         </amend>
+      </component>
+   </components>
 
-  <events/>
+   <amend xpath="/system/subjects/subject[@name='linux1']">
+      <bootparams>opt=1</bootparams>
+   </amend>
+   <amend xpath="/system/subjects/subject[@name='linux2']">
+      <bootparams>opt=2</bootparams>
+   </amend>
 
-  <components>
-     <component name="linux" profile="linux">
-        <depends>
-           <library ref="my_lib_name"/>
-        </depends>
-        <provides>
-	        <memory executable="true" logical="binary" size="16#1000#" virtualAddress="16#2000#" writable="true">
-	           <file filename="linux_bin" offset="none"/>
-	        </memory>
+   <subjects>
+      <subject name="linux1">
+         <bootparams>id=1</bootparams>
+         <devices>
+	         <device logical="usb" physical="usb_conitroller_1">
+	         </device>
+         </devices>
 
-        </provides>
-        <amend xpath="./depends">
-           <library ref="amended_lib_entry"/>
-        </amend>
-     </component>
-  </components>
+         <memory>
+	         <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+	         <memory executable="false" logical="extra_mem" physical="extra_mem" virtualAddress="16#f000_0000#" writable="true"/>
+         </memory>
+         <events/>
+         <component ref="linux"/>
+      </subject>
+      <subject name="linux2"/>
+      <subject name="linux3">
+         <amend xpath=".">
+            <events>
+               <source>
+                  <group name="vmx_exit">
+                     <default physical="system_panic">
+                        <system_panic/>
+                     </default>
+                  </group>
+               </source>
+            </events>
+            <!-- this comment will be gone -->
+            <component ref="foo"/>
+            <bootparams>amended=true</bootparams>
+         </amend>
 
-  <amend xpath="/system/subjects/subject[@name='linux1']">
-     <bootparams>opt=1</bootparams>
-  </amend>
-  <amend xpath="/system/subjects/subject[@name='linux2']">
-     <bootparams>opt=2</bootparams>
-  </amend>
+         <devices>
+            <device logical="car" physical="car_1234"/>
+            <device logical="bus" physical="bus_1234"/>
+         </devices>
+         <events>
+            <source/>
+         </events>
+      </subject>
+   </subjects>
 
-  <subjects>
-     <subject name="linux1">
-
-
-        <bootparams>id=1</bootparams>
-        <devices>
-	        <device logical="usb" physical="usb_conitroller_1">
-	        </device>
-        </devices>
-
-        <memory>
-	        <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
-	        <memory executable="false" logical="extra_mem" physical="extra_mem" virtualAddress="16#f000_0000#" writable="true"/>
-
-        </memory>
-
-
-        <events/>
-        <component ref="linux"/>
-     </subject>
-     <subject name="linux2"/>
-     <subject name="linux3">
-        <amend xpath=".">
-           <events>
-              <source>
-                 <group name="vmx_exit">
-                    <default physical="system_panic">
-                       <system_panic/>
-                    </default>
-                 </group>
-              </source>
-           </events>
-           <!-- this comment will be gone -->
-           <component ref="foo"/>
-           <bootparams>amended=true</bootparams>
-
-        </amend>
-
-        <devices>
-           <device logical="car" physical="car_1234"/>
-           <device logical="bus" physical="bus_1234"/>
-        </devices>
-        <events>
-           <source/>
-        </events>
-     </subject>
-
-  </subjects>
-
-  <scheduling tickRate="10000">
-     <majorFrame>
-        <cpu id="0">
-	        <minorFrame subject="lnx" ticks="80"/>
-        </cpu>
-     </majorFrame>
-  </scheduling>
+   <scheduling tickRate="10000">
+      <majorFrame>
+         <cpu id="0">
+	         <minorFrame subject="lnx" ticks="80"/>
+         </cpu>
+      </majorFrame>
+   </scheduling>
 </system>

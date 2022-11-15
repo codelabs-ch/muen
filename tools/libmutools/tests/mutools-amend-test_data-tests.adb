@@ -95,11 +95,11 @@ package body Mutools.Amend.Test_Data.Tests is
                  Message   => "Policy mismatch: " & Output);
       end No_Amend_Statements;
 
-     ----------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure XPath_Not_Unique
       is
-         Data   : Muxml.XML_Data_Type;
+         Data : Muxml.XML_Data_Type;
       begin
          Muxml.Parse (Data => Data,
                       Kind => Muxml.None,
@@ -124,11 +124,11 @@ package body Mutools.Amend.Test_Data.Tests is
          end;
       end XPath_Not_Unique;
 
-     ----------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure XPath_Not_Found
       is
-         Data   : Muxml.XML_Data_Type;
+         Data : Muxml.XML_Data_Type;
       begin
          Muxml.Parse (Data => Data,
                       Kind => Muxml.None,
@@ -153,11 +153,11 @@ package body Mutools.Amend.Test_Data.Tests is
          end;
       end XPath_Not_Found;
 
-     ----------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure XPath_Syntax_Error
       is
-         Data   : Muxml.XML_Data_Type;
+         Data : Muxml.XML_Data_Type;
       begin
          Muxml.Parse (Data => Data,
                       Kind => Muxml.None,
@@ -183,7 +183,7 @@ package body Mutools.Amend.Test_Data.Tests is
          end;
       end XPath_Syntax_Error;
 
-     ----------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Amend_On_Textnode
       is
@@ -220,11 +220,11 @@ package body Mutools.Amend.Test_Data.Tests is
          end;
       end Amend_On_Textnode;
 
-     ----------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure No_Legal_Insert_Position
       is
-         Data           : Muxml.XML_Data_Type;
+         Data : Muxml.XML_Data_Type;
       begin
          Muxml.Parse (Data => Data,
                       Kind => Muxml.None,
@@ -307,7 +307,7 @@ package body Mutools.Amend.Test_Data.Tests is
                  Message   => "Equal nodes reported as unequal");
       end Positive_Test;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Distinct_Types
       is
@@ -326,7 +326,7 @@ package body Mutools.Amend.Test_Data.Tests is
                  Message   => "Element- and text-nodes must not equal");
       end Distinct_Types;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Distinct_Node_Names
       is
@@ -357,7 +357,7 @@ package body Mutools.Amend.Test_Data.Tests is
                  Message   => "Nodes with different names reported equal");
       end Distinct_Node_Names;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Distinct_Attributes
       is

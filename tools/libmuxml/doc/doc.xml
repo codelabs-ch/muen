@@ -483,7 +483,7 @@
         \item The use of conditionals enables selective activation of parts of the source
         policy depending on the value of a given configuration variable.
         This allows flexible customization of a system during policy compilation
-        time by setting the value of a configuration variable or formulating an
+        by setting the value of a configuration variable or formulating an
         appropriate expression.
 
         \item Configuration variable substitution enables the policy writer to set the
@@ -494,8 +494,8 @@
 
         \item The policy may define templates for XML code, including parameters that
         can be used within expressions, conditionals and references within that template.
-        Templates can be used to avoid code duplication and to encapsulate portions
-        of code. Hence, templates can define building blocks of the system and help to
+        Templates can be employed to avoid code duplication and to encapsulate portions
+        of code. Hence, templates can define building blocks and help to
         provide a high-level view of a system.
 
         \item When two building blocks are connected via a channel or when a subject

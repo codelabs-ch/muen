@@ -24,19 +24,19 @@ with Sax.Locators;
 package body Schema.Dom_Readers_With_Location is
 
    overriding procedure Start_Element
-      (Handler     : in out Tree_Reader_With_Location;
-       NS          : Sax.Utils.XML_NS;
-       Local_Name  : Sax.Symbols.Symbol;
-       Atts        : Sax.Readers.Sax_Attribute_List)
+      (Handler    : in out Tree_Reader_With_Location;
+       NS         : Sax.Utils.XML_NS;
+       Local_Name : Sax.Symbols.Symbol;
+       Atts       : Sax.Readers.Sax_Attribute_List)
    is
       Att_Node, Unused : DOM.Core.Attr;
    begin
 
-      -- execute the original Start_Element
+      --  Execute the original Start_Element.
       Schema.Dom_Readers.Start_Element (Schema.Dom_Readers.Tree_Reader (Handler),
                                         NS, Local_Name, Atts);
 
-      --  Then add a new attribute to the created node
+      --  Then add a new attribute to the created node.
       Att_Node := DOM.Core.Documents.Create_Attribute
          (Doc => Schema.Dom_Readers_With_Location.Get_Tree (Handler),
           Name => "originOfNode");

@@ -29,14 +29,14 @@ package body Mucfgcheck
 is
 
    procedure Attr_Uniqueness
-      (Nodes     : DOM.Core.Node_List;
-       Attr_Name : String;
-       Error_Msg : String)
+     (Nodes     : DOM.Core.Node_List;
+      Attr_Name : String;
+      Error_Msg : String)
    is
-      -- Check if the value of Attr_Name is not equal for Left and Right node
+      --  Check if the value of Attr_Name is not equal for Left and Right node.
       procedure Check_Inequality (Left, Right : DOM.Core.Node);
 
-      ------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Check_Inequality (Left, Right : DOM.Core.Node)
       is

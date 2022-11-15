@@ -19,6 +19,7 @@
 with GNAT.Directory_Operations;
 
 with DOM.Core;
+
 with Muxml.Utils;
 with Mulog;
 with Mutools.System_Config;
@@ -50,9 +51,8 @@ is
    is
       Local_Include_Path : constant String
          := Include_Path & (if Include_Path'Length > 0 then ":" else "") & ".";
-      Policy, Config  : Muxml.XML_Data_Type;
-
-      Debug_Active    : constant Boolean
+      Policy, Config     : Muxml.XML_Data_Type;
+      Debug_Active       : constant Boolean
           := (if Debug_Level = NONE then False else True);
    begin
       Mulog.Log (Msg => "Processing system config '" & Config_File & "'");
@@ -183,6 +183,7 @@ is
       Mutools.Expressions.Expand (Policy       => Policy,
                                   Debug_Active => Debug_Active);
 
+      --  Remove log-entries for expressions before removing expression nodes.
       if Debug_Active then
          declare
             use all type DOM.Core.Node;
@@ -193,8 +194,7 @@ is
                 XPath => "/system/expressions");
          begin
             if Expr /= null then
-               Mutools.Xmldebuglog.Remove_Log_Of_Subtree
-                  (Node  => Expr);
+               Mutools.Xmldebuglog.Remove_Log_Of_Subtree (Node => Expr);
             end if;
          end;
       end if;
@@ -232,8 +232,8 @@ is
          Mutools.Amend.Expand (XML_Data     => Policy,
                                Debug_Active => Debug_Active);
       exception
-         -- for exceptions during amends, the current state of Policy
-         -- is helpful for debugging. Hence, we write it.
+         --  For exceptions during amends, the current state of Policy
+         --  is helpful for debugging. Hence, we write it.
 
          when others =>
             if Debug_Active then

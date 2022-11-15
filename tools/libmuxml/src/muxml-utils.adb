@@ -503,8 +503,8 @@ is
    -------------------------------------------------------------------------
 
    function Get_Unique_Element_Child
-      (Parent     : DOM.Core.Node;
-       Child_Name : String)
+     (Parent     : DOM.Core.Node;
+      Child_Name : String)
       return DOM.Core.Node
    is
       use all type DOM.Core.Node_Types;
@@ -533,8 +533,8 @@ is
    -------------------------------------------------------------------------
 
    function Has_Attribute
-      (Node      : DOM.Core.Node;
-       Attr_Name : String)
+     (Node      : DOM.Core.Node;
+      Attr_Name : String)
       return Boolean
    is
       use type DOM.Core.Node;
@@ -711,28 +711,28 @@ is
       end;
    end Merge;
 
-   ---------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    function Next_Node
-      (Current_Node       : DOM.Core.Node;
-       Only_Element_Nodes : Boolean       := False;
-       Stop_Node          : DOM.Core.Node := null)
+     (Current_Node       : DOM.Core.Node;
+      Only_Element_Nodes : Boolean       := False;
+      Stop_Node          : DOM.Core.Node := null)
       return DOM.Core.Node
    is
       use type DOM.Core.Node;
       use all type DOM.Core.Node_Types;
 
-      -- recursively go to the parent until some parent has a next sibling
-      -- and return that sibling
-      -- returns null if there is no such node
+      --  Recursively go to the parent until some parent has a next sibling
+      --  and return that sibling.
+      --  Returns null if there is no such node.
       function Backtrack_Until_Sibling
          (Node : DOM.Core.Node)
          return DOM.Core.Node;
 
-      ------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       function Backtrack_Until_Sibling
-         (Node : DOM.Core.Node)
+        (Node : DOM.Core.Node)
          return DOM.Core.Node
       is
       begin
@@ -744,23 +744,23 @@ is
             return DOM.Core.Nodes.Next_Sibling (N => Node);
          elsif DOM.Core.Nodes.Parent_Node (N => Node) /= null then
             return Backtrack_Until_Sibling
-               (Node =>  DOM.Core.Nodes.Parent_Node (N => Node));
+               (Node => DOM.Core.Nodes.Parent_Node (N => Node));
          else
             return null;
          end if;
       end Backtrack_Until_Sibling;
 
-      ------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- recurse until an element-node is found (if that is required)
+      --  Recurse until an element-node is found (if that is required).
       function Recurse_Until_Element
-         (Node               : DOM.Core.Node)
+        (Node : DOM.Core.Node)
          return DOM.Core.Node;
 
-      ------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       function Recurse_Until_Element
-         (Node               : DOM.Core.Node)
+        (Node : DOM.Core.Node)
          return DOM.Core.Node
       is
       begin
@@ -794,7 +794,7 @@ is
          elsif DOM.Core.Nodes.Parent_Node (N => Current_Node) /= null then
             return Recurse_Until_Element
                (Node => Backtrack_Until_Sibling
-                   (Node =>  DOM.Core.Nodes.Parent_Node
+                   (Node => DOM.Core.Nodes.Parent_Node
                        (N => Current_Node)));
          else
             return null;
@@ -807,9 +807,9 @@ is
    -------------------------------------------------------------------------
 
    function Next_Node_In_Subtree
-      (Root_Node          : DOM.Core.Node;
-       Current_Node       : DOM.Core.Node;
-       Only_Element_Nodes : Boolean := False)
+     (Root_Node          : DOM.Core.Node;
+      Current_Node       : DOM.Core.Node;
+      Only_Element_Nodes : Boolean := False)
       return DOM.Core.Node
    is
       use all type DOM.Core.Node;

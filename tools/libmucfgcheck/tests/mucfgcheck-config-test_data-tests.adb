@@ -15,7 +15,6 @@ with System.Assertions;
 --
 --  end read only
 with Mucfgcheck.Validation_Errors;
-
 --  begin read only
 --  end read only
 package body Mucfgcheck.Config.Test_Data.Tests is
@@ -60,10 +59,6 @@ package body Mucfgcheck.Config.Test_Data.Tests is
          Value => "feature_enabled");
 
       Name_Uniqueness (XML_Data => Data);
-      --DEBUG-START
-      --Ada.Text_IO.Put_Line ("DBG: names given to config-vars:"
-      --                      & Mucfgcheck.Validation_Errors.Get_Error_Message);
-      --DEBUG-END
       Assert (Condition => Validation_Errors.Contains
               (Msg => "The names given to config variables and expressions "
                & "are not unique. Conflicting value: 'feature_enabled'"),
@@ -268,7 +263,6 @@ package body Mucfgcheck.Config.Test_Data.Tests is
 --  begin read only
    end Test_Expression_Config_Var_Refs;
 --  end read only
-
 
 --  begin read only
    procedure Test_Expression_Integer_Values (Gnattest_T : in out Test);

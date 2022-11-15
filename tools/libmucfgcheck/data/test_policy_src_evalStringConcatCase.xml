@@ -50,7 +50,6 @@
             <string value="bar"/>
          </concatenation>
       </expression>
-
       <expression name="case1_string">
          <case variable="foo">
             <when value="foo">
@@ -101,8 +100,6 @@
             </when>
          </case>
       </expression>
-
-
       <expression name="session2_enabled">
          <gt>
             <variable name="session_count"/>

@@ -78,7 +78,7 @@ package body Muxml.XML_Data_Type_Test_Data.XML_Data_Type_Tests is
             (Condition => Test_Utils.Equal_Files
                 (Filename1 => "data/src_with_location.xml",
                  Filename2 => Dst_File),
-             Message => "Stored " & Dst_File & " XML differs from loaded one");
+             Message   => "Stored " & Dst_File & " XML differs from loaded one");
          Ada.Directories.Delete_File (Name => Dst_File);
       end;
 

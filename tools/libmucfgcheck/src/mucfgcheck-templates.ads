@@ -20,11 +20,11 @@ with Muxml;
 package Mucfgcheck.Templates
 is
 
-   --D Validate the uniqueness of template names
+   --  Validate the uniqueness of template names.
    procedure Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 
-   --D Check if each template in the document has a unique body
-   --D and a unique parameter block
+   --  Check if each template in the document has a unique body
+   --  and a unique parameter block.
    procedure Template_Integrity (XML_Data : Muxml.XML_Data_Type);
 
 end Mucfgcheck.Templates;

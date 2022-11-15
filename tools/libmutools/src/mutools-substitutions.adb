@@ -31,8 +31,9 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Process_Attributes (Data         : Muxml.XML_Data_Type;
-                                 Debug_Active : Boolean := False)
+   procedure Process_Attributes
+      (Data         : Muxml.XML_Data_Type;
+       Debug_Active : Boolean := False)
    is
       Config_Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -60,13 +61,13 @@ is
 
       procedure Populate_Node_Access
          (Config_Nodes :     DOM.Core.Node_List;
-          Node_Access   : out Mutools.Expressions.Name_To_String_Hashed_Map.Map);
+          Node_Access  : out Mutools.Expressions.Name_To_String_Hashed_Map.Map);
 
       ----------------------------------------------------------------------
 
       procedure Populate_Node_Access
          (Config_Nodes :     DOM.Core.Node_List;
-          Node_Access   : out Mutools.Expressions.Name_To_String_Hashed_Map.Map)
+          Node_Access  : out Mutools.Expressions.Name_To_String_Hashed_Map.Map)
       is
       begin
          for I in 0 .. DOM.Core.Nodes.Length (List => Config_Nodes) - 1 loop
@@ -97,13 +98,13 @@ is
          use all type DOM.Core.Node;
          use all type DOM.Core.Node_Types;
 
-         ------------------------------------------------------------------
+         -------------------------------------------------------------------
 
          -- workaround for V811-012
          -- replace this function by "Owner (Node)" once the bug is resolved
          function Get_Parent (Node : DOM.Core.Node) return DOM.Core.Node;
 
-         ------------------------------------------------------------------
+         -------------------------------------------------------------------
 
          function Get_Parent (Node : DOM.Core.Node) return DOM.Core.Node
          is
@@ -118,9 +119,9 @@ is
                          & "='"
                          & Getter (Node => Node)
                          & "']");
-                  Parent                : DOM.Core.Node;
-                  Attr_List             : DOM.Core.Named_Node_Map;
-                  Possibly_Equal_Attr   : DOM.Core.Node;
+                  Parent              : DOM.Core.Node;
+                  Attr_List           : DOM.Core.Named_Node_Map;
+                  Possibly_Equal_Attr : DOM.Core.Node;
                begin
                   for I in 0 .. DOM.Core.Nodes.Length (List => Possible_Parents_List) - 1 loop
                      Parent := DOM.Core.Nodes.Item

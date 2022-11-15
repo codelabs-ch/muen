@@ -25,33 +25,35 @@ with DOM.Core.Nodes;
 package Muxml.Utils
 is
 
-   -- Returns True if and only if Node has an attribute called with name Name.
+   --  Returns True if and only if Node has an attribute called Attr_Name.
    function Has_Attribute
-      (Node      : DOM.Core.Node;
-       Attr_Name : String)
+     (Node      : DOM.Core.Node;
+      Attr_Name : String)
       return Boolean;
 
-   -- Returns the "next node" as if traversing the xml-tree depth-first.
-   -- In particular this function can be used to traverse the xml-tree starting
-   -- from the given node.
-   -- null is returned if there is no next node.
-   -- If Only_Element_Nodes is True, only nodes of type Element_Node are returned.
-   -- If Stop_Node is not null, Next_Node will return null if the path in the tree
-   -- from Current_Node to the next node includes Stop_Node
-   -- (except if Current_Node = Stop_Node, in which case it continues).
+   --  Returns the "next node" as if traversing the xml-tree depth-first.
+   --  In particular this function can be used to traverse the xml-tree starting
+   --  from the given node.
+   --  null is returned if there is no next node.
+   --  If Only_Element_Nodes is True, only nodes of type Element_Node are
+   --  returned.
+   --  If Stop_Node is not null, Next_Node will return null if the path in the
+   --  tree from Current_Node to the next node includes Stop_Node
+   --  (except if Current_Node = Stop_Node, in which case it continues).
    function Next_Node
-      (Current_Node       : DOM.Core.Node;
-       Only_Element_Nodes : Boolean       := False;
-       Stop_Node          : DOM.Core.Node := null)
+     (Current_Node       : DOM.Core.Node;
+      Only_Element_Nodes : Boolean       := False;
+      Stop_Node          : DOM.Core.Node := null)
       return DOM.Core.Node;
 
-   -- Traverses the (sub)tree spanned by Root_Node depth-first using Next_Node.
-   -- Assumes that Current_Node is in the subtree of Root_Node (including the root).
-   -- Returns null when there is no next node in the tree.
+   --  Traverses the (sub)tree spanned by Root_Node depth-first using Next_Node.
+   --  Assumes that Current_Node is in the subtree of Root_Node (including the
+   --  root).
+   --  Returns null when there is no next node in the tree.
    function Next_Node_In_Subtree
-      (Root_Node          : DOM.Core.Node;
-       Current_Node       : DOM.Core.Node;
-       Only_Element_Nodes : Boolean := False)
+     (Root_Node          : DOM.Core.Node;
+      Current_Node       : DOM.Core.Node;
+      Only_Element_Nodes : Boolean := False)
       return DOM.Core.Node;
 
    --  Searches the element specified by an XPath in the given document and
@@ -287,12 +289,12 @@ is
      with
        Pre => DOM.Core.Nodes.Length (List => Nodes) > 0;
 
-   -- return a child of parent which is of type "Element_Node"
-   -- and has the specified name
-   -- returns null if the number of such nodes is not 1
+   --  Return a child of parent which is of type "Element_Node"
+   --  and has the specified name.
+   --  Returns null if the number of such nodes is not 1.
    function Get_Unique_Element_Child
-      (Parent     : DOM.Core.Node;
-       Child_Name : String)
+     (Parent     : DOM.Core.Node;
+      Child_Name : String)
       return DOM.Core.Node;
 
    --  Returns the sum of all values obtained by applying the given getter

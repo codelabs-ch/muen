@@ -15,12 +15,13 @@
 --  You should have received a copy of the GNU General Public License
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
-
-with DOM.Core;
+with Ada.Strings.Hash;
 with Ada.Containers.Indefinite_Vectors;
 with Ada.Containers.Indefinite_Holders;
 with Ada.Containers.Indefinite_Hashed_Maps;
-with Ada.Strings.Hash;
+
+with DOM.Core;
+
 with Muxml;
 
 use all type DOM.Core.Node;
@@ -30,9 +31,10 @@ is
 
    --  Expand all expressions in the specified policy to config values.
    --  This includes the substitutions of $-referenced variables within
-   --  expressions and within the config section
-   procedure Expand (Policy       : Muxml.XML_Data_Type;
-                     Debug_Active : Boolean := False);
+   --  expressions and within the config section.
+   procedure Expand
+      (Policy       : Muxml.XML_Data_Type;
+       Debug_Active : Boolean := False);
 
    Invalid_Expression : exception;
 
@@ -43,9 +45,9 @@ is
       (Element_Type => String,
        Index_Type   => Natural);
 
-   -- Fragment Vectors hold parts ("framents") of a string,
-   -- where each part is annotated with their type,
-   -- i.e., whether it is a reference to some variable or just text
+   --  Fragment Vectors hold parts ("framents") of a string,
+   --  where each part is annotated with their type,
+   --  i.e., whether it is a reference to some variable or just text.
    package String_Holder_Type is new Ada.Containers.Indefinite_Holders
       (Element_Type => String);
    type Fragment_Type is (Text_Type, Reference_Type);
@@ -57,21 +59,22 @@ is
       (Element_Type => Fragment_Entry,
        Index_Type   => Natural);
 
-   -- Parse strings of the form "text1_${ref1}_text2_${ref2}" into a vector
-   -- of the form (("text1_", Text_Type), ("ref1", Reference_Type), ...)
-   function Parse_Dollar_Braced_References (Input_String : String)
-                                           return Fragment_Vector.Vector;
+   --  Parse strings of the form "text1_${ref1}_text2_${ref2}" into a vector
+   --  of the form (("text1_", Text_Type), ("ref1", Reference_Type), ...).
+   function Parse_Dollar_Braced_References
+      (Input_String : String)
+       return Fragment_Vector.Vector;
 
-   -- hashmap for fast access to config variables and expressions by 'name'
-   -- attribute
+   --  Hashmap for fast access to config variables and expressions by 'name'
+   --  attribute.
    package Name_To_Node_Hashed_Map is new Ada.Containers.Indefinite_Hashed_Maps
       (Key_Type        => String,
        Element_Type    => DOM.Core.Node,
        Hash            => Ada.Strings.Hash,
        Equivalent_Keys => "=");
 
-   -- hashmaps for fast access to the evaluation results of expressions and
-   -- config variables (one map per type to avoid sorting lateron)
+   --  Hashmaps for fast access to the evaluation results of expressions and
+   --  config variables (one map per type to avoid sorting lateron).
    package Name_To_Boolean_Hashed_Map is new Ada.Containers.Indefinite_Hashed_Maps
       (Key_Type        => String,
        Element_Type    => Boolean,
@@ -88,7 +91,7 @@ is
        Hash            => Ada.Strings.Hash,
        Equivalent_Keys => "=");
 
-   -- wrapper for hash-maps
+   --  Wrapper for hash-maps.
    type Access_Hashmaps_Type is record
       Input          : Name_To_Node_Hashed_Map.Map;
       Output_Boolean : Name_To_Boolean_Hashed_Map.Map;
@@ -97,10 +100,11 @@ is
    end record;
 
 private
+
    use all type String_Vector.Vector;
 
-   -- specifies whether or not the result of the expansion of
-   -- variables and expressions is output to the log (includes console)
+   --  Specifies whether or not the result of the expansion of
+   --  variables and expressions is output to the log (includes console).
    Log_Expansion_Values : constant Boolean := False;
 
    --  Returns the value of the config variable reference or <boolean>-element
@@ -117,7 +121,7 @@ private
      (Node        :        DOM.Core.Node;
       Backtrace   : in out String_Vector.Vector;
       Node_Access : in out Access_Hashmaps_Type)
-     return Integer;
+      return Integer;
 
    --  Returns the value of the config variable reference or <string>-element
    --  given as node.
@@ -143,7 +147,7 @@ private
      (Node        :        DOM.Core.Node;
       Backtrace   : in out String_Vector.Vector;
       Node_Access : in out Access_Hashmaps_Type)
-     return Integer;
+      return Integer;
 
    --  Returns the string value of a string expression or config variable
    --  given as node and adds name-value entry to config section.
@@ -152,65 +156,66 @@ private
      (Node        :        DOM.Core.Node;
       Backtrace   : in out String_Vector.Vector;
       Node_Access : in out Access_Hashmaps_Type)
-     return String;
+      return String;
 
-   -- Evaluates Boolean expression recursively.
+   --  Evaluates Boolean expression recursively.
    function Boolean_Expression
      (Node        :        DOM.Core.Node;
       Backtrace   : in out String_Vector.Vector;
       Node_Access : in out Access_Hashmaps_Type)
-     return Boolean;
+      return Boolean;
 
-   -- Evaluates string expression recursively.
+   --  Evaluates string expression recursively.
    function String_Expression
       (Node        :        DOM.Core.Node;
        Backtrace   : in out String_Vector.Vector;
        Node_Access : in out Access_Hashmaps_Type)
-      return String;
+       return String;
 
-   -- Returns a config-variable or expression node with the given name attribute.
-   -- If there exists a matching config variable, than that is returned.
-   -- Otherwise, expressions are considered.
-   -- Raises an exception if no match is found.
+   --  Returns a config-variable or expression node with the given name
+   --  attribute.
+   --  If there exists a matching config variable, then that node is returned.
+   --  Otherwise, expressions are considered.
+   --  Raises an exception if no match is found.
    function Get_Defining_Node
       (Var_Name    :        String;
        Node_Access : in out Access_Hashmaps_Type)
-      return DOM.Core.Node;
+       return DOM.Core.Node;
 
-   -- define types that determine how an expression is handled.
-   -- Note: There are no expressions with integer type.
+   --  Define types that determine how an expression is handled.
+   --  Note: There are no expressions with integer type.
    type Expression_Toplevel_Type is
       (Boolean_Expr_Type, String_Expr_Type, Case_Expr_Type, Variable_Expr_Type);
 
-   -- determine whether the given expression-node defines a Boolean value, a
-   -- string value, or is of unknown type (in case of a case statement)
+   --  Determine whether the given expression-node defines a Boolean value, a
+   --  string value, or is of unknown type (in case of a case statement).
    function Get_Expr_Type
-      (Expr :  DOM.Core.Node)
-      return Expression_Toplevel_Type;
+      (Expr : DOM.Core.Node)
+       return Expression_Toplevel_Type;
 
-   -- return the Nth child of node Parent which is of type Element_Node
-   -- and null if no such node exists.
-   -- Use N => 1 for the first child.
+   --  Return the Nth child of node Parent which is of type Element_Node
+   --  and null if no such node exists.
+   --  Use N => 1 for the first child.
    function Get_Nth_Child_Node
       (Parent : DOM.Core.Node;
        N      : Positive)
-      return DOM.Core.Node;
+       return DOM.Core.Node;
 
-   -- provides all functionality for 'Expand', except for the outer loop,
-   -- i.e., it checks which type the given Node has and calls the
-   -- responsible evaluation function on that node.
+   --  Provides all functionality for 'Expand', except for the outer loop,
+   --  i.e., it checks which type the given Node has and calls the
+   --  responsible evaluation function on that node.
    procedure Expand_Single_Node
       (Node        :        DOM.Core.Node;
        Backtrace   : in out String_Vector.Vector;
        Node_Access : in out Access_Hashmaps_Type);
 
-   -- handles the addition of a string to the backtrace and handles errors
+   --  Handles the addition of a string to the backtrace and handles errors.
    procedure Add_To_Backtrace
       (Backtrace : in out String_Vector.Vector;
        Name      :        String);
 
-   -- Populate Node_Access with elements from Config_And_Exprs
-   --  for fast access to name-node pairs
+   --  Populate Node_Access with elements from Config_And_Exprs
+   --  for fast access to name-node pairs.
    procedure Initialize_Node_Access
       (Node_Access      : in out Mutools.Expressions.Access_Hashmaps_Type;
        Config_And_Exprs :        DOM.Core.Node_List);

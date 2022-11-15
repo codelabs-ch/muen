@@ -30,37 +30,37 @@ with McKae.XML.XPath.XIA;
 package body Mutools.Amend.Ordering
 is
 
-   ------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
-   -- return a string representation of a Vector_Tuple as tuples
-   -- proided that the entries of VT have the same length
+   --  Return a string representation of a Vector_Tuple as tuples
+   --  provided that the entries of VT have the same length.
    function To_String (VT : Vector_Tuple) return String;
 
-   ------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
-   -- return a string representation of a String_Vector
+   --  Return a string representation of a String_Vector.
    function To_String (SV : String_Vector.Vector) return String;
 
-   ------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    function Get_Insert_Index
       (Ancestors : String_Vector.Vector;
-       New_Child  : String;
-       Siblings   : String_Vector.Vector)
+       New_Child : String;
+       Siblings  : String_Vector.Vector)
       return Insert_Query_Result_Type
    is
       Child_Order : String_Vector.Vector;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- determine the type of the first ancestor
-      -- by going back in the Ancestor-list until some ancestor has a
-      -- unique type and then trace that type forward
+      --  Determine the type of the first ancestor
+      --  by going back in the Ancestor-list until some ancestor has a
+      --  unique type and then trace that type forward.
       function Get_Parent_Type
          (Ancestors : String_Vector.Vector)
          return String;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       function Get_Parent_Type
          (Ancestors : String_Vector.Vector)
@@ -106,16 +106,16 @@ is
          return S (Parent_Type);
       end Get_Parent_Type;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
    begin
       if Ancestors.Is_Empty then
-         -- this is not supported on purpose (to avoid mistakes)
+         --  This is not supported on purpose (to avoid mistakes).
          raise Not_Implemented with
             "Get_Insert_Index called with empty ancestor list.";
       end if;
 
-      -- get type of the parent
+      --  Get type of the parent.
       if Order_Info.Name_To_Type.Contains (Ancestors.First_Element) then
          Child_Order := Order_Info.Type_To_Children
             (Order_Info.Name_To_Type (Ancestors.First_Element).First_Element)
@@ -131,7 +131,7 @@ is
       end if;
 
       declare
-         -- get index of the new_child in the child-list of the parent
+         --  Get index of the new_child in the child-list of the parent.
          New_Child_Index : constant String_Vector.Extended_Index
                          := Child_Order.Find_Index (Item => New_Child);
          Sibling_Index   : String_Vector.Extended_Index;
@@ -140,8 +140,8 @@ is
             return No_Legal_Index;
          end if;
 
-         -- find index of first sibling which occurs after New_Child in
-         -- the child-list of Parent
+         --  Find index of first sibling which occurs after New_Child in
+         --  the child-list of Parent.
          for I in Siblings.First_Index .. Siblings.Last_Index loop
             Sibling_Index := Child_Order.Find_Index (Item => Siblings (I));
             if Sibling_Index = String_Vector.No_Index then
@@ -156,7 +156,7 @@ is
       return Insert_Index (Siblings.Length);
    end Get_Insert_Index;
 
-   ------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Init_Order_Information
        (Schema_XML_Data : String)
@@ -174,47 +174,47 @@ is
       Simple_XMLTypes, Elem_And_Container_Names, Elem_Container_Names
                   : String_Vector.Vector;
 
-      -- backtrace is accessed as a global variable (within
-      --   Init_Order_Information)
-      -- it stores the evaluation-path and is used for cycle detection
+      --  Backtrace is accessed as a global variable (within
+      --  Init_Order_Information).
+      --  It stores the evaluation-path and is used for cycle detection
       Backtrace   : Node_Vector.Vector;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- check that there is only one namespace
+      --  Check that there is only one namespace.
       procedure Check_Namespace
          (Schema_Node : DOM.Core.Node;
           Schema_XML_Data : String);
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- check that there are no nodes named
-      -- "import", "include", " redefine", "example" or "any"
+      --  Check that there are no nodes named
+      --  "import", "include", " redefine", "example" or "any".
       procedure Check_Forbidden_Element_Names
          (Schema_Node : DOM.Core.Node);
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- check that no attribute-node defines a substitution group
+      --  Check that no attribute-node defines a substitution group.
       procedure Check_Substitution_Group
          (Schema_Node : DOM.Core.Node);
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- check that the children of each type in Order_Info have unique names
+      --  Check that the children of each type in Order_Info have unique names.
       procedure Check_Unique_Names;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- delete elements of Order_Info.Name_To_Type with more than one entry
+      --  Delete elements of Order_Info.Name_To_Type with more than one entry.
       procedure Delete_Nonuniqe_From_Name_To_Type;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- recursive evaluation of a node to get a vector with information
-      -- about potential children.
-      -- The name of the function specifies the type of node it is meant for
-      --   (except for "Container_Wrapper", which is a wrapper)
+      --  Recursive evaluation of a node to get a vector with information
+      --  about potential children.
+      --  The name of the function specifies the type of node it is meant for
+      --  (except for "Container_Wrapper", which is a wrapper).
       function Eval_ComplexContent
          (Node : DOM.Core.Node) return Vector_Tuple;
       function Eval_Element
@@ -230,68 +230,68 @@ is
       function Eval_Sequence_Choice_All
          (Node : DOM.Core.Node) return Vector_Tuple;
 
-      -- Head of recursive evaluation of a fixed type
-      -- returns finished entry of the given type
+      --  Head of recursive evaluation of a fixed type.
+      --  Returns finished entry of the given type.
       function Eval_Type_By_Name (Type_Name : String) return Vector_Tuple;
 
-      -- Start recursive evaluation of a new type
-      -- Writes map entries and initiates evaluation of types of children
+      --  Start recursive evaluation of a new type.
+      --  Writes map entries and initiates evaluation of types of children.
       procedure Eval_Entrypoint (Type_Name : String);
 
-      -- search for a node called "element" within the schema, add it to
-      -- the lists and evaluate its type
+      --  Search for a node called "element" within the schema, add it to
+      --  The lists and evaluate its type.
       procedure Find_Root_Element_Node_And_Recurse
          (Schema_Node : DOM.Core.Node);
 
-      -- get the value of attribute Name of Node.
-      -- An empty string is returned if the attribute does not exist.
+      --  Get the value of attribute Name of Node.
+      --  An empty string is returned if the attribute does not exist.
       function Get_Attr (Node : DOM.Core.Node; Name : String) return String
          renames DOM.Core.Elements.Get_Attribute;
 
-      -- get list of all children which are of type "Element_Node"
-      -- (as defined in DOM.Core.Nodes.Node_Type)
+      --  Get list of all children which are of type "Element_Node"
+      --  (as defined in DOM.Core.Nodes.Node_Type).
       function Get_Element_Children
          (Node : DOM.Core.Node) return Node_Vector.Vector;
 
-      -- return node defining a group of type "Name_Attr"
+      --  Return node defining a group of type "Name_Attr".
       function Get_Group_Definition (Name_Attr : String) return DOM.Core.Node;
 
-      -- return a node with name "Node_Name" with attribute "name=Name_Attr"
-      -- if Node_Name is empty, it is not considered
+      --  Return a node with name "Node_Name" with attribute "name=Name_Attr"
+      --  if Node_Name is empty, it is not considered.
       function Get_Toplevel_Definition
          (Name_Attr : String;
           Node_Name : String := "")
          return DOM.Core.Node;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- Initialize a Vec with values defined by Name
+      --  Initialize a Vec with values defined by Name.
       procedure Initialize_Vectors
          (Vec  : out String_Vector.Vector;
           Name :     String);
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- shortcut for Node_Name without prefix
+      --  Shortcut for Node_Name without prefix.
       function Name (Node : DOM.Core.Node) return String;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- Remove last element from backtrace
+      --  Remove last element from backtrace.
       procedure Pop_From_Backtrace renames Backtrace.Delete_Last;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- Add Node to backtrace and raise error if loop is detected
+      --  Add Node to backtrace and raise error if loop is detected.
       procedure Push_To_Backtrace (Node : DOM.Core.Node);
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- if Name contains ':' return the slice of Name after the first
-      -- occurrence. Otherwise, Name is returned.
+      --  If Name contains ':' return the slice of Name after the first
+      --  occurrence. Otherwise, Name is returned.
       function Remove_Namespace (Name : String) return String;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Check_Forbidden_Element_Names
          (Schema_Node : DOM.Core.Node)
@@ -313,12 +313,12 @@ is
          end if;
       end Check_Forbidden_Element_Names;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- check namespaces
-      --- workaround: The namespace declarations are not attributes of
-      --- the root node. It seems impossible to access all declared
-      --- namespaces via the DOM-interface. Hence, we do it by hand.
+      --  Check namespaces:
+      --  Workaround: The namespace declarations are not attributes of
+      --  the root node. It seems impossible to access all declared
+      --  namespaces via the DOM-interface. Hence, we do it by hand.
       procedure Check_Namespace
          (Schema_Node : DOM.Core.Node;
           Schema_XML_Data : String)
@@ -334,14 +334,13 @@ is
             := "<" & DOM.Core.Nodes.Node_Name (Schema_Node);
          Left_Bound : constant Natural
             := Schema_Start'Length +
-            Ada.Strings.Fixed.Index (Source => Schema_XML_Data,
+            Ada.Strings.Fixed.Index (Source  => Schema_XML_Data,
                                      Pattern => Schema_Start,
-                                     From => 1);
+                                     From    => 1);
          Right_Bound : constant Natural
-            := Ada.Strings.Fixed.Index
-            (Source => Schema_XML_Data,
-             Pattern => ">",
-             From => Left_Bound) - 1;
+            := Ada.Strings.Fixed.Index (Source  => Schema_XML_Data,
+                                        Pattern => ">",
+                                        From    => Left_Bound) - 1;
          Count : Natural := 0;
       begin
          if Left_Bound = Schema_Start'Length or Right_Bound = 0 then
@@ -360,7 +359,7 @@ is
          end if;
       end Check_Namespace;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Check_Substitution_Group
          (Schema_Node : DOM.Core.Node)
@@ -387,7 +386,7 @@ is
          end loop;
       end Check_Substitution_Group;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Check_Unique_Names
       is
@@ -415,7 +414,7 @@ is
          end loop;
       end Check_Unique_Names;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Delete_Nonuniqe_From_Name_To_Type
       is
@@ -433,7 +432,7 @@ is
          end loop;
       end Delete_Nonuniqe_From_Name_To_Type;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       function Eval_ComplexContent
          (Node : DOM.Core.Node) return Vector_Tuple
@@ -449,10 +448,9 @@ is
          end loop;
 
          return Empty_Vectors;
-
       end Eval_ComplexContent;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       function Eval_Container_Wrapper
          (Node : DOM.Core.Node) return Vector_Tuple
@@ -479,7 +477,7 @@ is
 
       end Eval_Container_Wrapper;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       function Eval_Element
          (Node : DOM.Core.Node) return Vector_Tuple
@@ -502,29 +500,28 @@ is
             (New_Item => Get_Attr (Node => Node,
                                    Name => "name"));
          Output.Type_Names.Append
-            (New_Item =>  Remove_Namespace (Get_Attr (Node => Node,
-                                                      Name => "type")));
+            (New_Item => Remove_Namespace (Get_Attr (Node => Node,
+                                                     Name => "type")));
          Pop_From_Backtrace;
          return Output;
       end Eval_Element;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Eval_Entrypoint (Type_Name : String)
       is
          Types_Vector, Names_Vector : String_Vector.Vector;
          VT : Vector_Tuple;
-
       begin
          if Order_Info.Type_To_Children.Contains (Key => Type_Name) then
             return;
          end if;
 
-         -- assign VT to make sure Eval_Type_By_Name is out of scope
-         -- when tempering with cursors
+         --  Assign VT to make sure Eval_Type_By_Name is out of scope
+         --  when tempering with cursors.
          VT := Eval_Type_By_Name (Type_Name => Type_Name);
          Order_Info.Type_To_Children.Insert
-            (Key => Type_Name,
+            (Key      => Type_Name,
              New_Item => VT);
 
          Names_Vector := Order_Info.Type_To_Children.Element
@@ -540,7 +537,7 @@ is
                   (Key      => Names_Vector (I),
                    New_Item => String_Vector.To_Vector
                                  (New_Item => Types_Vector (I),
-                                  Length => 1));
+                                  Length   => 1));
             elsif not Order_Info.Name_To_Type (Names_Vector (I)).Contains
                (Item => Types_Vector (I))
             then
@@ -550,13 +547,12 @@ is
          end loop;
       end Eval_Entrypoint;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       function Eval_Extension
          (Node : DOM.Core.Node) return Vector_Tuple
       is
          Output, Tuple : Vector_Tuple;
-
       begin
          if not Muxml.Utils.Has_Attribute (Node => Node, Attr_Name => "base") then
             raise Validation_Error with
@@ -576,7 +572,7 @@ is
          return Output;
       end Eval_Extension;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       function Eval_Group
          (Node : DOM.Core.Node) return Vector_Tuple
@@ -611,13 +607,12 @@ is
          end if;
       end Eval_Group;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       function Eval_Restriction
          (Node : DOM.Core.Node) return Vector_Tuple
       is
          Empty_Tuple : Vector_Tuple;
-
       begin
          for Child of Get_Element_Children (Node => Node) loop
             if Elem_Container_Names.Contains (Name (Node => Child)) then
@@ -628,7 +623,7 @@ is
          return Empty_Tuple;
       end Eval_Restriction;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       function Eval_Sequence_Choice_All
          (Node : DOM.Core.Node) return Vector_Tuple
@@ -649,7 +644,7 @@ is
 
       end Eval_Sequence_Choice_All;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       function Eval_Type_By_Name (Type_Name : String) return Vector_Tuple
       is
@@ -691,7 +686,7 @@ is
          end if;
       end Eval_Type_By_Name;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Find_Root_Element_Node_And_Recurse
          (Schema_Node : DOM.Core.Node)
@@ -713,23 +708,23 @@ is
 
                -- insert root element in node-names-dictionary
                Order_Info.Name_To_Type.Insert
-                  (Key      =>  Order_Info.Type_To_Children
-                             ("schemaRoot").Node_Names.First_Element,
+                  (Key      => Order_Info.Type_To_Children
+                                 ("schemaRoot").Node_Names.First_Element,
                    New_Item => String_Vector.To_Vector
                                  (New_Item => Order_Info.Type_To_Children
                                     ("schemaRoot").Type_Names.First_Element,
                                   Length   => 1));
 
-               -- evaluate the root element
-               -- assignment before calling Eval is neccessarry
-               -- in order to drop the reference to Order_Info which prevents
-               -- tampering with Order_Info within Eval
+               --  Evaluate the root element.
+               --  Assignment before calling Eval is necessarry
+               --  in order to drop the reference to Order_Info which prevents
+               --  tampering with Order_Info within Eval.
                declare
                   Type_Name : constant String
                      := Order_Info.Type_To_Children
                      ("schemaRoot").Type_Names.First_Element;
                begin
-                  Eval_Entrypoint (Type_Name =>  Type_Name);
+                  Eval_Entrypoint (Type_Name => Type_Name);
                end;
             end if;
          end loop;
@@ -740,7 +735,7 @@ is
          end if;
       end Find_Root_Element_Node_And_Recurse;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       function Get_Element_Children
          (Node : DOM.Core.Node) return Node_Vector.Vector
@@ -761,7 +756,7 @@ is
          return Output;
       end Get_Element_Children;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       function Get_Group_Definition (Name_Attr : String) return DOM.Core.Node
       is
@@ -770,7 +765,7 @@ is
                                          Node_Name => "group");
       end Get_Group_Definition;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       function Get_Toplevel_Definition
          (Name_Attr : String;
@@ -804,10 +799,9 @@ is
             "Could not find a node defining the type '"
             & Name_Attr
             & "'";
-
       end Get_Toplevel_Definition;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Initialize_Vectors
          (Vec  : out String_Vector.Vector;
@@ -876,7 +870,7 @@ is
          end if;
       end Initialize_Vectors;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       function Name (Node : DOM.Core.Node) return String
       is
@@ -885,7 +879,7 @@ is
          return Remove_Namespace (Node_Name);
       end Name;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Push_To_Backtrace (Node : DOM.Core.Node)
       is
@@ -935,7 +929,7 @@ is
                              New_Item  => Node);
       end Push_To_Backtrace;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       function Remove_Namespace (Name : String) return String
       is
@@ -948,14 +942,14 @@ is
          return Name;
       end Remove_Namespace;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
    begin
       Muxml.Parse_String (Data => Schema,
                           Kind => Muxml.None,
                           XML  => Schema_XML_Data);
 
-      -- find the root-node of the schema (without knowing the namespace)
+      --  Find the root-node of the schema (without knowing the namespace).
       Schema_Node := DOM.Core.Nodes.First_Child (N => Schema.Doc);
       while Schema_Node /= null loop
          if  DOM.Core.Nodes.Node_Type (N => Schema_Node)
@@ -971,30 +965,30 @@ is
          "Could not find schema root node";
       end if;
 
-      Initialize_Vectors (Vec => Simple_XMLTypes,
+      Initialize_Vectors (Vec  => Simple_XMLTypes,
                           Name => "simple_types");
-      Initialize_Vectors (Vec => Elem_And_Container_Names,
+      Initialize_Vectors (Vec  => Elem_And_Container_Names,
                           Name => "element_and_containers");
-      Initialize_Vectors (Vec => Elem_Container_Names,
+      Initialize_Vectors (Vec  => Elem_Container_Names,
                           Name => "containers");
 
-      -- check assumption that are easy to check "a priori"
+      --  Check assumption that are easy to check "a priori".
       Check_Namespace (Schema_Node     => Schema_Node,
                        Schema_XML_Data => Schema_XML_Data);
       Check_Forbidden_Element_Names (Schema_Node => Schema_Node);
       Check_Substitution_Group (Schema_Node => Schema_Node);
 
-      -- main evaluation
+      --  Main evaluation
       Find_Root_Element_Node_And_Recurse (Schema_Node => Schema_Node);
 
-      -- "a posteriori"-check
+      --  "a posteriori"-check
       Check_Unique_Names;
 
       Delete_Nonuniqe_From_Name_To_Type;
 
    end Init_Order_Information;
 
-   ------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    function To_String (OI : Order_Information) return String
    is
@@ -1017,7 +1011,7 @@ is
          := OI.Name_To_Type.First;
 
    begin
-      -- image of Type_To_Children
+      --  Image of Type_To_Children
       Output := U ("{" & Newline);
 
       while Cursor_VT /= String_To_Vector_Tuple.No_Element loop
@@ -1033,7 +1027,7 @@ is
       end loop;
       Output := Output & "}" & Newline;
 
-      -- image of Name_To_Type
+      --  Image of Name_To_Type
       Output :=  Output & "{" & Newline;
       while Cursor_SV /= String_To_String_Vector.No_Element loop
          Key := U (String_To_String_Vector.Key (Cursor_SV));
@@ -1051,7 +1045,7 @@ is
       return ASU.To_String (Output);
    end To_String;
 
-   ------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    function To_String (VT : Vector_Tuple) return String
    is
@@ -1091,7 +1085,7 @@ is
       return ASU.To_String (Output);
    end To_String;
 
-   ------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    function To_String (SV : String_Vector.Vector) return String
    is

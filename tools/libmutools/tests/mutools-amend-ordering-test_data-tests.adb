@@ -43,7 +43,7 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
    -- open the given file and return its content as string
    function File_To_String (File_Name : String) return String
    is
-      File  : Ada.Text_IO.File_Type;
+      File         : Ada.Text_IO.File_Type;
       File_Content : Ada.Strings.Unbounded.Unbounded_String;
    begin
       Ada.Text_IO.Open (File => File,
@@ -101,12 +101,12 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
          Assert (Condition => Result = Get_Insert_Index
                     (Ancestors => Ancestors,
                      New_Child => Tagname,
-                     Siblings => Siblings),
+                     Siblings  => Siblings),
                  Message   => "Index mismatch: "
                     & Get_Insert_Index
                     (Ancestors => Ancestors,
                      New_Child => Tagname,
-                     Siblings => Siblings)'Image);
+                     Siblings  => Siblings)'Image);
       end Assert_Makro;
 
       procedure Positive_Test
@@ -276,7 +276,7 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
          Init_Order_Information (Schema_XML_Data => File_To_String
                                     (File_Name => Tmp_Filename));
          Assert (Condition => False,
-                 Message => "Exception expected");
+                 Message   => "Exception expected");
       exception
          when E : Not_Implemented =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
@@ -432,10 +432,10 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
 
       procedure Element_With_SubstitutionGroup
       is
-         Data   : Muxml.XML_Data_Type;
-         Node : DOM.Core.Node;
+         Data         : Muxml.XML_Data_Type;
+         Node         : DOM.Core.Node;
          Tmp_Filename : constant String
-            := "obj/tmp_file.txt";
+                      := "obj/tmp_file.txt";
       begin
          Muxml.Parse
            (Data => Data,
@@ -468,10 +468,10 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
 
       procedure SubstitutionGroup_External_Attribute
       is
-         Data   : Muxml.XML_Data_Type;
+         Data           : Muxml.XML_Data_Type;
          Node, Node_New : DOM.Core.Node;
-         Tmp_Filename : constant String
-            := "obj/tmp_file.txt";
+         Tmp_Filename   : constant String
+                        := "obj/tmp_file.txt";
       begin
          Muxml.Parse
            (Data => Data,

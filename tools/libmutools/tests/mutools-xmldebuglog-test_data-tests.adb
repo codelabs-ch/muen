@@ -42,7 +42,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
 
       AUnit.Assertions.Assert
         (True,
-         "Test not implemented.");
+         "Debug functionality not tested due to time constraints.");
 
 --  begin read only
    end Test_Move_Origin_To_Log;
@@ -62,7 +62,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
 
       AUnit.Assertions.Assert
         (True,
-         "Test not implemented.");
+         "Debug functionality not tested due to time constraints.");
 
 --  begin read only
    end Test_Add_Debug_Infos_As_Comments;
@@ -82,7 +82,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
 
       AUnit.Assertions.Assert
         (True,
-         "Test not implemented.");
+         "Debug functionality not tested due to time constraints.");
 
 --  begin read only
    end Test_Add_Transaction_Log_As_Comment;
@@ -102,7 +102,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
 
       AUnit.Assertions.Assert
         (True,
-         "Test not implemented.");
+         "Debug functionality not tested due to time constraints.");
 
 --  begin read only
    end Test_Get_Log_For_Error_Message;
@@ -122,7 +122,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
 
       AUnit.Assertions.Assert
         (True,
-         "Test not implemented.");
+         "Debug functionality not tested due to time constraints.");
 
 --  begin read only
    end Test_Get_Xpath;
@@ -142,7 +142,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
 
       AUnit.Assertions.Assert
         (True,
-         "Test not implemented.");
+         "Debug functionality not tested due to time constraints.");
 
 --  begin read only
    end Test_Add_Usetemplate_Transaction;
@@ -162,7 +162,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
 
       AUnit.Assertions.Assert
         (True,
-         "Test not implemented.");
+         "Debug functionality not tested due to time constraints.");
 
 --  begin read only
    end Test_Add_Conditional_Transaction;
@@ -182,7 +182,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
 
       AUnit.Assertions.Assert
         (True,
-         "Test not implemented.");
+         "Debug functionality not tested due to time constraints.");
 
 --  begin read only
    end Test_Add_Amend_Transaction;
@@ -202,7 +202,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
 
       AUnit.Assertions.Assert
         (True,
-         "Test not implemented.");
+         "Debug functionality not tested due to time constraints.");
 
 --  begin read only
    end Test_Add_Log_For_Node;
@@ -222,7 +222,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
 
       AUnit.Assertions.Assert
         (True,
-         "Test not implemented.");
+         "Debug functionality not tested due to time constraints.");
 
 --  begin read only
    end Test_Remove_Log_Of_Node;
@@ -242,7 +242,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
 
       AUnit.Assertions.Assert
         (True,
-         "Test not implemented.");
+         "Debug functionality not tested due to time constraints.");
 
 --  begin read only
    end Test_Remove_Log_Of_Subtree;
@@ -262,7 +262,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
 
       AUnit.Assertions.Assert
         (True,
-         "Test not implemented.");
+         "Debug functionality not tested due to time constraints.");
 
 --  begin read only
    end Test_Copy_Log_Entry;
@@ -282,7 +282,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
 
       AUnit.Assertions.Assert
         (True,
-         "Test not implemented.");
+         "Debug functionality not tested due to time constraints.");
 
 --  begin read only
    end Test_Gather_Backtrace_Info;
@@ -302,7 +302,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
 
       AUnit.Assertions.Assert
         (True,
-         "Test not implemented.");
+         "Debug functionality not tested due to time constraints.");
 
 --  begin read only
    end Test_Hash;
@@ -322,7 +322,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
 
       AUnit.Assertions.Assert
         (True,
-         "Test not implemented.");
+         "Debug functionality not tested due to time constraints.");
 
 --  begin read only
    end Test_Origin_To_String;
@@ -342,7 +342,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
 
       AUnit.Assertions.Assert
         (True,
-         "Test not implemented.");
+         "Debug functionality not tested due to time constraints.");
 
 --  begin read only
    end Test_Transaction_To_String;
@@ -362,7 +362,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
 
       AUnit.Assertions.Assert
         (True,
-         "Test not implemented.");
+         "Debug functionality not tested due to time constraints.");
 
 --  begin read only
    end Test_Parse_Origin_Attribute;
@@ -382,7 +382,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
 
       AUnit.Assertions.Assert
         (True,
-         "Test not implemented.");
+         "Debug functionality not tested due to time constraints.");
 
 --  begin read only
    end Test_Node_Backtrace_To_String;
@@ -402,7 +402,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
 
       AUnit.Assertions.Assert
         (True,
-         "Test not implemented.");
+         "Debug functionality not tested due to time constraints.");
 
 --  begin read only
    end Test_Transaction_Log_To_String;

@@ -15,36 +15,38 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with DOM.Core.Nodes;
-with DOM.Core.Elements;
-with DOM.Core.Documents.Local;
 with Ada.Strings.Maps;
 with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 with Ada.Exceptions;
 with Ada.Containers.Indefinite_Vectors;
 
-with Mulog;
+with DOM.Core.Nodes;
+with DOM.Core.Elements;
+with DOM.Core.Documents.Local;
+
 with McKae.XML.XPath.XIA;
+
+with Mulog;
 with Mutools.Amend.Ordering;
 with Mutools.Xmldebuglog;
 
 package body Mutools.Amend
 is
-   -- merge New_Child into Parent such that parts of the child-tree
-   -- that already exist in Parent are not duplicated
-   -- In detail: for each child C of Parent:
-   --   check if tag name and all attributes of C and New_Child are equal
-   --     if yes: recursive function call on C and on each Child of New_Child
-   --     if no: goto next child C of Parent
-   -- if no child matched:
+   --  Merge New_Child into Parent such that parts of the child-tree
+   --  that already exist in Parent are not duplicated.
+   --  In detail: for each child C of Parent:
+   --   Check if tag-name and all attributes of C and New_Child are equal
+   --     If yes: recursive function call on C and on each Child of New_Child
+   --     If no: goto next child C of Parent
+   --   If no child matched:
    --     append New_Child to children of Parent and return (with deep cloning)
    procedure Recursive_Merge
       (Parent       : DOM.Core.Node;
        New_Child    : DOM.Core.Node;
        Debug_Active : Boolean);
 
-   ------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Expand
       (XML_Data    : Muxml.XML_Data_Type;
@@ -83,7 +85,7 @@ is
                                    (Node => Amend_Statement));
                   end if;
                   Ada.Exceptions.Raise_Exception
-                     (E =>  Ada.Exceptions.Exception_Identity (X => Error),
+                     (E => Ada.Exceptions.Exception_Identity (X => Error),
                       Message => "XIA was evaluating XPath """
                          & DOM.Core.Elements.Get_Attribute
                          (Elem => Amend_Statement,
@@ -106,12 +108,12 @@ is
                        (Elem => Amend_Statement,
                         Name => "xpath")
                   & """ in amend statement.";
-
             end if;
+
             if Debug_Active then
-               -- before the nodes leave their place, we have push the
-               -- backtrace-info to the leafs of the subtree (because we need
-               -- their ancestors for that)
+               --  Before the nodes leave their place, we have push the
+               --  backtrace-info to the leafs of the subtree (because we need
+               --  their ancestors for that).
                declare
                   Log_Index : Mutools.Xmldebuglog.Transaction_Log_Index_Type;
                begin
@@ -170,7 +172,7 @@ is
       end loop;
    end Expand;
 
-   ------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    function Nodes_Equal (L : DOM.Core.Node; R : DOM.Core.Node)
       return Boolean
@@ -228,7 +230,7 @@ is
       return True;
    end Nodes_Equal;
 
-   ------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Recursive_Merge
       (Parent       : DOM.Core.Node;
@@ -251,63 +253,64 @@ is
       Dummy          : DOM.Core.Node;
       pragma Unreferenced (Dummy);
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- return a vector with the names of the ancestors of Node,
-      -- starting with the name of Node
+      --  Return a vector with the names of the ancestors of Node,
+      --  starting with the name of Node.
       function Get_Ancestor_Names (Node : DOM.Core.Node)
                return  Mutools.Amend.Ordering.String_Vector.Vector;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- check if the given node has only one child which is a text child
-      -- returns "Unique_Essential" if there is exactly 1 child and that is an essential text-node
-      -- returns "None_Or_Not_Essential" if there is no child or exactly 1 text-node-child which
-      --    contains only white-space
-      -- returns "Many_Or_Other_Type" otherwise
+      --  Check if the given node has only one child which is a text child.
+      --  Returns "Unique_Essential" if there is exactly 1 child and that is an
+      --  essential text-node.
+      --  Returns "None_Or_Not_Essential" if there is no child or exactly 1
+      --  text-node-child which contains only white-space.
+      --  Returns "Many_Or_Other_Type" otherwise.
       function Has_Only_Text_Child (Node : DOM.Core.Node)
                                    return Text_Child_Status_Type;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- insert element-node New_Child into parent
-      -- uses siblings (i.e., children of Parent) to determine insertion position
+      --  Insert element-node New_Child into parent.
+      --  Uses siblings (i.e., children of Parent) to determine insertion
+      --  position.
       procedure Insert
          (Parent         : DOM.Core.Node;
           New_Child      : DOM.Core.Node;
           Siblings_Names : Mutools.Amend.Ordering.String_Vector.Vector;
           Siblings_Nodes : Node_Vector.Vector);
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- returns true iff the given node is a text-node and its text
-      -- contains non-whitespace characters
+      --  Returns true if and only if the given node is a text-node and its text
+      --  contains non-whitespace characters.
       function Is_Essential_Textnode (N : DOM.Core.Node) return Boolean;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- insert New_Child into Parent
-      -- used only if New_Child is not a "special case",
-      -- (i.e., covered by Merge_Text_Branch)
+      --  Insert New_Child into Parent.
+      --  Used only if New_Child is not a "special case",
+      --  (i.e., covered by Merge_Text_Branch).
       procedure Merge_Regular_Element
          (Parent    : DOM.Core.Node;
           New_Child : DOM.Core.Node);
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- insert New_Child into Parent
-      -- in the case where New_Child is of the form
-      -- <tagname ...>text only</tagname>
+      --  Insert New_Child into Parent in the case where New_Child is of the
+      --  form   <tagname ...>text only</tagname>
       procedure Merge_Text_Branch
          (Parent    : DOM.Core.Node;
           New_Child : DOM.Core.Node);
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
-      -- get a string representation of Node, excluding its children
+      --  Get a string representation of Node, excluding its children.
       function Node_To_String (Node : DOM.Core.Node) return String;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       function Get_Ancestor_Names (Node : DOM.Core.Node)
                return  Mutools.Amend.Ordering.String_Vector.Vector
@@ -324,7 +327,7 @@ is
          return Output;
       end Get_Ancestor_Names;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       function Has_Only_Text_Child (Node : DOM.Core.Node)
                                    return Text_Child_Status_Type
@@ -354,10 +357,9 @@ is
                return Many_Or_Other_Type;
             end if;
          end if;
-
       end Has_Only_Text_Child;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Insert
          (Parent         : DOM.Core.Node;
@@ -365,13 +367,13 @@ is
           Siblings_Names : Mutools.Amend.Ordering.String_Vector.Vector;
           Siblings_Nodes : Node_Vector.Vector)
       is
-         Ancestors   : constant Mutools.Amend.Ordering.String_Vector.Vector
+         Ancestors    : constant Mutools.String_Vector.Vector
                       := Get_Ancestor_Names (Node => Parent);
          Query_Result : constant Mutools.Amend.Ordering.Insert_Query_Result_Type
                       := Mutools.Amend.Ordering.Get_Insert_Index
                         (Ancestors => Ancestors,
-                         New_Child  => DOM.Core.Nodes.Node_Name (N => New_Child),
-                         Siblings   => Siblings_Names);
+                         New_Child => DOM.Core.Nodes.Node_Name (N => New_Child),
+                         Siblings  => Siblings_Names);
          Copy_Of_New_Child, Ref_Child : DOM.Core.Node;
       begin
          if Query_Result = Mutools.Amend.Ordering.No_Legal_Index then
@@ -391,7 +393,7 @@ is
          elsif Query_Result = Mutools.Amend.Ordering.
             Insert_Query_Result_Type (Siblings_Names.Length)
          then
-            -- this triggers Insert_Before to append the new child at the end
+            --  This triggers Insert_Before to append the new child at the end.
             Ref_Child := null;
          else
             Ref_Child := Siblings_Nodes (Integer (Query_Result));
@@ -413,13 +415,13 @@ is
 
       end Insert;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       function Is_Essential_Textnode (N : DOM.Core.Node) return Boolean
       is
          Whitespace : constant Ada.Strings.Maps.Character_Set
                     := Ada.Strings.Maps.To_Set
-                         ("" & Character'Val (9)    -- horizontal tab
+                         ("" & Character'Val (9) -- horizontal tab
                           & Character'Val (10)   -- line feed
                           & Character'Val (13)   -- carriage return
                           & Character'Val (32)); -- space
@@ -442,15 +444,15 @@ is
          end if;
       end Is_Essential_Textnode;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Merge_Regular_Element
          (Parent    : DOM.Core.Node;
           New_Child : DOM.Core.Node)
       is
-         Siblings_Names     : Mutools.Amend.Ordering.String_Vector.Vector;
-         Siblings_Nodes     : Node_Vector.Vector;
-         Parent_Child       : DOM.Core.Node;
+         Siblings_Names : Mutools.Amend.Ordering.String_Vector.Vector;
+         Siblings_Nodes : Node_Vector.Vector;
+         Parent_Child   : DOM.Core.Node;
       begin
 
          Parent_Child := DOM.Core.Nodes.First_Child (N => Parent);
@@ -493,8 +495,8 @@ is
             Parent_Child := DOM.Core.Nodes.Next_Sibling (N => Parent_Child);
          end loop;
 
-         -- as the 'return' above was not reached
-         -- none of the children of Parent matches
+         --  As the 'return' above was not reached
+         --  none of the children of Parent matches.
          Insert
             (Parent         => Parent,
              New_Child      => New_Child,
@@ -503,15 +505,15 @@ is
 
       end Merge_Regular_Element;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Merge_Text_Branch
          (Parent    : DOM.Core.Node;
           New_Child : DOM.Core.Node)
       is
          Parent_Child, Parent_Child_Marked : DOM.Core.Node;
-         Siblings_Names  : Mutools.Amend.Ordering.String_Vector.Vector;
-         Siblings_Nodes  : Node_Vector.Vector;
+         Siblings_Names : Mutools.Amend.Ordering.String_Vector.Vector;
+         Siblings_Nodes : Node_Vector.Vector;
       begin
 
          Parent_Child := DOM.Core.Nodes.First_Child (N => Parent);
@@ -546,8 +548,8 @@ is
             Parent_Child := DOM.Core.Nodes.Next_Sibling (N => Parent_Child);
          end loop;
 
-         -- there existed a fitting node in parent in which we insert the text
-         -- from new child
+         --  There exists a fitting node in parent in which we insert the text
+         --  from new child.
          if Parent_Child_Marked /= null then
             declare
                Parent_Child_Child : constant DOM.Core.Node
@@ -593,7 +595,7 @@ is
          end if;
       end Merge_Text_Branch;
 
-      ---------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       function Node_To_String (Node : DOM.Core.Node) return String
       is
@@ -628,7 +630,7 @@ is
    begin
       if New_Child_Type = Text_Node then
          if Is_Essential_Textnode (N => New_Child) then
-            -- how to properly add a text-node to an xml-tree
+            --  How to properly add a text-node to an xml-tree
             --    (possibly after another text-node) needs knowledge about
             --    the meaning and syntax of the text
             --    (whitespace may be important). This is not supported.
@@ -638,7 +640,7 @@ is
                & "'. Cannot process isolated text-nodes. "
                & "Please add surrounding element-node.";
          else
-            -- text-nodes that contain only whitespace are ignored
+            --  Text-nodes that contain only whitespace are ignored.
             return;
          end if;
       elsif New_Child_Type = Comment_Node then

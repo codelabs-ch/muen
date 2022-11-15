@@ -41,7 +41,7 @@ package body Mutools.Mergers.Test_Data.Tests is
    begin
       -- this test is implemented in mucfgmerge.mergers and omitted here
       Assert (Condition => True,
-              Message => "Impossible test error");
+              Message   => "Tested in mucfgmerge.mergers");
 
 --  begin read only
    end Test_Merge_Config_Section;

@@ -21,8 +21,6 @@ with Ada.Strings.Unbounded;
 with DOM.Core.Nodes;
 with DOM.Core.Documents.Local;
 
---with McKae.XML.XPath.XIA;
-
 with Muxml.Utils;
 with Mutools.Mergers;
 
@@ -59,7 +57,7 @@ is
       New_Config :        DOM.Core.Node;
       Clone      :        Boolean := False);
 
-   ----------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Add_Missing_HW_Elements (HW_Node : DOM.Core.Node)
    is
@@ -77,7 +75,7 @@ is
          Ref_Names  => (1 => U ("memory")));
    end Add_Missing_HW_Elements;
 
-   ----------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Add_Missing_PL_Elements (PL_Node : DOM.Core.Node)
    is
@@ -120,7 +118,7 @@ is
       end if;
    end Merge_Config;
 
-   ---------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Merge_Config_Section
      (Policy     : in out Muxml.XML_Data_Type;
@@ -128,7 +126,7 @@ is
       Clone      :        Boolean := False)
    renames Mutools.Mergers.Merge_Config_Section;
 
-   ---------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Merge_Hardware
      (Policy        : in out Muxml.XML_Data_Type;
@@ -152,7 +150,7 @@ is
          Add_Location      => Add_Location);
    end Merge_Hardware;
 
-   ---------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Merge_Platform
      (Policy        : in out Muxml.XML_Data_Type;
@@ -173,7 +171,7 @@ is
          Add_Location      => Add_Location);
    end Merge_Platform;
 
-   ---------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Merge_Platform_Config (Policy : in out Muxml.XML_Data_Type)
    is

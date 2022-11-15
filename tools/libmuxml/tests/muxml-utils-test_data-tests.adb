@@ -74,7 +74,7 @@ package body Muxml.Utils.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
       use all type DOM.Core.Node;
 
-      Data : Muxml.XML_Data_Type;
+      Data         : Muxml.XML_Data_Type;
       Node1, Node2 : DOM.Core.Node;
    begin
       -- goto child
@@ -89,7 +89,7 @@ package body Muxml.Utils.Test_Data.Tests is
                   Only_Element_Nodes => True),
               Message   => "Node mismatch");
       Assert (Condition => DOM.Core.Nodes.First_Child (N => Node1)
-                 = Next_Node (Current_Node => Node1,
+                 = Next_Node (Current_Node       => Node1,
                               Only_Element_Nodes => False),
               Message   => "Node mismatch");
 
@@ -102,21 +102,19 @@ package body Muxml.Utils.Test_Data.Tests is
 
       -- goto sibling of ancestor
       Node1 := Get_Element
-         (Doc => Data.Doc,
+         (Doc   => Data.Doc,
           XPath => "/system/hardware");
       Assert (Condition => Node1 = Next_Node
                  (Current_Node       => Node2,
                   Only_Element_Nodes => True),
               Message   => "Node mismatch");
 
-
-
       -- goto sibling
       Node1 := Get_Element
-         (Doc => Data.Doc,
+         (Doc   => Data.Doc,
           XPath => "/system/hardware/processor/cpu[@apicId='0']");
       Node2 := Get_Element
-         (Doc => Data.Doc,
+         (Doc   => Data.Doc,
           XPath => "/system/hardware/processor/cpu[@apicId='2]");
       Assert (Condition => Node2 = Next_Node
                  (Current_Node       => Node1,
@@ -127,10 +125,9 @@ package body Muxml.Utils.Test_Data.Tests is
                               Only_Element_Nodes => False),
               Message   => "Node mismatch");
 
-
       -- no next node exists
       Node1 := Get_Element
-         (Doc => Data.Doc,
+         (Doc   => Data.Doc,
           XPath => "/system/scheduling/majorFrame/cpu/minorFrame[@ticks='80']");
       Assert (Condition => null = Next_Node
                  (Current_Node       => Node1,
@@ -152,9 +149,9 @@ package body Muxml.Utils.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
       use all type DOM.Core.Node;
 
-      Data : Muxml.XML_Data_Type;
+      Data         : Muxml.XML_Data_Type;
       Node1, Node2 : DOM.Core.Node;
-      Iterations : Integer := 0;
+      Iterations   : Integer := 0;
    begin
       -- traverse a single node
       Muxml.Parse
@@ -189,7 +186,7 @@ package body Muxml.Utils.Test_Data.Tests is
       end loop;
 
       Assert (Condition => Iterations = 5,
-              Message => "Iterations mismatch: " & Iterations'Image);
+              Message   => "Iterations mismatch: " & Iterations'Image);
 
 --  begin read only
    end Test_Next_Node_In_Subtree;
@@ -1922,9 +1919,9 @@ package body Muxml.Utils.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
       use all type DOM.Core.Node;
 
-      Data : Muxml.XML_Data_Type;
+      Data         : Muxml.XML_Data_Type;
       Node1, Node2 : DOM.Core.Node;
-      Iterations : Integer := 0;
+      Iterations   : Integer := 0;
    begin
 
       Muxml.Parse

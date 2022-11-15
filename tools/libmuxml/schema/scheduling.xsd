@@ -7,14 +7,49 @@
     The Muen SK implements a fixed, cyclic scheduler. The \texttt{scheduling}
     element is used to specify such a static plan by means of a major frame. A
     major frame consist of an arbitrary number of minor frames.  Minor frames in
-    turn specify a duration in number of ticks a subject is scheduled before
-    preemption in terms of the tick rate.
+    turn specify a duration in number of ticks a scheduling partition is
+    scheduled.
 
-    The tickRate attribute has the unit Hertz (Hz) and specifies the number of
-    clock ticks per second. The ticks attribute of minor frames is expressed in
-    terms of this tick rate. As an example: if we want to declare the minor
-    frame duration in terms of microseconds ($10^{-6}$) then a tick rate of
-    1000000 must be used.
+    Scheduling partitions defined in the \texttt{partitions} element consist of
+    one or more scheduling groups, which in turn specify one or more subjects to
+    be scheduled. \emph{Scheduling groups} are used to define groups of
+    cooperating subjects, which are allowed to hand over execution to a subject
+    in the same scheduling group. This is done via \emph{handover} events.
+    Membership of a scheduling group must be specified explicitly in the policy,
+    validators enforce that these settings are correct by calculating the chain
+    of handover events.
+
+    While scheduling groups support the efficient cooperation of multiple
+    subjects, subjects which need to be spatially but not temporally isolated
+    from each other cannot profit from it. To efficiently support this use-case,
+    the scheduling partition concept is implemented.
+
+    Within a \emph{scheduling partition}, all scheduling groups are scheduled
+    round robin with preemption and the opportunity to yield and/or sleep. If a
+    subject in a scheduling group sleeps or yields, the next scheduling group in
+    the scheduling partition is scheduled. More precisely: the active subject of
+    the next scheduling group is executed by the SK.
+
+    Note that prioritization is not implemented on purpose to avoid any starvation
+    issues\footnote{Prioritization with starvation protection cannot be implemented
+    with low complexity}. The yield operation maps to the x86\_64
+    \texttt{PAUSE} instruction, while sleep corresponds to \texttt{HLT}.
+    See the \emph{Muen Component Specification} document
+    \cite{muen:component-spec} for more information on this topic.
+
+    Minor frames designate the scheduling partition that is to be executed for
+    the given amount of ticks. The scheduling partition attribute \texttt{name}
+    uniquely identifies a scheduling partition. On first activation, the first
+    scheduling group (in XML-order) is scheduled. Within the scheduling group,
+    the first subject (again in XML-order) is executed. The active subject of a
+    scheduling group may change over time, as the cooperating subjects initiate
+    handover events.
+
+    The tickRate attribute of the \texttt{scheduling} element has the unit Hertz
+    (Hz) and specifies the number of clock ticks per second. The ticks attribute
+    of minor frames is expressed in terms of this tick rate. As an example: if
+    we want to declare the minor frame duration in terms of microseconds
+    ($10^{-6}$) then a tick rate of 1000000 must be used.
 
     The duration of a major frame must be the same on each CPU, meaning the sum
     of all minor frame ticks for any given CPU must be identical. However,
@@ -24,14 +59,6 @@
     active one. At the end of each major frame, the kernel determines the active
     major frame and switches to that scheduling plan for the duration of the
     major frame.
-
-    All subjects which can hand over execution to another subject via a switch
-    event form a so called scheduling group. Membership to a scheduling group is
-    determined by the specified switch events and how they link subjects
-    together. Minor frames designate the subject that is to be executed for the
-    given amount of ticks. The subject name identifies the \emph{initial}
-    subject of a minor frame but any member of the scheduling group of the given
-    subject may be executed during that minor frame.
 
     See line \ref{lst:af-lineref-sched} in listing \ref{lst:annotated-policy}
     for an example scheduling plan.

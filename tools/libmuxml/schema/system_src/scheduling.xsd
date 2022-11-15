@@ -22,8 +22,8 @@
  <xs:complexType name="minorFrameType">
   <xs:annotation>
    <xs:documentation>
-    A minor frame specifies the number of scheduling ticks a subject is allowed
-    to run on the CPU specified by the parent \texttt{cpu} element.
+    A minor frame specifies the number of scheduling ticks a partition is
+    allowed to run on the CPU specified by the parent \texttt{cpu} element.
 
     See line \ref{lst:af-lineref-sched-minor} in listing
     \ref{lst:annotated-policy} for an example minor frame.
@@ -51,7 +51,8 @@
     The scheduling \texttt{group} element is used to specify a collection of
     subjects that may cooperatively schedule each other via handover events.
     Scheduling groups must contain at least one subject. As an example, a Linux
-    subject and its associated Subject Monitor form a scheduling group.
+    subject and its associated Subject Monitor (SM), Subject Loader (SL) and
+    Device Manager (DM) form a scheduling group.
 
     See line \ref{lst:af-lineref-sched-group} in listing
     \ref{lst:annotated-policy} for an example scheduling group.
@@ -69,10 +70,7 @@
     scheduling groups consisting of subjects that require spatial but not
     temporal isolation from each other. Within a scheduling partition, all
     scheduling groups are scheduled round robin with preemption (i.e.
-    non-cooperatively) and the opportunity to yield and/or sleep. No
-    priorization is implemented on purpose to avoid any starvation issue
-    (Priorization with starvation protection cannot be implemented with low
-    complexity).
+    non-cooperatively) and the opportunity to yield and/or sleep.
 
     A scheduling partition must contain at least one scheduling group.
 

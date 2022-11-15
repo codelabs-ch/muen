@@ -2334,6 +2334,11 @@ is
       Memory_Section : constant DOM.Core.Node
         := Muxml.Utils.Get_Element (Doc   => Data.Doc,
                                     XPath => "/system/memory");
+      Skip_Mem       : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Memory_Section,
+           XPath => "memory[@type='subject_state' or "
+           & "@type='subject_timed_event' or @type='subject_interrupts']");
       File_Memory    : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Memory_Section,
@@ -2396,6 +2401,7 @@ is
             for J in 0 .. DCN.Length (List => Loadee_Mappings) - 1 loop
                declare
                   use type Interfaces.Unsigned_64;
+                  use type DOM.Core.Node;
 
                   Map_Node        : constant DOM.Core.Node
                     := DCN.Item (List  => Loadee_Mappings,
@@ -2423,184 +2429,195 @@ is
                   Virtual_Addr    : constant String
                     := Mutools.Utils.To_Hex
                       (Number => Ldr_Addr + Map_Addr);
+                  Skip            : constant Boolean
+                    := Muxml.Utils.Get_Element
+                      (Nodes     => Skip_Mem,
+                       Ref_Attr  => "name",
+                       Ref_Value => Map_Phys_Name) /= null;
                   Loader_Mapping  : constant DOM.Core.Node
-                    := MXU.Create_Virtual_Memory_Node
-                      (Policy        => Data,
-                       Logical_Name  => Log_Name,
-                       Physical_Name => Map_Phys_Name,
-                       Address       => Virtual_Addr,
-                       Writable      => Map_Is_Writable,
-                       Executable    => False);
+                    := (if not Skip then MXU.Create_Virtual_Memory_Node
+                        (Policy        => Data,
+                         Logical_Name  => Log_Name,
+                         Physical_Name => Map_Phys_Name,
+                         Address       => Virtual_Addr,
+                         Writable      => Map_Is_Writable,
+                         Executable    => False)
+                        else null);
                begin
 
-                  --  In case of loading a different subject, a new mapping in
-                  --  the loader address space must be added. Furthermore the
-                  --  CR4.VMXE flag in the loadee state is cleared to make sure
-                  --  a trap occurs after loadee reset. These steps must be
-                  --  skipped, when a subject is loading itself.
+                  --  Skip mapping of subject state, timed event and interrupt
+                  --  regions in loader, since these are reset by the kernel.
 
-                  if not Self_Loader then
-                     Mulog.Log
-                       (Msg => "Mapping memory region '" & Map_Log_Name
-                        & "' of subject '" & Loadee_Name & "' "
-                        & (if Map_Is_Writable then "writable"
-                          else "readable")
-                        & " to virtual address " & Virtual_Addr
-                        & " of loader subject '" & Ldr_Subj_Name & "'");
+                  if not Skip then
 
-                     --  Map region into loader.
+                     --  In case of loading a different subject, a new mapping in
+                     --  the loader address space must be added. Furthermore the
+                     --  CR4.VMXE flag in the loadee state is cleared to make sure
+                     --  a trap occurs after loadee reset. These steps must be
+                     --  skipped, when a subject is loading itself.
 
-                     Muxml.Utils.Append_Child
-                       (Node      => Ldr_Mem_Node,
-                        New_Child => Loader_Mapping);
+                     if not Self_Loader then
+                        Mulog.Log
+                          (Msg => "Mapping memory region '" & Map_Log_Name
+                           & "' of subject '" & Loadee_Name & "' "
+                           & (if Map_Is_Writable then "writable"
+                             else "readable")
+                           & " to virtual address " & Virtual_Addr
+                           & " of loader subject '" & Ldr_Subj_Name & "'");
 
-                     --  Clear CR4.VMXE in loadee subject state.
+                        --  Map region into loader.
 
-                     declare
-                        VMXE_Node : constant DOM.Core.Node
-                          := Muxml.Utils.Get_Element
-                            (Doc   => Loadee_Subj,
-                             XPath => "vcpu/registers/cr4/VMXEnable");
-                     begin
-                        DCN.Normalize (N => VMXE_Node);
-                        DCN.Set_Node_Value
-                          (N     => DCN.First_Child (N => VMXE_Node),
-                           Value => "0");
-                     end;
-                  end if;
+                        Muxml.Utils.Append_Child
+                          (Node      => Ldr_Mem_Node,
+                           New_Child => Loader_Mapping);
 
-                  --  If writable and file-backed, create physical target
-                  --  region and swap original mapping.
+                        --  Clear CR4.VMXE in loadee subject state.
 
-                  if Map_Is_Writable then
-                     declare
-                        use type DOM.Core.Node;
+                        declare
+                           VMXE_Node : constant DOM.Core.Node
+                             := Muxml.Utils.Get_Element
+                               (Doc   => Loadee_Subj,
+                                XPath => "vcpu/registers/cr4/VMXEnable");
+                        begin
+                           DCN.Normalize (N => VMXE_Node);
+                           DCN.Set_Node_Value
+                             (N     => DCN.First_Child (N => VMXE_Node),
+                              Value => "0");
+                        end;
+                     end if;
 
-                        Phys_Mem : constant DOM.Core.Node
-                          := Muxml.Utils.Get_Element
-                            (Nodes     => File_Memory,
-                             Ref_Attr  => "name",
-                             Ref_Value => Map_Phys_Name);
-                        Target_Phys_Name : constant String
-                          := Map_Phys_Name  & "_" & Loadee_Name;
-                     begin
-                        if Phys_Mem /= null then
+                     --  If writable and file-backed, create physical target
+                     --  region and swap original mapping.
 
-                           --  Update physical reference(s) to target region.
+                     if Map_Is_Writable then
+                        declare
+                           Phys_Mem : constant DOM.Core.Node
+                             := Muxml.Utils.Get_Element
+                               (Nodes     => File_Memory,
+                                Ref_Attr  => "name",
+                                Ref_Value => Map_Phys_Name);
+                           Target_Phys_Name : constant String
+                             := Map_Phys_Name  & "_" & Loadee_Name;
+                        begin
+                           if Phys_Mem /= null then
 
-                           DOM.Core.Elements.Set_Attribute
-                             (Elem  => Map_Node,
-                              Name  => "physical",
-                              Value => Target_Phys_Name);
-                           DOM.Core.Elements.Set_Attribute
-                             (Elem  => Loader_Mapping,
-                              Name  => "physical",
-                              Value => Target_Phys_Name);
-
-                           declare
-                              Phys_Size       : constant String
-                                := DOM.Core.Elements.Get_Attribute
-                                  (Elem => Phys_Mem,
-                                   Name => "size");
-                              Phys_Type       : constant String
-                                := DOM.Core.Elements.Get_Attribute
-                                  (Elem => Phys_Mem,
-                                   Name => "type");
-                              Target_Phys_Mem : constant DOM.Core.Node
-                                := MXU.Create_Memory_Node
-                                  (Policy      => Data,
-                                   Name        => Target_Phys_Name,
-                                   Address     => "",
-                                   Size        => Phys_Size,
-                                   Caching     =>
-                                     DOM.Core.Elements.Get_Attribute
-                                       (Elem => Phys_Mem,
-                                        Name => "caching"),
-                                   Alignment   =>
-                                     DOM.Core.Elements.Get_Attribute
-                                       (Elem => Phys_Mem,
-                                        Name => "alignment"),
-                                   Memory_Type => Phys_Type);
-                              Hash_Ref        : constant DOM.Core.Node
-                                := DOM.Core.Documents.Create_Element
-                                  (Doc      => Data.Doc,
-                                   Tag_Name => "hashRef");
-                              Src_Mapping     : constant DOM.Core.Node
-                                := MXU.Create_Virtual_Memory_Node
-                                  (Policy        => Data,
-                                   Logical_Name  => Log_Name & "_src",
-                                   Physical_Name => Map_Phys_Name,
-                                   Address       => Mutools.Utils.To_Hex
-                                     (Number => Current_Loader_Addr),
-                                   Writable      => False,
-                                   Executable    => False);
-                              Dev_Memory : constant DOM.Core.Node_List
-                                := Muxml.Utils.Get_Elements
-                                  (Nodes     => Dev_Dom_Memory,
-                                   Ref_Attr  => "physical",
-                                   Ref_Value => Map_Phys_Name);
-                              Dev_Mem_Count : constant Natural
-                                := DOM.Core.Nodes.Length (List => Dev_Memory);
-                           begin
-                              Mulog.Log
-                                (Msg => "Swapping file-backed source "
-                                 & "region '" & Map_Phys_Name
-                                 & "' with target memory region '"
-                                 & Target_Phys_Name & "'");
-
-                              Muxml.Utils.Append_Child
-                                (Node      => DCN.Insert_Before
-                                   (N         => Memory_Section,
-                                    New_Child => Target_Phys_Mem,
-                                    Ref_Child => Phys_Mem),
-                                 New_Child => Hash_Ref);
-                              DOM.Core.Elements.Set_Attribute
-                                (Elem  => Hash_Ref,
-                                 Name  => "memory",
-                                 Value => Map_Phys_Name);
+                              --  Update physical reference(s) to target region.
 
                               DOM.Core.Elements.Set_Attribute
-                                (Elem  => Phys_Mem,
-                                 Name  => "caching",
-                                 Value => "WB");
+                                (Elem  => Map_Node,
+                                 Name  => "physical",
+                                 Value => Target_Phys_Name);
+                              DOM.Core.Elements.Set_Attribute
+                                (Elem  => Loader_Mapping,
+                                 Name  => "physical",
+                                 Value => Target_Phys_Name);
 
-                              if Phys_Type = "subject_initrd" then
-
-                                 --  Collect all source regions of type initrd
-                                 --  for post-processing, see below.
-
-                                 DOM.Core.Append_Node
-                                   (List => Src_Initrd_Mem,
-                                    N    => Phys_Mem);
-                              end if;
-
-                              --  Add new source mapping to loader.
-
-                              Muxml.Utils.Append_Child
-                                (Node      => Ldr_Mem_Node,
-                                 New_Child => Src_Mapping);
-
-                              --  Swap device domain mappings.
-
-                              for K in 0 .. Dev_Mem_Count - 1 loop
+                              declare
+                                 Phys_Size       : constant String
+                                   := DOM.Core.Elements.Get_Attribute
+                                     (Elem => Phys_Mem,
+                                      Name => "size");
+                                 Phys_Type       : constant String
+                                   := DOM.Core.Elements.Get_Attribute
+                                     (Elem => Phys_Mem,
+                                      Name => "type");
+                                 Target_Phys_Mem : constant DOM.Core.Node
+                                   := MXU.Create_Memory_Node
+                                     (Policy      => Data,
+                                      Name        => Target_Phys_Name,
+                                      Address     => "",
+                                      Size        => Phys_Size,
+                                      Caching     =>
+                                        DOM.Core.Elements.Get_Attribute
+                                          (Elem => Phys_Mem,
+                                           Name => "caching"),
+                                      Alignment   =>
+                                        DOM.Core.Elements.Get_Attribute
+                                          (Elem => Phys_Mem,
+                                           Name => "alignment"),
+                                      Memory_Type => Phys_Type);
+                                 Hash_Ref        : constant DOM.Core.Node
+                                   := DOM.Core.Documents.Create_Element
+                                     (Doc      => Data.Doc,
+                                      Tag_Name => "hashRef");
+                                 Src_Mapping     : constant DOM.Core.Node
+                                   := MXU.Create_Virtual_Memory_Node
+                                     (Policy        => Data,
+                                      Logical_Name  => Log_Name & "_src",
+                                      Physical_Name => Map_Phys_Name,
+                                      Address       => Mutools.Utils.To_Hex
+                                        (Number => Current_Loader_Addr),
+                                      Writable      => False,
+                                      Executable    => False);
+                                 Dev_Memory : constant DOM.Core.Node_List
+                                   := Muxml.Utils.Get_Elements
+                                     (Nodes     => Dev_Dom_Memory,
+                                      Ref_Attr  => "physical",
+                                      Ref_Value => Map_Phys_Name);
+                                 Dev_Mem_Count : constant Natural
+                                   := DOM.Core.Nodes.Length
+                                     (List => Dev_Memory);
+                              begin
                                  Mulog.Log
-                                   (Msg => "Swapping device domain mapping of"
-                                    & " source region '" & Map_Phys_Name
-                                    & "' with target region '"
+                                   (Msg => "Swapping file-backed source "
+                                    & "region '" & Map_Phys_Name
+                                    & "' with target memory region '"
                                     & Target_Phys_Name & "'");
-                                 DOM.Core.Elements.Set_Attribute
-                                   (Elem  => DOM.Core.Nodes.Item
-                                      (List  => Dev_Memory,
-                                       Index => K),
-                                    Name  => "physical",
-                                    Value => Target_Phys_Name);
-                              end loop;
 
-                              Current_Loader_Addr := Current_Loader_Addr
-                                + Interfaces.Unsigned_64'Value (Phys_Size);
-                           end;
-                        end if;
-                     end;
+                                 Muxml.Utils.Append_Child
+                                   (Node      => DCN.Insert_Before
+                                      (N         => Memory_Section,
+                                       New_Child => Target_Phys_Mem,
+                                       Ref_Child => Phys_Mem),
+                                    New_Child => Hash_Ref);
+                                 DOM.Core.Elements.Set_Attribute
+                                   (Elem  => Hash_Ref,
+                                    Name  => "memory",
+                                    Value => Map_Phys_Name);
+
+                                 DOM.Core.Elements.Set_Attribute
+                                   (Elem  => Phys_Mem,
+                                    Name  => "caching",
+                                    Value => "WB");
+
+                                 if Phys_Type = "subject_initrd" then
+
+                                    --  Collect all source regions of tybe initrd
+                                    --  for post-processing, see below.
+
+                                    DOM.Core.Append_Node
+                                      (List => Src_Initrd_Mem,
+                                       N    => Phys_Mem);
+                                 end if;
+
+                                 --  Add new source mapping to loader.
+
+                                 Muxml.Utils.Append_Child
+                                   (Node      => Ldr_Mem_Node,
+                                    New_Child => Src_Mapping);
+
+                                 --  Swap device domain mappings.
+
+                                 for K in 0 .. Dev_Mem_Count - 1 loop
+                                    Mulog.Log
+                                      (Msg => "Swapping device domain mapping "
+                                       & "of source region '" & Map_Phys_Name
+                                       & "' with target region '"
+                                       & Target_Phys_Name & "'");
+                                    DOM.Core.Elements.Set_Attribute
+                                      (Elem  => DOM.Core.Nodes.Item
+                                         (List  => Dev_Memory,
+                                          Index => K),
+                                       Name  => "physical",
+                                       Value => Target_Phys_Name);
+                                 end loop;
+
+                                 Current_Loader_Addr := Current_Loader_Addr
+                                   + Interfaces.Unsigned_64'Value (Phys_Size);
+                              end;
+                           end if;
+                        end;
+                     end if;
                   end if;
                end;
             end loop;

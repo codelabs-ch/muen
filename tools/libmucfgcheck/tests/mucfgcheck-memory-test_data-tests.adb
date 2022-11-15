@@ -2031,6 +2031,161 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Monitor_Subject_Region_Mappings (Gnattest_T : in out Test);
+   procedure Test_Monitor_Subject_Region_Mappings_11712e (Gnattest_T : in out Test) renames Test_Monitor_Subject_Region_Mappings;
+--  id:2.2/11712e2ba12b3464/Monitor_Subject_Region_Mappings/1/0/
+   procedure Test_Monitor_Subject_Region_Mappings (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Monitor_Subject_Region_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
+
+      --  Move SM to different core to create writable subject state, timed
+      --  event and interrupts mapping on different core.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='sm']",
+         Name  => "cpu",
+         Value => "4");
+      Monitor_Subject_Region_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Memory region 'linux|interrupts' of subject 'linux' is "
+               & "monitored writable by subject 'sm' which is not running on "
+               & "the same CPU or a sibling"),
+              Message   => "Exception mismatch (interrupts)");
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Memory region 'linux|state' of subject 'linux' is "
+               & "monitored writable by subject 'sm' which is not running on "
+               & "the same CPU or a sibling"),
+              Message   => "Exception mismatch (state)");
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Memory region 'linux|timed_event' of subject 'linux' is "
+               & "monitored writable by subject 'sm' which is not running on "
+               & "the same CPU or a sibling"),
+              Message   => "Exception mismatch (timed event)");
+
+      Validation_Errors.Clear;
+
+      --  Make subjects siblings to check that this is allowed.
+
+      Muxml.Utils.Add_Child
+        (Parent     => Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='sm']"),
+         Child_Name => "sibling");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='sm']/sibling",
+         Name  => "ref",
+         Value => "main_subject");
+      Muxml.Utils.Add_Child
+        (Parent     => Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']"),
+         Child_Name => "sibling");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/sibling",
+         Name  => "ref",
+         Value => "main_subject");
+      Monitor_Subject_Region_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error (Siblings)");
+
+      --  Linux sibling of SM.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='sm']/sibling",
+         Name  => "ref",
+         Value => "");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/sibling",
+         Name  => "ref",
+         Value => "sm");
+      Monitor_Subject_Region_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error (Linux sibling of SM)");
+
+      --  SM sibling of Linux.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='sm']/sibling",
+         Name  => "ref",
+         Value => "linux");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/sibling",
+         Name  => "ref",
+         Value => "");
+      Monitor_Subject_Region_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error (SM sibling of Linux)");
+
+      --  SM and Linux are different siblings.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='sm']/sibling",
+         Name  => "ref",
+         Value => "a");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/sibling",
+         Name  => "ref",
+         Value => "b");
+      Monitor_Subject_Region_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Memory region 'linux|interrupts' of subject 'linux' is "
+               & "monitored writable by subject 'sm' which is not running on "
+               & "the same CPU or a sibling"),
+              Message   => "Exception mismatch (Different siblings)");
+
+      Validation_Errors.Clear;
+
+      --  Make mappings read-only to check that this is allowed.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='sm']"
+         & "/memory/memory[@physical='linux|interrupts']",
+         Name  => "writable",
+         Value => "false");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='sm']"
+         & "/memory/memory[@physical='linux|timed_event']",
+         Name  => "writable",
+         Value => "false");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='sm']"
+         & "/memory/memory[@physical='linux|state']",
+         Name  => "writable",
+         Value => "false");
+      Monitor_Subject_Region_Mappings (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error for read-only monitoring");
+--  begin read only
+   end Test_Monitor_Subject_Region_Mappings;
+--  end read only
+
+
+--  begin read only
    procedure Test_VTd_Root_Region_Size (Gnattest_T : in out Test);
    procedure Test_VTd_Root_Region_Size_bc3a31 (Gnattest_T : in out Test) renames Test_VTd_Root_Region_Size;
 --  id:2.2/bc3a31ac2395433f/VTd_Root_Region_Size/1/0/

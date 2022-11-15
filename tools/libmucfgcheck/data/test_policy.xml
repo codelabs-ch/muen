@@ -1839,6 +1839,8 @@
    <memory>
     <memory executable="true" logical="binary" physical="sm|bin" virtualAddress="16#1000#" writable="true"/>
     <memory executable="false" logical="linux|state" physical="linux|state" virtualAddress="16#001e_0000#" writable="true"/>
+    <memory executable="false" logical="linux|timer" physical="linux|timed_event" virtualAddress="16#001f_0000#" writable="true"/>
+    <memory executable="false" logical="linux|interrupts" physical="linux|interrupts" virtualAddress="16#001f_1000#" writable="true"/>
     <memory executable="false" logical="timer" physical="sm|timed_event" virtualAddress="16#000e_0000_0000#" writable="true"/>
     <memory executable="false" logical="sm_console" physical="sm_console" virtualAddress="16#000b_8000#" writable="true"/>
     <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_2" virtualAddress="16#000e_0000_9000#" writable="false"/>

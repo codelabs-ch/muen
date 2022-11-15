@@ -791,6 +791,119 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Monitor_Subject_Region_Mappings (XML_Data : Muxml.XML_Data_Type)
+   is
+      --  The function returns if the two given subjects are siblings.
+      function Are_Siblings (Left, Right : DOM.Core.Node) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Are_Siblings (Left, Right : DOM.Core.Node) return Boolean
+      is
+         L_Name : constant String
+           := DOM.Core.Elements.Get_Attribute (Elem => Left,
+                                               Name => "name");
+         L_Sib  : constant String
+           := Muxml.Utils.Get_Attribute (Doc   => Left,
+                                         XPath => "sibling",
+                                         Name  => "ref");
+         R_Name : constant String
+           := DOM.Core.Elements.Get_Attribute (Elem => Right,
+                                               Name => "name");
+         R_Sib  : constant String
+           := Muxml.Utils.Get_Attribute (Doc   => Right,
+                                         XPath => "sibling",
+                                         Name  => "ref");
+      begin
+         return L_Name = R_Sib
+           or L_Sib = R_Name
+           or (L_Sib'Length > 0 and L_Sib = R_Sib);
+      end Are_Siblings;
+
+      ----------------------------------------------------------------------
+
+      Physical_Memory : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory[@type='subject_state' or "
+           & "@type='subject_timed_event' or @type='subject_interrupts']");
+      Subjects : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject");
+      Subject_Writable_Memory : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/memory/memory[@writable='true']");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Physical_Memory) - 1 loop
+         declare
+            Phys_Mem : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Physical_Memory,
+                                      Index => I);
+            Phys_Mem_Name : constant String
+              := DOM.Core.Elements.Get_Attribute (Elem => Phys_Mem,
+                                                  Name => "name");
+            Mappings : constant DOM.Core.Node_List
+              := Muxml.Utils.Get_Elements (Nodes     => Subject_Writable_Memory,
+                                           Ref_Attr  => "physical",
+                                           Ref_Value => Phys_Mem_Name);
+            Map_Count : constant Natural
+              := DOM.Core.Nodes.Length (List => Mappings);
+         begin
+            if Map_Count /= 0 then
+               declare
+                  Subj_Name : constant String
+                    := Mutools.Utils.Decode_Entity_Name
+                      (Encoded_Str => Phys_Mem_Name);
+                  Subject   : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
+                      (Nodes     => Subjects,
+                       Ref_Attr  => "name",
+                       Ref_Value => Subj_Name);
+                  Subj_CPU  : constant String
+                    := DOM.Core.Elements.Get_Attribute (Elem => Subject,
+                                                        Name => "cpu");
+               begin
+                  Mulog.Log (Msg => "Checking" & Map_Count'Img & " writable "
+                             & "mapping(s) of monitored region '"
+                             & Phys_Mem_Name & "'");
+
+                  for J in 0 .. Map_Count - 1 loop
+                     declare
+                        Monitor_Subject : constant DOM.Core.Node
+                          := Muxml.Utils.Ancestor_Node
+                            (Node  => DOM.Core.Nodes.Item (List  => Mappings,
+                                                           Index => J),
+                             Level => 2);
+                        Monitor_CPU : constant String
+                          := DOM.Core.Elements.Get_Attribute
+                            (Elem => Monitor_Subject,
+                             Name => "cpu");
+                     begin
+                        if Subj_CPU /= Monitor_CPU
+                          and not Are_Siblings (Left  => Subject,
+                                                Right => Monitor_Subject)
+                        then
+                           Validation_Errors.Insert
+                             (Msg => "Memory region '" & Phys_Mem_Name
+                              & "' of subject '" & Subj_Name & "' is monitored"
+                              & " writable by subject '"
+                              & DOM.Core.Elements.Get_Attribute
+                                (Elem => Monitor_Subject,
+                                 Name => "name") & "' which is not running on"
+                              & " the same CPU or a sibling");
+                        end if;
+                     end;
+                  end loop;
+               end;
+            end if;
+         end;
+      end loop;
+   end Monitor_Subject_Region_Mappings;
+
+   -------------------------------------------------------------------------
+
    procedure Physical_Address_Alignment (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List

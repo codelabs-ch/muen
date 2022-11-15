@@ -793,6 +793,35 @@ is
 
    procedure Monitor_Subject_Region_Mappings (XML_Data : Muxml.XML_Data_Type)
    is
+      --  The function returns if the two given subjects are siblings.
+      function Are_Siblings (Left, Right : DOM.Core.Node) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Are_Siblings (Left, Right : DOM.Core.Node) return Boolean
+      is
+         L_Name : constant String
+           := DOM.Core.Elements.Get_Attribute (Elem => Left,
+                                               Name => "name");
+         L_Sib  : constant String
+           := Muxml.Utils.Get_Attribute (Doc   => Left,
+                                         XPath => "sibling",
+                                         Name  => "ref");
+         R_Name : constant String
+           := DOM.Core.Elements.Get_Attribute (Elem => Right,
+                                               Name => "name");
+         R_Sib  : constant String
+           := Muxml.Utils.Get_Attribute (Doc   => Right,
+                                         XPath => "sibling",
+                                         Name  => "ref");
+      begin
+         return L_Name = R_Sib
+           or L_Sib = R_Name
+           or (L_Sib'Length > 0 and L_Sib = R_Sib);
+      end Are_Siblings;
+
+      ----------------------------------------------------------------------
+
       Physical_Memory : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
@@ -827,12 +856,14 @@ is
                   Subj_Name : constant String
                     := Mutools.Utils.Decode_Entity_Name
                       (Encoded_Str => Phys_Mem_Name);
-                  Subj_CPU  : constant String
-                    := Muxml.Utils.Get_Attribute
+                  Subject   : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
                       (Nodes     => Subjects,
                        Ref_Attr  => "name",
-                       Ref_Value => Subj_Name,
-                       Attr_Name => "cpu");
+                       Ref_Value => Subj_Name);
+                  Subj_CPU  : constant String
+                    := DOM.Core.Elements.Get_Attribute (Elem => Subject,
+                                                        Name => "cpu");
                begin
                   Mulog.Log (Msg => "Checking" & Map_Count'Img & " writable "
                              & "mapping(s) of monitored region '"
@@ -850,7 +881,10 @@ is
                             (Elem => Monitor_Subject,
                              Name => "cpu");
                      begin
-                        if Subj_CPU /= Monitor_CPU then
+                        if Subj_CPU /= Monitor_CPU
+                          and not Are_Siblings (Left  => Subject,
+                                                Right => Monitor_Subject)
+                        then
                            Validation_Errors.Insert
                              (Msg => "Memory region '" & Phys_Mem_Name
                               & "' of subject '" & Subj_Name & "' is monitored"
@@ -858,7 +892,7 @@ is
                               & DOM.Core.Elements.Get_Attribute
                                 (Elem => Monitor_Subject,
                                  Name => "name") & "' which is not running on"
-                              & " the same CPU");
+                              & " the same CPU or a sibling");
                         end if;
                      end;
                   end loop;

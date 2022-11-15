@@ -220,6 +220,12 @@ is
      (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_mem
+   --D Validate that subject state, timed event and pending interrupts memory
+   --D regions are only mapped writable by subjects running on the same CPU
+   --D core.
+   procedure Monitor_Subject_Region_Mappings (XML_Data : Muxml.XML_Data_Type);
+
+   --D @Item List => validators_mem
    --D Validate size of VT-d root table region.
    procedure VTd_Root_Region_Size (XML_Data : Muxml.XML_Data_Type);
 

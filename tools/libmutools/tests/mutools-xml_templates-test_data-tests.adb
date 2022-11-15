@@ -161,7 +161,7 @@ package body Mutools.XML_Templates.Test_Data.Tests is
       Node := Muxml.Utils.Get_Element
                 (Doc   => Output.Doc,
                  XPath => "/scheduling/majorFrame/cpu[@id='0']"
-                          & "/minorFrame[@subject='lnx']");
+                          & "/minorFrame[@partition='linux']");
       Assert (Condition => Node /= null,
               Message   => "Could not find node in new document");
 

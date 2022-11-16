@@ -142,7 +142,7 @@ begin
             SK.Hypercall.Trigger_Event
               (Number => Sm_Component.Events.Resume_Subject_ID);
          when Types.Subject_Halt     =>
-            pragma Debug (Debug_Ops.Dump_State);
+            Debug_Ops.Dump_State;
             SK.CPU.Stop;
       end case;
       --D @Lst Smresumeend

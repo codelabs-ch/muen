@@ -29,8 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-pragma Compiler_Unit;
-
 with Ada.Unchecked_Conversion;
 
 package body System.Storage_Elements is

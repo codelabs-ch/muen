@@ -847,6 +847,8 @@ is
          end if;
 
          declare
+            use type Ahci.Status_Type;
+
             Ret_Val       : Ahci.Status_Type;
             Smart_Enabled : constant Boolean :=
                Ata_Identify_Response.Cmds_Features.SMART_Enabled;
@@ -854,6 +856,11 @@ is
             if Ahci.Devices (Port_ID).Support_SMART then
                if not Smart_Enabled then
                   SMART_Enable_Disable (Port_ID, True, Ret_Val);
+                  if Ret_Val /= Ahci.OK then
+                     Log.Put_Line
+                       ("ata: Error enabling SMART, Ret: "
+                        & SK.Strings.Img (Ahci.Status_To_Unsigned64 (Ret_Val)));
+                  end if;
                end if;
             end if;
          end;

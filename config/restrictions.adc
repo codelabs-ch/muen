@@ -29,3 +29,5 @@ pragma Warnings (Off, "pragma ""ATOMIC"" ignored in flow analysis (not yet suppo
   Reason => "Atomic not modelled");
 pragma Warnings (Off, "pragma ""ATOMIC"" ignored in proof (not yet supported)",
   Reason => "Atomic not modelled");
+pragma Warnings (Off, "Terminating annotations are deprecated",
+  Reason => "Silence until transition to newer toolchain/Always_Return is done");

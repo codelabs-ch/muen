@@ -131,9 +131,10 @@ is
          return;
       end if;
 
-      Log.Put_Line ("Device found with " &
-         SK.Strings.Img (Sector_Cnt) & " sectors and Sector_Size: " &
-         SK.Strings.Img (Sector_Size));
+      Log.Put_Line
+        ("Device found with " & SK.Strings.Img (Sector_Cnt)
+         & " sectors, Sector_Size " & SK.Strings.Img (Sector_Size)
+         & " and Max_Sectors " & SK.Strings.Img (Max_Sectors));
 
       --  get device health (SMART)
       Muenblock_Client_Instance.Get_SMART

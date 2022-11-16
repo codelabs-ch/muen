@@ -54,5 +54,6 @@ SECTIONS
 		*(.comment)
 		*(.eh_frame)
 		*(.eh_frame_hdr)
+		*(.note.gnu.property)
 	}
 }

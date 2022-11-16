@@ -390,8 +390,9 @@ is
          pragma Debug (Cmd_List_Running, Log.Put_Line (
             "Cmd_List_Running enabled"));
          Reset (ID, Success);
-         pragma Debug (not Success, Log.Put_Line
-                       ("Unable to reset Port!"));
+         if not Success then
+            Log.Put_Line ("Unable to reset Port!");
+         end if;
          --  TODO: HBA Reset
       end if;
    end Stop;

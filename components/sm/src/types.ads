@@ -56,6 +56,7 @@ is
       Reserved_2   : SK.Word32;
    end record
      with
+       Size        => 64,
        Object_Size => 64;
 
    for IO_Info_Type use record
@@ -84,7 +85,9 @@ is
       NMI_Blocking      : Boolean;
       Reserved_3        : SK.Bit_Array (13 .. 63);
    end record
-     with Object_Size => 64;
+     with
+       Size        => 64,
+       Object_Size => 64;
 
    for EPTV_Info_Type use record
       Read              at 0 range  0 ..  0;

@@ -1,0 +1,29 @@
+From 989ac6c228cd2b31279e7cb680cd9a362c6f05c5 Mon Sep 17 00:00:00 2001
+From: Adrian-Ken Rueegsegger <ken@codelabs.ch>
+Date: Wed, 16 Nov 2022 17:13:34 +0100
+Subject: [PATCH] Fix explicit membership test compiler warning
+
+Newer toolchains emmit the following warning:
+
+ src/shared/generic/lsc-hmac_sha256.adb:120:63: warning: explicit membership test may be optimized away [enabled by default]
+ src/shared/generic/lsc-hmac_sha256.adb:120:63: warning: use 'Valid attribute instead [enabled by default]
+---
+ src/shared/generic/lsc-hmac_sha256.adb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/shared/generic/lsc-hmac_sha256.adb b/src/shared/generic/lsc-hmac_sha256.adb
+index 8d7db4b..2ebf2c0 100644
+--- a/src/shared/generic/lsc-hmac_sha256.adb
++++ b/src/shared/generic/lsc-hmac_sha256.adb
+@@ -117,7 +117,7 @@ package body LSC.HMAC_SHA256 is
+       for Index in Auth_Index
+       loop
+          pragma Loop_Invariant
+-           (for all I in SHA256.SHA256_Hash_Index => (Prf (I) in Types.Word32));
++           (for all I in SHA256.SHA256_Hash_Index => Prf (I)'Valid);
+          Result (Index) := Prf (Index);
+       end loop;
+ 
+-- 
+2.30.2
+

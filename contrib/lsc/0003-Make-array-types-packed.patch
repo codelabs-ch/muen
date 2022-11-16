@@ -1,0 +1,76 @@
+From 6f77bfcb7f2d236a6e487d41011f2eb74c0feaa4 Mon Sep 17 00:00:00 2001
+From: Adrian-Ken Rueegsegger <ken@codelabs.ch>
+Date: Wed, 16 Nov 2022 17:30:35 +0100
+Subject: [PATCH] Make array types packed
+
+In order for these types to be used in unchecked conversions, they must
+have a fixed, deterministic memory layout.
+---
+ src/shared/generic/lsc-aes.ads    |  3 ++-
+ src/shared/generic/lsc-bignum.ads |  3 ++-
+ src/shared/generic/lsc-types.ads  | 12 ++++++++----
+ 3 files changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/src/shared/generic/lsc-aes.ads b/src/shared/generic/lsc-aes.ads
+index efff2d5..606f5e3 100644
+--- a/src/shared/generic/lsc-aes.ads
++++ b/src/shared/generic/lsc-aes.ads
+@@ -65,7 +65,8 @@ package LSC.AES is
+    subtype Key_Index is Types.Index range 0 .. 7;
+ 
+    --  AES key
+-   type Key_Type is array (Key_Index range <>) of Types.Word32;
++   type Key_Type is array (Key_Index range <>) of Types.Word32
++     with Pack;
+ 
+    --  Index of AES-128 key
+    subtype AES128_Key_Index is Types.Index range 0 .. 3;
+diff --git a/src/shared/generic/lsc-bignum.ads b/src/shared/generic/lsc-bignum.ads
+index b820bfc..876d2cb 100644
+--- a/src/shared/generic/lsc-bignum.ads
++++ b/src/shared/generic/lsc-bignum.ads
+@@ -47,7 +47,8 @@ is
+ 
+    subtype Big_Int_Range is Natural range Natural'First .. Natural'Last - 1;
+ 
+-   type Big_Int is array (Big_Int_Range range <>) of Types.Word32;
++   type Big_Int is array (Big_Int_Range range <>) of Types.Word32
++     with Pack;
+ 
+    function Num_Of_Big_Int (A : Big_Int; F, L : Natural)
+      return Math_Int.Math_Int
+diff --git a/src/shared/generic/lsc-types.ads b/src/shared/generic/lsc-types.ads
+index 98f3e82..00b0212 100644
+--- a/src/shared/generic/lsc-types.ads
++++ b/src/shared/generic/lsc-types.ads
+@@ -60,19 +60,23 @@ package LSC.Types is
+    subtype Byte_Array32_Index is Index range 0 .. 3;
+ 
+    -- 32-bit byte array
+-   type Byte_Array32_Type is array (Byte_Array32_Index) of Byte;
++   type Byte_Array32_Type is array (Byte_Array32_Index) of Byte
++     with Pack;
+ 
+    -- Index for 64-bit byte array
+    subtype Byte_Array64_Index is Index range 0 .. 7;
+ 
+    -- 64-bit byte array
+-   type Byte_Array64_Type is array (Byte_Array64_Index) of Byte;
++   type Byte_Array64_Type is array (Byte_Array64_Index) of Byte
++     with Pack;
+ 
+    -- Unconstrained array of 32-bit words
+-   type Word32_Array_Type is array (Index range <>) of Word32;
++   type Word32_Array_Type is array (Index range <>) of Word32
++     with Pack;
+ 
+    -- Unconstrained array of 64-bit words
+-   type Word64_Array_Type is array (Index range <>) of Word64;
++   type Word64_Array_Type is array (Index range <>) of Word64
++     with Pack;
+ 
+    -- Convert 32-bit word to 32-bit byte array
+    function Word32_To_Byte_Array32 (Value : Word32) return Byte_Array32_Type;
+-- 
+2.30.2
+

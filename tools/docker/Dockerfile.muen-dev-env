@@ -28,6 +28,21 @@ python3-minimal python3-lxml python3-colorlog python3-setuptools python3-pip \
 qemu-system-x86 rsync screen tidy unzip vim wget xfonts-unifont xorriso \
 xsltproc xz-utils zlib1g-dev"
 
+# Additional, not strictly required packages. Will not appear on the muen.sk
+# website
+ARG packages="$packages php7.4-cli php7.4-curl php7.4-xml"
+
+# Add PHP PPA on Ubuntu distros, required for arcanist
+ARG distro_name
+ARG ubuntupkgs="gpg-agent software-properties-common"
+RUN if [ "$distro_name" = "ubuntu" ]; then \
+	apt-get update && \
+	DEBIAN_FRONTEND=noninteractive apt-get install -qq -y --no-install-recommends $ubuntupkgs \
+	&& add-apt-repository ppa:ondrej/php \
+	&& apt purge -y --auto-remove $ubuntupkgs \
+	&& rm -rf /var/lib/apt/lists/*; \
+	fi
+
 # Install dependencies
 RUN apt-get update && \
 	DEBIAN_FRONTEND=noninteractive apt-get install -qq -y \
@@ -66,6 +81,9 @@ RUN curl -sSL "https://github.com/Solo5/solo5/releases/download/v0.6.5/solo5-v0.
 	&& make install-tools \
 	&& rm /opt/solo5-v0.6.5.tar.gz
 
+# Phabricator's arcanist for review workflow
+RUN git clone https://github.com/codelabs-ch/arcanist.git /opt/arcanist
+
 # Python modules
 RUN pip3 install wheel \
 	&& pip3 install 'lief==0.11.5' \
@@ -74,9 +92,10 @@ RUN pip3 install wheel \
 # Setup environment
 ENV HOME /home/user
 ENV LANG C.UTF-8
-ENV PATH /usr/lib/ccache:/opt/gnat/bin:$PATH
+ENV PATH /usr/lib/ccache:/opt/gnat/bin:/opt/arcanist/bin:$PATH
 
-RUN useradd --create-home --home-dir $HOME user -G dialout
+RUN useradd --create-home --home-dir $HOME user -G dialout \
+	&& chmod 755 /home/user
 
 WORKDIR $HOME
 USER user

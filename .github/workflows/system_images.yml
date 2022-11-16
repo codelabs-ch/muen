@@ -14,7 +14,7 @@ jobs:
       matrix:
         # test system/hardware permutations
         distro:
-          - debian-buster
+          - debian-bullseye
         system:
           - integration_tests.xml
           - demo_system_vtd.xml
@@ -34,33 +34,33 @@ jobs:
           - up-squared-e3950.xml
         include:
           # specific combinations
-          - distro: debian-buster
+          - distro: debian-bullseye
             system: demo_system_desktop.xml
             hardware: lenovo-t480s.xml
-          - distro: debian-buster
+          - distro: debian-bullseye
             system: demo_system_desktop_smp.xml
             hardware: lenovo-t480s.xml
-          - distro: debian-buster
+          - distro: debian-bullseye
             system: integration_tests_kt.xml
             hardware: kontron-ktqm77.xml
           # additional distros
-          - distro: debian-bullseye
+          - distro: ubuntu-focal
             system: demo_system_vtd.xml
             hardware: lenovo-t430s.xml
-          - distro: ubuntu-focal
+          - distro: ubuntu-jammy
             system: demo_system_vtd.xml
             hardware: lenovo-t430s.xml
     env:
       BUILD_OUTPUT_VERBOSE: 1
       BUILD_OUTPUT_SYNC: line
       CCACHE_HOST: ${{ github.workspace }}/.ccache
-      CCACHE_CONTAINER: /home/user/.ccache
+      CCACHE_DIR: /home/user/.ccache
       CCACHE_COMPILERCHECK: content
       DISTRO_NAME_VERSION: ${{ matrix.distro }}
     steps:
       -
         name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       -
         name: Prepare
         id: vars
@@ -83,15 +83,15 @@ jobs:
           echo runner_uid::${UID}
           echo devel_rev::${DEVEL_REV}
 
-          echo ::set-output name=distro_name::${DISTRO_NAME}
-          echo ::set-output name=distro_version::${DISTRO_VERSION}
-          echo ::set-output name=git_name::${GIT_NAME}
-          echo ::set-output name=docker_tag::${DOCKER_TAG}
-          echo ::set-output name=runner_uid::${UID}
-          echo ::set-output name=devel_rev::${DEVEL_REV}
+          echo "distro_name=${DISTRO_NAME}" >> $GITHUB_OUTPUT
+          echo "distro_version=${DISTRO_VERSION}" >> $GITHUB_OUTPUT
+          echo "git_name=${GIT_NAME}" >> $GITHUB_OUTPUT
+          echo "docker_tag=${DOCKER_TAG}" >> $GITHUB_OUTPUT
+          echo "runner_uid=${UID}" >> $GITHUB_OUTPUT
+          echo "devel_rev=${DEVEL_REV}" >> $GITHUB_OUTPUT
       -
         name: Setup Linux submodule cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: .git/modules/components/linux/src
           key: linux-submod-${{ secrets.CACHE_VERSION }}-${{ steps.vars.outputs.devel_rev }}
@@ -113,7 +113,7 @@ jobs:
           git submodule update --init
       -
         name: Cache Docker layers
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: /tmp/.buildx-cache
           key: buildx-${{ secrets.CACHE_VERSION }}-${{ matrix.distro }}-${{ steps.vars.outputs.devel_rev }}
@@ -121,7 +121,7 @@ jobs:
             buildx-${{ secrets.CACHE_VERSION }}-${{ matrix.distro }}-
       -
         name: Setup ccache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ env.CCACHE_HOST }}
           key: ccache-${{ secrets.CACHE_VERSION }}-${{ matrix.distro }}-${{ steps.vars.outputs.devel_rev }}
@@ -134,13 +134,13 @@ jobs:
           echo "max_size = 1.0G" > ${{ env.CCACHE_HOST }}/ccache.conf
       -
         name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
         with:
           driver-opts: network=host
       -
         name: Build Docker image
         id: docker_build
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: .
           file: ./tools/docker/Dockerfile.muen-dev-env
@@ -168,9 +168,10 @@ jobs:
           options: |
             -u ${{ steps.vars.outputs.runner_uid }}
             -v ${{ github.workspace }}:/mnt
-            -v ${{ env.CCACHE_HOST }}:${{ env.CCACHE_CONTAINER }}
+            -v ${{ env.CCACHE_HOST }}:${{ env.CCACHE_DIR }}
             -e BUILD_OUTPUT_VERBOSE
             -e BUILD_OUTPUT_SYNC
+            -e CCACHE_DIR
             -e CCACHE_COMPILERCHECK
             -e SYSTEM=xml/${{ matrix.system }}
             -e HARDWARE=hardware/${{ matrix.hardware }}
@@ -191,7 +192,7 @@ jobs:
       -
         name: Log in to Docker Hub
         if: steps.vars.outputs.git_name == 'master' || steps.vars.outputs.git_name == 'devel'
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
@@ -211,7 +212,7 @@ jobs:
           matrix.system == 'demo_system_vtd.xml' &&
           matrix.hardware == 'lenovo-t430s.xml' &&
           steps.vars.outputs.distro_name == 'debian' &&
-          steps.vars.outputs.distro_version == 'buster' &&
+          steps.vars.outputs.distro_version == 'bullseye' &&
           steps.vars.outputs.git_name == 'devel'
         run: |
           docker tag localhost:5000/muen-dev-env:${{ steps.vars.outputs.docker_tag }} \

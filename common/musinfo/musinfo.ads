@@ -134,6 +134,7 @@ is
    --  256-bit Hash.
    type Hash_Type is array (1 .. 32) of Interfaces.Unsigned_8
      with
+       Size        => 256,
        Object_Size => 256,
        Convention  => C;
 

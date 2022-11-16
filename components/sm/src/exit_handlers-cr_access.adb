@@ -61,7 +61,9 @@ is
       Source_Data   : SK.Word16;
       Reserved_3    : SK.Word32;
    end record
-     with Object_Size => 64;
+     with
+       Size        => 64,
+       Object_Size => 64;
 
    for CR_Info_Type use record
       CR_Number     at 0 range  0 ..  3;

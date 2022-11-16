@@ -1,8 +1,5 @@
 pragma Style_Checks (Off);
 
-with Vt_Component;
-pragma Elaborate_All (Vt_Component);
-
 package Vt_Component.Channel_Arrays
 is
 

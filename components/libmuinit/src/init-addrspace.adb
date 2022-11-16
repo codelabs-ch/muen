@@ -58,11 +58,6 @@ is
         with
           Import,
           Address => System'To_Address (Source.Address);
-      pragma Annotate
-        (GNATprove, Intentional,
-         "object is unsuitable for aliasing via address clause",
-         "Memory size information in Sinfo is generated at integration time"
-          & "based on policy.");
       pragma Warnings
         (GNATprove, On,
          "indirect writes to * through a potential alias are ignored");

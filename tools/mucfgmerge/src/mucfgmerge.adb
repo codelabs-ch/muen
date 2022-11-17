@@ -34,7 +34,8 @@ begin
    Merge.Run
      (Config_File  => Merge.Cmd_Line.Get_Config_File,
       Output_File  => Merge.Cmd_Line.Get_Output_File,
-      Include_Path => Merge.Cmd_Line.Get_Include_Path);
+      Include_Path => Merge.Cmd_Line.Get_Include_Path,
+      Debug_Level  => Merge.Cmd_Line.Get_Debug_Level);
 
 exception
    when Merge.Cmd_Line.Invalid_Cmd_Line =>

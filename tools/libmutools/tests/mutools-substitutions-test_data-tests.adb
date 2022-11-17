@@ -15,6 +15,11 @@ with System.Assertions;
 --
 --  end read only
 
+with Ada.Exceptions;
+with DOM.Core;
+with DOM.Core.Elements;
+with Muxml.Utils;
+
 --  begin read only
 --  end read only
 package body Mutools.Substitutions.Test_Data.Tests is
@@ -31,27 +36,62 @@ package body Mutools.Substitutions.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Process_Attributes (Gnattest_T : in out Test);
-   procedure Test_Process_Attributes_b56a16 (Gnattest_T : in out Test) renames Test_Process_Attributes;
---  id:2.2/b56a16e5501c94a3/Process_Attributes/1/0/
+   procedure Test_Process_Attributes_e39dfb (Gnattest_T : in out Test) renames Test_Process_Attributes;
+--  id:2.2/e39dfb99991cd9fc/Process_Attributes/1/0/
    procedure Test_Process_Attributes (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
-      Data : Muxml.XML_Data_Type;
+      procedure Positive_Test
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/substitution.xml");
+         Process_Attributes (Data => Data);
+         Muxml.Write (Data => Data,
+                      Kind => Muxml.None,
+                      File => "obj/substitution.xml");
+         Assert (Condition => Test_Utils.Equal_Files
+                    (Filename1 => "data/substitution.ref.xml",
+                     Filename2 => "obj/substitution.xml"),
+                 Message   => "Substituted XML mismatch");
+         Ada.Directories.Delete_File (Name => "obj/substitution.xml");
+      end Positive_Test;
+
+      procedure Non_Existent_Var
+      is
+         Data : Muxml.XML_Data_Type;
+         Node : DOM.Core.Node;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/substitution.xml");
+         Node := Muxml.Utils.Get_Element
+            (Doc   => Data.Doc,
+             XPath => "/system/memory/memory[@name='$default_name']");
+         DOM.Core.Elements.Set_Attribute
+               (Elem  => Node,
+                Name  => "name",
+                Value => "$not_existing_var");
+         Process_Attributes (Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (non_existent_var)");
+      exception
+         when E : Muxml.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Found attribute value or text-node with value "
+                       & "'$not_existing_var' but no variable with name "
+                       & "'not_existing_var' exists",
+                    Message   => "Exception message mismatch");
+
+      end Non_Existent_Var;
    begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.None,
-                   File => "data/substitution.xml");
-      Process_Attributes (Data => Data);
-      Muxml.Write (Data => Data,
-                   Kind => Muxml.None,
-                   File => "obj/substitution.xml");
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "data/substitution.ref.xml",
-               Filename2 => "obj/substitution.xml"),
-              Message   => "Substituted XML mismatch");
-      Ada.Directories.Delete_File (Name => "obj/substitution.xml");
+      Positive_Test;
+      Non_Existent_Var;
+
 --  begin read only
    end Test_Process_Attributes;
 --  end read only

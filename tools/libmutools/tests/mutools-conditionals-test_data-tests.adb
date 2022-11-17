@@ -15,6 +15,7 @@ with System.Assertions;
 --
 --  end read only
 with McKae.XML.XPath.XIA;
+with DOM.Core.Nodes;
 --  begin read only
 --  end read only
 package body Mutools.Conditionals.Test_Data.Tests is
@@ -31,8 +32,8 @@ package body Mutools.Conditionals.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Expand (Gnattest_T : in out Test);
-   procedure Test_Expand_150aa9 (Gnattest_T : in out Test) renames Test_Expand;
---  id:2.2/150aa91f5cdabaeb/Expand/1/0/
+   procedure Test_Expand_4a19b8 (Gnattest_T : in out Test) renames Test_Expand;
+--  id:2.2/4a19b878eb07fa84/Expand/1/0/
    procedure Test_Expand (Gnattest_T : in out Test) is
 --  end read only
 
@@ -42,16 +43,33 @@ package body Mutools.Conditionals.Test_Data.Tests is
 
       procedure No_Conditionals
       is
-         Output : constant String := "obj/config_no_conditionals.xml";
-         Data   : Muxml.XML_Data_Type;
+         Output    : constant String := "obj/config_no_conditionals.xml";
+         Data      : Muxml.XML_Data_Type;
+         Node      : DOM.Core.Node;
+         Node_List :  DOM.Core.Node_List;
       begin
          Muxml.Parse
            (Data => Data,
             Kind => Muxml.None,
             File => "data/test_policy_src.xml");
 
-         Muxml.Utils.Remove_Elements (Doc   => Data.Doc,
-                                      XPath => "//if");
+         -- remove all IF-nodes
+         -- the loop is necessary because nested IFs prevent usage of
+         -- functions such as Muxml.Utils.Remove_Elements
+         loop
+            Node_List := McKae.XML.XPath.XIA.XPath_Query
+               (N     => Data.Doc,
+                XPath => "//if");
+            exit when DOM.Core.Nodes.Length (List => Node_List) = 0;
+
+            Node := DOM.Core.Nodes.Item
+               (List  => Node_List,
+                Index => 0);
+            Node := DOM.Core.Nodes.Remove_Child
+               (N         => DOM.Core.Nodes.Parent_Node (N => Node),
+                Old_Child => Node);
+            DOM.Core.Nodes.Free (N => Node);
+         end loop;
 
          Expand (Policy => Data);
 
@@ -70,13 +88,13 @@ package body Mutools.Conditionals.Test_Data.Tests is
 
       procedure Positive_Test
       is
-         Output : constant String := "obj/config_conditionals.xml";
+         Output : constant String := "obj/output_test_policy_src_conditionals.xml";
          Data   : Muxml.XML_Data_Type;
       begin
          Muxml.Parse
            (Data => Data,
             Kind => Muxml.None,
-            File => "data/test_policy_src.xml");
+            File => "data/test_policy_src_conditionals.xml");
 
          Expand (Policy => Data);
 
@@ -84,7 +102,7 @@ package body Mutools.Conditionals.Test_Data.Tests is
                       Kind => Muxml.None,
                       File => Output);
          Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => "data/config_conditionals.xml",
+                 (Filename1 => "data/output_test_policy_src_conditionals.xml",
                   Filename2 => Output),
                  Message   => "Policy mismatch: " & Output);
 
@@ -93,80 +111,9 @@ package body Mutools.Conditionals.Test_Data.Tests is
    begin
       Positive_Test;
       No_Conditionals;
+
 --  begin read only
    end Test_Expand;
---  end read only
-
-
---  begin read only
-   procedure Test_Evaluate (Gnattest_T : in out Test);
-   procedure Test_Evaluate_7e0758 (Gnattest_T : in out Test) renames Test_Evaluate;
---  id:2.2/7e07583f3175aa13/Evaluate/1/0/
-   procedure Test_Evaluate (Gnattest_T : in out Test) is
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      use type DOM.Core.Node;
-
-      Data   : Muxml.XML_Data_Type;
-      Config : DOM.Core.Node_List;
-   begin
-      Muxml.Parse
-        (Data => Data,
-         Kind => Muxml.None,
-         File => "data/test_policy_src.xml");
-
-      Config := McKae.XML.XPath.XIA.XPath_Query
-        (N     => Data.Doc,
-         XPath => "/system/config/*");
-      Evaluate (Config => Config,
-                Parent => Muxml.Utils.Get_Element
-                  (Doc   => Data.Doc,
-                   XPath => "/system/memory"));
-      Assert (Condition => Muxml.Utils.Get_Element
-              (Doc   => Data.Doc,
-               XPath => "/system/memory/memory[@name='extra_mem']") /= null,
-              Message   => "Conditional evaluation failed (1)");
-
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/subjects/subject[@name='lnx']/memory/if"
-         & "[@variable='feature_enabled']",
-         Name  => "value",
-         Value => "false");
-
-      Evaluate (Config => Config,
-                Parent => Muxml.Utils.Get_Element
-                  (Doc   => Data.Doc,
-                   XPath => "/system/subjects/subject[@name='lnx']/memory"));
-      Assert (Condition => Muxml.Utils.Get_Element
-              (Doc   => Data.Doc,
-               XPath => "/system/subjects/subject[@name='lnx']/"
-               & "memory/memory[@name='extra_mem']") = null,
-              Message   => "Conditional evaluation failed (2)");
-
-      Evaluate (Config => Config,
-                Parent => Muxml.Utils.Get_Element
-                  (Doc   => Data.Doc,
-                   XPath => "/system/subjects/subject[@name='lnx']"));
-      Assert (Condition => Muxml.Utils.Get_Element
-              (Doc   => Data.Doc,
-               XPath => "/system/subjects/subject[@name='lnx']/"
-               & "devices/device[@logical='usb']") /= null,
-              Message   => "Conditional evaluation failed (3)");
-      Assert (Condition => Muxml.Utils.Get_Element
-              (Doc   => Data.Doc,
-               XPath => "/system/subjects/subject[@name='lnx']/"
-               & "devices/device[@logical='usb']/ioPort") = null,
-              Message   => "Conditional evaluation failed (4)");
-      Assert (Condition => Muxml.Utils.Get_Element
-              (Doc   => Data.Doc,
-               XPath => "/system/subjects/subject[@name='lnx']/"
-               & "devices/device[@logical='nic']") = null,
-              Message   => "Conditional evaluation failed (5)");
---  begin read only
-   end Test_Evaluate;
 --  end read only
 
 --  begin read only

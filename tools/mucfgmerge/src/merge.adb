@@ -18,17 +18,22 @@
 
 with GNAT.Directory_Operations;
 
+with DOM.Core;
+
 with Muxml.Utils;
 with Mulog;
 with Mutools.System_Config;
 with Mutools.Strings;
 with Mutools.XML_Utils;
+with Mutools.XML_Templates;
+with Mutools.Amend;
 with Mutools.Expressions;
 with Mutools.Conditionals;
 with Mutools.Substitutions;
+with Mutools.Xmldebuglog;
 with Mucfgcheck.Config;
+with Mucfgcheck.Templates;
 with Mucfgcheck.Validation_Errors;
-
 with Mergers;
 with Merge.Checks;
 with Merge.Utils;
@@ -41,18 +46,33 @@ is
    procedure Run
      (Config_File  : String;
       Output_File  : String;
-      Include_Path : String)
+      Include_Path : String;
+      Debug_Level  : Debug_Level_Type := NONE)
    is
       Local_Include_Path : constant String
-        := Include_Path & (if Include_Path'Length > 0 then ":" else "") & ".";
+         := Include_Path & (if Include_Path'Length > 0 then ":" else "") & ".";
       Policy, Config     : Muxml.XML_Data_Type;
+      Debug_Active       : constant Boolean
+          := (if Debug_Level = NONE then False else True);
    begin
       Mulog.Log (Msg => "Processing system config '" & Config_File & "'");
-      Muxml.Parse (Data => Config,
-                   Kind => Muxml.System_Config,
-                   File => Config_File);
-      Checks.Required_Config_Values (Policy => Config);
-      Mucfgcheck.Validation_Errors.Check;
+
+      -- cannot validate if Debug_Active is true.
+      -- Hence, validation is separate.
+      declare
+         Config_tmp : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Config_tmp,
+                      Kind => Muxml.System_Config,
+                      File => Config_File);
+         Checks.Required_Config_Values (Policy => Config_tmp);
+         Mucfgcheck.Validation_Errors.Check;
+      end;
+
+      Muxml.Parse (Data         => Config,
+                   Kind         => Muxml.None,
+                   File         => Config_File,
+                   Add_Location => Debug_Active);
 
       Mulog.Log (Msg => "Using include path '" & Local_Include_Path & "'");
 
@@ -66,18 +86,20 @@ is
                                  Dirs => Local_Include_Path);
          Inc_Path_Str    : constant String
            := Include_Path & (if Include_Path'Length > 0 then ":" else "")
-           & GNAT.Directory_Operations.Dir_Name (Path => Policy_File);
+              & GNAT.Directory_Operations.Dir_Name (Path => Policy_File);
       begin
          Mulog.Log (Msg => "Using policy file '" & Policy_Filename & "'");
-         Muxml.Parse (Data => Policy,
-                      Kind => Muxml.None,
-                      File => Policy_Filename);
+         Muxml.Parse (Data         => Policy,
+                      Kind         => Muxml.None,
+                      File         => Policy_Filename,
+                      Add_Location => Debug_Active);
          Mergers.Merge_Config (Policy => Policy,
                                Config => Config);
 
          Mutools.XML_Utils.Merge_XIncludes
            (Policy       => Policy,
-            Include_Dirs => Mutools.Strings.Tokenize (Str => Inc_Path_Str));
+            Include_Dirs => Mutools.Strings.Tokenize (Str => Inc_Path_Str),
+            Add_Location => Debug_Active);
       end;
 
       declare
@@ -92,7 +114,8 @@ is
          Mulog.Log (Msg => "Using hardware file '" & Hardware_Filename & "'");
          Mergers.Merge_Hardware
            (Policy        => Policy,
-            Hardware_File => Hardware_Filename);
+            Hardware_File => Hardware_Filename,
+            Add_Location  => Debug_Active);
       end;
 
       if Mutools.System_Config.Has_String
@@ -112,7 +135,8 @@ is
                        & Additional_Hw_Filename & "'");
             Mergers.Merge_Hardware
               (Policy        => Policy,
-               Hardware_File => Additional_Hw_Filename);
+               Hardware_File => Additional_Hw_Filename,
+               Add_Location  => Debug_Active);
          end;
       end if;
 
@@ -128,33 +152,106 @@ is
          Mulog.Log (Msg => "Using platform file '" & Platform_Filename & "'");
          Mergers.Merge_Platform
            (Policy        => Policy,
-            Platform_File => Platform_Filename);
+            Platform_File => Platform_Filename,
+            Add_Location  => Debug_Active);
       end;
       Mergers.Merge_Platform_Config (Policy => Policy);
 
       Mucfgcheck.Config.Name_Uniqueness (XML_Data => Policy);
-      Mucfgcheck.Config.Config_Boolean_Values (XML_Data => Policy);
-      Mucfgcheck.Config.Config_Integer_Values (XML_Data => Policy);
       Mucfgcheck.Config.Expression_Config_Var_Refs (XML_Data => Policy);
       Mucfgcheck.Config.Expression_Integer_Values (XML_Data => Policy);
       Mucfgcheck.Config.Expression_Boolean_Values (XML_Data => Policy);
+      Mucfgcheck.Templates.Name_Uniqueness (XML_Data => Policy);
+      Mucfgcheck.Templates.Template_Integrity (XML_Data => Policy);
+      Mucfgcheck.Validation_Errors.Check;
+
+      Mulog.Log (Msg => "Processing templates");
+      Mutools.XML_Templates.Expand (XML_Data     => Policy,
+                                    Debug_Active => Debug_Active);
+
+      if Debug_Active then
+         Mutools.Xmldebuglog.Move_Origin_To_Log (Doc => Policy.Doc);
+      end if;
+
+      -- Check uniqueness of variable names in config block as well as
+      -- names of expression again (templates may introduce duplicates)
+
+      Mucfgcheck.Config.Name_Uniqueness (XML_Data => Policy);
       Mucfgcheck.Validation_Errors.Check;
 
       Mulog.Log (Msg => "Processing expressions");
-      Mutools.Expressions.Expand (Policy => Policy);
-      Muxml.Utils.Remove_Elements
-        (Doc   => Policy.Doc,
-         XPath => "/system/expressions");
+      Mutools.Expressions.Expand (Policy       => Policy,
+                                  Debug_Active => Debug_Active);
 
-      --  Check conditional references after expression evaluation.
+      --  Remove log-entries for expressions before removing expression nodes.
+      if Debug_Active then
+         declare
+            use all type DOM.Core.Node;
+
+            Expr : constant DOM.Core.Node
+               := Muxml.Utils.Get_Element
+               (Doc   => Policy.Doc,
+                XPath => "/system/expressions");
+         begin
+            if Expr /= null then
+               Mutools.Xmldebuglog.Remove_Log_Of_Subtree (Node => Expr);
+            end if;
+         end;
+      end if;
+
+      Muxml.Utils.Remove_Elements
+         (Doc   => Policy.Doc,
+          XPath => "/system/expressions");
+
+      -- Check values of config variables after expansion of expressions
+      -- to make sure that $-references within <config> have been resolved.
+
+      Mucfgcheck.Config.Config_Boolean_Values (XML_Data => Policy);
+      Mucfgcheck.Config.Config_Integer_Values (XML_Data => Policy);
+      Mucfgcheck.Validation_Errors.Check;
+
+      Mulog.Log (Msg => "Processing attributes");
+      Mutools.Substitutions.Process_Attributes (Data         => Policy,
+                                                Debug_Active => Debug_Active);
+
+      --  Check conditional references after expression evaluation as
+      --  conditionals may refer to expressions
 
       Mucfgcheck.Config.Conditional_Config_Var_Refs (XML_Data => Policy);
       Mucfgcheck.Validation_Errors.Check;
-      Mulog.Log (Msg => "Processing conditionals");
-      Mutools.Conditionals.Expand (Policy => Policy);
 
-      Mulog.Log (Msg => "Processing attributes");
-      Mutools.Substitutions.Process_Attributes (Data => Policy);
+      Mulog.Log (Msg => "Processing conditionals");
+      Mutools.Conditionals.Expand (Policy       => Policy,
+                                   Debug_Active => Debug_Active);
+
+      --  Amend statements must be evaluated after conditionals as <amend> might
+      --  be inside of a conditional 'C' and have effects outside of C;
+
+      begin
+         Mulog.Log (Msg => "Processing amend");
+         Mutools.Amend.Expand (XML_Data     => Policy,
+                               Debug_Active => Debug_Active);
+      exception
+         --  For exceptions during amends, the current state of Policy
+         --  is helpful for debugging. Hence, we write it to a file.
+
+         when others =>
+            if Debug_Active then
+               Mulog.Log (Msg => "Writing current state of policy to file '"
+                             & Output_File & "_Policy_Before_Amend_Exception.xml"
+                             & "'");
+               Muxml.Write
+                  (File => Output_File & "_Policy_Before_Amend_Exception.xml",
+                   Kind => Muxml.None,
+                   Data => Policy);
+            end if;
+            raise;
+      end;
+
+      if Debug_Level = VERBOSE_OUTPUT then
+         Mutools.Xmldebuglog.Add_Transaction_Log_As_Comment (Doc => Policy.Doc);
+         Mutools.Xmldebuglog.Add_Debug_Infos_As_Comments (Doc => Policy.Doc);
+      end if;
 
       Muxml.Write
         (File => Output_File,

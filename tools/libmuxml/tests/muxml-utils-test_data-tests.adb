@@ -14,7 +14,8 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with DOM.Core;
+with DOM.Core.Nodes;
 --  begin read only
 --  end read only
 package body Muxml.Utils.Test_Data.Tests is
@@ -28,6 +29,169 @@ package body Muxml.Utils.Test_Data.Tests is
 
 --  begin read only
 --  end read only
+
+--  begin read only
+   procedure Test_Has_Attribute (Gnattest_T : in out Test);
+   procedure Test_Has_Attribute_f3fb97 (Gnattest_T : in out Test) renames Test_Has_Attribute;
+--  id:2.2/f3fb97f6570f4740/Has_Attribute/1/0/
+   procedure Test_Has_Attribute (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+      Node : DOM.Core.Node;
+      begin
+         Muxml.Parse
+           (Data => Data,
+            Kind => Muxml.None,
+            File => "data/format_src.xml");
+         Node := Get_Element (Doc => Data.Doc, XPath => "/system/config/string");
+         Assert (Condition => Has_Attribute (Node => Node, Attr_Name => "value"),
+                 Message   => "Value mismatch");
+         Assert (Condition => not Has_Attribute (Node => Node, Attr_Name => "id"),
+                 Message   => "Value mismatch");
+         Muxml.Utils.Set_Attribute
+            (Doc   => Data.Doc,
+             XPath => "/system/config/string",
+             Name  => "value",
+             Value => "");
+         Assert (Condition => Has_Attribute (Node => Node, Attr_Name => "value"),
+                 Message   => "Value mismatch");
+
+--  begin read only
+   end Test_Has_Attribute;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Next_Node (Gnattest_T : in out Test);
+   procedure Test_Next_Node_af4b58 (Gnattest_T : in out Test) renames Test_Next_Node;
+--  id:2.2/af4b58f89f91fcd2/Next_Node/1/0/
+   procedure Test_Next_Node (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+      use all type DOM.Core.Node;
+
+      Data         : Muxml.XML_Data_Type;
+      Node1, Node2 : DOM.Core.Node;
+   begin
+      -- goto child
+      Muxml.Parse
+         (Data => Data,
+          Kind => Muxml.None,
+          File => "data/format_src.xml");
+      Node1 := Get_Element (Doc => Data.Doc, XPath => "/system/config");
+      Node2 := Get_Element (Doc => Data.Doc, XPath => "/system/config/string");
+      Assert (Condition => Node2 = Next_Node
+                 (Current_Node       => Node1,
+                  Only_Element_Nodes => True),
+              Message   => "Node mismatch");
+      Assert (Condition => DOM.Core.Nodes.First_Child (N => Node1)
+                 = Next_Node (Current_Node       => Node1,
+                              Only_Element_Nodes => False),
+              Message   => "Node mismatch");
+
+      -- Stop_Node is in path to next node
+      Assert (Condition => null = Next_Node
+                 (Current_Node       => Node2,
+                  Only_Element_Nodes => True,
+                     Stop_Node       => Node1),
+              Message   => "Node mismatch");
+
+      -- goto sibling of ancestor
+      Node1 := Get_Element
+         (Doc   => Data.Doc,
+          XPath => "/system/hardware");
+      Assert (Condition => Node1 = Next_Node
+                 (Current_Node       => Node2,
+                  Only_Element_Nodes => True),
+              Message   => "Node mismatch");
+
+      -- goto sibling
+      Node1 := Get_Element
+         (Doc   => Data.Doc,
+          XPath => "/system/hardware/processor/cpu[@apicId='0']");
+      Node2 := Get_Element
+         (Doc   => Data.Doc,
+          XPath => "/system/hardware/processor/cpu[@apicId='2]");
+      Assert (Condition => Node2 = Next_Node
+                 (Current_Node       => Node1,
+                  Only_Element_Nodes => True),
+              Message   => "Node mismatch");
+      Assert (Condition => DOM.Core.Nodes.Next_Sibling (N => Node1)
+                 = Next_Node (Current_Node => Node1,
+                              Only_Element_Nodes => False),
+              Message   => "Node mismatch");
+
+      -- no next node exists
+      Node1 := Get_Element
+         (Doc   => Data.Doc,
+          XPath => "/system/scheduling/majorFrame/cpu/minorFrame[@ticks='80']");
+      Assert (Condition => null = Next_Node
+                 (Current_Node       => Node1,
+                  Only_Element_Nodes => True),
+              Message   => "Node mismatch");
+
+--  begin read only
+   end Test_Next_Node;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Next_Node_In_Subtree (Gnattest_T : in out Test);
+   procedure Test_Next_Node_In_Subtree_741503 (Gnattest_T : in out Test) renames Test_Next_Node_In_Subtree;
+--  id:2.2/741503a6eb9e654f/Next_Node_In_Subtree/1/0/
+   procedure Test_Next_Node_In_Subtree (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+      use all type DOM.Core.Node;
+
+      Data         : Muxml.XML_Data_Type;
+      Node1, Node2 : DOM.Core.Node;
+      Iterations   : Integer := 0;
+   begin
+      -- traverse a single node
+      Muxml.Parse
+         (Data => Data,
+          Kind => Muxml.None,
+          File => "data/format_src.xml");
+      Node1 := Get_Element (Doc => Data.Doc, XPath => "/system/config/string");
+      Assert (Condition => null = Next_Node_In_Subtree
+                 (Root_Node          => Node1,
+                  Current_Node       => Node1,
+                  Only_Element_Nodes => True),
+              Message   => "Node mismatch");
+
+      -- traverse a tree > 1. Check number of iterations
+      Node1 := Get_Element
+         (Doc   => Data.Doc,
+          XPath => "/system/hardware/devices/device[@name='debugconsole']");
+      Node2 := Get_Element
+         (Doc   => Data.Doc,
+          XPath => "/system/hardware/devices/device[@name='debugconsole']/ioPort");
+      Assert (Condition => Node2 = Next_Node_In_Subtree
+                 (Root_Node          => Node1,
+                  Current_Node       => Node1,
+                  Only_Element_Nodes => True),
+              Message   => "Node mismatch");
+      while Node2 /= null and Iterations < 100 loop
+         Iterations := Iterations + 1;
+         Node2 := Next_Node_In_Subtree
+            (Root_Node          => Node1,
+             Current_Node       => Node2,
+             Only_Element_Nodes => True);
+      end loop;
+
+      Assert (Condition => Iterations = 5,
+              Message   => "Iterations mismatch: " & Iterations'Image);
+
+--  begin read only
+   end Test_Next_Node_In_Subtree;
+--  end read only
+
 
 --  begin read only
    procedure Test_1_Get_Attribute (Gnattest_T : in out Test);
@@ -1373,7 +1537,7 @@ package body Muxml.Utils.Test_Data.Tests is
       Assert (Condition => DOM.Core.Nodes.Length
               (List => DOM.Core.Nodes.Child_Nodes (N => Parent)) = 4,
               Message   => "Child inserted despite being present");
-      
+
       Add_Child (Parent     => Parent,
                  Child_Name => "child_3");
       declare
@@ -1742,6 +1906,52 @@ package body Muxml.Utils.Test_Data.Tests is
               Message   => "Upper node mismatch");
 --  begin read only
    end Test_2_Get_Bounds;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Get_Unique_Element_Child (Gnattest_T : in out Test);
+   procedure Test_Get_Unique_Element_Child_9a02d5 (Gnattest_T : in out Test) renames Test_Get_Unique_Element_Child;
+--  id:2.2/9a02d545d8903e58/Get_Unique_Element_Child/1/0/
+   procedure Test_Get_Unique_Element_Child (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+      use all type DOM.Core.Node;
+
+      Data         : Muxml.XML_Data_Type;
+      Node1, Node2 : DOM.Core.Node;
+      Iterations   : Integer := 0;
+   begin
+
+      Muxml.Parse
+         (Data => Data,
+          Kind => Muxml.None,
+          File => "data/format_src.xml");
+      Node1 := Get_Element (Doc => Data.Doc, XPath => "/system/config");
+      Node2 := Get_Element (Doc => Data.Doc, XPath => "/system/config/string");
+      Assert (Condition => Node2 = Get_Unique_Element_Child
+                 (Parent     => Node1,
+                  Child_Name => "string"),
+              Message   => "Node mismatch");
+      Assert (Condition => null = Get_Unique_Element_Child
+                 (Parent     => Node2,
+                  Child_Name => "string"),
+              Message   => "Node mismatch");
+      Assert (Condition => null = Get_Unique_Element_Child
+                 (Parent     => Node2,
+                  Child_Name => "not_there"),
+              Message   => "Node mismatch");
+
+      Node1 := Get_Element
+         (Doc => Data.Doc,
+          XPath => "/system/hardware/devices/device[@name='debugconsole']/capabilities");
+      Assert (Condition => null = Get_Unique_Element_Child
+                 (Parent     => Node1,
+                  Child_Name => "capability"),
+              Message   => "Node mismatch");
+--  begin read only
+   end Test_Get_Unique_Element_Child;
 --  end read only
 
 

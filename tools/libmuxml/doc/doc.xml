@@ -459,39 +459,57 @@
      The tool reads a system configuration in XML format to locate the following
      files:
      \begin{itemize}
-     \item System policy
-     \item Hardware specification
-     \item Additional hardware specification
-     \item Platform specification
+        \item System policy
+        \item Hardware specification
+        \item Additional hardware specification
+        \item Platform specification
      \end{itemize}
 
-     The tool also provides an implementation of the XML XInclude
-     mechanism\footnote{\url{http://www.w3.org/TR/xinclude-11/}}. Using
-     includes, the policy writer is able to separate and organize the system
-     policy as desired. Instead of specifying the whole policy in one file,
-     subject specifications can for example be split into separate files, or
-     common parts shared by different system descriptions can be extracted,
-     thus modularizing and simplifying the policy specification task.
+     To make the system description flexible and modular the following features
+     are supported in the input policy:
+     \begin{itemize}
+        \item The tool provides an implementation of the XML XInclude
+        mechanism\footnote{\url{http://www.w3.org/TR/xinclude-11/}}. Using includes,
+        the policy writer is able to separate and organize the system policy as
+        desired. Instead of specifying the whole policy in one file, the subject
+        specifications can be split into separate files, or common parts shared by
+        different system descriptions can be extracted.
 
-     After the merge step, the resulting policy is well formatted to minimize
-     the difference in the generated policies resulting from the subsequent
-     tasks. This allows the user to review (\texttt{diff}) and therefore verify
-     the results of each policy compilation task.
+        \item Expressions can be used to formulate (nested) terms using
+        equality/inequality, numeric and logical operators as well as concatenation
+        of strings. Expressions can be used just like configuration variables to provide
+        parameters for other mechanisms.
 
-     Expressions can be used to formulate (nested) boolean terms using the
-     numeric equality/inequality and logical operators. They are evaluated to
-     boolean config values prior to processing conditionals.
+        \item The use of conditionals enables selective activation of parts of the source
+        policy depending on the value of a given configuration variable.
+        This allows flexible customization of a system during policy compilation
+        by setting the value of a configuration variable or formulating an
+        appropriate expression.
 
-     The use of conditionals enables selective activation of parts of the source
-     policy depending on the value of a given config variable. This allows
-     flexible parameterization of a system during policy compilation by setting
-     the value of a config variable or formulating an appropriate boolean
-     expression.
+        \item Configuration variable substitution enables the policy writer to set the
+        value of attributes to those of referenced configuration variables or
+        expressions.
+        Attributes that start with a dollar sign followed by a variable name are
+        substituted by the value of the variable.
 
-     Config variable substitution enables the policy writer to set the value of
-     attributes to those of referenced config values. Attributes that start
-     with a dollar sign followed by a config value name are substituted by the
-     value of the config variable.
+        \item The policy may define templates for XML code, including parameters that
+        can be used within expressions, conditionals and references within that template.
+        Templates can be employed to avoid code duplication and to encapsulate portions
+        of code. Hence, templates can define building blocks and help to
+        provide a high-level view of a system.
+
+        \item When two building blocks are connected via a channel or when a subject
+        behaves like a client of another subject, it is desirable to insert a
+        communication channel into a subject from ``outside'' of that subject.
+        Such additions to an XML node are possible with \texttt{amend} statements.
+        On evaluation, the children of an \texttt{amend}-node are merged into the
+        children of the node specified by the given XPath.
+     \end{itemize}
+
+     After the merge step, the resulting policy is well formatted to minimize the
+     difference in the generated policies resulting from the subsequent tasks. This
+     allows the user to easily review (\texttt{diff}) and therefore verify the
+     results of each policy compilation task.
     </text>
    </section>
 
@@ -650,25 +668,38 @@
      files into a single XML document.
 
      \begin{description} \itemsep1pt \parskip0pt
-     \item[Name] \hfill \\
-     \texttt{mucfgmerge}
-     \item[Input] \hfill \\
-     System configuration as XML, Colon-separated list of include paths
-     \item[Output] \hfill \\
-     System policy in format source (merged)
+        \item[Name] \hfill \\
+        \texttt{mucfgmerge}
+        \item[Input] \hfill \\
+        System configuration as XML, colon-separated list of include paths
+        \item[Output] \hfill \\
+        System policy in format source (merged)
      \end{description}
 
      This tool reads the system configuration and merges the specified system
-     policy, hardware and platform files into a single file. It evaluates
-     boolean expressions, resolves conditional parts of the policy and
-     substitutes attribute configuration value references. Included files are
-     inserted at the corresponding locations in the merged file. The XML
-     content is re-formatted so changes to the policy by subsequent build
-     steps can be manually reviewed or visualized by diffing the files.
+     policy, hardware and platform files into a single file.
+     To ease the creation of many similar variants of a system the provided
+     system policy may use templates, expressions, conditionals
+     and amend statements. The main processing-steps are:
+     \begin{enumerate}
+        \item Merge XIncludes of system policy into the system policy, i.e.,
+        insert the referenced files at the given location;
+        \item Merge hardware, additional hardware and platform specifications
+        into the system policy. This includes merging the platform configuration section
+        into the global configuration section;
+        \item Instantiate the templates, using the provided values and variable names;
+        \item Evaluate expressions, resulting in new configuration variables;
+        \item Replace all references to configuration variables with their value;
+        \item Evaluate conditionals, i.e., decide which sub-trees of the XML-tree to discard;
+        \item Evaluate amend statements, i.e., move sub-trees within the XML-tree.
+     \end{enumerate}
 
-     It also merges the platform configuration section (if any) into the
-     global configuration section, removing the platform configuration section
-     in the process.
+     The result is in policy source format and re-formatted so
+     changes to the policy by subsequent build steps can be manually reviewed or
+     visualized by diffing the files. In particular, the result does not contain any
+     templates, expressions, conditionals or amend statements.
+     The tool has debug modes that increase the verbosity of the output, in particular
+     in case of errors.
     </text>
    </section>
 

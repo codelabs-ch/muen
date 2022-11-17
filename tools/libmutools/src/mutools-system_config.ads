@@ -80,6 +80,20 @@ is
       Name  : String;
       Value : Boolean);
 
+   --  Set value of integer config variable specified by name to given value. A
+   --  config entry is created if it does not yet exist.
+   procedure Set_Value
+     (Data  : Muxml.XML_Data_Type;
+      Name  : String;
+      Value : Integer);
+
+   --  Set value of string config variable specified by name to given value. A
+   --  config entry is created if it does not yet exist.
+   procedure Set_Value
+     (Data  : Muxml.XML_Data_Type;
+      Name  : String;
+      Value : String);
+
    Not_Found : exception;
 
 end Mutools.System_Config;

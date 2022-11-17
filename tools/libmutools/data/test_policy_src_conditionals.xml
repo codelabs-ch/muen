@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<system>
+   <config>
+      <boolean name="feature_enabled" value="true"/>
+      <boolean name="dependent_feature" value="true"/>
+      <integer name="scount" value="4"/>
+      <integer name="session_count" value="4"/>
+      <string name="name3" value="myname"/>
+      <string name="name1" value="myname"/>
+      <string name="name2" value="myname"/>
+      <string name="foo" value="foobar"/>
+      <string name="lcbrace" value="{"/>
+   </config>
+
+   <hardware>
+      <memory>
+         <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
+      </memory>
+      <devices>
+         <device name="ioapic">
+            <memory caching="UC" name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#"/>
+         </device>
+      </devices>
+   </hardware>
+   <platform>
+      <mappings>
+         <aliases>
+            <alias name="debugconsole" physical="serial_1"/>
+         </aliases>
+         <classes>
+            <class name="usb">
+               <device physical="ehci"/>
+               <device physical="xhci"/>
+            </class>
+         </classes>
+      </mappings>
+   </platform>
+   <memory>
+      <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
+      <if value="true" variable="feature_enabled">
+         <memory caching="WB" name="extra_mem" physicalAddress="16#2000#" size="16#1000#"/>
+      </if>
+      <if value="1" variable="session_count">
+         <memory caching="WB" name="placeholder" physicalAddress="16#3000#" size="16#1000#"/>
+      </if>
+   </memory>
+   <events/>
+   <components>
+      <component name="linux" profile="linux">
+         <provides>
+            <memory executable="true" logical="binary" size="16#1000#" virtualAddress="16#2000#" writable="true">
+               <file filename="lnx_bin" offset="none"/>
+            </memory>
+         </provides>
+      </component>
+   </components>
+   <subjects>
+      <subject name="lnx">
+         <memory>
+            <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+            <if value="true" variable="feature_enabled">
+               <memory executable="false" logical="extra_mem" physical="extra_mem" virtualAddress="16#f000_0000#" writable="true"/>
+            </if>
+         </memory>
+         <if value="true" variable="feature_enabled">
+            <devices>
+               <device logical="usb" physical="usb_conitroller_1">
+                  <if value="false" variable="feature_enabled">
+                     <ioPort logical="port1" physical="port_60"/>
+                  </if>
+               </device>
+               <if value="42" variable="session_count">
+                  <device logical="nic" physical="ethernet_controller_1"/>
+               </if>
+            </devices>
+         </if>
+         <events/>
+         <component ref="linux">
+            <case variable="name1">
+               <when value="myname">
+                  <map logical="dummy" physical="dummy"/>
+
+                  <case variable="session_count">
+                     <when value="0">
+                        <!-- insert comment -->
+                     </when>
+                  </case>
+               </when>
+               <others>
+                  <if value="true" variable="feature_enabled">
+                     <map logical="feature" physical="extra_mem"/>
+                  </if>
+               </others>
+            </case>
+         </component>
+      </subject>
+
+      <case variable="session_count">
+         <when value="13">
+            <subject name="not_here"/>
+         </when>
+         <when value="14">
+            <null>
+               This will not show up.
+            </null>
+         </when>
+         <when value="15">
+            <foo><bar1><bar2/></bar1></foo>
+         </when>
+      </case>
+
+      <case variable="session_count">
+         <when value="13">
+            <subject name="not_here"/>
+         </when>
+         <when value="14">
+            <null>
+               This will not show up.
+            </null>
+         </when>
+         <when value="4">
+            <if variable="feature_enabled" value="false">
+               <bootparams>scount=4, feature_enabled=false</bootparams>
+            </if>
+            <if variable="feature_enabled" value="true">
+               Text Node.
+               <!-- this comment shows up -->
+               <subject name="subject3">
+                  <bootparams>scount=4, feature_enabled=true</bootparams>
+                  <component ref="xyz">
+                     <map logical="channel1" physical="some_name"/>
+                  </component>
+               </subject>
+            </if>
+         </when>
+      </case>
+
+      <case variable="name1">
+         <when value="sam">
+            <subject name="SAM"/>
+         </when>
+         <others>
+            <subject name="myname"/>
+         </others>
+      </case>
+
+      <case variable="name1">
+         <when value="myname"/>
+         <others>
+            <subject name="does_not_exist"/>
+         </others>
+      </case>
+   </subjects>
+   <scheduling tickRate="10000">
+      <partitions>
+         <partition name="linux">
+            <group>
+               <subject name="lnx"/>
+            </group>
+         </partition>
+      </partitions>
+      <majorFrame>
+         <cpu id="0">
+            <minorFrame partition="linux" ticks="80"/>
+         </cpu>
+      </majorFrame>
+   </scheduling>
+</system>

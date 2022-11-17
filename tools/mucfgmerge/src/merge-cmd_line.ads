@@ -22,12 +22,14 @@ with GNAT.Command_Line;
 
 package Merge.Cmd_Line
 is
-
    --  Init command line, use given tool description in usage output.
    procedure Init (Description : String);
 
    --  Return system config filename.
    function Get_Config_File return String;
+
+   --  Return the debug level.
+   function Get_Debug_Level return Debug_Level_Type;
 
    --  Return output filename.
    function Get_Output_File return String;
@@ -42,6 +44,7 @@ private
    Config_File  : Ada.Strings.Unbounded.Unbounded_String;
    Output_File  : Ada.Strings.Unbounded.Unbounded_String;
    Include_Path : Ada.Strings.Unbounded.Unbounded_String;
+   Debug_Level  : Debug_Level_Type;
 
    Parser : GNAT.Command_Line.Opt_Parser
      := GNAT.Command_Line.Command_Line_Parser;

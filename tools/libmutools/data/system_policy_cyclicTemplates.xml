@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<system>
+   <config>
+      <integer name="session_count" value="4"/>
+      <string  name="no_caching" value="UC"/>
+      <string  name="sizeOfExtraMem" value="16#0000_0000#"/>
+   </config>
+
+   <template name="template_memory">
+      <parameters>
+         <integer name="id1"/>
+         <string name="logical_test" defaultValue="system_test"/>
+         <string name="memory_name"/>
+      </parameters>
+      <body>
+         <useTemplate name="big_dev_template">
+            <parameter name="param1" value="1"/>
+         </useTemplate>
+      </body>
+   </template>
+
+   <template name="big_dev_template">
+      <parameters>
+         <integer name="param1"/>
+      </parameters>
+      <body>
+         <if variable="param1" value="22">
+            <amend xpath="/system/hardware/devices">
+               <device name="device_new">
+                  <memory caching="WB" name="mimi" physicalAddress="16#0000_0000#" size="16#0000#"/>
+                  <useTemplate name="oneline_mem_template"/>
+               </device>
+            </amend>
+         </if>
+      </body>
+   </template>
+
+   <expressions>
+      <expression name="session2_enabled">
+         <gt>
+            <variable name="session_count"/>
+            <integer value="1"/>
+         </gt>
+      </expression>
+   </expressions>
+
+   <useTemplate name="template_memory">
+      <parameter name="id1" value="20"/>
+      <parameter name="memory_name" value="extra_mem"/>
+   </useTemplate>
+
+   <subjects>
+      <subject name="lnx">
+         <memory>
+            <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#0000#" writable="true"/>
+            <memory executable="false" logical="extra_mem" physical="extra_mem" virtualAddress="16#0000_0000#" writable="true"/>
+
+            <template name="oneline_mem_template">
+               <body>
+                  <memory caching="UC" name="mmio" physicalAddress="16#0000_0000#" size="16#0000#"/>
+                  <useTemplate name="template_memory">
+                     <parameter name="id1" value="20"/>
+                     <parameter name="memory_name" value="extra_mem"/>
+                  </useTemplate>
+               </body>
+            </template>
+
+         </memory>
+         <devices>
+            <device logical="usb" physical="bbb">
+            </device>
+         </devices>
+         <events/>
+         <component ref="linux"/>
+      </subject>
+   </subjects>
+
+</system>

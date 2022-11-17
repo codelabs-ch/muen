@@ -9,6 +9,8 @@
   <boolean name="ahci_drv_enabled" value="true"/>
   <boolean name="pciconf_emulation_enabled" value="true"/>
   <boolean name="pciconf_emulation_xhci_enabled" value="false"/>
+  <string name="pciconf_emulation_xhci_devid" value="16#02#"/>
+  <string name="pciconf_emulation_xhci_physdev" value="usb_controller_1"/>
   <string name="pciconf_emulation_nic_devid" value="16#01#"/>
   <string name="pciconf_emulation_nic_physdev" value="ethernet_controller_1"/>
   <string name="logchannel_size" value="16#0002_0000#"/>

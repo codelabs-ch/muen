@@ -3,13 +3,13 @@
  <config>
   <boolean name="supports_xhci_debug" value="false"/>
   <boolean name="session2_enabled" value="true"/>
-  <integer name="session_count" value="4"/>
   <integer name="some_numeric_value" value="23"/>
-  <string name="no_caching" value="UC"/>
-  <string name="system" value="data/test_policy.xml"/>
-  <string name="hardware" value="data/hardware.xml"/>
+  <integer name="session_count" value="4"/>
   <string name="platform" value="data/platform.xml"/>
+  <string name="hardware" value="data/hardware.xml"/>
+  <string name="no_caching" value="UC"/>
   <string name="platform_id" value="foobar"/>
+  <string name="system" value="data/test_policy.xml"/>
  </config>
  <hardware>
   <processor cpuCores="2" speed="50" vmxTimerRate="0">

@@ -14,7 +14,13 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
+with Ada.Text_IO;
+with Ada.Text_IO.Text_Streams;
+
+with DOM.Core.Nodes;
+
 with Mucfgcheck.Validation_Errors;
+with Muxml;
 --  begin read only
 --  end read only
 package body Merge.Test_Data.Tests is
@@ -25,14 +31,13 @@ package body Merge.Test_Data.Tests is
 --  This section can be used to add global variables and other elements.
 --
 --  end read only
-
 --  begin read only
 --  end read only
 
 --  begin read only
    procedure Test_Run (Gnattest_T : in out Test);
-   procedure Test_Run_e5a2dd (Gnattest_T : in out Test) renames Test_Run;
---  id:2.2/e5a2dd86b12d7902/Run/1/0/
+   procedure Test_Run_61a2f5 (Gnattest_T : in out Test) renames Test_Run;
+--  id:2.2/61a2f5aae9823bcb/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
 --  end read only
 
@@ -53,10 +58,32 @@ package body Merge.Test_Data.Tests is
       exception
          when Mucfgcheck.Validation_Errors.Validation_Error =>
             Assert (Condition => Mucfgcheck.Validation_Errors.Contains
-                    (Msg => "Multiple config variables with name "
+                    (Msg => "The names given to config variables "
+                     & "and expressions are not unique. Conflicting value: "
                      & "'supports_xhci_debug'"),
                     Message   => "Exception message mismatch");
       end Duplicate_Config_Value;
+
+      ----------------------------------------------------------------------
+
+      procedure Duplicate_Config_Value_Due_To_Template
+      is
+         Output : constant String := "obj/duplicate_cfg_template.xml";
+      begin
+         Run (Config_File  => "data/config_templateNameCollision.xml",
+              Output_File  => Output,
+              Include_Path => "data/");
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when Mucfgcheck.Validation_Errors.Validation_Error =>
+            Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+                    (Msg => "The names given to config variables and "
+                     & "expressions are not unique. "
+                     & "Conflicting value: 't3_memory_name'"),
+                    Message   => "Exception message mismatch");
+      end Duplicate_Config_Value_Due_To_Template;
 
       ----------------------------------------------------------------------
 
@@ -100,25 +127,99 @@ package body Merge.Test_Data.Tests is
       is
          Output : constant String := "obj/run.xml";
       begin
-         Run (Config_File  => "data/test_config.xml",
+         Run (Config_File  => "data/config_with_templateAmend.xml",
               Output_File  => Output,
               Include_Path => "data");
 
          Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => "data/run.xml",
+                 (Filename1 => "data/output_templateAmend.xml",
                   Filename2 => Output),
                  Message   => "Policy mismatch: " & Output);
 
          Ada.Directories.Delete_File (Name => Output);
       end Positive_Test;
+
+      ----------------------------------------------------------------------
+
+      procedure Positive_Test_No_Expressions
+      is
+         Output : constant String := "obj/run_no_expressions.xml";
+      begin
+         Run (Config_File  => "data/config_no_expressions.xml",
+              Output_File  => Output,
+              Include_Path => "data",
+              Debug_Level  => VERBOSE_ERRORS);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/run_no_expressions.xml",
+                  Filename2 => Output),
+                 Message   => "Policy mismatch: " & Output);
+
+         Ada.Directories.Delete_File (Name => Output);
+      end Positive_Test_No_Expressions;
+
+      ----------------------------------------------------------------------
+
+      procedure Positive_Test_With_Debugging
+      is
+         Output : constant String := "obj/output_config_with_templateAmend.xml";
+
+         -- parse as XML-file and write out with same name and without comments
+         procedure Remove_Comments (File : String)
+         is
+            Data : Muxml.XML_Data_Type;
+            Output_File : Ada.Text_IO.File_Type;
+         begin
+            Muxml.Parse (Data => Data,
+                         Kind => Muxml.None,
+                         File => File);
+            Ada.Text_IO.Create (File => Output_File,
+                             Mode => Ada.Text_IO.Out_File,
+                                Name => File);
+            DOM.Core.Nodes.Write
+               (Stream         => Ada.Text_IO.Text_Streams.Stream (Output_File),
+                N              => Data.Doc,
+                Print_Comments => False,
+                Pretty_Print   => True);
+            Ada.Text_IO.Close (Output_File);
+         end Remove_Comments;
+
+      begin
+         Run (Config_File  => "data/config_with_templateAmend.xml",
+              Output_File  => Output,
+              Include_Path => "data",
+              Debug_Level  => VERBOSE_ERRORS);
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/output_templateAmend.xml",
+                  Filename2 => Output),
+                 Message   => "Policy mismatch: " & Output);
+         Ada.Directories.Delete_File (Name => Output);
+
+         Run (Config_File  => "data/config_with_templateAmend.xml",
+              Output_File  => Output,
+              Include_Path => "data",
+              Debug_Level  => VERBOSE_OUTPUT);
+         Remove_Comments (File => Output);
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/output_templateAmend.xml",
+                  Filename2 => Output),
+                 Message   => "Policy mismatch: " & Output);
+
+         Ada.Directories.Delete_File (Name => Output);
+      end Positive_Test_With_Debugging;
+
    begin
       Mucfgcheck.Validation_Errors.Clear;
       Duplicate_Config_Value;
+      Mucfgcheck.Validation_Errors.Clear;
+      Duplicate_Config_Value_Due_To_Template;
       Mucfgcheck.Validation_Errors.Clear;
 
       Include_Path;
       No_Additional_Hw;
       Positive_Test;
+      Positive_Test_With_Debugging;
+      Positive_Test_No_Expressions;
 --  begin read only
    end Test_Run;
 --  end read only

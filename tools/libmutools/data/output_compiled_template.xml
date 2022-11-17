@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<template name="template_memory">
+ <config>
+  <integer name="t42_id1" value="20"/>
+  <string name="t42_logical_test" value="system_test"/>
+  <string name="t42_memory_name" value="extra_mem"/>
+  <string name="t42_foo" value="$foo"/>
+ </config>
+ <expressions>
+  <expression name="t42_isId1_20">
+   <eq>
+    <variable name="t42_id1"/>
+    <integer value="20"/>
+   </eq>
+  </expression>
+ </expressions>
+ <body>
+  <memory>
+   <if value="true" variable="t42_isId1_20">
+    <memory caching="WB" name="$t42_foo" physicalAddress="16#0000#" size="16#0000#"/>
+   </if>
+   <memory caching="$no_caching" name="$t42_memory_name" physicalAddress="16#0000#" size="16#0000#"/>
+  </memory>
+  <if value="UC" variable="no_caching">
+   <amend xpath="/system/hardware/memory">
+    <memoryBlock allocatable="true" name="name" physicalAddress="16#0000#" size="$sizeOfExtraMem"/>
+    <useTemplate name="oneline_mem_template" namePrefix="t42_myprefix"/>
+   </amend>
+  </if>
+ </body>
+</template>
+

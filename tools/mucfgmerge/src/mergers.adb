@@ -21,9 +21,8 @@ with Ada.Strings.Unbounded;
 with DOM.Core.Nodes;
 with DOM.Core.Documents.Local;
 
-with McKae.XML.XPath.XIA;
-
 with Muxml.Utils;
+with Mutools.Mergers;
 
 package body Mergers
 is
@@ -50,7 +49,8 @@ is
       Section_Name      :        String;
       Section_List_Tags :        Muxml.Utils.Tags_Type;
       Section_Ref_Names :        Muxml.Utils.Tags_Type;
-      Add_Missing_Elems : not null access procedure (Node : DOM.Core.Node));
+      Add_Missing_Elems : not null access procedure (Node : DOM.Core.Node);
+      Add_Location      :        Boolean);
 
    procedure Merge_Config_Section
      (Policy     : in out Muxml.XML_Data_Type;
@@ -124,92 +124,14 @@ is
      (Policy     : in out Muxml.XML_Data_Type;
       New_Config :        DOM.Core.Node;
       Clone      :        Boolean := False)
-   is
-      use type DOM.Core.Node;
-
-      System_Cfg : DOM.Core.Node
-        := Muxml.Utils.Get_Element
-          (Doc   => Policy.Doc,
-           XPath => "/system/config");
-      New_Bools  : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => New_Config,
-           XPath => "boolean");
-      New_Ints   : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => New_Config,
-           XPath => "integer");
-      New_Strs   : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => New_Config,
-           XPath => "string");
-
-      --  Add given nodes to global config by inserting them before the
-      --  specified reference tags.
-      procedure Add_To_Config
-        (Nodes    : DOM.Core.Node_List;
-         Ref_Tags : Muxml.Utils.Tags_Type);
-
-      ----------------------------------------------------------------------
-
-      procedure Add_To_Config
-        (Nodes    : DOM.Core.Node_List;
-         Ref_Tags : Muxml.Utils.Tags_Type)
-      is
-         Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
-      begin
-         for I in 0 .. Count - 1 loop
-            declare
-               Node : DOM.Core.Node
-                 := DOM.Core.Nodes.Item (List  => Nodes,
-                                         Index => I);
-            begin
-               if Clone then
-                  Node := DOM.Core.Documents.Local.Adopt_Node
-                    (Doc    => Policy.Doc,
-                     Source => DOM.Core.Documents.Local.Clone_Node
-                       (N    => Node,
-                        Deep => True));
-               end if;
-               Muxml.Utils.Insert_Before (Parent    => System_Cfg,
-                                          New_Child => Node,
-                                          Ref_Names => Ref_Tags);
-            end;
-         end loop;
-      end Add_To_Config;
-   begin
-      if System_Cfg = null then
-         declare
-            Sys_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-              (Doc   => Policy.Doc,
-               XPath => "/system");
-         begin
-            System_Cfg := DOM.Core.Documents.Create_Element
-              (Doc      => Policy.Doc,
-               Tag_Name => "config");
-            System_Cfg := DOM.Core.Nodes.Insert_Before
-              (N         => Sys_Node,
-               New_Child => System_Cfg,
-               Ref_Child => DOM.Core.Nodes.First_Child (N => Sys_Node));
-         end;
-      end if;
-
-      if New_Config /= null then
-         Add_To_Config (Nodes    => New_Bools,
-                        Ref_Tags => (1 => U ("integer"),
-                                     2 => U ("string")));
-         Add_To_Config (Nodes    => New_Ints,
-                        Ref_Tags => (1 => U ("string")));
-         Add_To_Config (Nodes    => New_Strs,
-                        Ref_Tags => Muxml.Utils.No_Tags);
-      end if;
-   end Merge_Config_Section;
+   renames Mutools.Mergers.Merge_Config_Section;
 
    -------------------------------------------------------------------------
 
    procedure Merge_Hardware
      (Policy        : in out Muxml.XML_Data_Type;
-      Hardware_File :        String)
+      Hardware_File :        String;
+      Add_Location  :        Boolean := False)
    is
    begin
       Merge_Section
@@ -224,14 +146,16 @@ is
                                6 => U ("msr")),
          Section_Ref_Names => (1 => U ("platform"),
                                2 => U ("memory")),
-         Add_Missing_Elems => Add_Missing_HW_Elements'Access);
+         Add_Missing_Elems => Add_Missing_HW_Elements'Access,
+         Add_Location      => Add_Location);
    end Merge_Hardware;
 
    -------------------------------------------------------------------------
 
    procedure Merge_Platform
      (Policy        : in out Muxml.XML_Data_Type;
-      Platform_File :        String)
+      Platform_File :        String;
+      Add_Location  :        Boolean := False)
    is
    begin
       Merge_Section
@@ -243,7 +167,8 @@ is
                                3 => U ("class"),
                                4 => U ("device")),
          Section_Ref_Names => (1 => U ("memory")),
-         Add_Missing_Elems => Add_Missing_PL_Elements'Access);
+         Add_Missing_Elems => Add_Missing_PL_Elements'Access,
+         Add_Location      => Add_Location);
    end Merge_Platform;
 
    -------------------------------------------------------------------------
@@ -277,7 +202,8 @@ is
       Section_Name      :        String;
       Section_List_Tags :        Muxml.Utils.Tags_Type;
       Section_Ref_Names :        Muxml.Utils.Tags_Type;
-      Add_Missing_Elems : not null access procedure (Node : DOM.Core.Node))
+      Add_Missing_Elems : not null access procedure (Node : DOM.Core.Node);
+      Add_Location      :        Boolean)
    is
       use type DOM.Core.Node;
 
@@ -285,9 +211,10 @@ is
       Section_Node : DOM.Core.Node;
       Top_Node     : DOM.Core.Node;
    begin
-      Muxml.Parse (Data => Section,
-                   Kind => Muxml.None,
-                   File => Section_File);
+      Muxml.Parse (Data         => Section,
+                   Kind         => Muxml.None,
+                   File         => Section_File,
+                   Add_Location => Add_Location);
       Section_Node := Muxml.Utils.Get_Element
         (Doc   => Policy.Doc,
          XPath => "/system/" & Section_Name);

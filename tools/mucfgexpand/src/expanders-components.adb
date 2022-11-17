@@ -1194,6 +1194,7 @@ is
                   VCPU_Node := DOM.Core.Nodes.Remove_Child
                     (N         => Subj_Node,
                      Old_Child => Subj_VCPU_Node);
+                  DOM.Core.Nodes.Free (N => VCPU_Node);
                end;
             end if;
          end;

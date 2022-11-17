@@ -1,0 +1,323 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<system>
+   <config>
+      <boolean name="feature_enabled" value="true"/>
+      <boolean name="dependent_feature" value="$feature_enabled"/>
+      <integer name="scount" value="$session_count"/>
+      <integer name="session_count" value="4"/>
+      <string name="name3" value="$name2"/>
+      <string name="name1" value="myname"/>
+      <string name="name2" value="$name1"/>
+      <string name="foo" value="$foobar"/>
+      <string name="lcbrace" value="{"/>
+   </config>
+   <expressions>
+      <expression name="myconcatenation">
+         <concatenation>
+            <string value="start_"/>
+            <variable name="name2"/>
+            <variable name="name1"/>
+            <string value="foobar"/>
+         </concatenation>
+      </expression>
+      <expression name="evalStringExpr1">
+         <evalString value=""/>
+      </expression>
+      <expression name="evalStringExpr2">
+         <evalString value="/path/../to/*[@name='stuff']//node"/>
+      </expression>
+      <expression name="evalStringExpr3">
+         <evalString value="${case1_string}"/>
+      </expression>
+      <expression name="evalStringExpr4">
+         <evalString value="${foo}${lcbrace}"/>
+      </expression>
+      <expression name="evalStringExpr5">
+         <evalString value="bar${foo}_b ar "/>
+      </expression>
+      <expression name="evalStringExpr6">
+         <evalString value="${foo}${empty}_ba:,.'\/()!? r_${foo}${lcbrace}"/>
+      </expression>
+      <expression name="empty">
+         <concatenation>
+            <string value=""/>
+            <string value=""/>
+         </concatenation>
+      </expression>
+      <expression name="foobar">
+         <concatenation>
+            <string value="foo"/>
+            <string value="bar"/>
+         </concatenation>
+      </expression>
+
+      <expression name="case1_string">
+         <case variable="foo">
+            <when value="foo">
+               <string value="no bar"/>
+            </when>
+            <when value="foobar">
+               <variable name="foobar"/>
+            </when>
+         </case>
+      </expression>
+      <expression name="case2_bool">
+         <case variable="scount">
+            <when value="4">
+               <boolean value="true"/>
+            </when>
+            <others>
+               <boolean value="false"/>
+            </others>
+         </case>
+      </expression>
+      <expression name="case3_int">
+         <case variable="feature_enabled">
+            <when value="true">
+               <integer value="-04"/>
+            </when>
+            <when value="false">
+               <variable name="scount"/>
+            </when>
+         </case>
+      </expression>
+      <expression name="case4_int">
+         <case variable="feature_enabled">
+            <when value="true">
+               <integer value="-04"/>
+            </when>
+            <when value="false">
+               <case variable="foo">
+                  <when value="$foo">
+                     <integer value="55"/>
+                  </when>
+                  <when value="foo">
+                     <variable name="scount"/>
+                  </when>
+                  <when value="nono">
+                     <integer value="0"/>
+                  </when>
+               </case>
+            </when>
+         </case>
+      </expression>
+
+      <expression name="session2_enabled">
+         <gt>
+            <variable name="session_count"/>
+            <integer value="1"/>
+         </gt>
+      </expression>
+      <expression name="session2_disabled">
+         <gt>
+            <integer value="2"/>
+            <variable name="session_count"/>
+         </gt>
+      </expression>
+      <expression name="int_values">
+         <gt>
+            <integer value="5"/>
+            <integer value="1"/>
+         </gt>
+      </expression>
+      <expression name="int_values_2">
+         <lt>
+            <integer value="42"/>
+            <integer value="23"/>
+         </lt>
+      </expression>
+      <expression name="is_below_max">
+         <lt>
+            <variable name="session_count"/>
+            <integer value="255"/>
+         </lt>
+      </expression>
+      <expression name="has_four_sessions">
+         <eq>
+            <variable name="session_count"/>
+            <integer value="4"/>
+         </eq>
+      </expression>
+      <expression name="two_is_two">
+         <eq>
+            <integer value="2"/>
+            <integer value="2"/>
+         </eq>
+      </expression>
+      <expression name="two_is_three">
+         <eq>
+            <integer value="2"/>
+            <integer value="3"/>
+         </eq>
+      </expression>
+      <expression name="has_not_three_sessions">
+         <ne>
+            <variable name="session_count"/>
+            <integer value="3"/>
+         </ne>
+      </expression>
+      <expression name="two_is_not_three">
+         <ne>
+            <integer value="2"/>
+            <integer value="3"/>
+         </ne>
+      </expression>
+      <expression name="two_is_not_two">
+         <ne>
+            <integer value="2"/>
+            <integer value="2"/>
+         </ne>
+      </expression>
+      <expression name="iommu_disabled">
+         <not>
+            <variable name="feature_enabled"/>
+         </not>
+      </expression>
+      <expression name="not_false">
+         <not>
+            <boolean value="false"/>
+         </not>
+      </expression>
+      <expression name="and_expr">
+         <and>
+            <boolean value="false"/>
+            <variable name="feature_enabled"/>
+         </and>
+      </expression>
+      <expression name="and_expr_2">
+         <and>
+            <boolean value="true"/>
+            <boolean value="true"/>
+         </and>
+      </expression>
+      <expression name="or_expr">
+         <or>
+            <boolean value="false"/>
+            <variable name="feature_enabled"/>
+         </or>
+      </expression>
+      <expression name="or_expr_2">
+         <or>
+            <boolean value="false"/>
+            <boolean value="false"/>
+         </or>
+      </expression>
+      <expression name="nested_expr">
+         <and>
+            <expression name="session2_enabled">
+               <gt>
+                  <variable name="session_count"/>
+                  <integer value="1"/>
+               </gt>
+            </expression>
+            <expression name="sub_expression">
+               <or>
+                  <expression name="sub_sub_expression">
+                     <not>
+                        <boolean value="true"/>
+                     </not>
+                  </expression>
+                  <variable name="feature_enabled"/>
+               </or>
+            </expression>
+         </and>
+      </expression>
+   </expressions>
+   <hardware>
+      <memory>
+         <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
+      </memory>
+      <devices>
+         <device name="ioapic">
+            <memory caching="UC" name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#"/>
+         </device>
+      </devices>
+   </hardware>
+   <platform>
+      <mappings>
+         <aliases>
+            <alias name="debugconsole" physical="serial_1"/>
+         </aliases>
+         <classes>
+            <class name="usb">
+               <device physical="ehci"/>
+               <device physical="xhci"/>
+            </class>
+         </classes>
+      </mappings>
+   </platform>
+   <memory>
+      <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
+      <if value="true" variable="feature_enabled">
+         <memory caching="WB" name="extra_mem" physicalAddress="16#2000#" size="16#1000#"/>
+      </if>
+      <if value="1" variable="session_count">
+         <memory caching="WB" name="placeholder" physicalAddress="16#3000#" size="16#1000#"/>
+      </if>
+   </memory>
+   <events/>
+   <components>
+      <component name="linux" profile="linux">
+         <provides>
+            <memory executable="true" logical="binary" size="16#1000#" virtualAddress="16#2000#" writable="true">
+               <file filename="lnx_bin" offset="none"/>
+            </memory>
+         </provides>
+      </component>
+   </components>
+   <subjects>
+      <subject name="lnx">
+         <memory>
+            <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+            <if value="true" variable="feature_enabled">
+               <memory executable="false" logical="extra_mem" physical="extra_mem" virtualAddress="16#f000_0000#" writable="true"/>
+            </if>
+         </memory>
+         <if value="true" variable="feature_enabled">
+            <devices>
+               <device logical="usb" physical="usb_conitroller_1">
+                  <if value="false" variable="feature_enabled">
+                     <ioPort logical="port1" physical="port_60"/>
+                  </if>
+               </device>
+               <if value="42" variable="session_count">
+                  <device logical="nic" physical="ethernet_controller_1"/>
+               </if>
+            </devices>
+         </if>
+         <events/>
+         <component ref="linux">
+            <case variable="foo">
+               <when value="foobar">
+                  <map logical="dummy" physical="dummy"/>
+
+                  <case variable="scount">
+                     <when value="0">
+                        <!-- insert comment -->
+                     </when>
+                  </case>
+               </when>
+               <others>
+                  <if value="true" variable="feature_enabled">
+                     <map logical="feature" physical="extra_mem"/>
+                  </if>
+               </others>
+            </case>
+         </component>
+      </subject>
+   </subjects>
+   <scheduling tickRate="10000">
+      <partitions>
+         <partition name="linux">
+            <group>
+               <subject name="lnx"/>
+            </group>
+         </partition>
+      </partitions>
+      <majorFrame>
+         <cpu id="0">
+            <minorFrame partition="linux" ticks="80"/>
+         </cpu>
+      </majorFrame>
+   </scheduling>
+</system>

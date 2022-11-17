@@ -24,4 +24,8 @@ package Mutools.Expressions.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
+   procedure Initialize_Node_Access_Testing
+      (Data        :        Muxml.XML_Data_Type;
+       Node_Access : in out Access_Hashmaps_Type);
+
 end Mutools.Expressions.Test_Data;

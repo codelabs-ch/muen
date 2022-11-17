@@ -20,6 +20,7 @@ with DOM.Core.Append_Node;
 with DOM.Core.Elements;
 with DOM.Core.Attrs;
 with DOM.Core.Documents.Local;
+with DOM.Core;
 
 with McKae.XML.XPath.XIA;
 
@@ -501,6 +502,50 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Unique_Element_Child
+     (Parent     : DOM.Core.Node;
+      Child_Name : String)
+      return DOM.Core.Node
+   is
+      use all type DOM.Core.Node_Types;
+      use all type DOM.Core.Node;
+
+      Node : DOM.Core.Node
+         := DOM.Core.Nodes.First_Child (N => Parent);
+      Result : DOM.Core.Node
+         := null;
+   begin
+      while Node /= null loop
+         if DOM.Core.Nodes.Node_Type (N => Node) =  Element_Node
+            and then DOM.Core.Nodes.Node_Name (N => Node) = Child_Name
+         then
+            if Result = null then
+               Result := Node;
+            else
+               return null;
+            end if;
+         end if;
+         Node := DOM.Core.Nodes.Next_Sibling (N => Node);
+      end loop;
+      return Result;
+   end Get_Unique_Element_Child;
+
+   -------------------------------------------------------------------------
+
+   function Has_Attribute
+     (Node      : DOM.Core.Node;
+      Attr_Name : String)
+      return Boolean
+   is
+      use type DOM.Core.Node;
+   begin
+      return null /= DOM.Core.Nodes.Get_Named_Item
+         (Map  => DOM.Core.Nodes.Attributes (N => Node),
+          Name => Attr_Name);
+   end Has_Attribute;
+
+   -------------------------------------------------------------------------
+
    procedure Insert_Before
      (Parent    : DOM.Core.Node;
       New_Child : DOM.Core.Node;
@@ -668,6 +713,121 @@ is
 
    -------------------------------------------------------------------------
 
+   function Next_Node
+     (Current_Node       : DOM.Core.Node;
+      Only_Element_Nodes : Boolean       := False;
+      Stop_Node          : DOM.Core.Node := null)
+      return DOM.Core.Node
+   is
+      use type DOM.Core.Node;
+      use all type DOM.Core.Node_Types;
+
+      --  Recursively go to the parent until some parent has a next sibling
+      --  and return that sibling.
+      --  Returns null if there is no such node.
+      function Backtrack_Until_Sibling
+         (Node : DOM.Core.Node)
+         return DOM.Core.Node;
+
+      ----------------------------------------------------------------------
+
+      function Backtrack_Until_Sibling
+        (Node : DOM.Core.Node)
+         return DOM.Core.Node
+      is
+      begin
+         if Node = Stop_Node then
+            return null;
+         end if;
+
+         if DOM.Core.Nodes.Next_Sibling (N => Node) /= null then
+            return DOM.Core.Nodes.Next_Sibling (N => Node);
+         elsif DOM.Core.Nodes.Parent_Node (N => Node) /= null then
+            return Backtrack_Until_Sibling
+               (Node => DOM.Core.Nodes.Parent_Node (N => Node));
+         else
+            return null;
+         end if;
+      end Backtrack_Until_Sibling;
+
+      ----------------------------------------------------------------------
+
+      --  Recurse until an element-node is found (if that is required).
+      function Recurse_Until_Element
+        (Node : DOM.Core.Node)
+         return DOM.Core.Node;
+
+      ----------------------------------------------------------------------
+
+      function Recurse_Until_Element
+        (Node : DOM.Core.Node)
+         return DOM.Core.Node
+      is
+      begin
+         if Node = Stop_Node then
+            return null;
+         end if;
+
+         if Only_Element_Nodes then
+            if Node /= null and then
+               DOM.Core.Nodes.Node_Type (N => Node) /= Element_Node
+            then
+               return Next_Node (Current_Node       => Node,
+                                 Only_Element_Nodes => Only_Element_Nodes,
+                                 Stop_Node          => Stop_Node);
+            else
+               return Node;
+            end if;
+         else
+            return Node;
+         end if;
+      end Recurse_Until_Element;
+
+   begin
+      if Current_Node /= null then
+         if DOM.Core.Nodes.Has_Child_Nodes (N => Current_Node) then
+            return Recurse_Until_Element
+               (Node => DOM.Core.Nodes.First_Child (N => Current_Node));
+         elsif DOM.Core.Nodes.Next_Sibling (N => Current_Node) /= null then
+            return Recurse_Until_Element
+               (Node => DOM.Core.Nodes.Next_Sibling (N => Current_Node));
+         elsif DOM.Core.Nodes.Parent_Node (N => Current_Node) /= null then
+            return Recurse_Until_Element
+               (Node => Backtrack_Until_Sibling
+                   (Node => DOM.Core.Nodes.Parent_Node
+                       (N => Current_Node)));
+         else
+            return null;
+         end if;
+      else
+         return null;
+      end if;
+   end Next_Node;
+
+   -------------------------------------------------------------------------
+
+   function Next_Node_In_Subtree
+     (Root_Node          : DOM.Core.Node;
+      Current_Node       : DOM.Core.Node;
+      Only_Element_Nodes : Boolean := False)
+      return DOM.Core.Node
+   is
+      use all type DOM.Core.Node;
+   begin
+      if Current_Node /= Root_Node or
+         DOM.Core.Nodes.Has_Child_Nodes (N => Current_Node)
+      then
+         return Next_Node
+            (Current_Node       => Current_Node,
+             Only_Element_Nodes => Only_Element_Nodes,
+             Stop_Node          => Root_Node);
+      else
+         return null;
+      end if;
+   end Next_Node_In_Subtree;
+
+   -------------------------------------------------------------------------
+
    procedure Remove_Child
      (Node       : DOM.Core.Node;
       Child_Name : String)
@@ -720,6 +880,7 @@ is
                   Node := DOM.Core.Nodes.Remove_Child
                     (N         => DOM.Core.Nodes.Parent_Node (N => Node),
                      Old_Child => Node);
+                  DOM.Core.Nodes.Free (N => Node);
                end;
             end loop;
          end;

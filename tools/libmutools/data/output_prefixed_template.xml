@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<template name="template_memory">
+ <config>
+  <integer name="xprex_id1"/>
+  <string defaultValue="system_test" name="xprex_logical_test"/>
+  <string name="xprex_memory_name"/>
+ </config>
+ <expressions>
+  <expression name="xprex_isId1_20">
+   <eq>
+    <variable name="xprex_id1"/>
+    <integer value="20"/>
+   </eq>
+  </expression>
+ </expressions>
+ <body>
+  <memory>
+   <if value="true" variable="xprex_isId1_20">
+    <memory caching="WB" name="dummy" physicalAddress="16#0000#" size="16#0000#"/>
+   </if>
+   <memory caching="$no_caching" name="$xprex_memory_name" physicalAddress="16#0000#" size="16#0000#"/>
+  </memory>
+  <if value="UC" variable="no_caching">
+   <amend xpath="/system/hardware/memory">
+    <memoryBlock allocatable="true" name="name" physicalAddress="16#0000#" size="$sizeOfExtraMem"/>
+    <useTemplate name="oneline_mem_template" namePrefix="xprex_myprefix"/>
+   </amend>
+  </if>
+ </body>
+</template>
+

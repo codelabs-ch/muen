@@ -31,8 +31,8 @@ package body Muxml.XML_Data_Type_Test_Data.XML_Data_Type_Tests is
 
 --  begin read only
    procedure Test_Parse (Gnattest_T : in out Test_XML_Data_Type);
-   procedure Test_Parse_8fecef (Gnattest_T : in out Test_XML_Data_Type) renames Test_Parse;
---  id:2.2/8fecefff65fd7cbb/Parse/1/0/
+   procedure Test_Parse_9c71fd (Gnattest_T : in out Test_XML_Data_Type) renames Test_Parse;
+--  id:2.2/9c71fd70f96ce34b/Parse/1/0/
    procedure Test_Parse (Gnattest_T : in out Test_XML_Data_Type) is
 --  end read only
 
@@ -61,6 +61,26 @@ package body Muxml.XML_Data_Type_Test_Data.XML_Data_Type_Tests is
             Ada.Directories.Delete_File (Name => Dst_File);
          end;
       end loop;
+
+      -- parser that adds location information
+      declare
+         Data     : XML_Data_Type;
+         Dst_File : constant String := "obj/format_src_with_location.xml";
+      begin
+         Parse (Data         => Data,
+                Kind         => Format_Src,
+                File         => "data/format_src.xml",
+                Add_Location => True);
+         Write (Data => Data,
+                Kind => Muxml.None,
+                File => Dst_File);
+         Assert
+            (Condition => Test_Utils.Equal_Files
+                (Filename1 => "data/src_with_location.xml",
+                 Filename2 => Dst_File),
+             Message   => "Stored " & Dst_File & " XML differs from loaded one");
+         Ada.Directories.Delete_File (Name => Dst_File);
+      end;
 
       Load_Invalid_Format :
       declare

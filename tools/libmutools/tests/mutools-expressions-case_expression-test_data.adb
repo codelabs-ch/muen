@@ -3,7 +3,7 @@
 --  automatically. Contents of this package can be modified in any way
 --  except for sections surrounded by a 'read only' marker.
 
-package body Merge.Conditionals.Test_Data is
+package body Mutools.Expressions.Case_Expression.Test_Data is
 
    procedure Set_Up (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
@@ -15,6 +15,4 @@ package body Merge.Conditionals.Test_Data is
       pragma Unreferenced (Gnattest_T);
    begin
       null;
-   end Tear_Down;
-
-end Merge.Conditionals.Test_Data;
+   end Tear_Down;end Mutools.Expressions.Case_Expression.Test_Data;

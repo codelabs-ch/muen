@@ -23,9 +23,10 @@ with Ada.Text_IO.Text_Streams;
 with DOM.Core.Nodes;
 with Schema.Dom_Readers;
 with Schema.Validators;
+with Schema.Dom_Readers_With_Location;
+with Sax.Readers;
 with Input_Sources.File;
 with Input_Sources.Strings.Local;
-with Sax.Readers;
 with Unicode.CES.Utf8;
 
 with Muxml.Grammar;
@@ -40,9 +41,10 @@ is
    --  structure. The XML data is validated against the built-in system policy
    --  XML schema.
    procedure Parse
-     (Data  :    out XML_Data_Type;
-      Input : in out Input_Sources.Input_Source'Class;
-      Kind  :        Schema_Kind);
+     (Data         :    out XML_Data_Type;
+      Input        : in out Input_Sources.Input_Source'Class;
+      Kind         :        Schema_Kind;
+      Add_Location :        Boolean := False);
 
    -------------------------------------------------------------------------
 
@@ -55,50 +57,70 @@ is
    -------------------------------------------------------------------------
 
    procedure Parse
-     (Data  :    out XML_Data_Type;
-      Input : in out Input_Sources.Input_Source'Class;
-      Kind  :        Schema_Kind)
+     (Data         :    out XML_Data_Type;
+      Input        : in out Input_Sources.Input_Source'Class;
+      Kind         :        Schema_Kind;
+      Add_Location :        Boolean := False)
    is
-      Reader : DR.Tree_Reader;
-   begin
-      if Kind in Valid_Schema_Kind then
-         Reader.Set_Grammar (Grammar => Grammar.Get_Grammar (Kind));
-         Reader.Set_Feature (Name  => Sax.Readers.Schema_Validation_Feature,
-                             Value => True);
-      else
-         Reader.Set_Feature (Name  => Sax.Readers.Schema_Validation_Feature,
-                             Value => False);
-      end if;
+      Reader_with_L : Schema.Dom_Readers_With_Location.Tree_Reader_With_Location;
+      Reader_no_L   : DR.Tree_Reader;
 
+      ----------------------------------------------------------------------
+
+      --  Do the actual parsing, depending on the actual type of Reader.
+      procedure Do_Parse (Reader : in out DR.Tree_Reader'Class);
+
+      ----------------------------------------------------------------------
+
+      procedure Do_Parse (Reader : in out DR.Tree_Reader'Class)
+      is
       begin
-         Reader.Parse (Input => Input);
+         if Kind in Valid_Schema_Kind then
+            Reader.Set_Grammar (Grammar => Grammar.Get_Grammar (Kind));
+            Reader.Set_Feature (Name  => Sax.Readers.Schema_Validation_Feature,
+                                Value => True);
+         else
+            Reader.Set_Feature (Name  => Sax.Readers.Schema_Validation_Feature,
+                                Value => False);
+         end if;
+
+         begin
+            Reader.Parse (Input => Input);
+         exception
+            when others =>
+               Input.Close;
+               Data.Doc := Reader.Get_Tree;
+               Reader.Free;
+               raise;
+         end;
+
+         Input.Close;
+         Data.Doc := Reader.Get_Tree;
 
       exception
-         when others =>
-            Input.Close;
-            Data.Doc := Reader.Get_Tree;
-            Reader.Free;
-            raise;
-      end;
+         when SV.XML_Validation_Error =>
+            raise Validation_Error with "XML validation error - "
+               & Reader.Get_Error_Message;
+         when E : others =>
+            raise Validation_Error with "Error validating XML data - "
+               & Ada.Exceptions.Exception_Message (X => E);
+      end Do_Parse;
 
-      Input.Close;
-      Data.Doc := Reader.Get_Tree;
-
-   exception
-      when SV.XML_Validation_Error =>
-         raise Validation_Error with "XML validation error - "
-           & Reader.Get_Error_Message;
-      when E : others =>
-         raise Validation_Error with "Error validating XML data - "
-           & Ada.Exceptions.Exception_Message (X => E);
+   begin
+      if Add_Location then
+         Do_Parse (Reader => Reader_with_L);
+      else
+         Do_Parse (Reader => Reader_no_L);
+      end if;
    end Parse;
 
    -------------------------------------------------------------------------
 
    procedure Parse
-     (Data : out XML_Data_Type;
-      Kind :     Schema_Kind;
-      File :     String)
+     (Data         : out XML_Data_Type;
+      Kind         :     Schema_Kind;
+      File         :     String;
+      Add_Location :     Boolean := False)
    is
       File_Input : Input_Sources.File.File_Input;
    begin
@@ -112,9 +134,10 @@ is
               & "' - " & Ada.Exceptions.Exception_Message (X => E);
       end;
 
-      Parse (Data  => Data,
-             Input => File_Input,
-             Kind  => Kind);
+      Parse (Data         => Data,
+             Input        => File_Input,
+             Kind         => Kind,
+             Add_Location => Add_Location);
    end Parse;
 
    -------------------------------------------------------------------------

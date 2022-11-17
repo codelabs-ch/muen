@@ -71,18 +71,12 @@
     <integer value="2"/>
    </ne>
   </expression>
-  <expression name="truth">
-   <boolean value="true"/>
-  </expression>
-  <expression name="iommu_on">
-   <variable name="feature_enabled"/>
-  </expression>
   <expression name="iommu_disabled">
    <not>
     <variable name="feature_enabled"/>
    </not>
   </expression>
-  <expression name="true">
+  <expression name="not_false">
    <not>
     <boolean value="false"/>
    </not>

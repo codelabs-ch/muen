@@ -302,9 +302,12 @@ is
 
    --  Process XML Inclusions in the given XML policy. Inclusions are searched
    --  relative to the given include directories.
+   --  If Add_Location is True, the called parser adds an attribute to each
+   --  element-node, detailing the location of that node within the original file.
    procedure Merge_XIncludes
      (Policy       : in out Muxml.XML_Data_Type;
-      Include_Dirs :        Strings.String_Array);
+      Include_Dirs :        Strings.String_Array;
+      Add_Location :        Boolean := False);
 
    --  Calculate the PCI config space window address of the device with BDF as
    --  specified by the PCI node and the given base address.

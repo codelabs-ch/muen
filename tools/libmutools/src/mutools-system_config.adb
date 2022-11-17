@@ -18,6 +18,8 @@
 
 with Ada.Characters.Handling;
 with Ada.Strings.Unbounded;
+with Ada.Strings.Fixed;
+with Ada.Strings;
 
 with DOM.Core.Documents;
 with DOM.Core.Elements;
@@ -220,6 +222,72 @@ is
         (Elem  => Cfg_Node,
          Name  => "value",
          Value => Ada.Characters.Handling.To_Lower (Item => Value'Img));
+   end Set_Value;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Value
+     (Data  : Muxml.XML_Data_Type;
+      Name  : String;
+      Value : Integer)
+   is
+      Cfg_Node : DOM.Core.Node := Muxml.Utils.Get_Element
+        (Doc   => Data.Doc,
+         XPath => "/*/config/integer[@name='" & Name & "']");
+   begin
+      if Cfg_Node = null then
+         Cfg_Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "integer");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Cfg_Node,
+            Name  => "name",
+            Value => Name);
+         Muxml.Utils.Insert_Before
+           (Parent    => Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => "/*/config"),
+            New_Child => Cfg_Node,
+            Ref_Names => (1 => U ("string")));
+      end if;
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Cfg_Node,
+         Name  => "value",
+         Value => Ada.Strings.Fixed.Trim (Integer'Image (Value), Ada.Strings.Both));
+   end Set_Value;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Value
+     (Data  : Muxml.XML_Data_Type;
+      Name  : String;
+      Value : String)
+   is
+      Cfg_Node : DOM.Core.Node := Muxml.Utils.Get_Element
+        (Doc   => Data.Doc,
+         XPath => "/*/config/string[@name='" & Name & "']");
+   begin
+      if Cfg_Node = null then
+         Cfg_Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "string");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Cfg_Node,
+            Name  => "name",
+            Value => Name);
+         Muxml.Utils.Insert_Before
+           (Parent    => Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => "/*/config"),
+            New_Child => Cfg_Node,
+            Ref_Names => Muxml.Utils.No_Tags);
+      end if;
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Cfg_Node,
+         Name  => "value",
+         Value => Value);
    end Set_Value;
 
 end Mutools.System_Config;

@@ -16,21 +16,14 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-private with DOM.Core;
-
 with Muxml;
 
 package Mutools.Conditionals
 is
 
    --  Expand all conditionals in the specified policy.
-   procedure Expand (Policy : Muxml.XML_Data_Type);
-
-private
-
-   --  Recursively evaluate all conditionals of given parent node.
-   procedure Evaluate
-     (Config : DOM.Core.Node_List;
-      Parent : DOM.Core.Node);
+   procedure Expand
+      (Policy       : Muxml.XML_Data_Type;
+       Debug_Active : Boolean := False);
 
 end Mutools.Conditionals;

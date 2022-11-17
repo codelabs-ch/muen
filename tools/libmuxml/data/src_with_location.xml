@@ -1,0 +1,260 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<system originOfNode="format_src.xml:2:9">
+ <config originOfNode="format_src.xml:3:10">
+  <string name="system" originOfNode="format_src.xml:4:50" value="test_system.xml"/>
+ </config>
+ <hardware originOfNode="format_src.xml:6:12">
+  <processor cpuCores="2" originOfNode="format_src.xml:7:57" speed="2900" vmxTimerRate="5">
+   <cpu apicId="0" originOfNode="format_src.xml:8:21"/>
+   <cpu apicId="2" cpuId="1" originOfNode="format_src.xml:9:31"/>
+   <cpuid eax="16#0000_000d#" ebx="16#756e_6547#" ecx="16#6c65_746e#" edx="16#4965_6e69#" leaf="16#0000_0000#" originOfNode="format_src.xml:10:130" subleaf="16#00#"/>
+   <msr address="16#0000_003a#" name="IA32_FEATURE_CONTROL" originOfNode="format_src.xml:11:95" regval="16#0000_0000_0010_0005#"/>
+  </processor>
+  <memory originOfNode="format_src.xml:13:11">
+   <memoryBlock allocatable="true" name="ram_1" originOfNode="format_src.xml:14:98" physicalAddress="16#0000#" size="16#8000_0000#"/>
+   <reservedMemory name="rmrr1" originOfNode="format_src.xml:15:87" physicalAddress="16#da08_3000#" size="16#0001_d000#"/>
+  </memory>
+  <devices originOfNode="format_src.xml:17:12">
+   <device name="debugconsole" originOfNode="format_src.xml:18:32">
+    <ioPort end="16#50b8#" name="serial" originOfNode="format_src.xml:19:60" start="16#50b0#"/>
+    <capabilities originOfNode="format_src.xml:20:19">
+     <capability name="cap1" originOfNode="format_src.xml:21:30">12</capability>
+     <capability name="cap2" originOfNode="format_src.xml:22:31"/>
+    </capabilities>
+    <reservedMemory originOfNode="format_src.xml:24:34" ref="rmrr1"/>
+   </device>
+   <device name="physical_device" originOfNode="format_src.xml:26:35">
+    <description originOfNode="format_src.xml:27:18">Some device description</description>
+    <pci bus="16#00#" device="16#19#" function="0" originOfNode="format_src.xml:28:52">
+     <identification classcode="16#0200#" deviceId="16#1502#" originOfNode="format_src.xml:29:104" revisionId="16#04#" vendorId="16#8086#"/>
+     <iommuGroup id="4" originOfNode="format_src.xml:30:26"/>
+    </pci>
+    <irq name="physical_irq" number="19" originOfNode="format_src.xml:32:42">
+     <msi name="msi1" originOfNode="format_src.xml:33:24"/>
+     <msi name="msi2" originOfNode="format_src.xml:34:24"/>
+     <msi name="msi3" originOfNode="format_src.xml:35:24"/>
+     <msi name="msi4" originOfNode="format_src.xml:36:24"/>
+    </irq>
+   </device>
+  </devices>
+ </hardware>
+ <platform originOfNode="format_src.xml:41:12">
+  <config originOfNode="format_src.xml:42:11">
+   <boolean name="supports_xhci_debug" originOfNode="format_src.xml:43:54" value="true"/>
+  </config>
+  <mappings originOfNode="format_src.xml:45:13">
+   <aliases originOfNode="format_src.xml:46:13">
+    <alias name="device_alias_name" originOfNode="format_src.xml:47:64" physical="physical_device">
+     <resource name="irq1" originOfNode="format_src.xml:48:52" physical="physical_irq">
+      <resource name="control_irq" originOfNode="format_src.xml:49:53" physical="msi1"/>
+      <resource name="data_irq" originOfNode="format_src.xml:50:50" physical="msi2"/>
+     </resource>
+    </alias>
+   </aliases>
+  </mappings>
+  <kernelDiagnostics originOfNode="format_src.xml:55:34" type="uart">
+   <device originOfNode="format_src.xml:56:36" physical="debugconsole">
+    <ioPort originOfNode="format_src.xml:57:32" physical="serial"/>
+   </device>
+  </kernelDiagnostics>
+ </platform>
+ <memory originOfNode="format_src.xml:61:10">
+  <memory alignment="16#1000#" caching="WB" name="trampoline" originOfNode="format_src.xml:62:94" size="16#1000#" type="subject">
+   <hash originOfNode="format_src.xml:63:88" value="16#8529afcbc87cc6ea6eac37d12b60d9a87095170811b6b61036fda72a1036fda7#"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="backup" originOfNode="format_src.xml:65:90" size="16#1000#" type="subject">
+   <hashRef memory="trampoline" originOfNode="format_src.xml:66:34"/>
+  </memory>
+ </memory>
+ <deviceDomains originOfNode="format_src.xml:69:17">
+  <domain name="linux_domain" originOfNode="format_src.xml:70:31">
+   <memory originOfNode="format_src.xml:71:12">
+    <memory executable="true" logical="dma" originOfNode="format_src.xml:72:114" physical="linux|ram" virtualAddress="16#00a0_0000#" writable="true"/>
+   </memory>
+   <devices originOfNode="format_src.xml:74:13">
+    <device logical="gpu" originOfNode="format_src.xml:75:48" physical="intelgfx"/>
+    <device logical="xhci" mapReservedMemory="true" originOfNode="format_src.xml:76:70" physical="xhci"/>
+   </devices>
+  </domain>
+  <domain name="test_domain" originOfNode="format_src.xml:79:30">
+   <devices originOfNode="format_src.xml:80:13">
+    <device logical="nic" mapReservedMemory="true" originOfNode="format_src.xml:81:69" physical="nic1"/>
+   </devices>
+  </domain>
+ </deviceDomains>
+ <events originOfNode="format_src.xml:85:10">
+  <event mode="asap" name="xv6_keyboard" originOfNode="format_src.xml:86:43"/>
+  <event mode="kernel" name="panic" originOfNode="format_src.xml:87:38"/>
+  <event mode="kernel" name="sleep" originOfNode="format_src.xml:88:38"/>
+  <event mode="kernel" name="yield" originOfNode="format_src.xml:89:38"/>
+ </events>
+ <channels originOfNode="format_src.xml:91:12">
+  <channel hasEvent="asap" name="data_channel" originOfNode="format_src.xml:92:65" size="16#1000#"/>
+ </channels>
+ <components originOfNode="format_src.xml:94:14">
+  <library name="libfoo" originOfNode="format_src.xml:95:26">
+   <requires originOfNode="format_src.xml:96:14">
+    <memory originOfNode="format_src.xml:97:13">
+     <memory executable="false" logical="foo" originOfNode="format_src.xml:98:112" size="16#1000#" virtualAddress="16#cafe_0000#" writable="false"/>
+    </memory>
+    <channels originOfNode="format_src.xml:100:16"/>
+   </requires>
+   <provides originOfNode="format_src.xml:102:14">
+    <memory executable="false" logical="lib_resource" originOfNode="format_src.xml:103:128" size="16#1000#" type="subject" virtualAddress="16#5000#" writable="true">
+     <fill originOfNode="format_src.xml:104:30" pattern="16#00#"/>
+    </memory>
+   </provides>
+  </library>
+  <library name="libdebuglog" originOfNode="format_src.xml:108:31">
+   <depends originOfNode="format_src.xml:109:13">
+    <library originOfNode="format_src.xml:110:28" ref="libfoo"/>
+   </depends>
+   <requires originOfNode="format_src.xml:112:14">
+    <memory originOfNode="format_src.xml:113:13">
+     <memory executable="false" logical="logchannel" originOfNode="format_src.xml:114:118" size="16#1000#" virtualAddress="16#0001_0000#" writable="true"/>
+     <array elementSize="16#1000#" executable="false" logical="input_mux" originOfNode="format_src.xml:115:126" virtualAddressBase="16#0001_0000#" writable="true">
+      <memory logical="input1" originOfNode="format_src.xml:116:33"/>
+      <memory logical="input2" originOfNode="format_src.xml:117:33"/>
+     </array>
+    </memory>
+   </requires>
+  </library>
+  <component name="tau0" originOfNode="format_src.xml:122:43" profile="native">
+   <depends originOfNode="format_src.xml:123:13">
+    <library originOfNode="format_src.xml:124:33" ref="libdebuglog"/>
+   </depends>
+   <requires originOfNode="format_src.xml:126:14">
+    <vcpu originOfNode="format_src.xml:127:11">
+     <vmx originOfNode="format_src.xml:128:11">
+      <controls originOfNode="format_src.xml:129:17">
+       <proc originOfNode="format_src.xml:130:14">
+        <RDTSCExiting originOfNode="format_src.xml:131:23">0</RDTSCExiting>
+       </proc>
+      </controls>
+     </vmx>
+     <registers originOfNode="format_src.xml:135:17">
+      <gpr originOfNode="format_src.xml:136:12">
+       <rsp originOfNode="format_src.xml:137:13">16#eff8#</rsp>
+       <rbp originOfNode="format_src.xml:138:13">16#f000#</rbp>
+      </gpr>
+      <segments originOfNode="format_src.xml:140:17">
+       <es access="16#0001_0000#" base="16#0000#" limit="16#0000#" originOfNode="format_src.xml:141:89" selector="16#0000#"/>
+      </segments>
+     </registers>
+    </vcpu>
+    <memory originOfNode="format_src.xml:145:13">
+     <memory executable="false" logical="data" originOfNode="format_src.xml:146:112" size="16#1000#" virtualAddress="16#0001_0000#" writable="true"/>
+    </memory>
+    <channels originOfNode="format_src.xml:148:15">
+     <writer event="1" logical="channel" originOfNode="format_src.xml:149:85" size="16#1000#" virtualAddress="16#2000#"/>
+     <array elementSize="16#1000#" eventBase="16" logical="input_arr" originOfNode="format_src.xml:150:106" virtualAddressBase="16#0001_0000#">
+      <reader logical="input1" originOfNode="format_src.xml:151:33"/>
+      <reader logical="input2" originOfNode="format_src.xml:152:33"/>
+     </array>
+     <array elementSize="16#1000#" logical="output_arr" originOfNode="format_src.xml:154:108" vectorBase="32" virtualAddressBase="16#0001_0000#">
+      <writer logical="output1" originOfNode="format_src.xml:155:34"/>
+      <writer logical="output2" originOfNode="format_src.xml:156:34"/>
+     </array>
+    </channels>
+    <devices originOfNode="format_src.xml:159:14">
+     <device logical="test_device" originOfNode="format_src.xml:160:36">
+      <irq logical="irq" originOfNode="format_src.xml:161:39" vector="48"/>
+      <memory executable="false" logical="mmio1" originOfNode="format_src.xml:162:114" size="16#4000#" virtualAddress="16#1000_f000#" writable="true"/>
+      <ioPort end="16#cafe#" logical="port_1" originOfNode="format_src.xml:163:65" start="16#cafa#"/>
+     </device>
+    </devices>
+   </requires>
+   <provides originOfNode="format_src.xml:167:14">
+    <memory executable="true" logical="binary" originOfNode="format_src.xml:168:128" size="16#1000#" type="subject_binary" virtualAddress="16#2000#" writable="true">
+     <file filename="tau0" offset="none" originOfNode="format_src.xml:169:43"/>
+    </memory>
+   </provides>
+  </component>
+ </components>
+ <subjects originOfNode="format_src.xml:174:12">
+  <subject name="tau0" originOfNode="format_src.xml:175:24">
+   <bootparams originOfNode="format_src.xml:176:16">First param</bootparams>
+   <bootparams originOfNode="format_src.xml:177:16">Second param</bootparams>
+   <memory originOfNode="format_src.xml:178:12">
+    <memory executable="true" logical="text" originOfNode="format_src.xml:179:111" physical="tau0-text" virtualAddress="16#0000#" writable="false"/>
+   </memory>
+   <devices originOfNode="format_src.xml:181:13">
+    <device logical="foo" originOfNode="format_src.xml:182:42" physical="bar">
+     <irq logical="irq" originOfNode="format_src.xml:183:41" physical="irq"/>
+    </device>
+    <device logical="logical_device" originOfNode="format_src.xml:185:65" physical="physical_device">
+     <irq logical="logical_irq" originOfNode="format_src.xml:186:70" physical="physical_irq" vector="128">
+      <msi logical="control_irq" originOfNode="format_src.xml:187:51" physical="msi1"/>
+      <msi logical="data_irq" originOfNode="format_src.xml:188:48" physical="msi2"/>
+     </irq>
+    </device>
+   </devices>
+   <events originOfNode="format_src.xml:192:12">
+    <source originOfNode="format_src.xml:193:13">
+     <group name="vmx_exit" originOfNode="format_src.xml:194:29">
+      <default originOfNode="format_src.xml:195:33" physical="trap"/>
+      <event id="12" logical="sleep" originOfNode="format_src.xml:196:55" physical="sleep">
+       <subject_sleep originOfNode="format_src.xml:197:24"/>
+      </event>
+      <event id="40" logical="yield" originOfNode="format_src.xml:199:55" physical="yield">
+       <subject_yield originOfNode="format_src.xml:200:24"/>
+      </event>
+      <event id="59" logical="bail_out" originOfNode="format_src.xml:202:58" physical="panic">
+       <system_panic originOfNode="format_src.xml:203:23"/>
+      </event>
+     </group>
+    </source>
+    <target originOfNode="format_src.xml:207:13">
+     <event id="0" logical="reset" originOfNode="format_src.xml:208:61" physical="reset_subject">
+      <reset originOfNode="format_src.xml:209:15"/>
+     </event>
+    </target>
+   </events>
+   <channels originOfNode="format_src.xml:213:14">
+    <writer event="1" logical="channel" originOfNode="format_src.xml:214:92" physical="data_channel" virtualAddress="16#2000#"/>
+   </channels>
+   <monitor originOfNode="format_src.xml:216:13">
+    <loader logical="lnx_memory" originOfNode="format_src.xml:217:82" subject="linux" virtualAddress="16#cafe_feed#"/>
+   </monitor>
+   <component originOfNode="format_src.xml:219:26" ref="tau0">
+    <map logical="logical_channel" originOfNode="format_src.xml:220:65" physical="physical_channel"/>
+    <map logical="test_device" originOfNode="format_src.xml:221:59" physical="physical_device">
+     <map logical="device_resource" originOfNode="format_src.xml:222:74" physical="physical_device_resource"/>
+    </map>
+   </component>
+  </subject>
+  <subject name="sibling" originOfNode="format_src.xml:226:27">
+   <events originOfNode="format_src.xml:227:12">
+    <source originOfNode="format_src.xml:228:13">
+     <group name="vmx_exit" originOfNode="format_src.xml:229:29">
+      <default originOfNode="format_src.xml:230:33" physical="panic">
+       <system_panic originOfNode="format_src.xml:231:23"/>
+      </default>
+     </group>
+    </source>
+   </events>
+   <sibling originOfNode="format_src.xml:236:25" ref="tau0"/>
+  </subject>
+ </subjects>
+ <scheduling originOfNode="format_src.xml:239:31" tickRate="10000">
+  <partitions originOfNode="format_src.xml:240:15">
+   <partition name="tau0" originOfNode="format_src.xml:241:27">
+    <group originOfNode="format_src.xml:242:12">
+     <subject name="tau0" originOfNode="format_src.xml:243:28"/>
+    </group>
+   </partition>
+  </partitions>
+  <majorFrame originOfNode="format_src.xml:247:15">
+   <cpu id="0" originOfNode="format_src.xml:248:16">
+    <minorFrame originOfNode="format_src.xml:249:46" partition="tau0" ticks="40"/>
+    <minorFrame originOfNode="format_src.xml:250:46" partition="tau0" ticks="40"/>
+   </cpu>
+  </majorFrame>
+  <majorFrame originOfNode="format_src.xml:253:15">
+   <cpu id="0" originOfNode="format_src.xml:254:16">
+    <minorFrame originOfNode="format_src.xml:255:46" partition="tau0" ticks="80"/>
+   </cpu>
+  </majorFrame>
+ </scheduling>
+</system>
+

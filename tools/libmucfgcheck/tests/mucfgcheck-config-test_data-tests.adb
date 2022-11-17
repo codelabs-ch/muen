@@ -60,7 +60,8 @@ package body Mucfgcheck.Config.Test_Data.Tests is
 
       Name_Uniqueness (XML_Data => Data);
       Assert (Condition => Validation_Errors.Contains
-              (Msg => "Multiple config variables with name 'feature_enabled'"),
+              (Msg => "The names given to config variables and expressions "
+               & "are not unique. Conflicting value: 'feature_enabled'"),
               Message   => "Exception mismatch");
 --  begin read only
    end Test_Name_Uniqueness;
@@ -155,46 +156,110 @@ package body Mucfgcheck.Config.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
       Data : Muxml.XML_Data_Type;
+
+      procedure Positive_Test
+      is
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/test_policy_src_evalStringConcatCase.xml");
+
+         Expression_Config_Var_Refs (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Is_Empty,
+                 Message   => "Unexpected error in positive test");
+      end Positive_Test;
+
+      procedure Nonexisting_Ref
+      is
+      begin
+         Validation_Errors.Clear;
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/test_policy_src_evalStringConcatCase.xml");
+         Muxml.Utils.Set_Attribute
+            (Doc   => Data.Doc,
+             XPath => "/system/expressions/expression/gt/variable"
+                & "[@name='session_count']",
+             Name  => "name",
+             Value => "nonexistent");
+
+         Expression_Config_Var_Refs (XML_Data => Data);
+
+         Assert (Condition => Validation_Errors.Contains
+                    (Msg => "Variable 'nonexistent' referenced in expression "
+                        & "'session2_enabled' not defined"),
+                 Message   => "Exception mismatch (1)");
+      end Nonexisting_Ref;
+
+      procedure Empty_Ref
+      is
+      begin
+         Validation_Errors.Clear;
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/test_policy_src_evalStringConcatCase.xml");
+         Muxml.Utils.Set_Attribute
+            (Doc   => Data.Doc,
+             XPath => "/system/expressions/expression/gt/variable"
+                & "[@name='session_count']",
+             Name  => "name",
+             Value => "");
+
+         Expression_Config_Var_Refs (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                    (Msg => "Missing variable-reference in expression "
+                        & "'session2_enabled'"),
+                 Message   => "Exception mismatch (2)");
+      end Empty_Ref;
+
+      procedure Nonexisting_In_Case_Var
+      is
+      begin
+         Validation_Errors.Clear;
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/test_policy_src_evalStringConcatCase.xml");
+         Muxml.Utils.Set_Attribute
+            (Doc   => Data.Doc,
+             XPath => "/system/expressions/expression[@name='case1_string']/"
+                & "case/when/variable",
+             Name  => "name",
+             Value => "$foo");
+
+         Expression_Config_Var_Refs (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                    (Msg => "Variable '$foo' referenced in expression "
+                        & "'case1_string' not defined"),
+                 Message   => "Exception mismatch (1)");
+      end Nonexisting_In_Case_Var;
+
+      procedure Nonexisting_In_EvalString
+      is
+      begin
+         Validation_Errors.Clear;
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/test_policy_src_evalStringConcatCase.xml");
+         Muxml.Utils.Set_Attribute
+            (Doc   => Data.Doc,
+             XPath => "/system/expressions/expression[@name='evalStringExpr3']/"
+                & "evalString",
+             Name  => "value",
+             Value => "${nonexisting}");
+
+         Expression_Config_Var_Refs (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                    (Msg => "Variable 'nonexisting' referenced in expression "
+                        & "'evalStringExpr3' not defined"),
+                 Message   => "Exception mismatch (1)");
+      end Nonexisting_In_EvalString;
    begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.None,
-                   File => "data/test_policy_src.xml");
+      Positive_Test;
+      Nonexisting_Ref;
+      Empty_Ref;
+      Nonexisting_In_Case_Var;
+      Nonexisting_In_EvalString;
 
-      --  Must not raise an exception.
-
-      Expression_Config_Var_Refs (XML_Data => Data);
-      Assert (Condition => Validation_Errors.Is_Empty,
-              Message   => "Unexpected error in positive test");
-
-      --  Set reference to nonexistent config var.
-
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/expressions/expression/gt/variable"
-         & "[@name='session_count']",
-         Name  => "name",
-         Value => "nonexistent");
-
-      Expression_Config_Var_Refs (XML_Data => Data);
-      Assert (Condition => Validation_Errors.Contains
-              (Msg => "Config variable 'nonexistent' referenced in expression "
-               & "'session2_enabled' not defined"),
-              Message   => "Exception mismatch (1)");
-
-      --  Remove name attribute from variable reference.
-
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/expressions/expression/gt/variable"
-         & "[@name='nonexistent']",
-         Name  => "name",
-         Value => "");
-
-      Expression_Config_Var_Refs (XML_Data => Data);
-      Assert (Condition => Validation_Errors.Contains
-              (Msg => "Config variable without name attribute in expression "
-               & "'session2_enabled'"),
-              Message   => "Exception mismatch (2)");
 --  begin read only
    end Test_Expression_Config_Var_Refs;
 --  end read only
@@ -213,7 +278,7 @@ package body Mucfgcheck.Config.Test_Data.Tests is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.None,
-                   File => "data/test_policy_src.xml");
+                   File => "data/test_policy_src_evalStringConcatCase.xml");
 
       --  Positive test, must not raise an exception.
 
@@ -268,7 +333,7 @@ package body Mucfgcheck.Config.Test_Data.Tests is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.None,
-                   File => "data/test_policy_src.xml");
+                   File => "data/test_policy_src_evalStringConcatCase.xml");
 
       --  Positive test, must not raise an exception.
 
@@ -323,7 +388,7 @@ package body Mucfgcheck.Config.Test_Data.Tests is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.None,
-                   File => "data/test_policy_src.xml");
+                   File => "data/test_policy_src_evalStringConcatCase.xml");
 
       --  Must not raise an exception.
 

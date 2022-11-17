@@ -1,0 +1,8 @@
+<system>
+ <config>
+  <string name="system" value="system_policy_no_expressions.xml"/>
+  <string name="hardware" value="hardware.xml"/>
+  <string name="additional_hardware" value="additional_hw.xml"/>
+  <string name="platform" value="platform.xml"/>
+ </config>
+</system>

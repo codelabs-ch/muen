@@ -1,0 +1,1554 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="booleanConfigValueType">
+    <xs:annotation/>
+    <xs:attribute name="name" type="nameType">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="value" type="booleanType">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="integerConfigValueType">
+    <xs:annotation/>
+    <xs:attribute name="name" type="nameType">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="value" type="xs:integer">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="stringConfigValueType">
+    <xs:annotation/>
+    <xs:attribute name="name" type="nameType">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="value" type="xs:string">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="configType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="boolean" type="booleanConfigValueType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="integer" type="integerConfigValueType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="string" type="stringConfigValueType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="vectorType">
+    <xs:annotation/>
+    <xs:restriction base="xs:nonNegativeInteger">
+      <xs:maxInclusive value="255"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="irqNumberType">
+    <xs:annotation/>
+    <xs:restriction base="xs:nonNegativeInteger">
+      <xs:maxInclusive value="220"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ioPortType">
+    <xs:annotation/>
+    <xs:attribute name="name" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="start" type="word16Type" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="end" type="word16Type" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="irqType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="msi" type="msiIrqType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="number" type="irqNumberType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="msiIrqType">
+    <xs:annotation/>
+    <xs:attribute name="name" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="devicesRefType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="device" type="deviceRefType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deviceRefType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="pci" type="pciAddressType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="irq" type="irqRefType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="memory" type="devMemRefType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="ioPort" type="physicalRefType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="logical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="physical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="physicalRefType">
+    <xs:annotation/>
+    <xs:attribute name="logical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="physical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="eventsType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="event" type="eventType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="eventSourceType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="group" type="eventGroupType" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="eventTargetType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="event" type="targetEventEntryType" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="sourceEventEntryType">
+    <xs:annotation/>
+    <xs:complexContent>
+      <xs:extension base="baseEventWithIDType">
+        <xs:group ref="sourceEventActionsGroup" minOccurs="0" maxOccurs="1"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="baseEventType">
+    <xs:attribute name="logical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="physical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="baseEventWithIDType">
+    <xs:annotation/>
+    <xs:complexContent>
+      <xs:extension base="baseEventType">
+        <xs:attribute name="id" type="xs:nonNegativeInteger" use="required">
+          <xs:annotation/>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="eventGroupNameType">
+    <xs:annotation/>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="vmx_exit"/>
+      <xs:enumeration value="vmcall"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="eventType">
+    <xs:annotation/>
+    <xs:attribute name="name" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="mode" type="eventModeType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="eventActionInjectInterruptType">
+    <xs:annotation/>
+    <xs:attribute name="vector" type="vectorType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="eventActionUnmaskIrqType">
+    <xs:attribute name="number" type="irqNumberType" use="required"/>
+  </xs:complexType>
+  <xs:complexType name="eventActionNoParamType">
+    <xs:annotation/>
+  </xs:complexType>
+  <xs:group name="sourceEventActionsGroup">
+    <xs:choice>
+      <xs:element name="system_reboot" type="eventActionNoParamType"/>
+      <xs:element name="system_panic" type="eventActionNoParamType"/>
+      <xs:element name="system_poweroff" type="eventActionNoParamType"/>
+      <xs:element name="unmask_irq" type="eventActionUnmaskIrqType"/>
+    </xs:choice>
+  </xs:group>
+  <xs:group name="targetEventActionsGroup">
+    <xs:choice>
+      <xs:element name="inject_interrupt" type="eventActionInjectInterruptType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="reset" type="eventActionNoParamType" minOccurs="0" maxOccurs="1"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="deviceBaseType">
+    <xs:sequence>
+      <xs:element name="description" type="deviceDescriptionType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="pci" type="pciType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="irq" type="irqType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="memory" type="deviceMemoryType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="ioPort" type="ioPortType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="capabilities" type="capabilitiesType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="pciAddressType">
+    <xs:annotation/>
+    <xs:attribute name="bus" type="byteType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="device" type="pciDeviceNumberType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="function" type="pciFunctionNumberType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="pciDeviceNumberType">
+    <xs:annotation/>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="16#[0|1][0-9a-fA-F]#"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="pciFunctionNumberType">
+    <xs:annotation/>
+    <xs:restriction base="xs:nonNegativeInteger">
+      <xs:maxInclusive value="7"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="deviceIdentificationType">
+    <xs:annotation/>
+    <xs:attribute name="classcode" type="word16Type" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="vendorId" type="word16Type" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="deviceId" type="word16Type" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="revisionId" type="byteType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="iommuGroupType">
+    <xs:annotation/>
+    <xs:attribute name="id" type="xs:nonNegativeInteger" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="devicesType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="device" type="deviceType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="pciConfigAddress" type="word64Type" use="optional">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="processorType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="cpu" type="cpuCoreType" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="cpuCores" type="xs:positiveInteger" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="speed" type="xs:positiveInteger" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="vmxTimerRate" type="vmxTimerRateType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="vmxTimerRateType">
+    <xs:annotation/>
+    <xs:restriction base="xs:nonNegativeInteger">
+      <xs:maxInclusive value="31"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="capabilitiesType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="capability" type="capabilityType" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="capabilityType">
+    <xs:annotation/>
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="name" type="xs:string" use="required">
+          <xs:annotation/>
+        </xs:attribute>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="deviceDescriptionType">
+    <xs:annotation/>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:complexType name="kernelType">
+    <xs:sequence>
+      <xs:element name="memory" type="kernelMemMappingsType" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="devices" type="devicesRefType" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="kernelMemMappingsType">
+    <xs:sequence>
+      <xs:element name="cpu" type="cpuMemoryType" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="cpuMemoryType">
+    <xs:complexContent>
+      <xs:extension base="memoryRefsType">
+        <xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="memorySizeType">
+    <xs:annotation/>
+    <xs:restriction base="word64Type"/>
+  </xs:simpleType>
+  <xs:simpleType name="alignmentType">
+    <xs:annotation/>
+    <xs:restriction base="word64Type">
+      <xs:enumeration value="16#1000#"/>
+      <xs:enumeration value="16#0020_0000#"/>
+      <xs:enumeration value="16#4000_0000#"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="cachingType">
+    <xs:annotation/>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="UC|WC|WT|WB|WP"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="memoryKindType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="system"/>
+      <xs:enumeration value="system_vmxon"/>
+      <xs:enumeration value="system_iobm"/>
+      <xs:enumeration value="system_msrbm"/>
+      <xs:enumeration value="system_pt"/>
+      <xs:enumeration value="system_vtd_root"/>
+      <xs:enumeration value="system_vtd_context"/>
+      <xs:enumeration value="system_vtd_ir"/>
+      <xs:enumeration value="kernel"/>
+      <xs:enumeration value="kernel_binary"/>
+      <xs:enumeration value="kernel_fpu"/>
+      <xs:enumeration value="kernel_interface"/>
+      <xs:enumeration value="kernel_msrstore"/>
+      <xs:enumeration value="kernel_vmcs"/>
+      <xs:enumeration value="subject"/>
+      <xs:enumeration value="subject_info"/>
+      <xs:enumeration value="subject_state"/>
+      <xs:enumeration value="subject_binary"/>
+      <xs:enumeration value="subject_channel"/>
+      <xs:enumeration value="subject_crash_audit"/>
+      <xs:enumeration value="subject_initrd"/>
+      <xs:enumeration value="subject_bios"/>
+      <xs:enumeration value="subject_acpi_rsdp"/>
+      <xs:enumeration value="subject_acpi_xsdt"/>
+      <xs:enumeration value="subject_acpi_fadt"/>
+      <xs:enumeration value="subject_acpi_dsdt"/>
+      <xs:enumeration value="subject_zeropage"/>
+      <xs:enumeration value="subject_solo5_boot_info"/>
+      <xs:enumeration value="subject_device"/>
+      <xs:enumeration value="subject_scheduling_info"/>
+      <xs:enumeration value="subject_timed_event"/>
+      <xs:enumeration value="subject_interrupts"/>
+      <xs:enumeration value="device_rmrr"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="memoryBlockBaseType" abstract="true">
+    <xs:attribute name="name" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="physicalAddress" type="word64Type" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="size" type="memorySizeType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="deviceMemoryType">
+    <xs:annotation/>
+    <xs:complexContent>
+      <xs:extension base="memoryBlockBaseType">
+        <xs:attribute name="caching" type="cachingType" use="required">
+          <xs:annotation/>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="optionalOffsetType">
+    <xs:annotation/>
+    <xs:union memberTypes="word64Type noneType"/>
+  </xs:simpleType>
+  <xs:complexType name="fillContentType">
+    <xs:annotation/>
+    <xs:attribute name="pattern" type="byteType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="memRegionsType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="memory" type="memoryType" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="memRefType">
+    <xs:annotation/>
+    <xs:attributeGroup ref="memRefBaseAttrs"/>
+    <xs:attribute name="virtualAddress" type="word64Type" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="memoryRefsType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="memory" type="memRefType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:attributeGroup name="memBaseAttrs">
+    <xs:attribute name="logical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="writable" type="booleanType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="executable" type="booleanType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="memRefBaseAttrs">
+    <xs:attributeGroup ref="memBaseAttrs"/>
+    <xs:attribute name="physical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:complexType name="memoryBaseType" abstract="true">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="1">
+        <xs:element name="file" type="fileContentType"/>
+        <xs:element name="fill" type="fillContentType"/>
+      </xs:choice>
+      <xs:choice minOccurs="0" maxOccurs="1">
+        <xs:element name="hash" type="hash256Type"/>
+        <xs:element name="hashRef" type="hashRefType"/>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="size" type="memorySizeType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="physicalMemBaseType">
+    <xs:complexContent>
+      <xs:extension base="memoryBaseType">
+        <xs:attribute name="name" type="nameType" use="required">
+          <xs:annotation/>
+        </xs:attribute>
+        <xs:attribute name="caching" type="cachingType" use="required">
+          <xs:annotation/>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="hash256DigestType">
+    <xs:annotation/>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="16#[0-9a-fA-F]{64}#"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="optionalHashType">
+    <xs:annotation/>
+    <xs:union memberTypes="hash256DigestType noneType"/>
+  </xs:simpleType>
+  <xs:complexType name="hash256Type">
+    <xs:annotation/>
+    <xs:attribute name="value" type="optionalHashType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="hashRefType">
+    <xs:annotation/>
+    <xs:attribute name="memory" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="aliasesType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="alias" type="namePhysRefType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="namePhysRefType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="resource" type="namePhysRefType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="physical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="devClassesType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="class" type="devClassType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="devClassType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="device" type="physRefType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="physRefType">
+    <xs:annotation/>
+    <xs:attribute name="physical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="kernelDiagType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="device" type="kernelDiagDeviceType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+    <xs:attribute name="type" type="kernelDiagKindType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="kernelDiagKindType">
+    <xs:annotation/>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="none"/>
+      <xs:enumeration value="uart"/>
+      <xs:enumeration value="hsuart"/>
+      <xs:enumeration value="vga"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="kernelDiagDeviceType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="memory" type="physRefType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="ioPort" type="physRefType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="physical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="schedulingType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="majorFrame" type="majorFrameType" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="tickRate" type="xs:positiveInteger" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="cpuType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="minorFrame" type="minorFrameType" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:nonNegativeInteger" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:attributeGroup name="subjectBaseAttrs">
+    <xs:attribute name="name" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:complexType name="subjectEventsType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="source" type="eventSourceType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="target" type="eventTargetType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="subjectsType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="subject" type="subjectType" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="word64Type">
+    <xs:annotation/>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="16#[0-9a-fA-F]{4}(_([0-9a-fA-F]{4})){0,3}#"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="word32Type">
+    <xs:annotation/>
+    <xs:restriction base="word64Type">
+      <xs:maxLength value="13"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="word16Type">
+    <xs:annotation/>
+    <xs:restriction base="word64Type">
+      <xs:length value="8"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="byteType">
+    <xs:annotation/>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="16#[0-9a-fA-F]{2}#"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="booleanType">
+    <xs:annotation/>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="true"/>
+      <xs:enumeration value="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="nameType">
+    <xs:annotation/>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="63"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="namedRefType">
+    <xs:annotation/>
+    <xs:attribute name="ref" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="noneType">
+    <xs:annotation/>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="none"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="bitValueType">
+    <xs:annotation/>
+    <xs:restriction base="xs:nonNegativeInteger">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="msrModeType">
+    <xs:annotation/>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="r"/>
+      <xs:enumeration value="w"/>
+      <xs:enumeration value="rw"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="msrAddressType">
+    <xs:annotation/>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="16#([cC0]000_)?[01]([0-9a-fA-F]{3})#"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="msrType">
+    <xs:annotation/>
+    <xs:attribute name="start" type="msrAddressType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="end" type="msrAddressType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="mode" type="msrModeType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="msrsType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="msr" type="msrType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="segmentType">
+    <xs:annotation/>
+    <xs:attribute name="selector" type="word16Type" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="base" type="word64Type" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="limit" type="word32Type" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="access" type="word32Type" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="deviceDomainsType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="domain" type="deviceDomainType" minOccurs="0" maxOccurs="255"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="devsRefType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="device" type="devRefType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="devMemRefType">
+    <xs:annotation/>
+    <xs:attributeGroup ref="memRefBaseAttrs"/>
+    <xs:attribute name="virtualAddress" type="word64Type" use="optional">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="irqRefType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="msi" type="physicalRefType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="logical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="physical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="vector" type="vectorType" use="optional">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="eventGroupType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="default" type="defaultEventEntryType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="event" type="sourceEventEntryType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="eventGroupNameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="baseDefaultEventType">
+    <xs:annotation/>
+    <xs:attribute name="physical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="defaultEventEntryType">
+    <xs:annotation/>
+    <xs:complexContent>
+      <xs:extension base="baseDefaultEventType">
+        <xs:group ref="sourceEventActionsGroup" minOccurs="0" maxOccurs="1"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="targetEventEntryType">
+    <xs:annotation/>
+    <xs:complexContent>
+      <xs:extension base="baseEventType">
+        <xs:group ref="targetEventActionsGroup" minOccurs="0" maxOccurs="1"/>
+        <xs:attribute name="id" type="xs:nonNegativeInteger" use="optional">
+          <xs:annotation/>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="eventModeType">
+    <xs:annotation/>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="asap"/>
+      <xs:enumeration value="async"/>
+      <xs:enumeration value="self"/>
+      <xs:enumeration value="switch"/>
+      <xs:enumeration value="kernel"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="memoryType">
+    <xs:annotation/>
+    <xs:complexContent>
+      <xs:extension base="physicalMemBaseType">
+        <xs:attribute name="type" type="subjectMemoryKindType" use="optional">
+          <xs:annotation/>
+        </xs:attribute>
+        <xs:attribute name="alignment" type="alignmentType" use="optional">
+          <xs:annotation/>
+        </xs:attribute>
+        <xs:attribute name="physicalAddress" type="word64Type" use="optional">
+          <xs:annotation/>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="memoryBlockType">
+    <xs:annotation/>
+    <xs:complexContent>
+      <xs:extension base="memoryBlockBaseType">
+        <xs:attribute name="allocatable" type="booleanType" use="optional">
+          <xs:annotation/>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="reservedMemRegionType">
+    <xs:annotation/>
+    <xs:complexContent>
+      <xs:extension base="memoryBlockBaseType"/>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="fileContentType">
+    <xs:annotation/>
+    <xs:attribute name="filename" type="xs:string" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="offset" type="optionalOffsetType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:simpleType name="subjectMemoryKindType">
+    <xs:annotation/>
+    <xs:restriction base="memoryKindType">
+      <xs:enumeration value="subject"/>
+      <xs:enumeration value="subject_info"/>
+      <xs:enumeration value="subject_state"/>
+      <xs:enumeration value="subject_binary"/>
+      <xs:enumeration value="subject_channel"/>
+      <xs:enumeration value="subject_crash_audit"/>
+      <xs:enumeration value="subject_initrd"/>
+      <xs:enumeration value="subject_bios"/>
+      <xs:enumeration value="subject_acpi_rsdp"/>
+      <xs:enumeration value="subject_acpi_xsdt"/>
+      <xs:enumeration value="subject_acpi_fadt"/>
+      <xs:enumeration value="subject_acpi_dsdt"/>
+      <xs:enumeration value="subject_zeropage"/>
+      <xs:enumeration value="subject_solo5_boot_info"/>
+      <xs:enumeration value="subject_device"/>
+      <xs:enumeration value="subject_timed_event"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="majorFrameType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="cpu" type="cpuType" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="minorFrameType">
+    <xs:annotation/>
+    <xs:attribute name="subject" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="ticks" type="xs:positiveInteger" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="subjectType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="vcpu" type="vcpuType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="bootparams" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="memory" type="memoryRefsType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="devices" type="devicesRefType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="events" type="subjectEventsType" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="channels" type="channelReferencesType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="monitor" type="monitorType" minOccurs="0" maxOccurs="1"/>
+      <xs:choice minOccurs="1" maxOccurs="1">
+        <xs:element name="component" type="componentReferenceType"/>
+        <xs:element name="sibling" type="namedRefType"/>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attributeGroup ref="subjectBaseAttrs"/>
+  </xs:complexType>
+  <xs:complexType name="monitorType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="state" type="monitorSubjectRefType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="timed_event" type="monitorSubjectRefType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="interrupts" type="monitorSubjectRefType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="loader" type="loaderSubjectRefType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="loaderSubjectRefType">
+    <xs:annotation/>
+    <xs:attribute name="subject" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="logical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="virtualAddress" type="word64Type" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="monitorSubjectRefType">
+    <xs:annotation/>
+    <xs:complexContent>
+      <xs:extension base="loaderSubjectRefType">
+        <xs:attribute name="writable" type="booleanType" use="required">
+          <xs:annotation/>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="componentReferenceType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="map" type="resourceMappingType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="ref" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="resourceMappingType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="map" type="resourceMappingType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="logical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="physical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="channelsType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="channel" type="channelType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="channelType">
+    <xs:annotation/>
+    <xs:attribute name="name" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="size" type="memorySizeType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="hasEvent" type="eventModeType" use="optional">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="channelReferencesType">
+    <xs:annotation/>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="reader" type="channelReaderType"/>
+      <xs:element name="writer" type="channelWriterType"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="channelReaderType">
+    <xs:annotation/>
+    <xs:attribute name="logical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="physical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="virtualAddress" type="word64Type" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="vector" type="vectorType" use="optional">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="channelWriterType">
+    <xs:annotation/>
+    <xs:attribute name="logical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="physical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="virtualAddress" type="word64Type" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="event" type="xs:nonNegativeInteger" use="optional">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="componentsType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="library" type="libraryType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="component" type="componentType" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="componentType">
+    <xs:annotation/>
+    <xs:complexContent>
+      <xs:extension base="libraryType">
+        <xs:attribute name="profile" type="componentProfileType" use="required">
+          <xs:annotation/>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="libraryType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="config" type="configType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="depends" type="libraryDepsType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="requires" type="requiredResourcesType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="provides" type="providedResourcesType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="libraryDepsType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="library" type="namedRefType" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="requiredResourcesType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="vcpu" type="vcpuType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="memory" type="logicalMemoryType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="channels" type="logicalChannelsType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="devices" type="logicalDevicesType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="events" type="logicalEventsType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="providedResourcesType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="memory" type="providedMemType" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="providedMemType">
+    <xs:annotation/>
+    <xs:complexContent>
+      <xs:extension base="memoryBaseType">
+        <xs:attributeGroup ref="memBaseAttrs"/>
+        <xs:attribute name="virtualAddress" type="word64Type" use="required">
+          <xs:annotation/>
+        </xs:attribute>
+        <xs:attribute name="type" type="subjectMemoryKindType" use="optional">
+          <xs:annotation/>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="logicalChannelsType">
+    <xs:annotation/>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="reader" type="logicalChannelReaderType"/>
+      <xs:element name="writer" type="logicalChannelWriterType"/>
+      <xs:element name="array" type="channelArrayType"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="logicalMemoryType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="memory" type="logicalMemType"/>
+        <xs:element name="array" type="memoryArrayType"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="logicalMemType">
+    <xs:annotation/>
+    <xs:attributeGroup ref="memBaseAttrs"/>
+    <xs:attribute name="size" type="word64Type" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="virtualAddress" type="word64Type" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="logicalDevicesType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="device" type="logicalDeviceType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="logicalDeviceType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="irq" type="logicalIrqType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="memory" type="logicalMemType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="ioPort" type="logicalIoPortType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="logical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="logicalIrqType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="msi" type="logicalMsiIrqType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="logical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="vector" type="vectorType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="logicalMsiIrqType">
+    <xs:annotation/>
+    <xs:attribute name="logical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="logicalIoPortType">
+    <xs:annotation/>
+    <xs:attribute name="logical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="start" type="word16Type" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="end" type="word16Type" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="logicalChannelReaderType">
+    <xs:annotation/>
+    <xs:attribute name="logical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="virtualAddress" type="word64Type" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="size" type="word64Type" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="vector" type="vectorType" use="optional">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="logicalChannelWriterType">
+    <xs:annotation/>
+    <xs:attribute name="logical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="virtualAddress" type="word64Type" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="size" type="word64Type" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="event" type="xs:nonNegativeInteger" use="optional">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:attributeGroup name="arrayBaseAttrs">
+    <xs:attribute name="virtualAddressBase" type="word64Type" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="elementSize" type="word64Type" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:complexType name="arrayEntryType">
+    <xs:annotation/>
+    <xs:attribute name="logical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="memoryArrayType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="memory" type="arrayEntryType" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="memBaseAttrs"/>
+    <xs:attributeGroup ref="arrayBaseAttrs"/>
+  </xs:complexType>
+  <xs:complexType name="channelArrayType">
+    <xs:annotation/>
+    <xs:choice>
+      <xs:element name="reader" type="arrayEntryType" minOccurs="1" maxOccurs="unbounded"/>
+      <xs:element name="writer" type="arrayEntryType" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:choice>
+    <xs:attributeGroup ref="arrayBaseAttrs"/>
+    <xs:attribute name="logical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="eventBase" type="xs:nonNegativeInteger" use="optional">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="vectorBase" type="vectorType" use="optional">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="logicalEventsType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="source" type="logicalEventSourceType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="target" type="logicalEventTargetType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="logicalEventSourceType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="event" type="logicalSourceEventEntryType" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="logicalEventTargetType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="event" type="logicalTargetEventEntryType" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="baseLogicalEventType">
+    <xs:annotation/>
+    <xs:attribute name="logical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="logicalSourceEventEntryType">
+    <xs:annotation/>
+    <xs:complexContent>
+      <xs:extension base="baseLogicalEventType">
+        <xs:group ref="sourceEventActionsGroup" minOccurs="0" maxOccurs="1"/>
+        <xs:attribute name="id" type="xs:nonNegativeInteger" use="required">
+          <xs:annotation/>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="logicalTargetEventEntryType">
+    <xs:annotation/>
+    <xs:complexContent>
+      <xs:extension base="baseLogicalEventType">
+        <xs:group ref="targetEventActionsGroup" minOccurs="0" maxOccurs="1"/>
+        <xs:attribute name="id" type="xs:nonNegativeInteger" use="optional">
+          <xs:annotation/>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="componentProfileType">
+    <xs:annotation/>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="native"/>
+      <xs:enumeration value="vm"/>
+      <xs:enumeration value="linux"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="systemType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="config" type="configType" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="hardware" type="hardwareType" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="platform" type="platformType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="memory" type="memRegionsType" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="deviceDomains" type="deviceDomainsType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="events" type="eventsType" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="channels" type="channelsType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="components" type="componentsType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="subjects" type="subjectsType" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="scheduling" type="schedulingType" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="pinCtrlType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="ExternalInterruptExiting" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="VirtualNMIs" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ActivateVMXTimer" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ProcessPostedInterrupts" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="procCtrlType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="InterruptWindowExiting" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="UseTSCOffsetting" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="HLTExiting" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="INVLPGExiting" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="MWAITExiting" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="RDPMCExiting" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="RDTSCExiting" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CR3LoadExiting" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CR3StoreExiting" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CR8LoadExiting" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CR8StoreExiting" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="UseTPRShadow" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="NMIWindowExiting" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="MOVDRExiting" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="UnconditionalIOExiting" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="UseIOBitmaps" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="MonitorTrapFlag" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="UseMSRBitmaps" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="MONITORExiting" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PAUSEExiting" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Activate2ndaryControls" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="proc2CtrlType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="VirtualAPICAccesses" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="EnableEPT" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="DescriptorTableExiting" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="EnableRDTSCP" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Virtualizex2APICMode" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="EnableVPID" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="WBINVDExiting" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="UnrestrictedGuest" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="APICRegisterVirtualization" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="VirtualInterruptDelivery" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PAUSELoopExiting" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="RDRANDExiting" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="EnableINVPCID" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="EnableVMFunctions" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="vmEntryCtrlType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="LoadDebugControls" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="IA32eModeGuest" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="EntryToSMM" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="DeactiveDualMonitorTreatment" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="LoadIA32PERFGLOBALCTRL" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="LoadIA32PAT" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="LoadIA32EFER" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="vmExitCtrlType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="SaveDebugControls" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="HostAddressspaceSize" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="LoadIA32PERFGLOBALCTRL" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AckInterruptOnExit" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="SaveIA32PAT" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="LoadIA32PAT" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="SaveIA32EFER" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="LoadIA32EFER" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="SaveVMXTimerValue" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="cr0Type">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="ProtectionEnable" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="MonitorCoprocessor" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Emulation" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="TaskSwitched" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="WriteProtect" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AlignmentMask" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Paging" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="cr4Type">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="Virtual8086" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ProtectedVirtualInts" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="TimeStampDisable" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="DebuggingExtensions" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PageSizeExtensions" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PhysicalAddressExtension" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PageGlobalEnable" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PerfCounterEnable" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="OSSupportFXSAVE" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="OSSupportSIMDExceptions" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="UMInstructionPrevention" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="SMXEnable" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="FSGSBASEEnable" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PCIDEnable" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="XSAVEEnable" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="SMEPEnable" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="SMAPEnable" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ProtectionKeyEnable" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="exceptionType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="DivideError" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Debug" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Breakpoint" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Overflow" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="BOUNDRangeExceeded" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="InvalidOpcode" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="DeviceNotAvailable" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="DoubleFault" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CoprocessorSegmentOverrun" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="InvalidTSS" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="SegmentNotPresent" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="StackSegmentFault" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="GeneralProtection" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PageFault" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="x87FPUFloatingPointError" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AlignmentCheck" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="SIMDFloatingPointException" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="vcpuType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="vmx" type="vmxType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="msrs" type="msrsType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="registers" type="registersType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="vmxType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="controls" type="controlsType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="masks" type="masksType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="controlsType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="pin" type="pinCtrlType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="proc" type="procCtrlType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="proc2" type="proc2CtrlType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="entry" type="vmEntryCtrlType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="exit" type="vmExitCtrlType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="masksType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="exception" type="exceptionType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="cr0" type="cr0Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="cr4" type="cr4Type" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="registersType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="gpr" type="gprType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="cr0" type="cr0Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="cr4" type="cr4Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="segments" type="segmentsType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="gprType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="rip" type="word64Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="rsp" type="word64Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="rax" type="word64Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="rbx" type="word64Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="rcx" type="word64Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="rdx" type="word64Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="rdi" type="word64Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="rsi" type="word64Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="rbp" type="word64Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="r08" type="word64Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="r09" type="word64Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="r10" type="word64Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="r11" type="word64Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="r12" type="word64Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="r13" type="word64Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="r14" type="word64Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="r15" type="word64Type" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="segmentsType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="cs" type="segmentType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ds" type="segmentType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="es" type="segmentType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="fs" type="segmentType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="gs" type="segmentType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ss" type="segmentType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="tr" type="segmentType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ldtr" type="segmentType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="physicalMemoryType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="memoryBlock" type="memoryBlockType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="reservedMemory" type="reservedMemRegionType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deviceType">
+    <xs:annotation/>
+    <xs:complexContent>
+      <xs:extension base="deviceBaseType">
+        <xs:sequence>
+          <xs:element name="reservedMemory" type="namedRefType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="pciType">
+    <xs:annotation/>
+    <xs:complexContent>
+      <xs:extension base="pciAddressType">
+        <xs:sequence>
+          <xs:element name="identification" type="deviceIdentificationType" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="iommuGroup" type="iommuGroupType" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="cpuCoreType">
+    <xs:annotation/>
+    <xs:attribute name="apicId" type="xs:unsignedByte" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="cpuId" type="xs:unsignedByte" use="optional">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="hardwareType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="processor" type="processorType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="memory" type="physicalMemoryType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="devices" type="devicesType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="platformType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="config" type="configType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="mappings" type="mappingsType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="kernelDiagnostics" type="kernelDiagType" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="mappingsType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="aliases" type="aliasesType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="classes" type="devClassesType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deviceDomainType">
+    <xs:annotation/>
+    <xs:sequence>
+      <xs:element name="memory" type="memoryRefsType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="devices" type="devsRefType" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="devRefType">
+    <xs:annotation/>
+    <xs:attribute name="logical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="physical" type="nameType" use="required">
+      <xs:annotation/>
+    </xs:attribute>
+    <xs:attribute name="mapReservedMemory" type="booleanType" use="optional">
+      <xs:annotation/>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:element name="system" type="systemType"/>
+</xs:schema>

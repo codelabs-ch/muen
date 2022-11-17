@@ -149,6 +149,7 @@ is
                Old_Child => DOM.Core.Nodes.Item
                  (List  => Nodes,
                   Index => I));
+            DOM.Core.Nodes.Free (N => Dummy);
          end loop;
       end;
 

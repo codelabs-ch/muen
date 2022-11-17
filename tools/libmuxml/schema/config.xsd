@@ -96,6 +96,7 @@
     \end{lstlisting}
     ]]>
 
+    If the type of the referenced variable is 'string' the comparison is case-sensitive.
     A second use case is XML attribute value expansion as follows:
 
     <![CDATA[

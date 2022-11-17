@@ -2,27 +2,8 @@
 <system>
  <config>
   <boolean name="feature_enabled" value="true"/>
-  <boolean name="session2_enabled" value="true"/>
-  <boolean name="session2_disabled" value="false"/>
-  <boolean name="int_values" value="true"/>
-  <boolean name="int_values_2" value="false"/>
-  <boolean name="is_below_max" value="true"/>
-  <boolean name="has_four_sessions" value="true"/>
-  <boolean name="two_is_two" value="true"/>
-  <boolean name="two_is_three" value="false"/>
-  <boolean name="has_not_three_sessions" value="true"/>
-  <boolean name="two_is_not_three" value="true"/>
-  <boolean name="two_is_not_two" value="false"/>
-  <boolean name="truth" value="true"/>
-  <boolean name="iommu_on" value="true"/>
-  <boolean name="iommu_disabled" value="false"/>
-  <boolean name="true" value="true"/>
-  <boolean name="and_expr" value="false"/>
-  <boolean name="and_expr_2" value="true"/>
-  <boolean name="or_expr" value="true"/>
-  <boolean name="or_expr_2" value="false"/>
-  <boolean name="nested_expr" value="true"/>
   <integer name="session_count" value="4"/>
+  <string name="memory_name" value="ram"/>
  </config>
  <expressions>
   <expression name="session2_enabled">
@@ -151,6 +132,14 @@
     </expression>
    </and>
   </expression>
+  <expression name="compositeName">
+    <concatenation>
+      <string value="1"/>
+      <variable name="memory_name"/>
+      <variable name="memory_name"/>
+      <string value="_foo"/>
+    </concatenation>
+  </expression>
  </expressions>
  <hardware>
   <memory>
@@ -218,7 +207,7 @@
    <component ref="linux"/>
   </subject>
  </subjects>
- <scheduling tickRate="10000">
+  <scheduling tickRate="10000">
   <partitions>
    <partition name="linux">
     <group>
@@ -233,4 +222,3 @@
   </majorFrame>
  </scheduling>
 </system>
-

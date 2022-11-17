@@ -802,6 +802,77 @@ package body Mucfgcheck.Test_Data.Tests is
    end Test_Match_Name;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Attr_Uniqueness (Gnattest_T : in out Test);
+   procedure Test_Attr_Uniqueness_10895c (Gnattest_T : in out Test) renames Test_Attr_Uniqueness;
+--  id:2.2/10895ce3760b8cee/Attr_Uniqueness/1/0/
+   procedure Test_Attr_Uniqueness (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+      Nodes : DOM.Core.Node_List;
+      Data  : Muxml.XML_Data_Type;
+      Impl  : DOM.Core.DOM_Implementation;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.None,
+                   File => "data/test_policy_src.xml");
+      Validation_Errors.Clear;
+
+      -- Positive test: all distinct
+
+      Nodes := McKae.XML.XPath.XIA.XPath_Query
+                 (N     => Data.Doc,
+                  XPath => "//car | //measurement | //boat");
+      Attr_Uniqueness (Nodes => Nodes,
+                       Attr_Name => "id",
+                       Error_Msg => "Ids are not unique");
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
+      Validation_Errors.Clear;
+
+      -- Positive test: empty list
+
+      Nodes :=  McKae.XML.XPath.XIA.XPath_Query
+                 (N     => Data.Doc,
+                  XPath => "/doesnotexist");
+      Attr_Uniqueness (Nodes => Nodes,
+                       Attr_Name => "id",
+                       Error_Msg => "Ids are not unique");
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
+      Validation_Errors.Clear;
+
+      -- Positive test: list of length 1
+
+      Nodes :=  McKae.XML.XPath.XIA.XPath_Query
+                 (N     => Data.Doc,
+                  XPath => "//subject[@name='uniquenessTests']");
+      Attr_Uniqueness (Nodes => Nodes,
+                       Attr_Name => "id",
+                       Error_Msg => "Ids are not unique");
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
+      Validation_Errors.Clear;
+
+      -- Negative test: two nodes with same "name"
+
+      Nodes :=  McKae.XML.XPath.XIA.XPath_Query
+                 (N     => Data.Doc,
+                  XPath => "//subject[@name='uniquenessTests']/car "
+                  & "| //subject[@name='uniquenessTests']/car/id");
+      Attr_Uniqueness (Nodes => Nodes,
+                       Attr_Name => "name",
+                       Error_Msg => "Names are not unique.");
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Names are not unique. "
+               & "Conflicting value: 'c1'"),
+              Message   => "Exception mismatch");
+--  begin read only
+   end Test_Attr_Uniqueness;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

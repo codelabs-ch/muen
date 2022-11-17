@@ -33,7 +33,7 @@ is
       (Policy       :        Muxml.XML_Data_Type;
        Config       :        DOM.Core.Node_List;
        Parent       :        DOM.Core.Node;
-       Node_Access  : in out Mutools.Expressions.Access_Hashmaps_Type;
+       Node_Access  : in out Expressions.Access_Hashmaps_Type;
        Debug_Active :        Boolean);
 
    -------------------------------------------------------------------------
@@ -45,8 +45,8 @@ is
        Ref_In_New_Parent : DOM.Core.Node;
        Debug_Active      : Boolean       := False;
        Ancestor_For_Log  : DOM.Core.Node := null;
-       Transaction_Index : Mutools.Xmldebuglog.Transaction_Log_Index_Type
-                         := Mutools.Xmldebuglog.Null_Ref_Index);
+       Transaction_Index : Xmldebuglog.Transaction_Log_Index_Type
+                         := Xmldebuglog.Null_Ref_Index);
 
    -------------------------------------------------------------------------
 
@@ -54,7 +54,7 @@ is
       (Policy       :        Muxml.XML_Data_Type;
        Config       :        DOM.Core.Node_List;
        Parent       :        DOM.Core.Node;
-       Node_Access  : in out Mutools.Expressions.Access_Hashmaps_Type;
+       Node_Access  : in out Expressions.Access_Hashmaps_Type;
        Debug_Active :        Boolean)
    is
       use type DOM.Core.Node;
@@ -71,7 +71,7 @@ is
       function Is_Value_Equal_After_Cast
          (Config_Var_Name : String;
           Value           : String;
-          Node_Access     : Mutools.Expressions.Access_Hashmaps_Type)
+          Node_Access     : Expressions.Access_Hashmaps_Type)
          return Boolean;
 
       ----------------------------------------------------------------------
@@ -79,7 +79,7 @@ is
       function Is_Value_Equal_After_Cast
          (Config_Var_Name : String;
           Value           : String;
-          Node_Access     : Mutools.Expressions.Access_Hashmaps_Type)
+          Node_Access     : Expressions.Access_Hashmaps_Type)
          return Boolean
       is
       begin
@@ -91,7 +91,7 @@ is
                return Input_Value = Node_Access.Output_Boolean (Config_Var_Name);
             exception
                when Constraint_Error =>
-                  raise Mutools.Expressions.Invalid_Expression with
+                  raise Expressions.Invalid_Expression with
                      "Cannot compare value '"
                      & Value
                      & "' to variable '"
@@ -106,7 +106,7 @@ is
                return Input_Value = Node_Access.Output_Integer (Config_Var_Name);
             exception
                when Constraint_Error =>
-                  raise Mutools.Expressions.Invalid_Expression with
+                  raise Expressions.Invalid_Expression with
                      "Cannot compare value '"
                      & Value
                      & "' to variable '"
@@ -116,7 +116,7 @@ is
          elsif Node_Access.Output_String.Contains (Config_Var_Name) then
             return Value = Node_Access.Output_String (Config_Var_Name);
          else
-            raise Mutools.Expressions.Invalid_Expression with
+            raise Expressions.Invalid_Expression with
                "Cannot find variable with name '"
                & Config_Var_Name
                & "' in configuration";
@@ -150,8 +150,8 @@ is
                      (Elem => Cur_Child,
                       Name => "variable");
                   Dummy     : DOM.Core.Node;
-                  Log_Index : Mutools.Xmldebuglog.Transaction_Log_Index_Type
-                     := Mutools.Xmldebuglog.Null_Ref_Index;
+                  Log_Index : Xmldebuglog.Transaction_Log_Index_Type
+                     := Xmldebuglog.Null_Ref_Index;
                begin
                   if Is_Value_Equal_After_Cast
                      (Config_Var_Name => Cfg_Name,
@@ -159,9 +159,9 @@ is
                       Node_Access     => Node_Access)
                   then
                      if Debug_Active then
-                        Log_Index := Mutools.Xmldebuglog.Add_Conditional_Transaction
+                        Log_Index := Xmldebuglog.Add_Conditional_Transaction
                            (Conditional_Node => Cur_Child,
-                            Coditional_Kind  => Mutools.Xmldebuglog.IFCOND,
+                            Coditional_Kind  => Xmldebuglog.IFCOND,
                             Var_Name         => Cfg_Name,
                             Var_Value        => Value,
                             Matched          => True,
@@ -177,9 +177,9 @@ is
                          Transaction_Index => Log_Index);
                   else
                      if Debug_Active then
-                        Log_Index := Mutools.Xmldebuglog.Add_Conditional_Transaction
+                        Log_Index := Xmldebuglog.Add_Conditional_Transaction
                            (Conditional_Node => Cur_Child,
-                            Coditional_Kind  => Mutools.Xmldebuglog.IFCOND,
+                            Coditional_Kind  => Xmldebuglog.IFCOND,
                             Var_Name         => Cfg_Name,
                             Var_Value        => Value,
                             Matched          => False,
@@ -188,7 +188,7 @@ is
                   end if;
 
                   if Debug_Active then
-                     Mutools.Xmldebuglog.Remove_Log_Of_Subtree (Node => Cur_Child);
+                     Xmldebuglog.Remove_Log_Of_Subtree (Node => Cur_Child);
                   end if;
 
                   Dummy := DOM.Core.Nodes.Remove_Child
@@ -201,11 +201,11 @@ is
                   Dummy, Matching_Option_Node : DOM.Core.Node;
 
                   --  We need the backtrace only for syntactial reasons.
-                  Backtrace : Mutools.Expressions.String_Vector.Vector;
-                  Log_Index : Mutools.Xmldebuglog.Transaction_Log_Index_Type
-                     := Mutools.Xmldebuglog.Null_Ref_Index;
+                  Backtrace : String_Vector.Vector;
+                  Log_Index : Xmldebuglog.Transaction_Log_Index_Type
+                     := Xmldebuglog.Null_Ref_Index;
                begin
-                  Mutools.Expressions.Case_Expression.Evaluate_Case_Node_Frame
+                  Expressions.Case_Expression.Evaluate_Case_Node_Frame
                      (Case_Node   => Cur_Child,
                       Return_Node => Matching_Option_Node,
                       Backtrace   => Backtrace,
@@ -218,7 +218,7 @@ is
                               := DOM.Core.Elements.Get_Attribute (Elem => Cur_Child,
                                                                   Name => "variable");
                            Var_Value : constant String
-                              := Mutools.Expressions.Case_Expression.Get_Value_Of_Reference_Debug
+                              := Expressions.Case_Expression.Get_Value_Of_Reference_Debug
                               (Ref_Name    => Var_Name,
                                Node_Access => Node_Access);
                            Matched_Others : constant Boolean
@@ -227,9 +227,9 @@ is
                                      then True
                                      else False);
                         begin
-                           Log_Index := Mutools.Xmldebuglog.Add_Conditional_Transaction
+                           Log_Index := Xmldebuglog.Add_Conditional_Transaction
                               (Conditional_Node => Cur_Child,
-                               Coditional_Kind  => Mutools.Xmldebuglog.CASECOND,
+                               Coditional_Kind  => Xmldebuglog.CASECOND,
                                Var_Name         => Var_Name,
                                Var_Value        => Var_Value,
                                Matched          => True,
@@ -251,13 +251,13 @@ is
                               := DOM.Core.Elements.Get_Attribute (Elem => Cur_Child,
                                                                   Name => "variable");
                            Var_Value : constant String
-                              := Mutools.Expressions.Case_Expression.Get_Value_Of_Reference_Debug
+                              := Expressions.Case_Expression.Get_Value_Of_Reference_Debug
                               (Ref_Name    => Var_Name,
                                Node_Access => Node_Access);
                         begin
-                           Log_Index := Mutools.Xmldebuglog.Add_Conditional_Transaction
+                           Log_Index := Xmldebuglog.Add_Conditional_Transaction
                               (Conditional_Node => Cur_Child,
-                               Coditional_Kind  => Mutools.Xmldebuglog.CASECOND,
+                               Coditional_Kind  => Xmldebuglog.CASECOND,
                                Var_Name         => Var_Name,
                                Var_Value        => Var_Value,
                                Matched          => False,
@@ -267,7 +267,7 @@ is
                   end if;
 
                   if Debug_Active then
-                     Mutools.Xmldebuglog.Remove_Log_Of_Subtree (Node => Cur_Child);
+                     Xmldebuglog.Remove_Log_Of_Subtree (Node => Cur_Child);
                   end if;
 
                   Dummy := DOM.Core.Nodes.Remove_Child
@@ -281,7 +281,7 @@ is
                if Debug_Active then
                   Mulog.Log
                      (Msg => "Error when evaluating conditionals. "
-                         & Mutools.Xmldebuglog.Get_Log_For_Error_Message (Node => Cur_Child));
+                         & Xmldebuglog.Get_Log_For_Error_Message (Node => Cur_Child));
                end if;
                raise;
          end;
@@ -302,21 +302,21 @@ is
                    := McKae.XML.XPath.XIA.XPath_Query
                         (N     => Policy.Doc,
                          XPath => "/*");
-      Node_Access : Mutools.Expressions.Access_Hashmaps_Type;
+      Node_Access : Expressions.Access_Hashmaps_Type;
 
       ----------------------------------------------------------------------
 
       --  Populate Node_Access with elements from Config_Nodes
       --  for fast access to name-values pairs.
       procedure Initialize_Node_Access
-         (Node_Access  : in out Mutools.Expressions.Access_Hashmaps_Type;
+         (Node_Access  : in out Expressions.Access_Hashmaps_Type;
           Config_Nodes :        DOM.Core.Node_List;
           Debug_Active :        Boolean);
 
       ----------------------------------------------------------------------
 
       procedure Initialize_Node_Access
-         (Node_Access  : in out Mutools.Expressions.Access_Hashmaps_Type;
+         (Node_Access  : in out Expressions.Access_Hashmaps_Type;
           Config_Nodes :        DOM.Core.Node_List;
           Debug_Active :        Boolean)
       is
@@ -350,10 +350,10 @@ is
                       New_Item => Node_Raw_Value);
                else
                   if Debug_Active then
-                     Mulog.Log (Msg => Mutools.Xmldebuglog.Get_Log_For_Error_Message
+                     Mulog.Log (Msg => Xmldebuglog.Get_Log_For_Error_Message
                                    (Node => Node));
                   end if;
-                  raise Mutools.Expressions.Invalid_Expression with
+                  raise Expressions.Invalid_Expression with
                      "Found invalid node with name '"
                      & Node_Name
                      & "' when loading config variables to expand conditionals";
@@ -392,8 +392,8 @@ is
        Ref_In_New_Parent : DOM.Core.Node;
        Debug_Active      : Boolean       := False;
        Ancestor_For_Log  : DOM.Core.Node := null;
-       Transaction_Index : Mutools.Xmldebuglog.Transaction_Log_Index_Type
-                         := Mutools.Xmldebuglog.Null_Ref_Index)
+       Transaction_Index : Xmldebuglog.Transaction_Log_Index_Type
+                         := Xmldebuglog.Null_Ref_Index)
    is
       use type DOM.Core.Node;
 
@@ -409,7 +409,7 @@ is
              New_Child => Cur_Child,
              Ref_Child => Ref_In_New_Parent);
          if Debug_Active then
-            Mutools.Xmldebuglog.Add_Log_For_Node
+            Xmldebuglog.Add_Log_For_Node
                (Node      => Cur_Child,
                 Ancestor => Ancestor_For_Log,
                 TA_Number => Transaction_Index);

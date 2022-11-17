@@ -15,7 +15,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 with Ada.Containers;
-with Ada.Containers.Indefinite_Holders;
 with Ada.Containers.Indefinite_Vectors;
 with Ada.Containers.Hashed_Maps;
 with Ada.Containers.Vectors;
@@ -127,6 +126,7 @@ is
    function Hash (Node : DOM.Core.Node) return Ada.Containers.Hash_Type;
 
 private
+
    use all type DOM.Core.Node;
 
    --  There are 2 kinds of logs and one uses the other:
@@ -139,9 +139,6 @@ private
    --      However, the latter information is not completely stored in the list
    --      of each node, but must be gathered by examining the nodes ancestors'
    --      backtrace as well.
-
-   package String_Holder_Type is new Ada.Containers.Indefinite_Holders
-      (Element_Type => String);
 
    type Origin_Info_Type is record
       File_Name : String_Holder_Type.Holder;

@@ -26,8 +26,6 @@ with GNAT.Strings;
 
 with GNATCOLL.Projects;
 
-with Mutools;
-
 package body Stackcheck.Files
 is
 

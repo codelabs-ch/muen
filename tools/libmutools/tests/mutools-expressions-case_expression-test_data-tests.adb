@@ -114,8 +114,8 @@ package body Mutools.Expressions.Case_Expression.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Evaluate_Case_Node_Frame (Gnattest_T : in out Test);
-   procedure Test_Evaluate_Case_Node_Frame_1e49f2 (Gnattest_T : in out Test) renames Test_Evaluate_Case_Node_Frame;
---  id:2.2/1e49f2e5cfed5d5b/Evaluate_Case_Node_Frame/1/0/
+   procedure Test_Evaluate_Case_Node_Frame_cae2c4 (Gnattest_T : in out Test) renames Test_Evaluate_Case_Node_Frame;
+--  id:2.2/cae2c47a1ff17ddd/Evaluate_Case_Node_Frame/1/0/
    procedure Test_Evaluate_Case_Node_Frame (Gnattest_T : in out Test) is
 --  end read only
 
@@ -328,8 +328,8 @@ package body Mutools.Expressions.Case_Expression.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Case_Expression_Evaluation (Gnattest_T : in out Test);
-   procedure Test_Case_Expression_Evaluation_f7cb18 (Gnattest_T : in out Test) renames Test_Case_Expression_Evaluation;
---  id:2.2/f7cb1847098060d8/Case_Expression_Evaluation/1/0/
+   procedure Test_Case_Expression_Evaluation_fc32a7 (Gnattest_T : in out Test) renames Test_Case_Expression_Evaluation;
+--  id:2.2/fc32a77ce8d37bc5/Case_Expression_Evaluation/1/0/
    procedure Test_Case_Expression_Evaluation (Gnattest_T : in out Test) is
 --  end read only
 

@@ -81,7 +81,7 @@ is
                when Error : others =>
                   if Debug_Active then
                      Mulog.Log (Msg => "Error when evaluating xpath. "
-                                   & Mutools.Xmldebuglog.Get_Log_For_Error_Message
+                                   & Xmldebuglog.Get_Log_For_Error_Message
                                    (Node => Amend_Statement));
                   end if;
                   Ada.Exceptions.Raise_Exception
@@ -96,7 +96,7 @@ is
             if DOM.Core.Nodes.Length (List => Target_Nodes) /= 1 then
                if Debug_Active then
                      Mulog.Log (Msg => "Error when evaluating amend. "
-                                   & Mutools.Xmldebuglog.Get_Log_For_Error_Message
+                                   & Xmldebuglog.Get_Log_For_Error_Message
                                    (Node => Amend_Statement));
                end if;
 
@@ -115,20 +115,20 @@ is
                --  backtrace-info to the leafs of the subtree (because we need
                --  their ancestors for that).
                declare
-                  Log_Index : Mutools.Xmldebuglog.Transaction_Log_Index_Type;
+                  Log_Index : Xmldebuglog.Transaction_Log_Index_Type;
                begin
-                  Log_Index := Mutools.Xmldebuglog.Add_Amend_Transaction
+                  Log_Index := Xmldebuglog.Add_Amend_Transaction
                      (Amend_Node => Amend_Statement,
                       Xpath      => DOM.Core.Elements.Get_Attribute
                          (Elem => Amend_Statement,
                           Name => "xpath"));
                   -- add log with dummy inheritance
-                  Mutools.Xmldebuglog.Add_Log_For_Node
+                  Xmldebuglog.Add_Log_For_Node
                      (Node      => Amend_Statement,
                       Ancestor  => Amend_Statement,
                       TA_Number => Log_Index);
 
-                  Mutools.Xmldebuglog.Gather_Backtrace_Info
+                  Xmldebuglog.Gather_Backtrace_Info
                      (Node                => Amend_Statement,
                       Examine_Only_Parent => False,
                       Deep                => True);
@@ -152,7 +152,7 @@ is
                exception
                   when others =>
                      if Debug_Active then
-                        Mulog.Log (Msg => Mutools.Xmldebuglog.Get_Log_For_Error_Message
+                        Mulog.Log (Msg => Xmldebuglog.Get_Log_For_Error_Message
                                       (Node => Amend_Statement));
                      end if;
                      raise;
@@ -160,7 +160,7 @@ is
             end loop;
 
             if Debug_Active then
-               Mutools.Xmldebuglog.Remove_Log_Of_Subtree (Node => Amend_Statement);
+               Xmldebuglog.Remove_Log_Of_Subtree (Node => Amend_Statement);
             end if;
 
             Amend_Statement := DOM.Core.Nodes.Remove_Child
@@ -239,7 +239,7 @@ is
    is
       use type DOM.Core.Node;
       use all type DOM.Core.Node_Types;
-      use all type Mutools.Amend.Ordering.Insert_Index;
+      use type Mutools.Amend.Ordering.Insert_Index;
 
       type Text_Child_Status_Type is
          (Unique_Essential, None_Or_Not_Essential, Many_Or_Other_Type);
@@ -250,15 +250,13 @@ is
 
       New_Child_Type : constant DOM.Core.Node_Types
                      := DOM.Core.Nodes.Node_Type (N => New_Child);
-      Dummy          : DOM.Core.Node;
-      pragma Unreferenced (Dummy);
 
       ----------------------------------------------------------------------
 
       --  Return a vector with the names of the ancestors of Node,
       --  starting with the name of Node.
       function Get_Ancestor_Names (Node : DOM.Core.Node)
-               return  Mutools.Amend.Ordering.String_Vector.Vector;
+               return  Mutools.String_Vector.Vector;
 
       ----------------------------------------------------------------------
 
@@ -279,7 +277,7 @@ is
       procedure Insert
          (Parent         : DOM.Core.Node;
           New_Child      : DOM.Core.Node;
-          Siblings_Names : Mutools.Amend.Ordering.String_Vector.Vector;
+          Siblings_Names : Mutools.String_Vector.Vector;
           Siblings_Nodes : Node_Vector.Vector);
 
       ----------------------------------------------------------------------
@@ -313,9 +311,9 @@ is
       ----------------------------------------------------------------------
 
       function Get_Ancestor_Names (Node : DOM.Core.Node)
-               return  Mutools.Amend.Ordering.String_Vector.Vector
+               return  Mutools.String_Vector.Vector
       is
-         Output : Mutools.Amend.Ordering.String_Vector.Vector;
+         Output : Mutools.String_Vector.Vector;
          Parent : DOM.Core.Node
                 := DOM.Core.Nodes.Parent_Node (Node);
       begin
@@ -364,33 +362,33 @@ is
       procedure Insert
          (Parent         : DOM.Core.Node;
           New_Child      : DOM.Core.Node;
-          Siblings_Names : Mutools.Amend.Ordering.String_Vector.Vector;
+          Siblings_Names : Mutools.String_Vector.Vector;
           Siblings_Nodes : Node_Vector.Vector)
       is
          Ancestors    : constant Mutools.String_Vector.Vector
                       := Get_Ancestor_Names (Node => Parent);
-         Query_Result : constant Mutools.Amend.Ordering.Insert_Query_Result_Type
-                      := Mutools.Amend.Ordering.Get_Insert_Index
+         Query_Result : constant Ordering.Insert_Query_Result_Type
+                      := Ordering.Get_Insert_Index
                         (Ancestors => Ancestors,
                          New_Child => DOM.Core.Nodes.Node_Name (N => New_Child),
                          Siblings  => Siblings_Names);
          Copy_Of_New_Child, Ref_Child : DOM.Core.Node;
       begin
-         if Query_Result = Mutools.Amend.Ordering.No_Legal_Index then
+         if Query_Result = Ordering.No_Legal_Index then
             raise Muxml.Validation_Error with
                "Could not find valid place to insert '"
                & DOM.Core.Nodes.Node_Name (N => New_Child)
                & "' into node with name '"
                & DOM.Core.Nodes.Node_Name (N => Parent)
                & "'";
-         elsif Query_Result = Mutools.Amend.Ordering.No_Unique_Index then
+         elsif Query_Result = Ordering.No_Unique_Index then
             raise Muxml.Validation_Error with
                "Insufficient information to insert '"
                & DOM.Core.Nodes.Node_Name (N => New_Child)
                & "' into node with name '"
                & DOM.Core.Nodes.Node_Name (N => Parent)
                & "'";
-         elsif Query_Result = Mutools.Amend.Ordering.
+         elsif Query_Result = Ordering.
             Insert_Query_Result_Type (Siblings_Names.Length)
          then
             --  This triggers Insert_Before to append the new child at the end.
@@ -407,7 +405,7 @@ is
              Ref_Child => Ref_Child);
 
          if Debug_Active then
-            Mutools.Xmldebuglog.Copy_Log_Entry
+            Xmldebuglog.Copy_Log_Entry
                (Old_Node => New_Child,
                 New_Node => Copy_Of_New_Child,
                 Deep     => True);
@@ -450,7 +448,7 @@ is
          (Parent    : DOM.Core.Node;
           New_Child : DOM.Core.Node)
       is
-         Siblings_Names : Mutools.Amend.Ordering.String_Vector.Vector;
+         Siblings_Names : Mutools.String_Vector.Vector;
          Siblings_Nodes : Node_Vector.Vector;
          Parent_Child   : DOM.Core.Node;
       begin
@@ -463,7 +461,7 @@ is
                if Nodes_Equal (L => Parent_Child, R => New_Child) then
                   if Debug_Active then
                      Mulog.Log (Msg => "Info: Amend skipped insertion of '"
-                                   & Mutools.Xmldebuglog.Get_Xpath
+                                   & Xmldebuglog.Get_Xpath
                                    (Node => Parent)
                                    & "/"
                                    & Node_To_String (New_Child)
@@ -512,7 +510,7 @@ is
           New_Child : DOM.Core.Node)
       is
          Parent_Child, Parent_Child_Marked : DOM.Core.Node;
-         Siblings_Names : Mutools.Amend.Ordering.String_Vector.Vector;
+         Siblings_Names : Mutools.String_Vector.Vector;
          Siblings_Nodes : Node_Vector.Vector;
       begin
 
@@ -562,6 +560,7 @@ is
                                     (List  => DOM.Core.Nodes.Child_Nodes
                                                 (N => New_Child),
                                      Index => 0);
+               Dummy           : DOM.Core.Node;
             begin
                if Parent_Child_Child /= null then
                   DOM.Core.Nodes.Set_Node_Value
@@ -577,7 +576,7 @@ is
                end if;
 
                if Debug_Active then
-                  Mutools.Xmldebuglog.Copy_Log_Entry
+                  Xmldebuglog.Copy_Log_Entry
                      (Old_Node => New_Child,
                       New_Node => Parent_Child_Marked,
                       Deep     => False);

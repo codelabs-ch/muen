@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 with Ada.Strings.Hash;
-with Ada.Containers.Indefinite_Vectors;
-with Ada.Containers.Indefinite_Holders;
 with Ada.Containers.Indefinite_Hashed_Maps;
 
 with DOM.Core;
@@ -28,7 +26,6 @@ use all type DOM.Core.Node;
 
 package Mutools.Expressions
 is
-
    --  Expand all expressions in the specified policy to config values.
    --  This includes the substitutions of $-referenced variables within
    --  expressions and within the config section.
@@ -38,18 +35,9 @@ is
 
    Invalid_Expression : exception;
 
-   --  A string-vector is used to store a backtrace of the recursive path
-   --  used for evaluation. The backtrace is used for cycle detection
-   --  and to report a useful error in case of a cycle.
-   package String_Vector is new Ada.Containers.Indefinite_Vectors
-      (Element_Type => String,
-       Index_Type   => Natural);
-
    --  Fragment Vectors hold parts ("framents") of a string,
    --  where each part is annotated with their type,
    --  i.e., whether it is a reference to some variable or just text.
-   package String_Holder_Type is new Ada.Containers.Indefinite_Holders
-      (Element_Type => String);
    type Fragment_Type is (Text_Type, Reference_Type);
    type Fragment_Entry is record
       Value      : String_Holder_Type.Holder;
@@ -100,8 +88,6 @@ is
    end record;
 
 private
-
-   use all type String_Vector.Vector;
 
    --  Specifies whether or not the result of the expansion of
    --  variables and expressions is output to the log (includes console).

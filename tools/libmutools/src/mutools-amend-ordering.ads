@@ -16,7 +16,6 @@
 --
 
 with Ada.Containers.Indefinite_Ordered_Maps;
-with Ada.Containers.Indefinite_Vectors;
 
 package Mutools.Amend.Ordering
 is
@@ -26,10 +25,7 @@ is
    No_Unique_Index : constant Insert_Query_Result_Type := -1;
    No_Legal_Index  : constant Insert_Query_Result_Type := -2;
 
-   package String_Vector is new Ada.Containers.Indefinite_Vectors
-      (Index_Type   => Natural,
-       Element_Type => String);
-   use all type String_Vector.Vector;
+   use type String_Vector.Vector;
 
    --  This function is used to tell amend where to insert a particular node.
    --  Returns an index before which New_Child can be inserted such that

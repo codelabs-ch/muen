@@ -14,19 +14,22 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
-with Muxml.system_src_schema;
-with Muxml.Utils;
-with DOM.Core.Nodes;
-with DOM.Core.Elements;
-with DOM.Core.Documents;
-with Test_Utils;
 with Ada.Characters.Latin_1;
 with Ada.Strings.Unbounded;   use Ada.Strings.Unbounded;
 with Ada.Text_IO.Unbounded_IO;
 with Ada.Exceptions;
 with Ada.Text_IO;
 with Ada.Text_IO.Text_Streams;
+
+with Test_Utils;
+
+with DOM.Core.Nodes;
+with DOM.Core.Elements;
+with DOM.Core.Documents;
+
+with Muxml.system_src_schema;
+with Muxml.Utils;
+with McKae.XML.XPath.XIA;
 
 --  begin read only
 --  end read only
@@ -51,7 +54,8 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
                         Name => File_Name);
       loop
          exit when Ada.Text_IO.End_Of_File (File => File);
-         File_Content := File_Content & Ada.Text_IO.Unbounded_IO.Get_Line (File => File);
+         File_Content := File_Content
+            & Ada.Text_IO.Unbounded_IO.Get_Line (File => File);
       end loop;
       Ada.Text_IO.Close (File => File);
 
@@ -86,8 +90,8 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Get_Insert_Index (Gnattest_T : in out Test);
-   procedure Test_Get_Insert_Index_4041cb (Gnattest_T : in out Test) renames Test_Get_Insert_Index;
---  id:2.2/4041cb5bbaa38e1e/Get_Insert_Index/1/0/
+   procedure Test_Get_Insert_Index_c88a31 (Gnattest_T : in out Test) renames Test_Get_Insert_Index;
+--  id:2.2/c88a3111a5c759aa/Get_Insert_Index/1/0/
    procedure Test_Get_Insert_Index (Gnattest_T : in out Test) is
 --  end read only
 
@@ -294,7 +298,7 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
          Init_Order_Information (Schema_XML_Data => File_To_String
                                     (File_Name => "data/cyclic_group_references.xsd"));
          Assert (Condition => False,
-                 Message => "Exception expected");
+                 Message   => "Exception expected");
       exception
          when E : Not_Implemented =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
@@ -336,7 +340,7 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
          Init_Order_Information (Schema_XML_Data => File_To_String
                                     (File_Name => Tmp_Filename));
          Assert (Condition => False,
-                 Message => "Exception expected");
+                 Message   => "Exception expected");
       exception
          when E : Not_Implemented =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
@@ -348,13 +352,44 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
 
       procedure Element_Without_Type_Attribute
       is
+         use type DOM.Core.Node;
+
+         Data                        : Muxml.XML_Data_Type;
+         Element_Node, Type_Def_Node : DOM.Core.Node;
+         Tmp_Filename                : constant String
+                                     := "obj/element_no_type_attribute.xsd";
       begin
+         --  Move the type definition to make an 'inline' definition.
+         Muxml.Parse
+            (Data => Data,
+             Kind => Muxml.None,
+             File => "data/default_schema.xsd");
+         Element_Node := Muxml.Utils.Get_Element
+            (Doc   => Data.Doc,
+             XPath => "/xs:schema/xs:complexType[@name='eventsType']"
+                &  "/xs:sequence/xs:element[@name='event']");
+         Type_Def_Node := Muxml.Utils.Get_Element
+            (Doc   => Data.Doc,
+             XPath => "/xs:schema/xs:complexType[@name='eventType']");
+         Assert (Condition => Element_Node /= null and Type_Def_Node /= null,
+                 Message   => "Could not find elements to modify for new test.");
+
+         DOM.Core.Elements.Remove_Attribute
+            (Elem => Element_Node,
+             Name => "type");
+         Type_Def_Node := DOM.Core.Nodes.Insert_Before
+            (N         => Element_Node,
+             New_Child => Type_Def_Node);
+         Write_XML_With_Namespace
+            (Data => Data,
+             File => Tmp_Filename);
+
          Clear_Order_Info;
          Init_Order_Information
             (Schema_XML_Data => File_To_String
-                (File_Name => "data/element_without_type_attribute.xsd"));
+                (File_Name => Tmp_Filename));
          Assert (Condition => False,
-                 Message => "Exception expected");
+                 Message   => "Exception expected");
       exception
          when E : Not_Implemented =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
@@ -375,10 +410,10 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
             File => "data/default_schema.xsd");
 
          Muxml.Utils.Set_Attribute
-            (Doc => Data.Doc,
+            (Doc   => Data.Doc,
              XPath => "/xs:schema/xs:complexType[@name='eventsType']"
                 & "/xs:sequence/xs:element[@name='event']",
-             Name => "type",
+             Name  => "type",
              Value => "any");
 
          Write_XML_With_Namespace (Data => Data,
@@ -398,7 +433,7 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
 
       procedure Has_Redefine_Node
       is
-         Data   : Muxml.XML_Data_Type;
+         Data     : Muxml.XML_Data_Type;
          Node_New : DOM.Core.Node;
          Tmp_Filename : constant String
             := "obj/tmp_file.txt";
@@ -420,7 +455,7 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
          Init_Order_Information (Schema_XML_Data => File_To_String
                                     (File_Name => Tmp_Filename));
          Assert (Condition => False,
-                 Message => "Exception expected");
+                 Message   => "Exception expected");
       exception
          when E : Not_Implemented =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
@@ -457,7 +492,7 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
          Init_Order_Information (Schema_XML_Data => File_To_String
                                     (File_Name => Tmp_Filename));
          Assert (Condition => False,
-                 Message => "Exception expected");
+                 Message   => "Exception expected");
       exception
          when E : Not_Implemented =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
@@ -499,11 +534,12 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
          Init_Order_Information (Schema_XML_Data => File_To_String
                                     (File_Name => Tmp_Filename));
          Assert (Condition => False,
-                 Message => "Exception expected");
+                 Message   => "Exception expected");
       exception
          when E : Not_Implemented =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Schema contains element with attribute 'substitutionGroup'",
+                       = "Schema contains element with attribute"
+                       & " 'substitutionGroup'",
                     Message   => "Exception message mismatch: "
                        & Ada.Exceptions.Exception_Message (X => E));
       end SubstitutionGroup_External_Attribute;
@@ -511,8 +547,8 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
       Positive_Test;
 
       -- Fault tests
-      -- these tests specifically test the functions that check if the assumptions
-      -- required for the parsing to be correct, hold.
+      -- these tests specifically test the functions that check if the
+      -- assumptions required for the parsing to be correct, hold.
       Same_Name_Different_Type;
       Cyclic_Group_Reference;
       More_Than_One_Namespace;

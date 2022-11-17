@@ -115,7 +115,7 @@ is
 
       case Value_Of_Case.Value_Type is
          when Boolean_Type =>
-            if Mutools.Expressions.Log_Expansion_Values then
+            if Log_Expansion_Values then
                Mulog.Log (Msg => "Expanding expression '"
                              & Node_Name
                              & "' with value '"
@@ -126,7 +126,7 @@ is
                (Key      => Node_Name,
                 New_Item => Value_Of_Case.Bool_Value);
          when Integer_Type =>
-            if Mutools.Expressions.Log_Expansion_Values then
+            if Log_Expansion_Values then
                Mulog.Log (Msg => "Expanding expression '"
                              & Node_Name
                              & "' with value '"
@@ -137,7 +137,7 @@ is
                (Key      => Node_Name,
                 New_Item => Value_Of_Case.Int_Value);
          when String_Type =>
-            if Mutools.Expressions.Log_Expansion_Values then
+            if Log_Expansion_Values then
                Mulog.Log (Msg => "Expanding expression '"
                              & Node_Name
                              & "' with value '"

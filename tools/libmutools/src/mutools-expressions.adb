@@ -347,7 +347,7 @@ is
        Node_Access : in out Access_Hashmaps_Type)
       return Boolean
    is
-      use all type Mutools.Expressions.Case_Expression.Variable_Type;
+      use all type Case_Expression.Variable_Type;
 
       Node_Type : constant String
                 := DOM.Core.Nodes.Node_Name (N => Node);
@@ -401,15 +401,15 @@ is
       elsif Node_Type = "expression" then
          if Get_Expr_Type (Expr => Node) = Case_Expr_Type then
             declare
-               Result_Case : Mutools.Expressions.Case_Expression.Value_Type_Tuple;
+               Result_Case : Case_Expression.Value_Type_Tuple;
             begin
-               Mutools.Expressions.Case_Expression.Case_Expression_Evaluation
+               Case_Expression.Case_Expression_Evaluation
                   (Expr_Node     => Node,
                    Value_Of_Case => Result_Case,
                    Backtrace     => Backtrace,
                    Node_Access   => Node_Access);
                if Result_Case.Value_Type /=
-                  Mutools.Expressions.Case_Expression.Boolean_Type
+                  Case_Expression.Boolean_Type
                then
                   raise Muxml.Validation_Error with
                      "A Boolean variable or expression points to expression"
@@ -547,15 +547,15 @@ is
       elsif Node_Type = "expression" then
          if Get_Expr_Type (Expr => Node) = Case_Expr_Type then
             declare
-               Result_Case : Mutools.Expressions.Case_Expression.Value_Type_Tuple;
+               Result_Case : Case_Expression.Value_Type_Tuple;
             begin
-               Mutools.Expressions.Case_Expression.Case_Expression_Evaluation
+               Case_Expression.Case_Expression_Evaluation
                   (Expr_Node     => Node,
                    Value_Of_Case => Result_Case,
                    Backtrace     => Backtrace,
                    Node_Access   => Node_Access);
                if Result_Case.Value_Type /=
-                  Mutools.Expressions.Case_Expression.Integer_Type
+                  Case_Expression.Integer_Type
                then
                   raise Muxml.Validation_Error with
                      "An integer variable or expression points to expression"
@@ -688,16 +688,16 @@ is
       elsif Node_Type = "expression" then
          if Get_Expr_Type (Expr => Node) = Case_Expr_Type then
             declare
-               Result_Case : Mutools.Expressions.Case_Expression.Value_Type_Tuple;
+               Result_Case : Case_Expression.Value_Type_Tuple;
             begin
-               Mutools.Expressions.Case_Expression.Case_Expression_Evaluation
+               Case_Expression.Case_Expression_Evaluation
                   (Expr_Node     => Node,
                    Value_Of_Case => Result_Case,
                    Backtrace     => Backtrace,
                    Node_Access   => Node_Access);
 
                if Result_Case.Value_Type /=
-                  Mutools.Expressions.Case_Expression.String_Type
+                  Case_Expression.String_Type
                then
                   raise Muxml.Validation_Error with
                      "A string variable or expression points to expression "
@@ -805,7 +805,7 @@ is
             (N     => Policy.Doc,
              XPath => "/*/config");
          Insert_Position, Config_Entry, Config_Node, System_Node, Dummy : DOM.Core.Node;
-         pragma Unreferenced (Dummy);
+
       begin
          if DOM.Core.Nodes.Length (List => Config_Node_List) /= 0 then
             Config_Node := DOM.Core.Nodes.Item
@@ -815,7 +815,7 @@ is
             Insert_Position := DOM.Core.Nodes.Next_Sibling (N => Config_Node);
 
             if Expr_Debug_Active then
-               Mutools.Xmldebuglog.Remove_Log_Of_Subtree (Node  => Config_Node);
+               Xmldebuglog.Remove_Log_Of_Subtree (Node  => Config_Node);
             end if;
             Config_Node := DOM.Core.Nodes.Remove_Child
                (N          => System_Node,
@@ -948,9 +948,9 @@ is
       ----------------------------------------------------------------------
 
       -- do nothing (used to discard function return value)
-      procedure Discard (I : Boolean);
-      procedure Discard (I : Integer);
-      procedure Discard (I : String);
+      procedure Discard (I : Boolean) is null;
+      procedure Discard (I : Integer) is null;
+      procedure Discard (I : String) is null;
 
       ----------------------------------------------------------------------
 
@@ -961,33 +961,6 @@ is
          (Node_Name :     String;
           Reference :     String;
           Success   : out Boolean);
-
-      ----------------------------------------------------------------------
-
-      procedure Discard (I : Boolean)
-      is
-         pragma Unreferenced (I);
-      begin
-         null;
-      end Discard;
-
-      ----------------------------------------------------------------------
-
-      procedure Discard (I : Integer)
-      is
-         pragma Unreferenced (I);
-      begin
-         null;
-      end Discard;
-
-      ----------------------------------------------------------------------
-
-      procedure Discard (I : String)
-      is
-         pragma Unreferenced (I);
-      begin
-         null;
-      end Discard;
 
       ----------------------------------------------------------------------
 
@@ -1070,19 +1043,18 @@ is
                                        Node_Access => Node_Access));
          elsif Get_Expr_Type (Expr => Node) = Case_Expr_Type then
             declare
-               Dummy : Mutools.Expressions.Case_Expression.Value_Type_Tuple;
+               Dummy : Case_Expression.Value_Type_Tuple;
                Node_Name : constant String
                   := DOM.Core.Elements.Get_Attribute
                   (Elem => Node,
                    Name => "name");
             begin
                Add_To_Backtrace (Backtrace => Backtrace, Name => Node_Name);
-               Mutools.Expressions.Case_Expression.Case_Expression_Evaluation
+               Case_Expression.Case_Expression_Evaluation
                   (Expr_Node     => Node,
                    Value_Of_Case => Dummy,
                    Backtrace     => Backtrace,
                    Node_Access   => Node_Access);
-               pragma Unreferenced (Dummy);
                String_Vector.Delete_Last (Container => Backtrace);
             end;
          elsif Get_Expr_Type (Expr => Node) = Variable_Expr_Type then
@@ -1153,7 +1125,7 @@ is
                if Has_Been_Amended then
                   raise;
                else
-                  Mulog.Log (Msg => Mutools.Xmldebuglog.Get_Log_For_Error_Message
+                  Mulog.Log (Msg => Xmldebuglog.Get_Log_For_Error_Message
                                 (Node => Node));
                   Ada.Exceptions.Raise_Exception
                      (E       => Ada.Exceptions.Exception_Identity (X => E),
@@ -1278,7 +1250,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Initialize_Node_Access
-      (Node_Access      : in out Mutools.Expressions.Access_Hashmaps_Type;
+      (Node_Access      : in out Access_Hashmaps_Type;
        Config_And_Exprs :        DOM.Core.Node_List)
    is
    begin
@@ -1293,7 +1265,7 @@ is
          begin
             if Node_Name_Attr = "" then
                if Expr_Debug_Active then
-                  Mulog.Log (Msg => Mutools.Xmldebuglog.Get_Log_For_Error_Message
+                  Mulog.Log (Msg => Xmldebuglog.Get_Log_For_Error_Message
                                 (Node => Node));
                end if;
                raise Invalid_Expression with

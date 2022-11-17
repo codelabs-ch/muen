@@ -161,9 +161,9 @@ is
    procedure Init_Order_Information
        (Schema_XML_Data : String)
    is
-      use all type DOM.Core.Node_Types;
-      use all type DOM.Core.Node;
-      use all type Ada.Containers.Count_Type;
+      use type DOM.Core.Node_Types;
+      use type DOM.Core.Node;
+      use type Ada.Containers.Count_Type;
 
       package Node_Vector is new Ada.Containers.Indefinite_Vectors
          (Index_Type   => Natural,
@@ -993,8 +993,8 @@ is
    function To_String (OI : Order_Information) return String
    is
       package ASU renames Ada.Strings.Unbounded;
-      use all type String_To_Vector_Tuple.Cursor;
-      use all type String_To_String_Vector.Cursor;
+      use type String_To_Vector_Tuple.Cursor;
+      use type String_To_String_Vector.Cursor;
       use Ada.Strings.Unbounded;
 
       function U (S : String) return ASU.Unbounded_String
@@ -1055,7 +1055,7 @@ is
       function U (S : String) return ASU.Unbounded_String
          renames ASU.To_Unbounded_String;
 
-      use all type Ada.Containers.Count_Type;
+      use type Ada.Containers.Count_Type;
 
       Output : ASU.Unbounded_String
          := U ("");

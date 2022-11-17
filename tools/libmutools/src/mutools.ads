@@ -15,7 +15,15 @@
 --  You should have received a copy of the GNU General Public License
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
+with Ada.Containers.Indefinite_Vectors;
+with Ada.Containers.Indefinite_Holders;
 
 package Mutools
 is
+   package String_Vector is new Ada.Containers.Indefinite_Vectors
+      (Element_Type => String,
+       Index_Type   => Natural);
+
+   package String_Holder_Type is new Ada.Containers.Indefinite_Holders
+      (Element_Type => String);
 end Mutools;

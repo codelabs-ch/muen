@@ -254,7 +254,7 @@ is
                                (Elem => Call_Node,
                                 Name => "value"));
 
-                        Mutools.Expressions.String_Vector.Append
+                        Mutools.String_Vector.Append
                            (Container => Matching_Call_Param_Names,
                             New_Item  => Param_Name);
                      end if;
@@ -297,7 +297,7 @@ is
                                    (Elem => Node,
                                     Name => "name");
             begin
-               if not Mutools.Expressions.String_Vector.Contains
+               if not Mutools.String_Vector.Contains
                   (Container => Matching_Call_Param_Names,
                    Item      => Node_Name)
                then

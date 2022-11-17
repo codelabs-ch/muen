@@ -15,14 +15,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 with DOM.Core;
-with Ada.Containers.Indefinite_Holders;
 
 package Mutools.Expressions.Case_Expression
 is
    type Variable_Type is (Boolean_Type, Integer_Type, String_Type);
-
-   package String_Holder_Type is new Ada.Containers.Indefinite_Holders
-      (Element_Type => String);
 
    --  Container for values of case-expressions
    --  as their type can only be determined during evaluation.

@@ -233,10 +233,13 @@ is
                                Debug_Active => Debug_Active);
       exception
          --  For exceptions during amends, the current state of Policy
-         --  is helpful for debugging. Hence, we write it.
+         --  is helpful for debugging. Hence, we write it to a file.
 
          when others =>
             if Debug_Active then
+               Mulog.Log (Msg => "Writing current state of policy to file '"
+                             & Output_File & "_Policy_Before_Amend_Exception.xml"
+                             & "'");
                Muxml.Write
                   (File => Output_File & "_Policy_Before_Amend_Exception.xml",
                    Kind => Muxml.None,

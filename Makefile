@@ -33,6 +33,7 @@ tau0: policy-compile rts
 	$(MAKE) -C components install-$@
 
 tau0_static:	## Build system resource manager Tau0
+tau0_static: tools
 	$(MAKE) -C components $@
 
 pack:		## Build and create Muen system image

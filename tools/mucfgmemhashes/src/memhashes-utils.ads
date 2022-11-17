@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2016  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2016-2022  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2016-2022  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -29,5 +29,12 @@ is
      (Node      : DOM.Core.Node;
       Input_Dir : String := "")
       return Ada.Streams.Stream_Element_Array;
+
+   --  Calculate SHA-256 digest of memory node with content. Files are expected
+   --  to be found in the specified input directories.
+   function SHA256_Digest
+     (Node      : DOM.Core.Node;
+      Input_Dir : String := "")
+      return String;
 
 end Memhashes.Utils;

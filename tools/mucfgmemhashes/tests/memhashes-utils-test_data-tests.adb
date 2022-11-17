@@ -14,7 +14,8 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with McKae.XML.XPath.XIA;
+with Muxml.Utils;
 --  begin read only
 --  end read only
 package body Memhashes.Utils.Test_Data.Tests is
@@ -115,6 +116,54 @@ package body Memhashes.Utils.Test_Data.Tests is
       end;
 --  begin read only
    end Test_To_Stream;
+--  end read only
+
+
+--  begin read only
+   procedure Test_SHA256_Digest (Gnattest_T : in out Test);
+   procedure Test_SHA256_Digest_be9005 (Gnattest_T : in out Test) renames Test_SHA256_Digest;
+--  id:2.2/be900524d3954a67/SHA256_Digest/1/0/
+   procedure Test_SHA256_Digest (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+      Nodes  : DOM.Core.Node_List;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy_hashes.xml");
+      Nodes := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Policy.Doc,
+         XPath => "/system/memory/memory/*[self::fill or self::file]/..");
+      Assert (Condition => DOM.Core.Nodes.Length (List => Nodes) > 0,
+              Message   => "No content regions in reference policy");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Cur_Mem : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => Nodes,
+               Index => I);
+            Mem_Name : constant String
+              := DOM.Core.Elements.Get_Attribute (Elem => Cur_Mem,
+                                                  Name => "name");
+            Ref_Hash : constant String
+              := Muxml.Utils.Get_Attribute (Doc   => Cur_Mem,
+                                            XPath => "hash",
+                                            Name  => "value");
+         begin
+            if Ref_Hash'Length > 0 and Ref_Hash /= "none" then
+               Assert (Condition => SHA256_Digest
+                       (Node      => Cur_Mem,
+                        Input_Dir => "data") = Ref_Hash,
+                       Message   => "Hash mismatch of memory region '"
+                       & Mem_Name & "'");
+            end if;
+         end;
+      end loop;
+--  begin read only
+   end Test_SHA256_Digest;
 --  end read only
 
 --  begin read only

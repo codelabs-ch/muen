@@ -217,7 +217,7 @@ is
                --  Bit  0 - XSAVEOPT
                --  Bit  1 - XSAVEC
                --  Bit  2 - XGETBV
-               State.Regs.RAX := 16#0007#;
+               State.Regs.RAX := SK.Word64 (Values.EAX) and 16#0007#;
                State.Regs.RBX := SK.Word64 (Values.EBX);
                State.Regs.RCX := SK.Word64 (Values.ECX);
             else

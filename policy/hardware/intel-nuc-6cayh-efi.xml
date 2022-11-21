@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- ==========================================
-     Generated with mugenhwcfg (commit v0.6-24-g7d2fb8a)
-     Linux kernel version: 5.10.0-11-amd64
+     Generated with mugenhwcfg (commit v0.7)
+     Linux kernel version: 5.10.0-19-amd64
      Distribution: Debian GNU/Linux 11 (bullseye)
      Product information:
        Vendor: Intel(R) Client Systems
@@ -16,8 +16,6 @@
        Version: AYAPLCEL.86A.0070.2021.0901.1556
        Date: 09/01/2021
      Log:
-       * WARNING *: Unable to resolve device class 0c80. Please update pci.ids (-u) and
-       try again
        * WARNING *: Unable to resolve device class ff00. Please update pci.ids (-u) and
        try again
      ========================================== -->
@@ -81,6 +79,10 @@
     <msr address="16#0000_0483#" name="IA32_VMX_EXIT_CTLS" regval="16#01ff_ffff_0003_6dff#"/>
     <msr address="16#0000_0484#" name="IA32_VMX_ENTRY_CTLS" regval="16#0003_ffff_0000_11ff#"/>
     <msr address="16#0000_0485#" name="IA32_VMX_MISC" regval="16#0000_0000_6004_c1e7#"/>
+    <msr address="16#0000_0486#" name="IA32_VMX_CR0_FIXED0" regval="16#0000_0000_8000_0021#"/>
+    <msr address="16#0000_0487#" name="IA32_VMX_CR0_FIXED1" regval="16#0000_0000_ffff_ffff#"/>
+    <msr address="16#0000_0488#" name="IA32_VMX_CR4_FIXED0" regval="16#0000_0000_0000_2000#"/>
+    <msr address="16#0000_0489#" name="IA32_VMX_CR4_FIXED1" regval="16#0000_0000_0035_27ff#"/>
     <msr address="16#0000_048b#" name="IA32_VMX_PROCBASED_CTLS2" regval="16#001d_6fff_0000_0000#"/>
     <msr address="16#0000_048c#" name="IA32_VMX_EPT_VPID_CAP" regval="16#0000_0f01_0633_4141#"/>
     <msr address="16#0000_048d#" name="IA32_VMX_TRUE_PINBASED_CTLS" regval="16#0000_00ff_0000_0016#"/>
@@ -278,7 +280,7 @@
       <memory caching="UC" name="mem2" physicalAddress="16#9141_9000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e00c_a000#" size="16#1000#"/>
     </device>
-    <device name="0c80_1">
+    <device name="serial_bus_controller_1">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series PWM Pin Controller</description>
       <pci bus="16#00#" device="16#1a#" function="0">
         <identification classcode="16#0c80#" deviceId="16#5ac8#" revisionId="16#0b#" vendorId="16#8086#"/>

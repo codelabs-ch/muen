@@ -2555,7 +2555,7 @@ is
 
                               if Phys_Type = "subject_initrd" then
 
-                                 --  Collect all source regions of tybe initrd
+                                 --  Collect all source regions of type initrd
                                  --  for post-processing, see below.
 
                                  DOM.Core.Append_Node

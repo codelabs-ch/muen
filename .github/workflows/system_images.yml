@@ -21,7 +21,7 @@ jobs:
           - mirage-solo5.xml
         hardware:
           - cirrus7-nimbus.xml
-          - intel-nuc-5i5myhe.xml
+          - ibase-mi995vfx27.xml
           - intel-nuc-6cayh.xml
           - intel-nuc-6i7kyk.xml
           - kontron-ktqm77.xml
@@ -43,6 +43,9 @@ jobs:
           - distro: debian-bullseye
             system: integration_tests_kt.xml
             hardware: kontron-ktqm77.xml
+          - distro: debian-bullseye
+            system: mirage-solo5.xml
+            hardware: intel-nuc-5i5myhe.xml
           # additional distros
           - distro: ubuntu-focal
             system: demo_system_vtd.xml

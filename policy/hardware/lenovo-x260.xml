@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- ==========================================
-     Generated with mugenhwcfg (commit v0.6-24-g7d2fb8a)
-     Linux kernel version: 5.10.0-11-amd64
+     Generated with mugenhwcfg (commit v0.7)
+     Linux kernel version: 5.10.0-19-amd64
      Distribution: Debian GNU/Linux 11 (bullseye)
      Product information:
        Vendor: LENOVO
@@ -26,7 +26,7 @@
     <cpu apicId="0"/>
     <cpu apicId="2"/>
     <cpuid eax="16#0000_0016#" ebx="16#756e_6547#" ecx="16#6c65_746e#" edx="16#4965_6e69#" leaf="16#0000_0000#" subleaf="16#00#"/>
-    <cpuid eax="16#0004_06e3#" ebx="16#0210_0800#" ecx="16#7ffa_fbbf#" edx="16#bfeb_fbff#" leaf="16#0000_0001#" subleaf="16#00#"/>
+    <cpuid eax="16#0004_06e3#" ebx="16#0010_0800#" ecx="16#7ffa_fbbf#" edx="16#bfeb_fbff#" leaf="16#0000_0001#" subleaf="16#00#"/>
     <cpuid eax="16#7603_6301#" ebx="16#00f0_b5ff#" ecx="16#0000_0000#" edx="16#00c3_0000#" leaf="16#0000_0002#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0003#" subleaf="16#00#"/>
     <cpuid eax="16#1c00_4121#" ebx="16#01c0_003f#" ecx="16#0000_003f#" edx="16#0000_0000#" leaf="16#0000_0004#" subleaf="16#00#"/>
@@ -39,8 +39,8 @@
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0008#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0009#" subleaf="16#00#"/>
     <cpuid eax="16#0730_0404#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0603#" leaf="16#0000_000a#" subleaf="16#00#"/>
-    <cpuid eax="16#0000_0001#" ebx="16#0000_0002#" ecx="16#0000_0100#" edx="16#0000_0002#" leaf="16#0000_000b#" subleaf="16#00#"/>
-    <cpuid eax="16#0000_0004#" ebx="16#0000_0004#" ecx="16#0000_0201#" edx="16#0000_0002#" leaf="16#0000_000b#" subleaf="16#01#"/>
+    <cpuid eax="16#0000_0001#" ebx="16#0000_0002#" ecx="16#0000_0100#" edx="16#0000_0000#" leaf="16#0000_000b#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0004#" ebx="16#0000_0004#" ecx="16#0000_0201#" edx="16#0000_0000#" leaf="16#0000_000b#" subleaf="16#01#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_000c#" subleaf="16#00#"/>
     <cpuid eax="16#0000_001f#" ebx="16#0000_0440#" ecx="16#0000_0440#" edx="16#0000_0000#" leaf="16#0000_000d#" subleaf="16#00#"/>
     <cpuid eax="16#0000_000f#" ebx="16#0000_03c0#" ecx="16#0000_0100#" edx="16#0000_0000#" leaf="16#0000_000d#" subleaf="16#01#"/>
@@ -78,6 +78,10 @@
     <msr address="16#0000_0483#" name="IA32_VMX_EXIT_CTLS" regval="16#01ff_ffff_0003_6dff#"/>
     <msr address="16#0000_0484#" name="IA32_VMX_ENTRY_CTLS" regval="16#0003_ffff_0000_11ff#"/>
     <msr address="16#0000_0485#" name="IA32_VMX_MISC" regval="16#0000_0000_7004_c1e7#"/>
+    <msr address="16#0000_0486#" name="IA32_VMX_CR0_FIXED0" regval="16#0000_0000_8000_0021#"/>
+    <msr address="16#0000_0487#" name="IA32_VMX_CR0_FIXED1" regval="16#0000_0000_ffff_ffff#"/>
+    <msr address="16#0000_0488#" name="IA32_VMX_CR4_FIXED0" regval="16#0000_0000_0000_2000#"/>
+    <msr address="16#0000_0489#" name="IA32_VMX_CR4_FIXED1" regval="16#0000_0000_0037_27ff#"/>
     <msr address="16#0000_048b#" name="IA32_VMX_PROCBASED_CTLS2" regval="16#001f_bcff_0000_0000#"/>
     <msr address="16#0000_048c#" name="IA32_VMX_EPT_VPID_CAP" regval="16#0000_0f01_0633_4141#"/>
     <msr address="16#0000_048d#" name="IA32_VMX_TRUE_PINBASED_CTLS" regval="16#0000_007f_0000_0016#"/>

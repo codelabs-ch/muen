@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- ==========================================
-     Generated with mugenhwcfg (commit v0.6-24-g7d2fb8a)
-     Linux kernel version: 5.10.0-11-amd64
+     Generated with mugenhwcfg (commit v0.7)
+     Linux kernel version: 5.10.0-19-amd64
      Distribution: Debian GNU/Linux 11 (bullseye)
      Product information:
        Vendor: ASUS
@@ -64,6 +64,10 @@
     <msr address="16#0000_0483#" name="IA32_VMX_EXIT_CTLS" regval="16#007f_ffff_0003_6dff#"/>
     <msr address="16#0000_0484#" name="IA32_VMX_ENTRY_CTLS" regval="16#0000_ffff_0000_11ff#"/>
     <msr address="16#0000_0485#" name="IA32_VMX_MISC" regval="16#0000_0000_3004_81e5#"/>
+    <msr address="16#0000_0486#" name="IA32_VMX_CR0_FIXED0" regval="16#0000_0000_8000_0021#"/>
+    <msr address="16#0000_0487#" name="IA32_VMX_CR0_FIXED1" regval="16#0000_0000_ffff_ffff#"/>
+    <msr address="16#0000_0488#" name="IA32_VMX_CR4_FIXED0" regval="16#0000_0000_0000_2000#"/>
+    <msr address="16#0000_0489#" name="IA32_VMX_CR4_FIXED1" regval="16#0000_0000_0017_67ff#"/>
     <msr address="16#0000_048b#" name="IA32_VMX_PROCBASED_CTLS2" regval="16#0000_7cff_0000_0000#"/>
     <msr address="16#0000_048c#" name="IA32_VMX_EPT_VPID_CAP" regval="16#0000_0f01_0633_4141#"/>
     <msr address="16#0000_048d#" name="IA32_VMX_TRUE_PINBASED_CTLS" regval="16#0000_007f_0000_0016#"/>

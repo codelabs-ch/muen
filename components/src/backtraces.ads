@@ -28,6 +28,9 @@ is
      (RIP        :     Interfaces.Unsigned_64;
       RBP        :     Interfaces.Unsigned_64;
       Traces     : out Call_Trace_Type;
-      Last_Index : out Natural);
+      Last_Index : out Natural)
+   with
+      Pre  => Traces'Length > 0,
+      Post => Last_Index in Traces'Range;
 
 end Backtraces;

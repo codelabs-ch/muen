@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- ==========================================
-     Generated with mugenhwcfg (commit v0.6-24-g7d2fb8a)
-     Linux kernel version: 5.10.0-11-amd64
+     Generated with mugenhwcfg (commit v0.7)
+     Linux kernel version: 5.10.0-19-amd64
      Distribution: Debian GNU/Linux 11 (bullseye)
      Product information:
-       Vendor: 
-       Name: 
-       Product Version: 
+       Vendor: Intel(R) Client Systems
+       Name: NUC6CAYH
+       Product Version: J26843-410
      Board information:
        Vendor: Intel Corporation
        Name: NUC6CAYB
@@ -16,8 +16,6 @@
        Version: AYAPLCEL.86A.0070.2021.0901.1556
        Date: 09/01/2021
      Log:
-       * WARNING *: Unable to resolve device class 0c80. Please update pci.ids (-u) and
-       try again
        * WARNING *: Unable to resolve device class ff00. Please update pci.ids (-u) and
        try again
      ========================================== -->
@@ -30,7 +28,7 @@
     <cpu apicId="4"/>
     <cpu apicId="6"/>
     <cpuid eax="16#0000_0015#" ebx="16#756e_6547#" ecx="16#6c65_746e#" edx="16#4965_6e69#" leaf="16#0000_0000#" subleaf="16#00#"/>
-    <cpuid eax="16#0005_06c9#" ebx="16#0220_0800#" ecx="16#4ff8_ebb7#" edx="16#bfeb_fbff#" leaf="16#0000_0001#" subleaf="16#00#"/>
+    <cpuid eax="16#0005_06c9#" ebx="16#0020_0800#" ecx="16#4ff8_ebb7#" edx="16#bfeb_fbff#" leaf="16#0000_0001#" subleaf="16#00#"/>
     <cpuid eax="16#6164_a001#" ebx="16#0000_ffc4#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0002#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0003#" subleaf="16#00#"/>
     <cpuid eax="16#3c00_0121#" ebx="16#0140_003f#" ecx="16#0000_003f#" edx="16#0000_0001#" leaf="16#0000_0004#" subleaf="16#00#"/>
@@ -42,8 +40,8 @@
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0008#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0009#" subleaf="16#00#"/>
     <cpuid eax="16#0730_0404#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0603#" leaf="16#0000_000a#" subleaf="16#00#"/>
-    <cpuid eax="16#0000_0001#" ebx="16#0000_0001#" ecx="16#0000_0100#" edx="16#0000_0002#" leaf="16#0000_000b#" subleaf="16#00#"/>
-    <cpuid eax="16#0000_0005#" ebx="16#0000_0004#" ecx="16#0000_0201#" edx="16#0000_0002#" leaf="16#0000_000b#" subleaf="16#01#"/>
+    <cpuid eax="16#0000_0001#" ebx="16#0000_0001#" ecx="16#0000_0100#" edx="16#0000_0000#" leaf="16#0000_000b#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0005#" ebx="16#0000_0004#" ecx="16#0000_0201#" edx="16#0000_0000#" leaf="16#0000_000b#" subleaf="16#01#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_000c#" subleaf="16#00#"/>
     <cpuid eax="16#0000_001b#" ebx="16#0000_0440#" ecx="16#0000_0440#" edx="16#0000_0000#" leaf="16#0000_000d#" subleaf="16#00#"/>
     <cpuid eax="16#0000_000f#" ebx="16#0000_02c0#" ecx="16#0000_0100#" edx="16#0000_0000#" leaf="16#0000_000d#" subleaf="16#01#"/>
@@ -81,6 +79,10 @@
     <msr address="16#0000_0483#" name="IA32_VMX_EXIT_CTLS" regval="16#01ff_ffff_0003_6dff#"/>
     <msr address="16#0000_0484#" name="IA32_VMX_ENTRY_CTLS" regval="16#0003_ffff_0000_11ff#"/>
     <msr address="16#0000_0485#" name="IA32_VMX_MISC" regval="16#0000_0000_6004_c1e7#"/>
+    <msr address="16#0000_0486#" name="IA32_VMX_CR0_FIXED0" regval="16#0000_0000_8000_0021#"/>
+    <msr address="16#0000_0487#" name="IA32_VMX_CR0_FIXED1" regval="16#0000_0000_ffff_ffff#"/>
+    <msr address="16#0000_0488#" name="IA32_VMX_CR4_FIXED0" regval="16#0000_0000_0000_2000#"/>
+    <msr address="16#0000_0489#" name="IA32_VMX_CR4_FIXED1" regval="16#0000_0000_0035_27ff#"/>
     <msr address="16#0000_048b#" name="IA32_VMX_PROCBASED_CTLS2" regval="16#001d_6fff_0000_0000#"/>
     <msr address="16#0000_048c#" name="IA32_VMX_EPT_VPID_CAP" regval="16#0000_0f01_0633_4141#"/>
     <msr address="16#0000_048d#" name="IA32_VMX_TRUE_PINBASED_CTLS" regval="16#0000_00ff_0000_0016#"/>
@@ -301,7 +303,7 @@
       <memory caching="UC" name="mem2" physicalAddress="16#9141_9000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e00c_a000#" size="16#1000#"/>
     </device>
-    <device name="0c80_1">
+    <device name="serial_bus_controller_1">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series PWM Pin Controller</description>
       <pci bus="16#00#" device="16#1a#" function="0">
         <identification classcode="16#0c80#" deviceId="16#5ac8#" revisionId="16#0b#" vendorId="16#8086#"/>

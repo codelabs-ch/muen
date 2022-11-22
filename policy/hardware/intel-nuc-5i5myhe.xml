@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- ==========================================
-     Generated with mugenhwcfg (commit v0.6-24-g7d2fb8a)
-     Linux kernel version: 5.10.0-11-amd64
+     Generated with mugenhwcfg (commit v0.7)
+     Linux kernel version: 5.10.0-19-amd64
      Distribution: Debian GNU/Linux 11 (bullseye)
      Product information:
        Vendor: 
@@ -13,8 +13,8 @@
        Version: H47797-203
      BIOS information:
        Vendor: Intel Corporation
-       Version: MYBDWi5v.86A.0040.2017.1130.1223
-       Date: 11/30/2017
+       Version: MYBDWi5v.86A.0058.2020.0508.1146
+       Date: 05/08/2020
      ========================================== -->
 
 
@@ -24,7 +24,7 @@
     <cpu apicId="2"/>
     <cpuid eax="16#0000_0014#" ebx="16#756e_6547#" ecx="16#6c65_746e#" edx="16#4965_6e69#" leaf="16#0000_0000#" subleaf="16#00#"/>
     <cpuid eax="16#0003_06d4#" ebx="16#0010_0800#" ecx="16#7ffa_fbff#" edx="16#bfeb_fbff#" leaf="16#0000_0001#" subleaf="16#00#"/>
-    <cpuid eax="16#7603_6301#" ebx="16#00f0_b5ff#" ecx="16#0000_0000#" edx="16#00c3_0000#" leaf="16#0000_0002#" subleaf="16#00#"/>
+    <cpuid eax="16#7603_6301#" ebx="16#00f0_b6ff#" ecx="16#0000_0000#" edx="16#00c3_0000#" leaf="16#0000_0002#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0003#" subleaf="16#00#"/>
     <cpuid eax="16#1c00_4121#" ebx="16#01c0_003f#" ecx="16#0000_003f#" edx="16#0000_0000#" leaf="16#0000_0004#" subleaf="16#00#"/>
     <cpuid eax="16#1c00_4122#" ebx="16#01c0_003f#" ecx="16#0000_003f#" edx="16#0000_0000#" leaf="16#0000_0004#" subleaf="16#01#"/>
@@ -32,10 +32,10 @@
     <cpuid eax="16#1c03_c163#" ebx="16#02c0_003f#" ecx="16#0000_0fff#" edx="16#0000_0006#" leaf="16#0000_0004#" subleaf="16#03#"/>
     <cpuid eax="16#0000_0040#" ebx="16#0000_0040#" ecx="16#0000_0003#" edx="16#1114_2120#" leaf="16#0000_0005#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0077#" ebx="16#0000_0002#" ecx="16#0000_0009#" edx="16#0000_0000#" leaf="16#0000_0006#" subleaf="16#00#"/>
-    <cpuid eax="16#0000_0000#" ebx="16#021c_2fbb#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0007#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#021c_2fbb#" ecx="16#0000_0000#" edx="16#9c00_0400#" leaf="16#0000_0007#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0008#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0009#" subleaf="16#00#"/>
-    <cpuid eax="16#0730_0403#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0603#" leaf="16#0000_000a#" subleaf="16#00#"/>
+    <cpuid eax="16#0730_0803#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0603#" leaf="16#0000_000a#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0001#" ebx="16#0000_0002#" ecx="16#0000_0100#" edx="16#0000_0000#" leaf="16#0000_000b#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0004#" ebx="16#0000_0004#" ecx="16#0000_0201#" edx="16#0000_0000#" leaf="16#0000_000b#" subleaf="16#01#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0001#" ecx="16#0000_0001#" edx="16#0000_0000#" leaf="16#0000_000c#" subleaf="16#00#"/>
@@ -69,6 +69,10 @@
     <msr address="16#0000_0483#" name="IA32_VMX_EXIT_CTLS" regval="16#007f_ffff_0003_6dff#"/>
     <msr address="16#0000_0484#" name="IA32_VMX_ENTRY_CTLS" regval="16#0000_ffff_0000_11ff#"/>
     <msr address="16#0000_0485#" name="IA32_VMX_MISC" regval="16#0000_0000_3004_81e5#"/>
+    <msr address="16#0000_0486#" name="IA32_VMX_CR0_FIXED0" regval="16#0000_0000_8000_0021#"/>
+    <msr address="16#0000_0487#" name="IA32_VMX_CR0_FIXED1" regval="16#0000_0000_ffff_ffff#"/>
+    <msr address="16#0000_0488#" name="IA32_VMX_CR4_FIXED0" regval="16#0000_0000_0000_2000#"/>
+    <msr address="16#0000_0489#" name="IA32_VMX_CR4_FIXED1" regval="16#0000_0000_0037_67ff#"/>
     <msr address="16#0000_048b#" name="IA32_VMX_PROCBASED_CTLS2" regval="16#0005_7cff_0000_0000#"/>
     <msr address="16#0000_048c#" name="IA32_VMX_EPT_VPID_CAP" regval="16#0000_0f01_0633_4141#"/>
     <msr address="16#0000_048d#" name="IA32_VMX_TRUE_PINBASED_CTLS" regval="16#0000_007f_0000_0016#"/>
@@ -77,15 +81,17 @@
     <msr address="16#0000_0490#" name="IA32_VMX_TRUE_ENTRY_CTLS" regval="16#0000_ffff_0000_11fb#"/>
   </processor>
   <memory>
-    <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#0000#" size="16#0009_c000#"/>
-    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0010_0000#" size="16#3096_4000#"/>
-    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#30f6_2000#" size="16#0535_2000#"/>
-    <memoryBlock allocatable="false" name="ACPI Tables" physicalAddress="16#3636_f000#" size="16#0002_5000#"/>
-    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#3639_4000#" size="16#0093_0000#"/>
-    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#36ff_f000#" size="16#1000#"/>
-    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0001_0000_0000#" size="16#0003_8600_0000#"/>
-    <reservedMemory name="rmrr1" physicalAddress="16#36ef_3000#" size="16#0001_1000#"/>
-    <reservedMemory name="rmrr2" physicalAddress="16#3780_0000#" size="16#4080_0000#"/>
+    <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#0000#" size="16#0005_8000#"/>
+    <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#0005_9000#" size="16#0004_6000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0010_0000#" size="16#9add_2000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#9b42_3000#" size="16#06e5_f000#"/>
+    <memoryBlock allocatable="false" name="ACPI Tables" physicalAddress="16#a233_d000#" size="16#0002_5000#"/>
+    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#a236_2000#" size="16#0093_0000#"/>
+    <memoryBlock allocatable="false" name="Unknown E820 type" physicalAddress="16#a2f9_e000#" size="16#0006_1000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#a2ff_f000#" size="16#1000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0001_0000_0000#" size="16#0003_5600_0000#"/>
+    <reservedMemory name="rmrr1" physicalAddress="16#a2ef_3000#" size="16#0001_1000#"/>
+    <reservedMemory name="rmrr2" physicalAddress="16#a380_0000#" size="16#0480_0000#"/>
   </memory>
   <devices pciConfigAddress="16#f800_0000#" pciConfigSize="16#0400_0000#">
     <device name="system_board">
@@ -143,8 +149,8 @@
       <irq name="irq1" number="16">
         <msi name="msi1"/>
       </irq>
-      <memory caching="UC" name="mem1" physicalAddress="16#7900_0000#" size="16#0100_0000#"/>
-      <memory caching="WC" name="mem2" physicalAddress="16#8000_0000#" size="16#4000_0000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#a900_0000#" size="16#0100_0000#"/>
+      <memory caching="WC" name="mem2" physicalAddress="16#b000_0000#" size="16#1000_0000#"/>
       <memory caching="WC" name="mem3" physicalAddress="16#000c_0000#" size="16#0002_0000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#f801_0000#" size="16#1000#"/>
       <ioPort end="16#303f#" name="ioport1" start="16#3000#"/>
@@ -159,7 +165,7 @@
       <irq name="irq1" number="16">
         <msi name="msi1"/>
       </irq>
-      <memory caching="UC" name="mem1" physicalAddress="16#7a13_4000#" size="16#4000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#aa13_4000#" size="16#4000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#f801_8000#" size="16#1000#"/>
     </device>
     <device name="usb_controller_1">
@@ -178,7 +184,7 @@
         <msi name="msi7"/>
         <msi name="msi8"/>
       </irq>
-      <memory caching="UC" name="mem1" physicalAddress="16#7a12_0000#" size="16#0001_0000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#aa12_0000#" size="16#0001_0000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#f80a_0000#" size="16#1000#"/>
       <reservedMemory ref="rmrr1"/>
     </device>
@@ -191,7 +197,7 @@
       <irq name="irq1" number="16">
         <msi name="msi1"/>
       </irq>
-      <memory caching="UC" name="mem1" physicalAddress="16#7a13_d000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#aa13_c000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#f80b_0000#" size="16#1000#"/>
     </device>
     <device name="serial_controller_1">
@@ -200,12 +206,12 @@
         <identification classcode="16#0700#" deviceId="16#9cbd#" revisionId="16#03#" vendorId="16#8086#"/>
         <iommuGroup id="3"/>
       </pci>
-      <irq name="irq1" number="17">
+      <irq name="irq1" number="19">
         <msi name="msi1"/>
       </irq>
-      <memory caching="UC" name="mem1" physicalAddress="16#7a13_b000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#aa13_a000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#f80b_3000#" size="16#1000#"/>
-      <ioPort end="16#30e7#" name="ioport1" start="16#30e0#"/>
+      <ioPort end="16#3087#" name="ioport1" start="16#3080#"/>
     </device>
     <device name="ethernet_controller_1">
       <description>Intel Corporation Ethernet Connection (3) I218-LM</description>
@@ -216,10 +222,10 @@
       <irq name="irq1" number="20">
         <msi name="msi1"/>
       </irq>
-      <memory caching="UC" name="mem1" physicalAddress="16#7a10_0000#" size="16#0002_0000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#7a13_a000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#aa10_0000#" size="16#0002_0000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#aa13_9000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#f80c_8000#" size="16#1000#"/>
-      <ioPort end="16#309f#" name="ioport1" start="16#3080#"/>
+      <ioPort end="16#307f#" name="ioport1" start="16#3060#"/>
     </device>
     <device name="audio_device_2">
       <description>Intel Corporation Wildcat Point-LP High Definition Audio Controller</description>
@@ -230,42 +236,25 @@
       <irq name="irq1" number="22">
         <msi name="msi1"/>
       </irq>
-      <memory caching="UC" name="mem1" physicalAddress="16#7a13_0000#" size="16#4000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#aa13_0000#" size="16#4000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#f80d_8000#" size="16#1000#"/>
     </device>
     <device name="isa_bridge_1">
       <description>Intel Corporation Wildcat Point-LP LPC Controller</description>
       <pci bus="16#00#" device="16#1f#" function="0">
         <identification classcode="16#0601#" deviceId="16#9cc3#" revisionId="16#03#" vendorId="16#8086#"/>
-        <iommuGroup id="9"/>
+        <iommuGroup id="8"/>
       </pci>
       <memory caching="UC" name="mmconf" physicalAddress="16#f80f_8000#" size="16#1000#"/>
-    </device>
-    <device name="sata_controller_1">
-      <description>Intel Corporation Wildcat Point-LP SATA Controller [AHCI Mode]</description>
-      <pci bus="16#00#" device="16#1f#" function="2">
-        <identification classcode="16#0106#" deviceId="16#9c83#" revisionId="16#03#" vendorId="16#8086#"/>
-        <iommuGroup id="9"/>
-      </pci>
-      <irq name="irq1" number="19">
-        <msi name="msi1"/>
-      </irq>
-      <memory caching="UC" name="mem1" physicalAddress="16#7a13_9000#" size="16#1000#"/>
-      <memory caching="UC" name="mmconf" physicalAddress="16#f80f_a000#" size="16#1000#"/>
-      <ioPort end="16#30d7#" name="ioport1" start="16#30d0#"/>
-      <ioPort end="16#30c3#" name="ioport2" start="16#30c0#"/>
-      <ioPort end="16#30b7#" name="ioport3" start="16#30b0#"/>
-      <ioPort end="16#30a3#" name="ioport4" start="16#30a0#"/>
-      <ioPort end="16#307f#" name="ioport5" start="16#3060#"/>
     </device>
     <device name="smbus_1">
       <description>Intel Corporation Wildcat Point-LP SMBus Controller</description>
       <pci bus="16#00#" device="16#1f#" function="3">
         <identification classcode="16#0c05#" deviceId="16#9ca2#" revisionId="16#03#" vendorId="16#8086#"/>
-        <iommuGroup id="9"/>
+        <iommuGroup id="8"/>
       </pci>
       <irq name="irq1" number="18"/>
-      <memory caching="UC" name="mem1" physicalAddress="16#7a13_8000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#aa13_8000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#f80f_b000#" size="16#1000#"/>
       <ioPort end="16#305f#" name="ioport1" start="16#3040#"/>
     </device>
@@ -273,12 +262,12 @@
       <description>Intel Corporation Wireless 7265</description>
       <pci bus="16#02#" device="16#00#" function="0">
         <identification classcode="16#0280#" deviceId="16#095a#" revisionId="16#59#" vendorId="16#8086#"/>
-        <iommuGroup id="10"/>
+        <iommuGroup id="9"/>
       </pci>
       <irq name="irq1" number="19">
         <msi name="msi1"/>
       </irq>
-      <memory caching="UC" name="mem1" physicalAddress="16#7a00_0000#" size="16#2000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#aa00_0000#" size="16#2000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#f820_0000#" size="16#1000#"/>
     </device>
   </devices>

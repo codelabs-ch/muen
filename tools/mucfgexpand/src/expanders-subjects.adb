@@ -2327,6 +2327,10 @@ is
       package DCN renames DOM.Core.Nodes;
       package MXU renames Mutools.XML_Utils;
 
+      Dev_Dom_Memory : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/deviceDomains/domain/memory/memory");
       Memory_Section : constant DOM.Core.Node
         := Muxml.Utils.Get_Element (Doc   => Data.Doc,
                                     XPath => "/system/memory");
@@ -2530,6 +2534,13 @@ is
                                      (Number => Current_Loader_Addr),
                                    Writable      => False,
                                    Executable    => False);
+                              Dev_Memory : constant DOM.Core.Node_List
+                                := Muxml.Utils.Get_Elements
+                                  (Nodes     => Dev_Dom_Memory,
+                                   Ref_Attr  => "physical",
+                                   Ref_Value => Map_Phys_Name);
+                              Dev_Mem_Count : constant Natural
+                                := DOM.Core.Nodes.Length (List => Dev_Memory);
                            begin
                               Mulog.Log
                                 (Msg => "Swapping file-backed source "
@@ -2568,6 +2579,22 @@ is
                               Muxml.Utils.Append_Child
                                 (Node      => Ldr_Mem_Node,
                                  New_Child => Src_Mapping);
+
+                              --  Swap device domain mappings.
+
+                              for K in 0 .. Dev_Mem_Count - 1 loop
+                                 Mulog.Log
+                                   (Msg => "Swapping device domain mapping of"
+                                    & " source region '" & Map_Phys_Name
+                                    & "' with target region '"
+                                    & Target_Phys_Name & "'");
+                                 DOM.Core.Elements.Set_Attribute
+                                   (Elem  => DOM.Core.Nodes.Item
+                                      (List  => Dev_Memory,
+                                       Index => K),
+                                    Name  => "physical",
+                                    Value => Target_Phys_Name);
+                              end loop;
 
                               Current_Loader_Addr := Current_Loader_Addr
                                 + Interfaces.Unsigned_64'Value (Phys_Size);

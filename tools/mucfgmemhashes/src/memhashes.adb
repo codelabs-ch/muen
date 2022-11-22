@@ -16,10 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Streams;
-
-with GNAT.SHA256;
-
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 with DOM.Core.Documents;
@@ -66,12 +62,9 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Nodes,
                  Index => I);
-            Buffer : constant Ada.Streams.Stream_Element_Array
-              := Utils.To_Stream
-                (Node      => Mem_Node,
-                 Input_Dir => Input_Dir);
             Hash_Str : constant String
-              := "16#" & GNAT.SHA256.Digest (A => Buffer) & "#";
+              := Utils.SHA256_Digest (Node      => Mem_Node,
+                                      Input_Dir => Input_Dir);
             Hash_Node : DOM.Core.Node
               := Muxml.Utils.Get_Element (Doc   => Mem_Node,
                                           XPath => "hash");

@@ -26,7 +26,6 @@ with DOM.Core.Elements;
 
 with Muxml.Utils;
 with Mutools.Files;
-with Mutools.Image;
 with Mutools.Strings;
 with Mutools.Utils;
 
@@ -182,92 +181,5 @@ is
 
       return "16#" & GNAT.SHA256.Digest (C => Hash_Context) & "#";
    end SHA256_Digest;
-
-   -------------------------------------------------------------------------
-
-   function To_Stream
-     (Node      : DOM.Core.Node;
-      Input_Dir : String := "")
-      return Ada.Streams.Stream_Element_Array
-   is
-      type Content_Type is (File, Fill);
-
-      use type Ada.Streams.Stream_Element_Offset;
-
-      Mem_Size : constant Ada.Streams.Stream_Element_Offset
-        := Ada.Streams.Stream_Element_Offset'Value
-          (DOM.Core.Elements.Get_Attribute
-             (Elem => Node,
-              Name => "size"));
-      Content_Node : constant DOM.Core.Node
-        := Muxml.Utils.Get_Element
-          (Doc   => Node,
-           XPath => "*[self::fill or self::file]");
-      Content_Kind : constant Content_Type
-        := Content_Type'Value
-          (DOM.Core.Elements.Get_Tag_Name
-             (Elem => Content_Node));
-      Img : Mutools.Image.Image_Type (End_Address => Mem_Size - 1);
-   begin
-      case Content_Kind
-      is
-         when File =>
-            declare
-               use type Interfaces.Unsigned_64;
-
-               Offset_Str : constant String
-                 := DOM.Core.Elements.Get_Attribute
-                   (Elem => Content_Node,
-                    Name => "offset");
-               Filename : constant String
-                 := DOM.Core.Elements.Get_Attribute
-                   (Elem => Content_Node,
-                    Name => "filename");
-               Path : constant String
-                 := Mutools.Utils.Lookup_File
-                   (Filename    => Filename,
-                    Directories => Mutools.Strings.Tokenize
-                      (Str => Input_Dir));
-               Offset : Interfaces.Unsigned_64 := 0;
-               Added  : Interfaces.Unsigned_64;
-            begin
-               if Offset_Str /= "none" then
-                  Offset := Interfaces.Unsigned_64'Value (Offset_Str);
-               end if;
-
-               Mutools.Image.Add_File
-                 (Image   => Img,
-                  Path    => Path,
-                  Address => 0,
-                  Size    => Interfaces.Unsigned_64 (Mem_Size),
-                  Offset  => Offset,
-                  Added   => Added);
-
-               DOM.Core.Elements.Set_Attribute
-                 (Elem  => Content_Node,
-                  Name  => "size",
-                  Value => Mutools.Utils.To_Hex (Number => Offset + Added));
-            end;
-         when Fill =>
-            declare
-               Pattern : constant Ada.Streams.Stream_Element
-                 := Ada.Streams.Stream_Element'Value
-                   (DOM.Core.Elements.Get_Attribute
-                      (Elem => Content_Node,
-                       Name => "pattern"));
-            begin
-               Mutools.Image.Add_Pattern
-                 (Image   => Img,
-                  Pattern => Pattern,
-                  Size    => Interfaces.Unsigned_64 (Mem_Size),
-                  Address => 0);
-            end;
-      end case;
-
-      return Mutools.Image.Get_Buffer
-        (Image   => Img,
-         Address => 0,
-         Size    => Interfaces.Unsigned_64 (Mem_Size));
-   end To_Stream;
 
 end Memhashes.Utils;

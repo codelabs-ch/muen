@@ -78,7 +78,7 @@ is
    --  Memory usable for device domains/DMA.
    subtype DMA_Memory is
      Memory_Kind with Static_Predicate =>
-       DMA_Memory in Device_Rmrr | Subject | Subject_Device;
+       DMA_Memory in Device_Rmrr | Subject | Subject_Initrd | Subject_Device;
 
    --  MSR access modes.
    type MSR_Mode_Type is (R, W, RW);

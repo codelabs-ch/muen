@@ -21,7 +21,16 @@
   </memory>
  </memory>
  <deviceDomains>
-  <include href="common_device_domains.xml"/>
+  <domain name="nic_domain">
+   <memory>
+    <memory logical="dma1" physical="nic_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
+    <memory logical="dma2" physical="nic_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
+   </memory>
+   <devices>
+    <device logical="first_nic" physical="ethernet_controller_1"/>
+    <device logical="additional_nics" physical="additional_nics"/>
+   </devices>
+  </domain>
  </deviceDomains>
  <events>
   <include href="common_events.xml"/>
@@ -121,9 +130,6 @@
    </memory>
    <devices>
     <device logical="xhci" physical="usb_controller_1"/>
-    <device logical="storage_controller" physical="storage_controller">
-     <pci bus="16#00#" device="16#1f#" function="0"/>
-    </device>
    </devices>
    <events>
     <source>

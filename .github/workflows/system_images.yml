@@ -21,6 +21,7 @@ jobs:
           - mirage-solo5.xml
         hardware:
           - cirrus7-nimbus.xml
+          - ibase-mi995vfx27.xml
           - intel-nuc-6cayh.xml
           - intel-nuc-6i7kyk.xml
           - kontron-ktqm77.xml

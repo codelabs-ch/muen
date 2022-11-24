@@ -96,8 +96,8 @@ application domains.
 
 The <<mugenhwcfg>> tool for automated hardware description generation simplifies
 the addition of support for new target machines. There is also a Debian
-Live-based bootable ISO <<mugenhwcfg-live>> to simplify the collection of
-hardware configurations from new targets.
+Live-based bootable image <<mugenhwcfg-live>> with persistence to simplify the
+collection of hardware configurations from new targets.
 
 Resources
 ---------
@@ -338,7 +338,7 @@ References
 - [[[muenfs]]]          Muenfs Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenfs.git
 - [[[muennet]]]         Muennet Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muennet.git
 - [[[mugenhwcfg]]]      Muen hardware config generator, https://git.codelabs.ch/?p=muen/mugenhwcfg.git
-- [[[mugenhwcfg-live]]] Mugenhwcfg Live ISO, https://www.codelabs.ch/download/mugenhwcfg-live-amd64.hybrid.iso
+- [[[mugenhwcfg-live]]] Mugenhwcfg Live, https://www.codelabs.ch/download/mugenhwcfg-live-amd64.hybrid.img.gz
 
 
 License

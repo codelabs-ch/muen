@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2016  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2016-2022  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2016-2022  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,18 +16,18 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Streams;
-
 with DOM.Core;
+
+with Mutools.Strings;
 
 package Memhashes.Utils
 is
 
-   --  Create in-memory representation of specified memory node with content.
-   --  Files are expected to be found in the specified input directory.
-   function To_Stream
-     (Node      : DOM.Core.Node;
-      Input_Dir : String := "")
-      return Ada.Streams.Stream_Element_Array;
+   --  Calculate SHA-256 digest of memory node with content. Files are expected
+   --  to be found in the specified input directories.
+   function SHA256_Digest
+     (Node       : DOM.Core.Node;
+      Input_Dirs : Mutools.Strings.String_Array)
+      return String;
 
 end Memhashes.Utils;

@@ -16,10 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Streams;
-
-with GNAT.SHA256;
-
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 with DOM.Core.Documents;
@@ -28,6 +24,7 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.Strings;
 
 with Memhashes.Utils;
 with Memhashes.Pre_Checks;
@@ -52,6 +49,8 @@ is
           (N     => Policy.Doc,
            XPath => "/system/memory/memory[@type!='subject_info']/*"
            & "[self::fill or self::file]/..");
+      Input_Dirs : constant Mutools.Strings.String_Array
+        := Mutools.Strings.Tokenize (Str => Input_Dir);
       Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
    begin
       Mulog.Log (Msg => "Looking for input files in '" & Input_Dir & "'");
@@ -66,12 +65,9 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Nodes,
                  Index => I);
-            Buffer : constant Ada.Streams.Stream_Element_Array
-              := Utils.To_Stream
-                (Node      => Mem_Node,
-                 Input_Dir => Input_Dir);
             Hash_Str : constant String
-              := "16#" & GNAT.SHA256.Digest (A => Buffer) & "#";
+              := Utils.SHA256_Digest (Node       => Mem_Node,
+                                      Input_Dirs => Input_Dirs);
             Hash_Node : DOM.Core.Node
               := Muxml.Utils.Get_Element (Doc   => Mem_Node,
                                           XPath => "hash");

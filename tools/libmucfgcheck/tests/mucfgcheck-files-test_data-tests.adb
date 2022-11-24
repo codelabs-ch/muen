@@ -130,7 +130,7 @@ package body Mucfgcheck.Files.Test_Data.Tests is
 
       Files_Exist (Data => Policy);
       Assert (Condition => Validation_Errors.Contains
-              (Msg => "File 'data/nonexistent' referenced by physical memory "
+              (Msg => "File 'nonexistent' referenced by physical memory "
                & "region 'linux|acpi_rsdp' not found"),
               Message   => "Exception mismatch");
 --  begin read only

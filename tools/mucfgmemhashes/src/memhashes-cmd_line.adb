@@ -65,7 +65,7 @@ is
          Output      => In_Dir'Access,
          Switch      => "-i:",
          Long_Switch => "--input-directory:",
-         Help        => "Directory of input files");
+         Help        => "Colon-separated list of input paths");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Switch      => "-h",

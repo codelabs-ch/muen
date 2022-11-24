@@ -18,14 +18,16 @@
 
 with DOM.Core;
 
+with Mutools.Strings;
+
 package Memhashes.Utils
 is
 
    --  Calculate SHA-256 digest of memory node with content. Files are expected
    --  to be found in the specified input directories.
    function SHA256_Digest
-     (Node      : DOM.Core.Node;
-      Input_Dir : String := "")
+     (Node       : DOM.Core.Node;
+      Input_Dirs : Mutools.Strings.String_Array)
       return String;
 
 end Memhashes.Utils;

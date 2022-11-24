@@ -32,12 +32,15 @@ package body Memhashes.Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_SHA256_Digest (Gnattest_T : in out Test);
-   procedure Test_SHA256_Digest_be9005 (Gnattest_T : in out Test) renames Test_SHA256_Digest;
---  id:2.2/be900524d3954a67/SHA256_Digest/1/0/
+   procedure Test_SHA256_Digest_6842fa (Gnattest_T : in out Test) renames Test_SHA256_Digest;
+--  id:2.2/6842fa06c5f9c113/SHA256_Digest/1/0/
    procedure Test_SHA256_Digest (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
+
+      Input_Dirs : constant Mutools.Strings.String_Array
+        := Mutools.Strings.Tokenize (Str => "data");
 
       Policy : Muxml.XML_Data_Type;
       Nodes  : DOM.Core.Node_List;
@@ -66,8 +69,8 @@ package body Memhashes.Utils.Test_Data.Tests is
          begin
             if Ref_Hash'Length > 0 and Ref_Hash /= "none" then
                Assert (Condition => SHA256_Digest
-                       (Node      => Cur_Mem,
-                        Input_Dir => "data") = Ref_Hash,
+                       (Node       => Cur_Mem,
+                        Input_Dirs => Input_Dirs) = Ref_Hash,
                        Message   => "Hash mismatch of memory region '"
                        & Mem_Name & "'");
             end if;

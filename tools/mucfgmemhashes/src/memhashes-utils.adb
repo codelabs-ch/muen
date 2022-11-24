@@ -26,7 +26,6 @@ with DOM.Core.Elements;
 
 with Muxml.Utils;
 with Mutools.Files;
-with Mutools.Strings;
 with Mutools.Utils;
 
 package body Memhashes.Utils
@@ -35,8 +34,8 @@ is
    -------------------------------------------------------------------------
 
    function SHA256_Digest
-     (Node      : DOM.Core.Node;
-      Input_Dir : String := "")
+     (Node       : DOM.Core.Node;
+      Input_Dirs : Mutools.Strings.String_Array)
       return String
    is
       type Content_Type is (File, Fill);
@@ -111,8 +110,7 @@ is
                Path : constant String
                  := Mutools.Utils.Lookup_File
                    (Filename    => Filename,
-                    Directories => Mutools.Strings.Tokenize
-                      (Str => Input_Dir));
+                    Directories => Input_Dirs);
 
                Offset : Ada.Streams.Stream_Element_Offset := 0;
                Last   : Ada.Streams.Stream_Element_Offset := Buf_Size - 1;

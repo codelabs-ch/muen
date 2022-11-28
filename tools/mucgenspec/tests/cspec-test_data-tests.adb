@@ -218,6 +218,8 @@ package body Cspec.Test_Data.Tests is
               (Filename1 => Dir & "/no_res_component.ads",
                Filename2 => "data/no_res_component.ads"),
               Message   => "Top-level spec mismatch");
+
+      Ada.Directories.Delete_Tree (Directory => Dir);
 --  begin read only
    end Test_Run;
 --  end read only

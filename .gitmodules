@@ -1,9 +1,6 @@
 [submodule "components/linux/src"]
 	path = components/linux/src
 	url = ../muen/linux.git
-[submodule "tools/mugenschedcfg"]
-	path = tools/mugenschedcfg
-	url = ../muen/mugenschedcfg.git
 [submodule "components/libxhcidbg"]
 	path = components/libxhcidbg
 	url = ../libxhcidbg.git

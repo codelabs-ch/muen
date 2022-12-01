@@ -30,7 +30,6 @@ is
       Format_B,
       Format_Src,
       Hardware_Config,
-      Mugenschedcfg,
       System_Config,
       VCPU_Profile);
 

@@ -20,7 +20,7 @@ LABEL description "This image provides the build environment for the Muen projec
 
 # Required packages
 ARG packages="acpica-tools amtterm autoconf automake autopoint bc binutils-dev \
-bison bzip2 ca-certificates ccache cpio curl file flex git-core gnupg gnuplot \
+bison bzip2 ca-certificates ccache cpio curl file flex git-core gnupg \
 inotify-tools iputils-ping kmod lcov libc6-dev libcurl4-gnutls-dev libelf-dev \
 libfreetype6-dev libiberty-dev libncurses-dev libseccomp-dev libssl-dev \
 libxml2-utils lighttpd make mtools openssh-client patch picocom pkg-config \
@@ -28,9 +28,13 @@ python3-minimal python3-lxml python3-colorlog python3-setuptools python3-pip \
 qemu-system-x86 rsync screen tidy unzip vim wget xfonts-unifont xorriso \
 xsltproc xz-utils zlib1g-dev"
 
+# Build-time only. Will not appear on the muen.sk website
+# Required by GNAT installer
+ARG build_packages="libfontconfig1 libdbus-1-3 libx11-xcb1"
+
 # Additional, not strictly required packages. Will not appear on the muen.sk
 # website
-ARG packages="$packages php7.4-cli php7.4-curl php7.4-xml"
+ARG packages="$packages $build_packages php7.4-cli php7.4-curl php7.4-xml"
 
 # Add PHP PPA on Ubuntu distros, required for arcanist
 ARG distro_name
@@ -88,6 +92,9 @@ RUN git clone https://github.com/codelabs-ch/arcanist.git /opt/arcanist
 RUN pip3 install wheel \
 	&& pip3 install 'lief==0.11.5' \
 	&& pip3 install rangehttpserver
+
+# Purge build-time packages
+RUN apt-get --purge autoremove -y $build_packages
 
 # Setup environment
 ENV HOME /home/user

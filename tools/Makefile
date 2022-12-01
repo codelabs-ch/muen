@@ -28,7 +28,6 @@ TOOLS =            \
 	mucheckstack   \
 	mugenacpi      \
 	mugenmsrstore  \
-	mugenschedcfg  \
 	mugensinfo     \
 	mugensolo5     \
 	mugenspec      \
@@ -40,7 +39,6 @@ TOOLS =            \
 
 # Projects to test
 TESTS := $(LIBS) $(TOOLS)
-TESTS := $(filter-out mugenschedcfg,$(TESTS))
 TESTS := $(filter-out sbs,$(TESTS))
 
 # Projects to clean

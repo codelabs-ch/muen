@@ -1213,38 +1213,6 @@
     </text>
    </section>
 
-   <section id="tools-mugenschedcfg" label="Scheduling Plan Generator" priority="0">
-    <text priority="0">
-     The
-     \texttt{mugenschedcfg}\footnote{\url{https://git.codelabs.ch/?p=muen/mugenschedcfg.git}}
-     tool generates scheduling plans for Muen based on a given scheduling
-     configuration.  The configuration allows the user to specify the
-     following scheduling properties:
-
-     \begin{itemize}
-     \item Number of CPU cores
-     \item The tick rate of the CPUs
-     \item Security constraints to meet
-     \begin{itemize}
-     \item Same CPU domains
-     \item Simultaneous execution domains
-     \end{itemize}
-     \item Subject specifications
-     \item Score functions
-     \item Number of plans to generate
-     \item Plans
-     \begin{itemize}
-     \item Weighting of plan importance
-     \item Levels
-     \item Subjects of a plan
-     \item Chains with throughput metric
-     \end{itemize}
-     \end{itemize}
-
-     Consult the project's README and example plans on how to use the tool.
-    </text>
-   </section>
-
    <section id="tools-mucbinsplit" label="Component Binary Splitter" priority="0">
     <text priority="0">
      The \texttt{mucbinsplit} tool splits component binaries into multiple

@@ -40,8 +40,6 @@ POLICY_B_MANI ?= $(PACK_OBJ_DIR)/policy_b.xml.manifest
 KERNEL_BUILD    ?= debug
 COMPONENT_BUILD ?= debug
 
-MUGENSCHEDCFG_DIR ?= $(TOP_DIR)/tools/mugenschedcfg
-
 CSPECS_DIR ?= $(POLICY_DIR)/xml
 
 TAU0_STATIC ?= $(TOP_DIR)/components/tau0-static/bin/tau0_main
@@ -59,7 +57,6 @@ MUCGENSPEC     ?= $(TOP_DIR)/tools/mucgenspec/bin/mucgenspec
 MUGENACPI      ?= $(TOP_DIR)/tools/mugenacpi/bin/mugenacpi
 MUGENMANIFEST  ?= $(TOP_DIR)/tools/scripts/mugenmanifest.py
 MUGENMSRSTORE  ?= $(TOP_DIR)/tools/mugenmsrstore/bin/mugenmsrstore
-MUGENSCHEDCFG  ?= $(MUGENSCHEDCFG_DIR)/bin/mugenschedcfg
 MUGENSINFO     ?= $(TOP_DIR)/tools/mugensinfo/bin/mugensinfo
 MUGENSOLO5     ?= $(TOP_DIR)/tools/mugensolo5/bin/mugensolo5
 MUGENSPEC      ?= $(TOP_DIR)/tools/mugenspec/bin/mugenspec

@@ -55,24 +55,12 @@ ifeq (,$(SCHED_PRESENT))
 SCHED_PLAN_XML ?= $(POLICY_OBJ_DIR)/scheduling_plans.xml
 
 # Per-platform static plans in scheduling/static take precedence over
-# per-system static plans in the same directory.  If both static files are not
-# found, it is assumed that a plan needs to be generated, for which a
-# per-system Mugenschedcfg settings must be present. Fail if no such config is
+# per-system static plans in the same directory. Fail if no such config is
 # found.
 SCHED_PLATFORM = $(notdir $(PLATFORM))
 SCHED_CONFIG   = $(wildcard scheduling/static/$(SYSTEM_NAME)-$(SCHED_PLATFORM))
 ifeq (,$(SCHED_CONFIG))
 SCHED_CONFIG = $(wildcard scheduling/static/$(SYSTEM_NAME).xml)
-endif
-ifeq (,$(SCHED_CONFIG))
-SCHED_CONFIG = $(wildcard scheduling/generate/$(SYSTEM_NAME)-$(SCHED_PLATFORM))
-ifeq (,$(SCHED_CONFIG))
-SCHED_CONFIG = $(wildcard scheduling/generate/$(SYSTEM_NAME).xml)
-endif
-SCHED_CPUS      = $(shell xmllint --xpath 'string(/hardware/processor/@cpuCores)' $(HARDWARE))
-SCHED_PLAN_PDF ?= $(POLICY_OBJ_DIR)/scheduling_plans.pdf
-SCHED_PLAN_RAW ?= $(POLICY_OBJ_DIR)/scheduling_plans
-SCHED_PLAN_DBG ?= $(POLICY_OBJ_DIR)/mugenschedcfg.log
 endif
 ifeq (,$(SCHED_CONFIG))
 $(error No scheduling configuration for $(SYSTEM_NAME) (platform: $(SCHED_PLATFORM)))
@@ -132,18 +120,8 @@ $(POLICY_A): $(SYSTEM_POLICY_A)
 $(POLICY_B): $(SYSTEM_POLICY_B)
 	ln -sf $< $@
 
-$(SCHED_PLAN_PDF): $(SCHED_PLAN_XML)
-	(cd $(POLICY_OBJ_DIR) && gnuplot -e "outfile='$@'" $(MUGENSCHEDCFG_DIR)/plot.gnuplot)
-
-
-ifneq (,$(SCHED_CPUS))
-$(SCHED_PLAN_XML): $(SCHED_CONFIG) $(CFG_DEPS) $(MUGENSCHEDCFG) | $(OBJ_DIR)
-	@$(E) policy "Generate scheduling plans" \
-		"$(MUGENSCHEDCFG) -c $(SCHED_CPUS) -r $(SCHED_PLAN_RAW) -d $(SCHED_PLAN_DBG) $^"
-else
 $(SCHED_PLAN_XML): $(SCHED_CONFIG) $(CFG_DEPS) | $(OBJ_DIR)
 	@$(E) policy "Copy $(SCHED_CONFIG)" "cp $< $@"
-endif
 
 $(SYSTEM_POLICY_SRC): $(SYSTEM_CONFIG) $(SCHED_PLAN_XML) $(MUCFGMERGE) $(SOURCES) | $(OBJ_DIR)
 	@$(E) policy Merge "$(MUCFGMERGE) $< $@ -I $(POLICY_OBJ_DIR)"

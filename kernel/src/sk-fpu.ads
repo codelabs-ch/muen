@@ -102,13 +102,15 @@ private
       Global  => (In_Out => (State, X86_64.State)),
       Depends => ((State, X86_64.State) =>+ (Value, State));
 
-   --  Active FPU features that are supported by the hardware and are enabled.
+   --D @Text Section => SK.FPU.Active_XCR0_Features
+   --D Active FPU features that are supported by the hardware and are enabled.
    Active_XCR0_Features : Word64 := 0
    with
       Part_Of => State;
 
-   --  Current value of XCR0. Used to determine if write to XCR0 register is
-   --  actually necessary or if it already contains that value.
+   --D @Text Section => SK.FPU.Current_XCR0
+   --D Current value of XCR0. Used to determine if write to XCR0 register is
+   --D actually necessary or if it already contains that value.
    Current_XCR0 : Word64 := 0
    with
       Part_Of => State;

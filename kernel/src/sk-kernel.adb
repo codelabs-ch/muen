@@ -507,13 +507,13 @@ is
         --D Only bits that we support must be set.
         or else ((Supported or New_Value) /= Supported)
           --D @Item List => impl_handle_xsetbv_checks
-          --D XCR0_FPU_STATE_FLAG must always be set
+          --D \verb!XCR0_FPU_STATE_FLAG! must always be set
         or else not Bitops.Bit_Test
           (Value => New_Value,
            Pos   => Constants.XCR0_FPU_STATE_FLAG)
         --D @Item List => impl_handle_xsetbv_checks
-        --D If XCR0_AVX_STATE_FLAG is set then XCR0_SSE_STATE_FLAG must be set as
-        --D well.
+        --D If \verb!XCR0_AVX_STATE_FLAG! is set then \verb!XCR0_SSE_STATE_FLAG!
+        --D must be set as well.
         or else (Bitops.Bit_Test
                  (Value => New_Value,
                   Pos   => Constants.XCR0_AVX_STATE_FLAG)
@@ -521,8 +521,9 @@ is
                    (Value => New_Value,
                     Pos   => Constants.XCR0_SSE_STATE_FLAG))
         --D @Item List => impl_handle_xsetbv_checks
-        --D If any of XCR0_OPMASK_STATE_FLAG or XCR0_ZMM_HI256_STATE_FLAG
-        --D or XCR0_HI16_ZMM_STATE_FLAG are set then all must be set.
+        --D If any of \verb!XCR0_OPMASK_STATE_FLAG! or
+        --D \verb!XCR0_ZMM_HI256_STATE_FLAG! or \\
+        --D \verb!XCR0_HI16_ZMM_STATE_FLAG! are set then all must be set.
         or else ((Bitops.Bit_Test
                   (Value => New_Value,
                    Pos   => Constants.XCR0_OPMASK_STATE_FLAG)
@@ -543,7 +544,8 @@ is
                       (Value => New_Value,
                        Pos   => Constants.XCR0_ZMM_HI256_STATE_FLAG)))
         --D @Item List => impl_handle_xsetbv_checks
-        --D If AVX512 is set then XCR0_AVX_STATE_FLAG must be set as well.
+        --D If \verb!AVX512! is set then \verb!XCR0_AVX_STATE_FLAG! must be set
+        --D as well.
         or else (Bitops.Bit_Test
                  (Value => New_Value,
                   Pos   => Constants.XCR0_OPMASK_STATE_FLAG)
@@ -553,7 +555,7 @@ is
       then
 
          --D @Text Section => impl_handle_xsetbv
-         --D If the value is invalid, inject a #GP exception. Note that
+         --D If the value is invalid, inject a \#GP exception. Note that
          --D effectively the inserted event has type \emph{external interrupt}.
          --D While it would not work in general but in this specific case the
          --D exception error code is 0.

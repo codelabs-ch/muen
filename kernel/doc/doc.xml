@@ -904,8 +904,11 @@
     structures are listed in this section.
    </text>
    <section id="SK.Scheduler.Current_Minor_Frame_ID" label="SK.Scheduler.Current_Minor_Frame_ID" priority="0"/>
-   <section id="SK.Scheduler.Scheduling_Groups" label="SK.Scheduler.SK.Scheduler.Scheduling_Groups" priority="0"/>
+   <section id="SK.Scheduler.Scheduling_Partitions" label="SK.Scheduler.Scheduling_Partitions" priority="0"/>
+   <section id="SK.Scheduler.Scheduling_Groups" label="SK.Scheduler.Scheduling_Groups" priority="0"/>
    <section id="SK.Interrupt_Tables.Instance" label="SK.Interrupt_Tables.Instance" priority="0"/>
+   <section id="SK.FPU.Active_XCR0_Features" label="SK.FPU.Active_XCR0_Features" priority="0"/>
+   <section id="SK.FPU.Current_XCR0" label="SK.FPU.Current_XCR0" priority="0"/>
   </section>
   <section id="Skp.IOMMU.IOMMUs" label="Skp.IOMMU.IOMMUs" priority="0">
    <text priority="0">

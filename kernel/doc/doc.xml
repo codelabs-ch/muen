@@ -1169,7 +1169,7 @@
     <text priority="0">
      Whenever a VM-Exit occurs, the CPU passes the thread of execution from the subject
      code running in VMX non-root mode to the kernel \verb!handle_vmx_exit! procedure
-     found in file \verb!kernel/src/sk-scheduler.ads!. The hardware stores the
+     found in file \verb!kernel/src/sk-kernel.ads!. The hardware stores the
      execution state of the subject in the VMCS, transitions to VMX root-mode by
      restoring the host state of the kernel and starts execution at the Exit
      handler. Section \ref{impl_exit_handler} describes the main scheduler loop

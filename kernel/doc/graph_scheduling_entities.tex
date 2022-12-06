@@ -1,0 +1,10 @@
+\begin{tikzpicture}[minimum height=0.6cm]
+	\node (pln) [commonnode, bottom color=dark-gray, minimum width=1cm] {Scheduling Plan};
+	\node (prt) [commonnode, below=of pln, bottom color=kernelcolor, align=center] {Scheduling Partition [non-cooperative scheduling]};
+	\node (grp) [commonnode, below=of prt, bottom color=guestcolor, align=center]  {Scheduling Group [cooperative scheduling]};
+	\node (sub) [commonnode, below=of grp, bottom color=usercolor] {Subject};
+
+	\draw[-] (pln) to node[pos=0.2, right]{\(n\)} node[pos=0.8, right]{\(m\)} (prt);
+	\draw[-] (prt) to node[pos=0.2, right]{1} node[pos=0.8, right]{\(n\)} (grp);
+	\draw[-] (grp) to node[pos=0.2, right]{1} node[pos=0.8, right]{\(n\)} (sub);
+\end{tikzpicture}

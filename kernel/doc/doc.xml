@@ -397,16 +397,19 @@
      is done in a fixed, cyclic and preemptive manner according to a plan
      specified in the system policy.
 
-     <!--
-       TODO: Diagram scheduling partitions -> scheduling groups -> subjects
-     -->
-
      The scheduler is organized in a hierarchical fashion: at the first level,
      there are scheduling partitions. These consist of one or more scheduling
      groups. Subjects which can handover execution amongst each other via the
      event mechanism form a scheduling group. The scheduling plan specified in
      the policy, schedules scheduling partitions consisting of scheduling groups
      consisting of subjects.
+
+     \begin{figure}[ht]
+      \centering
+      \input{graph_scheduling_entities}
+      \caption{Relationship between scheduling entities}
+      \label{fig:scheduling-entities}
+     \end{figure}
 
      Within a scheduling partition, all scheduling groups are scheduled round
      robin with preemption and the opportunity to yield and/or sleep. A

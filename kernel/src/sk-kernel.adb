@@ -144,8 +144,8 @@ is
    begin
       loop
          --D @Text Section => impl_handle_target_event
-         --D First, check if the subject specified by ID has a target event pending
-         --D by consulting the subject events data.
+         --D First, check if the subject specified by ID has a target event
+         --D pending by consulting the subject events data.
          Subjects_Events.Consume_Event
            (Subject => Subject_ID,
             Found   => Found,
@@ -184,6 +184,9 @@ is
                   Init_Subject (ID => Subject_ID);
             end case;
          end;
+         --D @Text Section => impl_handle_target_event, Priority => 10
+         --D At most 64 target events are processed since that is the maximum
+         --D number of events that can be pending.
       end loop;
    end Handle_Pending_Target_Event;
 
@@ -830,7 +833,7 @@ is
       --D @Text Section => impl_exit_handler
       --D \paragraph{}
       --D Once the exit has been dealt with, the execution of the next subject
-      --D is prepared. A pending target event, if present, is handled see
+      --D is prepared. Pending target events, if present, are handled see
       --D \ref{impl_handle_target_event}.
       Current_Subject := Scheduler.Get_Current_Subject_ID;
       Handle_Pending_Target_Event (Subject_ID => Current_Subject);

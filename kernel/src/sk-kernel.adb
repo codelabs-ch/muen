@@ -243,6 +243,7 @@ is
       Dst_CPU : Skp.CPU_Range;
    begin
       --D @Text Section => impl_handle_source_event
+      --D \paragraph*{}
       --D First, the next subject to be executed is initialized to the current
       --D one. A handover event may change this but otherwise the same subject
       --D is to be executed next.
@@ -259,12 +260,20 @@ is
             --D If the designated action is no action, then nothing is
             --D done.
          when Skp.Events.Subject_Sleep   =>
+            --D @Item List => impl_handle_source_event_actions
+            --D If the designated action is subject sleep, then a rescheduling
+            --D of the partition with parameter \verb!Sleep! set to \verb!True!
+            --D is performed, see \ref{impl_scheduling_resched_sp}.
             Scheduler.Reschedule_Partition
               (Subject_ID      => Subject,
                RIP_Incremented => RIP_Incremented,
                Sleep           => True,
                Next_Subject    => Next_Subject);
          when Skp.Events.Subject_Yield   =>
+            --D @Item List => impl_handle_source_event_actions
+            --D If the designated action is subject yield, then a rescheduling
+            --D of the partition with parameter \verb!Sleep! set to \verb!False!
+            --D is performed, see \ref{impl_scheduling_resched_sp}.
             Scheduler.Reschedule_Partition
               (Subject_ID      => Subject,
                RIP_Incremented => RIP_Incremented,
@@ -306,6 +315,10 @@ is
             Dst_CPU := Skp.Subjects.Get_CPU_ID
               (Subject_ID => Event.Target_Subject);
 
+            --D @Text Section => impl_handle_source_event, Priority => 20
+            --D Indicate activity for the target subject which may lead to a
+            --D subject being woken up if it is currently sleeping, see
+            --D \ref{impl_scheduling_indicate_activity}.
             Scheduler.Indicate_Activity
               (Subject_ID => Event.Target_Subject,
                Same_CPU   => Dst_CPU = CPU_Info.CPU_ID);

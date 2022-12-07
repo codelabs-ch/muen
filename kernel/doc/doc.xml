@@ -1250,6 +1250,24 @@
     </text>
    </section>
   </section>
+  <section id="impl_scheduling" label="Scheduling Partition Management" priority="-2">
+   <text priority="0">
+    At the first level, the scheduler can always determine which scheduling
+    partition is active by keeping track of the current major and minor frame
+    and consulting the scheduling plans specified by the policy. This part of
+    the scheduler is described in section \ref{impl_handle_timer_expiry}.
+    At the second level, the scheduler manages scheduling groups within
+    partitions, which means determining which scheduling group is active within
+    each scheduling partition as well as which subject is currently active
+    within each scheduling group. This section describes how the second level of
+    the hierarchical scheduler operates.
+    The two main operations are updating the scheduling partition information,
+    which is done whenever a regular scheduling operation is performed on the
+    first level, i.e. on minor/major frame switch. Secondly, a scheduling
+    partition can explicitly be rescheduled by a subject performing a yield or
+    sleep action.
+   </text>
+  </section>
   <section id="impl_subjects_state" label="Subject State Management" priority="-2">
    <text priority="0">
     This section describes how the state of subjects is managed by the kernel.

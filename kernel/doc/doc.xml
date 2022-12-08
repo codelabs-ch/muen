@@ -274,8 +274,8 @@
      means of a \emph{policy} in XML format. The policy includes a declaration
      of all existing hardware resources of the target platform, the subjects to
      be executed with their assigned resources as well as the scheduling plan.
-     The plan specifies exactly when a subject should run on which CPU and for
-     how long.
+     The plan specifies exactly when a scheduling partition should run on which
+     CPU and for how long.
 
      Information flows between subjects are defined in their entirety in the
      policy. So-called memory channels declare directional writer/reader
@@ -715,7 +715,8 @@
      A trap always interrupts subject execution and invokes the kernel.
 
      Several types of traps are directly handled by the kernel as they are used
-     to implement kernel functionality. These traps are:
+     to implement kernel functionality or affect state that is controlled by the
+     kernel. These traps are:
 
      \begin{description}
       \item[External Interrupt] \hfill \\
@@ -761,8 +762,8 @@
 
      Through the use of the event mechanism, the vast majority of traps is
      handed over to a second subject to process. Only a few event actions are
-     handled directly by the kernel: unmask IRQ, system panic, reboot and
-     poweroff, see also \ref{impl_handle_source_event}.
+     handled directly by the kernel: unmask IRQ, subject yield, subject sleep,
+     system panic, reboot and poweroff, see also \ref{impl_handle_source_event}.
     </text>
    </section>
    <section id="overview_covert_channels" label="Avoidance of Covert Channels" priority="0">

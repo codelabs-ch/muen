@@ -740,7 +740,8 @@ is
    --D VMX root mode is performed by the hardware. The register state of the
    --D current subject is passed to the procedure by the
    --D \texttt{vmx\_exit\_handler} assembly code (which is set as kernel entry
-   --D point in the VMCS of the trapping subject).
+   --D point/\verb!HOST_RIP! in the VMCS of the trapping subject, see
+   --D \ref{impl_vmcs_setup_host}).
    procedure Handle_Vmx_Exit (Subject_Registers : in out CPU_Registers_Type)
    is
       --  See Intel SDM Vol. 3C, "27.2.2 Information for VM Exits Due to

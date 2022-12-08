@@ -26,6 +26,7 @@ endif
 define CMD_CONFIGURE
 	cd $(WRK) && PYTHON=python3 ./autogen.sh && ./configure \
 		--prefix=$(BUILDDIR)/$(GRUB_TARGET)-$(GRUB_PLATFORM) \
+		--disable-werror \
 		--disable-device-mapper \
 		--disable-grub-mount \
 		--disable-grub-themes \

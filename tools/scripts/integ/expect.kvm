@@ -15,6 +15,8 @@ serial.out;example: Monitored subject RIP 16#*#
 serial.out;example: Call Trace:
 serial.out;example:  \[<16#0000000000200008#>\]
 serial.out;example: Breakpoint exception processed successfully
+serial.out;example: Wakeup after sleep, checking whether work is pending
+serial.out;example: Copying request with size 16#.*# to response
 serial.out;Controller running
 serial.out;16#01#: Initial->Self-Control
 serial.out;16#01#: Self-Control->Finished
@@ -31,3 +33,6 @@ serial.out;21:.* Muen-PCI    -fasteoi   eth1
 serial.out;64 bytes from 192.168.253.2: seq=.* ttl=.* time=.* ms
 serial.out;64 bytes from 192.168.254.2: seq=.* ttl=.* time=.* ms
 serial.out;64 bytes from 192.168.254.3: seq=.* ttl=.* time=.* ms
+serial.out;Sending request with size
+serial.out;Wakeup from poll with pending response
+serial.out;SUCCESS: Response matches sent request

@@ -45,11 +45,16 @@ serial.out;example: SMART Status: OK!
 serial.out;example: Wrote 16#00040000# bytes in.* ticks
 serial.out;example: Read 16#00040000# bytes in.* ticks
 serial.out;example: Muenblock example done
+serial.out;example: Wakeup after sleep, checking whether work is pending
+serial.out;example: Copying request with size 16#.*# to response
 serial.out;*** '.*/integtest_kt' DONE
 serial.out;x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
 serial.out;x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
 serial.out;x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
 serial.out;x86/fpu: Enabled xstate features 0x7, context size is 832 bytes, using 'standard' format.
+serial.out;Sending request with size
+serial.out;Wakeup from poll with pending response
+serial.out;SUCCESS: Response matches sent request
 serial.out;Crash audit: Initialized
 serial.out;Exit reason: 16#0012#
 serial.out;Crash audit: CPU APIC ID 16#.*# - Allocated record 16#01#

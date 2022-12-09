@@ -19,18 +19,18 @@ LABEL maintainer "Adrian-Ken Rueegsegger <ken@codelabs.ch>"
 LABEL description "This image provides the build environment for the Muen project"
 
 # Required packages
-ARG packages="acpica-tools amtterm autoconf automake autopoint bc binutils-dev \
-bison bzip2 ca-certificates ccache cpio curl file flex git-core gnupg \
-inotify-tools iputils-ping kmod lcov libc6-dev libcurl4-gnutls-dev libelf-dev \
-libfreetype6-dev libiberty-dev libncurses-dev libseccomp-dev libssl-dev \
-libxml2-utils lighttpd make mtools openssh-client patch picocom pkg-config \
-python3-minimal python3-lxml python3-colorlog python3-setuptools python3-pip \
-qemu-system-x86 rsync screen tidy unzip vim wget xfonts-unifont xorriso \
-xsltproc xz-utils zlib1g-dev"
+ARG packages="acpica-tools amtterm autoconf automake autopoint bc bison bzip2 \
+ca-certificates ccache cpio curl file flex git-core gnupg inotify-tools \
+iputils-ping kmod lcov libc6-dev libcurl4-gnutls-dev libelf-dev \
+libfreetype6-dev libgmp10-dev libiberty-dev libncurses-dev libseccomp-dev \
+libssl-dev libxml2-utils lighttpd make mtools openssh-client patch picocom \
+pkg-config python3-minimal python3-lxml python3-colorlog python3-setuptools \
+python3-pip qemu-system-x86 rsync screen tidy unzip vim wget xfonts-unifont \
+xorriso xsltproc xz-utils zlib1g-dev"
 
 # Build-time only. Will not appear on the muen.sk website
-# Required by GNAT installer
-ARG build_packages="libfontconfig1 libdbus-1-3 libx11-xcb1"
+# Required to compile amtc/solo5
+ARG build_packages="gcc"
 
 # Additional, not strictly required packages. Will not appear on the muen.sk
 # website
@@ -54,20 +54,10 @@ RUN apt-get update && \
 	$packages \
 	&& rm -rf /var/lib/apt/lists/*
 
-# Install AdaCore toolchain
-RUN git clone https://github.com/AdaCore/gnat_community_install_script.git /tmp/gnat_script \
-	&& curl -sSL "https://community.download.adacore.com/v1/f3a99d283f7b3d07293b2e1d07de00e31e332325?filename=gnat-2021-20210519-x86_64-linux-bin" -o /tmp/gnat_installer.bin \
-	&& sh /tmp/gnat_script/install_package.sh /tmp/gnat_installer.bin /opt/gnat com.adacore,com.adacore.gnat,com.adacore.libadalang,com.adacore.spark2014_discovery \
-	&& rm -rf /tmp/gnat*
-
-ENV PATH /opt/gnat/bin:$PATH
-
-# Install gnattest tool
-RUN git clone https://github.com/codelabs-ch/libadalang-tools.git /tmp/libadalang-tools \
-	&& cd /tmp/libadalang-tools \
-	&& make bin \
-	&& cp bin/gnattest /usr/local/bin \
-	&& rm -rf /tmp/libadalang-tools
+# Alire
+RUN wget --no-verbose https://github.com/alire-project/alire/releases/download/v1.2.1/alr-1.2.1-bin-x86_64-linux.zip -P /tmp/alr \
+	&& (cd /tmp/alr && unzip alr-1.2.1-bin-x86_64-linux.zip && cp bin/alr /usr/local/bin) \
+	&& rm -rf /tmp/alr
 
 # amtc tool
 RUN git clone https://github.com/schnoddelbotz/amtc.git /tmp/amtc \
@@ -104,6 +94,14 @@ ENV PATH /usr/lib/ccache:/opt/gnat/bin:/opt/arcanist/bin:$PATH
 RUN useradd --create-home --home-dir $HOME user -G dialout \
 	&& chmod 755 /home/user
 
+# Alire 'meta' crate for the Muen toolchain
+ARG dev_env_rev=e106a56c8a8ebbb9b22172ac08461ed89a937ac8
+RUN git clone https://git.codelabs.ch/alire/muen-dev-env.git $HOME/dev-env.alr \
+	&& cd $HOME/dev-env.alr \
+	&& git reset --hard $dev_env_rev \
+	&& make
+
+ADD bashrc $HOME/.bashrc
 WORKDIR $HOME
 USER user
 

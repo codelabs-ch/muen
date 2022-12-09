@@ -231,7 +231,9 @@ begin
             Request_Valid := Foo.Is_Valid (Msg => Request);
 
             if Request_Valid then
-               Log.Put_Line (Item => "Copying response");
+               Log.Put_Line (Item => "Copying request with size "
+                             & SK.Strings.Img (Request.Size)
+                             & " to response");
                Response := Request;
             else
                Log.Put_Line (Item => "Invalid request message size "
@@ -248,6 +250,8 @@ begin
 
          SK.Hypercall.Trigger_Event
            (Number => Example_Component.Events.Sleep_ID);
+         Log.Put_Line
+           (Item => "Wakeup after sleep, checking whether work is pending");
       end loop;
    end;
 end Example;

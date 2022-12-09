@@ -171,7 +171,7 @@
     These are used to retrieve requests from a client, and to send a response
     (section \ref{interface_section}).
 
-    The example component also expects the availability of two source events
+    The example component also expects the availability of three source events
     with given IDs, and it is the target endpoint for the \texttt{inject\_timer}
     event.
 
@@ -516,7 +516,9 @@
    \end{itemize}
 
    It is possible to define multiple state items per type, referencing different
-   subjects.
+   subjects. Furthermore, a subject may monitor its own state, e.g. interrupts
+   which may be useful in combination with sleeping, see
+   \ref{subject-scheduling-usecase}.
 
    The self-referencing \texttt{loader} element shown in listing
    \ref{monitor-policy} is part of the subject lifecycle mechanism explained in
@@ -938,6 +940,130 @@
      \end{info}
     </text>
    </section>
+  </section>
+ </section>
+ <section id="subject-scheduling" label="Subject Yield/Sleep" priority="0">
+  <text priority="0">
+   Subjects which are part of the same scheduling group can do efficient,
+   cooperative scheduling using handover events. To make more efficient use of
+   CPU time of \emph{scheduling partitions}, a system integrator can assign
+   multiple scheduling groups, whose subjects do not require strict temporal
+   isolation, to the same partition. All the scheduling groups within a
+   partition are scheduled round robin with preemption and the opportunity to
+   yield and/or sleep.
+   An example for assignment to the same scheduling partition could be subjects
+   that are event-driven or perform polling of hardware but do not process data
+   in a steady/constant way.
+  </text>
+  <section id="subject-scheduling-yield" label="Yield" priority="0">
+   <text priority="0">
+    Subject can yield execution for the rest of the minor frame if it does not
+    require further CPU time. It can perform a yield operation by explicitly
+    triggering a source event with action \verb!subject_yield! or by causing a trap
+    with the same action, e.g. via the \verb!PAUSE! instruction when
+    \verb!PAUSE Exiting! is enabled in the subjects' vCPU profile.
+
+    When a subject yields, the kernel selects the next active scheduling group
+    of the partition and resumes execution of the active subject of the selected
+    group. If no other group is active, the subject which yielded will be
+    scheduled again.
+
+    Scheduling groups of a partition are scheduled round robin. A subject that
+    has yielded will eventually be scheduled again as soon as all other active
+    groups of the partition have had their turn. The currently active group is
+    changed in every new minor frame.
+   </text>
+  </section>
+  <section id="subject-scheduling-sleep" label="Sleep" priority="0">
+   <text priority="0">
+    Subjects which are event-driven and have no more work to do, can request to
+    be put to sleep until they should be woken up. Such a subject can perform
+    the sleep operation by explicitly triggering a source event with action
+    \verb!subject_sleep! or by causing a trap with the same action, e.g. via the
+    \verb!HLT! instruction when \verb!HLT Exiting! is enabled in the subject's
+    vCPU profile.
+
+    When a subject requests sleep, the kernel marks the scheduling group as
+    inactive, selects the next active scheduling group of the partition and
+    resumes execution of the active subject of the selected group. If no other
+    group is active, the whole scheduling partition is marked as sleeping and
+    the subject which requested to sleep is run with VMX Activity State set to
+    \verb!HLT!, i.e it will be scheduled but not execute any instruction.
+
+    The following events will lead to the wakeup of a a sleeping subject:
+
+    \begin{itemize}
+    \item Pending Interrupt
+    \item Pending Target Event
+    \item Timed Event expiry
+    \end{itemize}
+
+    As soon as a subject, and as a consequence its associated scheduling group,
+    becomes active, it will be considered again whenever a new scheduling group
+    is being selected for execution in a scheduling partition.
+
+    \begin{warning}
+    The instruction sequence \verb!cli; hlt;! may continue execution without
+    issuing an interrupt when a pending interrupt is inserted. This is a
+    deviation from Intel ISA but similar to the situation when an NMI occurs.
+    To guard against this behavior, the instruction sequence can be put inside a
+    (infinite) loop.
+    \end{warning}
+   </text>
+  </section>
+  <section id="subject-scheduling-config" label="Configuration" priority="0">
+   <text priority="0">
+   The following XML excerpt illustrates how to configure a subject to be able
+   to use the \verb!PAUSE! and \verb!HLT! instructions to trigger sleep and
+   yield actions.
+
+   \lstinputlisting[label=subject-scheduling-config,caption=Declaration of Sleep and Yield events,language=XML]{system_yield_sleep.xml}
+
+   \begin{info}
+   In order for these instructions to cause a VM-Exit the corresponding
+   HLT/PAUSE Exiting vCPU controls must be set to 1. This is not necessary if
+   yield an sleep are specified as vmcall source event actions and explicitly
+   triggered as hypercalls.
+   \end{info}
+   </text>
+  </section>
+  <section id="subject-scheduling-usecase" label="Use case: Event-driven component" priority="0">
+   <text priority="0">
+   An event-driven server subject can use the sleep mechanism to avoid
+   busy-looping and only become active when there is work pending. Producers, of
+   which there can be multiple, inform the subject about work that it should
+   process by sending an event with an associated interrupt. To avoid having to
+   process each interrupt one-by-one, the server subject can map its own pending
+   interrupts into it's address space.
+
+   First off, the subject must define a sleep event in the policy, as
+   illustrated in in the previous section \ref{subject-scheduling-config}.
+
+   Then, to monitor interrupts, the following is added to the subject's
+   \verb!monitor! section in the system policy:
+
+   \lstinputlisting[label=subject-scheduling-usecase-monitor,caption=Declaration for monitoring ones own interrupts,language=XML]{subject-monitor-interrupts.xml}
+
+   With this the pending interrupts data structure used by the kernel is mapped
+   into the subject's address space at the specified memory address.
+
+   The following code listing illustrates how the main processing loop
+   of the server subject could be implemented.
+
+   \lstinputlisting[label=eventdriven-main-loop,caption=Event-driven Main Loop of a native Ada/SPARK component,language=Ada]{event_driven_main_loop.adb}
+
+   The subject clears all pending interrupts by writing to the monitored
+   interrupt memory page (\verb!Clear_Pending_Interrupts!). In conjunction with
+   disabling interrupts via \verb!cli! during startup, no actual interrupt
+   injection into the subject is necessary. The only purpose that pending
+   interrupts serve, is that a sleeping subject is woken up by the kernel when
+   an interrupt is newly marked pending. This makes interrupt handling for
+   subjects much more efficient in this case, since it removes the need for any
+   subject/kernel transition per interrupt.
+   Analogously, to determine if interrupts are pending, the subject can inspect
+   the mapped pending interrupts page, which is represented by the
+   \verb!Pending_Interrupt_Present! function.
+   </text>
   </section>
  </section>
 

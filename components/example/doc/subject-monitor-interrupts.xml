@@ -1,0 +1,3 @@
+<monitor>
+ <interrupts subject="$nameOfSubject" virtualAddress="16#....#" writable="true"/>
+</monitor>

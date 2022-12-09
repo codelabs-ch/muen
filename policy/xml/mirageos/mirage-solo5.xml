@@ -76,7 +76,7 @@
   <subject name="nic_linux">
    <bootparams>console=hvc console=ttyS0 hostname=nic_linux</bootparams>
    <memory>
-    <memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
+    <memory logical="initramfs" physical="initramfs" virtualAddress="16#7000_0000#" writable="false" executable="false"/>
    </memory>
    <devices>
     <device logical="eth0" physical="ethernet_controller_1"/>
@@ -126,7 +126,7 @@
   <subject name="storage_linux">
    <bootparams>console=hvc console=ttyS0 hostname=storage_linux</bootparams>
    <memory>
-    <memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
+    <memory logical="initramfs" physical="initramfs" virtualAddress="16#7000_0000#" writable="false" executable="false"/>
    </memory>
    <devices>
     <device logical="xhci" physical="usb_controller_1"/>

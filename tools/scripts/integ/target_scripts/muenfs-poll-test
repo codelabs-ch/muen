@@ -1,0 +1,15 @@
+#!/bin/bash
+
+SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. $SCRIPTDIR/func.sh
+
+SSH="ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no lnx2"
+MOUNTDIR="/muenevents"
+
+execute "$SSH modprobe muenevents"
+execute "$SSH mkdir -p $MOUNTDIR"
+execute "$SSH mount -t muenevents none $MOUNTDIR"
+execute "$SSH muenfs-example /muenfs/example_request \
+		/muenfs/example_response \
+		/muenevents/example_request"
+execute "$SSH umount $MOUNTDIR"

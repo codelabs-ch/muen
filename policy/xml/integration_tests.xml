@@ -80,7 +80,7 @@
    </vcpu>
    <bootparams>console=hvc console=ttyS0 hostname=nic_linux muen-input.channel=virtual_keyboard debug</bootparams>
    <memory>
-    <memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
+    <memory logical="initramfs" physical="initramfs" virtualAddress="16#7000_0000#" writable="false" executable="false"/>
    </memory>
    <devices>
     <device logical="eth0" physical="ethernet_controller_1"/>
@@ -132,7 +132,7 @@
   <subject name="storage_linux">
    <bootparams>console=hvc console=ttyS0 hostname=storage_linux debug</bootparams>
    <memory>
-    <memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
+    <memory logical="initramfs" physical="initramfs" virtualAddress="16#7000_0000#" writable="false" executable="false"/>
    </memory>
    <devices>
     <if variable="dbgserver_sink_xhcidbg" value="false">

@@ -174,9 +174,9 @@ environment listed in the following table.
                            Ubuntu 20.04 x86_64 +
                            Ubuntu 22.04 x86_64
 | Linux kernel/KVM       | >= 5.2.0 with GUEST_CR3 fix <<lnxcr3>>
-| Ada compiler           | GNAT Community 2021
-| GCC version            | 10.3.1 20210520 for GNAT Community 2021
-| SPARK version          | GNAT Community 2021
+| Ada compiler           | GNAT FSF 12.2
+| GCC version            | gcc (GCC) 12.2
+| SPARK version          | 12.1
 | Emulator               | qemu-system-x86_64 (>= 3.1.0)
 | Intel AMT SoL client   | amtterm (>= commit 0ece513...)
 | Intel vPro AMT / WSMan | amtc (github.com/schnoddelbotz/amtc)
@@ -204,17 +204,15 @@ The first step to build Muen is to install the required packages. See the
 `tools/docker/Dockerfile.muen-dev-env` file in the project repository for the
 current list of required packages.
 
-The Ada and SPARK packages currently available in Debian and Ubuntu are too old
-to build Muen. GNAT Community 2021 for x86 GNU Linux (64-bit) from AdaCore
-must be installed instead. It can be downloaded from the following location:
+Muen is built using a GNAT FSF toolchain provided via <<alire>>, see the
+project's website about instructions on how to install the `alr` command-line
+tool for your distribution. Then clone and build the Muen meta crate for alire,
+which takes care of installing and configuring the toolchain:
 
-  https://www.adacore.com/download
-
-Extend your `PATH` to make the GNAT Community 2021 compiler and tools
-visible to the Muen build system (assuming that they are installed below
-`/opt`):
-
-  $ export PATH=/opt/GNAT/2021/bin:$PATH
+  $ git clone https://git.codelabs.ch/alire/muen-dev-env.git
+  $ cd muen-dev-env
+  $ make
+  $ eval `./env`
 
 Docker
 ~~~~~~
@@ -332,6 +330,7 @@ the `HARDWARE` variable:
 References
 ----------
 - [[[lnxcr3]]]          Linux KVM GUEST_CR3 fix, https://patchwork.kernel.org/patch/11165185/
+- [[[alire]]]           ALIRE: Ada LIbrary REpository, https://alire.ada.dev/
 - [[[ipxe]]]            iPXE boot firmware, https://ipxe.org/
 - [[[amt]]]             Intel AMT SoL client + tools, https://www.kraxel.org/cgit/amtterm/
 - [[[mirageos]]]        MirageOS, https://mirage.io

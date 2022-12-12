@@ -2230,9 +2230,9 @@
     <memory executable="false" logical="acpi_dsdt" physical="linux|acpi_dsdt" virtualAddress="16#000e_3000#" writable="false"/>
     <memory executable="false" logical="acpi_free" physical="linux|acpi_empty" virtualAddress="16#000e_4000#" writable="false"/>
     <memory executable="false" logical="lowmem" physical="linux|lowmem" virtualAddress="16#0001_4000#" writable="true"/>
-    <memory executable="false" logical="bios" physical="linux|bios" virtualAddress="16#000c_0000#" writable="false"/>
-    <memory executable="false" logical="bios" physical="linux|bios" virtualAddress="16#000d_0000#" writable="false"/>
-    <memory executable="false" logical="bios" physical="linux|bios" virtualAddress="16#000f_0000#" writable="false"/>
+    <memory executable="false" logical="bios1" physical="linux|bios" virtualAddress="16#000c_0000#" writable="false"/>
+    <memory executable="false" logical="bios2" physical="linux|bios" virtualAddress="16#000d_0000#" writable="false"/>
+    <memory executable="false" logical="bios3" physical="linux|bios" virtualAddress="16#000f_0000#" writable="false"/>
     <memory executable="false" logical="virtual_time" physical="virtual_time" virtualAddress="16#2000#" writable="false"/>
     <memory executable="false" logical="timer" physical="linux|timed_event" virtualAddress="16#000e_0000_0000#" writable="true"/>
     <memory executable="false" logical="linux_keyboard" physical="linux_keyboard" virtualAddress="16#3000#" writable="false"/>

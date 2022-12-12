@@ -4,7 +4,7 @@ KERNEL_VERSION ?= 5.15
 LINUX_CONFIG   ?= config/linux64-$(KERNEL_VERSION)
 
 INITRAMFS_BASE := initramfs.cpio.gz
-INITRAMFS_REV  := c34ca7cf78d5796e74ada78c5b7f37f3174c12c1
+INITRAMFS_REV  := eb968cf5bb4b9ccba643ca0c68a4cd980e9f0aaa
 INITRAMFS      ?= $(OBJ_DIR)/$(INITRAMFS_BASE)
 SITE           ?= https://github.com/codelabs-ch/buildroot-muen/raw/$(INITRAMFS_REV)/
 

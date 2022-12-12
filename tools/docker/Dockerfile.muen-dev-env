@@ -89,7 +89,7 @@ RUN apt-get --purge autoremove -y $build_packages
 # Setup environment
 ENV HOME /home/user
 ENV LANG C.UTF-8
-ENV PATH /usr/lib/ccache:/opt/gnat/bin:/opt/arcanist/bin:$PATH
+ENV PATH /opt/arcanist/bin:$PATH
 
 RUN useradd --create-home --home-dir $HOME user -G dialout \
 	&& chmod 755 /home/user

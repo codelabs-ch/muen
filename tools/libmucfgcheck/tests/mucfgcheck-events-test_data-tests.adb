@@ -697,12 +697,12 @@ package body Mucfgcheck.Events.Test_Data.Tests is
            (Node       => Muxml.Utils.Get_Element
               (Doc   => Data.Doc,
                XPath => "/system/subjects/subject[@name='vt']/events/source/"
-               & "group/event[system_panic]"),
+               & "group/event[@logical='panic_0']"),
             Child_Name => "system_panic");
 
          Kernel_Mode_Event_Actions (XML_Data => Data);
          Assert (Condition => Validation_Errors.Contains
-                 (Msg => "Kernel-mode source event 'panic' of subject"
+                 (Msg => "Kernel-mode source event 'panic_0' of subject"
                   & " 'vt' does not specify mandatory event action"),
                  Message   => "Exception mismatch (Panic)");
       end Missing_System_Panic;
@@ -847,9 +847,8 @@ package body Mucfgcheck.Events.Test_Data.Tests is
 
       Kernel_Mode_System_Actions (XML_Data => Data);
       Assert (Condition => Validation_Errors.Contains
-              (Msg => "System action for event 'panic' of subject 'tau0' does "
-               & "not reference physical kernel-mode event "
-               & "'system_panic'"),
+              (Msg => "System action for event 'panic_0' of subject 'tau0' does"
+               & " not reference physical kernel-mode event 'system_panic'"),
               Message   => "Exception mismatch (3)");
 
       Muxml.Utils.Set_Attribute

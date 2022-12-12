@@ -111,7 +111,7 @@
     <bootparams>debug</bootparams>
    </if>
    <memory>
-    <memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
+    <memory logical="initramfs" physical="initramfs" virtualAddress="16#7000_0000#" writable="false" executable="false"/>
    </memory>
    <devices>
     <device logical="eth0" physical="nic_1">
@@ -175,7 +175,7 @@
     <bootparams>debug</bootparams>
    </if>
    <memory>
-    <memory logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false" executable="false"/>
+    <memory logical="initramfs" physical="initramfs" virtualAddress="16#7000_0000#" writable="false" executable="false"/>
     <if variable="ahci_drv_active" value="true">
      <memory logical="muenblock" physical="blockdev_shm1" virtualAddress="16#a100_0000#" writable="true" executable="false"/>
     </if>

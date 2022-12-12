@@ -425,14 +425,13 @@ package body Mucfgcheck.Events.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Target_Event_ID_Uniqueness (Gnattest_T : in out Test);
-   procedure Test_Target_Event_ID_Uniqueness_227c5f (Gnattest_T : in out Test) renames Test_Target_Event_ID_Uniqueness;
---  id:2.2/227c5f2ef45f9aaa/Target_Event_ID_Uniqueness/1/0/
-   procedure Test_Target_Event_ID_Uniqueness (Gnattest_T : in out Test) is
+   procedure Test_Target_Event_ID_Name_Uniqueness (Gnattest_T : in out Test);
+   procedure Test_Target_Event_ID_Name_Uniqueness_4511b9 (Gnattest_T : in out Test) renames Test_Target_Event_ID_Name_Uniqueness;
+--  id:2.2/4511b9efaf3f0c9b/Target_Event_ID_Name_Uniqueness/1/0/
+   procedure Test_Target_Event_ID_Name_Uniqueness (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
-
       Data : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Data,
@@ -441,9 +440,32 @@ package body Mucfgcheck.Events.Test_Data.Tests is
 
       --  Positive test, must not raise an exception.
 
-      Target_Event_ID_Uniqueness (XML_Data => Data);
+      Target_Event_ID_Name_Uniqueness (XML_Data => Data);
       Assert (Condition => Validation_Errors.Is_Empty,
               Message   => "Unexpected error in positive test");
+
+      --  Set duplicate event name.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/target/event"
+         & "[@physical='resume_linux']",
+         Name  => "logical",
+         Value => "channel_event_linux_keyboard");
+
+      Target_Event_ID_Name_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject 'linux' has multiple target events with the same"
+               & " name: 'channel_event_linux_keyboard'"),
+              Message   => "Exception mismatch (1)");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/target/event"
+         & "[@physical='resume_linux']",
+         Name  => "logical",
+         Value => "resume_after_trap");
+
+      --  Set duplicate event ID.
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -451,14 +473,13 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          & "[@logical='resume_after_trap']",
          Name  => "id",
          Value => "1");
-
-      Target_Event_ID_Uniqueness (XML_Data => Data);
+      Target_Event_ID_Name_Uniqueness (XML_Data => Data);
       Assert (Condition => Validation_Errors.Contains
               (Msg => "Subject 'linux' target events 'resume_after_trap' and "
                & "'channel_event_linux_keyboard' share ID 1"),
-              Message   => "Exception mismatch");
+              Message   => "Exception mismatch (2)");
 --  begin read only
-   end Test_Target_Event_ID_Uniqueness;
+   end Test_Target_Event_ID_Name_Uniqueness;
 --  end read only
 
 

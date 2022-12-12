@@ -54,8 +54,8 @@ is
    procedure IPI_Different_Core (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_evts
-   --D Validate that target event IDs are unique.
-   procedure Target_Event_ID_Uniqueness (XML_Data : Muxml.XML_Data_Type);
+   --D Validate that target event IDs as well as logical names are unique.
+   procedure Target_Event_ID_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_evts
    --D Validate that source event IDs as well as logical names are unique per

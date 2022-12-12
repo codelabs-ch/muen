@@ -245,6 +245,8 @@ is
       XML_Processors.Register
         (Process => Subject.Scheduling_Group_IDs'Access);
       XML_Processors.Register
+        (Process => Subject.Logical_Memory_Name_Uniqueness'Access);
+      XML_Processors.Register
         (Process => Subject.Logical_Device_Name_Uniqueness'Access);
       XML_Processors.Register
         (Process => Subject.Logical_IRQ_MSI_Consecutiveness'Access);
@@ -285,11 +287,11 @@ is
       XML_Processors.Register
         (Process => Events.IPI_Different_Core'Access);
       XML_Processors.Register
-        (Process => Events.Target_Event_ID_Uniqueness'Access);
+        (Process => Events.Target_Event_ID_Name_Uniqueness'Access);
       XML_Processors.Register
         (Process => Events.Source_Group_Event_ID_Validity'Access);
       XML_Processors.Register
-        (Process => Events.Source_Group_Event_ID_Uniqueness'Access);
+        (Process => Events.Source_Group_Event_ID_Name_Uniqueness'Access);
       XML_Processors.Register
         (Process => Events.Source_VMX_Exit_Event_Completeness'Access);
       XML_Processors.Register

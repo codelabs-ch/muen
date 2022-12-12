@@ -51,6 +51,9 @@ is
       Value : String)
       return Boolean;
 
+   --  Returns True if the logical attribute of Left and Right are equal.
+   function Is_Logical_Equal (Left, Right : DOM.Core.Node) return Boolean;
+
    -------------------------------------------------------------------------
 
    procedure CPU_ID (XML_Data : Muxml.XML_Data_Type)
@@ -374,6 +377,20 @@ is
 
    -------------------------------------------------------------------------
 
+   function Is_Logical_Equal (Left, Right : DOM.Core.Node) return Boolean
+   is
+      Left_Logical : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Left,
+         Name => "logical");
+      Right_Logical : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Right,
+         Name => "logical");
+   begin
+      return Left_Logical = Right_Logical;
+   end Is_Logical_Equal;
+
+   -------------------------------------------------------------------------
+
    procedure Local_ID_Uniqueness (XML_Data : Muxml.XML_Data_Type)
    is
       Subjects  : constant DOM.Core.Node_List
@@ -457,17 +474,14 @@ is
 
       procedure Check_Logical_Name_Inequality (Left, Right : DOM.Core.Node)
       is
-         Left_Logical : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Left,
-            Name => "logical");
-         Right_Logical : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Right,
-            Name => "logical");
       begin
-         if Left_Logical = Right_Logical then
+         if Is_Logical_Equal (Left  => Left,
+                              Right => Right)
+         then
             raise Validation_Errors.Validation_Error with
               "devices with identical logical names" & " '"
-              & Left_Logical & "'";
+              & DOM.Core.Elements.Get_Attribute (Elem => Left,
+                                                 Name => "logical") & "'";
          end if;
       end Check_Logical_Name_Inequality;
    begin
@@ -602,6 +616,68 @@ is
          end;
       end loop;
    end Logical_IRQ_MSI_Consecutiveness;
+
+   -------------------------------------------------------------------------
+
+   procedure Logical_Memory_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type)
+   is
+      Subjects : constant DOM.Core.Node_List
+        := XPath_Query (N     => XML_Data.Doc,
+                        XPath => "/system/subjects/subject");
+      Subj_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Subjects);
+
+      --  Check that logical names of Left and Right differ.
+      procedure Check_Logical_Name_Inequality (Left, Right : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Logical_Name_Inequality (Left, Right : DOM.Core.Node)
+      is
+      begin
+         if Is_Logical_Equal (Left  => Left,
+                              Right => Right)
+         then
+            raise Validation_Errors.Validation_Error with
+              "memory regions with identical logical names" & " '"
+              & DOM.Core.Elements.Get_Attribute
+              (Elem => Left,
+               Name => "logical") & "'";
+         end if;
+      end Check_Logical_Name_Inequality;
+   begin
+      for I in Natural range 0 .. Subj_Count - 1 loop
+         declare
+            Cur_Subj : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Subjects,
+                                      Index => I);
+            Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Cur_Subj,
+               Name => "name");
+            Resources : constant DOM.Core.Node_List
+              := XPath_Query (N     => Cur_Subj,
+                              XPath => "memory/memory");
+            Count     : constant Natural
+              := DOM.Core.Nodes.Length (List => Resources);
+         begin
+            if Count > 1 then
+               Mulog.Log (Msg => "Checking" & Count'Img
+                          & " logical memory region name(s) of subject '"
+                          & Subj_Name & "' for uniqueness");
+
+               Compare_All
+                 (Nodes      => Resources,
+                  Comparator => Check_Logical_Name_Inequality'Access);
+            end if;
+
+         exception
+            when E : Validation_Errors.Validation_Error =>
+               Validation_Errors.Insert
+                 (Msg => "Subject '" & Subj_Name & "' has "
+                  & Ada.Exceptions.Exception_Message (X => E));
+         end;
+      end loop;
+   end Logical_Memory_Name_Uniqueness;
 
    -------------------------------------------------------------------------
 

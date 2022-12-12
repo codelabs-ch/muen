@@ -337,6 +337,44 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Logical_Memory_Name_Uniqueness (Gnattest_T : in out Test);
+   procedure Test_Logical_Memory_Name_Uniqueness_de17b6 (Gnattest_T : in out Test) renames Test_Logical_Memory_Name_Uniqueness;
+--  id:2.2/de17b66f0e72979c/Logical_Memory_Name_Uniqueness/1/0/
+   procedure Test_Logical_Memory_Name_Uniqueness (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Logical_Memory_Name_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']/memory/"
+         & "memory[@logical='buffer']",
+         Name  => "logical",
+         Value => "timer");
+
+      Logical_Memory_Name_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject 'linux' has memory regions with identical "
+               & "logical names 'timer'"),
+              Message   => "Exception mismatch");
+--  begin read only
+   end Test_Logical_Memory_Name_Uniqueness;
+--  end read only
+
+
+--  begin read only
    procedure Test_Logical_Device_Name_Uniqueness (Gnattest_T : in out Test);
    procedure Test_Logical_Device_Name_Uniqueness_aaba9c (Gnattest_T : in out Test) renames Test_Logical_Device_Name_Uniqueness;
 --  id:2.2/aaba9caac93471a1/Logical_Device_Name_Uniqueness/1/0/

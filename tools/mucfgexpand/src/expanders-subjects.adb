@@ -1680,6 +1680,10 @@ is
                                                         Name => "name");
                   Sib_ID  : constant Interfaces.Unsigned_64
                     := Interfaces.Unsigned_64 (J) + 1;
+                  Sib_ID_Str : constant String
+                    := Ada.Strings.Fixed.Trim
+                      (Source => Sib_ID'Img,
+                       Side   => Ada.Strings.Left);
                   Sib_Mem : constant DOM.Core.Node
                     := Muxml.Utils.Get_Element (Doc   => Sib_Subj,
                                                 XPath => "memory");
@@ -1703,6 +1707,10 @@ is
                            Mulog.Log (Msg => "Adding sinfo region of sibling '"
                                       & Sib_Name & "' to subject '"
                                       & Origin_Name & "'");
+                           DOM.Core.Elements.Set_Attribute
+                             (Elem  => M,
+                              Name  => "logical",
+                              Value => Logical_Name & Sib_ID_Str);
 
                            --  Set virtual address of sibling sinfo region to
                            --  place it at the expected slot in the consecutive
@@ -1729,6 +1737,10 @@ is
                            Mulog.Log (Msg => "Adding scheduling group info "
                                       & "region of sibling '" & Sib_Name
                                       & "' to subject '" & Origin_Name & "'");
+                           DOM.Core.Elements.Set_Attribute
+                             (Elem  => M,
+                              Name  => "logical",
+                              Value => Logical_Name & Sib_ID_Str);
 
                            --  Set virtual address of sibling sched info region
                            --  to place it at the expected slot in the
@@ -1764,9 +1776,7 @@ is
                            DOM.Core.Elements.Set_Attribute
                              (Elem  => M,
                               Name  => "logical",
-                              Value => Logical_Name & Ada.Strings.Fixed.Trim
-                                (Source => Sib_ID'Img,
-                                 Side   => Ada.Strings.Left));
+                              Value => Logical_Name & Sib_ID_Str);
 
                            --  Set virtual address of sibling timed event region
                            --  to place it at the expected slot in the

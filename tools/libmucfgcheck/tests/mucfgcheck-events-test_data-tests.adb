@@ -463,10 +463,10 @@ package body Mucfgcheck.Events.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Source_Group_Event_ID_Uniqueness (Gnattest_T : in out Test);
-   procedure Test_Source_Group_Event_ID_Uniqueness_0d6e56 (Gnattest_T : in out Test) renames Test_Source_Group_Event_ID_Uniqueness;
---  id:2.2/0d6e56c19519f6f3/Source_Group_Event_ID_Uniqueness/1/0/
-   procedure Test_Source_Group_Event_ID_Uniqueness (Gnattest_T : in out Test) is
+   procedure Test_Source_Group_Event_ID_Name_Uniqueness (Gnattest_T : in out Test);
+   procedure Test_Source_Group_Event_ID_Name_Uniqueness_27cefa (Gnattest_T : in out Test) renames Test_Source_Group_Event_ID_Name_Uniqueness;
+--  id:2.2/27cefab96498a26d/Source_Group_Event_ID_Name_Uniqueness/1/0/
+   procedure Test_Source_Group_Event_ID_Name_Uniqueness (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -479,9 +479,38 @@ package body Mucfgcheck.Events.Test_Data.Tests is
 
       --  Positive test, must not raise an exception.
 
-      Source_Group_Event_ID_Uniqueness (XML_Data => Data);
+      Source_Group_Event_ID_Name_Uniqueness (XML_Data => Data);
       Assert (Condition => Validation_Errors.Is_Empty,
-              Message   => "Unexpected error in positive test");
+              Message   => "Unexpected error in positive test (1)");
+
+      --  Set duplicate event name in different event group, must not raise an
+      --  exception.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/source/group/event"
+         & "[@logical='default_event_0']",
+         Name  => "logical",
+         Value => "unmask_irq_60");
+      Source_Group_Event_ID_Name_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test (2)");
+
+      --  Set duplicate event name in one event group.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/source/group/event"
+         & "[@logical='unmask_irq_59']",
+         Name  => "logical",
+         Value => "unmask_irq_60");
+      Source_Group_Event_ID_Name_Uniqueness (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Subject 'linux' has multiple source events with the same"
+               &" name: 'unmask_irq_60'"),
+              Message   => "Exception mismatch (1)");
+
+      --  Set duplicate event ID.
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -490,13 +519,13 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          Name  => "id",
          Value => "1");
 
-      Source_Group_Event_ID_Uniqueness (XML_Data => Data);
+      Source_Group_Event_ID_Name_Uniqueness (XML_Data => Data);
       Assert (Condition => Validation_Errors.Contains
               (Msg => "Subject 'sm' source events 'resume_linux' and "
                & "'channel_event_sm_console' share ID 1"),
-              Message   => "Exception mismatch");
+              Message   => "Exception mismatch (2)");
 --  begin read only
-   end Test_Source_Group_Event_ID_Uniqueness;
+   end Test_Source_Group_Event_ID_Name_Uniqueness;
 --  end read only
 
 

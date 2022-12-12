@@ -632,7 +632,8 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Source_Group_Event_ID_Uniqueness (XML_Data : Muxml.XML_Data_Type)
+   procedure Source_Group_Event_ID_Name_Uniqueness
+     (XML_Data : Muxml.XML_Data_Type)
    is
       use Ada.Strings.Unbounded;
 
@@ -670,6 +671,12 @@ is
                & "' source events '" & Left_Name & "' and '" & Right_Name
                & "' share ID" & Left_ID'Img);
          end if;
+         if Left_Name = Right_Name then
+            Validation_Errors.Insert
+              (Msg => "Subject '" & To_String (Subj_Name)
+               & "' has multiple source events with the same name: '"
+               & Left_Name & "'");
+         end if;
       end Check_Inequality;
 
       Subject_Event_Groups : constant DOM.Core.Node_List
@@ -703,14 +710,14 @@ is
 
                Mulog.Log (Msg => "Checking uniqueness of"
                           & DOM.Core.Nodes.Length (List => Events)'Img
-                          & " " & Ev_Group_Name & " source event ID(s) for "
-                          & "subject '" & To_String (Subj_Name) & "'");
+                          & " " & Ev_Group_Name & " source event ID(s) & name"
+                          & "(s) for subject '" & To_String (Subj_Name) & "'");
                Compare_All (Nodes      => Events,
                             Comparator => Check_Inequality'Access);
             end if;
          end;
       end loop;
-   end Source_Group_Event_ID_Uniqueness;
+   end Source_Group_Event_ID_Name_Uniqueness;
 
    -------------------------------------------------------------------------
 

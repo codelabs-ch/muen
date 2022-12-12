@@ -291,7 +291,7 @@ is
       XML_Processors.Register
         (Process => Events.Source_Group_Event_ID_Validity'Access);
       XML_Processors.Register
-        (Process => Events.Source_Group_Event_ID_Uniqueness'Access);
+        (Process => Events.Source_Group_Event_ID_Name_Uniqueness'Access);
       XML_Processors.Register
         (Process => Events.Source_VMX_Exit_Event_Completeness'Access);
       XML_Processors.Register

@@ -603,7 +603,7 @@ is
                  (Node      => Subj_Mem_Node,
                   New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                     (Policy        => Data,
-                     Logical_Name  => "bios",
+                     Logical_Name  => "bios_low",
                      Physical_Name => Subj_Name & "|bios",
                      Address       => Mutools.Utils.To_Hex
                        (Number => Lo_BIOS_Addr_Start),
@@ -616,7 +616,7 @@ is
                  (Node      => Subj_Mem_Node,
                   New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                     (Policy        => Data,
-                     Logical_Name  => "bios",
+                     Logical_Name  => "bios_high",
                      Physical_Name => Subj_Name & "|bios",
                      Address       => Mutools.Utils.To_Hex
                        (Number => Hi_BIOS_Addr_Start),

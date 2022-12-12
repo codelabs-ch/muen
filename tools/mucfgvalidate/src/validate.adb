@@ -245,6 +245,8 @@ is
       XML_Processors.Register
         (Process => Subject.Scheduling_Group_IDs'Access);
       XML_Processors.Register
+        (Process => Subject.Logical_Memory_Name_Uniqueness'Access);
+      XML_Processors.Register
         (Process => Subject.Logical_Device_Name_Uniqueness'Access);
       XML_Processors.Register
         (Process => Subject.Logical_IRQ_MSI_Consecutiveness'Access);

@@ -62,6 +62,10 @@ is
    procedure Scheduling_Group_IDs (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_subj
+   --D Validate that logical names of subject memory regions are unique.
+   procedure Logical_Memory_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
+
+   --D @Item List => validators_subj
    --D Validate that logical names of subject devices are unique.
    procedure Logical_Device_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 

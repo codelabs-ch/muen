@@ -35,7 +35,7 @@ all: build $(INITRAMFS)
 
 $(SRC_BZIMAGE): src/.config
 	@$(E) linux Olddefconfig "$(LINUX_FLAGS) $(MAKE) olddefconfig -C src" $(LOG)
-	@$(E) linux Build "$(LINUX_FLAGS) $(MAKE) -C src" $(LOG)
+	@$(E) linux Build "$(LINUX_FLAGS) $(MAKE) CC='ccache gcc' -C src" $(LOG)
 
 $(OBJ_DIR)/bzImage: $(SRC_BZIMAGE) | $(OBJ_DIR)
 	@$(E) linux "Copy" "cp $< $@" $(LOG)
@@ -49,7 +49,7 @@ $(MODS_BUILD): MOD_NAME = $(@:$(OBJ_DIR)/.%-build=%)
 $(MODS_BUILD): MOD_PATH = $(MODS_PATH)/$(MOD_NAME)
 $(MODS_BUILD): $(OBJ_DIR)/.mods-build $(MODS_SRC) | $(OBJ_DIR)
 	@$(E) linux "Build module $(MOD_NAME)" \
-		"$(LINUX_FLAGS) $(MAKE) M=$(MOD_PATH) -C src modules" $(LOG)
+		"$(LINUX_FLAGS) $(MAKE) CC='ccache gcc' M=$(MOD_PATH) -C src modules" $(LOG)
 	@touch $@
 
 $(OBJ_DIR)/.mods-install: $(OBJ_DIR)/.mods-build | $(OBJ_DIR)

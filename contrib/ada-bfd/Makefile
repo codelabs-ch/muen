@@ -4,6 +4,9 @@ SRC = https://github.com/stcarrez/ada-bfd.git
 
 BUILD_OPTS = -j1
 
+PATCHES = \
+	patches/0001-Add-liberty-to-LINKER_OPTIONS.patch
+
 define CMD_CONFIGURE
 	cd $(WRK) && ./configure --prefix=$(BUILDDIR)
 endef

@@ -17,6 +17,7 @@
 --
 
 with "xia";
+with "xmlada";
 
 with "../libtest/libtest";
 

@@ -4,9 +4,7 @@ include ../projects/exec.mk
 RECIPES =     \
 	ada-bfd   \
 	alog      \
-	gnatcoll  \
 	grub      \
-	libgpr    \
 	libhwbase \
 	lsc       \
 	xia

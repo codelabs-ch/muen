@@ -40,21 +40,25 @@ package body Stackcheck.Test_Data.Tests is
 
       Failure, Dynamic_Stack : Boolean;
    begin
+
+      --  Expected:
+      --  Largest stack usage by Foo.Largest_Stack_Usage with 256 bytes
+
       Run (Project_File => "data/testci",
-           Limit        => 240,
+           Limit        => 280,
            Overflow     => Failure,
            Dynamic      => Dynamic_Stack);
       Assert (Condition => not Failure,
-              Message   => "Failure with limit 240");
+              Message   => "Failure with limit 280");
       Assert (Condition => Dynamic_Stack,
               Message   => "Dynamic stack not detected");
 
       Run (Project_File => "data/testci",
-           Limit        => 239,
+           Limit        => 255,
            Overflow     => Failure,
            Dynamic      => Dynamic_Stack);
       Assert (Condition => Failure,
-              Message   => "No failure with limit 239");
+              Message   => "No failure with limit 255");
 
       Run (Project_File => "data/testci",
            Limit        => 0,

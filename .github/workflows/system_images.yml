@@ -145,7 +145,7 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v3
         with:
-          context: .
+          context: ./tools/docker
           file: ./tools/docker/Dockerfile.muen-dev-env
           build-args: |
             distro_name=${{ steps.vars.outputs.distro_name }}
@@ -180,6 +180,7 @@ jobs:
             -e HARDWARE=hardware/${{ matrix.hardware }}
             -w /mnt
           run: |
+            eval `/home/user/dev-env.alr/env`
             cat /etc/issue
             ccache -z
 

@@ -813,7 +813,8 @@
      \item[Name] \hfill \\
      \texttt{mucfgmemhashes}
      \item[Input] \hfill \\
-     System policy in format B
+     System policy in format B, colon-separated list of input directories
+     containing build artifacts
      \item[Output] \hfill \\
      System policy in format B with memory integrity hashes
      \end{description}
@@ -890,7 +891,8 @@
      \item[Name] \hfill \\
      \texttt{tau0\_main}
      \item[Input] \hfill \\
-     XML command stream, input directory containing build artifacts
+     XML command stream, colon-separated list of input directories containing
+     build artifacts
      \item[Output] \hfill \\
      Muen system image
      \item[Output format] \hfill \\

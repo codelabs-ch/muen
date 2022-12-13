@@ -1166,8 +1166,8 @@
     <memory executable="false" logical="acpi_free" physical="lnx|acpi_empty" virtualAddress="16#000e_4000#" writable="false"/>
     <memory executable="false" logical="bios_low" physical="lnx|bios" virtualAddress="16#000c_0000#" writable="false"/>
     <memory executable="false" logical="bios_high" physical="lnx|bios" virtualAddress="16#000d_0000#" writable="false"/>
-    <memory executable="false" logical="sinfo" physical="lnx_core_1|sinfo" virtualAddress="16#000e_0000_9000#" writable="false"/>
-    <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_5" virtualAddress="16#000e_0001_1000#" writable="false"/>
+    <memory executable="false" logical="sinfo1" physical="lnx_core_1|sinfo" virtualAddress="16#000e_0000_9000#" writable="false"/>
+    <memory executable="false" logical="sched_group_info1" physical="scheduling_group_info_5" virtualAddress="16#000e_0001_1000#" writable="false"/>
     <memory executable="false" logical="timed_event1" physical="lnx_core_1|timed_event" virtualAddress="16#000e_0081_1000#" writable="true"/>
    </memory>
    <devices>
@@ -1521,8 +1521,8 @@
     <memory executable="false" logical="lnx_acpi_free" physical="lnx|acpi_empty" virtualAddress="16#0001_000e_4000#" writable="false"/>
     <memory executable="false" logical="lnx_bios_low" physical="lnx|bios" virtualAddress="16#0001_000c_0000#" writable="false"/>
     <memory executable="false" logical="lnx_bios_high" physical="lnx|bios" virtualAddress="16#0001_000d_0000#" writable="false"/>
-    <memory executable="false" logical="lnx_sinfo" physical="lnx_core_1|sinfo" virtualAddress="16#000f_0000_9000#" writable="false"/>
-    <memory executable="false" logical="lnx_sched_group_info" physical="scheduling_group_info_5" virtualAddress="16#000f_0001_1000#" writable="false"/>
+    <memory executable="false" logical="lnx_sinfo1" physical="lnx_core_1|sinfo" virtualAddress="16#000f_0000_9000#" writable="false"/>
+    <memory executable="false" logical="lnx_sched_group_info1" physical="scheduling_group_info_5" virtualAddress="16#000f_0001_1000#" writable="false"/>
    </memory>
    <devices>
     <device logical="wlan" physical="wlan1">
@@ -2407,8 +2407,8 @@
     <memory executable="false" logical="acpi_free" physical="lnx|acpi_empty" virtualAddress="16#000e_4000#" writable="false"/>
     <memory executable="false" logical="bios_low" physical="lnx|bios" virtualAddress="16#000c_0000#" writable="false"/>
     <memory executable="false" logical="bios_high" physical="lnx|bios" virtualAddress="16#000d_0000#" writable="false"/>
-    <memory executable="false" logical="sinfo" physical="lnx_core_1|sinfo" virtualAddress="16#000e_0000_9000#" writable="false"/>
-    <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_5" virtualAddress="16#000e_0001_1000#" writable="false"/>
+    <memory executable="false" logical="sinfo1" physical="lnx_core_1|sinfo" virtualAddress="16#000e_0000_9000#" writable="false"/>
+    <memory executable="false" logical="sched_group_info1" physical="scheduling_group_info_5" virtualAddress="16#000e_0001_1000#" writable="false"/>
     <memory executable="false" logical="timed_event1" physical="lnx_core_1|timed_event" virtualAddress="16#000e_0081_1000#" writable="true"/>
    </memory>
    <devices>

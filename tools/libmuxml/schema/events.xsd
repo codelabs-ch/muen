@@ -46,7 +46,8 @@
     Source events are divided into two groups: \texttt{vmx\_exit} and
     \texttt{vmcall}.  For event group \texttt{vmx\_exit} the id attribute
     specifies the trap number while in the \texttt{vmcall} group it designates
-    the hypercall number.
+    the hypercall number. For the valid range of IDs for each group see section
+    \ref{system_src.xsd:sourceEventEntryType}.
 
     The \texttt{vmx\_exit} group is translated to a lookup table for handling
     VMX exit traps as defined by Intel SDM Vol. 3D, "Appendix C VMX Basic Exit
@@ -82,11 +83,27 @@
    <xs:documentation>
     A source \texttt{event} entry specifies a source event node, i.e. it
     registers a handler for the given event \texttt{id}. These IDs, depending on
-    the event group, are either hypercall numbers or VMX basic exit reasons.
+    the event group, are either hypercall numbers or VMX basic exit reasons. The
+    valid ID ranges of the respective groups are:
+
+    \begin{description}
+    \item[vmx\_exit] 0 .. 59
+    \item[vmcall] 0 .. 63
+    \end{description}
+
+    Additionally, the following IDs in \texttt{vmx\_exit} group are reserved and
+    may not be used:
+
+    \begin{itemize}
+    \item Used by kernel: 1, 7, 41, 52, 55
+    \item Reserved by Intel: 35, 38, 42
+    \end{itemize}
 
     It is possible to assign event actions to event source entries. Currently
-    supported source event actions are \texttt{system\_reboot} and
-    \texttt{system\_poweroff}, which both have the kernel itself as endpoint.
+    supported source event actions are \texttt{subject\_sleep},
+    \texttt{subject\_yield}, \texttt{unmask\_irq}, \texttt{system\_reboot},
+    \texttt{system\_poweroff} and \texttt{system\_panic}, which all have the
+    kernel itself as endpoint.
 
     See line \ref{lst:af-lineref-events-source-entry} in listing
     \ref{lst:annotated-policy} for a source event entry example.

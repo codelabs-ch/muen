@@ -428,7 +428,9 @@
   <xs:annotation>
    <xs:documentation>
     The \texttt{writer} element requests a channel with write permissions of the
-    specified size, address and optional notification event number.
+    specified size, address and optional notification event number. For valid
+    event ID ranges, see \texttt{vmcall} group in
+    \ref{system_src.xsd:sourceEventEntryType}.
 
     See line \ref{lst:af-lineref-compreq-channel-writer} in listing
     \ref{lst:annotated-policy} for an example channel writer specification.
@@ -545,7 +547,8 @@
    <xs:documentation>
     The \texttt{eventBase} attribute specifies the event number of the first
     element in the array. This number is incremented for all further elements
-    in the array (\texttt{eventBase + 1}).
+    in the array (\texttt{eventBase + 1}). For valid event ID ranges see
+    \texttt{vmcall} group in \ref{system_src.xsd:sourceEventEntryType}.
 
     Note that this attribute is only taken into consideration for a writer
     array.
@@ -633,7 +636,8 @@
      <xs:attribute name="id" type="xs:nonNegativeInteger" use="required">
       <xs:annotation>
        <xs:documentation>
-        ID of source event.
+        ID of source event. For valid ID ranges see \texttt{vmcall} group in
+        \ref{system_src.xsd:sourceEventEntryType}.
        </xs:documentation>
       </xs:annotation>
      </xs:attribute>

@@ -245,7 +245,7 @@ system image.
 Emulation
 ~~~~~~~~~
 To ease kernel development and testing, the Muen project makes use of nested
-virtualization provided by QEMU/KVM. In order for this to work, a recent Linux
+virtualization provided by QEMU/KVM. In order for this to work, a Linux
 kernel (>= 5.2.0) with applied KVM GUEST_CR3 fix <<lnxcr3>> and the
 `qemu-system-x86_64` binary must be installed on the build machine.
 

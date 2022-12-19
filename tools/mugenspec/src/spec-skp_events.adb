@@ -298,6 +298,10 @@ is
         := Ada.Strings.Fixed.Trim
           (Source => Mutools.Constants.Event_Bits'Img,
            Side   => Ada.Strings.Left);
+      Max_Trap_ID_Str : constant String
+        := Ada.Strings.Fixed.Trim
+          (Source => Mutools.Constants.Max_Valid_VMX_Exit_ID'Img,
+           Side   => Ada.Strings.Left);
       Subjects       : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
@@ -596,6 +600,10 @@ is
         (Template => Tmpl,
          Pattern  => "__event_bits__",
          Content  => Event_Bits_Str);
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__max_trap_id__",
+         Content  => Max_Trap_ID_Str);
       Mutools.Templates.Replace
         (Template => Tmpl,
          Pattern  => "__event_kind_types__",

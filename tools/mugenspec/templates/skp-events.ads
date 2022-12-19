@@ -21,7 +21,7 @@ is
    Invalid_Target_Event : constant Target_Event_Range
      := Target_Event_Range'Last;
 
-   type Trap_Range is range 0 .. 59;
+   type Trap_Range is range 0 .. __max_trap_id__;
 
 __event_kind_types__
    type Source_Event_Type is record

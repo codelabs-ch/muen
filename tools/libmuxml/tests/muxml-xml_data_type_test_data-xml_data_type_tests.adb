@@ -85,7 +85,6 @@ package body Muxml.XML_Data_Type_Test_Data.XML_Data_Type_Tests is
       Load_Invalid_Format :
       declare
          Data : XML_Data_Type;
-         pragma Unreferenced (Data);
       begin
          Parse (Data => Data,
                 Kind => Format_B,
@@ -100,7 +99,6 @@ package body Muxml.XML_Data_Type_Test_Data.XML_Data_Type_Tests is
       Load_Invalid_Xml:
       declare
          Data : XML_Data_Type;
-         pragma Unreferenced (Data);
       begin
          Parse (Data => Data,
                 Kind => Format_B,
@@ -118,7 +116,6 @@ package body Muxml.XML_Data_Type_Test_Data.XML_Data_Type_Tests is
            := "Error validating XML data - data/invalid:1:1: Non-white space "
            & "found at top level";
          Data    : XML_Data_Type;
-         pragma Unreferenced (Data);
       begin
          Parse (Data => Data,
                 Kind => Format_B,
@@ -139,7 +136,6 @@ package body Muxml.XML_Data_Type_Test_Data.XML_Data_Type_Tests is
          Ref_Msg : constant String := "Error reading XML file 'nonexistent' - "
            & "Could not open nonexistent";
          Data    : XML_Data_Type;
-         pragma Unreferenced (Data);
       begin
          Parse (Data => Data,
                 Kind => Format_B,

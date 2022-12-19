@@ -113,14 +113,23 @@ is
      (Subject_ID      :     Skp.Global_Subject_ID_Type;
       RIP_Incremented :     Boolean;
       Sleep           :     Boolean;
-      Next_Subject    : out Skp.Global_Subject_ID_Type);
+      Next_Subject    : out Skp.Global_Subject_ID_Type)
+   with
+      Global => (Input  => (CPU_Info.CPU_ID, Subjects_Events.State,
+                            Subjects_Interrupts.State, Timed_Events.State,
+                            X86_64.State),
+                 In_Out => (Group_Activity_Indicator, State, Subjects.State));
 
    --  Indicate that activity has occurred that might change the status of the
    --  subject given by ID. Same CPU specifies whether the subject is running
    --  on this CPU core.
    procedure Indicate_Activity
      (Subject_ID : Skp.Global_Subject_ID_Type;
-      Same_CPU   : Boolean);
+      Same_CPU   : Boolean)
+   with
+      Global  => (Input  => State,
+                  In_Out => Group_Activity_Indicator),
+      Depends => (Group_Activity_Indicator =>+ (Subject_ID, Same_CPU, State));
 
 private
 

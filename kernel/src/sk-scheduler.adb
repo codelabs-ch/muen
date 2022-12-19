@@ -36,7 +36,11 @@ is
 
    --  Returns True if the subject with the given ID is active and not sleeping.
    function Is_Active (Subject_ID : Skp.Global_Subject_ID_Type) return Boolean
-   with Volatile_Function
+   with
+      Global => (Input => (Subjects.State, Subjects_Events.State,
+                           Subjects_Interrupts.State, Timed_Events.State,
+                           X86_64.State)),
+      Volatile_Function
    is
       Pending_Events     : constant Boolean
         := Subjects_Events.Has_Pending_Event (Subject => Subject_ID);
@@ -58,13 +62,19 @@ is
      return Policy.Scheduling_Partition_Range
    is (Policy.Scheduling_Plans (CPU_Info.CPU_ID)
        (Global_Current_Major_Frame_ID).Minor_Frames
-       (Current_Minor_Frame_ID).Partition_ID);
+       (Current_Minor_Frame_ID).Partition_ID)
+   with
+      Global => (Input => (CPU_Info.CPU_ID, Global_Current_Major_Frame_ID,
+                           Current_Minor_Frame_ID));
 
    -------------------------------------------------------------------------
 
    --  Returns the ID of the currently active scheduling group which is
    --  specified by the current scheduling partition.
    function Current_Scheduling_Group_ID return Policy.Scheduling_Group_Range
+   with
+      Global => (Input => (CPU_Info.CPU_ID, Global_Current_Major_Frame_ID,
+                           Current_Minor_Frame_ID, Scheduling_Partitions))
    is
       Partition_ID : constant Policy.Scheduling_Partition_Range
         := Current_Scheduling_Partition_ID;
@@ -83,6 +93,8 @@ is
      (Partition_ID : Policy.Scheduling_Partition_Range;
       Group_ID     : Policy.Scheduling_Group_Range)
       return Boolean
+   with
+      Global => (Input => (Scheduling_Groups, Scheduling_Partitions))
    is
       List_Head : constant Policy.Extended_Scheduling_Group_Range
         := Scheduling_Partitions (Partition_ID).Earliest_Timer;
@@ -99,6 +111,9 @@ is
    procedure Activate_Group
      (Partition_ID : Policy.Scheduling_Partition_Range;
       Group_ID     : Policy.Scheduling_Group_Range)
+   with
+      Global => (In_Out => (Scheduling_Groups, Scheduling_Partitions,
+                            Global_Group_Activity_Indicator))
    is
       Group_Index : constant Policy.Scheduling_Group_Index_Range
         := Policy.Get_Scheduling_Group_Index (Group_ID => Group_ID);
@@ -141,6 +156,9 @@ is
       Group_Index  : Policy.Scheduling_Group_Index_Range;
       Subject_ID   : Skp.Global_Subject_ID_Type)
    with
+      Global => (Input  => Timed_Events.State,
+                 In_Out => (Scheduling_Groups, Scheduling_Partitions,
+                            Global_Group_Activity_Indicator)),
       Annotate => (GNATprove, Terminating)
    is
       --  Insert group with given ID and deadline into timed event list between
@@ -299,6 +317,13 @@ is
    procedure Indicate_Activity
      (Subject_ID : Skp.Global_Subject_ID_Type;
       Same_CPU   : Boolean)
+   with
+      Refined_Global  =>
+         (Input  => Scheduling_Groups,
+          In_Out => Global_Group_Activity_Indicator),
+      Refined_Depends =>
+         (Global_Group_Activity_Indicator =>+ (Subject_ID, Same_CPU,
+                                               Scheduling_Groups))
    is
       Partition_ID : constant Policy.Scheduling_Partition_Range
         := Policy.Get_Scheduling_Partition_ID (Subject_ID => Subject_ID);
@@ -334,6 +359,11 @@ is
    --  specified partition and activating all groups for which the timer is
    --  expired.
    procedure Update_Timer_List (Partition : Policy.Scheduling_Partition_Range)
+   with
+      Global  => (Input  => X86_64.State,
+                  In_Out => (Global_Group_Activity_Indicator,
+                             Scheduling_Groups,
+                             Scheduling_Partitions))
    is
       Cur_Group : Policy.Extended_Scheduling_Group_Range
         := Scheduling_Partitions (Partition).Earliest_Timer;
@@ -411,6 +441,14 @@ is
       RIP_Incremented :     Boolean;
       Sleep           :     Boolean;
       Next_Subject    : out Skp.Global_Subject_ID_Type)
+   with
+      Refined_Global =>
+        (Input  => (CPU_Info.CPU_ID, Current_Minor_Frame_ID,
+                    Global_Current_Major_Frame_ID,
+                    Subjects_Events.State, Subjects_Interrupts.State,
+                    Timed_Events.State, X86_64.State),
+         In_Out => (Global_Group_Activity_Indicator, Scheduling_Groups,
+                    Scheduling_Partitions, Subjects.State))
    is
       Partition_ID      : constant Policy.Scheduling_Partition_Range
         := Current_Scheduling_Partition_ID;
@@ -461,12 +499,11 @@ is
 
    procedure Set_Current_Subject_ID (Subject_ID : Skp.Global_Subject_ID_Type)
    with
-      Refined_Global  => (Input  => (Current_Minor_Frame_ID,
-                                     Global_Current_Major_Frame_ID,
-                                     Scheduling_Partitions,
-                                     CPU_Info.CPU_ID),
-                          In_Out => Scheduling_Groups),
-      Refined_Post    => Scheduling_Groups
+      Refined_Global => (Input  => (Current_Minor_Frame_ID,
+                                    Global_Current_Major_Frame_ID,
+                                    Scheduling_Partitions, CPU_Info.CPU_ID),
+                         In_Out => Scheduling_Groups),
+      Refined_Post   => Scheduling_Groups
          (Current_Scheduling_Group_ID).Active_Subject = Subject_ID
    is
    begin

@@ -765,7 +765,7 @@ is
                Validation_Errors.Insert
                  (Msg => "Subject '" & Subj_Name & "': ID"
                   & Event_ID'Img & " of event '" & Event_Name
-                  & "' invalid for " & "group " & Event_Group'Img);
+                  & "' invalid for group " & Event_Group'Img);
             end if;
          end;
       end loop;

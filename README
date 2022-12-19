@@ -96,8 +96,8 @@ application domains.
 
 The <<mugenhwcfg>> tool for automated hardware description generation simplifies
 the addition of support for new target machines. There is also a Debian
-Live-based bootable ISO <<mugenhwcfg-live>> to simplify the collection of
-hardware configurations from new targets.
+Live-based bootable image <<mugenhwcfg-live>> with persistence to simplify the
+collection of hardware configurations from new targets.
 
 Resources
 ---------
@@ -245,7 +245,7 @@ system image.
 Emulation
 ~~~~~~~~~
 To ease kernel development and testing, the Muen project makes use of nested
-virtualization provided by QEMU/KVM. In order for this to work, a recent Linux
+virtualization provided by QEMU/KVM. In order for this to work, a Linux
 kernel (>= 5.2.0) with applied KVM GUEST_CR3 fix <<lnxcr3>> and the
 `qemu-system-x86_64` binary must be installed on the build machine.
 
@@ -338,14 +338,14 @@ References
 - [[[muenfs]]]          Muenfs Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenfs.git
 - [[[muennet]]]         Muennet Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muennet.git
 - [[[mugenhwcfg]]]      Muen hardware config generator, https://git.codelabs.ch/?p=muen/mugenhwcfg.git
-- [[[mugenhwcfg-live]]] Mugenhwcfg Live ISO, https://www.codelabs.ch/download/mugenhwcfg-live-amd64.hybrid.iso
+- [[[mugenhwcfg-live]]] Mugenhwcfg Live, https://www.codelabs.ch/download/mugenhwcfg-live-amd64.hybrid.img.gz
 
 
 License
 -------
 --------------------------------------------------------------------------------
-Copyright (C) 2013-2021  Reto Buerki <reet@codelabs.ch>
-Copyright (C) 2013-2021  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+Copyright (C) 2013-2022  Reto Buerki <reet@codelabs.ch>
+Copyright (C) 2013-2022  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software

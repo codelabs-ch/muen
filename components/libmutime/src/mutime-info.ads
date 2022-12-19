@@ -40,14 +40,19 @@ is
 
    Time_Info_Size : constant := 24;
 
+   --D @Interface
+   --D This record is used to exchange time information from the time subject to
+   --D clients.
    type Time_Info_Type is record
-      --  Mutime timestamp when TSC was zero. A TSC_Time_Base value of zero
-      --  indicates that the time info is not (yet) valid. Use Update_Validity
-      --  and Is_Valid operations to check.
+      --D @Interface
+      --D Mutime timestamp when TSC was zero. A TSC_Time_Base value of zero
+      --D indicates that the time info is not (yet) valid.
       TSC_Time_Base      : Timestamp_Type'Base with Atomic;
-      --  TSC Ticks in Hz
+      --D @Interface
+      --D TSC Ticks in Hz
       TSC_Tick_Rate_Hz   : TSC_Tick_Rate_Hz_Type'Base;
-      --  Timezone offset in microseconds
+      --D @Interface
+      --D Timezone offset in microseconds
       Timezone_Microsecs : Timezone_Type'Base;
    end record
    with Size => Time_Info_Size * 8;

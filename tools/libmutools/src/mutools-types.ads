@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+private with Mutools.Constants;
+
 package Mutools.Types
 is
 
@@ -90,7 +92,7 @@ private
 
    function Get_Max_ID (Group : Event_Group_Type) return Natural
    is (case Group is
-          when Vmx_Exit => 59,
-          when Vmcall   => 63);
+          when Vmx_Exit => Constants.Max_Valid_VMX_Exit_ID,
+          when Vmcall   => Constants.Max_Valid_Vmcall_ID);
 
 end Mutools.Types;

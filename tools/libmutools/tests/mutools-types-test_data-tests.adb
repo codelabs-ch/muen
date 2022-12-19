@@ -39,9 +39,11 @@ package body Mutools.Types.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-      Assert (Condition => Get_Max_ID (Group => Vmx_Exit) = 59,
+      Assert (Condition => Get_Max_ID (Group => Vmx_Exit)
+              = Constants.Max_Valid_VMX_Exit_ID,
               Message   => "Invalid VMX exit max ID");
-      Assert (Condition => Get_Max_ID (Group => Vmcall) = 63,
+      Assert (Condition => Get_Max_ID (Group => Vmcall)
+              = Constants.Max_Valid_Vmcall_ID,
               Message   => "Invalid Vmcall max ID");
 --  begin read only
    end Test_Get_Max_ID;

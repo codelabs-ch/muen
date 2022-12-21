@@ -194,7 +194,8 @@
     and switching to the target. This can only happen between subjects running
     on the same core. Such a construct is used to pass the thread of execution
     on to a different subject, e.g. invocation of a debugger subject if an error
-    occurs in the source subject.
+    occurs in the source subject. It is called \emph{handover} or \emph{handover
+    event}.
     \item \texttt{kernel}~\\
     These kinds of events are directed at the kernel an thus only specify a
     source since the target is the kernel. They are used to enable specific

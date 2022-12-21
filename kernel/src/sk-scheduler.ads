@@ -171,7 +171,7 @@ private
    type Scheduling_Group_Activity_Indicator_Array is
      array (Policy.Scheduling_Partition_Range) of Atomics.Atomic64_Type;
 
-   --D @Text Section => SK.Scheduler.Global_Group_Activity_Indicator
+   --D @Interface
    --D Scheduling group activity indicator bitmap. Tracks the active scheduling
    --D groups of each scheduling partition. The bitmap position to scheduling
    --D group mapping is specified in the scheduling partition config of the
@@ -218,8 +218,9 @@ private
                   Policy.Scheduling_Partition_Config (I).Last_Group_Index);
 
    --D @Text Section => SK.Scheduler.Scheduling_Partitions
-   --D Scheduling partitions information. The array stores the ID of
-   --D the current active subject for each scheduling group.
+   --D Scheduling partitions management information. The array stores the
+   --D currently active group, the earliest timer deadline and the sleeping
+   --D state of each scheduling partition.
    Scheduling_Partitions : Scheduling_Partitions_Array
      := (others => Null_Scheduling_Partition)
    with
@@ -256,8 +257,9 @@ private
      (Policy.Scheduling_Group_Range) of Scheduling_Group_Type;
 
    --D @Text Section => SK.Scheduler.Scheduling_Groups
-   --D IDs of active subjects per scheduling group. The array stores the ID of
-   --D the current active subject for each scheduling group.
+   --D Scheduling groups management information. The array stores the currently
+   --D active subject, position in the timer list as well as the timeout
+   --D deadline of each scheduling group.
    Scheduling_Groups : Scheduling_Group_Array
      := (others => Null_Scheduling_Group)
    with

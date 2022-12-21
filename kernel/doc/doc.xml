@@ -1,6 +1,6 @@
 <doc name="Muen Separation Kernel">
  <author>Adrian-Ken Rueegsegger, Reto Buerki</author>
- <version>0.6</version>
+ <version>0.7</version>
 
  <latex_preamble>
   \usepackage{titlepic}
@@ -12,6 +12,7 @@
   \usepackage[head=30pt, lmargin=3.0cm, rmargin=3.0cm, bmargin=1.9cm, tmargin=3.2cm]{geometry}
 
   \usepackage{pgfgantt}
+  \usepackage{pifont,mdframed}
 
   \usepackage{hyperref}
   \hypersetup{
@@ -45,10 +46,10 @@
   \input{tikzstyle}
 
   \newenvironment{info}
-  {\par
+  {\par\begin{mdframed}[linewidth=0.4pt,linecolor=blue]
   \begin{list}{}{\leftmargin=1cm
   \labelwidth=\leftmargin}\item[\color{blue}\Large\ding{43}]}
-  {\end{list}\par}
+  {\end{list}\end{mdframed}\par}
  </latex_preamble>
 
  <section id="introduction" label="Introduction" priority="0">
@@ -274,8 +275,8 @@
      means of a \emph{policy} in XML format. The policy includes a declaration
      of all existing hardware resources of the target platform, the subjects to
      be executed with their assigned resources as well as the scheduling plan.
-     The plan specifies exactly when a subject should run on which CPU and for
-     how long.
+     The plan specifies exactly when a scheduling partition should run on which
+     CPU and for how long.
 
      Information flows between subjects are defined in their entirety in the
      policy. So-called memory channels declare directional writer/reader
@@ -397,25 +398,41 @@
      is done in a fixed, cyclic and preemptive manner according to a plan
      specified in the system policy.
 
-     Subjects are executed for a fixed amount of time, before being forcefully
-     preempted by the scheduler. Preemption means that regardless of what
-     operations a subject is currently performing, its execution is suspended
-     when the allotted time quantum has been consumed. Suspension means the
-     current state like CPU register contents is saved to the data structure
-     associated with the subject. After a subject has been suspended, the
-     scheduler restores the state and executes the next subject for a given
-     amount of time.
+     The scheduler is organized in a hierarchical fashion: at the first level,
+     there are scheduling partitions. These consist of one or more scheduling
+     groups. Subjects which can handover execution amongst each other via the
+     event mechanism form a scheduling group. The scheduling plan specified in
+     the policy, schedules scheduling partitions consisting of scheduling groups
+     consisting of subjects.
+
+     \begin{figure}[ht]
+      \centering
+      \input{graph_scheduling_entities}
+      \caption{Relationship between scheduling entities}
+      \label{fig:scheduling-entities}
+     \end{figure}
+
+     Within a scheduling partition, all scheduling groups are scheduled round
+     robin with preemption and the opportunity to yield and/or sleep. A
+     prioritization is not implemented on purpose to avoid any starvation
+     issues. The reason is that prioritization with starvation protection cannot
+     be implemented with low complexity. For a detailed description of the
+     operation of scheduling partitions, see \ref{overview_scheduling_yieldsleep}.
 
      Scheduling information is declared in a \emph{scheduling plan}. Such a plan
-     is part of the policy and specifies in what order subjects are executed on
-     which CPU core and for how long (see \ref{Skp.Scheduling}). The task of
-     the scheduler is to enforce a given scheduling regime.
+     is part of the policy and specifies which subjects belong to which
+     scheduling group and which scheduling groups belong to which scheduling
+     partition. A subject can only be part of one group and a group can only be
+     part of exactly one partition. Furthermore, the scheduling plan specifies
+     in what order scheduling partitions are executed on which CPU core and for
+     how long (see \ref{Skp.Scheduling}). The task of the scheduler is to
+     enforce a given scheduling regime.
 
      A scheduling plan is specified in terms of frames. A \emph{major frame}
      consists of a sequence of minor frames. When the end of a major frame is
      reached, the scheduler starts over from the beginning and uses the first
      minor frame in a cyclic fashion. This means that major frames are
-     repetitive. A \emph{minor frame} specifies a subject and a precise amount
+     repetitive. A \emph{minor frame} specifies a partition and a precise amount
      of time. This information is directly applied and enforced by the scheduler.
 
      Figure \ref{fig:example-major-frame} illustrates the structure of a major
@@ -423,9 +440,9 @@
      twice the amount of ticks than the other minor frames, which have identical
      length. Time progresses on the horizontal axis from left to right.
 
-     When the major frame starts, subject 1 is scheduled for the length of minor
-     frame 1, followed by a switch to subject 2. After that the two subjects are
-     again scheduled in alternating fashion.
+     When the major frame starts, partition 1 is scheduled for the length of minor
+     frame 1, followed by a switch to partition 2. After that the two partitions
+     are again scheduled in alternating fashion.
 
      \begin{figure}[ht]
       \centering
@@ -445,7 +462,8 @@
 
      An example of a scheduling plan for multiple CPUs is depicted in
      figure \ref{fig:example-scheduling-plan}. It illustrates a system with two
-     CPUs that execute various subjects indicated by different colors.
+     CPUs that execute various scheduling partitions indicated by different
+     colors.
 
      \begin{figure}[ht]
       \centering
@@ -454,17 +472,17 @@
       \label{fig:example-scheduling-plan}
      \end{figure}
 
-     CPU0 is executing the same subject for the whole duration of the major
-     frame. The second CPU is executing two subjects (blue
-     and green) in alternating order. As can be seen, subject green is granted
-     more CPU cycles than subject blue. All CPUs of the system wait on a barrier
-     at the beginning of a new major frame.  This guarantees that all logical
-     CPUs of a system are in-sync when major frames change.
+     CPU0 is executing the same partition for the whole duration of the major
+     frame. The second CPU is executing two partitions (blue and green) in
+     alternating order. As can be seen, partition green is granted more CPU
+     cycles than partition blue. All CPUs of the system wait on a barrier at the
+     beginning of a new major frame.  This guarantees that all logical CPUs of a
+     system are in-sync when major frames change.
 
-     The scheduler is also kept simple by the fact that subjects never migrate
-     between cores: they can only be scheduled on one particular CPU. This
-     invariant is checked and enforced during the policy validation step
-     (see \cite{muen:system-spec}).
+     The scheduler is also kept simple by the fact that subjects, and thus
+     partitions, never migrate between cores: they can only be scheduled on one
+     particular CPU. This invariant is checked and enforced during the policy
+     validation step (see \cite{muen:system-spec}).
 
      Since a system performs diverse tasks with different resource requirements,
      there is a need for some flexibility with regards to scheduling. To provide
@@ -485,6 +503,62 @@
      Refer to \cite{muen:system-spec} for a description of $\tau$0 as well as
      the motivation behind it.
     </text>
+    <section id="overview_scheduling_yieldsleep" label="Yield and Sleep Operations" priority="0">
+     <text priority="0">
+      While scheduling groups support the efficient cooperation of multiple
+      subjects, subjects which need to be spatially but not temporally isolated
+      from each other cannot profit from it. This is where scheduling partitions
+      can help: scheduling groups that do not need mutual, temporal isolation
+      can be assigned to the same scheduling partition. Note that systems where
+      all subjects must be temporally isolated can be realized by assigning each
+      subject to one scheduling group and each scheduling group to a single
+      scheduling partition.
+
+      Whenever a minor frame changes, a scheduling operation for partitions is
+      performed by choosing a new scheduling group in a round-robin fashion.
+      The next scheduling group is selected from among all active scheduling
+      groups of the partition. The active subject of the newly selected group is
+      then scheduled. If no active scheduling group exists, i.e. all groups of
+      the partition are asleep, Muen enters the current subject while setting
+      the VMX Activity State to 1 (i.e. halted) which suspends execution for the
+      remainder of the current minor frame.
+
+      Subjects can trigger source events with a yield action if they want to
+      relinquish the remainder of the minor frame to a different scheduling
+      group of the same partition. This instructs the kernel to reschedule the
+      scheduling partition, i.e. look up the next active scheduling group and
+      schedule the current subject of that group. If there is no other active
+      group, the same subject will be scheduled again.
+
+      A typical use case would be a subject that runs a server loop in which it
+      checks if a client has submitted some work. If no pending work is present,
+      instead of busy looping, it can perform a yield operation. While the CPU
+      is relinquished, it will stay the active subject of the group and be
+      executed again, when the group is scheduling the next time.
+
+      The sleep operation can be initiated by triggering an event that has been
+      configured with a sleep action in the policy. The kernel will mark the
+      scheduling group of this subject as inactive which means it will no longer
+      get CPU execution time. The scheduler then reschedules the partition and
+      selects the next active scheduling group. If no scheduling group is active
+      in the partition, the scheduling partition transitions to the sleep state
+      and no subject will be executed for the rest of the minor frame.
+
+      An inactive scheduling group can become active by an external interrupt,
+      an event that has been received/marked pending or a timed event that
+      expired. The timers of all inactive scheduling groups are managed in a
+      chronologically sorted list (called \emph{timer list}). Insertion happens
+      on scheduling group deactivation and removal when a timer expired. The
+      kernel updates the timer list as part of updating the scheduling group
+      information, see \ref{impl_scheduling_upd_sp} for the implementation
+      details.
+
+      Event-driven subjects, which receive interrupts whenever work is pending,
+      can use the sleep mechanism for efficient use of CPU time, see
+      \cite{muen:component-spec} for detailed information how such a component
+      can be configured and implemented.
+     </text>
+    </section>
    </section>
    <section id="overview_interrupts" label="Interrupts" priority="0">
     <text priority="0">
@@ -642,7 +716,8 @@
      A trap always interrupts subject execution and invokes the kernel.
 
      Several types of traps are directly handled by the kernel as they are used
-     to implement kernel functionality. These traps are:
+     to implement kernel functionality or affect state that is controlled by the
+     kernel. These traps are:
 
      \begin{description}
       \item[External Interrupt] \hfill \\
@@ -688,8 +763,8 @@
 
      Through the use of the event mechanism, the vast majority of traps is
      handed over to a second subject to process. Only a few event actions are
-     handled directly by the kernel: unmask IRQ, system panic, reboot and
-     poweroff, see also \ref{impl_handle_source_event}.
+     handled directly by the kernel: unmask IRQ, subject yield, subject sleep,
+     system panic, reboot and poweroff, see also \ref{impl_handle_source_event}.
     </text>
    </section>
    <section id="overview_covert_channels" label="Avoidance of Covert Channels" priority="0">
@@ -904,8 +979,11 @@
     structures are listed in this section.
    </text>
    <section id="SK.Scheduler.Current_Minor_Frame_ID" label="SK.Scheduler.Current_Minor_Frame_ID" priority="0"/>
-   <section id="SK.Scheduler.Scheduling_Groups" label="SK.Scheduler.SK.Scheduler.Scheduling_Groups" priority="0"/>
+   <section id="SK.Scheduler.Scheduling_Partitions" label="SK.Scheduler.Scheduling_Partitions" priority="0"/>
+   <section id="SK.Scheduler.Scheduling_Groups" label="SK.Scheduler.Scheduling_Groups" priority="0"/>
    <section id="SK.Interrupt_Tables.Instance" label="SK.Interrupt_Tables.Instance" priority="0"/>
+   <section id="SK.FPU.Active_XCR0_Features" label="SK.FPU.Active_XCR0_Features" priority="0"/>
+   <section id="SK.FPU.Current_XCR0" label="SK.FPU.Current_XCR0" priority="0"/>
   </section>
   <section id="Skp.IOMMU.IOMMUs" label="Skp.IOMMU.IOMMUs" priority="0">
    <text priority="0">
@@ -1166,13 +1244,31 @@
     <text priority="0">
      Whenever a VM-Exit occurs, the CPU passes the thread of execution from the subject
      code running in VMX non-root mode to the kernel \verb!handle_vmx_exit! procedure
-     found in file \verb!kernel/src/sk-scheduler.ads!. The hardware stores the
+     found in file \verb!kernel/src/sk-kernel.ads!. The hardware stores the
      execution state of the subject in the VMCS, transitions to VMX root-mode by
      restoring the host state of the kernel and starts execution at the Exit
      handler. Section \ref{impl_exit_handler} describes the main scheduler loop
      of the Muen kernel.
     </text>
    </section>
+  </section>
+  <section id="impl_scheduling" label="Scheduling Partition Management" priority="-2">
+   <text priority="0">
+    At the first level, the scheduler can always determine which scheduling
+    partition is active by keeping track of the current major and minor frame
+    and consulting the scheduling plans specified by the policy. This part of
+    the scheduler is described in section \ref{impl_handle_timer_expiry}.
+    At the second level, the scheduler manages scheduling groups within
+    partitions, which means determining which scheduling group is active within
+    each scheduling partition as well as which subject is currently active
+    within each scheduling group. This section describes how the second level of
+    the hierarchical scheduler operates.
+    The two main operations are updating the scheduling partition information,
+    which is done whenever a regular scheduling operation is performed on the
+    first level, i.e. on minor/major frame switch. Secondly, a scheduling
+    partition can explicitly be rescheduled by a subject performing a yield or
+    sleep action.
+   </text>
   </section>
   <section id="impl_subjects_state" label="Subject State Management" priority="-2">
    <text priority="0">

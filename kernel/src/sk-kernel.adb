@@ -144,8 +144,8 @@ is
    begin
       loop
          --D @Text Section => impl_handle_target_event
-         --D First, check if the subject specified by ID has a target event pending
-         --D by consulting the subject events data.
+         --D First, check if the subject specified by ID has a target event
+         --D pending by consulting the subject events data.
          Subjects_Events.Consume_Event
            (Subject => Subject_ID,
             Found   => Found,
@@ -184,6 +184,9 @@ is
                   Init_Subject (ID => Subject_ID);
             end case;
          end;
+         --D @Text Section => impl_handle_target_event, Priority => 10
+         --D At most 64 target events are processed since that is the maximum
+         --D number of events that can be pending.
       end loop;
    end Handle_Pending_Target_Event;
 
@@ -240,6 +243,7 @@ is
       Dst_CPU : Skp.CPU_Range;
    begin
       --D @Text Section => impl_handle_source_event
+      --D \paragraph*{}
       --D First, the next subject to be executed is initialized to the current
       --D one. A handover event may change this but otherwise the same subject
       --D is to be executed next.
@@ -256,12 +260,20 @@ is
             --D If the designated action is no action, then nothing is
             --D done.
          when Skp.Events.Subject_Sleep   =>
+            --D @Item List => impl_handle_source_event_actions
+            --D If the designated action is subject sleep, then a rescheduling
+            --D of the partition with parameter \verb!Sleep! set to \verb!True!
+            --D is performed, see \ref{impl_scheduling_resched_sp}.
             Scheduler.Reschedule_Partition
               (Subject_ID      => Subject,
                RIP_Incremented => RIP_Incremented,
                Sleep           => True,
                Next_Subject    => Next_Subject);
          when Skp.Events.Subject_Yield   =>
+            --D @Item List => impl_handle_source_event_actions
+            --D If the designated action is subject yield, then a rescheduling
+            --D of the partition with parameter \verb!Sleep! set to \verb!False!
+            --D is performed, see \ref{impl_scheduling_resched_sp}.
             Scheduler.Reschedule_Partition
               (Subject_ID      => Subject,
                RIP_Incremented => RIP_Incremented,
@@ -303,6 +315,10 @@ is
             Dst_CPU := Skp.Subjects.Get_CPU_ID
               (Subject_ID => Event.Target_Subject);
 
+            --D @Text Section => impl_handle_source_event, Priority => 20
+            --D Indicate activity for the target subject which may lead to a
+            --D subject being woken up if it is currently sleeping, see
+            --D \ref{impl_scheduling_indicate_activity}.
             Scheduler.Indicate_Activity
               (Subject_ID => Event.Target_Subject,
                Same_CPU   => Dst_CPU = CPU_Info.CPU_ID);
@@ -507,13 +523,13 @@ is
         --D Only bits that we support must be set.
         or else ((Supported or New_Value) /= Supported)
           --D @Item List => impl_handle_xsetbv_checks
-          --D XCR0_FPU_STATE_FLAG must always be set
+          --D \verb!XCR0_FPU_STATE_FLAG! must always be set
         or else not Bitops.Bit_Test
           (Value => New_Value,
            Pos   => Constants.XCR0_FPU_STATE_FLAG)
         --D @Item List => impl_handle_xsetbv_checks
-        --D If XCR0_AVX_STATE_FLAG is set then XCR0_SSE_STATE_FLAG must be set as
-        --D well.
+        --D If \verb!XCR0_AVX_STATE_FLAG! is set then \verb!XCR0_SSE_STATE_FLAG!
+        --D must be set as well.
         or else (Bitops.Bit_Test
                  (Value => New_Value,
                   Pos   => Constants.XCR0_AVX_STATE_FLAG)
@@ -521,8 +537,9 @@ is
                    (Value => New_Value,
                     Pos   => Constants.XCR0_SSE_STATE_FLAG))
         --D @Item List => impl_handle_xsetbv_checks
-        --D If any of XCR0_OPMASK_STATE_FLAG or XCR0_ZMM_HI256_STATE_FLAG
-        --D or XCR0_HI16_ZMM_STATE_FLAG are set then all must be set.
+        --D If any of \verb!XCR0_OPMASK_STATE_FLAG! or
+        --D \verb!XCR0_ZMM_HI256_STATE_FLAG! or \\
+        --D \verb!XCR0_HI16_ZMM_STATE_FLAG! are set then all must be set.
         or else ((Bitops.Bit_Test
                   (Value => New_Value,
                    Pos   => Constants.XCR0_OPMASK_STATE_FLAG)
@@ -543,7 +560,8 @@ is
                       (Value => New_Value,
                        Pos   => Constants.XCR0_ZMM_HI256_STATE_FLAG)))
         --D @Item List => impl_handle_xsetbv_checks
-        --D If AVX512 is set then XCR0_AVX_STATE_FLAG must be set as well.
+        --D If \verb!AVX512! is set then \verb!XCR0_AVX_STATE_FLAG! must be set
+        --D as well.
         or else (Bitops.Bit_Test
                  (Value => New_Value,
                   Pos   => Constants.XCR0_OPMASK_STATE_FLAG)
@@ -553,7 +571,7 @@ is
       then
 
          --D @Text Section => impl_handle_xsetbv
-         --D If the value is invalid, inject a #GP exception. Note that
+         --D If the value is invalid, inject a \#GP exception. Note that
          --D effectively the inserted event has type \emph{external interrupt}.
          --D While it would not work in general but in this specific case the
          --D exception error code is 0.
@@ -722,7 +740,8 @@ is
    --D VMX root mode is performed by the hardware. The register state of the
    --D current subject is passed to the procedure by the
    --D \texttt{vmx\_exit\_handler} assembly code (which is set as kernel entry
-   --D point in the VMCS of the trapping subject).
+   --D point/\verb!HOST_RIP! in the VMCS of the trapping subject, see
+   --D \ref{impl_vmcs_setup_host}).
    procedure Handle_Vmx_Exit (Subject_Registers : in out CPU_Registers_Type)
    is
       --  See Intel SDM Vol. 3C, "27.2.2 Information for VM Exits Due to
@@ -828,7 +847,7 @@ is
       --D @Text Section => impl_exit_handler
       --D \paragraph{}
       --D Once the exit has been dealt with, the execution of the next subject
-      --D is prepared. A pending target event, if present, is handled see
+      --D is prepared. Pending target events, if present, are handled see
       --D \ref{impl_handle_target_event}.
       Current_Subject := Scheduler.Get_Current_Subject_ID;
       Handle_Pending_Target_Event (Subject_ID => Current_Subject);

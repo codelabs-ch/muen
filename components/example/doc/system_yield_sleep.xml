@@ -1,0 +1,40 @@
+<events>
+ ...
+ <event mode="kernel" name="subject_yield"/>
+ <event mode="kernel" name="subject_sleep"/>
+ ..
+</events>
+...
+<subjects>
+ <subject ...>
+  <vcpu>
+   <vmx>
+    <controls>
+     <proc>
+      <!-- VM-Exit on HLT instruction -->
+      <HLTExiting>1</HLTExiting>
+      <!-- VM-Exit on PAUSE instruction -->
+      <PAUSEExiting>1</PAUSEExiting>
+     </proc>
+    </controls>
+   </vmx>
+  <vcpu>
+  <events>
+   <source>
+    <group name="vmx_exit">
+     <!-- Exit Reason 12: HLT -->
+     <event id="12" physical="subject_yield">
+      <subject_yield/>
+     </event>
+     ...
+     <!-- Exit Reason 40: PAUSE -->
+     <event id="40" physical="subject_sleep">
+      <subject_sleep/>
+     </event>
+    </group>
+   </source>
+  </events>
+  ...
+ </subject>
+ ...
+</subjects>

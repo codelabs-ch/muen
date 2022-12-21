@@ -35,6 +35,11 @@ is
    -------------------------------------------------------------------------
 
    --  Returns True if the subject with the given ID is active and not sleeping.
+   --D @Section Id => impl_scheduling_is_active, Label => Active Subject, Parent => impl_scheduling, Priority => 10
+   --D @Text Section => impl_scheduling_is_active
+   --D A subject is considered active if either of the following conditions is
+   --D True:
+   --D @UL Id => impl_scheduling_is_active_conds, Section => impl_scheduling_is_active, Priority => 0
    function Is_Active (Subject_ID : Skp.Global_Subject_ID_Type) return Boolean
    with
       Global => (Input => (Subjects.State, Subjects_Events.State,
@@ -42,14 +47,23 @@ is
                            X86_64.State)),
       Volatile_Function
    is
+      --D @Item List => impl_scheduling_is_active_conds
+      --D The subject has a pending event.
       Pending_Events     : constant Boolean
         := Subjects_Events.Has_Pending_Event (Subject => Subject_ID);
+      --D @Item List => impl_scheduling_is_active_conds
+      --D The subject has a pending interrupt.
       Pending_Interrupts : constant Boolean
         := Subjects_Interrupts.Has_Pending_Interrupt (Subject => Subject_ID);
+      --D @Item List => impl_scheduling_is_active_conds
+      --D The subject timed event has expired.
       Expired_Timer      : constant Boolean
         := Timed_Events.Has_Expired (Subject => Subject_ID);
    begin
       return Pending_Events or Pending_Interrupts or Expired_Timer
+      --D @Item List => impl_scheduling_is_active_conds
+      --D The subject is running/has the running flag set, i.e. is not in the
+      --D sleep state.
         or Subjects.Is_Running (ID => Subject_ID);
    end Is_Active;
 
@@ -105,9 +119,11 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Set the global activity indicator of the scheduling group identified by
-   --  partition ID and scheduling group index. Also remove the now active
-   --  scheduling group from the sorted timer list of the scheduling partition.
+   --D @Section Id => impl_scheduling_activate_group, Label => Scheduling Group Activation, Parent => impl_scheduling, Priority => 20
+   --D @Text Section => impl_scheduling_activate_group
+   --D Set the global activity indicator of the scheduling group identified by
+   --D partition ID and scheduling group index. Also remove the now active
+   --D scheduling group from the sorted timer list of the scheduling partition.
    procedure Activate_Group
      (Partition_ID : Policy.Scheduling_Partition_Range;
       Group_ID     : Policy.Scheduling_Group_Range)
@@ -147,10 +163,12 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Clear the global activity indicator of the scheduling group identified by
-   --  partition ID and scheduling group index. Also insert the timed event of
-   --  the active subject of the scheduling group into the sorted timer list of
-   --  the scheduling partition if it is not already in the list.
+   --D @Section Id => impl_scheduling_deactivate_group, Label => Scheduling Group Deactivation, Parent => impl_scheduling, Priority => 21
+   --D @Text Section => impl_scheduling_deactivate_group
+   --D Clear the global activity indicator of the scheduling group identified by
+   --D partition ID and scheduling group index. Also insert the timed event of
+   --D the active subject of the scheduling group into the sorted timer list of
+   --D the scheduling partition if it is not already in the list.
    procedure Deactivate_Group
      (Partition_ID : Policy.Scheduling_Partition_Range;
       Group_Index  : Policy.Scheduling_Group_Index_Range;
@@ -251,10 +269,12 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Find the next active schedduling group for the scheduling partition
-   --  specified by ID. No_Group is returned if no scheduling group is active
-   --  in the given partition. The group activity indicator of the partition is
-   --  updated as part of the scheduling group search.
+   --D @Section Id => impl_scheduling_find_next_active_sg, Label => Finding the next active scheduling group, Parent => impl_scheduling, Priority => 11
+   --D @Text Section => impl_scheduling_find_next_active_sg
+   --D Find next active scheduling group for the scheduling partition specified
+   --D by ID. \verb!No_Group! is returned if no scheduling group is active in
+   --D the given partition.
+   --D @OL Id => impl_scheduling_find_next_active_sg_steps, Section => impl_scheduling_find_next_active_sg, Priority => 0
    procedure Find_Next_Active_Scheduling_Group
      (Partition_ID     :     Policy.Scheduling_Partition_Range;
       Next_Group       : out Policy.Extended_Scheduling_Group_Range;
@@ -281,21 +301,37 @@ is
       Next_Group := Policy.No_Group;
       Next_Group_Index := Current_SG_Index;
       loop
+         --D @Item List => impl_scheduling_find_next_active_sg_steps
+         --D Loop over all scheduling groups (maximum is 64) of the partition
+         --D starting with the successor of the currently active group.
          Next_Group_Index := Successor_Group
            (Partition_ID => Partition_ID,
             Group_Index  => Next_Group_Index);
+
+         --D @Item List => impl_scheduling_find_next_active_sg_steps
+         --D Atomically examine the group activity indicator of the next group.
          Indicated_As_Active := Atomics.Bit_Test
            (Atomic => Global_Group_Activity_Indicator (Partition_ID),
             Bit    => Byte (Next_Group_Index));
          if Indicated_As_Active then
+            --D @Item List => impl_scheduling_find_next_active_sg_steps
+            --D If the group is indicated as active, evaluate whether the
+            --D current subject of this scheduling group is actually active.
             Next_Group := Policy.Get_Scheduling_Group_ID
               (Partition_ID => Partition_ID,
                Group_Index  => Next_Group_Index);
             Subject_Is_Active := Is_Active
               (Subject_ID => Scheduling_Groups (Next_Group).Active_Subject);
             if Subject_Is_Active then
+               --D @Item List => impl_scheduling_find_next_active_sg_steps
+               --D If the subject is indeed active, the next active group has
+               --D been found and is returned.
                return;
             else
+               --D @Item List => impl_scheduling_find_next_active_sg_steps
+               --D If the subject is not active, deactivate the group which also
+               --D clears the global activity indicator of the group, see
+               --D \ref{impl_scheduling_deactivate_group}.
                Deactivate_Group
                  (Partition_ID => Partition_ID,
                   Group_Index  => Next_Group_Index,
@@ -305,15 +341,20 @@ is
             end if;
          end if;
 
-         --  Stop search if we end up back at the current scheduling group
-         --  since this means there is no active group in this partition.
-
+         --D @Item List => impl_scheduling_find_next_active_sg_steps
+         --D Stop search if we end up back at the current scheduling group
+         --D since this means there is no other active group in this partition.
          exit when Next_Group_Index = Current_SG_Index;
       end loop;
    end Find_Next_Active_Scheduling_Group;
 
    -------------------------------------------------------------------------
 
+   --D @Section Id => impl_scheduling_indicate_activity, Label => Indicate Subject Activity, Parent => impl_scheduling, Priority => 30
+   --D @Text Section => impl_scheduling_indicate_activity
+   --D Indicate that activity for a given subject has occurred by atomically
+   --D setting the global scheduling group activity indicator of the associated
+   --D scheduling group of the target subject.
    procedure Indicate_Activity
      (Subject_ID : Skp.Global_Subject_ID_Type;
       Same_CPU   : Boolean)
@@ -334,9 +375,9 @@ is
    begin
       if Same_CPU then
 
-         --  Only indicate activity if the target subject is the active
-         --  subject of its scheduling group.
-
+         --D @Text Section => impl_scheduling_indicate_activity
+         --D If the subject is running on the same CPU, only indicate activity
+         --D if the target subject is the active subject of its scheduling group.
          if Subject_ID = Scheduling_Groups (Group_ID).Active_Subject then
             Atomics.Set
               (Atomic => Global_Group_Activity_Indicator (Partition_ID),
@@ -344,9 +385,9 @@ is
          end if;
       else
 
-         --  Unconditionally indicate activity for target subject running
-         --  on different CPU cores.
-
+         --D @Text Section => impl_scheduling_indicate_activity
+         --D Unconditionally indicate activity for target subject running on
+         --D different CPU cores.
          Atomics.Set
            (Atomic => Global_Group_Activity_Indicator (Partition_ID),
             Bit    => Byte (Group_Index));
@@ -355,9 +396,11 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Update the timer list by scannig all inactive scheduling groups of the
-   --  specified partition and activating all groups for which the timer is
-   --  expired.
+   --D @Section Id => impl_scheduling_upd_timer_list, Label => Updating Scheduling Partition Timer List, Parent => impl_scheduling, Priority => 40
+   --D @Text Section => impl_scheduling_upd_timer_list
+   --D Update the timer list by scannig all inactive scheduling groups of the
+   --D specified partition and activating all groups for which the timer is
+   --D expired.
    procedure Update_Timer_List (Partition : Policy.Scheduling_Partition_Range)
    with
       Global  => (Input  => X86_64.State,
@@ -388,8 +431,12 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Update scheduling partition information by performing a scheduling
-   --  operation for the currently active scheduling partition.
+   --D @Section Id => impl_scheduling_upd_sp, Label => Update Scheduling Partitions, Parent => impl_scheduling, Priority => 0
+   --D @Text Section => impl_scheduling_upd_sp
+   --D Update scheduling partition information on minor/major frame change, by
+   --D performing a scheduling operation for the currently active scheduling
+   --D partition.
+   --D @OL Id => impl_scheduling_upd_sp_steps, Section => impl_scheduling_upd_sp, Priority => 0
    procedure Update_Scheduling_Partition
    with
       Global => (Input  => (CPU_Info.CPU_ID, Current_Minor_Frame_ID,
@@ -404,38 +451,53 @@ is
       Next_Group     : Policy.Extended_Scheduling_Group_Range;
       Next_Group_Idx : Policy.Scheduling_Group_Index_Range;
    begin
+      --D @Item List => impl_scheduling_upd_sp_steps
+      --D Update the timer list.
       Update_Timer_List (Partition => Partition_ID);
 
+      --D @Item List => impl_scheduling_upd_sp_steps
+      --D Find the next active scheduling group of the current partition.
       Find_Next_Active_Scheduling_Group (Partition_ID     => Partition_ID,
                                          Next_Group       => Next_Group,
                                          Next_Group_Index => Next_Group_Idx);
       if Next_Group /= Policy.No_Group then
          if Scheduling_Partitions (Partition_ID).Sleeping then
 
-            --  Transition sleeping partition to active state.
-
+            --D @Item List => impl_scheduling_upd_sp_steps
+            --D If an active scheduling group is present and the partition
+            --D is sleeping, transition the scheduling partition to the active
+            --D state.
             Subjects.Set_Activity_State
               (ID    => Scheduling_Groups (Next_Group).Active_Subject,
                Value => Constants.GUEST_ACTIVITY_ACTIVE);
             Scheduling_Partitions (Partition_ID).Sleeping := False;
          end if;
 
-         --  Active subjects always have the running flag set.
-
+         --D @Item List => impl_scheduling_upd_sp_steps
+         --D Set the running flag of the active subject of the next active
+         --D scheduling group.
          Subjects.Set_Running
            (ID    => Scheduling_Groups (Next_Group).Active_Subject,
             Value => True);
 
-         --  Switch to next scheduling group by making it the active group of
-         --  the scheduling partition.
-
+         --D @Item List => impl_scheduling_upd_sp_steps
+         --D Switch to the next scheduling group by making it the active group
+         --D of the scheduling partition.
          Scheduling_Partitions (Partition_ID).Active_Group_Index
            := Next_Group_Idx;
       end if;
+      --D @Item List => impl_scheduling_upd_sp_steps
+      --D If no active scheduling group is found, nothing (except for updating
+      --D the timer list) is done.
    end Update_Scheduling_Partition;
 
    -------------------------------------------------------------------------
 
+   --D @Section Id => impl_scheduling_resched_sp, Label => Rescheduling Scheduling Partitions, Parent => impl_scheduling, Priority => 0
+   --D @Text Section => impl_scheduling_resched_sp
+   --D Reschedule a scheduling partition due to a sleep or yield action
+   --D performed by a given subject.
+   --D @OL Id => impl_scheduling_resched_sp_steps, Section => impl_scheduling_resched_sp, Priority => 0
    procedure Reschedule_Partition
      (Subject_ID      :     Skp.Global_Subject_ID_Type;
       RIP_Incremented :     Boolean;
@@ -457,12 +519,17 @@ is
       Subject_Is_Active : Boolean;
    begin
       if Sleep then
+         --D @Item List => impl_scheduling_resched_sp_steps
+         --D If the subject requested to sleep, set the running flag to False.
          Subjects.Set_Running (ID    => Subject_ID,
                                Value => False);
       end if;
 
       Subject_Is_Active := Is_Active (Subject_ID => Subject_ID);
       if not Subject_Is_Active then
+         --D @Item List => impl_scheduling_resched_sp_steps
+         --D Then, if the subject is not active, deactivate the associated
+         --D scheduling group.
          Deactivate_Group
            (Partition_ID => Partition_ID,
             Group_Index  => Scheduling_Partitions
@@ -474,20 +541,23 @@ is
          Subjects.Increment_RIP (ID => Subject_ID);
       end if;
 
+      --D @Item List => impl_scheduling_resched_sp_steps
+      --D Find the next active scheduling group of the partition.
       Find_Next_Active_Scheduling_Group (Partition_ID     => Partition_ID,
                                          Next_Group       => Next_Group,
                                          Next_Group_Index => Next_Group_Idx);
       if Next_Group /= Policy.No_Group then
 
-         --  Switch to next scheduling group by making it the active group of
-         --  the scheduling partition.
-
+         --D @Item List => impl_scheduling_resched_sp_steps
+         --D If an active group is present, switch to the next scheduling group
+         --D by making it the active group of the scheduling partition.
          Scheduling_Partitions
            (Partition_ID).Active_Group_Index := Next_Group_Idx;
       else
 
-         --  Transition active partition to sleep state.
-
+         --D @Item List => impl_scheduling_resched_sp_steps
+         --D If there is no active group, transition the active partition to
+         --D sleep state.
          Subjects.Set_Activity_State (ID    => Subject_ID,
                                       Value => Constants.GUEST_ACTIVITY_HLT);
          Scheduling_Partitions (Partition_ID).Sleeping := True;
@@ -645,7 +715,10 @@ is
 
       Current_Minor_Frame_ID := Next_Minor_ID;
 
-      --  Update scheduling partition.
+      --D @Text Section => impl_handle_timer_expiry, Priority => 10
+      --D After updating the major and minor frame information, which is the
+      --D first level of the hierarchical scheduling algorithm, scheduling
+      --D partitions are updated, see \ref{impl_scheduling_upd_sp}.
 
       Update_Scheduling_Partition;
 
@@ -705,6 +778,10 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Initialize scheduling group information which ensures that the initial
+   --  subject of each scheduling group is set as the active subject.
+   --  Furthermore the timer list is set up as being empty without a pending
+   --  timeout.
    procedure Init_Scheduling_Groups
    with
       Global  => (Output => Scheduling_Groups),

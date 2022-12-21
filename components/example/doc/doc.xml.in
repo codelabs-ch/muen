@@ -32,6 +32,7 @@
   \definecolor{mymauve}{rgb}{0.58,0,0.82}
 
   \usepackage{listings}
+  \usepackage{pifont,mdframed}
   \lstset{
   backgroundcolor=\color{white},
   basicstyle=\footnotesize\ttfamily,
@@ -70,16 +71,16 @@
   }{\endoldlongtable}
 
   \newenvironment{warning}
-  {\par
+  {\par\begin{mdframed}[linewidth=0.4pt,linecolor=red]
   \begin{list}{}{\leftmargin=1cm
   \labelwidth=\leftmargin}\item[\color{red}\Large\ding{43}]}
-  {\end{list}\par}
+  {\end{list}\end{mdframed}\par}
 
   \newenvironment{info}
-  {\par
+  {\par\begin{mdframed}[linewidth=0.4pt,linecolor=blue]
   \begin{list}{}{\leftmargin=1cm
   \labelwidth=\leftmargin}\item[\color{blue}\Large\ding{43}]}
-  {\end{list}\par}
+  {\end{list}\end{mdframed}\par}
  </latex_preamble>
 
  <description scope="config" name="ahci_drv_enabled">

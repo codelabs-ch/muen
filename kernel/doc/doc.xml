@@ -12,6 +12,7 @@
   \usepackage[head=30pt, lmargin=3.0cm, rmargin=3.0cm, bmargin=1.9cm, tmargin=3.2cm]{geometry}
 
   \usepackage{pgfgantt}
+  \usepackage{pifont,mdframed}
 
   \usepackage{hyperref}
   \hypersetup{
@@ -45,10 +46,10 @@
   \input{tikzstyle}
 
   \newenvironment{info}
-  {\par
+  {\par\begin{mdframed}[linewidth=0.4pt,linecolor=blue]
   \begin{list}{}{\leftmargin=1cm
   \labelwidth=\leftmargin}\item[\color{blue}\Large\ding{43}]}
-  {\end{list}\par}
+  {\end{list}\end{mdframed}\par}
  </latex_preamble>
 
  <section id="introduction" label="Introduction" priority="0">

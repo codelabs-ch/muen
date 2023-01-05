@@ -226,7 +226,7 @@
                                                                                                                                                      >        <Emulation>0</Emulation>
                                                                                                                                                      >        <TaskSwitched>0</TaskSwitched>
                                                                                                                                                      >        <ExtensionType>0</ExtensionType>
-                                                                                                                                                     >        <NumericError>0</NumericError>
+                                                                                                                                                     >        <NumericError>1</NumericError>
                                                                                                                                                      >        <WriteProtect>0</WriteProtect>
                                                                                                                                                      >        <AlignmentMask>0</AlignmentMask>
                                                                                                                                                      >        <NotWritethrough>0</NotWritethrough>
@@ -978,7 +978,7 @@
                                                                                                                                                      >        <Emulation>0</Emulation>
                                                                                                                                                      >        <TaskSwitched>0</TaskSwitched>
                                                                                                                                                      >        <ExtensionType>0</ExtensionType>
-                                                                                                                                                     >        <NumericError>0</NumericError>
+                                                                                                                                                     >        <NumericError>1</NumericError>
                                                                                                                                                      >        <WriteProtect>0</WriteProtect>
                                                                                                                                                      >        <AlignmentMask>0</AlignmentMask>
                                                                                                                                                      >        <NotWritethrough>0</NotWritethrough>

@@ -284,6 +284,10 @@ is
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
               XPath => "vcpu/vmx/masks/cr0/*");
+         CR0_Shadow   : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Subject,
+              XPath => "vcpu/registers/cr0Shadow/*");
          CR4_Value   : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
@@ -292,6 +296,10 @@ is
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
               XPath => "vcpu/vmx/masks/cr4/*");
+         CR4_Shadow   : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Subject,
+              XPath => "vcpu/registers/cr4Shadow/*");
          Exceptions  : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
@@ -384,6 +392,9 @@ is
            & Indent & "    CR0_Value          => "
            & Mutools.Utils.To_Hex (Number => VMX.Get_CR0 (Fields => CR0_Value))
            & "," & ASCII.LF
+           & Indent & "    CR0_Shadow         => "
+           & Mutools.Utils.To_Hex (Number => VMX.Get_CR0 (Fields => CR0_Shadow))
+           & "," & ASCII.LF
            & Indent & "    CR0_Mask           => "
            & Mutools.Utils.To_Hex (Number => VMX.Get_CR0
                                    (Fields  => CR0_Mask,
@@ -391,6 +402,9 @@ is
            & "," & ASCII.LF
            & Indent & "    CR4_Value          => "
            & Mutools.Utils.To_Hex (Number => VMX.Get_CR4 (Fields => CR4_Value))
+           & "," & ASCII.LF
+           & Indent & "    CR4_Shadow         => "
+           & Mutools.Utils.To_Hex (Number => VMX.Get_CR4 (Fields => CR4_Shadow))
            & "," & ASCII.LF
            & Indent & "    CR4_Mask           => "
            & Mutools.Utils.To_Hex (Number => VMX.Get_CR4

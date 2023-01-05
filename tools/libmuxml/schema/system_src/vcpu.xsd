@@ -269,6 +269,64 @@
   </xs:sequence>
  </xs:complexType>
 
+ <xs:complexType name="cr0ShadowType">
+  <xs:annotation>
+   <xs:documentation>
+    Allows to set initial values of the CR0 shadow control register.
+
+    See Intel SDM Vol. 3C, "24.6.6 Guest/Host Masks and Read Shadows for CR0 and
+    CR4" for more details on the CR0 shadow.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:sequence>
+   <xs:element name="ProtectionEnable"   type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="MonitorCoprocessor" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="Emulation"          type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="TaskSwitched"       type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="ExtensionType"      type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="NumericError"       type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="WriteProtect"       type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="AlignmentMask"      type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="NotWritethrough"    type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="CacheDisable"       type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="Paging"             type="bitValueType" minOccurs="0" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
+
+ <xs:complexType name="cr4ShadowType">
+  <xs:annotation>
+   <xs:documentation>
+    Allows to set initial values of the CR4 shadow control register.
+
+    See Intel SDM Vol. 3C, "24.6.6 Guest/Host Masks and Read Shadows for CR0 and
+    CR4" for more details on the CR0 shadow.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:sequence>
+   <xs:element name="Virtual8086"              type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="ProtectedVirtualInts"     type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="TimeStampDisable"         type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="DebuggingExtensions"      type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="PageSizeExtensions"       type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="PhysicalAddressExtension" type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="MachineCheckEnable"       type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="PageGlobalEnable"         type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="PerfCounterEnable"        type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="OSSupportFXSAVE"          type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="OSSupportSIMDExceptions"  type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="UMInstructionPrevention"  type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="VMXEnable"                type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="SMXEnable"                type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="FSGSBASEEnable"           type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="PCIDEnable"               type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="XSAVEEnable"              type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="SMEPEnable"               type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="SMAPEnable"               type="bitValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="ProtectionKeyEnable"      type="bitValueType" minOccurs="0" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
+
+
  <xs:complexType name="vcpuType">
   <xs:annotation>
    <xs:documentation>
@@ -346,14 +404,16 @@
   <xs:annotation>
    <xs:documentation>
     The \texttt{registers} element specifies the initial value of
-    general-purpose (GPR), CR0/CR4 and segment registers.
+    general-purpose (GPR), CR0/CR4, CR0/CR4 read shadow and segment registers.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>
-   <xs:element name="gpr"      type="gprType"      minOccurs="0" maxOccurs="1"/>
-   <xs:element name="cr0"      type="cr0Type"      minOccurs="0" maxOccurs="1"/>
-   <xs:element name="cr4"      type="cr4Type"      minOccurs="0" maxOccurs="1"/>
-   <xs:element name="segments" type="segmentsType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="gpr"       type="gprType"       minOccurs="0" maxOccurs="1"/>
+   <xs:element name="cr0"       type="cr0Type"       minOccurs="0" maxOccurs="1"/>
+   <xs:element name="cr0Shadow" type="cr0ShadowType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="cr4"       type="cr4Type"       minOccurs="0" maxOccurs="1"/>
+   <xs:element name="cr4Shadow" type="cr4ShadowType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="segments"  type="segmentsType"  minOccurs="0" maxOccurs="1"/>
   </xs:sequence>
  </xs:complexType>
 

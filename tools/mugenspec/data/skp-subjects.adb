@@ -17,8 +17,10 @@ is
       GPRs               : SK.CPU_Registers_Type;
       Segment_Regs       : SK.Segment_Registers_Type;
       CR0_Value          : SK.Word64;
+      CR0_Shadow         : SK.Word64;
       CR0_Mask           : SK.Word64;
       CR4_Value          : SK.Word64;
+      CR4_Shadow         : SK.Word64;
       CR4_Mask           : SK.Word64;
       Exception_Bitmap   : SK.Word32;
       MSR_Count          : SK.Word32;
@@ -98,8 +100,10 @@ is
              Limit         => 16#0000#,
              Access_Rights => 16#0001_0000#)),
        CR0_Value          => 16#8001_0035#,
+       CR0_Shadow         => 16#8001_0035#,
        CR0_Mask           => 16#ffff_ffff_ffff_ffff#,
        CR4_Value          => 16#2020#,
+       CR4_Shadow         => 16#2020#,
        CR4_Mask           => 16#ffff_ffff_ffff_ffff#,
        Exception_Bitmap   => 16#ffff_ffff#,
        MSR_Count          => 1,
@@ -178,8 +182,10 @@ is
              Limit         => 16#0000#,
              Access_Rights => 16#0001_0000#)),
        CR0_Value          => 16#0035#,
+       CR0_Shadow         => 16#0035#,
        CR0_Mask           => 16#ffff_ffff_1ffa_ffe0#,
        CR4_Value          => 16#2020#,
+       CR4_Shadow         => 16#2020#,
        CR4_Mask           => 16#ffff_ffff_ff88_b000#,
        Exception_Bitmap   => 16#fff0_8006#,
        MSR_Count          => 5,
@@ -258,8 +264,10 @@ is
              Limit         => 16#0000#,
              Access_Rights => 16#0001_0000#)),
        CR0_Value          => 16#8001_0035#,
+       CR0_Shadow         => 16#8001_0035#,
        CR0_Mask           => 16#ffff_ffff_ffff_ffff#,
        CR4_Value          => 16#2020#,
+       CR4_Shadow         => 16#2020#,
        CR4_Mask           => 16#ffff_ffff_ffff_ffff#,
        Exception_Bitmap   => 16#ffff_ffff#,
        MSR_Count          => 0,
@@ -338,8 +346,10 @@ is
              Limit         => 16#0000#,
              Access_Rights => 16#0001_0000#)),
        CR0_Value          => 16#8001_0035#,
+       CR0_Shadow         => 16#0004#,
        CR0_Mask           => 16#ffff_ffff_ffff_ffff#,
        CR4_Value          => 16#2020#,
+       CR4_Shadow         => 16#0000#,
        CR4_Mask           => 16#ffff_ffff_ffff_ffff#,
        Exception_Bitmap   => 16#ffff_ffff#,
        MSR_Count          => 0,
@@ -362,6 +372,13 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_CR0_Shadow
+     (Subject_ID : Global_Subject_ID_Type)
+      return SK.Word64
+   is (Subject_Specs (Subject_ID).CR0_Shadow);
+
+   -------------------------------------------------------------------------
+
    function Get_CR0_Mask (Subject_ID : Global_Subject_ID_Type) return SK.Word64
    is (Subject_Specs (Subject_ID).CR0_Mask);
 
@@ -369,6 +386,13 @@ is
 
    function Get_CR4 (Subject_ID : Global_Subject_ID_Type) return SK.Word64
    is (Subject_Specs (Subject_ID).CR4_Value);
+
+   -------------------------------------------------------------------------
+
+   function Get_CR4_Shadow
+     (Subject_ID : Global_Subject_ID_Type)
+      return SK.Word64
+   is (Subject_Specs (Subject_ID).CR4_Shadow);
 
    -------------------------------------------------------------------------
 

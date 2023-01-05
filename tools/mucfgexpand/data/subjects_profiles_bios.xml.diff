@@ -197,6 +197,19 @@
                                                                                                                                                      >        <CacheDisable>0</CacheDisable>
                                                                                                                                                      >        <Paging>0</Paging>
                                                                                                                                                      >       </cr0>
+                                                                                                                                                     >       <cr0Shadow>
+                                                                                                                                                     >        <ProtectionEnable>1</ProtectionEnable>
+                                                                                                                                                     >        <MonitorCoprocessor>0</MonitorCoprocessor>
+                                                                                                                                                     >        <Emulation>0</Emulation>
+                                                                                                                                                     >        <TaskSwitched>0</TaskSwitched>
+                                                                                                                                                     >        <ExtensionType>0</ExtensionType>
+                                                                                                                                                     >        <NumericError>0</NumericError>
+                                                                                                                                                     >        <WriteProtect>0</WriteProtect>
+                                                                                                                                                     >        <AlignmentMask>0</AlignmentMask>
+                                                                                                                                                     >        <NotWritethrough>0</NotWritethrough>
+                                                                                                                                                     >        <CacheDisable>0</CacheDisable>
+                                                                                                                                                     >        <Paging>0</Paging>
+                                                                                                                                                     >       </cr0Shadow>
                                                                                                                                                      >       <cr4>
                                                                                                                                                      >        <Virtual8086>0</Virtual8086>
                                                                                                                                                      >        <ProtectedVirtualInts>0</ProtectedVirtualInts>
@@ -219,6 +232,28 @@
                                                                                                                                                      >        <SMAPEnable>0</SMAPEnable>
                                                                                                                                                      >        <ProtectionKeyEnable>0</ProtectionKeyEnable>
                                                                                                                                                      >       </cr4>
+                                                                                                                                                     >       <cr4Shadow>
+                                                                                                                                                     >        <Virtual8086>0</Virtual8086>
+                                                                                                                                                     >        <ProtectedVirtualInts>0</ProtectedVirtualInts>
+                                                                                                                                                     >        <TimeStampDisable>0</TimeStampDisable>
+                                                                                                                                                     >        <DebuggingExtensions>0</DebuggingExtensions>
+                                                                                                                                                     >        <PageSizeExtensions>0</PageSizeExtensions>
+                                                                                                                                                     >        <PhysicalAddressExtension>0</PhysicalAddressExtension>
+                                                                                                                                                     >        <MachineCheckEnable>0</MachineCheckEnable>
+                                                                                                                                                     >        <PageGlobalEnable>0</PageGlobalEnable>
+                                                                                                                                                     >        <PerfCounterEnable>0</PerfCounterEnable>
+                                                                                                                                                     >        <OSSupportFXSAVE>0</OSSupportFXSAVE>
+                                                                                                                                                     >        <OSSupportSIMDExceptions>0</OSSupportSIMDExceptions>
+                                                                                                                                                     >        <UMInstructionPrevention>0</UMInstructionPrevention>
+                                                                                                                                                     >        <VMXEnable>0</VMXEnable>
+                                                                                                                                                     >        <SMXEnable>0</SMXEnable>
+                                                                                                                                                     >        <FSGSBASEEnable>0</FSGSBASEEnable>
+                                                                                                                                                     >        <PCIDEnable>0</PCIDEnable>
+                                                                                                                                                     >        <XSAVEEnable>0</XSAVEEnable>
+                                                                                                                                                     >        <SMEPEnable>0</SMEPEnable>
+                                                                                                                                                     >        <SMAPEnable>0</SMAPEnable>
+                                                                                                                                                     >        <ProtectionKeyEnable>0</ProtectionKeyEnable>
+                                                                                                                                                     >       </cr4Shadow>
                                                                                                                                                      >       <segments>
                                                                                                                                                      >        <cs access="16#c09b#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0008#"/>
                                                                                                                                                      >        <ds access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
@@ -430,6 +465,19 @@
                                                                                                                                                      >        <CacheDisable>0</CacheDisable>
                                                                                                                                                      >        <Paging>1</Paging>
                                                                                                                                                      >       </cr0>
+                                                                                                                                                     >       <cr0Shadow>
+                                                                                                                                                     >        <ProtectionEnable>1</ProtectionEnable>
+                                                                                                                                                     >        <MonitorCoprocessor>1</MonitorCoprocessor>
+                                                                                                                                                     >        <Emulation>0</Emulation>
+                                                                                                                                                     >        <TaskSwitched>0</TaskSwitched>
+                                                                                                                                                     >        <ExtensionType>1</ExtensionType>
+                                                                                                                                                     >        <NumericError>1</NumericError>
+                                                                                                                                                     >        <WriteProtect>1</WriteProtect>
+                                                                                                                                                     >        <AlignmentMask>0</AlignmentMask>
+                                                                                                                                                     >        <NotWritethrough>0</NotWritethrough>
+                                                                                                                                                     >        <CacheDisable>0</CacheDisable>
+                                                                                                                                                     >        <Paging>1</Paging>
+                                                                                                                                                     >       </cr0Shadow>
                                                                                                                                                      >       <cr4>
                                                                                                                                                      >        <Virtual8086>0</Virtual8086>
                                                                                                                                                      >        <ProtectedVirtualInts>0</ProtectedVirtualInts>
@@ -452,6 +500,28 @@
                                                                                                                                                      >        <SMAPEnable>0</SMAPEnable>
                                                                                                                                                      >        <ProtectionKeyEnable>0</ProtectionKeyEnable>
                                                                                                                                                      >       </cr4>
+                                                                                                                                                     >       <cr4Shadow>
+                                                                                                                                                     >        <Virtual8086>0</Virtual8086>
+                                                                                                                                                     >        <ProtectedVirtualInts>0</ProtectedVirtualInts>
+                                                                                                                                                     >        <TimeStampDisable>0</TimeStampDisable>
+                                                                                                                                                     >        <DebuggingExtensions>0</DebuggingExtensions>
+                                                                                                                                                     >        <PageSizeExtensions>0</PageSizeExtensions>
+                                                                                                                                                     >        <PhysicalAddressExtension>1</PhysicalAddressExtension>
+                                                                                                                                                     >        <MachineCheckEnable>1</MachineCheckEnable>
+                                                                                                                                                     >        <PageGlobalEnable>0</PageGlobalEnable>
+                                                                                                                                                     >        <PerfCounterEnable>0</PerfCounterEnable>
+                                                                                                                                                     >        <OSSupportFXSAVE>1</OSSupportFXSAVE>
+                                                                                                                                                     >        <OSSupportSIMDExceptions>0</OSSupportSIMDExceptions>
+                                                                                                                                                     >        <UMInstructionPrevention>0</UMInstructionPrevention>
+                                                                                                                                                     >        <VMXEnable>1</VMXEnable>
+                                                                                                                                                     >        <SMXEnable>0</SMXEnable>
+                                                                                                                                                     >        <FSGSBASEEnable>0</FSGSBASEEnable>
+                                                                                                                                                     >        <PCIDEnable>0</PCIDEnable>
+                                                                                                                                                     >        <XSAVEEnable>0</XSAVEEnable>
+                                                                                                                                                     >        <SMEPEnable>0</SMEPEnable>
+                                                                                                                                                     >        <SMAPEnable>0</SMAPEnable>
+                                                                                                                                                     >        <ProtectionKeyEnable>0</ProtectionKeyEnable>
+                                                                                                                                                     >       </cr4Shadow>
                                                                                                                                                      >       <segments>
                                                                                                                                                      >        <cs access="16#a09b#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0008#"/>
                                                                                                                                                      >        <ds access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
@@ -634,6 +704,19 @@
                                                                                                                                                      >        <CacheDisable>0</CacheDisable>
                                                                                                                                                      >        <Paging>1</Paging>
                                                                                                                                                      >       </cr0>
+                                                                                                                                                     >       <cr0Shadow>
+                                                                                                                                                     >        <ProtectionEnable>1</ProtectionEnable>
+                                                                                                                                                     >        <MonitorCoprocessor>1</MonitorCoprocessor>
+                                                                                                                                                     >        <Emulation>0</Emulation>
+                                                                                                                                                     >        <TaskSwitched>0</TaskSwitched>
+                                                                                                                                                     >        <ExtensionType>1</ExtensionType>
+                                                                                                                                                     >        <NumericError>1</NumericError>
+                                                                                                                                                     >        <WriteProtect>1</WriteProtect>
+                                                                                                                                                     >        <AlignmentMask>0</AlignmentMask>
+                                                                                                                                                     >        <NotWritethrough>0</NotWritethrough>
+                                                                                                                                                     >        <CacheDisable>0</CacheDisable>
+                                                                                                                                                     >        <Paging>1</Paging>
+                                                                                                                                                     >       </cr0Shadow>
                                                                                                                                                      >       <cr4>
                                                                                                                                                      >        <Virtual8086>0</Virtual8086>
                                                                                                                                                      >        <ProtectedVirtualInts>0</ProtectedVirtualInts>
@@ -656,6 +739,28 @@
                                                                                                                                                      >        <SMAPEnable>0</SMAPEnable>
                                                                                                                                                      >        <ProtectionKeyEnable>0</ProtectionKeyEnable>
                                                                                                                                                      >       </cr4>
+                                                                                                                                                     >       <cr4Shadow>
+                                                                                                                                                     >        <Virtual8086>0</Virtual8086>
+                                                                                                                                                     >        <ProtectedVirtualInts>0</ProtectedVirtualInts>
+                                                                                                                                                     >        <TimeStampDisable>0</TimeStampDisable>
+                                                                                                                                                     >        <DebuggingExtensions>0</DebuggingExtensions>
+                                                                                                                                                     >        <PageSizeExtensions>0</PageSizeExtensions>
+                                                                                                                                                     >        <PhysicalAddressExtension>1</PhysicalAddressExtension>
+                                                                                                                                                     >        <MachineCheckEnable>1</MachineCheckEnable>
+                                                                                                                                                     >        <PageGlobalEnable>0</PageGlobalEnable>
+                                                                                                                                                     >        <PerfCounterEnable>0</PerfCounterEnable>
+                                                                                                                                                     >        <OSSupportFXSAVE>1</OSSupportFXSAVE>
+                                                                                                                                                     >        <OSSupportSIMDExceptions>0</OSSupportSIMDExceptions>
+                                                                                                                                                     >        <UMInstructionPrevention>0</UMInstructionPrevention>
+                                                                                                                                                     >        <VMXEnable>1</VMXEnable>
+                                                                                                                                                     >        <SMXEnable>0</SMXEnable>
+                                                                                                                                                     >        <FSGSBASEEnable>0</FSGSBASEEnable>
+                                                                                                                                                     >        <PCIDEnable>0</PCIDEnable>
+                                                                                                                                                     >        <XSAVEEnable>0</XSAVEEnable>
+                                                                                                                                                     >        <SMEPEnable>0</SMEPEnable>
+                                                                                                                                                     >        <SMAPEnable>0</SMAPEnable>
+                                                                                                                                                     >        <ProtectionKeyEnable>0</ProtectionKeyEnable>
+                                                                                                                                                     >       </cr4Shadow>
                                                                                                                                                      >       <segments>
                                                                                                                                                      >        <cs access="16#a09b#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0008#"/>
                                                                                                                                                      >        <ds access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
@@ -839,6 +944,19 @@
                                                                                                                                                      >        <CacheDisable>0</CacheDisable>
                                                                                                                                                      >        <Paging>0</Paging>
      </cr0>                                                                                                                                                  </cr0>
+                                                                                                                                                     >       <cr0Shadow>
+                                                                                                                                                     >        <ProtectionEnable>1</ProtectionEnable>
+                                                                                                                                                     >        <MonitorCoprocessor>0</MonitorCoprocessor>
+                                                                                                                                                     >        <Emulation>0</Emulation>
+                                                                                                                                                     >        <TaskSwitched>0</TaskSwitched>
+                                                                                                                                                     >        <ExtensionType>0</ExtensionType>
+                                                                                                                                                     >        <NumericError>0</NumericError>
+                                                                                                                                                     >        <WriteProtect>0</WriteProtect>
+                                                                                                                                                     >        <AlignmentMask>0</AlignmentMask>
+                                                                                                                                                     >        <NotWritethrough>0</NotWritethrough>
+                                                                                                                                                     >        <CacheDisable>0</CacheDisable>
+                                                                                                                                                     >        <Paging>0</Paging>
+                                                                                                                                                     >       </cr0Shadow>
                                                                                                                                                      >       <cr4>
                                                                                                                                                      >        <Virtual8086>0</Virtual8086>
                                                                                                                                                      >        <ProtectedVirtualInts>0</ProtectedVirtualInts>
@@ -861,6 +979,28 @@
                                                                                                                                                      >        <SMAPEnable>0</SMAPEnable>
                                                                                                                                                      >        <ProtectionKeyEnable>0</ProtectionKeyEnable>
                                                                                                                                                      >       </cr4>
+                                                                                                                                                     >       <cr4Shadow>
+                                                                                                                                                     >        <Virtual8086>0</Virtual8086>
+                                                                                                                                                     >        <ProtectedVirtualInts>0</ProtectedVirtualInts>
+                                                                                                                                                     >        <TimeStampDisable>0</TimeStampDisable>
+                                                                                                                                                     >        <DebuggingExtensions>0</DebuggingExtensions>
+                                                                                                                                                     >        <PageSizeExtensions>0</PageSizeExtensions>
+                                                                                                                                                     >        <PhysicalAddressExtension>0</PhysicalAddressExtension>
+                                                                                                                                                     >        <MachineCheckEnable>0</MachineCheckEnable>
+                                                                                                                                                     >        <PageGlobalEnable>0</PageGlobalEnable>
+                                                                                                                                                     >        <PerfCounterEnable>0</PerfCounterEnable>
+                                                                                                                                                     >        <OSSupportFXSAVE>0</OSSupportFXSAVE>
+                                                                                                                                                     >        <OSSupportSIMDExceptions>0</OSSupportSIMDExceptions>
+                                                                                                                                                     >        <UMInstructionPrevention>0</UMInstructionPrevention>
+                                                                                                                                                     >        <VMXEnable>0</VMXEnable>
+                                                                                                                                                     >        <SMXEnable>0</SMXEnable>
+                                                                                                                                                     >        <FSGSBASEEnable>0</FSGSBASEEnable>
+                                                                                                                                                     >        <PCIDEnable>0</PCIDEnable>
+                                                                                                                                                     >        <XSAVEEnable>0</XSAVEEnable>
+                                                                                                                                                     >        <SMEPEnable>0</SMEPEnable>
+                                                                                                                                                     >        <SMAPEnable>0</SMAPEnable>
+                                                                                                                                                     >        <ProtectionKeyEnable>0</ProtectionKeyEnable>
+                                                                                                                                                     >       </cr4Shadow>
      <segments>                                                                                                                                              <segments>
       <cs access="16#809b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>                                                                            <cs access="16#809b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
       <ds access="16#8093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>                                                                            <ds access="16#8093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
@@ -1073,6 +1213,19 @@
                                                                                                                                                      >        <CacheDisable>0</CacheDisable>
                                                                                                                                                      >        <Paging>1</Paging>
                                                                                                                                                      >       </cr0>
+                                                                                                                                                     >       <cr0Shadow>
+                                                                                                                                                     >        <ProtectionEnable>1</ProtectionEnable>
+                                                                                                                                                     >        <MonitorCoprocessor>1</MonitorCoprocessor>
+                                                                                                                                                     >        <Emulation>0</Emulation>
+                                                                                                                                                     >        <TaskSwitched>0</TaskSwitched>
+                                                                                                                                                     >        <ExtensionType>1</ExtensionType>
+                                                                                                                                                     >        <NumericError>1</NumericError>
+                                                                                                                                                     >        <WriteProtect>1</WriteProtect>
+                                                                                                                                                     >        <AlignmentMask>0</AlignmentMask>
+                                                                                                                                                     >        <NotWritethrough>0</NotWritethrough>
+                                                                                                                                                     >        <CacheDisable>0</CacheDisable>
+                                                                                                                                                     >        <Paging>1</Paging>
+                                                                                                                                                     >       </cr0Shadow>
                                                                                                                                                      >       <cr4>
                                                                                                                                                      >        <Virtual8086>0</Virtual8086>
                                                                                                                                                      >        <ProtectedVirtualInts>0</ProtectedVirtualInts>
@@ -1095,6 +1248,28 @@
                                                                                                                                                      >        <SMAPEnable>0</SMAPEnable>
                                                                                                                                                      >        <ProtectionKeyEnable>0</ProtectionKeyEnable>
                                                                                                                                                      >       </cr4>
+                                                                                                                                                     >       <cr4Shadow>
+                                                                                                                                                     >        <Virtual8086>0</Virtual8086>
+                                                                                                                                                     >        <ProtectedVirtualInts>0</ProtectedVirtualInts>
+                                                                                                                                                     >        <TimeStampDisable>0</TimeStampDisable>
+                                                                                                                                                     >        <DebuggingExtensions>0</DebuggingExtensions>
+                                                                                                                                                     >        <PageSizeExtensions>0</PageSizeExtensions>
+                                                                                                                                                     >        <PhysicalAddressExtension>1</PhysicalAddressExtension>
+                                                                                                                                                     >        <MachineCheckEnable>1</MachineCheckEnable>
+                                                                                                                                                     >        <PageGlobalEnable>0</PageGlobalEnable>
+                                                                                                                                                     >        <PerfCounterEnable>0</PerfCounterEnable>
+                                                                                                                                                     >        <OSSupportFXSAVE>1</OSSupportFXSAVE>
+                                                                                                                                                     >        <OSSupportSIMDExceptions>0</OSSupportSIMDExceptions>
+                                                                                                                                                     >        <UMInstructionPrevention>0</UMInstructionPrevention>
+                                                                                                                                                     >        <VMXEnable>1</VMXEnable>
+                                                                                                                                                     >        <SMXEnable>0</SMXEnable>
+                                                                                                                                                     >        <FSGSBASEEnable>0</FSGSBASEEnable>
+                                                                                                                                                     >        <PCIDEnable>0</PCIDEnable>
+                                                                                                                                                     >        <XSAVEEnable>0</XSAVEEnable>
+                                                                                                                                                     >        <SMEPEnable>0</SMEPEnable>
+                                                                                                                                                     >        <SMAPEnable>0</SMAPEnable>
+                                                                                                                                                     >        <ProtectionKeyEnable>0</ProtectionKeyEnable>
+                                                                                                                                                     >       </cr4Shadow>
                                                                                                                                                      >       <segments>
                                                                                                                                                      >        <cs access="16#a09b#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0008#"/>
                                                                                                                                                      >        <ds access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>

@@ -17,8 +17,10 @@ is
       GPRs               : SK.CPU_Registers_Type;
       Segment_Regs       : SK.Segment_Registers_Type;
       CR0_Value          : SK.Word64;
+      CR0_Shadow         : SK.Word64;
       CR0_Mask           : SK.Word64;
       CR4_Value          : SK.Word64;
+      CR4_Shadow         : SK.Word64;
       CR4_Mask           : SK.Word64;
       Exception_Bitmap   : SK.Word32;
       MSR_Count          : SK.Word32;
@@ -43,6 +45,13 @@ __subjects__);
 
    -------------------------------------------------------------------------
 
+   function Get_CR0_Shadow
+     (Subject_ID : Global_Subject_ID_Type)
+      return SK.Word64
+   is (Subject_Specs (Subject_ID).CR0_Shadow);
+
+   -------------------------------------------------------------------------
+
    function Get_CR0_Mask (Subject_ID : Global_Subject_ID_Type) return SK.Word64
    is (Subject_Specs (Subject_ID).CR0_Mask);
 
@@ -50,6 +59,13 @@ __subjects__);
 
    function Get_CR4 (Subject_ID : Global_Subject_ID_Type) return SK.Word64
    is (Subject_Specs (Subject_ID).CR4_Value);
+
+   -------------------------------------------------------------------------
+
+   function Get_CR4_Shadow
+     (Subject_ID : Global_Subject_ID_Type)
+      return SK.Word64
+   is (Subject_Specs (Subject_ID).CR4_Shadow);
 
    -------------------------------------------------------------------------
 

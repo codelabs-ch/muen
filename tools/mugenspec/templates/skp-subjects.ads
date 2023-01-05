@@ -71,9 +71,17 @@ is
      (Subject_ID : Global_Subject_ID_Type)
       return SK.Word64;
 
+   function Get_CR0_Shadow
+     (Subject_ID : Global_Subject_ID_Type)
+      return SK.Word64;
+
    function Get_CR4 (Subject_ID : Global_Subject_ID_Type) return SK.Word64;
 
    function Get_CR4_Mask
+     (Subject_ID : Global_Subject_ID_Type)
+      return SK.Word64;
+
+   function Get_CR4_Shadow
      (Subject_ID : Global_Subject_ID_Type)
       return SK.Word64;
 

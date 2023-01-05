@@ -128,16 +128,19 @@ is
 
    --  Reset state of subject with given ID to the specified initial values.
    procedure Reset_State
-     (ID       : Skp.Global_Subject_ID_Type;
-      GPRs     : CPU_Registers_Type;
-      RIP      : Word64;
-      RSP      : Word64;
-      CR0      : Word64;
-      CR4      : Word64;
-      Segments : Segment_Registers_Type)
+     (ID         : Skp.Global_Subject_ID_Type;
+      GPRs       : CPU_Registers_Type;
+      RIP        : Word64;
+      RSP        : Word64;
+      CR0        : Word64;
+      CR0_Shadow : Word64;
+      CR4        : Word64;
+      CR4_Shadow : Word64;
+      Segments   : Segment_Registers_Type)
    with
       Global  => (In_Out => State),
-      Depends => (State =>+ (ID, GPRs, RIP, RSP, CR0, CR4, Segments));
+      Depends => (State =>+ (ID, GPRs, RIP, RSP, CR0, CR0_Shadow, CR4,
+                             CR4_Shadow, Segments));
 
    --  Create crash audit context for subject with given ID.
    procedure Create_Context

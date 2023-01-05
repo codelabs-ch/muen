@@ -948,13 +948,15 @@ is
       --D @Item List => subject_init_steps
       --D Reset CPU state of subject according to policy.
       Subjects.Reset_State
-        (ID       => ID,
-         GPRs     => Skp.Subjects.Get_GPRs (Subject_ID => ID),
-         RIP      => Skp.Subjects.Get_Entry_Point (Subject_ID => ID),
-         RSP      => Skp.Subjects.Get_Stack_Address (Subject_ID => ID),
-         CR0      => Skp.Subjects.Get_CR0 (Subject_ID => ID),
-         CR4      => Skp.Subjects.Get_CR4 (Subject_ID => ID),
-         Segments => Skp.Subjects.Get_Segment_Registers (Subject_ID => ID));
+        (ID         => ID,
+         GPRs       => Skp.Subjects.Get_GPRs (Subject_ID => ID),
+         RIP        => Skp.Subjects.Get_Entry_Point (Subject_ID => ID),
+         RSP        => Skp.Subjects.Get_Stack_Address (Subject_ID => ID),
+         CR0        => Skp.Subjects.Get_CR0 (Subject_ID => ID),
+         CR0_Shadow => Skp.Subjects.Get_CR0_Shadow (Subject_ID => ID),
+         CR4        => Skp.Subjects.Get_CR4 (Subject_ID => ID),
+         CR4_Shadow => Skp.Subjects.Get_CR4_Shadow (Subject_ID => ID),
+         Segments   => Skp.Subjects.Get_Segment_Registers (Subject_ID => ID));
    end Init_Subject;
 
    -------------------------------------------------------------------------

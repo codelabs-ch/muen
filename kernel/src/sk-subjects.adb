@@ -269,17 +269,19 @@ is
    --D by the policy are cleared to zero, except for RFLAGS which is initialized
    --D to \verb!Constants.RFLAGS_Default_Value!.
    procedure Reset_State
-     (ID       : Skp.Global_Subject_ID_Type;
-      GPRs     : CPU_Registers_Type;
-      RIP      : Word64;
-      RSP      : Word64;
-      CR0      : Word64;
-      CR4      : Word64;
-      Segments : Segment_Registers_Type)
+     (ID         : Skp.Global_Subject_ID_Type;
+      GPRs       : CPU_Registers_Type;
+      RIP        : Word64;
+      RSP        : Word64;
+      CR0        : Word64;
+      CR0_Shadow : Word64;
+      CR4        : Word64;
+      CR4_Shadow : Word64;
+      Segments   : Segment_Registers_Type)
    with
       Refined_Global  => (In_Out => Descriptors),
-      Refined_Depends => (Descriptors =>+ (ID, GPRs, RIP, RSP, CR0, CR4,
-                                           Segments))
+      Refined_Depends => (Descriptors =>+ (ID, GPRs, RIP, RSP, CR0, CR0_Shadow,
+                                           CR4, CR4_Shadow, Segments))
    is
    begin
       Descriptors (ID).Data :=
@@ -292,7 +294,9 @@ is
          RIP             => RIP,
          RSP             => RSP,
          CR0             => CR0,
+         SHADOW_CR0      => CR0_Shadow,
          CR4             => CR4,
+         SHADOW_CR4      => CR4_Shadow,
          RFLAGS          => Constants.RFLAGS_Default_Value,
          Segment_Regs    => Segments,
          GDTR            => Null_Segment,

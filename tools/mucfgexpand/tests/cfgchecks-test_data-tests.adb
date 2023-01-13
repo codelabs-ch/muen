@@ -1304,6 +1304,44 @@ package body Cfgchecks.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Domain_Map_Subject_Memory_References (Gnattest_T : in out Test);
+   procedure Test_Domain_Map_Subject_Memory_References_c4ebcb (Gnattest_T : in out Test) renames Test_Domain_Map_Subject_Memory_References;
+--  id:2.2/c4ebcb7af5841ca0/Domain_Map_Subject_Memory_References/1/0/
+   procedure Test_Domain_Map_Subject_Memory_References (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.None,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise exception.
+
+      Domain_Map_Subject_Memory_References (XML_Data => Data);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/deviceDomains/domain[@name='nic1_domain']/memory/"
+         & "mapSubjectMemory",
+         Name  => "subject",
+         Value => "nonexistent");
+
+      Domain_Map_Subject_Memory_References (XML_Data => Data);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg => "Subject 'nonexistent' referenced by memory map"
+               & " directive in device domain 'nic1_domain' not found"),
+              Message   => "Exception mismatch");
+--  begin read only
+   end Test_Domain_Map_Subject_Memory_References;
+--  end read only
+
+
+--  begin read only
    procedure Test_Subject_Component_References (Gnattest_T : in out Test);
    procedure Test_Subject_Component_References_0ac6d5 (Gnattest_T : in out Test) renames Test_Subject_Component_References;
 --  id:2.2/0ac6d5c2c7416f1f/Subject_Component_References/1/0/

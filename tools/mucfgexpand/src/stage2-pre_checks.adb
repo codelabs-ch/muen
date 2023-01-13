@@ -103,6 +103,8 @@ is
       Check_Procs.Register (Process => Channel_Reader_Has_Event_Vector'Access);
       Check_Procs.Register (Process => Hardware_CPU_Count_Presence'Access);
       Check_Procs.Register
+        (Process => Domain_Map_Subject_Memory_References'Access);
+      Check_Procs.Register
         (Process => MC.Hardware.IOAPIC_Presence'Access);
       Check_Procs.Register
         (Process => MC.Platform.Kernel_Diagnostics_Device_Reference'Access);

@@ -30,6 +30,9 @@ is
    --  Add VT-d tables (root, context, address translation and IR tables).
    procedure Add_Tables (Data : in out Muxml.XML_Data_Type);
 
+   --  Map memory of subjects referenced by map subject memory directive.
+   procedure Map_Subject_Memory (Data : in out Muxml.XML_Data_Type);
+
    --  Add mappings for reserved memory regions of referenced devices.
    procedure Add_Reserved_Memory_Region_Mappings
      (Data : in out Muxml.XML_Data_Type);

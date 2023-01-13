@@ -6,10 +6,10 @@
   <memory caching="WB" name="dummy_5" physicalAddress="16#9000#" size="16#2000#">                                                                         <memory caching="WB" name="dummy_5" physicalAddress="16#9000#" size="16#2000#">
    <file filename="foofile" offset="none"/>                                                                                                                <file filename="foofile" offset="none"/>
   </memory>                                                                                                                                               </memory>
-  <memory caching="WC" name="dummy_6" physicalAddress="16#b000#" size="16#1000#">                                                                    |    <memory caching="WC" name="dummy_6_lnx" size="16#1000#">
+  <memory caching="WC" name="dummy_6" physicalAddress="16#b000#" size="16#1000#" type="subject">                                                     |    <memory caching="WC" name="dummy_6_lnx" size="16#1000#" type="subject">
                                                                                                                                                      >     <hashRef memory="dummy_6"/>
                                                                                                                                                      >    </memory>
-                                                                                                                                                     >    <memory caching="WB" name="dummy_6" physicalAddress="16#b000#" size="16#1000#">
+                                                                                                                                                     >    <memory caching="WB" name="dummy_6" physicalAddress="16#b000#" size="16#1000#" type="subject">
    <file filename="barfile" offset="none"/>                                                                                                                <file filename="barfile" offset="none"/>
   </memory>                                                                                                                                               </memory>
 --

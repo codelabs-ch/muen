@@ -5,8 +5,8 @@
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
 --
-   <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dma1" physical="nic1|dma" virtualAddress="16#1000#" writable="true"/>                                               <memory executable="false" logical="dma1" physical="nic1|dma" virtualAddress="16#1000#" writable="true"/>
+    <mapSubjectMemory subject="lnx" virtualAddressOffset="16#1000_2000#"/>                                                                                  <mapSubjectMemory subject="lnx" virtualAddressOffset="16#1000_2000#"/>
                                                                                                                                                      >      <memory executable="false" logical="rmrr1" physical="rmrr1" virtualAddress="16#da08_3000#" writable="true"/>
    </memory>                                                                                                                                               </memory>
    <devices>                                                                                                                                               <devices>

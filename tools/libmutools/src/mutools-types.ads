@@ -82,6 +82,11 @@ is
      Memory_Kind with Static_Predicate =>
        DMA_Memory in Device_Rmrr | Subject | Subject_Initrd | Subject_Device;
 
+   --  Memory usable by subjects as RAM.
+   subtype Subject_RAM_Memory is
+     Subject_Memory with Static_Predicate =>
+       Subject_RAM_Memory in Subject | Subject_Initrd;
+
    --  MSR access modes.
    type MSR_Mode_Type is (R, W, RW);
 

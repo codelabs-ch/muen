@@ -33,10 +33,6 @@ is
 
    package MT renames Mutools.Types;
 
-   subtype Usable_Memory is
-     MT.Subject_Memory with Static_Predicate => Usable_Memory in
-       MT.Subject;
-
    subtype ACPI_Memory is
      MT.Subject_Memory with Static_Predicate => ACPI_Memory in
        MT.Subject_Acpi_Rsdp | MT.Subject_Acpi_Xsdt | MT.Subject_Acpi_Fadt
@@ -83,22 +79,21 @@ is
               := MT.Memory_Kind'Value
                 (DOM.Core.Elements.Get_Attribute (Elem => Phys_Node,
                                                   Name => "type"));
+            Writable : constant Boolean
+              := Boolean'Value (DOM.Core.Elements.Get_Attribute
+                                (Elem => Virt_Node,
+                                 Name => "writable"));
             C_Type : Interfaces.C.unsigned;
          begin
             case Mem_Type is
-               when Usable_Memory =>
-                  C_Type := Constants.E820_RAM;
-               when ACPI_Memory =>
-                  C_Type := Constants.E820_ACPI;
-               when MT.Subject_Initrd =>
-                  if Boolean'Value (DOM.Core.Elements.Get_Attribute
-                                    (Elem => Virt_Node,
-                                     Name => "writable"))
-                  then
+               when MT.Subject_RAM_Memory =>
+                  if Writable then
                      C_Type := Constants.E820_RAM;
                   else
                      C_Type := Constants.E820_RESERVED;
                   end if;
+               when ACPI_Memory =>
+                  C_Type := Constants.E820_ACPI;
                when others =>
                   C_Type := Constants.E820_RESERVED;
             end case;

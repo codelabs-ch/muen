@@ -90,6 +90,25 @@ package body Expanders.Device_Domains.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Map_Subject_Memory (Gnattest_T : in out Test);
+   procedure Test_Map_Subject_Memory_a0b5f0 (Gnattest_T : in out Test) renames Test_Map_Subject_Memory;
+--  id:2.2/a0b5f0e4e12d7169/Map_Subject_Memory/1/0/
+   procedure Test_Map_Subject_Memory (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename => "obj/device_domains_map_subject_mem.xml",
+         Ref_Diff => "data/device_domains_map_subject_mem.xml.diff",
+         Expander => Map_Subject_Memory'Access);
+--  begin read only
+   end Test_Map_Subject_Memory;
+--  end read only
+
+
+--  begin read only
    procedure Test_Add_Reserved_Memory_Region_Mappings (Gnattest_T : in out Test);
    procedure Test_Add_Reserved_Memory_Region_Mappings_48a720 (Gnattest_T : in out Test) renames Test_Add_Reserved_Memory_Region_Mappings;
 --  id:2.2/48a720bc6d127fd2/Add_Reserved_Memory_Region_Mappings/1/0/

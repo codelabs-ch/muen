@@ -4,6 +4,7 @@
   <domain name="nic1_domain">                                                                                                                        <
    <memory>                                                                                                                                          <
     <memory executable="false" logical="dma1" physical="nic1|dma" virtualAddress="16#1000#" writable="true"/>                                        <
+    <mapSubjectMemory subject="lnx" virtualAddressOffset="16#1000_2000#"/>                                                                           <
    </memory>                                                                                                                                         <
    <devices>                                                                                                                                         <
     <device logical="nic1" mapReservedMemory="true" physical="nic1"/>                                                                                <

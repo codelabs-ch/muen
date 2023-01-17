@@ -98,6 +98,9 @@ is
    --  device domain.
    procedure Device_RMRR_Domain_Assignment (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check subject references in map subject memory elements of device domains.
+   procedure Domain_Map_Subject_Memory_References (XML_Data : Muxml.XML_Data_Type);
+
    --  Check subject component references.
    procedure Subject_Component_References (XML_Data : Muxml.XML_Data_Type);
 

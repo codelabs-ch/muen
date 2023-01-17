@@ -11,7 +11,7 @@
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>
-   <xs:element name="memory"  type="memoryRefsType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="memory"  type="devdomMemoryRefsType" minOccurs="0" maxOccurs="1"/>
    <xs:element name="devices" type="devsRefType"    minOccurs="1" maxOccurs="1"/>
   </xs:sequence>
   <xs:attribute name="name" type="nameType" use="required">
@@ -48,6 +48,44 @@
    <xs:annotation>
     <xs:documentation>
      Whether to automatically map RMRR memory associated with device.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+ </xs:complexType>
+
+ <xs:complexType name="devdomMemoryRefsType">
+  <xs:annotation>
+   <xs:documentation>
+    List of physical memory region references and optional map subject memory
+    elements.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:sequence>
+   <xs:element name="memory"           type="memRefType"           minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="mapSubjectMemory" type="mapSubjectMemoryType" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
+
+ <xs:complexType name="mapSubjectMemoryType">
+  <xs:annotation>
+   <xs:documentation>
+    This element instructs the expander to map memory regions of the specified
+    subject into the device domain. Only regions which are writable and of type
+    \emph{Subject} and \emph{Subject\_Initrd} are mapped.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="subject" type="nameType" use="required">
+   <xs:annotation>
+    <xs:documentation>
+     Name of the subject.
+    </xs:documentation>
+   </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="virtualAddressOffset" type="word64Type" use="optional">
+   <xs:annotation>
+    <xs:documentation>
+     Optional offset value. If this attribute it specified, the given value will
+     be added to the \emph{virtualAddress} value of a mapped memory region.
     </xs:documentation>
    </xs:annotation>
   </xs:attribute>

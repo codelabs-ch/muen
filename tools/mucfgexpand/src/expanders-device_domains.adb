@@ -31,6 +31,7 @@ with McKae.XML.XPath.XIA;
 with Mulog;
 with Muxml.Utils;
 with Mutools.Utils;
+with Mutools.Types;
 with Mutools.XML_Utils;
 
 with Expanders.XML_Utils;
@@ -383,6 +384,120 @@ is
          end;
       end loop;
    end Add_Tables;
+
+   -------------------------------------------------------------------------
+
+   procedure Map_Subject_Memory (Data : in out Muxml.XML_Data_Type)
+   is
+      Map_Cmds : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/deviceDomains/domain/memory/mapSubjectMemory");
+      Phys_Mem : DOM.Core.Node_List;
+      Count    : constant Natural := DOM.Core.Nodes.Length (List => Map_Cmds);
+   begin
+      if Count = 0 then
+         return;
+      end if;
+
+      Phys_Mem := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Data.Doc,
+         XPath => "/system/memory/memory");
+
+      Mulog.Log (Msg => "Expanding" & Count'Img & " device domain map subject"
+                 & " memory directive(s)");
+
+      for I in 0 .. Count - 1 loop
+         declare
+            Map_Cmd : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Map_Cmds,
+                 Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Map_Cmd,
+                 Name => "subject");
+            Offset_Str : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Map_Cmd,
+                 Name => "virtualAddressOffset");
+            Subj_Mem_List : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Data.Doc,
+                 XPath => "/system/subjects/subject[@name='" & Subj_Name & "']"
+                 & "/memory/memory[@writable='true']");
+         begin
+            for J in 0 .. DOM.Core.Nodes.Length (List => Subj_Mem_List) - 1 loop
+               declare
+                  Mem_Node : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List => Subj_Mem_List,
+                       Index => J);
+                  Phys_Mem_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Mem_Node,
+                       Name => "physical");
+                  Phys_Mem_Node : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
+                      (Nodes     => Phys_Mem,
+                       Ref_Attr  => "name",
+                       Ref_Value => Phys_Mem_Name);
+                  Mem_Kind_Str : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                         (Elem => Phys_Mem_Node,
+                          Name => "type");
+               begin
+                  if Mem_Kind_Str'Length > 0
+                    and then Mutools.Types.Memory_Kind'Value
+                      (Mem_Kind_Str) in Mutools.Types.Subject_RAM_Memory
+                  then
+                     declare
+                        Mem_Clone : constant DOM.Core.Node
+                          := DOM.Core.Nodes.Clone_Node
+                            (N    => Mem_Node,
+                             Deep => False);
+                        Devdom_Mem_Node : constant DOM.Core.Node
+                          := DOM.Core.Nodes.Parent_Node (N => Map_Cmd);
+                     begin
+                        DOM.Core.Elements.Set_Attribute
+                          (Elem  => Mem_Clone,
+                           Name  => "executable",
+                           Value => "false");
+
+                        if Offset_Str'Length > 0 then
+                           declare
+                              use type Interfaces.Unsigned_64;
+
+                              Addr : Interfaces.Unsigned_64
+                                := Interfaces.Unsigned_64'Value
+                                  (DOM.Core.Elements.Get_Attribute
+                                     (Elem => Mem_Clone,
+                                      Name => "virtualAddress"));
+                           begin
+                              Addr := Addr + Interfaces.Unsigned_64'Value
+                                (Offset_Str);
+                              DOM.Core.Elements.Set_Attribute
+                                (Elem  => Mem_Clone,
+                                 Name  => "virtualAddress",
+                                 Value => Mutools.Utils.To_Hex
+                                   (Number => Addr));
+                           end;
+                        end if;
+
+                        Muxml.Utils.Append_Child
+                          (Node      => Devdom_Mem_Node,
+                           New_Child => Mem_Clone);
+                     end;
+                  end if;
+               end;
+            end loop;
+         end;
+      end loop;
+
+      Muxml.Utils.Remove_Elements
+        (Doc   => Data.Doc,
+         XPath => "/system/deviceDomains/domain/memory/mapSubjectMemory");
+   end Map_Subject_Memory;
 
    -------------------------------------------------------------------------
 

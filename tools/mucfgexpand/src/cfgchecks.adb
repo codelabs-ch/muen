@@ -1457,6 +1457,48 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Domain_Map_Subject_Memory_References (XML_Data : Muxml.XML_Data_Type)
+   is
+      --  Returns the error message for a given reference node.
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean);
+
+      ----------------------------------------------------------------------
+
+      procedure Error_Msg
+        (Node    :     DOM.Core.Node;
+         Err_Str : out Ada.Strings.Unbounded.Unbounded_String;
+         Fatal   : out Boolean)
+      is
+         Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "subject");
+         Devdom_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Muxml.Utils.Ancestor_Node (Node  => Node,
+                                               Level => 2),
+            Name => "name");
+      begin
+         Err_Str := Ada.Strings.Unbounded.To_Unbounded_String
+           ("Subject '" & Subj_Name
+            & "' referenced by memory map directive in device domain '"
+            & Devdom_Name & "' not found");
+         Fatal := False;
+      end Error_Msg;
+   begin
+      Mucfgcheck.For_Each_Match
+        (XML_Data     => XML_Data,
+         Source_XPath => "/system/deviceDomains/domain/memory/mapSubjectMemory",
+         Ref_XPath    => "/system/subjects/subject",
+         Log_Message  => "subject reference(s) in device domain map memory "
+         & "directives",
+         Error        => Error_Msg'Access,
+         Match        => Mucfgcheck.Match_Subject_Name'Access);
+   end Domain_Map_Subject_Memory_References;
+
+   -------------------------------------------------------------------------
+
    procedure Hardware_CPU_Count_Presence (XML_Data : Muxml.XML_Data_Type)
    is
       Attr_Path : constant String := "/system/hardware/processor/@cpuCores";

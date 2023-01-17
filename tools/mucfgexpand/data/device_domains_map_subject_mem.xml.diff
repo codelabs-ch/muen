@@ -1,0 +1,5 @@
+   <memory>                                                                                                                                                <memory>
+    <memory executable="false" logical="dma1" physical="nic1|dma" virtualAddress="16#1000#" writable="true"/>                                               <memory executable="false" logical="dma1" physical="nic1|dma" virtualAddress="16#1000#" writable="true"/>
+    <mapSubjectMemory subject="lnx" virtualAddressOffset="16#1000_2000#"/>                                                                           |      <memory executable="false" logical="file_2" physical="dummy_6" virtualAddress="16#1003_2000#" writable="true"/>
+   </memory>                                                                                                                                               </memory>
+   <devices>                                                                                                                                               <devices>

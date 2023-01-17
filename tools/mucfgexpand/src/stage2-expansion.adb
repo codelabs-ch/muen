@@ -148,6 +148,11 @@ is
       Procs.Register (Process => Subjects.Remove_Monitors'Access);
       Procs.Register (Process => Subjects.Remove_Device_MSIs'Access);
 
+      --  Expand device domain map subject memory directives after loader
+      --  expander, as it might remap writable subject memory.
+
+      Procs.Register (Process => Device_Domains.Map_Subject_Memory'Access);
+
       Procs.Register (Process => Scheduling.Add_Barrier_Configs'Access);
 
       --  Subject profiles must be expanded since they may add MSR registers.

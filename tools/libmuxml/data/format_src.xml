@@ -70,6 +70,7 @@
   <domain name="linux_domain">
    <memory>
     <memory executable="true" logical="dma" physical="linux|ram" virtualAddress="16#00a0_0000#" writable="true"/>
+    <mapSubjectMemory subject="nic_linux" virtualAddressOffset="16#1000_0000#"/>
    </memory>
    <devices>
     <device logical="gpu" physical="intelgfx"/>

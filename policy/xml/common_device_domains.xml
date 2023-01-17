@@ -1,8 +1,7 @@
 <include>
  <domain name="nic_domain">
   <memory>
-   <memory logical="dma1" physical="nic_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
-   <memory logical="dma2" physical="nic_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
+   <mapSubjectMemory subject="nic_linux"/>
   </memory>
   <devices>
    <device logical="first_nic" physical="ethernet_controller_1"/>

@@ -26,8 +26,8 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-with "../../config/shared";
-with "../../projects/shared_tests";
+with "../../build-cfg/gpr/shared";
+with "../../build-cfg/gpr/shared_tests";
 
 project GNATtest_Libmusinfo is
 

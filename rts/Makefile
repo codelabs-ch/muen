@@ -1,6 +1,6 @@
 COMPONENT = rts
 
-include ../Makeconf
+include ../build-cfg/mk/Makeconf
 
 INCLUDE_SRC  = $(wildcard src/*.ad*)
 INCLUDE_SRC += $(wildcard src/asm/*.S)

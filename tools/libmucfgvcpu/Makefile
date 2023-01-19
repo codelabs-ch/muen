@@ -13,7 +13,7 @@ ADDITIONAL_CLEAN = $(GEN_DIR)
 include ../library.mk
 include ../coverage.mk
 
-include ../../projects/tests.mk
+include ../../build-cfg/mk/tests.mk
 
 DUMMY := $(shell mkdir -p $(GEN_DIR))
 

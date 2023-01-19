@@ -1,4 +1,4 @@
-include ../../Makeconf
+include ../../build-cfg/mk/Makeconf
 
 KERNEL_VERSION ?= 5.15
 LINUX_CONFIG   ?= config/linux64-$(KERNEL_VERSION)

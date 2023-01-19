@@ -1,7 +1,7 @@
 IMG_NAME = muen.img
 IMG_TAU0 = $(OBJ_DIR)/$(IMG_NAME).cmds
 
-include ../Makeconf
+include ../build-cfg/mk/Makeconf
 
 ifneq (,$(TAU0_SKIP_HASHING))
 SKIP_HASH = --skip-hashing

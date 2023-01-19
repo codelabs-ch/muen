@@ -1,4 +1,4 @@
-include Makeconf
+include build-cfg/mk/Makeconf
 
 export HARDWARE
 export SYSTEM

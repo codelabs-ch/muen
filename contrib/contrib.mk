@@ -1,5 +1,5 @@
 include ../contrib.conf.mk
-include ../../projects/exec.mk
+include ../../build-cfg/mk/exec.mk
 
 ifndef CMD_BUILD
 define CMD_BUILD

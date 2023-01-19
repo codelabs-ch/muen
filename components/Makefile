@@ -1,4 +1,4 @@
-include ../Makeconf
+include ../build-cfg/mk/Makeconf
 include proofs.mk
 
 # SPARK components to be built

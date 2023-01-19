@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../config/shared";
+with "../build-cfg/gpr/shared";
 with "../policy/obj/policy";
 
 project Kernel is
@@ -100,7 +100,7 @@ project Kernel is
 
    package Builder is
       for Executable ("init.S") use "kernel";
-      for Global_Configuration_Pragmas use "../config/restrictions.adc";
+      for Global_Configuration_Pragmas use "../build-cfg/gpr/restrictions.adc";
    end Builder;
 
    package Compiler is
@@ -110,7 +110,7 @@ project Kernel is
         & Preprocessor_Switches
         & Shared.Warning_Switches
         & Extra_Warning_Switches;
-      for Local_Configuration_Pragmas use "../config/restrictions-" & Build_Mode & ".adc";
+      for Local_Configuration_Pragmas use "../build-cfg/gpr/restrictions-" & Build_Mode & ".adc";
    end Compiler;
 
    package Linker is

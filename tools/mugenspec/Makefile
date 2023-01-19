@@ -14,7 +14,7 @@ include ../component.mk
 include ../coverage.mk
 include ../templates.mk
 
-include ../../projects/tests.mk
+include ../../build-cfg/mk/tests.mk
 
 $(OBJ_DIR)/gnatprove/gnatprove.out: $(SPECS) $(STATIC_SPECS)
 	gnatprove $(SPARK_OPTS) -q --report=fail -Pgnatprove_mugenspec

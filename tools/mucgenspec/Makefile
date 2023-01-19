@@ -12,4 +12,4 @@ include ../component.mk
 include ../coverage.mk
 include ../templates.mk
 
-include ../../projects/tests.mk
+include ../../build-cfg/mk/tests.mk

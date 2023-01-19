@@ -5,4 +5,4 @@ include ../coverage.mk
 
 XML_OBJ := $(wildcard obj/*.xml)
 
-include ../../projects/tests.mk
+include ../../build-cfg/mk/tests.mk

@@ -16,8 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../config/shared";
-with "../projects/shared_tests";
+with "../build-cfg/gpr/shared";
+with "../build-cfg/gpr/shared_tests";
 
 abstract project Tests extends "tools.gpr" is
 

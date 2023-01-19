@@ -1,4 +1,4 @@
-with "../../config/shared";
+with "../../build-cfg/gpr/shared";
 
 project Libsparkcrypto is
 

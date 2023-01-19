@@ -26,7 +26,7 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-with "../../config/shared.gpr";
+with "../../build-cfg/gpr/shared.gpr";
 with "../libmusinfo/libmusinfo";
 with "../libmuinit/libmuinit";
 with "libsparkcrypto";

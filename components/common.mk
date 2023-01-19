@@ -2,8 +2,8 @@ COMP_BIN = $(OBJ_DIR)/$(COMPONENT_BUILD)/$(COMPONENT)
 
 all: $(ALL)
 
-include ../../Makeconf
-include ../../Makespark
+include ../../build-cfg/mk/Makeconf
+include ../../build-cfg/mk/Makespark
 include ../cspecs_spark.mk
 include ../proofs.mk
 

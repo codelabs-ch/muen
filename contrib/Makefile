@@ -1,5 +1,5 @@
 # required for MAKEFLAGS silent option
-include ../projects/exec.mk
+include ../build-cfg/mk/exec.mk
 
 RECIPES =     \
 	ada-bfd   \

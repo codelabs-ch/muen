@@ -39,7 +39,7 @@ ADDITIONAL_CLEAN = $(GEN_DIR)
 include ../library.mk
 include ../coverage.mk
 
-include ../../projects/tests.mk
+include ../../build-cfg/mk/tests.mk
 
 $(OBJ_DIR) $(GEN_DIR):
 	@mkdir $@

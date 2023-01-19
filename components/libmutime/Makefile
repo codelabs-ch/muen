@@ -7,4 +7,4 @@ SPARK_STEPS   = 200000
 
 include ../library_spark.mk
 
-include ../../projects/tests.mk
+include ../../build-cfg/mk/tests.mk

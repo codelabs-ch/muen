@@ -29,7 +29,7 @@ GEN_STAMPS = $(GEN_NAMES:%=.gen-%)
 
 GENERATOR_OPTS = -o $(OBJ_DIR) $(SYSTEM_POLICY_B)
 
-include ../Makeconf
+include ../build-cfg/mk/Makeconf
 
 # Include system policy Makefile if it exists to enable creation of system
 # policy prior to merge. The snippet is expected to have the same name as the

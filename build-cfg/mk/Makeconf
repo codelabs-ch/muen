@@ -1,11 +1,11 @@
-TOP_DIR := $(patsubst %/,%,$(dir $(realpath $(filter %Makeconf, $(MAKEFILE_LIST)))))
+TOP_DIR := $(patsubst %/,%,$(dir $(realpath $(filter %Makeconf, $(MAKEFILE_LIST))))../../)
 SHELL := /bin/bash
 
 SRC_DIR = $(CURDIR)/src
 OBJ_DIR = $(CURDIR)/obj
 GEN_DIR = $(CURDIR)/generated
 
-include $(TOP_DIR)/projects/exec.mk
+include $(TOP_DIR)/build-cfg/mk/exec.mk
 include $(TOP_DIR)/tools/plugins/documentation/config.mk
 
 NUM_CPUS  ?= $(shell getconf _NPROCESSORS_ONLN)

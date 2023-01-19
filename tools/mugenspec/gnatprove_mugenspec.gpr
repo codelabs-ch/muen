@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../../config/shared";
+with "../../build-cfg/gpr/shared";
 
 project GNATprove_Mugenspec is
 
@@ -25,13 +25,13 @@ project GNATprove_Mugenspec is
    for Object_Dir use "obj";
 
    package Builder is
-      for Global_Configuration_Pragmas use "../../config/restrictions.adc";
+      for Global_Configuration_Pragmas use "../../build-cfg/gpr/restrictions.adc";
    end Builder;
 
    package Compiler is
       for Default_Switches ("Ada") use Shared.Spark_Compiler_Switches
         & Shared.Warning_Switches;
-      for Local_Configuration_Pragmas use "../../config/restrictions-prove.adc";
+      for Local_Configuration_Pragmas use "../../build-cfg/gpr/restrictions-prove.adc";
    end Compiler;
 
 end GNATprove_Mugenspec;

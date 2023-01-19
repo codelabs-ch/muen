@@ -1,4 +1,4 @@
-include ../../../Makeconf
+include ../../../build-cfg/mk/Makeconf
 
 all: fuzzer
 

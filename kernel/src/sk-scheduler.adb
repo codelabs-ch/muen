@@ -415,12 +415,17 @@ is
       Find_Earliest_Non_Expire_Timer_Loop :
       while Cur_Group /= Policy.No_Group loop
          if Scheduling_Groups (Cur_Group).Timeout <= Now then
-            Activate_Group (Partition_ID => Partition,
-                            Group_ID     => Cur_Group);
+            declare
+               Next_Group : constant Policy.Extended_Scheduling_Group_Range
+                 := Scheduling_Groups (Cur_Group).Next_Timer;
+            begin
+               Activate_Group (Partition_ID => Partition,
+                               Group_ID     => Cur_Group);
+               Cur_Group := Next_Group;
+            end;
          else
             exit Find_Earliest_Non_Expire_Timer_Loop;
          end if;
-         Cur_Group := Scheduling_Groups (Cur_Group).Next_Timer;
       end loop Find_Earliest_Non_Expire_Timer_Loop;
 
       Scheduling_Partitions (Partition).Earliest_Timer := Cur_Group;

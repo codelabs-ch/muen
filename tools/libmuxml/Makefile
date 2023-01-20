@@ -1,5 +1,6 @@
 COMPONENT = libmuxml
 
+SCHEMA_DIR = schema
 SCHEMA_FILES = \
 	$(GEN_DIR)/muxml-system_a_schema.ads        \
 	$(GEN_DIR)/muxml-system_b_schema.ads        \
@@ -8,9 +9,9 @@ SCHEMA_FILES = \
 	$(GEN_DIR)/muxml-system_config_schema.ads   \
 	$(GEN_DIR)/muxml-hardware_config_schema.ads \
 	$(GEN_DIR)/muxml-component_schema.ads
-SCHEMA_FILE = schema/`echo $* | sed -e 's/_a//g;s/_b//g;s/_src//g'`.xsd
+SCHEMA_FILE = $(SCHEMA_DIR)/`echo $* | sed -e 's/_a//g;s/_b//g;s/_src//g'`.xsd
 
-XSD_FILES = $(shell find schema/ -name '*.xsd')
+XSD_FILES = $(shell find $(SCHEMA_DIR)/ -name '*.xsd')
 
 COMPONENT_TARGETS = $(SCHEMA_FILES)
 TEST_TARGETS      = $(COMPONENT_TARGETS) xmllint
@@ -32,7 +33,8 @@ $(OBJ_DIR) $(GEN_DIR):
 
 $(GEN_DIR)/muxml-%_schema.ads: $(XSD_FILES) $(RESOLVE_XSL) | $(GEN_DIR)
 	@$(E) $(COMPONENT) "XSLT $*" \
-		"xsltproc --stringparam format $* $(RESOLVE_XSL) $(SCHEMA_FILE) > $(GEN_DIR)/$*.xsd"
+		"xsltproc --path $(SCHEMA_DIR)/$* --stringparam format $* \
+		 $(RESOLVE_XSL) $(SCHEMA_FILE) > $(GEN_DIR)/$*.xsd"
 	@$(E) $(COMPONENT) "Xml2Ada $*" \
 		"$(XML2ADA) Muxml.$*_schema $(GEN_DIR)/$*.xsd $@"
 

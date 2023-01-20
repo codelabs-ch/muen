@@ -129,7 +129,10 @@ is
       Group_ID     : Policy.Scheduling_Group_Range)
    with
       Global => (In_Out => (Scheduling_Groups, Scheduling_Partitions,
-                            Global_Group_Activity_Indicator))
+                            Global_Group_Activity_Indicator)),
+      Post =>
+         Scheduling_Groups (Group_ID).Prev_Timer = Policy.No_Group and
+         Scheduling_Groups (Group_ID).Next_Timer = Policy.No_Group
    is
       Group_Index : constant Policy.Scheduling_Group_Index_Range
         := Policy.Get_Scheduling_Group_Index (Group_ID => Group_ID);

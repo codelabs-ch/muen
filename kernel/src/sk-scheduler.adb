@@ -452,7 +452,7 @@ is
 
    --D @Section Id => impl_scheduling_upd_timer_list, Label => Updating Scheduling Partition Timer List, Parent => impl_scheduling, Priority => 40
    --D @Text Section => impl_scheduling_upd_timer_list
-   --D Update the timer list by scannig all inactive scheduling groups of the
+   --D Update the timer list by scanning all inactive scheduling groups of the
    --D specified partition and activating all groups for which the timer is
    --D expired.
    procedure Update_Timer_List (Partition : Policy.Scheduling_Partition_Range)

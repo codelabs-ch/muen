@@ -1,5 +1,6 @@
 COMPONENT = libmuxml
 
+SCHEMA_DIR = schema
 SCHEMA_ADS_FILES = \
 	$(GEN_DIR)/muxml-system_a_schema.ads        \
 	$(GEN_DIR)/muxml-system_a_extended_schema.ads        \
@@ -21,9 +22,9 @@ SYSTEM_SCHEMA_FILES = \
 	$(GEN_DIR)/system_b.xsd        \
 	$(GEN_DIR)/system_src.xsd
 
-SCHEMA_FILE = schema/`echo $* | sed -e 's/_a//g;s/_b//g;s/_src//g'`.xsd
+SCHEMA_FILE = $(SCHEMA_DIR)/`echo $* | sed -e 's/_a//g;s/_b//g;s/_src//g'`.xsd
 
-XSD_FILES = $(shell find schema/ -name '*.xsd')
+XSD_FILES = $(shell find $(SCHEMA_DIR)/ -name '*.xsd')
 SCHEMA_PLUGINS = $(shell find schema_plugins/ -name '*.py')
 
 COMPONENT_TARGETS = $(SCHEMA_ADS_FILES)
@@ -58,7 +59,8 @@ $(GEN_DIR)/muxml-%_schema.ads: $(GEN_DIR)/%.xsd | $(GEN_DIR)
 
 $(GEN_DIR)/%.xsd: $(XSD_FILES) $(RESOLVE_XSL) | $(GEN_DIR)
 	@$(E) $(COMPONENT) "XSLT $*" \
-		"xsltproc --stringparam format $* $(RESOLVE_XSL) $(SCHEMA_FILE) > $@"
+		"xsltproc --path $(SCHEMA_DIR)/$* --stringparam format $* \
+		$(RESOLVE_XSL) $(SCHEMA_FILE) > $@"
 
 xmllint: $(LINT_OK)
 $(OBJ_DIR)/%.lintok: $(COMPONENT_TARGETS) $(LINT_XML) $(SYSTEM_SCHEMA_FILES) | $(OBJ_DIR)

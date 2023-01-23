@@ -75,7 +75,7 @@ package body Mucfgcheck.MSR.Test_Data.Tests is
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
-      --  Positve test.
+      --  Positive test.
 
       Check_Whitelist (XML_Data => Data);
       Assert (Condition => Validation_Errors.Is_Empty,

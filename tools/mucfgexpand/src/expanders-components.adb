@@ -106,10 +106,10 @@ is
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Arr_Node,
                  XPath => "*[self::reader or self::writer]");
-            Child_Count : constant Positive
+            Child_Count : constant Natural
               := DOM.Core.Nodes.Length (List => Children);
          begin
-            Mulog.Log (Msg => "Adding" & Child_Count'Img & " channels(s) "
+            Mulog.Log (Msg => "Adding" & Child_Count'Img & " channel(s) "
                        & "of array '" & Arr_Name & "' to component '"
                        & Comp_Name & "'");
             for J in 0 .. Child_Count - 1 loop
@@ -923,7 +923,7 @@ is
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Arr_Node,
                  XPath => "*");
-            Child_Count : constant Positive
+            Child_Count : constant Natural
               := DOM.Core.Nodes.Length (List => Children);
          begin
             Mulog.Log (Msg => "Adding" & Child_Count'Img & " memory region(s) "

@@ -212,10 +212,15 @@ is
 
    function Get_Channel_Kind (Node : DOM.Core.Node) return Channel_Kind
    is
+      use type DOM.Core.Node;
    begin
-      return Channel_Kind'Value
-        (DOM.Core.Elements.Get_Tag_Name (Elem => Node));
-
+      --  Node may be null if there are empty channel arrays
+      if Node = null then
+         return None;
+      else
+         return Channel_Kind'Value
+            (DOM.Core.Elements.Get_Tag_Name (Elem => Node));
+      end if;
    exception
       when Constraint_Error =>
          raise Attribute_Error with "Unable to determine channel kind of "
@@ -320,11 +325,6 @@ is
            (N     => Arr,
             XPath => "*"));
    begin
-      if Child_Count = 0 then
-         raise Array_Error with Array_Kind & " array '" & S (Logical)
-           & "' has no child elements";
-      end if;
-
       Array_Attrs_As_String
         (Arr          => Arr,
          Array_Kind   => Array_Kind,
@@ -410,6 +410,7 @@ is
          case Kind is
             when Reader => return Res & To_Reader_Str;
             when Writer => return Res & To_Writer_Str;
+            when None   => return Res;
          end case;
       end To_Reader_Writer_Str;
 
@@ -810,7 +811,7 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Arr,
            XPath => "*");
-      Child_Count : constant Positive
+      Child_Count : constant Natural
         := DOM.Core.Nodes.Length (List => Children);
 
       Res : Unbounded_String;

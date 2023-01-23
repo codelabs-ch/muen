@@ -127,10 +127,12 @@ private
 
    type Channel_Kind is
      (Reader,
-      Writer);
+      Writer,
+      None);
 
-   --  Return channel kind of given node. Raises attribute error if node is not
-   --  a valid channel kind.
+   --  Return channel kind of given node. Returns "None" if the given
+   --  node is null. Raises attribute error if node is not a valid
+   --  channel kind.
    function Get_Channel_Kind (Node : DOM.Core.Node) return Channel_Kind;
 
 end Cspec.Utils;

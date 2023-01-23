@@ -379,19 +379,23 @@ package body Cspec.Utils.Test_Data.Tests is
       Data      : Muxml.XML_Data_Type;
       Arr, Node : DOM.Core.Node;
 
-      Ref : constant String :=
+      Ref1 : constant String :=
         "   Input_Address_Base  : constant := 16#f000#;" & ASCII.LF
         & "   Input_Element_Size  : constant := 16#1000#;" & ASCII.LF
-        & "   Input_Element_Count : constant := 2;" & ASCII.LF
+        & "   Input_Element_Count : constant := ";
+      Ref2 : constant String :=
+        ";" & ASCII.LF
         & "   Input_Executable    : constant Boolean := False;" & ASCII.LF
         & "   Input_Writable      : constant Boolean := True;" & ASCII.LF
         & ASCII.LF
         & "   Input_Names : constant Name_Array (1 .. Input_Element_Count)"
         & ASCII.LF
-        & "     := (" & ASCII.LF
-        & "         1 => To_Name (Str => ""tau0""),"  & ASCII.LF
+        & "     := (" & ASCII.LF;
+      Ref3 : constant String :=
+        "         1 => To_Name (Str => ""tau0""),"  & ASCII.LF
         & "         2 => To_Name (Str => ""time"")"  & ASCII.LF
         & "        );";
+
    begin
       Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 
@@ -419,20 +423,10 @@ package body Cspec.Utils.Test_Data.Tests is
          Name  => "writable",
          Value => "true");
 
-      begin
-         declare
-            Dummy : constant String := To_Memory_Array_Str (Arr => Arr);
-         begin
-            Assert (Condition => False,
-                    Message   => "Exception expected");
-         end;
-
-      exception
-         when E : Array_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Memory array 'Input' has no child elements",
-                    Message   => "Exception message mismatch");
-      end;
+      Assert (Condition => To_Memory_Array_Str (Arr => Arr)
+                 = Ref1 & "0" & Ref2 & ASCII.LF & "        );",
+              Message   => "String mismatch"
+                 & To_Memory_Array_Str (Arr => Arr));
 
       Node := DOM.Core.Documents.Create_Element
         (Doc      => Data.Doc,
@@ -455,8 +449,12 @@ package body Cspec.Utils.Test_Data.Tests is
         (N         => Arr,
          New_Child => Node);
 
-      Assert (Condition => To_Memory_Array_Str (Arr => Arr) = Ref,
-              Message   => "String mismatch");
+
+      Assert (Condition => To_Memory_Array_Str (Arr => Arr)
+                 = Ref1 & "2" & Ref2 & Ref3,
+              Message   => "String mismatch"
+                 & To_Memory_Array_Str (Arr => Arr));
+
 --  begin read only
    end Test_To_Memory_Array_Str;
 --  end read only
@@ -475,11 +473,12 @@ package body Cspec.Utils.Test_Data.Tests is
       Data      : Muxml.XML_Data_Type;
       Arr, Node : DOM.Core.Node;
 
-      Names : constant String := ASCII.LF & ASCII.LF
+      Names1 : constant String := ASCII.LF & ASCII.LF
         & "   Input_Names : constant Name_Array (1 .. Input_Element_Count)"
         & ASCII.LF
-        & "     := (" & ASCII.LF
-        & "         1 => To_Name (Str => ""tau0"")" & ASCII.LF
+        & "     := (" & ASCII.LF;
+      Names2 : constant String :=
+        "         1 => To_Name (Str => ""tau0"")" & ASCII.LF
         & "        );";
       Chan_Rdr : constant String := ASCII.LF
         & "   Input_Element_Kind  : constant Channel_Kind := Channel_Reader;";
@@ -487,10 +486,10 @@ package body Cspec.Utils.Test_Data.Tests is
       Ref1 : constant String :=
         "   Input_Address_Base  : constant := 16#f000#;" & ASCII.LF
         & "   Input_Element_Size  : constant := 16#1000#;" & ASCII.LF
-        & "   Input_Element_Count : constant := 1;";
-      Ref2 : constant String := Ref1 & Chan_Rdr & ASCII.LF
+        & "   Input_Element_Count : constant := ";
+      Ref2 : constant String := Chan_Rdr & ASCII.LF
         & "   Input_Vector_Base   : constant := 16;";
-      Ref3 : constant String := Ref1 & ASCII.LF
+      Ref3 : constant String :=  ASCII.LF
         & "   Input_Element_Kind  : constant Channel_Kind := Channel_Writer;"
         & ASCII.LF
         & "   Input_Event_Base    : constant := 32;";
@@ -520,34 +519,31 @@ package body Cspec.Utils.Test_Data.Tests is
          Name  => "logical",
          Value => "tau0");
 
-      begin
-         declare
-            Dummy : constant String := To_Channel_Array_Str (Arr => Arr);
-         begin
-            Assert (Condition => False,
-                    Message   => "Exception expected");
-         end;
-
-      exception
-         when E : Array_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Channel array 'Input' has no child elements",
-                    Message   => "Exception message mismatch");
-      end;
+      Assert (Condition => To_Channel_Array_Str (Arr => Arr)
+                 = Ref1 & "0;" & ASCII.LF
+                 & "   Input_Element_Kind  : constant Channel_Kind := Channel_None;"
+                 & Names1 & ASCII.LF & "        );",
+              Message   => "String mismatch (1):"
+                 & To_Channel_Array_Str (Arr => Arr));
 
       Node := DOM.Core.Nodes.Append_Child
         (N         => Arr,
          New_Child => Node);
 
-      Assert (Condition => To_Channel_Array_Str (Arr => Arr) = Ref1 & Chan_Rdr & Names,
-              Message   => "String mismatch (1)");
+      Assert (Condition => To_Channel_Array_Str (Arr => Arr)
+                 = Ref1 & "1;" & Chan_Rdr & Names1 & Names2,
+              Message   => "String mismatch (2):"
+                 & To_Channel_Array_Str (Arr => Arr));
 
       DOM.Core.Elements.Set_Attribute
         (Elem  => Arr,
          Name  => "vectorBase",
          Value => "16");
-      Assert (Condition => To_Channel_Array_Str (Arr => Arr) = Ref2 & Names,
-              Message   => "String mismatch (2)");
+      Assert (Condition => To_Channel_Array_Str (Arr => Arr)
+                 = Ref1 & "1;" & Ref2 & Names1 & Names2,
+              Message   => "String mismatch (3):"
+                 & To_Channel_Array_Str (Arr => Arr)
+                 & Ref1 & "1;" & Ref2 & Names1 & Names2);
 
       DOM.Core.Elements.Remove_Attribute
         (Elem => Arr,
@@ -569,8 +565,12 @@ package body Cspec.Utils.Test_Data.Tests is
         (Elem  => Arr,
          Name  => "eventBase",
          Value => "32");
-      Assert (Condition => To_Channel_Array_Str (Arr => Arr) = Ref3 & Names,
-              Message   => "String mismatch (3)");
+
+      Assert (Condition => To_Channel_Array_Str (Arr => Arr)
+                 = Ref1 & "1;" & Ref3 & Names1 & Names2,
+              Message   => "String mismatch (3):"
+                 & To_Channel_Array_Str (Arr => Arr));
+
 --  begin read only
    end Test_To_Channel_Array_Str;
 --  end read only

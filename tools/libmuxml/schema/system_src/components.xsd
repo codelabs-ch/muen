@@ -512,7 +512,7 @@
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>
-   <xs:element name="memory" type="arrayEntryType" minOccurs="1" maxOccurs="unbounded"/>
+   <xs:element name="memory" type="arrayEntryType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
   <xs:attributeGroup ref="memBaseAttrs"/>
   <xs:attributeGroup ref="arrayBaseAttrs"/>
@@ -531,8 +531,8 @@
    </xs:documentation>
   </xs:annotation>
   <xs:choice>
-   <xs:element name="reader" type="arrayEntryType" minOccurs="1" maxOccurs="unbounded"/>
-   <xs:element name="writer" type="arrayEntryType" minOccurs="1" maxOccurs="unbounded"/>
+   <xs:element name="reader" type="arrayEntryType" minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="writer" type="arrayEntryType" minOccurs="0" maxOccurs="unbounded"/>
   </xs:choice>
   <xs:attributeGroup ref="arrayBaseAttrs"/>
   <xs:attribute name="logical" type="nameType" use="required">

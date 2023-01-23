@@ -1,30 +1,100 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <system>
  <config>
-  <boolean name="not_false" value="true"/>
-  <boolean name="session2_disabled" value="false"/>
-  <boolean name="or_expr_2" value="false"/>
-  <boolean name="nested_expr" value="true"/>
-  <boolean name="two_is_not_three" value="true"/>
-  <boolean name="two_is_not_two" value="false"/>
-  <boolean name="int_values_2" value="false"/>
-  <boolean name="has_not_three_sessions" value="true"/>
-  <boolean name="and_expr_2" value="true"/>
-  <boolean name="iommu_disabled" value="false"/>
-  <boolean name="is_below_max" value="true"/>
-  <boolean name="or_expr" value="true"/>
-  <boolean name="two_is_two" value="true"/>
-  <boolean name="has_four_sessions" value="true"/>
-  <boolean name="two_is_three" value="false"/>
-  <boolean name="and_expr" value="false"/>
-  <boolean name="session2_enabled" value="true"/>
-  <boolean name="feature_enabled" value="true"/>
-  <boolean name="int_values" value="true"/>
-  <integer name="session_count" value="4"/>
-  <string name="first_name" value="alf"/>
-  <string name="place" value="melmac"/>
+  <boolean name="inserted_2" value="true"/>
+  <integer name="inserted_3" value="42"/>
+  <integer name="inserted_4" value="43"/>
+  <string name="inserted_1" value="i1"/>
  </config>
  <expressions>
+  <expression name="myconcatenation">
+   <concatenation>
+    <string value="start_"/>
+    <variable name="name2"/>
+    <variable name="name1"/>
+    <string value="foobar"/>
+   </concatenation>
+  </expression>
+  <expression name="evalStringExpr1">
+   <evalString value=""/>
+  </expression>
+  <expression name="evalStringExpr2">
+   <evalString value="/path/../to/*[@name='stuff']//node"/>
+  </expression>
+  <expression name="evalStringExpr3">
+   <evalString value="${case1_string}"/>
+  </expression>
+  <expression name="evalStringExpr4">
+   <evalString value="${foo}${lcbrace}"/>
+  </expression>
+  <expression name="evalStringExpr5">
+   <evalString value="bar${foo}_b ar "/>
+  </expression>
+  <expression name="evalStringExpr6">
+   <evalString value="${foo}${empty}_ba:,.'\/()!? r_${foo}${lcbrace}"/>
+  </expression>
+  <expression name="empty">
+   <concatenation>
+    <string value=""/>
+    <string value=""/>
+   </concatenation>
+  </expression>
+  <expression name="foobar">
+   <concatenation>
+    <string value="foo"/>
+    <string value="bar"/>
+   </concatenation>
+  </expression>
+  <expression name="case1_string">
+   <case variable="foo">
+    <when value="foo">
+     <string value="no bar"/>
+    </when>
+    <when value="foobar">
+     <variable name="foobar"/>
+    </when>
+   </case>
+  </expression>
+  <expression name="case2_bool">
+   <case variable="scount">
+    <when value="4">
+     <boolean value="true"/>
+    </when>
+    <others>
+     <boolean value="false"/>
+    </others>
+   </case>
+  </expression>
+  <expression name="case3_int">
+   <case variable="feature_enabled">
+    <when value="true">
+     <integer value="-04"/>
+    </when>
+    <when value="false">
+     <variable name="scount"/>
+    </when>
+   </case>
+  </expression>
+  <expression name="case4_int">
+   <case variable="feature_enabled">
+    <when value="true">
+     <integer value="-04"/>
+    </when>
+    <when value="false">
+     <case variable="foo">
+      <when value="$foo">
+       <integer value="55"/>
+      </when>
+      <when value="foo">
+       <variable name="scount"/>
+      </when>
+      <when value="nono">
+       <integer value="0"/>
+      </when>
+     </case>
+    </when>
+   </case>
+  </expression>
   <expression name="session2_enabled">
    <gt>
     <variable name="session_count"/>
@@ -145,6 +215,15 @@
     </expression>
    </and>
   </expression>
+  <expression name="alias_expression_bool">
+   <variable name="nested_expr"/>
+  </expression>
+  <expression name="alias_expression_int">
+   <variable name="case4_int"/>
+  </expression>
+  <expression name="alias_expression_string">
+   <variable name="case1_string"/>
+  </expression>
  </expressions>
  <hardware>
   <memory>
@@ -209,7 +288,24 @@
     </devices>
    </if>
    <events/>
-   <component ref="linux"/>
+   <component ref="linux">
+    <case variable="foo">
+     <when value="foobar">
+      <map logical="dummy" physical="dummy"/>
+      <case variable="scount">
+       <when value="0">
+
+        <!-- insert comment -->
+       </when>
+      </case>
+     </when>
+     <others>
+      <if value="true" variable="feature_enabled">
+       <map logical="feature" physical="extra_mem"/>
+      </if>
+     </others>
+    </case>
+   </component>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

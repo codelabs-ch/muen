@@ -14,8 +14,10 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
+with Ada.Exceptions;
 with McKae.XML.XPath.XIA;
 with DOM.Core.Nodes;
+with Mutools.Expressions;
 --  begin read only
 --  end read only
 package body Mutools.Conditionals.Test_Data.Tests is
@@ -86,7 +88,7 @@ package body Mutools.Conditionals.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
-      procedure Positive_Test
+      procedure Positive_Test (Debug_Active : Boolean)
       is
          Output : constant String := "obj/output_test_policy_src_conditionals.xml";
          Data   : Muxml.XML_Data_Type;
@@ -96,7 +98,7 @@ package body Mutools.Conditionals.Test_Data.Tests is
             Kind => Muxml.None,
             File => "data/test_policy_src_conditionals.xml");
 
-         Expand (Policy => Data);
+         Expand (Policy => Data, Debug_Active => Debug_Active);
 
          Muxml.Write (Data => Data,
                       Kind => Muxml.None,
@@ -108,9 +110,97 @@ package body Mutools.Conditionals.Test_Data.Tests is
 
          Ada.Directories.Delete_File (Name => Output);
       end Positive_Test;
+
+      ----------------------------------------------------------------------
+
+      procedure Not_A_Boolean
+      is
+         Output : constant String := "obj/output_test_policy_src_conditionals.xml";
+         Data   : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse
+           (Data => Data,
+            Kind => Muxml.None,
+            File => "data/test_policy_src_conditionals.xml");
+         Muxml.Utils.Set_Attribute
+            (Doc   => Data.Doc,
+             XPath => "/system/memory/if[@variable='feature_enabled']",
+             Name  => "value",
+             Value => "1");
+         Expand (Policy => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+      exception
+         when E : Expressions.Invalid_Expression =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Cannot compare value '1' to variable 'feature_enabled'"
+                       & " which is a Boolean (cast failed)",
+                    Message   => "Exception message mismatch: " &
+                          Ada.Exceptions.Exception_Message (X => E));
+      end Not_A_Boolean;
+
+      ----------------------------------------------------------------------
+
+      procedure Not_An_Integer
+      is
+         Output : constant String := "obj/output_test_policy_src_conditionals.xml";
+         Data   : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse
+           (Data => Data,
+            Kind => Muxml.None,
+            File => "data/test_policy_src_conditionals.xml");
+         Muxml.Utils.Set_Attribute
+            (Doc   => Data.Doc,
+             XPath => "/system/memory/if[@variable='session_count']",
+             Name  => "value",
+             Value => "one");
+         Expand (Policy => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+      exception
+         when E : Expressions.Invalid_Expression =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Cannot compare value 'one' to variable 'session_count'"
+                       & " which is an Integer (cast failed)",
+                    Message   => "Exception message mismatch: " &
+                          Ada.Exceptions.Exception_Message (X => E));
+      end Not_An_Integer;
+
+      ----------------------------------------------------------------------
+
+      procedure Var_Not_Found
+      is
+         Output : constant String := "obj/output_test_policy_src_conditionals.xml";
+         Data   : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse
+           (Data => Data,
+            Kind => Muxml.None,
+            File => "data/test_policy_src_conditionals.xml");
+         Muxml.Utils.Set_Attribute
+            (Doc   => Data.Doc,
+             XPath => "/system/memory/if[@variable='session_count']",
+             Name  => "variable",
+             Value => "no_such_var");
+         Expand (Policy => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+      exception
+         when E : Expressions.Invalid_Expression =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Cannot find variable with name 'no_such_var'"
+                       & " in configuration",
+                    Message   => "Exception message mismatch: " &
+                          Ada.Exceptions.Exception_Message (X => E));
+      end Var_Not_Found;
    begin
-      Positive_Test;
+      Positive_Test (Debug_Active => False);
+      Positive_Test (Debug_Active => True);
       No_Conditionals;
+      Not_A_Boolean;
+      Not_An_Integer;
+      Var_Not_Found;
 
 --  begin read only
    end Test_Expand;

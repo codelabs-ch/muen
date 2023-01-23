@@ -50,7 +50,7 @@ package body Mutools.Substitutions.Test_Data.Tests is
          Muxml.Parse (Data => Data,
                       Kind => Muxml.None,
                       File => "data/substitution.xml");
-         Process_Attributes (Data => Data);
+         Process_Attributes (Data => Data, Debug_Active => True);
          Muxml.Write (Data => Data,
                       Kind => Muxml.None,
                       File => "obj/substitution.xml");
@@ -76,7 +76,7 @@ package body Mutools.Substitutions.Test_Data.Tests is
                (Elem  => Node,
                 Name  => "name",
                 Value => "$not_existing_var");
-         Process_Attributes (Data => Data);
+         Process_Attributes (Data => Data, Debug_Active => True);
          Assert (Condition => False,
                  Message   => "Exception expected (non_existent_var)");
       exception
@@ -88,9 +88,35 @@ package body Mutools.Substitutions.Test_Data.Tests is
                     Message   => "Exception message mismatch");
 
       end Non_Existent_Var;
+
+      procedure Dollar_Ref_In_Variable_Attribute
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/substitution.xml");
+         Muxml.Utils.Set_Attribute
+            (Doc   => Data.Doc,
+             XPath => "/system/memory/if[@variable='session_count']",
+             Name  => "variable",
+             Value => "$session_count");
+         Process_Attributes (Data => Data, Debug_Active => True);
+         Assert (Condition => False,
+                 Message   => "Exception expected (non_existent_var)");
+      exception
+         when E : Muxml.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Error when substituting $-reference."
+                       & " Found $-reference in 'variable'-attribute."
+                       & " Value is '$session_count'.",
+                    Message   => "Exception message mismatch");
+
+      end Dollar_Ref_In_Variable_Attribute;
    begin
       Positive_Test;
       Non_Existent_Var;
+      Dollar_Ref_In_Variable_Attribute;
 
 --  begin read only
    end Test_Process_Attributes;

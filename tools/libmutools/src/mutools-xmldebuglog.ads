@@ -241,7 +241,6 @@ private
    function Transaction_Log_To_String return String;
 
    --  Delete all entries in the Transaction-/Nodes_Backtrace-Log, respectively.
-   --  Meant for untit tests and debugging.
    procedure Clear_Transaction_Log;
    procedure Clear_Backtrace_Log;
 

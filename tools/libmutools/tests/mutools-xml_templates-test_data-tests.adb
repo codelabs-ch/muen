@@ -394,22 +394,16 @@ package body Mutools.XML_Templates.Test_Data.Tests is
 
       procedure Positive_Test
       is
-         Data, Template_Doc : Muxml.XML_Data_Type;
-         Output_File_Name   : constant String
-                            := "obj/output_prefixed_template.xml";
-         Locked_Attr        : Node_Set_Type.Set;
+         Template_Doc     : Muxml.XML_Data_Type;
+         Output_File_Name : constant String
+                          := "obj/output_prefixed_template.xml";
+         Locked_Attr      : Node_Set_Type.Set;
 
-         Template_Def, Root_Node, Dummy, New_Config : DOM.Core.Node;
+         Root_Node, Dummy, New_Config : DOM.Core.Node;
       begin
-         Muxml.Parse (Data => Data,
+         Muxml.Parse (Data => Template_Doc,
                       Kind => Muxml.None,
-                      File => "data/system_policy_templateAmend.xml");
-         -- prepare a new document to use
-         Template_Def := Muxml.Utils.Get_Element
-            (Doc   => Data.Doc,
-             XPath => "/system/template[@name='template_memory']");
-         Create_XMLDocument_From_Node (New_Doc  => Template_Doc.Doc,
-                                       Src_Node => Template_Def);
+                      File => "data/template_definition.xml");
          Root_Node := Muxml.Utils.Get_Element
             (Doc   => Template_Doc.Doc,
              XPath => "/template");

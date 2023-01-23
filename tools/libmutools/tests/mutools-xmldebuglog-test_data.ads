@@ -4,6 +4,7 @@
 --  except for sections surrounded by a 'read only' marker.
 
 with AUnit.Test_Fixtures;
+with Muxml;
 
 package Mutools.Xmldebuglog.Test_Data is
 
@@ -14,5 +15,8 @@ package Mutools.Xmldebuglog.Test_Data is
 
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
+
+   --  does most merging steps to fill the logs in a consistent way
+   procedure Merge_All_Steps (Data : in out Muxml.XML_Data_Type);
 
 end Mutools.Xmldebuglog.Test_Data;

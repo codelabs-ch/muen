@@ -3,6 +3,7 @@
    <config>
       <boolean name="feature_enabled" value="true"/>
       <boolean name="dependent_feature" value="$feature_enabled"/>
+      <boolean name="depends_on_expression" value="$case2_bool"/>
       <integer name="scount" value="$session_count"/>
       <integer name="session_count" value="4"/>
       <string name="name3" value="$name2"/>
@@ -10,6 +11,7 @@
       <string name="name2" value="$name1"/>
       <string name="foo" value="$foobar"/>
       <string name="lcbrace" value="{"/>
+      <string name="empty_string" value=""/>
    </config>
    <expressions>
       <expression name="myconcatenation">
@@ -221,6 +223,15 @@
                </or>
             </expression>
          </and>
+      </expression>
+      <expression name="alias_expression_bool">
+         <variable name="nested_expr"/>
+      </expression>
+      <expression name="alias_expression_int">
+         <variable name="case4_int"/>
+      </expression>
+      <expression name="alias_expression_string">
+         <variable name="case1_string"/>
       </expression>
    </expressions>
    <hardware>

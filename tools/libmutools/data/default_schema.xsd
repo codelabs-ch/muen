@@ -513,7 +513,7 @@
       <xs:element name="class" type="devClassType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="devClassType">
+  <xs:complexType name="devClassTypeExtended">
     <xs:annotation/>
     <xs:sequence>
       <xs:element name="device" type="physRefType" minOccurs="0" maxOccurs="unbounded"/>
@@ -521,6 +521,16 @@
     <xs:attribute name="name" type="nameType" use="required">
       <xs:annotation/>
     </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="devClassType">
+    <xs:annotation/>
+    <xs:complexContent>
+      <xs:restriction base="devClassTypeExtended">
+         <xs:sequence>
+            <xs:element name="device" type="physRefType" minOccurs="1" maxOccurs="unbounded"/>
+         </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
   </xs:complexType>
   <xs:complexType name="physRefType">
     <xs:annotation/>

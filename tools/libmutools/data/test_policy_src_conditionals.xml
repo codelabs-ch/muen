@@ -43,6 +43,9 @@
       <if value="1" variable="session_count">
          <memory caching="WB" name="placeholder" physicalAddress="16#3000#" size="16#1000#"/>
       </if>
+      <if value="not my name" variable="name1">
+         <memory caching="WB" name="shouldNotAppear" physicalAddress="16#3000#" size="16#1000#"/>
+      </if>
    </memory>
    <events/>
    <components>

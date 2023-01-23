@@ -69,6 +69,21 @@ package body Mutools.Amend.Test_Data.Tests is
 
          Ada.Directories.Delete_File (Name => Output);
 
+         --  do the same with active debug-flag
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/amend_expand.xml");
+         Expand (XML_Data => Data, Debug_Active => True);
+
+         Muxml.Write (Data => Data,
+                      Kind => Muxml.None,
+                      File => Output);
+         Assert (Condition => Test_Utils.Equal_Files
+                   (Filename1 => "data/output_amend_expand.xml",
+                    Filename2 => Output),
+                 Message   => "Policy mismatch: " & Output);
+
+         Ada.Directories.Delete_File (Name => Output);
       end Positive_Test;
 
       ----------------------------------------------------------------------
@@ -247,6 +262,7 @@ package body Mutools.Amend.Test_Data.Tests is
                           Ada.Exceptions.Exception_Message (X => E));
          end;
       end No_Legal_Insert_Position;
+
    begin
       Positive_Test;
       No_Amend_Statements;
@@ -305,6 +321,17 @@ package body Mutools.Amend.Test_Data.Tests is
                                           Value => "");
          Assert (Condition => Nodes_Equal (L => Left, R => Right),
                  Message   => "Equal nodes reported as unequal");
+
+
+         Left := DOM.Core.Documents.Create_Text_Node
+            (Doc  => Policy.Doc,
+             Data => "Seite links");
+         Right := DOM.Core.Documents.Create_Text_Node
+            (Doc  => Policy.Doc,
+             Data => "Seite rechts");
+         Assert (Condition => not Nodes_Equal (L => Left, R => Right),
+                 Message   => "Unequal nodes reported as equal");
+
       end Positive_Test;
 
       ----------------------------------------------------------------------

@@ -3,6 +3,8 @@
    <config>
       <boolean name="feature_enabled" value="true"/>
       <integer name="session_count" value="4"/>
+      <string name="first_name" value="alf"/>
+      <string name="place" value="melmac"/>
    </config>
    <expressions>
       <expression name="session2_enabled">

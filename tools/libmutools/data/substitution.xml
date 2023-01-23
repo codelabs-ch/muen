@@ -21,7 +21,10 @@
   </mappings>
  </platform>
  <memory>
-  <memory caching="WB" name="$default_name" size="16#1000#"/>
+    <memory caching="WB" name="$default_name" size="16#1000#"/>
+    <if value="$default_size" variable="session_count">
+       <memory caching="WB" name="does_not_show_up" size="16#1000#"/>
+    </if>
  </memory>
  <events/>
  <channels/>

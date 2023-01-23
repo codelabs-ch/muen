@@ -60,8 +60,8 @@ private
    --  (a) definitions of the form <boolean name="foo" .../>
    --      (also for integer and string)
    --  (b) <expression name="foo".. />
-   --  All occurances of these variable-names (as variables) and occurances of
-   --  <useTemplate namePrefix="foo" .../>
+   --  All occurrences of these variable-names (as variables) and occurrences
+   --  of <useTemplate namePrefix="foo" .../>
    --  are then prefixed with the given prefix except if the (attribute)-node
    --  with that reference is contained in Locked_Attr.
    procedure Prefix_Variables

@@ -121,7 +121,7 @@ is
 
    --  Produce a hash for a DOM-Node.
    --  The hash is produced solely from the address that Node points to.
-   --  This is justifed as equality of nodes is checked via their addresses.
+   --  This is justified as equality of nodes is checked via their addresses.
    --  This hash-function does not claim any security properties.
    function Hash (Node : DOM.Core.Node) return Ada.Containers.Hash_Type;
 
@@ -202,7 +202,7 @@ private
       Origin_Of_Node        : Origin_Info_Type;
       Template_Backtrace    : Actions_Ref_Type;
       Conditional_Backtrace : Actions_Ref_Type;
-      -- Amend has at most one enty
+      -- Amend has at most one entry
       Amend_Backtrace       :  Transaction_Log_Index_Type := Null_Ref_Index;
    end record;
 

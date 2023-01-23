@@ -1384,7 +1384,7 @@ is
          begin
             if Has_Dollar_Or_Braces (Input => String_Fragment) then
                raise Invalid_Expression with
-                  "EvalString got invaild value '" & Input_String & "'";
+                  "EvalString got invalid value '" & Input_String & "'";
             elsif String_Fragment'Length > 0 then
                Fragment_Vector.Append
                   (Container => Result,
@@ -1403,7 +1403,7 @@ is
 
          if Right_Index = 0 then
             raise Invalid_Expression with
-               "EvalString got invaild value '" & Input_String & "'";
+               "EvalString got invalid value '" & Input_String & "'";
          end if;
 
          declare
@@ -1412,7 +1412,7 @@ is
          begin
             if Has_Dollar_Or_Braces (Input => String_Fragment) then
                raise Invalid_Expression with
-                  "EvalString got invaild value '" & Input_String & "'";
+                  "EvalString got invalid value '" & Input_String & "'";
             else
                --  An empty reference is OK for the parser.
                Fragment_Vector.Append
@@ -1437,7 +1437,7 @@ is
       begin
          if Has_Dollar_Or_Braces (Input => String_Fragment) then
             raise Invalid_Expression with
-               "EvalString got invaild value '" & Input_String & "'";
+               "EvalString got invalid value '" & Input_String & "'";
          elsif String_Fragment'Length > 0 then
             Fragment_Vector.Append
                (Container => Result,

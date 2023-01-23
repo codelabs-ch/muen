@@ -543,6 +543,18 @@ is
             Group_Index  => Scheduling_Partitions
               (Partition_ID).Active_Group_Index,
             Subject_ID   => Subject_ID);
+
+         --D @Item List => impl_scheduling_resched_sp_steps
+         --D After deactivation, check if the subject has become active in the
+         --D meantime as subjects on other cores may send events at any time.
+         --D Reactivate the scheduling group in that case.
+         Subject_Is_Active := Is_Active (Subject_ID => Subject_ID);
+         if Subject_Is_Active then
+            Activate_Group
+              (Partition_ID => Partition_ID,
+               Group_ID     => Policy.Get_Scheduling_Group_ID
+                 (Subject_ID => Subject_ID));
+         end if;
       end if;
 
       if not RIP_Incremented then

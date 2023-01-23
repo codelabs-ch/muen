@@ -107,7 +107,7 @@
   <xs:attribute name="revisionId" type="byteType"   use="required">
    <xs:annotation>
     <xs:documentation>
-     PCI device revison ID.
+     PCI device revision ID.
     </xs:documentation>
    </xs:annotation>
   </xs:attribute>

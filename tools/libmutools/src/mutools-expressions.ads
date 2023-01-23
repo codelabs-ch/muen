@@ -119,7 +119,7 @@ private
 
    --  Returns the Boolean value of a Boolean expression or config variable
    --  given as node and adds name-value entry to config section.
-   --  Resolves dependencies recusively.
+   --  Resolves dependencies recursively.
    function Evaluate_Boolean
      (Node        :        DOM.Core.Node;
       Backtrace   : in out String_Vector.Vector;
@@ -128,7 +128,7 @@ private
 
    --  Returns the integer value of an integer expression or config variable
    --  given as node and adds name-value entry to config section.
-   --  Resolves dependencies recusively.
+   --  Resolves dependencies recursively.
    function Evaluate_Integer
      (Node        :        DOM.Core.Node;
       Backtrace   : in out String_Vector.Vector;
@@ -137,7 +137,7 @@ private
 
    --  Returns the string value of a string expression or config variable
    --  given as node and adds name-value entry to config section.
-   --  Resolves dependencies recusively.
+   --  Resolves dependencies recursively.
    function Evaluate_String
      (Node        :        DOM.Core.Node;
       Backtrace   : in out String_Vector.Vector;

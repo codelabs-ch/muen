@@ -32,7 +32,7 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Ignore acces to port: Do nothing on write, fake read.
+   --  Ignore access to port: Do nothing on write, fake read.
    procedure Ignore_Access (Info : IO_Info_Type)
    with
       Global  => (In_Out => Subject_Info.State),

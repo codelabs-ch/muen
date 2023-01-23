@@ -72,7 +72,7 @@ is
    --  Buffer_Offset + Sector_Cnt is in the Range of the Buffer (no wrap around
    --  handled by muenblock_client)
    --
-   --  Read and Write are not threadsave and should not be called concurrently.
+   --  Read and Write are not threadsafe and should not be called concurrently.
    procedure Read
       (Device_Id     :     Device_Range_Type;
        Start_Sector  :     Interfaces.Unsigned_64;

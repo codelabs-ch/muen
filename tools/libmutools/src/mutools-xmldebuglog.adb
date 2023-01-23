@@ -546,7 +546,7 @@ is
 
             --  Ref may have some but not all array elements of New_Data already
             --  e.g. if Merge_Parent_Backtrace_Info was called in the past
-            --  and new actions happend in between.
+            --  and new actions happened in between.
             --  Hence, if the new element is already present, we omit it.
             for I in Actions_Index_Range'First .. Actions_Index_Range'First + Ref.Length - 1 loop
                if Ref.Entries (I) = Next_Element then
@@ -555,7 +555,7 @@ is
             end loop;
 
             if not Found then
-               --  Actions on ancestors happend before actions specific to their
+               --  Actions on ancestors happened before actions specific to their
                --  children.
                --- Hence, these need to be at the beginning of the array.
                --  Hence, we shift array entries first.

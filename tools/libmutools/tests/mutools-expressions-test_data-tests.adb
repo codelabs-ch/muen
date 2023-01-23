@@ -192,7 +192,7 @@ package body Mutools.Expressions.Test_Data.Tests is
       exception
          when E : Invalid_Expression =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "EvalString got invaild value '" & Input & "'",
+                       = "EvalString got invalid value '" & Input & "'",
                     Message   => "Exception message mismatch (" & Input & ")");
       end Test_Faulty_String;
 

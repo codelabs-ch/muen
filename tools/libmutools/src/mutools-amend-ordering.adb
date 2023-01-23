@@ -345,7 +345,7 @@ is
       begin
          if Left_Bound = Schema_Start'Length or Right_Bound = 0 then
             raise Validation_Error with
-               "Coud not find schema-node for namespace-checking";
+               "Could not find schema-node for namespace-checking";
          end if;
          for I in Whitespace'Range loop
             Count := Count +
@@ -716,7 +716,7 @@ is
                                   Length   => 1));
 
                --  Evaluate the root element.
-               --  Assignment before calling Eval is necessarry
+               --  Assignment before calling Eval is necessary
                --  in order to drop the reference to Order_Info which prevents
                --  tampering with Order_Info within Eval.
                declare

@@ -178,7 +178,7 @@
     \end{itemize}
 
     \texttt{msi} sub-elements are present if the device supports MSI interrupts.
-    The element count designates the number of supported MSI interrrupts.
+    The element count designates the number of supported MSI interrupts.
 
     See line \ref{lst:af-lineref-device-irq} in listing
     \ref{lst:annotated-policy} for an example device IRQ declaration.
@@ -309,7 +309,7 @@
     subject and switching to the target. Such a construct is used to pass the
     thread of execution on to a different subject, e.g. invocation of a debugger
     subject if an error occurs in the source subject. The third kind is used to
-    faciliate the restart of subjects.
+    facilitate the restart of subjects.
 
     An event can also have the same source and target, which is called
     \emph{self} event. Such events are useful to implement para-virtualized
@@ -627,7 +627,7 @@
   <xs:attribute name="revisionId" type="byteType" use="required">
    <xs:annotation>
     <xs:documentation>
-     PCI device revison ID.
+     PCI device revision ID.
     </xs:documentation>
    </xs:annotation>
   </xs:attribute>

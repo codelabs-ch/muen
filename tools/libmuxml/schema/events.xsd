@@ -16,7 +16,7 @@
     subject and switching to the target. Such a construct is used to pass the
     thread of execution on to a different subject, e.g. invocation of a debugger
     subject if an error occurs in the source subject. The third kind is used to
-    faciliate the restart of subjects.
+    facilitate the restart of subjects.
 
     An event can also have the same source and target, which is called
     \emph{self} event. Such events are useful to implement para-virtualized

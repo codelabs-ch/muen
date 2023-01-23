@@ -636,7 +636,7 @@
     static configuration, hands over execution to SM.
 
     SM first examines the exit reason of the associated subject, by using the
-    aformentioned \texttt{State} variable:
+    aforementioned \texttt{State} variable:
 
     \lstinputlisting[linerange=Smexitbegin-Smexitend,label=code-sm-exit-reason,caption=Determining
     the exit reason,language=Ada]{../../sm/src/sm.adb}
@@ -678,7 +678,7 @@
  <section id="subject-lifecycle" label="Subject Lifecycle" priority="0">
   <text priority="0">
    The subject lifecycle management concept provides a lightweight mechanism to
-   intialize and reset native subjects. It allows to set up the memory resource
+   initialize and reset native subjects. It allows to set up the memory resource
    of a subject to a well-known state prior to the execution of subject code.
 
    The initialization of the subject runtime environment is performed by a dedicated
@@ -828,7 +828,7 @@
     \end{figure}
 
     The Subject Initialization Stub implements the finite state machine depicted
-    in figure ~\ref{fig-subject_init_fsm}. Transitions are perfomed when the
+    in figure ~\ref{fig-subject_init_fsm}. Transitions are performed when the
     init code is in the given state and the specified command is read from the
     command interface. Table \ref{tab-lifecycle-fsm-commands} lists the commands
     issued by the controller and the action performed by the Subject
@@ -912,7 +912,7 @@
            native subject initialization, reused via the Libmuinit library.
      \item After successful setup of Linux memory, SL triggers a handover to SM.
      \item SM inspects Linux Status Interface filled in by SL to check that no
-           error occured.
+           error occurred.
      \item If Linux State has Error bit set, print error message and halt
            subject execution.
      \item Check if SM is monitoring an AP Linux (\verb$CR0.PE = 0$): wait for

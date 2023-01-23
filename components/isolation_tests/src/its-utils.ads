@@ -21,7 +21,7 @@ with Interfaces;
 package ITS.Utils
 is
 
-   --  Addressable memory which explicitly exludes 0 since access to
+   --  Addressable memory which explicitly excludes 0 since access to
    --  Null_Address is undefined behavior.
    subtype Memory_Address is
      Interfaces.Unsigned_64 range 1 .. Interfaces.Unsigned_64'Last;

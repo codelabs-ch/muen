@@ -1632,6 +1632,76 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Sched_Partition_Info_Mappings
+     (Data : in out Muxml.XML_Data_Type)
+   is
+      use type Interfaces.Unsigned_64;
+
+      Sched_Info_Virtual_Address : constant String := Mutools.Utils.To_Hex
+        (Number => Config.Subject_Info_Virtual_Addr +
+           Expanders.Config.Subject_Sinfo_Region_Size);
+
+      Subjects : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject");
+      SP_Subjects : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/scheduling/partitions/partition/group/subject");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subject : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subject,
+                 Name => "name");
+            SP_Subj : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => SP_Subjects,
+                 Ref_Attr  => "name",
+                 Ref_Value => Subj_Name);
+            Group_ID_Str : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => DOM.Core.Nodes.Parent_Node (N => SP_Subj),
+                 Name => "id");
+            Partition_ID_Str : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node (Node => SP_Subj,
+                                                    Level => 2),
+                 Name => "id");
+            Subj_Mem_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Subject,
+                 XPath => "memory");
+         begin
+            Mulog.Log (Msg => "Adding mapping of scheduling partition "
+                       & Partition_ID_Str & " info region to subject '"
+                       & Subj_Name & "'");
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Subject,
+               Name  => "schedGroupId",
+               Value => Group_ID_Str);
+            Muxml.Utils.Append_Child
+              (Node      => Subj_Mem_Node,
+               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+                 (Policy        => Data,
+                  Logical_Name  => "sched_partition_info",
+                  Physical_Name => "scheduling_partition_info_"
+                  & Partition_ID_Str,
+                  Address       => Sched_Info_Virtual_Address,
+                  Writable      => False,
+                  Executable    => False));
+         end;
+      end loop;
+   end Add_Sched_Partition_Info_Mappings;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Sibling_Memory (Data : in out Muxml.XML_Data_Type)
    is
       package Cfg renames Expanders.Config;

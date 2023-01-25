@@ -16,7 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Exceptions;
 with Ada.Strings.Fixed;
 
 with Interfaces;
@@ -363,41 +362,6 @@ is
          end;
       end loop;
    end Add_Reserved_Memory_Regions;
-
-   -------------------------------------------------------------------------
-
-   procedure Add_Scheduling_Group_Info_Regions
-     (Data : in out Muxml.XML_Data_Type)
-   is
-      package MXU renames Mutools.XML_Utils;
-
-      Sched_Group_Count : Natural;
-   begin
-      begin
-         Sched_Group_Count := MXU.Get_Initial_Scheduling_Group_Subjects
-           (Data => Data)'Length;
-
-      exception
-         when E : others =>
-            raise Expansion_Error with "Error adding scheduling group info "
-              & "regions - " & Ada.Exceptions.Exception_Message (X => E);
-      end;
-
-      Mulog.Log (Msg => "Adding" & Sched_Group_Count'Img
-                 & " scheduling group info region(s)");
-      for I in 1 .. Sched_Group_Count loop
-         Mutools.XML_Utils.Add_Memory_Region
-           (Policy      => Data,
-            Name        => "scheduling_group_info_"
-            & Ada.Strings.Fixed.Trim (Source => I'Img,
-                                      Side   => Ada.Strings.Left),
-            Address     => "",
-            Size        => "16#1000#",
-            Caching     => "WB",
-            Alignment   => "16#1000#",
-            Memory_Type => "subject_scheduling_info");
-      end loop;
-   end Add_Scheduling_Group_Info_Regions;
 
    -------------------------------------------------------------------------
 

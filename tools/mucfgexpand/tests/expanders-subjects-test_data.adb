@@ -97,7 +97,6 @@ package body Expanders.Subjects.Test_Data is
    begin
       Prepare_Sched_Info_Mappings (Data => Data);
       Add_CPU_IDs (Data => Data);
-      Add_Sched_Group_Info_Mappings (Data => Data);
       Add_Sched_Partition_Info_Mappings (Data => Data);
       Add_Timed_Event_Mappings (Data => Data);
    end Prepare_Sibling_Mappings;

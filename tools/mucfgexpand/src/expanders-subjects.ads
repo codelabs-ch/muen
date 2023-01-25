@@ -83,9 +83,6 @@ is
    --  Add sinfo region to all subjects.
    procedure Add_Sinfo_Regions (Data : in out Muxml.XML_Data_Type);
 
-   --  Add scheduling group info mappings.
-   procedure Add_Sched_Group_Info_Mappings (Data : in out Muxml.XML_Data_Type);
-
    --  Add scheduling partition info mappings.
    procedure Add_Sched_Partition_Info_Mappings
      (Data : in out Muxml.XML_Data_Type);

@@ -346,10 +346,10 @@
   <memory alignment="16#1000#" caching="WB" name="time|fpu" physicalAddress="16#4f00_2000#" size="16#1000#" type="kernel_fpu"/>
   <memory alignment="16#1000#" caching="WB" name="sm|fpu" physicalAddress="16#4f00_3000#" size="16#1000#" type="kernel_fpu"/>
   <memory alignment="16#1000#" caching="WB" name="linux|fpu" physicalAddress="16#4f00_4000#" size="16#1000#" type="kernel_fpu"/>
-  <memory alignment="16#1000#" caching="WB" name="scheduling_group_info_1" physicalAddress="16#2151_8000#" size="16#1000#" type="subject_scheduling_info"/>
-  <memory alignment="16#1000#" caching="WB" name="scheduling_group_info_2" physicalAddress="16#2151_9000#" size="16#1000#" type="subject_scheduling_info"/>
-  <memory alignment="16#1000#" caching="WB" name="scheduling_group_info_3" physicalAddress="16#2151_a000#" size="16#1000#" type="subject_scheduling_info"/>
-  <memory alignment="16#1000#" caching="WB" name="scheduling_group_info_4" physicalAddress="16#2151_b000#" size="16#1000#" type="subject_scheduling_info"/>
+  <memory alignment="16#1000#" caching="WB" name="scheduling_partition_info_1" physicalAddress="16#2151_8000#" size="16#1000#" type="subject_scheduling_info"/>
+  <memory alignment="16#1000#" caching="WB" name="scheduling_partition_info_2" physicalAddress="16#2151_9000#" size="16#1000#" type="subject_scheduling_info"/>
+  <memory alignment="16#1000#" caching="WB" name="scheduling_partition_info_3" physicalAddress="16#2151_a000#" size="16#1000#" type="subject_scheduling_info"/>
+  <memory alignment="16#1000#" caching="WB" name="scheduling_partition_info_4" physicalAddress="16#2151_b000#" size="16#1000#" type="subject_scheduling_info"/>
   <memory alignment="16#1000#" caching="UC" name="crash_audit" physicalAddress="16#cafe_6000#" size="16#1000#" type="subject_crash_audit"/>
  </memory>
  <deviceDomains>

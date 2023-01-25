@@ -1952,10 +1952,10 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Scheduling_Group_Info_Region_Presence (Gnattest_T : in out Test);
-   procedure Test_Scheduling_Group_Info_Region_Presence_54e535 (Gnattest_T : in out Test) renames Test_Scheduling_Group_Info_Region_Presence;
---  id:2.2/54e5352eb4c027ff/Scheduling_Group_Info_Region_Presence/1/0/
-   procedure Test_Scheduling_Group_Info_Region_Presence (Gnattest_T : in out Test) is
+   procedure Test_Scheduling_Info_Region_Presence (Gnattest_T : in out Test);
+   procedure Test_Scheduling_Info_Region_Presence_09c7ae (Gnattest_T : in out Test) renames Test_Scheduling_Info_Region_Presence;
+--  id:2.2/09c7ae9f325ba44d/Scheduling_Info_Region_Presence/1/0/
+   procedure Test_Scheduling_Info_Region_Presence (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1968,25 +1968,25 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       --  Positive test, must not raise an exception.
 
-      Scheduling_Group_Info_Region_Presence (XML_Data => Data);
+      Scheduling_Info_Region_Presence (XML_Data => Data);
       Assert (Condition => Validation_Errors.Is_Empty,
               Message   => "Unexpected error in positive test");
 
-      --  Missing sched group info region.
+      --  Missing sched info region.
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/memory/memory[@name='scheduling_group_info_1']",
+         XPath => "/system/memory/memory[@name='scheduling_partition_info_1']",
          Name  => "name",
          Value => "foobar");
 
-      Scheduling_Group_Info_Region_Presence (XML_Data => Data);
+      Scheduling_Info_Region_Presence (XML_Data => Data);
       Assert (Condition => Validation_Errors.Contains
-              (Msg => "Scheduling group info region of scheduling group 1 not"
+              (Msg => "Scheduling info region of scheduling partition 1 not"
                & " found"),
               Message   => "Exception mismatch");
 --  begin read only
-   end Test_Scheduling_Group_Info_Region_Presence;
+   end Test_Scheduling_Info_Region_Presence;
 --  end read only
 
 

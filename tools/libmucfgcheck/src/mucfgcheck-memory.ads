@@ -208,10 +208,9 @@ is
    procedure Subject_PT_Region_Presence (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_mem
-   --D Validate that a scheduling group info memory region exists for each
-   --D scheduling group.
-   procedure Scheduling_Group_Info_Region_Presence
-     (XML_Data : Muxml.XML_Data_Type);
+   --D Validate that a scheduling info memory region exists for each scheduling
+   --D partition.
+   procedure Scheduling_Info_Region_Presence (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_mem
    --D Validate that subjects map the scheduling group info region of the

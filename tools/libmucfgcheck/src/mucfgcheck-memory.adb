@@ -1062,28 +1062,31 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Scheduling_Group_Info_Region_Presence
-     (XML_Data : Muxml.XML_Data_Type)
+   procedure Scheduling_Info_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
-      Sched_Groups : constant Mutools.XML_Utils.ID_Map_Array
-        := Mutools.XML_Utils.Get_Initial_Scheduling_Group_Subjects
-          (Data => XML_Data);
+      Sched_Partitions : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/scheduling/partitions/partition");
       Sched_Memory : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/memory/memory[@type='subject_scheduling_info']");
+      SP_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Sched_Partitions);
    begin
-      Mulog.Log (Msg => "Checking" & Sched_Groups'Length'Img
-                 & " scheduling group info region(s) for presence");
+      Mulog.Log (Msg => "Checking" & SP_Count'Img
+                 & " scheduling partition info region(s) for presence");
 
-      for I in Sched_Groups'Range loop
+      for I in 0 .. SP_Count - 1 loop
          declare
             use type DOM.Core.Node;
-
+            SP_ID_Str : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => DOM.Core.Nodes.Item (List => Sched_Partitions,
+                                            Index => I),
+               Name  => "id");
             Name : constant String
-              := "scheduling_group_info_" & Ada.Strings.Fixed.Trim
-                (Source => I'Img,
-                 Side   => Ada.Strings.Left);
+              := "scheduling_partition_info_" & SP_ID_Str;
             Mem  : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Nodes     => Sched_Memory,
@@ -1092,12 +1095,12 @@ is
          begin
             if Mem = null then
                Validation_Errors.Insert
-                 (Msg => "Scheduling group info region of "
-                  & "scheduling group" & I'Img & " not found");
+                 (Msg => "Scheduling info region of "
+                  & "scheduling partition " & SP_ID_Str & " not found");
             end if;
          end;
       end loop;
-   end Scheduling_Group_Info_Region_Presence;
+   end Scheduling_Info_Region_Presence;
 
    -------------------------------------------------------------------------
 

@@ -340,7 +340,22 @@ is
                   Group_Index  => Next_Group_Index,
                   Subject_ID   => Scheduling_Groups
                     (Next_Group).Active_Subject);
-               Next_Group := Skp.Scheduling.No_Group;
+
+               --D @Item List => impl_scheduling_find_next_active_sg_steps
+               --D After deactivation, check if the subject has become active in
+               --D the meantime as subjects on other cores may send events at
+               --D any time. Reactivate the scheduling group in that case and
+               --D return it as the next active group.
+               Subject_Is_Active := Is_Active
+                 (Subject_ID => Scheduling_Groups (Next_Group).Active_Subject);
+               if Subject_Is_Active then
+                  Activate_Group
+                    (Partition_ID => Partition_ID,
+                     Group_ID     => Next_Group);
+                  return;
+               else
+                  Next_Group := Skp.Scheduling.No_Group;
+               end if;
             end if;
          end if;
 

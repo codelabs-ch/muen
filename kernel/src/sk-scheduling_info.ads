@@ -88,7 +88,7 @@ private
       Async_Readers,
       Async_Writers,
       Part_Of => State,
-      Address => System'To_Address (Skp.Kernel.Sched_Group_Info_Address);
+      Address => System'To_Address (Skp.Kernel.Scheduling_Info_Address);
    pragma Warnings
      (GNATprove, On,
       "writing * is assumed to have no effects on other non-volatile objects");

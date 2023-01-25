@@ -15,7 +15,7 @@ is
    Subj_MSR_Store_Address    : constant := 16#0080_0000#;
    Subj_VMCS_Address         : constant := 16#0090_0000#;
    Subj_FPU_State_Address    : constant := 16#00b0_0000#;
-   Sched_Group_Info_Address  : constant := 16#0090_0000#;
+   Scheduling_Info_Address   : constant := 16#0090_0000#;
    Crash_Audit_Address       : constant := 16#000e_0001_9000#;
    Crash_Audit_Size          : constant := 16#1000#;
 

@@ -1839,6 +1839,42 @@ is
                               New_Child => DOM.Core.Nodes.Remove_Child
                                 (N         => Sib_Mem,
                                  Old_Child => M));
+                        elsif Logical_Name = "sched_partition_info" then
+                           Mulog.Log (Msg => "Adding scheduling partition info "
+                                      & "region of sibling '" & Sib_Name
+                                      & "' to subject '" & Origin_Name & "'");
+                           DOM.Core.Elements.Set_Attribute
+                             (Elem  => M,
+                              Name  => "logical",
+                              Value => Logical_Name & Sib_ID_Str);
+
+                           --  Set virtual address of sibling sched info region
+                           --  to place it at the expected slot in the
+                           --  consecutive array of sinfo+sched_partition_info
+                           --  regions. Since scheduling info region is always
+                           --  placed right after the sinfo region, the address
+                           --  is calculated by calculating the sinfo region
+                           --  address of the *next* subject and subtracting the
+                           --  sched_info_region size.
+
+                           DOM.Core.Elements.Set_Attribute
+                             (Elem  => M,
+                              Name  => "virtualAddress",
+                              Value => Mutools.Utils.To_Hex
+                                (Number => Config.Subject_Info_Virtual_Addr
+                                 + (Sib_ID + 1)
+                                 * (Cfg.Subject_Sinfo_Region_Size
+                                   + Cfg.Sched_Group_Info_Region_Size)
+                                 - Cfg.Sched_Group_Info_Region_Size));
+
+                           --  Remove mapping from sibling and add it to origin
+                           --  subject.
+
+                           Muxml.Utils.Append_Child
+                             (Node      => Origin_Mem,
+                              New_Child => DOM.Core.Nodes.Remove_Child
+                                (N         => Sib_Mem,
+                                 Old_Child => M));
                         elsif Logical_Name = "timed_event" then
                            Mulog.Log (Msg => "Adding timed event region of "
                                       & "sibling '" & Sib_Name

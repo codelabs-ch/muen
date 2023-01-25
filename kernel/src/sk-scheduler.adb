@@ -119,26 +119,20 @@ is
 
    -------------------------------------------------------------------------
 
-   --D @Section Id => impl_scheduling_activate_group, Label => Scheduling Group Activation, Parent => impl_scheduling, Priority => 20
-   --D @Text Section => impl_scheduling_activate_group
-   --D Set the global activity indicator of the scheduling group identified by
-   --D partition ID and scheduling group index. Also remove the now active
-   --D scheduling group from the sorted timer list of the scheduling partition.
-   procedure Activate_Group
+   --  Remove given scheduling group from the timer list of the specified
+   --  scheduling partition.
+   procedure Remove_Group_From_Timer_List
      (Partition_ID : Policy.Scheduling_Partition_Range;
       Group_ID     : Policy.Scheduling_Group_Range)
    with
-      Global => (In_Out => (Scheduling_Groups, Scheduling_Partitions,
-                            Global_Group_Activity_Indicator)),
-      Post =>
+      Global => (In_Out => (Scheduling_Groups, Scheduling_Partitions)),
+      Post   =>
          Scheduling_Groups (Group_ID).Prev_Timer = Policy.No_Group and
          Scheduling_Groups (Group_ID).Next_Timer = Policy.No_Group
    is
-      Group_Index : constant Policy.Scheduling_Group_Index_Range
-        := Policy.Get_Scheduling_Group_Index (Group_ID => Group_ID);
-      Prev_Group  : constant Policy.Extended_Scheduling_Group_Range
+      Prev_Group : constant Policy.Extended_Scheduling_Group_Range
         := Scheduling_Groups (Group_ID).Prev_Timer;
-      Next_Group  : constant Policy.Extended_Scheduling_Group_Range
+      Next_Group : constant Policy.Extended_Scheduling_Group_Range
         := Scheduling_Groups (Group_ID).Next_Timer;
    begin
 
@@ -158,7 +152,31 @@ is
 
       Scheduling_Groups (Group_ID).Prev_Timer := Policy.No_Group;
       Scheduling_Groups (Group_ID).Next_Timer := Policy.No_Group;
+   end Remove_Group_From_Timer_List;
 
+   -------------------------------------------------------------------------
+
+   --D @Section Id => impl_scheduling_activate_group, Label => Scheduling Group Activation, Parent => impl_scheduling, Priority => 20
+   --D @Text Section => impl_scheduling_activate_group
+   --D Set the global activity indicator of the scheduling group identified by
+   --D partition ID and scheduling group index. Also remove the now active
+   --D scheduling group from the sorted timer list of the scheduling partition.
+   procedure Activate_Group
+     (Partition_ID : Policy.Scheduling_Partition_Range;
+      Group_ID     : Policy.Scheduling_Group_Range)
+   with
+      Global => (In_Out => (Scheduling_Groups, Scheduling_Partitions,
+                            Global_Group_Activity_Indicator)),
+      Post =>
+         Scheduling_Groups (Group_ID).Prev_Timer = Policy.No_Group and
+         Scheduling_Groups (Group_ID).Next_Timer = Policy.No_Group
+   is
+      Group_Index : constant Policy.Scheduling_Group_Index_Range
+        := Policy.Get_Scheduling_Group_Index (Group_ID => Group_ID);
+   begin
+      Remove_Group_From_Timer_List
+        (Partition_ID => Partition_ID,
+         Group_ID     => Group_ID);
       Atomics.Set
         (Atomic => Global_Group_Activity_Indicator (Partition_ID),
          Bit    => Atomics.Bit_Pos (Group_Index));

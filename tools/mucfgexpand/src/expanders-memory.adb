@@ -401,6 +401,40 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Scheduling_Partition_Info_Regions
+     (Data : in out Muxml.XML_Data_Type)
+   is
+      Sched_Partitions : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/scheduling/partitions/partition");
+      Sched_Partition_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Sched_Partitions);
+   begin
+      Mulog.Log (Msg => "Adding" & Sched_Partition_Count'Img
+                 & " scheduling partition info region(s)");
+      for I in 1 .. Sched_Partition_Count loop
+         declare
+            SP_ID : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => DOM.Core.Nodes.Item (List  => Sched_Partitions,
+                                              Index => I - 1),
+                 Name => "id");
+         begin
+            Mutools.XML_Utils.Add_Memory_Region
+              (Policy      => Data,
+               Name        => "scheduling_partition_info_" & SP_ID,
+               Address     => "",
+               Size        => "16#1000#",
+               Caching     => "WB",
+               Alignment   => "16#1000#",
+               Memory_Type => "subject_scheduling_info");
+         end;
+      end loop;
+   end Add_Scheduling_Partition_Info_Regions;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Subject_Bitmaps (Data : in out Muxml.XML_Data_Type)
    is
       IOBM_Size  : constant := Mutools.Constants.Page_Size * 2;

@@ -213,10 +213,9 @@ is
    procedure Scheduling_Info_Region_Presence (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_mem
-   --D Validate that subjects map the scheduling group info region of the
-   --D scheduling group they belong to.
-   procedure Subject_Sched_Group_Info_Mappings
-     (XML_Data : Muxml.XML_Data_Type);
+   --D Validate that subjects map the scheduling info region of their associated
+   --D scheduling partition.
+   procedure Subject_Sched_Info_Mappings (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_mem
    --D Validate that subject state, timed event and pending interrupts memory

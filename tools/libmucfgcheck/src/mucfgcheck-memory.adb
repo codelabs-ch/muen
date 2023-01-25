@@ -1283,9 +1283,12 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Subject_Sched_Group_Info_Mappings
-     (XML_Data : Muxml.XML_Data_Type)
+   procedure Subject_Sched_Info_Mappings (XML_Data : Muxml.XML_Data_Type)
    is
+      SP_Subjects : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/scheduling/partitions/partition/group/subject");
       Subjects : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
@@ -1293,7 +1296,7 @@ is
       Subj_Count : constant Natural
         := DOM.Core.Nodes.Length (List => Subjects);
    begin
-      Mulog.Log (Msg => "Checking scheduling group info region mappings of"
+      Mulog.Log (Msg => "Checking scheduling info region mappings of"
                  & Subj_Count'Img & " subject(s)");
 
       for I in 0 .. Subj_Count - 1 loop
@@ -1303,33 +1306,36 @@ is
             Subject : constant DOM.Core.Node
               := DOM.Core.Nodes.Item (List  => Subjects,
                                       Index => I);
-            Sched_Grp_ID : constant String
+            Subj_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subject,
-                 Name => "schedGroupId");
-            Sched_Grp_Region_Name : constant String
-              := "scheduling_group_info_" & Sched_Grp_ID;
+                 Name => "name");
+            SP_Subject : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element (Nodes     => SP_Subjects,
+                                          Ref_Attr  => "name",
+                                          Ref_Value => Subj_Name);
+            SP_ID_Str : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node (Node  => SP_Subject,
+                                                    Level => 2),
+                 Name => "id");
+            Sched_Info_Region_Name : constant String
+              := "scheduling_partition_info_" & SP_ID_Str;
             Sched_Info_Mapping : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Subject,
-                 XPath => "memory/memory[@physical='" & Sched_Grp_Region_Name
+                 XPath => "memory/memory[@physical='" & Sched_Info_Region_Name
                  & "']");
          begin
             if Sched_Info_Mapping = null then
-               declare
-                  Subj_Name : constant String
-                    := DOM.Core.Elements.Get_Attribute (Elem => Subject,
-                                                        Name => "name");
-               begin
-                  Validation_Errors.Insert
-                    (Msg => "Subject '" & Subj_Name
-                     & "' has no mapping for info region of scheduling group "
-                     & Sched_Grp_ID);
-               end;
+               Validation_Errors.Insert
+                 (Msg => "Subject '" & Subj_Name
+                  & "' has no mapping for info region of scheduling partition "
+                  & SP_ID_Str);
             end if;
          end;
       end loop;
-   end Subject_Sched_Group_Info_Mappings;
+   end Subject_Sched_Info_Mappings;
 
    -------------------------------------------------------------------------
 

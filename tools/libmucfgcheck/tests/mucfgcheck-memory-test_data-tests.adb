@@ -1990,10 +1990,10 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Subject_Sched_Group_Info_Mappings (Gnattest_T : in out Test);
-   procedure Test_Subject_Sched_Group_Info_Mappings_97d94f (Gnattest_T : in out Test) renames Test_Subject_Sched_Group_Info_Mappings;
---  id:2.2/97d94f92347c2094/Subject_Sched_Group_Info_Mappings/1/0/
-   procedure Test_Subject_Sched_Group_Info_Mappings (Gnattest_T : in out Test) is
+   procedure Test_Subject_Sched_Info_Mappings (Gnattest_T : in out Test);
+   procedure Test_Subject_Sched_Info_Mappings_b048bf (Gnattest_T : in out Test) renames Test_Subject_Sched_Info_Mappings;
+--  id:2.2/b048bfb2fd5b5fe0/Subject_Sched_Info_Mappings/1/0/
+   procedure Test_Subject_Sched_Info_Mappings (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -2006,7 +2006,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       --  Positive test, must not raise an exception.
 
-      Subject_Sched_Group_Info_Mappings (XML_Data => Data);
+      Subject_Sched_Info_Mappings (XML_Data => Data);
       Assert (Condition => Validation_Errors.Is_Empty,
               Message   => "Unexpected error in positive test");
 
@@ -2015,17 +2015,17 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/subjects/subject/memory/memory"
-         & "[@physical='scheduling_group_info_1']",
+         & "[@physical='scheduling_partition_info_1']",
          Name  => "physical",
          Value => "foobar");
 
-      Subject_Sched_Group_Info_Mappings (XML_Data => Data);
+      Subject_Sched_Info_Mappings (XML_Data => Data);
       Assert (Condition => Validation_Errors.Contains
               (Msg => "Subject 'vt' has no mapping for info region of "
-               & "scheduling group 1"),
+               & "scheduling partition 1"),
               Message   => "Exception mismatch");
 --  begin read only
-   end Test_Subject_Sched_Group_Info_Mappings;
+   end Test_Subject_Sched_Info_Mappings;
 --  end read only
 
 

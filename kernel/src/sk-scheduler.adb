@@ -618,10 +618,16 @@ is
                                          Next_Group       => Next_Group,
                                          Next_Group_Index => Next_Group_Idx);
       if Next_Group /= Policy.No_Group then
+         --D @Item List => impl_scheduling_resched_sp_steps
+         --D If an active group is present, set the running flag of its active
+         --D subject.
+         Subjects.Set_Running
+           (ID    => Scheduling_Groups (Next_Group).Active_Subject,
+            Value => True);
 
          --D @Item List => impl_scheduling_resched_sp_steps
-         --D If an active group is present, switch to the next scheduling group
-         --D by making it the active group of the scheduling partition.
+         --D Switch to the next scheduling group by making it the active group
+         --D of the scheduling partition.
          Scheduling_Partitions
            (Partition_ID).Active_Group_Index := Next_Group_Idx;
       else

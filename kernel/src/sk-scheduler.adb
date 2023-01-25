@@ -805,12 +805,10 @@ is
 
       --D @Text Section => impl_handle_timer_expiry, Priority => 10
       --D Finally, publish the updated scheduling information to the next
-      --D active scheduling group.
-
-      --  Set scheduling information of scheduling group.
+      --D active scheduling partition.
 
       Scheduling_Info.Set_Scheduling_Info
-        (ID                 => Policy.Get_Scheduling_Group_ID
+        (ID                 => Policy.Get_Scheduling_Partition_ID
            (Subject_ID => Next_Subject),
          TSC_Schedule_Start => Current_Major_Frame_Start +
            Policy.Scheduling_Plans (CPU_Info.CPU_ID)
@@ -912,11 +910,11 @@ is
          VMX.Load (VMCS_Address => Current_VMCS_Addr);
 
          --D @Item List => impl_kernel_init_sched_steps
-         --D Set start and end timestamp of initial minor frame for
-         --D the scheduling group of the first subject based on current
-         --D TSC.
+         --D Set start and end timestamp of the initial minor frame for
+         --D the scheduling partition of the first subject. The values are based
+         --D on the current TSC and the deadline of the first minor frame.
          Scheduling_Info.Set_Scheduling_Info
-           (ID                 => Policy.Get_Scheduling_Group_ID
+           (ID                 => Policy.Get_Scheduling_Partition_ID
               (Subject_ID => Current_Subject),
             TSC_Schedule_Start => Now,
             TSC_Schedule_End   => Now + Policy.Scheduling_Plans

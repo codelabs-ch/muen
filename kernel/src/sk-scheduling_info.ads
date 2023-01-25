@@ -25,16 +25,16 @@ private with Skp.Kernel;
 with Skp.Scheduling;
 
 --D @Interface
---D This package provides access to per-group scheduling information.
+--D This package provides access to per-partition scheduling information.
 package SK.Scheduling_Info
 with
    Abstract_State => (State with External => (Async_Readers, Async_Writers)),
    Initializes    => State
 is
 
-   --  Set TSC start/end for scheduling group specified by ID.
+   --  Set TSC start/end for scheduling partition specified by ID.
    procedure Set_Scheduling_Info
-     (ID                 : Skp.Scheduling.Scheduling_Group_Range;
+     (ID                 : Skp.Scheduling.Scheduling_Partition_Range;
       TSC_Schedule_Start : SK.Word64;
       TSC_Schedule_End   : SK.Word64)
    with
@@ -63,14 +63,14 @@ private
    with
       Size => Page_Size * 8;
 
-   type Sched_Info_Array is array (Skp.Scheduling.Scheduling_Group_Range)
+   type Sched_Info_Array is array (Skp.Scheduling.Scheduling_Partition_Range)
      of Sched_Info_Page_Type
    with
       Independent_Components,
       Component_Size => Page_Size * 8,
       Alignment      => Page_Size,
       Object_Size    => Page_Size * 8
-           * Word64 (Skp.Scheduling.Scheduling_Group_Range'Last);
+           * Word64 (Skp.Scheduling.Scheduling_Partition_Range'Last);
 
    pragma Warnings
      (GNATprove, Off,
@@ -78,10 +78,10 @@ private
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
    --D @Interface
-   --D Scheduling group info regions which provide the start and end timestamp
-   --D of the current minor frame. Each scheduling group has their own,
-   --D independent information which is mapped read-only into the address space
-   --D of all subjects belonging to that group.
+   --D Scheduling info regions which provide the start and end timestamp of the
+   --D current minor frame. Each scheduling partition has their own, independent
+   --D information which is mapped read-only into the address space of all
+   --D subjects belonging to that partition.
    Sched_Info : Sched_Info_Array
    with
       Volatile,

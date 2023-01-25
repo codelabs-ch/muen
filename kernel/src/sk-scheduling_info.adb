@@ -24,7 +24,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Set_Scheduling_Info
-     (ID                 : Skp.Scheduling.Scheduling_Group_Range;
+     (ID                 : Skp.Scheduling.Scheduling_Partition_Range;
       TSC_Schedule_Start : SK.Word64;
       TSC_Schedule_End   : SK.Word64)
    is

@@ -110,10 +110,10 @@ is
    procedure Kernel_PT_Below_4G (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_mem
-   --D Validate that scheduling group info regions are mapped by the kernel
-   --D running subjects of that scheduling group. Also verify that the kernel
+   --D Validate that scheduling info regions are mapped by the kernel running
+   --D subjects of that scheduling partition. Also verify that the kernel
    --D mapping is at the expected virtual location.
-   procedure Kernel_Sched_Group_Info_Mappings (XML_Data : Muxml.XML_Data_Type);
+   procedure Kernel_Sched_Info_Mappings (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_mem
    --D Validate that a subject state memory region with the expected size

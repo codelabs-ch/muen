@@ -114,7 +114,7 @@
     <memory logical="linux|timed_event" physical="linux|timed_event" writable="true" executable="false" virtualAddress="16#0030_1000#"/>
     <memory logical="linux|msrstore" physical="linux|msrstore" writable="true" executable="false" virtualAddress="16#0080_1000#"/>
     <memory logical="linux|fpu" physical="linux|fpu" writable="true" executable="false" virtualAddress="16#00b0_1000#"/>
-    <memory logical="scheduling_group_info_1" physical="scheduling_group_info_1" writable="true" executable="false" virtualAddress="16#00a0_0000#"/>
+    <memory logical="scheduling_partition_info_1" physical="scheduling_partition_info_1" writable="true" executable="false" virtualAddress="16#00a0_0000#"/>
     <memory logical="crash_audit" physical="crash_audit" writable="true" executable="false" virtualAddress="16#00c0_0000#"/>
    </cpu>
   </memory>

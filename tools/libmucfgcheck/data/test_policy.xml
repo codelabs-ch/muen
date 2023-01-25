@@ -405,7 +405,7 @@
     <memory executable="false" logical="vt|fpu" physical="vt|fpu" virtualAddress="16#00b0_1000#" writable="true"/>
     <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
     <memory executable="false" logical="vt|vmcs" physical="vt|vmcs" virtualAddress="16#002e_1000#" writable="true"/>
-    <memory executable="false" logical="scheduling_group_info_1" physical="scheduling_group_info_1" virtualAddress="16#00a0_0000#" writable="true"/>
+    <memory executable="false" logical="scheduling_partition_info_1" physical="scheduling_partition_info_1" virtualAddress="16#00a0_0000#" writable="true"/>
     <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#000e_0001_9000#" writable="true"/>
    </cpu>
    <cpu id="1">
@@ -427,7 +427,7 @@
     <memory executable="false" logical="linux|msrstore" physical="linux|msrstore" virtualAddress="16#0080_4000#" writable="true"/>
     <memory executable="false" logical="sm|fpu" physical="sm|fpu" virtualAddress="16#00b0_3000#" writable="true"/>
     <memory executable="false" logical="linux|fpu" physical="linux|fpu" virtualAddress="16#00b0_4000#" writable="true"/>
-    <memory executable="false" logical="scheduling_group_info_2" physical="scheduling_group_info_2" virtualAddress="16#00a0_1000#" writable="true"/>
+    <memory executable="false" logical="scheduling_partition_info_2" physical="scheduling_partition_info_2" virtualAddress="16#00a0_1000#" writable="true"/>
     <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#000e_0001_9000#" writable="true"/>
    </cpu>
    <cpu id="2">
@@ -444,7 +444,7 @@
     <memory executable="false" logical="time|interrupts" physical="time|interrupts" virtualAddress="16#0060_2000#" writable="true"/>
     <memory executable="false" logical="time|msrstore" physical="time|msrstore" virtualAddress="16#0080_2000#" writable="true"/>
     <memory executable="false" logical="time|fpu" physical="time|fpu" virtualAddress="16#00b0_2000#" writable="true"/>
-    <memory executable="false" logical="scheduling_group_info_3" physical="scheduling_group_info_3" virtualAddress="16#00a0_2000#" writable="true"/>
+    <memory executable="false" logical="scheduling_partition_info_3" physical="scheduling_partition_info_3" virtualAddress="16#00a0_2000#" writable="true"/>
     <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#000e_0001_9000#" writable="true"/>
    </cpu>
    <cpu id="3">
@@ -460,7 +460,7 @@
     <memory executable="false" logical="tau0|timed_event" physical="tau0|timed_event" virtualAddress="16#0040_0000#" writable="true"/>
     <memory executable="false" logical="tau0|interrupts" physical="tau0|interrupts" virtualAddress="16#0060_0000#" writable="true"/>
     <memory executable="false" logical="tau0|fpu" physical="tau0|fpu" virtualAddress="16#00b0_0000#" writable="true"/>
-    <memory executable="false" logical="scheduling_group_info_4" physical="scheduling_group_info_4" virtualAddress="16#00a0_3000#" writable="true"/>
+    <memory executable="false" logical="scheduling_partition_info_4" physical="scheduling_partition_info_4" virtualAddress="16#00a0_3000#" writable="true"/>
     <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#000e_0001_9000#" writable="true"/>
    </cpu>
   </memory>

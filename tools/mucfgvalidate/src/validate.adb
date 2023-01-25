@@ -147,7 +147,7 @@ is
       XML_Processors.Register
         (Process => Memory.Subject_Sched_Group_Info_Mappings'Access);
       XML_Processors.Register
-        (Process => Memory.Kernel_Sched_Group_Info_Mappings'Access);
+        (Process => Memory.Kernel_Sched_Info_Mappings'Access);
       XML_Processors.Register
         (Process => Memory.Monitor_Subject_Region_Mappings'Access);
       XML_Processors.Register

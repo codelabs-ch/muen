@@ -790,10 +790,10 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Kernel_Sched_Group_Info_Mappings (Gnattest_T : in out Test);
-   procedure Test_Kernel_Sched_Group_Info_Mappings_6f1b3f (Gnattest_T : in out Test) renames Test_Kernel_Sched_Group_Info_Mappings;
---  id:2.2/6f1b3fbaf1fe3483/Kernel_Sched_Group_Info_Mappings/1/0/
-   procedure Test_Kernel_Sched_Group_Info_Mappings (Gnattest_T : in out Test) is
+   procedure Test_Kernel_Sched_Info_Mappings (Gnattest_T : in out Test);
+   procedure Test_Kernel_Sched_Info_Mappings_9916af (Gnattest_T : in out Test) renames Test_Kernel_Sched_Info_Mappings;
+--  id:2.2/9916affe505ff893/Kernel_Sched_Info_Mappings/1/0/
+   procedure Test_Kernel_Sched_Info_Mappings (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -806,72 +806,71 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       --  Positive test, must not raise an exception.
 
-      Kernel_Sched_Group_Info_Mappings (XML_Data => Data);
+      Kernel_Sched_Info_Mappings (XML_Data => Data);
       Assert (Condition => Validation_Errors.Is_Empty,
               Message   => "Unexpected error in positive test");
 
-      --  Kernel scheduling group info mapping with wrong virtual base
-      --  address.
+      --  Kernel scheduling info mapping with wrong virtual base address.
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/kernel/memory/cpu/memory"
-         & "[@physical='scheduling_group_info_4']",
+         & "[@physical='scheduling_partition_info_4']",
          Name  => "virtualAddress",
          Value => "16#beef_0000#");
-      Kernel_Sched_Group_Info_Mappings (XML_Data => Data);
+      Kernel_Sched_Info_Mappings (XML_Data => Data);
       Assert (Condition => Validation_Errors.Contains
-              (Msg => "Kernel mapping for info region of scheduling group 4 at"
-               & " unexpected kernel virtual address 16#beef_0000#, "
+              (Msg => "Kernel mapping for info region of scheduling partition 4"
+               & " at unexpected kernel virtual address 16#beef_0000#, "
                & "should be 16#00a0_3000#"),
               Message   => "Exception mismatch (1)");
 
-      --  Kernel and scheduling group of different CPU.
+      --  Kernel and scheduling partition of different CPU.
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/subjects/subject[@name='tau0']",
+         XPath => "/system/scheduling/partitions/partition[@name='tau0']",
          Name  => "cpu",
          Value => "0");
-      Kernel_Sched_Group_Info_Mappings (XML_Data => Data);
+      Kernel_Sched_Info_Mappings (XML_Data => Data);
       Assert (Condition => Validation_Errors.Contains
-              (Msg => "Info region of scheduling group 4 mapped by kernel "
+              (Msg => "Info region of scheduling partition 4 mapped by kernel "
                & "running on CPU 3, should be CPU 0"),
               Message   => "Exception mismatch (2)");
 
-      --  Multiple kernel scheduling group info mappings.
+      --  Multiple kernel scheduling info mappings.
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/kernel/memory/cpu/memory[@physical='vt|state']",
          Name  => "physical",
-         Value => "scheduling_group_info_4");
-      Kernel_Sched_Group_Info_Mappings (XML_Data => Data);
+         Value => "scheduling_partition_info_4");
+      Kernel_Sched_Info_Mappings (XML_Data => Data);
       Assert (Condition => Validation_Errors.Contains
-              (Msg => "Info region of scheduling group 4 has multiple "
+              (Msg => "Info region of scheduling partition 4 has multiple "
                & "kernel mappings: 2"),
               Message   => "Exception mismatch (3)");
 
-      --  Missing kernel scheduling group info mapping.
+      --  Missing kernel scheduling info mapping.
 
       declare
          Node : DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
             XPath => "/system/kernel/memory/cpu[@id='0']/memory"
-            & "[@physical='scheduling_group_info_1']");
+            & "[@physical='scheduling_partition_info_1']");
       begin
          Node := DOM.Core.Nodes.Remove_Child
            (N         => DOM.Core.Nodes.Parent_Node (N => Node),
             Old_Child => Node);
 
-         Kernel_Sched_Group_Info_Mappings (XML_Data => Data);
+         Kernel_Sched_Info_Mappings (XML_Data => Data);
          Assert (Condition => Validation_Errors.Contains
-                 (Msg => "No kernel mapping for info region of scheduling group"
-                  & " 1"),
+                 (Msg => "No kernel mapping for info region of scheduling "
+                  & "partition 1"),
                  Message   => "Exception mismatch (4)");
       end;
 --  begin read only
-   end Test_Kernel_Sched_Group_Info_Mappings;
+   end Test_Kernel_Sched_Info_Mappings;
 --  end read only
 
 

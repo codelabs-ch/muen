@@ -48,6 +48,10 @@ is
    --  Add scheduling group info page mappings.
    procedure Add_Sched_Group_Info_Mappings (Data : in out Muxml.XML_Data_Type);
 
+   --  Add scheduling partition info page mappings.
+   procedure Add_Sched_Partition_Info_Mappings
+     (Data : in out Muxml.XML_Data_Type);
+
    --  Map tau0 interface memory region on BSP.
    procedure Map_Tau0_Interface (Data : in out Muxml.XML_Data_Type);
 

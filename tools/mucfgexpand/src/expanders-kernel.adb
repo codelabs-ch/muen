@@ -598,6 +598,69 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Sched_Partition_Info_Mappings
+     (Data : in out Muxml.XML_Data_Type)
+   is
+      CPU_Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/kernel/memory/cpu");
+      Sched_Partitions : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/scheduling/partitions/partition");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => CPU_Nodes) - 1 loop
+         declare
+            CPU_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => CPU_Nodes,
+                                      Index => I);
+            CPU_ID   : constant String
+              := DOM.Core.Elements.Get_Attribute (Elem => CPU_Node,
+                                                  Name => "id");
+            CPU_SPs  : constant DOM.Core.Node_List
+              := Muxml.Utils.Get_Elements
+                (Nodes     => Sched_Partitions,
+                 Ref_Attr  => "cpu",
+                 Ref_Value => CPU_ID);
+         begin
+            for J in 1 .. DOM.Core.Nodes.Length (List => CPU_SPs) loop
+               declare
+                  use type Interfaces.Unsigned_64;
+
+                  Cur_SP : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item (List  => CPU_SPs,
+                                            Index => J - 1);
+                  Cur_SP_ID_Str : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Cur_SP,
+                       Name => "id");
+                  Cur_SP_ID : constant Natural := Natural'Value (Cur_SP_ID_Str);
+                  Sched_Info_Name : constant String
+                    := "scheduling_partition_info_" & Cur_SP_ID_Str;
+                  Virtual_Address : constant Interfaces.Unsigned_64
+                    := Config.Sched_Group_Info_Virtual_Addr
+                      + Interfaces.Unsigned_64
+                    (Cur_SP_ID - 1) * Mutools.Constants.Page_Size;
+               begin
+                  Muxml.Utils.Append_Child
+                    (Node      => CPU_Node,
+                     New_Child => MX.Create_Virtual_Memory_Node
+                       (Policy        => Data,
+                        Logical_Name  => Sched_Info_Name,
+                        Physical_Name => Sched_Info_Name,
+                        Address       => Mutools.Utils.To_Hex
+                          (Number => Virtual_Address),
+                        Writable      => True,
+                        Executable    => False));
+               end;
+            end loop;
+         end;
+      end loop;
+   end Add_Sched_Partition_Info_Mappings;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Section_Skeleton (Data : in out Muxml.XML_Data_Type)
    is
       CPU_Count     : constant Positive

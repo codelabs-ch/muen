@@ -207,6 +207,26 @@ package body Expanders.Kernel.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Add_Sched_Partition_Info_Mappings (Gnattest_T : in out Test);
+   procedure Test_Add_Sched_Partition_Info_Mappings_075374 (Gnattest_T : in out Test) renames Test_Add_Sched_Partition_Info_Mappings;
+--  id:2.2/0753743620eda399/Add_Sched_Partition_Info_Mappings/1/0/
+   procedure Test_Add_Sched_Partition_Info_Mappings (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename => "obj/kernel_sched_partition_info_mapping.xml",
+         Ref_Diff => "data/kernel_sched_partition_info_mapping.xml.diff",
+         Pre      => Pre_Sched_Part_Info_Mappings'Access,
+         Expander => Add_Sched_Partition_Info_Mappings'Access);
+--  begin read only
+   end Test_Add_Sched_Partition_Info_Mappings;
+--  end read only
+
+
+--  begin read only
    procedure Test_Map_Tau0_Interface (Gnattest_T : in out Test);
    procedure Test_Map_Tau0_Interface_1c6595 (Gnattest_T : in out Test) renames Test_Map_Tau0_Interface;
 --  id:2.2/1c659557f0d945b9/Map_Tau0_Interface/1/0/

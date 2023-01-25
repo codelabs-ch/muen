@@ -347,6 +347,18 @@ is
                --D @Item List => impl_scheduling_find_next_active_sg_steps
                --D If the subject is indeed active, the next active group has
                --D been found and is returned.
+               if Is_Group_In_Timer_List
+                 (Partition_ID => Partition_ID,
+                  Group_ID     => Next_Group)
+               then
+                  --D @Item List => impl_scheduling_find_next_active_sg_steps
+                  --D If the subject was previously deactivated, we have to
+                  --D additionally remove its corresponding scheduling group
+                  --D from the timer list.
+                  Remove_Group_From_Timer_List (Partition_ID => Partition_ID,
+                                                Group_ID     => Next_Group);
+               end if;
+
                return;
             else
                --D @Item List => impl_scheduling_find_next_active_sg_steps

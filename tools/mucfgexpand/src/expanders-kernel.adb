@@ -549,7 +549,7 @@ is
                   Sched_Info_Name : constant String
                     := "scheduling_partition_info_" & Cur_SP_ID_Str;
                   Virtual_Address : constant Interfaces.Unsigned_64
-                    := Config.Sched_Group_Info_Virtual_Addr
+                    := Config.Scheduling_Info_Virtual_Addr
                       + Interfaces.Unsigned_64
                     (Cur_SP_ID - 1) * Mutools.Constants.Page_Size;
                begin

@@ -1730,7 +1730,7 @@ is
                                 (Number => Config.Subject_Info_Virtual_Addr
                                  + Sib_ID
                                  * (Cfg.Subject_Sinfo_Region_Size
-                                   + Cfg.Sched_Group_Info_Region_Size)));
+                                   + Cfg.Scheduling_Info_Region_Size)));
 
                            --  Remove mapping from sibling and add it to origin
                            --  subject.
@@ -1765,8 +1765,8 @@ is
                                 (Number => Config.Subject_Info_Virtual_Addr
                                  + (Sib_ID + 1)
                                  * (Cfg.Subject_Sinfo_Region_Size
-                                   + Cfg.Sched_Group_Info_Region_Size)
-                                 - Cfg.Sched_Group_Info_Region_Size));
+                                   + Cfg.Scheduling_Info_Region_Size)
+                                 - Cfg.Scheduling_Info_Region_Size));
 
                            --  Remove mapping from sibling and add it to origin
                            --  subject.

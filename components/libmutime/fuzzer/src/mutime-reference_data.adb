@@ -29,8 +29,6 @@
 with Ada.Sequential_IO;
 with Ada.Numerics.Discrete_Random;
 
-with Interfaces;
-
 with GNAT.OS_Lib;
 with GNAT.Expect;
 with GNAT.String_Split;
@@ -66,8 +64,6 @@ is
 
    function Exec_Date_Cmd (T : Random_T_Type) return String
    is
-      use Interfaces;
-
       Args : GNAT.OS_Lib.Argument_List (1 .. 4);
       Res  : aliased Integer;
    begin
@@ -99,8 +95,6 @@ is
      (Timestamp : out Timestamp_Type;
       Date_Time : out Date_Time_Type)
    is
-      use type Interfaces.Unsigned_64;
-
       T : constant Random_T_Type
         := Random_Timestamps.Random (Gen => Generator);
    begin

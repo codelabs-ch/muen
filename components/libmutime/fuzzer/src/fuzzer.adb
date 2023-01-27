@@ -80,9 +80,9 @@ is
       end To_String;
    begin
       Ada.Text_IO.Put_Line (Operation & " mismatch");
-      Ada.Text_IO.Put_Line ("Reference" & Get_Value (Timestamp => T_Ref)'Img
+      Ada.Text_IO.Put_Line ("Reference" & T_Ref'Img
                             & " " & To_String (Date => D_Ref));
-      Ada.Text_IO.Put_Line ("Result   " & Get_Value (Timestamp => T_Res)'Img
+      Ada.Text_IO.Put_Line ("Result   " & T_Res'Img
                             & " " & To_String (Date => D_Res));
    end Print_Mismatch;
 
@@ -117,6 +117,6 @@ begin
          return;
       end if;
 
-      Ada.Text_IO.Put_Line ("OK :" & Get_Value (Timestamp => T_Res)'Img);
+      Ada.Text_IO.Put_Line ("OK :" & T_Res'Img);
    end loop;
 end Fuzzer;

@@ -815,7 +815,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/kernel/memory/cpu/memory"
-         & "[@physical='scheduling_partition_info_4']",
+         & "[@physical='scheduling_info_4']",
          Name  => "virtualAddress",
          Value => "16#beef_0000#");
       Kernel_Sched_Info_Mappings (XML_Data => Data);
@@ -844,7 +844,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
         (Doc   => Data.Doc,
          XPath => "/system/kernel/memory/cpu/memory[@physical='vt|state']",
          Name  => "physical",
-         Value => "scheduling_partition_info_4");
+         Value => "scheduling_info_4");
       Kernel_Sched_Info_Mappings (XML_Data => Data);
       Assert (Condition => Validation_Errors.Contains
               (Msg => "Info region of scheduling partition 4 has multiple "
@@ -857,7 +857,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          Node : DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
             XPath => "/system/kernel/memory/cpu[@id='0']/memory"
-            & "[@physical='scheduling_partition_info_1']");
+            & "[@physical='scheduling_info_1']");
       begin
          Node := DOM.Core.Nodes.Remove_Child
            (N         => DOM.Core.Nodes.Parent_Node (N => Node),
@@ -1975,7 +1975,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/memory/memory[@name='scheduling_partition_info_1']",
+         XPath => "/system/memory/memory[@name='scheduling_info_1']",
          Name  => "name",
          Value => "foobar");
 
@@ -2015,14 +2015,14 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/subjects/subject/memory/memory"
-         & "[@physical='scheduling_partition_info_1']",
+         & "[@physical='scheduling_info_1']",
          Name  => "physical",
          Value => "foobar");
 
       Subject_Sched_Info_Mappings (XML_Data => Data);
       Assert (Condition => Validation_Errors.Contains
-              (Msg => "Subject 'vt' has no mapping for info region of "
-               & "scheduling partition 1"),
+              (Msg => "Subject 'vt' has no mapping of scheduling info region"
+               & " 1"),
               Message   => "Exception mismatch");
 --  begin read only
    end Test_Subject_Sched_Info_Mappings;

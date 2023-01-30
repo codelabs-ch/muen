@@ -346,10 +346,10 @@
   <memory alignment="16#1000#" caching="WB" name="time|fpu" physicalAddress="16#4f00_2000#" size="16#1000#" type="kernel_fpu"/>
   <memory alignment="16#1000#" caching="WB" name="sm|fpu" physicalAddress="16#4f00_3000#" size="16#1000#" type="kernel_fpu"/>
   <memory alignment="16#1000#" caching="WB" name="linux|fpu" physicalAddress="16#4f00_4000#" size="16#1000#" type="kernel_fpu"/>
-  <memory alignment="16#1000#" caching="WB" name="scheduling_partition_info_1" physicalAddress="16#2151_8000#" size="16#1000#" type="subject_scheduling_info"/>
-  <memory alignment="16#1000#" caching="WB" name="scheduling_partition_info_2" physicalAddress="16#2151_9000#" size="16#1000#" type="subject_scheduling_info"/>
-  <memory alignment="16#1000#" caching="WB" name="scheduling_partition_info_3" physicalAddress="16#2151_a000#" size="16#1000#" type="subject_scheduling_info"/>
-  <memory alignment="16#1000#" caching="WB" name="scheduling_partition_info_4" physicalAddress="16#2151_b000#" size="16#1000#" type="subject_scheduling_info"/>
+  <memory alignment="16#1000#" caching="WB" name="scheduling_info_1" physicalAddress="16#2151_8000#" size="16#1000#" type="subject_scheduling_info"/>
+  <memory alignment="16#1000#" caching="WB" name="scheduling_info_2" physicalAddress="16#2151_9000#" size="16#1000#" type="subject_scheduling_info"/>
+  <memory alignment="16#1000#" caching="WB" name="scheduling_info_3" physicalAddress="16#2151_a000#" size="16#1000#" type="subject_scheduling_info"/>
+  <memory alignment="16#1000#" caching="WB" name="scheduling_info_4" physicalAddress="16#2151_b000#" size="16#1000#" type="subject_scheduling_info"/>
   <memory alignment="16#1000#" caching="UC" name="crash_audit" physicalAddress="16#cafe_6000#" size="16#1000#" type="subject_crash_audit"/>
  </memory>
  <deviceDomains>
@@ -405,7 +405,7 @@
     <memory executable="false" logical="vt|fpu" physical="vt|fpu" virtualAddress="16#00b0_1000#" writable="true"/>
     <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
     <memory executable="false" logical="vt|vmcs" physical="vt|vmcs" virtualAddress="16#002e_1000#" writable="true"/>
-    <memory executable="false" logical="scheduling_partition_info_1" physical="scheduling_partition_info_1" virtualAddress="16#00a0_0000#" writable="true"/>
+    <memory executable="false" logical="scheduling_info_1" physical="scheduling_info_1" virtualAddress="16#00a0_0000#" writable="true"/>
     <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#000e_0001_9000#" writable="true"/>
    </cpu>
    <cpu id="1">
@@ -427,7 +427,7 @@
     <memory executable="false" logical="linux|msrstore" physical="linux|msrstore" virtualAddress="16#0080_4000#" writable="true"/>
     <memory executable="false" logical="sm|fpu" physical="sm|fpu" virtualAddress="16#00b0_3000#" writable="true"/>
     <memory executable="false" logical="linux|fpu" physical="linux|fpu" virtualAddress="16#00b0_4000#" writable="true"/>
-    <memory executable="false" logical="scheduling_partition_info_2" physical="scheduling_partition_info_2" virtualAddress="16#00a0_1000#" writable="true"/>
+    <memory executable="false" logical="scheduling_info_2" physical="scheduling_info_2" virtualAddress="16#00a0_1000#" writable="true"/>
     <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#000e_0001_9000#" writable="true"/>
    </cpu>
    <cpu id="2">
@@ -444,7 +444,7 @@
     <memory executable="false" logical="time|interrupts" physical="time|interrupts" virtualAddress="16#0060_2000#" writable="true"/>
     <memory executable="false" logical="time|msrstore" physical="time|msrstore" virtualAddress="16#0080_2000#" writable="true"/>
     <memory executable="false" logical="time|fpu" physical="time|fpu" virtualAddress="16#00b0_2000#" writable="true"/>
-    <memory executable="false" logical="scheduling_partition_info_3" physical="scheduling_partition_info_3" virtualAddress="16#00a0_2000#" writable="true"/>
+    <memory executable="false" logical="scheduling_info_3" physical="scheduling_info_3" virtualAddress="16#00a0_2000#" writable="true"/>
     <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#000e_0001_9000#" writable="true"/>
    </cpu>
    <cpu id="3">
@@ -460,7 +460,7 @@
     <memory executable="false" logical="tau0|timed_event" physical="tau0|timed_event" virtualAddress="16#0040_0000#" writable="true"/>
     <memory executable="false" logical="tau0|interrupts" physical="tau0|interrupts" virtualAddress="16#0060_0000#" writable="true"/>
     <memory executable="false" logical="tau0|fpu" physical="tau0|fpu" virtualAddress="16#00b0_0000#" writable="true"/>
-    <memory executable="false" logical="scheduling_partition_info_4" physical="scheduling_partition_info_4" virtualAddress="16#00a0_3000#" writable="true"/>
+    <memory executable="false" logical="scheduling_info_4" physical="scheduling_info_4" virtualAddress="16#00a0_3000#" writable="true"/>
     <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#000e_0001_9000#" writable="true"/>
    </cpu>
   </memory>
@@ -720,7 +720,7 @@
    <memory>
     <memory executable="false" logical="sys_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="true"/>
     <memory executable="true" logical="binary" physical="tau0|bin" virtualAddress="16#1000#" writable="true"/>
-    <memory executable="false" logical="sched_part_info" physical="scheduling_partition_info_4" virtualAddress="16#000e_0000_9000#" writable="false"/>
+    <memory executable="false" logical="sched_part_info" physical="scheduling_info_4" virtualAddress="16#000e_0000_9000#" writable="false"/>
     <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#000e_0001_9000#" writable="false"/>
    </memory>
    <devices/>
@@ -1128,7 +1128,7 @@
     <memory executable="false" logical="time_console" physical="time_console" virtualAddress="16#0011_0000#" writable="false"/>
     <memory executable="false" logical="sm_console" physical="sm_console" virtualAddress="16#0012_0000#" writable="false"/>
     <memory executable="false" logical="linux_keyboard" physical="linux_keyboard" virtualAddress="16#0005_0000#" writable="true"/>
-    <memory executable="false" logical="sched_part_info" physical="scheduling_partition_info_1" virtualAddress="16#000e_0000_9000#" writable="false"/>
+    <memory executable="false" logical="scheduling_info" physical="scheduling_info_1" virtualAddress="16#000e_0000_9000#" writable="false"/>
    </memory>
    <devices>
     <device logical="vga" physical="vga">
@@ -1570,7 +1570,7 @@
     <memory executable="true" logical="binary" physical="time|bin" virtualAddress="16#1000#" writable="true"/>
     <memory executable="false" logical="virtual_time" physical="virtual_time" virtualAddress="16#0002_0000#" writable="true"/>
     <memory executable="false" logical="time_console" physical="time_console" virtualAddress="16#000b_8000#" writable="true"/>
-    <memory executable="false" logical="sched_partition_info" physical="scheduling_partition_info_3" virtualAddress="16#000e_0000_9000#" writable="false"/>
+    <memory executable="false" logical="scheduling_info" physical="scheduling_info_3" virtualAddress="16#000e_0000_9000#" writable="false"/>
    </memory>
    <devices>
     <device logical="port80" physical="port80">
@@ -1983,7 +1983,7 @@
     <memory executable="false" logical="linux|interrupts" physical="linux|interrupts" virtualAddress="16#001f_1000#" writable="true"/>
     <memory executable="false" logical="timer" physical="sm|timed_event" virtualAddress="16#000e_0000_0000#" writable="true"/>
     <memory executable="false" logical="sm_console" physical="sm_console" virtualAddress="16#000b_8000#" writable="true"/>
-    <memory executable="false" logical="sched_partition_info" physical="scheduling_partition_info_2" virtualAddress="16#000e_0000_9000#" writable="false"/>
+    <memory executable="false" logical="scheduling_info" physical="scheduling_info_2" virtualAddress="16#000e_0000_9000#" writable="false"/>
    </memory>
    <devices/>
    <events>
@@ -2415,7 +2415,7 @@
     <memory executable="false" logical="buffer" physical="linux|buffer" virtualAddress="16#1000_0000#" writable="true"/>
     <memory executable="false" logical="initramfs1" physical="initramfs1" virtualAddress="16#1009_0000#" writable="false"/>
     <memory executable="false" logical="initramfs2" physical="initramfs2" virtualAddress="16#1009_1000#" writable="false"/>
-    <memory executable="false" logical="sched_partition_info" physical="scheduling_partition_info_2" virtualAddress="16#000e_0000_9000#" writable="false"/>
+    <memory executable="false" logical="scheduling_info" physical="scheduling_info_2" virtualAddress="16#000e_0000_9000#" writable="false"/>
     <memory executable="false" logical="buffer_src" physical="linux|buffer_src" virtualAddress="16#7000_1000_0000#" writable="false"/>
    </memory>
    <devices>

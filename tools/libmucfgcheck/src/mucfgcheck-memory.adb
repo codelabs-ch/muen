@@ -707,7 +707,7 @@ is
                                                   Name => "cpu");
             SP_CPU_ID : constant Natural := Natural'Value (SP_CPU_ID_Str);
             Sched_Info_Region_Name : constant String
-              := "scheduling_partition_info_" & SP_ID_Str;
+              := "scheduling_info_" & SP_ID_Str;
             Sched_Info_Mappings : constant DOM.Core.Node_List
               := Muxml.Utils.Get_Elements
                 (Nodes     => Kernel_Memory,
@@ -1071,7 +1071,7 @@ is
         := DOM.Core.Nodes.Length (List => Sched_Partitions);
    begin
       Mulog.Log (Msg => "Checking" & SP_Count'Img
-                 & " scheduling partition info region(s) for presence");
+                 & " scheduling info region(s) for presence");
 
       for I in 0 .. SP_Count - 1 loop
          declare
@@ -1080,8 +1080,7 @@ is
               (Elem => DOM.Core.Nodes.Item (List => Sched_Partitions,
                                             Index => I),
                Name  => "id");
-            Name : constant String
-              := "scheduling_partition_info_" & SP_ID_Str;
+            Name : constant String := "scheduling_info_" & SP_ID_Str;
             Mem  : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Nodes     => Sched_Memory,
@@ -1320,7 +1319,7 @@ is
                                                     Level => 2),
                  Name => "id");
             Sched_Info_Region_Name : constant String
-              := "scheduling_partition_info_" & SP_ID_Str;
+              := "scheduling_info_" & SP_ID_Str;
             Sched_Info_Mapping : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Subject,
@@ -1330,8 +1329,7 @@ is
             if Sched_Info_Mapping = null then
                Validation_Errors.Insert
                  (Msg => "Subject '" & Subj_Name
-                  & "' has no mapping for info region of scheduling partition "
-                  & SP_ID_Str);
+                  & "' has no mapping of scheduling info region " & SP_ID_Str);
             end if;
          end;
       end loop;

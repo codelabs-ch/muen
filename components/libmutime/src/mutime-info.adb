@@ -86,20 +86,15 @@ is
       Correction     : out Integer_63;
       Timestamp      : out Timestamp_Type)
    is
-      --  TSC tick rate in MHz from 1 Mhz to 100 Ghz.
-      subtype TSC_Tick_Rate_Mhz_Type is Integer_62 range 1 .. 100000;
-
       Timezone_Microsecs : constant Timezone_Type
         := TI.Timezone_Microsecs;
       TSC_Tick_Rate_Hz   : constant TSC_Tick_Rate_Hz_Type
         := TI.TSC_Tick_Rate_Hz;
-      TSC_Tick_Rate_Mhz  : constant TSC_Tick_Rate_Mhz_Type
-        := TSC_Tick_Rate_Mhz_Type (TSC_Tick_Rate_Hz / 10 ** 6);
    begin
       Timestamp := TI.TSC_Time_Base;
 
-      Correction := Timezone_Microsecs + Integer_62
-        (Schedule_Ticks / TSC_Tick_Rate_Mhz);
+      Correction := Timezone_Microsecs +
+        (Schedule_Ticks / Integer_62 (TSC_Tick_Rate_Hz) * 10 ** 6);
 
       Timestamp := Timestamp + Correction;
    end Get_Current_Time;

@@ -4,7 +4,7 @@
 package Skp.Kernel
 is
 
-   TSC_Mhz : constant := 2900;
+   TSC_Khz : constant := 2900000;
 
    Stack_Address             : constant := 16#0011_3000#;
    Intr_Stack_Address        : constant := 16#0011_4000#;

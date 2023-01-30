@@ -104,7 +104,7 @@ is
         (Doc   => Policy.Doc,
          XPath => "/system/hardware/processor");
       CPU_Speed_Hz : constant Interfaces.Unsigned_64
-        := 1_000_000 * Interfaces.Unsigned_64'Value
+        := 1000 * Interfaces.Unsigned_64'Value
           (DOM.Core.Elements.Get_Attribute
              (Elem => Processor,
               Name => "speed"));

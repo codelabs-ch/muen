@@ -359,7 +359,7 @@ is
              (Elem => Crash_Audit_Node,
               Name => "virtualAddress");
 
-         TSC_Mhz : constant String
+         TSC_Khz : constant String
            := Muxml.Utils.Get_Attribute
              (Doc   => Policy.Doc,
               XPath => "/system/hardware/processor",
@@ -426,8 +426,8 @@ is
             Content  => Crash_Audit_Size);
          Mutools.Templates.Replace
            (Template => Tmpl,
-            Pattern  => "__tsc_mhz__",
-            Content  => TSC_Mhz);
+            Pattern  => "__tsc_khz__",
+            Content  => TSC_Khz);
 
          Mutools.Templates.Write
            (Template => Tmpl,

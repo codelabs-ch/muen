@@ -508,8 +508,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Add_Sched_Partition_Info_Mappings
-     (Data : in out Muxml.XML_Data_Type)
+   procedure Add_Scheduling_Info_Mappings (Data : in out Muxml.XML_Data_Type)
    is
       CPU_Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -547,7 +546,7 @@ is
                        Name => "id");
                   Cur_SP_ID : constant Natural := Natural'Value (Cur_SP_ID_Str);
                   Sched_Info_Name : constant String
-                    := "scheduling_partition_info_" & Cur_SP_ID_Str;
+                    := "scheduling_info_" & Cur_SP_ID_Str;
                   Virtual_Address : constant Interfaces.Unsigned_64
                     := Config.Scheduling_Info_Virtual_Addr
                       + Interfaces.Unsigned_64
@@ -567,7 +566,7 @@ is
             end loop;
          end;
       end loop;
-   end Add_Sched_Partition_Info_Mappings;
+   end Add_Scheduling_Info_Mappings;
 
    -------------------------------------------------------------------------
 

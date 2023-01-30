@@ -1569,8 +1569,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Add_Sched_Partition_Info_Mappings
-     (Data : in out Muxml.XML_Data_Type)
+   procedure Add_Scheduling_Info_Mappings (Data : in out Muxml.XML_Data_Type)
    is
       use type Interfaces.Unsigned_64;
 
@@ -1616,7 +1615,7 @@ is
                 (Doc   => Subject,
                  XPath => "memory");
          begin
-            Mulog.Log (Msg => "Adding mapping of scheduling partition "
+            Mulog.Log (Msg => "Adding mapping of scheduling "
                        & Partition_ID_Str & " info region to subject '"
                        & Subj_Name & "'");
             DOM.Core.Elements.Set_Attribute
@@ -1627,15 +1626,15 @@ is
               (Node      => Subj_Mem_Node,
                New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
-                  Logical_Name  => "sched_partition_info",
-                  Physical_Name => "scheduling_partition_info_"
+                  Logical_Name  => "scheduling_info",
+                  Physical_Name => "scheduling_info_"
                   & Partition_ID_Str,
                   Address       => Sched_Info_Virtual_Address,
                   Writable      => False,
                   Executable    => False));
          end;
       end loop;
-   end Add_Sched_Partition_Info_Mappings;
+   end Add_Scheduling_Info_Mappings;
 
    -------------------------------------------------------------------------
 
@@ -1740,7 +1739,7 @@ is
                               New_Child => DOM.Core.Nodes.Remove_Child
                                 (N         => Sib_Mem,
                                  Old_Child => M));
-                        elsif Logical_Name = "sched_partition_info" then
+                        elsif Logical_Name = "scheduling_info" then
                            Mulog.Log (Msg => "Adding scheduling partition info "
                                       & "region of sibling '" & Sib_Name
                                       & "' to subject '" & Origin_Name & "'");
@@ -1751,7 +1750,7 @@ is
 
                            --  Set virtual address of sibling sched info region
                            --  to place it at the expected slot in the
-                           --  consecutive array of sinfo+sched_partition_info
+                           --  consecutive array of sinfo+scheduling_info
                            --  regions. Since scheduling info region is always
                            --  placed right after the sinfo region, the address
                            --  is calculated by calculating the sinfo region

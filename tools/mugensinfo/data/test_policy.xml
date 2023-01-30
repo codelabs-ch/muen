@@ -4,7 +4,7 @@
  </config>
 
  <hardware>
-  <processor cpuCores="1" speed="2900" vmxTimerRate="5">
+  <processor cpuCores="1" speed="2900123" vmxTimerRate="5">
    <cpu apicId="0" cpuId="0"/>
   </processor>
   <memory>

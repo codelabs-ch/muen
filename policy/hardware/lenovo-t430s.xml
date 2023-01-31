@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- ==========================================
-     Generated with mugenhwcfg (commit v0.7)
-     Linux kernel version: 5.10.0-19-amd64
+     Generated with mugenhwcfg (commit v0.7.1)
+     Linux kernel version: 5.10.0-21-amd64
      Distribution: Debian GNU/Linux 11 (bullseye)
      Product information:
        Vendor: LENOVO
@@ -19,7 +19,7 @@
 
 
 <hardware>
-  <processor cpuCores="2" speed="2893" vmxTimerRate="5">
+  <processor cpuCores="2" speed="2893431" vmxTimerRate="5">
     <cpu apicId="0"/>
     <cpu apicId="2"/>
     <cpuid eax="16#0000_000d#" ebx="16#756e_6547#" ecx="16#6c65_746e#" edx="16#4965_6e69#" leaf="16#0000_0000#" subleaf="16#00#"/>

@@ -52,8 +52,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Get_Boot_Time
-     (Timestamp : out Timestamp_Type)
+   procedure Get_Boot_Time (Timestamp : out Timestamp_Type)
    with
       Refined_Global  => (Input => Time_Info),
       Refined_Depends => (Timestamp => Time_Info)

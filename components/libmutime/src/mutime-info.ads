@@ -78,8 +78,7 @@ is
                    Success                => State);
 
    --  Return time at system boot.
-   procedure Get_Boot_Time
-     (Timestamp : out Timestamp_Type)
+   procedure Get_Boot_Time (Timestamp : out Timestamp_Type)
    with
       Global  => (Input => State),
       Depends => (Timestamp => State);

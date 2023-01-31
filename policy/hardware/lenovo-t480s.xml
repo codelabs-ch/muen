@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- ==========================================
-     Generated with mugenhwcfg (commit v0.7)
-     Linux kernel version: 5.10.0-19-amd64
+     Generated with mugenhwcfg (commit v0.7.1)
+     Linux kernel version: 5.10.0-21-amd64
      Distribution: Debian GNU/Linux 11 (bullseye)
      Product information:
        Vendor: LENOVO
@@ -15,11 +15,13 @@
        Vendor: LENOVO
        Version: N22ET72W (1.49 )
        Date: 11/17/2021
+     Log:
+       * WARNING *: Adding fake irq 16 for device with MSIs: 0000:00:08.0
      ========================================== -->
 
 
 <hardware>
-  <processor cpuCores="4" speed="2100" vmxTimerRate="7">
+  <processor cpuCores="4" speed="2112002" vmxTimerRate="7">
     <cpu apicId="0"/>
     <cpu apicId="2"/>
     <cpu apicId="4"/>
@@ -178,6 +180,9 @@
         <identification classcode="16#0880#" deviceId="16#1911#" revisionId="16#00#" vendorId="16#8086#"/>
         <iommuGroup id="3"/>
       </pci>
+      <irq name="irq1" number="16">
+        <msi name="msi1"/>
+      </irq>
       <memory caching="UC" name="mem1" physicalAddress="16#dc25_0000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#f804_0000#" size="16#1000#"/>
     </device>

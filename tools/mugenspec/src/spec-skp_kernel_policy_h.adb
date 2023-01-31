@@ -315,7 +315,7 @@ is
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
                XPath => "/system/kernel/memory/cpu/"
-               & "memory[@logical='scheduling_partition_info_1']",
+               & "memory[@logical='scheduling_info_1']",
                Name  => "virtualAddress"));
          Subj_MSR_Store_Addr : constant Unsigned_64
            := Calculate_MSR_Store_Base_Address (Policy => Policy);

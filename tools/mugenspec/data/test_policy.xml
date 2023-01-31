@@ -197,9 +197,9 @@
     <memory executable="false" logical="tau0|msrstore" physical="tau0|msrstore" virtualAddress="16#0080_0000#" writable="true"/>
     <memory executable="false" logical="tau0|vmcs" physical="tau0|vmcs" virtualAddress="16#0090_0000#" writable="true"/>
     <memory executable="false" logical="tau0|fpu" physical="tau0|fpu" virtualAddress="16#00b0_0000#" writable="true"/>
-    <memory executable="false" logical="scheduling_partition_info_1" physical="scheduling_partition_info_1" virtualAddress="16#0090_0000#" writable="true"/>
-    <memory executable="false" logical="scheduling_partition_info_3" physical="scheduling_partition_info_3" virtualAddress="16#0090_2000#" writable="true"/>
-    <memory executable="false" logical="scheduling_partition_info_4" physical="scheduling_partition_info_4" virtualAddress="16#0090_3000#" writable="true"/>
+    <memory executable="false" logical="scheduling_info_1" physical="scheduling_info_1" virtualAddress="16#0090_0000#" writable="true"/>
+    <memory executable="false" logical="scheduling_info_3" physical="scheduling_info_3" virtualAddress="16#0090_2000#" writable="true"/>
+    <memory executable="false" logical="scheduling_info_4" physical="scheduling_info_4" virtualAddress="16#0090_3000#" writable="true"/>
     <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#000e_0001_9000#" writable="true"/>
    </cpu>
    <cpu id="1">
@@ -209,7 +209,7 @@
     <memory executable="true" logical="data" physical="kernel_data" virtualAddress="16#0011_8000#" writable="true"/>
     <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
     <memory executable="false" logical="subject1|msrstore" physical="subject1|msrstore" virtualAddress="16#0080_1000#" writable="true"/>
-    <memory executable="false" logical="scheduling_partition_info_2" physical="scheduling_partition_info_2" virtualAddress="16#0090_1000#" writable="true"/>
+    <memory executable="false" logical="scheduling_info_2" physical="scheduling_info_2" virtualAddress="16#0090_1000#" writable="true"/>
     <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#000e_0001_9000#" writable="true"/>
    </cpu>
   </memory>

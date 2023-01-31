@@ -295,6 +295,12 @@ is
    --D Find next active scheduling group for the scheduling partition specified
    --D by ID. \verb!No_Group! is returned if no scheduling group is active in
    --D the given partition.
+   --D \paragraph{}
+   --D As part of the search for the next active scheduling group, the status of
+   --D scheduling groups is updated by looking at whether a subject is indicated
+   --D as active and then examining if it is actually active (e.g. running flag
+   --D set or pending event etc). Depending on the determined state, the subject
+   --D is activated or deactivated.
    --D @OL Id => impl_scheduling_find_next_active_sg_steps, Section => impl_scheduling_find_next_active_sg, Priority => 0
    procedure Find_Next_Active_Scheduling_Group
      (Partition_ID     :     Policy.Scheduling_Partition_Range;

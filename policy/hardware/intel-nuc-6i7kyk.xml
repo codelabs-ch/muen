@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- ==========================================
-     Generated with mugenhwcfg (commit v0.7)
-     Linux kernel version: 5.10.0-19-amd64
+     Generated with mugenhwcfg (commit v0.7.1)
+     Linux kernel version: 5.10.0-21-amd64
      Distribution: Debian GNU/Linux 11 (bullseye)
      Product information:
        Vendor: 
@@ -19,7 +19,7 @@
 
 
 <hardware>
-  <processor cpuCores="4" speed="2600" vmxTimerRate="7">
+  <processor cpuCores="4" speed="2591999" vmxTimerRate="7">
     <cpu apicId="0"/>
     <cpu apicId="2"/>
     <cpu apicId="4"/>
@@ -294,11 +294,11 @@
       <memory caching="UC" name="mem1" physicalAddress="16#dc20_0000#" size="16#2000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e030_0000#" size="16#1000#"/>
     </device>
-    <device name="usb_controller_2">
-      <description>Intel Corporation DSL6340 USB 3.1 Controller [Alpine Ridge]</description>
-      <pci bus="16#3c#" device="16#00#" function="0">
-        <identification classcode="16#0c03#" deviceId="16#15b5#" revisionId="16#00#" vendorId="16#8086#"/>
-        <iommuGroup id="18"/>
+    <device name="non-volatile_memory_controller_1">
+      <description>Samsung Electronics Co Ltd NVMe SSD Controller SM981/PM981/PM983</description>
+      <pci bus="16#3d#" device="16#00#" function="0">
+        <identification classcode="16#0108#" deviceId="16#a808#" revisionId="16#00#" vendorId="16#144d#"/>
+        <iommuGroup id="15"/>
       </pci>
       <irq name="irq1" number="16">
         <msi name="msi1"/>
@@ -309,14 +309,39 @@
         <msi name="msi6"/>
         <msi name="msi7"/>
         <msi name="msi8"/>
+        <msi name="msi9"/>
+        <msi name="msi10"/>
+        <msi name="msi11"/>
+        <msi name="msi12"/>
+        <msi name="msi13"/>
+        <msi name="msi14"/>
+        <msi name="msi15"/>
+        <msi name="msi16"/>
+        <msi name="msi17"/>
+        <msi name="msi18"/>
+        <msi name="msi19"/>
+        <msi name="msi20"/>
+        <msi name="msi21"/>
+        <msi name="msi22"/>
+        <msi name="msi23"/>
+        <msi name="msi24"/>
+        <msi name="msi25"/>
+        <msi name="msi26"/>
+        <msi name="msi27"/>
+        <msi name="msi28"/>
+        <msi name="msi29"/>
+        <msi name="msi30"/>
+        <msi name="msi31"/>
+        <msi name="msi32"/>
+        <msi name="msi33"/>
       </irq>
-      <memory caching="UC" name="mem1" physicalAddress="16#d9f0_0000#" size="16#0001_0000#"/>
-      <memory caching="UC" name="mmconf" physicalAddress="16#e3c0_0000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#dc10_0000#" size="16#4000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#e3d0_0000#" size="16#1000#"/>
     </device>
     <device name="sata_controller_1">
       <pci bus="16#3e#" device="16#00#" function="0">
         <identification classcode="16#0106#" deviceId="16#a801#" revisionId="16#01#" vendorId="16#144d#"/>
-        <iommuGroup id="15"/>
+        <iommuGroup id="16"/>
       </pci>
       <irq name="irq1" number="16">
         <msi name="msi1"/>

@@ -16,7 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Exceptions;
 with Ada.Strings.Fixed;
 
 with Interfaces;
@@ -509,92 +508,65 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Add_Sched_Group_Info_Mappings (Data : in out Muxml.XML_Data_Type)
+   procedure Add_Scheduling_Info_Mappings (Data : in out Muxml.XML_Data_Type)
    is
-      package MXU renames Mutools.XML_Utils;
-
       CPU_Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/kernel/memory/cpu");
-      Subjects  : constant DOM.Core.Node_List
+      Sched_Partitions : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/subjects/subject");
+           XPath => "/system/scheduling/partitions/partition");
    begin
-      declare
-         Group_Map : MXU.ID_Map_Array
-           := MXU.Get_Initial_Scheduling_Group_Subjects (Data => Data);
-      begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => CPU_Nodes) - 1 loop
+         declare
+            CPU_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => CPU_Nodes,
+                                      Index => I);
+            CPU_ID   : constant String
+              := DOM.Core.Elements.Get_Attribute (Elem => CPU_Node,
+                                                  Name => "id");
+            CPU_SPs  : constant DOM.Core.Node_List
+              := Muxml.Utils.Get_Elements
+                (Nodes     => Sched_Partitions,
+                 Ref_Attr  => "cpu",
+                 Ref_Value => CPU_ID);
+         begin
+            for J in 1 .. DOM.Core.Nodes.Length (List => CPU_SPs) loop
+               declare
+                  use type Interfaces.Unsigned_64;
 
-      --  Swap subject with corresponding CPU IDs.
-
-         for I in Group_Map'Range loop
-            declare
-               Subject_ID : constant String
-                 := Ada.Strings.Fixed.Trim (Source => Group_Map (I)'Img,
-                                            Side   => Ada.Strings.Left);
-               Subject    : constant DOM.Core.Node
-                 := Muxml.Utils.Get_Element (Nodes     => Subjects,
-                                             Ref_Attr  => "globalId",
-                                             Ref_Value => Subject_ID);
-               CPU_ID     : constant Natural := Natural'Value
-                 (DOM.Core.Elements.Get_Attribute
-                    (Elem => Subject,
-                     Name => "cpu"));
-            begin
-               Group_Map (I) := CPU_ID;
-            end;
-         end loop;
-
-         for I in 0 .. DOM.Core.Nodes.Length (List => CPU_Nodes) - 1 loop
-            declare
-               CPU_Node : constant DOM.Core.Node
-                 := DOM.Core.Nodes.Item (List  => CPU_Nodes,
-                                         Index => I);
-               CPU_ID   : constant Natural := Natural'Value
-                 (DOM.Core.Elements.Get_Attribute (Elem => CPU_Node,
-                                                   Name => "id"));
-            begin
-               for J in Group_Map'Range loop
-                  if Group_Map (J) = CPU_ID then
-
-                  --  Add mapping for scheduling group executed on this CPU.
-
-                     declare
-                        use type Interfaces.Unsigned_64;
-
-                        Sched_Info_Name : constant String
-                          := "scheduling_group_info_" & Ada.Strings.Fixed.Trim
-                            (Source => J'Img,
-                             Side   => Ada.Strings.Left);
-                        Virtual_Address : constant Interfaces.Unsigned_64
-                          := Config.Sched_Group_Info_Virtual_Addr
-                            + Interfaces.Unsigned_64
-                          ((J - 1) * Mutools.Constants.Page_Size);
-                     begin
-                        Muxml.Utils.Append_Child
-                          (Node      => CPU_Node,
-                           New_Child => MX.Create_Virtual_Memory_Node
-                             (Policy        => Data,
-                              Logical_Name  => Sched_Info_Name,
-                              Physical_Name => Sched_Info_Name,
-                              Address       => Mutools.Utils.To_Hex
-                                (Number => Virtual_Address),
-                              Writable      => True,
-                              Executable    => False));
-                     end;
-                  end if;
-               end loop;
-            end;
-         end loop;
-      end;
-
-   exception
-      when E : others =>
-         raise Expansion_Error with "Error adding scheduling group info "
-           & "kernel mappings - " & Ada.Exceptions.Exception_Message (X => E);
-   end Add_Sched_Group_Info_Mappings;
+                  Cur_SP : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item (List  => CPU_SPs,
+                                            Index => J - 1);
+                  Cur_SP_ID_Str : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Cur_SP,
+                       Name => "id");
+                  Cur_SP_ID : constant Natural := Natural'Value (Cur_SP_ID_Str);
+                  Sched_Info_Name : constant String
+                    := "scheduling_info_" & Cur_SP_ID_Str;
+                  Virtual_Address : constant Interfaces.Unsigned_64
+                    := Config.Scheduling_Info_Virtual_Addr
+                      + Interfaces.Unsigned_64
+                    (Cur_SP_ID - 1) * Mutools.Constants.Page_Size;
+               begin
+                  Muxml.Utils.Append_Child
+                    (Node      => CPU_Node,
+                     New_Child => MX.Create_Virtual_Memory_Node
+                       (Policy        => Data,
+                        Logical_Name  => Sched_Info_Name,
+                        Physical_Name => Sched_Info_Name,
+                        Address       => Mutools.Utils.To_Hex
+                          (Number => Virtual_Address),
+                        Writable      => True,
+                        Executable    => False));
+               end;
+            end loop;
+         end;
+      end loop;
+   end Add_Scheduling_Info_Mappings;
 
    -------------------------------------------------------------------------
 

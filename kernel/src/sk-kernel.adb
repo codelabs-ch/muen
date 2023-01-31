@@ -431,8 +431,9 @@ is
    --D @Section Id => impl_handle_irq, Label => External Interrupt Handling, Parent => impl_exit_handler, Priority => 10
    procedure Handle_Irq (Vector : Byte)
    with
-      Global => (In_Out => (IO_Apic.State, Subjects_Interrupts.State,
-                            X86_64.State))
+      Global => (Input  => Scheduler.State,
+                 In_Out => (IO_Apic.State, Scheduler.Group_Activity_Indicator,
+                            Subjects_Interrupts.State, X86_64.State))
    is
       Vect_Nr : Skp.Interrupts.Remapped_Vector_Type;
       Route   : Skp.Interrupts.Vector_Route_Type;
@@ -461,6 +462,14 @@ is
             Subjects_Interrupts.Insert_Interrupt
               (Subject => Route.Subject,
                Vector  => Byte (Route.Vector));
+            --D \paragraph{}
+            --D Then, indicate activity for the subject in order to make sure
+            --D that potentially sleeping target subjects are woken up. Note
+            --D that IRQs are always routed to CPUs executing the target
+            --D subject.
+            Scheduler.Indicate_Activity
+              (Subject_ID => Route.Subject,
+               Same_CPU   => True);
          end if;
 
          --D @Text Section => impl_handle_irq

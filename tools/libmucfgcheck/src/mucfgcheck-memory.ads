@@ -110,10 +110,10 @@ is
    procedure Kernel_PT_Below_4G (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_mem
-   --D Validate that scheduling group info regions are mapped by the kernel
-   --D running subjects of that scheduling group. Also verify that the kernel
+   --D Validate that scheduling info regions are mapped by the kernel running
+   --D subjects of that scheduling partition. Also verify that the kernel
    --D mapping is at the expected virtual location.
-   procedure Kernel_Sched_Group_Info_Mappings (XML_Data : Muxml.XML_Data_Type);
+   procedure Kernel_Sched_Info_Mappings (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_mem
    --D Validate that a subject state memory region with the expected size
@@ -208,16 +208,14 @@ is
    procedure Subject_PT_Region_Presence (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_mem
-   --D Validate that a scheduling group info memory region exists for each
-   --D scheduling group.
-   procedure Scheduling_Group_Info_Region_Presence
-     (XML_Data : Muxml.XML_Data_Type);
+   --D Validate that a scheduling info memory region exists for each scheduling
+   --D partition.
+   procedure Scheduling_Info_Region_Presence (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_mem
-   --D Validate that subjects map the scheduling group info region of the
-   --D scheduling group they belong to.
-   procedure Subject_Sched_Group_Info_Mappings
-     (XML_Data : Muxml.XML_Data_Type);
+   --D Validate that subjects map the scheduling info region of their associated
+   --D scheduling partition.
+   procedure Subject_Sched_Info_Mappings (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_mem
    --D Validate that subject state, timed event and pending interrupts memory

@@ -674,65 +674,60 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Kernel_Sched_Group_Info_Mappings (XML_Data : Muxml.XML_Data_Type)
+   procedure Kernel_Sched_Info_Mappings (XML_Data : Muxml.XML_Data_Type)
    is
-      Sched_Group_Map : constant Mutools.XML_Utils.ID_Map_Array
-        := Mutools.XML_Utils.Get_Initial_Scheduling_Group_Subjects
-          (Data => XML_Data);
+      Scheduling_Partitions : constant  DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/scheduling/partitions/partition");
+      SP_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Scheduling_Partitions);
       Kernel_Memory : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/kernel/memory/cpu/memory");
-      Subjects : constant DOM.Core.Node_List
-        := XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => "/system/subjects/subject");
       Sched_Info_Base_Address : Interfaces.Unsigned_64 := 0;
    begin
-      Mulog.Log (Msg => "Checking scheduling group info region kernel mapping"
-                 & " for" & Sched_Group_Map'Length'Img
-                 & " scheduling group(s)");
+      Mulog.Log (Msg => "Checking scheduling info region kernel mapping"
+                 & " for" & SP_Count'Img & " scheduling partition(s)");
 
-      for I in Sched_Group_Map'Range loop
+      for I in 0 .. SP_Count - 1 loop
          declare
             use type DOM.Core.Node;
 
-            Sched_Grp_ID : constant String
-              := Ada.Strings.Fixed.Trim
-                (Source => I'Img,
-                 Side   => Ada.Strings.Left);
-            Sched_Grp_Region_Name : constant String
-              := "scheduling_group_info_" & Sched_Grp_ID;
+            Cur_SP : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Scheduling_Partitions,
+                                      Index => I);
+            SP_ID_Str : constant String
+              := DOM.Core.Elements.Get_Attribute (Elem => Cur_SP,
+                                                  Name => "id");
+            SP_ID : constant Natural := Natural'Value (SP_ID_Str);
+            SP_CPU_ID_Str : constant String
+              := DOM.Core.Elements.Get_Attribute (Elem => Cur_SP,
+                                                  Name => "cpu");
+            SP_CPU_ID : constant Natural := Natural'Value (SP_CPU_ID_Str);
+            Sched_Info_Region_Name : constant String
+              := "scheduling_info_" & SP_ID_Str;
             Sched_Info_Mappings : constant DOM.Core.Node_List
               := Muxml.Utils.Get_Elements
                 (Nodes     => Kernel_Memory,
                  Ref_Attr  => "physical",
-                 Ref_Value => Sched_Grp_Region_Name);
+                 Ref_Value => Sched_Info_Region_Name);
             Sched_Info_Mapping : constant DOM.Core.Node
               := DOM.Core.Nodes.Item (List  => Sched_Info_Mappings,
                                       Index => 0);
             Mappings_Count : constant Natural
               := DOM.Core.Nodes.Length (List => Sched_Info_Mappings);
-            Subj_ID_Str : constant String
-              := Ada.Strings.Fixed.Trim
-                (Source => Sched_Group_Map (I)'Img,
-                 Side   => Ada.Strings.Left);
-            Subj_CPU_ID : constant Natural := Natural'Value
-              (Muxml.Utils.Get_Attribute
-                 (Nodes     => Subjects,
-                  Ref_Attr  => "globalId",
-                  Ref_Value => Subj_ID_Str,
-                  Attr_Name => "cpu"));
          begin
             if Mappings_Count = 0 then
                Validation_Errors.Insert
                  (Msg => "No kernel mapping for info region"
-                  & " of scheduling group " & Sched_Grp_ID);
+                  & " of scheduling partition " & SP_ID_Str);
                return;
             elsif Mappings_Count > 1 then
                Validation_Errors.Insert
-                 (Msg => "Info region of scheduling group "
-                  & Sched_Grp_ID & " has multiple kernel mappings:"
+                 (Msg => "Info region of scheduling partition "
+                  & SP_ID_Str & " has multiple kernel mappings:"
                   & Mappings_Count'Img);
             end if;
 
@@ -743,13 +738,12 @@ is
                        (N => Sched_Info_Mapping),
                      Name => "id"));
             begin
-               if Kernel_CPU_ID /= Subj_CPU_ID then
+               if Kernel_CPU_ID /= SP_CPU_ID then
                   Validation_Errors.Insert
-                    (Msg => "Info region of scheduling group"
-                     & " " & Sched_Grp_ID
+                    (Msg => "Info region of scheduling partition " & SP_ID_Str
                      & " mapped by kernel running on CPU"
-                     & Kernel_CPU_ID'Img & ", should be CPU"
-                     & Subj_CPU_ID'Img);
+                     & Kernel_CPU_ID'Img & ", should be CPU "
+                     & SP_CPU_ID_Str);
                end if;
             end;
 
@@ -761,22 +755,23 @@ is
                          Name => "virtualAddress"));
                Ref_Address : constant Interfaces.Unsigned_64
                  := Sched_Info_Base_Address + Interfaces.Unsigned_64
-                   (I - 1) * Mutools.Constants.Page_Size;
+                   (SP_ID - 1) * Mutools.Constants.Page_Size;
             begin
                if Sched_Info_Base_Address = 0 then
                   Sched_Info_Base_Address := Virtual_Address;
                elsif Virtual_Address /= Ref_Address then
                   Validation_Errors.Insert
                     (Msg => "Kernel mapping for info region "
-                     & "of scheduling group" & I'Img & " at unexpected kernel "
-                     & "virtual address " & Mutools.Utils.To_Hex
-                       (Number => Virtual_Address) & ", should be "
+                     & "of scheduling partition " & SP_ID_Str
+                     & " at unexpected kernel virtual address "
+                     & Mutools.Utils.To_Hex (Number => Virtual_Address)
+                     & ", should be "
                      & Mutools.Utils.To_Hex (Number => Ref_Address));
                end if;
             end;
          end;
       end loop;
-   end Kernel_Sched_Group_Info_Mappings;
+   end Kernel_Sched_Info_Mappings;
 
    -------------------------------------------------------------------------
 
@@ -1062,28 +1057,30 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Scheduling_Group_Info_Region_Presence
-     (XML_Data : Muxml.XML_Data_Type)
+   procedure Scheduling_Info_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
-      Sched_Groups : constant Mutools.XML_Utils.ID_Map_Array
-        := Mutools.XML_Utils.Get_Initial_Scheduling_Group_Subjects
-          (Data => XML_Data);
+      Sched_Partitions : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/scheduling/partitions/partition");
       Sched_Memory : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/memory/memory[@type='subject_scheduling_info']");
+      SP_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Sched_Partitions);
    begin
-      Mulog.Log (Msg => "Checking" & Sched_Groups'Length'Img
-                 & " scheduling group info region(s) for presence");
+      Mulog.Log (Msg => "Checking" & SP_Count'Img
+                 & " scheduling info region(s) for presence");
 
-      for I in Sched_Groups'Range loop
+      for I in 0 .. SP_Count - 1 loop
          declare
             use type DOM.Core.Node;
-
-            Name : constant String
-              := "scheduling_group_info_" & Ada.Strings.Fixed.Trim
-                (Source => I'Img,
-                 Side   => Ada.Strings.Left);
+            SP_ID_Str : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => DOM.Core.Nodes.Item (List => Sched_Partitions,
+                                            Index => I),
+               Name  => "id");
+            Name : constant String := "scheduling_info_" & SP_ID_Str;
             Mem  : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Nodes     => Sched_Memory,
@@ -1092,12 +1089,12 @@ is
          begin
             if Mem = null then
                Validation_Errors.Insert
-                 (Msg => "Scheduling group info region of "
-                  & "scheduling group" & I'Img & " not found");
+                 (Msg => "Scheduling info region of "
+                  & "scheduling partition " & SP_ID_Str & " not found");
             end if;
          end;
       end loop;
-   end Scheduling_Group_Info_Region_Presence;
+   end Scheduling_Info_Region_Presence;
 
    -------------------------------------------------------------------------
 
@@ -1285,9 +1282,12 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Subject_Sched_Group_Info_Mappings
-     (XML_Data : Muxml.XML_Data_Type)
+   procedure Subject_Sched_Info_Mappings (XML_Data : Muxml.XML_Data_Type)
    is
+      SP_Subjects : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/scheduling/partitions/partition/group/subject");
       Subjects : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
@@ -1295,7 +1295,7 @@ is
       Subj_Count : constant Natural
         := DOM.Core.Nodes.Length (List => Subjects);
    begin
-      Mulog.Log (Msg => "Checking scheduling group info region mappings of"
+      Mulog.Log (Msg => "Checking scheduling info region mappings of"
                  & Subj_Count'Img & " subject(s)");
 
       for I in 0 .. Subj_Count - 1 loop
@@ -1305,33 +1305,35 @@ is
             Subject : constant DOM.Core.Node
               := DOM.Core.Nodes.Item (List  => Subjects,
                                       Index => I);
-            Sched_Grp_ID : constant String
+            Subj_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subject,
-                 Name => "schedGroupId");
-            Sched_Grp_Region_Name : constant String
-              := "scheduling_group_info_" & Sched_Grp_ID;
+                 Name => "name");
+            SP_Subject : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element (Nodes     => SP_Subjects,
+                                          Ref_Attr  => "name",
+                                          Ref_Value => Subj_Name);
+            SP_ID_Str : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node (Node  => SP_Subject,
+                                                    Level => 2),
+                 Name => "id");
+            Sched_Info_Region_Name : constant String
+              := "scheduling_info_" & SP_ID_Str;
             Sched_Info_Mapping : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Subject,
-                 XPath => "memory/memory[@physical='" & Sched_Grp_Region_Name
+                 XPath => "memory/memory[@physical='" & Sched_Info_Region_Name
                  & "']");
          begin
             if Sched_Info_Mapping = null then
-               declare
-                  Subj_Name : constant String
-                    := DOM.Core.Elements.Get_Attribute (Elem => Subject,
-                                                        Name => "name");
-               begin
-                  Validation_Errors.Insert
-                    (Msg => "Subject '" & Subj_Name
-                     & "' has no mapping for info region of scheduling group "
-                     & Sched_Grp_ID);
-               end;
+               Validation_Errors.Insert
+                 (Msg => "Subject '" & Subj_Name
+                  & "' has no mapping of scheduling info region " & SP_ID_Str);
             end if;
          end;
       end loop;
-   end Subject_Sched_Group_Info_Mappings;
+   end Subject_Sched_Info_Mappings;
 
    -------------------------------------------------------------------------
 

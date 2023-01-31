@@ -254,7 +254,7 @@
                                                                                                                                                      >      <memory executable="false" logical="sys_interface" physical="sys_interface" virtualAddress="16#003f_f000#" writable="true"/>
                                                                                                                                                      >      <memory executable="false" logical="stack" physical="tau0|stack" virtualAddress="16#1000#" writable="true"/>
                                                                                                                                                      >      <memory executable="true" logical="binary" physical="tau0|bin" virtualAddress="16#0020_0000#" writable="true"/>
-                                                                                                                                                     >      <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_2" virtualAddress="16#000e_0000_8000#" writable="false"/>
+                                                                                                                                                     >      <memory executable="false" logical="scheduling_info" physical="scheduling_info_2" virtualAddress="16#000e_0000_8000#" writable="false"/>
                                                                                                                                                      >     </memory>
                                                                                                                                                      >     <devices/>
                                                                                                                                                      >     <events>
@@ -274,7 +274,7 @@
 --
     <memory executable="false" logical="file_2" physical="dummy_6" virtualAddress="16#0003_0000#" writable="true"/>                                         <memory executable="false" logical="file_2" physical="dummy_6" virtualAddress="16#0003_0000#" writable="true"/>
     <memory executable="false" logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false"/>                                   <memory executable="false" logical="initramfs" physical="initramfs" virtualAddress="16#9000_0000#" writable="false"/>
-                                                                                                                                                     >      <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_1" virtualAddress="16#000e_0000_8000#" writable="false"/>
+                                                                                                                                                     >      <memory executable="false" logical="scheduling_info" physical="scheduling_info_1" virtualAddress="16#000e_0000_8000#" writable="false"/>
    </memory>                                                                                                                                               </memory>
    <devices>                                                                                                                                               <devices>
 --
@@ -285,7 +285,7 @@
                                                                                                                                                      >     <bootparams/>
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
-                                                                                                                                                     >      <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_1" virtualAddress="16#000e_0000_8000#" writable="false"/>
+                                                                                                                                                     >      <memory executable="false" logical="scheduling_info" physical="scheduling_info_1" virtualAddress="16#000e_0000_8000#" writable="false"/>
    </memory>                                                                                                                                               </memory>
    <devices>                                                                                                                                               <devices>
 --
@@ -300,7 +300,7 @@
                                                                                                                                                      >     <bootparams/>
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
-                                                                                                                                                     >      <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_3" virtualAddress="16#000e_0000_8000#" writable="false"/>
+                                                                                                                                                     >      <memory executable="false" logical="scheduling_info" physical="scheduling_info_3" virtualAddress="16#000e_0000_8000#" writable="false"/>
    </memory>                                                                                                                                               </memory>
    <devices>                                                                                                                                               <devices>
 --
@@ -314,7 +314,7 @@
    </vcpu>                                                                                                                                                 </vcpu>
                                                                                                                                                      >     <bootparams/>
                                                                                                                                                      >     <memory>
-                                                                                                                                                     >      <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_5" virtualAddress="16#000e_0000_8000#" writable="false"/>
+                                                                                                                                                     >      <memory executable="false" logical="scheduling_info" physical="scheduling_info_5" virtualAddress="16#000e_0000_8000#" writable="false"/>
                                                                                                                                                      >     </memory>
                                                                                                                                                      >     <devices/>
    <events>                                                                                                                                                <events>
@@ -326,7 +326,7 @@
                                                                                                                                                      >     <vcpu/>
                                                                                                                                                      >     <bootparams/>
                                                                                                                                                      >     <memory>
-                                                                                                                                                     >      <memory executable="false" logical="sched_group_info" physical="scheduling_group_info_4" virtualAddress="16#000e_0000_8000#" writable="false"/>
+                                                                                                                                                     >      <memory executable="false" logical="scheduling_info" physical="scheduling_info_4" virtualAddress="16#000e_0000_8000#" writable="false"/>
                                                                                                                                                      >     </memory>
                                                                                                                                                      >     <devices/>
    <events>                                                                                                                                                <events>
@@ -340,28 +340,28 @@
 --
  <scheduling tickRate="10000">                                                                                                                           <scheduling tickRate="10000">
   <partitions>                                                                                                                                            <partitions>
-   <partition name="linux">                                                                                                                          |     <partition cpu="0" name="linux">
+   <partition name="linux">                                                                                                                          |     <partition cpu="0" id="1" name="linux">
     <group>                                                                                                                                          |      <group id="1">
      <subject name="lnx"/>                                                                                                                                   <subject name="lnx"/>
      <subject name="subject1"/>                                                                                                                              <subject name="subject1"/>
     </group>                                                                                                                                                </group>
    </partition>                                                                                                                                            </partition>
-   <partition name="tau0">                                                                                                                           |     <partition cpu="1" name="tau0">
+   <partition name="tau0">                                                                                                                           |     <partition cpu="1" id="2" name="tau0">
     <group>                                                                                                                                          |      <group id="2">
      <subject name="tau0"/>                                                                                                                                  <subject name="tau0"/>
     </group>                                                                                                                                                </group>
    </partition>                                                                                                                                            </partition>
-   <partition name="s2">                                                                                                                             |     <partition cpu="1" name="s2">
+   <partition name="s2">                                                                                                                             |     <partition cpu="1" id="3" name="s2">
     <group>                                                                                                                                          |      <group id="3">
      <subject name="subject2"/>                                                                                                                              <subject name="subject2"/>
     </group>                                                                                                                                                </group>
    </partition>                                                                                                                                            </partition>
-   <partition name="s3">                                                                                                                             |     <partition cpu="0" name="s3">
+   <partition name="s3">                                                                                                                             |     <partition cpu="0" id="4" name="s3">
     <group>                                                                                                                                          |      <group id="4">
      <subject name="subject3"/>                                                                                                                              <subject name="subject3"/>
     </group>                                                                                                                                                </group>
    </partition>                                                                                                                                            </partition>
-   <partition name="linux_1">                                                                                                                        |     <partition cpu="1" name="linux_1">
+   <partition name="linux_1">                                                                                                                        |     <partition cpu="1" id="5" name="linux_1">
     <group>                                                                                                                                          |      <group id="5">
      <subject name="lnx_core_1"/>                                                                                                                            <subject name="lnx_core_1"/>
     </group>                                                                                                                                                </group>

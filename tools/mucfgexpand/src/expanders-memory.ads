@@ -72,8 +72,7 @@ is
    --  Add physical memory region for each reserved memory region.
    procedure Add_Reserved_Memory_Regions (Data : in out Muxml.XML_Data_Type);
 
-   --  Add physical memory region for each scheduling group.
-   procedure Add_Scheduling_Group_Info_Regions
-     (Data : in out Muxml.XML_Data_Type);
+   --  Add physical scheduling info memory region for each scheduling partition.
+   procedure Add_Scheduling_Info_Regions (Data : in out Muxml.XML_Data_Type);
 
 end Expanders.Memory;

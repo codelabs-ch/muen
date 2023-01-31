@@ -125,7 +125,7 @@ is
       XML_Processors.Register
         (Process => Memory.Subject_PT_Region_Presence'Access);
       XML_Processors.Register
-        (Process => Memory.Scheduling_Group_Info_Region_Presence'Access);
+        (Process => Memory.Scheduling_Info_Region_Presence'Access);
       XML_Processors.Register
         (Process => Memory.Kernel_Memory_Mappings'Access);
       XML_Processors.Register
@@ -145,9 +145,9 @@ is
       XML_Processors.Register
         (Process => Memory.Subject_FPU_State_Mappings'Access);
       XML_Processors.Register
-        (Process => Memory.Subject_Sched_Group_Info_Mappings'Access);
+        (Process => Memory.Subject_Sched_Info_Mappings'Access);
       XML_Processors.Register
-        (Process => Memory.Kernel_Sched_Group_Info_Mappings'Access);
+        (Process => Memory.Kernel_Sched_Info_Mappings'Access);
       XML_Processors.Register
         (Process => Memory.Monitor_Subject_Region_Mappings'Access);
       XML_Processors.Register

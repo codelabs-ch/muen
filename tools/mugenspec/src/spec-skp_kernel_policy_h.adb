@@ -311,11 +311,11 @@ is
                XPath => "/system/kernel/memory/cpu/"
                & "memory[@logical='" & First_Subject_Name & "|fpu']",
                Name  => "virtualAddress"));
-         Sched_Grp_Info_Addr : constant Unsigned_64 := Unsigned_64'Value
+         Sched_Info_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
                XPath => "/system/kernel/memory/cpu/"
-               & "memory[@logical='scheduling_group_info_1']",
+               & "memory[@logical='scheduling_info_1']",
                Name  => "virtualAddress"));
          Subj_MSR_Store_Addr : constant Unsigned_64
            := Calculate_MSR_Store_Base_Address (Policy => Policy);
@@ -410,8 +410,8 @@ is
             Content  => Mutools.Utils.To_Hex  (Number => Subj_VMCS_Addr));
          Mutools.Templates.Replace
            (Template => Tmpl,
-            Pattern  => "__sched_group_info_addr__",
-            Content  => Mutools.Utils.To_Hex (Number => Sched_Grp_Info_Addr));
+            Pattern  => "__sched_info_addr__",
+            Content  => Mutools.Utils.To_Hex (Number => Sched_Info_Addr));
          Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__intr_stack_addr__",

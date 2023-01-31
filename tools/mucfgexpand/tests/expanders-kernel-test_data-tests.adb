@@ -187,22 +187,22 @@ package body Expanders.Kernel.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Add_Sched_Group_Info_Mappings (Gnattest_T : in out Test);
-   procedure Test_Add_Sched_Group_Info_Mappings_a6ca47 (Gnattest_T : in out Test) renames Test_Add_Sched_Group_Info_Mappings;
---  id:2.2/a6ca47d1783a39bf/Add_Sched_Group_Info_Mappings/1/0/
-   procedure Test_Add_Sched_Group_Info_Mappings (Gnattest_T : in out Test) is
+   procedure Test_Add_Scheduling_Info_Mappings (Gnattest_T : in out Test);
+   procedure Test_Add_Scheduling_Info_Mappings_a32472 (Gnattest_T : in out Test) renames Test_Add_Scheduling_Info_Mappings;
+--  id:2.2/a32472f62674d43f/Add_Scheduling_Info_Mappings/1/0/
+   procedure Test_Add_Scheduling_Info_Mappings (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename => "obj/kernel_sched_group_info_mapping.xml",
-         Ref_Diff => "data/kernel_sched_group_info_mapping.xml.diff",
-         Pre      => Pre_Sched_Group_Info_Mappings'Access,
-         Expander => Add_Sched_Group_Info_Mappings'Access);
+        (Filename => "obj/kernel_scheduling_info_mapping.xml",
+         Ref_Diff => "data/kernel_scheduling_info_mapping.xml.diff",
+         Pre      => Pre_Sched_Part_Info_Mappings'Access,
+         Expander => Add_Scheduling_Info_Mappings'Access);
 --  begin read only
-   end Test_Add_Sched_Group_Info_Mappings;
+   end Test_Add_Scheduling_Info_Mappings;
 --  end read only
 
 

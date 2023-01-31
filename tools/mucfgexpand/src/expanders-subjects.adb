@@ -1569,7 +1569,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Add_Sched_Group_Info_Mappings (Data : in out Muxml.XML_Data_Type)
+   procedure Add_Scheduling_Info_Mappings (Data : in out Muxml.XML_Data_Type)
    is
       use type Interfaces.Unsigned_64;
 
@@ -1581,7 +1581,7 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/subjects/subject");
-      SG_Subjects :  constant DOM.Core.Node_List
+      SP_Subjects : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/scheduling/partitions/partition/group/subject");
@@ -1596,22 +1596,27 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subject,
                  Name => "name");
-            SG_Subj : constant DOM.Core.Node
+            SP_Subj : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Nodes     => SG_Subjects,
+                (Nodes     => SP_Subjects,
                  Ref_Attr  => "name",
                  Ref_Value => Subj_Name);
             Group_ID_Str : constant String
               := DOM.Core.Elements.Get_Attribute
-                (Elem => DOM.Core.Nodes.Parent_Node (N => SG_Subj),
+                (Elem => DOM.Core.Nodes.Parent_Node (N => SP_Subj),
+                 Name => "id");
+            Partition_ID_Str : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node (Node => SP_Subj,
+                                                    Level => 2),
                  Name => "id");
             Subj_Mem_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Subject,
                  XPath => "memory");
          begin
-            Mulog.Log (Msg => "Adding mapping of scheduling group "
-                       &  Group_ID_Str & " info region to subject '"
+            Mulog.Log (Msg => "Adding mapping of scheduling "
+                       & Partition_ID_Str & " info region to subject '"
                        & Subj_Name & "'");
             DOM.Core.Elements.Set_Attribute
               (Elem  => Subject,
@@ -1621,14 +1626,15 @@ is
               (Node      => Subj_Mem_Node,
                New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
-                  Logical_Name  => "sched_group_info",
-                  Physical_Name => "scheduling_group_info_" & Group_ID_Str,
+                  Logical_Name  => "scheduling_info",
+                  Physical_Name => "scheduling_info_"
+                  & Partition_ID_Str,
                   Address       => Sched_Info_Virtual_Address,
                   Writable      => False,
                   Executable    => False));
          end;
       end loop;
-   end Add_Sched_Group_Info_Mappings;
+   end Add_Scheduling_Info_Mappings;
 
    -------------------------------------------------------------------------
 
@@ -1723,7 +1729,7 @@ is
                                 (Number => Config.Subject_Info_Virtual_Addr
                                  + Sib_ID
                                  * (Cfg.Subject_Sinfo_Region_Size
-                                   + Cfg.Sched_Group_Info_Region_Size)));
+                                   + Cfg.Scheduling_Info_Region_Size)));
 
                            --  Remove mapping from sibling and add it to origin
                            --  subject.
@@ -1733,8 +1739,8 @@ is
                               New_Child => DOM.Core.Nodes.Remove_Child
                                 (N         => Sib_Mem,
                                  Old_Child => M));
-                        elsif Logical_Name = "sched_group_info" then
-                           Mulog.Log (Msg => "Adding scheduling group info "
+                        elsif Logical_Name = "scheduling_info" then
+                           Mulog.Log (Msg => "Adding scheduling partition info "
                                       & "region of sibling '" & Sib_Name
                                       & "' to subject '" & Origin_Name & "'");
                            DOM.Core.Elements.Set_Attribute
@@ -1744,8 +1750,8 @@ is
 
                            --  Set virtual address of sibling sched info region
                            --  to place it at the expected slot in the
-                           --  consecutive array of sinfo+sched_group_info
-                           --  regions. Since sched_group_info region is always
+                           --  consecutive array of sinfo+scheduling_info
+                           --  regions. Since scheduling info region is always
                            --  placed right after the sinfo region, the address
                            --  is calculated by calculating the sinfo region
                            --  address of the *next* subject and subtracting the
@@ -1758,8 +1764,8 @@ is
                                 (Number => Config.Subject_Info_Virtual_Addr
                                  + (Sib_ID + 1)
                                  * (Cfg.Subject_Sinfo_Region_Size
-                                   + Cfg.Sched_Group_Info_Region_Size)
-                                 - Cfg.Sched_Group_Info_Region_Size));
+                                   + Cfg.Scheduling_Info_Region_Size)
+                                 - Cfg.Scheduling_Info_Region_Size));
 
                            --  Remove mapping from sibling and add it to origin
                            --  subject.

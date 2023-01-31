@@ -86,8 +86,7 @@ is
       Procs.Register (Process => Memory.Add_VMXON_Regions'Access);
       Procs.Register (Process => Memory.Add_VMCS_Regions'Access);
       Procs.Register (Process => Memory.Add_Subject_Bitmaps'Access);
-      Procs.Register
-        (Process => Memory.Add_Scheduling_Group_Info_Regions'Access);
+      Procs.Register (Process => Memory.Add_Scheduling_Info_Regions'Access);
       Procs.Register (Process => Kernel.Add_Section_Skeleton'Access);
       Procs.Register (Process => Kernel.Add_Binary_Mappings'Access);
       Procs.Register (Process => Kernel.Add_Subj_State_Mappings'Access);
@@ -95,7 +94,7 @@ is
       Procs.Register (Process => Kernel.Add_Subj_Interrupts_Mappings'Access);
       Procs.Register (Process => Kernel.Add_Subj_VMCS_Mappings'Access);
       Procs.Register (Process => Kernel.Add_Subj_FPU_State_Mappings'Access);
-      Procs.Register (Process => Kernel.Add_Sched_Group_Info_Mappings'Access);
+      Procs.Register (Process => Kernel.Add_Scheduling_Info_Mappings'Access);
       Procs.Register (Process => Kernel.Add_Crash_Audit_Mappings'Access);
       Procs.Register (Process => Kernel.Map_Tau0_Interface'Access);
       Procs.Register (Process => Kernel.Add_Devices'Access);
@@ -103,8 +102,7 @@ is
       Procs.Register (Process => Subjects.Add_Sinfo_Regions'Access);
 
       Procs.Register (Process => Subjects.Handle_Monitors'Access);
-      Procs.Register
-        (Process => Subjects.Add_Sched_Group_Info_Mappings'Access);
+      Procs.Register (Process => Subjects.Add_Scheduling_Info_Mappings'Access);
       Procs.Register (Process => Subjects.Add_Timed_Event_Mappings'Access);
       Procs.Register (Process => Subjects.Add_Default_Events'Access);
       Procs.Register (Process => Subjects.Add_Device_BDFs'Access);

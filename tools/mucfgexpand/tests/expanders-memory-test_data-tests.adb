@@ -14,7 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with Expanders.Scheduling;
 --  begin read only
 --  end read only
 package body Expanders.Memory.Test_Data.Tests is
@@ -358,22 +358,22 @@ package body Expanders.Memory.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Add_Scheduling_Group_Info_Regions (Gnattest_T : in out Test);
-   procedure Test_Add_Scheduling_Group_Info_Regions_f9e756 (Gnattest_T : in out Test) renames Test_Add_Scheduling_Group_Info_Regions;
---  id:2.2/f9e756ad4d13a2e9/Add_Scheduling_Group_Info_Regions/1/0/
-   procedure Test_Add_Scheduling_Group_Info_Regions (Gnattest_T : in out Test) is
+   procedure Test_Add_Scheduling_Info_Regions (Gnattest_T : in out Test);
+   procedure Test_Add_Scheduling_Info_Regions_915c75 (Gnattest_T : in out Test) renames Test_Add_Scheduling_Info_Regions;
+--  id:2.2/915c75bdb766cf0f/Add_Scheduling_Info_Regions/1/0/
+   procedure Test_Add_Scheduling_Info_Regions (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename => "obj/memory_sched_group_info.xml",
-         Ref_Diff => "data/memory_sched_group_info.xml.diff",
-         Pre      => Add_Tau0_And_Subject_IDs'Access,
-         Expander => Add_Scheduling_Group_Info_Regions'Access);
+        (Filename => "obj/memory_scheduling_info.xml",
+         Ref_Diff => "data/memory_scheduling_info.xml.diff",
+         Pre      => Scheduling.Add_Partition_IDs'Access,
+         Expander => Add_Scheduling_Info_Regions'Access);
 --  begin read only
-   end Test_Add_Scheduling_Group_Info_Regions;
+   end Test_Add_Scheduling_Info_Regions;
 --  end read only
 
 --  begin read only

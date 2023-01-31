@@ -29,8 +29,8 @@ package Expanders.Kernel.Test_Data is
    --  Prepare policy for MSR store mappings test.
    procedure Pre_Subj_MSR_Store_Mappings (Data : in out Muxml.XML_Data_Type);
 
-   --  Prepare policy for scheduling group info mappings test.
-   procedure Pre_Sched_Group_Info_Mappings (Data : in out Muxml.XML_Data_Type);
+   --  Prepare policy for scheduling partition info mappings test.
+   procedure Pre_Sched_Part_Info_Mappings (Data : in out Muxml.XML_Data_Type);
 
    --  Prepare policy for tau0 interface mapping test.
    procedure Pre_Map_Tau0_Interface (Data : in out Muxml.XML_Data_Type);

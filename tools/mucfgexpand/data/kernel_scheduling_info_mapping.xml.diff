@@ -6,11 +6,6 @@
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="tau0|bin" size="16#0001_0000#" type="subject_binary">
                                                                                                                                                      >     <file filename="tau0" offset="16#001f_f000#"/>
                                                                                                                                                      >    </memory>
-                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="scheduling_group_info_1" size="16#1000#" type="subject_scheduling_info"/>
-                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="scheduling_group_info_2" size="16#1000#" type="subject_scheduling_info"/>
-                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="scheduling_group_info_3" size="16#1000#" type="subject_scheduling_info"/>
-                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="scheduling_group_info_4" size="16#1000#" type="subject_scheduling_info"/>
-                                                                                                                                                     >    <memory alignment="16#1000#" caching="WB" name="scheduling_group_info_5" size="16#1000#" type="subject_scheduling_info"/>
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>
 --
@@ -20,7 +15,22 @@
  </events>                                                                                                                                               </events>
  <channels>                                                                                                                                              <channels>
 --
+  </component>                                                                                                                                            </component>
  </components>                                                                                                                                           </components>
+                                                                                                                                                     >   <kernel>
+                                                                                                                                                     >    <memory>
+                                                                                                                                                     >     <cpu id="0">
+                                                                                                                                                     >      <memory executable="false" logical="scheduling_info_1" physical="scheduling_info_1" virtualAddress="16#00b0_0000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="scheduling_info_4" physical="scheduling_info_4" virtualAddress="16#00b0_3000#" writable="true"/>
+                                                                                                                                                     >     </cpu>
+                                                                                                                                                     >     <cpu id="1">
+                                                                                                                                                     >      <memory executable="false" logical="scheduling_info_2" physical="scheduling_info_2" virtualAddress="16#00b0_1000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="scheduling_info_3" physical="scheduling_info_3" virtualAddress="16#00b0_2000#" writable="true"/>
+                                                                                                                                                     >      <memory executable="false" logical="scheduling_info_5" physical="scheduling_info_5" virtualAddress="16#00b0_4000#" writable="true"/>
+                                                                                                                                                     >     </cpu>
+                                                                                                                                                     >    </memory>
+                                                                                                                                                     >    <devices/>
+                                                                                                                                                     >   </kernel>
  <subjects>                                                                                                                                              <subjects>
   <subject name="lnx">                                                                                                                               |    <subject cpu="1" globalId="0" name="tau0" profile="native">
                                                                                                                                                      >     <vcpu>
@@ -271,57 +281,57 @@
                                                                                                                                                      >      </source>
                                                                                                                                                      >     </events>
                                                                                                                                                      >    </subject>
-                                                                                                                                                     >    <subject globalId="1" name="lnx">
+                                                                                                                                                     >    <subject cpu="0" globalId="1" name="lnx">
    <bootparams>hostname=lnx</bootparams>                                                                                                                   <bootparams>hostname=lnx</bootparams>
    <bootparams>debug</bootparams>                                                                                                                          <bootparams>debug</bootparams>
 --
    <component ref="linux"/>                                                                                                                                <component ref="linux"/>
   </subject>                                                                                                                                              </subject>
-  <subject name="subject1">                                                                                                                          |    <subject globalId="2" name="subject1">
+  <subject name="subject1">                                                                                                                          |    <subject cpu="0" globalId="2" name="subject1">
    <memory>                                                                                                                                                <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>                                                 <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
 --
    </component>                                                                                                                                            </component>
   </subject>                                                                                                                                              </subject>
-  <subject name="subject2">                                                                                                                          |    <subject globalId="3" name="subject2">
+  <subject name="subject2">                                                                                                                          |    <subject cpu="1" globalId="3" name="subject2">
    <vcpu>                                                                                                                                                  <vcpu>
     <msrs>                                                                                                                                                  <msrs>
 --
    </component>                                                                                                                                            </component>
   </subject>                                                                                                                                              </subject>
-  <subject name="lnx_core_1">                                                                                                                        |    <subject globalId="4" name="lnx_core_1">
+  <subject name="lnx_core_1">                                                                                                                        |    <subject cpu="1" globalId="4" name="lnx_core_1">
    <vcpu>                                                                                                                                                  <vcpu>
     <registers>                                                                                                                                             <registers>
 --
    <sibling ref="lnx"/>                                                                                                                                    <sibling ref="lnx"/>
   </subject>                                                                                                                                              </subject>
-  <subject name="subject3">                                                                                                                          |    <subject globalId="5" name="subject3">
+  <subject name="subject3">                                                                                                                          |    <subject cpu="0" globalId="5" name="subject3">
    <events>                                                                                                                                                <events>
     <source>                                                                                                                                                <source>
 --
  <scheduling tickRate="10000">                                                                                                                           <scheduling tickRate="10000">
   <partitions>                                                                                                                                            <partitions>
-   <partition name="linux">                                                                                                                          |     <partition cpu="0" name="linux">
+   <partition name="linux">                                                                                                                          |     <partition cpu="0" id="1" name="linux">
     <group>                                                                                                                                                 <group>
      <subject name="lnx"/>                                                                                                                                   <subject name="lnx"/>
 --
     </group>                                                                                                                                                </group>
    </partition>                                                                                                                                            </partition>
-   <partition name="tau0">                                                                                                                           |     <partition cpu="1" name="tau0">
+   <partition name="tau0">                                                                                                                           |     <partition cpu="1" id="2" name="tau0">
     <group>                                                                                                                                                 <group>
      <subject name="tau0"/>                                                                                                                                  <subject name="tau0"/>
     </group>                                                                                                                                                </group>
    </partition>                                                                                                                                            </partition>
-   <partition name="s2">                                                                                                                             |     <partition cpu="1" name="s2">
+   <partition name="s2">                                                                                                                             |     <partition cpu="1" id="3" name="s2">
     <group>                                                                                                                                                 <group>
      <subject name="subject2"/>                                                                                                                              <subject name="subject2"/>
     </group>                                                                                                                                                </group>
    </partition>                                                                                                                                            </partition>
-   <partition name="s3">                                                                                                                             |     <partition cpu="0" name="s3">
+   <partition name="s3">                                                                                                                             |     <partition cpu="0" id="4" name="s3">
     <group>                                                                                                                                                 <group>
      <subject name="subject3"/>                                                                                                                              <subject name="subject3"/>
     </group>                                                                                                                                                </group>
    </partition>                                                                                                                                            </partition>
-   <partition name="linux_1">                                                                                                                        |     <partition cpu="1" name="linux_1">
+   <partition name="linux_1">                                                                                                                        |     <partition cpu="1" id="5" name="linux_1">
     <group>                                                                                                                                                 <group>
      <subject name="lnx_core_1"/>                                                                                                                            <subject name="lnx_core_1"/>

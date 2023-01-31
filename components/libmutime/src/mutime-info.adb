@@ -80,23 +80,50 @@ is
    -------------------------------------------------------------------------
 
    procedure Get_Current_Time
-     (TI             :     Time_Info_Type;
-      Schedule_Ticks :     Integer_62;
-      Correction     : out Integer_63;
-      Timestamp      : out Timestamp_Type)
+     (TI              :     Time_Info_Type;
+      Schedule_Ticks  :     Integer_62;
+      Timezone_Offset :     Timezone_Type;
+      Correction      : out Integer_63;
+      Timestamp       : out Timestamp_Type)
    is
-      Timezone_Microsecs : constant Timezone_Type
-        := TI.Timezone_Microsecs;
-      TSC_Tick_Rate_Hz   : constant TSC_Tick_Rate_Hz_Type
+      TSC_Tick_Rate_Hz : constant TSC_Tick_Rate_Hz_Type
         := TI.TSC_Tick_Rate_Hz;
    begin
-      Timestamp := TI.TSC_Time_Base;
-
-      Correction := Timezone_Microsecs +
+      Timestamp  := TI.TSC_Time_Base;
+      Correction := Timezone_Offset +
         (Schedule_Ticks / Integer_62 (TSC_Tick_Rate_Hz) * 10 ** 6);
 
       Timestamp := Timestamp + Correction;
    end Get_Current_Time;
+
+   -------------------------------------------------------------------------
+
+   procedure Get_Current_Time_UTC
+     (Schedule_Ticks :     Integer_62;
+      Correction     : out Integer_63;
+      Timestamp      : out Timestamp_Type;
+      Success        : out Boolean)
+   with
+      Refined_Global  => (Input => Time_Info),
+      Refined_Depends => ((Correction, Timestamp) => (Schedule_Ticks,
+                                                      Time_Info),
+                          Success                 => Time_Info)
+   is
+      Time : constant Time_Info_Type := Time_Info;
+   begin
+      Timestamp  := Timestamp_Type'First;
+      Correction := Integer_63'First;
+
+      Success := Valid (TI => Time);
+      if Success then
+         Get_Current_Time
+           (TI              => Time,
+            Schedule_Ticks  => Schedule_Ticks,
+            Timezone_Offset => 0,
+            Correction      => Correction,
+            Timestamp       => Timestamp);
+      end if;
+   end Get_Current_Time_UTC;
 
    -------------------------------------------------------------------------
 
@@ -111,17 +138,21 @@ is
                                                       Time_Info),
                           Success                 => Time_Info)
    is
-      Time : constant Time_Info_Type := Time_Info;
+      Time     : constant Time_Info_Type := Time_Info;
+      Tz_Msecs : Timezone_Type;
    begin
+      Timestamp  := Timestamp_Type'First;
+      Correction := Integer_63'First;
+
       Success := Valid (TI => Time);
       if Success then
-         Get_Current_Time (TI             => Time,
-                           Schedule_Ticks => Schedule_Ticks,
-                           Correction     => Correction,
-                           Timestamp      => Timestamp);
-      else
-         Correction := Integer_63'First;
-         Timestamp := Timestamp_Type'First;
+         Tz_Msecs := Time.Timezone_Microsecs;
+         Get_Current_Time
+           (TI              => Time,
+            Schedule_Ticks  => Schedule_Ticks,
+            Timezone_Offset => Tz_Msecs,
+            Correction      => Correction,
+            Timestamp       => Timestamp);
       end if;
    end Get_Current_Time;
 

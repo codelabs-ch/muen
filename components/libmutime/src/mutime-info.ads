@@ -65,8 +65,23 @@ is
 
    --  Calculate current timestamp using the information stored in the time
    --  info record and the specified CPU ticks. The procedure returns the
-   --  timestamp and the calculated correction to the time base in
-   --  microseconds if Success is True.
+   --  timestamp and the applied correction to the time base in microseconds
+   --  if Success is True. No timezone offset is applied.
+   procedure Get_Current_Time_UTC
+     (Schedule_Ticks :     Integer_62;
+      Correction     : out Integer_63;
+      Timestamp      : out Timestamp_Type;
+      Success        : out Boolean)
+   with
+      Global  => (Input => State),
+      Depends => ((Correction, Timestamp) => (Schedule_Ticks, State),
+                  Success                 => State);
+
+   --  Calculate current timestamp using the information stored in the time
+   --  info record and the specified CPU ticks. The procedure returns the
+   --  timestamp and the applied correction to the time base in microseconds
+   --  if Success is True. The correction also takes the timezone offset into
+   --  account.
    procedure Get_Current_Time
      (Schedule_Ticks :     Integer_62;
       Correction     : out Integer_63;
@@ -101,12 +116,14 @@ private
       Post => (if Valid'Result then TI.TSC_Time_Base /= 0);
 
    procedure Get_Current_Time
-     (TI             :     Time_Info_Type;
-      Schedule_Ticks :     Integer_62;
-      Correction     : out Integer_63;
-      Timestamp      : out Timestamp_Type)
+     (TI              :     Time_Info_Type;
+      Schedule_Ticks  :     Integer_62;
+      Timezone_Offset :     Timezone_Type;
+      Correction      : out Integer_63;
+      Timestamp       : out Timestamp_Type)
    with
-      Depends => ((Correction, Timestamp) => (Schedule_Ticks, TI)),
+      Depends => ((Correction, Timestamp) => (Schedule_Ticks, Timezone_Offset,
+                                              TI)),
       Pre     => Valid (TI => TI);
 
    procedure Get_Boot_Time

@@ -56,7 +56,7 @@ is
          Sched := 0;
       end if;
 
-      Mutime.Info.Get_Current_Time
+      Mutime.Info.Get_Current_Time_UTC
         (Schedule_Ticks => Sched,
          Correction     => Correction_Unused,
          Timestamp      => Timestamp,

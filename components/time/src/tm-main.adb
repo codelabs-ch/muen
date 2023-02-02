@@ -85,16 +85,14 @@ is
          use type Mutime.Timestamp_Type;
 
          Timestamp      : Mutime.Timestamp_Type;
-         TSC_Khz        : constant Musinfo.TSC_Tick_Rate_Khz_Type
+         TSC_kHz        : constant Musinfo.TSC_Tick_Rate_Khz_Type
            := Musinfo.Instance.TSC_Khz;
          TSC_Hz         : constant Mutime.Info.TSC_Tick_Rate_Hz_Type
-           := TSC_Khz * 1000;
-         TSC_Mhz        : constant Interfaces.Unsigned_64
-           := TSC_Khz  / 1000;
+           := TSC_kHz * 1000;
          Microsecs_Boot : Interfaces.Unsigned_64;
       begin
          Timestamp := Mutime.Time_Of (Date_Time => Date_Time);
-         Microsecs_Boot := TSC_Value / TSC_Mhz;
+         Microsecs_Boot := (TSC_Value / TSC_kHz) * 1000;
 
          Timestamp := Timestamp - Microsecs_Boot;
 

@@ -482,16 +482,16 @@ package body Cspec.Utils.Test_Data.Tests is
         & "        );";
       Chan_Rdr : constant String := ASCII.LF
         & "   Input_Element_Kind  : constant Channel_Kind := Channel_Reader;";
+      Chan_Wrt : constant String := ASCII.LF
+         & "   Input_Element_Kind  : constant Channel_Kind := Channel_Writer;";
 
       Ref1 : constant String :=
         "   Input_Address_Base  : constant := 16#f000#;" & ASCII.LF
         & "   Input_Element_Size  : constant := 16#1000#;" & ASCII.LF
         & "   Input_Element_Count : constant := ";
-      Ref2 : constant String := Chan_Rdr & ASCII.LF
+      Ref2 : constant String :=  ASCII.LF
         & "   Input_Vector_Base   : constant := 16;";
       Ref3 : constant String :=  ASCII.LF
-        & "   Input_Element_Kind  : constant Channel_Kind := Channel_Writer;"
-        & ASCII.LF
         & "   Input_Event_Base    : constant := 32;";
    begin
       Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
@@ -526,13 +526,54 @@ package body Cspec.Utils.Test_Data.Tests is
               Message   => "String mismatch (1):"
                  & To_Channel_Array_Str (Arr => Arr));
 
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Arr,
+         Name  => "vectorBase",
+         Value => "16");
+      Assert (Condition => To_Channel_Array_Str (Arr => Arr)
+                 = Ref1 & "0;" & ASCII.LF
+                 & "   Input_Element_Kind  : constant Channel_Kind := Channel_None;"
+                 & Ref2 & Names1 & ASCII.LF & "        );",
+              Message   => "String mismatch (2):"
+                 & To_Channel_Array_Str (Arr => Arr));
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Arr,
+         Name  => "eventBase",
+         Value => "32");
+      declare
+         Dummy : Unbounded_String;
+      begin
+         Dummy := To_Unbounded_String (To_Channel_Array_Str (Arr => Arr));
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+      exception
+         when E : Attribute_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Empty channel array specifies 'eventBase' and "
+                       & "'vectorBase' attributes, which is invalid",
+                    Message   => "Exception mismatch");
+      end;
+
+      DOM.Core.Elements.Remove_Attribute
+        (Elem => Arr,
+         name => "vectorBase");
+      Assert (Condition => To_Channel_Array_Str (Arr => Arr)
+                 = Ref1 & "0;" & ASCII.LF
+                 & "   Input_Element_Kind  : constant Channel_Kind := Channel_None;"
+                 & Ref3 & Names1 & ASCII.LF & "        );",
+              Message   => "String mismatch (3):"
+                 & To_Channel_Array_Str (Arr => Arr));
+
+      DOM.Core.Elements.Remove_Attribute
+        (Elem => Arr,
+          name => "eventBase");
       Node := DOM.Core.Nodes.Append_Child
         (N         => Arr,
          New_Child => Node);
-
       Assert (Condition => To_Channel_Array_Str (Arr => Arr)
                  = Ref1 & "1;" & Chan_Rdr & Names1 & Names2,
-              Message   => "String mismatch (2):"
+              Message   => "String mismatch (4):"
                  & To_Channel_Array_Str (Arr => Arr));
 
       DOM.Core.Elements.Set_Attribute
@@ -540,10 +581,10 @@ package body Cspec.Utils.Test_Data.Tests is
          Name  => "vectorBase",
          Value => "16");
       Assert (Condition => To_Channel_Array_Str (Arr => Arr)
-                 = Ref1 & "1;" & Ref2 & Names1 & Names2,
-              Message   => "String mismatch (3):"
+                 = Ref1 & "1;" & Chan_Rdr & Ref2 & Names1 & Names2,
+              Message   => "String mismatch (5):"
                  & To_Channel_Array_Str (Arr => Arr)
-                 & Ref1 & "1;" & Ref2 & Names1 & Names2);
+                 & Ref1 & "1;" & Chan_Rdr & Ref2 & Names1 & Names2);
 
       DOM.Core.Elements.Remove_Attribute
         (Elem => Arr,
@@ -567,8 +608,8 @@ package body Cspec.Utils.Test_Data.Tests is
          Value => "32");
 
       Assert (Condition => To_Channel_Array_Str (Arr => Arr)
-                 = Ref1 & "1;" & Ref3 & Names1 & Names2,
-              Message   => "String mismatch (3):"
+                 = Ref1 & "1;" & Chan_Wrt & Ref3 & Names1 & Names2,
+              Message   => "String mismatch (6):"
                  & To_Channel_Array_Str (Arr => Arr));
 
 --  begin read only

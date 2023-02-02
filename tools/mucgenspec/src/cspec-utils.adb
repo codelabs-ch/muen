@@ -369,6 +369,41 @@ is
          --  Return string representation of writer attribute.
          function To_Writer_Str return Unbounded_String;
 
+         --  Return string representation of reader or writer attribute in case
+         --  the array is empty
+         function To_Reader_Or_Writer_Str return Unbounded_String;
+
+         -------------------------------------------------------------------
+
+         function To_Reader_Or_Writer_Str return Unbounded_String
+         is
+            Event_Base : constant Unbounded_String
+               := U (DOM.Core.Elements.Get_Attribute
+                       (Elem => Arr,
+                        Name => "eventBase"));
+            Vector_Base : constant Unbounded_String
+               := U (DOM.Core.Elements.Get_Attribute
+                       (Elem => Arr,
+                        Name => "vectorBase"));
+            Res : Unbounded_String;
+         begin
+            if Event_Base /= Null_Unbounded_String
+               and Vector_Base /= Null_Unbounded_String
+            then
+               raise Attribute_Error with "Empty channel array specifies "
+                  & "'eventBase' and 'vectorBase' attributes, which is invalid";
+            elsif Event_Base /= Null_Unbounded_String then
+               Res := ASCII.LF &
+                  I & Logical & "_Event_Base    : constant := "
+                  & Event_Base & ";";
+            elsif  Vector_Base /= Null_Unbounded_String then
+               Res := ASCII.LF &
+                  I & Logical & "_Vector_Base   : constant := "
+                  & Vector_Base & ";";
+            end if;
+            return Res;
+         end To_Reader_Or_Writer_Str;
+
          -------------------------------------------------------------------
 
          function To_Reader_Str return Unbounded_String
@@ -410,7 +445,7 @@ is
          case Kind is
             when Reader => return Res & To_Reader_Str;
             when Writer => return Res & To_Writer_Str;
-            when None   => return Res;
+            when None   => return Res & To_Reader_Or_Writer_Str;
          end case;
       end To_Reader_Writer_Str;
 

@@ -579,10 +579,25 @@ is
 
    begin
       --  Check if both have a log-entry (abort otherwise).
-      if not Nodes_Backtrace_Log.Contains (Key => Node) or
-         not Nodes_Backtrace_Log.Contains (Key => Parent)
-      then
-         return;
+      if not Nodes_Backtrace_Log.Contains (Key => Node) then
+         Nodes_Backtrace_Log.Insert
+            (Key      => Node,
+             New_Item =>
+                (Self                  => Node,
+                 Origin_Of_Node        => Null_Origin_Info,
+                 Template_Backtrace    => Null_Actions_Ref,
+                 Conditional_Backtrace => Null_Actions_Ref,
+                 Amend_Backtrace       => Null_Ref_Index));
+      end if;
+      if not Nodes_Backtrace_Log.Contains (Key => Parent) then
+         Nodes_Backtrace_Log.Insert
+            (Key      => Parent,
+             New_Item =>
+                (Self                  => Parent,
+                 Origin_Of_Node        => Null_Origin_Info,
+                 Template_Backtrace    => Null_Actions_Ref,
+                 Conditional_Backtrace => Null_Actions_Ref,
+                 Amend_Backtrace       => Null_Ref_Index));
       end if;
 
       declare
@@ -591,20 +606,25 @@ is
          Parent_Backtrace : Node_Backtrace_Type
             renames Nodes_Backtrace_Log (Parent);
       begin
-
          --  If Node has some amend transaction in its history:
-         --  Abort, because the history of Node must be written before amend
-         --  is evaluated (no transaction can happen afterwards).
-         if Node_Backtrace.Amend_Backtrace /= Null_Ref_Index then
-            return;
+         --  A new amend coming from Parent must be a mistake because amend
+         --  nodes are not allowed to contain amend nodes.
+         if Parent_Backtrace.Amend_Backtrace /= Null_Ref_Index then
+            if Node_Backtrace.Amend_Backtrace /= Null_Ref_Index and
+               Node_Backtrace.Amend_Backtrace /= Parent_Backtrace.Amend_Backtrace
+            then
+               raise Muxml.Validation_Error with
+                  "Merge_Parent_Backtrace_Info cannot log amend-info for node '"
+                  & Get_Xpath (Node => Node)
+                  & "' because its log already contains a different amend-info";
+            end if;
+            Node_Backtrace.Amend_Backtrace := Parent_Backtrace.Amend_Backtrace;
          end if;
 
          Amend_Array (Ref      => Node_Backtrace.Template_Backtrace,
                       New_Data => Parent_Backtrace.Template_Backtrace);
          Amend_Array (Ref      => Node_Backtrace.Conditional_Backtrace,
                       New_Data => Parent_Backtrace.Conditional_Backtrace);
-
-         Node_Backtrace.Amend_Backtrace := Parent_Backtrace.Amend_Backtrace;
       end;
    end Merge_Parent_Backtrace_Info;
 

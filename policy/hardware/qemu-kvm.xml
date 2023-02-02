@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- ==========================================
-     Generated with mugenhwcfg (commit v0.7)
-     Linux kernel version: 5.10.0-19-amd64
+     Generated with mugenhwcfg (commit v0.7.1)
+     Linux kernel version: 5.10.0-21-amd64
      Distribution: Debian GNU/Linux 11 (bullseye)
      Product information:
        Vendor: QEMU
@@ -13,20 +13,19 @@
        Version: 1.14.0-2
        Date: 04/01/2014
      Log:
-       * WARNING *: Skipping invalid IRQ resource for device 0000:00:03.0: None
-       * WARNING *: Skipping invalid IRQ resource for device 0000:00:04.0: None
-       * WARNING *: Skipping invalid IRQ resource for device 0000:00:1f.2: None
-       * WARNING *: Skipping invalid IRQ resource for device 0000:00:1f.3: None
-       * WARNING *: Skipping invalid IRQ resource for device 0000:01:00.0: None
+       * WARNING *: Adding fake irq 16 for device with MSIs: 0000:00:03.0
+       * WARNING *: Adding fake irq 16 for device with MSIs: 0000:00:1f.2
+       * WARNING *: Adding fake irq 16 for device with MSIs: 0000:01:00.0
        * WARNING *: Board information in output description could not be obtained:
        [Errno 2] No such file or directory: '/sys/devices/virtual/dmi/id/board_vendor'
        * MANUAL  *: Changed name of ethernet_controller_1 to ethernet_controller_2
        * MANUAL  *: Changed name of ethernet_controller_2 to ethernet_controller_1
+       * MANUAL  *: Fake legacy IRQ for device 00:04.0
      ========================================== -->
 
 
 <hardware>
-  <processor cpuCores="2" speed="2112" vmxTimerRate="5">
+  <processor cpuCores="2" speed="2112002" vmxTimerRate="5">
     <cpu apicId="0"/>
     <cpu apicId="2"/>
     <cpuid eax="16#0000_000d#" ebx="16#756e_6547#" ecx="16#6c65_746e#" edx="16#4965_6e69#" leaf="16#0000_0000#" subleaf="16#00#"/>
@@ -157,12 +156,23 @@
         <identification classcode="16#0c03#" deviceId="16#000d#" revisionId="16#01#" vendorId="16#1b36#"/>
         <iommuGroup id="3"/>
       </pci>
-      <irq name="irq1" number="22"> <!-- fake legacy IRQ number -->
-       <msi name="msi1"/>
-       <msi name="msi2"/>
-       <msi name="msi3"/>
-       <msi name="msi4"/>
-       <msi name="msi5"/>
+      <irq name="irq1" number="16">
+        <msi name="msi1"/>
+        <msi name="msi2"/>
+        <msi name="msi3"/>
+        <msi name="msi4"/>
+        <msi name="msi5"/>
+        <msi name="msi6"/>
+        <msi name="msi7"/>
+        <msi name="msi8"/>
+        <msi name="msi9"/>
+        <msi name="msi10"/>
+        <msi name="msi11"/>
+        <msi name="msi12"/>
+        <msi name="msi13"/>
+        <msi name="msi14"/>
+        <msi name="msi15"/>
+        <msi name="msi16"/>
       </irq>
       <memory caching="UC" name="mem1" physicalAddress="16#fea5_0000#" size="16#4000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#b001_8000#" size="16#1000#"/>
@@ -193,8 +203,8 @@
         <identification classcode="16#0106#" deviceId="16#2922#" revisionId="16#02#" vendorId="16#8086#"/>
         <iommuGroup id="5"/>
       </pci>
-      <irq name="irq1" number="16"> <!-- fake legacy IRQ number -->
-       <msi name="msi1"/>
+      <irq name="irq1" number="16">
+        <msi name="msi1"/>
       </irq>
       <memory caching="UC" name="mem1" physicalAddress="16#fea5_6000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#b00f_a000#" size="16#1000#"/>
@@ -215,10 +225,10 @@
         <identification classcode="16#0200#" deviceId="16#1041#" revisionId="16#01#" vendorId="16#1af4#"/>
         <iommuGroup id="2"/>
       </pci>
-      <irq name="irq1" number="18"> <!-- fake legacy IRQ number -->
-       <msi name="msi1"/>
-       <msi name="msi2"/>
-       <msi name="msi3"/>
+      <irq name="irq1" number="16">
+        <msi name="msi1"/>
+        <msi name="msi2"/>
+        <msi name="msi3"/>
       </irq>
       <memory caching="UC" name="mem1" physicalAddress="16#fe84_0000#" size="16#1000#"/>
       <memory caching="UC" name="mem2" physicalAddress="16#fe00_0000#" size="16#4000#"/>

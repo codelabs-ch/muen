@@ -24,7 +24,8 @@ with Musinfo.Instance;
 package Time
 is
 
-   --  Initialize time. Halts the CPU if the sinfo data is not valid.
+   --  Initialize time. Halts the CPU if the sinfo data is not valid, and waits
+   --  for the absolute time to be published by the time server.
    procedure Initialize
    with
       Global  => (Input  => (Musinfo.Instance.State, Mutime.Info.State),

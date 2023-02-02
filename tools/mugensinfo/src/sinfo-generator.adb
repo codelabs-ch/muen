@@ -338,10 +338,8 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      use type Interfaces.Unsigned_64;
-
       TSC_Khz  : constant Interfaces.Unsigned_64
-        := 1000 * Interfaces.Unsigned_64'Value
+        := Interfaces.Unsigned_64'Value
           (Muxml.Utils.Get_Attribute
              (Doc   => Policy.Doc,
               XPath => "/system/hardware/processor",

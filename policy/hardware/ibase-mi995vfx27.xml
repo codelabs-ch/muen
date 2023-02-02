@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- ==========================================
-     Generated with mugenhwcfg (commit v0.7)
-     Linux kernel version: 5.10.0-19-amd64
+     Generated with mugenhwcfg (commit v0.7.1)
+     Linux kernel version: 5.10.0-21-amd64
      Distribution: Debian GNU/Linux 11 (bullseye)
      Product information:
        Vendor: 
@@ -15,11 +15,13 @@
        Vendor: American Megatrends Inc.
        Version: 5.13
        Date: 06/13/2019
+     Log:
+       * WARNING *: Adding fake irq 16 for device with MSIs: 0000:00:14.0
      ========================================== -->
 
 
 <hardware>
-  <processor cpuCores="6" speed="2712" vmxTimerRate="7">
+  <processor cpuCores="6" speed="2712023" vmxTimerRate="7">
     <cpu apicId="0"/>
     <cpu apicId="2"/>
     <cpu apicId="4"/>
@@ -206,8 +208,15 @@
         <identification classcode="16#0c03#" deviceId="16#a36d#" revisionId="16#10#" vendorId="16#8086#"/>
         <iommuGroup id="5"/>
       </pci>
-      <irq name="irq1" number="22"> <!-- FAKE IRQ -->
+      <irq name="irq1" number="16">
         <msi name="msi1"/>
+        <msi name="msi2"/>
+        <msi name="msi3"/>
+        <msi name="msi4"/>
+        <msi name="msi5"/>
+        <msi name="msi6"/>
+        <msi name="msi7"/>
+        <msi name="msi8"/>
       </irq>
       <memory caching="UC" name="mem1" physicalAddress="16#a142_0000#" size="16#0001_0000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e00a_0000#" size="16#1000#"/>

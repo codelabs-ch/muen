@@ -44,7 +44,8 @@ is
    is
       Now : constant Word64 := CPU.RDTSC;
    begin
-      Delay_Until (Deadline => Now + Word64 (US) * Skp.Kernel.TSC_Mhz);
+      Delay_Until (Deadline => Now + ((Word64 (US)
+                   * Skp.Kernel.TSC_Khz) / 1000));
    end U_Delay;
 
 end SK.Delays;

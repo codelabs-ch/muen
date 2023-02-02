@@ -47,6 +47,23 @@ package body Mutime.Info.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Get_Current_Time_UTC (Gnattest_T : in out Test);
+   procedure Test_Get_Current_Time_UTC_cc9cb1 (Gnattest_T : in out Test) renames Test_Get_Current_Time_UTC;
+--  id:2.2/cc9cb167283d7f27/Get_Current_Time_UTC/1/0/
+   procedure Test_Get_Current_Time_UTC (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Assert (Condition => True,
+              Message   => "Tested with Test_1_Get_Current_Time");
+--  begin read only
+   end Test_Get_Current_Time_UTC;
+--  end read only
+
+
+--  begin read only
    procedure Test_2_Get_Current_Time (Gnattest_T : in out Test);
    procedure Test_Get_Current_Time_7024f2 (Gnattest_T : in out Test) renames Test_2_Get_Current_Time;
 --  id:2.2/7024f2e671a6d9a3/Get_Current_Time/0/0/
@@ -128,8 +145,8 @@ package body Mutime.Info.Test_Data.Tests is
 
 --  begin read only
    procedure Test_1_Get_Current_Time (Gnattest_T : in out Test);
-   procedure Test_Get_Current_Time_cea631 (Gnattest_T : in out Test) renames Test_1_Get_Current_Time;
---  id:2.2/cea6319c99ce0b67/Get_Current_Time/1/0/
+   procedure Test_Get_Current_Time_41db59 (Gnattest_T : in out Test) renames Test_1_Get_Current_Time;
+--  id:2.2/41db598ec5218d5b/Get_Current_Time/1/0/
    procedure Test_1_Get_Current_Time (Gnattest_T : in out Test) is
 --  end read only
 
@@ -144,18 +161,30 @@ package body Mutime.Info.Test_Data.Tests is
       T  : Time_Info_Type :=
         (TSC_Time_Base      => Epoch_Timestamp,
          TSC_Tick_Rate_Hz   => 1 * 10 ** 9,
-         Timezone_Microsecs => Tz);
+         Timezone_Microsecs => 0);
       C  : Integer_62;
    begin
-      Get_Current_Time (TI             => T,
-                        Schedule_Ticks => Ti,
-                        Correction     => C,
-                        Timestamp      => Ts);
+      Get_Current_Time (TI              => T,
+                        Schedule_Ticks  => Ti,
+                        Timezone_Offset => Tz,
+                        Correction      => C,
+                        Timestamp       => Ts);
 
       Assert (Condition => C = Tz + (Ti / 1000),
               Message   => "Correction mismatch");
       Assert (Condition => Ts = Epoch_Timestamp + C,
               Message   => "Timestamp mismatch");
+
+      Get_Current_Time (TI              => T,
+                        Schedule_Ticks  => Ti,
+                        Timezone_Offset => 0,
+                        Correction      => C,
+                        Timestamp       => Ts);
+
+      Assert (Condition => C = (Ti / 1000),
+              Message   => "Correction mismatch (UTC)");
+      Assert (Condition => Ts = Epoch_Timestamp + C,
+              Message   => "Timestamp mismatch (UTC)");
 --  begin read only
    end Test_1_Get_Current_Time;
 --  end read only

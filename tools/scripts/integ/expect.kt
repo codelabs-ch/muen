@@ -20,7 +20,7 @@ serial.out;muen-smp: Setup timer for CPU#0:.*
 serial.out;muen-smp: Setup timer for CPU#1:.*
 serial.out;muen-smp: Setup timer for CPU#2:.*
 serial.out;smp: Brought up 1 node, 3 CPUs
-serial.out;smpboot: Total of 3 processors activated (13800.00 BogoMIPS)
+serial.out;smpboot: Total of 3 processors activated (13800.09 BogoMIPS)
 serial.out;e1000e 0000:00:19.0 eth0: MAC: 10, PHY: 11, PBA No: FFFFFF-0FF
 serial.out;e1000e 0000:00:1f.0 eth1: MAC: 3, PHY: 8, PBA No: FFFFFF-0FF
 serial.out;00:19.0 Ethernet controller: Intel Corporation 82579LM Gigabit Network Connection

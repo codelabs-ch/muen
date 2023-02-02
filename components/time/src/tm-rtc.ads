@@ -35,10 +35,13 @@ is
       Status_B : Interfaces.Unsigned_8;
    end record;
 
-   --  Read time from CMOS RTC.
-   procedure Read_Time (T : out Time_Type)
+   --  Read time from CMOS RTC. TSC designates the tick count when the time was
+   --  read.
+   procedure Read_Time
+     (Time : out Time_Type;
+      TSC  : out Interfaces.Unsigned_64)
    with
       Global  => (In_Out => X86_64.State),
-      Depends => (T => X86_64.State, X86_64.State =>+ null);
+      Depends => ((Time, TSC) => X86_64.State, X86_64.State =>+ null);
 
 end Tm.Rtc;

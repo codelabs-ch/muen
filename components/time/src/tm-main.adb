@@ -48,8 +48,9 @@ is
 
       Mucontrol.Status.Instance.Initialize;
 
-      Rtc.Read_Time (T => Rtc_Time);
-      TSC_Value := SK.CPU.RDTSC;
+      Rtc.Read_Time
+        (Time => Rtc_Time,
+         TSC  => TSC_Value);
 
       Debuglog.Client.Put_Line
         (Item => "RTC date/time: "

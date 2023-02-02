@@ -17,6 +17,7 @@
 --
 
 with SK.IO;
+with SK.CPU;
 with SK.Bitops;
 
 with Cmos_Rtc;
@@ -28,7 +29,9 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Read_Time (T : out Time_Type)
+   procedure Read_Time
+     (Time : out Time_Type;
+      TSC  : out Interfaces.Unsigned_64)
    is
       Status_A : SK.Byte := 16#80#;
    begin
@@ -46,41 +49,43 @@ is
                      Value => Status_A);
       end loop;
 
+      TSC := SK.CPU.RDTSC;
+
       --  Read values from RTC.
 
       SK.IO.Outb (Port  => Cmos_Rtc.Port_Reg_Select,
                   Value => Cmos_Rtc.Reg_Seconds);
       SK.IO.Inb  (Port  => Cmos_Rtc.Port_Data,
-                  Value => SK.Byte (T.Second));
+                  Value => SK.Byte (Time.Second));
       SK.IO.Outb (Port  => Cmos_Rtc.Port_Reg_Select,
                   Value => Cmos_Rtc.Reg_Minutes);
       SK.IO.Inb  (Port  => Cmos_Rtc.Port_Data,
-                  Value => SK.Byte (T.Minute));
+                  Value => SK.Byte (Time.Minute));
       SK.IO.Outb (Port  => Cmos_Rtc.Port_Reg_Select,
                   Value => Cmos_Rtc.Reg_Hours);
       SK.IO.Inb  (Port  => Cmos_Rtc.Port_Data,
-                  Value => SK.Byte (T.Hour));
+                  Value => SK.Byte (Time.Hour));
       SK.IO.Outb (Port  => Cmos_Rtc.Port_Reg_Select,
                   Value => Cmos_Rtc.Reg_Day_Of_Month);
       SK.IO.Inb  (Port  => Cmos_Rtc.Port_Data,
-                  Value => SK.Byte (T.Day));
+                  Value => SK.Byte (Time.Day));
       SK.IO.Outb (Port  => Cmos_Rtc.Port_Reg_Select,
                   Value => Cmos_Rtc.Reg_Month);
       SK.IO.Inb  (Port  => Cmos_Rtc.Port_Data,
-                  Value => SK.Byte (T.Month));
+                  Value => SK.Byte (Time.Month));
       SK.IO.Outb (Port  => Cmos_Rtc.Port_Reg_Select,
                   Value => Cmos_Rtc.Reg_Year);
       SK.IO.Inb  (Port  => Cmos_Rtc.Port_Data,
-                  Value => SK.Byte (T.Year));
+                  Value => SK.Byte (Time.Year));
       SK.IO.Outb (Port  => Cmos_Rtc.Port_Reg_Select,
                   Value => Cmos_Rtc.Reg_Century);
       SK.IO.Inb  (Port  => Cmos_Rtc.Port_Data,
-                  Value => SK.Byte (T.Century));
+                  Value => SK.Byte (Time.Century));
 
       SK.IO.Outb (Port  => Cmos_Rtc.Port_Reg_Select,
                   Value => Cmos_Rtc.Reg_Status_B);
       SK.IO.Inb  (Port  => Cmos_Rtc.Port_Data,
-                  Value => SK.Byte (T.Status_B));
+                  Value => SK.Byte (Time.Status_B));
    end Read_Time;
 
 end Tm.Rtc;

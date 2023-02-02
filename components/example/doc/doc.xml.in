@@ -1,6 +1,6 @@
 <doc name="Muen Component Specification">
  <author>Adrian-Ken Rueegsegger, Reto Buerki</author>
- <version>0.7</version>
+ <version>0.7.1</version>
 
  <latex_preamble>
   \usepackage{titlepic}

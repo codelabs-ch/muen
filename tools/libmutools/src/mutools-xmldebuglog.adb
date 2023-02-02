@@ -321,6 +321,22 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Clear_Backtrace_Log
+   is
+   begin
+      Nodes_Backtrace_Log_Type.Clear (Container => Nodes_Backtrace_Log);
+   end Clear_Backtrace_Log;
+
+   -------------------------------------------------------------------------
+
+   procedure Clear_Transaction_Log
+   is
+   begin
+      Transaction_Log_Type.Clear (Container => Transaction_Log);
+   end Clear_Transaction_Log;
+
+   -------------------------------------------------------------------------
+
    procedure Copy_Log_Entry
       (Old_Node : DOM.Core.Node;
        New_Node : DOM.Core.Node;
@@ -666,6 +682,24 @@ is
              Only_Element_Nodes => True);
       end loop;
    end Move_Origin_To_Log;
+
+   -------------------------------------------------------------------------
+
+   function Node_Backtrace_Log_To_String return String
+   is
+      use Ada.Strings.Unbounded;
+      Output : Unbounded_String;
+      Node   : DOM.Core.Node;
+   begin
+      for Cursor in Nodes_Backtrace_Log.Iterate loop
+         Node := Nodes_Backtrace_Log_Type.Key (Cursor);
+         Output := Output
+            & " ("
+            & Node_Backtrace_To_String (Node => Node)
+            & ")";
+      end loop;
+      return To_String (Output);
+   end Node_Backtrace_Log_To_String;
 
    -------------------------------------------------------------------------
 

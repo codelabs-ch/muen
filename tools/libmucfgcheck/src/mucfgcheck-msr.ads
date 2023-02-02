@@ -46,7 +46,7 @@ is
    --D \item \texttt{MSR\_PKG\_ENERGY\_STATUS}
    --D \item \texttt{MSR\_DRAM\_ENERGY\_STATUS}
    --D \item \texttt{MSR\_PP1\_ENERGY\_STATUS}
-   --D \item \texttt{MSR\_CONFIG\_TDP_CONTROL}
+   --D \item \texttt{MSR\_CONFIG\_TDP\_CONTROL}
    --D \item \texttt{IA32\_PM\_ENABLE}
    --D \item \texttt{IA32\_HWP\_CAPABILITIES}
    --D \item \texttt{IA32\_HWP\_REQUEST}

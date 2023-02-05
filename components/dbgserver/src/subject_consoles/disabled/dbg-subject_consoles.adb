@@ -55,6 +55,10 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure List (Queue : in out Byte_Queue.Queue_Type) is null;
+
+   -------------------------------------------------------------------------
+
    procedure Put (Data : Interfaces.Unsigned_8) is null;
 
 end Dbg.Subject_Consoles;

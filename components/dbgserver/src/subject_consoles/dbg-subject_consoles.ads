@@ -18,6 +18,8 @@
 
 with Interfaces;
 
+with Dbg.Byte_Queue;
+
 package Dbg.Subject_Consoles
 is
 
@@ -45,5 +47,8 @@ is
    --  Forward given data to the currently attached console. If no console is
    --  attached, then the data is silently ignored.
    procedure Put (Data : Interfaces.Unsigned_8);
+
+   --  Output listing of forwarding consoles to given queue.
+   procedure List (Queue : in out Byte_Queue.Queue_Type);
 
 end Dbg.Subject_Consoles;

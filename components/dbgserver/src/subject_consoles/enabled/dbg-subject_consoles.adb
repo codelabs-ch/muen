@@ -22,8 +22,10 @@ with SK.Hypercall;
 
 with Dbgserver_Component.Channel_Arrays;
 
+with Dbg.Byte_Queue.Format;
 with Dbg.Subject_Consoles.Stream.Reader;
 with Dbg.Subject_Consoles.Stream.Writer_Instance;
+with Dbg.Subject_List;
 
 package body Dbg.Subject_Consoles
 is
@@ -39,6 +41,11 @@ is
      ((Cspecs.Subject_Consoles_In_Element_Count /=
           Cspecs.Subject_Consoles_Out_Element_Count),
       "Subject Console input and output channel count mismatch");
+
+   pragma Compile_Time_Error
+     ((Cspecs.Subject_Consoles_In_Element_Count /=
+         Subject_List.Subject_Console_Subject_Names'Last),
+      "Subject Console input and subject name count mismatch");
 
    type Extended_Subject_Console_Range is new Natural range
      0 .. Cspecs.Subject_Consoles_In_Element_Count;
@@ -154,6 +161,37 @@ is
 
       Attached_Console := No_Console;
    end Init;
+
+   -------------------------------------------------------------------------
+
+   procedure List (Queue : in out Byte_Queue.Queue_Type)
+   is
+      Header : constant String := "|        ID | Console";
+      H_Rule : constant String := "|-----------+--------------------";
+   begin
+      Byte_Queue.Format.Append_Line
+        (Queue => Queue,
+         Item  => Header);
+      Byte_Queue.Format.Append_Line
+        (Queue => Queue,
+         Item  => H_Rule);
+
+      for I in Subject_List.Subject_Console_Subject_Names'Range loop
+         Byte_Queue.Format.Append_Character
+           (Queue => Queue,
+            Item  => '|');
+         Byte_Queue.Format.Append_Natural
+           (Queue      => Queue,
+            Item       => I,
+            Left_Align => False);
+         Byte_Queue.Format.Append_String
+           (Queue => Queue,
+            Item  => " | ");
+         Byte_Queue.Format.Append_Line
+           (Queue => Queue,
+            Item  => String (Subject_List.Subject_Console_Subject_Names (I)));
+      end loop;
+   end List;
 
    -------------------------------------------------------------------------
 

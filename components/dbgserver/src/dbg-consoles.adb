@@ -145,6 +145,11 @@ is
           Command     => Command_Type'(Kind => List_Events),
           Has_Param   => False,
           Description => To_Cmd_Descr ("List events")),
+         (Cmd_Str     => "lf",
+          Cmd_Len     => 2,
+          Command     => Command_Type'(Kind => List_Forward_Consoles),
+          Has_Param   => False,
+          Description => To_Cmd_Descr ("List forward consoles")),
          (Cmd_Str     => "ls",
           Cmd_Len     => 2,
           Command     => Command_Type'(Kind => List_Subjects),
@@ -709,6 +714,8 @@ is
          when List_Events =>
             List_Events (Queue   => Console.Output_Queue,
                          Success => Success);
+         when List_Forward_Consoles =>
+            Subject_Consoles.List (Queue => Console.Output_Queue);
          when List_Subjects =>
             List_Subjects (Queue => Console.Output_Queue);
          when Stream_Reset =>

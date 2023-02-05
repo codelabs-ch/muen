@@ -66,6 +66,7 @@ private
       Failure,
       List_Channels,
       List_Events,
+      List_Forward_Consoles,
       List_Subjects,
       Log_All,
       Log_None,

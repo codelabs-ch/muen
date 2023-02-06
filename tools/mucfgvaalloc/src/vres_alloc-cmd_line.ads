@@ -1,6 +1,5 @@
 --
---  Copyright (C) 2016  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2023 secunet Security Networks AG
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -20,31 +19,25 @@ with Ada.Strings.Unbounded;
 
 with GNAT.Command_Line;
 
-package Cspec.Cmd_Line
+package Vres_Alloc.Cmd_Line
 is
-
    --  Init command line, use given tool description in usage output.
    procedure Init (Description : String);
 
-   --  Return path to input component specification.
-   function Get_Input_Spec return String;
+   --  Return filename of root of component specification
+   function Get_Policy_Joined return String;
 
-   --  Return output directory.
-   function Get_Output_Dir return String;
-
-   --  Return Ada package name. Returns empty string if no package name has
-   --  been given on the command line.
-   function Get_Package_Name return String;
+   --  Return filename for output specificaton
+   function Get_Output_Filename return String;
 
    Invalid_Cmd_Line : exception;
 
 private
 
-   Output_Dir   : Ada.Strings.Unbounded.Unbounded_String;
-   Input_Spec   : Ada.Strings.Unbounded.Unbounded_String;
-   Package_Name : Ada.Strings.Unbounded.Unbounded_String;
+   Policy_Joined    : Ada.Strings.Unbounded.Unbounded_String;
+   Output_Filename  : Ada.Strings.Unbounded.Unbounded_String;
 
    Parser : GNAT.Command_Line.Opt_Parser
      := GNAT.Command_Line.Command_Line_Parser;
 
-end Cspec.Cmd_Line;
+end Vres_Alloc.Cmd_Line;

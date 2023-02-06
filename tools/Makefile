@@ -19,6 +19,8 @@ TOOLS =            \
 	mucbinsplit    \
 	mucfgalloc     \
 	mucfgcjoin     \
+	mucfgcvaalloc  \
+	mucfgvaalloc  \
 	mucfgexpand    \
 	mucfgmemhashes \
 	mucfgmerge     \

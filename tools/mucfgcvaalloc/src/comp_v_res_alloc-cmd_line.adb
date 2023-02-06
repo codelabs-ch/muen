@@ -1,6 +1,5 @@
 --
---  Copyright (C) 2016  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2023 secunet Security Networks AG
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -20,7 +19,7 @@ with GNAT.Strings;
 
 with Mutools.Cmd_Line;
 
-package body Cspec.Cmd_Line
+package body Comp_V_Res_Alloc.Cmd_Line
 is
 
    function S
@@ -35,18 +34,27 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Package_Name return String
-   is (S (Package_Name));
+   function Get_Include_Path return String
+   is
+   begin
+      return S (Include_Path);
+   end Get_Include_Path;
 
    -------------------------------------------------------------------------
 
    function Get_Input_Spec return String
-   is (S (Input_Spec));
+   is
+   begin
+      return S (Input_Spec);
+   end Get_Input_Spec;
 
    -------------------------------------------------------------------------
 
-   function Get_Output_Dir return String
-   is (S (Output_Dir));
+   function Get_Output_Filename return String
+   is
+   begin
+      return S (Output_Filename);
+   end Get_Output_Filename;
 
    -------------------------------------------------------------------------
 
@@ -54,62 +62,55 @@ is
    is
       use Ada.Strings.Unbounded;
 
-      Cmdline   : Mutools.Cmd_Line.Config_Type;
-      In_Spec   : aliased GNAT.Strings.String_Access;
-      Package_N : aliased GNAT.Strings.String_Access;
+      Cmdline     : Mutools.Cmd_Line.Config_Type;
+      Include_Dir : aliased GNAT.Strings.String_Access;
+
    begin
       GNAT.Command_Line.Set_Usage
         (Config => Cmdline.Data,
-         Usage  => "[options] <output_dir>",
+         Usage  => "[options] <input_spec_file> <output_file>",
          Help   => Description);
-      GNAT.Command_Line.Define_Switch
-        (Config      => Cmdline.Data,
-         Output      => In_Spec'Access,
-         Switch      => "-i:",
-         Long_Switch => "--input-spec:",
-         Help        => "Path to input component specification");
-      GNAT.Command_Line.Define_Switch
-        (Config      => Cmdline.Data,
-         Output      => Package_N'Access,
-         Switch      => "-p:",
-         Long_Switch => "--package-name:",
-         Help        => "Package name to use in Ada code");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Switch      => "-h",
          Long_Switch => "--help",
          Help        => "Display usage and exit");
+
+      GNAT.Command_Line.Define_Switch
+        (Config      => Cmdline.Data,
+         Output      => Include_Dir'Access,
+         Switch      => "-I:",
+         Long_Switch => "--include-path:",
+         Help        => "Colon-separated list of include paths");
+
       begin
          GNAT.Command_Line.Getopt
            (Config => Cmdline.Data,
             Parser => Parser);
-         if In_Spec'Length /= 0 then
-            Input_Spec := U (In_Spec.all);
-         end if;
-         if Package_N'Length /= 0 then
-            Package_Name := To_Unbounded_String (Package_N.all);
-         end if;
 
-         GNAT.Strings.Free (X => In_Spec);
-         GNAT.Strings.Free (X => Package_N);
+         if Include_Dir'Length /= 0 then
+            Include_Path := U (Include_Dir.all);
+         end if;
+         GNAT.Strings.Free (X => Include_Dir);
 
       exception
          when GNAT.Command_Line.Invalid_Switch |
-              GNAT.Command_Line.Exit_From_Command_Line =>
+           GNAT.Command_Line.Exit_From_Command_Line =>
             raise Invalid_Cmd_Line;
          when GNAT.Command_Line.Invalid_Parameter =>
             GNAT.Command_Line.Display_Help (Config => Cmdline.Data);
             raise Invalid_Cmd_Line;
       end;
 
-      Output_Dir := U (GNAT.Command_Line.Get_Argument (Parser => Parser));
+      Input_Spec := U (GNAT.Command_Line.Get_Argument (Parser => Parser));
+      Output_Filename := U (GNAT.Command_Line.Get_Argument (Parser => Parser));
 
-      if Output_Dir = Null_Unbounded_String
-        or Input_Spec = Null_Unbounded_String
+      if Input_Spec = Null_Unbounded_String
+        or Output_Filename = Null_Unbounded_String
       then
          GNAT.Command_Line.Display_Help (Config => Cmdline.Data);
          raise Invalid_Cmd_Line;
       end if;
    end Init;
 
-end Cspec.Cmd_Line;
+end Comp_V_Res_Alloc.Cmd_Line;

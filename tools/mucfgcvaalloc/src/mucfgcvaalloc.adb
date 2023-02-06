@@ -1,6 +1,5 @@
 --
---  Copyright (C) 2016  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2023 secunet Security Networks AG
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,37 +15,36 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Exceptions;
 with Ada.Command_Line;
+with Ada.Exceptions;
 
-with Mucfgcheck.Validation_Errors;
 with Mulog;
 with Muxml;
-with Mutools.System_Config;
+with Mutools.Utils;
+with Mucfgcheck.Validation_Errors;
 
-with Cspec.Utils;
-with Cspec.Cmd_Line;
+with Comp_V_Res_Alloc;
+with Comp_V_Res_Alloc.Cmd_Line;
 
-procedure Mucgenspec
+procedure Mucfgcvaalloc
 is
 begin
-   Cspec.Cmd_Line.Init
-     (Description => "Component logical resource constants generator");
-   Cspec.Run (Input_Spec       => Cspec.Cmd_Line.Get_Input_Spec,
-              Output_Directory => Cspec.Cmd_Line.Get_Output_Dir,
-              Package_Name     => Cspec.Cmd_Line.Get_Package_Name);
+   Comp_V_Res_Alloc.Cmd_Line.Init
+      (Description     => "Muen component virtual address allocator");
+   Comp_V_Res_Alloc.Run
+     (Input_Spec       => Comp_V_Res_Alloc.Cmd_Line.Get_Input_Spec,
+      Include_Path     => Comp_V_Res_Alloc.Cmd_Line.Get_Include_Path,
+      Output_File_Name => Comp_V_Res_Alloc.Cmd_Line.Get_Output_Filename);
 
 exception
-   when Cspec.Cmd_Line.Invalid_Cmd_Line =>
+   when Comp_V_Res_Alloc.Cmd_Line.Invalid_Cmd_Line =>
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : Muxml.XML_Input_Error
-      | Muxml.Validation_Error
-      | Mutools.System_Config.Not_Found
-      | Cspec.Component_Not_Found
-      | Cspec.Utils.Array_Error
-      | Cspec.Utils.Attribute_Error =>
+      | Mutools.Utils.File_Not_Found
+      | Muxml.Validation_Error =>
+      -- TODO mmmDEBUG: maybe add    Comp_V_Res_Alloc.Checks.Validation_Error
       Mulog.Log (Level => Mulog.Error,
-                 Msg   => "Spec generation failed, aborting");
+                 Msg   => "Atomatic allocation of virtual addresses failed, aborting");
       Mulog.Log (Level => Mulog.Error,
                  Msg   => Ada.Exceptions.Exception_Message (X => E));
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
@@ -62,4 +60,4 @@ exception
       Mulog.Log (Level => Mulog.Error,
                  Msg   => Ada.Exceptions.Exception_Information (X => E));
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
-end Mucgenspec;
+end Mucfgcvaalloc;

@@ -1,6 +1,5 @@
 --
---  Copyright (C) 2016  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2016  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2023 secunet Security Networks AG
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,23 +15,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package Cspec
+package Comp_V_Res_Alloc
 is
 
-   --  Start spec generation for given input component specification. XIncludes
-   --  are resolved using the specified include path.
-   --
-   --  If the output spec path is not nil, the processed XML data is written to
-   --  the given path.
-   --
-   --  If the package name is not nil, it will be used in the generated Ada
-   --  code instead of the component name declared in the input component
-   --  specification.
+   --  The main procedure (start allocation)
    procedure Run
      (Input_Spec       : String;
-      Output_Directory : String;
-      Package_Name     : String := "");
+      Include_Path     : String;
+      Output_File_Name : String);
 
-   Component_Not_Found : exception;
+   Validation_Error : exception;
 
-end Cspec;
+end Comp_V_Res_Alloc;

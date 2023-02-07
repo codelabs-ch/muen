@@ -633,8 +633,9 @@ is
       else
 
          --D @Item List => impl_scheduling_resched_sp_steps
-         --D If there is no active group, transition the active partition to
-         --D sleep state.
+         --D If there is no active group, put the scheduling partition to sleep
+         --D by transitioning the current subject to the HLT activity state,
+         --D see Intel SDM Vol. 3C, "24.4.2 Guest Non-Register State".
          Subjects.Set_Activity_State (ID    => Subject_ID,
                                       Value => Constants.GUEST_ACTIVITY_HLT);
          Scheduling_Partitions (Partition_ID).Sleeping := True;

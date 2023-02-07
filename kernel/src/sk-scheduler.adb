@@ -505,10 +505,12 @@ is
                  In_Out => (Global_Group_Activity_Indicator, Scheduling_Groups,
                             Scheduling_Partitions, Subjects.State))
    is
-      Partition_ID   : constant Policy.Scheduling_Partition_Range
-        := Current_Scheduling_Partition_ID;
-      Next_Group     : Policy.Extended_Scheduling_Group_Range;
-      Next_Group_Idx : Policy.Scheduling_Group_Index_Range;
+      Current_Subject : constant Skp.Global_Subject_ID_Type
+        := Get_Current_Subject_ID;
+      Partition_ID    : constant Policy.Scheduling_Partition_Range
+        := Policy.Get_Scheduling_Partition_ID (Subject_ID => Current_Subject);
+      Next_Group      : Policy.Extended_Scheduling_Group_Range;
+      Next_Group_Idx  : Policy.Scheduling_Group_Index_Range;
    begin
       --D @Item List => impl_scheduling_upd_sp_steps
       --D Update the timer list.
@@ -524,10 +526,11 @@ is
 
             --D @Item List => impl_scheduling_upd_sp_steps
             --D If an active scheduling group is present and the partition
-            --D is sleeping, transition the scheduling partition to the active
-            --D state.
+            --D was sleeping, wake up the scheduling partition by transitioning
+            --D the current subject to the ACTIVE activity state, see Intel SDM
+            --D Vol. 3C, "24.4.2 Guest Non-Register State".
             Subjects.Set_Activity_State
-              (ID    => Scheduling_Groups (Next_Group).Active_Subject,
+              (ID    => Current_Subject,
                Value => Constants.GUEST_ACTIVITY_ACTIVE);
             Scheduling_Partitions (Partition_ID).Sleeping := False;
          end if;
@@ -633,8 +636,9 @@ is
       else
 
          --D @Item List => impl_scheduling_resched_sp_steps
-         --D If there is no active group, transition the active partition to
-         --D sleep state.
+         --D If there is no active group, put the scheduling partition to sleep
+         --D by transitioning the current subject to the HLT activity state,
+         --D see Intel SDM Vol. 3C, "24.4.2 Guest Non-Register State".
          Subjects.Set_Activity_State (ID    => Subject_ID,
                                       Value => Constants.GUEST_ACTIVITY_HLT);
          Scheduling_Partitions (Partition_ID).Sleeping := True;

@@ -813,7 +813,7 @@ package body Mutools.Expressions.Test_Data.Tests is
       Mutools.Expressions.Test_Data.Initialize_Node_Access_Testing
          (Data        => Data,
           Node_Access => Node_Access);
-      Assert (Condition => -4 =  Evaluate_Integer
+      Assert (Condition => -4 = Evaluate_Integer
                  (Node        => Muxml.Utils.Get_Element
                      (Doc   => Data.Doc,
                       XPath => "/system/expressions/expression[@name='alias_expression_int']"),
@@ -1526,12 +1526,12 @@ package body Mutools.Expressions.Test_Data.Tests is
          begin
             Dummy :=  Ada.Strings.Unbounded.To_Unbounded_String
                (String_Expression
-                   (Backtrace => Backtrace,
+                   (Backtrace   => Backtrace,
                     Node_Access => Node_Access,
-                    Node   => Muxml.Utils.Get_Element
-                                (Doc   => Data.Doc,
-                                 XPath => "/system/expressions/expression"
-                                          & "[@name='compositeName']")));
+                    Node        => Muxml.Utils.Get_Element
+                       (Doc   => Data.Doc,
+                        XPath => "/system/expressions/expression"
+                           & "[@name='compositeName']")));
             Assert (Condition => False,
                     Message   => "Exception expected");
          exception
@@ -1892,7 +1892,6 @@ package body Mutools.Expressions.Test_Data.Tests is
          return Input;
       end Dummy_Map;
 
-
       procedure Positive_Generic_Test
          (Node_XPath : String;
           Var_Name   : String;
@@ -1932,10 +1931,6 @@ package body Mutools.Expressions.Test_Data.Tests is
           Contains             => Node_Access.Output_String.Contains,
           Get_Value            => Node_Access.Output_String.Element,
           Value_Type_To_String => Dummy_Map);
-
-
-
-
 
    begin
       Muxml.Parse (Data => Data,

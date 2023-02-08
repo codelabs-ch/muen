@@ -60,16 +60,16 @@ package body Mutools.Conditionals.Test_Data.Tests is
          -- functions such as Muxml.Utils.Remove_Elements
          loop
             Node_List := McKae.XML.XPath.XIA.XPath_Query
-               (N     => Data.Doc,
-                XPath => "//if");
+              (N     => Data.Doc,
+               XPath => "//if");
             exit when DOM.Core.Nodes.Length (List => Node_List) = 0;
 
             Node := DOM.Core.Nodes.Item
-               (List  => Node_List,
-                Index => 0);
+              (List  => Node_List,
+               Index => 0);
             Node := DOM.Core.Nodes.Remove_Child
-               (N         => DOM.Core.Nodes.Parent_Node (N => Node),
-                Old_Child => Node);
+              (N         => DOM.Core.Nodes.Parent_Node (N => Node),
+               Old_Child => Node);
             DOM.Core.Nodes.Free (N => Node);
          end loop;
 
@@ -79,8 +79,8 @@ package body Mutools.Conditionals.Test_Data.Tests is
                       Kind => Muxml.None,
                       File => Output);
          Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => "data/config_no_conditionals.xml",
-                  Filename2 => Output),
+                   (Filename1 => "data/config_no_conditionals.xml",
+                    Filename2 => Output),
                  Message   => "Policy mismatch: " & Output);
 
          Ada.Directories.Delete_File (Name => Output);
@@ -104,8 +104,8 @@ package body Mutools.Conditionals.Test_Data.Tests is
                       Kind => Muxml.None,
                       File => Output);
          Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => "data/output_test_policy_src_conditionals.xml",
-                  Filename2 => Output),
+                   (Filename1 => "data/output_test_policy_src_conditionals.xml",
+                    Filename2 => Output),
                  Message   => "Policy mismatch: " & Output);
 
          Ada.Directories.Delete_File (Name => Output);
@@ -123,10 +123,10 @@ package body Mutools.Conditionals.Test_Data.Tests is
             Kind => Muxml.None,
             File => "data/test_policy_src_conditionals.xml");
          Muxml.Utils.Set_Attribute
-            (Doc   => Data.Doc,
-             XPath => "/system/memory/if[@variable='feature_enabled']",
-             Name  => "value",
-             Value => "1");
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/if[@variable='feature_enabled']",
+            Name  => "value",
+            Value => "1");
          Expand (Policy => Data);
          Assert (Condition => False,
                  Message   => "Exception expected");
@@ -136,7 +136,7 @@ package body Mutools.Conditionals.Test_Data.Tests is
                        = "Cannot compare value '1' to variable 'feature_enabled'"
                        & " which is a Boolean (cast failed)",
                     Message   => "Exception message mismatch: " &
-                          Ada.Exceptions.Exception_Message (X => E));
+                       Ada.Exceptions.Exception_Message (X => E));
       end Not_A_Boolean;
 
       ----------------------------------------------------------------------
@@ -151,10 +151,10 @@ package body Mutools.Conditionals.Test_Data.Tests is
             Kind => Muxml.None,
             File => "data/test_policy_src_conditionals.xml");
          Muxml.Utils.Set_Attribute
-            (Doc   => Data.Doc,
-             XPath => "/system/memory/if[@variable='session_count']",
-             Name  => "value",
-             Value => "one");
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/if[@variable='session_count']",
+            Name  => "value",
+            Value => "one");
          Expand (Policy => Data);
          Assert (Condition => False,
                  Message   => "Exception expected");
@@ -164,7 +164,7 @@ package body Mutools.Conditionals.Test_Data.Tests is
                        = "Cannot compare value 'one' to variable 'session_count'"
                        & " which is an Integer (cast failed)",
                     Message   => "Exception message mismatch: " &
-                          Ada.Exceptions.Exception_Message (X => E));
+                       Ada.Exceptions.Exception_Message (X => E));
       end Not_An_Integer;
 
       ----------------------------------------------------------------------
@@ -179,10 +179,10 @@ package body Mutools.Conditionals.Test_Data.Tests is
             Kind => Muxml.None,
             File => "data/test_policy_src_conditionals.xml");
          Muxml.Utils.Set_Attribute
-            (Doc   => Data.Doc,
-             XPath => "/system/memory/if[@variable='session_count']",
-             Name  => "variable",
-             Value => "no_such_var");
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/if[@variable='session_count']",
+            Name  => "variable",
+            Value => "no_such_var");
          Expand (Policy => Data);
          Assert (Condition => False,
                  Message   => "Exception expected");
@@ -192,7 +192,7 @@ package body Mutools.Conditionals.Test_Data.Tests is
                        = "Cannot find variable with name 'no_such_var'"
                        & " in configuration",
                     Message   => "Exception message mismatch: " &
-                          Ada.Exceptions.Exception_Message (X => E));
+                       Ada.Exceptions.Exception_Message (X => E));
       end Var_Not_Found;
    begin
       Positive_Test (Debug_Active => False);

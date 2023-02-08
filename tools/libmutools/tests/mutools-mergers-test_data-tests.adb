@@ -59,7 +59,6 @@ package body Mutools.Mergers.Test_Data.Tests is
 
       procedure Insert_Empty_Section
       is
-
       begin
          Muxml.Parse (Data => Policy,
                       Kind => Muxml.None,

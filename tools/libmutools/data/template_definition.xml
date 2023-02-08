@@ -1,40 +1,40 @@
 <template name="template_memory">
-   <parameters>
-      <integer name="id1"/>
-      <string name="logical_test" defaultValue="system_test"/>
-      <string name="memory_name"/>
-   </parameters>
-   <expressions>
-      <expression name="isId1_20">
-         <eq>
-            <variable name="id1"/>
-            <integer value="20"/>
-         </eq>
-      </expression>
-      <expression name="local_expr">
-         <concatenation>
-            <variable name="id1"/>
-            <string value="42"/>
-         </concatenation>
-      </expression>
-      <expression name="my_xpath"><evalString value="config: ${id1}_foo expr${isId1_20} global_${globalRef}"/></expression>
-   </expressions>
-   <body>
-      <amend xpath="$my_xpath">
-         <bootparams>$global_ref_here</bootparams>
-         <bootparams>$local_expr</bootparams>
-      </amend>
-      <memory>
-         <if value="true" variable="isId1_20">
-            <memory caching="WB" name="dummy" physicalAddress="16#0000#" size="16#0000#"/>
-         </if>
-         <memory caching="$no_caching" name="$memory_name" physicalAddress="16#0000#" size="16#0000#"/>
-      </memory>
-      <if variable="no_caching" value="UC">
-         <amend xpath="/system/hardware/memory">
-            <memoryBlock allocatable="true" name="name" physicalAddress="16#0000#" size="$sizeOfExtraMem"/>
-            <useTemplate name="oneline_mem_template" namePrefix="individualprefix"/>
-         </amend>
-      </if>
-   </body>
+ <parameters>
+  <integer name="id1"/>
+  <string name="logical_test" defaultValue="system_test"/>
+  <string name="memory_name"/>
+ </parameters>
+ <expressions>
+  <expression name="isId1_20">
+   <eq>
+    <variable name="id1"/>
+    <integer value="20"/>
+   </eq>
+  </expression>
+  <expression name="local_expr">
+   <concatenation>
+    <variable name="id1"/>
+    <string value="42"/>
+   </concatenation>
+  </expression>
+  <expression name="my_xpath"><evalString value="config: ${id1}_foo expr${isId1_20} global_${globalRef}"/></expression>
+ </expressions>
+ <body>
+  <amend xpath="$my_xpath">
+   <bootparams>$global_ref_here</bootparams>
+   <bootparams>$local_expr</bootparams>
+  </amend>
+  <memory>
+   <if value="true" variable="isId1_20">
+    <memory caching="WB" name="dummy" physicalAddress="16#0000#" size="16#0000#"/>
+   </if>
+   <memory caching="$no_caching" name="$memory_name" physicalAddress="16#0000#" size="16#0000#"/>
+  </memory>
+  <if variable="no_caching" value="UC">
+   <amend xpath="/system/hardware/memory">
+    <memoryBlock allocatable="true" name="name" physicalAddress="16#0000#" size="$sizeOfExtraMem"/>
+    <useTemplate name="oneline_mem_template" namePrefix="individualprefix"/>
+   </amend>
+  </if>
+ </body>
 </template>

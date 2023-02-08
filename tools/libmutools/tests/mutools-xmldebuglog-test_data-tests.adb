@@ -40,7 +40,6 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
 --
 --  end read only
 
-
 --  begin read only
 --  end read only
 
@@ -107,7 +106,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
          Assert (Condition => Origin_Info.File_Name.Element
                     = "system_policy_short.xml"
                     and Origin_Info.Line = 4
-                    and Origin_Info.Column = 93,
+                    and Origin_Info.Column = 89,
                  Message => "Content of origin_info is not correct: "
                     & Node_Backtrace_To_String
                     (Muxml.Utils.Get_Element
@@ -169,16 +168,16 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
                  (Data    => Data,
                   XPath   => "/system/hardware/memory/memoryBlock[@name='amended_block']",
                   Comment => "Node_Name='memoryBlock', "
-                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=32, Column=120\), "
+                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=32, Column=110\), "
                      & "Transaction\(Kind='amend', "
-                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=31, Column=52\), "
+                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=31, Column=44\), "
                      & "Xpath='/system/hardware/memory'\), "
                      & "Transaction\(Kind='if', "
-                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=29, Column=47\), "
+                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=29, Column=41\), "
                      & "Var_Name='no_caching', Var_Value='UC', "
                      & "Matched=TRUE, Matched_Others=FALSE\), "
                      & "Transaction\(Kind='useTemplate', "
-                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=92, Column=40\),  "
+                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=92, Column=38\),  "
                      & "Template_Name='template_memory', "
                      & "Call_Parameters\(id1='20', memory_name='extra_mem'\), Prefix='(t[0-9]*_)*'\)"),
               Message   => "Comment mismatch");
@@ -187,11 +186,10 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
                  (Data    => Data,
                   XPath   => "/system/subjects/subject[@name='lnx']/memory/memory[@name='conditional_mem']",
                   Comment =>"Node_Name='memory', "
-                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', "
-                     & "Line=128, Column=112\), Transaction\(Kind='case', "
-                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', "
-                     & "Line=118, Column=45\), Var_Name='sizeOfExtraMem', "
-                     & "Var_Value='16#0000_0000#', Matched=TRUE, Matched_Others=TRUE\)"),
+                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=128, Column=100\), "
+                     & "Transaction\(Kind='case', "
+                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=118, Column=37\), "
+                     & "Var_Name='sizeOfExtraMem', Var_Value='16#0000_0000#', Matched=TRUE, Matched_Others=TRUE\)"),
               Message   => "Comment mismatch");
 --  begin read only
    end Test_Add_Debug_Infos_As_Comments;
@@ -231,24 +229,24 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
       begin
          Assert (Condition => 0 < Index (Log_Text, "Transaction_Log"),
                  Message   => "Mismatch of log message");
-         Assert (Condition => 0 < Index (Log_Text,
-            "Transaction(Kind='useTemplate', "
-            & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=67, Column=55),  "
-            & "Template_Name='oneline_mem_template', Call_Parameters()"),
+         Assert (Condition => 0 < Index
+                    (Log_Text, "Transaction(Kind='useTemplate', "
+                        & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=67, Column=47),  "
+                        & "Template_Name='oneline_mem_template', Call_Parameters()"),
                  Message   => "Mismatch of log message");
-         Assert (Condition => 0 < Index (Log_Text,
-            "Transaction(Kind='useTemplate', "
-            & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=92, Column=40),  "
-            & "Template_Name='template_memory', Call_Parameters(id1='20', memory_name='extra_mem')"),
+         Assert (Condition => 0 < Index
+                    (Log_Text, "Transaction(Kind='useTemplate', "
+                        & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=92, Column=38),  "
+                        & "Template_Name='template_memory', Call_Parameters(id1='20', memory_name='extra_mem')"),
                  Message   => "Mismatch of log message");
-         Assert (Condition => 0 < Index (Log_Text,
-            "Transaction(Kind='if', "
-            & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=24, Column=50)"),
+         Assert (Condition => 0 < Index
+                    (Log_Text, "Transaction(Kind='if', "
+                        & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=24, Column=42)"),
                  Message   => "Mismatch of log message");
-         Assert (Condition => 0 < Index (Log_Text,
-            "Transaction(Kind='amend', "
-            & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=110, Column=52), "
-            & "Xpath='/system/hardware/memory')"),
+         Assert (Condition => 0 < Index
+                    (Log_Text, "Transaction(Kind='amend', "
+                        & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=110, Column=44), "
+                        & "Xpath='/system/hardware/memory')"),
                  Message   => "Mismatch of log message");
          end;
 --  begin read only
@@ -282,13 +280,13 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
 
       Assert (Condition => GNAT.Regpat.Match
                  (Expression => "^Log information for debugging: Node_Name='memory', "
-                 & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=25, Column=94\), "
-                 & "Transaction\(Kind='useTemplate', "
-                 & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=92, Column=40\),  "
-                 & "Template_Name='template_memory', "
+                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=25, Column=84\), "
+                     & "Transaction\(Kind='useTemplate', "
+                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=92, Column=38\),  "
+                     & "Template_Name='template_memory', "
                      & "Call_Parameters\(id1='20', memory_name='extra_mem'\), Prefix='(t[0-9]*_)*'\)$",
                   Data => Get_Log_For_Error_Message (Node => Node)),
-                 Message => "Log message mismatch: "
+              Message => "Log message mismatch: "
                  & Get_Log_For_Error_Message (Node => Node));
 --  begin read only
    end Test_Get_Log_For_Error_Message;
@@ -358,7 +356,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
               Message   => "Log length not equal 2");
       Assert (Condition => Transaction_To_String (TA => Transaction_Log.Last_Element)
                  = "Transaction(Kind='useTemplate', "
-                 & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=92, Column=40),  "
+                 & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=92, Column=38),  "
                  & "Template_Name='template_memory', Call_Parameters(id1='20', memory_name='extra_mem'), "
                  & "Prefix='some_prefix')",
               Message   => "Transaction Log mismatch: " & Transaction_Log_To_String);
@@ -415,7 +413,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
               Message   => "Log length not equal 2");
       Assert (Condition => Transaction_To_String (TA => Transaction_Log.Last_Element)
                  = "Transaction(Kind='if', "
-                 & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=42, Column=43), "
+                 & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=42, Column=37), "
                  & "Var_Name='param1', Var_Value='555', Matched=TRUE, Matched_Others=TRUE)",
               Message   => "Transaction Log mismatch: " & Transaction_Log_To_String);
 --  begin read only
@@ -459,7 +457,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
               Message   => "Log length not equal 2");
       Assert (Condition => Transaction_To_String (TA => Transaction_Log.Last_Element)
                  = "Transaction(Kind='amend', "
-                 & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=110, Column=52), "
+                 & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=110, Column=44), "
                  & "Xpath='/any/path/I/like[@name='123']')",
               Message   => "Transaction Log mismatch: " & Transaction_Log_To_String);
 --  begin read only
@@ -501,10 +499,10 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
                  (Expression => "Node_Name='foobar', "
                      & "Node_Origin=\(Filename='', Line=0, Column=0\), "
                      & "Transaction\(Kind='if', "
-                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=24, Column=50\), "
+                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=24, Column=42\), "
                      & "Var_Name='(t[0-9]*_)*isId1_20', Var_Value='true', Matched=TRUE, Matched_Others=FALSE\), "
                      & "Transaction\(Kind='useTemplate', "
-                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=67, Column=55\),  "
+                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=67, Column=47\),  "
                      & "Template_Name='oneline_mem_template', Call_Parameters\(\), Prefix='(t[0-9]*_)*'\)",
                   Data => Node_Backtrace_To_String (Node => Node)),
               Message   => "Log mismatch: " & Node_Backtrace_To_String (Node => Node));
@@ -533,7 +531,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
              (Doc   => Data.Doc,
               XPath => "/system/memory/memory[@name='dummy']");
       Assert (Condition => Nodes_Backtrace_Log.Contains (Node),
-              Message   => "Error is test setup");
+              Message   => "Error in test setup");
       Remove_Log_Of_Node (Node => Node);
       Assert (Condition => not Nodes_Backtrace_Log.Contains (Node),
               Message   => "Node was not removed");
@@ -666,12 +664,12 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
 
       Assert (Condition => Node_Backtrace_To_String (Node => Node)
                  = "Node_Name='if', "
-                 & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=24, Column=50)",
+                 & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=24, Column=42)",
               Message   => "Log message mismatch: "
                  & Node_Backtrace_To_String (Node => Node));
       Assert (Condition => Node_Backtrace_To_String (Node => Node_Child)
                  = "Node_Name='memory', "
-                 & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=25, Column=94)",
+                 & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=25, Column=84)",
               Message   => "Log message mismatch: "
                  & Node_Backtrace_To_String (Node => Node_Child));
 
@@ -679,9 +677,9 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
       Gather_Backtrace_Info (Node => Node, Deep => False);
       Assert (Condition => GNAT.Regpat.Match
                  (Expression => "^Node_Name='if', "
-                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=24, Column=50\), "
+                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=24, Column=42\), "
                      & "Transaction\(Kind='useTemplate', "
-                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=92, Column=40\),  "
+                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=92, Column=38\),  "
                      & "Template_Name='template_memory', "
                      & "Call_Parameters\(id1='20', memory_name='extra_mem'\), Prefix='(t[0-9]*_)*'\)$",
                   Data => Node_Backtrace_To_String (Node => Node)),
@@ -700,9 +698,9 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
                  & Node_Backtrace_To_String (Node => Node));
       Assert (Condition => GNAT.Regpat.Match
                  (Expression => "^Node_Name='memory', "
-                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=25, Column=94\), "
+                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=25, Column=84\), "
                      & "Transaction\(Kind='useTemplate', "
-                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=92, Column=40\),  "
+                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=92, Column=38\),  "
                      & "Template_Name='template_memory', "
                      & "Call_Parameters\(id1='20', memory_name='extra_mem'\), Prefix='(t[0-9]*_)*'\)$",
                   Data => Node_Backtrace_To_String (Node => Node_Child)),
@@ -762,7 +760,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
              (Doc   => Data.Doc,
               Xpath => "/system/hardware")).Origin_Of_Node;
       Assert (Condition => Origin_To_String (Origin => Origin)
-                 = "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=60, Column=14)",
+                 = "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=60, Column=12)",
               Message   => "Origin string mismatch: "
                  & Origin_To_String (Origin => Origin));
 --  begin read only
@@ -795,7 +793,7 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
       TA := Transaction_Log (NB.Conditional_Backtrace.Entries (1));
       Assert (Condition => Transaction_To_String (TA)
                  = "Transaction(Kind='if', "
-                 & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=145, Column=52), "
+                 & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=145, Column=44), "
                  & "Var_Name='session_count', Var_Value='4', Matched=TRUE, Matched_Others=FALSE)",
               Message   => "Transaction string mismatch: "
                  & Transaction_To_String (TA));
@@ -822,8 +820,8 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
       Node := Muxml.Utils.Get_Element
              (Doc   => Data.Doc,
               Xpath => "/system");
-      DOM.Core.Elements.Set_Attribute (Elem => Node,
-                                       Name => "originOfNode",
+      DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                       Name  => "originOfNode",
                                        Value => "filename:123:0");
       Assert (Condition => Parse_Origin_Attribute (Node)
                  = Origin_Info_Type'
@@ -833,8 +831,8 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
               Message   => "Parsing error for Origin: "
                  & Origin_To_String (Parse_Origin_Attribute (Node)));
 
-      DOM.Core.Elements.Set_Attribute (Elem => Node,
-                                       Name => "originOfNode",
+      DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                       Name  => "originOfNode",
                                        Value => "filename:new:123:0");
       Assert (Condition => Parse_Origin_Attribute (Node)
                  = Null_Origin_Info,
@@ -868,16 +866,16 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
 
       Assert (Condition => GNAT.Regpat.Match
                  (Expression => "Node_Name='memoryBlock', "
-                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=32, Column=120\), "
+                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=32, Column=110\), "
                      & "Transaction\(Kind='amend', "
-                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=31, Column=52\), "
+                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=31, Column=44\), "
                      & "Xpath='/system/hardware/memory'\), "
                      & "Transaction\(Kind='if', "
-                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=29, Column=47\), "
+                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=29, Column=41\), "
                      & "Var_Name='no_caching', Var_Value='UC', "
                      & "Matched=TRUE, Matched_Others=FALSE\), "
                      & "Transaction\(Kind='useTemplate', "
-                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=92, Column=40\),  "
+                     & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=92, Column=38\),  "
                      & "Template_Name='template_memory', "
                      & "Call_Parameters\(id1='20', memory_name='extra_mem'\), Prefix='(t[0-9]*_)*'\)",
                   Data   => Node_Backtrace_To_String (Node)),
@@ -908,28 +906,31 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
       begin
          Assert (Condition => GNAT.Regpat.Match
                     (Expression => "\(Node_Name='memory', "
-            & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=45, Column=101\), "
-            & "Transaction\(Kind='amend', "
-            & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=43, Column=53\), "
-            & "Xpath='/system/hardware/devices'\), Transaction\(Kind='if', "
-            & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=42, Column=43\), "
-            & "Var_Name='(t[0-9]*_)*param1', Var_Value='22', Matched=TRUE, Matched_Others=FALSE\), "
-            & "Transaction\(Kind='useTemplate', Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', "
-            & "Line=69, Column=47\),  Template_Name='big_dev_template', Call_Parameters\(param1='22'\),",
+                        & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=45, Column=89\), "
+                        & "Transaction\(Kind='amend', "
+                        & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=43, Column=45\), "
+                        & "Xpath='/system/hardware/devices'\), "
+                        & "Transaction\(Kind='if', "
+                        & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=42, Column=37\), "
+                        & "Var_Name='(t[0-9]*_)*param1', Var_Value='22', Matched=TRUE, Matched_Others=FALSE\), "
+                        & "Transaction\(Kind='useTemplate', "
+                        & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=69, Column=41\),  "
+                        & "Template_Name='big_dev_template', Call_Parameters\(param1='22'\),",
                      Data => Log_Text),
                  Message   => "Mismatch of log message");
 
         Assert (Condition => GNAT.Regpat.Match
                    (Expression => "\(Node_Name='components', "
-            & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=97, Column=16\)\)",
+                       & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=97, Column=14\)\)",
                     Data => Log_Text),
                 Message   => "Mismatch of log message");
 
         Assert (Condition => GNAT.Regpat.Match
                    (Expression => "\(Node_Name='memory', "
-            & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=128, Column=112\), "
-            & "Transaction\(Kind='case', Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=118, Column=45\), "
-            & "Var_Name='sizeOfExtraMem', Var_Value='16#0000_0000#', Matched=TRUE, Matched_Others=TRUE\)\)",
+                       & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=128, Column=100\), "
+                       & "Transaction\(Kind='case', "
+                       & "Node_Origin=\(Filename='system_policy_for_xmldebuglog\.xml', Line=118, Column=37\), "
+                       & "Var_Name='sizeOfExtraMem', Var_Value='16#0000_0000#', Matched=TRUE, Matched_Others=TRUE\)\)",
                     Data => Log_Text),
                 Message   => "Mismatch of log message");
       end;
@@ -960,21 +961,21 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
       begin
          Assert (Condition => 0 < Index (Log_Text,
             "Transaction(Kind='useTemplate', "
-            & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=67, Column=55),  "
+            & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=67, Column=47),  "
             & "Template_Name='oneline_mem_template', Call_Parameters()"),
                  Message   => "Mismatch of log message");
          Assert (Condition => 0 < Index (Log_Text,
             "Transaction(Kind='useTemplate', "
-            & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=92, Column=40),  "
+            & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=92, Column=38),  "
             & "Template_Name='template_memory', Call_Parameters(id1='20', memory_name='extra_mem')"),
                  Message   => "Mismatch of log message");
          Assert (Condition => 0 < Index (Log_Text,
             "Transaction(Kind='if', "
-            & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=24, Column=50)"),
+            & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=24, Column=42)"),
                  Message   => "Mismatch of log message");
          Assert (Condition => 0 < Index (Log_Text,
             "Transaction(Kind='amend', "
-            & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=110, Column=52), "
+            & "Node_Origin=(Filename='system_policy_for_xmldebuglog.xml', Line=110, Column=44), "
             & "Xpath='/system/hardware/memory')"),
                  Message   => "Mismatch of log message");
          end;

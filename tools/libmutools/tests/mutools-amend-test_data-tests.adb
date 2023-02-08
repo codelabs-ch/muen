@@ -262,7 +262,6 @@ package body Mutools.Amend.Test_Data.Tests is
                           Ada.Exceptions.Exception_Message (X => E));
          end;
       end No_Legal_Insert_Position;
-
    begin
       Positive_Test;
       No_Amend_Statements;
@@ -325,10 +324,10 @@ package body Mutools.Amend.Test_Data.Tests is
 
          Left := DOM.Core.Documents.Create_Text_Node
             (Doc  => Policy.Doc,
-             Data => "Seite links");
+             Data => "Left side");
          Right := DOM.Core.Documents.Create_Text_Node
             (Doc  => Policy.Doc,
-             Data => "Seite rechts");
+             Data => "Right side");
          Assert (Condition => not Nodes_Equal (L => Left, R => Right),
                  Message   => "Unequal nodes reported as equal");
 

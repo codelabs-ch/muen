@@ -370,7 +370,7 @@ is
          function To_Writer_Str return Unbounded_String;
 
          --  Return string representation of reader or writer attribute in case
-         --  the array is empty
+         --  the array is empty.
          function To_Reader_Or_Writer_Str return Unbounded_String;
 
          -------------------------------------------------------------------
@@ -390,8 +390,11 @@ is
             if Event_Base /= Null_Unbounded_String
                and Vector_Base /= Null_Unbounded_String
             then
-               raise Attribute_Error with "Empty channel array specifies "
-                  & "'eventBase' and 'vectorBase' attributes, which is invalid";
+               raise Attribute_Error with "Empty channel array '"
+                  & DOM.Core.Elements.Get_Attribute (Elem => Arr,
+                                                     Name => "logical")
+                  & "' specifies 'eventBase' and 'vectorBase' attributes, "
+                  & "which is invalid";
             elsif Event_Base /= Null_Unbounded_String then
                Res := ASCII.LF &
                   I & Logical & "_Event_Base    : constant := "

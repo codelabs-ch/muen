@@ -550,9 +550,10 @@ package body Cspec.Utils.Test_Data.Tests is
       exception
          when E : Attribute_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                       = "Empty channel array specifies 'eventBase' and "
-                       & "'vectorBase' attributes, which is invalid",
-                    Message   => "Exception mismatch");
+                       = "Empty channel array 'input' specifies "
+                       & "'eventBase' and 'vectorBase' attributes, which is invalid",
+                    Message   => "Exception mismatch"
+                       & Ada.Exceptions.Exception_Message (X => E));
       end;
 
       DOM.Core.Elements.Remove_Attribute

@@ -136,9 +136,11 @@ package body Merge.Cmd_Line.Test_Data.Tests is
       ----------------------------------------------------------------------
 
       procedure Positive_Test
+         (Debug_Level_Option  : String;
+          Correct_Debug_Level : Debug_Level_Type)
       is
          Args        : aliased GNAT.OS_Lib.Argument_List
-            := (1 => new String'("-d1"),
+            := (1 => new String'("-d" & Debug_Level_Option),
                 2 => new String'("-I/tmp/component"),
                 3 => new String'("data/system_config.xml"),
                 4 => new String'("merged.xml"));
@@ -156,7 +158,7 @@ package body Merge.Cmd_Line.Test_Data.Tests is
             GNAT.OS_Lib.Free (X => Args (A));
          end loop;
 
-         Assert (Condition => Debug_Level = VERBOSE_ERRORS,
+         Assert (Condition => Debug_Level = Correct_Debug_Level,
                  Message   => "Config file mismatch");
          Assert (Condition => Config_File = "data/system_config.xml",
                  Message   => "Config file mismatch");
@@ -169,7 +171,12 @@ package body Merge.Cmd_Line.Test_Data.Tests is
       Invalid_Switch;
       Null_Argument;
       No_Include_Path;
-      Positive_Test;
+      Positive_Test (Debug_Level_Option  => "0",
+                     Correct_Debug_Level => NONE);
+      Positive_Test (Debug_Level_Option  => "1",
+                     Correct_Debug_Level => VERBOSE_ERRORS);
+      Positive_Test (Debug_Level_Option  => "2",
+                     Correct_Debug_Level => VERBOSE_OUTPUT);
 --  begin read only
    end Test_Init;
 --  end read only

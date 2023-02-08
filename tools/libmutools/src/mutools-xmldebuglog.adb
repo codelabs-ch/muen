@@ -321,6 +321,22 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Clear_Backtrace_Log
+   is
+   begin
+      Nodes_Backtrace_Log_Type.Clear (Container => Nodes_Backtrace_Log);
+   end Clear_Backtrace_Log;
+
+   -------------------------------------------------------------------------
+
+   procedure Clear_Transaction_Log
+   is
+   begin
+      Transaction_Log_Type.Clear (Container => Transaction_Log);
+   end Clear_Transaction_Log;
+
+   -------------------------------------------------------------------------
+
    procedure Copy_Log_Entry
       (Old_Node : DOM.Core.Node;
        New_Node : DOM.Core.Node;
@@ -579,10 +595,25 @@ is
 
    begin
       --  Check if both have a log-entry (abort otherwise).
-      if not Nodes_Backtrace_Log.Contains (Key => Node) or
-         not Nodes_Backtrace_Log.Contains (Key => Parent)
-      then
-         return;
+      if not Nodes_Backtrace_Log.Contains (Key => Node) then
+         Nodes_Backtrace_Log.Insert
+            (Key      => Node,
+             New_Item =>
+                (Self                  => Node,
+                 Origin_Of_Node        => Null_Origin_Info,
+                 Template_Backtrace    => Null_Actions_Ref,
+                 Conditional_Backtrace => Null_Actions_Ref,
+                 Amend_Backtrace       => Null_Ref_Index));
+      end if;
+      if not Nodes_Backtrace_Log.Contains (Key => Parent) then
+         Nodes_Backtrace_Log.Insert
+            (Key      => Parent,
+             New_Item =>
+                (Self                  => Parent,
+                 Origin_Of_Node        => Null_Origin_Info,
+                 Template_Backtrace    => Null_Actions_Ref,
+                 Conditional_Backtrace => Null_Actions_Ref,
+                 Amend_Backtrace       => Null_Ref_Index));
       end if;
 
       declare
@@ -591,20 +622,25 @@ is
          Parent_Backtrace : Node_Backtrace_Type
             renames Nodes_Backtrace_Log (Parent);
       begin
-
          --  If Node has some amend transaction in its history:
-         --  Abort, because the history of Node must be written before amend
-         --  is evaluated (no transaction can happen afterwards).
-         if Node_Backtrace.Amend_Backtrace /= Null_Ref_Index then
-            return;
+         --  A new amend coming from Parent must be a mistake because amend
+         --  nodes are not allowed to contain amend nodes.
+         if Parent_Backtrace.Amend_Backtrace /= Null_Ref_Index then
+            if Node_Backtrace.Amend_Backtrace /= Null_Ref_Index and
+               Node_Backtrace.Amend_Backtrace /= Parent_Backtrace.Amend_Backtrace
+            then
+               raise Muxml.Validation_Error with
+                  "Merge_Parent_Backtrace_Info cannot log amend-info for node '"
+                  & Get_Xpath (Node => Node)
+                  & "' because its log already contains a different amend-info";
+            end if;
+            Node_Backtrace.Amend_Backtrace := Parent_Backtrace.Amend_Backtrace;
          end if;
 
          Amend_Array (Ref      => Node_Backtrace.Template_Backtrace,
                       New_Data => Parent_Backtrace.Template_Backtrace);
          Amend_Array (Ref      => Node_Backtrace.Conditional_Backtrace,
                       New_Data => Parent_Backtrace.Conditional_Backtrace);
-
-         Node_Backtrace.Amend_Backtrace := Parent_Backtrace.Amend_Backtrace;
       end;
    end Merge_Parent_Backtrace_Info;
 
@@ -646,6 +682,24 @@ is
              Only_Element_Nodes => True);
       end loop;
    end Move_Origin_To_Log;
+
+   -------------------------------------------------------------------------
+
+   function Node_Backtrace_Log_To_String return String
+   is
+      use Ada.Strings.Unbounded;
+      Output : Unbounded_String;
+      Node   : DOM.Core.Node;
+   begin
+      for Cursor in Nodes_Backtrace_Log.Iterate loop
+         Node := Nodes_Backtrace_Log_Type.Key (Cursor);
+         Output := Output
+            & " ("
+            & Node_Backtrace_To_String (Node => Node)
+            & ")";
+      end loop;
+      return To_String (Output);
+   end Node_Backtrace_Log_To_String;
 
    -------------------------------------------------------------------------
 

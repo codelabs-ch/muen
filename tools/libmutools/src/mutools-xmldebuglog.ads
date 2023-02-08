@@ -232,8 +232,16 @@ private
    --  the correct backtrace by examining the ancestors of Node, first.
    function Node_Backtrace_To_String (Node : DOM.Core.Node) return String;
 
-   --  Return all entries of the transaction log, starting with the oldest
-   --  transaction.
+   --  Return string representation of entire Backtrace_Log.
+   --  The order of elements within the representation is not fixed.
+   function Node_Backtrace_Log_To_String return String;
+
+   --  Return a string representation of the entire transaction log,
+   --  starting with the oldest transaction.
    function Transaction_Log_To_String return String;
+
+   --  Delete all entries in the Transaction-/Nodes_Backtrace-Log, respectively.
+   procedure Clear_Transaction_Log;
+   procedure Clear_Backtrace_Log;
 
 end Mutools.Xmldebuglog;

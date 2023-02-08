@@ -22,6 +22,9 @@
  </platform>
  <memory>
   <memory caching="WB" name="foobar" size="16#1000#"/>
+  <if value="16#1000#" variable="session_count">
+   <memory caching="WB" name="does_not_show_up" size="16#1000#"/>
+  </if>
  </memory>
  <events/>
  <channels/>

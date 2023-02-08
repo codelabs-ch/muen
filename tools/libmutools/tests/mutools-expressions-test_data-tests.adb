@@ -586,6 +586,7 @@ package body Mutools.Expressions.Test_Data.Tests is
       Data        : Muxml.XML_Data_Type;
       Node_Access : Access_Hashmaps_Type;
       Backtrace   : String_Vector.Vector;
+      Dummy       : Boolean;
 
    begin
       Muxml.Parse (Data => Data,
@@ -596,7 +597,7 @@ package body Mutools.Expressions.Test_Data.Tests is
             (Data        => Data,
              Node_Access => Node_Access);
 
-      -- Positive_Test: Expression_Case
+      -- Positive test: Expression_Case
       Assert (Condition => Evaluate_Boolean
                  (Node        => Muxml.Utils.Get_Element
                      (Doc   => Data.Doc,
@@ -605,7 +606,7 @@ package body Mutools.Expressions.Test_Data.Tests is
                   Node_Access => Node_Access),
               Message => "Boolean value mismatch");
 
-      -- Positive_Test: Expression_Boolean
+      -- Positive test: Expression_Boolean
       Assert (Condition => not Evaluate_Boolean
                  (Node        => Muxml.Utils.Get_Element
                      (Doc   => Data.Doc,
@@ -614,7 +615,7 @@ package body Mutools.Expressions.Test_Data.Tests is
                   Node_Access => Node_Access),
               Message => "Boolean value mismatch");
 
-      -- Positive_Test: Boolean_Constant
+      -- Positive test: Boolean_Constant
       Assert (Condition => Evaluate_Boolean
                  (Node        => Muxml.Utils.Get_Element
                      (Doc   => Data.Doc,
@@ -623,11 +624,53 @@ package body Mutools.Expressions.Test_Data.Tests is
                   Node_Access => Node_Access),
               Message => "Boolean value mismatch");
 
-      -- Positive_Test_Boolean_DollarRef
+      -- Positive test: Boolean_DollarRef
       Assert (Condition => Evaluate_Boolean
                  (Node        => Muxml.Utils.Get_Element
                      (Doc   => Data.Doc,
                       XPath => "/system/config/boolean[@name='dependent_feature']"),
+                  Backtrace   => Backtrace,
+                  Node_Access => Node_Access),
+              Message => "Boolean value mismatch");
+
+      -- Positive test: Boolean_DollarRef_with_redirect
+      Mutools.Expressions.Test_Data.Initialize_Node_Access_Testing
+         (Data        => Data,
+          Node_Access => Node_Access);
+      Assert (Condition => Evaluate_Boolean
+                 (Node        => Muxml.Utils.Get_Element
+                     (Doc   => Data.Doc,
+                      XPath => "/system/config/boolean[@name='depends_on_expression']"),
+                  Backtrace   => Backtrace,
+                  Node_Access => Node_Access),
+              Message => "Boolean value mismatch");
+
+      -- Positive test: Expression of type Variable_Expr_Type (unknown ref)
+      Mutools.Expressions.Test_Data.Initialize_Node_Access_Testing
+         (Data        => Data,
+          Node_Access => Node_Access);
+      Assert (Condition => Evaluate_Boolean
+                 (Node        => Muxml.Utils.Get_Element
+                     (Doc   => Data.Doc,
+                      XPath => "/system/expressions/expression[@name='alias_expression_bool']"),
+                  Backtrace   => Backtrace,
+                  Node_Access => Node_Access),
+              Message => "Boolean value mismatch");
+
+      -- Positive test: Expression of type Variable_Expr_Type (known ref)
+      Mutools.Expressions.Test_Data.Initialize_Node_Access_Testing
+         (Data        => Data,
+          Node_Access => Node_Access);
+      Dummy := Evaluate_Boolean
+         (Node        => Muxml.Utils.Get_Element
+             (Doc   => Data.Doc,
+              XPath => "/system/expressions/expression[@name='nested_expr']"),
+          Backtrace   => Backtrace,
+          Node_Access => Node_Access);
+      Assert (Condition => Evaluate_Boolean
+                 (Node        => Muxml.Utils.Get_Element
+                     (Doc   => Data.Doc,
+                      XPath => "/system/expressions/expression[@name='alias_expression_bool']"),
                   Backtrace   => Backtrace,
                   Node_Access => Node_Access),
               Message => "Boolean value mismatch");
@@ -710,6 +753,7 @@ package body Mutools.Expressions.Test_Data.Tests is
       Data        : Muxml.XML_Data_Type;
       Node_Access : Access_Hashmaps_Type;
       Backtrace   : String_Vector.Vector;
+      Dummy       : Integer;
 
    begin
       Muxml.Parse (Data => Data,
@@ -749,6 +793,34 @@ package body Mutools.Expressions.Test_Data.Tests is
                   Backtrace   => Backtrace,
                   Node_Access => Node_Access),
               Message => "Integer value mismatch");
+
+      -- Positive_Test: Expression_Variable_Type (known ref)
+      Dummy := Evaluate_Integer
+         (Node        => Muxml.Utils.Get_Element
+             (Doc   => Data.Doc,
+              XPath => "/system/expressions/expression[@name='case4_int']"),
+          Backtrace   => Backtrace,
+          Node_Access => Node_Access);
+      Assert (Condition => -4 =  Evaluate_Integer
+                 (Node        => Muxml.Utils.Get_Element
+                     (Doc   => Data.Doc,
+                      XPath => "/system/expressions/expression[@name='alias_expression_int']"),
+                  Backtrace   => Backtrace,
+                  Node_Access => Node_Access),
+              Message => "Integer value mismatch");
+
+      -- Positive_Test: Expression_Variable_Type (unknown ref)
+      Mutools.Expressions.Test_Data.Initialize_Node_Access_Testing
+         (Data        => Data,
+          Node_Access => Node_Access);
+      Assert (Condition => -4 = Evaluate_Integer
+                 (Node        => Muxml.Utils.Get_Element
+                     (Doc   => Data.Doc,
+                      XPath => "/system/expressions/expression[@name='alias_expression_int']"),
+                  Backtrace   => Backtrace,
+                  Node_Access => Node_Access),
+              Message => "Integer value mismatch");
+
 
       --- Fault-Tests
       -- Expression_Case_Bool
@@ -838,6 +910,36 @@ package body Mutools.Expressions.Test_Data.Tests is
             (Data        => Data,
              Node_Access => Node_Access);
 
+
+      -- Positive_Test: String_Constant (known ref)
+      Assert (Condition => "myname" = Evaluate_String
+                 (Node        => Muxml.Utils.Get_Element
+                     (Doc   => Data.Doc,
+                      XPath => "/system/config/string[@name='name1']"),
+                  Backtrace   => Backtrace,
+                  Node_Access => Node_Access),
+              Message => "Boolean value mismatch");
+
+      -- Positive_Test: String_DollarRef
+      Assert (Condition => "myname" = Evaluate_String
+                 (Node        => Muxml.Utils.Get_Element
+                     (Doc   => Data.Doc,
+                      XPath => "/system/config/string[@name='name2']"),
+                  Backtrace   => Backtrace,
+                  Node_Access => Node_Access),
+              Message => "Boolean value mismatch");
+
+
+      -- Positive_Test: Empty String_Constant
+      Assert (Condition => "" = Evaluate_String
+                 (Node        => Muxml.Utils.Get_Element
+                     (Doc   => Data.Doc,
+                      XPath => "/system/config/string[@name='empty_string']"),
+                  Backtrace   => Backtrace,
+                  Node_Access => Node_Access),
+              Message => "Boolean value mismatch");
+
+
       -- Positive_Test: Expression_Case
       Assert (Condition => "foobar" = Evaluate_String
                  (Node        => Muxml.Utils.Get_Element
@@ -866,23 +968,27 @@ package body Mutools.Expressions.Test_Data.Tests is
                   Node_Access => Node_Access),
               Message => "String value mismatch");
 
-      -- Positive_Test: String_Constant
-      Assert (Condition => "myname" = Evaluate_String
-                 (Node        => Muxml.Utils.Get_Element
-                     (Doc   => Data.Doc,
-                      XPath => "/system/config/string[@name='name1']"),
-                  Backtrace   => Backtrace,
-                  Node_Access => Node_Access),
-              Message => "Boolean value mismatch");
 
-      -- Positive_Test: String_DollarRef
-      Assert (Condition => "myname" = Evaluate_String
+      -- Positive_Test: Expression_Variable_Type (known ref)
+      Assert (Condition => "foobar" = Evaluate_String
                  (Node        => Muxml.Utils.Get_Element
                      (Doc   => Data.Doc,
-                      XPath => "/system/config/string[@name='name2']"),
+                      XPath => "/system/expressions/expression[@name='alias_expression_string']"),
                   Backtrace   => Backtrace,
                   Node_Access => Node_Access),
-              Message => "Boolean value mismatch");
+              Message => "String value mismatch");
+
+      -- Positive_Test: Expression_Variable_Type (unknown ref)
+      Mutools.Expressions.Test_Data.Initialize_Node_Access_Testing
+         (Data        => Data,
+          Node_Access => Node_Access);
+      Assert (Condition => "foobar" = Evaluate_String
+                 (Node        => Muxml.Utils.Get_Element
+                     (Doc   => Data.Doc,
+                      XPath => "/system/expressions/expression[@name='alias_expression_string']"),
+                  Backtrace   => Backtrace,
+                  Node_Access => Node_Access),
+              Message => "String value mismatch");
 
       --- Fault-Tests
       -- Expression_Case_IntType
@@ -1398,6 +1504,48 @@ package body Mutools.Expressions.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure String_Expr_No_Child
+      is
+         Data        : Muxml.XML_Data_Type;
+         Backtrace   : String_Vector.Vector;
+         Node_Access : Access_Hashmaps_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/test_policy_src_concatenation.xml");
+         Mutools.Expressions.Test_Data.Initialize_Node_Access_Testing
+            (Data        => Data,
+             Node_Access => Node_Access);
+
+         Muxml.Utils.Remove_Elements
+            (Doc   => Data.Doc,
+             XPath => "/system/expressions/expression"
+             & "[@name='compositeName']/*");
+         declare
+            Dummy : Ada.Strings.Unbounded.Unbounded_String;
+         begin
+            Dummy :=  Ada.Strings.Unbounded.To_Unbounded_String
+               (String_Expression
+                   (Backtrace   => Backtrace,
+                    Node_Access => Node_Access,
+                    Node        => Muxml.Utils.Get_Element
+                       (Doc   => Data.Doc,
+                        XPath => "/system/expressions/expression"
+                           & "[@name='compositeName']")));
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+         exception
+            when E : Invalid_Expression =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                          = "String-expression 'compositeName' "
+                            & "does not have one unique child",
+                       Message   => "Exception message mismatch "
+                       & "(invalid concatenation)");
+         end;
+      end String_Expr_No_Child;
+
+      ----------------------------------------------------------------------
+
       procedure Concat_One_Child
       is
          Data        : Muxml.XML_Data_Type;
@@ -1526,6 +1674,7 @@ package body Mutools.Expressions.Test_Data.Tests is
       Positive_Test;
       Concat_No_Child;
       Concat_One_Child;
+      String_Expr_No_Child;
       Eval_String_Ref_To_Empty;
       No_String_Expr;
 
@@ -1726,53 +1875,93 @@ package body Mutools.Expressions.Test_Data.Tests is
       Node_Access : Access_Hashmaps_Type;
       Backtrace   : String_Vector.Vector;
       Node        : DOM.Core.Node;
+
+      generic
+         type Value_Type (<>) is private;
+         with function Contains (Key : String) return Boolean;
+         with function Get_Value (Name : String) return Value_Type;
+         with function Value_Type_To_String (Value : Value_Type) return String;
+      procedure Positive_Generic_Test
+         (Node_XPath : String;
+          Var_Name   : String;
+          Expr_Value : Value_Type);
+
+      function Dummy_Map (Input : String) return String
+      is
+      begin
+         return Input;
+      end Dummy_Map;
+
+      procedure Positive_Generic_Test
+         (Node_XPath : String;
+          Var_Name   : String;
+          Expr_Value : Value_Type)
+      is
+      begin
+         Node := Muxml.Utils.Get_Element
+            (Doc   => Data.Doc,
+             XPath => Node_XPath & "[@name='" & Var_Name & "']");
+         Mutools.Expressions.Test_Data.Initialize_Node_Access_Testing
+            (Data        => Data,
+             Node_Access => Node_Access);
+         Expand_Single_Node
+            (Node        => Node,
+             Backtrace   => Backtrace,
+             Node_Access => Node_Access);
+         Assert (Condition => Contains (Var_Name),
+                 Message   => "Missing containment in output: " & Var_Name);
+         Assert (Condition => Get_Value (Var_Name) = Expr_Value,
+                 Message   => "Value mismatch: " & Value_Type_To_String (Expr_Value));
+      end Positive_Generic_Test;
+
+      procedure Positive_Boolean_Test is new Positive_Generic_Test
+         (Value_Type           => Boolean,
+          Contains             => Node_Access.Output_Boolean.Contains,
+          Get_Value            => Node_Access.Output_Boolean.Element,
+          Value_Type_To_String => Boolean'Image);
+
+      procedure Positive_Integer_Test is new Positive_Generic_Test
+         (Value_Type           => Integer,
+          Contains             => Node_Access.Output_Integer.Contains,
+          Get_Value            => Node_Access.Output_Integer.Element,
+          Value_Type_To_String => Integer'Image);
+
+      procedure Positive_String_Test is new Positive_Generic_Test
+         (Value_Type           => String,
+          Contains             => Node_Access.Output_String.Contains,
+          Get_Value            => Node_Access.Output_String.Element,
+          Value_Type_To_String => Dummy_Map);
+
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.None,
                    File => "data/test_policy_src_evalStringConcatCase.xml");
-      Mutools.Expressions.Test_Data.Initialize_Node_Access_Testing
-            (Data        => Data,
-             Node_Access => Node_Access);
 
       -- positive tests
-      Node := Muxml.Utils.Get_Element
-            (Doc   => Data.Doc,
-             XPath => "/system/expressions/expression[@name='session2_enabled']");
-      Expand_Single_Node
-         (Node        => Node,
-          Backtrace   => Backtrace,
-          Node_Access => Node_Access);
-      Assert (Condition => Node_Access.Output_Boolean.Contains ("session2_enabled"),
-              Message   => "Missing containment in output");
-      Assert (Condition => Node_Access.Output_Boolean ("session2_enabled") = True,
-              Message   => "Value mismatch.");
-
-      Node := Muxml.Utils.Get_Element
-            (Doc   => Data.Doc,
-             XPath => "/system/config/string[@name='name3']");
-      Expand_Single_Node
-         (Node        => Node,
-          Backtrace   => Backtrace,
-          Node_Access => Node_Access);
-      Assert (Condition => Node_Access.Output_String.Contains ("name3"),
-              Message   => "Missing containment in output");
-      Assert (Condition => Node_Access.Output_String ("name3") = "myname",
-              Message   => "Value mismatch.");
-
-      Node := Muxml.Utils.Get_Element
-         (Doc   => Data.Doc,
-          XPath => "/system/config/integer[@name='session_count']");
-      Mutools.Expressions.Test_Data.Initialize_Node_Access_Testing
-            (Data        => Data,
-             Node_Access => Node_Access);
-      Expand_Single_Node
-         (Node        => Node,
-          Backtrace   => Backtrace,
-          Node_Access => Node_Access);
-      Assert (Condition => Node_Access.Output_Integer.Contains ("session_count"),
-              Message   => "Missing containment in output");
-      Assert (Condition => Node_Access.Output_Integer ("session_count") = 4,
-              Message   => "Value mismatch.");
+      Positive_Boolean_Test
+         (Node_XPath => "/system/expressions/expression",
+          Var_Name   => "session2_enabled",
+          Expr_Value => True);
+      Positive_String_Test
+         (Node_XPath => "/system/config/string",
+          Var_Name   => "name3",
+          Expr_Value => "myname");
+      Positive_Integer_Test
+         (Node_XPath => "/system/config/integer",
+          Var_Name   => "session_count",
+          Expr_Value => 4);
+      Positive_Boolean_Test
+         (Node_XPath => "/system/expressions/expression",
+          Var_Name   => "alias_expression_bool",
+          Expr_Value => True);
+      Positive_Integer_Test
+         (Node_XPath => "/system/expressions/expression",
+          Var_Name   => "alias_expression_int",
+          Expr_Value => -4);
+      Positive_String_Test
+         (Node_XPath => "/system/expressions/expression",
+          Var_Name   => "alias_expression_string",
+          Expr_Value => "foobar");
 
       --- negative test
       -- attempt to expand text-node

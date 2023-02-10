@@ -111,7 +111,7 @@
     </xs:documentation>
    </xs:annotation>
   </xs:attribute>
-  <xs:attribute name="virtualAddress" type="word64Type" use="required">
+  <xs:attribute name="virtualAddress" type="word64Type">
    <xs:annotation>
     <xs:documentation>
      Address of mapping in subject address space.
@@ -154,7 +154,7 @@
     </xs:documentation>
    </xs:annotation>
   </xs:attribute>
-  <xs:attribute name="virtualAddress" type="word64Type" use="required">
+  <xs:attribute name="virtualAddress" type="word64Type">
    <xs:annotation>
     <xs:documentation>
      Address of mapping in subject address space.

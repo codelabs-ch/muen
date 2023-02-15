@@ -99,7 +99,7 @@ is
                  & Input_Spec & "'");
 
       Muxml.Parse (Data => Spec,
-                   Kind => Muxml.None,
+                   Kind => Muxml.Component,
                    File => Input_Spec);
 
       declare

@@ -846,7 +846,7 @@ is
                 Ref_Child => Insert_Position);
          else
             Config_Node := DOM.Core.Nodes.Append_Child
-               (N         => DOM.Core.Nodes.Parent_Node (N => System_Node),
+               (N         => System_Node,
                 New_Child => Config_Node);
          end if;
 

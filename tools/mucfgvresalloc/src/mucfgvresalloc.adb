@@ -26,7 +26,7 @@ with Mucfgcheck.Validation_Errors;
 with Vres_Alloc;
 with Vres_Alloc.Cmd_Line;
 
-procedure Mucfgvaalloc
+procedure Mucfgvresalloc
 is
 begin
    Vres_Alloc.Cmd_Line.Init
@@ -60,4 +60,4 @@ exception
       Mulog.Log (Level => Mulog.Error,
                  Msg   => Ada.Exceptions.Exception_Information (X => E));
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
-end Mucfgvaalloc;
+end Mucfgvresalloc;

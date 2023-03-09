@@ -30,7 +30,7 @@ is
       "mucfgalloc/mucfgalloc.gpr",
       "mucfgcjoin/mucfgcjoin.gpr",
       "mucfgcvresalloc/mucfgcvresalloc.gpr",
-      "mucfgvaalloc/mucfgvaalloc.gpr",
+      "mucfgvresalloc/mucfgvresalloc.gpr",
       "mucfgexpand/mucfgexpand.gpr",
       "mucfgmemhashes/mucfgmemhashes.gpr",
       "mucfgmerge/mucfgmerge.gpr",

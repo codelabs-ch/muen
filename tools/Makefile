@@ -20,7 +20,7 @@ TOOLS =            \
 	mucfgalloc     \
 	mucfgcjoin     \
 	mucfgcvresalloc  \
-	mucfgvaalloc  \
+	mucfgvresalloc  \
 	mucfgexpand    \
 	mucfgmemhashes \
 	mucfgmerge     \

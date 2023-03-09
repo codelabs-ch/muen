@@ -1,4 +1,4 @@
-COMPONENT = mucfgvaalloc
+COMPONENT = mucfgvresalloc
 
 include ../component.mk
 include ../coverage.mk

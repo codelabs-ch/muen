@@ -102,7 +102,7 @@ is
    Invalid_Region           : exception;
 
    -------------------------------------------------------------------------
-   -- Procedures/functions for mucfgcvresalloc and mucfgvaalloc
+   -- Procedures/functions for mucfgcvresalloc and mucfgvresalloc
 
    type Run_Type_Type is (VIRTUAL_ADDRESSES, WRITER_EVENTS, READER_EVENTS);
 
@@ -233,7 +233,7 @@ private
        Last_Address  :        Interfaces.Unsigned_64);
 
    -------------------------------------------------------------------------
-   -- Procedures/functions for mucfgcvresalloc and mucfgvaalloc
+   -- Procedures/functions for mucfgcvresalloc and mucfgvresalloc
 
    package Memory_Intervals_Package is new
      Ada.Containers.Doubly_Linked_Lists (Element_Type => Memory_Interval_Type);

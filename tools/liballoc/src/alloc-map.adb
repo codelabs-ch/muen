@@ -170,6 +170,38 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Allocate_And_Set_Single_Resource
+     (Av_Mem   : in out Alloc.Map.VA_Regions_Type;
+      Node     :        DOM.Core.Node;
+      Run_Type :        Alloc.Map.Run_Type_Type;
+      Size     :        String := "")
+   is
+      Size_U64    : Interfaces.Unsigned_64;
+      New_Address : Interfaces.Unsigned_64;
+   begin
+      case Run_Type is
+         when VIRTUAL_ADDRESSES =>
+            if Size /= "" then
+               Size_U64 := Interfaces.Unsigned_64'Value (Size);
+            else
+               Size_U64 := Interfaces.Unsigned_64'Value
+                 (DOM.Core.Elements.Get_Attribute (Elem => Node,
+                                                   Name => "size"));
+            end if;
+         when READER_EVENTS | WRITER_EVENTS =>
+            Size_U64 := 1;
+      end case;
+
+      New_Address := Alloc.Map.Reserve_Memory (List => Av_Mem,
+                                               Size => Size_U64);
+      Set_Virtual_Resource
+        (Node     => Node,
+         Run_Type => Run_Type,
+         Value    => New_Address);
+   end Allocate_And_Set_Single_Resource;
+
+   -------------------------------------------------------------------------
+
    procedure Allocate_Fixed
      (Map           : in out Map_Type;
       Name          :        Ada.Strings.Unbounded.Unbounded_String;
@@ -222,38 +254,6 @@ is
          First_Address => First_Address,
          Last_Address  => Last_Address);
    end Allocate_Fixed;
-
-   -------------------------------------------------------------------------
-
-   procedure Allocate_Single_Region
-     (Av_Mem   : in out Alloc.Map.VA_Regions_Type;
-      Node     :        DOM.Core.Node;
-      Run_Type :        Alloc.Map.Run_Type_Type;
-      Size     :        String := "")
-   is
-      Size_U64    : Interfaces.Unsigned_64;
-      New_Address : Interfaces.Unsigned_64;
-   begin
-      case Run_Type is
-         when VIRTUAL_ADDRESSES =>
-            if Size /= "" then
-               Size_U64 := Interfaces.Unsigned_64'Value (Size);
-            else
-               Size_U64 := Interfaces.Unsigned_64'Value
-                 (DOM.Core.Elements.Get_Attribute (Elem => Node,
-                                                   Name => "size"));
-            end if;
-         when READER_EVENTS | WRITER_EVENTS =>
-            Size_U64 := 1;
-      end case;
-
-      New_Address := Alloc.Map.Reserve_Memory (List => Av_Mem,
-                                               Size => Size_U64);
-      Set_Virtual_Resource
-        (Node     => Node,
-         Run_Type => Run_Type,
-         Value    => New_Address);
-   end Allocate_Single_Region;
 
    -------------------------------------------------------------------------
 

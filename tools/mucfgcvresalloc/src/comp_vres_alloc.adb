@@ -372,7 +372,7 @@ is
                Curr_Node :=  Alloc.Map.Node_List_Package.Element (Curr);
                if DOM.Core.Elements.Get_Tag_Name (Elem => Curr_Node) /= "array"
                then
-                  Alloc.Map.Allocate_Single_Region
+                  Alloc.Map.Allocate_And_Set_Single_Resource
                     (Av_Mem   => Available_Memory,
                      Node     => Curr_Node,
                      Run_Type => Run_Type);

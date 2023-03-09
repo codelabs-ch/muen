@@ -156,8 +156,7 @@ is
    --  Depending on Run_Type, set the resource attribute of Node.
    --  A region of size Size is reserved in Av_Mem.
    --  If Size is not given, the 'size' attribute of Node is read instead.
-   --  TODO: Rename! Maybe "Set_Single_Virtual_Resource"
-   procedure Allocate_Single_Region
+   procedure Allocate_And_Set_Single_Resource
      (Av_Mem   : in out Alloc.Map.VA_Regions_Type;
       Node     :        DOM.Core.Node;
       Run_Type :        Run_Type_Type;

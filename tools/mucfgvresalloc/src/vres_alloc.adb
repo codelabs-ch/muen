@@ -149,7 +149,7 @@ is
             when Alloc.Map.READER_EVENTS | Alloc.Map.WRITER_EVENTS =>
                Size := 1;
          end case;
-         Alloc.Map.Allocate_Single_Region
+         Alloc.Map.Allocate_And_Set_Single_Resource
            (Av_Mem   => Av_Mem,
             Node     => Curr_Node,
             Run_Type => Run_Type,

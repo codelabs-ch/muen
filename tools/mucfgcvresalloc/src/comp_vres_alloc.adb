@@ -44,7 +44,7 @@ with Muxml.Utils;
 with Alloc.Map;
 with Alloc.Config;
 
-package body Comp_V_Res_Alloc
+package body Comp_Vres_Alloc
 is
    --  Count the number of child nodes of type Element_Node
    function Count_Element_Children
@@ -460,4 +460,4 @@ is
       Mulog.Log (Msg => "Successfully created policy '"
                    & Output_File_Name & "'");
    end Run;
-end Comp_V_Res_Alloc;
+end Comp_Vres_Alloc;

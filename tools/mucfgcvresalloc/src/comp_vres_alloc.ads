@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2022 secunet Security Networks AG
+--  Copyright (C) 2023 secunet Security Networks AG
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -15,17 +15,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmulog/libmulog";
-with "../libmutools/libmutools";
-with "../liballoc/liballoc";
-with "../libmucfgcheck/libmucfgcheck";
-with "../libtest/libtest";
+package Comp_Vres_Alloc
+is
 
-project GNATtest_Mucfgcvaalloc extends "../tests.gpr" is
+   --  The main procedure (start allocation)
+   procedure Run
+     (Input_Spec       : String;
+      Include_Path     : String;
+      Output_File_Name : String);
 
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj/tests";
+   Validation_Error : exception;
 
-   package Make renames Tests.Make;
-
-end GNATtest_Mucfgcvaalloc;
+end Comp_Vres_Alloc;

@@ -23,26 +23,26 @@ with Muxml;
 with Mutools.Utils;
 with Mucfgcheck.Validation_Errors;
 
-with Comp_V_Res_Alloc;
-with Comp_V_Res_Alloc.Cmd_Line;
+with Comp_Vres_Alloc;
+with Comp_Vres_Alloc.Cmd_Line;
 
-procedure Mucfgcvaalloc
+procedure Mucfgcvresalloc
 is
 begin
-   Comp_V_Res_Alloc.Cmd_Line.Init
+   Comp_Vres_Alloc.Cmd_Line.Init
       (Description     => "Muen component virtual address allocator");
-   Comp_V_Res_Alloc.Run
-     (Input_Spec       => Comp_V_Res_Alloc.Cmd_Line.Get_Input_Spec,
-      Include_Path     => Comp_V_Res_Alloc.Cmd_Line.Get_Include_Path,
-      Output_File_Name => Comp_V_Res_Alloc.Cmd_Line.Get_Output_Filename);
+   Comp_Vres_Alloc.Run
+     (Input_Spec       => Comp_Vres_Alloc.Cmd_Line.Get_Input_Spec,
+      Include_Path     => Comp_Vres_Alloc.Cmd_Line.Get_Include_Path,
+      Output_File_Name => Comp_Vres_Alloc.Cmd_Line.Get_Output_Filename);
 
 exception
-   when Comp_V_Res_Alloc.Cmd_Line.Invalid_Cmd_Line =>
+   when Comp_Vres_Alloc.Cmd_Line.Invalid_Cmd_Line =>
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : Muxml.XML_Input_Error
       | Mutools.Utils.File_Not_Found
       | Muxml.Validation_Error =>
-      -- TODO mmmDEBUG: maybe add    Comp_V_Res_Alloc.Checks.Validation_Error
+      -- TODO mmmDEBUG: maybe add    Comp_Vres_Alloc.Checks.Validation_Error
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "Atomatic allocation of virtual addresses failed, aborting");
       Mulog.Log (Level => Mulog.Error,
@@ -60,4 +60,4 @@ exception
       Mulog.Log (Level => Mulog.Error,
                  Msg   => Ada.Exceptions.Exception_Information (X => E));
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
-end Mucfgcvaalloc;
+end Mucfgcvresalloc;

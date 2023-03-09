@@ -19,7 +19,7 @@ with GNAT.Strings;
 
 with Mutools.Cmd_Line;
 
-package body Comp_V_Res_Alloc.Cmd_Line
+package body Comp_Vres_Alloc.Cmd_Line
 is
 
    function S
@@ -113,4 +113,4 @@ is
       end if;
    end Init;
 
-end Comp_V_Res_Alloc.Cmd_Line;
+end Comp_Vres_Alloc.Cmd_Line;

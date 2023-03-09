@@ -19,7 +19,7 @@ with Ada.Strings.Unbounded;
 
 with GNAT.Command_Line;
 
-package Comp_V_Res_Alloc.Cmd_Line
+package Comp_Vres_Alloc.Cmd_Line
 is
    --  Init command line, use given tool description in usage output.
    procedure Init (Description : String);
@@ -44,4 +44,4 @@ private
    Parser : GNAT.Command_Line.Opt_Parser
      := GNAT.Command_Line.Command_Line_Parser;
 
-end Comp_V_Res_Alloc.Cmd_Line;
+end Comp_Vres_Alloc.Cmd_Line;

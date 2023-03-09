@@ -990,7 +990,7 @@ is
    function To_String (Number : Interfaces.Unsigned_64) return String
    is
    begin
-      return Ada.Strings.Fixed.Trim (N'Image, Ada.Strings.Both);
+      return Ada.Strings.Fixed.Trim (Number'Image, Ada.Strings.Both);
    end To_String;
 
    -------------------------------------------------------------------------

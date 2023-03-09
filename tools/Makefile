@@ -19,7 +19,7 @@ TOOLS =            \
 	mucbinsplit    \
 	mucfgalloc     \
 	mucfgcjoin     \
-	mucfgcvaalloc  \
+	mucfgcvresalloc  \
 	mucfgvaalloc  \
 	mucfgexpand    \
 	mucfgmemhashes \

@@ -46,11 +46,6 @@ with Alloc.Config;
 
 package body Comp_Vres_Alloc
 is
-   --  Count the number of child nodes of type Element_Node
-   function Count_Element_Children
-     (Node : DOM.Core.Node)
-     return Interfaces.Unsigned_64;
-
    --  Check and expand expressions and conditionals in given input spec.
    procedure Expand_Expr_Sub_Cond (Data : Muxml.XML_Data_Type);
 
@@ -82,7 +77,7 @@ is
    is
       use type Interfaces.Unsigned_64;
       Count : constant Interfaces.Unsigned_64
-        := Count_Element_Children (Node => Node);
+        := Muxml.Utils.Count_Element_Children (Node => Node);
       --  We prevent Count from reaching 0 when arrays are empty.
       --  Setting the resource-base to a default (like 0) may case clashes
       --  in the component or toolchain code.
@@ -124,32 +119,6 @@ is
                Value => Alloc.Map.To_String (New_Address));
       end case;
    end Allocate_Array;
-
-   ----------------------------------------------------------------------
-
-   -- TODO: could export this to some lib. Used in mucgenspec > To_Name_Array
-   --   and probably others
-   function Count_Element_Children
-     (Node : DOM.Core.Node)
-     return Interfaces.Unsigned_64
-   is
-      use type DOM.Core.Node_Types;
-      use type Interfaces.Unsigned_64;
-
-      Curr_Node : DOM.Core.Node;
-      Child_List : constant DOM.Core.Node_List
-        := DOM.Core.Nodes.Child_Nodes (N => Node);
-      Count : Interfaces.Unsigned_64 := 0;
-   begin
-      for I in 0 ..  DOM.Core.Nodes.Length (List => Child_List) - 1 loop
-         Curr_Node := DOM.Core.Nodes.Item (List  => Child_List,
-                                           Index => I);
-         if DOM.Core.Nodes.Node_Type (N => Curr_Node) = DOM.Core.Element_Node then
-            Count := Count + 1;
-         end if;
-      end loop;
-      return Count;
-   end Count_Element_Children;
 
    -------------------------------------------------------------------------
 
@@ -208,7 +177,8 @@ is
          Alloc.Map.Subtract_Memory_Interval
            (List          => Av_Mem,
             First_Address => Interfaces.Unsigned_64'Value (Attr_Value),
-            Size          => Size * Count_Element_Children (Node => Node));
+            Size          => Size
+              * Muxml.Utils.Count_Element_Children (Node => Node));
       end if;
    end Include_Array;
 

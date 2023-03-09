@@ -161,6 +161,30 @@ is
       return False;
    end Contains;
 
+   ----------------------------------------------------------------------
+
+   function Count_Element_Children
+     (Node : DOM.Core.Node)
+     return Interfaces.Unsigned_64
+   is
+      use type DOM.Core.Node_Types;
+      use type Interfaces.Unsigned_64;
+
+      Curr_Node : DOM.Core.Node;
+      Child_List : constant DOM.Core.Node_List
+        := DOM.Core.Nodes.Child_Nodes (N => Node);
+      Count : Interfaces.Unsigned_64 := 0;
+   begin
+      for I in 0 ..  DOM.Core.Nodes.Length (List => Child_List) - 1 loop
+         Curr_Node := DOM.Core.Nodes.Item (List  => Child_List,
+                                           Index => I);
+         if DOM.Core.Nodes.Node_Type (N => Curr_Node) = DOM.Core.Element_Node then
+            Count := Count + 1;
+         end if;
+      end loop;
+      return Count;
+   end Count_Element_Children;
+
    -------------------------------------------------------------------------
 
    function Get_Attribute

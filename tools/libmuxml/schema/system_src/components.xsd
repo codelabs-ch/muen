@@ -457,7 +457,7 @@
     </xs:documentation>
    </xs:annotation>
   </xs:attribute>
-  <xs:attribute name="event" type="xs:nonNegativeInteger" use="optional">
+  <xs:attribute name="event" type="eventIdType" use="optional">
   <xs:annotation>
    <xs:documentation>
     Notification event number.
@@ -633,7 +633,7 @@
   <xs:complexContent>
    <xs:extension base="baseLogicalEventType">
      <xs:group ref="sourceEventActionsGroup" minOccurs="0" maxOccurs="1"/>
-     <xs:attribute name="id" type="xs:nonNegativeInteger" use="required">
+     <xs:attribute name="id" type="eventIdType" use="required">
       <xs:annotation>
        <xs:documentation>
         ID of source event. For valid ID ranges see \texttt{vmcall} group in

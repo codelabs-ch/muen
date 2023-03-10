@@ -11,6 +11,16 @@
    <xs:maxInclusive value="255"/>
   </xs:restriction>
  </xs:simpleType>
+ <xs:simpleType name="eventIdType">
+   <xs:annotation>
+     <xs:documentation>
+       Event number.
+     </xs:documentation>
+   </xs:annotation>
+   <xs:restriction base="xs:nonNegativeInteger">
+     <xs:maxInclusive value="63"/>
+   </xs:restriction>
+ </xs:simpleType>
 
  <xs:simpleType name="irqNumberType">
   <xs:annotation>

@@ -78,7 +78,7 @@ is
    --  per Hand geschrieben werden!
    C_Readers_Read_Only_Targets : constant Mutools.String_Vector.Vector
      := Mutools.String_Vector.To_Vector
-     (New_Item => "requires/events/target/event",
+     (New_Item => "requires/events/target/event/inject_interrupt/..",
       Length   => 1);
 
    --  This is the list of XPaths where Comp_Res_Alloc may assign the
@@ -114,7 +114,7 @@ is
       Length   => 1);
    Readers_Read_Only_Targets : constant Mutools.String_Vector.Vector
      := Mutools.String_Vector.To_Vector
-     (New_Item => "events/target/event",
+     (New_Item => "events/target/event/inject_interrupt/..",
       Length   => 1);
 
    --  This is like  C_Event_Source_Read_Write_Targets but for Res_Alloc and

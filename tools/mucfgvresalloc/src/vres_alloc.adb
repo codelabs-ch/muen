@@ -357,10 +357,7 @@ is
       Inserted : Boolean;
       New_Value : Address_And_Size_Type;
    begin
-      if not Alloc.Map.Node_Has_Relevant_Resource (Elem => Node, Run_Type => Run_Type)
-      then
-         return;
-      elsif Attr_Value = "" or Attr_Value = "auto" or Logical = "" then
+      if Attr_Value = "" or Attr_Value = "auto" or Logical = "" then
          raise Validation_Error with
            "Missing attribute value at '"
            & Mutools.Xmldebuglog.Get_Xpath (Node => Node)

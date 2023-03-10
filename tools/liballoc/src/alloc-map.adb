@@ -674,26 +674,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Node_Has_Relevant_Resource
-     (Elem     : DOM.Core.Node;
-      Run_Type : Alloc.Map.Run_Type_Type)
-     return Boolean
-   is
-   begin
-      if Run_Type = Alloc.Map.READER_EVENTS and then
-        DOM.Core.Elements.Get_Tag_Name (Elem => Elem) = "event" and then
-        Muxml.Utils.Get_Unique_Element_Child
-        (Parent     => Elem,
-         Child_Name => "inject_interrupt") = null
-      then
-         return False;
-      else
-         return True;
-      end if;
-   end Node_Has_Relevant_Resource;
-
-   -------------------------------------------------------------------------
-
    procedure Reserve
      (Map           : in out Map_Type;
       Kind          :        Region_Kind;

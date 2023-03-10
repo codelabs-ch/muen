@@ -188,15 +188,6 @@ is
       Run_Type : Alloc.Map.Run_Type_Type)
      return String;
 
-   --  Returns "False" if and only if
-   --    Run_Type is Reader_Event and
-   --    the Tag_Name of the node is "event" and
-   --    there is no child-node with Tag_Name "inject_interrupt".
-   function Node_Has_Relevant_Resource
-     (Elem     : DOM.Core.Node;
-      Run_Type : Alloc.Map.Run_Type_Type)
-     return Boolean;
-
    --  Depending on Run_Type, set the attribute "virtualAddress", "event" or
    --  "vector" of Node to Value.
    procedure Set_Virtual_Resource

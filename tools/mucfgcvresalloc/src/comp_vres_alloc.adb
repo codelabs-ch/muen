@@ -196,10 +196,7 @@ is
       Size : constant Interfaces.Unsigned_64
         := Alloc.Map.Get_Resource_Size (Elem => Node, Run_Type => Run_Type);
    begin
-      if not Alloc.Map.Node_Has_Relevant_Resource (Elem => Node, Run_Type => Run_Type)
-      then
-         return;
-      elsif Attr_Value = "auto" or Attr_Value = "" then
+      if Attr_Value = "auto" or Attr_Value = "" then
          --  if the node is missing a resource, add it to the todo-list
          if not Read_Only then
             Alloc.Map.Node_List_Package.Append

@@ -45,6 +45,31 @@ package body Mutools.Expressions.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure Minimal_Component
+      is
+         Output : constant String := "obj/output_minimal_component.xml";
+         Data   : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse
+           (Data => Data,
+            Kind => Muxml.Component,
+            File => "data/minimal_component.xml");
+
+         Expand (Policy => Data);
+
+         Muxml.Write (Data => Data,
+                      Kind => Muxml.Component,
+                      File => Output);
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/output_minimal_component.xml",
+                  Filename2 => Output),
+                 Message   => "Policy mismatch: " & Output);
+
+         Ada.Directories.Delete_File (Name => Output);
+      end Minimal_Component;
+
+      ----------------------------------------------------------------------
+
       procedure Positive_Test
       is
          Output : constant String := "obj/output_config_expressions.xml";
@@ -125,12 +150,11 @@ package body Mutools.Expressions.Test_Data.Tests is
 
          Ada.Directories.Delete_File (Name => Output);
       end No_Config_No_Expressions;
-
    begin
       Positive_Test;
       No_Expressions;
       No_Config_No_Expressions;
-
+      Minimal_Component;
 --  begin read only
    end Test_Expand;
 --  end read only

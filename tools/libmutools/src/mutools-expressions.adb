@@ -823,11 +823,7 @@ is
             DOM.Core.Nodes.Free (N => Config_Node);
 
          else
-            System_Node := DOM.Core.Nodes.Item
-               (List  => McKae.XML.XPath.XIA.XPath_Query
-                   (N     => Policy.Doc,
-                    XPath => "/*"),
-                Index => 0);
+            System_Node := DOM.Core.Documents.Get_Element (Doc => Policy.Doc);
 
             if DOM.Core.Nodes.Has_Child_Nodes (N => System_Node) then
                Insert_Position := DOM.Core.Nodes.First_Child (N => System_Node);
@@ -846,7 +842,7 @@ is
                 Ref_Child => Insert_Position);
          else
             Config_Node := DOM.Core.Nodes.Append_Child
-               (N         => DOM.Core.Nodes.Parent_Node (N => System_Node),
+               (N         => System_Node,
                 New_Child => Config_Node);
          end if;
 

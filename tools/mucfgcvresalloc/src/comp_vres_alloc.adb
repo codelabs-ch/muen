@@ -308,13 +308,13 @@ is
               (N     => Policy.Doc,
                XPath => Alloc.Map.Get_Target_String
                  (Target_List => Target_List_R_W,
-                  Prefix      => Alloc.Config.C_Res_Alloc_Target_Prefix));
+                  Prefix      => "/component"));
             R_Targets : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
               (N     => Policy.Doc,
                XPath => Alloc.Map.Get_Target_String
                  (Target_List => Target_List_R,
-                  Prefix      => Alloc.Config.C_Res_Alloc_Target_Prefix));
+                  Prefix      => "/component"));
          begin
             Include_Node_List (Node_List => R_Targets,
                                Read_Only => True,

@@ -424,7 +424,7 @@ is
         (N     => Comp_Node,
          XPath => Alloc.Map.Get_Target_String
            (Target_List => Targets_List_1,
-            Prefix      => Alloc.Config.C_Res_Alloc_Target_Prefix));
+            Prefix      => "/component"));
       Put_Targets_In_Map (Mapping  => Mapping,
                           Targets  => Targets,
                           Run_Type => Run_Type);
@@ -433,7 +433,7 @@ is
         (N     => Comp_Node,
          XPath => Alloc.Map.Get_Target_String
            (Target_List => Targets_List_2,
-            Prefix      => Alloc.Config.C_Res_Alloc_Target_Prefix));
+            Prefix      => "/component"));
       Put_Targets_In_Map (Mapping  => Mapping,
                           Targets  => Targets,
                           Run_Type => Run_Type);

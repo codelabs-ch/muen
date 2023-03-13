@@ -42,10 +42,6 @@ is
      := (First_Address => 0,
          Last_Address  => 63);
 
-   --  This prefix is used for the xpaths of all targets of mucfgcresalloc.
-   C_Res_Alloc_Target_Prefix : constant String
-     := "/component";
-
    --  This is the list of XPaths where Comp_Va_alloc may assign virtual
    --  addresses.
    --  The paths are relative to the root of the respective component.

@@ -171,9 +171,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Allocate_And_Set_Single_Resource
-     (Av_Mem   : in out Alloc.Map.VA_Regions_Type;
+     (Av_Mem   : in out VA_Regions_Type;
       Node     :        DOM.Core.Node;
-      Run_Type :        Alloc.Map.Run_Type_Type;
+      Run_Type :        Run_Type_Type;
       Size     :        String := "")
    is
       Size_U64    : Interfaces.Unsigned_64;
@@ -192,8 +192,8 @@ is
             Size_U64 := 1;
       end case;
 
-      New_Address := Alloc.Map.Reserve_Memory (List => Av_Mem,
-                                               Size => Size_U64);
+      New_Address := Reserve_Memory (List => Av_Mem,
+                                     Size => Size_U64);
       Set_Virtual_Resource
         (Node     => Node,
          Run_Type => Run_Type,
@@ -342,7 +342,7 @@ is
 
    function Get_Resource_Size
      (Elem     : DOM.Core.Node;
-      Run_Type : Alloc.Map.Run_Type_Type)
+      Run_Type : Run_Type_Type)
      return Interfaces.Unsigned_64
    is
       Tag_Name : constant String
@@ -356,7 +356,7 @@ is
       function Check_Size (Size : String) return Interfaces.Unsigned_64
       is
       begin
-         if Run_Type = Alloc.Map.VIRTUAL_ADDRESSES then
+         if Run_Type = VIRTUAL_ADDRESSES then
             if Size = "" then
                raise Validation_Error with
                  "Could not find 'size'/'elementSize' attribute in node at '"
@@ -386,14 +386,14 @@ is
 
    function Get_Resource_Value
      (Elem     : DOM.Core.Node;
-      Run_Type : Alloc.Map.Run_Type_Type)
+      Run_Type : Run_Type_Type)
      return String
    is
       Tag_Name : constant String
         := DOM.Core.Elements.Get_Tag_Name (Elem => Elem);
    begin
       case Run_Type is
-         when Alloc.Map.VIRTUAL_ADDRESSES =>
+         when VIRTUAL_ADDRESSES =>
             if Tag_Name = "array" then
                return DOM.Core.Elements.Get_Attribute
                  (Elem => Elem,
@@ -403,7 +403,7 @@ is
                  (Elem => Elem,
                   Name => "virtualAddress");
             end if;
-         when Alloc.Map.READER_EVENTS =>
+         when READER_EVENTS =>
             if Tag_Name = "reader" then
                return DOM.Core.Elements.Get_Attribute
                  (Elem => Elem,
@@ -433,7 +433,7 @@ is
                  & Tag_Name
                  & "' when reading attribute value for reader event";
             end if;
-         when Alloc.Map.WRITER_EVENTS =>
+         when WRITER_EVENTS =>
             if Tag_Name = "writer" then
                return DOM.Core.Elements.Get_Attribute
                  (Elem => Elem,
@@ -872,7 +872,7 @@ is
 
    procedure Set_Virtual_Resource
      (Node     : DOM.Core.Node;
-      Run_Type : Alloc.Map.Run_Type_Type;
+      Run_Type : Run_Type_Type;
       Value    : Interfaces.Unsigned_64)
    is
    begin

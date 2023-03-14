@@ -157,7 +157,7 @@ is
    --  A region of size Size is reserved in Av_Mem.
    --  If Size is not given, the 'size' attribute of Node is read instead.
    procedure Allocate_And_Set_Single_Resource
-     (Av_Mem   : in out Alloc.Map.VA_Regions_Type;
+     (Av_Mem   : in out VA_Regions_Type;
       Node     :        DOM.Core.Node;
       Run_Type :        Run_Type_Type;
       Size     :        String := "");
@@ -176,7 +176,7 @@ is
    --  (or of one element of the array) is returned. Otherwise, 1 is returend.
    function Get_Resource_Size
      (Elem     : DOM.Core.Node;
-      Run_Type : Alloc.Map.Run_Type_Type)
+      Run_Type : Run_Type_Type)
      return Interfaces.Unsigned_64;
 
    --  Returns the value of "virtualAddress", "vector", "event",
@@ -185,14 +185,14 @@ is
    --  If the needed attribute is not found, then "" is returned.
    function Get_Resource_Value
      (Elem     : DOM.Core.Node;
-      Run_Type : Alloc.Map.Run_Type_Type)
+      Run_Type : Run_Type_Type)
      return String;
 
    --  Depending on Run_Type, set the attribute "virtualAddress", "event" or
    --  "vector" of Node to Value.
    procedure Set_Virtual_Resource
      (Node     : DOM.Core.Node;
-      Run_Type : Alloc.Map.Run_Type_Type;
+      Run_Type : Run_Type_Type;
       Value    : Interfaces.Unsigned_64);
 
    Validation_Error : exception;

@@ -25,20 +25,20 @@ is
    --  contained in.
    --  TODO: Improvement: Use platform properties for these values and pass
    --        as parameter at runtime
-   Default_Va_Space_Native : constant Alloc.Map.Memory_Interval_Type
+   Default_Va_Space_Native : constant Map.Memory_Interval_Type
      := (First_Address => 16#0000_0000_2000_0000#,
          Last_Address  => 16#0000_0007_FFFF_FFFF#);
 
-   Default_Va_Space_Vm : constant Alloc.Map.Memory_Interval_Type
+   Default_Va_Space_Vm : constant Map.Memory_Interval_Type
      := (First_Address => 16#0000_0010_0000_0000#,
          Last_Address  => 16#0000_001F_FFFF_FFFF#);
 
    --  These are the domains for the attributes 'vector' and 'event'
    --  of channel-readers and channel-writers respectively
-   Vector_Numbers_Domain : constant Alloc.Map.Memory_Interval_Type
+   Vector_Numbers_Domain : constant Map.Memory_Interval_Type
      := (First_Address => 0,
          Last_Address  => 255);
-   Event_Numbers_Domain : constant Alloc.Map.Memory_Interval_Type
+   Event_Numbers_Domain : constant Map.Memory_Interval_Type
      := (First_Address => 0,
          Last_Address  => 63);
 

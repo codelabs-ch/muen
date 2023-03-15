@@ -864,7 +864,7 @@ is
          Curr := Next (Curr);
       end loop;
       raise Out_Of_Memory with
-        "Could not find free virtual memory region of size '"
+        "Could not find free domain region of size '"
         & To_Hex (Number => Size) & "'";
    end Reserve_Memory;
 

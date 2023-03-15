@@ -485,7 +485,7 @@ package body Alloc.Map.VA_Regions_Type_Test_Data.VA_Regions_Type_Tests is
       exception
          when E : Out_Of_Memory =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                      = "Could not find free virtual memory region of size "
+                      = "Could not find free domain region of size "
                       & "'16#0001#'",
                     Message   => "Exception mismatch: "
                       & Ada.Exceptions.Exception_Message (X => E));
@@ -526,7 +526,7 @@ package body Alloc.Map.VA_Regions_Type_Test_Data.VA_Regions_Type_Tests is
       exception
          when E : Out_Of_Memory =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                      = "Could not find free virtual memory region of size "
+                      = "Could not find free domain region of size "
                       & "'16#3002#'",
                     Message   => "Exception mismatch: "
                       & Ada.Exceptions.Exception_Message (X => E));

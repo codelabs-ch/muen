@@ -133,7 +133,7 @@ is
 
       Mutools.Expressions.Expand (Policy => Data);
       Muxml.Utils.Remove_Elements (Doc   => Data.Doc,
-                                   XPath => "/component/expressions");
+                                   XPath => "/*/expressions");
       Mucfgcheck.Config.Conditional_Config_Var_Refs (XML_Data => Data);
       Mutools.Conditionals.Expand (Policy => Data);
       Mutools.Substitutions.Process_Attributes (Data => Data);

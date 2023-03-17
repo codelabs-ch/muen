@@ -3,10 +3,12 @@ name: Build MirageOS docker image
 on:
   push:
     paths:
+      - '.github/workflows/mirageos.yml'
       - 'tools/docker/Dockerfile.muen-mirageos'
 
 jobs:
   build:
+    name: Build image
     runs-on: ubuntu-latest
     steps:
       -

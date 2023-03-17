@@ -10,7 +10,7 @@ for highly critical systems and advanced national security platforms, codelabs
 closely cooperates with the high-security specialist secunet Security Networks
 AG in Germany.
 
-image::example.svg[Example Architecture, width=70%, align="center"]
+image::doc/images/example.svg[Example Architecture, width=70%, align="center"]
 
 A separation kernel is a specialized microkernel that provides an execution
 environment for components that exclusively communicate according to a given

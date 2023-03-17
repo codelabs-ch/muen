@@ -96,13 +96,32 @@ jobs:
           echo "devel_rev=${DEVEL_REV}" >> $GITHUB_OUTPUT
           echo "container_registry=${CONTAINER_REGISTRY}" >> $GITHUB_OUTPUT
       -
-        name: Setup Linux submodule cache
-        uses: actions/cache@v3
+        name: Restore Linux submodule cache
+        uses: actions/cache/restore@v3
+        id: restore-cache-lnx-submodule
         with:
           path: .git/modules/components/linux/src
           key: linux-submod-${{ secrets.CACHE_VERSION }}-${{ steps.vars.outputs.devel_rev }}
           restore-keys: |
             linux-submod-${{ secrets.CACHE_VERSION }}-
+      -
+        name: Restore Docker layer cache
+        uses: actions/cache/restore@v3
+        id: restore-cache-docker
+        with:
+          path: /tmp/.buildx-cache
+          key: buildx-${{ secrets.CACHE_VERSION }}-${{ matrix.distro }}-${{ steps.vars.outputs.devel_rev }}
+          restore-keys: |
+            buildx-${{ secrets.CACHE_VERSION }}-${{ matrix.distro }}-
+      -
+        name: Restore ccache cache
+        uses: actions/cache/restore@v3
+        id: restore-cache-ccache
+        with:
+          path: ${{ env.CCACHE_HOST }}
+          key: ccache-${{ secrets.CACHE_VERSION }}-${{ matrix.distro }}-${{ steps.vars.outputs.devel_rev }}
+          restore-keys: |
+            ccache-${{ secrets.CACHE_VERSION }}-${{ matrix.distro }}-
       -
         name: Submodule config and init/update
         run: |
@@ -117,22 +136,6 @@ jobs:
           git config --file=.gitmodules submodule.components/linux/modules/muenevents.url https://git.codelabs.ch/muen/linux/muenevents.git
           git submodule update --init --depth=1 -- components/linux/src
           git submodule update --init
-      -
-        name: Cache Docker layers
-        uses: actions/cache@v3
-        with:
-          path: /tmp/.buildx-cache
-          key: buildx-${{ secrets.CACHE_VERSION }}-${{ matrix.distro }}-${{ steps.vars.outputs.devel_rev }}
-          restore-keys: |
-            buildx-${{ secrets.CACHE_VERSION }}-${{ matrix.distro }}-
-      -
-        name: Setup ccache
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.CCACHE_HOST }}
-          key: ccache-${{ secrets.CACHE_VERSION }}-${{ matrix.distro }}-${{ steps.vars.outputs.devel_rev }}
-          restore-keys: |
-            ccache-${{ secrets.CACHE_VERSION }}-${{ matrix.distro }}-
       -
         name: Configure ccache max_size
         run: |
@@ -230,3 +233,30 @@ jobs:
           docker tag localhost:5000/muen-dev-env:${{ steps.vars.outputs.docker_tag }} \
             $REG/$REPOS/muen-dev-env:latest
           docker push $REG/$REPOS/muen-dev-env:latest
+      -
+        name: Save Linux submodule cache
+        if: |
+          steps.vars.outputs.git_name == 'devel' &&
+          steps.restore-cache-lnx-submodule.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v3
+        with:
+          path: .git/modules/components/linux/src
+          key: linux-submod-${{ secrets.CACHE_VERSION }}-${{ steps.vars.outputs.devel_rev }}
+      -
+        name: Save Docker layer cache
+        if: |
+          steps.vars.outputs.git_name == 'devel' &&
+          steps.restore-cache-docker.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: buildx-${{ secrets.CACHE_VERSION }}-${{ matrix.distro }}-${{ steps.vars.outputs.devel_rev }}
+      -
+        name: Save ccache cache
+        if: |
+          steps.vars.outputs.git_name == 'devel' &&
+          steps.restore-cache-ccache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v3
+        with:
+          path: ${{ env.CCACHE_HOST }}
+          key: ccache-${{ secrets.CACHE_VERSION }}-${{ matrix.distro }}-${{ steps.vars.outputs.devel_rev }}

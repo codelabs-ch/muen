@@ -78,6 +78,7 @@ jobs:
           DEVEL_REV=`git rev-parse origin/devel`
           LNX_REV=`git submodule status -- components/linux/src | \
             sed -rn 's/^-([a-f0-9]+).*/\1/p'`
+          CONTAINER_REGISTRY=ghcr.io
 
           echo distro_name::${DISTRO_NAME}
           echo distro_version::${DISTRO_VERSION}
@@ -85,6 +86,7 @@ jobs:
           echo docker_tag::${DOCKER_TAG}
           echo runner_uid::${UID}
           echo devel_rev::${DEVEL_REV}
+          echo container_registry::${CONTAINER_REGISTRY}
 
           echo "distro_name=${DISTRO_NAME}" >> $GITHUB_OUTPUT
           echo "distro_version=${DISTRO_VERSION}" >> $GITHUB_OUTPUT
@@ -92,6 +94,7 @@ jobs:
           echo "docker_tag=${DOCKER_TAG}" >> $GITHUB_OUTPUT
           echo "runner_uid=${UID}" >> $GITHUB_OUTPUT
           echo "devel_rev=${DEVEL_REV}" >> $GITHUB_OUTPUT
+          echo "container_registry=${CONTAINER_REGISTRY}" >> $GITHUB_OUTPUT
       -
         name: Setup Linux submodule cache
         uses: actions/cache@v3
@@ -194,24 +197,27 @@ jobs:
             # make must be last run command (exit code matters)
             make -j`nproc` iso HARDWARE=$HARDWARE SYSTEM=$SYSTEM && ccache -s
       -
-        name: Log in to Docker Hub
+        name: Log in to Container registry
         if: steps.vars.outputs.git_name == 'master' || steps.vars.outputs.git_name == 'devel'
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          registry: ${{ steps.vars.outputs.container_registry }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       -
-        name: Push to Docker Hub 1
+        name: Push to Container registry 1
         if: |
           matrix.system == 'demo_system_vtd.xml' &&
           matrix.hardware == 'lenovo-t430s.xml' &&
           (steps.vars.outputs.git_name == 'master' || steps.vars.outputs.git_name == 'devel')
         run: |
+          REPOS=${{ github.repository_owner }}
+          REG=${{ steps.vars.outputs.container_registry }}
           docker tag localhost:5000/muen-dev-env:${{ steps.vars.outputs.docker_tag }} \
-            codelabsch/muen-dev-env:${{ steps.vars.outputs.docker_tag }}
-          docker push codelabsch/muen-dev-env:${{ steps.vars.outputs.docker_tag }}
+            $REG/$REPOS/muen-dev-env:${{ steps.vars.outputs.docker_tag }}
+          docker push $REG/$REPOS/muen-dev-env:${{ steps.vars.outputs.docker_tag }}
       -
-        name: Push to Docker Hub 2
+        name: Push to Container registry 2
         if: |
           matrix.system == 'demo_system_vtd.xml' &&
           matrix.hardware == 'lenovo-t430s.xml' &&
@@ -219,6 +225,8 @@ jobs:
           steps.vars.outputs.distro_version == 'bullseye' &&
           steps.vars.outputs.git_name == 'devel'
         run: |
+          REPOS=${{ github.repository_owner }}
+          REG=${{ steps.vars.outputs.container_registry }}
           docker tag localhost:5000/muen-dev-env:${{ steps.vars.outputs.docker_tag }} \
-            codelabsch/muen-dev-env:latest
-          docker push codelabsch/muen-dev-env:latest
+            $REG/$REPOS/muen-dev-env:latest
+          docker push $REG/$REPOS/muen-dev-env:latest

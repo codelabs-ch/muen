@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 544.84 189.4">
+  <g transform="translate(-105.8 -267.2)">
+    <rect stroke-opacity=".784" fill-opacity=".804" ry="5.794" height="112.62" width="116.95" stroke="#000" y="268.64" x="107.12" stroke-width="2.7"/>
+    <rect stroke-linejoin="round" stroke-opacity=".784" fill-opacity=".824" ry="5.794" height="112.62" width="116.95" stroke="#000" stroke-linecap="round" y="268.64" x="248.61" stroke-width="2.7" fill="#ef2424"/>
+    <rect stroke-opacity=".784" fill-opacity=".824" ry="5.794" height="112.62" width="116.95" stroke="#000" y="268.64" x="390.1" stroke-width="2.7" fill="#ef2424"/>
+    <rect stroke-opacity=".784" fill-opacity=".824" ry="5.794" height="112.62" width="116.95" stroke="#000" y="268.64" x="531.6" stroke-width="2.7" fill="#ef2424"/>
+    <path stroke-linejoin="round" d="M108.3 398.9h539.92m-128.4-130.21v129.86M378.06 268.69v129.86M236.31 268.69v129.86" stroke-opacity=".784" stroke="#000" stroke-linecap="round" stroke-width="2.702" fill="none"/>
+    <text font-family="Source Code Pro" fill-opacity=".784" font-size="27" y="331.384" x="165.604" fill="#fff" letter-spacing="0" word-spacing="0">
+      <tspan style="text-align:center" font-family="Arial" font-size="18" y="331.384" x="165.604" text-anchor="middle">Linux VM</tspan>
+    </text>
+    <text style="text-align:center" font-family="Arial" fill-opacity=".784" font-size="18" y="307.108" x="306.738" letter-spacing="0" text-anchor="middle" word-spacing="0">
+      <tspan y="307.108" x="306.738">Subject</tspan><tspan y="329.608" x="306.738">Monitor</tspan><tspan y="352.108" x="306.738">(native)</tspan>
+    </text>
+    <text style="text-align:center" font-family="Arial" fill-opacity=".784" font-size="18" y="318.358" x="448.584" letter-spacing="0" text-anchor="middle" word-spacing="0">
+      <tspan y="318.358" x="448.584">Time</tspan><tspan y="340.858" x="448.584">(native)</tspan>
+    </text>
+    <text style="text-align:center" font-family="Arial" fill-opacity=".784" font-size="18" y="318.029" x="590.084" letter-spacing="0" text-anchor="middle" word-spacing="0">
+      <tspan y="318.029" x="590.084">VT</tspan><tspan y="340.529" x="590.084">(native)</tspan>
+    </text>
+    <rect stroke-opacity=".784" ry="5.061" height="43.314" width="542.14" stroke="#000" y="411.93" x="107.12" stroke-width="2.7" fill="#FFF"/>
+    <text style="text-align:center" font-family="Source Code Pro" font-size="21.6" y="438.241" x="378.058" fill="#fff" letter-spacing="0" text-anchor="middle" word-spacing="0">
+      <tspan font-size="18" font-family="Arial" fill-opacity=".784" y="438.241" x="378.058" fill="#000">Muen Separation Kernel</tspan>
+    </text>
+  </g>
+</svg>

@@ -22,13 +22,13 @@ We provide ready-made Docker images containing all required software to build
 Muen system images and MirageOS unikernels. Issue the following command to get
 the Muen Development environment:
 
-  $ docker pull codelabsch/muen-dev-env
+  $ docker pull ghcr.io/codelabs-ch/muen-dev-env
 
 By default, the commands given in this article are expected to be run in the
 `muen-dev-env` container. You can use the run script provided as part of the
 Muen repository to enter the container like so:
 
-  $ tools/docker/run.muen-dev-env codelabsch/muen-dev-env \
+  $ tools/docker/run.muen-dev-env ghcr.io/codelabs-ch/muen-dev-env \
 	  EXTRA_EXPOSE="--expose 4433"
 
 The `EXTRA_EXPOSE` environment variable makes sure that port 4433 is accessible
@@ -39,7 +39,7 @@ Website".
 For building MirageOS unikernels, there is a separate image, which you can
 acquire by issuing the following command:
 
-  $ docker pull codelabsch/muen-mirageos
+  $ docker pull ghcr.io/codelabs-ch/muen-mirageos
 
 This container is only used for building unikernels and it is explicitly stated
 in this article when commands should be executed in the `muen-mirageos`

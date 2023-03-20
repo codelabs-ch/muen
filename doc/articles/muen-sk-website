@@ -37,20 +37,20 @@ of stage one in the multi-stage Docker build.
 
 The complete Muen system image build consists of two Docker images:
 
-. codelabsch/muen-mirageos
-. codelabsch/muen-dev-env
+. ghcr.io/codelabs-ch/muen-mirageos
+. ghcr.io/codelabs-ch/muen-dev-env
 
-These images can be found on our https://hub.docker.com/u/codelabsch/[Docker
-Hub] page. The key is to import artifacts from the previous build stage into
-the next one using the `COPY --from` syntax.  The following commands serve as
-an example of how to copy the unikernel binary the MirageOS container to the
-Muen system image build stage:
+These images can be found on our https://github.com/orgs/codelabs-ch/packages[GitHub]
+page. The key is to import artifacts from the previous build stage into the
+next one using the `COPY --from` syntax.  The following commands serve as an
+example of how to copy the unikernel binary the MirageOS container to the Muen
+system image build stage:
 
 ```
-FROM codelabsch/muen-mirageos as unikernel
+FROM ghcr.io/codelabs-ch/muen-mirageos as unikernel
 # compile unikernel
 
-FROM codelabsch/muen-dev-env:latest
+FROM ghcr.io/codelabs-ch/muen-dev-env:latest
 COPY --from=unikernel /home/opam/opam-repository/unipi/unipi.muen /tmp/unikernel
 ```
 

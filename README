@@ -219,7 +219,7 @@ Docker
 There is also a ready-made Docker image which contains all necessary tools for
 Muen development. You can install it using the following command:
 
-  $ docker pull codelabsch/muen-dev-env
+  $ docker pull ghcr.io/codelabs-ch/muen-dev-env
 
 Compilation
 ~~~~~~~~~~~

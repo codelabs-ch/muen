@@ -109,7 +109,7 @@ is
      (Targets          :        DOM.Core.Node_List;
       Todo_List        : in out Alloc.Map.Node_List_Package.List;
       Available_Memory : in out Alloc.Map.VA_Regions_Type;
-      Mapping          : in out Logical_To_Interval_Package.Map;
+      Mapping          :        Logical_To_Interval_Package.Map;
       Read_Only        :        Boolean;
       Run_Type         :        Alloc.Map.Run_Type_Type);
 
@@ -164,7 +164,7 @@ is
      (Targets          :        DOM.Core.Node_List;
       Todo_List        : in out Alloc.Map.Node_List_Package.List;
       Available_Memory : in out Alloc.Map.VA_Regions_Type;
-      Mapping          : in out Logical_To_Interval_Package.Map;
+      Mapping          :        Logical_To_Interval_Package.Map;
       Read_Only        :        Boolean;
       Run_Type         :        Alloc.Map.Run_Type_Type)
    is
@@ -397,35 +397,38 @@ is
      (Comp_Node : DOM.Core.Node;
       Run_Type  : Alloc.Map.Run_Type_Type)
    is
+      type Map_Access_Type is access all Logical_To_Interval_Package.Map;
+
       Comp_Name : constant String
         := DOM.Core.Elements.Get_Attribute
         (Elem => Comp_Node,
          Name => "name");
       Targets_List_1, Targets_List_2 :  Mutools.String_Vector.Vector;
       Targets : DOM.Core.Node_List;
-      Mapping : Logical_To_Interval_Package.Map;
+      Mapping_Access : Map_Access_Type;
+
    begin
       case Run_Type is
          when Alloc.Map.VIRTUAL_ADDRESSES =>
             Targets_List_1 := Alloc.Config.C_Va_Alloc_Read_Write_Targets;
             Targets_List_2 := Alloc.Config.C_Va_Alloc_Read_Only_Targets;
-            Mapping        := Components_Map (Comp_Name).Va_Map;
+            Mapping_Access := Components_Map (Comp_Name).Va_Map'Access;
          when Alloc.Map.READER_EVENTS =>
             Targets_List_1 := Alloc.Config.C_Readers_Read_Write_Targets;
             Targets_List_2 := Alloc.Config.C_Readers_Read_Only_Targets;
-            Mapping        := Components_Map (Comp_Name).Reader_Events_Map;
+            Mapping_Access := Components_Map (Comp_Name).Reader_Events_Map'Access;
          when Alloc.Map.WRITER_EVENTS =>
             Targets_List_1 := Alloc.Config.C_Writers_Read_Write_Targets;
             Targets_List_2 := Alloc.Config.C_Writers_Read_Only_Targets;
-            Mapping        := Components_Map (Comp_Name).Writer_Events_Map;
+            Mapping_Access := Components_Map (Comp_Name).Writer_Events_Map'Access;
       end case;
 
       Targets := McKae.XML.XPath.XIA.XPath_Query
         (N     => Comp_Node,
          XPath => Alloc.Map.Get_Target_String
            (Target_List => Targets_List_1,
-            Prefix      => "/component"));
-      Put_Targets_In_Map (Mapping  => Mapping,
+            Prefix      => "./"));
+      Put_Targets_In_Map (Mapping  => Mapping_Access.all,
                           Targets  => Targets,
                           Run_Type => Run_Type);
 
@@ -433,8 +436,8 @@ is
         (N     => Comp_Node,
          XPath => Alloc.Map.Get_Target_String
            (Target_List => Targets_List_2,
-            Prefix      => "/component"));
-      Put_Targets_In_Map (Mapping  => Mapping,
+            Prefix      => "./"));
+      Put_Targets_In_Map (Mapping  => Mapping_Access.all,
                           Targets  => Targets,
                           Run_Type => Run_Type);
    end Init_Component_Elements;
@@ -585,10 +588,11 @@ is
          Run_Type       : Alloc.Map.Run_Type_Type)
       is
          use type Ada.Containers.Count_Type;
+         type Map_Access_Type is access constant Logical_To_Interval_Package.Map;
 
          Available_Memory : Alloc.Map.VA_Regions_Type;
          Todo_List        : Alloc.Map.Node_List_Package.List;
-         Mapping          : Logical_To_Interval_Package.Map;
+         Mapping_Access   : Map_Access_Type;
       begin
          --  Initialize free space for virtual ressource.
          --  Note: subtracting the memory reserved by the component
@@ -625,15 +629,15 @@ is
                when Alloc.Map.VIRTUAL_ADDRESSES =>
                   Targets_List_R_W := Alloc.Config.Va_Alloc_Read_Write_Targets;
                   Targets_List_R   := Alloc.Config.Va_Alloc_Read_Only_Targets;
-                  Mapping := Component_Info.Va_Map;
+                  Mapping_Access   := Component_Info.Va_Map'Access;
                when Alloc.Map.READER_EVENTS =>
                   Targets_List_R_W := Alloc.Config.Readers_Read_Write_Targets;
                   Targets_List_R   := Alloc.Config.Readers_Read_Only_Targets;
-                  Mapping := Component_Info.Reader_Events_Map;
+                  Mapping_Access   := Component_Info.Reader_Events_Map'Access;
                when Alloc.Map.WRITER_EVENTS =>
                   Targets_List_R_W := Alloc.Config.Writers_Read_Write_Targets;
                   Targets_List_R   := Alloc.Config.Writers_Read_Only_Targets;
-                  Mapping := Component_Info.Writer_Events_Map;
+                  Mapping_Access   := Component_Info.Writer_Events_Map'Access;
             end case;
 
             --  Put Targets within Subject on todo-list if resource
@@ -650,7 +654,7 @@ is
               (Targets          => Targets,
                Todo_List        => Todo_List,
                Available_Memory => Available_Memory,
-               Mapping          => Mapping,
+               Mapping          => Mapping_Access.all,
                Read_Only        => True,
                Run_Type         => Run_Type);
 
@@ -663,7 +667,7 @@ is
               (Targets          => Targets,
                Todo_List        => Todo_List,
                Available_Memory => Available_Memory,
-               Mapping          => Mapping,
+               Mapping          => Mapping_Access.all,
                Read_Only        => False,
                Run_Type         => Run_Type);
          end;
@@ -671,7 +675,7 @@ is
          --  allocate new resources for remaining nodes
          if Todo_List.Length > 0 then
             --  finish restriction of available memory
-            for Addr_And_Size of Mapping loop
+            for Addr_And_Size of Mapping_Access.all loop
                Alloc.Map.Subtract_Memory_Interval
                  (List => Available_Memory,
                   First_Address => Addr_And_Size.First_Address,

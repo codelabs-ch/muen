@@ -34,8 +34,8 @@ is
 
 private
 
-   Policy_Joined    : Ada.Strings.Unbounded.Unbounded_String;
-   Output_Filename  : Ada.Strings.Unbounded.Unbounded_String;
+   Policy_Joined   : Ada.Strings.Unbounded.Unbounded_String;
+   Output_Filename : Ada.Strings.Unbounded.Unbounded_String;
 
    Parser : GNAT.Command_Line.Opt_Parser
      := GNAT.Command_Line.Command_Line_Parser;

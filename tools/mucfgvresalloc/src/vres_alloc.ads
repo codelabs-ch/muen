@@ -37,9 +37,9 @@ is
    type Component_Info_Type is
    record
       Profile           : Mutools.String_Holder_Type.Holder;
-      Va_Map            : Logical_To_Interval_Package.Map;
-      Reader_Events_Map : Logical_To_Interval_Package.Map;
-      Writer_Events_Map : Logical_To_Interval_Package.Map;
+      Va_Map            : aliased Logical_To_Interval_Package.Map;
+      Reader_Events_Map : aliased Logical_To_Interval_Package.Map;
+      Writer_Events_Map : aliased Logical_To_Interval_Package.Map;
    end record;
 
    package Component_To_Map_Package is new Ada.Containers.Indefinite_Hashed_Maps

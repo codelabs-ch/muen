@@ -31,8 +31,8 @@ package body Cspec.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Run (Gnattest_T : in out Test);
-   procedure Test_Run_6c1c8f (Gnattest_T : in out Test) renames Test_Run;
---  id:2.2/6c1c8ff63395de3b/Run/1/0/
+   procedure Test_Run_e5a2dd (Gnattest_T : in out Test) renames Test_Run;
+--  id:2.2/e5a2dd86b12d7902/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
 --  end read only
 
@@ -46,8 +46,7 @@ package body Cspec.Test_Data.Tests is
          C : constant String := "vt";
       begin
          Run (Input_Spec       => "data/component_vt.xml",
-              Output_Directory => Dir,
-              Include_Path     => "");
+              Output_Directory => Dir);
 
          Assert (Condition => Ada.Directories.Exists (Name => Dir),
                  Message   => "Directory not created (1)");
@@ -96,8 +95,7 @@ package body Cspec.Test_Data.Tests is
          C : constant String := "libdebug";
       begin
          Run (Input_Spec       => "data/library_debug.xml",
-              Output_Directory => Dir,
-              Include_Path     => "");
+              Output_Directory => Dir);
 
          Assert (Condition => Ada.Directories.Exists (Name => Dir),
                  Message   => "Directory not created (2)");
@@ -121,75 +119,12 @@ package body Cspec.Test_Data.Tests is
 
       Ada.Directories.Delete_Tree (Directory => Dir);
 
-      Includes:
-      declare
-         C : constant String := "inc";
-      begin
-         Run (Input_Spec       => "data/component_inc.xml",
-              Output_Spec      => Dir & "/outspec.xml",
-              Output_Directory => Dir,
-              Include_Path     => "data/incdir");
-
-         Assert (Condition => Ada.Directories.Exists (Name => Dir),
-                 Message   => "Directory not created (3)");
-         Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => Dir & "/outspec.xml",
-                  Filename2 => "data/outspec_inc.xml"),
-                 Message   => "Output spec mismatch (1)");
-         Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => Dir & "/" & C & P & "-memory.ads",
-                  Filename2 => "data/" & C & P & "-memory.ads"),
-                 Message   => C & P & "-memory.ads mismatch");
-      end Includes;
-
-      Ada.Directories.Delete_Tree (Directory => Dir);
-
-      Conditionals:
-      declare
-         C : constant String := "cond";
-      begin
-         Run (Input_Spec       => "data/component_cond.xml",
-              Output_Spec      => Dir & "/outspec.xml",
-              Output_Directory => Dir,
-              Include_Path     => "");
-
-         Assert (Condition => Ada.Directories.Exists (Name => Dir),
-                 Message   => "Directory not created (4)");
-         Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => Dir & "/outspec.xml",
-                  Filename2 => "data/outspec_cond.xml"),
-                 Message   => "Output spec mismatch (2)");
-      end Conditionals;
-
-      Ada.Directories.Delete_Tree (Directory => Dir);
-
-      Substitutions :
-      declare
-         C : constant String := "subst";
-      begin
-         Run (Input_Spec       => "data/component_subst.xml",
-              Output_Spec      => Dir & "/outspec.xml",
-              Output_Directory => Dir,
-              Include_Path     => "");
-
-         Assert (Condition => Ada.Directories.Exists (Name => Dir),
-                 Message   => "Directory not created (5)");
-         Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => Dir & "/outspec.xml",
-                  Filename2 => "data/outspec_subst.xml"),
-                 Message   => "Output spec mismatch (3)");
-      end Substitutions;
-
-      Ada.Directories.Delete_Tree (Directory => Dir);
-
       Package_Name :
       declare
          C : constant String := "xt";
       begin
          Run (Input_Spec       => "data/component_vt.xml",
-              Output_Spec      => Dir & "/outspec.xml",
               Output_Directory => Dir,
-              Include_Path     => "",
               Package_Name     => "xt");
 
          Assert (Condition => Ada.Directories.Exists (Name => Dir),
@@ -198,10 +133,6 @@ package body Cspec.Test_Data.Tests is
                  (Filename1 => Dir & "/" & C & P & ".ads",
                   Filename2 => "data/" & C & P & ".ads"),
                  Message   => C & P & ".ads mismatch");
-         Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => Dir & "/outspec.xml",
-                  Filename2 => "data/component_vt.xml"),
-                 Message   => "Output spec mismatch (4)");
       end Package_Name;
 
       Ada.Directories.Delete_Tree (Directory => Dir);
@@ -209,8 +140,7 @@ package body Cspec.Test_Data.Tests is
        --  No resources found.
 
       Run (Input_Spec       => "data/component_nores.xml",
-           Output_Directory => Dir,
-           Include_Path     => "");
+           Output_Directory => Dir);
 
       Assert (Condition => Ada.Directories.Exists (Name => Dir),
               Message   => "Directory not created (7)");

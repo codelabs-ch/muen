@@ -142,11 +142,9 @@ package body Cspec.Cmd_Line.Test_Data.Tests is
          Args : aliased GNAT.OS_Lib.Argument_List
            := (1 => new String'("-i"),
                2 => new String'("my_cspec"),
-               3 => new String'("-I"),
-               4 => new String'("incdir"),
-               5 => new String'("-o"),
-               6 => new String'("obj/out.xml"),
-               7 => new String'("obj/gen"));
+               3 => new String'("-p"),
+               4 => new String'("my_package"),
+               5 => new String'("obj/gen"));
          Test_Parser : GNAT.Command_Line.Opt_Parser;
       begin
          GNAT.Command_Line.Initialize_Option_Scan
@@ -161,14 +159,12 @@ package body Cspec.Cmd_Line.Test_Data.Tests is
             GNAT.OS_Lib.Free (X => Args (A));
          end loop;
 
-         Assert (Condition => Output_Dir = "obj/gen",
-                 Message   => "Output dir mismatch");
-         Assert (Condition => Output_Spec = "obj/out.xml",
-                 Message   => "Output spec mismatch");
          Assert (Condition => Input_Spec = "my_cspec",
                  Message   => "Cspec input mismatch");
-         Assert (Condition => Include_Path = "incdir",
-                 Message   => "Include dir mismatch");
+         Assert (Condition => Package_Name = "my_package",
+                 Message   => "Output spec mismatch");
+         Assert (Condition => Output_Dir = "obj/gen",
+                 Message   => "Output dir mismatch");
       end Positive_Test;
    begin
       Invalid_Switch;
@@ -221,50 +217,6 @@ package body Cspec.Cmd_Line.Test_Data.Tests is
               Message   => "Output dir mismatch");
 --  begin read only
    end Test_Get_Output_Dir;
---  end read only
-
-
---  begin read only
-   procedure Test_Get_Output_Spec (Gnattest_T : in out Test);
-   procedure Test_Get_Output_Spec_faaf96 (Gnattest_T : in out Test) renames Test_Get_Output_Spec;
---  id:2.2/faaf964f54641d5e/Get_Output_Spec/1/0/
-   procedure Test_Get_Output_Spec (Gnattest_T : in out Test) is
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      use Ada.Strings.Unbounded;
-
-      Ref : constant Unbounded_String
-        := To_Unbounded_String ("output.xml");
-   begin
-      Output_Spec := Ref;
-      Assert (Condition => Get_Output_Spec = Ref,
-              Message   => "Output spec mismatch");
---  begin read only
-   end Test_Get_Output_Spec;
---  end read only
-
-
---  begin read only
-   procedure Test_Get_Include_Path (Gnattest_T : in out Test);
-   procedure Test_Get_Include_Path_a61f46 (Gnattest_T : in out Test) renames Test_Get_Include_Path;
---  id:2.2/a61f46d53b52eaa1/Get_Include_Path/1/0/
-   procedure Test_Get_Include_Path (Gnattest_T : in out Test) is
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      use Ada.Strings.Unbounded;
-
-      Ref : constant Unbounded_String
-        := To_Unbounded_String ("/path");
-   begin
-      Include_Path := Ref;
-      Assert (Condition => Get_Include_Path = Ref,
-              Message   => "Include path mismatch");
---  begin read only
-   end Test_Get_Include_Path;
 --  end read only
 
 

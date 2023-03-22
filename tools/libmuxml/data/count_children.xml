@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+ <child1 attr1="foo">
+  <child11/>
+  <child12/>
+  <child13/>
+  <!--comment--> text
+  <child14/>
+ </child1>
+ <child2/>
+ <child3>  <!--comment--> text </child3>
+</root>

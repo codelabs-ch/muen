@@ -194,6 +194,44 @@ package body Muxml.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Count_Element_Children (Gnattest_T : in out Test);
+   procedure Test_Count_Element_Children_88676c (Gnattest_T : in out Test) renames Test_Count_Element_Children;
+--  id:2.2/88676c3db7e948e6/Count_Element_Children/1/0/
+   procedure Test_Count_Element_Children (Gnattest_T : in out Test) is
+--  end read only
+
+      use type Interfaces.Unsigned_64;
+      pragma Unreferenced (Gnattest_T);
+      Data : XML_Data_Type;
+      Count : Interfaces.Unsigned_64;
+   begin
+      Muxml.Parse
+        (Data => Data,
+         Kind => Muxml.None,
+         File => "data/count_children.xml");
+      Count := Count_Element_Children
+        (Node => Get_Element (Doc => Data.Doc, XPath => "/root"));
+      Assert (Condition => Count = 3,
+              Message   => "Count mismatch: " & Count'Image);
+      Count := Count_Element_Children
+        (Node => Get_Element (Doc => Data.Doc, XPath => "/root/child1"));
+      Assert (Condition => Count = 4,
+              Message   => "Count mismatch: " & Count'Image);
+      Count := Count_Element_Children
+        (Node => Get_Element (Doc => Data.Doc, XPath => "/root/child2"));
+      Assert (Condition => Count = 0,
+              Message   => "Count mismatch: " & Count'Image);
+      Count := Count_Element_Children
+        (Node => Get_Element (Doc => Data.Doc, XPath => "/root/child3"));
+      Assert (Condition => Count = 0,
+              Message   => "Count mismatch: " & Count'Image);
+
+--  begin read only
+   end Test_Count_Element_Children;
+--  end read only
+
+
+--  begin read only
    procedure Test_1_Get_Attribute (Gnattest_T : in out Test);
    procedure Test_Get_Attribute_7606a9 (Gnattest_T : in out Test) renames Test_1_Get_Attribute;
 --  id:2.2/7606a922e00da111/Get_Attribute/1/0/

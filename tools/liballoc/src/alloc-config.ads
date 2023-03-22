@@ -23,7 +23,7 @@ package Alloc.Config
 is
    --  This is the space all automatically assigned virtual addresses are
    --  contained in.
-   --  TODO: Improvement: Use platform properties for these values and pass
+   --  TODO: Potential improvement: Use platform properties for these values and pass
    --        as parameter at runtime
    Default_Va_Space_Native : constant Map.Memory_Interval_Type
      := (First_Address => 16#0000_0000_2000_0000#,
@@ -35,12 +35,16 @@ is
 
    --  These are the domains for the attributes 'vector' and 'event'
    --  of channel-readers and channel-writers respectively
-   Vector_Numbers_Domain : constant Map.Memory_Interval_Type
+   Default_Vector_Numbers_Domain : constant Map.Memory_Interval_Type
      := (First_Address => 0,
          Last_Address  => 255);
-   Event_Numbers_Domain : constant Map.Memory_Interval_Type
+   Default_Event_Numbers_Domain : constant Map.Memory_Interval_Type
      := (First_Address => 0,
          Last_Address  => 63);
+
+   -------------------------------------------------------------------------
+   --  ATTENTION: If you change the values below you may have to adapt the
+   --  code of mucfgcvresalloc, mucfgvresalloc and their unittests
 
    --  This is the list of XPaths where Comp_Va_alloc may assign virtual
    --  addresses.

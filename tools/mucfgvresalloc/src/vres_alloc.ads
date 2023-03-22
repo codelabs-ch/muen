@@ -18,7 +18,10 @@ with Ada.Strings.Hash;
 with Ada.Containers.Indefinite_Hashed_Maps;
 with Mutools;
 with Interfaces;
+
 private with Mutools.Expressions;
+private with Alloc.Config;
+private with Alloc.Map;
 
 package Vres_Alloc
 is
@@ -59,4 +62,15 @@ private
    Memory_Sizes   : Mutools.Expressions.Name_To_String_Hashed_Map.Map;
    Channel_Sizes  : Mutools.Expressions.Name_To_String_Hashed_Map.Map;
    Components_Map : Component_To_Map_Package.Map;
+
+   --  The default domains are copied to local variables
+   --  in order to be able to change them in unittests
+   Va_Space_Native : Alloc.Map.Memory_Interval_Type
+     := Alloc.Config.Default_Va_Space_Native;
+   Va_Space_Vm : Alloc.Map.Memory_Interval_Type
+     := Alloc.Config.Default_Va_Space_Vm;
+   Vector_Numbers_Domain : Alloc.Map.Memory_Interval_Type
+     := Alloc.Config.Default_Vector_Numbers_Domain;
+   Event_Numbers_Domain : Alloc.Map.Memory_Interval_Type
+     := Alloc.Config.Default_Event_Numbers_Domain;
 end Vres_Alloc;

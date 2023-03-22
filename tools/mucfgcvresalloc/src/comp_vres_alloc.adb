@@ -41,9 +41,6 @@ with Mulog;
 with Muxml;
 with Muxml.Utils;
 
-with Alloc.Map;
-with Alloc.Config;
-
 package body Comp_Vres_Alloc
 is
    --  Check and expand expressions and conditionals in given input spec.
@@ -265,20 +262,20 @@ is
                then
                   Alloc.Map.Add_Memory_Interval
                     (List     => Available_Memory,
-                     Interval => Alloc.Config.Default_Va_Space_Native);
+                     Interval => Va_Space_Native);
                else
                   Alloc.Map.Add_Memory_Interval
                     (List     => Available_Memory,
-                     Interval => Alloc.Config.Default_Va_Space_Vm);
+                     Interval => Va_Space_Vm);
                end if;
             when Alloc.Map.WRITER_EVENTS =>
                Alloc.Map.Add_Memory_Interval
                  (List     => Available_Memory,
-                  Interval => Alloc.Config.Event_Numbers_Domain);
+                  Interval => Event_Numbers_Domain);
             when Alloc.Map.READER_EVENTS =>
                Alloc.Map.Add_Memory_Interval
                  (List     => Available_Memory,
-                  Interval => Alloc.Config.Vector_Numbers_Domain);
+                  Interval => Vector_Numbers_Domain);
          end case;
 
          --  Block domain-space taken by existsing virtual resources

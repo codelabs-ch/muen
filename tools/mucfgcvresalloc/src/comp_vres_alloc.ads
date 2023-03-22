@@ -15,6 +15,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+private with Alloc.Config;
+private with Alloc.Map;
+
 package Comp_Vres_Alloc
 is
 
@@ -26,4 +29,15 @@ is
 
    Validation_Error : exception;
 
+private
+   --  The default domains are copied to local variables
+   --  in order to be able to change them in unittests
+   Va_Space_Native : Alloc.Map.Memory_Interval_Type
+     := Alloc.Config.Default_Va_Space_Native;
+   Va_Space_Vm : Alloc.Map.Memory_Interval_Type
+     := Alloc.Config.Default_Va_Space_Vm;
+   Vector_Numbers_Domain : Alloc.Map.Memory_Interval_Type
+     := Alloc.Config.Default_Vector_Numbers_Domain;
+   Event_Numbers_Domain : Alloc.Map.Memory_Interval_Type
+     := Alloc.Config.Default_Event_Numbers_Domain;
 end Comp_Vres_Alloc;

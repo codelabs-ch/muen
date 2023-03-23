@@ -521,17 +521,19 @@
      the I/O port of a specific device and create a corresponding configuration
      value based on it, which is then included in the component specification.
 
-     The \texttt{mucgenspec} tool described in \ref{tools-mucgenspec}
-     implements the blue \emph{Specgen} task shown in figure
+     The \texttt{mucfgcvresalloc} tool described in \ref{tools-mucfgcvresalloc}
+     implements the blue \emph{Component VR Allocator} task shown in figure
      \ref{fig:build-process}. It is used to process component specifications
      and, similar to the policy merger, supports conditionals, expressions and
-     configuration value substitutions. It also generates Ada/SPARK packages
-     containing constants derived from the declared component resources and
-     config values. These constants can be used to reliably address specific or
-     configurable resources in the source code.
+     configuration value substitutions.
 
-     After the component specification has been processed, the component source
-     code is compiled into a binary.
+     After the component specification has been processed, the
+     \texttt{mucgenspec} tool described in \ref{tools-mucgenspec}
+     generates Ada/SPARK packages containing constants derived from the
+     declared component resources and config values.
+     These constants can be used to reliably address specific or
+     configurable resources in the source code.
+     With these constants the component source code is compiled into a binary.
 
      The \texttt{mucbinsplit} tool described in \ref{tools-mucbinsplit} can be
      used to extract ELF sections of the component binary into separate files.
@@ -559,6 +561,13 @@
      Policy compilation encompasses the tasks involved to transform the policy
      from source format to format A and finally to format B, which is the fully
      expanded format with no implicit properties.
+
+     The Virtual Resource Allocator tool sets virtual resources that are left
+     unassigned in the joined policy. These resources include virtual addresses
+     and event numbers of channels. Often, the precise values of these resources
+     do not matter to the integrator and make the policy harder to read and write.
+     Section \ref{tools-mucfgvresalloc} explains the Virtual Resource Allocator
+     tool is detail.
 
      The Expander tool takes care of completing the user-specified policy with
      additional information and resolving abstractions only available in format
@@ -661,6 +670,83 @@
    <text priority="0">
     This section describes the tools which form the core of the Muen toolchain.
    </text>
+
+   <section id="tools-mucfgcvresalloc" label="Component Virtual Resource Allocator" priority="0">
+    <text priority="0">
+     The tool \texttt{mucfgcvresalloc} processes a user provided component specification and outputs
+     a finished, schema compliant description of the component interface. Just like \texttt{mucfgmerge}
+     it supports inclusion of external files, conditionals, expressions and substitutions. Furthermore,
+     it can automatically allocate virtual resources as described below.
+
+     \begin{description} \itemsep1pt \parskip0pt
+        \item[Name] \hfill \\
+        \texttt{mucfgcvresalloc}
+        \item[Input] \hfill \\
+        Component configuration as XML, colon-separated list of include paths
+        \item[Output] \hfill \\
+        Component specification as XML in component format
+     \end{description}
+
+     The main processing-steps are:
+     \begin{enumerate}
+        \item Merge XIncludes of main XML file, i.e.,
+        insert the referenced files at the given location;
+        \item Evaluate expressions, conditionals and substitutions;
+        \item Assign missing virtual addresses;
+        \item Assign missing event ids of readers;
+        \item Assign missing event ids of writers;
+     \end{enumerate}
+
+     Virtual addresses and event ids are considered to be \textit{virtual resources}.
+     Each of the three virtual resources has its own domain.
+     To request automatic allocation of the attribute \texttt{virtualAddress}
+     (or \texttt{virtualAddressBase} for arrays) omit the attribute.
+     To request automatic allocation of event ids of readers or writers the respective
+     attribute must be set to \texttt{auto}.
+
+     To determine which addresses or ids to choose, \texttt{mucfgcvresalloc}
+     looks at the addresses and ids already present in the file.
+     Dependencies of virtual resources through libraries or the sytem policy
+     can be resolved by manually assigning such resources and restricting
+     the domains used by \texttt{mucfgcvresalloc}.
+    </text>
+   </section>
+
+ <section id="tools-mucfgvresalloc" label="Virtual Resource Allocator" priority="0">
+    <text priority="0">
+     The tool \texttt{mucfgvresalloc} processes the joined system policy and outputs
+     a system policy in format source. Its purpose is to automatically allocate
+     virtual resources within subject descriptions.
+
+     \begin{description} \itemsep1pt \parskip0pt
+        \item[Name] \hfill \\
+        \texttt{mucfgvresalloc}
+        \item[Input] \hfill \\
+        Joined system policy as XML
+        \item[Output] \hfill \\
+        System policy where all virtual resources have been assigned
+     \end{description}
+
+     Virtual addresses and event ids are considered to be \textit{virtual resources}.
+     Each of the three virtual resources has its own domain.
+     To request automatic allocation of the attribute \texttt{virtualAddress}
+     omit the attribute.
+     To request automatic allocation of event ids of readers or writers the respective
+     attribute must be set to \texttt{auto}.
+
+     To determine which addresses or ids to choose, \texttt{mucfgvresalloc}
+     processes each subject separately. For each subject, it gathers virtual
+     resources already set in the component that is referenced by the subject and
+     resources set in the subject itself.
+     Thereafter, missing virtual resources are either set
+     to the value fixed by the component (if possible) or chosen from the remaining
+     space in the respective domain.
+
+     Dependencies of virtual resources through libraries or devices
+     can be resolved by manually assigning such resources and restricting
+     the domains used by \texttt{mucfgvresalloc}.
+    </text>
+   </section>
 
    <section id="tools-mucfgmerge" label="Policy Merger" priority="0">
     <text priority="0">
@@ -1044,29 +1130,20 @@
     <section id="tools-mucgenspec" label="Component Source Specifications" priority="0">
      <text priority="0">
       Process component description and generate source specifications from it.
-      Write processed description to specified output file.
 
       \begin{description} \itemsep1pt \parskip0pt
       \item[Name] \hfill \\
       \texttt{mucgenspec}
       \item[Input] \hfill \\
-      Component description in XML, colon-separated list of include paths
+      Component description in XML
       \item[Output] \hfill \\
-      Component source specifications in SPARK, processed component
+      Component source specifications in SPARK
       description in XML
       \end{description}
 
-      The component spec generation tool processes the given component
-      description by evaluating XIncludes, boolean expressions and resolving
-      conditional parts.  Furthermore, it performs substitutions of attributes
-      with configuration values.
-
-      It also generates Ada/SPARK packages containing constants of the declared
+      The component spec generation tool generates Ada/SPARK packages containing constants of the declared
       logical component resources. The generated specifications can be used in
       the component source code to access the declared resources.
-
-      The resulting processed component description is written to the given
-      output location.
      </text>
     </section>
 

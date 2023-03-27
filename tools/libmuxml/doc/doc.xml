@@ -706,7 +706,7 @@
 
      To determine which addresses or ids to choose, \texttt{mucfgcvresalloc}
      looks at the addresses and ids already present in the file.
-     Dependencies of virtual resources through libraries or the sytem policy
+     Dependencies of virtual resources through libraries or the system policy
      can be resolved by manually assigning such resources and restricting
      the domains used by \texttt{mucfgcvresalloc}.
     </text>

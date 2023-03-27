@@ -591,7 +591,7 @@ is
          Todo_List        : Alloc.Map.Node_List_Package.List;
          Mapping_Access   : Map_Access_Type;
       begin
-         --  Initialize free space for virtual ressource.
+         --  Initialize free space for virtual resource.
          --  Note: subtracting the memory reserved by the component
          --  specification (stored in Component_Info.*_Map)
          --  is delayed to avoid it when possible.

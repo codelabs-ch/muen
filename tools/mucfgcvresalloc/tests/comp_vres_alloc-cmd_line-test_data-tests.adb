@@ -36,7 +36,7 @@ package body Comp_Vres_Alloc.Cmd_Line.Test_Data.Tests is
    procedure Test_Init_a69a58 (Gnattest_T : in out Test) renames Test_Init;
 --  id:2.2/a69a5871ab5eef40/Init/1/0/
    procedure Test_Init (Gnattest_T : in out Test) is
-      --  end read only
+--  end read only
 
       pragma Unreferenced (Gnattest_T);
       use Ada.Strings.Unbounded;

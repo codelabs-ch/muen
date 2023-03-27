@@ -30,7 +30,7 @@ is
    --  Return include path
    function Get_Include_Path return String;
 
-   --  Return filename for output specificaton
+   --  Return filename for output specification
    function Get_Output_Filename return String;
 
    Invalid_Cmd_Line : exception;

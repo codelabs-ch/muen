@@ -27,7 +27,7 @@ is
    --  Return filename of root of component specification
    function Get_Policy_Joined return String;
 
-   --  Return filename for output specificaton
+   --  Return filename for output specification
    function Get_Output_Filename return String;
 
    Invalid_Cmd_Line : exception;

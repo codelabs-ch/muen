@@ -21,7 +21,6 @@ with Ada.Exceptions;
 with Mulog;
 with Muxml;
 with Mutools.Utils;
-with Mucfgcheck.Validation_Errors;
 
 with Vres_Alloc;
 with Vres_Alloc.Cmd_Line;
@@ -40,19 +39,12 @@ exception
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : Muxml.XML_Input_Error
       | Mutools.Utils.File_Not_Found
-      | Muxml.Validation_Error =>
-      -- TODO mmmDEBUG: maybe add    Vres_Alloc.Checks.Validation_Error
+      | Muxml.Validation_Error
+      | Vres_Alloc.Validation_Error =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "Atomatic allocation of virtual addresses failed, aborting");
       Mulog.Log (Level => Mulog.Error,
                  Msg   => Ada.Exceptions.Exception_Message (X => E));
-      Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
-      -- TODO mmmDEBUG: this can probably be deleted (check when done)!
-   when Mucfgcheck.Validation_Errors.Validation_Error =>
-      Mulog.Log (Level => Mulog.Error,
-                 Msg   => "Semantic check failed, aborting");
-      Mulog.Log (Level => Mulog.Error,
-                 Msg   => Mucfgcheck.Validation_Errors.Get_Error_Message);
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : others =>
       Mulog.Log (Level => Mulog.Error,

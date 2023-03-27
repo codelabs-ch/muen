@@ -41,8 +41,8 @@ exception
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : Muxml.XML_Input_Error
       | Mutools.Utils.File_Not_Found
-      | Muxml.Validation_Error =>
-      -- TODO mmmDEBUG: maybe add    Comp_Vres_Alloc.Checks.Validation_Error
+      | Muxml.Validation_Error
+      | Comp_Vres_Alloc.Validation_Error =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "Atomatic allocation of virtual addresses failed, aborting");
       Mulog.Log (Level => Mulog.Error,

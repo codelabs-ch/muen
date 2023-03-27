@@ -29,9 +29,12 @@ is
      := (First_Address => 16#0000_0000_2000_0000#,
          Last_Address  => 16#0000_0007_FFFF_FFFF#);
 
+   --  Muennet cannot deal with 64bit addresses because of ioremap_cache in
+   --  initialize_reader/initialize_writer. Hence, this domain must not
+   --  include addresses bigger than 16#0000_0000_FFFF_FFFF#.
    Default_Va_Space_Vm : constant Map.Memory_Interval_Type
-     := (First_Address => 16#0000_0010_0000_0000#,
-         Last_Address  => 16#0000_001F_FFFF_FFFF#);
+     := (First_Address => 16#0000_0000_A000_0000#,
+         Last_Address  => 16#0000_0000_FFFF_FFFF#);
 
    --  These are the domains for the attributes 'vector' and 'event'
    --  of channel-readers and channel-writers respectively

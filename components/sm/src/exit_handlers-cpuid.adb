@@ -280,7 +280,7 @@ is
 
             --  Get Highest Extended Function Supported.
 
-            State.Regs.RAX := 16#8000_0004#;
+            State.Regs.RAX := 16#8000_0008#;
             State.Regs.RBX := 0;
             State.Regs.RCX := 0;
             State.Regs.RDX := 0;
@@ -291,7 +291,23 @@ is
 
             --  Mask out Bit 27 - RDTSCP
             State.Regs.RDX := SK.Word64 (Values.EDX) and 16#f7ff_ffff#;
-         when 2 | 16#8000_0002# .. 16#8000_0004# =>
+         when 16#8000_0007# =>
+
+            --  Clear to zero in order to not provide CPU Size/hierarchy
+            --  information to Linux subjects.
+
+            State.Regs.RAX := 0;
+            State.Regs.RBX := 0;
+            State.Regs.RCX := 0;
+            State.Regs.RDX := 0;
+         when 16#8000_0008# =>
+
+            --  Physical Address and Linear Address Size
+            State.Regs.RAX := SK.Word64 (Values.EAX);
+            State.Regs.RBX := 0;
+            State.Regs.RCX := 0;
+            State.Regs.RDX := 0;
+         when 2 | 16#8000_0002# .. 16#8000_0006# =>
 
             --  Passthrough values.
 

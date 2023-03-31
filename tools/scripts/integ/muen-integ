@@ -79,6 +79,18 @@ failed()
 	exit 1
 }
 
+not_expect()
+{
+	local file=$1
+	local pattern=$2
+	log "Not expect pattern '$pattern' in file '$file'"
+	$MULOG $file | grep "$pattern" >>$LOGFILE 2>&1
+	if [ $? -eq 0 ]; then
+		log "Found unexpected pattern '$pattern' in '$file'"
+		failed
+	fi
+}
+
 expect()
 {
 	local file=$1
@@ -100,11 +112,16 @@ expect_from_file()
 	do
 		local file=`echo "$line" | cut -d\; -f1`
 		local pattern=`echo "$line" | cut -d\; -f2`
+		local neg=`echo "$line" | cut -d\; -f3`
 		if [ -z "$file" ]; then
 			continue
 		fi
 
-		expect $path/$file "$pattern"
+		if [ -z "$neg" ]; then
+			expect $path/$file "$pattern"
+		else
+			not_expect $path/$file "$pattern"
+		fi
 	done < $pattern_file
 }
 

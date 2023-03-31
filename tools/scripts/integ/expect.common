@@ -32,3 +32,4 @@ serial.out;Linux loaded
 serial.out;BUG:;!
 serial.out;Bad FPU state;!
 serial.out;CPU: .* PID: .*;!
+serial.out;segfault at;!

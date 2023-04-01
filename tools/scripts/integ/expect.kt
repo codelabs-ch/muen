@@ -16,9 +16,15 @@ serial.out;pci 0000:00:19.0: BAR 0: reserving \[mem 0xf7f00000-0xf7f1ffff flags 
 serial.out;pci 0000:00:19.0: BAR 1: reserving \[mem 0xf7f39000-0xf7f39fff flags 0x40200\] (d=0, p=0)
 serial.out;pci 0000:00:19.0: BAR 2: reserving \[io  0xf080-0xf09f flags 0x40101\] (d=0, p=0)
 serial.out;smpboot: Max logical packages: 3
-serial.out;muen-smp: Setup timer for CPU#0:.*
-serial.out;muen-smp: Setup timer for CPU#1:.*
-serial.out;muen-smp: Setup timer for CPU#2:.*
+serial.out;muen-smp: Using timed event .* for CPU#0
+serial.out;muen-smp: Using timed event .* for CPU#1
+serial.out;muen-smp: Using timed event .* for CPU#2
+serial.out;muen-smp: Using timed event region at address 0x.* for CPU#0
+serial.out;muen-smp: Using timed event region at address 0x.* for CPU#1
+serial.out;muen-smp: Using timed event region at address 0x.* for CPU#2
+serial.out;muen-smp: Registering timer for CPU#0
+serial.out;muen-smp: Registering timer for CPU#1
+serial.out;muen-smp: Registering timer for CPU#2
 serial.out;smp: Brought up 1 node, 3 CPUs
 serial.out;smpboot: Total of 3 processors activated (13800.09 BogoMIPS)
 serial.out;e1000e 0000:00:19.0 eth0: MAC: 10, PHY: 11, PBA No: FFFFFF-0FF

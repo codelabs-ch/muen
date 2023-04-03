@@ -29,3 +29,7 @@ serial.out;rtc_cmos rtc_cmos: registered as rtc0
 serial.out;64 bytes from 192.168.10.4: seq=.* ttl=.* time=.* ms
 serial.out;Linux reset
 serial.out;Linux loaded
+serial.out;BUG:;!
+serial.out;Bad FPU state;!
+serial.out;CPU: .* PID: .*;!
+serial.out;segfault at;!

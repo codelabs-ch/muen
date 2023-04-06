@@ -34,12 +34,14 @@ is
 
    use Subject_Info;
 
-   --  Return size of enabled features in XSAVE area.
-   function Get_XSAVE_Area_Size (Features : SK.Byte) return SK.Word32;
+   --  Return size of enabled features in XSAVE area. The Features parameter
+   --  describes a state-component bitmap, see Intel SDM Vol. 1,
+   --  "13.1 XSAVE-Supported Features and State-Component Bitmaps".
+   function Get_XSAVE_Area_Size (Features : SK.Word64) return SK.Word32;
 
    -------------------------------------------------------------------------
 
-   function Get_XSAVE_Area_Size (Features : SK.Byte) return SK.Word32
+   function Get_XSAVE_Area_Size (Features : SK.Word64) return SK.Word32
    is
       use type SK.Word32;
 
@@ -51,9 +53,9 @@ is
       Calc   : SK.Word32 := 0;
       Res    : Boolean;
    begin
-      for I in SK.Word64 range 2 .. 7 loop
+      for I in SK.Bitops.Word64_Pos range 2 .. SK.Bitops.Word64_Pos'Last loop
          if SK.Bitops.Bit_Test
-           (Value => SK.Word64 (Features),
+           (Value => Features,
             Pos   => I)
          then
             CPU_Values.Get_CPUID_Values
@@ -202,13 +204,12 @@ is
                declare
                   use type SK.Word32;
 
-                  Enabled   : constant SK.Byte
-                    := SK.Byte
-                      (Values.EAX and SK.Constants.XCR0_Supported_Features_Mask);
+                  Enabled   : constant SK.Word64 := SK.Word64
+                    (Values.EAX and SK.Constants.XCR0_Supported_Features_Mask);
                   Area_Size : constant SK.Word32
                     := Get_XSAVE_Area_Size (Features => Enabled);
                begin
-                  State.Regs.RAX := SK.Word64 (Enabled);
+                  State.Regs.RAX := Enabled;
                   State.Regs.RBX := SK.Word64 (Area_Size);
                   State.Regs.RCX := SK.Word64 (Area_Size);
                end;

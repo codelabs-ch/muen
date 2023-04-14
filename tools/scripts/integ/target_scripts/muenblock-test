@@ -92,7 +92,7 @@ test_title "lnx1 -> lnx2 XHCI [complete blockdev]"
 
 execute "sleep 2"
 execute "$SSH muenblock-server-all"
-execute "muenblock-client-all"
+execute "muenblock-client"
 execute "sleep 2"
 
 execute "mount /dev/muendiska1 /mnt/1"

@@ -75,7 +75,6 @@ def add_elf_memory(xml_spec, binary, filename):
 
             n = "+".join([section.name for section in sections])
             mem_name = (n[:max_len - 2] + '..') if len(n) > max_len else n
-            print("* Adding memory region '" + mem_name + "'")
 
             w = ELF.SEGMENT_FLAGS.W in segment
             x = ELF.SEGMENT_FLAGS.X in segment
@@ -87,18 +86,20 @@ def add_elf_memory(xml_spec, binary, filename):
             vaddr_str = muutils.int_to_ada_hex(virtual_addr)
             offset_str = muutils.int_to_ada_hex(segment.file_offset)
 
-            mem = etree.Element("memory",
-                                logical=mem_name,
-                                virtualAddress=vaddr_str,
-                                size=muutils.int_to_ada_hex(phy_size),
-                                executable=muutils.bool_to_str(x),
-                                writable=muutils.bool_to_str(w),
-                                type="subject_binary")
-            etree.SubElement(mem,
-                             "file",
-                             filename=filename,
-                             offset=offset_str)
-            provides.append(mem)
+            if phy_size > 0:
+                print("* Adding memory region '" + mem_name + "'")
+                mem = etree.Element("memory",
+                                    logical=mem_name,
+                                    virtualAddress=vaddr_str,
+                                    size=muutils.int_to_ada_hex(phy_size),
+                                    executable=muutils.bool_to_str(x),
+                                    writable=muutils.bool_to_str(w),
+                                    type="subject_binary")
+                etree.SubElement(mem,
+                                 "file",
+                                 filename=filename,
+                                 offset=offset_str)
+                provides.append(mem)
 
             # Add fill region if virtual_size is larger than physical_size
             mem_size = segment.virtual_size

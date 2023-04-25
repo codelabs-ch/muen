@@ -12,12 +12,12 @@
  </if>
  <requires>
   <memory>
-   <memory logical="crash_audit" size="16#1000#" virtualAddress="16#1000_0000#" writable="false" executable="false"/>
+   <memory logical="crash_audit" size="16#1000#" writable="false" executable="false"/>
   </memory>
   <channels>
    <include href="logchannels.xml"/>
    <if variable="sink_shmem" value="true">
-    <writer logical="debug_shm_sink_memory" size="$logchannel_size" virtualAddress="16#b000_0000#"/>
+    <writer logical="debug_shm_sink_memory" size="$logchannel_size"/>
    </if>
   </channels>
   <devices>

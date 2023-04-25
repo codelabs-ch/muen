@@ -523,8 +523,8 @@
 
      The \texttt{mucfgcvresalloc} tool described in \ref{tools-mucfgcvresalloc}
      implements the blue \emph{Component VR Allocator} task shown in figure
-     \ref{fig:build-process}. It is used to process component specifications
-     and, similar to the policy merger, supports conditionals, expressions and
+     \ref{fig:build-process}. Furthermore, similar to the policy merger,
+     it supports inclusions, conditionals, expressions and
      configuration value substitutions.
 
      After the component specification has been processed, the
@@ -563,11 +563,11 @@
      expanded format with no implicit properties.
 
      The Virtual Resource Allocator tool sets virtual resources that are left
-     unassigned in the joined policy. These resources include virtual addresses
-     and event numbers of channels. Often, the precise values of these resources
+     unassigned in the joined policy. These resources include virtual addresses,
+     event numbers and vectors of channels. Often, the precise values of these resources
      do not matter to the integrator and make the policy harder to read and write.
      Section \ref{tools-mucfgvresalloc} explains the Virtual Resource Allocator
-     tool is detail.
+     tool in detail.
 
      The Expander tool takes care of completing the user-specified policy with
      additional information and resolving abstractions only available in format
@@ -692,12 +692,12 @@
         \item Merge XIncludes of main XML file, i.e.,
         insert the referenced files at the given location;
         \item Evaluate expressions, conditionals and substitutions;
-        \item Assign missing virtual addresses;
-        \item Assign missing event ids of readers;
-        \item Assign missing event ids of writers;
+        \item Assign missing virtual addresses of channels and memory regions, as well as arrays of channels and memory regions;
+        \item Assign missing IRQs of channel reader events and arrays of channel readers;
+        \item Assign missing event IDs of channel writer events and arrays of channel writers;
      \end{enumerate}
 
-     Virtual addresses and event ids are considered to be \textit{virtual resources}.
+     Virtual addresses and event IDs are considered to be \textit{virtual resources}.
      Each of the three virtual resources has its own domain.
      To request automatic allocation of the attribute \texttt{virtualAddress}
      (or \texttt{virtualAddressBase} for arrays) omit the attribute.
@@ -707,8 +707,7 @@
      To determine which addresses or ids to choose, \texttt{mucfgcvresalloc}
      looks at the addresses and ids already present in the file.
      Dependencies of virtual resources through libraries or the system policy
-     can be resolved by manually assigning such resources and restricting
-     the domains used by \texttt{mucfgcvresalloc}.
+     can be resolved by manually assigning such resources.
     </text>
    </section>
 
@@ -724,17 +723,18 @@
         \item[Input] \hfill \\
         Joined system policy as XML
         \item[Output] \hfill \\
-        System policy where all virtual resources have been assigned
+        System policy where all virtual resources of subjects have been assigned
      \end{description}
 
-     Virtual addresses and event ids are considered to be \textit{virtual resources}.
+     \texttt{mucfgvresalloc} can assign virtual addresses of channels and memory
+     regions, IRQs of channel reader events, and IDs of channel writer events.
+     These attributes are considered to be \textit{virtual resources}.
      Each of the three virtual resources has its own domain.
      To request automatic allocation of the attribute \texttt{virtualAddress}
-     omit the attribute.
-     To request automatic allocation of event ids of readers or writers the respective
-     attribute must be set to \texttt{auto}.
+     omit the attribute. For the other two resources the respective attribute
+     must be set to \texttt{auto}.
 
-     To determine which addresses or ids to choose, \texttt{mucfgvresalloc}
+     To determine which value to choose for a virtual resource, \texttt{mucfgvresalloc}
      processes each subject separately. For each subject, it gathers virtual
      resources already set in the component that is referenced by the subject and
      resources set in the subject itself.
@@ -743,8 +743,7 @@
      space in the respective domain.
 
      Dependencies of virtual resources through libraries or devices
-     can be resolved by manually assigning such resources and restricting
-     the domains used by \texttt{mucfgvresalloc}.
+     can be resolved by manually assigning such resources.
     </text>
    </section>
 

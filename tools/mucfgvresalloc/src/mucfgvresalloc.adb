@@ -18,8 +18,9 @@
 with Ada.Command_Line;
 with Ada.Exceptions;
 
-with Mulog;
 with Muxml;
+
+with Mulog;
 with Mutools.Utils;
 
 with Vres_Alloc;
@@ -31,7 +32,7 @@ begin
    Vres_Alloc.Cmd_Line.Init
       (Description     => "Muen virtual address allocator");
    Vres_Alloc.Run
-     (Policy_Joined    => Vres_Alloc.Cmd_Line.Get_Policy_Joined,
+     (Policy_File_Name => Vres_Alloc.Cmd_Line.Get_Policy,
       Output_File_Name => Vres_Alloc.Cmd_Line.Get_Output_Filename);
 
 exception
@@ -42,7 +43,7 @@ exception
       | Muxml.Validation_Error
       | Vres_Alloc.Validation_Error =>
       Mulog.Log (Level => Mulog.Error,
-                 Msg   => "Atomatic allocation of virtual addresses failed, aborting");
+                 Msg   => "Allocation of virtual addresses failed, aborting");
       Mulog.Log (Level => Mulog.Error,
                  Msg   => Ada.Exceptions.Exception_Message (X => E));
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);

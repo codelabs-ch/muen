@@ -24,22 +24,22 @@ is
    --  Init command line, use given tool description in usage output.
    procedure Init (Description : String);
 
-   --  Return filename of root of component specification
+   --  Return filename of root of component specification.
    function Get_Input_Spec return String;
 
-   --  Return include path
+   --  Return include path.
    function Get_Include_Path return String;
 
-   --  Return filename for output specification
+   --  Return filename for output specification.
    function Get_Output_Filename return String;
 
    Invalid_Cmd_Line : exception;
 
 private
 
-   Input_Spec       : Ada.Strings.Unbounded.Unbounded_String;
-   Include_Path     : Ada.Strings.Unbounded.Unbounded_String;
-   Output_Filename  : Ada.Strings.Unbounded.Unbounded_String;
+   Input_Spec      : Ada.Strings.Unbounded.Unbounded_String;
+   Include_Path    : Ada.Strings.Unbounded.Unbounded_String;
+   Output_Filename : Ada.Strings.Unbounded.Unbounded_String;
 
    Parser : GNAT.Command_Line.Opt_Parser
      := GNAT.Command_Line.Command_Line_Parser;

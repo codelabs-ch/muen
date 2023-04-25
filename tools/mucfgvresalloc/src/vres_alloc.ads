@@ -16,12 +16,14 @@
 
 with Ada.Strings.Hash;
 with Ada.Containers.Indefinite_Hashed_Maps;
-with Mutools;
+
 with Interfaces;
 
+with Mutools;
+
 private with Mutools.Expressions;
-private with Alloc.Config;
-private with Alloc.Map;
+private with Mutools.Intervals;
+private with Mutools.Vres_Alloc.Config;
 
 package Vres_Alloc
 is
@@ -45,32 +47,32 @@ is
       Writer_Events_Map : aliased Logical_To_Interval_Package.Map;
    end record;
 
+   --  The main procedure
+   procedure Run
+     (Policy_File_Name : String;
+      Output_File_Name : String);
+
+   Validation_Error : exception;
+
+private
    package Component_To_Map_Package is new Ada.Containers.Indefinite_Hashed_Maps
       (Key_Type        => String,
        Element_Type    => Component_Info_Type,
        Hash            => Ada.Strings.Hash,
        Equivalent_Keys => "=");
 
-   --  The main procedure
-   procedure Run
-     (Policy_Joined    : String;
-      Output_File_Name : String);
-
-   Validation_Error : exception;
-
-private
    Memory_Sizes   : Mutools.Expressions.Name_To_String_Hashed_Map.Map;
    Channel_Sizes  : Mutools.Expressions.Name_To_String_Hashed_Map.Map;
    Components_Map : Component_To_Map_Package.Map;
 
    --  The default domains are copied to local variables
-   --  in order to be able to change them in unittests
-   Va_Space_Native : Alloc.Map.Memory_Interval_Type
-     := Alloc.Config.Default_Va_Space_Native;
-   Va_Space_Vm : Alloc.Map.Memory_Interval_Type
-     := Alloc.Config.Default_Va_Space_Vm;
-   Vector_Numbers_Domain : Alloc.Map.Memory_Interval_Type
-     := Alloc.Config.Default_Vector_Numbers_Domain;
-   Event_Numbers_Domain : Alloc.Map.Memory_Interval_Type
-     := Alloc.Config.Default_Event_Numbers_Domain;
+   --  in order to be able to change them in unittests.
+   Va_Space_Native       : Mutools.Intervals.Interval_Type
+     := Mutools.Vres_Alloc.Config.Default_Va_Space_Native;
+   Va_Space_Vm           : Mutools.Intervals.Interval_Type
+     := Mutools.Vres_Alloc.Config.Default_Va_Space_Vm;
+   Vector_Numbers_Domain : Mutools.Intervals.Interval_Type
+     := Mutools.Vres_Alloc.Config.Default_Vector_Numbers_Domain;
+   Event_Numbers_Domain  : Mutools.Intervals.Interval_Type
+     := Mutools.Vres_Alloc.Config.Default_Event_Numbers_Domain;
 end Vres_Alloc;

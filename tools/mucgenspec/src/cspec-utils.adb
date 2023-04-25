@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Interfaces;
-
 with Ada.Strings.Fixed;
 with Ada.Characters.Handling;
 
@@ -322,7 +320,7 @@ is
    is
       Res, Addr, Size : Unbounded_String;
 
-      Child_Count : constant Interfaces.Unsigned_64
+      Child_Count : constant Natural
         := Muxml.Utils.Count_Element_Children (Node => Arr);
    begin
       Array_Attrs_As_String

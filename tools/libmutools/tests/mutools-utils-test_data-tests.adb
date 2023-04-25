@@ -178,6 +178,27 @@ package body Mutools.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_To_Decimal (Gnattest_T : in out Test);
+   procedure Test_To_Decimal_01db46 (Gnattest_T : in out Test) renames Test_To_Decimal;
+--  id:2.2/01db4625a2accc44/To_Decimal/1/0/
+   procedure Test_To_Decimal (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+
+      Assert (Condition => To_Decimal (Number => 42) = "42",
+              Message   => "String mismatch: " & To_Decimal (Number => 42));
+      Assert (Condition => To_Decimal (Number => 0) = "0",
+              Message   => "String mismatch: " & To_Decimal (Number => 0));
+
+--  begin read only
+   end Test_To_Decimal;
+--  end read only
+
+
+--  begin read only
    procedure Test_Indent (Gnattest_T : in out Test);
    procedure Test_Indent_399a7a (Gnattest_T : in out Test) renames Test_Indent;
 --  id:2.2/399a7ad24f629c80/Indent/1/0/

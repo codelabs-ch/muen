@@ -24,10 +24,10 @@ with DOM.Core.Elements;
 with DOM.Core.Nodes;
 
 with Mutools.OS;
+with Mutools.Vres_Alloc;
+
 with Muxml;
 with Muxml.Utils;
-
-with Alloc.Map;
 
 --  begin read only
 --  end read only
@@ -52,7 +52,7 @@ package body Vres_Alloc.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      --  Compore the diff between Original_File and New_File
+      --  Compare the diff between Original_File and New_File
       --  to the reference diff Ref_Diff and return true if and only if they are
       --  equal.
       function Diff_Equal
@@ -61,7 +61,7 @@ package body Vres_Alloc.Test_Data.Tests is
          Diff_Ref      : String)
         return Boolean
       is
-         Diff_Filename : constant String
+         Diff_Filename        : constant String
            := New_File & ".diff";
          Create_Diff_File_Cmd : constant String
            :=  "diff -w -B " & Original_File & " " & New_File
@@ -77,19 +77,19 @@ package body Vres_Alloc.Test_Data.Tests is
 
       procedure Test
         (Input_Policy         : String;
-         Input_Default_Folder : Boolean := true;
+         Input_Default_Folder : Boolean := True;
          Output_Filename      : String;
          Diff_Ref_File        : String;
          Test_Name            : String)
       is
-         Output_Dir  : constant String
+         Output_Dir     : constant String
            := "obj/outdir";
-         Output_Path : constant String
+         Output_Path    : constant String
            := Output_Dir & "/" & Output_Filename;
-         Input_Path  : constant String
+         Input_Path     : constant String
            := (if Input_Default_Folder then "data/" else "")
              & Input_Policy;
-         Diff_File_Path : constant String
+       Diff_File_Path : constant String
            := (if Input_Default_Folder then "data/" else "")
              & Diff_Ref_File;
       begin
@@ -100,7 +100,7 @@ package body Vres_Alloc.Test_Data.Tests is
          Component_To_Map_Package.Clear
            (Container => Components_Map);
 
-         Run (Policy_Joined    => Input_Path,
+         Run (Policy_File_Name => Input_Path,
               Output_File_Name => Output_Path);
 
          Assert (Condition => Ada.Directories.Exists (Name => Output_Dir),
@@ -117,15 +117,16 @@ package body Vres_Alloc.Test_Data.Tests is
       end Test;
    begin
       --  Fix a domain configuration for the unittests.
-      --  Otherwise the tests fail if the domains in Alloc.Config change
-      Va_Space_Native       := (First_Address => 16#0000_0000_2000_0000#,
-                                Last_Address  => 16#0000_0007_FFFF_FFFF#);
-      Va_Space_Vm           := (First_Address => 16#0000_0010_0000_0000#,
-                                Last_Address  => 16#0000_001F_FFFF_FFFF#);
-      Vector_Numbers_Domain := (First_Address => 0,
-                                Last_Address  => 255);
-      Event_Numbers_Domain  := (First_Address => 0,
-                                Last_Address  => 63);
+      --  Otherwise the tests fail if the domains in Mutools.Vres_Alloc.Config
+      --  change.
+      Va_Space_Native       := (First_Element => 16#0000_0000_2000_0000#,
+                                Last_Element  => 16#0000_0007_FFFF_FFFF#);
+      Va_Space_Vm           := (First_Element => 16#0000_0010_0000_0000#,
+                                Last_Element  => 16#0000_001F_FFFF_FFFF#);
+      Vector_Numbers_Domain := (First_Element => 0,
+                                Last_Element  => 255);
+      Event_Numbers_Domain  := (First_Element => 0,
+                                Last_Element  => 63);
 
       --  Positive test: No resources need allocation
       Test (Input_Policy    => "policy_no_autoalloc.xml",
@@ -133,7 +134,7 @@ package body Vres_Alloc.Test_Data.Tests is
             Diff_Ref_File   => "empty_diff.diff",
             Test_Name       => "No allocation necessary");
 
-      --  Positive test: This test intendes to present a 'general case' where
+      --  Positive test: This test intends to present a 'general case' where
       --  all features are needed, i.e., some resources are fixed in the
       --  subject, some are fixed by the component, some need to be allocated
       --  from the rest of the domain.
@@ -143,7 +144,7 @@ package body Vres_Alloc.Test_Data.Tests is
             Test_Name       => "Allocation of all resources");
 
       --  Negative tests:
-      --  Referenced component not found
+      --  Referenced component not found.
       declare
          Data         : Muxml.XML_Data_Type;
          Changed_Spec : constant String
@@ -153,7 +154,7 @@ package body Vres_Alloc.Test_Data.Tests is
                       Kind => Muxml.None,
                       File => "data/policy_allocation.xml");
          Muxml.Utils.Set_Attribute
-           (Doc => Data.Doc,
+           (Doc   => Data.Doc,
             XPath => "/system/subjects/subject[@name='subject2']/component",
             Name  => "ref",
             Value => "no_such_component");
@@ -176,10 +177,9 @@ package body Vres_Alloc.Test_Data.Tests is
                     Message   => "Exception mismatch: "
                       & Ada.Exceptions.Exception_Message (X => E));
             Ada.Directories.Delete_File (Name => Changed_Spec);
-            DOM.Core.Nodes.Free (N => Data.Doc, Deep => True);
       end;
 
-      --  Read-only resource with value "auto"
+      --  Read-only resource with value "auto".
       declare
          Data         : Muxml.XML_Data_Type;
          Changed_Spec : constant String
@@ -189,7 +189,7 @@ package body Vres_Alloc.Test_Data.Tests is
                       Kind => Muxml.None,
                       File => "data/policy_allocation.xml");
          Muxml.Utils.Set_Attribute
-           (Doc => Data.Doc,
+           (Doc   => Data.Doc,
             XPath => "/system/subjects/subject[@name='subject2']/events/source/"
               & "group[@name='vmcall']/event[@id='5']",
             Name  => "id",
@@ -214,10 +214,9 @@ package body Vres_Alloc.Test_Data.Tests is
                     Message   => "Exception mismatch: "
                       & Ada.Exceptions.Exception_Message (X => E));
             Ada.Directories.Delete_File (Name => Changed_Spec);
-            DOM.Core.Nodes.Free (N => Data.Doc, Deep => True);
       end;
 
-      --  Not enough space for event resource
+      --  Not enough space for event resource.
       declare
          Data          : Muxml.XML_Data_Type;
          Changed_Spec  : constant String
@@ -259,21 +258,20 @@ package body Vres_Alloc.Test_Data.Tests is
                Input_Default_Folder => False,
                Output_Filename      => "output_policy_fail.xml",
                Diff_Ref_File        => "empty_diff.diff",
-               Test_Name            => "Exception: not engouh space for events");
+               Test_Name            => "Exception: not enough space for events");
          Assert (Condition => False,
                  Message   => "Exception expected");
       exception
-         when E: Alloc.Map.Out_Of_Memory =>
+         when E: Mutools.Intervals.Out_Of_Space =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                      = "Could not find free domain region of size '16#0001#'",
+                      = "Cannot find free interval of size '16#0001#'",
                     Message   => "Exception mismatch: "
                       & Ada.Exceptions.Exception_Message (X => E));
             Ada.Directories.Delete_File (Name => Changed_Spec);
-            DOM.Core.Nodes.Free (N => Data.Doc, Deep => True);
       end;
 
-      --  Channel is not declared
-            declare
+      --  Channel is not declared.
+      declare
          Data         : Muxml.XML_Data_Type;
          Changed_Spec : constant String
            := "obj/vres_false_auto.xml";
@@ -293,7 +291,7 @@ package body Vres_Alloc.Test_Data.Tests is
                Input_Default_Folder => False,
                Output_Filename      => "output_policy_fail.xml",
                Diff_Ref_File        => "empty_diff.diff",
-               Test_Name            => "Exception: read-only with 'auto'");
+               Test_Name            => "Exception: Channel not declared");
          Assert (Condition => False,
                  Message   => "Exception expected");
       exception
@@ -305,7 +303,210 @@ package body Vres_Alloc.Test_Data.Tests is
                     Message   => "Exception mismatch: "
                       & Ada.Exceptions.Exception_Message (X => E));
             Ada.Directories.Delete_File (Name => Changed_Spec);
-            DOM.Core.Nodes.Free (N => Data.Doc, Deep => True);
+      end;
+
+      --  Memory not declared.
+      declare
+         Data         : Muxml.XML_Data_Type;
+         Changed_Spec : constant String
+           := "obj/vres_false_auto.xml";
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/policy_allocation.xml");
+         Muxml.Utils.Remove_Elements
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/memory[@name='dummy_1000_']");
+         Muxml.Write
+           (File => Changed_Spec,
+            Kind => Muxml.None,
+            Data => Data);
+         Test (Input_Policy         => Changed_Spec,
+               Input_Default_Folder => False,
+               Output_Filename      => "output_policy_fail.xml",
+               Diff_Ref_File        => "empty_diff.diff",
+               Test_Name            => "Exception: Memory not declared");
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+      exception
+         when E: Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                      = "Cannot find size of node at "
+                      & "'/#document/system/subjects/subject/memory/memory' "
+                      & "with physical 'dummy_1000_'",
+                    Message   => "Exception mismatch: "
+                      & Ada.Exceptions.Exception_Message (X => E));
+            Ada.Directories.Delete_File (Name => Changed_Spec);
+      end;
+
+      --  Same logical (not in array) in component mapped twice with different
+      --  values.
+      declare
+         Data               : Muxml.XML_Data_Type;
+         Changed_Spec       : constant String
+           := "obj/vres_false_auto.xml";
+         New_Node           : DOM.Core.Node;
+         Parent_Xpath       : constant String
+           := "/system/components/component[@name='c1']/requires/memory";
+
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/policy_allocation.xml");
+         New_Node := DOM.Core.Nodes.Clone_Node
+           (N    =>  Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => Parent_Xpath & "/memory[@logical='ml1']"),
+            Deep => True);
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => New_Node,
+            Name  => "virtualAddress",
+            Value => "16#4444_0000#");
+         New_Node := DOM.Core.Nodes.Append_Child
+           (N         => Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => Parent_Xpath),
+            New_Child => New_Node);
+         Muxml.Write
+           (File => Changed_Spec,
+            Kind => Muxml.None,
+            Data => Data);
+
+         Test (Input_Policy         => Changed_Spec,
+               Input_Default_Folder => False,
+               Output_Filename      => "output_policy_fail.xml",
+               Diff_Ref_File        => "empty_diff.diff",
+               Test_Name            => "Exception: Same logical not array");
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+      exception
+         when E: Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                      = "Conflicting resource values for logical 'ml1': "
+                      & "found '(First_Address=16#0002_0000#, Size=536870912)' "
+                      & "and '(First_Address=16#4444_0000#, Size=536870912)'",
+                    Message   => "Exception mismatch: "
+                      & Ada.Exceptions.Exception_Message (X => E));
+            Ada.Directories.Delete_File (Name => Changed_Spec);
+      end;
+
+      --  Same logical in array in component mapped twice with different
+      --  values.
+      declare
+         Data               : Muxml.XML_Data_Type;
+         Changed_Spec       : constant String
+           := "obj/vres_false_auto.xml";
+         New_Node           : DOM.Core.Node;
+         Parent_Xpath       : constant String
+           := "/system/components/component[@name='c1']/requires/memory";
+
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/policy_allocation.xml");
+         New_Node := DOM.Core.Nodes.Clone_Node
+           (N    =>  Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => Parent_Xpath & "/array[@logical='mal3']"),
+            Deep => True);
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => New_Node,
+            Name  => "virtualAddressBase",
+            Value => "16#4444_0000#");
+         New_Node := DOM.Core.Nodes.Append_Child
+           (N         => Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => Parent_Xpath),
+            New_Child => New_Node);
+         Muxml.Write
+           (File => Changed_Spec,
+            Kind => Muxml.None,
+            Data => Data);
+
+         Test (Input_Policy         => Changed_Spec,
+               Input_Default_Folder => False,
+               Output_Filename      => "output_policy_fail.xml",
+               Diff_Ref_File        => "empty_diff.diff",
+               Test_Name            => "Exception: Same logical in array");
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+      exception
+         when E: Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                      = "Conflicting resource values for logical 'mem11': "
+                      & "found '(First_Address=16#3087_3000#, Size=4096)' "
+                      & "and '(First_Address=16#4444_0000#, Size=4096)'",
+                    Message   => "Exception mismatch: "
+                      & Ada.Exceptions.Exception_Message (X => E));
+            Ada.Directories.Delete_File (Name => Changed_Spec);
+      end;
+
+
+      --  Alignment problems:
+      declare
+         Data         : Muxml.XML_Data_Type;
+         Changed_Spec : constant String
+           := "obj/vres_false_auto.xml";
+
+         procedure Test_Alignment_Failure (XPath, Attr_Name, Value : String)
+         is
+         begin
+            Muxml.Parse (Data => Data,
+                         Kind => Muxml.None,
+                         File => "data/policy_allocation.xml");
+            Muxml.Utils.Set_Attribute
+              (Doc   => Data.Doc,
+               XPath => XPath,
+               Name  => Attr_Name,
+               Value => Value);
+            Muxml.Write
+              (File => Changed_Spec,
+               Kind => Muxml.None,
+               Data => Data);
+
+            Test (Input_Policy         => Changed_Spec,
+                  Input_Default_Folder => False,
+                  Output_Filename      => "output_policy_fail.xml",
+                  Diff_Ref_File        => "empty_diff.diff",
+                  Test_Name            => "Exception: Alignment in component");
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+         exception
+            when E: Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                         = "Virtual resource not aligned",
+                       Message   => "Exception mismatch: "
+                         & Ada.Exceptions.Exception_Message (X => E));
+               Ada.Directories.Delete_File (Name => Changed_Spec);
+         end Test_Alignment_Failure;
+      begin
+         --  Address fixed in component is not aligned.
+         Test_Alignment_Failure
+           (XPath     => "/system/components/component[@name='c1']/requires/"
+              & "channels/reader[@logical='crl0']",
+            Attr_Name => "virtualAddress",
+            Value     => "16#0010_0001#");
+
+         --  Size fixed in component is not aligned.
+         Test_Alignment_Failure
+           (XPath     => "/system/components/component[@name='c1']/requires/"
+              & "channels/reader[@logical='crl0']",
+            Attr_Name => "size",
+            Value     => "16#0001_0f00#");
+
+         --  Unused size in component is not aligned.
+         Test_Alignment_Failure
+           (XPath     => "/system/components/component[@name='c1']/requires/"
+              & "memory/memory[@logical='ml1']",
+            Attr_Name => "size",
+            Value     => "16#0001#");
+
+         --  Set address in subject not aligned.
+         Test_Alignment_Failure
+           (XPath     => "/system/subjects/subject[@name='subject2']/memory/"
+              & "memory[@logical='ml4']",
+            Attr_Name => "virtualAddress",
+            Value     => "16#3003_0040#");
       end;
 
 --  begin read only

@@ -18,6 +18,7 @@ with System.Assertions;
 
 with Ada.Directories;
 with Ada.Exceptions;
+
 with Interfaces;
 
 with Test_Utils;
@@ -30,9 +31,8 @@ with Muxml;
 with Muxml.Utils;
 
 with Mutools.Utils;
-
-with Alloc.Map;
-with Alloc.Config;
+with Mutools.Vres_Alloc;
+with Mutools.Vres_Alloc.Config;
 
 --  begin read only
 --  end read only
@@ -88,16 +88,17 @@ package body Comp_Vres_Alloc.Test_Data.Tests is
       end Test;
 
    begin
-      --  Fix a domain configuration for the unittests.
-      --  Otherwise the tests fail if the domains in Alloc.Config change
-      Va_Space_Native       := (First_Address => 16#0000_0000_2000_0000#,
-                                Last_Address  => 16#0000_0007_FFFF_FFFF#);
-      Va_Space_Vm           := (First_Address => 16#0000_0010_0000_0000#,
-                                Last_Address  => 16#0000_001F_FFFF_FFFF#);
-      Vector_Numbers_Domain := (First_Address => 0,
-                                Last_Address  => 255);
-      Event_Numbers_Domain  := (First_Address => 0,
-                                Last_Address  => 63);
+      --  Fix domain configuration for the unittests.
+      --  Otherwise the tests fail if the domains in Mutools.Vres_Alloc.Config
+      --  change.
+      Va_Space_Native       := (First_Element => 16#0000_0000_2000_0000#,
+                                Last_Element  => 16#0000_0007_FFFF_FFFF#);
+      Va_Space_Vm           := (First_Element => 16#0000_0010_0000_0000#,
+                                Last_Element  => 16#0000_001F_FFFF_FFFF#);
+      Vector_Numbers_Domain := (First_Element => 0,
+                                Last_Element  => 255);
+      Event_Numbers_Domain  := (First_Element => 0,
+                                Last_Element  => 63);
 
       --  No actions necessary (output should equal input)
       Test (Input_Spec       => "component_vt.xml",
@@ -138,7 +139,7 @@ package body Comp_Vres_Alloc.Test_Data.Tests is
             Test_Name        => "Virtual Resources");
 
       --  Negative Tests:
-      --  Vector in read-only event set to 'auto'
+      --  Vector in read-only path set to 'auto'
       declare
          Data         : Muxml.XML_Data_Type;
          Changed_Spec : constant String
@@ -173,7 +174,6 @@ package body Comp_Vres_Alloc.Test_Data.Tests is
                     Message   => "Exception mismatch: "
                       & Ada.Exceptions.Exception_Message (X => E));
             Ada.Directories.Delete_File (Name => Changed_Spec);
-            DOM.Core.Nodes.Free (N => Data.Doc, Deep => True);
       end;
 
       --  Id in read-only event set to auto
@@ -186,7 +186,7 @@ package body Comp_Vres_Alloc.Test_Data.Tests is
                       Kind => Muxml.None,
                       File => "data/component_vres.xml");
          Muxml.Utils.Set_Attribute
-           (Doc => Data.Doc,
+           (Doc   => Data.Doc,
             XPath => "/component/requires/events/source/"
               & "event[@logical='es2']",
             Name  => "id",
@@ -211,7 +211,6 @@ package body Comp_Vres_Alloc.Test_Data.Tests is
                     Message   => "Exception mismatch: "
                       & Ada.Exceptions.Exception_Message (X => E));
             Ada.Directories.Delete_File (Name => Changed_Spec);
-            DOM.Core.Nodes.Free (N => Data.Doc, Deep => True);
       end;
 
       --  Not enough space for virtual addresses
@@ -224,10 +223,10 @@ package body Comp_Vres_Alloc.Test_Data.Tests is
          Start_Ml7          : constant Interfaces.Unsigned_64
            := 16#4000_0000#;
          Threshold          : constant Interfaces.Unsigned_64
-           := Alloc.Config.Default_Va_Space_Native.Last_Address;
+           := Mutools.Vres_Alloc.Config.Default_Va_Space_Native.Last_Element;
          --  We want Start_Ml7 + Size_To_Fill_Space >=  Threshold
          Size_To_Fill_Space : constant Interfaces.Unsigned_64
-           := (if Threshold > Start_Ml7 then (Threshold - Start_Ml7)
+           := (if Threshold > Start_Ml7 then (Threshold - Start_Ml7 + 1)
                                         else Interfaces.Unsigned_64'(1));
       begin
          Muxml.Parse (Data => Data,
@@ -253,14 +252,13 @@ package body Comp_Vres_Alloc.Test_Data.Tests is
          Assert (Condition => False,
                  Message   => "Exception expected");
       exception
-         when E: Alloc.Map.Out_Of_Memory =>
+         when E: Mutools.Intervals.Out_Of_Space =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                      = "Could not find free domain region of size "
+                      = "Cannot find free interval of size "
                       & "'16#1000_1000#'",
                     Message  => "Exception mismatch: "
                       & Ada.Exceptions.Exception_Message (X => E));
             Ada.Directories.Delete_File (Name => Changed_Spec);
-            DOM.Core.Nodes.Free (N => Data.Doc, Deep => True);
       end;
 
       --  Not enough space for event ids
@@ -294,8 +292,9 @@ package body Comp_Vres_Alloc.Test_Data.Tests is
             DOM.Core.Elements.Set_Attribute
               (Elem  => Child,
                Name  => "size",
-               Value => "16#0001#");
-            Child := DOM.Core.Nodes.Append_Child (N => Parent, New_Child => Child);
+               Value => "16#1000#");
+            Child := DOM.Core.Nodes.Append_Child (N         => Parent,
+                                                  New_Child => Child);
          end loop;
          Muxml.Write
            (File => Changed_Spec,
@@ -311,14 +310,13 @@ package body Comp_Vres_Alloc.Test_Data.Tests is
          Assert (Condition => False,
                  Message   => "Exception expected");
       exception
-         when E: Alloc.Map.Out_Of_Memory =>
+         when E: Mutools.Intervals.Out_Of_Space =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                      = "Could not find free domain region of size "
+                      = "Cannot find free interval of size "
                       & "'16#0001#'",
                     Message   => "Exception mismatch: "
                       & Ada.Exceptions.Exception_Message (X => E));
             Ada.Directories.Delete_File (Name => Changed_Spec);
-            DOM.Core.Nodes.Free (N => Data.Doc, Deep => True);
       end;
 
       --  Library: Run must not change anything in a library component
@@ -362,7 +360,67 @@ package body Comp_Vres_Alloc.Test_Data.Tests is
                     Message  => "Exception mismatch: "
                       & Ada.Exceptions.Exception_Message (X => E));
             Ada.Directories.Delete_File (Name => Changed_Spec);
-            DOM.Core.Nodes.Free (N => Data.Doc, Deep => True);
+      end;
+
+      --  Alignment problems:
+      declare
+         Data         : Muxml.XML_Data_Type;
+         Changed_Spec : constant String
+           := "obj/component_vres_false_auto.xml";
+
+         procedure Test_Alignment_Failure (XPath, Attr_Name, Value : String)
+         is
+         begin
+            Muxml.Parse (Data => Data,
+                         Kind => Muxml.None,
+                         File => "data/component_vres.xml");
+            Muxml.Utils.Set_Attribute
+              (Doc   => Data.Doc,
+               XPath => XPath,
+               Name  => Attr_Name,
+               Value => Value);
+            Muxml.Write
+              (File => Changed_Spec,
+               Kind => Muxml.None,
+               Data => Data);
+
+            Test (Input_Spec                => Changed_Spec,
+                  Input_Spec_Default_Folder => False,
+                  Include_Path              => "",
+                  Output_File_Name          => "output_component_vres.xml",
+                  Output_Ref_File           => "output_component_vres.xml",
+                  Test_Name                 => "Alignment Failure");
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+         exception
+            when E: Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                         = "Virtual resource not aligned",
+                       Message   => "Exception mismatch: "
+                         & Ada.Exceptions.Exception_Message (X => E));
+               Ada.Directories.Delete_File (Name => Changed_Spec);
+         end Test_Alignment_Failure;
+      begin
+         --  An address is set but not aligned
+         Test_Alignment_Failure
+           (XPath     => "/component/requires/memory/"
+              & "memory[@logical='ml1']",
+            Attr_Name => "virtualAddress",
+            Value     => "16#0002_0222#");
+
+         --  The virtualAddressBase of an array is not aligned
+         Test_Alignment_Failure
+           (XPath     => "/component/requires/memory/"
+              & "array[@logical='mal2']",
+            Attr_Name => "virtualAddressBase",
+            Value     => "16#3004_5100#");
+
+         --  The elementSize in an array without baseAddress is not aligned
+         Test_Alignment_Failure
+           (XPath     => "/component/requires/memory/"
+              & "array[@logical='mal3']",
+            Attr_Name => "elementSize",
+            Value     => "16#0010_100b#");
       end;
 
 --  begin read only

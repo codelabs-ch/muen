@@ -16,6 +16,7 @@
 --
 
 with Interfaces;
+
 with Ada.Directories;
 
 with GNAT.Directory_Operations;
@@ -29,6 +30,8 @@ with McKae.XML.XPath.XIA;
 
 with Mucfgcheck.Config;
 with Mucfgcheck.Validation_Errors;
+
+with Mutools;
 with Mutools.Strings;
 with Mutools.Utils;
 with Mutools.XML_Utils;
@@ -38,6 +41,7 @@ with Mutools.Substitutions;
 with Mutools.Xmldebuglog;
 
 with Mulog;
+
 with Muxml;
 with Muxml.Utils;
 
@@ -46,74 +50,99 @@ is
    --  Check and expand expressions and conditionals in given input spec.
    procedure Expand_Expr_Sub_Cond (Data : Muxml.XML_Data_Type);
 
+   --  For a node containing a single virtual resource of the specified kind
+   --  (i.e., not an array):
+   --  If the virtual resource is not set, append the node to Todo_List.
+   --  If the virtual resource is set, subtract the used domain space from
+   --  Av_Ival.
+   --  Raises an exception if Read_Only is true and the resource is not set.
    procedure Include_Single_Node
-     (Av_Mem    : in out Alloc.Map.VA_Regions_Type;
-      Todo_List : in out Alloc.Map.Node_List_Package.List;
-      Node      : DOM.Core.Node;
-      Read_Only : Boolean;
-      Run_Type  : Alloc.Map.Run_Type_Type);
+     (Av_Ival       : in out Mutools.Intervals.Interval_List_Type;
+      Todo_List     : in out Muxml.Utils.Node_List_Package.List;
+      Node          :        DOM.Core.Node;
+      Read_Only     :        Boolean;
+      Resource_Kind :        Mutools.Vres_Alloc.Resource_Kind_Type);
 
+   --  For an array with virtual resources for each element:
+   --  If the virtual resource is not set, append the array to Todo_List.
+   --  If the virtual resource is set, subtract the used domain space from
+   --  Av_Ival.
+   --  Raises an exception if Read_Only is true and the resource is not set.
    procedure Include_Array
-     (Av_Mem    : in out Alloc.Map.VA_Regions_Type;
-      Todo_List : in out Alloc.Map.Node_List_Package.List;
-      Node      : DOM.Core.Node;
-      Read_Only : Boolean;
-      Run_Type  : Alloc.Map.Run_Type_Type);
+     (Av_Ival       : in out Mutools.Intervals.Interval_List_Type;
+      Todo_List     : in out Muxml.Utils.Node_List_Package.List;
+      Node          :        DOM.Core.Node;
+      Read_Only     :        Boolean;
+      Resource_Kind :        Mutools.Vres_Alloc.Resource_Kind_Type);
 
+   --  Reserve and set the requested virtual resource for an array.
    procedure Allocate_Array
-     (Av_Mem   : in out Alloc.Map.VA_Regions_Type;
-      Node     :        DOM.Core.Node;
-      Run_Type : Alloc.Map.Run_Type_Type);
+     (Av_Ival       : in out Mutools.Intervals.Interval_List_Type;
+      Node          :        DOM.Core.Node;
+      Resource_Kind :        Mutools.Vres_Alloc.Resource_Kind_Type);
 
    -------------------------------------------------------------------------
 
    procedure Allocate_Array
-     (Av_Mem   : in out Alloc.Map.VA_Regions_Type;
-      Node     :        DOM.Core.Node;
-      Run_Type : Alloc.Map.Run_Type_Type)
+     (Av_Ival       : in out Mutools.Intervals.Interval_List_Type;
+      Node          :        DOM.Core.Node;
+      Resource_Kind :        Mutools.Vres_Alloc.Resource_Kind_Type)
    is
       use type Interfaces.Unsigned_64;
-      Count : constant Interfaces.Unsigned_64
-        := Muxml.Utils.Count_Element_Children (Node => Node);
+      Count          : constant Interfaces.Unsigned_64
+        := Interfaces.Unsigned_64
+        (Muxml.Utils.Count_Element_Children (Node => Node));
       --  We prevent Count from reaching 0 when arrays are empty.
-      --  Setting the resource-base to a default (like 0) may case clashes
+      --  Setting the resource-base to a default (like 0) may cause clashes
       --  in the component or toolchain code.
-      --  If elementSize is 0, there is a mistake and Reserve_Memory
-      --  will raise an exception.
+      --  If elementSize is 0, the alignment check will fail.
       Count_Not_Zero : constant Interfaces.Unsigned_64
         := (if Count > 0 then Count else 1);
-      Size : Interfaces.Unsigned_64;
-      New_Address : Interfaces.Unsigned_64;
+
+      Size           : Interfaces.Unsigned_64;
+      New_Address    : Interfaces.Unsigned_64;
    begin
-      case Run_Type is
-         when Alloc.Map.VIRTUAL_ADDRESSES =>
-            Size := Count_Not_Zero * Interfaces.Unsigned_64'Value
+      case Resource_Kind is
+         when Mutools.Vres_Alloc.Virtual_Addresses =>
+            Size := Interfaces.Unsigned_64'Value
               (DOM.Core.Elements.Get_Attribute
                  (Elem => Node,
                   Name => "elementSize"));
-            New_Address := Alloc.Map.Reserve_Memory
-              (List => Av_Mem,
+            if not Mutools.Vres_Alloc.Is_Aligned (Size => Size) then
+               Mulog.Log (Msg => "Error: elementSize is not "
+                            & "a multiple of 16#1000#. XPath: '"
+                            & Mutools.Xmldebuglog.Get_Xpath (Node => Node)
+                            & "', elementSize: '"
+                            & Mutools.Utils.To_Hex (Number => Size)
+                            & "'");
+               raise Validation_Error with "Virtual resource not aligned";
+            end if;
+
+            Size := Count_Not_Zero * Size;
+            New_Address := Mutools.Intervals.Reserve_Interval
+              (List => Av_Ival,
                Size => Size);
             DOM.Core.Elements.Set_Attribute
               (Elem  => Node,
                Name  => "virtualAddressBase",
                Value => Mutools.Utils.To_Hex (Number => New_Address));
-         when Alloc.Map.READER_EVENTS =>
-            New_Address := Alloc.Map.Reserve_Memory
-              (List => Av_Mem,
+
+         when Mutools.Vres_Alloc.Reader_Vectors =>
+            New_Address := Mutools.Intervals.Reserve_Interval
+              (List => Av_Ival,
                Size => Count_Not_Zero);
             DOM.Core.Elements.Set_Attribute
               (Elem  => Node,
                Name  => "vectorBase",
-               Value => Alloc.Map.To_String (New_Address));
-         when Alloc.Map.WRITER_EVENTS =>
-            New_Address := Alloc.Map.Reserve_Memory
-              (List => Av_Mem,
+               Value => Mutools.Utils.To_Decimal (New_Address));
+         when Mutools.Vres_Alloc.Writer_Events =>
+            New_Address := Mutools.Intervals.Reserve_Interval
+              (List => Av_Ival,
                Size => Count_Not_Zero);
             DOM.Core.Elements.Set_Attribute
               (Elem  => Node,
                Name  => "eventBase",
-               Value => Alloc.Map.To_String (New_Address));
+               Value => Mutools.Utils.To_Decimal (New_Address));
       end case;
    end Allocate_Array;
 
@@ -141,23 +170,28 @@ is
    -------------------------------------------------------------------------
 
    procedure Include_Array
-     (Av_Mem    : in out Alloc.Map.VA_Regions_Type;
-      Todo_List : in out Alloc.Map.Node_List_Package.List;
-      Node      : DOM.Core.Node;
-      Read_Only : Boolean;
-      Run_Type  : Alloc.Map.Run_Type_Type)
+     (Av_Ival       : in out Mutools.Intervals.Interval_List_Type;
+      Todo_List     : in out Muxml.Utils.Node_List_Package.List;
+      Node          :        DOM.Core.Node;
+      Read_Only     :        Boolean;
+      Resource_Kind :        Mutools.Vres_Alloc.Resource_Kind_Type)
    is
       use type Interfaces.Unsigned_64;
+      use type Mutools.Vres_Alloc.Resource_Kind_Type;
 
       Attr_Value : constant String
-        := Alloc.Map.Get_Resource_Value (Elem => Node, Run_Type => Run_Type);
-      Size : constant Interfaces.Unsigned_64
-        := Alloc.Map.Get_Resource_Size (Elem => Node, Run_Type => Run_Type);
+        := Mutools.Vres_Alloc.Get_Resource_Value
+        (Elem          => Node,
+         Resource_Kind => Resource_Kind);
+      Size       : constant Interfaces.Unsigned_64
+        := Mutools.Vres_Alloc.Get_Resource_Size
+        (Elem          => Node,
+         Resource_Kind => Resource_Kind);
    begin
       if Attr_Value = "" or Attr_Value = "auto" then
          --  the resources needs to be written - put it on the todo-list
          if not Read_Only then
-            Alloc.Map.Node_List_Package.Append
+            Muxml.Utils.Node_List_Package.Append
               (Container => Todo_List,
                New_Item  => Node);
          else
@@ -170,39 +204,59 @@ is
             raise Validation_Error with "Invalid attribute value";
          end if;
       else
-         --  the resource is set - exclude from domain
-         Alloc.Map.Subtract_Memory_Interval
-           (List          => Av_Mem,
-            First_Address => Interfaces.Unsigned_64'Value (Attr_Value),
-            Size          => Size
-              * Muxml.Utils.Count_Element_Children (Node => Node));
+         --  Because the resource is set, we exclude it from the domain.
+         if Resource_Kind = Mutools.Vres_Alloc.Virtual_Addresses and then
+           not Mutools.Vres_Alloc.Is_Aligned
+           (Address => Interfaces.Unsigned_64'Value (Attr_Value),
+            Size    => Size)
+         then
+            Mulog.Log (Msg => "Error: Size or virtual address of node is not "
+                         & "a multiple of 16#1000#. XPath: '"
+                         & Mutools.Xmldebuglog.Get_Xpath (Node => Node)
+                         & "', Size: '"
+                         & Mutools.Utils.To_Hex (Number => Size)
+                         & "', Virtual address: '"
+                         & Attr_Value
+                         & "'");
+            raise Validation_Error with "Virtual resource not aligned";
+         end if;
+         Mutools.Intervals.Subtract_Interval
+           (List          => Av_Ival,
+            First_Element => Interfaces.Unsigned_64'Value (Attr_Value),
+            Size          => Size * Interfaces.Unsigned_64
+              (Muxml.Utils.Count_Element_Children (Node => Node)));
       end if;
    end Include_Array;
 
    -------------------------------------------------------------------------
 
    procedure Include_Single_Node
-     (Av_Mem    : in out Alloc.Map.VA_Regions_Type;
-      Todo_List : in out Alloc.Map.Node_List_Package.List;
-      Node      : DOM.Core.Node;
-      Read_Only : Boolean;
-      Run_Type  : Alloc.Map.Run_Type_Type)
+     (Av_Ival       : in out Mutools.Intervals.Interval_List_Type;
+      Todo_List     : in out Muxml.Utils.Node_List_Package.List;
+      Node          :        DOM.Core.Node;
+      Read_Only     :        Boolean;
+      Resource_Kind :        Mutools.Vres_Alloc.Resource_Kind_Type)
    is
+      use type Mutools.Vres_Alloc.Resource_Kind_Type;
+
       Attr_Value : constant String
-        := Alloc.Map.Get_Resource_Value (Elem => Node, Run_Type => Run_Type);
-      Size : constant Interfaces.Unsigned_64
-        := Alloc.Map.Get_Resource_Size (Elem => Node, Run_Type => Run_Type);
+        := Mutools.Vres_Alloc.Get_Resource_Value
+        (Elem          => Node,
+         Resource_Kind => Resource_Kind);
+      Size       : constant Interfaces.Unsigned_64
+        := Mutools.Vres_Alloc.Get_Resource_Size
+        (Elem          => Node,
+         Resource_Kind => Resource_Kind);
    begin
       if Attr_Value = "auto" or Attr_Value = "" then
-         --  if the node is missing a resource, add it to the todo-list
+         --  If the node is missing a resource, add it to the todo-list.
          if not Read_Only then
-            Alloc.Map.Node_List_Package.Append
+            Muxml.Utils.Node_List_Package.Append
               (Container => Todo_List,
                New_Item  => Node);
          else
-            Mulog.Log (Msg => "Error: Found node with false "
-                         & "'virtualAddress'/'vector'/'event'/'id' "
-                         & "attribute value. Xpath: '"
+            Mulog.Log (Msg => "Found read-only node which requested automatic "
+                         & "allocation of virtual resource. Xpath: '"
                          & Mutools.Xmldebuglog.Get_Xpath (Node => Node)
                          & "', value: '"
                          & Attr_Value
@@ -210,10 +264,25 @@ is
             raise Validation_Error with "Invalid attribute value";
          end if;
       else
-         --  if the resource is set already, exclude it from Av_Mem
-         Alloc.Map.Subtract_Memory_Interval
-           (List          => Av_Mem,
-            First_Address => Interfaces.Unsigned_64'Value (Attr_Value),
+         --  If the resource is set already, exclude it from Av_Ival.
+         if Resource_Kind = Mutools.Vres_Alloc.Virtual_Addresses and then
+           not Mutools.Vres_Alloc.Is_Aligned
+           (Address => Interfaces.Unsigned_64'Value (Attr_Value),
+            Size    => Size)
+         then
+            Mulog.Log (Msg => "Error: Size or virtual address of node is not "
+                         & "a multiple of 16#1000#. XPath: '"
+                         & Mutools.Xmldebuglog.Get_Xpath (Node => Node)
+                         & "', Size: '"
+                         & Mutools.Utils.To_Hex (Number => Size)
+                         & "', Virtual address: '"
+                         & Attr_Value
+                         & "'");
+            raise Validation_Error with "Virtual resource not aligned";
+         end if;
+         Mutools.Intervals.Subtract_Interval
+           (List          => Av_Ival,
+            First_Element => Interfaces.Unsigned_64'Value (Attr_Value),
             Size          => Size);
       end if;
    end Include_Single_Node;
@@ -226,127 +295,144 @@ is
       Output_File_Name : String)
    is
       Policy           : Muxml.XML_Data_Type;
-      Available_Memory : Alloc.Map.VA_Regions_Type;
       Node             : DOM.Core.Node;
-      Todo_List        : Alloc.Map.Node_List_Package.List;
 
-      --  Depending on Run_Type, create and/or assign
+      --  Depending on Resource_Kind, create and/or assign
       --  'virtualAddress', 'event' and 'vector' attributes in
-      --  channel-reader or channel-writer nodes and the corresponding arrays.
+      --  channel-reader, channel-writer and memory nodes and in the
+      --  corresponding arrays.
       procedure Assign_Missing_Virtual_Resources
-        (Run_Type : Alloc.Map.Run_Type_Type);
+        (Resource_Kind : Mutools.Vres_Alloc.Resource_Kind_Type);
 
       ----------------------------------------------------------------------
 
-      --  Iterate over given list and trigger "inclusion" for each node
+      --  Iterate over Node_List and trigger "inclusion" for each node,
+      --  i.e., either block the resources taken by it or put it on Todo_List
+      --  for allocation lateron.
       procedure Include_Node_List
-        (Node_List : DOM.Core.Node_List;
-         Read_Only : Boolean;
-         Run_Type  : Alloc.Map.Run_Type_Type);
+        (Av_Ival       : in out Mutools.Intervals.Interval_List_Type;
+         Todo_List     : in out Muxml.Utils.Node_List_Package.List;
+         Node_List     :        DOM.Core.Node_List;
+         Read_Only     :        Boolean;
+         Resource_Kind :        Mutools.Vres_Alloc.Resource_Kind_Type);
 
       ----------------------------------------------------------------------
 
       procedure Assign_Missing_Virtual_Resources
-        (Run_Type : Alloc.Map.Run_Type_Type)
+        (Resource_Kind : Mutools.Vres_Alloc.Resource_Kind_Type)
       is
+         Todo_List           : Muxml.Utils.Node_List_Package.List;
+         Available_Intervals : Mutools.Intervals.Interval_List_Type;
       begin
-         Alloc.Map.Node_List_Package.Clear (Container => Todo_List);
-         Alloc.Map.Clear (List => Available_Memory);
-
-         --  Initialize the domain of the virtual resource
-         case Run_Type is
-            when Alloc.Map.VIRTUAL_ADDRESSES =>
-               Node := DOM.Core.Documents.Get_Element (Doc => Policy.Doc);
-               if DOM.Core.Elements.Get_Attribute (Elem => Node, Name => "profile")
-                 = "native"
+         --  Initialize the domain of the virtual resource.
+         case Resource_Kind is
+            when Mutools.Vres_Alloc.Virtual_Addresses =>
+               if not (Mutools.Vres_Alloc.Is_Aligned
+                         (Address => Va_Space_Native.First_Element)
+                  and Mutools.Vres_Alloc.Is_Aligned
+                         (Address => Va_Space_Vm.First_Element))
                then
-                  Alloc.Map.Add_Memory_Interval
-                    (List     => Available_Memory,
+                  raise Validation_Error with
+                    "Default values for virtual address domains are not "
+                    & "aligned to page size.";
+               end if;
+               Node := DOM.Core.Documents.Get_Element (Doc => Policy.Doc);
+               if "native" = DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => "profile")
+               then
+                  Mutools.Intervals.Add_Interval
+                    (List     => Available_Intervals,
                      Interval => Va_Space_Native);
                else
-                  Alloc.Map.Add_Memory_Interval
-                    (List     => Available_Memory,
+                  Mutools.Intervals.Add_Interval
+                    (List     => Available_Intervals,
                      Interval => Va_Space_Vm);
                end if;
-            when Alloc.Map.WRITER_EVENTS =>
-               Alloc.Map.Add_Memory_Interval
-                 (List     => Available_Memory,
+            when Mutools.Vres_Alloc.Writer_Events =>
+               Mutools.Intervals.Add_Interval
+                 (List     => Available_Intervals,
                   Interval => Event_Numbers_Domain);
-            when Alloc.Map.READER_EVENTS =>
-               Alloc.Map.Add_Memory_Interval
-                 (List     => Available_Memory,
+            when Mutools.Vres_Alloc.Reader_Vectors =>
+               Mutools.Intervals.Add_Interval
+                 (List     => Available_Intervals,
                   Interval => Vector_Numbers_Domain);
          end case;
 
          --  Block domain-space taken by existsing virtual resources
-         --  and fill todo-list
+         --  and fill todo-list.
          Mulog.Log (Msg => "Analyzing resources for "
-                   & Run_Type'Image);
+                   & Resource_Kind'Image);
          declare
             Target_List_R_W : constant Mutools.String_Vector.Vector
-              := (case Run_Type is
-                 when Alloc.Map.VIRTUAL_ADDRESSES =>
-                    Alloc.Config.C_Va_Alloc_Read_Write_Targets,
-                 when Alloc.Map.WRITER_EVENTS =>
-                    Alloc.Config.C_Writers_Read_Write_Targets,
-                 when Alloc.Map.READER_EVENTS =>
-                    Alloc.Config.C_Readers_Read_Write_Targets);
+              := (case Resource_Kind is
+                 when Mutools.Vres_Alloc.Virtual_Addresses =>
+                    Mutools.Vres_Alloc.Config.C_Va_Alloc_Read_Write_Targets,
+                 when Mutools.Vres_Alloc.Writer_Events =>
+                    Mutools.Vres_Alloc.Config.C_Writers_Read_Write_Targets,
+                 when Mutools.Vres_Alloc.Reader_Vectors =>
+                    Mutools.Vres_Alloc.Config.C_Readers_Read_Write_Targets);
             Target_List_R : constant Mutools.String_Vector.Vector
-              := (case Run_Type is
-                 when Alloc.Map.VIRTUAL_ADDRESSES =>
-                    Alloc.Config.C_Va_Alloc_Read_Only_Targets,
-                 when Alloc.Map.WRITER_EVENTS =>
-                    Alloc.Config.C_Writers_Read_Only_Targets,
-                 when Alloc.Map.READER_EVENTS =>
-                    Alloc.Config.C_Readers_Read_Only_Targets);
+              := (case Resource_Kind is
+                 when Mutools.Vres_Alloc.Virtual_Addresses =>
+                    Mutools.Vres_Alloc.Config.C_Va_Alloc_Read_Only_Targets,
+                 when Mutools.Vres_Alloc.Writer_Events =>
+                    Mutools.Vres_Alloc.Config.C_Writers_Read_Only_Targets,
+                 when Mutools.Vres_Alloc.Reader_Vectors =>
+                    Mutools.Vres_Alloc.Config.C_Readers_Read_Only_Targets);
 
             R_W_Targets : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
               (N     => Policy.Doc,
-               XPath => Alloc.Map.Get_Target_String
+               XPath => Mutools.Vres_Alloc.Get_Target_String
                  (Target_List => Target_List_R_W,
                   Prefix      => "/component"));
             R_Targets : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
               (N     => Policy.Doc,
-               XPath => Alloc.Map.Get_Target_String
+               XPath => Mutools.Vres_Alloc.Get_Target_String
                  (Target_List => Target_List_R,
                   Prefix      => "/component"));
          begin
-            Include_Node_List (Node_List => R_Targets,
-                               Read_Only => True,
-                               Run_Type  => Run_Type);
-            Include_Node_List (Node_List => R_W_Targets,
-                               Read_Only => False,
-                               Run_Type  => Run_Type);
+            Include_Node_List (Av_Ival       => Available_Intervals,
+                               Todo_List     => Todo_List,
+                               Node_List     => R_Targets,
+                               Read_Only     => True,
+                               Resource_Kind => Resource_Kind);
+            Include_Node_List (Av_Ival       => Available_Intervals,
+                               Todo_List     => Todo_List,
+                               Node_List     => R_W_Targets,
+                               Read_Only     => False,
+                               Resource_Kind => Resource_Kind);
          end;
 
-         --  iterate over nodes on todo-list and allocate from Available_Memory
-         Mulog.Log (Msg => "Setting " & Run_Type'Image & " for "
+         --  Iterate over nodes on todo-list and allocate from
+         --  Available_Intervals.
+         Mulog.Log (Msg => "Setting " & Resource_Kind'Image & " for"
                       & Todo_List.Length'Img
                       & " nodes");
          declare
-            use type Alloc.Map.Node_List_Package.Cursor;
+            use type Muxml.Utils.Node_List_Package.Cursor;
 
-            Curr : Alloc.Map.Node_List_Package.Cursor
+            Curr : Muxml.Utils.Node_List_Package.Cursor
               := Todo_List.First;
             Curr_Node : DOM.Core.Node;
          begin
-            while Curr /= Alloc.Map.Node_List_Package.No_Element loop
-               Curr_Node :=  Alloc.Map.Node_List_Package.Element (Curr);
+            while Curr /= Muxml.Utils.Node_List_Package.No_Element loop
+               Curr_Node :=  Muxml.Utils.Node_List_Package.Element (Curr);
                if DOM.Core.Elements.Get_Tag_Name (Elem => Curr_Node) /= "array"
                then
-                  Alloc.Map.Allocate_And_Set_Single_Resource
-                    (Av_Mem   => Available_Memory,
-                     Node     => Curr_Node,
-                     Run_Type => Run_Type);
+                  Mutools.Vres_Alloc.Allocate_And_Set_Single_Resource
+                    (Av_Ival       => Available_Intervals,
+                     Node          => Curr_Node,
+                     Resource_Kind => Resource_Kind);
                else
                   Allocate_Array
-                    (Av_Mem   => Available_Memory,
-                     Node     => Curr_Node,
-                     Run_Type => Run_Type);
+                    (Av_Ival       => Available_Intervals,
+                     Node          => Curr_Node,
+                     Resource_Kind => Resource_Kind);
                end if;
-               Alloc.Map.Node_List_Package.Next (Curr);
+               Muxml.Utils.Node_List_Package.Next (Curr);
             end loop;
          end;
       end Assign_Missing_Virtual_Resources;
@@ -354,9 +440,11 @@ is
       ----------------------------------------------------------------------
 
       procedure Include_Node_List
-        (Node_List : DOM.Core.Node_List;
-         Read_Only : Boolean;
-         Run_Type  : Alloc.Map.Run_Type_Type)
+        (Av_Ival       : in out Mutools.Intervals.Interval_List_Type;
+         Todo_List     : in out Muxml.Utils.Node_List_Package.List;
+         Node_List     :        DOM.Core.Node_List;
+         Read_Only     :        Boolean;
+         Resource_Kind :        Mutools.Vres_Alloc.Resource_Kind_Type)
       is
          Curr_Node : DOM.Core.Node;
       begin
@@ -367,22 +455,21 @@ is
             if DOM.Core.Elements.Get_Tag_Name (Elem => Curr_Node) /= "array"
             then
                Include_Single_Node
-                 (Av_Mem    => Available_Memory,
-                  Todo_List => Todo_List,
-                  Node      => Curr_Node,
-                  Read_Only => Read_Only,
-                  Run_Type  => Run_Type);
+                 (Av_Ival       => Av_Ival,
+                  Todo_List     => Todo_List,
+                  Node          => Curr_Node,
+                  Read_Only     => Read_Only,
+                  Resource_Kind => Resource_Kind);
             else
                Include_Array
-                 (Av_Mem    => Available_Memory,
-                  Todo_List => Todo_List,
-                  Node      => Curr_Node,
-                  Read_Only => Read_Only,
-                  Run_Type  => Run_Type);
+                 (Av_Ival       => Av_Ival,
+                  Todo_List     => Todo_List,
+                  Node          => Curr_Node,
+                  Read_Only     => Read_Only,
+                  Resource_Kind => Resource_Kind);
             end if;
          end loop;
       end Include_Node_List;
-
    begin
       Mulog.Log (Msg => "Processing component specification");
       Muxml.Parse (Data => Policy,
@@ -404,13 +491,13 @@ is
       Expand_Expr_Sub_Cond (Data => Policy);
 
       Assign_Missing_Virtual_Resources
-        (Run_Type => Alloc.Map.VIRTUAL_ADDRESSES);
+        (Resource_Kind => Mutools.Vres_Alloc.Virtual_Addresses);
       Assign_Missing_Virtual_Resources
-        (Run_Type => Alloc.Map.READER_EVENTS);
+        (Resource_Kind => Mutools.Vres_Alloc.Reader_Vectors);
       Assign_Missing_Virtual_Resources
-        (Run_Type => Alloc.Map.WRITER_EVENTS);
+        (Resource_Kind => Mutools.Vres_Alloc.Writer_Events);
 
-      --  Write output with validation
+      --  Write output with validation.
       if not Ada.Directories.Exists
         (Ada.Directories.Containing_Directory (Output_File_Name))
       then

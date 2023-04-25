@@ -15,13 +15,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-private with Alloc.Config;
-private with Alloc.Map;
+private with Mutools.Intervals;
+private with Mutools.Vres_Alloc.Config;
 
 package Comp_Vres_Alloc
 is
-
-   --  The main procedure (start allocation)
+   --  The main procedure (start allocation).
    procedure Run
      (Input_Spec       : String;
       Include_Path     : String;
@@ -31,13 +30,13 @@ is
 
 private
    --  The default domains are copied to local variables
-   --  in order to be able to change them in unittests
-   Va_Space_Native : Alloc.Map.Memory_Interval_Type
-     := Alloc.Config.Default_Va_Space_Native;
-   Va_Space_Vm : Alloc.Map.Memory_Interval_Type
-     := Alloc.Config.Default_Va_Space_Vm;
-   Vector_Numbers_Domain : Alloc.Map.Memory_Interval_Type
-     := Alloc.Config.Default_Vector_Numbers_Domain;
-   Event_Numbers_Domain : Alloc.Map.Memory_Interval_Type
-     := Alloc.Config.Default_Event_Numbers_Domain;
+   --  in order to be able to change them in unittests.
+   Va_Space_Native       : Mutools.Intervals.Interval_Type
+     := Mutools.Vres_Alloc.Config.Default_Va_Space_Native;
+   Va_Space_Vm           : Mutools.Intervals.Interval_Type
+     := Mutools.Vres_Alloc.Config.Default_Va_Space_Vm;
+   Vector_Numbers_Domain : Mutools.Intervals.Interval_Type
+     := Mutools.Vres_Alloc.Config.Default_Vector_Numbers_Domain;
+   Event_Numbers_Domain  : Mutools.Intervals.Interval_Type
+     := Mutools.Vres_Alloc.Config.Default_Event_Numbers_Domain;
 end Comp_Vres_Alloc;

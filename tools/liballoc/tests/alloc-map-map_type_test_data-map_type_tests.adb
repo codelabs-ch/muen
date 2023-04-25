@@ -877,10 +877,10 @@ package body Alloc.Map.Map_Type_Test_Data.Map_Type_Tests is
 
 
 --  begin read only
-   procedure Test_1_Clear (Gnattest_T : in out Test_Map_Type);
-   procedure Test_Clear_88711b (Gnattest_T : in out Test_Map_Type) renames Test_1_Clear;
+   procedure Test_Clear (Gnattest_T : in out Test_Map_Type);
+   procedure Test_Clear_88711b (Gnattest_T : in out Test_Map_Type) renames Test_Clear;
 --  id:2.2/88711b92a83fb6bc/Clear/1/0/
-   procedure Test_1_Clear (Gnattest_T : in out Test_Map_Type) is
+   procedure Test_Clear (Gnattest_T : in out Test_Map_Type) is
 --  end read only
       use type Ada.Containers.Count_Type;
    begin
@@ -893,7 +893,7 @@ package body Alloc.Map.Map_Type_Test_Data.Map_Type_Tests is
       Assert (Condition => Gnattest_T.Fixture.Data.Length = 0,
               Message   => "Map not cleared");
 --  begin read only
-   end Test_1_Clear;
+   end Test_Clear;
 --  end read only
 
 

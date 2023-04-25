@@ -16,6 +16,7 @@ with System.Assertions;
 --  end read only
 
 with GNAT.OS_Lib;
+
 with Ada.Strings.Unbounded;
 
 --  begin read only
@@ -63,12 +64,12 @@ package body Vres_Alloc.Cmd_Line.Test_Data.Tests is
             GNAT.OS_Lib.Free (X => Args (A));
          end loop;
 
-         Assert (Condition => Policy_Joined = "specs/folder/input_policy.xml",
+         Assert (Condition => Policy = "specs/folder/input_policy.xml",
                  Message   => "Input file mismatch");
          Assert (Condition => Output_Filename = "output/output_policy.xml",
                  Message   => "Output file  mismatch");
 
-         Policy_Joined   := To_Unbounded_String ("");
+         Policy   := To_Unbounded_String ("");
          Output_Filename := To_Unbounded_String ("");
       end All_Arguments;
 
@@ -99,7 +100,7 @@ package body Vres_Alloc.Cmd_Line.Test_Data.Tests is
          for A in Args'Range loop
             GNAT.OS_Lib.Free (X => Args (A));
          end loop;
-         Policy_Joined   := To_Unbounded_String ("");
+         Policy := To_Unbounded_String ("");
          Output_Filename := To_Unbounded_String ("");
       end Missing_Argument;
 
@@ -113,10 +114,10 @@ package body Vres_Alloc.Cmd_Line.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Get_Policy_Joined (Gnattest_T : in out Test);
-   procedure Test_Get_Policy_Joined_a821d8 (Gnattest_T : in out Test) renames Test_Get_Policy_Joined;
---  id:2.2/a821d8e1061afcf2/Get_Policy_Joined/1/0/
-   procedure Test_Get_Policy_Joined (Gnattest_T : in out Test) is
+   procedure Test_Get_Policy (Gnattest_T : in out Test);
+   procedure Test_Get_Policy_aac0d6 (Gnattest_T : in out Test) renames Test_Get_Policy;
+--  id:2.2/aac0d695aae58756/Get_Policy/1/0/
+   procedure Test_Get_Policy (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -125,12 +126,11 @@ package body Vres_Alloc.Cmd_Line.Test_Data.Tests is
       Ref : constant Unbounded_String
         := To_Unbounded_String ("some_filename.xml");
    begin
-      Policy_Joined := Ref;
-      Assert (Condition => Get_Policy_Joined = Ref,
+      Policy := Ref;
+      Assert (Condition => Get_Policy = Ref,
               Message   => "Input file mismatch");
-
 --  begin read only
-   end Test_Get_Policy_Joined;
+   end Test_Get_Policy;
 --  end read only
 
 

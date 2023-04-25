@@ -17,7 +17,6 @@
 
 with "../libmulog/libmulog";
 with "../libmutools/libmutools";
-with "../liballoc/liballoc";
 with "../libmucfgcheck/libmucfgcheck";
 with "../shared_tools";
 

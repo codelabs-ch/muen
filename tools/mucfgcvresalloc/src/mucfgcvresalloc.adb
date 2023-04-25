@@ -44,7 +44,7 @@ exception
       | Muxml.Validation_Error
       | Comp_Vres_Alloc.Validation_Error =>
       Mulog.Log (Level => Mulog.Error,
-                 Msg   => "Atomatic allocation of virtual addresses failed, aborting");
+                 Msg   => "Allocation of virtual addresses failed, aborting");
       Mulog.Log (Level => Mulog.Error,
                  Msg   => Ada.Exceptions.Exception_Message (X => E));
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);

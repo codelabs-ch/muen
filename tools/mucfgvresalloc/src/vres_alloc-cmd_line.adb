@@ -40,11 +40,11 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Policy_Joined return String
+   function Get_Policy return String
    is
    begin
-      return S (Policy_Joined);
-   end Get_Policy_Joined;
+      return S (Policy);
+   end Get_Policy;
 
    -------------------------------------------------------------------------
 
@@ -52,7 +52,7 @@ is
    is
       use Ada.Strings.Unbounded;
 
-      Cmdline     : Mutools.Cmd_Line.Config_Type;
+      Cmdline : Mutools.Cmd_Line.Config_Type;
 
    begin
       GNAT.Command_Line.Set_Usage
@@ -79,10 +79,10 @@ is
             raise Invalid_Cmd_Line;
       end;
 
-      Policy_Joined := U (GNAT.Command_Line.Get_Argument (Parser => Parser));
+      Policy          := U (GNAT.Command_Line.Get_Argument (Parser => Parser));
       Output_Filename := U (GNAT.Command_Line.Get_Argument (Parser => Parser));
 
-      if Policy_Joined = Null_Unbounded_String
+      if Policy = Null_Unbounded_String
         or Output_Filename = Null_Unbounded_String
       then
          GNAT.Command_Line.Display_Help (Config => Cmdline.Data);

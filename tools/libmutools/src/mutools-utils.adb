@@ -262,6 +262,14 @@ is
 
    -------------------------------------------------------------------------
 
+   function To_Decimal (Number : Interfaces.Unsigned_64) return String
+   is
+   begin
+      return Ada.Strings.Fixed.Trim (Number'Image, Ada.Strings.Both);
+   end To_Decimal;
+
+   -------------------------------------------------------------------------
+
    function To_Hex
      (Number     : Interfaces.Unsigned_64;
       Normalize  : Boolean := True;

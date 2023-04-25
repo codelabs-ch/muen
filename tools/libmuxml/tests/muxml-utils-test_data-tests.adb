@@ -195,15 +195,15 @@ package body Muxml.Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Count_Element_Children (Gnattest_T : in out Test);
-   procedure Test_Count_Element_Children_88676c (Gnattest_T : in out Test) renames Test_Count_Element_Children;
---  id:2.2/88676c3db7e948e6/Count_Element_Children/1/0/
+   procedure Test_Count_Element_Children_ea862c (Gnattest_T : in out Test) renames Test_Count_Element_Children;
+--  id:2.2/ea862c201eab8836/Count_Element_Children/1/0/
    procedure Test_Count_Element_Children (Gnattest_T : in out Test) is
 --  end read only
 
       use type Interfaces.Unsigned_64;
       pragma Unreferenced (Gnattest_T);
-      Data : XML_Data_Type;
-      Count : Interfaces.Unsigned_64;
+      Data  : XML_Data_Type;
+      Count : Natural;
    begin
       Muxml.Parse
         (Data => Data,

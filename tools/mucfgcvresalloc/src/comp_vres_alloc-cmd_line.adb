@@ -64,7 +64,6 @@ is
 
       Cmdline     : Mutools.Cmd_Line.Config_Type;
       Include_Dir : aliased GNAT.Strings.String_Access;
-
    begin
       GNAT.Command_Line.Set_Usage
         (Config => Cmdline.Data,
@@ -75,7 +74,6 @@ is
          Switch      => "-h",
          Long_Switch => "--help",
          Help        => "Display usage and exit");
-
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Output      => Include_Dir'Access,
@@ -95,7 +93,7 @@ is
 
       exception
          when GNAT.Command_Line.Invalid_Switch |
-           GNAT.Command_Line.Exit_From_Command_Line =>
+              GNAT.Command_Line.Exit_From_Command_Line =>
             raise Invalid_Cmd_Line;
          when GNAT.Command_Line.Invalid_Parameter =>
             GNAT.Command_Line.Display_Help (Config => Cmdline.Data);

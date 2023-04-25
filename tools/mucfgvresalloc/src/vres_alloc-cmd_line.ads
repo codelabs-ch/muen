@@ -24,17 +24,17 @@ is
    --  Init command line, use given tool description in usage output.
    procedure Init (Description : String);
 
-   --  Return filename of root of component specification
-   function Get_Policy_Joined return String;
+   --  Return filename of root of component specification.
+   function Get_Policy return String;
 
-   --  Return filename for output specification
+   --  Return filename for output specification.
    function Get_Output_Filename return String;
 
    Invalid_Cmd_Line : exception;
 
 private
 
-   Policy_Joined   : Ada.Strings.Unbounded.Unbounded_String;
+   Policy          : Ada.Strings.Unbounded.Unbounded_String;
    Output_Filename : Ada.Strings.Unbounded.Unbounded_String;
 
    Parser : GNAT.Command_Line.Opt_Parser

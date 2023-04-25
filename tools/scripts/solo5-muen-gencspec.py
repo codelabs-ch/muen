@@ -76,6 +76,11 @@ def add_elf_memory(xml_spec, binary, filename):
             n = "+".join([section.name for section in sections])
             mem_name = (n[:max_len - 2] + '..') if len(n) > max_len else n
 
+            # Rename .text to text so Muinit can look it up and use it as entry
+            # point after initialization.
+            if ".text" in mem_name:
+                mem_name = "text"
+
             w = ELF.SEGMENT_FLAGS.W in segment
             x = ELF.SEGMENT_FLAGS.X in segment
 

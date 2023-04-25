@@ -18,6 +18,7 @@ MFT_CMD = "solo5-elftool query-manifest"
 ABI_CMD = "solo5-elftool query-abi"
 DEFAULT_RAM_SIZE = "512"
 MAX_NAME_LEN = 63
+NOP = 0x90
 
 ABI_TARGET = "muen"
 ABI_VERSION = 2
@@ -188,6 +189,29 @@ def validate_solo5_abi(raw_abi):
                  + ", expected " + str(ABI_VERSION))
 
 
+def patch_binary(binary):
+    """
+    Patch .interp section at beginning of binary preceding .text with NOPs
+    which effectively makes the start of the text section an entry point.
+    This is required to be loadable by the Muinit stub, since it transfers
+    control to the start of the text section.
+    """
+    interp_section = binary.get_section(".interp")
+    text_section = binary.get_section(".text")
+    if text_section is None:
+        sys.exit("Error: Unable to patch binary - '.text' section not found")
+
+    patch_size = text_section.file_offset - interp_section.file_offset
+
+    print("Patching binary @ file offset "
+          + muutils.int_to_ada_hex(interp_section.file_offset)
+          + " with " + str(patch_size) + " NOPs")
+    fh = open(out_bin_path, "r+b")
+    fh.seek(interp_section.file_offset)
+    fh.write(bytes([NOP] * patch_size))
+    fh.close()
+
+
 def parse_args():
     """
     Returned parsed command line arguments
@@ -301,3 +325,4 @@ if copy_binary:
     out_bin_path = out_dir + "/" + binary_name
     print("Copying unikernel binary to '" + out_bin_path + "'")
     shutil.copy(src_bin_path, out_bin_path)
+    patch_binary(binary)

@@ -21,7 +21,7 @@ MAX_NAME_LEN = 63
 NOP = 0x90
 
 ABI_TARGET = "muen"
-ABI_VERSION = 2
+ABI_VERSION = 3
 
 chan_size = 0x100000
 chan_addr = 0xe0000000

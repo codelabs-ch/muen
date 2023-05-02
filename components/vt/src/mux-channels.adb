@@ -99,11 +99,13 @@ is
      (Channel : Output_Channel_Range;
       Event   : Input.Input_Event_Type)
    is
+      use type SK.Byte;
    begin
       Input.Event_Channel.Writer_Instance.Write
         (Channel => Out_Channels (Channel),
          Element => Event);
-      SK.Hypercall.Trigger_Event (Number => SK.Byte (Channel));
+      SK.Hypercall.Trigger_Event
+        (Number => Cspecs.Input_Devices_Event_Base + SK.Byte (Channel - 1));
    end Write;
 
 end Mux.Channels;

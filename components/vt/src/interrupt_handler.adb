@@ -19,6 +19,7 @@
 with SK.Strings;
 
 with Vt_Component.Channels;
+with Vt_Component.Channel_Arrays;
 
 with Log;
 with Input_Events;
@@ -35,11 +36,13 @@ is
 
       Vector : constant SK.Byte := SK.Byte'Mod (Context.Vector);
    begin
-      if Vector >= SK.Byte (Mux.Input_Channel_Range'First) + 33
-        and then Vector <= SK.Byte (Mux.Input_Channel_Range'Last) + 33
+      if Vector >= Vt_Component.Channel_Arrays.Console_Vector_Base
+        and Vector <= Vt_Component.Channel_Arrays.Console_Vector_Base
+          + Vt_Component.Channel_Arrays.Console_Element_Count - 1
       then
          Mux.Terminals.Set_Pending_Flag
-           (Channel_Nr => Mux.Input_Channel_Range (Vector - 33));
+           (Channel_Nr => Mux.Input_Channel_Range
+              ((Vector - Vt_Component.Channel_Arrays.Console_Vector_Base) + 1));
       elsif Vector = Vt_Component.Channels.Input_Events_Vector then
          Input_Events.Process;
       else

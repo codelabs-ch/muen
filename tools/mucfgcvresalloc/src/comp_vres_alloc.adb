@@ -76,6 +76,10 @@ is
       Resource_Kind :        Mutools.Vres_Alloc.Resource_Kind_Type);
 
    --  Reserve and set the requested virtual resource for an array.
+   --  If the array is empty, the requested resource is set to the last
+   --  element of the respective domain. No resources are reserved in that
+   --  case because resources of empty arrays must never be used and
+   --  will not appear in policy-b.xml.
    procedure Allocate_Array
      (Av_Ival       : in out Mutools.Intervals.Interval_List_Type;
       Node          :        DOM.Core.Node;
@@ -92,13 +96,6 @@ is
       Count          : constant Interfaces.Unsigned_64
         := Interfaces.Unsigned_64
         (Muxml.Utils.Count_Element_Children (Node => Node));
-      --  We prevent Count from reaching 0 when arrays are empty.
-      --  Setting the resource-base to a default (like 0) may cause clashes
-      --  in the component or toolchain code.
-      --  If elementSize is 0, the alignment check will fail.
-      Count_Not_Zero : constant Interfaces.Unsigned_64
-        := (if Count > 0 then Count else 1);
-
       Size           : Interfaces.Unsigned_64;
       New_Address    : Interfaces.Unsigned_64;
    begin
@@ -118,27 +115,38 @@ is
                raise Validation_Error with "Virtual resource not aligned";
             end if;
 
-            Size := Count_Not_Zero * Size;
-            New_Address := Mutools.Intervals.Reserve_Interval
-              (List => Av_Ival,
-               Size => Size);
+            if Count = 0 then
+               New_Address := Interfaces.Unsigned_64'Last;
+            else
+               New_Address := Mutools.Intervals.Reserve_Interval
+                 (List => Av_Ival,
+                  Size => Count * Size);
+            end if;
             DOM.Core.Elements.Set_Attribute
               (Elem  => Node,
                Name  => "virtualAddressBase",
                Value => Mutools.Utils.To_Hex (Number => New_Address));
 
          when Mutools.Vres_Alloc.Reader_Vectors =>
-            New_Address := Mutools.Intervals.Reserve_Interval
-              (List => Av_Ival,
-               Size => Count_Not_Zero);
+            if Count = 0 then
+               New_Address := 255;
+            else
+               New_Address := Mutools.Intervals.Reserve_Interval
+                 (List => Av_Ival,
+                  Size => Count);
+            end if;
             DOM.Core.Elements.Set_Attribute
               (Elem  => Node,
                Name  => "vectorBase",
                Value => Mutools.Utils.To_Decimal (New_Address));
          when Mutools.Vres_Alloc.Writer_Events =>
-            New_Address := Mutools.Intervals.Reserve_Interval
-              (List => Av_Ival,
-               Size => Count_Not_Zero);
+            if Count = 0 then
+               New_Address := 63;
+            else
+               New_Address := Mutools.Intervals.Reserve_Interval
+                 (List => Av_Ival,
+                  Size => Count);
+            end if;
             DOM.Core.Elements.Set_Attribute
               (Elem  => Node,
                Name  => "eventBase",

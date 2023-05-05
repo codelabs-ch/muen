@@ -523,9 +523,10 @@
 
      The \texttt{mucfgcvresalloc} tool described in \ref{tools-mucfgcvresalloc}
      implements the blue \emph{Component VR Allocator} task shown in figure
-     \ref{fig:build-process}. Furthermore, similar to the policy merger,
-     it supports inclusions, conditionals, expressions and
-     configuration value substitutions.
+     \ref{fig:build-process}. It is primarily used to automatically allocate
+     attributes of component resources like \emph{virtualAddress} for channels.
+     Furthermore, similar to the policy merger, it supports inclusions,
+     conditionals, expressions and configuration value substitutions.
 
      After the component specification has been processed, the
      \texttt{mucgenspec} tool described in \ref{tools-mucgenspec}
@@ -692,12 +693,13 @@
         \item Merge XIncludes of main XML file, i.e.,
         insert the referenced files at the given location;
         \item Evaluate expressions, conditionals and substitutions;
-        \item Assign missing virtual addresses of channels and memory regions, as well as arrays of channels and memory regions;
+        \item Assign missing virtual addresses of channels and memory regions,
+        as well as arrays of channels and memory regions;
         \item Assign missing IRQs of channel reader events and arrays of channel readers;
         \item Assign missing event IDs of channel writer events and arrays of channel writers;
      \end{enumerate}
 
-     Virtual addresses and event IDs are considered to be \textit{virtual resources}.
+     Virtual addresses, IRQs and event IDs are considered to be \textit{virtual resources}.
      Each of the three virtual resources has its own domain.
      To request automatic allocation of the attribute \texttt{virtualAddress}
      (or \texttt{virtualAddressBase} for arrays) omit the attribute.

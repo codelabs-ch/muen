@@ -340,7 +340,7 @@
    <events>
     <source>
      <group name="vmcall">
-      <event id="124" logical="channel_event_lnx_console" physical="lnx_console"/>
+      <event id="61" logical="channel_event_lnx_console" physical="lnx_console"/>
      </group>
     </source>
     <target>

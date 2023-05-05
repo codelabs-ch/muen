@@ -12,11 +12,11 @@
    </array>
   </memory>
   <channels>
-    <array elementSize="16#0000_8000#" logical="blockdev_request" virtualAddressBase="16#0200_0000#" vectorBase="50">
+    <array elementSize="16#0000_8000#" logical="blockdev_request" vectorBase="auto">
        <reader logical="blockdev_request1"/>
        <reader logical="blockdev_request2"/>
     </array>
-    <array elementSize="16#0000_4000#" logical="blockdev_response" virtualAddressBase="16#0300_0000#" eventBase="40">
+    <array elementSize="16#0000_4000#" logical="blockdev_response" eventBase="auto">
        <writer logical="blockdev_response1"/>
        <writer logical="blockdev_response2"/>
     </array>

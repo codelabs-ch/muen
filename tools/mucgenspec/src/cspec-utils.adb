@@ -320,10 +320,8 @@ is
    is
       Res, Addr, Size : Unbounded_String;
 
-      Child_Count : constant Natural := DOM.Core.Nodes.Length
-        (List => McKae.XML.XPath.XIA.XPath_Query
-           (N     => Arr,
-            XPath => "*"));
+      Child_Count : constant Natural
+        := Muxml.Utils.Count_Element_Children (Node => Arr);
    begin
       Array_Attrs_As_String
         (Arr          => Arr,

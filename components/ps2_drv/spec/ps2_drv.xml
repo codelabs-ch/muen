@@ -4,7 +4,7 @@
 	</depends>
 	<requires>
 		<channels>
-			<writer logical="input_events" virtualAddress="16#0005_0000#" size="16#1000#" event="1"/>
+			<writer logical="input_events" size="16#1000#" event="auto"/>
 		</channels>
 		<devices>
 			<device logical="ps2">

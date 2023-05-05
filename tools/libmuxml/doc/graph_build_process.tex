@@ -10,12 +10,14 @@
 	\node (joi) [bluebox, above=of src] {Joiner};
 	\node (cmp) [apribox, above=of joi] {Components};
 
-	\node (spg) [bluebox, right=of cmp] {Specgen};
-	\node (cm2) [apribox, right=of spg] {Components};
+	%%\node (spg) [bluebox, right=of cmp] {Specgen};
+   \node (cvr) [bluebox, right=of cmp, text width=2.2cm] {Component VR Allocator};
+	\node (cm2) [apribox, right=of cvr, text width=2.2cm] {Components (pre-format)};
 
-	\node (exp) [bluebox, right=of src] {Expander};
+   \node (vra) [bluebox, right=of src] {VR Allocator};
+	\node (exp) [bluebox, right=of vra] {Expander};
 	\node (fma) [apribox, right=of exp] {Format A};
-	\node (alo) [bluebox, right=of fma] {Allocator};
+	\node (alo) [bluebox, below=of fma] {Allocator};
 	\node (fmb) [apribox, below=of alo] {Format B};
 	\node (val) [bluebox, left=of fmb]  {Validator};
 	\node (sge) [bluebox, left=of val]  {Structure Generators};
@@ -44,11 +46,12 @@
 	\draw[arrow] (cmp) -- (joi);
 	\draw[arrow] (joi) -- (src);
 
-	\draw[arrow] (spg) -- (cmp);
-	\draw[arrow] (cm2) -- (spg);
+	\draw[arrow] (cvr) -- (cmp);
+	\draw[arrow] (cm2) -- (cvr);
 
 	\draw[arrow] (mrg) -- (src);
-	\draw[arrow] (src) -- (exp);
+	\draw[arrow] (src) -- (vra);
+	\draw[arrow] (vra) -- (exp);
 	\draw[arrow] (exp) -- (fma);
 	\draw[arrow] (fma) -- (alo);
 	\draw[arrow] (alo) -- (fmb);

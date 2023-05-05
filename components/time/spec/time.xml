@@ -14,7 +14,7 @@
 			</vmx>
 		</vcpu>
 		<channels>
-			<array elementSize="16#1000#" logical="export_channels" virtualAddressBase="16#000f_ffd0_0000#">
+			<array elementSize="16#1000#" logical="export_channels">
 				<writer logical="time_export1"/>
 			</array>
 		</channels>

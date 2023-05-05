@@ -9,16 +9,16 @@ serial.out;Switched to clocksource muen-clksrc
 serial.out;Hypervisor detected: Muen SK
 serial.out;muen-sinfo: Subject information .* @ 0x
 serial.out;muen-sinfo: Subject exports .* resources
-serial.out;muen-smp: Allocating IRQ 52 for event virtual_.* (CPU#0)
+serial.out;muen-smp: Allocating IRQ.* for event virtual_.* (CPU#0)
 serial.out;muen: Registering platform-specific PCI/MSI operations
-serial.out;muen-input: Using input channel '.*' at address 0x3000, IRQ 52
+serial.out;muen-input: Using input channel '.*' at address 0x.*, IRQ.*
 serial.out;Mounting Muen channel filesystem
-serial.out;muenfs: registered file virtual_console - start 0x0000000000004000, size 0x00010000, access rw
-serial.out;muenfs: registered file virtual_input - start 0x0000000000003000, size 0x00001000, access ro
-serial.out;muenfs: registered file testchannel_1 - start 0x0000000e00f00000, size 0x00001000, access ro
-serial.out;muenfs: registered file testchannel_2 - start 0x0000000e00f01000, size 0x00001000, access rw
-serial.out;muenfs: registered file testchannel_3 - start 0x0000000e00f02000, size 0x00100000, access ro
-serial.out;muenfs: registered file testchannel_4 - start 0x0000000e01002000, size 0x00100000, access rw
+serial.out;muenfs: registered file virtual_console - start 0x.*, size 0x00010000, access rw
+serial.out;muenfs: registered file virtual_input - start 0x.*, size 0x00001000, access ro
+serial.out;muenfs: registered file testchannel_1 - start 0x.*, size 0x00001000, access ro
+serial.out;muenfs: registered file testchannel_2 - start 0x.*, size 0x00001000, access rw
+serial.out;muenfs: registered file testchannel_3 - start 0x.*, size 0x00100000, access ro
+serial.out;muenfs: registered file testchannel_4 - start 0x.*, size 0x00100000, access rw
 serial.out;Starting Muen virtual networking
 serial.out;net0: Interface added
 serial.out;ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200)

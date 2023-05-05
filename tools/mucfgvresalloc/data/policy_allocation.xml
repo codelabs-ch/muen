@@ -1,0 +1,552 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<system>
+ <config>
+ </config>
+ <hardware>
+  <processor cpuCores="2" speed="2900" vmxTimerRate="5">
+   <cpu apicId="0"/>
+   <cpu apicId="2" cpuId="0"/>
+  </processor>
+  <memory>
+   <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
+   <reservedMemory name="rmrr1" physicalAddress="16#da08_3000#" size="16#0001_d000#"/>
+  </memory>
+  <devices pciConfigAddress="16#e000_0000#" pciConfigSize="16#1000_0000#">
+   <device name="debugconsole">
+    <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
+   </device>
+  </devices>
+ </hardware>
+ <platform>
+  <mappings>
+   <aliases>
+    <alias name="wireless" physical="wlan1">
+     <resource name="interrupt" physical="irq1">
+      <resource name="msi_interrupt" physical="msi1"/>
+     </resource>
+     <resource name="memory" physical="mmio1"/>
+     <resource name="memory" physical="mmconf"/>
+    </alias>
+   </aliases>
+   <classes>
+    <class name="network_adapters">
+     <device physical="nic1"/>
+     <device physical="nic3"/>
+    </class>
+   </classes>
+  </mappings>
+  <kernelDiagnostics type="uart">
+   <device physical="debugconsole">
+    <ioPort physical="serial"/>
+   </device>
+  </kernelDiagnostics>
+ </platform>
+ <memory>
+  <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
+  <memory caching="WB" name="dummy_2000" size="16#2000#"/>
+  <memory caching="WB" name="dummy_F000" size="16#F000#"/>
+  <memory caching="WB" name="dummy_40_" size="16#0040_0000#"/>
+  <memory caching="WB" name="dummy_1000_" size="16#1000_0000#"/>
+  <memory alignment="16#1000#" caching="UC" name="nic1|dma" physicalAddress="16#2000#" size="16#1000#"/>
+  <memory alignment="16#1000#" caching="UC" name="xhci|dma" physicalAddress="16#3000#" size="16#1000#"/>
+  <memory caching="WB" name="dummy_2" physicalAddress="16#4000#" size="16#2000#"/>
+  <memory caching="WB" name="dummy_3" physicalAddress="16#5000#" size="16#3000#"/>
+  <memory caching="WB" name="dummy_4" physicalAddress="16#6000#" size="16#3000#"/>
+  <memory caching="WB" name="dummy_5" physicalAddress="16#9000#" size="16#2000#">
+   <file filename="foofile" offset="none"/>
+  </memory>
+  <memory caching="WC" name="dummy_6" physicalAddress="16#b000#" size="16#1000#" type="subject">
+   <file filename="barfile" offset="none"/>
+  </memory>
+  <memory caching="WB" name="initramfs" physicalAddress="16#c000#" size="16#4000#">
+   <file filename="initramfs.cpio.xz" offset="none"/>
+  </memory>
+  <memory caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>
+  <memory caching="WB" name="major_frame_request" physicalAddress="16#0006_1000#" size="16#1000#"/>
+ </memory>
+ <deviceDomains>
+  <domain name="nic1_domain">
+   <memory>
+    <memory executable="false" logical="dma1" physical="nic1|dma" virtualAddress="16#1000#" writable="true"/>
+    <mapSubjectMemory subject="lnx" virtualAddressOffset="16#1000_2000#"/>
+   </memory>
+   <devices>
+    <device logical="nic1" mapReservedMemory="true" physical="nic1"/>
+    <device logical="wlan" physical="wireless"/>
+   </devices>
+  </domain>
+  <domain name="xhci_domain">
+   <memory>
+    <memory executable="false" logical="dma2" physical="xhci|dma" virtualAddress="16#2000#" writable="true"/>
+   </memory>
+   <devices>
+    <device logical="xhci" physical="xhci"/>
+   </devices>
+  </domain>
+ </deviceDomains>
+ <events>
+  <event mode="asap" name="ping_subject2"/>
+  <event mode="switch" name="trap_to_subject1"/>
+  <event mode="switch" name="handover_to_lnx"/>
+  <event mode="self" name="timer_subject1"/>
+  <event mode="self" name="foo_subject1"/>
+  <event mode="kernel" name="system_reboot"/>
+  <event mode="kernel" name="system_poweroff"/>
+  <event mode="kernel" name="system_panic"/>
+ </events>
+ <channels>
+  <channel hasEvent="asap" name="data_channel" size="16#0001_0000#"/>
+  <channel hasEvent="switch" name="data_channel2" size="16#0002_0000#"/>
+  <channel name="data_channel3" size="16#1000#"/>
+  <channel name="data_channel4" size="16#1000#"/>
+  <channel name="data_channel5" size="16#1000#"/>
+  <channel hasEvent="async" name="chan_array1" size="16#1000#"/>
+  <channel hasEvent="async" name="chan_array2" size="16#1000#"/>
+  <channel hasEvent="async" name="chan_array3" size="16#2000#"/>
+  <channel hasEvent="async" name="chan_array4" size="16#2000#"/>
+  <channel hasEvent="async" name="channel_1_" size="16#0001_0000#"/>
+  <channel hasEvent="async" name="channel_1000" size="16#1000#"/>
+  <channel hasEvent="async" name="channel_2000" size="16#2000#"/>
+ </channels>
+ <components>
+  <library name="l0">
+   <config>
+    <string name="library_config_var" value="config_val_l0"/>
+   </config>
+   <requires>
+    <devices>
+     <device logical="some_dev">
+      <irq logical="irq" vector="21"/>
+      <memory executable="false" logical="mmio1" size="16#0001_0000#" virtualAddress="16#0100_f000#" writable="true"/>
+      <ioPort end="16#50c8#" logical="port" start="16#50c0#"/>
+     </device>
+    </devices>
+   </requires>
+  </library>
+  <library name="l1">
+   <depends>
+    <library ref="l0"/>
+   </depends>
+   <requires>
+    <memory>
+     <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>
+     <array elementSize="16#3000#" executable="false" logical="memarray" virtualAddressBase="16#1000_0000#" writable="true">
+      <memory logical="mem1"/>
+      <memory logical="mem2"/>
+     </array>
+    </memory>
+    <channels>
+     <reader logical="chan1" size="16#1000#" virtualAddress="16#2000#"/>
+     <array elementSize="16#1000#" logical="input_arr" vectorBase="32" virtualAddressBase="16#0001_0000#">
+      <reader logical="input1"/>
+      <reader logical="input2"/>
+     </array>
+     <array elementSize="16#2000#" eventBase="16" logical="output_arr" virtualAddressBase="16#0002_0000#">
+      <writer logical="output1"/>
+      <writer logical="output2"/>
+     </array>
+    </channels>
+    <events>
+     <source>
+      <event id="20" logical="foo"/>
+     </source>
+     <target>
+      <event id="63" logical="self_reset">
+       <reset/>
+      </event>
+     </target>
+    </events>
+   </requires>
+  </library>
+  <library name="l2">
+   <requires>
+    <memory>
+     <memory executable="true" logical="data2" size="16#1000#" virtualAddress="16#8000#" writable="true"/>
+    </memory>
+   </requires>
+  </library>
+
+  <!-- the above should not be read and is left to test this -->
+
+  <!-- components which are not libraries must be read -->
+  <component name="linux" profile="linux">
+   <provides>
+    <memory executable="true" logical="binary" size="16#1000#" type="subject_binary" virtualAddress="16#2000#" writable="true">
+     <file filename="lnx_bin" offset="none"/>
+    </memory>
+   </provides>
+  </component>
+  <component name="c1" profile="native">
+   <depends>
+    <library ref="l0"/>
+    <library ref="l1"/>
+   </depends>
+   <requires>
+    <memory>
+     <memory executable="false" logical="ml1" size="16#2000_0000#" virtualAddress="16#0002_0000#" writable="true"/>
+     <memory executable="false" logical="ml3" size="16#0040_0000#" virtualAddress="16#3004_0000#" writable="false"/>
+     <array elementSize="16#F000#" executable="true" logical="mal1" virtualAddressBase="16#3084_5000#" writable="false">
+      <memory logical="mem01"/>
+      <memory logical="mem02"/>
+     </array>
+     <memory executable="false" logical="ml6" size="16#0001_0000#" virtualAddress="16#3086_3000#" writable="false"/>
+     <array elementSize="16#0000_1000#" executable="true" logical="mal3" virtualAddressBase="16#3087_3000#" writable="false">
+      <memory logical="mem11"/>
+      <memory logical="mem12"/>
+     </array>
+    </memory>
+    <channels>
+     <reader logical="crl0" size="16#0001_0000#" vector="0" virtualAddress="16#0010_0000#"/>
+     <reader logical="crl2" size="16#0001_0000#" vector="1" virtualAddress="16#30a7_5000#"/>
+     <array elementSize="16#1000#" logical="cral1" vectorBase="5" virtualAddressBase="16#3002_1000#">
+      <reader logical="input1"/>
+      <reader logical="input2"/>
+     </array>
+     <reader logical="crl3" size="16#0000_1000#" vector="2" virtualAddress="16#0011_0000#"/>
+     <writer event="3" logical="cwl2" size="16#1000#" virtualAddress="16#0005_1000#"/>
+     <writer logical="cwl3" size="16#0001_0000#" virtualAddress="16#000f_fff0_0000#"/>
+     <array elementSize="16#2000#" eventBase="12" logical="cwal1" virtualAddressBase="16#0002_0000#">
+      <writer logical="output1"/>
+      <writer logical="output2"/>
+      <writer logical="output3"/>
+     </array>
+     <array elementSize="16#2000#" eventBase="4" logical="cwal2" virtualAddressBase="16#0902_0000#">
+      <writer logical="output21"/>
+      <writer logical="output22"/>
+      <writer logical="output23"/>
+     </array>
+    </channels>
+    <devices>
+     <device logical="storage_device">
+      <irq logical="ctrl_irq" vector="120">
+       <msi logical="control_irq"/>
+       <msi logical="data_irq"/>
+       <msi logical="send_irq"/>
+       <msi logical="receive_irq"/>
+      </irq>
+      <memory executable="false" logical="mmio1" size="16#4000#" virtualAddress="16#1000_f000#" writable="true"/>
+      <ioPort end="16#50af#" logical="port_1" start="16#50a8#"/>
+      <ioPort end="16#50bf#" logical="port_2" start="16#50bc#"/>
+      <ioPort end="16#50a7#" logical="port_3" start="16#50a0#"/>
+     </device>
+    </devices>
+    <events>
+     <source>
+      <event id="1" logical="handover"/>
+      <event id="29" logical="trigger_timer"/>
+      <event id="30" logical="reboot">
+       <system_reboot/>
+      </event>
+      <event id="31" logical="shutdown">
+       <system_poweroff/>
+      </event>
+     </source>
+     <target>
+      <event logical="timer">
+       <inject_interrupt vector="7"/>
+      </event>
+     </target>
+    </events>
+   </requires>
+   <provides>
+    <memory executable="true" logical="binary" size="16#1000#" type="subject_binary" virtualAddress="16#0020_0000#" writable="true">
+     <file filename="c1_bin" offset="none"/>
+    </memory>
+   </provides>
+  </component>
+ </components>
+ <subjects>
+  <subject name="lnx">
+   <bootparams>hostname=lnx</bootparams>
+   <bootparams>debug</bootparams>
+   <memory>
+    <memory executable="false" logical="dummy" physical="dummy" writable="true"/>
+    <memory executable="false" logical="file_1" physical="dummy_5" virtualAddress="16#0010_0002_0000#" writable="true"/>
+    <memory executable="false" logical="file_2" physical="dummy_6" virtualAddress="16#2003_0000#" writable="true"/>
+    <memory executable="false" logical="initramfs" physical="initramfs" writable="false"/>
+   </memory>
+   <devices>
+    <device logical="xhci" physical="xhci">
+     <irq logical="irq1" physical="irq1">
+      <msi logical="msi1" physical="msi1"/>
+      <msi logical="msi2" physical="msi2"/>
+     </irq>
+     <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#0252_0000#" writable="true"/>
+    </device>
+    <device logical="wlan" physical="wireless">
+     <irq logical="irq" physical="interrupt" vector="89">
+      <msi logical="msi" physical="msi_interrupt"/>
+     </irq>
+     <memory executable="false" logical="mmio" physical="memory" virtualAddress="16#01c0_0000#" writable="true"/>
+    </device>
+    <device logical="wlan2" physical="wlan2">
+     <pci bus="16#01#" device="16#05#" function="2"/>
+    </device>
+    <device logical="wifi" physical="wifi">
+     <pci bus="16#00#" device="16#1c#" function="0"/>
+    </device>
+   </devices>
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <default physical="trap_to_subject1"/>
+     </group>
+    </source>
+    <target>
+     <event logical="handover_from_subject1" physical="handover_to_lnx"/>
+    </target>
+   </events>
+   <channels>
+    <reader logical="channel_1" physical="data_channel" vector="2" virtualAddress="16#2001_0000#"/>
+    <reader logical="channel_2" physical="data_channel2" vector="auto"/>
+    <reader logical="channel_5" physical="data_channel"/>
+    <reader logical="channel_3" physical="data_channel" vector="1"/>
+    <reader logical="channel_4" physical="data_channel2" vector="auto" virtualAddress="16#2003_5000#"/>
+    <writer event="auto" logical="channel_3" physical="channel_1_" virtualAddress="16#2000_9000#"/>
+    <writer event="0" logical="channel_4" physical="channel_1_"/>
+    <writer event="auto" logical="channel_5" physical="channel_1_"/>
+   </channels>
+   <component ref="linux"/>
+  </subject>
+  <subject name="subject1">
+   <vcpu>
+    <msrs>
+     <msr end="16#00ce#" mode="r" start="16#00ce#"/>
+    </msrs>
+   </vcpu>
+   <memory>
+    <memory executable="false" logical="ml3" physical="dummy_40_" writable="false"/>
+    <memory executable="true" logical="mem02" physical="dummy_F000" writable="false"/>
+    <memory executable="false" logical="mem11" physical="dummy_2000" writable="true"/>
+    <memory executable="false" logical="mem12" physical="dummy_2000" writable="true"/>
+    <memory executable="false" logical="ml7" physical="dummy_40_" writable="false"/>
+    <memory executable="false" logical="dummy" physical="dummy" writable="true"/>
+   </memory>
+   <devices>
+    <device logical="nics" physical="network_adapters"/>
+   </devices>
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <default physical="system_panic">
+       <system_panic/>
+      </default>
+      <event id="0" logical="reboot" physical="system_reboot">
+       <system_reboot/>
+      </event>
+     </group>
+     <group name="vmcall">
+      <event id="5" logical="ping" physical="ping_subject2"/>
+     </group>
+    </source>
+    <target>
+     <event logical="ping_from_lnx" physical="ping_subject2">
+      <inject_interrupt vector="3"/>
+     </event>
+    </target>
+   </events>
+   <channels>
+    <writer event="auto" logical="c2" physical="chan_array2"/>
+    <reader logical="c3" physical="chan_array3" vector="auto"/>
+    <reader logical="c4" physical="chan_array4" vector="auto"/>
+    <reader logical="crl0" physical="channel_1_" vector="auto"/>
+    <reader logical="input1" physical="channel_1_" vector="auto"/>
+    <reader logical="input2" physical="channel_1_" vector="auto"/>
+    <reader logical="crl3" physical="channel_1000" vector="auto"/>
+    <writer event="auto" logical="cwl2" physical="channel_1000"/>
+    <writer logical="cwl3" physical="channel_1_"/>
+    <writer event="auto" logical="output1" physical="channel_2000"/>
+    <writer event="auto" logical="output2" physical="channel_2000"/>
+    <writer event="auto" logical="output3" physical="channel_2000"/>
+    <writer event="auto" logical="output21" physical="channel_2000"/>
+    <writer event="auto" logical="output22" physical="channel_2000"/>
+   </channels>
+   <component ref="c1">
+    <map logical="ml5" physical="does_not_exist"/>
+    <map logical="ml6" physical="does_not_exist"/>
+    <map logical="output1" physical="dummy_2000"/>
+    <map logical="output2" physical="dummy_2000"/>
+    <map logical="output3" physical="dummy_2000"/>
+    <map logical="output23" physical="channel_2000"/>
+    <map logical="mem01" physical="does_not_exist"/>
+    <map logical="primary_data" physical="data_channel3"/>
+    <map logical="secondary_data" physical="data_channel4"/>
+    <map logical="output1" physical="chan_array1"/>
+    <map logical="mem1" physical="dummy_2"/>
+    <map logical="wifi" physical="wifi">
+     <map logical="irq" physical="interrupt"/>
+     <map logical="mmio" physical="memory"/>
+    </map>
+    <map logical="shutdown" physical="system_poweroff"/>
+   </component>
+  </subject>
+  <subject name="subject2">
+   <vcpu>
+    <msrs>
+     <msr end="16#00ce#" mode="r" start="16#00ce#"/>
+    </msrs>
+   </vcpu>
+   <memory>
+    <memory executable="true" logical="ml2" physical="dummy_1000_" writable="true"/>
+    <memory executable="false" logical="ml3" physical="dummy_40_" virtualAddress="16#3004_0000#" writable="false"/>
+    <memory executable="true" logical="mem02" physical="dummy_F000" writable="false"/>
+    <memory executable="true" logical="mem2" physical="dummy_2000" writable="false"/>
+    <memory executable="true" logical="mem3" physical="dummy_2000" writable="false"/>
+    <memory executable="true" logical="mem4" physical="dummy_2000" writable="false"/>
+    <memory executable="false" logical="ml4" physical="dummy_2000" virtualAddress="16#3003_0000#" writable="true"/>
+    <memory executable="false" logical="mem11" physical="dummy_2000" writable="true"/>
+    <memory executable="false" logical="mem12" physical="dummy_2000" writable="true"/>
+    <memory executable="false" logical="ml7" physical="dummy_40_" writable="false"/>
+    <memory executable="false" logical="dummy" physical="dummy" writable="true"/>
+   </memory>
+   <devices>
+    <device logical="nics" physical="network_adapters"/>
+   </devices>
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <default physical="system_panic">
+       <system_panic/>
+      </default>
+      <event id="0" logical="reboot" physical="system_reboot">
+       <system_reboot/>
+      </event>
+     </group>
+     <group name="vmcall">
+      <event id="5" logical="ping" physical="ping_subject2"/>
+     </group>
+    </source>
+    <target>
+     <event logical="ping_from_lnx" physical="ping_subject2">
+      <inject_interrupt vector="3"/>
+     </event>
+    </target>
+   </events>
+   <channels>
+    <writer event="12" logical="c2" physical="chan_array2" virtualAddress="16#0001_4000#"/>
+    <reader logical="c3" physical="chan_array3" vector="128" virtualAddress="16#0001_5000#"/>
+    <reader logical="c4" physical="chan_array4" vector="129" virtualAddress="16#0001_7000#"/>
+    <reader logical="crl0" physical="chan_array4" vector="0" virtualAddress="16#0010_0000#"/>
+    <reader logical="crl1" physical="chan_array4" vector="auto"/>
+    <reader logical="input1" physical="channel_1000" vector="auto"/>
+    <reader logical="input2" physical="channel_1000" vector="auto"/>
+    <reader logical="crl3" physical="channel_1000" vector="2"/>
+    <reader logical="crl4" physical="channel_1000" vector="auto"/>
+    <reader logical="crl5" physical="channel_1000" vector="30" virtualAddress="16#00a9_5000#"/>
+    <writer event="auto" logical="cwl1" physical="channel_1000" virtualAddress="16#2002_0000#"/>
+    <writer event="3" logical="cwl2" physical="channel_1000"/>
+    <writer logical="cwl3" physical="channel_1_" virtualAddress="16#000f_fff0_0000#"/>
+    <writer event="4" logical="cwl4" physical="channel_1000" virtualAddress="16#00aa_5000#"/>
+    <writer event="auto" logical="output1" physical="channel_2000"/>
+    <writer event="auto" logical="output2" physical="channel_2000"/>
+    <writer event="auto" logical="output3" physical="channel_2000"/>
+    <writer event="auto" logical="output21" physical="channel_2000" virtualAddress="16#0902_0000#"/>
+    <writer event="auto" logical="output22" physical="channel_2000"/>
+   </channels>
+   <component ref="c1">
+    <map logical="ml5" physical="does_not_exist"/>
+    <map logical="ml6" physical="does_not_exist"/>
+    <map logical="output1" physical="dummy_2000"/>
+    <map logical="output2" physical="dummy_2000"/>
+    <map logical="output3" physical="dummy_2000"/>
+    <map logical="output23" physical="channel_2000"/>
+    <map logical="mem01" physical="does_not_exist"/>
+    <map logical="primary_data" physical="data_channel3"/>
+    <map logical="secondary_data" physical="data_channel4"/>
+    <map logical="output1" physical="chan_array1"/>
+    <map logical="mem1" physical="dummy_2"/>
+    <map logical="wifi" physical="wifi">
+     <map logical="irq" physical="interrupt"/>
+     <map logical="mmio" physical="memory"/>
+    </map>
+    <map logical="shutdown" physical="system_poweroff"/>
+   </component>
+  </subject>
+  <subject name="lnx_core_1">
+   <vcpu>
+    <registers>
+     <gpr>
+      <rip>16#0009_a000#</rip>
+      <rsp>16#0000#</rsp>
+     </gpr>
+     <cr0>
+      <ProtectionEnable>0</ProtectionEnable>
+     </cr0>
+     <segments>
+      <cs access="16#809b#" base="16#0000#" limit="16#ffff#" selector="16#0008#"/>
+      <ds access="16#8093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+     </segments>
+    </registers>
+   </vcpu>
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <default physical="system_panic">
+       <system_panic/>
+      </default>
+     </group>
+    </source>
+   </events>
+   <sibling ref="lnx"/>
+  </subject>
+ </subjects>
+ <scheduling tickRate="10000">
+  <partitions>
+   <partition name="linux">
+    <group>
+     <subject name="lnx"/>
+     <subject name="subject1"/>
+    </group>
+   </partition>
+   <partition name="tau0">
+    <group>
+     <subject name="tau0"/>
+    </group>
+   </partition>
+   <partition name="s2">
+    <group>
+     <subject name="subject2"/>
+    </group>
+   </partition>
+   <partition name="s3">
+    <group>
+     <subject name="subject3"/>
+    </group>
+   </partition>
+   <partition name="linux_1">
+    <group>
+     <subject name="lnx_core_1"/>
+    </group>
+   </partition>
+  </partitions>
+  <majorFrame>
+   <cpu id="0">
+    <minorFrame partition="linux" ticks="60"/>
+    <minorFrame partition="linux" ticks="20"/>
+   </cpu>
+   <cpu id="1">
+    <minorFrame partition="tau0" ticks="40"/>
+    <minorFrame partition="s2" ticks="20"/>
+    <minorFrame partition="s2" ticks="20"/>
+   </cpu>
+  </majorFrame>
+  <majorFrame>
+   <cpu id="0">
+    <minorFrame partition="linux" ticks="10"/>
+    <minorFrame partition="linux" ticks="20"/>
+    <minorFrame partition="linux" ticks="40"/>
+    <minorFrame partition="linux" ticks="20"/>
+    <minorFrame partition="linux" ticks="10"/>
+    <minorFrame partition="s3" ticks="10"/>
+   </cpu>
+   <cpu id="1">
+    <minorFrame partition="tau0" ticks="10"/>
+    <minorFrame partition="s2" ticks="30"/>
+    <minorFrame partition="tau0" ticks="30"/>
+    <minorFrame partition="s2" ticks="20"/>
+    <minorFrame partition="tau0" ticks="20"/>
+    <minorFrame partition="linux_1" ticks="10"/>
+   </cpu>
+  </majorFrame>
+ </scheduling>
+</system>

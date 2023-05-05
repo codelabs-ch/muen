@@ -30,9 +30,7 @@ is
    --  specification.
    procedure Run
      (Input_Spec       : String;
-      Output_Spec      : String := "";
       Output_Directory : String;
-      Include_Path     : String;
       Package_Name     : String := "");
 
    Component_Not_Found : exception;

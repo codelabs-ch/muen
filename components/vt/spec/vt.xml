@@ -4,18 +4,18 @@
 	</depends>
 	<requires>
 		<memory>
-			<memory logical="slot_control_1" virtualAddress="16#0007_0000#" size="16#1000#" writable="true" executable="false"/>
+			<memory logical="slot_control_1" size="16#1000#" writable="true" executable="false"/>
 		</memory>
 		<channels>
-			<array elementSize="16#0001_0000#" logical="console" vectorBase="34" virtualAddressBase="16#0010_0000#">
+			<array elementSize="16#0001_0000#" logical="console" vectorBase="auto">
 				<reader logical="NIC Linux"/>
 				<reader logical="Storage Linux"/>
 			</array>
-			<array elementSize="16#1000#" eventBase="1" logical="input_devices" virtualAddressBase="16#0005_0000#">
+			<array elementSize="16#1000#" eventBase="auto" logical="input_devices">
 				<writer logical="input_device_1"/>
 				<writer logical="input_device_2"/>
 			</array>
-			<reader logical="input_events" virtualAddress="16#0006_0000#" size="16#1000#" vector="48"/>
+			<reader logical="input_events" size="16#1000#" vector="auto"/>
 		</channels>
 		<devices>
 			<device logical="vga">

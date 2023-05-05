@@ -32,12 +32,6 @@ is
    --  Return output directory.
    function Get_Output_Dir return String;
 
-   --  Return output component spec.
-   function Get_Output_Spec return String;
-
-   --  Return include path.
-   function Get_Include_Path return String;
-
    --  Return Ada package name. Returns empty string if no package name has
    --  been given on the command line.
    function Get_Package_Name return String;
@@ -47,9 +41,7 @@ is
 private
 
    Output_Dir   : Ada.Strings.Unbounded.Unbounded_String;
-   Output_Spec  : Ada.Strings.Unbounded.Unbounded_String;
    Input_Spec   : Ada.Strings.Unbounded.Unbounded_String;
-   Include_Path : Ada.Strings.Unbounded.Unbounded_String;
    Package_Name : Ada.Strings.Unbounded.Unbounded_String;
 
    Parser : GNAT.Command_Line.Opt_Parser

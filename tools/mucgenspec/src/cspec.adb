@@ -19,19 +19,10 @@
 with Ada.Directories;
 with Ada.Characters.Handling;
 
-with GNAT.Directory_Operations;
-
+with Muxml;
 with Mulog;
-with Muxml.Utils;
 with Mutools.Utils;
-with Mutools.Strings;
-with Mutools.XML_Utils;
 with Mutools.Templates;
-with Mutools.Expressions;
-with Mutools.Conditionals;
-with Mutools.Substitutions;
-with Mucfgcheck.Config;
-with Mucfgcheck.Validation_Errors;
 
 with Cspec.Utils;
 with Cspec.Generators;
@@ -55,9 +46,6 @@ is
       Pattern  :        String;
       Content  :        String;
       Filename :        String);
-
-   --  Check and expand expressions and conditionals in given input spec.
-   procedure Expand_Expr_Cond (Data : Muxml.XML_Data_Type);
 
    -------------------------------------------------------------------------
 
@@ -100,32 +88,9 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Expand_Expr_Cond (Data : Muxml.XML_Data_Type)
-   is
-   begin
-      Mucfgcheck.Config.Config_Boolean_Values (XML_Data => Data);
-      Mucfgcheck.Config.Config_Integer_Values (XML_Data => Data);
-      Mucfgcheck.Config.Expression_Config_Var_Refs (XML_Data => Data);
-      Mucfgcheck.Config.Expression_Integer_Values (XML_Data => Data);
-      Mucfgcheck.Config.Expression_Boolean_Values (XML_Data => Data);
-
-      Mutools.Expressions.Expand (Policy => Data);
-      Muxml.Utils.Remove_Elements (Doc   => Data.Doc,
-                                   XPath => "/component/expressions");
-
-      Mucfgcheck.Config.Conditional_Config_Var_Refs (XML_Data => Data);
-      Mutools.Conditionals.Expand (Policy => Data);
-
-      Mucfgcheck.Validation_Errors.Check;
-   end Expand_Expr_Cond;
-
-   -------------------------------------------------------------------------
-
    procedure Run
      (Input_Spec       : String;
-      Output_Spec      : String := "";
       Output_Directory : String;
-      Include_Path     : String;
       Package_Name     : String := "")
    is
       Spec : Muxml.XML_Data_Type;
@@ -134,22 +99,8 @@ is
                  & Input_Spec & "'");
 
       Muxml.Parse (Data => Spec,
-                   Kind => Muxml.None,
+                   Kind => Muxml.Component,
                    File => Input_Spec);
-
-      declare
-         Inc_Path_Str : constant String
-           := Include_Path & (if Include_Path'Length > 0 then ":" else "")
-           & GNAT.Directory_Operations.Dir_Name (Path => Input_Spec);
-      begin
-         Mulog.Log (Msg => "Using include path '" & Inc_Path_Str & "'");
-         Mutools.XML_Utils.Merge_XIncludes
-           (Policy       => Spec,
-            Include_Dirs => Mutools.Strings.Tokenize (Str => Inc_Path_Str));
-      end;
-
-      Expand_Expr_Cond (Data => Spec);
-      Mutools.Substitutions.Process_Attributes (Data => Spec);
 
       declare
          Tmpl : Mutools.Templates.Template_Type;
@@ -285,13 +236,6 @@ is
 
          Mulog.Log (Msg => "Specs generated successfully");
 
-         if Output_Spec'Length > 0 then
-            Mulog.Log (Msg => "Writing output component spec '"
-                       & Output_Spec & "'");
-            Muxml.Write (Data => Spec,
-                         Kind => Muxml.Component,
-                         File => Output_Spec);
-         end if;
       end;
    end Run;
 

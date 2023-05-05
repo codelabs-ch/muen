@@ -54,6 +54,9 @@ is
       Byte_Short : Boolean := False)
       return String;
 
+   --  Return trimmed representation in decimal format.
+   function To_Decimal (Number : Interfaces.Unsigned_64) return String;
+
    --  Return N number of indentation units. The unit size specifies the number
    --  of spaces per unit.
    function Indent

@@ -33,9 +33,7 @@ begin
    Cspec.Cmd_Line.Init
      (Description => "Component logical resource constants generator");
    Cspec.Run (Input_Spec       => Cspec.Cmd_Line.Get_Input_Spec,
-              Output_Spec      => Cspec.Cmd_Line.Get_Output_Spec,
               Output_Directory => Cspec.Cmd_Line.Get_Output_Dir,
-              Include_Path     => Cspec.Cmd_Line.Get_Include_Path,
               Package_Name     => Cspec.Cmd_Line.Get_Package_Name);
 
 exception
@@ -54,7 +52,7 @@ exception
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when Mucfgcheck.Validation_Errors.Validation_Error =>
       Mulog.Log (Level => Mulog.Error,
-                   Msg   => "Semantic check failed, aborting");
+                 Msg   => "Semantic check failed, aborting");
       Mulog.Log (Level => Mulog.Error,
                  Msg   => Mucfgcheck.Validation_Errors.Get_Error_Message);
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);

@@ -111,14 +111,14 @@
     </xs:documentation>
    </xs:annotation>
   </xs:attribute>
-  <xs:attribute name="virtualAddress" type="word64Type" use="required">
+  <xs:attribute name="virtualAddress" type="word64Type">
    <xs:annotation>
     <xs:documentation>
      Address of mapping in subject address space.
     </xs:documentation>
    </xs:annotation>
   </xs:attribute>
-  <xs:attribute name="vector" type="vectorType" use="optional">
+  <xs:attribute name="vector" type="vectorOrAutoType" use="optional">
    <xs:annotation>
     <xs:documentation>
      Associated vector. Must be set if a physical channel with \texttt{hasEvent}
@@ -154,14 +154,14 @@
     </xs:documentation>
    </xs:annotation>
   </xs:attribute>
-  <xs:attribute name="virtualAddress" type="word64Type" use="required">
+  <xs:attribute name="virtualAddress" type="word64Type">
    <xs:annotation>
     <xs:documentation>
      Address of mapping in subject address space.
     </xs:documentation>
    </xs:annotation>
   </xs:attribute>
-  <xs:attribute name="event" type="xs:nonNegativeInteger" use="optional">
+  <xs:attribute name="event" type="eventIdOrAutoType" use="optional">
    <xs:annotation>
     <xs:documentation>
      Associated event number. Must be set if a physical channel with
@@ -170,5 +170,30 @@
    </xs:annotation>
   </xs:attribute>
  </xs:complexType>
-
+  <xs:simpleType name="constantAuto">
+   <xs:annotation>
+     <xs:documentation>
+       A string that is "auto".
+     </xs:documentation>
+   </xs:annotation>
+   <xs:restriction base="xs:string">
+     <xs:enumeration value="auto"/>
+   </xs:restriction>
+ </xs:simpleType>
+ <xs:simpleType name="vectorOrAutoType">
+  <xs:annotation>
+   <xs:documentation>
+    Vector number or "auto" to request automatic assignment.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:union memberTypes="vectorType constantAuto"/>
+ </xs:simpleType>
+ <xs:simpleType name="eventIdOrAutoType">
+   <xs:annotation>
+     <xs:documentation>
+       Event number or "auto" to request automatic assignment.
+     </xs:documentation>
+   </xs:annotation>
+   <xs:union memberTypes="eventIdType constantAuto"/>
+ </xs:simpleType>
 </xs:schema>

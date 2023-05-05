@@ -40,11 +40,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Include_Path return String
-   is (S (Include_Path));
-
-   -------------------------------------------------------------------------
-
    function Get_Input_Spec return String
    is (S (Input_Spec));
 
@@ -55,20 +50,13 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Output_Spec return String
-   is (S (Output_Spec));
-
-   -------------------------------------------------------------------------
-
    procedure Init (Description : String)
    is
       use Ada.Strings.Unbounded;
 
       Cmdline   : Mutools.Cmd_Line.Config_Type;
       In_Spec   : aliased GNAT.Strings.String_Access;
-      Inc_Dir   : aliased GNAT.Strings.String_Access;
       Package_N : aliased GNAT.Strings.String_Access;
-      Out_Spec  : aliased GNAT.Strings.String_Access;
    begin
       GNAT.Command_Line.Set_Usage
         (Config => Cmdline.Data,
@@ -82,22 +70,10 @@ is
          Help        => "Path to input component specification");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
-         Output      => Out_Spec'Access,
-         Switch      => "-o:",
-         Long_Switch => "--output-spec:",
-         Help        => "Processed component specification path");
-      GNAT.Command_Line.Define_Switch
-        (Config      => Cmdline.Data,
          Output      => Package_N'Access,
          Switch      => "-p:",
          Long_Switch => "--package-name:",
          Help        => "Package name to use in Ada code");
-      GNAT.Command_Line.Define_Switch
-        (Config      => Cmdline.Data,
-         Output      => Inc_Dir'Access,
-         Switch      => "-I:",
-         Long_Switch => "--include-path:",
-         Help        => "Colon-separated list of include paths");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Switch      => "-h",
@@ -110,19 +86,11 @@ is
          if In_Spec'Length /= 0 then
             Input_Spec := U (In_Spec.all);
          end if;
-         if Inc_Dir'Length /= 0 then
-            Include_Path := To_Unbounded_String (Inc_Dir.all);
-         end if;
-         if Out_Spec'Length /= 0 then
-            Output_Spec := To_Unbounded_String (Out_Spec.all);
-         end if;
          if Package_N'Length /= 0 then
             Package_Name := To_Unbounded_String (Package_N.all);
          end if;
 
          GNAT.Strings.Free (X => In_Spec);
-         GNAT.Strings.Free (X => Inc_Dir);
-         GNAT.Strings.Free (X => Out_Spec);
          GNAT.Strings.Free (X => Package_N);
 
       exception

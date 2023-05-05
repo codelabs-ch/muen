@@ -19,8 +19,10 @@
 with Interfaces;
 
 with Ada.Strings.Unbounded;
+with Ada.Containers.Doubly_Linked_Lists;
 
 with DOM.Core.Nodes;
+use type DOM.Core.Node;
 
 package Muxml.Utils
 is
@@ -55,6 +57,11 @@ is
       Current_Node       : DOM.Core.Node;
       Only_Element_Nodes : Boolean := False)
       return DOM.Core.Node;
+
+   --  Count the number of child nodes of Node of type Element_Node.
+   function Count_Element_Children
+     (Node : DOM.Core.Node)
+     return Natural;
 
    --  Searches the element specified by an XPath in the given document and
    --  returns the attribute given by name as string. If no such attribute or
@@ -305,5 +312,8 @@ is
       return Interfaces.Unsigned_64;
 
    XML_Error : exception;
+
+   package Node_List_Package is new
+     Ada.Containers.Doubly_Linked_Lists (Element_Type => DOM.Core.Node);
 
 end Muxml.Utils;

@@ -29,6 +29,8 @@ is
       "mucbinsplit/mucbinsplit.gpr",
       "mucfgalloc/mucfgalloc.gpr",
       "mucfgcjoin/mucfgcjoin.gpr",
+      "mucfgcvresalloc/mucfgcvresalloc.gpr",
+      "mucfgvresalloc/mucfgvresalloc.gpr",
       "mucfgexpand/mucfgexpand.gpr",
       "mucfgmemhashes/mucfgmemhashes.gpr",
       "mucfgmerge/mucfgmerge.gpr",

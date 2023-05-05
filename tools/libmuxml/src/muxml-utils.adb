@@ -43,8 +43,6 @@ is
       Child_Name : String;
       Ref_Names  : Tags_Type := No_Tags)
    is
-      use type DOM.Core.Node;
-
       Child : constant DOM.Core.Node
         := Get_Element
           (Doc   => Parent,
@@ -91,8 +89,6 @@ is
       Level : Positive)
       return DOM.Core.Node
    is
-      use type DOM.Core.Node;
-
       Result : DOM.Core.Node := Node;
    begin
       for I in 1 .. Level loop
@@ -141,8 +137,6 @@ is
       Node : DOM.Core.Node)
       return Boolean
    is
-      use type DOM.Core.Node;
-
       Count : constant Natural := DOM.Core.Nodes.Length (List => List);
    begin
       if Node = null then
@@ -161,6 +155,29 @@ is
       return False;
    end Contains;
 
+   ----------------------------------------------------------------------
+
+   function Count_Element_Children
+     (Node : DOM.Core.Node)
+     return Natural
+   is
+      use type DOM.Core.Node_Types;
+
+      Curr_Node  : DOM.Core.Node;
+      Child_List : constant DOM.Core.Node_List
+        := DOM.Core.Nodes.Child_Nodes (N => Node);
+      Count      : Natural := 0;
+   begin
+      for I in 0 ..  DOM.Core.Nodes.Length (List => Child_List) - 1 loop
+         Curr_Node := DOM.Core.Nodes.Item (List  => Child_List,
+                                           Index => I);
+         if DOM.Core.Nodes.Node_Type (N => Curr_Node) = DOM.Core.Element_Node then
+            Count := Count + 1;
+         end if;
+      end loop;
+      return Count;
+   end Count_Element_Children;
+
    -------------------------------------------------------------------------
 
    function Get_Attribute
@@ -169,8 +186,6 @@ is
       Name  : String)
       return String
    is
-      use type DOM.Core.Node;
-
       Node : constant DOM.Core.Node := Get_Element
         (Doc   => Doc,
          XPath => XPath);
@@ -209,8 +224,6 @@ is
       Attr_Name : String)
       return String
    is
-      use type DOM.Core.Node;
-
       Node : constant DOM.Core.Node
         := Get_Element (Nodes => Nodes,
                         Refs  => Refs);
@@ -292,8 +305,6 @@ is
       Child_Names : Tags_Type)
       return DOM.Core.Node
    is
-      use type DOM.Core.Node;
-
       Node : DOM.Core.Node := null;
    begin
       for Child of Child_Names loop
@@ -313,8 +324,6 @@ is
       XPath : String)
       return DOM.Core.Node
    is
-      use type DOM.Core.Node;
-
       Element : DOM.Core.Node := null;
    begin
       if XPath'Length = 0 then
@@ -387,8 +396,6 @@ is
       XPath : String)
       return String
    is
-      use type DOM.Core.Node;
-
       Node : constant DOM.Core.Node
         := Get_Element
           (Doc   => Doc,

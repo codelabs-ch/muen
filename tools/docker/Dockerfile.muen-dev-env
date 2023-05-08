@@ -67,13 +67,13 @@ RUN git clone https://github.com/schnoddelbotz/amtc.git /tmp/amtc \
 	&& rm -rf /tmp/amtc
 
 # Install solo5. test_hello.muen is required by Github Actions CI.
-RUN curl -sSL "https://github.com/Solo5/solo5/releases/download/v0.6.5/solo5-v0.6.5.tar.gz" -o /opt/solo5-v0.6.5.tar.gz \
-	&& tar -C /opt -zxf /opt/solo5-v0.6.5.tar.gz \
-	&& cd /opt/solo5-v0.6.5 \
+RUN curl -sSL "https://github.com/Solo5/solo5/releases/download/v0.8.0/solo5-v0.8.0.tar.gz" -o /opt/solo5-v0.8.0.tar.gz \
+	&& tar -C /opt -zxf /opt/solo5-v0.8.0.tar.gz \
+	&& cd /opt/solo5-v0.8.0 \
 	&& ./configure.sh \
 	&& make -j`nproc`\
 	&& make install-tools \
-	&& rm /opt/solo5-v0.6.5.tar.gz
+	&& rm /opt/solo5-v0.8.0.tar.gz
 
 # Phabricator's arcanist for review workflow
 RUN git clone https://github.com/codelabs-ch/arcanist.git /opt/arcanist

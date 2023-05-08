@@ -186,6 +186,7 @@ jobs:
             -e HARDWARE=hardware/${{ matrix.hardware }}
             -w /mnt
           run: |
+            set -e
             eval `/home/user/dev-env.alr/env`
             cat /etc/issue
             ccache -z

@@ -1,7 +1,7 @@
 package Xt_Component
 is
 
-   type Channel_Kind is (Channel_Reader, Channel_Writer);
+   type Channel_Kind is (Channel_Reader, Channel_Writer, None);
 
    type Name_Type is new String (1 .. 63);
 

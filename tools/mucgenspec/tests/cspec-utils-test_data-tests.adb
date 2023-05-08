@@ -424,7 +424,11 @@ package body Cspec.Utils.Test_Data.Tests is
          Value => "true");
 
       Assert (Condition => To_Memory_Array_Str (Arr => Arr)
-                 = Ref1 & "0" & Ref2 & ASCII.LF & "        );",
+                 = Ref1 & "0"
+                 & Ref2
+                 & "         others => To_Name (Str => """")"
+                 & ASCII.LF
+                 & "        );",
               Message   => "String mismatch"
                  & To_Memory_Array_Str (Arr => Arr));
 
@@ -473,13 +477,16 @@ package body Cspec.Utils.Test_Data.Tests is
       Data      : Muxml.XML_Data_Type;
       Arr, Node : DOM.Core.Node;
 
-      Names1 : constant String := ASCII.LF & ASCII.LF
+      Names1       : constant String := ASCII.LF & ASCII.LF
         & "   Input_Names : constant Name_Array (1 .. Input_Element_Count)"
         & ASCII.LF
         & "     := (" & ASCII.LF;
-      Names2 : constant String :=
+      Names_Others : constant String :=
+        "         others => To_Name (Str => """")" & ASCII.LF;
+      Names2       : constant String :=
         "         1 => To_Name (Str => ""tau0"")" & ASCII.LF
         & "        );";
+
       Chan_Rdr : constant String := ASCII.LF
         & "   Input_Element_Kind  : constant Channel_Kind := Channel_Reader;";
       Chan_Wrt : constant String := ASCII.LF
@@ -521,8 +528,8 @@ package body Cspec.Utils.Test_Data.Tests is
 
       Assert (Condition => To_Channel_Array_Str (Arr => Arr)
                  = Ref1 & "0;" & ASCII.LF
-                 & "   Input_Element_Kind  : constant Channel_Kind := Channel_None;"
-                 & Names1 & ASCII.LF & "        );",
+                 & "   Input_Element_Kind  : constant Channel_Kind := None;"
+                 & Names1 & Names_Others & "        );",
               Message   => "String mismatch (1):"
                  & To_Channel_Array_Str (Arr => Arr));
 
@@ -532,8 +539,8 @@ package body Cspec.Utils.Test_Data.Tests is
          Value => "16");
       Assert (Condition => To_Channel_Array_Str (Arr => Arr)
                  = Ref1 & "0;" & ASCII.LF
-                 & "   Input_Element_Kind  : constant Channel_Kind := Channel_None;"
-                 & Ref2 & Names1 & ASCII.LF & "        );",
+                 & "   Input_Element_Kind  : constant Channel_Kind := None;"
+                 & Ref2 & Names1 & Names_Others & "        );",
               Message   => "String mismatch (2):"
                  & To_Channel_Array_Str (Arr => Arr));
 
@@ -561,8 +568,8 @@ package body Cspec.Utils.Test_Data.Tests is
          name => "vectorBase");
       Assert (Condition => To_Channel_Array_Str (Arr => Arr)
                  = Ref1 & "0;" & ASCII.LF
-                 & "   Input_Element_Kind  : constant Channel_Kind := Channel_None;"
-                 & Ref3 & Names1 & ASCII.LF & "        );",
+                 & "   Input_Element_Kind  : constant Channel_Kind := None;"
+                 & Ref3 & Names1 & Names_Others & "        );",
               Message   => "String mismatch (3):"
                  & To_Channel_Array_Str (Arr => Arr));
 

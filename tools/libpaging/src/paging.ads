@@ -26,7 +26,7 @@ is
    type Caching_Type is (UC, WC, WT, WP, WB);
 
    --  Supported paging modes.
-   type Paging_Mode_Type is (IA32e_Mode, EPT_Mode);
+   type Paging_Mode_Type is (IA32e_Mode, EPT_Mode, ARMv8a_Stage1_Mode);
 
    --  All paging structure types (PML4, PDPT, PD, PT) have 512 entries.
    type Entry_Range is range 0 .. 511;

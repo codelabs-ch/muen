@@ -28,4 +28,15 @@ is
          3 => To_Name (Str => "output3")
         );
 
+   Empty_Chanarray_Address_Base  : constant := 16#0003_0000#;
+   Empty_Chanarray_Element_Size  : constant := 16#1000#;
+   Empty_Chanarray_Element_Count : constant := 0;
+   Empty_Chanarray_Element_Kind  : constant Channel_Kind := None;
+   Empty_Chanarray_Event_Base    : constant := 1;
+
+   Empty_Chanarray_Names : constant Name_Array (1 .. Empty_Chanarray_Element_Count)
+     := (
+         others => To_Name (Str => "")
+        );
+
 end Vt_Component.Channel_Arrays;

@@ -99,10 +99,10 @@ package body Ptwalk.Test_Data.Tests is
                   Translated_Addr => Address);
          Assert (Condition => R.Success = Success,
                  Message   => "Unexpected success: " & Success'Img
-                 & " /=" & R.Success'Img);
+                 & " /= " & R.Success'Img);
          Assert (Condition => R.PAddr = Address,
                  Message   => "Unexpected address: "
-                 & Mutools.Utils.To_Hex (Number => Address) & " /="
+                 & Mutools.Utils.To_Hex (Number => Address) & " /= "
                  & Mutools.Utils.To_Hex (Number => R.PAddr));
       end loop;
 
@@ -117,7 +117,20 @@ package body Ptwalk.Test_Data.Tests is
                Success         => Success,
                Translated_Addr => Address);
       Assert (Condition => not Success,
-              Message   => "Successful translation for invalid PT reference");
+              Message   => "Successful translation for invalid PT ref (1)");
+
+      --  Invalid paging structure reference below PT pointer.
+
+      Do_Walk (Virtual_Address => 543,
+               File            => PT_File,
+               PT_Pointer      => 16#1000_0000#,
+               PT_Type         => Paging.EPT_Mode,
+               Level           => 1,
+               PT_Address      => 0,
+               Success         => Success,
+               Translated_Addr => Address);
+      Assert (Condition => not Success,
+              Message   => "Successful translation for invalid PT (2)");
 
       Ada.Streams.Stream_IO.Close (File => PT_File);
 

@@ -44,22 +44,22 @@ is
       Table  : Tables.Page_Table_Type);
 
    --  Create single PML4 entry from given stream data.
-   procedure Deserialze_PML4_Entry
+   procedure Deserialize_PML4_Entry
      (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
       Table_Entry : out Entries.Table_Entry_Type);
 
    --  Create single PDPT entry from given stream data.
-   procedure Deserialze_PDPT_Entry
+   procedure Deserialize_PDPT_Entry
      (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
       Table_Entry : out Entries.Table_Entry_Type);
 
    --  Create single PD entry from given stream data.
-   procedure Deserialze_PD_Entry
+   procedure Deserialize_PD_Entry
      (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
       Table_Entry : out Entries.Table_Entry_Type);
 
    --  Create single PT entry from given stream data.
-   procedure Deserialze_PT_Entry
+   procedure Deserialize_PT_Entry
      (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
       Table_Entry : out Entries.Table_Entry_Type);
 

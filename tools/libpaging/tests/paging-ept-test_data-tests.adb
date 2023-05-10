@@ -207,10 +207,10 @@ package body Paging.EPT.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Deserialze_PML4_Entry (Gnattest_T : in out Test);
-   procedure Test_Deserialze_PML4_Entry_9da287 (Gnattest_T : in out Test) renames Test_Deserialze_PML4_Entry;
---  id:2.2/9da2878c857c6e24/Deserialze_PML4_Entry/1/0/
-   procedure Test_Deserialze_PML4_Entry (Gnattest_T : in out Test) is
+   procedure Test_Deserialize_PML4_Entry (Gnattest_T : in out Test);
+   procedure Test_Deserialize_PML4_Entry_b66448 (Gnattest_T : in out Test) renames Test_Deserialize_PML4_Entry;
+--  id:2.2/b6644863d5fbc611/Deserialize_PML4_Entry/1/0/
+   procedure Test_Deserialize_PML4_Entry (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -229,7 +229,7 @@ package body Paging.EPT.Test_Data.Tests is
 
          PML4_Entry : Entries.Table_Entry_Type;
       begin
-         Deserialze_PML4_Entry (Stream      => Stream (File => File),
+         Deserialize_PML4_Entry (Stream      => Stream (File => File),
                                 Table_Entry => PML4_Entry);
          Close (File => File);
 
@@ -255,15 +255,15 @@ package body Paging.EPT.Test_Data.Tests is
             raise;
       end;
 --  begin read only
-   end Test_Deserialze_PML4_Entry;
+   end Test_Deserialize_PML4_Entry;
 --  end read only
 
 
 --  begin read only
-   procedure Test_Deserialze_PDPT_Entry (Gnattest_T : in out Test);
-   procedure Test_Deserialze_PDPT_Entry_f53807 (Gnattest_T : in out Test) renames Test_Deserialze_PDPT_Entry;
---  id:2.2/f5380744c07dff21/Deserialze_PDPT_Entry/1/0/
-   procedure Test_Deserialze_PDPT_Entry (Gnattest_T : in out Test) is
+   procedure Test_Deserialize_PDPT_Entry (Gnattest_T : in out Test);
+   procedure Test_Deserialize_PDPT_Entry_99a233 (Gnattest_T : in out Test) renames Test_Deserialize_PDPT_Entry;
+--  id:2.2/99a2339fcf3d7582/Deserialize_PDPT_Entry/1/0/
+   procedure Test_Deserialize_PDPT_Entry (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -283,22 +283,22 @@ package body Paging.EPT.Test_Data.Tests is
 
          PDPT_Entry : Entries.Table_Entry_Type;
       begin
-         Deserialze_PDPT_Entry (Stream      => Stream (File => File),
+         Deserialize_PDPT_Entry (Stream      => Stream (File => File),
                                 Table_Entry => PDPT_Entry);
          Assert (Condition => PDPT_Entry = Ref_PDPT_Entry_0,
                  Message   => "Deserialized PDPT entry 0 mismatch");
 
-         Deserialze_PDPT_Entry (Stream      => Stream (File => File),
+         Deserialize_PDPT_Entry (Stream      => Stream (File => File),
                                 Table_Entry => PDPT_Entry);
          Assert (Condition => PDPT_Entry = Ref_PDPT_Entry_1,
                  Message   => "Deserialized PDPT entry 1 mismatch");
 
-         Deserialze_PDPT_Entry (Stream      => Stream (File => File),
+         Deserialize_PDPT_Entry (Stream      => Stream (File => File),
                                 Table_Entry => PDPT_Entry);
          Assert (Condition => PDPT_Entry = Ref_PDPT_Entry_2,
                  Message   => "Deserialized PDPT entry 2 mismatch");
 
-         Deserialze_PDPT_Entry (Stream      => Stream (File => File),
+         Deserialize_PDPT_Entry (Stream      => Stream (File => File),
                                 Table_Entry => PDPT_Entry);
          Close (File => File);
 
@@ -313,15 +313,15 @@ package body Paging.EPT.Test_Data.Tests is
             raise;
       end;
 --  begin read only
-   end Test_Deserialze_PDPT_Entry;
+   end Test_Deserialize_PDPT_Entry;
 --  end read only
 
 
 --  begin read only
-   procedure Test_Deserialze_PD_Entry (Gnattest_T : in out Test);
-   procedure Test_Deserialze_PD_Entry_cdf777 (Gnattest_T : in out Test) renames Test_Deserialze_PD_Entry;
---  id:2.2/cdf7771059204699/Deserialze_PD_Entry/1/0/
-   procedure Test_Deserialze_PD_Entry (Gnattest_T : in out Test) is
+   procedure Test_Deserialize_PD_Entry (Gnattest_T : in out Test);
+   procedure Test_Deserialize_PD_Entry_9df8cc (Gnattest_T : in out Test) renames Test_Deserialize_PD_Entry;
+--  id:2.2/9df8cc74336eefeb/Deserialize_PD_Entry/1/0/
+   procedure Test_Deserialize_PD_Entry (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -340,7 +340,7 @@ package body Paging.EPT.Test_Data.Tests is
 
          PD_Entry : Entries.Table_Entry_Type;
       begin
-         Deserialze_PD_Entry (Stream      => Stream (File => File),
+         Deserialize_PD_Entry (Stream      => Stream (File => File),
                               Table_Entry => PD_Entry);
          Close (File => File);
 
@@ -366,15 +366,15 @@ package body Paging.EPT.Test_Data.Tests is
             raise;
       end;
 --  begin read only
-   end Test_Deserialze_PD_Entry;
+   end Test_Deserialize_PD_Entry;
 --  end read only
 
 
 --  begin read only
-   procedure Test_Deserialze_PT_Entry (Gnattest_T : in out Test);
-   procedure Test_Deserialze_PT_Entry_3a3c51 (Gnattest_T : in out Test) renames Test_Deserialze_PT_Entry;
---  id:2.2/3a3c5176bca7d21e/Deserialze_PT_Entry/1/0/
-   procedure Test_Deserialze_PT_Entry (Gnattest_T : in out Test) is
+   procedure Test_Deserialize_PT_Entry (Gnattest_T : in out Test);
+   procedure Test_Deserialize_PT_Entry_e948e5 (Gnattest_T : in out Test) renames Test_Deserialize_PT_Entry;
+--  id:2.2/e948e5655666da87/Deserialize_PT_Entry/1/0/
+   procedure Test_Deserialize_PT_Entry (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -394,7 +394,7 @@ package body Paging.EPT.Test_Data.Tests is
       begin
          Set_Index (File => File,
                     To   => 184 * 8 + 1);
-         Deserialze_PT_Entry (Stream      => Stream (File => File),
+         Deserialize_PT_Entry (Stream      => Stream (File => File),
                               Table_Entry => PT_Entry);
          Close (File => File);
 
@@ -409,7 +409,7 @@ package body Paging.EPT.Test_Data.Tests is
             raise;
       end;
 --  begin read only
-   end Test_Deserialze_PT_Entry;
+   end Test_Deserialize_PT_Entry;
 --  end read only
 
 

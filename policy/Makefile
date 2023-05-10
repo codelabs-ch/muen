@@ -137,7 +137,7 @@ $(SYSTEM_POLICY_A): $(SYSTEM_POLICY_VA_ALLOC) $(MUCFGEXPAND)
 	@$(E) policy Expand "$(MUCFGEXPAND) $< $@"
 
 $(SYSTEM_POLICY_B): $(SYSTEM_POLICY_A) $(MUCFGALLOC)
-	@$(E) policy Alloc "$(MUCFGALLOC) $< $@"
+	@$(E) policy "Allocate physical memory" "$(MUCFGALLOC) $< $@"
 
 .validated: $(SYSTEM_POLICY_B) $(MUCFGVALIDATE)
 	@$(E) policy Validate "$(MUCFGVALIDATE) $<"

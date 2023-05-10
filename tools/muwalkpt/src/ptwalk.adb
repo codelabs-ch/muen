@@ -37,15 +37,15 @@ is
    Deserializers : constant array
      (Paging.Paging_Mode_Type) of Deserializer_Array
      := (Paging.IA32e_Mode =>
-           (1 => Paging.IA32e.Deserialze_PML4_Entry'Access,
-            2 => Paging.IA32e.Deserialze_PDPT_Entry'Access,
-            3 => Paging.IA32e.Deserialze_PD_Entry'Access,
-            4 => Paging.IA32e.Deserialze_PT_Entry'Access),
+           (1 => Paging.IA32e.Deserialize_PML4_Entry'Access,
+            2 => Paging.IA32e.Deserialize_PDPT_Entry'Access,
+            3 => Paging.IA32e.Deserialize_PD_Entry'Access,
+            4 => Paging.IA32e.Deserialize_PT_Entry'Access),
          Paging.EPT_Mode   =>
-           (1 => Paging.EPT.Deserialze_PML4_Entry'Access,
-            2 => Paging.EPT.Deserialze_PDPT_Entry'Access,
-            3 => Paging.EPT.Deserialze_PD_Entry'Access,
-            4 => Paging.EPT.Deserialze_PT_Entry'Access));
+           (1 => Paging.EPT.Deserialize_PML4_Entry'Access,
+            2 => Paging.EPT.Deserialize_PDPT_Entry'Access,
+            3 => Paging.EPT.Deserialize_PD_Entry'Access,
+            4 => Paging.EPT.Deserialize_PT_Entry'Access));
 
    ----------------------------------------------------------------------...
 
@@ -67,17 +67,28 @@ is
           (Address => Virtual_Address,
            Level   => Level);
 
+      Table_File_Idx : Ada.Streams.Stream_IO.Count;
+      PT_Entry       : Paging.Entries.Table_Entry_Type;
+   begin
+      if PT_Address < PT_Pointer then
+         Mulog.Log (Msg => "Invalid paging structure reference: Address below"
+                    & " given PT pointer ("
+                    & Mutools.Utils.To_Hex (Number => PT_Address) & " < "
+                    & Mutools.Utils.To_Hex (Number => PT_Pointer));
+         Success := False;
+         Translated_Addr := 0;
+         return;
+      end if;
+
       --  Add one because file index starts at one while page table ranges
       --  start at zero.
 
-      Table_File_Idx : constant Ada.Streams.Stream_IO.Count
-        := Ada.Streams.Stream_IO.Count (PT_Address - PT_Pointer + 1)
-        + Ada.Streams.Stream_IO.Count (Entry_Idx) * 8;
-
-      PT_Entry : Paging.Entries.Table_Entry_Type;
-   begin
+      Table_File_Idx := Ada.Streams.Stream_IO.Count
+        (PT_Address - PT_Pointer + 1) + Ada.Streams.Stream_IO.Count (Entry_Idx)
+        * 8;
       if Table_File_Idx > Ada.Streams.Stream_IO.Size (File => File) then
-         Mulog.Log (Msg => "Invalid paging structure reference");
+         Mulog.Log (Msg => "Invalid paging structure reference: Address outside"
+                    & " of file");
          Success := False;
          Translated_Addr := 0;
          return;

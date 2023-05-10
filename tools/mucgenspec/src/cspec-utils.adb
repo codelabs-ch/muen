@@ -440,8 +440,11 @@ is
          end To_Writer_Str;
       begin
          Res := ASCII.LF &
-           I & Logical & "_Element_Kind  : constant Channel_Kind := Channel_"
-           & Mutools.Utils.To_Ada_Identifier (Str => Kind'Img) & ";";
+           I & Logical & "_Element_Kind  : constant Channel_Kind := "
+           & (if Kind /= None then
+                 "Channel_" & Mutools.Utils.To_Ada_Identifier (Str => Kind'Img)
+              else "None")
+           & ";";
 
          case Kind is
             when Reader => return Res & To_Reader_Str;
@@ -856,30 +859,36 @@ is
         & "_Element_Count)" & ASCII.LF
         & I (N         => 5,
              Unit_Size => 1) & ":= (" & ASCII.LF;
-      for J in 1 .. Child_Count loop
-         declare
-            Child : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                   (List  => Children,
-                    Index => J - 1);
-            Logical : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Child,
-                 Name => "logical");
-            Nr : constant String
-              := Ada.Strings.Fixed.Trim
-                (Source => J'Img,
-                 Side   => Ada.Strings.Left);
-         begin
-            Res := Res & I (N         => 9,
-                            Unit_Size => 1)
-              & Nr & " => To_Name (Str => """ & Logical & """)";
+      if Child_Count = 0 then
+         Res := Res & I (N         => 9,
+                         Unit_Size => 1)
+           & "others => To_Name (Str => """")";
+      else
+         for J in 1 .. Child_Count loop
+            declare
+               Child : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item
+                 (List  => Children,
+                  Index => J - 1);
+               Logical : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                 (Elem => Child,
+                  Name => "logical");
+               Nr : constant String
+                 := Ada.Strings.Fixed.Trim
+                 (Source => J'Img,
+                  Side   => Ada.Strings.Left);
+            begin
+               Res := Res & I (N         => 9,
+                               Unit_Size => 1)
+                 & Nr & " => To_Name (Str => """ & Logical & """)";
 
-            if J /= Child_Count then
-               Res := Res & "," & ASCII.LF;
-            end if;
-         end;
-      end loop;
+               if J /= Child_Count then
+                  Res := Res & "," & ASCII.LF;
+               end if;
+            end;
+         end loop;
+      end if;
       Res := Res & ASCII.LF & I
         (N         => 8,
          Unit_Size => 1) & ");";

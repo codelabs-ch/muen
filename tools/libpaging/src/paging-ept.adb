@@ -261,7 +261,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Deserialze_PD_Entry
+   procedure Deserialize_PD_Entry
      (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
       Table_Entry : out Entries.Table_Entry_Type)
    is
@@ -270,11 +270,11 @@ is
       Interfaces.Unsigned_64'Read (Stream, Raw_Entry);
       Table_Entry := Create_Entry (Raw_Entry => Raw_Entry,
                                    Level     => 3);
-   end Deserialze_PD_Entry;
+   end Deserialize_PD_Entry;
 
    -------------------------------------------------------------------------
 
-   procedure Deserialze_PDPT_Entry
+   procedure Deserialize_PDPT_Entry
      (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
       Table_Entry : out Entries.Table_Entry_Type)
    is
@@ -283,11 +283,11 @@ is
       Interfaces.Unsigned_64'Read (Stream, Raw_Entry);
       Table_Entry := Create_Entry (Raw_Entry => Raw_Entry,
                                    Level     => 2);
-   end Deserialze_PDPT_Entry;
+   end Deserialize_PDPT_Entry;
 
    -------------------------------------------------------------------------
 
-   procedure Deserialze_PML4_Entry
+   procedure Deserialize_PML4_Entry
      (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
       Table_Entry : out Entries.Table_Entry_Type)
    is
@@ -296,11 +296,11 @@ is
       Interfaces.Unsigned_64'Read (Stream, Raw_Entry);
       Table_Entry := Create_Entry (Raw_Entry => Raw_Entry,
                                    Level     => 1);
-   end Deserialze_PML4_Entry;
+   end Deserialize_PML4_Entry;
 
    -------------------------------------------------------------------------
 
-   procedure Deserialze_PT_Entry
+   procedure Deserialize_PT_Entry
      (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
       Table_Entry : out Entries.Table_Entry_Type)
    is
@@ -309,7 +309,7 @@ is
       Interfaces.Unsigned_64'Read (Stream, Raw_Entry);
       Table_Entry := Create_Entry (Raw_Entry => Raw_Entry,
                                    Level     => 4);
-   end Deserialze_PT_Entry;
+   end Deserialize_PT_Entry;
 
    -------------------------------------------------------------------------
 

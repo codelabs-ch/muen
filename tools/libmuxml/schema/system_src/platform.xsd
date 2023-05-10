@@ -4,7 +4,7 @@
  <xs:complexType name="platformType">
   <xs:annotation>
    <xs:documentation>
-    To enable an uniform view of the hardware resources across different
+    To enable a uniform view of the hardware resources across different
     physical machines from the system integrators perspective, the platform
     description layer is interposed between the hardware resource description
     and the rest of the system policy. This allows to build a Muen system for

@@ -20,6 +20,7 @@ with Mulog;
 with Mutools.Files;
 with Mutools.Utils;
 
+with Paging.ARMv8a.Stage1;
 with Paging.Entries;
 with Paging.EPT;
 with Paging.IA32e;
@@ -45,7 +46,12 @@ is
            (1 => Paging.EPT.Deserialize_PML4_Entry'Access,
             2 => Paging.EPT.Deserialize_PDPT_Entry'Access,
             3 => Paging.EPT.Deserialize_PD_Entry'Access,
-            4 => Paging.EPT.Deserialize_PT_Entry'Access));
+            4 => Paging.EPT.Deserialize_PT_Entry'Access),
+         Paging.ARMv8a_Stage1_Mode   =>
+           (1 => Paging.ARMv8a.Stage1.Deserialize_Level0_Entry'Access,
+            2 => Paging.ARMv8a.Stage1.Deserialize_Level1_Entry'Access,
+            3 => Paging.ARMv8a.Stage1.Deserialize_Level2_Entry'Access,
+            4 => Paging.ARMv8a.Stage1.Deserialize_Level3_Entry'Access));
 
    ----------------------------------------------------------------------...
 

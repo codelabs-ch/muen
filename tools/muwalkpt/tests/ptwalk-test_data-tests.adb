@@ -47,6 +47,10 @@ package body Ptwalk.Test_Data.Tests is
            Table_Type      => Paging.IA32e_Mode,
            Table_Pointer   => 16#00fa_0000#,
            Virtual_Address => 16#d000_0000#);
+      Run (Table_File      => "data/armv8a_stage1_pt",
+           Table_Type      => Paging.ARMv8a_Stage1_Mode,
+           Table_Pointer   => 16#000a_4000#,
+           Virtual_Address => 16#0401_1000#);
 --  begin read only
    end Test_Run;
 --  end read only

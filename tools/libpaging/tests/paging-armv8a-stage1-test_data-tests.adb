@@ -16,6 +16,10 @@ with System.Assertions;
 --  end read only
 with Ada.Exceptions;
 with Ada.Streams.Stream_IO;
+
+with Mutools.Files;
+with Mutools.Utils;
+with Test_Utils;
 --  begin read only
 --  end read only
 package body Paging.ARMv8a.Stage1.Test_Data.Tests is
@@ -29,6 +33,244 @@ package body Paging.ARMv8a.Stage1.Test_Data.Tests is
 
 --  begin read only
 --  end read only
+
+--  begin read only
+   procedure Test_Serialize_Level0 (Gnattest_T : in out Test);
+   procedure Test_Serialize_Level0_fb69fa (Gnattest_T : in out Test) renames Test_Serialize_Level0;
+--  id:2.2/fb69fa5b2c5db45c/Serialize_Level0/1/0/
+   procedure Test_Serialize_Level0 (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Fname : constant String := "armv8a_stage1_lvl0";
+
+      Level0 : Tables.Page_Table_Type;
+   begin
+      Tables.Set_Physical_Address (Table   => Level0,
+                                   Address => 16#000a_4000#);
+      Tables.Add_Entry (Table => Level0,
+                        Index => 0,
+                        E     => Entries.Create
+                          (Dst_Index   => 0,
+                           Dst_Address => 16#000a_6000#,
+                           Readable    => False,
+                           Writable    => True,
+                           Executable  => True,
+                           Maps_Page   => False,
+                           Global      => False,
+                           Caching     => WB));
+
+      declare
+         use Ada.Streams.Stream_IO;
+
+         File : File_Type;
+      begin
+         Mutools.Files.Open (Filename => "obj/" & Fname,
+                             File     => File);
+         Serialize_Level0 (Stream => Stream (File => File),
+                           Table  => Level0);
+         Close (File => File);
+      end;
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/" & Fname & ".ref",
+               Filename2 => "obj/" & Fname),
+              Message   => "ARMv8a Stage1 Level 0 table mismatch");
+--  begin read only
+   end Test_Serialize_Level0;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Serialize_Level1 (Gnattest_T : in out Test);
+   procedure Test_Serialize_Level1_60b524 (Gnattest_T : in out Test) renames Test_Serialize_Level1;
+--  id:2.2/60b5248d96727681/Serialize_Level1/1/0/
+   procedure Test_Serialize_Level1 (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Fname : constant String := "armv8a_stage1_lvl1";
+
+      Level1 : Tables.Page_Table_Type;
+   begin
+      Tables.Set_Physical_Address (Table   => Level1,
+                                   Address => 16#000a_6000#);
+      Tables.Add_Entry (Table => Level1,
+                        Index => 0,
+                        E     => Entries.Create
+                          (Dst_Index   => 0,
+                           Dst_Address => 16#000a_8000#,
+                           Readable    => False,
+                           Writable    => True,
+                           Executable  => True,
+                           Maps_Page   => False,
+                           Global      => False,
+                           Caching     => WB));
+
+      declare
+         use Ada.Streams.Stream_IO;
+
+         File : File_Type;
+      begin
+         Mutools.Files.Open (Filename => "obj/" & Fname,
+                             File     => File);
+         Serialize_Level1 (Stream => Stream (File => File),
+                           Table  => Level1);
+         Close (File => File);
+      end;
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/" & Fname & ".ref",
+               Filename2 => "obj/" & Fname),
+              Message   => "ARMv8a Stage1 Level 1 table mismatch");
+--  begin read only
+   end Test_Serialize_Level1;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Serialize_Level2 (Gnattest_T : in out Test);
+   procedure Test_Serialize_Level2_cdfa68 (Gnattest_T : in out Test) renames Test_Serialize_Level2;
+--  id:2.2/cdfa680810819872/Serialize_Level2/1/0/
+   procedure Test_Serialize_Level2 (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.Unsigned_64;
+
+      Fname     : constant String := "armv8a_stage1_lvl2";
+      Base_Addr : constant Interfaces.Unsigned_64 := 16#0400_0000#;
+
+      Level2 : Tables.Page_Table_Type;
+   begin
+      Tables.Set_Physical_Address (Table   => Level2,
+                                   Address => 16#000a_8000#);
+
+      --  32 large page (2MB) mappings.
+
+      for I in Interfaces.Unsigned_64 range 0 .. 31 loop
+         Tables.Add_Entry (Table => Level2,
+                           Index => Entry_Range (I),
+                           E     => Entries.Create
+                             (Dst_Index   => 0,
+                              Dst_Address => Base_Addr +  I * 16#0020_0000#,
+                              Readable    => False,
+                              Writable    => True,
+                              Executable  => True,
+                              Maps_Page   => True,
+                              Global      => False,
+                              Caching     => WB));
+      end loop;
+
+      --  Reference to level 3 PT.
+
+      Tables.Add_Entry (Table => Level2,
+                        Index => 32,
+                        E     => Entries.Create
+                          (Dst_Index   => 0,
+                           Dst_Address => 16#000a_a000#,
+                           Readable    => False,
+                           Writable    => True,
+                           Executable  => True,
+                           Maps_Page   => False,
+                           Global      => False,
+                           Caching     => WB));
+
+      declare
+         use Ada.Streams.Stream_IO;
+
+         File : File_Type;
+      begin
+         Mutools.Files.Open (Filename => "obj/" & Fname,
+                             File     => File);
+         Serialize_Level2 (Stream => Stream (File => File),
+                           Table  => Level2);
+         Close (File => File);
+      end;
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/" & Fname & ".ref",
+               Filename2 => "obj/" & Fname),
+              Message   => "ARMv8a Stage1 Level 2 table mismatch");
+--  begin read only
+   end Test_Serialize_Level2;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Serialize_Level3 (Gnattest_T : in out Test);
+   procedure Test_Serialize_Level3_1dee06 (Gnattest_T : in out Test) renames Test_Serialize_Level3;
+--  id:2.2/1dee06fd09a0b2d7/Serialize_Level3/1/0/
+   procedure Test_Serialize_Level3 (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Fname     : constant String := "armv8a_stage1_lvl3";
+      Base_Addr : constant Interfaces.Unsigned_64 := 16#0400_0000#;
+
+      Level3 : Tables.Page_Table_Type;
+   begin
+      Tables.Set_Physical_Address (Table   => Level3,
+                                   Address => 16#000a_a000#);
+
+      Tables.Add_Entry (Table => Level3,
+                        Index => 0,
+                        E     => Entries.Create
+                          (Dst_Index   => 0,
+                           Dst_Address => 16#ff00_0000#,
+                           Readable    => False,
+                           Writable    => True,
+                           Executable  => True,
+                           Maps_Page   => True,
+                           Global      => False,
+                           Caching     => UC));
+      Tables.Add_Entry (Table => Level3,
+                        Index => 16,
+                        E     => Entries.Create
+                          (Dst_Index   => 0,
+                           Dst_Address => 16#f906_0000#,
+                           Readable    => False,
+                           Writable    => True,
+                           Executable  => True,
+                           Maps_Page   => True,
+                           Global      => False,
+                           Caching     => UC));
+      Tables.Add_Entry (Table => Level3,
+                        Index => 17,
+                        E     => Entries.Create
+                          (Dst_Index   => 0,
+                           Dst_Address => 16#f907_0000#,
+                           Readable    => False,
+                           Writable    => True,
+                           Executable  => True,
+                           Maps_Page   => True,
+                           Global      => False,
+                           Caching     => UC));
+
+      declare
+         use Ada.Streams.Stream_IO;
+
+         File : File_Type;
+      begin
+         Mutools.Files.Open (Filename => "obj/" & Fname,
+                             File     => File);
+         Serialize_Level3 (Stream => Stream (File => File),
+                           Table  => Level3);
+         Close (File => File);
+      end;
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/" & Fname & ".ref",
+               Filename2 => "obj/" & Fname),
+              Message   => "ARMv8a Stage1 Level 3 table mismatch");
+--  begin read only
+   end Test_Serialize_Level3;
+--  end read only
+
 
 --  begin read only
    procedure Test_Deserialize_Level0_Entry (Gnattest_T : in out Test);

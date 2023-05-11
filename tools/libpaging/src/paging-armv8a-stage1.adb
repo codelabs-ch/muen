@@ -21,9 +21,14 @@ with Mutools.Utils;
 package body Paging.ARMv8a.Stage1
 is
 
+   type Raw_Table_Type is array (Entry_Range) of Interfaces.Unsigned_64;
+
    Present_Flag        : constant :=  0;
    Not_Large_Page_Flag : constant :=  1;
+   Attr_Index_Bitpos   : constant :=  2;
+   User_Readable_Flag  : constant :=  6;
    Not_Writable_Flag   : constant :=  7;
+   Accessed_Flag       : constant := 10;
    Not_Global_Flag     : constant := 11;
    UXN_Flag            : constant := 54;
 
@@ -33,12 +38,30 @@ is
    --  ARMv8a Table entry MAIR index range is bits 2 .. 4.
    ARMv8a_MT_Mask : constant Interfaces.Unsigned_64 := 16#0000_0000_0000_001c#;
 
+   --  Outer shareable, see ARM Arm D8.5.2 "Stage 1 Shareability attributes".
+   ARMv8_Stage1_Outer_Shareable : constant Interfaces.Unsigned_64 := 16#0200#;
+
+   --  Create page table entry with given parameters.
+   function Create_Entry
+     (Address        : Interfaces.Unsigned_64;
+      Present        : Boolean;
+      Readable       : Boolean;
+      Writable       : Boolean;
+      Executable     : Boolean;
+      Not_Large_Page : Boolean;
+      Accessed       : Boolean;
+      Memory_Type    : Caching_Type)
+      return Interfaces.Unsigned_64;
+
    --  Create table entry of specified level based on given raw ARMv8a paging
    --  structure entry.
    function Create_Entry
      (Raw_Entry : Interfaces.Unsigned_64;
       Level     : Paging_Level)
       return Entries.Table_Entry_Type;
+
+   --  Returns the MAIR index for the given caching type.
+   function MAIR_Index (Caching : Caching_Type) return Interfaces.Unsigned_64;
 
    -------------------------------------------------------------------------
 
@@ -91,7 +114,7 @@ is
       DAIR_Idx   : constant Natural
         := Natural (Interfaces.Shift_Right
                     (Value  => Raw_Entry and ARMv8a_MT_Mask,
-                     Amount => 2));
+                     Amount => Attr_Index_Bitpos));
    begin
       return Entries.Create
         (Dst_Index   =>
@@ -106,6 +129,73 @@ is
          Maps_Page   => Present and Maps_Page,
          Global      => Global,
          Caching     => Cache_Mapping (DAIR_Idx));
+   end Create_Entry;
+
+   -------------------------------------------------------------------------
+
+   function Create_Entry
+     (Address        : Interfaces.Unsigned_64;
+      Present        : Boolean;
+      Readable       : Boolean;
+      Writable       : Boolean;
+      Executable     : Boolean;
+      Not_Large_Page : Boolean;
+      Accessed       : Boolean;
+      Memory_Type    : Caching_Type)
+      return Interfaces.Unsigned_64
+   is
+      use type Interfaces.Unsigned_64;
+
+      Result : Interfaces.Unsigned_64 := 0;
+   begin
+      if Present then
+         Result := Address and Address_Mask;
+
+         if Readable then
+            Result := Mutools.Utils.Bit_Set
+              (Value => Result,
+               Pos   => User_Readable_Flag);
+         end if;
+
+         if not Writable then
+            Result := Mutools.Utils.Bit_Set
+              (Value => Result,
+               Pos   => Not_Writable_Flag);
+         end if;
+
+         if not Executable then
+            Result := Mutools.Utils.Bit_Set
+              (Value => Result,
+               Pos   => UXN_Flag);
+         end if;
+
+         Result := Mutools.Utils.Bit_Set
+           (Value => Result,
+            Pos   => Present_Flag);
+      end if;
+
+      if Not_Large_Page then
+         Result := Mutools.Utils.Bit_Set
+           (Value => Result,
+            Pos   => Not_Large_Page_Flag);
+      end if;
+
+      if Accessed then
+         Result := Mutools.Utils.Bit_Set
+           (Value => Result,
+            Pos   => Accessed_Flag);
+
+         if Memory_Type = WB then
+
+            --  Mark write-back memory as outer shareable. However, this is only
+            --  necessary for cacheable, non-device memory shared with agents in
+            --  the outer domain, i.e. GPU.
+
+            Result := Result or ARMv8_Stage1_Outer_Shareable;
+         end if;
+      end if;
+
+      return Result or MAIR_Index (Caching => Memory_Type);
    end Create_Entry;
 
    -------------------------------------------------------------------------
@@ -159,5 +249,173 @@ is
       Table_Entry := Create_Entry (Raw_Entry => Raw_Entry,
                                    Level     => 4);
    end Deserialize_Level3_Entry;
+
+   -------------------------------------------------------------------------
+
+   function MAIR_Index (Caching : Caching_Type) return Interfaces.Unsigned_64
+   is
+      Result : Interfaces.Unsigned_64;
+   begin
+
+      --  MAIR for native components using Stage1 translation:
+      --  0. => 0xff : Normal memory, Outer Write-Back Non-transient, RW-Alloc
+      --               Normal memory, Inner Write-Back Non-transient, RW-Alloc
+      --  others => 0x00 : Device-nGnRnE memory
+
+      case Caching is
+         when WB     => Result := 0;
+         when UC     => Result := 1;
+         when others =>
+            raise Constraint_Error with "Caching type not supported by ARMv8a "
+              & "stage 1: " & Caching'Img;
+      end case;
+
+      return Interfaces.Shift_Left (Value  => Result,
+                                    Amount => Attr_Index_Bitpos);
+   end MAIR_Index;
+
+   -------------------------------------------------------------------------
+
+   procedure Serialize_Level0
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      Table  : Tables.Page_Table_Type)
+   is
+      Raw_Table : Raw_Table_Type := (others => 0);
+
+      --  Add given table entry to raw table.
+      procedure Add_To_Raw_Table
+        (Index  : Entry_Range;
+         TEntry : Entries.Table_Entry_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Add_To_Raw_Table
+        (Index  : Entry_Range;
+         TEntry : Entries.Table_Entry_Type)
+      is
+      begin
+         Raw_Table (Index) := Create_Entry
+           (Address        => TEntry.Get_Dst_Address,
+            Present        => TEntry.Is_Present,
+            Readable       => TEntry.Is_Readable,
+            Writable       => TEntry.Is_Writable,
+            Executable     => TEntry.Is_Executable,
+            Not_Large_Page => not TEntry.Maps_Page,
+            Accessed       => TEntry.Maps_Page,
+            Memory_Type    => TEntry.Get_Caching);
+      end Add_To_Raw_Table;
+   begin
+      Tables.Iterate (Table   => Table,
+                      Process => Add_To_Raw_Table'Access);
+      Raw_Table_Type'Write (Stream, Raw_Table);
+   end Serialize_Level0;
+
+   -------------------------------------------------------------------------
+
+   procedure Serialize_Level1
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      Table  : Tables.Page_Table_Type)
+   is
+      Raw_Table : Raw_Table_Type := (others => 0);
+
+      --  Add given table entry to raw table.
+      procedure Add_To_Raw_Table
+        (Index  : Entry_Range;
+         TEntry : Entries.Table_Entry_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Add_To_Raw_Table
+        (Index  : Entry_Range;
+         TEntry : Entries.Table_Entry_Type)
+      is
+      begin
+         Raw_Table (Index) := Create_Entry
+           (Address        => TEntry.Get_Dst_Address,
+            Present        => TEntry.Is_Present,
+            Readable       => TEntry.Is_Readable,
+            Writable       => TEntry.Is_Writable,
+            Executable     => TEntry.Is_Executable,
+            Not_Large_Page => not TEntry.Maps_Page,
+            Accessed       => TEntry.Maps_Page,
+            Memory_Type    => TEntry.Get_Caching);
+      end Add_To_Raw_Table;
+   begin
+      Tables.Iterate (Table   => Table,
+                      Process => Add_To_Raw_Table'Access);
+      Raw_Table_Type'Write (Stream, Raw_Table);
+   end Serialize_Level1;
+
+   -------------------------------------------------------------------------
+
+   procedure Serialize_Level2
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      Table  : Tables.Page_Table_Type)
+   is
+      Raw_Table : Raw_Table_Type := (others => 0);
+
+      --  Add given table entry to raw table.
+      procedure Add_To_Raw_Table
+        (Index  : Entry_Range;
+         TEntry : Entries.Table_Entry_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Add_To_Raw_Table
+        (Index  : Entry_Range;
+         TEntry : Entries.Table_Entry_Type)
+      is
+      begin
+         Raw_Table (Index) := Create_Entry
+           (Address        => TEntry.Get_Dst_Address,
+            Present        => TEntry.Is_Present,
+            Readable       => TEntry.Is_Readable,
+            Writable       => TEntry.Is_Writable,
+            Executable     => TEntry.Is_Executable,
+            Not_Large_Page => not TEntry.Maps_Page,
+            Accessed       => TEntry.Maps_Page,
+            Memory_Type    => TEntry.Get_Caching);
+      end Add_To_Raw_Table;
+   begin
+      Tables.Iterate (Table   => Table,
+                      Process => Add_To_Raw_Table'Access);
+      Raw_Table_Type'Write (Stream, Raw_Table);
+   end Serialize_Level2;
+
+   -------------------------------------------------------------------------
+
+   procedure Serialize_Level3
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      Table  : Tables.Page_Table_Type)
+   is
+      Raw_Table : Raw_Table_Type := (others => 0);
+
+      --  Add given table entry to raw table.
+      procedure Add_To_Raw_Table
+        (Index  : Entry_Range;
+         TEntry : Entries.Table_Entry_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Add_To_Raw_Table
+        (Index  : Entry_Range;
+         TEntry : Entries.Table_Entry_Type)
+      is
+      begin
+         Raw_Table (Index) := Create_Entry
+           (Address        => TEntry.Get_Dst_Address,
+            Present        => TEntry.Is_Present,
+            Readable       => TEntry.Is_Readable,
+            Writable       => TEntry.Is_Writable,
+            Executable     => TEntry.Is_Executable,
+            Not_Large_Page => True,
+            Accessed       => TEntry.Maps_Page,
+            Memory_Type    => TEntry.Get_Caching);
+      end Add_To_Raw_Table;
+   begin
+      Tables.Iterate (Table   => Table,
+                      Process => Add_To_Raw_Table'Access);
+      Raw_Table_Type'Write (Stream, Raw_Table);
+   end Serialize_Level3;
 
 end Paging.ARMv8a.Stage1;

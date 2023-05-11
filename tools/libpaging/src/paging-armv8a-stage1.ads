@@ -19,6 +19,7 @@
 with Ada.Streams;
 
 with Paging.Entries;
+with Paging.Tables;
 
 package Paging.ARMv8a.Stage1
 is
@@ -26,6 +27,22 @@ is
    --  Implementation of ARMv8a stage1 paging structures, as specified by Arm
    --  Architecture Reference Manual for A-profile architecture,
    --  issue J.a, "D8.3 Translation table descriptor formats".
+
+   procedure Serialize_Level0
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      Table  : Tables.Page_Table_Type);
+
+   procedure Serialize_Level1
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      Table  : Tables.Page_Table_Type);
+
+   procedure Serialize_Level2
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      Table  : Tables.Page_Table_Type);
+
+   procedure Serialize_Level3
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      Table  : Tables.Page_Table_Type);
 
    --  Create single Level0 entry from given stream data.
    procedure Deserialize_Level0_Entry

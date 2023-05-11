@@ -37,15 +37,15 @@ is
    Deserializers : constant array
      (Paging.Paging_Mode_Type) of Deserializer_Array
      := (Paging.IA32e_Mode =>
-           (1 => Paging.IA32e.Deserialze_PML4_Entry'Access,
-            2 => Paging.IA32e.Deserialze_PDPT_Entry'Access,
-            3 => Paging.IA32e.Deserialze_PD_Entry'Access,
-            4 => Paging.IA32e.Deserialze_PT_Entry'Access),
+           (1 => Paging.IA32e.Deserialize_PML4_Entry'Access,
+            2 => Paging.IA32e.Deserialize_PDPT_Entry'Access,
+            3 => Paging.IA32e.Deserialize_PD_Entry'Access,
+            4 => Paging.IA32e.Deserialize_PT_Entry'Access),
          Paging.EPT_Mode   =>
-           (1 => Paging.EPT.Deserialze_PML4_Entry'Access,
-            2 => Paging.EPT.Deserialze_PDPT_Entry'Access,
-            3 => Paging.EPT.Deserialze_PD_Entry'Access,
-            4 => Paging.EPT.Deserialze_PT_Entry'Access));
+           (1 => Paging.EPT.Deserialize_PML4_Entry'Access,
+            2 => Paging.EPT.Deserialize_PDPT_Entry'Access,
+            3 => Paging.EPT.Deserialize_PD_Entry'Access,
+            4 => Paging.EPT.Deserialize_PT_Entry'Access));
 
    ----------------------------------------------------------------------...
 

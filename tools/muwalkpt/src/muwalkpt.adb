@@ -31,6 +31,7 @@ begin
    Ptwalk.Run (Table_File      => Ptwalk.Cmd_Line.Get_PT_File,
                Table_Type      => Ptwalk.Cmd_Line.Get_PT_Type,
                Table_Pointer   => Ptwalk.Cmd_Line.Get_PT_Pointer,
+               Start_Level     => Ptwalk.Cmd_Line.Get_Start_Level,
                Virtual_Address => Ptwalk.Cmd_Line.Get_Virtual_Address);
 
 exception

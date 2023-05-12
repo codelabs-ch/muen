@@ -31,8 +31,8 @@ package body Ptwalk.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Run (Gnattest_T : in out Test);
-   procedure Test_Run_faf985 (Gnattest_T : in out Test) renames Test_Run;
---  id:2.2/faf985e08b0a661e/Run/1/0/
+   procedure Test_Run_2802f9 (Gnattest_T : in out Test) renames Test_Run;
+--  id:2.2/2802f9c9471f7ee4/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
 --  end read only
 
@@ -42,18 +42,22 @@ package body Ptwalk.Test_Data.Tests is
       Run (Table_File      => "data/nic_linux_pt",
            Table_Type      => Paging.EPT_Mode,
            Table_Pointer   => 16#00fa_0000#,
+           Start_Level     => Paging.Paging_Level'First,
            Virtual_Address => 16#9000_0000#);
       Run (Table_File      => "data/nic_linux_pt",
            Table_Type      => Paging.IA32e_Mode,
            Table_Pointer   => 16#00fa_0000#,
+           Start_Level     => Paging.Paging_Level'First,
            Virtual_Address => 16#d000_0000#);
       Run (Table_File      => "data/armv8a_stage1_pt",
            Table_Type      => Paging.ARMv8a_Stage1_Mode,
            Table_Pointer   => 16#000a_4000#,
+           Start_Level     => Paging.Paging_Level'First,
            Virtual_Address => 16#0401_1000#);
       Run (Table_File      => "data/armv8a_stage2_pt",
            Table_Type      => Paging.ARMv8a_Stage2_Mode,
            Table_Pointer   => 16#0009_c000#,
+           Start_Level     => 2,
            Virtual_Address => 16#0000_0000#);
 --  begin read only
    end Test_Run;

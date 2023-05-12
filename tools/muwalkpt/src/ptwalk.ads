@@ -31,6 +31,7 @@ is
      (Table_File      : String;
       Table_Type      : Paging.Paging_Mode_Type;
       Table_Pointer   : Interfaces.Unsigned_64;
+      Start_Level     : Paging.Paging_Level;
       Virtual_Address : Interfaces.Unsigned_64);
 
 private

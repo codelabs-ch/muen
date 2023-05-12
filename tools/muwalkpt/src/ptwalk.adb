@@ -150,6 +150,7 @@ is
      (Table_File      : String;
       Table_Type      : Paging.Paging_Mode_Type;
       Table_Pointer   : Interfaces.Unsigned_64;
+      Start_Level     : Paging.Paging_Level;
       Virtual_Address : Interfaces.Unsigned_64)
    is
       PT_File : Ada.Streams.Stream_IO.File_Type;
@@ -166,6 +167,8 @@ is
       Mulog.Log (Msg => "Translation of virtual address "
                  & Mutools.Utils.To_Hex (Number => Virtual_Address));
 
+      Mulog.Log (Msg => "Page table walk starting at level" & Start_Level'Img);
+
       declare
          Success     : Boolean;
          Target_Addr : Interfaces.Unsigned_64;
@@ -174,7 +177,7 @@ is
                   File            => PT_File,
                   PT_Pointer      => Table_Pointer,
                   PT_Type         => Table_Type,
-                  Level           => Paging.Paging_Level'First,
+                  Level           => Start_Level,
                   PT_Address      => Table_Pointer,
                   Success         => Success,
                   Translated_Addr => Target_Addr);

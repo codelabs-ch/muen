@@ -42,6 +42,9 @@ is
    --  Return virtual address.
    function Get_Virtual_Address return Interfaces.Unsigned_64;
 
+   --  Return start level.
+   function Get_Start_Level return Paging.Paging_Level;
+
    Invalid_Cmd_Line : exception;
 
 private
@@ -49,6 +52,7 @@ private
    PT_File      : Ada.Strings.Unbounded.Unbounded_String;
    PT_Type      : Paging.Paging_Mode_Type;
    PT_Pointer   : Interfaces.Unsigned_64;
+   Start_Level  : Paging.Paging_Level;
    Virtual_Addr : Interfaces.Unsigned_64;
 
    Parser : GNAT.Command_Line.Opt_Parser

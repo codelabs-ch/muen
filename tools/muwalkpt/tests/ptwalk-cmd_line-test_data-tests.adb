@@ -42,6 +42,46 @@ package body Ptwalk.Cmd_Line.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure Invalid_Start_Level
+      is
+         use type Interfaces.Unsigned_64;
+         use type Paging.Paging_Mode_Type;
+
+         Args        : aliased GNAT.OS_Lib.Argument_List
+           := (1 => new String'("-p"),
+               2 => new String'("16#1ef000#"),
+               3 => new String'("-t"),
+               4 => new String'("EPT"),
+               5 => new String'("-s=5"),
+               6 => new String'("16#beefa0f#"),
+               7 => new String'("data/gfx_linux_pt"));
+         Test_Parser : GNAT.Command_Line.Opt_Parser;
+      begin
+         GNAT.Command_Line.Initialize_Option_Scan
+           (Parser       => Test_Parser,
+            Command_Line => Args'Unchecked_Access);
+
+         Parser := Test_Parser;
+
+         begin
+            Init (Description => "Test run");
+            for A in Args'Range loop
+               GNAT.OS_Lib.Free (X => Args (A));
+            end loop;
+            Assert (Condition => False,
+                    Message   => "Exception expected (7)");
+
+         exception
+            when Invalid_Cmd_Line => null;
+         end;
+
+         for A in Args'Range loop
+            GNAT.OS_Lib.Free (X => Args (A));
+         end loop;
+      end Invalid_Start_Level;
+
+      ----------------------------------------------------------------------
+
       procedure Invalid_Switch
       is
          Args        : aliased GNAT.OS_Lib.Argument_List
@@ -252,8 +292,9 @@ package body Ptwalk.Cmd_Line.Test_Data.Tests is
                2 => new String'("16#1ef000#"),
                3 => new String'("-t"),
                4 => new String'("EPT"),
-               5 => new String'("16#beefa0f#"),
-               6 => new String'("data/gfx_linux_pt"));
+               5 => new String'("-s=3"),
+               6 => new String'("16#beefa0f#"),
+               7 => new String'("data/gfx_linux_pt"));
          Test_Parser : GNAT.Command_Line.Opt_Parser;
       begin
          GNAT.Command_Line.Initialize_Option_Scan
@@ -274,9 +315,11 @@ package body Ptwalk.Cmd_Line.Test_Data.Tests is
                  Message   => "PT type mismatch");
          Assert (Condition => PT_Pointer = 16#1ef000#,
                  Message   => "PT pointer mismatch");
+         Assert (Condition => Start_Level = 3,
+                 Message   => "Start Level mismatch");
          Assert (Condition => Virtual_Addr = 16#beefa0f#,
                  Message   => "Virtual address mismatch");
-      end;
+      end Positive_Test;
    begin
       Invalid_Switch;
       Null_Argument;
@@ -284,6 +327,7 @@ package body Ptwalk.Cmd_Line.Test_Data.Tests is
       No_PT_Pointer;
       No_PT_Type;
       No_Virtual_Address;
+      Invalid_Start_Level;
       Positive_Test;
 --  begin read only
    end Test_Init;
@@ -371,6 +415,25 @@ package body Ptwalk.Cmd_Line.Test_Data.Tests is
               Message   => "Virtual address mismatch");
 --  begin read only
    end Test_Get_Virtual_Address;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Get_Start_Level (Gnattest_T : in out Test);
+   procedure Test_Get_Start_Level_d5a931 (Gnattest_T : in out Test) renames Test_Get_Start_Level;
+--  id:2.2/d5a9317bb181b498/Get_Start_Level/1/0/
+   procedure Test_Get_Start_Level (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Ref : constant Paging.Paging_Level := 2;
+   begin
+      Start_Level := Ref;
+      Assert (Condition => Get_Start_Level = Ref,
+              Message   => "Start Level mismatch");
+--  begin read only
+   end Test_Get_Start_Level;
 --  end read only
 
 --  begin read only

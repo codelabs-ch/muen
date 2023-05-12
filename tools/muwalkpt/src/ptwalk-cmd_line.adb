@@ -54,6 +54,11 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Start_Level return Paging.Paging_Level
+   is (Start_Level);
+
+   -------------------------------------------------------------------------
+
    function Get_Virtual_Address return Interfaces.Unsigned_64
    is (Virtual_Addr);
 
@@ -61,9 +66,10 @@ is
 
    procedure Init (Description : String)
    is
-      Cmdline : Mutools.Cmd_Line.Config_Type;
-      PT_Ptr  : aliased GNAT.Strings.String_Access;
-      PT_Typ  : aliased GNAT.Strings.String_Access;
+      Cmdline   : Mutools.Cmd_Line.Config_Type;
+      PT_Ptr    : aliased GNAT.Strings.String_Access;
+      PT_Typ    : aliased GNAT.Strings.String_Access;
+      Start_Lvl : aliased Integer;
    begin
       GNAT.Command_Line.Set_Usage
         (Config => Cmdline.Data,
@@ -82,6 +88,15 @@ is
          Long_Switch => "--pt-type:",
          Help        => "Page table type "
          & "[IA32e|EPT|ARMv8a_Stage1|ARMv8a_Stage2]");
+      GNAT.Command_Line.Define_Switch
+        (Config      => Cmdline.Data,
+         Output      => Start_Lvl'Access,
+         Switch      => "-s=",
+         Long_Switch => "--start-level=",
+         Help        => "Page table walk start level (default:"
+         & Paging.Paging_Level'Image (Paging.Paging_Level'First) & ")",
+         Initial     => Paging.Paging_Level'First,
+         Default     => Paging.Paging_Level'First);
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Switch      => "-h",
@@ -105,6 +120,11 @@ is
          exception
             when others => raise GNAT.Command_Line.Invalid_Parameter;
          end;
+
+         if Start_Lvl not in Paging.Paging_Level then
+            raise GNAT.Command_Line.Invalid_Parameter;
+         end if;
+         Start_Level := Paging.Paging_Level (Start_Lvl);
 
          GNAT.Strings.Free (X => PT_Ptr);
          GNAT.Strings.Free (X => PT_Typ);

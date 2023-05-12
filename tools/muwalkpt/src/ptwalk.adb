@@ -21,6 +21,7 @@ with Mutools.Files;
 with Mutools.Utils;
 
 with Paging.ARMv8a.Stage1;
+with Paging.ARMv8a.Stage2;
 with Paging.Entries;
 with Paging.EPT;
 with Paging.IA32e;
@@ -51,7 +52,12 @@ is
            (1 => Paging.ARMv8a.Stage1.Deserialize_Level0_Entry'Access,
             2 => Paging.ARMv8a.Stage1.Deserialize_Level1_Entry'Access,
             3 => Paging.ARMv8a.Stage1.Deserialize_Level2_Entry'Access,
-            4 => Paging.ARMv8a.Stage1.Deserialize_Level3_Entry'Access));
+            4 => Paging.ARMv8a.Stage1.Deserialize_Level3_Entry'Access),
+         Paging.ARMv8a_Stage2_Mode   =>
+           (1 => Paging.ARMv8a.Stage2.Deserialize_Level0_Entry'Access,
+            2 => Paging.ARMv8a.Stage2.Deserialize_Level1_Entry'Access,
+            3 => Paging.ARMv8a.Stage2.Deserialize_Level2_Entry'Access,
+            4 => Paging.ARMv8a.Stage2.Deserialize_Level3_Entry'Access));
 
    ----------------------------------------------------------------------...
 

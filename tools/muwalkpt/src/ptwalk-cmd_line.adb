@@ -80,7 +80,8 @@ is
          Output      => PT_Typ'Access,
          Switch      => "-t:",
          Long_Switch => "--pt-type:",
-         Help        => "Page table type [IA32e|EPT|ARMv8a_Stage1]");
+         Help        => "Page table type "
+         & "[IA32e|EPT|ARMv8a_Stage1|ARMv8a_Stage2]");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Switch      => "-h",

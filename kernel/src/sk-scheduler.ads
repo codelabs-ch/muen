@@ -107,13 +107,13 @@ is
    --  group in the partition will be switched to or if all are inactive, the
    --  scheduling partition is put into sleep mode until the end of the minor
    --  frame. To make sure execution of the subject resumes after the
-   --  yield/sleep instruction, the RIP of the subject is incremented when RIP
-   --  Incremented is specified as False.
+   --  yield/sleep instruction, the RIP of the subject is incremented when
+   --  increment RIP is True.
    procedure Reschedule_Partition
-     (Subject_ID      :     Skp.Global_Subject_ID_Type;
-      RIP_Incremented :     Boolean;
-      Sleep           :     Boolean;
-      Next_Subject    : out Skp.Global_Subject_ID_Type)
+     (Subject_ID    :     Skp.Global_Subject_ID_Type;
+      Increment_RIP :     Boolean;
+      Sleep         :     Boolean;
+      Next_Subject  : out Skp.Global_Subject_ID_Type)
    with
       Global => (Input  => (CPU_Info.CPU_ID, Subjects_Events.State,
                             Subjects_Interrupts.State, Timed_Events.State,

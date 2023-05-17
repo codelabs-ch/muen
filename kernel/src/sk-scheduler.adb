@@ -561,10 +561,10 @@ is
    --D performed by a given subject.
    --D @OL Id => impl_scheduling_resched_sp_steps, Section => impl_scheduling_resched_sp, Priority => 0
    procedure Reschedule_Partition
-     (Subject_ID      :     Skp.Global_Subject_ID_Type;
-      RIP_Incremented :     Boolean;
-      Sleep           :     Boolean;
-      Next_Subject    : out Skp.Global_Subject_ID_Type)
+     (Subject_ID    :     Skp.Global_Subject_ID_Type;
+      Increment_RIP :     Boolean;
+      Sleep         :     Boolean;
+      Next_Subject  : out Skp.Global_Subject_ID_Type)
    with
       Refined_Global =>
         (Input  => (CPU_Info.CPU_ID, Current_Minor_Frame_ID,
@@ -611,7 +611,7 @@ is
          end if;
       end if;
 
-      if not RIP_Incremented then
+      if Increment_RIP then
          Subjects.Increment_RIP (ID => Subject_ID);
       end if;
 

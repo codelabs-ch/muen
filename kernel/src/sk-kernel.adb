@@ -646,7 +646,7 @@ is
                Event         => Skp.Events.Get_Source_Event
                  (Subject_ID => Event_Subj,
                   Event_Nr   => Skp.Events.Target_Event_Range (Event_Nr)),
-               Increment_RIP => True,
+               Increment_RIP => False,
                Next_Subject  => Next_Subject_ID);
             Timed_Events.Clear_Event (Subject => Event_Subj);
          end if;

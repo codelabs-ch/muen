@@ -16,6 +16,7 @@
   </memory>
   <channels>
    <include href="logchannels.xml"/>
+   <include href="subject_consoles.xml"/>
    <if variable="sink_shmem" value="true">
     <writer logical="debug_shm_sink_memory" size="$logchannel_size"/>
    </if>

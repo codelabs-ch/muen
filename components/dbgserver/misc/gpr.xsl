@@ -22,6 +22,10 @@
     </xsl:call-template>
    </xsl:if>
   </xsl:for-each>
+  <xsl:call-template name="configBooleanWithParams">
+   <xsl:with-param name="name" select="'subject_consoles_enabled'"/>
+   <xsl:with-param name="value" select="count(/system/subjects/subject/component[@ref=$COMPONENTNAME]/map[starts-with(@logical,'subject_console_')]) &gt; 0"/>
+  </xsl:call-template>
   <xsl:call-template name="gprFooter"/>
  </xsl:template>
 

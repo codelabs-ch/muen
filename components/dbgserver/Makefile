@@ -24,4 +24,5 @@ $(GEN_DIR)/dbg-subject_list.ads: $(TFM_NAMES) $(POLICY_SRC)
 		--src_policy $(POLICY_SRC)"
 $(GEN_DIR)/dbg_config.gpr: $(XSL_TFM_GPR) $(POLICY_SRC)
 	@$(E) $(COMPONENT) "Generate dbg_config.gpr" "xsltproc -o $@ --stringparam \
-		GPRNAME dbg_config $< $(POLICY_SRC)"
+		GPRNAME dbg_config --stringparam COMPONENTNAME $(COMPONENT) \
+		$< $(POLICY_SRC)"

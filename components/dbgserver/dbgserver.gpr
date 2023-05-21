@@ -33,7 +33,8 @@ project Dbgserver extends "../component_spark" is
       "src/sinks/pcspkr",
       "src/sinks/serial",
       "src/sinks/shmem",
-      "src/sinks/xhcidbg");
+      "src/sinks/xhcidbg",
+      "src/subject_consoles");
    Obj_Suffix := "/";
 
    case dbg_config.dbgserver_sink_serial is
@@ -77,6 +78,15 @@ project Dbgserver extends "../component_spark" is
       when "false" =>
          Src_Dirs   := Src_Dirs   & "src/sinks/pcspkr/disabled";
          Obj_Suffix := Obj_Suffix & "_pcspkr_disabled";
+   end case;
+
+   case dbg_config.subject_consoles_enabled is
+      when "true"  =>
+         Src_Dirs   := Src_Dirs   & "src/subject_consoles/enabled";
+         Obj_Suffix := Obj_Suffix & "_subject_consoles_enabled";
+      when "false" =>
+         Src_Dirs   := Src_Dirs   & "src/subject_consoles/disabled";
+         Obj_Suffix := Obj_Suffix & "_subject_consoles_disabled";
    end case;
 
    for Languages use ("Ada", "Asm");

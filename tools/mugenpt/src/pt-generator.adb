@@ -414,6 +414,8 @@ is
                   2 => Paging.EPT.Serialize_PDPT'Access,
                   3 => Paging.EPT.Serialize_PD'Access,
                   4 => Paging.EPT.Serialize_PT'Access));
+         when others =>
+            null;
       end case;
 
       Close (File => File);

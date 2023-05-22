@@ -23,23 +23,17 @@ is
 
    type Raw_Table_Type is array (Entry_Range) of Interfaces.Unsigned_64;
 
-   Present_Flag        : constant :=  0;
-   Not_Large_Page_Flag : constant :=  1;
-   Attr_Index_Bitpos   : constant :=  2;
-   User_Readable_Flag  : constant :=  6;
-   Not_Writable_Flag   : constant :=  7;
-   Accessed_Flag       : constant := 10;
-   Not_Global_Flag     : constant := 11;
-   UXN_Flag            : constant := 54;
+   Attr_Index_Bitpos  : constant :=  2;
+   User_Readable_Flag : constant :=  6;
+   Not_Writable_Flag  : constant :=  7;
+   Not_Global_Flag    : constant := 11;
+   UXN_Flag           : constant := 54;
 
    --  ARMv8a Table entry address range is bits 12 .. 47.
    Address_Mask   : constant Interfaces.Unsigned_64 := 16#0000_ffff_ffff_f000#;
 
    --  ARMv8a Table entry MAIR index range is bits 2 .. 4.
    ARMv8a_MT_Mask : constant Interfaces.Unsigned_64 := 16#0000_0000_0000_001c#;
-
-   --  Outer shareable, see ARM Arm D8.5.2 "Stage 1 Shareability attributes".
-   ARMv8_Stage1_Outer_Shareable : constant Interfaces.Unsigned_64 := 16#0200#;
 
    --  Create page table entry with given parameters.
    function Create_Entry
@@ -191,7 +185,7 @@ is
             --  necessary for cacheable, non-device memory shared with agents in
             --  the outer domain, i.e. GPU.
 
-            Result := Result or ARMv8_Stage1_Outer_Shareable;
+            Result := Result or ARMv8_Outer_Shareable;
          end if;
       end if;
 

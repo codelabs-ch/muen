@@ -19,4 +19,15 @@
 package Paging.ARMv8a
 is
 
+private
+
+   --  Reference: ARM Arm, D8.3, "Translation table descriptor formats"
+   Present_Flag        : constant :=  0;
+   Not_Large_Page_Flag : constant :=  1;
+   Accessed_Flag       : constant := 10;
+
+   --  Outer shareable, see ARM Arm D8.5.2 "Stage 1 Shareability attributes" and
+   --  D8.5.6 "Stage 2 Shareability attributes".
+   ARMv8_Outer_Shareable : constant Interfaces.Unsigned_64 := 16#0200#;
+
 end Paging.ARMv8a;

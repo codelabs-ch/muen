@@ -1,0 +1,1084 @@
+<?xml version="1.0" encoding="utf-8"?>
+<system>
+<config>
+ <boolean name="armv8" value="true"/>
+ <boolean name="debug_enabled" value="true"/>
+ <string name="debug_level" value="Level_3"/>
+</config>
+<hardware>
+ <processor cpuCores="4" speed="1199999988" vmxTimerRate="1">
+  <cpu apicId="0" cpuId="0"/>
+  <cpu apicId="2" cpuId="1"/>
+  <cpu apicId="4" cpuId="2"/>
+  <cpu apicId="6" cpuId="3"/>
+ </processor>
+ <memory>
+  <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0000_0000#" size="16#8000_0000#"/>
+ </memory>
+ <devices>
+  <device name="ioapic_1">  <!-- TODO: Remove dummy I/O APIC  -->
+   <memory caching="UC" name="mem1" physicalAddress="16#fec0_0000#" size="16#1000#"/>
+   <capabilities>
+    <capability name="ioapic"/>
+    <capability name="gsi_base">0</capability>
+    <capability name="max_redirection_entry">23</capability>
+    <capability name="source_id">16#ff00#</capability>
+   </capabilities>
+  </device>
+  <device name="APU_GIC">
+   <irq name="sgi_0" number="0"/>
+   <irq name="sgi_1" number="1"/>
+   <irq name="sgi_2" number="2"/>
+   <irq name="sgi_3" number="3"/>
+   <irq name="sgi_4" number="4"/>
+   <irq name="sgi_5" number="5"/>
+   <irq name="sgi_6" number="6"/>
+   <irq name="sgi_7" number="7"/>
+   <irq name="sgi_8" number="8"/>
+   <irq name="sgi_9" number="9"/>
+   <irq name="sgi_10" number="10"/>
+   <irq name="sgi_11" number="11"/>
+   <irq name="sgi_12" number="12"/>
+   <irq name="sgi_13" number="13"/>
+   <irq name="sgi_14" number="14"/>
+   <irq name="sgi_15" number="15"/>
+   <irq name="maintenance" number="25"/>
+   <irq name="hypervisor_timer" number="26"/>
+   <irq name="virtual_timer" number="27"/>
+   <irq name="physical_timer" number="30"/>
+   <memory caching="UC" name="GIC" physicalAddress="16#f900_0000#" size="16#1000#"/>
+   <memory caching="UC" name="GICD" physicalAddress="16#f901_0000#" size="16#1000#"/>
+   <memory caching="UC" name="GICC" physicalAddress="16#f902_0000#" size="16#1000#"/>
+   <memory caching="UC" name="GICC_DIR" physicalAddress="16#f903_0000#" size="16#1000#"/>
+   <memory caching="UC" name="GICH" physicalAddress="16#f904_0000#" size="16#1000#"/>
+   <memory caching="UC" name="GICH_Alias" physicalAddress="16#f905_0000#" size="16#1000#"/>
+   <memory caching="UC" name="GICV" physicalAddress="16#f906_0000#" size="16#1000#"/>
+   <memory caching="UC" name="GICV_DIR" physicalAddress="16#f907_0000#" size="16#1000#"/>
+   <capabilities>
+    <capability name="gic"/>
+   </capabilities>
+  </device>
+  <device name="SMMU_GPV">
+   <irq name="irq" number="187"/>
+   <memory caching="UC" name="mem" physicalAddress="16#fd80_0000#" size="16#0020_0000#"/>
+   <capabilities>
+    <capability name="iommu"/>
+    <capability name="agaw">39</capability>
+    <capability name="fr_offset">544</capability>
+    <capability name="iotlb_invalidate_offset">248</capability>
+   </capabilities>
+  </device>
+  <device name="UART0">
+   <irq name="irq" number="53"/>
+   <memory caching="UC" name="mem" physicalAddress="16#ff00_0000#" size="16#0001_0000#"/>
+   <capabilities>
+    <capability name="serial"/>
+   </capabilities>
+  </device>
+  <device name="UART1">
+   <irq name="irq" number="54"/>
+   <memory caching="UC" name="mem" physicalAddress="16#ff01_0000#" size="16#0001_0000#"/>
+   <capabilities>
+    <capability name="serial"/>
+   </capabilities>
+  </device>
+  <device name="USB3_0_XHCI">
+   <irq name="irq1" number="97"/>
+   <irq name="irq2" number="98"/>
+   <irq name="irq3" number="99"/>
+   <irq name="irq4" number="100"/>
+   <irq name="irq5" number="101"/>
+   <irq name="irq6" number="107"/>
+   <memory caching="UC" name="mem1" physicalAddress="16#fe20_0000#" size="16#1000#"/>
+   <memory caching="UC" name="mem2" physicalAddress="16#fe20_c000#" size="16#1000#"/>
+  </device>
+  <device name="USB3_1_XHCI">
+   <irq name="irq1" number="102"/>
+   <irq name="irq2" number="103"/>
+   <irq name="irq3" number="104"/>
+   <irq name="irq4" number="105"/>
+   <irq name="irq5" number="106"/>
+   <irq name="irq6" number="108"/>
+   <memory caching="UC" name="mem1" physicalAddress="16#fe30_0000#" size="16#1000#"/>
+   <memory caching="UC" name="mem2" physicalAddress="16#fe30_c000#" size="16#1000#"/>
+  </device>
+  <device name="GEM3">
+   <irq name="irq1" number="95"/>
+   <irq name="irq2" number="96"/>
+   <memory caching="UC" name="mem1" physicalAddress="16#ff0e_0000#" size="16#1000#"/>
+  </device>
+ </devices>
+</hardware>
+<platform>
+ <mappings>
+  <aliases>
+   <alias name="serial_device_1" physical="UART0">
+    <resource name="mem1" physical="mem"/>
+    <resource name="irq1" physical="irq"/>
+   </alias>
+   <alias name="serial_device_2" physical="UART1">
+    <resource name="mem1" physical="mem"/>
+    <resource name="irq1" physical="irq"/>
+   </alias>
+  </aliases>
+  <classes />
+ </mappings>
+ <kernelDiagnostics type="hsuart">
+  <device physical="UART0">
+   <memory physical="mem"/>
+  </device>
+ </kernelDiagnostics>
+</platform>
+<memory>
+ <memory alignment="16#1000#" caching="WB" name="kernel_text" physicalAddress="16#0000#" size="16#0005_8000#" type="kernel_binary">
+  <file filename="kernel.bin" offset="16#0000#"/>
+ </memory>
+ <memory alignment="16#1000#" caching="WB" name="kernel_ro" physicalAddress="16#0005_8000#" size="16#0001_8000#" type="kernel_binary">
+  <file filename="kernel.bin" offset="16#0005_8000#"/>
+ </memory>
+ <memory alignment="16#1000#" caching="WB" name="kernel_data_0" physicalAddress="16#0007_0000#" size="16#2000#" type="kernel_binary">
+  <file filename="kernel.bin" offset="16#0007_0000#"/>
+ </memory>
+ <memory alignment="16#1000#" caching="WB" name="kernel_bss_0" physicalAddress="16#0007_2000#" size="16#2000#" type="kernel_binary">
+  <fill pattern="16#00#"/>
+ </memory>
+ <memory alignment="16#1000#" caching="WB" name="kernel_global_data" physicalAddress="16#0007_4000#" size="16#c000#" type="kernel_binary">
+  <file filename="kernel.bin" offset="16#0007_4000#"/>
+ </memory>
+ <memory alignment="16#1000#" caching="WB" name="kernel_global_rodata" physicalAddress="16#0008_0000#" size="16#0001_0000#" type="kernel_binary">
+  <file filename="kernel.bin" offset="16#0008_0000#"/>
+ </memory>
+ <memory alignment="16#1000#" caching="WB" name="kernel_stack_0" physicalAddress="16#000c_0000#" size="16#0002_0000#" type="kernel">
+  <fill pattern="16#00#"/>
+ </memory>
+ <memory alignment="16#1000#" caching="WB" name="kernel_0|pt" physicalAddress="16#0010_0000#" size="16#8000#" type="system_pt">
+  <file filename="xilinxzcu104-core-0.pt" offset="none"/>
+ </memory>
+ <memory alignment="16#1000#" caching="WB" name="linux|pt" physicalAddress="16#0020_0000#" size="16#6000#" type="system_pt">
+  <file filename="xilinxzcu104-linux.pt" offset="none"/>
+ </memory>
+ <memory alignment="16#1000#" caching="WB" name="event_logger|pt" physicalAddress="16#0021_0000#" size="16#4000#" type="system_pt">
+  <file filename="xilinxzcu104-event_logger.pt" offset="none"/>
+ </memory>
+ <memory alignment="16#1000#" caching="WB" name="event_logger|binary" physicalAddress="16#0400_0000#" size="16#0002_0000#" type="subject_binary">
+  <file filename="subject_one.bin" offset="none"/>
+ </memory>
+ <memory alignment="16#1000#" caching="WB" name="linux|lowmem" physicalAddress="16#1000_0000#" size="16#0004_0000#" type="subject">
+  <fill pattern="16#00#"/>
+ </memory>
+ <memory alignment="16#1000#" caching="WB" name="linux|dtb" physicalAddress="16#1004_0000#" size="16#0004_0000#" type="subject_binary">
+  <file filename="devicetree_linux_one.dtb" offset="none"/>
+ </memory>
+ <memory alignment="16#1000#" caching="WB" name="linux|binary" physicalAddress="16#1008_0000#" size="16#006d_d000#" type="subject_binary">
+  <file filename="Image_linux_one.bin" offset="none"/>
+ </memory>
+ <memory alignment="16#1000#" caching="WB" name="linux|ram" physicalAddress="16#1075_d000#" size="16#1a8a_3000#" type="subject"/>
+ <memory alignment="16#1000#" caching="WB" name="linux|rootfs" physicalAddress="16#2b00_0000#" size="16#0500_0000#" type="subject_initrd">
+  <file filename="rootfs_linux_one.cpio.gz" offset="none"/>
+ </memory>
+ <memory alignment="16#1000#" caching="WB" name="kernel_interrupt_stack_0" physicalAddress="16#003f_f000#" size="16#1000#" type="kernel">
+  <fill pattern="16#00#"/>
+ </memory>
+ <memory alignment="16#1000#" caching="UC" name="crash_audit" physicalAddress="16#0040_0000#" size="16#1000#" type="subject_crash_audit"/>
+ <memory alignment="16#1000#" caching="WB" name="linux|iobm" physicalAddress="16#0002_0000_0000#" size="16#2000#" type="system_iobm"/>
+ <memory alignment="16#1000#" caching="WB" name="event_logger|iobm" physicalAddress="16#0002_0000_2000#" size="16#2000#" type="system_iobm"/>
+ <memory alignment="16#1000#" caching="WB" name="linux|msrbm" physicalAddress="16#0002_0000_8000#" size="16#1000#" type="system_msrbm"/>
+ <memory alignment="16#1000#" caching="WB" name="event_logger|msrbm" physicalAddress="16#0002_0000_9000#" size="16#1000#" type="system_msrbm"/>
+</memory>
+<deviceDomains/>
+<events>
+ <event name="system_panic" mode="kernel"/>
+ <event name="magic_number" mode="kernel"/>
+ <event name="event_demo" mode="self"/>
+</events>
+<kernel>
+ <memory>
+  <cpu id="0">
+   <memory logical="text" physical="kernel_text" virtualAddress="16#0000#" writable="false" executable="true"/>
+   <memory logical="ro" physical="kernel_ro" virtualAddress="16#0005_8000#" writable="false" executable="false"/>
+   <memory logical="data" physical="kernel_data_0" virtualAddress="16#0007_0000#" writable="true" executable="false"/>
+   <memory logical="bss" physical="kernel_bss_0" virtualAddress="16#0007_2000#" writable="true" executable="false"/>
+   <memory logical="globaldata" physical="kernel_global_data" virtualAddress="16#0007_4000#" writable="true" executable="false"/>
+   <!--  This section must be writable for now  -->
+   <memory logical="globalrodata" physical="kernel_global_rodata" virtualAddress="16#0008_0000#" writable="true" executable="false"/>
+   <memory logical="stack" physical="kernel_stack_0" virtualAddress="16#0009_0000#" writable="true" executable="false"/>
+   <memory logical="interrupt_stack" physical="kernel_interrupt_stack_0" virtualAddress="16#003f_f000#" writable="true" executable="false"/>
+   <memory logical="crash_audit" physical="crash_audit" virtualAddress="16#0040_0000#" writable="true"  executable="false"/>
+  </cpu>
+ </memory>
+ <devices>
+  <device logical="debugconsole" physical="UART0">
+   <memory virtualAddress="16#ff00_0000#" physical="mem" logical="serial_dev" writable="true" executable="false"/>
+  </device>
+  <device logical="gic" physical="APU_GIC">
+   <irq logical="maintenance_irq" physical="maintenance" vector="25"/>
+   <memory logical="GIC" physical="GIC" virtualAddress="16#f900_0000#" writable="true" executable="false"/>
+   <memory logical="GICD" physical="GICD" virtualAddress="16#f900_1000#" writable="true" executable="false"/>
+   <memory logical="GICC" physical="GICC" virtualAddress="16#f900_2000#" writable="true" executable="false"/>
+   <memory logical="GICC_DIR" physical="GICC_DIR" virtualAddress="16#f900_3000#" writable="true" executable="false"/>
+   <memory logical="GICH" physical="GICH" virtualAddress="16#f900_4000#" writable="true" executable="false"/>
+   <memory logical="GICH_Alias" physical="GICH_Alias" virtualAddress="16#f900_5000#" writable="true" executable="false"/>
+   <memory logical="GICV" physical="GICV" virtualAddress="16#f900_6000#" writable="true" executable="false"/>
+   <memory logical="GICV_DIR" physical="GICV_DIR" virtualAddress="16#f900_7000#" writable="true" executable="false"/>
+  </device>
+  <device logical="smmu" physical="SMMU_GPV">
+   <irq logical="smmu_irq" physical="irq" vector="187"/>
+   <memory virtualAddress="16#fd80_0000#" physical="mem" logical="smmu_dev" writable="true" executable="false"/>
+  </device>
+ </devices>
+</kernel>
+<subjects>
+ <subject cpu="0" globalId="0" localId="0" name="linux" schedGroupId="1">
+  <vcpu>
+   <vmx>
+    <controls>
+     <pin>
+      <ExternalInterruptExiting>1</ExternalInterruptExiting>
+      <NMIExiting>1</NMIExiting>
+      <VirtualNMIs>0</VirtualNMIs>
+      <ActivateVMXTimer>1</ActivateVMXTimer>
+      <ProcessPostedInterrupts>0</ProcessPostedInterrupts>
+     </pin>
+     <proc>
+      <InterruptWindowExiting>0</InterruptWindowExiting>
+      <UseTSCOffsetting>0</UseTSCOffsetting>
+      <HLTExiting>0</HLTExiting>
+      <INVLPGExiting>1</INVLPGExiting>
+      <MWAITExiting>1</MWAITExiting>
+      <RDPMCExiting>1</RDPMCExiting>
+      <RDTSCExiting>1</RDTSCExiting>
+      <CR3LoadExiting>0</CR3LoadExiting>
+      <CR3StoreExiting>0</CR3StoreExiting>
+      <CR8LoadExiting>1</CR8LoadExiting>
+      <CR8StoreExiting>1</CR8StoreExiting>
+      <UseTPRShadow>0</UseTPRShadow>
+      <NMIWindowExiting>0</NMIWindowExiting>
+      <MOVDRExiting>1</MOVDRExiting>
+      <UnconditionalIOExiting>0</UnconditionalIOExiting>
+      <UseIOBitmaps>1</UseIOBitmaps>
+      <MonitorTrapFlag>0</MonitorTrapFlag>
+      <UseMSRBitmaps>1</UseMSRBitmaps>
+      <MONITORExiting>1</MONITORExiting>
+      <PAUSEExiting>0</PAUSEExiting>
+      <Activate2ndaryControls>1</Activate2ndaryControls>
+     </proc>
+     <proc2>
+      <VirtualAPICAccesses>0</VirtualAPICAccesses>
+      <EnableEPT>1</EnableEPT>
+      <DescriptorTableExiting>0</DescriptorTableExiting>
+      <EnableRDTSCP>0</EnableRDTSCP>
+      <Virtualizex2APICMode>0</Virtualizex2APICMode>
+      <EnableVPID>0</EnableVPID>
+      <WBINVDExiting>1</WBINVDExiting>
+      <UnrestrictedGuest>1</UnrestrictedGuest>
+      <APICRegisterVirtualization>0</APICRegisterVirtualization>
+      <VirtualInterruptDelivery>0</VirtualInterruptDelivery>
+      <PAUSELoopExiting>0</PAUSELoopExiting>
+      <RDRANDExiting>0</RDRANDExiting>
+      <EnableINVPCID>0</EnableINVPCID>
+      <EnableVMFunctions>0</EnableVMFunctions>
+     </proc2>
+     <entry>
+      <LoadDebugControls>0</LoadDebugControls>
+      <IA32eModeGuest>0</IA32eModeGuest>
+      <EntryToSMM>0</EntryToSMM>
+      <DeactiveDualMonitorTreatment>0</DeactiveDualMonitorTreatment>
+      <LoadIA32PERFGLOBALCTRL>0</LoadIA32PERFGLOBALCTRL>
+      <LoadIA32PAT>0</LoadIA32PAT>
+      <LoadIA32EFER>1</LoadIA32EFER>
+     </entry>
+     <exit>
+      <SaveDebugControls>0</SaveDebugControls>
+      <HostAddressspaceSize>1</HostAddressspaceSize>
+      <LoadIA32PERFGLOBALCTRL>0</LoadIA32PERFGLOBALCTRL>
+      <AckInterruptOnExit>1</AckInterruptOnExit>
+      <SaveIA32PAT>0</SaveIA32PAT>
+      <LoadIA32PAT>0</LoadIA32PAT>
+      <SaveIA32EFER>1</SaveIA32EFER>
+      <LoadIA32EFER>1</LoadIA32EFER>
+      <SaveVMXTimerValue>0</SaveVMXTimerValue>
+     </exit>
+    </controls>
+    <masks>
+     <exception>
+      <DivideError>0</DivideError>
+      <Debug>0</Debug>
+      <Breakpoint>0</Breakpoint>
+      <Overflow>0</Overflow>
+      <BOUNDRangeExceeded>0</BOUNDRangeExceeded>
+      <InvalidOpcode>0</InvalidOpcode>
+      <DeviceNotAvailable>0</DeviceNotAvailable>
+      <DoubleFault>0</DoubleFault>
+      <CoprocessorSegmentOverrun>0</CoprocessorSegmentOverrun>
+      <InvalidTSS>0</InvalidTSS>
+      <SegmentNotPresent>0</SegmentNotPresent>
+      <StackSegmentFault>0</StackSegmentFault>
+      <GeneralProtection>0</GeneralProtection>
+      <PageFault>0</PageFault>
+      <x87FPUFloatingPointError>0</x87FPUFloatingPointError>
+      <AlignmentCheck>0</AlignmentCheck>
+      <MachineCheck>1</MachineCheck>
+      <SIMDFloatingPointException>0</SIMDFloatingPointException>
+     </exception>
+     <cr0>
+      <ProtectionEnable>0</ProtectionEnable>
+      <MonitorCoprocessor>0</MonitorCoprocessor>
+      <Emulation>0</Emulation>
+      <TaskSwitched>0</TaskSwitched>
+      <ExtensionType>0</ExtensionType>
+      <NumericError>1</NumericError>
+      <WriteProtect>0</WriteProtect>
+      <AlignmentMask>0</AlignmentMask>
+      <NotWritethrough>1</NotWritethrough>
+      <CacheDisable>1</CacheDisable>
+      <Paging>0</Paging>
+     </cr0>
+     <cr4>
+      <Virtual8086>0</Virtual8086>
+      <ProtectedVirtualInts>0</ProtectedVirtualInts>
+      <TimeStampDisable>0</TimeStampDisable>
+      <DebuggingExtensions>0</DebuggingExtensions>
+      <PageSizeExtensions>0</PageSizeExtensions>
+      <PhysicalAddressExtension>0</PhysicalAddressExtension>
+      <MachineCheckEnable>1</MachineCheckEnable>
+      <PageGlobalEnable>0</PageGlobalEnable>
+      <PerfCounterEnable>0</PerfCounterEnable>
+      <OSSupportFXSAVE>0</OSSupportFXSAVE>
+      <OSSupportSIMDExceptions>0</OSSupportSIMDExceptions>
+      <UMInstructionPrevention>0</UMInstructionPrevention>
+      <VMXEnable>1</VMXEnable>
+      <SMXEnable>0</SMXEnable>
+      <FSGSBASEEnable>0</FSGSBASEEnable>
+      <PCIDEnable>0</PCIDEnable>
+      <XSAVEEnable>0</XSAVEEnable>
+      <SMEPEnable>0</SMEPEnable>
+      <SMAPEnable>0</SMAPEnable>
+      <ProtectionKeyEnable>1</ProtectionKeyEnable>
+     </cr4>
+    </masks>
+   </vmx>
+   <msrs/>
+   <registers>
+    <gpr>
+     <rip>16#0040_0000#</rip>
+     <rsp>16#0000#</rsp>
+     <rax>16#0000#</rax>
+     <rbx>16#0000#</rbx>
+     <rcx>16#0000#</rcx>
+     <rdx>16#0000#</rdx>
+     <rdi>16#0000#</rdi>
+     <rsi>16#0000#</rsi>
+     <rbp>16#0000#</rbp>
+     <r08>16#0000#</r08>
+     <r09>16#0000#</r09>
+     <r10>16#0000#</r10>
+     <r11>16#0000#</r11>
+     <r12>16#0000#</r12>
+     <r13>16#0000#</r13>
+     <r14>16#0000#</r14>
+     <r15>16#0000#</r15>
+    </gpr>
+    <cr0>
+     <ProtectionEnable>1</ProtectionEnable>
+     <MonitorCoprocessor>0</MonitorCoprocessor>
+     <Emulation>1</Emulation>
+     <TaskSwitched>0</TaskSwitched>
+     <ExtensionType>1</ExtensionType>
+     <NumericError>1</NumericError>
+     <WriteProtect>0</WriteProtect>
+     <AlignmentMask>0</AlignmentMask>
+     <NotWritethrough>0</NotWritethrough>
+     <CacheDisable>0</CacheDisable>
+     <Paging>0</Paging>
+    </cr0>
+    <cr0Shadow>
+     <ProtectionEnable>1</ProtectionEnable>
+     <MonitorCoprocessor>0</MonitorCoprocessor>
+     <Emulation>0</Emulation>
+     <TaskSwitched>0</TaskSwitched>
+     <ExtensionType>0</ExtensionType>
+     <NumericError>0</NumericError>
+     <WriteProtect>0</WriteProtect>
+     <AlignmentMask>0</AlignmentMask>
+     <NotWritethrough>0</NotWritethrough>
+     <CacheDisable>0</CacheDisable>
+     <Paging>0</Paging>
+    </cr0Shadow>
+    <cr4>
+     <Virtual8086>0</Virtual8086>
+     <ProtectedVirtualInts>0</ProtectedVirtualInts>
+     <TimeStampDisable>0</TimeStampDisable>
+     <DebuggingExtensions>0</DebuggingExtensions>
+     <PageSizeExtensions>0</PageSizeExtensions>
+     <PhysicalAddressExtension>1</PhysicalAddressExtension>
+     <MachineCheckEnable>1</MachineCheckEnable>
+     <PageGlobalEnable>0</PageGlobalEnable>
+     <PerfCounterEnable>0</PerfCounterEnable>
+     <OSSupportFXSAVE>0</OSSupportFXSAVE>
+     <OSSupportSIMDExceptions>0</OSSupportSIMDExceptions>
+     <UMInstructionPrevention>0</UMInstructionPrevention>
+     <VMXEnable>1</VMXEnable>
+     <SMXEnable>0</SMXEnable>
+     <FSGSBASEEnable>0</FSGSBASEEnable>
+     <PCIDEnable>0</PCIDEnable>
+     <XSAVEEnable>0</XSAVEEnable>
+     <SMEPEnable>0</SMEPEnable>
+     <SMAPEnable>0</SMAPEnable>
+     <ProtectionKeyEnable>0</ProtectionKeyEnable>
+    </cr4>
+    <cr4Shadow>
+     <Virtual8086>0</Virtual8086>
+     <ProtectedVirtualInts>0</ProtectedVirtualInts>
+     <TimeStampDisable>0</TimeStampDisable>
+     <DebuggingExtensions>0</DebuggingExtensions>
+     <PageSizeExtensions>0</PageSizeExtensions>
+     <PhysicalAddressExtension>0</PhysicalAddressExtension>
+     <MachineCheckEnable>0</MachineCheckEnable>
+     <PageGlobalEnable>0</PageGlobalEnable>
+     <PerfCounterEnable>0</PerfCounterEnable>
+     <OSSupportFXSAVE>0</OSSupportFXSAVE>
+     <OSSupportSIMDExceptions>0</OSSupportSIMDExceptions>
+     <UMInstructionPrevention>0</UMInstructionPrevention>
+     <VMXEnable>0</VMXEnable>
+     <SMXEnable>0</SMXEnable>
+     <FSGSBASEEnable>0</FSGSBASEEnable>
+     <PCIDEnable>0</PCIDEnable>
+     <XSAVEEnable>0</XSAVEEnable>
+     <SMEPEnable>0</SMEPEnable>
+     <SMAPEnable>0</SMAPEnable>
+     <ProtectionKeyEnable>0</ProtectionKeyEnable>
+    </cr4Shadow>
+    <segments>
+     <cs access="16#c09b#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0008#"/>
+     <ds access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+     <es access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+     <fs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+     <gs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+     <ss access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+     <tr access="16#008b#" base="16#0000#" limit="16#ffff#" selector="16#0018#"/>
+     <ldtr access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+    </segments>
+   </registers>
+  </vcpu>
+  <bootparams>
+   console=ttyPS0,115200 root=/dev/ram0 initrd=0x0f000000,1451008 earlycon
+  </bootparams>
+  <memory>
+   <memory logical="lowmem" physical="linux|lowmem" virtualAddress="16#0000_0000#" writable="true" executable="true"/>
+   <memory logical="dtb" physical="linux|dtb" virtualAddress="16#0004_0000#" writable="true" executable="true"/>
+   <memory logical="binary" physical="linux|binary" virtualAddress="16#0008_0000#" writable="true" executable="true"/>
+   <memory logical="ram" physical="linux|ram" virtualAddress="16#0075_d000#" writable="true" executable="true"/>
+   <memory logical="rootfs" physical="linux|rootfs" virtualAddress="16#1b00_0000#" writable="true" executable="true"/>
+  </memory>
+  <devices>
+   <device logical="vgic" physical="APU_GIC">
+    <irq logical="linux_timer" physical="virtual_timer" vector="27"/>
+    <memory logical="vgic_dev1" physical="GICV" virtualAddress="16#2000_0000#" writable="true" executable="false"/>
+    <memory logical="vgic_dev2" physical="GICV_DIR" virtualAddress="16#2000_1000#" writable="true" executable="false"/>
+   </device>
+   <device logical="serial" physical="UART1">
+    <irq logical="serial_irq" physical="irq" vector="32"/>
+    <memory logical="serial_dev" physical="mem" virtualAddress="16#2101_0000#" writable="true" executable="false"/>
+   </device>
+  </devices>
+  <events>
+   <source>
+    <group name="vmx_exit">
+     <event id="4" logical="magic_number_event_logger" physical="magic_number"/>
+     <event id="0" logical="default_event_0" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="2" logical="default_event_2" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="3" logical="default_event_3" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="5" logical="default_event_5" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="6" logical="default_event_6" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="8" logical="default_event_8" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="9" logical="default_event_9" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="10" logical="default_event_10" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="11" logical="default_event_11" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="12" logical="default_event_12" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="13" logical="default_event_13" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="14" logical="default_event_14" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="15" logical="default_event_15" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="16" logical="default_event_16" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="17" logical="default_event_17" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="18" logical="default_event_18" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="19" logical="default_event_19" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="20" logical="default_event_20" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="21" logical="default_event_21" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="22" logical="default_event_22" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="23" logical="default_event_23" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="24" logical="default_event_24" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="25" logical="default_event_25" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="26" logical="default_event_26" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="27" logical="default_event_27" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="28" logical="default_event_28" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="29" logical="default_event_29" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="30" logical="default_event_30" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="31" logical="default_event_31" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="32" logical="default_event_32" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="33" logical="default_event_33" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="34" logical="default_event_34" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="36" logical="default_event_36" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="37" logical="default_event_37" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="39" logical="default_event_39" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="40" logical="default_event_40" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="43" logical="default_event_43" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="44" logical="default_event_44" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="45" logical="default_event_45" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="46" logical="default_event_46" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="47" logical="default_event_47" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="48" logical="default_event_48" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="49" logical="default_event_49" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="50" logical="default_event_50" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="51" logical="default_event_51" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="53" logical="default_event_53" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="54" logical="default_event_54" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="56" logical="default_event_56" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="57" logical="default_event_57" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="58" logical="default_event_58" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="59" logical="default_event_59" physical="system_panic">
+      <system_panic/>
+     </event>
+    </group>
+    <group name="vmcall"/>
+   </source>
+  </events>
+ </subject>
+ <subject cpu="0" localId="1" globalId="1" name="event_logger" schedGroupId="2">
+  <vcpu>
+   <vmx>
+    <controls>
+     <pin>
+      <ExternalInterruptExiting>1</ExternalInterruptExiting>
+      <NMIExiting>1</NMIExiting>
+      <VirtualNMIs>0</VirtualNMIs>
+      <ActivateVMXTimer>1</ActivateVMXTimer>
+      <ProcessPostedInterrupts>0</ProcessPostedInterrupts>
+     </pin>
+     <proc>
+      <InterruptWindowExiting>0</InterruptWindowExiting>
+      <UseTSCOffsetting>0</UseTSCOffsetting>
+      <HLTExiting>0</HLTExiting>
+      <INVLPGExiting>1</INVLPGExiting>
+      <MWAITExiting>1</MWAITExiting>
+      <RDPMCExiting>1</RDPMCExiting>
+      <RDTSCExiting>1</RDTSCExiting>
+      <CR3LoadExiting>1</CR3LoadExiting>
+      <CR3StoreExiting>1</CR3StoreExiting>
+      <CR8LoadExiting>1</CR8LoadExiting>
+      <CR8StoreExiting>1</CR8StoreExiting>
+      <UseTPRShadow>0</UseTPRShadow>
+      <NMIWindowExiting>0</NMIWindowExiting>
+      <MOVDRExiting>1</MOVDRExiting>
+      <UnconditionalIOExiting>0</UnconditionalIOExiting>
+      <UseIOBitmaps>1</UseIOBitmaps>
+      <MonitorTrapFlag>0</MonitorTrapFlag>
+      <UseMSRBitmaps>1</UseMSRBitmaps>
+      <MONITORExiting>1</MONITORExiting>
+      <PAUSEExiting>0</PAUSEExiting>
+      <Activate2ndaryControls>1</Activate2ndaryControls>
+     </proc>
+     <proc2>
+      <VirtualAPICAccesses>0</VirtualAPICAccesses>
+      <EnableEPT>0</EnableEPT>
+      <DescriptorTableExiting>0</DescriptorTableExiting>
+      <EnableRDTSCP>0</EnableRDTSCP>
+      <Virtualizex2APICMode>0</Virtualizex2APICMode>
+      <EnableVPID>0</EnableVPID>
+      <WBINVDExiting>1</WBINVDExiting>
+      <UnrestrictedGuest>0</UnrestrictedGuest>
+      <APICRegisterVirtualization>0</APICRegisterVirtualization>
+      <VirtualInterruptDelivery>0</VirtualInterruptDelivery>
+      <PAUSELoopExiting>0</PAUSELoopExiting>
+      <RDRANDExiting>0</RDRANDExiting>
+      <EnableINVPCID>0</EnableINVPCID>
+      <EnableVMFunctions>0</EnableVMFunctions>
+     </proc2>
+     <entry>
+      <LoadDebugControls>0</LoadDebugControls>
+      <IA32eModeGuest>1</IA32eModeGuest>
+      <EntryToSMM>0</EntryToSMM>
+      <DeactiveDualMonitorTreatment>0</DeactiveDualMonitorTreatment>
+      <LoadIA32PERFGLOBALCTRL>0</LoadIA32PERFGLOBALCTRL>
+      <LoadIA32PAT>0</LoadIA32PAT>
+      <LoadIA32EFER>0</LoadIA32EFER>
+     </entry>
+     <exit>
+      <SaveDebugControls>0</SaveDebugControls>
+      <HostAddressspaceSize>1</HostAddressspaceSize>
+      <LoadIA32PERFGLOBALCTRL>0</LoadIA32PERFGLOBALCTRL>
+      <AckInterruptOnExit>1</AckInterruptOnExit>
+      <SaveIA32PAT>0</SaveIA32PAT>
+      <LoadIA32PAT>0</LoadIA32PAT>
+      <SaveIA32EFER>0</SaveIA32EFER>
+      <LoadIA32EFER>0</LoadIA32EFER>
+      <SaveVMXTimerValue>0</SaveVMXTimerValue>
+     </exit>
+    </controls>
+    <masks>
+     <exception>
+      <DivideError>1</DivideError>
+      <Debug>1</Debug>
+      <Breakpoint>1</Breakpoint>
+      <Overflow>1</Overflow>
+      <BOUNDRangeExceeded>1</BOUNDRangeExceeded>
+      <InvalidOpcode>1</InvalidOpcode>
+      <DeviceNotAvailable>1</DeviceNotAvailable>
+      <DoubleFault>1</DoubleFault>
+      <CoprocessorSegmentOverrun>1</CoprocessorSegmentOverrun>
+      <InvalidTSS>1</InvalidTSS>
+      <SegmentNotPresent>1</SegmentNotPresent>
+      <StackSegmentFault>1</StackSegmentFault>
+      <GeneralProtection>1</GeneralProtection>
+      <PageFault>1</PageFault>
+      <x87FPUFloatingPointError>1</x87FPUFloatingPointError>
+      <AlignmentCheck>1</AlignmentCheck>
+      <MachineCheck>1</MachineCheck>
+      <SIMDFloatingPointException>1</SIMDFloatingPointException>
+     </exception>
+     <cr0>
+      <ProtectionEnable>1</ProtectionEnable>
+      <MonitorCoprocessor>1</MonitorCoprocessor>
+      <Emulation>1</Emulation>
+      <TaskSwitched>1</TaskSwitched>
+      <ExtensionType>1</ExtensionType>
+      <NumericError>1</NumericError>
+      <WriteProtect>1</WriteProtect>
+      <AlignmentMask>1</AlignmentMask>
+      <NotWritethrough>1</NotWritethrough>
+      <CacheDisable>1</CacheDisable>
+      <Paging>1</Paging>
+     </cr0>
+     <cr4>
+      <Virtual8086>1</Virtual8086>
+      <ProtectedVirtualInts>1</ProtectedVirtualInts>
+      <TimeStampDisable>1</TimeStampDisable>
+      <DebuggingExtensions>1</DebuggingExtensions>
+      <PageSizeExtensions>1</PageSizeExtensions>
+      <PhysicalAddressExtension>1</PhysicalAddressExtension>
+      <MachineCheckEnable>1</MachineCheckEnable>
+      <PageGlobalEnable>1</PageGlobalEnable>
+      <PerfCounterEnable>1</PerfCounterEnable>
+      <OSSupportFXSAVE>1</OSSupportFXSAVE>
+      <OSSupportSIMDExceptions>1</OSSupportSIMDExceptions>
+      <UMInstructionPrevention>1</UMInstructionPrevention>
+      <VMXEnable>1</VMXEnable>
+      <SMXEnable>1</SMXEnable>
+      <FSGSBASEEnable>1</FSGSBASEEnable>
+      <PCIDEnable>1</PCIDEnable>
+      <XSAVEEnable>1</XSAVEEnable>
+      <SMEPEnable>1</SMEPEnable>
+      <SMAPEnable>1</SMAPEnable>
+      <ProtectionKeyEnable>1</ProtectionKeyEnable>
+     </cr4>
+    </masks>
+   </vmx>
+   <msrs/>
+   <registers>
+    <gpr>
+     <rip>16#0020_0000#</rip>
+     <rsp>16#3000#</rsp>
+     <rax>16#0000#</rax>
+     <rbx>16#0000#</rbx>
+     <rcx>16#0000#</rcx>
+     <rdx>16#0000#</rdx>
+     <rdi>16#0000#</rdi>
+     <rsi>16#0000#</rsi>
+     <rbp>16#0000#</rbp>
+     <r08>16#0000#</r08>
+     <r09>16#0000#</r09>
+     <r10>16#0000#</r10>
+     <r11>16#0000#</r11>
+     <r12>16#0000#</r12>
+     <r13>16#0000#</r13>
+     <r14>16#0000#</r14>
+     <r15>16#0000#</r15>
+    </gpr>
+    <cr0>
+     <ProtectionEnable>1</ProtectionEnable>
+     <MonitorCoprocessor>1</MonitorCoprocessor>
+     <Emulation>0</Emulation>
+     <TaskSwitched>0</TaskSwitched>
+     <ExtensionType>1</ExtensionType>
+     <NumericError>1</NumericError>
+     <WriteProtect>1</WriteProtect>
+     <AlignmentMask>0</AlignmentMask>
+     <NotWritethrough>0</NotWritethrough>
+     <CacheDisable>0</CacheDisable>
+     <Paging>1</Paging>
+    </cr0>
+    <cr0Shadow>
+     <ProtectionEnable>1</ProtectionEnable>
+     <MonitorCoprocessor>1</MonitorCoprocessor>
+     <Emulation>0</Emulation>
+     <TaskSwitched>0</TaskSwitched>
+     <ExtensionType>1</ExtensionType>
+     <NumericError>1</NumericError>
+     <WriteProtect>1</WriteProtect>
+     <AlignmentMask>0</AlignmentMask>
+     <NotWritethrough>0</NotWritethrough>
+     <CacheDisable>0</CacheDisable>
+     <Paging>1</Paging>
+    </cr0Shadow>
+    <cr4>
+     <Virtual8086>0</Virtual8086>
+     <ProtectedVirtualInts>0</ProtectedVirtualInts>
+     <TimeStampDisable>0</TimeStampDisable>
+     <DebuggingExtensions>0</DebuggingExtensions>
+     <PageSizeExtensions>0</PageSizeExtensions>
+     <PhysicalAddressExtension>1</PhysicalAddressExtension>
+     <MachineCheckEnable>1</MachineCheckEnable>
+     <PageGlobalEnable>0</PageGlobalEnable>
+     <PerfCounterEnable>0</PerfCounterEnable>
+     <OSSupportFXSAVE>1</OSSupportFXSAVE>
+     <OSSupportSIMDExceptions>0</OSSupportSIMDExceptions>
+     <UMInstructionPrevention>0</UMInstructionPrevention>
+     <VMXEnable>1</VMXEnable>
+     <SMXEnable>0</SMXEnable>
+     <FSGSBASEEnable>0</FSGSBASEEnable>
+     <PCIDEnable>0</PCIDEnable>
+     <XSAVEEnable>0</XSAVEEnable>
+     <SMEPEnable>0</SMEPEnable>
+     <SMAPEnable>0</SMAPEnable>
+     <ProtectionKeyEnable>0</ProtectionKeyEnable>
+    </cr4>
+    <cr4Shadow>
+     <Virtual8086>0</Virtual8086>
+     <ProtectedVirtualInts>0</ProtectedVirtualInts>
+     <TimeStampDisable>0</TimeStampDisable>
+     <DebuggingExtensions>0</DebuggingExtensions>
+     <PageSizeExtensions>0</PageSizeExtensions>
+     <PhysicalAddressExtension>1</PhysicalAddressExtension>
+     <MachineCheckEnable>1</MachineCheckEnable>
+     <PageGlobalEnable>0</PageGlobalEnable>
+     <PerfCounterEnable>0</PerfCounterEnable>
+     <OSSupportFXSAVE>1</OSSupportFXSAVE>
+     <OSSupportSIMDExceptions>0</OSSupportSIMDExceptions>
+     <UMInstructionPrevention>0</UMInstructionPrevention>
+     <VMXEnable>1</VMXEnable>
+     <SMXEnable>0</SMXEnable>
+     <FSGSBASEEnable>0</FSGSBASEEnable>
+     <PCIDEnable>0</PCIDEnable>
+     <XSAVEEnable>0</XSAVEEnable>
+     <SMEPEnable>0</SMEPEnable>
+     <SMAPEnable>0</SMAPEnable>
+     <ProtectionKeyEnable>0</ProtectionKeyEnable>
+    </cr4Shadow>
+    <segments>
+     <cs access="16#a09b#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0008#"/>
+     <ds access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+     <es access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+     <fs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+     <gs access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+     <ss access="16#c093#" base="16#0000#" limit="16#ffff_ffff#" selector="16#0010#"/>
+     <tr access="16#008b#" base="16#0000#" limit="16#ffff#" selector="16#0018#"/>
+     <ldtr access="16#0001_0000#" base="16#0000#" limit="16#0000#" selector="16#0000#"/>
+    </segments>
+   </registers>
+  </vcpu>
+  <bootparams/>
+  <memory>
+   <memory logical="binary" physical="event_logger|binary" virtualAddress="16#0000_0000#" writable="true" executable="true"/>
+  </memory>
+  <devices>
+   <device logical="serial" physical="UART0">
+    <irq logical="serial_irq" physical="irq" vector="32"/>
+    <memory logical="serial_dev" physical="mem" virtualAddress="16#0400_0000#" writable="true" executable="false"/>
+   </device>
+   <device logical="vgic" physical="APU_GIC">
+    <irq logical="event_demo_irq" physical="sgi_12" vector="12"/>
+    <memory logical="vgic_dev1" physical="GICV" virtualAddress="16#0401_0000#" writable="true" executable="false"/>
+    <memory logical="vgic_dev2" physical="GICV_DIR" virtualAddress="16#0401_1000#" writable="true" executable="false"/>
+   </device>
+  </devices>
+  <events>
+   <source>
+    <group name="vmx_exit">
+     <event id="4" logical="magic_number_event_logger" physical="magic_number"/>
+     <event id="0" logical="default_event_0" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="2" logical="default_event_2" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="3" logical="default_event_3" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="5" logical="default_event_5" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="6" logical="default_event_6" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="8" logical="default_event_8" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="9" logical="default_event_9" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="10" logical="default_event_10" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="11" logical="default_event_11" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="12" logical="default_event_12" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="13" logical="default_event_13" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="14" logical="default_event_14" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="15" logical="default_event_15" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="16" logical="default_event_16" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="17" logical="default_event_17" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="18" logical="default_event_18" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="19" logical="default_event_19" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="20" logical="default_event_20" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="21" logical="default_event_21" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="22" logical="default_event_22" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="23" logical="default_event_23" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="24" logical="default_event_24" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="25" logical="default_event_25" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="26" logical="default_event_26" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="27" logical="default_event_27" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="28" logical="default_event_28" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="29" logical="default_event_29" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="30" logical="default_event_30" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="31" logical="default_event_31" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="32" logical="default_event_32" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="33" logical="default_event_33" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="34" logical="default_event_34" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="36" logical="default_event_36" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="37" logical="default_event_37" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="39" logical="default_event_39" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="40" logical="default_event_40" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="43" logical="default_event_43" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="44" logical="default_event_44" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="45" logical="default_event_45" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="46" logical="default_event_46" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="47" logical="default_event_47" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="48" logical="default_event_48" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="49" logical="default_event_49" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="50" logical="default_event_50" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="51" logical="default_event_51" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="53" logical="default_event_53" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="54" logical="default_event_54" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="56" logical="default_event_56" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="57" logical="default_event_57" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="58" logical="default_event_58" physical="system_panic">
+      <system_panic/>
+     </event>
+     <event id="59" logical="default_event_59" physical="system_panic">
+      <system_panic/>
+     </event>
+    </group>
+    <group name="vmcall">
+     <event id="42" logical="self_inject_interrupt" physical="event_demo"/>
+    </group>
+   </source>
+   <target>
+    <event id="0" logical="self_inject_interrupt" physical="event_demo">
+     <inject_interrupt vector="12"/>
+    </event>
+   </target>
+  </events>
+ </subject>
+</subjects>
+<scheduling tickRate="1">
+ <partitions>
+  <partition cpu="0" id="1" name="linux">
+   <group id="1">
+    <subject name="linux"/>
+   </group>
+  </partition>
+  <partition cpu="0" id="2" name="event_logger">
+   <group id="2">
+    <subject name="event_logger"/>
+   </group>
+  </partition>
+ </partitions>
+ <majorFrame>
+  <cpu id="0">
+   <minorFrame barrier="none" partition="linux" ticks="1048576"/>
+   <minorFrame barrier="none" partition="event_logger" ticks="65536"/>
+  </cpu>
+  <barriers/>
+ </majorFrame>
+</scheduling>
+</system>

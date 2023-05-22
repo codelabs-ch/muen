@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 package Dbg.Subject_Consoles
 is
 
@@ -27,5 +29,9 @@ is
    procedure Attach
      (ID      :     Positive;
       Success : out Boolean);
+
+   --  Forward given data to the currently attached console. If no console is
+   --  attached, then the data is silently ignored.
+   procedure Put (Data : Interfaces.Unsigned_8);
 
 end Dbg.Subject_Consoles;

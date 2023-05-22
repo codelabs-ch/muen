@@ -34,4 +34,8 @@ is
 
    procedure Init is null;
 
+   -------------------------------------------------------------------------
+
+   procedure Put (Data : Interfaces.Unsigned_8) is null;
+
 end Dbg.Subject_Consoles;

@@ -97,5 +97,14 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Put (Data : Interfaces.Unsigned_8)
+   is
+   begin
+      if Attached_Console /= No_Console then
+         Stream.Writer_Instance.Write
+           (Channel => Consoles_In (Subject_Console_Range (Attached_Console)),
+            Element => Data);
+      end if;
+   end Put;
 
 end Dbg.Subject_Consoles;

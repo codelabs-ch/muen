@@ -83,6 +83,14 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Detach
+   is
+   begin
+      Attached_Console := No_Console;
+   end Detach;
+
+   -------------------------------------------------------------------------
+
    procedure Init
    is
    begin

@@ -21,6 +21,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Attach
+     (ID      :     Positive;
+      Success : out Boolean)
+   is
+      pragma Unreferenced (ID);
+   begin
+      Success := False;
+   end Attach;
+
+   -------------------------------------------------------------------------
+
    procedure Init is null;
 
 end Dbg.Subject_Consoles;

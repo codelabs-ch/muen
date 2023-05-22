@@ -22,4 +22,10 @@ is
    --  Initialize all subject consoles.
    procedure Init;
 
+   --  Attach to subject console specified by ID. If the ID does not designate a
+   --  valid subject console, then Success is set to False.
+   procedure Attach
+     (ID      :     Positive;
+      Success : out Boolean);
+
 end Dbg.Subject_Consoles;

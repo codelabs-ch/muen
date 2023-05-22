@@ -37,10 +37,10 @@ is
           Cspecs.Subject_Consoles_Out_Element_Count),
       "Subject Console input and output channel count mismatch");
 
-   type Extended_Subject_Console_Range is Natural range
+   type Extended_Subject_Console_Range is new Natural range
      0 .. Cspecs.Subject_Consoles_In_Element_Count;
 
-   subtype Subject_Console_Range is new Extended_Subject_Console_Range range
+   type Subject_Console_Range is new Extended_Subject_Console_Range range
      1 .. Extended_Subject_Console_Range'Last;
 
    No_Console : constant Extended_Subject_Console_Range
@@ -64,7 +64,22 @@ is
        * Cspecs.Subject_Consoles_Out_Element_Count * 8;
 
    --  ID of currently attached subject console.
-   Attached_Console : Subject_Console_Range;
+   Attached_Console : Extended_Subject_Console_Range;
+
+   -------------------------------------------------------------------------
+
+   procedure Attach
+     (ID      :     Positive;
+      Success : out Boolean)
+   is
+   begin
+      if ID <= Natural (Subject_Console_Range'Last) then
+         Attached_Console := Extended_Subject_Console_Range (ID);
+         Success := True;
+      else
+         Success := False;
+      end if;
+   end Attach;
 
    -------------------------------------------------------------------------
 

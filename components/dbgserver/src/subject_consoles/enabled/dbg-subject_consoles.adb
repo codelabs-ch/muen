@@ -16,15 +16,60 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with System;
+
 with Dbgserver_Component.Channel_Arrays;
+
+with Dbg.Subject_Consoles.Stream.Writer_Instance;
 
 package body Dbg.Subject_Consoles
 is
 
    package Cspecs renames Dbgserver_Component.Channel_Arrays;
 
+   pragma Compile_Time_Error
+     ((Cspecs.Subject_Consoles_In_Element_Size /=
+          Cspecs.Subject_Consoles_Out_Element_Size),
+      "Subject Console input and output channel size mismatch");
+
+   pragma Compile_Time_Error
+     ((Cspecs.Subject_Consoles_In_Element_Count /=
+          Cspecs.Subject_Consoles_Out_Element_Count),
+      "Subject Console input and output channel count mismatch");
+
+   type Subject_Console_Range is Positive range
+     1 .. Cspecs.Subject_Consoles_In_Element_Count;
+
+   type Console_Channels_Array is
+     array (Subject_Console_Range) of Stream.Channel_Type;
+
+   Consoles_In : Console_Channels_Array
+   with
+      Async_Readers,
+      Address => System'To_Address (Cspecs.Subject_Consoles_In_Address_Base),
+      Size    => Cspecs.Subject_Consoles_In_Element_Size
+        * Cspecs.Subject_Consoles_In_Element_Count * 8;
+
+   Consoles_Out : Console_Channels_Array
+   with
+      Async_Writers,
+      Address => System'To_Address (Cspecs.Subject_Consoles_Out_Address_Base),
+      Size    => Cspecs.Subject_Consoles_Out_Element_Size
+       * Cspecs.Subject_Consoles_Out_Element_Count * 8;
+
    -------------------------------------------------------------------------
 
-   procedure Init is null;
+   procedure Init
+   is
+   begin
+      for I in Subject_Console_Range loop
+         Stream.Writer_Instance.Initialize
+           (Channel => Consoles_In (I),
+            Epoch   => 1);
+      end loop;
+   end Init;
+
+   -------------------------------------------------------------------------
+
 
 end Dbg.Subject_Consoles;

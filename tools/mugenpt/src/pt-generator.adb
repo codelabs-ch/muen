@@ -27,10 +27,12 @@ with McKae.XML.XPath.XIA;
 with Mulog;
 with Muxml.Utils;
 with Mutools.Files;
+with Mutools.System_Config;
 with Mutools.Utils;
 
 with Interfaces;
 
+with Paging.ARMv8a.Stage2;
 with Paging.EPT;
 with Paging.IA32e;
 with Paging.Layouts;
@@ -96,7 +98,17 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
         (N     => Policy.Doc,
          XPath => "/system/kernel/memory/cpu");
+      Is_ARM_System : constant Boolean := Mutools.System_Config.Has_Boolean
+        (Data => Policy,
+         Name => "armv8") and then
+        Mutools.System_Config.Get_Value
+          (Data => Policy,
+           Name => "armv8");
    begin
+      if Is_ARM_System then
+         return;
+      end if;
+
       for I in 0 .. DOM.Core.Nodes.Length (List => CPUs) - 1 loop
          declare
             ID_Str : constant String := I'Img (I'Img'First + 1 .. I'Img'Last);
@@ -151,6 +163,8 @@ is
       Filename     : String;
       PT_Type      : Paging.Paging_Mode_Type := Paging.IA32e_Mode)
    is
+      use type Paging.Paging_Mode_Type;
+
       Phys_Mem  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
@@ -159,7 +173,10 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/hardware/devices/device");
-      Vmem      : Paging.Layouts.Memory_Layout_Type (Levels => 4);
+      PT_Levels : constant Paging.Paging_Level
+        := (if PT_Type = Paging.ARMv8a_Stage2_Mode then 3
+            else 4);
+      Vmem      : Paging.Layouts.Memory_Layout_Type (Levels => PT_Levels);
 
       --  Add mapping of given logical to physical memory.
       procedure Add_Mapping
@@ -221,7 +238,9 @@ is
    begin
       Paging.Layouts.Set_Large_Page_Support
         (Mem_Layout => Vmem,
-         State      => False);
+         State      => (if PT_Type in Paging.IA32e_Mode .. Paging.EPT_Mode then
+                             False
+                        else True));
       Paging.Layouts.Set_Address (Mem_Layout => Vmem,
                                   Address    => Pml4_Address);
 
@@ -320,6 +339,12 @@ is
          := McKae.XML.XPath.XIA.XPath_Query
         (N     => Policy.Doc,
          XPath => "/system/subjects/subject");
+      Is_ARM_System : constant Boolean := Mutools.System_Config.Has_Boolean
+        (Data => Policy,
+         Name => "armv8") and then
+        Mutools.System_Config.Get_Value
+          (Data => Policy,
+           Name => "armv8");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
@@ -357,7 +382,12 @@ is
 
             Paging_Mode : Paging.Paging_Mode_Type;
          begin
-            if Muxml.Utils.Get_Element_Value
+            if Is_ARM_System then
+
+               --  All subjects use SLAT on ARM systems.
+
+               Paging_Mode := Paging.ARMv8a_Stage2_Mode;
+            elsif Muxml.Utils.Get_Element_Value
               (Doc   => DOM.Core.Nodes.Item (List  => Subjects,
                                              Index => I),
                XPath => "vcpu/vmx/controls/proc2/EnableEPT") = "1"
@@ -414,6 +444,14 @@ is
                   2 => Paging.EPT.Serialize_PDPT'Access,
                   3 => Paging.EPT.Serialize_PD'Access,
                   4 => Paging.EPT.Serialize_PT'Access));
+         when Paging.ARMv8a_Stage2_Mode =>
+            Paging.Layouts.Serialize
+              (Stream      => Stream (File),
+               Mem_Layout  => Mem_Layout,
+               Serializers =>
+                 (1 => Paging.ARMv8a.Stage2.Serialize_Level1'Access,
+                  2 => Paging.ARMv8a.Stage2.Serialize_Level2'Access,
+                  3 => Paging.ARMv8a.Stage2.Serialize_Level3'Access));
          when others =>
             null;
       end case;

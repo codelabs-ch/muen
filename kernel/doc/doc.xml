@@ -172,6 +172,9 @@
      contains is given:
 
      \begin{description}
+        \item[build-cfg/] \hfill \\
+        Build configuration, auxiliary project files and utility scripts used
+        when building/proving the Muen tools, Components as well as the kernel.
         \item[common/] \hfill \\
         Source code packages shared between the kernel and components.
         \item[components/] \hfill \\
@@ -179,9 +182,6 @@
         drivers (e.g. AHCI, PS/2) or Subject Monitor for Muen Linux. These are
         utilized to realize different Muen Systems and can be reused in any
         component-based system running on top of Muen.
-        \item[config/] \hfill \\
-        Compiler and Proof tool configuration used when building the Muen tools,
-        Components as well as the kernel.
         \item[contrib/] \hfill \\
         Third-party software required for building some tools and components.
         \item[deploy/] \hfill \\

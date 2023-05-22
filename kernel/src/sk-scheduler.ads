@@ -131,6 +131,11 @@ is
                   In_Out => Group_Activity_Indicator),
       Depends => (Group_Activity_Indicator =>+ (Subject_ID, Same_CPU, State));
 
+   --  Returns True if the current partition is in a sleep state.
+   function Is_Current_Partition_Sleeping return Boolean
+   with
+      Global => (Input => (CPU_Info.CPU_ID, State));
+
 private
 
    package Policy renames Skp.Scheduling;

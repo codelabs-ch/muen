@@ -857,14 +857,18 @@ is
       --D @Text Section => impl_exit_handler
       --D \paragraph{}
       --D Once the exit has been dealt with, the execution of the next subject
-      --D is prepared. Pending target events, if present, are handled see
-      --D \ref{impl_handle_target_event}.
+      --D is prepared.
       Current_Subject := Scheduler.Get_Current_Subject_ID;
-      Handle_Pending_Target_Event (Subject_ID => Current_Subject);
-      --D @Text Section => impl_exit_handler
-      --D Then, a pending interrupt, if present, is prepared for injection, see
-      --D \ref{impl_inject_interrupt}.
-      Inject_Interrupt (Subject_ID => Current_Subject);
+
+      if not Scheduler.Is_Current_Partition_Sleeping then
+         Handle_Pending_Target_Event (Subject_ID => Current_Subject);
+         --D @Text Section => impl_exit_handler
+         --D If the current scheduling partition is not asleep, pending target
+         --D events, if present, are handled see \ref{impl_handle_target_event}.
+         --D Then, a pending interrupt, if present, is prepared for injection,
+         --D see \ref{impl_inject_interrupt}.
+         Inject_Interrupt (Subject_ID => Current_Subject);
+      end if;
 
       --D @Text Section => impl_exit_handler
       --D \paragraph{}

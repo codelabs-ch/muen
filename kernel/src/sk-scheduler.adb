@@ -101,6 +101,15 @@ is
 
    -------------------------------------------------------------------------
 
+   function Is_Current_Partition_Sleeping return Boolean
+   is (Scheduling_Partitions (Current_Scheduling_Partition_ID).Sleeping)
+   with
+      Refined_Global =>
+         (Input => (CPU_Info.CPU_ID, Global_Current_Major_Frame_ID,
+                    Current_Minor_Frame_ID, Scheduling_Partitions));
+
+   -------------------------------------------------------------------------
+
    --  Returns True if the given scheduling group is in the timer list of the
    --  specified scheduling partition.
    function Is_Group_In_Timer_List

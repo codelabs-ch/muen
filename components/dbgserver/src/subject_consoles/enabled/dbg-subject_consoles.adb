@@ -37,8 +37,14 @@ is
           Cspecs.Subject_Consoles_Out_Element_Count),
       "Subject Console input and output channel count mismatch");
 
-   type Subject_Console_Range is Positive range
-     1 .. Cspecs.Subject_Consoles_In_Element_Count;
+   type Extended_Subject_Console_Range is Natural range
+     0 .. Cspecs.Subject_Consoles_In_Element_Count;
+
+   subtype Subject_Console_Range is new Extended_Subject_Console_Range range
+     1 .. Extended_Subject_Console_Range'Last;
+
+   No_Console : constant Extended_Subject_Console_Range
+     := Extended_Subject_Console_Range'First;
 
    type Console_Channels_Array is
      array (Subject_Console_Range) of Stream.Channel_Type;
@@ -57,6 +63,9 @@ is
       Size    => Cspecs.Subject_Consoles_Out_Element_Size
        * Cspecs.Subject_Consoles_Out_Element_Count * 8;
 
+   --  ID of currently attached subject console.
+   Attached_Console : Subject_Console_Range;
+
    -------------------------------------------------------------------------
 
    procedure Init
@@ -67,6 +76,8 @@ is
            (Channel => Consoles_In (I),
             Epoch   => 1);
       end loop;
+
+      Attached_Console := No_Console;
    end Init;
 
    -------------------------------------------------------------------------

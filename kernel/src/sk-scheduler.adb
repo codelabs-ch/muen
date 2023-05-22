@@ -101,6 +101,15 @@ is
 
    -------------------------------------------------------------------------
 
+   function Is_Current_Partition_Sleeping return Boolean
+   is (Scheduling_Partitions (Current_Scheduling_Partition_ID).Sleeping)
+   with
+      Refined_Global =>
+         (Input => (CPU_Info.CPU_ID, Global_Current_Major_Frame_ID,
+                    Current_Minor_Frame_ID, Scheduling_Partitions));
+
+   -------------------------------------------------------------------------
+
    --  Returns True if the given scheduling group is in the timer list of the
    --  specified scheduling partition.
    function Is_Group_In_Timer_List
@@ -561,10 +570,10 @@ is
    --D performed by a given subject.
    --D @OL Id => impl_scheduling_resched_sp_steps, Section => impl_scheduling_resched_sp, Priority => 0
    procedure Reschedule_Partition
-     (Subject_ID      :     Skp.Global_Subject_ID_Type;
-      RIP_Incremented :     Boolean;
-      Sleep           :     Boolean;
-      Next_Subject    : out Skp.Global_Subject_ID_Type)
+     (Subject_ID    :     Skp.Global_Subject_ID_Type;
+      Increment_RIP :     Boolean;
+      Sleep         :     Boolean;
+      Next_Subject  : out Skp.Global_Subject_ID_Type)
    with
       Refined_Global =>
         (Input  => (CPU_Info.CPU_ID, Current_Minor_Frame_ID,
@@ -611,7 +620,7 @@ is
          end if;
       end if;
 
-      if not RIP_Incremented then
+      if Increment_RIP then
          Subjects.Increment_RIP (ID => Subject_ID);
       end if;
 

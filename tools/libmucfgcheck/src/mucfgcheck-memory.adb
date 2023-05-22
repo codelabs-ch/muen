@@ -848,17 +848,18 @@ is
          begin
             if Map_Count /= 0 then
                declare
-                  Subj_Name : constant String
+                  Subj_Name  : constant String
                     := Mutools.Utils.Decode_Entity_Name
                       (Encoded_Str => Phys_Mem_Name);
-                  Subject   : constant DOM.Core.Node
+                  Subject    : constant DOM.Core.Node
                     := Muxml.Utils.Get_Element
                       (Nodes     => Subjects,
                        Ref_Attr  => "name",
                        Ref_Value => Subj_Name);
-                  Subj_CPU  : constant String
-                    := DOM.Core.Elements.Get_Attribute (Elem => Subject,
-                                                        Name => "cpu");
+                  Subj_Group : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Subject,
+                       Name => "schedGroupId");
                begin
                   Mulog.Log (Msg => "Checking" & Map_Count'Img & " writable "
                              & "mapping(s) of monitored region '"
@@ -871,12 +872,12 @@ is
                             (Node  => DOM.Core.Nodes.Item (List  => Mappings,
                                                            Index => J),
                              Level => 2);
-                        Monitor_CPU : constant String
+                        Monitor_Group : constant String
                           := DOM.Core.Elements.Get_Attribute
                             (Elem => Monitor_Subject,
-                             Name => "cpu");
+                             Name => "schedGroupId");
                      begin
-                        if Subj_CPU /= Monitor_CPU
+                        if Subj_Group /= Monitor_Group
                           and not Are_Siblings (Left  => Subject,
                                                 Right => Monitor_Subject)
                         then
@@ -886,8 +887,8 @@ is
                               & " writable by subject '"
                               & DOM.Core.Elements.Get_Attribute
                                 (Elem => Monitor_Subject,
-                                 Name => "name") & "' which is not running on"
-                              & " the same CPU or a sibling");
+                                 Name => "name") & "' which is not in the same "
+                              & "scheduling group or a sibling");
                         end if;
                      end;
                   end loop;

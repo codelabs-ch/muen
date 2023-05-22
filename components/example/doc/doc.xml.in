@@ -517,8 +517,10 @@
    \end{itemize}
 
    It is possible to define multiple state items per type, referencing different
-   subjects. Furthermore, a subject may monitor its own state, e.g. interrupts
-   which may be useful in combination with sleeping, see
+   subjects. \emph{Writable} monitoring is only allowed by subjects belonging to
+   the same scheduling group or siblings. Read-only monitoring has no such
+   restrictions.  Furthermore, a subject may monitor its own state, e.g.
+   interrupts, which may be useful in combination with sleeping, see
    \ref{subject-scheduling-usecase}.
 
    The self-referencing \texttt{loader} element shown in listing

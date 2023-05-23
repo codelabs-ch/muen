@@ -142,7 +142,7 @@ is
       Found    : Boolean;
       Event_ID : Skp.Events.Event_Range;
    begin
-      loop
+      for I in Skp.Events.Event_Range loop
          --D @Text Section => impl_handle_target_event
          --D First, check if the subject specified by ID has a target event
          --D pending by consulting the subject events data.

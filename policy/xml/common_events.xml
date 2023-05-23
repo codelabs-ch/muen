@@ -14,6 +14,7 @@
  <event name="timer_linux_1" mode="self"/>
  <event name="timer_linux_2" mode="self"/>
  <event name="reboot_linux_1" mode="self"/>
+ <event name="subject_sleep" mode="kernel"/>
  <event name="system_reboot" mode="kernel"/>
  <event name="system_poweroff" mode="kernel"/>
  <event name="system_panic" mode="kernel"/>

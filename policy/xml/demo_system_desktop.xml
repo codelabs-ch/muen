@@ -74,6 +74,7 @@
   <event name="trap_to_sm" mode="switch"/>
   <event name="serial_irq4_linux" mode="async"/>
   <event name="timer_linux" mode="self"/>
+  <event name="subject_sleep" mode="kernel"/>
   <event name="system_reboot" mode="kernel"/>
   <event name="system_poweroff" mode="kernel"/>
   <event name="system_panic" mode="kernel"/>

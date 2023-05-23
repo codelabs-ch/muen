@@ -36,7 +36,6 @@
   <include href="common_events.xml"/>
 
   <event name="example_self" mode="self"/>
-  <event name="subject_sleep" mode="kernel"/>
   <event name="subject_yield" mode="kernel"/>
  </events>
 

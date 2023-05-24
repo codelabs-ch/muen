@@ -124,9 +124,11 @@ xml_parser = etree.XMLParser(remove_blank_text=True)
 src_policy = etree.parse(src_policy_path, xml_parser).getroot()
 
 log_names = extract_subject_names(src_policy, "log_")
+subj_cons_names = extract_subject_names(src_policy, "subject_console_out_")
 
 with open(out_path, 'w') as out_file:
     print("Writing Ada package '" + pkg_name + "' file to '" + out_path + "'")
     write_package_header(pkg_name, out_file)
     write_spec(log_names, "Log", "Subject_Buffer_Range", out_file)
+    write_spec(subj_cons_names, "Subject_Console", None, out_file)
     write_package_end(pkg_name, out_file)

@@ -545,7 +545,7 @@ is
    procedure List_Subjects (Queue : in out Byte_Queue.Queue_Type)
    is
       Header    : constant String := "|        ID | Subject";
-      Subj_Rule : constant Subject_List.Name_Type := (others => '-');
+      Subj_Rule : constant Subject_List.Log_Name_Type := (others => '-');
       H_Rule    : constant String := "|-----------+--" & Subj_Rule;
    begin
       Byte_Queue.Format.Append_Line
@@ -555,7 +555,7 @@ is
         (Queue => Queue,
          Item  => H_Rule);
 
-      for I in Subject_List.Subject_Names'Range loop
+      for I in Subject_List.Log_Subject_Names'Range loop
          Byte_Queue.Format.Append_Character
            (Queue => Queue,
             Item  => '|');
@@ -568,7 +568,7 @@ is
             Item  => " | ");
          Byte_Queue.Format.Append_Line
            (Queue => Queue,
-            Item  => Subject_List.Subject_Names (I));
+            Item  => Subject_List.Log_Subject_Names (I));
       end loop;
 
       Byte_Queue.Format.Append_Line

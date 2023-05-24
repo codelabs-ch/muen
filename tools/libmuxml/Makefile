@@ -11,6 +11,7 @@ SCHEMA_FILES = \
 SCHEMA_FILE = schema/`echo $* | sed -e 's/_a//g;s/_b//g;s/_src//g'`.xsd
 
 XSD_FILES = $(shell find schema/ -name '*.xsd')
+SCHEMA_PLUGINS = $(shell find schema_plugins/ -name '*.py')
 
 COMPONENT_TARGETS = $(SCHEMA_FILES)
 TEST_TARGETS      = $(COMPONENT_TARGETS) xmllint
@@ -30,9 +31,11 @@ include ../../projects/tests.mk
 $(OBJ_DIR) $(GEN_DIR):
 	@mkdir $@
 
-$(GEN_DIR)/muxml-%_schema.ads: $(XSD_FILES) $(RESOLVE_XSL) | $(GEN_DIR)
+$(GEN_DIR)/muxml-%_schema.ads: $(XSD_FILES) $(RESOLVE_XSL) $(SCHEMA_PLUGINS) | $(GEN_DIR)
 	@$(E) $(COMPONENT) "XSLT $*" \
 		"xsltproc --stringparam format $* $(RESOLVE_XSL) $(SCHEMA_FILE) > $(GEN_DIR)/$*.xsd"
+	@$(E) $(COMPONENT) "add doc plugin" \
+		"schema_plugins/xsd_plugin_doc.py $(GEN_DIR)/$*.xsd $(GEN_DIR)/$*.xsd"
 	@$(E) $(COMPONENT) "Xml2Ada $*" \
 		"$(XML2ADA) Muxml.$*_schema $(GEN_DIR)/$*.xsd $@"
 

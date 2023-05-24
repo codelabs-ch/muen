@@ -95,7 +95,7 @@ RUN useradd --create-home --home-dir $HOME user -G dialout \
 	&& chmod 755 /home/user
 
 # Alire 'meta' crate for the Muen toolchain
-ARG dev_env_rev=e106a56c8a8ebbb9b22172ac08461ed89a937ac8
+ARG dev_env_rev=38fac6533c3251e7cc67e5b16fcc5a9775c1d9cc
 RUN git clone https://git.codelabs.ch/alire/muen-dev-env.git $HOME/dev-env.alr \
 	&& cd $HOME/dev-env.alr \
 	&& git reset --hard $dev_env_rev \

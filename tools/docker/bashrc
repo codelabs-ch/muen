@@ -1,1 +1,1 @@
-eval `$HOME/dev-env.alr/env`
+source $HOME/dev-env.alr/env

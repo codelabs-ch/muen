@@ -84,9 +84,9 @@ is
    --D @Section Id => impl_inject_interrupt, Label => Interrupt Injection, Parent => impl_exit_handler, Priority => 70
    procedure Inject_Interrupt (Subject_ID : Skp.Global_Subject_ID_Type)
    with
-      Global => (Input  => (CPU_Info.APIC_ID, Subjects.State),
+      Global => (Input  => CPU_Info.APIC_ID,
                  In_Out => (Crash_Audit.State, Subjects_Interrupts.State,
-                            X86_64.State))
+                            Subjects.State, X86_64.State))
    is
       Vector            : Byte;
       Interrupt_Pending : Boolean;
@@ -108,6 +108,13 @@ is
             VMX.VMCS_Write
               (Field => Constants.VM_ENTRY_INTERRUPT_INFO,
                Value => Constants.VM_INTERRUPT_INFO_VALID + Word64 (Vector));
+
+            if not Subjects.Is_Running (ID => Subject_ID) then
+               --D @Text Section => impl_inject_interrupt, Priority => 10
+               --D If the subject is currently sleeping, then set it to running.
+               Subjects.Set_Running (ID    => Subject_ID,
+                                     Value => True);
+            end if;
          end if;
       end if;
 
@@ -139,8 +146,9 @@ is
                     Subjects_MSR_Store.State, Timed_Events.State,
                     VMX.VMCS_State, X86_64.State))
    is
-      Found    : Boolean;
-      Event_ID : Skp.Events.Event_Range;
+      Found         : Boolean;
+      Event_Handled : Boolean := False;
+      Event_ID      : Skp.Events.Event_Range;
    begin
       for I in Skp.Events.Event_Range loop
          --D @Text Section => impl_handle_target_event
@@ -152,6 +160,8 @@ is
             Event   => Event_ID);
 
          exit when not Found;
+
+         Event_Handled := True;
 
          --D @Text Section => impl_handle_target_event
          --D If an event is pending, it is consumed by looking up the target
@@ -188,6 +198,14 @@ is
          --D At most 64 target events are processed since that is the maximum
          --D number of events that can be pending.
       end loop;
+
+      if Event_Handled and not Subjects.Is_Running (ID => Subject_ID) then
+         --D @Text Section => impl_handle_target_event, Priority => 10
+         --D If an event was handled and the subject is currently sleeping, set
+         --D it to running.
+         Subjects.Set_Running (ID    => Subject_ID,
+                               Value => True);
+      end if;
    end Handle_Pending_Target_Event;
 
    -------------------------------------------------------------------------
@@ -857,18 +875,14 @@ is
       --D @Text Section => impl_exit_handler
       --D \paragraph{}
       --D Once the exit has been dealt with, the execution of the next subject
-      --D is prepared.
+      --D is prepared. Pending target events, if present, are handled see
+      --D \ref{impl_handle_target_event}.
       Current_Subject := Scheduler.Get_Current_Subject_ID;
-
-      if not Scheduler.Is_Current_Partition_Sleeping then
-         Handle_Pending_Target_Event (Subject_ID => Current_Subject);
-         --D @Text Section => impl_exit_handler
-         --D If the current scheduling partition is not asleep, pending target
-         --D events, if present, are handled see \ref{impl_handle_target_event}.
-         --D Then, a pending interrupt, if present, is prepared for injection,
-         --D see \ref{impl_inject_interrupt}.
-         Inject_Interrupt (Subject_ID => Current_Subject);
-      end if;
+      Handle_Pending_Target_Event (Subject_ID => Current_Subject);
+      --D @Text Section => impl_exit_handler
+      --D Then, a pending interrupt, if present, is prepared for injection, see
+      --D \ref{impl_inject_interrupt}.
+      Inject_Interrupt (Subject_ID => Current_Subject);
 
       --D @Text Section => impl_exit_handler
       --D \paragraph{}

@@ -47,24 +47,38 @@ is
                            X86_64.State)),
       Volatile_Function
    is
-      --D @Item List => impl_scheduling_is_active_conds
-      --D The subject has a pending event.
-      Pending_Events     : constant Boolean
-        := Subjects_Events.Has_Pending_Event (Subject => Subject_ID);
-      --D @Item List => impl_scheduling_is_active_conds
-      --D The subject has a pending interrupt.
-      Pending_Interrupts : constant Boolean
-        := Subjects_Interrupts.Has_Pending_Interrupt (Subject => Subject_ID);
-      --D @Item List => impl_scheduling_is_active_conds
-      --D The subject timed event has expired.
-      Expired_Timer      : constant Boolean
-        := Timed_Events.Has_Expired (Subject => Subject_ID);
+      Condition : Boolean;
    begin
-      return Pending_Events or Pending_Interrupts or Expired_Timer
       --D @Item List => impl_scheduling_is_active_conds
       --D The subject is running/has the running flag set, i.e. is not in the
       --D sleep state.
-        or Subjects.Is_Running (ID => Subject_ID);
+      if Subjects.Is_Running (ID => Subject_ID) then
+         return True;
+      end if;
+
+      --D @Item List => impl_scheduling_is_active_conds
+      --D The subject has a pending event.
+      Condition := Subjects_Events.Has_Pending_Event (Subject => Subject_ID);
+      if Condition then
+         return True;
+      end if;
+
+      --D @Item List => impl_scheduling_is_active_conds
+      --D The subject has a pending interrupt.
+      Condition := Subjects_Interrupts.Has_Pending_Interrupt
+        (Subject => Subject_ID);
+      if Condition then
+         return True;
+      end if;
+
+      --D @Item List => impl_scheduling_is_active_conds
+      --D The subject timed event has expired.
+      Condition := Timed_Events.Has_Expired (Subject => Subject_ID);
+      if Condition then
+         return True;
+      end if;
+
+      return False;
    end Is_Active;
 
    -------------------------------------------------------------------------
@@ -98,15 +112,6 @@ is
       return Policy.Scheduling_Partition_Config
         (Partition_ID).Groups (Group_Index);
    end Current_Scheduling_Group_ID;
-
-   -------------------------------------------------------------------------
-
-   function Is_Current_Partition_Sleeping return Boolean
-   is (Scheduling_Partitions (Current_Scheduling_Partition_ID).Sleeping)
-   with
-      Refined_Global =>
-         (Input => (CPU_Info.CPU_ID, Global_Current_Major_Frame_ID,
-                    Current_Minor_Frame_ID, Scheduling_Partitions));
 
    -------------------------------------------------------------------------
 

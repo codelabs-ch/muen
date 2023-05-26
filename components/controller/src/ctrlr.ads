@@ -40,4 +40,8 @@ is
    --  Run controller.
    procedure Run;
 
+   --  Yield execution.
+   procedure Yield
+   with Global => null;
+
 end Ctrlr;

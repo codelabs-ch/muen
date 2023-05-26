@@ -33,6 +33,9 @@
    <group>
     <subject name="dbgserver"/>
    </group>
+   <group>
+    <subject name="time"/>
+   </group>
   </partition>
   <partition name="vt">
    <group>
@@ -42,11 +45,6 @@
   <partition name="tau0">
    <group>
     <subject name="tau0"/>
-   </group>
-  </partition>
-  <partition name="time">
-   <group>
-    <subject name="time"/>
    </group>
   </partition>
   <partition name="controller">
@@ -187,7 +185,7 @@
    <minorFrame partition="nic_linux" ticks="4"/>
    <minorFrame partition="debugserver" ticks="1"/>
    <minorFrame partition="nic_linux" ticks="4"/>
-   <minorFrame partition="time" ticks="1"/>
+   <minorFrame partition="debugserver" ticks="1"/>
    <minorFrame partition="nic_linux" ticks="4"/>
    <minorFrame partition="debugserver" ticks="1"/>
    <minorFrame partition="nic_linux" ticks="4"/>
@@ -219,7 +217,7 @@
    <minorFrame partition="nic_linux" ticks="4"/>
    <minorFrame partition="debugserver" ticks="1"/>
    <minorFrame partition="nic_linux" ticks="4"/>
-   <minorFrame partition="time" ticks="1"/>
+   <minorFrame partition="debugserver" ticks="1"/>
    <minorFrame partition="nic_linux" ticks="4"/>
    <minorFrame partition="debugserver" ticks="1"/>
    <minorFrame partition="nic_linux" ticks="4"/>
@@ -357,7 +355,7 @@
    <minorFrame partition="nic_linux" ticks="4"/>
    <minorFrame partition="controller" ticks="1"/>
    <minorFrame partition="nic_linux" ticks="4"/>
-   <minorFrame partition="time" ticks="1"/>
+   <minorFrame partition="debugserver" ticks="1"/>
    <minorFrame partition="nic_linux" ticks="4"/>
    <minorFrame partition="debugserver" ticks="1"/>
    <minorFrame partition="nic_linux" ticks="4"/>
@@ -389,7 +387,7 @@
    <minorFrame partition="nic_linux" ticks="4"/>
    <minorFrame partition="idle_1" ticks="1"/>
    <minorFrame partition="nic_linux" ticks="4"/>
-   <minorFrame partition="time" ticks="1"/>
+   <minorFrame partition="debugserver" ticks="1"/>
   </cpu>
  </majorFrame>
 </scheduling>

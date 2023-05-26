@@ -1,10 +1,24 @@
 <subject name="ps2">
+ <vcpu>
+  <vmx>
+   <controls>
+    <proc>
+     <!-- VM-Exit on HLT instruction -->
+     <HLTExiting>1</HLTExiting>
+    </proc>
+   </controls>
+  </vmx>
+ </vcpu>
  <events>
   <source>
    <group name="vmx_exit">
     <default physical="system_panic">
      <system_panic/>
     </default>
+    <!-- Exit Reason 12: HLT -->
+    <event id="12" logical="sleep" physical="subject_sleep">
+     <subject_sleep/>
+    </event>
    </group>
   </source>
  </events>

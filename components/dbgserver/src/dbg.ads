@@ -26,6 +26,10 @@ is
    --  Run log server.
    procedure Run;
 
+   --  Yield execution.
+   procedure Yield
+   with Global => null;
+
 private
 
    type Subject_Buffer_Range is range

@@ -23,14 +23,12 @@
     <subject name="nic_dm"/>
    </group>
   </partition>
-  <partition name="time">
-   <group>
-    <subject name="time"/>
-   </group>
-  </partition>
   <partition name="debugserver">
    <group>
     <subject name="dbgserver"/>
+   </group>
+   <group>
+    <subject name="time"/>
    </group>
   </partition>
   <partition name="vt">
@@ -62,9 +60,9 @@
    <minorFrame partition="nic_linux" ticks="120"/>
   </cpu>
   <cpu id="1">
-   <minorFrame partition="time" ticks="20"/>
    <minorFrame partition="debugserver" ticks="30"/>
    <minorFrame partition="vt" ticks="25"/>
+   <minorFrame partition="debugserver" ticks="20"/>
    <minorFrame partition="ahci_driver" ticks="40"/>
    <minorFrame partition="storage_linux" ticks="35"/>
   </cpu>

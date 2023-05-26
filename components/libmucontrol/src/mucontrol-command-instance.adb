@@ -26,10 +26,15 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
+with System.Machine_Code;
+
 package body Mucontrol.Command.Instance
 with
    Refined_State => (State => Command_Page)
 is
+
+   --  Pause execution of busy loop.
+   procedure Pause;
 
    -------------------------------------------------------------------------
 
@@ -66,6 +71,18 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Pause
+   with
+      SPARK_Mode => Off
+   is
+   begin
+      System.Machine_Code.Asm
+        (Template => "pause",
+         Volatile => True);
+   end Pause;
+
+   -------------------------------------------------------------------------
+
    procedure Wait_For_Next (Cmd : in out Command_Type)
    is
       Cur_Cmd : constant Command_Type := Cmd;
@@ -73,6 +90,7 @@ is
       loop
          Cmd := Command_Page.Command;
          exit when Cmd /= Cur_Cmd;
+         Pause;
       end loop;
    end Wait_For_Next;
 

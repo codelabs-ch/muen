@@ -104,8 +104,6 @@
   <event name="trap_to_isolation_tests_monitor" mode="switch"/>
   <event name="resume_isolation_tests" mode="switch"/>
   <event name="example_self" mode="self"/>
-  <event name="subject_sleep" mode="kernel"/>
-  <event name="subject_yield" mode="kernel"/>
  </events>
 
  <channels>

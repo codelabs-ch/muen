@@ -1,10 +1,24 @@
 <subject name="controller">
+ <vcpu>
+  <vmx>
+   <controls>
+    <proc>
+     <!-- VM-Exit on PAUSE instruction -->
+     <PAUSEExiting>1</PAUSEExiting>
+    </proc>
+   </controls>
+  </vmx>
+ </vcpu>
  <events>
   <source>
    <group name="vmx_exit">
     <default physical="system_panic">
      <system_panic/>
     </default>
+    <!-- Exit Reason 40: PAUSE -->
+    <event id="40" logical="yield" physical="subject_yield">
+     <subject_yield/>
+    </event>
    </group>
   </source>
  </events>

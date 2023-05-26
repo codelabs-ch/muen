@@ -24,5 +24,6 @@ begin
    Dbg.Crash_Audit.Process;
    loop
       Dbg.Run;
+      Dbg.Yield;
    end loop;
 end Dbgserver;

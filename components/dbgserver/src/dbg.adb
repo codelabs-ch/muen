@@ -15,6 +15,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.CPU;
+
 with Dbg.Buffers;
 with Dbg.PC_Speaker_Dbg;
 with Dbg.Serial;
@@ -135,5 +137,9 @@ is
       Run_xHC_Dbg (Channel => Instance (INTERFACE_XHCDBG));
       Run_PC_Speaker_Dbg (Channel => Instance (INTERFACE_PCSPKR));
    end Run;
+
+   -------------------------------------------------------------------------
+
+   procedure Yield renames SK.CPU.Pause;
 
 end Dbg;

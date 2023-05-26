@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.CPU;
+
 with Ctrlr.Lifecycle;
 
 package body Ctrlr
@@ -30,5 +32,9 @@ is
          Lifecycle.Process (ID => I);
       end loop;
    end Run;
+
+   -------------------------------------------------------------------------
+
+   procedure Yield renames SK.CPU.Pause;
 
 end Ctrlr;

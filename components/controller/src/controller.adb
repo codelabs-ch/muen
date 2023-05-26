@@ -28,5 +28,6 @@ begin
 
    loop
       Ctrlr.Run;
+      Ctrlr.Yield;
    end loop;
 end Controller;

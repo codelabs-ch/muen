@@ -23,11 +23,6 @@
     <subject name="unikernel_sm"/>
    </group>
   </partition>
-  <partition name="time">
-   <group>
-    <subject name="time"/>
-   </group>
-  </partition>
   <partition name="controller">
    <group>
     <subject name="controller"/>
@@ -36,6 +31,9 @@
   <partition name="debugserver">
    <group>
     <subject name="dbgserver"/>
+   </group>
+   <group>
+    <subject name="time"/>
    </group>
   </partition>
   <partition name="vt">
@@ -59,7 +57,7 @@
    <minorFrame partition="nic_linux" ticks="20"/>
   </cpu>
   <cpu id="1">
-   <minorFrame partition="time" ticks="10"/>
+   <minorFrame partition="storage_linux" ticks="10"/>
    <minorFrame partition="controller" ticks="10"/>
    <minorFrame partition="debugserver" ticks="30"/>
    <minorFrame partition="vt" ticks="25"/>

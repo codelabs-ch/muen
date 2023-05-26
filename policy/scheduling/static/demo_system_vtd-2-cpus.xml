@@ -35,12 +35,10 @@
   </partition>
   <partition name="debugserver">
    <group>
-    <subject name="dbgserver"/>
-   </group>
-  </partition>
-  <partition name="time">
-   <group>
     <subject name="time"/>
+   </group>
+   <group>
+    <subject name="dbgserver"/>
    </group>
   </partition>
   <if variable="ahci_drv_active" value="true">
@@ -167,8 +165,7 @@
   </cpu>
   <cpu id="1">
    <minorFrame partition="storage_linux" ticks="2"/>
-   <minorFrame partition="debugserver" ticks="2"/>
-   <minorFrame partition="time" ticks="1"/>
+   <minorFrame partition="debugserver" ticks="3"/>
    <minorFrame partition="storage_linux" ticks="2"/>
    <if variable="ahci_drv_active" value="true">
     <minorFrame partition="ahci_driver" ticks="3"/>
@@ -392,8 +389,7 @@
    <minorFrame partition="storage_linux" ticks="3"/>
    <minorFrame partition="debugserver" ticks="2"/>
    <minorFrame partition="storage_linux" ticks="3"/>
-   <minorFrame partition="debugserver" ticks="1"/>
-   <minorFrame partition="time" ticks="1"/>
+   <minorFrame partition="debugserver" ticks="2"/>
    <minorFrame partition="storage_linux" ticks="3"/>
    <minorFrame partition="vt" ticks="2"/>
    <minorFrame partition="storage_linux" ticks="3"/>

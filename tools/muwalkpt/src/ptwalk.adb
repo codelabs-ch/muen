@@ -86,7 +86,7 @@ is
          Mulog.Log (Msg => "Invalid paging structure reference: Address below"
                     & " given PT pointer ("
                     & Mutools.Utils.To_Hex (Number => PT_Address) & " < "
-                    & Mutools.Utils.To_Hex (Number => PT_Pointer));
+                    & Mutools.Utils.To_Hex (Number => PT_Pointer) & ")");
          Success := False;
          Translated_Addr := 0;
          return;

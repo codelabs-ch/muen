@@ -44,6 +44,7 @@ package body Pt.Generator.Test_Data.Tests is
       is
          Policy : Muxml.XML_Data_Type;
 
+         Knl_Pt0 : constant String := "xilinxzcu104-core-0.pt";
          Sub1_Pt : constant String := "xilinxzcu104-linux.pt";
          Sub2_Pt : constant String := "xilinxzcu104-event_logger.pt";
       begin
@@ -54,6 +55,10 @@ package body Pt.Generator.Test_Data.Tests is
          Write (Output_Dir => "obj",
                 Policy     => Policy);
 
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/" & Knl_Pt0,
+                  Filename2 => "obj/" & Knl_Pt0),
+                 Message   => "ARMv8a: Kernel pagetables mismatch");
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => "data/" & Sub1_Pt,
                   Filename2 => "obj/" & Sub1_Pt),

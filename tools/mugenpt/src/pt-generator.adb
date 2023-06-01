@@ -32,6 +32,7 @@ with Mutools.Utils;
 
 with Interfaces;
 
+with Paging.ARMv8a.Stage1;
 with Paging.ARMv8a.Stage2;
 with Paging.EPT;
 with Paging.IA32e;
@@ -104,11 +105,10 @@ is
         Mutools.System_Config.Get_Value
           (Data => Policy,
            Name => "armv8");
+      Paging_Mode : constant Paging.Paging_Mode_Type
+        := (if Is_ARM_System then Paging.ARMv8a_Stage1_Mode
+            else Paging.IA32e_Mode);
    begin
-      if Is_ARM_System then
-         return;
-      end if;
-
       for I in 0 .. DOM.Core.Nodes.Length (List => CPUs) - 1 loop
          declare
             ID_Str : constant String := I'Img (I'Img'First + 1 .. I'Img'Last);
@@ -148,7 +148,7 @@ is
                Devices      => Devices,
                Pml4_Address => PML4_Addr,
                Filename     => Output_Dir & "/" & Filename,
-               PT_Type      => Paging.IA32e_Mode);
+               PT_Type      => Paging_Mode);
          end;
       end loop;
    end Write_Kernel_Pagetable;
@@ -444,6 +444,15 @@ is
                   2 => Paging.EPT.Serialize_PDPT'Access,
                   3 => Paging.EPT.Serialize_PD'Access,
                   4 => Paging.EPT.Serialize_PT'Access));
+         when Paging.ARMv8a_Stage1_Mode =>
+            Paging.Layouts.Serialize
+              (Stream      => Stream (File),
+               Mem_Layout  => Mem_Layout,
+               Serializers =>
+                 (1 => Paging.ARMv8a.Stage1.Serialize_Level0'Access,
+                  2 => Paging.ARMv8a.Stage1.Serialize_Level1'Access,
+                  3 => Paging.ARMv8a.Stage1.Serialize_Level2'Access,
+                  4 => Paging.ARMv8a.Stage1.Serialize_Level3'Access));
          when Paging.ARMv8a_Stage2_Mode =>
             Paging.Layouts.Serialize
               (Stream      => Stream (File),
@@ -452,8 +461,6 @@ is
                  (1 => Paging.ARMv8a.Stage2.Serialize_Level1'Access,
                   2 => Paging.ARMv8a.Stage2.Serialize_Level2'Access,
                   3 => Paging.ARMv8a.Stage2.Serialize_Level3'Access));
-         when others =>
-            null;
       end case;
 
       Close (File => File);

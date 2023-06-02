@@ -17,7 +17,7 @@
 
 with Ada.Containers.Indefinite_Ordered_Maps;
 
-package Mutools.Amend.Ordering
+package Muxml.Grammar_Tools
 is
    type Insert_Query_Result_Type is range -2 .. Integer'Last;
    subtype Insert_Index is Insert_Query_Result_Type
@@ -27,7 +27,8 @@ is
 
    use type String_Vector.Vector;
 
-   --  This function is used to tell amend where to insert a particular node.
+   --  This function is used to tell amend and other tools where to insert a
+   --  particular node.
    --  Returns an index before which New_Child can be inserted such that
    --    the schema is satisfied (e.g. "0" means "before the first child").
    --  Ancestors is a list always containing the name of the parent P of
@@ -55,6 +56,16 @@ is
    -- raised if the schema is not compliant with
    -- https://www.w3.org/TR/xmlschema-0/
    Validation_Error : exception;
+
+   --  Read the given schema definition and write the
+   --  following to the internal package state:
+   --  (1) a mapping of the form
+   --     "typename -> ((nodename1, nodename2, ...),
+   --                   (type nodename1, type nodename2, ...))"  and
+   --  (2) a mapping of the form
+   --     "nodename  -> (unique typename of nodename)".
+   --  The procedure overwrites any former order information.
+   procedure Init_Order_Information (Schema_XML_Data : String);
 
 private
 
@@ -89,19 +100,9 @@ private
    --  its results in Order_Info.
    Order_Info : Order_Information;
 
-   --  Read the schema definition of the policy_src format and write the
-   --  following to the internal package state:
-   --  (1) a mapping of the form
-   --     "typename -> ((nodename1, nodename2, ...),
-   --                   (type nodename1, type nodename2, ...))"  and
-   --  (2) a mapping of the form
-   --     "nodename  -> (unique typename of nodename)".
-   --  Schema_XML_Data is a parameter in order to facilitate unit tests.
-   procedure Init_Order_Information (Schema_XML_Data : String);
-
    --  Return a string representation of Order_Information.
    --  More To_String functions are implemented in the body.
    --  This function is in the spec because it is used in the unittests.
    function To_String (OI : Order_Information) return String;
 
-end Mutools.Amend.Ordering;
+end Muxml.Grammar_Tools;

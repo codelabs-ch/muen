@@ -316,4 +316,38 @@ is
    package Node_List_Package is new
      Ada.Containers.Doubly_Linked_Lists (Element_Type => DOM.Core.Node);
 
+   --  Return a vector with the names of the ancestors of Node,
+   --  starting with the name of Node.
+   function Get_Ancestor_Names
+     (Node : DOM.Core.Node)
+     return  String_Vector.Vector;
+
+   --  Insert New_Child as a child of Parent such that the resulting list of
+   --  children in Parent validates against the currently loaded XML-schema
+   --  (load a schema with Init_Order_Information).
+   --
+   --  If Clone_Child is True, a deep clone of New_Child is inserted.
+   --  Siblings_Names and  Siblings_Nodes may either both be empty or must
+   --  both contain the node-name/node of all children of Parent
+   --  (element-nodes only; in the correct order).
+   --  Both will be updated to hold the new list of children of Parent.
+   --  Ancestors must be a list of node-names starting with the name of Parent.
+   --  Ancestors is used to determine the type of Parent in case of abiguity.
+   --  Insertion_Index is the index in the resulting Siblings_Nodes vector
+   --  where New_Child (or its clone) can be found.
+   procedure Insert_Child
+     (Parent          :        DOM.Core.Node;
+      New_Child       :        DOM.Core.Node;
+      Clone_Child     :        Boolean := False;
+      Siblings_Names  : in out String_Vector.Vector;
+      Siblings_Nodes  : in out Node_Vector.Vector;
+      Ancestors       :        String_Vector.Vector;
+      Insertion_Index :    out Natural);
+
+   --  Wrapper for Insert_Child with minimal interface
+   procedure Insert_Child
+    (Parent      : DOM.Core.Node;
+     New_Child   : DOM.Core.Node;
+     Clone_Child : Boolean := False);
+
 end Muxml.Utils;

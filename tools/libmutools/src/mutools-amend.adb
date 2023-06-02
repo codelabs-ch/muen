@@ -19,7 +19,6 @@ with Ada.Strings.Maps;
 with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 with Ada.Exceptions;
-with Ada.Containers.Indefinite_Vectors;
 
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
@@ -28,7 +27,11 @@ with DOM.Core.Documents.Local;
 with McKae.XML.XPath.XIA;
 
 with Mulog;
-with Mutools.Amend.Ordering;
+
+with Muxml.Grammar_Tools;
+with Muxml.system_src_schema;
+with Muxml.Utils;
+
 with Mutools.Xmldebuglog;
 
 package body Mutools.Amend
@@ -59,7 +62,12 @@ is
    begin
       Mulog.Log (Msg => "Expanding "
          & DOM.Core.Nodes.Length (List => Amend_Statements)'Img
-         & " amend-statements");
+                   & " amend-statements");
+
+      --  Initialize the insertion-algorithm with the XSD-schema
+      Muxml.Grammar_Tools.Init_Order_Information
+        (Schema_XML_Data => Muxml.system_src_schema.Data);
+
       for I in 0 .. DOM.Core.Nodes.Length (List => Amend_Statements) - 1 loop
          declare
             Amend_Statement : DOM.Core.Node
@@ -239,24 +247,12 @@ is
    is
       use type DOM.Core.Node;
       use all type DOM.Core.Node_Types;
-      use type Mutools.Amend.Ordering.Insert_Index;
 
       type Text_Child_Status_Type is
          (Unique_Essential, None_Or_Not_Essential, Many_Or_Other_Type);
 
-      package Node_Vector is new Ada.Containers.Indefinite_Vectors
-         (Index_Type   => Natural,
-          Element_Type => DOM.Core.Node);
-
       New_Child_Type : constant DOM.Core.Node_Types
                      := DOM.Core.Nodes.Node_Type (N => New_Child);
-
-      ----------------------------------------------------------------------
-
-      --  Return a vector with the names of the ancestors of Node,
-      --  starting with the name of Node.
-      function Get_Ancestor_Names (Node : DOM.Core.Node)
-               return  Mutools.String_Vector.Vector;
 
       ----------------------------------------------------------------------
 
@@ -268,17 +264,6 @@ is
       --  Returns "Many_Or_Other_Type" otherwise.
       function Has_Only_Text_Child (Node : DOM.Core.Node)
                                    return Text_Child_Status_Type;
-
-      ----------------------------------------------------------------------
-
-      --  Insert element-node New_Child into parent.
-      --  Uses siblings (i.e., children of Parent) to determine insertion
-      --  position.
-      procedure Insert
-         (Parent         : DOM.Core.Node;
-          New_Child      : DOM.Core.Node;
-          Siblings_Names : Mutools.String_Vector.Vector;
-          Siblings_Nodes : Node_Vector.Vector);
 
       ----------------------------------------------------------------------
 
@@ -307,23 +292,6 @@ is
 
       --  Get a string representation of Node, excluding its children.
       function Node_To_String (Node : DOM.Core.Node) return String;
-
-      ----------------------------------------------------------------------
-
-      function Get_Ancestor_Names (Node : DOM.Core.Node)
-               return  Mutools.String_Vector.Vector
-      is
-         Output : Mutools.String_Vector.Vector;
-         Parent : DOM.Core.Node
-                := DOM.Core.Nodes.Parent_Node (Node);
-      begin
-         Output.Append (DOM.Core.Nodes.Node_Name (N => Node));
-         while Parent /= null loop
-            Output.Append (DOM.Core.Nodes.Node_Name (N => Parent));
-            Parent := DOM.Core.Nodes.Parent_Node (Parent);
-         end loop;
-         return Output;
-      end Get_Ancestor_Names;
 
       ----------------------------------------------------------------------
 
@@ -356,62 +324,6 @@ is
             end if;
          end if;
       end Has_Only_Text_Child;
-
-      ----------------------------------------------------------------------
-
-      procedure Insert
-         (Parent         : DOM.Core.Node;
-          New_Child      : DOM.Core.Node;
-          Siblings_Names : Mutools.String_Vector.Vector;
-          Siblings_Nodes : Node_Vector.Vector)
-      is
-         Ancestors    : constant Mutools.String_Vector.Vector
-                      := Get_Ancestor_Names (Node => Parent);
-         Query_Result : constant Ordering.Insert_Query_Result_Type
-                      := Ordering.Get_Insert_Index
-                        (Ancestors => Ancestors,
-                         New_Child => DOM.Core.Nodes.Node_Name (N => New_Child),
-                         Siblings  => Siblings_Names);
-         Copy_Of_New_Child, Ref_Child : DOM.Core.Node;
-      begin
-         if Query_Result = Ordering.No_Legal_Index then
-            raise Muxml.Validation_Error with
-               "Could not find valid place to insert '"
-               & DOM.Core.Nodes.Node_Name (N => New_Child)
-               & "' into node with name '"
-               & DOM.Core.Nodes.Node_Name (N => Parent)
-               & "'";
-         elsif Query_Result = Ordering.No_Unique_Index then
-            raise Muxml.Validation_Error with
-               "Insufficient information to insert '"
-               & DOM.Core.Nodes.Node_Name (N => New_Child)
-               & "' into node with name '"
-               & DOM.Core.Nodes.Node_Name (N => Parent)
-               & "'";
-         elsif Query_Result = Ordering.
-            Insert_Query_Result_Type (Siblings_Names.Length)
-         then
-            --  This triggers Insert_Before to append the new child at the end.
-            Ref_Child := null;
-         else
-            Ref_Child := Siblings_Nodes (Integer (Query_Result));
-         end if;
-
-         Copy_Of_New_Child := DOM.Core.Nodes.Insert_Before
-            (N         => Parent,
-             New_Child => DOM.Core.Documents.Local.Clone_Node
-                (N    => New_Child,
-                 Deep => True),
-             Ref_Child => Ref_Child);
-
-         if Debug_Active then
-            Xmldebuglog.Copy_Log_Entry
-               (Old_Node => New_Child,
-                New_Node => Copy_Of_New_Child,
-                Deep     => True);
-         end if;
-
-      end Insert;
 
       ----------------------------------------------------------------------
 
@@ -448,9 +360,10 @@ is
          (Parent    : DOM.Core.Node;
           New_Child : DOM.Core.Node)
       is
-         Siblings_Names : Mutools.String_Vector.Vector;
-         Siblings_Nodes : Node_Vector.Vector;
-         Parent_Child   : DOM.Core.Node;
+         Siblings_Names  : Mutools.String_Vector.Vector;
+         Siblings_Nodes  : Muxml.Node_Vector.Vector;
+         Parent_Child    : DOM.Core.Node;
+         Insertion_Index : Natural;
       begin
 
          Parent_Child := DOM.Core.Nodes.First_Child (N => Parent);
@@ -495,11 +408,20 @@ is
 
          --  As the 'return' above was not reached
          --  none of the children of Parent matches.
-         Insert
-            (Parent         => Parent,
-             New_Child      => New_Child,
-             Siblings_Names => Siblings_Names,
-             Siblings_Nodes => Siblings_Nodes);
+         Muxml.Utils.Insert_Child
+            (Parent          => Parent,
+             New_Child       => New_Child,
+             Clone_Child     => True,
+             Siblings_Names  => Siblings_Names,
+             Siblings_Nodes  => Siblings_Nodes,
+             Ancestors       => Muxml.Utils.Get_Ancestor_Names (Node => Parent),
+             Insertion_Index => Insertion_Index);
+         if Debug_Active then
+            Xmldebuglog.Copy_Log_Entry
+              (Old_Node => New_Child,
+               New_Node => Siblings_Nodes (Insertion_Index),
+               Deep     => True);
+         end if;
 
       end Merge_Regular_Element;
 
@@ -510,8 +432,9 @@ is
           New_Child : DOM.Core.Node)
       is
          Parent_Child, Parent_Child_Marked : DOM.Core.Node;
-         Siblings_Names : Mutools.String_Vector.Vector;
-         Siblings_Nodes : Node_Vector.Vector;
+         Siblings_Names                    : Mutools.String_Vector.Vector;
+         Siblings_Nodes                    : Muxml.Node_Vector.Vector;
+         Insertion_Index                   : Natural;
       begin
 
          Parent_Child := DOM.Core.Nodes.First_Child (N => Parent);
@@ -581,16 +504,24 @@ is
                       New_Node => Parent_Child_Marked,
                       Deep     => False);
                end if;
-
                return;
-
             end;
          else
-            Insert
-               (Parent         => Parent,
-                New_Child      => New_Child,
-                Siblings_Names => Siblings_Names,
-                Siblings_Nodes => Siblings_Nodes);
+            Muxml.Utils.Insert_Child
+              (Parent          => Parent,
+               New_Child       => New_Child,
+               Clone_Child     => True,
+               Siblings_Names  => Siblings_Names,
+               Siblings_Nodes  => Siblings_Nodes,
+               Ancestors       => Muxml.Utils.Get_Ancestor_Names
+                 (Node => Parent),
+               Insertion_Index => Insertion_Index);
+            if Debug_Active then
+               Xmldebuglog.Copy_Log_Entry
+                 (Old_Node => New_Child,
+                  New_Node => Siblings_Nodes (Insertion_Index),
+                  Deep     => True);
+            end if;
          end if;
       end Merge_Text_Branch;
 

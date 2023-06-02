@@ -19,10 +19,14 @@
 
 with Ada.Finalization;
 
+with Ada.Containers.Indefinite_Vectors;
+
 with DOM.Core;
 
 package Muxml
 is
+   use type DOM.Core.Node;
+
    type Schema_Kind is
      (None,
       Component,
@@ -66,6 +70,14 @@ is
 
    Validation_Error : exception;
    XML_Input_Error  : exception;
+
+   package String_Vector is new Ada.Containers.Indefinite_Vectors
+      (Element_Type => String,
+       Index_Type   => Natural);
+
+   package Node_Vector is new Ada.Containers.Indefinite_Vectors
+         (Index_Type   => Natural,
+          Element_Type => DOM.Core.Node);
 
 private
 

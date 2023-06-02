@@ -22,12 +22,11 @@ with Ada.Characters.Latin_1;
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
-with Muxml.system_src_schema;
 with Muxml.Utils;
 
 with McKae.XML.XPath.XIA;
 
-package body Mutools.Amend.Ordering
+package body Muxml.Grammar_Tools
 is
 
    -------------------------------------------------------------------------
@@ -162,7 +161,6 @@ is
        (Schema_XML_Data : String)
    is
       use type DOM.Core.Node_Types;
-      use type DOM.Core.Node;
       use type Ada.Containers.Count_Type;
 
       package Node_Vector is new Ada.Containers.Indefinite_Vectors
@@ -183,7 +181,7 @@ is
 
       --  Check that there is only one namespace.
       procedure Check_Namespace
-         (Schema_Node : DOM.Core.Node;
+         (Schema_Node     : DOM.Core.Node;
           Schema_XML_Data : String);
 
       ----------------------------------------------------------------------
@@ -978,6 +976,10 @@ is
       Check_Forbidden_Element_Names (Schema_Node => Schema_Node);
       Check_Substitution_Group (Schema_Node => Schema_Node);
 
+      --  Clear potentially present state
+      Order_Info.Type_To_Children.Clear;
+      Order_Info.Name_To_Type.Clear;
+
       --  Main evaluation
       Find_Root_Element_Node_And_Recurse (Schema_Node => Schema_Node);
 
@@ -1113,8 +1115,4 @@ is
          & "]";
       return ASU.To_String (Output);
    end To_String;
-
-begin
-   Init_Order_Information (Schema_XML_Data => Muxml.system_src_schema.Data);
-
-end  Mutools.Amend.Ordering;
+end Muxml.Grammar_Tools;

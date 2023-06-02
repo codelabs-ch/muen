@@ -106,9 +106,8 @@ is
       Config_Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/*/config/boolean"
-               & " | /*/config/integer"
-               & " | /*/config/string");
+           XPath => "/*[self::system or self::component or self::library]"
+             & "/config/*[self::boolean or self::integer or self::string]");
       Set_Of_Names : Set_Of_Strings_Type.Set;
    begin
       for I in Natural range 0 .. DOM.Core.Nodes.Length (List => Config_Nodes) - 1 loop
@@ -165,7 +164,8 @@ is
    procedure Check_Config_Boolean_Values is new Check_Type_Values
      (Value_Type => Boolean,
       Typename   => "boolean",
-      XPath      => "/*/config/",
+      XPath      => "/*[self::system or self::component or self::library]"
+        & "/config/",
       Value_Kind => "config variable",
       Name       => Config_Var_Name);
 
@@ -177,7 +177,8 @@ is
    procedure Check_Config_Integer_Values is new Check_Type_Values
      (Value_Type => Integer,
       Typename   => "integer",
-      XPath      => "/*/config/",
+      XPath      => "/*[self::system or self::component or self::library]"
+        & "/config/",
       Value_Kind => "config variable",
       Name       => Config_Var_Name);
 
@@ -189,7 +190,8 @@ is
    procedure Check_Boolean_Values is new Check_Type_Values
      (Value_Type => Boolean,
       Typename   => "boolean",
-      XPath      => "/*/expressions//",
+      XPath      => "/*[self::system or self::component or self::library]"
+        & "/expressions//",
       Value_Kind => "expression",
       Name       => Expression_Name);
 
@@ -201,7 +203,8 @@ is
    procedure Check_Integer_Values is new Check_Type_Values
      (Value_Type => Integer,
       Typename   => "integer",
-      XPath      => "/*/expressions//",
+      XPath      => "/*[self::system or self::component or self::library]"
+        & "/expressions//",
       Value_Kind => "expression",
       Name       => Expression_Name);
 
@@ -221,13 +224,15 @@ is
       Config_Vars : constant DOM.Core.Node_List
                   := McKae.XML.XPath.XIA.XPath_Query
                         (N     => XML_Data.Doc,
-                         XPath => "/*/config/boolean"
-                           & " | /*/config/integer"
-                           & " | /*/config/string");
+                         XPath => "/*[self::system or self::component"
+                           & " or self::library]/config/"
+                           & "*[self::boolean or self::integer"
+                           & " or self::string]");
       Exprs       : constant DOM.Core.Node_List
                   := McKae.XML.XPath.XIA.XPath_Query
                         (N     => XML_Data.Doc,
-                         XPath => "/*/expressions/expression");
+                         XPath => "/*[self::system or self::component"
+                           & " or self::library]/expressions/expression");
       Known_Names : Set;
 
       ----------------------------------------------------------------------
@@ -392,10 +397,10 @@ is
       Cfg_Expr_Values : constant DOM.Core.Node_List
          := McKae.XML.XPath.XIA.XPath_Query
                (N     => XML_Data.Doc,
-                XPath => "/*/config/boolean "
-                  & "| /*/config/integer "
-                  & "| /*/config/string "
-                  & "| /*/expressions/expression");
+                XPath => "/*[self::system or self::component or self::library]"
+                  & "/config/*[self::boolean or self::integer or self::string]"
+                  & " | /*[self::system or self::component or self::library]"
+                  & "/expressions/expression");
    begin
       Mulog.Log (Msg => "Checking uniqueness of"
                  & DOM.Core.Nodes.Length (List => Cfg_Expr_Values)'Img

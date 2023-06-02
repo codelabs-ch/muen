@@ -239,7 +239,7 @@ is
             Child_Children : constant DOM.Core.Node_List
                := McKae.XML.XPath.XIA.XPath_Query
                (N     => Child,
-                XPath => "./*");
+                XPath => "variable | boolean | integer | string");
             Child_Child : DOM.Core.Node;
             Child_Value : Value_Type_Tuple;
          begin

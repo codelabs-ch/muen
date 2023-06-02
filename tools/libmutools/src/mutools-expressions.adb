@@ -778,12 +778,12 @@ is
    is
       Backtrace  : String_Vector.Vector;
       Vars_Exprs : constant DOM.Core.Node_List
-                 := McKae.XML.XPath.XIA.XPath_Query
-                      (N     => Policy.Doc,
-                       XPath =>  "/*/config/boolean | "
-                               & "/*/config/integer | "
-                               & "/*/config/string | "
-                               & "/*/expressions/expression");
+        := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Policy.Doc,
+         XPath =>  "/*[self::system or self::component or self::library]"
+           & "/config/*[self::boolean or self::integer or self::string]"
+           & " | /*[self::system or self::component or self::library]"
+           & "/expressions/expression");
       Node_Access : Access_Hashmaps_Type;
 
       ----------------------------------------------------------------------
@@ -803,8 +803,10 @@ is
          Config_Node_List : constant DOM.Core.Node_List
             := McKae.XML.XPath.XIA.XPath_Query
             (N     => Policy.Doc,
-             XPath => "/*/config");
-         Insert_Position, Config_Entry, Config_Node, System_Node, Dummy : DOM.Core.Node;
+             XPath => "/*[self::system or self::component or self::library]"
+               & "/config");
+         Insert_Position, Config_Entry   : DOM.Core.Node;
+         Config_Node, System_Node, Dummy : DOM.Core.Node;
 
       begin
          if DOM.Core.Nodes.Length (List => Config_Node_List) /= 0 then
@@ -1460,7 +1462,7 @@ is
       Children  : constant DOM.Core.Node_List
                 := McKae.XML.XPath.XIA.XPath_Query
                       (N     => Node,
-                       XPath => "./*");
+                       XPath => "concatenation | evalString");
 
       ----------------------------------------------------------------------
 
@@ -1480,7 +1482,7 @@ is
          Children  : constant DOM.Core.Node_List
             := McKae.XML.XPath.XIA.XPath_Query
             (N     => Node,
-             XPath => "./*");
+             XPath => "string | variable");
          Result    : ASU.Unbounded_String;
       begin
          if DOM.Core.Nodes.Length (List => Children) < 2 then
@@ -1592,19 +1594,10 @@ is
             return Evaluate_Concatenation
                (Node      => Child,
                 Backtrace => Backtrace);
-         elsif Child_Name = "evalString" then
+         else                -- Child_Name = "evalString" then
             return Evaluate_Eval_String
                (Node      => Child,
                 Backtrace => Backtrace);
-         else
-            raise Invalid_Expression with
-               "String-expression '"
-               & DOM.Core.Elements.Get_Attribute
-               (Elem => Node,
-                Name => "name")
-               & "' has an unknown child operation with name '"
-               & Child_Name
-               & "'";
          end if;
       end;
    end String_Expression;

@@ -1,7 +1,7 @@
 # required for MAKEFLAGS silent option
 include ../build-cfg/mk/exec.mk
 
-RECIPES =     \
+MUEN_CONTRIB_RECIPES ?= \
 	ada-bfd   \
 	alog      \
 	grub      \
@@ -9,13 +9,13 @@ RECIPES =     \
 	lsc       \
 	xia
 
-RECIPES_DOWNLOAD = $(RECIPES:%=download-%)
-RECIPES_CLEAN    = $(RECIPES:%=clean-%)
+RECIPES_DOWNLOAD = $(MUEN_CONTRIB_RECIPES:%=download-%)
+RECIPES_CLEAN    = $(MUEN_CONTRIB_RECIPES:%=clean-%)
 
 all: build_recipes
 
-build_recipes: $(RECIPES)
-$(RECIPES):
+build_recipes: $(MUEN_CONTRIB_RECIPES)
+$(MUEN_CONTRIB_RECIPES):
 	$(MAKE) -C $@
 
 gnatcoll: libgpr
@@ -29,4 +29,4 @@ clean: $(RECIPES_CLEAN)
 $(RECIPES_CLEAN):
 	$(MAKE) -C $(@:clean-%=%) clean
 
-.PHONY: $(RECIPES)
+.PHONY: $(MUEN_CONTRIB_RECIPES)

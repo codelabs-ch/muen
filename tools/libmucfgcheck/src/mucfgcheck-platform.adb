@@ -108,7 +108,14 @@ is
       For_Each_Match
         (XML_Data     => XML_Data,
          Source_XPath => "/system/platform/mappings/aliases/alias/resource",
-         Ref_XPath    => "/system/hardware/devices/device/*",
+         Ref_XPath    => "/system/hardware/devices/device/"
+           & "*[self::reservedMemory"
+           & " or self::description"
+           & " or self::pci"
+           & " or self::irq"
+           & " or self::memory"
+           & " or self::ioPort"
+           & " or self::capabilities]",
          Log_Message  => "alias device resource reference(s)",
          Error        => Error_Msg'Access,
          Match        => Mutools.Match.Is_Valid_Resource_Ref'Access);

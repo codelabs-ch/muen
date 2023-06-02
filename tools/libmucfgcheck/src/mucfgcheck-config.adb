@@ -221,7 +221,9 @@ is
       Config_Vars : constant DOM.Core.Node_List
                   := McKae.XML.XPath.XIA.XPath_Query
                         (N     => XML_Data.Doc,
-                         XPath => "/*/config/*");
+                         XPath => "/*/config/boolean"
+                           & " | /*/config/integer"
+                           & " | /*/config/string");
       Exprs       : constant DOM.Core.Node_List
                   := McKae.XML.XPath.XIA.XPath_Query
                         (N     => XML_Data.Doc,
@@ -390,7 +392,10 @@ is
       Cfg_Expr_Values : constant DOM.Core.Node_List
          := McKae.XML.XPath.XIA.XPath_Query
                (N     => XML_Data.Doc,
-                XPath => "/*/config/* | /*/expressions/expression");
+                XPath => "/*/config/boolean "
+                  & "| /*/config/integer "
+                  & "| /*/config/string "
+                  & "| /*/expressions/expression");
    begin
       Mulog.Log (Msg => "Checking uniqueness of"
                  & DOM.Core.Nodes.Length (List => Cfg_Expr_Values)'Img

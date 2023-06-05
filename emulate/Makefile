@@ -25,7 +25,7 @@ endif
 ifeq ($(MUEN_EFI),)
 GRUB_MODS_PATH ?= $(CONTRIB_BUILD_DIR)/i386-pc/lib/grub/i386-pc
 GRUB_MKRESCUE  ?= $(CONTRIB_BUILD_DIR)/i386-pc/bin/grub-mkrescue
-QEMU_OPTS = -curses
+QEMU_OPTS = -display curses
 GRUB_CFG = grub.cfg
 else
 GRUB_MODS_PATH ?= $(CONTRIB_BUILD_DIR)/x86_64-efi/lib/grub/x86_64-efi

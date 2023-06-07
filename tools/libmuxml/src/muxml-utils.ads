@@ -336,18 +336,32 @@ is
    --  Insertion_Index is the index in the resulting Siblings_Nodes vector
    --  where New_Child (or its clone) can be found.
    procedure Insert_Child
-     (Parent          :        DOM.Core.Node;
-      New_Child       :        DOM.Core.Node;
-      Clone_Child     :        Boolean := False;
-      Siblings_Names  : in out String_Vector.Vector;
-      Siblings_Nodes  : in out Node_Vector.Vector;
-      Ancestors       :        String_Vector.Vector;
-      Insertion_Index :    out Natural);
+     (Parent           :        DOM.Core.Node;
+      New_Child        :        DOM.Core.Node;
+      Clone_Child      :        Boolean := False;
+      Siblings_Names   : in out String_Vector.Vector;
+      Siblings_Nodes   : in out Node_Vector.Vector;
+      Ignored_Siblings :        String_Vector.Vector
+        := String_Vector.Empty_Vector;
+      Ancestors        :        String_Vector.Vector;
+      Insertion_Index  :    out Natural);
 
-   --  Wrapper for Insert_Child with minimal interface
+   --  Wrapper for Insert_Child with reduced interface
    procedure Insert_Child
-    (Parent      : DOM.Core.Node;
-     New_Child   : DOM.Core.Node;
-     Clone_Child : Boolean := False);
+    (Parent           : DOM.Core.Node;
+     New_Child        : DOM.Core.Node;
+     Clone_Child      : Boolean := False;
+     Ignored_Siblings : String_Vector.Vector
+       := String_Vector.Empty_Vector);
+
+   --  Wrapper for Insert_Child with reduced interface which returns the
+   --  inserted Node.
+   function Insert_Child
+    (Parent           : DOM.Core.Node;
+     New_Child        : DOM.Core.Node;
+     Clone_Child      : Boolean := False;
+     Ignored_Siblings : String_Vector.Vector
+       := String_Vector.Empty_Vector)
+    return DOM.Core.Node;
 
 end Muxml.Utils;

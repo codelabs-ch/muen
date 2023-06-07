@@ -189,9 +189,11 @@ is
       Output : String_Vector.Vector;
       Parent : DOM.Core.Node
         := DOM.Core.Nodes.Parent_Node (Node);
+      Owner  : constant DOM.Core.Node
+        := DOM.Core.Nodes.Owner_Document (Node);
    begin
       Output.Append (DOM.Core.Nodes.Node_Name (N => Node));
-      while Parent /= null loop
+      while Parent /= null and Parent /= Owner loop
          Output.Append (DOM.Core.Nodes.Node_Name (N => Parent));
          Parent := DOM.Core.Nodes.Parent_Node (Parent);
       end loop;
@@ -630,9 +632,11 @@ is
    -------------------------------------------------------------------------
 
    procedure Insert_Child
-     (Parent      : DOM.Core.Node;
-      New_Child   : DOM.Core.Node;
-      Clone_Child : Boolean := False)
+     (Parent           : DOM.Core.Node;
+      New_Child        : DOM.Core.Node;
+      Clone_Child      : Boolean := False;
+      Ignored_Siblings : String_Vector.Vector
+        := String_Vector.Empty_Vector)
    is
       Siblings_Names  : String_Vector.Vector;
       Siblings_Nodes  : Node_Vector.Vector;
@@ -644,20 +648,49 @@ is
          Clone_Child     => Clone_Child,
          Siblings_Names  => Siblings_Names,
          Siblings_Nodes  => Siblings_Nodes,
+         Ignored_Siblings => Ignored_Siblings,
          Ancestors       => Get_Ancestor_Names (Node => Parent),
          Insertion_Index => Insertion_Index);
    end Insert_Child;
 
    -------------------------------------------------------------------------
 
+   function Insert_Child
+     (Parent           : DOM.Core.Node;
+      New_Child        : DOM.Core.Node;
+      Clone_Child      : Boolean := False;
+      Ignored_Siblings : String_Vector.Vector
+        := String_Vector.Empty_Vector)
+    return DOM.Core.Node
+   is
+      Siblings_Names  : String_Vector.Vector;
+      Siblings_Nodes  : Node_Vector.Vector;
+      Insertion_Index : Natural;
+   begin
+      Insert_Child
+        (Parent          => Parent,
+         New_Child       => New_Child,
+         Clone_Child     => Clone_Child,
+         Siblings_Names  => Siblings_Names,
+         Siblings_Nodes  => Siblings_Nodes,
+         Ignored_Siblings => Ignored_Siblings,
+         Ancestors       => Get_Ancestor_Names (Node => Parent),
+         Insertion_Index => Insertion_Index);
+      return Siblings_Nodes (Insertion_Index);
+   end Insert_Child;
+
+   -------------------------------------------------------------------------
+
    procedure Insert_Child
-     (Parent          :        DOM.Core.Node;
-      New_Child       :        DOM.Core.Node;
-      Clone_Child     :        Boolean := False;
-      Siblings_Names  : in out String_Vector.Vector;
-      Siblings_Nodes  : in out Node_Vector.Vector;
-      Ancestors       :        String_Vector.Vector;
-      Insertion_Index :    out Natural)
+     (Parent           :        DOM.Core.Node;
+      New_Child        :        DOM.Core.Node;
+      Clone_Child      :        Boolean := False;
+      Siblings_Names   : in out String_Vector.Vector;
+      Siblings_Nodes   : in out Node_Vector.Vector;
+      Ignored_Siblings :        String_Vector.Vector
+        := String_Vector.Empty_Vector;
+      Ancestors        :        String_Vector.Vector;
+      Insertion_Index  :    out Natural)
    is
       use type String_Vector.Vector;
       use type DOM.Core.Node;
@@ -676,6 +709,8 @@ is
             while Parent_Child /= null loop
                if DOM.Core.Nodes.Node_Type (N => Parent_Child)
                  = DOM.Core.Element_Node
+                 and not Ignored_Siblings.Contains
+                 (DOM.Core.Nodes.Node_Name (N => Parent_Child))
                then
                   Siblings_Nodes.Append (Parent_Child);
                   Siblings_Names.Append (DOM.Core.Nodes.Node_Name

@@ -800,54 +800,64 @@ is
          (Policy      :        Muxml.XML_Data_Type;
           Node_Access : in out Access_Hashmaps_Type)
       is
+         System_Node_List : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+           (N     => Policy.Doc,
+            XPath => "/*[self::system or self::component or self::library]");
+         System_Node      : constant DOM.Core.Node
+           := DOM.Core.Nodes.Item
+           (List  => System_Node_List,
+            Index => 0);
          Config_Node_List : constant DOM.Core.Node_List
-            := McKae.XML.XPath.XIA.XPath_Query
-            (N     => Policy.Doc,
-             XPath => "/*[self::system or self::component or self::library]"
-               & "/config");
-         Insert_Position, Config_Entry   : DOM.Core.Node;
-         Config_Node, System_Node, Dummy : DOM.Core.Node;
+           := McKae.XML.XPath.XIA.XPath_Query
+           (N     => System_Node,
+            XPath => "config");
+         Config_Node, Config_Node_New, Config_Entry, Dummy : DOM.Core.Node;
 
       begin
+         --  Do nothing if there is no output to write
+         --  (i.e., no config values or expressions existed).
+         --  This matters if everything is static but no config-section exits.
+         if Node_Access.Output_Boolean.Is_Empty
+           and Node_Access.Output_Integer.Is_Empty
+           and Node_Access.Output_String.Is_Empty
+         then
+            return;
+         end if;
+
          if DOM.Core.Nodes.Length (List => Config_Node_List) /= 0 then
             Config_Node := DOM.Core.Nodes.Item
                (List  => Config_Node_List,
                 Index => 0);
-            System_Node := DOM.Core.Nodes.Parent_Node (N => Config_Node);
-            Insert_Position := DOM.Core.Nodes.Next_Sibling (N => Config_Node);
-
             if Expr_Debug_Active then
                Xmldebuglog.Remove_Log_Of_Subtree (Node  => Config_Node);
             end if;
-            Config_Node := DOM.Core.Nodes.Remove_Child
+         else
+            --  The reason this is not supported is that in general we do not
+            --  know where to insert a new "config" node at this stage of
+            --  processing.
+            --  The document may contain "if" (and other unknown tags) and
+            --  ignoring them may lead to validation errors later.
+            raise Muxml.Validation_Error with
+              "Expressions exist but no 'config' element exits."
+              & " This is not supported.";
+         end if;
+
+         --  Replace the existing config-node with an empty config-node
+         Config_Node_New := DOM.Core.Documents.Create_Element
+           (Doc       => Policy.Doc,
+            Tag_Name  => "config");
+         Config_Node_New := DOM.Core.Nodes.Insert_Before
+           (N         => System_Node,
+            New_Child => Config_Node_New,
+            Ref_Child => Config_Node);
+         Config_Node := DOM.Core.Nodes.Remove_Child
                (N          => System_Node,
                 Old_Child  => Config_Node);
-            DOM.Core.Nodes.Free (N => Config_Node);
+         DOM.Core.Nodes.Free (N => Config_Node);
+         Config_Node := Config_Node_New;
 
-         else
-            System_Node := DOM.Core.Documents.Get_Element (Doc => Policy.Doc);
-
-            if DOM.Core.Nodes.Has_Child_Nodes (N => System_Node) then
-               Insert_Position := DOM.Core.Nodes.First_Child (N => System_Node);
-            end if;
-
-         end if;
-
-         Config_Node :=  DOM.Core.Documents.Create_Element
-           (Doc      => Policy.Doc,
-            Tag_Name => "config");
-
-         if Insert_Position /= null then
-            Config_Node := DOM.Core.Nodes.Insert_Before
-               (N         => DOM.Core.Nodes.Parent_Node (N => Insert_Position),
-                New_Child => Config_Node,
-                Ref_Child => Insert_Position);
-         else
-            Config_Node := DOM.Core.Nodes.Append_Child
-               (N         => System_Node,
-                New_Child => Config_Node);
-         end if;
-
+         --  Insert output into empty config node
          for C in Node_Access.Output_Boolean.Iterate loop
             Config_Entry := DOM.Core.Documents.Create_Element
                (Doc      => Policy.Doc,

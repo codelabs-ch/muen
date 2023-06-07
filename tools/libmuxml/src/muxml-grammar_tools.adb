@@ -21,6 +21,7 @@ with Ada.Characters.Latin_1;
 
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
+with DOM.Core.Documents;
 
 with Muxml.Utils;
 
@@ -28,6 +29,12 @@ with McKae.XML.XPath.XIA;
 
 package body Muxml.Grammar_Tools
 is
+   -------------------------------------------------------------------------
+
+   --  Get list of all children which are of type "Element_Node"
+   --  (as defined in DOM.Core.Nodes.Node_Type).
+   function Get_Element_Children
+     (Node : DOM.Core.Node) return Node_Vector.Vector;
 
    -------------------------------------------------------------------------
 
@@ -42,11 +49,35 @@ is
 
    -------------------------------------------------------------------------
 
+
+   function Get_Element_Children
+     (Node : DOM.Core.Node) return Node_Vector.Vector
+   is
+      use type DOM.Core.Node_Types;
+
+      Output : Node_Vector.Vector;
+      Child  : DOM.Core.Node
+        := DOM.Core.Nodes.First_Child (N => Node);
+   begin
+      while Child /= null loop
+         if DOM.Core.Nodes.Node_Type (N => Child)
+           = DOM.Core.Element_Node
+         then
+            Output.Append (Child);
+         end if;
+         Child := DOM.Core.Nodes.Next_Sibling (N => Child);
+      end loop;
+
+      return Output;
+   end Get_Element_Children;
+
+   ----------------------------------------------------------------------
+
    function Get_Insert_Index
-      (Ancestors : String_Vector.Vector;
-       New_Child : String;
-       Siblings  : String_Vector.Vector)
-      return Insert_Query_Result_Type
+     (Ancestors : String_Vector.Vector;
+      New_Child : String;
+      Siblings  : String_Vector.Vector)
+     return Insert_Query_Result_Type
    is
       Child_Order : String_Vector.Vector;
 
@@ -84,12 +115,23 @@ is
          end loop;
 
          if Index_Unique = String_Vector.No_Index then
-            raise Insufficient_Information with
-               "Cannot determine type of any ancestor.";
+            --  Last chance to avoid type resolution fault:
+            --  If the last ancestor has the same name
+            --  as one of the children ofsystemRoot we assume that
+            --  one of these children is the last ancestor.
+            if Order_Info.Type_To_Children ("schemaRoot").Node_Names.Contains
+              (Ancestors.Last_Element)
+            then
+               Index_Unique := Ancestors.Last_Index + 1;
+               Parent_Type := U ("schemaRoot");
+            else
+               raise Insufficient_Information with
+                 "Cannot determine type of any ancestor.";
+            end if;
+         else
+            Parent_Type := U (Order_Info.Name_To_Type
+                                (Ancestors (Index_Unique)).First_Element);
          end if;
-
-         Parent_Type := U (Order_Info.Name_To_Type
-                           (Ancestors (Index_Unique)).First_Element);
 
          for I in reverse Ancestors.First_Index .. Index_Unique - 1 loop
             Children := Order_Info.Type_To_Children (S (Parent_Type));
@@ -163,10 +205,6 @@ is
       use type DOM.Core.Node_Types;
       use type Ada.Containers.Count_Type;
 
-      package Node_Vector is new Ada.Containers.Indefinite_Vectors
-         (Index_Type   => Natural,
-          Element_Type => DOM.Core.Node);
-
       Schema      : Muxml.XML_Data_Type;
       Schema_Node : DOM.Core.Node; -- the root node of the actual schema
       Simple_XMLTypes, Elem_And_Container_Names, Elem_Container_Names
@@ -236,20 +274,15 @@ is
       --  Writes map entries and initiates evaluation of types of children.
       procedure Eval_Entrypoint (Type_Name : String);
 
-      --  Search for a node called "element" within the schema, add it to
-      --  The lists and evaluate its type.
+      --  Search for a nodes called "element" within the schema, add it to
+      --  the lists and evaluate its type.
       procedure Find_Root_Element_Node_And_Recurse
-         (Schema_Node : DOM.Core.Node);
+        (Schema_Node : DOM.Core.Node);
 
       --  Get the value of attribute Name of Node.
       --  An empty string is returned if the attribute does not exist.
       function Get_Attr (Node : DOM.Core.Node; Name : String) return String
-         renames DOM.Core.Elements.Get_Attribute;
-
-      --  Get list of all children which are of type "Element_Node"
-      --  (as defined in DOM.Core.Nodes.Node_Type).
-      function Get_Element_Children
-         (Node : DOM.Core.Node) return Node_Vector.Vector;
+        renames DOM.Core.Elements.Get_Attribute;
 
       --  Return node defining a group of type "Name_Attr".
       function Get_Group_Definition (Name_Attr : String) return DOM.Core.Node;
@@ -257,9 +290,9 @@ is
       --  Return a node with name "Node_Name" with attribute "name=Name_Attr"
       --  if Node_Name is empty, it is not considered.
       function Get_Toplevel_Definition
-         (Name_Attr : String;
-          Node_Name : String := "")
-         return DOM.Core.Node;
+        (Name_Attr : String;
+         Node_Name : String := "")
+        return DOM.Core.Node;
 
       ----------------------------------------------------------------------
 
@@ -693,25 +726,55 @@ is
       begin
          for Child of Get_Element_Children (Node => Schema_Node) loop
             if Name (Node => Child) = "element" then
-               if Found then
-                  raise Not_Implemented with
-                     "The schema allows two root elements";
-               end if;
                Found := True;
 
-               -- insert root element in types dictionary
-               Order_Info.Type_To_Children.Insert
-                  (Key => "schemaRoot",
-                   New_Item => Eval_Element (Node => Child));
+               --  Insert root element in types-to-children dictionary
+               declare
+                  Current_Tuple : Vector_Tuple
+                    := Vector_Tuple'(others => String_Vector.Empty_Vector);
+                  New_Tuple : constant Vector_Tuple
+                    := Eval_Element (Node => Child);
+               begin
+                  if not Order_Info.Type_To_Children.Contains (Key => "schemaRoot")
+                  then
+                     Order_Info.Type_To_Children.Insert
+                       (Key      => "schemaRoot",
+                        New_Item => Vector_Tuple'
+                          (others => String_Vector.Empty_Vector));
+                  end if;
+                  Current_Tuple := Order_Info.Type_To_Children.Element
+                    (Key => "schemaRoot");
+                  Current_Tuple.Node_Names.Append (New_Tuple.Node_Names);
+                  Current_Tuple.Type_Names.Append (New_Tuple.Type_Names);
 
-               -- insert root element in node-names-dictionary
-               Order_Info.Name_To_Type.Insert
-                  (Key      => Order_Info.Type_To_Children
-                                 ("schemaRoot").Node_Names.First_Element,
-                   New_Item => String_Vector.To_Vector
-                                 (New_Item => Order_Info.Type_To_Children
-                                    ("schemaRoot").Type_Names.First_Element,
-                                  Length   => 1));
+                  Order_Info.Type_To_Children.Replace
+                  (Key      => "schemaRoot",
+                   New_Item => Current_Tuple);
+               end;
+
+               --  Insert root element in node_name-to-type(s)-dictionary
+               declare
+                  New_Name : constant String
+                    := Order_Info.Type_To_Children
+                    ("schemaRoot").Node_Names.Last_Element;
+                  New_Type : constant String
+                    := Order_Info.Type_To_Children
+                    ("schemaRoot").Type_Names.Last_Element;
+                  Current_Types : String_Vector.Vector
+                    := String_Vector.Empty_Vector;
+               begin
+                  if Order_Info.Name_To_Type.Contains (New_Name) then
+                     Current_Types := Order_Info.Name_To_Type.Element (New_Name);
+                  else
+                     Order_Info.Name_To_Type.Insert
+                    (Key      => New_Name,
+                     New_Item => String_Vector.Empty_Vector);
+                  end if;
+                  Current_Types.Append (New_Type);
+                  Order_Info.Name_To_Type.Replace
+                    (Key      => New_Name,
+                     New_Item => Current_Types);
+               end;
 
                --  Evaluate the root element.
                --  Assignment before calling Eval is necessary
@@ -720,7 +783,7 @@ is
                declare
                   Type_Name : constant String
                      := Order_Info.Type_To_Children
-                     ("schemaRoot").Type_Names.First_Element;
+                     ("schemaRoot").Type_Names.Last_Element;
                begin
                   Eval_Entrypoint (Type_Name => Type_Name);
                end;
@@ -732,27 +795,6 @@ is
                & "at root level";
          end if;
       end Find_Root_Element_Node_And_Recurse;
-
-      ----------------------------------------------------------------------
-
-      function Get_Element_Children
-         (Node : DOM.Core.Node) return Node_Vector.Vector
-      is
-         Output : Node_Vector.Vector;
-         Child : DOM.Core.Node
-            := DOM.Core.Nodes.First_Child (N => Node);
-      begin
-         while Child /= null loop
-            if   DOM.Core.Nodes.Node_Type (N => Child)
-               = DOM.Core.Element_Node
-            then
-               Output.Append (Child);
-            end if;
-            Child := DOM.Core.Nodes.Next_Sibling (N => Child);
-         end loop;
-
-         return Output;
-      end Get_Element_Children;
 
       ----------------------------------------------------------------------
 

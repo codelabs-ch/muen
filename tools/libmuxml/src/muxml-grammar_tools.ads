@@ -46,8 +46,8 @@ is
    --    (error).
    function Get_Insert_Index
       (Ancestors : String_Vector.Vector;
-       New_Child  : String;
-       Siblings   : String_Vector.Vector)
+       New_Child : String;
+       Siblings  : String_Vector.Vector)
       return Insert_Query_Result_Type;
 
    --  Raised if the schema uses a construction which is not supported.

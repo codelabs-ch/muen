@@ -50,6 +50,13 @@ is
        Siblings  : String_Vector.Vector)
       return Insert_Query_Result_Type;
 
+   --  Starting form the root-node N: Delete all children of N that
+   --  cannot be a child of N accoding to the currently
+   --  loaded schema information (loadable with Init_Order_Information).
+   --  Afterwards, recurses into the remaining children of N.
+   --  Only tag-names are evaluated.
+   procedure Filter_XML (Xml_Data : Muxml.XML_Data_Type);
+
    --  Raised if the schema uses a construction which is not supported.
    Not_Implemented : exception;
 

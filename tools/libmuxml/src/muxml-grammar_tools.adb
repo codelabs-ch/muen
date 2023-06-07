@@ -49,6 +49,71 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Filter_XML (Xml_Data : Muxml.XML_Data_Type)
+   is
+      --  Recursive function that filters the children of Node and recurses.
+      --  Node_Type is assumed to be the type of Node.
+      procedure Filter_Node (Parent    : DOM.Core.Node;
+                             Node_Type : String);
+
+      ----------------------------------------------------------------------
+
+      procedure Filter_Node (Parent    : DOM.Core.Node;
+                             Node_Type : String)
+      is
+         Children_Info : constant Vector_Tuple
+           := Order_Info.Type_To_Children (Node_Type);
+         Node           : DOM.Core.Node;
+         To_Free        : Node_Vector.Vector;
+         Index          : String_Vector.Extended_Index;
+      begin
+         --  Remove and free nodes that are not allowed as direct child
+         for Child of Get_Element_Children (Node => Parent) loop
+            if not Children_Info.Node_Names.Contains
+              (DOM.Core.Nodes.Node_Name (N => Child))
+            then
+               Node := DOM.Core.Nodes.Remove_Child
+                 (N          => Parent,
+                  Old_Child  => Child);
+               To_Free.Append (Node);
+            end if;
+         end loop;
+         for Node of To_Free loop
+            DOM.Core.Nodes.Free (N => Node);
+         end loop;
+
+         --  Recurse into children
+         for Child of Get_Element_Children (Node => Parent) loop
+            Index := Children_Info.Node_Names.Find_Index
+              (DOM.Core.Nodes.Node_Name (N => Child));
+            Filter_Node (Parent    => Child,
+                         Node_Type => Children_Info.Type_Names (Index));
+         end loop;
+      end Filter_Node;
+
+      Root_Node      : constant DOM.Core.Node
+        := DOM.Core.Documents.Get_Element (Doc => Xml_Data.Doc);
+      Root_Node_Name : constant String
+        := DOM.Core.Nodes.Node_Name (N         => Root_Node);
+      Index          : String_Vector.Extended_Index;
+   begin
+      if not Order_Info.Type_To_Children
+        ("schemaRoot").Node_Names.Contains (Root_Node_Name)
+      then
+         raise Validation_Error with
+           "Could not find root-node with tag '"
+           & Root_Node_Name
+           & "' in loaded schema information.";
+      else
+         Index :=  Order_Info.Type_To_Children
+           ("schemaRoot").Node_Names.Find_Index (Root_Node_Name);
+         Filter_Node (Parent    => Root_Node,
+                      Node_Type => Order_Info.Type_To_Children
+                        ("schemaRoot").Type_Names (Index));
+      end if;
+   end Filter_XML;
+
+   -------------------------------------------------------------------------
 
    function Get_Element_Children
      (Node : DOM.Core.Node) return Node_Vector.Vector

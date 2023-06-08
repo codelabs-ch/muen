@@ -35,9 +35,11 @@ $(GEN_DIR)/muxml-%_schema.ads: $(XSD_FILES) $(RESOLVE_XSL) $(SCHEMA_PLUGINS) | $
 	@$(E) $(COMPONENT) "XSLT $*" \
 		"xsltproc --stringparam format $* $(RESOLVE_XSL) $(SCHEMA_FILE) > $(GEN_DIR)/$*.xsd"
 	@$(E) $(COMPONENT) "add doc plugin" \
-		"schema_plugins/xsd_plugin_doc.py $(GEN_DIR)/$*.xsd $(GEN_DIR)/$*.xsd"
+		"schema_plugins/xsd_plugin_doc.py $(GEN_DIR)/$*.xsd $(GEN_DIR)/$*_extended.xsd"
 	@$(E) $(COMPONENT) "Xml2Ada $*" \
 		"$(XML2ADA) Muxml.$*_schema $(GEN_DIR)/$*.xsd $@"
+	#@$(E) $(COMPONENT) "Xml2Ada $*" \
+	#	"$(XML2ADA) Muxml.$*_extended_schema $(GEN_DIR)/$*_extended.xsd $@"
 
 xmllint: $(LINT_OK)
 $(OBJ_DIR)/%.lintok: $(COMPONENT_TARGETS) $(LINT_XML) | $(OBJ_DIR)

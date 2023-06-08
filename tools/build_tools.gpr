@@ -48,5 +48,6 @@ is
       "mugenzp/mugenzp.gpr",
       "mupcspkrdbg/mupcspkrdbg.gpr",
       "muwalkpt/muwalkpt.gpr",
+      "muxmlfilter/muxmlfilter.gpr",
       "sbs/sbs.gpr");
 end Build_Tools;

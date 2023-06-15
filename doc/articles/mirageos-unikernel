@@ -49,21 +49,21 @@ If you use Docker to build the unikernels and Muen system images, you can skip
 the rest of this section and continue reading at "Running unikernels".
 
 ==== OCaml Compiler
-These instructions have been tested with version 4.09.0 of the compiler. If you
+These instructions have been tested with version 4.14.1 of the compiler. If you
 are not already using this compiler, you can create a new switch as follows:
 
-  $ opam switch create 4.09.0
+  $ opam switch create 4.14.1
 
 Then make sure you update the environment:
 
-  $ eval $(opam env)
+  $ eval $(opam env --switch=4.14.1)
 
-The version 4.09.0 should be marked as the current version:
+The version 4.14.1 should be marked as the current version:
 
   $ opam switch list
   ...
   #   switch  compiler                    description
-  ->  4.09.0  ocaml-base-compiler.4.09.0  4.09.0
+  ->  4.14.1  ocaml-base-compiler.4.14.1  4.14.1
   ...
 
 Update the Opam repository to the latest state:
@@ -72,14 +72,10 @@ Update the Opam repository to the latest state:
   $ opam upgrade
 
 ==== Mirage Tool
-These instructions have been tested with MirageOS version 3.7.6. Install the
-depext module which handles external/system dependencies for opam packages.
+These instructions have been tested with MirageOS version 4.4.0. Install the
+mirage tool:
 
-  $ opam install -y depext
-
-Then install the mirage tool:
-
-  $ opam install -y mirage.3.7.6
+  $ opam install -y mirage.4.4.0
 
 ==== Solo5 ELF tool
 Since version v0.6.0, Solo5 unikernels contain a so called "application
@@ -87,9 +83,9 @@ manifest", which enables support for multiple network and block devices. In
 order to query this information the `solo5-elftool` needs to be installed. For
 that purpose, download Solo5 and install the tool like so:
 
-  $ wget https://github.com/Solo5/solo5/releases/download/v0.6.5/solo5-v0.6.5.tar.gz
-  $ tar -zxf solo5-v0.6.5.tar.gz
-  $ cd solo5-v0.6.5
+  $ wget https://github.com/Solo5/solo5/releases/download/v0.8.0/solo5-v0.8.0.tar.gz
+  $ tar -zxf solo5-v0.8.0.tar.gz
+  $ cd solo5-v0.8.0
   $ ./configure.sh --only-tools
   $ make install-tools
 
@@ -102,9 +98,9 @@ environment variable.
 Solo5 comes bundled with simple test cases, most of which can be executed on
 Muen in QEMU/KVM. Download Solo5 and build the tests like so:
 
-  $ wget https://github.com/Solo5/solo5/releases/download/v0.6.5/solo5-v0.6.5.tar.gz
-  $ tar -zxf solo5-v0.6.5.tar.gz
-  $ cd solo5-v0.6.5
+  $ wget https://github.com/Solo5/solo5/releases/download/v0.8.0/solo5-v0.8.0.tar.gz
+  $ tar -zxf solo5-v0.8.0.tar.gz
+  $ cd solo5-v0.8.0
 
 NOTE: You only need to download the Solo5 source if you are using the
 muen-dev-env Docker container and have not done so in the previous step.
@@ -119,10 +115,10 @@ find at `tests/test_hello/test_hello.muen`. Post-process the compiled binary
 with the `solo5-muen-gencspec` script invoking it from the Muen toplevel
 directory as follows:
 
-  $ tools/scripts/solo5-muen-gencspec.py [..]/solo5-v0.6.5/tests/test_hello/test_hello.muen \
+  $ tools/scripts/solo5-muen-gencspec.py [..]/solo5-v0.8.0/tests/test_hello/test_hello.muen \
 	  policy/xml/mirageos/cspec_src.xml policy/obj \
 	  --out_spec policy/xml/mirageos/component_unikernel.xml \
-	  --bootparams "Hi!"
+	  --bootparams "Hi!" --disable-reset
 
 The script generates a Muen component specification for the unikernel and
 copies the test_hello.muen binary to the Muen build directory. It is expected
@@ -142,19 +138,19 @@ messages in the log:
 
 
 ```
-Solo5: Console: Muen Channel @ 0xffff00000, size 0x20000, epoch 0x221e12da6
+Solo5: Console: Muen Channel @ 0xffff00000, size 0x20000, epoch 0x1d94c593e
             |      ___|
   __|  _ \  |  _ \ __ \
 \__ \ (   | | (   |  ) |
 ____/\___/ _|\___/____/
-Solo5: Bindings version v0.6.5
-Solo5: Memory map: 513 MB addressable:
-Solo5:   reserved @ (0x0 - 0xfffff)
-Solo5:       text @ (0x100000 - 0x104fff)
-Solo5:     rodata @ (0x105000 - 0x106fff)
-Solo5:       data @ (0x107000 - 0x10cfff)
-Solo5:       heap >= 0x10d000 < stack < 0x2010d000
-Solo5: Clock source: Muen PV clock, TSC frequency 2112000000 Hz
+Solo5: Bindings version v0.8.0
+Solo5: Memory map: 514 MB addressable:
+Solo5:   reserved @ (0x0 - 0x1fffff)
+Solo5:       text @ (0x200000 - 0x204fff)
+Solo5:     rodata @ (0x205000 - 0x206fff)
+Solo5:       data @ (0x207000 - 0x20cfff)
+Solo5:       heap >= 0x20d000 < stack < 0x2020d000
+Solo5: Clock source: Muen PV clock, TSC frequency 2112002000 Hz
 
 **** Solo5 standalone test_hello ****
 
@@ -176,7 +172,7 @@ https://pbs.twimg.com/media/C6wSmDiWoAEQFvx.jpg[static website].
 
   $ git clone https://github.com/mirage/mirage-skeleton
   $ cd mirage-skeleton/applications/static_website_tls
-  $ git checkout 9c01288
+  $ git checkout 3a955d604d45
 
 NOTE: If you are using Docker containers, execute the above commands in the
 `muen-mirageos` container.

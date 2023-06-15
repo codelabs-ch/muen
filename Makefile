@@ -57,7 +57,6 @@ emulate: pack
 	$(MAKE) -C $@
 
 iso:		## Build and create Muen system image (ISO)
-iso: HARDWARE=hardware/lenovo-t430s.xml
 iso: pack
 	$(MAKE) -C emulate $@
 

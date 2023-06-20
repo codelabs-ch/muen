@@ -1,3 +1,6 @@
+[submodule "build-cfg"]
+	path = build-cfg
+	url = ../muen/build-cfg.git
 [submodule "components/linux/src"]
 	path = components/linux/src
 	url = ../muen/linux.git

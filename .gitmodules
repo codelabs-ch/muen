@@ -23,6 +23,9 @@
 [submodule "components/linux/modules/muenevents"]
 	path = components/linux/modules/muenevents
 	url = ../muen/linux/muenevents.git
+[submodule "contrib"]
+	path = contrib
+	url = ../muen/contrib.git
 [submodule "tools"]
 	path = tools
 	url = ../muen/tools.git

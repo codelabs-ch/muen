@@ -1,7 +1,0 @@
-﻿<hardware>
- <devices>
-  <device name="cmos_rtc">
-   <ioPort name="ports" start="16#0070#" end="16#0071#"/>
-  </device>
- </devices>
-</hardware>

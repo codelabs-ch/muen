@@ -1,3 +1,0 @@
-#!/bin/bash
-
-while true; do muenblock-test || break; done

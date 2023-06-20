@@ -1,9 +1,0 @@
-#!/bin/bash
-
-BLKDEV=sda
-
-echo none > /sys/class/block/${BLKDEV}/queue/scheduler
-
-modprobe muenblock-server \
-   connections=1:blockdev_request1:blockdev_response1:muenblock:9570208dca77db19:9851be3282fef0dc \
-   devices=/dev/${BLKDEV}1:1,/dev/${BLKDEV}2:1

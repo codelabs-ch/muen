@@ -1,8 +1,0 @@
-<system>
- <config>
-  <boolean name="inserted_2" value="true"/>
-  <string name="inserted_1" value="i1"/>
-  <integer name="inserted_3" value="42"/>
-  <integer name="inserted_4" value="43"/>
- </config>
-</system>

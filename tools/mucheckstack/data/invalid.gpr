@@ -1,7 +1,0 @@
-with "nonexistent";
-
-project Invalid is
-
-   for Object_Dir use "invalid";
-
-end Invalid;

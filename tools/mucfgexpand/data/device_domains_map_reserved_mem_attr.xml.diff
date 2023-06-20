@@ -1,5 +1,0 @@
-   </memory>                                                                                                                                               </memory>
-   <devices>                                                                                                                                               <devices>
-    <device logical="nic1" mapReservedMemory="true" physical="nic1"/>                                                                                |      <device logical="nic1" physical="nic1"/>
-    <device logical="wlan" physical="wireless"/>                                                                                                            <device logical="wlan" physical="wireless"/>
-   </devices>                                                                                                                                              </devices>

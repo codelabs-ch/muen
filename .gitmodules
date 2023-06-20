@@ -26,3 +26,6 @@
 [submodule "tools"]
 	path = tools
 	url = ../muen/tools.git
+[submodule "contrib"]
+	path = contrib
+	url = ../muen/contrib.git

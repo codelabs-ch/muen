@@ -2,7 +2,7 @@
  <vcpu>
   <registers>
    <gpr>
-    <rip>16#0009_a000#</rip>
+    <rip>16#0009_9000#</rip>
     <rsp>16#0000#</rsp>
    </gpr>
    <cr0>

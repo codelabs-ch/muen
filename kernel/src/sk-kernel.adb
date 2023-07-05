@@ -36,6 +36,9 @@ with SK.VTd.Debug;
 with SK.VTd.Interrupts;
 with SK.Interrupts;
 with SK.Crash_Audit_Types;
+pragma Warnings (Off);
+with SK.Delays;
+pragma Warnings (On);
 
 package body SK.Kernel
 is
@@ -209,6 +212,8 @@ is
                                Ctx => S);
       FPU.Get_Registers (ID   => Subject,
                          Regs => S.FPU_Registers);
+
+      pragma Debug (Delays.U_Delay (US => 4 * 10 ** 6));
       pragma Debug (Dump.Print_Message (Msg => ">>> System Panic triggered"));
       pragma Debug (Subjects.Debug.Print_State (S => S));
       Error (Reason   => Crash_Audit_Types.Subj_System_Panic,

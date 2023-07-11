@@ -81,6 +81,8 @@
      <masks>
       <cr4>
        <OSSupportFXSAVE>0</OSSupportFXSAVE>
+       <OSSupportSIMDExceptions>0</OSSupportSIMDExceptions>
+       <FSGSBASEEnable>0</FSGSBASEEnable>
        <XSAVEEnable>0</XSAVEEnable>
       </cr4>
      </masks>

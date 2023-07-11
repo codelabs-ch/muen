@@ -65,7 +65,7 @@
     <library ref="libmutime"/>
    </depends>
    <provides>
-    <memory executable="true" logical="blob" size="16#0013_0000#" type="subject_binary" virtualAddress="16#0000#" writable="true">
+    <memory executable="true" logical="blob" size="16#0004_0000#" type="subject_binary" virtualAddress="16#0010_0000#" writable="true">
      <file filename="bb" offset="none"/>
     </memory>
    </provides>
@@ -91,12 +91,12 @@
     </msrs>
     <registers>
      <gpr>
-      <rip>16#0000#</rip>  <!-- __start64 -->
+      <rip>16#0010_00f6#</rip>
      </gpr>
     </registers>
    </vcpu>
    <memory>
-    <memory executable="true" logical="ram" physical="bb|ram" virtualAddress="16#0013_0000#" writable="true"/>
+    <memory executable="true" logical="ram" physical="bb|ram" virtualAddress="16#0014_0000#" writable="true"/>
    </memory>
    <events>
     <source>

@@ -2,12 +2,20 @@ COMPONENT = libmuxml
 
 SCHEMA_FILES = \
 	$(GEN_DIR)/muxml-system_a_schema.ads        \
+	$(GEN_DIR)/muxml-system_a_extended_schema.ads        \
 	$(GEN_DIR)/muxml-system_b_schema.ads        \
+	$(GEN_DIR)/muxml-system_b_extended_schema.ads        \
 	$(GEN_DIR)/muxml-system_src_schema.ads      \
+	$(GEN_DIR)/muxml-system_src_extended_schema.ads      \
 	$(GEN_DIR)/muxml-vcpu_profile_schema.ads    \
+	$(GEN_DIR)/muxml-vcpu_profile_extended_schema.ads    \
 	$(GEN_DIR)/muxml-system_config_schema.ads   \
+	$(GEN_DIR)/muxml-system_config_extended_schema.ads   \
 	$(GEN_DIR)/muxml-hardware_config_schema.ads \
-	$(GEN_DIR)/muxml-component_schema.ads
+	$(GEN_DIR)/muxml-hardware_config_extended_schema.ads \
+	$(GEN_DIR)/muxml-component_schema.ads       \
+	$(GEN_DIR)/muxml-component_extended_schema.ads
+
 SCHEMA_FILE = schema/`echo $* | sed -e 's/_a//g;s/_b//g;s/_src//g'`.xsd
 
 XSD_FILES = $(shell find schema/ -name '*.xsd')
@@ -38,8 +46,8 @@ $(GEN_DIR)/muxml-%_schema.ads: $(XSD_FILES) $(RESOLVE_XSL) $(SCHEMA_PLUGINS) | $
 		"schema_plugins/xsd_plugin_doc.py $(GEN_DIR)/$*.xsd $(GEN_DIR)/$*_extended.xsd"
 	@$(E) $(COMPONENT) "Xml2Ada $*" \
 		"$(XML2ADA) Muxml.$*_schema $(GEN_DIR)/$*.xsd $@"
-	#@$(E) $(COMPONENT) "Xml2Ada $*" \
-	#	"$(XML2ADA) Muxml.$*_extended_schema $(GEN_DIR)/$*_extended.xsd $@"
+	@$(E) $(COMPONENT) "Xml2Ada $*_extended" \
+		"$(XML2ADA) Muxml.$*_extended_schema $(GEN_DIR)/$*_extended.xsd $(subst _schema.ads,_extended_schema.ads,$@)"
 
 xmllint: $(LINT_OK)
 $(OBJ_DIR)/%.lintok: $(COMPONENT_TARGETS) $(LINT_XML) | $(OBJ_DIR)

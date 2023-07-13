@@ -2,7 +2,8 @@
 --  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
 --  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --  Copyright (C) 2014        Alexander Senier <mail@senier.net>
---
+--  Copyright (C) 2023        secunet Security Networks AG
+
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
 --  the Free Software Foundation, either version 3 of the License, or
@@ -30,12 +31,19 @@ is
    type Schema_Kind is
      (None,
       Component,
+      Component_Ext,
       Format_A,
+      Format_A_Ext,
       Format_B,
+      Format_B_Ext,
       Format_Src,
+      Format_Src_Ext,
       Hardware_Config,
+      Hardware_Config_Ext,
       System_Config,
-      VCPU_Profile);
+      System_Config_Ext,
+      VCPU_Profile,
+      VCPU_Profile_Ext);
 
    subtype Valid_Schema_Kind is Schema_Kind range
      Schema_Kind'Succ (Schema_Kind'First) .. Schema_Kind'Last;

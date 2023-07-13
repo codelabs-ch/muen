@@ -255,7 +255,7 @@ is
 
       Muxml.Write
         (File => Output_File,
-         Kind => Muxml.Format_Src,
+         Kind => Muxml.Format_Src_Ext,
          Data => Policy);
       Mulog.Log (Msg => "Successfully created policy '" & Output_File & "'");
    end Run;

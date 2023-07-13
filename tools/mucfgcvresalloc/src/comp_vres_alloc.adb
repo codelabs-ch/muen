@@ -514,7 +514,7 @@ is
       end if;
       Muxml.Write
         (File => Output_File_Name,
-         Kind => Muxml.Component,
+         Kind => Muxml.Component_Ext,
          Data => Policy);
       Mulog.Log (Msg => "Successfully created policy '"
                    & Output_File_Name & "'");

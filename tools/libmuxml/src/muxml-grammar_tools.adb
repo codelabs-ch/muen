@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2022 secunet Security Networks AG
+--  Copyright (C) 2023 secunet Security Networks AG
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -94,7 +94,7 @@ is
       Root_Node      : constant DOM.Core.Node
         := DOM.Core.Documents.Get_Element (Doc => Xml_Data.Doc);
       Root_Node_Name : constant String
-        := DOM.Core.Nodes.Node_Name (N         => Root_Node);
+        := DOM.Core.Nodes.Node_Name (N => Root_Node);
       Index          : String_Vector.Extended_Index;
    begin
       if not Order_Info.Type_To_Children

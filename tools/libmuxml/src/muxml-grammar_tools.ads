@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2022 secunet Security Networks AG
+--  Copyright (C) 2023 secunet Security Networks AG
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@ is
        Siblings  : String_Vector.Vector)
       return Insert_Query_Result_Type;
 
-   --  Starting form the root-node N: Delete all children of N that
+   --  Starting from the root-node N: Delete all children of N that
    --  cannot be a child of N accoding to the currently
    --  loaded schema information (loadable with Init_Order_Information).
    --  Afterwards, recurses into the remaining children of N.

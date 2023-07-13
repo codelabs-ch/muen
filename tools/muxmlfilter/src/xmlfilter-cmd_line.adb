@@ -98,20 +98,23 @@ is
          Output      => I_Schema_Name'Access,
          Switch      => "-isn:",
          Long_Switch => "--input-schema-name:",
-         Help        => "Name of schema to be used for input validation.");
+         Help        => "Name of schema to be used for input validation."
+           & " Required.");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Output      => O_Schema_Name'Access,
          Switch      => "-osn:",
          Long_Switch => "--output-schema-name:",
-         Help        => "Name of schema to be used for filtering.");
+         Help        => "Name of schema to be used for filtering."
+           & " Required if osp is not given.");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Output      => O_Schema_Path'Access,
          Switch      => "-osp:",
          Long_Switch => "--output-schema-path:",
-         Help        => "Path to xsd-schema definition to be used for filtering"
-           & "if no name is given. In this case the output is not validated.");
+         Help        => "Path to xsd-schema definition to be used for filtering."
+           & "Required if osn is not given. "
+           & "In this case the output is not validated.");
       begin
          GNAT.Command_Line.Getopt
            (Config => Cmdline.Data,

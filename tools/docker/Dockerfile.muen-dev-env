@@ -12,7 +12,7 @@
 
 # Base image
 ARG distro_name=debian
-ARG distro_version=bullseye
+ARG distro_version=bookworm
 FROM ${distro_name}:${distro_version}
 
 LABEL maintainer "Adrian-Ken Rueegsegger <ken@codelabs.ch>"
@@ -25,8 +25,9 @@ iputils-ping kmod lcov libc6-dev libcurl4-gnutls-dev libelf-dev \
 libfreetype6-dev libgmp10-dev libiberty-dev libncurses-dev libseccomp-dev \
 libssl-dev libxml2-utils lighttpd make mtools openssh-client patch picocom \
 pkg-config python3-minimal python3-lxml python3-colorlog python3-setuptools \
-python3-pip qemu-system-x86 rsync screen tidy unzip vim wget xfonts-unifont \
-xorriso xsltproc xz-utils zlib1g-dev"
+python3-pip python3-rangehttpserver python3-wheel qemu-system-x86 rsync \
+screen tidy unzip vim wget xfonts-unifont xorriso xsltproc xxd xz-utils \
+zlib1g-dev"
 
 # Build-time only. Will not appear on the muen.sk website
 # Required to compile amtc/solo5
@@ -34,7 +35,7 @@ ARG build_packages="gcc"
 
 # Additional, not strictly required packages. Will not appear on the muen.sk
 # website
-ARG packages="$packages $build_packages php7.4-cli php7.4-curl php7.4-xml"
+ARG packages="$packages $build_packages php-cli php-curl php-xml"
 
 # Add PHP PPA on Ubuntu distros, required for arcanist
 ARG distro_name
@@ -79,9 +80,8 @@ RUN curl -sSL "https://github.com/Solo5/solo5/releases/download/v0.8.0/solo5-v0.
 RUN git clone https://github.com/codelabs-ch/arcanist.git /opt/arcanist
 
 # Python modules
-RUN pip3 install wheel \
-	&& pip3 install 'lief==0.11.5' \
-	&& pip3 install rangehttpserver
+ARG distro_name
+RUN pip3 install $(if [ "$distro_name" = "debian" ]; then echo --break-system-packages; fi) lief
 
 # Purge build-time packages
 RUN apt-get --purge autoremove -y $build_packages

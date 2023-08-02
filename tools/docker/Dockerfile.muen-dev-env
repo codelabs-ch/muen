@@ -101,8 +101,9 @@ RUN git clone https://git.codelabs.ch/alire/muen-dev-env.git $HOME/dev-env.alr \
 	&& git reset --hard $dev_env_rev \
 	&& make
 
-ADD bashrc $HOME/.bashrc
 WORKDIR $HOME
 USER user
 
+COPY entrypoint.muen-dev-env /usr/local/bin/entrypoint
+ENTRYPOINT [ "entrypoint" ]
 CMD [ "bash" ]

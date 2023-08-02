@@ -1,0 +1,3 @@
+#!/bin/bash
+. $HOME/dev-env.alr/env
+exec "$@"

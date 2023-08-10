@@ -25,7 +25,10 @@ with GNAT.SHA256;
 
 with Mulog;
 
+with Muxml;
 with Muxml.Utils;
+with Muxml.Grammar;
+with Muxml.Grammar_Tools;
 
 with Mutools.Utils;
 with Mutools.Constants;
@@ -194,8 +197,13 @@ is
                  & Spec_File & "'");
 
       Muxml.Parse (Data => Spec,
-                   Kind => Muxml.Component,
+                   Kind => Muxml.Component_Ext,
                    File => Spec_File);
+
+      --  Load schema information for schema-dependent insertion of nodes.
+      Muxml.Grammar_Tools.Init_Order_Information
+        (Schema_XML_Data => Muxml.Grammar.Schema_Map
+           (Muxml.Component_Ext).XSD.all);
 
       Check_Section_Names (Descriptor => Descriptor);
 
@@ -278,7 +286,7 @@ is
 
       Muxml.Write
         (Data => Spec,
-         Kind => Muxml.Component,
+         Kind => Muxml.Component_Ext,
          File => Output_Spec);
 
    exception

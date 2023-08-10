@@ -21,7 +21,12 @@ with Ada.Strings.Unbounded;
 with DOM.Core.Documents;
 
 with Mulog;
+
+with Muxml;
 with Muxml.Utils;
+with Muxml.Grammar;
+with Muxml.Grammar_Tools;
+
 with Mutools.Strings;
 
 with Compjoin.Utils;
@@ -36,12 +41,24 @@ is
 
    procedure Add_Components_Section (Policy : Muxml.XML_Data_Type)
    is
+      use type DOM.Core.Node;
+
+      Root           : constant DOM.Core.Node
+        := DOM.Core.Documents.Get_Element (Policy.Doc);
+      Component_Node : DOM.Core.Node
+        := Muxml.Utils.Get_Unique_Element_Child (Parent     => Root,
+                                                 Child_Name => "components");
    begin
-      Muxml.Utils.Add_Child
-        (Parent     => DOM.Core.Documents.Get_Element (Doc => Policy.Doc),
-         Child_Name => "components",
-         Ref_Names  => (1 => Ada.Strings.Unbounded.To_Unbounded_String
-                        ("subjects")));
+      if Component_Node /= null then
+         return;
+      end if;
+
+      Component_Node := DOM.Core.Documents.Create_Element
+                (Doc      => Policy.Doc,
+                 Tag_Name => "components");
+      Muxml.Utils.Insert_Child
+           (Parent    => Root,
+            New_Child => Component_Node);
    end Add_Components_Section;
 
    -------------------------------------------------------------------------
@@ -55,8 +72,13 @@ is
    begin
       Mulog.Log (Msg => "Processing system policy '" & Input_File & "'");
       Muxml.Parse (Data => Policy,
-                   Kind => Muxml.Format_Src,
+                   Kind => Muxml.Format_Src_Ext,
                    File => Input_File);
+      --  Load schema information for schema-dependent insertion of nodes.
+      Muxml.Grammar_Tools.Init_Order_Information
+        (Schema_XML_Data => Muxml.Grammar.Schema_Map
+           (Muxml.Format_Src_Ext).XSD.all);
+
       Add_Components_Section (Policy => Policy);
 
       declare
@@ -79,7 +101,7 @@ is
       end;
 
       Muxml.Write (Data => Policy,
-                   Kind => Muxml.Format_Src,
+                   Kind => Muxml.Format_Src_Ext,
                    File => Output_File);
       Mulog.Log (Msg => "Successfully wrote joined system policy to '"
                  & Output_File & "'");

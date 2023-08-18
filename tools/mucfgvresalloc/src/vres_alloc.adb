@@ -165,6 +165,9 @@ is
                                              Index => I);
                if DOM.Core.Nodes.Node_Type (N => Child)
                  = DOM.Core.Element_Node
+                 and (DOM.Core.Nodes.Node_Name (N => Child) = "memory"
+                        or DOM.Core.Nodes.Node_Name (N => Child) = "reader"
+                        or DOM.Core.Nodes.Node_Name (N => Child) = "writer")
                then
                   Logical_To_Interval_Package.Insert
                     (Container => Mapping,
@@ -442,7 +445,7 @@ is
         := DOM.Core.Elements.Get_Attribute
         (Elem => Comp_Node,
          Name => "name");
-      Targets_List_1, Targets_List_2 :  Mutools.String_Vector.Vector;
+      Targets_List_1, Targets_List_2 : Mutools.String_Vector.Vector;
       Targets                        : DOM.Core.Node_List;
       Mapping_Access                 : Map_Access_Type;
 
@@ -772,7 +775,7 @@ is
    begin
       Mulog.Log (Msg => "Processing joined policy");
       Muxml.Parse (Data => Policy,
-                   Kind => Muxml.Format_Src,
+                   Kind => Muxml.Format_Src_Ext,
                    File => Policy_File_Name);
 
       --  Read global information about sizes of channels and memory
@@ -851,7 +854,7 @@ is
          end if;
          Muxml.Write
            (File => Output_File_Name,
-            Kind => Muxml.Format_Src,
+            Kind => Muxml.Format_Src_Ext,
             Data => Policy);
          Mulog.Log (Msg => "Successfully wrote policy with virtual "
                       & "resources to '"

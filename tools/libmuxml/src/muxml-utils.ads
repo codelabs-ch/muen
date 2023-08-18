@@ -59,8 +59,12 @@ is
       return DOM.Core.Node;
 
    --  Count the number of child nodes of Node of type Element_Node.
+   --  If Name_Filter is not empty nodes are only counted if their name appears
+   --  in the given list.
    function Count_Element_Children
-     (Node : DOM.Core.Node)
+     (Node        : DOM.Core.Node;
+      Name_Filter : Muxml.String_Vector.Vector
+        := Muxml.String_Vector.Empty_Vector)
      return Natural;
 
    --  Searches the element specified by an XPath in the given document and

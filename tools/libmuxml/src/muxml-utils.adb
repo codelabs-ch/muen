@@ -160,7 +160,9 @@ is
    ----------------------------------------------------------------------
 
    function Count_Element_Children
-     (Node : DOM.Core.Node)
+     (Node        : DOM.Core.Node;
+      Name_Filter : Muxml.String_Vector.Vector
+        := Muxml.String_Vector.Empty_Vector)
      return Natural
    is
       use type DOM.Core.Node_Types;
@@ -173,7 +175,11 @@ is
       for I in 0 ..  DOM.Core.Nodes.Length (List => Child_List) - 1 loop
          Curr_Node := DOM.Core.Nodes.Item (List  => Child_List,
                                            Index => I);
-         if DOM.Core.Nodes.Node_Type (N => Curr_Node) = DOM.Core.Element_Node then
+         if DOM.Core.Nodes.Node_Type (N => Curr_Node) = DOM.Core.Element_Node
+           and then (Name_Filter.Is_Empty
+                       or Name_Filter.Contains
+                       (Item => DOM.Core.Nodes.Node_Name (N => Curr_Node)))
+         then
             Count := Count + 1;
          end if;
       end loop;

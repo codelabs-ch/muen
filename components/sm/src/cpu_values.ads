@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK;
+with SK.Bitops;
 
 package CPU_Values
 is
@@ -28,39 +28,15 @@ is
       EDX : SK.Word32;
    end record;
 
-   Null_CPUID_Values : constant CPUID_Values_Type := (others => 0);
-
-   --  Return CPUID values of hardware target for given leaf/subleaf.
-   --  Returns False if the leaf/subleaf is not found, or if the request
-   --  is outside of the supported leaf range.
-   procedure Get_CPUID_Values
-     (Leaf     :     SK.Word32;
-      Subleaf  :     SK.Byte;
-      Result   : out CPUID_Values_Type;
-      Success  : out Boolean);
-
-   --  Return register value of MSR given by address. Returns False if the
-   --  address is unknown.
-   procedure Get_MSR_Value
-     (Address :     SK.Word32;
-      Regval  : out SK.Word64;
-      Success : out Boolean);
-
-private
-
-   type CPUID_Entry_Type is record
-      Leaf        : SK.Word32;
-      Has_Subleaf : Boolean;
-      Subleaf     : SK.Byte;
-      EAX         : SK.Word32;
-      EBX         : SK.Word32;
-      ECX         : SK.Word32;
-      EDX         : SK.Word32;
-   end record;
+   Null_CPUID_Values : constant CPUID_Values_Type
+     := (EAX => 0, EBX => 0, ECX => 0, EDX => 0);
 
    type MSR_Entry_Type is record
       Addr   : SK.Word32;
       Regval : SK.Word64;
    end record;
+
+   subtype XSAVE_Feature_Pos is
+     SK.Bitops.Word64_Pos range 2 .. SK.Bitops.Word64_Pos'Last;
 
 end CPU_Values;

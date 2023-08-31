@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import argparse
-from collections import namedtuple
 from lxml import etree
 import os
 import sys
@@ -15,46 +14,45 @@ def write_spec(policy, package_name, f):
     """
     Write CPU config to given file.
     """
-    f.write("private package " + package_name + "\n")
+    f.write("package " + package_name + "\n")
     f.write("is\n\n")
 
     cpuid = policy.xpath("/system/hardware/processor/cpuid")
-    count = len(cpuid)
 
-    f.write("   CPUID : constant array (Positive range <>) of "
-            "CPUID_Entry_Type\n")
-    f.write("     := (\n")
-    for idx, c in enumerate(cpuid, start=1):
+    # CPUID leafs
+    for c in cpuid:
         leaf = c.get("leaf")
-        subleaf_count = len(c.xpath("/system/hardware/processor/cpuid[@leaf='"
-                                    + leaf + "']"))
-        has_subleaf = "True" if subleaf_count > 1 else "False"
-        f.write("         " + str(idx) + " => ("
-                + leaf + ", " + has_subleaf + ", "
-                + c.get("subleaf") + ", "
+        subleaf = c.get("subleaf")
+        f.write("   CPUID_" + leaf[3:-1] + "_" + subleaf[3:-1]
+                + " : constant CPUID_Values_Type\n     := ("
                 + c.get("eax") + ", " + c.get("ebx") + ", "
-                + c.get("ecx") + ", " + c.get("edx") + ")")
-        if idx < count:
-            f.write(",\n")
-        else:
-            f.write("\n")
-    f.write("        );\n\n")
+                + c.get("ecx") + ", " + c.get("edx")
+                + ");\n")
+    f.write("\n")
 
+    # XSAVE feature bit to CPUID value entries map
+    d_leafs = policy.xpath("/system/hardware/processor/cpuid[@leaf='16#0000_000d#']")
+    f.write("   XSAVE_Feature_Values : constant array (XSAVE_Feature_Pos)"
+            " of CPUID_Values_Type\n     := (\n")
+    for d in d_leafs:
+        subleaf = d.get("subleaf")
+        if int(subleaf[3:-1], 16) < 2:
+            continue
+        f.write("         " + subleaf + " => ("
+                + d.get("eax") + ", " + d.get("ebx") + ", "
+                + d.get("ecx") + ", " + d.get("edx")
+                + "),\n")
+    f.write("         others => Null_CPUID_Values\n        );\n\n")
+
+    # MSRs
     msr = policy.xpath("/system/hardware/processor/msr")
-    count = len(msr)
 
-    f.write("   MSR : constant array (Positive range <>) of MSR_Entry_Type\n")
-    f.write("     := (\n")
-    for idx, c in enumerate(msr, start=1):
-        f.write("         " + str(idx) + " => ("
-                + c.get("address") + ", " + c.get("regval") + ")")
-        if idx < count:
-            f.write(",\n")
-        else:
-            f.write("\n")
-    f.write("        );\n\n")
+    for m in msr:
+        f.write("   MSR_" + m.get("name") + " : constant MSR_Entry_Type\n"
+                "      := ("
+                + m.get("address") + ", " + m.get("regval") + ");\n")
 
-    f.write("end " + package_name + ";\n")
+    f.write("\nend " + package_name + ";\n")
     f.close()
 
 
@@ -85,9 +83,9 @@ if out_path is None:
 if src_policy_path is None:
     sys.exit("Error: Muen source system policy XML not specified")
 
-    if not os.path.isfile(src_policy_path):
-        sys.exit("Error: Muen source system policy XML not found '"
-                 + src_policy_path + "'")
+if not os.path.isfile(src_policy_path):
+    sys.exit("Error: Muen source system policy XML not found '"
+             + src_policy_path + "'")
 
 out_dir = os.path.dirname(out_path)
 if len(out_dir) > 0 and not os.path.isdir(out_dir):

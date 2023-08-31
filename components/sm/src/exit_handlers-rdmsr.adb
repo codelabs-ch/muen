@@ -18,7 +18,7 @@
 
 with SK.Constants;
 
-with CPU_Values;
+with CPU_Values.Target;
 
 pragma $Release_Warnings
   (Off, "unit * is not referenced",
@@ -41,9 +41,6 @@ is
       use type SK.Word32;
       use type SK.Word64;
 
-      Res    : Boolean;
-      Regval : SK.Word64;
-
       RAX : constant SK.Word64 := State.Regs.RAX;
       RCX : constant SK.Word64 := State.Regs.RCX;
       RDX : constant SK.Word64 := State.Regs.RDX;
@@ -51,17 +48,13 @@ is
    begin
       Action := Types.Subject_Continue;
 
-      CPU_Values.Get_MSR_Value
-        (Address => MSR,
-         Regval  => Regval,
-         Success => Res);
-
-      if Res and then MSR = IA32_MISC_ENABLE then
+      if MSR = IA32_MISC_ENABLE then
 
          --  Bit  0: Fast string operations
          --  Bit 11: Branch Trace Storage Unavailable
          --  Bit 12: Precise Event Based Sampling (PEBS) Unavailable
-         State.Regs.RAX := Regval and 16#1801#;
+         State.Regs.RAX :=
+           CPU_Values.Target.MSR_IA32_MISC_ENABLE.Regval and 16#1801#;
          State.Regs.RDX := 0;
       else
          pragma Debug (Sm_Component.Config.Debug_Rdmsr,

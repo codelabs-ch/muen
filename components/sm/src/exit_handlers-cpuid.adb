@@ -19,7 +19,7 @@
 with SK.Constants;
 with SK.Bitops;
 
-with CPU_Values;
+with CPU_Values.Target;
 
 pragma $Release_Warnings
   (Off, "unit * is not referenced",
@@ -51,19 +51,11 @@ is
    is
       use type SK.Word32;
 
-      Feature_Bitmap : SK.Word64 := 0;
-      CPU_Features   : CPU_Values.CPUID_Values_Type;
-      Success        : Boolean;
+      Feature_Bitmap : SK.Word64;
    begin
-      CPU_Values.Get_CPUID_Values
-        (Leaf    => 16#d#,
-         Subleaf => 0,
-         Result  => CPU_Features,
-         Success => Success);
-      if Success then
-         Feature_Bitmap := SK.Word64
-           (CPU_Features.EAX and SK.Constants.XCR0_Supported_Features_Mask);
-      end if;
+      Feature_Bitmap := SK.Word64
+        (CPU_Values.Target.CPUID_0000_000d_00.EAX and
+           SK.Constants.XCR0_Supported_Features_Mask);
 
       return Feature_Bitmap;
    end Get_Enabled_XSAVE_Features;
@@ -73,26 +65,22 @@ is
    function Get_XSAVE_Area_Size (Features : SK.Word64) return SK.Word32
    is
       use type SK.Word32;
+      use type CPU_Values.CPUID_Values_Type;
 
       --  Legacy region + xsave header size, see Intel SDM Vol. 1,
       --  "13.4 XSAVE Area".
       Base_Size : constant := 16#240#;
 
-      Values : CPU_Values.CPUID_Values_Type;
       Calc   : SK.Word32 := 0;
-      Res    : Boolean;
+      Values : CPU_Values.CPUID_Values_Type;
    begin
       for I in SK.Bitops.Word64_Pos range 2 .. SK.Bitops.Word64_Pos'Last loop
          if SK.Bitops.Bit_Test
            (Value => Features,
             Pos   => I)
          then
-            CPU_Values.Get_CPUID_Values
-              (Leaf    => 16#d#,
-               Subleaf => SK.Byte (I),
-               Result  => Values,
-               Success => Res);
-            if Res then
+            Values := CPU_Values.Target.XSAVE_Feature_Values (I);
+            if Values /= CPU_Values.Null_CPUID_Values then
                Calc := Calc + Values.EAX;
             end if;
          end if;
@@ -107,32 +95,17 @@ is
    is
       use type SK.Word64;
 
+      package CPU renames CPU_Values.Target;
+
       --D @Lst Smcpuidbegin
       RAX : constant SK.Word64 := State.Regs.RAX;
       RCX : constant SK.Word64 := State.Regs.RCX;
-
-      Values : CPU_Values.CPUID_Values_Type;
-      Res    : Boolean;
    begin
       Action         := Types.Subject_Continue;
       State.Regs.RAX := 0;
       State.Regs.RBX := 0;
       State.Regs.RCX := 0;
       State.Regs.RDX := 0;
-
-      CPU_Values.Get_CPUID_Values
-        (Leaf    => SK.Word32'Mod (RAX),
-         Subleaf => SK.Byte'Mod (RCX),
-         Result  => Values,
-         Success => Res);
-      if not Res then
-         pragma Debug (Sm_Component.Config.Debug_Cpuid,
-                       Debug_Ops.Put_Line
-                         (Item => "Ignoring unknown CPUID leaf "
-                          & SK.Strings.Img (RAX)
-                          & ", subleaf " & SK.Strings.Img (RCX)));
-         return;
-      end if;
 
       case RAX is
          when 0 =>
@@ -141,17 +114,18 @@ is
 
             State.Regs.RAX := 16#d#;
 
-            State.Regs.RBX := SK.Word64 (Values.EBX);
-            State.Regs.RCX := SK.Word64 (Values.ECX);
-            State.Regs.RDX := SK.Word64 (Values.EDX);
+            State.Regs.RBX := SK.Word64 (CPU.CPUID_0000_0000_00.EBX);
+            State.Regs.RCX := SK.Word64 (CPU.CPUID_0000_0000_00.ECX);
+            State.Regs.RDX := SK.Word64 (CPU.CPUID_0000_0000_00.EDX);
          when 1 =>
             --D @Lst Smcpuidend
 
-            State.Regs.RAX := SK.Word64 (Values.EAX);
+            State.Regs.RAX := SK.Word64 (CPU.CPUID_0000_0001_00.EAX);
 
             -- Bits 07..00 - Brand Index
             -- Bits 15..08 - CLFLUSH line size
-            State.Regs.RBX := SK.Word64 (Values.EBX) and 16#ffff#;
+            State.Regs.RBX := SK.Word64
+               (CPU.CPUID_0000_0001_00.EBX) and 16#ffff#;
 
             --  Bit  0 - Streaming SIMD Extensions 3 (SSE3)
             --  Bit  1 - PCLMULQDQ
@@ -167,7 +141,8 @@ is
             --  Bit 26 - XSAVE
             --  Bit 29 - F16C
             --  Bit 30 - RDRAND
-            State.Regs.RCX := SK.Word64 (Values.ECX) and 16#7e98_3203#;
+            State.Regs.RCX := SK.Word64
+               (CPU.CPUID_0000_0001_00.ECX) and 16#7e98_3203#;
 
             --  Bit  0 -   FPU: x87 enabled
             --  Bit  1 -   VME: Virtual-8086 Mode Enhancement
@@ -188,16 +163,55 @@ is
             --  Bit 25 -   SSE: SSE support
             --  Bit 26 -  SSE2: SSE2 support
             --  Bit 27 -    SS: Self Snoop
-            State.Regs.RDX := SK.Word64 (Values.EDX) and 16#0f8a_b97f#;
+            State.Regs.RDX := SK.Word64
+               (CPU.CPUID_0000_0001_00.EDX) and 16#0f8a_b97f#;
+         when 2 =>
+            State.Regs.RAX := SK.Word64 (CPU.CPUID_0000_0002_00.EAX);
+            State.Regs.RBX := SK.Word64 (CPU.CPUID_0000_0002_00.EBX);
+            State.Regs.RCX := SK.Word64 (CPU.CPUID_0000_0002_00.ECX);
+            State.Regs.RDX := SK.Word64 (CPU.CPUID_0000_0002_00.EDX);
          when 4 =>
 
             --  Mask out APIC ID information. Otherwise Linux deduces topology
             --  from this information.
 
-            State.Regs.RAX := SK.Word64 (Values.EAX) and 16#3ff#;
-            State.Regs.RBX := SK.Word64 (Values.EBX);
-            State.Regs.RCX := SK.Word64 (Values.ECX);
-            State.Regs.RDX := SK.Word64 (Values.EDX);
+            if RCX = 0 then
+               State.Regs.RAX := SK.Word64
+                  (CPU.CPUID_0000_0004_00.EAX) and 16#3ff#;
+               State.Regs.RBX := SK.Word64
+                  (CPU.CPUID_0000_0004_00.EBX);
+               State.Regs.RCX := SK.Word64
+                  (CPU.CPUID_0000_0004_00.ECX);
+               State.Regs.RDX := SK.Word64
+                  (CPU.CPUID_0000_0004_00.EDX);
+            elsif RCX = 1 then
+               State.Regs.RAX := SK.Word64
+                  (CPU.CPUID_0000_0004_01.EAX) and 16#3ff#;
+               State.Regs.RBX := SK.Word64
+                  (CPU.CPUID_0000_0004_01.EBX);
+               State.Regs.RCX := SK.Word64
+                  (CPU.CPUID_0000_0004_01.ECX);
+               State.Regs.RDX := SK.Word64
+                  (CPU.CPUID_0000_0004_01.EDX);
+            elsif RCX = 2 then
+               State.Regs.RAX := SK.Word64
+                  (CPU.CPUID_0000_0004_02.EAX) and 16#3ff#;
+               State.Regs.RBX := SK.Word64
+                  (CPU.CPUID_0000_0004_02.EBX);
+               State.Regs.RCX := SK.Word64
+                  (CPU.CPUID_0000_0004_02.ECX);
+               State.Regs.RDX := SK.Word64
+                  (CPU.CPUID_0000_0004_02.EDX);
+            elsif RCX = 3 then
+               State.Regs.RAX := SK.Word64
+                  (CPU.CPUID_0000_0004_03.EAX) and 16#3ff#;
+               State.Regs.RBX := SK.Word64
+                  (CPU.CPUID_0000_0004_03.EBX);
+               State.Regs.RCX := SK.Word64
+                  (CPU.CPUID_0000_0004_03.ECX);
+               State.Regs.RDX := SK.Word64
+                  (CPU.CPUID_0000_0004_03.EDX);
+            end if;
          when 7 =>
 
             --  Structured Extended Feature Flags.
@@ -221,7 +235,7 @@ is
                --  Bit 29 - SHA
                --  Bit 30 - AVX512BW
                --  Bit 31 - AVX512VL
-               State.Regs.RBX := SK.Word64 (Values.EBX) and 16#f0af_0329#;
+               State.Regs.RBX := SK.Word64 (CPU.CPUID_0000_0007_00.EBX) and 16#f0af_0329#;
             else
                State.Regs.RBX := 0;
             end if;
@@ -234,21 +248,23 @@ is
                   use type SK.Word32;
 
                   Enabled   : constant SK.Word64 := SK.Word64
-                    (Values.EAX and SK.Constants.XCR0_Supported_Features_Mask);
+                    (CPU.CPUID_0000_000d_00.EAX
+                     and SK.Constants.XCR0_Supported_Features_Mask);
                   Area_Size : constant SK.Word32
                     := Get_XSAVE_Area_Size (Features => Enabled);
                begin
                   State.Regs.RAX := Enabled;
                   State.Regs.RBX := SK.Word64 (Area_Size);
                   State.Regs.RCX := SK.Word64 (Area_Size);
-                  State.Regs.RDX := SK.Word64 (Values.EDX);
+                  State.Regs.RDX := SK.Word64 (CPU.CPUID_0000_000d_00.EDX);
                end;
             elsif RCX = 1 then
 
                --  Bit  0 - XSAVEOPT
                --  Bit  1 - XSAVEC
                --  Bit  2 - XGETBV
-               State.Regs.RAX := SK.Word64 (Values.EAX) and 16#0007#;
+               State.Regs.RAX := SK.Word64
+                  (CPU.CPUID_0000_000d_01.EAX) and 16#0007#;
                State.Regs.RBX := SK.Word64
                  (Get_XSAVE_Area_Size (Features => Get_Enabled_XSAVE_Features));
 
@@ -268,10 +284,18 @@ is
                     (Value => Get_Enabled_XSAVE_Features,
                      Pos   => SK.Bitops.Word64_Pos (RCX))
                   then
-                     State.Regs.RAX := SK.Word64 (Values.EAX);
-                     State.Regs.RBX := SK.Word64 (Values.EBX);
-                     State.Regs.RCX := SK.Word64 (Values.ECX);
-                     State.Regs.RDX := SK.Word64 (Values.EDX);
+                     State.Regs.RAX := SK.Word64
+                        (CPU.XSAVE_Feature_Values
+                           (SK.Bitops.Word64_Pos (RCX)).EAX);
+                     State.Regs.RBX := SK.Word64
+                        (CPU.XSAVE_Feature_Values
+                           (SK.Bitops.Word64_Pos (RCX)).EBX);
+                     State.Regs.RCX := SK.Word64
+                        (CPU.XSAVE_Feature_Values
+                           (SK.Bitops.Word64_Pos (RCX)).ECX);
+                     State.Regs.RDX := SK.Word64
+                        (CPU.XSAVE_Feature_Values
+                           (SK.Bitops.Word64_Pos (RCX)).EDX);
                   end if;
                end if;
             end if;
@@ -285,20 +309,28 @@ is
             State.Regs.RCX := 0;
             State.Regs.RDX := 0;
          when 16#8000_0001# =>
-            State.Regs.RAX := SK.Word64 (Values.EAX);
-            State.Regs.RBX := SK.Word64 (Values.EBX);
-            State.Regs.RCX := SK.Word64 (Values.ECX);
+            State.Regs.RAX := SK.Word64 (CPU.CPUID_8000_0001_00.EAX);
+            State.Regs.RBX := SK.Word64 (CPU.CPUID_8000_0001_00.EBX);
+            State.Regs.RCX := SK.Word64 (CPU.CPUID_8000_0001_00.ECX);
 
             --  Mask out Bit 27 - RDTSCP
-            State.Regs.RDX := SK.Word64 (Values.EDX) and 16#f7ff_ffff#;
-         when 2 | 16#8000_0002# .. 16#8000_0004# =>
-
-            --  Passthrough values.
-
-            State.Regs.RAX := SK.Word64 (Values.EAX);
-            State.Regs.RBX := SK.Word64 (Values.EBX);
-            State.Regs.RCX := SK.Word64 (Values.ECX);
-            State.Regs.RDX := SK.Word64 (Values.EDX);
+            State.Regs.RDX := SK.Word64
+               (CPU.CPUID_8000_0001_00.EDX) and 16#f7ff_ffff#;
+         when 16#8000_0002# =>
+            State.Regs.RAX := SK.Word64 (CPU.CPUID_8000_0002_00.EAX);
+            State.Regs.RBX := SK.Word64 (CPU.CPUID_8000_0002_00.EBX);
+            State.Regs.RCX := SK.Word64 (CPU.CPUID_8000_0002_00.ECX);
+            State.Regs.RDX := SK.Word64 (CPU.CPUID_8000_0002_00.EDX);
+         when 16#8000_0003# =>
+            State.Regs.RAX := SK.Word64 (CPU.CPUID_8000_0003_00.EAX);
+            State.Regs.RBX := SK.Word64 (CPU.CPUID_8000_0003_00.EBX);
+            State.Regs.RCX := SK.Word64 (CPU.CPUID_8000_0003_00.ECX);
+            State.Regs.RDX := SK.Word64 (CPU.CPUID_8000_0003_00.EDX);
+         when 16#8000_0004# =>
+            State.Regs.RAX := SK.Word64 (CPU.CPUID_8000_0004_00.EAX);
+            State.Regs.RBX := SK.Word64 (CPU.CPUID_8000_0004_00.EBX);
+            State.Regs.RCX := SK.Word64 (CPU.CPUID_8000_0004_00.ECX);
+            State.Regs.RDX := SK.Word64 (CPU.CPUID_8000_0004_00.EDX);
          when others =>
             pragma Debug (Sm_Component.Config.Debug_Cpuid,
                           Debug_Ops.Put_Line

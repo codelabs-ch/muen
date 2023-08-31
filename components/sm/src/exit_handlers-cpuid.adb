@@ -197,7 +197,7 @@ is
             State.Regs.RAX := SK.Word64 (Values.EAX) and 16#3ff#;
             State.Regs.RBX := SK.Word64 (Values.EBX);
             State.Regs.RCX := SK.Word64 (Values.ECX);
-            State.Regs.RCX := SK.Word64 (Values.ECX);
+            State.Regs.RDX := SK.Word64 (Values.EDX);
          when 7 =>
 
             --  Structured Extended Feature Flags.

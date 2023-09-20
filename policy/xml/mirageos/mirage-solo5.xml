@@ -19,6 +19,14 @@
    <fill pattern="16#00#"/>
    <hash value="none"/>
   </memory>
+  <memory name="control_unikernel" size="16#1000#" caching="WB">
+   <fill pattern="16#ff#"/>
+   <hash value="none"/>
+  </memory>
+  <memory name="status_unikernel" size="16#1000#" caching="WB">
+   <fill pattern="16#00#"/>
+   <hash value="none"/>
+  </memory>
  </memory>
  <deviceDomains>
   <domain name="nic_domain">
@@ -34,6 +42,7 @@
  </deviceDomains>
  <events>
   <include href="common_events.xml"/>
+  <event name="unikernel_reset" mode="self"/>
   <event name="resume_unikernel_1" mode="switch"/>
   <event name="trap_to_sm_3" mode="switch"/>
  </events>
@@ -196,14 +205,25 @@
      <group name="vmx_exit">
       <default physical="trap_to_sm_3"/>
      </group>
+     <group name="vmcall">
+      <event id="0" logical="solo5_exit" physical="unikernel_reset"/>
+     </group>
     </source>
     <target>
      <event logical="resume_after_trap" physical="resume_unikernel_1"/>
+     <event logical="solo5_exit" physical="unikernel_reset">
+      <reset/>
+     </event>
     </target>
    </events>
+   <monitor>
+    <loader subject="unikernel" logical="reload" virtualAddress="16#0000#"/>
+   </monitor>
    <component ref="unikernel">
     <map logical="time_info" physical="time_info"/>
     <map logical="debuglog" physical="debuglog_subject7"/>
+    <map logical="status" physical="status_unikernel"/>
+    <map logical="control" physical="control_unikernel"/>
    </component>
   </subject>
  </subjects>

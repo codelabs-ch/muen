@@ -4,6 +4,7 @@ from __future__ import print_function
 
 import sys
 import re
+import os.path
 
 
 if len(sys.argv) == 1:
@@ -13,6 +14,10 @@ elif len(sys.argv) == 2:
     f = sys.stdin
 else:
     filename = sys.argv[2]
+    if not os.path.exists(filename):
+        print("Specified file '" + filename + "' does not exist")
+        exit(-1)
+
     f = open(filename, 'r', encoding='utf-8', errors='replace')
 
 subject_id = int(sys.argv[1], 0)

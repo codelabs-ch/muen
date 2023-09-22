@@ -2,6 +2,7 @@
  <depends>
   <library ref="libmudebuglog"/>
   <library ref="libmutime"/>
+  <library ref="muinit"/>
  </depends>
  <requires>
   <vcpu>
@@ -28,6 +29,9 @@
      </exception>
     </masks>
    </vmx>
+   <msrs>
+    <msr end="16#c000_0100#" mode="rw" start="16#c000_0100#"/>
+   </msrs>
    <registers>
     <gpr>
      <rip>16#0010_0000#</rip>

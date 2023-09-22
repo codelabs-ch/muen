@@ -21,7 +21,8 @@
 
 _main:
 	// Save initial register values on stack to restore after
-	// initialization.
+	// initialization. The stack pointer is set to the inital value of the
+	// component, which may have arbitrary (byte) alignment.
 	// Note: Registers r10-r15 are used by the init code and do not
 	//       retain their initial value.
 	push %r9
@@ -36,7 +37,13 @@ _main:
 	// Space for return values: 5 x 8 bytes (see Run_Info_Type).
 	sub $0x28, %rsp
 	mov %rsp, %rdi
+	// Ensure 16-byte stack alignment for call into SPARK subprogram, as
+	// required by the AMD x86_64 calling convention (section 3.2.2 "The Stack
+	// Frame").
+	mov %rsp, %rbp
+	and  $-0x10, %rsp
 	call init_main
+	mov %rbp, %rsp
 	pop %r15       // Entry point
 	pop %r14       // Status address
 	pop %r13       // Status value

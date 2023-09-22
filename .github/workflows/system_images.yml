@@ -193,7 +193,7 @@ jobs:
 
             if [ $SYSTEM == 'xml/mirage-solo5.xml' ]; then \
               tools/scripts/solo5-muen-gencspec.py \
-                /opt/solo5-v0.6.5/tests/test_hello/test_hello.muen \
+                /opt/solo5-v*/tests/test_hello/test_hello.muen \
                 policy/xml/mirageos/cspec_src.xml policy/obj \
                 --out_spec policy/xml/mirageos/component_unikernel.xml; \
             fi

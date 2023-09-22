@@ -18,9 +18,10 @@ MFT_CMD = "solo5-elftool query-manifest"
 ABI_CMD = "solo5-elftool query-abi"
 DEFAULT_RAM_SIZE = "512"
 MAX_NAME_LEN = 63
+NOP = 0x90
 
 ABI_TARGET = "muen"
-ABI_VERSION = 2
+ABI_VERSION = 3
 
 chan_size = 0x100000
 chan_addr = 0xe0000000
@@ -54,6 +55,24 @@ def set_rip(xml_spec, binary):
     print("* Setting RIP to " + rip.text)
 
 
+def set_resetable(xml_spec, resetable):
+    """
+    Add reset config value to XML spec.
+    """
+    section = src_spec.xpath("/component/config")
+    if len(section) == 0:
+        comp = src_spec.xpath("/component")[0]
+        config = etree.Element("config")
+        comp.insert(0, config)
+    else:
+        config = section[0]
+
+    rst_str = str(resetable).lower()
+    print("* Component reset is set to '" + rst_str + "'")
+    var = etree.Element("boolean", name="resetable", value=rst_str)
+    config.insert(0, var)
+
+
 def add_elf_memory(xml_spec, binary, filename):
     """
     Add memory regions for given ELF binary with specified name to <requires>
@@ -75,7 +94,11 @@ def add_elf_memory(xml_spec, binary, filename):
 
             n = "+".join([section.name for section in sections])
             mem_name = (n[:max_len - 2] + '..') if len(n) > max_len else n
-            print("* Adding memory region '" + mem_name + "'")
+
+            # Rename .text to text so Muinit can look it up and use it as entry
+            # point after initialization.
+            if ".text" in mem_name:
+                mem_name = "text"
 
             w = ELF.SEGMENT_FLAGS.W in segment
             x = ELF.SEGMENT_FLAGS.X in segment
@@ -87,18 +110,20 @@ def add_elf_memory(xml_spec, binary, filename):
             vaddr_str = muutils.int_to_ada_hex(virtual_addr)
             offset_str = muutils.int_to_ada_hex(segment.file_offset)
 
-            mem = etree.Element("memory",
-                                logical=mem_name,
-                                virtualAddress=vaddr_str,
-                                size=muutils.int_to_ada_hex(phy_size),
-                                executable=muutils.bool_to_str(x),
-                                writable=muutils.bool_to_str(w),
-                                type="subject_binary")
-            etree.SubElement(mem,
-                             "file",
-                             filename=filename,
-                             offset=offset_str)
-            provides.append(mem)
+            if phy_size > 0:
+                print("* Adding memory region '" + mem_name + "'")
+                mem = etree.Element("memory",
+                                    logical=mem_name,
+                                    virtualAddress=vaddr_str,
+                                    size=muutils.int_to_ada_hex(phy_size),
+                                    executable=muutils.bool_to_str(x),
+                                    writable=muutils.bool_to_str(w),
+                                    type="subject_binary")
+                etree.SubElement(mem,
+                                 "file",
+                                 filename=filename,
+                                 offset=offset_str)
+                provides.append(mem)
 
             # Add fill region if virtual_size is larger than physical_size
             mem_size = segment.virtual_size
@@ -182,6 +207,29 @@ def validate_solo5_abi(raw_abi):
                  + ", expected " + str(ABI_VERSION))
 
 
+def patch_binary(binary):
+    """
+    Patch .interp section at beginning of binary preceding .text with NOPs
+    which effectively makes the start of the text section an entry point.
+    This is required to be loadable by the Muinit stub, since it transfers
+    control to the start of the text section.
+    """
+    interp_section = binary.get_section(".interp")
+    text_section = binary.get_section(".text")
+    if text_section is None:
+        sys.exit("Error: Unable to patch binary - '.text' section not found")
+
+    patch_size = text_section.file_offset - interp_section.file_offset
+
+    print("Patching binary @ file offset "
+          + muutils.int_to_ada_hex(interp_section.file_offset)
+          + " with " + str(patch_size) + " NOPs")
+    fh = open(out_bin_path, "r+b")
+    fh.seek(interp_section.file_offset)
+    fh.write(bytes([NOP] * patch_size))
+    fh.close()
+
+
 def parse_args():
     """
     Returned parsed command line arguments
@@ -205,6 +253,9 @@ def parse_args():
                             action="store_false", default=True,
                             help=('Do not copy unikernel binary to output '
                                   'directory'))
+    arg_parser.add_argument('--disable-reset', dest='resetable',
+                            action="store_false", default=True,
+                            help=('Disable reset of unikernel on exit'))
 
     return arg_parser.parse_args()
 
@@ -216,6 +267,7 @@ out_dir = args.out_dir
 boot_params = args.bootparams
 out_spec_path = args.out_spec
 copy_binary = args.copy_bin
+resetable = args.resetable
 ram_size_mb = args.ram
 
 if not os.path.isfile(src_bin_path):
@@ -235,6 +287,7 @@ src_spec = etree.parse(src_spec_path, xml_parser).getroot()
 comp_name = src_spec.attrib['name'].lower()
 
 add_bootparams(src_spec, boot_params)
+set_resetable(src_spec, resetable)
 set_rip(src_spec, binary)
 end_address = add_elf_memory(src_spec, binary, binary_name)
 chan_addr = add_ram_memory(src_spec, binary, end_address, ram_size_mb)
@@ -295,3 +348,4 @@ if copy_binary:
     out_bin_path = out_dir + "/" + binary_name
     print("Copying unikernel binary to '" + out_bin_path + "'")
     shutil.copy(src_bin_path, out_bin_path)
+    patch_binary(binary)

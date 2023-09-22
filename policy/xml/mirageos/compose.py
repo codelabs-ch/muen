@@ -15,6 +15,7 @@ LINUX_NAME = "nic_linux"
 LINUX_BASE_ADDR = 0xe03000000
 LINUX_BOOTPARAM = "unikernel_iface"
 OUT_SPEC_PATH = "../" + POLICY_TEMPLATE
+RESET_VAR_NAME = "resetable"
 
 
 def add_physical_channels(doc, comp_channels, subject_name):
@@ -66,6 +67,18 @@ def add_linux_channels(doc, comp_channels, subject_name):
         etree.SubElement(subj_channels, chan_type, logical=log_name,
                          physical=phys_name, virtualAddress=addr_str)
         address += size
+
+
+def copy_reset_variable(doc, subject_name):
+    """
+    Copy component-local "resetable" variable to system config section.
+    """
+    comp_rst = doc.xpath("/system/components/component[@name='"
+                         + subject_name + "']/config/boolean[@name='"
+                         + RESET_VAR_NAME + "']")[0]
+    sys_config = doc.xpath("/system/config")[0]
+    etree.SubElement(sys_config, "boolean", name=subject_name + "_"
+                     + RESET_VAR_NAME, value=comp_rst.get("value"))
 
 
 def extend_subject_bootparams(doc, subject_name, bootparams):
@@ -137,6 +150,7 @@ add_subject_channel_mappings(doc, comp_channels, SUBJECT_NAME)
 add_linux_channels(doc, comp_channels, SUBJECT_NAME)
 add_linux_bootparams(doc, comp_channels)
 set_subject_bootparams(doc, cspec_doc, SUBJECT_NAME)
+copy_reset_variable(doc, SUBJECT_NAME)
 
 with open(OUT_SPEC_PATH, 'wb') as f:
     print("Writing system policy to '" + OUT_SPEC_PATH + "'")

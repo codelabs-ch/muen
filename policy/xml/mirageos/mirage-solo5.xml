@@ -42,7 +42,9 @@
  </deviceDomains>
  <events>
   <include href="common_events.xml"/>
-  <event name="unikernel_reset" mode="self"/>
+  <if variable="unikernel_resetable" value="true">
+   <event name="unikernel_reset" mode="self"/>
+  </if>
   <event name="resume_unikernel_1" mode="switch"/>
   <event name="trap_to_sm_3" mode="switch"/>
  </events>
@@ -206,19 +208,25 @@
       <default physical="trap_to_sm_3"/>
      </group>
      <group name="vmcall">
-      <event id="0" logical="solo5_exit" physical="unikernel_reset"/>
+      <if variable="unikernel_resetable" value="true">
+       <event id="0" logical="solo5_exit" physical="unikernel_reset"/>
+      </if>
      </group>
     </source>
     <target>
      <event logical="resume_after_trap" physical="resume_unikernel_1"/>
-     <event logical="solo5_exit" physical="unikernel_reset">
-      <reset/>
-     </event>
+     <if variable="unikernel_resetable" value="true">
+      <event logical="solo5_exit" physical="unikernel_reset">
+       <reset/>
+      </event>
+     </if>
     </target>
    </events>
-   <monitor>
-    <loader subject="unikernel" logical="reload" virtualAddress="16#0000#"/>
-   </monitor>
+   <if variable="unikernel_resetable" value="true">
+    <monitor>
+     <loader subject="unikernel" logical="reload" virtualAddress="16#0000#"/>
+    </monitor>
+   </if>
    <component ref="unikernel">
     <map logical="time_info" physical="time_info"/>
     <map logical="debuglog" physical="debuglog_subject7"/>

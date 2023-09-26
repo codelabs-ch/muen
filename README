@@ -170,8 +170,7 @@ The Muen SK has been developed and successfully tested using the development
 environment listed in the following table.
 
 |===================================================================
-| Operating systems      | Debian GNU/Linux 11 x86_64 +
-                           Ubuntu 20.04 x86_64 +
+| Operating systems      | Debian GNU/Linux 12 x86_64 +
                            Ubuntu 22.04 x86_64
 | Linux kernel/KVM       | >= 5.2.0 with GUEST_CR3 fix <<lnxcr3>>
 | Ada compiler           | GNAT FSF 12.2
@@ -212,7 +211,7 @@ which takes care of installing and configuring the toolchain:
   $ git clone https://git.codelabs.ch/alire/muen-dev-env.git
   $ cd muen-dev-env
   $ make
-  $ . env
+  $ source ./env
 
 Docker
 ~~~~~~

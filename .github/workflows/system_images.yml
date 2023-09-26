@@ -14,7 +14,7 @@ jobs:
       matrix:
         # test system/hardware permutations
         distro:
-          - debian-bullseye
+          - debian-bookworm
         system:
           - integration_tests.xml
           - demo_system_vtd.xml
@@ -34,22 +34,19 @@ jobs:
           - up-squared-e3950.xml
         include:
           # specific combinations
-          - distro: debian-bullseye
+          - distro: debian-bookworm
             system: demo_system_desktop.xml
             hardware: lenovo-t480s.xml
-          - distro: debian-bullseye
+          - distro: debian-bookworm
             system: demo_system_desktop_smp.xml
             hardware: lenovo-t480s.xml
-          - distro: debian-bullseye
+          - distro: debian-bookworm
             system: integration_tests_kt.xml
             hardware: kontron-ktqm77.xml
-          - distro: debian-bullseye
+          - distro: debian-bookworm
             system: mirage-solo5.xml
             hardware: intel-nuc-5i5myhe.xml
           # additional distros
-          - distro: ubuntu-focal
-            system: demo_system_vtd.xml
-            hardware: lenovo-t430s.xml
           - distro: ubuntu-jammy
             system: demo_system_vtd.xml
             hardware: lenovo-t430s.xml
@@ -187,7 +184,7 @@ jobs:
             -w /mnt
           run: |
             set -e
-            source /home/user/dev-env.alr/env
+            source /opt/dev-env.alr/env
             cat /etc/issue
             ccache -z
 
@@ -226,7 +223,7 @@ jobs:
           matrix.system == 'demo_system_vtd.xml' &&
           matrix.hardware == 'lenovo-t430s.xml' &&
           steps.vars.outputs.distro_name == 'debian' &&
-          steps.vars.outputs.distro_version == 'bullseye' &&
+          steps.vars.outputs.distro_version == 'bookworm' &&
           steps.vars.outputs.git_name == 'devel'
         run: |
           REPOS=${{ github.repository_owner }}

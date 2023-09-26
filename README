@@ -211,7 +211,7 @@ which takes care of installing and configuring the toolchain:
   $ git clone https://git.codelabs.ch/alire/muen-dev-env.git
   $ cd muen-dev-env
   $ make
-  $ . env
+  $ source ./env
 
 Docker
 ~~~~~~

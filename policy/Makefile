@@ -5,6 +5,7 @@ SYSTEM_POLICY_VA_ALLOC   ?= $(POLICY_OBJ_DIR)/$(SYSTEM_NAME)_with_va.xml
 SYSTEM_POLICY_VA_ALLOC_F ?= $(POLICY_OBJ_DIR)/$(SYSTEM_NAME)_with_va_filtered.xml
 SYSTEM_POLICY_A          ?= $(POLICY_OBJ_DIR)/$(SYSTEM_NAME)_a.xml
 SYSTEM_POLICY_B          ?= $(POLICY_OBJ_DIR)/$(SYSTEM_NAME)_b.xml
+SYSTEM_POLICY_B_EXT      ?= $(POLICY_OBJ_DIR)/$(SYSTEM_NAME)_b_ext.xml
 
 OUTPUT   = $(OBJ_DIR)/skp.ads
 LAST_CFG = $(shell cat $(OBJ_DIR)/.cfg 2>/dev/null)
@@ -91,6 +92,7 @@ endif
 
 
 compile: .validated $(OUTPUT) $(POLICY_A) $(POLICY_B)
+compile-ext_b: $(SYSTEM_POLICY_B_EXT)
 
 merge: $(POLICY_SRC)
 
@@ -147,6 +149,10 @@ $(SYSTEM_POLICY_A): $(SYSTEM_POLICY_VA_ALLOC_F) $(MUCFGEXPAND)
 
 $(SYSTEM_POLICY_B): $(SYSTEM_POLICY_A) $(MUCFGALLOC)
 	@$(E) policy "Allocate physical memory" "$(MUCFGALLOC) $< $@"
+
+$(SYSTEM_POLICY_B_EXT): $(SYSTEM_POLICY_B) $(DOC_PLUGIN_POLICY_B_EXTENDER) $(SYSTEM_POLICY_VA_ALLOC)
+	@$(E) policy "Extend policy b with documentation" \
+		"$(DOC_PLUGIN_POLICY_B_EXTENDER) --pj $(SYSTEM_POLICY_VA_ALLOC) --pb $(SYSTEM_POLICY_B) --o $@"
 
 .validated: $(SYSTEM_POLICY_B) $(MUCFGVALIDATE)
 	@$(E) policy Validate "$(MUCFGVALIDATE) $<"

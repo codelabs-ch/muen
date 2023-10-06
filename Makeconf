@@ -69,8 +69,9 @@ MUGENTAU0CMDS   ?= $(TOP_DIR)/tools/mugentau0cmds/bin/mugentau0cmds
 MUGENZP         ?= $(TOP_DIR)/tools/mugenzp/bin/mugenzp
 MUXMLFILTER     ?= $(TOP_DIR)/tools/muxmlfilter/bin/muxmlfilter
 
-XML2ADA     ?= $(TOP_DIR)/tools/scripts/xml2ada
-RESOLVE_XSL ?= $(TOP_DIR)/tools/libmuxml/schema/resolve.xsl
+XML2ADA                      ?= $(TOP_DIR)/tools/scripts/xml2ada
+RESOLVE_XSL                  ?= $(TOP_DIR)/tools/libmuxml/schema/resolve.xsl
+DOC_PLUGIN_POLICY_B_EXTENDER ?= $(TOP_DIR)/tools/scripts/toolchain_plugin-doc_transfer.py
 
 TO_RAW_OPTS = -O binary \
 	--set-section-flags .bss=alloc,load,contents \

@@ -21,6 +21,9 @@ policy-compile:	## Compile and validate system policy
 policy-compile: tools components
 	$(MAKE) -C policy compile
 
+policy-compile-ext_b: policy-compile
+	$(MAKE) -C policy compile-ext_b
+
 components:	## Build all components
 components: policy-merge rts $(CONTRIB)
 	$(MAKE) -C $@

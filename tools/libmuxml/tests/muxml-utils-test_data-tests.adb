@@ -16,6 +16,8 @@ with System.Assertions;
 --  end read only
 with DOM.Core;
 with DOM.Core.Nodes;
+with Muxml.Grammar_Tools;
+with Muxml.system_src_schema;
 --  begin read only
 --  end read only
 package body Muxml.Utils.Test_Data.Tests is
@@ -195,8 +197,8 @@ package body Muxml.Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Count_Element_Children (Gnattest_T : in out Test);
-   procedure Test_Count_Element_Children_ea862c (Gnattest_T : in out Test) renames Test_Count_Element_Children;
---  id:2.2/ea862c201eab8836/Count_Element_Children/1/0/
+   procedure Test_Count_Element_Children_7b5586 (Gnattest_T : in out Test) renames Test_Count_Element_Children;
+--  id:2.2/7b5586a410406765/Count_Element_Children/1/0/
    procedure Test_Count_Element_Children (Gnattest_T : in out Test) is
 --  end read only
 
@@ -2047,6 +2049,355 @@ package body Muxml.Utils.Test_Data.Tests is
               Message   => "Sum mismatch");
 --  begin read only
    end Test_Sum;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Get_Ancestor_Names (Gnattest_T : in out Test);
+   procedure Test_Get_Ancestor_Names_2b67aa (Gnattest_T : in out Test) renames Test_Get_Ancestor_Names;
+--  id:2.2/2b67aa12e69e4f8e/Get_Ancestor_Names/1/0/
+   procedure Test_Get_Ancestor_Names (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+      use type String_Vector.Vector;
+
+      Data : Muxml.XML_Data_Type;
+      Node : DOM.Core.Node;
+      Ancestors : String_Vector.Vector;
+   begin
+      Muxml.Parse
+        (Data => Data,
+         Kind => Muxml.None,
+         File => "data/format_src.xml");
+      --  No ancestors
+      Node := Muxml.Utils.Get_Element
+        (Doc   => Data.Doc,
+         XPath => "/system");
+      Ancestors.Append("system");
+
+      Assert (Condition => Get_Ancestor_Names (Node => Node) = Ancestors,
+              Message   => "Ancestors mismatch"
+             & Get_Ancestor_Names (Node => Node).First_Element);
+
+      --  non-trivial ancestor list
+      Node := Muxml.Utils.Get_Element
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='tau0']/"
+           & "devices/device[@logical='foo']");
+      Ancestors.Prepend("subjects");
+      Ancestors.Prepend("subject");
+      Ancestors.Prepend("devices");
+      Ancestors.Prepend("device");
+      Assert (Condition => Get_Ancestor_Names (Node => Node) = Ancestors,
+              Message   => "Ancestors mismatch");
+
+--  begin read only
+   end Test_Get_Ancestor_Names;
+--  end read only
+
+
+--  begin read only
+   procedure Test_1_Insert_Child (Gnattest_T : in out Test);
+   procedure Test_Insert_Child_b58cd4 (Gnattest_T : in out Test) renames Test_1_Insert_Child;
+--  id:2.2/b58cd4a6b373adf4/Insert_Child/1/0/
+   procedure Test_1_Insert_Child (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+      use type DOM.Core.Node;
+
+      procedure Positive_Tests
+      is
+         Data                             : Muxml.XML_Data_Type;
+         Parent_Node, New_Node, Node      : DOM.Core.Node;
+         Siblings_Names, Ignored_Siblings : String_Vector.Vector;
+         Siblings_Nodes                   : Node_Vector.Vector;
+         Insertion_Index                  : Natural;
+      begin
+         Muxml.Parse
+           (Data => Data,
+            Kind => Muxml.None,
+            File => "data/format_src.xml");
+
+         --    insert new node as last element
+         Parent_Node := Muxml.Utils.Get_Element
+            (Doc   => Data.Doc,
+             XPath => "/system/subjects");
+         New_Node := DOM.Core.Documents.Create_Element
+            (Doc      => Data.Doc,
+             Tag_Name => "subject");
+         DOM.Core.Elements.Set_Attribute
+            (Elem  => New_Node,
+             Name  => "name",
+             Value => "my_new_subject");
+         Insert_Child
+           (Parent           => Parent_Node,
+            New_Child        => New_Node,
+            Clone_Child      => False,
+            Siblings_Names   => Siblings_Names,
+            Siblings_Nodes   => Siblings_Nodes,
+            Ignored_Siblings => Ignored_Siblings,
+            Ancestors        => Get_Ancestor_Names (Node => Parent_Node),
+            Insertion_Index  => Insertion_Index);
+         Assert (Condition => Insertion_Index = 2,
+                 Message   => "Insertion_Index mismatch: " & Insertion_Index'Img);
+         Assert (Condition => Siblings_Names.Last_Element = "subject"
+                   and Natural (Siblings_Names.Length) = 3,
+                 Message   => "Siblings_Names mismatch");
+         New_Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='my_new_subject']");
+         Assert (Condition => New_Node /= null,
+                 Message   => "Inserted node not found");
+
+         --    insert in empty list of siblings
+         Siblings_Names := String_Vector.Empty_Vector;
+         Siblings_Nodes := Node_Vector.Empty_Vector;
+         Parent_Node := New_Node; --  Parent is now <subject name='my_new_subject'>
+         New_Node := DOM.Core.Documents.Create_Element
+            (Doc      => Data.Doc,
+             Tag_Name => "component");
+         DOM.Core.Elements.Set_Attribute
+            (Elem  => New_Node,
+             Name  => "ref",
+             Value => "bogous_ref");
+         Insert_Child
+           (Parent           => Parent_Node,
+            New_Child        => New_Node,
+            Clone_Child      => False,
+            Siblings_Names   => Siblings_Names,
+            Siblings_Nodes   => Siblings_Nodes,
+            Ignored_Siblings => Ignored_Siblings,
+            Ancestors        => Get_Ancestor_Names (Node => Parent_Node),
+            Insertion_Index  => Insertion_Index);
+         Assert (Condition => Insertion_Index = 0,
+                 Message   => "Insertion_Index mismatch: " & Insertion_Index'Img);
+         Assert (Condition => Siblings_Names.First_Element = "component"
+                   and Natural (Siblings_Names.Length) = 1,
+                 Message   => "Siblings_Names mismatch");
+         New_Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='my_new_subject']/component");
+         Assert (Condition => New_Node /= null,
+                 Message   => "Inserted node not found");
+
+         --    insert new tag as first with clone
+         New_Node := DOM.Core.Documents.Create_Element
+            (Doc      => Data.Doc,
+             Tag_Name => "bootparams");
+         Insert_Child
+           (Parent           => Parent_Node,
+            New_Child        => New_Node,
+            Clone_Child      => True,
+            Siblings_Names   => Siblings_Names,
+            Siblings_Nodes   => Siblings_Nodes,
+            Ignored_Siblings => Ignored_Siblings,
+            Ancestors        => Get_Ancestor_Names (Node => Parent_Node),
+            Insertion_Index  => Insertion_Index);
+         Assert (Condition => Insertion_Index = 0,
+                 Message   => "Insertion_Index mismatch: " & Insertion_Index'Img);
+         Assert (Condition => Siblings_Names.First_Element = "bootparams"
+                   and Natural (Siblings_Names.Length) = 2,
+                 Message   => "Siblings_Names mismatch");
+         New_Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='my_new_subject']/bootparams");
+         Assert (Condition => New_Node /= null,
+                 Message   => "Inserted node not found");
+
+         --    insert in middle
+         New_Node := DOM.Core.Documents.Create_Element
+            (Doc      => Data.Doc,
+             Tag_Name => "memory");
+         Insert_Child
+           (Parent           => Parent_Node,
+            New_Child        => New_Node,
+            Clone_Child      => False,
+            Siblings_Names   => Siblings_Names,
+            Siblings_Nodes   => Siblings_Nodes,
+            Ignored_Siblings => Ignored_Siblings,
+            Ancestors        => Get_Ancestor_Names (Node => Parent_Node),
+            Insertion_Index  => Insertion_Index);
+         Assert (Condition => Insertion_Index = 1,
+                 Message   => "Insertion_Index mismatch: " & Insertion_Index'Img);
+         Assert (Condition => Natural (Siblings_Names.Length) = 3,
+                 Message   => "Siblings_Names mismatch");
+         Node := Siblings_Nodes.Element (1);
+         New_Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='my_new_subject']/memory");
+         Assert (Condition => New_Node = Node,
+                 Message   => "Inserted node not found");
+
+         --    insert with ignored siblings (which have false tags)
+         New_Node := DOM.Core.Documents.Create_Element
+            (Doc      => Data.Doc,
+             Tag_Name => "not_schema_complient");
+         Insert_Before (Parent    => Parent_Node,
+                        New_Child => New_Node,
+                        Ref_Child => "memory");
+         New_Node := DOM.Core.Documents.Create_Element
+            (Doc      => Data.Doc,
+             Tag_Name => "bootparams");
+         Siblings_Names := String_Vector.Empty_Vector;
+         Siblings_Nodes := Node_Vector.Empty_Vector;
+         Ignored_Siblings.Append ("not_schema_complient");
+         Insert_Child
+           (Parent           => Parent_Node,
+            New_Child        => New_Node,
+            Clone_Child      => False,
+            Siblings_Names   => Siblings_Names,
+            Siblings_Nodes   => Siblings_Nodes,
+            Ignored_Siblings => Ignored_Siblings,
+            Ancestors        => Get_Ancestor_Names (Node => Parent_Node),
+            Insertion_Index  => Insertion_Index);
+         Assert (Condition => Insertion_Index = 1,
+                 Message   => "Insertion_Index mismatch: " & Insertion_Index'Img);
+         Assert (Condition => Natural (Siblings_Nodes.Length) = 4
+                   and Natural (Siblings_Names.Length) = 4,
+                 Message   => "Siblings_Names and Siblings_Nodes mismatch");
+      end Positive_Tests;
+
+      procedure Negative_Tests
+      is
+         Data                             : Muxml.XML_Data_Type;
+         Parent_Node, New_Node            : DOM.Core.Node;
+         Siblings_Names, Ignored_Siblings : String_Vector.Vector;
+         Siblings_Nodes                   : Node_Vector.Vector;
+         Insertion_Index                  : Natural;
+      begin
+         --    no legal position (false tag of new node)
+         Muxml.Parse
+           (Data => Data,
+            Kind => Muxml.None,
+            File => "data/format_src.xml");
+
+         --    insert new node as last element
+         Parent_Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects");
+         New_Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "not_schema_complient");
+         Insert_Child
+           (Parent           => Parent_Node,
+            New_Child        => New_Node,
+            Clone_Child      => False,
+            Siblings_Names   => Siblings_Names,
+            Siblings_Nodes   => Siblings_Nodes,
+            Ignored_Siblings => Ignored_Siblings,
+            Ancestors        => Get_Ancestor_Names (Node => Parent_Node),
+            Insertion_Index  => Insertion_Index);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                      = "Could not find valid place to insert "
+                      & "'not_schema_complient' into node with name 'subjects'",
+                    Message   => "Exception mismatch");
+      end Negative_Tests;
+   begin
+      Muxml.Grammar_Tools.Init_Order_Information
+        (Schema_XML_Data => Muxml.system_src_schema.Data);
+      Positive_Tests;
+      Negative_Tests;
+
+--  begin read only
+   end Test_1_Insert_Child;
+--  end read only
+
+
+--  begin read only
+   procedure Test_2_Insert_Child (Gnattest_T : in out Test);
+   procedure Test_Insert_Child_b71056 (Gnattest_T : in out Test) renames Test_2_Insert_Child;
+--  id:2.2/b71056829f2eefad/Insert_Child/0/0/
+   procedure Test_2_Insert_Child (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+      use type DOM.Core.Node;
+      Data                  : XML_Data_Type;
+      Parent_Node, New_Node : DOM.Core.Node;
+   begin
+      --  Most of the functionality is tested in the non-wrapped version.
+      Muxml.Grammar_Tools.Init_Order_Information
+        (Schema_XML_Data => Muxml.system_src_schema.Data);
+
+      Muxml.Parse
+        (Data => Data,
+         Kind => Muxml.None,
+         File => "data/format_src.xml");
+
+      Parent_Node := Muxml.Utils.Get_Element
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='tau0']/component");
+      New_Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "map");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => New_Node,
+         Name  => "logical",
+         Value => "new_logical");
+      Insert_Child
+        (Parent    => Parent_Node,
+         New_Child => New_Node);
+      New_Node := Muxml.Utils.Get_Element
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='tau0']/component/"
+           & "map[@logical='new_logical']");
+      Assert (Condition => New_Node /= null,
+              Message   => "Inserted node not found");
+
+--  begin read only
+   end Test_2_Insert_Child;
+--  end read only
+
+
+--  begin read only
+   procedure Test_3_Insert_Child (Gnattest_T : in out Test);
+   procedure Test_Insert_Child_168189 (Gnattest_T : in out Test) renames Test_3_Insert_Child;
+--  id:2.2/1681891410309f50/Insert_Child/0/0/
+   procedure Test_3_Insert_Child (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type DOM.Core.Node;
+      Data                  : XML_Data_Type;
+      Parent_Node, New_Node : DOM.Core.Node;
+   begin
+      --  Most of the functionality is tested in the non-wrapped version.
+      Muxml.Grammar_Tools.Init_Order_Information
+        (Schema_XML_Data => Muxml.system_src_schema.Data);
+
+      Muxml.Parse
+        (Data => Data,
+         Kind => Muxml.None,
+         File => "data/format_src.xml");
+
+      Parent_Node := Muxml.Utils.Get_Element
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='tau0']/component");
+      New_Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "map");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => New_Node,
+         Name  => "logical",
+         Value => "new_logical");
+      New_Node := Insert_Child
+        (Parent    => Parent_Node,
+         New_Child => New_Node);
+      Assert (Condition => New_Node = Muxml.Utils.Get_Element
+                (Doc   => Data.Doc,
+                 XPath => "/system/subjects/subject[@name='tau0']/component/"
+                   & "map[@logical='new_logical']"),
+              Message   => "Inserted node not found");
+
+--  begin read only
+   end Test_3_Insert_Child;
 --  end read only
 
 --  begin read only

@@ -5,12 +5,12 @@
 
 with Muxml.system_src_schema;
 
-package body Mutools.Amend.Ordering.Test_Data is
+package body Muxml.Grammar_Tools.Test_Data is
 
    procedure Set_Up (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
    begin
-      null;
+      Init_Order_Information (Schema_XML_Data => Muxml.system_src_schema.Data);
    end Set_Up;
 
    procedure Tear_Down (Gnattest_T : in out Test) is
@@ -29,4 +29,4 @@ package body Mutools.Amend.Ordering.Test_Data is
    end Clear_Order_Info;
 
 
-end Mutools.Amend.Ordering.Test_Data;
+end Muxml.Grammar_Tools.Test_Data;

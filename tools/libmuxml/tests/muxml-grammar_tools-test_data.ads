@@ -5,7 +5,7 @@
 
 with AUnit.Test_Fixtures;
 
-package Mutools.Amend.Ordering.Test_Data is
+package Muxml.Grammar_Tools.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -18,4 +18,4 @@ package Mutools.Amend.Ordering.Test_Data is
    -- delete all entries in Order_Info
    procedure Clear_Order_Info;
 
-end Mutools.Amend.Ordering.Test_Data;
+end Muxml.Grammar_Tools.Test_Data;

@@ -97,7 +97,8 @@ is
         := DOM.Core.Nodes.Node_Name (N => Root_Node);
       Index          : String_Vector.Extended_Index;
    begin
-      if not Order_Info.Type_To_Children
+      if not Order_Info.Type_To_Children.Contains ("schemaRoot")
+        or else not Order_Info.Type_To_Children
         ("schemaRoot").Node_Names.Contains (Root_Node_Name)
       then
          raise Validation_Error with
@@ -182,7 +183,7 @@ is
          if Index_Unique = String_Vector.No_Index then
             --  Last chance to avoid type resolution fault:
             --  If the last ancestor has the same name
-            --  as one of the children ofsystemRoot we assume that
+            --  as one of the children of systemRoot we assume that
             --  one of these children is the last ancestor.
             if Order_Info.Type_To_Children ("schemaRoot").Node_Names.Contains
               (Ancestors.Last_Element)
@@ -342,12 +343,12 @@ is
       --  Search for a nodes called "element" within the schema, add it to
       --  the lists and evaluate its type.
       procedure Find_Root_Element_Node_And_Recurse
-        (Schema_Node : DOM.Core.Node);
+         (Schema_Node : DOM.Core.Node);
 
       --  Get the value of attribute Name of Node.
       --  An empty string is returned if the attribute does not exist.
       function Get_Attr (Node : DOM.Core.Node; Name : String) return String
-        renames DOM.Core.Elements.Get_Attribute;
+         renames DOM.Core.Elements.Get_Attribute;
 
       --  Return node defining a group of type "Name_Attr".
       function Get_Group_Definition (Name_Attr : String) return DOM.Core.Node;
@@ -355,9 +356,9 @@ is
       --  Return a node with name "Node_Name" with attribute "name=Name_Attr"
       --  if Node_Name is empty, it is not considered.
       function Get_Toplevel_Definition
-        (Name_Attr : String;
-         Node_Name : String := "")
-        return DOM.Core.Node;
+         (Name_Attr : String;
+          Node_Name : String := "")
+         return DOM.Core.Node;
 
       ----------------------------------------------------------------------
 

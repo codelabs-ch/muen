@@ -331,7 +331,7 @@ is
    --  (load a schema with Init_Order_Information).
    --
    --  If Clone_Child is True, a deep clone of New_Child is inserted.
-   --  Siblings_Names and  Siblings_Nodes may either both be empty or must
+   --  Siblings_Names and Siblings_Nodes may either both be empty or must
    --  both contain the node-name/node of all children of Parent
    --  (element-nodes only; in the correct order).
    --  Both will be updated to hold the new list of children of Parent.

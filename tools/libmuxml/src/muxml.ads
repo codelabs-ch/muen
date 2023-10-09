@@ -31,19 +31,22 @@ is
    type Schema_Kind is
      (None,
       Component,
-      Component_Ext,
       Format_A,
-      Format_A_Ext,
       Format_B,
-      Format_B_Ext,
       Format_Src,
-      Format_Src_Ext,
       Hardware_Config,
-      Hardware_Config_Ext,
       System_Config,
-      System_Config_Ext,
       VCPU_Profile,
+      Component_Ext,
+      Format_A_Ext,
+      Format_B_Ext,
+      Format_Src_Ext,
+      Hardware_Config_Ext,
+      System_Config_Ext,
       VCPU_Profile_Ext);
+
+   subtype Core_Schema_Kind is Schema_Kind
+     range None .. VCPU_Profile;
 
    subtype Valid_Schema_Kind is Schema_Kind range
      Schema_Kind'Succ (Schema_Kind'First) .. Schema_Kind'Last;

@@ -649,14 +649,14 @@ is
       Insertion_Index : Natural;
    begin
       Insert_Child
-        (Parent          => Parent,
-         New_Child       => New_Child,
-         Clone_Child     => Clone_Child,
-         Siblings_Names  => Siblings_Names,
-         Siblings_Nodes  => Siblings_Nodes,
+        (Parent           => Parent,
+         New_Child        => New_Child,
+         Clone_Child      => Clone_Child,
+         Siblings_Names   => Siblings_Names,
+         Siblings_Nodes   => Siblings_Nodes,
          Ignored_Siblings => Ignored_Siblings,
-         Ancestors       => Get_Ancestor_Names (Node => Parent),
-         Insertion_Index => Insertion_Index);
+         Ancestors        => Get_Ancestor_Names (Node => Parent),
+         Insertion_Index  => Insertion_Index);
    end Insert_Child;
 
    -------------------------------------------------------------------------
@@ -674,14 +674,14 @@ is
       Insertion_Index : Natural;
    begin
       Insert_Child
-        (Parent          => Parent,
-         New_Child       => New_Child,
-         Clone_Child     => Clone_Child,
-         Siblings_Names  => Siblings_Names,
-         Siblings_Nodes  => Siblings_Nodes,
+        (Parent           => Parent,
+         New_Child        => New_Child,
+         Clone_Child      => Clone_Child,
+         Siblings_Names   => Siblings_Names,
+         Siblings_Nodes   => Siblings_Nodes,
          Ignored_Siblings => Ignored_Siblings,
-         Ancestors       => Get_Ancestor_Names (Node => Parent),
-         Insertion_Index => Insertion_Index);
+         Ancestors        => Get_Ancestor_Names (Node => Parent),
+         Insertion_Index  => Insertion_Index);
       return Siblings_Nodes (Insertion_Index);
    end Insert_Child;
 

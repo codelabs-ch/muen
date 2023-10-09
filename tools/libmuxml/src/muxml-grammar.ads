@@ -1,6 +1,7 @@
 --
 --  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
 --  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2023  secunet Security Networks AG
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by

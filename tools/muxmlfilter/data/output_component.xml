@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<component name="tau0" profile="native">
+ <config>
+  <boolean name="debug_enabled" value="true">
+  </boolean>
+  <integer name="debug_level" value="7"/>
+  <string name="debug_sink" value="serial"/>
+ </config>
+ <depends>
+  <library ref="libdebuglog">
+  </library>
+ </depends>
+ <requires>
+  <vcpu>
+   <vmx>
+    <controls>
+     <proc>
+      <RDTSCExiting>0</RDTSCExiting>
+     </proc>
+    </controls>
+   </vmx>
+   <registers>
+    <gpr>
+     <rax>16#cafe#</rax>
+    </gpr>
+    <segments>
+     <ss access="16#c093#" base="16#0000#" limit="16#ffff#" selector="16#0010#"/>
+    </segments>
+   </registers>
+  </vcpu>
+  <memory>
+   <memory executable="false" logical="data" size="16#1000#" virtualAddress="16#0001_0000#" writable="true"/>
+  </memory>
+  <channels>
+   <writer event="1" logical="channel" size="16#1000#" virtualAddress="16#2000#"/>
+   <array elementSize="16#1000#" eventBase="16" logical="input_arr" virtualAddressBase="16#0001_0000#">
+    <reader logical="input1">
+    </reader>
+    <reader logical="input2"/>
+   </array>
+   <array elementSize="16#1000#" logical="output_arr" vectorBase="32" virtualAddressBase="16#0001_0000#">
+    <writer logical="output1">
+    </writer>
+    <writer logical="output2"/>
+   </array>
+  </channels>
+  <devices>
+   <device logical="test_device">
+    <irq logical="irq" vector="48"/>
+    <irq logical="component_logical_irq" vector="128">
+     <msi logical="control_irq"/>
+     <msi logical="data_irq"/>
+    </irq>
+    <memory executable="false" logical="mmio1" size="16#4000#" virtualAddress="16#1000_f000#" writable="true"/>
+    <ioPort end="16#cafe#" logical="port_1" start="16#cafa#"/>
+   </device>
+  </devices>
+  <events>
+   <source>
+    <event id="1" logical="handover"/>
+    <event id="30" logical="reboot">
+     <system_reboot/>
+    </event>
+    <event id="31" logical="shutdown">
+     <system_poweroff/>
+    </event>
+   </source>
+   <target>
+    <event logical="timer">
+     <inject_interrupt vector="37"/>
+    </event>
+    <event id="63" logical="reset">
+     <reset/>
+    </event>
+   </target>
+  </events>
+ </requires>
+</component>
+

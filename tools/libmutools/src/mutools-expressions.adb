@@ -1590,7 +1590,7 @@ is
             & DOM.Core.Elements.Get_Attribute
             (Elem => Node,
              Name => "name")
-            & "' does not have one unique child";
+            & "' is missing a unique legal child node";
       end if;
 
       declare

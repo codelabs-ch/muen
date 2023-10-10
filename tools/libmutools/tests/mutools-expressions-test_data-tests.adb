@@ -1562,7 +1562,7 @@ package body Mutools.Expressions.Test_Data.Tests is
             when E : Invalid_Expression =>
                Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                           = "String-expression 'compositeName' "
-                            & "does not have one unique child",
+                            & "is missing a unique legal child node",
                        Message   => "Exception message mismatch "
                        & "(invalid concatenation)");
          end;
@@ -1688,10 +1688,11 @@ package body Mutools.Expressions.Test_Data.Tests is
          exception
             when E : Invalid_Expression =>
                Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                          = "String-expression 'session2_enabled' has an "
-                          & "unknown child operation with name 'gt'",
+                          = "String-expression 'session2_enabled'"
+                          & " is missing a unique legal child node",
                        Message   => "Exception message mismatch "
-                          & "(ref with empty name)");
+                         & "(ref with empty name):"
+                         & Ada.Exceptions.Exception_Message (X => E));
          end;
       end No_String_Expr;
    begin

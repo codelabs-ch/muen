@@ -32,6 +32,9 @@ is
    --  Number of days between Common Era and UNIX epoch.
    CE_To_Epoch_Days : constant := 719499;
 
+   --  Shift Epoch to 0000-03-01
+   Epoch_Shift_Days : constant := 719468;
+
    Year_Epoch    : constant := 1970;
    Secs_Per_Hour : constant := 60 * 60;
    Secs_Per_Day  : constant := Secs_Per_Hour * 24;
@@ -164,21 +167,27 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Algorithm extracted from the Linux kernel time_to_tm() function
-   --  (kernel/time/timeconv.c).
+   --  The following is adapted from Algorithm 5 of [1]. The Linux kernel
+   --  uses the same algorithm (see kernel/time/timeconv.c).
+   --
+   --  [1] Neri C, Schneider L. Euclidean Affine Functions and Applications
+   --  to Calendar Algorithms. Softw Pract Exper. 2023;53(4):937-970.
+   --  doi: 10.1002/spe.3172
 
    procedure Split
      (Timestamp :     Timestamp_Type;
       Date_Time : out Date_Time_Type)
    is
-      Days, R : Integer;
-      Y       : Internal_Year_Type;
+      Days, R, Century, Day_Of_Century, Year_Of_Century, Day_Of_Year,
+        Year, Month, Day, N1, N2, N3 : Interfaces.Unsigned_64;
    begin
 
       --  Discard microseconds.
 
-      Days := Integer ((Timestamp / 10 ** 6) / Secs_Per_Day);
-      R    := Integer ((Timestamp / 10 ** 6) mod Secs_Per_Day);
+      Days := Interfaces.Unsigned_64 ((Timestamp / 10 ** 6) / Secs_Per_Day);
+      Days := Days + Epoch_Shift_Days;
+
+      R    := Interfaces.Unsigned_64 ((Timestamp / 10 ** 6) mod Secs_Per_Day);
 
       Date_Time.Hour := Hour_Type (R / Secs_Per_Hour);
       R := R mod Secs_Per_Hour;
@@ -186,32 +195,29 @@ is
       Date_Time.Minute := Minute_Type (R / 60);
       Date_Time.Second := Second_Type (R mod 60);
 
-      Y := Year_Epoch;
+      N1             := 4 * Days + 3;
+      Century        := N1 / 146097;
+      Day_Of_Century := (N1 mod 146097) / 4;
 
-      while Days < 0 or else Days >= Get_Day_Count (Y => Y) loop
-         declare
-            Yc : Integer := Days / 365;
-            Yg : Internal_Year_Type;
-         begin
-            if Yc = 0 then
-               Yc := -1;
-            end if;
+      N2              := 4 * Day_Of_Century + 3;
+      N2              := N2 * 2939745;
+      Year_Of_Century := N2 / 2 ** 32;
+      Day_Of_Year     := (N2 mod 2 ** 32) / 2939745 / 4;
 
-            Yg := Y + Yc;
+      N3    := Day_Of_Year * 2141 + 197913;
+      Month := N3 / 2 ** 16;
+      Day   := (N3 mod 2 ** 16) / 2141;
 
-            Days := Days - ((Yg - Y) * 365 + Leaps_Between
-                            (Y1 => Y  - 1,
-                             Y2 => Yg - 1));
+      Year := 100 * Century + Year_Of_Century;
+      if Day_Of_Year >= 306 then
+         Year  := Year + 1;
+         Month := Month - 12;
+      end if;
+      Day := Day + 1;
 
-            Y := Yg;
-         end;
-      end loop;
-
-      Date_Time.Year := Year_Type (Y);
-      Get_Month_And_Day (Days      => Days + 1,
-                         Leap_Year => Is_Leap (Y => Y),
-                         Month     => Date_Time.Month,
-                         Day       => Date_Time.Day);
+      Date_Time.Year  := Year_Type (Year);
+      Date_Time.Month := Month_Type (Month);
+      Date_Time.Day   := Day_Type (Day);
    end Split;
 
    -------------------------------------------------------------------------

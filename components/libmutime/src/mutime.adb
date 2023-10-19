@@ -222,29 +222,44 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Algorithm extracted from the Linux kernel mktime64() function
-   --  (kernel/time/time.c).
+   --  The following is adapted from Algorithm 6 of [1].
+   --
+   --  [1] Neri C, Schneider L. Euclidean Affine Functions and Applications
+   --  to Calendar Algorithms. Softw Pract Exper. 2023;53(4):937-970.
+   --  doi: 10.1002/spe.3172
 
    function Time_Of (Date_Time : Date_Time_Type) return Timestamp_Type
    is
-      M    : Integer := Integer (Date_Time.Month);
-      Y    : Integer := Integer (Date_Time.Year);
       Time : Timestamp_Type;
+
+      C, Y, M, D, Y1, M1 : Interfaces.Unsigned_64;
    begin
+      --  Required for gnatprove FSF 12.1.1.
+      pragma Assert (1 <= Date_Time.Month and Date_Time.Month <= 12);
+      pragma Assert
+        (1_970 <= Date_Time.Year and Date_Time.Year <= 9_999);
+      pragma Assert (1 <= Date_Time.Day and Date_Time.Day <= 31);
+      pragma Assert (0 <= Date_Time.Hour and Date_Time.Hour <= 23);
+      pragma Assert (0 <= Date_Time.Minute and Date_Time.Minute <= 59);
+      pragma Assert (0 <= Date_Time.Second and Date_Time.Second <= 59);
 
-      --  Put February last because it contains leap day.
+      Y := Interfaces.Unsigned_64 (Date_Time.Year);
+      M := Interfaces.Unsigned_64 (Date_Time.Month);
 
-      M := M - 2;
-      if 0 >= M then
+      if M <= 2 then
          M := M + 12;
          Y := Y - 1;
       end if;
 
+      D := Interfaces.Unsigned_64 (Date_Time.Day) - 1;
+
+      C  := Y / 100;
+      Y1 := 1461 * Y / 4 - C + C / 4;
+      M1 := (979 * M - 2919) / 2 ** 5;
+
       --  Days
 
-      Time := Timestamp_Type
-        (Leaps (Y) + 367 * M / 12 + Positive (Date_Time.Day))
-          + Timestamp_Type (Y) * 365 - Timestamp_Type (CE_To_Epoch_Days);
+      Time := Timestamp_Type ((Y1 + M1 + D) - Epoch_Shift_Days);
 
       --  Hours
 

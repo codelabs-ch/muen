@@ -29,13 +29,9 @@
 package body Mutime
 is
 
-   --  Number of days between Common Era and UNIX epoch.
-   CE_To_Epoch_Days : constant := 719499;
-
    --  Shift Epoch to 0000-03-01
    Epoch_Shift_Days : constant := 719468;
 
-   Year_Epoch    : constant := 1970;
    Secs_Per_Hour : constant := 60 * 60;
    Secs_Per_Day  : constant := Secs_Per_Hour * 24;
 
@@ -49,42 +45,6 @@ is
    Month_Yday : constant array (Boolean) of Days_Before_Month_Array :=
      (False => (0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334),
       True  => (0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335));
-
-   --  Returns the number of leap years in the range 0 .. Y.
-   function Leaps (Y : Positive) return Natural
-   is
-     (Y / 4 - Y / 100 + Y / 400)
-   with
-      Post => Leaps'Result = (Y / 4 - Y / 100 + Y / 400);
-
-   function Is_Leap (Y : Positive) return Boolean
-   is
-     (Y mod 4 = 0 and then (Y mod 100 /= 0 or Y mod 400 = 0))
-   with
-      Post => Is_Leap'Result =
-         (Y mod 4 = 0 and (Y mod 100 /= 0 or Y mod 400 = 0));
-
-   function Leaps_Between
-     (Y1 : Positive;
-      Y2 : Positive)
-      return Integer
-   with
-      Post => Leaps_Between'Result = Leaps (Y2) - Leaps (Y1);
-
-   --  Internal year type required to represent possible year numbers without
-   --  taking leap years into account. Used when guessing the year from a day
-   --  count.
-   subtype Internal_Year_Type is Positive range 1970 .. 10005;
-   subtype Total_Days_Per_Year_Type is
-     Positive range 365 .. Max_Days_Per_Year_Type;
-
-   function Get_Day_Count
-     (Y : Internal_Year_Type)
-      return Total_Days_Per_Year_Type
-   is
-     (if Is_Leap (Y => Y) then 366 else 365)
-   with
-      Post => Get_Day_Count'Result = (if Is_Leap (Y => Y) then 366 else 365);
 
    -------------------------------------------------------------------------
 
@@ -149,21 +109,6 @@ is
          end if;
       end loop;
    end Get_Month_And_Day;
-
-   -------------------------------------------------------------------------
-
-   function Leaps_Between
-     (Y1 : Positive;
-      Y2 : Positive)
-      return Integer
-   is
-      L1, L2 : Natural;
-   begin
-      L1 := Leaps (Y => Y1);
-      L2 := Leaps (Y => Y2);
-
-      return L2 - L1;
-   end Leaps_Between;
 
    -------------------------------------------------------------------------
 

@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Muxml;
+with Muxml.Utils;
 with Mulog;
 
 package body Ucode
@@ -38,6 +38,16 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_Src,
                    File => Policy);
+
+      declare
+         Sig : constant String := Muxml.Utils.Get_Attribute
+             (Doc   => Data.Doc,
+              XPath => "/system/hardware/processor/cpuid"
+              & "[@leaf='16#0000_0001#']",
+              Name  => "eax");
+      begin
+         Mulog.Log (Msg => "Processor signature is " & Sig);
+      end;
    end Run;
 
 end Ucode;

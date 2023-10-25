@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<system>
+ <config/>
+ <hardware>
+  <processor cpuCores="2" speed="2112002" vmxTimerRate="5">
+   <cpu apicId="0"/>
+   <cpu apicId="2"/>
+   <cpuid eax="16#0000_0f68#" ebx="16#0004_0800#" ecx="16#ffb8_2223#" edx="16#178b_fbff#" leaf="16#0000_0001#" subleaf="16#00#"/>
+  </processor>
+  <memory>
+   <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
+  </memory>
+  <devices>
+   <device name="ioapic">
+    <memory caching="UC" name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#"/>
+   </device>
+  </devices>
+ </hardware>
+ <platform>
+  <mappings>
+   <aliases>
+    <alias name="debugconsole" physical="serial_1"/>
+   </aliases>
+   <classes>
+    <class name="usb">
+     <device physical="ehci"/>
+     <device physical="xhci"/>
+    </class>
+   </classes>
+  </mappings>
+  <kernelDiagnostics type="uart">
+   <device physical="debugconsole">
+    <ioPort physical="serial"/>
+   </device>
+  </kernelDiagnostics>
+ </platform>
+ <memory>
+  <memory caching="WB" name="extra_mem" physicalAddress="16#2000#" size="16#1000#"/>
+  <memory caching="WB" name="existing_microcode" physicalAddress="16#2000#" size="16#1000#" type="kernel_microcode"/>
+ </memory>
+ <events/>
+ <components>
+  <component name="linux" profile="linux">
+   <provides>
+    <memory executable="true" logical="binary" size="16#1000#" virtualAddress="16#2000#" writable="true">
+     <file filename="lnx_bin" offset="none"/>
+    </memory>
+   </provides>
+  </component>
+ </components>
+ <subjects>
+  <subject name="lnx">
+   <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+    <memory executable="false" logical="extra_mem" physical="extra_mem" virtualAddress="16#f000_0000#" writable="true"/>
+   </memory>
+   <devices>
+    <device logical="usb" physical="usb_conitroller_1">
+    </device>
+   </devices>
+   <events/>
+   <component ref="linux"/>
+  </subject>
+ </subjects>
+ <scheduling tickRate="10000">
+  <partitions>
+   <partition name="linux">
+    <group>
+     <subject name="lnx"/>
+    </group>
+   </partition>
+  </partitions>
+  <majorFrame>
+   <cpu id="0">
+    <minorFrame partition="linux" ticks="80"/>
+   </cpu>
+  </majorFrame>
+ </scheduling>
+</system>
+

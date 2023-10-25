@@ -58,6 +58,7 @@
    <xs:enumeration value="kernel_binary"/>
    <xs:enumeration value="kernel_fpu"/>
    <xs:enumeration value="kernel_interface"/>
+   <xs:enumeration value="kernel_microcode"/>
    <xs:enumeration value="kernel_msrstore"/>
    <xs:enumeration value="kernel_vmcs"/>
    <xs:enumeration value="subject"/>

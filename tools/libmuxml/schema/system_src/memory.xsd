@@ -14,7 +14,7 @@
   </xs:annotation>
   <xs:complexContent>
    <xs:extension base="physicalMemBaseType">
-    <xs:attribute name="type" type="subjectMemoryKindType" use="optional">
+    <xs:attribute name="type" type="srcMemoryKindType" use="optional">
      <xs:annotation>
       <xs:documentation>
        Optional subject memory type.
@@ -117,6 +117,43 @@
    </xs:annotation>
   </xs:attribute>
  </xs:complexType>
+
+ <xs:simpleType name="srcMemoryKindType">
+  <xs:annotation>
+   <xs:documentation>
+    Memory types allowed in policy format source phyiscal memory section. For
+    information about subject memory types,
+    see \ref{system_src.xsd:subjectMemoryKindType}.
+
+    Besides subject types, the following memory types are allowed:
+
+    \begin{itemize}
+    \item \texttt{kernel\_microcode}~\\
+    Memory region designating a CPU microcode update, e.g. added by the
+    \texttt{mucfgucode} tool (\ref{tools-mucfgucode}).
+    \end{itemize}
+   </xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="memoryKindType">
+   <xs:enumeration value="kernel_microcode"/>
+   <xs:enumeration value="subject"/>
+   <xs:enumeration value="subject_info"/>
+   <xs:enumeration value="subject_state"/>
+   <xs:enumeration value="subject_binary"/>
+   <xs:enumeration value="subject_channel"/>
+   <xs:enumeration value="subject_crash_audit"/>
+   <xs:enumeration value="subject_initrd"/>
+   <xs:enumeration value="subject_bios"/>
+   <xs:enumeration value="subject_acpi_rsdp"/>
+   <xs:enumeration value="subject_acpi_xsdt"/>
+   <xs:enumeration value="subject_acpi_fadt"/>
+   <xs:enumeration value="subject_acpi_dsdt"/>
+   <xs:enumeration value="subject_zeropage"/>
+   <xs:enumeration value="subject_solo5_boot_info"/>
+   <xs:enumeration value="subject_device"/>
+   <xs:enumeration value="subject_timed_event"/>
+  </xs:restriction>
+ </xs:simpleType>
 
  <xs:simpleType name="subjectMemoryKindType">
   <xs:annotation>

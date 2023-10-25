@@ -20,6 +20,8 @@ with Ada.Directories;
 
 with Interfaces;
 
+with DOM.Core.Nodes;
+
 with Mulog;
 with Muxml.Utils;
 with Mutools.OS;
@@ -68,11 +70,26 @@ is
          if Ada.Directories.Exists (Name => Path) then
             Mutools.OS.Execute (Command => "/usr/sbin/iucode-tool -l " & Path);
             declare
+               use type DOM.Core.Node;
                use type Ada.Directories.File_Size;
 
+               Node : DOM.Core.Node :=
+                 Muxml.Utils.Get_Element
+                   (Doc   => Data.Doc,
+                    XPath =>
+                      "/system/memory/memory[@type='kernel_microcode']");
                Size : Ada.Directories.File_Size :=
                  Ada.Directories.Size (Name => Path);
             begin
+               if Node /= null then
+                  Mulog.Log
+                    (Msg => "Removing existing microcode memory region");
+                  Node := DOM.Core.Nodes.Remove_Child
+                    (N         => Muxml.Utils.Get_Element
+                       (Doc   => Data.Doc,
+                        XPath => "/system/memory"),
+                     Old_Child => Node);
+               end if;
                Mulog.Log
                  (Msg => "Adding file-backed memory region for MCU, size"
                   & Size'Img & " bytes");

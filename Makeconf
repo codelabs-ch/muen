@@ -51,6 +51,7 @@ MUCFGCVRESALLOC ?= $(TOP_DIR)/tools/mucfgcvresalloc/bin/mucfgcvresalloc
 MUCFGEXPAND     ?= $(TOP_DIR)/tools/mucfgexpand/bin/mucfgexpand
 MUCFGMEMHASHES  ?= $(TOP_DIR)/tools/mucfgmemhashes/bin/mucfgmemhashes
 MUCFGMERGE      ?= $(TOP_DIR)/tools/mucfgmerge/bin/mucfgmerge
+MUCFGUCODE      ?= $(TOP_DIR)/tools/mucfgucode/bin/mucfgucode
 MUCFGVRESALLOC  ?= $(TOP_DIR)/tools/mucfgvresalloc/bin/mucfgvresalloc
 MUCFGVALIDATE   ?= $(TOP_DIR)/tools/mucfgvalidate/bin/mucfgvalidate
 MUCHECKELF      ?= $(TOP_DIR)/tools/mucheckelf/bin/mucheckelf

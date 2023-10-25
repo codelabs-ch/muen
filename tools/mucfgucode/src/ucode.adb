@@ -24,6 +24,7 @@ with Mulog;
 with Muxml.Utils;
 with Mutools.OS;
 with Mutools.Utils;
+with Mutools.Constants;
 with Mutools.XML_Utils;
 
 package body Ucode
@@ -66,23 +67,34 @@ is
 
          if Ada.Directories.Exists (Name => Path) then
             Mutools.OS.Execute (Command => "/usr/sbin/iucode-tool -l " & Path);
-            Mulog.Log
-              (Msg => "Adding file-backed memory region for MCU to '"
-               & Policy & "'");
-            Mutools.XML_Utils.Add_Memory_Region
-              (Policy      => Data,
-               Name        => "microcode",
-               Address     => "",
-               Size        => "16#1000#",
-               Alignment   => "16#1000#",
-               Caching     => "WB",
-               Memory_Type => "kernel_microcode",
-               File_Name   => Sig_C,
-               File_Offset => "none");
+            declare
+               use type Ada.Directories.File_Size;
+
+               Size : Ada.Directories.File_Size :=
+                 Ada.Directories.Size (Name => Path);
+            begin
+               Mulog.Log
+                 (Msg => "Adding file-backed memory region for MCU, size"
+                  & Size'Img & " bytes");
+               Size := Size - (Size mod (-Mutools.Constants.Page_Size));
+               Mutools.XML_Utils.Add_Memory_Region
+                 (Policy      => Data,
+                  Name        => "microcode",
+                  Address     => "",
+                  Size        =>
+                    Mutools.Utils.To_Hex
+                      (Number => Interfaces.Unsigned_64 (Size)),
+                  Alignment   => "16#1000#",
+                  Caching     => "WB",
+                  Memory_Type => "kernel_microcode",
+                  File_Name   => Sig_C,
+                  File_Offset => "none");
+            end;
             Muxml.Write
               (Data => Data,
                Kind => Muxml.Format_Src,
                File => Policy);
+            Mulog.Log (Msg => "Policy '" & Policy & "' updated");
          else
             Mulog.Log (Msg => "No matching microcode update");
          end if;

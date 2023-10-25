@@ -16,8 +16,14 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Muxml.Utils;
+with Ada.Directories;
+
+with Interfaces;
+
 with Mulog;
+with Muxml.Utils;
+with Mutools.OS;
+with Mutools.Utils;
 
 package body Ucode
 is
@@ -29,8 +35,6 @@ is
       Ucode_Dir  : String;
       Output_Dir : String)
    is
-      pragma Unreferenced (Ucode_Dir, Output_Dir);
-
       Data : Muxml.XML_Data_Type;
    begin
       Mulog.Log (Msg => "Processing policy '" & Policy & "'");
@@ -45,8 +49,20 @@ is
               XPath => "/system/hardware/processor/cpuid"
               & "[@leaf='16#0000_0001#']",
               Name  => "eax");
+         Sig_C : constant String := Mutools.Utils.To_Hex
+             (Number    => Interfaces.Unsigned_64'Value (Sig),
+              Normalize => False);
+         Path : constant String := Output_Dir & "/" & Sig_C;
       begin
          Mulog.Log (Msg => "Processor signature is " & Sig);
+         if Ada.Directories.Exists (Name => Path) then
+            Mulog.Log (Msg => "Deleting existing file '" & Path & "'");
+            Ada.Directories.Delete_File (Name => Path);
+         end if;
+         Mutools.OS.Execute
+           (Command => "/usr/sbin/iucode-tool --strict-checks -v " & Ucode_Dir
+            & " -s 0x" & Sig_C & " -w " & Path);
+         Mutools.OS.Execute (Command => "/usr/sbin/iucode-tool -l " & Path);
       end;
    end Run;
 

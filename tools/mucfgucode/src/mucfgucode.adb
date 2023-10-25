@@ -21,6 +21,7 @@ with Ada.Command_Line;
 
 with Mulog;
 with Muxml;
+with Mutools.OS;
 
 with Ucode.Cmd_Line;
 
@@ -37,7 +38,8 @@ exception
    when Ucode.Cmd_Line.Invalid_Cmd_Line =>
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : Muxml.XML_Input_Error
-      | Muxml.Validation_Error =>
+      | Muxml.Validation_Error
+      | Mutools.OS.Command_Failed =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "Ucode processing failed, aborting");
       Mulog.Log (Level => Mulog.Error,

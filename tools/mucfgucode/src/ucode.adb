@@ -79,6 +79,10 @@ is
                Memory_Type => "kernel_microcode",
                File_Name   => Sig_C,
                File_Offset => "none");
+            Muxml.Write
+              (Data => Data,
+               Kind => Muxml.Format_Src,
+               File => Policy);
          else
             Mulog.Log (Msg => "No matching microcode update");
          end if;

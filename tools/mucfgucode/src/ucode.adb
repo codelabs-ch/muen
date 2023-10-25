@@ -24,6 +24,7 @@ with Mulog;
 with Muxml.Utils;
 with Mutools.OS;
 with Mutools.Utils;
+with Mutools.XML_Utils;
 
 package body Ucode
 is
@@ -62,7 +63,25 @@ is
          Mutools.OS.Execute
            (Command => "/usr/sbin/iucode-tool --strict-checks -v " & Ucode_Dir
             & " -s 0x" & Sig_C & " -w " & Path);
-         Mutools.OS.Execute (Command => "/usr/sbin/iucode-tool -l " & Path);
+
+         if Ada.Directories.Exists (Name => Path) then
+            Mutools.OS.Execute (Command => "/usr/sbin/iucode-tool -l " & Path);
+            Mulog.Log
+              (Msg => "Adding file-backed memory region for MCU to '"
+               & Policy & "'");
+            Mutools.XML_Utils.Add_Memory_Region
+              (Policy      => Data,
+               Name        => "microcode",
+               Address     => "",
+               Size        => "16#1000#",
+               Alignment   => "16#1000#",
+               Caching     => "WB",
+               Memory_Type => "kernel_microcode",
+               File_Name   => Sig_C,
+               File_Offset => "none");
+         else
+            Mulog.Log (Msg => "No matching microcode update");
+         end if;
       end;
    end Run;
 

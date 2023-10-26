@@ -17,7 +17,6 @@
 --
 
 with SK.Arch;
-with SK.VMX;
 
 package body SK.Scheduler
 with
@@ -839,9 +838,7 @@ is
 
    procedure Set_VMX_Exit_Timer
    is
-      Now      : constant Word64 := Arch.Get_Current_Timestamp;
       Deadline : Word64;
-      Cycles   : Word64;
    begin
 
       --  Absolute deadline is given by start of major frame plus the number of
@@ -856,15 +853,7 @@ is
         Policy.Scheduling_Plans (CPU_Info.CPU_ID)
         (Global_Current_Major_Frame_ID).Minor_Frames
         (Current_Minor_Frame_ID).Deadline;
-
-      if Deadline > Now then
-         Cycles := Deadline - Now;
-      else
-         Cycles := 0;
-      end if;
-
-      VMX.VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
-                      Value => Cycles / 2 ** Policy.VMX_Timer_Rate);
+      Arch.Set_Timer (Deadline => Deadline);
    end Set_VMX_Exit_Timer;
 
    -------------------------------------------------------------------------

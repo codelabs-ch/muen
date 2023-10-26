@@ -126,6 +126,10 @@ project Kernel is
    package Naming is
       for Body_Suffix ("Asm_Cpp") use ".S";
       for Body ("SK.MCU") use "sk-mcu__" & MCU_Pkg & ".adb";
+      case Build_Mode is
+         when "debug" =>
+            for Spec ("SK.UART.State") use "sk-uart-state__globaldata.ads";
+      end case;
    end Naming;
 
 end Kernel;

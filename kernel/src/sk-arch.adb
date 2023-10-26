@@ -16,8 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Skp.Scheduling;
 with Skp.Subjects;
 
+with SK.Constants;
 with SK.CPU;
 with SK.VMX;
 
@@ -39,5 +41,21 @@ is
       --D Load VMCS of initial subject.
       VMX.Load (VMCS_Address => Current_VMCS_Addr);
    end Load_Subject;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Timer (Deadline : Word64)
+   is
+      Now    : constant Word64 := Get_Current_Timestamp;
+      Cycles : Word64;
+   begin
+      if Deadline > Now then
+         Cycles := Deadline - Now;
+      else
+         Cycles := 0;
+      end if;
+      VMX.VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
+                      Value => Cycles / 2 ** Skp.Scheduling.VMX_Timer_Rate);
+   end Set_Timer;
 
 end SK.Arch;

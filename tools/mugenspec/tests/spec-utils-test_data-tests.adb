@@ -14,7 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
-
+with Muxml.Utils;
 --  begin read only
 --  end read only
 package body Spec.Utils.Test_Data.Tests is
@@ -128,6 +128,44 @@ package body Spec.Utils.Test_Data.Tests is
               Message   => "CPU ID Map mismatch");
 --  begin read only
    end Test_Get_APIC_CPU_ID_Map;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Requires_MCU (Gnattest_T : in out Test);
+   procedure Test_Requires_MCU_366fae (Gnattest_T : in out Test) renames Test_Requires_MCU;
+--  id:2.2/366fae54ec0ed371/Requires_MCU/1/0/
+   procedure Test_Requires_MCU (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Assert (Condition => Requires_MCU (Policy => Policy),
+              Message   => "Expected MCU True");
+
+      declare
+         Node : DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Policy.Doc,
+              XPath => "/system/memory/memory[@type='kernel_microcode']");
+      begin
+         Node :=
+           DOM.Core.Nodes.Remove_Child
+             (N         =>
+                Muxml.Utils.Get_Element
+                  (Doc => Policy.Doc, XPath => "/system/memory"),
+              Old_Child => Node);
+         Assert
+           (Condition => not Requires_MCU (Policy => Policy),
+            Message   => "Expected MCU False");
+      end;
+--  begin read only
+   end Test_Requires_MCU;
 --  end read only
 
 --  begin read only

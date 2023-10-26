@@ -836,7 +836,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set_VMX_Exit_Timer
+   procedure Set_Preemption_Timer
    is
       Deadline : Word64;
    begin
@@ -854,7 +854,7 @@ is
         (Global_Current_Major_Frame_ID).Minor_Frames
         (Current_Minor_Frame_ID).Deadline;
       Arch.Set_Timer (Deadline => Deadline);
-   end Set_VMX_Exit_Timer;
+   end Set_Preemption_Timer;
 
    -------------------------------------------------------------------------
 

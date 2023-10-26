@@ -905,7 +905,7 @@ is
       --D are restored, see \ref{impl_subjects_state_restore}. Additionally, to
       --D ensure the precondition of \texttt{Subjects.Restore\_State}, the state
       --D is filtered beforehand, see \ref{impl_subjects_state_filter}.
-      Scheduler.Set_VMX_Exit_Timer;
+      Scheduler.Set_Preemption_Timer;
       FPU.Restore_State (ID => Current_Subject);
       Subjects.Filter_State (ID => Current_Subject);
       Subjects.Restore_State
@@ -1154,7 +1154,7 @@ is
          --D @Item List => impl_kernel_init_steps, Priority => 20
          --D Arm VMX Exit timer of scheduler for preemption on end of initial
          --D minor frame.
-         Scheduler.Set_VMX_Exit_Timer;
+         Scheduler.Set_Preemption_Timer;
 
          declare
             Current_Subject : constant Skp.Global_Subject_ID_Type

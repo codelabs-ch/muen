@@ -66,10 +66,9 @@ is
          In_Out => (State, Crash_Audit.State, MP.Barrier,
                     Scheduling_Info.State, X86_64.State));
 
-   --  Set VMX-preemption timer of the currently active VMCS to trigger at the
-   --  current deadline. If the deadline has already passed the timer is set to
-   --  zero.
-   procedure Set_VMX_Exit_Timer
+   --  Set scheduler preemption timer to trigger at the current deadline. If the
+   --  deadline has already passed the timer is set to zero.
+   procedure Set_Preemption_Timer
    with
       Global =>
         (Input  => (State, CPU_Info.APIC_ID, CPU_Info.CPU_ID),

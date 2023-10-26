@@ -46,17 +46,6 @@ with SK.MCU;
 package SK.Kernel
 is
 
-   --  Initialize subject with given ID.
-   procedure Init_Subject (ID : Skp.Global_Subject_ID_Type)
-   with
-      Global =>
-        (Input  => (CPU_Info.APIC_ID, Interrupt_Tables.State,
-                    VMX.Exit_Address),
-         In_Out => (Crash_Audit.State, FPU.State, Subjects.State,
-                    Subjects_Events.State, Subjects_Interrupts.State,
-                    Subjects_MSR_Store.State, Timed_Events.State,
-                    VMX.VMCS_State, X86_64.State));
-
    --  Kernel initialization.
    procedure Initialize (Subject_Registers : out CPU_Registers_Type)
    with

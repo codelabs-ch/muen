@@ -31,4 +31,7 @@ is
    --  Load hardware-specific state of subject specified by ID.
    procedure Load_Subject (ID : Skp.Global_Subject_ID_Type);
 
+   --  Set timer to fire at the specified deadline given as a timestamp value.
+   procedure Set_Timer (Deadline : Word64);
+
 end SK.Arch;

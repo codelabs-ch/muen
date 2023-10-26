@@ -19,8 +19,6 @@
 with Ada.Characters.Handling;
 with Ada.Strings.Unbounded;
 
-with DOM.Core;
-
 with Muxml.Utils;
 
 with Mulog;
@@ -28,6 +26,7 @@ with Mutools.Templates;
 with Mutools.Types;
 with Mutools.XML_Utils;
 
+with Spec.Utils;
 with String_Templates;
 
 package body Spec.Policy_Gpr
@@ -95,15 +94,10 @@ is
 
       function Has_MCU return String
       is
-         use type DOM.Core.Node;
-
-         Node : constant DOM.Core.Node :=
-           Muxml.Utils.Get_Element
-             (Doc   => Policy.Doc,
-              XPath => "/system/memory/memory[@type='kernel_microcode']");
-         Enabled : constant Boolean := Node /= null;
       begin
-         return Mutools.Utils.To_Ada_Identifier (Str => Enabled'Img);
+         return
+           Mutools.Utils.To_Ada_Identifier
+             (Str => Utils.Requires_MCU (Policy => Policy)'Img);
       end Has_MCU;
 
       ----------------------------------------------------------------------

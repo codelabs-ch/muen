@@ -217,15 +217,15 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Activity_State
-     (ID : Skp.Global_Subject_ID_Type)
-      return SK.Word32
-   is (Descriptors (ID).Data.Activity_State)
+   function Get_Activity_State (ID : Skp.Global_Subject_ID_Type) return Boolean
+   is (Descriptors (ID).Data.Activity_State
+       = SK.Constants.GUEST_ACTIVITY_ACTIVE)
    with
       Refined_Global  => (Input => Descriptors),
       Refined_Depends => (Get_Activity_State'Result => (ID, Descriptors)),
       Refined_Post    =>
-        Get_Activity_State'Result = Descriptors (ID).Data.Activity_State;
+         Get_Activity_State'Result =
+           (Descriptors (ID).Data.Activity_State = SK.Constants.GUEST_ACTIVITY_ACTIVE);
 
    -------------------------------------------------------------------------
 
@@ -615,17 +615,21 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set_Activity_State
+   procedure Set_Active
      (ID    : Skp.Global_Subject_ID_Type;
-      Value : Word32)
+      Value : Boolean)
     with
       Refined_Global  => (In_Out => Descriptors),
       Refined_Depends => (Descriptors  =>+ (ID, Value)),
-      Refined_Post    => Descriptors (ID).Data.Activity_State = Value
+      Refined_Post    => Descriptors (ID).Data.Activity_State =
+         (if Value then SK.Constants.GUEST_ACTIVITY_ACTIVE
+          else SK.Constants.GUEST_ACTIVITY_HLT)
    is
    begin
-      Descriptors (ID).Data.Activity_State := Value;
-   end Set_Activity_State;
+      Descriptors (ID).Data.Activity_State
+        := (if Value then SK.Constants.GUEST_ACTIVITY_ACTIVE
+            else SK.Constants.GUEST_ACTIVITY_HLT);
+   end Set_Active;
 
    -------------------------------------------------------------------------
 

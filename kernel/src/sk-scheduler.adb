@@ -540,9 +540,9 @@ is
             --D was sleeping, wake up the scheduling partition by transitioning
             --D the current subject to the ACTIVE activity state, see Intel SDM
             --D Vol. 3C, "24.4.2 Guest Non-Register State".
-            Subjects.Set_Activity_State
+            Subjects.Set_Active
               (ID    => Current_Subject,
-               Value => Constants.GUEST_ACTIVITY_ACTIVE);
+               Value => True);
             Scheduling_Partitions (Partition_ID).Sleeping := False;
          end if;
 
@@ -650,8 +650,8 @@ is
          --D If there is no active group, put the scheduling partition to sleep
          --D by transitioning the current subject to the HLT activity state,
          --D see Intel SDM Vol. 3C, "24.4.2 Guest Non-Register State".
-         Subjects.Set_Activity_State (ID    => Subject_ID,
-                                      Value => Constants.GUEST_ACTIVITY_HLT);
+         Subjects.Set_Active (ID    => Subject_ID,
+                              Value => False);
          Scheduling_Partitions (Partition_ID).Sleeping := True;
       end if;
       Next_Subject := Get_Current_Subject_ID;

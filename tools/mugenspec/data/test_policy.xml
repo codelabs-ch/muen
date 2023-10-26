@@ -202,6 +202,7 @@
     <memory executable="false" logical="scheduling_info_3" physical="scheduling_info_3" virtualAddress="16#0090_2000#" writable="true"/>
     <memory executable="false" logical="scheduling_info_4" physical="scheduling_info_4" virtualAddress="16#0090_3000#" writable="true"/>
     <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#000e_0001_9000#" writable="true"/>
+    <memory executable="false" logical="microcode" physical="microcode" virtualAddress="16#00d0_1000#" writable="false"/>
    </cpu>
    <cpu id="1">
     <memory executable="true" logical="text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="true"/>

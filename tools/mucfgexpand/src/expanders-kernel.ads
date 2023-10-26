@@ -57,4 +57,7 @@ is
    --  Add crash audit region mappings.
    procedure Add_Crash_Audit_Mappings (Data : in out Muxml.XML_Data_Type);
 
+   --  Add microcode mappings.
+   procedure Add_Microcode_Mappings (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Kernel;

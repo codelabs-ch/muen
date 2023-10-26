@@ -271,6 +271,26 @@ package body Expanders.Kernel.Test_Data.Tests is
    end Test_Add_Crash_Audit_Mappings;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Add_Microcode_Mappings (Gnattest_T : in out Test);
+   procedure Test_Add_Microcode_Mappings_e0d089 (Gnattest_T : in out Test) renames Test_Add_Microcode_Mappings;
+--  id:2.2/e0d08939cc79c543/Add_Microcode_Mappings/1/0/
+   procedure Test_Add_Microcode_Mappings (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename => "obj/kernel_microcode_mappings.xml",
+         Ref_Diff => "data/kernel_microcode_mappings.xml.diff",
+         Pre      => Add_Section_Skeleton'Access,
+         Expander => Add_Microcode_Mappings'Access);
+--  begin read only
+   end Test_Add_Microcode_Mappings;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

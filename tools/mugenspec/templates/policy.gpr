@@ -7,5 +7,6 @@ __debug_device_type__
    type Boolean is ("True", "False");
 
    Has_Multiple_Major_Frames : Boolean := "__multiple_major_frames__";
+   MCU_Enabled               : Boolean := "__mcu_enabled__";
 
 end Policy;

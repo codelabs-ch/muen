@@ -27,6 +27,7 @@ with SK.CPU;
 with SK.Constants;
 with SK.Dump;
 with SK.KC;
+with SK.MCU;
 with SK.Version;
 with SK.Power;
 with SK.Strings;
@@ -1099,6 +1100,11 @@ is
          --D Synchronize all CPUs to make sure APs have performed all steps up
          --D until this point.
          MP.Wait_For_All;
+
+         --D @Item List => impl_kernel_init_steps
+         --D Perform Intel microcode update on all cores. This is only done
+         --D if the policy specifies an MCU blob.
+         MCU.Process;
 
          --D @Item List => impl_kernel_init_steps
          --D Enable VMX, enter VMX root-mode and initialize scheduler.

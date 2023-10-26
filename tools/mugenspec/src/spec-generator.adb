@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Spec.Utils;
 with Spec.Policy_Gpr;
 with Spec.Skp;
 with Spec.Skp_Events;
@@ -24,6 +25,7 @@ with Spec.Skp_Hardware;
 with Spec.Skp_Interrupts;
 with Spec.Skp_IOMMU;
 with Spec.Skp_Subjects;
+with Spec.Skp_MCU;
 with Spec.Skp_Kernel_Policy_H;
 
 package body Spec.Generator
@@ -63,6 +65,11 @@ is
       Skp_IOMMU.Write
         (Output_Dir => Output_Dir,
          Policy     => Policy);
+      if Utils.Requires_MCU (Policy => Policy) then
+         Skp_MCU.Write
+           (Output_Dir => Output_Dir,
+            Policy     => Policy);
+      end if;
    end Write;
 
 end Spec.Generator;

@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Skp.Subjects;
-
 with SK.Arch;
 with SK.VMX;
 
@@ -907,15 +905,13 @@ is
       Init_Scheduling_Groups;
 
       declare
-         Now               : constant Word64 := Arch.Get_Current_Timestamp;
-         Current_Subject   : constant Skp.Global_Subject_ID_Type
+         Now             : constant Word64 := Arch.Get_Current_Timestamp;
+         Current_Subject : constant Skp.Global_Subject_ID_Type
            := Get_Current_Subject_ID;
-         Current_VMCS_Addr : constant Word64
-           := Skp.Subjects.Get_VMCS_Address (Subject_ID => Current_Subject);
       begin
          --D @Item List => impl_kernel_init_sched_steps
-         --D Load VMCS of initial subject.
-         VMX.Load (VMCS_Address => Current_VMCS_Addr);
+         --D Load initial subject.
+         Arch.Load_Subject (ID => Current_Subject);
 
          --D @Item List => impl_kernel_init_sched_steps
          --D Set start and end timestamp of the initial minor frame for

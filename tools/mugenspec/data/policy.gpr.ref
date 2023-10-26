@@ -8,5 +8,6 @@ abstract project Policy is
    type Boolean is ("True", "False");
 
    Has_Multiple_Major_Frames : Boolean := "True";
+   MCU_Enabled               : Boolean := "True";
 
 end Policy;

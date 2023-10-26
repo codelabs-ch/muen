@@ -18,7 +18,7 @@
 
 with Skp.Subjects;
 
-with SK.CPU;
+with SK.Arch;
 with SK.VMX;
 
 package body SK.Scheduler
@@ -478,7 +478,7 @@ is
    is
       Cur_Group : Policy.Extended_Scheduling_Group_Range
         := Scheduling_Partitions (Partition).Earliest_Timer;
-      Now : constant Word64 := CPU.RDTSC;
+      Now : constant Word64 := Arch.Get_Current_Timestamp;
    begin
       Find_Earliest_Non_Expire_Timer_Loop :
       while Cur_Group /= Policy.No_Group loop
@@ -841,7 +841,7 @@ is
 
    procedure Set_VMX_Exit_Timer
    is
-      Now      : constant Word64 := CPU.RDTSC;
+      Now      : constant Word64 := Arch.Get_Current_Timestamp;
       Deadline : Word64;
       Cycles   : Word64;
    begin
@@ -907,7 +907,7 @@ is
       Init_Scheduling_Groups;
 
       declare
-         Now               : constant Word64 := CPU.RDTSC;
+         Now               : constant Word64 := Arch.Get_Current_Timestamp;
          Current_Subject   : constant Skp.Global_Subject_ID_Type
            := Get_Current_Subject_ID;
          Current_VMCS_Addr : constant Word64

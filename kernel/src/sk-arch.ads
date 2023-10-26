@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Skp;
+
 --D @Interface
 --D This package defines an architecture-independent interface for
 --D architecture-specific implementations.
@@ -25,5 +27,8 @@ is
    --  Returns the current timestamp counter value in CPU cycles.
    function Get_Current_Timestamp return Word64
    with Volatile_Function;
+
+   --  Load hardware-specific state of subject specified by ID.
+   procedure Load_Subject (ID : Skp.Global_Subject_ID_Type);
 
 end SK.Arch;

@@ -43,6 +43,7 @@ is
    Subject_VMCS_Virtual_Addr        : constant := 16#00a0_0000#;
    Scheduling_Info_Virtual_Addr     : constant := 16#00b0_0000#;
    Subject_FPU_States_Virtual_Addr  : constant := 16#00c0_0000#;
+   Ucode_Virtual_Addr               : constant := 16#00d0_0000#;
 
    Subject_Sinfo_Region_Size        : constant := 16#8000#;
    Scheduling_Info_Region_Size      : constant := 16#1000#;

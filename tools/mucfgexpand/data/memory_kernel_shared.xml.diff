@@ -1,5 +1,5 @@
-  </memory>                                                                                                                                               </memory>
   <memory caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>                                    <memory caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>
+  <memory caching="WB" name="microcode" physicalAddress="16#0007_0000#" size="16#1000#" type="kernel_microcode"/>                                         <memory caching="WB" name="microcode" physicalAddress="16#0007_0000#" size="16#1000#" type="kernel_microcode"/>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="kernel_text" physicalAddress="16#0010_0000#" size="16#0001_1000#" type="kernel_binary">
                                                                                                                                                      >     <file filename="kernel" offset="16#0000#"/>
                                                                                                                                                      >    </memory>

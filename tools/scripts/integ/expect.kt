@@ -5,6 +5,11 @@ serial.out;I/O APIC RTE 16#01#: Routing IRQ 16#01# as vector 16#21# to CPU with 
 serial.out;I/O APIC RTE 16#0c#: Routing IRQ 16#0c# as vector 16#2c# to CPU with APIC ID 16#00#, VT-d IRT index 16#0c#
 serial.out;IOMMU 01: TES 01, RTPS 01, FLS 00, AFLS 00, WBFS 00, QIES 00, IRES 01, IRTPS 01, CFIS 00
 serial.out;IOMMU 02: TES 01, RTPS 01, FLS 00, AFLS 00, WBFS 00, QIES 00, IRES 01, IRTPS 01, CFIS 00
+serial.out;MCU: Updating CPU with signature 16#000306a9# and revision 16#00000012#
+serial.out;MCU01: Update to revision 16#00000021# successful
+serial.out;MCU03: Update to revision 16#00000021# successful
+serial.out;MCU02: Update to revision 16#00000021# successful
+serial.out;MCU00: Update to revision 16#00000021# successful
 serial.out;Waiting for AP wakeup event
 serial.out;AP wakeup event received
 serial.out;ttyS1 at I/O 0x2f8 (irq = 5, base_baud = 115200)

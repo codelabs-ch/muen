@@ -48,6 +48,10 @@ is
    procedure Crash_Audit_Address_Equality (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_knl
+   --D Validate that all (if any) microcode update virtual addresses are equal.
+   procedure Microcode_Address_Equality (XML_Data : Muxml.XML_Data_Type);
+
+   --D @Item List => validators_knl
    --D Validate that every kernel has a stack and interrupt stack region mapped
    --D and both regions are guarded by unmapped pages below and above.
    procedure Stack_Layout (XML_Data : Muxml.XML_Data_Type);

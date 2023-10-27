@@ -223,6 +223,8 @@ is
       XML_Processors.Register
         (Process => Kernel.Stack_Address_Equality'Access);
       XML_Processors.Register
+        (Process => Kernel.Microcode_Address_Equality'Access);
+      XML_Processors.Register
         (Process => Kernel.Stack_Layout'Access);
       XML_Processors.Register
         (Process => Kernel.CPU_Memory_Section_Count'Access);

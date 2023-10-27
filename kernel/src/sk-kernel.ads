@@ -36,6 +36,7 @@ with SK.Tau0_Interface;
 with SK.Timed_Events;
 with SK.VMX;
 with SK.Crash_Audit;
+with SK.MCU;
 
 --D @Interface
 --D This package implements kernel initialization which is the initial entry
@@ -61,7 +62,7 @@ is
    with
       Global =>
         (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, CPU_Info.Is_BSP,
-                    MCE.State, VMX.Exit_Address),
+                    MCE.State, VMX.Exit_Address, MCU.State),
          In_Out => (Crash_Audit.State, FPU.State, Interrupt_Tables.State,
                     IO_Apic.State, MP.Barrier, Scheduler.State,
                     Scheduling_Info.State, Subjects.State,

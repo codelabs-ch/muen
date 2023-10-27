@@ -17,6 +17,8 @@
 --
 
 package body SK.MCU
+with
+   SPARK_Mode => Off
 is
 
    procedure Process is null;

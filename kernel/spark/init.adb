@@ -19,12 +19,14 @@ with SK.Tau0_Interface;
 with SK.Timed_Events;
 with SK.VMX;
 with SK.Crash_Audit;
+with SK.MCU;
 
 procedure Init
 with
    Global =>
       (Input  => (SK.CPU_Info.APIC_ID, SK.CPU_Info.CPU_ID, SK.CPU_Info.Is_BSP,
-                  SK.MCE.State, SK.Tau0_Interface.State, SK.VMX.Exit_Address),
+                  SK.MCE.State, SK.Tau0_Interface.State, SK.VMX.Exit_Address,
+                  SK.MCU.State),
        In_Out => (SK.Crash_Audit.State, SK.FPU.State, SK.IO_Apic.State,
                   SK.Interrupt_Tables.State, SK.MP.Barrier, SK.Scheduler.State,
                   SK.Scheduler.Group_Activity_Indicator,

@@ -351,6 +351,7 @@
   <memory alignment="16#1000#" caching="WB" name="scheduling_info_3" physicalAddress="16#2151_a000#" size="16#1000#" type="subject_scheduling_info"/>
   <memory alignment="16#1000#" caching="WB" name="scheduling_info_4" physicalAddress="16#2151_b000#" size="16#1000#" type="subject_scheduling_info"/>
   <memory alignment="16#1000#" caching="UC" name="crash_audit" physicalAddress="16#cafe_6000#" size="16#1000#" type="subject_crash_audit"/>
+  <memory alignment="16#1000#" caching="UC" name="microcode" physicalAddress="16#caff_6000#" size="16#1000#" type="kernel_microcode"/>
  </memory>
  <deviceDomains>
   <domain id="1" name="linux_domain">
@@ -407,6 +408,7 @@
     <memory executable="false" logical="vt|vmcs" physical="vt|vmcs" virtualAddress="16#002e_1000#" writable="true"/>
     <memory executable="false" logical="scheduling_info_1" physical="scheduling_info_1" virtualAddress="16#00a0_0000#" writable="true"/>
     <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#000e_0001_9000#" writable="true"/>
+    <memory executable="false" logical="microcode" physical="microcode" virtualAddress="16#000d_0000#" writable="false"/>
    </cpu>
    <cpu id="1">
     <memory executable="true" logical="text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="false"/>
@@ -429,6 +431,7 @@
     <memory executable="false" logical="linux|fpu" physical="linux|fpu" virtualAddress="16#00b0_4000#" writable="true"/>
     <memory executable="false" logical="scheduling_info_2" physical="scheduling_info_2" virtualAddress="16#00a0_1000#" writable="true"/>
     <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#000e_0001_9000#" writable="true"/>
+    <memory executable="false" logical="microcode" physical="microcode" virtualAddress="16#000d_0000#" writable="false"/>
    </cpu>
    <cpu id="2">
     <memory executable="true" logical="text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="false"/>
@@ -446,6 +449,7 @@
     <memory executable="false" logical="time|fpu" physical="time|fpu" virtualAddress="16#00b0_2000#" writable="true"/>
     <memory executable="false" logical="scheduling_info_3" physical="scheduling_info_3" virtualAddress="16#00a0_2000#" writable="true"/>
     <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#000e_0001_9000#" writable="true"/>
+    <memory executable="false" logical="microcode" physical="microcode" virtualAddress="16#000d_0000#" writable="false"/>
    </cpu>
    <cpu id="3">
     <memory executable="true" logical="text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="false"/>
@@ -462,6 +466,7 @@
     <memory executable="false" logical="tau0|fpu" physical="tau0|fpu" virtualAddress="16#00b0_0000#" writable="true"/>
     <memory executable="false" logical="scheduling_info_4" physical="scheduling_info_4" virtualAddress="16#00a0_3000#" writable="true"/>
     <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#000e_0001_9000#" writable="true"/>
+    <memory executable="false" logical="microcode" physical="microcode" virtualAddress="16#000d_0000#" writable="false"/>
    </cpu>
   </memory>
   <devices>

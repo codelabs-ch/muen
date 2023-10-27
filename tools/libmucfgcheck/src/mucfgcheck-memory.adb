@@ -786,6 +786,24 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Microcode_Region_Count (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory[@type='kernel_microcode']");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
+   begin
+      Mulog.Log (Msg => "Checking microcode region count");
+      if Count > 1 then
+         Validation_Errors.Insert
+           (Msg => "Invalid number of kernel microcode regions:"
+            & Count'Img);
+      end if;
+   end Microcode_Region_Count;
+
+   -------------------------------------------------------------------------
+
    procedure Monitor_Subject_Region_Mappings (XML_Data : Muxml.XML_Data_Type)
    is
       --  The function returns if the two given subjects are siblings.

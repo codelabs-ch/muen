@@ -85,6 +85,10 @@ is
    procedure Uncached_Crash_Audit_Presence (XML_Data : Muxml.XML_Data_Type);
 
    --D @Item List => validators_mem
+   --D Validate that there is either zero or exactly one MCU region present.
+   procedure Microcode_Region_Count (XML_Data : Muxml.XML_Data_Type);
+
+   --D @Item List => validators_mem
    --D Validate that a kernel data region exists for every CPU.
    procedure Kernel_Data_Region_Presence (XML_Data : Muxml.XML_Data_Type);
 

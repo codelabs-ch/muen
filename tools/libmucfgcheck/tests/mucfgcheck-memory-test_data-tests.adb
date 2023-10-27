@@ -14,6 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
+with Mutools.XML_Utils;
 with Mucfgcheck.Validation_Errors;
 --  begin read only
 --  end read only
@@ -585,6 +586,64 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
               Message   => "Exception mismatch (2)");
 --  begin read only
    end Test_Uncached_Crash_Audit_Presence;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Microcode_Region_Count (Gnattest_T : in out Test);
+   procedure Test_Microcode_Region_Count_43d0bb (Gnattest_T : in out Test) renames Test_Microcode_Region_Count;
+--  id:2.2/43d0bb59d82c9e8a/Microcode_Region_Count/1/0/
+   procedure Test_Microcode_Region_Count (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+      Node : DOM.Core.Node;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive tests, must not raise an exception.
+
+      Microcode_Region_Count (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test (1)");
+
+      --  Positive tests, must not raise an exception.
+
+      Node := Muxml.Utils.Get_Element
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@type='kernel_microcode']");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "type",
+         Value => "something");
+      Microcode_Region_Count (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test (2)");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "type",
+         Value => "kernel_microcode");
+
+      --  Negative test.
+
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Data,
+         Name        => "microcode2",
+         Address     => "16#0010_1000#",
+         Size        => "16#1000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         Memory_Type => "kernel_microcode");
+      Microcode_Region_Count (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Invalid number of kernel microcode regions: 2"),
+              Message   => "Exception mismatch");
+--  begin read only
+   end Test_Microcode_Region_Count;
 --  end read only
 
 

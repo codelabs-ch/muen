@@ -20,12 +20,18 @@ with System;
 
 with SK.Strings;
 with SK.CPU;
-with SK.CPU_Info;
 with SK.Dump;
+
+pragma $Release_Warnings
+  (Off, "unit * is not referenced", Reason => "Only used for debug output");
+with SK.CPU_Info;
+pragma $Release_Warnings (On, "unit * is not referenced");
 
 with Skp.MCU;
 
 package body SK.MCU
+with
+   Refined_State => (State => UCH)
 is
 
    IA32_BIOS_UPDT_TRIG : constant := 16#79#;
@@ -51,7 +57,8 @@ is
    end record
    with
       Pack,
-      Size => Header_Size * 8;
+      Size        => Header_Size * 8,
+      Object_Size => Header_Size * 8;
 
    pragma Warnings
      (GNATprove, Off,
@@ -68,14 +75,14 @@ is
 
    --  Return update ID, see Intel SDM Vol. 3A, "9.11.7 Update Signature and
    --  Verification".
-   function Get_Update_ID return Word32;
+   procedure Get_Update_ID (Value : out Word32);
 
    --  Perform actual MCU.
    procedure Perform_Update;
 
    -------------------------------------------------------------------------
 
-   function Get_Update_ID return Word32
+   procedure Get_Update_ID (Value : out Word32)
    is
       Unused_EAX, Unused_EBX, Unused_ECX, Unused_EDX : Word32;
    begin
@@ -84,16 +91,20 @@ is
          Value    => 0);
       Unused_EAX := 1;
       Unused_ECX := 0;
+      pragma Warnings
+        (GNATProve, Off, "statement has no effect",
+         Reason => "The effect is to trigger the sign ID update");
       CPU.CPUID
         (EAX => Unused_EAX,
          EBX => Unused_EBX,
          ECX => Unused_ECX,
          EDX => Unused_EDX);
+      pragma Warnings
+        (GNATProve, On, "statement has no effect");
       CPU.Get_MSR
         (Register => IA32_BIOS_SIGN_ID,
          Low      => Unused_EAX,
-         High     => Unused_EDX);
-      return Unused_EDX;
+         High     => Value);
    end Get_Update_ID;
 
    -------------------------------------------------------------------------
@@ -114,8 +125,7 @@ is
    --  Vol. 3A, "9.11.7.2 Authenticating the Update".
    procedure Process
    is
-      Unused_BSP : constant Boolean := CPU_Info.Is_BSP;
-      My_Sig     : Word32 := 1;
+      My_Sig : Word32 := 1;
       Unused_Rev, Unused_EBX, Unused_ECX, Unused_EDX : Word32;
    begin
       Unused_ECX := 0;
@@ -124,31 +134,31 @@ is
          EBX => Unused_EBX,
          ECX => Unused_ECX,
          EDX => Unused_EDX);
-      Unused_Rev := Get_Update_ID;
+      Get_Update_ID (Value => Unused_Rev);
 
       --  Common info is only logged on BSP.
 
       pragma Debug
-        (Unused_BSP,
+        (CPU_Info.Is_BSP,
          Dump.Print_Message
-           (Msg => "MCU: Updating CPU with signature "
+           (Msg    => "MCU: Updating CPU with signature "
             & Strings.Img (My_Sig) & " and revision "
             & Strings.Img (Unused_Rev)));
 
       if UCH.Header_Version /= 1 then
          pragma Debug
-           (Unused_BSP,
+           (CPU_Info.Is_BSP,
             Dump.Print_Message
-              (Msg =>
+              (Msg    =>
                  "MCU: ERROR - Unknown header version " &
                  Strings.Img (UCH.Header_Version)));
          return;
       end if;
 
       pragma Debug
-        (Unused_BSP,
+        (CPU_Info.Is_BSP,
          Dump.Print_Message
-           (Msg =>
+           (Msg    =>
               "MCU: Ucode update @ "
               & Strings.Img (Word64'(Skp.MCU.Ucode_Address))
               & ASCII.LF & "MCU: Header version      : "
@@ -183,7 +193,7 @@ is
       end if;
 
       Perform_Update;
-      Unused_Rev := Get_Update_ID;
+      Get_Update_ID (Value => Unused_Rev);
       pragma Debug
         (Unused_Rev = UCH.Update_Revision,
          Dump.Print_Message

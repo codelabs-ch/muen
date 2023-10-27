@@ -16,14 +16,22 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with X86_64;
+
 --D @Interface
 --D This package provides Intel microcode update (MCU) facilities.
 --D This package does nothing if the policy does not specify an Intel microcode
 --D update blob.
 package SK.MCU
+with
+   Abstract_State => State,
+   Initializes    => State
 is
 
    --  Perform MCU.
-   procedure Process;
+   procedure Process
+   with
+      Global => (Input  => State,
+                 In_Out => X86_64.State);
 
 end SK.MCU;

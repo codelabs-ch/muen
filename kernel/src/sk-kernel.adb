@@ -27,7 +27,6 @@ with SK.CPU;
 with SK.Constants;
 with SK.Dump;
 with SK.KC;
-with SK.MCU;
 with SK.Version;
 with SK.Power;
 with SK.Strings;

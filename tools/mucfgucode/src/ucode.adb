@@ -56,7 +56,8 @@ is
          Sig_C : constant String := Mutools.Utils.To_Hex
              (Number    => Interfaces.Unsigned_64'Value (Sig),
               Normalize => False);
-         Path : constant String := Output_Dir & "/" & Sig_C;
+         Filename : constant String := Sig_C & ".ucode";
+         Path     : constant String := Output_Dir & "/" & Filename;
       begin
          Mulog.Log (Msg => "Processor signature is " & Sig);
          if Ada.Directories.Exists (Name => Path) then
@@ -104,7 +105,7 @@ is
                   Alignment   => "16#1000#",
                   Caching     => "WB",
                   Memory_Type => "kernel_microcode",
-                  File_Name   => Sig_C,
+                  File_Name   => Filename,
                   File_Offset => "none");
             end;
             Muxml.Write

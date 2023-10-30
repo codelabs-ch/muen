@@ -58,14 +58,14 @@ package body Ucode.Test_Data.Tests is
          --  Dummy file, should be replaced with real ucode.
          Ada.Directories.Copy_File
            (Source_Name => "data/test_policy.xml",
-            Target_Name => "obj/run/f68");
+            Target_Name => "obj/run/f68.ucode");
 
          Run (Policy     => "obj/test_policy.xml",
               Ucode_Dir  => "data/ucode",
               Output_Dir => Out_Dir); 
 
          Assert (Condition => Ada.Directories.Exists 
-                   (Name => Out_Dir & "/f68"),
+                   (Name => Out_Dir & "/f68.ucode"),
                  Message   => "MCU not copied");
 
          declare
@@ -88,11 +88,12 @@ package body Ucode.Test_Data.Tests is
                     Message => "Size mismatch");
             Assert (Condition => DOM.Core.Nodes.Length
                      (McKae.XML.XPath.XIA.XPath_Query
-                       (N => Node, XPath => "file[@filename='f68']")) = 1, 
+                       (N => Node, XPath => "file[@filename='f68.ucode']"))
+                      = 1,
                     Message   => "Filename node mismatch");
             Assert (Condition => Test_Utils.Equal_Files
                     (Filename1 => "data/ucode/microcode",
-                     Filename2 => Out_Dir & "/f68"),
+                     Filename2 => Out_Dir & "/f68.ucode"),
                     Message   => "Microcode file invalid");
          end;
 

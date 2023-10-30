@@ -1243,6 +1243,41 @@
     </text>
    </section>
 
+   <section id="tools-mucfgucode" label="Microcode Updates" priority="0">
+    <text priority="0">
+     The \texttt{mucfgucode} tool is used to enable Intel processor microcode
+     updates (MCU) on Muen.
+
+     \begin{description} \itemsep1pt \parskip0pt
+     \item[Name] \hfill \\
+     \texttt{mucfgucode}
+     \item[Input] \hfill \\
+     System policy in format source, directory containing Intel microcode updates
+     \item[Output] \hfill \\
+     System policy in format source containing a file-backed microcode memory
+     region. The Intel microcode update blob is copied to the specified output
+     directory
+     \end{description}
+
+     The microcode update tool processes a system policy in format source,
+     extracts the signature of the target processor from the CPUID leaf
+     1 eax register value and executes the
+     \texttt{iucode-tool}\footnote{https://gitlab.com/iucode-tool/iucode-tool/-/wikis/home}
+     for the specified directory containing Intel microcode updates. See the
+     Intel SDM Vol. 3A, "9.11 Microcode Update Facilities" for more information
+     on Intel MCU.
+
+     The tool adds a file-backed physical memory for a matching MCU of the
+     given processor. Also, the MCU is copied to the specified output directory
+     with a \texttt{.ucode} suffix.
+
+     If a phyiscal memory region for MCU already exits, it is removed before
+     further processing.
+     The system policy is left unchanged if the tool does not find an applicable
+     MCU for the target processor.
+    </text>
+   </section>
+
    <!-- XXX: Add description of muwalkpt -->
    <!-- XXX: Add description of mugenmanifest -->
   </section> <!-- toolchain-additional-tools -->

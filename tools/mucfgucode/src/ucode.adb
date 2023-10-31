@@ -65,11 +65,11 @@ is
             Ada.Directories.Delete_File (Name => Path);
          end if;
          Mutools.OS.Execute
-           (Command => "/usr/sbin/iucode-tool --strict-checks -v " & Ucode_Dir
+           (Command => "iucode_tool --strict-checks -v " & Ucode_Dir
             & " -s 0x" & Sig_C & " -w " & Path);
 
          if Ada.Directories.Exists (Name => Path) then
-            Mutools.OS.Execute (Command => "/usr/sbin/iucode-tool -l " & Path);
+            Mutools.OS.Execute (Command => "iucode_tool -l " & Path);
             declare
                use type DOM.Core.Node;
                use type Ada.Directories.File_Size;

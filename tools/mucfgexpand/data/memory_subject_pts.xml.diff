@@ -16,6 +16,7 @@
    <file filename="initramfs.cpio.xz" offset="none"/>                                                                                                      <file filename="initramfs.cpio.xz" offset="none"/>
   </memory>                                                                                                                                               </memory>
   <memory caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>                               |    <memory alignment="16#1000#" caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>
+  <memory caching="WB" name="microcode" physicalAddress="16#0007_0000#" size="16#1000#" type="kernel_microcode"/>                                    |    <memory alignment="16#1000#" caching="WB" name="microcode" physicalAddress="16#0007_0000#" size="16#1000#" type="kernel_microcode"/>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#9000#" type="system_pt">
                                                                                                                                                      >     <fill pattern="16#00#"/>
                                                                                                                                                      >    </memory>

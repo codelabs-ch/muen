@@ -52,7 +52,7 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
 
       Memory_Space (XML_Data => Data);
       Assert (Condition => Validation_Errors.Contains
-              (Msg => "Allocated 16#13ed_b000# bytes of physical memory but "
+              (Msg => "Allocated 16#13ed_c000# bytes of physical memory but "
                & "only 16#042a_1000# bytes available by the hardware"),
               Message   => "Exception mismatch");
 --  begin read only

@@ -16,10 +16,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.UART.State;
+
 package body SK.UART
 is
 
-   Send_Char_Count : Byte := FIFO_Size;
+   package Instance is new SK.UART.State;
 
    -------------------------------------------------------------------------
 
@@ -100,17 +102,17 @@ is
    procedure Put_Char (Item : Character)
    is
    begin
-      if Send_Char_Count = FIFO_Size then
+      if Instance.Send_Char_Count = FIFO_Size then
          while not Is_Send_Buffer_Empty loop
             null;
          end loop;
-         Send_Char_Count := 0;
+         Instance.Send_Char_Count := 0;
       end if;
 
       Write (Address => Base_Address,
              Value   => Character'Pos (Item));
 
-      Send_Char_Count := Send_Char_Count + 1;
+      Instance.Send_Char_Count := Instance.Send_Char_Count + 1;
    end Put_Char;
 
    -------------------------------------------------------------------------

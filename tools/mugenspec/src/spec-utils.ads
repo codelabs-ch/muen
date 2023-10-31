@@ -20,6 +20,7 @@ with Interfaces;
 
 with DOM.Core;
 
+with Muxml;
 with Mutools.Utils;
 with Mutools.XML_Utils;
 
@@ -57,5 +58,9 @@ is
    function Get_APIC_CPU_ID_Map
      (CPU_Nodes : DOM.Core.Node_List)
       return APIC_To_CPU_ID_Array;
+
+   --  Returns True if the system specified by given policy requires microcode
+   --  update facilities in the kernel.
+   function Requires_MCU (Policy : Muxml.XML_Data_Type) return Boolean;
 
 end Spec.Utils;

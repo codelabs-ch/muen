@@ -19,6 +19,8 @@
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
+with Muxml.Utils;
+
 package body Spec.Utils
 is
 
@@ -108,6 +110,20 @@ is
 
       return Count;
    end Get_IRQ_Count;
+
+   -------------------------------------------------------------------------
+
+   function Requires_MCU (Policy : Muxml.XML_Data_Type) return Boolean
+   is
+      use type DOM.Core.Node;
+
+      Node : constant DOM.Core.Node :=
+        Muxml.Utils.Get_Element
+          (Doc   => Policy.Doc,
+           XPath => "/system/memory/memory[@type='kernel_microcode']");
+   begin
+      return Node /= null;
+   end Requires_MCU;
 
    -------------------------------------------------------------------------
 

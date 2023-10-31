@@ -32,6 +32,7 @@ project Kernel is
    Extra_Warning_Switches := ();
    Extra_Compiler_Switches := ();
    Preprocessor_Switches := ();
+   MCU_Pkg := "";
 
    case Build_Mode is
       when "debug" =>
@@ -84,6 +85,11 @@ project Kernel is
          ("-gnateDMajor_Frame_Warnings=Warnings");
    end case;
 
+   case Policy.MCU_Enabled is
+      when "True"  => MCU_Pkg := "enabled";
+      when "False" => MCU_Pkg := "disabled";
+   end case;
+
    for Languages use ("Ada") & Extra_Languages;
 
    for Source_Dirs use
@@ -119,6 +125,11 @@ project Kernel is
 
    package Naming is
       for Body_Suffix ("Asm_Cpp") use ".S";
+      for Body ("SK.MCU") use "sk-mcu__" & MCU_Pkg & ".adb";
+      case Build_Mode is
+         when "debug" =>
+            for Spec ("SK.UART.State") use "sk-uart-state__globaldata.ads";
+      end case;
    end Naming;
 
 end Kernel;

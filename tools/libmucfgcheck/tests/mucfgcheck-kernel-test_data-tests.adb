@@ -269,6 +269,57 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Microcode_Address_Equality (Gnattest_T : in out Test);
+   procedure Test_Microcode_Address_Equality_c02bd0 (Gnattest_T : in out Test) renames Test_Microcode_Address_Equality;
+--  id:2.2/c02bd002743c4806/Microcode_Address_Equality/1/0/
+   procedure Test_Microcode_Address_Equality (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Microcode_Address_Equality (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory"
+         & "[@physical='microcode'][1]",
+         Name  => "virtualAddress",
+         Value => "16#0021_0000#");
+
+      Microcode_Address_Equality (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Attribute 'virtualAddress => 16#000d_0000#' of"
+               & " 'microcode' kernel microcode element differs"),
+              Message   => "Exception mismatch (1)");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory"
+         & "[@physical='microcode'][1]",
+         Name  => "physical",
+         Value => "something");
+
+      Microcode_Address_Equality (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Required microcode mappings not present (expected 4, "
+               & "found 3)"),
+              Message   => "Exception mismatch (2)");
+--  begin read only
+   end Test_Microcode_Address_Equality;
+--  end read only
+
+
+--  begin read only
    procedure Test_Stack_Layout (Gnattest_T : in out Test);
    procedure Test_Stack_Layout_61b627 (Gnattest_T : in out Test) renames Test_Stack_Layout;
 --  id:2.2/61b6272803731039/Stack_Layout/1/0/

@@ -1101,6 +1101,11 @@ is
          MP.Wait_For_All;
 
          --D @Item List => impl_kernel_init_steps
+         --D Perform Intel microcode update on all cores. This is only done
+         --D if the policy specifies an MCU blob.
+         MCU.Process;
+
+         --D @Item List => impl_kernel_init_steps
          --D Enable VMX, enter VMX root-mode and initialize scheduler.
          System_State.Enable_VMX_Feature;
          VMX.Enter_Root_Mode;

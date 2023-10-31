@@ -1,5 +1,5 @@
-  </memory>                                                                                                                                               </memory>
   <memory caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>                                    <memory caching="UC" name="crash_audit" physicalAddress="16#0006_0000#" size="16#1000#" type="subject_crash_audit"/>
+  <memory caching="WB" name="microcode" physicalAddress="16#0007_0000#" size="16#1000#" type="kernel_microcode"/>                                         <memory caching="WB" name="microcode" physicalAddress="16#0007_0000#" size="16#1000#" type="kernel_microcode"/>
                                                                                                                                                      >    <memory alignment="16#1000#" caching="WB" name="trampoline" physicalAddress="16#1000#" size="16#1000#" type="system"/>
  </memory>                                                                                                                                               </memory>
  <deviceDomains>                                                                                                                                         <deviceDomains>

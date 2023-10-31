@@ -223,6 +223,8 @@ is
       XML_Processors.Register
         (Process => Kernel.Stack_Address_Equality'Access);
       XML_Processors.Register
+        (Process => Kernel.Microcode_Address_Equality'Access);
+      XML_Processors.Register
         (Process => Kernel.Stack_Layout'Access);
       XML_Processors.Register
         (Process => Kernel.CPU_Memory_Section_Count'Access);
@@ -332,6 +334,8 @@ is
         (Process => Memory.VTd_Context_Region_Size'Access);
       XML_Processors.Register
         (Process => Memory.VTd_IRT_Region_Presence'Access);
+      XML_Processors.Register
+        (Process => Memory.Microcode_Region_Count'Access);
       XML_Processors.Register
         (Process => Hardware.IOMMU_Presence'Access);
       XML_Processors.Register

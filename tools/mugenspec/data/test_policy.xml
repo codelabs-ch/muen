@@ -101,6 +101,7 @@
   <memory alignment="16#1000#" caching="WB" name="kernel_interrupt_stack_1" physicalAddress="16#0031_3000#" size="16#1000#" type="kernel"/>
   <memory alignment="16#1000#" caching="UC" name="kernel_data" physicalAddress="16#0011_8000#" size="16#6000#" type="kernel_binary"/>
   <memory alignment="16#1000#" caching="UC" name="sys_interface" physicalAddress="16#001f_f000#" size="16#1000#" type="system"/>
+  <memory alignment="16#1000#" caching="WB" name="microcode" physicalAddress="16#002f_f000#" size="16#1000#" type="kernel_microcode"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_0|pt" physicalAddress="16#0020_0000#" size="16#4000#" type="system_pt">
    <file filename="kernel_pt_0" offset="none"/>
   </memory>
@@ -201,6 +202,7 @@
     <memory executable="false" logical="scheduling_info_3" physical="scheduling_info_3" virtualAddress="16#0090_2000#" writable="true"/>
     <memory executable="false" logical="scheduling_info_4" physical="scheduling_info_4" virtualAddress="16#0090_3000#" writable="true"/>
     <memory executable="false" logical="crash_audit" physical="crash_audit" virtualAddress="16#000e_0001_9000#" writable="true"/>
+    <memory executable="false" logical="microcode" physical="microcode" virtualAddress="16#00d0_1000#" writable="false"/>
    </cpu>
    <cpu id="1">
     <memory executable="true" logical="text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="true"/>

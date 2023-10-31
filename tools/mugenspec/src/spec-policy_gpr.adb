@@ -26,6 +26,7 @@ with Mutools.Templates;
 with Mutools.Types;
 with Mutools.XML_Utils;
 
+with Spec.Utils;
 with String_Templates;
 
 package body Spec.Policy_Gpr
@@ -45,6 +46,10 @@ is
 
       --  Returns all valid diagnostics device kinds as string.
       function Get_Diagnostics_Kind return String;
+
+      --  Returns the string "True" if the microcode update facility should be
+      --  active and "False" otherwise.
+      function Has_MCU return String;
 
       --  Returns the string "True" if the scheduling plan has multiple major
       --  frames and "False" otherwise.
@@ -87,6 +92,16 @@ is
 
       ----------------------------------------------------------------------
 
+      function Has_MCU return String
+      is
+      begin
+         return
+           Mutools.Utils.To_Ada_Identifier
+             (Str => Utils.Requires_MCU (Policy => Policy)'Img);
+      end Has_MCU;
+
+      ----------------------------------------------------------------------
+
       function Has_Multiple_Major_Frames return String
       is
       begin
@@ -108,6 +123,10 @@ is
         (Template => Tmpl,
          Pattern  => "__debug_device_type__",
          Content  => Get_Debug_Device_Type);
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__mcu_enabled__",
+         Content  => Has_MCU);
       Mutools.Templates.Replace
         (Template => Tmpl,
          Pattern  => "__multiple_major_frames__",

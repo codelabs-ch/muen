@@ -96,6 +96,7 @@ is
       Procs.Register (Process => Kernel.Add_Subj_FPU_State_Mappings'Access);
       Procs.Register (Process => Kernel.Add_Scheduling_Info_Mappings'Access);
       Procs.Register (Process => Kernel.Add_Crash_Audit_Mappings'Access);
+      Procs.Register (Process => Kernel.Add_Microcode_Mappings'Access);
       Procs.Register (Process => Kernel.Map_Tau0_Interface'Access);
       Procs.Register (Process => Kernel.Add_Devices'Access);
 

@@ -24,6 +24,7 @@ TOOLS =            \
 	mucfgexpand    \
 	mucfgmemhashes \
 	mucfgmerge     \
+	mucfgucode     \
 	mucfgvalidate  \
 	mucgenspec     \
 	mucheckelf     \

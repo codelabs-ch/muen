@@ -125,6 +125,10 @@ is
    --  This hash-function does not claim any security properties.
    function Hash (Node : DOM.Core.Node) return Ada.Containers.Hash_Type;
 
+   --  Delete all entries in the Transaction-/Nodes_Backtrace-Log, respectively.
+   procedure Clear_Transaction_Log;
+   procedure Clear_Backtrace_Log;
+
 private
 
    use all type DOM.Core.Node;
@@ -239,9 +243,5 @@ private
    --  Return a string representation of the entire transaction log,
    --  starting with the oldest transaction.
    function Transaction_Log_To_String return String;
-
-   --  Delete all entries in the Transaction-/Nodes_Backtrace-Log, respectively.
-   procedure Clear_Transaction_Log;
-   procedure Clear_Backtrace_Log;
 
 end Mutools.Xmldebuglog;

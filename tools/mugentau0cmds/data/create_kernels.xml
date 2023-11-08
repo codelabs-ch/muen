@@ -51,7 +51,6 @@
   <attachMemoryRegionKernel kernel="0" region="" offset="0" length="1" tableIndex="42" writable="true" executable="false"/>
   <clearPages basePage="16#0195_f000#" count="9"/>
   <createPageTableKernel kernel="0" page="16#0195_f000#" level="4" virtualAddress="16#0000#" readable="true" writable="true" executable="true"/>
-
   <createPageTableKernel kernel="0" page="16#0196_7000#" level="3" virtualAddress="16#0000#" readable="true" writable="true" executable="true"/>
   <createPageTableKernel kernel="0" page="16#0196_6000#" level="2" virtualAddress="16#0000#" readable="true" writable="true" executable="true"/>
   <createPageTableKernel kernel="0" page="16#0196_5000#" level="1" virtualAddress="16#00a0_0000#" readable="true" writable="true" executable="true"/>
@@ -60,7 +59,6 @@
   <createPageTableKernel kernel="0" page="16#0196_2000#" level="1" virtualAddress="16#0040_0000#" readable="true" writable="true" executable="true"/>
   <createPageTableKernel kernel="0" page="16#0196_1000#" level="1" virtualAddress="16#0020_0000#" readable="true" writable="true" executable="true"/>
   <createPageTableKernel kernel="0" page="16#0196_0000#" level="1" virtualAddress="16#0000#" readable="true" writable="true" executable="true"/>
-
   <mapPagesKernel kernel="0" tableIndex="0" baseVirtualAddress="16#0010_0000#" baseOffset="0" count="16"/>
   <mapPagesKernel kernel="0" tableIndex="1" baseVirtualAddress="16#0011_0000#" baseOffset="0" count="2"/>
   <mapPagesKernel kernel="0" tableIndex="2" baseVirtualAddress="16#0011_2000#" baseOffset="0" count="2"/>
@@ -108,7 +106,6 @@
   <mapDevicePagesKernel kernel="0" device="" basePage="16#fed9_0000#" baseVirtualAddress="16#0030_1000#" count="1" writable="true" executable="false"/>
   <mapDevicePagesKernel kernel="0" device="" basePage="16#fed9_1000#" baseVirtualAddress="16#0030_2000#" count="1" writable="true" executable="false"/>
   <lockKernel kernel="0"/>
-
   <activatePageTableKernel kernel="0" level="1" virtualAddress="16#0000#"/>
   <activatePageTableKernel kernel="0" level="1" virtualAddress="16#0020_0000#"/>
   <activatePageTableKernel kernel="0" level="1" virtualAddress="16#0040_0000#"/>
@@ -170,7 +167,6 @@
   <attachMemoryRegionKernel kernel="1" region="" offset="0" length="1" tableIndex="85" writable="true" executable="false"/>
   <clearPages basePage="16#0196_8000#" count="9"/>
   <createPageTableKernel kernel="1" page="16#0196_8000#" level="4" virtualAddress="16#0000#" readable="true" writable="true" executable="true"/>
-
   <createPageTableKernel kernel="1" page="16#0197_0000#" level="3" virtualAddress="16#0000#" readable="true" writable="true" executable="true"/>
   <createPageTableKernel kernel="1" page="16#0196_f000#" level="2" virtualAddress="16#0000#" readable="true" writable="true" executable="true"/>
   <createPageTableKernel kernel="1" page="16#0196_e000#" level="1" virtualAddress="16#00a0_0000#" readable="true" writable="true" executable="true"/>
@@ -179,7 +175,6 @@
   <createPageTableKernel kernel="1" page="16#0196_b000#" level="1" virtualAddress="16#0040_0000#" readable="true" writable="true" executable="true"/>
   <createPageTableKernel kernel="1" page="16#0196_a000#" level="1" virtualAddress="16#0020_0000#" readable="true" writable="true" executable="true"/>
   <createPageTableKernel kernel="1" page="16#0196_9000#" level="1" virtualAddress="16#0000#" readable="true" writable="true" executable="true"/>
-
   <mapPagesKernel kernel="1" tableIndex="43" baseVirtualAddress="16#0010_0000#" baseOffset="0" count="16"/>
   <mapPagesKernel kernel="1" tableIndex="44" baseVirtualAddress="16#0011_0000#" baseOffset="0" count="2"/>
   <mapPagesKernel kernel="1" tableIndex="45" baseVirtualAddress="16#0011_2000#" baseOffset="0" count="2"/>
@@ -227,7 +222,6 @@
   <mapDevicePagesKernel kernel="1" device="" basePage="16#fed9_0000#" baseVirtualAddress="16#0030_1000#" count="1" writable="true" executable="false"/>
   <mapDevicePagesKernel kernel="1" device="" basePage="16#fed9_1000#" baseVirtualAddress="16#0030_2000#" count="1" writable="true" executable="false"/>
   <lockKernel kernel="1"/>
-
   <activatePageTableKernel kernel="1" level="1" virtualAddress="16#0000#"/>
   <activatePageTableKernel kernel="1" level="1" virtualAddress="16#0020_0000#"/>
   <activatePageTableKernel kernel="1" level="1" virtualAddress="16#0040_0000#"/>

@@ -66,7 +66,6 @@ is
       Buffer     :        Command_Buffer_Type)
    is
    begin
-      Ada.Text_IO.New_Line (File => Stream_Doc.File);
       for Cmd of Buffer.Cmds loop
          Ada.Text_IO.Put_Line (File => Stream_Doc.File,
                                Item => S (Cmd));

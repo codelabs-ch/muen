@@ -335,14 +335,14 @@ is
                   CU.Append_Command
                     (Stream_Doc => Stream_Doc,
                      Name       => "activatePagesMR",
-                     Attrs      => (Region_Attr,
-                                    (Attr  => U ("baseVirtualAddress"),
-                                     Value => U (Mutools.Utils.To_Hex
-                                       (Number => 0))),
-                                    (Attr  => U ("count"),
-                                     Value => U (Interfaces.Unsigned_64'Image
-                                       (Size
-                                          / Mutools.Constants.Page_Size)))));
+                     Attrs      =>
+                       (Region_Attr,
+                        (Attr  => U ("baseVirtualAddress"),
+                         Value => U (Mutools.Utils.To_Hex
+                           (Number => 0))),
+                        (Attr  => U ("count"),
+                         Value => U (Trim (Interfaces.Unsigned_64'Image
+                           (Size / Mutools.Constants.Page_Size))))));
 
                   for Lvl in 1 .. Level - 1 loop
                      declare

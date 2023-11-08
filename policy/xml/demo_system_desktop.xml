@@ -133,7 +133,7 @@
      <msr end="16#0774#" mode="rw" start="16#0774#"/> <!-- IA32_HWP_REQUEST                    -->
     </msrs>
    </vcpu>
-   <bootparams>console=ttyS0 console=tty0 hostname=linux drm.debug=0x2 i8042.nopnp=1</bootparams>
+   <bootparams>console=ttyS0 console=tty0 hostname=linux root=/dev/nvme0n1p1 drm.debug=0x2 i8042.nopnp=1</bootparams>
    <memory>
     <memory logical="ram_2" physical="linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="true"/>
     <memory logical="ram_3" physical="linux|ram_3" virtualAddress="16#0001_0000_0000#" writable="true" executable="true"/>

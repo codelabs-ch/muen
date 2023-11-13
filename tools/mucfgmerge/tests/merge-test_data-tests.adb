@@ -21,6 +21,7 @@ with DOM.Core.Nodes;
 
 with Mucfgcheck.Validation_Errors;
 with Muxml;
+with Mutools.Xmldebuglog;
 --  begin read only
 --  end read only
 package body Merge.Test_Data.Tests is
@@ -95,6 +96,9 @@ package body Merge.Test_Data.Tests is
               Output_File  => Output,
               Include_Path => "data/hw:data/platform:data");
 
+         Mutools.Xmldebuglog.Clear_Transaction_Log;
+         Mutools.Xmldebuglog.Clear_Backtrace_Log;
+
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => "data/run_include_path.xml",
                   Filename2 => Output),
@@ -112,6 +116,9 @@ package body Merge.Test_Data.Tests is
          Run (Config_File  => "data/config_no_additional_hw.xml",
               Output_File  => Output,
               Include_Path => "");
+
+         Mutools.Xmldebuglog.Clear_Transaction_Log;
+         Mutools.Xmldebuglog.Clear_Backtrace_Log;
 
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => "data/run_no_additional_hw.xml",
@@ -131,6 +138,9 @@ package body Merge.Test_Data.Tests is
               Output_File  => Output,
               Include_Path => "data");
 
+         Mutools.Xmldebuglog.Clear_Transaction_Log;
+         Mutools.Xmldebuglog.Clear_Backtrace_Log;
+
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => "data/output_templateAmend.xml",
                   Filename2 => Output),
@@ -149,6 +159,9 @@ package body Merge.Test_Data.Tests is
               Output_File  => Output,
               Include_Path => "data",
               Debug_Level  => VERBOSE_ERRORS);
+
+         Mutools.Xmldebuglog.Clear_Transaction_Log;
+         Mutools.Xmldebuglog.Clear_Backtrace_Log;
 
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => "data/run_no_expressions.xml",
@@ -194,11 +207,17 @@ package body Merge.Test_Data.Tests is
                   Filename2 => Output),
                  Message   => "Policy mismatch: " & Output);
          Ada.Directories.Delete_File (Name => Output);
+         Mutools.Xmldebuglog.Clear_Transaction_Log;
+         Mutools.Xmldebuglog.Clear_Backtrace_Log;
 
          Run (Config_File  => "data/config_with_templateAmend.xml",
               Output_File  => Output,
               Include_Path => "data",
               Debug_Level  => VERBOSE_OUTPUT);
+
+         Mutools.Xmldebuglog.Clear_Transaction_Log;
+         Mutools.Xmldebuglog.Clear_Backtrace_Log;
+
          Remove_Comments (File => Output);
          Assert (Condition => Test_Utils.Equal_Files
                  (Filename1 => "data/output_templateAmend.xml",
@@ -212,8 +231,13 @@ package body Merge.Test_Data.Tests is
       Mucfgcheck.Validation_Errors.Clear;
       Duplicate_Config_Value;
       Mucfgcheck.Validation_Errors.Clear;
+      Mutools.Xmldebuglog.Clear_Transaction_Log;
+      Mutools.Xmldebuglog.Clear_Backtrace_Log;
+
       Duplicate_Config_Value_Due_To_Template;
       Mucfgcheck.Validation_Errors.Clear;
+      Mutools.Xmldebuglog.Clear_Transaction_Log;
+      Mutools.Xmldebuglog.Clear_Backtrace_Log;
 
       Include_Path;
       No_Additional_Hw;

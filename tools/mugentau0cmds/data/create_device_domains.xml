@@ -6,16 +6,13 @@
   <attachMemoryRegionDeviceDomain domain="0" region="" offset="0" length="9" tableIndex="1" writable="true" executable="false"/>
   <clearPages basePage="16#017f_c000#" count="132"/>
   <createPageTableDeviceDomain domain="0" page="16#017f_c000#" level="4" virtualAddress="16#0000#" readable="true" writable="true" executable="true"/>
-
   <createPageTableDeviceDomain domain="0" page="16#0180_0000#" level="3" virtualAddress="16#0000#" readable="true" writable="true" executable="true"/>
   <createPageTableDeviceDomain domain="0" page="16#017f_f000#" level="2" virtualAddress="16#0000#" readable="true" writable="true" executable="true"/>
   <createPageTableDeviceDomain domain="0" page="16#017f_e000#" level="1" virtualAddress="16#0100_0000#" readable="true" writable="true" executable="true"/>
   <createPageTableDeviceDomain domain="0" page="16#017f_d000#" level="1" virtualAddress="16#0000#" readable="true" writable="true" executable="true"/>
-
   <mapPagesDeviceDomain domain="0" tableIndex="0" baseVirtualAddress="16#0002_0000#" baseOffset="0" count="128"/>
   <mapPagesDeviceDomain domain="0" tableIndex="1" baseVirtualAddress="16#0100_0000#" baseOffset="0" count="9"/>
   <lockDeviceDomain domain="0"/>
-
   <activatePageTableDeviceDomain domain="0" level="1" virtualAddress="16#0000#"/>
   <activatePageTableDeviceDomain domain="0" level="1" virtualAddress="16#0100_0000#"/>
   <activatePageTableDeviceDomain domain="0" level="2" virtualAddress="16#0000#"/>
@@ -28,16 +25,13 @@
   <attachMemoryRegionDeviceDomain domain="1" region="" offset="0" length="9" tableIndex="3" writable="true" executable="false"/>
   <clearPages basePage="16#0188_0000#" count="132"/>
   <createPageTableDeviceDomain domain="1" page="16#0188_0000#" level="4" virtualAddress="16#0000#" readable="true" writable="true" executable="true"/>
-
   <createPageTableDeviceDomain domain="1" page="16#0188_4000#" level="3" virtualAddress="16#0000#" readable="true" writable="true" executable="true"/>
   <createPageTableDeviceDomain domain="1" page="16#0188_3000#" level="2" virtualAddress="16#0000#" readable="true" writable="true" executable="true"/>
   <createPageTableDeviceDomain domain="1" page="16#0188_2000#" level="1" virtualAddress="16#0100_0000#" readable="true" writable="true" executable="true"/>
   <createPageTableDeviceDomain domain="1" page="16#0188_1000#" level="1" virtualAddress="16#0000#" readable="true" writable="true" executable="true"/>
-
   <mapPagesDeviceDomain domain="1" tableIndex="2" baseVirtualAddress="16#0002_0000#" baseOffset="0" count="128"/>
   <mapPagesDeviceDomain domain="1" tableIndex="3" baseVirtualAddress="16#0100_0000#" baseOffset="0" count="9"/>
   <lockDeviceDomain domain="1"/>
-
   <activatePageTableDeviceDomain domain="1" level="1" virtualAddress="16#0000#"/>
   <activatePageTableDeviceDomain domain="1" level="1" virtualAddress="16#0100_0000#"/>
   <activatePageTableDeviceDomain domain="1" level="2" virtualAddress="16#0000#"/>
@@ -50,17 +44,14 @@
   <attachMemoryRegionDeviceDomain domain="2" region="" offset="0" length="32" tableIndex="5" writable="true" executable="false"/>
   <clearPages basePage="16#01a0_c000#" count="6"/>
   <createPageTableDeviceDomain domain="2" page="16#01a0_c000#" level="4" virtualAddress="16#0000#" readable="true" writable="true" executable="true"/>
-
   <createPageTableDeviceDomain domain="2" page="16#01a1_1000#" level="3" virtualAddress="16#0000#" readable="true" writable="true" executable="true"/>
   <createPageTableDeviceDomain domain="2" page="16#01a1_0000#" level="2" virtualAddress="16#4000_0000#" readable="true" writable="true" executable="true"/>
   <createPageTableDeviceDomain domain="2" page="16#01a0_f000#" level="2" virtualAddress="16#0000#" readable="true" writable="true" executable="true"/>
   <createPageTableDeviceDomain domain="2" page="16#01a0_e000#" level="1" virtualAddress="16#7aa0_0000#" readable="true" writable="true" executable="true"/>
   <createPageTableDeviceDomain domain="2" page="16#01a0_d000#" level="1" virtualAddress="16#0100_0000#" readable="true" writable="true" executable="true"/>
-
   <mapPagesDeviceDomain domain="2" tableIndex="4" baseVirtualAddress="16#0100_0000#" baseOffset="0" count="65"/>
   <mapPagesDeviceDomain domain="2" tableIndex="5" baseVirtualAddress="16#7aa9_f000#" baseOffset="0" count="32"/>
   <lockDeviceDomain domain="2"/>
-
   <activatePageTableDeviceDomain domain="2" level="1" virtualAddress="16#0100_0000#"/>
   <activatePageTableDeviceDomain domain="2" level="1" virtualAddress="16#7aa0_0000#"/>
   <activatePageTableDeviceDomain domain="2" level="2" virtualAddress="16#0000#"/>

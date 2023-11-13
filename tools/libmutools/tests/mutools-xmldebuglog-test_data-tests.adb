@@ -740,6 +740,60 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Clear_Transaction_Log (Gnattest_T : in out Test);
+   procedure Test_Clear_Transaction_Log_53378e (Gnattest_T : in out Test) renames Test_Clear_Transaction_Log;
+--  id:2.2/53378ea54a185b7c/Clear_Transaction_Log/1/0/
+   procedure Test_Clear_Transaction_Log (Gnattest_T : in out Test) is
+--  end read only
+
+      use type Ada.Containers.Count_Type;
+      pragma Unreferenced (Gnattest_T);
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data         => Data,
+                   Kind         => Muxml.None,
+                   File         => "data/system_policy_for_xmldebuglog.xml",
+                   Add_Location => True);
+      Merge_All_Steps (Data => Data);
+      Assert (Condition => Transaction_Log.Length > 0,
+              Message   => "Error in test setup");
+
+      Clear_Transaction_Log;
+      Assert (Condition => Transaction_Log.Length = 0,
+              Message   => "Transaction log not cleared");
+--  begin read only
+   end Test_Clear_Transaction_Log;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Clear_Backtrace_Log (Gnattest_T : in out Test);
+   procedure Test_Clear_Backtrace_Log_556164 (Gnattest_T : in out Test) renames Test_Clear_Backtrace_Log;
+--  id:2.2/556164b199fc8b2f/Clear_Backtrace_Log/1/0/
+   procedure Test_Clear_Backtrace_Log (Gnattest_T : in out Test) is
+--  end read only
+
+      use type Ada.Containers.Count_Type;
+      pragma Unreferenced (Gnattest_T);
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data         => Data,
+                   Kind         => Muxml.None,
+                   File         => "data/system_policy_for_xmldebuglog.xml",
+                   Add_Location => True);
+      Merge_All_Steps (Data => Data);
+      Assert (Condition => Nodes_Backtrace_Log.Length > 0,
+              Message   => "Error in test setup");
+
+      Clear_Backtrace_Log;
+      Assert (Condition => Nodes_Backtrace_Log.Length = 0,
+              Message   => "Transaction log not cleared");
+--  begin read only
+   end Test_Clear_Backtrace_Log;
+--  end read only
+
+
+--  begin read only
    procedure Test_Origin_To_String (Gnattest_T : in out Test);
    procedure Test_Origin_To_String_cdeaf7 (Gnattest_T : in out Test) renames Test_Origin_To_String;
 --  id:2.2/cdeaf7034e6348c5/Origin_To_String/1/0/
@@ -981,60 +1035,6 @@ package body Mutools.Xmldebuglog.Test_Data.Tests is
          end;
 --  begin read only
    end Test_Transaction_Log_To_String;
---  end read only
-
-
---  begin read only
-   procedure Test_Clear_Transaction_Log (Gnattest_T : in out Test);
-   procedure Test_Clear_Transaction_Log_53378e (Gnattest_T : in out Test) renames Test_Clear_Transaction_Log;
---  id:2.2/53378ea54a185b7c/Clear_Transaction_Log/1/0/
-   procedure Test_Clear_Transaction_Log (Gnattest_T : in out Test) is
---  end read only
-
-      use type Ada.Containers.Count_Type;
-      pragma Unreferenced (Gnattest_T);
-      Data : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data         => Data,
-                   Kind         => Muxml.None,
-                   File         => "data/system_policy_for_xmldebuglog.xml",
-                   Add_Location => True);
-      Merge_All_Steps (Data => Data);
-      Assert (Condition => Transaction_Log.Length > 0,
-              Message   => "Error in test setup");
-
-      Clear_Transaction_Log;
-      Assert (Condition => Transaction_Log.Length = 0,
-              Message   => "Transaction log not cleared");
---  begin read only
-   end Test_Clear_Transaction_Log;
---  end read only
-
-
---  begin read only
-   procedure Test_Clear_Backtrace_Log (Gnattest_T : in out Test);
-   procedure Test_Clear_Backtrace_Log_556164 (Gnattest_T : in out Test) renames Test_Clear_Backtrace_Log;
---  id:2.2/556164b199fc8b2f/Clear_Backtrace_Log/1/0/
-   procedure Test_Clear_Backtrace_Log (Gnattest_T : in out Test) is
---  end read only
-
-      use type Ada.Containers.Count_Type;
-      pragma Unreferenced (Gnattest_T);
-      Data : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data         => Data,
-                   Kind         => Muxml.None,
-                   File         => "data/system_policy_for_xmldebuglog.xml",
-                   Add_Location => True);
-      Merge_All_Steps (Data => Data);
-      Assert (Condition => Nodes_Backtrace_Log.Length > 0,
-              Message   => "Error in test setup");
-
-      Clear_Backtrace_Log;
-      Assert (Condition => Nodes_Backtrace_Log.Length = 0,
-              Message   => "Transaction log not cleared");
---  begin read only
-   end Test_Clear_Backtrace_Log;
 --  end read only
 
 --  begin read only

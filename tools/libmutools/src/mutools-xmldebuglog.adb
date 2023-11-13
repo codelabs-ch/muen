@@ -629,6 +629,11 @@ is
             if Node_Backtrace.Amend_Backtrace /= Null_Ref_Index and
                Node_Backtrace.Amend_Backtrace /= Parent_Backtrace.Amend_Backtrace
             then
+               Mulog.Log (Msg => "Debug-Info: Backtrace-log of Parent:'"
+                            & Node_Backtrace_To_String (Node => Parent)
+                            & "', Backtrace-log of Node:'"
+                            & Node_Backtrace_To_String (Node => Node)
+                            & "'");
                raise Muxml.Validation_Error with
                   "Merge_Parent_Backtrace_Info cannot log amend-info for node '"
                   & Get_Xpath (Node => Node)

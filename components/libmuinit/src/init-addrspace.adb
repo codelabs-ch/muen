@@ -100,8 +100,8 @@ is
       Destination : Musinfo.Memregion_Type)
      with SPARK_Mode => Off
    is
-      subtype Region_Range is Interfaces.Unsigned_64 range 1 .. Source.Size;
-      type Data_Array is array (Region_Range) of Interfaces.Unsigned_8
+      subtype Region_Range is Interfaces.Unsigned_64 range 1 .. Source.Size / 8;
+      type Data_Array is array (Region_Range) of Interfaces.Unsigned_64
         with Pack;
 
       Src_Memory : constant Data_Array

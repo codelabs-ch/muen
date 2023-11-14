@@ -29,6 +29,8 @@
 with Interfaces;
 
 package Mutime.Utils
+with
+   SPARK_Mode
 is
 
    subtype Two_Digits_Type is Interfaces.Unsigned_8 range 0 .. 99;
@@ -37,5 +39,31 @@ is
    function To_BCD
      (Value : Two_Digits_Type)
       return Interfaces.Unsigned_8;
+
+   use type Interfaces.Unsigned_128;
+
+   --  The procedure multiplies a given value with a multiplier and then
+   --  divides it by the specified divisor.
+   --
+   --  The procedure supports 128 bit arithmetic by using the processor's MUL
+   --  and DIV instructions. It basically calculates the following efficiently:
+   --
+   --    Quotient := Unsigned_64'Mod (Unsigned_128 (Value) * Unsigned_128
+   --      (Multiplier) / Unsigned_128 (Divisor))
+   --
+   --  The processor will raise an exception if the quotient is >= 2 ** 64. A
+   --  precondition ensures that this does not happen.
+   procedure Multiply_Divide
+     (Value      :     Interfaces.Unsigned_64;
+      Multiplier :     Interfaces.Unsigned_64;
+      Divisor    :     Interfaces.Unsigned_64;
+      Quotient   : out Interfaces.Unsigned_64)
+   with
+      Pre =>
+         (Divisor /= 0 and then
+            (Interfaces.Unsigned_128 (Value) *
+             Interfaces.Unsigned_128 (Multiplier)) /
+               Interfaces.Unsigned_128 (Divisor) <=
+                 Interfaces.Unsigned_128 (Interfaces.Unsigned_64'Last));
 
 end Mutime.Utils;

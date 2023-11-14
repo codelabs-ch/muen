@@ -50,6 +50,53 @@ package body Mutime.Utils.Test_Data.Tests is
    end Test_To_BCD;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Multiply_Divide (Gnattest_T : in out Test);
+   procedure Test_Multiply_Divide_7d4c68 (Gnattest_T : in out Test) renames Test_Multiply_Divide;
+--  id:2.2/7d4c68ed999118f1/Multiply_Divide/1/0/
+   procedure Test_Multiply_Divide (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Q : Interfaces.Unsigned_64;
+   begin
+      Multiply_Divide
+        (Value      => 12,
+         Multiplier => 12,
+         Divisor    => 2,
+         Quotient   => Q);
+      Assert (Condition => Q = 72,
+              Message   => "Quotient invalid (1):" & Q'Img);
+      Multiply_Divide
+        (Value      => 1231231312,
+         Multiplier => 18282822,
+         Divisor    => 23442,
+         Quotient   => Q);
+      Assert (Condition => Q = 960258634848,
+              Message   => "Quotient invalid (2):" & Q'Img);
+      Multiply_Divide
+        (Value      => Interfaces.Unsigned_64'Last,
+         Multiplier => 2,
+         Divisor    => 3,
+         Quotient   => Q);
+      Assert (Condition => Q = 12297829382473034410,
+              Message   => "Quotient invalid (3):" & Q'Img);
+
+      --  Corner case: Quotient = Unsigned_64'Last
+
+      Multiply_Divide
+        (Value      => 6148914691236517205,
+         Multiplier => 3,
+         Divisor    => 1,
+         Quotient   => Q);
+      Assert (Condition => Q = Interfaces.Unsigned_64'Last,
+              Message   => "Quotient invalid (4):" & Q'Img);
+--  begin read only
+   end Test_Multiply_Divide;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

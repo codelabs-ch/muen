@@ -26,8 +26,32 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
+with System.Machine_Code;
+
 package body Mutime.Utils
 is
+
+   -------------------------------------------------------------------------
+
+   procedure Multiply_Divide
+     (Value      :     Interfaces.Unsigned_64;
+      Multiplier :     Interfaces.Unsigned_64;
+      Divisor    :     Interfaces.Unsigned_64;
+      Quotient   : out Interfaces.Unsigned_64)
+   with
+      SPARK_Mode => Off
+   is
+      use Interfaces;
+   begin
+      System.Machine_Code.Asm
+        (Template => "mulq %2; divq %3",
+         Outputs  => (Unsigned_64'Asm_Output ("=a", Quotient)),
+         Inputs   =>
+           (Unsigned_64'Asm_Input ("a", Value),
+            Unsigned_64'Asm_Input ("rm", Multiplier),
+            Unsigned_64'Asm_Input ("rm", Divisor)),
+         Clobber  => "rdx");
+   end Multiply_Divide;
 
    -------------------------------------------------------------------------
 

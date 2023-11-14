@@ -126,18 +126,42 @@ is
       Pattern : Musinfo.Pattern_Type)
      with SPARK_Mode => Off
    is
-      subtype Region_Range is Interfaces.Unsigned_64 range 1 .. Region.Size;
+      subtype Region_Range is Interfaces.Unsigned_64 range 1 .. Region.Size / 8;
 
-      type Data_Array is array (Region_Range) of Interfaces.Unsigned_8
+      type Data_Array is array (Region_Range) of Interfaces.Unsigned_64
         with Pack;
+
+      Data : constant Interfaces.Unsigned_64
+        := Interfaces.Shift_Left
+          (Value  => Interfaces.Unsigned_64 (Pattern),
+           Amount => 56) +
+        Interfaces.Shift_Left
+          (Value  => Interfaces.Unsigned_64 (Pattern),
+           Amount => 48) +
+        Interfaces.Shift_Left
+          (Value  => Interfaces.Unsigned_64 (Pattern),
+           Amount => 40) +
+        Interfaces.Shift_Left
+          (Value  => Interfaces.Unsigned_64 (Pattern),
+           Amount => 32) +
+        Interfaces.Shift_Left
+          (Value  => Interfaces.Unsigned_64 (Pattern),
+           Amount => 24) +
+        Interfaces.Shift_Left
+          (Value  => Interfaces.Unsigned_64 (Pattern),
+           Amount => 16) +
+        Interfaces.Shift_Left
+          (Value  => Interfaces.Unsigned_64 (Pattern),
+           Amount => 8) +
+        Interfaces.Unsigned_64 (Pattern);
 
       Raw_Memory : Data_Array
       with
          Import,
          Address => System'To_Address (Region.Address);
    begin
-      for Byte of Raw_Memory loop
-         Byte := Interfaces.Unsigned_8 (Pattern);
+      for QWord of Raw_Memory loop
+         QWord := Data;
       end loop;
    end Memset;
 

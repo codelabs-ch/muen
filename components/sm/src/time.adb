@@ -34,28 +34,14 @@ is
 
    function Get_Date_Time return Mutime.Date_Time_Type
    is
-      use type Interfaces.Unsigned_64;
-
       Timestamp         : Mutime.Timestamp_Type;
       Date_Time         : Mutime.Date_Time_Type;
-      Sched             : Mutime.Integer_62;
-      Correction_Unused : Mutime.Integer_63;
+      Correction_Unused : Interfaces.Integer_64;
       Success           : Boolean;
 
-      TSC_Schedule_Start : constant Interfaces.Unsigned_64
+      Sched : constant Interfaces.Unsigned_64
         := Musinfo.Instance.TSC_Schedule_Start;
    begin
-      if TSC_Schedule_Start <= Interfaces.Unsigned_64
-        (Mutime.Integer_62'Last)
-      then
-         Sched := Mutime.Integer_62 (TSC_Schedule_Start);
-      else
-         pragma Debug (Debug_Ops.Put_Line
-                       (Item => "Error: Scheduling info out of bounds "
-                        & SK.Strings.Img (TSC_Schedule_Start)));
-         Sched := 0;
-      end if;
-
       Mutime.Info.Get_Current_Time_UTC
         (Schedule_Ticks => Sched,
          Correction     => Correction_Unused,

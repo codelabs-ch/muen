@@ -74,18 +74,14 @@ is
       Right : Interfaces.Unsigned_64)
       return Timestamp_Type;
 
-   use type Interfaces.Integer_64;
    use type Interfaces.Unsigned_64;
 
-   --  Types used for safe signed timestamp arithmetic.
-   subtype Integer_63 is Interfaces.Integer_64 range -2 ** 62 .. 2 ** 62 - 1;
-
-   --  Add given Integer_63 value to timestamp. If Left + Right is bigger than
+   --  Add given Integer_64 value to timestamp. If Left + Right is bigger than
    --  the largest possible timestamp, the maximum timestamp is returned. If
    --  Left - Right is less than zero, zero is returned.
    function "+"
      (Left  : Timestamp_Type;
-      Right : Integer_63)
+      Right : Interfaces.Integer_64)
       return Timestamp_Type;
 
 private

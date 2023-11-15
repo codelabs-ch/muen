@@ -82,7 +82,7 @@ package body Mutime.Info.Test_Data.Tests is
         (TSC_Time_Base      => Epoch_Timestamp,
          TSC_Tick_Rate_Hz   => 1 * 10 ** 9,
          Timezone_Microsecs => 0);
-      C  : Integer_63;
+      C  : Interfaces.Integer_64;
    begin
       Get_Current_Time (TI              => T,
                         Schedule_Ticks  => Ti,

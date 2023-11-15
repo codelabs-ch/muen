@@ -50,19 +50,20 @@ is
 
    function "+"
      (Left  : Timestamp_Type;
-      Right : Integer_63)
+      Right : Interfaces.Integer_64)
       return Timestamp_Type
    is
-      Res : Timestamp_Type                 := 0;
-      L   : constant Integer_63            := Integer_63 (Left);
-      Sum : constant Interfaces.Integer_64 := Interfaces.Integer_64
-        (L + Right);
+      use type Interfaces.Integer_128;
+
+      Res : Timestamp_Type                  := 0;
+      Sum : constant Interfaces.Integer_128 := Interfaces.Integer_128
+        (Left) + Interfaces.Integer_128 (Right);
    begin
-      if Sum <= Interfaces.Integer_64 (Timestamp_Type'Last) and then
+      if Sum <= Interfaces.Integer_128 (Timestamp_Type'Last) and then
         Sum > 0
       then
          Res := Timestamp_Type (Sum);
-      elsif Sum > Interfaces.Integer_64 (Timestamp_Type'Last) then
+      elsif Sum > Interfaces.Integer_128 (Timestamp_Type'Last) then
          Res := Timestamp_Type'Last;
       elsif Sum < 0 then
          Res := 0;

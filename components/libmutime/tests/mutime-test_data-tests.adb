@@ -253,14 +253,15 @@ package body Mutime.Test_Data.Tests is
 
       T : Timestamp_Type := 123;
    begin
-      Assert (Condition => T + Integer_63 (123) = 246,
+      Assert (Condition => T + Interfaces.Integer_64 (123) = 246,
               Message   => "Result mismatch (1)");
-      Assert (Condition => T + Integer_63 (-155) = 0,
+      Assert (Condition => T + Interfaces.Integer_64 (-155) = 0,
               Message   => "Result mismatch (2)");
 
       T := Timestamp_Type'Last;
-      Assert (Condition => T + Integer_63 (12) = Timestamp_Type'Last,
-              Message   => "Result mismatch (3)");
+      Assert 
+        (Condition => T + Interfaces.Integer_64 (12) = Timestamp_Type'Last,
+         Message   => "Result mismatch (3)");
 --  begin read only
    end Test_Plus;
 --  end read only

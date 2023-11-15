@@ -6,7 +6,7 @@
 --                                                                          --
 --                                 S p e c                                  --
 --                                                                          --
---          Copyright (C) 2002-2013, Free Software Foundation, Inc.         --
+--          Copyright (C) 2002-2022, Free Software Foundation, Inc.         --
 --                                                                          --
 -- This specification is derived from the Ada Reference Manual for use with --
 -- GNAT. The copyright notice above, and the license provisions that follow --
@@ -33,7 +33,10 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+--  This is the runtime version of this unit (not used during GNAT build)
+
 package Interfaces is
+   pragma No_Elaboration_Code_All;
    pragma Pure;
 
    --  All identifiers in this unit are implementation defined
@@ -49,10 +52,20 @@ package Interfaces is
    type Integer_32 is range -2 ** 31 .. 2 ** 31 - 1;
    for Integer_32'Size use 32;
 
-   type Integer_64 is range -2 ** 63 .. 2 ** 63 - 1;
+   type Integer_64 is new Long_Long_Integer;
    for Integer_64'Size use 64;
+   --  Note: we use Long_Long_Integer'First instead of -2 ** 63 to allow this
+   --  unit to compile when using custom target configuration files where the
+   --  maximum integer is 32 bits. This is useful for static analysis tools
+   --  such as SPARK or CodePeer. In the normal case Long_Long_Integer is
+   --  always 64-bits so we get the desired 64-bit type.
 
-   type Unsigned_8  is mod 2 **  8;
+   type Integer_128 is new Long_Long_Long_Integer;
+   --  Note: we use Long_Long_Long_Integer instead of literal bounds to allow
+   --  this unit to be compiled with compilers not supporting 128-bit integers.
+   --  We do not put a confirming size clause of 128 bits for the same reason.
+
+   type Unsigned_8 is mod 2 ** 8;
    for Unsigned_8'Size use  8;
 
    type Unsigned_16 is mod 2 ** 16;
@@ -60,97 +73,142 @@ package Interfaces is
 
    type Unsigned_24 is mod 2 ** 24;
    for Unsigned_24'Size use 24;
+   --  Declare this type for compatibility with legacy Ada compilers.
+   --  This is particularly useful in the context of CodePeer analysis.
 
    type Unsigned_32 is mod 2 ** 32;
    for Unsigned_32'Size use 32;
 
-   type Unsigned_64 is mod 2 ** 64;
+   type Unsigned_64 is mod 2 ** Long_Long_Integer'Size;
    for Unsigned_64'Size use 64;
+   --  See comment on Integer_64 above
+
+   type Unsigned_128 is mod 2 ** Long_Long_Long_Integer'Size;
+   --  See comment on Integer_128 above
 
    function Shift_Left
      (Value  : Unsigned_8;
-      Amount : Natural) return Unsigned_8;
+      Amount : Natural) return Unsigned_8
+      with Import, Convention => Intrinsic, Static;
 
    function Shift_Right
      (Value  : Unsigned_8;
-      Amount : Natural) return Unsigned_8;
+      Amount : Natural) return Unsigned_8
+      with Import, Convention => Intrinsic, Static;
 
    function Shift_Right_Arithmetic
      (Value  : Unsigned_8;
-      Amount : Natural) return Unsigned_8;
+      Amount : Natural) return Unsigned_8
+      with Import, Convention => Intrinsic, Static;
 
    function Rotate_Left
      (Value  : Unsigned_8;
-      Amount : Natural) return Unsigned_8;
+      Amount : Natural) return Unsigned_8
+      with Import, Convention => Intrinsic, Static;
 
    function Rotate_Right
      (Value  : Unsigned_8;
-      Amount : Natural) return Unsigned_8;
+      Amount : Natural) return Unsigned_8
+      with Import, Convention => Intrinsic, Static;
 
    function Shift_Left
      (Value  : Unsigned_16;
-      Amount : Natural) return Unsigned_16;
+      Amount : Natural) return Unsigned_16
+      with Import, Convention => Intrinsic, Static;
 
    function Shift_Right
      (Value  : Unsigned_16;
-      Amount : Natural) return Unsigned_16;
+      Amount : Natural) return Unsigned_16
+      with Import, Convention => Intrinsic, Static;
 
    function Shift_Right_Arithmetic
      (Value  : Unsigned_16;
-      Amount : Natural) return Unsigned_16;
+      Amount : Natural) return Unsigned_16
+      with Import, Convention => Intrinsic, Static;
 
    function Rotate_Left
      (Value  : Unsigned_16;
-      Amount : Natural) return Unsigned_16;
+      Amount : Natural) return Unsigned_16
+      with Import, Convention => Intrinsic, Static;
 
    function Rotate_Right
      (Value  : Unsigned_16;
-      Amount : Natural) return Unsigned_16;
+      Amount : Natural) return Unsigned_16
+      with Import, Convention => Intrinsic, Static;
 
    function Shift_Left
      (Value  : Unsigned_32;
-      Amount : Natural) return Unsigned_32;
+      Amount : Natural) return Unsigned_32
+      with Import, Convention => Intrinsic, Static;
 
    function Shift_Right
      (Value  : Unsigned_32;
-      Amount : Natural) return Unsigned_32;
+      Amount : Natural) return Unsigned_32
+      with Import, Convention => Intrinsic, Static;
 
    function Shift_Right_Arithmetic
      (Value  : Unsigned_32;
-      Amount : Natural) return Unsigned_32;
+      Amount : Natural) return Unsigned_32
+      with Import, Convention => Intrinsic, Static;
 
    function Rotate_Left
      (Value  : Unsigned_32;
-      Amount : Natural) return Unsigned_32;
+      Amount : Natural) return Unsigned_32
+      with Import, Convention => Intrinsic, Static;
 
    function Rotate_Right
      (Value  : Unsigned_32;
-      Amount : Natural) return Unsigned_32;
+      Amount : Natural) return Unsigned_32
+      with Import, Convention => Intrinsic, Static;
 
    function Shift_Left
      (Value  : Unsigned_64;
-      Amount : Natural) return Unsigned_64;
+      Amount : Natural) return Unsigned_64
+      with Import, Convention => Intrinsic, Static;
 
    function Shift_Right
      (Value  : Unsigned_64;
-      Amount : Natural) return Unsigned_64;
+      Amount : Natural) return Unsigned_64
+      with Import, Convention => Intrinsic, Static;
 
    function Shift_Right_Arithmetic
      (Value  : Unsigned_64;
-      Amount : Natural) return Unsigned_64;
+      Amount : Natural) return Unsigned_64
+      with Import, Convention => Intrinsic, Static;
 
    function Rotate_Left
      (Value  : Unsigned_64;
-      Amount : Natural) return Unsigned_64;
+      Amount : Natural) return Unsigned_64
+      with Import, Convention => Intrinsic, Static;
 
    function Rotate_Right
      (Value  : Unsigned_64;
-      Amount : Natural) return Unsigned_64;
+      Amount : Natural) return Unsigned_64
+      with Import, Convention => Intrinsic, Static;
 
-   pragma Import (Intrinsic, Shift_Left);
-   pragma Import (Intrinsic, Shift_Right);
-   pragma Import (Intrinsic, Shift_Right_Arithmetic);
-   pragma Import (Intrinsic, Rotate_Left);
-   pragma Import (Intrinsic, Rotate_Right);
+   function Shift_Left
+     (Value  : Unsigned_128;
+      Amount : Natural) return Unsigned_128
+      with Import, Convention => Intrinsic, Static;
+
+   function Shift_Right
+     (Value  : Unsigned_128;
+      Amount : Natural) return Unsigned_128
+      with Import, Convention => Intrinsic, Static;
+
+   function Shift_Right_Arithmetic
+     (Value  : Unsigned_128;
+      Amount : Natural) return Unsigned_128
+      with Import, Convention => Intrinsic, Static;
+
+   function Rotate_Left
+     (Value  : Unsigned_128;
+      Amount : Natural) return Unsigned_128
+      with Import, Convention => Intrinsic, Static;
+
+   function Rotate_Right
+     (Value  : Unsigned_128;
+      Amount : Natural) return Unsigned_128
+      with Import, Convention => Intrinsic, Static;
 
 end Interfaces;

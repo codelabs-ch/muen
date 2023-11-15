@@ -30,6 +30,8 @@ with System;
 
 with Libmutime_Component.Channels;
 
+with Mutime.Utils;
+
 package body Mutime.Info
 with
    Refined_State => (State => Time_Info)
@@ -49,6 +51,35 @@ is
    pragma Warnings
      (GNATprove, On,
       "writing * is assumed to have no effects on other non-volatile objects");
+
+   --  Add given Unsigned_64 value to timezone. If Left + Right is bigger than
+   --  the largest possible Integer_63 value, the maximum value is returned.
+   function "+"
+     (Left  : Timezone_Type;
+      Right : Interfaces.Unsigned_64)
+      return Integer_63;
+
+   -------------------------------------------------------------------------
+
+   function "+"
+     (Left  : Timezone_Type;
+      Right : Interfaces.Unsigned_64)
+      return Integer_63
+   is
+      use type Interfaces.Integer_128;
+
+      Res : Integer_63;
+      Sum : constant Interfaces.Integer_128
+        := Interfaces.Integer_128 (Left) + Interfaces.Integer_128 (Right);
+   begin
+      if Sum > Interfaces.Integer_128 (Integer_63'Last) then
+         Res := Integer_63'Last;
+      else
+         Res := Integer_63 (Sum);
+      end if;
+
+      return Res;
+   end "+";
 
    -------------------------------------------------------------------------
 
@@ -81,25 +112,31 @@ is
 
    procedure Get_Current_Time
      (TI              :     Time_Info_Type;
-      Schedule_Ticks  :     Integer_62;
+      Schedule_Ticks  :     Interfaces.Unsigned_64;
       Timezone_Offset :     Timezone_Type;
       Correction      : out Integer_63;
       Timestamp       : out Timestamp_Type)
    is
       TSC_Tick_Rate_Hz : constant TSC_Tick_Rate_Hz_Type
         := TI.TSC_Tick_Rate_Hz;
+      Quotient         : Interfaces.Unsigned_64;
    begin
-      Timestamp  := TI.TSC_Time_Base;
-      Correction := Timezone_Offset +
-        (Schedule_Ticks / Integer_62 (TSC_Tick_Rate_Hz) * 10 ** 6);
+      Timestamp := TI.TSC_Time_Base;
 
-      Timestamp := Timestamp + Correction;
+      Utils.Multiply_Divide
+        (Value      => Schedule_Ticks,
+         Multiplier => 10 ** 6,
+         Divisor    => TSC_Tick_Rate_Hz,
+         Quotient   => Quotient);
+
+      Correction := Timezone_Offset + Quotient;
+      Timestamp  := Timestamp + Correction;
    end Get_Current_Time;
 
    -------------------------------------------------------------------------
 
    procedure Get_Current_Time_UTC
-     (Schedule_Ticks :     Integer_62;
+     (Schedule_Ticks :     Interfaces.Unsigned_64;
       Correction     : out Integer_63;
       Timestamp      : out Timestamp_Type;
       Success        : out Boolean)
@@ -128,7 +165,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Get_Current_Time
-     (Schedule_Ticks :     Integer_62;
+     (Schedule_Ticks :     Interfaces.Unsigned_64;
       Correction     : out Integer_63;
       Timestamp      : out Timestamp_Type;
       Success        : out Boolean)

@@ -31,7 +31,7 @@ with
    Abstract_State => (State with External => Async_Writers)
 is
 
-   subtype Timezone_Type is Integer_62 range
+   subtype Timezone_Type is Integer_63 range
      -12 * 60 * 60 * 10 ** 6 .. 14 * 60 * 60 * 10 ** 6;
 
    --  TSC tick rate in Hz from 1 Mhz to 100 Ghz.
@@ -68,7 +68,7 @@ is
    --  timestamp and the applied correction to the time base in microseconds
    --  if Success is True. No timezone offset is applied.
    procedure Get_Current_Time_UTC
-     (Schedule_Ticks :     Integer_62;
+     (Schedule_Ticks :     Interfaces.Unsigned_64;
       Correction     : out Integer_63;
       Timestamp      : out Timestamp_Type;
       Success        : out Boolean)
@@ -83,7 +83,7 @@ is
    --  if Success is True. The correction also takes the timezone offset into
    --  account.
    procedure Get_Current_Time
-     (Schedule_Ticks :     Integer_62;
+     (Schedule_Ticks :     Interfaces.Unsigned_64;
       Correction     : out Integer_63;
       Timestamp      : out Timestamp_Type;
       Success        : out Boolean)
@@ -117,7 +117,7 @@ private
 
    procedure Get_Current_Time
      (TI              :     Time_Info_Type;
-      Schedule_Ticks  :     Integer_62;
+      Schedule_Ticks  :     Interfaces.Unsigned_64;
       Timezone_Offset :     Timezone_Type;
       Correction      : out Integer_63;
       Timestamp       : out Timestamp_Type)

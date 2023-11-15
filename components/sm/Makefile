@@ -9,6 +9,9 @@ XSL_TFM_CFG        = misc/config.xsl
 XSL_TFM_GPR        = misc/gpr.xsl
 TFM_CPU_VALS       = misc/cpu-values.py
 
+SPARK_TIMEOUT = 0
+SPARK_STEPS   = 200000
+
 include ../component_spark.mk
 
 $(GEN_DIR)/config.xml: $(XSL_TFM_CFG) $(XSL_TFM_COMMON_CFG) $(POLICY_SRC)

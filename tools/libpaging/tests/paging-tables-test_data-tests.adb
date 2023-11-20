@@ -204,7 +204,7 @@ package body Paging.Tables.Test_Data.Tests is
 
       use type Interfaces.Unsigned_64;
 
-      Table : Page_Table_Type := Null_Table;
+      Table : Page_Table_Type;
    begin
       Assert (Condition => Table.Address = 0,
               Message   => "Address not zero");

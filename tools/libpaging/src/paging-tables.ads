@@ -93,7 +93,7 @@ private
 
    type Page_Table_Type is record
       Length  : Natural := 0;
-      Address : Interfaces.Unsigned_64;
+      Address : Interfaces.Unsigned_64 := 0;
       Data    : Entries_Array := Null_Entries;
    end record;
 

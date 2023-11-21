@@ -28,12 +28,14 @@ is
    --  Supported paging modes.
    type Paging_Mode_Type is (IA32e_Mode, EPT_Mode);
 
+   Entries_Per_Table : constant := 512;
+
    --  All paging structure types (PML4, PDPT, PD, PT) have 512 entries.
-   type Entry_Range is range 0 .. 511;
+   type Entry_Range is range 0 .. Entries_Per_Table - 1;
 
    --  Paging structure index type which defines the range of paging structures
    --  per level.
-   type Table_Range is range 0 .. 512 * 512 * 512 - 1;
+   type Table_Range is range 0 .. Entries_Per_Table ** 3 - 1;
 
    subtype Paging_Level is Positive range 1 .. 4;
 

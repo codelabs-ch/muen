@@ -129,6 +129,7 @@ project Kernel is
       case Build_Mode is
          when "debug" =>
             for Spec ("SK.UART.State") use "sk-uart-state__globaldata.ads";
+         when others => null;
       end case;
    end Naming;
 

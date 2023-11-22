@@ -89,7 +89,13 @@ handle_all:
 	mov %cr2, %rax
 	push %rax
 	mov %rsp, %rdi
+	// Ensure 16-byte stack alignment for call into SPARK subprogram, as
+	// required by the AMD x86_64 calling convention (section 3.2.2 "The Stack
+	// Frame").
+	mov %rsp, %rbp
+	and  $-0x10, %rsp
 	call dispatch_interrupt
+	mov %rbp, %rsp
 	pop %rax
 	restore_regs
 

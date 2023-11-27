@@ -29,43 +29,45 @@ is
    is
       use type Tables_Map_Package.Cursor;
 
-      --  Add entry to given table.
-      procedure Add_Entry
-        (Number :        Table_Range;
-         Table  : in out Tables.Page_Table_Type);
-
-      procedure Add_Entry
-        (Number :        Table_Range;
-         Table  : in out Tables.Page_Table_Type)
-      is
-         pragma Unreferenced (Number);
-      begin
-         Tables.Add_Entry (Table => Table,
-                           Index => Entry_Index,
-                           E     => Table_Entry);
-      end Add_Entry;
-
-      Pos : Tables_Map_Package.Cursor := Map.Tables.Find (Key => Table_Number);
+      Pos : Tables_Map_Package.Cursor := Map.Tables.Find
+        (Item => (Index => Table_Number,
+                  Data  => null));
       Ins : Boolean;
    begin
       if Pos = Tables_Map_Package.No_Element then
-         Map.Tables.Insert
-           (Key      => Table_Number,
-            New_Item => Tables.Null_Table,
-            Position => Pos,
-            Inserted => Ins);
+         Map.Tables.Insert (New_Item =>
+                              (Index => Table_Number,
+                               Data  => new Tables.Page_Table_Type),
+                            Position => Pos,
+                            Inserted => Ins);
       end if;
 
-      Map.Tables.Update_Element
-        (Position => Pos,
-         Process  => Add_Entry'Access);
+      Tables.Add_Entry
+        (Table => Tables_Map_Package.Element (Position => Pos).Data.all,
+         Index => Entry_Index,
+         E     => Table_Entry);
    end Add_Entry;
 
    -------------------------------------------------------------------------
 
    procedure Clear (Map : in out Page_Table_Map)
    is
+      use type Tables_Map_Package.Cursor;
+
+      Cur_Pos : Tables_Map_Package.Cursor := Map.Tables.First;
    begin
+      while Cur_Pos /= Tables_Map_Package.No_Element loop
+         declare
+            Element  : Table_Map_Type
+              := Tables_Map_Package.Element (Position => Cur_Pos);
+            Next_Pos : constant Tables_Map_Package.Cursor
+              := Tables_Map_Package.Next (Position => Cur_Pos);
+         begin
+            Free (Element.Data);
+            Map.Tables.Delete (Position => Cur_Pos);
+            Cur_Pos := Next_Pos;
+         end;
+      end loop;
       Map.Tables.Clear;
    end Clear;
 
@@ -79,36 +81,27 @@ is
    is
       use type Tables_Map_Package.Cursor;
 
-      Pos    : constant Tables_Map_Package.Cursor
-        := Map.Tables.Find (Key => Table_Number);
+      Pos    : constant Tables_Map_Package.Cursor := Map.Tables.Find
+        (Item => (Index => Table_Number,
+                  Data  => null));
       Result : Boolean := False;
-
-      --  Check if entry with 'Entry_Index' is present in table.
-      procedure Check_Entry_Presence
-        (Key     : Table_Range;
-         Element : Tables.Page_Table_Type);
-
-      ----------------------------------------------------------------------
-
-      procedure Check_Entry_Presence
-        (Key     : Table_Range;
-         Element : Tables.Page_Table_Type)
-      is
-         pragma Unreferenced (Key);
-      begin
-         Result := Tables.Contains
-           (Table => Element,
-            Index => Entry_Index);
-      end Check_Entry_Presence;
    begin
       if Pos /= Tables_Map_Package.No_Element then
-         Tables_Map_Package.Query_Element
-           (Position => Pos,
-            Process  => Check_Entry_Presence'Access);
+         Result := Tables.Contains
+           (Table => Tables_Map_Package.Element (Position => Pos).Data.all,
+            Index => Entry_Index);
       end if;
 
       return Result;
    end Contains;
+
+   -------------------------------------------------------------------------
+
+   procedure Finalize (Map : in out Page_Table_Map)
+   is
+   begin
+      Clear (Map => Map);
+   end Finalize;
 
    -------------------------------------------------------------------------
 
@@ -119,9 +112,9 @@ is
       return Entries.Table_Entry_Type
    is
       use type Tables_Map_Package.Cursor;
-
       Pos : constant Tables_Map_Package.Cursor := Map.Tables.Find
-        (Key => Table_Number);
+        (Item => (Index => Table_Number,
+                  Data  => null));
    begin
       if Pos = Tables_Map_Package.No_Element then
          raise Missing_Table with "Table with number" & Table_Number'Img
@@ -129,7 +122,7 @@ is
       end if;
 
       return Tables.Get_Entry
-        (Table => Tables_Map_Package.Element (Position => Pos),
+        (Table => Tables_Map_Package.Element (Position => Pos).Data.all,
          Index => Entry_Index);
    end Get_Entry;
 
@@ -143,7 +136,8 @@ is
       use type Tables_Map_Package.Cursor;
 
       Pos : constant Tables_Map_Package.Cursor := Map.Tables.Find
-        (Key => Table_Number);
+        (Item => (Index => Table_Number,
+                  Data  => null));
    begin
       if Pos = Tables_Map_Package.No_Element then
          raise Missing_Table with "Table with number" & Table_Number'Img
@@ -151,7 +145,7 @@ is
       end if;
 
       return Tables.Get_Physical_Address
-        (Table => Tables_Map_Package.Element (Position => Pos));
+        (Table => Tables_Map_Package.Element (Position => Pos).Data.all);
    end Get_Table_Address;
 
    -------------------------------------------------------------------------
@@ -167,10 +161,11 @@ is
 
       procedure Call_Process (Pos : Tables_Map_Package.Cursor)
       is
+         Elem : constant Table_Map_Type
+           := Tables_Map_Package.Element (Position => Pos);
       begin
-         Process
-           (Table_Number => Tables_Map_Package.Key (Position => Pos),
-            Table        => Tables_Map_Package.Element (Position => Pos));
+         Process (Table_Number => Elem.Index,
+                  Table        => Elem.Data.all);
       end Call_Process;
    begin
       Map.Tables.Iterate (Process => Call_Process'Access);
@@ -197,9 +192,11 @@ is
 
       procedure Call_Process (Pos : Tables_Map_Package.Cursor)
       is
+         Elem : constant Table_Map_Type
+           := Tables_Map_Package.Element (Position => Pos);
       begin
-         Map.Tables.Update_Element (Position => Pos,
-                                    Process  => Process);
+         Process (Table_Number => Elem.Index,
+                  Table        => Elem.Data.all);
       end Call_Process;
    begin
       Map.Tables.Iterate (Process => Call_Process'Access);

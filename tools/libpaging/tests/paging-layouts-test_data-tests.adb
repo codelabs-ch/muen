@@ -30,6 +30,26 @@ package body Paging.Layouts.Test_Data.Tests is
 --  end read only
 
 --  begin read only
+   procedure Test_Null_Layout (Gnattest_T : in out Test);
+   procedure Test_Null_Layout_fb82a8 (Gnattest_T : in out Test) renames Test_Null_Layout;
+--  id:2.2/fb82a8b86bd3df7f/Null_Layout/1/0/
+   procedure Test_Null_Layout (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Layout : constant Memory_Layout_Type := Null_Layout;
+   begin
+      Assert (Condition => Layout.Levels = 4,
+              Message   => "Null layout levels mismatch");
+      Assert (Condition => Layout.Use_Large_Pages,
+              Message   => "Null layout use large pages mismatch");
+--  begin read only
+   end Test_Null_Layout;
+--  end read only
+
+
+--  begin read only
    procedure Test_Set_Address (Gnattest_T : in out Test);
    procedure Test_Set_Address_9d0225 (Gnattest_T : in out Test) renames Test_Set_Address;
 --  id:2.2/9d0225d7a0c1251e/Set_Address/1/0/

@@ -40,6 +40,7 @@ with Log;
 with Subject_Info;
 with Timed_Events;
 with Interrupt_Handler;
+with Memory_Fills;
 
 with Example_Component.Config;
 with Example_Component.Events;
@@ -91,6 +92,10 @@ begin
                  (Item => SK.Word64 (Mucontrol.Status.Instance.Get)));
    Log.Put_Line (Item => "Current Epoch : " & SK.Strings.Img
                  (Item => Cur_Epoch));
+
+   --  Check contents of filled memory region.
+
+   Memory_Fills.Validate_Region_Content;
 
    --  Enable interrupts.
 

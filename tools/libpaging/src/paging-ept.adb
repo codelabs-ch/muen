@@ -332,14 +332,14 @@ is
       is
       begin
          Raw_Table (Index) := Create_Dir_Entry
-           (Address     => TEntry.Get_Dst_Address,
-            Present     => TEntry.Is_Present,
-            Readable    => TEntry.Is_Readable,
-            Writable    => TEntry.Is_Writable,
-            Executable  => TEntry.Is_Executable,
-            Map_Page    => TEntry.Maps_Page,
+           (Address     => Entries.Get_Dst_Address (TEntry),
+            Present     => Entries.Is_Present (TEntry),
+            Readable    => Entries.Is_Readable (TEntry),
+            Writable    => Entries.Is_Writable (TEntry),
+            Executable  => Entries.Is_Executable (TEntry),
+            Map_Page    => Entries.Maps_Page (TEntry),
             Ignore_PAT  => True,
-            Memory_Type => TEntry.Get_Caching);
+            Memory_Type => Entries.Get_Caching (TEntry));
       end Add_To_Raw_Table;
    begin
       Tables.Iterate (Table   => Table,
@@ -368,14 +368,14 @@ is
       is
       begin
          Raw_Table (Index) := Create_Dir_Entry
-           (Address     => TEntry.Get_Dst_Address,
-            Present     => TEntry.Is_Present,
-            Readable    => TEntry.Is_Readable,
-            Writable    => TEntry.Is_Writable,
-            Executable  => TEntry.Is_Executable,
-            Map_Page    => TEntry.Maps_Page,
+           (Address     => Entries.Get_Dst_Address (TEntry),
+            Present     => Entries.Is_Present (TEntry),
+            Readable    => Entries.Is_Readable (TEntry),
+            Writable    => Entries.Is_Writable (TEntry),
+            Executable  => Entries.Is_Executable (TEntry),
+            Map_Page    => Entries.Maps_Page (TEntry),
             Ignore_PAT  => True,
-            Memory_Type => TEntry.Get_Caching);
+            Memory_Type => Entries.Get_Caching (TEntry));
       end Add_To_Raw_Table;
    begin
       Tables.Iterate (Table   => Table,
@@ -404,11 +404,11 @@ is
       is
       begin
          Raw_Table (Index) := Create_Entry
-           (Address    => TEntry.Get_Dst_Address,
-            Present    => TEntry.Is_Present,
-            Readable   => TEntry.Is_Readable,
-            Writable   => TEntry.Is_Writable,
-            Executable => TEntry.Is_Executable);
+           (Address    => Entries.Get_Dst_Address (TEntry),
+            Present    => Entries.Is_Present (TEntry),
+            Readable   => Entries.Is_Readable (TEntry),
+            Writable   => Entries.Is_Writable (TEntry),
+            Executable => Entries.Is_Executable (TEntry));
       end Add_To_Raw_Table;
    begin
       Tables.Iterate (Table   => Table,
@@ -437,14 +437,14 @@ is
       is
       begin
          Raw_Table (Index) := Create_Map_Entry
-           (Address     => TEntry.Get_Dst_Address,
-            Present     => TEntry.Is_Present,
-            Readable    => TEntry.Is_Readable,
-            Writable    => TEntry.Is_Writable,
-            Executable  => TEntry.Is_Executable,
-            Map_Page    => TEntry.Maps_Page,
+           (Address     => Entries.Get_Dst_Address (TEntry),
+            Present     => Entries.Is_Present (TEntry),
+            Readable    => Entries.Is_Readable (TEntry),
+            Writable    => Entries.Is_Writable (TEntry),
+            Executable  => Entries.Is_Executable (TEntry),
+            Map_Page    => Entries.Maps_Page (TEntry),
             Ignore_PAT  => True,
-            Memory_Type => TEntry.Get_Caching);
+            Memory_Type => Entries.Get_Caching (TEntry));
       end Add_To_Raw_Table;
    begin
       Tables.Iterate (Table   => Table,

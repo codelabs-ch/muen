@@ -32,6 +32,7 @@
    <if variable="ahci_drv_enabled" value="true">
     <memory executable="false" logical="blockdev_shm2" size="16#0100_0000#" writable="true"/>
    </if>
+   <memory executable="false" logical="filled_region" size="16#1000#" writable="true"/>
   </memory>
   <channels>
    <reader logical="example_request" size="16#1000#" vector="auto"/>

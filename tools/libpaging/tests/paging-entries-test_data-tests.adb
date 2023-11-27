@@ -3,7 +3,7 @@
 --  Such changes will be kept during further regeneration of this file.
 --  All code placed outside of test routine bodies will be lost. The
 --  code intended to set up and tear down the test environment should be
---  placed into Paging.Entries.Table_Entry_Type_Test_Data.
+--  placed into Paging.Entries.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
 with System.Assertions;
@@ -17,7 +17,7 @@ with System.Assertions;
 
 --  begin read only
 --  end read only
-package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
+package body Paging.Entries.Test_Data.Tests is
 
 --  begin read only
 --  id:2.2/01/
@@ -30,10 +30,10 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
 --  end read only
 
 --  begin read only
-   procedure Test_Create (Gnattest_T : in out Test_Table_Entry_Type);
-   procedure Test_Create_161e77 (Gnattest_T : in out Test_Table_Entry_Type) renames Test_Create;
+   procedure Test_Create (Gnattest_T : in out Test);
+   procedure Test_Create_161e77 (Gnattest_T : in out Test) renames Test_Create;
 --  id:2.2/161e77e82fda3da2/Create/1/0/
-   procedure Test_Create (Gnattest_T : in out Test_Table_Entry_Type) is
+   procedure Test_Create (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -56,7 +56,7 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
               Message   => "Dst offset mismatch");
       Assert (Condition => TEntry.Dst_Address = 16#1f_f000#,
               Message   => "Dst address mismatch");
-      Assert (Condition => not TEntry.Is_Present,
+      Assert (Condition => not Is_Present (E => TEntry),
               Message   => "Present");
       Assert (Condition => TEntry.Readable,
               Message   => "Not readable");
@@ -76,10 +76,10 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
 
 
 --  begin read only
-   procedure Test_Get_Dst_Table_Index (Gnattest_T : in out Test_Table_Entry_Type);
-   procedure Test_Get_Dst_Table_Index_3a8ec3 (Gnattest_T : in out Test_Table_Entry_Type) renames Test_Get_Dst_Table_Index;
+   procedure Test_Get_Dst_Table_Index (Gnattest_T : in out Test);
+   procedure Test_Get_Dst_Table_Index_3a8ec3 (Gnattest_T : in out Test) renames Test_Get_Dst_Table_Index;
 --  id:2.2/3a8ec3d3f6058b3d/Get_Dst_Table_Index/1/0/
-   procedure Test_Get_Dst_Table_Index (Gnattest_T : in out Test_Table_Entry_Type) is
+   procedure Test_Get_Dst_Table_Index (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -93,10 +93,10 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
 
 
 --  begin read only
-   procedure Test_Get_Dst_Address (Gnattest_T : in out Test_Table_Entry_Type);
-   procedure Test_Get_Dst_Address_17828e (Gnattest_T : in out Test_Table_Entry_Type) renames Test_Get_Dst_Address;
+   procedure Test_Get_Dst_Address (Gnattest_T : in out Test);
+   procedure Test_Get_Dst_Address_17828e (Gnattest_T : in out Test) renames Test_Get_Dst_Address;
 --  id:2.2/17828eb746e595fc/Get_Dst_Address/1/0/
-   procedure Test_Get_Dst_Address (Gnattest_T : in out Test_Table_Entry_Type) is
+   procedure Test_Get_Dst_Address (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -111,10 +111,10 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
 
 
 --  begin read only
-   procedure Test_Set_Dst_Address (Gnattest_T : in out Test_Table_Entry_Type);
-   procedure Test_Set_Dst_Address_c21cb9 (Gnattest_T : in out Test_Table_Entry_Type) renames Test_Set_Dst_Address;
+   procedure Test_Set_Dst_Address (Gnattest_T : in out Test);
+   procedure Test_Set_Dst_Address_c21cb9 (Gnattest_T : in out Test) renames Test_Set_Dst_Address;
 --  id:2.2/c21cb91d98cddfe9/Set_Dst_Address/1/0/
-   procedure Test_Set_Dst_Address (Gnattest_T : in out Test_Table_Entry_Type) is
+   procedure Test_Set_Dst_Address (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -133,10 +133,10 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
 
 
 --  begin read only
-   procedure Test_Is_Present (Gnattest_T : in out Test_Table_Entry_Type);
-   procedure Test_Is_Present_b4af0c (Gnattest_T : in out Test_Table_Entry_Type) renames Test_Is_Present;
+   procedure Test_Is_Present (Gnattest_T : in out Test);
+   procedure Test_Is_Present_b4af0c (Gnattest_T : in out Test) renames Test_Is_Present;
 --  id:2.2/b4af0c02e50428f8/Is_Present/1/0/
-   procedure Test_Is_Present (Gnattest_T : in out Test_Table_Entry_Type) is
+   procedure Test_Is_Present (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -161,10 +161,10 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
 
 
 --  begin read only
-   procedure Test_Is_Readable (Gnattest_T : in out Test_Table_Entry_Type);
-   procedure Test_Is_Readable_a3f083 (Gnattest_T : in out Test_Table_Entry_Type) renames Test_Is_Readable;
+   procedure Test_Is_Readable (Gnattest_T : in out Test);
+   procedure Test_Is_Readable_a3f083 (Gnattest_T : in out Test) renames Test_Is_Readable;
 --  id:2.2/a3f083bb8d1d64f6/Is_Readable/1/0/
-   procedure Test_Is_Readable (Gnattest_T : in out Test_Table_Entry_Type) is
+   procedure Test_Is_Readable (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -178,10 +178,10 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
 
 
 --  begin read only
-   procedure Test_Is_Writable (Gnattest_T : in out Test_Table_Entry_Type);
-   procedure Test_Is_Writable_4b4e3f (Gnattest_T : in out Test_Table_Entry_Type) renames Test_Is_Writable;
+   procedure Test_Is_Writable (Gnattest_T : in out Test);
+   procedure Test_Is_Writable_4b4e3f (Gnattest_T : in out Test) renames Test_Is_Writable;
 --  id:2.2/4b4e3f0710c4652e/Is_Writable/1/0/
-   procedure Test_Is_Writable (Gnattest_T : in out Test_Table_Entry_Type) is
+   procedure Test_Is_Writable (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -195,10 +195,10 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
 
 
 --  begin read only
-   procedure Test_Is_Executable (Gnattest_T : in out Test_Table_Entry_Type);
-   procedure Test_Is_Executable_3e2d63 (Gnattest_T : in out Test_Table_Entry_Type) renames Test_Is_Executable;
+   procedure Test_Is_Executable (Gnattest_T : in out Test);
+   procedure Test_Is_Executable_3e2d63 (Gnattest_T : in out Test) renames Test_Is_Executable;
 --  id:2.2/3e2d635bdaa67355/Is_Executable/1/0/
-   procedure Test_Is_Executable (Gnattest_T : in out Test_Table_Entry_Type) is
+   procedure Test_Is_Executable (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -212,10 +212,10 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
 
 
 --  begin read only
-   procedure Test_Maps_Page (Gnattest_T : in out Test_Table_Entry_Type);
-   procedure Test_Maps_Page_4c3f51 (Gnattest_T : in out Test_Table_Entry_Type) renames Test_Maps_Page;
+   procedure Test_Maps_Page (Gnattest_T : in out Test);
+   procedure Test_Maps_Page_4c3f51 (Gnattest_T : in out Test) renames Test_Maps_Page;
 --  id:2.2/4c3f511d997b690a/Maps_Page/1/0/
-   procedure Test_Maps_Page (Gnattest_T : in out Test_Table_Entry_Type) is
+   procedure Test_Maps_Page (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -229,10 +229,10 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
 
 
 --  begin read only
-   procedure Test_Is_Global (Gnattest_T : in out Test_Table_Entry_Type);
-   procedure Test_Is_Global_aeaec3 (Gnattest_T : in out Test_Table_Entry_Type) renames Test_Is_Global;
+   procedure Test_Is_Global (Gnattest_T : in out Test);
+   procedure Test_Is_Global_aeaec3 (Gnattest_T : in out Test) renames Test_Is_Global;
 --  id:2.2/aeaec3a5b655240a/Is_Global/1/0/
-   procedure Test_Is_Global (Gnattest_T : in out Test_Table_Entry_Type) is
+   procedure Test_Is_Global (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -246,10 +246,10 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
 
 
 --  begin read only
-   procedure Test_Get_Caching (Gnattest_T : in out Test_Table_Entry_Type);
-   procedure Test_Get_Caching_b6648c (Gnattest_T : in out Test_Table_Entry_Type) renames Test_Get_Caching;
+   procedure Test_Get_Caching (Gnattest_T : in out Test);
+   procedure Test_Get_Caching_b6648c (Gnattest_T : in out Test) renames Test_Get_Caching;
 --  id:2.2/b6648c05e48c90b4/Get_Caching/1/0/
-   procedure Test_Get_Caching (Gnattest_T : in out Test_Table_Entry_Type) is
+   procedure Test_Get_Caching (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -271,4 +271,4 @@ begin
    null;
 --  begin read only
 --  end read only
-end Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests;
+end Paging.Entries.Test_Data.Tests;

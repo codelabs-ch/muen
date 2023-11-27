@@ -21,6 +21,8 @@ with SK.Exceptions;
 with Musinfo.Instance;
 
 package Interrupt_Handler
+with
+   Abstract_State => State
 is
 
    --  Exception/Interrupt handler.

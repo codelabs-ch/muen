@@ -27,6 +27,11 @@
      </exception>
     </masks>
    </vmx>
+   <registers>
+    <cr4>
+     <XSAVEEnable>1</XSAVEEnable>
+    </cr4>
+   </registers>
   </vcpu>
   <memory>
    <if variable="ahci_drv_enabled" value="true">

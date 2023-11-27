@@ -27,5 +27,6 @@
    <map logical="blockdev_response2" physical="blockdev_response2"/>
    <map logical="blockdev_shm2" physical="blockdev_shm2"/>
   </if>
+  <map logical="filled_region" physical="example_filled_region"/>
  </component>
 </subject>

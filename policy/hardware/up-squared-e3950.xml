@@ -13,8 +13,8 @@
        Version: V0.4
      BIOS information:
        Vendor: American Megatrends Inc.
-       Version: UPA1AM61
-       Date: 08/12/2021
+       Version: UPA1AM64
+       Date: 11/23/2022
      Log:
        * WARNING *: Adding fake irq 16 for device with MSIs: 0000:00:02.0
        * WARNING *: Adding fake irq 16 for device with MSIs: 0000:00:0f.0
@@ -32,7 +32,7 @@
     <cpu apicId="4"/>
     <cpu apicId="6"/>
     <cpuid eax="16#0000_0015#" ebx="16#756e_6547#" ecx="16#6c65_746e#" edx="16#4965_6e69#" leaf="16#0000_0000#" subleaf="16#00#"/>
-    <cpuid eax="16#0005_06c9#" ebx="16#0020_0800#" ecx="16#4ff8_ebb7#" edx="16#bfeb_fbff#" leaf="16#0000_0001#" subleaf="16#00#"/>
+    <cpuid eax="16#0005_06ca#" ebx="16#0020_0800#" ecx="16#4ff8_ebb7#" edx="16#bfeb_fbff#" leaf="16#0000_0001#" subleaf="16#00#"/>
     <cpuid eax="16#6164_a001#" ebx="16#0000_ffc4#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0002#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0003#" subleaf="16#00#"/>
     <cpuid eax="16#3c00_0121#" ebx="16#0140_003f#" ecx="16#0000_003f#" edx="16#0000_0001#" leaf="16#0000_0004#" subleaf="16#00#"/>
@@ -40,7 +40,7 @@
     <cpuid eax="16#3c00_c143#" ebx="16#03c0_003f#" ecx="16#0000_03ff#" edx="16#0000_0001#" leaf="16#0000_0004#" subleaf="16#02#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#1124_2020#" leaf="16#0000_0005#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0057#" ebx="16#0000_0002#" ecx="16#0000_0001#" edx="16#0000_0000#" leaf="16#0000_0006#" subleaf="16#00#"/>
-    <cpuid eax="16#0000_0000#" ebx="16#2294_e283#" ecx="16#0000_0000#" edx="16#2c00_0400#" leaf="16#0000_0007#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#2294_e283#" ecx="16#0000_0000#" edx="16#ac00_0400#" leaf="16#0000_0007#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0008#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0009#" subleaf="16#00#"/>
     <cpuid eax="16#0730_0404#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0603#" leaf="16#0000_000a#" subleaf="16#00#"/>
@@ -75,7 +75,7 @@
     <cpuid eax="16#0000_0003#" ebx="16#0000_00f9#" ecx="16#0124_f800#" edx="16#0000_0000#" leaf="16#8086_0000#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0003#" ebx="16#0000_00f9#" ecx="16#0124_f800#" edx="16#0000_0000#" leaf="16#c000_0000#" subleaf="16#00#"/>
     <msr address="16#0000_003a#" name="IA32_FEATURE_CONTROL" regval="16#0000_0000_0000_0005#"/>
-    <msr address="16#0000_010a#" name="IA32_ARCH_CAPABILITIES" regval="16#0000_0000_0000_0079#"/>
+    <msr address="16#0000_010a#" name="IA32_ARCH_CAPABILITIES" regval="16#0000_0000_0000_0069#"/>
     <msr address="16#0000_01a0#" name="IA32_MISC_ENABLE" regval="16#0000_0000_0081_0089#"/>
     <msr address="16#0000_0480#" name="IA32_VMX_BASIC" regval="16#00da_0400_0000_0011#"/>
     <msr address="16#0000_0481#" name="IA32_VMX_PINBASED_CTLS" regval="16#0000_00ff_0000_0016#"/>
@@ -98,16 +98,16 @@
     <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#0000#" size="16#0003_f000#"/>
     <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#0004_0000#" size="16#0005_e000#"/>
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0010_0000#" size="16#0ff0_0000#"/>
-    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#1215_1000#" size="16#657f_3000#"/>
-    <memoryBlock allocatable="false" name="ACPI Tables" physicalAddress="16#79a6_5000#" size="16#0007_d000#"/>
-    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#79ae_2000#" size="16#0006_0000#"/>
-    <memoryBlock allocatable="false" name="Unknown E820 type" physicalAddress="16#79fd_c000#" size="16#0005_0000#"/>
-    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#7a02_c000#" size="16#0036_a000#"/>
-    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#7a39_6000#" size="16#1000#"/>
-    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#7a3c_1000#" size="16#005a_5000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#1215_1000#" size="16#657e_c000#"/>
+    <memoryBlock allocatable="false" name="ACPI Tables" physicalAddress="16#79a5_e000#" size="16#0007_d000#"/>
+    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#79ad_b000#" size="16#0006_0000#"/>
+    <memoryBlock allocatable="false" name="Unknown E820 type" physicalAddress="16#79fd_a000#" size="16#0005_0000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#7a02_a000#" size="16#0036_a000#"/>
+    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#7a39_4000#" size="16#1000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#7a3b_f000#" size="16#005a_7000#"/>
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#7a96_8000#" size="16#0069_8000#"/>
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0001_0000_0000#" size="16#0001_8000_0000#"/>
-    <reservedMemory name="rmrr1" physicalAddress="16#799f_f000#" size="16#0002_0000#"/>
+    <reservedMemory name="rmrr1" physicalAddress="16#799f_8000#" size="16#0002_0000#"/>
     <reservedMemory name="rmrr2" physicalAddress="16#7b80_0000#" size="16#0480_0000#"/>
   </memory>
   <devices pciConfigAddress="16#e000_0000#" pciConfigSize="16#1000_0000#">
@@ -149,15 +149,15 @@
     <device name="host_bridge_1">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series Host Bridge</description>
       <pci bus="16#00#" device="16#00#" function="0">
-        <identification classcode="16#0600#" deviceId="16#5af0#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <identification classcode="16#0600#" deviceId="16#5af0#" revisionId="16#0d#" vendorId="16#8086#"/>
         <iommuGroup id="0"/>
       </pci>
       <memory caching="UC" name="mmconf" physicalAddress="16#e000_0000#" size="16#1000#"/>
     </device>
     <device name="vga_compatible_controller_1">
-      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series Integrated Graphics Controller</description>
+      <description>Intel Corporation Apollo Lake [HD Graphics 505]</description>
       <pci bus="16#00#" device="16#02#" function="0">
-        <identification classcode="16#0300#" deviceId="16#5a84#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <identification classcode="16#0300#" deviceId="16#5a84#" revisionId="16#0d#" vendorId="16#8086#"/>
         <iommuGroup id="1"/>
       </pci>
       <irq name="irq1" number="16">
@@ -173,7 +173,7 @@
     <device name="multimedia_audio_controller_1">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series Audio Cluster</description>
       <pci bus="16#00#" device="16#0e#" function="0">
-        <identification classcode="16#0401#" deviceId="16#5a98#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <identification classcode="16#0401#" deviceId="16#5a98#" revisionId="16#0d#" vendorId="16#8086#"/>
         <iommuGroup id="2"/>
       </pci>
       <irq name="irq1" number="25">
@@ -186,7 +186,7 @@
     <device name="communication_controller_1">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series Trusted Execution Engine</description>
       <pci bus="16#00#" device="16#0f#" function="0">
-        <identification classcode="16#0780#" deviceId="16#5a9a#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <identification classcode="16#0780#" deviceId="16#5a9a#" revisionId="16#0d#" vendorId="16#8086#"/>
         <iommuGroup id="3"/>
       </pci>
       <irq name="irq1" number="16">
@@ -198,7 +198,7 @@
     <device name="sata_controller_1">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series SATA AHCI Controller</description>
       <pci bus="16#00#" device="16#12#" function="0">
-        <identification classcode="16#0106#" deviceId="16#5ae3#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <identification classcode="16#0106#" deviceId="16#5ae3#" revisionId="16#0d#" vendorId="16#8086#"/>
         <iommuGroup id="4"/>
       </pci>
       <irq name="irq1" number="16">
@@ -215,7 +215,7 @@
     <device name="usb_controller_1">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series USB xHCI</description>
       <pci bus="16#00#" device="16#15#" function="0">
-        <identification classcode="16#0c03#" deviceId="16#5aa8#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <identification classcode="16#0c03#" deviceId="16#5aa8#" revisionId="16#0d#" vendorId="16#8086#"/>
         <iommuGroup id="7"/>
       </pci>
       <irq name="irq1" number="17">
@@ -234,7 +234,7 @@
     </device>
     <device name="usb_controller_2">
       <pci bus="16#00#" device="16#15#" function="1">
-        <identification classcode="16#0c03#" deviceId="16#5aaa#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <identification classcode="16#0c03#" deviceId="16#5aaa#" revisionId="16#0d#" vendorId="16#8086#"/>
         <iommuGroup id="7"/>
       </pci>
       <irq name="irq1" number="13"/>
@@ -246,7 +246,7 @@
     <device name="signal_processing_controller_1">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series I2C Controller #1</description>
       <pci bus="16#00#" device="16#16#" function="0">
-        <identification classcode="16#1180#" deviceId="16#5aac#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <identification classcode="16#1180#" deviceId="16#5aac#" revisionId="16#0d#" vendorId="16#8086#"/>
         <iommuGroup id="8"/>
       </pci>
       <irq name="irq1" number="27"/>
@@ -257,7 +257,7 @@
     <device name="signal_processing_controller_2">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series I2C Controller #2</description>
       <pci bus="16#00#" device="16#16#" function="1">
-        <identification classcode="16#1180#" deviceId="16#5aae#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <identification classcode="16#1180#" deviceId="16#5aae#" revisionId="16#0d#" vendorId="16#8086#"/>
         <iommuGroup id="8"/>
       </pci>
       <irq name="irq1" number="28"/>
@@ -268,7 +268,7 @@
     <device name="signal_processing_controller_3">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series I2C Controller #3</description>
       <pci bus="16#00#" device="16#16#" function="2">
-        <identification classcode="16#1180#" deviceId="16#5ab0#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <identification classcode="16#1180#" deviceId="16#5ab0#" revisionId="16#0d#" vendorId="16#8086#"/>
         <iommuGroup id="8"/>
       </pci>
       <irq name="irq1" number="29"/>
@@ -279,7 +279,7 @@
     <device name="signal_processing_controller_4">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series I2C Controller #4</description>
       <pci bus="16#00#" device="16#16#" function="3">
-        <identification classcode="16#1180#" deviceId="16#5ab2#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <identification classcode="16#1180#" deviceId="16#5ab2#" revisionId="16#0d#" vendorId="16#8086#"/>
         <iommuGroup id="8"/>
       </pci>
       <irq name="irq1" number="30"/>
@@ -290,7 +290,7 @@
     <device name="signal_processing_controller_5">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series I2C Controller #5</description>
       <pci bus="16#00#" device="16#17#" function="0">
-        <identification classcode="16#1180#" deviceId="16#5ab4#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <identification classcode="16#1180#" deviceId="16#5ab4#" revisionId="16#0d#" vendorId="16#8086#"/>
         <iommuGroup id="9"/>
       </pci>
       <irq name="irq1" number="31"/>
@@ -301,7 +301,7 @@
     <device name="signal_processing_controller_6">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series I2C Controller #6</description>
       <pci bus="16#00#" device="16#17#" function="1">
-        <identification classcode="16#1180#" deviceId="16#5ab6#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <identification classcode="16#1180#" deviceId="16#5ab6#" revisionId="16#0d#" vendorId="16#8086#"/>
         <iommuGroup id="9"/>
       </pci>
       <irq name="irq1" number="32"/>
@@ -312,7 +312,7 @@
     <device name="signal_processing_controller_7">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series I2C Controller #7</description>
       <pci bus="16#00#" device="16#17#" function="2">
-        <identification classcode="16#1180#" deviceId="16#5ab8#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <identification classcode="16#1180#" deviceId="16#5ab8#" revisionId="16#0d#" vendorId="16#8086#"/>
         <iommuGroup id="9"/>
       </pci>
       <irq name="irq1" number="33"/>
@@ -323,7 +323,7 @@
     <device name="signal_processing_controller_8">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series I2C Controller #8</description>
       <pci bus="16#00#" device="16#17#" function="3">
-        <identification classcode="16#1180#" deviceId="16#5aba#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <identification classcode="16#1180#" deviceId="16#5aba#" revisionId="16#0d#" vendorId="16#8086#"/>
         <iommuGroup id="9"/>
       </pci>
       <irq name="irq1" number="34"/>
@@ -334,7 +334,7 @@
     <device name="signal_processing_controller_9">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series HSUART Controller #1</description>
       <pci bus="16#00#" device="16#18#" function="0">
-        <identification classcode="16#1180#" deviceId="16#5abc#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <identification classcode="16#1180#" deviceId="16#5abc#" revisionId="16#0d#" vendorId="16#8086#"/>
         <iommuGroup id="10"/>
       </pci>
       <irq name="irq1" number="4"/>
@@ -345,7 +345,7 @@
     <device name="signal_processing_controller_10">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series HSUART Controller #2</description>
       <pci bus="16#00#" device="16#18#" function="1">
-        <identification classcode="16#1180#" deviceId="16#5abe#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <identification classcode="16#1180#" deviceId="16#5abe#" revisionId="16#0d#" vendorId="16#8086#"/>
         <iommuGroup id="10"/>
       </pci>
       <irq name="irq1" number="5"/>
@@ -356,7 +356,7 @@
     <device name="signal_processing_controller_11">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series SPI Controller #1</description>
       <pci bus="16#00#" device="16#19#" function="0">
-        <identification classcode="16#1180#" deviceId="16#5ac2#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <identification classcode="16#1180#" deviceId="16#5ac2#" revisionId="16#0d#" vendorId="16#8086#"/>
         <iommuGroup id="11"/>
       </pci>
       <irq name="irq1" number="35"/>
@@ -367,7 +367,7 @@
     <device name="signal_processing_controller_12">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series SPI Controller #2</description>
       <pci bus="16#00#" device="16#19#" function="1">
-        <identification classcode="16#1180#" deviceId="16#5ac4#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <identification classcode="16#1180#" deviceId="16#5ac4#" revisionId="16#0d#" vendorId="16#8086#"/>
         <iommuGroup id="11"/>
       </pci>
       <irq name="irq1" number="36"/>
@@ -378,7 +378,7 @@
     <device name="signal_processing_controller_13">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series SPI Controller #3</description>
       <pci bus="16#00#" device="16#19#" function="2">
-        <identification classcode="16#1180#" deviceId="16#5ac6#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <identification classcode="16#1180#" deviceId="16#5ac6#" revisionId="16#0d#" vendorId="16#8086#"/>
         <iommuGroup id="11"/>
       </pci>
       <irq name="irq1" number="37"/>
@@ -389,7 +389,7 @@
     <device name="serial_bus_controller_1">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series PWM Pin Controller</description>
       <pci bus="16#00#" device="16#1a#" function="0">
-        <identification classcode="16#0c80#" deviceId="16#5ac8#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <identification classcode="16#0c80#" deviceId="16#5ac8#" revisionId="16#0d#" vendorId="16#8086#"/>
         <iommuGroup id="12"/>
       </pci>
       <memory caching="UC" name="mem1" physicalAddress="16#9161_c000#" size="16#1000#"/>
@@ -399,7 +399,7 @@
     <device name="sd_host_controller_1">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series eMMC Controller</description>
       <pci bus="16#00#" device="16#1c#" function="0">
-        <identification classcode="16#0805#" deviceId="16#5acc#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <identification classcode="16#0805#" deviceId="16#5acc#" revisionId="16#0d#" vendorId="16#8086#"/>
         <iommuGroup id="13"/>
       </pci>
       <irq name="irq1" number="39"/>
@@ -410,7 +410,7 @@
     <device name="sd_host_controller_2">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series SDIO Controller</description>
       <pci bus="16#00#" device="16#1e#" function="0">
-        <identification classcode="16#0805#" deviceId="16#5ad0#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <identification classcode="16#0805#" deviceId="16#5ad0#" revisionId="16#0d#" vendorId="16#8086#"/>
         <iommuGroup id="14"/>
       </pci>
       <irq name="irq1" number="42"/>
@@ -421,7 +421,7 @@
     <device name="isa_bridge_1">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series Low Pin Count Interface</description>
       <pci bus="16#00#" device="16#1f#" function="0">
-        <identification classcode="16#0601#" deviceId="16#5ae8#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <identification classcode="16#0601#" deviceId="16#5ae8#" revisionId="16#0d#" vendorId="16#8086#"/>
         <iommuGroup id="15"/>
       </pci>
       <memory caching="UC" name="mmconf" physicalAddress="16#e00f_8000#" size="16#1000#"/>
@@ -429,7 +429,7 @@
     <device name="smbus_1">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series SMBus Controller</description>
       <pci bus="16#00#" device="16#1f#" function="1">
-        <identification classcode="16#0c05#" deviceId="16#5ad4#" revisionId="16#0b#" vendorId="16#8086#"/>
+        <identification classcode="16#0c05#" deviceId="16#5ad4#" revisionId="16#0d#" vendorId="16#8086#"/>
         <iommuGroup id="15"/>
       </pci>
       <memory caching="UC" name="mem1" physicalAddress="16#9161_6000#" size="16#1000#"/>

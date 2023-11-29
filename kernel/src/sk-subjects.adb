@@ -76,6 +76,12 @@ is
    --  "3.4.2 Segment Selectors".
    SEGMENT_SELECTOR_PL_MASK : constant := 2#11#;
 
+   --  Guest interruptibility state, see Intel SDM Vol. 3C,
+   --  "24.4.2 Guest Non-Register State".
+   --   Bit 0: Blocking by STI
+   --   Bit 1: Blocking by MOV SS
+   INTERRUPTIBILITY_BLOCK_MASK : constant SK.Word32 := 2#11#;
+
    -------------------------------------------------------------------------
 
    --  Stores the VMCS guest selector and descriptor information of the segment
@@ -230,14 +236,25 @@ is
       Refined_Post    => Descriptors (ID).Data.RIP =
         Descriptors (ID).Data.RIP'Old + Word64
        (Descriptors (ID).Data.Instruction_Len)
+        and
+       (Descriptors (ID).Data.Intr_State and INTERRUPTIBILITY_BLOCK_MASK) = 0
    is
       --D @Text Section => hypercall_handling, Priority => 10
       --D The RIP of the subject is incremented by the value of the current
       --D instruction length.
-      Next_RIP : constant Word64 := Descriptors (ID).Data.RIP +
-                   Word64 (Descriptors (ID).Data.Instruction_Len);
+      Next_RIP   : constant Word64 := Descriptors (ID).Data.RIP +
+        Word64 (Descriptors (ID).Data.Instruction_Len);
+      Intr_State : constant SK.Word32 := Descriptors (ID).Data.Intr_State;
    begin
       Descriptors (ID).Data.RIP := Next_RIP;
+
+      --  Clear any interrupt blocking which might have been in effect for the
+      --  emulated instruction which is being skipped by incrementing the RIP.
+
+      if (Intr_State and INTERRUPTIBILITY_BLOCK_MASK) /= 0 then
+         Descriptors (ID).Data.Intr_State
+           := Intr_State and not INTERRUPTIBILITY_BLOCK_MASK;
+      end if;
    end Increment_RIP;
 
    -------------------------------------------------------------------------

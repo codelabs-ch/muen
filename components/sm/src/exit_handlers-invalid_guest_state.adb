@@ -70,8 +70,7 @@ is
          Is_BSP := Is_Protected_Mode_Enabled;
          if not Is_BSP then
             Debug_Ops.Put_Line (Item => "Waiting for AP wakeup event");
-            SK.CPU.Sti;
-            SK.CPU.Hlt;
+            SK.CPU.Wait_For_Interrupt;
             SK.CPU.Cli;
             Debug_Ops.Put_Line (Item => "AP wakeup event received");
          end if;

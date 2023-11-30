@@ -188,8 +188,7 @@ is
       loop
          SK.CPU.Cli;
          if not Has_Pending_Data then
-            SK.CPU.Sti;
-            SK.CPU.Hlt;
+            SK.CPU.Wait_For_Interrupt;
          else
             SK.CPU.Sti;
          end if;

@@ -71,7 +71,8 @@ is
       Ctx.Bank_Count_OK := Bank_Count <= Crash_Audit_Types.MCE_Max_Banks;
       pragma Debug (not Ctx.Bank_Count_OK,
                     KC.Put_Line
-                      (Item => "Init: Unsupported number of MCE banks"));
+                      (Item => "Init: Unsupported number of MCE banks "
+                       & Strings.Img (Bank_Count)));
 
       Is_Valid := Ctx.Bank_Count_OK and Ctx.MCE_Support and Ctx.MCA_Support;
    end Check_State;

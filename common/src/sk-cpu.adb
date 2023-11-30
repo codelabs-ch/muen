@@ -314,6 +314,25 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Wait_For_Interrupt
+   with
+      SPARK_Mode => Off
+   is
+   begin
+
+      --  This instruction sequence needs to be part of the same assembler code
+      --  block since sti only blocks interrupts for the next instruction
+      --  immediately following it. Otherwise, if an interrupt occurs between
+      --  sti and the eventual hlt, the code might stay halted until the next
+      --  interrupt occurs.
+
+      System.Machine_Code.Asm
+        (Template => "sti; hlt",
+         Volatile => True);
+   end Wait_For_Interrupt;
+
+   -------------------------------------------------------------------------
+
    procedure Write_MSR
      (Register : SK.Word32;
       Low      : SK.Word32;

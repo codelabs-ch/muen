@@ -54,3 +54,7 @@ $(OBJ_DIR)/%.lintok: $(COMPONENT_TARGETS) $(LINT_XML) | $(OBJ_DIR)
 	@$(E) $(COMPONENT) "Xmllint $*" \
 		"xmllint --noout --schema generated/system_$(*:format_%.xml=%).xsd data/$*"
 	@touch $@
+
+
+doc/graph_integration_overview.pdf: doc/graph_integration_overview.tex
+	cd doc && pdflatex graph_integration_overview.tex && cd ..

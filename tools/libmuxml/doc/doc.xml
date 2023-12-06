@@ -160,7 +160,7 @@
   <section id="policy-format" label="Policy Format" priority="0">
    <text priority="0">
     The system policy is specified in XML. There are currently three different
-    policy formats:
+    main policy formats:
 
     \begin{itemize}
     \item Source Format
@@ -190,6 +190,10 @@
     thus considered \emph{internal}. While it is possible to specify a system
     policy in format A or B, it is not recommended.
     \end{warning}
+
+    Additionally to these three main formats, there may be extended versions
+    of these formats if plugins are used.
+    See Section~\ref{toolchain-plugin_system} for details about the plugin system.
    </text>
 
    <section id="policy-format-src" label="Source Format" priority="0">
@@ -442,9 +446,9 @@
     sections explain each processing step while section \ref{toolchain-core-tools}
     describes each tool separately.
 
-    \begin{figure}[h!]
+    \begin{figure}[ht!]
     \centering
-    \input{graph_build_process}
+    \makebox[\textwidth][c]{\includegraphics[width=\pagewidth-2cm]{graph_integration_overview.pdf}}
     \caption{Build process}
     \label{fig:build-process}
     \end{figure}
@@ -1173,6 +1177,34 @@
    </section>
   </section> <!-- toolchain-core-tools -->
 
+  <section id="toolchain-plugin_system" label="Toolchain Plugin System" priority="0">
+    <text priority="0">
+      As visible in Figure~\ref{fig:build-process}, the build process includes
+      two steps where plugins may be inserted if needed.
+      The intention of the plugin system is to simplify the introduction of
+      small, less critical modifications to the toolchain and keep those
+      separate from the ``core``-toolchain of Muen.
+      A tool is considered to be part of the core-toolchains if it is \textit{needed}
+      to build the bootable system image.
+      Additionally, \texttt{Mucfgvalidate} is considered part of the core-toolchain, too.
+
+      An example of a plugin is the documentation-plugin (see \ref{toolchain-plugin-doc-transfer}).
+      It can help to build documentation for a system and the user can easily adjust
+      its functionality and the underlying XSD-schema as needed.
+      Similarly, a plugin can be used to extend the automatically generated headers of components.
+
+      To hide the additional information in the policy from tools that may not be
+      able to digest them, \texttt{muxmlfilter}
+      (see~\ref{tools-mucfgfilter}) is used to remove such parts of the policy before processing it.
+      That way, changes in the plugins have minimal impact on the core toolchain.
+
+      To enable the validation of extended policies, the plugin system includes tools
+      that extend policy format definitions.
+      Hence, there may be extended versions of Source Format, Format A and Format B,
+      depending on plugin usage.
+    </text>
+  </section>
+
   <section id="toolchain-additional-tools" label="Additional Tools" priority="0">
    <text priority="0">
     This section lists additional helper tools which simplify the process of
@@ -1354,6 +1386,56 @@
      The system policy is left unchanged if the tool does not find an applicable
      MCU for the target processor.
     </text>
+   </section>
+
+   <section id="tools-mucfgfilter" label="XML filtering tool" priority="0">
+     <text priority="0">
+       The \texttt{muxmlfilter} tool can filter a given XML-file such that
+       the output satisfies a given schema definition.
+
+       \begin{description} \itemsep1pt \parskip0pt
+       \item[Name] \hfill \\
+       \texttt{muxmlfilter}
+       \item[Input] \hfill \\
+       XSD-Schema, XML-file
+       \item[Output] \hfill \\
+       Filtered XML-file where all nodes not allowed by the given schema have been deleted
+       \end{description}
+
+       The filter is intended for XML files that satisfy the target schema,
+       except for some added element-nodes that are not allowed by the schema.
+       The possibility to filter out some elements is needed
+       to make toolchain-plugins possible (see \ref{toolchain-plugin_system}).
+
+       The given schema can either be one of the build-in schemata (in which case it can be given by name),
+       or it can be specified by a file-path.
+       While \texttt{muxmlfilter} is not specific to muen policies,
+       the used schema needs to satisfy a number of technical restrictions.
+       These are described in \texttt{tools/libmuxml/schema\_plugins/README.md}
+     </text>
+   </section>
+
+   <section id="toolchain-plugin-doc-transfer" label="Documentation transfer plugin" priority="0">
+     <text priority="0">
+       The \texttt{doc\_transfer} script can extend a given policy B with documentation nodes.
+
+       \begin{description} \itemsep1pt \parskip0pt
+       \item[Name] \hfill \\
+       \texttt{toolchain\_plugin-doc\_transfer}
+       \item[Input] \hfill \\
+       Policy B XML-file, joined policy XML-file
+       \item[Output] \hfill \\
+       Policy B with added documentation
+       \end{description}
+
+       The tool processes the given joined policy and extracts a list of target
+       XPath-addresses paired with an XML-node containing documentation.
+       This list is then applied to the given policy B, which effectively transfers
+       documentation from the given joined policy to the given policy B.
+       This way, documentation information that was present in policy src can be reinserted in
+       policy B.
+       The amended policy B can serve as a single source for documentation information.
+     </text>
    </section>
 
    <!-- XXX: Add description of muwalkpt -->

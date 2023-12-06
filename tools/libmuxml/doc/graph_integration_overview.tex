@@ -15,7 +15,7 @@
 \tikzstyle{bluebox}=[shadowbox, fill=CornflowerBlue!50]
 \tikzstyle{redbox}=[shadowbox, fill=Red!50]
 \tikzstyle{blackbox}=[shadowbox, fill=Black!65, text=White]
-\tikzstyle{arrow}=[->, -latex, line width=0.8mm]
+\tikzstyle{arrow}=[->, -latex, line width=0.8mm, rounded corners=3mm]
 
 \tikzstyle{Data}=[rectangle, draw=blue, text width=35mm, align=center]
 \tikzstyle{Tool}=[rectangle, draw=black, fill=white!70!black, text width=35mm, align=center]
@@ -26,7 +26,6 @@
 \node [Data, right= of hardwaresrc] (platformsrc) {Platform description (.xml)};
 \node [Data, right= of platformsrc] (systemsrc) {System description (.xml)};
 
-
 \node [Tool, below= of platformsrc] (mucfgmerge) {Policy Merger\\(mucfgmerge)};
 \node [Data, below= of mucfgmerge] (policysrc) {Policy Source (.xml)};
 \draw [arrow] (hardwaresrc) to (mucfgmerge);
@@ -34,11 +33,8 @@
 \draw [arrow] (systemsrc) to (mucfgmerge);
 \draw [arrow] (mucfgmerge) to (policysrc);
 
-
-
 \node [Data, right=70mm of policysrc] (cspecsrc) {Sources for Component Spec};
 \node [Tool, below= of cspecsrc] (xsltcspecs) {Extract content and merge\\(xslt)};
-\draw [decorate, decoration={calligraphic brace, amplitude=4mm},line width=1.0mm] ($(cspecsrc.north)+(-50mm,5mm)$) -- ($(cspecsrc.north)+(50mm,5mm)$) node [yshift=8mm, midway] {This is done for each component};
 \draw [arrow] (cspecsrc) to (xsltcspecs);
 \draw [arrow] (policysrc) to (xsltcspecs);
 
@@ -63,7 +59,7 @@
 \node [Data, below= of cspecplugin] (cspecext) {Extended Headers (.ads)};
 \draw [arrow] (cspecads) to (cspecplugin);
 \draw [arrow] (cspecplugin) to (cspecext);
-\draw [arrow] (cspecs.east) -| ([xshift=20mm]cspecs.east) |-  (cspecplugin.east);
+\draw [arrow] (cspecs.east) -| ([xshift=20mm]cspecvr.east) |-  (cspecplugin.east);
 
 \node [Data, right= of cspecext] (compsrc) {Component Source (.adb, .ads)};
 \node [Tool, below= of cspecext] (compilercspecs) {Compiler};
@@ -76,9 +72,12 @@
 \node [Data, below= of mucbinsplit] (cbinparts) {Separated Sections of Binary};
 \node [Data, left= of cbinparts] (cspecwithhash) {XML Cspec with Refs to Binaries (.xml)};
 \draw [arrow] (compbinary) to (mucbinsplit);
-\draw [arrow] (cspecs.west) -| ([xshift=-15mm]cspecs.west) |- (mucbinsplit.west);
+\draw [arrow] (cspecs.west) -| ([xshift=-15mm]cspecvr.west) |- (mucbinsplit.west);
 \draw [arrow] (mucbinsplit) to (cbinparts);
 \draw [arrow] (mucbinsplit) to (cspecwithhash);
+
+\node [fit={(cspecwithhash)(compsrc)(cspecsrc)}, draw=white!40!black, dashed, line width=0.8mm] (component_border) {};
+\node [above=0mm of component_border.north west, anchor=south west, color=white!40!black] (component_border_text) {\textit{This is done for each component:}};
 
 \node [Tool, below= of policysrc] (mucfgjoin) {Join system and componet descriptions\\(mucfgjoin)};
 \node [Data, below= of mucfgjoin] (policyjoined) {Joined policy (.xml)};
@@ -101,7 +100,6 @@
 \draw [arrow] (policyjvrf) to (mucfgexpand);
 \draw [arrow] (mucfgexpand) to (policya);
 
-
 \node [Tool, below= of policya] (mucfgalloc) {Physical address allocation\\(mucfgalloc)};
 \node [Data, below= of mucfgalloc] (policyb) {Core Policy B (.xml)};
 \draw [arrow] (policya) to (mucfgalloc);
@@ -120,6 +118,10 @@
 \node [Data, below= of structgens] (subjectarticfacts) {Subject specific artifacts};
 \draw [arrow] (validator) to (structgens);
 \draw [arrow] (structgens) to (subjectarticfacts);
+%mugenacpi: ACPI tables for VMs
+%mugenmsrstore: MSR store regions
+%mugenzp: Zero-page regions for VMs
+%mugensolo5: Solo5 boot info
 
 \node [Tool, left= of structgens] (mugentau0cmds) {Command Stream Generator\\(mugentau0cmds)};
 \node [Data, below= of mugentau0cmds] (commandstream) {Tau0 command stream};
@@ -141,8 +143,8 @@
 \node [Tool, below= of subjectarticfacts] (mucfgmemhashes) {Hash Generation\\(mucfgmemhashes)};
 \node [Data, below= of mucfgmemhashes] (policybhashes) {Core Policy B with hashes};
 \draw [arrow] (subjectarticfacts) to (mucfgmemhashes);
-\draw [arrow]  ([yshift=0mm]policyb.east) -| ([xshift=8mm]policyb.east) |- ([yshift=1mm]mucfgmemhashes.east);
-\draw [arrow]  ([xshift=-3mm]cbinparts.south) |-  ([yshift=-6mm]cbinparts.south west) -| ([xshift=10mm]mucfgmemhashes.south east) |- ([yshift=-1mm]mucfgmemhashes.east);
+\draw [arrow]  (policyb.east) -| ([shift={(10mm,-10mm)}]policyb.east) |- ([yshift=2mm]mucfgmemhashes.east);
+\draw [arrow]  ([xshift=-3mm]cbinparts.south) |-  ([yshift=-8mm]cbinparts.south west) -| ([shift={(10mm,-8mm)}]mucfgmemhashes.east) |- ([yshift=-2mm]mucfgmemhashes.east);
 \draw [arrow]  (mucfgmemhashes) to (policybhashes);
 
 \node [Tool, below= of policybhashes] (sinfo) {Extract Subject Infos\\(mugensinfo)};
@@ -153,36 +155,10 @@
 \node [Tool, below= of sinfodata] (tau0) {Tau0\\(tau0\_main)};
 \node [Data, below= of tau0] (img) {Bootabe System Image};
 \draw [arrow] (commandstream.south) |-  ([yshift=0mm]tau0.west);
-\draw [arrow] (kernelbinary.south) |- ([yshift=-2mm]tau0.west);
-\draw [arrow] (subjectarticfacts.west) -| ([xshift=-6mm]subjectarticfacts.west) |- ([yshift=2mm]tau0.west);
+\draw [arrow] (kernelbinary.south) |- ([yshift=-3mm]tau0.west);
+\draw [arrow] (subjectarticfacts.west) -| ([shift={(-7mm,-10mm)}]subjectarticfacts.west) |- ([yshift=3mm]tau0.west);
 \draw [arrow] (sinfodata) to (tau0);
 \draw [arrow] (cbinparts.south) |- ([yshift=-0mm]tau0.east);
 \draw [arrow] (tau0) to (img);
 \end{tikzpicture}
 \end{document}
-
-
-Command Stream Generation  => Command Stream
-
-
-
-mucfgmemhashes: add hashes to a given policy  (memory integrity hasher)
-mucgenspec: generate component headers
-mucheckelf: check elf binaries against policy
-mucheckstack: check maximum stack size of component
-
-#Structures:
-mugenacpi: ACPI tables for VMs
-mugenmsrstore: MSR store regions
-mugensinfo: Sinfo regions
-mugenzp: Zero-page regions for VMs
-mugensolo5: Solo5 boot info
-
-
-mugenspec: Specifications for Muen kernel (.ads, .adb, .c, .gpr)
-
-
-mugentau0cmds: create XML command stream for tau0
-tau0_main: muen system image
-
-muwalkpt

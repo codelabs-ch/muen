@@ -2,10 +2,6 @@
 
 import argparse
 import json
-import lief
-from lief import ELF
-from lxml import etree
-import math
 import os
 import shutil
 import subprocess
@@ -13,6 +9,9 @@ import sys
 
 import _paths
 import muutils
+import lief
+from lief import ELF
+from lxml import etree
 
 MFT_CMD = "solo5-elftool query-manifest"
 ABI_CMD = "solo5-elftool query-abi"
@@ -32,9 +31,9 @@ def add_bootparams(xml_spec, bootparams):
     """
     Add bootparams config value to XML spec.
     """
-    section = src_spec.xpath("/component/config")
+    section = xml_spec.xpath("/component/config")
     if len(section) == 0:
-        comp = src_spec.xpath("/component")[0]
+        comp = xml_spec.xpath("/component")[0]
         config = etree.Element("config")
         comp.insert(0, config)
     else:
@@ -50,7 +49,7 @@ def set_rip(xml_spec, binary):
     """
     Set RIP in XML spec to entry point of given ELF binary.
     """
-    rip = src_spec.xpath("/component/requires/vcpu/registers/gpr/rip")[0]
+    rip = xml_spec.xpath("/component/requires/vcpu/registers/gpr/rip")[0]
     rip.text = muutils.int_to_ada_hex(binary.header.entrypoint)
     print("* Setting RIP to " + rip.text)
 
@@ -59,9 +58,9 @@ def set_resetable(xml_spec, resetable):
     """
     Add reset config value to XML spec.
     """
-    section = src_spec.xpath("/component/config")
+    section = xml_spec.xpath("/component/config")
     if len(section) == 0:
-        comp = src_spec.xpath("/component")[0]
+        comp = xml_spec.xpath("/component")[0]
         config = etree.Element("config")
         comp.insert(0, config)
     else:
@@ -148,7 +147,7 @@ def add_elf_memory(xml_spec, binary, filename):
     return end_addr
 
 
-def add_ram_memory(xml_spec, binary, binary_end, ram_size_mb):
+def add_ram_memory(xml_spec, binary_end, ram_size_mb):
     """
     Add RAM memory region of given size and set RSP to top of RAM in XML spec.
     Returns the virtual end address of the RAM memory region.
@@ -164,7 +163,7 @@ def add_ram_memory(xml_spec, binary, binary_end, ram_size_mb):
                      writable="true",
                      type="subject")
 
-    rsp = src_spec.xpath("/component/requires/vcpu/registers/gpr/rsp")[0]
+    rsp = xml_spec.xpath("/component/requires/vcpu/registers/gpr/rsp")[0]
     rsp.text = muutils.int_to_ada_hex(binary_end + ram_size - 8)
     print("* Setting RSP to " + rsp.text)
 
@@ -290,7 +289,7 @@ add_bootparams(src_spec, boot_params)
 set_resetable(src_spec, resetable)
 set_rip(src_spec, binary)
 end_address = add_elf_memory(src_spec, binary, binary_name)
-chan_addr = add_ram_memory(src_spec, binary, end_address, ram_size_mb)
+chan_addr = add_ram_memory(src_spec, end_address, ram_size_mb)
 
 print("Extracting Solo5 ABI information from unikernel binary")
 try:

@@ -32,7 +32,7 @@ documentationType_definition = """
  <xs:complexType name="documentationType">
   <xs:annotation>
    <xs:documentation>
-    A \\texttt{doc} node contains documentaion about its parent node.
+    A \\texttt{doc} node contains documentation about its parent node.
     The type of the documentation specifies its intended recipients.
    </xs:documentation>
   </xs:annotation>
@@ -59,19 +59,22 @@ documentationType_definition = """
 """
 
 
-def documentationType_defined (root: etree._Element):
-    nsmap = libp.Ns_Info (root).nsmap
-    docT_nodes  = root.xpath("./*[local-name()='complexType' and @name='documentationType']",
-                             namespaces=nsmap)
-    docTT_nodes = root.xpath("./*[local-name()='simpleType' and @name='docTypeType']",
-                             namespaces=nsmap)
+def documentationType_defined(root: etree._Element):
+    nsmap = libp.Ns_Info(root).nsmap
+    docT_nodes = root.xpath(
+        "./*[local-name()='complexType' and @name='documentationType']",
+        namespaces=nsmap)
+    docTT_nodes = root.xpath(
+        "./*[local-name()='simpleType' and @name='docTypeType']",
+        namespaces=nsmap)
     return (len(docT_nodes) >= 1 and len(docTT_nodes) >= 1)
 
-def doc_in_universal_starting_group (root: etree._Element) -> bool:
+
+def doc_in_universal_starting_group(root: etree._Element) -> bool:
     """
     Determine if the universal_starting_group contains a doc-element.
     """
-    nsmap = libp.Ns_Info (root).nsmap
+    nsmap = libp.Ns_Info(root).nsmap
     doc_nodes = root.xpath("./*[local-name()='group' "
                            + "and @name='universal_starting_group']/"
                            + "*[local-name()='sequence']/"
@@ -79,25 +82,27 @@ def doc_in_universal_starting_group (root: etree._Element) -> bool:
                            namespaces=nsmap)
     return len(doc_nodes) >= 1
 
-def insert_doc_in_universal_starting_group (doc_root: etree._Element):
+
+def insert_doc_in_universal_starting_group(doc_root: etree._Element):
     """
     Inserts an element of type documentationType into the universal
     starting group.
     Assumes that universal_starting_group exists.
     """
-    ns = libp.Ns_Info (doc_root)
+    ns = libp.Ns_Info(doc_root)
     seq_node = doc_root.xpath("./*[local-name()='group' "
-                           + "and @name='universal_starting_group']/"
-                           + "*[local-name()='sequence']",
-                           namespaces = ns.nsmap)[0]
-    attribs = {"qname" : ns.ns_prefix + "element",
-               "name" : "doc",
-               "type" : "documentationType",
-               "minOccurs" : "0",
-               "maxOccurs" : "unbounded"}
-    new_node = libp.create_element_from_dict (attribs)
+                              + "and @name='universal_starting_group']/"
+                              + "*[local-name()='sequence']",
+                              namespaces=ns.nsmap)[0]
+    attribs = {"qname": ns.ns_prefix + "element",
+               "name": "doc",
+               "type": "documentationType",
+               "minOccurs": "0",
+               "maxOccurs": "unbounded"}
+    new_node = libp.create_element_from_dict(attribs)
     # we always insert at index 0 - documentation should always be first
     seq_node.insert(0, new_node)
+
 
 def arg_parse():
     arg_parser = argparse.ArgumentParser(description=DESCRIPTION)
@@ -106,6 +111,7 @@ def arg_parse():
     arg_parser.add_argument('output_file', type=str,
                             help='path of output xsd-file')
     return arg_parser.parse_args()
+
 
 def add_documentation():
     """
@@ -121,27 +127,28 @@ def add_documentation():
     args = arg_parse()
     tree = etree.parse(args.input_file, parser)
     doc_root = tree.getroot()
-    ns_prefix = libp.Ns_Info (doc_root).ns_prefix
+    ns_prefix = libp.Ns_Info(doc_root).ns_prefix
 
-    # Insert universal_starting_group if it does not exists (wrapper for plugins
-    # that are allowed in every complexType).
-    if not libp.universal_starting_group_defined (doc_root):
-        libp.insert_universal_starting_group (doc_root)
+    # Insert universal_starting_group if it does not exists
+    # (wrapper for plugins that are allowed in every complexType).
+    if not libp.universal_starting_group_defined(doc_root):
+        libp.insert_universal_starting_group(doc_root)
 
     # Append definition of documentationType
-    if not documentationType_defined (doc_root):
-        libp.insert_children_from_string \
-        (root = doc_root,
-         xml_string = documentationType_definition)
+    if not documentationType_defined(doc_root):
+        libp.insert_children_from_string(
+            root=doc_root,
+            xml_string=documentationType_definition)
 
     # Insert doc in universal_starting_group
-    if not doc_in_universal_starting_group (doc_root):
-        insert_doc_in_universal_starting_group (doc_root)
+    if not doc_in_universal_starting_group(doc_root):
+        insert_doc_in_universal_starting_group(doc_root)
 
     tree.write(args.output_file,
-               pretty_print = True,
-               encoding = 'utf-8',
-               xml_declaration = True)
+               pretty_print=True,
+               encoding='utf-8',
+               xml_declaration=True)
+
 
 if __name__ == "__main__":
     add_documentation()

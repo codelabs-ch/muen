@@ -110,7 +110,7 @@ package body Xmlfilter.Cmd_Line.Test_Data.Tests is
          Assert (Condition => Output_Schema_Name = ASU.Null_Unbounded_String,
                  Message   => "Output schema name mismatch");
          Assert (Condition => Output_Schema_Path = "/path/to/out_scheme.xsd",
-                 Message   => "Ouput schema path mismatch");
+                 Message   => "Output schema path mismatch");
       end Positive_Test2;
 
       procedure Negative_Test_Missing_Output_Schema

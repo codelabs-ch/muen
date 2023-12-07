@@ -39,7 +39,7 @@
 \draw [arrow] (policysrc) to (xsltcspecs);
 
 \node [Data, below= of xsltcspecs] (cspecspar) {Parametrized Cspecs Source};
-\node [Tool, below= of cspecspar] (mucfgcvresalloc) {Virtual Ressource Allocation for Component\\(mucfgvresalloc)};
+\node [Tool, below= of cspecspar] (mucfgcvresalloc) {Virtual Resource Allocation for Component\\(mucfgvresalloc)};
 \node [Data, below= of mucfgcvresalloc] (cspecs) {XML Component Specification (.xml)};
 \draw [arrow] (xsltcspecs) to (cspecspar);
 \draw [arrow] (cspecspar) to (mucfgcvresalloc);
@@ -85,7 +85,7 @@
 \draw [arrow] (cspecwithhash.north) |- (mucfgjoin);
 \draw [arrow] (mucfgjoin) to (policyjoined);
 
-\node [Tool, below= of policyjoined] (mucfgvresalloc) {Virtual Ressource Allocation\\(mucfgvresalloc)};
+\node [Tool, below= of policyjoined] (mucfgvresalloc) {Virtual Resource Allocation\\(mucfgvresalloc)};
 \node [Data, below= of mucfgvresalloc] (policyjvr) {Policy with virtual resources (.xml)};
 \draw [arrow] (policyjoined) to (mucfgvresalloc);
 \draw [arrow] (mucfgvresalloc) to (policyjvr);

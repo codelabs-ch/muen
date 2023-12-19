@@ -34,4 +34,27 @@ is
       Global => (Input  => State,
                  In_Out => X86_64.State);
 
+   Header_Size : constant := 48;
+
+   type Padding_Type is array (1 .. 3) of Word32;
+
+   --  Microcode update header.
+   --  See Intel SDM Vol. 3A, "9.11.1 Microcode Update"
+   type Header_Type is record
+      Header_Version      : Word32;
+      Update_Revision     : Word32;
+      Date                : Word32;
+      Processor_Signature : Word32;
+      Checksum            : Word32;
+      Loader_Revision     : Word32;
+      Processor_Flags     : Word32;
+      Data_Size           : Word32;
+      Total_Size          : Word32;
+      Reserved            : Padding_Type;
+   end record
+   with
+      Pack,
+      Size        => Header_Size * 8,
+      Object_Size => Header_Size * 8;
+
 end SK.MCU;

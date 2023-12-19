@@ -37,29 +37,6 @@ is
    IA32_BIOS_UPDT_TRIG : constant := 16#79#;
    IA32_BIOS_SIGN_ID   : constant := 16#8b#;
 
-   Header_Size : constant := 48;
-
-   type Padding_Type is array (1 .. 3) of Word32;
-
-   --  Microcode update header.
-   --  See Intel SDM Vol. 3A, "9.11.1 Microcode Update"
-   type Header_Type is record
-      Header_Version      : Word32;
-      Update_Revision     : Word32;
-      Date                : Word32;
-      Processor_Signature : Word32;
-      Checksum            : Word32;
-      Loader_Revision     : Word32;
-      Processor_Flags     : Word32;
-      Data_Size           : Word32;
-      Total_Size          : Word32;
-      Reserved            : Padding_Type;
-   end record
-   with
-      Pack,
-      Size        => Header_Size * 8,
-      Object_Size => Header_Size * 8;
-
    pragma Warnings
      (GNATprove, Off,
       "indirect writes to * through a potential alias are ignored",
@@ -157,22 +134,11 @@ is
 
       pragma Debug
         (CPU_Info.Is_BSP,
-         Dump.Print_Message
-           (Msg    =>
-              "MCU: Ucode update @ "
-              & Strings.Img (Word64'(Skp.MCU.Ucode_Address))
-              & ASCII.LF & "MCU: Header version      : "
-              & Strings.Img (UCH.Header_Version)
-              & ASCII.LF & "MCU: Update revision     : "
-              & Strings.Img (UCH.Update_Revision)
-              & ASCII.LF & "MCU: Update date         : "
-              & Strings.Img (UCH.Date)
-              & ASCII.LF & "MCU: Processor signature : "
-              & Strings.Img (UCH.Processor_Signature)
-              & ASCII.LF & "MCU: Loader revision     : "
-              & Strings.Img (UCH.Loader_Revision)
-              & ASCII.LF & "MCU: Processor flags     : "
-              & Strings.Img (UCH.Processor_Flags)));
+         Dump.Print_Message (Msg => "MCU: Ucode update @ "
+         & Strings.Img (Word64'(Skp.MCU.Ucode_Address))));
+      pragma Debug
+        (CPU_Info.Is_BSP,
+         Dump.Print_MCU_Header (Hdr => UCH));
 
       if My_Sig /= UCH.Processor_Signature then
          pragma Debug

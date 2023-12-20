@@ -161,6 +161,8 @@ is
       Alignment => 64,
       Size      => XSAVE_Area_Size * 8;
 
+   Null_XSAVE_Area : constant XSAVE_Area_Type;
+
    Seg_Type_Size : constant := 8 + 8 + 4 + 4;
 
    type Segment_Type is record
@@ -382,6 +384,13 @@ private
      := (XSTATE_BV => 0,
          XCOMP_BV  => 0,
          Reserved  => (others => 0));
+
+   Null_XSAVE_Area : constant XSAVE_Area_Type
+     := (Legacy_Header    => Null_XSAVE_Legacy_Header,
+         Legacy_Registers => (others => 0),
+         Legacy_Reserved  => (others => 0),
+         XSAVE_Header     => Null_XSAVE_Header,
+         Extended_Region  => (others => 0));
 
    Null_CPU_Regs : constant CPU_Registers_Type
      := CPU_Registers_Type'(others => 0);

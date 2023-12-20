@@ -64,8 +64,10 @@ begin
 
    --  Initialize interrupt handling.
 
+   --D @Lst IDTbegin
    SK.Interrupt_Tables.Initialize
      (Stack_Addr => Component_Constants.Interrupt_Stack_Address);
+   --D @Lst IDTend
 
    --  Check sinfo validity.
 

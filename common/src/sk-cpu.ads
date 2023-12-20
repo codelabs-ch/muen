@@ -98,6 +98,13 @@ is
       Inline_Always,
       No_Return;
 
+   --  Halt instruction execution until the occurence of the next interrupt.
+   procedure Wait_For_Interrupt
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ null),
+      Inline_Always;
+
    --  Return current value of CR0 register.
    function Get_CR0 return SK.Word64
    with

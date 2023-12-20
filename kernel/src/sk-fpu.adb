@@ -32,11 +32,7 @@ is
    Null_FPU_State : constant FPU_State_Type
      := (XCR0       => 0,
          Padding    => (others => 0),
-         XSAVE_Area => (Legacy_Header    => Null_XSAVE_Legacy_Header,
-                        Legacy_Registers => (others => 0),
-                        Legacy_Reserved  => (others => 0),
-                        XSAVE_Header     => Null_XSAVE_Header,
-                        Extended_Region  => (others => 0)));
+         XSAVE_Area => Null_XSAVE_Area);
 
    -------------------------------------------------------------------------
 

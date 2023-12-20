@@ -17,6 +17,7 @@
 --
 
 with SK.CPU;
+with SK.Constants;
 with SK.Strings;
 
 with Exceptions;
@@ -25,7 +26,15 @@ with Example_Component.Channels;
 with Log;
 
 package body Interrupt_Handler
+with
+   Refined_State => (State => (FPU_State, Active_FPU_Features))
 is
+
+   --  Storage area for saving/restoring the FPU state.
+   FPU_State           : SK.XSAVE_Area_Type;
+   Active_FPU_Features : SK.Word64
+   with
+      Constant_After_Elaboration;
 
    -------------------------------------------------------------------------
 
@@ -35,6 +44,8 @@ is
 
       Vector : constant SK.Byte := SK.Byte'Mod (Context.Vector);
    begin
+      SK.CPU.XSAVE (Target => FPU_State,
+                    State  => Active_FPU_Features);
       if Vector > 31 then
          Handle_Interrupt (Vector => Vector);
       elsif Vector = 3 then
@@ -71,6 +82,9 @@ is
 
          SK.CPU.Stop;
       end if;
+
+      SK.CPU.XRSTOR (Source => FPU_State,
+                     State  => Active_FPU_Features);
    end Dispatch_Exception;
 
    -------------------------------------------------------------------------
@@ -86,4 +100,12 @@ is
       end if;
    end Handle_Interrupt;
 
+begin
+   FPU_State                          := SK.Null_XSAVE_Area;
+   FPU_State.Legacy_Header.FCW        := SK.Constants.FCW_Default_Value;
+   FPU_State.Legacy_Header.MXCSR      := SK.Constants.MXCSR_Default_Value;
+   FPU_State.Legacy_Header.MXCSR_Mask := SK.Constants.MXCSR_Mask_Default_Value;
+   SK.CPU.XGETBV
+     (Register => 0,
+      Value    => Active_FPU_Features);
 end Interrupt_Handler;

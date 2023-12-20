@@ -25,6 +25,7 @@ with
    Abstract_State => State
 is
 
+   --D @Lst InterruptHandlerSpecbegin
    --  Exception/Interrupt handler.
    procedure Dispatch_Exception (Context : SK.Exceptions.Isr_Context_Type)
    with
@@ -32,6 +33,7 @@ is
       Convention => C,
       Link_Name  => "dispatch_interrupt",
       Pre        => Musinfo.Instance.Is_Valid;
+   --D @Lst InterruptHandlerSpecend
 
    --  Interrupt handler.
    procedure Handle_Interrupt (Vector : SK.Byte)

@@ -1070,6 +1070,44 @@
   </section>
  </section>
 
+ <section id="interrupt-handling" label="Interrupt Handling" priority="0">
+  <text priority="0">
+   Subjects wishing to process interrupts must setup the environment according
+   to the x86 ISA, i.e. install a Global Descriptor Table and Interrupt
+   Descriptor Table etc. see Intel SDM Vol. 3A, section 6.12 Exception and
+   Interrupt Handling. Native Ada/SPARK subjects can use the
+   \verb!SK.Interrupt_Tables! package as is illustrated by the following snippet
+   from the Example component:
+
+   \lstinputlisting[linerange=IDTbegin-IDTend,label=code-idt-init,caption=Initialization of Interrupt Tables,language=Ada]{../src/example.adb}
+
+   Then the component must provide a handler procedure which should be executed
+   whenever an interrupt occurs. It must have the link name
+   \verb!dispatch_interrupt!. For native Ada/SPARK code, this can be achieved as
+   follows:
+
+   \lstinputlisting[linerange=InterruptHandlerSpecbegin-InterruptHandlerSpecend,label=code-irq-handler-spec,caption=Specification of an Interrupt Handler procedure,language=Ada]{../src/interrupt_handler.ads}
+
+   While the interrupt handler facility takes care of saving and restoring all
+   general purpose registers, the FPU state is not automatically handled. If the
+   component interrupt handling code makes use of the FPU, e.g. through
+   optimized code which leverages the wider FPU XMM registers for faster string
+   copying, the state must be explicitly saved at the beginning of the interrupt
+   handler and restored at the end using XSAVE/XRSTOR. Otherwise the FPU state
+   of interrupted code is clobbered. Refer to the \verb!Interrupt_Handler!
+   package which illustrates how to implement interrupt handlers that may use
+   the FPU.
+
+   Alternatively, one can choose to disallow FPU use in the interrupt handler by
+   using the attribute \verb!no_caller_saved_registers! in combination with
+   the \verb!-mgeneral-regs-only! compiler flag~\footnote{https://gcc.gnu.org/onlinedocs/gcc/x86-Function-Attributes.html}.
+   To apply the attribute to Ada/SPARK subprograms the following snippet can be
+   used:
+
+   \lstinputlisting[label=code-irq-handler-nocallersavedregs,caption=Usage of Machine attribute pragma,language=Ada]{machine_attribute.ads}
+  </text>
+ </section>
+
  <section id="verification_conditions_spark2014" label="Verification" priority="0">
   <text priority="-10">
    Muen is very well suited to work with verified SPARK/Ada components. The

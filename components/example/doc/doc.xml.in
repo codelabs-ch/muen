@@ -1020,7 +1020,7 @@
    to use the \verb!PAUSE! and \verb!HLT! instructions to trigger sleep and
    yield actions.
 
-   \lstinputlisting[label=subject-scheduling-config,caption=Declaration of Sleep and Yield events,language=XML]{system_yield_sleep.xml}
+   \lstinputlisting[label=subject-scheduling-config-listing,caption=Declaration of Sleep and Yield events,language=XML]{system_yield_sleep.xml}
 
    \begin{info}
    In order for these instructions to cause a VM-Exit the corresponding

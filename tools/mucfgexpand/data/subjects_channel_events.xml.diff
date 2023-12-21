@@ -92,6 +92,28 @@
     </channels>                                                                                                                                             </channels>
     <devices>                                                                                                                                               <devices>
 --
+    <library ref="muinit"/>                                                                                                                                 <library ref="muinit"/>
+   </depends>                                                                                                                                              </depends>
+                                                                                                                                                     >     <requires>
+                                                                                                                                                     >      <vcpu>
+                                                                                                                                                     >       <registers>
+                                                                                                                                                     >        <gpr>
+                                                                                                                                                     >         <rip>16#0010_0000#</rip>
+                                                                                                                                                     >        </gpr>
+                                                                                                                                                     >       </registers>
+                                                                                                                                                     >      </vcpu>
+                                                                                                                                                     >     </requires>
+   <provides>                                                                                                                                              <provides>
+    <memory executable="true" logical="binary" size="16#1000#" type="subject_binary" virtualAddress="16#0020_0000#" writable="false">                       <memory executable="true" logical="binary" size="16#1000#" type="subject_binary" virtualAddress="16#0020_0000#" writable="false">
+--
+     <hash value="16#ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7#"/>                                                                    <hash value="16#ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7#"/>
+    </memory>                                                                                                                                               </memory>
+                                                                                                                                                     >      <memory executable="true" logical="muinit" size="16#9000#" type="subject_binary" virtualAddress="16#0010_0000#" writable="false">
+                                                                                                                                                     >       <file filename="muinit" offset="none"/>
+                                                                                                                                                     >      </memory>
+   </provides>                                                                                                                                             </provides>
+  </component>                                                                                                                                            </component>
+--
  <subjects>                                                                                                                                              <subjects>
   <subject name="lnx">                                                                                                                                    <subject name="lnx">
                                                                                                                                                      >     <vcpu/>

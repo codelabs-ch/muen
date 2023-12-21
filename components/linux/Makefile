@@ -42,7 +42,7 @@ $(OBJ_DIR)/bzImage: $(SRC_BZIMAGE) | $(OBJ_DIR)
 
 $(OBJ_DIR)/.mods-build: $(SRC_BZIMAGE) | $(OBJ_DIR)
 	@$(E) linux "Build kernel modules" \
-		"$(LINUX_FLAGS) $(MAKE) -C src modules" $(LOG)
+		"$(LINUX_FLAGS) $(MAKE) CC='ccache gcc' -C src modules" $(LOG)
 	@touch $@
 
 $(MODS_BUILD): MOD_NAME = $(@:$(OBJ_DIR)/.%-build=%)

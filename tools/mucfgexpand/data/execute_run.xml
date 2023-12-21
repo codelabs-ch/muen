@@ -217,6 +217,9 @@
    <file filename="somedata" offset="none"/>
    <hash value="16#ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7#"/>
   </memory>
+  <memory alignment="16#1000#" caching="WB" name="subject3|muinit" size="16#9000#" type="subject_binary">
+   <file filename="muinit" offset="none"/>
+  </memory>
   <memory alignment="16#1000#" caching="WB" name="data_channel" size="16#1000#" type="subject_channel">
    <fill pattern="16#00#"/>
   </memory>
@@ -417,7 +420,7 @@
   <memory alignment="16#1000#" caching="WB" name="subject2|pt" size="16#e000#" type="system_pt">
    <fill pattern="16#00#"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="subject3|pt" size="16#a000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="subject3|pt" size="16#b000#" type="system_pt">
    <fill pattern="16#00#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="vtd_root" size="16#1000#" type="system_vtd_root">
@@ -2919,7 +2922,7 @@
     <msrs/>
     <registers>
      <gpr>
-      <rip>16#0020_0000#</rip>
+      <rip>16#0010_0000#</rip>
       <rsp>16#3000#</rsp>
       <rax>16#0000#</rax>
       <rbx>16#0000#</rbx>
@@ -3024,6 +3027,7 @@
     <memory executable="true" logical="binary" physical="subject3|binary" virtualAddress="16#0020_0000#" writable="false"/>
     <memory executable="false" logical="resource_1" physical="subject3|resource_1_subject3" virtualAddress="16#0020_1000#" writable="true"/>
     <memory executable="false" logical="resource_2" physical="subject3|resource_2_subject3" virtualAddress="16#0040_0000#" writable="true"/>
+    <memory executable="true" logical="muinit" physical="subject3|muinit" virtualAddress="16#0010_0000#" writable="false"/>
     <memory executable="false" logical="sinfo" physical="subject3|sinfo" virtualAddress="16#000e_0000_0000#" writable="false"/>
     <memory executable="false" logical="scheduling_info" physical="scheduling_info_4" virtualAddress="16#000e_0000_8000#" writable="false"/>
     <memory executable="false" logical="timed_event" physical="subject3|timed_event" virtualAddress="16#000e_0001_0000#" writable="true"/>

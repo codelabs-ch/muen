@@ -71,7 +71,7 @@ is
                        & SK.Strings.Img (Item => Context.Error_Code));
          Log.Put_Line (Item => " RIP       : "
                        & SK.Strings.Img (Item => Context.RIP));
-         Log.Put_Line (Item => " RSP       :"
+         Log.Put_Line (Item => " RSP       : "
                        & SK.Strings.Img (Item => Context.RSP));
          Log.Put_Line (Item => " CS        : "
                        & SK.Strings.Img (Item => SK.Byte'Mod (Context.CS)));

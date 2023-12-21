@@ -49,7 +49,7 @@ is
    --  and DIV instructions. It basically calculates the following efficiently:
    --
    --    Quotient := Unsigned_64'Mod (Unsigned_128 (Value) * Unsigned_128
-   --      (Multiplier) / Unsigned_128 (Divisor))
+   --      (Multiplier) / Unsigned_128 (Divisor));
    --
    --  The processor will raise an exception if the quotient is >= 2 ** 64. A
    --  precondition ensures that this does not happen.

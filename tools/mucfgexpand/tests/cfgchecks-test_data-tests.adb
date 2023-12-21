@@ -738,6 +738,74 @@ package body Cfgchecks.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Subject_Muinit_Loader_Presence (Gnattest_T : in out Test);
+   procedure Test_Subject_Muinit_Loader_Presence_ec7b05 (Gnattest_T : in out Test) renames Test_Subject_Muinit_Loader_Presence;
+--  id:2.2/ec7b050c020fe27b/Subject_Muinit_Loader_Presence/1/0/
+   procedure Test_Subject_Muinit_Loader_Presence (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+      Mem_Node, Muinit_Mem_Node : DOM.Core.Node;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Expanders.Subjects.Add_Missing_Elements (Data => Policy);
+      Expanders.Components.Add_Library_Resources (Data => Policy);
+      Expanders.Components.Add_Provided_Memory (Data => Policy);
+      Expanders.Components.Add_Memory (Data => Policy);
+
+      --  Positive test, must not raise an exception.
+
+      Subject_Muinit_Loader_Presence (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test (1)");
+      
+      --  Missing Muinit memory mapping.
+      
+      Muinit_Mem_Node := Muxml.Utils.Get_Element
+        (Doc => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject3']/memory/"
+         & "memory[@logical='muinit']");
+      Mem_Node := DOM.Core.Nodes.Parent_Node (N => Muinit_Mem_Node);
+      Muinit_Mem_Node
+        := DOM.Core.Nodes.Remove_Child
+          (N         => Mem_Node,
+           Old_Child => Muinit_Mem_Node);
+      Subject_Muinit_Loader_Presence (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg =>"Subject 'subject3' specifies loader with self-reference"
+               & " but does not map muinit memory region"),
+              Message   => "Exception mismatch (Missing muinit region)");
+      
+      --  Positive test, no loader and no Muinit memory mapping.
+
+      Mucfgcheck.Validation_Errors.Clear;
+      Muxml.Utils.Remove_Elements
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject3']/monitor/"
+         & "loader[@subject='subject3']");
+      Subject_Muinit_Loader_Presence (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test (2)");
+      
+      --  Missing loader self reference.
+      
+      Muxml.Utils.Append_Child (Node      => Mem_Node,
+                                New_Child => Muinit_Mem_Node);        
+      Subject_Muinit_Loader_Presence (XML_Data => Policy);
+      Assert (Condition => Mucfgcheck.Validation_Errors.Contains
+              (Msg => "Subject 'subject3' maps logical muinit memory region "
+               & "but does not specify loader with self-reference"),
+               Message  => "Exception mismatch (Missing loader)");
+--  begin read only
+   end Test_Subject_Muinit_Loader_Presence;
+--  end read only
+
+
+--  begin read only
    procedure Test_Channel_Reader_Writer (Gnattest_T : in out Test);
    procedure Test_Channel_Reader_Writer_918b3c (Gnattest_T : in out Test) renames Test_Channel_Reader_Writer;
 --  id:2.2/918b3c5761bd21a7/Channel_Reader_Writer/1/0/

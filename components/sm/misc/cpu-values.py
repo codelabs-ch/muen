@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
 import argparse
-from collections import namedtuple
-from lxml import etree
 import os
 import sys
 
+from lxml import etree
 
 DESCRIPTION = 'SM CPU config generator'
 DEFAULT_PACKAGE_NAME = 'CPU_Values.Target'
@@ -85,9 +84,9 @@ if out_path is None:
 if src_policy_path is None:
     sys.exit("Error: Muen source system policy XML not specified")
 
-    if not os.path.isfile(src_policy_path):
-        sys.exit("Error: Muen source system policy XML not found '"
-                 + src_policy_path + "'")
+if not os.path.isfile(src_policy_path):
+    sys.exit("Error: Muen source system policy XML not found '"
+             + src_policy_path + "'")
 
 out_dir = os.path.dirname(out_path)
 if len(out_dir) > 0 and not os.path.isdir(out_dir):

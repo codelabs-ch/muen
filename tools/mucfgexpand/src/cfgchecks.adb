@@ -2446,6 +2446,51 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Subject_Muinit_Loader_Presence (XML_Data : Muxml.XML_Data_Type)
+   is
+      Subjects : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Subjects);
+   begin
+      for I in 0 .. Count - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            Subj : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Subjects,
+                                      Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute (Elem => Subj,
+                                                  Name => "name");
+            Muinit_Mem : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Subj,
+                 XPath => "memory/memory[@logical='muinit']");
+            Loader : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Subj,
+                 XPath => "monitor/loader[@subject='" & Subj_Name & "']");
+         begin
+            if Muinit_Mem /= null and Loader = null then
+               Mucfgcheck.Validation_Errors.Insert
+                 (Msg => "Subject '"
+                  & Subj_Name & "' maps logical muinit memory region but does "
+                  & "not specify loader with self-reference");
+            end if;
+            if Loader /= null and Muinit_Mem = null then
+               Mucfgcheck.Validation_Errors.Insert
+                 (Msg => "Subject '"
+                  & Subj_Name & "' specifies loader with self-reference but "
+                  & "does not map muinit memory region");
+            end if;
+         end;
+      end loop;
+   end Subject_Muinit_Loader_Presence;
+
+   -------------------------------------------------------------------------
+
    procedure Subject_Resource_Maps_Logical_Uniqueness
      (XML_Data : Muxml.XML_Data_Type)
    is

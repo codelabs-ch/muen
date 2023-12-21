@@ -18,6 +18,7 @@
 
 with Skp.Interrupts;
 
+with SK.MCU;
 with SK.Crash_Audit_Types;
 
 --D @Interface
@@ -47,6 +48,9 @@ is
 
    --  Print MCE state.
    procedure Print_MCE_State (Context : Crash_Audit_Types.MCE_Context_Type);
+
+   --  Print MCU header.
+   procedure Print_MCU_Header (Hdr : MCU.Header_Type);
 
    --  Print message followed by a newline.
    procedure Print_Message (Msg : String);

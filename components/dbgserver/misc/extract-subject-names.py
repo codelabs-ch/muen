@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 import argparse
-from lxml import etree
 import os
 import sys
 
+from lxml import etree
 
 DESCRIPTION = 'Dbgserver subject name mapping generator'
 COMPONENT_NAME = 'dbgserver'
@@ -42,7 +42,6 @@ def write_spec(subject_names, package_name, f):
     """
     Write mapping of specified subject names to given file.
     """
-    subjcount = len(subject_names)
     maxlen = max(len(name) for name in subject_names)
     f.write("private package " + package_name + "\n")
     f.write("is\n\n")
@@ -89,9 +88,9 @@ if out_path is None:
 if src_policy_path is None:
     sys.exit("Error: Muen source system policy XML not specified")
 
-    if not os.path.isfile(src_policy_path):
-        sys.exit("Error: Muen source system policy XML not found '"
-                 + src_policy_path + "'")
+if not os.path.isfile(src_policy_path):
+    sys.exit("Error: Muen source system policy XML not found '"
+             + src_policy_path + "'")
 
 out_dir = os.path.dirname(out_path)
 if len(out_dir) > 0 and not os.path.isdir(out_dir):

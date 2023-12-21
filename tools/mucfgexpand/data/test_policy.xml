@@ -229,6 +229,22 @@
   <channel hasEvent="async" name="chan_array4" size="16#2000#"/>
  </channels>
  <components>
+  <library name="muinit">
+   <requires>
+    <vcpu>
+     <registers>
+      <gpr>
+       <rip>16#0010_0000#</rip>
+      </gpr>
+     </registers>
+    </vcpu>
+   </requires>
+   <provides>
+    <memory executable="true" logical="muinit" size="16#9000#" type="subject_binary" virtualAddress="16#0010_0000#" writable="false">
+     <file filename="muinit" offset="none"/>
+    </memory>
+   </provides>
+  </library>
   <library name="l0">
    <config>
     <string name="library_config_var" value="config_val_l0"/>
@@ -389,6 +405,9 @@
    </provides>
   </component>
   <component name="c3" profile="native">
+   <depends>
+    <library ref="muinit"/>
+   </depends>
    <provides>
     <memory executable="true" logical="binary" size="16#1000#" type="subject_binary" virtualAddress="16#0020_0000#" writable="false">
      <file filename="c3_bin" offset="none"/>

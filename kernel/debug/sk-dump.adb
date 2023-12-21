@@ -98,6 +98,27 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Print_MCU_Header (Hdr : MCU.Header_Type)
+   is
+   begin
+      Debug_Lock.Acquire;
+      KC.Put_Line (Item => "MCU: Header version      : "
+                   & Strings.Img (Hdr.Header_Version));
+      KC.Put_Line (Item => "MCU: Update revision     : "
+                   & Strings.Img (Hdr.Update_Revision));
+      KC.Put_Line (Item => "MCU: Update date         : "
+                   & Strings.Img (Hdr.Date));
+      KC.Put_Line (Item => "MCU: Processor signature : "
+                   & Strings.Img (Hdr.Processor_Signature));
+      KC.Put_Line (Item => "MCU: Loader revision     : "
+                   & Strings.Img (Hdr.Loader_Revision));
+      KC.Put_Line (Item => "MCU: Processor flags     : "
+                   & Strings.Img (Hdr.Processor_Flags));
+      Debug_Lock.Release;
+   end Print_MCU_Header;
+
+   -------------------------------------------------------------------------
+
    procedure Print_Message (Msg : String)
    is
    begin

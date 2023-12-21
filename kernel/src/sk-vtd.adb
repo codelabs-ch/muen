@@ -47,7 +47,7 @@ is
       Extcaps : Reg_Extcapability_Type;
    begin
       Version := Read_Version (Index => Idx);
-      Ctx.Version_Support := Version.MAX = 1 and then Version.MIN = 0;
+      Ctx.Version_Support := Version.MAX >= 1;
       pragma Debug (not Ctx.Version_Support,
                     KC.Put_Line
                       (Item => "Init: Unsupported IOMMU version "

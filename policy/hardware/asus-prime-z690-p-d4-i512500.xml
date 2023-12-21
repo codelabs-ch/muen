@@ -1,0 +1,564 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- ==========================================
+     Generated with mugenhwcfg (commit v0.7.2)
+     Linux kernel version: 6.1.0-13-amd64
+     Distribution: Debian GNU/Linux 12 (bookworm)
+     Product information:
+       Vendor: ASUS
+       Name: System Product Name
+       Product Version: System Version
+     Board information:
+       Vendor: ASUSTeK COMPUTER INC.
+       Name: PRIME Z690-P D4
+       Version: Rev 1.xx
+     BIOS information:
+       Vendor: American Megatrends Inc.
+       Version: 3010
+       Date: 12/11/2023
+     Log:
+       * WARNING *: Adding fake irq 16 for device with MSIs: 0000:00:02.0
+       * WARNING *: Adding fake irq 16 for device with MSIs: 0000:00:0e.0
+       * WARNING *: Adding fake irq 16 for device with MSIs: 0000:00:14.0
+       * WARNING *: Adding fake irq 16 for device with MSIs: 0000:00:16.0
+       * WARNING *: Adding fake irq 16 for device with MSIs: 0000:00:17.0
+       * WARNING *: Adding fake irq 16 for device with MSIs: 0000:00:1f.3
+       * WARNING *: Adding fake irq 16 for device with MSIs: 0000:01:00.0
+       * WARNING *: Adding fake irq 16 for device with MSIs: 0000:05:00.0
+     ========================================== -->
+
+
+<hardware>
+  <processor cpuCores="6" speed="3000000" vmxTimerRate="7">
+    <cpu apicId="0"/>
+    <cpu apicId="2"/>
+    <cpu apicId="4"/>
+    <cpu apicId="6"/>
+    <cpu apicId="8"/>
+    <cpu apicId="10"/>
+    <cpuid eax="16#0000_0020#" ebx="16#756e_6547#" ecx="16#6c65_746e#" edx="16#4965_6e69#" leaf="16#0000_0000#" subleaf="16#00#"/>
+    <cpuid eax="16#0009_0675#" ebx="16#0010_0800#" ecx="16#7ffa_fbff#" edx="16#bfeb_fbff#" leaf="16#0000_0001#" subleaf="16#00#"/>
+    <cpuid eax="16#00fe_ff01#" ebx="16#0000_00f0#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0002#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0003#" subleaf="16#00#"/>
+    <cpuid eax="16#1c00_4121#" ebx="16#02c0_003f#" ecx="16#0000_003f#" edx="16#0000_0000#" leaf="16#0000_0004#" subleaf="16#00#"/>
+    <cpuid eax="16#1c00_4122#" ebx="16#01c0_003f#" ecx="16#0000_003f#" edx="16#0000_0000#" leaf="16#0000_0004#" subleaf="16#01#"/>
+    <cpuid eax="16#1c00_4143#" ebx="16#0240_003f#" ecx="16#0000_07ff#" edx="16#0000_0000#" leaf="16#0000_0004#" subleaf="16#02#"/>
+    <cpuid eax="16#1c03_c163#" ebx="16#02c0_003f#" ecx="16#0000_5fff#" edx="16#0000_0004#" leaf="16#0000_0004#" subleaf="16#03#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0004#" subleaf="16#04#"/>
+    <cpuid eax="16#0000_0040#" ebx="16#0000_0040#" ecx="16#0000_0003#" edx="16#1010_1020#" leaf="16#0000_0005#" subleaf="16#00#"/>
+    <cpuid eax="16#00df_8ff7#" ebx="16#0000_0002#" ecx="16#0000_0409#" edx="16#0000_0003#" leaf="16#0000_0006#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0002#" ebx="16#239c_27eb#" ecx="16#98c0_27bc#" edx="16#fc1c_4410#" leaf="16#0000_0007#" subleaf="16#00#"/>
+    <cpuid eax="16#0040_1c10#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0004_0000#" leaf="16#0000_0007#" subleaf="16#01#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0017#" leaf="16#0000_0007#" subleaf="16#02#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0008#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0009#" subleaf="16#00#"/>
+    <cpuid eax="16#0830_0805#" ebx="16#0000_0000#" ecx="16#0000_000f#" edx="16#0000_8604#" leaf="16#0000_000a#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0001#" ebx="16#0000_0002#" ecx="16#0000_0100#" edx="16#0000_0000#" leaf="16#0000_000b#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0004#" ebx="16#0000_000c#" ecx="16#0000_0201#" edx="16#0000_0000#" leaf="16#0000_000b#" subleaf="16#01#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0002#" edx="16#0000_0000#" leaf="16#0000_000b#" subleaf="16#02#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_000c#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0207#" ebx="16#0000_0a88#" ecx="16#0000_0a88#" edx="16#0000_0000#" leaf="16#0000_000d#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_000f#" ebx="16#0000_0670#" ecx="16#0001_9900#" edx="16#0000_0000#" leaf="16#0000_000d#" subleaf="16#01#"/>
+    <cpuid eax="16#0000_0100#" ebx="16#0000_0240#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_000d#" subleaf="16#02#"/>
+    <cpuid eax="16#0000_0080#" ebx="16#0000_0000#" ecx="16#0000_0001#" edx="16#0000_0000#" leaf="16#0000_000d#" subleaf="16#08#"/>
+    <cpuid eax="16#0000_0008#" ebx="16#0000_0a80#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_000d#" subleaf="16#09#"/>
+    <cpuid eax="16#0000_0010#" ebx="16#0000_0000#" ecx="16#0000_0001#" edx="16#0000_0000#" leaf="16#0000_000d#" subleaf="16#0b#"/>
+    <cpuid eax="16#0000_0018#" ebx="16#0000_0000#" ecx="16#0000_0001#" edx="16#0000_0000#" leaf="16#0000_000d#" subleaf="16#0c#"/>
+    <cpuid eax="16#0000_0328#" ebx="16#0000_0000#" ecx="16#0000_0001#" edx="16#0000_0000#" leaf="16#0000_000d#" subleaf="16#0f#"/>
+    <cpuid eax="16#0000_0008#" ebx="16#0000_0000#" ecx="16#0000_0001#" edx="16#0000_0000#" leaf="16#0000_000d#" subleaf="16#10#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_000e#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_000f#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0010#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0011#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0012#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0012#" subleaf="16#01#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0012#" subleaf="16#02#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0013#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0001#" ebx="16#0000_005f#" ecx="16#0000_0007#" edx="16#0000_0000#" leaf="16#0000_0014#" subleaf="16#00#"/>
+    <cpuid eax="16#0249_0002#" ebx="16#003f_003f#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0014#" subleaf="16#01#"/>
+    <cpuid eax="16#0000_0002#" ebx="16#0000_009c#" ecx="16#0249_f000#" edx="16#0000_0000#" leaf="16#0000_0015#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0bb8#" ebx="16#0000_11f8#" ecx="16#0000_0064#" edx="16#0000_0000#" leaf="16#0000_0016#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0017#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0008#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0018#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0008_0001#" ecx="16#0000_0020#" edx="16#0000_4022#" leaf="16#0000_0018#" subleaf="16#01#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0008_0006#" ecx="16#0000_0004#" edx="16#0000_4022#" leaf="16#0000_0018#" subleaf="16#02#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0010_000f#" ecx="16#0000_0001#" edx="16#0000_4125#" leaf="16#0000_0018#" subleaf="16#03#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0004_0001#" ecx="16#0000_0010#" edx="16#0000_4024#" leaf="16#0000_0018#" subleaf="16#04#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0004_0006#" ecx="16#0000_0008#" edx="16#0000_4024#" leaf="16#0000_0018#" subleaf="16#05#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0008_0008#" ecx="16#0000_0001#" edx="16#0000_4124#" leaf="16#0000_0018#" subleaf="16#06#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0008_0007#" ecx="16#0000_0080#" edx="16#0000_4043#" leaf="16#0000_0018#" subleaf="16#07#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0008_0009#" ecx="16#0000_0080#" edx="16#0000_4043#" leaf="16#0000_0018#" subleaf="16#08#"/>
+    <cpuid eax="16#0000_0007#" ebx="16#0000_0014#" ecx="16#0000_0003#" edx="16#0000_0000#" leaf="16#0000_0019#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_001a#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0001#" ebx="16#0000_0001#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_001b#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_001b#" subleaf="16#01#"/>
+    <cpuid eax="16#4000_000b#" ebx="16#0000_0007#" ecx="16#0000_0007#" edx="16#0000_0000#" leaf="16#0000_001c#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_001d#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_001e#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0001#" ebx="16#0000_0002#" ecx="16#0000_0100#" edx="16#0000_0000#" leaf="16#0000_001f#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0004#" ebx="16#0000_000c#" ecx="16#0000_0201#" edx="16#0000_0000#" leaf="16#0000_001f#" subleaf="16#01#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0002#" edx="16#0000_0000#" leaf="16#0000_001f#" subleaf="16#02#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0001#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0020#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0001#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#2000_0000#" subleaf="16#00#"/>
+    <cpuid eax="16#8000_0008#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#8000_0000#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0121#" edx="16#2c10_0800#" leaf="16#8000_0001#" subleaf="16#00#"/>
+    <cpuid eax="16#6874_3231#" ebx="16#6e65_4720#" ecx="16#746e_4920#" edx="16#5228_6c65#" leaf="16#8000_0002#" subleaf="16#00#"/>
+    <cpuid eax="16#6f43_2029#" ebx="16#5428_6572#" ecx="16#6920_294d#" edx="16#3231_2d35#" leaf="16#8000_0003#" subleaf="16#00#"/>
+    <cpuid eax="16#0030_3035#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#8000_0004#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#8000_0005#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0500_7040#" edx="16#0000_0000#" leaf="16#8000_0006#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0100#" leaf="16#8000_0007#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_302e#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#8000_0008#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0001#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#8086_0000#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0001#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#c000_0000#" subleaf="16#00#"/>
+    <msr address="16#0000_003a#" name="IA32_FEATURE_CONTROL" regval="16#0000_0000_0000_0005#"/>
+    <msr address="16#0000_010a#" name="IA32_ARCH_CAPABILITIES" regval="16#0000_0000_0088_fd6b#"/>
+    <msr address="16#0000_01a0#" name="IA32_MISC_ENABLE" regval="16#0000_0000_0085_0089#"/>
+    <msr address="16#0000_0480#" name="IA32_VMX_BASIC" regval="16#03da_0500_0000_0013#"/>
+    <msr address="16#0000_0481#" name="IA32_VMX_PINBASED_CTLS" regval="16#0000_00ff_0000_0016#"/>
+    <msr address="16#0000_0482#" name="IA32_VMX_PROCBASED_CTLS" regval="16#fffb_fffe_0401_e172#"/>
+    <msr address="16#0000_0483#" name="IA32_VMX_EXIT_CTLS" regval="16#f77f_ffff_0003_6dff#"/>
+    <msr address="16#0000_0484#" name="IA32_VMX_ENTRY_CTLS" regval="16#0076_ffff_0000_11ff#"/>
+    <msr address="16#0000_0485#" name="IA32_VMX_MISC" regval="16#0000_0000_7004_c1e7#"/>
+    <msr address="16#0000_0486#" name="IA32_VMX_CR0_FIXED0" regval="16#0000_0000_8000_0021#"/>
+    <msr address="16#0000_0487#" name="IA32_VMX_CR0_FIXED1" regval="16#0000_0000_ffff_ffff#"/>
+    <msr address="16#0000_0488#" name="IA32_VMX_CR4_FIXED0" regval="16#0000_0000_0000_2000#"/>
+    <msr address="16#0000_0489#" name="IA32_VMX_CR4_FIXED1" regval="16#0000_0000_01ff_6fff#"/>
+    <msr address="16#0000_048b#" name="IA32_VMX_PROCBASED_CTLS2" regval="16#0f5f_7fff_0000_0000#"/>
+    <msr address="16#0000_048c#" name="IA32_VMX_EPT_VPID_CAP" regval="16#0001_0f01_06f3_4141#"/>
+    <msr address="16#0000_048d#" name="IA32_VMX_TRUE_PINBASED_CTLS" regval="16#0000_00ff_0000_0016#"/>
+    <msr address="16#0000_048e#" name="IA32_VMX_TRUE_PROCBASED_CTLS" regval="16#fffb_fffe_0400_6172#"/>
+    <msr address="16#0000_048f#" name="IA32_VMX_TRUE_EXIT_CTLS" regval="16#f77f_ffff_0003_6dfb#"/>
+    <msr address="16#0000_0490#" name="IA32_VMX_TRUE_ENTRY_CTLS" regval="16#0076_ffff_0000_11fb#"/>
+  </processor>
+  <memory>
+    <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#0000#" size="16#0009_e000#"/>
+    <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#0009_f000#" size="16#1000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0010_0000#" size="16#5698_e000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#56a8_f000#" size="16#0183_d000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#582c_d000#" size="16#0c30_2000#"/>
+    <memoryBlock allocatable="false" name="ACPI Tables" physicalAddress="16#682c_f000#" size="16#0025_0000#"/>
+    <memoryBlock allocatable="false" name="ACPI Non-volatile Storage" physicalAddress="16#6851_f000#" size="16#0020_0000#"/>
+    <memoryBlock allocatable="false" name="Unknown E820 type" physicalAddress="16#69f1_f000#" size="16#000e_0000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#69ff_f000#" size="16#1000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0001_0000_0000#" size="16#0007_7f80_0000#"/>
+    <reservedMemory name="rmrr1" physicalAddress="16#7000_0000#" size="16#1080_0000#"/>
+  </memory>
+  <devices pciConfigAddress="16#c000_0000#" pciConfigSize="16#1000_0000#">
+    <device name="system_board">
+      <ioPort end="16#0cf9#" name="reset" start="16#0cf9#"/>
+      <ioPort end="16#1804#" name="pm1a_cnt" start="16#1804#"/>
+      <capabilities>
+        <capability name="systemboard"/>
+        <capability name="pm1a_cnt_slp_typ">7168</capability>
+      </capabilities>
+    </device>
+    <device name="ioapic_1">
+      <memory caching="UC" name="mem1" physicalAddress="16#fec0_0000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="ioapic"/>
+        <capability name="gsi_base">0</capability>
+        <capability name="max_redirection_entry">119</capability>
+        <capability name="source_id">16#00f7#</capability>
+      </capabilities>
+    </device>
+    <device name="iommu_1">
+      <memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="iommu"/>
+        <capability name="agaw">48</capability>
+        <capability name="fr_offset">1024</capability>
+        <capability name="iotlb_invalidate_offset">1288</capability>
+      </capabilities>
+    </device>
+    <device name="iommu_2">
+      <memory caching="UC" name="mmio" physicalAddress="16#fed9_1000#" size="16#1000#"/>
+      <capabilities>
+        <capability name="iommu"/>
+        <capability name="agaw">48</capability>
+        <capability name="fr_offset">1024</capability>
+        <capability name="iotlb_invalidate_offset">1288</capability>
+      </capabilities>
+    </device>
+    <device name="com_1">
+      <irq name="irq1" number="4"/>
+      <ioPort end="16#03ff#" name="ioport1" start="16#03f8#"/>
+    </device>
+    <device name="host_bridge_1">
+      <pci bus="16#00#" device="16#00#" function="0">
+        <identification classcode="16#0600#" deviceId="16#4650#" revisionId="16#05#" vendorId="16#8086#"/>
+        <iommuGroup id="1"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#c000_0000#" size="16#1000#"/>
+    </device>
+    <device name="vga_compatible_controller_1">
+      <description>Intel Corporation Alder Lake-S GT1 [UHD Graphics 770]</description>
+      <pci bus="16#00#" device="16#02#" function="0">
+        <identification classcode="16#0300#" deviceId="16#4690#" revisionId="16#0c#" vendorId="16#8086#"/>
+        <iommuGroup id="0"/>
+      </pci>
+      <irq name="irq1" number="16">
+        <msi name="msi1"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#0060_0400_0000#" size="16#0100_0000#"/>
+      <memory caching="WC" name="mem2" physicalAddress="16#0040_0000_0000#" size="16#1000_0000#"/>
+      <memory caching="UC" name="mem3" physicalAddress="16#000c_0000#" size="16#0002_0000#"/>
+      <memory caching="UC" name="mem4" physicalAddress="16#0040_1000_0000#" size="16#0700_0000#"/>
+      <memory caching="UC" name="mem5" physicalAddress="16#0040_2000_0000#" size="16#e000_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#c001_0000#" size="16#1000#"/>
+      <ioPort end="16#703f#" name="ioport1" start="16#7000#"/>
+      <reservedMemory ref="rmrr1"/>
+    </device>
+    <device name="signal_processing_controller_1">
+      <description>Intel Corporation Platform Monitoring Technology</description>
+      <pci bus="16#00#" device="16#0a#" function="0">
+        <identification classcode="16#1180#" deviceId="16#467d#" revisionId="16#01#" vendorId="16#8086#"/>
+        <iommuGroup id="3"/>
+      </pci>
+      <memory caching="UC" name="mem1" physicalAddress="16#0060_0521_0000#" size="16#8000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#c005_0000#" size="16#1000#"/>
+    </device>
+    <device name="raid_bus_controller_1">
+      <description>Intel Corporation Volume Management Device NVMe RAID Controller</description>
+      <pci bus="16#00#" device="16#0e#" function="0">
+        <identification classcode="16#0104#" deviceId="16#467f#" revisionId="16#00#" vendorId="16#8086#"/>
+        <iommuGroup id="4"/>
+      </pci>
+      <irq name="irq1" number="16">
+        <msi name="msi1"/>
+        <msi name="msi2"/>
+        <msi name="msi3"/>
+        <msi name="msi4"/>
+        <msi name="msi5"/>
+        <msi name="msi6"/>
+        <msi name="msi7"/>
+        <msi name="msi8"/>
+        <msi name="msi9"/>
+        <msi name="msi10"/>
+        <msi name="msi11"/>
+        <msi name="msi12"/>
+        <msi name="msi13"/>
+        <msi name="msi14"/>
+        <msi name="msi15"/>
+        <msi name="msi16"/>
+        <msi name="msi17"/>
+        <msi name="msi18"/>
+        <msi name="msi19"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#0060_0200_0000#" size="16#0200_0000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#8200_0000#" size="16#0200_0000#"/>
+      <memory caching="UC" name="mem3" physicalAddress="16#0060_0510_0000#" size="16#0010_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#c007_0000#" size="16#1000#"/>
+    </device>
+    <device name="usb_controller_1">
+      <description>Intel Corporation Alder Lake-S PCH USB 3.2 Gen 2x2 XHCI Controller</description>
+      <pci bus="16#00#" device="16#14#" function="0">
+        <identification classcode="16#0c03#" deviceId="16#7ae0#" revisionId="16#11#" vendorId="16#8086#"/>
+        <iommuGroup id="5"/>
+      </pci>
+      <irq name="irq1" number="16">
+        <msi name="msi1"/>
+        <msi name="msi2"/>
+        <msi name="msi3"/>
+        <msi name="msi4"/>
+        <msi name="msi5"/>
+        <msi name="msi6"/>
+        <msi name="msi7"/>
+        <msi name="msi8"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#0060_0520_0000#" size="16#0001_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#c00a_0000#" size="16#1000#"/>
+    </device>
+    <device name="ram_memory_1">
+      <description>Intel Corporation Alder Lake-S PCH Shared SRAM</description>
+      <pci bus="16#00#" device="16#14#" function="2">
+        <identification classcode="16#0500#" deviceId="16#7aa7#" revisionId="16#11#" vendorId="16#8086#"/>
+        <iommuGroup id="5"/>
+      </pci>
+      <memory caching="UC" name="mem1" physicalAddress="16#0060_0522_4000#" size="16#4000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#0060_0522_d000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#c00a_2000#" size="16#1000#"/>
+    </device>
+    <device name="serial_bus_controller_1">
+      <description>Intel Corporation Alder Lake-S PCH Serial IO I2C Controller #0</description>
+      <pci bus="16#00#" device="16#15#" function="0">
+        <identification classcode="16#0c80#" deviceId="16#7acc#" revisionId="16#11#" vendorId="16#8086#"/>
+        <iommuGroup id="6"/>
+      </pci>
+      <memory caching="UC" name="mem1" physicalAddress="16#0040_1700_0000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#c00a_8000#" size="16#1000#"/>
+    </device>
+    <device name="serial_bus_controller_2">
+      <description>Intel Corporation Alder Lake-S PCH Serial IO I2C Controller #1</description>
+      <pci bus="16#00#" device="16#15#" function="1">
+        <identification classcode="16#0c80#" deviceId="16#7acd#" revisionId="16#11#" vendorId="16#8086#"/>
+        <iommuGroup id="6"/>
+      </pci>
+      <memory caching="UC" name="mem1" physicalAddress="16#0040_1700_1000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#c00a_9000#" size="16#1000#"/>
+    </device>
+    <device name="serial_bus_controller_3">
+      <description>Intel Corporation Alder Lake-S PCH Serial IO I2C Controller #2</description>
+      <pci bus="16#00#" device="16#15#" function="2">
+        <identification classcode="16#0c80#" deviceId="16#7ace#" revisionId="16#11#" vendorId="16#8086#"/>
+        <iommuGroup id="6"/>
+      </pci>
+      <memory caching="UC" name="mem1" physicalAddress="16#0040_1700_2000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#c00a_a000#" size="16#1000#"/>
+    </device>
+    <device name="communication_controller_1">
+      <description>Intel Corporation Alder Lake-S PCH HECI Controller #1</description>
+      <pci bus="16#00#" device="16#16#" function="0">
+        <identification classcode="16#0780#" deviceId="16#7ae8#" revisionId="16#11#" vendorId="16#8086#"/>
+        <iommuGroup id="7"/>
+      </pci>
+      <irq name="irq1" number="16">
+        <msi name="msi1"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#0060_0522_9000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#c00b_0000#" size="16#1000#"/>
+    </device>
+    <device name="sata_controller_1">
+      <description>Intel Corporation Alder Lake-S PCH SATA Controller [AHCI Mode]</description>
+      <pci bus="16#00#" device="16#17#" function="0">
+        <identification classcode="16#0106#" deviceId="16#7ae2#" revisionId="16#11#" vendorId="16#8086#"/>
+        <iommuGroup id="8"/>
+      </pci>
+      <irq name="irq1" number="16">
+        <msi name="msi1"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#8600_0000#" size="16#2000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#8600_3000#" size="16#1000#"/>
+      <memory caching="UC" name="mem3" physicalAddress="16#8600_2000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#c00b_8000#" size="16#1000#"/>
+      <ioPort end="16#7097#" name="ioport1" start="16#7090#"/>
+      <ioPort end="16#7083#" name="ioport2" start="16#7080#"/>
+      <ioPort end="16#707f#" name="ioport3" start="16#7060#"/>
+    </device>
+    <device name="isa_bridge_1">
+      <description>Intel Corporation Z690 Chipset LPC/eSPI Controller</description>
+      <pci bus="16#00#" device="16#1f#" function="0">
+        <identification classcode="16#0601#" deviceId="16#7a84#" revisionId="16#11#" vendorId="16#8086#"/>
+        <iommuGroup id="14"/>
+      </pci>
+      <memory caching="UC" name="mmconf" physicalAddress="16#c00f_8000#" size="16#1000#"/>
+    </device>
+    <device name="audio_device_1">
+      <description>Intel Corporation Alder Lake-S HD Audio Controller</description>
+      <pci bus="16#00#" device="16#1f#" function="3">
+        <identification classcode="16#0403#" deviceId="16#7ad0#" revisionId="16#11#" vendorId="16#8086#"/>
+        <iommuGroup id="14"/>
+      </pci>
+      <irq name="irq1" number="16">
+        <msi name="msi1"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#0060_0522_0000#" size="16#4000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#0060_0500_0000#" size="16#0010_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#c00f_b000#" size="16#1000#"/>
+    </device>
+    <device name="smbus_1">
+      <description>Intel Corporation Alder Lake-S PCH SMBus Controller</description>
+      <pci bus="16#00#" device="16#1f#" function="4">
+        <identification classcode="16#0c05#" deviceId="16#7aa3#" revisionId="16#11#" vendorId="16#8086#"/>
+        <iommuGroup id="14"/>
+      </pci>
+      <memory caching="UC" name="mem1" physicalAddress="16#0060_0522_8000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#c00f_c000#" size="16#1000#"/>
+      <ioPort end="16#efbf#" name="ioport1" start="16#efa0#"/>
+    </device>
+    <device name="serial_bus_controller_4">
+      <description>Intel Corporation Alder Lake-S PCH SPI Controller</description>
+      <pci bus="16#00#" device="16#1f#" function="5">
+        <identification classcode="16#0c80#" deviceId="16#7aa4#" revisionId="16#11#" vendorId="16#8086#"/>
+        <iommuGroup id="14"/>
+      </pci>
+      <memory caching="UC" name="mem1" physicalAddress="16#8080_0000#" size="16#1000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#c00f_d000#" size="16#1000#"/>
+    </device>
+    <device name="non-volatile_memory_controller_1">
+      <description>Samsung Electronics Co Ltd NVMe SSD Controller PM9A1/PM9A3/980PRO</description>
+      <pci bus="16#01#" device="16#00#" function="0">
+        <identification classcode="16#0108#" deviceId="16#a80a#" revisionId="16#00#" vendorId="16#144d#"/>
+        <iommuGroup id="15"/>
+      </pci>
+      <irq name="irq1" number="16">
+        <msi name="msi1"/>
+        <msi name="msi2"/>
+        <msi name="msi3"/>
+        <msi name="msi4"/>
+        <msi name="msi5"/>
+        <msi name="msi6"/>
+        <msi name="msi7"/>
+        <msi name="msi8"/>
+        <msi name="msi9"/>
+        <msi name="msi10"/>
+        <msi name="msi11"/>
+        <msi name="msi12"/>
+        <msi name="msi13"/>
+        <msi name="msi14"/>
+        <msi name="msi15"/>
+        <msi name="msi16"/>
+<!--    <msi name="msi17"/>
+        <msi name="msi18"/>
+        <msi name="msi19"/>
+        <msi name="msi20"/>
+        <msi name="msi21"/>
+        <msi name="msi22"/>
+        <msi name="msi23"/>
+        <msi name="msi24"/>
+        <msi name="msi25"/>
+        <msi name="msi26"/>
+        <msi name="msi27"/>
+        <msi name="msi28"/>
+        <msi name="msi29"/>
+        <msi name="msi30"/>
+        <msi name="msi31"/>
+        <msi name="msi32"/>
+        <msi name="msi33"/>
+        <msi name="msi34"/>
+        <msi name="msi35"/>
+        <msi name="msi36"/>
+        <msi name="msi37"/>
+        <msi name="msi38"/>
+        <msi name="msi39"/>
+        <msi name="msi40"/>
+        <msi name="msi41"/>
+        <msi name="msi42"/>
+        <msi name="msi43"/>
+        <msi name="msi44"/>
+        <msi name="msi45"/>
+        <msi name="msi46"/>
+        <msi name="msi47"/>
+        <msi name="msi48"/>
+        <msi name="msi49"/>
+        <msi name="msi50"/>
+        <msi name="msi51"/>
+        <msi name="msi52"/>
+        <msi name="msi53"/>
+        <msi name="msi54"/>
+        <msi name="msi55"/>
+        <msi name="msi56"/>
+        <msi name="msi57"/>
+        <msi name="msi58"/>
+        <msi name="msi59"/>
+        <msi name="msi60"/>
+        <msi name="msi61"/>
+        <msi name="msi62"/>
+        <msi name="msi63"/>
+        <msi name="msi64"/>
+        <msi name="msi65"/>
+        <msi name="msi66"/>
+        <msi name="msi67"/>
+        <msi name="msi68"/>
+        <msi name="msi69"/>
+        <msi name="msi70"/>
+        <msi name="msi71"/>
+        <msi name="msi72"/>
+        <msi name="msi73"/>
+        <msi name="msi74"/>
+        <msi name="msi75"/>
+        <msi name="msi76"/>
+        <msi name="msi77"/>
+        <msi name="msi78"/>
+        <msi name="msi79"/>
+        <msi name="msi80"/>
+        <msi name="msi81"/>
+        <msi name="msi82"/>
+        <msi name="msi83"/>
+        <msi name="msi84"/>
+        <msi name="msi85"/>
+        <msi name="msi86"/>
+        <msi name="msi87"/>
+        <msi name="msi88"/>
+        <msi name="msi89"/>
+        <msi name="msi90"/>
+        <msi name="msi91"/>
+        <msi name="msi92"/>
+        <msi name="msi93"/>
+        <msi name="msi94"/>
+        <msi name="msi95"/>
+        <msi name="msi96"/>
+        <msi name="msi97"/>
+        <msi name="msi98"/>
+        <msi name="msi99"/>
+        <msi name="msi100"/>
+        <msi name="msi101"/>
+        <msi name="msi102"/>
+        <msi name="msi103"/>
+        <msi name="msi104"/>
+        <msi name="msi105"/>
+        <msi name="msi106"/>
+        <msi name="msi107"/>
+        <msi name="msi108"/>
+        <msi name="msi109"/>
+        <msi name="msi110"/>
+        <msi name="msi111"/>
+        <msi name="msi112"/>
+        <msi name="msi113"/>
+        <msi name="msi114"/>
+        <msi name="msi115"/>
+        <msi name="msi116"/>
+        <msi name="msi117"/>
+        <msi name="msi118"/>
+        <msi name="msi119"/>
+        <msi name="msi120"/>
+        <msi name="msi121"/>
+        <msi name="msi122"/>
+        <msi name="msi123"/>
+        <msi name="msi124"/>
+        <msi name="msi125"/>
+        <msi name="msi126"/>
+        <msi name="msi127"/>
+        <msi name="msi128"/>
+        <msi name="msi129"/>
+        <msi name="msi130"/>  -->
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#85f0_0000#" size="16#4000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#c010_0000#" size="16#1000#"/>
+    </device>
+    <device name="ethernet_controller_1">
+      <description>Realtek Semiconductor Co., Ltd. RTL8125 2.5GbE Controller</description>
+      <pci bus="16#05#" device="16#00#" function="0">
+        <identification classcode="16#0200#" deviceId="16#8125#" revisionId="16#05#" vendorId="16#10ec#"/>
+        <iommuGroup id="16"/>
+      </pci>
+      <irq name="irq1" number="16">
+        <msi name="msi1"/>
+        <msi name="msi2"/>
+        <msi name="msi3"/>
+        <msi name="msi4"/>
+        <msi name="msi5"/>
+        <msi name="msi6"/>
+        <msi name="msi7"/>
+        <msi name="msi8"/>
+        <msi name="msi9"/>
+        <msi name="msi10"/>
+        <msi name="msi11"/>
+        <msi name="msi12"/>
+        <msi name="msi13"/>
+        <msi name="msi14"/>
+        <msi name="msi15"/>
+        <msi name="msi16"/>
+<!--    <msi name="msi17"/>
+        <msi name="msi18"/>
+        <msi name="msi19"/>
+        <msi name="msi20"/>
+        <msi name="msi21"/>
+        <msi name="msi22"/>
+        <msi name="msi23"/>
+        <msi name="msi24"/>
+        <msi name="msi25"/>
+        <msi name="msi26"/>
+        <msi name="msi27"/>
+        <msi name="msi28"/>
+        <msi name="msi29"/>
+        <msi name="msi30"/>
+        <msi name="msi31"/>
+        <msi name="msi32"/>  -->
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#85e0_0000#" size="16#0001_0000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#85e1_0000#" size="16#4000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#c050_0000#" size="16#1000#"/>
+      <ioPort end="16#40ff#" name="ioport1" start="16#4000#"/>
+    </device>
+  </devices>
+</hardware>

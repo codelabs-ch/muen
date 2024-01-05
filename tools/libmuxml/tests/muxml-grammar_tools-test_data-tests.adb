@@ -185,11 +185,46 @@ package body Muxml.Grammar_Tools.Test_Data.Tests is
          Assert_Makro (Tagname => "memory", Result => No_Unique_Index);
       end Index_Not_Unique;
 
+      -- This test targets the fallback mechanism of Get_Parent_Type
+      -- in case the type resolution is not possible.
+      procedure Fallback_Parent_Type
+      is
+         Schema_Type_Resolution_Problem : constant String
+           := "<xs:schema xmlns:xs=""http://www.w3.org/2001/XMLSchema"">"
+             & " <xs:complexType name=""groupType"">"
+             & "  <xs:sequence>"
+             & "   <xs:element name=""group"" type=""subgroupType""/>"
+             & "   <xs:element name=""groupname"" type=""xs:string""/>"
+             & "  </xs:sequence>"
+             & " </xs:complexType>"
+             & " <xs:complexType name=""subgroupType"">"
+             & "  <xs:sequence>"
+             & "   <xs:element name=""membername"" type=""xs:string""/>"
+             & "   <xs:element name=""group"" type=""subgroupType""/>"
+             & "  </xs:sequence>"
+             & " </xs:complexType>"
+             & " <xs:element name=""group"" type=""groupType""/>"
+             & "</xs:schema>";
+      begin
+         Ancestors.Clear;
+         Siblings.Clear;
+         Init_Order_Information (Schema_XML_Data => Schema_Type_Resolution_Problem);
+
+         Ancestors.Append ("group");
+         Ancestors.Append ("group");
+         Ancestors.Append ("group");
+         Siblings.Append ("membername");
+
+         Assert_Makro (Tagname => "group", Result => 1);
+      end Fallback_Parent_Type;
+
    begin
       Positive_Test;
 
       No_Insertion_Possible;
       Index_Not_Unique;
+
+      Fallback_Parent_Type;
 --  begin read only
    end Test_Get_Insert_Index;
 --  end read only
@@ -251,7 +286,7 @@ package body Muxml.Grammar_Tools.Test_Data.Tests is
                end;
             end loop;
          end;
-         Filter_XML (Xml_Data => Data);
+         Filter_XML (XML_Data => Data);
          Muxml.Write (Data => Data,
                       Kind => Muxml.None,
                       File => Output);
@@ -275,7 +310,7 @@ package body Muxml.Grammar_Tools.Test_Data.Tests is
            (Data => Data,
             Kind => Muxml.None,
             File => "data/format_src.xml");
-         Filter_XML (Xml_Data => Data);
+         Filter_XML (XML_Data => Data);
          Assert (Condition => False,
                  Message   => "Exception expected (missing init)");
       exception

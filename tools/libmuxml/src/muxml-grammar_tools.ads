@@ -55,7 +55,7 @@ is
    --  loaded schema information (loadable with Init_Order_Information).
    --  Afterwards, recurses into the remaining children of N.
    --  Only tag-names are evaluated.
-   procedure Filter_XML (Xml_Data : Muxml.XML_Data_Type);
+   procedure Filter_XML (XML_Data : Muxml.XML_Data_Type);
 
    --  Raised if the schema uses a construction which is not supported.
    Not_Implemented : exception;

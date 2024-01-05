@@ -144,7 +144,7 @@
 \node [Data, below= of mucfgmemhashes] (policybhashes) {Core Policy B with hashes};
 \draw [arrow] (subjectarticfacts) to (mucfgmemhashes);
 \draw [arrow]  (policyb.east) -| ([shift={(10mm,-10mm)}]policyb.east) |- ([yshift=2mm]mucfgmemhashes.east);
-\draw [arrow]  ([xshift=-3mm]cbinparts.south) |-  ([yshift=-8mm]cbinparts.south west) -| ([shift={(10mm,-8mm)}]mucfgmemhashes.east) |- ([yshift=-2mm]mucfgmemhashes.east);
+\draw [arrow]  ([xshift=-3mm]cbinparts.south) |-  ([yshift=-12mm]cbinparts.south west) -| ([shift={(10mm,-8mm)}]mucfgmemhashes.east) |- ([yshift=-2mm]mucfgmemhashes.east);
 \draw [arrow]  (mucfgmemhashes) to (policybhashes);
 
 \node [Tool, below= of policybhashes] (sinfo) {Extract Subject Infos\\(mugensinfo)};

@@ -13,7 +13,6 @@ capabilities are limited to the cases present in the current rules
 (e.g. at most one parametrized attribute per xml-node).
 """
 
-import sys
 import copy
 import argparse
 from lxml import etree
@@ -105,13 +104,13 @@ def do_traversal_func(current_map, node, param_bind, c2s_map, expansion):
     for child in node.findall("*"):
         for rule in current_map:
             (rule_matches, fresh_param_bindings, action) = apply_rule(
-                child, rule, current_map[rule], param_bind)
+                child, rule, current_map[rule])
             if rule_matches:
                 action(child, param_bind | fresh_param_bindings,
                        c2s_map, expansion)
 
 
-def apply_rule(node, key, value, param_bind):
+def apply_rule(node, key, value):
     """returns tuple: (rule_matches, fresh_param_bindings, action)
     rule_matches ... indicates if the first level (until first '/')
                      of the given key matches node
@@ -193,7 +192,7 @@ def get_list_of_substitutions(parametrized_substring, param_bind, c2s_map):
     of $subject_name.
     parametrized_substring must be either
     $Component_To_Subjects($component_name)
-    or of the from
+    or of the form
     $subject_name
     """
 
@@ -262,7 +261,7 @@ def add_to_output_func(target_path, node, param_bind, c2s_map, exp_subdict):
 def compile_target_expansion(source_root):
     """Creates a data structure which determines
     what to insert where in the target tree.
-    The data stucture is has layout like this:
+    The data stucture's layout is like this:
     {'__children' :
       {'system' :
        {'__new_leaves' : [<Element doc at 0x7fc793f93b80>,
@@ -292,12 +291,12 @@ def simple_xpath_match(node, local_xpath):
     """Determines for a 'local rule' such as 'subject[@name="foo"]'
     if node matches it. It only looks at the node-tag and compares
     at most one attribute-value pair."""
-    return apply_rule(node, local_xpath, None, dict())[0]
+    return apply_rule(node, local_xpath, None)[0]
 
 
 def apply_target_expansion(subtree_root, sub_expansion):
     """Applies the modifications given by sub_expansion
-    to the xml-subtree with rooted at subtree_root
+    to the xml-subtree with is rooted at subtree_root
     """
 
     if '__children' in sub_expansion:
@@ -427,7 +426,10 @@ def main():
         apply_target_expansion(subtree_root=pb_root,
                                sub_expansion=expansion['__children']['system'])
 
-    policy_b.write(args.o, xml_declaration=True, pretty_print=True)
+    policy_b.write(args.o,
+                   xml_declaration=True,
+                   pretty_print=True,
+                   encoding="utf-8")
 
 
 if __name__ == '__main__':

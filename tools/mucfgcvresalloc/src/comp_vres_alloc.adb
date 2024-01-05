@@ -243,7 +243,7 @@ is
             First_Element => Interfaces.Unsigned_64'Value (Attr_Value),
             Size          => Size * Interfaces.Unsigned_64
               (Muxml.Utils.Count_Element_Children
-                 (Node => Node,
+                 (Node        => Node,
                   Name_Filter => Name_Filter)));
       end if;
    end Include_Array;

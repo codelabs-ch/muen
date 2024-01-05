@@ -42,6 +42,8 @@ package body Xmlfilter.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
       Output : constant String := "obj/output.xml";
 
+      ----------------------------------------------------------------------
+
       procedure Positive_Tests
       is
       begin
@@ -72,6 +74,8 @@ package body Xmlfilter.Test_Data.Tests is
          Ada.Directories.Delete_File (Name => Output);
       end Positive_Tests;
 
+      ----------------------------------------------------------------------
+
       procedure Negative_Test_Not_Schema_Complient
       is
       begin
@@ -93,6 +97,8 @@ package body Xmlfilter.Test_Data.Tests is
                    & Ada.Exceptions.Exception_Message (X => E));
       end Negative_Test_Not_Schema_Complient;
 
+      ----------------------------------------------------------------------
+
       procedure Negative_Test_Output_Schema_Missing
       is
       begin
@@ -112,6 +118,8 @@ package body Xmlfilter.Test_Data.Tests is
                     Message   => "Exception message mismatch: "
                    & Ada.Exceptions.Exception_Message (X => E));
       end Negative_Test_Output_Schema_Missing;
+
+      ----------------------------------------------------------------------
 
       procedure Negative_Test_Unknown_Schema_Name
       is

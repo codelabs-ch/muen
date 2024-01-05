@@ -26,6 +26,7 @@ with Ada.Strings.Unbounded;
 
 package body Xmlfilter
 is
+
    procedure Run
      (Input_Xml_Path     : String;
       Input_Schema_Name  : String;
@@ -36,7 +37,7 @@ is
       package ASU renames Ada.Strings.Unbounded;
       use all type ASU.Unbounded_String;
 
-      -- Maps the given string to the
+      -- Maps the given string to the internal schema identifier
       function Get_Schema_Type (Schema_Name : String) return Muxml.Schema_Kind;
 
       ----------------------------------------------------------------------
@@ -111,7 +112,7 @@ is
             Path_To_Schema_File => Output_Schema_Path));
 
       Mulog.Log (Msg => "Filtering XML-data");
-      Muxml.Grammar_Tools.Filter_XML (Xml_Data => XML_Document);
+      Muxml.Grammar_Tools.Filter_XML (XML_Data => XML_Document);
 
       Muxml.Write
         (File => Output_Xml_Path,

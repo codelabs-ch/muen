@@ -116,7 +116,7 @@ def arg_parse():
 def add_documentation():
     """
     This procedure will add the possibility to use <doc> nodes on
-    toplevel as well as as child of any element-node with complex type
+    toplevel and as child of any element-node with complex type
     (this includes elements of type "string" or "word64Type").
 
     Prerequisite: all complex types are defined in the root-node
@@ -127,7 +127,6 @@ def add_documentation():
     args = arg_parse()
     tree = etree.parse(args.input_file, parser)
     doc_root = tree.getroot()
-    ns_prefix = libp.Ns_Info(doc_root).ns_prefix
 
     # Insert universal_starting_group if it does not exists
     # (wrapper for plugins that are allowed in every complexType).

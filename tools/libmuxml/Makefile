@@ -49,7 +49,7 @@ $(GEN_DIR)/muxml-%_extended_schema.ads: $(GEN_DIR)/%_extended.xsd | $(GEN_DIR)
 		"$(XML2ADA) Muxml.$*_extended_schema $(GEN_DIR)/$*_extended.xsd $@"
 
 $(GEN_DIR)/%_extended.xsd: $(GEN_DIR)/%.xsd $(SCHEMA_PLUGINS) | $(GEN_DIR)
-	@$(E) $(COMPONENT) "add doc plugin" \
+	@$(E) $(COMPONENT) "Doc plugin $*_extended" \
 		"schema_plugins/xsd_plugin_doc.py $(GEN_DIR)/$*.xsd $@"
 
 $(GEN_DIR)/muxml-%_schema.ads: $(GEN_DIR)/%.xsd | $(GEN_DIR)
@@ -66,6 +66,7 @@ $(OBJ_DIR)/%.lintok: $(COMPONENT_TARGETS) $(LINT_XML) $(SYSTEM_SCHEMA_FILES) | $
 		"xmllint --noout --schema generated/system_$(*:format_%.xml=%).xsd data/$*"
 	@touch $@
 
-
 doc/graph_integration_overview.pdf: doc/graph_integration_overview.tex
-	cd doc && pdflatex graph_integration_overview.tex && cd ..
+	cd doc && pdflatex graph_integration_overview.tex
+
+.PRECIOUS: $(GEN_DIR)/%.xsd $(GEN_DIR)/%_extended.xsd

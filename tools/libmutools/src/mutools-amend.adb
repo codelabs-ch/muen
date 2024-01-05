@@ -64,7 +64,7 @@ is
          & DOM.Core.Nodes.Length (List => Amend_Statements)'Img
                    & " amend-statements");
 
-      --  Initialize the insertion-algorithm with the XSD-schema
+      --  Initialize the insertion-algorithm with the XSD-schema.
       Muxml.Grammar_Tools.Init_Order_Information
         (Schema_XML_Data => Muxml.system_src_schema.Data);
 

@@ -845,15 +845,15 @@ is
 
          --  Replace the existing config-node with an empty config-node
          Config_Node_New := DOM.Core.Documents.Create_Element
-           (Doc       => Policy.Doc,
-            Tag_Name  => "config");
+           (Doc      => Policy.Doc,
+            Tag_Name => "config");
          Config_Node_New := DOM.Core.Nodes.Insert_Before
            (N         => System_Node,
             New_Child => Config_Node_New,
             Ref_Child => Config_Node);
          Config_Node := DOM.Core.Nodes.Remove_Child
-               (N          => System_Node,
-                Old_Child  => Config_Node);
+               (N         => System_Node,
+                Old_Child => Config_Node);
          DOM.Core.Nodes.Free (N => Config_Node);
          Config_Node := Config_Node_New;
 

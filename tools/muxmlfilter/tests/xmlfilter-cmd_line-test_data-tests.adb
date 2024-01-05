@@ -41,6 +41,8 @@ package body Xmlfilter.Cmd_Line.Test_Data.Tests is
       package ASU renames Ada.Strings.Unbounded;
       use type ASU.Unbounded_String;
 
+      ----------------------------------------------------------------------
+
       procedure Reset_Init_Vars
       is
       begin
@@ -50,6 +52,8 @@ package body Xmlfilter.Cmd_Line.Test_Data.Tests is
          Output_Schema_Name := ASU.Null_Unbounded_String;
          Output_Schema_Path := ASU.Null_Unbounded_String;
       end Reset_Init_Vars;
+
+      ----------------------------------------------------------------------
 
       procedure Positive_Test1
       is
@@ -82,6 +86,8 @@ package body Xmlfilter.Cmd_Line.Test_Data.Tests is
                  Message   => "Output schema path mismatch");
       end Positive_Test1;
 
+      ----------------------------------------------------------------------
+
       procedure Positive_Test2
       is
          Test_Parser : GNAT.Command_Line.Opt_Parser;
@@ -113,6 +119,8 @@ package body Xmlfilter.Cmd_Line.Test_Data.Tests is
                  Message   => "Output schema path mismatch");
       end Positive_Test2;
 
+      ----------------------------------------------------------------------
+
       procedure Negative_Test_Missing_Output_Schema
       is
          Test_Parser : GNAT.Command_Line.Opt_Parser;
@@ -139,6 +147,8 @@ package body Xmlfilter.Cmd_Line.Test_Data.Tests is
          end loop;
       end Negative_Test_Missing_Output_Schema;
 
+      ----------------------------------------------------------------------
+
       procedure Negative_Test_Missing_File
       is
          Test_Parser : GNAT.Command_Line.Opt_Parser;
@@ -164,6 +174,8 @@ package body Xmlfilter.Cmd_Line.Test_Data.Tests is
             GNAT.OS_Lib.Free (X => Args (A));
          end loop;
       end Negative_Test_Missing_File;
+
+      ----------------------------------------------------------------------
 
       procedure Negative_Test_Invalid_Switch
       is

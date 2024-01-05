@@ -774,7 +774,7 @@ is
             Ref_Child => Ref_Child);
       end if;
 
-      --  Update siblings (for potential reuse lateron)
+      --  Update siblings (for potential reuse later on)
       Siblings_Names.Insert (Before   => Insertion_Index,
                              New_Item => DOM.Core.Nodes.Node_Name
                                (N => Inserted_Node));

@@ -336,7 +336,7 @@ is
    --  (element-nodes only; in the correct order).
    --  Both will be updated to hold the new list of children of Parent.
    --  Ancestors must be a list of node-names starting with the name of Parent.
-   --  Ancestors is used to determine the type of Parent in case of abiguity.
+   --  Ancestors is used to determine the type of Parent in case of ambiguity.
    --  Insertion_Index is the index in the resulting Siblings_Nodes vector
    --  where New_Child (or its clone) can be found.
    procedure Insert_Child
@@ -352,20 +352,20 @@ is
 
    --  Wrapper for Insert_Child with reduced interface
    procedure Insert_Child
-    (Parent           : DOM.Core.Node;
-     New_Child        : DOM.Core.Node;
-     Clone_Child      : Boolean := False;
-     Ignored_Siblings : String_Vector.Vector
-       := String_Vector.Empty_Vector);
+     (Parent           : DOM.Core.Node;
+      New_Child        : DOM.Core.Node;
+      Clone_Child      : Boolean := False;
+      Ignored_Siblings : String_Vector.Vector
+      := String_Vector.Empty_Vector);
 
    --  Wrapper for Insert_Child with reduced interface which returns the
    --  inserted Node.
    function Insert_Child
-    (Parent           : DOM.Core.Node;
-     New_Child        : DOM.Core.Node;
-     Clone_Child      : Boolean := False;
-     Ignored_Siblings : String_Vector.Vector
-       := String_Vector.Empty_Vector)
-    return DOM.Core.Node;
+     (Parent           : DOM.Core.Node;
+      New_Child        : DOM.Core.Node;
+      Clone_Child      : Boolean := False;
+      Ignored_Siblings : String_Vector.Vector
+      := String_Vector.Empty_Vector)
+     return DOM.Core.Node;
 
 end Muxml.Utils;

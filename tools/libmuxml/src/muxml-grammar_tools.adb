@@ -34,7 +34,8 @@ is
    --  Get list of all children which are of type "Element_Node"
    --  (as defined in DOM.Core.Nodes.Node_Type).
    function Get_Element_Children
-     (Node : DOM.Core.Node) return Node_Vector.Vector;
+     (Node : DOM.Core.Node)
+     return Node_Vector.Vector;
 
    -------------------------------------------------------------------------
 
@@ -49,7 +50,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Filter_XML (Xml_Data : Muxml.XML_Data_Type)
+   procedure Filter_XML (XML_Data : Muxml.XML_Data_Type)
    is
       --  Recursive function that filters the children of Node and recurses.
       --  Node_Type is assumed to be the type of Node.
@@ -63,9 +64,9 @@ is
       is
          Children_Info : constant Vector_Tuple
            := Order_Info.Type_To_Children (Node_Type);
-         Node           : DOM.Core.Node;
-         To_Free        : Node_Vector.Vector;
-         Index          : String_Vector.Extended_Index;
+         Node    : DOM.Core.Node;
+         To_Free : Node_Vector.Vector;
+         Index   : String_Vector.Extended_Index;
       begin
          --  Remove and free nodes that are not allowed as direct child
          for Child of Get_Element_Children (Node => Parent) loop
@@ -92,7 +93,7 @@ is
       end Filter_Node;
 
       Root_Node      : constant DOM.Core.Node
-        := DOM.Core.Documents.Get_Element (Doc => Xml_Data.Doc);
+        := DOM.Core.Documents.Get_Element (Doc => XML_Data.Doc);
       Root_Node_Name : constant String
         := DOM.Core.Nodes.Node_Name (N => Root_Node);
       Index          : String_Vector.Extended_Index;
@@ -340,7 +341,7 @@ is
       --  Writes map entries and initiates evaluation of types of children.
       procedure Eval_Entrypoint (Type_Name : String);
 
-      --  Search for a nodes called "element" within the schema, add it to
+      --  Search for nodes called "element" within the schema, add it to
       --  the lists and evaluate its type.
       procedure Find_Root_Element_Node_And_Recurse
          (Schema_Node : DOM.Core.Node);
@@ -814,18 +815,18 @@ is
                   Current_Tuple.Type_Names.Append (New_Tuple.Type_Names);
 
                   Order_Info.Type_To_Children.Replace
-                  (Key      => "schemaRoot",
-                   New_Item => Current_Tuple);
+                    (Key      => "schemaRoot",
+                     New_Item => Current_Tuple);
                end;
 
                --  Insert root element in node_name-to-type(s)-dictionary
                declare
                   New_Name : constant String
                     := Order_Info.Type_To_Children
-                    ("schemaRoot").Node_Names.Last_Element;
+                      ("schemaRoot").Node_Names.Last_Element;
                   New_Type : constant String
                     := Order_Info.Type_To_Children
-                    ("schemaRoot").Type_Names.Last_Element;
+                      ("schemaRoot").Type_Names.Last_Element;
                   Current_Types : String_Vector.Vector
                     := String_Vector.Empty_Vector;
                begin
@@ -833,8 +834,8 @@ is
                      Current_Types := Order_Info.Name_To_Type.Element (New_Name);
                   else
                      Order_Info.Name_To_Type.Insert
-                    (Key      => New_Name,
-                     New_Item => String_Vector.Empty_Vector);
+                       (Key      => New_Name,
+                        New_Item => String_Vector.Empty_Vector);
                   end if;
                   Current_Types.Append (New_Type);
                   Order_Info.Name_To_Type.Replace
@@ -849,7 +850,7 @@ is
                declare
                   Type_Name : constant String
                      := Order_Info.Type_To_Children
-                     ("schemaRoot").Type_Names.Last_Element;
+                       ("schemaRoot").Type_Names.Last_Element;
                begin
                   Eval_Entrypoint (Type_Name => Type_Name);
                end;

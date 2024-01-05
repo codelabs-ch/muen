@@ -313,6 +313,26 @@ is
             end;
          end loop;
 
+         -- check if the template call contains any element-nodes which are not
+         -- called "parameter"
+         declare
+            Bad_Nodes : constant DOM.Core.Node_List
+               := McKae.XML.XPath.XIA.XPath_Query
+               (N     => Template_Call,
+                XPath => ".//*[not(local-name(.)='parameter')]");
+            Node      : DOM.Core.Node;
+         begin
+            if DOM.Core.Nodes.Length (List => Bad_Nodes) /= 0 then
+               Node := DOM.Core.Nodes.Item
+                  (List  => Bad_Nodes,
+                   Index => 0);
+               raise Muxml.Validation_Error with
+                  "UseTemplate statement contains node with name '"
+                  & DOM.Core.Nodes.Node_Name (N => Node)
+                  & "'. Only 'parameter' is allowed.";
+            end if;
+         end;
+
          -- remove old 'parameters' node
          declare
             Params : DOM.Core.Node

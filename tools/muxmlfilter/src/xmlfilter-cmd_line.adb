@@ -78,7 +78,7 @@ is
    is
       use Ada.Strings.Unbounded;
 
-      Cmdline     : Mutools.Cmd_Line.Config_Type;
+      Cmdline       : Mutools.Cmd_Line.Config_Type;
       I_Schema_Name : aliased GNAT.Strings.String_Access;
       O_Schema_Name : aliased GNAT.Strings.String_Access;
       O_Schema_Path : aliased GNAT.Strings.String_Access;
@@ -137,8 +137,8 @@ is
 
       exception
          when GNAT.Command_Line.Invalid_Switch |
-           GNAT.Command_Line.Exit_From_Command_Line |
-           GNAT.Command_Line.Invalid_Parameter =>
+              GNAT.Command_Line.Exit_From_Command_Line |
+              GNAT.Command_Line.Invalid_Parameter =>
             GNAT.Command_Line.Display_Help (Config => Cmdline.Data);
             raise Invalid_Cmd_Line;
       end;

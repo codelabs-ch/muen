@@ -114,8 +114,8 @@ def get_defining_node(node: etree._Element, def_name: str) -> etree._Element:
     if len(results) == 1:
         return results[0]
     else:
-        raise Error("Could not find unique defining node for type/group "
-                    + f"with name '{def_name}'")
+        raise ValueError("Could not find unique defining node for type/group "
+                         + f"with name '{def_name}'")
 
 
 def create_element_from_dict(attribs: dict[str, str]) -> etree._Element:
@@ -140,7 +140,7 @@ def insert_universal_starting_group(doc_root: etree._Element):
     if type B is derived from type A, then type A is changed but not type B
     (simply by not changing types which are derived).
     The function does not support all possible xsd-constructions.
-    In particular a complexTypes derived via 'restriction' are not allowed.
+    In particular complexTypes derived via 'restriction' are not allowed.
     """
 
     for child_node in doc_root.iterchildren():
@@ -171,8 +171,8 @@ def insert_usg_in_complexType(node: etree._Element):
         #    This case is not supported!
         elif name == "complexContent":
             if len(child.xpath("./*[local-name()='restriction']")) > 0:
-                raise Error("Found unsupported element in complexType: "
-                            + "'restriction'")
+                raise ValueError("Found unsupported element in complexType: "
+                                 + "'restriction'")
             return
         elif name in ["annotation"]:
             continue
@@ -197,8 +197,9 @@ def insert_usg_in_complexType(node: etree._Element):
             insert_usg_in_sequence(sequence_sibling)
             return
         else:
-            raise (f"Found unsupported tag in complexType: {name}\n"
-                   + "Location of finding: " + node_ancestors_string(child))
+            raise ValueError(f"Found unsupported tag in complexType: {name}\n"
+                             + "Location of finding: "
+                             + node_ancestors_string(child))
 
     # if the type did not contain any children we insert a sequence
     node.append(etree.Element(f"{prefix}sequence"))
@@ -250,7 +251,7 @@ def insert_children_from_string(root: etree._Element,
     elif position == 'bottom':
         index = len(root)
     else:
-        raise Error(f"Unknown value for parameter 'position': {positiion}")
+        raise ValueError(f"Unknown value for parameter 'position': {position}")
 
     for child in new_doc.iterchildren():
         root.insert(index, child)

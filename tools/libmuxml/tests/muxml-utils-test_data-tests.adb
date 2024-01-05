@@ -2078,7 +2078,7 @@ package body Muxml.Utils.Test_Data.Tests is
 
       Assert (Condition => Get_Ancestor_Names (Node => Node) = Ancestors,
               Message   => "Ancestors mismatch"
-             & Get_Ancestor_Names (Node => Node).First_Element);
+                & Get_Ancestor_Names (Node => Node).First_Element);
 
       --  non-trivial ancestor list
       Node := Muxml.Utils.Get_Element
@@ -2106,6 +2106,8 @@ package body Muxml.Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
       use type DOM.Core.Node;
+
+      ----------------------------------------------------------------------
 
       procedure Positive_Tests
       is
@@ -2259,6 +2261,8 @@ package body Muxml.Utils.Test_Data.Tests is
                  Message   => "Siblings_Names and Siblings_Nodes mismatch");
       end Positive_Tests;
 
+      ----------------------------------------------------------------------
+
       procedure Negative_Tests
       is
          Data                             : Muxml.XML_Data_Type;
@@ -2298,12 +2302,87 @@ package body Muxml.Utils.Test_Data.Tests is
                       & "'not_schema_complient' into node with name 'subjects'",
                     Message   => "Exception mismatch");
       end Negative_Tests;
+
+      ----------------------------------------------------------------------
+
+      --  This test is crafted to trigger the case that the provided
+      --  information is deemed insufficient to determine the type of the
+      --  parent node and hence insertion fails.
+      procedure Insufficient_Information_Test
+      is
+         Schema_Type_Resolution_Problem : constant String
+           := "<xs:schema xmlns:xs=""http://www.w3.org/2001/XMLSchema"">"
+             & " <xs:element name=""root"" type=""rootType""/>"
+             & " <xs:complexType name=""rootType"">"
+             & "  <xs:sequence>"
+             & "   <xs:element name=""group"" type=""groupType""/>"
+             & "   <xs:element name=""groupname"" type=""xs:string""/>"
+             & "  </xs:sequence>"
+             & " </xs:complexType>"
+             & " <xs:complexType name=""groupType"">"
+             & "  <xs:sequence>"
+             & "   <xs:element name=""group"" type=""subgroupType""/>"
+             & "   <xs:element name=""groupname"" type=""xs:string""/>"
+             & "  </xs:sequence>"
+             & " </xs:complexType>"
+             & " <xs:complexType name=""subgroupType"">"
+             & "  <xs:sequence>"
+             & "   <xs:element name=""membername"" type=""xs:string""/>"
+             & "   <xs:element name=""group"" type=""subgroupType""/>"
+             & "  </xs:sequence>"
+             & " </xs:complexType>"
+             & "</xs:schema>";
+
+         Data                      : Muxml.XML_Data_Type;
+         Parent_Node, New_Node     : DOM.Core.Node;
+         Siblings_Names, Ancestors : String_Vector.Vector;
+         Siblings_Nodes            : Node_Vector.Vector;
+         Insertion_Index           : Natural;
+
+      begin
+         Muxml.Parse
+           (Data => Data,
+            Kind => Muxml.None,
+            File => "data/type_resolution_problem.xml");
+
+         Parent_Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/root/group/group/group");
+         New_Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "group");
+         Siblings_Names.Append ("membername");
+         Siblings_Nodes.Append
+           (Muxml.Utils.Get_Element
+             (Doc   => Data.Doc,
+              XPath => "/root/group/group/group/membername"));
+         --  Not giving *all* ancestors is key to trigger the exception
+         Ancestors.Append ("group");
+
+         Insert_Child
+           (Parent           => Parent_Node,
+            New_Child        => New_Node,
+            Siblings_Names   => Siblings_Names,
+            Siblings_Nodes   => Siblings_Nodes,
+            Ancestors        => Ancestors,
+            Insertion_Index  => Insertion_Index);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                      = "Insufficient information to insert 'group'"
+                      & " into node with name 'group'",
+                    Message   => "Exception mismatch");
+      end Insufficient_Information_Test;
+
    begin
       Muxml.Grammar_Tools.Init_Order_Information
         (Schema_XML_Data => Muxml.system_src_schema.Data);
       Positive_Tests;
       Negative_Tests;
 
+      Insufficient_Information_Test;
 --  begin read only
    end Test_1_Insert_Child;
 --  end read only

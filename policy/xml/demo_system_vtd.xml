@@ -1,6 +1,14 @@
 <?xml version="1.0"?>
 <system>
+ <doc type="muen-tools" chapter="1" priority="0">
+  Example documentation: Information about the system as a whole.
+ </doc>
  <config>
+  <doc>
+   Documentation in the 'config' section is ignored,
+   because this section gets rewritten when expanding
+   expressions.
+  </doc>
   <boolean name="xhcidbg_enabled" value="true"/>
   <boolean name="dbgserver_serial_enabled" value="true"/>
   <boolean name="dbgserver_sink_pcspkr" value="false"/>
@@ -24,7 +32,11 @@
   <if variable="ahci_drv_active" value="true">
    <include href="memory_ahci.xml"/>
    <memory name="blockdev_shm1" size="16#0100_0000#" caching="WB" type="subject_device"/>
-   <memory name="blockdev_shm2" size="16#0100_0000#" caching="WB" type="subject_device"/>
+   <memory name="blockdev_shm2" size="16#0100_0000#" caching="WB" type="subject_device">
+    <doc type="dev">
+     Example documentation: This is an example documentation that is meant for developers.
+    </doc>
+   </memory>
   </if>
  </memory>
 
@@ -72,6 +84,9 @@
   </if>
 
   <subject name="dbgserver">
+   <doc type="muen-tools" chapter="2" priority="1">
+    Example documentation: The debug server can be used to find bugs.
+   </doc>
    <events>
     <source>
      <group name="vmx_exit">
@@ -87,7 +102,12 @@
     <map logical="log_channel3" physical="debuglog_subject3"/>
     <map logical="log_channel4" physical="debuglog_subject4"/>
     <map logical="log_channel5" physical="debuglog_subject5"/>
-    <map logical="log_channel_example" physical="debuglog_example"/>
+    <map logical="log_channel_example" physical="debuglog_example">
+     <doc type="muen-tools">
+      Example documentation:
+      This channel is used to receive log data from the example component.
+     </doc>
+    </map>
     <map logical="log_channel_6" physical="debuglog_controller"/>
     <if variable="ahci_drv_active" value="true">
      <map logical="log_ahci_drv" physical="debuglog_ahci_drv"/>
@@ -114,7 +134,13 @@
    <devices>
     <device logical="eth0" physical="nic_1">
      <if variable="pciconf_emulation_enabled" value="true">
-      <pci bus="16#00#" device="16#01#" function="0"/>
+      <pci bus="16#00#" device="16#01#" function="0">
+       <doc type="muen-tools">
+        This documenation is ignored because there is no rule
+        in the transfer-script defining where it goes.
+        Such a rule can be added easily.
+       </doc>
+      </pci>
      </if>
     </device>
     <device logical="aditional_nics" physical="additional_nics"/>

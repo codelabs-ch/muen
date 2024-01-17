@@ -37,7 +37,7 @@ is
       Component_Node : DOM.Core.Node;
    begin
       Muxml.Parse (Data => Component,
-                   Kind => Muxml.Component,
+                   Kind => Muxml.Component_Ext,
                    File => Component_File);
       Component_Node := DOM.Core.Documents.Local.Adopt_Node
         (Doc    => Policy.Doc,
@@ -45,12 +45,9 @@ is
            (N    => DOM.Core.Documents.Get_Element (Doc => Component.Doc),
             Deep => True));
 
-      --  Insert before component to comply with element order, i.e. library
-      --  must precede component elements.
-
-      Muxml.Utils.Insert_Before (Parent    => Section_Node,
-                                 New_Child => Component_Node,
-                                 Ref_Child => "component");
+      Muxml.Utils.Insert_Child
+        (Parent    => Section_Node,
+         New_Child => Component_Node);
    end Add_Component;
 
 end Compjoin.Utils;

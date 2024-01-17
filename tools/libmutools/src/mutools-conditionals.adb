@@ -297,7 +297,9 @@ is
       Config_Nodes : constant DOM.Core.Node_List
                    := McKae.XML.XPath.XIA.XPath_Query
                         (N     => Policy.Doc,
-                         XPath => "/*/config/*");
+                         XPath => "/*[self::system or self::component"
+                           & " or self::library]/config/"
+                           & "*[self::boolean or self::integer or self::string]");
       Sections     : constant DOM.Core.Node_List
                    := McKae.XML.XPath.XIA.XPath_Query
                         (N     => Policy.Doc,

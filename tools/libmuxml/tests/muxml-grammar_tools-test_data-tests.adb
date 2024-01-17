@@ -3,7 +3,7 @@
 --  Such changes will be kept during further regeneration of this file.
 --  All code placed outside of test routine bodies will be lost. The
 --  code intended to set up and tear down the test environment should be
---  placed into Mutools.Amend.Ordering.Test_Data.
+--  placed into Muxml.Grammar_Tools.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
 with System.Assertions;
@@ -20,6 +20,7 @@ with Ada.Text_IO.Unbounded_IO;
 with Ada.Exceptions;
 with Ada.Text_IO;
 with Ada.Text_IO.Text_Streams;
+with Ada.Directories;
 
 with Test_Utils;
 
@@ -33,7 +34,7 @@ with McKae.XML.XPath.XIA;
 
 --  begin read only
 --  end read only
-package body Mutools.Amend.Ordering.Test_Data.Tests is
+package body Muxml.Grammar_Tools.Test_Data.Tests is
 
 --  begin read only
 --  id:2.2/01/
@@ -41,7 +42,6 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
 --  This section can be used to add global variables and other elements.
 --
 --  end read only
-
 
    -- open the given file and return its content as string
    function File_To_String (File_Name : String) return String
@@ -61,7 +61,6 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
 
       return To_String (File_Content);
    end File_To_String;
-
 
    -- Muxml.Write omits namespace declarations as an attribute of schema.
    -- This functions includes them.
@@ -84,14 +83,13 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
                    Kind => Muxml.None,
                    File => File);
    end Write_XML_With_Namespace;
-
 --  begin read only
 --  end read only
 
 --  begin read only
    procedure Test_Get_Insert_Index (Gnattest_T : in out Test);
-   procedure Test_Get_Insert_Index_c88a31 (Gnattest_T : in out Test) renames Test_Get_Insert_Index;
---  id:2.2/c88a3111a5c759aa/Get_Insert_Index/1/0/
+   procedure Test_Get_Insert_Index_dcc60e (Gnattest_T : in out Test) renames Test_Get_Insert_Index;
+--  id:2.2/dcc60eded3c68908/Get_Insert_Index/1/0/
    procedure Test_Get_Insert_Index (Gnattest_T : in out Test) is
 --  end read only
 
@@ -187,14 +185,148 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
          Assert_Makro (Tagname => "memory", Result => No_Unique_Index);
       end Index_Not_Unique;
 
+      -- This test targets the fallback mechanism of Get_Parent_Type
+      -- in case the type resolution is not possible.
+      procedure Fallback_Parent_Type
+      is
+         Schema_Type_Resolution_Problem : constant String
+           := "<xs:schema xmlns:xs=""http://www.w3.org/2001/XMLSchema"">"
+             & " <xs:complexType name=""groupType"">"
+             & "  <xs:sequence>"
+             & "   <xs:element name=""group"" type=""subgroupType""/>"
+             & "   <xs:element name=""groupname"" type=""xs:string""/>"
+             & "  </xs:sequence>"
+             & " </xs:complexType>"
+             & " <xs:complexType name=""subgroupType"">"
+             & "  <xs:sequence>"
+             & "   <xs:element name=""membername"" type=""xs:string""/>"
+             & "   <xs:element name=""group"" type=""subgroupType""/>"
+             & "  </xs:sequence>"
+             & " </xs:complexType>"
+             & " <xs:element name=""group"" type=""groupType""/>"
+             & "</xs:schema>";
+      begin
+         Ancestors.Clear;
+         Siblings.Clear;
+         Init_Order_Information (Schema_XML_Data => Schema_Type_Resolution_Problem);
+
+         Ancestors.Append ("group");
+         Ancestors.Append ("group");
+         Ancestors.Append ("group");
+         Siblings.Append ("membername");
+
+         Assert_Makro (Tagname => "group", Result => 1);
+      end Fallback_Parent_Type;
+
    begin
       Positive_Test;
 
       No_Insertion_Possible;
       Index_Not_Unique;
 
+      Fallback_Parent_Type;
 --  begin read only
    end Test_Get_Insert_Index;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Filter_XML (Gnattest_T : in out Test);
+   procedure Test_Filter_XML_9aa343 (Gnattest_T : in out Test) renames Test_Filter_XML;
+--  id:2.2/9aa343ecc2f33278/Filter_XML/1/0/
+   procedure Test_Filter_XML (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      --  Positive test: Add some nodes to a file, fiter it and compare result
+      --  to original file
+      procedure Positive_Test
+      is
+         Output : constant String := "obj/output_format_src.xml";
+         Data   : Muxml.XML_Data_Type;
+      begin
+         Clear_Order_Info;
+         Init_Order_Information (Schema_XML_Data => File_To_String
+                                   (File_Name => "data/default_schema.xsd"));
+         Muxml.Parse
+           (Data => Data,
+            Kind => Muxml.None,
+            File => "data/format_src.xml");
+         declare
+            Root_Node         : constant DOM.Core.Node
+              := DOM.Core.Documents.Get_Element (Doc => Data.Doc);
+            Insertion_Targets : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+              (N     => Root_Node,
+               XPath => "/system | "
+                 & "/system/components/component[@name='tau0'] | "
+                 & "/system/components/component[@name='tau0']/depends | "
+                 & "/system/components/component[@name='tau0']/channels/"
+                 & "/array[@logical='input_arr'] | "
+                 & "/system/memory/memory[@name='backup']");
+         begin
+            for I in 0 .. DOM.Core.Nodes.Length (List => Insertion_Targets) - 1 loop
+               declare
+                  Target  : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item (List  => Insertion_Targets,
+                                            Index => I);
+                  New_Node : DOM.Core.Node;
+               begin
+                  New_Node := DOM.Core.Documents.Create_Element
+                    (Doc      => Data.Doc,
+                     Tag_Name => "arbitraryName");
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => New_Node,
+                     Name  => "name",
+                     Value => "some_value");
+                  New_Node := DOM.Core.Nodes.Append_Child
+                    (N         => Target,
+                     New_Child => New_Node);
+               end;
+            end loop;
+         end;
+         Filter_XML (XML_Data => Data);
+         Muxml.Write (Data => Data,
+                      Kind => Muxml.None,
+                      File => Output);
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/format_src.xml",
+                  Filename2 => Output),
+                 Message   => "Policy mismatch: " & Output);
+
+         Ada.Directories.Delete_File (Name => Output);
+      end Positive_Test;
+
+      ----------------------------------------------------------------------
+
+      --  Negatvie test: no initiation of Order_Info before filtering
+      procedure No_Initiation
+      is
+         Data : Muxml.XML_Data_Type;
+      begin
+         Clear_Order_Info;
+         Muxml.Parse
+           (Data => Data,
+            Kind => Muxml.None,
+            File => "data/format_src.xml");
+         Filter_XML (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected (missing init)");
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                      = "Could not find root-node with tag 'system'"
+                      & " in loaded schema information.",
+                    Message   => "Exception message mismatch: "
+                      & Ada.Exceptions.Exception_Message (X => E));
+      end No_Initiation;
+   begin
+      Positive_Test;
+      No_Initiation;
+
+--  begin read only
+   end Test_Filter_XML;
 --  end read only
 
 
@@ -309,7 +441,6 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
                     Message   => "Exception message mismatch: "
                        & Ada.Exceptions.Exception_Message (X => E));
       end Cyclic_Group_Reference;
-
 
       procedure More_Than_One_Namespace
       is
@@ -565,16 +696,15 @@ package body Mutools.Amend.Ordering.Test_Data.Tests is
 
 --  begin read only
    procedure Test_To_String (Gnattest_T : in out Test);
-   procedure Test_To_String_0e2908 (Gnattest_T : in out Test) renames Test_To_String;
---  id:2.2/0e2908eb51b24930/To_String/1/0/
+   procedure Test_To_String_4c0f3c (Gnattest_T : in out Test) renames Test_To_String;
+--  id:2.2/4c0f3c81b96c42bd/To_String/1/0/
    procedure Test_To_String (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
-
    begin
-      -- this 'usual case' is tested as part of the positive test of
-      -- Init_Order_Information
+      -- a non-trivial positive testcase is tested as part of the positive test
+      -- of Init_Order_Information
 
       -- test case for empty Order_Info
       Clear_Order_Info;
@@ -600,4 +730,4 @@ begin
    null;
 --  begin read only
 --  end read only
-end Mutools.Amend.Ordering.Test_Data.Tests;
+end Muxml.Grammar_Tools.Test_Data.Tests;

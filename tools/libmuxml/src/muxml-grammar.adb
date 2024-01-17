@@ -2,6 +2,7 @@
 --  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
 --  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --  Copyright (C) 2014  Alexander Senier <mail@senier.net>
+--  Copyright (C) 2023  secunet Security Networks AG
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -23,39 +24,8 @@ with Input_Sources.Strings;
 with Schema.Schema_Readers;
 with Unicode.CES.Utf8;
 
-with Muxml.system_src_schema;
-with Muxml.system_a_schema;
-with Muxml.system_b_schema;
-with Muxml.hardware_config_schema;
-with Muxml.system_config_schema;
-with Muxml.vcpu_profile_schema;
-with Muxml.component_schema;
-
 package body Muxml.Grammar
 is
-
-   type Schema_Info_Type is record
-      Id, XSD : access constant String;
-   end record;
-
-   Schema_Map : constant array (Valid_Schema_Kind) of Schema_Info_Type
-     := (Format_Src      => (Id  => system_src_schema.Id'Access,
-                             XSD => system_src_schema.Data'Access),
-         Format_A        => (Id  => system_a_schema.Id'Access,
-                             XSD => system_a_schema.Data'Access),
-         Format_B        => (Id  => system_b_schema.Id'Access,
-                             XSD => system_b_schema.Data'Access),
-         Hardware_Config => (Id  => hardware_config_schema.Id'Access,
-                             XSD => hardware_config_schema.Data'Access),
-         System_Config   => (Id  => system_config_schema.Id'Access,
-                             XSD => system_config_schema.Data'Access),
-         VCPU_Profile    => (Id  => vcpu_profile_schema.Id'Access,
-                             XSD => vcpu_profile_schema.Data'Access),
-         Component       => (Id  => component_schema.Id'Access,
-                             XSD => component_schema.Data'Access));
-
-   -------------------------------------------------------------------------
-
    function Get_Grammar
      (Kind : Valid_Schema_Kind)
       return Schema.Validators.XML_Grammar

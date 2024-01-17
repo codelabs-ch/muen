@@ -54,7 +54,9 @@ is
       Val_Str : constant String
         := Muxml.Utils.Get_Attribute
           (Doc   => Data.Doc,
-           XPath => "/*/config/*[@name='" & Name & "']",
+           XPath => "/*[self::system or self::component or self::library]"
+             & "/config/*[(self::boolean or self::integer or self::string)"
+             & "and @name='" & Name & "']",
            Name  => "value");
    begin
       if Val_Str'Length = 0 then
@@ -73,7 +75,8 @@ is
       Val_Str : constant String
         := Muxml.Utils.Get_Attribute
           (Doc   => Data.Doc,
-           XPath => "/*/config/boolean[@name='" & Name & "']",
+           XPath => "/*[self::system or self::component or self::library]"
+             & "/config/boolean[@name='" & Name & "']",
            Name  => "value");
    begin
       if Val_Str'Length = 0 then
@@ -93,7 +96,8 @@ is
       Val_Str : constant String
         := Muxml.Utils.Get_Attribute
           (Doc   => Data.Doc,
-           XPath => "/*/config/integer[@name='" & Name & "']",
+           XPath => "/*[self::system or self::component or self::library]"
+             & "/config/integer[@name='" & Name & "']",
            Name  => "value");
    begin
       if Val_Str'Length = 0 then
@@ -113,7 +117,8 @@ is
       Node : constant DOM.Core.Node
         := Muxml.Utils.Get_Element
           (Doc   => Data.Doc,
-           XPath => "/*/config/string[@name='" & Name & "']");
+           XPath => "/*[self::system or self::component or self::library]"
+             & "/config/string[@name='" & Name & "']");
    begin
       if Node = null then
          raise Not_Found with "No string config option '" & Name & "' found";
@@ -161,7 +166,8 @@ is
    begin
       return null /= Muxml.Utils.Get_Element
         (Doc   => Data.Doc,
-         XPath => "/*/config/" & Opt_Type & "[@name='" & Name & "']");
+         XPath => "/*[self::system or self::component or self::library]"
+             & "/config/" & Opt_Type & "[@name='" & Name & "']");
    end Has_Option;
 
    -------------------------------------------------------------------------
@@ -186,7 +192,8 @@ is
    is
    begin
       return Has_Option (Data     => Data,
-                         Opt_Type => "*",
+                         Opt_Type => "*[self::boolean or self::integer"
+                           & " or self::string]",
                          Name     => Name);
    end Has_Value;
 
@@ -199,7 +206,8 @@ is
    is
       Cfg_Node : DOM.Core.Node := Muxml.Utils.Get_Element
         (Doc   => Data.Doc,
-         XPath => "/*/config/boolean[@name='" & Name & "']");
+         XPath => "/*[self::system or self::component or self::library]"
+           & "/config/boolean[@name='" & Name & "']");
    begin
       if Cfg_Node = null then
          Cfg_Node := DOM.Core.Documents.Create_Element
@@ -212,7 +220,8 @@ is
          Muxml.Utils.Insert_Before
            (Parent    => Muxml.Utils.Get_Element
               (Doc   => Data.Doc,
-               XPath => "/*/config"),
+               XPath => "/*[self::system or self::component or self::library]"
+                 & "/config"),
             New_Child => Cfg_Node,
             Ref_Names => (1 => U ("integer"),
                           2 => U ("string")));
@@ -233,7 +242,8 @@ is
    is
       Cfg_Node : DOM.Core.Node := Muxml.Utils.Get_Element
         (Doc   => Data.Doc,
-         XPath => "/*/config/integer[@name='" & Name & "']");
+         XPath => "/*[self::system or self::component or self::library]"
+                 & "/config/integer[@name='" & Name & "']");
    begin
       if Cfg_Node = null then
          Cfg_Node := DOM.Core.Documents.Create_Element
@@ -246,7 +256,8 @@ is
          Muxml.Utils.Insert_Before
            (Parent    => Muxml.Utils.Get_Element
               (Doc   => Data.Doc,
-               XPath => "/*/config"),
+               XPath => "/*[self::system or self::component or self::library]"
+                 & "/config"),
             New_Child => Cfg_Node,
             Ref_Names => (1 => U ("string")));
       end if;
@@ -266,7 +277,8 @@ is
    is
       Cfg_Node : DOM.Core.Node := Muxml.Utils.Get_Element
         (Doc   => Data.Doc,
-         XPath => "/*/config/string[@name='" & Name & "']");
+         XPath => "/*[self::system or self::component or self::library]"
+                 & "/config/string[@name='" & Name & "']");
    begin
       if Cfg_Node = null then
          Cfg_Node := DOM.Core.Documents.Create_Element
@@ -279,7 +291,8 @@ is
          Muxml.Utils.Insert_Before
            (Parent    => Muxml.Utils.Get_Element
               (Doc   => Data.Doc,
-               XPath => "/*/config"),
+               XPath => "/*[self::system or self::component or self::library]"
+                 & "/config"),
             New_Child => Cfg_Node,
             Ref_Names => Muxml.Utils.No_Tags);
       end if;

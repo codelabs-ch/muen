@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2022 secunet Security Networks AG
+--  Copyright (C) 2023 secunet Security Networks AG
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -21,14 +21,21 @@ with Ada.Characters.Latin_1;
 
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
+with DOM.Core.Documents;
 
-with Muxml.system_src_schema;
 with Muxml.Utils;
 
 with McKae.XML.XPath.XIA;
 
-package body Mutools.Amend.Ordering
+package body Muxml.Grammar_Tools
 is
+   -------------------------------------------------------------------------
+
+   --  Get list of all children which are of type "Element_Node"
+   --  (as defined in DOM.Core.Nodes.Node_Type).
+   function Get_Element_Children
+     (Node : DOM.Core.Node)
+     return Node_Vector.Vector;
 
    -------------------------------------------------------------------------
 
@@ -43,11 +50,101 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Filter_XML (XML_Data : Muxml.XML_Data_Type)
+   is
+      --  Recursive function that filters the children of Node and recurses.
+      --  Node_Type is assumed to be the type of Node.
+      procedure Filter_Node (Parent    : DOM.Core.Node;
+                             Node_Type : String);
+
+      ----------------------------------------------------------------------
+
+      procedure Filter_Node (Parent    : DOM.Core.Node;
+                             Node_Type : String)
+      is
+         Children_Info : constant Vector_Tuple
+           := Order_Info.Type_To_Children (Node_Type);
+         Node    : DOM.Core.Node;
+         To_Free : Node_Vector.Vector;
+         Index   : String_Vector.Extended_Index;
+      begin
+         --  Remove and free nodes that are not allowed as direct child
+         for Child of Get_Element_Children (Node => Parent) loop
+            if not Children_Info.Node_Names.Contains
+              (DOM.Core.Nodes.Node_Name (N => Child))
+            then
+               Node := DOM.Core.Nodes.Remove_Child
+                 (N          => Parent,
+                  Old_Child  => Child);
+               To_Free.Append (Node);
+            end if;
+         end loop;
+         for Node of To_Free loop
+            DOM.Core.Nodes.Free (N => Node);
+         end loop;
+
+         --  Recurse into children
+         for Child of Get_Element_Children (Node => Parent) loop
+            Index := Children_Info.Node_Names.Find_Index
+              (DOM.Core.Nodes.Node_Name (N => Child));
+            Filter_Node (Parent    => Child,
+                         Node_Type => Children_Info.Type_Names (Index));
+         end loop;
+      end Filter_Node;
+
+      Root_Node      : constant DOM.Core.Node
+        := DOM.Core.Documents.Get_Element (Doc => XML_Data.Doc);
+      Root_Node_Name : constant String
+        := DOM.Core.Nodes.Node_Name (N => Root_Node);
+      Index          : String_Vector.Extended_Index;
+   begin
+      if not Order_Info.Type_To_Children.Contains ("schemaRoot")
+        or else not Order_Info.Type_To_Children
+        ("schemaRoot").Node_Names.Contains (Root_Node_Name)
+      then
+         raise Validation_Error with
+           "Could not find root-node with tag '"
+           & Root_Node_Name
+           & "' in loaded schema information.";
+      else
+         Index :=  Order_Info.Type_To_Children
+           ("schemaRoot").Node_Names.Find_Index (Root_Node_Name);
+         Filter_Node (Parent    => Root_Node,
+                      Node_Type => Order_Info.Type_To_Children
+                        ("schemaRoot").Type_Names (Index));
+      end if;
+   end Filter_XML;
+
+   -------------------------------------------------------------------------
+
+   function Get_Element_Children
+     (Node : DOM.Core.Node) return Node_Vector.Vector
+   is
+      use type DOM.Core.Node_Types;
+
+      Output : Node_Vector.Vector;
+      Child  : DOM.Core.Node
+        := DOM.Core.Nodes.First_Child (N => Node);
+   begin
+      while Child /= null loop
+         if DOM.Core.Nodes.Node_Type (N => Child)
+           = DOM.Core.Element_Node
+         then
+            Output.Append (Child);
+         end if;
+         Child := DOM.Core.Nodes.Next_Sibling (N => Child);
+      end loop;
+
+      return Output;
+   end Get_Element_Children;
+
+   ----------------------------------------------------------------------
+
    function Get_Insert_Index
-      (Ancestors : String_Vector.Vector;
-       New_Child : String;
-       Siblings  : String_Vector.Vector)
-      return Insert_Query_Result_Type
+     (Ancestors : String_Vector.Vector;
+      New_Child : String;
+      Siblings  : String_Vector.Vector)
+     return Insert_Query_Result_Type
    is
       Child_Order : String_Vector.Vector;
 
@@ -85,12 +182,23 @@ is
          end loop;
 
          if Index_Unique = String_Vector.No_Index then
-            raise Insufficient_Information with
-               "Cannot determine type of any ancestor.";
+            --  Last chance to avoid type resolution fault:
+            --  If the last ancestor has the same name
+            --  as one of the children of systemRoot we assume that
+            --  one of these children is the last ancestor.
+            if Order_Info.Type_To_Children ("schemaRoot").Node_Names.Contains
+              (Ancestors.Last_Element)
+            then
+               Index_Unique := Ancestors.Last_Index + 1;
+               Parent_Type := U ("schemaRoot");
+            else
+               raise Insufficient_Information with
+                 "Cannot determine type of any ancestor.";
+            end if;
+         else
+            Parent_Type := U (Order_Info.Name_To_Type
+                                (Ancestors (Index_Unique)).First_Element);
          end if;
-
-         Parent_Type := U (Order_Info.Name_To_Type
-                           (Ancestors (Index_Unique)).First_Element);
 
          for I in reverse Ancestors.First_Index .. Index_Unique - 1 loop
             Children := Order_Info.Type_To_Children (S (Parent_Type));
@@ -162,12 +270,7 @@ is
        (Schema_XML_Data : String)
    is
       use type DOM.Core.Node_Types;
-      use type DOM.Core.Node;
       use type Ada.Containers.Count_Type;
-
-      package Node_Vector is new Ada.Containers.Indefinite_Vectors
-         (Index_Type   => Natural,
-          Element_Type => DOM.Core.Node);
 
       Schema      : Muxml.XML_Data_Type;
       Schema_Node : DOM.Core.Node; -- the root node of the actual schema
@@ -183,7 +286,7 @@ is
 
       --  Check that there is only one namespace.
       procedure Check_Namespace
-         (Schema_Node : DOM.Core.Node;
+         (Schema_Node     : DOM.Core.Node;
           Schema_XML_Data : String);
 
       ----------------------------------------------------------------------
@@ -238,8 +341,8 @@ is
       --  Writes map entries and initiates evaluation of types of children.
       procedure Eval_Entrypoint (Type_Name : String);
 
-      --  Search for a node called "element" within the schema, add it to
-      --  The lists and evaluate its type.
+      --  Search for nodes called "element" within the schema, add it to
+      --  the lists and evaluate its type.
       procedure Find_Root_Element_Node_And_Recurse
          (Schema_Node : DOM.Core.Node);
 
@@ -247,11 +350,6 @@ is
       --  An empty string is returned if the attribute does not exist.
       function Get_Attr (Node : DOM.Core.Node; Name : String) return String
          renames DOM.Core.Elements.Get_Attribute;
-
-      --  Get list of all children which are of type "Element_Node"
-      --  (as defined in DOM.Core.Nodes.Node_Type).
-      function Get_Element_Children
-         (Node : DOM.Core.Node) return Node_Vector.Vector;
 
       --  Return node defining a group of type "Name_Attr".
       function Get_Group_Definition (Name_Attr : String) return DOM.Core.Node;
@@ -695,25 +793,55 @@ is
       begin
          for Child of Get_Element_Children (Node => Schema_Node) loop
             if Name (Node => Child) = "element" then
-               if Found then
-                  raise Not_Implemented with
-                     "The schema allows two root elements";
-               end if;
                Found := True;
 
-               -- insert root element in types dictionary
-               Order_Info.Type_To_Children.Insert
-                  (Key => "schemaRoot",
-                   New_Item => Eval_Element (Node => Child));
+               --  Insert root element in types-to-children dictionary
+               declare
+                  Current_Tuple : Vector_Tuple
+                    := Vector_Tuple'(others => String_Vector.Empty_Vector);
+                  New_Tuple : constant Vector_Tuple
+                    := Eval_Element (Node => Child);
+               begin
+                  if not Order_Info.Type_To_Children.Contains (Key => "schemaRoot")
+                  then
+                     Order_Info.Type_To_Children.Insert
+                       (Key      => "schemaRoot",
+                        New_Item => Vector_Tuple'
+                          (others => String_Vector.Empty_Vector));
+                  end if;
+                  Current_Tuple := Order_Info.Type_To_Children.Element
+                    (Key => "schemaRoot");
+                  Current_Tuple.Node_Names.Append (New_Tuple.Node_Names);
+                  Current_Tuple.Type_Names.Append (New_Tuple.Type_Names);
 
-               -- insert root element in node-names-dictionary
-               Order_Info.Name_To_Type.Insert
-                  (Key      => Order_Info.Type_To_Children
-                                 ("schemaRoot").Node_Names.First_Element,
-                   New_Item => String_Vector.To_Vector
-                                 (New_Item => Order_Info.Type_To_Children
-                                    ("schemaRoot").Type_Names.First_Element,
-                                  Length   => 1));
+                  Order_Info.Type_To_Children.Replace
+                    (Key      => "schemaRoot",
+                     New_Item => Current_Tuple);
+               end;
+
+               --  Insert root element in node_name-to-type(s)-dictionary
+               declare
+                  New_Name : constant String
+                    := Order_Info.Type_To_Children
+                      ("schemaRoot").Node_Names.Last_Element;
+                  New_Type : constant String
+                    := Order_Info.Type_To_Children
+                      ("schemaRoot").Type_Names.Last_Element;
+                  Current_Types : String_Vector.Vector
+                    := String_Vector.Empty_Vector;
+               begin
+                  if Order_Info.Name_To_Type.Contains (New_Name) then
+                     Current_Types := Order_Info.Name_To_Type.Element (New_Name);
+                  else
+                     Order_Info.Name_To_Type.Insert
+                       (Key      => New_Name,
+                        New_Item => String_Vector.Empty_Vector);
+                  end if;
+                  Current_Types.Append (New_Type);
+                  Order_Info.Name_To_Type.Replace
+                    (Key      => New_Name,
+                     New_Item => Current_Types);
+               end;
 
                --  Evaluate the root element.
                --  Assignment before calling Eval is necessary
@@ -722,7 +850,7 @@ is
                declare
                   Type_Name : constant String
                      := Order_Info.Type_To_Children
-                     ("schemaRoot").Type_Names.First_Element;
+                       ("schemaRoot").Type_Names.Last_Element;
                begin
                   Eval_Entrypoint (Type_Name => Type_Name);
                end;
@@ -734,27 +862,6 @@ is
                & "at root level";
          end if;
       end Find_Root_Element_Node_And_Recurse;
-
-      ----------------------------------------------------------------------
-
-      function Get_Element_Children
-         (Node : DOM.Core.Node) return Node_Vector.Vector
-      is
-         Output : Node_Vector.Vector;
-         Child : DOM.Core.Node
-            := DOM.Core.Nodes.First_Child (N => Node);
-      begin
-         while Child /= null loop
-            if   DOM.Core.Nodes.Node_Type (N => Child)
-               = DOM.Core.Element_Node
-            then
-               Output.Append (Child);
-            end if;
-            Child := DOM.Core.Nodes.Next_Sibling (N => Child);
-         end loop;
-
-         return Output;
-      end Get_Element_Children;
 
       ----------------------------------------------------------------------
 
@@ -978,6 +1085,10 @@ is
       Check_Forbidden_Element_Names (Schema_Node => Schema_Node);
       Check_Substitution_Group (Schema_Node => Schema_Node);
 
+      --  Clear potentially present state
+      Order_Info.Type_To_Children.Clear;
+      Order_Info.Name_To_Type.Clear;
+
       --  Main evaluation
       Find_Root_Element_Node_And_Recurse (Schema_Node => Schema_Node);
 
@@ -1113,8 +1224,4 @@ is
          & "]";
       return ASU.To_String (Output);
    end To_String;
-
-begin
-   Init_Order_Information (Schema_XML_Data => Muxml.system_src_schema.Data);
-
-end  Mutools.Amend.Ordering;
+end Muxml.Grammar_Tools;

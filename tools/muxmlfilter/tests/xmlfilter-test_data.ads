@@ -5,7 +5,7 @@
 
 with AUnit.Test_Fixtures;
 
-package Mutools.Amend.Ordering.Test_Data is
+package Xmlfilter.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -15,7 +15,4 @@ package Mutools.Amend.Ordering.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-   -- delete all entries in Order_Info
-   procedure Clear_Order_Info;
-
-end Mutools.Amend.Ordering.Test_Data;
+end Xmlfilter.Test_Data;

@@ -15,6 +15,10 @@ with System.Assertions;
 --
 --  end read only
 
+with Muxml;
+with Muxml.Grammar;
+with Muxml.Grammar_Tools;
+
 --  begin read only
 --  end read only
 package body Compjoin.Utils.Test_Data.Tests is
@@ -40,6 +44,9 @@ package body Compjoin.Utils.Test_Data.Tests is
 
       Policy : Muxml.XML_Data_Type;
    begin
+      Muxml.Grammar_Tools.Init_Order_Information
+        (Schema_XML_Data => Muxml.Grammar.Schema_Map
+           (Muxml.Format_Src_Ext).XSD.all);
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");

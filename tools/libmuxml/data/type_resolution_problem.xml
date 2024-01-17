@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+   <group>
+      <group>
+         <group>
+            <membername>Foo</membername>
+         </group>
+      </group>
+   </group>
+</root>

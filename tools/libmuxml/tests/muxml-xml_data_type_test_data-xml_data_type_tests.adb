@@ -39,7 +39,7 @@ package body Muxml.XML_Data_Type_Test_Data.XML_Data_Type_Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-      for K in Schema_Kind loop
+      for K in Core_Schema_Kind loop
          declare
             Data     : XML_Data_Type;
             K_Str    : constant String := Ada.Characters.Handling.To_Lower

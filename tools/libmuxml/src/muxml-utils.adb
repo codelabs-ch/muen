@@ -24,6 +24,8 @@ with DOM.Core;
 
 with McKae.XML.XPath.XIA;
 
+with Muxml.Grammar_Tools;
+
 package body Muxml.Utils
 is
 
@@ -158,7 +160,9 @@ is
    ----------------------------------------------------------------------
 
    function Count_Element_Children
-     (Node : DOM.Core.Node)
+     (Node        : DOM.Core.Node;
+      Name_Filter : Muxml.String_Vector.Vector
+        := Muxml.String_Vector.Empty_Vector)
      return Natural
    is
       use type DOM.Core.Node_Types;
@@ -171,12 +175,36 @@ is
       for I in 0 ..  DOM.Core.Nodes.Length (List => Child_List) - 1 loop
          Curr_Node := DOM.Core.Nodes.Item (List  => Child_List,
                                            Index => I);
-         if DOM.Core.Nodes.Node_Type (N => Curr_Node) = DOM.Core.Element_Node then
+         if DOM.Core.Nodes.Node_Type (N => Curr_Node) = DOM.Core.Element_Node
+           and then (Name_Filter.Is_Empty
+                       or Name_Filter.Contains
+                       (Item => DOM.Core.Nodes.Node_Name (N => Curr_Node)))
+         then
             Count := Count + 1;
          end if;
       end loop;
       return Count;
    end Count_Element_Children;
+
+   -------------------------------------------------------------------------
+
+   function Get_Ancestor_Names
+     (Node : DOM.Core.Node)
+     return  String_Vector.Vector
+   is
+      Output : String_Vector.Vector;
+      Parent : DOM.Core.Node
+        := DOM.Core.Nodes.Parent_Node (Node);
+      Owner  : constant DOM.Core.Node
+        := DOM.Core.Nodes.Owner_Document (Node);
+   begin
+      Output.Append (DOM.Core.Nodes.Node_Name (N => Node));
+      while Parent /= null and Parent /= Owner loop
+         Output.Append (DOM.Core.Nodes.Node_Name (N => Parent));
+         Parent := DOM.Core.Nodes.Parent_Node (Parent);
+      end loop;
+      return Output;
+   end Get_Ancestor_Names;
 
    -------------------------------------------------------------------------
 
@@ -606,6 +634,153 @@ is
                        New_Child => New_Child);
       end if;
    end Insert_Before;
+
+   -------------------------------------------------------------------------
+
+   procedure Insert_Child
+     (Parent           : DOM.Core.Node;
+      New_Child        : DOM.Core.Node;
+      Clone_Child      : Boolean := False;
+      Ignored_Siblings : String_Vector.Vector
+        := String_Vector.Empty_Vector)
+   is
+      Siblings_Names  : String_Vector.Vector;
+      Siblings_Nodes  : Node_Vector.Vector;
+      Insertion_Index : Natural;
+   begin
+      Insert_Child
+        (Parent           => Parent,
+         New_Child        => New_Child,
+         Clone_Child      => Clone_Child,
+         Siblings_Names   => Siblings_Names,
+         Siblings_Nodes   => Siblings_Nodes,
+         Ignored_Siblings => Ignored_Siblings,
+         Ancestors        => Get_Ancestor_Names (Node => Parent),
+         Insertion_Index  => Insertion_Index);
+   end Insert_Child;
+
+   -------------------------------------------------------------------------
+
+   function Insert_Child
+     (Parent           : DOM.Core.Node;
+      New_Child        : DOM.Core.Node;
+      Clone_Child      : Boolean := False;
+      Ignored_Siblings : String_Vector.Vector
+        := String_Vector.Empty_Vector)
+    return DOM.Core.Node
+   is
+      Siblings_Names  : String_Vector.Vector;
+      Siblings_Nodes  : Node_Vector.Vector;
+      Insertion_Index : Natural;
+   begin
+      Insert_Child
+        (Parent           => Parent,
+         New_Child        => New_Child,
+         Clone_Child      => Clone_Child,
+         Siblings_Names   => Siblings_Names,
+         Siblings_Nodes   => Siblings_Nodes,
+         Ignored_Siblings => Ignored_Siblings,
+         Ancestors        => Get_Ancestor_Names (Node => Parent),
+         Insertion_Index  => Insertion_Index);
+      return Siblings_Nodes (Insertion_Index);
+   end Insert_Child;
+
+   -------------------------------------------------------------------------
+
+   procedure Insert_Child
+     (Parent           :        DOM.Core.Node;
+      New_Child        :        DOM.Core.Node;
+      Clone_Child      :        Boolean := False;
+      Siblings_Names   : in out String_Vector.Vector;
+      Siblings_Nodes   : in out Node_Vector.Vector;
+      Ignored_Siblings :        String_Vector.Vector
+        := String_Vector.Empty_Vector;
+      Ancestors        :        String_Vector.Vector;
+      Insertion_Index  :    out Natural)
+   is
+      use type String_Vector.Vector;
+      use type DOM.Core.Node;
+      use type DOM.Core.Node_Types;
+      use type Grammar_Tools.Insert_Query_Result_Type;
+
+      Query_Result             : Grammar_Tools.Insert_Query_Result_Type;
+      Ref_Child, Inserted_Node : DOM.Core.Node;
+   begin
+      --  Initialize missing information
+      if Siblings_Names = String_Vector.Empty_Vector then
+         declare
+            Parent_Child : DOM.Core.Node
+              := DOM.Core.Nodes.First_Child (N => Parent);
+         begin
+            while Parent_Child /= null loop
+               if DOM.Core.Nodes.Node_Type (N => Parent_Child)
+                 = DOM.Core.Element_Node
+                 and not Ignored_Siblings.Contains
+                 (DOM.Core.Nodes.Node_Name (N => Parent_Child))
+               then
+                  Siblings_Nodes.Append (Parent_Child);
+                  Siblings_Names.Append (DOM.Core.Nodes.Node_Name
+                                           (N => Parent_Child));
+               end if;
+               Parent_Child := DOM.Core.Nodes.Next_Sibling
+                 (N => Parent_Child);
+            end loop;
+         end;
+      end if;
+
+      --  Determine insertion reference node
+      Query_Result := Muxml.Grammar_Tools.Get_Insert_Index
+        (Ancestors => Ancestors,
+         New_Child => DOM.Core.Nodes.Node_Name (N => New_Child),
+         Siblings  => Siblings_Names);
+
+      if Query_Result = Muxml.Grammar_Tools.No_Legal_Index then
+         raise Muxml.Validation_Error with
+           "Could not find valid place to insert '"
+           & DOM.Core.Nodes.Node_Name (N => New_Child)
+           & "' into node with name '"
+           & DOM.Core.Nodes.Node_Name (N => Parent)
+           & "'";
+      elsif Query_Result = Muxml.Grammar_Tools.No_Unique_Index then
+         raise Muxml.Validation_Error with
+           "Insufficient information to insert '"
+           & DOM.Core.Nodes.Node_Name (N => New_Child)
+           & "' into node with name '"
+           & DOM.Core.Nodes.Node_Name (N => Parent)
+           & "'";
+      elsif Query_Result = Muxml.Grammar_Tools.
+        Insert_Query_Result_Type (Siblings_Names.Length)
+      then
+         --  This triggers Insert_Before to append the new child at the end.
+         Ref_Child := null;
+         Insertion_Index := Natural (Query_Result);
+      else
+         Ref_Child := Siblings_Nodes (Natural (Query_Result));
+         Insertion_Index := Natural (Query_Result);
+      end if;
+
+      --  Do the insertion
+      if Clone_Child then
+         Inserted_Node := DOM.Core.Nodes.Insert_Before
+           (N         => Parent,
+            New_Child => DOM.Core.Documents.Local.Clone_Node
+              (N    => New_Child,
+               Deep => True),
+            Ref_Child => Ref_Child);
+      else
+         Inserted_Node := DOM.Core.Nodes.Insert_Before
+           (N         => Parent,
+            New_Child => New_Child,
+            Ref_Child => Ref_Child);
+      end if;
+
+      --  Update siblings (for potential reuse later on)
+      Siblings_Names.Insert (Before   => Insertion_Index,
+                             New_Item => DOM.Core.Nodes.Node_Name
+                               (N => Inserted_Node));
+      Siblings_Nodes.Insert (Before   => Insertion_Index,
+                             New_Item => Inserted_Node);
+   end Insert_Child;
 
    -------------------------------------------------------------------------
 

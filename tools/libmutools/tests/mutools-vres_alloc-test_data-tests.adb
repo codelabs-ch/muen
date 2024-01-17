@@ -172,8 +172,8 @@ package body Mutools.Vres_Alloc.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Get_Target_String (Gnattest_T : in out Test);
-   procedure Test_Get_Target_String_1f0cfc (Gnattest_T : in out Test) renames Test_Get_Target_String;
---  id:2.2/1f0cfc866df2b790/Get_Target_String/1/0/
+   procedure Test_Get_Target_String_429be5 (Gnattest_T : in out Test) renames Test_Get_Target_String;
+--  id:2.2/429be579202eb1dd/Get_Target_String/1/0/
    procedure Test_Get_Target_String (Gnattest_T : in out Test) is
 --  end read only
 

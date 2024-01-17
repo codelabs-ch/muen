@@ -17,6 +17,7 @@
 --
 with Ada.Strings.Hash;
 with Ada.Containers.Indefinite_Hashed_Maps;
+with Ada.Containers.Indefinite_Vectors;
 
 with DOM.Core;
 

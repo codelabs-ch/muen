@@ -1,0 +1,19 @@
+<component profile="testing">
+ <shares value="nothing"/>
+ <has_strange_tags>
+  <child1/>
+  <child2/>
+ </has_strange_tags>
+ <requires>
+  <memory>
+   <memory  virtualAddress="on the moon"/>
+  </memory>
+ </requires>
+ <my_new_tag>
+  <key name="foo" value="bar"/>
+  <key name="foo2" value="bar3"/>
+  <key name="foo3" value="bar3"/>
+  <bogous_child name="remove_me"/>
+ </my_new_tag>
+ <last>I am the last one ... </last>
+</component>

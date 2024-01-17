@@ -2,7 +2,8 @@
 --  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
 --  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --  Copyright (C) 2014        Alexander Senier <mail@senier.net>
---
+--  Copyright (C) 2023        secunet Security Networks AG
+
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
 --  the Free Software Foundation, either version 3 of the License, or
@@ -19,10 +20,14 @@
 
 with Ada.Finalization;
 
+with Ada.Containers.Indefinite_Vectors;
+
 with DOM.Core;
 
 package Muxml
 is
+   use type DOM.Core.Node;
+
    type Schema_Kind is
      (None,
       Component,
@@ -31,7 +36,17 @@ is
       Format_Src,
       Hardware_Config,
       System_Config,
-      VCPU_Profile);
+      VCPU_Profile,
+      Component_Ext,
+      Format_A_Ext,
+      Format_B_Ext,
+      Format_Src_Ext,
+      Hardware_Config_Ext,
+      System_Config_Ext,
+      VCPU_Profile_Ext);
+
+   subtype Core_Schema_Kind is Schema_Kind
+     range None .. VCPU_Profile;
 
    subtype Valid_Schema_Kind is Schema_Kind range
      Schema_Kind'Succ (Schema_Kind'First) .. Schema_Kind'Last;
@@ -66,6 +81,14 @@ is
 
    Validation_Error : exception;
    XML_Input_Error  : exception;
+
+   package String_Vector is new Ada.Containers.Indefinite_Vectors
+     (Element_Type => String,
+      Index_Type   => Natural);
+
+   package Node_Vector is new Ada.Containers.Indefinite_Vectors
+     (Index_Type   => Natural,
+      Element_Type => DOM.Core.Node);
 
 private
 

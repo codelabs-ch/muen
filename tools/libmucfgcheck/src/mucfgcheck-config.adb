@@ -37,6 +37,9 @@ is
        Hash                => Ada.Strings.Hash,
        Equivalent_Elements => "=");
 
+   Xpath_Root_Node : constant String
+     := "/*[self::system or self::component or self::library]";
+
    --  Returns the name of the config variable given by the node.
    function Config_Var_Name (Node : DOM.Core.Node) return String;
 
@@ -106,9 +109,8 @@ is
       Config_Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/*/config/boolean"
-               & " | /*/config/integer"
-               & " | /*/config/string");
+           XPath => Xpath_Root_Node
+             & "/config/*[self::boolean or self::integer or self::string]");
       Set_Of_Names : Set_Of_Strings_Type.Set;
    begin
       for I in Natural range 0 .. DOM.Core.Nodes.Length (List => Config_Nodes) - 1 loop
@@ -165,7 +167,7 @@ is
    procedure Check_Config_Boolean_Values is new Check_Type_Values
      (Value_Type => Boolean,
       Typename   => "boolean",
-      XPath      => "/*/config/",
+      XPath      => Xpath_Root_Node & "/config/",
       Value_Kind => "config variable",
       Name       => Config_Var_Name);
 
@@ -177,7 +179,7 @@ is
    procedure Check_Config_Integer_Values is new Check_Type_Values
      (Value_Type => Integer,
       Typename   => "integer",
-      XPath      => "/*/config/",
+      XPath      => Xpath_Root_Node & "/config/",
       Value_Kind => "config variable",
       Name       => Config_Var_Name);
 
@@ -189,7 +191,7 @@ is
    procedure Check_Boolean_Values is new Check_Type_Values
      (Value_Type => Boolean,
       Typename   => "boolean",
-      XPath      => "/*/expressions//",
+      XPath      => Xpath_Root_Node & "/expressions//",
       Value_Kind => "expression",
       Name       => Expression_Name);
 
@@ -201,7 +203,7 @@ is
    procedure Check_Integer_Values is new Check_Type_Values
      (Value_Type => Integer,
       Typename   => "integer",
-      XPath      => "/*/expressions//",
+      XPath      => Xpath_Root_Node & "/expressions//",
       Value_Kind => "expression",
       Name       => Expression_Name);
 
@@ -221,11 +223,13 @@ is
       Config_Vars : constant DOM.Core.Node_List
                   := McKae.XML.XPath.XIA.XPath_Query
                         (N     => XML_Data.Doc,
-                         XPath => "/*/config/*");
+                         XPath => Xpath_Root_Node & "/config/"
+                           & "*[self::boolean or self::integer"
+                           & " or self::string]");
       Exprs       : constant DOM.Core.Node_List
                   := McKae.XML.XPath.XIA.XPath_Query
                         (N     => XML_Data.Doc,
-                         XPath => "/*/expressions/expression");
+                         XPath => Xpath_Root_Node & "/expressions/expression");
       Known_Names : Set;
 
       ----------------------------------------------------------------------
@@ -390,7 +394,9 @@ is
       Cfg_Expr_Values : constant DOM.Core.Node_List
          := McKae.XML.XPath.XIA.XPath_Query
                (N     => XML_Data.Doc,
-                XPath => "/*/config/* | /*/expressions/expression");
+                XPath => Xpath_Root_Node
+                  & "/config/*[self::boolean or self::integer or self::string]"
+                  & " | " & Xpath_Root_Node & "/expressions/expression");
    begin
       Mulog.Log (Msg => "Checking uniqueness of"
                  & DOM.Core.Nodes.Length (List => Cfg_Expr_Values)'Img

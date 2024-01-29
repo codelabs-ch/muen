@@ -100,7 +100,7 @@ is
 
    --  Iterate over target nodes:
    --    If the virtual resource (specified by Resource_Kind) of the target
-   --    is set, substract these resources from Available_Intervals.
+   --    is set, subtract these resources from Available_Intervals.
    --    Otherwise:
    --       Set the resource if it is listed in Mapping.
    --       Otherwise: Put the target node into Todo_List.

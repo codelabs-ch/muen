@@ -1,6 +1,6 @@
 <doc name="Muen System Specification">
  <author>Adrian-Ken Rueegsegger, Reto Buerki</author>
- <version>0.7.1</version>
+ <version>0.7.2</version>
 
  <latex_preamble>
   \usepackage{titlepic}
@@ -673,7 +673,7 @@
 
   <section id="toolchain-plugin_system" label="Plugin System" priority="0">
     <text priority="0">
-      As visible in Figure~\ref{fig:build-process}, the build process includes
+      As is shown in Figure~\ref{fig:build-process}, the build process includes
       two steps where plugins may be inserted if needed.
       The intention of the plugin system is to simplify the introduction of
       small, less critical modifications to the toolchain and keep those
@@ -720,7 +720,7 @@
         Component specification as XML in component format
      \end{description}
 
-     The main processing-steps are:
+     The main processing steps are:
      \begin{enumerate}
         \item Merge XIncludes of main XML file, i.e.,
         insert the referenced files at the given location;
@@ -1438,7 +1438,7 @@
      given processor. Also, the MCU is copied to the specified output directory
      with a \texttt{.ucode} suffix.
 
-     If a phyiscal memory region for MCU already exists, it is removed before
+     If a physical memory region for MCU already exists, it is removed before
      further processing.
      The system policy is left unchanged if the tool does not find an applicable
      MCU for the target processor.

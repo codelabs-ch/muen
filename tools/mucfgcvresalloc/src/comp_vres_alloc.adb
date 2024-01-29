@@ -379,7 +379,7 @@ is
                   Interval => Vector_Numbers_Domain);
          end case;
 
-         --  Block domain-space taken by existsing virtual resources
+         --  Block domain-space taken by existing virtual resources
          --  and fill todo-list.
          Mulog.Log (Msg => "Analyzing resources for "
                    & Resource_Kind'Image);

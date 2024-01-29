@@ -7,7 +7,7 @@ article focuses on a practical use-case of the technology.
 
 The https://muen.sk[muen.sk] project website is served by the
 https://github.com/hannesm/unipi[Unipi] MirageOS unikernel running on Muen.
-Unipi fetches the static website content to serve from a Git repositry. The
+Unipi fetches the static website content to serve from a Git repository. The
 article explains how to build such a system using
 https://docs.docker.com/engine/userguide/eng-image/multistage-build/[multi-stage
 Docker] images and then deploy it to actual hardware.

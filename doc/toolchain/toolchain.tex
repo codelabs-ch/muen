@@ -161,7 +161,7 @@ services. The second type facilitates suspension of execution of the source
 subject and switching to the target. Such a construct is used to pass the
 thread of execution on to a different subject, e.g. invocation of a debugger
 subject if an error occurs in the source subject. The third kind is used to
-faciliate the restart of subjects.
+facilitate the restart of subjects.
 
 Kernel events are special in that they are targeted at the kernel. The
 currently supported events are system reboot and shutdown.
@@ -215,7 +215,7 @@ cyclic fashion. This means that major frames are repetitive. A
 \emph{minor frame} specifies a subject and a precise amount of time.
 
 The \texttt{mugenschedcfg} tool can be used to automatically generate
-scheduling plans from a given scheduling configration, see section
+scheduling plans from a given scheduling configuration, see section
 \ref{sec:mugenschedcfg}.
 
 \subsection{Format}
@@ -890,7 +890,7 @@ of a memory region. This mechanism is heavily used by the subject loader (SL)
 during subject init and reset operation. The subject loader expander remaps
 writable memory regions of the loadee (the subject under loader control) to SL
 and replaces the original regions with new ones containing a hash reference to
-the associated pyhsical memory region. This way SL is able to determine the
+the associated physical memory region. This way SL is able to determine the
 intended content of the target memory region by looking up the region in its
 sinfo page by using the hash value as key.
 

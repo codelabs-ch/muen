@@ -84,7 +84,7 @@ is
          raise Open_Error with "Unable to open output file '" & Output & "'";
       end if;
 
-      Mulog.Log (Msg => "Files successfuly opened, watch '"
+      Mulog.Log (Msg => "Files successfully opened, watch '"
                  & Output & "' for data");
 
       declare
@@ -171,7 +171,7 @@ is
                   delay 1.0;
                when Readers.Overrun_Detected =>
                   Mulog.Log
-                    (Msg => "Overrrun detected, some data might be lost");
+                    (Msg => "Overrun detected, some data might be lost");
                when Readers.Inactive =>
                   Mulog.Log (Msg => "Channel inactive, waiting");
                   delay 2.0;

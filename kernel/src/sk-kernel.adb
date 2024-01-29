@@ -251,7 +251,7 @@ is
    --D Source events are actions performed when a given subject triggers a trap
    --D or a hypercall. Source events can also be triggered by the timed event
    --D mechanism. The increment RIP parameter specifies that the RIP of the
-   --D subject caller should be incremented if necessary, as part of the event
+   --D subject should be incremented if necessary, as part of the event
    --D handling (e.g. sleep action).
    procedure Handle_Source_Event
      (Subject       :     Skp.Global_Subject_ID_Type;
@@ -1004,7 +1004,7 @@ is
    is
       use type Skp.CPU_Range;
    begin
-      --D @Item List => impl_kernel_init_sched_steps
+      --D @Item List => impl_kernel_init_steps, Priority => 10
       --D Setup VMCS and state of each subject running on this logical CPU,
       --D see \ref{impl_subject_init}.
       for I in Skp.Global_Subject_ID_Type loop
@@ -1133,20 +1133,21 @@ is
          MCU.Process;
 
          --D @Item List => impl_kernel_init_steps
-         --D Enable VMX, enter VMX root-mode and initialize subjects with all
-         --D their associated state. Finally, finish setup by initializing the
-         --D scheduler.
+         --D Enable VMX and enter VMX root-mode.
          System_State.Enable_VMX_Feature;
          VMX.Enter_Root_Mode;
          Init_Subjects;
+
+         --D @Item List => impl_kernel_init_steps, Priority => 20
+         --D Finish setup by initializing the scheduler.
          Scheduler.Init;
 
-         --D @Item List => impl_kernel_init_steps
+         --D @Item List => impl_kernel_init_steps, Priority => 20
          --D Synchronize all logical CPUs prior to setting VMX preemption
          --D timer.
          MP.Wait_For_All;
 
-         --D @Item List => impl_kernel_init_steps
+         --D @Item List => impl_kernel_init_steps, Priority => 20
          --D Arm VMX Exit timer of scheduler for preemption on end of initial
          --D minor frame.
          Scheduler.Set_VMX_Exit_Timer;
@@ -1155,7 +1156,7 @@ is
             Current_Subject : constant Skp.Global_Subject_ID_Type
               := Scheduler.Get_Current_Subject_ID;
          begin
-            --D @Item List => impl_kernel_init_steps
+            --D @Item List => impl_kernel_init_steps, Priority => 20
             --D Prepare state of initial subject for execution.
             Subjects.Filter_State (ID => Current_Subject);
             Subjects.Restore_State
@@ -1164,7 +1165,7 @@ is
          end;
       end;
 
-      --D @Text Section => impl_kernel_init, Priority => 20
+      --D @Text Section => impl_kernel_init, Priority => 30
       --D Registers of the first subject to schedule are returned by the
       --D initialization procedure to the calling assembler code. The assembly
       --D then restores the subject register values prior to launching the first

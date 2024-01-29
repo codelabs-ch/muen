@@ -79,7 +79,7 @@
 \node [fit={(cspecwithhash)(compsrc)(cspecsrc)}, draw=white!40!black, dashed, line width=0.8mm] (component_border) {};
 \node [above=0mm of component_border.north west, anchor=south west, color=white!40!black] (component_border_text) {\textit{This is done for each component:}};
 
-\node [Tool, below= of policysrc] (mucfgjoin) {Join system and componet descriptions\\(mucfgjoin)};
+\node [Tool, below= of policysrc] (mucfgjoin) {Join system and component descriptions\\(mucfgjoin)};
 \node [Data, below= of mucfgjoin] (policyjoined) {Joined policy (.xml)};
 \draw [arrow] (policysrc) to (mucfgjoin);
 \draw [arrow] (cspecwithhash.north) |- (mucfgjoin);

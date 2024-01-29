@@ -155,7 +155,7 @@
  <xs:simpleType name="srcMemoryKindType">
   <xs:annotation>
    <xs:documentation>
-    Memory types allowed in policy format source phyiscal memory section. For
+    Memory types allowed in policy format source physical memory section. For
     information about subject memory types,
     see \ref{system_src.xsd:subjectMemoryKindType}.
 

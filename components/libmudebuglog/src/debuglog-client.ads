@@ -32,7 +32,7 @@ with
    Abstract_State => State
 is
 
-   --  Inititalize debug log.
+   --  Initialize debug log.
    procedure Init (Epoch : Interfaces.Unsigned_64)
    with
       Global  => (Output => State),

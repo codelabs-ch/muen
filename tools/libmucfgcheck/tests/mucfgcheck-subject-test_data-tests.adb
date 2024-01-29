@@ -471,7 +471,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       Assert (Condition => Validation_Errors.Is_Empty,
               Message   => "Unexpected error in positive test");
 
-      --  Set mistmatching physical IRQ number as suffix.
+      --  Set mismatching physical IRQ number as suffix.
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
@@ -488,7 +488,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
                & "expected 21"),
               Message   => "Exception mismatch (IRQ mismatch 1)");
 
-      --  Set mistmatching logical IRQ number as suffix
+      --  Set mismatching logical IRQ number as suffix
       --  (unresolvable vector).
 
       Muxml.Utils.Set_Attribute
@@ -505,7 +505,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
                & "logical name suffix"),
               Message   => "Exception mismatch (IRQ mismatch 2)");
 
-      --  Mistmatching logical IRQ number as suffix (resolvable vector).
+      --  Mismatching logical IRQ number as suffix (resolvable vector).
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,

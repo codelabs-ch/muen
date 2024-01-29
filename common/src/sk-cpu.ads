@@ -98,7 +98,7 @@ is
       Inline_Always,
       No_Return;
 
-   --  Halt instruction execution until the occurence of the next interrupt.
+   --  Halt instruction execution until the occurrence of the next interrupt.
    procedure Wait_For_Interrupt
    with
       Global  => (In_Out => X86_64.State),

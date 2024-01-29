@@ -160,14 +160,15 @@ is
             --  Bit 13 - CMPXCHG16B
             --  Bit 19 - SSE4.1
             --  Bit 20 - SSE4.2
-            --  Bit 22 - POPCNT Instruction
+            --  Bit 22 - MOVBE
+            --  Bit 23 - POPCNT Instruction
             --  Bit 25 - AESNI
             --  Bit 27 - OSXSAVE
             --  Bit 28 - AVX
             --  Bit 26 - XSAVE
             --  Bit 29 - F16C
             --  Bit 30 - RDRAND
-            State.Regs.RCX := SK.Word64 (Values.ECX) and 16#7e98_3203#;
+            State.Regs.RCX := SK.Word64 (Values.ECX) and 16#7ed8_3203#;
 
             --  Bit  0 -   FPU: x87 enabled
             --  Bit  1 -   VME: Virtual-8086 Mode Enhancement
@@ -202,32 +203,63 @@ is
 
             --  Structured Extended Feature Flags.
 
-            --  Cap supported subleaves.
-            State.Regs.RAX := 0;
-
             if RCX = 0 then
+               --  Cap supported subleaves.
+               State.Regs.RAX := 1;
+
                --  Bit  0 - FSGSBASE
                --  Bit  3 - BMI1
                --  Bit  5 - AVX2
+               --  Bit  7 - SMEP
                --  Bit  8 - BMI2
                --  Bit  9 - REP MOVSB/STOSB
                --  Bit 16 - AVX512F
                --  Bit 17 - AVX512DQ
                --  Bit 18 - RDSEED
                --  Bit 19 - ADX
+               --  Bit 20 - SMAP
                --  Bit 21 - AVX512_IFMA
                --  Bit 23 - CLFLUSHOPT
                --  Bit 28 - AVX512CD
                --  Bit 29 - SHA
                --  Bit 30 - AVX512BW
                --  Bit 31 - AVX512VL
-               State.Regs.RBX := SK.Word64 (Values.EBX) and 16#f0af_0329#;
-            else
-               State.Regs.RBX := 0;
-            end if;
+               State.Regs.RBX := SK.Word64 (Values.EBX) and 16#f0bf_03a9#;
 
-            State.Regs.RCX := 0;
-            State.Regs.RDX := 0;
+               --  Bit  1 - AVX512_VBMI
+               --  Bit  6 - AVX512_VBMI2
+               --  Bit  8 - GFNI
+               --  Bit  9 - VAES
+               --  Bit 10 - VPCLMULQDQ
+               --  Bit 11 - AVX512_VNNI
+               --  Bit 12 - AVX512_BITALG
+               --  Bit 14 - AVX512_VPOPCNTDQ
+               --  Bit 27 - MOVDIRI
+               --  Bit 28 - MOVDIRI64B
+               State.Regs.RCX := SK.Word64 (Values.ECX) and 16#1800_5f42#;
+
+               --  Bit  4 - Fast Short REP MOV
+               --  Bit  8 - AVX512_VP2INTERSECT
+               --  Bit 14 - SERIALIZE
+               --  Bit 23 - AVX512_FP16
+               State.Regs.RDX := SK.Word64 (Values.EDX) and 16#0080_4110#;
+            elsif RCX = 1 then
+
+               --  Bit  4 - AVX-VNNI
+               --  Bit  5 - AVX512_BF16
+               --  Bit 10 - zero-length REB MOVSB
+               --  Bit 11 - fast short REB STOSB
+               --  Bit 12 - fast short REB CMPSB, REP SCASB
+               State.Regs.RAX := SK.Word64 (Values.EAX) and 16#0000_1c30#;
+               State.Regs.RBX := 0;
+               State.Regs.RCX := 0;
+               State.Regs.RDX := 0;
+            else
+               State.Regs.RAX := 0;
+               State.Regs.RBX := 0;
+               State.Regs.RCX := 0;
+               State.Regs.RDX := 0;
+            end if;
          when 16#d# =>
             if RCX = 0 then
                declare
@@ -280,7 +312,7 @@ is
 
             --  Get Highest Extended Function Supported.
 
-            State.Regs.RAX := 16#8000_0004#;
+            State.Regs.RAX := 16#8000_0008#;
             State.Regs.RBX := 0;
             State.Regs.RCX := 0;
             State.Regs.RDX := 0;
@@ -291,7 +323,23 @@ is
 
             --  Mask out Bit 27 - RDTSCP
             State.Regs.RDX := SK.Word64 (Values.EDX) and 16#f7ff_ffff#;
-         when 2 | 16#8000_0002# .. 16#8000_0004# =>
+         when 16#8000_0007# =>
+
+            --  Clear to zero in order to not provide CPU Size/hierarchy
+            --  information to Linux subjects.
+
+            State.Regs.RAX := 0;
+            State.Regs.RBX := 0;
+            State.Regs.RCX := 0;
+            State.Regs.RDX := 0;
+         when 16#8000_0008# =>
+
+            --  Physical Address and Linear Address Size
+            State.Regs.RAX := SK.Word64 (Values.EAX);
+            State.Regs.RBX := 0;
+            State.Regs.RCX := 0;
+            State.Regs.RDX := 0;
+         when 2 | 16#8000_0002# .. 16#8000_0006# =>
 
             --  Passthrough values.
 

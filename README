@@ -186,6 +186,7 @@ chance similar hardware works out-of-the box if the microarchitecture is Ivy
 Bridge or newer.
 
 |===================================================================
+| ASUS Prime Z690-P D4           | Alder Lake  | i5-125000
 | iBASE MI995VF-X27              | Coffee Lake | Xeon E-2176M
 | Lenovo ThinkPad T480s          | Kaby Lake   | i7-8650U
 | Lenovo ThinkPad X260           | Skylake     | i7-6500U

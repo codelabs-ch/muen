@@ -13,6 +13,7 @@ serial.out;MCU00: Update to revision 16#00000021# successful
 serial.out;Waiting for AP wakeup event
 serial.out;AP wakeup event received
 serial.out;ttyS1 at I/O 0x2f8 (irq = 5, base_baud = 115200)
+serial.out;memtype_reserve: \[mem 0xf8000000-0xf8ffffff\], req uncached-minus
 serial.out;pci 0000:00:19.0: \[8086:1502\] type 00 class 0x020000
 serial.out;pci 0000:00:19.0: reg 0x10: \[mem 0xf7f00000-0xf7f1ffff\]
 serial.out;pci 0000:00:19.0: reg 0x14: \[mem 0xf7f39000-0xf7f39fff\]

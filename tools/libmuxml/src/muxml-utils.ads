@@ -22,7 +22,6 @@ with Ada.Strings.Unbounded;
 with Ada.Containers.Doubly_Linked_Lists;
 
 with DOM.Core.Nodes;
-use type DOM.Core.Node;
 
 package Muxml.Utils
 is

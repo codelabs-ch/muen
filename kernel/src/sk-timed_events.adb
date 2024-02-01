@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK.CPU;
+with SK.Arch;
 
 package body SK.Timed_Events
 with
@@ -82,7 +82,7 @@ is
       Refined_Depends =>
          (Has_Expired'Result => (Subject_Events, Subject, X86_64.State))
    is
-      Now               : constant Word64 := CPU.RDTSC;
+      Now               : constant Word64 := Arch.Get_Current_Timestamp;
       Cur_Trigger_value : constant Word64
         := Subject_Events (Subject).Data.TSC_Trigger_Value;
    begin

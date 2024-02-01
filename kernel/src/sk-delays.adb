@@ -18,6 +18,7 @@
 
 with Skp.Kernel;
 
+with SK.Arch;
 with SK.CPU;
 
 package body SK.Delays
@@ -32,7 +33,7 @@ is
       Current : Word64;
    begin
       loop
-         Current := CPU.RDTSC;
+         Current := Arch.Get_Current_Timestamp;
          exit when Current >= Deadline;
          CPU.Pause;
       end loop;
@@ -42,7 +43,7 @@ is
 
    procedure U_Delay (US : Natural)
    is
-      Now : constant Word64 := CPU.RDTSC;
+      Now : constant Word64 := Arch.Get_Current_Timestamp;
    begin
       Delay_Until (Deadline => Now + ((Word64 (US)
                    * Skp.Kernel.TSC_Khz) / 1000));

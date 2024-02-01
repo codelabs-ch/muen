@@ -21,8 +21,8 @@ with Skp.Interrupts;
 with Skp.Kernel;
 with Skp.Subjects;
 
+with SK.Arch;
 with SK.Bitops;
-with SK.CPU;
 with SK.Constants;
 with SK.Dump;
 with SK.KC;
@@ -662,7 +662,7 @@ is
            := Next_Subject_ID;
          Trigger_Value : Word64;
          Event_Nr      : Skp.Events.Event_Range;
-         TSC_Now       : constant Word64 := CPU.RDTSC;
+         TSC_Now       : constant Word64 := Arch.Get_Current_Timestamp;
       begin
 
          --D @Text Section => impl_handle_timer_expiry, Priority => 20

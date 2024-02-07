@@ -13,7 +13,7 @@ LINUX_NAME = "nic_linux"
 LINUX_BASE_ADDR = 0xe03000000
 LINUX_BOOTPARAM = "unikernel_iface"
 OUT_SPEC_PATH = "../" + POLICY_TEMPLATE
-RESET_VAR_NAME = "resetable"
+RESET_VAR_NAME = "resettable"
 
 
 def add_physical_channels(doc, comp_channels, subject_name):
@@ -69,7 +69,7 @@ def add_linux_channels(doc, comp_channels, subject_name):
 
 def copy_reset_variable(doc, subject_name):
     """
-    Copy component-local "resetable" variable to system config section.
+    Copy component-local "resettable" variable to system config section.
     """
     comp_rst = doc.xpath("/system/components/component[@name='"
                          + subject_name + "']/config/boolean[@name='"

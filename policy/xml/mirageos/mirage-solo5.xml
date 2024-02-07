@@ -42,7 +42,7 @@
  </deviceDomains>
  <events>
   <include href="common_events.xml"/>
-  <if variable="unikernel_resetable" value="true">
+  <if variable="unikernel_resettable" value="true">
    <event name="unikernel_reset" mode="self"/>
   </if>
   <event name="resume_unikernel_1" mode="switch"/>
@@ -205,21 +205,21 @@
       <default physical="trap_to_sm_3"/>
      </group>
      <group name="vmcall">
-      <if variable="unikernel_resetable" value="true">
+      <if variable="unikernel_resettable" value="true">
        <event id="0" logical="solo5_exit" physical="unikernel_reset"/>
       </if>
      </group>
     </source>
     <target>
      <event logical="resume_after_trap" physical="resume_unikernel_1"/>
-     <if variable="unikernel_resetable" value="true">
+     <if variable="unikernel_resettable" value="true">
       <event logical="solo5_exit" physical="unikernel_reset">
        <reset/>
       </event>
      </if>
     </target>
    </events>
-   <if variable="unikernel_resetable" value="true">
+   <if variable="unikernel_resettable" value="true">
     <monitor>
      <loader subject="unikernel" logical="reload" virtualAddress="16#0000#"/>
     </monitor>

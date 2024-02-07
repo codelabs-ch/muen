@@ -54,7 +54,7 @@ def set_rip(xml_spec, binary):
     print("* Setting RIP to " + rip.text)
 
 
-def set_resetable(xml_spec, resetable):
+def set_resettable(xml_spec, resettable):
     """
     Add reset config value to XML spec.
     """
@@ -66,9 +66,9 @@ def set_resetable(xml_spec, resetable):
     else:
         config = section[0]
 
-    rst_str = str(resetable).lower()
+    rst_str = str(resettable).lower()
     print("* Component reset is set to '" + rst_str + "'")
-    var = etree.Element("boolean", name="resetable", value=rst_str)
+    var = etree.Element("boolean", name="resettable", value=rst_str)
     config.insert(0, var)
 
 
@@ -252,7 +252,7 @@ def parse_args():
                             action="store_false", default=True,
                             help=('Do not copy unikernel binary to output '
                                   'directory'))
-    arg_parser.add_argument('--disable-reset', dest='resetable',
+    arg_parser.add_argument('--disable-reset', dest='resettable',
                             action="store_false", default=True,
                             help=('Disable reset of unikernel on exit'))
 
@@ -266,7 +266,7 @@ out_dir = args.out_dir
 boot_params = args.bootparams
 out_spec_path = args.out_spec
 copy_binary = args.copy_bin
-resetable = args.resetable
+resettable = args.resettable
 ram_size_mb = args.ram
 
 if not os.path.isfile(src_bin_path):
@@ -286,7 +286,7 @@ src_spec = etree.parse(src_spec_path, xml_parser).getroot()
 comp_name = src_spec.attrib['name'].lower()
 
 add_bootparams(src_spec, boot_params)
-set_resetable(src_spec, resetable)
+set_resettable(src_spec, resettable)
 set_rip(src_spec, binary)
 end_address = add_elf_memory(src_spec, binary, binary_name)
 chan_addr = add_ram_memory(src_spec, end_address, ram_size_mb)

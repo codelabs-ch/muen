@@ -636,16 +636,16 @@ package body Mutools.Vres_Alloc.Test_Data.Tests is
 
       Assert (Condition => True = Is_Aligned (Address => 16#1001_0000#,
                                               Size    => 16#1234_5678_1000#),
-              Message   => "False negative aligment.");
+              Message   => "False negative alignment.");
       Assert (Condition => False = Is_Aligned (Address => 16#0001#,
                                                Size    => 16#1000#),
-              Message   => "False positive aligment (Address not aligned)");
+              Message   => "False positive alignment (Address not aligned)");
       Assert (Condition => False = Is_Aligned (Size => 16#0100#),
-              Message   => "False positive aligment (Size not aligned)");
+              Message   => "False positive alignment (Size not aligned)");
       Assert (Condition => False = Is_Aligned (Size => 16#0000#),
-              Message   => "False positive aligment (Size is 0)");
+              Message   => "False positive alignment (Size is 0)");
       Assert (Condition => False = Is_Aligned (Address => 16#0fff#),
-              Message   => "False positive aligment (Address not aligned)");
+              Message   => "False positive alignment (Address not aligned)");
 
 --  begin read only
    end Test_Is_Aligned;

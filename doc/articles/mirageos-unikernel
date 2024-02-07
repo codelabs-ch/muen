@@ -89,7 +89,7 @@ that purpose, download Solo5 and install the tool like so:
   $ ./configure.sh --only-tools
   $ make install-tools
 
-By default, the tools are made accesible by installing them in
+By default, the tools are made accessible by installing them in
 `/usr/local/bin`. You can change the destination directory via the `DESTDIR`
 environment variable.
 

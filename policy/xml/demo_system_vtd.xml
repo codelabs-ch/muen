@@ -136,7 +136,7 @@
      <if variable="pciconf_emulation_enabled" value="true">
       <pci bus="16#00#" device="16#01#" function="0">
        <doc type="muen-tools">
-        This documenation is ignored because there is no rule
+        This documentation is ignored because there is no rule
         in the transfer-script defining where it goes.
         Such a rule can be added easily.
        </doc>

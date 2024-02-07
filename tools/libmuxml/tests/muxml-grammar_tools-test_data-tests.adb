@@ -239,7 +239,7 @@ package body Muxml.Grammar_Tools.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      --  Positive test: Add some nodes to a file, fiter it and compare result
+      --  Positive test: Add some nodes to a file, filter it and compare result
       --  to original file
       procedure Positive_Test
       is

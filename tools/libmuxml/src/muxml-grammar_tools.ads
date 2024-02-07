@@ -51,7 +51,7 @@ is
       return Insert_Query_Result_Type;
 
    --  Starting from the root-node N: Delete all children of N that
-   --  cannot be a child of N accoding to the currently
+   --  cannot be a child of N according to the currently
    --  loaded schema information (loadable with Init_Order_Information).
    --  Afterwards, recurses into the remaining children of N.
    --  Only tag-names are evaluated.

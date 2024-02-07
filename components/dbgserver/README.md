@@ -305,7 +305,7 @@ WantedBy=multi-user.target
 ```
 
 With these files in place, systemd automatically starts the muendbg.service and
-its dependecies during boot. You can check the status with the following
+its dependencies during boot. You can check the status with the following
 command:
 
 ```shell
@@ -322,7 +322,7 @@ $ sudo systemctl status muendbg.service
 
 Mar 19 13:04:23 host systemd[1]: Started muendbg.service - Muen SHMmem debug capture.
 Mar 19 13:04:23 host mureadshmemlog[891]: Mar 19 2024 13:04:23 mureadshmemlog: Processing input file '/muenfs/debug_shm_sink_memory'
-Mar 19 13:04:23 host mureadshmemlog[891]: Mar 19 2024 13:04:23 mureadshmemlog: Files successfuly opened, watch '/var/log/muen.log' for data
+Mar 19 13:04:23 host mureadshmemlog[891]: Mar 19 2024 13:04:23 mureadshmemlog: Files successfully opened, watch '/var/log/muen.log' for data
 ```
 
 ### PC Speaker Decoding

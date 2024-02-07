@@ -25,7 +25,7 @@ pragma Elaborate_All (X86_64);
 --D @Interface
 --D This package deals with Machine-Check Architecture and Exception (MCA, MCE),
 --D see Intel SDM Vol. 3B, "Chapter 15 Machine-Check Architecture"
---D \cite{intelsdm}. The MCA and MCE mechanims allow the detection of hardware
+--D \cite{intelsdm}. The MCA and MCE mechanisms allow the detection of hardware
 --D errors.
 package SK.MCE
 with

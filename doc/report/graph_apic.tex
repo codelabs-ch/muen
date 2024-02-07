@@ -18,7 +18,7 @@
 	\draw[very thick] (du0) to node[auto, name=sys] {System Bus} (du1);
 
 	\node[apribox, below=6mm of sys]  (ioa) {I/O APIC};
-	\node[align=center, right=of ioa] (ext) {External\\Interrups};
+	\node[align=center, right=of ioa] (ext) {External\\Interrupts};
 
 	\draw[thick, <->] (ioa) -- (sys);
 	\draw[arrow] (ext) -- (ioa);

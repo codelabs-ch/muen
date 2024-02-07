@@ -1438,7 +1438,7 @@
      given processor. Also, the MCU is copied to the specified output directory
      with a \texttt{.ucode} suffix.
 
-     If a phyiscal memory region for MCU already exists, it is removed before
+     If a physical memory region for MCU already exists, it is removed before
      further processing.
      The system policy is left unchanged if the tool does not find an applicable
      MCU for the target processor.

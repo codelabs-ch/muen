@@ -36,7 +36,7 @@ is
 
    Invalid_Expression : exception;
 
-   --  Fragment Vectors hold parts ("framents") of a string,
+   --  Fragment Vectors hold parts ("fragments") of a string,
    --  where each part is annotated with their type,
    --  i.e., whether it is a reference to some variable or just text.
    type Fragment_Type is (Text_Type, Reference_Type);

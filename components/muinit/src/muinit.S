@@ -21,7 +21,7 @@
 
 _main:
 	// Save initial register values on stack to restore after
-	// initialization. The stack pointer is set to the inital value of the
+	// initialization. The stack pointer is set to the initial value of the
 	// component, which may have arbitrary (byte) alignment.
 	// Note: Registers r10-r15 are used by the init code and do not
 	//       retain their initial value.

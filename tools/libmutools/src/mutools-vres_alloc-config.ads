@@ -33,7 +33,7 @@ is
 
    --  This is the space all automatically assigned virtual addresses of
    --  virtual machine subjects (like linuxes) are contained in.
-   --  There is a maxium number of bits available for hardware-addresses in
+   --  There is a maximum number of bits available for hardware-addresses in
    --  linuxes which is less than 64 bits. At the time of writing it is 36 bits
    --  for linuxes running in Muen.
    Default_Va_Space_Vm : constant Intervals.Interval_Type

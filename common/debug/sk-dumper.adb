@@ -195,12 +195,17 @@ is
    -------------------------------------------------------------------------
 
    procedure Output_VMX_Error
-     (Reason  : Crash_Audit_Types.VTx_Reason_Range;
+     (Reason  : Crash_Audit_Types.Reason_Type;
       Context : Crash_Audit_Types.VTx_Context_Type)
    is
    begin
       Put_Line (Item => "VMX error details for reason "
                 & Img (Word64 (Reason)));
+
+      if Reason not in Crash_Audit_Types.VTx_Reason_Range then
+         Put_Line (Item => "Invalid reason for VMX error");
+         return;
+      end if;
 
       if Context.Field_Validity.Instrerr_Valid then
          Put_Line

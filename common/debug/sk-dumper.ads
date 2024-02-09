@@ -58,7 +58,7 @@ is
 
    --  Output VMX error information.
    procedure Output_VMX_Error
-     (Reason  : Crash_Audit_Types.VTx_Reason_Range;
+     (Reason  : Crash_Audit_Types.Reason_Type;
       Context : Crash_Audit_Types.VTx_Context_Type);
 
 end SK.Dumper;

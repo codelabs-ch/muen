@@ -559,7 +559,8 @@ is
    end record
    with
       Pack,
-      Size => Dump_Type_Size * 8;
+      Size        => Dump_Type_Size * 8,
+      Object_Size => Dump_Type_Size * 8;
 
    Null_Dump : constant Dump_Type;
 

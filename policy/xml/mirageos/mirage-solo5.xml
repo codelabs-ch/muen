@@ -19,14 +19,16 @@
    <fill pattern="16#00#"/>
    <hash value="none"/>
   </memory>
-  <memory name="control_unikernel" size="16#1000#" caching="WB">
-   <fill pattern="16#ff#"/>
-   <hash value="none"/>
-  </memory>
-  <memory name="status_unikernel" size="16#1000#" caching="WB">
-   <fill pattern="16#00#"/>
-   <hash value="none"/>
-  </memory>
+  <if variable="unikernel_resettable" value="true">
+   <memory name="control_unikernel" size="16#1000#" caching="WB">
+    <fill pattern="16#ff#"/>
+    <hash value="none"/>
+   </memory>
+   <memory name="status_unikernel" size="16#1000#" caching="WB">
+    <fill pattern="16#00#"/>
+    <hash value="none"/>
+   </memory>
+  </if>
  </memory>
  <deviceDomains>
   <domain name="nic_domain">
@@ -227,8 +229,10 @@
    <component ref="unikernel">
     <map logical="time_info" physical="time_info"/>
     <map logical="debuglog" physical="debuglog_subject7"/>
-    <map logical="status" physical="status_unikernel"/>
-    <map logical="control" physical="control_unikernel"/>
+    <if variable="unikernel_resettable" value="true">
+     <map logical="status" physical="status_unikernel"/>
+     <map logical="control" physical="control_unikernel"/>
+    </if>
    </component>
   </subject>
  </subjects>

@@ -72,6 +72,22 @@ def set_resettable(xml_spec, resettable):
     config.insert(0, var)
 
 
+def add_muinit_dep(xml_spec):
+    """
+    Add dependency to muinit.
+    """
+    section = xml_spec.xpath("/component/depends")
+    if len(section) == 0:
+        comp = xml_spec.xpath("/component")[0]
+        depends = etree.Element("depends")
+        comp.insert(0, depends)
+    else:
+        depends = section[0]
+
+    print("* Adding dependency to Muinit")
+    etree.SubElement(depends, "library", ref="muinit")
+
+
 def add_elf_memory(xml_spec, binary, filename):
     """
     Add memory regions for given ELF binary with specified name to <requires>
@@ -287,6 +303,8 @@ comp_name = src_spec.attrib['name'].lower()
 
 add_bootparams(src_spec, boot_params)
 set_resettable(src_spec, resettable)
+if resettable:
+    add_muinit_dep(src_spec)
 set_rip(src_spec, binary)
 end_address = add_elf_memory(src_spec, binary, binary_name)
 chan_addr = add_ram_memory(src_spec, end_address, ram_size_mb)

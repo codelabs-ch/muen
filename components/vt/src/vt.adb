@@ -21,7 +21,8 @@ with SK.Interrupt_Tables;
 
 with Log;
 
-with Component_Constants;
+with Vt_Component.Memory;
+
 with Interrupt_Handler;
 pragma Unreferenced (Interrupt_Handler);
 
@@ -29,10 +30,12 @@ with Mux.Terminals;
 
 procedure VT
 is
+   use type SK.Word64;
 begin
    Log.Text_IO.Init (Epoch => 1);
    SK.Interrupt_Tables.Initialize
-     (Stack_Addr => Component_Constants.Interrupt_Stack_Address);
+     (Stack_Addr => Vt_Component.Memory.Interrupt_Stack_Address +
+        Vt_Component.Memory.Interrupt_Stack_Size);
    Mux.Terminals.Initialize;
 
    SK.CPU.Sti;

@@ -33,9 +33,8 @@ with Mutime.Info;
 with Musinfo.Instance;
 with Mudm.Client;
 
-with Component_Constants;
-
 with Sm_Component.Events;
+with Sm_Component.Memory;
 
 with Time;
 with Types;
@@ -83,7 +82,8 @@ begin
    Debuglog.Client.Init (Epoch => Cur_Epoch);
    Debug_Ops.Put_Line (Item => "SM subject running");
    SK.Interrupt_Tables.Initialize
-     (Stack_Addr => Component_Constants.Interrupt_Stack_Address);
+     (Stack_Addr => Sm_Component.Memory.Interrupt_Stack_Address
+      + Sm_Component.Memory.Interrupt_Stack_Size);
    Time.Initialize;
 
    if not Musinfo.Instance.Is_Valid then

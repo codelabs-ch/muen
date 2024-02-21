@@ -25,8 +25,6 @@ with SK.Hypercall;
 
 with Musinfo.Instance;
 
-with Component_Constants;
-
 with Exceptions;
 
 with Foo.Receiver;
@@ -44,12 +42,15 @@ with Memory_Fills;
 
 with Example_Component.Config;
 with Example_Component.Events;
+with Example_Component.Memory;
 
 with Mucontrol.Command.Instance;
 with Mucontrol.Status.Instance;
 
 procedure Example
 is
+   use type Interfaces.Unsigned_64;
+
    Cur_Epoch     : constant Interfaces.Unsigned_64
      := Mucontrol.Command.Instance.Get_Epoch;
 
@@ -66,7 +67,8 @@ begin
 
    --D @Lst IDTbegin
    SK.Interrupt_Tables.Initialize
-     (Stack_Addr => Component_Constants.Interrupt_Stack_Address);
+     (Stack_Addr => Example_Component.Memory.Interrupt_Stack_Address +
+        Example_Component.Memory.Interrupt_Stack_Size);
    --D @Lst IDTend
 
    --  Check sinfo validity.
@@ -109,8 +111,6 @@ begin
    --  Trigger a self-event to wakeup from hlt.
 
    declare
-      use type SK.Word64;
-
       --D @Lst Sinfobegin
       Minor_Start : constant SK.Word64 := Musinfo.Instance.TSC_Schedule_Start;
       Minor_End   : constant SK.Word64 := Musinfo.Instance.TSC_Schedule_End;
@@ -148,8 +148,6 @@ begin
    SK.CPU.Cli;
 
    declare
-      use type SK.Word64;
-
       Minor_Start : constant SK.Word64 := Musinfo.Instance.TSC_Schedule_Start;
       Minor_End   : constant SK.Word64 := Musinfo.Instance.TSC_Schedule_End;
       Trigger     : constant SK.Word64 := Minor_End + 1000;
@@ -177,8 +175,6 @@ begin
    --  Yield remaining time of current minor frame.
 
    declare
-      use type SK.Word64;
-
       Minor_End       : constant SK.Word64 := Musinfo.Instance.TSC_Schedule_End;
       New_Minor_Start : SK.Word64;
    begin

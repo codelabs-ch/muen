@@ -18,4 +18,9 @@ is
    Initramfs_Executable : constant Boolean := False;
    Initramfs_Writable   : constant Boolean := False;
 
+   Binary_Address    : constant := 16#1000#;
+   Binary_Size       : constant := 16#0003_0000#;
+   Binary_Executable : constant Boolean := True;
+   Binary_Writable   : constant Boolean := True;
+
 end Vt_Component.Memory;

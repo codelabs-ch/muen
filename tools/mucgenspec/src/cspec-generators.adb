@@ -125,8 +125,8 @@ is
       return Get_Str
         (Spec  => Spec,
          Func  => Utils.To_Memory_Str'Access,
-         XPath => "*[self::component or self::library]/requires/"
-         & "memory/memory");
+         XPath => "*[self::component or self::library]/requires/memory/memory"
+           & "|*[self::component or self::library]/provides/memory");
    end Get_Memory_Str;
 
    -------------------------------------------------------------------------

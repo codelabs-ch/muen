@@ -64,6 +64,11 @@
    </target>
   </events>
  </requires>
+ <provides>
+  <memory executable="false" logical="interrupt_stack" size="16#2000#" type="subject_binary" virtualAddress="16#0001_0000#" writable="true">
+   <fill pattern="16#00#"/>
+  </memory>
+ </provides>
 </component>
   </xsl:template>
   <xsl:template match="@*|node()">

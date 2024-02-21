@@ -24,8 +24,8 @@ SECTIONS
 
 	.stack 0x1000 :
 	{
-		/* Stack and Interrupt stack are 2 pages each */
-		. += 0x4000;
+		/* Component Stack is 2 pages, see COMPONENT_STACK_SIZE */
+		. += 0x2000;
 	}
 
 	.text 0x200000 :

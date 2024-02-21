@@ -22,7 +22,7 @@ with SK.Interrupt_Tables;
 with Interrupt_Handler;
 pragma Unreferenced (Interrupt_Handler);
 
-with Component_Constants;
+with Ps2_Drv_Component.Memory;
 with Log;
 
 with PS2.I8042;
@@ -31,12 +31,15 @@ with PS2.Output;
 
 procedure PS2_Drv
 is
+   use type SK.Word64;
+
    I8042_Success, Mouse_Success : Boolean;
 begin
    Log.Text_IO.Init (Epoch => 1);
 
    SK.Interrupt_Tables.Initialize
-     (Stack_Addr => Component_Constants.Interrupt_Stack_Address);
+     (Stack_Addr => Ps2_Drv_Component.Memory.Interrupt_Stack_Address +
+        Ps2_Drv_Component.Memory.Interrupt_Stack_Size);
    PS2.Output.Init;
    PS2.I8042.Init (Success => I8042_Success);
    PS2.Mouse.Init (Success => Mouse_Success);

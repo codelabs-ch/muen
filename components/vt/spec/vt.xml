@@ -3,9 +3,6 @@
 		<library ref="libmudebuglog"/>
 	</depends>
 	<requires>
-		<memory>
-			<memory logical="slot_control_1" size="16#1000#" writable="true" executable="false"/>
-		</memory>
 		<channels>
 			<array elementSize="16#0001_0000#" logical="console" vectorBase="auto">
 				<reader logical="NIC Linux"/>
@@ -25,6 +22,7 @@
 		</devices>
 		<events>
 			<source>
+				<event id="1" logical="request_reset_slot_1"/>
 				<event id="30" logical="shutdown">
 					<system_poweroff/>
 				</event>

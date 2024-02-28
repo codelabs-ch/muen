@@ -37,9 +37,6 @@
   <fill pattern="16#00#"/>
   <hash value="none"/>
  </memory>
- <memory name="slot_control_1" size="16#1000#" caching="WB">
-  <fill pattern="16#00#"/>
- </memory>
  <memory name="initramfs" size="16#0113_0000#" caching="WB" type="subject_initrd">
   <file filename="initramfs.cpio.gz" offset="none"/>
  </memory>

@@ -94,6 +94,7 @@ project Kernel is
 
    for Source_Dirs use
      ("../common/src",
+      "../common/muinterrupts",
       "../common/muschedinfo",
       "../common/mutimedevents",
       "../policy/obj",

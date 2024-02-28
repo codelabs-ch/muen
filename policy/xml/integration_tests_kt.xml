@@ -218,7 +218,7 @@
      <group name="vmcall">
       <event id="0" logical="smp_signal_sm_01" physical="nic_linux_smp_signal_sm_01"/>
       <event id="2" logical="smp_signal_sm_02" physical="nic_linux_smp_signal_sm_02"/>
-      <event id="30" logical="reboot" physical="reboot_linux_1"/>
+      <event id="30" logical="reboot" physical="request_reset_slot_1"/>
       <event id="31" logical="timer" physical="timer_linux_1"/>
      </group>
     </source>
@@ -228,9 +228,6 @@
       <reset/>
      </event>
      <event id="62" logical="reset_from_vt" physical="reset_slot_1">
-      <reset/>
-     </event>
-     <event id="61" logical="reboot" physical="reboot_linux_1">
       <reset/>
      </event>
      <event logical="serial_irq4" physical="serial_irq4_linux_1">

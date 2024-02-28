@@ -20,6 +20,8 @@ private with System;
 
 private with Skp.Kernel;
 
+private with Muinterrupts;
+
 with Skp;
 
 --D @Interface
@@ -66,38 +68,29 @@ is
 
 private
 
-   Interrupt_Count      : constant := 256;
-   Bits_In_Word         : constant := 64;
-   Interrupt_Words      : constant := Interrupt_Count / Bits_In_Word;
-   Interrupt_Array_Size : constant := Interrupt_Count / 8;
-
-   type Interrupt_Word_Type is range 0 .. (Interrupt_Words - 1);
-
-   type Interrupts_Array is array (Interrupt_Word_Type) of Word64
+   type Padding_Type is array
+     (Muinterrupts.Interrupt_Interface_Size .. Page_Size - 1) of Byte
    with
-      Size => Interrupt_Array_Size * 8;
-
-   type Padding_Type is array (1 .. Page_Size - Interrupt_Array_Size) of Byte
-   with
-      Size => (Page_Size - Interrupt_Array_Size) * 8;
+      Size => (Page_Size - Muinterrupts.Interrupt_Interface_Size) * 8;
 
    --D @Interface
    --D An subject interrupt page consist of the pending interrupt data and is
    --D padded to a full 4K memory page. Explicit padding makes sure the entirety
    --D of the memory is covered and initialized.
-   type Interrupt_Page is record
+   type Interrupt_Interface_Type is record
       --D @Interface
       --D Pending interrupts stored in the form of a bitmap.
-      Data    : Interrupts_Array;
+      Data    : Muinterrupts.Interrupt_Interface_Type;
       --D @Interface
       --D Padding to fill the memory page.
       Padding : Padding_Type;
    end record
    with
-      Size => Page_Size * 8;
+      Size        => Page_Size * 8,
+      Object_Size => Page_Size * 8;
 
    type Pending_Interrupts_Array is
-     array (Skp.Global_Subject_ID_Type) of Interrupt_Page
+     array (Skp.Global_Subject_ID_Type) of Interrupt_Interface_Type
    with
       Independent_Components,
       Component_Size => Page_Size * 8,

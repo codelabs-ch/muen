@@ -25,6 +25,11 @@ with Controller_Component.Events;
 package Ctrlr.Config
 is
 
+   --  Pending interrupts region address.
+   --  TODO: Replace this constant with CSPEC generated one as soon as the
+   --  <monitor> section is supported in component specs, see T514.
+   Pending_Interrupts_Address : constant := 16#0030_0000#;
+
    package Cspecs renames Controller_Component.Events;
 
    type Reset_Event_Range is range 0 .. 64;

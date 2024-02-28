@@ -18,7 +18,6 @@
     <memory logical="status_4"/>
     <memory logical="status_5"/>
    </array>
-   <memory logical="slot_control_1" size="16#1000#" writable="true" executable="false"/>
   </memory>
   <events>
    <source>

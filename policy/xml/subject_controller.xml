@@ -22,6 +22,9 @@
    </group>
   </source>
  </events>
+ <monitor>
+  <interrupts subject="controller" logical="pending_interrupts" virtualAddress="16#0030_0000#" writable="true"/>
+ </monitor>
  <component ref="controller">
   <map logical="debuglog" physical="debuglog_controller"/>
   <map logical="control_1" physical="control_time"/>

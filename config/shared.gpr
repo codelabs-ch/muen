@@ -46,6 +46,7 @@ abstract project Shared is
    Common_Linker_Switches :=
      ("-nostdlib",
       "-n",
+      "-Wl,-z,noexecstack",
       "-Wl,--gc-sections");
 
    Spark_Linker_Switches :=

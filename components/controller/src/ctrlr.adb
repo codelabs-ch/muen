@@ -19,6 +19,7 @@
 with SK.CPU;
 
 with Ctrlr.Lifecycle;
+with Ctrlr.Requests;
 
 package body Ctrlr
 is
@@ -28,6 +29,7 @@ is
    procedure Run
    is
    begin
+      Ctrlr.Requests.Process;
       for I in Managed_Subjects_Range loop
          Lifecycle.Process (ID => I);
       end loop;

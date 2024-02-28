@@ -18,18 +18,13 @@
 
 with Interfaces;
 
-private with System;
-
-private with Controller_Component.Memory;
-
 package Ctrlr.Slot_Control
 is
 
    --  Returns the current era for the managed subject specified by ID.
    function Get_Current_Era
      (ID : Managed_Subjects_Range)
-      return Interfaces.Unsigned_64
-   with Volatile_Function;
+      return Interfaces.Unsigned_64;
 
    --  Queue reset request of slot with given ID by incrementing its epoch. If
    --  ID does not designate a valid slot, no action is taken.
@@ -37,32 +32,10 @@ is
 
 private
 
-   package Cspecs renames Controller_Component.Memory;
-
-   Padding_Start : constant := 9;
-
-   type Padding_Type is array (Padding_Start .. Cspecs.Slot_Control_1_Size)
-     of Interfaces.Unsigned_8
-   with Size => (Cspecs.Slot_Control_1_Size - Padding_Start + 1) * 8;
-
    type Slot_Control_Type is record
-      Era     : Interfaces.Unsigned_64 with Atomic;
-      Padding : Padding_Type;
-   end record
-   with Object_Size => Cspecs.Slot_Control_1_Size * 8;
+      Era : Interfaces.Unsigned_64;
+   end record;
 
-   pragma Warnings
-     (GNATprove, Off,
-      "writing * is assumed to have no effects on other non-volatile objects",
-      Reason => "This global variable is effectively read-only.");
-   Slot_Control_1 : Slot_Control_Type
-   with
-      Volatile,
-      Async_Writers,
-      Address => System'To_Address (Cspecs.Slot_Control_1_Address),
-      Size    => Cspecs.Slot_Control_1_Size * 8;
-   pragma Warnings
-     (GNATprove, On,
-      "writing * is assumed to have no effects on other non-volatile objects");
+   Slot_Control_1 : Slot_Control_Type := (others => 0);
 
 end Ctrlr.Slot_Control;

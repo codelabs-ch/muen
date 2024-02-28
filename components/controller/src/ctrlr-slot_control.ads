@@ -31,6 +31,10 @@ is
       return Interfaces.Unsigned_64
    with Volatile_Function;
 
+   --  Queue reset request of slot with given ID by incrementing its epoch. If
+   --  ID does not designate a valid slot, no action is taken.
+   procedure Reset (Slot_ID : Natural);
+
 private
 
    package Cspecs renames Controller_Component.Memory;

@@ -35,4 +35,19 @@ is
       return Cur_Era;
    end Get_Current_Era;
 
+   -------------------------------------------------------------------------
+
+   procedure Reset (Slot_ID : Natural)
+   is
+      use type Interfaces.Unsigned_64;
+
+      Cur_Era : Interfaces.Unsigned_64;
+   begin
+      if Slot_ID = 1 then
+         Cur_Era := Slot_Control_1.Era;
+         Cur_Era := Cur_Era + 1;
+         Slot_Control_1.Era := Cur_Era;
+      end if;
+   end Reset;
+
 end Ctrlr.Slot_Control;

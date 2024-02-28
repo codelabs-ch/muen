@@ -25,6 +25,7 @@
 		</devices>
 		<events>
 			<source>
+				<event id="1" logical="request_reset_slot_1"/>
 				<event id="30" logical="shutdown">
 					<system_poweroff/>
 				</event>

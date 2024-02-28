@@ -25,6 +25,11 @@
     <event id="10" logical="reset_slot_1_sm"/>
     <event id="11" logical="reset_slot_1_linux"/>
    </source>
+   <target>
+    <event logical="request_reset_slot_1">
+     <inject_interrupt vector="32"/>
+    </event>
+   </target>
   </events>
  </requires>
 </component>

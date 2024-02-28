@@ -22,6 +22,7 @@ with "../libmucontroltypes/libmucontroltypes";
 project Controller extends "../component_spark" is
 
    Extra_Dirs := Component_Spark.Src_Dirs
+     & "../../common/muinterrupts"
      & "../../common/strings/impl";
 
    for Languages use ("Ada", "Asm");

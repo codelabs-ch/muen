@@ -85,7 +85,7 @@ private
    --D An subject interrupt page consist of the pending interrupt data and is
    --D padded to a full 4K memory page. Explicit padding makes sure the entirety
    --D of the memory is covered and initialized.
-   type Interrupt_Page is record
+   type Interrupt_Interface_Type is record
       --D @Interface
       --D Pending interrupts stored in the form of a bitmap.
       Data    : Interrupts_Array;
@@ -94,10 +94,11 @@ private
       Padding : Padding_Type;
    end record
    with
-      Size => Page_Size * 8;
+      Size        => Page_Size * 8,
+      Object_Size => Page_Size * 8;
 
    type Pending_Interrupts_Array is
-     array (Skp.Global_Subject_ID_Type) of Interrupt_Page
+     array (Skp.Global_Subject_ID_Type) of Interrupt_Interface_Type
    with
       Independent_Components,
       Component_Size => Page_Size * 8,

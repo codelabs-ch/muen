@@ -33,24 +33,25 @@ is
    --  Return word, pos for given vector.
    procedure To_Pos
      (Vector :     SK.Byte;
-      Word   : out Interrupt_Word_Type;
+      Word   : out Muinterrupts.Interrupt_Word_Type;
       Pos    : out Bitops.Word64_Pos)
    with
       Inline_Always
    is
    begin
-      Word := Interrupt_Word_Type (Vector / Bits_In_Word);
-      Pos  := Bitops.Word64_Pos (Vector mod Bits_In_Word);
+      Word := Muinterrupts.Interrupt_Word_Type
+        (Vector / Muinterrupts.Bits_In_Word);
+      Pos  := Bitops.Word64_Pos (Vector mod Muinterrupts.Bits_In_Word);
    end To_Pos;
 
    -------------------------------------------------------------------------
 
    --  Convert given word, pos to vector;
    function To_Vector
-     (Word : Interrupt_Word_Type;
+     (Word : Muinterrupts.Interrupt_Word_Type;
       Pos  : Bitops.Word64_Pos)
       return Byte
-   is (Byte (Word) * Byte (Bits_In_Word) + Byte (Pos))
+   is (Byte (Word) * Byte (Muinterrupts.Bits_In_Word) + Byte (Pos))
    with
       Inline_Always;
 
@@ -64,7 +65,7 @@ is
       Global  => (In_Out => Pending_Interrupts),
       Depends => (Pending_Interrupts =>+ (Subject, Vector))
    is
-      Word : Interrupt_Word_Type;
+      Word : Muinterrupts.Interrupt_Word_Type;
       Pos  : Bitops.Word64_Pos;
    begin
       To_Pos (Vector => Vector,
@@ -106,7 +107,7 @@ is
       Refined_Global  => (In_Out => Pending_Interrupts),
       Refined_Depends => (Pending_Interrupts =>+ (Vector, Subject))
    is
-      Word : Interrupt_Word_Type;
+      Word : Muinterrupts.Interrupt_Word_Type;
       Pos  : Bitops.Word64_Pos;
    begin
       To_Pos (Vector => Vector,
@@ -136,7 +137,7 @@ is
       Interrupt_Pending : Boolean;
    begin
       Search_Interrupt_Words :
-      for Interrupt_Word in Interrupt_Word_Type loop
+      for Interrupt_Word in Muinterrupts.Interrupt_Word_Type loop
          --D @Interface
          --D Read current pending interrupt word of specific subject into Field
          --D variable.
@@ -165,7 +166,7 @@ is
       Vector := 0;
 
       Search_Interrupt_Words :
-      for Interrupt_Word in reverse Interrupt_Word_Type loop
+      for Interrupt_Word in reverse Muinterrupts.Interrupt_Word_Type loop
          --D @Interface
          --D Read current pending interrupt word of specific subject into Field
          --D variable.

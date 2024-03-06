@@ -1,19 +1,6 @@
-PV  = 2.06
-PKG = grub-$(PV)
-DLA = $(PKG).tar.xz
-SRC = src/$(DLA)
-
-PATCHES = \
-	patches/0001-Implement-Command-Stream-Loader-CSL-module.patch \
-	patches/0002-pgp-Provide-grub_verify_signature2-function.patch \
-	patches/0003-include-grub-file.h-Add-GRUB_FILE_TYPE_SBS.patch \
-	patches/0004-pgp-Do-not-verify-GRUB_FILE_TYPE_SBS-files.patch \
-	patches/0005-grub-shell-Improve-mkrescue_args-handling.patch \
-	patches/0006-Implement-Signed-Block-Stream-SBS-loader.patch
-
-define CMD_DL
-	cp $(SRC) $(TMP)
-endef
+REV = 6091259ac0ef
+PKG = grub
+SRC = https://github.com/codelabs-ch/grub2.git
 
 ifeq (,$(MUEN_EFI))
 GRUB_PLATFORM := pc
@@ -24,7 +11,7 @@ GRUB_TARGET   := x86_64
 endif
 
 define CMD_CONFIGURE
-	cd $(WRK) && PYTHON=python3 ./autogen.sh && ./configure \
+	cd $(WRK) && ./bootstrap && ./configure \
 		--prefix=$(BUILDDIR)/$(GRUB_TARGET)-$(GRUB_PLATFORM) \
 		--disable-werror \
 		--disable-device-mapper \
@@ -44,7 +31,7 @@ endef
 
 all: install_grub_platform
 
-include ../contrib.archive.mk
+include ../contrib.git.mk
 
 install_grub_platform: $(TMP)/.$(GRUB_TARGET)-$(GRUB_PLATFORM)
 $(TMP)/.$(GRUB_TARGET)-$(GRUB_PLATFORM):

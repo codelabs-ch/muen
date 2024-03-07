@@ -574,6 +574,16 @@ is
                New_Item => DOM.Core.Elements.Get_Attribute (Elem => Curr_Node,
                                                             Name => "size"));
          end loop;
+
+      exception
+         when Constraint_Error =>
+            raise Validation_Error
+              with "Duplicate physical "
+              & DOM.Core.Elements.Get_Tag_Name (Elem => Curr_Node)
+              & " with name '"
+              & DOM.Core.Elements.Get_Attribute (Elem => Curr_Node,
+                                                 Name => "name")
+              & "'";
       end Generic_Init;
 
    begin

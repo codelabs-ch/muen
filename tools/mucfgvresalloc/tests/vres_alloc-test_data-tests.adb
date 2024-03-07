@@ -216,6 +216,77 @@ package body Vres_Alloc.Test_Data.Tests is
             Ada.Directories.Delete_File (Name => Changed_Spec);
       end;
 
+      --  Duplicate physical memory region.
+      declare
+         Data         : Muxml.XML_Data_Type;
+         Changed_Spec : constant String
+           := "obj/vres_component_duplicate_memregion.xml";
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/policy_allocation.xml");
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/memory[@name='dummy_2']",
+            Name  => "name",
+            Value => "dummy");
+         Muxml.Write
+           (File => Changed_Spec,
+            Kind => Muxml.None,
+            Data => Data);
+
+         Test (Input_Policy         => Changed_Spec,
+               Input_Default_Folder => False,
+               Output_Filename      => "output_policy_fail.xml",
+               Diff_Ref_File        => "empty_diff.diff",
+               Test_Name            => "Exception: duplicate physical memory");
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E: Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Duplicate physical memory with name 'dummy'",
+                    Message   => "Exception mismatch: "
+                    & Ada.Exceptions.Exception_Message (X => E));
+            Ada.Directories.Delete_File (Name => Changed_Spec);
+      end;
+      --  Duplicate physical channel.
+      declare
+         Data         : Muxml.XML_Data_Type;
+         Changed_Spec : constant String
+           := "obj/vres_component_duplicate_channel.xml";
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/policy_allocation.xml");
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/channels/channel[@name='data_channel5']",
+            Name  => "name",
+            Value => "data_channel4");
+         Muxml.Write
+           (File => Changed_Spec,
+            Kind => Muxml.None,
+            Data => Data);
+
+         Test (Input_Policy         => Changed_Spec,
+               Input_Default_Folder => False,
+               Output_Filename      => "output_policy_fail.xml",
+               Diff_Ref_File        => "empty_diff.diff",
+               Test_Name            => "Exception: duplicate physical channel");
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E: Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Duplicate physical channel with name 'data_channel4'",
+                    Message   => "Exception mismatch: "
+                    & Ada.Exceptions.Exception_Message (X => E));
+            Ada.Directories.Delete_File (Name => Changed_Spec);
+      end;
+
       --  Not enough space for event resource.
       declare
          Data          : Muxml.XML_Data_Type;

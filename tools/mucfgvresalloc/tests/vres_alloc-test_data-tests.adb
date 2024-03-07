@@ -169,7 +169,7 @@ package body Vres_Alloc.Test_Data.Tests is
                Diff_Ref_File        => "empty_diff.diff",
                Test_Name            => "Exception: component not found");
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (1)");
       exception
          when E: Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
@@ -205,7 +205,7 @@ package body Vres_Alloc.Test_Data.Tests is
                Diff_Ref_File        => "empty_diff.diff",
                Test_Name            => "Exception: read-only with 'auto'");
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (2)");
       exception
          when E: Muxml.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
@@ -241,7 +241,7 @@ package body Vres_Alloc.Test_Data.Tests is
                Diff_Ref_File        => "empty_diff.diff",
                Test_Name            => "Exception: duplicate physical memory");
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (3)");
 
       exception
          when E: Validation_Error =>
@@ -276,7 +276,7 @@ package body Vres_Alloc.Test_Data.Tests is
                Diff_Ref_File        => "empty_diff.diff",
                Test_Name            => "Exception: duplicate physical channel");
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (4)");
 
       exception
          when E: Validation_Error =>
@@ -331,7 +331,7 @@ package body Vres_Alloc.Test_Data.Tests is
                Diff_Ref_File        => "empty_diff.diff",
                Test_Name            => "Exception: not enough space for events");
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (5)");
       exception
          when E: Mutools.Intervals.Out_Of_Space =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
@@ -364,7 +364,7 @@ package body Vres_Alloc.Test_Data.Tests is
                Diff_Ref_File        => "empty_diff.diff",
                Test_Name            => "Exception: Channel not declared");
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (6)");
       exception
          when E: Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
@@ -398,7 +398,7 @@ package body Vres_Alloc.Test_Data.Tests is
                Diff_Ref_File        => "empty_diff.diff",
                Test_Name            => "Exception: Memory not declared");
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (7)");
       exception
          when E: Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
@@ -449,7 +449,7 @@ package body Vres_Alloc.Test_Data.Tests is
                Diff_Ref_File        => "empty_diff.diff",
                Test_Name            => "Exception: Same logical not array");
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (8)");
       exception
          when E: Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
@@ -500,7 +500,7 @@ package body Vres_Alloc.Test_Data.Tests is
                Diff_Ref_File        => "empty_diff.diff",
                Test_Name            => "Exception: Same logical in array");
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (9)");
       exception
          when E: Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
@@ -541,7 +541,7 @@ package body Vres_Alloc.Test_Data.Tests is
                   Diff_Ref_File        => "empty_diff.diff",
                   Test_Name            => "Exception: Alignment in component");
             Assert (Condition => False,
-                    Message   => "Exception expected");
+                    Message   => "Exception expected (10)");
          exception
             when E: Validation_Error =>
                Assert (Condition => Ada.Exceptions.Exception_Message (X => E)

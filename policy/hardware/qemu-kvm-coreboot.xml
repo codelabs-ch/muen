@@ -10,16 +10,14 @@
      Board information:
      BIOS information:
        Vendor: coreboot
-       Version: 4.11-350-g31ecc882bc
-       Date: 02/20/2020
+       Version: 24.05-154-ge5462aae168b
+       Date: 06/05/2024
      Log:
        * WARNING *: Adding fake irq 16 for device with MSIs: 0000:00:02.0
        * WARNING *: Adding fake irq 16 for device with MSIs: 0000:00:03.0
        * WARNING *: Adding fake irq 16 for device with MSIs: 0000:00:1f.2
        * WARNING *: Board information in output description could not be obtained:
        [Errno 2] No such file or directory: '/sys/devices/virtual/dmi/id/board_vendor'
-       * MANUAL  *: Leave working RAM layout unchanged
-       Newer Linux kernel report 'Unknown E820 type' regions with coreboot
        * MANUAL  *: Fake legacy IRQ for device 00:04.0
      ========================================== -->
 
@@ -100,8 +98,8 @@
     <msr address="16#0000_0490#" name="IA32_VMX_TRUE_ENTRY_CTLS" regval="16#0000_f3ff_0000_11fb#"/>
   </processor>
   <memory>
-    <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#0000#" size="16#0009_f000#"/>
-    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0010_0000#" size="16#7fe7_4000#"/>
+    <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#1000#" size="16#0009_f000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0010_0000#" size="16#7fd5_8000#"/>
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0001_0000_0000#" size="16#c000_0000#"/>
   </memory>
   <devices pciConfigAddress="16#b000_0000#" pciConfigSize="16#1000_0000#">
@@ -149,7 +147,7 @@
         <iommuGroup id="1"/>
       </pci>
       <memory caching="UC" name="mem1" physicalAddress="16#fd00_0000#" size="16#0100_0000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#fe09_8000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#fcf6_7000#" size="16#1000#"/>
       <memory caching="UC" name="mem3" physicalAddress="16#000c_0000#" size="16#0002_0000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#b000_8000#" size="16#1000#"/>
     </device>
@@ -165,9 +163,9 @@
         <msi name="msi3"/>
         <msi name="msi4"/>
       </irq>
-      <memory caching="UC" name="mem1" physicalAddress="16#fe09_9000#" size="16#1000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#fe09_0000#" size="16#4000#"/>
-      <memory caching="UC" name="mem3" physicalAddress="16#fe00_0000#" size="16#0004_0000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#fcf6_6000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#fcf6_c000#" size="16#4000#"/>
+      <memory caching="UC" name="mem3" physicalAddress="16#fcfc_0000#" size="16#0004_0000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#b001_0000#" size="16#1000#"/>
     </device>
     <device name="usb_controller_1">
@@ -194,7 +192,7 @@
         <msi name="msi15"/>
         <msi name="msi16"/>
       </irq>
-      <memory caching="UC" name="mem1" physicalAddress="16#fe09_4000#" size="16#4000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#fcf6_8000#" size="16#4000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#b001_8000#" size="16#1000#"/>
     </device>
     <device name="ethernet_controller_2">
@@ -204,10 +202,10 @@
         <iommuGroup id="4"/>
       </pci>
       <irq name="irq1" number="20"/>
-      <memory caching="UC" name="mem1" physicalAddress="16#fe09_b000#" size="16#1000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#fe04_0000#" size="16#0004_0000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#fcf6_4000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#fcf8_0000#" size="16#0004_0000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#b002_0000#" size="16#1000#"/>
-      <ioPort end="16#58ff#" name="ioport1" start="16#5800#"/>
+      <ioPort end="16#ffff#" name="ioport1" start="16#ff00#"/>
     </device>
     <device name="isa_bridge_1">
       <description>Intel Corporation 82801IB (ICH9) LPC Interface Controller</description>
@@ -226,9 +224,9 @@
       <irq name="irq1" number="16">
         <msi name="msi1"/>
       </irq>
-      <memory caching="UC" name="mem1" physicalAddress="16#fe09_a000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#fcf6_5000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#b00f_a000#" size="16#1000#"/>
-      <ioPort end="16#5c1f#" name="ioport1" start="16#5c00#"/>
+      <ioPort end="16#feff#" name="ioport1" start="16#fee0#"/>
     </device>
     <device name="smbus_1">
       <description>Intel Corporation 82801I (ICH9 Family) SMBus Controller</description>
@@ -237,7 +235,7 @@
         <iommuGroup id="5"/>
       </pci>
       <memory caching="UC" name="mmconf" physicalAddress="16#b00f_b000#" size="16#1000#"/>
-      <ioPort end="16#103f#" name="ioport1" start="16#1000#"/>
+      <ioPort end="16#043f#" name="ioport1" start="16#0400#"/>
     </device>
   </devices>
 </hardware>

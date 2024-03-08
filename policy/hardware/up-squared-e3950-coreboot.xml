@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- ==========================================
-     Generated with mugenhwcfg (commit v0.7.1)
-     Linux kernel version: 5.10.0-21-amd64
-     Distribution: Debian GNU/Linux 11 (bullseye)
+     Generated with mugenhwcfg (commit v0.7.2)
+     Linux kernel version: 6.1.0-16-amd64
+     Distribution: Debian GNU/Linux 12 (bookworm)
      Product information:
        Vendor: Up
        Name: Squared
@@ -13,10 +13,8 @@
        Version: 1.0
      BIOS information:
        Vendor: coreboot
-       Version: 4.11-356-ge612b01eec-dirty
-       Date: 08/03/2020
-     Log:
-       * WARNING *: Skipping invalid IRQ resource for device 0000:00:1f.1: None
+       Version: 24.05-159-g919727708ddc
+       Date: 06/06/2024
      ========================================== -->
 
 
@@ -33,6 +31,7 @@
     <cpuid eax="16#3c00_0121#" ebx="16#0140_003f#" ecx="16#0000_003f#" edx="16#0000_0001#" leaf="16#0000_0004#" subleaf="16#00#"/>
     <cpuid eax="16#3c00_0122#" ebx="16#01c0_003f#" ecx="16#0000_003f#" edx="16#0000_0001#" leaf="16#0000_0004#" subleaf="16#01#"/>
     <cpuid eax="16#3c00_c143#" ebx="16#03c0_003f#" ecx="16#0000_03ff#" edx="16#0000_0001#" leaf="16#0000_0004#" subleaf="16#02#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0004#" subleaf="16#03#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#1124_2020#" leaf="16#0000_0005#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0057#" ebx="16#0000_0002#" ecx="16#0000_0001#" edx="16#0000_0000#" leaf="16#0000_0006#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0000#" ebx="16#2294_e283#" ecx="16#0000_0000#" edx="16#2c00_0400#" leaf="16#0000_0007#" subleaf="16#00#"/>
@@ -41,6 +40,7 @@
     <cpuid eax="16#0730_0404#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0603#" leaf="16#0000_000a#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0001#" ebx="16#0000_0001#" ecx="16#0000_0100#" edx="16#0000_0000#" leaf="16#0000_000b#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0005#" ebx="16#0000_0004#" ecx="16#0000_0201#" edx="16#0000_0000#" leaf="16#0000_000b#" subleaf="16#01#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0002#" edx="16#0000_0000#" leaf="16#0000_000b#" subleaf="16#02#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_000c#" subleaf="16#00#"/>
     <cpuid eax="16#0000_001b#" ebx="16#0000_0440#" ecx="16#0000_0440#" edx="16#0000_0000#" leaf="16#0000_000d#" subleaf="16#00#"/>
     <cpuid eax="16#0000_000f#" ebx="16#0000_02c0#" ecx="16#0000_0100#" edx="16#0000_0000#" leaf="16#0000_000d#" subleaf="16#01#"/>
@@ -53,6 +53,8 @@
     <cpuid eax="16#0000_0007#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0003#" leaf="16#0000_0010#" subleaf="16#02#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0011#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0012#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0012#" subleaf="16#01#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0012#" subleaf="16#02#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0013#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0001#" ebx="16#0000_000f#" ecx="16#8000_0007#" edx="16#0000_0000#" leaf="16#0000_0014#" subleaf="16#00#"/>
     <cpuid eax="16#0249_0002#" ebx="16#003f_ffff#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0014#" subleaf="16#01#"/>
@@ -70,7 +72,7 @@
     <cpuid eax="16#0000_0003#" ebx="16#0000_00f9#" ecx="16#0124_f800#" edx="16#0000_0000#" leaf="16#8086_0000#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0003#" ebx="16#0000_00f9#" ecx="16#0124_f800#" edx="16#0000_0000#" leaf="16#c000_0000#" subleaf="16#00#"/>
     <msr address="16#0000_003a#" name="IA32_FEATURE_CONTROL" regval="16#0000_0000_0000_0005#"/>
-    <msr address="16#0000_010a#" name="IA32_ARCH_CAPABILITIES" regval="16#0000_0000_0000_0079#"/>
+    <msr address="16#0000_010a#" name="IA32_ARCH_CAPABILITIES" regval="16#0000_0000_0000_0c79#"/>
     <msr address="16#0000_01a0#" name="IA32_MISC_ENABLE" regval="16#0000_0000_0081_0089#"/>
     <msr address="16#0000_0480#" name="IA32_VMX_BASIC" regval="16#00da_0400_0000_0011#"/>
     <msr address="16#0000_0481#" name="IA32_VMX_PINBASED_CTLS" regval="16#0000_00ff_0000_0016#"/>
@@ -90,11 +92,9 @@
     <msr address="16#0000_0490#" name="IA32_VMX_TRUE_ENTRY_CTLS" regval="16#0003_ffff_0000_11fb#"/>
   </processor>
   <memory>
-    <memoryBlock allocatable="false" name="Unknown E820 type" physicalAddress="16#0000#" size="16#1000#"/>
     <memoryBlock allocatable="false" name="System RAM" physicalAddress="16#1000#" size="16#0009_f000#"/>
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0010_0000#" size="16#0ff0_0000#"/>
-    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#1215_1000#" size="16#689b_e000#"/>
-    <memoryBlock allocatable="false" name="Unknown E820 type" physicalAddress="16#7ab0_f000#" size="16#004f_1000#"/>
+    <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#1215_1000#" size="16#688b_f000#"/>
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0001_0000_0000#" size="16#0001_8000_0000#"/>
     <reservedMemory name="rmrr1" physicalAddress="16#7b80_0000#" size="16#0480_0000#"/>
   </memory>
@@ -138,24 +138,24 @@
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series Host Bridge</description>
       <pci bus="16#00#" device="16#00#" function="0">
         <identification classcode="16#0600#" deviceId="16#5af0#" revisionId="16#0b#" vendorId="16#8086#"/>
-        <iommuGroup id="0"/>
+        <iommuGroup id="1"/>
       </pci>
       <memory caching="UC" name="mmconf" physicalAddress="16#e000_0000#" size="16#1000#"/>
     </device>
     <device name="vga_compatible_controller_1">
-      <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series Integrated Graphics Controller</description>
+      <description>Intel Corporation Apollo Lake [HD Graphics 505]</description>
       <pci bus="16#00#" device="16#02#" function="0">
         <identification classcode="16#0300#" deviceId="16#5a84#" revisionId="16#0b#" vendorId="16#8086#"/>
-        <iommuGroup id="1"/>
+        <iommuGroup id="0"/>
       </pci>
       <irq name="irq1" number="19">
         <msi name="msi1"/>
       </irq>
-      <memory caching="UC" name="mem1" physicalAddress="16#c000_0000#" size="16#0100_0000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#cf00_0000#" size="16#0100_0000#"/>
       <memory caching="UC" name="mem2" physicalAddress="16#b000_0000#" size="16#1000_0000#"/>
       <memory caching="UC" name="mem3" physicalAddress="16#000c_0000#" size="16#0002_0000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e001_0000#" size="16#1000#"/>
-      <ioPort end="16#303f#" name="ioport1" start="16#3000#"/>
+      <ioPort end="16#efff#" name="ioport1" start="16#efc0#"/>
       <reservedMemory ref="rmrr1"/>
     </device>
     <device name="audio_device_1">
@@ -167,8 +167,8 @@
       <irq name="irq1" number="25">
         <msi name="msi1"/>
       </irq>
-      <memory caching="UC" name="mem1" physicalAddress="16#c171_0000#" size="16#4000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#c120_0000#" size="16#0010_0000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#ce8e_c000#" size="16#4000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#ced0_0000#" size="16#0010_0000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e007_0000#" size="16#1000#"/>
     </device>
     <device name="sata_controller_1">
@@ -180,13 +180,13 @@
       <irq name="irq1" number="19">
         <msi name="msi1"/>
       </irq>
-      <memory caching="UC" name="mem1" physicalAddress="16#c171_4000#" size="16#2000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#c173_8000#" size="16#1000#"/>
-      <memory caching="UC" name="mem3" physicalAddress="16#c173_7000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#ce8e_a000#" size="16#2000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#ce8c_9000#" size="16#1000#"/>
+      <memory caching="UC" name="mem3" physicalAddress="16#ce8c_a000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e009_0000#" size="16#1000#"/>
-      <ioPort end="16#3087#" name="ioport1" start="16#3080#"/>
-      <ioPort end="16#308b#" name="ioport2" start="16#3088#"/>
-      <ioPort end="16#305f#" name="ioport3" start="16#3040#"/>
+      <ioPort end="16#ef7f#" name="ioport1" start="16#ef78#"/>
+      <ioPort end="16#ef77#" name="ioport2" start="16#ef74#"/>
+      <ioPort end="16#ef9f#" name="ioport3" start="16#ef80#"/>
     </device>
     <device name="usb_controller_1">
       <description>Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series USB xHCI</description>
@@ -204,7 +204,7 @@
         <msi name="msi7"/>
         <msi name="msi8"/>
       </irq>
-      <memory caching="UC" name="mem1" physicalAddress="16#c170_0000#" size="16#0001_0000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#ce8f_0000#" size="16#0001_0000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e00a_8000#" size="16#1000#"/>
     </device>
     <device name="usb_controller_2">
@@ -213,8 +213,8 @@
         <iommuGroup id="6"/>
       </pci>
       <irq name="irq1" number="13"/>
-      <memory caching="UC" name="mem1" physicalAddress="16#c100_0000#" size="16#0020_0000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#c171_9000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#cee0_0000#" size="16#0020_0000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#ce8e_8000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e00a_9000#" size="16#1000#"/>
     </device>
     <device name="signal_processing_controller_1">
@@ -224,8 +224,8 @@
         <iommuGroup id="7"/>
       </pci>
       <irq name="irq1" number="27"/>
-      <memory caching="UC" name="mem1" physicalAddress="16#c171_a000#" size="16#1000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#c171_b000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#ce8e_7000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#ce8e_6000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e00b_0000#" size="16#1000#"/>
     </device>
     <device name="signal_processing_controller_2">
@@ -235,8 +235,8 @@
         <iommuGroup id="7"/>
       </pci>
       <irq name="irq1" number="28"/>
-      <memory caching="UC" name="mem1" physicalAddress="16#c171_c000#" size="16#1000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#c171_d000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#ce8e_5000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#ce8e_4000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e00b_1000#" size="16#1000#"/>
     </device>
     <device name="signal_processing_controller_3">
@@ -246,8 +246,8 @@
         <iommuGroup id="7"/>
       </pci>
       <irq name="irq1" number="29"/>
-      <memory caching="UC" name="mem1" physicalAddress="16#c171_e000#" size="16#1000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#c171_f000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#ce8e_3000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#ce8e_2000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e00b_2000#" size="16#1000#"/>
     </device>
     <device name="signal_processing_controller_4">
@@ -257,8 +257,8 @@
         <iommuGroup id="7"/>
       </pci>
       <irq name="irq1" number="30"/>
-      <memory caching="UC" name="mem1" physicalAddress="16#c172_0000#" size="16#1000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#c172_1000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#ce8e_1000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#ce8e_0000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e00b_3000#" size="16#1000#"/>
     </device>
     <device name="signal_processing_controller_5">
@@ -268,8 +268,8 @@
         <iommuGroup id="8"/>
       </pci>
       <irq name="irq1" number="31"/>
-      <memory caching="UC" name="mem1" physicalAddress="16#c172_2000#" size="16#1000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#c172_3000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#ce8d_f000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#ce8d_e000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e00b_8000#" size="16#1000#"/>
     </device>
     <device name="signal_processing_controller_6">
@@ -279,8 +279,8 @@
         <iommuGroup id="8"/>
       </pci>
       <irq name="irq1" number="32"/>
-      <memory caching="UC" name="mem1" physicalAddress="16#c172_4000#" size="16#1000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#c172_5000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#ce8d_d000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#ce8d_c000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e00b_9000#" size="16#1000#"/>
     </device>
     <device name="signal_processing_controller_7">
@@ -290,8 +290,8 @@
         <iommuGroup id="8"/>
       </pci>
       <irq name="irq1" number="33"/>
-      <memory caching="UC" name="mem1" physicalAddress="16#c172_6000#" size="16#1000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#c172_7000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#ce8d_b000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#ce8d_a000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e00b_a000#" size="16#1000#"/>
     </device>
     <device name="signal_processing_controller_8">
@@ -301,8 +301,8 @@
         <iommuGroup id="8"/>
       </pci>
       <irq name="irq1" number="34"/>
-      <memory caching="UC" name="mem1" physicalAddress="16#c172_8000#" size="16#1000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#c172_9000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#ce8d_9000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#ce8d_8000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e00b_b000#" size="16#1000#"/>
     </device>
     <device name="signal_processing_controller_9">
@@ -312,8 +312,8 @@
         <iommuGroup id="9"/>
       </pci>
       <irq name="irq1" number="4"/>
-      <memory caching="UC" name="mem1" physicalAddress="16#ddff_c000#" size="16#1000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#c172_a000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#cdff_c000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#ce8d_7000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e00c_0000#" size="16#1000#"/>
     </device>
     <device name="signal_processing_controller_10">
@@ -323,8 +323,8 @@
         <iommuGroup id="9"/>
       </pci>
       <irq name="irq1" number="5"/>
-      <memory caching="UC" name="mem1" physicalAddress="16#c172_b000#" size="16#1000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#c172_c000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#ce8d_6000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#ce8d_5000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e00c_1000#" size="16#1000#"/>
     </device>
     <device name="signal_processing_controller_11">
@@ -334,8 +334,8 @@
         <iommuGroup id="10"/>
       </pci>
       <irq name="irq1" number="35"/>
-      <memory caching="UC" name="mem1" physicalAddress="16#c172_d000#" size="16#1000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#c172_e000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#ce8d_4000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#ce8d_3000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e00c_8000#" size="16#1000#"/>
     </device>
     <device name="signal_processing_controller_12">
@@ -345,8 +345,8 @@
         <iommuGroup id="10"/>
       </pci>
       <irq name="irq1" number="36"/>
-      <memory caching="UC" name="mem1" physicalAddress="16#c172_f000#" size="16#1000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#c173_0000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#ce8d_2000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#ce8d_1000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e00c_9000#" size="16#1000#"/>
     </device>
     <device name="signal_processing_controller_13">
@@ -356,8 +356,8 @@
         <iommuGroup id="10"/>
       </pci>
       <irq name="irq1" number="37"/>
-      <memory caching="UC" name="mem1" physicalAddress="16#c173_1000#" size="16#1000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#c173_2000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#ce8d_0000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#ce8c_f000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e00c_a000#" size="16#1000#"/>
     </device>
     <device name="sd_host_controller_1">
@@ -367,8 +367,8 @@
         <iommuGroup id="11"/>
       </pci>
       <irq name="irq1" number="39"/>
-      <memory caching="UC" name="mem1" physicalAddress="16#c173_3000#" size="16#1000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#c173_4000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#ce8c_e000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#ce8c_d000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e00e_0000#" size="16#1000#"/>
     </device>
     <device name="sd_host_controller_2">
@@ -378,8 +378,8 @@
         <iommuGroup id="12"/>
       </pci>
       <irq name="irq1" number="42"/>
-      <memory caching="UC" name="mem1" physicalAddress="16#c173_5000#" size="16#1000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#c173_6000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#ce8c_c000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#ce8c_b000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e00f_0000#" size="16#1000#"/>
     </device>
     <device name="isa_bridge_1">
@@ -396,9 +396,10 @@
         <identification classcode="16#0c05#" deviceId="16#5ad4#" revisionId="16#0b#" vendorId="16#8086#"/>
         <iommuGroup id="13"/>
       </pci>
-      <memory caching="UC" name="mem1" physicalAddress="16#c173_9000#" size="16#1000#"/>
+      <irq name="irq1" number="20"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#ce8c_8000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e00f_9000#" size="16#1000#"/>
-      <ioPort end="16#307f#" name="ioport1" start="16#3060#"/>
+      <ioPort end="16#efbf#" name="ioport1" start="16#efa0#"/>
     </device>
     <device name="ethernet_controller_1">
       <description>Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller</description>
@@ -412,10 +413,10 @@
         <msi name="msi3"/>
         <msi name="msi4"/>
       </irq>
-      <memory caching="UC" name="mem1" physicalAddress="16#c140_0000#" size="16#1000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#c130_0000#" size="16#4000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#ceb0_0000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#cec0_0000#" size="16#4000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e020_0000#" size="16#1000#"/>
-      <ioPort end="16#10ff#" name="ioport1" start="16#1000#"/>
+      <ioPort end="16#f0ff#" name="ioport1" start="16#f000#"/>
     </device>
     <device name="ethernet_controller_2">
       <description>Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller</description>
@@ -429,10 +430,10 @@
         <msi name="msi3"/>
         <msi name="msi4"/>
       </irq>
-      <memory caching="UC" name="mem1" physicalAddress="16#c160_0000#" size="16#1000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#c150_0000#" size="16#4000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#ce90_0000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#cea0_0000#" size="16#4000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#e030_0000#" size="16#1000#"/>
-      <ioPort end="16#20ff#" name="ioport1" start="16#2000#"/>
+      <ioPort end="16#d0ff#" name="ioport1" start="16#d000#"/>
     </device>
   </devices>
 </hardware>

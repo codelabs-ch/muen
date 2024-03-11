@@ -16,6 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+STARTUP(stub.o)
+
 ENTRY(_main)
 
 SECTIONS
@@ -30,7 +32,7 @@ SECTIONS
 
 	.text 0x200000 :
 	{
-		KEEP (stub.o(.stub))
+		KEEP (stub.o)
 		*(.text .text.*)
 	}
 

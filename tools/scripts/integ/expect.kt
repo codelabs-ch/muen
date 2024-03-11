@@ -69,7 +69,7 @@ serial.out;Sending request with size
 serial.out;Wakeup from poll with pending response
 serial.out;SUCCESS: Response matches sent request
 serial.out;Crash audit: Initialized
-serial.out;Exit reason: 16#0012#
+serial.out;Exit reason: 16#00000012#
 serial.out;Crash audit: CPU APIC ID 16#.*# - Allocated record 16#01#
 serial.out;Crash audit: CPU APIC ID 16#.*# - Initiating reboot in 10 seconds
 serial.out;Crash audit: Records found, dump count is 16#01#

@@ -6,23 +6,10 @@ abstract project Shared is
    --  Linker script for linking SPARK components/kernel.
    Linker_Script := external ("linker_script", "-Xlinker_script parameter must be provided");
 
-   --  Prevent compiler from generating floating-point code, see:
-   --    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=41202
-   --    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=53383
-   No_FPU_Switches :=
-     ("-mno-80387",
-      "-mno-fp-ret-in-387",
-      "-mno-mmx",
-      "-mno-sse",
-      "-mno-sse2",
-      "-mno-sse3",
-      "-mno-ssse3",
-      "-mno-sse4",
-      "-mno-sse4a",
-      "-mno-sse4.1",
-      "-mno-sse4.2",
-      "-mno-avx",
-      "-mno-avx2");
+   --  Prevent compiler from generating floating-point code, by generating code
+   --  that only  uses the general-purpose registers, see:
+   --    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=70738
+   No_FPU_Switches := ("-mgeneral-regs-only");
 
    Common_Compiler_Switches :=
      ("-fcallgraph-info=su",
@@ -59,6 +46,7 @@ abstract project Shared is
    Common_Linker_Switches :=
      ("-nostdlib",
       "-n",
+      "-Wl,-z,noexecstack",
       "-Wl,--gc-sections");
 
    Spark_Linker_Switches :=

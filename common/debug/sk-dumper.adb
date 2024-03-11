@@ -45,8 +45,8 @@ is
       RIP, CS, RFL, RSP, SS, CR0, CR3, CR4 : Word64)
    is
    begin
-      Put_Line (Item => "RIP: " & Img (RIP) & " CS : " & Img (Word16 (CS)));
-      Put_Line (Item => "RSP: " & Img (RSP) & " SS : " & Img (Word16 (SS)));
+      Put_Line (Item => "RIP: " & Img (RIP) & " CS : " & Img (CS));
+      Put_Line (Item => "RSP: " & Img (RSP) & " SS : " & Img (SS));
 
       Put_Line (Item => "RAX: " & Img (Regs.RAX)
                 & " RBX: " & Img (Regs.RBX)
@@ -68,7 +68,7 @@ is
       Put_Line (Item => "CR0: " & Img (CR0) & " CR2: " & Img (Regs.CR2)
                 & " CR3: " & Img (CR3));
       Put_Line (Item => "CR4: " & Img (CR4) & " EFL: "
-                & Img (Word32 (RFL)));
+                & Img (RFL));
    end Output_Registers;
 
    -------------------------------------------------------------------------
@@ -82,7 +82,7 @@ is
       Put_Line (Item => "[CPU with APIC ID " & Img (APIC_ID)
                 & " : KERNEL PANIC]");
 
-      Put_Line (Item => "Vector: " & Img (Byte (Context.ISR_Ctx.Vector))
+      Put_Line (Item => "Vector: " & Img (Context.ISR_Ctx.Vector)
                 & ", Error: " & Img (Context.ISR_Ctx.Error_Code));
       New_Line;
       Output_Registers (Regs => Context.ISR_Ctx.Regs,
@@ -104,7 +104,9 @@ is
    begin
       Put_Line (Item => "MCE banks        " & Img (Byte (Context.Bank_Count)));
       Put_Line (Item => "IA32_MCG_STATUS  " & Img (Context.MCG_Status));
-      for I in 0 .. Context.Bank_Count - 1 loop
+      for I in 0 .. Crash_Audit_Types.Bank_Index_Ext_Range'Min
+                       (Context.Bank_Count - 1, Context.MCi_Status'Last)
+      loop
          if Bitops.Bit_Test (Value => Context.MCi_Status (I),
                              Pos   => Constants.MCi_STATUS_Bit_Valid)
          then
@@ -135,7 +137,7 @@ is
    begin
       Put_String (Item => Name);
       Put_Line
-        (Item => ": " & Img (Word16 (Seg.Selector))
+        (Item => ": " & Img (Seg.Selector)
          & ":" & Img (Seg.Base)
          & ":" & Img (Seg.Limit)
          & ":" & Img (Seg.Access_Rights));
@@ -149,7 +151,7 @@ is
       Put_Line (Item => "Subject " & Img (Context.Subject_ID));
 
       Put_Line (Item => "Exit reason: "
-                & Img (Word16 (Context.Descriptor.Exit_Reason))
+                & Img (Context.Descriptor.Exit_Reason)
                 & ", Exit qualification: "
                 & Img (Context.Descriptor.Exit_Qualification));
 
@@ -193,12 +195,17 @@ is
    -------------------------------------------------------------------------
 
    procedure Output_VMX_Error
-     (Reason  : Crash_Audit_Types.VTx_Reason_Range;
+     (Reason  : Crash_Audit_Types.Reason_Type;
       Context : Crash_Audit_Types.VTx_Context_Type)
    is
    begin
       Put_Line (Item => "VMX error details for reason "
                 & Img (Word64 (Reason)));
+
+      if Reason not in Crash_Audit_Types.VTx_Reason_Range then
+         Put_Line (Item => "Invalid reason for VMX error");
+         return;
+      end if;
 
       if Context.Field_Validity.Instrerr_Valid then
          Put_Line

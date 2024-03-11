@@ -16,7 +16,17 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+STARTUP(stub.o)
+
 ENTRY(_main)
+
+PHDRS
+{
+	component_stack  PT_LOAD FLAGS(PF_R|PF_W);
+	component_code   PT_LOAD FLAGS(PF_R|PF_X);
+	component_rodata PT_LOAD FLAGS(PF_R);
+	component_data   PT_LOAD FLAGS(PF_R|PF_W);
+}
 
 SECTIONS
 {
@@ -26,28 +36,28 @@ SECTIONS
 	{
 		/* Component Stack is 2 pages, see COMPONENT_STACK_SIZE */
 		. += 0x2000;
-	}
+	} : component_stack
 
 	.text 0x200000 :
 	{
-		KEEP (stub.o(.stub))
+		KEEP (stub.o)
 		*(.text .text.*)
-	}
-
-	.bss ALIGN (4096) :
-	{
-		*(.bss .bss.*)
-	}
+	} : component_code
 
 	.rodata ALIGN (4096) :
 	{
 		*(.rodata .rodata.*)
-	}
+	} : component_rodata
 
 	.data ALIGN (4096) :
 	{
 		*(.data .data.*)
-	}
+	} : component_data
+
+	.bss ALIGN (4096) :
+	{
+		*(.bss .bss.*)
+	} : component_data
 
 	/DISCARD/ :
 	{

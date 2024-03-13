@@ -45,12 +45,17 @@ ISO_FILES := \
 	boot/grub/grub.cfg.sig=$(OBJ_DIR)/$(GRUB_CFG).sig \
 	boot/kernel.csl=$(IMAGE_CSL) \
 	boot/kernel.sbs=$(IMAGE_SBS) \
-	boot/filo/menu.lst=menu.lst
+	boot/filo/menu.lst=menu.lst \
+	live/filesystem.packages=/mnt/live/filesystem.packages \
+	live/filesystem.squashfs=/mnt/live/filesystem.squashfs \
+	live/initrd.img=/mnt/live/initrd.img \
+	live/vmlinuz=/mnt/live/vmlinuz
 
 GRUB_MKRESCUE_PRELOAD_MODS ?= gcry_rsa gcry_sha512 configfile csl pgp sbs normal
 
 QEMU_OPTS += \
 	-drive file=$(ISOFILE),index=0,media=disk,format=raw \
+	-drive file=disk.img,index=1,media=disk,format=raw \
 	-serial file:serial.out \
 	-machine q35,accel=kvm,kernel-irqchip=split \
 	-cpu IvyBridge-IBRS,+invtsc,+vmx \

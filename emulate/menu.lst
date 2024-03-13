@@ -1,4 +1,6 @@
 timeout 0
 
 title Muen
-	kernel hda0:/boot/kernel.csl
+	kernel hda0:/live/vmlinuz boot=live components intel_iommu=on iomem=relaxed nomodeset console=ttyS0
+	initrd hda0:/live/initrd.img
+	boot

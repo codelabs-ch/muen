@@ -22,17 +22,13 @@ with X86_64;
 
 with SK.Constants;
 with SK.CPU_Info;
-with SK.FPU;
-with SK.Interrupt_Tables;
 with SK.MP;
 with SK.Scheduling_Info;
 with SK.Subjects;
 with SK.Subjects_Events;
 with SK.Subjects_Interrupts;
-with SK.Subjects_MSR_Store;
 with SK.Tau0_Interface;
 with SK.Timed_Events;
-with SK.VMX;
 with SK.Crash_Audit;
 
 private with SK.Atomics;
@@ -66,13 +62,9 @@ is
    procedure Init
    with
       Global =>
-        (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, CPU_Info.Is_BSP,
-                    Interrupt_Tables.State, VMX.Exit_Address),
-         In_Out => (State, Crash_Audit.State, FPU.State, MP.Barrier,
-                    Scheduling_Info.State, Subjects.State,
-                    Subjects_Events.State, Subjects_Interrupts.State,
-                    Subjects_MSR_Store.State, Timed_Events.State,
-                    VMX.VMCS_State, X86_64.State));
+        (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, CPU_Info.Is_BSP),
+         In_Out => (State, Crash_Audit.State, MP.Barrier,
+                    Scheduling_Info.State, X86_64.State));
 
    --  Set VMX-preemption timer of the currently active VMCS to trigger at the
    --  current deadline. If the deadline has already passed the timer is set to

@@ -2,7 +2,6 @@
  <depends>
   <library ref="libmudebuglog"/>
   <library ref="libmutime"/>
-  <library ref="muinit"/>
  </depends>
  <requires>
   <vcpu>

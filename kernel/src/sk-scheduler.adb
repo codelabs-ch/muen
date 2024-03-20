@@ -19,7 +19,7 @@
 with Skp.Subjects;
 
 with SK.CPU;
-with SK.Kernel;
+with SK.VMX;
 
 package body SK.Scheduler
 with
@@ -900,21 +900,11 @@ is
    --D @OL Id => impl_kernel_init_sched_steps, Section => impl_kernel_init_sched
    procedure Init
    is
-      use type Skp.CPU_Range;
    begin
       --D @Item List => impl_kernel_init_sched_steps
       --D Initialize scheduling group data structures, i.e. set initially active
       --D subjects.
       Init_Scheduling_Groups;
-
-      --D @Item List => impl_kernel_init_sched_steps
-      --D Setup VMCS and state of each subject running on this logical CPU,
-      --D see \ref{impl_subject_init}.
-      for I in Skp.Global_Subject_ID_Type loop
-         if Skp.Subjects.Get_CPU_ID (Subject_ID => I) = CPU_Info.CPU_ID then
-            Kernel.Init_Subject (ID => I);
-         end if;
-      end loop;
 
       declare
          Now               : constant Word64 := CPU.RDTSC;

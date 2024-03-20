@@ -40,6 +40,17 @@ with SK.Crash_Audit_Types;
 package body SK.Kernel
 is
 
+   --  Initialize subject with given ID.
+   procedure Init_Subject (ID : Skp.Global_Subject_ID_Type)
+   with
+      Global =>
+        (Input  => (CPU_Info.APIC_ID, Interrupt_Tables.State,
+                    VMX.Exit_Address),
+         In_Out => (Crash_Audit.State, FPU.State, Subjects.State,
+                    Subjects_Events.State, Subjects_Interrupts.State,
+                    Subjects_MSR_Store.State, Timed_Events.State,
+                    VMX.VMCS_State, X86_64.State));
+
    -------------------------------------------------------------------------
 
    use type Crash_Audit_Types.Reason_Type;
@@ -989,6 +1000,22 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Init_Subjects
+   is
+      use type Skp.CPU_Range;
+   begin
+      --D @Item List => impl_kernel_init_sched_steps
+      --D Setup VMCS and state of each subject running on this logical CPU,
+      --D see \ref{impl_subject_init}.
+      for I in Skp.Global_Subject_ID_Type loop
+         if Skp.Subjects.Get_CPU_ID (Subject_ID => I) = CPU_Info.CPU_ID then
+            Init_Subject (ID => I);
+         end if;
+      end loop;
+   end Init_Subjects;
+
+   -------------------------------------------------------------------------
+
    --D @Section Id => impl_kernel_init, Label => Initialization, Parent => implementation, Priority => -10
    --D @Text Section => impl_kernel_init
    --D The \verb!SK.Kernel.Initialize! procedure is the Ada/SPARK entry point
@@ -1106,9 +1133,12 @@ is
          MCU.Process;
 
          --D @Item List => impl_kernel_init_steps
-         --D Enable VMX, enter VMX root-mode and initialize scheduler.
+         --D Enable VMX, enter VMX root-mode and initialize subjects with all
+         --D their associated state. Finally, finish setup by initializing the
+         --D scheduler.
          System_State.Enable_VMX_Feature;
          VMX.Enter_Root_Mode;
+         Init_Subjects;
          Scheduler.Init;
 
          --D @Item List => impl_kernel_init_steps

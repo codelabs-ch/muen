@@ -28,6 +28,39 @@
   colorlinks=true,
   }
 
+  \definecolor{mygreen}{rgb}{0,0.6,0}
+  \definecolor{mygray}{rgb}{0.5,0.5,0.5}
+  \definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+  \usepackage{listings}
+  \usepackage{pifont,mdframed}
+  \lstset{
+  backgroundcolor=\color{white},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  commentstyle=\color{mygreen},
+  extendedchars=true,
+  rangeprefix=--D\ @Lst\ ,
+  includerangemarker=false,
+  frame=single,
+  keepspaces=true,
+  keywordstyle=\color{blue},
+  language=Octave,
+  numbers=left,
+  numbersep=5pt,
+  numberstyle=\tiny\color{mygray},
+  rulecolor=\color{black},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  stepnumber=2,
+  stringstyle=\color{mymauve},
+  tabsize=2,
+  title=\lstname
+  }
+
   \usepackage[T1]{fontenc}
   \usepackage{courier}
   \newcommand{\tablefont} {\fontfamily{pcr}\fontsize{7pt}{8pt}\selectfont}
@@ -692,6 +725,10 @@
      information from a previous crash which has already been processed. This
      enables reliable identification of current audit entries to avoid duplicate
      processing.
+
+     For a complete specification of the data structures and the information
+     that is recorded by the crash audit mechanism, refer to appendix
+     \ref{appendix-crash-audit}.
     </text>
    </section>
    <section id="overview_interaction" label="Subject Interaction" priority="0">
@@ -1009,6 +1046,10 @@
     CPU-Global section since it may be accessible by subjects (e.g. for
     outputting crash information). Additionally the memory type of the region
     must be Uncached (UC) so the content survives a warm start/system reboot.
+
+    For a complete specification of the data structures and the information that
+    is recorded by the crash audit mechanism, refer to appendix
+    \ref{appendix-crash-audit}.
    </text>
   </section>
   <section id="SK.Tau0_Interface.New_Major" label="SK.Tau0_Interface.New_Major" priority="0">
@@ -1292,6 +1333,14 @@
     VMCS depending on how it has been configured. Part of the kernel's duties is
     to set up the VMCS according to the subject specification in the system
     policy.
+   </text>
+  </section>
+ </section>
+
+ <section id="appendix" label="Appendix" priority="1000">
+  <section id="appendix-crash-audit" label="Crash Audit data structure" priority="0">
+   <text priority="0">
+    \lstinputlisting[caption=Crash Audit Data Types,label={lst:crash_audit-types},language=Ada]{../../common/crash_audit/sk-crash_audit_types.ads}
    </text>
   </section>
  </section>

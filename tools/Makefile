@@ -36,7 +36,6 @@ TOOLS =            \
 	mugenspec      \
 	mugentau0cmds  \
 	mugenzp        \
-	mupcspkrdbg    \
 	muwalkpt       \
 	muxmlfilter    \
 	sbs

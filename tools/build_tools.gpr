@@ -46,7 +46,6 @@ is
       "mugenspec/mugenspec.gpr",
       "mugentau0cmds/mugentau0cmds.gpr",
       "mugenzp/mugenzp.gpr",
-      "mupcspkrdbg/mupcspkrdbg.gpr",
       "muwalkpt/muwalkpt.gpr",
       "muxmlfilter/muxmlfilter.gpr",
       "sbs/sbs.gpr");

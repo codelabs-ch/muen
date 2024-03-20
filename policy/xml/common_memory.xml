@@ -47,5 +47,9 @@
  <memory name="example_filled_region" size="16#1000#" caching="WB">
   <fill pattern="16#5a#"/>
  </memory>
- <memory name="crash_audit" physicalAddress="16#0001_00a1_1000#" size="16#1000#" caching="UC" type="subject_crash_audit"/>
+ <memory name="crash_audit" physicalAddress="16#0001_00a1_1000#" size="16#1000#" caching="UC" type="subject_crash_audit">
+  <doc type="dev">
+   This memory region is used to store Crash Audit information.
+  </doc>
+ </memory>
 </include>

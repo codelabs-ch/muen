@@ -29,7 +29,7 @@ with McKae.XML.XPath.XIA;
 with Mulog;
 
 with Muxml.Grammar_Tools;
-with Muxml.system_src_schema;
+with Muxml.system_src_extended_schema;
 with Muxml.Utils;
 
 with Mutools.Xmldebuglog;
@@ -66,7 +66,7 @@ is
 
       --  Initialize the insertion-algorithm with the XSD-schema.
       Muxml.Grammar_Tools.Init_Order_Information
-        (Schema_XML_Data => Muxml.system_src_schema.Data);
+        (Schema_XML_Data => Muxml.system_src_extended_schema.Data);
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Amend_Statements) - 1 loop
          declare
@@ -362,10 +362,11 @@ is
       is
          Siblings_Names  : Mutools.String_Vector.Vector;
          Siblings_Nodes  : Muxml.Node_Vector.Vector;
+         Amend_Tag       : constant Muxml.String_Vector.Vector
+           := Muxml.String_Vector.To_Vector ("amend", 1);
          Parent_Child    : DOM.Core.Node;
          Insertion_Index : Natural;
       begin
-
          Parent_Child := DOM.Core.Nodes.First_Child (N => Parent);
          while Parent_Child /= null loop
             if DOM.Core.Nodes.Node_Type (N => Parent_Child) = Element_Node
@@ -409,13 +410,14 @@ is
          --  As the 'return' above was not reached
          --  none of the children of Parent matches.
          Muxml.Utils.Insert_Child
-            (Parent          => Parent,
-             New_Child       => New_Child,
-             Clone_Child     => True,
-             Siblings_Names  => Siblings_Names,
-             Siblings_Nodes  => Siblings_Nodes,
-             Ancestors       => Muxml.Utils.Get_Ancestor_Names (Node => Parent),
-             Insertion_Index => Insertion_Index);
+            (Parent           => Parent,
+             New_Child        => New_Child,
+             Clone_Child      => True,
+             Siblings_Names   => Siblings_Names,
+             Siblings_Nodes   => Siblings_Nodes,
+             Ignored_Siblings => Amend_Tag,
+             Ancestors        => Muxml.Utils.Get_Ancestor_Names (Node => Parent),
+             Insertion_Index  => Insertion_Index);
          if Debug_Active then
             Xmldebuglog.Copy_Log_Entry
               (Old_Node => New_Child,
@@ -434,6 +436,8 @@ is
          Parent_Child, Parent_Child_Marked : DOM.Core.Node;
          Siblings_Names                    : Mutools.String_Vector.Vector;
          Siblings_Nodes                    : Muxml.Node_Vector.Vector;
+         Amend_Tag                         : constant Muxml.String_Vector.Vector
+           := Muxml.String_Vector.To_Vector ("amend", 1);
          Insertion_Index                   : Natural;
       begin
 
@@ -508,14 +512,15 @@ is
             end;
          else
             Muxml.Utils.Insert_Child
-              (Parent          => Parent,
-               New_Child       => New_Child,
-               Clone_Child     => True,
-               Siblings_Names  => Siblings_Names,
-               Siblings_Nodes  => Siblings_Nodes,
-               Ancestors       => Muxml.Utils.Get_Ancestor_Names
+              (Parent           => Parent,
+               New_Child        => New_Child,
+               Clone_Child      => True,
+               Siblings_Names   => Siblings_Names,
+               Siblings_Nodes   => Siblings_Nodes,
+               Ignored_Siblings => Amend_Tag,
+               Ancestors        => Muxml.Utils.Get_Ancestor_Names
                  (Node => Parent),
-               Insertion_Index => Insertion_Index);
+               Insertion_Index  => Insertion_Index);
             if Debug_Active then
                Xmldebuglog.Copy_Log_Entry
                  (Old_Node => New_Child,

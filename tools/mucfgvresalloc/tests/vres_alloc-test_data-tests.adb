@@ -169,7 +169,7 @@ package body Vres_Alloc.Test_Data.Tests is
                Diff_Ref_File        => "empty_diff.diff",
                Test_Name            => "Exception: component not found");
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (1)");
       exception
          when E: Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
@@ -205,7 +205,7 @@ package body Vres_Alloc.Test_Data.Tests is
                Diff_Ref_File        => "empty_diff.diff",
                Test_Name            => "Exception: read-only with 'auto'");
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (2)");
       exception
          when E: Muxml.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
@@ -213,6 +213,77 @@ package body Vres_Alloc.Test_Data.Tests is
                       & " Invalid integer: ""auto""",
                     Message   => "Exception mismatch: "
                       & Ada.Exceptions.Exception_Message (X => E));
+            Ada.Directories.Delete_File (Name => Changed_Spec);
+      end;
+
+      --  Duplicate physical memory region.
+      declare
+         Data         : Muxml.XML_Data_Type;
+         Changed_Spec : constant String
+           := "obj/vres_component_duplicate_memregion.xml";
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/policy_allocation.xml");
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/memory[@name='dummy_2']",
+            Name  => "name",
+            Value => "dummy");
+         Muxml.Write
+           (File => Changed_Spec,
+            Kind => Muxml.None,
+            Data => Data);
+
+         Test (Input_Policy         => Changed_Spec,
+               Input_Default_Folder => False,
+               Output_Filename      => "output_policy_fail.xml",
+               Diff_Ref_File        => "empty_diff.diff",
+               Test_Name            => "Exception: duplicate physical memory");
+         Assert (Condition => False,
+                 Message   => "Exception expected (3)");
+
+      exception
+         when E: Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Duplicate physical memory with name 'dummy'",
+                    Message   => "Exception mismatch: "
+                    & Ada.Exceptions.Exception_Message (X => E));
+            Ada.Directories.Delete_File (Name => Changed_Spec);
+      end;
+      --  Duplicate physical channel.
+      declare
+         Data         : Muxml.XML_Data_Type;
+         Changed_Spec : constant String
+           := "obj/vres_component_duplicate_channel.xml";
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.None,
+                      File => "data/policy_allocation.xml");
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/channels/channel[@name='data_channel5']",
+            Name  => "name",
+            Value => "data_channel4");
+         Muxml.Write
+           (File => Changed_Spec,
+            Kind => Muxml.None,
+            Data => Data);
+
+         Test (Input_Policy         => Changed_Spec,
+               Input_Default_Folder => False,
+               Output_Filename      => "output_policy_fail.xml",
+               Diff_Ref_File        => "empty_diff.diff",
+               Test_Name            => "Exception: duplicate physical channel");
+         Assert (Condition => False,
+                 Message   => "Exception expected (4)");
+
+      exception
+         when E: Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Duplicate physical channel with name 'data_channel4'",
+                    Message   => "Exception mismatch: "
+                    & Ada.Exceptions.Exception_Message (X => E));
             Ada.Directories.Delete_File (Name => Changed_Spec);
       end;
 
@@ -260,7 +331,7 @@ package body Vres_Alloc.Test_Data.Tests is
                Diff_Ref_File        => "empty_diff.diff",
                Test_Name            => "Exception: not enough space for events");
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (5)");
       exception
          when E: Mutools.Intervals.Out_Of_Space =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
@@ -293,7 +364,7 @@ package body Vres_Alloc.Test_Data.Tests is
                Diff_Ref_File        => "empty_diff.diff",
                Test_Name            => "Exception: Channel not declared");
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (6)");
       exception
          when E: Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
@@ -327,7 +398,7 @@ package body Vres_Alloc.Test_Data.Tests is
                Diff_Ref_File        => "empty_diff.diff",
                Test_Name            => "Exception: Memory not declared");
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (7)");
       exception
          when E: Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
@@ -378,7 +449,7 @@ package body Vres_Alloc.Test_Data.Tests is
                Diff_Ref_File        => "empty_diff.diff",
                Test_Name            => "Exception: Same logical not array");
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (8)");
       exception
          when E: Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
@@ -429,7 +500,7 @@ package body Vres_Alloc.Test_Data.Tests is
                Diff_Ref_File        => "empty_diff.diff",
                Test_Name            => "Exception: Same logical in array");
          Assert (Condition => False,
-                 Message   => "Exception expected");
+                 Message   => "Exception expected (9)");
       exception
          when E: Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
@@ -470,7 +541,7 @@ package body Vres_Alloc.Test_Data.Tests is
                   Diff_Ref_File        => "empty_diff.diff",
                   Test_Name            => "Exception: Alignment in component");
             Assert (Condition => False,
-                    Message   => "Exception expected");
+                    Message   => "Exception expected (10)");
          exception
             when E: Validation_Error =>
                Assert (Condition => Ada.Exceptions.Exception_Message (X => E)

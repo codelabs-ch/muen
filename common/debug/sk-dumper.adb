@@ -104,7 +104,9 @@ is
    begin
       Put_Line (Item => "MCE banks        " & Img (Byte (Context.Bank_Count)));
       Put_Line (Item => "IA32_MCG_STATUS  " & Img (Context.MCG_Status));
-      for I in 0 .. Context.Bank_Count - 1 loop
+      for I in 0 .. Crash_Audit_Types.Bank_Index_Ext_Range'Min
+                       (Context.Bank_Count - 1, Context.MCi_Status'Last)
+      loop
          if Bitops.Bit_Test (Value => Context.MCi_Status (I),
                              Pos   => Constants.MCi_STATUS_Bit_Valid)
          then

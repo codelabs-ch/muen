@@ -22,7 +22,7 @@ with Skp;
 
 with SK.Apic;
 
-pragma Elaborate_All (SK.Apic, X86_64);
+pragma Elaborate (SK.Apic, X86_64);
 pragma Unreferenced (X86_64);
 
 --D @Interface

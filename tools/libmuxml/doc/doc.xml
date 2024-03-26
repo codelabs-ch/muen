@@ -1285,11 +1285,11 @@
      \begin{tabular}{l|l}
      \textbf{ELF Section} &amp; \textbf{Memory Name} \\
      \hline
-     .text       &amp; kernel\_text        \\
-     .data       &amp; kernel\_data        \\
-     .rodata     &amp; kernel\_ro          \\
-     .bss        &amp; kernel\_bss         \\
-     .globaldata &amp; kernel\_global_data \\
+     .text       &amp; kernel\_text         \\
+     .data       &amp; kernel\_data         \\
+     .rodata     &amp; kernel\_ro           \\
+     .bss        &amp; kernel\_bss          \\
+     .globaldata &amp; kernel\_global\_data \\
      \hline
      \end{tabular}
      \end{table}

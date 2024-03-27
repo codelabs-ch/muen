@@ -193,7 +193,7 @@
 
     Additionally to these three main formats, there may be extended versions
     of these formats if plugins are used.
-    See Section~\ref{toolchain-plugin_system} for details about the plugin system.
+    See section~\ref{toolchain-plugin_system} for details about the plugin system.
    </text>
 
    <section id="policy-format-src" label="Source Format" priority="0">
@@ -673,7 +673,7 @@
 
   <section id="toolchain-plugin_system" label="Plugin System" priority="0">
     <text priority="0">
-      As is shown in Figure~\ref{fig:build-process}, the build process includes
+      As is shown in figure~\ref{fig:build-process}, the build process includes
       two steps where plugins may be inserted if needed.
       The intention of the plugin system is to simplify the introduction of
       small, less critical modifications to the toolchain and keep those
@@ -1171,7 +1171,6 @@
       Component description in XML
       \item[Output] \hfill \\
       Component source specifications in SPARK
-      description in XML
       \end{description}
 
       The component spec generation tool generates Ada/SPARK packages containing constants of the declared
@@ -1285,11 +1284,11 @@
      \begin{tabular}{l|l}
      \textbf{ELF Section} &amp; \textbf{Memory Name} \\
      \hline
-     .text       &amp; kernel\_text        \\
-     .data       &amp; kernel\_data        \\
-     .rodata     &amp; kernel\_ro          \\
-     .bss        &amp; kernel\_bss         \\
-     .globaldata &amp; kernel\_global_data \\
+     .text       &amp; kernel\_text         \\
+     .data       &amp; kernel\_data         \\
+     .rodata     &amp; kernel\_ro           \\
+     .bss        &amp; kernel\_bss          \\
+     .globaldata &amp; kernel\_global\_data \\
      \hline
      \end{tabular}
      \end{table}

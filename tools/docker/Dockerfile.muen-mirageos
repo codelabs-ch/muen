@@ -10,14 +10,13 @@ USER opam
 
 RUN cd /home/opam/opam-repository \
 	&& git fetch origin master \
-	&& git reset --hard 01487021cbdc2c54d643dbf5696e2211ca3db31d \
+	&& git reset --hard 6d17c11f6930230daaef6a30d13bc23c1597fc9f \
 	&& opam update \
-	&& opam depext -y mirage.4.4.0 \
-	&& opam install -y mirage.4.4.0
+	&& opam install -y mirage.4.4.2
 
 RUN git clone https://github.com/mirage/mirage-skeleton
 RUN git clone -b with-kv-mirage4 https://github.com/roburio/unipi.git \
 	&& cd unipi \
-	&& git reset --hard 13c638e2c91c27967fee3835bd708dabc6f30978
+	&& git reset --hard 90dd597b41aee0162cdc75d87a1ce3ca415bef55
 
 CMD [ "bash" ]

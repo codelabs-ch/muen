@@ -52,12 +52,12 @@ GRUB_MKRESCUE_PRELOAD_MODS ?= gcry_rsa gcry_sha512 configfile csl pgp sbs normal
 QEMU_OPTS += \
 	-drive file=$(ISOFILE),index=0,media=disk,format=raw \
 	-serial file:serial.out \
-	-machine q35,accel=kvm,kernel-irqchip=split \
+	-machine pc-q35-7.2,accel=kvm,kernel-irqchip=split \
 	-cpu IvyBridge-IBRS,+invtsc,+vmx \
 	-m $(QEMU_MEM) \
 	-smp cores=2,threads=2,sockets=1 \
 	-device intel-iommu,intremap=on,device-iotlb=on \
-	-device ioh3420,id=pcie.1,chassis=1 \
+	-device pcie-root-port,id=pcie.1,chassis=1 \
 	-device virtio-net-pci,bus=pcie.1,addr=0.0,netdev=net0,disable-legacy=on,disable-modern=off,iommu_platform=on,ats=on \
 	-netdev $(QEMU_NETDEV_OPTS) \
 	-device qemu-xhci,id=xhci,bus=pcie.0,addr=3.0 \

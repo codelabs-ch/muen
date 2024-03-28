@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -ex
+
 PARENT=$1
 CHILD_DEV=$2
 MARK=$3

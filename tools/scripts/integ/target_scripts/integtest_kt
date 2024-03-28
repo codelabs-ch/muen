@@ -1,33 +1,34 @@
 #!/bin/bash
 
-OUTPUT=/dev/ttyS0
+set -ex
 SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 . $SCRIPTDIR/func.sh
+cd $SCRIPTDIR
 
 date_print "*** Starting '$0'"
 
-lspci >$OUTPUT 2>&1
+lspci
 
-ifconfig eth0 down >$OUTPUT 2>&1
-ifconfig br0 down >$OUTPUT 2>&1
+ifconfig eth0 down
+ifconfig br0 down
 
-ifconfig eth1 up >$OUTPUT 2>&1
-ifconfig eth1 192.168.254.55 >$OUTPUT 2>&1
-ping -c 3 192.168.254.1 >$OUTPUT 2>&1
-ifconfig eth1 down >$OUTPUT 2>&1
+ifconfig eth1 up
+ifconfig eth1 192.168.254.55
+ping -c 3 192.168.254.1
+ifconfig eth1 down
 
-ifconfig br0 up >$OUTPUT >&1
-ifconfig eth0 up >$OUTPUT >&1
+ifconfig br0 up
+ifconfig eth0 up
 
-muenblock-test >$OUTPUT 2>&1
+./muenblock-test
 
 date_print "*** '$0' DONE"
 
 # run common integration tests
-$SCRIPTDIR/integtest
+./integtest
 
-muenfs-poll-test >$OUTPUT 2>&1
+./muenfs-poll-test
 
 # trigger system panic to exercise crash audit
 mount -t muenevents none /muenevents

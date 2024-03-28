@@ -20,30 +20,31 @@
 #  $ sudo vgchange -a n vg1
 #  $ sudo cryptsetup luksClose test-crypt
 
+set -ex
 SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . $SCRIPTDIR/func.sh
+cd $SCRIPTDIR
 
 REFS="/mnt/1/files"
 SHACMD="sha256sum -c sha256sum"
 SSH="ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no lnx2"
 
 perform_tests() {
-	execute "cd $REFS"
-	execute "$SHACMD"
+	pushd $REFS
+	$SHACMD
 
-	execute "rm -rf /mnt/1/files2"
-	execute "cp -Rv $REFS /mnt/1/files2"
-	execute "cd /mnt/1/files2"
-	execute "$SHACMD"
-	execute "rm -r /mnt/1/files2"
+	rm -rf /mnt/1/files2
+	cp -Rv $REFS /mnt/1/files2
+	cd /mnt/1/files2
+	$SHACMD
+	rm -r /mnt/1/files2
 
-	execute "rm -rf /mnt/2/files"
-	execute "cp -Rv $REFS /mnt/2/"
-	execute "cd /mnt/2/files"
-	execute "$SHACMD"
-	execute "rm -r /mnt/2/files"
-
-	cd /
+	rm -rf /mnt/2/files
+	cp -Rv $REFS /mnt/2/
+	cd /mnt/2/files
+	$SHACMD
+	rm -r /mnt/2/files
+	popd
 	sync
 }
 
@@ -55,79 +56,79 @@ test_title() {
 
 test_title "lnx1 -> lnx2 XHCI"
 
-execute "$SSH muenblock-server"
+$SSH target_scripts/muenblock-server
 
-execute "mkdir -p /mnt/1"
-execute "mkdir -p /mnt/2"
+mkdir -p /mnt/1
+mkdir -p /mnt/2
 
-execute "muenblock-client"
-execute "sleep 2"
-execute "mount /dev/muendiska /mnt/1"
-execute "mount /dev/muendiskb /mnt/2"
+./muenblock-client
+sleep 2
+mount /dev/muendiska /mnt/1
+mount /dev/muendiskb /mnt/2
 
 perform_tests
-execute "umount /mnt/1"
-execute "umount /mnt/2"
-execute "fsck -n /dev/muendiska"
-execute "fsck -n /dev/muendiskb"
-execute "rmmod muenblock_client"
+umount /mnt/1
+umount /mnt/2
+fsck -n /dev/muendiska
+fsck -n /dev/muendiskb
+rmmod muenblock_client
 
 test_title "lnx1 -> lnx2 XHCI [no server restart]"
 
-execute "muenblock-client"
-execute "sleep 2"
-execute "mount /dev/muendiska /mnt/1"
-execute "mount /dev/muendiskb /mnt/2"
+./muenblock-client
+sleep 2
+mount /dev/muendiska /mnt/1
+mount /dev/muendiskb /mnt/2
 
 perform_tests
-execute "umount /mnt/1"
-execute "umount /mnt/2"
-execute "fsck -n /dev/muendiska"
-execute "fsck -n /dev/muendiskb"
-execute "rmmod muenblock_client"
+umount /mnt/1
+umount /mnt/2
+fsck -n /dev/muendiska
+fsck -n /dev/muendiskb
+rmmod muenblock_client
 
-execute "$SSH rmmod muenblock_server"
+$SSH rmmod muenblock_server
 
 test_title "lnx1 -> lnx2 XHCI [complete blockdev]"
 
-execute "sleep 2"
-execute "$SSH muenblock-server-all"
-execute "muenblock-client"
-execute "sleep 2"
+sleep 2
+$SSH target_scripts/muenblock-server-all
+./muenblock-client
+sleep 2
 
-execute "mount /dev/muendiska1 /mnt/1"
-execute "mount /dev/muendiska2 /mnt/2"
+mount /dev/muendiska1 /mnt/1
+mount /dev/muendiska2 /mnt/2
 
 perform_tests
-execute "umount /mnt/2"
+umount /mnt/2
 
 test_title "lnx1 -> lnx2 XHCI [ext/LVM/crypt]"
 
-execute "muenblock-lvops"
-execute "umount /mnt/1"
-execute "fsck -n /dev/muendiska1"
-execute "fsck -n /dev/muendiska2"
+./muenblock-lvops
+umount /mnt/1
+fsck -n /dev/muendiska1
+fsck -n /dev/muendiska2
 
-execute "rmmod muenblock_client"
-execute "$SSH rmmod muenblock_server"
+rmmod muenblock_client
+$SSH rmmod muenblock_server
 
 test_title "lnx1 -> ahci_drv AHCI"
 
-execute "muenblock-client-native"
-execute "sleep 2"
-execute "mount /dev/muendiska1 /mnt/1"
-execute "mount /dev/muendiska2 /mnt/2"
+./muenblock-client-native
+sleep 2
+mount /dev/muendiska1 /mnt/1
+mount /dev/muendiska2 /mnt/2
 
 perform_tests
-execute "umount /mnt/2"
+umount /mnt/2
 
 test_title "lnx1 -> ahci_drv AHCI [ext/LVM/crypt]"
 
-execute "muenblock-lvops"
-execute "umount /mnt/1"
-execute "fsck -n /dev/muendiska1"
-execute "fsck -n /dev/muendiska2"
+./muenblock-lvops
+umount /mnt/1
+fsck -n /dev/muendiska1
+fsck -n /dev/muendiska2
 
-execute "rmmod muenblock_client"
+rmmod muenblock_client
 
 echo "MUENBLOCKINTEGPASSED"

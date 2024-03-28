@@ -1,25 +1,26 @@
 #!/bin/bash
 
+set -ex
 SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . $SCRIPTDIR/func.sh
 
 SHACMD="sha256sum -c sha256sum"
 CRYPTDEV=/dev/muendiska5
 
-execute "echo 123 | cryptsetup luksOpen $CRYPTDEV crypt"
-execute "pvscan"
-execute "vgscan"
-execute "vgchange -a y vg1"
-execute "vgscan --mknodes"
-execute "lvscan"
+echo 123 | cryptsetup luksOpen $CRYPTDEV crypt
+pvscan
+vgscan
+vgchange -a y vg1
+vgscan --mknodes
+lvscan
 
-execute "mount /dev/vg1/testlv /mnt/2"
-execute "cp -vR /mnt/1/files /mnt/2"
-execute "cd /mnt/2/files"
-execute "$SHACMD"
-execute "rm -r /mnt/2/files"
-execute "cd /"
-execute "umount /mnt/2"
-execute "fsck -y /dev/vg1/testlv"
-execute "vgchange -a n vg1"
-execute "cryptsetup luksClose crypt"
+mount /dev/vg1/testlv /mnt/2
+cp -vR /mnt/1/files /mnt/2
+cd /mnt/2/files
+$SHACMD
+rm -r /mnt/2/files
+cd /
+umount /mnt/2
+fsck -y /dev/vg1/testlv
+vgchange -a n vg1
+cryptsetup luksClose crypt

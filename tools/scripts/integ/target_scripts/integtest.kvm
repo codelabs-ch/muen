@@ -1,27 +1,29 @@
 #!/bin/bash
 
-OUTPUT=/dev/ttyS0
+set -ex
 SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 . $SCRIPTDIR/func.sh
+cd $SCRIPTDIR
 
 date_print "*** Starting '$0'"
 
-# QEMU gateway
-ping -c 3 192.168.254.2 >$OUTPUT 2>&1
-# QEMU DNS
-ping -c 3 192.168.254.3 >$OUTPUT 2>&1
-# lnx2
-ping -c 3 192.168.10.4 >$OUTPUT 2>&1
+# ensure that net0 to lnx2 works
+ssh -o UserKnownHostsFile=/dev/null \
+	-o StrictHostKeyChecking=no \
+	-o ConnectTimeout=1 \
+	-o ConnectionAttempts=60 \
+	lnx2 /bin/true
 
-ifconfig eth1 up >$OUTPUT 2>&1
-ifconfig eth1 192.168.253.100 >$OUTPUT 2>&1
+ifconfig eth1 up
+ifconfig eth1 192.168.100.10
 
-# QEMU gateway
-ping -c 3 192.168.253.2 >$OUTPUT 2>&1
+# virbr0 on host
+ping -I eth1 -c 3 192.168.100.1
 
-cat /proc/interrupts >$OUTPUT 2>&1
-cat /proc/cpuinfo >$OUTPUT 2>&1
+cat /proc/interrupts
+cat /proc/cpuinfo
 
-muenfs-poll-test >$OUTPUT 2>&1
+./muenfs-poll-test
 
-date_print "*** '$0' DONE"
+date_print "*** $0 DONE"

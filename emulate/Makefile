@@ -52,7 +52,7 @@ GRUB_MKRESCUE_PRELOAD_MODS ?= gcry_rsa gcry_sha512 configfile csl pgp sbs normal
 QEMU_OPTS += \
 	-drive file=$(ISOFILE),index=0,media=disk,format=raw \
 	-serial file:serial.out \
-	-machine q35,accel=kvm,kernel-irqchip=split \
+	-machine pc-q35-7.2,accel=kvm,kernel-irqchip=split \
 	-cpu IvyBridge-IBRS,+invtsc,+vmx \
 	-m $(QEMU_MEM) \
 	-smp cores=2,threads=2,sockets=1 \

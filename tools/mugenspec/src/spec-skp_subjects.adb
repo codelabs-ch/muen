@@ -276,6 +276,10 @@ is
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
               XPath => "vcpu/vmx/controls/exit/*");
+         RFLAGS_Val  : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Subject,
+              XPath => "vcpu/registers/rflags/*");
          CR0_Value   : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
@@ -389,6 +393,10 @@ is
                            Seg_Regs => Segments_Node);
 
          Subj_Buf := Subj_Buf
+           & Indent & "    RFLAGS             => "
+           & Mutools.Utils.To_Hex
+           (Number => VMX.Get_RFLAGS (Fields => RFLAGS_Val))
+           & "," & ASCII.LF
            & Indent & "    CR0_Value          => "
            & Mutools.Utils.To_Hex (Number => VMX.Get_CR0 (Fields => CR0_Value))
            & "," & ASCII.LF

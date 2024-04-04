@@ -57,6 +57,10 @@ is
      (Subject_ID : Global_Subject_ID_Type)
       return SK.CPU_Registers_Type;
 
+   function Get_RFLAGS
+     (Subject_ID : Global_Subject_ID_Type)
+      return SK.Word64;
+
    function Get_Segment_Registers
      (Subject_ID : Global_Subject_ID_Type)
       return SK.Segment_Registers_Type;

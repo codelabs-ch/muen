@@ -338,6 +338,44 @@ package body Spec.VMX_Types.Test_Data.Tests is
    end Test_Get_Exceptions;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Get_RFLAGS (Gnattest_T : in out Test);
+   procedure Test_Get_RFLAGS_ddbb52 (Gnattest_T : in out Test) renames Test_Get_RFLAGS;
+--  id:2.2/ddbb52ec1f48ad5e/Get_RFLAGS/1/0/
+   procedure Test_Get_RFLAGS (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type interfaces.Unsigned_64;
+
+      Policy : Muxml.XML_Data_Type;
+      Nodes  : DOM.Core.Node_List;
+   begin
+      Assert (Condition => Get_RFLAGS (Fields => Nodes) = 2,
+              Message   => "RFLAGS value mismatch (1)");
+      Assert (Condition => Get_RFLAGS
+              (Fields  => Nodes,
+               Default => 789330) = 789330,
+              Message   => "RFLAGS value mismatch (2)");
+
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Nodes := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='tau0']"
+         & "/vcpu/registers/rflags/*");
+
+      Assert (Condition => Get_RFLAGS (Fields => Nodes)
+              = 2#0011_0010_0000_0010#,
+              Message   => "RFLAGS value mismatch (3)"
+              & Get_RFLAGS (Fields => Nodes)'Img);
+--  begin read only
+   end Test_Get_RFLAGS;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

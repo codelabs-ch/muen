@@ -38,6 +38,9 @@
    <rsi>16#cafe#</rsi>
    <r15>16#ffff#</r15>
   </gpr>
+  <rflags>
+   <InterruptEnable>1</InterruptEnable>
+  </rflags>
   <cr4>
    <PerfCounterEnable>1</PerfCounterEnable>
    <VMXEnable>0</VMXEnable>

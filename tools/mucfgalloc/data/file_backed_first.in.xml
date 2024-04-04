@@ -191,6 +191,25 @@
       <r14>16#0000#</r14>
       <r15>16#0000#</r15>
      </gpr>
+     <rflags>
+      <Carry>0</Carry>
+      <Parity>0</Parity>
+      <AuxiliaryCarry>0</AuxiliaryCarry>
+      <Zero>0</Zero>
+      <Sign>0</Sign>
+      <Trap>0</Trap>
+      <InterruptEnable>0</InterruptEnable>
+      <Direction>0</Direction>
+      <Overflow>0</Overflow>
+      <IOPrivilegeLevel>0</IOPrivilegeLevel>
+      <NestedTask>0</NestedTask>
+      <Resume>0</Resume>
+      <Virtual8086Mode>0</Virtual8086Mode>
+      <AlignmentCheck>0</AlignmentCheck>
+      <VirtualInterruptFlag>0</VirtualInterruptFlag>
+      <VirtualInterruptPending>0</VirtualInterruptPending>
+      <Identification>0</Identification>
+     </rflags>
      <cr0>
       <ProtectionEnable>1</ProtectionEnable>
       <MonitorCoprocessor>0</MonitorCoprocessor>

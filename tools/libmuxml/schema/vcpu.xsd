@@ -13,6 +13,18 @@
   </xs:restriction>
  </xs:simpleType>
 
+ <xs:simpleType name="twoBitsValueType">
+  <xs:annotation>
+   <xs:documentation>
+    The value of two bits [0..3].
+   </xs:documentation>
+  </xs:annotation>
+  <xs:restriction base="xs:nonNegativeInteger">
+   <xs:minInclusive value="0"/>
+   <xs:maxInclusive value="3"/>
+  </xs:restriction>
+ </xs:simpleType>
+
  <xs:simpleType name="msrModeType">
   <xs:annotation>
    <xs:documentation>

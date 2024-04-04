@@ -404,11 +404,13 @@
   <xs:annotation>
    <xs:documentation>
     The \texttt{registers} element specifies the initial value of
-    general-purpose (GPR), CR0/CR4, CR0/CR4 read shadow and segment registers.
+    general-purpose (GPR), RFLAGS, CR0/CR4, CR0/CR4 read shadow and segment
+    registers.
    </xs:documentation>
   </xs:annotation>
   <xs:sequence>
    <xs:element name="gpr"       type="gprType"       minOccurs="0" maxOccurs="1"/>
+   <xs:element name="rflags"    type="rflagsType"    minOccurs="0" maxOccurs="1"/>
    <xs:element name="cr0"       type="cr0Type"       minOccurs="0" maxOccurs="1"/>
    <xs:element name="cr0Shadow" type="cr0ShadowType" minOccurs="0" maxOccurs="1"/>
    <xs:element name="cr4"       type="cr4Type"       minOccurs="0" maxOccurs="1"/>
@@ -442,6 +444,33 @@
    <xs:element name="r13" type="word64Type" minOccurs="0" maxOccurs="1"/>
    <xs:element name="r14" type="word64Type" minOccurs="0" maxOccurs="1"/>
    <xs:element name="r15" type="word64Type" minOccurs="0" maxOccurs="1"/>
+  </xs:sequence>
+ </xs:complexType>
+
+ <xs:complexType name="rflagsType">
+  <xs:annotation>
+   <xs:documentation>
+    Allows to set initial values of the RFLAGS status register.
+   </xs:documentation>
+  </xs:annotation>
+  <xs:sequence>
+   <xs:element name="Carry"                   type="bitValueType"     minOccurs="0" maxOccurs="1"/>
+   <xs:element name="Parity"                  type="bitValueType"     minOccurs="0" maxOccurs="1"/>
+   <xs:element name="AuxiliaryCarry"          type="bitValueType"     minOccurs="0" maxOccurs="1"/>
+   <xs:element name="Zero"                    type="bitValueType"     minOccurs="0" maxOccurs="1"/>
+   <xs:element name="Sign"                    type="bitValueType"     minOccurs="0" maxOccurs="1"/>
+   <xs:element name="Trap"                    type="bitValueType"     minOccurs="0" maxOccurs="1"/>
+   <xs:element name="InterruptEnable"         type="bitValueType"     minOccurs="0" maxOccurs="1"/>
+   <xs:element name="Direction"               type="bitValueType"     minOccurs="0" maxOccurs="1"/>
+   <xs:element name="Overflow"                type="bitValueType"     minOccurs="0" maxOccurs="1"/>
+   <xs:element name="IOPrivilegeLevel"        type="twoBitsValueType" minOccurs="0" maxOccurs="1"/>
+   <xs:element name="NestedTask"              type="bitValueType"     minOccurs="0" maxOccurs="1"/>
+   <xs:element name="Resume"                  type="bitValueType"     minOccurs="0" maxOccurs="1"/>
+   <xs:element name="Virtual8086Mode"         type="bitValueType"     minOccurs="0" maxOccurs="1"/>
+   <xs:element name="AlignmentCheck"          type="bitValueType"     minOccurs="0" maxOccurs="1"/>
+   <xs:element name="VirtualInterruptFlag"    type="bitValueType"     minOccurs="0" maxOccurs="1"/>
+   <xs:element name="VirtualInterruptPending" type="bitValueType"     minOccurs="0" maxOccurs="1"/>
+   <xs:element name="Identification"          type="bitValueType"     minOccurs="0" maxOccurs="1"/>
   </xs:sequence>
  </xs:complexType>
 

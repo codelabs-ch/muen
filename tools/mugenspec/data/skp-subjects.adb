@@ -16,6 +16,7 @@ is
       Entry_Point        : SK.Word64;
       GPRs               : SK.CPU_Registers_Type;
       Segment_Regs       : SK.Segment_Registers_Type;
+      RFLAGS             : SK.Word64;
       CR0_Value          : SK.Word64;
       CR0_Shadow         : SK.Word64;
       CR0_Mask           : SK.Word64;
@@ -99,6 +100,7 @@ is
              Base          => 16#0000#,
              Limit         => 16#0000#,
              Access_Rights => 16#0001_0000#)),
+       RFLAGS             => 16#3202#,
        CR0_Value          => 16#8001_0035#,
        CR0_Shadow         => 16#8001_0035#,
        CR0_Mask           => 16#ffff_ffff_ffff_ffff#,
@@ -181,6 +183,7 @@ is
              Base          => 16#0000#,
              Limit         => 16#0000#,
              Access_Rights => 16#0001_0000#)),
+       RFLAGS             => 16#0002#,
        CR0_Value          => 16#0035#,
        CR0_Shadow         => 16#0035#,
        CR0_Mask           => 16#ffff_ffff_1ffa_ffe0#,
@@ -263,6 +266,7 @@ is
              Base          => 16#0000#,
              Limit         => 16#0000#,
              Access_Rights => 16#0001_0000#)),
+       RFLAGS             => 16#0002#,
        CR0_Value          => 16#8001_0035#,
        CR0_Shadow         => 16#8001_0035#,
        CR0_Mask           => 16#ffff_ffff_ffff_ffff#,
@@ -345,6 +349,7 @@ is
              Base          => 16#0000#,
              Limit         => 16#0000#,
              Access_Rights => 16#0001_0000#)),
+       RFLAGS             => 16#0002#,
        CR0_Value          => 16#8001_0035#,
        CR0_Shadow         => 16#0004#,
        CR0_Mask           => 16#ffff_ffff_ffff_ffff#,
@@ -461,6 +466,13 @@ is
      (Subject_ID : Global_Subject_ID_Type)
       return SK.Word64
    is (Subject_Specs (Subject_ID).PML4_Address);
+
+   -------------------------------------------------------------------------
+
+   function Get_RFLAGS
+     (Subject_ID : Global_Subject_ID_Type)
+      return SK.Word64
+   is (Subject_Specs (Subject_ID).RFLAGS);
 
    -------------------------------------------------------------------------
 

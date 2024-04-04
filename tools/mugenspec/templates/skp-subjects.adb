@@ -16,6 +16,7 @@ is
       Entry_Point        : SK.Word64;
       GPRs               : SK.CPU_Registers_Type;
       Segment_Regs       : SK.Segment_Registers_Type;
+      RFLAGS             : SK.Word64;
       CR0_Value          : SK.Word64;
       CR0_Shadow         : SK.Word64;
       CR0_Mask           : SK.Word64;
@@ -134,6 +135,13 @@ __subjects__);
      (Subject_ID : Global_Subject_ID_Type)
       return SK.Word64
    is (Subject_Specs (Subject_ID).PML4_Address);
+
+   -------------------------------------------------------------------------
+
+   function Get_RFLAGS
+     (Subject_ID : Global_Subject_ID_Type)
+      return SK.Word64
+   is (Subject_Specs (Subject_ID).RFLAGS);
 
    -------------------------------------------------------------------------
 

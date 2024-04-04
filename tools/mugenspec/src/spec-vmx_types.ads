@@ -83,6 +83,12 @@ is
       Default : Interfaces.Unsigned_64 := 0)
       return Interfaces.Unsigned_64;
 
+   --  Return numeric value for RFLAGS given as XML node list.
+   function Get_RFLAGS
+     (Fields  : DOM.Core.Node_List;
+      Default : Interfaces.Unsigned_64 := 0)
+      return Interfaces.Unsigned_64;
+
 private
 
    type Pin_Ctrl_Type is

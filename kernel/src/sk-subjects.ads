@@ -132,6 +132,7 @@ is
       GPRs       : CPU_Registers_Type;
       RIP        : Word64;
       RSP        : Word64;
+      RFLAGS     : Word64;
       CR0        : Word64;
       CR0_Shadow : Word64;
       CR4        : Word64;
@@ -139,7 +140,7 @@ is
       Segments   : Segment_Registers_Type)
    with
       Global  => (In_Out => State),
-      Depends => (State =>+ (ID, GPRs, RIP, RSP, CR0, CR0_Shadow, CR4,
+      Depends => (State =>+ (ID, GPRs, RIP, RSP, RFLAGS, CR0, CR0_Shadow, CR4,
                              CR4_Shadow, Segments));
 
    --  Create crash audit context for subject with given ID.

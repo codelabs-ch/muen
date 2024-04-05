@@ -991,6 +991,7 @@ is
          GPRs       => Skp.Subjects.Get_GPRs (Subject_ID => ID),
          RIP        => Skp.Subjects.Get_Entry_Point (Subject_ID => ID),
          RSP        => Skp.Subjects.Get_Stack_Address (Subject_ID => ID),
+         RFLAGS     => Skp.Subjects.Get_RFLAGS (Subject_ID => ID),
          CR0        => Skp.Subjects.Get_CR0 (Subject_ID => ID),
          CR0_Shadow => Skp.Subjects.Get_CR0_Shadow (Subject_ID => ID),
          CR4        => Skp.Subjects.Get_CR4 (Subject_ID => ID),

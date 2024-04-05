@@ -266,6 +266,7 @@
       <xs:enumeration value="kernel_binary"/>
       <xs:enumeration value="kernel_fpu"/>
       <xs:enumeration value="kernel_interface"/>
+      <xs:enumeration value="kernel_microcode"/>
       <xs:enumeration value="kernel_msrstore"/>
       <xs:enumeration value="kernel_vmcs"/>
       <xs:enumeration value="subject"/>
@@ -600,7 +601,7 @@
   <xs:complexType name="memoryType">
     <xs:complexContent>
       <xs:extension base="physicalMemBaseType">
-        <xs:attribute name="type" type="subjectMemoryKindType" use="optional"/>
+        <xs:attribute name="type" type="srcMemoryKindType" use="optional"/>
         <xs:attribute name="alignment" type="alignmentType" use="optional"/>
         <xs:attribute name="physicalAddress" type="word64Type" use="optional"/>
       </xs:extension>
@@ -622,6 +623,27 @@
     <xs:attribute name="filename" type="xs:string" use="required"/>
     <xs:attribute name="offset" type="optionalOffsetType" use="required"/>
   </xs:complexType>
+  <xs:simpleType name="srcMemoryKindType">
+    <xs:restriction base="memoryKindType">
+      <xs:enumeration value="kernel_microcode"/>
+      <xs:enumeration value="subject"/>
+      <xs:enumeration value="subject_info"/>
+      <xs:enumeration value="subject_state"/>
+      <xs:enumeration value="subject_binary"/>
+      <xs:enumeration value="subject_channel"/>
+      <xs:enumeration value="subject_crash_audit"/>
+      <xs:enumeration value="subject_initrd"/>
+      <xs:enumeration value="subject_bios"/>
+      <xs:enumeration value="subject_acpi_rsdp"/>
+      <xs:enumeration value="subject_acpi_xsdt"/>
+      <xs:enumeration value="subject_acpi_fadt"/>
+      <xs:enumeration value="subject_acpi_dsdt"/>
+      <xs:enumeration value="subject_zeropage"/>
+      <xs:enumeration value="subject_solo5_boot_info"/>
+      <xs:enumeration value="subject_device"/>
+      <xs:enumeration value="subject_timed_event"/>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:simpleType name="subjectMemoryKindType">
     <xs:restriction base="memoryKindType">
       <xs:enumeration value="subject"/>
@@ -779,6 +801,9 @@
   <xs:complexType name="requiredResourcesType">
     <xs:sequence>
       <xs:element name="vcpu" type="vcpuType" minOccurs="0" maxOccurs="1"/>
+      <!-- NOTE: This element is *not* in the actual XML schema. See also
+                 comment for vcpuTypeRestricted.
+       -->
       <xs:element name="rvcpu" type="vcpuTypeRestricted" minOccurs="0" maxOccurs="1"/>
       <xs:element name="memory" type="logicalMemoryType" minOccurs="0" maxOccurs="1"/>
       <xs:element name="channels" type="logicalChannelsType" minOccurs="0" maxOccurs="1"/>
@@ -1115,6 +1140,11 @@
       <xs:element name="registers" type="registersType" minOccurs="0" maxOccurs="1"/>
     </xs:sequence>
   </xs:complexType>
+  <!-- NOTE: This type is *not* in the actual XML schema. It is placed here in
+             the test data to construct the case of an xs:complexType with an
+             xs:restriction. As such it increases test coverage of
+             Init_Order_Information as well as Get_Insert_Index.
+  -->
   <xs:complexType name="vcpuTypeRestricted">
     <xs:complexContent>
       <xs:restriction base="person">

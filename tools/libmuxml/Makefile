@@ -69,4 +69,8 @@ $(OBJ_DIR)/%.lintok: $(COMPONENT_TARGETS) $(LINT_XML) $(SYSTEM_SCHEMA_FILES) | $
 doc/graph_integration_overview.pdf: doc/graph_integration_overview.tex
 	cd doc && pdflatex graph_integration_overview.tex
 
+data/default_schema.xsd: $(GEN_DIR)/system_src.xsd $(STRIP_ANNOT_XSL)
+	@$(E) $(COMPONENT) "XSLT $@" \
+		"xsltproc $(STRIP_ANNOT_XSL) $< > $@"
+
 .PRECIOUS: $(GEN_DIR)/%.xsd $(GEN_DIR)/%_extended.xsd

@@ -72,6 +72,7 @@ MUXMLFILTER     ?= $(TOP_DIR)/tools/muxmlfilter/bin/muxmlfilter
 
 XML2ADA         ?= $(TOP_DIR)/tools/scripts/xml2ada
 RESOLVE_XSL     ?= $(TOP_DIR)/tools/libmuxml/schema/resolve.xsl
+STRIP_ANNOT_XSL ?= $(TOP_DIR)/tools/libmuxml/schema/strip-annotations.xsl
 
 TO_RAW_OPTS = -O binary \
 	--set-section-flags .bss=alloc,load,contents \

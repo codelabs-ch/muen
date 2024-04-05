@@ -433,10 +433,10 @@ package body Muxml.Utils.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Get_Element_Value (Gnattest_T : in out Test);
-   procedure Test_Get_Element_Value_69bad0 (Gnattest_T : in out Test) renames Test_Get_Element_Value;
+   procedure Test_1_Get_Element_Value (Gnattest_T : in out Test);
+   procedure Test_Get_Element_Value_69bad0 (Gnattest_T : in out Test) renames Test_1_Get_Element_Value;
 --  id:2.2/69bad06be5a13405/Get_Element_Value/1/0/
-   procedure Test_Get_Element_Value (Gnattest_T : in out Test) is
+   procedure Test_1_Get_Element_Value (Gnattest_T : in out Test) is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -491,7 +491,7 @@ package body Muxml.Utils.Test_Data.Tests is
                XPath => "nonexistent") = "",
               Message   => "Element value mismatch (4)");
 --  begin read only
-   end Test_Get_Element_Value;
+   end Test_1_Get_Element_Value;
 --  end read only
 
 
@@ -557,6 +557,57 @@ package body Muxml.Utils.Test_Data.Tests is
       end;
 --  begin read only
    end Test_Set_Element_Value;
+--  end read only
+
+
+--  begin read only
+   procedure Test_2_Get_Element_Value (Gnattest_T : in out Test);
+   procedure Test_Get_Element_Value_657f82 (Gnattest_T : in out Test) renames Test_2_Get_Element_Value;
+--  id:2.2/657f82234c450669/Get_Element_Value/0/0/
+   procedure Test_2_Get_Element_Value (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : XML_Data_Type;
+      List : DOM.Core.Node_List;
+   begin
+      Muxml.Parse
+        (Data => Data,
+         Kind => Muxml.None,
+         File => "data/format_a.xml");
+
+      Assert (Condition => Get_Element_Value
+              (List => List,
+               Tag  => "empty") = "",
+              Message   => "Element value mismatch (Empty list)");
+      Assert (Condition => Get_Element_Value
+              (List => List,
+               Tag  => "nonexistent") = "",
+              Message   => "Element value mismatch (Nonexistent)");
+      Assert (Condition => Get_Element_Value
+              (List => McKae.XML.XPath.XIA.XPath_Query
+               (N     => Data.Doc,
+                XPath => "/system/config/*"),
+               Tag  => "integer") = "",
+              Message   => "Element value mismatch (Tag without text)");
+      Assert (Condition => Get_Element_Value
+              (List => McKae.XML.XPath.XIA.XPath_Query
+               (N     => Data.Doc,
+                XPath => "/system/subjects/subject[@name='tau0']/vcpu"
+                & "/registers/rflags/*"),
+               Tag  => "IOPrivilegeLevel") = "3",
+              Message   => "Element value mismatch (RFLAGS)");
+      Assert (Condition => Get_Element_Value
+              (List => McKae.XML.XPath.XIA.XPath_Query
+               (N     => Data.Doc,
+                XPath => "/system/subjects/subject[@name='tau0']/vcpu"
+                & "/registers/gpr/*"),
+               Tag  => "r10") = "16#cafe#",
+              Message   => "Element value mismatch (GPR)");
+--  begin read only
+   end Test_2_Get_Element_Value;
 --  end read only
 
 

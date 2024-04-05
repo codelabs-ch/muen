@@ -436,6 +436,46 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Element_Value
+     (List : DOM.Core.Node_List;
+      Tag  : String)
+      return String
+   is
+      Count : constant Natural := DOM.Core.Nodes.Length (List => List);
+   begin
+      for I in Natural range 0 .. Count - 1 loop
+         declare
+            Cur_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => List,
+                                      Index => I);
+         begin
+            if DOM.Core.Nodes.Node_Name (N => Cur_Node) = Tag then
+               declare
+                  use type DOM.Core.Node_Types;
+
+                  Cur_Child : DOM.Core.Node
+                    := DOM.Core.Nodes.First_Child (N => Cur_Node);
+               begin
+                  while Cur_Child /= null loop
+                     if DOM.Core.Nodes.Node_Type (N => Cur_Child)
+                       = DOM.Core.Text_Node
+                     then
+                        return DOM.Core.Nodes.Node_Value (N => Cur_Child);
+                     end if;
+                     Cur_Child := DOM.Core.Nodes.Next_Sibling (N => Cur_Child);
+                  end loop;
+               end;
+
+               return "";
+            end if;
+         end;
+      end loop;
+
+      return "";
+   end Get_Element_Value;
+
+   -------------------------------------------------------------------------
+
    function Get_Elements
      (Nodes     : DOM.Core.Node_List;
       Ref_Attr  : String;

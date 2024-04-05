@@ -16,12 +16,74 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
+with DOM.Core;
+
 with Mutools.Utils;
 
 with Spec.Utils;
 
 package Spec.VMX_Types
 is
+
+   --  Returns the numeric value for the given Pin-Based VM-Execution controls
+   --  given as a list of XML nodes.
+   function Get_Pin_Controls
+     (Fields  : DOM.Core.Node_List;
+      Default : Interfaces.Unsigned_64 := 0)
+      return Interfaces.Unsigned_64;
+
+   --  Returns the numeric value for the given CPU-Based VM-Execution controls
+   --  given as a list of XML nodes.
+   function Get_Proc_Controls
+     (Fields  : DOM.Core.Node_List;
+      Default : Interfaces.Unsigned_64 := 0)
+      return Interfaces.Unsigned_64;
+
+   --  Returns the numeric value for the given secondary CPU-Based VM-Execution
+   --  controls given as a list of XML nodes.
+   function Get_Proc2_Controls
+     (Fields  : DOM.Core.Node_List;
+      Default : Interfaces.Unsigned_64 := 0)
+      return Interfaces.Unsigned_64;
+
+   --  Returns the numeric value for the given VM-Entry controls given as a list
+   --  of XML nodes.
+   function Get_Entry_Controls
+     (Fields  : DOM.Core.Node_List;
+      Default : Interfaces.Unsigned_64 := 0)
+      return Interfaces.Unsigned_64;
+
+   --  Returns the numeric value for the given VM-Exit controls given as a list
+   --  of XML nodes.
+   function Get_Exit_Controls
+     (Fields  : DOM.Core.Node_List;
+      Default : Interfaces.Unsigned_64 := 0)
+      return Interfaces.Unsigned_64;
+
+   --  Returns the numeric value for the CR0 control register given as a list
+   --  of XML nodes.
+   function Get_CR0
+     (Fields  : DOM.Core.Node_List;
+      Default : Interfaces.Unsigned_64 := 0)
+      return Interfaces.Unsigned_64;
+
+   --  Returns the numeric value for the CR4 control register given as a list
+   --  of XML nodes.
+   function Get_CR4
+     (Fields  : DOM.Core.Node_List;
+      Default : Interfaces.Unsigned_64 := 0)
+      return Interfaces.Unsigned_64;
+
+   --  Returns the numeric value for the exceptions given as a list of XML
+   --  nodes.
+   function Get_Exceptions
+     (Fields  : DOM.Core.Node_List;
+      Default : Interfaces.Unsigned_64 := 0)
+      return Interfaces.Unsigned_64;
+
+private
 
    type Pin_Ctrl_Type is
      (ExternalInterruptExiting,
@@ -35,7 +97,7 @@ is
 
    --  Pin control bit positions as specified by Intel SDM Vol. 3C, "24.6.1
    --  Pin-Based VM-Execution Controls".
-   function Get_Pin_Controls is new Utils.To_Number
+   function Get_Pin_Controls_Value is new Utils.To_Number
      (Bitfield_Type => Pin_Ctrl_Type,
       Mapping_Type  => Pin_Ctrl_Map_Type,
       Map           =>
@@ -44,6 +106,12 @@ is
          VirtualNMIs              => 5,
          ActivateVMXTimer         => 6,
          ProcessPostedInterrupts  => 7));
+
+   function Get_Pin_Controls
+     (Fields  : DOM.Core.Node_List;
+      Default : Interfaces.Unsigned_64 := 0)
+      return Interfaces.Unsigned_64
+      renames Get_Pin_Controls_Value;
 
    type Proc_Ctrl_Type is
      (InterruptWindowExiting,
@@ -73,7 +141,7 @@ is
 
    --  Proc control bit positions as specified by Intel SDM Vol. 3C, "24.6.2
    --  Processor-Based VM-Execution Controls".
-   function Get_Proc_Controls is new Utils.To_Number
+   function Get_Proc_Controls_Value is new Utils.To_Number
      (Bitfield_Type => Proc_Ctrl_Type,
       Mapping_Type  => Proc_Ctrl_Map_Type,
       Map           =>
@@ -99,6 +167,12 @@ is
          PAUSEExiting           => 30,
          Activate2ndaryControls => 31));
 
+   function Get_Proc_Controls
+     (Fields  : DOM.Core.Node_List;
+      Default : Interfaces.Unsigned_64 := 0)
+      return Interfaces.Unsigned_64
+      renames Get_Proc_Controls_Value;
+
    type Proc2_Ctrl_Type is
      (VirtualAPICAccesses,
       EnableEPT,
@@ -120,7 +194,7 @@ is
 
    --  Secondary proc control bit positions as specified by Intel SDM Vol. 3C,
    --  "24.6.2 Processor-Based VM-Execution Controls".
-   function Get_Proc2_Controls is new Utils.To_Number
+   function Get_Proc2_Controls_Value is new Utils.To_Number
      (Bitfield_Type => Proc2_Ctrl_Type,
       Mapping_Type  => Proc2_Ctrl_Map_Type,
       Map           =>
@@ -139,6 +213,12 @@ is
          EnableINVPCID              => 12,
          EnableVMFunctions          => 13));
 
+   function Get_Proc2_Controls
+     (Fields  : DOM.Core.Node_List;
+      Default : Interfaces.Unsigned_64 := 0)
+      return Interfaces.Unsigned_64
+      renames Get_Proc2_Controls_Value;
+
    type Entry_Ctrl_Type is
      (LoadDebugControls,
       IA32eModeGuest,
@@ -153,7 +233,7 @@ is
 
    --  VM-Entry control bit positions as specified by Intel SDM Vol. 3C,
    --  "24.8.1 VM-Entry Controls".
-   function Get_Entry_Controls is new Utils.To_Number
+   function Get_Entry_Controls_Value is new Utils.To_Number
      (Bitfield_Type => Entry_Ctrl_Type,
       Mapping_Type  => Entry_Ctrl_Map_Type,
       Map           =>
@@ -164,6 +244,12 @@ is
          LoadIA32PERFGLOBALCTRL       => 13,
          LoadIA32PAT                  => 14,
          LoadIA32EFER                 => 15));
+
+   function Get_Entry_Controls
+     (Fields  : DOM.Core.Node_List;
+      Default : Interfaces.Unsigned_64 := 0)
+      return Interfaces.Unsigned_64
+      renames Get_Entry_Controls_Value;
 
    type Exit_Ctrl_Type is
      (SaveDebugControls,
@@ -181,7 +267,7 @@ is
 
    --  VM-Exit control bit positions as specified by Intel SDM Vol. 3C, "24.7.1
    --  VM-Exit Controls".
-   function Get_Exit_Controls is new Utils.To_Number
+   function Get_Exit_Controls_Value is new Utils.To_Number
      (Bitfield_Type => Exit_Ctrl_Type,
       Mapping_Type  => Exit_Ctrl_Map_Type,
       Map           =>
@@ -194,6 +280,12 @@ is
          SaveIA32EFER           => 20,
          LoadIA32EFER           => 21,
          SaveVMXTimerValue      => 22));
+
+   function Get_Exit_Controls
+     (Fields  : DOM.Core.Node_List;
+      Default : Interfaces.Unsigned_64 := 0)
+      return Interfaces.Unsigned_64
+      renames Get_Exit_Controls_Value;
 
    type CR0_Flags_Type is
      (ProtectionEnable,
@@ -213,7 +305,7 @@ is
 
    --  CR0 flag bit positions as specified by Intel SDM Vol. 3A, "2.5 Control
    --  Registers".
-   function Get_CR0 is new Utils.To_Number
+   function Get_CR0_Value is new Utils.To_Number
      (Bitfield_Type => CR0_Flags_Type,
       Mapping_Type  => CR0_Flags_Map_Type,
       Map           =>
@@ -228,6 +320,12 @@ is
          NotWritethrough    => 29,
          CacheDisable       => 30,
          Paging             => 31));
+
+   function Get_CR0
+     (Fields  : DOM.Core.Node_List;
+      Default : Interfaces.Unsigned_64 := 0)
+      return Interfaces.Unsigned_64
+      renames Get_CR0_Value;
 
    type CR4_Flags_Type is
      (Virtual8086,
@@ -256,7 +354,7 @@ is
 
    --  CR4 flag bit positions as specified by Intel SDM Vol. 3A, "2.5 Control
    --  Registers".
-   function Get_CR4 is new Utils.To_Number
+   function Get_CR4_Value is new Utils.To_Number
      (Bitfield_Type => CR4_Flags_Type,
       Mapping_Type  => CR4_Flags_Map_Type,
       Map           =>
@@ -280,6 +378,12 @@ is
          SMEPEnable               => 20,
          SMAPEnable               => 21,
          ProtectionKeyEnable      => 22));
+
+   function Get_CR4
+     (Fields  : DOM.Core.Node_List;
+      Default : Interfaces.Unsigned_64 := 0)
+      return Interfaces.Unsigned_64
+      renames Get_CR4_Value;
 
    type Exceptions_Type is
      (DivideError,
@@ -306,7 +410,7 @@ is
 
    --  Exceptions bit positions as specified by Intel SDM Vol. 3A, "6.3.1
    --  External Interrupts".
-   function Get_Exceptions is new Utils.To_Number
+   function Get_Exceptions_Value is new Utils.To_Number
      (Bitfield_Type => Exceptions_Type,
       Mapping_Type  => Exceptions_Map_Type,
       Map           =>
@@ -328,5 +432,11 @@ is
          AlignmentCheck             => 17,
          MachineCheck               => 18,
          SIMDFloatingPointException => 19));
+
+   function Get_Exceptions
+     (Fields  : DOM.Core.Node_List;
+      Default : Interfaces.Unsigned_64 := 0)
+      return Interfaces.Unsigned_64
+      renames Get_Exceptions_Value;
 
 end Spec.VMX_Types;

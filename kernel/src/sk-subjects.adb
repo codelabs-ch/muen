@@ -283,13 +283,13 @@ is
    --D @Text Section => impl_subjects_state_reset
    --D Resetting the state of a subject with given ID means that all state
    --D values are set to those specified in the policy. Fields that are not set
-   --D by the policy are cleared to zero, except for RFLAGS which is initialized
-   --D to \verb!Constants.RFLAGS_Default_Value!.
+   --D by the policy are cleared to zero.
    procedure Reset_State
      (ID         : Skp.Global_Subject_ID_Type;
       GPRs       : CPU_Registers_Type;
       RIP        : Word64;
       RSP        : Word64;
+      RFLAGS     : Word64;
       CR0        : Word64;
       CR0_Shadow : Word64;
       CR4        : Word64;
@@ -297,8 +297,9 @@ is
       Segments   : Segment_Registers_Type)
    with
       Refined_Global  => (In_Out => Descriptors),
-      Refined_Depends => (Descriptors =>+ (ID, GPRs, RIP, RSP, CR0, CR0_Shadow,
-                                           CR4, CR4_Shadow, Segments))
+      Refined_Depends => (Descriptors =>+ (ID, GPRs, RIP, RSP, RFLAGS, CR0,
+                                           CR0_Shadow, CR4, CR4_Shadow,
+                                           Segments))
    is
    begin
       Descriptors (ID).Data :=
@@ -314,7 +315,7 @@ is
          SHADOW_CR0      => CR0_Shadow,
          CR4             => CR4,
          SHADOW_CR4      => CR4_Shadow,
-         RFLAGS          => Constants.RFLAGS_Default_Value,
+         RFLAGS          => RFLAGS,
          Segment_Regs    => Segments,
          GDTR            => Null_Segment,
          IDTR            => Null_Segment,

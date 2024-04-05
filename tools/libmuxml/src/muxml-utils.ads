@@ -106,6 +106,14 @@ is
       XPath : String;
       Value : String);
 
+   --  Searches the element specified by tag name in the given node list and
+   --  returns its value as string. If no such element exists, an empty string
+   --  is returned.
+   function Get_Element_Value
+     (List : DOM.Core.Node_List;
+      Tag  : String)
+      return String;
+
    --  Returns True if the specified node is a member of the given list.
    function Contains
      (List : DOM.Core.Node_List;

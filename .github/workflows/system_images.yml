@@ -200,7 +200,7 @@ jobs:
       -
         name: Log in to Container registry
         if: steps.vars.outputs.git_name == 'master' || steps.vars.outputs.git_name == 'devel'
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ${{ steps.vars.outputs.container_registry }}
           username: ${{ github.actor }}

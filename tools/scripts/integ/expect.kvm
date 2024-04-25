@@ -6,7 +6,7 @@ serial.out;PS/2 driver initialized successfully
 serial.out;example: Subject running
 serial.out;example: Current Status: 16#0000000000000009#
 serial.out;example: Current Epoch : 16#0000000000000001#
-serial.out;example: Filled nemory region contains expected pattern
+serial.out;example: Filled memory region contains expected pattern
 serial.out;example: Triggering self-event
 serial.out;example: Halting
 serial.out;example: Received vector 16#25#

@@ -92,8 +92,7 @@ is
    type XSAVE_Legacy_Header_Type is record
       FCW        : Word16;
       FSW        : Word16;
-      FTW        : Byte;
-      Reserved   : Byte;
+      FTW        : Word16;
       FOP        : Word16;
       FIP        : Word64;
       FDP        : Word64;
@@ -323,8 +322,7 @@ private
    for XSAVE_Legacy_Header_Type use record
       FCW        at  0 range  0 .. 15;
       FSW        at  2 range  0 .. 15;
-      FTW        at  4 range  0 ..  7;
-      Reserved   at  5 range  0 ..  7;
+      FTW        at  4 range  0 .. 15;
       FOP        at  6 range  0 .. 15;
       FIP        at  8 range  0 .. 63;
       FDP        at 16 range  0 .. 63;
@@ -373,7 +371,6 @@ private
      := (FCW        => 0,
          FSW        => 0,
          FTW        => 0,
-         Reserved   => 0,
          FOP        => 0,
          FIP        => 0,
          FDP        => 0,

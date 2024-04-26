@@ -27,6 +27,8 @@ project Example extends "../component_spark" is
      & "src"
      & "generated"
      & "../../common/strings/impl"
+     & "../../common/crash_audit"
+     & "../../common/debug"
      & "../../common/mutimedevents";
    Obj_Suffix := "/";
 

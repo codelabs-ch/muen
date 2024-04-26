@@ -34,6 +34,7 @@ with Muenblock_Example;
 
 with Debuglog.Client;
 
+with FPU;
 with Log;
 with Subject_Info;
 with Timed_Events;
@@ -218,6 +219,11 @@ begin
          Log.Put_Line (Item => "Error triggering #BP exception!");
       end if;
    end;
+
+   --  Make use of the FPU.
+
+   FPU.Log_State (Title => "FPU: Initial state");
+   FPU.Do_Tests;
 
    --  Act as a service: process events from associated subject.
 

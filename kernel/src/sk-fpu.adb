@@ -109,6 +109,8 @@ is
         := Active_XCR0_Features;
       Subject_FPU_States (ID).XSAVE_Area.Legacy_Header.FCW
         := Constants.FCW_Default_Value;
+      Subject_FPU_States (ID).XSAVE_Area.Legacy_Header.FTW
+        := Constants.FTW_Default_Value;
       Subject_FPU_States (ID).XSAVE_Area.Legacy_Header.MXCSR
         := Constants.MXCSR_Default_Value;
       Subject_FPU_States (ID).XSAVE_Area.Legacy_Header.MXCSR_Mask

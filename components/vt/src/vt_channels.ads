@@ -19,6 +19,8 @@
 with Muchannel_Constants;
 with Muchannel.Readers;
 
+with SHMStream_Constants;
+
 with Vt_Component.Channel_Arrays;
 
 package VT_Channels
@@ -31,7 +33,7 @@ is
       Elements     => Cspecs.Console_Element_Size -
         Muchannel_Constants.Header_Size,
       Null_Element => ASCII.NUL,
-      Protocol     => 1);
+      Protocol     => SHMStream_Constants.HVC_MUEN_PROTOCOL);
    package VT_Channel_Rdr is new VT_Channel.Readers;
 
 end VT_Channels;

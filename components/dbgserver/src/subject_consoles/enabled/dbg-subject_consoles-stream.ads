@@ -21,6 +21,8 @@ with Interfaces;
 with Muchannel;
 with Muchannel_Constants;
 
+with SHMStream_Constants;
+
 with Dbgserver_Component.Channel_Arrays;
 
 pragma Elaborate_All (Muchannel);
@@ -31,4 +33,4 @@ package Dbg.Subject_Consoles.Stream is new Muchannel
      (Dbgserver_Component.Channel_Arrays.Subject_Consoles_In_Element_Size
       - Muchannel_Constants.Header_Size),
    Null_Element => 0,
-   Protocol     => 1);
+   Protocol     => SHMStream_Constants.HVC_MUEN_PROTOCOL);

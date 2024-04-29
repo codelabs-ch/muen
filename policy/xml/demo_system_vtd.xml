@@ -143,6 +143,12 @@
    <if variable="linux_debug" value="true">
     <bootparams>debug</bootparams>
    </if>
+   <if variable="dbgserver_console_forwarding" value="false">
+    <bootparams>hvc_muen.out=virtual_console</bootparams>
+   </if>
+   <if variable="dbgserver_console_forwarding" value="true">
+    <bootparams>hvc_muen.out=virtual_console,hvc1|out hvc_muen.in=,hvc1|in</bootparams>
+   </if>
    <memory>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#7000_0000#" writable="false" executable="false"/>
    </memory>
@@ -213,6 +219,12 @@
    <bootparams>console=hvc console=ttyS0 hostname=lnx2</bootparams>
    <if variable="linux_debug" value="true">
     <bootparams>debug</bootparams>
+   </if>
+   <if variable="dbgserver_console_forwarding" value="false">
+    <bootparams>hvc_muen.out=virtual_console</bootparams>
+   </if>
+   <if variable="dbgserver_console_forwarding" value="true">
+    <bootparams>hvc_muen.out=virtual_console,hvc1|out hvc_muen.in=,hvc1|in</bootparams>
    </if>
    <memory>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#7000_0000#" writable="false" executable="false"/>

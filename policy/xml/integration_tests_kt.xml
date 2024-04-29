@@ -188,7 +188,7 @@
      </controls>
     </vmx>
    </vcpu>
-   <bootparams>console=hvc console=ttyS0 hostname=lnx1 muen-input.channel=virtual_keyboard debug</bootparams>
+   <bootparams>console=hvc console=ttyS0 hostname=lnx1 muen-input.channel=virtual_keyboard hvc_muen.out=virtual_console debug</bootparams>
    <memory>
     <memory logical="ram_2" physical="nic_linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="true"/>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#7000_0000#" writable="false" executable="false"/>
@@ -478,7 +478,7 @@
   </subject>
 
   <subject name="storage_linux">
-   <bootparams>console=hvc console=ttyS0 hostname=lnx2 debug</bootparams>
+   <bootparams>console=hvc console=ttyS0 hostname=lnx2 hvc_muen.out=virtual_console debug</bootparams>
    <memory>
     <memory logical="ram_2" physical="storage_linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="true"/>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#7000_0000#" writable="false" executable="false"/>

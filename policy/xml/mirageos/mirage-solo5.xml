@@ -87,7 +87,7 @@
    </component>
   </subject>
   <subject name="nic_linux">
-   <bootparams>console=hvc console=ttyS0 hostname=lnx1</bootparams>
+   <bootparams>console=hvc console=ttyS0 hostname=lnx1 hvc_muen.out=virtual_console</bootparams>
    <memory>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#7000_0000#" writable="false" executable="false"/>
    </memory>
@@ -134,7 +134,7 @@
    </component>
   </subject>
   <subject name="storage_linux">
-   <bootparams>console=hvc console=ttyS0 hostname=lnx2</bootparams>
+   <bootparams>console=hvc console=ttyS0 hostname=lnx2 hvc_muen.out=virtual_console</bootparams>
    <memory>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#7000_0000#" writable="false" executable="false"/>
    </memory>

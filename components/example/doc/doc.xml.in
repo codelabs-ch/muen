@@ -1149,8 +1149,6 @@
   </text>
 
   <section id="Timed_Events.Timed_Evtexample" label="Timed Events" priority="0"/>
-  <section id="example_requestexample" label="Shared Memory Channel (Reader)" priority="0"/>
-  <section id="example_responseexample" label="Shared Memory Channel (Writer)" priority="0"/>
   <section id="Subject_Info.Stateexample" label="Monitored Subject Register State" priority="0"/>
  </section>
 

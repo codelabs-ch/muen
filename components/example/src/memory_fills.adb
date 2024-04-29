@@ -64,13 +64,13 @@ is
       for I in Memory_Region'Range loop
          if Memory_Region (I) /= Fill_Pattern then
             Log.Put_Line
-              (Item => "Filled nemory region contains unexpected pattern "
+              (Item => "Filled memory region contains unexpected pattern "
                & SK.Strings.Img (Memory_Region (I)) & " @ " & SK.Strings.Img
                (Cspecs.Filled_Region_Address + I));
             return;
          end if;
       end loop;
-      Log.Put_Line (Item => "Filled nemory region contains expected pattern");
+      Log.Put_Line (Item => "Filled memory region contains expected pattern");
    end Validate_Region_Content;
 
 end Memory_Fills;

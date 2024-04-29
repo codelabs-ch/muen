@@ -16,8 +16,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-STARTUP(stub.o)
-
 ENTRY(_main)
 
 PHDRS
@@ -40,7 +38,7 @@ SECTIONS
 
 	.text 0x200000 :
 	{
-		KEEP (stub.o)
+		KEEP (*(.text.init))
 		*(.text .text.*)
 	} : component_code
 

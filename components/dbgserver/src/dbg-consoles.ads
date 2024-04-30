@@ -30,7 +30,7 @@ is
 
    subtype Command_Buffer_Type is String (Command_Buffer_Range);
 
-   type Console_Mode_Kind is (Processing, Forwarding);
+   type Console_Mode_Kind is (Processing, Buffering, Forwarding);
 
    type Console_Type is record
       --  The console has its own output queue to separate the emitted strings

@@ -51,4 +51,11 @@ is
    --  Output listing of forwarding consoles to given queue.
    procedure List (Queue : in out Byte_Queue.Queue_Type);
 
+   type Keycombo_Array is array (Natural range <>) of Character;
+
+   --  Key combination to detach console.
+   Detach_Keys : constant Keycombo_Array (1 .. 2)
+     := (1 => ASCII.ESC,
+         2 => ASCII.ESC);
+
 end Dbg.Subject_Consoles;

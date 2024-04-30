@@ -915,42 +915,64 @@ is
          Byte_Queue.Drop_Bytes (Queue  => Input_Queue,
                                 Length => 1);
 
-         if Console.Current_Mode = Forwarding then
-            Run_Attached_Console (Console => Console);
-            if Input_Element = Character'Pos (ASCII.ESC)
-              and then Console.Last_Input = Character'Pos (ASCII.ESC)
-            then
-
-               --  Detach console due to <ESC><ESC>
-
-               Subject_Consoles.Detach;
-               Console.Current_Mode := Processing;
-
-               Byte_Queue.Format.Append_New_Line
-                 (Queue => Console.Output_Queue);
-               Byte_Queue.Format.Append_New_Line
-                 (Queue => Console.Output_Queue);
-               Clean_Command_Buffer (Console => Console);
-               Write_Command_Buffer (Console => Console);
-            else
-               Subject_Consoles.Put (Data => Input_Element);
-               Subject_Consoles.Flush;
-               Console.Last_Input := Input_Element;
-            end if;
-         else
-            declare
-               Input_Char : constant Character
-                 := Character'Val (Input_Element);
-            begin
-               case Input_Char is
+         case Console.Current_Mode is
+            when Processing =>
+               declare
+                  Input_Char : constant Character
+                    := Character'Val (Input_Element);
+               begin
+                  case Input_Char is
                   when ASCII.ESC => Handle_Escape;
                   when ASCII.BS
                      | ASCII.DEL => Handle_Backspace;
                   when ASCII.CR  => Handle_Return;
                   when others    => Handle_Normal_Input (Char => Input_Char);
-               end case;
-            end;
-         end if;
+                  end case;
+               end;
+            when Forwarding =>
+               Run_Attached_Console (Console => Console);
+               Console.Last_Input := Input_Element;
+               if Input_Element = Subject_Consoles.Detach_Keys
+                 (Subject_Consoles.Detach_Keys'First)'Enum_Rep
+               then
+
+                  --  Buffer input due to partial match of detach key combo.
+
+                  Console.Current_Mode := Buffering;
+               else
+                  Subject_Consoles.Put (Data => Input_Element);
+                  Subject_Consoles.Flush;
+               end if;
+            when Buffering =>
+               Run_Attached_Console (Console => Console);
+               if Input_Element = Subject_Consoles.Detach_Keys
+                 (Subject_Consoles.Detach_Keys'Last)'Enum_Rep
+               then
+
+                  --  Detach console due to full match of detach key combo.
+
+                  Subject_Consoles.Detach;
+                  Console.Current_Mode := Processing;
+
+                  Byte_Queue.Format.Append_New_Line
+                    (Queue => Console.Output_Queue);
+                  Byte_Queue.Format.Append_New_Line
+                    (Queue => Console.Output_Queue);
+                  Clean_Command_Buffer (Console => Console);
+                  Write_Command_Buffer (Console => Console);
+               else
+
+                  --  Send all buffered data and transition to forwarding due to
+                  --  mismatch of detach key combo.
+
+                  Subject_Consoles.Put (Data => Console.Last_Input);
+                  Subject_Consoles.Put (Data => Input_Element);
+                  Subject_Consoles.Flush;
+
+                  Console.Last_Input := Input_Element;
+                  Console.Current_Mode := Forwarding;
+               end if;
+         end case;
       end loop;
 
       if Console.Current_Mode = Forwarding then

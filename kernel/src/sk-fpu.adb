@@ -105,8 +105,12 @@ is
       --D 3A, "9.1.1 Processor State After Reset".
       Subject_FPU_States (ID) := Null_FPU_State;
       Subject_FPU_States (ID).XCR0 := Active_XCR0_Features;
+      Subject_FPU_States (ID).XSAVE_Area.XSAVE_Header.XSTATE_BV
+        := Active_XCR0_Features;
       Subject_FPU_States (ID).XSAVE_Area.Legacy_Header.FCW
         := Constants.FCW_Default_Value;
+      Subject_FPU_States (ID).XSAVE_Area.Legacy_Header.FTW
+        := Constants.FTW_Default_Value;
       Subject_FPU_States (ID).XSAVE_Area.Legacy_Header.MXCSR
         := Constants.MXCSR_Default_Value;
       Subject_FPU_States (ID).XSAVE_Area.Legacy_Header.MXCSR_Mask

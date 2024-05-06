@@ -1162,6 +1162,7 @@ is
             Subjects.Restore_State
               (ID   => Current_Subject,
                Regs => Subject_Registers);
+            FPU.Restore_State (ID => Current_Subject);
          end;
       end;
 

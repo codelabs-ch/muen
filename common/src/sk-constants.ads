@@ -256,6 +256,9 @@ is
    --  FCW initial value, see Intel SDM Vol. 1,
    --  "13.6 Processor Tracking of XSAVE-Managed State"
    FCW_Default_Value        : constant := 16#037f#;
+   --  FTW initial value, see Intel SDM Vol. 1,
+   --  "13.6 Processor Tracking of XSAVE-Managed State"
+   FTW_Default_Value        : constant := 16#ffff#;
 
    --  Segment selector values.
 

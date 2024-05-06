@@ -60,6 +60,37 @@ serial.out;example: Read 16#00040000# bytes in.* ticks
 serial.out;example: Muenblock example done
 serial.out;example: Wakeup after sleep, checking whether work is pending
 serial.out;example: Copying request with size 16#.*# to response
+serial.out;example: XCR0 : 16#0000000000000007#, XSTATE_BV 16#0000000000000007#, XCOMP_BV 16#0000000000000000#
+serial.out;example: MXCSR: 16#00001f80# MXCSR mask: 16#0000ffff#
+serial.out;example: FCW  : 16#037f# FSW: 16#0000# FTW: 16#00ff# FOP: 16#0000#
+serial.out;example: FIP  : 16#0000000000000000#   FDP: 16#0000000000000000#
+serial.out;example:  ST0  : 00000000000000000000000000000000
+serial.out;example:  ST1  : 00000000000000000000000000000000
+serial.out;example:  ST2  : 00000000000000000000000000000000
+serial.out;example:  ST3  : 00000000000000000000000000000000
+serial.out;example:  ST4  : 00000000000000000000000000000000
+serial.out;example:  ST5  : 00000000000000000000000000000000
+serial.out;example:  ST6  : 00000000000000000000000000000000
+serial.out;example:  ST7  : 00000000000000000000000000000000
+serial.out;example:  XMM0 : 00000000000000000000000000000000
+serial.out;example:  XMM1 : 00000000000000000000000000000000
+serial.out;example:  XMM2 : 00000000000000000000000000000000
+serial.out;example:  XMM3 : 00000000000000000000000000000000
+serial.out;example:  XMM4 : 00000000000000000000000000000000
+serial.out;example:  XMM5 : 00000000000000000000000000000000
+serial.out;example:  XMM6 : 00000000000000000000000000000000
+serial.out;example:  XMM7 : 00000000000000000000000000000000
+serial.out;example:  XMM8 : 00000000000000000000000000000000
+serial.out;example:  XMM9 : 00000000000000000000000000000000
+serial.out;example:  XMM10: 00000000000000000000000000000000
+serial.out;example:  XMM11: 00000000000000000000000000000000
+serial.out;example:  XMM12: 00000000000000000000000000000000
+serial.out;example:  XMM13: 00000000000000000000000000000000
+serial.out;example:  XMM14: 00000000000000000000000000000000
+serial.out;example:  XMM15: 00000000000000000000000000000000
+serial.out;example: FCW already contains value to be written;!
+serial.out;example: Setting FCW successful
+serial.out;example: Resetting FCW with xrstor successful
 serial.out;*** '.*/integtest_kt' DONE
 serial.out;x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
 serial.out;x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'

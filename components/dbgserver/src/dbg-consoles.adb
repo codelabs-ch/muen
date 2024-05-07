@@ -678,12 +678,14 @@ is
    -------------------------------------------------------------------------
 
    procedure Execute_Command
-     (Command :        Command_Type;
-      Console : in out Console_Type;
-      Success :    out Boolean)
+     (Command      :        Command_Type;
+      Console      : in out Console_Type;
+      Success      :    out Boolean;
+      Print_Prompt :    out Boolean)
    is
    begin
       Success := True;
+      Print_Prompt := True;
 
       case Command.Kind is
          when Failure =>
@@ -724,6 +726,7 @@ is
             Attach_Console (Console => Console,
                             ID      => Command.Console_ID,
                             Success => Success);
+            Print_Prompt := not Success;
          when Print_Status =>
             Print_Status (Queue => Console.Output_Queue);
       end case;
@@ -889,13 +892,14 @@ is
          Command         : constant Command_Type := Parse_Command
            (Buffer     => Console.Command_Buffer,
             Buffer_End => Console.Command_Buffer_Pos);
-         Success         : Boolean;
+         Success, Prompt : Boolean;
          Failure_Message : constant String := "Command failed, try 'h'";
       begin
          Byte_Queue.Format.Append_New_Line (Queue => Console.Output_Queue);
-         Execute_Command (Console => Console,
-                          Command => Command,
-                          Success => Success);
+         Execute_Command (Console      => Console,
+                          Command      => Command,
+                          Success      => Success,
+                          Print_Prompt => Prompt);
 
          if not Success then
             Byte_Queue.Format.Append_Line
@@ -904,7 +908,9 @@ is
          end if;
 
          Clean_Command_Buffer (Console => Console);
-         Write_Command_Buffer (Console => Console);
+         if Prompt then
+            Write_Command_Buffer (Console => Console);
+         end if;
       end Handle_Return;
 
       Input_Element : Interfaces.Unsigned_8;

@@ -177,9 +177,9 @@ is
    is
    begin
       Low := 16#0020_8900_0000_0000# or (TSS_Limit * 2 ** 48)
-        or (TSS_Address and 16#00ff_ffff#) * 2 ** 16
-        or (TSS_Address and 16#ff00_0000#) * 2 ** 56;
-      High  := TSS_Address / 2 ** 32;
+        or (TSS_Address and 16#00ff_ffff#) * 2 ** 16   --  23:00
+        or (TSS_Address and 16#ff00_0000#) * 2 ** 32;  --  31:24
+      High := TSS_Address / 2 ** 32;                   --  63:32
    end Get_TSS_Descriptor;
 
    -------------------------------------------------------------------------

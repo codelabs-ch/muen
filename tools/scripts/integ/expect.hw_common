@@ -29,4 +29,7 @@ serial.out;stats.tx_bytes: 276
 
 serial.out;Current date/time matches expected value
 
+serial.out;hvc_muen\[1\]: Out channel hvc1|out @ 0x.*, size 0x1000, event -1
+serial.out;hvc_muen\[1\]: In channel hvc1|in @ 0x.*, size 0x1000, vector .*
+
 http.out;GET /file HTTP/1.1.* 200

@@ -236,7 +236,7 @@ jobs:
         if: |
           steps.vars.outputs.git_name == 'devel' &&
           steps.restore-cache-lnx-submodule.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         with:
           path: .git/modules/components/linux/src
           key: linux-submod-${{ secrets.CACHE_VERSION }}-${{ steps.vars.outputs.devel_rev }}
@@ -245,7 +245,7 @@ jobs:
         if: |
           steps.vars.outputs.git_name == 'devel' &&
           steps.restore-cache-docker.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         with:
           path: /tmp/.buildx-cache
           key: buildx-${{ secrets.CACHE_VERSION }}-${{ matrix.distro }}-${{ steps.vars.outputs.devel_rev }}
@@ -254,7 +254,7 @@ jobs:
         if: |
           steps.vars.outputs.git_name == 'devel' &&
           steps.restore-cache-ccache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         with:
           path: ${{ env.CCACHE_HOST }}
           key: ccache-${{ secrets.CACHE_VERSION }}-${{ matrix.distro }}-${{ steps.vars.outputs.devel_rev }}

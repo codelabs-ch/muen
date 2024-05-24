@@ -200,7 +200,7 @@
     <bootparams>hvc_muen.out=virtual_console</bootparams>
    </if>
    <if variable="dbgserver_console_forwarding" value="true">
-    <bootparams>hvc_muen.out=virtual_console,hvc1|out hvc_muen.in=,hvc1|in</bootparams>
+    <bootparams>hvc_muen.out=virtual_console,hvc1_output hvc_muen.in=,hvc1_input</bootparams>
    </if>
    <memory>
     <memory logical="ram_2" physical="nic_linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="true"/>
@@ -264,8 +264,8 @@
     <writer logical="blockdev_request1" physical="blockdev_request1" virtualAddress="16#000e_01f0_c000#" event="4"/>
     <reader logical="blockdev_response1" physical="blockdev_response1" virtualAddress="16#000e_01f1_4000#" vector="102"/>
     <if variable="dbgserver_console_forwarding" value="true">
-     <reader logical="hvc1|in" physical="console_in_1" vector="auto"/>
-     <writer logical="hvc1|out" physical="console_out_1"/>
+     <reader logical="hvc1_input" physical="console_in_1" vector="auto"/>
+     <writer logical="hvc1_output" physical="console_out_1"/>
     </if>
    </channels>
    <component ref="linux">
@@ -500,7 +500,7 @@
     <bootparams>hvc_muen.out=virtual_console</bootparams>
    </if>
    <if variable="dbgserver_console_forwarding" value="true">
-    <bootparams>hvc_muen.out=virtual_console,hvc1|out hvc_muen.in=,hvc1|in</bootparams>
+    <bootparams>hvc_muen.out=virtual_console,hvc1_output hvc_muen.in=,hvc1_input</bootparams>
    </if>
    <memory>
     <memory logical="ram_2" physical="storage_linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="true"/>
@@ -554,8 +554,8 @@
     <reader logical="example_response" physical="example_response" virtualAddress="16#000e_0210_c000#" vector="101"/>
     <writer logical="example_request" physical="example_request" virtualAddress="16#000e_0211_4000#" event="2"/>
     <if variable="dbgserver_console_forwarding" value="true">
-     <reader logical="hvc1|in" physical="console_in_2" vector="auto"/>
-     <writer logical="hvc1|out" physical="console_out_2"/>
+     <reader logical="hvc1_input" physical="console_in_2" vector="auto"/>
+     <writer logical="hvc1_output" physical="console_out_2"/>
     </if>
    </channels>
    <component ref="linux">

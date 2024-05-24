@@ -141,7 +141,7 @@
     <bootparams>hvc_muen.out=virtual_console</bootparams>
    </if>
    <if variable="dbgserver_console_forwarding" value="true">
-    <bootparams>hvc_muen.out=virtual_console,hvc1|out hvc_muen.in=,hvc1|in</bootparams>
+    <bootparams>hvc_muen.out=virtual_console,hvc1_output hvc_muen.in=,hvc1_input</bootparams>
    </if>
    <memory>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#7000_0000#" writable="false" executable="false"/>
@@ -199,8 +199,8 @@
      <reader logical="debug_shm_sink_memory" physical="debug_shm_sink_memory"/>
     </if>
     <if variable="dbgserver_console_forwarding" value="true">
-     <reader logical="hvc1|in" physical="console_in_1" vector="auto"/>
-     <writer logical="hvc1|out" physical="console_out_1"/>
+     <reader logical="hvc1_input" physical="console_in_1" vector="auto"/>
+     <writer logical="hvc1_output" physical="console_out_1"/>
     </if>
    </channels>
    <component ref="linux">
@@ -218,7 +218,7 @@
     <bootparams>hvc_muen.out=virtual_console</bootparams>
    </if>
    <if variable="dbgserver_console_forwarding" value="true">
-    <bootparams>hvc_muen.out=virtual_console,hvc1|out hvc_muen.in=,hvc1|in</bootparams>
+    <bootparams>hvc_muen.out=virtual_console,hvc1_output hvc_muen.in=,hvc1_input</bootparams>
    </if>
    <memory>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#7000_0000#" writable="false" executable="false"/>
@@ -270,8 +270,8 @@
      <reader logical="blockdev_response1" physical="blockdev_response1" vector="auto"/>
     </if>
     <if variable="dbgserver_console_forwarding" value="true">
-     <reader logical="hvc1|in" physical="console_in_2" vector="auto"/>
-     <writer logical="hvc1|out" physical="console_out_2"/>
+     <reader logical="hvc1_input" physical="console_in_2" vector="auto"/>
+     <writer logical="hvc1_output" physical="console_out_2"/>
     </if>
    </channels>
    <component ref="linux">

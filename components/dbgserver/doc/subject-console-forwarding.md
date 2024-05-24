@@ -72,8 +72,8 @@ Linux subjects in question:
 ```XML
 <channels>
  ...
- <reader logical="hvc1|in" physical="console_in_1" vector="auto"/>
- <writer logical="hvc1|out" physical="console_out_1"/>
+ <reader logical="hvc1_input" physical="console_in_1" vector="auto"/>
+ <writer logical="hvc1_output" physical="console_out_1"/>
  ...
 </channels>
 ```
@@ -86,7 +86,7 @@ so it knows which channels to use for communication. This is done using the in
 and out parameters:
 
 ```XML
-<bootparams>hvc_muen.out=virtual_console,hvc1|out hvc_muen.in=,hvc1|in</bootparams>
+<bootparams>hvc_muen.out=virtual_console,hvc1_output hvc_muen.in=,hvc1_input</bootparams>
 ```
 
 As it supports up to 8 consoles simultaneously, the `in` and `out` parameters

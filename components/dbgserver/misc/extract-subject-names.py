@@ -11,14 +11,15 @@ COMPONENT_NAME = 'dbgserver'
 DEFAULT_PACKAGE_NAME = 'Dbg.Subject_List'
 
 
-def extract_subject_names(xml_spec):
+def extract_subject_names(xml_spec, channel_prefix):
     """
     Return names of subjects mapping log channels from given XML system policy.
     """
     subject_names = []
-    log_channels = xml_spec.xpath("/system/subjects/subject/component[@ref='"
-                                  + COMPONENT_NAME
-                                  + "']/map[starts-with(@logical,'log_')]")
+    log_channels = xml_spec.xpath(
+        f"/system/subjects/subject/component[@ref='{COMPONENT_NAME}']"
+        f"/map[starts-with(@logical,'{channel_prefix}')]"
+    )
 
     for channel in log_channels:
         phys_name = channel.get("physical")
@@ -38,27 +39,48 @@ def extract_subject_names(xml_spec):
     return subject_names
 
 
-def write_spec(subject_names, package_name, f):
+def write_package_header(package_name, f):
+    """
+    Write package header.
+    """
+    f.write(f"private package {package_name}\n")
+    f.write("is\n\n")
+
+
+def write_package_end(package_name, f):
+    """
+    Write package end.
+    """
+    f.write(f"end {package_name};\n")
+
+
+def write_spec(subject_names, prefix, range_type, f):
     """
     Write mapping of specified subject names to given file.
     """
+    pre = prefix + "_"
+    arrtype = pre + "Names_Array"
+    subjcount = len(subject_names)
+    if subjcount == 0:
+        return
+
     maxlen = max(len(name) for name in subject_names)
-    f.write("private package " + package_name + "\n")
-    f.write("is\n\n")
-    f.write("   subtype Name_Type is String (1 .. " + str(maxlen) + ");\n\n")
-    f.write("   type Names_Array is array (Subject_Buffer_Range) of "
-            + "Name_Type;\n\n")
-    f.write("   Subject_Names : constant Names_Array :=\n")
+    if range_type is None:
+        range_type = "1 .. " + str(subjcount)
+
+    f.write(f"   subtype {pre}Name_Type is String (1 .. {str(maxlen)});\n\n")
+    f.write(f"   type {arrtype} is\n")
+    f.write(f"     array ({range_type}) of {pre}Name_Type;\n\n")
+    f.write(f"   {pre}Subject_Names : constant {arrtype} :=\n")
     for i, name in enumerate(subject_names):
         if i:
             f.write(",\n      ")
         else:
             f.write("     (",)
 
-        f.write(str(i + 1) + ' => "' + name.ljust(maxlen) + '"')
+        f.write(f'{str(i + 1)} => "{name.ljust(maxlen)}"')
 
     f.write(");\n\n")
-    f.write("end " + package_name + ";\n")
 
 
 def parse_args():
@@ -101,8 +123,12 @@ print("Reading source system policy from '" + src_policy_path + "'")
 xml_parser = etree.XMLParser(remove_blank_text=True)
 src_policy = etree.parse(src_policy_path, xml_parser).getroot()
 
-names = extract_subject_names(src_policy)
+log_names = extract_subject_names(src_policy, "log_")
+subj_cons_names = extract_subject_names(src_policy, "subject_console_out_")
 
 with open(out_path, 'w') as out_file:
     print("Writing Ada package '" + pkg_name + "' file to '" + out_path + "'")
-    write_spec(names, pkg_name, out_file)
+    write_package_header(pkg_name, out_file)
+    write_spec(log_names, "Log", "Subject_Buffer_Range", out_file)
+    write_spec(subj_cons_names, "Subject_Console", None, out_file)
+    write_package_end(pkg_name, out_file)

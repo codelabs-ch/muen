@@ -25,6 +25,7 @@ with Dbg.Xhci_Dbg;
 with Dbg.Byte_Queue.Format;
 with Dbg.Channels;
 with Dbg.Consoles;
+with Dbg.Subject_Consoles;
 
 package body Dbg
 is
@@ -56,6 +57,8 @@ is
       Serial.Init;
       Shared_Memory.Init;
       Xhci_Dbg.Init;
+
+      Subject_Consoles.Init;
    end Initialize;
 
    -------------------------------------------------------------------------

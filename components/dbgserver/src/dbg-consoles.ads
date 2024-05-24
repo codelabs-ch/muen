@@ -17,6 +17,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with Dbg.Byte_Queue;
 
 package Dbg.Consoles
@@ -28,6 +30,8 @@ is
 
    subtype Command_Buffer_Type is String (Command_Buffer_Range);
 
+   type Console_Mode_Kind is (Processing, Buffering, Forwarding);
+
    type Console_Type is record
       --  The console has its own output queue to separate the emitted strings
       --  from the log messages.
@@ -36,6 +40,11 @@ is
       Command_Buffer     : Command_Buffer_Type;
       --  Buffer position of the next free character.
       Command_Buffer_Pos : Natural;
+      --  Current operational mode of console.
+      Current_Mode       : Console_Mode_Kind;
+      --  ID of attached subject console.
+      Attached_Console   : Natural;
+      Last_Input         : Interfaces.Unsigned_8;
    end record;
 
    --  Initializes the given debug console.
@@ -52,10 +61,12 @@ private
    Empty_Command_Buffer : constant Command_Buffer_Type := (others => ' ');
 
    type Command_Kind is
-     (Clear_Line,
+     (Attach_Console,
+      Clear_Line,
       Failure,
       List_Channels,
       List_Events,
+      List_Forward_Consoles,
       List_Subjects,
       Log_All,
       Log_None,
@@ -70,9 +81,10 @@ private
 
    type Command_Type (Kind : Command_Kind := Failure) is record
       case Kind is
-         when Trigger_Event => Event_Number   : Natural := 0;
-         when Log_Toggle    => Channel_Number : Natural := 0;
-         when others        => null;
+         when Trigger_Event  => Event_Number   : Natural := 0;
+         when Log_Toggle     => Channel_Number : Natural := 0;
+         when Attach_Console => Console_ID     : Natural := 0;
+         when others         => null;
       end case;
    end record;
 

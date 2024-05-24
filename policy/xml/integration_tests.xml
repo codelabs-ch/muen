@@ -3,6 +3,7 @@
  <config>
   <boolean name="ahci_drv_enabled" value="false"/>
   <boolean name="xhcidbg_enabled" value="true"/>
+  <boolean name="dbgserver_console_forwarding" value="true"/>
   <boolean name="dbgserver_serial_enabled" value="true"/>
   <boolean name="dbgserver_sink_pcspkr" value="false"/>
   <boolean name="dbgserver_sink_shmem" value="false"/>
@@ -64,6 +65,12 @@
     <map logical="log_channel6" physical="debuglog_controller"/>
     <map logical="log_channel7" physical="debuglog_isolation_tests"/>
     <include href="subject_dbgserver_common.xml"/>
+    <if variable="dbgserver_console_forwarding" value="true">
+     <map logical="subject_console_in_1" physical="console_in_1"/>
+     <map logical="subject_console_in_2" physical="console_in_2"/>
+     <map logical="subject_console_out_1" physical="console_out_1"/>
+     <map logical="subject_console_out_2" physical="console_out_2"/>
+    </if>
    </component>
   </subject>
 
@@ -79,6 +86,12 @@
     </vmx>
    </vcpu>
    <bootparams>console=hvc console=ttyS0 hostname=lnx1 muen-input.channel=virtual_keyboard debug</bootparams>
+   <if variable="dbgserver_console_forwarding" value="false">
+    <bootparams>hvc_muen.out=virtual_console</bootparams>
+   </if>
+   <if variable="dbgserver_console_forwarding" value="true">
+    <bootparams>hvc_muen.out=virtual_console,hvc1_output hvc_muen.in=,hvc1_input</bootparams>
+   </if>
    <memory>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#7000_0000#" writable="false" executable="false"/>
    </memory>
@@ -119,6 +132,11 @@
     <writer logical="testchannel_1" physical="testchannel_1" virtualAddress="16#000e_00f0_1000#"/>
     <reader logical="testchannel_4" physical="testchannel_4" virtualAddress="16#000e_00f0_2000#"/>
     <writer logical="testchannel_3" physical="testchannel_3" virtualAddress="16#000e_0100_2000#"/>
+
+    <if variable="dbgserver_console_forwarding" value="true">
+     <reader logical="hvc1_input" physical="console_in_1" vector="auto"/>
+     <writer logical="hvc1_output" physical="console_out_1"/>
+    </if>
    </channels>
    <component ref="linux">
     <map logical="lowmem" physical="nic_linux|lowmem"/>
@@ -128,6 +146,12 @@
 
   <subject name="storage_linux">
    <bootparams>console=hvc console=ttyS0 hostname=lnx2 debug</bootparams>
+   <if variable="dbgserver_console_forwarding" value="false">
+    <bootparams>hvc_muen.out=virtual_console</bootparams>
+   </if>
+   <if variable="dbgserver_console_forwarding" value="true">
+    <bootparams>hvc_muen.out=virtual_console,hvc1_output hvc_muen.in=,hvc1_input</bootparams>
+   </if>
    <memory>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#7000_0000#" writable="false" executable="false"/>
    </memory>
@@ -166,6 +190,11 @@
     <writer logical="testchannel_2" physical="testchannel_2" virtualAddress="16#000e_00f0_1000#"/>
     <reader logical="testchannel_3" physical="testchannel_3" virtualAddress="16#000e_00f0_2000#"/>
     <writer logical="testchannel_4" physical="testchannel_4" virtualAddress="16#000e_0100_2000#"/>
+
+    <if variable="dbgserver_console_forwarding" value="true">
+     <reader logical="hvc1_input" physical="console_in_2" vector="auto"/>
+     <writer logical="hvc1_output" physical="console_out_2"/>
+    </if>
    </channels>
    <component ref="linux">
     <map logical="lowmem" physical="storage_linux|lowmem"/>

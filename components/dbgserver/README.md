@@ -188,21 +188,23 @@ This interactive console can be used to send commands to the Debug Server,
 which processes them at runtime. All supported commands are listed below.
 
 ### Commands
-| Command    | Description               |
-| ---------- | ------------------------- |
-| h          | Print help message        |
-| `<ESC>`    | Clear line                |
-| rb         | System Reboot             |
-| sd         | System Shutdown           |
-| st         | Print debug server status |
-| lc         | List channels             |
-| le         | List events               |
-| ls         | List subjects             |
-| sr         | Reset log streams         |
-| la         | Enable all log channels   |
-| ln         | Disable all log channels  |
-| lt `<num>` | Toggle logging of channel |
-| te `<num>` | Trigger event             |
+| Command    | Description                                   |
+| ---------- | --------------------------------------------- |
+| h          | Print help message                            |
+| `<ESC>`    | Clear line                                    |
+| rb         | System Reboot                                 |
+| sd         | System Shutdown                               |
+| st         | Print debug server status                     |
+| lc         | List channels                                 |
+| le         | List events                                   |
+| lf         | List forward consoles                         |
+| ls         | List subjects                                 |
+| sr         | Reset log streams                             |
+| la         | Enable all log channels                       |
+| ln         | Disable all log channels                      |
+| lt `<num>` | Toggle logging of channel                     |
+| te `<num>` | Trigger event                                 |
+| ac `<num>` | Attach subject console (Detach: `<ESC><ESC>`) |
 
 ## Tools
 There are various tools and scripts which aide in processing the log messages

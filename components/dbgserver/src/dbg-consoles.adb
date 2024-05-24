@@ -17,8 +17,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Interfaces;
-
 with SK.Hypercall;
 
 with Musinfo.Instance;
@@ -28,6 +26,7 @@ with Dbg.Buffers;
 with Dbg.Byte_Queue.Format;
 with Dbg.Channels;
 with Dbg.String_Utils;
+with Dbg.Subject_Consoles;
 with Dbg.Subject_List;
 
 with Dbgserver_Component.Channel_Arrays;
@@ -71,7 +70,7 @@ is
    subtype Command_String_Range  is Command_String_Length range
      Command_String_Length'First + 1 .. Command_String_Length'Last;
    subtype Command_String        is String (Command_String_Range);
-   subtype Command_Description   is String (1 .. 30);
+   subtype Command_Description   is String (1 .. 45);
 
    type Command_Descriptor_Type is record
       Cmd_Str     : Command_String;
@@ -146,6 +145,11 @@ is
           Command     => Command_Type'(Kind => List_Events),
           Has_Param   => False,
           Description => To_Cmd_Descr ("List events")),
+         (Cmd_Str     => "lf",
+          Cmd_Len     => 2,
+          Command     => Command_Type'(Kind => List_Forward_Consoles),
+          Has_Param   => False,
+          Description => To_Cmd_Descr ("List forward consoles")),
          (Cmd_Str     => "ls",
           Cmd_Len     => 2,
           Command     => Command_Type'(Kind => List_Subjects),
@@ -178,7 +182,30 @@ is
                                        Event_Number => 0),
           Has_Param   => True,
           Description => To_Cmd_Descr ("Trigger event")),
+         (Cmd_Str     => "ac",
+          Cmd_Len     => 2,
+          Command     => Command_Type'(Kind       => Attach_Console,
+                                       Console_ID => 1),
+          Has_Param   => True,
+          Description => To_Cmd_Descr
+            ("Attach subject console (Detach: <ESC><ESC>)")),
          Null_Command);
+
+   -------------------------------------------------------------------------
+
+   procedure Attach_Console
+     (Console : in out Console_Type;
+      ID      :        Natural;
+      Success :    out Boolean)
+   is
+   begin
+      Subject_Consoles.Attach (ID      => ID,
+                               Success => Success);
+      if Success then
+         Console.Attached_Console := ID;
+         Console.Current_Mode := Forwarding;
+      end if;
+   end Attach_Console;
 
    -------------------------------------------------------------------------
 
@@ -298,6 +325,8 @@ is
       Console.Command_Buffer_Pos := Console.Command_Buffer'First;
       Byte_Queue.Initialize (Queue => Console.Output_Queue);
       Setup_Log_Buffers (Console => Console);
+      Console.Current_Mode := Processing;
+      Console.Last_Input   := 0;
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -521,7 +550,7 @@ is
    procedure List_Subjects (Queue : in out Byte_Queue.Queue_Type)
    is
       Header    : constant String := "|        ID | Subject";
-      Subj_Rule : constant Subject_List.Name_Type := (others => '-');
+      Subj_Rule : constant Subject_List.Log_Name_Type := (others => '-');
       H_Rule    : constant String := "|-----------+--" & Subj_Rule;
    begin
       Byte_Queue.Format.Append_Line
@@ -531,7 +560,7 @@ is
         (Queue => Queue,
          Item  => H_Rule);
 
-      for I in Subject_List.Subject_Names'Range loop
+      for I in Subject_List.Log_Subject_Names'Range loop
          Byte_Queue.Format.Append_Character
            (Queue => Queue,
             Item  => '|');
@@ -544,7 +573,7 @@ is
             Item  => " | ");
          Byte_Queue.Format.Append_Line
            (Queue => Queue,
-            Item  => Subject_List.Subject_Names (I));
+            Item  => Subject_List.Log_Subject_Names (I));
       end loop;
 
       Byte_Queue.Format.Append_Line
@@ -649,12 +678,14 @@ is
    -------------------------------------------------------------------------
 
    procedure Execute_Command
-     (Command :        Command_Type;
-      Queue   : in out Byte_Queue.Queue_Type;
-      Success :    out Boolean)
+     (Command      :        Command_Type;
+      Console      : in out Console_Type;
+      Success      :    out Boolean;
+      Print_Prompt :    out Boolean)
    is
    begin
       Success := True;
+      Print_Prompt := True;
 
       case Command.Kind is
          when Failure =>
@@ -678,19 +709,26 @@ is
             Trigger_Event (Number  => Command.Event_Number,
                            Success => Success);
          when Print_Help =>
-            Print_Help (Queue => Queue);
+            Print_Help (Queue => Console.Output_Queue);
          when List_Channels =>
-            List_Channels (Queue   => Queue,
+            List_Channels (Queue   => Console.Output_Queue,
                            Success => Success);
          when List_Events =>
-            List_Events (Queue   => Queue,
+            List_Events (Queue   => Console.Output_Queue,
                          Success => Success);
+         when List_Forward_Consoles =>
+            Subject_Consoles.List (Queue => Console.Output_Queue);
          when List_Subjects =>
-            List_Subjects (Queue => Queue);
+            List_Subjects (Queue => Console.Output_Queue);
          when Stream_Reset =>
             Stream_Reset;
+         when Attach_Console =>
+            Attach_Console (Console => Console,
+                            ID      => Command.Console_ID,
+                            Success => Success);
+            Print_Prompt := not Success;
          when Print_Status =>
-            Print_Status (Queue => Queue);
+            Print_Status (Queue => Console.Output_Queue);
       end case;
    end Execute_Command;
 
@@ -749,6 +787,8 @@ is
                      Command.Event_Number := Number;
                   elsif Command.Kind = Log_Toggle then
                      Command.Channel_Number := Number;
+                  elsif Command.Kind = Attach_Console then
+                     Command.Console_ID := Number;
                   end if;
                else
                   return Command_Type'(Kind => Failure);
@@ -761,10 +801,31 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Run_Attached_Console (Console : in out Console_Type)
+   with
+      Pre => Console.Current_Mode = Forwarding
+   is
+      Input_Data : Interfaces.Unsigned_8;
+      Success    : Boolean;
+   begin
+      loop
+         Subject_Consoles.Get
+           (Data       => Input_Data,
+            Success    => Success);
+         exit when not Success;
+         Byte_Queue.Append
+           (Queue => Console.Output_Queue,
+            Byte  => Input_Data);
+      end loop;
+   end Run_Attached_Console;
+
+   -------------------------------------------------------------------------
+
    procedure Run
      (Console     : in out Console_Type;
       Input_Queue : in out Byte_Queue.Queue_Type)
    is
+      use type Interfaces.Unsigned_8;
 
       --  Overwrites the previous character in the command buffer with a space
       --  and decrements the buffer position.
@@ -831,13 +892,14 @@ is
          Command         : constant Command_Type := Parse_Command
            (Buffer     => Console.Command_Buffer,
             Buffer_End => Console.Command_Buffer_Pos);
-         Success         : Boolean;
+         Success, Prompt : Boolean;
          Failure_Message : constant String := "Command failed, try 'h'";
       begin
          Byte_Queue.Format.Append_New_Line (Queue => Console.Output_Queue);
-         Execute_Command (Command => Command,
-                          Queue   => Console.Output_Queue,
-                          Success => Success);
+         Execute_Command (Console      => Console,
+                          Command      => Command,
+                          Success      => Success,
+                          Print_Prompt => Prompt);
 
          if not Success then
             Byte_Queue.Format.Append_Line
@@ -846,7 +908,9 @@ is
          end if;
 
          Clean_Command_Buffer (Console => Console);
-         Write_Command_Buffer (Console => Console);
+         if Prompt then
+            Write_Command_Buffer (Console => Console);
+         end if;
       end Handle_Return;
 
       Input_Element : Interfaces.Unsigned_8;
@@ -857,18 +921,70 @@ is
          Byte_Queue.Drop_Bytes (Queue  => Input_Queue,
                                 Length => 1);
 
-         declare
-            Input_Char : constant Character := Character'Val (Input_Element);
-         begin
-            case Input_Char is
-               when ASCII.ESC => Handle_Escape;
-               when ASCII.BS
-                  | ASCII.DEL => Handle_Backspace;
-               when ASCII.CR  => Handle_Return;
-               when others    => Handle_Normal_Input (Char => Input_Char);
-            end case;
-         end;
+         case Console.Current_Mode is
+            when Processing =>
+               declare
+                  Input_Char : constant Character
+                    := Character'Val (Input_Element);
+               begin
+                  case Input_Char is
+                  when ASCII.ESC => Handle_Escape;
+                  when ASCII.BS
+                     | ASCII.DEL => Handle_Backspace;
+                  when ASCII.CR  => Handle_Return;
+                  when others    => Handle_Normal_Input (Char => Input_Char);
+                  end case;
+               end;
+            when Forwarding =>
+               Run_Attached_Console (Console => Console);
+               Console.Last_Input := Input_Element;
+               if Input_Element = Subject_Consoles.Detach_Keys
+                 (Subject_Consoles.Detach_Keys'First)'Enum_Rep
+               then
+
+                  --  Buffer input due to partial match of detach key combo.
+
+                  Console.Current_Mode := Buffering;
+               else
+                  Subject_Consoles.Put (Data => Input_Element);
+                  Subject_Consoles.Flush;
+               end if;
+            when Buffering =>
+               Run_Attached_Console (Console => Console);
+               if Input_Element = Subject_Consoles.Detach_Keys
+                 (Subject_Consoles.Detach_Keys'Last)'Enum_Rep
+               then
+
+                  --  Detach console due to full match of detach key combo.
+
+                  Subject_Consoles.Detach;
+                  Console.Current_Mode := Processing;
+
+                  Byte_Queue.Format.Append_New_Line
+                    (Queue => Console.Output_Queue);
+                  Byte_Queue.Format.Append_New_Line
+                    (Queue => Console.Output_Queue);
+                  Clean_Command_Buffer (Console => Console);
+                  Write_Command_Buffer (Console => Console);
+               else
+
+                  --  Send all buffered data and transition to forwarding due to
+                  --  mismatch of detach key combo.
+
+                  Subject_Consoles.Put (Data => Console.Last_Input);
+                  Subject_Consoles.Put (Data => Input_Element);
+                  Subject_Consoles.Flush;
+
+                  Console.Last_Input := Input_Element;
+                  Console.Current_Mode := Forwarding;
+               end if;
+         end case;
       end loop;
+
+      if Console.Current_Mode = Forwarding then
+         Subject_Consoles.Flush;
+         Run_Attached_Console (Console => Console);
+      end if;
    end Run;
 
 end Dbg.Consoles;

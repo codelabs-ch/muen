@@ -52,6 +52,7 @@
        * WARNING *: Adding fake irq 16 for device with MSIs: 0000:80:04.7
        * MANUAL  *: Comment out ioapic_X with X > 1
        * MANUAL  *: Comment out unneeded MSIs
+       * MANUAL  *: Adding rmrr_xhci1 region
      ========================================== -->
 
 
@@ -179,6 +180,19 @@
     <memoryBlock allocatable="true" name="System RAM" physicalAddress="16#0001_0000_0000#" size="16#007f_3fff_f000#"/>
     <reservedMemory name="rmrr1" physicalAddress="16#894e_b000#" size="16#3000#"/>
     <reservedMemory name="rmrr2" physicalAddress="16#8950_6000#" size="16#1000#"/>
+    <!--
+     IMPORTANT:
+
+     The following region must be accessible by usb_controller_1, otherwise the server hangs on controller usage
+     (dbgserver or Linux subjects). No ilo NMI gets through, and the Muen SK is apparently not running in this state.
+
+     After some time (the exact time varies), the server continues running normally.
+
+     The range has been identified by try-and-error from VT-d faults and is incomplete. The current setting works well
+     with demo_system_vtd and xHCI assigned to dbgserver. If the server hangs with another VT-d fault in the log, 
+     chances are that the xhci controller does not work correctly. This needs to be investigated further (T678).
+    -->
+    <reservedMemory name="rmrr_xhci1" physicalAddress="16#70b6_0000#" size="16#0011_0000#"/>
   </memory>
   <devices pciConfigAddress="16#c000_0000#" pciConfigSize="16#1000_0000#">
     <device name="system_board">
@@ -555,6 +569,7 @@
       <memory caching="UC" name="mem1" physicalAddress="16#d9e8_0000#" size="16#0001_0000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#c00a_0000#" size="16#1000#"/>
       <reservedMemory ref="rmrr1"/>
+      <reservedMemory ref="rmrr_xhci1"/>
     </device>
     <device name="signal_processing_controller_1">
       <description>Intel Corporation C620 Series Chipset Family Thermal Subsystem</description>

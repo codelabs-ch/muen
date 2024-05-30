@@ -74,11 +74,13 @@ is
                       (Item => "Init: IOMMU FR offset mismatch "
                        & Strings.Img (Word16 (Caps.FRO) * 16)));
 
-      Ctx.NFR_Match := Caps.NFR = 0;
+      Ctx.NFR_Match := Caps.NFR = Byte (Skp.IOMMU.Fault_Recording_Index'Last);
       pragma Debug (not Ctx.NFR_Match,
                     KC.Put_Line
                       (Item => "Init: Unsupported IOMMU NFR "
-                       & Strings.Img (Caps.NFR)));
+                       & Strings.Img (Caps.NFR) & ", expected "
+                       & Strings.Img
+                          (Byte (Skp.IOMMU.Fault_Recording_Index'Last))));
 
       Extcaps := Read_Extended_Capability (Index => Idx);
 
@@ -162,15 +164,32 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Clear_Fault_Record (IOMMU : IOMMU_Device_Range)
+   procedure Clear_All_Fault_Records (IOMMU : Skp.IOMMU.IOMMU_Device_Range)
+   is
+   begin
+      for I in Fault_Recording_Index'Range loop
+         Clear_Fault_Record
+           (IOMMU => IOMMU,
+            FRI   => I);
+      end loop;
+   end Clear_All_Fault_Records;
+
+   -------------------------------------------------------------------------
+
+   procedure Clear_Fault_Record
+     (IOMMU : Skp.IOMMU.IOMMU_Device_Range;
+      FRI   : Skp.IOMMU.Fault_Recording_Index)
    is
       Fault_Recording : Reg_Fault_Recording_Type;
       Fault_Status    : Reg_Fault_Status_Type;
    begin
-      Fault_Recording   := Read_Fault_Recording (Index => IOMMU);
+      Fault_Recording := Read_Fault_Recording
+        (Index     => IOMMU,
+         FRI       => FRI);
       Fault_Recording.F := 1;
       Write_Fault_Recording
         (Index => IOMMU,
+         FRI   => FRI,
          Value => Fault_Recording);
 
       Fault_Status     := Read_Fault_Status (Index => IOMMU);
@@ -484,7 +503,7 @@ is
       for I in IOMMU_Device_Range loop
          Set_Fault_Event_Mask (IOMMU  => I,
                                Enable => True);
-         Clear_Fault_Record (IOMMU => I);
+         Clear_All_Fault_Records (IOMMU => I);
          pragma Debug (Debug.Setup_Fault_Interrupt (IOMMU => I));
          pragma Debug (Set_Fault_Event_Mask (IOMMU  => I,
                                              Enable => False));

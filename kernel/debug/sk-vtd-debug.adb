@@ -31,20 +31,32 @@ is
       Status : Reg_Fault_Status_Type;
    begin
       for I in IOMMU_Device_Range loop
-         Status := Read_Fault_Status (Index => (I));
+         Status := Read_Fault_Status (Index => I);
+
+         --  Intel VT-d Specification, "7.2.1 Primary Fault Logging".
 
          if Status.PPF = 1 then
             declare
+               Start_Idx    : constant Fault_Recording_Index
+                 := Fault_Recording_Index (Status.FRI);
                Fault_Record : Reg_Fault_Recording_Type;
             begin
-               Fault_Record := Read_Fault_Recording (Index => I);
-               Dump.Print_VTd_Fault
-                 (IOMMU  => I,
-                  Status => Status,
-                  Fault  => Fault_Record);
+               for J in Fault_Recording_Index range
+                 Start_Idx .. Fault_Recording_Index'Last
+               loop
+                  Fault_Record := Read_Fault_Recording
+                      (Index => I,
+                       FRI   => J);
+                  exit when Fault_Record.F = 0;
+                  Dump.Print_VTd_Fault
+                    (IOMMU  => I,
+                     FRI    => J,
+                     Fault  => Fault_Record);
+                  VTd.Clear_Fault_Record
+                    (IOMMU => I,
+                     FRI   => J);
+               end loop;
             end;
-
-            VTd.Clear_Fault_Record (IOMMU => I);
          end if;
       end loop;
    end Process_Fault;

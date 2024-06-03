@@ -35,10 +35,6 @@ is
 
    --  Basic types
 
-   type Bit_Array is array (Positive range <>) of SK.Bit_Type
-     with
-       Pack;
-
    type Bit_2_Type is range 0 .. 2 ** 2 - 1
      with
        Size => 2;
@@ -65,7 +61,7 @@ is
    type Reg_Version_Type is record
       MIN      : Bit_4_Type;
       MAX      : Bit_4_Type;
-      Reserved : Bit_Array (1 .. 24);
+      Reserved : SK.Bit_Array (1 .. 24);
    end record
      with
        Size => 32;
@@ -84,21 +80,21 @@ is
       PLMR       : SK.Bit_Type;
       PHMR       : SK.Bit_Type;
       CM         : SK.Bit_Type;
-      SAGAW      : Bit_Array (1 .. 5);
-      Reserved_1 : Bit_Array (1 .. 3);
-      MGAW       : Bit_Array (1 .. 6);
+      SAGAW      : SK.Bit_Array (1 .. 5);
+      Reserved_1 : SK.Bit_Array (1 .. 3);
+      MGAW       : SK.Bit_Array (1 .. 6);
       ZLR        : SK.Bit_Type;
       Reserved_2 : SK.Bit_Type;
       FRO        : Bit_10_Type;
-      SLLPS      : Bit_Array (1 .. 4);
+      SLLPS      : SK.Bit_Array (1 .. 4);
       Reserved_3 : SK.Bit_Type;
       PSI        : SK.Bit_Type;
       NFR        : SK.Byte;
-      MAMV       : Bit_Array (1 .. 6);
+      MAMV       : SK.Bit_Array (1 .. 6);
       DWD        : SK.Bit_Type;
       DRD        : SK.Bit_Type;
       FL1GP      : SK.Bit_Type;
-      Reserved_4 : Bit_Array (1 .. 7);
+      Reserved_4 : SK.Bit_Array (1 .. 7);
    end record
      with Size => 64;
 
@@ -137,8 +133,8 @@ is
       PT         : SK.Bit_Type;
       SC         : SK.Bit_Type;
       IRO        : Bit_10_Type;
-      Reserved_2 : Bit_Array (1 .. 2);
-      MHMV       : Bit_Array (1 .. 4);
+      Reserved_2 : SK.Bit_Array (1 .. 2);
+      MHMV       : SK.Bit_Array (1 .. 4);
       ECS        : SK.Bit_Type;
       MTS        : SK.Bit_Type;
       NEST       : SK.Bit_Type;
@@ -150,8 +146,8 @@ is
       POT        : SK.Bit_Type;
       NWFS       : SK.Bit_Type;
       EAFS       : SK.Bit_Type;
-      PSS        : Bit_Array (1 .. 5);
-      Reserved_3 : Bit_Array (1 .. 24);
+      PSS        : SK.Bit_Array (1 .. 5);
+      Reserved_3 : SK.Bit_Array (1 .. 24);
    end record;
 
    for Reg_Extcapability_Type use record
@@ -183,7 +179,7 @@ is
 
    --  Global Command Register
    type Reg_Global_Command_Type is record
-      Reserved : Bit_Array (1 .. 23);
+      Reserved : SK.Bit_Array (1 .. 23);
       CFI      : SK.Bit_Type;
       SIRTP    : SK.Bit_Type;
       IRE      : SK.Bit_Type;
@@ -212,7 +208,7 @@ is
 
    --  Global Status Register
    type Reg_Global_Status_Type is record
-      Reserved : Bit_Array (1 .. 23);
+      Reserved : SK.Bit_Array (1 .. 23);
       CFIS     : SK.Bit_Type;
       IRTPS    : SK.Bit_Type;
       IRES     : SK.Bit_Type;
@@ -241,7 +237,7 @@ is
 
    --  Context Command Register
    type Reg_Context_Command_Type is record
-      Unused : Bit_Array (1 .. 59);
+      Unused : SK.Bit_Array (1 .. 59);
       CAIG   : Bit_2_Type;
       CIRG   : Bit_2_Type;
       ICC    : SK.Bit_Type;
@@ -286,7 +282,7 @@ is
    end record;
 
    type Reg_Fault_Event_Control_Type is record
-      Reserved : Bit_Array (1 .. 30);
+      Reserved : SK.Bit_Array (1 .. 30);
       IP       : SK.Bit_Type;
       IM       : SK.Bit_Type;
    end record
@@ -312,12 +308,12 @@ is
    end record;
 
    type Reg_Fault_Event_Address_Type is record
-      Reserved_1       : Bit_Array (1 .. 2);
+      Reserved_1       : SK.Bit_Array (1 .. 2);
       Destination_Mode : SK.Bit_Type;
       Redirection_Hint : SK.Bit_Type;
       Reserved_2       : SK.Byte;
       APIC_ID          : SK.Byte;
-      FEEh             : Bit_Array (1 .. 12);
+      FEEh             : SK.Bit_Array (1 .. 12);
    end record
      with
        Size => 32;
@@ -334,7 +330,7 @@ is
    --  Interrupt Remapping Table Address Register
    type Reg_IRT_Address is record
       S        : Bit_4_Type;
-      Reserved : Bit_Array (1 .. 7);
+      Reserved : SK.Bit_Array (1 .. 7);
       EIME     : SK.Bit_Type;
       IRTA     : Bit_52_Type;
    end record
@@ -350,7 +346,7 @@ is
 
    --  IOTLB Invalidate Register (dynamic)
    type Reg_IOTLB_Invalidate is record
-      Unused     : Bit_Array (1 .. 57);
+      Unused     : SK.Bit_Array (1 .. 57);
       IAIG       : Bit_2_Type;
       Reserved_1 : SK.Bit_Type;
       IIRG       : Bit_2_Type;
@@ -369,15 +365,15 @@ is
 
    --  Fault Recording Register (dynamic)
    type Reg_Fault_Recording_Type is record
-      Reserved_1 : Bit_Array (1 .. 12);
+      Reserved_1 : SK.Bit_Array (1 .. 12);
       FI         : Bit_52_Type;
       SID        : SK.Word16;
-      Reserved_2 : Bit_Array (1 .. 13);
+      Reserved_2 : SK.Bit_Array (1 .. 13);
       PRIV       : SK.Bit_Type;
       EXE        : SK.Bit_Type;
       PP         : SK.Bit_Type;
       FR         : SK.Byte;
-      PV         : Bit_Array (1 .. 20);
+      PV         : SK.Bit_Array (1 .. 20);
       AType      : Bit_2_Type;
       T          : SK.Bit_Type;
       F          : SK.Bit_Type;
@@ -570,7 +566,7 @@ private
       Fault_Event_Control : Reg_Fault_Event_Control_Type;
       Fault_Event_Data    : Reg_Fault_Event_Data_Type;
       Fault_Event_Address : Reg_Fault_Event_Address_Type;
-      Reserved_3          : Bit_Array (1 .. 928);
+      Reserved_3          : SK.Bit_Array (1 .. 928);
       IRT_Address         : Reg_IRT_Address;
    end record
      with
@@ -645,13 +641,13 @@ private
       IOMMU_1 : IOMMU_1_Type;
       --D @Interface
       --D Padding for IOMMU 1 to 4K.
-      Padding_1 : Bit_Array (1 .. SK.Page_Size * 8 - IOMMU_1_Type_Size);
+      Padding_1 : SK.Bit_Array (1 .. SK.Page_Size * 8 - IOMMU_1_Type_Size);
       --D @Interface
       --D Memory-mapped registers of IOMMU 2.
       IOMMU_2 : IOMMU_2_Type;
       --D @Interface
       --D Padding for IOMMU 2 to 4K.
-      Padding_2 : Bit_Array (1 .. SK.Page_Size * 8 - IOMMU_2_Type_Size);
+      Padding_2 : SK.Bit_Array (1 .. SK.Page_Size * 8 - IOMMU_2_Type_Size);
    end record
      with
        Pack,

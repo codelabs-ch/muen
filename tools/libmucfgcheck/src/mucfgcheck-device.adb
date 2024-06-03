@@ -810,12 +810,22 @@ is
                              := DOM.Core.Elements.Get_Attribute
                                (Elem => Prev_Phys_Node,
                                 Name => "name");
+                           S1_Name : constant String
+                             := DOM.Core.Elements.Get_Attribute
+                               (Elem => Subject,
+                                Name => "name");
+                           S2_Name : constant String
+                             := DOM.Core.Elements.Get_Attribute
+                               (Elem => Prev_Subj,
+                                Name => "name");
                         begin
                            Validation_Errors.Insert
                              (Msg => "Physical devices '"
-                              & Prev_Phys_Name & "' and '" & Phys_Name
-                              & "' are part of a PCI multi-function device "
-                              & "and must be assigned to the same subject");
+                              & Prev_Phys_Name & "' of subject " & S2_Name
+                              & " and '" & Phys_Name & "' of subject "
+                              & S1_Name & " are part of a PCI multi-function "
+                              & "device and must be assigned to the same "
+                              & "subject");
                         end;
                      end if;
 

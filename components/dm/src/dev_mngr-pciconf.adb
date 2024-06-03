@@ -121,7 +121,13 @@ is
                     Vread       => Vread_BAR,
                     Write_Perm  => Write_Virt,
                     Write_Width => Access_32,
-                    Vwrite      => Vwrite_BAR));
+                    Vwrite      => Vwrite_BAR),
+         11     => (Offset      => Field_Header,
+                    Read_Mask   => Read_All_Virt,
+                    Vread       => Vread_None,
+                    Write_Perm  => Write_Denied,
+                    Write_Width => Access_8,
+                    Vwrite      => Vwrite_None));
 
    subtype Read_Idx_Type is SK.Byte range 0 .. 3;
 
@@ -691,7 +697,10 @@ is
          Header := Addrspace.Read_Byte
            (SID    => SID,
             Offset => Field_Header);
-         if Header /= 0 then
+
+         --  16#80#: Multi-functional device, will be announced as non-multi
+         --  functional (see rule 11).
+         if not (Header = 0 or Header = 16#80#) then
             Log.Put_Line
               (Item => "Pciconf " & SK.Strings.Img (SID)
                & ": Unsupported header " & SK.Strings.Img (Header));

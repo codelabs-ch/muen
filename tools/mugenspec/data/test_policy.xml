@@ -54,6 +54,7 @@
     <capabilities>
      <capability name="iommu"/>
      <capability name="fr_offset">512</capability>
+     <capability name="nfr">8</capability>
      <capability name="iotlb_invalidate_offset">264</capability>
     </capabilities>
    </device>
@@ -62,6 +63,7 @@
     <capabilities>
      <capability name="iommu"/>
      <capability name="fr_offset">514</capability>
+     <capability name="nfr">8</capability>
      <capability name="iotlb_invalidate_offset">1280</capability>
     </capabilities>
    </device>

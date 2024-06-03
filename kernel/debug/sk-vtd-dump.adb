@@ -69,7 +69,6 @@ is
       Status : Skp.IOMMU.Reg_Fault_Status_Type;
       Fault  : Skp.IOMMU.Reg_Fault_Recording_Type)
    is
-      use type Skp.IOMMU.Bit_Type;
       use type Skp.IOMMU.Bit_52_Type;
 
       --  Interrupt translation fault reason range, see Intel VT-d

@@ -35,11 +35,7 @@ is
 
    --  Basic types
 
-   type Bit_Type is range 0 .. 1
-     with
-       Size => 1;
-
-   type Bit_Array is array (Positive range <>) of Bit_Type
+   type Bit_Array is array (Positive range <>) of SK.Bit_Type
      with
        Pack;
 
@@ -83,25 +79,25 @@ is
    --  Capability register
    type Reg_Capability_Type is record
       ND         : Bit_3_Type;
-      AFL        : Bit_Type;
-      RWBF       : Bit_Type;
-      PLMR       : Bit_Type;
-      PHMR       : Bit_Type;
-      CM         : Bit_Type;
+      AFL        : SK.Bit_Type;
+      RWBF       : SK.Bit_Type;
+      PLMR       : SK.Bit_Type;
+      PHMR       : SK.Bit_Type;
+      CM         : SK.Bit_Type;
       SAGAW      : Bit_Array (1 .. 5);
       Reserved_1 : Bit_Array (1 .. 3);
       MGAW       : Bit_Array (1 .. 6);
-      ZLR        : Bit_Type;
-      Reserved_2 : Bit_Type;
+      ZLR        : SK.Bit_Type;
+      Reserved_2 : SK.Bit_Type;
       FRO        : Bit_10_Type;
       SLLPS      : Bit_Array (1 .. 4);
-      Reserved_3 : Bit_Type;
-      PSI        : Bit_Type;
+      Reserved_3 : SK.Bit_Type;
+      PSI        : SK.Bit_Type;
       NFR        : SK.Byte;
       MAMV       : Bit_Array (1 .. 6);
-      DWD        : Bit_Type;
-      DRD        : Bit_Type;
-      FL1GP      : Bit_Type;
+      DWD        : SK.Bit_Type;
+      DRD        : SK.Bit_Type;
+      FL1GP      : SK.Bit_Type;
       Reserved_4 : Bit_Array (1 .. 7);
    end record
      with Size => 64;
@@ -132,28 +128,28 @@ is
 
    --  Extended Capability register
    type Reg_Extcapability_Type is record
-      C          : Bit_Type;
-      QI         : Bit_Type;
-      DT         : Bit_Type;
-      IR         : Bit_Type;
-      EIM        : Bit_Type;
-      Reserved_1 : Bit_Type;
-      PT         : Bit_Type;
-      SC         : Bit_Type;
+      C          : SK.Bit_Type;
+      QI         : SK.Bit_Type;
+      DT         : SK.Bit_Type;
+      IR         : SK.Bit_Type;
+      EIM        : SK.Bit_Type;
+      Reserved_1 : SK.Bit_Type;
+      PT         : SK.Bit_Type;
+      SC         : SK.Bit_Type;
       IRO        : Bit_10_Type;
       Reserved_2 : Bit_Array (1 .. 2);
       MHMV       : Bit_Array (1 .. 4);
-      ECS        : Bit_Type;
-      MTS        : Bit_Type;
-      NEST       : Bit_Type;
-      DIS        : Bit_Type;
-      PASID      : Bit_Type;
-      PRS        : Bit_Type;
-      ERS        : Bit_Type;
-      SRS        : Bit_Type;
-      POT        : Bit_Type;
-      NWFS       : Bit_Type;
-      EAFS       : Bit_Type;
+      ECS        : SK.Bit_Type;
+      MTS        : SK.Bit_Type;
+      NEST       : SK.Bit_Type;
+      DIS        : SK.Bit_Type;
+      PASID      : SK.Bit_Type;
+      PRS        : SK.Bit_Type;
+      ERS        : SK.Bit_Type;
+      SRS        : SK.Bit_Type;
+      POT        : SK.Bit_Type;
+      NWFS       : SK.Bit_Type;
+      EAFS       : SK.Bit_Type;
       PSS        : Bit_Array (1 .. 5);
       Reserved_3 : Bit_Array (1 .. 24);
    end record;
@@ -188,15 +184,15 @@ is
    --  Global Command Register
    type Reg_Global_Command_Type is record
       Reserved : Bit_Array (1 .. 23);
-      CFI      : Bit_Type;
-      SIRTP    : Bit_Type;
-      IRE      : Bit_Type;
-      QIE      : Bit_Type;
-      WBF      : Bit_Type;
-      EAFL     : Bit_Type;
-      SFL      : Bit_Type;
-      SRTP     : Bit_Type;
-      TE       : Bit_Type;
+      CFI      : SK.Bit_Type;
+      SIRTP    : SK.Bit_Type;
+      IRE      : SK.Bit_Type;
+      QIE      : SK.Bit_Type;
+      WBF      : SK.Bit_Type;
+      EAFL     : SK.Bit_Type;
+      SFL      : SK.Bit_Type;
+      SRTP     : SK.Bit_Type;
+      TE       : SK.Bit_Type;
    end record
      with
        Size => 32;
@@ -217,15 +213,15 @@ is
    --  Global Status Register
    type Reg_Global_Status_Type is record
       Reserved : Bit_Array (1 .. 23);
-      CFIS     : Bit_Type;
-      IRTPS    : Bit_Type;
-      IRES     : Bit_Type;
-      QIES     : Bit_Type;
-      WBFS     : Bit_Type;
-      AFLS     : Bit_Type;
-      FLS      : Bit_Type;
-      RTPS     : Bit_Type;
-      TES      : Bit_Type;
+      CFIS     : SK.Bit_Type;
+      IRTPS    : SK.Bit_Type;
+      IRES     : SK.Bit_Type;
+      QIES     : SK.Bit_Type;
+      WBFS     : SK.Bit_Type;
+      AFLS     : SK.Bit_Type;
+      FLS      : SK.Bit_Type;
+      RTPS     : SK.Bit_Type;
+      TES      : SK.Bit_Type;
    end record
      with
        Size => 32;
@@ -248,7 +244,7 @@ is
       Unused : Bit_Array (1 .. 59);
       CAIG   : Bit_2_Type;
       CIRG   : Bit_2_Type;
-      ICC    : Bit_Type;
+      ICC    : SK.Bit_Type;
    end record
      with
        Size => 64;
@@ -262,14 +258,14 @@ is
 
    --  Fault Status Register
    type Reg_Fault_Status_Type is record
-      PFO      : Bit_Type;
-      PPF      : Bit_Type;
-      AFO      : Bit_Type;
-      APF      : Bit_Type;
-      IQE      : Bit_Type;
-      ICE      : Bit_Type;
-      ITE      : Bit_Type;
-      PRO      : Bit_Type;
+      PFO      : SK.Bit_Type;
+      PPF      : SK.Bit_Type;
+      AFO      : SK.Bit_Type;
+      APF      : SK.Bit_Type;
+      IQE      : SK.Bit_Type;
+      ICE      : SK.Bit_Type;
+      ITE      : SK.Bit_Type;
+      PRO      : SK.Bit_Type;
       FRI      : SK.Byte;
       Reserved : SK.Word16;
    end record
@@ -291,8 +287,8 @@ is
 
    type Reg_Fault_Event_Control_Type is record
       Reserved : Bit_Array (1 .. 30);
-      IP       : Bit_Type;
-      IM       : Bit_Type;
+      IP       : SK.Bit_Type;
+      IM       : SK.Bit_Type;
    end record
      with
        Size => 32;
@@ -317,8 +313,8 @@ is
 
    type Reg_Fault_Event_Address_Type is record
       Reserved_1       : Bit_Array (1 .. 2);
-      Destination_Mode : Bit_Type;
-      Redirection_Hint : Bit_Type;
+      Destination_Mode : SK.Bit_Type;
+      Redirection_Hint : SK.Bit_Type;
       Reserved_2       : SK.Byte;
       APIC_ID          : SK.Byte;
       FEEh             : Bit_Array (1 .. 12);
@@ -339,7 +335,7 @@ is
    type Reg_IRT_Address is record
       S        : Bit_4_Type;
       Reserved : Bit_Array (1 .. 7);
-      EIME     : Bit_Type;
+      EIME     : SK.Bit_Type;
       IRTA     : Bit_52_Type;
    end record
      with
@@ -356,10 +352,10 @@ is
    type Reg_IOTLB_Invalidate is record
       Unused     : Bit_Array (1 .. 57);
       IAIG       : Bit_2_Type;
-      Reserved_1 : Bit_Type;
+      Reserved_1 : SK.Bit_Type;
       IIRG       : Bit_2_Type;
-      Reserved_2 : Bit_Type;
-      IVT        : Bit_Type;
+      Reserved_2 : SK.Bit_Type;
+      IVT        : SK.Bit_Type;
    end record;
 
    for Reg_IOTLB_Invalidate use record
@@ -377,14 +373,14 @@ is
       FI         : Bit_52_Type;
       SID        : SK.Word16;
       Reserved_2 : Bit_Array (1 .. 13);
-      PRIV       : Bit_Type;
-      EXE        : Bit_Type;
-      PP         : Bit_Type;
+      PRIV       : SK.Bit_Type;
+      EXE        : SK.Bit_Type;
+      PP         : SK.Bit_Type;
       FR         : SK.Byte;
       PV         : Bit_Array (1 .. 20);
       AType      : Bit_2_Type;
-      T          : Bit_Type;
-      F          : Bit_Type;
+      T          : SK.Bit_Type;
+      F          : SK.Bit_Type;
    end record
      with
        Size => 128;

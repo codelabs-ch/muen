@@ -396,6 +396,13 @@ is
       F          at 0 range 127 .. 127;
    end record;
 
+   type Fault_Recording_Index is range 0 .. __nfr_last_idx__;
+
+   type Fault_Recording_Array is array (Fault_Recording_Index'Range) of Reg_Fault_Recording_Type
+   with
+      Pack,
+      Size => __nfr__ * 128;
+
    function Read_Version
      (Index : IOMMU_Device_Range)
       return Reg_Version_Type
@@ -439,13 +446,15 @@ is
       Value : Reg_Context_Command_Type);
 
    function Read_Fault_Recording
-     (Index : IOMMU_Device_Range)
+     (Index : IOMMU_Device_Range;
+      FRI   : Fault_Recording_Index)
       return Reg_Fault_Recording_Type
    with
       Volatile_Function;
 
    procedure Write_Fault_Recording
      (Index : IOMMU_Device_Range;
+      FRI   : Fault_Recording_Index;
       Value : Reg_Fault_Recording_Type);
 
    function Read_Fault_Status
@@ -596,7 +605,7 @@ __iommu_type_sizes__
       --D faults. Their number and offset varies depending on the specific
       --D IOMMU device, see Intel VT-d Specification, "10.4.14 Fault Recording
       --D Registers [n]".
-      Fault_Recording  : Reg_Fault_Recording_Type;
+      Fault_Recording  : Fault_Recording_Array;
    end record;
 
 __iommu_x_types__

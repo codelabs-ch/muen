@@ -121,14 +121,15 @@ is
    -------------------------------------------------------------------------
 
    function Read_Fault_Recording
-     (Index : IOMMU_Device_Range)
+     (Index : IOMMU_Device_Range;
+      FRI   : Fault_Recording_Index)
       return Reg_Fault_Recording_Type
    is
       Value : Reg_Fault_Recording_Type;
    begin
       case Index is
-         when 1 => Value := IOMMUs.IOMMU_1.Fault_Recording;
-         when 2 => Value := IOMMUs.IOMMU_2.Fault_Recording;
+         when 1 => Value := IOMMUs.IOMMU_1.Fault_Recording (FRI);
+         when 2 => Value := IOMMUs.IOMMU_2.Fault_Recording (FRI);
       end case;
 
       return Value;
@@ -254,12 +255,13 @@ is
 
    procedure Write_Fault_Recording
      (Index : IOMMU_Device_Range;
+      FRI   : Fault_Recording_Index;
       Value : Reg_Fault_Recording_Type)
    is
    begin
       case Index is
-         when 1 => IOMMUs.IOMMU_1.Fault_Recording := Value;
-         when 2 => IOMMUs.IOMMU_2.Fault_Recording := Value;
+         when 1 => IOMMUs.IOMMU_1.Fault_Recording (FRI) := Value;
+         when 2 => IOMMUs.IOMMU_2.Fault_Recording (FRI) := Value;
       end case;
    end Write_Fault_Recording;
 

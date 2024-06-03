@@ -396,6 +396,13 @@ is
       F          at 0 range 127 .. 127;
    end record;
 
+   type Fault_Recording_Index is range 0 .. 7;
+
+   type Fault_Recording_Array is array (Fault_Recording_Index'Range) of Reg_Fault_Recording_Type
+   with
+      Pack,
+      Size => 8 * 128;
+
    function Read_Version
      (Index : IOMMU_Device_Range)
       return Reg_Version_Type
@@ -439,13 +446,15 @@ is
       Value : Reg_Context_Command_Type);
 
    function Read_Fault_Recording
-     (Index : IOMMU_Device_Range)
+     (Index : IOMMU_Device_Range;
+      FRI   : Fault_Recording_Index)
       return Reg_Fault_Recording_Type
    with
       Volatile_Function;
 
    procedure Write_Fault_Recording
      (Index : IOMMU_Device_Range;
+      FRI   : Fault_Recording_Index;
       Value : Reg_Fault_Recording_Type);
 
    function Read_Fault_Status
@@ -530,7 +539,7 @@ private
          2 => FR_Offset_2
         );
 
-   IOMMU_1_Type_Size : constant := 8 * 512 + 128;
+   IOMMU_1_Type_Size : constant := 8 * 512 + 1024;
    IOMMU_2_Type_Size : constant := 8 * 1280 + 64;
 
    function Config_Get_IOTLB_Inv_Offset
@@ -605,7 +614,7 @@ private
       --D faults. Their number and offset varies depending on the specific
       --D IOMMU device, see Intel VT-d Specification, "10.4.14 Fault Recording
       --D Registers [n]".
-      Fault_Recording  : Reg_Fault_Recording_Type;
+      Fault_Recording  : Fault_Recording_Array;
    end record;
 
    type IOMMU_1_Type is new IOMMU_X_Type with Size => IOMMU_1_Type_Size;
@@ -621,13 +630,13 @@ private
    for IOMMU_1_Type use record
       Common at 0 range 0 .. IOMMU_Common_Size - 1;
       IOTLB_Invalidate at IOTLB_Inv_Offset_1 range 0 .. 63;
-      Fault_Recording at FR_Offset_1 range 0 .. 127;
+      Fault_Recording at FR_Offset_1 range 0 .. 8 * 128 - 1;
    end record;
 
    for IOMMU_2_Type use record
       Common at 0 range 0 .. IOMMU_Common_Size - 1;
       IOTLB_Invalidate at IOTLB_Inv_Offset_2 range 0 .. 63;
-      Fault_Recording at FR_Offset_2 range 0 .. 127;
+      Fault_Recording at FR_Offset_2 range 0 .. 8 * 128 - 1;
    end record;
    pragma Warnings (On, "*-bit gap before component *");
    pragma Warnings (On, "memory layout out of order");

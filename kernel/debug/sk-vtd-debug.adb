@@ -18,6 +18,7 @@
 
 with SK.Constants;
 with SK.VTd.Dump;
+with SK.Strings;
 
 package body SK.VTd.Debug
 is
@@ -36,34 +37,41 @@ is
          --  Intel VT-d Specification, "7.2.1 Primary Fault Logging".
 
          if Status.PPF = 1 then
-            declare
-               One_FR : constant Boolean
-                 := Fault_Recording_Index'Last = 0;
-               Inc    : constant Fault_Recording_Index
-                 := (if One_FR then 0 else 1);
-               FRI    : Fault_Recording_Index
-                 := Fault_Recording_Index (Status.FRI);
-               FR     : Reg_Fault_Recording_Type;
-            begin
-               loop
-                  FR := Read_Fault_Recording
-                      (Index => I,
-                       FRI   => FRI);
+            if Status.FRI > Byte (Fault_Recording_Index'Last) then
+               SK.VTd.Dump.Print_Message
+                 (IOMMU   => I,
+                  Message => "Invalid FRI " & Strings.Img (Status.FRI));
+            else
+               declare
+                  One_FR : constant Boolean               :=
+                    Fault_Recording_Index'Last = 0;
+                  Inc    : constant Fault_Recording_Index :=
+                    (if One_FR then 0 else 1);
+                  FRI    : Fault_Recording_Index;
+                  FR     : Reg_Fault_Recording_Type;
+               begin
+                  FRI := Fault_Recording_Index (Status.FRI);
 
-                  --  FRI might wrap around until FR.F = 0.
+                  loop
+                     FR := Read_Fault_Recording
+                         (Index => I,
+                          FRI   => FRI);
 
-                  exit when FR.F = 0;
-                  Dump.Print_VTd_Fault
-                    (IOMMU  => I,
-                     FRI    => FRI,
-                     Fault  => FR);
-                  VTd.Clear_Fault_Record
-                    (IOMMU => I,
-                     FRI   => FRI);
-                  exit when One_FR;
-                  FRI := FRI + Inc;
-               end loop;
-            end;
+                     --  FRI might wrap around until FR.F = 0.
+
+                     exit when FR.F = 0;
+                     Dump.Print_VTd_Fault
+                       (IOMMU => I,
+                        FRI   => FRI,
+                        Fault => FR);
+                     VTd.Clear_Fault_Record
+                       (IOMMU => I,
+                        FRI   => FRI);
+                     exit when One_FR;
+                     FRI := FRI + Inc;
+                  end loop;
+               end;
+            end if;
          end if;
       end loop;
    end Process_Fault;

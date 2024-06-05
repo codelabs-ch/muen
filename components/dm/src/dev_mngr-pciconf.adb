@@ -53,6 +53,9 @@ is
    MSI_Cap_ID   : constant := 16#05#;
    MSI_X_Cap_ID : constant := 16#11#;
 
+   Header_Type_Normal   : constant := 0;
+   Header_Type_Multi_Fn : constant := 16#80#;
+
    Null_Rule : constant Rule_Type
      := (Offset      => Mudm.Offset_Type'Last,
          Read_Mask   => Read_All_Virt,
@@ -698,9 +701,8 @@ is
            (SID    => SID,
             Offset => Field_Header);
 
-         --  16#80#: Multi-functional device, will be announced as non-multi
-         --  functional (see rule 11).
-         if not (Header = 0 or Header = 16#80#) then
+         if not (Header = Header_Type_Normal or Header = Header_Type_Multi_Fn)
+         then
             Log.Put_Line
               (Item => "Pciconf " & SK.Strings.Img (SID)
                & ": Unsupported header " & SK.Strings.Img (Header));

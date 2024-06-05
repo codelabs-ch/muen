@@ -396,9 +396,9 @@ is
       F          at 0 range 127 .. 127;
    end record;
 
-   type Fault_Recording_Index is range 0 .. 7;
+   type Fault_Recording_Index is mod 8;
 
-   type Fault_Recording_Array is array (Fault_Recording_Index'Range) of Reg_Fault_Recording_Type
+   type Fault_Recording_Array is array (Fault_Recording_Index) of Reg_Fault_Recording_Type
    with
       Pack,
       Size => 8 * 128;

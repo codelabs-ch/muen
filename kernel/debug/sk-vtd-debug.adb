@@ -37,24 +37,31 @@ is
 
          if Status.PPF = 1 then
             declare
-               Start_Idx    : constant Fault_Recording_Index
+               One_FR : constant Boolean
+                 := Fault_Recording_Index'Last = 0;
+               Inc    : constant Fault_Recording_Index
+                 := (if One_FR then 0 else 1);
+               FRI    : Fault_Recording_Index
                  := Fault_Recording_Index (Status.FRI);
-               Fault_Record : Reg_Fault_Recording_Type;
+               FR     : Reg_Fault_Recording_Type;
             begin
-               for J in Fault_Recording_Index range
-                 Start_Idx .. Fault_Recording_Index'Last
                loop
-                  Fault_Record := Read_Fault_Recording
+                  FR := Read_Fault_Recording
                       (Index => I,
-                       FRI   => J);
-                  exit when Fault_Record.F = 0;
+                       FRI   => FRI);
+
+                  --  FRI might wrap around until FR.F = 0.
+
+                  exit when FR.F = 0;
                   Dump.Print_VTd_Fault
                     (IOMMU  => I,
-                     FRI    => J,
-                     Fault  => Fault_Record);
+                     FRI    => FRI,
+                     Fault  => FR);
                   VTd.Clear_Fault_Record
                     (IOMMU => I,
-                     FRI   => J);
+                     FRI   => FRI);
+                  exit when One_FR;
+                  FRI := FRI + Inc;
                end loop;
             end;
          end if;

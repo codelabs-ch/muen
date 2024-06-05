@@ -396,9 +396,9 @@ is
       F          at 0 range 127 .. 127;
    end record;
 
-   type Fault_Recording_Index is range 0 .. __nfr_last_idx__;
+   type Fault_Recording_Index is mod __nfr__;
 
-   type Fault_Recording_Array is array (Fault_Recording_Index'Range) of Reg_Fault_Recording_Type
+   type Fault_Recording_Array is array (Fault_Recording_Index) of Reg_Fault_Recording_Type
    with
       Pack,
       Size => __nfr__ * 128;

@@ -476,12 +476,6 @@ is
             Side   => Ada.Strings.Left));
       Mutools.Templates.Replace
         (Template => Tmpl,
-         Pattern  => "__nfr_last_idx__",
-         Content  => Ada.Strings.Fixed.Trim
-           (Source => Natural'Image (Nfr_Val - 1),
-            Side   => Ada.Strings.Left));
-      Mutools.Templates.Replace
-        (Template => Tmpl,
          Pattern  => "__nfr__",
          Content  => Ada.Strings.Fixed.Trim
            (Source => Natural'Image (Nfr_Val),

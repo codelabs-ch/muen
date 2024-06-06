@@ -400,7 +400,8 @@ is
 
    type Fault_Recording_Index is mod 8;
 
-   type Fault_Recording_Array is array (Fault_Recording_Index) of Reg_Fault_Recording_Type
+   type Reg_Fault_Recording_Array is array
+     (Fault_Recording_Index) of Reg_Fault_Recording_Type
    with
       Pack,
       Size => 8 * Reg_Fault_Recording_Size;
@@ -616,7 +617,7 @@ private
       --D faults. Their number and offset varies depending on the specific
       --D IOMMU device, see Intel VT-d Specification, "10.4.14 Fault Recording
       --D Registers [n]".
-      Fault_Recording  : Fault_Recording_Array;
+      Fault_Recording  : Reg_Fault_Recording_Array;
    end record;
 
    type IOMMU_1_Type is new IOMMU_X_Type with Size => IOMMU_1_Type_Size;

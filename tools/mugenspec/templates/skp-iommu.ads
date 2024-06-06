@@ -400,7 +400,8 @@ is
 
    type Fault_Recording_Index is mod __nfr__;
 
-   type Fault_Recording_Array is array (Fault_Recording_Index) of Reg_Fault_Recording_Type
+   type Reg_Fault_Recording_Array is array
+     (Fault_Recording_Index) of Reg_Fault_Recording_Type
    with
       Pack,
       Size => __nfr__ * Reg_Fault_Recording_Size;
@@ -607,7 +608,7 @@ __iommu_type_sizes__
       --D faults. Their number and offset varies depending on the specific
       --D IOMMU device, see Intel VT-d Specification, "10.4.14 Fault Recording
       --D Registers [n]".
-      Fault_Recording  : Fault_Recording_Array;
+      Fault_Recording  : Reg_Fault_Recording_Array;
    end record;
 
 __iommu_x_types__

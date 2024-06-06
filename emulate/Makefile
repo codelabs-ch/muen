@@ -57,8 +57,7 @@ QEMU_OPTS += \
 	-m $(QEMU_MEM) \
 	-smp cores=2,threads=2,sockets=1 \
 	-device intel-iommu,intremap=on,device-iotlb=on \
-	-device ioh3420,id=pcie.1,chassis=1 \
-	-device virtio-net-pci,bus=pcie.1,addr=0.0,netdev=net0,disable-legacy=on,disable-modern=off,iommu_platform=on,ats=on \
+	-device virtio-net-pci,bus=pcie.0,addr=2.0,netdev=net0,disable-legacy=on,disable-modern=off,iommu_platform=on,ats=on \
 	-netdev $(QEMU_NETDEV_OPTS) \
 	-device qemu-xhci,id=xhci,bus=pcie.0,addr=3.0 \
 	-device usb-tablet,bus=xhci.0 \

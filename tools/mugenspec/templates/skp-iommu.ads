@@ -363,6 +363,8 @@ is
       IVT        at 0 range 63 .. 63;
    end record;
 
+   Reg_Fault_Recording_Size : constant := 128;
+
    --  Fault Recording Register (dynamic)
    type Reg_Fault_Recording_Type is record
       Reserved_1 : SK.Bit_Array (1 .. 12);
@@ -379,7 +381,7 @@ is
       F          : SK.Bit_Type;
    end record
      with
-       Size => 128;
+       Size => Reg_Fault_Recording_Size;
 
    for Reg_Fault_Recording_Type use record
       Reserved_1 at 0 range 0   .. 11;
@@ -401,7 +403,7 @@ is
    type Fault_Recording_Array is array (Fault_Recording_Index) of Reg_Fault_Recording_Type
    with
       Pack,
-      Size => __nfr__ * 128;
+      Size => __nfr__ * Reg_Fault_Recording_Size;
 
    function Read_Version
      (Index : IOMMU_Device_Range)

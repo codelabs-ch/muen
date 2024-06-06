@@ -232,8 +232,8 @@ is
               & Indent (N => 2) & "IOTLB_Invalidate at IOTLB_Inv_Offset_"
               & Suffix & " range 0 .. 63;" & ASCII.LF
               & Indent (N => 2) & "Fault_Recording at FR_Offset_" & Suffix
-              & " range 0 .." & NFR'Img & " * 128 - 1;" & ASCII.LF
-              & Indent (N => 1) & "end record"
+              & " range 0 .." & NFR'Img & " * Reg_Fault_Recording_Size - 1;"
+              & ASCII.LF & Indent (N => 1) & "end record"
               & (if I < Count then ";" & ASCII.LF & ASCII.LF else ";");
 
             IOMMU_Fields := IOMMU_Fields & Indent (N => 2)

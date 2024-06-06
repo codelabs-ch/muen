@@ -1,25 +1,23 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- ==========================================
-     Generated with mugenhwcfg (commit v0.7.1)
-     Linux kernel version: 5.10.0-21-amd64
-     Distribution: Debian GNU/Linux 11 (bullseye)
+     Generated with mugenhwcfg (commit v0.7.2)
+     Linux kernel version: 6.1.0-18-amd64
+     Distribution: Debian GNU/Linux 12 (bookworm)
      Product information:
        Vendor: QEMU
        Name: Standard PC (Q35 + ICH9, 2009)
-       Product Version: pc-q35-5.2
+       Product Version: pc-q35-7.2
      Board information:
      BIOS information:
        Vendor: coreboot
        Version: 4.11-350-g31ecc882bc
        Date: 02/20/2020
      Log:
+       * WARNING *: Adding fake irq 16 for device with MSIs: 0000:00:02.0
        * WARNING *: Adding fake irq 16 for device with MSIs: 0000:00:03.0
        * WARNING *: Adding fake irq 16 for device with MSIs: 0000:00:1f.2
-       * WARNING *: Adding fake irq 16 for device with MSIs: 0000:01:00.0
        * WARNING *: Board information in output description could not be obtained:
        [Errno 2] No such file or directory: '/sys/devices/virtual/dmi/id/board_vendor'
-       * MANUAL  *: Changed name of ethernet_controller_1 to ethernet_controller_2
-       * MANUAL  *: Changed name of ethernet_controller_2 to ethernet_controller_1
        * MANUAL  *: Leave working RAM layout unchanged
        Newer Linux kernel report 'Unknown E820 type' regions with coreboot
        * MANUAL  *: Fake legacy IRQ for device 00:04.0
@@ -27,7 +25,7 @@
 
 
 <hardware>
-  <processor cpuCores="2" speed="2112002" vmxTimerRate="5">
+  <processor cpuCores="2" speed="2111994" vmxTimerRate="5">
     <cpu apicId="0"/>
     <cpu apicId="2"/>
     <cpuid eax="16#0000_000d#" ebx="16#756e_6547#" ecx="16#6c65_746e#" edx="16#4965_6e69#" leaf="16#0000_0000#" subleaf="16#00#"/>
@@ -38,6 +36,7 @@
     <cpuid eax="16#0400_0122#" ebx="16#01c0_003f#" ecx="16#0000_003f#" edx="16#0000_0001#" leaf="16#0000_0004#" subleaf="16#01#"/>
     <cpuid eax="16#0400_4143#" ebx="16#03c0_003f#" ecx="16#0000_0fff#" edx="16#0000_0001#" leaf="16#0000_0004#" subleaf="16#02#"/>
     <cpuid eax="16#0400_c163#" ebx="16#03c0_003f#" ecx="16#0000_3fff#" edx="16#0000_0006#" leaf="16#0000_0004#" subleaf="16#03#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0004#" subleaf="16#04#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0003#" edx="16#0000_0000#" leaf="16#0000_0005#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0004#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_0006#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0281#" ecx="16#0000_0000#" edx="16#0400_0000#" leaf="16#0000_0007#" subleaf="16#00#"/>
@@ -46,12 +45,14 @@
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_000a#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0001#" ebx="16#0000_0002#" ecx="16#0000_0100#" edx="16#0000_0000#" leaf="16#0000_000b#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0002#" ebx="16#0000_0004#" ecx="16#0000_0201#" edx="16#0000_0000#" leaf="16#0000_000b#" subleaf="16#01#"/>
+    <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0002#" edx="16#0000_0000#" leaf="16#0000_000b#" subleaf="16#02#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_000c#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0007#" ebx="16#0000_0340#" ecx="16#0000_0340#" edx="16#0000_0000#" leaf="16#0000_000d#" subleaf="16#00#"/>
-    <cpuid eax="16#0000_0001#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_000d#" subleaf="16#01#"/>
+    <cpuid eax="16#0000_0001#" ebx="16#0000_0340#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_000d#" subleaf="16#01#"/>
     <cpuid eax="16#0000_0100#" ebx="16#0000_0240#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#0000_000d#" subleaf="16#02#"/>
+    <cpuid eax="16#0000_0007#" ebx="16#0000_0340#" ecx="16#0000_0340#" edx="16#0000_0000#" leaf="16#2000_0000#" subleaf="16#00#"/>
     <cpuid eax="16#4000_0010#" ebx="16#4b4d_564b#" ecx="16#564b_4d56#" edx="16#0000_004d#" leaf="16#4000_0000#" subleaf="16#00#"/>
-    <cpuid eax="16#0100_007b#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_0001#" subleaf="16#00#"/>
+    <cpuid eax="16#0100_807b#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_0001#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_0002#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_0003#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_0004#" subleaf="16#00#"/>
@@ -66,8 +67,8 @@
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_000d#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_000e#" subleaf="16#00#"/>
     <cpuid eax="16#0000_0000#" ebx="16#0000_0000#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_000f#" subleaf="16#00#"/>
-    <cpuid eax="16#0020_39fe#" ebx="16#000f_4240#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_0010#" subleaf="16#00#"/>
-    <cpuid eax="16#0000_0007#" ebx="16#0000_0340#" ecx="16#0000_0340#" edx="16#0000_0000#" leaf="16#2000_0000#" subleaf="16#00#"/>
+    <cpuid eax="16#0020_39fb#" ebx="16#000f_4240#" ecx="16#0000_0000#" edx="16#0000_0000#" leaf="16#4000_0010#" subleaf="16#00#"/>
+    <cpuid eax="16#0000_0007#" ebx="16#0000_0340#" ecx="16#0000_0340#" edx="16#0000_0000#" leaf="16#4000_0100#" subleaf="16#00#"/>
     <cpuid eax="16#8000_0008#" ebx="16#756e_6547#" ecx="16#6c65_746e#" edx="16#4965_6e69#" leaf="16#8000_0000#" subleaf="16#00#"/>
     <cpuid eax="16#0003_06a9#" ebx="16#0000_0000#" ecx="16#0000_0001#" edx="16#2810_0800#" leaf="16#8000_0001#" subleaf="16#00#"/>
     <cpuid eax="16#6574_6e49#" ebx="16#6558_206c#" ecx="16#4520_6e6f#" edx="16#3231_2d33#" leaf="16#8000_0002#" subleaf="16#00#"/>
@@ -148,9 +149,26 @@
         <iommuGroup id="1"/>
       </pci>
       <memory caching="UC" name="mem1" physicalAddress="16#fd00_0000#" size="16#0100_0000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#fe25_4000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#fe09_8000#" size="16#1000#"/>
       <memory caching="UC" name="mem3" physicalAddress="16#000c_0000#" size="16#0002_0000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#b000_8000#" size="16#1000#"/>
+    </device>
+    <device name="ethernet_controller_1">
+      <description>Red Hat, Inc. Virtio network device</description>
+      <pci bus="16#00#" device="16#02#" function="0">
+        <identification classcode="16#0200#" deviceId="16#1041#" revisionId="16#01#" vendorId="16#1af4#"/>
+        <iommuGroup id="2"/>
+      </pci>
+      <irq name="irq1" number="16">
+        <msi name="msi1"/>
+        <msi name="msi2"/>
+        <msi name="msi3"/>
+        <msi name="msi4"/>
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#fe09_9000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#fe09_0000#" size="16#4000#"/>
+      <memory caching="UC" name="mem3" physicalAddress="16#fe00_0000#" size="16#0004_0000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#b001_0000#" size="16#1000#"/>
     </device>
     <device name="usb_controller_1">
       <description>Red Hat, Inc. QEMU XHCI Host Controller</description>
@@ -176,7 +194,7 @@
         <msi name="msi15"/>
         <msi name="msi16"/>
       </irq>
-      <memory caching="UC" name="mem1" physicalAddress="16#fe25_0000#" size="16#4000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#fe09_4000#" size="16#4000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#b001_8000#" size="16#1000#"/>
     </device>
     <device name="ethernet_controller_2">
@@ -186,8 +204,8 @@
         <iommuGroup id="4"/>
       </pci>
       <irq name="irq1" number="20"/>
-      <memory caching="UC" name="mem1" physicalAddress="16#fe25_6000#" size="16#1000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#fe20_0000#" size="16#0004_0000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#fe09_b000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#fe04_0000#" size="16#0004_0000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#b002_0000#" size="16#1000#"/>
       <ioPort end="16#58ff#" name="ioport1" start="16#5800#"/>
     </device>
@@ -208,7 +226,7 @@
       <irq name="irq1" number="16">
         <msi name="msi1"/>
       </irq>
-      <memory caching="UC" name="mem1" physicalAddress="16#fe25_5000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#fe09_a000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#b00f_a000#" size="16#1000#"/>
       <ioPort end="16#5c1f#" name="ioport1" start="16#5c00#"/>
     </device>
@@ -219,23 +237,7 @@
         <iommuGroup id="5"/>
       </pci>
       <memory caching="UC" name="mmconf" physicalAddress="16#b00f_b000#" size="16#1000#"/>
-      <ioPort end="16#203f#" name="ioport1" start="16#2000#"/>
-    </device>
-    <device name="ethernet_controller_1">
-      <description>Red Hat, Inc. Virtio network device</description>
-      <pci bus="16#01#" device="16#00#" function="0">
-        <identification classcode="16#0200#" deviceId="16#1041#" revisionId="16#01#" vendorId="16#1af4#"/>
-        <iommuGroup id="2"/>
-      </pci>
-      <irq name="irq1" number="16">
-        <msi name="msi1"/>
-        <msi name="msi2"/>
-        <msi name="msi3"/>
-      </irq>
-      <memory caching="UC" name="mem1" physicalAddress="16#fe14_0000#" size="16#1000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#fe00_0000#" size="16#4000#"/>
-      <memory caching="UC" name="mem3" physicalAddress="16#fe10_0000#" size="16#0004_0000#"/>
-      <memory caching="UC" name="mmconf" physicalAddress="16#b010_0000#" size="16#1000#"/>
+      <ioPort end="16#103f#" name="ioport1" start="16#1000#"/>
     </device>
   </devices>
 </hardware>

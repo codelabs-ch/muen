@@ -43,15 +43,10 @@ is
                   Message => "Invalid FRI " & Strings.Img (Status.FRI));
             else
                declare
-                  One_FR : constant Boolean               :=
-                    Fault_Recording_Index'Last = 0;
-                  Inc    : constant Fault_Recording_Index :=
-                    (if One_FR then 0 else 1);
-                  FRI    : Fault_Recording_Index;
-                  FR     : Reg_Fault_Recording_Type;
+                  FRI : Fault_Recording_Index
+                    := Fault_Recording_Index (Status.FRI);
+                  FR  : Reg_Fault_Recording_Type;
                begin
-                  FRI := Fault_Recording_Index (Status.FRI);
-
                   loop
                      FR := Read_Fault_Recording
                          (Index => I,
@@ -67,8 +62,7 @@ is
                      VTd.Clear_Fault_Record
                        (IOMMU => I,
                         FRI   => FRI);
-                     exit when One_FR;
-                     FRI := FRI + Inc;
+                     FRI := Fault_Recording_Index'Succ (FRI);
                   end loop;
                end;
             end if;

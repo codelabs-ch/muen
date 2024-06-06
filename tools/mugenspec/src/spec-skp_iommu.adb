@@ -45,15 +45,20 @@ is
       Count    :        Positive);
 
    --  Generate variable record field offset and size constants.
+   --  The NFR parameter designates the number of supported fault recording
+   --  registers.
    procedure Generate_Variable_Offsets_Sizes
      (Template : in out Mutools.Templates.Template_Type;
       IOMMUs   :        DOM.Core.Node_List;
-      Count    :        Positive);
+      Count    :        Positive;
+      NFR      :        Positive);
 
-   --  Generate IOMMU record types and representation clauses.
+   --  Generate IOMMU record types and representation clauses. The NFR parameter
+   --  designates the number of supported fault recording registers.
    procedure Generate_IOMMU_Record_Types
      (Template : in out Mutools.Templates.Template_Type;
-      Count    :        Positive);
+      Count    :        Positive;
+      NFR      :        Positive);
 
    -------------------------------------------------------------------------
 
@@ -130,7 +135,7 @@ is
                    Common   => True,
                    Write    => False),
             7  => (Replace  => U ("__body_read_fault_recording_case__"),
-                   Variable => U ("Fault_Recording"),
+                   Variable => U ("Fault_Recording (FRI)"),
                    Common   => False,
                    Write    => False),
             8  => (Replace  => U ("__body_read_fault_status_case__"),
@@ -166,7 +171,7 @@ is
                    Common   => True,
                    Write    => True),
             16 => (Replace  => U ("__body_write_fault_recording_case__"),
-                   Variable => U ("Fault_Recording"),
+                   Variable => U ("Fault_Recording (FRI)"),
                    Common   => False,
                    Write    => True),
             17 => (Replace  => U ("__body_write_fault_status_case__"),
@@ -204,7 +209,8 @@ is
 
    procedure Generate_IOMMU_Record_Types
      (Template : in out Mutools.Templates.Template_Type;
-      Count    :        Positive)
+      Count    :        Positive;
+      NFR      :        Positive)
    is
       IOMMU_X_String, IOMMU_X_Repr_String, IOMMU_Fields : Unbounded_String;
    begin
@@ -226,8 +232,8 @@ is
               & Indent (N => 2) & "IOTLB_Invalidate at IOTLB_Inv_Offset_"
               & Suffix & " range 0 .. 63;" & ASCII.LF
               & Indent (N => 2) & "Fault_Recording at FR_Offset_" & Suffix
-              & " range 0 .. 127;" & ASCII.LF
-              & Indent (N => 1) & "end record"
+              & " range 0 .." & NFR'Img & " * Reg_Fault_Recording_Size - 1;"
+              & ASCII.LF & Indent (N => 1) & "end record"
               & (if I < Count then ";" & ASCII.LF & ASCII.LF else ";");
 
             IOMMU_Fields := IOMMU_Fields & Indent (N => 2)
@@ -237,7 +243,7 @@ is
               & "IOMMU_" & Suffix & " : IOMMU_" & Suffix & "_Type;" & ASCII.LF
               & Indent (N => 2) & "--D @Interface" & ASCII.LF & Indent (N => 2)
               & "--D Padding for IOMMU " & Suffix &  " to 4K." & ASCII.LF
-              & Indent (N => 2) & "Padding_" & Suffix & " : Bit_Array "
+              & Indent (N => 2) & "Padding_" & Suffix & " : SK.Bit_Array "
               & "(1 .. SK.Page_Size * 8 - IOMMU_" & Suffix & "_Type_Size)"
               & (if I < Count then ";" & ASCII.LF else ";");
          end;
@@ -262,7 +268,8 @@ is
    procedure Generate_Variable_Offsets_Sizes
      (Template : in out Mutools.Templates.Template_Type;
       IOMMUs   :        DOM.Core.Node_List;
-      Count    :        Positive)
+      Count    :        Positive;
+      NFR      :        Positive)
    is
       Iotlb_String, Iotlb_Array_String, Fro_String, Fro_Array_String,
       Sizes_String : Unbounded_String;
@@ -305,7 +312,7 @@ is
             Register_Size : constant Positive
               := (if Iotlb_Inv_Cap_Val > Fro_Cap_Val
                   then IOTLB_Invalidate_Size_Bits
-                  else Fault_Recording_Size_Bits);
+                  else NFR * Fault_Recording_Size_Bits);
          begin
             Iotlb_String := Iotlb_String & Indent (N => 1)
               & "IOTLB_Inv_Offset_" & Suffix & " : constant := "
@@ -426,6 +433,14 @@ is
         (List => IOMMUs.Right);
       IOMMU_PT_Levels : constant Mutools.XML_Utils.IOMMU_Paging_Level
         := Mutools.XML_Utils.Get_IOMMU_Paging_Levels (Data => Policy);
+      Nfr_Cap : constant String :=
+        Muxml.Utils.Get_Element_Value
+          (Doc   => DOM.Core.Nodes.Item
+             (List  => IOMMUs.Right,
+              Index => 0),
+           XPath => "capabilities/capability[@name='nfr']");
+      Nfr_Val : constant Positive :=
+        (if Nfr_Cap = "" then 1 else Positive'Value (Nfr_Cap));
       Tmpl : Mutools.Templates.Template_Type;
    begin
       Mulog.Log (Msg => "Writing IOMMU spec to '" & Filename & "'");
@@ -459,14 +474,22 @@ is
          Content  => Ada.Strings.Fixed.Trim
            (Source => Positive'Image (IOMMU_PT_Levels - 1),
             Side   => Ada.Strings.Left));
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__nfr__",
+         Content  => Ada.Strings.Fixed.Trim
+           (Source => Natural'Image (Nfr_Val),
+            Side   => Ada.Strings.Left));
 
       Generate_Variable_Offsets_Sizes
         (Template => Tmpl,
          IOMMUs   => IOMMUs.Right,
-         Count    => IOMMU_Count);
+         Count    => IOMMU_Count,
+         NFR      => Nfr_Val);
       Generate_IOMMU_Record_Types
         (Template => Tmpl,
-         Count    => IOMMU_Count);
+         Count    => IOMMU_Count,
+         NFR      => Nfr_Val);
 
       Mutools.Templates.Write
         (Template => Tmpl,

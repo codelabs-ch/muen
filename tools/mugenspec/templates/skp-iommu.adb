@@ -115,7 +115,8 @@ __body_read_fault_event_data_case__
    -------------------------------------------------------------------------
 
    function Read_Fault_Recording
-     (Index : IOMMU_Device_Range)
+     (Index : IOMMU_Device_Range;
+      FRI   : Fault_Recording_Index)
       return Reg_Fault_Recording_Type
    is
       Value : Reg_Fault_Recording_Type;
@@ -239,6 +240,7 @@ __body_write_fault_event_data_case__
 
    procedure Write_Fault_Recording
      (Index : IOMMU_Device_Range;
+      FRI   : Fault_Recording_Index;
       Value : Reg_Fault_Recording_Type)
    is
    begin

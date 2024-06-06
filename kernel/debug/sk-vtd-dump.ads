@@ -30,9 +30,9 @@ is
 
    --  Print VT-d fault information for given IOMMU.
    procedure Print_VTd_Fault
-     (IOMMU  : Skp.IOMMU.IOMMU_Device_Range;
-      Status : Skp.IOMMU.Reg_Fault_Status_Type;
-      Fault  : Skp.IOMMU.Reg_Fault_Recording_Type);
+     (IOMMU : Skp.IOMMU.IOMMU_Device_Range;
+      FRI   : Skp.IOMMU.Fault_Recording_Index;
+      Fault : Skp.IOMMU.Reg_Fault_Recording_Type);
 
    --  Print general remapping hardware status for given IOMMU.
    procedure Print_Global_Status

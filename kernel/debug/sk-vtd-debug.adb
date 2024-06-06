@@ -18,6 +18,7 @@
 
 with SK.Constants;
 with SK.VTd.Dump;
+with SK.Strings;
 
 package body SK.VTd.Debug
 is
@@ -31,20 +32,40 @@ is
       Status : Reg_Fault_Status_Type;
    begin
       for I in IOMMU_Device_Range loop
-         Status := Read_Fault_Status (Index => (I));
+         Status := Read_Fault_Status (Index => I);
+
+         --  Intel VT-d Specification, "7.2.1 Primary Fault Logging".
 
          if Status.PPF = 1 then
-            declare
-               Fault_Record : Reg_Fault_Recording_Type;
-            begin
-               Fault_Record := Read_Fault_Recording (Index => I);
-               Dump.Print_VTd_Fault
-                 (IOMMU  => I,
-                  Status => Status,
-                  Fault  => Fault_Record);
-            end;
+            if Status.FRI > Byte (Fault_Recording_Index'Last) then
+               SK.VTd.Dump.Print_Message
+                 (IOMMU   => I,
+                  Message => "Invalid FRI " & Strings.Img (Status.FRI));
+            else
+               declare
+                  FRI : Fault_Recording_Index
+                    := Fault_Recording_Index (Status.FRI);
+                  FR  : Reg_Fault_Recording_Type;
+               begin
+                  loop
+                     FR := Read_Fault_Recording
+                         (Index => I,
+                          FRI   => FRI);
 
-            VTd.Clear_Fault_Record (IOMMU => I);
+                     --  FRI might wrap around until FR.F = 0.
+
+                     exit when FR.F = 0;
+                     Dump.Print_VTd_Fault
+                       (IOMMU => I,
+                        FRI   => FRI,
+                        Fault => FR);
+                     VTd.Clear_Fault_Record
+                       (IOMMU => I,
+                        FRI   => FRI);
+                     FRI := Fault_Recording_Index'Succ (FRI);
+                  end loop;
+               end;
+            end if;
          end if;
       end loop;
    end Process_Fault;

@@ -65,11 +65,10 @@ is
    -------------------------------------------------------------------------
 
    procedure Print_VTd_Fault
-     (IOMMU  : Skp.IOMMU.IOMMU_Device_Range;
-      Status : Skp.IOMMU.Reg_Fault_Status_Type;
-      Fault  : Skp.IOMMU.Reg_Fault_Recording_Type)
+     (IOMMU : Skp.IOMMU.IOMMU_Device_Range;
+      FRI   : Skp.IOMMU.Fault_Recording_Index;
+      Fault : Skp.IOMMU.Reg_Fault_Recording_Type)
    is
-      use type Skp.IOMMU.Bit_Type;
       use type Skp.IOMMU.Bit_52_Type;
 
       --  Interrupt translation fault reason range, see Intel VT-d
@@ -77,41 +76,46 @@ is
       subtype IR_Fault_Range is SK.Byte range 16#20# .. 16#26#;
    begin
       Debug_Lock.Acquire;
-      Print_Message (IOMMU   => IOMMU,
-                     Message => "VT-d fault with FRI " & Img (Status.FRI),
-                     Newline => False);
-
-      if Fault.F = 1 then
-         KC.Put_String (Item => " - Reason: " & Img (Fault.FR));
-
-         if Fault.FR in IR_Fault_Range then
-
-            --  FI field is undefined for interrupt-remapping fault condition
-            --  of blocked Compatibility mode interrupt (fault reason 16#25#,
-            --  see Intel VT-d Specification, "10.4.14 Fault Recording
-            --  Registers [n]").
-
-            if Fault.FR /= 16#25# then
-               KC.Put_String (Item => ", IRT index: "
-                              & Img (Word16 (Fault.FI / 2 ** 36)));
-            end if;
-         else
-            KC.Put_String (Item => ", Address: "
-                           & Img (Word64 (Fault.FI * 2 ** 12)));
-
-            KC.Put_String (Item => ", Type: ");
-            if Fault.T = 0 then
-               KC.Put_String (Item => "Write");
-            else
-               KC.Put_String (Item => "Read");
-            end if;
-         end if;
-
-         KC.Put_String
-           (Item => ", Source: " & Img_Nobase (Byte (Fault.SID / 2 ** 8))
-            & ":" & Img_Nobase (Byte ((Fault.SID / 2 ** 3) and 16#1f#))
-            & "." & Img_Nobase (Byte (Fault.SID and 16#07#)));
+      if Fault.F = 0 then
+         Print_Message
+           (IOMMU   => IOMMU,
+            Message => "Bogus VT-d fault with FRI " & Img (Byte (FRI)));
+         Debug_Lock.Release;
+         return;
       end if;
+
+      Print_Message (IOMMU   => IOMMU,
+                     Message => "VT-d fault with FRI " & Img (Byte (FRI)),
+                     Newline => False);
+      KC.Put_String (Item => " - Reason: " & Img (Fault.FR));
+
+      if Fault.FR in IR_Fault_Range then
+
+         --  FI field is undefined for interrupt-remapping fault condition
+         --  of blocked Compatibility mode interrupt (fault reason 16#25#,
+         --  see Intel VT-d Specification, "10.4.14 Fault Recording
+         --  Registers [n]").
+
+         if Fault.FR /= 16#25# then
+            KC.Put_String (Item => ", IRT index: "
+                           & Img (Word16 (Fault.FI / 2 ** 36)));
+         end if;
+      else
+         KC.Put_String (Item => ", Address: "
+                        & Img (Word64 (Fault.FI * 2 ** 12)));
+
+         KC.Put_String (Item => ", Type: ");
+         if Fault.T = 0 then
+            KC.Put_String (Item => "Write");
+         else
+            KC.Put_String (Item => "Read");
+         end if;
+      end if;
+
+      KC.Put_String
+        (Item => ", Source: " & Img_Nobase (Byte (Fault.SID / 2 ** 8))
+         & ":" & Img_Nobase (Byte ((Fault.SID / 2 ** 3) and 16#1f#))
+         & "." & Img_Nobase (Byte (Fault.SID and 16#07#)));
 
       KC.New_Line;
 

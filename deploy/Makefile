@@ -79,3 +79,9 @@ target_start_epc:
 
 target_shutdown_epc:
 	./start_shutdown_epc.sh $(TARGET_EPCIP) shutdown
+
+target_start_ilo:
+	./start_shutdown_ilo.sh $(TARGET_IP) start
+
+target_shutdown_ilo:
+	./start_shutdown_ilo.sh $(TARGET_IP) shutdown

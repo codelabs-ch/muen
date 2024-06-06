@@ -1226,6 +1226,14 @@ is
                      Utils.Reserve_Number (Allocator => IRQ_Alloc,
                                            Number    => J);
                   end loop;
+
+                  --  Do not allocate IRQ 80, as Linux panics on reception of
+                  --  this vector, see int80_emulation() in
+                  --  arch/x86/entry/common.c.
+
+                  Utils.Reserve_Number
+                    (Allocator => IRQ_Alloc,
+                     Number    => IRQ_Alloc.Range_Start + 80);
                end if;
 
                for J in 1 .. DOM.Core.Nodes.Length (List => Alloc_Devs) loop

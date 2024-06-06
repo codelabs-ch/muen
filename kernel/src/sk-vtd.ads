@@ -51,9 +51,18 @@ is
 
 private
 
-   --  Clears the Fault recording register and the Primary Fault Overflow flag
+   --  Clears the Fault recording register specified by FRI and the Primary
+   --  Fault Overflow flag of the specified IOMMU.
+   procedure Clear_Fault_Record
+     (IOMMU : Skp.IOMMU.IOMMU_Device_Range;
+      FRI   : Skp.IOMMU.Fault_Recording_Index)
+   with
+      Global  => (In_Out => Skp.IOMMU.State),
+      Depends => (Skp.IOMMU.State =>+ (IOMMU, FRI));
+
+   --  Clear all Fault recording registers and the Primary Fault Overflow flag
    --  of the specified IOMMU.
-   procedure Clear_Fault_Record (IOMMU : Skp.IOMMU.IOMMU_Device_Range)
+   procedure Clear_All_Fault_Records (IOMMU : Skp.IOMMU.IOMMU_Device_Range)
    with
       Global  => (In_Out => Skp.IOMMU.State),
       Depends => (Skp.IOMMU.State =>+ IOMMU);

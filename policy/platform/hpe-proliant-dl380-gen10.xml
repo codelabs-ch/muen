@@ -1,0 +1,57 @@
+<platform>
+ <config>
+  <boolean name="ahci_supported" value="false"/>
+  <boolean name="serial_supported" value="true"/>
+  <boolean name="hsuart_supported" value="false"/>
+  <boolean name="xhcidbg_supported" value="true"/>
+  <boolean name="uefi_gop_rmrr_access" value="false"/>
+ </config>
+ <mappings>
+  <aliases>
+   <alias name="serial_device_1" physical="com_1">
+    <resource name="ioport1" physical="ioport1"/>
+   </alias>
+   <alias name="nic_1" physical="ethernet_controller_1">
+    <resource name="irq1" physical="irq1">
+     <resource name="msi1" physical="msi1"/>
+    </resource>
+    <resource name="mem1" physical="mem1"/>
+    <resource name="mem2" physical="mem2"/>
+    <resource name="mem3" physical="mem3"/>
+    <resource name="mem4" physical="mem4"/>
+    <if variable="pciconf_emulation_enabled" value="false">
+     <resource name="mmconf" physical="mmconf"/>
+    </if>
+   </alias>
+   <alias name="storage_controller" physical="sata_controller_1"/>
+   <alias name="ahci_controller" physical="sata_controller_1">
+    <resource name="irq1" physical="irq1">
+     <resource name="msi1" physical="msi1"/>
+    </resource>
+    <resource name="ahci_registers" physical="mem3"/>
+    <resource name="mmconf" physical="mmconf"/>
+   </alias>
+  </aliases>
+  <classes>
+   <class name="desktop_devices">
+    <device physical="ethernet_controller_1"/>
+    <device physical="ethernet_controller_5"/>
+    <device physical="serial_attached_scsi_controller_1"/>
+   </class>
+   <class name="additional_nics">
+    <!--
+     controller 2 .. 4: not possible due to multi-function device check and PCI
+     config space emulation (controller 1 is assigned to nic_dm if enabled, the
+     others to nic_linux, which is not allowed).
+    -->
+    <device physical="ethernet_controller_5"/>
+    <device physical="ethernet_controller_6"/>
+   </class>
+  </classes>
+ </mappings>
+ <kernelDiagnostics type="uart">
+  <device physical="com_1">
+   <ioPort physical="ioport1"/>
+  </device>
+ </kernelDiagnostics>
+</platform>

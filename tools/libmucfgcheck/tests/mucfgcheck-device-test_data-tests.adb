@@ -1179,9 +1179,9 @@ package body Mucfgcheck.Device.Test_Data.Tests is
 
          PCI_Multifunction_Device_Refs (XML_Data => Data);
          Assert (Condition => Validation_Errors.Contains
-                 (Msg => "Physical devices 'ethernet_2' and 'wireless' are "
-                  & "part of a PCI multi-function device and must be assigned "
-                  & "to the same subject"),
+                 (Msg => "Physical devices 'ethernet_2' of subject linux and"
+                  & " 'wireless' of subject vt are part of a PCI multi-function"
+                  & " device and must be assigned to the same subject"),
                  Message   => "Exception mismatch");
       end Subject_Mismatch;
 --  begin read only

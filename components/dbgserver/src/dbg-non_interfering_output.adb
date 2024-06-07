@@ -89,11 +89,13 @@ is
       Input_Queue  : in out Byte_Queue.Queue_Type;
       Output_Queue : in out Byte_Queue.Queue_Type)
    is
+      Console_Is_Attached : constant Boolean
+        := Console.Current_Mode in Consoles.Console_Attached_Modes;
       Run_Queue_Result : Run_Queue_Result_Type;
    begin
       Process_Input (Queue => Input_Queue);
 
-      if Run_State = Sending_Output_Queue then
+      if not Console_Is_Attached and Run_State = Sending_Output_Queue then
          Run_Queue (Queue  => Output_Queue,
                     Result => Run_Queue_Result);
          if Run_Queue_Result.Exit_Reason = Queue_Empty then
@@ -104,7 +106,7 @@ is
          end if;
       end if;
 
-      if Run_State = Sending_Command_Queue then
+      if Console_Is_Attached or Run_State = Sending_Command_Queue then
          Run_Queue (Queue  => Console.Output_Queue,
                     Result => Run_Queue_Result);
          if Run_Queue_Result.Exit_Reason = Queue_Empty then

@@ -204,7 +204,7 @@ is
          Pos   => Execute_Flag);
       Maps_Page  : constant Boolean := Mutools.Utils.Bit_Test
            (Value => Raw_Entry,
-            Pos   => Present_Flag) or (Level = Paging_Level'Last);
+            Pos   => Present_Flag) or Level = Paging_Level'Last;
       EPT_MT     : constant Natural
         := Natural ((Raw_Entry and EPT_MT_Mask) / 2 ** 3);
    begin

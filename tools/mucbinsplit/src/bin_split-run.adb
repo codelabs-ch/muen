@@ -105,9 +105,9 @@ is
               := BS.Element (Sect_It);
          begin
             if (Sec.Flags and Bfd.Constants.SEC_DEBUGGING) = 0
-              and then (not Is_Valid_Section
+              and then not Is_Valid_Section
                           (Section_Name  => Bfd.Sections.Get_Name (Sec),
-                           Section_Infos => Section_Infos))
+                           Section_Infos => Section_Infos)
             then
                raise Bin_Split_Error
                  with "Unexpected section name '"

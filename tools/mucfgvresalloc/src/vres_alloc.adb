@@ -406,7 +406,7 @@ is
         := DOM.Core.Elements.Get_Tag_Name (Elem => Node);
    begin
       if Tag_Name = "memory" then
-         if (not Memory_Sizes.Contains (Physical)) or else
+         if not Memory_Sizes.Contains (Physical) or else
            Memory_Sizes (Physical) = ""
          then
             raise Validation_Error with
@@ -418,7 +418,7 @@ is
          end if;
          return Memory_Sizes (Physical);
       else
-         if (not Channel_Sizes.Contains (Physical)) or else
+         if not Channel_Sizes.Contains (Physical) or else
            Channel_Sizes (Physical) = ""
          then
             raise Validation_Error with

@@ -32,6 +32,9 @@ is
 
    type Console_Mode_Kind is (Processing, Buffering, Forwarding);
 
+   subtype Console_Attached_Modes is
+     Console_Mode_Kind range Buffering .. Forwarding;
+
    type Console_Type is record
       --  The console has its own output queue to separate the emitted strings
       --  from the log messages.

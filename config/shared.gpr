@@ -47,7 +47,10 @@ abstract project Shared is
      ("-nostdlib",
       "-n",
       "-Wl,-z,noexecstack",
-      "-Wl,--gc-sections");
+      "-no-pie",
+      "-Wl,--gc-sections",
+      "-Wl,--no-dynamic-linker" -- needed for "PHDR segment not covered by LOAD segment"
+      );
 
    Spark_Linker_Switches :=
      ("-T", Linker_Script) & Common_Linker_Switches;

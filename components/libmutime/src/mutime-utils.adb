@@ -72,6 +72,8 @@ is
          Tmp    := Tmp / 10;
          exit when Shift + 4 > Shift_Type'Last;
          Shift  := Shift + 4;
+
+         pragma Loop_Variant (Increases => Shift);
       end loop;
 
       return Result;

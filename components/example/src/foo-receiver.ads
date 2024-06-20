@@ -22,7 +22,7 @@ with
    Initializes    => State
 is
 
-   --  Fills the current crypter request into the given req parameter.
+   --  Fills the current request into the given req parameter.
    procedure Receive (Req : out Foo.Message_Type)
    with
       Global  => (Input => State),

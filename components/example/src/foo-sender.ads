@@ -24,7 +24,7 @@ with
    Initializes    => State
 is
 
-   --  Copies the given response message into the crypter response page.
+   --  Copies the given response message into the response page.
    procedure Send (Res : Foo.Message_Type)
    with
       Global  => (Output => State, In_Out => X86_64.State),

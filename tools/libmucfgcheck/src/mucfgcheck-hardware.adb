@@ -132,6 +132,70 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure CPU_Feature_MCE (XML_Data : Muxml.XML_Data_Type)
+   is
+      function U
+        (Source : String)
+         return Ada.Strings.Unbounded.Unbounded_String
+         renames Ada.Strings.Unbounded.To_Unbounded_String;
+
+      MCE_Max_Banks : constant := 28;
+
+      CPUID_Leafs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/hardware/processor/cpuid");
+   begin
+      Mulog.Log (Msg => "Checking CPU MCE feature");
+      declare
+         CPUID_FEATURE_MCE : constant := 7;
+         CPUID_FEATURE_MCA : constant := 14;
+
+         EDX_Str : constant String
+           := Muxml.Utils.Get_Attribute
+             (Nodes     => CPUID_Leafs,
+              Refs      => (1 => (Name  => U ("leaf"),
+                                  Value => U ("16#0000_0001#")),
+                            2 => (Name  => U ("subleaf"),
+                                  Value => U ("16#00#"))),
+              Attr_Name => "edx");
+         EDX : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value (EDX_Str);
+
+         Mcg_Cap_MSR : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (Muxml.Utils.Get_Attribute
+                (Doc   => XML_Data.Doc,
+                 XPath => "/system/hardware/processor/msr[@name='IA32_MCG_CAP']",
+                 Name  => "regval"));
+         Bank_Count : constant Natural := Natural (Mcg_Cap_MSR and 16#ff#);
+      begin
+         if not Mutools.Utils.Bit_Test
+           (Value => EDX,
+            Pos   => CPUID_FEATURE_MCE)
+         then
+            Validation_Errors.Insert (Msg => "CPU does not support MCE");
+            return;
+         end if;
+
+         if not Mutools.Utils.Bit_Test
+           (Value => EDX,
+            Pos   => CPUID_FEATURE_MCA)
+         then
+            Validation_Errors.Insert (Msg => "CPU does not support MCA");
+            return;
+         end if;
+
+         if Bank_Count > MCE_Max_Banks then
+            Validation_Errors.Insert (Msg => "Unsupported number of MCE banks"
+                                      & Bank_Count'Img);
+            return;
+         end if;
+      end;
+   end CPU_Feature_MCE;
+
+   -------------------------------------------------------------------------
+
    procedure CPU_Sub_Elements (XML_Data : Muxml.XML_Data_Type)
    is
       Physical_CPUs : constant Positive

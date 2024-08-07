@@ -14,6 +14,7 @@ with System.Assertions;
 --  This section can be used to add with clauses if necessary.
 --
 --  end read only
+with Mutools.Utils;
 with Mucfgcheck.Validation_Errors;
 --  begin read only
 --  end read only
@@ -299,6 +300,79 @@ package body Mucfgcheck.Hardware.Test_Data.Tests is
               Message   => "Exception mismatch (5)");
 --  begin read only
    end Test_CPU_Sub_Elements;
+--  end read only
+
+
+--  begin read only
+   procedure Test_CPU_Feature_MCE (Gnattest_T : in out Test);
+   procedure Test_CPU_Feature_MCE_14ec62 (Gnattest_T : in out Test) renames Test_CPU_Feature_MCE;
+--  id:2.2/14ec62f56e83abf7/CPU_Feature_MCE/1/0/
+   procedure Test_CPU_Feature_MCE (Gnattest_T : in out Test) is
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data       : Muxml.XML_Data_Type;
+      CPUID_Node : DOM.Core.Node;
+      EDX        : Interfaces.Unsigned_64;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      CPU_Feature_MCE (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Is_Empty,
+              Message   => "Unexpected error in positive test");
+
+      CPUID_Node := Muxml.Utils.Get_Element
+        (Doc => Data.Doc,
+         XPath => "/system/hardware/processor/cpuid[@leaf='16#0000_0001#' "
+         & "and @subleaf='16#00#']");
+      EDX := Interfaces.Unsigned_64'Value
+        (DOM.Core.Elements.Get_Attribute (Elem => CPUID_Node,
+                                          Name => "edx"));
+
+      --  Too many MCE banks.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/hardware/processor/msr[@name='IA32_MCG_CAP']",
+         Name  => "regval",
+         Value => "16#0000_0000_0f00_081f#");
+      CPU_Feature_MCE (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "Unsupported number of MCE banks 31"),
+              Message   => "Exception mismatch (MCE Banks)");
+
+      --  CPUID MCA feature not present.
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem => CPUID_Node,
+         Name  => "edx",
+         Value => Mutools.Utils.To_Hex
+           (Mutools.Utils.Bit_Clear (Value => EDX,
+                                     Pos   => 14)));
+      CPU_Feature_MCE (XML_Data => Data);
+      Assert (Condition => Validation_Errors.Contains
+              (Msg => "CPU does not support MCA"),
+              Message   => "Exception mismatch (MCA)");
+
+      --  CPUID MCE feature not present.
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem => CPUID_Node,
+         Name  => "edx",
+         Value => Mutools.Utils.To_Hex
+           (Mutools.Utils.Bit_Clear (Value => EDX,
+                                     Pos   => 7)));
+         CPU_Feature_MCE (XML_Data => Data);
+         Assert (Condition => Validation_Errors.Contains
+                 (Msg => "CPU does not support MCE"),
+                 Message   => "Exception mismatch (MCE)");
+--  begin read only
+   end Test_CPU_Feature_MCE;
 --  end read only
 
 

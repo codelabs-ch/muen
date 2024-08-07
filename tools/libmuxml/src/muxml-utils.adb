@@ -107,7 +107,6 @@ is
      (Left  : in out DOM.Core.Node_List;
       Right :        DOM.Core.Node_List)
    is
-
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Right) - 1 loop
          DOM.Core.Append_Node
@@ -125,7 +124,6 @@ is
       New_Child : DOM.Core.Node)
    is
       Dummy : DOM.Core.Node;
-      pragma Unreferenced (Dummy);
    begin
       Dummy := DOM.Core.Nodes.Append_Child
         (N         => Node,
@@ -964,7 +962,6 @@ is
             return Node;
          end if;
       end Recurse_Until_Element;
-
    begin
       if Current_Node /= null then
          if DOM.Core.Nodes.Has_Child_Nodes (N => Current_Node) then

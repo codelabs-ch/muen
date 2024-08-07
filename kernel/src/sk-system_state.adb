@@ -79,8 +79,8 @@ is
    is
    begin
       return
-        ((Fixed0 or  Register) = Register) and
-        ((Fixed1 and Register) = Register);
+        (Fixed0 or  Register) = Register and
+        (Fixed1 and Register) = Register;
    end Fixed_Valid;
 
    -------------------------------------------------------------------------

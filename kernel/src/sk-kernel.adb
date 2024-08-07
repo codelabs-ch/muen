@@ -560,7 +560,7 @@ is
         or else Index /= 0
         --D @Item List => impl_handle_xsetbv_checks
         --D Only bits that we support must be set.
-        or else ((Supported or New_Value) /= Supported)
+        or else (Supported or New_Value) /= Supported
           --D @Item List => impl_handle_xsetbv_checks
           --D \verb!XCR0_FPU_STATE_FLAG! must always be set
         or else not Bitops.Bit_Test

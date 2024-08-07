@@ -206,6 +206,7 @@ is
       --  Days
 
       Time := Timestamp_Type ((Y1 + M1 + D) - Epoch_Shift_Days);
+      pragma Assert (Time < Timestamp_Type (1461 * 9999 / 4 + 979 * 14 + 31));
 
       --  Hours
 

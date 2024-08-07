@@ -63,5 +63,9 @@ SECTIONS
 		*(.eh_frame)
 		*(.eh_frame_hdr)
 		*(.note.gnu.property)
+		*(.dynamic)
+		*(.dyns*)
+		*(.hash)
+		*(.gnu.hash)
 	}
 }

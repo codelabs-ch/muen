@@ -157,7 +157,7 @@ is
                     Ref_Value => Phys_Name,
                     Attr_Name => "type"));
          begin
-            if not (Mem_Type in Mutools.Types.DMA_Memory) then
+            if Mem_Type not in Mutools.Types.DMA_Memory then
                Validation_Errors.Insert
                  (Msg => "Device domain memory '"
                   & Phys_Name & "' has invalid memory type " & Mem_Type'Img);

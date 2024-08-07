@@ -233,8 +233,8 @@ is
    is
       use type Interfaces.Unsigned_64;
    begin
-      return (Address mod 16#1000# = 0)
-        and (Size mod 16#1000# = 0)
+      return Address mod 16#1000# = 0
+        and Size mod 16#1000# = 0
         and Size > 0;
    end Is_Aligned;
 

@@ -37,6 +37,7 @@ is
    type Interrupt_Interface_Type is array (Interrupt_Word_Type)
      of Interfaces.Unsigned_64
    with
-      Size => Interrupt_Interface_Size * 8;
+      Size        => Interrupt_Interface_Size * 8,
+      Object_Size => Interrupt_Interface_Size * 8;
 
 end Muinterrupts;

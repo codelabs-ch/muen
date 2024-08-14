@@ -1,7 +1,7 @@
 FROM ocaml/opam:debian-12-ocaml-4.14
 
-LABEL maintainer "Reto Buerki <reet@codelabs.ch>"
-LABEL description "Build environment for Muen-enabled MirageOS/Solo5 Unipi website unikernel"
+LABEL maintainer="Reto Buerki <reet@codelabs.ch>"
+LABEL description="Build environment for Muen-enabled MirageOS/Solo5 Unipi website unikernel"
 
 USER root
 RUN curl -SL https://github.com/ocaml/opam/releases/download/2.1.5/opam-2.1.5-x86_64-linux -o $(which opam) \

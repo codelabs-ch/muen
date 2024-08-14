@@ -15,8 +15,8 @@ ARG distro_name=debian
 ARG distro_version=bookworm
 FROM ${distro_name}:${distro_version}
 
-LABEL maintainer "Adrian-Ken Rueegsegger <ken@codelabs.ch>"
-LABEL description "This image provides the build environment for the Muen project"
+LABEL maintainer="Adrian-Ken Rueegsegger <ken@codelabs.ch>"
+LABEL description="This image provides the build environment for the Muen project"
 
 # Required packages
 ARG packages="acpica-tools amtterm autoconf automake autopoint bc bison bzip2 \
@@ -76,9 +76,9 @@ RUN pip3 install $(if [ "$distro_name" = "debian" ]; then echo --break-system-pa
 RUN apt-get --purge autoremove -y $build_packages
 
 # Setup environment
-ENV HOME /home/user
-ENV LANG C.UTF-8
-ENV PATH /opt/arcanist/bin:$PATH
+ENV HOME=/home/user
+ENV LANG=C.UTF-8
+ENV PATH=/opt/arcanist/bin:$PATH
 
 RUN useradd --create-home --home-dir $HOME user -G dialout \
 	&& chmod 755 /home/user

@@ -41,6 +41,10 @@
     </doc>
    </memory>
   </if>
+  <!-- high mem access test for bootloaders -->
+  <memory name="high_mem_access" physicalAddress="16#0001_0011_1000#" size="16#4000#" caching="WB" type="subject">
+   <fill pattern="16#ab#"/>
+  </memory>
  </memory>
 
  <deviceDomains>

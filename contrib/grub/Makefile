@@ -1,4 +1,4 @@
-REV = 6091259ac0ef
+REV = fe8a86958757
 PKG = grub
 SRC = https://github.com/codelabs-ch/grub2.git
 

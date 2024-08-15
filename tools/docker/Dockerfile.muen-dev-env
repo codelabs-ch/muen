@@ -52,6 +52,7 @@ RUN wget --no-verbose https://github.com/alire-project/alire/releases/download/v
 # amtc tool
 RUN git clone https://github.com/schnoddelbotz/amtc.git /tmp/amtc \
 	&& cd /tmp/amtc \
+	&& git config --file=.gitmodules submodule.src/amtterm.url https://github.com/kraxel/amtterm \
 	&& make -j`nproc` amtc \
 	&& cp src/amtc /usr/local/bin \
 	&& rm -rf /tmp/amtc

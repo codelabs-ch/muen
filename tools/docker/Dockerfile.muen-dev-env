@@ -15,8 +15,8 @@ ARG distro_name=debian
 ARG distro_version=bookworm
 FROM ${distro_name}:${distro_version}
 
-LABEL maintainer "Adrian-Ken Rueegsegger <ken@codelabs.ch>"
-LABEL description "This image provides the build environment for the Muen project"
+LABEL maintainer="Adrian-Ken Rueegsegger <ken@codelabs.ch>"
+LABEL description="This image provides the build environment for the Muen project"
 
 # Required packages
 ARG packages="acpica-tools amtterm autoconf automake autopoint bc bison bzip2 \
@@ -52,6 +52,7 @@ RUN wget --no-verbose https://github.com/alire-project/alire/releases/download/v
 # amtc tool
 RUN git clone https://github.com/schnoddelbotz/amtc.git /tmp/amtc \
 	&& cd /tmp/amtc \
+	&& git config --file=.gitmodules submodule.src/amtterm.url https://github.com/kraxel/amtterm \
 	&& make -j`nproc` amtc \
 	&& cp src/amtc /usr/local/bin \
 	&& rm -rf /tmp/amtc
@@ -70,15 +71,15 @@ RUN git clone https://github.com/codelabs-ch/arcanist.git /opt/arcanist
 
 # Python modules
 ARG distro_name
-RUN pip3 install $(if [ "$distro_name" = "debian" ]; then echo --break-system-packages; fi) lief
+RUN pip3 install $(if [ "$distro_name" = "debian" ]; then echo --break-system-packages; fi) lief==0.14.1
 
 # Purge build-time packages
 RUN apt-get --purge autoremove -y $build_packages
 
 # Setup environment
-ENV HOME /home/user
-ENV LANG C.UTF-8
-ENV PATH /opt/arcanist/bin:$PATH
+ENV HOME=/home/user
+ENV LANG=C.UTF-8
+ENV PATH=/opt/arcanist/bin:$PATH
 
 RUN useradd --create-home --home-dir $HOME user -G dialout \
 	&& chmod 755 /home/user

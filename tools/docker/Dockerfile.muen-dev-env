@@ -71,7 +71,7 @@ RUN git clone https://github.com/codelabs-ch/arcanist.git /opt/arcanist
 
 # Python modules
 ARG distro_name
-RUN pip3 install $(if [ "$distro_name" = "debian" ]; then echo --break-system-packages; fi) lief
+RUN pip3 install $(if [ "$distro_name" = "debian" ]; then echo --break-system-packages; fi) lief==0.14.1
 
 # Purge build-time packages
 RUN apt-get --purge autoremove -y $build_packages

@@ -7,20 +7,18 @@ import os
 import sys
 import struct
 
-CSL_VERMAGIC = struct.pack('Q', 0x8adc5fa2448cb65e)
+CSL_VERMAGIC = struct.pack("Q", 0x8ADC5FA2448CB65E)
 
 
 def parse_args():
     """
     Returned parsed command line arguments
     """
-    arg_parser = argparse.ArgumentParser(description='CSL file prepender')
-    arg_parser.add_argument('img_src', type=str,
-                            help='CSL image source')
-    arg_parser.add_argument('img_dst', type=str,
-                            help='CSL image destination')
-    arg_parser.add_argument('cmd_id', type=int, help='CSL cmd ID to use')
-    arg_parser.add_argument('file', type=str, help='File to encode')
+    arg_parser = argparse.ArgumentParser(description="CSL file prepender")
+    arg_parser.add_argument("img_src", type=str, help="CSL image source")
+    arg_parser.add_argument("img_dst", type=str, help="CSL image destination")
+    arg_parser.add_argument("cmd_id", type=int, help="CSL cmd ID to use")
+    arg_parser.add_argument("file", type=str, help="File to encode")
 
     return arg_parser.parse_args()
 
@@ -38,24 +36,29 @@ if not os.path.isfile(file_to_encode):
 if not 60000 <= cmd_id <= 65535:
     sys.exit("Error: CMD ID " + str(cmd_id) + " not in vendor specific range")
 
-with open(img_src_fname, 'rb') as img_src:
+with open(img_src_fname, "rb") as img_src:
     magic = img_src.read(8)
     if magic != CSL_VERMAGIC:
         img_src.close()
         sys.exit("Error: source '" + img_src_fname + "' is not a CSL image")
 
     img_src.seek(8)
-    with open(img_dst_fname, 'wb') as img_dst:
-
+    with open(img_dst_fname, "wb") as img_dst:
         fsize = os.stat(file_to_encode).st_size
-        print("Encoding file '" + file_to_encode + "' of size " + str(fsize)
-              + " byte(s) as CSL CMD ID " + str(cmd_id))
+        print(
+            "Encoding file '"
+            + file_to_encode
+            + "' of size "
+            + str(fsize)
+            + " byte(s) as CSL CMD ID "
+            + str(cmd_id)
+        )
 
         img_dst.write(CSL_VERMAGIC)
-        img_dst.write(struct.pack('Q', cmd_id))
-        img_dst.write(struct.pack('Q', fsize))
+        img_dst.write(struct.pack("Q", cmd_id))
+        img_dst.write(struct.pack("Q", fsize))
 
-        with open(file_to_encode, 'rb') as in_file:
+        with open(file_to_encode, "rb") as in_file:
             img_dst.write(in_file.read())
             in_file.close()
             img_dst.write(img_src.read())

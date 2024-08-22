@@ -16,7 +16,7 @@ def ada_hex_to_int(value):
     if value == "":
         return ""
     else:
-        return int(value.replace('_', '')[3:-1], 16)
+        return int(value.replace("_", "")[3:-1], 16)
 
 
 def int_to_ada_hex(value):
@@ -28,7 +28,7 @@ def int_to_ada_hex(value):
         return ""
     else:
         val = hex(value).rstrip("L").lstrip("0x")
-        val = val.rjust(int(math.ceil(len(val) / 4.0) * 4), '0')
+        val = val.rjust(int(math.ceil(len(val) / 4.0) * 4), "0")
         hexvalue = "16#"
         for index in range(0, len(val)):
             if ((index % 4) == 0) and (index != 0):

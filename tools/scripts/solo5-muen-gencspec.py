@@ -23,7 +23,7 @@ ABI_TARGET = "muen"
 ABI_VERSION = 3
 
 chan_size = 0x100000
-chan_addr = 0xe0000000
+chan_addr = 0xE0000000
 comp_name = ""
 
 
@@ -108,7 +108,7 @@ def add_elf_memory(xml_spec, binary, filename):
                 continue
 
             n = "+".join([section.name for section in sections])
-            mem_name = (n[:max_len - 2] + '..') if len(n) > max_len else n
+            mem_name = (n[: max_len - 2] + "..") if len(n) > max_len else n
 
             # Rename .text to text so Muinit can look it up and use it as entry
             # point after initialization.
@@ -127,17 +127,16 @@ def add_elf_memory(xml_spec, binary, filename):
 
             if phy_size > 0:
                 print("* Adding memory region '" + mem_name + "'")
-                mem = etree.Element("memory",
-                                    logical=mem_name,
-                                    virtualAddress=vaddr_str,
-                                    size=muutils.int_to_ada_hex(phy_size),
-                                    executable=muutils.bool_to_str(x),
-                                    writable=muutils.bool_to_str(w),
-                                    type="subject_binary")
-                etree.SubElement(mem,
-                                 "file",
-                                 filename=filename,
-                                 offset=offset_str)
+                mem = etree.Element(
+                    "memory",
+                    logical=mem_name,
+                    virtualAddress=vaddr_str,
+                    size=muutils.int_to_ada_hex(phy_size),
+                    executable=muutils.bool_to_str(x),
+                    writable=muutils.bool_to_str(w),
+                    type="subject_binary",
+                )
+                etree.SubElement(mem, "file", filename=filename, offset=offset_str)
                 provides.append(mem)
 
             # Add fill region if virtual_size is larger than physical_size
@@ -148,13 +147,15 @@ def add_elf_memory(xml_spec, binary, filename):
                 vaddr_str = muutils.int_to_ada_hex(vaddr)
                 size_str = muutils.int_to_ada_hex(mem_size - phy_size)
                 print("* Adding memory region '" + mem_name + "|fill'")
-                mem = etree.Element("memory",
-                                    logical=mem_name + "|fill",
-                                    virtualAddress=vaddr_str,
-                                    size=size_str,
-                                    executable=muutils.bool_to_str(x),
-                                    writable=muutils.bool_to_str(w),
-                                    type="subject_binary")
+                mem = etree.Element(
+                    "memory",
+                    logical=mem_name + "|fill",
+                    virtualAddress=vaddr_str,
+                    size=size_str,
+                    executable=muutils.bool_to_str(x),
+                    writable=muutils.bool_to_str(w),
+                    type="subject_binary",
+                )
                 etree.SubElement(mem, "fill", pattern="16#00#")
                 provides.append(mem)
 
@@ -169,15 +170,18 @@ def add_ram_memory(xml_spec, binary_end, ram_size_mb):
     Returns the virtual end address of the RAM memory region.
     """
     print("* Adding RAM region with size " + str(ram_size_mb) + " MB")
-    ram_size = ram_size_mb * 2 ** 20
+    ram_size = ram_size_mb * 2**20
     provides = src_spec.xpath("/component/provides")[0]
-    etree.SubElement(provides, "memory",
-                     logical="ram",
-                     virtualAddress=muutils.int_to_ada_hex(binary_end),
-                     size=muutils.int_to_ada_hex(ram_size),
-                     executable="false",
-                     writable="true",
-                     type="subject")
+    etree.SubElement(
+        provides,
+        "memory",
+        logical="ram",
+        virtualAddress=muutils.int_to_ada_hex(binary_end),
+        size=muutils.int_to_ada_hex(ram_size),
+        executable="false",
+        writable="true",
+        type="subject",
+    )
 
     rsp = xml_spec.xpath("/component/requires/vcpu/registers/gpr/rsp")[0]
     rsp.text = muutils.int_to_ada_hex(binary_end + ram_size - 8)
@@ -191,15 +195,29 @@ def add_channel(name, channels):
     Add channel reader/writer XML elements for Solo5 device with given name.
     """
     global chan_addr, chan_size
-    print("* Adding channels for device '" + name + "' @ "
-          + muutils.int_to_ada_hex(chan_addr))
-    channels.append(etree.Element("reader", logical=name + "|in",
-                    virtualAddress=muutils.int_to_ada_hex(chan_addr),
-                    size=muutils.int_to_ada_hex(chan_size)))
+    print(
+        "* Adding channels for device '"
+        + name
+        + "' @ "
+        + muutils.int_to_ada_hex(chan_addr)
+    )
+    channels.append(
+        etree.Element(
+            "reader",
+            logical=name + "|in",
+            virtualAddress=muutils.int_to_ada_hex(chan_addr),
+            size=muutils.int_to_ada_hex(chan_size),
+        )
+    )
     chan_addr += chan_size
-    channels.append(etree.Element("writer", logical=name + "|out",
-                    virtualAddress=muutils.int_to_ada_hex(chan_addr),
-                    size=muutils.int_to_ada_hex(chan_size)))
+    channels.append(
+        etree.Element(
+            "writer",
+            logical=name + "|out",
+            virtualAddress=muutils.int_to_ada_hex(chan_addr),
+            size=muutils.int_to_ada_hex(chan_size),
+        )
+    )
     chan_addr += chan_size
 
 
@@ -210,16 +228,24 @@ def validate_solo5_abi(raw_abi):
     print("* Checking Solo5 ABI")
     data = json.loads(raw_abi)
 
-    if not data['type'] == "solo5.abi":
+    if not data["type"] == "solo5.abi":
         sys.exit("Error: JSON file does not contain Solo5 ABI")
 
-    if not data['target'] == ABI_TARGET:
-        sys.exit("Error: Solo5 ABI target mismatch: " + data['target']
-                 + ", expected " + ABI_TARGET)
+    if not data["target"] == ABI_TARGET:
+        sys.exit(
+            "Error: Solo5 ABI target mismatch: "
+            + data["target"]
+            + ", expected "
+            + ABI_TARGET
+        )
 
-    if not data['version'] == ABI_VERSION:
-        sys.exit("Error: Solo5 ABI version: " + str(data['version'])
-                 + ", expected " + str(ABI_VERSION))
+    if not data["version"] == ABI_VERSION:
+        sys.exit(
+            "Error: Solo5 ABI version: "
+            + str(data["version"])
+            + ", expected "
+            + str(ABI_VERSION)
+        )
 
 
 def patch_binary(binary):
@@ -236,9 +262,13 @@ def patch_binary(binary):
 
     patch_size = text_section.file_offset - interp_section.file_offset
 
-    print("Patching binary @ file offset "
-          + muutils.int_to_ada_hex(interp_section.file_offset)
-          + " with " + str(patch_size) + " NOPs")
+    print(
+        "Patching binary @ file offset "
+        + muutils.int_to_ada_hex(interp_section.file_offset)
+        + " with "
+        + str(patch_size)
+        + " NOPs"
+    )
     fh = open(out_bin_path, "r+b")
     fh.seek(interp_section.file_offset)
     fh.write(bytes([NOP] * patch_size))
@@ -249,28 +279,44 @@ def parse_args():
     """
     Returned parsed command line arguments
     """
-    arg_parser = argparse.ArgumentParser(description='Solo5 to Muen converter')
-    arg_parser.add_argument('elf_binary', type=str,
-                            help='Solo5 unikernel ELF binary')
-    arg_parser.add_argument('src_xml_spec', type=str,
-                            help='Muen component source XML specification')
-    arg_parser.add_argument('out_dir', type=str, help='Output directory')
-    arg_parser.add_argument('--bootparams', type=str, default="",
-                            help=('Solo5 unikernel boot parameters'))
-    arg_parser.add_argument('--out_spec', type=str,
-                            help=('Filename of processed Muen component XML '
-                                  '(default: <out_dir>/cspecs/'
-                                  '$component_name.xml)'))
-    arg_parser.add_argument('--ram', type=int, default=DEFAULT_RAM_SIZE,
-                            help=('Allocate unikernel memory in MB (default: '
-                                  + DEFAULT_RAM_SIZE + ' MB'))
-    arg_parser.add_argument('--nocopy', dest='copy_bin',
-                            action="store_false", default=True,
-                            help=('Do not copy unikernel binary to output '
-                                  'directory'))
-    arg_parser.add_argument('--disable-reset', dest='resettable',
-                            action="store_false", default=True,
-                            help=('Disable reset of unikernel on exit'))
+    arg_parser = argparse.ArgumentParser(description="Solo5 to Muen converter")
+    arg_parser.add_argument("elf_binary", type=str, help="Solo5 unikernel ELF binary")
+    arg_parser.add_argument(
+        "src_xml_spec", type=str, help="Muen component source XML specification"
+    )
+    arg_parser.add_argument("out_dir", type=str, help="Output directory")
+    arg_parser.add_argument(
+        "--bootparams", type=str, default="", help=("Solo5 unikernel boot parameters")
+    )
+    arg_parser.add_argument(
+        "--out_spec",
+        type=str,
+        help=(
+            "Filename of processed Muen component XML "
+            "(default: <out_dir>/cspecs/"
+            "$component_name.xml)"
+        ),
+    )
+    arg_parser.add_argument(
+        "--ram",
+        type=int,
+        default=DEFAULT_RAM_SIZE,
+        help=("Allocate unikernel memory in MB (default: " + DEFAULT_RAM_SIZE + " MB"),
+    )
+    arg_parser.add_argument(
+        "--nocopy",
+        dest="copy_bin",
+        action="store_false",
+        default=True,
+        help=("Do not copy unikernel binary to output " "directory"),
+    )
+    arg_parser.add_argument(
+        "--disable-reset",
+        dest="resettable",
+        action="store_false",
+        default=True,
+        help=("Disable reset of unikernel on exit"),
+    )
 
     return arg_parser.parse_args()
 
@@ -299,7 +345,7 @@ print("Reading source component specification from '" + src_spec_path + "'")
 src_spec_name = os.path.basename(src_spec_path)
 xml_parser = etree.XMLParser(remove_blank_text=True)
 src_spec = etree.parse(src_spec_path, xml_parser).getroot()
-comp_name = src_spec.attrib['name'].lower()
+comp_name = src_spec.attrib["name"].lower()
 
 add_bootparams(src_spec, boot_params)
 set_resettable(src_spec, resettable)
@@ -311,8 +357,7 @@ chan_addr = add_ram_memory(src_spec, end_address, ram_size_mb)
 
 print("Extracting Solo5 ABI information from unikernel binary")
 try:
-    abi_info = subprocess.check_output(ABI_CMD + " " + src_bin_path,
-                                       shell=True)
+    abi_info = subprocess.check_output(ABI_CMD + " " + src_bin_path, shell=True)
 except subprocess.CalledProcessError:
     sys.exit("Error: Unable to extract ABI from unikernel binary")
 
@@ -320,19 +365,18 @@ validate_solo5_abi(abi_info)
 
 print("Extracting Solo5 manifest from unikernel binary")
 try:
-    manifest = subprocess.check_output(MFT_CMD + " " + src_bin_path,
-                                       shell=True)
+    manifest = subprocess.check_output(MFT_CMD + " " + src_bin_path, shell=True)
 except subprocess.CalledProcessError:
     sys.exit("Error: Unable to extract manifest from unikernel binary")
 
 data = json.loads(manifest)
-if not data['type'] == "solo5.manifest":
+if not data["type"] == "solo5.manifest":
     sys.exit("Error: JSON file does not contain Solo5 Manifest")
 
 channels = src_spec.xpath("/component/requires/channels")
 
-for dev in data['devices']:
-    if dev['type'] == "NET_BASIC":
+for dev in data["devices"]:
+    if dev["type"] == "NET_BASIC":
         if len(channels) == 0:
             req = src_spec.xpath("/component/requires")[0]
             channels = etree.SubElement(req, "channels")
@@ -341,7 +385,7 @@ for dev in data['devices']:
             if len(devs) > 0:
                 req.remove(devs[0])
                 req.append(devs[0])
-        add_channel(dev['name'], channels)
+        add_channel(dev["name"], channels)
 
 if out_spec_path is None:
     out_spec_path = out_dir + "/"
@@ -351,9 +395,15 @@ if out_spec_path is None:
     out_spec_path += comp_name + ".xml"
 
 if not os.path.isdir(os.path.dirname(out_spec_path)):
-    sys.exit(("Error: Output directory for component specification does not "
-              + "exist ('" + os.path.dirname(out_spec_path) + "')"))
-with open(out_spec_path, 'wb') as out_spec:
+    sys.exit(
+        (
+            "Error: Output directory for component specification does not "
+            + "exist ('"
+            + os.path.dirname(out_spec_path)
+            + "')"
+        )
+    )
+with open(out_spec_path, "wb") as out_spec:
     print("Writing component specification to '" + out_spec_path + "'")
     out_spec.write(etree.tostring(src_spec, pretty_print=True))
 

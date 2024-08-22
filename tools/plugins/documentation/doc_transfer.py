@@ -57,32 +57,29 @@ def compile_component_to_subjects_map(root):
     # build a dependency graph between subjects, components and libraries
     dep_graph = Graph()
     for comp in root.xpath("components/library"):
-        c2s_map[comp.get('name')] = set()
-        dep_graph.nodes.add((comp.get('name'), 'l'))
+        c2s_map[comp.get("name")] = set()
+        dep_graph.nodes.add((comp.get("name"), "l"))
         depends = comp.find("depends")
         if depends is not None:
             for dep in depends.findall("library"):
-                dep_graph.edges.add(
-                    ((comp.get('name'), 'l'), (dep.get('ref'), 'l')))
+                dep_graph.edges.add(((comp.get("name"), "l"), (dep.get("ref"), "l")))
 
     for comp in root.xpath("components/component"):
-        c2s_map[comp.get('name')] = set()
-        dep_graph.nodes.add((comp.get('name'), 'c'))
+        c2s_map[comp.get("name")] = set()
+        dep_graph.nodes.add((comp.get("name"), "c"))
         depends = comp.find("depends")
         if depends is not None:
             for dep in depends.findall("library"):
-                dep_graph.edges.add(
-                    ((comp.get('name'), 'c'), (dep.get('ref'), 'l')))
+                dep_graph.edges.add(((comp.get("name"), "c"), (dep.get("ref"), "l")))
 
     for subj in root.xpath("subjects/subject"):
-        dep_graph.nodes.add((subj.get('name'), 's'))
+        dep_graph.nodes.add((subj.get("name"), "s"))
         comp = subj.find("component")
         if comp is not None and comp.get("ref"):
-            dep_graph.edges.add(
-                ((subj.get('name'), 's'), (comp.get('ref'), 'c')))
+            dep_graph.edges.add(((subj.get("name"), "s"), (comp.get("ref"), "c")))
 
     # resolve dependencies of libraries
-    for subj_node in [x for x in dep_graph.nodes if x[1] == 's']:
+    for subj_node in [x for x in dep_graph.nodes if x[1] == "s"]:
         for comp_node in dep_graph.get_reachable_nodes(subj_node):
             c2s_map[comp_node[0]].add(subj_node[0])
 
@@ -96,7 +93,8 @@ def do_traversal(current_map):
         node=node,
         param_bind=param_bind,
         c2s_map=c2s_map,
-        expansion=expansion)
+        expansion=expansion,
+    )
 
 
 def do_traversal_func(current_map, node, param_bind, c2s_map, expansion):
@@ -104,10 +102,10 @@ def do_traversal_func(current_map, node, param_bind, c2s_map, expansion):
     for child in node.findall("*"):
         for rule in current_map:
             (rule_matches, fresh_param_bindings, action) = apply_rule(
-                child, rule, current_map[rule])
+                child, rule, current_map[rule]
+            )
             if rule_matches:
-                action(child, param_bind | fresh_param_bindings,
-                       c2s_map, expansion)
+                action(child, param_bind | fresh_param_bindings, c2s_map, expansion)
 
 
 def apply_rule(node, key, value):
@@ -121,12 +119,13 @@ def apply_rule(node, key, value):
     Note: This parser only implements features needed at the time of writing.
     """
 
-    local_rule = key.split('/')[0]
-    remaining_rule = "/".join(key.split('/')[1:])
+    local_rule = key.split("/")[0]
+    remaining_rule = "/".join(key.split("/")[1:])
     # a new, shortened rule is produced from the old rule in case the given
     # rule involed children of node
-    new_action = (do_traversal({remaining_rule: value})
-                  if remaining_rule != '' else value)
+    new_action = (
+        do_traversal({remaining_rule: value}) if remaining_rule != "" else value
+    )
 
     node_name = local_rule.split("[")[0]
     if node.tag != node_name:
@@ -157,16 +156,16 @@ def apply_rule(node, key, value):
 
 def add_to_output(target_path):
     """Lambda-function wrapper for add_to_output_func"""
-    if target_path[0] != '/':
+    if target_path[0] != "/":
         print("ERROR: target path must be absolute and start with '/'")
         exit(1)
-    return lambda node, param_bind, c2s_map, expansion: \
-        add_to_output_func(
-            target_path=target_path[1:],
-            node=node,
-            param_bind=param_bind,
-            c2s_map=c2s_map,
-            exp_subdict=expansion)
+    return lambda node, param_bind, c2s_map, expansion: add_to_output_func(
+        target_path=target_path[1:],
+        node=node,
+        param_bind=param_bind,
+        c2s_map=c2s_map,
+        exp_subdict=expansion,
+    )
 
 
 def add_new_leaf(exp_subdict, node):
@@ -197,11 +196,12 @@ def get_list_of_substitutions(parametrized_substring, param_bind, c2s_map):
     """
 
     if parametrized_substring.startswith("$Component_To_Subjects"):
-        param_name = parametrized_substring.split(
-            '$Component_To_Subjects($')[1].split(')')[0]
+        param_name = parametrized_substring.split("$Component_To_Subjects($")[1].split(
+            ")"
+        )[0]
         resolve_to_subject = True
     else:
-        param_name = parametrized_substring.split('$')[1]
+        param_name = parametrized_substring.split("$")[1]
         resolve_to_subject = False
 
     if param_name not in param_bind:
@@ -227,12 +227,12 @@ def add_to_output_func(target_path, node, param_bind, c2s_map, exp_subdict):
     """Insert the given node at target_path into exp_subject"""
 
     # check if we are the end of the recursion
-    if target_path == '':
+    if target_path == "":
         add_new_leaf(exp_subdict, node)
         return
 
-    local_path = target_path.split('/')[0]
-    remaining_path = "/".join(target_path.split('/')[1:])
+    local_path = target_path.split("/")[0]
+    remaining_path = "/".join(target_path.split("/")[1:])
     if "$" not in local_path:
         include_new_child(exp_subdict=exp_subdict, child_str=local_path)
         add_to_output_func(
@@ -240,12 +240,14 @@ def add_to_output_func(target_path, node, param_bind, c2s_map, exp_subdict):
             node=node,
             param_bind=param_bind,
             c2s_map=c2s_map,
-            exp_subdict=exp_subdict['__children'][local_path])
+            exp_subdict=exp_subdict["__children"][local_path],
+        )
         return
 
     parametrized_substring = local_path.split('"')[1]
     substitutions = get_list_of_substitutions(
-        parametrized_substring, param_bind, c2s_map)
+        parametrized_substring, param_bind, c2s_map
+    )
 
     for sub in substitutions:
         local_path_subst = local_path.replace(parametrized_substring, sub)
@@ -255,7 +257,8 @@ def add_to_output_func(target_path, node, param_bind, c2s_map, exp_subdict):
             node=node,
             param_bind=param_bind,
             c2s_map=c2s_map,
-            exp_subdict=exp_subdict['__children'][local_path_subst])
+            exp_subdict=exp_subdict["__children"][local_path_subst],
+        )
 
 
 def compile_target_expansion(source_root):
@@ -282,7 +285,8 @@ def compile_target_expansion(source_root):
         node=source_root,
         param_bind=parameter_binding,
         c2s_map=c2s_map,
-        expansion=expansion)
+        expansion=expansion,
+    )
 
     return expansion
 
@@ -299,30 +303,30 @@ def apply_target_expansion(subtree_root, sub_expansion):
     to the xml-subtree with is rooted at subtree_root
     """
 
-    if '__children' in sub_expansion:
+    if "__children" in sub_expansion:
         for child in list(subtree_root):
-            for path in sub_expansion['__children']:
+            for path in sub_expansion["__children"]:
                 if simple_xpath_match(child, path):
-                    apply_target_expansion(
-                        child, sub_expansion['__children'][path])
+                    apply_target_expansion(child, sub_expansion["__children"][path])
 
-    if '__new_leaves' in sub_expansion:
-        for leave in reversed(sub_expansion['__new_leaves']):
+    if "__new_leaves" in sub_expansion:
+        for leave in reversed(sub_expansion["__new_leaves"]):
             subtree_root.insert(0, copy.deepcopy(leave))
     return
 
 
 def print_expansion(exp, indent):
-    """ DEBUG only: print given expansion structure in a human readable way"""
+    """DEBUG only: print given expansion structure in a human readable way"""
     if not isinstance(exp, dict):
-        print(indent * ' ', exp)
+        print(indent * " ", exp)
         return
 
-    print(indent * ' ' + '{')
+    print(indent * " " + "{")
     for key in exp:
-        print(indent * ' ' + key + ' :')
+        print(indent * " " + key + " :")
         print_expansion(exp[key], indent + 1)
-    print(indent * ' ' + '}')
+    print(indent * " " + "}")
+
 
 ###################################################################
 # These dictionaries determine what the program does
@@ -351,67 +355,86 @@ def print_expansion(exp, indent):
 
 
 subj_mem_map = {
-    'doc': add_to_output(
+    "doc": add_to_output(
         '/system/subjects/subject[@name="$subject_name"]'
-        + '/memory/memory[@logical="$subj_mem_logical"]')}
+        + '/memory/memory[@logical="$subj_mem_logical"]'
+    )
+}
 
 subject_map = {
-    'doc': add_to_output('/system/subjects/subject[@name="$subject_name"]'),
+    "doc": add_to_output('/system/subjects/subject[@name="$subject_name"]'),
     'memory/memory[@logical="$subj_mem_logical"]': do_traversal(subj_mem_map),
     'component/map[@logical="$subj_mem_logical"]': do_traversal(subj_mem_map),
-    'channels/reader'
-    + '[@logical="$subj_mem_logical"]': do_traversal(subj_mem_map),
-    'channels/writer'
-    + '[@logical="$subj_mem_logical"]': do_traversal(subj_mem_map)}
+    "channels/reader" + '[@logical="$subj_mem_logical"]': do_traversal(subj_mem_map),
+    "channels/writer" + '[@logical="$subj_mem_logical"]': do_traversal(subj_mem_map),
+}
 
 comp_mem_map = {
-    'doc': add_to_output(
-        '/system/subjects/subject'
+    "doc": add_to_output(
+        "/system/subjects/subject"
         + '[@name="$Component_To_Subjects($component_name)"]'
-        + '/memory/memory[@logical="$comp_mem_logical"]')}
+        + '/memory/memory[@logical="$comp_mem_logical"]'
+    )
+}
 
 comp_map = {
-    'doc': add_to_output(
-        '/system/subjects/subject'
-        + '[@name="$Component_To_Subjects($component_name)"]'),
-    'requires/memory/memory[@logical="$comp_mem_logical"]':
-    do_traversal(comp_mem_map),
-    'requires/memory/array/memory[@logical="$comp_mem_logical"]':
-    do_traversal(comp_mem_map),
-    'requires/channels/reader[@logical="$comp_mem_logical"]':
-    do_traversal(comp_mem_map),
-    'requires/channels/writer[@logical="$comp_mem_logical"]':
-    do_traversal(comp_mem_map),
-    'requires/channels/array/reader[@logical="$comp_mem_logical"]':
-    do_traversal(comp_mem_map),
-    'requires/channels/array/writer[@logical="$comp_mem_logical"]':
-    do_traversal(comp_mem_map)}
+    "doc": add_to_output(
+        "/system/subjects/subject" + '[@name="$Component_To_Subjects($component_name)"]'
+    ),
+    'requires/memory/memory[@logical="$comp_mem_logical"]': do_traversal(comp_mem_map),
+    'requires/memory/array/memory[@logical="$comp_mem_logical"]': do_traversal(
+        comp_mem_map
+    ),
+    'requires/channels/reader[@logical="$comp_mem_logical"]': do_traversal(
+        comp_mem_map
+    ),
+    'requires/channels/writer[@logical="$comp_mem_logical"]': do_traversal(
+        comp_mem_map
+    ),
+    'requires/channels/array/reader[@logical="$comp_mem_logical"]': do_traversal(
+        comp_mem_map
+    ),
+    'requires/channels/array/writer[@logical="$comp_mem_logical"]': do_traversal(
+        comp_mem_map
+    ),
+}
 
-components_map = {'component[@name="$component_name"]': do_traversal(comp_map),
-                  'library[@name="$component_name"]': do_traversal(comp_map)}
+components_map = {
+    'component[@name="$component_name"]': do_traversal(comp_map),
+    'library[@name="$component_name"]': do_traversal(comp_map),
+}
 
-subjects_map = {'doc': add_to_output("/system/subjects"),
-                'subject[@name="$subject_name"]': do_traversal(subject_map)}
+subjects_map = {
+    "doc": add_to_output("/system/subjects"),
+    'subject[@name="$subject_name"]': do_traversal(subject_map),
+}
 
-system_map = {'doc': add_to_output('/system'),
-              'memory/memory[@name="$mem_name"]/doc':
-              add_to_output('/system/memory/memory[@name="$mem_name"]'),
-              'components': do_traversal(components_map),
-              'subjects': do_traversal(subjects_map)}
+system_map = {
+    "doc": add_to_output("/system"),
+    'memory/memory[@name="$mem_name"]/doc': add_to_output(
+        '/system/memory/memory[@name="$mem_name"]'
+    ),
+    "components": do_traversal(components_map),
+    "subjects": do_traversal(subjects_map),
+}
 
 ###################################################################
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Transfer <doc> nodes from policy-joined to policy-b')
-    parser.add_argument('--pj', type=str, required=True,
-                        help='path to policy_joined.xml')
-    parser.add_argument('--pb', type=str, required=True,
-                        help='path to policy_b.xml')
-    parser.add_argument('--o', type=str, required=True,
-                        help='path to output file '
-                        + '(policy_b with documentation)')
+        description="Transfer <doc> nodes from policy-joined to policy-b"
+    )
+    parser.add_argument(
+        "--pj", type=str, required=True, help="path to policy_joined.xml"
+    )
+    parser.add_argument("--pb", type=str, required=True, help="path to policy_b.xml")
+    parser.add_argument(
+        "--o",
+        type=str,
+        required=True,
+        help="path to output file " + "(policy_b with documentation)",
+    )
     args = parser.parse_args()
 
     policy_joined = etree.ElementTree()
@@ -422,15 +445,13 @@ def main():
 
     expansion = compile_target_expansion(source_root=pj_root)
 
-    if '__children' in expansion and 'system' in expansion['__children']:
-        apply_target_expansion(subtree_root=pb_root,
-                               sub_expansion=expansion['__children']['system'])
+    if "__children" in expansion and "system" in expansion["__children"]:
+        apply_target_expansion(
+            subtree_root=pb_root, sub_expansion=expansion["__children"]["system"]
+        )
 
-    policy_b.write(args.o,
-                   xml_declaration=True,
-                   pretty_print=True,
-                   encoding="utf-8")
+    policy_b.write(args.o, xml_declaration=True, pretty_print=True, encoding="utf-8")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

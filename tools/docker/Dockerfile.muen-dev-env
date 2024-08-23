@@ -19,8 +19,8 @@ LABEL maintainer="Adrian-Ken Rueegsegger <ken@codelabs.ch>"
 LABEL description="This image provides the build environment for the Muen project"
 
 # Required packages
-ARG packages="acpica-tools amtterm autoconf automake autopoint bc bison bzip2 \
-ca-certificates ccache cpio curl file flex gawk gettext git-core \
+ARG packages="acpica-tools amtterm autoconf automake autopoint bc bison black \
+bzip2 ca-certificates ccache cpio curl file flex gawk gettext git-core \
 gnupg inotify-tools iputils-ping iucode-tool kmod lcov libc6-dev \
 libcurl4-gnutls-dev libelf-dev libfreetype6-dev libgmp10-dev libiberty-dev \
 libncurses-dev libseccomp-dev libssl-dev libxml2-utils lighttpd make mtools \

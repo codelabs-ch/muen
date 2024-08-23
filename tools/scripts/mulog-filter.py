@@ -18,15 +18,15 @@ else:
         print("Specified file '" + filename + "' does not exist")
         exit(-1)
 
-    f = open(filename, 'r', encoding='utf-8', errors='replace')
+    f = open(filename, "r", encoding="utf-8", errors="replace")
 
 id = int(sys.argv[1], 0)
 
-if id > 0xffff:
+if id > 0xFFFF:
     print("Invalid ID %x: must be in range 0 .. 0xffff" % id)
     exit(-1)
 
-p = re.compile('16#' + format(id, 'x').zfill(4) + '#[%#>|]')
+p = re.compile("16#" + format(id, "x").zfill(4) + "#[%#>|]")
 
 is_first_line = True
 line = f.readline()
@@ -34,10 +34,10 @@ line = f.readline()
 while line:
     m = p.match(line)
     if m:
-        if line[8] != '>' and is_first_line is False:
-            print('\n', end='')
+        if line[8] != ">" and is_first_line is False:
+            print("\n", end="")
 
-        print(line.rstrip('\n')[9:].translate('\r\01'), end='')
+        print(line.rstrip("\n")[9:].translate("\r\01"), end="")
 
         sys.stdout.flush()
         if is_first_line is True:
@@ -45,6 +45,6 @@ while line:
 
     line = f.readline()
 
-print('\n', end='')
+print("\n", end="")
 f.close()
 exit(0)

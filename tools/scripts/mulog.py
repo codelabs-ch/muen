@@ -27,16 +27,16 @@ else:
         print("Specified file '" + filename + "' does not exist")
         exit(-1)
 
-f = open(filename, 'r', encoding='utf-8', errors='replace')
-lines = [line.rstrip('\r\n') for line in f]
+f = open(filename, "r", encoding="utf-8", errors="replace")
+lines = [line.rstrip("\r\n") for line in f]
 f.close()
 
-p = re.compile('16#[0-9a-fA-F]{4}#>')
+p = re.compile("16#[0-9a-fA-F]{4}#>")
 
 for line in lines:
     m = p.match(line)
     if m:
-        parentPrefix = m.group().replace('>', '|')
+        parentPrefix = m.group().replace(">", "|")
         append(parentPrefix, line[9:])
     elif line[0:3] != "---":
         formatted.append(line)

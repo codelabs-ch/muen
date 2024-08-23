@@ -19,13 +19,15 @@ dbgchannel_end = 4
 
 def create_phys_memory(mem):
     for i in range(1, cores + 1):
-        control = etree.Element("memory", name="control_sm_" + str(i),
-                                size="16#1000#", caching="WB")
+        control = etree.Element(
+            "memory", name="control_sm_" + str(i), size="16#1000#", caching="WB"
+        )
         control.append(etree.Element("fill", pattern="16#ff#"))
         control.append(etree.Element("hash", value="none"))
         mem.append(control)
-        status = etree.Element("memory", name="status_sm_" + str(i),
-                               size="16#1000#", caching="WB")
+        status = etree.Element(
+            "memory", name="status_sm_" + str(i), size="16#1000#", caching="WB"
+        )
         status.append(etree.Element("fill", pattern="16#00#"))
         status.append(etree.Element("hash", value="none"))
         mem.append(status)
@@ -33,40 +35,55 @@ def create_phys_memory(mem):
 
 def create_phys_events(events):
     for i in range(1, cores + 1):
-        events.append(etree.Element("event", mode="switch",
-                                    name="trap_to_sm_" + str(i)))
-        events.append(etree.Element("event", mode="switch",
-                                    name="resume_linux_" + str(i)))
-        events.append(etree.Element("event", mode="async",
-                                    name="serial_irq4_linux_" + str(i)))
-        events.append(etree.Element("event", mode="self",
-                                    name="timer_linux_" + str(i)))
-        events.append(etree.Element("event", mode="asap",
-                                    name="linux_smp_signal_sm_"
-                                    + str(i).zfill(2)))
+        events.append(
+            etree.Element("event", mode="switch", name="trap_to_sm_" + str(i))
+        )
+        events.append(
+            etree.Element("event", mode="switch", name="resume_linux_" + str(i))
+        )
+        events.append(
+            etree.Element("event", mode="async", name="serial_irq4_linux_" + str(i))
+        )
+        events.append(etree.Element("event", mode="self", name="timer_linux_" + str(i)))
+        events.append(
+            etree.Element(
+                "event", mode="asap", name="linux_smp_signal_sm_" + str(i).zfill(2)
+            )
+        )
 
 
 def create_phys_channels(channels):
     for i in range(1, cores + 1):
         channels.append(
-                etree.Element("channel", name="debuglog_subject"
-                              + str(dbgchannel_end + i),
-                              size="$logchannel_size"))
+            etree.Element(
+                "channel",
+                name="debuglog_subject" + str(dbgchannel_end + i),
+                size="$logchannel_size",
+            )
+        )
 
 
 def create_lnx_resources(subject):
     vmcall = subject.xpath("events/source/group[@name='vmcall']")[0]
     for i in range(1, cores + 1):
-        etree.SubElement(vmcall, "event", id=str(2 + i),
-                         logical="smp_signal_sm_" + str(i).zfill(2),
-                         physical="linux_smp_signal_sm_" + str(i).zfill(2))
+        etree.SubElement(
+            vmcall,
+            "event",
+            id=str(2 + i),
+            logical="smp_signal_sm_" + str(i).zfill(2),
+            physical="linux_smp_signal_sm_" + str(i).zfill(2),
+        )
 
 
 def create_dbg_resources(subject):
     comp = subject.xpath("component")[0]
     for i in range(1, cores + 1):
-        etree.SubElement(comp, "map", logical="log_channel" + str(2 + i),
-                         physical="debuglog_subject" + str(dbgchannel_end + i))
+        etree.SubElement(
+            comp,
+            "map",
+            logical="log_channel" + str(2 + i),
+            physical="debuglog_subject" + str(dbgchannel_end + i),
+        )
 
 
 def create_subjects(subjects, parser):
@@ -88,9 +105,8 @@ def create_subjects(subjects, parser):
                     n.set(attr, n.get(attr) + str(i))
                 else:
                     ldict = locals()
-                    exec(val_exp, {'i': i, 'dbgchannel_end': dbgchannel_end},
-                         ldict)
-                    f = ldict['f']
+                    exec(val_exp, {"i": i, "dbgchannel_end": dbgchannel_end}, ldict)
+                    f = ldict["f"]
                     n.set(attr, n.get(attr) + f)
                     del n.attrib["attrvalue"]
                 del n.attrib["attrset"]
@@ -113,13 +129,12 @@ def adjust_core_one(cpus):
         c.xpath("minorFrame[@partition='debugserver']")[0].set("ticks", "1")
         c.xpath("minorFrame[@partition='time']")[0].set("ticks", "1")
         for i in range(4):
-            c.insert(0, etree.Element("minorFrame", partition="linux_core1",
-                     ticks="10"))
+            c.insert(
+                0, etree.Element("minorFrame", partition="linux_core1", ticks="10")
+            )
         for i in range(5):
-            c.append(etree.Element("minorFrame", partition="linux_core1",
-                     ticks="10"))
-        c.append(etree.Element("minorFrame", partition="linux_core1",
-                 ticks="8"))
+            c.append(etree.Element("minorFrame", partition="linux_core1", ticks="10"))
+        c.append(etree.Element("minorFrame", partition="linux_core1", ticks="8"))
 
 
 def create_additional_cores(majors):
@@ -127,9 +142,9 @@ def create_additional_cores(majors):
         for m in majors:
             cpu = etree.Element("cpu", id=str(i))
             for j in range(10):
-                etree.SubElement(cpu, "minorFrame",
-                                 partition="linux_core" + str(i),
-                                 ticks="10")
+                etree.SubElement(
+                    cpu, "minorFrame", partition="linux_core" + str(i), ticks="10"
+                )
             m.append(cpu)
 
 
@@ -157,13 +172,12 @@ create_phys_memory(doc.xpath("/system/memory")[0])
 create_phys_events(doc.xpath("/system/events")[0])
 create_phys_channels(doc.xpath("/system/channels")[0])
 create_lnx_resources(doc.xpath("/system/subjects/subject[@name='linux']")[0])
-create_dbg_resources(
-    doc.xpath("/system/subjects/subject[@name='dbgserver']")[0])
+create_dbg_resources(doc.xpath("/system/subjects/subject[@name='dbgserver']")[0])
 create_subjects(doc.xpath("/system/subjects")[0], parser)
 create_scheduling_partitions(doc.xpath("/system/scheduling/partitions")[0])
 adjust_core_one(doc.xpath("/system/scheduling/majorFrame/cpu[@id='1']"))
 create_additional_cores(doc.xpath("/system/scheduling/majorFrame"))
 spread_devices()
 
-with open('../demo_system_desktop_smp.xml', 'wb') as f:
+with open("../demo_system_desktop_smp.xml", "wb") as f:
     f.write(etree.tostring(doc, pretty_print=True))

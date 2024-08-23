@@ -21,6 +21,7 @@
 # definition of the group that is inserted everywhere
 # This wrapper can be used to add more elements "everywhere".
 from lxml import etree
+
 universal_starting_group_definition = """
 <dummy_root xmlns:xs="http://www.w3.org/2001/XMLSchema">
  <xs:group name="universal_starting_group">
@@ -101,7 +102,7 @@ def get_defining_node(node: etree._Element, def_name: str) -> etree._Element:
     """
     root = node.getroottree().getroot()
     target_prefix = Ns_Info(node).ns_short
-    target_tags = ['complexType', 'simpleType', 'group']
+    target_tags = ["complexType", "simpleType", "group"]
 
     # Build xpath
     target_xpath = ""
@@ -114,8 +115,9 @@ def get_defining_node(node: etree._Element, def_name: str) -> etree._Element:
     if len(results) == 1:
         return results[0]
     else:
-        raise ValueError("Could not find unique defining node for type/group "
-                         + f"with name '{def_name}'")
+        raise ValueError(
+            f"Could not find unique defining node for type/group with name '{def_name}'"
+        )
 
 
 def create_element_from_dict(attribs: dict[str, str]) -> etree._Element:
@@ -147,8 +149,9 @@ def insert_universal_starting_group(doc_root: etree._Element):
         if localname(child_node) == "complexType":
             insert_usg_in_complexType(node=child_node)
 
-    insert_children_from_string(root=doc_root,
-                                xml_string=universal_starting_group_definition)
+    insert_children_from_string(
+        root=doc_root, xml_string=universal_starting_group_definition
+    )
 
 
 def insert_usg_in_complexType(node: etree._Element):
@@ -171,8 +174,9 @@ def insert_usg_in_complexType(node: etree._Element):
         #    This case is not supported!
         elif name == "complexContent":
             if len(child.xpath("./*[local-name()='restriction']")) > 0:
-                raise ValueError("Found unsupported element in complexType: "
-                                 + "'restriction'")
+                raise ValueError(
+                    "Found unsupported element in complexType: " + "'restriction'"
+                )
             return
         elif name in ["annotation"]:
             continue
@@ -197,9 +201,11 @@ def insert_usg_in_complexType(node: etree._Element):
             insert_usg_in_sequence(sequence_sibling)
             return
         else:
-            raise ValueError(f"Found unsupported tag in complexType: {name}\n"
-                             + "Location of finding: "
-                             + node_ancestors_string(child))
+            raise ValueError(
+                f"Found unsupported tag in complexType: {name}\n"
+                + "Location of finding: "
+                + node_ancestors_string(child)
+            )
 
     # if the type did not contain any children we insert a sequence
     node.append(etree.Element(f"{prefix}sequence"))
@@ -213,8 +219,7 @@ def insert_usg_in_sequence(node: etree._Element):
     """
     prefix = Ns_Info(node).ns_prefix
     # Check if the requested node has been inserted already.
-    node_to_insert_info = {"qname": f"{prefix}group",
-                           "ref": "universal_starting_group"}
+    node_to_insert_info = {"qname": f"{prefix}group", "ref": "universal_starting_group"}
     new_element = create_element_from_dict(node_to_insert_info)
     if len(node) == 0:
         node.append(new_element)
@@ -231,13 +236,14 @@ def universal_starting_group_defined(root: etree._Element) -> bool:
     """
     matches = root.xpath(
         "./*[local-name()='group' and @name='universal_starting_group']",
-        namespaces=Ns_Info(root).nsmap)
+        namespaces=Ns_Info(root).nsmap,
+    )
     return len(matches) >= 1
 
 
-def insert_children_from_string(root: etree._Element,
-                                xml_string: str,
-                                position: str = None):
+def insert_children_from_string(
+    root: etree._Element, xml_string: str, position: str = None
+):
     """
     Interprets xml_string as XML tree T (must be valid XML),
     and inserts all children of the root of T as children of 'root'.
@@ -246,9 +252,9 @@ def insert_children_from_string(root: etree._Element,
     """
     parser = etree.XMLParser(remove_blank_text=True)
     new_doc = etree.fromstring(xml_string, parser)
-    if position is None or position == 'top':
+    if position is None or position == "top":
         index = 0
-    elif position == 'bottom':
+    elif position == "bottom":
         index = len(root)
     else:
         raise ValueError(f"Unknown value for parameter 'position': {position}")

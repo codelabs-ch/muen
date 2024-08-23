@@ -15,7 +15,7 @@ from lxml import etree
 NO_HASH = "none"
 
 if len(sys.argv) != 3:
-    print(sys.argv[0] + ' <XML spec> <Output file>')
+    print(sys.argv[0] + " <XML spec> <Output file>")
     sys.exit(1)
 
 if not os.path.isfile(sys.argv[1]):
@@ -29,10 +29,13 @@ if len(hash_nodes) == 0:
     print("No writable memory region found")
 else:
     for node in hash_nodes:
-        print("Clearing hash for writable memory region '"
-              + node.getparent().get('logical') + "'")
-        node.attrib['value'] = NO_HASH
+        print(
+            "Clearing hash for writable memory region '"
+            + node.getparent().get("logical")
+            + "'"
+        )
+        node.attrib["value"] = NO_HASH
 
-    with open(sys.argv[2], 'wb') as f:
+    with open(sys.argv[2], "wb") as f:
         print("Writing adjusted XML spec to '" + sys.argv[2] + "'")
         f.write(etree.tostring(doc, pretty_print=True))

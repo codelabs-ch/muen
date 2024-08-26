@@ -32,7 +32,7 @@ is
    --D @Interface
    --D Example request channel. Used to illustrate a service component.
    --D @Lst Reqbegin
-   Request : Foo.Message_Type
+   Request : Message_Type
      with
        Volatile,
        Async_Writers,
@@ -45,7 +45,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Receive (Req : out Foo.Message_Type)
+   procedure Receive (Req : out Message_Type)
    with
       Refined_Global  => (Input => Request),
       Refined_Depends => (Req => Request)

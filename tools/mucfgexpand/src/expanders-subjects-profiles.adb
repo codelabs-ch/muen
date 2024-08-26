@@ -563,7 +563,7 @@ is
             --D @Item(List     => 'linux_profile_actions',
             --D       Priority => 0).
             --D Add dummy legacy BIOS regions (start address
-            --D \texttt{16#000c\_0000#})
+            --D \texttt{16\#000c\_0000\#})
 
             BIOS_Region_Size   : constant Interfaces.Unsigned_64
               := 16#0001_0000#;

@@ -42,7 +42,7 @@ is
    --D and format. It must be adjusted whenever the audit record format is
    --D changed in an incompatible way. The two highest bytes are therefore
    --D used as counter.
-   Crash_Magic : constant := 16#0100_0df7_50d5_0e9a#;
+   Crash_Magic : constant := 16#0200_0df7_50d5_0e9a#;
 
    subtype Version_Str_Range is Positive range 1 .. 64;
 

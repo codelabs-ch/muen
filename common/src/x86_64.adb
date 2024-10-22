@@ -18,7 +18,6 @@
 
 package body X86_64
 with
-   SPARK_Mode    => Off,
    Refined_State => (State => null)
 is
 

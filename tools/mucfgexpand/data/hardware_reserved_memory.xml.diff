@@ -1,6 +1,0 @@
-  <memory>                                                                                                                                                <memory>
-   <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>                                                          <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
-   <reservedMemory name="rmrr1" physicalAddress="16#da08_3000#" size="16#0001_d000#"/>                                                               <
-   <reservedMemory name="rmrr2" physicalAddress="16#dd00_0000#" size="16#0001_0000#"/>                                                               <
-  </memory>                                                                                                                                               </memory>
-  <devices pciConfigAddress="16#e000_0000#" pciConfigSize="16#1000_0000#">                                                                                <devices pciConfigAddress="16#e000_0000#" pciConfigSize="16#1000_0000#">

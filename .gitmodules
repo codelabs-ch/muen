@@ -1,3 +1,6 @@
+[submodule "build-cfg"]
+	path = build-cfg
+	url = ../muen/build-cfg.git
 [submodule "components/linux/src"]
 	path = components/linux/src
 	url = ../muen/linux.git
@@ -17,9 +20,18 @@
 [submodule "components/linux/modules/muenblock"]
 	path = components/linux/modules/muenblock
 	url = ../muen/linux/muenblock.git
-[submodule "tools/sbs"]
-	path = tools/sbs
-	url = ../sbs-tools
 [submodule "components/linux/modules/muenevents"]
 	path = components/linux/modules/muenevents
 	url = ../muen/linux/muenevents.git
+[submodule "tools"]
+	path = tools
+	url = ../muen/tools.git
+[submodule "contrib"]
+	path = contrib
+	url = ../muen/contrib.git
+[submodule "common"]
+	path = common
+	url = ../muen/common
+[submodule "rts"]
+	path = rts
+	url = ../muen/rts

@@ -18,6 +18,7 @@
 
 with System;
 
+with Skp.Arch;
 with Skp.Kernel;
 
 with SK.Dump;
@@ -615,7 +616,7 @@ is
                    (Value => CR4,
                     Pos   => Constants.CR4_VMXE_FLAG));
       CPU.VMX.VMXON
-        (Region  => Skp.Vmxon_Address + Get_CPU_Offset,
+        (Region  => Skp.Arch.Vmxon_Address + Get_CPU_Offset,
          Success => Success);
       if not Success then
          VMX_Error (Reason  => Crash_Audit_Types.VTx_VMX_Root_Mode_Failed,

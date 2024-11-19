@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Skp.Scheduling;
+with Skp.Arch;
 with Skp.Subjects;
 
 with SK.Constants;
@@ -55,7 +55,7 @@ is
          Cycles := 0;
       end if;
       VMX.VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
-                      Value => Cycles / 2 ** Skp.Scheduling.VMX_Timer_Rate);
+                      Value => Cycles / 2 ** Skp.Arch.VMX_Timer_Rate);
    end Set_Timer;
 
 end SK.Arch;

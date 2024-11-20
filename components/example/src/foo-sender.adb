@@ -39,7 +39,7 @@ is
       & "interfaces. Non-overlap is checked during system build.");
    --D @Interface
    --D Example response channel. Used to illustrate a service component.
-   Response : Foo.Message_Type
+   Response : Message_Type
      with
        Volatile,
        Async_Readers,
@@ -54,7 +54,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Send (Res : Foo.Message_Type)
+   procedure Send (Res : Message_Type)
    with
       Refined_Global  => (Output => Response, In_Out => X86_64.State),
       Refined_Depends => (Response => Res, X86_64.State =>+ null)
@@ -67,5 +67,5 @@ is
    end Send;
 
 begin
-   Response := Foo.Null_Message;
+   Response := Null_Message;
 end Foo.Sender;

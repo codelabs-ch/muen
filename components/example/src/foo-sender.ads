@@ -25,7 +25,7 @@ with
 is
 
    --  Copies the given response message into the response page.
-   procedure Send (Res : Foo.Message_Type)
+   procedure Send (Res : Message_Type)
    with
       Global  => (Output => State, In_Out => X86_64.State),
       Depends => (State => Res, X86_64.State =>+ null);

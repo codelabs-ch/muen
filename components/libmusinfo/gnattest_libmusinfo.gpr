@@ -38,8 +38,11 @@ project GNATtest_Libmusinfo is
      ("musinfo-instance.ads",
       "musinfo-instance.adb");
 
+   Compiler_Switches := Shared.Spark_Compiler_Switches
+     & ("-gnatwal", "-ftest-coverage", "-fprofile-arcs");
+
    package Compiler is
-      for Default_Switches ("Ada") use Shared.Spark_Compiler_Switches;
+      for Default_Switches ("Ada") use Compiler_Switches;
    end Compiler;
 
    package Gnattest renames Shared_Tests.Gnattest;

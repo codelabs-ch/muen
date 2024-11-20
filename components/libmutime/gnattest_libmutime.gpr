@@ -34,8 +34,11 @@ project GNATtest_Libmutime is
    for Source_Dirs use ("src", "tests/src");
    for Object_Dir use "obj/tests";
 
+   Compiler_Switches := Shared.Spark_Compiler_Switches
+     & ("-gnatwal", "-ftest-coverage", "-fprofile-arcs");
+
    package Compiler is
-      for Default_Switches ("Ada") use Shared.Spark_Compiler_Switches;
+      for Default_Switches ("Ada") use Compiler_Switches;
    end Compiler;
 
    package Gnattest renames Shared_Tests.Gnattest;

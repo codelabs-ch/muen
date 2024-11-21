@@ -35,3 +35,9 @@
 [submodule "rts"]
 	path = rts
 	url = ../muen/rts
+[submodule "nci"]
+	path = ci/nci
+	url = ../nci.git
+[submodule "nci-config"]
+	path = ci/nci-config
+	url = ../nci-config.git

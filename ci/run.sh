@@ -11,13 +11,38 @@ NCI=$SCRIPTDIR/nci
 artifacts_dir=""
 force=false
 build_only=false
+deploy_to_hw=false
 
-while getopts "a:bf" opt; do
+set_buildvars()
+{
+	IFS='|' read -ra build_vars <<< "$1"
+
+	local i
+	for i in "${build_vars[@]}"
+	do
+		export "$i"
+	done
+}
+
+unset_buildvars()
+{
+	IFS='|' read -ra build_vars <<< "$1"
+
+	local i
+	for i in "${build_vars[@]}"
+	do
+		unset $(echo $i | cut -d\= -f1)
+	done
+}
+
+while getopts "a:bfd" opt; do
 	case $opt in
 		a) artifacts_dir="$OPTARG" ;;
 		b)
 			build_only=true
 			force=true
+			;;
+		d)	deploy_to_hw=true
 			;;
 		f)
 			force=true
@@ -26,6 +51,7 @@ while getopts "a:bf" opt; do
 			echo "Usage: $0 [-a artifacts_dir] [-b] [-f]"
 			echo "  -b  Build only, selects force"
 			echo "  -f  Build images even if image dir already exists"
+			echo "  -d  Also deploy to hardware"
 			exit 1
 			;;
 	esac
@@ -35,23 +61,35 @@ done
 [ -n "$artifacts_dir" ] || artifacts_dir=$(mktemp -d /tmp/nci-XXXXXX)
 mkdir -p $artifacts_dir
 
-if [ ! -d $IMAGES ] || [ "$force" = true ]; then
+if [ ! -f $IMAGES/.built ] || [ "$force" = true ]; then
 	# build and copy all relevant targets first
 	declare -a builds
-	builds+=("xml/demo_system_vtd.xml;hardware/qemu-kvm.xml;qemu-kvm.iso")
-	builds+=("xml/demo_system_vtd.xml;hardware/qemu-kvm-coreboot.xml;qemu-kvm-coreboot.iso")
+	builds+=("xml/demo_system_vtd.xml;hardware/qemu-kvm.xml;")
+	builds+=("xml/demo_system_vtd.xml;hardware/qemu-kvm-coreboot.xml;")
+
+	if [ "$deploy_to_hw" = true ]; then
+		builds+=("xml/integration_tests.xml;hardware/intel-nuc-6cayh-efi.xml;MUEN_EFI=1")
+		builds+=("xml/integration_tests_kt.xml;hardware/kontron-ktqm77.xml;MUEN_UCODE_DIR=$MUEN_UCODE_DIR")
+	fi
 
 	mkdir -p $IMAGES
 	for build in "${builds[@]}"; do
 		system="${build%%;*}"
 		remainder="${build#*;}"
 		hw="${remainder%%;*}"
-		img="${remainder#*;}"
+		img=$(basename "$hw")
+		img="${img%.xml}.iso"
+		vars="${remainder#*;}"
+
+		set_buildvars "$vars"
 		make -C kernel clean
 		make iso -j$(nproc) SYSTEM="$system" HARDWARE="$hw"
+		unset_buildvars "$vars"
 		cp emulate/muen.iso $IMAGES/$img
 	done
 fi
+
+touch $IMAGES/.built
 
 if [ "$build_only" = true ]; then
 	exit 0
@@ -64,8 +102,14 @@ if [ -n "$artifacts_dir" ]; then
 	ARGS+="-a $artifacts_dir"
 fi
 
+if [ "$deploy_to_hw" = true ]; then
+	configs=$SCRIPTDIR/nci-config/x86/*.yaml
+else
+	configs=$SCRIPTDIR/nci-config/x86/qemu*.yaml
+fi
+
 ./nci run $ARGS \
-	-c $SCRIPTDIR/nci-config/x86/qemu*.yaml \
+	-c $configs \
 	-DIMAGE_DIR=$IMAGES \
 	-DCONFIG_DIR=$SCRIPTDIR/nci-config \
 	-DMUEN_DIR=$ROOT | tee $artifacts_dir/nci.log

@@ -4,6 +4,8 @@ set -euxo pipefail
 
 SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+. $SCRIPTDIR/config
+
 IMAGES=$(realpath $SCRIPTDIR/images)
 ROOT=$(realpath $SCRIPTDIR/..)
 NCI=$SCRIPTDIR/nci
@@ -64,12 +66,10 @@ mkdir -p $artifacts_dir
 if [ ! -f $IMAGES/.built ] || [ "$force" = true ]; then
 	# build and copy all relevant targets first
 	declare -a builds
-	builds+=("xml/demo_system_vtd.xml;hardware/qemu-kvm.xml;")
-	builds+=("xml/demo_system_vtd.xml;hardware/qemu-kvm-coreboot.xml;")
+	builds+=("${targets_qemu[@]}")
 
 	if [ "$deploy_to_hw" = true ]; then
-		builds+=("xml/integration_tests.xml;hardware/intel-nuc-6cayh-efi.xml;MUEN_EFI=1")
-		builds+=("xml/integration_tests_kt.xml;hardware/kontron-ktqm77.xml;MUEN_UCODE_DIR=$MUEN_UCODE_DIR")
+		builds+=("${targets_hw[@]}")
 	fi
 
 	mkdir -p $IMAGES

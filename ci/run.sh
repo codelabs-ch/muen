@@ -87,6 +87,9 @@ if [ ! -f $IMAGES/.built ] || [ "$force" = true ]; then
 		unset_buildvars "$vars"
 		cp emulate/muen.iso $IMAGES/$img
 	done
+
+	# generate kernel metrics (last target)
+	make -C kernel metrics
 fi
 
 touch $IMAGES/.built

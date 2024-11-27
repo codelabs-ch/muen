@@ -78,6 +78,7 @@ clean:		## Clean up everything except contrib sources
 	$(MAKE) clean -C rts
 	$(MAKE) clean -C emulate
 	rm -rf contrib/obj
+	rm -rf ci/images
 
 distclean:	## Clean up everything including contrib sources
 distclean: clean

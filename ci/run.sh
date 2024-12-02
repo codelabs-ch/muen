@@ -90,6 +90,9 @@ if [ ! -f $IMAGES/.built ] || [ "$force" = true ]; then
 
 	# generate kernel metrics (last target)
 	make -C kernel metrics
+
+	# copy mulog.py
+	cp tools/scripts/mulog.py $IMAGES/
 fi
 
 touch $IMAGES/.built
@@ -114,7 +117,6 @@ fi
 ./nci run $ARGS \
 	-c $configs \
 	-DIMAGE_DIR=$IMAGES \
-	-DCONFIG_DIR=$SCRIPTDIR/nci-config \
-	-DMUEN_DIR=$ROOT | tee $artifacts_dir/nci.log
+	-DCONFIG_DIR=$SCRIPTDIR/nci-config | tee $artifacts_dir/nci.log
 
 popd

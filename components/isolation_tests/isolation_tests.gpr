@@ -16,17 +16,16 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmudebuglog/libmudebuglog";
-with "../libmusinfo/libmusinfo";
+with "libmudebuglog";
+with "libmusinfo";
+with "common_strings";
 
 project Isolation_Tests extends "../component_spark" is
 
    Extra_Dirs := Component_Spark.Src_Dirs;
-   Extra_Dirs := Extra_Dirs
-     & "../../common/strings/impl";
 
    for Languages use ("Ada", "Asm");
-   for Source_Dirs use ("generated", "src") & Extra_Dirs;
+   for Source_Dirs use (external("GENERATED"), "src", "../src") & Extra_Dirs;
    for Object_Dir use "obj/" & Component_Spark.Build_Mode;
    for Main use ("isolation_tests");
 

@@ -26,9 +26,9 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-with "../../build-cfg/gpr/shared.gpr";
-with "../libmusinfo/libmusinfo";
-with "../libmuinit/libmuinit";
+with "shared";
+with "libmusinfo";
+with "libmuinit";
 with "libsparkcrypto";
 
 project Muinit extends "../common" is

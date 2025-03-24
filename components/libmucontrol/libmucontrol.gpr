@@ -26,12 +26,12 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-with "../libmucontroltypes/libmucontroltypes";
+with "libmucontroltypes";
 
 library project Libmucontrol extends "../library_spark" is
 
    for Languages use ("Ada");
-   for Source_Dirs use ("generated", "src");
+   for Source_Dirs use (external("GENERATED"), "src");
    for Object_Dir use "obj/" & Library_Spark.Build_Mode;
    for Library_Dir use "lib/" & Library_Spark.Build_Mode;
    for Library_Name use "mucontrol";

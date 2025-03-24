@@ -16,15 +16,16 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmudebuglog/libmudebuglog";
-with "../libmutime/libmutime";
-with "../libmusinfo/libmusinfo";
-with "../libmucontrol/libmucontrol";
+with "common_strings";
+with "libmudebuglog";
+with "libmutime";
+with "libmusinfo";
+with "libmucontrol";
 
 project Time extends "../component_spark" is
 
    for Languages use ("Ada", "Asm");
-   for Source_Dirs use ("generated", "src", "../../common/strings/impl")
+   for Source_Dirs use (external("GENERATED"), "src", "../src")
      & Component_Spark.Src_Dirs;
    for Object_Dir use "obj/" & Component_Spark.Build_Mode;
    for Main use ("time");

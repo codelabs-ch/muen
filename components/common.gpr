@@ -16,7 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../build-cfg/gpr/shared";
+with "shared";
+with "muen_common";
 
 abstract project Common is
 
@@ -26,7 +27,7 @@ abstract project Common is
    type Proof_Type is ("limited", "complete");
    Proof_Mode : Proof_Type := external ("proofs", "limited");
 
-   Src_Dirs := ("../../common/src", "../src");
+   Src_Dirs := ("src");
    Extra_Warning_Switches := ();
    Extra_Compiler_Switches := ();
    Preprocessor_Switches := ();
@@ -59,7 +60,7 @@ abstract project Common is
    end case;
 
    package Builder is
-      for Global_Configuration_Pragmas use "../build-cfg/gpr/restrictions.adc";
+      for Global_Configuration_Pragmas use external ("BUILD_CFG_PATH") & "/restrictions.adc";
    end Builder;
 
    package Compiler is
@@ -69,7 +70,7 @@ abstract project Common is
         & Preprocessor_Switches
         & Shared.Warning_Switches
         & Extra_Warning_Switches;
-      for Local_Configuration_Pragmas use "../build-cfg/gpr/restrictions-" & Build_Mode & ".adc";
+      for Local_Configuration_Pragmas use external ("BUILD_CFG_PATH") & "/restrictions-" & Build_Mode & ".adc";
    end Compiler;
 
    package Naming is

@@ -31,6 +31,7 @@ is
    --D argument.
    procedure Trigger_Event (Number : SK.Byte)
    with
+      SPARK_Mode => Off,
       Global  => (In_Out => X86_64.State),
       Depends => (X86_64.State =>+ Number);
 

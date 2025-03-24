@@ -17,6 +17,7 @@
 --
 
 package Dbg.Crash_Audit
+with SPARK_Mode => Off
 is
 
    --  Process crash audit records if present.

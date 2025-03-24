@@ -29,7 +29,7 @@
 library project Libmutime extends "../library_spark" is
 
    for Languages use ("Ada");
-   for Source_Dirs use ("generated", "src");
+   for Source_Dirs use (external("LIBMUTIME_GENERATED"), "src");
    for Object_Dir use "obj/" & Library_Spark.Build_Mode;
    for Library_Dir use "lib/" & Library_Spark.Build_Mode;
    for Library_Name use "mutime";

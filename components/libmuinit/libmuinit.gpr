@@ -26,9 +26,9 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-with "../../build-cfg/gpr/shared.gpr";
-with "../libmusinfo/libmusinfo";
-with "../libmucontrol/libmucontrol";
+with "shared";
+with "libmusinfo";
+with "libmucontrol";
 with "libsparkcrypto";
 
 library project Libmuinit extends "../library_spark" is

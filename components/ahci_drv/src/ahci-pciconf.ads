@@ -44,7 +44,7 @@ is
       Cache_Line_Size         : Interfaces.Unsigned_8;
       Master_Latency_Timer    : Interfaces.Unsigned_8;
       Header_Type             : Interfaces.Unsigned_8;
-      Buitin_Self_Test        : Interfaces.Unsigned_8;
+      Builtin_Self_Test       : Interfaces.Unsigned_8;
       Base_Address_Register_0 : Interfaces.Unsigned_32;
       Base_Address_Register_1 : Interfaces.Unsigned_32;
       Base_Address_Register_2 : Interfaces.Unsigned_32;
@@ -75,7 +75,7 @@ is
       Cache_Line_Size         at 16#0c# range  0 ..  7;
       Master_Latency_Timer    at 16#0c# range  8 .. 15;
       Header_Type             at 16#0c# range 16 .. 23;
-      Buitin_Self_Test        at 16#0c# range 24 .. 31;
+      Builtin_Self_Test       at 16#0c# range 24 .. 31;
       Base_Address_Register_0 at 16#10# range  0 .. 31;
       Base_Address_Register_1 at 16#14# range  0 .. 31;
       Base_Address_Register_2 at 16#18# range  0 .. 31;

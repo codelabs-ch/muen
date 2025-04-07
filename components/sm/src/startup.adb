@@ -92,7 +92,7 @@ is
            := Musinfo.Instance.Resource_By_Name
              (Name => Musinfo.Utils.To_Name (Str => Linux_Status_Name),
               Kind => Musinfo.Res_Memory);
-         Cur_State, Unused_Diag : SK.Word64;
+         Cur_State, Diag : SK.Word64;
       begin
          if Mem_Res = Musinfo.Null_Resource
            or else Mem_Res.Mem_Data.Address /= Linux_Status_Address
@@ -110,7 +110,7 @@ is
          end if;
 
          Cur_State   := SK.Word64 (Linux_Status.State);
-         Unused_Diag := SK.Word64 (Linux_Status.Diagnostics);
+         Diag := SK.Word64 (Linux_Status.Diagnostics);
 
          Success := (Cur_State = SK.Word64 (Mucontrol.Status.STATE_RUNNING));
          if Success then
@@ -121,7 +121,7 @@ is
             Debug_Ops.Put_Line (Item => "State      : "
                                 & SK.Strings.Img (Item => Cur_State));
             Debug_Ops.Put_Line (Item => "Diagnostics: "
-                                & SK.Strings.Img (Item => Unused_Diag));
+                                & SK.Strings.Img (Item => Diag));
          end if;
       end;
    end Setup_Monitored_Subject;

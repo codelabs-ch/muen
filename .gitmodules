@@ -31,10 +31,10 @@
 	url = ../muen/contrib.git
 [submodule "common"]
 	path = common
-	url = ../muen/common
+	url = ../muen/common.git
 [submodule "rts"]
 	path = rts
-	url = ../muen/rts
+	url = ../muen/rts.git
 [submodule "nci"]
 	path = ci/nci
 	url = ../nci.git

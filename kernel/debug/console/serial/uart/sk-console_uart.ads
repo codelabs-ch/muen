@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2023  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2023  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,13 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK.Constants;
+with SK.UART_Pkg;
+with SK.Console_Serial;
 
-private generic package SK.UART.State
-is
-
-   Send_Char_Count : Byte := FIFO_Size
-   with
-      Linker_Section => SK.Constants.Global_Data_Section;
-
-end SK.UART.State;
+package SK.Console_UART is new Console_Serial (UART_Pkg => UART_Pkg);

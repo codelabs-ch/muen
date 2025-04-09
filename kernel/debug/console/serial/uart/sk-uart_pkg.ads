@@ -21,7 +21,7 @@ with Skp.Hardware;
 with SK.UART;
 with SK.UART_8250;
 
-package SK.Console_UART is new SK.UART
+package SK.UART_Pkg is new UART
   (Base_Address  => Skp.Hardware.Debugconsole_Port,
    Register_Type => Byte,
    Address_Type  => Word16,

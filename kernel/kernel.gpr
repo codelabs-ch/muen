@@ -38,11 +38,21 @@ project Kernel is
       when "debug" =>
          Extra_Dirs := Extra_Dirs
            & ("../common/" & Build_Mode, "../common/strings/impl",
-              Build_Mode, Build_Mode & "/console/" & Policy.Debug_Type);
+              Build_Mode);
          Extra_Languages := ("Asm_Cpp");
          Preprocessor_Switches :=
            ("-gnateDRelease_Warnings=Ignored_Warnings");
          Extra_Warning_Switches := Shared.Build_Warning_Switches;
+
+         case Policy.Debug_Type is
+            when "uart" | "hsuart" =>
+               Extra_Dirs := Extra_Dirs
+                 & (Build_Mode & "/console/serial",
+                    Build_Mode & "/console/serial/" & Policy.Debug_Type);
+            when others =>
+               Extra_Dirs := Extra_Dirs
+                 & (Build_Mode & "/console/" & Policy.Debug_Type);
+         end case;
 
       when "release" =>
          Extra_Dirs := Extra_Dirs & ("../common/strings/empty", Build_Mode);
@@ -127,11 +137,6 @@ project Kernel is
    package Naming is
       for Body_Suffix ("Asm_Cpp") use ".S";
       for Body ("SK.MCU") use "sk-mcu__" & MCU_Pkg & ".adb";
-      case Build_Mode is
-         when "debug" =>
-            for Spec ("SK.UART.State") use "sk-uart-state__globaldata.ads";
-         when others => null;
-      end case;
    end Naming;
 
 end Kernel;

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2020  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2020  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2015  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,12 +16,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Skp.Hardware;
+
 with SK.UART;
 with SK.UART_HS;
 
-with Skp.Hardware;
-
-package SK.Console_HSUART is new SK.UART
+package SK.UART_Pkg is new UART
   (Base_Address  => Skp.Hardware.Debugconsole_Memory,
    Register_Type => Word32,
    Address_Type  => Word64,

@@ -25,6 +25,8 @@ private with Dbg.Serial.UART;
 package body Dbg.Serial
 is
 
+   UART_State : Dbg.Serial.UART.State_Type;
+
    --  Receive data up until Length bytes from UART into given buffer. The
    --  actual number of bytes received is return by Length.
    procedure Receive_Buffer
@@ -48,7 +50,7 @@ is
    procedure Init
    is
    begin
-      UART.Init;
+      UART.Init (State => UART_State);
    end Init;
 
    -------------------------------------------------------------------------
@@ -76,7 +78,9 @@ is
    is
    begin
       for I in Buffer'First .. Length loop
-         UART.Put_Char (Item => Character'Val (Buffer (I)));
+         UART.Put_Char
+           (State => UART_State,
+            Item  => Character'Val (Buffer (I)));
       end loop;
       Success := True;
    end Send_Buffer;

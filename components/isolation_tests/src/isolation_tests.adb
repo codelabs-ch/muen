@@ -27,6 +27,7 @@ with ITS.Instructions;
 with ITS.IO_Ports;
 with ITS.Memory;
 with ITS.MSRs;
+with ITS.FPU;
 with ITS.Results;
 
 procedure Isolation_Tests
@@ -56,6 +57,8 @@ begin
    ITS.Instructions.Execute_VMXOFF;
    ITS.Instructions.Write_To_CR0;
    ITS.Instructions.Write_To_CR3;
+
+   ITS.FPU.Verify_Initial_State;
 
    ITS.Results.Report;
 

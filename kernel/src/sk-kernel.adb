@@ -1098,6 +1098,11 @@ is
          Apic.Enable;
          MCE.Enable;
 
+         --D @Item List => impl_kernel_init_steps
+         --D Set CPU to base frequency and disable Opportunistic Processor
+         --D Performance Operation ("Turbo").
+         Power.Set_CPU_Base_Frequency;
+
          if CPU_Info.Is_BSP then
             --D @Item List => impl_kernel_init_steps
             --D Setup of Multicore memory barries (BSP-only).

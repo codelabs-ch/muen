@@ -42,4 +42,11 @@ is
       Depends => (X86_64.State =>+ null),
       No_Return;
 
+   --  Set CPU to base frequency and disengages Opportunistic Processor
+   --  Performance Operation ("Turbo" mode).
+   procedure Set_CPU_Base_Frequency
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ null);
+
 end SK.Power;

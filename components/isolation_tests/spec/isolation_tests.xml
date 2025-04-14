@@ -11,6 +11,11 @@
    <msrs>
     <msr end="16#0174#" mode="r" start="16#0174#"/>
    </msrs>
+   <registers>
+    <cr4>
+     <XSAVEEnable>1</XSAVEEnable>
+    </cr4>
+   </registers>
   </vcpu>
   <memory>
    <memory logical="read_only" size="16#1000#" virtualAddress="16#1000_0000#" writable="false" executable="false"/>

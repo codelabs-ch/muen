@@ -40,19 +40,27 @@ is
    procedure Verify_Initial_State
    is
       use type Interfaces.Unsigned_16;
+      use type SK.XSAVE_Legacy_Registers_Type;
+      use type SK.XSAVE_Extended_Region_Type;
 
       Title           : constant String
         := "Verify initial FPU State";
       Description     : constant String
-        := "This test verifies the initial FPU state.";
+        := "This test verifies the initial subject-visible FPU state.";
       Expected_Result : constant String
-        := "The FPU register values saved to memory are all 0.";
+        := "The FPU legacy and XSAVE header values contain the expected "
+        & "values and the FPU legacy registers and extended region are null.";
       Log_ID          : Log_Buffer.Ext_Log_Entries_Range;
       Success         : Boolean;
       Unused_Byte     : Interfaces.Unsigned_8;
       Start, Stop     : Interfaces.Unsigned_64;
       Src_Info        : constant String
         := Enclosing_Entity & ", " & Source_Location;
+
+      Null_Legacy_Registers : constant SK.XSAVE_Legacy_Registers_Type
+        := (others => 0);
+      Null_Extended_Region  : constant SK.XSAVE_Extended_Region_Type
+        := (others => 0);
 
       XCR0_Ref       : constant Interfaces.Unsigned_64 := 7;
       XSTATE_BV_Ref  : constant Interfaces.Unsigned_64 := 7;
@@ -162,6 +170,26 @@ is
         (Str => "  Result   : "
          & SK.Strings.Img (Item => State.Legacy_Header.FDP));
 
+      Log_Buffer.New_Line;
+      Log_Buffer.Put_Line (Str => "> Legacy registers");
+      Log_Buffer.Put_Line (Str => "  Expected : all-0");
+      Log_Buffer.Put (Str => "  Result   : ");
+      if State.Legacy_Registers = Null_Legacy_Registers then
+         Log_Buffer.Put_Line (Str => "True");
+      else
+         Log_Buffer.Put_Line (Str => "False");
+      end if;
+
+      Log_Buffer.New_Line;
+      Log_Buffer.Put_Line (Str => "> Extended region");
+      Log_Buffer.Put_Line (Str => "  Expected : all-0");
+      Log_Buffer.Put (Str => "  Result   : ");
+      if State.Extended_Region = Null_Extended_Region then
+         Log_Buffer.Put_Line (Str => "True");
+      else
+         Log_Buffer.Put_Line (Str => "False");
+      end if;
+
       Success := XCR0 = XCR0_Ref
          and State.XSAVE_Header.XSTATE_BV = XSTATE_BV_Ref
          and State.XSAVE_Header.XCOMP_BV = XCOMP_BV_Ref
@@ -172,7 +200,9 @@ is
          and State.Legacy_Header.FTW = FTW_Ref
          and State.Legacy_Header.FOP = FOP_Ref
          and State.Legacy_Header.FIP = FIP_Ref
-         and State.Legacy_Header.FDP = FDP_Ref;
+         and State.Legacy_Header.FDP = FDP_Ref
+         and State.Legacy_Registers = Null_Legacy_Registers
+         and State.Extended_Region = Null_Extended_Region;
 
       Stop := Musinfo.Instance.TSC_Schedule_End;
       Results.Append

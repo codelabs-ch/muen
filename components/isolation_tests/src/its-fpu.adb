@@ -24,6 +24,8 @@ with SK.Strings;
 with ITS.Log_Buffer;
 with ITS.Results;
 
+with Reference_Values;
+
 package body ITS.FPU
 is
 
@@ -62,8 +64,10 @@ is
       Null_Extended_Region  : constant SK.XSAVE_Extended_Region_Type
         := (others => 0);
 
-      XCR0_Ref       : constant Interfaces.Unsigned_64 := 7;
-      XSTATE_BV_Ref  : constant Interfaces.Unsigned_64 := 7;
+      XCR0_Ref       : constant Interfaces.Unsigned_64
+        := Reference_Values.XSAVE_Supported;
+      XSTATE_BV_Ref  : constant Interfaces.Unsigned_64
+        := Reference_Values.XSAVE_Supported;
       XCOMP_BV_Ref   : constant Interfaces.Unsigned_64 := 0;
       MXCSR_Ref      : constant Interfaces.Unsigned_32 := 16#1f80#;
       MXCSR_Mask_Ref : constant Interfaces.Unsigned_32 := 16#ffff#;

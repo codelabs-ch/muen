@@ -1,4 +1,9 @@
 <subject name="nic_sl">
+ <devices>
+  <device logical="nvme" physical="non-volatile_memory_controller_1">
+   <memory logical="mmconf" physical="mmconf" writable="true" executable="false"/>
+  </device>
+ </devices>
  <events>
   <source>
    <group name="vmx_exit">

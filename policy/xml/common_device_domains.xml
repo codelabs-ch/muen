@@ -4,6 +4,7 @@
    <mapSubjectMemory subject="nic_linux"/>
   </memory>
   <devices>
+   <device logical="nvme" physical="non-volatile_memory_controller_1"/>
    <device logical="first_nic" physical="ethernet_controller_1"/>
    <device logical="additional_nics" physical="additional_nics"/>
   </devices>

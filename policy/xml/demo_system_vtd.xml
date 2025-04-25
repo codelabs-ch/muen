@@ -151,6 +151,7 @@
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#7000_0000#" writable="false" executable="false"/>
    </memory>
    <devices>
+    <device logical="nvme" physical="non-volatile_memory_controller_1"/>
     <device logical="eth0" physical="nic_1">
      <if variable="pciconf_emulation_enabled" value="true">
       <pci bus="16#00#" device="16#01#" function="0">

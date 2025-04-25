@@ -15,6 +15,7 @@
      Log:
        * WARNING *: Adding fake irq 16 for device with MSIs: 0000:00:02.0
        * WARNING *: Adding fake irq 16 for device with MSIs: 0000:00:03.0
+       * WARNING *: Adding fake irq 16 for device with MSIs: 0000:00:05.0
        * WARNING *: Adding fake irq 16 for device with MSIs: 0000:00:1f.2
        * WARNING *: Board information in output description could not be obtained:
        [Errno 2] No such file or directory: '/sys/devices/virtual/dmi/id/board_vendor'
@@ -147,7 +148,7 @@
         <iommuGroup id="1"/>
       </pci>
       <memory caching="UC" name="mem1" physicalAddress="16#fd00_0000#" size="16#0100_0000#"/>
-      <memory caching="UC" name="mem2" physicalAddress="16#fcf6_7000#" size="16#1000#"/>
+      <memory caching="UC" name="mem2" physicalAddress="16#fcf6_3000#" size="16#1000#"/>
       <memory caching="UC" name="mem3" physicalAddress="16#000c_0000#" size="16#0002_0000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#b000_8000#" size="16#1000#"/>
     </device>
@@ -163,7 +164,7 @@
         <msi name="msi3"/>
         <msi name="msi4"/>
       </irq>
-      <memory caching="UC" name="mem1" physicalAddress="16#fcf6_6000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#fcf6_2000#" size="16#1000#"/>
       <memory caching="UC" name="mem2" physicalAddress="16#fcf6_c000#" size="16#4000#"/>
       <memory caching="UC" name="mem3" physicalAddress="16#fcfc_0000#" size="16#0004_0000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#b001_0000#" size="16#1000#"/>
@@ -202,16 +203,92 @@
         <iommuGroup id="4"/>
       </pci>
       <irq name="irq1" number="20"/>
-      <memory caching="UC" name="mem1" physicalAddress="16#fcf6_4000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#fcf6_0000#" size="16#1000#"/>
       <memory caching="UC" name="mem2" physicalAddress="16#fcf8_0000#" size="16#0004_0000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#b002_0000#" size="16#1000#"/>
       <ioPort end="16#ffff#" name="ioport1" start="16#ff00#"/>
+    </device>
+    <device name="non-volatile_memory_controller_1">
+      <description>Red Hat, Inc. QEMU NVM Express Controller</description>
+      <pci bus="16#00#" device="16#05#" function="0">
+        <identification classcode="16#0108#" deviceId="16#0010#" revisionId="16#02#" vendorId="16#1b36#"/>
+        <iommuGroup id="5"/>
+      </pci>
+      <irq name="irq1" number="16">
+        <msi name="msi1"/>
+        <msi name="msi2"/>
+        <msi name="msi3"/>
+        <msi name="msi4"/>
+        <msi name="msi5"/>
+        <msi name="msi6"/>
+        <msi name="msi7"/>
+        <msi name="msi8"/>
+        <msi name="msi9"/>
+        <msi name="msi10"/>
+        <msi name="msi11"/>
+        <msi name="msi12"/>
+        <msi name="msi13"/>
+        <msi name="msi14"/>
+        <msi name="msi15"/>
+        <msi name="msi16"/>
+        <!-- <msi name="msi17"/> -->
+        <!-- <msi name="msi18"/> -->
+        <!-- <msi name="msi19"/> -->
+        <!-- <msi name="msi20"/> -->
+        <!-- <msi name="msi21"/> -->
+        <!-- <msi name="msi22"/> -->
+        <!-- <msi name="msi23"/> -->
+        <!-- <msi name="msi24"/> -->
+        <!-- <msi name="msi25"/> -->
+        <!-- <msi name="msi26"/> -->
+        <!-- <msi name="msi27"/> -->
+        <!-- <msi name="msi28"/> -->
+        <!-- <msi name="msi29"/> -->
+        <!-- <msi name="msi30"/> -->
+        <!-- <msi name="msi31"/> -->
+        <!-- <msi name="msi32"/> -->
+        <!-- <msi name="msi33"/> -->
+        <!-- <msi name="msi34"/> -->
+        <!-- <msi name="msi35"/> -->
+        <!-- <msi name="msi36"/> -->
+        <!-- <msi name="msi37"/> -->
+        <!-- <msi name="msi38"/> -->
+        <!-- <msi name="msi39"/> -->
+        <!-- <msi name="msi40"/> -->
+        <!-- <msi name="msi41"/> -->
+        <!-- <msi name="msi42"/> -->
+        <!-- <msi name="msi43"/> -->
+        <!-- <msi name="msi44"/> -->
+        <!-- <msi name="msi45"/> -->
+        <!-- <msi name="msi46"/> -->
+        <!-- <msi name="msi47"/> -->
+        <!-- <msi name="msi48"/> -->
+        <!-- <msi name="msi49"/> -->
+        <!-- <msi name="msi50"/> -->
+        <!-- <msi name="msi51"/> -->
+        <!-- <msi name="msi52"/> -->
+        <!-- <msi name="msi53"/> -->
+        <!-- <msi name="msi54"/> -->
+        <!-- <msi name="msi55"/> -->
+        <!-- <msi name="msi56"/> -->
+        <!-- <msi name="msi57"/> -->
+        <!-- <msi name="msi58"/> -->
+        <!-- <msi name="msi59"/> -->
+        <!-- <msi name="msi60"/> -->
+        <!-- <msi name="msi61"/> -->
+        <!-- <msi name="msi62"/> -->
+        <!-- <msi name="msi63"/> -->
+        <!-- <msi name="msi64"/> -->
+        <!-- <msi name="msi65"/> -->
+      </irq>
+      <memory caching="UC" name="mem1" physicalAddress="16#fcf6_4000#" size="16#4000#"/>
+      <memory caching="UC" name="mmconf" physicalAddress="16#b002_8000#" size="16#1000#"/>
     </device>
     <device name="isa_bridge_1">
       <description>Intel Corporation 82801IB (ICH9) LPC Interface Controller</description>
       <pci bus="16#00#" device="16#1f#" function="0">
         <identification classcode="16#0601#" deviceId="16#2918#" revisionId="16#02#" vendorId="16#8086#"/>
-        <iommuGroup id="5"/>
+        <iommuGroup id="6"/>
       </pci>
       <memory caching="UC" name="mmconf" physicalAddress="16#b00f_8000#" size="16#1000#"/>
     </device>
@@ -219,12 +296,12 @@
       <description>Intel Corporation 82801IR/IO/IH (ICH9R/DO/DH) 6 port SATA Controller [AHCI mode]</description>
       <pci bus="16#00#" device="16#1f#" function="2">
         <identification classcode="16#0106#" deviceId="16#2922#" revisionId="16#02#" vendorId="16#8086#"/>
-        <iommuGroup id="5"/>
+        <iommuGroup id="6"/>
       </pci>
       <irq name="irq1" number="16">
         <msi name="msi1"/>
       </irq>
-      <memory caching="UC" name="mem1" physicalAddress="16#fcf6_5000#" size="16#1000#"/>
+      <memory caching="UC" name="mem1" physicalAddress="16#fcf6_1000#" size="16#1000#"/>
       <memory caching="UC" name="mmconf" physicalAddress="16#b00f_a000#" size="16#1000#"/>
       <ioPort end="16#feff#" name="ioport1" start="16#fee0#"/>
     </device>
@@ -232,7 +309,7 @@
       <description>Intel Corporation 82801I (ICH9 Family) SMBus Controller</description>
       <pci bus="16#00#" device="16#1f#" function="3">
         <identification classcode="16#0c05#" deviceId="16#2930#" revisionId="16#02#" vendorId="16#8086#"/>
-        <iommuGroup id="5"/>
+        <iommuGroup id="6"/>
       </pci>
       <memory caching="UC" name="mmconf" physicalAddress="16#b00f_b000#" size="16#1000#"/>
       <ioPort end="16#043f#" name="ioport1" start="16#0400#"/>

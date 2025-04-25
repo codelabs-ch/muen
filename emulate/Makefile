@@ -50,12 +50,13 @@ ISO_FILES := \
 GRUB_MKRESCUE_PRELOAD_MODS ?= gcry_rsa gcry_sha512 configfile csl pgp sbs normal
 
 QEMU_OPTS += \
-	-drive file=$(ISOFILE),index=0,media=disk,format=raw \
 	-serial file:serial.out \
 	-machine pc-q35-7.2,accel=kvm,kernel-irqchip=split \
 	-cpu IvyBridge-IBRS,+invtsc,+vmx \
 	-m $(QEMU_MEM) \
 	-smp cores=2,threads=2,sockets=1 \
+	-device nvme,bus=pcie.0,addr=5.0,drive=nvme0,serial=nvme-1 \
+	-drive file=$(ISOFILE),index=0,media=disk,format=raw,id=nvme0,if=none \
 	-device intel-iommu,intremap=on,device-iotlb=on \
 	-device virtio-net-pci,bus=pcie.0,addr=2.0,netdev=net0,disable-legacy=on,disable-modern=off,iommu_platform=on,ats=on \
 	-netdev $(QEMU_NETDEV_OPTS) \

@@ -26,15 +26,168 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
+with System;
+
+with Interfaces;
+
+--  TODO: Remove me.
+with Debuglog.Client;
+with SK.Strings;
+
 package body Init.Devices
 is
+   --  TODO: Move to proper library and use it in ahci_drv
+   --  as well
+
+   type Info_Record is record
+      Revision_ID : Interfaces.Unsigned_8;
+      Class_Code  : Interfaces.Unsigned_24;
+   end record
+   with
+      Pack,
+      Size => 32;
+
+   type Header_Type is record
+      Vendor_ID               : Interfaces.Unsigned_16;
+      Device_ID               : Interfaces.Unsigned_16;
+      Command                 : Interfaces.Unsigned_16;
+      Status                  : Interfaces.Unsigned_16;
+      Info                    : Info_Record;
+      Cache_Line_Size         : Interfaces.Unsigned_8;
+      Master_Latency_Timer    : Interfaces.Unsigned_8;
+      Header_Type             : Interfaces.Unsigned_8;
+      Buitin_Self_Test        : Interfaces.Unsigned_8;
+      Base_Address_Register_0 : Interfaces.Unsigned_32;
+      Base_Address_Register_1 : Interfaces.Unsigned_32;
+      Base_Address_Register_2 : Interfaces.Unsigned_32;
+      Base_Address_Register_3 : Interfaces.Unsigned_32;
+      Base_Address_Register_4 : Interfaces.Unsigned_32;
+      Base_Address_Register_5 : Interfaces.Unsigned_32;
+      Cardbus_CIS_Pointer     : Interfaces.Unsigned_32;
+      Subsystem_Vendor_ID     : Interfaces.Unsigned_16;
+      Subsystem_ID            : Interfaces.Unsigned_16;
+      Expansion_ROM_Base_Addr : Interfaces.Unsigned_32;
+      Capabilities_Pointer    : Interfaces.Unsigned_8;
+      Reserved_1              : Interfaces.Unsigned_24;
+      Reserved_2              : Interfaces.Unsigned_32;
+      Interrupt_Line          : Interfaces.Unsigned_8;
+      Interrupt_Pin           : Interfaces.Unsigned_8;
+      Min_Grant               : Interfaces.Unsigned_8;
+      Max_Latency             : Interfaces.Unsigned_8;
+   end record
+   with
+      Size => 64 * 8;
+
+   for Header_Type use record
+      Vendor_ID               at 16#00# range  0 .. 15;
+      Device_ID               at 16#00# range 16 .. 31;
+      Command                 at 16#04# range  0 .. 15;
+      Status                  at 16#04# range 16 .. 31;
+      Info                    at 16#08# range  0 .. 31;
+      Cache_Line_Size         at 16#0c# range  0 ..  7;
+      Master_Latency_Timer    at 16#0c# range  8 .. 15;
+      Header_Type             at 16#0c# range 16 .. 23;
+      Buitin_Self_Test        at 16#0c# range 24 .. 31;
+      Base_Address_Register_0 at 16#10# range  0 .. 31;
+      Base_Address_Register_1 at 16#14# range  0 .. 31;
+      Base_Address_Register_2 at 16#18# range  0 .. 31;
+      Base_Address_Register_3 at 16#1c# range  0 .. 31;
+      Base_Address_Register_4 at 16#20# range  0 .. 31;
+      Base_Address_Register_5 at 16#24# range  0 .. 31;
+      Cardbus_CIS_Pointer     at 16#28# range  0 .. 31;
+      Subsystem_Vendor_ID     at 16#2c# range  0 .. 15;
+      Subsystem_ID            at 16#2c# range 16 .. 31;
+      Expansion_ROM_Base_Addr at 16#30# range  0 .. 31;
+      Capabilities_Pointer    at 16#34# range  0 ..  7;
+      Reserved_1              at 16#34# range  8 .. 31;
+      Reserved_2              at 16#38# range  0 .. 31;
+      Interrupt_Line          at 16#3c# range  0 ..  7;
+      Interrupt_Pin           at 16#3c# range  8 .. 15;
+      Min_Grant               at 16#3c# range 16 .. 23;
+      Max_Latency             at 16#3c# range 24 .. 31;
+   end record;
+
+   subtype Capability_Range is Interfaces.Unsigned_8 range 16#40# .. 16#ff#;
+
+   type Caps_Array is array (Capability_Range) of Interfaces.Unsigned_8
+   with
+      Pack;
+
+   type Config_Space is record
+      Header       : Header_Type;
+      Capabilities : Caps_Array;
+   end record
+   with
+      Pack,
+      Object_Size => 256 * 8,
+      Size        => 256 * 8;
+
+   pragma Warnings
+     (GNATprove, Off,
+      "writing * is assumed to have no effects on other non-volatile objects",
+      Reason => "All objects with address clause are mapped to external "
+      & "interfaces. Non-overlap is checked during system build.");
+   Instance : Config_Space
+   with
+      Volatile,
+      Async_Readers,
+      Async_Writers,
+      Address => System'To_Address (16#f800_8000#);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
+
+   -------------------------------------------------------------------------
+
+   procedure Print_PCI_Capabilities
+   is
+      use Debuglog.Client;
+      use type Interfaces.Unsigned_8;
+
+      Cap_ID : Interfaces.Unsigned_8;
+      Index  : Interfaces.Unsigned_8 := Instance.Header.Capabilities_Pointer;
+   begin
+      loop
+         exit when Index = 0 or not (Index in Capability_Range);
+         Cap_ID := Instance.Capabilities (Index);
+         Put_Line (Item => " Capability : " & SK.Strings.Img (Cap_ID) & " @ "
+                   & SK.Strings.Img (Index));
+         Index := Instance.Capabilities (Index + 1);
+      end loop;
+   end Print_PCI_Capabilities;
+
+   -------------------------------------------------------------------------
+
+   procedure Print_PCI_Device_Info
+   is
+      use Debuglog.Client;
+
+      Dummy8  : Interfaces.Unsigned_8;
+      Dummy16 : Interfaces.Unsigned_16;
+      Dummy32 : Interfaces.Unsigned_32;
+   begin
+      Put_Line (Item => "== PCI config space");
+      Dummy16 := Instance.Header.Vendor_ID;
+      Put_Line (Item => " Vendor ID  : " & SK.Strings.Img (Dummy16));
+      Dummy16 := Instance.Header.Device_ID;
+      Put_Line (Item => " Device ID  : " & SK.Strings.Img (Dummy16));
+      Dummy8 := Instance.Header.Info.Revision_ID;
+      Put_Line (Item => " Revision   : " & SK.Strings.Img (Dummy8));
+      Dummy32 := Interfaces.Unsigned_32 (Instance.Header.Info.Class_Code);
+      Put_Line (Item => " Class      : " & SK.Strings.Img (Dummy32));
+      Dummy32 := Instance.Header.Base_Address_Register_5;
+      Put_Line (Item => " ABAR       : " & SK.Strings.Img (Dummy32));
+      Dummy16 := Instance.Header.Command;
+      Put_Line (Item => " CMD        : " & SK.Strings.Img (Dummy16));
+   end Print_PCI_Device_Info;
 
    -------------------------------------------------------------------------
 
    procedure Reset
    is
    begin
-      null;
+      Print_PCI_Device_Info;
+      Print_PCI_Capabilities;
    end Reset;
 
 end Init.Devices;

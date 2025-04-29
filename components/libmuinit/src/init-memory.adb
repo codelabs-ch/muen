@@ -115,6 +115,7 @@ is
            and then Element.Mem_Data.Flags.Writable
            and then Element.Mem_Data.Kind /= Musinfo.Subject_State
            and then Element.Mem_Data.Kind /= Musinfo.Subject_Timed_Event
+           and then Element.Mem_Data.Kind /= Musinfo.Subject_Channel
          then
             Addrspace.Memset (Region  => Element.Mem_Data,
                               Pattern => 0);

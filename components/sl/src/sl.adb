@@ -24,6 +24,7 @@ with Mucontrol.Status;
 
 with Init.Run;
 with Init.Status;
+with Init.Devices;
 
 with Sl_Component.Events;
 
@@ -40,6 +41,11 @@ begin
 
    Debuglog.Client.Init (Epoch => 1);
    Debuglog.Client.Put_Line (Item => "SL running");
+
+   --  TODO: Proper return code
+   --  TODO: Move to libmuinit
+   --  TODO: Introduce muinit state
+   Init.Devices.Reset;
 
    loop
       Init.Run.Initialize (Success => Success);

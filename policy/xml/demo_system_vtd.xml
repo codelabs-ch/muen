@@ -133,6 +133,7 @@
      <map logical="subject_console_out_1" physical="console_out_1"/>
      <map logical="subject_console_out_2" physical="console_out_2"/>
     </if>
+    <map logical="log_channel_sl" physical="debuglog_sl"/>
    </component>
   </subject>
 

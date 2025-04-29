@@ -1,6 +1,7 @@
 <component name="sl" profile="native">
 	<depends>
 		<library ref="libmuinit"/>
+		<library ref="libmudebuglog"/>
 	</depends>
 	<requires>
 		<events>

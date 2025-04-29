@@ -27,6 +27,9 @@ with Init.Status;
 
 with Sl_Component.Events;
 
+--  TODO: Remove me
+with Debuglog.Client;
+
 procedure Sl
 is
    Success : Boolean;
@@ -34,6 +37,9 @@ begin
    if not Musinfo.Instance.Is_Valid then
       SK.CPU.Stop;
    end if;
+
+   Debuglog.Client.Init (Epoch => 1);
+   Debuglog.Client.Put_Line (Item => "SL running");
 
    loop
       Init.Run.Initialize (Success => Success);

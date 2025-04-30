@@ -34,12 +34,14 @@ with Interfaces;
 with Debuglog.Client;
 with SK.Strings;
 
+--  TODO: Remove
+pragma Warnings (Off);
 package body Init.Devices
 is
    --  TODO: Move to proper library and use it in ahci_drv
    --  as well
 
-   type Info_Record is record
+   type Info_Record_Type is record
       Revision_ID : Interfaces.Unsigned_8;
       Class_Code  : Interfaces.Unsigned_24;
    end record
@@ -52,7 +54,7 @@ is
       Device_ID               : Interfaces.Unsigned_16;
       Command                 : Interfaces.Unsigned_16;
       Status                  : Interfaces.Unsigned_16;
-      Info                    : Info_Record;
+      Info                    : Info_Record_Type;
       Cache_Line_Size         : Interfaces.Unsigned_8;
       Master_Latency_Timer    : Interfaces.Unsigned_8;
       Header_Type             : Interfaces.Unsigned_8;
@@ -113,7 +115,7 @@ is
    with
       Pack;
 
-   type Config_Space is record
+   type Config_Space_Type is record
       Header       : Header_Type;
       Capabilities : Caps_Array;
    end record
@@ -127,7 +129,7 @@ is
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
-   Instance : Config_Space
+   Instance : Config_Space_Type
    with
       Volatile,
       Async_Readers,
@@ -136,6 +138,57 @@ is
    pragma Warnings
      (GNATprove, On,
       "writing * is assumed to have no effects on other non-volatile objects");
+
+   --  PCI Express Base Specification 6.2, 7.5.3 PCI Express Capability
+   --  Structure.
+   type PCIe_Cap_Struct_Type is record
+      Cap_ID         : Interfaces.Unsigned_8;
+      Next_Cap_Ptr   : Interfaces.Unsigned_8;
+      Caps_Register  : Interfaces.Unsigned_16;
+      Device_Caps    : Interfaces.Unsigned_32;
+      Device_Control : Interfaces.Unsigned_16;
+      Device_Status  : Interfaces.Unsigned_16;
+   end record
+   with
+      Size => 3 * 32;
+
+   for PCIe_Cap_Struct_Type use record
+      Cap_ID         at 16#00# range  0 ..  7;
+      Next_Cap_Ptr   at 16#00# range  8 .. 15;
+      Caps_Register  at 16#00# range 16 .. 31;
+      Device_Caps    at 16#04# range  0 .. 31;
+      Device_Control at 16#08# range  0 .. 15;
+      Device_Status  at 16#08# range 16 .. 31;
+   end record;
+
+   --  FLR_Cap_Bit  : constant := 16#10000000#;
+   FLR_Initiate : constant := 16#8000#;
+
+   -------------------------------------------------------------------------
+
+   procedure Do_Reset
+   is
+      use Debuglog.Client;
+      use type Interfaces.Unsigned_16;
+
+      Caps : PCIe_Cap_Struct_Type
+      with
+         Address => System'To_Address (16#f800_8080#);
+
+      Ctrl_Val : Interfaces.Unsigned_16 := Caps.Device_Control;
+   begin
+      Put_Line (Item => "Reset()");
+
+      -- PCI Express Base Specification 6.2, 6.6.2 Function Level Reset (FLR).
+      Caps.Device_Control := Ctrl_Val or FLR_Initiate;
+      --  TODO: real delay
+      for I in 0 .. 300000 loop
+         null;
+      end loop;
+
+      Ctrl_Val := Caps.Device_Control;
+      Put_Line (Item => " Device_Control after reset : " & SK.Strings.Img (Ctrl_Val));
+   end Do_Reset;
 
    -------------------------------------------------------------------------
 
@@ -168,26 +221,76 @@ is
    begin
       Put_Line (Item => "== PCI config space");
       Dummy16 := Instance.Header.Vendor_ID;
-      Put_Line (Item => " Vendor ID  : " & SK.Strings.Img (Dummy16));
+      Put_Line (Item => " Vendor ID : " & SK.Strings.Img (Dummy16));
       Dummy16 := Instance.Header.Device_ID;
-      Put_Line (Item => " Device ID  : " & SK.Strings.Img (Dummy16));
+      Put_Line (Item => " Device ID : " & SK.Strings.Img (Dummy16));
       Dummy8 := Instance.Header.Info.Revision_ID;
-      Put_Line (Item => " Revision   : " & SK.Strings.Img (Dummy8));
+      Put_Line (Item => " Revision  : " & SK.Strings.Img (Dummy8));
       Dummy32 := Interfaces.Unsigned_32 (Instance.Header.Info.Class_Code);
-      Put_Line (Item => " Class      : " & SK.Strings.Img (Dummy32));
+      Put_Line (Item => " Class     : " & SK.Strings.Img (Dummy32));
       Dummy32 := Instance.Header.Base_Address_Register_5;
-      Put_Line (Item => " ABAR       : " & SK.Strings.Img (Dummy32));
+      Put_Line (Item => " ABAR      : " & SK.Strings.Img (Dummy32));
       Dummy16 := Instance.Header.Command;
-      Put_Line (Item => " CMD        : " & SK.Strings.Img (Dummy16));
+      Put_Line (Item => " CMD       : " & SK.Strings.Img (Dummy16));
+      Dummy32 := Instance.Header.Base_Address_Register_0;
+      Put_Line (Item => " BAR0      : " & SK.Strings.Img (Dummy32));
+      Dummy32 := Instance.Header.Base_Address_Register_1;
+      Put_Line (Item => " BAR1      : " & SK.Strings.Img (Dummy32));
+      Dummy32 := Instance.Header.Base_Address_Register_2;
+      Put_Line (Item => " BAR2      : " & SK.Strings.Img (Dummy32));
+      Dummy32 := Instance.Header.Base_Address_Register_3;
+      Put_Line (Item => " BAR3      : " & SK.Strings.Img (Dummy32));
+      Dummy32 := Instance.Header.Base_Address_Register_4;
+      Put_Line (Item => " BAR4      : " & SK.Strings.Img (Dummy32));
+      Dummy32 := Instance.Header.Base_Address_Register_5;
+      Put_Line (Item => " BAR6      : " & SK.Strings.Img (Dummy32));
    end Print_PCI_Device_Info;
+
+   -------------------------------------------------------------------------
+
+   procedure Print_PCIe_Capability_Structure
+   is
+      use Debuglog.Client;
+
+      Caps : PCIe_Cap_Struct_Type
+      with
+         Address => System'To_Address (16#f800_8080#);
+
+      Dummy8  : Interfaces.Unsigned_8;
+      Dummy16 : Interfaces.Unsigned_16;
+      Dummy32 : Interfaces.Unsigned_32;
+   begin
+      Put_Line (Item => "== PCIe Capability Structure");
+      Dummy8 := Caps.Cap_ID;
+      Put_Line (Item => " Cap ID              : " & SK.Strings.Img (Dummy8));
+      Dummy8 := Caps.Next_Cap_Ptr;
+      Put_Line (Item => " Next Cap Ptr        : " & SK.Strings.Img (Dummy8));
+      Dummy16 := Caps.Caps_Register;
+      Put_Line (Item => " Caps Register       : " & SK.Strings.Img (Dummy16));
+      Dummy32 := Caps.Device_Caps;
+      Put_Line (Item => " Device Capabilities : " & SK.Strings.Img (Dummy32));
+      Dummy16 := Caps.Device_Control;
+      Put_Line (Item => " Device Control      : " & SK.Strings.Img (Dummy16));
+      Dummy16 := Caps.Device_Status;
+      Put_Line (Item => " Device Status       : " & SK.Strings.Img (Dummy16));
+   end Print_PCIe_Capability_Structure;
 
    -------------------------------------------------------------------------
 
    procedure Reset
    is
    begin
+      --  TODO: check capabilities list bit before accessing caps.
       Print_PCI_Device_Info;
       Print_PCI_Capabilities;
+      Print_PCIe_Capability_Structure;
+
+      Do_Reset;
+
+      Print_PCI_Device_Info;
+      Print_PCI_Capabilities;
+      Print_PCIe_Capability_Structure;
    end Reset;
 
 end Init.Devices;
+pragma Warnings (On);

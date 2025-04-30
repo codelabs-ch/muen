@@ -45,6 +45,7 @@ def create_phys_events(events):
             etree.Element("event", mode="async", name="serial_irq4_linux_" + str(i))
         )
         events.append(etree.Element("event", mode="self", name="timer_linux_" + str(i)))
+        events.append(etree.Element("event", mode="self", name="work_linux_" + str(i)))
         events.append(
             etree.Element(
                 "event", mode="asap", name="linux_smp_signal_sm_" + str(i).zfill(2)

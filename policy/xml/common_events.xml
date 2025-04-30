@@ -14,6 +14,8 @@
  <event name="serial_irq4_linux_2" mode="async"/>
  <event name="timer_linux_1" mode="self"/>
  <event name="timer_linux_2" mode="self"/>
+ <event name="work_linux_1" mode="self"/>
+ <event name="work_linux_2" mode="self"/>
  <event name="subject_sleep" mode="kernel"/>
  <event name="subject_yield" mode="kernel"/>
  <event name="system_reboot" mode="kernel"/>

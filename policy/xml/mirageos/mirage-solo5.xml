@@ -113,6 +113,7 @@
       <default physical="trap_to_sm_1"/>
      </group>
      <group name="vmcall">
+      <event id="29" logical="work" physical="work_linux_1"/>
       <event id="30" logical="reboot" physical="request_reset_slot_1"/>
       <event id="31" logical="timer" physical="timer_linux_1"/>
      </group>
@@ -130,6 +131,9 @@
      </event>
      <event logical="timer" physical="timer_linux_1">
       <inject_interrupt vector="236"/>
+     </event>
+     <event logical="work" physical="work_linux_1">
+      <inject_interrupt vector="246"/>
      </event>
     </target>
    </events>
@@ -170,6 +174,7 @@
       <default physical="trap_to_sm_2"/>
      </group>
      <group name="vmcall">
+      <event id="29" logical="work" physical="work_linux_2"/>
       <event id="31" logical="timer" physical="timer_linux_2"/>
      </group>
     </source>
@@ -183,6 +188,9 @@
      </event>
      <event logical="timer" physical="timer_linux_2">
       <inject_interrupt vector="236"/>
+     </event>
+     <event logical="work" physical="work_linux_2">
+      <inject_interrupt vector="246"/>
      </event>
     </target>
    </events>

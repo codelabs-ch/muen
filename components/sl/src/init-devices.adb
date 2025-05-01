@@ -161,7 +161,7 @@ is
       Device_Status  at 16#08# range 16 .. 31;
    end record;
 
-   --  FLR_Cap_Bit  : constant := 16#10000000#;
+   FLR_Cap_Bit  : constant := 16#10000000#;
    FLR_Initiate : constant := 16#8000#;
 
    -------------------------------------------------------------------------
@@ -251,6 +251,7 @@ is
    procedure Print_PCIe_Capability_Structure
    is
       use Debuglog.Client;
+      use type Interfaces.Unsigned_32;
 
       Caps : PCIe_Cap_Struct_Type
       with
@@ -269,6 +270,13 @@ is
       Put_Line (Item => " Caps Register       : " & SK.Strings.Img (Dummy16));
       Dummy32 := Caps.Device_Caps;
       Put_Line (Item => " Device Capabilities : " & SK.Strings.Img (Dummy32));
+
+      if (Dummy32 and FLR_Cap_Bit) = FLR_Cap_Bit then
+         Put_Line (Item => " FLR capability      : True");
+      else
+         Put_Line (Item => " FLR capability      : False");
+      end if;
+
       Dummy16 := Caps.Device_Control;
       Put_Line (Item => " Device Control      : " & SK.Strings.Img (Dummy16));
       Dummy16 := Caps.Device_Status;

@@ -100,6 +100,8 @@
   <event name="serial_irq4_linux_4" mode="async"/>
   <event name="timer_linux_3" mode="self"/>
   <event name="timer_linux_4" mode="self"/>
+  <event name="work_linux_3" mode="self"/>
+  <event name="work_linux_4" mode="self"/>
   <event name="nic_linux_smp_signal_sm_01" mode="asap"/>
   <event name="nic_linux_smp_signal_sm_02" mode="asap"/>
   <event name="trap_to_isolation_tests_monitor" mode="switch"/>
@@ -231,6 +233,7 @@
      <group name="vmcall">
       <event id="0" logical="smp_signal_sm_01" physical="nic_linux_smp_signal_sm_01"/>
       <event id="2" logical="smp_signal_sm_02" physical="nic_linux_smp_signal_sm_02"/>
+      <event id="29" logical="work" physical="work_linux_1"/>
       <event id="30" logical="reboot" physical="request_reset_slot_1"/>
       <event id="31" logical="timer" physical="timer_linux_1"/>
      </group>
@@ -248,6 +251,9 @@
      </event>
      <event logical="timer" physical="timer_linux_1">
       <inject_interrupt vector="236"/>
+     </event>
+     <event logical="work" physical="work_linux_1">
+      <inject_interrupt vector="246"/>
      </event>
     </target>
    </events>
@@ -306,6 +312,7 @@
       <default physical="trap_to_sm_3"/>
      </group>
      <group name="vmcall">
+      <event id="29" logical="work" physical="work_linux_3"/>
       <event id="30" logical="panic" physical="system_panic">
        <system_panic/>
       </event>
@@ -319,6 +326,9 @@
      </event>
      <event logical="timer" physical="timer_linux_3">
       <inject_interrupt vector="236"/>
+     </event>
+     <event logical="work" physical="work_linux_3">
+      <inject_interrupt vector="246"/>
      </event>
     </target>
    </events>
@@ -419,6 +429,7 @@
       <default physical="trap_to_sm_4"/>
      </group>
      <group name="vmcall">
+      <event id="29" logical="work" physical="work_linux_4"/>
       <event id="31" logical="timer" physical="timer_linux_4"/>
      </group>
     </source>
@@ -429,6 +440,9 @@
      </event>
      <event logical="timer" physical="timer_linux_4">
       <inject_interrupt vector="236"/>
+     </event>
+     <event logical="work" physical="work_linux_4">
+      <inject_interrupt vector="246"/>
      </event>
     </target>
    </events>
@@ -525,6 +539,7 @@
       <default physical="trap_to_sm_2"/>
      </group>
      <group name="vmcall">
+      <event id="29" logical="work" physical="work_linux_2"/>
       <event id="31" logical="timer" physical="timer_linux_2"/>
      </group>
     </source>
@@ -538,6 +553,9 @@
      </event>
      <event logical="timer" physical="timer_linux_2">
       <inject_interrupt vector="236"/>
+     </event>
+     <event logical="work" physical="work_linux_2">
+      <inject_interrupt vector="246"/>
      </event>
     </target>
    </events>

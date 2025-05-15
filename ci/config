@@ -1,9 +1,9 @@
 MUEN_UCODE_DIR=${MUEN_UCODE_DIR:-""}
 
 declare -a targets_qemu
-targets_qemu+=("xml/demo_system_vtd.xml;hardware/qemu-kvm.xml;")
-targets_qemu+=("xml/demo_system_vtd.xml;hardware/qemu-kvm-coreboot.xml;")
+targets_qemu+=("xml/demo_system_vtd.xml;hardware/qemu-kvm.xml;;QEMU_IMAGE_DIR")
+targets_qemu+=("xml/demo_system_vtd.xml;hardware/qemu-kvm-coreboot.xml;;QEMU_COREBOOT_IMAGE_DIR")
 
 declare -a targets_hw
-targets_hw+=("xml/integration_tests.xml;hardware/intel-nuc-6cayh-efi.xml;MUEN_EFI=1")
-targets_hw+=("xml/integration_tests_kt.xml;hardware/kontron-ktqm77.xml;MUEN_UCODE_DIR=$MUEN_UCODE_DIR")
+targets_hw+=("xml/integration_tests.xml;hardware/intel-nuc-6cayh-efi.xml;MUEN_EFI=1;NUC6CAYH_EFI_INTEG_IMAGE_DIR")
+targets_hw+=("xml/integration_tests_kt.xml;hardware/kontron-ktqm77.xml;MUEN_UCODE_DIR=$MUEN_UCODE_DIR;KTQM77_INTEG_IMAGE_DIR")

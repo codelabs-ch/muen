@@ -14,6 +14,7 @@ artifacts_dir=""
 force=false
 build_only=false
 deploy_to_hw=false
+nci_defines=()
 
 set_buildvars()
 {
@@ -63,60 +64,53 @@ done
 [ -n "$artifacts_dir" ] || artifacts_dir=$(mktemp -d /tmp/nci-XXXXXX)
 mkdir -p $artifacts_dir
 
-if [ ! -f $IMAGES/.built ] || [ "$force" = true ]; then
-	# build and copy all relevant targets first
-	declare -a builds
-	builds+=("${targets_qemu[@]}")
+declare -a targets
+targets+=("${targets_qemu[@]}")
+if [ "$deploy_to_hw" = true ]; then
+	targets+=("${targets_hw[@]}")
+fi
 
-	if [ "$deploy_to_hw" = true ]; then
-		builds+=("${targets_hw[@]}")
-	fi
+for target in "${targets[@]}"; do
+	IFS=';' read -r system hw vars image_dir_var <<< "$target"
+	img_base=$(basename "$hw")
+	img_name=${img_base%.xml}
+	destdir=${IMAGES}/${img_name}
+	nci_defines+=( "-D${image_dir_var}=${destdir}" )
 
-	mkdir -p $IMAGES
-	for build in "${builds[@]}"; do
-		system="${build%%;*}"
-		remainder="${build#*;}"
-		hw="${remainder%%;*}"
-		img=$(basename "$hw")
-		img="${img%.xml}.iso"
-		vars="${remainder#*;}"
+	if [ ! -f $destdir/muen.iso ] || [ "$force" = true ]; then
+		mkdir -p $destdir
 
 		set_buildvars "$vars"
 		make -C kernel clean
 		make iso -j$(nproc) SYSTEM="$system" HARDWARE="$hw"
 		unset_buildvars "$vars"
-		cp emulate/muen.iso $IMAGES/$img
-	done
+		cp emulate/muen.iso $destdir/
 
-	# generate kernel metrics (last target)
-	make -C kernel metrics
+		# generate kernel metrics of last target
+		if [[ "$target" == "${targets[-1]}" ]]; then
+			make -C kernel metrics
+		fi
+	fi
+done
 
-	# copy mulog.py
-	cp tools/scripts/mulog.py $IMAGES/
-fi
-
-touch $IMAGES/.built
 
 if [ "$build_only" = true ]; then
 	exit 0
 fi
-
-pushd $NCI
 
 ARGS=""
 if [ -n "$artifacts_dir" ]; then
 	ARGS+="-a $artifacts_dir"
 fi
 
+nci_defines+=( "-DMULOG_DIR=$ROOT/tools/scripts" )
 if [ "$deploy_to_hw" = true ]; then
 	configs=$SCRIPTDIR/nci-config/x86/*.yaml
 else
 	configs=$SCRIPTDIR/nci-config/x86/qemu*.yaml
 fi
 
-./nci run $ARGS \
+$NCI/nci run $ARGS \
 	-c $configs \
-	-DIMAGE_DIR=$IMAGES \
-	-DCONFIG_DIR=$SCRIPTDIR/nci-config | tee $artifacts_dir/nci.log
-
-popd
+	"${nci_defines[@]}" \
+	-DCONFIG_DIR=$SCRIPTDIR/nci-config

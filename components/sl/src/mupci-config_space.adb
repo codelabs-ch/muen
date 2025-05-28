@@ -26,33 +26,35 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Mupci.Config_Space.Debug;
-
-with Init.Cspecs;
-
-package body Init.Devices
+package body Mupci.Config_Space
 is
+
+   FLR_Initiate : constant := 16#8000#;
 
    -------------------------------------------------------------------------
 
    procedure Reset
+     (Dev     :     Device_Type;
+      Success : out Boolean)
    is
-      Unreferenced_Success : Boolean;
+      use type Interfaces.Unsigned_16;
+      pragma Unreferenced (Dev);
+
+      --  TODO: From base address + offset in device info.
+      Caps : PCIe_Cap_Struct_Type
+      with
+         Address => System'To_Address (16#f800_8080#);
+
+      Ctrl_Val : constant Interfaces.Unsigned_16 := Caps.Device_Control;
    begin
-      for D of Cspecs.Devices loop
-         --  TODO: check capabilities list bit before accessing caps.
-         Mupci.Config_Space.Debug.Print_PCI_Device_Info (Dev => D);
-         Mupci.Config_Space.Debug.Print_PCI_Capabilities (Dev => D);
-         Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure (Dev => D);
-
-         Mupci.Config_Space.Reset
-           (Dev     => D,
-            Success => Unreferenced_Success);
-
-         Mupci.Config_Space.Debug.Print_PCI_Device_Info (Dev => D);
-         Mupci.Config_Space.Debug.Print_PCI_Capabilities (Dev => D);
-         Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure (Dev => D);
+      -- PCI Express Base Specification 6.2, 6.6.2 Function Level Reset (FLR).
+      Caps.Device_Control := Ctrl_Val or FLR_Initiate;
+      --  TODO: real delay
+      for I in 0 .. 300000 loop
+         null;
       end loop;
+
+      Success := True;
    end Reset;
 
-end Init.Devices;
+end Mupci.Config_Space;

@@ -26,33 +26,16 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Mupci.Config_Space.Debug;
-
-with Init.Cspecs;
-
-package body Init.Devices
+package Mupci.Config_Space.Debug
 is
 
-   -------------------------------------------------------------------------
+   --  Print information about given PCI device.
+   procedure Print_PCI_Device_Info (Dev : Device_Type);
 
-   procedure Reset
-   is
-      Unreferenced_Success : Boolean;
-   begin
-      for D of Cspecs.Devices loop
-         --  TODO: check capabilities list bit before accessing caps.
-         Mupci.Config_Space.Debug.Print_PCI_Device_Info (Dev => D);
-         Mupci.Config_Space.Debug.Print_PCI_Capabilities (Dev => D);
-         Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure (Dev => D);
+   --  Print PCI capabilities of given device.
+   procedure Print_PCI_Capabilities (Dev : Device_Type);
 
-         Mupci.Config_Space.Reset
-           (Dev     => D,
-            Success => Unreferenced_Success);
+   --  Print PCIe capability structure of given device.
+   procedure Print_PCIe_Capability_Structure (Dev : Device_Type);
 
-         Mupci.Config_Space.Debug.Print_PCI_Device_Info (Dev => D);
-         Mupci.Config_Space.Debug.Print_PCI_Capabilities (Dev => D);
-         Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure (Dev => D);
-      end loop;
-   end Reset;
-
-end Init.Devices;
+end Mupci.Config_Space.Debug;

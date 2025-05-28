@@ -26,33 +26,29 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Mupci.Config_Space.Debug;
+with Interfaces;
 
-with Init.Cspecs;
-
-package body Init.Devices
+package Mupci
 is
 
-   -------------------------------------------------------------------------
+   --  Common types used by CSPECS and Mupci library.
 
-   procedure Reset
-   is
-      Unreferenced_Success : Boolean;
-   begin
-      for D of Cspecs.Devices loop
-         --  TODO: check capabilities list bit before accessing caps.
-         Mupci.Config_Space.Debug.Print_PCI_Device_Info (Dev => D);
-         Mupci.Config_Space.Debug.Print_PCI_Capabilities (Dev => D);
-         Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure (Dev => D);
+   type BAR_Type is record
+      Register_Value : Interfaces.Unsigned_32;
+      Sized          : Interfaces.Unsigned_32;
+   end record;
 
-         Mupci.Config_Space.Reset
-           (Dev     => D,
-            Success => Unreferenced_Success);
+   Null_BAR_Type : constant BAR_Type := (others => 0);
 
-         Mupci.Config_Space.Debug.Print_PCI_Device_Info (Dev => D);
-         Mupci.Config_Space.Debug.Print_PCI_Capabilities (Dev => D);
-         Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure (Dev => D);
-      end loop;
-   end Reset;
+   type BAR_Array is array (Natural range 0 .. 5) of BAR_Type;
 
-end Init.Devices;
+   type Device_Type is record
+      Mmconf_Base : Interfaces.Unsigned_64;
+      Device_ID   : Interfaces.Unsigned_16;
+      Vendor_ID   : Interfaces.Unsigned_16;
+      BARs        : BAR_Array;
+   end record;
+
+   type Device_Array is array (Positive range <>) of Device_Type;
+
+end Mupci;

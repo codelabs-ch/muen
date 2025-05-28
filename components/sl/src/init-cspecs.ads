@@ -26,33 +26,20 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Mupci.Config_Space.Debug;
+with Mupci;
 
-with Init.Cspecs;
-
-package body Init.Devices
+--  TODO: This will be generated
+package Init.Cspecs
 is
 
-   -------------------------------------------------------------------------
+   subtype Device_Array is Mupci.Device_Array (Positive range 1 .. 1);
 
-   procedure Reset
-   is
-      Unreferenced_Success : Boolean;
-   begin
-      for D of Cspecs.Devices loop
-         --  TODO: check capabilities list bit before accessing caps.
-         Mupci.Config_Space.Debug.Print_PCI_Device_Info (Dev => D);
-         Mupci.Config_Space.Debug.Print_PCI_Capabilities (Dev => D);
-         Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure (Dev => D);
+   Devices : constant Device_Array :=
+      (1 => (Mmconf_Base => 16#f800_8000#,
+             Device_ID   => 16#0010#,
+             Vendor_ID   => 16#1b36#,
+             BARs        => (0      => (Register_Value => 0,
+                                        Sized          => 0),
+                             others => Mupci.Null_BAR_Type)));
 
-         Mupci.Config_Space.Reset
-           (Dev     => D,
-            Success => Unreferenced_Success);
-
-         Mupci.Config_Space.Debug.Print_PCI_Device_Info (Dev => D);
-         Mupci.Config_Space.Debug.Print_PCI_Capabilities (Dev => D);
-         Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure (Dev => D);
-      end loop;
-   end Reset;
-
-end Init.Devices;
+end Init.Cspecs;

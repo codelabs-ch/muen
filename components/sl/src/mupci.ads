@@ -28,6 +28,8 @@
 
 with Interfaces;
 
+with Musinfo;
+
 package Mupci
 is
 
@@ -43,10 +45,10 @@ is
    type BAR_Array is array (Natural range 0 .. 5) of BAR_Type;
 
    type Device_Type is record
-      Mmconf_Base : Interfaces.Unsigned_64;
-      Device_ID   : Interfaces.Unsigned_16;
-      Vendor_ID   : Interfaces.Unsigned_16;
-      BARs        : BAR_Array;
+      SID       : Musinfo.SID_Type;
+      Device_ID : Interfaces.Unsigned_16;
+      Vendor_ID : Interfaces.Unsigned_16;
+      BARs      : BAR_Array;
    end record;
 
    type Device_Array is array (Positive range <>) of Device_Type;

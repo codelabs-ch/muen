@@ -35,7 +35,7 @@ is
    subtype Device_Array is Mupci.Device_Array (Positive range 1 .. 1);
 
    Devices : constant Device_Array :=
-      (1 => (Mmconf_Base => 16#f800_8000#,
+      (1 => (SID         => 8,
              Device_ID   => 16#0010#,
              Vendor_ID   => 16#1b36#,
              BARs        => (0      => (Register_Value => 0,

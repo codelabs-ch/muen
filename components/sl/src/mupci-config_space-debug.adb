@@ -41,18 +41,15 @@ is
 
    procedure Print_PCI_Capabilities (Dev : Device_Type)
    is
-      pragma Unreferenced (Dev);
-      use type Interfaces.Unsigned_8;
-
       Cap_ID : Interfaces.Unsigned_8;
-      Index  : Interfaces.Unsigned_8 := Instance.Header.Capabilities_Pointer;
+      Index  : Interfaces.Unsigned_8 := Space (Dev.SID).Header.Capabilities_Pointer;
    begin
       loop
          exit when Index = 0 or not (Index in Capability_Range);
-         Cap_ID := Instance.Capabilities (Index);
+         Cap_ID := Space (Dev.SID).Capabilities (Index);
          Put_Line (Item => " Capability : " & SK.Strings.Img (Cap_ID) & " @ "
                    & SK.Strings.Img (Index));
-         Index := Instance.Capabilities (Index + 1);
+         Index := Space (Dev.SID).Capabilities (Index + 1);
       end loop;
    end Print_PCI_Capabilities;
 
@@ -60,36 +57,34 @@ is
 
    procedure Print_PCI_Device_Info (Dev : Device_Type)
    is
-      pragma Unreferenced (Dev);
-
       Dummy8  : Interfaces.Unsigned_8;
       Dummy16 : Interfaces.Unsigned_16;
       Dummy32 : Interfaces.Unsigned_32;
    begin
       Put_Line (Item => "== PCI config space");
-      Dummy16 := Instance.Header.Vendor_ID;
+      Dummy16 := Space (Dev.SID).Header.Vendor_ID;
       Put_Line (Item => " Vendor ID : " & SK.Strings.Img (Dummy16));
-      Dummy16 := Instance.Header.Device_ID;
+      Dummy16 := Space (Dev.SID).Header.Device_ID;
       Put_Line (Item => " Device ID : " & SK.Strings.Img (Dummy16));
-      Dummy8 := Instance.Header.Info.Revision_ID;
+      Dummy8 := Space (Dev.SID).Header.Info.Revision_ID;
       Put_Line (Item => " Revision  : " & SK.Strings.Img (Dummy8));
-      Dummy32 := Interfaces.Unsigned_32 (Instance.Header.Info.Class_Code);
+      Dummy32 := Interfaces.Unsigned_32 (Space (Dev.SID).Header.Info.Class_Code);
       Put_Line (Item => " Class     : " & SK.Strings.Img (Dummy32));
-      Dummy32 := Instance.Header.Base_Address_Register_5;
+      Dummy32 := Space (Dev.SID).Header.Base_Address_Register_5;
       Put_Line (Item => " ABAR      : " & SK.Strings.Img (Dummy32));
-      Dummy16 := Instance.Header.Command;
+      Dummy16 := Space (Dev.SID).Header.Command;
       Put_Line (Item => " CMD       : " & SK.Strings.Img (Dummy16));
-      Dummy32 := Instance.Header.Base_Address_Register_0;
+      Dummy32 := Space (Dev.SID).Header.Base_Address_Register_0;
       Put_Line (Item => " BAR0      : " & SK.Strings.Img (Dummy32));
-      Dummy32 := Instance.Header.Base_Address_Register_1;
+      Dummy32 := Space (Dev.SID).Header.Base_Address_Register_1;
       Put_Line (Item => " BAR1      : " & SK.Strings.Img (Dummy32));
-      Dummy32 := Instance.Header.Base_Address_Register_2;
+      Dummy32 := Space (Dev.SID).Header.Base_Address_Register_2;
       Put_Line (Item => " BAR2      : " & SK.Strings.Img (Dummy32));
-      Dummy32 := Instance.Header.Base_Address_Register_3;
+      Dummy32 := Space (Dev.SID).Header.Base_Address_Register_3;
       Put_Line (Item => " BAR3      : " & SK.Strings.Img (Dummy32));
-      Dummy32 := Instance.Header.Base_Address_Register_4;
+      Dummy32 := Space (Dev.SID).Header.Base_Address_Register_4;
       Put_Line (Item => " BAR4      : " & SK.Strings.Img (Dummy32));
-      Dummy32 := Instance.Header.Base_Address_Register_5;
+      Dummy32 := Space (Dev.SID).Header.Base_Address_Register_5;
       Put_Line (Item => " BAR6      : " & SK.Strings.Img (Dummy32));
    end Print_PCI_Device_Info;
 

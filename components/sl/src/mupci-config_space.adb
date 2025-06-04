@@ -37,7 +37,6 @@ is
      (Dev     :     Device_Type;
       Success : out Boolean)
    is
-      use type Interfaces.Unsigned_16;
       pragma Unreferenced (Dev);
 
       --  TODO: From base address + offset in device info.

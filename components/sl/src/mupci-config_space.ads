@@ -26,7 +26,11 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
+with SK;
+
 private with System;
+
+with Musinfo;
 
 package Mupci.Config_Space
 is
@@ -37,6 +41,10 @@ is
 
 private
 
+   use type Interfaces.Unsigned_8;
+   use type Interfaces.Unsigned_16;
+   use type Interfaces.Unsigned_64;
+
    --  TODO: Add reference to spec.
    type Info_Record_Type is record
       Revision_ID : Interfaces.Unsigned_8;
@@ -45,6 +53,8 @@ private
    with
       Pack,
       Size => 32;
+
+   Header_Size : constant := 64;
 
    --  TODO: Add reference to spec.
    type Header_Type is record
@@ -76,7 +86,7 @@ private
       Max_Latency             : Interfaces.Unsigned_8;
    end record
    with
-      Size => 64 * 8;
+      Size => Header_Size * 8;
 
    for Header_Type use record
       Vendor_ID               at 16#00# range  0 .. 15;
@@ -109,18 +119,27 @@ private
 
    subtype Capability_Range is Interfaces.Unsigned_8 range 16#40# .. 16#ff#;
 
+   Caps_Array_Size : constant := Capability_Range'Last - Capability_Range'First + 1;
+
    type Caps_Array is array (Capability_Range) of Interfaces.Unsigned_8
    with
-      Pack;
+      Size => Caps_Array_Size * 8;
+
+   subtype Extended_Range is Interfaces.Unsigned_16 range 1 .. Interfaces.Unsigned_16 (SK.Page_Size)
+     - Interfaces.Unsigned_16 (Caps_Array_Size + Header_Size);
+
+   type Extended_Array is array (Extended_Range) of Interfaces.Unsigned_8
+   with
+      Size => Extended_Range'Last * 8;
 
    type Config_Space_Type is record
       Header       : Header_Type;
       Capabilities : Caps_Array;
+      Extended     : Extended_Array;
    end record
    with
-      Pack,
-      Object_Size => 256 * 8,
-      Size        => 256 * 8;
+      Object_Size => SK.Page_Size * 8,
+      Size        => SK.Page_Size * 8;
 
    --  PCI Express Base Specification 6.2, 7.5.3 PCI Express Capability
    --  Structure.
@@ -144,19 +163,28 @@ private
       Device_Status  at 16#08# range 16 .. 31;
    end record;
 
+   type Addrspace_Type is array (Musinfo.SID_Type) of Config_Space_Type
+   with
+      Component_Size => SK.Page_Size * 8,
+      Object_Size    => (Interfaces.Unsigned_64 (Musinfo.SID_Type'Last) + 1)
+         * SK.Page_Size * 8,
+      Pack;
+
+   --  TODO: We need XML Unsigned_32 <integer> support to define this in config.
+   --        or generate it in CSPECS since it is static.
+   Mmconf_Base : constant := 16#f800_0000#;
+
    pragma Warnings
      (GNATprove, Off,
       "writing * is assumed to have no effects on other non-volatile objects",
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
-   Instance : Config_Space_Type
+   Space : Addrspace_Type
    with
+      Import,
       Volatile,
       Async_Readers,
       Async_Writers,
-      Address => System'To_Address (16#f800_8000#);
-   pragma Warnings
-     (GNATprove, On,
-      "writing * is assumed to have no effects on other non-volatile objects");
+      Address => System'To_Address (Mmconf_Base);
 
 end Mupci.Config_Space;

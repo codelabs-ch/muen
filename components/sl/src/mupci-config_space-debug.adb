@@ -41,15 +41,22 @@ is
 
    procedure Print_PCI_Capabilities (Dev : Device_Type)
    is
+      use type Interfaces.Unsigned_8;
+
       Cap_ID : Interfaces.Unsigned_8;
-      Index  : Interfaces.Unsigned_8 := Space (Dev.SID).Header.Capabilities_Pointer;
+      Ptr    : constant Interfaces.Unsigned_8
+        := Space (Dev.SID).Header.Capabilities_Pointer;
+
+      --  PCI Express Base Specification 6.2, 7.5.1.1.11 Capabilities Pointer.
+      --  Lowest two bits must be masked.
+      Index : Interfaces.Unsigned_16 := Interfaces.Unsigned_16 (Ptr and 16#fc#);
    begin
       loop
-         exit when Index = 0 or not (Index in Capability_Range);
-         Cap_ID := Space (Dev.SID).Capabilities (Index);
+         exit when Index = 0 or not (Index in Legacy_Range);
+         Cap_ID := Space (Dev.SID).Dev_Specific (Index);
          Put_Line (Item => " Capability : " & SK.Strings.Img (Cap_ID) & " @ "
                    & SK.Strings.Img (Index));
-         Index := Space (Dev.SID).Capabilities (Index + 1);
+         Index := Interfaces.Unsigned_16 (Space (Dev.SID).Dev_Specific (Index + 1));
       end loop;
    end Print_PCI_Capabilities;
 

@@ -41,7 +41,6 @@ is
 
 private
 
-   use type Interfaces.Unsigned_8;
    use type Interfaces.Unsigned_16;
    use type Interfaces.Unsigned_64;
 
@@ -117,25 +116,17 @@ private
       Max_Latency             at 16#3c# range 24 .. 31;
    end record;
 
-   subtype Capability_Range is Interfaces.Unsigned_8 range 16#40# .. 16#ff#;
+   subtype Dev_Specific_Range is Interfaces.Unsigned_16 range 16#40# .. 16#fff#;
 
-   Caps_Array_Size : constant := Capability_Range'Last - Capability_Range'First + 1;
+   subtype Legacy_Range is Dev_Specific_Range range 16#40# .. 16#ff#;
 
-   type Caps_Array is array (Capability_Range) of Interfaces.Unsigned_8
+   type Dev_Specific_Array is array (Dev_Specific_Range) of Interfaces.Unsigned_8
    with
-      Size => Caps_Array_Size * 8;
-
-   subtype Extended_Range is Interfaces.Unsigned_16 range 1 .. Interfaces.Unsigned_16 (SK.Page_Size)
-     - Interfaces.Unsigned_16 (Caps_Array_Size + Header_Size);
-
-   type Extended_Array is array (Extended_Range) of Interfaces.Unsigned_8
-   with
-      Size => Extended_Range'Last * 8;
+      Size => (Dev_Specific_Range'Last - Dev_Specific_Range'First + 1) * 8;
 
    type Config_Space_Type is record
       Header       : Header_Type;
-      Capabilities : Caps_Array;
-      Extended     : Extended_Array;
+      Dev_Specific : Dev_Specific_Array;
    end record
    with
       Object_Size => SK.Page_Size * 8,

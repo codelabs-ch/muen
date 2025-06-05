@@ -29,13 +29,13 @@
 package Mupci.Config_Space.Debug
 is
 
-   --  Print information about given PCI device.
-   procedure Print_PCI_Device_Info (Dev : Device_Type);
+   --  Print information about PCI device given by SID.
+   procedure Print_PCI_Device_Info (SID : Musinfo.SID_Type);
 
    --  Print PCI capabilities of given device.
-   procedure Print_PCI_Capabilities (Dev : Device_Type);
+   procedure Print_PCI_Capabilities (SID : Musinfo.SID_Type);
 
    --  Print PCIe capability structure of given device.
-   procedure Print_PCIe_Capability_Structure (Dev : Device_Type);
+   procedure Print_PCIe_Capability_Structure (SID : Musinfo.SID_Type);
 
 end Mupci.Config_Space.Debug;

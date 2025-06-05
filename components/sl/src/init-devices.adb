@@ -41,17 +41,17 @@ is
    begin
       for D of Cspecs.Devices loop
          --  TODO: check capabilities list bit before accessing caps.
-         Mupci.Config_Space.Debug.Print_PCI_Device_Info (Dev => D);
-         Mupci.Config_Space.Debug.Print_PCI_Capabilities (Dev => D);
-         Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure (Dev => D);
+         Mupci.Config_Space.Debug.Print_PCI_Device_Info (SID => D.SID);
+         Mupci.Config_Space.Debug.Print_PCI_Capabilities (SID => D.SID);
+         Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure (SID => D.SID);
 
          Mupci.Config_Space.Reset
            (Dev     => D,
             Success => Unreferenced_Success);
 
-         Mupci.Config_Space.Debug.Print_PCI_Device_Info (Dev => D);
-         Mupci.Config_Space.Debug.Print_PCI_Capabilities (Dev => D);
-         Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure (Dev => D);
+         Mupci.Config_Space.Debug.Print_PCI_Device_Info (SID => D.SID);
+         Mupci.Config_Space.Debug.Print_PCI_Capabilities (SID => D.SID);
+         Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure (SID => D.SID);
       end loop;
    end Reset;
 

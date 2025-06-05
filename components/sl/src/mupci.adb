@@ -26,22 +26,28 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Mupci;
-
---  TODO: This will be generated
-package Init.Cspecs
+package body Mupci
 is
 
-   subtype Device_Array is Mupci.Device_Array (Positive range 1 .. 1);
+   -------------------------------------------------------------------------
 
-   Devices : constant Device_Array :=
-      (1 => (SID         => 8,
-             Device_ID   => 16#0010#,
-             Vendor_ID   => 16#1b36#,
-             BARs        => (0      => (Register_Value => 0,
-                                        Sized          => 0),
-                             others => Mupci.Null_BAR_Type),
-             Caps        => (Mupci.PCI_Express_Capability => 16#80#,
-                             others                       => Mupci.Null_Dev_Specific_Offset)));
+   procedure Get_PCIe_Capability
+     (Device  :     Device_Type;
+      ID      :     Capability_ID_Type;
+      Offset  : out Dev_Specific_Range;
+      Success : out Boolean)
+   is
+   begin
+      Success := False;
+      Offset  := Null_Dev_Specific_Offset;
 
-end Init.Cspecs;
+      for Cap_ID in Device.Caps'Range loop
+         if Cap_ID = ID then
+            Success := True;
+            Offset  := Device.Caps (Cap_ID);
+            return;
+         end if;
+      end loop;
+   end Get_PCIe_Capability;
+
+end Mupci;

@@ -116,10 +116,6 @@ private
       Max_Latency             at 16#3c# range 24 .. 31;
    end record;
 
-   subtype Dev_Specific_Range is Interfaces.Unsigned_16 range 16#40# .. 16#fff#;
-
-   subtype Legacy_Range is Dev_Specific_Range range 16#40# .. 16#ff#;
-
    type Dev_Specific_Array is array (Dev_Specific_Range) of Interfaces.Unsigned_8
    with
       Size => (Dev_Specific_Range'Last - Dev_Specific_Range'First + 1) * 8;

@@ -30,10 +30,20 @@ with Interfaces;
 
 with Musinfo;
 
+--  Common types used by CSPECS and Mupci library.
 package Mupci
 is
 
-   --  Common types used by CSPECS and Mupci library.
+   --  PCIe configuration space range.
+
+   subtype Dev_Specific_Range is Interfaces.Unsigned_16 range 16#40# .. 16#fff#;
+
+   Null_Dev_Specific_Offset : constant Dev_Specific_Range;
+
+   --  Currently supported capabilites.
+   type Capability_ID_Type is
+     (PCI_Power_Management_Capability,
+      PCI_Express_Capability);
 
    type BAR_Type is record
       Register_Value : Interfaces.Unsigned_32;
@@ -44,13 +54,34 @@ is
 
    type BAR_Array is array (Natural range 0 .. 5) of BAR_Type;
 
+   type Caps_Array is array (Capability_ID_Type) of Dev_Specific_Range;
+
    type Device_Type is record
       SID       : Musinfo.SID_Type;
       Device_ID : Interfaces.Unsigned_16;
       Vendor_ID : Interfaces.Unsigned_16;
       BARs      : BAR_Array;
+      Caps      : Caps_Array;
    end record;
 
    type Device_Array is array (Positive range <>) of Device_Type;
+
+   --  Return offset of PCI(e) capability in given device PCI configuration
+   --  space. If device does not have such a capability, Success is False
+   --  and offset is set to null offset.
+   procedure Get_PCIe_Capability
+     (Device  :     Device_Type;
+      ID      :     Capability_ID_Type;
+      Offset  : out Dev_Specific_Range;
+      Success : out Boolean);
+
+private
+
+   Null_Dev_Specific_Offset : constant Dev_Specific_Range
+     := Dev_Specific_Range'Last;
+
+   for Capability_ID_Type use
+     (PCI_Power_Management_Capability => 16#01#,
+      PCI_Express_Capability          => 16#10#);
 
 end Mupci;

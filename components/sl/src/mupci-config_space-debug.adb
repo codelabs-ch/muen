@@ -52,7 +52,7 @@ is
       Index : Interfaces.Unsigned_16 := Interfaces.Unsigned_16 (Ptr and 16#fc#);
    begin
       loop
-         exit when Index = 0 or not (Index in Legacy_Range);
+         exit when Index = 0 or not (Index in Dev_Specific_Range);
          Cap_ID := Space (SID).Dev_Specific (Index);
          Put_Line (Item => " Capability : " & SK.Strings.Img (Cap_ID) & " @ "
                    & SK.Strings.Img (Index));

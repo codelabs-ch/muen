@@ -36,6 +36,18 @@ is
 
    -------------------------------------------------------------------------
 
+   function Check_Vendor_Device (Device : Device_Type) return Boolean
+   is
+      Vendor_ID : constant Interfaces.Unsigned_16
+        := Space (Device.SID).Header.Vendor_ID;
+      Device_ID : constant Interfaces.Unsigned_16
+        := Space (Device.SID).Header.Device_ID;
+   begin
+      return Vendor_ID = Device.Vendor_ID and Device_ID = Device.Device_ID;
+   end Check_Vendor_Device;
+
+   -------------------------------------------------------------------------
+
    procedure Reset
      (Device  :     Device_Type;
       Success : out Boolean)

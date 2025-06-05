@@ -34,6 +34,11 @@ with Musinfo;
 
 package Mupci.Config_Space
 is
+
+   --  Check that the PCI configuration space of given device
+   --  matches the expected Vendor/Device ID.
+   function Check_Vendor_Device (Device : Device_Type) return Boolean;
+
    --  Reset given device.
    procedure Reset
      (Device  :     Device_Type;

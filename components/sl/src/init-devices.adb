@@ -26,6 +26,8 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
+with SK.Strings;
+
 with Mupci.Config_Space.Debug;
 
 with Debuglog.Client;
@@ -47,15 +49,24 @@ is
          Mupci.Config_Space.Debug.Print_PCI_Capabilities (SID => D.SID);
          Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure (SID => D.SID);
 
-         Mupci.Config_Space.Reset
-           (Device  => D,
-            Success => Success);
+         Success := Mupci.Config_Space.Check_Vendor_Device (Device => D);
+
          if Success then
-            Mupci.Config_Space.Debug.Print_PCI_Device_Info (SID => D.SID);
-            Mupci.Config_Space.Debug.Print_PCI_Capabilities (SID => D.SID);
-            Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure (SID => D.SID);
+            Mupci.Config_Space.Reset
+               (Device  => D,
+               Success => Success);
+            if Success then
+               Mupci.Config_Space.Debug.Print_PCI_Device_Info (SID => D.SID);
+               Mupci.Config_Space.Debug.Print_PCI_Capabilities (SID => D.SID);
+               Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure (SID => D.SID);
+            else
+               Debuglog.Client.Put_Line (Item => "ERROR: Reset failed");
+            end if;
          else
-            Debuglog.Client.Put_Line (Item => "ERROR: Reset failed");
+            Debuglog.Client.Put_Line
+              (Item => "ERROR: Unexpected device at "
+                       & SK.Strings.Img (Mupci.Config_Space.Mmconf_Address
+                          (SID => D.SID)));
          end if;
       end loop;
    end Reset;

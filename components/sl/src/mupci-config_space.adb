@@ -31,18 +31,36 @@ is
 
    FLR_Initiate : constant := 16#8000#;
 
+   --  Access PCIe capability structure at given address and reset device.
+   procedure Reset_Device_FLR (Address : Interfaces.Unsigned_64);
+
    -------------------------------------------------------------------------
 
    procedure Reset
-     (Dev     :     Device_Type;
+     (Device  :     Device_Type;
       Success : out Boolean)
    is
-      pragma Unreferenced (Dev);
+      Offset : Dev_Specific_Range;
+   begin
+      Get_PCIe_Capability
+        (Device  => Device,
+         ID      => PCI_Express_Capability,
+         Offset  => Offset,
+         Success => Success);
+      if Success then
+         Reset_Device_FLR (Address => Mmconf_Register
+           (SID    => Device.SID,
+            Offset => Offset));
+      end if;
+   end Reset;
 
-      --  TODO: From base address + offset in device info.
+   -------------------------------------------------------------------------
+
+   procedure Reset_Device_FLR (Address : Interfaces.Unsigned_64)
+   is
       Caps : PCIe_Cap_Struct_Type
       with
-         Address => System'To_Address (16#f800_8080#);
+         Address => System'To_Address (Address);
 
       Ctrl_Val : constant Interfaces.Unsigned_16 := Caps.Device_Control;
    begin
@@ -53,7 +71,7 @@ is
          null;
       end loop;
 
-      Success := True;
-   end Reset;
+      --  TODO: Check if reset is successful
+   end Reset_Device_FLR;
 
 end Mupci.Config_Space;

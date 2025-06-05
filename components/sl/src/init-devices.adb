@@ -28,6 +28,8 @@
 
 with Mupci.Config_Space.Debug;
 
+with Debuglog.Client;
+
 with Init.Cspecs;
 
 package body Init.Devices
@@ -37,7 +39,7 @@ is
 
    procedure Reset
    is
-      Unreferenced_Success : Boolean;
+      Success : Boolean;
    begin
       for D of Cspecs.Devices loop
          --  TODO: check capabilities list bit before accessing caps.
@@ -46,12 +48,15 @@ is
          Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure (SID => D.SID);
 
          Mupci.Config_Space.Reset
-           (Dev     => D,
-            Success => Unreferenced_Success);
-
-         Mupci.Config_Space.Debug.Print_PCI_Device_Info (SID => D.SID);
-         Mupci.Config_Space.Debug.Print_PCI_Capabilities (SID => D.SID);
-         Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure (SID => D.SID);
+           (Device  => D,
+            Success => Success);
+         if Success then
+            Mupci.Config_Space.Debug.Print_PCI_Device_Info (SID => D.SID);
+            Mupci.Config_Space.Debug.Print_PCI_Capabilities (SID => D.SID);
+            Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure (SID => D.SID);
+         else
+            Debuglog.Client.Put_Line (Item => "ERROR: Reset failed");
+         end if;
       end loop;
    end Reset;
 

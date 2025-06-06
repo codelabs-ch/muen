@@ -29,7 +29,8 @@
 package body Mupci.Config_Space
 is
 
-   FLR_Initiate : constant := 16#8000#;
+   Cmd_Intx_Disable : constant := 16#0400#;
+   FLR_Initiate     : constant := 16#8000#;
 
    --  Access PCIe capability structure at given address and reset device.
    procedure Reset_Device_FLR (Address : Interfaces.Unsigned_64);
@@ -123,18 +124,35 @@ is
      (Device  :     Device_Type;
       Success : out Boolean)
    is
-      Offset : Dev_Specific_Range;
+      Offset       : Dev_Specific_Range;
+      Cmd_Register : Interfaces.Unsigned_16;
    begin
       Get_PCIe_Capability
         (Device  => Device,
          ID      => PCI_Express_Capability,
          Offset  => Offset,
          Success => Success);
-      if Success then
-         Reset_Device_FLR (Address => Mmconf_Register
-           (SID    => Device.SID,
-            Offset => Offset));
+      if not Success then
+         return;
       end if;
+
+      Cmd_Register := Space (Device.SID).Header.Command;
+
+      --  Explanation taken from Linux kernel, pci_dev_save_and_disable.
+      --
+      --  Disable the device by clearing the Command register, except for
+      --  INTx-disable which is set.  This not only disables MMIO and I/O port
+      --  BARs, but also prevents the device from being Bus Master, preventing
+      --  DMA from the device including MSI/MSI-X interrupts.  For PCI 2.3
+      --  compliant devices, INTx-disable prevents legacy interrupts.
+
+      Space (Device.SID).Header.Command := Cmd_Intx_Disable;
+
+      Reset_Device_FLR (Address => Mmconf_Register
+        (SID    => Device.SID,
+         Offset => Offset));
+
+      Space (Device.SID).Header.Command := Cmd_Register;
    end Reset;
 
    -------------------------------------------------------------------------

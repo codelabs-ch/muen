@@ -42,7 +42,8 @@ is
    is
       use type Interfaces.Unsigned_32;
 
-      Regvalue : Interfaces.Unsigned_32;
+      Cmd_Register   : Interfaces.Unsigned_16;
+      Regvalue, Size : Interfaces.Unsigned_32;
    begin
       Success := True;
 
@@ -52,6 +53,52 @@ is
          if Device.BARs (I).Register_Value /= Regvalue then
             Success := False;
             return;
+         end if;
+
+         if Device.BARs (I) /= Null_BAR then
+
+            --  Check size, see PCI Express Base Specification 6.2,
+            --  7.5.1.2.1 Base Address Registers,
+            --  Implementation note about sizing base address registers.
+
+            --  Disable decode.
+
+            Cmd_Register := Space (Device.SID).Header.Command;
+            Cmd_Register := Cmd_Register and not 16#3#;
+            Space (Device.SID).Header.Command := Cmd_Register;
+
+            Space (Device.SID).Header.Base_Address_Registers (I)
+            := Interfaces.Unsigned_32'Last;
+            Size := Space (Device.SID).Header.Base_Address_Registers (I);
+
+            if (Regvalue and 1) = 1 then
+
+               --  PIO, clear first two bits.
+
+               Size := Size and not 16#3#;
+            else
+
+               --  Memory, clear first 4 bits.
+
+               Size := Size and not 16#f#;
+            end if;
+
+            Size := not Size + 1;
+
+            if Device.BARs (I).Size /= Size then
+               Success := False;
+               return;
+            end if;
+
+            --  Restore register value.
+
+            Space (Device.SID).Header.Base_Address_Registers (I) := Regvalue;
+
+            --  Re-enable decode.
+
+            Cmd_Register := Space (Device.SID).Header.Command;
+            Cmd_Register := Cmd_Register or 16#3#;
+            Space (Device.SID).Header.Command := Cmd_Register;
          end if;
       end loop;
    end Check_BARs;

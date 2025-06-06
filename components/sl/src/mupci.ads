@@ -47,7 +47,7 @@ is
 
    type BAR_Type is record
       Register_Value : Interfaces.Unsigned_32;
-      Sized          : Interfaces.Unsigned_32;
+      Size           : Interfaces.Unsigned_32;
    end record;
 
    Null_BAR : constant BAR_Type;

@@ -44,30 +44,56 @@ is
       Success : Boolean;
    begin
       for D of Cspecs.Devices loop
-         --  TODO: check capabilities list bit before accessing caps.
-         Mupci.Config_Space.Debug.Print_PCI_Device_Info (SID => D.SID);
-         Mupci.Config_Space.Debug.Print_PCI_Capabilities (SID => D.SID);
-         Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure (SID => D.SID);
+         declare
+            PCIe_Cap : Mupci.Dev_Specific_Range;
+         begin
+            --  TODO: check capabilities list bit before accessing caps.
+            Mupci.Config_Space.Debug.Print_PCI_Device_Info (SID => D.SID);
+            Mupci.Config_Space.Debug.Print_PCI_Capabilities (SID => D.SID);
 
-         Success := Mupci.Config_Space.Check_Vendor_Device (Device => D);
-
-         if Success then
-            Mupci.Config_Space.Reset
-               (Device  => D,
+            Mupci.Get_PCIe_Capability
+              (Device  => D,
+               ID      => Mupci.PCI_Express_Capability,
+               Offset  => PCIe_Cap,
                Success => Success);
             if Success then
-               Mupci.Config_Space.Debug.Print_PCI_Device_Info (SID => D.SID);
-               Mupci.Config_Space.Debug.Print_PCI_Capabilities (SID => D.SID);
-               Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure (SID => D.SID);
+               Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure
+                 (Address => Mupci.Config_Space.Mmconf_Register
+                    (SID    => D.SID,
+                     Offset => PCIe_Cap));
+
+               Mupci.Config_Space.Check_Vendor_Device
+                 (Device  => D,
+                  Success => Success);
+
+               if Success then
+                  Mupci.Config_Space.Reset
+                    (Device  => D,
+                     Success => Success);
+                  if Success then
+                     Mupci.Config_Space.Debug.Print_PCI_Device_Info (SID => D.SID);
+                     Mupci.Config_Space.Debug.Print_PCI_Capabilities (SID => D.SID);
+                     Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure
+                       (Address => Mupci.Config_Space.Mmconf_Register
+                          (SID    => D.SID,
+                           Offset => PCIe_Cap));
+                  else
+                     Debuglog.Client.Put_Line
+                       (Item => "ERROR: Reset failed, SID "
+                        & SK.Strings.Img (D.SID));
+                  end if;
+               else
+                  Debuglog.Client.Put_Line
+                     (Item => "ERROR: Unexpected device at "
+                      & SK.Strings.Img (Mupci.Config_Space.Mmconf_Address
+                        (SID => D.SID)));
+               end if;
             else
-               Debuglog.Client.Put_Line (Item => "ERROR: Reset failed");
+               Debuglog.Client.Put_Line
+                 (Item => "ERROR: PCIe capability not found for device SID "
+                  & SK.Strings.Img (D.SID));
             end if;
-         else
-            Debuglog.Client.Put_Line
-              (Item => "ERROR: Unexpected device at "
-                       & SK.Strings.Img (Mupci.Config_Space.Mmconf_Address
-                          (SID => D.SID)));
-         end if;
+         end;
       end loop;
    end Reset;
 

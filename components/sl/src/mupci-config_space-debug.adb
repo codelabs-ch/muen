@@ -52,7 +52,11 @@ is
       Index : Interfaces.Unsigned_16 := Interfaces.Unsigned_16 (Ptr and 16#fc#);
    begin
       loop
-         exit when Index = 0 or not (Index in Dev_Specific_Range);
+         exit when Index not in Dev_Specific_Range
+           or (Index = Dev_Specific_Range'Last - 1);
+         pragma Loop_Invariant (Index in Dev_Specific_Range);
+         pragma Loop_Invariant (Index + 1 in Dev_Specific_Range);
+
          Cap_ID := Space (SID).Dev_Specific (Index);
          Put_Line (Item => " Capability : " & SK.Strings.Img (Cap_ID) & " @ "
                    & SK.Strings.Img (Index));
@@ -97,17 +101,19 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Print_PCIe_Capability_Structure (SID : Musinfo.SID_Type)
+   procedure Print_PCIe_Capability_Structure
+     (Address : Interfaces.Unsigned_64)
+   with
+      SPARK_Mode => Off
    is
-      pragma Unreferenced (SID);
-
       use type Interfaces.Unsigned_32;
 
       FLR_Cap_Bit  : constant := 16#10000000#;
 
       Caps : PCIe_Cap_Struct_Type
       with
-         Address => System'To_Address (16#f800_8080#);
+         Import,
+         Address => System'To_Address (Address);
 
       Dummy8  : Interfaces.Unsigned_8;
       Dummy16 : Interfaces.Unsigned_16;

@@ -35,7 +35,8 @@ is
    --  Print PCI capabilities of given device.
    procedure Print_PCI_Capabilities (SID : Musinfo.SID_Type);
 
-   --  Print PCIe capability structure of given device.
-   procedure Print_PCIe_Capability_Structure (SID : Musinfo.SID_Type);
+   --  Print PCIe capability structure at given address.
+   procedure Print_PCIe_Capability_Structure
+     (Address : Interfaces.Unsigned_64);
 
 end Mupci.Config_Space.Debug;

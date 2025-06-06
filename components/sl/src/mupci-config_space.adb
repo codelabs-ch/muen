@@ -36,14 +36,16 @@ is
 
    -------------------------------------------------------------------------
 
-   function Check_Vendor_Device (Device : Device_Type) return Boolean
+   procedure Check_Vendor_Device
+     (Device  :     Device_Type;
+      Success : out Boolean)
    is
       Vendor_ID : constant Interfaces.Unsigned_16
         := Space (Device.SID).Header.Vendor_ID;
       Device_ID : constant Interfaces.Unsigned_16
         := Space (Device.SID).Header.Device_ID;
    begin
-      return Vendor_ID = Device.Vendor_ID and Device_ID = Device.Device_ID;
+      Success := Vendor_ID = Device.Vendor_ID and Device_ID = Device.Device_ID;
    end Check_Vendor_Device;
 
    -------------------------------------------------------------------------
@@ -69,9 +71,12 @@ is
    -------------------------------------------------------------------------
 
    procedure Reset_Device_FLR (Address : Interfaces.Unsigned_64)
+   with
+      SPARK_Mode => Off
    is
       Caps : PCIe_Cap_Struct_Type
       with
+         Import,
          Address => System'To_Address (Address);
 
       Ctrl_Val : constant Interfaces.Unsigned_16 := Caps.Device_Control;

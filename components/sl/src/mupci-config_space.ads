@@ -37,7 +37,9 @@ is
 
    --  Check that the PCI configuration space of given device
    --  matches the expected Vendor/Device ID.
-   function Check_Vendor_Device (Device : Device_Type) return Boolean;
+   procedure Check_Vendor_Device
+     (Device  :     Device_Type;
+      Success : out Boolean);
 
    --  Reset given device.
    procedure Reset
@@ -190,6 +192,9 @@ private
       Async_Readers,
       Async_Writers,
       Address => System'To_Address (Mmconf_Base);
+   pragma Warnings
+     (GNATprove, On,
+      "writing * is assumed to have no effects on other non-volatile objects");
 
    function Mmconf_Address
      (SID : Musinfo.SID_Type)

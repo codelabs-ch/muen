@@ -81,22 +81,14 @@ is
       Put_Line (Item => " Revision  : " & SK.Strings.Img (Dummy8));
       Dummy32 := Interfaces.Unsigned_32 (Space (SID).Header.Info.Class_Code);
       Put_Line (Item => " Class     : " & SK.Strings.Img (Dummy32));
-      Dummy32 := Space (SID).Header.Base_Address_Register_5;
-      Put_Line (Item => " ABAR      : " & SK.Strings.Img (Dummy32));
       Dummy16 := Space (SID).Header.Command;
       Put_Line (Item => " CMD       : " & SK.Strings.Img (Dummy16));
-      Dummy32 := Space (SID).Header.Base_Address_Register_0;
-      Put_Line (Item => " BAR0      : " & SK.Strings.Img (Dummy32));
-      Dummy32 := Space (SID).Header.Base_Address_Register_1;
-      Put_Line (Item => " BAR1      : " & SK.Strings.Img (Dummy32));
-      Dummy32 := Space (SID).Header.Base_Address_Register_2;
-      Put_Line (Item => " BAR2      : " & SK.Strings.Img (Dummy32));
-      Dummy32 := Space (SID).Header.Base_Address_Register_3;
-      Put_Line (Item => " BAR3      : " & SK.Strings.Img (Dummy32));
-      Dummy32 := Space (SID).Header.Base_Address_Register_4;
-      Put_Line (Item => " BAR4      : " & SK.Strings.Img (Dummy32));
-      Dummy32 := Space (SID).Header.Base_Address_Register_5;
-      Put_Line (Item => " BAR6      : " & SK.Strings.Img (Dummy32));
+      for I in BAR_Range loop
+         Dummy32 := Space (SID).Header.Base_Address_Registers (I);
+         Put_Line (Item => " BAR" & SK.Strings.Img_Nobase
+                    (Item => Interfaces.Unsigned_8 (I)) & "     : "
+                    & SK.Strings.Img (Dummy32));
+      end loop;
    end Print_PCI_Device_Info;
 
    -------------------------------------------------------------------------

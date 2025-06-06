@@ -50,9 +50,11 @@ is
       Sized          : Interfaces.Unsigned_32;
    end record;
 
-   Null_BAR_Type : constant BAR_Type := (others => 0);
+   Null_BAR : constant BAR_Type;
 
-   type BAR_Array is array (Natural range 0 .. 5) of BAR_Type;
+   subtype BAR_Range is Natural range 0 .. 5;
+
+   type BAR_Array is array (BAR_Range) of BAR_Type;
 
    type Caps_Array is array (Capability_ID_Type) of Dev_Specific_Range;
 
@@ -83,5 +85,7 @@ private
    for Capability_ID_Type use
      (PCI_Power_Management_Capability => 16#01#,
       PCI_Express_Capability          => 16#10#);
+
+   Null_BAR : constant BAR_Type := (others => 0);
 
 end Mupci;

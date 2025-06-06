@@ -36,6 +36,28 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Check_BARs
+     (Device  :     Device_Type;
+      Success : out Boolean)
+   is
+      use type Interfaces.Unsigned_32;
+
+      Regvalue : Interfaces.Unsigned_32;
+   begin
+      Success := True;
+
+      for I in Device.BARs'Range loop
+         Regvalue := Space (Device.SID).Header.Base_Address_Registers (I);
+
+         if Device.BARs (I).Register_Value /= Regvalue then
+            Success := False;
+            return;
+         end if;
+      end loop;
+   end Check_BARs;
+
+   -------------------------------------------------------------------------
+
    procedure Check_Vendor_Device
      (Device  :     Device_Type;
       Success : out Boolean)

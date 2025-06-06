@@ -38,9 +38,9 @@ is
       (1 => (SID         => 8,
              Device_ID   => 16#0010#,
              Vendor_ID   => 16#1b36#,
-             BARs        => (0      => (Register_Value => 0,
-                                        Sized          => 0),
-                             others => Mupci.Null_BAR_Type),
+             BARs        => (0      => (Register_Value => 16#febd4004#,
+                                        Sized          => 16#4000#),
+                             others => Mupci.Null_BAR),
              Caps        => (Mupci.PCI_Express_Capability => 16#80#,
                              others                       => Mupci.Null_Dev_Specific_Offset)));
 

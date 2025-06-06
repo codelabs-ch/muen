@@ -41,6 +41,12 @@ is
      (Device  :     Device_Type;
       Success : out Boolean);
 
+   --  Check that the PCI configuration space of given device
+   --  matches the expected BAR addresses and sizes.
+   procedure Check_BARs
+     (Device  :     Device_Type;
+      Success : out Boolean);
+
    --  Reset given device.
    procedure Reset
      (Device  :     Device_Type;
@@ -74,6 +80,10 @@ private
 
    Header_Size : constant := 64;
 
+   type Device_BAR_Array is array (BAR_Range) of Interfaces.Unsigned_32
+   with
+      Size => 6 * 4 * 8;
+
    --  TODO: Add reference to spec.
    type Header_Type is record
       Vendor_ID               : Interfaces.Unsigned_16;
@@ -85,12 +95,7 @@ private
       Master_Latency_Timer    : Interfaces.Unsigned_8;
       Header_Type             : Interfaces.Unsigned_8;
       Buitin_Self_Test        : Interfaces.Unsigned_8;
-      Base_Address_Register_0 : Interfaces.Unsigned_32;
-      Base_Address_Register_1 : Interfaces.Unsigned_32;
-      Base_Address_Register_2 : Interfaces.Unsigned_32;
-      Base_Address_Register_3 : Interfaces.Unsigned_32;
-      Base_Address_Register_4 : Interfaces.Unsigned_32;
-      Base_Address_Register_5 : Interfaces.Unsigned_32;
+      Base_Address_Registers  : Device_BAR_Array;
       Cardbus_CIS_Pointer     : Interfaces.Unsigned_32;
       Subsystem_Vendor_ID     : Interfaces.Unsigned_16;
       Subsystem_ID            : Interfaces.Unsigned_16;
@@ -107,32 +112,27 @@ private
       Size => Header_Size * 8;
 
    for Header_Type use record
-      Vendor_ID               at 16#00# range  0 .. 15;
-      Device_ID               at 16#00# range 16 .. 31;
-      Command                 at 16#04# range  0 .. 15;
-      Status                  at 16#04# range 16 .. 31;
-      Info                    at 16#08# range  0 .. 31;
-      Cache_Line_Size         at 16#0c# range  0 ..  7;
-      Master_Latency_Timer    at 16#0c# range  8 .. 15;
-      Header_Type             at 16#0c# range 16 .. 23;
-      Buitin_Self_Test        at 16#0c# range 24 .. 31;
-      Base_Address_Register_0 at 16#10# range  0 .. 31;
-      Base_Address_Register_1 at 16#14# range  0 .. 31;
-      Base_Address_Register_2 at 16#18# range  0 .. 31;
-      Base_Address_Register_3 at 16#1c# range  0 .. 31;
-      Base_Address_Register_4 at 16#20# range  0 .. 31;
-      Base_Address_Register_5 at 16#24# range  0 .. 31;
-      Cardbus_CIS_Pointer     at 16#28# range  0 .. 31;
-      Subsystem_Vendor_ID     at 16#2c# range  0 .. 15;
-      Subsystem_ID            at 16#2c# range 16 .. 31;
-      Expansion_ROM_Base_Addr at 16#30# range  0 .. 31;
-      Capabilities_Pointer    at 16#34# range  0 ..  7;
-      Reserved_1              at 16#34# range  8 .. 31;
-      Reserved_2              at 16#38# range  0 .. 31;
-      Interrupt_Line          at 16#3c# range  0 ..  7;
-      Interrupt_Pin           at 16#3c# range  8 .. 15;
-      Min_Grant               at 16#3c# range 16 .. 23;
-      Max_Latency             at 16#3c# range 24 .. 31;
+      Vendor_ID               at 16#00# range  0 ..  15;
+      Device_ID               at 16#00# range 16 ..  31;
+      Command                 at 16#04# range  0 ..  15;
+      Status                  at 16#04# range 16 ..  31;
+      Info                    at 16#08# range  0 ..  31;
+      Cache_Line_Size         at 16#0c# range  0 ..   7;
+      Master_Latency_Timer    at 16#0c# range  8 ..  15;
+      Header_Type             at 16#0c# range 16 ..  23;
+      Buitin_Self_Test        at 16#0c# range 24 ..  31;
+      Base_Address_Registers  at 16#10# range  0 .. 191;
+      Cardbus_CIS_Pointer     at 16#28# range  0 ..  31;
+      Subsystem_Vendor_ID     at 16#2c# range  0 ..  15;
+      Subsystem_ID            at 16#2c# range 16 ..  31;
+      Expansion_ROM_Base_Addr at 16#30# range  0 ..  31;
+      Capabilities_Pointer    at 16#34# range  0 ..   7;
+      Reserved_1              at 16#34# range  8 ..  31;
+      Reserved_2              at 16#38# range  0 ..  31;
+      Interrupt_Line          at 16#3c# range  0 ..   7;
+      Interrupt_Pin           at 16#3c# range  8 ..  15;
+      Min_Grant               at 16#3c# range 16 ..  23;
+      Max_Latency             at 16#3c# range 24 ..  31;
    end record;
 
    type Dev_Specific_Array is array (Dev_Specific_Range) of Interfaces.Unsigned_8

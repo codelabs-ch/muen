@@ -32,6 +32,11 @@ is
    Cmd_Intx_Disable : constant := 16#0400#;
    FLR_Initiate     : constant := 16#8000#;
 
+   PCI_Base_Address_Mem_Mask : constant := 16#f#;
+   PCI_Base_Address_IO_Mask  : constant := 16#3#;
+
+   Spaces_Enable_Bits : constant := 3;
+
    --  Access PCIe capability structure at given address and reset device.
    procedure Reset_Device_FLR (Address : Interfaces.Unsigned_64);
 
@@ -43,7 +48,6 @@ is
    is
       use type Interfaces.Unsigned_32;
 
-      Cmd_Register   : Interfaces.Unsigned_16;
       Regvalue, Size : Interfaces.Unsigned_32;
    begin
       Success := True;
@@ -62,26 +66,22 @@ is
             --  7.5.1.2.1 Base Address Registers,
             --  Implementation note about sizing base address registers.
 
-            --  Disable decode.
-
-            Cmd_Register := Space (Device.SID).Header.Command;
-            Cmd_Register := Cmd_Register and not 16#3#;
-            Space (Device.SID).Header.Command := Cmd_Register;
+            Decode_Disable (SID => Device.SID);
 
             Space (Device.SID).Header.Base_Address_Registers (I)
-            := Interfaces.Unsigned_32'Last;
+              := Interfaces.Unsigned_32'Last;
             Size := Space (Device.SID).Header.Base_Address_Registers (I);
 
             if (Regvalue and 1) = 1 then
 
                --  PIO, clear first two bits.
 
-               Size := Size and not 16#3#;
+               Size := Size and not PCI_Base_Address_IO_Mask;
             else
 
                --  Memory, clear first 4 bits.
 
-               Size := Size and not 16#f#;
+               Size := Size and not PCI_Base_Address_Mem_Mask;
             end if;
 
             Size := not Size + 1;
@@ -95,11 +95,7 @@ is
 
             Space (Device.SID).Header.Base_Address_Registers (I) := Regvalue;
 
-            --  Re-enable decode.
-
-            Cmd_Register := Space (Device.SID).Header.Command;
-            Cmd_Register := Cmd_Register or 16#3#;
-            Space (Device.SID).Header.Command := Cmd_Register;
+            Decode_Enable (SID => Device.SID);
          end if;
       end loop;
    end Check_BARs;
@@ -117,6 +113,28 @@ is
    begin
       Success := Vendor_ID = Device.Vendor_ID and Device_ID = Device.Device_ID;
    end Check_Vendor_Device;
+
+   -------------------------------------------------------------------------
+
+   procedure Decode_Enable (SID : Musinfo.SID_Type)
+   is
+      Cmd_Register : Interfaces.Unsigned_16;
+   begin
+      Cmd_Register := Space (SID).Header.Command;
+      Cmd_Register := Cmd_Register or Spaces_Enable_Bits;
+      Space (SID).Header.Command := Cmd_Register;
+   end Decode_Enable;
+
+   -------------------------------------------------------------------------
+
+   procedure Decode_Disable (SID : Musinfo.SID_Type)
+   is
+      Cmd_Register : Interfaces.Unsigned_16;
+   begin
+      Cmd_Register := Space (SID).Header.Command;
+      Cmd_Register := Cmd_Register and not Spaces_Enable_Bits;
+      Space (SID).Header.Command := Cmd_Register;
+   end Decode_Disable;
 
    -------------------------------------------------------------------------
 

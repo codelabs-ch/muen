@@ -47,6 +47,12 @@ is
      (Device  :     Device_Type;
       Success : out Boolean);
 
+   --  Disable decode of I/O and mem spaces for specified device.
+   procedure Decode_Disable (SID : Musinfo.SID_Type);
+
+   --  Enable decode of I/O and mem spaces for specified device.
+   procedure Decode_Enable (SID : Musinfo.SID_Type);
+
    --  Reset given device.
    procedure Reset
      (Device  :     Device_Type;

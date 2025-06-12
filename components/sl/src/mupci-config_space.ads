@@ -47,6 +47,11 @@ is
      (Device  :     Device_Type;
       Success : out Boolean);
 
+   --  Setup BARs of specified device according to policy.
+   procedure Setup_BARs
+     (Device  :     Device_Type;
+      Success : out Boolean);
+
    --  Disable decode of I/O and mem spaces for specified device.
    procedure Decode_Disable (SID : Musinfo.SID_Type);
 

@@ -103,6 +103,16 @@ is
              (Address => Mupci.Config_Space.Mmconf_Register
                 (SID    => D.SID,
                  Offset => PCIe_Cap));
+
+            Mupci.Config_Space.Setup_BARs
+              (Device  => D,
+               Success => Success);
+            if not Success then
+               Debuglog.Client.Put_Line
+                 (Item => "ERROR: Programming BARs failed, SID "
+                  & SK.Strings.Img (D.SID));
+            end if;
+            Mupci.Config_Space.Debug.Print_PCI_Device_Info (SID => D.SID);
          end;
       end loop;
    end Reset;

@@ -41,6 +41,8 @@ is
 
    procedure Reset
    is
+      use type Mupci.Reset_Method_Type;
+
       Success : Boolean;
    begin
       for D of Cspecs.Devices loop
@@ -89,30 +91,32 @@ is
                return;
             end if;
 
-            Mupci.Config_Space.Reset
-              (Device  => D,
-               Success => Success);
-            if not Success then
-               Debuglog.Client.Put_Line
-                 (Item => "ERROR: Reset failed, SID "
-                  & SK.Strings.Img (D.SID));
-            end if;
-            Mupci.Config_Space.Debug.Print_PCI_Device_Info (SID => D.SID);
-            Mupci.Config_Space.Debug.Print_PCI_Capabilities (SID => D.SID);
-            Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure
-             (Address => Mupci.Config_Space.Mmconf_Register
-                (SID    => D.SID,
-                 Offset => PCIe_Cap));
+            if D.Reset /= Mupci.Reset_Method_None then
+               Mupci.Config_Space.Reset
+                 (Device  => D,
+                  Success => Success);
+               if not Success then
+                  Debuglog.Client.Put_Line
+                    (Item => "ERROR: Reset failed, SID "
+                     & SK.Strings.Img (D.SID));
+               end if;
+               Mupci.Config_Space.Debug.Print_PCI_Device_Info (SID => D.SID);
+               Mupci.Config_Space.Debug.Print_PCI_Capabilities (SID => D.SID);
+               Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure
+                (Address => Mupci.Config_Space.Mmconf_Register
+                   (SID    => D.SID,
+                    Offset => PCIe_Cap));
 
-            Mupci.Config_Space.Setup_BARs
-              (Device  => D,
-               Success => Success);
-            if not Success then
-               Debuglog.Client.Put_Line
-                 (Item => "ERROR: Programming BARs failed, SID "
-                  & SK.Strings.Img (D.SID));
+               Mupci.Config_Space.Setup_BARs
+                 (Device  => D,
+                  Success => Success);
+               if not Success then
+                  Debuglog.Client.Put_Line
+                    (Item => "ERROR: Programming BARs failed, SID "
+                     & SK.Strings.Img (D.SID));
+               end if;
+               Mupci.Config_Space.Debug.Print_PCI_Device_Info (SID => D.SID);
             end if;
-            Mupci.Config_Space.Debug.Print_PCI_Device_Info (SID => D.SID);
          end;
       end loop;
    end Reset;

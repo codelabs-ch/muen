@@ -61,7 +61,9 @@ is
    --  Reset given device.
    procedure Reset
      (Device  :     Device_Type;
-      Success : out Boolean);
+      Success : out Boolean)
+   with
+      Pre => Device.Reset /= Reset_Method_None;
 
    --  Return address of device PCI configuration space.
    function Mmconf_Address

@@ -58,12 +58,21 @@ is
 
    type Caps_Array is array (Capability_ID_Type) of Dev_Specific_Range;
 
+   --  Known reset methods, not all might be implemented.
+   type Reset_Method_Type is
+     (Reset_Method_None,
+      Reset_Method_FLR,
+      Reset_Method_AF_FLR,
+      Reset_Method_PM,
+      Reset_Method_Bus);
+
    type Device_Type is record
       SID       : Musinfo.SID_Type;
       Device_ID : Interfaces.Unsigned_16;
       Vendor_ID : Interfaces.Unsigned_16;
       BARs      : BAR_Array;
       Caps      : Caps_Array;
+      Reset     : Reset_Method_Type;
    end record;
 
    type Device_Array is array (Positive range <>) of Device_Type;

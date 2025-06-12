@@ -38,6 +38,7 @@ is
       (1 => (SID         => 8,
              Device_ID   => 16#0010#,
              Vendor_ID   => 16#1b36#,
+             Reset       => Mupci.Reset_Method_FLR,
              BARs        => (0      => (Register_Value => 16#febd4004#,
                                         Size           => 16#4000#),
                              others => Mupci.Null_BAR),

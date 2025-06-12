@@ -145,14 +145,6 @@ is
       Offset       : Dev_Specific_Range;
       Cmd_Register : Interfaces.Unsigned_16;
    begin
-      Get_PCIe_Capability
-        (Device  => Device,
-         ID      => PCI_Express_Capability,
-         Offset  => Offset,
-         Success => Success);
-      if not Success then
-         return;
-      end if;
 
       Cmd_Register := Space (Device.SID).Header.Command;
 
@@ -166,9 +158,23 @@ is
 
       Space (Device.SID).Header.Command := Cmd_Intx_Disable;
 
-      Reset_Device_FLR (Address => Mmconf_Register
-        (SID    => Device.SID,
-         Offset => Offset));
+      case Device.Reset is
+         when Reset_Method_FLR =>
+            Get_PCIe_Capability
+              (Device  => Device,
+               ID      => PCI_Express_Capability,
+               Offset  => Offset,
+               Success => Success);
+            if not Success then
+               return;
+            end if;
+
+            Reset_Device_FLR (Address => Mmconf_Register
+              (SID    => Device.SID,
+               Offset => Offset));
+         when others =>
+            Success := False;
+      end case;
 
       Space (Device.SID).Header.Command := Cmd_Register;
    end Reset;

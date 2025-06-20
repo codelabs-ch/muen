@@ -136,7 +136,7 @@ is
    begin
       Debug_Lock.Acquire;
       KC.Put_Line (Item => "Ignoring spurious event " & Img (Event_Nr)
-                   & " from subject 0x" & Img (Byte (Current_Subject)));
+                   & " from subject " & Img (Byte (Current_Subject)));
       Debug_Lock.Release;
    end Print_Spurious_Event;
 

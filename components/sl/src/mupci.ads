@@ -40,6 +40,12 @@ is
 
    Null_Dev_Specific_Offset : constant Dev_Specific_Range;
 
+   --  PCI standard capability range.
+
+   subtype Capability_Range is Dev_Specific_Range range 16#40# .. 16#ff#;
+
+   Null_Capability_Offset : constant Capability_Range;
+
    --  Currently supported capabilites.
    type Capability_ID_Type is
      (PCI_Power_Management_Capability,
@@ -56,8 +62,6 @@ is
 
    type BAR_Array is array (BAR_Range) of BAR_Type;
 
-   type Caps_Array is array (Capability_ID_Type) of Dev_Specific_Range;
-
    --  Known reset methods, not all might be implemented.
    type Reset_Method_Type is
      (Reset_Method_None,
@@ -71,25 +75,18 @@ is
       Device_ID : Interfaces.Unsigned_16;
       Vendor_ID : Interfaces.Unsigned_16;
       BARs      : BAR_Array;
-      Caps      : Caps_Array;
       Reset     : Reset_Method_Type;
    end record;
 
    type Device_Array is array (Positive range <>) of Device_Type;
 
-   --  Return offset of PCI(e) capability in given device PCI configuration
-   --  space. If device does not have such a capability, Success is False
-   --  and offset is set to null offset.
-   procedure Get_PCIe_Capability
-     (Device  :     Device_Type;
-      ID      :     Capability_ID_Type;
-      Offset  : out Dev_Specific_Range;
-      Success : out Boolean);
-
 private
 
    Null_Dev_Specific_Offset : constant Dev_Specific_Range
      := Dev_Specific_Range'Last;
+
+   Null_Capability_Offset : constant Capability_Range
+     := Capability_Range'Last;
 
    for Capability_ID_Type use
      (PCI_Power_Management_Capability => 16#01#,

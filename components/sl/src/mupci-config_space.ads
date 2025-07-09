@@ -77,6 +77,15 @@ is
       Offset : Dev_Specific_Range)
      return Interfaces.Unsigned_64;
 
+   --  Return offset of PCI standard capability in given device PCI
+   --  configuration space. If device does not have such a capability, Success
+   --  is False and offset is set to null offset.
+   procedure Get_PCI_Capability
+     (SID     :     Musinfo.SID_Type;
+      ID      :     Capability_ID_Type;
+      Offset  : out Capability_Range;
+      Success : out Boolean);
+
 private
 
    use type Interfaces.Unsigned_16;

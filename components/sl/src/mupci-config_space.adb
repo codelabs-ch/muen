@@ -138,11 +138,42 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Get_PCI_Capability
+     (SID     :     Musinfo.SID_Type;
+      ID      :     Capability_ID_Type;
+      Offset  : out Capability_Range;
+      Success : out Boolean)
+   is
+      use type Interfaces.Unsigned_8;
+
+      ID_Value : constant Interfaces.Unsigned_8
+        := Capability_ID_Type'Enum_Rep (ID);
+      Cap_ID   : Interfaces.Unsigned_8;
+      Index    : Interfaces.Unsigned_16
+        := Interfaces.Unsigned_16 (Space (SID).Header.Capabilities_Pointer);
+   begin
+      Success := False;
+      Offset  := Null_Capability_Offset;
+
+      loop
+         exit when Index = 0 or not (Index in Capability_Range);
+         Cap_ID := Space (SID).Dev_Specific (Index);
+         if Cap_ID = ID_Value then
+            Offset  := Index;
+            Success := True;
+            return;
+         end if;
+         Index := Interfaces.Unsigned_16 (Space (SID).Dev_Specific (Index + 1));
+      end loop;
+   end Get_PCI_Capability;
+
+   -------------------------------------------------------------------------
+
    procedure Reset
      (Device  :     Device_Type;
       Success : out Boolean)
    is
-      Offset       : Dev_Specific_Range;
+      Offset       : Capability_Range;
       Cmd_Register : Interfaces.Unsigned_16;
    begin
 
@@ -160,8 +191,8 @@ is
 
       case Device.Reset is
          when Reset_Method_FLR =>
-            Get_PCIe_Capability
-              (Device  => Device,
+            Get_PCI_Capability
+              (SID     => Device.SID,
                ID      => PCI_Express_Capability,
                Offset  => Offset,
                Success => Success);

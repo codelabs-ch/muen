@@ -41,8 +41,6 @@ is
              Reset       => Mupci.Reset_Method_FLR,
              BARs        => (0      => (Register_Value => 16#febd4004#,
                                         Size           => 16#4000#),
-                             others => Mupci.Null_BAR),
-             Caps        => (Mupci.PCI_Express_Capability => 16#80#,
-                             others                       => Mupci.Null_Dev_Specific_Offset)));
+                             others => Mupci.Null_BAR)));
 
 end Init.Cspecs;

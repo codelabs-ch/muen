@@ -47,14 +47,14 @@ is
    begin
       for D of Cspecs.Devices loop
          declare
-            PCIe_Cap : Mupci.Dev_Specific_Range;
+            PCIe_Cap : Mupci.Capability_Range;
          begin
             --  TODO: check capabilities list bit before accessing caps.
             Mupci.Config_Space.Debug.Print_PCI_Device_Info (SID => D.SID);
             Mupci.Config_Space.Debug.Print_PCI_Capabilities (SID => D.SID);
 
-            Mupci.Get_PCIe_Capability
-              (Device  => D,
+            Mupci.Config_Space.Get_PCI_Capability
+              (SID     => D.SID,
                ID      => Mupci.PCI_Express_Capability,
                Offset  => PCIe_Cap,
                Success => Success);

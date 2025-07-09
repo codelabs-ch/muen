@@ -86,9 +86,8 @@ is
                Success => Success);
             if not Success then
                Debuglog.Client.Put_Line
-                 (Item => "ERROR: Unexpected BAR for device SID "
-                  & SK.Strings.Img (D.SID));
-               return;
+                 (Item => "WARNING: Unexpected BAR for device SID "
+                  & SK.Strings.Img (D.SID) & ", continue");
             end if;
 
             if D.Reset /= Mupci.Reset_Method_None then

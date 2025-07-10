@@ -35,6 +35,23 @@ with Musinfo;
 package Mupci.Config_Space
 is
 
+   --  PCIe configuration space range.
+
+   subtype Dev_Specific_Range is Interfaces.Unsigned_16 range 16#40# .. 16#fff#;
+
+   Null_Dev_Specific_Offset : constant Dev_Specific_Range;
+
+   --  PCI standard capability range.
+
+   subtype Capability_Range is Dev_Specific_Range range 16#40# .. 16#ff#;
+
+   Null_Capability_Offset : constant Capability_Range;
+
+   --  Currently supported capabilites.
+   type Capability_ID_Type is
+     (PCI_Power_Management_Capability,
+      PCI_Express_Capability);
+
    --  Check that the PCI configuration space of given device
    --  matches the expected Vendor/Device ID.
    procedure Check_Vendor_Device
@@ -97,6 +114,16 @@ private
 
    use type Interfaces.Unsigned_16;
    use type Interfaces.Unsigned_64;
+
+   Null_Dev_Specific_Offset : constant Dev_Specific_Range
+     := Dev_Specific_Range'Last;
+
+   Null_Capability_Offset : constant Capability_Range
+     := Capability_Range'Last;
+
+   for Capability_ID_Type use
+     (PCI_Power_Management_Capability => 16#01#,
+      PCI_Express_Capability          => 16#10#);
 
    --  TODO: Add reference to spec.
    type Info_Record_Type is record

@@ -35,7 +35,9 @@ is
    PCI_Base_Address_Mem_Mask : constant := 16#f#;
    PCI_Base_Address_IO_Mask  : constant := 16#3#;
 
-   Spaces_Enable_Bits : constant := 3;
+   PCI_Cmd_Spaces_Enable_Bits : constant := 3;
+
+   PCIe_Cap_Dev_Status_Transaction_Pending : constant := 16#20#;
 
    --  Access PCIe capability structure at given address and reset device.
    procedure Reset_Device_FLR (Address : Interfaces.Unsigned_64);
@@ -121,7 +123,7 @@ is
       Cmd_Register : Interfaces.Unsigned_16;
    begin
       Cmd_Register := Space (SID).Header.Command;
-      Cmd_Register := Cmd_Register or Spaces_Enable_Bits;
+      Cmd_Register := Cmd_Register or PCI_Cmd_Spaces_Enable_Bits;
       Space (SID).Header.Command := Cmd_Register;
    end Decode_Enable;
 
@@ -132,7 +134,7 @@ is
       Cmd_Register : Interfaces.Unsigned_16;
    begin
       Cmd_Register := Space (SID).Header.Command;
-      Cmd_Register := Cmd_Register and not Spaces_Enable_Bits;
+      Cmd_Register := Cmd_Register and not PCI_Cmd_Spaces_Enable_Bits;
       Space (SID).Header.Command := Cmd_Register;
    end Decode_Disable;
 
@@ -179,6 +181,10 @@ is
 
       Cmd_Register := Space (Device.SID).Header.Command;
 
+      --  PCI Express Base Specification 6.2, 6.6.2 Function Level Reset (FLR).
+      --  Impl. Note "Avoiding data corruption from stale completions",
+      --  Item 2: Software clears the command register.
+
       --  Explanation taken from Linux kernel, pci_dev_save_and_disable.
       --
       --  Disable the device by clearing the Command register, except for
@@ -223,7 +229,23 @@ is
 
       Ctrl_Val : constant Interfaces.Unsigned_16 := Caps.Device_Control;
    begin
-      -- PCI Express Base Specification 6.2, 6.6.2 Function Level Reset (FLR).
+
+      --  PCI Express Base Specification 6.2, 6.6.2 Function Level Reset (FLR).
+      --  Impl. Note "Avoiding data corruption from stale completions",
+      --  Item 3: Wait for pending transactions.
+
+      for I in 1 .. 4 loop
+         exit when (Caps.Device_Status and PCIe_Cap_Dev_Status_Transaction_Pending) = 0;
+         --  TODO: real delay
+         for I in 0 .. 300000 loop
+            null;
+         end loop;
+      end loop;
+
+      --  PCI Express Base Specification 6.2, 6.6.2 Function Level Reset (FLR).
+      --  Impl. Note "Avoiding data corruption from stale completions",
+      --  Item 4: Software initiates FLR.
+
       Caps.Device_Control := Ctrl_Val or FLR_Initiate;
       --  TODO: real delay
       for I in 0 .. 300000 loop

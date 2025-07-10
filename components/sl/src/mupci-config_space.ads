@@ -65,6 +65,13 @@ is
    with
       Pre => Device.Reset /= Reset_Method_None;
 
+   --  Wait for device ready within the given timeout in MS. Returns False if
+   --  the device is not ready after the specified time period.
+   procedure Wait_For_Device
+     (SID        :     Musinfo.SID_Type;
+      Timeout_MS :     Positive;
+      Success    : out Boolean);
+
    --  Return address of device PCI configuration space.
    function Mmconf_Address
      (SID : Musinfo.SID_Type)

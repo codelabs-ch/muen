@@ -209,6 +209,14 @@ is
             Reset_Device_FLR (Address => Mmconf_Register
               (SID    => Device.SID,
                Offset => Offset));
+
+            --  Wait for device ready, wait for an additional 1 sec as per
+            --  conventional device reset.
+
+            Wait_For_Device
+              (SID        => Device.SID,
+               Timeout_MS => 1000,
+               Success    => Success);
          when others =>
             Success := False;
       end case;
@@ -247,12 +255,15 @@ is
       --  Item 4: Software initiates FLR.
 
       Caps.Device_Control := Ctrl_Val or FLR_Initiate;
-      --  TODO: real delay
+      --  TODO: Implement Immediate Ready support
+
+      --  PCI Express Base Specification 6.2, 6.6.2 Function Level Reset (FLR).
+      --  Impl. Note "Avoiding data corruption from stale completions",
+      --  Item 5: Software waits 100ms.
+
       for I in 0 .. 300000 loop
          null;
       end loop;
-
-      --  TODO: Check if reset is successful
    end Reset_Device_FLR;
 
    -------------------------------------------------------------------------
@@ -284,5 +295,32 @@ is
 
       Decode_Enable (SID => Device.SID);
    end Setup_BARs;
+
+   -------------------------------------------------------------------------
+
+   procedure Wait_For_Device
+     (SID        :     Musinfo.SID_Type;
+      Timeout_MS :     Positive;
+      Success    : out Boolean)
+   is
+      pragma Unreferenced (Timeout_MS);
+
+      Cmd_Val   : Interfaces.Unsigned_16;
+      Not_Ready : constant Interfaces.Unsigned_16 := 16#ffff#;
+   begin
+
+      --  TODO: Handle Request Retry Status completions if supported by device.
+
+      --  Use command register instead of vendor ID to ignore CRS
+      --  completions for now. See also Linux pci_dev_wait() function.
+
+      for I in 1 .. 5 loop
+         Cmd_Val := Space (SID).Header.Command;
+         exit when Cmd_Val /= Not_Ready;
+         --  TODO: Add real delay
+      end loop;
+
+      Success := Cmd_Val /= Not_Ready;
+   end Wait_For_Device;
 
 end Mupci.Config_Space;

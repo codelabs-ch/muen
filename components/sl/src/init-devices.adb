@@ -32,7 +32,7 @@ with Mupci.Config_Space.Debug;
 
 with Debuglog.Client;
 
-with Init.Cspecs;
+with Pciconf;
 
 package body Init.Devices
 is
@@ -45,7 +45,7 @@ is
 
       Success : Boolean;
    begin
-      for D of Cspecs.Devices loop
+      for D of Pciconf.Devices loop
          declare
             PCIe_Cap : Mupci.Config_Space.Capability_Range;
          begin

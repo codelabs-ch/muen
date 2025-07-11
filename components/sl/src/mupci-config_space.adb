@@ -27,6 +27,8 @@
 --
 
 package body Mupci.Config_Space
+with
+   Refined_State => (State => Space)
 is
 
    Cmd_Intx_Disable : constant := 16#0400#;

@@ -33,6 +33,8 @@ private with System;
 with Musinfo;
 
 package Mupci.Config_Space
+with
+   Abstract_State => (State with External => (Async_Readers, Async_Writers))
 is
 
    --  PCIe configuration space range.
@@ -243,10 +245,10 @@ private
       & "interfaces. Non-overlap is checked during system build.");
    Space : Addrspace_Type
    with
-      Import,
       Volatile,
       Async_Readers,
       Async_Writers,
+      Part_Of => State,
       Address => System'To_Address (Mmconf_Base);
    pragma Warnings
      (GNATprove, On,

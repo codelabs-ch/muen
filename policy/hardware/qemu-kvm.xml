@@ -213,6 +213,9 @@
       <pci bus="16#00#" device="16#05#" function="0">
         <identification classcode="16#0108#" deviceId="16#0010#" revisionId="16#02#" vendorId="16#1b36#"/>
         <iommuGroup id="5"/>
+        <bars>
+         <memBar0 ref="mem1" prefetchable="false" bit64="true"/>
+        </bars>
       </pci>
       <irq name="irq1" number="16">
         <msi name="msi1"/>

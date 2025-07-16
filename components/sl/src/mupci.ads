@@ -30,7 +30,8 @@ with Interfaces;
 
 with Musinfo;
 
---  Common types used by CSPECS and Mupci library.
+--D @Interface
+--D This package defines types used in the Muen PCI library API.
 package Mupci
 is
 

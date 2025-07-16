@@ -32,11 +32,12 @@ private with System;
 
 with Musinfo;
 
+--D @Interface
+--D This package defines an API to the PCI configuration space of devices.
 package Mupci.Config_Space
 with
    Abstract_State => (State with External => (Async_Readers, Async_Writers))
 is
-
    --  PCIe configuration space range.
 
    subtype Dev_Specific_Range is Interfaces.Unsigned_16 range 16#40# .. 16#fff#;
@@ -127,7 +128,6 @@ private
      (PCI_Power_Management_Capability => 16#01#,
       PCI_Express_Capability          => 16#10#);
 
-   --  TODO: Add reference to spec.
    type Info_Record_Type is record
       Revision_ID : Interfaces.Unsigned_8;
       Class_Code  : Interfaces.Unsigned_24;
@@ -142,7 +142,6 @@ private
    with
       Size => 6 * 4 * 8;
 
-   --  TODO: Add reference to spec.
    type Header_Type is record
       Vendor_ID               : Interfaces.Unsigned_16;
       Device_ID               : Interfaces.Unsigned_16;
@@ -197,8 +196,17 @@ private
    with
       Size => (Dev_Specific_Range'Last - Dev_Specific_Range'First + 1) * 8;
 
+   --D @Interface
+   --D PCI (Express) device configuration space.
    type Config_Space_Type is record
+      --D @Interface
+      --D Standard PCI configuration space header, see PCI Local Bus
+      --D Specification, section "Configuration Space Organization".
       Header       : Header_Type;
+      --D @Interface
+      --D Device specific data above PCI 3.0 compatible configuration space
+      --D header (> 0x3f) in PCI and PCI Express (PCIe) configuration
+      --D space, including PCI and PCIe capability structures.
       Dev_Specific : Dev_Specific_Array;
    end record
    with

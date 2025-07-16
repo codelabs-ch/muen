@@ -30,19 +30,22 @@ package body Mupci.Config_Space
 with
    Refined_State => (State => Space)
 is
-
-   Cmd_Intx_Disable : constant := 16#0400#;
-   FLR_Initiate     : constant := 16#8000#;
-
    PCI_Base_Address_Mem_Mask : constant := 16#f#;
    PCI_Base_Address_IO_Mask  : constant := 16#3#;
 
-   PCI_Cmd_Spaces_Enable_Bits : constant := 3;
+   PCI_Cmd_Spaces_Enable_Bits : constant := 16#0003#;
+   PCI_Cmd_Intx_Disable       : constant := 16#0400#;
 
-   PCIe_Cap_Dev_Status_Transaction_Pending : constant := 16#20#;
+   PCIe_Cap_Dev_Status_Transaction_Pending : constant := 16#0020#;
+   PCIe_Cap_FLR_Initiate                   : constant := 16#8000#;
 
    --  Access PCIe capability structure at given address and reset device.
    procedure Reset_Device_FLR (Address : Interfaces.Unsigned_64);
+   --  TODO: Add pre that access is within Capabiltiy_Range of device
+   --        with given SID.
+
+   --  Busyloop given milliseconds.
+   procedure Wait (Milliseconds : Interfaces.Unsigned_64);
 
    -------------------------------------------------------------------------
 
@@ -195,7 +198,7 @@ is
       --  DMA from the device including MSI/MSI-X interrupts.  For PCI 2.3
       --  compliant devices, INTx-disable prevents legacy interrupts.
 
-      Space (Device.SID).Header.Command := Cmd_Intx_Disable;
+      Space (Device.SID).Header.Command := PCI_Cmd_Intx_Disable;
 
       case Device.Reset is
          when Reset_Method_FLR =>
@@ -212,7 +215,7 @@ is
               (SID    => Device.SID,
                Offset => Offset));
 
-            --  Wait for device ready, wait for an additional 1 sec as per
+            --  Wait for device ready: wait for an additional 1 sec as per
             --  conventional device reset.
 
             Wait_For_Device
@@ -244,28 +247,25 @@ is
       --  Impl. Note "Avoiding data corruption from stale completions",
       --  Item 3: Wait for pending transactions.
 
-      for I in 1 .. 4 loop
-         exit when (Caps.Device_Status and PCIe_Cap_Dev_Status_Transaction_Pending) = 0;
-         --  TODO: real delay
-         for I in 0 .. 300000 loop
-            null;
-         end loop;
+      for I in 1 .. 10 loop
+         exit when
+           (Caps.Device_Status and PCIe_Cap_Dev_Status_Transaction_Pending) = 0;
+         Wait (Milliseconds => 100);
       end loop;
 
       --  PCI Express Base Specification 6.2, 6.6.2 Function Level Reset (FLR).
       --  Impl. Note "Avoiding data corruption from stale completions",
       --  Item 4: Software initiates FLR.
 
-      Caps.Device_Control := Ctrl_Val or FLR_Initiate;
+      Caps.Device_Control := Ctrl_Val or PCIe_Cap_FLR_Initiate;
+
       --  TODO: Implement Immediate Ready support
 
       --  PCI Express Base Specification 6.2, 6.6.2 Function Level Reset (FLR).
       --  Impl. Note "Avoiding data corruption from stale completions",
       --  Item 5: Software waits 100ms.
 
-      for I in 0 .. 300000 loop
-         null;
-      end loop;
+      Wait (Milliseconds => 100);
    end Reset_Device_FLR;
 
    -------------------------------------------------------------------------
@@ -298,6 +298,20 @@ is
       Decode_Enable (SID => Device.SID);
    end Setup_BARs;
 
+   --------------------------------------------------------------------------
+
+   --  TODO: Implement real wait.
+   procedure Wait (Milliseconds : Interfaces.Unsigned_64)
+   with
+      SPARK_Mode => Off
+   is
+      pragma Unreferenced (Milliseconds);
+   begin
+      for I in 1 .. 2000000 loop
+         null;
+      end loop;
+   end Wait;
+
    -------------------------------------------------------------------------
 
    procedure Wait_For_Device
@@ -319,7 +333,7 @@ is
       for I in 1 .. 5 loop
          Cmd_Val := Space (SID).Header.Command;
          exit when Cmd_Val /= Not_Ready;
-         --  TODO: Add real delay
+         Wait (Milliseconds => 200);
       end loop;
 
       Success := Cmd_Val /= Not_Ready;

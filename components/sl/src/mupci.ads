@@ -54,10 +54,13 @@ is
       Reset_Method_PM,
       Reset_Method_Bus);
 
+   type Vendor_ID_Type is new Interfaces.Unsigned_16;
+   type Device_ID_Type is new Interfaces.Unsigned_16;
+
    type Device_Type is record
       SID       : Musinfo.SID_Type;
-      Device_ID : Interfaces.Unsigned_16;
-      Vendor_ID : Interfaces.Unsigned_16;
+      Vendor_ID : Vendor_ID_Type;
+      Device_ID : Device_ID_Type;
       BARs      : BAR_Array;
       Reset     : Reset_Method_Type;
    end record;

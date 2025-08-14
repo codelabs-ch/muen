@@ -110,13 +110,15 @@ is
    -------------------------------------------------------------------------
 
    procedure Check_Vendor_Device
-     (Device    :     aliased Config_Space_Type;
-      Vendor_ID :     Interfaces.Unsigned_16;
-      Device_ID :     Interfaces.Unsigned_16;
-      Success   : out Boolean)
+     (Device    : aliased     Config_Space_Type;
+      Vendor_ID :             Vendor_ID_Type;
+      Device_ID :             Device_ID_Type;
+      Success   :         out Boolean)
    is
-      V_ID : constant Interfaces.Unsigned_16 := Device.Header.Vendor_ID;
-      D_ID : constant Interfaces.Unsigned_16 := Device.Header.Device_ID;
+      V_ID : constant Vendor_ID_Type
+        := Vendor_ID_Type (Device.Header.Vendor_ID);
+      D_ID : constant Device_ID_Type
+        := Device_ID_Type (Device.Header.Device_ID);
    begin
       Success := V_ID = Vendor_ID and D_ID = Device_ID;
    end Check_Vendor_Device;

@@ -133,10 +133,10 @@ is
    --  Check that the given device PCI configuration space matches the expected
    --  Vendor/Device ID.
    procedure Check_Vendor_Device
-     (Device    : aliased Config_Space_Type;
-      Vendor_ID : Interfaces.Unsigned_16;
-      Device_ID : Interfaces.Unsigned_16;
-      Success   : out Boolean);
+     (Device    : aliased     Config_Space_Type;
+      Vendor_ID :             Vendor_ID_Type;
+      Device_ID :             Device_ID_Type;
+      Success   :         out Boolean);
 
 private
 

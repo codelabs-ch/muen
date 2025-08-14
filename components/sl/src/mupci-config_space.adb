@@ -148,7 +148,7 @@ is
    procedure Get_PCI_Capability
      (SID     :     Musinfo.SID_Type;
       ID      :     Capability_ID_Type;
-      Offset  : out Capability_Range;
+      Offset  : out Capability_Ptr_Type;
       Success : out Boolean)
    is
       use type Interfaces.Unsigned_8;
@@ -160,10 +160,10 @@ is
         := Interfaces.Unsigned_16 (Space (SID).Header.Capabilities_Pointer);
    begin
       Success := False;
-      Offset  := Null_Capability_Offset;
+      Offset  := Capability_Ptr_Type'First;
 
       loop
-         exit when Index = 0 or not (Index in Capability_Range);
+         exit when Index = 0 or not (Index in Capability_Ptr_Type);
          Cap_ID := Space (SID).Dev_Specific (Index);
          if Cap_ID = ID_Value then
             Offset  := Index;
@@ -180,7 +180,7 @@ is
      (Device  :     Device_Type;
       Success : out Boolean)
    is
-      Offset       : Capability_Range;
+      Offset       : Capability_Ptr_Type;
       Cmd_Register : Interfaces.Unsigned_16;
    begin
 

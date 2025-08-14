@@ -47,7 +47,7 @@ is
    begin
       for D of Pciconf.Devices loop
          declare
-            PCIe_Cap : Mupci.Config_Space.Capability_Range;
+            PCIe_Cap : Mupci.Config_Space.Capability_Ptr_Type;
          begin
             --  TODO: check capabilities list bit before accessing caps.
             Mupci.Config_Space.Debug.Print_PCI_Device_Info (SID => D.SID);

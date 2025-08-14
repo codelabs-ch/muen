@@ -44,11 +44,15 @@ is
 
    Null_Dev_Specific_Offset : constant Dev_Specific_Range;
 
-   --  PCI standard capability range.
+   --  PCI capability pointer.
+   --  See PCI Local Bus Specification, "Capabilities List".
+   --  The last valid pointer must hold enough space for the ID and next
+   --  pointer fields, and at least one data byte.
 
-   subtype Capability_Range is Dev_Specific_Range range 16#40# .. 16#ff#;
+   use type Dev_Specific_Range;
 
-   Null_Capability_Offset : constant Capability_Range;
+   subtype Capability_Ptr_Type is Dev_Specific_Range range
+     Dev_Specific_Range'First .. Dev_Specific_Range'Last - 3;
 
    --  Currently supported capabilites.
    type Capability_ID_Type is
@@ -110,19 +114,15 @@ is
    procedure Get_PCI_Capability
      (SID     :     Musinfo.SID_Type;
       ID      :     Capability_ID_Type;
-      Offset  : out Capability_Range;
+      Offset  : out Capability_Ptr_Type;
       Success : out Boolean);
 
 private
 
-   use type Interfaces.Unsigned_16;
    use type Interfaces.Unsigned_64;
 
    Null_Dev_Specific_Offset : constant Dev_Specific_Range
      := Dev_Specific_Range'Last;
-
-   Null_Capability_Offset : constant Capability_Range
-     := Capability_Range'Last;
 
    for Capability_ID_Type use
      (PCI_Power_Management_Capability => 16#01#,

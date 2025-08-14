@@ -53,7 +53,7 @@ is
    begin
       loop
          exit when Index not in Dev_Specific_Range
-           or (Index = Dev_Specific_Range'Last - 1);
+           or Index = Dev_Specific_Range'Last - 1;
          pragma Loop_Invariant (Index in Dev_Specific_Range);
          pragma Loop_Invariant (Index + 1 in Dev_Specific_Range);
 

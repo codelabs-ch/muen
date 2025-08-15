@@ -26,6 +26,8 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
+with Mupci.Config_Device;
+
 package body Mupci.Config_Space
 with
    Refined_State => (State => Space)
@@ -110,28 +112,12 @@ is
    -------------------------------------------------------------------------
 
    procedure Check_Vendor_Device
-     (Device    : aliased     Config_Space_Type;
-      Vendor_ID :             Vendor_ID_Type;
-      Device_ID :             Device_ID_Type;
-      Success   :         out Boolean)
-   is
-      V_ID : constant Vendor_ID_Type
-        := Vendor_ID_Type (Device.Header.Vendor_ID);
-      D_ID : constant Device_ID_Type
-        := Device_ID_Type (Device.Header.Device_ID);
-   begin
-      Success := V_ID = Vendor_ID and D_ID = Device_ID;
-   end Check_Vendor_Device;
-
-   -------------------------------------------------------------------------
-
-   procedure Check_Vendor_Device
      (Device  :     Device_Type;
       Success : out Boolean)
    is
       Mmconf : aliased constant Config_Space_Type := Space (Device.SID);
    begin
-      Check_Vendor_Device
+      Config_Device.Check_Vendor_Device
         (Device    => Mmconf,
          Vendor_ID => Device.Vendor_ID,
          Device_ID => Device.Device_ID,

@@ -33,7 +33,8 @@ private with System;
 with Musinfo;
 
 --D @Interface
---D This package defines an API to the PCI configuration space of devices.
+--D This package defines an API to the PCI configuration space of devices
+--D assigned to a subject.
 package Mupci.Config_Space
 with
    Abstract_State => (State with External => (Async_Readers, Async_Writers))
@@ -96,25 +97,6 @@ is
       ID      :     Capability_ID_Type;
       Offset  : out Capability_Ptr_Type;
       Success : out Boolean);
-
-   --  Per-mmconf-space operations.
-
-   --  The following relies on the Ada 2012 'aliased' semantic descibed in:
-   --  http://www.ada-auth.org/standards/12rat/html/Rat12-4-2.html
-   --
-   --  The 'aliased' keyword requires the compiler to enforce pass-by-reference,
-   --  also for non-tagged records.
-   --
-   --  Rationale: Access types cannot be used as SPARK enforces them
-   --  to be declared at library level.
-
-   --  Check that the given device PCI configuration space matches the expected
-   --  Vendor/Device ID.
-   procedure Check_Vendor_Device
-     (Device    : aliased     Config_Space_Type;
-      Vendor_ID :             Vendor_ID_Type;
-      Device_ID :             Device_ID_Type;
-      Success   :         out Boolean);
 
 private
 

@@ -192,6 +192,7 @@ private
       Dev_Specific : Dev_Specific_Array;
    end record
    with
+      Volatile,
       Object_Size => SK.Page_Size * 8,
       Size        => SK.Page_Size * 8;
 

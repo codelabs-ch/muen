@@ -102,7 +102,7 @@ private
 
    use type Interfaces.Unsigned_64;
 
-   type Addrspace_Type is array (Musinfo.SID_Type) of Config_Space_Type
+   type Addrspace_Type is array (Musinfo.SID_Type) of aliased Config_Space_Type
    with
       Component_Size => SK.Page_Size * 8,
       Object_Size    => (Interfaces.Unsigned_64 (Musinfo.SID_Type'Last) + 1)

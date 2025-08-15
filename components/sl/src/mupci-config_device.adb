@@ -29,6 +29,8 @@
 package body Mupci.Config_Device
 is
 
+   PCI_Cmd_Spaces_Enable_Bits : constant := 16#0003#;
+
    -------------------------------------------------------------------------
 
    procedure Check_Vendor_Device
@@ -44,5 +46,27 @@ is
    begin
       Success := V_ID = Vendor_ID and D_ID = Device_ID;
    end Check_Vendor_Device;
+
+   -------------------------------------------------------------------------
+
+   procedure Decode_Disable (Device : aliased in out Config_Space_Type)
+   is
+      Cmd_Register : Interfaces.Unsigned_16;
+   begin
+      Cmd_Register := Device.Header.Command;
+      Cmd_Register := Cmd_Register and not PCI_Cmd_Spaces_Enable_Bits;
+      Device.Header.Command := Cmd_Register;
+   end Decode_Disable;
+
+   -------------------------------------------------------------------------
+
+   procedure Decode_Enable (Device : aliased in out Config_Space_Type)
+   is
+      Cmd_Register : Interfaces.Unsigned_16;
+   begin
+      Cmd_Register := Device.Header.Command;
+      Cmd_Register := Cmd_Register or PCI_Cmd_Spaces_Enable_Bits;
+      Device.Header.Command := Cmd_Register;
+   end Decode_Enable;
 
 end Mupci.Config_Device;

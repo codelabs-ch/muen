@@ -35,8 +35,7 @@ is
    PCI_Base_Address_Mem_Mask : constant := 16#f#;
    PCI_Base_Address_IO_Mask  : constant := 16#3#;
 
-   PCI_Cmd_Spaces_Enable_Bits : constant := 16#0003#;
-   PCI_Cmd_Intx_Disable       : constant := 16#0400#;
+   PCI_Cmd_Intx_Disable : constant := 16#0400#;
 
    PCIe_Cap_Dev_Status_Transaction_Pending : constant := 16#0020#;
    PCIe_Cap_FLR_Initiate                   : constant := 16#8000#;
@@ -115,10 +114,9 @@ is
      (Device  :     Device_Type;
       Success : out Boolean)
    is
-      Mmconf : aliased constant Config_Space_Type := Space (Device.SID);
    begin
       Config_Device.Check_Vendor_Device
-        (Device    => Mmconf,
+        (Device    => Space (Device.SID),
          Vendor_ID => Device.Vendor_ID,
          Device_ID => Device.Device_ID,
          Success   => Success);
@@ -128,22 +126,16 @@ is
 
    procedure Decode_Enable (SID : Musinfo.SID_Type)
    is
-      Cmd_Register : Interfaces.Unsigned_16;
    begin
-      Cmd_Register := Space (SID).Header.Command;
-      Cmd_Register := Cmd_Register or PCI_Cmd_Spaces_Enable_Bits;
-      Space (SID).Header.Command := Cmd_Register;
+      Config_Device.Decode_Enable (Device => Space (SID));
    end Decode_Enable;
 
    -------------------------------------------------------------------------
 
    procedure Decode_Disable (SID : Musinfo.SID_Type)
    is
-      Cmd_Register : Interfaces.Unsigned_16;
    begin
-      Cmd_Register := Space (SID).Header.Command;
-      Cmd_Register := Cmd_Register and not PCI_Cmd_Spaces_Enable_Bits;
-      Space (SID).Header.Command := Cmd_Register;
+      Config_Device.Decode_Disable (Device => Space (SID));
    end Decode_Disable;
 
    -------------------------------------------------------------------------

@@ -28,8 +28,71 @@
 
 package body Mupci.Config_Device
 is
+   PCI_Base_Address_Mem_Mask : constant := 16#f#;
+   PCI_Base_Address_IO_Mask  : constant := 16#3#;
 
    PCI_Cmd_Spaces_Enable_Bits : constant := 16#0003#;
+
+   -------------------------------------------------------------------------
+
+   procedure Check_BARs
+     (Device  : aliased in out Config_Space_Type;
+      BARs    :                BAR_Array;
+      Success :            out Boolean)
+   is
+      use type Interfaces.Unsigned_32;
+
+      Regvalue, Size : Interfaces.Unsigned_32;
+   begin
+      Success := True;
+
+      for I in BARs'Range loop
+         Regvalue := Device.Header.Base_Address_Registers (I);
+
+         if BARs (I).Register_Value /= Regvalue then
+            Success := False;
+            return;
+         end if;
+
+         if BARs (I) /= Null_BAR then
+
+            --  Check size, see PCI Express Base Specification 6.2,
+            --  7.5.1.2.1 Base Address Registers,
+            --  Implementation note about sizing base address registers.
+
+            Decode_Disable (Device => Device);
+
+            Device.Header.Base_Address_Registers (I)
+              := Interfaces.Unsigned_32'Last;
+            Size := Device.Header.Base_Address_Registers (I);
+
+            if (Regvalue and 1) = 1 then
+
+               --  PIO, clear first two bits.
+
+               Size := Size and not PCI_Base_Address_IO_Mask;
+            else
+
+               --  Memory, clear first 4 bits.
+
+               Size := Size and not PCI_Base_Address_Mem_Mask;
+            end if;
+
+            Size := not Size + 1;
+
+            if BARs (I).Size /= Size then
+               Success := False;
+               return;
+            end if;
+
+            --  Restore register value.
+
+            Device.Header.Base_Address_Registers (I) := Regvalue;
+
+            Decode_Enable (Device => Device);
+         end if;
+      end loop;
+   end Check_BARs;
 
    -------------------------------------------------------------------------
 

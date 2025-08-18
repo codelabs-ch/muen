@@ -32,9 +32,6 @@ package body Mupci.Config_Space
 with
    Refined_State => (State => Space)
 is
-   PCI_Base_Address_Mem_Mask : constant := 16#f#;
-   PCI_Base_Address_IO_Mask  : constant := 16#3#;
-
    PCI_Cmd_Intx_Disable : constant := 16#0400#;
 
    PCIe_Cap_Dev_Status_Transaction_Pending : constant := 16#0020#;
@@ -54,58 +51,11 @@ is
      (Device  :     Device_Type;
       Success : out Boolean)
    is
-      use type Interfaces.Unsigned_32;
-
-      Regvalue, Size : Interfaces.Unsigned_32;
    begin
-      Success := True;
-
-      for I in Device.BARs'Range loop
-         Regvalue := Space (Device.SID).Header.Base_Address_Registers (I);
-
-         if Device.BARs (I).Register_Value /= Regvalue then
-            Success := False;
-            return;
-         end if;
-
-         if Device.BARs (I) /= Null_BAR then
-
-            --  Check size, see PCI Express Base Specification 6.2,
-            --  7.5.1.2.1 Base Address Registers,
-            --  Implementation note about sizing base address registers.
-
-            Decode_Disable (SID => Device.SID);
-
-            Space (Device.SID).Header.Base_Address_Registers (I)
-              := Interfaces.Unsigned_32'Last;
-            Size := Space (Device.SID).Header.Base_Address_Registers (I);
-
-            if (Regvalue and 1) = 1 then
-
-               --  PIO, clear first two bits.
-
-               Size := Size and not PCI_Base_Address_IO_Mask;
-            else
-
-               --  Memory, clear first 4 bits.
-
-               Size := Size and not PCI_Base_Address_Mem_Mask;
-            end if;
-
-            Size := not Size + 1;
-
-            if Device.BARs (I).Size /= Size then
-               Success := False;
-               return;
-            end if;
-
-            --  Restore register value.
-
-            Space (Device.SID).Header.Base_Address_Registers (I) := Regvalue;
-
-            Decode_Enable (SID => Device.SID);
-         end if;
-      end loop;
+      Config_Device.Check_BARs
+        (Device  => Space (Device.SID),
+         BARs    => Device.BARs,
+         Success => Success);
    end Check_BARs;
 
    -------------------------------------------------------------------------

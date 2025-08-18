@@ -49,6 +49,13 @@ is
       Device_ID :             Device_ID_Type;
       Success   :         out Boolean);
 
+   --  Check that the PCI configuration space of given device
+   --  matches the expected BAR addresses and sizes.
+   procedure Check_BARs
+     (Device  : aliased in out Config_Space_Type;
+      BARs    :                BAR_Array;
+      Success :            out Boolean);
+
    --  Disable decode of I/O and mem spaces for specified device.
    procedure Decode_Disable (Device : aliased in out Config_Space_Type);
 

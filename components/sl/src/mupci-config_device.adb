@@ -33,6 +33,9 @@ is
 
    PCI_Cmd_Spaces_Enable_Bits : constant := 16#0003#;
 
+   --  Busyloop given milliseconds.
+   procedure Wait (Milliseconds : Interfaces.Unsigned_64);
+
    -------------------------------------------------------------------------
 
    procedure Check_BARs
@@ -193,5 +196,46 @@ is
 
       Decode_Enable (Device => Device);
    end Setup_BARs;
+
+   --------------------------------------------------------------------------
+
+   --  TODO: Implement real wait.
+   procedure Wait (Milliseconds : Interfaces.Unsigned_64)
+   with
+      SPARK_Mode => Off
+   is
+      pragma Unreferenced (Milliseconds);
+   begin
+      for I in 1 .. 2000000 loop
+         null;
+      end loop;
+   end Wait;
+
+   -------------------------------------------------------------------------
+
+   procedure Wait_For_Device
+     (Device     : aliased     Config_Space_Type;
+      Timeout_MS :             Positive;
+      Success    :         out Boolean)
+   is
+      pragma Unreferenced (Timeout_MS);
+
+      Cmd_Val   : Interfaces.Unsigned_16;
+      Not_Ready : constant Interfaces.Unsigned_16 := 16#ffff#;
+   begin
+
+      --  TODO: Handle Request Retry Status completions if supported by device.
+
+      --  Use command register instead of vendor ID to ignore CRS
+      --  completions for now. See also Linux pci_dev_wait() function.
+
+      for I in 1 .. 5 loop
+         Cmd_Val := Device.Header.Command;
+         exit when Cmd_Val /= Not_Ready;
+         Wait (Milliseconds => 200);
+      end loop;
+
+      Success := Cmd_Val /= Not_Ready;
+   end Wait_For_Device;
 
 end Mupci.Config_Device;

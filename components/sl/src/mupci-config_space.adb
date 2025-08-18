@@ -232,24 +232,11 @@ is
       Timeout_MS :     Positive;
       Success    : out Boolean)
    is
-      pragma Unreferenced (Timeout_MS);
-
-      Cmd_Val   : Interfaces.Unsigned_16;
-      Not_Ready : constant Interfaces.Unsigned_16 := 16#ffff#;
    begin
-
-      --  TODO: Handle Request Retry Status completions if supported by device.
-
-      --  Use command register instead of vendor ID to ignore CRS
-      --  completions for now. See also Linux pci_dev_wait() function.
-
-      for I in 1 .. 5 loop
-         Cmd_Val := Space (SID).Header.Command;
-         exit when Cmd_Val /= Not_Ready;
-         Wait (Milliseconds => 200);
-      end loop;
-
-      Success := Cmd_Val /= Not_Ready;
+      Config_Device.Wait_For_Device
+        (Device     => Space (SID),
+         Timeout_MS => Timeout_MS,
+         Success    => Success);
    end Wait_For_Device;
 
 end Mupci.Config_Space;

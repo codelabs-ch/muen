@@ -68,6 +68,13 @@ is
    --  Enable decode of I/O and mem spaces for specified device.
    procedure Decode_Enable (Device : aliased in out Config_Space_Type);
 
+   --  Wait for device ready within the given timeout in MS. Returns False if
+   --  the device is not ready after the specified time period.
+   procedure Wait_For_Device
+     (Device     : aliased     Config_Space_Type;
+      Timeout_MS :             Positive;
+      Success    :         out Boolean);
+
    --  Return offset of PCI standard capability in given device PCI
    --  configuration space. If device does not have such a capability, Success
    --  is False and offset is set to null offset.

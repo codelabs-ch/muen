@@ -68,4 +68,13 @@ is
    --  Enable decode of I/O and mem spaces for specified device.
    procedure Decode_Enable (Device : aliased in out Config_Space_Type);
 
+   --  Return offset of PCI standard capability in given device PCI
+   --  configuration space. If device does not have such a capability, Success
+   --  is False and offset is set to null offset.
+   procedure Get_PCI_Capability
+     (Device  : aliased     Config_Space_Type;
+      ID      :             Capability_ID_Type;
+      Offset  :         out Capability_Ptr_Type;
+      Success :         out Boolean);
+
 end Mupci.Config_Device;

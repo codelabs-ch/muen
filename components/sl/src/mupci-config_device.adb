@@ -134,6 +134,37 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Get_PCI_Capability
+     (Device  : aliased     Config_Space_Type;
+      ID      :             Capability_ID_Type;
+      Offset  :         out Capability_Ptr_Type;
+      Success :         out Boolean)
+   is
+      use type Interfaces.Unsigned_8;
+
+      ID_Value : constant Interfaces.Unsigned_8 :=
+        Capability_ID_Type'Enum_Rep (ID);
+      Cap_ID   : Interfaces.Unsigned_8;
+      Index    : Interfaces.Unsigned_16         :=
+        Interfaces.Unsigned_16 (Device.Header.Capabilities_Pointer);
+   begin
+      Success := False;
+      Offset  := Capability_Ptr_Type'First;
+
+      loop
+         exit when Index = 0 or not (Index in Capability_Ptr_Type);
+         Cap_ID := Device.Dev_Specific (Index);
+         if Cap_ID = ID_Value then
+            Offset  := Index;
+            Success := True;
+            return;
+         end if;
+         Index := Interfaces.Unsigned_16 (Device.Dev_Specific (Index + 1));
+      end loop;
+   end Get_PCI_Capability;
+
+   -------------------------------------------------------------------------
+
    procedure Setup_BARs
      (Device  : aliased in out Config_Space_Type;
       BARs    :                BAR_Array;

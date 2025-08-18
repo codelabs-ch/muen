@@ -85,18 +85,6 @@ is
    with
       Pre => Timeout_MS mod Divider = 0;
 
-   --  Return address of device PCI configuration space.
-   function Mmconf_Address
-     (SID : Musinfo.SID_Type)
-      return Interfaces.Unsigned_64;
-
-   --  Return address of device PCI configuration space register at
-   --  given offset.
-   function Mmconf_Register
-     (SID    : Musinfo.SID_Type;
-      Offset : Dev_Specific_Range)
-      return Interfaces.Unsigned_64;
-
    --  Return offset of PCI standard capability in given device PCI
    --  configuration space. If device does not have such a capability, Success
    --  is False and offset is set to null offset.
@@ -136,16 +124,5 @@ private
    pragma Warnings
      (GNATprove, On,
       "writing * is assumed to have no effects on other non-volatile objects");
-
-   function Mmconf_Address
-     (SID : Musinfo.SID_Type)
-      return Interfaces.Unsigned_64
-   is (Mmconf_Base + Interfaces.Unsigned_64 (SID * SK.Page_Size));
-
-   function Mmconf_Register
-     (SID    : Musinfo.SID_Type;
-      Offset : Dev_Specific_Range)
-      return Interfaces.Unsigned_64
-   is (Mmconf_Address (SID) + Interfaces.Unsigned_64 (Offset));
 
 end Mupci.Config_Space;

@@ -66,7 +66,7 @@ is
             end if;
 
             Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure
-              (Address => Mupci.Config_Space.Mmconf_Register
+              (Address => Mupci.Config_Space.Debug.Mmconf_Register
                  (SID    => D.SID,
                   Offset => PCIe_Cap));
 
@@ -76,7 +76,7 @@ is
             if not Success then
                Debuglog.Client.Put_Line
                   (Item => "ERROR: Unexpected device at "
-                   & SK.Strings.Img (Mupci.Config_Space.Mmconf_Address
+                   & SK.Strings.Img (Mupci.Config_Space.Debug.Mmconf_Address
                      (SID => D.SID)));
                return;
             end if;
@@ -102,7 +102,7 @@ is
                Mupci.Config_Space.Debug.Print_PCI_Device_Info (SID => D.SID);
                Mupci.Config_Space.Debug.Print_PCI_Capabilities (SID => D.SID);
                Mupci.Config_Space.Debug.Print_PCIe_Capability_Structure
-                (Address => Mupci.Config_Space.Mmconf_Register
+                (Address => Mupci.Config_Space.Debug.Mmconf_Register
                    (SID    => D.SID,
                     Offset => PCIe_Cap));
 

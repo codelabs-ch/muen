@@ -26,12 +26,25 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
+with System.Storage_Elements;
+
 package body Mupci.Config_Device
 is
    PCI_Base_Address_Mem_Mask : constant := 16#f#;
    PCI_Base_Address_IO_Mask  : constant := 16#3#;
 
    PCI_Cmd_Spaces_Enable_Bits : constant := 16#0003#;
+
+   PCI_Cmd_Intx_Disable : constant := 16#0400#;
+
+   PCIe_Cap_Dev_Status_Transaction_Pending : constant := 16#0020#;
+   PCIe_Cap_FLR_Initiate                   : constant := 16#8000#;
+
+   --  Access PCIe capability structure of given device and reset it using
+   --  FLR method.
+   procedure Reset_Device_FLR
+     (Device  : aliased Config_Space_Type;
+      Offset  :         Capability_Ptr_Type);
 
    --  Busyloop given milliseconds.
    procedure Wait (Milliseconds : Interfaces.Unsigned_64);
@@ -165,6 +178,108 @@ is
          Index := Interfaces.Unsigned_16 (Device.Dev_Specific (Index + 1));
       end loop;
    end Get_PCI_Capability;
+
+   -------------------------------------------------------------------------
+
+   procedure Reset
+     (Device  : aliased in out Config_Space_Type;
+      Method  :                Reset_Method_Type;
+      Success :            out Boolean)
+   is
+      Offset       : Capability_Ptr_Type;
+      Cmd_Register : Interfaces.Unsigned_16;
+   begin
+
+      Cmd_Register := Device.Header.Command;
+
+      --  PCI Express Base Specification 6.2, 6.6.2 Function Level Reset (FLR).
+      --  Impl. Note "Avoiding data corruption from stale completions",
+      --  Item 2: Software clears the command register.
+
+      --  Explanation taken from Linux kernel, pci_dev_save_and_disable.
+      --
+      --  Disable the device by clearing the Command register, except for
+      --  INTx-disable which is set.  This not only disables MMIO and I/O port
+      --  BARs, but also prevents the device from being Bus Master, preventing
+      --  DMA from the device including MSI/MSI-X interrupts.  For PCI 2.3
+      --  compliant devices, INTx-disable prevents legacy interrupts.
+
+      Device.Header.Command := PCI_Cmd_Intx_Disable;
+
+      case Method is
+         when Reset_Method_FLR =>
+            Get_PCI_Capability
+              (Device  => Device,
+               ID      => PCI_Express_Capability,
+               Offset  => Offset,
+               Success => Success);
+            if not Success then
+               return;
+            end if;
+
+            Reset_Device_FLR
+              (Device => Device,
+               Offset => Offset);
+
+            --  Wait for device ready: wait for an additional 1 sec as per
+            --  conventional device reset.
+
+            Wait_For_Device
+              (Device     => Device,
+               Timeout_MS => 1000,
+               Success    => Success);
+         when others =>
+            Success := False;
+      end case;
+
+      Device.Header.Command := Cmd_Register;
+   end Reset;
+
+   -------------------------------------------------------------------------
+
+   procedure Reset_Device_FLR
+     (Device  : aliased Config_Space_Type;
+      Offset  :         Capability_Ptr_Type)
+   with
+      SPARK_Mode => Off
+   is
+      use type System.Storage_Elements.Storage_Offset;
+
+      Address : constant System.Address
+        := Device'Address + System.Storage_Elements.Storage_Offset (Offset);
+
+      Caps : PCIe_Cap_Struct_Type
+      with
+         Import,
+         Address => Address;
+
+      Ctrl_Val : constant Interfaces.Unsigned_16 := Caps.Device_Control;
+   begin
+
+      --  PCI Express Base Specification 6.2, 6.6.2 Function Level Reset (FLR).
+      --  Impl. Note "Avoiding data corruption from stale completions",
+      --  Item 3: Wait for pending transactions.
+
+      for I in 1 .. 10 loop
+         exit when
+           (Caps.Device_Status and PCIe_Cap_Dev_Status_Transaction_Pending) = 0;
+         Wait (Milliseconds => 100);
+      end loop;
+
+      --  PCI Express Base Specification 6.2, 6.6.2 Function Level Reset (FLR).
+      --  Impl. Note "Avoiding data corruption from stale completions",
+      --  Item 4: Software initiates FLR.
+
+      Caps.Device_Control := Ctrl_Val or PCIe_Cap_FLR_Initiate;
+
+      --  TODO: Implement Immediate Ready support
+
+      --  PCI Express Base Specification 6.2, 6.6.2 Function Level Reset (FLR).
+      --  Impl. Note "Avoiding data corruption from stale completions",
+      --  Item 5: Software waits 100ms.
+
+      Wait (Milliseconds => 100);
+   end Reset_Device_FLR;
 
    -------------------------------------------------------------------------
 

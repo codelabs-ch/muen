@@ -68,6 +68,14 @@ is
    --  Enable decode of I/O and mem spaces for specified device.
    procedure Decode_Enable (Device : aliased in out Config_Space_Type);
 
+   --  Reset given device.
+   procedure Reset
+     (Device  : aliased in out Config_Space_Type;
+      Method  :                Reset_Method_Type;
+      Success :            out Boolean)
+   with
+      Pre => Method /= Reset_Method_None;
+
    --  Wait for device ready within the given timeout in MS. Returns False if
    --  the device is not ready after the specified time period.
    --

@@ -70,10 +70,18 @@ is
 
    --  Wait for device ready within the given timeout in MS. Returns False if
    --  the device is not ready after the specified time period.
+   --
+   --  The Divider argument's purpose is to split the total timeout duration
+   --  into smaller, evenly spaced time slices. These slices are used to perform
+   --  repeated wait operations instead of waiting for the full timeout in one
+   --  go.
    procedure Wait_For_Device
      (Device     : aliased     Config_Space_Type;
       Timeout_MS :             Positive;
-      Success    :         out Boolean);
+      Divider    :             Positive := 5;
+      Success    :         out Boolean)
+   with
+      Pre => Timeout_MS mod Divider = 0;
 
    --  Return offset of PCI standard capability in given device PCI
    --  configuration space. If device does not have such a capability, Success

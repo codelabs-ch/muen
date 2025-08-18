@@ -230,12 +230,14 @@ is
    procedure Wait_For_Device
      (SID        :     Musinfo.SID_Type;
       Timeout_MS :     Positive;
+      Divider    :     Positive := 5;
       Success    : out Boolean)
    is
    begin
       Config_Device.Wait_For_Device
         (Device     => Space (SID),
          Timeout_MS => Timeout_MS,
+         Divider    => Divider,
          Success    => Success);
    end Wait_For_Device;
 

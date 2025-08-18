@@ -216,11 +216,12 @@ is
    procedure Wait_For_Device
      (Device     : aliased     Config_Space_Type;
       Timeout_MS :             Positive;
+      Divider    :             Positive := 5;
       Success    :         out Boolean)
    is
-      pragma Unreferenced (Timeout_MS);
+      use type Interfaces.Unsigned_64;
 
-      Cmd_Val   : Interfaces.Unsigned_16;
+      Cmd_Val   : Interfaces.Unsigned_16          := 0;
       Not_Ready : constant Interfaces.Unsigned_16 := 16#ffff#;
    begin
 
@@ -229,10 +230,13 @@ is
       --  Use command register instead of vendor ID to ignore CRS
       --  completions for now. See also Linux pci_dev_wait() function.
 
-      for I in 1 .. 5 loop
+      for I in 1 .. Divider loop
          Cmd_Val := Device.Header.Command;
          exit when Cmd_Val /= Not_Ready;
-         Wait (Milliseconds => 200);
+         Wait
+           (Milliseconds =>
+              Interfaces.Unsigned_64 (Timeout_MS) /
+              Interfaces.Unsigned_64 (Divider));
       end loop;
 
       Success := Cmd_Val /= Not_Ready;

@@ -219,28 +219,11 @@ is
      (Device  :     Device_Type;
       Success : out Boolean)
    is
-      use type Interfaces.Unsigned_32;
-
-      Regvalue : Interfaces.Unsigned_32;
    begin
-      Success := True;
-
-      Decode_Disable (SID => Device.SID);
-
-      for I in Device.BARs'Range loop
-         if Device.BARs (I) /= Null_BAR then
-            Space (Device.SID).Header.Base_Address_Registers (I)
-              := Device.BARs (I).Register_Value;
-
-            Regvalue := Space (Device.SID).Header.Base_Address_Registers (I);
-            if Device.BARs (I).Register_Value /= Regvalue then
-               Success := False;
-               return;
-            end if;
-         end if;
-      end loop;
-
-      Decode_Enable (SID => Device.SID);
+      Config_Device.Check_BARs
+        (Device  => Space (Device.SID),
+         BARs    => Device.BARs,
+         Success => Success);
    end Setup_BARs;
 
    --------------------------------------------------------------------------

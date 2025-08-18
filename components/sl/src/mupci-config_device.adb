@@ -132,4 +132,35 @@ is
       Device.Header.Command := Cmd_Register;
    end Decode_Enable;
 
+   -------------------------------------------------------------------------
+
+   procedure Setup_BARs
+     (Device  : aliased in out Config_Space_Type;
+      BARs    :                BAR_Array;
+      Success :            out Boolean)
+   is
+      use type Interfaces.Unsigned_32;
+
+      Regvalue : Interfaces.Unsigned_32;
+   begin
+      Success := True;
+
+      Decode_Disable (Device => Device);
+
+      for I in BARs'Range loop
+         if BARs (I) /= Null_BAR then
+            Device.Header.Base_Address_Registers (I)
+              := BARs (I).Register_Value;
+
+            Regvalue := Device.Header.Base_Address_Registers (I);
+            if BARs (I).Register_Value /= Regvalue then
+               Success := False;
+               return;
+            end if;
+         end if;
+      end loop;
+
+      Decode_Enable (Device => Device);
+   end Setup_BARs;
+
 end Mupci.Config_Device;

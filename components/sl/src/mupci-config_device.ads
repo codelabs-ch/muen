@@ -56,6 +56,12 @@ is
       BARs    :                BAR_Array;
       Success :            out Boolean);
 
+   --  Setup BARs of specified device according to policy.
+   procedure Setup_BARs
+     (Device  : aliased in out Config_Space_Type;
+      BARs    :                BAR_Array;
+      Success :            out Boolean);
+
    --  Disable decode of I/O and mem spaces for specified device.
    procedure Decode_Disable (Device : aliased in out Config_Space_Type);
 

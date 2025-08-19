@@ -144,11 +144,13 @@ def write_spec(devices: dict[str, etree._Element], outfile: str, pkg: str):
         f.write("   Devices : constant Device_Array := (\n")
         for name, e in devices.items():
             f.write(
-                f"      {count} => (SID       => 8,\n"  # TODO
-                f"            Device_ID => {e.xpath('pci/identification/@deviceId')[0]},\n"
-                f"            Vendor_ID => {e.xpath('pci/identification/@vendorId')[0]},\n"
-                "            Reset     => Mupci.Reset_Method_FLR,\n"
-                "            BARs      => (\n"
+                f"      {count} => (SID         => 8,\n"  # TODO
+                f"            Device_ID   => {e.xpath('pci/identification/@deviceId')[0]},\n"
+                f"            Vendor_ID   => {e.xpath('pci/identification/@vendorId')[0]},\n"
+                f"            Revision_ID => {e.xpath('pci/identification/@revisionId')[0]},\n"
+                f"            Class_Code  => {e.xpath('pci/identification/@classcode')[0]},\n"
+                "            Reset       => Mupci.Reset_Method_FLR,\n"
+                "            BARs        => (\n"
             )
             f.write(get_bar_config(dev=e))
             if len(devices) == count:

@@ -58,15 +58,20 @@ is
       Reset_Method_PM,
       Reset_Method_Bus);
 
-   type Vendor_ID_Type is new Interfaces.Unsigned_16;
-   type Device_ID_Type is new Interfaces.Unsigned_16;
+   type Vendor_ID_Type     is new Interfaces.Unsigned_16;
+   type Device_ID_Type     is new Interfaces.Unsigned_16;
+   type Revision_ID_Type   is new Interfaces.Unsigned_8;
+   type Class_Code_PI_Type is new Interfaces.Unsigned_8;
+   type Class_Code_Type    is new Interfaces.Unsigned_16;
 
    type Device_Type is record
-      SID       : Musinfo.SID_Type;
-      Vendor_ID : Vendor_ID_Type;
-      Device_ID : Device_ID_Type;
-      BARs      : BAR_Array;
-      Reset     : Reset_Method_Type;
+      SID         : Musinfo.SID_Type;
+      Vendor_ID   : Vendor_ID_Type;
+      Device_ID   : Device_ID_Type;
+      Revision_ID : Revision_ID_Type;
+      Class_Code  : Class_Code_Type;
+      BARs        : BAR_Array;
+      Reset       : Reset_Method_Type;
    end record;
 
    type Device_Array is array (Positive range <>) of Device_Type;
@@ -110,14 +115,6 @@ private
      (PCI_Power_Management_Capability => 16#01#,
       PCI_Express_Capability          => 16#10#);
 
-   type Info_Record_Type is record
-      Revision_ID : Interfaces.Unsigned_8;
-      Class_Code  : Interfaces.Unsigned_24;
-   end record
-   with
-      Pack,
-      Size => 32;
-
    Header_Size : constant := 64;
 
    type Device_BAR_Array is array (BAR_Range) of Interfaces.Unsigned_32
@@ -125,11 +122,13 @@ private
       Size => 6 * 4 * 8;
 
    type Header_Type is record
-      Vendor_ID               : Interfaces.Unsigned_16;
-      Device_ID               : Interfaces.Unsigned_16;
+      Vendor_ID               : Vendor_ID_Type;
+      Device_ID               : Device_ID_Type;
       Command                 : Interfaces.Unsigned_16;
       Status                  : Interfaces.Unsigned_16;
-      Info                    : Info_Record_Type;
+      Revision_ID             : Revision_ID_Type;
+      Class_Code_PI           : Class_Code_PI_Type;
+      Class_Code              : Class_Code_Type;
       Cache_Line_Size         : Interfaces.Unsigned_8;
       Master_Latency_Timer    : Interfaces.Unsigned_8;
       Header_Type             : Interfaces.Unsigned_8;
@@ -155,7 +154,9 @@ private
       Device_ID               at 16#00# range 16 ..  31;
       Command                 at 16#04# range  0 ..  15;
       Status                  at 16#04# range 16 ..  31;
-      Info                    at 16#08# range  0 ..  31;
+      Revision_ID             at 16#08# range  0 ..   7;
+      Class_Code_PI           at 16#08# range  8 ..  15;
+      Class_Code              at 16#08# range 16 ..  31;
       Cache_Line_Size         at 16#0c# range  0 ..   7;
       Master_Latency_Timer    at 16#0c# range  8 ..  15;
       Header_Type             at 16#0c# range 16 ..  23;

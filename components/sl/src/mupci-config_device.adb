@@ -118,10 +118,8 @@ is
       Device_ID :             Device_ID_Type;
       Success   :         out Boolean)
    is
-      V_ID : constant Vendor_ID_Type
-        := Vendor_ID_Type (Device.Header.Vendor_ID);
-      D_ID : constant Device_ID_Type
-        := Device_ID_Type (Device.Header.Device_ID);
+      V_ID : constant Vendor_ID_Type := Device.Header.Vendor_ID;
+      D_ID : constant Device_ID_Type := Device.Header.Device_ID;
    begin
       Success := V_ID = Vendor_ID and D_ID = Device_ID;
    end Check_Vendor_Device;

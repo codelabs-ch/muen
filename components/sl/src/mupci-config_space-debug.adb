@@ -73,14 +73,14 @@ is
       Dummy32 : Interfaces.Unsigned_32;
    begin
       Put_Line (Item => "== PCI config space");
-      Dummy16 := Space (SID).Header.Vendor_ID;
+      Dummy16 := Interfaces.Unsigned_16 (Space (SID).Header.Vendor_ID);
       Put_Line (Item => " Vendor ID : " & SK.Strings.Img (Dummy16));
-      Dummy16 := Space (SID).Header.Device_ID;
+      Dummy16 := Interfaces.Unsigned_16 (Space (SID).Header.Device_ID);
       Put_Line (Item => " Device ID : " & SK.Strings.Img (Dummy16));
-      Dummy8 := Space (SID).Header.Info.Revision_ID;
+      Dummy8 := Interfaces.Unsigned_8 (Space (SID).Header.Revision_ID);
       Put_Line (Item => " Revision  : " & SK.Strings.Img (Dummy8));
-      Dummy32 := Interfaces.Unsigned_32 (Space (SID).Header.Info.Class_Code);
-      Put_Line (Item => " Class     : " & SK.Strings.Img (Dummy32));
+      Dummy16 := Interfaces.Unsigned_16 (Space (SID).Header.Class_Code);
+      Put_Line (Item => " Class     : " & SK.Strings.Img (Dummy16));
       Dummy16 := Space (SID).Header.Command;
       Put_Line (Item => " CMD       : " & SK.Strings.Img (Dummy16));
       for I in BAR_Range loop

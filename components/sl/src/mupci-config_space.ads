@@ -40,9 +40,9 @@ with
    Abstract_State => (State with External => (Async_Readers, Async_Writers))
 is
 
-   --  Check that the PCI configuration space of given device
-   --  matches the expected Vendor/Device ID.
-   procedure Check_Vendor_Device
+   --  Check that the given device PCI configuration space matches the expected
+   --  Vendor/Device/Revision IDs and class code.
+   procedure Check_Device_Identity
      (Device  :     Device_Type;
       Success : out Boolean);
 

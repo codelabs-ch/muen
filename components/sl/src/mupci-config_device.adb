@@ -112,17 +112,24 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Check_Vendor_Device
-     (Device    : aliased     Config_Space_Type;
-      Vendor_ID :             Vendor_ID_Type;
-      Device_ID :             Device_ID_Type;
-      Success   :         out Boolean)
+   procedure Check_Device_Identity
+     (Device      : aliased     Config_Space_Type;
+      Vendor_ID   :             Vendor_ID_Type;
+      Device_ID   :             Device_ID_Type;
+      Revision_ID :             Revision_ID_Type;
+      Class_Code  :             Class_Code_Type;
+      Success     :         out Boolean)
    is
-      V_ID : constant Vendor_ID_Type := Device.Header.Vendor_ID;
-      D_ID : constant Device_ID_Type := Device.Header.Device_ID;
+      V_ID : constant Vendor_ID_Type   := Device.Header.Vendor_ID;
+      D_ID : constant Device_ID_Type   := Device.Header.Device_ID;
+      R_ID : constant Revision_ID_Type := Device.Header.Revision_ID;
+      C_C  : constant Class_Code_Type  := Device.Header.Class_Code;
    begin
-      Success := V_ID = Vendor_ID and D_ID = Device_ID;
-   end Check_Vendor_Device;
+      Success := V_ID = Vendor_ID
+        and D_ID = Device_ID
+        and R_ID = Revision_ID
+        and C_C  = Class_Code;
+   end Check_Device_Identity;
 
    -------------------------------------------------------------------------
 

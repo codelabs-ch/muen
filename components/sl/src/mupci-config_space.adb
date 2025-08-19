@@ -48,17 +48,19 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Check_Vendor_Device
+   procedure Check_Device_Identity
      (Device  :     Device_Type;
       Success : out Boolean)
    is
    begin
-      Config_Device.Check_Vendor_Device
-        (Device    => Space (Device.SID),
-         Vendor_ID => Device.Vendor_ID,
-         Device_ID => Device.Device_ID,
-         Success   => Success);
-   end Check_Vendor_Device;
+      Config_Device.Check_Device_Identity
+        (Device      => Space (Device.SID),
+         Vendor_ID   => Device.Vendor_ID,
+         Device_ID   => Device.Device_ID,
+         Revision_ID => Device.Revision_ID,
+         Class_Code  => Device.Class_Code,
+         Success     => Success);
+   end Check_Device_Identity;
 
    -------------------------------------------------------------------------
 

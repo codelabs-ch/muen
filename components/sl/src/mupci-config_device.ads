@@ -42,12 +42,14 @@ is
    --  to be declared at library level.
 
    --  Check that the given device PCI configuration space matches the expected
-   --  Vendor/Device ID.
-   procedure Check_Vendor_Device
-     (Device    : aliased     Config_Space_Type;
-      Vendor_ID :             Vendor_ID_Type;
-      Device_ID :             Device_ID_Type;
-      Success   :         out Boolean);
+   --  Vendor/Device/Revision IDs and class code.
+   procedure Check_Device_Identity
+     (Device      : aliased     Config_Space_Type;
+      Vendor_ID   :             Vendor_ID_Type;
+      Device_ID   :             Device_ID_Type;
+      Revision_ID :             Revision_ID_Type;
+      Class_Code  :             Class_Code_Type;
+      Success     :         out Boolean);
 
    --  Check that the PCI configuration space of given device
    --  matches the expected BAR addresses and sizes.

@@ -70,7 +70,7 @@ is
                  (SID    => D.SID,
                   Offset => PCIe_Cap));
 
-            Mupci.Config_Space.Check_Vendor_Device
+            Mupci.Config_Space.Check_Device_Identity
               (Device  => D,
                Success => Success);
             if not Success then

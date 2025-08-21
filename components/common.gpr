@@ -22,7 +22,7 @@ with "muen_common";
 abstract project Common is
 
    type Build_Type is ("debug", "release", "prove");
-   Build_Mode : Build_Type := external ("build", "prove");
+   Build_Mode : Build_Type := external ("MUEN_BUILD_MODE");
 
    type Proof_Type is ("limited", "complete");
    Proof_Mode : Proof_Type := external ("proofs", "limited");

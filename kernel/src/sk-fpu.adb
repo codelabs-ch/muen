@@ -21,7 +21,11 @@ with SK.CPU;
 with SK.Bitops;
 with SK.Constants;
 with SK.Dump;
+
+pragma $Release_Warnings
+  (Off, "unit * is not referenced", Reason => "Only used for debug output");
 with SK.Strings;
+pragma $Release_Warnings (On, "unit * is not referenced");
 
 package body SK.FPU
 with

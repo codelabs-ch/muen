@@ -19,7 +19,11 @@
 with SK.KC;
 with SK.VTd.Debug;
 with SK.VTd.Dump;
+
+pragma $Release_Warnings
+  (Off, "unit * is not referenced", Reason => "Only used for debug output");
 with SK.Strings;
+pragma $Release_Warnings (On, "unit * is not referenced");
 
 package body SK.VTd
 is

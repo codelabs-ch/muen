@@ -29,13 +29,17 @@ with SK.Dump;
 with SK.KC;
 with SK.Version;
 with SK.Power;
-with SK.Strings;
 with SK.Subjects.Debug;
 with SK.System_State;
 with SK.VTd.Debug;
 with SK.VTd.Interrupts;
 with SK.Interrupts;
 with SK.Crash_Audit_Types;
+
+pragma $Release_Warnings
+  (Off, "unit * is not referenced", Reason => "Only used for debug output");
+with SK.Strings;
+pragma $Release_Warnings (On, "unit * is not referenced");
 
 package body SK.Kernel
 is

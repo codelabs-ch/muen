@@ -27,8 +27,12 @@ with SK.CPU;
 with SK.Delays;
 with SK.Power;
 with SK.Version;
-with SK.Strings;
 with SK.Constants;
+
+pragma $Release_Warnings
+  (Off, "unit * is not referenced", Reason => "Only used for debug output");
+with SK.Strings;
+pragma $Release_Warnings (On, "unit * is not referenced");
 
 package body SK.Crash_Audit
 with

@@ -20,7 +20,6 @@ with "shared";
 with "policy";
 with "crash_audit";
 with "common_strings";
-with "common_debug";
 
 with "muen_common";
 with "muinterrupts";
@@ -61,8 +60,7 @@ project Kernel is
          end case;
 
       when "release" =>
-         -- FIXME
-         -- Extra_Dirs := Extra_Dirs & ("../common/strings/empty", Build_Mode);
+         Extra_Dirs := Extra_Dirs & Build_Mode;
          Extra_Languages := ("Asm_Cpp");
          Preprocessor_Switches :=
            ("-gnateDRelease_Warnings=Warnings");

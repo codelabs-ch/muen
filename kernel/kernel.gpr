@@ -69,7 +69,7 @@ project Kernel is
 
       when "prove" =>
          Extra_Dirs := Extra_Dirs
-           & ("../common/strings/empty", "release", "spark");
+           & ("release", "spark");
          Preprocessor_Switches :=
            ("-gnateDRelease_Warnings=Warnings");
    end case;
@@ -111,7 +111,7 @@ project Kernel is
       "src/**", external("POLICY_SRC_DIR"), external("VERSION_DIR")) &
      Extra_Dirs;
 
-   for Object_Dir use "obj/" & Build_Mode;
+   for Object_Dir use external("OBJ_DIR","obj/") & Build_Mode;
 
    for Main use ("init");
 

@@ -47,7 +47,8 @@ is
       Stack_Size : out Interfaces.Unsigned_64;
       Success    : out Boolean)
    with
-      Pre => Musinfo.Instance.Is_Valid;
+      Global => (Input => Musinfo.Instance.State),
+      Pre    => Musinfo.Instance.Is_Valid;
 
    --  Setup all writable memory regions present in subject info with their
    --  initial content.

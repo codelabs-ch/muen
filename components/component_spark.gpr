@@ -20,6 +20,8 @@ with "shared";
 
 abstract project Component_Spark extends "common.gpr" is
 
+   Obj_Dir := external("OBJ_DIR", "obj/") & Common.Build_Mode;
+
    package Linker is
       for Default_Switches ("Ada") use Shared.Spark_Linker_Switches;
    end Linker;

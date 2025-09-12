@@ -179,7 +179,7 @@ is
    --D @Text Section => impl_crash_audit_alloc
    --D Allocate a global crash audit entry termed \emph{slot}. For a full
    --D description of the crash audit entry data structure see section
-   --D \ref{SK.Crash_Audit_Types}.
+   --D \ref{appendix-crash-audit}.
    --D @OL Id => impl_crash_audit_alloc_steps, Section => impl_crash_audit_alloc
    procedure Allocate (Audit : out Entry_Type)
    is

@@ -53,7 +53,7 @@
    <memory>
     <memory logical="dma1" physical="nic_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
     <memory logical="dma2" physical="nic_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
-    <memory logical="dma3" physical="nic_linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="false"/>
+    <memory logical="dma3" physical="nic_linux|ram_2" virtualAddress="16#1300_0000#" writable="true" executable="false"/>
    </memory>
    <devices>
     <device logical="nic1" physical="ethernet_controller_1"/>
@@ -64,7 +64,7 @@
    <memory>
     <memory logical="dma1" physical="storage_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
     <memory logical="dma2" physical="storage_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
-    <memory logical="dma3" physical="storage_linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="false"/>
+    <memory logical="dma3" physical="storage_linux|ram_2" virtualAddress="16#1300_0000#" writable="true" executable="false"/>
     <memory logical="blockdev_xhci_shm1" physical="blockdev_xhci_shm1" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
    </memory>
    <devices>
@@ -205,7 +205,7 @@
     <bootparams>hvc_muen.out=virtual_console,hvc1_output hvc_muen.in=,hvc1_input</bootparams>
    </if>
    <memory>
-    <memory logical="ram_2" physical="nic_linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="true"/>
+    <memory logical="ram_2" physical="nic_linux|ram_2" virtualAddress="16#1300_0000#" writable="true" executable="true"/>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#7000_0000#" writable="false" executable="false"/>
     <memory logical="blockdev_xhci_shm1" physical="blockdev_xhci_shm1" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
     <memory logical="blockdev_shm1" physical="blockdev_shm1" virtualAddress="16#a100_0000#" writable="true" executable="false"/>
@@ -517,7 +517,7 @@
     <bootparams>hvc_muen.out=virtual_console,hvc1_output hvc_muen.in=,hvc1_input</bootparams>
    </if>
    <memory>
-    <memory logical="ram_2" physical="storage_linux|ram_2" virtualAddress="16#1100_0000#" writable="true" executable="true"/>
+    <memory logical="ram_2" physical="storage_linux|ram_2" virtualAddress="16#1300_0000#" writable="true" executable="true"/>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#7000_0000#" writable="false" executable="false"/>
     <memory logical="muenblock" physical="blockdev_xhci_shm1" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
    </memory>

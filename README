@@ -99,6 +99,12 @@ the addition of support for new target machines. There is also a Debian
 Live-based bootable image <<mugenhwcfg-live>> with persistence to simplify the
 collection of hardware configurations from new targets.
 
+ARM64
+~~~~~
+The current development branch of Muen provides preliminary support for running
+Muen on AMD Zynq™ UltraScale+™ MPSoC evaluation boards. See the instructions
+below.
+
 Resources
 ---------
 
@@ -142,48 +148,15 @@ discussions regarding the Muen separation kernel.
 * The list has a Google Groups web interface:
   https://groups.google.com/group/muen-dev.
 
-
-Download
---------
-The Muen sources are available through the following git repository:
-
-  $ git clone --recursive https://git.codelabs.ch/git/muen.git
-
-A browsable version of the repository is available here:
-
-https://git.codelabs.ch/?p=muen.git
-
-A ZIP archive of the current Muen sources can be downloaded here:
-
-https://git.codelabs.ch/?p=muen.git;a=snapshot;h=HEAD;sf=zip
-
-NOTE: The ZIP archive cannot be used to build the example system since it does
-      not contain all sub-projects.
-
-
-Build
------
-
-Environment
-~~~~~~~~~~~
-The Muen SK has been developed and successfully tested using the development
-environment listed in the following table.
-
-|===================================================================
-| Operating systems      | Debian GNU/Linux 12 x86_64 +
-                           Ubuntu 22.04 x86_64
-| Linux kernel/KVM       | >= 5.2.0 with GUEST_CR3 fix <<lnxcr3>>
-| Ada compiler           | GNAT FSF 12.2
-| GCC version            | gcc (GCC) 12.2
-| SPARK version          | 12.1
-| Emulator               | qemu-system-x86_64 (>= 3.1.0)
-| Intel AMT SoL client   | amtterm (>= commit 0ece513...)
-| Intel vPro AMT / WSMan | amtc (github.com/schnoddelbotz/amtc)
-|===================================================================
+Tested Hardware
+---------------
 
 The following hardware is used for the development of Muen. There is a good
 chance similar hardware works out-of-the box if the microarchitecture is Ivy
 Bridge or newer.
+
+Intel x86
+~~~~~~~~~
 
 |===================================================================
 | ASUS Prime Z690-P D4           | Alder Lake  | i5-125000
@@ -201,139 +174,115 @@ Bridge or newer.
 | Kontron Technology KTQM77/mITX | Ivy Bridge  | i7-3610QE
 |===================================================================
 
-The first step to build Muen is to install the required packages. See the
-`tools/docker/Dockerfile.muen-dev-env` file in the project repository for the
-current list of required packages.
+ARM64
+~~~~~
 
-Muen is built using a GNAT FSF toolchain provided via <<alire>>, see the
-project's website about instructions on how to install the `alr` command-line
-tool for your distribution. Then clone and build the Muen meta crate for alire,
-which takes care of installing and configuring the toolchain:
+|===================================================================
+| AMD MPSoC ZCU104/ZCU106 | ARMv8.1 | ARM Cortex‑A53
+|===================================================================
 
-  $ git clone https://git.codelabs.ch/alire/muen-dev-env.git
-  $ cd muen-dev-env
-  $ make
-  $ source ./env
+Building Muen
+-------------
 
-Docker
-~~~~~~
-There is also a ready-made Docker image which contains all necessary tools for
-Muen development. You can install it using the following command:
+Prerequisites
+~~~~~~~~~~~~~
+Muen is built using the Bob Build Tool <<bob>>, install it via `pipx`:
 
-  $ docker pull ghcr.io/codelabs-ch/muen-dev-env
+  $ pipx install BobBuildTool
 
-Compilation
-~~~~~~~~~~~
-To build the Muen tools, RTS, kernel and example components change to the Muen
-source directory and issue the following command:
+Further variants of installing bob are described here:
+https://bob-build-tool.readthedocs.io/en/latest/installation.html#install.
 
-  $ make
+We recommend using the following bob user configuration in
+`~/.config/bob/default.yaml`:
 
-This will create a bootable ISO image containing the example system. See below
-for deployment instructions.
+```
+command:
+  dev:
+    jobs: 32
+    sandbox: dev
+```
 
-The following command gives a short description of the top-level Makefile
-targets:
+Replace the example number 32 with your desired job count (e.g. number of CPU
+cores of your build machine). The `sandbox: dev` setting instructs bob to build
+in a containerized environment.
 
-  $ make help
+Once bob is ready, clone the Muen recipes and update all layers:
 
+  $ git clone --recurse-submodules https://git.codelabs.ch/bob/muen.git
+  $ cd muen
+  $ bob layers update
 
-Deploy
-------
-The build system provides two ways to instantly deploy and test the created
-system image.
+Building
+~~~~~~~~
+Execute the `bob ls` command to list all available root recipes. Pick one and
+build it using the `bob dev <recipe_name>` command, e.g.:
+
+  $ bob dev x86-qemu-debug
+
+To build an ARM64 demo system for the QEMU-emulated ZCU102, issue the following
+command:
+
+  $ bob dev arm64-qemu-zcu102-minimal-debug
+
+Deployment & Testing
+--------------------
 
 Emulation
 ~~~~~~~~~
 To ease kernel development and testing, the Muen project makes use of nested
-virtualization provided by QEMU/KVM. In order for this to work, a Linux
-kernel (>= 5.2.0) with applied KVM GUEST_CR3 fix <<lnxcr3>> and the
-`qemu-system-x86_64` binary must be installed on the build machine.
+virtualization provided by QEMU/KVM.
 
-Issue the following command in the Muen project directory to start the nested
-virtualization of a Muen system:
+Issue the following command in the project directory to start the Muen system
+in QEMU:
 
-  $ make emulate
+  $ contrib/runQemu_x86.sh x86-qemu-debug 1
 
-The system serial output is written to `emulate/serial.out`. Follow the
-on-screen instructions on how to connect to the QEMU curses console or how to
-SSH into the NIC Linux guest VM.
+The number 1 indicates that a sandboxed build should be used. The system serial
+output is written to `serial.out`. Follow the on-screen instructions on how to
+connect to the QEMU curses console or how to SSH into the NIC Linux guest VM of
+the demo system.
 
 NOTE: As the virtual terminal (VT) over curses is timing sensitive and QEMU/KVM
-cannot guarantee tick-exact timing depending on the host CPU and system load,
-this console is just an emergency console. Use SSH to interact with the booted
-Muen system.
+cannot guarantee correct timing due to differences in host CPU, system load,
+etc., this console is just an emergency console. Use SSH to interact with the
+booted Muen system.
+
+To run an ARM64 system execute `contrib/runQemu_arm64.sh` accordingly.
+
+It's also possible to run all virtualized scenarios via the continuous
+integration (CI) system:
+
+  $ ci/run.sh -a output
+
+This will build and test all QEMU-emulated systems automatically, writing all
+artifacts to the given `output` directory. To put a specific system under test:
+
+  $ ci/run.sh -a output -r x86-qemu-debug
+
+See `ci/run.sh -h` for all available options.
 
 Hardware
 ~~~~~~~~
-The top-level Makefile provides two convenient targets to deploy Muen to real
-hardware: `iso` and `deploy`. The first creates a bootable ISO image which can
-be burned on a CD-ROM or dumped on a USB stick, the second uses network boot to
-shorten round-trips during development.
+To build a bootable ISO file, execute the following command:
 
-USB Stick
-^^^^^^^^^
-To create a bootable USB stick containing the Muen system, enter the following
-commands in the top-level directory:
+  $ bob dev x86-t430s-debug
 
-  $ make HARDWARE=hardware/lenovo-t440s.xml SYSTEM=xml/demo_system_vtd.xml iso
+This will build a system for the Lenovo T430s hardware which can be dumped on a
+USB stick. If the desired system is not already present when executing the `bob
+ls` command, add it to the `x86.yaml` recipe accordingly (use the entry for the
+Lenovo T430s hardware as a template).
 
-Then follow the instructions on the screen.
+To build the minimal demo for the Xilinx MPSoC execute:
 
-Network Boot
-^^^^^^^^^^^^
-For fast deployment of the Muen system image to real hardware, the iPXE
-<<ipxe>> boot firmware installed on a USB stick in conjunction with Intel Active
-Management Technology (AMT) is used. Please refer to the amtterm <<amt>>
-documentation on how to configure AMT on the target hardware.
+  $ bob dev arm64-xilinx-zcu104-minimal-debug
 
-To build and install iPXE with the Muen specific boot script issue the
-following commands:
-
-  $ sudo apt-get install liblzma-dev
-  $ git clone git://git.ipxe.org/ipxe.git
-  $ wget https://muen.sk/muen.ipxe
-  $ cd ipxe/src
-  $ make bin/ipxe.usb EMBED=../../muen.ipxe
-  $ sudo dd if=bin/ipxe.usb of=/dev/sdX
-
-The `/dev/sdX` device is the USB stick (e.g. `/dev/sdc`, without partition
-number). *All existing data will be erased*.
-
-When booting from the created stick the first NIC (net0) is configured as follows:
-
-  IP Address : 192.168.254.2
-  Netmask    : 255.255.255.0
-  Gateway    : 192.168.254.1
-
-After initialization of the network adapter iPXE tries to download and
-chainload the iPXE configuration from the following URL:
-
-  http://192.168.254.1:8000/boot.cfg
-
-The development machine must be connected to the target hardware via an
-interface with IP address 192.168.254.1. To actually serve the created system
-image to the bootloader, issue the following command in the top-level Muen
-directory:
-
-  $ export AMT_PASSWORD=<your AMT password>
-  $ make deploy
-
-To view the output of the Muen kernel debug console use the command:
-
-  $ amtterm 192.168.254.2
-
-If your hardware differs from the default configuration, additionally specify
-the `HARDWARE` variable:
-
-  $ make deploy HARDWARE=hardware/intel-nuc-dc53427hye.xml
+Then copy `dev/dist/arm64-xilinx-zcu104-minimal-debug/1/workspace/BOOT.bin` to
+a suitable SD card and power on the board.
 
 References
 ----------
-- [[[lnxcr3]]]          Linux KVM GUEST_CR3 fix, https://patchwork.kernel.org/patch/11165185/
-- [[[alire]]]           ALIRE: Ada LIbrary REpository, https://alire.ada.dev/
-- [[[ipxe]]]            iPXE boot firmware, https://ipxe.org/
-- [[[amt]]]             Intel AMT SoL client + tools, https://www.kraxel.org/cgit/amtterm/
+- [[[bob]]]             Bob Build Tool, https://bobbuildtool.dev/
 - [[[mirageos]]]        MirageOS, https://mirage.io
 - [[[muenblock]]]       Muenblock Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenblock.git
 - [[[muenfs]]]          Muenfs Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenfs.git
@@ -345,8 +294,10 @@ References
 License
 -------
 --------------------------------------------------------------------------------
-Copyright (C) 2013-2024  Reto Buerki <reet@codelabs.ch>
-Copyright (C) 2013-2024  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+Copyright (C) 2013-2025  Reto Buerki <reet@codelabs.ch>
+Copyright (C) 2013-2025  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+Copyright (C) 2018-2025  David Loosli <david@codelabs.ch>
+Copyright (C) 2023-2025  Tobias Brunner <tobias@codelabs.ch>
 
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software

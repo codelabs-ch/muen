@@ -26,13 +26,13 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-with "../../build-cfg/gpr/shared";
-with "../../build-cfg/gpr/shared_tests";
+with "shared";
+with "shared_tests";
 
 project GNATtest_Libmutime is
 
    for Source_Dirs use ("src", "tests/src");
-   for Object_Dir use "obj/tests";
+   for Object_Dir use external("OBJ_DIR");
 
    Compiler_Switches := Shared.Spark_Compiler_Switches
      & ("-gnatwal", "-ftest-coverage", "-fprofile-arcs");

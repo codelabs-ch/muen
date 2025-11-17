@@ -282,13 +282,13 @@ a suitable SD card and power on the board.
 
 References
 ----------
-- [[[bob]]]             Bob Build Tool, https://bobbuildtool.dev/
-- [[[mirageos]]]        MirageOS, https://mirage.io
-- [[[muenblock]]]       Muenblock Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenblock.git
-- [[[muenfs]]]          Muenfs Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenfs.git
-- [[[muennet]]]         Muennet Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muennet.git
-- [[[mugenhwcfg]]]      Muen hardware config generator, https://git.codelabs.ch/?p=muen/mugenhwcfg.git
-- [[[mugenhwcfg-live]]] Mugenhwcfg Live, https://github.com/codelabs-ch/mugenhwcfg-live/releases
+- [[bob]]             Bob Build Tool, https://bobbuildtool.dev/
+- [[mirageos]]        MirageOS, https://mirage.io
+- [[muenblock]]       Muenblock Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenblock.git
+- [[muenfs]]          Muenfs Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenfs.git
+- [[muennet]]         Muennet Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muennet.git
+- [[mugenhwcfg]]      Muen hardware config generator, https://git.codelabs.ch/?p=muen/mugenhwcfg.git
+- [[mugenhwcfg-live]] Mugenhwcfg Live, https://github.com/codelabs-ch/mugenhwcfg-live/releases
 
 
 License

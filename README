@@ -84,9 +84,9 @@ The Muen platform includes re-usable components which implement common services:
 * PS/2 driver subject written in Ada 2012
 * Virtual Terminal (VT) subject written in Ada 2012
 
-Furthermore the <<muenfs>>, <<muennet>> and <<muenblock>> Linux kernel modules
-provide virtual filesystem, network interface and block I/O drivers based on
-inter-subject memory channels.
+Furthermore the <<muenblock>>, <<muenevents>>, <<muenfs>> and <<muennet>> Linux
+kernel modules provide block I/O, inter-subject event, virtual filesystem and
+network interface drivers based on inter-subject memory channels.
 
 Toolchain
 ~~~~~~~~~
@@ -285,6 +285,7 @@ References
 - [[bob]]             Bob Build Tool, https://bobbuildtool.dev/
 - [[mirageos]]        MirageOS, https://mirage.io
 - [[muenblock]]       Muenblock Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenblock.git
+- [[muenevents]]      Muenevents Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenevents.git
 - [[muenfs]]          Muenfs Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muenfs.git
 - [[muennet]]         Muennet Linux kernel module, https://git.codelabs.ch/?p=muen/linux/muennet.git
 - [[mugenhwcfg]]      Muen hardware config generator, https://git.codelabs.ch/?p=muen/mugenhwcfg.git

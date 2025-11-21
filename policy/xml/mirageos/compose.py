@@ -1,18 +1,16 @@
 #!/usr/bin/env python3
 
+import argparse
+
 from copy import deepcopy
 from lxml import etree
 
-import _paths
 import muutils
 
-POLICY_TEMPLATE = "mirage-solo5.xml"
-COMPONENT_SPEC = "component_unikernel.xml"
 SUBJECT_NAME = "unikernel"
 LINUX_NAME = "nic_linux"
 LINUX_BASE_ADDR = 0xE03000000
 LINUX_BOOTPARAM = "unikernel_iface"
-OUT_SPEC_PATH = "../" + POLICY_TEMPLATE
 RESET_VAR_NAME = "resettable"
 
 
@@ -157,12 +155,26 @@ def add_component(doc, comp_doc):
     components.append(deepcopy(comp_doc))
 
 
-parser = etree.XMLParser(remove_blank_text=True)
-doc = etree.parse(POLICY_TEMPLATE, parser).getroot()
-cspec_doc = etree.parse(COMPONENT_SPEC, parser).getroot()
-comp_channels = cspec_doc.xpath("/component/requires/channels/*")
+def parse_args():
+    """
+    Returned parsed command line arguments
+    """
+    arg_parser = argparse.ArgumentParser(description="MirageOS/Solo5 system composer")
+    arg_parser.add_argument(
+        "policy_path", type=str, help="Path of to be created system policy"
+    )
+    arg_parser.add_argument(
+        "--template", type=str, help=("System policy template path")
+    )
+    arg_parser.add_argument("--unikernel-spec", type=str, help=("Unikernel spec path"))
+    return arg_parser.parse_args()
 
-print("Creating system policy '" + OUT_SPEC_PATH + "'")
+
+args = parse_args()
+parser = etree.XMLParser(remove_blank_text=True)
+doc = etree.parse(args.template, parser).getroot()
+cspec_doc = etree.parse(args.unikernel_spec, parser).getroot()
+comp_channels = cspec_doc.xpath("/component/requires/channels/*")
 
 add_component(doc, cspec_doc)
 add_physical_channels(doc, comp_channels, SUBJECT_NAME)
@@ -172,6 +184,6 @@ add_linux_bootparams(doc, comp_channels)
 set_subject_bootparams(doc, cspec_doc, SUBJECT_NAME)
 copy_reset_variable(doc, SUBJECT_NAME)
 
-with open(OUT_SPEC_PATH, "wb") as f:
-    print("Writing system policy to '" + OUT_SPEC_PATH + "'")
+with open(args.policy_path, "wb") as f:
+    print("Writing system policy to '" + args.policy_path + "'")
     f.write(etree.tostring(doc, pretty_print=True))

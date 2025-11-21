@@ -16,9 +16,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../build-cfg/gpr/shared";
+with "shared";
 
 abstract project Component_Spark extends "common.gpr" is
+
+   Obj_Dir  := external("OBJ_DIR", "obj/") & Common.Build_Mode;
+   Exec_Dir := external("EXEC_DIR", "bin/") & Common.Build_Mode;
 
    package Linker is
       for Default_Switches ("Ada") use Shared.Spark_Linker_Switches;

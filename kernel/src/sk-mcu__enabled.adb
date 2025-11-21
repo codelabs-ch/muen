@@ -18,12 +18,12 @@
 
 with System;
 
-with SK.Strings;
 with SK.CPU;
 with SK.Dump;
 
 pragma $Release_Warnings
   (Off, "unit * is not referenced", Reason => "Only used for debug output");
+with SK.Strings;
 with SK.CPU_Info;
 pragma $Release_Warnings (On, "unit * is not referenced");
 

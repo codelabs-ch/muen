@@ -16,11 +16,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmudebuglog/libmudebuglog";
-with "../libmutime/libmutime";
-with "../libmudm/libmudm";
-with "../libmucontrol/libmucontrol";
-with "generated/config";
+with "common_strings";
+with "libmudebuglog";
+with "libmutime";
+with "libmudm";
+with "libmucontrol";
+with "config";
 
 project Sm extends "../component_spark" is
 
@@ -39,9 +40,9 @@ project Sm extends "../component_spark" is
    end Naming;
 
    for Languages use ("Ada", "Asm");
-   for Source_Dirs use ("generated", "src", "../../common/strings/impl")
+   for Source_Dirs use (external("GENERATED"), "src", "../src")
      & Component_Spark.Src_Dirs;
-   for Object_Dir use "obj/" & Component_Spark.Build_Mode;
+   for Object_Dir use Component_Spark.Obj_Dir;
    for Main use ("sm");
 
 end Sm;

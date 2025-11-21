@@ -27,8 +27,12 @@ with SK.CPU;
 with SK.Delays;
 with SK.Power;
 with SK.Version;
-with SK.Strings;
 with SK.Constants;
+
+pragma $Release_Warnings
+  (Off, "unit * is not referenced", Reason => "Only used for debug output");
+with SK.Strings;
+pragma $Release_Warnings (On, "unit * is not referenced");
 
 package body SK.Crash_Audit
 with
@@ -175,7 +179,7 @@ is
    --D @Text Section => impl_crash_audit_alloc
    --D Allocate a global crash audit entry termed \emph{slot}. For a full
    --D description of the crash audit entry data structure see section
-   --D \ref{SK.Crash_Audit_Types}.
+   --D \ref{appendix-crash-audit}.
    --D @OL Id => impl_crash_audit_alloc_steps, Section => impl_crash_audit_alloc
    procedure Allocate (Audit : out Entry_Type)
    is

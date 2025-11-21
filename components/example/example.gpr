@@ -16,20 +16,18 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmudebuglog/libmudebuglog";
-with "../libmusinfo/libmusinfo";
-with "../libmucontrol/libmucontrol";
-with "generated/example_config";
+with "libmudebuglog";
+with "libmusinfo";
+with "libmucontrol";
+with "example_config";
+with "common_strings";
+with "crash_audit";
+with "common_debug";
+with "mutimedevents";
 
 project Example extends "../component_spark" is
 
-   Src_Dirs := Component_Spark.Src_Dirs
-     & "src"
-     & "generated"
-     & "../../common/strings/impl"
-     & "../../common/crash_audit"
-     & "../../common/debug"
-     & "../../common/mutimedevents";
+   Src_Dirs := ("src", external("GENERATED"), "../src");
    Obj_Suffix := "/";
 
    case example_config.ahci_drv_enabled is
@@ -52,8 +50,8 @@ project Example extends "../component_spark" is
 
    for Languages use ("Ada", "Asm");
    for Source_Dirs use Src_Dirs;
-   for Object_Dir use "obj/" & Component_Spark.Build_Mode & Obj_Suffix;
-   for Exec_Dir use "obj/" & Component_Spark.Build_Mode;
+   for Object_Dir use Component_Spark.Obj_Dir & Obj_Suffix;
+   for Exec_Dir use component_spark.Exec_Dir;
    for Main use ("example");
 
    package Compiler is

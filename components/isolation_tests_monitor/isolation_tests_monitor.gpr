@@ -19,7 +19,7 @@
 project Isolation_Tests_Monitor extends "../component_spark" is
 
    for Languages use ("Ada", "Asm");
-   for Source_Dirs use ("generated", "src") & Component_Spark.Src_Dirs;
+   for Source_Dirs use (external("GENERATED"), "src", "../src") & Component_Spark.Src_Dirs;
    for Object_Dir use "obj/" & Component_Spark.Build_Mode;
    for Main use ("isolation_tests_monitor");
 

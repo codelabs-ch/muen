@@ -8,15 +8,17 @@ article focuses on a practical use-case of the technology.
 The https://muen.sk[muen.sk] project website is served by the
 https://github.com/hannesm/unipi[Unipi] MirageOS unikernel running on Muen.
 Unipi fetches the static website content to serve from a Git repository. The
-article explains how to build such a system using
-https://docs.docker.com/engine/userguide/eng-image/multistage-build/[multi-stage
-Docker] images and then deploy it to actual hardware.
+article explains how to build such a system using the Bob Build Tool and Docker
+images and then deploy it to actual hardware.
 
 === System Image Build
 The following graph gives an overview of the muen.sk system image build
 process:
 
 image:graph_img_create.svg[Image creation, width=50%]
+
+While the unikernel is compiled within the `ghcr.io/codelabs-ch/muen-mirageos`
+Docker container, the Muen system image is built using the Bob Build Tool.
 
 In order to be able to serve the page via the TLS stack provided by MirageOS,
 up to date SSL/TLS certificates are required. We use
@@ -35,29 +37,30 @@ https://certbot.eff.org/docs/using.html#standalone[standalone feature] of the
 Letsencrypt's certbot client. The certificate files are then added as content
 of stage one in the multi-stage Docker build.
 
-The complete Muen system image build consists of two Docker images:
+The unikernel built inside the Docker container is extracted to the host
+system, where it is picked up by bob:
 
-. ghcr.io/codelabs-ch/muen-mirageos
-. ghcr.io/codelabs-ch/muen-dev-env
-
-These images can be found on our https://github.com/orgs/codelabs-ch/packages[GitHub]
-page. The key is to import artifacts from the previous build stage into the
-next one using the `COPY --from` syntax.  The following commands serve as an
-example of how to copy the unikernel binary the MirageOS container to the Muen
-system image build stage:
-
-```
+[source,docker]
+.Example Dockerfile
+----
 FROM ghcr.io/codelabs-ch/muen-mirageos as unikernel
-# compile unikernel
+# configure and compile unikernel
+----
 
-FROM ghcr.io/codelabs-ch/muen-dev-env:latest
-COPY --from=unikernel /home/opam/opam-repository/unipi/unipi.muen /tmp/unikernel
-```
+Build the Docker image, create a temporary container and copy the resulting
+unikernel to the host (`unipi` for example):
 
-The assembled Muen system image containing the unikernel subject serving the
-Muen website is copied out of the final Docker container. Because we want the
-target system to only boot cryptographically verified images, the image is
-signed using the following command (as described by the
+  $ docker build -t my-unikernel .
+  $ docker create --name temp-container my-unikernel
+  $ docker cp temp-container:/home/opam/unipi/dist/unipi.muen ./unipi.muen
+  $ docker rm temp-container
+
+Then build the system image with bob:
+
+  $ bob dev x86-qemu-solo5-debug -DUNIKERNEL_FILE=${PWD}/unipi.muen
+
+Because we want the target system to only boot cryptographically verified
+images, the image is signed using the following command (as described by the
 http://ipxe.org/crypto#code_signing[iPXE homepage]):
 
 ```

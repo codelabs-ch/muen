@@ -26,12 +26,12 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-library project Libmutime extends "../library_spark" is
+library project Libmutime extends "library_spark" is
 
    for Languages use ("Ada");
-   for Source_Dirs use ("generated", "src");
-   for Object_Dir use "obj/" & Library_Spark.Build_Mode;
-   for Library_Dir use "lib/" & Library_Spark.Build_Mode;
+   for Source_Dirs use (external("LIBMUTIME_GENERATED"), "src");
+   for Object_Dir use Library_Spark.Obj_Dir;
+   for Library_Dir use Library_Spark.Lib_Dir;
    for Library_Name use "mutime";
    for Library_Kind use "static";
 

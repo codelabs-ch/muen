@@ -62,5 +62,6 @@ SECTIONS
 		*(.eh_frame)
 		*(.eh_frame_hdr)
 		*(.note.gnu.property)
+		*(.note.gnu.build-id)
 	}
 }

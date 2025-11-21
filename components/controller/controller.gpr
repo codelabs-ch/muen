@@ -16,18 +16,16 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmudebuglog/libmudebuglog";
-with "../libmucontroltypes/libmucontroltypes";
+with "common_strings";
+with "muinterrupts";
+with "libmudebuglog";
+with "libmucontroltypes";
 
 project Controller extends "../component_spark" is
 
-   Extra_Dirs := Component_Spark.Src_Dirs
-     & "../../common/muinterrupts"
-     & "../../common/strings/impl";
-
    for Languages use ("Ada", "Asm");
-   for Source_Dirs use ("generated", "src") & Extra_Dirs;
-   for Object_Dir use "obj/" & Component_Spark.Build_Mode;
+   for Source_Dirs use (external("GENERATED"), "src", "../src");
+   for Object_Dir use Component_Spark.Obj_Dir;
    for Main use ("controller");
 
 end Controller;

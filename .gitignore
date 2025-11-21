@@ -6,3 +6,4 @@ generated
 *~
 *.pyc
 .clang-format
+*.vscode

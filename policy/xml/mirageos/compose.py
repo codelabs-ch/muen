@@ -160,13 +160,13 @@ def parse_args():
     Returned parsed command line arguments
     """
     arg_parser = argparse.ArgumentParser(description="MirageOS/Solo5 system composer")
-    arg_parser.add_argument("policy_path", type=str, help="Path of to be created system policy")
+    arg_parser.add_argument(
+        "policy_path", type=str, help="Path of to be created system policy"
+    )
     arg_parser.add_argument(
         "--template", type=str, help=("System policy template path")
     )
-    arg_parser.add_argument(
-        "--unikernel-spec", type=str, help=("Unikernel spec path")
-    )
+    arg_parser.add_argument("--unikernel-spec", type=str, help=("Unikernel spec path"))
     return arg_parser.parse_args()
 
 

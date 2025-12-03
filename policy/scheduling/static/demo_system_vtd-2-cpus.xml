@@ -42,9 +42,9 @@
    </group>
   </partition>
   <if variable="ahci_drv_active" value="true">
-   <partition name="ahci_driver">
+   <partition name="storage_drv_ahci">
     <group>
-     <subject name="ahci_drv"/>
+     <subject name="storage_drv_ahci"/>
     </group>
    </partition>
   </if>
@@ -168,14 +168,14 @@
    <minorFrame partition="debugserver" ticks="3"/>
    <minorFrame partition="storage_linux" ticks="2"/>
    <if variable="ahci_drv_active" value="true">
-    <minorFrame partition="ahci_driver" ticks="3"/>
+    <minorFrame partition="storage_drv_ahci" ticks="3"/>
     <minorFrame partition="storage_linux" ticks="2"/>
-    <minorFrame partition="ahci_driver" ticks="3"/>
+    <minorFrame partition="storage_drv_ahci" ticks="3"/>
     <minorFrame partition="storage_linux" ticks="2"/>
-    <minorFrame partition="ahci_driver" ticks="3"/>
+    <minorFrame partition="storage_drv_ahci" ticks="3"/>
     <minorFrame partition="storage_linux" ticks="2"/>
     <minorFrame partition="debugserver" ticks="2"/>
-    <minorFrame partition="ahci_driver" ticks="1"/>
+    <minorFrame partition="storage_drv_ahci" ticks="1"/>
    </if>
    <if variable="ahci_drv_active" value="false">
     <minorFrame partition="storage_linux" ticks="15"/>
@@ -229,14 +229,14 @@
    <minorFrame partition="idle_1" ticks="1"/>
    <minorFrame partition="storage_linux" ticks="2"/>
    <if variable="ahci_drv_active" value="true">
-    <minorFrame partition="ahci_driver" ticks="3"/>
+    <minorFrame partition="storage_drv_ahci" ticks="3"/>
     <minorFrame partition="storage_linux" ticks="2"/>
-    <minorFrame partition="ahci_driver" ticks="3"/>
+    <minorFrame partition="storage_drv_ahci" ticks="3"/>
     <minorFrame partition="storage_linux" ticks="2"/>
-    <minorFrame partition="ahci_driver" ticks="3"/>
+    <minorFrame partition="storage_drv_ahci" ticks="3"/>
     <minorFrame partition="storage_linux" ticks="2"/>
     <minorFrame partition="debugserver" ticks="2"/>
-    <minorFrame partition="ahci_driver" ticks="1"/>
+    <minorFrame partition="storage_drv_ahci" ticks="1"/>
    </if>
    <if variable="ahci_drv_active" value="false">
     <minorFrame partition="storage_linux" ticks="15"/>
@@ -394,7 +394,7 @@
    <minorFrame partition="vt" ticks="2"/>
    <minorFrame partition="storage_linux" ticks="3"/>
    <if variable="ahci_drv_active" value="true">
-    <minorFrame partition="ahci_driver" ticks="2"/>
+    <minorFrame partition="storage_drv_ahci" ticks="2"/>
    </if>
    <if variable="ahci_drv_active" value="false">
     <minorFrame partition="storage_linux" ticks="2"/>
@@ -416,7 +416,7 @@
    <minorFrame partition="vt" ticks="2"/>
    <minorFrame partition="storage_linux" ticks="3"/>
    <if variable="ahci_drv_active" value="true">
-    <minorFrame partition="ahci_driver" ticks="2"/>
+    <minorFrame partition="storage_drv_ahci" ticks="2"/>
    </if>
    <if variable="ahci_drv_active" value="false">
     <minorFrame partition="storage_linux" ticks="2"/>
@@ -438,7 +438,7 @@
    <minorFrame partition="vt" ticks="2"/>
    <minorFrame partition="storage_linux" ticks="3"/>
    <if variable="ahci_drv_active" value="true">
-    <minorFrame partition="ahci_driver" ticks="2"/>
+    <minorFrame partition="storage_drv_ahci" ticks="2"/>
    </if>
    <if variable="ahci_drv_active" value="false">
     <minorFrame partition="storage_linux" ticks="2"/>
@@ -460,7 +460,7 @@
    <minorFrame partition="vt" ticks="2"/>
    <minorFrame partition="storage_linux" ticks="3"/>
    <if variable="ahci_drv_active" value="true">
-    <minorFrame partition="ahci_driver" ticks="2"/>
+    <minorFrame partition="storage_drv_ahci" ticks="2"/>
    </if>
    <if variable="ahci_drv_active" value="false">
     <minorFrame partition="storage_linux" ticks="2"/>
@@ -482,7 +482,7 @@
    <minorFrame partition="vt" ticks="2"/>
    <minorFrame partition="storage_linux" ticks="3"/>
    <if variable="ahci_drv_active" value="true">
-    <minorFrame partition="ahci_driver" ticks="2"/>
+    <minorFrame partition="storage_drv_ahci" ticks="2"/>
    </if>
    <if variable="ahci_drv_active" value="false">
     <minorFrame partition="storage_linux" ticks="2"/>
@@ -504,7 +504,7 @@
    <minorFrame partition="vt" ticks="2"/>
    <minorFrame partition="storage_linux" ticks="3"/>
    <if variable="ahci_drv_active" value="true">
-    <minorFrame partition="ahci_driver" ticks="2"/>
+    <minorFrame partition="storage_drv_ahci" ticks="2"/>
    </if>
    <if variable="ahci_drv_active" value="false">
     <minorFrame partition="storage_linux" ticks="2"/>

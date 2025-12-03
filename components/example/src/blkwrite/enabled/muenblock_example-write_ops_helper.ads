@@ -1,4 +1,5 @@
 with Example_Component.Memory_Arrays;
+with Interfaces; use Interfaces;
 package Muenblock_Example.Write_Ops_Helper
 is
    procedure Run_Instance

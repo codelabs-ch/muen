@@ -1,12 +1,8 @@
 with SK.Strings;
 
-with Example_Component.Memory;
-
 with Log;
 package body Muenblock_Example.Write_Ops_Helper
 is
-   NVME_NAME : constant := "blockdev_NVME_shm2";
-   AHCI_NAME : constant := "blockdev_AHCI_shm2";
 
    Test_Data_Size : constant := 32768;
 
@@ -73,34 +69,29 @@ is
       Start_Time           : SK.Word64;
       End_Time             : SK.Word64;
       Res                  : Interfaces.Unsigned_64;
-      Instance_Name        : constant := Example_Component.Memory_Arrays.Blockdev_Shm2_Names (SHM_Array_Index);
+      Client               : constant Client_Range := Client_Range (SHM_Array_Index);
+
    begin
       Success := False;
 
-      -- Check for correct order of shm regions
-      if Example_Component.Memory_Arrays.Blockdev_Shm2_Names (1) /= AHCI_NAME and
-         Example_Component.Memory_Arrays.Blockdev_Shm2_Names (2) /= NVME_NAME then
-         Log.Put_Line ("Invalid Order of BLOCKDEV_SHM2 Names; Aborting ...");
-         return;
-      end if;
-
       if SHM_Array_Index not in 1 | 2 then
-         Log.Put_Line ("Invalid SHM Index: " & SK.Strings.Img (SHM_Array_Index));
+         Log.Put_Line ("Invalid SHM Index: " & SK.Strings.Img (Interfaces.Unsigned_8 (SHM_Array_Index)));
          return;
       end if;
 
-      Log.Put_Line ("Starting test of " & Instance_Name);
+      Log.Put_Line ("Starting test " & SK.Strings.Img (Interfaces.Unsigned_8 (SHM_Array_Index)));
 
       Test_Data_Sector_Cnt := Interfaces.Unsigned_64'Mod
         (Test_Data_Type'Size) / 8 / Sector_Size;
 
-      Muenblock_Client_Instance.Discard
-        (Device_Id    => 0,
+      Muenblock_Clients_Instance.Discard
+        (Client       => Client,
+         Device_Id    => 0,
          Start_Sector => 0,
          Sector_Cnt   => Test_Data_Sector_Cnt,
          Result       => Res);
       if Res /= 0 then
-         Log.Put_Line (Instance_Name & ": Discard failed!");
+         Log.Put_Line ("Discard failed!");
          return;
       end if;
 
@@ -115,8 +106,9 @@ is
       end if;
 
       Start_Time := Musinfo.Instance.TSC_Schedule_End;
-      Muenblock_Client_Instance.Write
-        (Device_Id     => 0,
+      Muenblock_Clients_Instance.Write
+        (Client        => Client,
+         Device_Id     => 0,
          Start_Sector  => 0,
          Buffer_Offset => 0,
          Sector_Cnt    => Test_Data_Sector_Cnt,
@@ -125,11 +117,11 @@ is
       End_Time := Musinfo.Instance.TSC_Schedule_Start;
 
       if Res /= Test_Data_Sector_Cnt then
-         Log.Put_Line (Instance_Name & ": Write failed! "
+         Log.Put_Line ("Write failed! "
                        & SK.Strings.Img (Interfaces.Unsigned_32'Mod (Res)));
          return;
       else
-         Log.Put_Line (Instance_Name & ": Wrote "
+         Log.Put_Line ("Wrote "
                        & SK.Strings.Img (Interfaces.Unsigned_32'Mod
                          (Test_Data_Type'Size / 8))
                        & " bytes in "
@@ -137,18 +129,19 @@ is
                        & " ticks");
       end if;
 
-      Muenblock_Client_Instance.Sync
+      Muenblock_Clients_Instance.Sync
         (Device_Id => 0,
          Result    => Res);
 
       if Res /= 0 then
-         Log.Put_Line (Instance_Name & ": Sync failed!");
+         Log.Put_Line ("Sync failed!");
          return;
       end if;
 
       Start_Time := Musinfo.Instance.TSC_Schedule_End;
-      Muenblock_Client_Instance.Read
-        (Device_Id     => 0,
+      Muenblock_Clients_Instance.Read
+        (Client        => Client,
+         Device_Id     => 0,
          Start_Sector  => 0,
          Buffer_Offset => Interfaces.Unsigned_64'Mod (Test_Data_Type'Size) / 8,
          Sector_Cnt    => Test_Data_Sector_Cnt,
@@ -156,7 +149,7 @@ is
 
       End_Time := Musinfo.Instance.TSC_Schedule_Start;
 
-      Log.Put_Line (Instance_Name & ": Read "
+      Log.Put_Line ("Read "
                     & SK.Strings.Img (Interfaces.Unsigned_32'Mod
                       (Test_Data_Type'Size / 8))
                     & " bytes in "
@@ -164,7 +157,7 @@ is
                     & " ticks");
 
       if Res /= Test_Data_Sector_Cnt then
-         Log.Put_Line (Instance_Name & ": Read failed! "
+         Log.Put_Line ("Read failed! "
                        & SK.Strings.Img (Interfaces.Unsigned_32'Mod (Res)));
          return;
       end if;
@@ -179,7 +172,7 @@ is
                W := Test_Write_Ahci (I);
                if R /= W then
                   Log.Put_Line
-                  (Instance_Name & ": Data did not match! Offset:" &
+                  ("Data did not match! Offset:" &
                      SK.Strings.Img (Interfaces.Unsigned_32 (I)) & " Read : " &
                      SK.Strings.Img (R) & ". Wanted: " &
                      SK.Strings.Img (W)
@@ -193,7 +186,7 @@ is
                W := Test_Write_Nvme (I);
                if R /= W then
                   Log.Put_Line
-                  (Instance_Name & ": Data did not match! Offset:" &
+                  ("Data did not match! Offset:" &
                      SK.Strings.Img (Interfaces.Unsigned_32 (I)) & " Read : " &
                      SK.Strings.Img (R) & ". Wanted: " &
                      SK.Strings.Img (W)
@@ -204,7 +197,7 @@ is
          end if;
       end;
 
-      Log.Put_Line ("Finished test of " & Instance_Name & " successfully.");
+      Log.Put_Line ("Finished test " & SK.Strings.Img (Interfaces.Unsigned_8 (SHM_Array_Index)) & " successfully.");
       Success := True;
-   end;
+   end Run_Instance;
 end Muenblock_Example.Write_Ops_Helper;

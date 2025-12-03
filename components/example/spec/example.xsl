@@ -46,9 +46,9 @@
       <!-- <if variable="ahci_drv_enabled" value="true"> -->
      <memory logical="blockdev_AHCI_shm2"/>
       <!-- </if> -->
-      <!-- <if variable="nvme_drv_enabled" value="true"> -->
+      <if variable="nvme_drv_enabled" value="true">
      <memory logical="blockdev_NVME_shm2"/>
-      <!-- </if> -->
+      </if>
    </array>
 
    <memory executable="false" logical="filled_region" size="16#1000#" writable="true"/>
@@ -69,17 +69,17 @@
     <!-- <if variable="ahci_drv_enabled" value="true"> -->
       <reader logical="blockdev_response2_ahci"/>
     <!-- </if> -->
-    <!-- <if variable="nvme_drv_enabled" value="true"> -->
+    <if variable="nvme_drv_enabled" value="true">
       <reader logical="blockdev_response2_nvme"/>
-    <!-- </if> -->
+    </if>
   </array>
   <array logical="blockdev_request2" virtualAddressBase="16#00b0_0000#" elementSize="16#8000#" eventBase="10">
     <!-- <if variable="ahci_drv_enabled" value="true"> -->
        <writer logical="blockdev_request2_ahci"/>
     <!-- </if> -->
-    <!-- <if variable="nvme_drv_enabled" value="true"> -->
+    <if variable="nvme_drv_enabled" value="true">
         <writer logical="blockdev_request2_nvme"/>
-    <!-- </if> -->
+    </if>
   </array>
 
   </channels>

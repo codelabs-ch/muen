@@ -44,14 +44,16 @@
     <subject name="vt"/>
    </group>
   </partition>
-    <partition name="storage_drv_ahci">
-   <group>
-    <subject name="storage_drv_ahci"/>
-   </group>
-  </partition>
+  <if variable="ahci_drv_active" value="true">
+   <partition name="storage_drv_ahci">
+    <group>
+     <subject name="storage_drv_ahci"/>
+    </group>
+   </partition>
+  </if>
   <!-- <partition name="storage_drv_nvme">
    <group>
-    <subject name="storage_drv_nvme"/>
+   <subject name="storage_drv_nvme"/>
    </group>
   </partition> -->
   <partition name="storage_linux">
@@ -91,8 +93,13 @@
    <minorFrame partition="time" ticks="1"/>
    <minorFrame partition="debugserver" ticks="30"/>
    <minorFrame partition="vt" ticks="19"/>
-   <minorFrame partition="storage_drv_ahci" ticks="30"/>
-   <minorFrame partition="storage_linux" ticks="70"/>
+   <if variable="ahci_drv_active" value="true">
+    <minorFrame partition="storage_drv_ahci" ticks="30"/>
+    <minorFrame partition="storage_linux" ticks="70"/>
+   </if>
+   <if variable="ahci_drv_active" value="false">
+    <minorFrame partition="storage_linux" ticks="100"/>
+   </if>
   </cpu>
   <cpu id="2">
    <minorFrame partition="nic_linux_1" ticks="75"/>
@@ -112,8 +119,13 @@
    <minorFrame partition="controller" ticks="3"/>
   </cpu>
   <cpu id="1">
-   <minorFrame partition="storage_drv_ahci" ticks="30"/>
-   <minorFrame partition="storage_linux" ticks="100"/>
+   <if variable="ahci_drv_active" value="true">
+    <minorFrame partition="storage_drv_ahci" ticks="30"/>
+    <minorFrame partition="storage_linux" ticks="100"/>
+   </if>
+   <if variable="ahci_drv_active" value="false">
+    <minorFrame partition="storage_linux" ticks="130"/>
+   </if>
    <minorFrame partition="vt" ticks="10"/>
    <minorFrame partition="debugserver" ticks="10"/>
   </cpu>

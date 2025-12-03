@@ -10,7 +10,7 @@
   <boolean name="nvme_drv_active" value="false"/>
   <boolean name="pciconf_emulation_enabled" value="true"/>
   <boolean name="pciconf_emulation_xhci_enabled" value="true"/>
-  <boolean name="example_blk_write" value="true"/>
+  <boolean name="example_blk_write" value="false"/>
   <string name="pciconf_emulation_nic_devid" value="16#1f#"/>
   <string name="pciconf_emulation_nic_physdev" value="ethernet_controller_2"/>
   <string name="pciconf_emulation_xhci_devid" value="16#01#"/>
@@ -21,7 +21,9 @@
  <memory>
   <include href="common_memory.xml"/>
   <include href="memory_xhci_dma.xml"/>
-  <include href="memory_storage-ahci.xml"/>
+  <if variable="ahci_drv_active" value="true">
+   <include href="memory_storage-ahci.xml"/>
+  </if>
   <memory name="control_sm_3" size="16#1000#" caching="WB">
    <fill pattern="16#ff#"/>
    <hash value="none"/>
@@ -39,16 +41,16 @@
    <hash value="none"/>
   </memory>
   <if variable="ahci_drv_active" value="true">
-   <memory alignment="16#1000#" name="blockdev_AHCI_Shm1" size="16#0100_0000#" caching="WB" type="subject_device"/>
-   <memory alignment="16#1000#" name="blockdev_AHCI_Shm2" size="16#0100_0000#" caching="WB" type="subject_device"/>
+   <memory name="blockdev_AHCI_Shm1" size="16#0100_0000#" caching="WB" type="subject_device"/>
+   <memory name="blockdev_AHCI_Shm2" size="16#0100_0000#" caching="WB" type="subject_device"/>
    <memory name="blockdev_xhci_shm1" size="16#0100_0000#" caching="WB" type="subject_device"/>
   </if>
   <if variable="nvme_drv_active" value="true">
    <include href="memory_storage-nvme.xml"/>
 
-   <memory alignment="16#1000#" caching="WB" name="NVME_Queue_Memory"   size="16#0200_0000#" type="subject_device"/>
-   <memory alignment="16#1000#" name="blockdev_NVME_Shm1" size="16#0100_0000#" caching="WB" type="subject_device"/>
-   <memory alignment="16#1000#" name="blockdev_NVME_Shm2" size="16#0100_0000#" caching="WB" type="subject_device"/>
+   <memory caching="WB" name="NVME_Queue_Memory"   size="16#0200_0000#" type="subject_device"/>
+   <memory name="blockdev_NVME_Shm1" size="16#0100_0000#" caching="WB" type="subject_device"/>
+   <memory name="blockdev_NVME_Shm2" size="16#0100_0000#" caching="WB" type="subject_device"/>
   </if>
   <memory name="isolation_tests_state" size="16#1000#" caching="WB"/>
   <memory name="isolation_tests_read_only" size="16#1000#" caching="WB"/>
@@ -73,40 +75,44 @@
     <memory logical="dma1" physical="storage_linux|lowmem" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
     <memory logical="dma2" physical="storage_linux|ram" virtualAddress="16#0100_0000#" writable="true" executable="false"/>
     <memory logical="dma3" physical="storage_linux|ram_2" virtualAddress="16#1300_0000#" writable="true" executable="false"/>
-    <memory logical="blockdev_xhci_shm1" physical="blockdev_xhci_shm1" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
+    <if variable="ahci_drv_active" value="true">
+     <memory logical="blockdev_xhci_shm1" physical="blockdev_xhci_shm1" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
+    </if>
    </memory>
    <devices>
     <device logical="xhci" physical="usb_controller_1"/>
     <device logical="nic3" physical="ethernet_controller_3"/>
    </devices>
   </domain>
-  <domain name="ahci_domain">
-   <memory>
-    <memory logical="dma" physical="ahci_dma" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
-    <memory logical="blockdev_AHCI_Shm1" physical="blockdev_AHCI_Shm1" virtualAddress="16#a100_0000#" writable="true" executable="false"/>
-    <memory logical="blockdev_AHCI_Shm2" physical="blockdev_AHCI_Shm2" virtualAddress="16#a200_0000#" writable="true" executable="false"/>
-   </memory>
-  <devices>
-   <device logical="storage_controller" physical="storage_controller"  mapReservedMemory="true"/>
-  </devices>
- </domain>
- <if variable="nvme_drv_active" value="true">
-    <domain name="nvme_domain">
+  <if variable="ahci_drv_active" value="true">
+   <domain name="ahci_domain">
     <memory>
-        <memory logical="NVME_Queue_Memory" physical="NVME_Queue_Memory" virtualAddress="16#4000_0000#" writable="true" executable="false"/>
-        <memory logical="dma" physical="NVME_DMA_Region" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
-        <memory logical="blockdev_NVME_Shm1" physical="blockdev_NVME_Shm1" virtualAddress="16#a100_0000#" writable="true" executable="false"/>
-        <memory logical="blockdev_NVME_Shm2" physical="blockdev_NVME_Shm2" virtualAddress="16#a200_0000#" writable="true" executable="false"/>
+     <memory logical="dma" physical="ahci_dma" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
+     <memory logical="blockdev_AHCI_Shm1" physical="blockdev_AHCI_Shm1" virtualAddress="16#a100_0000#" writable="true" executable="false"/>
+     <memory logical="blockdev_AHCI_Shm2" physical="blockdev_AHCI_Shm2" virtualAddress="16#a200_0000#" writable="true" executable="false"/>
     </memory>
     <devices>
-        <device logical="NVME_controller" physical="nvme_controller" mapReservedMemory="true"/>
+     <device logical="storage_controller" physical="storage_controller"  mapReservedMemory="true"/>
     </devices>
-    </domain>
- </if>
+   </domain>
+  </if>
+  <if variable="nvme_drv_active" value="true">
+   <domain name="nvme_domain">
+    <memory>
+     <memory logical="NVME_Queue_Memory" physical="NVME_Queue_Memory" virtualAddress="16#4000_0000#" writable="true" executable="false"/>
+     <memory logical="dma" physical="NVME_DMA_Region" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
+     <memory logical="blockdev_NVME_Shm1" physical="blockdev_NVME_Shm1" virtualAddress="16#a100_0000#" writable="true" executable="false"/>
+     <memory logical="blockdev_NVME_Shm2" physical="blockdev_NVME_Shm2" virtualAddress="16#a200_0000#" writable="true" executable="false"/>
+    </memory>
+    <devices>
+     <device logical="NVME_controller" physical="nvme_controller" mapReservedMemory="true"/>
+    </devices>
+   </domain>
+  </if>
   <domain name="legacy">
    <devices>
-   <device logical="usb_controller_2" physical="usb_controller_2" mapReservedMemory="true"/>
-   <device logical="usb_controller_3" physical="usb_controller_3" mapReservedMemory="true"/>
+    <device logical="usb_controller_2" physical="usb_controller_2" mapReservedMemory="true"/>
+    <device logical="usb_controller_3" physical="usb_controller_3" mapReservedMemory="true"/>
    </devices>
   </domain>
  </deviceDomains>
@@ -173,7 +179,9 @@
   <include href="subject_vt.xml"/>
   <include href="subject_its.xml"/>
   <include href="subject_itsm.xml"/>
-  <include href="subject_storage-ahci.xml"/>
+  <if variable="ahci_drv_active" value="true">
+   <include href="subject_storage-ahci.xml"/>
+  </if>
   <if variable="nvme_drv_active" value="true">
    <include href="subject_storage-nvme.xml"/>
   </if>
@@ -203,7 +211,9 @@
     <map logical="log_channel11" physical="debuglog_subject11"/>
     <map logical="log_channel12" physical="debuglog_controller"/>
     <map logical="log_channel13" physical="debuglog_isolation_tests"/>
-    <map logical="log_channel14" physical="debuglog_ahci_drv"/>
+    <if variable="ahci_drv_active" value="true">
+     <map logical="log_channel14" physical="debuglog_ahci_drv"/>
+    </if>
     <if variable="nvme_drv_active" value="true">
      <map logical="log_channel16" physical="debuglog_nvme_drv"/>
     </if>
@@ -244,10 +254,12 @@
    <memory>
     <memory logical="ram_2" physical="nic_linux|ram_2" virtualAddress="16#1300_0000#" writable="true" executable="true"/>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#7000_0000#" writable="false" executable="false"/>
-    <memory logical="blockdev_xhci_shm1" physical="blockdev_xhci_shm1" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
-    <memory logical="blockdev_AHCI_Shm1" physical="blockdev_AHCI_Shm1" virtualAddress="16#a100_0000#" writable="true" executable="false"/>
+    <if variable="ahci_drv_active" value="true">
+     <memory logical="blockdev_xhci_shm1" physical="blockdev_xhci_shm1" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
+     <memory logical="blockdev_AHCI_Shm1" physical="blockdev_AHCI_Shm1" virtualAddress="16#a100_0000#" writable="true" executable="false"/>
+    </if>
     <if variable="nvme_drv_active" value="true">
-        <memory logical="blockdev_NVME_Shm1" physical="blockdev_NVME_Shm1" virtualAddress="16#a200_0000#" writable="true" executable="false"/>
+     <memory logical="blockdev_NVME_Shm1" physical="blockdev_NVME_Shm1" virtualAddress="16#a200_0000#" writable="true" executable="false"/>
     </if>
    </memory>
    <devices>
@@ -565,7 +577,9 @@
    <memory>
     <memory logical="ram_2" physical="storage_linux|ram_2" virtualAddress="16#1300_0000#" writable="true" executable="true"/>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#7000_0000#" writable="false" executable="false"/>
-    <memory logical="muenblock" physical="blockdev_xhci_shm1" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
+    <if variable="ahci_drv_active" value="true">
+     <memory logical="muenblock" physical="blockdev_xhci_shm1" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
+    </if>
    </memory>
    <devices>
     <device logical="xhci" physical="$pciconf_emulation_xhci_physdev">

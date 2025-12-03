@@ -43,12 +43,12 @@
     <memory executable="false" logical="blockdev_NVME_shm2" size="16#0100_0000#" writable="true"/>
    </if> -->
    <array logical="blockdev_shm2" virtualAddressBase="16#0100_0000#" elementSize="16#0100_0000#"  writable="true" executable="false">
-      <!-- <if variable="ahci_drv_enabled" value="true"> -->
+    <if variable="ahci_drv_enabled" value="true">
      <memory logical="blockdev_AHCI_shm2"/>
-      <!-- </if> -->
-      <if variable="nvme_drv_enabled" value="true">
+    </if>
+    <if variable="nvme_drv_enabled" value="true">
      <memory logical="blockdev_NVME_shm2"/>
-      </if>
+    </if>
    </array>
 
    <memory executable="false" logical="filled_region" size="16#1000#" writable="true"/>
@@ -65,22 +65,22 @@
     <reader logical="blockdev_response2_nvme" size="16#0000_4000#" vector="auto"/>
    </if> -->
 
-  <array logical="blockdev_response2" virtualAddressBase="16#00a0_0000#" elementSize="16#4000#" vectorBase="42">
-    <!-- <if variable="ahci_drv_enabled" value="true"> -->
-      <reader logical="blockdev_response2_ahci"/>
-    <!-- </if> -->
-    <if variable="nvme_drv_enabled" value="true">
-      <reader logical="blockdev_response2_nvme"/>
+   <array logical="blockdev_response2" virtualAddressBase="16#00a0_0000#" elementSize="16#4000#" vectorBase="42">
+    <if variable="ahci_drv_enabled" value="true">
+     <reader logical="blockdev_response2_ahci"/>
     </if>
-  </array>
-  <array logical="blockdev_request2" virtualAddressBase="16#00b0_0000#" elementSize="16#8000#" eventBase="10">
-    <!-- <if variable="ahci_drv_enabled" value="true"> -->
-       <writer logical="blockdev_request2_ahci"/>
-    <!-- </if> -->
     <if variable="nvme_drv_enabled" value="true">
-        <writer logical="blockdev_request2_nvme"/>
+     <reader logical="blockdev_response2_nvme"/>
     </if>
-  </array>
+   </array>
+   <array logical="blockdev_request2" virtualAddressBase="16#00b0_0000#" elementSize="16#8000#" eventBase="10">
+    <if variable="ahci_drv_enabled" value="true">
+     <writer logical="blockdev_request2_ahci"/>
+    </if>
+    <if variable="nvme_drv_enabled" value="true">
+     <writer logical="blockdev_request2_nvme"/>
+    </if>
+   </array>
 
   </channels>
   <events>

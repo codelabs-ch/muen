@@ -7,6 +7,7 @@
   <boolean name="dbgserver_sink_shmem" value="false"/>
   <boolean name="dbgserver_sink_xhcidbg" value="false"/>
   <boolean name="ahci_drv_active" value="true"/>
+  <boolean name="nvme_drv_active" value="false"/>
   <boolean name="pciconf_emulation_enabled" value="true"/>
   <boolean name="pciconf_emulation_xhci_enabled" value="true"/>
   <boolean name="example_blk_write" value="true"/>
@@ -20,7 +21,7 @@
  <memory>
   <include href="common_memory.xml"/>
   <include href="memory_xhci_dma.xml"/>
-  <include href="memory_ahci.xml"/>
+  <include href="memory_storage-ahci.xml"/>
   <memory name="control_sm_3" size="16#1000#" caching="WB">
    <fill pattern="16#ff#"/>
    <hash value="none"/>
@@ -38,9 +39,16 @@
    <hash value="none"/>
   </memory>
   <if variable="ahci_drv_active" value="true">
-   <memory name="blockdev_shm1" size="16#0100_0000#" caching="WB" type="subject_device"/>
-   <memory name="blockdev_shm2" size="16#0100_0000#" caching="WB" type="subject_device"/>
+   <memory alignment="16#1000#" name="blockdev_AHCI_Shm1" size="16#0100_0000#" caching="WB" type="subject_device"/>
+   <memory alignment="16#1000#" name="blockdev_AHCI_Shm2" size="16#0100_0000#" caching="WB" type="subject_device"/>
    <memory name="blockdev_xhci_shm1" size="16#0100_0000#" caching="WB" type="subject_device"/>
+  </if>
+  <if variable="nvme_drv_active" value="true">
+   <include href="memory_storage-nvme.xml"/>
+
+   <memory alignment="16#1000#" caching="WB" name="NVME_Queue_Memory"   size="16#0200_0000#" type="subject_device"/>
+   <memory alignment="16#1000#" name="blockdev_NVME_Shm1" size="16#0100_0000#" caching="WB" type="subject_device"/>
+   <memory alignment="16#1000#" name="blockdev_NVME_Shm2" size="16#0100_0000#" caching="WB" type="subject_device"/>
   </if>
   <memory name="isolation_tests_state" size="16#1000#" caching="WB"/>
   <memory name="isolation_tests_read_only" size="16#1000#" caching="WB"/>
@@ -75,13 +83,26 @@
   <domain name="ahci_domain">
    <memory>
     <memory logical="dma" physical="ahci_dma" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
-    <memory logical="blockdev_shm1" physical="blockdev_shm1" virtualAddress="16#a100_0000#" writable="true" executable="false"/>
-    <memory logical="blockdev_shm2" physical="blockdev_shm2" virtualAddress="16#a200_0000#" writable="true" executable="false"/>
+    <memory logical="blockdev_AHCI_Shm1" physical="blockdev_AHCI_Shm1" virtualAddress="16#a100_0000#" writable="true" executable="false"/>
+    <memory logical="blockdev_AHCI_Shm2" physical="blockdev_AHCI_Shm2" virtualAddress="16#a200_0000#" writable="true" executable="false"/>
    </memory>
-   <devices>
-   <device logical="storage_controller" physical="storage_controller"/>
-   </devices>
-  </domain>
+  <devices>
+   <device logical="storage_controller" physical="storage_controller"  mapReservedMemory="true"/>
+  </devices>
+ </domain>
+ <if variable="nvme_drv_active" value="true">
+    <domain name="nvme_domain">
+    <memory>
+        <memory logical="NVME_Queue_Memory" physical="NVME_Queue_Memory" virtualAddress="16#4000_0000#" writable="true" executable="false"/>
+        <memory logical="dma" physical="NVME_DMA_Region" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
+        <memory logical="blockdev_NVME_Shm1" physical="blockdev_NVME_Shm1" virtualAddress="16#a100_0000#" writable="true" executable="false"/>
+        <memory logical="blockdev_NVME_Shm2" physical="blockdev_NVME_Shm2" virtualAddress="16#a200_0000#" writable="true" executable="false"/>
+    </memory>
+    <devices>
+        <device logical="NVME_controller" physical="nvme_controller" mapReservedMemory="true"/>
+    </devices>
+    </domain>
+ </if>
   <domain name="legacy">
    <devices>
    <device logical="usb_controller_2" physical="usb_controller_2" mapReservedMemory="true"/>
@@ -116,7 +137,6 @@
   <channel name="debuglog_subject10" size="$logchannel_size"/>
   <channel name="debuglog_subject11" size="$logchannel_size"/>
   <channel name="debuglog_isolation_tests" size="$logchannel_size"/>
-  <channel name="debuglog_ahci_drv" size="$logchannel_size"/>
   <channel name="debuglog_example" size="$logchannel_size"/>
   <channel name="nic_dm_request_1" size="16#1000#" hasEvent="switch"/>
   <channel name="nic_dm_request_2" size="16#1000#" hasEvent="switch"/>
@@ -124,12 +144,23 @@
   <channel name="nic_dm_response_2" size="16#1000#" hasEvent="switch"/>
   <channel name="blockdev_xhci_request1" size="16#8000#" hasEvent="asap"/>
   <channel name="blockdev_xhci_response1" size="16#4000#" hasEvent="asap"/>
-  <channel name="blockdev_request1" size="16#8000#" hasEvent="asap"/>
-  <channel name="blockdev_response1" size="16#4000#" hasEvent="asap"/>
-  <channel name="blockdev_request2" size="16#8000#" hasEvent="asap"/>
-  <channel name="blockdev_response2" size="16#4000#" hasEvent="asap"/>
   <channel name="example_request" size="16#1000#" hasEvent="asap"/>
   <channel name="example_response" size="16#1000#" hasEvent="asap"/>
+  <if variable="ahci_drv_active" value="true">
+   <channel name="debuglog_ahci_drv" size="$logchannel_size"/>
+   <channel name="blockdev_request1_ahci"  size="16#0000_8000#" hasEvent="asap"/>
+   <channel name="blockdev_response1_ahci" size="16#0000_4000#" hasEvent="asap"/>
+   <channel name="blockdev_request2_ahci"  size="16#0000_8000#" hasEvent="asap"/>
+   <channel name="blockdev_response2_ahci" size="16#0000_4000#" hasEvent="asap"/>
+  </if>
+  <if variable="nvme_drv_active" value="true">
+   <channel name="debuglog_nvme_drv" size="$logchannel_size"/>
+
+   <channel name="blockdev_request1_nvme"  size="16#0000_8000#" hasEvent="asap"/>
+   <channel name="blockdev_response1_nvme" size="16#0000_4000#" hasEvent="asap"/>
+   <channel name="blockdev_request2_nvme"  size="16#0000_8000#" hasEvent="asap"/>
+   <channel name="blockdev_response2_nvme" size="16#0000_4000#" hasEvent="asap"/>
+  </if>
  </channels>
 
  <subjects>
@@ -142,7 +173,10 @@
   <include href="subject_vt.xml"/>
   <include href="subject_its.xml"/>
   <include href="subject_itsm.xml"/>
-  <include href="subject_ahci.xml"/>
+  <include href="subject_storage-ahci.xml"/>
+  <if variable="nvme_drv_active" value="true">
+   <include href="subject_storage-nvme.xml"/>
+  </if>
   <include href="subject_example.xml"/>
 
   <subject name="dbgserver">
@@ -170,6 +204,9 @@
     <map logical="log_channel12" physical="debuglog_controller"/>
     <map logical="log_channel13" physical="debuglog_isolation_tests"/>
     <map logical="log_channel14" physical="debuglog_ahci_drv"/>
+    <if variable="nvme_drv_active" value="true">
+     <map logical="log_channel16" physical="debuglog_nvme_drv"/>
+    </if>
     <map logical="log_channel15" physical="debuglog_example"/>
     <include href="subject_dbgserver_common.xml"/>
     <if variable="dbgserver_console_forwarding" value="true">
@@ -208,7 +245,10 @@
     <memory logical="ram_2" physical="nic_linux|ram_2" virtualAddress="16#1300_0000#" writable="true" executable="true"/>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#7000_0000#" writable="false" executable="false"/>
     <memory logical="blockdev_xhci_shm1" physical="blockdev_xhci_shm1" virtualAddress="16#a000_0000#" writable="true" executable="false"/>
-    <memory logical="blockdev_shm1" physical="blockdev_shm1" virtualAddress="16#a100_0000#" writable="true" executable="false"/>
+    <memory logical="blockdev_AHCI_Shm1" physical="blockdev_AHCI_Shm1" virtualAddress="16#a100_0000#" writable="true" executable="false"/>
+    <if variable="nvme_drv_active" value="true">
+        <memory logical="blockdev_NVME_Shm1" physical="blockdev_NVME_Shm1" virtualAddress="16#a200_0000#" writable="true" executable="false"/>
+    </if>
    </memory>
    <devices>
     <device logical="serial" physical="com_2">
@@ -267,8 +307,14 @@
     <writer logical="testchannel_3" physical="testchannel_3" virtualAddress="16#000e_0100_2000#"/>
     <writer logical="blockdev_xhci_request1" physical="blockdev_xhci_request1" virtualAddress="16#000e_01f0_0000#" event="3"/>
     <reader logical="blockdev_xhci_response1" physical="blockdev_xhci_response1" virtualAddress="16#000e_01f0_8000#" vector="101"/>
-    <writer logical="blockdev_request1" physical="blockdev_request1" virtualAddress="16#000e_01f0_c000#" event="4"/>
-    <reader logical="blockdev_response1" physical="blockdev_response1" virtualAddress="16#000e_01f1_4000#" vector="102"/>
+    <if variable="ahci_drv_active" value="true">
+     <writer logical="blockdev_request1_ahci" physical="blockdev_request1_ahci" event="4"/>
+     <reader logical="blockdev_response1_ahci" physical="blockdev_response1_ahci" vector="102"/>
+    </if>
+    <if variable="nvme_drv_active" value="true">
+     <writer logical="blockdev_request1_nvme" physical="blockdev_request1_nvme" event="auto"/>
+     <reader logical="blockdev_response1_nvme" physical="blockdev_response1_nvme" vector="auto"/>
+    </if>
     <if variable="dbgserver_console_forwarding" value="true">
      <reader logical="hvc1_input" physical="console_in_1" vector="auto"/>
      <writer logical="hvc1_output" physical="console_out_1"/>

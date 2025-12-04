@@ -79,12 +79,12 @@ package Ports_Config is
    --  configuration of the server ports
    Port_Config : constant Port_Config_Array_Type :=
       (Port_Config_Type'(
-         Chan_Idx => 1,
+         Chan_Idx => 0,
          Devices  => (
             Device_Type'(Ahci_Port => Device_ID, Partition => No_Partition),
             others => Null_Device)),
        Port_Config_Type'(
-          Chan_Idx => 0,
+          Chan_Idx => 1,
           Devices  => (
             Device_Type'(Ahci_Port => Device_ID, Partition => 4),
             others => Null_Device))

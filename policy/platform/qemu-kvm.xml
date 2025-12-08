@@ -35,6 +35,7 @@
    </alias>
    <alias name="nvme_controller" physical="non-volatile_memory_controller_1">
     <resource name="mem1" physical="mem1"/>
+    <!-- <resource name="mem2" physical="mem2"/> -->
     <resource name="mmconf" physical="mmconf"/>
    </alias>
   </aliases>

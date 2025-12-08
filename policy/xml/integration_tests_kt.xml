@@ -7,7 +7,7 @@
   <boolean name="dbgserver_sink_shmem" value="false"/>
   <boolean name="dbgserver_sink_xhcidbg" value="false"/>
   <boolean name="ahci_drv_active" value="true"/>
-  <boolean name="nvme_drv_active" value="false"/>
+  <boolean name="nvme_drv_active" value="true"/>
   <boolean name="pciconf_emulation_enabled" value="true"/>
   <boolean name="pciconf_emulation_xhci_enabled" value="true"/>
   <boolean name="example_blk_write" value="true"/>
@@ -21,9 +21,6 @@
  <memory>
   <include href="common_memory.xml"/>
   <include href="memory_xhci_dma.xml"/>
-  <if variable="ahci_drv_active" value="true">
-   <include href="memory_storage-ahci.xml"/>
-  </if>
   <memory name="control_sm_3" size="16#1000#" caching="WB">
    <fill pattern="16#ff#"/>
    <hash value="none"/>
@@ -41,6 +38,8 @@
    <hash value="none"/>
   </memory>
   <if variable="ahci_drv_active" value="true">
+   <include href="memory_storage-ahci.xml"/>
+
    <memory name="blockdev_AHCI_Shm1" size="16#0100_0000#" caching="WB" type="subject_device"/>
    <memory name="blockdev_AHCI_Shm2" size="16#0100_0000#" caching="WB" type="subject_device"/>
    <memory name="blockdev_xhci_shm1" size="16#0100_0000#" caching="WB" type="subject_device"/>

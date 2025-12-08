@@ -51,11 +51,13 @@
     </group>
    </partition>
   </if>
-  <!-- <partition name="storage_drv_nvme">
-   <group>
-   <subject name="storage_drv_nvme"/>
-   </group>
-  </partition> -->
+  <if variable="nvme_drv_active" value="true">
+   <partition name="storage_drv_nvme">
+    <group>
+    <subject name="storage_drv_nvme"/>
+    </group>
+   </partition>
+  </if>
   <partition name="storage_linux">
    <group>
     <subject name="example"/>
@@ -94,12 +96,18 @@
    <minorFrame partition="debugserver" ticks="30"/>
    <minorFrame partition="vt" ticks="19"/>
    <if variable="ahci_drv_active" value="true">
-    <minorFrame partition="storage_drv_ahci" ticks="30"/>
-    <minorFrame partition="storage_linux" ticks="70"/>
+    <minorFrame partition="storage_drv_ahci" ticks="20"/>
    </if>
    <if variable="ahci_drv_active" value="false">
-    <minorFrame partition="storage_linux" ticks="100"/>
+    <minorFrame partition="storage_linux" ticks="20"/>
    </if>
+   <if variable="nvme_drv_active" value="true">
+    <minorFrame partition="storage_drv_nvme" ticks="20"/>
+   </if>
+   <if variable="nvme_drv_active" value="false">
+    <minorFrame partition="storage_linux" ticks="20"/>
+   </if>
+    <minorFrame partition="storage_linux" ticks="60"/>
   </cpu>
   <cpu id="2">
    <minorFrame partition="nic_linux_1" ticks="75"/>
@@ -121,11 +129,17 @@
   <cpu id="1">
    <if variable="ahci_drv_active" value="true">
     <minorFrame partition="storage_drv_ahci" ticks="30"/>
-    <minorFrame partition="storage_linux" ticks="100"/>
    </if>
    <if variable="ahci_drv_active" value="false">
-    <minorFrame partition="storage_linux" ticks="130"/>
+    <minorFrame partition="storage_linux" ticks="30"/>
    </if>
+   <if variable="nvme_drv_active" value="true">
+    <minorFrame partition="storage_drv_nvme" ticks="30"/>
+   </if>
+   <if variable="nvme_drv_active" value="false">
+    <minorFrame partition="storage_linux" ticks="30"/>
+   </if>
+   <minorFrame partition="storage_linux" ticks="70"/>
    <minorFrame partition="vt" ticks="10"/>
    <minorFrame partition="debugserver" ticks="10"/>
   </cpu>

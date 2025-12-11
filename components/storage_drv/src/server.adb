@@ -203,8 +203,6 @@ is
          end loop;
       end loop;
 
-      --  end if;
-
    end Init;
 
    --------------------------------------------------------------------
@@ -359,7 +357,6 @@ is
       Pre  => Musinfo.Instance.Is_Valid and then
               Storage_Interface.Is_Valid
    is
-      --  Ret      : Ahci.Status_Type;
       Response     : MB.Block_Response_Type;
 
    begin
@@ -395,9 +392,12 @@ is
                Storage_Interface.Get_Max_Sector_Cnt (Ports (Port_Idx).Devs (Dev_Idx).Ahci_Port);
 
          when MB.Reset =>
-            -- TODO Check if Queue Pointers align
-            -- TODO maybe reset?
-            Storage_Interface.Reset (Response.Status_Code);
+            for I in Ports (Port_Idx).Devs'Range loop
+               if Ports (Port_Idx).Devs (I).Is_Valid then
+                     Finish_Current_Request (Port_Idx, I, False);
+               end if;
+            end loop;
+            Response.Status_Code := 0;
 
          when MB.Get_SMART =>
             declare
@@ -652,6 +652,6 @@ begin
    for Chn of Response_Channels loop
       Resp_Chn.Writer_Instance.Initialize
          (Channel => Chn,
-            Epoch   => 1);
+          Epoch   => 1);
    end loop;
 end Server;

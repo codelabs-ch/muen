@@ -1,8 +1,9 @@
-with System;
 with Ada.Unchecked_Conversion;
+with System;
+with Log; use Log;
 with NVMe.AdminCommandSet; use  NVMe.AdminCommandSet;
 with NVMe.CompletionQ;
-with Log; use Log;
+--  with NVMe.IOCommandSet; use  NVMe.IOCommandSet;
 with SK.Strings;
 
 package body NVMe.Host is
@@ -269,7 +270,6 @@ package body NVMe.Host is
          Log.Put_String ("Successfully executed Admin Command ");
          Log.Put_NVMe_AdminCMD_Image (AdminCMD.OPC);
          Log.New_Line;
-         -- Log.Print_Status_Code (SC => Temp_CQE.Status.SC, SCT => Temp_CQE.Status.SCT);
          Status := OK;
       elsif Temp_CQE.CID = AdminCMD.CID and Temp_CQE.Status.SC > 0 then
          Log.Put_String ("Error: Admin CMD failed: ");
@@ -298,7 +298,8 @@ package body NVMe.Host is
    end ProcessAdminCommand;
 
    procedure GetSMART
-     (SMART_Status : out SMART_Status_Type;
+     (Address      :     Unsigned_64;
+      SMART_Status : out SMART_Status_Type;
       NVMe_Status  : out Status_Type)
    is
       Admin_CMD    : Admin_Command;
@@ -314,6 +315,20 @@ package body NVMe.Host is
 
    begin
 
+      PRP_D_Ptr.E1 := Address;
+
+      CreateSMART_Health_LogPage_Command
+                     (CMD_Identifier => CMD_Identifier_Admin,
+                      DPTR           => PRP_D_Ptr,
+                      Command        => Admin_CMD);
+      ProcessAdminCommand (Admin_CMD, NVMe_Status);
+
+      if NVMe_Status /= OK then
+         SMART_Status := Undefined;
+         return;
+      end if;
+
+      -- execute again so we get the logpage also on our specified location to check flags
       PRP_D_Ptr.E1 := SMART_Health_LogPage_Address;
 
       CreateSMART_Health_LogPage_Command
@@ -352,7 +367,6 @@ package body NVMe.Host is
       IOSQ (IOSQ_Index)  := IOCmd;
       if IOSQ_Index = IOSQ'Last then
          -- Queue Wrap
-         --  Log.Put_Line ("NVMe: IO SQ Queue Wrap");
          IOSQ_Index := 0;
       else
          IOSQ_Index := IOSQ_Index + 1;
@@ -360,18 +374,12 @@ package body NVMe.Host is
       IOSQ_TailDoorbell  := Unsigned_32 (IOSQ_Index);
       Status := Unknown;
 
-      -- Log.Put_Line ("Index"  & Unsigned_32'Image (IOCQ_Index));
-
       loop
          Temp_CQE := IOCQ (IOCQ_Index);
          exit when Temp_CQE.P /= IOCQ_PhaseTag and Temp_CQE.CID = IOCmd.CID;
       end loop;
 
       if Temp_CQE.CID = IOCmd.CID and Temp_CQE.Status.SC = 0 then
-         --  Log.Put_String("Successfully executed IO Command ");
-         --  Log.Put_String (NVMe_IOCMD_Type_Image (IOCmd.OPC));
-         --  Log.New_Line;
-         -- Log.Print_Status_Code (SC => Temp_CQE.Status.SC, SCT => Temp_CQE.Status.SCT);
          Status := OK;
       elsif Temp_CQE.CID = IOCmd.CID and Temp_CQE.Status.SC > 0 then
          Log.Put_String ("Error: IO CMD failed: ");
@@ -389,7 +397,6 @@ package body NVMe.Host is
 
       if IOCQ_Index = IOCQ'Last then
          -- Queue Wrap
-         --  Log.Put_Line ("NVMe: IO CQ Queue Wrap");
          IOCQ_Index := 0;
          -- Inverting Phase Tag
          IOCQ_PhaseTag := not IOCQ_PhaseTag;
@@ -499,7 +506,7 @@ package body NVMe.Host is
          CProp.AQA := Temp_AQA;
       end;
         -- Configure Admin Queue Base Addresses
-        -- devided the given memory in half for testing - change if needed
+        -- devided the given memory in half - change if needed
       CProp.ASQ := ASQ_Address;
       CProp.ACQ := ACQ_Address;
 
@@ -511,9 +518,6 @@ package body NVMe.Host is
       begin
          CSS_BitArray := uInt8ToBitArray (Temp);
       end;
-      --  Log.Put_Line ("CSS" & Boolean'Image (CSS_BitArray (7)));
-      --  Log.Put_Line ("CSS" & Boolean'Image (CSS_BitArray (6)));
-      --  Log.Put_Line ("CSS" & Boolean'Image (CSS_BitArray (0)));
       declare
          Temp_CC : CC_Part := CProp.CC;
          Temp_CAP_AMS : constant Unsigned_2 := CProp.CAP.AMS;
@@ -589,7 +593,7 @@ package body NVMe.Host is
          Memory_Page_Size := Unsigned_8 (Temp_CC.MPS);
          pragma Assert (Memory_Page_Size <= Unsigned_8 (Unsigned_4'Last));
 
-      --FIXME this should come later but testing showed is required here already
+         --this should come later but testing showed is required here already
          Temp_CC.IOCQES := 4; -- 16 Byte
          Temp_CC.IOSQES := 6; -- 64 Byte
 
@@ -615,7 +619,6 @@ package body NVMe.Host is
       ---------------------------------------------------
 
       PRP_D_Ptr.E1 := Ident_Controller_Address;
-      --  Log.Put_Reg64 ("PRP1", Log.Word64 (PRP_Data_Ptr.E1));
 
       CreateIndentify_Command
         (CMD_Identifier   => CMD_Identifier_Admin,
@@ -952,12 +955,6 @@ package body NVMe.Host is
       ---------------------------------------------------
       --- 10. Initialize I/O Completion Queues
       ---------------------------------------------------
-
-      --  declare
-      --     mqes : Unsigned_16 := CProp.CAP.MQES;
-      --  begin
-      --     Log.Put_Line ("Maximum Queue Size Supported: " & Unsigned_16'Image (mqes));
-      --  end;
 
          -- value in bytes, 2^n
       declare

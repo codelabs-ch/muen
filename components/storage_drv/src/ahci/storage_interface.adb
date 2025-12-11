@@ -98,12 +98,13 @@ package body Storage_Interface is
        Dev_Id  :     PConf.Port_Range;
        Status  : out Status_Type)
    is
+      use type Unsigned_32;
    begin
       Ahci.Device.RW_Sectors
          (ID      => Dev_Id,
           RW      => Ahci.Read,
           Start   => SLBA,
-          Count   => NLB,
+          Count   => NLB + 1,
           Address => Address,
           Ret_Val => Status);
 
@@ -116,12 +117,13 @@ package body Storage_Interface is
        Dev_Id  :     PConf.Port_Range;
        Status  : out Status_Type)
    is
+      use type Unsigned_32;
    begin
       Ahci.Device.RW_Sectors
          (ID      => Dev_Id,
           RW      => Ahci.Write,
           Start   => SLBA,
-          Count   => NLB,
+          Count   => NLB + 1,
           Address => Address,
           Ret_Val => Status);
 
@@ -133,22 +135,15 @@ package body Storage_Interface is
        Dev_Id  :     PConf.Port_Range;
        Status  : out Status_Type)
    is
+      use type Unsigned_32;
    begin
       Ahci.Device.Discard_Sectors
          (ID      => Dev_Id,
           Start   => SLBA,
-          Count   => NLB,
+          Count   => NLB + 1,
           Ret_Val => Status);
 
    end Execute_Discard_Command;
-
-   procedure Reset (Status : out Unsigned_64)
-   is
-   begin
-    -- TODO Check if Queue Pointers align
-    -- TODO maybe reset?
-      Status := 0;
-   end Reset;
 
    procedure Check_SMART_Status (Address :     Unsigned_64;
                                  Dev_Id  :     PConf.Port_Range;

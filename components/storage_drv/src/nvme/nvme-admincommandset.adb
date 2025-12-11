@@ -307,11 +307,6 @@ package body NVMe.AdminCommandSet is
        Command          :    out Admin_Command)
    is
    begin
-      --  function Upper (I : Interfaces.Unsigned_64) return Interfaces.Unsigned_32
-      --  is (Interfaces.Unsigned_32 (Interfaces.Shift_Right (I, 32)));
-
-      --  function Lower (I : Interfaces.Unsigned_64) return Interfaces.Unsigned_32
-      --  is (Interfaces.Unsigned_32 (I and 16#ffff_ffff#));
 
       CreateGetLogPage_Command
          (CMD_Identifier => CMD_Identifier,

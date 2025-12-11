@@ -165,7 +165,7 @@ is
 
       Put_Line ("====== GPT Partition " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Index + 1)) &
                    " of " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Partitions.Partition_Array_Length'Last)));
-      Put_String (" Partition Name:        "); Print_Wide_String (Partition.Partition_Name);
+      Put_String (" Partition Name:       "); Print_Wide_String (Partition.Partition_Name);
       Put_Line (" Partition Type GUID:  " & SK.Strings.Img (Partition.Partition_Type_GUID));
       Put_Line (" Unique Partition GUID:" & SK.Strings.Img (Partition.Unique_Partition_GUID));
       Put_Line (" Starting LBA:         " & SK.Strings.Img_Dec (Partition.Starting_LBA));
@@ -183,7 +183,7 @@ is
    is
    begin
       Put_Line ("=========== GPT Header ===========================");
-      Put_Line (" Signature:             " & Header.Signature);
+      Put_Line (" Signature:            " & Header.Signature);
       Put_Line (" Revision:             " & SK.Strings.Img_Dec (Unsigned_64 (Header.Revision)));
       Put_Line (" Header Size:          " & SK.Strings.Img_Dec (Unsigned_64 (Header.Header_Size)));
       Put_Line (" My LBA:               " & SK.Strings.Img_Dec (Header.My_LBA));

@@ -612,18 +612,6 @@ package NVMe.Host is
    --- Setup
    ---------------------------------------------------
 
-   --   type CompletionQs is array (1 .. 65_535) of CompletionQ.CompletionQ with
-   --      Predicate =>
-   --       CompletionQs (CompletionQs'First) in CompletionQ.Admin_CompletionQ;
-
-   --   type SubmissionQs is array (1 .. 65_535) of SubmissionQ.SubmissionQ with
-   --      Predicate =>
-   --       SubmissionQs (SubmissionQs'First) in SubmissionQ.Admin_SubmissionQ;
-
-   --   procedure Setup
-   --      (IO_SubmissionQs : out SubmissionQs;
-   --       IO_CompletionQs : out CompletionQs);
-
    CMD_Identifier_Admin     : Unsigned_16 := 0;
    CMD_Identifier_IO        : Unsigned_16 := 0;
 
@@ -659,7 +647,8 @@ package NVMe.Host is
    type SMART_Status_Type is (OK, Threshold_Exceeded, Undefined);
 
    procedure GetSMART
-     (SMART_Status : out SMART_Status_Type;
+     (Address      :     Unsigned_64;
+      SMART_Status : out SMART_Status_Type;
       NVMe_Status  : out Status_Type)
    with Pre => Is_Valid;
 
@@ -670,8 +659,6 @@ package NVMe.Host is
    function Get_Max_Sector_Cnt return Unsigned_64;
 
    function Get_Sector_Size return Unsigned_32;
-
-   --  function Get_Max_Sector_Count return Unsigned_32;
 
    ---------------------------------------------------
    --- 3.5 Controller Initialization

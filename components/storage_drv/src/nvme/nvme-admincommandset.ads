@@ -162,7 +162,7 @@ package NVMe.AdminCommandSet is
 
    type CriticalWarning_Type is record
       AvailableSpaceBelowThresh   : Boolean;
-      TemperatureWarning          : Boolean; -- see Sectuib 5.27.1.3
+      TemperatureWarning          : Boolean; -- see Section 5.27.1.3
       ReliabilityDegraded         : Boolean;
       ReadOnlyModeActive          : Boolean; -- see Section 8.12.1
       BackupDeviceFailure         : Boolean;

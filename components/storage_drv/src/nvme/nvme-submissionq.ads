@@ -6,11 +6,9 @@ package NVMe.SubmissionQ is
    --- 3.3.3.1 Submission Queue Entry
    ---------------------------------------------------
 
-   -- either Address of PRP_Entry or Address of PRP_List
-   --  type PRP_Entry is new Unsigned_64;
-
+   -- values are either address of PRP_Entry or Address of PRP_List
    type PRP_Data_Ptr is record
-      E1 : Unsigned_64; -- or PRP_Entry or List PTR
+      E1 : Unsigned_64;
       E2 : Unsigned_64;
    end record
    with Size => 16 * 8;
@@ -33,9 +31,6 @@ package NVMe.SubmissionQ is
    for SGL_Data_Ptr use record
       SGL at 0 range 0 .. 127;
    end record;
-
-   --subtype
-   --type SGL_Descriptor is record null record;
 
    type SQE  is record
       OPC      : Unsigned_8;       -- -+
@@ -64,7 +59,6 @@ package NVMe.SubmissionQ is
    with Size => 64 * 8;
 
    for SQE use record
-      -- (starting) at (Byte) x (occupying bits) range y .. z
       OPC          at  0 range 0 ..   7;
       FUSE         at  1 range 0 ..   1;
       Reserved     at  1 range 2 ..   5;

@@ -99,16 +99,15 @@ package body Storage_Interface is
 
       NVMe.Host.ControllerInit (Success);
       -- Testing IO
-      -- NVMe.Host.Test_IO_Operations;
       Ports (1).Chan_Idx := PConf.Port_Config (1).Chan_Idx;
-      Ports (1).Devs (0) := (Ahci_Port     => 1,
+      Ports (1).Devs (0) := (Ahci_Port     => 0,
                              Partition     => PConf.No_Partition,
                              Is_Valid      => True,
                              Sector_Offset => 0,
                              Sector_Count  => NVMe.Host.Get_Sector_Cnt,
                              Current       => Null_Current);
       Ports (2).Chan_Idx := PConf.Port_Config (2).Chan_Idx;
-      Ports (2).Devs (0) := (Ahci_Port     => 1,
+      Ports (2).Devs (0) := (Ahci_Port     => 0,
                              Partition     => PConf.Smart_Only,
                              Is_Valid      => True,
                              Sector_Offset => 0,
@@ -116,7 +115,7 @@ package body Storage_Interface is
                              Current       => Null_Current);
 
       Devs := (others => False);
-      Devs (1) := True;
+      Devs (0) := True;
    end Init;
 
    function Get_Sector_Size (Dev_Id : PConf.Port_Range) return Unsigned_32

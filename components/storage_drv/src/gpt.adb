@@ -455,12 +455,10 @@ is
 
       -- Parse Partitions
       for I in Entry_Array_Type'Range loop
-         pragma Loop_Invariant (Part_Table.Count <= I); -- fails in 'last check
+         pragma Loop_Invariant (Part_Table.Count <= I);
          Partition := PGPT.Entry_Array (I);
          if Partition.Partition_Type_GUID /= Partitions.PARTITION_TYPE_EMPTY then
             Part_Table.Count := Part_Table.Count + 1;
-            -- todo fixme what to do here?
-            -- Log.Put_Line ("GPT: Partition is" & Unsigned_128'Image (Partition.Partition_Type_GUID));
             Part_Table.Entries (I).Partition_Type := Interfaces.Unsigned_8 (16#83#); --ef
             Part_Table.Entries (I).Start_Lba := Interfaces.Unsigned_64 (Partition.Starting_LBA);
             Part_Table.Entries (I).Sector_Cnt := Partition.Ending_LBA - Partition.Starting_LBA;

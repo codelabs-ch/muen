@@ -73,20 +73,21 @@ package Ports_Config is
 
    --  nuc: 0
    --  qemu: 1
-   Device_ID : constant Port_Range := 1;
+   --  nvme is hardcoded to 0
+   Device_ID : constant Port_Range := 0;
 
    --  configuration of the server ports
    Port_Config : constant Port_Config_Array_Type :=
       (Port_Config_Type'(
-         Chan_Idx => 0,
+         Chan_Idx => 1,
          Devices  => (
             Device_Type'(Ahci_Port => Device_ID, Partition => No_Partition),
             others => Null_Device)),
        Port_Config_Type'(
-          Chan_Idx => 1,
+          Chan_Idx => 0,
           Devices  => (
-             Device_Type'(Ahci_Port => Device_ID, Partition => 4),
-             others => Null_Device))
+            Device_Type'(Ahci_Port => Device_ID, Partition => 4),
+            others => Null_Device))
       );
 
 end Ports_Config;

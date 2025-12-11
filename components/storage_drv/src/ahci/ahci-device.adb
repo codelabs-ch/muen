@@ -45,12 +45,13 @@ is
    begin
       case Signature is
          when Storage_Interface.Sata_device =>
-            Ata.RW_Sectors (ID => ID,
-               RW      => RW,
-               Start   => Start,
-               Count   => Count,
-               Address => Address,
-               Ret_Val => Ret_Val);
+            Ata.RW_Sectors
+               (ID      => ID,
+                RW      => RW,
+                Start   => Start,
+                Count   => Count,
+                Address => Address,
+                Ret_Val => Ret_Val);
          when others =>
             Ret_Val := ENOTSUP;
       end case;
@@ -139,10 +140,10 @@ is
 
       case Signature is
          when Storage_Interface.Sata_device =>
-            Ata.Get_SMART (ID => ID,
-               Address => Address,
-               Status  => Status,
-               Ret_Val => Ret_Val);
+            Ata.Get_SMART (ID      => ID,
+                           Address => Address,
+                           Status  => Status,
+                           Ret_Val => Ret_Val);
          when others =>
             Ret_Val := ENOTSUP;
       end case;
@@ -294,6 +295,7 @@ is
    begin
       for I in PConf.Port_Range loop
          if PI (Natural (I)) then
+            Log.Put_Line ("Probe Port " & SK.Strings.Img (Unsigned_8 (I)));
             Probe (Port_ID => I);
          end if;
       end loop;

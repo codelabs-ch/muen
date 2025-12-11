@@ -19,19 +19,21 @@ with System;
 
 with Musinfo.Instance;
 
-with Muenblock_Client;
-with Example_Component.Channels;
+with Muenblock_Clients;
+with Example_Component.Channel_Arrays;
 
 package Muenblock_Example
 is
-   package Muenblock_Client_Instance is new Muenblock_Client
-      (Req_Channel_Address  => System'To_Address
-            (Example_Component.Channels.Blockdev_Request2_Ahci_Address),
-       Resp_Channel_Address => System'To_Address
-            (Example_Component.Channels.Blockdev_Response2_Ahci_Address),
-       Event_Number         =>
-         Example_Component.Channels.Blockdev_Request2_Ahci_Event,
-       Devices_Cnt_Max      => 1);
+   type Client_Range is range 1 .. Example_Component.Channel_Arrays.Blockdev_Request2_Element_Count;
+
+   package Muenblock_Clients_Instance is new Muenblock_Clients
+      (Req_Channel_Base_Address => System'To_Address
+            (Example_Component.Channel_Arrays.Blockdev_Request2_Address_Base),
+      Resp_Channel_Base_Address => System'To_Address
+            (Example_Component.Channel_Arrays.Blockdev_Response2_Address_Base),
+      Base_Event_Number         => Example_Component.Channel_Arrays.Blockdev_Request2_Event_Base,
+      Client_Range_Type         => Client_Range,
+      Devices_Cnt_Max           => 1);
 
    procedure Show
    with

@@ -375,8 +375,14 @@ is
          Delays.M_Delay (Msec => 1);
       end loop;
 
+      Status := Instance (ID).Command_And_Status;
+      if Status.FRE then
+         Status.FRE := False;
+         Instance (ID).Command_And_Status := Status;
+      end if;
+
       for I in Natural range 1 .. 500 loop
-         Fis_Receive_Enabled := Instance (ID).Command_And_Status.FRE;
+         Fis_Receive_Enabled := Instance (ID).Command_And_Status.FR;
          exit when not Fis_Receive_Enabled;
          Delays.M_Delay (Msec => 1);
       end loop;

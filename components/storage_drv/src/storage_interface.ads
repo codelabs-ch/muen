@@ -6,9 +6,12 @@ with Storage_Drv_Cspecs_Wrapper;
 with Muenblock;
 with Muenblock.Request_Channel;
 with Muenblock.Response_Channel;
+
 with Musinfo.Instance;
 
-package Storage_Interface is
+package Storage_Interface
+is
+
    package CSpecs   renames Storage_Drv_Cspecs_Wrapper.Channel_Arrays;
    package PConf    renames Ports_Config;
    package MB       renames Muenblock;
@@ -109,6 +112,8 @@ package Storage_Interface is
    subtype Unsigned_64 is Interfaces.Unsigned_64;
    subtype Unsigned_128 is Interfaces.Unsigned_128;
 
+   -------------------------------------------------------------------------
+
    type Bit_Array is array (Natural range <>) of Boolean
    with Pack;
 
@@ -121,6 +126,8 @@ package Storage_Interface is
 
    type Word_Array is array (Natural range <>) of Interfaces.Unsigned_16
    with Pack;
+
+   -------------------------------------------------------------------------
 
    --  array for internal storage of detected devices
    type Signature_Type is (Empty_device, Sata_device, NVMe_device, Atapi_device);
@@ -151,7 +158,7 @@ package Storage_Interface is
       with Size => 8 * 8;
    for  Status_Type use (OK => 0, ENOTSUP => 1, EIO => 10);
 
-   ------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    subtype Devs_Array is Bit_Array (0 .. Integer (PConf.Port_Range'Last));
 
@@ -198,6 +205,8 @@ package Storage_Interface is
    end record;
 
    type Ports_Array is array (PConf.Ports_Array_Range) of Port_Type;
+
+   -------------------------------------------------------------------------
 
    procedure Startup;
 

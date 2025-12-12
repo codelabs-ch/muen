@@ -1,15 +1,20 @@
 with Ada.Unchecked_Conversion;
+
 with System;
-with Log; use Log;
-with NVMe.AdminCommandSet; use  NVMe.AdminCommandSet;
-with NVMe.CompletionQ;
---  with NVMe.IOCommandSet; use  NVMe.IOCommandSet;
+
 with SK.Strings;
 
-package body NVMe.Host is
-   ----------------------------
-   -- Named Adress Numbers
-   ----------------------------
+with Log;
+
+with NVMe.AdminCommandSet;
+with NVMe.CompletionQ;
+
+package body NVMe.Host
+is
+
+   -------------------------------------------------------------------------
+   -- Named Address Numbers
+   -------------------------------------------------------------------------
 
    -- PCIE mmconf
    Bar0_Offset     : constant := 16#10#;
@@ -56,9 +61,10 @@ package body NVMe.Host is
    Test_IO_Read_Offset     : constant := 16#0008_0020#;
    Test_IO_Read_Address    : constant := DRAM_Memory.Queue_Memory_Address + Test_IO_Read_Offset;
 
-   ----------------------------
+   -------------------------------------------------------------------------
    -- Controller Data Structures
-   ----------------------------
+   -------------------------------------------------------------------------
+
    pragma Warnings
      (GNATprove, Off,
       "indirect writes to * through a potential alias are ignored",
@@ -81,9 +87,9 @@ package body NVMe.Host is
       Address =>
        System'To_Address (CProp_Address);
 
-   ----------------------------
+   -------------------------------------------------------------------------
    -- Admin Submission Queue
-   ----------------------------
+   -------------------------------------------------------------------------
 
    ASQ : SubmissionQ.Entry_Queue := (others => SubmissionQ.Null_SQE)
    with
@@ -99,9 +105,9 @@ package body NVMe.Host is
 
    ASQ_Index : SubmissionQ.Entry_Queue_Range := 0;
 
-   ----------------------------
+   -------------------------------------------------------------------------
    -- Admin Completion Queue
-   ----------------------------
+   -------------------------------------------------------------------------
 
    ACQ : CompletionQ.Entry_Queue := (others => CompletionQ.Null_CQE)
    with
@@ -118,9 +124,9 @@ package body NVMe.Host is
    ACQ_Index     : CompletionQ.Entry_Queue_Range := 0;
    ACQ_PhaseTag  : Boolean    := False;
 
-   ----------------------------
+   -------------------------------------------------------------------------
    -- IO Submission Queue
-   ----------------------------
+   -------------------------------------------------------------------------
 
    IOSQ : SubmissionQ.Entry_Queue := (others => SubmissionQ.Null_SQE)
    with
@@ -136,9 +142,9 @@ package body NVMe.Host is
 
    IOSQ_Index : SubmissionQ.Entry_Queue_Range := 0;
 
-   ----------------------------
+   -------------------------------------------------------------------------
    -- IO Completion Queue
-   ----------------------------
+   -------------------------------------------------------------------------
 
    IOCQ : CompletionQ.Entry_Queue := (others => CompletionQ.Null_CQE)
    with
@@ -155,9 +161,9 @@ package body NVMe.Host is
    IOCQ_Index    : CompletionQ.Entry_Queue_Range := 0;
    IOCQ_PhaseTag : Boolean    := False;
 
-   ----------------------------
+   -------------------------------------------------------------------------
    -- Other Declarations
-   ----------------------------
+   -------------------------------------------------------------------------
 
    IdentController : IdentifyController
    with
@@ -191,7 +197,7 @@ package body NVMe.Host is
       Volatile, Async_Writers,
       Address => System'To_Address (Test_IO_Read_Address);
 
-   SMART_Health_LogPage : SMART_LogPage
+   SMART_Health_LogPage : AdminCommandSet.SMART_LogPage
    with
       Volatile, Async_Writers,
       Address => System'To_Address (SMART_Health_LogPage_Address);
@@ -209,7 +215,8 @@ package body NVMe.Host is
    MB_Max_Sector_Count : Unsigned_64 := 0;
    MB_Sector_Size      : Unsigned_32 := 512;
 
-   -------------------------------------------------------------------------------------------------
+   -------------------------------------------------------------------------
+
    pragma Warnings (GNATprove, Off, "subprogram ""Wait_For_Ready"" has no effect");
    procedure Wait_For_Ready (Should_Be : Boolean)
    is
@@ -226,7 +233,7 @@ package body NVMe.Host is
    end Wait_For_Ready;
    pragma Warnings (GNATprove, On, "subprogram ""Wait_For_Ready"" has no effect");
 
-   -------------------------------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Set_Muenblock_Constants (NS : IdentifyNamespace)
    with Pre => NS.LBA_List (0).LBADS = 9 or else NS.LBA_List (0).LBADS = 12,
@@ -239,18 +246,19 @@ package body NVMe.Host is
       MB_Size := MB_Sector_Count * Unsigned_64 (MB_Sector_Size);
    end Set_Muenblock_Constants;
 
-   -------------------------------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure ProcessAdminCommand
-      (AdminCMD :     Admin_Command;
+      (AdminCMD :     SubmissionQ.Admin_Command;
        Status   : out Status_Type)
    is
       use type CompletionQ.Entry_Queue_Range;
+      use type SubmissionQ.Entry_Queue_Range;
 
       Temp_CQE       : CompletionQ.CQE;
    begin
 
-      ASQ (ASQ_Index)  := AdminCMD;
+      ASQ (ASQ_Index) := AdminCMD;
       if ASQ_Index = ASQ'Last then
          -- Queue Wrap
          ASQ_Index := 0;
@@ -278,7 +286,7 @@ package body NVMe.Host is
          Log.Put_Line ("CID"  & SK.Strings.Img_Dec (Unsigned_64 (Temp_CQE.CID)));
          Log.Put_Line ("SQHD" & SK.Strings.Img_Dec (Unsigned_64 (Temp_CQE.SQHD)));
          Log.Put_Line ("SQID" & SK.Strings.Img_Dec (Unsigned_64 (Temp_CQE.SQID)));
-         Log.Put_Line ("P "   & Boolean_Image (Temp_CQE.P));
+         Log.Put_Line ("P "   & Log.Boolean_Image (Temp_CQE.P));
          Log.Put_Line ("SC"   & SK.Strings.Img_Dec (Unsigned_64 (Temp_CQE.Status.SC)) &
                        " SCT" & SK.Strings.Img_Dec (Unsigned_64 (Temp_CQE.Status.SCT)));
          Log.Print_Status_Code (SC => Temp_CQE.Status.SC, SCT => Temp_CQE.Status.SCT);
@@ -297,14 +305,16 @@ package body NVMe.Host is
 
    end ProcessAdminCommand;
 
+   -------------------------------------------------------------------------
+
    procedure GetSMART
      (Address      :     Unsigned_64;
       SMART_Status : out SMART_Status_Type;
       NVMe_Status  : out Status_Type)
    is
-      Admin_CMD    : Admin_Command;
+      Admin_CMD    : SubmissionQ.Admin_Command;
       PRP_D_Ptr    : SubmissionQ.PRP_Data_Ptr := (0, 0);
-      No_Warning   : constant CriticalWarning_Type :=
+      No_Warning   : constant AdminCommandSet.CriticalWarning_Type :=
         (AvailableSpaceBelowThresh => False,
          TemperatureWarning => False,
          ReliabilityDegraded => False,
@@ -317,7 +327,7 @@ package body NVMe.Host is
 
       PRP_D_Ptr.E1 := Address;
 
-      CreateSMART_Health_LogPage_Command
+      AdminCommandSet.CreateSMART_Health_LogPage_Command
                      (CMD_Identifier => CMD_Identifier_Admin,
                       DPTR           => PRP_D_Ptr,
                       Command        => Admin_CMD);
@@ -331,7 +341,7 @@ package body NVMe.Host is
       -- execute again so we get the logpage also on our specified location to check flags
       PRP_D_Ptr.E1 := SMART_Health_LogPage_Address;
 
-      CreateSMART_Health_LogPage_Command
+      AdminCommandSet.CreateSMART_Health_LogPage_Command
                      (CMD_Identifier => CMD_Identifier_Admin,
                       DPTR           => PRP_D_Ptr,
                       Command        => Admin_CMD);
@@ -340,7 +350,8 @@ package body NVMe.Host is
       if NVMe_Status = OK
       then
          declare
-            LogPage : constant SMART_LogPage := SMART_Health_LogPage;
+            use type AdminCommandSet.CriticalWarning_Type;
+            LogPage : constant AdminCommandSet.SMART_LogPage := SMART_Health_LogPage;
          begin
             if LogPage.CriticalWarning = No_Warning then
                SMART_Status := OK;
@@ -355,13 +366,16 @@ package body NVMe.Host is
       end if;
    end GetSMART;
 
+   -------------------------------------------------------------------------
+
    procedure ProcessIOCommand
-      (IOCmd  :     IO_Command;
+      (IOCmd  :     SubmissionQ.IO_Command;
        Status : out Status_Type)
    is
       use type CompletionQ.Entry_Queue_Range;
+      use type SubmissionQ.Entry_Queue_Range;
 
-      Temp_CQE       : CompletionQ.CQE;
+      Temp_CQE : CompletionQ.CQE;
    begin
 
       IOSQ (IOSQ_Index)  := IOCmd;
@@ -407,9 +421,9 @@ package body NVMe.Host is
 
    end ProcessIOCommand;
 
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
    --- 3.5 Controller Initialization
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure ControllerInit
      (Success : out Boolean)
@@ -441,7 +455,7 @@ package body NVMe.Host is
       function NumOfQsToCDW11    is new Ada.Unchecked_Conversion (CDW11_NumOfQsType, Unsigned_32);
 
       CSS_BitArray        : Bit_Array_8;
-      Admin_CMD           : Admin_Command;
+      Admin_CMD           : SubmissionQ.Admin_Command;
       PRP_D_Ptr           : SubmissionQ.PRP_Data_Ptr := (0, 0);
       Test_Bool           : Boolean;
       CDW11_Temp          : Unsigned_32;
@@ -506,7 +520,7 @@ package body NVMe.Host is
          CProp.AQA := Temp_AQA;
       end;
         -- Configure Admin Queue Base Addresses
-        -- devided the given memory in half - change if needed
+        -- divided the given memory in half - change if needed
       CProp.ASQ := ASQ_Address;
       CProp.ACQ := ACQ_Address;
 
@@ -620,7 +634,7 @@ package body NVMe.Host is
 
       PRP_D_Ptr.E1 := Ident_Controller_Address;
 
-      CreateIndentify_Command
+      AdminCommandSet.CreateIndentify_Command
         (CMD_Identifier   => CMD_Identifier_Admin,
          DPTR             => PRP_D_Ptr,
          NSID             => 0,
@@ -661,7 +675,7 @@ package body NVMe.Host is
          ------------------------------------------------------------
          PRP_D_Ptr.E1 := Namespace_List_Address;
 
-         CreateIndentify_Command
+         AdminCommandSet.CreateIndentify_Command
            (CMD_Identifier   => CMD_Identifier_Admin,
             DPTR             => PRP_D_Ptr,
             NSID             => 0,
@@ -697,7 +711,7 @@ package body NVMe.Host is
 
             PRP_D_Ptr.E1 := Ident_Namespace_Address;
 
-            CreateIndentify_Command
+            AdminCommandSet.CreateIndentify_Command
               (CMD_Identifier   => CMD_Identifier_Admin,
                DPTR             => PRP_D_Ptr,
                NSID             => Temp_NSID,
@@ -742,7 +756,7 @@ package body NVMe.Host is
          -- 8.a.i Identify IO CMD Set CNS 1Ch
          ------------------------------------
          PRP_D_Ptr.E1 := IO_CMD_Sets_Address;
-         CreateIndentify_Command
+         AdminCommandSet.CreateIndentify_Command
            (CMD_Identifier   => CMD_Identifier_Admin,
             DPTR             => PRP_D_Ptr,
             NSID             => 0,
@@ -784,7 +798,7 @@ package body NVMe.Host is
          -----------------------------------------------
          CDW11_Temp := IOCMDIndexToCDW11 ((IOCSCI => IO_CMD_Set_Index, others => <>));
          PRP_D_Ptr.E1 := 0;
-         CreateSetFeatures_Command
+         AdminCommandSet.CreateSetFeatures_Command
            (CMD_Identifier => CMD_Identifier_Admin,
             DPTR           => PRP_D_Ptr,
             FID            => 16#19#,
@@ -812,7 +826,7 @@ package body NVMe.Host is
             Test_Bool := IO_CMD_Sets (IO_CMD_Set_Iterator).NVM_CMD_Set;
             if Test_Bool then
                -- CSI 0 for NVM-CMD-Set
-               CreateIndentify_Command
+               AdminCommandSet.CreateIndentify_Command
                  (CMD_Identifier   => CMD_Identifier_Admin,
                   DPTR             => PRP_D_Ptr,
                   NSID             => 0,
@@ -828,7 +842,7 @@ package body NVMe.Host is
                Test_Bool := IO_CMD_Sets (IO_CMD_Set_Iterator).Key_Value_CMD_Set;
                if Test_Bool then
                   -- CSI 1 for Key-Value-CMD-Set
-                  CreateIndentify_Command
+                  AdminCommandSet.CreateIndentify_Command
                     (CMD_Identifier   => CMD_Identifier_Admin,
                      DPTR             => PRP_D_Ptr,
                      NSID             => 0,
@@ -843,7 +857,7 @@ package body NVMe.Host is
                   Test_Bool := IO_CMD_Sets (IO_CMD_Set_Iterator).Zoned_Namespace_CMD_Set;
                   if Test_Bool then
                      -- CSI 2 for Zoned-Namespace-CMD-Set
-                     CreateIndentify_Command
+                     AdminCommandSet.CreateIndentify_Command
                        (CMD_Identifier   => CMD_Identifier_Admin,
                         DPTR             => PRP_D_Ptr,
                         NSID             => 0,
@@ -889,7 +903,7 @@ package body NVMe.Host is
                ---------------------------------------------
                if Is_NVM_CMD_Set then
                   PRP_D_Ptr.E1 := Ident_Namespace_Address;
-                  CreateIndentify_Command
+                  AdminCommandSet.CreateIndentify_Command
                     (CMD_Identifier   => CMD_Identifier_Admin,
                      DPTR             => PRP_D_Ptr,
                      NSID             => Temp_NSID,
@@ -938,7 +952,7 @@ package body NVMe.Host is
 
       PRP_D_Ptr.E1 := 0;
       CDW11_Temp := NumOfQsToCDW11 ((NSQR => 1, NCQR => 1));
-      CreateSetFeatures_Command
+      AdminCommandSet.CreateSetFeatures_Command
         (CMD_Identifier => CMD_Identifier_Admin,
          DPTR           => PRP_D_Ptr,
          FID            => 16#07#,
@@ -966,7 +980,7 @@ package body NVMe.Host is
       end;
 
       PRP_D_Ptr.E1 := IOCQ_Address;
-      CreateCreateIOCQ_Command
+      AdminCommandSet.CreateCreateIOCQ_Command
         (CMD_Identifier   => CMD_Identifier_Admin,
          DPTR             => PRP_D_Ptr,
          QID              => 1,
@@ -985,7 +999,7 @@ package body NVMe.Host is
       ---------------------------------------------------
 
       PRP_D_Ptr.E1 := IOSQ_Address;
-      CreateCreateIOSQ_Command
+      AdminCommandSet.CreateCreateIOSQ_Command
         (CMD_Identifier   => CMD_Identifier_Admin,
          DPTR             => PRP_D_Ptr,
          QID              => 1,
@@ -1011,7 +1025,7 @@ package body NVMe.Host is
 
    procedure ControllerShutdown
    is
-      Admin_CMD   : Admin_Command;
+      Admin_CMD   : SubmissionQ.Admin_Command;
       NVMe_Status : Status_Type;
    begin
 
@@ -1023,7 +1037,7 @@ package body NVMe.Host is
 
       begin
          if Enabled then
-            CreateDeleteIOSQ_Command
+            AdminCommandSet.CreateDeleteIOSQ_Command
                (CMD_Identifier => CMD_Identifier_Admin,
                 QID            => 1,
                 Command        => Admin_CMD);
@@ -1032,7 +1046,7 @@ package body NVMe.Host is
                Log.Put_Line ("NVME: Error During NVMe Controller Shutdown Step 1-1");
             end if;
 
-            CreateDeleteIOCQ_Command
+            AdminCommandSet.CreateDeleteIOCQ_Command
                (CMD_Identifier => CMD_Identifier_Admin,
                 QID            => 1,
                 Command        => Admin_CMD);

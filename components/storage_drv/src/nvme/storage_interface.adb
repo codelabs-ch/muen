@@ -1,15 +1,20 @@
+with SK.CPU;
+
 with NVMe.SubmissionQ;
 with NVMe.IOCommandSet;
 with NVMe.Host;
+
 with Log;
 with Server;
 with Pciconf;
-with SK.CPU;
 
-package body Storage_Interface is
+package body Storage_Interface
+is
 
    use type Unsigned_32;
    use type Unsigned_64;
+
+   -------------------------------------------------------------------------
 
    pragma Warnings (Off, "Dev_Id");
    function Dummy_Use_Return (Dev_Id : PConf.Port_Range) return Unsigned_32
@@ -26,6 +31,8 @@ package body Storage_Interface is
       null;
    end Dummy_Use;
    pragma Warnings (GNATprove, On, "subprogram ""Dummy_Use"" has no effect");
+
+   -------------------------------------------------------------------------
 
    procedure Startup
    is
@@ -81,6 +88,8 @@ package body Storage_Interface is
       end;
    end Startup;
 
+   -------------------------------------------------------------------------
+
    procedure Init
       (Devs    : out Devs_Array;
        Ports   : out Ports_Array;
@@ -118,6 +127,8 @@ package body Storage_Interface is
       Devs (0) := True;
    end Init;
 
+   -------------------------------------------------------------------------
+
    function Get_Sector_Size (Dev_Id : PConf.Port_Range) return Unsigned_32
    is (NVMe.Host.Get_Sector_Size + Dummy_Use_Return (Dev_Id));
 
@@ -129,6 +140,8 @@ package body Storage_Interface is
 
    function Get_Size (Dev_Id : PConf.Port_Range) return Unsigned_64
    is (NVMe.Host.Get_Size + Unsigned_64 (Dummy_Use_Return (Dev_Id)));
+
+   -------------------------------------------------------------------------
 
    procedure Execute_Read_Command
       (Address :     Unsigned_64;
@@ -162,6 +175,8 @@ package body Storage_Interface is
 
    end Execute_Read_Command;
 
+   -------------------------------------------------------------------------
+
    procedure Execute_Write_Command
       (Address :     Unsigned_64;
        SLBA    :     Unsigned_64;
@@ -194,6 +209,8 @@ package body Storage_Interface is
 
    end Execute_Write_Command;
 
+   -------------------------------------------------------------------------
+
    procedure Execute_Discard_Command
       (SLBA    :     Unsigned_64;
        NLB     :     Unsigned_32;
@@ -221,6 +238,8 @@ package body Storage_Interface is
 
    end Execute_Discard_Command;
 
+   -------------------------------------------------------------------------
+
    procedure Check_SMART_Status (Address :     Unsigned_64;
                                  Dev_Id  :     PConf.Port_Range;
                                  Status  : out Unsigned_64)
@@ -246,6 +265,8 @@ package body Storage_Interface is
       end if;
    end Check_SMART_Status;
 
+   -------------------------------------------------------------------------
+
    procedure Sync (Dev_Id :      PConf.Port_Range;
                    Status : out  Unsigned_64)
    is
@@ -265,6 +286,8 @@ package body Storage_Interface is
          Status := 1;
       end if;
    end Sync;
+
+   -------------------------------------------------------------------------
 
    function Is_Valid return Boolean
    is (NVMe.Host.Is_Valid);

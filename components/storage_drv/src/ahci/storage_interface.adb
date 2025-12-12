@@ -6,7 +6,8 @@ with Server;
 with Pciconf;
 with SK.CPU;
 
-package body Storage_Interface is
+package body Storage_Interface
+is
 
    procedure Startup
    is
@@ -58,6 +59,8 @@ package body Storage_Interface is
 
    end Startup;
 
+   -------------------------------------------------------------------------
+
    procedure Init
       (Devs    : out Devs_Array;
        Ports   : out Ports_Array;
@@ -79,6 +82,8 @@ package body Storage_Interface is
       Success := True;
    end Init;
 
+   -------------------------------------------------------------------------
+
    function Get_Sector_Size (Dev_Id : PConf.Port_Range) return Unsigned_32
    is (Ahci.Device.Get_Sector_Size (Dev_Id));
 
@@ -90,6 +95,8 @@ package body Storage_Interface is
 
    function Get_Size (Dev_Id : PConf.Port_Range) return Unsigned_64
    is (Ahci.Device.Get_Size (Dev_Id));
+
+   -------------------------------------------------------------------------
 
    procedure Execute_Read_Command
       (Address :     Unsigned_64;
@@ -110,6 +117,8 @@ package body Storage_Interface is
 
    end Execute_Read_Command;
 
+   -------------------------------------------------------------------------
+
    procedure Execute_Write_Command
       (Address :     Unsigned_64;
        SLBA    :     Unsigned_64;
@@ -129,6 +138,8 @@ package body Storage_Interface is
 
    end Execute_Write_Command;
 
+   -------------------------------------------------------------------------
+
    procedure Execute_Discard_Command
       (SLBA    :     Unsigned_64;
        NLB     :     Unsigned_32;
@@ -144,6 +155,8 @@ package body Storage_Interface is
           Ret_Val => Status);
 
    end Execute_Discard_Command;
+
+   -------------------------------------------------------------------------
 
    procedure Check_SMART_Status (Address :     Unsigned_64;
                                  Dev_Id  :     PConf.Port_Range;
@@ -171,6 +184,8 @@ package body Storage_Interface is
       end if;
    end Check_SMART_Status;
 
+   -------------------------------------------------------------------------
+
    procedure Sync (Dev_Id :     PConf.Port_Range;
                    Status : out Unsigned_64)
    is
@@ -186,6 +201,8 @@ package body Storage_Interface is
          Status := 1;
       end if;
    end Sync;
+
+   -------------------------------------------------------------------------
 
    function Is_Valid return Boolean
    is (Musinfo.Instance.Is_Valid);

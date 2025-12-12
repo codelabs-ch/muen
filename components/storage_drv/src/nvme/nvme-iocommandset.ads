@@ -1,10 +1,12 @@
-with NVMe.SubmissionQ;
-use  NVMe.SubmissionQ;
-with NVMe.Host;
 with Interfaces;
+
+with NVMe.SubmissionQ;
+with NVMe.Host;
+
 with Storage_Interface; use Storage_Interface;
 
-package NVMe.IOCommandSet is
+package NVMe.IOCommandSet
+is
 
    use type Interfaces.Unsigned_8;
    use type Interfaces.Unsigned_16;
@@ -43,51 +45,51 @@ package NVMe.IOCommandSet is
       Incompressible     at 0 range 7 .. 7;
    end record;
 
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
    --- 3.2.4 NVM Command Set Specification 1.0c
    --- Read Command
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure CreateRead_Command
-      (CMD_Identifier  : in out Unsigned_16;          -- Command Identifier
-       DPTR            :    SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       SLBA            :    Unsigned_64;              -- Starting Logical Block Address (LBA)
-       NLB             :    Unsigned_16;              -- Number of Logical Blocks
-       Command         : out IO_Command)
+      (CMD_Identifier  : in out Unsigned_16;              -- Command Identifier
+       DPTR            :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
+       SLBA            :        Unsigned_64;              -- Starting Logical Block Address (LBA)
+       NLB             :        Unsigned_16;              -- Number of Logical Blocks
+       Command         :    out SubmissionQ.IO_Command)
    with Pre => NVMe.Host.Is_Valid;
 
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
    --- 3.2.6 NVM Command Set Specification 1.0c
    --- Write Command
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure CreateWrite_Command
-      (CMD_Identifier  : in out Unsigned_16;          -- Command Identifier
-       DPTR            :    SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       SLBA            :    Unsigned_64;              -- Starting Logical Block Address (LBA)
-       NLB             :    Unsigned_16;              -- Number of Logical Blocks
-       Command         : out IO_Command)
+      (CMD_Identifier  : in out Unsigned_16;              -- Command Identifier
+       DPTR            :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
+       SLBA            :        Unsigned_64;              -- Starting Logical Block Address (LBA)
+       NLB             :        Unsigned_16;              -- Number of Logical Blocks
+       Command         :    out SubmissionQ.IO_Command)
    with Pre => NVMe.Host.Is_Valid;
 
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
    --- 3.2.8 NVM Command Set Specification 1.0c
    --- Write Zeroes Command
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure CreateWrite_Zeroes_Command
-      (CMD_Identifier  : in out Unsigned_16;          -- Command Identifier
-       SLBA            :    Unsigned_64;              -- Starting Logical Block Address (LBA)
-       NLB             :    Unsigned_16;              -- Number of Logical Blocks
-       Command         : out IO_Command);
+      (CMD_Identifier  : in out Unsigned_16;              -- Command Identifier
+       SLBA            :        Unsigned_64;              -- Starting Logical Block Address (LBA)
+       NLB             :        Unsigned_16;              -- Number of Logical Blocks
+       Command         :    out SubmissionQ.IO_Command);
 
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
    --- 7.1 NVMe Base Spec 2.0c
    --- Flush Command
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure CreateFlush_Command
-      (CMD_Identifier  : in out Unsigned_16;          -- Command Identifier
-       Command         : out IO_Command);
+      (CMD_Identifier  : in out Unsigned_16;              -- Command Identifier
+       Command         :    out SubmissionQ.IO_Command);
 
 private
 

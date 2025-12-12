@@ -1,6 +1,7 @@
 with Storage_Interface; use Storage_Interface;
 
-package NVMe.SubmissionQ is
+package NVMe.SubmissionQ
+is
 
    ---------------------------------------------------
    --- 3.3.3.1 Submission Queue Entry
@@ -93,32 +94,34 @@ package NVMe.SubmissionQ is
        DPRP     => (others => 0),
        others   => 0);
 
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
    --- Submission Queue
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
 
    type Entry_Queue_Range is new Unsigned_6 range 0 .. 63;
 
    type Entry_Queue is array (Entry_Queue_Range) of SQE
    with Pack, Object_Size => 64 * 8 * 64;
 
-   ----------------
+   -------------------------------------------------------------------------
 
    subtype Admin_Command is SQE
    with Predicate => Admin_Command.PSDT = 0 and
                      Admin_Command.OPC in AdminCMD_Valid_Opcodes;
 
    subtype AdminCMD_Valid_Opcodes is Unsigned_8
-   with Predicate => AdminCMD_Valid_Opcodes in  0 .. 2 | 4 .. 6 | 8 .. 10 | 12 .. 13 | 16#10# .. 16#11# |
-                                                16#14# .. 16#15# | 16#18# .. 16#1A# | 16#1C# .. 16#1E# |
-                                                16#20# | 16#24# | 16#7C# | 16#7F# | 16#80# .. 16#82# |
-                                                16#84# | 16#86#;
+   with Predicate => AdminCMD_Valid_Opcodes in
+      0 .. 2 | 4 .. 6 | 8 .. 10 | 12 .. 13 | 16#10# .. 16#11# |
+      16#14# .. 16#15# | 16#18# .. 16#1A# | 16#1C# .. 16#1E# |
+      16#20# | 16#24# | 16#7C# | 16#7F# | 16#80# .. 16#82# |
+      16#84# | 16#86#;
 
    subtype IO_Command is SQE
    with Predicate => IO_Command.PSDT = 0 and
                      IO_Command.OPC in IOCMD_Valid_Opcodes;
 
    subtype IOCMD_Valid_Opcodes is Unsigned_8
-   with Predicate => IOCMD_Valid_Opcodes in 0 .. 2 | 4 .. 5 | 8 .. 9 | 12 .. 14 | 16#11# | 16#15# | 16#19#;
+   with Predicate => IOCMD_Valid_Opcodes in
+      0 .. 2 | 4 .. 5 | 8 .. 9 | 12 .. 14 | 16#11# | 16#15# | 16#19#;
 
 end NVMe.SubmissionQ;

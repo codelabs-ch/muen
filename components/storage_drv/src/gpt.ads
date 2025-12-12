@@ -1,10 +1,12 @@
+with Interfaces;
+
 with Partitions;
 with Ports_Config;
-with Interfaces;
 with Storage_Interface; use Storage_Interface;
 
 package Gpt
 is
+
    use type Interfaces.Unsigned_16;
    use type Interfaces.Unsigned_32;
    use type Interfaces.Unsigned_64;
@@ -92,6 +94,8 @@ is
       Reserved           at  92 range 0 ..   3359;
       Entry_Array        at 512 range 0 .. 131071;
    end record;
+
+   -------------------------------------------------------------------------
 
    procedure Parse
      (ID         :     Ports_Config.Port_Range;

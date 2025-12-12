@@ -1,6 +1,7 @@
 with Ada.Unchecked_Conversion;
 
-package body NVMe.AdminCommandSet is
+package body NVMe.AdminCommandSet
+is
 
    -- CDW11_Cvt shall already be converted from specific Field Type to Unsigned32
    procedure CreateSetFeatures_Command
@@ -10,7 +11,7 @@ package body NVMe.AdminCommandSet is
        SV               :        Boolean;                  -- Save (persistently)
        UUID_Index       :        Unsigned_7;               -- UUID Index
        CDW11_Cvt        :        Unsigned_32;              -- Already converted FID specific CDW11
-       Command          :    out Admin_Command)
+       Command          :    out SubmissionQ.Admin_Command)
    is
       CDW10_Temp : constant CDW10_SET := (FID => FID, SV => SV, others => <>);
       CDW14_Temp : constant CDW14     := (UUID_Index, others => <>);
@@ -41,13 +42,15 @@ package body NVMe.AdminCommandSet is
 
    end CreateSetFeatures_Command;
 
+   -------------------------------------------------------------------------
+
    procedure CreateGetFeatures_Command
       (CMD_Identifier   : in out Unsigned_16;              -- Command Identifier
        DPTR             :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
        FID              :        Unsigned_8;               -- Feature Identifier
        SEL              :        Unsigned_3;               -- Select (Attribute of requested Data)
        UUID_Index       :        Unsigned_7;               -- UUID Index
-       Command          :    out Admin_Command)
+       Command          :    out SubmissionQ.Admin_Command)
    is
       CDW10_Temp : constant CDW10_GET := (FID, SEL, others => <>);
       CDW14_Temp : constant CDW14     := (UUID_Index, others => <>);
@@ -78,6 +81,8 @@ package body NVMe.AdminCommandSet is
 
    end CreateGetFeatures_Command;
 
+   -------------------------------------------------------------------------
+
    procedure CreateIndentify_Command
       (CMD_Identifier   : in out Unsigned_16;              -- Command Identifier
        DPTR             :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
@@ -87,7 +92,7 @@ package body NVMe.AdminCommandSet is
        CSI              :        Unsigned_8;               -- Command Set Identifier
        CNSSpecificIdent :        Unsigned_16;              -- CNS Specific Identifier
        UUID_Index       :        Unsigned_7;               -- UUID Index
-       Command          :    out Admin_Command)
+       Command          :    out SubmissionQ.Admin_Command)
    is
       CDW10_Temp  : constant CDW10_Ident := (CNS => CNS, Filler => 0, CNTID => CNTID);
       CDW11_Temp  : constant CDW11_Ident := (CNS_SI => CNSSpecificIdent, Filler => 0, CSI => CSI);
@@ -120,6 +125,8 @@ package body NVMe.AdminCommandSet is
 
    end CreateIndentify_Command;
 
+   -------------------------------------------------------------------------
+
    procedure CreateCreateIOCQ_Command
       (CMD_Identifier   : in out Unsigned_16;              -- Command Identifier
        DPTR             :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
@@ -127,7 +134,7 @@ package body NVMe.AdminCommandSet is
        QSIZE            :        Unsigned_16;              -- Queue Size
        PC               :        Boolean;                  -- Physically Contiguous
        IEN              :        Boolean;                  -- Interrupts Enabled (Default: False)
-       Command          :    out Admin_Command)
+       Command          :    out SubmissionQ.Admin_Command)
    is
       CDW10_Temp : constant CDW10_CreateIOQ  := (QID => QID, QSIZE => QSIZE);
       CDW11_Temp : constant CDW11_CreateIOCQ := (PC, IEN, 0, 0, 0);
@@ -158,6 +165,8 @@ package body NVMe.AdminCommandSet is
 
    end CreateCreateIOCQ_Command;
 
+   -------------------------------------------------------------------------
+
    procedure CreateCreateIOSQ_Command
       (CMD_Identifier   : in out Unsigned_16;              -- Command Identifier
        DPTR             :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
@@ -166,7 +175,7 @@ package body NVMe.AdminCommandSet is
        PC               :        Boolean;                  -- Physically Contiguous
        QPRIO            :        Unsigned_2;               -- Queue Priority
        CQID             :        Unsigned_16;              -- Completion Queue Identifier
-       Command          :    out Admin_Command)
+       Command          :    out SubmissionQ.Admin_Command)
    is
       CDW10_Temp : constant CDW10_CreateIOQ  := (QID => QID, QSIZE => QSIZE);
       CDW11_Temp : constant CDW11_CreateIOSQ := (PC => PC, QPRIO => QPRIO, CQID => CQID, others => <>);
@@ -197,10 +206,12 @@ package body NVMe.AdminCommandSet is
 
    end CreateCreateIOSQ_Command;
 
+   -------------------------------------------------------------------------
+
    procedure CreateDeleteIOCQ_Command
       (CMD_Identifier   : in out Unsigned_16;     -- Command Identifier
        QID              :        Unsigned_16;     -- Queue Identifier
-       Command          :    out Admin_Command)
+       Command          :    out SubmissionQ.Admin_Command)
    is
       CDW10_Temp : constant CDW10_DeleteIOQ  := (QID, others => <>);
 
@@ -229,10 +240,12 @@ package body NVMe.AdminCommandSet is
 
    end CreateDeleteIOCQ_Command;
 
+   -------------------------------------------------------------------------
+
    procedure CreateDeleteIOSQ_Command
       (CMD_Identifier   : in out Unsigned_16;     -- Command Identifier
        QID              :        Unsigned_16;     -- Queue Identifier
-       Command          :    out Admin_Command)
+       Command          :    out SubmissionQ.Admin_Command)
    is
       CDW10_Temp : constant CDW10_DeleteIOQ  := (QID, others => <>);
 
@@ -261,6 +274,8 @@ package body NVMe.AdminCommandSet is
 
    end CreateDeleteIOSQ_Command;
 
+   -------------------------------------------------------------------------
+
    procedure CreateGetLogPage_Command
       (CMD_Identifier   : in out Unsigned_16;              -- Command Identifier
        DPTR             :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
@@ -270,7 +285,7 @@ package body NVMe.AdminCommandSet is
        NUMDL            :        Unsigned_16;              -- Number of DWORDS Lower
        NUMDU            :        Unsigned_16;              -- Number of DWORDS (16 most significant bits)
        LogSpecificID    :        Unsigned_16;              -- Log Specific Identifier
-       Command          :    out Admin_Command)
+       Command          :    out SubmissionQ.Admin_Command)
    is
       CDW10_Temp : constant CDW10_GetLogPage := (LID => LID, LSP => LSP, RAE => RAE, NUMDL => NUMDL);
       CDW11_Temp : constant CDW11_GetLogPage  := (NUMDU => NUMDU, LogSpecificID => LogSpecificID);
@@ -301,10 +316,12 @@ package body NVMe.AdminCommandSet is
 
    end CreateGetLogPage_Command;
 
+   -------------------------------------------------------------------------
+
    procedure CreateSMART_Health_LogPage_Command
       (CMD_Identifier   : in out Unsigned_16;              -- Command Identifier
        DPTR             :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       Command          :    out Admin_Command)
+       Command          :    out SubmissionQ.Admin_Command)
    is
    begin
 
@@ -314,18 +331,20 @@ package body NVMe.AdminCommandSet is
           LID            => 2,
           LSP            => 0,
           RAE            => False,
-          NUMDL          => 128, --?
-          NUMDU          => 0, --?
+          NUMDL          => 128,
+          NUMDU          => 0,
           LogSpecificID  => 0,
           Command        => Command);
-
+      -- no CMD ID increment due to existing increment in CreateGetLogPage_Command
    end CreateSMART_Health_LogPage_Command;
+
+   -------------------------------------------------------------------------
 
    procedure CreateAbort_Command
       (CMD_Identifier   : in out Unsigned_16;     -- Command Identifier
        CMD_ID2Abort     :        Unsigned_16;     -- Command Identifier of the Command to be aborted
        SQID             :        Unsigned_16;     -- Submission Queue Identifier
-       Command          :    out Admin_Command)
+       Command          :    out SubmissionQ.Admin_Command)
    is
       CDW10_Temp : constant CDW10_Abort  := (SQID => SQID, CID2A => CMD_ID2Abort);
 
@@ -354,9 +373,11 @@ package body NVMe.AdminCommandSet is
 
    end CreateAbort_Command;
 
+   -------------------------------------------------------------------------
+
    procedure CreateAsyncEventReq_Command
       (CMD_Identifier   : in out Unsigned_16; -- Command Identifier
-       Command          :    out Admin_Command)
+       Command          :    out SubmissionQ.Admin_Command)
    is
    begin
       Command :=

@@ -1,16 +1,17 @@
-with NVMe.SubmissionQ;
-use  NVMe.SubmissionQ;
 with Interfaces;
+
+with NVMe.SubmissionQ;
 with Storage_Interface; use Storage_Interface;
 
-package NVMe.AdminCommandSet is
+package NVMe.AdminCommandSet
+is
 
    use type Interfaces.Unsigned_16;
    use type Interfaces.Unsigned_32;
 
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
    --- 5. Admin Command Set
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
 
    type AdminCMD_Type is
       (Delete_IO_SQ, Create_IO_SQ, Get_Log_Page, Delete_IO_CQ, Create_IO_CQ,
@@ -51,9 +52,9 @@ package NVMe.AdminCommandSet is
        Sanitize               => 16#84#,
        Get_LBA_Status         => 16#86#);
 
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
    --- 5.27 Set Features command
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure CreateSetFeatures_Command
       (CMD_Identifier   : in out Unsigned_16;              -- Command Identifier
@@ -62,11 +63,11 @@ package NVMe.AdminCommandSet is
        SV               :        Boolean;                  -- Save (persistently)
        UUID_Index       :        Unsigned_7;               -- UUID Index
        CDW11_Cvt        :        Unsigned_32;              -- Already converted FID specific CDW11
-       Command          :    out Admin_Command);
+       Command          :    out SubmissionQ.Admin_Command);
 
-    ---------------------------------------------------
+    -------------------------------------------------------------------------
     --- 5.15 Get Features command
-    ---------------------------------------------------
+    -------------------------------------------------------------------------
 
    procedure CreateGetFeatures_Command
       (CMD_Identifier   : in out Unsigned_16;              -- Command Identifier
@@ -74,11 +75,11 @@ package NVMe.AdminCommandSet is
        FID              :        Unsigned_8;               -- Feature Identifier
        SEL              :        Unsigned_3;               -- Select (Attribute of requested Data)
        UUID_Index       :        Unsigned_7;               -- UUID Index
-       Command          :    out Admin_Command);
+       Command          :    out SubmissionQ.Admin_Command);
 
-    ---------------------------------------------------
+    -------------------------------------------------------------------------
     --- 5.17 Identify command
-    ---------------------------------------------------
+    -------------------------------------------------------------------------
 
    procedure CreateIndentify_Command
       (CMD_Identifier   : in out Unsigned_16;              -- Command Identifier
@@ -89,11 +90,11 @@ package NVMe.AdminCommandSet is
        CSI              :        Unsigned_8;               -- Command Set Identifier
        CNSSpecificIdent :        Unsigned_16;              -- CNS Specific Identifier
        UUID_Index       :        Unsigned_7;               -- UUID Index
-       Command          :    out Admin_Command);
+       Command          :    out SubmissionQ.Admin_Command);
 
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
    --- 5.4 Create I/O Completion Queue command
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure CreateCreateIOCQ_Command
       (CMD_Identifier   : in out Unsigned_16;              -- Command Identifier
@@ -102,11 +103,11 @@ package NVMe.AdminCommandSet is
        QSIZE            :        Unsigned_16;              -- Queue Size
        PC               :        Boolean;                  -- Physically Contiguous
        IEN              :        Boolean;                  -- Interrupts Enabled (Default: False)
-       Command          :    out Admin_Command);
+       Command          :    out SubmissionQ.Admin_Command);
 
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
    --- 5.5 Create I/O Submission Queue command
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure CreateCreateIOSQ_Command
       (CMD_Identifier   : in out Unsigned_16;              -- Command Identifier
@@ -116,29 +117,29 @@ package NVMe.AdminCommandSet is
        PC               :        Boolean;                  -- Physically Contiguous
        QPRIO            :        Unsigned_2;               -- Queue Priority
        CQID             :        Unsigned_16;              -- Completion Queue Identifier
-       Command          :    out Admin_Command);
+       Command          :    out SubmissionQ.Admin_Command);
 
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
    --- 5.6 Delete I/O Completion Queue command
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure CreateDeleteIOCQ_Command
       (CMD_Identifier   : in out Unsigned_16;      -- Command Identifier
        QID              :        Unsigned_16;     -- Queue Identifier
-       Command          :    out Admin_Command);
+       Command          :    out SubmissionQ.Admin_Command);
 
-    ---------------------------------------------------
+    -------------------------------------------------------------------------
     --- 5.7 Delete I/O Submission Queue command
-    ---------------------------------------------------
+    -------------------------------------------------------------------------
 
    procedure CreateDeleteIOSQ_Command
       (CMD_Identifier   : in out Unsigned_16;     -- Command Identifier
        QID              :        Unsigned_16;     -- Queue Identifier
-       Command          :    out Admin_Command);
+       Command          :    out SubmissionQ.Admin_Command);
 
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
    --- 5.16 Get Log Page command
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure CreateGetLogPage_Command
       (CMD_Identifier   : in out Unsigned_16;              -- Command Identifier
@@ -149,16 +150,16 @@ package NVMe.AdminCommandSet is
        NUMDL            :        Unsigned_16;              -- Number of DWORDS Lower
        NUMDU            :        Unsigned_16;              -- Number of DWORDS (16 most significant bits)
        LogSpecificID    :        Unsigned_16;              -- Log Specific Identifier
-       Command          :    out Admin_Command);
+       Command          :    out SubmissionQ.Admin_Command);
 
    procedure CreateSMART_Health_LogPage_Command
       (CMD_Identifier   : in out Unsigned_16;              -- Command Identifier
        DPTR             :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       Command          :    out Admin_Command);
+       Command          :    out SubmissionQ.Admin_Command);
 
-   -------------------------------------------
+   -------------------------------------------------------------------------
    -- Figure 207: SMART / Health Info Log Page
-   -------------------------------------------
+   -------------------------------------------------------------------------
 
    type CriticalWarning_Type is record
       AvailableSpaceBelowThresh   : Boolean;
@@ -238,23 +239,23 @@ package NVMe.AdminCommandSet is
       Reserved_2                       at 232 range 0 .. 2239;
    end record;
 
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
    --- 5.1 Abort Command
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure CreateAbort_Command
       (CMD_Identifier   : in out Unsigned_16;     -- Command Identifier
        CMD_ID2Abort     :        Unsigned_16;     -- Command Identifier of the Command to be aborted
        SQID             :        Unsigned_16;     -- Submission Queue Identifier
-       Command          :    out Admin_Command);
+       Command          :    out SubmissionQ.Admin_Command);
 
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
    --- 5.2 Async Event Request Command
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure CreateAsyncEventReq_Command
       (CMD_Identifier   : in out Unsigned_16;     -- Command Identifier
-       Command          :    out Admin_Command);
+       Command          :    out SubmissionQ.Admin_Command);
 
 private
 

@@ -1,16 +1,17 @@
 with Ada.Unchecked_Conversion;
 with System;
 
-package body NVMe.IOCommandSet is
+package body NVMe.IOCommandSet
+is
 
    ----------------------------
-   -- Named Adress Numbers
+   -- Named Address Numbers
    ----------------------------
    -- Queue Memory
    PRP_List_Offset  : constant := 16#0009_0000#;
    PRP_List_Address : constant := NVMe.Host.DRAM_Memory.Queue_Memory_Address + PRP_List_Offset;
 
-   ----------------------------
+   -------------------------------------------------------------------------
 
    pragma Warnings
      (GNATprove, Off,
@@ -35,15 +36,17 @@ package body NVMe.IOCommandSet is
      (GNATprove, On,
       "indirect writes to * through a potential alias are ignored");
 
+   -------------------------------------------------------------------------
+
    -- Check if PRP.E2 is needed and fill it accordingly with PRP Entry or PRP List
    -- this only works if DMA is physically continuous
-   -- Controller consumes PRP Entries based on NLB, no end marker needed
    procedure Correct_PRP
       (PRP           :     SubmissionQ.PRP_Data_Ptr;
        NLB           :     Unsigned_16;
        Corrected_PRP : out SubmissionQ.PRP_Data_Ptr)
    with Pre => (NVMe.Host.Is_Valid)
    is
+      use type SubmissionQ.PRP_List_Range;
 
       Sector_Size       : constant Unsigned_64 := Unsigned_64 (Host.Get_Sector_Size);
       Exponent          : constant Natural     := 12 + Natural (NVMe.Host.Memory_Page_Size);
@@ -74,7 +77,7 @@ package body NVMe.IOCommandSet is
             -- reset PRP List
             PRP_List := (others => 0);
             -- fill PRP List
-            for Index in PRP_List_Range range 1 .. PRP_List_Range (Number_PRPs) loop
+            for Index in SubmissionQ.PRP_List_Range range 1 .. SubmissionQ.PRP_List_Range (Number_PRPs) loop
                PRP_List (Index - 1) := PRP_Base + (Unsigned_64 (Index) * MPS_UInt);
             end loop;
 
@@ -83,12 +86,14 @@ package body NVMe.IOCommandSet is
       end if;
    end Correct_PRP;
 
+   -------------------------------------------------------------------------
+
    procedure CreateRead_Command
-      (CMD_Identifier  : in out Unsigned_16;          -- Command Identifier
-       DPTR            :    SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       SLBA            :    Unsigned_64;              -- Starting Logical Block Address (LBA)
-       NLB             :    Unsigned_16;              -- Number of Logical Blocks
-       Command         : out IO_Command)
+      (CMD_Identifier  : in out Unsigned_16;              -- Command Identifier
+       DPTR            :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
+       SLBA            :        Unsigned_64;              -- Starting Logical Block Address (LBA)
+       NLB             :        Unsigned_16;              -- Number of Logical Blocks
+       Command         :    out SubmissionQ.IO_Command)
    is
       CDW10and11_Temp : CDW10and11_RW;
       PRP : SubmissionQ.PRP_Data_Ptr;
@@ -124,12 +129,14 @@ package body NVMe.IOCommandSet is
 
    end CreateRead_Command;
 
+   -------------------------------------------------------------------------
+
    procedure CreateWrite_Command
-      (CMD_Identifier  : in out Unsigned_16;          -- Command Identifier
-       DPTR            :    SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       SLBA            :    Unsigned_64;              -- Starting Logical Block Address (LBA)
-       NLB             :    Unsigned_16;              -- Number of Logical Blocks
-       Command         : out IO_Command)
+      (CMD_Identifier  : in out Unsigned_16;              -- Command Identifier
+       DPTR            :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
+       SLBA            :        Unsigned_64;              -- Starting Logical Block Address (LBA)
+       NLB             :        Unsigned_16;              -- Number of Logical Blocks
+       Command         :    out SubmissionQ.IO_Command)
    is
       CDW10and11_Temp : CDW10and11_RW;
       PRP             : SubmissionQ.PRP_Data_Ptr;
@@ -167,11 +174,13 @@ package body NVMe.IOCommandSet is
 
    end CreateWrite_Command;
 
+   -------------------------------------------------------------------------
+
    procedure CreateWrite_Zeroes_Command
       (CMD_Identifier  : in out Unsigned_16;          -- Command Identifier
        SLBA            :        Unsigned_64;          -- Starting Logical Block Address (LBA)
        NLB             :        Unsigned_16;          -- Number of Logical Blocks
-       Command         :    out IO_Command)
+       Command         :    out SubmissionQ.IO_Command)
    is
       CDW10and11_Temp : CDW10and11_RW;
 
@@ -204,9 +213,11 @@ package body NVMe.IOCommandSet is
 
    end CreateWrite_Zeroes_Command;
 
+   -------------------------------------------------------------------------
+
    procedure CreateFlush_Command
       (CMD_Identifier  : in out Unsigned_16;          -- Command Identifier
-       Command         : out IO_Command)
+       Command         :    out SubmissionQ.IO_Command)
    is
    begin
 

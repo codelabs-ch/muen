@@ -1,14 +1,16 @@
+with System;
+
+with SK.Strings;
+
+with CRC32;
 with Log;
 with Storage_Drv_Cspecs_Wrapper;
-with CRC32;
-with System;
-with SK.Strings;
 
 package body Gpt
 is
-   ----------------------------
-   -- Named Adress Numbers
-   ----------------------------
+   -------------------------------------------------------------------------
+   -- Named Address Numbers
+   -------------------------------------------------------------------------
 
    GPT_Offset  : constant := 0;
    GPT_Address : constant := Storage_Drv_Cspecs_Wrapper.Memory.Dma_Region_Address + GPT_Offset;
@@ -29,7 +31,7 @@ is
    Alternate_Partition_Entry_Array_for_CRC_Offset  : constant := 16#4800#;
    Alternate_Partition_Entry_Array_for_CRC_Address : constant := Storage_Drv_Cspecs_Wrapper.Memory.Dma_Region_Address + Alternate_Partition_Entry_Array_for_CRC_Offset;
 
-   ----------------------------
+   -------------------------------------------------------------------------
 
    pragma Warnings
      (GNATprove, Off,
@@ -67,7 +69,7 @@ is
       Volatile,
       Address => System'To_Address (Alternate_GPT_Header_Array_for_CRC_Address);
 
-   -------------------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    type CRC_Entries_Byte_Array_Index_Type is new Unsigned_32 range 1 .. 128 * 128;
    type CRC_Entries_Byte_Array is array (CRC_Entries_Byte_Array_Index_Type) of Character with Pack;
@@ -89,7 +91,7 @@ is
       Reason => "All objects with address clause are mapped to external "
       & "interfaces. Non-overlap is checked during system build.");
 
-   --------------------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Calc_Partition_Array_CRC32
       (CRC32_Check                 : Unsigned_32;
@@ -135,6 +137,8 @@ is
       end if;
 
    end Calc_Partition_Array_CRC32;
+
+   -------------------------------------------------------------------------
 
    procedure Calc_Header_CRC32
       (CRC32_Check                 : Unsigned_32;
@@ -197,7 +201,7 @@ is
 
    end Calc_Header_CRC32;
 
-   --------------------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Parse
       (ID         :     Ports_Config.Port_Range;
@@ -207,6 +211,8 @@ is
       Num_of_LBA    : Unsigned_16;
       Partition     : Partition_Entry_Type;
       Success       : Boolean;
+
+      ----------------------------------------------------------------------
 
       function Is_Efi_Part (Signature : String) return Boolean
       is
@@ -222,12 +228,16 @@ is
             Signature (Signature'First + 7) = 'T';
       end Is_Efi_Part;
 
+      ----------------------------------------------------------------------
+
       function Is_Empty_Partition (Partition_Entry : Partition_Entry_Type) return Boolean
       is
       begin
          return Partition_Entry.Unique_Partition_GUID = 0 and then
             Partition_Entry.Partition_Type_GUID = 0;
       end Is_Empty_Partition;
+
+      ----------------------------------------------------------------------
 
       use type Partitions.Partition_Table_Type;
 

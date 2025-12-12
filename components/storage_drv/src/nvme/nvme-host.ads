@@ -1,13 +1,13 @@
-with NVMe.SubmissionQ;
-use  NVMe.SubmissionQ;
-
-with Storage_Interface; use Storage_Interface;
-
-with Storage_Drv_Cspecs_Wrapper;
-
 with Interfaces;
 
-package NVMe.Host is
+with NVMe.SubmissionQ;
+
+with Storage_Interface; use Storage_Interface;
+with Storage_Drv_Cspecs_Wrapper;
+
+package NVMe.Host
+is
+
    package PCIE_Memory renames Storage_Drv_Cspecs_Wrapper.Devices;
    package DRAM_Memory renames Storage_Drv_Cspecs_Wrapper.Memory;
 
@@ -16,10 +16,10 @@ package NVMe.Host is
    use type Interfaces.Unsigned_32;
    use type Interfaces.Unsigned_64;
 
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
    --- 3.1.3.
    --- Controller Properties
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
 
    -- Controller Capabilities
    type CAP_Part is record
@@ -228,10 +228,10 @@ package NVMe.Host is
    --    Size => 3640;
    end record;
 
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
    --- 5.17.2.1
    --- Identify Controller Data Structure (CNS 01h)
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
 
    --  Power State Descriptor
    type PSD is record
@@ -322,7 +322,7 @@ package NVMe.Host is
       -- NVMe V2.0
       --NVMSR     : Unsigned_8;                 -- NVM Subsytem Report
       --VWCI      : Unsigned_8;                 -- VPD Write Cycle Information
-      --MEC       : Unsigned_8;                 -- Managment Endpoint Capabilities
+      --MEC       : Unsigned_8;                 -- Management Endpoint Capabilities
       Reserved_2 : Byte_Array (0 .. 121);
       OACS       : Unsigned_16;                -- Optional Admin Command Support, old: OAPSCS
       ACL        : Unsigned_8;                 -- Abort Command Limit
@@ -470,10 +470,10 @@ package NVMe.Host is
       PSD0       at 2048 range   0 .. 8191;
    end record;
 
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
    --- 5.17.2.21
    --- Identify I/O Command Set data structure (CNS 1Ch)
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
 
    type IO_CMD_Set_Vector is record
       NVM_CMD_Set             : Boolean := False;
@@ -495,13 +495,13 @@ package NVMe.Host is
    type IO_CMD_Set_Array is array (IO_CMD_Set_Array_Index_Type) of IO_CMD_Set_Vector
    with Pack, Object_Size => 64 * 512;
 
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
    --- 5.17.2.10
    --- Identify Namespace data structure for an Allocated Namespace ID (CNS 11h)
    ---------
    --- NVM Command Set Specification 1.0c : 4.1.5.5; Figure 97
    --- Figure 97: Identify – Identify Namespace Data Structure, NVM Command Set
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
 
    type Namespace_ID_List_Index_Type is new Natural range 0 .. 1023;
    type Namespace_ID_List is array (Namespace_ID_List_Index_Type) of Unsigned_32
@@ -608,9 +608,9 @@ package NVMe.Host is
       LBA_List  at 128 range 0 .. 2047;
    end record;
 
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
    --- Setup
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
 
    CMD_Identifier_Admin     : Unsigned_16 := 0;
    CMD_Identifier_IO        : Unsigned_16 := 0;
@@ -636,11 +636,11 @@ package NVMe.Host is
    end record;
 
    procedure ProcessAdminCommand
-     (AdminCMD  :     Admin_Command;
+     (AdminCMD  :     SubmissionQ.Admin_Command;
       Status    : out Status_Type);
 
    procedure ProcessIOCommand
-     (IOCmd  :     IO_Command;
+     (IOCmd  :     SubmissionQ.IO_Command;
       Status : out Status_Type)
    with Pre => Is_Valid;
 
@@ -660,22 +660,23 @@ package NVMe.Host is
 
    function Get_Sector_Size return Unsigned_32;
 
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
    --- 3.5 Controller Initialization
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure ControllerInit
      (Success : out Boolean)
    with Pre => Check_Sector_Size,
         Post => (if Success then Is_Valid);
-   ---------------------------------------------------
+
+   -------------------------------------------------------------------------
    --- 3.6 Controller Shutdown
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure ControllerShutdown
    with Pre => Is_Valid;
 
-   ---------------------------------------------------
+   -------------------------------------------------------------------------
    function Check_Sector_Size return Boolean is
     (Get_Sector_Size in 512 | 4096)
    with Ghost;

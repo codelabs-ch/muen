@@ -4,7 +4,8 @@ with Storage_Drv_Ahci_Component.Channel_Arrays;
 with Storage_Drv_Ahci_Component.Memory;
 with Storage_Drv_Ahci_Component.Memory_Arrays;
 
-package Storage_Drv_Cspecs_Wrapper is
+package Storage_Drv_Cspecs_Wrapper
+is
    package Storage_Drv_Component renames Storage_Drv_Ahci_Component;
    package Devices renames Storage_Drv_Ahci_Component.Devices;
    package Channel_Arrays renames Storage_Drv_Ahci_Component.Channel_Arrays;

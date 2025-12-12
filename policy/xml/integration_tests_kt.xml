@@ -319,12 +319,12 @@
     <writer logical="blockdev_xhci_request1" physical="blockdev_xhci_request1" virtualAddress="16#000e_01f0_0000#" event="3"/>
     <reader logical="blockdev_xhci_response1" physical="blockdev_xhci_response1" virtualAddress="16#000e_01f0_8000#" vector="101"/>
     <if variable="ahci_drv_active" value="true">
-     <writer logical="blockdev_request1_ahci" physical="blockdev_request1_ahci" event="4"/>
-     <reader logical="blockdev_response1_ahci" physical="blockdev_response1_ahci" vector="102"/>
+     <writer logical="blockdev_request1_ahci" physical="blockdev_request1_ahci" virtualAddress="16#000e_01f0_c000#" event="4"/>
+     <reader logical="blockdev_response1_ahci" physical="blockdev_response1_ahci" virtualAddress="16#000e_01f1_4000#" vector="102"/>
     </if>
     <if variable="nvme_drv_active" value="true">
-     <writer logical="blockdev_request1_nvme" physical="blockdev_request1_nvme" event="auto"/>
-     <reader logical="blockdev_response1_nvme" physical="blockdev_response1_nvme" vector="auto"/>
+     <writer logical="blockdev_request1_nvme" physical="blockdev_request1_nvme" virtualAddress="16#000e_01f1_8000#" event="auto"/>
+     <reader logical="blockdev_response1_nvme" physical="blockdev_response1_nvme" virtualAddress="16#000e_01f2_0000#" vector="auto"/>
     </if>
     <if variable="dbgserver_console_forwarding" value="true">
      <reader logical="hvc1_input" physical="console_in_1" vector="auto"/>

@@ -26,11 +26,11 @@ package Muenblock_Example
 is
    package Muenblock_Client_Instance is new Muenblock_Client
       (Req_Channel_Address  => System'To_Address
-            (Example_Component.Channels.Blockdev_Request2_Address),
+            (Example_Component.Channels.Blockdev_Request2_Ahci_Address),
        Resp_Channel_Address => System'To_Address
-            (Example_Component.Channels.Blockdev_Response2_Address),
+            (Example_Component.Channels.Blockdev_Response2_Ahci_Address),
        Event_Number         =>
-         Example_Component.Channels.Blockdev_Request2_Event,
+         Example_Component.Channels.Blockdev_Request2_Ahci_Event,
        Devices_Cnt_Max      => 1);
 
    procedure Show

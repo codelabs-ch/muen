@@ -69,7 +69,7 @@ is
       Async_Writers,
       Size    => SMART_Attribute_Size * 30 * 8,
       Address => System'To_Address
-         (Example_Component.Memory.Blockdev_Shm2_Address + 2);
+         (Example_Component.Memory.Blockdev_Ahci_Shm2_Address + 2);
    pragma Warnings
      (GNATprove, On,
       "writing * is assumed to have no effects on other non-volatile objects");

@@ -5,10 +5,12 @@
   <xsl:output method="xml" encoding="UTF-8" indent="yes" omit-xml-declaration="yes"/>
   <xsl:template match="/system/config">
    <xsl:variable name="ahci_drv_enabled" select="boolean[@name='ahci_drv_active']/@value"/>
+   <xsl:variable name="nvme_drv_enabled" select="boolean[@name='nvme_drv_active']/@value"/>
 
 <component name="example" profile="native">
  <config>
   <boolean name="ahci_drv_enabled" value="{$ahci_drv_enabled}"/>
+  <boolean name="nvme_drv_enabled" value="{$nvme_drv_enabled}"/>
   <boolean name="print_serial" value="false"/>
   <boolean name="print_vcpu_speed" value="true"/>
   <integer name="serial" value="123456789"/>
@@ -35,7 +37,10 @@
   </vcpu>
   <memory>
    <if variable="ahci_drv_enabled" value="true">
-    <memory executable="false" logical="blockdev_shm2" size="16#0100_0000#" writable="true"/>
+    <memory executable="false" logical="blockdev_AHCI_shm2" size="16#0100_0000#" writable="true"/>
+   </if>
+   <if variable="nvme_drv_enabled" value="true">
+    <memory executable="false" logical="blockdev_NVME_shm2" size="16#0100_0000#" writable="true"/>
    </if>
    <memory executable="false" logical="filled_region" size="16#1000#" writable="true"/>
   </memory>
@@ -43,8 +48,12 @@
    <reader logical="example_request" size="16#1000#" vector="auto"/>
    <writer logical="example_response" size="16#1000#" event="auto"/>
    <if variable="ahci_drv_enabled" value="true">
-    <writer logical="blockdev_request2"  size="16#0000_8000#" event="auto"/>
-    <reader logical="blockdev_response2" size="16#0000_4000#" vector="auto"/>
+    <writer logical="blockdev_request2_ahci"  size="16#0000_8000#" event="auto"/>
+    <reader logical="blockdev_response2_ahci" size="16#0000_4000#" vector="auto"/>
+   </if>
+   <if variable="nvme_drv_enabled" value="true">
+    <writer logical="blockdev_request2_nvme"  size="16#0000_8000#" event="auto"/>
+    <reader logical="blockdev_response2_nvme" size="16#0000_4000#" vector="auto"/>
    </if>
   </channels>
   <events>

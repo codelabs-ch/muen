@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:template match="/">
+<component name="%%%COMPONENT_NAME%%%" profile="native">
+<config>
+   <boolean name="IS_NVME_VARIANT" value="%%%IS_NVME_VARIANT%%%"/>
+</config>
+<depends>
+   <library ref="libmudebuglog"/>
+</depends>
+
+<requires>
+<memory>
+   <!-- for 32 ports 16#c000# bytes are needed for descriptor tables + 16K for device init -->
+   <memory logical="dma_region" size="16#0001_0000#" virtualAddress="16#a000_0000#" writable="true" executable="false" />
+
+   <if variable="IS_NVME_VARIANT" value="true">
+      <memory logical="Queue_Memory" size="16#0200_0000#" virtualAddress="16#4000_0000#" writable="true" executable="false" />
+   </if>
+
+   <array elementSize="16#0100_0000#" logical="blockdev_shm" virtualAddressBase="16#a100_0000#" writable="true" executable="false">
+      <memory logical="blockdev_Shm1"/>
+      <memory logical="blockdev_Shm2"/>
+   </array>
+</memory>
+<channels>
+   <array elementSize="16#0000_8000#" logical="blockdev_request" vectorBase="auto">
+      <reader logical="blockdev_request1"/>
+      <reader logical="blockdev_request2"/>
+   </array>
+   <array elementSize="16#0000_4000#" logical="blockdev_response" eventBase="auto">
+      <writer logical="blockdev_response1"/>
+      <writer logical="blockdev_response2"/>
+   </array>
+</channels>
+<devices>
+   <if variable="IS_NVME_VARIANT" value="false">
+      <device logical="controller">
+      <irq logical="irq" vector="48"/>
+      <memory executable="false" logical="mmconf"         size="16#1000#" virtualAddress="16#f800_8000#" writable="true"/>
+      <memory executable="false" logical="ahci_registers" size="16#1000#" virtualAddress="16#e000_0000#" writable="true"/>
+      </device>
+   </if>
+   <if variable="IS_NVME_VARIANT" value="true">
+      <device logical="controller">
+         <memory executable="false" logical="mmconf" size="16#1000#" virtualAddress="16#f800_8000#" writable="true"/>
+         <memory executable="false" logical="mem1"   size="16#4000#" virtualAddress="16#e000_0000#" writable="true"/>
+      </device>
+   </if>
+</devices>
+</requires>
+</component>
+</xsl:template>
+</xsl:stylesheet>

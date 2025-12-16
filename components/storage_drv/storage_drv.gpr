@@ -1,0 +1,42 @@
+with "libmuchannel";
+with "libmudebuglog";
+with "libmusinfo";
+with "libmutime";
+
+with "common_strings";
+
+project Storage_Drv extends "../component_spark" is
+
+   type Drive_Kind_Type is ("AHCI", "NVME");
+   Drive_Kind : Drive_Kind_Type := external ("DRIVE_KIND");
+
+   for Languages use ("Ada", "Asm");
+   for Object_Dir use Component_Spark.Obj_Dir;
+   for Main use ("storage_drv.adb");
+
+   Src_Dirs := (
+      "src",
+      "../src",
+      external ("GENERATED"),
+      external ("MUEN_STORAGE_DRV_PORTS_CFG")
+   );
+
+   Exec_Name := "";
+
+   case Drive_Kind is
+      when "NVME" =>
+         Src_Dirs := Src_Dirs & "src/nvme";
+         Exec_Name := "storage_drv-nvme";
+      when "AHCI" =>
+         Src_Dirs := Src_Dirs & "src/ahci";
+         Exec_Name := "storage_drv-ahci";
+   end case;
+
+   for Source_Dirs use Src_Dirs;
+
+   package Builder is
+      for Global_Configuration_Pragmas use "restrictions.adc";
+      for Executable ("storage_drv.adb") use Exec_Name;
+   end Builder;
+
+end Storage_Drv;

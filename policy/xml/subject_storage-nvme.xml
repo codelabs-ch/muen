@@ -1,0 +1,29 @@
+<subject name="storage_drv_nvme">
+ <events>
+  <source>
+   <group name="vmx_exit">
+    <default physical="system_panic">
+     <system_panic/>
+    </default>
+   </group>
+  </source>
+ </events>
+ <component ref="storage_drv_nvme">
+
+  <map logical="controller" physical="nvme_controller">
+    <map logical="mmconf" physical="mmconf"/>
+    <map logical="mem1"   physical="mem1"/>
+  </map>
+  <map logical="Queue_Memory" physical="NVME_Queue_Memory"/>
+
+  <map logical="debuglog" physical="debuglog_nvme_drv"/>
+  <map logical="dma_region" physical="NVME_DMA_Region"/>
+  <map logical="blockdev_Shm1" physical="blockdev_NVME_Shm1"/>
+  <map logical="blockdev_Shm2" physical="blockdev_NVME_Shm2"/>
+  <map logical="blockdev_request1" physical="blockdev_request1_nvme"/>
+  <map logical="blockdev_response1" physical="blockdev_response1_nvme"/>
+  <map logical="blockdev_request2" physical="blockdev_request2_nvme"/>
+  <map logical="blockdev_response2" physical="blockdev_response2_nvme"/>
+
+ </component>
+</subject>

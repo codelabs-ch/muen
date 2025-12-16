@@ -23,9 +23,14 @@
   <map logical="control" physical="control_example"/>
   <map logical="status" physical="status_example"/>
   <if variable="ahci_drv_active" value="true">
-   <map logical="blockdev_request2" physical="blockdev_request2"/>
-   <map logical="blockdev_response2" physical="blockdev_response2"/>
-   <map logical="blockdev_shm2" physical="blockdev_shm2"/>
+   <map logical="blockdev_request2_ahci" physical="blockdev_request2_ahci"/>
+   <map logical="blockdev_response2_ahci" physical="blockdev_response2_ahci"/>
+   <map logical="blockdev_AHCI_shm2" physical="blockdev_AHCI_Shm2"/>
+  </if>
+  <if variable="nvme_drv_active" value="true">
+   <map logical="blockdev_request2_nvme" physical="blockdev_request2_nvme"/>
+   <map logical="blockdev_response2_nvme" physical="blockdev_response2_nvme"/>
+   <map logical="blockdev_NVME_shm2" physical="blockdev_NVME_Shm2"/>
   </if>
   <map logical="filled_region" physical="example_filled_region"/>
  </component>

@@ -36,11 +36,17 @@
     <subject name="vt"/>
    </group>
   </partition>
-  <partition name="ahci_driver">
+  <partition name="storage_drv_ahci">
    <group>
-    <subject name="ahci_drv"/>
+    <subject name="storage_drv_ahci"/>
    </group>
   </partition>
+  <partition name="storage_drv_nvme">
+   <group>
+    <subject name="storage_drv_nvme"/>
+   </group>
+  </partition>
+
   <partition name="storage_linux">
    <group>
     <subject name="storage_linux"/>
@@ -63,7 +69,8 @@
    <minorFrame partition="debugserver" ticks="30"/>
    <minorFrame partition="vt" ticks="25"/>
    <minorFrame partition="debugserver" ticks="20"/>
-   <minorFrame partition="ahci_driver" ticks="40"/>
+   <minorFrame partition="storage_drv_ahci" ticks="20"/>
+   <minorFrame partition="storage_drv_nvme" ticks="20"/>
    <minorFrame partition="storage_linux" ticks="35"/>
   </cpu>
  </majorFrame>
@@ -77,7 +84,8 @@
   <cpu id="1">
    <minorFrame partition="storage_linux" ticks="50"/>
    <minorFrame partition="vt" ticks="20"/>
-   <minorFrame partition="ahci_driver" ticks="50"/>
+   <minorFrame partition="storage_drv_ahci" ticks="25"/>
+   <minorFrame partition="storage_drv_nvme" ticks="25"/>
    <minorFrame partition="storage_linux" ticks="30"/>
   </cpu>
  </majorFrame>

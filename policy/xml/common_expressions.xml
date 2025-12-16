@@ -5,6 +5,12 @@
    <variable name="ahci_supported"/>
   </and>
  </expression>
+  <expression name="nvme_drv_active">
+  <and>
+   <variable name="nvme_drv_enabled"/>
+   <variable name="nvme_supported"/>
+  </and>
+ </expression>
  <expression name="dbgserver_sink_serial">
   <and>
    <variable name="dbgserver_serial_enabled"/>

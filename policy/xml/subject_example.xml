@@ -22,6 +22,7 @@
   <map logical="inject_timer" physical="example_self"/>
   <map logical="control" physical="control_example"/>
   <map logical="status" physical="status_example"/>
+
   <if variable="ahci_drv_active" value="true">
    <map logical="blockdev_request2_ahci" physical="blockdev_request2_ahci"/>
    <map logical="blockdev_response2_ahci" physical="blockdev_response2_ahci"/>

@@ -174,6 +174,12 @@
    </if>
    <memory>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#7000_0000#" writable="false" executable="false"/>
+    <if variable="ahci_drv_active" value="true">
+     <memory logical="blockdev_AHCI_Shm1" physical="blockdev_AHCI_Shm1" writable="true" executable="false"/>
+    </if>
+    <if variable="nvme_drv_active" value="true">
+     <memory logical="blockdev_NVME_Shm1" physical="blockdev_NVME_Shm1" writable="true" executable="false"/>
+    </if>
    </memory>
    <devices>
     <device logical="eth0" physical="nic_1">
@@ -235,6 +241,15 @@
      <reader logical="hvc1_input" physical="console_in_1" vector="auto"/>
      <writer logical="hvc1_output" physical="console_out_1"/>
     </if>
+
+    <if variable="ahci_drv_active" value="true">
+     <writer logical="blockdev_request1_ahci" physical="blockdev_request1_ahci" event="auto"/>
+     <reader logical="blockdev_response1_ahci" physical="blockdev_response1_ahci" vector="auto"/>
+    </if>
+    <if variable="nvme_drv_active" value="true">
+     <writer logical="blockdev_request1_nvme" physical="blockdev_request1_nvme" event="auto"/>
+     <reader logical="blockdev_response1_nvme" physical="blockdev_response1_nvme" vector="auto"/>
+    </if>
    </channels>
    <component ref="linux">
     <map logical="lowmem" physical="nic_linux|lowmem"/>
@@ -255,9 +270,6 @@
    </if>
    <memory>
     <memory logical="initramfs" physical="initramfs" virtualAddress="16#7000_0000#" writable="false" executable="false"/>
-    <if variable="ahci_drv_active" value="true">
-     <memory logical="muenblock" physical="blockdev_NVME_Shm1" writable="true" executable="false"/>
-    </if>
    </memory>
    <devices>
     <if variable="dbgserver_sink_xhcidbg" value="false">
@@ -302,14 +314,6 @@
     <reader logical="testchannel_3" physical="testchannel_3"/>
     <writer logical="testchannel_4" physical="testchannel_4"/>
 
-    <if variable="ahci_drv_active" value="true">
-     <writer logical="blockdev_request1_ahci" physical="blockdev_request1_ahci" event="auto"/>
-     <reader logical="blockdev_response1_ahci" physical="blockdev_response1_ahci" vector="auto"/>
-    </if>
-    <if variable="nvme_drv_active" value="true">
-     <writer logical="blockdev_request1_nvme" physical="blockdev_request1_nvme" event="auto"/>
-     <reader logical="blockdev_response1_nvme" physical="blockdev_response1_nvme" vector="auto"/>
-    </if>
     <if variable="dbgserver_console_forwarding" value="true">
      <reader logical="hvc1_input" physical="console_in_2" vector="auto"/>
      <writer logical="hvc1_output" physical="console_out_2"/>

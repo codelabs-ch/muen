@@ -503,6 +503,14 @@ is
             if Temp_V.Major < 2 then
                Is_Old_NVME_Version := True;
                Log.Put_Line ("NVMe 1.x detected - using legacy initialization path");
+            else
+               Log.Put_Line ("");
+               Log.Put_Line ("---------------------------------------------------");
+               Log.Put_Line ("WARNING: NVMe version >= 2.0");
+               Log.Put_Line ("         Untested Controller Init");
+               Log.Put_Line ("---------------------------------------------------");
+               Log.Put_Line ("");
+
             end if;
       end;
 

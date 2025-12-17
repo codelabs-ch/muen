@@ -133,7 +133,7 @@ configure step if you customized the unikernel.
 
 Time to run the system using QEMU:
 
-  $ contrib/runQemu.py -q //x86-qemu-solo5-debug
+  $ contrib/runQemu.py -q x86-qemu-solo5-debug
 
 Finally, you can point your browser to `https://localhost:4433/` and after
 accepting the certificate warnings you should see the static website served by

@@ -236,7 +236,7 @@ virtualization provided by QEMU/KVM.
 Issue the following command in the project directory to start the Muen system
 in QEMU:
 
-  $ contrib/runQemu.py -q //x86-qemu-debug
+  $ contrib/runQemu.py -q x86-qemu-debug
 
 The system serial output is written to `run/serial.out`. Follow the on-screen
 instructions on how to connect to the QEMU vnc session or how to SSH into the
@@ -250,7 +250,7 @@ booted Muen system.
 To run an ARM64 system execute `contrib/runQemu.py` with an arm64-specific
 package query:
 
-  $ contrib/runQemu.py -q //arm64-qemu-zcu102-minimal-debug
+  $ contrib/runQemu.py -q arm64-qemu-zcu102-minimal-debug
 
 It's also possible to run all virtualized scenarios via the continuous
 integration (CI) system:

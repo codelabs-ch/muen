@@ -5,6 +5,7 @@ with System;
 with SK.Strings;
 
 with Log;
+with NVMe_Log;
 
 with NVMe.AdminCommandSet;
 with NVMe.CompletionQ;
@@ -235,14 +236,17 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set_Muenblock_Constants (NS : IdentifyNamespace)
-   with Pre => NS.LBA_List (0).LBADS = 9 or else NS.LBA_List (0).LBADS = 12,
+   procedure Set_Muenblock_Constants
+      (NS_LBA_List : LBA_Format_List;
+       NS_NSZE     : Unsigned_64;
+       NS_NCAP     : Unsigned_64)
+   with Pre => NS_LBA_List (0).LBADS = 9 or else NS_LBA_List (0).LBADS = 12,
         Post => MB_Sector_Size = 512 or else MB_Sector_Size = 4096
    is
    begin
-      MB_Sector_Count := NS.NSZE;
-      MB_Max_Sector_Count := NS.NCAP;
-      MB_Sector_Size := Unsigned_32 (2 ** Natural (NS.LBA_List (0).LBADS));
+      MB_Sector_Count := NS_NSZE;
+      MB_Max_Sector_Count := NS_NCAP;
+      MB_Sector_Size := Unsigned_32 (2 ** Natural (NS_LBA_List (0).LBADS));
       MB_Size := MB_Sector_Count * Unsigned_64 (MB_Sector_Size);
    end Set_Muenblock_Constants;
 
@@ -276,12 +280,12 @@ is
       -- TODO Clenaup if statement if no timeout
       if Temp_CQE.CID = AdminCMD.CID and Temp_CQE.Status.SC = 0 then
          Log.Put_String ("Successfully executed Admin Command ");
-         Log.Put_NVMe_AdminCMD_Image (AdminCMD.OPC);
+         NVMe_Log.Put_NVMe_AdminCMD_Image (AdminCMD.OPC);
          Log.New_Line;
          Status := OK;
       elsif Temp_CQE.CID = AdminCMD.CID and Temp_CQE.Status.SC > 0 then
          Log.Put_String ("Error: Admin CMD failed: ");
-         Log.Put_NVMe_AdminCMD_Image (AdminCMD.OPC);
+         NVMe_Log.Put_NVMe_AdminCMD_Image (AdminCMD.OPC);
          Log.New_Line;
          Log.Put_Line ("CID"  & SK.Strings.Img_Dec (Unsigned_64 (Temp_CQE.CID)));
          Log.Put_Line ("SQHD" & SK.Strings.Img_Dec (Unsigned_64 (Temp_CQE.SQHD)));
@@ -289,7 +293,7 @@ is
          Log.Put_Line ("P "   & Log.Boolean_Image (Temp_CQE.P));
          Log.Put_Line ("SC"   & SK.Strings.Img_Dec (Unsigned_64 (Temp_CQE.Status.SC)) &
                        " SCT" & SK.Strings.Img_Dec (Unsigned_64 (Temp_CQE.Status.SCT)));
-         Log.Print_Status_Code (SC => Temp_CQE.Status.SC, SCT => Temp_CQE.Status.SCT);
+         NVMe_Log.Print_Status_Code (SC => Temp_CQE.Status.SC, SCT => Temp_CQE.Status.SCT);
          Status := Fail;
       end if;
 
@@ -351,11 +355,11 @@ is
       then
          declare
             use type AdminCommandSet.CriticalWarning_Type;
-            LogPage : constant AdminCommandSet.SMART_LogPage := SMART_Health_LogPage;
+            CriticalWarning : constant AdminCommandSet.CriticalWarning_Type := SMART_Health_LogPage.CriticalWarning;
          begin
-            if LogPage.CriticalWarning = No_Warning then
+            if CriticalWarning = No_Warning then
                SMART_Status := OK;
-            elsif LogPage.CriticalWarning.AvailableSpaceBelowThresh then
+            elsif CriticalWarning.AvailableSpaceBelowThresh then
                SMART_Status := Threshold_Exceeded;
             else
                SMART_Status := Undefined;
@@ -397,7 +401,7 @@ is
          Status := OK;
       elsif Temp_CQE.CID = IOCmd.CID and Temp_CQE.Status.SC > 0 then
          Log.Put_String ("Error: IO CMD failed: ");
-         Log.Put_NVMe_IOCMD_Image (IOCmd.OPC);
+         NVMe_Log.Put_NVMe_IOCMD_Image (IOCmd.OPC);
          Log.New_Line;
          Log.Put_Line ("CID  " & SK.Strings.Img_Dec (Unsigned_64 (Temp_CQE.CID)));
          Log.Put_Line ("SQHD " & SK.Strings.Img_Dec (Unsigned_64 (Temp_CQE.SQHD)));
@@ -405,7 +409,7 @@ is
          Log.Put_Line ("P    " & Log.Boolean_Image (Temp_CQE.P));
          Log.Put_Line ("SC   " & SK.Strings.Img_Dec (Unsigned_64 (Temp_CQE.Status.SC)) &
                        " SCT " & SK.Strings.Img_Dec (Unsigned_64 (Temp_CQE.Status.SCT)));
-         Log.Print_Status_Code (SC => Temp_CQE.Status.SC, SCT => Temp_CQE.Status.SCT);
+         NVMe_Log.Print_Status_Code (SC => Temp_CQE.Status.SC, SCT => Temp_CQE.Status.SCT);
          Status := Fail;
       end if;
 
@@ -737,16 +741,16 @@ is
             end if;
 
             declare
-               Temp_NS   : constant IdentifyNamespace := IdentNamespace;
-               Temp_NSZE : Unsigned_64;
+               Temp_LBA_List : constant LBA_Format_List := IdentNamespace.LBA_List;
+               Temp_NSZE     : constant Unsigned_64 := IdentNamespace.NSZE;
+               Temp_NCAP     : constant Unsigned_64 := IdentNamespace.NCAP;
             begin
-               Temp_NSZE := Temp_NS.NSZE;
                Log.Put_Line ("Namespace Size is " & SK.Strings.Img_Dec (Temp_NSZE) & " logical blocks.");
-               if Temp_NS.LBA_List (0).LBADS not in 9 | 12 then
+               if Temp_LBA_List (0).LBADS not in 9 | 12 then
                   Log.Put_Line ("NVME: Invalid Namespace LBA Size.");
                   return;
                end if;
-               Set_Muenblock_Constants (Temp_NS);
+               Set_Muenblock_Constants (Temp_LBA_List, Temp_NSZE, Temp_NCAP);
             end;
          end loop;
 
@@ -928,16 +932,16 @@ is
                   end if;
 
                   declare
-                     Temp_NS   : constant IdentifyNamespace := IdentNamespace;
-                     Temp_NSZE : Unsigned_64;
+                     Temp_LBA_List : constant LBA_Format_List := IdentNamespace.LBA_List;
+                     Temp_NSZE     : constant Unsigned_64 := IdentNamespace.NSZE;
+                     Temp_NCAP     : constant Unsigned_64 := IdentNamespace.NCAP;
                   begin
-                     Temp_NSZE := Temp_NS.NSZE;
                      Log.Put_Line ("Namespace Size is " & SK.Strings.Img_Dec (Temp_NSZE) & " logical blocks.");
-                     if Temp_NS.LBA_List (0).LBADS not in 9 | 12 then
+                     if Temp_LBA_List (0).LBADS not in 9 | 12 then
                         Log.Put_Line ("NVME: Invalid Namespace LBA Size.");
                         return;
                      end if;
-                     Set_Muenblock_Constants (Temp_NS);
+                     Set_Muenblock_Constants (Temp_LBA_List, Temp_NSZE, Temp_NCAP);
                   end;
                else
                   -- Temporary until more needed

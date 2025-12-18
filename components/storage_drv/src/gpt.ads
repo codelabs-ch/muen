@@ -27,13 +27,15 @@ is
       Reserved             at 0 range 3 .. 63;
    end record;
 
+   type Partition_Name_String is new String (1 .. 72);
+
    type Partition_Entry_Type is record
       Partition_Type_GUID   : Unsigned_128;       -- Mixed Endian
       Unique_Partition_GUID : Unsigned_128;       -- Mixed Endian
       Starting_LBA          : Unsigned_64;        -- Little Endian
       Ending_LBA            : Unsigned_64;        -- inclusive, usually odd
       Attributes            : Partition_Attributes;
-      Partition_Name        : String (1 .. 72);   -- 36 Chars UTF-16LE (wide_str)--> Decode!
+      Partition_Name        : Partition_Name_String;   -- 36 Chars UTF-16LE (wide_str)--> Decode!
    end record with
       Size => 1024, Object_Size => 1024;
    for Partition_Entry_Type use record
@@ -53,8 +55,8 @@ is
       Reserved                    : Byte_Array (0 .. 3); -- reserved (zeroed)
       My_LBA                      : Unsigned_64;
       Alternate_LBA               : Unsigned_64;
-      First_Useable_LBA           : Unsigned_64;    -- primary partition table last LBA + 1
-      Last_Useable_LBA            : Unsigned_64;    -- secondary partition table first LBA - 1
+      First_Usable_LBA            : Unsigned_64;    -- primary partition table last LBA + 1
+      Last_Usable_LBA             : Unsigned_64;    -- secondary partition table first LBA - 1
       Disk_GUID                   : Unsigned_128;   -- Mixed Endian
       Partition_Entry_LBA         : Unsigned_64;    -- LBA of start of partition entry array
       Number_Of_Partition_Entries : Unsigned_32;    -- usually   2
@@ -70,8 +72,8 @@ is
       Reserved                    at 20 range 0 ..  31;
       My_LBA                      at 24 range 0 ..  63;
       Alternate_LBA               at 32 range 0 ..  63;
-      First_Useable_LBA           at 40 range 0 ..  63;
-      Last_Useable_LBA            at 48 range 0 ..  63;
+      First_Usable_LBA            at 40 range 0 ..  63;
+      Last_Usable_LBA             at 48 range 0 ..  63;
       Disk_GUID                   at 56 range 0 .. 127;
       Partition_Entry_LBA         at 72 range 0 ..  63;
       Number_Of_Partition_Entries at 80 range 0 ..  31;

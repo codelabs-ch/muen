@@ -296,12 +296,12 @@ is
          end if;
 
          -- Check if usable LBA range is within disk
-         if GPT_Primary_Header.First_Useable_LBA > Storage_Interface.Get_Sector_Cnt (ID) then
-            Log.Put_Line ("GPT: 'First Useable LBA' is invalid");
+         if GPT_Primary_Header.First_Usable_LBA > Storage_Interface.Get_Sector_Cnt (ID) then
+            Log.Put_Line ("GPT: 'First Usable LBA is invalid");
             return;
          end if;
-         if GPT_Primary_Header.Last_Useable_LBA > Storage_Interface.Get_Sector_Cnt (ID) then
-            Log.Put_Line ("GPT: 'Last Useable LBA' is invalid");
+         if GPT_Primary_Header.Last_Usable_LBA > Storage_Interface.Get_Sector_Cnt (ID) then
+            Log.Put_Line ("GPT: 'Last Usable LBA is invalid");
             return;
          end if;
 
@@ -350,16 +350,16 @@ is
                Log.Put_Line ("GPT: Alternate is:  " & SK.Strings.Img_Dec (Alternate_GPT_Header_TMP.Alternate_LBA));
                return;
             end if;
-            if GPT_Primary_Header.First_Useable_LBA /= Alternate_GPT_Header_TMP.First_Useable_LBA then
+            if GPT_Primary_Header.First_Usable_LBA /= Alternate_GPT_Header_TMP.First_Usable_LBA then
                Log.Put_Line ("GPT: Alternate GPT Header First Usable LBA missmatch");
-               Log.Put_Line ("GPT: Primary:   " & SK.Strings.Img_Dec (GPT_Primary_Header.First_Useable_LBA));
-               Log.Put_Line ("GPT: Alternate: " & SK.Strings.Img_Dec (Alternate_GPT_Header_TMP.First_Useable_LBA));
+               Log.Put_Line ("GPT: Primary:   " & SK.Strings.Img_Dec (GPT_Primary_Header.First_Usable_LBA));
+               Log.Put_Line ("GPT: Alternate: " & SK.Strings.Img_Dec (Alternate_GPT_Header_TMP.First_Usable_LBA));
                return;
             end if;
-            if GPT_Primary_Header.Last_Useable_LBA /= Alternate_GPT_Header_TMP.Last_Useable_LBA then
+            if GPT_Primary_Header.Last_Usable_LBA /= Alternate_GPT_Header_TMP.Last_Usable_LBA then
                Log.Put_Line ("GPT: Alternate GPT Header Last Usable LBA missmatch");
-               Log.Put_Line ("GPT: Primary:   " & SK.Strings.Img_Dec (GPT_Primary_Header.Last_Useable_LBA));
-               Log.Put_Line ("GPT: Alternate: " & SK.Strings.Img_Dec (Alternate_GPT_Header_TMP.Last_Useable_LBA));
+               Log.Put_Line ("GPT: Primary:   " & SK.Strings.Img_Dec (GPT_Primary_Header.Last_Usable_LBA));
+               Log.Put_Line ("GPT: Alternate: " & SK.Strings.Img_Dec (Alternate_GPT_Header_TMP.Last_Usable_LBA));
                return;
             end if;
             if GPT_Primary_Header.Disk_GUID /= Alternate_GPT_Header_TMP.Disk_GUID then

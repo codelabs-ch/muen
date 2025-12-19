@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with "muen_common";
+
 project Isolation_Tests_Monitor extends "component_spark" is
 
    for Languages use ("Ada", "Asm");

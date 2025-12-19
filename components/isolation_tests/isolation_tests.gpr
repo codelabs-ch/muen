@@ -23,10 +23,8 @@ with "muen_common";
 
 project Isolation_Tests extends "component_spark" is
 
-   Extra_Dirs := Component_Spark.Src_Dirs;
-
    for Languages use ("Ada", "Asm");
-   for Source_Dirs use (external("GENERATED"), "src") & Extra_Dirs;
+   for Source_Dirs use (external("GENERATED"), "src", "../src");
    for Object_Dir use "obj/" & Component_Spark.Build_Mode;
    for Main use ("isolation_tests");
 

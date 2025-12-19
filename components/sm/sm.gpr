@@ -23,7 +23,7 @@ with "libmudm";
 with "libmucontrol";
 with "config";
 
-project Sm extends "../component_spark" is
+project Sm extends "component_spark" is
 
    Mudm_Client := "";
 

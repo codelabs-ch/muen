@@ -19,7 +19,7 @@
 with "libmusinfo";
 with "libmuinit";
 
-project Sl extends "../component_spark" is
+project Sl extends "component_spark" is
 
    Extra_Dirs := Component_Spark.Src_Dirs & external("GENERATED");
 

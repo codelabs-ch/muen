@@ -20,7 +20,7 @@ with "muen_common";
 with "common_debug";
 with "libmudebuglog";
 
-project Vt extends "../component_spark" is
+project Vt extends "component_spark" is
 
    for Languages use ("Ada", "Asm");
    for Source_Dirs use

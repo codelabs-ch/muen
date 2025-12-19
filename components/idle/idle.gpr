@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-project Idle extends "../component_spark" is
+project Idle extends "component_spark" is
 
    for Languages use ("Ada", "Asm");
    for Source_Dirs use ("../src", "src");

@@ -20,7 +20,7 @@ with "libmudebuglog";
 with "common_strings";
 with "muen_common";
 
-project Ps2_Drv extends "../component_spark" is
+project Ps2_Drv extends "component_spark" is
 
    for Languages use ("Ada", "Asm");
    for Source_Dirs use

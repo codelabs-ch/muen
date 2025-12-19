@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-project Tau0 extends "../component_spark" is
+project Tau0 extends "component_spark" is
 
    Extra_Dirs := Component_Spark.Src_Dirs;
 

@@ -21,7 +21,7 @@ with "muinterrupts";
 with "libmudebuglog";
 with "libmucontroltypes";
 
-project Controller extends "../component_spark" is
+project Controller extends "component_spark" is
 
    for Languages use ("Ada", "Asm");
    for Source_Dirs use (external("GENERATED"), "src", "../src");

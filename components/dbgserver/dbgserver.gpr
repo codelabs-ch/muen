@@ -24,7 +24,7 @@ with "muen_common";
 with "common_debug";
 with "common_strings";
 
-project Dbgserver extends "../component_spark" is
+project Dbgserver extends "component_spark" is
 
    Src_Dirs :=
      ("../src",

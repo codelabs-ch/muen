@@ -22,7 +22,7 @@ with "libmutime";
 with "libmusinfo";
 with "libmucontrol";
 
-project Time extends "../component_spark" is
+project Time extends "component_spark" is
 
    for Languages use ("Ada", "Asm");
    for Source_Dirs use (external("GENERATED"), "src", "../src")

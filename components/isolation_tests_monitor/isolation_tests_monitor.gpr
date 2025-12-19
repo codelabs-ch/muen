@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-project Isolation_Tests_Monitor extends "../component_spark" is
+project Isolation_Tests_Monitor extends "component_spark" is
 
    for Languages use ("Ada", "Asm");
    for Source_Dirs use (external("GENERATED"), "src", "../src") & Component_Spark.Src_Dirs;

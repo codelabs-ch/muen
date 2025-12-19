@@ -25,7 +25,7 @@ with "crash_audit";
 with "common_debug";
 with "mutimedevents";
 
-project Example extends "../component_spark" is
+project Example extends "component_spark" is
 
    Src_Dirs := ("src", external("GENERATED"), "../src");
    Obj_Suffix := "/";

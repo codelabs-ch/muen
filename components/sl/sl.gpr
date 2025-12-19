@@ -28,6 +28,7 @@ project Sl extends "component_spark" is
       when "debug"   => Extra_Dirs := Extra_Dirs & Component_Spark.Build_Mode;
       when "release" => Extra_Dirs := Extra_Dirs & Component_Spark.Build_Mode;
       when "prove"   => Extra_Dirs := Extra_Dirs & "release";
+      when others    => null;
    end case;
 
    for Languages use ("Ada", "Asm");

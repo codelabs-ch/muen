@@ -20,14 +20,14 @@ with "muen_common";
 with "common_debug";
 with "libmudebuglog";
 
-project Vt extends "../component_spark" is
+project Vt extends "component_spark" is
 
    for Languages use ("Ada", "Asm");
    for Source_Dirs use
      ("../src",
       external ("GENERATED"),
       "src");
-   for Object_Dir use "obj/" & Component_Spark.Build_Mode;
+   for Object_Dir use Component_Spark.Obj_Dir;
 
    for Main use ("vt");
 

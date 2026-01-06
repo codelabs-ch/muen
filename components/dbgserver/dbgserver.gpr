@@ -24,7 +24,7 @@ with "muen_common";
 with "common_debug";
 with "common_strings";
 
-project Dbgserver extends "../component_spark" is
+project Dbgserver extends "component_spark" is
 
    Src_Dirs :=
      ("../src",
@@ -91,7 +91,7 @@ project Dbgserver extends "../component_spark" is
 
    for Languages use ("Ada", "Asm");
    for Source_Dirs use Src_Dirs;
-   for Object_Dir use "obj/" & Component_Spark.Build_Mode & Obj_Suffix;
+   for Object_Dir use Component_Spark.Obj_Dir & Obj_Suffix;
    for Exec_Dir use "obj/" & Component_Spark.Build_Mode;
    for Main use ("dbgserver");
 

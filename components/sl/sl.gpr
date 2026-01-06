@@ -16,17 +16,19 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with "muen_common";
 with "libmusinfo";
 with "libmuinit";
 
-project Sl extends "../component_spark" is
+project Sl extends "component_spark" is
 
-   Extra_Dirs := Component_Spark.Src_Dirs & external("GENERATED");
+   Extra_Dirs := (external("GENERATED"));
 
    case Component_Spark.Build_Mode is
       when "debug"   => Extra_Dirs := Extra_Dirs & Component_Spark.Build_Mode;
       when "release" => Extra_Dirs := Extra_Dirs & Component_Spark.Build_Mode;
       when "prove"   => Extra_Dirs := Extra_Dirs & "release";
+      when others    => null;
    end case;
 
    for Languages use ("Ada", "Asm");

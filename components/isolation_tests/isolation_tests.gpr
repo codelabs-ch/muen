@@ -19,14 +19,13 @@
 with "libmudebuglog";
 with "libmusinfo";
 with "common_strings";
+with "muen_common";
 
-project Isolation_Tests extends "../component_spark" is
-
-   Extra_Dirs := Component_Spark.Src_Dirs;
+project Isolation_Tests extends "component_spark" is
 
    for Languages use ("Ada", "Asm");
-   for Source_Dirs use (external("GENERATED"), "src", "../src") & Extra_Dirs;
-   for Object_Dir use "obj/" & Component_Spark.Build_Mode;
+   for Source_Dirs use (external("GENERATED"), "src", "../src");
+   for Object_Dir use Component_Spark.Obj_Dir;
    for Main use ("isolation_tests");
 
 end Isolation_Tests;

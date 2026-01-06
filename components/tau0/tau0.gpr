@@ -16,13 +16,13 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-project Tau0 extends "../component_spark" is
+with "muen_common";
 
-   Extra_Dirs := Component_Spark.Src_Dirs;
+project Tau0 extends "component_spark" is
 
    for Languages use ("Ada", "Asm");
-   for Source_Dirs use ("src", "../src", external("POLICY_DIR")) & Extra_Dirs;
-   for Object_Dir use "obj/" & Component_Spark.Build_Mode;
+   for Object_Dir use Component_Spark.Obj_Dir;
+   for Source_Dirs use ("src", "../src", external("POLICY_DIR"));
    for Main use ("tau0");
 
 end Tau0;

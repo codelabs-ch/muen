@@ -20,7 +20,7 @@ with "libmuchannel";
 with "libmudebuglog";
 with "common_strings";
 
-project Ahci_Drv extends "../component_spark" is
+project Ahci_Drv extends "component_spark" is
 
    for Languages use ("Ada", "Asm");
    for Source_Dirs use (external("GENERATED"), "src", "../src");

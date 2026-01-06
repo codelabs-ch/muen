@@ -31,9 +31,6 @@ project Kernel is
    type Build_Type is ("debug", "release", "prove");
    Build_Mode : Build_Type := external ("MUEN_BUILD_MODE");
 
-   type Proof_Type is ("limited", "complete");
-   Proof_Mode : Proof_Type := external ("proofs", "limited");
-
    Extra_Dirs := ();
    Extra_Languages := ();
    Extra_Warning_Switches := ();
@@ -72,16 +69,6 @@ project Kernel is
            & ("release", "spark");
          Preprocessor_Switches :=
            ("-gnateDRelease_Warnings=Warnings");
-   end case;
-
-   case Proof_Mode is
-      when "limited" =>
-         Preprocessor_Switches := Preprocessor_Switches &
-         ("-gnateDComplete_Proofs=Off");
-
-      when "complete" =>
-         Preprocessor_Switches := Preprocessor_Switches &
-         ("-gnateDComplete_Proofs=On");
    end case;
 
    case Policy.Has_Multiple_Major_Frames is

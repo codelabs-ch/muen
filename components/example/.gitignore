@@ -1,5 +1,0 @@
-doc/*
-
-!doc/*.dot
-!doc/doc.xml.in
-!doc/bib.bib

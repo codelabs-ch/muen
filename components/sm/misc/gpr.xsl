@@ -3,7 +3,7 @@
 
 	<xsl:output method="text" encoding="utf-8" indent="no"/>
 
-	<xsl:include href="../../xslt/gpr_config.xsl"/>
+	<xsl:include href="gpr_config-functions.xsl"/>
 
 	<xsl:strip-space elements="*"/>
 	<xsl:template match="system/*"/>

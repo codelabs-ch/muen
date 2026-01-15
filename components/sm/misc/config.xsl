@@ -3,7 +3,7 @@
 
 	<xsl:output method="text" encoding="utf-8" indent="no"/>
 
-	<xsl:include href="../../xslt/config.xsl"/>
+	<xsl:include href="config-functions.xsl"/>
 
 	<xsl:strip-space elements="*"/>
 	<xsl:template match="text()"/>

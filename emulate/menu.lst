@@ -1,4 +1,0 @@
-timeout 0
-
-title Muen
-	kernel hda0:/boot/kernel.csl

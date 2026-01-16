@@ -17,6 +17,7 @@
 --
 
 with "common_strings";
+with "libmubase";
 with "libmudebuglog";
 with "libmudm";
 

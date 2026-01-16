@@ -18,6 +18,7 @@
 
 with "common_strings";
 with "muinterrupts";
+with "libmubase";
 with "libmudebuglog";
 with "libmucontroltypes";
 

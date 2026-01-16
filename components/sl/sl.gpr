@@ -17,6 +17,7 @@
 --
 
 with "muen_common";
+with "libmubase";
 with "libmusinfo";
 with "libmuinit";
 

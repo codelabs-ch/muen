@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with "libmubase";
 with "libmudebuglog";
 with "libmusinfo";
 with "common_strings";

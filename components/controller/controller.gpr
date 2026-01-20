@@ -25,7 +25,7 @@ with "libmucontroltypes";
 project Controller extends "component_spark" is
 
    for Languages use ("Ada", "Asm");
-   for Source_Dirs use (external("GENERATED"), "src", "../src");
+   for Source_Dirs use (external("GENERATED"), "src");
    for Object_Dir use Component_Spark.Obj_Dir;
    for Main use ("controller");
 

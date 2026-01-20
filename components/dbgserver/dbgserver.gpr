@@ -28,8 +28,7 @@ with "common_strings";
 project Dbgserver extends "component_spark" is
 
    Src_Dirs :=
-     ("../src",
-      external("GENERATED"),
+     (external("GENERATED"),
       "src",
       "src/sinks/pcspkr",
       "src/sinks/serial",

@@ -41,7 +41,7 @@ project Sm extends "component_spark" is
    end Naming;
 
    for Languages use ("Ada", "Asm");
-   for Source_Dirs use (external("GENERATED"), "src", "../src");
+   for Source_Dirs use (external("GENERATED"), "src");
    for Object_Dir use Component_Spark.Obj_Dir;
    for Main use ("sm");
 

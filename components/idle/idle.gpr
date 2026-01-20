@@ -21,7 +21,7 @@ with "libmubase";
 project Idle extends "component_spark" is
 
    for Languages use ("Ada", "Asm");
-   for Source_Dirs use ("../src", "src");
+   for Source_Dirs use ("src");
    for Object_Dir use Component_Spark.Obj_Dir;
 
    for Main use ("idle");

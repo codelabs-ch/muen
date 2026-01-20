@@ -28,7 +28,7 @@ with "mutimedevents";
 
 project Example extends "component_spark" is
 
-   Src_Dirs := ("src", external("GENERATED"), "../src");
+   Src_Dirs := ("src", external("GENERATED"));
    Obj_Suffix := "/";
 
    case example_config.ahci_drv_enabled is

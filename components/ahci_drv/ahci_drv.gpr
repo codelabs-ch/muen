@@ -19,6 +19,7 @@
 with "libmubase";
 with "libmuchannel";
 with "libmudebuglog";
+with "libmublock";
 with "common_strings";
 
 project Ahci_Drv extends "component_spark" is

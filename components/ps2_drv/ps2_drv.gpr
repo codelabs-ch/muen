@@ -18,6 +18,7 @@
 
 with "libmubase";
 with "libmudebuglog";
+with "libmucoll";
 with "common_strings";
 with "muen_common";
 

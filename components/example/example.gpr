@@ -17,6 +17,8 @@
 --
 
 with "libmubase";
+with "libmublock";
+with "libmucoll";
 with "libmudebuglog";
 with "libmusinfo";
 with "libmucontrol";

@@ -17,6 +17,7 @@
 --
 
 with "libmubase";
+with "libmucoll";
 with "muen_common";
 
 project Isolation_Tests_Monitor extends "component_spark" is

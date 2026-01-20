@@ -18,6 +18,7 @@
 
 with "common_strings";
 with "libmubase";
+with "libmucoll";
 with "libmudebuglog";
 with "libmutime";
 with "libmusinfo";

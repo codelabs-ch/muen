@@ -22,6 +22,7 @@ with "libmudebuglog";
 with "libmutime";
 with "libmudm";
 with "libmucontrol";
+with "libmucoll";
 with "config";
 
 project Sm extends "component_spark" is

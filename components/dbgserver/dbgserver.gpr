@@ -19,6 +19,7 @@ with "libmubase";
 with "libxhcidbg";
 with "libmudebuglog";
 with "libmusinfo";
+with "libmucoll";
 with "dbg_config";
 with "crash_audit";
 with "muen_common";

@@ -1,13 +1,13 @@
 with Interfaces;
-with Ports_Config;
-
-with Storage_Drv_Cspecs_Wrapper;
 
 with Muenblock;
 with Muenblock.Request_Channel;
 with Muenblock.Response_Channel;
 
 with Musinfo.Instance;
+
+with Ports_Config;
+with Storage_Drv_Cspecs_Wrapper;
 
 package Storage_Interface
 is
@@ -129,8 +129,9 @@ is
 
    -------------------------------------------------------------------------
 
-   --  array for internal storage of detected devices
+   --  Array for internal storage of detected devices.
    type Signature_Type is (Empty_device, Sata_device, NVMe_device, Atapi_device);
+
    type Device_Info is record
       Signature         : Signature_Type;
       Support_48Bit     : Boolean;
@@ -162,7 +163,7 @@ is
 
    subtype Devs_Array is Bit_Array (0 .. Integer (PConf.Port_Range'Last));
 
-   --  Maximum number of request we combine to a single request
+   --  Maximum number of request we combine to a single request.
    Requ_Max : constant := 64;
    subtype Tag_Array_Range is Unsigned_32 range 0 .. Requ_Max;
    type Tag_Array_Type is array (Tag_Array_Range) of Unsigned_32;
@@ -189,7 +190,7 @@ is
    type Internal_Device_Type is record
       Ahci_Port     : PConf.Port_Range;
       Partition     : Integer;
-      --  Sector offset used for partition addressing
+      --  Sector offset used for partition addressing.
       Is_Valid      : Boolean;
       Sector_Offset : Unsigned_64;
       Sector_Count  : Unsigned_64;
@@ -249,14 +250,16 @@ is
    with
       Pre => Is_Valid;
 
-   procedure Check_SMART_Status (Address :     Unsigned_64;
-                                 Dev_Id  :     PConf.Port_Range;
-                                 Status  : out Unsigned_64)
+   procedure Check_SMART_Status
+      (Address :     Unsigned_64;
+       Dev_Id  :     PConf.Port_Range;
+       Status  : out Unsigned_64)
    with
       Pre => Is_Valid;
 
-   procedure Sync (Dev_Id :      PConf.Port_Range;
-                   Status : out  Unsigned_64)
+   procedure Sync
+      (Dev_Id :      PConf.Port_Range;
+       Status : out  Unsigned_64)
    with
       Pre => Is_Valid;
 

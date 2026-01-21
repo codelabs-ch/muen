@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2020 secunet Security Networks AG
+--  Copyright (C) 2020  secunet Security Networks AG
 --  Copyright (C) 2025  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
@@ -60,7 +60,7 @@ is
    with
       Volatile,
       Async_Readers,
-      Address     => Req_Channel_Base_Address;
+      Address => Req_Channel_Base_Address;
    pragma Warnings
      (GNATprove, On,
       "writing * is assumed to have no effects on other non-volatile objects");
@@ -138,7 +138,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Receive
-     (Client       :     Client_Range_Type;
+     (Client   :     Client_Range_Type;
       Response : out MB.Block_Response_Type;
       Error    : out Boolean)
    with
@@ -154,11 +154,10 @@ is
             + Musinfo.Instance.TSC_Khz
             * Interfaces.Unsigned_64 (Operations_Time_Out);
    begin
-      --  wait for responses
       Now   := Musinfo.Instance.TSC_Schedule_Start;
       Error := False;
 
-      Wait_Data :
+      Wait_Response :
       loop
          Resp_Chn.Reader.Read
            (Channel => Response_Channels (Client),
@@ -197,8 +196,8 @@ is
             Error := True;
          end if;
 
-         exit Wait_Data when Res = Resp_Chn.Reader.Success or Error;
-      end loop Wait_Data;
+         exit Wait_Response when Res = Resp_Chn.Reader.Success or Error;
+      end loop Wait_Response;
    end Receive;
 
    -------------------------------------------------------------------------
@@ -221,7 +220,7 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Returns the number of devices on this channel pair
+   --  Returns the number of devices on this channel pair.
    procedure Get_Devices_Cnt
      (Client :     Client_Range_Type;
       Cnt    : out Device_Count_Type)
@@ -378,7 +377,6 @@ is
            (Channel => Response_Channels (Client),
             Reader  => Readers (Client));
 
-      --  wait for the server to become active
       Wait_Active :
       loop
          Resp_Chn.Is_Active
@@ -405,14 +403,14 @@ is
          end if;
       end;
 
-      --  Get Number of attached devices
+      --  Get Number of attached devices.
       Get_Devices_Cnt (Client, Device_Infos (Client).Count);
 
       if Device_Infos (Client).Count = 0 then
          Debuglog.Client.Put_Line (Item => "No devices found!");
       end if;
 
-      --  fill device Info
+      --  Fill device Info.
       declare
          Dev_Infos : Device_Info_Array_Type renames Device_Infos (Client).Infos;
       begin

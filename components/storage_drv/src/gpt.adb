@@ -47,8 +47,9 @@ is
    -- Header
 
    type CRC_Header_Byte_Array is array (0 .. 91) of Character
-   with Pack,
-        Size => 92 * 8;
+   with
+      Pack,
+      Size => 92 * 8;
 
    -- same Address as GPT
    GPT_Header_Array_for_CRC : CRC_Header_Byte_Array
@@ -133,24 +134,22 @@ is
 
       if CRC32_Calc /= CRC32_Check then
          Success := False;
-         Log.Put_Line ("GPT: CRC of " & (if Is_Alternate_GPT then "Alternate GPT Entry Array Size wrong" else "GPT Entry Array Size wrong"));
+         Log.Put_Line ("GPT: CRC of " & (if Is_Alternate_GPT then "alternate GPT entry array size wrong" else "GPT entry array size wrong"));
       end if;
-
    end Calc_Partition_Array_CRC32;
 
    -------------------------------------------------------------------------
 
    procedure Calc_Header_CRC32
-      (CRC32_Check                 : Unsigned_32;
-       Is_Alternate_GPT            : Boolean;
-       Success                     : out Boolean)
+      (CRC32_Check      :     Unsigned_32;
+       Is_Alternate_GPT :     Boolean;
+       Success          : out Boolean)
    is
       CRC        : CRC32.CRC_32;
       CRC32_Calc : Unsigned_32;
-
    begin
       CRC32.Initialize (CRC);
-      Success    := True;
+      Success := True;
 
       if Is_Alternate_GPT then
          pragma Warnings (GNATprove, off, "unused assignment");
@@ -169,10 +168,10 @@ is
          Alternate_GPT_Header.Header_CRC32 := CRC32_Check;
 
          if CRC32_Calc /= CRC32_Check then
-            Log.Put_Line ("GPT: CRC of Alternate GPT Header Size wrong");
+            Log.Put_Line ("GPT: CRC of alternate GPT header wrong");
             Log.Put_Line ("GPT: calculated" & SK.Strings.Img_Dec (Unsigned_64 (CRC32_Calc)));
             Log.Put_Line ("GPT: expected  " & SK.Strings.Img_Dec (Unsigned_64 (CRC32_Check)));
-            Success    := False;
+            Success := False;
 
          end if;
       else
@@ -192,25 +191,30 @@ is
          PGPT.Primary_GPT_Header.Header_CRC32 := CRC32_Check;
 
          if CRC32_Calc /= CRC32_Check then
-            Log.Put_Line ("GPT: CRC of GPT Header Size wrong");
+            Log.Put_Line ("GPT: CRC of primary GPT header wrong");
             Log.Put_Line ("GPT: calculated" & SK.Strings.Img_Dec (Unsigned_64 (CRC32_Calc)));
             Log.Put_Line ("GPT: expected  " & SK.Strings.Img_Dec (Unsigned_64 (CRC32_Check)));
             Success := False;
          end if;
       end if;
-
    end Calc_Header_CRC32;
 
    -------------------------------------------------------------------------
+
+   -- References
+   -- https://source.denx.de/u-boot/u-boot/-/blob/master/doc/README.gpt
+   -- https://source.denx.de/u-boot/u-boot/-/blob/master/disk/part_efi.c
+   -- https://github.com/ceph/simplegpt/blob/master/simplegpt.py
+   -- https://github.com/pvachon/pygpt/blob/master/partition_table_header.py
 
    procedure Parse
       (ID         :     Ports_Config.Port_Range;
        Part_Table : out Partitions.Partition_Table_Type)
    is
-      Status        : Status_Type;
-      Num_of_LBA    : Unsigned_16;
-      Partition     : Partition_Entry_Type;
-      Success       : Boolean;
+      Status      : Status_Type;
+      Num_of_LBA  : Unsigned_16;
+      Partition   : Partition_Entry_Type;
+      Success     : Boolean;
 
       ----------------------------------------------------------------------
 
@@ -237,23 +241,10 @@ is
             Partition_Entry.Partition_Type_GUID = 0;
       end Is_Empty_Partition;
 
-      ----------------------------------------------------------------------
-
-      use type Partitions.Partition_Table_Type;
-
-      function Check_Part_Table_Count_Equal (P1 : Partitions.Partition_Table_Type; P2 : Partitions.Partition_Table_Type) return Boolean
-      is (P1.Count = P2.Count)
-      with Ghost,
-           Pre => P1 = P2,
-           Post => (if Check_Part_Table_Count_Equal'Result then P1.Count = P2.Count);
-
    begin
       Part_Table := Partitions.Null_Partition_Table;
 
-      -- TODO Proof that Part_Table.Count = 0 here
-      pragma Assert (Check_Part_Table_Count_Equal (Part_Table, Partitions.Null_Partition_Table));
-
-      Log.Put_Line ("GPT: Checking for GPT Header");
+      Log.Put_Line ("GPT: Checking for GPT header");
 
       -- Read Header
       Storage_Interface.Execute_Read_Command
@@ -264,7 +255,7 @@ is
           Status  => Status);
 
       if Status /= OK then
-         Log.Put_Line ("GPT: Failed to GPT Header from Disk");
+         Log.Put_Line ("GPT: Failed to read GPT header from disk");
          return;
       end if;
 
@@ -272,36 +263,37 @@ is
          GPT_Primary_Header : constant GPT_Header_Type := PGPT.Primary_GPT_Header;
       begin
          if not Is_Efi_Part (GPT_Primary_Header.Signature) then
-            Log.Put_Line ("GPT: Invalid Signature: " & GPT_Primary_Header.Signature);
+            Log.Put_Line ("GPT: Invalid signature: " & GPT_Primary_Header.Signature);
             return;
          end if;
          if GPT_Primary_Header.Header_Size < 92 then
-            Log.Put_Line ("GPT: Invalid GPT Header Size");
+            Log.Put_Line ("GPT: Invalid GPT header size");
             return;
          end if;
 
-         -- Check Header Size CRC
-         Calc_Header_CRC32 (GPT_Primary_Header.Header_CRC32, Is_Alternate_GPT => False, Success => Success);
+         -- Check Header CRC
+         Calc_Header_CRC32
+            (CRC32_Check       => GPT_Primary_Header.Header_CRC32,
+             Is_Alternate_GPT  => False,
+             Success           => Success);
          if not Success then
             return;
          end if;
 
-         -- Check My/CurrentLBA
-         -- better way?
          if GPT_Primary_Header.My_LBA /= 1 then
-            Log.Put_Line ("GPT: Current LBA missmatch");
+            Log.Put_Line ("GPT: Current LBA mismatch");
             Log.Put_Line ("GPT: Header says: " & SK.Strings.Img (GPT_Primary_Header.My_LBA));
-            Log.Put_Line ("GPT: expected:    " & SK.Strings.Img (Unsigned_128 (1)));
+            Log.Put_Line ("GPT: expected:    " & SK.Strings.Img (Unsigned_64 (1)));
             return;
          end if;
 
          -- Check if usable LBA range is within disk
          if GPT_Primary_Header.First_Usable_LBA > Storage_Interface.Get_Sector_Cnt (ID) then
-            Log.Put_Line ("GPT: 'First Usable LBA is invalid");
+            Log.Put_Line ("GPT: First uable LBA is invalid");
             return;
          end if;
          if GPT_Primary_Header.Last_Usable_LBA > Storage_Interface.Get_Sector_Cnt (ID) then
-            Log.Put_Line ("GPT: 'Last Usable LBA is invalid");
+            Log.Put_Line ("GPT: Last usable LBA is invalid");
             return;
          end if;
 
@@ -314,75 +306,77 @@ is
              Status  => Status);
 
          if Status /= Storage_Interface.OK then
-            Log.Put_Line ("GPT: Failed to Alternate GPT Header from Disk");
+            Log.Put_Line ("GPT: Failed to read alternate GPT header from disk");
             return;
          end if;
 
          declare
             Alternate_GPT_Header_TMP : constant GPT_Header_Type := Alternate_GPT_Header;
          begin
-            -- Checking similarity of fields:
             if not Is_Efi_Part (Alternate_GPT_Header_TMP.Signature) then
-               Log.Put_Line ("GPT: Alternate GPT Header Signature invalid");
+               Log.Put_Line ("GPT: alternate GPT header signature invalid");
                Log.Put_Line ("GPT: Primary:   " & GPT_Primary_Header.Signature);
                Log.Put_Line ("GPT: Alternate: " & Alternate_GPT_Header_TMP.Signature);
                return;
             end if;
             if GPT_Primary_Header.Revision /= Alternate_GPT_Header_TMP.Revision then
-               Log.Put_Line ("GPT: Alternate GPT Header Revision missmatch");
+               Log.Put_Line ("GPT: alternate GPT header revision mismatch");
                Log.Put_Line ("GPT: Primary:   " & SK.Strings.Img_Dec (Unsigned_64 (GPT_Primary_Header.Revision)));
                Log.Put_Line ("GPT: Alternate: " & SK.Strings.Img_Dec (Unsigned_64 (Alternate_GPT_Header_TMP.Revision)));
                return;
             end if;
             if Alternate_GPT_Header_TMP.Header_Size < 92 then
-               Log.Put_Line ("GPT: Alternate GPT Header invalid Size");
+               Log.Put_Line ("GPT: alternate GPT header invalid size");
                return;
             end if;
             if Alternate_GPT_Header_TMP.My_LBA /= GPT_Primary_Header.Alternate_LBA then
-               Log.Put_Line ("GPT: Alternate GPT Header myLBA missmatch");
+               Log.Put_Line ("GPT: alternate GPT eader myLBA mismatch");
                Log.Put_Line ("GPT: Primary wants: " & SK.Strings.Img_Dec (GPT_Primary_Header.Alternate_LBA));
                Log.Put_Line ("GPT: Alternate is:  " & SK.Strings.Img_Dec (Alternate_GPT_Header_TMP.My_LBA));
                return;
             end if;
             if Alternate_GPT_Header_TMP.Alternate_LBA /= GPT_Primary_Header.My_LBA then
-               Log.Put_Line ("GPT: Alternate GPT Header Alternate LBA missmatch");
+               Log.Put_Line ("GPT: alternate GPT header alternate LBA mismatch");
                Log.Put_Line ("GPT: Primary wants: " & SK.Strings.Img_Dec (GPT_Primary_Header.My_LBA));
                Log.Put_Line ("GPT: Alternate is:  " & SK.Strings.Img_Dec (Alternate_GPT_Header_TMP.Alternate_LBA));
                return;
             end if;
             if GPT_Primary_Header.First_Usable_LBA /= Alternate_GPT_Header_TMP.First_Usable_LBA then
-               Log.Put_Line ("GPT: Alternate GPT Header First Usable LBA missmatch");
+               Log.Put_Line ("GPT: alternate GPT header first usable LBA mismatch");
                Log.Put_Line ("GPT: Primary:   " & SK.Strings.Img_Dec (GPT_Primary_Header.First_Usable_LBA));
                Log.Put_Line ("GPT: Alternate: " & SK.Strings.Img_Dec (Alternate_GPT_Header_TMP.First_Usable_LBA));
                return;
             end if;
             if GPT_Primary_Header.Last_Usable_LBA /= Alternate_GPT_Header_TMP.Last_Usable_LBA then
-               Log.Put_Line ("GPT: Alternate GPT Header Last Usable LBA missmatch");
+               Log.Put_Line ("GPT: alternate GPT header last usable LBA mismatch");
                Log.Put_Line ("GPT: Primary:   " & SK.Strings.Img_Dec (GPT_Primary_Header.Last_Usable_LBA));
                Log.Put_Line ("GPT: Alternate: " & SK.Strings.Img_Dec (Alternate_GPT_Header_TMP.Last_Usable_LBA));
                return;
             end if;
             if GPT_Primary_Header.Disk_GUID /= Alternate_GPT_Header_TMP.Disk_GUID then
-               Log.Put_Line ("GPT: Alternate GPT Header Disk GUID missmatch");
+               Log.Put_Line ("GPT: alternate GPT header disk GUID mismatch");
                Log.Put_Line ("GPT: Primary:   " & SK.Strings.Img (GPT_Primary_Header.Disk_GUID));
                Log.Put_Line ("GPT: Alternate: " & SK.Strings.Img (Alternate_GPT_Header_TMP.Disk_GUID));
                return;
             end if;
             if GPT_Primary_Header.Number_Of_Partition_Entries /= Alternate_GPT_Header_TMP.Number_Of_Partition_Entries then
-               Log.Put_Line ("GPT: Alternate GPT Header Number of Partition Entries missmatch");
+               Log.Put_Line ("GPT: alternate GPT header number of partition entries mismatch");
                Log.Put_Line ("GPT: Primary:   " & SK.Strings.Img_Dec (Unsigned_64 (GPT_Primary_Header.Number_Of_Partition_Entries)));
                Log.Put_Line ("GPT: Alternate: " & SK.Strings.Img_Dec (Unsigned_64 (Alternate_GPT_Header_TMP.Number_Of_Partition_Entries)));
                return;
             end if;
             if GPT_Primary_Header.Size_Of_Partition_Entry /= Alternate_GPT_Header_TMP.Size_Of_Partition_Entry then
-               Log.Put_Line ("GPT: Alternate GPT Header Size of Partition Entry missmatch");
+               Log.Put_Line ("GPT: alternate GPT header size of partition entry mismatch");
                Log.Put_Line ("GPT: Primary:   " & SK.Strings.Img_Dec (Unsigned_64 (GPT_Primary_Header.Size_Of_Partition_Entry)));
                Log.Put_Line ("GPT: Alternate: " & SK.Strings.Img_Dec (Unsigned_64 (Alternate_GPT_Header_TMP.Size_Of_Partition_Entry)));
                return;
             end if;
 
             -- Check alternate GPT Header if CRC is correct
-            Calc_Header_CRC32 (Alternate_GPT_Header_TMP.Header_CRC32, Is_Alternate_GPT => True, Success => Success);
+            Calc_Header_CRC32
+               (CRC32_Check      => Alternate_GPT_Header_TMP.Header_CRC32,
+                Is_Alternate_GPT => True,
+                Success          => Success);
             if not Success then
                return;
             end if;
@@ -413,20 +407,21 @@ is
                return;
             end if;
 
-            Calc_Partition_Array_CRC32 (Alternate_GPT_Header_TMP.Partition_Entry_Array_CRC32,
-               Alternate_GPT_Header_TMP.Number_Of_Partition_Entries,
-               Alternate_GPT_Header_TMP.Size_Of_Partition_Entry,
-               Is_Alternate_GPT => True,
-               Success => Success);
+            Calc_Partition_Array_CRC32
+               (CRC32_Check                 => Alternate_GPT_Header_TMP.Partition_Entry_Array_CRC32,
+                Number_Of_Partition_Entries => Alternate_GPT_Header_TMP.Number_Of_Partition_Entries,
+                Size_Of_Partition_Entry     => Alternate_GPT_Header_TMP.Size_Of_Partition_Entry,
+                Is_Alternate_GPT            => True,
+                Success                     => Success);
             if not Success
             then
                return;
             end if;
 
-            Log.Put_Line ("GPT: Primary and Alternate GPT Header are correct.");
+            Log.Put_Line ("GPT: Primary and alternate GPT headers are correct.");
          end;
 
-         -- Check Partion Entry Array CRC
+         -- Check Partiton Entry Array CRC
          -- load Entries
 
          Storage_Interface.Execute_Read_Command
@@ -461,8 +456,6 @@ is
          end if;
       end;
 
-      pragma Assert (Check_Part_Table_Count_Equal (Part_Table, Partitions.Null_Partition_Table));
-
       -- Parse Partitions
       for I in Entry_Array_Type'Range loop
          pragma Loop_Invariant (Part_Table.Count <= I);
@@ -493,13 +486,6 @@ is
          end;
       end loop;
       Log.Put_Line ("==================================================");
-
-      -- links
-      -- https://source.denx.de/u-boot/u-boot/-/blob/master/doc/README.gpt
-      -- https://source.denx.de/u-boot/u-boot/-/blob/master/disk/part_efi.c
-      -- https://github.com/ceph/simplegpt/blob/master/simplegpt.py
-      -- https://github.com/pvachon/pygpt/blob/master/partition_table_header.py
-
    end Parse;
 
 end Gpt;

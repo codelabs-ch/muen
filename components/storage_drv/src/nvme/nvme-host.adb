@@ -46,21 +46,21 @@ is
    IOCQ_HD_Address : constant := PCIE_Memory.Controller_Mem1_Address + IOCQ_HD_Offset;
 
    -- DRAM Memory
-   Ident_Controller_Offset         : constant := 16#0004_0000#;
-   Ident_Controller_Address        : constant := DRAM_Memory.Queue_Memory_Address + Ident_Controller_Offset;
-   IO_CMD_Sets_Offset              : constant := 16#0005_0000#;
-   IO_CMD_Sets_Address             : constant := DRAM_Memory.Queue_Memory_Address + IO_CMD_Sets_Offset;
-   Namespace_List_Offset           : constant := 16#0006_0000#;
-   Namespace_List_Address          : constant := DRAM_Memory.Queue_Memory_Address + Namespace_List_Offset;
-   Ident_Namespace_Offset          : constant := 16#0007_0000#;
-   Ident_Namespace_Address         : constant := DRAM_Memory.Queue_Memory_Address + Ident_Namespace_Offset;
-   SMART_Health_LogPage_Offset     : constant := 16#0009_0000#;
-   SMART_Health_LogPage_Address    : constant := DRAM_Memory.Queue_Memory_Address + SMART_Health_LogPage_Offset;
+   Ident_Controller_Offset      : constant := 16#0004_0000#;
+   Ident_Controller_Address     : constant := DRAM_Memory.Queue_Memory_Address + Ident_Controller_Offset;
+   IO_CMD_Sets_Offset           : constant := 16#0005_0000#;
+   IO_CMD_Sets_Address          : constant := DRAM_Memory.Queue_Memory_Address + IO_CMD_Sets_Offset;
+   Namespace_List_Offset        : constant := 16#0006_0000#;
+   Namespace_List_Address       : constant := DRAM_Memory.Queue_Memory_Address + Namespace_List_Offset;
+   Ident_Namespace_Offset       : constant := 16#0007_0000#;
+   Ident_Namespace_Address      : constant := DRAM_Memory.Queue_Memory_Address + Ident_Namespace_Offset;
+   SMART_Health_LogPage_Offset  : constant := 16#0009_0000#;
+   SMART_Health_LogPage_Address : constant := DRAM_Memory.Queue_Memory_Address + SMART_Health_LogPage_Offset;
 
-   Test_IO_Write_Offset    : constant := 16#0008_0000#;
-   Test_IO_Write_Address   : constant := DRAM_Memory.Queue_Memory_Address + Test_IO_Write_Offset;
-   Test_IO_Read_Offset     : constant := 16#0008_0020#;
-   Test_IO_Read_Address    : constant := DRAM_Memory.Queue_Memory_Address + Test_IO_Read_Offset;
+   Test_IO_Write_Offset  : constant := 16#0008_0000#;
+   Test_IO_Write_Address : constant := DRAM_Memory.Queue_Memory_Address + Test_IO_Write_Offset;
+   Test_IO_Read_Offset   : constant := 16#0008_0020#;
+   Test_IO_Read_Address  : constant := DRAM_Memory.Queue_Memory_Address + Test_IO_Read_Offset;
 
    -------------------------------------------------------------------------
    -- Controller Data Structures
@@ -78,13 +78,17 @@ is
       & "interfaces. Non-overlap is checked during system build.");
    BAR0 : BAR_64Bit
    with
-      Volatile, Async_Readers, Async_Writers,
+      Volatile,
+      Async_Readers,
+      Async_Writers,
       Address =>
        System'To_Address (Bar0_Address);
 
    CProp : ControllerProperties
    with
-      Volatile, Async_Readers, Async_Writers,
+      Volatile,
+      Async_Readers,
+      Async_Writers,
       Address =>
        System'To_Address (CProp_Address);
 
@@ -94,13 +98,17 @@ is
 
    ASQ : SubmissionQ.Entry_Queue := (others => SubmissionQ.Null_SQE)
    with
-      Volatile, Async_Readers, Effective_Writes,
+      Volatile,
+      Async_Readers,
+      Effective_Writes,
       Address =>
        System'To_Address (ASQ_Address);
 
    ASQ_TailDoorbell : Unsigned_32 := 0
    with
-      Volatile, Async_Readers, Effective_Writes,
+      Volatile,
+      Async_Readers,
+      Effective_Writes,
       Address =>
        System'To_Address (ASQ_TD_Address);
 
@@ -112,18 +120,22 @@ is
 
    ACQ : CompletionQ.Entry_Queue := (others => CompletionQ.Null_CQE)
    with
-     Volatile, Async_Readers, Async_Writers,
+     Volatile,
+     Async_Readers,
+     Async_Writers,
      Address =>
       System'To_Address (ACQ_Address);
 
    ACQ_HeadDoorbell : Unsigned_32 := 0
    with
-      Volatile, Async_Readers, Effective_Writes,
+      Volatile,
+      Async_Readers,
+      Effective_Writes,
       Address =>
        System'To_Address (ACQ_HD_Address);
 
-   ACQ_Index     : CompletionQ.Entry_Queue_Range := 0;
-   ACQ_PhaseTag  : Boolean    := False;
+   ACQ_Index    : CompletionQ.Entry_Queue_Range := 0;
+   ACQ_PhaseTag : Boolean                       := False;
 
    -------------------------------------------------------------------------
    -- IO Submission Queue
@@ -131,13 +143,16 @@ is
 
    IOSQ : SubmissionQ.Entry_Queue := (others => SubmissionQ.Null_SQE)
    with
-      Volatile, Async_Readers,
+      Volatile,
+      Async_Readers,
       Address =>
        System'To_Address (IOSQ_Address);
 
    IOSQ_TailDoorbell : Unsigned_32 := 0
    with
-      Volatile, Async_Readers, Effective_Writes,
+      Volatile,
+      Async_Readers,
+      Effective_Writes,
       Address =>
        System'To_Address (IOSQ_TD_Address);
 
@@ -149,18 +164,22 @@ is
 
    IOCQ : CompletionQ.Entry_Queue := (others => CompletionQ.Null_CQE)
    with
-      Volatile, Async_Readers, Async_Writers,
+      Volatile,
+      Async_Readers,
+      Async_Writers,
       Address =>
        System'To_Address (IOCQ_Address);
 
    IOCQ_HeadDoorbell : Unsigned_32 := 0
    with
-      Volatile, Async_Readers, Effective_Writes,
+      Volatile,
+      Async_Readers,
+      Effective_Writes,
       Address =>
        System'To_Address (IOCQ_HD_Address);
 
    IOCQ_Index    : CompletionQ.Entry_Queue_Range := 0;
-   IOCQ_PhaseTag : Boolean    := False;
+   IOCQ_PhaseTag : Boolean                       := False;
 
    -------------------------------------------------------------------------
    -- Other Declarations
@@ -168,26 +187,31 @@ is
 
    IdentController : IdentifyController
    with
-      Volatile, Async_Writers,
-       Address => System'To_Address (Ident_Controller_Address);
+      Volatile,
+      Async_Writers,
+      Address => System'To_Address (Ident_Controller_Address);
 
    -- last item is where the next one has every flag as false
    IO_CMD_Sets : IO_CMD_Set_Array
    with
-      Volatile, Async_Writers, Import,
-       Address => System'To_Address (IO_CMD_Sets_Address);
+      Volatile,
+      Async_Writers,
+      Import,
+      Address => System'To_Address (IO_CMD_Sets_Address);
 
    IO_CMD_Set_Index : IO_CMD_Set_Array_Index_Type := 0;
 
    Namespace_List : Namespace_ID_List := (others => 0)
    with
-      Volatile, Async_Writers,
-       Address => System'To_Address (Namespace_List_Address);
+      Volatile,
+      Async_Writers,
+      Address => System'To_Address (Namespace_List_Address);
 
    IdentNamespace : IdentifyNamespace
    with
-      Volatile, Async_Writers,
-       Address => System'To_Address (Ident_Namespace_Address);
+      Volatile,
+      Async_Writers,
+      Address => System'To_Address (Ident_Namespace_Address);
 
    IO_Write_TestNum : Unsigned_32 := 69_420
    with
@@ -195,12 +219,14 @@ is
 
    IO_Read_TestNum : Unsigned_32 := 0
    with
-      Volatile, Async_Writers,
+      Volatile,
+      Async_Writers,
       Address => System'To_Address (Test_IO_Read_Address);
 
    SMART_Health_LogPage : AdminCommandSet.SMART_LogPage
    with
-      Volatile, Async_Writers,
+      Volatile,
+      Async_Writers,
       Address => System'To_Address (SMART_Health_LogPage_Address);
 
    pragma Warnings
@@ -259,7 +285,7 @@ is
       use type CompletionQ.Entry_Queue_Range;
       use type SubmissionQ.Entry_Queue_Range;
 
-      Temp_CQE       : CompletionQ.CQE;
+      Temp_CQE : CompletionQ.CQE;
    begin
 
       ASQ (ASQ_Index) := AdminCMD;
@@ -275,11 +301,10 @@ is
       loop
          Temp_CQE := ACQ (ACQ_Index);
          exit when Temp_CQE.P /= ACQ_PhaseTag;
-         -- Todo Timeout?
+         -- Todo Timeout
       end loop;
-      -- TODO Clenaup if statement if no timeout
       if Temp_CQE.CID = AdminCMD.CID and Temp_CQE.Status.SC = 0 then
-         Log.Put_String ("Successfully executed Admin Command ");
+         Log.Put_String ("Successfully executed admin command ");
          NVMe_Log.Put_NVMe_AdminCMD_Image (AdminCMD.OPC);
          Log.New_Line;
          Status := OK;
@@ -316,25 +341,25 @@ is
       SMART_Status : out SMART_Status_Type;
       NVMe_Status  : out Status_Type)
    is
-      Admin_CMD    : SubmissionQ.Admin_Command;
-      PRP_D_Ptr    : SubmissionQ.PRP_Data_Ptr := (0, 0);
-      No_Warning   : constant AdminCommandSet.CriticalWarning_Type :=
-        (AvailableSpaceBelowThresh => False,
-         TemperatureWarning => False,
-         ReliabilityDegraded => False,
-         ReadOnlyModeActive => False,
-         BackupDeviceFailure => False,
+      Admin_CMD  : SubmissionQ.Admin_Command;
+      PRP_D_Ptr  : SubmissionQ.PRP_Data_Ptr := (0, 0);
+      No_Warning : constant AdminCommandSet.CriticalWarning_Type :=
+        (AvailableSpaceBelowThresh   => False,
+         TemperatureWarning          => False,
+         ReliabilityDegraded         => False,
+         ReadOnlyModeActive          => False,
+         BackupDeviceFailure         => False,
          PersistMemoryRegionReadOnly => False,
-         Reserved => (False, False));
+         Reserved                    => (False, False));
 
    begin
 
       PRP_D_Ptr.E1 := Address;
 
       AdminCommandSet.CreateSMART_Health_LogPage_Command
-                     (CMD_Identifier => CMD_Identifier_Admin,
-                      DPTR           => PRP_D_Ptr,
-                      Command        => Admin_CMD);
+         (CMD_Identifier => CMD_Identifier_Admin,
+          DPTR           => PRP_D_Ptr,
+          Command        => Admin_CMD);
       ProcessAdminCommand (Admin_CMD, NVMe_Status);
 
       if NVMe_Status /= OK then
@@ -346,9 +371,9 @@ is
       PRP_D_Ptr.E1 := SMART_Health_LogPage_Address;
 
       AdminCommandSet.CreateSMART_Health_LogPage_Command
-                     (CMD_Identifier => CMD_Identifier_Admin,
-                      DPTR           => PRP_D_Ptr,
-                      Command        => Admin_CMD);
+         (CMD_Identifier => CMD_Identifier_Admin,
+          DPTR           => PRP_D_Ptr,
+          Command        => Admin_CMD);
       ProcessAdminCommand (Admin_CMD, NVMe_Status);
 
       if NVMe_Status = OK
@@ -429,26 +454,31 @@ is
    --- 3.5 Controller Initialization
    -------------------------------------------------------------------------
 
-   procedure ControllerInit
-     (Success : out Boolean)
+   procedure ControllerInit (Success : out Boolean)
    is
       use type CompletionQ.Entry_Queue_Range;
 
       type CDW11_SetIOSetsType is record
-         IOCSCI   : IO_CMD_Set_Array_Index_Type;
-         Filler1  : Unsigned_7 := 0;
-         Filler2  : Unsigned_16 := 0;
-      end record with Size => 32;
+         IOCSCI  : IO_CMD_Set_Array_Index_Type;
+         Filler1 : Unsigned_7  := 0;
+         Filler2 : Unsigned_16 := 0;
+      end record
+      with
+         Size => 32;
+
       for CDW11_SetIOSetsType use record
-         IOCSCI   at 0 range 0 ..  8;
-         Filler1  at 1 range 1 ..  7;
-         Filler2  at 2 range 0 .. 15;
+         IOCSCI  at 0 range 0 ..  8;
+         Filler1 at 1 range 1 ..  7;
+         Filler2 at 2 range 0 .. 15;
       end record;
 
       type CDW11_NumOfQsType is record
          NSQR : Unsigned_16;
          NCQR : Unsigned_16;
-      end record with Size => 32;
+      end record
+      with
+         Size => 32;
+
       for CDW11_NumOfQsType use record
          NSQR at 0 range 0 .. 15;
          NCQR at 2 range 0 .. 15;
@@ -523,7 +553,6 @@ is
       ---------------------------------------------------
       --- 2. Configuring Admin Queue Attributes, if needed
       ---------------------------------------------------
-         -- Default Values of Qemu are 255; 63 (Zeros based => 256, 64)
       declare
          Temp_AQA : AQA_Part := CProp.AQA;
       begin
@@ -531,8 +560,8 @@ is
          Temp_AQA.ASQS := 63;
          CProp.AQA := Temp_AQA;
       end;
-        -- Configure Admin Queue Base Addresses
-        -- divided the given memory in half - change if needed
+      -- Configure Admin Queue Base Addresses
+      -- divided the given memory in half - change if needed
       CProp.ASQ := ASQ_Address;
       CProp.ACQ := ACQ_Address;
 
@@ -567,11 +596,11 @@ is
             end if;
          end if;
 
-      ---------------------------------------------------
-      --- 4. Configuring Controller Settings
-      ---------------------------------------------------
-      -- 4.1. Arbitration Mechanism
-      ------------------------------------
+         ---------------------------------------------------
+         --- 4. Configuring Controller Settings
+         ---------------------------------------------------
+         -- 4.1. Arbitration Mechanism
+         ------------------------------------
          -- Round Robin is standard AM
          Temp_CC.AMS := 0;
          -- Check if Weighted Round Robin is supported
@@ -586,21 +615,20 @@ is
             Temp_CC.AMS := 7;
          end if;
 
-      ---------------------------------------------------
-      -- 4.2 Memory Page Size
-      ---------------------------------------------------
+         ---------------------------------------------------
+         -- 4.2 Memory Page Size
+         ---------------------------------------------------
 
-      ---------------------------------------------------
-      -- MPS is 2^(12+MPS) -> with 2 -> 16KB
-      -- limits on qemu: min=0, max=4
-      -- uInt 4
-      -- change if needed:
-      -- bigger  : for fewer, heavier loads
-      -- smaller : for more, random and small loads
+         ---------------------------------------------------
+         -- MPS is 2^(12+MPS) -> with 2 -> 16KB
+         -- limits on qemu: min=0, max=4
+         -- uInt 4
+         -- change if needed:
+         -- bigger  : for fewer, heavier loads
+         -- smaller : for more, random and small loads
 
-      -- Muenblock max MPS need should be 64k so MPS=4
-
-      ---------------------------------------------------
+         -- Muenblock max MPS need should be 64k so MPS=4
+         ---------------------------------------------------
          declare
             Temp_Max : constant Unsigned_4 := CProp.CAP.MPSMAX;
             Temp_Min : constant Unsigned_4 := CProp.CAP.MPSMIN;
@@ -623,9 +651,9 @@ is
          Temp_CC.IOCQES := 4; -- 16 Byte
          Temp_CC.IOSQES := 6; -- 64 Byte
 
-      ---------------------------------------------------
-      --- 5. Enabling the Controller
-      ---------------------------------------------------
+         ---------------------------------------------------
+         --- 5. Enabling the Controller
+         ---------------------------------------------------
 
          Temp_CC.EN := True;
 
@@ -667,7 +695,7 @@ is
       declare
          VID : constant Unsigned_16 := IdentController.VID;
       begin
-         Log.Put_Line ("VID :" & SK.Strings.Img (VID));
+         Log.Put_Line ("VID: " & SK.Strings.Img (VID));
       end;
 
       ---------------------------------------------------
@@ -719,7 +747,8 @@ is
                exit;
             end if;
 
-            Log.Put_Line ("NSID " & SK.Strings.Img_Dec (Unsigned_64 (Namespace_ID_List_Index)) & " is " & SK.Strings.Img_Dec (Unsigned_64 (Temp_NSID)));
+            Log.Put_Line ("NSID " & SK.Strings.Img_Dec (Unsigned_64 (Namespace_ID_List_Index))
+                          & " is " & SK.Strings.Img_Dec (Unsigned_64 (Temp_NSID)));
 
             PRP_D_Ptr.E1 := Ident_Namespace_Address;
 
@@ -887,7 +916,9 @@ is
                   end if;
                end if;
             end if;
-            Log.Put_Line ("Identifying CMD Set at Index " & SK.Strings.Img_Dec (Unsigned_64 (IO_CMD_Set_Iterator)) & " of " & SK.Strings.Img_Dec (Unsigned_64 (IO_CMD_Set_Index)));
+
+            Log.Put_Line ("Identifying CMD Set at Index " & SK.Strings.Img_Dec (Unsigned_64 (IO_CMD_Set_Iterator))
+                          & " of " & SK.Strings.Img_Dec (Unsigned_64 (IO_CMD_Set_Index)));
             ProcessAdminCommand (Admin_CMD, NVMe_Status);
             if NVMe_Status /= OK then
                Log.Put_Line ("NVME: Error During NVMe Controller Init Step 8.b.i");
@@ -909,7 +940,8 @@ is
                   exit;
                end if;
 
-               Log.Put_Line ("NSID " & SK.Strings.Img_Dec (Unsigned_64 (Namespace_ID_List_Index)) & " is " & SK.Strings.Img_Dec (Unsigned_64 (Temp_NSID)));
+               Log.Put_Line ("NSID " & SK.Strings.Img_Dec (Unsigned_64 (Namespace_ID_List_Index))
+                             & " is " & SK.Strings.Img_Dec (Unsigned_64 (Temp_NSID)));
                ---------------------------------------------
                -- 8.b.ii.1 only for NVM or Zoned NS CMD Sets
                ---------------------------------------------
@@ -982,7 +1014,7 @@ is
       --- 10. Initialize I/O Completion Queues
       ---------------------------------------------------
 
-         -- value in bytes, 2^n
+      -- value in bytes, 2^n
       declare
          Temp_CC : CC_Part := CProp.CC;
       begin
@@ -1041,9 +1073,9 @@ is
       NVMe_Status : Status_Type;
    begin
 
-   ----------------------------
-   --- 1. If Controller enabled
-   ----------------------------
+      ----------------------------
+      --- 1. If Controller enabled
+      ----------------------------
       declare
          Enabled : constant Boolean := CProp.CC.EN;
 
@@ -1091,7 +1123,7 @@ is
          end;
       end loop;
 
-      Log.Put_Line ("Controller Shutdown Complete.");
+      Log.Put_Line ("Controller shutdown complete.");
 
    end ControllerShutdown;
 

@@ -3,6 +3,8 @@ with Log;
 package body NVMe_Log
 is
 
+   -------------------------------------------------------------------------
+
    procedure Put_NVMe_AdminCMD_Image (TypeID : Interfaces.Unsigned_8)
    is
    begin
@@ -229,7 +231,12 @@ is
       others => "Vendor Specific                                                                                 "
    );
 
-   procedure Print_Status_Code (SC :  Interfaces.Unsigned_8; SCT : Unsigned_3) is
+   -------------------------------------------------------------------------
+
+   procedure Print_Status_Code
+      (SC  : Interfaces.Unsigned_8;
+       SCT : Unsigned_3)
+   is
       function Msg_Length (S : Status_String) return Natural
       with Post => Msg_Length'Result <= Max_Status_Length
       is

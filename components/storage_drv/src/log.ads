@@ -32,7 +32,9 @@ is
 
    function Boolean_Image (B : Boolean) return Bool_Image;
 
-   procedure Print_GPT_Partition_Table_Entry (Partition : Gpt.Partition_Entry_Type; Index : Partitions.Partition_Array_Length);
+   procedure Print_GPT_Partition_Table_Entry
+      (Partition : Gpt.Partition_Entry_Type;
+       Index     : Partitions.Partition_Array_Length);
 
    procedure Print_GPT_Header (Header : Gpt.GPT_Header_Type);
 

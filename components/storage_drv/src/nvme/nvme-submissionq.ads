@@ -60,25 +60,25 @@ is
    with Size => 64 * 8;
 
    for SQE use record
-      OPC          at  0 range 0 ..   7;
-      FUSE         at  1 range 0 ..   1;
-      Reserved     at  1 range 2 ..   5;
-      PSDT         at  1 range 6 ..   7;
-      CID          at  2 range 0 ..  15;
+      OPC      at  0 range 0 ..   7;
+      FUSE     at  1 range 0 ..   1;
+      Reserved at  1 range 2 ..   5;
+      PSDT     at  1 range 6 ..   7;
+      CID      at  2 range 0 ..  15;
 
-      NSID         at  4 range 0 ..  31;
-      CDW2         at  8 range 0 ..  31;
-      CDW3         at 12 range 0 ..  31;
-      MPTR         at 16 range 0 ..  63;
+      NSID     at  4 range 0 ..  31;
+      CDW2     at  8 range 0 ..  31;
+      CDW3     at 12 range 0 ..  31;
+      MPTR     at 16 range 0 ..  63;
 
-      DPRP         at 24 range 0 .. 127;
+      DPRP     at 24 range 0 .. 127;
 
-      CDW10        at 40 range 0 ..  31;
-      CDW11        at 44 range 0 ..  31;
-      CDW12        at 48 range 0 ..  31;
-      CDW13        at 52 range 0 ..  31;
-      CDW14        at 56 range 0 ..  31;
-      CDW15        at 60 range 0 ..  31;
+      CDW10    at 40 range 0 ..  31;
+      CDW11    at 44 range 0 ..  31;
+      CDW12    at 48 range 0 ..  31;
+      CDW13    at 52 range 0 ..  31;
+      CDW14    at 56 range 0 ..  31;
+      CDW15    at 60 range 0 ..  31;
    end record;
 
    Null_SQE : constant SQE :=

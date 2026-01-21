@@ -51,11 +51,11 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateRead_Command
-      (CMD_Identifier  : in out Unsigned_16;              -- Command Identifier
-       DPTR            :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       SLBA            :        Unsigned_64;              -- Starting Logical Block Address (LBA)
-       NLB             :        Unsigned_16;              -- Number of Logical Blocks
-       Command         :    out SubmissionQ.IO_Command)
+      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
+       DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
+       SLBA           :        Unsigned_64;              -- Starting Logical Block Address (LBA)
+       NLB            :        Unsigned_16;              -- Number of Logical Blocks
+       Command        :    out SubmissionQ.IO_Command)
    with Pre => NVMe.Host.Is_Valid;
 
    -------------------------------------------------------------------------
@@ -64,11 +64,11 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateWrite_Command
-      (CMD_Identifier  : in out Unsigned_16;              -- Command Identifier
-       DPTR            :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       SLBA            :        Unsigned_64;              -- Starting Logical Block Address (LBA)
-       NLB             :        Unsigned_16;              -- Number of Logical Blocks
-       Command         :    out SubmissionQ.IO_Command)
+      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
+       DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
+       SLBA           :        Unsigned_64;              -- Starting Logical Block Address (LBA)
+       NLB            :        Unsigned_16;              -- Number of Logical Blocks
+       Command        :    out SubmissionQ.IO_Command)
    with Pre => NVMe.Host.Is_Valid;
 
    -------------------------------------------------------------------------

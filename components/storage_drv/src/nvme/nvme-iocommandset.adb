@@ -48,14 +48,14 @@ is
    is
       use type SubmissionQ.PRP_List_Range;
 
-      Sector_Size       : constant Unsigned_64 := Unsigned_64 (Host.Get_Sector_Size);
-      Exponent          : constant Natural     := 12 + Natural (NVMe.Host.Memory_Page_Size);
-      MPS_UInt          : constant Unsigned_64 := Unsigned_64 (2) ** Exponent;
-      MPS_Int           : constant Integer_64  := Integer_64 (MPS_UInt);
-      Amount_Data       : constant Unsigned_64 := Unsigned_64 (NLB) * Sector_Size;
-      Remaining_Data    : Integer_64;
-      Number_PRPs       : Unsigned_8;
-      PRP_Base          : Unsigned_64;
+      Sector_Size    : constant Unsigned_64 := Unsigned_64 (Host.Get_Sector_Size);
+      Exponent       : constant Natural     := 12 + Natural (NVMe.Host.Memory_Page_Size);
+      MPS_UInt       : constant Unsigned_64 := Unsigned_64 (2) ** Exponent;
+      MPS_Int        : constant Integer_64  := Integer_64 (MPS_UInt);
+      Amount_Data    : constant Unsigned_64 := Unsigned_64 (NLB) * Sector_Size;
+      Remaining_Data : Integer_64;
+      Number_PRPs    : Unsigned_8;
+      PRP_Base       : Unsigned_64;
 
    begin
       Corrected_PRP := PRP;
@@ -89,11 +89,11 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateRead_Command
-      (CMD_Identifier  : in out Unsigned_16;              -- Command Identifier
-       DPTR            :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       SLBA            :        Unsigned_64;              -- Starting Logical Block Address (LBA)
-       NLB             :        Unsigned_16;              -- Number of Logical Blocks
-       Command         :    out SubmissionQ.IO_Command)
+      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
+       DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
+       SLBA           :        Unsigned_64;              -- Starting Logical Block Address (LBA)
+       NLB            :        Unsigned_16;              -- Number of Logical Blocks
+       Command        :    out SubmissionQ.IO_Command)
    is
       CDW10and11_Temp : CDW10and11_RW;
       PRP : SubmissionQ.PRP_Data_Ptr;
@@ -132,11 +132,11 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateWrite_Command
-      (CMD_Identifier  : in out Unsigned_16;              -- Command Identifier
-       DPTR            :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       SLBA            :        Unsigned_64;              -- Starting Logical Block Address (LBA)
-       NLB             :        Unsigned_16;              -- Number of Logical Blocks
-       Command         :    out SubmissionQ.IO_Command)
+      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
+       DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
+       SLBA           :        Unsigned_64;              -- Starting Logical Block Address (LBA)
+       NLB            :        Unsigned_16;              -- Number of Logical Blocks
+       Command        :    out SubmissionQ.IO_Command)
    is
       CDW10and11_Temp : CDW10and11_RW;
       PRP             : SubmissionQ.PRP_Data_Ptr;
@@ -177,10 +177,10 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateWrite_Zeroes_Command
-      (CMD_Identifier  : in out Unsigned_16;          -- Command Identifier
-       SLBA            :        Unsigned_64;          -- Starting Logical Block Address (LBA)
-       NLB             :        Unsigned_16;          -- Number of Logical Blocks
-       Command         :    out SubmissionQ.IO_Command)
+      (CMD_Identifier : in out Unsigned_16;          -- Command Identifier
+       SLBA           :        Unsigned_64;          -- Starting Logical Block Address (LBA)
+       NLB            :        Unsigned_16;          -- Number of Logical Blocks
+       Command        :    out SubmissionQ.IO_Command)
    is
       CDW10and11_Temp : CDW10and11_RW;
 
@@ -216,8 +216,8 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateFlush_Command
-      (CMD_Identifier  : in out Unsigned_16;          -- Command Identifier
-       Command         :    out SubmissionQ.IO_Command)
+      (CMD_Identifier : in out Unsigned_16;          -- Command Identifier
+       Command        :    out SubmissionQ.IO_Command)
    is
    begin
 

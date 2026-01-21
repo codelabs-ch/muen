@@ -57,25 +57,25 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateSetFeatures_Command
-      (CMD_Identifier   : in out Unsigned_16;              -- Command Identifier
-       DPTR             :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       FID              :        Unsigned_8;               -- Feature Identifier
-       SV               :        Boolean;                  -- Save (persistently)
-       UUID_Index       :        Unsigned_7;               -- UUID Index
-       CDW11_Cvt        :        Unsigned_32;              -- Already converted FID specific CDW11
-       Command          :    out SubmissionQ.Admin_Command);
+      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
+       DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
+       FID            :        Unsigned_8;               -- Feature Identifier
+       SV             :        Boolean;                  -- Save (persistently)
+       UUID_Index     :        Unsigned_7;               -- UUID Index
+       CDW11_Cvt      :        Unsigned_32;              -- Already converted FID specific CDW11
+       Command        :    out SubmissionQ.Admin_Command);
 
     -------------------------------------------------------------------------
     --- 5.15 Get Features command
     -------------------------------------------------------------------------
 
    procedure CreateGetFeatures_Command
-      (CMD_Identifier   : in out Unsigned_16;              -- Command Identifier
-       DPTR             :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       FID              :        Unsigned_8;               -- Feature Identifier
-       SEL              :        Unsigned_3;               -- Select (Attribute of requested Data)
-       UUID_Index       :        Unsigned_7;               -- UUID Index
-       Command          :    out SubmissionQ.Admin_Command);
+      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
+       DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
+       FID            :        Unsigned_8;               -- Feature Identifier
+       SEL            :        Unsigned_3;               -- Select (Attribute of requested Data)
+       UUID_Index     :        Unsigned_7;               -- UUID Index
+       Command        :    out SubmissionQ.Admin_Command);
 
     -------------------------------------------------------------------------
     --- 5.17 Identify command
@@ -97,65 +97,65 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateCreateIOCQ_Command
-      (CMD_Identifier   : in out Unsigned_16;              -- Command Identifier
-       DPTR             :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       QID              :        Unsigned_16;              -- Queue Identifier
-       QSIZE            :        Unsigned_16;              -- Queue Size
-       PC               :        Boolean;                  -- Physically Contiguous
-       IEN              :        Boolean;                  -- Interrupts Enabled (Default: False)
-       Command          :    out SubmissionQ.Admin_Command);
+      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
+       DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
+       QID            :        Unsigned_16;              -- Queue Identifier
+       QSIZE          :        Unsigned_16;              -- Queue Size
+       PC             :        Boolean;                  -- Physically Contiguous
+       IEN            :        Boolean;                  -- Interrupts Enabled (Default: False)
+       Command        :    out SubmissionQ.Admin_Command);
 
    -------------------------------------------------------------------------
    --- 5.5 Create I/O Submission Queue command
    -------------------------------------------------------------------------
 
    procedure CreateCreateIOSQ_Command
-      (CMD_Identifier   : in out Unsigned_16;              -- Command Identifier
-       DPTR             :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       QID              :        Unsigned_16;              -- Queue Identifier
-       QSIZE            :        Unsigned_16;              -- Queue Size
-       PC               :        Boolean;                  -- Physically Contiguous
-       QPRIO            :        Unsigned_2;               -- Queue Priority
-       CQID             :        Unsigned_16;              -- Completion Queue Identifier
-       Command          :    out SubmissionQ.Admin_Command);
+      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
+       DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
+       QID            :        Unsigned_16;              -- Queue Identifier
+       QSIZE          :        Unsigned_16;              -- Queue Size
+       PC             :        Boolean;                  -- Physically Contiguous
+       QPRIO          :        Unsigned_2;               -- Queue Priority
+       CQID           :        Unsigned_16;              -- Completion Queue Identifier
+       Command        :    out SubmissionQ.Admin_Command);
 
    -------------------------------------------------------------------------
    --- 5.6 Delete I/O Completion Queue command
    -------------------------------------------------------------------------
 
    procedure CreateDeleteIOCQ_Command
-      (CMD_Identifier   : in out Unsigned_16;      -- Command Identifier
-       QID              :        Unsigned_16;     -- Queue Identifier
-       Command          :    out SubmissionQ.Admin_Command);
+      (CMD_Identifier : in out Unsigned_16;      -- Command Identifier
+       QID            :        Unsigned_16;      -- Queue Identifier
+       Command        :    out SubmissionQ.Admin_Command);
 
     -------------------------------------------------------------------------
     --- 5.7 Delete I/O Submission Queue command
     -------------------------------------------------------------------------
 
    procedure CreateDeleteIOSQ_Command
-      (CMD_Identifier   : in out Unsigned_16;     -- Command Identifier
-       QID              :        Unsigned_16;     -- Queue Identifier
-       Command          :    out SubmissionQ.Admin_Command);
+      (CMD_Identifier : in out Unsigned_16;     -- Command Identifier
+       QID            :        Unsigned_16;     -- Queue Identifier
+       Command        :    out SubmissionQ.Admin_Command);
 
    -------------------------------------------------------------------------
    --- 5.16 Get Log Page command
    -------------------------------------------------------------------------
 
    procedure CreateGetLogPage_Command
-      (CMD_Identifier   : in out Unsigned_16;              -- Command Identifier
-       DPTR             :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       LID              :        Unsigned_8;               -- Log Page Identifier
-       LSP              :        Unsigned_7;               -- Log Specific Parameter
-       RAE              :        Boolean;                  -- Retain Async Event
-       NUMDL            :        Unsigned_16;              -- Number of DWORDS Lower
-       NUMDU            :        Unsigned_16;              -- Number of DWORDS (16 most significant bits)
-       LogSpecificID    :        Unsigned_16;              -- Log Specific Identifier
-       Command          :    out SubmissionQ.Admin_Command);
+      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
+       DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
+       LID            :        Unsigned_8;               -- Log Page Identifier
+       LSP            :        Unsigned_7;               -- Log Specific Parameter
+       RAE            :        Boolean;                  -- Retain Async Event
+       NUMDL          :        Unsigned_16;              -- Number of DWORDS Lower
+       NUMDU          :        Unsigned_16;              -- Number of DWORDS (16 most significant bits)
+       LogSpecificID  :        Unsigned_16;              -- Log Specific Identifier
+       Command        :    out SubmissionQ.Admin_Command);
 
    procedure CreateSMART_Health_LogPage_Command
-      (CMD_Identifier   : in out Unsigned_16;              -- Command Identifier
-       DPTR             :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       Command          :    out SubmissionQ.Admin_Command);
+      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
+       DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
+       Command        :    out SubmissionQ.Admin_Command);
 
    -------------------------------------------------------------------------
    -- Figure 207: SMART / Health Info Log Page
@@ -169,8 +169,10 @@ is
       BackupDeviceFailure         : Boolean;
       PersistMemoryRegionReadOnly : Boolean; -- see Section 8.14
       Reserved                    : Bit_Array (6 .. 7);
-   end record with
+   end record
+   with
       Size => 8;
+
    for CriticalWarning_Type use record
       AvailableSpaceBelowThresh   at 0 range 0 .. 0;
       TemperatureWarning          at 0 range 1 .. 1;
@@ -181,8 +183,11 @@ is
       Reserved                    at 0 range 6 .. 7;
    end record;
 
+   -- Consists of Temperature Readings [K]
    type TempSensorArray is array (1 .. 8) of Unsigned_16
-   with Pack, Object_Size => 16 * 8;                           -- Consists of Temperature Readings [K]
+   with
+      Pack,
+      Object_Size => 16 * 8;
 
    type SMART_LogPage is record
       CriticalWarning                  : CriticalWarning_Type; -- Indicated Type of Critical Warning
@@ -210,8 +215,10 @@ is
       TotalThermalMngmtTempTime1       : Unsigned_32;          -- Amount of time the controller thermal throttled lightly [s]
       TotalThermalMngmtTempTime2       : Unsigned_32;          -- Amount of time the controller thermal throttled heavily [s]
       Reserved_2                       : Byte_Array (232 .. 511);
-   end record with
-      Size => 512 * 8, Object_Size => 512 * 8;
+   end record
+   with
+      Size        => 512 * 8,
+      Object_Size => 512 * 8;
    for SMART_LogPage use record
       CriticalWarning                  at   0 range 0 ..    7;
       CompositeTemperature             at   1 range 0 ..   15;
@@ -244,18 +251,18 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateAbort_Command
-      (CMD_Identifier   : in out Unsigned_16;     -- Command Identifier
-       CMD_ID2Abort     :        Unsigned_16;     -- Command Identifier of the Command to be aborted
-       SQID             :        Unsigned_16;     -- Submission Queue Identifier
-       Command          :    out SubmissionQ.Admin_Command);
+      (CMD_Identifier : in out Unsigned_16;     -- Command Identifier
+       CMD_ID2Abort   :        Unsigned_16;     -- Command Identifier of the Command to be aborted
+       SQID           :        Unsigned_16;     -- Submission Queue Identifier
+       Command        :    out SubmissionQ.Admin_Command);
 
    -------------------------------------------------------------------------
    --- 5.2 Async Event Request Command
    -------------------------------------------------------------------------
 
    procedure CreateAsyncEventReq_Command
-      (CMD_Identifier   : in out Unsigned_16;     -- Command Identifier
-       Command          :    out SubmissionQ.Admin_Command);
+      (CMD_Identifier : in out Unsigned_16;     -- Command Identifier
+       Command        :    out SubmissionQ.Admin_Command);
 
 private
 
@@ -264,7 +271,8 @@ private
       Filler1    : Boolean := False;
       Filler2    : Unsigned_8 := 0;
       Filler3    : Unsigned_16 := 0;
-   end record with
+   end record
+   with
       Size => 32;
 
    for CDW14 use record
@@ -281,7 +289,8 @@ private
       Filler1 : Unsigned_16 := 0;
       Filler2 : Unsigned_7 := 0;
       SV      : Boolean;    -- Save
-   end record with
+   end record
+   with
       Size => 32;
 
    for CDW10_SET use record
@@ -298,7 +307,8 @@ private
       SEL     : Unsigned_3; -- Select
       Filler1 : Unsigned_5 := 0;
       Filler2 : Unsigned_16 := 0;
-   end record with
+   end record
+   with
       Size => 32;
 
    for CDW10_GET use record
@@ -314,7 +324,8 @@ private
       CNS    : Unsigned_8;  -- Controller or Namespace Structure
       Filler : Unsigned_8 := 0;
       CNTID  : Unsigned_16; -- Controller Identifier
-   end record with
+   end record
+   with
       Size => 32;
 
    for CDW10_Ident use record
@@ -327,7 +338,8 @@ private
       CNS_SI : Unsigned_16; -- CNS Specific Identifier
       Filler : Unsigned_8 := 0;
       CSI    : Unsigned_8;  -- Command Set Identifier
-   end record with
+   end record
+   with
       Size => 32;
 
    for CDW11_Ident use record
@@ -341,8 +353,10 @@ private
    type CDW10_CreateIOQ is record
       QID   : Unsigned_16; -- Queue ID
       QSIZE : Unsigned_16; -- Queue Size
-   end record with
+   end record
+   with
       Size => 32;
+
    for CDW10_CreateIOQ use record
       QID   at 0 range 0 .. 15;
       QSIZE at 2 range 0 .. 15;
@@ -354,8 +368,10 @@ private
       Filler1 : Unsigned_6 := 0;
       Filler2 : Unsigned_8 := 0;
       IV      : Unsigned_16; -- Interrupt Vector
-   end record with
+   end record
+   with
       Size => 32;
+
    for CDW11_CreateIOCQ use record
       PC      at 0 range 0 ..  0;
       IEN     at 0 range 1 ..  1;
@@ -370,8 +386,10 @@ private
       Filler1 : Unsigned_5 := 0;
       Filler2 : Unsigned_8 := 0;
       CQID    : Unsigned_16; -- Completion Queue Identifier
-   end record with
+   end record
+   with
       Size => 32;
+
    for CDW11_CreateIOSQ use record
       PC      at 0 range 0 ..  0;
       QPRIO   at 0 range 1 ..  2;
@@ -384,8 +402,10 @@ private
    type CDW10_DeleteIOQ is record
       QID    : Unsigned_16; -- Queue Identifier
       Filler : Unsigned_16 := 0;
-   end record with
+   end record
+   with
       Size => 32;
+
    for CDW10_DeleteIOQ use record
       QID    at 0 range 0 .. 15;
       Filler at 2 range 0 .. 15;
@@ -397,8 +417,10 @@ private
       LSP   : Unsigned_7;  -- Log Specific Parameter
       RAE   : Boolean;     -- Retain Async Event
       NUMDL : Unsigned_16; -- Number of DWORDS Lower
-   end record with
+   end record
+   with
       Size => 32;
+
    for CDW10_GetLogPage use record
       LID   at 0 range 0 ..  7;
       LSP   at 1 range 0 ..  6;
@@ -409,8 +431,10 @@ private
    type CDW11_GetLogPage is record
       NUMDU         : Unsigned_16; -- Number of DWORDS (16 most significant bits)
       LogSpecificID : Unsigned_16; -- Log Specific Identifier
-   end record with
+   end record
+   with
       Size => 32;
+
    for CDW11_GetLogPage use record
       NUMDU         at 0 range 0 .. 15;
       LogSpecificID at 2 range 0 .. 15;
@@ -421,8 +445,10 @@ private
    type CDW10_Abort is record
       SQID  : Unsigned_16; -- Submission Queue Identifier
       CID2A : Unsigned_16; -- Command Identifier of the Command to be aborted
-   end record with
+   end record
+   with
       Size => 32;
+
    for CDW10_Abort use record
       SQID  at 0 range 0 .. 15;
       CID2A at 2 range 0 .. 15;

@@ -134,11 +134,10 @@ is
             + Musinfo.Instance.TSC_Khz
             * Interfaces.Unsigned_64 (Operations_Time_Out);
    begin
-      --  wait for responses
       Now := Musinfo.Instance.TSC_Schedule_Start;
       Error := False;
 
-      Wait_Data : loop
+      Wait_Response : loop
          Resp_Chn.Reader.Read
            (Channel => Response_Channel,
             Reader  => Reader,
@@ -174,8 +173,8 @@ is
             Error := True;
          end if;
 
-         exit Wait_Data when Res = Resp_Chn.Reader.Success or Error;
-      end loop Wait_Data;
+         exit Wait_Response when Res = Resp_Chn.Reader.Success or Error;
+      end loop Wait_Response;
    end Receive;
 
    -------------------------------------------------------------------------
@@ -192,12 +191,12 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Returns the number of devices on this channel pair
+   --  Returns the number of devices on this channel pair.
    procedure Get_Devices_Cnt (Cnt : out Device_Count_Type)
    is
       use type MB.Request_Kind_Type;
 
-      Request  : MB.Block_Request_Type  := MB.Null_Request;
+      Request  : MB.Block_Request_Type := MB.Null_Request;
       Response : MB.Block_Response_Type;
       Error    : Boolean;
    begin
@@ -225,7 +224,7 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Get Number of Sectors and Sector Size of a given Device
+   --  Get Number of Sectors and Sector Size of a given Device.
    procedure Get_Device_Info
       (Device_Id   :     Device_Range_Type;
        Sector_Cnt  : out Interfaces.Unsigned_64;
@@ -342,7 +341,6 @@ is
            (Channel => Response_Channel,
             Reader  => Reader);
 
-      --  wait for the server to become active
       Wait_Active : loop
          Resp_Chn.Is_Active (
             Channel => Response_Channel,
@@ -370,14 +368,14 @@ is
          end if;
       end;
 
-      --  Get Number of attached devices
+      --  Get Number of attached devices.
       Get_Devices_Cnt (Devices_Cnt);
 
       if Devices_Cnt = 0 then
          Debuglog.Client.Put_Line (Item => "No devices found!");
       end if;
 
-      --  fill device Info
+      --  Fill device Info.
       declare
          Unused_Valid : Boolean;
       begin

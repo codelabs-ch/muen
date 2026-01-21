@@ -155,8 +155,8 @@ is
                Log.Put_Line ("Read failed");
             end if;
             if Sig /= 16#aa55# then
-               Log.Put_Line ("Signature invalid");
-               Log.Put_Line ("is " & SK.Strings.Img (Sig));
+               Log.Put_String ("Signature invalid: ");
+               Log.Put_Line (SK.Strings.Img (Sig));
             end if;
             Part_Table.Count := 0;
             return;
@@ -167,7 +167,7 @@ is
          if Partition.Partition_Type = Partitions.PARTITION_TYPE_PROTECTIVE
             or Partition.Partition_Type = Partitions.PARTITION_TYPE_EFI
          then
-            Log.Put_Line ("Found GPT Partion");
+            Log.Put_Line ("Found GPT partiton");
             Gpt.Parse (ID, Part_Table);
             return;
          end if;
@@ -211,7 +211,6 @@ is
                   --  the next partition table is at
                   Sector := Start_Lba;
                   Stop_Parsing := False;
-
                end if;
 
                if Part_Table.Count + Found not in
@@ -233,7 +232,6 @@ is
                   Found := Found + 1;
                end if;
             end if;
-
          end loop;
          Part_Table.Count := Part_Table.Count + Found;
          exit Parse_Loop when Stop_Parsing;

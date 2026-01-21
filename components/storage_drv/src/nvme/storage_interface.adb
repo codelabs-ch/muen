@@ -48,7 +48,7 @@ is
          SK.CPU.Stop;
       end if;
 
-      --  enable PCI Bus master, memory and io space. This might habe been already
+      --  Enable PCI Bus master, memory and io space. This might habe been already
       --  done by BIOS but coreboot usually leaves BM disabled.
       declare
          Pci_Cmd : constant Unsigned_16
@@ -240,9 +240,10 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Check_SMART_Status (Address :     Unsigned_64;
-                                 Dev_Id  :     PConf.Port_Range;
-                                 Status  : out Unsigned_64)
+   procedure Check_SMART_Status
+      (Address :     Unsigned_64;
+       Dev_Id  :     PConf.Port_Range;
+       Status  : out Unsigned_64)
    is
       use type NVMe.Status_Type;
       SMART_Status : NVMe.Host.SMART_Status_Type;
@@ -267,8 +268,9 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Sync (Dev_Id :      PConf.Port_Range;
-                   Status : out  Unsigned_64)
+   procedure Sync
+      (Dev_Id :      PConf.Port_Range;
+       Status : out  Unsigned_64)
    is
       use type NVMe.Status_Type;
       IO_CMD      : NVMe.SubmissionQ.IO_Command;

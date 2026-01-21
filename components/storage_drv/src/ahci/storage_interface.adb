@@ -1,13 +1,16 @@
+with SK.CPU;
+
 with Ahci.Constants;
 with Ahci.Device;
 with Ahci_Log;
 with Log;
 with Server;
 with Pciconf;
-with SK.CPU;
 
 package body Storage_Interface
 is
+
+   -------------------------------------------------------------------------
 
    procedure Startup
    is
@@ -23,12 +26,12 @@ is
          SK.CPU.Stop;
       end if;
 
-      --  enable PCI Bus master, memory and io space. This might habe been already
+      --  Enable PCI Bus master, memory and io space. This might habe been already
       --  done by BIOS but coreboot usually leaves BM disabled.
       declare
-         use type Unsigned_16;
+         use type Interfaces.Unsigned_16;
 
-         Pci_Cmd : constant Unsigned_16
+         Pci_Cmd : constant Interfaces.Unsigned_16
             := Pciconf.Instance.Header.Command;
       begin
          if (Pci_Cmd and 16#4#) /= 16#4# then
@@ -37,11 +40,8 @@ is
       end;
 
       declare
-
          Info : constant Pciconf.Info_Record := Pciconf.Instance.Header.Info;
-
          Success : Boolean;
-
       begin
          if Info.Class_Code = Ahci.Constants.AHCI_Class_Code then
             Log.Put_Line (Item => "AHCI controller present");
@@ -114,7 +114,6 @@ is
           Count   => NLB + 1,
           Address => Address,
           Ret_Val => Status);
-
    end Execute_Read_Command;
 
    -------------------------------------------------------------------------
@@ -135,7 +134,6 @@ is
           Count   => NLB + 1,
           Address => Address,
           Ret_Val => Status);
-
    end Execute_Write_Command;
 
    -------------------------------------------------------------------------
@@ -153,14 +151,14 @@ is
           Start   => SLBA,
           Count   => NLB + 1,
           Ret_Val => Status);
-
    end Execute_Discard_Command;
 
    -------------------------------------------------------------------------
 
-   procedure Check_SMART_Status (Address :     Unsigned_64;
-                                 Dev_Id  :     PConf.Port_Range;
-                                 Status  : out Unsigned_64)
+   procedure Check_SMART_Status
+      (Address :     Unsigned_64;
+       Dev_Id  :     PConf.Port_Range;
+       Status  : out Unsigned_64)
    is
       SMART_Status : Ahci.Device.SMART_Status_Type;
       Ret : Status_Type;
@@ -186,8 +184,9 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Sync (Dev_Id :     PConf.Port_Range;
-                   Status : out Unsigned_64)
+   procedure Sync
+      (Dev_Id :     PConf.Port_Range;
+       Status : out Unsigned_64)
    is
       Ret : Status_Type;
    begin

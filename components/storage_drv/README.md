@@ -1,22 +1,25 @@
-# AHCI Driver and NVMe Driver
+# AHCI/NVMe Storage Driver
 
 ## Introduction
 
-This **AHCI Driver** subject 'implements support for the AHCI Block.
+This **AHCI Driver** instantiation of the Storage Driver implements support
+for the AHCI Block.
 
 At the moment there are some restrictions / open items:
 - Only SATA devices supported. There is no support for ATAPI.
 - Error handling is nearly untested due to missing broken hardware.
 
 
-The **NVMe Driver** part of it implements support for NVMe Storage Devices.
+The **NVMe Driver** instantiation implements support for NVMe Storage Devices.
 
 At the moment there are some restrictions / open items:
 - Only one Namespace and one Controller supported.
 - Not all IO and Admin Commands implemented - only those needed for Muenblock usage.
-- TBC
+- Perfomance yet to be optimized
+- NVMe 1.4 tested, 2.0 is untested
+- Spec references reference NVMe Base Spec 2.0c
 
-> Both drivers support MBR and GUID Partition Parsing.
+> Both drivers support MBR and GUID partition parsing.
 
 ## Configure the server
 

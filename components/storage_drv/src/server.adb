@@ -15,12 +15,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Unchecked_Conversion;
-
-with Log;
-with SK.Strings;
-with Interfaces;
 with System;
+with Ada.Unchecked_Conversion;
+with Interfaces;
+
+with SK.Strings;
+with SK.Hypercall;
 
 with Muenblock;
 with Muenblock.Request_Channel;
@@ -28,12 +28,10 @@ with Muenblock.Response_Channel;
 with Muenblock.Request_Channel.Reader;
 with Muenblock.Response_Channel.Writer_Instance;
 
+with Log;
 with Mbr;
 with Partitions;
-
 with Storage_Drv_Cspecs_Wrapper;
-
-with SK.Hypercall;
 
 use type Interfaces.Unsigned_32;
 use type Interfaces.Unsigned_64;
@@ -138,7 +136,7 @@ is
       Mbr_Partitions : Partitions.Partition_Table_Type := Partitions.Null_Partition_Table;
 
    begin
-      --  --  Init all attached devices, setup memory regions,...
+      -- Init all attached devices, setup memory regions,...
 
       Storage_Interface.Init (Devs, Ports, Success);
 
@@ -255,7 +253,6 @@ is
       Address     : constant Interfaces.Unsigned_64
                      := Ports (Port_Idx).Devs (Dev_Idx).Current.Buffer_Offset +
                               Get_Shm_Buffer_Base (Ports (Port_Idx).Chan_Idx);
-
    begin
       if Ports (Port_Idx).Devs (Dev_Idx).Current.Tag_Idx
         = Tag_Array_Range'First
@@ -460,24 +457,24 @@ is
       --  requests first and start a new request.
 
       -- FIXME NVMe implications?
-         if Ports (Port_Idx).Devs (Dev_Idx).Current.Tag_Idx
-            /= Tag_Array_Range'First
-         and then
-            ((Request.Request_Kind
-               /= Ports (Port_Idx).Devs (Dev_Idx).Current.Request_Kind)
-            or (Request.Buffer_Offset
-               /= Ports (Port_Idx).Devs (Dev_Idx).Current.Buffer_Offset +
-                  Ports (Port_Idx).Devs (Dev_Idx).Current.Request_Length)
-            or (Request.Device_Offset
-               /= Ports (Port_Idx).Devs (Dev_Idx).Current.Device_Offset +
-                  Ports (Port_Idx).Devs (Dev_Idx).Current.Request_Length)
-            or (Ports (Port_Idx).Devs (Dev_Idx).Current.Tag_Idx
-               = Tag_Array_Range'Last)
-            or (Request.Device_Id
-               /= Ports (Port_Idx).Devs (Dev_Idx).Current.Device_Id))
-         then
-            Finish_Current_Request (Port_Idx, Dev_Idx);
-         end if;
+      if Ports (Port_Idx).Devs (Dev_Idx).Current.Tag_Idx
+         /= Tag_Array_Range'First
+      and then
+         ((Request.Request_Kind
+            /= Ports (Port_Idx).Devs (Dev_Idx).Current.Request_Kind)
+         or (Request.Buffer_Offset
+            /= Ports (Port_Idx).Devs (Dev_Idx).Current.Buffer_Offset +
+               Ports (Port_Idx).Devs (Dev_Idx).Current.Request_Length)
+         or (Request.Device_Offset
+            /= Ports (Port_Idx).Devs (Dev_Idx).Current.Device_Offset +
+               Ports (Port_Idx).Devs (Dev_Idx).Current.Request_Length)
+         or (Ports (Port_Idx).Devs (Dev_Idx).Current.Tag_Idx
+            = Tag_Array_Range'Last)
+         or (Request.Device_Id
+            /= Ports (Port_Idx).Devs (Dev_Idx).Current.Device_Id))
+      then
+         Finish_Current_Request (Port_Idx, Dev_Idx);
+      end if;
 
       if Ports (Port_Idx).Devs (Dev_Idx).Current.Request_Kind = MB.None
       then
@@ -555,7 +552,6 @@ is
       case Request.Request_Kind is
          when MB.Read | MB.Write | MB.Discard =>
                Process_RWD_Request (Port_Idx, Dev_Idx, Request);
-
          when MB.Media_Blocks
                | MB.Block_Length
                | MB.Max_Blocks_Count
@@ -564,7 +560,6 @@ is
                | MB.Get_SMART
                | MB.Sync =>
                Process_Simple_Request (Port_Idx, Dev_Idx, Request);
-
          when others =>
             Log.Put_Line ("Unknown request!");
       end case;

@@ -1,6 +1,7 @@
 with SK.Strings;
 
 with Log;
+
 package body Muenblock_Example.Write_Ops_Helper
 is
 
@@ -61,9 +62,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Run_Instance
-      (SHM_Array_Index :     Positive;
-       Sector_Size     :     Interfaces.Unsigned_64;
-       Success         : out Boolean)
+     (SHM_Array_Index :     Positive;
+      Sector_Size     :     Interfaces.Unsigned_64;
+      Success         : out Boolean)
    is
       Test_Data_Sector_Cnt : Interfaces.Unsigned_64;
       Start_Time           : SK.Word64;
@@ -172,7 +173,8 @@ is
                W := Test_Write_Ahci (I);
                if R /= W then
                   Log.Put_Line
-                  ("Data did not match! Offset:" &
+                    ("Data did not match for test " & SK.Strings.Img_Dec (SHM_Array_Index) &
+                     "! Offset:" &
                      SK.Strings.Img (Interfaces.Unsigned_32 (I)) & " Read : " &
                      SK.Strings.Img (R) & ". Wanted: " &
                      SK.Strings.Img (W)
@@ -186,7 +188,8 @@ is
                W := Test_Write_Nvme (I);
                if R /= W then
                   Log.Put_Line
-                  ("Data did not match! Offset:" &
+                    ("Data did not match for test " & SK.Strings.Img_Dec (SHM_Array_Index) &
+                     "! Offset:" &
                      SK.Strings.Img (Interfaces.Unsigned_32 (I)) & " Read : " &
                      SK.Strings.Img (R) & ". Wanted: " &
                      SK.Strings.Img (W)

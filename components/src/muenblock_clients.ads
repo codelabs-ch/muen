@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2020 secunet Security Networks AG
+--  Copyright (C) 2020  secunet Security Networks AG
 --  Copyright (C) 2025  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
@@ -49,11 +49,11 @@ is
 
    --  Discard a range of sectors for the given device of the specified client.
    procedure Discard
-     (Client        :     Client_Range_Type := Client_Range_Type'First;
-      Device_Id     :     Device_Range_Type;
-      Start_Sector  :     Interfaces.Unsigned_64;
-      Sector_Cnt    :     Interfaces.Unsigned_64;
-      Result        : out Interfaces.Unsigned_64);
+     (Client       :     Client_Range_Type := Client_Range_Type'First;
+      Device_Id    :     Device_Range_Type;
+      Start_Sector :     Interfaces.Unsigned_64;
+      Sector_Cnt   :     Interfaces.Unsigned_64;
+      Result       : out Interfaces.Unsigned_64);
 
    --  Get Number of Sectors and Sector Size of the given Device and specified
    --  client.
@@ -72,12 +72,11 @@ is
       Buffer_Offset :     Interfaces.Unsigned_64;
       Result        : out Interfaces.Unsigned_64);
 
-   --  Read 'Sector_Cnt' Sectors from 'Start_Sector' to
-   --  'Buffer_Offset'
+   --  Read 'Sector_Cnt' Sectors from 'Start_Sector' to 'Buffer_Offset'
    --
    --  Caller must ensure that the Buffer Ranges do no overlap and that
    --  Buffer_Offset + Sector_Cnt is in the Range of the Buffer (no wrap around
-   --  handled by muenblock_client)
+   --  handled by muenblock_client).
    --
    --  Read and Write are not threadsafe and should not be called concurrently.
    procedure Read
@@ -99,7 +98,7 @@ is
    --
    --  Caller must ensure that the Buffer Ranges do no overlap and that
    --  Buffer_Offset + Sector_Cnt is in the Range of the Buffer (no wrap around
-   --  handled by muenblock_client)
+   --  handled by muenblock_client).
    procedure Write
      (Client        :     Client_Range_Type := Client_Range_Type'First;
       Device_Id     :     Device_Range_Type;

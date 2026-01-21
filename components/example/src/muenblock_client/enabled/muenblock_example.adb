@@ -30,6 +30,7 @@ package body Muenblock_Example
 is
 
    -------------------------------------------------------------------------
+   -- Info: all spec information is about NVMe Base Specification 2.0c
 
    type Unsigned_48 is mod 2 ** 48;
    for Unsigned_48'Size use 48;
@@ -60,85 +61,85 @@ is
      array (Integer range 1 .. 30) of SMART_Attribute_Type
      with Object_Size => SMART_Attribute_Size * 30 * 8;
 
-   -------------------------------------------
-   -- NVME Figure 207: SMART / Health Info Log Page
-   -------------------------------------------
-   type Bit_Array is array (Natural range <>) of Boolean
-   with Pack;
-
    type CriticalWarning_Type is record
-      AvailableSpaceBelowThresh   : Boolean;
-      TemperatureWarning          : Boolean; -- see Section 5.27.1.3
-      ReliabilityDegraded         : Boolean;
-      ReadOnlyModeActive          : Boolean; -- see Section 8.12.1
-      BackupDeviceFailure         : Boolean;
-      PersistMemoryRegionReadOnly : Boolean; -- see Section 8.14
-   end record with
+      Available_Space_Below_Thresh   : Boolean;
+      Temperature_Warning            : Boolean; -- see Section 5.27.1.3
+      Reliability_Degraded           : Boolean;
+      ReadOnly_Mode_Active           : Boolean; -- see Section 8.12.1
+      Backup_Device_Failure          : Boolean;
+      Persist_Memory_Region_ReadOnly : Boolean; -- see Section 8.14
+   end record
+   with
       Size => 8;
    for CriticalWarning_Type use record
-      AvailableSpaceBelowThresh   at 0 range 0 .. 0;
-      TemperatureWarning          at 0 range 1 .. 1;
-      ReliabilityDegraded         at 0 range 2 .. 2;
-      ReadOnlyModeActive          at 0 range 3 .. 3;
-      BackupDeviceFailure         at 0 range 4 .. 4;
-      PersistMemoryRegionReadOnly at 0 range 5 .. 5;
+      Available_Space_Below_Thresh   at 0 range 0 .. 0;
+      Temperature_Warning            at 0 range 1 .. 1;
+      Reliability_Degraded           at 0 range 2 .. 2;
+      ReadOnly_Mode_Active           at 0 range 3 .. 3;
+      Backup_Device_Failure          at 0 range 4 .. 4;
+      Persist_Memory_Region_ReadOnly at 0 range 5 .. 5;
    end record;
 
-   type TempSensorArray is array (1 .. 8) of Interfaces.Unsigned_16 with Pack; -- Consists of Temperature Readings [K]
+   -- Consists of Temperature Readings [K]
+   type Temp_Sensor_Array is array (1 .. 8) of Interfaces.Unsigned_16
+   with
+      Pack;
 
-   type SMART_LogPage is record
-      CriticalWarning                  : CriticalWarning_Type; -- Indicated Type of Critical Warning
-      CompositeTemperature             : Interfaces.Unsigned_16;          -- Current Composite Temp [Kelvin]
-      AvailableSpare                   : Interfaces.Unsigned_8;           -- Current Available Space [%]
-      AvailableSpareThreshold          : Interfaces.Unsigned_8;           -- Threshold for 'full' [%]
-      PercentageUsed                   : Interfaces.Unsigned_8;           -- Estimate of NVM life used [%]
+   -- NVME Figure 207: SMART / Health Info Log Page
+   type SMART_Log_Page is record
+      Critical_Warning                     : CriticalWarning_Type;      -- Indicated Type of Critical Warning
+      Composite_Temperature                : Interfaces.Unsigned_16;    -- Current Composite Temp [Kelvin]
+      Available_Spare                      : Interfaces.Unsigned_8;     -- Current Available Space [%]
+      Available_Spare_Threshold            : Interfaces.Unsigned_8;     -- Threshold for 'full' [%]
+      Percentage_Used                      : Interfaces.Unsigned_8;     -- Estimate of NVM life used [%]
       -- Unused: EnduranceGroupCriticalWarning
-      Reserved_1                       : Bit_Array (0 .. 207);
-      DataUnitsRead                    : Interfaces.Unsigned_128;         -- Number of 512 Byte Units the Host has read
-      DataUnitsWritten                 : Interfaces.Unsigned_128;         -- Number of 512 Byte Units the Host has written
-      HostReadCommands                 : Interfaces.Unsigned_128;         -- Number of Host Read CMDs completed by the controller
-      HostWriteommands                 : Interfaces.Unsigned_128;         -- Number of Host Write CMDs completed by the controller
-      ControllerBusyTime               : Interfaces.Unsigned_128;         -- Amount of time the controller was busy with I/O CMDs [min]
-      PowerCycles                      : Interfaces.Unsigned_128;         -- Number of Power Cycles
-      PowerOnHours                     : Interfaces.Unsigned_128;         -- Number of (operational) Power-on hours [h]
-      UnsafeShutdowns                  : Interfaces.Unsigned_128;         -- Number of unsafe shutdowns
-      MediaAndIntegrityErrors          : Interfaces.Unsigned_128;         -- Number of detected unrecoverdd data integrity errors
-      NumberOfErrorLogInfoEntries      : Interfaces.Unsigned_128;         -- Number of Error information log Entries
-      WarningCompositeTempTime         : Interfaces.Unsigned_32;          -- Amount of time the Composite Temperarature was greater then allowed [min]
-      CriticalCompositeTempTime        : Interfaces.Unsigned_32;          -- Amount of time the Composite Temperarature was critical [min]
-      TempSensors                      : TempSensorArray;      -- Array for current temperarature reports by sensors 1 .. 8
-      ThermalMngmtTemp1TransitionCount : Interfaces.Unsigned_32;          -- Number of times the controller thermal throttled lightly
-      ThermalMngmtTemp2TransitionCount : Interfaces.Unsigned_32;          -- Number of times the controller thermal throttled heavily
-      TotalThermalMngmtTempTime1       : Interfaces.Unsigned_32;          -- Amount of time the controller thermal throttled lightly [s]
-      TotalThermalMngmtTempTime2       : Interfaces.Unsigned_32;          -- Amount of time the controller thermal throttled heavily [s]
-      Reserved_2                       : Bit_Array (0 .. 2175);
-   end record with
+      Reserved_1                           : SK.Bit_Array (1 .. 208);
+      Data_Units_Read                      : Interfaces.Unsigned_128;   -- Number of 512 Byte Units the Host has read
+      Data_Units_Written                   : Interfaces.Unsigned_128;   -- Number of 512 Byte Units the Host has written
+      Host_Read_Commands                   : Interfaces.Unsigned_128;   -- Number of Host Read CMDs completed by the controller
+      Host_Write_Commands                  : Interfaces.Unsigned_128;   -- Number of Host Write CMDs completed by the controller
+      Controller_Busy_Time                 : Interfaces.Unsigned_128;   -- Amount of time the controller was busy with I/O CMDs [min]
+      Power_Cycles                         : Interfaces.Unsigned_128;   -- Number of Power Cycles
+      Power_On_Hours                       : Interfaces.Unsigned_128;   -- Number of (operational) Power-on hours [h]
+      Unsafe_Shutdowns                     : Interfaces.Unsigned_128;   -- Number of unsafe shutdowns
+      Media_And_Integrity_Errors           : Interfaces.Unsigned_128;   -- Number of detected unrecoverdd data integrity errors
+      Number_Of_Error_Log_Info_Entries     : Interfaces.Unsigned_128;   -- Number of Error information log Entries
+      Warning_Composite_Temp_Time          : Interfaces.Unsigned_32;    -- Amount of time the Composite Temperarature was greater then allowed [min]
+      Critical_Composite_Temp_Time         : Interfaces.Unsigned_32;    -- Amount of time the Composite Temperarature was critical [min]
+      Temp_Sensors                         : Temp_Sensor_Array;         -- Array for current temperarature reports by sensors 1 .. 8
+      Thermal_Mngmt_Temp1_Transition_Count : Interfaces.Unsigned_32;    -- Number of times the controller thermal throttled lightly
+      Thermal_Mngmt_Temp2_Transition_Count : Interfaces.Unsigned_32;    -- Number of times the controller thermal throttled heavily
+      Total_Thermal_Mngmt_Temp_Time1       : Interfaces.Unsigned_32;    -- Amount of time the controller thermal throttled lightly [s]
+      Total_Thermal_Mngmt_Temp_Time2       : Interfaces.Unsigned_32;    -- Amount of time the controller thermal throttled heavily [s]
+      Reserved_2                           : SK.Bit_Array (1 .. 2176);
+   end record
+   with
       Size => 512 * 8;
-   for SMART_LogPage use record
-      CriticalWarning                  at   0 range 0 ..    7;
-      CompositeTemperature             at   1 range 0 ..   15;
-      AvailableSpare                   at   3 range 0 ..    7;
-      AvailableSpareThreshold          at   4 range 0 ..    7;
-      PercentageUsed                   at   5 range 0 ..    7;
-      Reserved_1                       at   6 range 0 ..  207;
-      DataUnitsRead                    at  32 range 0 ..  127;
-      DataUnitsWritten                 at  48 range 0 ..  127;
-      HostReadCommands                 at  64 range 0 ..  127;
-      HostWriteommands                 at  80 range 0 ..  127;
-      ControllerBusyTime               at  96 range 0 ..  127;
-      PowerCycles                      at 112 range 0 ..  127;
-      PowerOnHours                     at 128 range 0 ..  127;
-      UnsafeShutdowns                  at 144 range 0 ..  127;
-      MediaAndIntegrityErrors          at 160 range 0 ..  127;
-      NumberOfErrorLogInfoEntries      at 176 range 0 ..  127;
-      WarningCompositeTempTime         at 192 range 0 ..   31;
-      CriticalCompositeTempTime        at 196 range 0 ..   31;
-      TempSensors                      at 200 range 0 ..  127;
-      ThermalMngmtTemp1TransitionCount at 216 range 0 ..   31;
-      ThermalMngmtTemp2TransitionCount at 220 range 0 ..   31;
-      TotalThermalMngmtTempTime1       at 224 range 0 ..   31;
-      TotalThermalMngmtTempTime2       at 228 range 0 ..   31;
-      Reserved_2                       at 232 range 0 .. 2175;
+   for SMART_Log_Page use record
+      Critical_Warning                     at   0 range 0 ..    7;
+      Composite_Temperature                at   1 range 0 ..   15;
+      Available_Spare                      at   3 range 0 ..    7;
+      Available_Spare_Threshold            at   4 range 0 ..    7;
+      Percentage_Used                      at   5 range 0 ..    7;
+      Reserved_1                           at   6 range 0 ..  207;
+      Data_Units_Read                      at  32 range 0 ..  127;
+      Data_Units_Written                   at  48 range 0 ..  127;
+      Host_Read_Commands                   at  64 range 0 ..  127;
+      Host_Write_Commands                  at  80 range 0 ..  127;
+      Controller_Busy_Time                 at  96 range 0 ..  127;
+      Power_Cycles                         at 112 range 0 ..  127;
+      Power_On_Hours                       at 128 range 0 ..  127;
+      Unsafe_Shutdowns                     at 144 range 0 ..  127;
+      Media_And_Integrity_Errors           at 160 range 0 ..  127;
+      Number_Of_Error_Log_Info_Entries     at 176 range 0 ..  127;
+      Warning_Composite_Temp_Time          at 192 range 0 ..   31;
+      Critical_Composite_Temp_Time         at 196 range 0 ..   31;
+      Temp_Sensors                         at 200 range 0 ..  127;
+      Thermal_Mngmt_Temp1_Transition_Count at 216 range 0 ..   31;
+      Thermal_Mngmt_Temp2_Transition_Count at 220 range 0 ..   31;
+      Total_Thermal_Mngmt_Temp_Time1       at 224 range 0 ..   31;
+      Total_Thermal_Mngmt_Temp_Time2       at 228 range 0 ..   31;
+      Reserved_2                           at 232 range 0 .. 2175;
    end record;
 
    -------------------------------------------------------------------------
@@ -155,7 +156,7 @@ is
       Address => System'To_Address
          (Example_Component.Memory_Arrays.Blockdev_Shm2_Address_Base + 2);
 
-   SMART_Attribute_Table_Nvme : SMART_LogPage
+   SMART_Attribute_Table_Nvme : SMART_Log_Page
    with
       Volatile,
       Async_Writers,
@@ -196,18 +197,18 @@ is
             end loop;
          when 2 =>
             declare
-               LogPage : constant SMART_LogPage := SMART_Attribute_Table_Nvme;
+               LogPage : constant SMART_Log_Page := SMART_Attribute_Table_Nvme;
             begin
-               Log.Put_Line ("Available Spare %: " & SK.Strings.Img (Interfaces.Unsigned_32 (LogPage.AvailableSpare)));
-               Log.Put_Line ("Lifetime Used %  : " & SK.Strings.Img (Interfaces.Unsigned_32 (LogPage.PercentageUsed)));
-               Log.Put_Line ("Data Units R     : " & SK.Strings.Img (LogPage.DataUnitsRead));
-               Log.Put_Line ("Data Units W     : " & SK.Strings.Img (LogPage.DataUnitsWritten));
-               Log.Put_Line ("Power Cycles     : " & SK.Strings.Img (LogPage.PowerCycles));
-               Log.Put_Line ("Power On Hours   : " & SK.Strings.Img (LogPage.PowerOnHours));
-               Log.Put_Line ("Unsafe Shutdowns : " & SK.Strings.Img (LogPage.UnsafeShutdowns));
-               Log.Put_Line ("Media Integ Errs : " & SK.Strings.Img (LogPage.MediaAndIntegrityErrors));
-               Log.Put_Line ("Warn Temp Time   : " & SK.Strings.Img (LogPage.WarningCompositeTempTime));
-               Log.Put_Line ("Crit Temp Time   : " & SK.Strings.Img (LogPage.CriticalCompositeTempTime));
+               Log.Put_Line ("Available Spare %: " & SK.Strings.Img (Interfaces.Unsigned_32 (LogPage.Available_Spare)));
+               Log.Put_Line ("Lifetime Used %  : " & SK.Strings.Img (Interfaces.Unsigned_32 (LogPage.Percentage_Used)));
+               Log.Put_Line ("Data Units R     : " & SK.Strings.Img (LogPage.Data_Units_Read));
+               Log.Put_Line ("Data Units W     : " & SK.Strings.Img (LogPage.Data_Units_Written));
+               Log.Put_Line ("Power Cycles     : " & SK.Strings.Img (LogPage.Power_Cycles));
+               Log.Put_Line ("Power On Hours   : " & SK.Strings.Img (LogPage.Power_On_Hours));
+               Log.Put_Line ("Unsafe Shutdowns : " & SK.Strings.Img (LogPage.Unsafe_Shutdowns));
+               Log.Put_Line ("Media Integ Errs : " & SK.Strings.Img (LogPage.Media_And_Integrity_Errors));
+               Log.Put_Line ("Warn Temp Time   : " & SK.Strings.Img (LogPage.Warning_Composite_Temp_Time));
+               Log.Put_Line ("Crit Temp Time   : " & SK.Strings.Img (LogPage.Critical_Composite_Temp_Time));
             end;
          when others =>
             Log.Put_Line
@@ -231,7 +232,6 @@ is
       Wrt_Success : Boolean;
    begin
       Log.Put_Line ("Muenblock example start");
-      -- FIXME if one Client fails before the other, the second one won't get tested
       for Client in Client_Range loop
          Log.Put_Line ("Testing client " & SK.Strings.Img (Interfaces.Unsigned_64 (Client)));
 
@@ -247,40 +247,39 @@ is
 
          if not Valid then
             Log.Put_Line ("Unable to get device Info");
-            return;
-         end if;
+         else
+            Log.Put_Line
+              ("Device found with " & SK.Strings.Img (Sector_Cnt)
+               & " sectors, Sector_Size " & SK.Strings.Img (Sector_Size)
+               & " and Max_Sectors " & SK.Strings.Img (Max_Sectors));
 
-         Log.Put_Line
-         ("Device found with " & SK.Strings.Img (Sector_Cnt)
-            & " sectors, Sector_Size " & SK.Strings.Img (Sector_Size)
-            & " and Max_Sectors " & SK.Strings.Img (Max_Sectors));
+            --  get device health (SMART)
+            Muenblock_Clients_Instance.Get_SMART
+              (Client        => Client,
+               Device_Id     => 0,
+               Buffer_Offset => 0,
+               Result        => Res);
+            case Res is
+               when 0 =>
+                  Log.Put_Line ("Unable to read SMART Data!");
+               when Muenblock.SMART_OK =>
+                  Log.Put_Line ("SMART Status: OK!");
+               when Muenblock.SMART_THRESHOLD_EXCEEDED =>
+                  Log.Put_Line ("SMART Status: Threshold Exceeded!");
+               when Muenblock.SMART_UNDEFINED =>
+                  Log.Put_Line ("SMART Status: Undefined!");
+               when others =>
+                  null;
+            end case;
 
-         --  get device health (SMART)
-         Muenblock_Clients_Instance.Get_SMART
-           (Client        => Client,
-            Device_Id     => 0,
-            Buffer_Offset => 0,
-            Result        => Res);
-         case Res is
-            when 0 =>
-               Log.Put_Line ("Unable to read SMART Data!");
-            when Muenblock.SMART_OK =>
-               Log.Put_Line ("SMART Status: OK!");
-            when Muenblock.SMART_THRESHOLD_EXCEEDED =>
-               Log.Put_Line ("SMART Status: Threshold Exceeded!");
-            when Muenblock.SMART_UNDEFINED =>
-               Log.Put_Line ("SMART Status: Undefined!");
-            when others =>
-               null;
-         end case;
+            if Res /= 0 then
+               SMART_Dump_Data (Positive (Client));
+            end if;
 
-         if Res /= 0 then
-            SMART_Dump_Data (Positive (Client));
-         end if;
-
-         if Sector_Size = 0 then
-            Log.Put_Line ("Sector size is 0");
-            return;
+            if Sector_Size = 0 then
+               Log.Put_Line ("Sector size is 0");
+               return;
+            end if;
          end if;
       end loop;
 

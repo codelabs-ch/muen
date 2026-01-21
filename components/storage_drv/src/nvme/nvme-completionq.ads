@@ -11,9 +11,10 @@ is
       SC  : Unsigned_8; -- Status Code
       SCT : Unsigned_3; -- Status Code Type
       CRD : Unsigned_2; -- Command Retry Delay
-      M   : Boolean;    -- More (Information - see Error Page)
+      M   : Boolean;    -- More (Information - see error page)
       DNR : Boolean;    -- Do Not Retry (bc expected to fail)
-   end record with
+   end record
+   with
      Size => 15;
 
    for StatusField use record
@@ -24,10 +25,11 @@ is
       DNR at 1 range 6 .. 6;
    end record;
 
-   Null_StatusField : StatusField := (SC  => 0,
-                                      SCT => 0,
-                                      CRD => 0,
-                                      others   => False);
+   Null_StatusField : StatusField :=
+      (SC     => 0,
+       SCT    => 0,
+       CRD    => 0,
+       others => False);
 
    type CQE is record
       DWORD0 : Unsigned_32;
@@ -39,7 +41,8 @@ is
       CID    : Unsigned_16;      -- Command Identifier
       P      : Boolean;          -- Phase Tag
       Status : StatusField;      -- Status Field
-   end record with
+   end record
+   with
      Size => 16 * 8;
 
    for CQE use record
@@ -52,10 +55,12 @@ is
       Status at 14 range 1 .. 15;
    end record;
 
-   Null_CQE : constant CQE := (P      => False,
-                               Status => Null_StatusField,
-                               DWORD0 => 0, DWORD1 => 0,
-                               others => 0);
+   Null_CQE : constant CQE :=
+      (P      => False,
+       Status => Null_StatusField,
+       DWORD0 => 0,
+       DWORD1 => 0,
+       others => 0);
 
    -------------------------------------------------------------------------
    --- Completion QUEUE
@@ -64,6 +69,8 @@ is
    type Entry_Queue_Range is new Unsigned_8 range 0 .. 255;
 
    type Entry_Queue is array (Entry_Queue_Range) of CQE
-   with Pack, Object_Size => 256 * 16 * 8;
+   with
+      Pack,
+      Object_Size => 256 * 16 * 8;
 
 end NVMe.CompletionQ;

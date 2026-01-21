@@ -1,5 +1,6 @@
 with Interfaces;
 with System;
+
 with SK.Strings;
 
 with Ahci.Ports; use Ahci.Ports;
@@ -27,8 +28,8 @@ is
       Async_Writers,
       Address => System'To_Address (Storage_Interface.Command_Table_Address);
 
-   procedure Dump_Cmd_Table (
-      ID  : PConf.Port_Range;
+   procedure Dump_Cmd_Table
+     (ID  : PConf.Port_Range;
       Len : Integer)
    is
       use type Interfaces.Unsigned_32;
@@ -96,11 +97,11 @@ is
         (Storage_Drv_Cspecs_Wrapper.Devices.Controller_Ahci_Registers_Address
             + 16#100#);
 
-   procedure Dump_Port_Regs (ID  : PConf.Port_Range)
+   procedure Dump_Port_Regs (ID : PConf.Port_Range)
    is
       use type Interfaces.Unsigned_32;
-      Local32      : Unsigned_32;
-      Start_Index  : constant Integer := Integer (ID) * 16#20#;
+      Local32     : Unsigned_32;
+      Start_Index : constant Integer := Integer (ID) * 16#20#;
    begin
       Put_Line ("Dumping Port  " & SK.Strings.Img (
                 Unsigned_32 (ID)));
@@ -111,7 +112,7 @@ is
       end loop;
    end Dump_Port_Regs;
 
-      -------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Print_Port_Error (ID : PConf.Port_Range)
    is

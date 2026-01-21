@@ -40,8 +40,10 @@ is
       NSSS      : Boolean;     -- NVM Subsystem Shutdown Supported
       CRMS      : Unsigned_2;  -- Controller Ready Modes Supported
       Reserved2 : Bit_Array (0 .. 2);
-   end record with
-     Size => 64, Object_Size => 64;
+   end record
+   with
+      Size         => 64,
+      Object_Size => 64;
 
    for CAP_Part use record
       MQES      at 0 range 0 .. 15;
@@ -68,8 +70,10 @@ is
       Tert  : Unsigned_8;
       Minor : Unsigned_8;
       Major : Unsigned_16; -- NVMe Version >= 1.2.1
-   end record with
-     Size => 32, Object_Size => 32;
+   end record
+   with
+      Size => 32,
+      Object_Size => 32;
 
    for VS_Part use record
       Tert  at 0 range  0 ..  7;
@@ -89,8 +93,10 @@ is
       IOCQES    : Unsigned_4; -- IO CompletionQueue Entry Size
       CRIME     : Boolean;    -- Controller Ready Independent of Media Enable
       Reserved2 : Bit_Array (0 .. 6);
-   end record with
-     Size => 32, Object_Size => 32;
+   end record
+   with
+      Size => 32,
+      Object_Size => 32;
 
    for CC_Part use record
       EN        at 0 range 0 ..  0;
@@ -133,8 +139,9 @@ is
       Reserved1 : Bit_Array (12 .. 15);
       ACQS      : Unsigned_12; -- Admin Completion Queue Size, Zero based Value
       Reserved2 : Bit_Array (28 .. 31);
-   end record with
-     Size => 32;
+   end record
+   with
+      Size => 32;
 
    for AQA_Part use record
       ASQS      at 0 range  0 .. 11;
@@ -147,8 +154,9 @@ is
    type CRTO_PART is record
       CRWMT : Unsigned_16; -- Controller Ready With Media Timeout
       CRIMT : Unsigned_16; -- Controller Ready Independent of Media Timeout
-   end record with
-     Size => 32;
+   end record
+   with
+      Size => 32;
 
    for CRTO_PART use record
       CRWMT at 0 range 0 .. 15;
@@ -190,8 +198,10 @@ is
    --     PMRMSCU : Unsigned_32; -- Persistent Memory Region Memory Space Control Upper
    --  end record with
    --    Size => 3612*8;
-   end record with
-     Size => 864, Object_Size => 864;
+   end record
+   with
+      Size => 864,
+      Object_Size => 864;
 
    for ControllerProperties use record
       CAP     at   0 range  0 .. 63;
@@ -260,7 +270,9 @@ is
       APS         : Unsigned_2;  -- Active Power Scale
       Reserved_10 : Byte_Array (0 .. 8);
    end record
-   with Size => 256, Object_Size => 256;
+   with
+      Size => 256,
+      Object_Size => 256;
 
    for PSD use record
       MP          at  0 range 0 .. 15;
@@ -381,7 +393,8 @@ is
       PSD0       : PowerStateDescriptors;      -- Power State 0 Descriptors
    end record
    with
-    Size => 3072 * 8, Object_Size => 3072 * 8;
+      Size => 3072 * 8,
+      Object_Size => 3072 * 8;
 
    for IdentifyController use record
       VID        at    0 range   0 ..   15;
@@ -481,7 +494,9 @@ is
       Zoned_Namespace_CMD_Set : Boolean := False;
       Reserved                : Bit_Array (3 .. 63);
    end record
-   with Size => 64, Object_Size => 64;
+   with
+      Size => 64,
+      Object_Size => 64;
 
    for IO_CMD_Set_Vector use record
       NVM_CMD_Set             at 0 range 0 ..  0;
@@ -493,7 +508,9 @@ is
    -- last item is where the next one has every flag as false
    type IO_CMD_Set_Array_Index_Type is new Natural range 0 .. 511;
    type IO_CMD_Set_Array is array (IO_CMD_Set_Array_Index_Type) of IO_CMD_Set_Vector
-   with Pack, Object_Size => 64 * 512;
+   with
+      Pack,
+      Object_Size => 64 * 512;
 
    -------------------------------------------------------------------------
    --- 5.17.2.10
@@ -505,15 +522,19 @@ is
 
    type Namespace_ID_List_Index_Type is new Natural range 0 .. 1023;
    type Namespace_ID_List is array (Namespace_ID_List_Index_Type) of Unsigned_32
-   with Pack, Object_Size => 32 * 1024;
+   with
+      Pack,
+      Object_Size => 32 * 1024;
 
    type LBA_Format is record
-      MS    : Unsigned_16; -- Metadata Size
-      LBADS : Unsigned_8;  -- LBA Data Size
-      RP    : Unsigned_2;  -- Relative Performance
+      MS       : Unsigned_16; -- Metadata Size
+      LBADS    : Unsigned_8;  -- LBA Data Size
+      RP       : Unsigned_2;  -- Relative Performance
       Reserved : Bit_Array (26 .. 31);
    end record
-   with Size => 32, Object_Size => 32;
+   with
+      Size => 32,
+      Object_Size => 32;
 
    for LBA_Format use record
       MS       at 0 range 0 .. 15;
@@ -523,7 +544,9 @@ is
    end record;
 
    type LBA_Format_List is array (Unsigned_8 range 0 .. 63) of LBA_Format
-   with Pack, Object_Size => 32 * 64;
+   with
+      Pack,
+      Object_Size => 32 * 64;
 
    type IdentifyNamespace is record
       NSZE       : Unsigned_64;  -- Namespace Size
@@ -565,7 +588,9 @@ is
       EUI64      : Unsigned_64;  -- IEEE Extended Unique Identifier
       LBA_List   : LBA_Format_List;
    end record
-   with Size => 384 * 8, Object_Size => 384 * 8;
+   with
+      Size => 384 * 8,
+      Object_Size => 384 * 8;
 
    for IdentifyNamespace use record
       NSZE      at   0 range 0 ..   63;
@@ -612,8 +637,8 @@ is
    --- Setup
    -------------------------------------------------------------------------
 
-   CMD_Identifier_Admin     : Unsigned_16 := 0;
-   CMD_Identifier_IO        : Unsigned_16 := 0;
+   CMD_Identifier_Admin : Unsigned_16 := 0;
+   CMD_Identifier_IO    : Unsigned_16 := 0;
 
    -- constants
    -- MPS in Byte
@@ -625,8 +650,10 @@ is
       Prefetchable : Boolean;
       Address1     : Unsigned_28;
       Address2     : Unsigned_32;
-   end record with
-     Size => 64, Object_Size => 64;
+   end record
+   with
+      Size => 64,
+      Object_Size => 64;
    for BAR_64Bit use record
       RegionType   at 0 range 0 ..  0;
       Width        at 0 range 1 ..  2;
@@ -636,8 +663,8 @@ is
    end record;
 
    procedure ProcessAdminCommand
-     (AdminCMD  :     SubmissionQ.Admin_Command;
-      Status    : out Status_Type);
+     (AdminCMD :     SubmissionQ.Admin_Command;
+      Status   : out Status_Type);
 
    procedure ProcessIOCommand
      (IOCmd  :     SubmissionQ.IO_Command;
@@ -664,9 +691,8 @@ is
    --- 3.5 Controller Initialization
    -------------------------------------------------------------------------
 
-   procedure ControllerInit
-     (Success : out Boolean)
-   with Pre => Check_Sector_Size,
+   procedure ControllerInit (Success : out Boolean)
+   with Pre  => Check_Sector_Size,
         Post => (if Success then Is_Valid);
 
    -------------------------------------------------------------------------
@@ -677,6 +703,7 @@ is
    with Pre => Is_Valid;
 
    -------------------------------------------------------------------------
+
    function Check_Sector_Size return Boolean is
     (Get_Sector_Size in 512 | 4096)
    with Ghost;

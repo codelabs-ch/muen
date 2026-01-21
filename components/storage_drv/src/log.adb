@@ -100,7 +100,6 @@ is
          Put_Line ("");
       end Print_Wide_String;
    begin
-
       Put_Line ("====== GPT Partition " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Index + 1)) &
                    " of " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Partitions.Partition_Array_Length'Last)));
       Put_String (" Partition Name:       "); Print_Wide_String (Partition.Partition_Name);
@@ -112,7 +111,6 @@ is
       Put_Line ("  Platform is Required: " & Boolean_Image (Partition.Attributes.Platform_Required));
       Put_Line ("  EFI do not read:      " & Boolean_Image (Partition.Attributes.EFI_Should_Ignore));
       Put_Line ("  Legacy BIOS bootable: " & Boolean_Image (Partition.Attributes.Legacy_Bios_Bootable));
-
    end Print_GPT_Partition_Table_Entry;
 
    -------------------------------------------------------------------------
@@ -132,7 +130,6 @@ is
       Put_Line (" Partition Entry LBA:  " & SK.Strings.Img_Dec (Header.Partition_Entry_LBA));
       Put_Line (" Nr. Partition Entries:" & SK.Strings.Img_Dec (Unsigned_64 (Header.Number_Of_Partition_Entries)));
       Put_Line (" Partition Entry Size: " & SK.Strings.Img_Dec (Unsigned_64 (Header.Number_Of_Partition_Entries)));
-
    end Print_GPT_Header;
 
    -------------------------------------------------------------------------

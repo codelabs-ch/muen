@@ -36,12 +36,6 @@
    </registers>
   </vcpu>
   <memory>
-   <!-- <if variable="ahci_drv_enabled" value="true">
-    <memory executable="false" logical="blockdev_AHCI_shm2" size="16#0100_0000#" writable="true"/>
-   </if>
-   <if variable="nvme_drv_enabled" value="true">
-    <memory executable="false" logical="blockdev_NVME_shm2" size="16#0100_0000#" writable="true"/>
-   </if> -->
    <array logical="blockdev_shm2" virtualAddressBase="16#0100_0000#" elementSize="16#0100_0000#"  writable="true" executable="false">
     <if variable="ahci_drv_enabled" value="true">
      <memory logical="blockdev_AHCI_shm2"/>
@@ -50,21 +44,11 @@
      <memory logical="blockdev_NVME_shm2"/>
     </if>
    </array>
-
    <memory executable="false" logical="filled_region" size="16#1000#" writable="true"/>
   </memory>
   <channels>
    <reader logical="example_request" size="16#1000#" vector="auto"/>
    <writer logical="example_response" size="16#1000#" event="auto"/>
-   <!-- <if variable="ahci_drv_enabled" value="true">
-    <writer logical="blockdev_request2_ahci"  size="16#0000_8000#" event="auto"/>
-    <reader logical="blockdev_response2_ahci" size="16#0000_4000#" vector="auto"/>
-   </if>
-   <if variable="nvme_drv_enabled" value="true">
-    <writer logical="blockdev_request2_nvme"  size="16#0000_8000#" event="auto"/>
-    <reader logical="blockdev_response2_nvme" size="16#0000_4000#" vector="auto"/>
-   </if> -->
-
    <array logical="blockdev_response2" virtualAddressBase="16#00a0_0000#" elementSize="16#4000#" vectorBase="42">
     <if variable="ahci_drv_enabled" value="true">
      <reader logical="blockdev_response2_ahci"/>

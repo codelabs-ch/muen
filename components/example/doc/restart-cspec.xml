@@ -1,6 +1,0 @@
-<component name="foo" profile="native">
- <depends>
-  <library ref="muinit"/>
- </depends>
- ...
-</component>

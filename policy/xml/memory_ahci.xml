@@ -1,3 +1,0 @@
-<memory name="ahci_dma" size="16#0001_0000#" caching="WB" type="subject_device">
-   <fill pattern="16#00#"/>
-</memory>

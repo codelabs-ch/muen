@@ -1,6 +1,6 @@
 {
 	"project_id" : "Muen Separation Kernel",
-	"conduit_uri" : "https://dev.codelabs.ch/",
+	"phabricator.uri" : "https://dev.codelabs.ch/",
 	"git.default-relative-commit" : "origin/main",
 	"arc.land.onto" : [ "main" ],
 	"arc.land.onto.default" : "main",

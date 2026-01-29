@@ -170,7 +170,7 @@ is
         (Unused_Rev /= UCH.Update_Revision,
          Dump.Print_Message
            (Msg => "MCU" & Strings.Img_Nobase (Byte (CPU_Info.CPU_ID))
-            & ": ERROR - Update failed, revision still"
+            & ": ERROR - Update failed, revision still "
             & Strings.Img (Unused_Rev)));
    end Process;
 

@@ -235,7 +235,7 @@ is
 
    procedure Print_Status_Code
       (SC  : Interfaces.Unsigned_8;
-       SCT : Unsigned_3)
+       SCT : Storage_Interface.Unsigned_3)
    is
       function Msg_Length (S : Status_String) return Natural
       with Post => Msg_Length'Result <= Max_Status_Length

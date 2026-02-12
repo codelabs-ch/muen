@@ -21,18 +21,17 @@ is
    -------------------------------------------------------------------------
 
    procedure Cmd_Slot_Prepare
-      (Port_ID :        PConf.Port_Range;
+      (Port_ID :        Ports_Config.Port_Range;
        Len     : in out Interfaces.Unsigned_32;
        Address :        Interfaces.Unsigned_64;
        RW      :        RW_Type)
    is
-      use type Interfaces.Unsigned_64;
       Address_Offset : Interfaces.Unsigned_32 := 0;
       Bytes          : Interfaces.Unsigned_32;
       Bytes_Per_Prdt : constant               := 16#400000#;
       FIS_Len        : constant               := 5; -- FIS Len -> 5DWord
       High           : Interfaces.Unsigned_32;
-      Low            : Unsigned_31;
+      Low            : Storage_Interface.Unsigned_31;
       Length         : Interfaces.Unsigned_32 := Len;
       Prdt_Len       : Interfaces.Unsigned_32;
    begin
@@ -63,7 +62,7 @@ is
          else
             Bytes := Bytes_Per_Prdt;
          end if;
-         Low  := Unsigned_31'Mod
+         Low  := Storage_Interface.Unsigned_31'Mod
             (Interfaces.Shift_Right
                (Address + Interfaces.Unsigned_64 (Address_Offset), 1));
          High := Interfaces.Unsigned_32 (Interfaces.Shift_Right
@@ -72,7 +71,7 @@ is
          Command_Table (Port_ID).Prdt (I).DBA := Low;
          Command_Table (Port_ID).Prdt (I).DBAU := High;
          Command_Table (Port_ID).Prdt (I).DBC
-            := Unsigned_22 ((Bytes - 1) and 16#3f_ffff#);
+            := Storage_Interface.Unsigned_22 ((Bytes - 1) and 16#3f_ffff#);
 
          Length := Length - Bytes;
          Address_Offset := Address_Offset + Bytes;

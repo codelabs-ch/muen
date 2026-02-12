@@ -15,7 +15,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Storage_Interface;
+with Interfaces;
 
 package Partitions
 is
@@ -23,13 +23,13 @@ is
    PARTITION_TYPE_PROTECTIVE : constant := 16#EE#;
    PARTITION_TYPE_EFI        : constant := 16#EF#;
 
-   type EBR_Partition_Types_Type is array (1 .. 3) of Storage_Interface.Unsigned_8;
+   type EBR_Partition_Types_Type is array (1 .. 3) of Interfaces.Unsigned_8;
    EBR_Partition_Types : EBR_Partition_Types_Type := (16#05#, 16#0f#, 16#85#);
 
    type Partition_Element_Type is record
-      Start_Lba      : Storage_Interface.Unsigned_64;
-      Sector_Cnt     : Storage_Interface.Unsigned_64;
-      Partition_Type : Storage_Interface.Unsigned_8;
+      Start_Lba      : Interfaces.Unsigned_64;
+      Sector_Cnt     : Interfaces.Unsigned_64;
+      Partition_Type : Interfaces.Unsigned_8;
    end record;
 
    Null_Partition_Element : Partition_Element_Type :=

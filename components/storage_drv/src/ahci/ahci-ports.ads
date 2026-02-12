@@ -16,9 +16,11 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
 with System;
 
-with Storage_Interface; use Storage_Interface;
+with Ports_Config;
+with Storage_Interface;
 
 with Musinfo.Instance;
 
@@ -35,12 +37,12 @@ is
 
    --  Clear Sata / Interrupt error registers of the port specified by 'ID'.
    procedure Clear_Errors
-      (ID    : PConf.Port_Range;
+      (ID    : Ports_Config.Port_Range;
        Clear : Clear_Error_Type);
 
    --  Enable port specified by ID.
    procedure Enable
-     (ID      :     PConf.Port_Range;
+     (ID      :     Ports_Config.Port_Range;
       Success : out Boolean)
    with
       Pre => Musinfo.Instance.Is_Valid;
@@ -50,7 +52,7 @@ is
    --  Execute commandslot
    --  Timeout: abort command if no response from device within Timeout sec
    procedure Execute
-      (ID      :     PConf.Port_Range;
+      (ID      :     Ports_Config.Port_Range;
        Timeout :     Execute_Timeout_Type;
        Success : out Boolean)
    with
@@ -58,27 +60,27 @@ is
 
    --  Test if the port is active (device detected)
    procedure Is_Active
-      (ID     :     PConf.Port_Range;
+      (ID     :     Ports_Config.Port_Range;
        Active : out Boolean);
 
    --  Power up port specified by ID.
-   procedure Power_Up (ID : PConf.Port_Range);
+   procedure Power_Up (ID : Ports_Config.Port_Range);
 
    --  Reset port specified by ID.
    procedure Reset
-     (ID      :     PConf.Port_Range;
+     (ID      :     Ports_Config.Port_Range;
       Success : out Boolean)
    with
       Pre => Musinfo.Instance.Is_Valid;
 
    --  Spin up device
-   procedure Spin_Up (ID : PConf.Port_Range);
+   procedure Spin_Up (ID : Ports_Config.Port_Range);
 
    --  Start command processing of command list for port specified by ID.
-   procedure Start (ID : PConf.Port_Range);
+   procedure Start (ID : Ports_Config.Port_Range);
 
    --  Stop command processing of command list for port specified by ID.
-   procedure Stop (ID : PConf.Port_Range)
+   procedure Stop (ID : Ports_Config.Port_Range)
    with
       Pre => Musinfo.Instance.Is_Valid;
 
@@ -93,7 +95,7 @@ is
       DPS        : Boolean;
       PCS        : Boolean;
       DMPS       : Boolean;
-      Reserved_1 : Bit_Array (8 .. 21);
+      Reserved_1 : Storage_Interface.Bit_Array (8 .. 21);
       PRCS       : Boolean;
       IPMS       : Boolean;
       OFS        : Boolean;
@@ -143,7 +145,7 @@ is
       DPE        : Boolean;
       PCE        : Boolean;
       DMPE       : Boolean;
-      Reserved_1 : Bit_Array (8 .. 21);
+      Reserved_1 : Storage_Interface.Bit_Array (8 .. 21);
       PRCE       : Boolean;
       IPME       : Boolean;
       OFE        : Boolean;
@@ -186,8 +188,8 @@ is
       POD      : Boolean;
       CLO      : Boolean;
       FRE      : Boolean;
-      Reserved : Bit_Array (5 .. 7);
-      CCS      : Unsigned_5;
+      Reserved : Storage_Interface.Bit_Array (5 .. 7);
+      CCS      : Storage_Interface.Unsigned_5;
       MPSS     : Boolean;
       FR       : Boolean;
       CR       : Boolean;
@@ -203,7 +205,7 @@ is
       DLAE     : Boolean;
       ALPE     : Boolean;
       ASP      : Boolean;
-      ICC      : Unsigned_4;
+      ICC      : Storage_Interface.Unsigned_4;
    end record
    with
       Size => 4 * 8;
@@ -236,9 +238,9 @@ is
 
    type Port_Task_File_Status_Type is record
       ERR        : Boolean;
-      Specific_1 : Bit_Array (1 .. 2);
+      Specific_1 : Storage_Interface.Bit_Array (1 .. 2);
       DRQ        : Boolean;
-      Specific_2 : Bit_Array (4 .. 6);
+      Specific_2 : Storage_Interface.Bit_Array (4 .. 6);
       BSY        : Boolean;
    end record
    with
@@ -254,8 +256,8 @@ is
 
    type Port_Task_File_Data_Type is record
       STS      : Port_Task_File_Status_Type;
-      ERR      : Unsigned_8;
-      Reserved : Unsigned_16;
+      ERR      : Interfaces.Unsigned_8;
+      Reserved : Interfaces.Unsigned_16;
    end record
    with
       Size => 4 * 8;
@@ -267,10 +269,10 @@ is
    end record;
 
    type Port_SATA_Status_Type is record
-      DET      : Unsigned_4;
-      SPD      : Unsigned_4;
-      IPM      : Unsigned_4;
-      Reserved : Bit_Array (12 .. 31);
+      DET      : Storage_Interface.Unsigned_4;
+      SPD      : Storage_Interface.Unsigned_4;
+      IPM      : Storage_Interface.Unsigned_4;
+      Reserved : Storage_Interface.Bit_Array (12 .. 31);
    end record
    with
       Size => 4 * 8;
@@ -283,10 +285,10 @@ is
    end record;
 
    type Port_SATA_Control_Type is record
-      DET      : Unsigned_4;
-      SPD      : Unsigned_4;
-      IPM      : Unsigned_4;
-      Reserved : Bit_Array (12 .. 31);
+      DET      : Storage_Interface.Unsigned_4;
+      SPD      : Storage_Interface.Unsigned_4;
+      IPM      : Storage_Interface.Unsigned_4;
+      Reserved : Storage_Interface.Bit_Array (12 .. 31);
    end record
    with
       Size => 4 * 8;
@@ -299,8 +301,8 @@ is
    end record;
 
    type Port_SATA_Error_Type is record
-      ERR  : Unsigned_16;
-      DIAG : Unsigned_16;
+      ERR  : Interfaces.Unsigned_16;
+      DIAG : Interfaces.Unsigned_16;
    end record
    with
       Size => 4 * 8;
@@ -311,8 +313,8 @@ is
    end record;
 
    type Port_SATA_Notification_Type is record
-      PMN      : Bit_Array (0 .. 15);
-      Reserved : Unsigned_16;
+      PMN      : Storage_Interface.Bit_Array (0 .. 15);
+      Reserved : Interfaces.Unsigned_16;
    end record
    with
       Size => 4 * 8;
@@ -326,11 +328,11 @@ is
       EN         : Boolean;
       DEC        : Boolean;
       SDE        : Boolean;
-      Reserved_1 : Bit_Array (3 .. 7);
-      DEV        : Unsigned_4;
-      ADO        : Unsigned_4;
-      DWE        : Unsigned_4;
-      Reserved_2 : Bit_Array (20 .. 31);
+      Reserved_1 : Storage_Interface.Bit_Array (3 .. 7);
+      DEV        : Storage_Interface.Unsigned_4;
+      ADO        : Storage_Interface.Unsigned_4;
+      DWE        : Storage_Interface.Unsigned_4;
+      Reserved_2 : Storage_Interface.Bit_Array (20 .. 31);
    end record
    with
       Size => 4 * 8;
@@ -349,11 +351,11 @@ is
    type Device_Sleep_Type is record
       ADSE     : Boolean;
       DSP      : Boolean;
-      DETO     : Unsigned_8;
-      MDAT     : Unsigned_5;
-      DITO     : Unsigned_10;
-      DM       : Unsigned_4;
-      Reserved : Bit_Array (29 .. 31);
+      DETO     : Interfaces.Unsigned_8;
+      MDAT     : Storage_Interface.Unsigned_5;
+      DITO     : Storage_Interface.Unsigned_10;
+      DM       : Storage_Interface.Unsigned_4;
+      Reserved : Storage_Interface.Bit_Array (29 .. 31);
    end record
    with
       Size => 4 * 8;
@@ -371,26 +373,26 @@ is
    Port_Registers_Size : constant := 16#80# * 8;
 
    type Port_Registers_Type is record
-      Cmd_List_Base_Addr       : Unsigned_32;
-      Cmd_List_Base_Upper_Addr : Unsigned_32;
-      FIS_Base_Addr            : Unsigned_32;
-      FIS_Base_Upper_Addr      : Unsigned_32;
+      Cmd_List_Base_Addr       : Interfaces.Unsigned_32;
+      Cmd_List_Base_Upper_Addr : Interfaces.Unsigned_32;
+      FIS_Base_Addr            : Interfaces.Unsigned_32;
+      FIS_Base_Upper_Addr      : Interfaces.Unsigned_32;
       Interrupt_Status         : Port_Interrupt_Status_Type;
       Interrupt_Enable         : Port_Interrupt_Enable_Type;
       Command_And_Status       : Port_Command_Status_Type;
-      Reserved_1               : Unsigned_32;
+      Reserved_1               : Interfaces.Unsigned_32;
       Task_File_Data           : Port_Task_File_Data_Type;
-      Signature                : Unsigned_32;
+      Signature                : Interfaces.Unsigned_32;
       SATA_Status              : Port_SATA_Status_Type;
       SATA_Control             : Port_SATA_Control_Type;
       SATA_Error               : Port_SATA_Error_Type;
-      SATA_Active              : Bit_Array (0 .. 31);
-      Command_Issue            : Bit_Array (0 .. 31);
+      SATA_Active              : Storage_Interface.Bit_Array (0 .. 31);
+      Command_Issue            : Storage_Interface.Bit_Array (0 .. 31);
       SATA_Notification        : Port_SATA_Notification_Type;
       FIS_Based_Switching_Ctrl : FIS_Based_Switching_Control_Type;
       Device_Sleep             : Device_Sleep_Type;
-      Reserved_2               : Byte_Array (16#48# .. 16#6f#);
-      Vendor_Specific          : Byte_Array (16#70# .. 16#7f#);
+      Reserved_2               : Storage_Interface.Byte_Array (16#48# .. 16#6f#);
+      Vendor_Specific          : Storage_Interface.Byte_Array (16#70# .. 16#7f#);
    end record
    with
       Size => Port_Registers_Size;
@@ -425,10 +427,10 @@ is
    SIG_SEMB  : constant := 16#c33c0101#;
    SIG_PM    : constant := 16#96690101#;
 
-   use type PConf.Port_Range;
-   Ports_Array_Size : constant := (PConf.Port_Range'Last + 1) * Port_Registers_Size;
+   use type Ports_Config.Port_Range;
+   Ports_Array_Size : constant := (Ports_Config.Port_Range'Last + 1) * Port_Registers_Size;
 
-   type Port_Registers_Array is array (PConf.Port_Range) of Port_Registers_Type
+   type Port_Registers_Array is array (Ports_Config.Port_Range) of Port_Registers_Type
    with
       Pack,
       Object_Size => Ports_Array_Size;

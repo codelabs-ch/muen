@@ -2,7 +2,7 @@ with Interfaces;
 
 with Partitions;
 with Ports_Config;
-with Storage_Interface; use Storage_Interface;
+with Storage_Interface;
 
 package Gpt
 is
@@ -17,7 +17,7 @@ is
       EFI_Should_Ignore    : Boolean;
       Legacy_Bios_Bootable : Boolean;
       -- remainder is reserved / partition specifc (define if needed)
-      Reserved             : Bit_Array (3 .. 63);
+      Reserved             : Storage_Interface.Bit_Array (3 .. 63);
    end record
    with
       Size => 64,
@@ -33,10 +33,10 @@ is
    type Partition_Name_String is new String (1 .. 72);
 
    type Partition_Entry_Type is record
-      Partition_Type_GUID   : Unsigned_128;       -- Mixed Endian
-      Unique_Partition_GUID : Unsigned_128;       -- Mixed Endian
-      Starting_LBA          : Unsigned_64;        -- Little Endian
-      Ending_LBA            : Unsigned_64;        -- inclusive, usually odd
+      Partition_Type_GUID   : Interfaces.Unsigned_128;       -- Mixed Endian
+      Unique_Partition_GUID : Interfaces.Unsigned_128;       -- Mixed Endian
+      Starting_LBA          : Interfaces.Unsigned_64;        -- Little Endian
+      Ending_LBA            : Interfaces.Unsigned_64;        -- inclusive, usually odd
       Attributes            : Partition_Attributes;
       Partition_Name        : Partition_Name_String;   -- 36 Chars UTF-16LE (wide_str)--> Decode!
    end record
@@ -55,19 +55,19 @@ is
 
    type GPT_Header_Type is record
       Signature                   : String (1 .. 8); -- Little Endian
-      Revision                    : Unsigned_32;
-      Header_Size                 : Unsigned_32;
-      Header_CRC32                : Unsigned_32;
-      Reserved                    : Byte_Array (0 .. 3); -- reserved (zeroed)
-      My_LBA                      : Unsigned_64;
-      Alternate_LBA               : Unsigned_64;
-      First_Usable_LBA            : Unsigned_64;    -- primary partition table last LBA + 1
-      Last_Usable_LBA             : Unsigned_64;    -- secondary partition table first LBA - 1
-      Disk_GUID                   : Unsigned_128;   -- Mixed Endian
-      Partition_Entry_LBA         : Unsigned_64;    -- LBA of start of partition entry array
-      Number_Of_Partition_Entries : Unsigned_32;    -- usually   2
-      Size_Of_Partition_Entry     : Unsigned_32;    -- usually 128
-      Partition_Entry_Array_CRC32 : Unsigned_32;
+      Revision                    : Interfaces.Unsigned_32;
+      Header_Size                 : Interfaces.Unsigned_32;
+      Header_CRC32                : Interfaces.Unsigned_32;
+      Reserved                    : Storage_Interface.Byte_Array (0 .. 3); -- reserved (zeroed)
+      My_LBA                      : Interfaces.Unsigned_64;
+      Alternate_LBA               : Interfaces.Unsigned_64;
+      First_Usable_LBA            : Interfaces.Unsigned_64;    -- primary partition table last LBA + 1
+      Last_Usable_LBA             : Interfaces.Unsigned_64;    -- secondary partition table first LBA - 1
+      Disk_GUID                   : Interfaces.Unsigned_128;   -- Mixed Endian
+      Partition_Entry_LBA         : Interfaces.Unsigned_64;    -- LBA of start of partition entry array
+      Number_Of_Partition_Entries : Interfaces.Unsigned_32;    -- usually   2
+      Size_Of_Partition_Entry     : Interfaces.Unsigned_32;    -- usually 128
+      Partition_Entry_Array_CRC32 : Interfaces.Unsigned_32;
    end record
    with
       Size => 736,
@@ -99,7 +99,7 @@ is
    -- https://upload.wikimedia.org/wikipedia/commons/0/07/GUID_Partition_Table_Scheme.svg
    type Primary_GPT is record
       Primary_GPT_Header : GPT_Header_Type;
-      Reserved           : Byte_Array (0 .. 419);
+      Reserved           : Storage_Interface.Byte_Array (0 .. 419);
       Entry_Array        : Entry_Array_Type;
    end record
    with

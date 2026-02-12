@@ -18,7 +18,8 @@
 
 with System;
 
-with Storage_Interface; use Storage_Interface;
+with Interfaces;
+
 with Storage_Drv_Cspecs_Wrapper;
 
 package Pciconf
@@ -27,40 +28,40 @@ is
    package Spec renames Storage_Drv_Cspecs_Wrapper.Devices;
 
    type Info_Record is record
-      Revision_ID : Unsigned_8;
-      Class_Code  : Unsigned_24;
+      Revision_ID : Interfaces.Unsigned_8;
+      Class_Code  : Interfaces.Unsigned_24;
    end record
    with
       Pack,
       Size => 32;
 
    type Header_Type is record
-      Vendor_ID               : Unsigned_16;
-      Device_ID               : Unsigned_16;
-      Command                 : Unsigned_16;
-      Status                  : Unsigned_16;
+      Vendor_ID               : Interfaces.Unsigned_16;
+      Device_ID               : Interfaces.Unsigned_16;
+      Command                 : Interfaces.Unsigned_16;
+      Status                  : Interfaces.Unsigned_16;
       Info                    : Info_Record;
-      Cache_Line_Size         : Unsigned_8;
-      Master_Latency_Timer    : Unsigned_8;
-      Header_Type             : Unsigned_8;
-      Builtin_Self_Test       : Unsigned_8;
-      Base_Address_Register_0 : Unsigned_32;
-      Base_Address_Register_1 : Unsigned_32;
-      Base_Address_Register_2 : Unsigned_32;
-      Base_Address_Register_3 : Unsigned_32;
-      Base_Address_Register_4 : Unsigned_32;
-      Base_Address_Register_5 : Unsigned_32;
-      Cardbus_CIS_Pointer     : Unsigned_32;
-      Subsystem_Vendor_ID     : Unsigned_16;
-      Subsystem_ID            : Unsigned_16;
-      Expansion_ROM_Base_Addr : Unsigned_32;
-      Capabilities_Pointer    : Unsigned_8;
-      Reserved_1              : Unsigned_24;
-      Reserved_2              : Unsigned_32;
-      Interrupt_Line          : Unsigned_8;
-      Interrupt_Pin           : Unsigned_8;
-      Min_Grant               : Unsigned_8;
-      Max_Latency             : Unsigned_8;
+      Cache_Line_Size         : Interfaces.Unsigned_8;
+      Master_Latency_Timer    : Interfaces.Unsigned_8;
+      Header_Type             : Interfaces.Unsigned_8;
+      Builtin_Self_Test       : Interfaces.Unsigned_8;
+      Base_Address_Register_0 : Interfaces.Unsigned_32;
+      Base_Address_Register_1 : Interfaces.Unsigned_32;
+      Base_Address_Register_2 : Interfaces.Unsigned_32;
+      Base_Address_Register_3 : Interfaces.Unsigned_32;
+      Base_Address_Register_4 : Interfaces.Unsigned_32;
+      Base_Address_Register_5 : Interfaces.Unsigned_32;
+      Cardbus_CIS_Pointer     : Interfaces.Unsigned_32;
+      Subsystem_Vendor_ID     : Interfaces.Unsigned_16;
+      Subsystem_ID            : Interfaces.Unsigned_16;
+      Expansion_ROM_Base_Addr : Interfaces.Unsigned_32;
+      Capabilities_Pointer    : Interfaces.Unsigned_8;
+      Reserved_1              : Interfaces.Unsigned_24;
+      Reserved_2              : Interfaces.Unsigned_32;
+      Interrupt_Line          : Interfaces.Unsigned_8;
+      Interrupt_Pin           : Interfaces.Unsigned_8;
+      Min_Grant               : Interfaces.Unsigned_8;
+      Max_Latency             : Interfaces.Unsigned_8;
    end record
    with
       Size => 64 * 8;
@@ -94,9 +95,9 @@ is
       Max_Latency             at 16#3c# range 24 .. 31;
    end record;
 
-   subtype Capability_Range is Unsigned_8 range 16#40# .. 16#ff#;
+   subtype Capability_Range is Interfaces.Unsigned_8 range 16#40# .. 16#ff#;
 
-   type Caps_Array is array (Capability_Range) of Unsigned_8
+   type Caps_Array is array (Capability_Range) of Interfaces.Unsigned_8
    with
       Pack;
 

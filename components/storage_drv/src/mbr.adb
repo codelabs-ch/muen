@@ -141,7 +141,7 @@ is
       Part_Table := Null_Partition_Table;
       Parse_Loop : loop
          --  read sector containing a MBR / EBR entry
-         Log.Put_Line ("DMA BASE Address is " & SK.Strings.Img (Unsigned_64 (Storage_Interface.DMA_Mem_Base_Address)));
+         Log.Put_Line ("DMA BASE Address is " & SK.Strings.Img (Interfaces.Unsigned_64 (Storage_Interface.DMA_Mem_Base_Address)));
          Storage_Interface.Execute_Read_Command
            (Address => Storage_Interface.DMA_Mem_Base_Address,
             SLBA    => Sector,

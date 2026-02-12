@@ -16,8 +16,11 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
 with System;
-with Storage_Interface; use Storage_Interface;
+
+with Ports_Config;
+with Storage_Interface;
 
 package Ahci.FIS
 is
@@ -27,7 +30,7 @@ is
      (Host_To_Device, Device_To_Host, DMA_Activate, DMA_Setup,
       Data, BIST_Active, PIO_Setup, Set_Device_Bits);
 
-   FIS_Val : array (FIS_Kind_Type) of Unsigned_8
+   FIS_Val : array (FIS_Kind_Type) of Interfaces.Unsigned_8
      := (Host_To_Device  => 16#27#,
          Device_To_Host  => 16#24#,
          DMA_Activate    => 16#39#,
@@ -39,20 +42,20 @@ is
 
    --  Serial ATA AHCI 1.3.1 Specification, section 4.2.3.1.
    type Command_FIS_Type is record
-      FIS_Type     : Unsigned_8;
-      PM_Port      : Unsigned_4;
-      Reserved_1   : Bit_Array (12 .. 14);
+      FIS_Type     : Interfaces.Unsigned_8;
+      PM_Port      : Storage_Interface.Unsigned_4;
+      Reserved_1   : Storage_Interface.Bit_Array (12 .. 14);
       C            : Boolean;
-      Command      : Unsigned_8;
-      Features0_7  : Unsigned_8;
-      LBA0_23      : Unsigned_24;
-      Device       : Unsigned_8;
-      LBA_24_47    : Unsigned_24;
-      Features8_15 : Unsigned_8;
-      Count        : Unsigned_16;
-      ICC          : Bit_Array (16 .. 23);
-      Control      : Unsigned_8;
-      Reserved_2   : Bit_Array (0 .. 31);
+      Command      : Interfaces.Unsigned_8;
+      Features0_7  : Interfaces.Unsigned_8;
+      LBA0_23      : Interfaces.Unsigned_24;
+      Device       : Interfaces.Unsigned_8;
+      LBA_24_47    : Interfaces.Unsigned_24;
+      Features8_15 : Interfaces.Unsigned_8;
+      Count        : Interfaces.Unsigned_16;
+      ICC          : Storage_Interface.Bit_Array (16 .. 23);
+      Control      : Interfaces.Unsigned_8;
+      Reserved_2   : Storage_Interface.Bit_Array (0 .. 31);
    end record
    with
       Size => 20 * 8;
@@ -76,20 +79,20 @@ is
 
    --  Serial ATA Revision 3.0, section 10.3.5.
    type Device_To_Host_FIS_Type is record
-      FIS_Type   : Unsigned_8;
-      PM_Port    : Unsigned_4;
-      Reserved_1 : Bit_Array (12 .. 13);
+      FIS_Type   : Interfaces.Unsigned_8;
+      PM_Port    : Storage_Interface.Unsigned_4;
+      Reserved_1 : Storage_Interface.Bit_Array (12 .. 13);
       I          : Boolean;
       Reserved_2 : Boolean;
-      Status     : Unsigned_8;
-      Error      : Unsigned_8;
-      LBA0_23    : Unsigned_24;
-      Device     : Unsigned_8;
-      LBA_24_47  : Unsigned_24;
-      Reserved_3 : Bit_Array (24 .. 31);
-      Count      : Unsigned_16;
-      Reserved_4 : Bit_Array (16 .. 31);
-      Reserved_5 : Bit_Array (0 .. 31);
+      Status     : Interfaces.Unsigned_8;
+      Error      : Interfaces.Unsigned_8;
+      LBA0_23    : Interfaces.Unsigned_24;
+      Device     : Interfaces.Unsigned_8;
+      LBA_24_47  : Interfaces.Unsigned_24;
+      Reserved_3 : Storage_Interface.Bit_Array (24 .. 31);
+      Count      : Interfaces.Unsigned_16;
+      Reserved_4 : Storage_Interface.Bit_Array (16 .. 31);
+      Reserved_5 : Storage_Interface.Bit_Array (0 .. 31);
    end record
    with
       Size => 20 * 8;
@@ -113,17 +116,17 @@ is
 
    --  Serial ATA Revision 3.0, section 10.3.6.
    type Set_Device_Bits_FIS_Type is record
-      FIS_Type          : Unsigned_8;
-      PM_Port           : Unsigned_4;
-      Reserved_1        : Bit_Array (12 .. 13);
+      FIS_Type          : Interfaces.Unsigned_8;
+      PM_Port           : Storage_Interface.Unsigned_4;
+      Reserved_1        : Storage_Interface.Bit_Array (12 .. 13);
       I                 : Boolean;
       N                 : Boolean;
-      Status_Lo         : Unsigned_3;
+      Status_Lo         : Storage_Interface.Unsigned_3;
       Reserved_2        : Boolean;
-      Status_Hi         : Unsigned_3;
+      Status_Hi         : Storage_Interface.Unsigned_3;
       Reserved_3        : Boolean;
-      Error             : Unsigned_8;
-      Protocol_Specific : Unsigned_32;
+      Error             : Interfaces.Unsigned_8;
+      Protocol_Specific : Interfaces.Unsigned_32;
    end record
    with
       Size => 8 * 8;
@@ -144,9 +147,9 @@ is
 
    --  Serial ATA Revision 3.0, section 10.3.7.
    type DMA_Activate_FIS_Type is record
-      FIS_Type : Unsigned_8;
-      PM_Port  : Unsigned_4;
-      Reserved : Bit_Array (12 .. 31);
+      FIS_Type : Interfaces.Unsigned_8;
+      PM_Port  : Storage_Interface.Unsigned_4;
+      Reserved : Storage_Interface.Bit_Array (12 .. 31);
    end record
    with
       Size => 4 * 8;
@@ -159,19 +162,19 @@ is
 
    --  Serial ATA Revision 3.0, section 10.3.8.
    type DMA_Setup_FIS_Type is record
-      FIS_Type           : Unsigned_8;
-      PM_Port            : Unsigned_4;
+      FIS_Type           : Interfaces.Unsigned_8;
+      PM_Port            : Storage_Interface.Unsigned_4;
       R                  : Boolean;
       D                  : Boolean;
       I                  : Boolean;
       A                  : Boolean;
-      Reserved_1         : Bit_Array (16 .. 31);
-      DMA_Buffer_ID_Low  : Unsigned_32;
-      DMA_Buffer_ID_High : Unsigned_32;
-      Reserved_2         : Unsigned_32;
-      DMA_Buffer_Offset  : Unsigned_32;
-      DMA_Transfer_Count : Unsigned_32;
-      Reserved_3         : Bit_Array (0 .. 31);
+      Reserved_1         : Storage_Interface.Bit_Array (16 .. 31);
+      DMA_Buffer_ID_Low  : Interfaces.Unsigned_32;
+      DMA_Buffer_ID_High : Interfaces.Unsigned_32;
+      Reserved_2         : Interfaces.Unsigned_32;
+      DMA_Buffer_Offset  : Interfaces.Unsigned_32;
+      DMA_Transfer_Count : Interfaces.Unsigned_32;
+      Reserved_3         : Storage_Interface.Bit_Array (0 .. 31);
    end record
    with
       Size => 28 * 8;
@@ -194,23 +197,23 @@ is
 
    --  Serial ATA Revision 3.0, section 10.3.10.
    type PIO_Setup_FIS_Type is record
-      FIS_Type       : Unsigned_8;
-      PM_Port        : Unsigned_4;
+      FIS_Type       : Interfaces.Unsigned_8;
+      PM_Port        : Storage_Interface.Unsigned_4;
       Reserved_1     : Boolean;
       D              : Boolean;
       I              : Boolean;
       Reserved_2     : Boolean;
-      Status         : Unsigned_8;
-      Error          : Unsigned_8;
-      LBA0_23        : Unsigned_24;
-      Device         : Unsigned_8;
-      LBA_24_47      : Unsigned_24;
-      Reserved_3     : Bit_Array (24 .. 31);
-      Count          : Unsigned_16;
-      Reserved_4     : Bit_Array (16 .. 23);
-      E_Status       : Unsigned_8;
-      Transfer_Count : Unsigned_16;
-      Reserved_5     : Bit_Array (16 .. 31);
+      Status         : Interfaces.Unsigned_8;
+      Error          : Interfaces.Unsigned_8;
+      LBA0_23        : Interfaces.Unsigned_24;
+      Device         : Interfaces.Unsigned_8;
+      LBA_24_47      : Interfaces.Unsigned_24;
+      Reserved_3     : Storage_Interface.Bit_Array (24 .. 31);
+      Count          : Interfaces.Unsigned_16;
+      Reserved_4     : Storage_Interface.Bit_Array (16 .. 23);
+      E_Status       : Interfaces.Unsigned_8;
+      Transfer_Count : Interfaces.Unsigned_16;
+      Reserved_5     : Storage_Interface.Bit_Array (16 .. 31);
    end record
    with
       Size => 20 * 8;
@@ -240,14 +243,14 @@ is
    --  Serial ATA AHCI 1.3.1 Specification, section 4.2.1.
    type Received_FIS_Type is record
       DSFIS     : DMA_Setup_FIS_Type;
-      Reserved1 : Unsigned_32;
+      Reserved1 : Interfaces.Unsigned_32;
       PSFIS     : PIO_Setup_FIS_Type;
-      Reserved2 : Byte_Array (0 .. 11);
+      Reserved2 : Storage_Interface.Byte_Array (0 .. 11);
       RFIS      : Device_To_Host_FIS_Type;
-      Reserved3 : Unsigned_32;
+      Reserved3 : Interfaces.Unsigned_32;
       SDBFIS    : Set_Device_Bits_FIS_Type;
-      UFIS      : Byte_Array (0 .. 63);
-      Reserved4 : Byte_Array (0 .. 95);
+      UFIS      : Storage_Interface.Byte_Array (0 .. 63);
+      Reserved4 : Storage_Interface.Byte_Array (0 .. 95);
    end record
    with
       Size => Received_FIS_Size;
@@ -264,10 +267,10 @@ is
       Reserved4 at 16#A0# range 0 .. 96 * 8 - 1;
    end record;
 
-   use type PConf.Port_Range;
-   FIS_Array_Size : constant := (PConf.Port_Range'Last + 1) * Received_FIS_Size;
+   use type Ports_Config.Port_Range;
+   FIS_Array_Size : constant := (Ports_Config.Port_Range'Last + 1) * Received_FIS_Size;
 
-   type FIS_Array_Type is array (PConf.Port_Range) of Received_FIS_Type
+   type FIS_Array_Type is array (Ports_Config.Port_Range) of Received_FIS_Type
    with Object_Size => FIS_Array_Size;
 
    pragma Warnings
@@ -280,7 +283,7 @@ is
       Volatile,
       Async_Readers,
       Async_Writers,
-      Address => System'To_Address (Fis_Base_Address);
+      Address => System'To_Address (Storage_Interface.Fis_Base_Address);
    pragma Warnings
      (GNATprove, On,
       "writing * is assumed to have no effects on other non-volatile objects");

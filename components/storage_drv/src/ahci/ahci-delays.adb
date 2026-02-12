@@ -21,13 +21,13 @@ with SK.CPU;
 package body Ahci.Delays
 is
 
-   use type Unsigned_64;
+   use type Interfaces.Unsigned_64;
 
    --  Suspend execution of caller for at least the specified amount of seconds
    --  scaled by given unit.
    procedure Sleep
-     (Amount : Unsigned_64;
-      Unit   : Unsigned_64)
+     (Amount : Interfaces.Unsigned_64;
+      Unit   : Interfaces.Unsigned_64)
    with
       Global => (Input  => (Musinfo.Instance.State,
                             Musinfo.Instance.Scheduling_Info),
@@ -35,13 +35,13 @@ is
       Pre    => Musinfo.Instance.Is_Valid and then Unit > 0;
 
    --  Returns Timestamp counter frequency in Hz.
-   function TSC_Hz return Unsigned_64
+   function TSC_Hz return Interfaces.Unsigned_64
    with
       Pre => Musinfo.Instance.Is_Valid;
 
    --  Suspend execution of caller until the given deadline specified in TSC
    --  ticks has passed.
-   procedure Sleep_Until (Deadline : Unsigned_64)
+   procedure Sleep_Until (Deadline : Interfaces.Unsigned_64)
    with
       Global => (Proof_In => Musinfo.Instance.State,
                  Input    => Musinfo.Instance.Scheduling_Info,
@@ -53,19 +53,19 @@ is
    procedure M_Delay (Msec : Natural)
    is
    begin
-      Sleep (Amount => Unsigned_64 (Msec),
+      Sleep (Amount => Interfaces.Unsigned_64 (Msec),
              Unit   => 1000);
    end M_Delay;
 
    -------------------------------------------------------------------------
 
    procedure Sleep
-     (Amount : Unsigned_64;
-      Unit   : Unsigned_64)
+     (Amount : Interfaces.Unsigned_64;
+      Unit   : Interfaces.Unsigned_64)
    is
-      Now   : constant Unsigned_64
+      Now   : constant Interfaces.Unsigned_64
         := Musinfo.Instance.TSC_Schedule_End;
-      Ticks : constant Unsigned_64
+      Ticks : constant Interfaces.Unsigned_64
         := (Amount * TSC_Hz + (Unit - 1)) / Unit;
    begin
       Sleep_Until (Deadline => Now + Ticks);
@@ -73,11 +73,11 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Sleep_Until (Deadline : Unsigned_64)
+   procedure Sleep_Until (Deadline : Interfaces.Unsigned_64)
    with
       SPARK_Mode => Off
    is
-      Now : Unsigned_64;
+      Now : Interfaces.Unsigned_64;
    begin
       loop
          Now := Musinfo.Instance.TSC_Schedule_Start;
@@ -88,7 +88,7 @@ is
 
    -------------------------------------------------------------------------
 
-   function TSC_Hz return Unsigned_64
+   function TSC_Hz return Interfaces.Unsigned_64
    is (Musinfo.Instance.TSC_Khz * 1000);
 
    -------------------------------------------------------------------------
@@ -96,7 +96,7 @@ is
    procedure U_Delay (Usec : Natural)
    is
    begin
-      Sleep (Amount => Unsigned_64 (Usec),
+      Sleep (Amount => Interfaces.Unsigned_64 (Usec),
              Unit   => 1_000_000);
    end U_Delay;
 

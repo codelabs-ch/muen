@@ -72,7 +72,7 @@ is
 
    -------------------------------------------------------------------------
 
-   type CRC_Entries_Byte_Array_Index_Type is new Unsigned_32 range 1 .. 128 * 128;
+   type CRC_Entries_Byte_Array_Index_Type is new Interfaces.Unsigned_32 range 1 .. 128 * 128;
    type CRC_Entries_Byte_Array is array (CRC_Entries_Byte_Array_Index_Type) of Character with Pack;
    Partition_Entry_Array_for_CRC : CRC_Entries_Byte_Array
    with
@@ -95,16 +95,16 @@ is
    -------------------------------------------------------------------------
 
    procedure Calc_Partition_Array_CRC32
-      (CRC32_Check                 : Unsigned_32;
-       Number_Of_Partition_Entries : Unsigned_32;
-       Size_Of_Partition_Entry     : Unsigned_32;
+      (CRC32_Check                 : Interfaces.Unsigned_32;
+       Number_Of_Partition_Entries : Interfaces.Unsigned_32;
+       Size_Of_Partition_Entry     : Interfaces.Unsigned_32;
        Is_Alternate_GPT            : Boolean;
        Success                     : out Boolean)
    with Pre => (Number_Of_Partition_Entries in 1 .. 128 and
                 Size_Of_Partition_Entry in 1 .. 128)
    is
       CRC        : CRC32.CRC_32;
-      CRC32_Calc : Unsigned_32;
+      CRC32_Calc : Interfaces.Unsigned_32;
 
       subtype Index_Type is CRC_Entries_Byte_Array_Index_Type
       range 1 ..  CRC_Entries_Byte_Array_Index_Type (Size_Of_Partition_Entry * Number_Of_Partition_Entries);
@@ -130,7 +130,7 @@ is
             end;
          end loop;
       end if;
-      CRC32_Calc := Unsigned_32 (CRC32.Get_Value (CRC));
+      CRC32_Calc := CRC32.Get_Value (CRC);
 
       if CRC32_Calc /= CRC32_Check then
          Success := False;
@@ -141,12 +141,12 @@ is
    -------------------------------------------------------------------------
 
    procedure Calc_Header_CRC32
-      (CRC32_Check      :     Unsigned_32;
+      (CRC32_Check      :     Interfaces.Unsigned_32;
        Is_Alternate_GPT :     Boolean;
        Success          : out Boolean)
    is
       CRC        : CRC32.CRC_32;
-      CRC32_Calc : Unsigned_32;
+      CRC32_Calc : Interfaces.Unsigned_32;
    begin
       CRC32.Initialize (CRC);
       Success := True;
@@ -163,14 +163,14 @@ is
                CRC32.Update (CRC, GPT_Header_Array_for_CRC_TMP (Index));
             end loop;
          end;
-         CRC32_Calc := Unsigned_32 (CRC32.Get_Value (CRC));
+         CRC32_Calc := CRC32.Get_Value (CRC);
 
          Alternate_GPT_Header.Header_CRC32 := CRC32_Check;
 
          if CRC32_Calc /= CRC32_Check then
             Log.Put_Line ("GPT: CRC of alternate GPT header wrong");
-            Log.Put_Line ("GPT: calculated" & SK.Strings.Img_Dec (Unsigned_64 (CRC32_Calc)));
-            Log.Put_Line ("GPT: expected  " & SK.Strings.Img_Dec (Unsigned_64 (CRC32_Check)));
+            Log.Put_Line ("GPT: calculated" & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (CRC32_Calc)));
+            Log.Put_Line ("GPT: expected  " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (CRC32_Check)));
             Success := False;
 
          end if;
@@ -186,14 +186,14 @@ is
                CRC32.Update (CRC, GPT_Header_Array_for_CRC_TMP (Index));
             end loop;
          end;
-         CRC32_Calc := Unsigned_32 (CRC32.Get_Value (CRC));
+         CRC32_Calc := CRC32.Get_Value (CRC);
 
          PGPT.Primary_GPT_Header.Header_CRC32 := CRC32_Check;
 
          if CRC32_Calc /= CRC32_Check then
             Log.Put_Line ("GPT: CRC of primary GPT header wrong");
-            Log.Put_Line ("GPT: calculated" & SK.Strings.Img_Dec (Unsigned_64 (CRC32_Calc)));
-            Log.Put_Line ("GPT: expected  " & SK.Strings.Img_Dec (Unsigned_64 (CRC32_Check)));
+            Log.Put_Line ("GPT: calculated" & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (CRC32_Calc)));
+            Log.Put_Line ("GPT: expected  " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (CRC32_Check)));
             Success := False;
          end if;
       end if;
@@ -211,8 +211,10 @@ is
       (ID         :     Ports_Config.Port_Range;
        Part_Table : out Partitions.Partition_Table_Type)
    is
-      Status      : Status_Type;
-      Num_of_LBA  : Unsigned_16;
+      use type Storage_Interface.Status_Type;
+
+      Status      : Storage_Interface.Status_Type;
+      Num_of_LBA  : Interfaces.Unsigned_16;
       Partition   : Partition_Entry_Type;
       Success     : Boolean;
 
@@ -254,7 +256,7 @@ is
           Dev_Id  => ID,
           Status  => Status);
 
-      if Status /= OK then
+      if Status /= Storage_Interface.OK then
          Log.Put_Line ("GPT: Failed to read GPT header from disk");
          return;
       end if;
@@ -283,7 +285,7 @@ is
          if GPT_Primary_Header.My_LBA /= 1 then
             Log.Put_Line ("GPT: Current LBA mismatch");
             Log.Put_Line ("GPT: Header says: " & SK.Strings.Img (GPT_Primary_Header.My_LBA));
-            Log.Put_Line ("GPT: expected:    " & SK.Strings.Img (Unsigned_64 (1)));
+            Log.Put_Line ("GPT: expected:    " & SK.Strings.Img (Interfaces.Unsigned_64 (1)));
             return;
          end if;
 
@@ -300,7 +302,7 @@ is
          -- Check alternate GPT Header
          Storage_Interface.Execute_Read_Command
             (Address => Alternate_GPT_Header_Address,
-             SLBA    => Interfaces.Unsigned_64 (GPT_Primary_Header.Alternate_LBA),
+             SLBA    => GPT_Primary_Header.Alternate_LBA,
              NLB     => 0,
              Dev_Id  => ID,
              Status  => Status);
@@ -321,8 +323,8 @@ is
             end if;
             if GPT_Primary_Header.Revision /= Alternate_GPT_Header_TMP.Revision then
                Log.Put_Line ("GPT: alternate GPT header revision mismatch");
-               Log.Put_Line ("GPT: Primary:   " & SK.Strings.Img_Dec (Unsigned_64 (GPT_Primary_Header.Revision)));
-               Log.Put_Line ("GPT: Alternate: " & SK.Strings.Img_Dec (Unsigned_64 (Alternate_GPT_Header_TMP.Revision)));
+               Log.Put_Line ("GPT: Primary:   " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (GPT_Primary_Header.Revision)));
+               Log.Put_Line ("GPT: Alternate: " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Alternate_GPT_Header_TMP.Revision)));
                return;
             end if;
             if Alternate_GPT_Header_TMP.Header_Size < 92 then
@@ -361,14 +363,14 @@ is
             end if;
             if GPT_Primary_Header.Number_Of_Partition_Entries /= Alternate_GPT_Header_TMP.Number_Of_Partition_Entries then
                Log.Put_Line ("GPT: alternate GPT header number of partition entries mismatch");
-               Log.Put_Line ("GPT: Primary:   " & SK.Strings.Img_Dec (Unsigned_64 (GPT_Primary_Header.Number_Of_Partition_Entries)));
-               Log.Put_Line ("GPT: Alternate: " & SK.Strings.Img_Dec (Unsigned_64 (Alternate_GPT_Header_TMP.Number_Of_Partition_Entries)));
+               Log.Put_Line ("GPT: Primary:   " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (GPT_Primary_Header.Number_Of_Partition_Entries)));
+               Log.Put_Line ("GPT: Alternate: " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Alternate_GPT_Header_TMP.Number_Of_Partition_Entries)));
                return;
             end if;
             if GPT_Primary_Header.Size_Of_Partition_Entry /= Alternate_GPT_Header_TMP.Size_Of_Partition_Entry then
                Log.Put_Line ("GPT: alternate GPT header size of partition entry mismatch");
-               Log.Put_Line ("GPT: Primary:   " & SK.Strings.Img_Dec (Unsigned_64 (GPT_Primary_Header.Size_Of_Partition_Entry)));
-               Log.Put_Line ("GPT: Alternate: " & SK.Strings.Img_Dec (Unsigned_64 (Alternate_GPT_Header_TMP.Size_Of_Partition_Entry)));
+               Log.Put_Line ("GPT: Primary:   " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (GPT_Primary_Header.Size_Of_Partition_Entry)));
+               Log.Put_Line ("GPT: Alternate: " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Alternate_GPT_Header_TMP.Size_Of_Partition_Entry)));
                return;
             end if;
 
@@ -381,18 +383,18 @@ is
                return;
             end if;
 
-            Num_of_LBA := Unsigned_16'Mod (GPT_Primary_Header.Number_Of_Partition_Entries) *
-                                Unsigned_16'Mod (GPT_Primary_Header.Size_Of_Partition_Entry) / 512; -- -1?
+            Num_of_LBA := Interfaces.Unsigned_16'Mod (GPT_Primary_Header.Number_Of_Partition_Entries) *
+                           Interfaces.Unsigned_16'Mod (GPT_Primary_Header.Size_Of_Partition_Entry) / 512; -- -1?
 
             -- Check alternate GPT Partition Table if CRC is also correct
             Storage_Interface.Execute_Read_Command
                (Address => Alternate_Partition_Entry_Array_for_CRC_Address,
-                SLBA    => Interfaces.Unsigned_64 (Alternate_GPT_Header_TMP.Partition_Entry_LBA),
+                SLBA    => Alternate_GPT_Header_TMP.Partition_Entry_LBA,
                 NLB     => Interfaces.Unsigned_32 (Num_of_LBA),
                 Dev_Id  => ID,
                 Status  => Status);
 
-            if Status /= OK then
+            if Status /= Storage_Interface.OK then
                Log.Put_Line ("GPT: Failed to Read Alternate Partition Entry Array from Disk");
                return;
             end if;
@@ -426,12 +428,12 @@ is
 
          Storage_Interface.Execute_Read_Command
             (Address => GPT_Entries_Address,
-             SLBA    => Interfaces.Unsigned_64 (GPT_Primary_Header.Partition_Entry_LBA),
+             SLBA    => GPT_Primary_Header.Partition_Entry_LBA,
              NLB     => Interfaces.Unsigned_32 (Num_of_LBA),
              Dev_Id  => ID,
              Status  => Status);
 
-         if Status /= OK then
+         if Status /= Storage_Interface.OK then
             Log.Put_Line ("GPT: Failed to Read Partition Entry Array from Disk");
             return;
          end if;
@@ -463,7 +465,7 @@ is
          if Partition.Partition_Type_GUID /= Partitions.PARTITION_TYPE_EMPTY then
             Part_Table.Count := Part_Table.Count + 1;
             Part_Table.Entries (I).Partition_Type := Interfaces.Unsigned_8 (16#83#); --ef
-            Part_Table.Entries (I).Start_Lba := Interfaces.Unsigned_64 (Partition.Starting_LBA);
+            Part_Table.Entries (I).Start_Lba := Partition.Starting_LBA;
             Part_Table.Entries (I).Sector_Cnt := Partition.Ending_LBA - Partition.Starting_LBA;
          end if;
       end loop;

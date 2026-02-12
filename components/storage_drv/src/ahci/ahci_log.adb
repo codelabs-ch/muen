@@ -3,10 +3,11 @@ with System;
 
 with SK.Strings;
 
-with Ahci.Ports; use Ahci.Ports;
-with Pciconf;
-with Log; use Log;
 with Ahci; use Ahci;
+with Ahci.Ports; use Ahci.Ports;
+with Log; use Log;
+with Pciconf;
+with Storage_Interface;
 
 with Storage_Drv_Cspecs_Wrapper;
 
@@ -14,11 +15,12 @@ package body Ahci_Log
 with
    SPARK_Mode => Off
 is
-   use type Storage_Interface.PConf.Port_Range;
+   use type Ports_Config.Port_Range;
+   use type Interfaces.Unsigned_32;
 
    type Cmd_Table_Buf_Type
-   is array (Integer range 0 .. Integer ((PConf.Port_Range'Last + 1) * 16#40#))
-      of Unsigned_32
+   is array (Integer range 0 .. Integer ((Ports_Config.Port_Range'Last + 1) * 16#40#))
+      of Interfaces.Unsigned_32
    with Pack;
 
    Cmd_Table_Buf : Cmd_Table_Buf_Type
@@ -29,18 +31,17 @@ is
       Address => System'To_Address (Storage_Interface.Command_Table_Address);
 
    procedure Dump_Cmd_Table
-     (ID  : PConf.Port_Range;
+     (ID  : Ports_Config.Port_Range;
       Len : Integer)
    is
-      use type Interfaces.Unsigned_32;
-      Local32       : Unsigned_32;
+      Local32       : Interfaces.Unsigned_32;
       Start_Index   : constant Integer := Integer (ID) * 16#40#;
    begin
       for I in Integer range Start_Index .. Start_Index + Len loop
          Local32 := Cmd_Table_Buf (I);
          Put_Line
            ("Cmd Table ["
-            & SK.Strings.Img (Unsigned_8 (I))
+            & SK.Strings.Img (Interfaces.Unsigned_8 (I))
             & "] "
             & SK.Strings.Img (Local32));
          Local32 := Local32 + 1;
@@ -51,9 +52,9 @@ is
 
    type Cmd_List_Buf_Type
    is array (Integer range 0 ..
-               Integer ((PConf.Port_Range'Last + 1) * 16#100#))
-      of Unsigned_32
-   with Size => 32 * (1 + Integer (PConf.Port_Range'Last + 1) * 16#100#);
+               Integer ((Ports_Config.Port_Range'Last + 1) * 16#100#))
+      of Interfaces.Unsigned_32
+   with Size => 32 * (1 + Integer (Ports_Config.Port_Range'Last + 1) * 16#100#);
 
    Cmd_List_Buf : Cmd_List_Buf_Type
    with
@@ -63,18 +64,17 @@ is
       Address => System'To_Address (Storage_Interface.Command_Lists_Address);
 
    procedure Dump_Cmd_List
-     (ID  : PConf.Port_Range;
+     (ID  : Ports_Config.Port_Range;
       Len : Integer)
    is
-      use type Interfaces. Unsigned_32;
-      Local32      : Unsigned_32;
+      Local32      : Interfaces.Unsigned_32;
       Start_Index  : constant Integer := Integer (ID) * 16#100#;
    begin
       for I in Integer range Start_Index .. Start_Index + Len loop
          Local32 := Cmd_List_Buf (I);
          Put_Line
            ("Cmd List ["
-            & SK.Strings.Img (Unsigned_8 (I))
+            & SK.Strings.Img (Interfaces.Unsigned_8 (I))
             & "] "
             & SK.Strings.Img (Local32));
          Local32 := Local32 + 1;
@@ -85,8 +85,8 @@ is
 
    type Port_Regs_Array
       is array (Integer range 0 ..
-                  Integer (PConf.Port_Range'Last) * 16#20# + 17)
-      of Unsigned_32;
+                  Integer (Ports_Config.Port_Range'Last) * 16#20# + 17)
+      of Interfaces.Unsigned_32;
 
    Port_Regs : Port_Regs_Array
    with
@@ -97,14 +97,13 @@ is
         (Storage_Drv_Cspecs_Wrapper.Devices.Controller_Ahci_Registers_Address
             + 16#100#);
 
-   procedure Dump_Port_Regs (ID : PConf.Port_Range)
+   procedure Dump_Port_Regs (ID : Ports_Config.Port_Range)
    is
-      use type Interfaces.Unsigned_32;
-      Local32     : Unsigned_32;
+      Local32     : Interfaces.Unsigned_32;
       Start_Index : constant Integer := Integer (ID) * 16#20#;
    begin
       Put_Line ("Dumping Port  " & SK.Strings.Img (
-                Unsigned_32 (ID)));
+                Interfaces.Unsigned_32 (ID)));
       for I in Integer range Start_Index .. 17 + Start_Index loop
          Local32 := Port_Regs (I);
          Put_Line (SK.Strings.Img (Local32));
@@ -114,7 +113,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Print_Port_Error (ID : PConf.Port_Range)
+   procedure Print_Port_Error (ID : Ports_Config.Port_Range)
    is
       use type Interfaces.Unsigned_16;
 
@@ -162,10 +161,10 @@ is
    procedure Print_PCI_Capabilities
    is
       use Pciconf;
-      use type Storage_Interface.Unsigned_8;
+      use type Interfaces.Unsigned_8;
 
-      Cap_ID : Unsigned_8;
-      Index  : Unsigned_8 := Pciconf.Instance.Header.Capabilities_Pointer;
+      Cap_ID : Interfaces.Unsigned_8;
+      Index  : Interfaces.Unsigned_8 := Pciconf.Instance.Header.Capabilities_Pointer;
    begin
       loop
          exit when Index = 0 or not (Index in Pciconf.Capability_Range);

@@ -120,16 +120,16 @@ is
    begin
       Put_Line ("=========== GPT Header ===========================");
       Put_Line (" Signature:            " & Header.Signature);
-      Put_Line (" Revision:             " & SK.Strings.Img_Dec (Unsigned_64 (Header.Revision)));
-      Put_Line (" Header Size:          " & SK.Strings.Img_Dec (Unsigned_64 (Header.Header_Size)));
+      Put_Line (" Revision:             " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Header.Revision)));
+      Put_Line (" Header Size:          " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Header.Header_Size)));
       Put_Line (" My LBA:               " & SK.Strings.Img_Dec (Header.My_LBA));
       Put_Line (" Alternate LBA:        " & SK.Strings.Img_Dec (Header.Alternate_LBA));
       Put_Line (" First Usable LBA:     " & SK.Strings.Img_Dec (Header.First_Usable_LBA));
       Put_Line (" Last Usable LBA:      " & SK.Strings.Img_Dec (Header.Last_Usable_LBA));
       Put_Line (" Disk GUID:            " & SK.Strings.Img     (Header.Disk_GUID));
       Put_Line (" Partition Entry LBA:  " & SK.Strings.Img_Dec (Header.Partition_Entry_LBA));
-      Put_Line (" Nr. Partition Entries:" & SK.Strings.Img_Dec (Unsigned_64 (Header.Number_Of_Partition_Entries)));
-      Put_Line (" Partition Entry Size: " & SK.Strings.Img_Dec (Unsigned_64 (Header.Number_Of_Partition_Entries)));
+      Put_Line (" Nr. Partition Entries:" & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Header.Number_Of_Partition_Entries)));
+      Put_Line (" Partition Entry Size: " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Header.Number_Of_Partition_Entries)));
    end Print_GPT_Header;
 
    -------------------------------------------------------------------------

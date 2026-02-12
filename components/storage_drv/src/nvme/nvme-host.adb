@@ -104,7 +104,7 @@ is
       Address =>
        System'To_Address (ASQ_Address);
 
-   ASQ_TailDoorbell : Unsigned_32 := 0
+   ASQ_TailDoorbell : Interfaces.Unsigned_32 := 0
    with
       Volatile,
       Async_Readers,
@@ -126,7 +126,7 @@ is
      Address =>
       System'To_Address (ACQ_Address);
 
-   ACQ_HeadDoorbell : Unsigned_32 := 0
+   ACQ_HeadDoorbell : Interfaces.Unsigned_32 := 0
    with
       Volatile,
       Async_Readers,
@@ -148,7 +148,7 @@ is
       Address =>
        System'To_Address (IOSQ_Address);
 
-   IOSQ_TailDoorbell : Unsigned_32 := 0
+   IOSQ_TailDoorbell : Interfaces.Unsigned_32 := 0
    with
       Volatile,
       Async_Readers,
@@ -170,7 +170,7 @@ is
       Address =>
        System'To_Address (IOCQ_Address);
 
-   IOCQ_HeadDoorbell : Unsigned_32 := 0
+   IOCQ_HeadDoorbell : Interfaces.Unsigned_32 := 0
    with
       Volatile,
       Async_Readers,
@@ -213,11 +213,11 @@ is
       Async_Writers,
       Address => System'To_Address (Ident_Namespace_Address);
 
-   IO_Write_TestNum : Unsigned_32 := 69_420
+   IO_Write_TestNum : Interfaces.Unsigned_32 := 69_420
    with
       Address => System'To_Address (Test_IO_Write_Address);
 
-   IO_Read_TestNum : Unsigned_32 := 0
+   IO_Read_TestNum : Interfaces.Unsigned_32 := 0
    with
       Volatile,
       Async_Writers,
@@ -237,10 +237,10 @@ is
       "indirect writes to * through a potential alias are ignored");
 
    -- MUENBLOCK Constants
-   MB_Size             : Unsigned_64 := 0;
-   MB_Sector_Count     : Unsigned_64 := 0;
-   MB_Max_Sector_Count : Unsigned_64 := 0;
-   MB_Sector_Size      : Unsigned_32 := 512;
+   MB_Size             : Interfaces.Unsigned_64 := 0;
+   MB_Sector_Count     : Interfaces.Unsigned_64 := 0;
+   MB_Max_Sector_Count : Interfaces.Unsigned_64 := 0;
+   MB_Sector_Size      : Interfaces.Unsigned_32 := 512;
 
    -------------------------------------------------------------------------
 
@@ -264,16 +264,16 @@ is
 
    procedure Set_Muenblock_Constants
       (NS_LBA_List : LBA_Format_List;
-       NS_NSZE     : Unsigned_64;
-       NS_NCAP     : Unsigned_64)
+       NS_NSZE     : Interfaces.Unsigned_64;
+       NS_NCAP     : Interfaces.Unsigned_64)
    with Pre => NS_LBA_List (0).LBADS = 9 or else NS_LBA_List (0).LBADS = 12,
         Post => MB_Sector_Size = 512 or else MB_Sector_Size = 4096
    is
    begin
       MB_Sector_Count := NS_NSZE;
       MB_Max_Sector_Count := NS_NCAP;
-      MB_Sector_Size := Unsigned_32 (2 ** Natural (NS_LBA_List (0).LBADS));
-      MB_Size := MB_Sector_Count * Unsigned_64 (MB_Sector_Size);
+      MB_Sector_Size := Interfaces.Unsigned_32 (2 ** Natural (NS_LBA_List (0).LBADS));
+      MB_Size := MB_Sector_Count * Interfaces.Unsigned_64 (MB_Sector_Size);
    end Set_Muenblock_Constants;
 
    -------------------------------------------------------------------------
@@ -295,7 +295,7 @@ is
       else
          ASQ_Index := ASQ_Index + 1;
       end if;
-      ASQ_TailDoorbell := Unsigned_32 (ASQ_Index);
+      ASQ_TailDoorbell := Interfaces.Unsigned_32 (ASQ_Index);
       Status := Unknown;
 
       loop
@@ -312,12 +312,12 @@ is
          Log.Put_String ("Error: Admin CMD failed: ");
          NVMe_Log.Put_NVMe_AdminCMD_Image (AdminCMD.OPC);
          Log.New_Line;
-         Log.Put_Line ("CID"  & SK.Strings.Img_Dec (Unsigned_64 (Temp_CQE.CID)));
-         Log.Put_Line ("SQHD" & SK.Strings.Img_Dec (Unsigned_64 (Temp_CQE.SQHD)));
-         Log.Put_Line ("SQID" & SK.Strings.Img_Dec (Unsigned_64 (Temp_CQE.SQID)));
+         Log.Put_Line ("CID"  & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Temp_CQE.CID)));
+         Log.Put_Line ("SQHD" & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Temp_CQE.SQHD)));
+         Log.Put_Line ("SQID" & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Temp_CQE.SQID)));
          Log.Put_Line ("P "   & Log.Boolean_Image (Temp_CQE.P));
-         Log.Put_Line ("SC"   & SK.Strings.Img_Dec (Unsigned_64 (Temp_CQE.Status.SC)) &
-                       " SCT" & SK.Strings.Img_Dec (Unsigned_64 (Temp_CQE.Status.SCT)));
+         Log.Put_Line ("SC"   & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Temp_CQE.Status.SC)) &
+                       " SCT" & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Temp_CQE.Status.SCT)));
          NVMe_Log.Print_Status_Code (SC => Temp_CQE.Status.SC, SCT => Temp_CQE.Status.SCT);
          Status := Fail;
       end if;
@@ -330,14 +330,14 @@ is
       else
          ACQ_Index := ACQ_Index + 1;
       end if;
-      ACQ_HeadDoorbell := Unsigned_32 (ACQ_Index);
+      ACQ_HeadDoorbell := Interfaces.Unsigned_32 (ACQ_Index);
 
    end ProcessAdminCommand;
 
    -------------------------------------------------------------------------
 
    procedure GetSMART
-     (Address      :     Unsigned_64;
+     (Address      :     Interfaces.Unsigned_64;
       SMART_Status : out SMART_Status_Type;
       NVMe_Status  : out Status_Type)
    is
@@ -414,7 +414,7 @@ is
       else
          IOSQ_Index := IOSQ_Index + 1;
       end if;
-      IOSQ_TailDoorbell  := Unsigned_32 (IOSQ_Index);
+      IOSQ_TailDoorbell  := Interfaces.Unsigned_32 (IOSQ_Index);
       Status := Unknown;
 
       loop
@@ -428,12 +428,12 @@ is
          Log.Put_String ("Error: IO CMD failed: ");
          NVMe_Log.Put_NVMe_IOCMD_Image (IOCmd.OPC);
          Log.New_Line;
-         Log.Put_Line ("CID  " & SK.Strings.Img_Dec (Unsigned_64 (Temp_CQE.CID)));
-         Log.Put_Line ("SQHD " & SK.Strings.Img_Dec (Unsigned_64 (Temp_CQE.SQHD)));
-         Log.Put_Line ("SQID " & SK.Strings.Img_Dec (Unsigned_64 (Temp_CQE.SQID)));
+         Log.Put_Line ("CID  " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Temp_CQE.CID)));
+         Log.Put_Line ("SQHD " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Temp_CQE.SQHD)));
+         Log.Put_Line ("SQID " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Temp_CQE.SQID)));
          Log.Put_Line ("P    " & Log.Boolean_Image (Temp_CQE.P));
-         Log.Put_Line ("SC   " & SK.Strings.Img_Dec (Unsigned_64 (Temp_CQE.Status.SC)) &
-                       " SCT " & SK.Strings.Img_Dec (Unsigned_64 (Temp_CQE.Status.SCT)));
+         Log.Put_Line ("SC   " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Temp_CQE.Status.SC)) &
+                       " SCT " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Temp_CQE.Status.SCT)));
          NVMe_Log.Print_Status_Code (SC => Temp_CQE.Status.SC, SCT => Temp_CQE.Status.SCT);
          Status := Fail;
       end if;
@@ -446,7 +446,7 @@ is
       else
          IOCQ_Index := IOCQ_Index + 1;
       end if;
-      IOCQ_HeadDoorbell := Unsigned_32 (IOCQ_Index);
+      IOCQ_HeadDoorbell := Interfaces.Unsigned_32 (IOCQ_Index);
 
    end ProcessIOCommand;
 
@@ -457,11 +457,13 @@ is
    procedure ControllerInit (Success : out Boolean)
    is
       use type CompletionQ.Entry_Queue_Range;
+      use type Storage_Interface.Unsigned_2;
+      use type Storage_Interface.Unsigned_4;
 
       type CDW11_SetIOSetsType is record
          IOCSCI  : IO_CMD_Set_Array_Index_Type;
-         Filler1 : Unsigned_7  := 0;
-         Filler2 : Unsigned_16 := 0;
+         Filler1 : Storage_Interface.Unsigned_7  := 0;
+         Filler2 : Interfaces.Unsigned_16 := 0;
       end record
       with
          Size => 32;
@@ -473,8 +475,8 @@ is
       end record;
 
       type CDW11_NumOfQsType is record
-         NSQR : Unsigned_16;
-         NCQR : Unsigned_16;
+         NSQR : Interfaces.Unsigned_16;
+         NCQR : Interfaces.Unsigned_16;
       end record
       with
          Size => 32;
@@ -484,17 +486,17 @@ is
          NCQR at 2 range 0 .. 15;
       end record;
 
-      function uInt8ToBitArray   is new Ada.Unchecked_Conversion (Unsigned_8, Bit_Array_8);
-      function IOCMDIndexToCDW11 is new Ada.Unchecked_Conversion (CDW11_SetIOSetsType, Unsigned_32);
-      function NumOfQsToCDW11    is new Ada.Unchecked_Conversion (CDW11_NumOfQsType, Unsigned_32);
+      function uInt8ToBitArray   is new Ada.Unchecked_Conversion (Interfaces.Unsigned_8, Storage_Interface.Bit_Array_8);
+      function IOCMDIndexToCDW11 is new Ada.Unchecked_Conversion (CDW11_SetIOSetsType, Interfaces.Unsigned_32);
+      function NumOfQsToCDW11    is new Ada.Unchecked_Conversion (CDW11_NumOfQsType, Interfaces.Unsigned_32);
 
-      CSS_BitArray        : Bit_Array_8;
+      CSS_BitArray        : Storage_Interface.Bit_Array_8;
       Admin_CMD           : SubmissionQ.Admin_Command;
       PRP_D_Ptr           : SubmissionQ.PRP_Data_Ptr := (0, 0);
       Test_Bool           : Boolean;
-      CDW11_Temp          : Unsigned_32;
+      CDW11_Temp          : Interfaces.Unsigned_32;
       Temp_CQE            : CompletionQ.CQE;
-      Temp_NSID           : Unsigned_32;
+      Temp_NSID           : Interfaces.Unsigned_32;
       Is_NVM_CMD_Set      : Boolean := False;
       Is_Old_NVME_Version : Boolean := False;
 
@@ -569,13 +571,13 @@ is
       --- 3. Checking supported I/O Cmd Sets
       ---------------------------------------------------
       declare
-         Temp : constant Unsigned_8 := CProp.CAP.CSS;
+         Temp : constant Interfaces.Unsigned_8 := CProp.CAP.CSS;
       begin
          CSS_BitArray := uInt8ToBitArray (Temp);
       end;
       declare
          Temp_CC : CC_Part := CProp.CC;
-         Temp_CAP_AMS : constant Unsigned_2 := CProp.CAP.AMS;
+         Temp_CAP_AMS : constant Storage_Interface.Unsigned_2 := CProp.CAP.AMS;
       begin
          if Is_Old_NVME_Version then
             -- NVMe 1.4: Only NVM Command Set (CSS bit 0)
@@ -630,8 +632,8 @@ is
          -- Muenblock max MPS need should be 64k so MPS=4
          ---------------------------------------------------
          declare
-            Temp_Max : constant Unsigned_4 := CProp.CAP.MPSMAX;
-            Temp_Min : constant Unsigned_4 := CProp.CAP.MPSMIN;
+            Temp_Max : constant Storage_Interface.Unsigned_4 := CProp.CAP.MPSMAX;
+            Temp_Min : constant Storage_Interface.Unsigned_4 := CProp.CAP.MPSMIN;
          begin
             if Temp_Max < 4 then
                Temp_CC.MPS := Temp_Max;
@@ -644,8 +646,8 @@ is
             end if;
          end;
 
-         Memory_Page_Size := Unsigned_8 (Temp_CC.MPS);
-         pragma Assert (Memory_Page_Size <= Unsigned_8 (Unsigned_4'Last));
+         Memory_Page_Size := Interfaces.Unsigned_8 (Temp_CC.MPS);
+         pragma Assert (Memory_Page_Size <= Interfaces.Unsigned_8 (Storage_Interface.Unsigned_4'Last));
 
          --this should come later but testing showed is required here already
          Temp_CC.IOCQES := 4; -- 16 Byte
@@ -693,7 +695,7 @@ is
       end if;
 
       declare
-         VID : constant Unsigned_16 := IdentController.VID;
+         VID : constant Interfaces.Unsigned_16 := IdentController.VID;
       begin
          Log.Put_Line ("VID: " & SK.Strings.Img (VID));
       end;
@@ -747,8 +749,8 @@ is
                exit;
             end if;
 
-            Log.Put_Line ("NSID " & SK.Strings.Img_Dec (Unsigned_64 (Namespace_ID_List_Index))
-                          & " is " & SK.Strings.Img_Dec (Unsigned_64 (Temp_NSID)));
+            Log.Put_Line ("NSID " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Namespace_ID_List_Index))
+                          & " is " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Temp_NSID)));
 
             PRP_D_Ptr.E1 := Ident_Namespace_Address;
 
@@ -771,8 +773,8 @@ is
 
             declare
                Temp_LBA_List : constant LBA_Format_List := IdentNamespace.LBA_List;
-               Temp_NSZE     : constant Unsigned_64 := IdentNamespace.NSZE;
-               Temp_NCAP     : constant Unsigned_64 := IdentNamespace.NCAP;
+               Temp_NSZE     : constant Interfaces.Unsigned_64 := IdentNamespace.NSZE;
+               Temp_NCAP     : constant Interfaces.Unsigned_64 := IdentNamespace.NCAP;
             begin
                Log.Put_Line ("Namespace Size is " & SK.Strings.Img_Dec (Temp_NSZE) & " logical blocks.");
                if Temp_LBA_List (0).LBADS not in 9 | 12 then
@@ -832,7 +834,7 @@ is
             end if;
          end loop;
 
-         Log.Put_Line ("Found IO CMD Set Index" & SK.Strings.Img_Dec (Unsigned_64 (IO_CMD_Set_Index)));
+         Log.Put_Line ("Found IO CMD Set Index" & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (IO_CMD_Set_Index)));
 
          -----------------------------------------------
          -- 8.a.ii Set Features FID 19h for cmdset index
@@ -854,7 +856,7 @@ is
             return;
          end if;
          Temp_CQE := ACQ (ACQ_Index - 1);
-         Log.Put_Line ("Index of IO CMD Set Combination is now: " & SK.Strings.Img_Dec (Unsigned_64 (Temp_CQE.DWORD0)));
+         Log.Put_Line ("Index of IO CMD Set Combination is now: " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Temp_CQE.DWORD0)));
 
          ------------------------------------------------------------
          -- 8.b.i Identify active Namespace ID List for every CMD Set
@@ -917,8 +919,8 @@ is
                end if;
             end if;
 
-            Log.Put_Line ("Identifying CMD Set at Index " & SK.Strings.Img_Dec (Unsigned_64 (IO_CMD_Set_Iterator))
-                          & " of " & SK.Strings.Img_Dec (Unsigned_64 (IO_CMD_Set_Index)));
+            Log.Put_Line ("Identifying CMD Set at Index " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (IO_CMD_Set_Iterator))
+                          & " of " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (IO_CMD_Set_Index)));
             ProcessAdminCommand (Admin_CMD, NVMe_Status);
             if NVMe_Status /= OK then
                Log.Put_Line ("NVME: Error During NVMe Controller Init Step 8.b.i");
@@ -940,8 +942,8 @@ is
                   exit;
                end if;
 
-               Log.Put_Line ("NSID " & SK.Strings.Img_Dec (Unsigned_64 (Namespace_ID_List_Index))
-                             & " is " & SK.Strings.Img_Dec (Unsigned_64 (Temp_NSID)));
+               Log.Put_Line ("NSID " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Namespace_ID_List_Index))
+                             & " is " & SK.Strings.Img_Dec (Interfaces.Unsigned_64 (Temp_NSID)));
                ---------------------------------------------
                -- 8.b.ii.1 only for NVM or Zoned NS CMD Sets
                ---------------------------------------------
@@ -965,8 +967,8 @@ is
 
                   declare
                      Temp_LBA_List : constant LBA_Format_List := IdentNamespace.LBA_List;
-                     Temp_NSZE     : constant Unsigned_64 := IdentNamespace.NSZE;
-                     Temp_NCAP     : constant Unsigned_64 := IdentNamespace.NCAP;
+                     Temp_NSZE     : constant Interfaces.Unsigned_64 := IdentNamespace.NSZE;
+                     Temp_NCAP     : constant Interfaces.Unsigned_64 := IdentNamespace.NCAP;
                   begin
                      Log.Put_Line ("Namespace Size is " & SK.Strings.Img_Dec (Temp_NSZE) & " logical blocks.");
                      if Temp_LBA_List (0).LBADS not in 9 | 12 then
@@ -1114,8 +1116,10 @@ is
 
       loop
          declare
-            Temp_SHST : constant Unsigned_2 := CProp.CSTS.SHST;
-            Temp_ST   : constant Boolean    := CProp.CSTS.ST;
+            use type Storage_Interface.Unsigned_2;
+
+            Temp_SHST : constant Storage_Interface.Unsigned_2 := CProp.CSTS.SHST;
+            Temp_ST   : constant Boolean := CProp.CSTS.ST;
          begin
             pragma Warnings (GNATprove, Off, "statement has no effect");
             exit when Temp_SHST = 2 and not Temp_ST;
@@ -1130,18 +1134,18 @@ is
    --------------------------------------------------------------------------
 
    -- Number of logical blocks * sector size
-   function Get_Size return Unsigned_64
+   function Get_Size return Interfaces.Unsigned_64
       -- maybe use NVMCAP (check the documentation note for it first)
    is (MB_Size);
 
    -- Sector = Logical Block
-   function Get_Sector_Cnt return Unsigned_64
+   function Get_Sector_Cnt return Interfaces.Unsigned_64
    is (MB_Sector_Count);
 
-   function Get_Max_Sector_Cnt return Unsigned_64
+   function Get_Max_Sector_Cnt return Interfaces.Unsigned_64
    is (MB_Max_Sector_Count);
 
-   function Get_Sector_Size return Unsigned_32
+   function Get_Sector_Size return Interfaces.Unsigned_32
    is (MB_Sector_Size);
 
 end NVMe.Host;

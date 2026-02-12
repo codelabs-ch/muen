@@ -5,19 +5,19 @@ is
 
    -- CDW11_Cvt shall already be converted from specific Field Type to Unsigned32
    procedure CreateSetFeatures_Command
-      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
-       DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       FID            :        Unsigned_8;               -- Feature Identifier
-       SV             :        Boolean;                  -- Save (persistently)
-       UUID_Index     :        Unsigned_7;               -- UUID Index
-       CDW11_Cvt      :        Unsigned_32;              -- Already converted FID specific CDW11
+      (CMD_Identifier : in out Interfaces.Unsigned_16;       -- Command Identifier
+       DPTR           :        SubmissionQ.PRP_Data_Ptr;     -- PRP Data Pointer
+       FID            :        Interfaces.Unsigned_8;        -- Feature Identifier
+       SV             :        Boolean;                      -- Save (persistently)
+       UUID_Index     :        Storage_Interface.Unsigned_7; -- UUID Index
+       CDW11_Cvt      :        Interfaces.Unsigned_32;       -- Already converted FID specific CDW11
        Command        :    out SubmissionQ.Admin_Command)
    is
       CDW10_Temp : constant CDW10_SET := (FID => FID, SV => SV, others => <>);
       CDW14_Temp : constant CDW14     := (UUID_Index, others => <>);
 
-      function Cvt_CDW10 is new Ada.Unchecked_Conversion (CDW10_SET, Unsigned_32);
-      function Cvt_CDW14 is new Ada.Unchecked_Conversion (CDW14, Unsigned_32);
+      function Cvt_CDW10 is new Ada.Unchecked_Conversion (CDW10_SET, Interfaces.Unsigned_32);
+      function Cvt_CDW14 is new Ada.Unchecked_Conversion (CDW14, Interfaces.Unsigned_32);
 
    begin
       Command :=
@@ -44,18 +44,18 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateGetFeatures_Command
-      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
-       DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       FID            :        Unsigned_8;               -- Feature Identifier
-       SEL            :        Unsigned_3;               -- Select (Attribute of requested Data)
-       UUID_Index     :        Unsigned_7;               -- UUID Index
+      (CMD_Identifier : in out Interfaces.Unsigned_16;       -- Command Identifier
+       DPTR           :        SubmissionQ.PRP_Data_Ptr;     -- PRP Data Pointer
+       FID            :        Interfaces.Unsigned_8;        -- Feature Identifier
+       SEL            :        Storage_Interface.Unsigned_3; -- Select (Attribute of requested Data)
+       UUID_Index     :        Storage_Interface.Unsigned_7; -- UUID Index
        Command        :    out SubmissionQ.Admin_Command)
    is
       CDW10_Temp : constant CDW10_GET := (FID, SEL, others => <>);
       CDW14_Temp : constant CDW14     := (UUID_Index, others => <>);
 
-      function Cvt_CDW10 is new Ada.Unchecked_Conversion (CDW10_GET, Unsigned_32);
-      function Cvt_CDW14 is new Ada.Unchecked_Conversion (CDW14, Unsigned_32);
+      function Cvt_CDW10 is new Ada.Unchecked_Conversion (CDW10_GET, Interfaces.Unsigned_32);
+      function Cvt_CDW14 is new Ada.Unchecked_Conversion (CDW14, Interfaces.Unsigned_32);
 
    begin
       Command :=
@@ -82,23 +82,23 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateIndentify_Command
-      (CMD_Identifier   : in out Unsigned_16;              -- Command Identifier
-       DPTR             :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       NSID             :        Unsigned_32;              -- Namespace Identifier
-       CNTID            :        Unsigned_16;              -- Controller Identifier
-       CNS              :        Unsigned_8;               -- Controller or Namespace Structure
-       CSI              :        Unsigned_8;               -- Command Set Identifier
-       CNSSpecificIdent :        Unsigned_16;              -- CNS Specific Identifier
-       UUID_Index       :        Unsigned_7;               -- UUID Index
+      (CMD_Identifier   : in out Interfaces.Unsigned_16;       -- Command Identifier
+       DPTR             :        SubmissionQ.PRP_Data_Ptr;     -- PRP Data Pointer
+       NSID             :        Interfaces.Unsigned_32;       -- Namespace Identifier
+       CNTID            :        Interfaces.Unsigned_16;       -- Controller Identifier
+       CNS              :        Interfaces.Unsigned_8;        -- Controller or Namespace Structure
+       CSI              :        Interfaces.Unsigned_8;        -- Command Set Identifier
+       CNSSpecificIdent :        Interfaces.Unsigned_16;       -- CNS Specific Identifier
+       UUID_Index       :        Storage_Interface.Unsigned_7; -- UUID Index
        Command          :    out SubmissionQ.Admin_Command)
    is
       CDW10_Temp  : constant CDW10_Ident := (CNS => CNS, Filler => 0, CNTID => CNTID);
       CDW11_Temp  : constant CDW11_Ident := (CNS_SI => CNSSpecificIdent, Filler => 0, CSI => CSI);
       CDW14_Temp  : constant CDW14       := (UUID_Index, False, 0, 0);
 
-      function Cvt_CDW10 is new Ada.Unchecked_Conversion (CDW10_Ident, Unsigned_32);
-      function Cvt_CDW11 is new Ada.Unchecked_Conversion (CDW11_Ident, Unsigned_32);
-      function Cvt_CDW14 is new Ada.Unchecked_Conversion (CDW14, Unsigned_32);
+      function Cvt_CDW10 is new Ada.Unchecked_Conversion (CDW10_Ident, Interfaces.Unsigned_32);
+      function Cvt_CDW11 is new Ada.Unchecked_Conversion (CDW11_Ident, Interfaces.Unsigned_32);
+      function Cvt_CDW14 is new Ada.Unchecked_Conversion (CDW14, Interfaces.Unsigned_32);
 
    begin
       Command :=
@@ -125,10 +125,10 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateCreateIOCQ_Command
-      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
+      (CMD_Identifier : in out Interfaces.Unsigned_16;   -- Command Identifier
        DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       QID            :        Unsigned_16;              -- Queue Identifier
-       QSIZE          :        Unsigned_16;              -- Queue Size
+       QID            :        Interfaces.Unsigned_16;   -- Queue Identifier
+       QSIZE          :        Interfaces.Unsigned_16;   -- Queue Size
        PC             :        Boolean;                  -- Physically Contiguous
        IEN            :        Boolean;                  -- Interrupts Enabled (Default: False)
        Command        :    out SubmissionQ.Admin_Command)
@@ -136,8 +136,8 @@ is
       CDW10_Temp : constant CDW10_CreateIOQ  := (QID => QID, QSIZE => QSIZE);
       CDW11_Temp : constant CDW11_CreateIOCQ := (PC, IEN, 0, 0, 0);
 
-      function Cvt_CDW10 is new Ada.Unchecked_Conversion (CDW10_CreateIOQ, Unsigned_32);
-      function Cvt_CDW11 is new Ada.Unchecked_Conversion (CDW11_CreateIOCQ, Unsigned_32);
+      function Cvt_CDW10 is new Ada.Unchecked_Conversion (CDW10_CreateIOQ, Interfaces.Unsigned_32);
+      function Cvt_CDW11 is new Ada.Unchecked_Conversion (CDW11_CreateIOCQ, Interfaces.Unsigned_32);
 
    begin
       Command :=
@@ -164,20 +164,20 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateCreateIOSQ_Command
-      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
-       DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       QID            :        Unsigned_16;              -- Queue Identifier
-       QSIZE          :        Unsigned_16;              -- Queue Size
-       PC             :        Boolean;                  -- Physically Contiguous
-       QPRIO          :        Unsigned_2;               -- Queue Priority
-       CQID           :        Unsigned_16;              -- Completion Queue Identifier
+      (CMD_Identifier : in out Interfaces.Unsigned_16;       -- Command Identifier
+       DPTR           :        SubmissionQ.PRP_Data_Ptr;     -- PRP Data Pointer
+       QID            :        Interfaces.Unsigned_16;       -- Queue Identifier
+       QSIZE          :        Interfaces.Unsigned_16;       -- Queue Size
+       PC             :        Boolean;                      -- Physically Contiguous
+       QPRIO          :        Storage_Interface.Unsigned_2; -- Queue Priority
+       CQID           :        Interfaces.Unsigned_16;       -- Completion Queue Identifier
        Command        :    out SubmissionQ.Admin_Command)
    is
       CDW10_Temp : constant CDW10_CreateIOQ  := (QID => QID, QSIZE => QSIZE);
       CDW11_Temp : constant CDW11_CreateIOSQ := (PC => PC, QPRIO => QPRIO, CQID => CQID, others => <>);
 
-      function Cvt_CDW10 is new Ada.Unchecked_Conversion (CDW10_CreateIOQ, Unsigned_32);
-      function Cvt_CDW11 is new Ada.Unchecked_Conversion (CDW11_CreateIOSQ, Unsigned_32);
+      function Cvt_CDW10 is new Ada.Unchecked_Conversion (CDW10_CreateIOQ, Interfaces.Unsigned_32);
+      function Cvt_CDW11 is new Ada.Unchecked_Conversion (CDW11_CreateIOSQ, Interfaces.Unsigned_32);
 
    begin
       Command :=
@@ -204,13 +204,13 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateDeleteIOCQ_Command
-      (CMD_Identifier : in out Unsigned_16;     -- Command Identifier
-       QID            :        Unsigned_16;     -- Queue Identifier
+      (CMD_Identifier : in out Interfaces.Unsigned_16;     -- Command Identifier
+       QID            :        Interfaces.Unsigned_16;     -- Queue Identifier
        Command        :    out SubmissionQ.Admin_Command)
    is
       CDW10_Temp : constant CDW10_DeleteIOQ  := (QID, others => <>);
 
-      function Cvt_CDW10 is new Ada.Unchecked_Conversion (CDW10_DeleteIOQ, Unsigned_32);
+      function Cvt_CDW10 is new Ada.Unchecked_Conversion (CDW10_DeleteIOQ, Interfaces.Unsigned_32);
 
    begin
       Command :=
@@ -237,13 +237,13 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateDeleteIOSQ_Command
-      (CMD_Identifier : in out Unsigned_16;     -- Command Identifier
-       QID            :        Unsigned_16;     -- Queue Identifier
+      (CMD_Identifier : in out Interfaces.Unsigned_16;     -- Command Identifier
+       QID            :        Interfaces.Unsigned_16;     -- Queue Identifier
        Command        :    out SubmissionQ.Admin_Command)
    is
       CDW10_Temp : constant CDW10_DeleteIOQ  := (QID, others => <>);
 
-      function Cvt_CDW10 is new Ada.Unchecked_Conversion (CDW10_DeleteIOQ, Unsigned_32);
+      function Cvt_CDW10 is new Ada.Unchecked_Conversion (CDW10_DeleteIOQ, Interfaces.Unsigned_32);
 
    begin
       Command :=
@@ -270,21 +270,21 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateGetLogPage_Command
-      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
-       DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       LID            :        Unsigned_8;               -- Log Page Identifier
-       LSP            :        Unsigned_7;               -- Log Specific Parameter
-       RAE            :        Boolean;                  -- Retain Async Event
-       NUMDL          :        Unsigned_16;              -- Number of DWORDS Lower
-       NUMDU          :        Unsigned_16;              -- Number of DWORDS (16 most significant bits)
-       LogSpecificID  :        Unsigned_16;              -- Log Specific Identifier
+      (CMD_Identifier : in out Interfaces.Unsigned_16;       -- Command Identifier
+       DPTR           :        SubmissionQ.PRP_Data_Ptr;     -- PRP Data Pointer
+       LID            :        Interfaces.Unsigned_8;        -- Log Page Identifier
+       LSP            :        Storage_Interface.Unsigned_7; -- Log Specific Parameter
+       RAE            :        Boolean;                      -- Retain Async Event
+       NUMDL          :        Interfaces.Unsigned_16;       -- Number of DWORDS Lower
+       NUMDU          :        Interfaces.Unsigned_16;       -- Number of DWORDS (16 most significant bits)
+       LogSpecificID  :        Interfaces.Unsigned_16;       -- Log Specific Identifier
        Command        :    out SubmissionQ.Admin_Command)
    is
       CDW10_Temp : constant CDW10_GetLogPage := (LID => LID, LSP => LSP, RAE => RAE, NUMDL => NUMDL);
       CDW11_Temp : constant CDW11_GetLogPage  := (NUMDU => NUMDU, LogSpecificID => LogSpecificID);
 
-      function Cvt_CDW10 is new Ada.Unchecked_Conversion (CDW10_GetLogPage, Unsigned_32);
-      function Cvt_CDW11 is new Ada.Unchecked_Conversion (CDW11_GetLogPage, Unsigned_32);
+      function Cvt_CDW10 is new Ada.Unchecked_Conversion (CDW10_GetLogPage, Interfaces.Unsigned_32);
+      function Cvt_CDW11 is new Ada.Unchecked_Conversion (CDW11_GetLogPage, Interfaces.Unsigned_32);
 
    begin
       Command :=
@@ -311,7 +311,7 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateSMART_Health_LogPage_Command
-      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
+      (CMD_Identifier : in out Interfaces.Unsigned_16;   -- Command Identifier
        DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
        Command        :    out SubmissionQ.Admin_Command)
    is
@@ -333,14 +333,14 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateAbort_Command
-      (CMD_Identifier : in out Unsigned_16;     -- Command Identifier
-       CMD_ID2Abort   :        Unsigned_16;     -- Command Identifier of the Command to be aborted
-       SQID           :        Unsigned_16;     -- Submission Queue Identifier
+      (CMD_Identifier : in out Interfaces.Unsigned_16;     -- Command Identifier
+       CMD_ID2Abort   :        Interfaces.Unsigned_16;     -- Command Identifier of the Command to be aborted
+       SQID           :        Interfaces.Unsigned_16;     -- Submission Queue Identifier
        Command        :    out SubmissionQ.Admin_Command)
    is
       CDW10_Temp : constant CDW10_Abort  := (SQID => SQID, CID2A => CMD_ID2Abort);
 
-      function Cvt_CDW10 is new Ada.Unchecked_Conversion (CDW10_Abort, Unsigned_32);
+      function Cvt_CDW10 is new Ada.Unchecked_Conversion (CDW10_Abort, Interfaces.Unsigned_32);
 
    begin
       Command :=
@@ -367,7 +367,7 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateAsyncEventReq_Command
-      (CMD_Identifier : in out Unsigned_16; -- Command Identifier
+      (CMD_Identifier : in out Interfaces.Unsigned_16; -- Command Identifier
        Command        :    out SubmissionQ.Admin_Command)
    is
    begin

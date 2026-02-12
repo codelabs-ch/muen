@@ -15,8 +15,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with Musinfo.Instance;
-with Storage_Interface; use Storage_Interface;
+with Storage_Interface;
 with Ports_Config;
 
 package Ahci.Device
@@ -31,10 +33,10 @@ is
    procedure RW_Sectors
       (ID      :     Ports_Config.Port_Range;
        RW      :     RW_Type;
-       Start   :     Unsigned_64; --  Start Sector
-       Count   :     Unsigned_32; --  Number of Sectors
-       Address :     Unsigned_64; --  Buffer Address
-       Ret_Val : out Status_Type)
+       Start   :     Interfaces.Unsigned_64; --  Start Sector
+       Count   :     Interfaces.Unsigned_32; --  Number of Sectors
+       Address :     Interfaces.Unsigned_64; --  Buffer Address
+       Ret_Val : out Storage_Interface.Status_Type)
    with
       Pre => Musinfo.Instance.Is_Valid;
 
@@ -42,16 +44,16 @@ is
    --  starting at 'Start' sector.
    procedure Discard_Sectors
       (ID      :     Ports_Config.Port_Range;
-       Start   :     Unsigned_64; --  Start Sector
-       Count   :     Unsigned_32; --  Number of Sectors
-       Ret_Val : out Status_Type)
+       Start   :     Interfaces.Unsigned_64; --  Start Sector
+       Count   :     Interfaces.Unsigned_32; --  Number of Sectors
+       Ret_Val : out Storage_Interface.Status_Type)
    with
       Pre => Musinfo.Instance.Is_Valid;
 
    --  Send Sync-Command to the device.
    procedure Sync
       (ID      :     Ports_Config.Port_Range;
-       Ret_Val : out Status_Type)
+       Ret_Val : out Storage_Interface.Status_Type)
    with
       Pre => Musinfo.Instance.Is_Valid;
 
@@ -59,29 +61,29 @@ is
 
    procedure Get_SMART
       (ID      :     Ports_Config.Port_Range;
-       Address :     Unsigned_64; --  Buffer Address
+       Address :     Interfaces.Unsigned_64; --  Buffer Address
        Status  : out SMART_Status_Type;
-       Ret_Val : out Status_Type)
+       Ret_Val : out Storage_Interface.Status_Type)
    with
       Pre => Musinfo.Instance.Is_Valid;
 
    --  Returns a Bit_Array where 'found' devices are 'True'.
-   subtype Port_Status_Type is Bit_Array
+   subtype Port_Status_Type is Storage_Interface.Bit_Array
      (Natural (Ports_Config.Port_Range'First) .. Natural (Ports_Config.Port_Range'Last));
 
    procedure Get_Attached_Devices (Dev : out Port_Status_Type);
 
    --  Get maximum number of Sectors per R/W/Discard request.
    function Get_Max_Sector_Count (ID : Ports_Config.Port_Range)
-      return Unsigned_32;
+      return Interfaces.Unsigned_32;
 
    --  Get size of the disk at port 'ID' in bytes.
-   function Get_Size (ID : Ports_Config.Port_Range) return Unsigned_64;
+   function Get_Size (ID : Ports_Config.Port_Range) return Interfaces.Unsigned_64;
 
    --  Get number of sectors of the device at port 'ID'.
-   function Get_Sector_Cnt (ID : Ports_Config.Port_Range) return Unsigned_64;
+   function Get_Sector_Cnt (ID : Ports_Config.Port_Range) return Interfaces.Unsigned_64;
 
    --  Get size of a sector in bytes of the device at port 'ID'.
-   function Get_Sector_Size (ID : Ports_Config.Port_Range) return Unsigned_32;
+   function Get_Sector_Size (ID : Ports_Config.Port_Range) return Interfaces.Unsigned_32;
 
 end Ahci.Device;

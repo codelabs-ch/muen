@@ -1,4 +1,6 @@
-with Storage_Interface; use Storage_Interface;
+with Interfaces;
+
+with Storage_Interface;
 
 package NVMe.CompletionQ
 is
@@ -8,11 +10,11 @@ is
    -------------------------------------------------------------------------
 
    type StatusField is record
-      SC  : Unsigned_8; -- Status Code
-      SCT : Unsigned_3; -- Status Code Type
-      CRD : Unsigned_2; -- Command Retry Delay
-      M   : Boolean;    -- More (Information - see error page)
-      DNR : Boolean;    -- Do Not Retry (bc expected to fail)
+      SC  : Interfaces.Unsigned_8;        -- Status Code
+      SCT : Storage_Interface.Unsigned_3; -- Status Code Type
+      CRD : Storage_Interface.Unsigned_2; -- Command Retry Delay
+      M   : Boolean;                      -- More (Information - see error page)
+      DNR : Boolean;                      -- Do Not Retry (bc expected to fail)
    end record
    with
      Size => 15;
@@ -32,15 +34,15 @@ is
        others => False);
 
    type CQE is record
-      DWORD0 : Unsigned_32;
-      DWORD1 : Unsigned_32;
+      DWORD0 : Interfaces.Unsigned_32;
+      DWORD1 : Interfaces.Unsigned_32;
 
-      SQHD   : Unsigned_16;      -- Submission Queue Head Pointer
-      SQID   : Unsigned_16;      -- Submission Queue Identifier
+      SQHD   : Interfaces.Unsigned_16;      -- Submission Queue Head Pointer
+      SQID   : Interfaces.Unsigned_16;      -- Submission Queue Identifier
 
-      CID    : Unsigned_16;      -- Command Identifier
-      P      : Boolean;          -- Phase Tag
-      Status : StatusField;      -- Status Field
+      CID    : Interfaces.Unsigned_16;      -- Command Identifier
+      P      : Boolean;                     -- Phase Tag
+      Status : StatusField;                 -- Status Field
    end record
    with
      Size => 16 * 8;
@@ -66,7 +68,7 @@ is
    --- Completion QUEUE
    -------------------------------------------------------------------------
 
-   type Entry_Queue_Range is new Unsigned_8 range 0 .. 255;
+   type Entry_Queue_Range is new Interfaces.Unsigned_8 range 0 .. 255;
 
    type Entry_Queue is array (Entry_Queue_Range) of CQE
    with

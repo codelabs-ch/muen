@@ -31,6 +31,7 @@ with Muenblock.Response_Channel.Writer_Instance;
 with Log;
 with Mbr;
 with Partitions;
+with Ports_Config;
 with Storage_Drv_Cspecs_Wrapper;
 
 use type Interfaces.Unsigned_32;
@@ -46,12 +47,12 @@ is
      * CSpecs.Blockdev_Request_Element_Size * 8;
 
    type Request_Channel_Array is
-     array (PConf.Channel_Range) of Req_Chn.Channel_Type
+     array (Ports_Config.Channel_Range) of Req_Chn.Channel_Type
      with
        Object_Size => Request_Channels_Size;
 
    type Request_Reader_Array
-   is array (PConf.Channel_Range)
+   is array (Ports_Config.Channel_Range)
       of Req_Chn.Reader.Reader_Type;
 
    pragma Warnings
@@ -75,7 +76,7 @@ is
      * CSpecs.Blockdev_Response_Element_Size * 8;
 
    type Response_Chan_Array is
-     array (PConf.Channel_Range) of Resp_Chn.Channel_Type
+     array (Ports_Config.Channel_Range) of Resp_Chn.Channel_Type
      with
        Object_Size => Response_Channels_Size;
 
@@ -110,7 +111,7 @@ is
     (Chan_Idx         => 0,
      Devs             => (others => Internal_Device_Type'(
         Ahci_Port     => 0,
-        Partition     => PConf.Null_Partition,
+        Partition     => Ports_Config.Null_Partition,
         Sector_Offset => 0,
         Sector_Count  => 0,
         Is_Valid      => False,
@@ -125,14 +126,14 @@ is
 
    procedure Init (Success : out Boolean)
    is
-      use type PConf.Port_Range;
-      use type PConf.Device_Type;
+      use type Ports_Config.Port_Range;
+      use type Ports_Config.Device_Type;
 
-      ID             : PConf.Port_Range := 0;
+      ID             : Ports_Config.Port_Range := 0;
       Mbr_Not_Read   : Boolean         := True;
-      Port           : PConf.Port_Config_Type;
-      Dev            : PConf.Device_Type;
-      Devs           : Bit_Array (0 .. Integer (PConf.Port_Range'Last));
+      Port           : Ports_Config.Port_Config_Type;
+      Dev            : Ports_Config.Device_Type;
+      Devs           : Bit_Array (0 .. Integer (Ports_Config.Port_Range'Last));
       Mbr_Partitions : Partitions.Partition_Table_Type := Partitions.Null_Partition_Table;
 
    begin
@@ -146,12 +147,12 @@ is
 
       --  Check if the configured device / partition is available
       --  and setup partition offsets.
-      for Port_Idx in PConf.Port_Config'Range loop
-         Port := PConf.Port_Config (Port_Idx);
+      for Port_Idx in Ports_Config.Port_Config'Range loop
+         Port := Ports_Config.Port_Config (Port_Idx);
          Ports (Port_Idx).Chan_Idx := Port.Chan_Idx;
          for Dev_Idx in Port.Devices'Range loop
             Dev := Port.Devices (Dev_Idx);
-            if Dev = PConf.Null_Device then
+            if Dev = Ports_Config.Null_Device then
                goto Next_Dev;
             end if;
             if not Devs (Integer (Dev.Ahci_Port)) then
@@ -175,11 +176,11 @@ is
 
             --  is the partition available?
             if Mbr_Partitions.Count > Dev.Partition
-               or else Dev.Partition = PConf.No_Partition
+               or else Dev.Partition = Ports_Config.No_Partition
             then
                Ports (Port_Idx).Devs (Dev_Idx).Is_Valid := True;
                Ports (Port_Idx).Devs (Dev_Idx).Ahci_Port := Dev.Ahci_Port;
-               if Dev.Partition = PConf.No_Partition
+               if Dev.Partition = Ports_Config.No_Partition
                then
                   --  whole disk exported
                   Ports (Port_Idx).Devs (Dev_Idx).Sector_Offset := 0;
@@ -194,7 +195,7 @@ is
                      := Mbr_Partitions.Entries (Dev.Partition).Sector_Cnt;
                end if;
             end if;
-            if Dev.Partition = PConf.Smart_Only then
+            if Dev.Partition = Ports_Config.Smart_Only then
                Ports (Port_Idx).Devs (Dev_Idx).Ahci_Port := Dev.Ahci_Port;
             end if;
             <<Next_Dev>>
@@ -206,7 +207,7 @@ is
    --------------------------------------------------------------------
 
    procedure Send_Response
-      (Chan_Idx : PConf.Channel_Range;
+      (Chan_Idx : Ports_Config.Channel_Range;
        Response : MB.Block_Response_Type)
    is
    begin
@@ -220,7 +221,7 @@ is
 
    --------------------------------------------------------------------
 
-   function Get_Shm_Buffer_Base (Shm_Idx : PConf.Channel_Range)
+   function Get_Shm_Buffer_Base (Shm_Idx : Ports_Config.Channel_Range)
       return Interfaces.Unsigned_64
    is
       package A renames Storage_Drv_Cspecs_Wrapper.Memory_Arrays;
@@ -232,8 +233,8 @@ is
    --------------------------------------------------------------------
 
    procedure Finish_Current_Request
-      (Port_Idx : PConf.Ports_Array_Range;
-       Dev_Idx  : PConf.Devices_Range;
+      (Port_Idx : Ports_Config.Ports_Array_Range;
+       Dev_Idx  : Ports_Config.Devices_Range;
        SendResp : Boolean := True)
    with
       Pre  => Musinfo.Instance.Is_Valid and then
@@ -242,7 +243,7 @@ is
    is
 
       Ret         : Status_Type := EIO;
-      Dev_Id      : constant PConf.Port_Range
+      Dev_Id      : constant Ports_Config.Port_Range
                      := Ports (Port_Idx).Devs (Dev_Idx).Ahci_Port;
       Sector_Size : constant Interfaces.Unsigned_32 := Storage_Interface.Get_Sector_Size (Dev_Id);
       Start_Sec   : constant Interfaces.Unsigned_64
@@ -347,8 +348,8 @@ is
    --------------------------------------------------------------------
 
    procedure Process_Simple_Request
-      (Port_Idx : PConf.Ports_Array_Range;
-       Dev_Idx  : PConf.Devices_Range;
+      (Port_Idx : Ports_Config.Ports_Array_Range;
+       Dev_Idx  : Ports_Config.Devices_Range;
        Request  : MB.Block_Request_Type)
    with
       Pre  => Musinfo.Instance.Is_Valid and then
@@ -428,8 +429,8 @@ is
    --------------------------------------------------------------------
 
    procedure Process_RWD_Request
-      (Port_Idx : PConf.Ports_Array_Range;
-       Dev_Idx  : PConf.Devices_Range;
+      (Port_Idx : Ports_Config.Ports_Array_Range;
+       Dev_Idx  : Ports_Config.Devices_Range;
        Request  : MB.Block_Request_Type)
    with
       Pre  => Musinfo.Instance.Is_Valid and then
@@ -502,7 +503,7 @@ is
    --------------------------------------------------------------------
 
    procedure Process_Request
-      (Port_Idx : PConf.Ports_Array_Range;
+      (Port_Idx : Ports_Config.Ports_Array_Range;
        Request  : MB.Block_Request_Type)
    with
       Pre  => Musinfo.Instance.Is_Valid and then
@@ -510,7 +511,7 @@ is
    is
       use type Interfaces.Unsigned_16;
 
-      Dev_Idx : PConf.Devices_Range;
+      Dev_Idx : Ports_Config.Devices_Range;
    begin
       pragma Debug
         (Unused_Debug_Requests,
@@ -518,7 +519,7 @@ is
            & SK.Strings.Img (Interfaces.Unsigned_32 (Port_Idx))));
       pragma Debug (Unused_Debug_Requests, Log.Print_Request (Request));
 
-      if Request.Device_Id > Interfaces.Unsigned_16 (PConf.Devices_Range'Last)
+      if Request.Device_Id > Interfaces.Unsigned_16 (Ports_Config.Devices_Range'Last)
       then
          Log.Put_Line
            ("Request on port: " &
@@ -547,7 +548,7 @@ is
          return;
       end if;
 
-      Dev_Idx := PConf.Devices_Range (Request.Device_Id);
+      Dev_Idx := Ports_Config.Devices_Range (Request.Device_Id);
 
       case Request.Request_Kind is
          when MB.Read | MB.Write | MB.Discard =>
@@ -569,7 +570,7 @@ is
    --------------------------------------------------------------------
 
    procedure Finish_Current_Requests
-      (Port_Idx : PConf.Ports_Array_Range)
+      (Port_Idx : Ports_Config.Ports_Array_Range)
    with
       Pre  => Musinfo.Instance.Is_Valid and then
               Storage_Interface.Is_Valid
@@ -585,7 +586,7 @@ is
    --------------------------------------------------------------------
 
    procedure Process_Port
-      (Port_Idx : PConf.Ports_Array_Range)
+      (Port_Idx : Ports_Config.Ports_Array_Range)
    with
       Pre  => Musinfo.Instance.Is_Valid and then
               Storage_Interface.Is_Valid

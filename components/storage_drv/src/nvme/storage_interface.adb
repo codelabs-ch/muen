@@ -11,13 +11,14 @@ with Pciconf;
 package body Storage_Interface
 is
 
-   use type Unsigned_32;
-   use type Unsigned_64;
+   use type Interfaces.Unsigned_16;
+   use type Interfaces.Unsigned_32;
+   use type Interfaces.Unsigned_64;
 
    -------------------------------------------------------------------------
 
    pragma Warnings (Off, "Dev_Id");
-   function Dummy_Use_Return (Dev_Id : PConf.Port_Range) return Unsigned_32
+   function Dummy_Use_Return (Dev_Id : Ports_Config.Port_Range) return Interfaces.Unsigned_32
    is
    begin
       return 0;
@@ -25,7 +26,7 @@ is
    pragma Warnings (On, "Dev_Id");
 
    pragma Warnings (GNATprove, Off, "subprogram ""Dummy_Use"" has no effect");
-   procedure Dummy_Use (Dev_Id : PConf.Port_Range)
+   procedure Dummy_Use (Dev_Id : Ports_Config.Port_Range)
    is
    begin
       null;
@@ -36,7 +37,6 @@ is
 
    procedure Startup
    is
-      use type Unsigned_16;
    begin
       Log.Init (Epoch => 1);
 
@@ -51,7 +51,7 @@ is
       --  Enable PCI Bus master, memory and io space. This might habe been already
       --  done by BIOS but coreboot usually leaves BM disabled.
       declare
-         Pci_Cmd : constant Unsigned_16
+         Pci_Cmd : constant Interfaces.Unsigned_16
             := Pciconf.Instance.Header.Command;
       begin
          if (Pci_Cmd and 16#4#) /= 16#4# then
@@ -67,6 +67,8 @@ is
       pragma Assert (NVME_Check_Sector_Size);
 
       declare
+
+         use type Interfaces.Unsigned_24;
 
          Info : constant Pciconf.Info_Record := Pciconf.Instance.Header.Info;
 
@@ -100,7 +102,7 @@ is
          (Chan_Idx         => 0,
           Devs             => (others => Internal_Device_Type'(
                Ahci_Port     => 0,
-               Partition     => PConf.Null_Partition,
+               Partition     => Ports_Config.Null_Partition,
                Sector_Offset => 0,
                Sector_Count  => 0,
                Is_Valid      => False,
@@ -108,16 +110,16 @@ is
 
       NVMe.Host.ControllerInit (Success);
       -- Testing IO
-      Ports (1).Chan_Idx := PConf.Port_Config (1).Chan_Idx;
+      Ports (1).Chan_Idx := Ports_Config.Port_Config (1).Chan_Idx;
       Ports (1).Devs (0) := (Ahci_Port     => 0,
-                             Partition     => PConf.No_Partition,
+                             Partition     => Ports_Config.No_Partition,
                              Is_Valid      => True,
                              Sector_Offset => 0,
                              Sector_Count  => NVMe.Host.Get_Sector_Cnt,
                              Current       => Null_Current);
-      Ports (2).Chan_Idx := PConf.Port_Config (2).Chan_Idx;
+      Ports (2).Chan_Idx := Ports_Config.Port_Config (2).Chan_Idx;
       Ports (2).Devs (0) := (Ahci_Port     => 0,
-                             Partition     => PConf.Smart_Only,
+                             Partition     => Ports_Config.Smart_Only,
                              Is_Valid      => True,
                              Sector_Offset => 0,
                              Sector_Count  => NVMe.Host.Get_Sector_Cnt,
@@ -129,25 +131,25 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Sector_Size (Dev_Id : PConf.Port_Range) return Unsigned_32
+   function Get_Sector_Size (Dev_Id : Ports_Config.Port_Range) return Interfaces.Unsigned_32
    is (NVMe.Host.Get_Sector_Size + Dummy_Use_Return (Dev_Id));
 
-   function Get_Sector_Cnt (Dev_Id : PConf.Port_Range) return Unsigned_64
-   is (NVMe.Host.Get_Sector_Cnt + Unsigned_64 (Dummy_Use_Return (Dev_Id)));
+   function Get_Sector_Cnt (Dev_Id : Ports_Config.Port_Range) return Interfaces.Unsigned_64
+   is (NVMe.Host.Get_Sector_Cnt + Interfaces.Unsigned_64 (Dummy_Use_Return (Dev_Id)));
 
-   function Get_Max_Sector_Cnt (Dev_Id : PConf.Port_Range) return Unsigned_64
-   is (NVMe.Host.Get_Max_Sector_Cnt + Unsigned_64 (Dummy_Use_Return (Dev_Id)));
+   function Get_Max_Sector_Cnt (Dev_Id : Ports_Config.Port_Range) return Interfaces.Unsigned_64
+   is (NVMe.Host.Get_Max_Sector_Cnt + Interfaces.Unsigned_64 (Dummy_Use_Return (Dev_Id)));
 
-   function Get_Size (Dev_Id : PConf.Port_Range) return Unsigned_64
-   is (NVMe.Host.Get_Size + Unsigned_64 (Dummy_Use_Return (Dev_Id)));
+   function Get_Size (Dev_Id : Ports_Config.Port_Range) return Interfaces.Unsigned_64
+   is (NVMe.Host.Get_Size + Interfaces.Unsigned_64 (Dummy_Use_Return (Dev_Id)));
 
    -------------------------------------------------------------------------
 
    procedure Execute_Read_Command
-      (Address :     Unsigned_64;
-       SLBA    :     Unsigned_64;
-       NLB     :     Unsigned_32;
-       Dev_Id  :     PConf.Port_Range;
+      (Address :     Interfaces.Unsigned_64;
+       SLBA    :     Interfaces.Unsigned_64;
+       NLB     :     Interfaces.Unsigned_32;
+       Dev_Id  :     Ports_Config.Port_Range;
        Status  : out Status_Type)
    is
       PRP_Data_Ptr : NVMe.SubmissionQ.PRP_Data_Ptr := (0, 0);
@@ -162,7 +164,7 @@ is
          (CMD_Identifier  => NVMe.Host.CMD_Identifier_IO,
           DPTR            => PRP_Data_Ptr,
           SLBA            => SLBA,
-          NLB             => Unsigned_16'Mod (NLB),
+          NLB             => Interfaces.Unsigned_16'Mod (NLB),
           Command         => IO_CMD);
 
       NVMe.Host.ProcessIOCommand (IOCmd => IO_CMD, Status => NVMe_Status);
@@ -178,10 +180,10 @@ is
    -------------------------------------------------------------------------
 
    procedure Execute_Write_Command
-      (Address :     Unsigned_64;
-       SLBA    :     Unsigned_64;
-       NLB     :     Unsigned_32;
-       Dev_Id  :     PConf.Port_Range;
+      (Address :     Interfaces.Unsigned_64;
+       SLBA    :     Interfaces.Unsigned_64;
+       NLB     :     Interfaces.Unsigned_32;
+       Dev_Id  :     Ports_Config.Port_Range;
        Status  : out Status_Type)
    is
       PRP_Data_Ptr : NVMe.SubmissionQ.PRP_Data_Ptr := (0, 0);
@@ -196,7 +198,7 @@ is
          (CMD_Identifier  => NVMe.Host.CMD_Identifier_IO,
           DPTR            => PRP_Data_Ptr,
           SLBA            => SLBA,
-          NLB             => Unsigned_16'Mod (NLB),
+          NLB             => Interfaces.Unsigned_16'Mod (NLB),
           Command         => IO_CMD);
 
       NVMe.Host.ProcessIOCommand (IOCmd => IO_CMD, Status => NVMe_Status);
@@ -212,9 +214,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Execute_Discard_Command
-      (SLBA    :     Unsigned_64;
-       NLB     :     Unsigned_32;
-       Dev_Id  :     PConf.Port_Range;
+      (SLBA    :     Interfaces.Unsigned_64;
+       NLB     :     Interfaces.Unsigned_32;
+       Dev_Id  :     Ports_Config.Port_Range;
        Status  : out Status_Type)
    is
       IO_CMD      : NVMe.SubmissionQ.IO_Command;
@@ -225,7 +227,7 @@ is
       NVMe.IOCommandSet.CreateWrite_Zeroes_Command
          (CMD_Identifier  => NVMe.Host.CMD_Identifier_IO,
           SLBA            => SLBA,
-          NLB             => Unsigned_16'Mod (NLB),
+          NLB             => Interfaces.Unsigned_16'Mod (NLB),
           Command         => IO_CMD);
 
       NVMe.Host.ProcessIOCommand (IOCmd => IO_CMD, Status => NVMe_Status);
@@ -241,9 +243,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Check_SMART_Status
-      (Address :     Unsigned_64;
-       Dev_Id  :     PConf.Port_Range;
-       Status  : out Unsigned_64)
+      (Address :     Interfaces.Unsigned_64;
+       Dev_Id  :     Ports_Config.Port_Range;
+       Status  : out Interfaces.Unsigned_64)
    is
       use type NVMe.Status_Type;
       SMART_Status : NVMe.Host.SMART_Status_Type;
@@ -269,8 +271,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Sync
-      (Dev_Id :      PConf.Port_Range;
-       Status : out  Unsigned_64)
+      (Dev_Id :      Ports_Config.Port_Range;
+       Status : out  Interfaces.Unsigned_64)
    is
       use type NVMe.Status_Type;
       IO_CMD      : NVMe.SubmissionQ.IO_Command;

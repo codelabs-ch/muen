@@ -1,7 +1,7 @@
 with Interfaces;
 
 with NVMe.SubmissionQ;
-with Storage_Interface; use Storage_Interface;
+with Storage_Interface;
 
 package NVMe.AdminCommandSet
 is
@@ -57,12 +57,12 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateSetFeatures_Command
-      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
-       DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       FID            :        Unsigned_8;               -- Feature Identifier
-       SV             :        Boolean;                  -- Save (persistently)
-       UUID_Index     :        Unsigned_7;               -- UUID Index
-       CDW11_Cvt      :        Unsigned_32;              -- Already converted FID specific CDW11
+      (CMD_Identifier : in out Interfaces.Unsigned_16;       -- Command Identifier
+       DPTR           :        SubmissionQ.PRP_Data_Ptr;     -- PRP Data Pointer
+       FID            :        Interfaces.Unsigned_8;        -- Feature Identifier
+       SV             :        Boolean;                      -- Save (persistently)
+       UUID_Index     :        Storage_Interface.Unsigned_7; -- UUID Index
+       CDW11_Cvt      :        Interfaces.Unsigned_32;       -- Already converted FID specific CDW11
        Command        :    out SubmissionQ.Admin_Command);
 
     -------------------------------------------------------------------------
@@ -70,11 +70,11 @@ is
     -------------------------------------------------------------------------
 
    procedure CreateGetFeatures_Command
-      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
-       DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       FID            :        Unsigned_8;               -- Feature Identifier
-       SEL            :        Unsigned_3;               -- Select (Attribute of requested Data)
-       UUID_Index     :        Unsigned_7;               -- UUID Index
+      (CMD_Identifier : in out Interfaces.Unsigned_16;       -- Command Identifier
+       DPTR           :        SubmissionQ.PRP_Data_Ptr;     -- PRP Data Pointer
+       FID            :        Interfaces.Unsigned_8;        -- Feature Identifier
+       SEL            :        Storage_Interface.Unsigned_3; -- Select (Attribute of requested Data)
+       UUID_Index     :        Storage_Interface.Unsigned_7; -- UUID Index
        Command        :    out SubmissionQ.Admin_Command);
 
     -------------------------------------------------------------------------
@@ -82,14 +82,14 @@ is
     -------------------------------------------------------------------------
 
    procedure CreateIndentify_Command
-      (CMD_Identifier   : in out Unsigned_16;              -- Command Identifier
-       DPTR             :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       NSID             :        Unsigned_32;              -- Namespace Identifier
-       CNTID            :        Unsigned_16;              -- Controller Identifier
-       CNS              :        Unsigned_8;               -- Controller or Namespace Structure
-       CSI              :        Unsigned_8;               -- Command Set Identifier
-       CNSSpecificIdent :        Unsigned_16;              -- CNS Specific Identifier
-       UUID_Index       :        Unsigned_7;               -- UUID Index
+      (CMD_Identifier   : in out Interfaces.Unsigned_16;       -- Command Identifier
+       DPTR             :        SubmissionQ.PRP_Data_Ptr;     -- PRP Data Pointer
+       NSID             :        Interfaces.Unsigned_32;       -- Namespace Identifier
+       CNTID            :        Interfaces.Unsigned_16;       -- Controller Identifier
+       CNS              :        Interfaces.Unsigned_8;        -- Controller or Namespace Structure
+       CSI              :        Interfaces.Unsigned_8;        -- Command Set Identifier
+       CNSSpecificIdent :        Interfaces.Unsigned_16;       -- CNS Specific Identifier
+       UUID_Index       :        Storage_Interface.Unsigned_7; -- UUID Index
        Command          :    out SubmissionQ.Admin_Command);
 
    -------------------------------------------------------------------------
@@ -97,10 +97,10 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateCreateIOCQ_Command
-      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
+      (CMD_Identifier : in out Interfaces.Unsigned_16;   -- Command Identifier
        DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       QID            :        Unsigned_16;              -- Queue Identifier
-       QSIZE          :        Unsigned_16;              -- Queue Size
+       QID            :        Interfaces.Unsigned_16;   -- Queue Identifier
+       QSIZE          :        Interfaces.Unsigned_16;   -- Queue Size
        PC             :        Boolean;                  -- Physically Contiguous
        IEN            :        Boolean;                  -- Interrupts Enabled (Default: False)
        Command        :    out SubmissionQ.Admin_Command);
@@ -110,13 +110,13 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateCreateIOSQ_Command
-      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
-       DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       QID            :        Unsigned_16;              -- Queue Identifier
-       QSIZE          :        Unsigned_16;              -- Queue Size
-       PC             :        Boolean;                  -- Physically Contiguous
-       QPRIO          :        Unsigned_2;               -- Queue Priority
-       CQID           :        Unsigned_16;              -- Completion Queue Identifier
+      (CMD_Identifier : in out Interfaces.Unsigned_16;       -- Command Identifier
+       DPTR           :        SubmissionQ.PRP_Data_Ptr;     -- PRP Data Pointer
+       QID            :        Interfaces.Unsigned_16;       -- Queue Identifier
+       QSIZE          :        Interfaces.Unsigned_16;       -- Queue Size
+       PC             :        Boolean;                      -- Physically Contiguous
+       QPRIO          :        Storage_Interface.Unsigned_2; -- Queue Priority
+       CQID           :        Interfaces.Unsigned_16;       -- Completion Queue Identifier
        Command        :    out SubmissionQ.Admin_Command);
 
    -------------------------------------------------------------------------
@@ -124,8 +124,8 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateDeleteIOCQ_Command
-      (CMD_Identifier : in out Unsigned_16;      -- Command Identifier
-       QID            :        Unsigned_16;      -- Queue Identifier
+      (CMD_Identifier : in out Interfaces.Unsigned_16; -- Command Identifier
+       QID            :        Interfaces.Unsigned_16; -- Queue Identifier
        Command        :    out SubmissionQ.Admin_Command);
 
     -------------------------------------------------------------------------
@@ -133,8 +133,8 @@ is
     -------------------------------------------------------------------------
 
    procedure CreateDeleteIOSQ_Command
-      (CMD_Identifier : in out Unsigned_16;     -- Command Identifier
-       QID            :        Unsigned_16;     -- Queue Identifier
+      (CMD_Identifier : in out Interfaces.Unsigned_16; -- Command Identifier
+       QID            :        Interfaces.Unsigned_16; -- Queue Identifier
        Command        :    out SubmissionQ.Admin_Command);
 
    -------------------------------------------------------------------------
@@ -142,18 +142,18 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateGetLogPage_Command
-      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
-       DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       LID            :        Unsigned_8;               -- Log Page Identifier
-       LSP            :        Unsigned_7;               -- Log Specific Parameter
-       RAE            :        Boolean;                  -- Retain Async Event
-       NUMDL          :        Unsigned_16;              -- Number of DWORDS Lower
-       NUMDU          :        Unsigned_16;              -- Number of DWORDS (16 most significant bits)
-       LogSpecificID  :        Unsigned_16;              -- Log Specific Identifier
+      (CMD_Identifier : in out Interfaces.Unsigned_16;       -- Command Identifier
+       DPTR           :        SubmissionQ.PRP_Data_Ptr;     -- PRP Data Pointer
+       LID            :        Interfaces.Unsigned_8;        -- Log Page Identifier
+       LSP            :        Storage_Interface.Unsigned_7; -- Log Specific Parameter
+       RAE            :        Boolean;                      -- Retain Async Event
+       NUMDL          :        Interfaces.Unsigned_16;       -- Number of DWORDS Lower
+       NUMDU          :        Interfaces.Unsigned_16;       -- Number of DWORDS (16 most significant bits)
+       LogSpecificID  :        Interfaces.Unsigned_16;       -- Log Specific Identifier
        Command        :    out SubmissionQ.Admin_Command);
 
    procedure CreateSMART_Health_LogPage_Command
-      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
+      (CMD_Identifier : in out Interfaces.Unsigned_16;   -- Command Identifier
        DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
        Command        :    out SubmissionQ.Admin_Command);
 
@@ -168,7 +168,7 @@ is
       ReadOnlyModeActive          : Boolean; -- see Section 8.12.1
       BackupDeviceFailure         : Boolean;
       PersistMemoryRegionReadOnly : Boolean; -- see Section 8.14
-      Reserved                    : Bit_Array (6 .. 7);
+      Reserved                    : Storage_Interface.Bit_Array (6 .. 7);
    end record
    with
       Size => 8;
@@ -184,37 +184,37 @@ is
    end record;
 
    -- Consists of Temperature Readings [K]
-   type TempSensorArray is array (1 .. 8) of Unsigned_16
+   type TempSensorArray is array (1 .. 8) of Interfaces.Unsigned_16
    with
       Pack,
       Object_Size => 16 * 8;
 
    type SMART_LogPage is record
-      CriticalWarning                  : CriticalWarning_Type; -- Indicated Type of Critical Warning
-      CompositeTemperature             : Unsigned_16;          -- Current Composite Temp [Kelvin]
-      AvailableSpare                   : Unsigned_8;           -- Current Available Space [%]
-      AvailableSpareThreshold          : Unsigned_8;           -- Threshold for 'full' [%]
-      PercentageUsed                   : Unsigned_8;           -- Estimate of NVM life used [%]
+      CriticalWarning                  : CriticalWarning_Type;    -- Indicated Type of Critical Warning
+      CompositeTemperature             : Interfaces.Unsigned_16;  -- Current Composite Temp [Kelvin]
+      AvailableSpare                   : Interfaces.Unsigned_8;   -- Current Available Space [%]
+      AvailableSpareThreshold          : Interfaces.Unsigned_8;   -- Threshold for 'full' [%]
+      PercentageUsed                   : Interfaces.Unsigned_8;   -- Estimate of NVM life used [%]
       -- Unused: EnduranceGroupCriticalWarning
-      Reserved_1                       : Byte_Array (6 .. 31);
-      DataUnitsRead                    : Unsigned_128;         -- Number of 512 Byte Units the Host has read
-      DataUnitsWritten                 : Unsigned_128;         -- Number of 512 Byte Units the Host has written
-      HostReadCommands                 : Unsigned_128;         -- Number of Host Read CMDs completed by the controller
-      HostWriteommands                 : Unsigned_128;         -- Number of Host Write CMDs completed by the controller
-      ControllerBusyTime               : Unsigned_128;         -- Amount of time the controller was busy with I/O CMDs [min]
-      PowerCycles                      : Unsigned_128;         -- Number of Power Cycles
-      PowerOnHours                     : Unsigned_128;         -- Number of (operational) Power-on hours [h]
-      UnsafeShutdowns                  : Unsigned_128;         -- Number of unsafe shutdowns
-      MediaAndIntegrityErrors          : Unsigned_128;         -- Number of detected unrecoverdd data integrity errors
-      NumberOfErrorLogInfoEntries      : Unsigned_128;         -- Number of Error information log Entries
-      WarningCompositeTempTime         : Unsigned_32;          -- Amount of time the Composite Temperarature was greater then allowed [min]
-      CriticalCompositeTempTime        : Unsigned_32;          -- Amount of time the Composite Temperarature was critical [min]
-      TempSensors                      : TempSensorArray;      -- Array for current temperarature reports by sensors 1 .. 8
-      ThermalMngmtTemp1TransitionCount : Unsigned_32;          -- Number of times the controller thermal throttled lightly
-      ThermalMngmtTemp2TransitionCount : Unsigned_32;          -- Number of times the controller thermal throttled heavily
-      TotalThermalMngmtTempTime1       : Unsigned_32;          -- Amount of time the controller thermal throttled lightly [s]
-      TotalThermalMngmtTempTime2       : Unsigned_32;          -- Amount of time the controller thermal throttled heavily [s]
-      Reserved_2                       : Byte_Array (232 .. 511);
+      Reserved_1                       : Storage_Interface.Byte_Array (6 .. 31);
+      DataUnitsRead                    : Interfaces.Unsigned_128; -- Number of 512 Byte Units the Host has read
+      DataUnitsWritten                 : Interfaces.Unsigned_128; -- Number of 512 Byte Units the Host has written
+      HostReadCommands                 : Interfaces.Unsigned_128; -- Number of Host Read CMDs completed by the controller
+      HostWriteommands                 : Interfaces.Unsigned_128; -- Number of Host Write CMDs completed by the controller
+      ControllerBusyTime               : Interfaces.Unsigned_128; -- Amount of time the controller was busy with I/O CMDs [min]
+      PowerCycles                      : Interfaces.Unsigned_128; -- Number of Power Cycles
+      PowerOnHours                     : Interfaces.Unsigned_128; -- Number of (operational) Power-on hours [h]
+      UnsafeShutdowns                  : Interfaces.Unsigned_128; -- Number of unsafe shutdowns
+      MediaAndIntegrityErrors          : Interfaces.Unsigned_128; -- Number of detected unrecoverdd data integrity errors
+      NumberOfErrorLogInfoEntries      : Interfaces.Unsigned_128; -- Number of Error information log Entries
+      WarningCompositeTempTime         : Interfaces.Unsigned_32;  -- Amount of time the Composite Temperarature was greater then allowed [min]
+      CriticalCompositeTempTime        : Interfaces.Unsigned_32;  -- Amount of time the Composite Temperarature was critical [min]
+      TempSensors                      : TempSensorArray;         -- Array for current temperarature reports by sensors 1 .. 8
+      ThermalMngmtTemp1TransitionCount : Interfaces.Unsigned_32;  -- Number of times the controller thermal throttled lightly
+      ThermalMngmtTemp2TransitionCount : Interfaces.Unsigned_32;  -- Number of times the controller thermal throttled heavily
+      TotalThermalMngmtTempTime1       : Interfaces.Unsigned_32;  -- Amount of time the controller thermal throttled lightly [s]
+      TotalThermalMngmtTempTime2       : Interfaces.Unsigned_32;  -- Amount of time the controller thermal throttled heavily [s]
+      Reserved_2                       : Storage_Interface.Byte_Array (232 .. 511);
    end record
    with
       Size        => 512 * 8,
@@ -251,9 +251,9 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateAbort_Command
-      (CMD_Identifier : in out Unsigned_16;     -- Command Identifier
-       CMD_ID2Abort   :        Unsigned_16;     -- Command Identifier of the Command to be aborted
-       SQID           :        Unsigned_16;     -- Submission Queue Identifier
+      (CMD_Identifier : in out Interfaces.Unsigned_16; -- Command Identifier
+       CMD_ID2Abort   :        Interfaces.Unsigned_16; -- Command Identifier of the Command to be aborted
+       SQID           :        Interfaces.Unsigned_16; -- Submission Queue Identifier
        Command        :    out SubmissionQ.Admin_Command);
 
    -------------------------------------------------------------------------
@@ -261,16 +261,16 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateAsyncEventReq_Command
-      (CMD_Identifier : in out Unsigned_16;     -- Command Identifier
+      (CMD_Identifier : in out Interfaces.Unsigned_16; -- Command Identifier
        Command        :    out SubmissionQ.Admin_Command);
 
 private
 
    type CDW14 is record
-      UUID_Index : Unsigned_7;
+      UUID_Index : Storage_Interface.Unsigned_7;
       Filler1    : Boolean := False;
-      Filler2    : Unsigned_8 := 0;
-      Filler3    : Unsigned_16 := 0;
+      Filler2    : Interfaces.Unsigned_8 := 0;
+      Filler3    : Interfaces.Unsigned_16 := 0;
    end record
    with
       Size => 32;
@@ -285,9 +285,9 @@ private
    -- SET FEATURE CMD
 
    type CDW10_SET is record
-      FID     : Unsigned_8; -- Feature Identifier
-      Filler1 : Unsigned_16 := 0;
-      Filler2 : Unsigned_7 := 0;
+      FID     : Interfaces.Unsigned_8; -- Feature Identifier
+      Filler1 : Interfaces.Unsigned_16 := 0;
+      Filler2 : Storage_Interface.Unsigned_7 := 0;
       SV      : Boolean;    -- Save
    end record
    with
@@ -303,10 +303,10 @@ private
    -- GET FEATURE CMD
 
    type CDW10_GET is record
-      FID     : Unsigned_8; -- Feature Identifier
-      SEL     : Unsigned_3; -- Select
-      Filler1 : Unsigned_5 := 0;
-      Filler2 : Unsigned_16 := 0;
+      FID     : Interfaces.Unsigned_8;        -- Feature Identifier
+      SEL     : Storage_Interface.Unsigned_3; -- Select
+      Filler1 : Storage_Interface.Unsigned_5 := 0;
+      Filler2 : Interfaces.Unsigned_16 := 0;
    end record
    with
       Size => 32;
@@ -321,9 +321,9 @@ private
    -- IDENTIFY CMD
 
    type CDW10_Ident is record
-      CNS    : Unsigned_8;  -- Controller or Namespace Structure
-      Filler : Unsigned_8 := 0;
-      CNTID  : Unsigned_16; -- Controller Identifier
+      CNS    : Interfaces.Unsigned_8;  -- Controller or Namespace Structure
+      Filler : Interfaces.Unsigned_8 := 0;
+      CNTID  : Interfaces.Unsigned_16; -- Controller Identifier
    end record
    with
       Size => 32;
@@ -335,9 +335,9 @@ private
    end record;
 
    type CDW11_Ident is record
-      CNS_SI : Unsigned_16; -- CNS Specific Identifier
-      Filler : Unsigned_8 := 0;
-      CSI    : Unsigned_8;  -- Command Set Identifier
+      CNS_SI : Interfaces.Unsigned_16; -- CNS Specific Identifier
+      Filler : Interfaces.Unsigned_8 := 0;
+      CSI    : Interfaces.Unsigned_8;  -- Command Set Identifier
    end record
    with
       Size => 32;
@@ -351,8 +351,8 @@ private
    -- Create IO Queues CMD
 
    type CDW10_CreateIOQ is record
-      QID   : Unsigned_16; -- Queue ID
-      QSIZE : Unsigned_16; -- Queue Size
+      QID   : Interfaces.Unsigned_16; -- Queue ID
+      QSIZE : Interfaces.Unsigned_16; -- Queue Size
    end record
    with
       Size => 32;
@@ -363,11 +363,11 @@ private
    end record;
 
    type CDW11_CreateIOCQ is record
-      PC      : Boolean;     -- Physically Contiguous
-      IEN     : Boolean;     -- Interrupts Enabled
-      Filler1 : Unsigned_6 := 0;
-      Filler2 : Unsigned_8 := 0;
-      IV      : Unsigned_16; -- Interrupt Vector
+      PC      : Boolean;                           -- Physically Contiguous
+      IEN     : Boolean;                           -- Interrupts Enabled
+      Filler1 : Storage_Interface.Unsigned_6 := 0;
+      Filler2 : Interfaces.Unsigned_8 := 0;
+      IV      : Interfaces.Unsigned_16;            -- Interrupt Vector
    end record
    with
       Size => 32;
@@ -381,11 +381,11 @@ private
    end record;
 
    type CDW11_CreateIOSQ is record
-      PC      : Boolean;     -- Physically Contiguous
-      QPRIO   : Unsigned_2;  -- Queue Priority
-      Filler1 : Unsigned_5 := 0;
-      Filler2 : Unsigned_8 := 0;
-      CQID    : Unsigned_16; -- Completion Queue Identifier
+      PC      : Boolean;                           -- Physically Contiguous
+      QPRIO   : Storage_Interface.Unsigned_2;      -- Queue Priority
+      Filler1 : Storage_Interface.Unsigned_5 := 0;
+      Filler2 : Interfaces.Unsigned_8 := 0;
+      CQID    : Interfaces.Unsigned_16;            -- Completion Queue Identifier
    end record
    with
       Size => 32;
@@ -400,8 +400,8 @@ private
 
    -- Delete IO Queues CMD
    type CDW10_DeleteIOQ is record
-      QID    : Unsigned_16; -- Queue Identifier
-      Filler : Unsigned_16 := 0;
+      QID    : Interfaces.Unsigned_16; -- Queue Identifier
+      Filler : Interfaces.Unsigned_16 := 0;
    end record
    with
       Size => 32;
@@ -413,10 +413,10 @@ private
 
    -- Get Log Page CMD
    type CDW10_GetLogPage is record
-      LID   : Unsigned_8;  -- Log Page Identifier
-      LSP   : Unsigned_7;  -- Log Specific Parameter
-      RAE   : Boolean;     -- Retain Async Event
-      NUMDL : Unsigned_16; -- Number of DWORDS Lower
+      LID   : Interfaces.Unsigned_8;         -- Log Page Identifier
+      LSP   : Storage_Interface.Unsigned_7;  -- Log Specific Parameter
+      RAE   : Boolean;                       -- Retain Async Event
+      NUMDL : Interfaces.Unsigned_16;        -- Number of DWORDS Lower
    end record
    with
       Size => 32;
@@ -429,8 +429,8 @@ private
    end record;
 
    type CDW11_GetLogPage is record
-      NUMDU         : Unsigned_16; -- Number of DWORDS (16 most significant bits)
-      LogSpecificID : Unsigned_16; -- Log Specific Identifier
+      NUMDU         : Interfaces.Unsigned_16; -- Number of DWORDS (16 most significant bits)
+      LogSpecificID : Interfaces.Unsigned_16; -- Log Specific Identifier
    end record
    with
       Size => 32;
@@ -443,8 +443,8 @@ private
    -- Abort CMD
 
    type CDW10_Abort is record
-      SQID  : Unsigned_16; -- Submission Queue Identifier
-      CID2A : Unsigned_16; -- Command Identifier of the Command to be aborted
+      SQID  : Interfaces.Unsigned_16; -- Submission Queue Identifier
+      CID2A : Interfaces.Unsigned_16; -- Command Identifier of the Command to be aborted
    end record
    with
       Size => 32;

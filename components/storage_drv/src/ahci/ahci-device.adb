@@ -15,8 +15,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Interfaces;
-
 with Ata;
 
 with Ahci.Commands;
@@ -34,14 +32,14 @@ is
    -------------------------------------------------------------------------
 
    procedure RW_Sectors
-      (ID      :     PConf.Port_Range;
+      (ID      :     Ports_Config.Port_Range;
        RW      :     RW_Type;
-       Start   :     Unsigned_64;
-       Count   :     Unsigned_32;
-       Address :     Unsigned_64;
-       Ret_Val : out Status_Type)
+       Start   :     Interfaces.Unsigned_64;
+       Count   :     Interfaces.Unsigned_32;
+       Address :     Interfaces.Unsigned_64;
+       Ret_Val : out Storage_Interface.Status_Type)
    is
-      Signature : constant Signature_Type := Devices (ID).Signature;
+      Signature : constant Storage_Interface.Signature_Type := Storage_Interface.Devices (ID).Signature;
    begin
       case Signature is
          when Storage_Interface.Sata_device =>
@@ -53,7 +51,7 @@ is
                 Address => Address,
                 Ret_Val => Ret_Val);
          when others =>
-            Ret_Val := ENOTSUP;
+            Ret_Val := Storage_Interface.ENOTSUP;
       end case;
    end RW_Sectors;
 
@@ -61,11 +59,11 @@ is
 
    procedure Discard_Sectors
       (ID      :     Ports_Config.Port_Range;
-       Start   :     Unsigned_64;
-       Count   :     Unsigned_32;
-       Ret_Val : out Status_Type)
+       Start   :     Interfaces.Unsigned_64;
+       Count   :     Interfaces.Unsigned_32;
+       Ret_Val : out Storage_Interface.Status_Type)
    is
-      Signature : constant Signature_Type := Devices (ID).Signature;
+      Signature : constant Storage_Interface.Signature_Type := Storage_Interface.Devices (ID).Signature;
    begin
       case Signature is
          when Storage_Interface.Sata_device =>
@@ -75,7 +73,7 @@ is
                 Count => Count,
                 Ret_Val => Ret_Val);
          when others =>
-            Ret_Val := ENOTSUP;
+            Ret_Val := Storage_Interface.ENOTSUP;
       end case;
    end Discard_Sectors;
 
@@ -83,20 +81,21 @@ is
 
    procedure Get_Attached_Devices (Dev : out Port_Status_Type)
    is
+      use type Storage_Interface.Signature_Type;
    begin
       Dev := (others => False);
 
       for I in Ports_Config.Port_Range loop
-         Dev (Integer (I)) := Devices (I).Signature /= Storage_Interface.Empty_device;
+         Dev (Integer (I)) := Storage_Interface.Devices (I).Signature /= Storage_Interface.Empty_device;
       end loop;
    end Get_Attached_Devices;
 
    -------------------------------------------------------------------------
 
    function Get_Max_Sector_Count (ID : Ports_Config.Port_Range)
-      return Unsigned_32
+      return Interfaces.Unsigned_32
    is
-      Signature : constant Signature_Type := Devices (ID).Signature;
+      Signature : constant Storage_Interface.Signature_Type := Storage_Interface.Devices (ID).Signature;
    begin
       case Signature is
          when Storage_Interface.Sata_device =>
@@ -108,33 +107,33 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Size (ID : Ports_Config.Port_Range) return Unsigned_64
+   function Get_Size (ID : Ports_Config.Port_Range) return Interfaces.Unsigned_64
    is
-      use type Unsigned_64;
+      use type Interfaces.Unsigned_64;
    begin
-      return Unsigned_64 (Get_Sector_Size (ID)) *
+      return Interfaces.Unsigned_64 (Get_Sector_Size (ID)) *
                Get_Sector_Cnt (ID);
    end Get_Size;
 
    -------------------------------------------------------------------------
 
-   function Get_Sector_Size (ID : Ports_Config.Port_Range) return Unsigned_32
-   is (Devices (ID).Sector_Size);
+   function Get_Sector_Size (ID : Ports_Config.Port_Range) return Interfaces.Unsigned_32
+   is (Storage_Interface.Devices (ID).Sector_Size);
 
    -------------------------------------------------------------------------
 
-   function Get_Sector_Cnt (ID : Ports_Config.Port_Range) return Unsigned_64
-   is (Devices (ID).Number_Of_Sectors);
+   function Get_Sector_Cnt (ID : Ports_Config.Port_Range) return Interfaces.Unsigned_64
+   is (Storage_Interface.Devices (ID).Number_Of_Sectors);
 
    -------------------------------------------------------------------------
 
    procedure Get_SMART
       (ID      :     Ports_Config.Port_Range;
-       Address :     Unsigned_64; --  Buffer Address
+       Address :     Interfaces.Unsigned_64; --  Buffer Address
        Status  : out SMART_Status_Type;
-       Ret_Val : out Status_Type)
+       Ret_Val : out Storage_Interface.Status_Type)
    is
-      Signature : constant Signature_Type := Devices (ID).Signature;
+      Signature : constant Storage_Interface.Signature_Type := Storage_Interface.Devices (ID).Signature;
    begin
       Status := Undefined;
 
@@ -145,7 +144,7 @@ is
                            Status  => Status,
                            Ret_Val => Ret_Val);
          when others =>
-            Ret_Val := ENOTSUP;
+            Ret_Val := Storage_Interface.ENOTSUP;
       end case;
 
    end Get_SMART;
@@ -157,17 +156,17 @@ is
    with
       Pre => Musinfo.Instance.Is_Valid
    is
-      Sig : Unsigned_32;
+      Sig : Interfaces.Unsigned_32;
    begin
       Sig := Ports.Instance (Port_ID).Signature;
       case Sig is
          when Ports.SIG_ATA =>
             Ata.Identify_Device (Port_ID => Port_ID);
-            Devices (Port_ID).Signature := Storage_Interface.Sata_device;
+            Storage_Interface.Devices (Port_ID).Signature := Storage_Interface.Sata_device;
          when Ports.SIG_ATAPI =>
-            Devices (Port_ID).Signature := Storage_Interface.Atapi_device;
+            Storage_Interface.Devices (Port_ID).Signature := Storage_Interface.Atapi_device;
          when others =>
-            Devices (Port_ID).Signature := Storage_Interface.Empty_device;
+            Storage_Interface.Devices (Port_ID).Signature := Storage_Interface.Empty_device;
       end case;
 
    end Identify_Device;
@@ -179,13 +178,14 @@ is
    with
       Pre => Musinfo.Instance.Is_Valid
    is
-      use type Unsigned_64;
-      use type PConf.Port_Range;
+      use type Interfaces.Unsigned_64;
+      use type Ports_Config.Port_Range;
+      use type Storage_Interface.Signature_Type;
 
       HBA_Caps       : constant HBA.HBA_Caps_Type
                          := HBA.Instance.Host_Capabilities;
       Success        : Boolean;
-      Address        : Unsigned_64;
+      Address        : Interfaces.Unsigned_64;
       Timeout        : Natural := 3000;
       Clear_Err      : Ports.Clear_Error_Type;
 
@@ -193,11 +193,11 @@ is
       Cmd_Table_Size : constant := 16#100#;
       Fis_Size       : constant := 16#100#;
 
-      function Upper (I : Unsigned_64) return Unsigned_32
-      is (Unsigned_32 (Interfaces.Shift_Right (I, 32)));
+      function Upper (I : Interfaces.Unsigned_64) return Interfaces.Unsigned_32
+      is (Interfaces.Unsigned_32 (Interfaces.Shift_Right (I, 32)));
 
-      function Lower (I : Unsigned_64) return Unsigned_32
-      is (Unsigned_32 (I and 16#ffff_ffff#));
+      function Lower (I : Interfaces.Unsigned_64) return Interfaces.Unsigned_32
+      is (Interfaces.Unsigned_32 (I and 16#ffff_ffff#));
    begin
 
       if HBA_Caps.SSS then
@@ -226,23 +226,23 @@ is
 
       Ports.Stop (ID => Port_ID);
 
-      Address := Command_Lists_Address
-                     + Unsigned_64 (Port_ID) * Cmd_List_Size;
+      Address := Storage_Interface.Command_Lists_Address
+                     + Interfaces.Unsigned_64 (Port_ID) * Cmd_List_Size;
       Ports.Instance (Port_ID).Cmd_List_Base_Addr := Lower (Address);
       Ports.Instance (Port_ID).Cmd_List_Base_Upper_Addr := Upper (Address);
 
-      Address := Fis_Base_Address
-                  + Unsigned_64 (Port_ID) * Fis_Size;
+      Address := Storage_Interface.Fis_Base_Address
+                  + Interfaces.Unsigned_64 (Port_ID) * Fis_Size;
       Ports.Instance (Port_ID).FIS_Base_Addr := Lower (Address);
       Ports.Instance (Port_ID).FIS_Base_Upper_Addr := Upper (Address);
 
       --  setup command table address in command header. For now it's
       --  a fixed mapping between Cmd[0] and Command_Header[0].
-      Address := Command_Table_Address
-         + Unsigned_64 (Port_ID) * Cmd_Table_Size;
+      Address := Storage_Interface.Command_Table_Address
+         + Interfaces.Unsigned_64 (Port_ID) * Cmd_Table_Size;
       Commands.Command_Lists (Port_ID)(0).CTBA
-         := Unsigned_25 (Interfaces.Shift_Right
-               (Unsigned_32'Mod (Address), 7));
+         := Storage_Interface.Unsigned_25 (Interfaces.Shift_Right
+               (Interfaces.Unsigned_32'Mod (Address), 7));
       Commands.Command_Lists (Port_ID)(0).CTBAU := Upper (Address);
 
       Ports.Start (ID => Port_ID); -- start cmd engine + fre
@@ -263,10 +263,10 @@ is
 
       Identify_Device (Port_ID => Port_ID);
 
-      if Devices (Port_ID).Signature = Storage_Interface.Sata_device then
+      if Storage_Interface.Devices (Port_ID).Signature = Storage_Interface.Sata_device then
          Log.Put_Line
            ("Sata device found on Port "
-            & SK.Strings.Img (Unsigned_8 (Port_ID)));
+            & SK.Strings.Img (Interfaces.Unsigned_8 (Port_ID)));
       end if;
    end Probe;
 
@@ -274,15 +274,15 @@ is
 
    procedure Sync
       (ID      :     Ports_Config.Port_Range;
-       Ret_Val : out Status_Type)
+       Ret_Val : out Storage_Interface.Status_Type)
    is
-      Signature : constant Signature_Type := Devices (ID).Signature;
+      Signature : constant Storage_Interface.Signature_Type := Storage_Interface.Devices (ID).Signature;
    begin
       case Signature is
-         when  Storage_Interface.Sata_device =>
+         when Storage_Interface.Sata_device =>
             Ata.Sync (ID => ID, Ret_Val => Ret_Val);
          when others =>
-            Ret_Val := ENOTSUP;
+            Ret_Val := Storage_Interface.ENOTSUP;
             null;
       end case;
    end Sync;
@@ -291,11 +291,11 @@ is
 
    procedure Init
    is
-      PI : constant Bit_Array := HBA.Instance.Ports_Implemented;
+      PI : constant Storage_Interface.Bit_Array := HBA.Instance.Ports_Implemented;
    begin
-      for I in PConf.Port_Range loop
+      for I in Ports_Config.Port_Range loop
          if PI (Natural (I)) then
-            Log.Put_Line ("Probe Port " & SK.Strings.Img (Unsigned_8 (I)));
+            Log.Put_Line ("Probe Port " & SK.Strings.Img (Interfaces.Unsigned_8 (I)));
             Probe (Port_ID => I);
          end if;
       end loop;

@@ -12,6 +12,8 @@ is
 
    -------------------------------------------------------------------------
 
+   use type Interfaces.Unsigned_32;
+
    procedure Startup
    is
    begin
@@ -40,6 +42,8 @@ is
       end;
 
       declare
+         use type Interfaces.Unsigned_24;
+
          Info : constant Pciconf.Info_Record := Pciconf.Instance.Header.Info;
          Success : Boolean;
       begin
@@ -71,7 +75,7 @@ is
          (Chan_Idx         => 0,
           Devs             => (others => Internal_Device_Type'(
                Ahci_Port     => 0,
-               Partition     => PConf.Null_Partition,
+               Partition     => Ports_Config.Null_Partition,
                Sector_Offset => 0,
                Sector_Count  => 0,
                Is_Valid      => False,
@@ -84,28 +88,27 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Sector_Size (Dev_Id : PConf.Port_Range) return Unsigned_32
+   function Get_Sector_Size (Dev_Id : Ports_Config.Port_Range) return Interfaces.Unsigned_32
    is (Ahci.Device.Get_Sector_Size (Dev_Id));
 
-   function Get_Sector_Cnt (Dev_Id : PConf.Port_Range) return Unsigned_64
+   function Get_Sector_Cnt (Dev_Id : Ports_Config.Port_Range) return Interfaces.Unsigned_64
    is (Ahci.Device.Get_Sector_Cnt (Dev_Id));
 
-   function Get_Max_Sector_Cnt (Dev_Id : PConf.Port_Range) return Unsigned_64
-   is (Unsigned_64 (Ahci.Device.Get_Max_Sector_Count (Dev_Id)));
+   function Get_Max_Sector_Cnt (Dev_Id : Ports_Config.Port_Range) return Interfaces.Unsigned_64
+   is (Interfaces.Unsigned_64 (Ahci.Device.Get_Max_Sector_Count (Dev_Id)));
 
-   function Get_Size (Dev_Id : PConf.Port_Range) return Unsigned_64
+   function Get_Size (Dev_Id : Ports_Config.Port_Range) return Interfaces.Unsigned_64
    is (Ahci.Device.Get_Size (Dev_Id));
 
    -------------------------------------------------------------------------
 
    procedure Execute_Read_Command
-      (Address :     Unsigned_64;
-       SLBA    :     Unsigned_64;
-       NLB     :     Unsigned_32;
-       Dev_Id  :     PConf.Port_Range;
+      (Address :     Interfaces.Unsigned_64;
+       SLBA    :     Interfaces.Unsigned_64;
+       NLB     :     Interfaces.Unsigned_32;
+       Dev_Id  :     Ports_Config.Port_Range;
        Status  : out Status_Type)
    is
-      use type Unsigned_32;
    begin
       Ahci.Device.RW_Sectors
          (ID      => Dev_Id,
@@ -119,13 +122,12 @@ is
    -------------------------------------------------------------------------
 
    procedure Execute_Write_Command
-      (Address :     Unsigned_64;
-       SLBA    :     Unsigned_64;
-       NLB     :     Unsigned_32;
-       Dev_Id  :     PConf.Port_Range;
+      (Address :     Interfaces.Unsigned_64;
+       SLBA    :     Interfaces.Unsigned_64;
+       NLB     :     Interfaces.Unsigned_32;
+       Dev_Id  :     Ports_Config.Port_Range;
        Status  : out Status_Type)
    is
-      use type Unsigned_32;
    begin
       Ahci.Device.RW_Sectors
          (ID      => Dev_Id,
@@ -139,12 +141,11 @@ is
    -------------------------------------------------------------------------
 
    procedure Execute_Discard_Command
-      (SLBA    :     Unsigned_64;
-       NLB     :     Unsigned_32;
-       Dev_Id  :     PConf.Port_Range;
+      (SLBA    :     Interfaces.Unsigned_64;
+       NLB     :     Interfaces.Unsigned_32;
+       Dev_Id  :     Ports_Config.Port_Range;
        Status  : out Status_Type)
    is
-      use type Unsigned_32;
    begin
       Ahci.Device.Discard_Sectors
          (ID      => Dev_Id,
@@ -156,9 +157,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Check_SMART_Status
-      (Address :     Unsigned_64;
-       Dev_Id  :     PConf.Port_Range;
-       Status  : out Unsigned_64)
+      (Address :     Interfaces.Unsigned_64;
+       Dev_Id  :     Ports_Config.Port_Range;
+       Status  : out Interfaces.Unsigned_64)
    is
       SMART_Status : Ahci.Device.SMART_Status_Type;
       Ret : Status_Type;
@@ -185,8 +186,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Sync
-      (Dev_Id :     PConf.Port_Range;
-       Status : out Unsigned_64)
+      (Dev_Id :     Ports_Config.Port_Range;
+       Status : out Interfaces.Unsigned_64)
    is
       Ret : Status_Type;
    begin

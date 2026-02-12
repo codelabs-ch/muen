@@ -105,7 +105,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Setup_H2D_Cmd
-      (ID       : PConf.Port_Range;
+      (ID       : Ports_Config.Port_Range;
        Cmd      : Interfaces.Unsigned_8;
        Start    : Interfaces.Unsigned_64;
        Sectors  : Interfaces.Unsigned_32;
@@ -123,7 +123,7 @@ is
       Ahci.Commands.Command_Table (ID).Cfis (7) := Fis_H2d_Dev_Lba;
       Ahci.Commands.Command_Table (ID).Cfis (8) := To_Byte (Start, 3);
 
-      if Devices (ID).Support_48Bit then
+      if Storage_Interface.Devices (ID).Support_48Bit then
          Ahci.Commands.Command_Table (ID).Cfis (9)  := To_Byte (Start, 4);
          Ahci.Commands.Command_Table (ID).Cfis (10) := To_Byte (Start, 5);
       else
@@ -144,7 +144,7 @@ is
    -------------------------------------------------------------------------
 
    type LBA_Range_Type is record
-      LBA    : Unsigned_48;
+      LBA    : Storage_Interface.Unsigned_48;
       Length : Interfaces.Unsigned_16;
    end record
    with Size => 64;
@@ -154,10 +154,10 @@ is
       Length at 6 range 0 .. 2 * 8 - 1;
    end record;
 
-   LBA_Range_Entry_Max : constant Integer := DMA_Mem_Size / 8 - 1;
+   LBA_Range_Entry_Max : constant Integer := Storage_Interface.DMA_Mem_Size / 8 - 1;
    type LBA_Range is range 0 .. LBA_Range_Entry_Max;
    type LBA_Range_List_Type is array (LBA_Range) of LBA_Range_Type
-   with Object_Size => DMA_Mem_Size * 8;
+   with Object_Size => Storage_Interface.DMA_Mem_Size * 8;
 
    pragma Warnings
      (GNATprove, Off,
@@ -169,36 +169,38 @@ is
       Volatile,
       Async_Readers,
       Async_Writers,
-      Address => System'To_Address (DMA_Mem_Base_Address),
-      Size    => DMA_Mem_Size * 8;
+      Address => System'To_Address (Storage_Interface.DMA_Mem_Base_Address),
+      Size    => Storage_Interface.DMA_Mem_Size * 8;
    pragma Warnings
      (GNATprove, On,
       "writing * is assumed to have no effects on other non-volatile objects");
 
    procedure Discard_Sectors
-      (ID      :     PConf.Port_Range;
-       Start   :     Unsigned_64;
-       Count   :     Unsigned_32;
-       Ret_Val : out Status_Type)
+      (ID      :     Ports_Config.Port_Range;
+       Start   :     Interfaces.Unsigned_64;
+       Count   :     Interfaces.Unsigned_32;
+       Ret_Val : out Storage_Interface.Status_Type)
    is
+      use type Storage_Interface.Unsigned_48;
+
       Cnt     : Interfaces.Unsigned_32 := Count;
       Now     : Interfaces.Unsigned_16;
       Length  : Interfaces.Unsigned_32 := 0;
-      Sec     : Unsigned_48;
+      Sec     : Storage_Interface.Unsigned_48;
       Len     : Interfaces.Unsigned_32;
       Idx     : LBA_Range := LBA_Range'First;
       Success : Boolean;
    begin
-      if (not Devices (ID).Support_Discard)
-         or (Devices (ID).Support_48Bit and
+      if (not Storage_Interface.Devices (ID).Support_Discard)
+         or (Storage_Interface.Devices (ID).Support_48Bit and
             ((Start >= 16#1_0000_0000_0000#) or (Count > 64 * 1024)))
-         or (not Devices (ID).Support_48Bit)
+         or (not Storage_Interface.Devices (ID).Support_48Bit)
       then
-         Ret_Val := ENOTSUP;
+         Ret_Val := Storage_Interface.ENOTSUP;
          return;
       end if;
 
-      Sec := Unsigned_48 (Start);
+      Sec := Storage_Interface.Unsigned_48 (Start);
 
       --  build a list of LBA Range entries as described in
       --  ATA Attachment 8 ATA/ATAP Command Set 7.22.3.6
@@ -216,12 +218,12 @@ is
          if Idx = LBA_Range'Last then
             Log.Put_Line
               ("Discard_Sectors: Error constructing LBA entries (1)");
-            Ret_Val := ENOTSUP;
+            Ret_Val := Storage_Interface.ENOTSUP;
             return;
          end if;
          Idx := Idx + 1;
          Cnt := Cnt - Interfaces.Unsigned_32 (Now);
-         Sec := Sec + Unsigned_48 (Now);
+         Sec := Sec + Storage_Interface.Unsigned_48 (Now);
       end loop;
 
       --  length must be a multiple of 512Byte(64 entries) fill up with zeros
@@ -231,7 +233,7 @@ is
          if Idx = LBA_Range'Last then
             Log.Put_Line
               ("Discard_Sectors: Error constructing LBA entries (2)");
-            Ret_Val := ENOTSUP;
+            Ret_Val := Storage_Interface.ENOTSUP;
             return;
          end if;
          Idx := Idx + 1;
@@ -240,10 +242,10 @@ is
 
       Len := Length;
       Ahci.Commands.Cmd_Slot_Prepare
-         (ID, Length, DMA_Mem_Base_Address, Ahci.Write);
+         (ID, Length, Storage_Interface.DMA_Mem_Base_Address, Ahci.Write);
 
       if Len /= Length then
-         Ret_Val := EIO;
+         Ret_Val := Storage_Interface.EIO;
          return;
       end if;
 
@@ -258,21 +260,21 @@ is
                           Success => Success);
 
       if Success then
-         Ret_Val := OK;
+         Ret_Val := Storage_Interface.OK;
       else
          Ahci_Log.Dump_Cmd_List (ID, 8);
          Ahci_Log.Dump_Cmd_Table (ID, 40);
-         Ret_Val := EIO;
+         Ret_Val := Storage_Interface.EIO;
       end if;
    end Discard_Sectors;
 
    ------------------------------------------------------------------------
 
-   function Get_Max_Sector_Count (ID : PConf.Port_Range)
-      return Unsigned_32
+   function Get_Max_Sector_Count (ID : Ports_Config.Port_Range)
+      return Interfaces.Unsigned_32
    is
    begin
-      if Devices (ID).Support_48Bit then
+      if Storage_Interface.Devices (ID).Support_48Bit then
          return 64 * 1024;
       else
          return 256;
@@ -282,12 +284,12 @@ is
    -------------------------------------------------------------------------
 
    procedure RW_Sectors
-      (ID      :     PConf.Port_Range;
+      (ID      :     Ports_Config.Port_Range;
        RW      :     Ahci.RW_Type;
-       Start   :     Unsigned_64; --  Start Sector
-       Count   :     Unsigned_32; --  Number of Sectors
-       Address :     Unsigned_64; --  DMA Buffer address
-       Ret_Val : out Status_Type)
+       Start   :     Interfaces.Unsigned_64; --  Start Sector
+       Count   :     Interfaces.Unsigned_32; --  Number of Sectors
+       Address :     Interfaces.Unsigned_64; --  DMA Buffer address
+       Ret_Val : out Storage_Interface.Status_Type)
    is
       Bytes    : Interfaces.Unsigned_32;
       Bytes_IO : Interfaces.Unsigned_32;
@@ -303,26 +305,26 @@ is
          Ahci.Read  => (Ata_Read_Dma, Ata_Read_Dma_Ext),
          Ahci.Write => (Ata_Write_Dma, Ata_Write_Dma_Ext));
    begin
-      if (Devices (ID).Support_48Bit and
+      if (Storage_Interface.Devices (ID).Support_48Bit and
             ((Start >= 16#1_0000_0000_0000#) or (Count > 64 * 1024)))
-         or ((not Devices (ID).Support_48Bit) and
+         or ((not Storage_Interface.Devices (ID).Support_48Bit) and
             ((Start >= 16#1000_0000#) or (Count > 256)))
       then
-         Ret_Val := ENOTSUP;
+         Ret_Val := Storage_Interface.ENOTSUP;
          return;
       end if;
 
-      Cmd   := Cmd_Table (RW, Devices (ID).Support_48Bit);
+      Cmd   := Cmd_Table (RW, Storage_Interface.Devices (ID).Support_48Bit);
       Bytes := Interfaces.Shift_Left
-        (Count, Devices (ID).Sector_Size_Shift);
+        (Count, Storage_Interface.Devices (ID).Sector_Size_Shift);
 
       Ahci.Commands.Cmd_Slot_Prepare (ID, Bytes, Address, RW);
 
       Sectors := Interfaces.Shift_Right
-                  (Bytes, Devices (ID).Sector_Size_Shift);
+                  (Bytes, Storage_Interface.Devices (ID).Sector_Size_Shift);
 
-      if (Devices (ID).Support_48Bit and (Sectors = 65536))
-         or ((not Devices (ID).Support_48Bit) and (Sectors = 256))
+      if (Storage_Interface.Devices (ID).Support_48Bit and (Sectors = 65536))
+         or ((not Storage_Interface.Devices (ID).Support_48Bit) and (Sectors = 256))
       then
          Sectors := 0;
       end if;
@@ -349,9 +351,9 @@ is
 
       if Success and (Bytes_IO = Bytes)
       then
-         Ret_Val := OK;
+         Ret_Val := Storage_Interface.OK;
       else
-         Ret_Val := EIO;
+         Ret_Val := Storage_Interface.EIO;
       end if;
 
    end RW_Sectors;
@@ -359,13 +361,13 @@ is
    -------------------------------------------------------------------------
 
    procedure Sync
-      (ID      :     PConf.Port_Range;
-       Ret_Val : out Status_Type)
+      (ID      :     Ports_Config.Port_Range;
+       Ret_Val : out Storage_Interface.Status_Type)
    is
       Cmd     : Interfaces.Unsigned_8;
       Success : Boolean;
    begin
-      if Devices (ID).Support_48Bit then
+      if Storage_Interface.Devices (ID).Support_48Bit then
          Cmd := Ata_Flush_Cache_Ext;
       else
          Cmd := Ata_Flush_Cache;
@@ -383,20 +385,20 @@ is
                           Timeout => 60,
                           Success => Success);
       if Success then
-         Ret_Val := OK;
+         Ret_Val := Storage_Interface.OK;
       else
          Log.Put_Line ("Flush Cache failed!");
-         Ret_Val := EIO;
+         Ret_Val := Storage_Interface.EIO;
       end if;
    end Sync;
 
    -------------------------------------------------------------------------
 
    procedure SMART_Execute_Cmd
-      (ID      :     PConf.Port_Range;
+      (ID      :     Ports_Config.Port_Range;
        Feature :     Interfaces.Unsigned_16;
-       Address :     Interfaces.Unsigned_64 := DMA_Mem_Base_Address;
-       Ret_Val : out Status_Type)
+       Address :     Interfaces.Unsigned_64 := Storage_Interface.DMA_Mem_Base_Address;
+       Ret_Val : out Storage_Interface.Status_Type)
    with
       Pre => Musinfo.Instance.Is_Valid
    is
@@ -404,7 +406,7 @@ is
       Length  : Interfaces.Unsigned_32 := 512;
       Success : Boolean;
    begin
-      Ret_Val := EIO;
+      Ret_Val := Storage_Interface.EIO;
 
       Ahci.Commands.Cmd_Slot_Prepare (Port_ID => ID,
                                       Len     => Length,
@@ -426,7 +428,7 @@ is
                           Success => Success);
 
       if Success then
-         Ret_Val := OK;
+         Ret_Val := Storage_Interface.OK;
       end if;
 
    end SMART_Execute_Cmd;
@@ -434,16 +436,19 @@ is
    -------------------------------------------------------------------------
 
    procedure Get_SMART
-      (ID      :     PConf.Port_Range;
-       Address :     Unsigned_64; --  DMA Buffer address
+      (ID      :     Ports_Config.Port_Range;
+       Address :     Interfaces.Unsigned_64; --  DMA Buffer address
        Status  : out Ahci.Device.SMART_Status_Type;
-       Ret_Val : out Status_Type)
+       Ret_Val : out Storage_Interface.Status_Type)
    is
-      Return_Status : Unsigned_24;
+      use type Storage_Interface.Status_Type;
+      use type Interfaces.Unsigned_24;
+
+      Return_Status : Interfaces.Unsigned_24;
    begin
       Status := Ahci.Device.Undefined;
-      if not Devices (ID).Support_SMART then
-         Ret_Val := ENOTSUP;
+      if not Storage_Interface.Devices (ID).Support_SMART then
+         Ret_Val := Storage_Interface.ENOTSUP;
          return;
       end if;
 
@@ -452,7 +457,7 @@ is
                          Address => Address,
                          Ret_Val => Ret_Val);
 
-      if Ret_Val /= OK then
+      if Ret_Val /= Storage_Interface.OK then
          return;
       end if;
 
@@ -460,7 +465,7 @@ is
                          Feature => SMART_Return_Status,
                          Ret_Val => Ret_Val);
 
-      if Ret_Val = OK then
+      if Ret_Val = Storage_Interface.OK then
          Return_Status := Ahci.FIS.Fis_Array (ID).RFIS.LBA0_23;
          if (Return_Status and 16#ffff00#) = 16#c24f00# then
             Status := Ahci.Device.OK;
@@ -475,9 +480,9 @@ is
    -------------------------------------------------------------------------
 
    procedure SMART_Enable_Disable
-      (ID      :     PConf.Port_Range;
+      (ID      :     Ports_Config.Port_Range;
        Enable  :     Boolean;
-       Ret_Val : out Status_Type)
+       Ret_Val : out Storage_Interface.Status_Type)
    with
       Pre => Musinfo.Instance.Is_Valid
    is
@@ -497,11 +502,11 @@ is
    -------------------------------------------------------------------------
    --  Word 106 type
    type Sector_Size_Type is record
-      Size          : Unsigned_4;
-      Reserved      : Bit_Array (4 .. 11);
+      Size          : Storage_Interface.Unsigned_4;
+      Reserved      : Storage_Interface.Bit_Array (4 .. 11);
       Logical_Valid : Boolean;
       Multi_Logical : Boolean;
-      Valid         : Unsigned_2;
+      Valid         : Storage_Interface.Unsigned_2;
    end record
    with Size => 16;
 
@@ -658,24 +663,24 @@ is
    Ata_Identify_Response_Size : constant := 512 * 8;
 
    type Ata_Identify_Response_Type is record
-      Unused_1            : Word_Array (0 .. 22);
+      Unused_1            : Storage_Interface.Word_Array (0 .. 22);
       FW                  : String (1 ..  8);
       Model               : String (1 .. 40);
-      Unused_2            : Word_Array (47 .. 59);
+      Unused_2            : Storage_Interface.Word_Array (47 .. 59);
       Number_Of_Sectors   : Interfaces.Unsigned_32;
-      Unused_3            : Word_Array (62 .. 68);
+      Unused_3            : Storage_Interface.Word_Array (62 .. 68);
       Additional_Support  : Interfaces.Unsigned_16;
-      Unused_4            : Word_Array (70 .. 81);
+      Unused_4            : Storage_Interface.Word_Array (70 .. 81);
       Cmds_Features       : Cmds_Features_Type;
-      Unused_5            : Word_Array (86 .. 99);
+      Unused_5            : Storage_Interface.Word_Array (86 .. 99);
       Number_Of_Sectors_2 : Interfaces.Unsigned_64;
-      Unused_6            : Word_Array (104 .. 105);
+      Unused_6            : Storage_Interface.Word_Array (104 .. 105);
       Sector_Size         : Sector_Size_Type;
-      Unused_7            : Word_Array (107 .. 116);
+      Unused_7            : Storage_Interface.Word_Array (107 .. 116);
       Logical_Sector_Size : Interfaces.Unsigned_32;
-      Unused_8            : Word_Array (119 .. 168);
-      DSM_Support         : Bit_Array  (0 ..  15);
-      Unused_9            : Word_Array (170 .. 255);
+      Unused_8            : Storage_Interface.Word_Array (119 .. 168);
+      DSM_Support         : Storage_Interface.Bit_Array  (0 ..  15);
+      Unused_9            : Storage_Interface.Word_Array (170 .. 255);
    end record
    with
       Object_Size => Ata_Identify_Response_Size,
@@ -712,7 +717,7 @@ is
       Volatile,
       Async_Readers,
       Async_Writers,
-      Address => System'To_Address (DMA_Mem_Base_Address);
+      Address => System'To_Address (Storage_Interface.DMA_Mem_Base_Address);
    pragma Warnings
      (GNATprove, On,
       "writing * is assumed to have no effects on other non-volatile objects");
@@ -741,8 +746,10 @@ is
    -------------------------------------------------------------------------
 
    procedure Identify_Device
-      (Port_ID : PConf.Port_Range)
+      (Port_ID : Ports_Config.Port_Range)
    is
+      use type Storage_Interface.Unsigned_2;
+
       function Status_To_Unsigned64 is new Ada.Unchecked_Conversion
          (Storage_Interface.Status_Type, Interfaces.Unsigned_64);
 
@@ -758,7 +765,7 @@ is
    begin
       Ahci.Commands.Cmd_Slot_Prepare (Port_ID => Port_ID,
                                       Len     => Length,
-                                      Address => DMA_Mem_Base_Address,
+                                      Address => Storage_Interface.DMA_Mem_Base_Address,
                                       RW      => RW);
 
       if Length /= 512 then
@@ -785,79 +792,81 @@ is
       Model := Ata_Identify_Response.Model;
       Convert_Ata_String (Model);
 
-      Devices (Port_ID).Signature := Storage_Interface.Sata_device;
+      Storage_Interface.Devices (Port_ID).Signature := Storage_Interface.Sata_device;
 
       Log.Put_Line ("ata: device found: " & Model & " [" & FW & "]");
 
-      Devices (Port_ID).Support_48Bit :=
+      Storage_Interface.Devices (Port_ID).Support_48Bit :=
          Ata_Identify_Response.Cmds_Features.Support_48Bit;
 
-      if Devices (Port_ID).Support_48Bit then
+      if Storage_Interface.Devices (Port_ID).Support_48Bit then
          Log.Put_Line ("ata: Support for LBA-48 enabled.");
       end if;
 
-      if Devices (Port_ID).Support_48Bit then
+      if Storage_Interface.Devices (Port_ID).Support_48Bit then
          Number_Of_Sectors := Ata_Identify_Response.Number_Of_Sectors_2;
       else
          Number_Of_Sectors := Interfaces.Unsigned_64
             (Ata_Identify_Response.Number_Of_Sectors);
       end if;
-      Devices (Port_ID).Number_Of_Sectors := Number_Of_Sectors;
+      Storage_Interface.Devices (Port_ID).Number_Of_Sectors := Number_Of_Sectors;
 
       Sector_Size := Ata_Identify_Response.Sector_Size;
       if Sector_Size.Valid /= 2 or not Sector_Size.Logical_Valid
       then
          --  set default sector size
-         Devices (Port_ID).Sector_Size := 512;
+         Storage_Interface.Devices (Port_ID).Sector_Size := 512;
       else
          Logical_Sector_Size :=
             Ata_Identify_Response.Logical_Sector_Size;
-         Devices (Port_ID).Sector_Size := Logical_Sector_Size * 2;
+         Storage_Interface.Devices (Port_ID).Sector_Size := Logical_Sector_Size * 2;
       end if;
 
-      Devices (Port_ID).Sector_Size_Shift := 0;
-      Sector_Size_Bytes := Devices (Port_ID).Sector_Size;
+      Storage_Interface.Devices (Port_ID).Sector_Size_Shift := 0;
+      Sector_Size_Bytes := Storage_Interface.Devices (Port_ID).Sector_Size;
 
       Get_Shift :
       for I in 1 .. 33 loop
          Sector_Size_Bytes := Sector_Size_Bytes / 2;
          exit Get_Shift when Sector_Size_Bytes = 0;
-         Devices (Port_ID).Sector_Size_Shift :=
-            Devices (Port_ID).Sector_Size_Shift + 1;
+         Storage_Interface.Devices (Port_ID).Sector_Size_Shift :=
+            Storage_Interface.Devices (Port_ID).Sector_Size_Shift + 1;
 
          pragma Loop_Invariant
-            (Devices (Port_ID).Sector_Size_Shift <= I);
+            (Storage_Interface.Devices (Port_ID).Sector_Size_Shift <= I);
       end loop Get_Shift;
 
       Log.Put_Line
          ("ata: Sector Size:" & SK.Strings.Img (
-         Devices (Port_ID).Sector_Size));
+         Storage_Interface.Devices (Port_ID).Sector_Size));
       Log.Put_Line
          ("ata: Sector Size Shift:" & SK.Strings.Img (
          Interfaces.Unsigned_32 (
-            Devices (Port_ID).Sector_Size_Shift)));
+            Storage_Interface.Devices (Port_ID).Sector_Size_Shift)));
 
-      Devices (Port_ID).Support_Discard :=
+      Storage_Interface.Devices (Port_ID).Support_Discard :=
          Ata_Identify_Response.DSM_Support (0);
-      if Devices (Port_ID).Support_Discard then
+      if Storage_Interface.Devices (Port_ID).Support_Discard then
          Log.Put_Line ("ata: Trim supported");
       end if;
 
-      Devices (Port_ID).Support_SMART :=
+      Storage_Interface.Devices (Port_ID).Support_SMART :=
          Ata_Identify_Response.Cmds_Features.SMART_Supported;
-      if Devices (Port_ID).Support_SMART then
+      if Storage_Interface.Devices (Port_ID).Support_SMART then
          Log.Put_Line ("ata: SMART supported");
       end if;
 
       declare
-         Ret_Val       : Status_Type;
+         use type Storage_Interface.Status_Type;
+
+         Ret_Val       : Storage_Interface.Status_Type;
          Smart_Enabled : constant Boolean :=
             Ata_Identify_Response.Cmds_Features.SMART_Enabled;
       begin
-         if Devices (Port_ID).Support_SMART then
+         if Storage_Interface.Devices (Port_ID).Support_SMART then
             if not Smart_Enabled then
                SMART_Enable_Disable (Port_ID, True, Ret_Val);
-               if Ret_Val /= OK then
+               if Ret_Val /= Storage_Interface.OK then
                   Log.Put_Line
                      ("ata: Error enabling SMART, Ret: "
                      & SK.Strings.Img (Status_To_Unsigned64 (Ret_Val)));

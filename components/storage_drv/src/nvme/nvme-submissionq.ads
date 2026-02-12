@@ -1,7 +1,11 @@
-with Storage_Interface; use Storage_Interface;
+with Interfaces;
+
+with Storage_Interface;
 
 package NVMe.SubmissionQ
 is
+
+   use type Storage_Interface.Unsigned_2;
 
    ---------------------------------------------------
    --- 3.3.3.1 Submission Queue Entry
@@ -9,13 +13,13 @@ is
 
    -- values are either address of PRP_Entry or Address of PRP_List
    type PRP_Data_Ptr is record
-      E1 : Unsigned_64;
-      E2 : Unsigned_64;
+      E1 : Interfaces.Unsigned_64;
+      E2 : Interfaces.Unsigned_64;
    end record
    with Size => 16 * 8;
 
-   type PRP_List_Range is new Unsigned_8 range 0 .. 255;
-   type PRP_List_Type is array (PRP_List_Range) of Unsigned_64
+   type PRP_List_Range is new Interfaces.Unsigned_8 range 0 .. 255;
+   type PRP_List_Type is array (PRP_List_Range) of Interfaces.Unsigned_64
    with Pack, Object_Size => 64 * 256;
 
    for PRP_Data_Ptr use record
@@ -25,7 +29,7 @@ is
 
    type SGL_Data_Ptr is
    record
-      SGL : Unsigned_128;
+      SGL : Interfaces.Unsigned_128;
    end record
    with Size => 16 * 8;
 
@@ -34,27 +38,27 @@ is
    end record;
 
    type SQE  is record
-      OPC      : Unsigned_8;       -- -+
-      FUSE     : Unsigned_2;       --  |
-      Reserved : Bit_Array (2 .. 5); --| CDW0
-      PSDT     : Unsigned_2;       --  |
-      CID      : Unsigned_16;      -- -+
+      OPC      : Interfaces.Unsigned_8;              -- -+
+      FUSE     : Storage_Interface.Unsigned_2;       --  |
+      Reserved : Storage_Interface.Bit_Array (2 .. 5); --| CDW0
+      PSDT     : Storage_Interface.Unsigned_2;       --  |
+      CID      : Interfaces.Unsigned_16;             -- -+
 
-      NSID     : Unsigned_32;      -- -+ CDW1
+      NSID     : Interfaces.Unsigned_32;             -- -+ CDW1
 
-      CDW2     : Unsigned_32;      -- -+ CDW2
-      CDW3     : Unsigned_32;      -- -+ CDW3
+      CDW2     : Interfaces.Unsigned_32;             -- -+ CDW2
+      CDW3     : Interfaces.Unsigned_32;             -- -+ CDW3
 
-      MPTR     : Unsigned_64;      -- -+ CDW4 .. CDW5
+      MPTR     : Interfaces.Unsigned_64;             -- -+ CDW4 .. CDW5
 
       DPRP     : PRP_Data_Ptr;
 
-      CDW10    : Unsigned_32;
-      CDW11    : Unsigned_32;
-      CDW12    : Unsigned_32;
-      CDW13    : Unsigned_32;
-      CDW14    : Unsigned_32;
-      CDW15    : Unsigned_32;
+      CDW10    : Interfaces.Unsigned_32;
+      CDW11    : Interfaces.Unsigned_32;
+      CDW12    : Interfaces.Unsigned_32;
+      CDW13    : Interfaces.Unsigned_32;
+      CDW14    : Interfaces.Unsigned_32;
+      CDW15    : Interfaces.Unsigned_32;
 
    end record
    with Size => 64 * 8;
@@ -98,7 +102,7 @@ is
    --- Submission Queue
    -------------------------------------------------------------------------
 
-   type Entry_Queue_Range is new Unsigned_6 range 0 .. 63;
+   type Entry_Queue_Range is new Storage_Interface.Unsigned_6 range 0 .. 63;
 
    type Entry_Queue is array (Entry_Queue_Range) of SQE
    with Pack, Object_Size => 64 * 8 * 64;
@@ -109,7 +113,7 @@ is
    with Predicate => Admin_Command.PSDT = 0 and
                      Admin_Command.OPC in AdminCMD_Valid_Opcodes;
 
-   subtype AdminCMD_Valid_Opcodes is Unsigned_8
+   subtype AdminCMD_Valid_Opcodes is Interfaces.Unsigned_8
    with Predicate => AdminCMD_Valid_Opcodes in
       0 .. 2 | 4 .. 6 | 8 .. 10 | 12 .. 13 | 16#10# .. 16#11# |
       16#14# .. 16#15# | 16#18# .. 16#1A# | 16#1C# .. 16#1E# |
@@ -120,7 +124,7 @@ is
    with Predicate => IO_Command.PSDT = 0 and
                      IO_Command.OPC in IOCMD_Valid_Opcodes;
 
-   subtype IOCMD_Valid_Opcodes is Unsigned_8
+   subtype IOCMD_Valid_Opcodes is Interfaces.Unsigned_8
    with Predicate => IOCMD_Valid_Opcodes in
       0 .. 2 | 4 .. 5 | 8 .. 9 | 12 .. 14 | 16#11# | 16#15# | 16#19#;
 

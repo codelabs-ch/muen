@@ -42,20 +42,21 @@ is
    -- this only works if DMA is physically continuous
    procedure Correct_PRP
       (PRP           :     SubmissionQ.PRP_Data_Ptr;
-       NLB           :     Unsigned_16;
+       NLB           :     Interfaces.Unsigned_16;
        Corrected_PRP : out SubmissionQ.PRP_Data_Ptr)
    with Pre => (NVMe.Host.Is_Valid)
    is
       use type SubmissionQ.PRP_List_Range;
+      use type Interfaces.Integer_64;
 
-      Sector_Size    : constant Unsigned_64 := Unsigned_64 (Host.Get_Sector_Size);
+      Sector_Size    : constant Interfaces.Unsigned_64 := Interfaces.Unsigned_64 (Host.Get_Sector_Size);
       Exponent       : constant Natural     := 12 + Natural (NVMe.Host.Memory_Page_Size);
-      MPS_UInt       : constant Unsigned_64 := Unsigned_64 (2) ** Exponent;
-      MPS_Int        : constant Integer_64  := Integer_64 (MPS_UInt);
-      Amount_Data    : constant Unsigned_64 := Unsigned_64 (NLB) * Sector_Size;
-      Remaining_Data : Integer_64;
-      Number_PRPs    : Unsigned_8;
-      PRP_Base       : Unsigned_64;
+      MPS_UInt       : constant Interfaces.Unsigned_64 := Interfaces.Unsigned_64 (2) ** Exponent;
+      MPS_Int        : constant Interfaces.Integer_64  := Interfaces.Integer_64 (MPS_UInt);
+      Amount_Data    : constant Interfaces.Unsigned_64 := Interfaces.Unsigned_64 (NLB) * Sector_Size;
+      Remaining_Data : Interfaces.Integer_64;
+      Number_PRPs    : Interfaces.Unsigned_8;
+      PRP_Base       : Interfaces.Unsigned_64;
 
    begin
       Corrected_PRP := PRP;
@@ -63,10 +64,10 @@ is
       -- Calculating the Data that could not fit into PRP.E1 (with the given Offset)
 
       if Amount_Data > (MPS_UInt - (PRP.E1 and (MPS_UInt - 1))) then
-         Remaining_Data := Integer_64 (Amount_Data) - (MPS_Int - Integer_64 (PRP.E1 and (MPS_UInt - 1)));
+         Remaining_Data := Interfaces.Integer_64 (Amount_Data) - (MPS_Int - Interfaces.Integer_64 (PRP.E1 and (MPS_UInt - 1)));
 
          pragma Assert (MPS_Int > 0);
-         Number_PRPs := Unsigned_8'Mod (Remaining_Data / MPS_Int) + (if Remaining_Data rem MPS_Int > 0 then 1 else 0);
+         Number_PRPs := Interfaces.Unsigned_8'Mod (Remaining_Data / MPS_Int) + (if Remaining_Data rem MPS_Int > 0 then 1 else 0);
 
          PRP_Base := PRP.E1 - (PRP.E1 and (MPS_UInt - 1));
 
@@ -78,7 +79,7 @@ is
             PRP_List := (others => 0);
             -- fill PRP List
             for Index in SubmissionQ.PRP_List_Range range 1 .. SubmissionQ.PRP_List_Range (Number_PRPs) loop
-               PRP_List (Index - 1) := PRP_Base + (Unsigned_64 (Index) * MPS_UInt);
+               PRP_List (Index - 1) := PRP_Base + (Interfaces.Unsigned_64 (Index) * MPS_UInt);
             end loop;
 
             Corrected_PRP.E2 := PRP_List_Address;
@@ -89,18 +90,18 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateRead_Command
-      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
+      (CMD_Identifier : in out Interfaces.Unsigned_16;              -- Command Identifier
        DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       SLBA           :        Unsigned_64;              -- Starting Logical Block Address (LBA)
-       NLB            :        Unsigned_16;              -- Number of Logical Blocks
+       SLBA           :        Interfaces.Unsigned_64;              -- Starting Logical Block Address (LBA)
+       NLB            :        Interfaces.Unsigned_16;              -- Number of Logical Blocks
        Command        :    out SubmissionQ.IO_Command)
    is
       CDW10and11_Temp : CDW10and11_RW;
       PRP : SubmissionQ.PRP_Data_Ptr;
 
-      function Cvt_to_CDW10and11 is new Ada.Unchecked_Conversion (Unsigned_64, CDW10and11_RW);
-      function Cvt_CDW12         is new Ada.Unchecked_Conversion (CDW12_Read, Unsigned_32);
-      function Cvt_CDW13         is new Ada.Unchecked_Conversion (CDW13_Read, Unsigned_32);
+      function Cvt_to_CDW10and11 is new Ada.Unchecked_Conversion (Interfaces.Unsigned_64, CDW10and11_RW);
+      function Cvt_CDW12         is new Ada.Unchecked_Conversion (CDW12_Read, Interfaces.Unsigned_32);
+      function Cvt_CDW13         is new Ada.Unchecked_Conversion (CDW13_Read, Interfaces.Unsigned_32);
 
    begin
 
@@ -132,18 +133,18 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateWrite_Command
-      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
+      (CMD_Identifier : in out Interfaces.Unsigned_16;              -- Command Identifier
        DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       SLBA           :        Unsigned_64;              -- Starting Logical Block Address (LBA)
-       NLB            :        Unsigned_16;              -- Number of Logical Blocks
+       SLBA           :        Interfaces.Unsigned_64;              -- Starting Logical Block Address (LBA)
+       NLB            :        Interfaces.Unsigned_16;              -- Number of Logical Blocks
        Command        :    out SubmissionQ.IO_Command)
    is
       CDW10and11_Temp : CDW10and11_RW;
       PRP             : SubmissionQ.PRP_Data_Ptr;
 
-      function Cvt_to_CDW10and11 is new Ada.Unchecked_Conversion (Unsigned_64, CDW10and11_RW);
-      function Cvt_CDW12         is new Ada.Unchecked_Conversion (CDW12_Write, Unsigned_32);
-      function Cvt_CDW13         is new Ada.Unchecked_Conversion (CDW13_Write, Unsigned_32);
+      function Cvt_to_CDW10and11 is new Ada.Unchecked_Conversion (Interfaces.Unsigned_64, CDW10and11_RW);
+      function Cvt_CDW12         is new Ada.Unchecked_Conversion (CDW12_Write, Interfaces.Unsigned_32);
+      function Cvt_CDW13         is new Ada.Unchecked_Conversion (CDW13_Write, Interfaces.Unsigned_32);
 
    begin
 
@@ -177,15 +178,15 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateWrite_Zeroes_Command
-      (CMD_Identifier : in out Unsigned_16;          -- Command Identifier
-       SLBA           :        Unsigned_64;          -- Starting Logical Block Address (LBA)
-       NLB            :        Unsigned_16;          -- Number of Logical Blocks
+      (CMD_Identifier : in out Interfaces.Unsigned_16;          -- Command Identifier
+       SLBA           :        Interfaces.Unsigned_64;          -- Starting Logical Block Address (LBA)
+       NLB            :        Interfaces.Unsigned_16;          -- Number of Logical Blocks
        Command        :    out SubmissionQ.IO_Command)
    is
       CDW10and11_Temp : CDW10and11_RW;
 
-      function Cvt_CDW12 is new Ada.Unchecked_Conversion (CDW12_Write_Zeroes, Unsigned_32);
-      function Cvt_to_CDW10and11 is new Ada.Unchecked_Conversion (Unsigned_64, CDW10and11_RW);
+      function Cvt_CDW12 is new Ada.Unchecked_Conversion (CDW12_Write_Zeroes, Interfaces.Unsigned_32);
+      function Cvt_to_CDW10and11 is new Ada.Unchecked_Conversion (Interfaces.Unsigned_64, CDW10and11_RW);
 
    begin
 
@@ -216,7 +217,7 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateFlush_Command
-      (CMD_Identifier : in out Unsigned_16;          -- Command Identifier
+      (CMD_Identifier : in out Interfaces.Unsigned_16;          -- Command Identifier
        Command        :    out SubmissionQ.IO_Command)
    is
    begin

@@ -15,51 +15,54 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with Musinfo.Instance;
 
 with Ahci;
 with Ahci.Device;
-with Storage_Interface; use Storage_Interface;
+with Ports_Config;
+with Storage_Interface;
 
 package Ata
 is
    procedure Discard_Sectors
-      (ID      :     PConf.Port_Range;
-       Start   :     Unsigned_64;
-       Count   :     Unsigned_32;
-       Ret_Val : out Status_Type)
+      (ID      :     Ports_Config.Port_Range;
+       Start   :     Interfaces.Unsigned_64;
+       Count   :     Interfaces.Unsigned_32;
+       Ret_Val : out Storage_Interface.Status_Type)
    with
       Pre => Musinfo.Instance.Is_Valid;
 
-   function Get_Max_Sector_Count (ID : PConf.Port_Range)
-      return Unsigned_32;
+   function Get_Max_Sector_Count (ID : Ports_Config.Port_Range)
+      return Interfaces.Unsigned_32;
 
    procedure RW_Sectors
-      (ID      :     PConf.Port_Range;
+      (ID      :     Ports_Config.Port_Range;
        RW      :     Ahci.RW_Type;
-       Start   :     Unsigned_64; --  Start Sector
-       Count   :     Unsigned_32; --  Number of Sectors
-       Address :     Unsigned_64; --  DMA Buffer address
-       Ret_Val : out Status_Type)
+       Start   :     Interfaces.Unsigned_64; --  Start Sector
+       Count   :     Interfaces.Unsigned_32; --  Number of Sectors
+       Address :     Interfaces.Unsigned_64; --  DMA Buffer address
+       Ret_Val : out Storage_Interface.Status_Type)
    with
       Pre => Musinfo.Instance.Is_Valid;
 
    procedure Sync
-      (ID      :     PConf.Port_Range;
-       Ret_Val : out Status_Type)
+      (ID      :     Ports_Config.Port_Range;
+       Ret_Val : out Storage_Interface.Status_Type)
    with
       Pre => Musinfo.Instance.Is_Valid;
 
    procedure Identify_Device
-      (Port_ID : PConf.Port_Range)
+      (Port_ID : Ports_Config.Port_Range)
    with
       Pre => Musinfo.Instance.Is_Valid;
 
    procedure Get_SMART
-      (ID      :     PConf.Port_Range;
-       Address :     Unsigned_64; --  DMA Buffer address
+      (ID      :     Ports_Config.Port_Range;
+       Address :     Interfaces.Unsigned_64; --  DMA Buffer address
        Status  : out Ahci.Device.SMART_Status_Type;
-       Ret_Val : out Status_Type)
+       Ret_Val : out Storage_Interface.Status_Type)
    with
       Pre => Musinfo.Instance.Is_Valid;
 

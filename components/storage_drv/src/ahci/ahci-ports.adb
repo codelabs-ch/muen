@@ -27,15 +27,17 @@ with Log;
 package body Ahci.Ports
 is
 
-   Device_Not_Present  : constant Unsigned_4 := 16#0#;
-   Present_Established : constant Unsigned_4 := 16#3#;
+   use type Storage_Interface.Unsigned_4;
 
-   Interface_Active    : constant Unsigned_4 := 16#1#;
+   Device_Not_Present  : constant Storage_Interface.Unsigned_4 := 16#0#;
+   Present_Established : constant Storage_Interface.Unsigned_4 := 16#3#;
+
+   Interface_Active    : constant Storage_Interface.Unsigned_4 := 16#1#;
 
    -------------------------------------------------------------------------
 
    procedure Clear_Errors
-      (ID    : PConf.Port_Range;
+      (ID    : Ports_Config.Port_Range;
        Clear : Clear_Error_Type)
    is
       Sata_Error  : Port_SATA_Error_Type;
@@ -70,7 +72,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Enable
-     (ID      :     PConf.Port_Range;
+     (ID      :     Ports_Config.Port_Range;
       Success : out Boolean)
    is
       Status : Port_SATA_Status_Type;
@@ -101,10 +103,10 @@ is
    -------------------------------------------------------------------------
 
    procedure Check_Error
-     (ID    :     PConf.Port_Range;
+     (ID    :     Ports_Config.Port_Range;
       Error : out Boolean)
    is
-      use type Storage_Interface.Unsigned_16;
+      use type Interfaces.Unsigned_16;
       Sata_Error  : constant Port_SATA_Error_Type :=
                         Instance (ID).SATA_Error;
       Intr_Status : constant Port_Interrupt_Status_Type :=
@@ -129,7 +131,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Recover_Errors (ID : PConf.Port_Range)
+   procedure Recover_Errors (ID : Ports_Config.Port_Range)
    with
       Pre => Musinfo.Instance.Is_Valid
    is
@@ -164,22 +166,22 @@ is
    -------------------------------------------------------------------------
 
    procedure Execute
-      (ID      :     PConf.Port_Range;
+      (ID      :     Ports_Config.Port_Range;
        Timeout :     Execute_Timeout_Type;
        Success : out Boolean)
    is
-      use type Unsigned_64;
+      use type Interfaces.Unsigned_64;
 
-      Local_Cmd_Issue  : Bit_Array (0 .. 31);
+      Local_Cmd_Issue  : Storage_Interface.Bit_Array (0 .. 31);
       Local_Int_Status : Port_Interrupt_Status_Type;
       Local_Cmd_Status : Port_Command_Status_Type;
       Error            : Boolean;
       Clear            : Clear_Error_Type := (others => False);
-      Now              : Unsigned_64;
-      TSC_Sched_End    : constant Unsigned_64
+      Now              : Interfaces.Unsigned_64;
+      TSC_Sched_End    : constant Interfaces.Unsigned_64
         := Musinfo.Instance.TSC_Schedule_End;
-      End_Time         : constant Unsigned_64
-        := TSC_Sched_End + Unsigned_64 (Timeout)
+      End_Time         : constant Interfaces.Unsigned_64
+        := TSC_Sched_End + Interfaces.Unsigned_64 (Timeout)
         * Musinfo.Instance.TSC_Khz * 1000;
    begin
       Local_Cmd_Status := Instance (ID).Command_And_Status;
@@ -187,7 +189,7 @@ is
 
       if (Local_Cmd_Status.CR = False) or Local_Cmd_Issue (0) then
          pragma Debug (Log.Put_Line ("Busy.." &
-            SK.Strings.Img (Unsigned_32 (ID))));
+            SK.Strings.Img (Interfaces.Unsigned_32 (ID))));
             Success := False;
             return;
       end if;
@@ -235,7 +237,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Is_Active
-     (ID     :     PConf.Port_Range;
+     (ID     :     Ports_Config.Port_Range;
       Active : out Boolean)
    is
       Status : Port_SATA_Status_Type;
@@ -247,7 +249,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Power_Up (ID : PConf.Port_Range)
+   procedure Power_Up (ID : Ports_Config.Port_Range)
    is
       Cmd : Port_Command_Status_Type;
    begin
@@ -260,21 +262,21 @@ is
    -------------------------------------------------------------------------
 
    procedure Reset
-     (ID      :     PConf.Port_Range;
+     (ID      :     Ports_Config.Port_Range;
       Success : out Boolean)
    is
       Reset_SERR : constant Port_SATA_Error_Type
-        := (ERR  => Unsigned_16'Last,
-            DIAG => Unsigned_16'Last);
+        := (ERR  => Interfaces.Unsigned_16'Last,
+            DIAG => Interfaces.Unsigned_16'Last);
 
       Cmd_List_Running : Boolean;
-      Device_Detection : Unsigned_4;
+      Device_Detection : Storage_Interface.Unsigned_4;
       Command_Status   : Port_Command_Status_Type
         := Instance (ID).Command_And_Status;
       Sata_Ctrl        : Port_SATA_Control_Type;
    begin
       Log.Put_Line
-        ("Reset Port" & SK.Strings.Img (Unsigned_8 (ID)));
+        ("Reset Port" & SK.Strings.Img (Interfaces.Unsigned_8 (ID)));
       --  Serial ATA AHCI 1.3.1 Specification, section 10.4.2.
       Command_Status.ST := False;
       Instance (ID).Command_And_Status := Command_Status;
@@ -288,7 +290,7 @@ is
       if Cmd_List_Running then
          Log.Put_Line
            ("Port " & SK.Strings.Img
-              (Item => Unsigned_8 (ID))
+              (Item => Interfaces.Unsigned_8 (ID))
             & ": Command list still running, issuing reset anyway");
       end if;
 
@@ -314,7 +316,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Spin_Up (ID : PConf.Port_Range)
+   procedure Spin_Up (ID : Ports_Config.Port_Range)
    is
       Cmd_Status : Port_Command_Status_Type
                      := Instance (ID).Command_And_Status;
@@ -334,7 +336,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Start (ID : PConf.Port_Range)
+   procedure Start (ID : Ports_Config.Port_Range)
    is
       Status : Port_Command_Status_Type;
    begin
@@ -356,7 +358,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Stop (ID : PConf.Port_Range)
+   procedure Stop (ID : Ports_Config.Port_Range)
    is
       Cmd_List_Running    : Boolean;
       Fis_Receive_Enabled : Boolean;

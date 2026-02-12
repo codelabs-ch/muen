@@ -3,7 +3,7 @@ with Interfaces;
 with NVMe.SubmissionQ;
 with NVMe.Host;
 
-with Storage_Interface; use Storage_Interface;
+with Storage_Interface;
 
 package NVMe.IOCommandSet
 is
@@ -32,8 +32,8 @@ is
 
    -- Dataset Management Type
    type DSM_Type is record
-      Access_Frequency   : Unsigned_4;
-      Access_Latency     : Unsigned_2;
+      Access_Frequency   : Storage_Interface.Unsigned_4;
+      Access_Latency     : Storage_Interface.Unsigned_2;
       Sequential_Request : Boolean;
       Incompressible     : Boolean;
    end record with
@@ -51,10 +51,10 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateRead_Command
-      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
+      (CMD_Identifier : in out Interfaces.Unsigned_16;   -- Command Identifier
        DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       SLBA           :        Unsigned_64;              -- Starting Logical Block Address (LBA)
-       NLB            :        Unsigned_16;              -- Number of Logical Blocks
+       SLBA           :        Interfaces.Unsigned_64;   -- Starting Logical Block Address (LBA)
+       NLB            :        Interfaces.Unsigned_16;   -- Number of Logical Blocks
        Command        :    out SubmissionQ.IO_Command)
    with Pre => NVMe.Host.Is_Valid;
 
@@ -64,10 +64,10 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateWrite_Command
-      (CMD_Identifier : in out Unsigned_16;              -- Command Identifier
+      (CMD_Identifier : in out Interfaces.Unsigned_16;   -- Command Identifier
        DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
-       SLBA           :        Unsigned_64;              -- Starting Logical Block Address (LBA)
-       NLB            :        Unsigned_16;              -- Number of Logical Blocks
+       SLBA           :        Interfaces.Unsigned_64;   -- Starting Logical Block Address (LBA)
+       NLB            :        Interfaces.Unsigned_16;   -- Number of Logical Blocks
        Command        :    out SubmissionQ.IO_Command)
    with Pre => NVMe.Host.Is_Valid;
 
@@ -77,9 +77,9 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateWrite_Zeroes_Command
-      (CMD_Identifier  : in out Unsigned_16;              -- Command Identifier
-       SLBA            :        Unsigned_64;              -- Starting Logical Block Address (LBA)
-       NLB             :        Unsigned_16;              -- Number of Logical Blocks
+      (CMD_Identifier  : in out Interfaces.Unsigned_16; -- Command Identifier
+       SLBA            :        Interfaces.Unsigned_64; -- Starting Logical Block Address (LBA)
+       NLB             :        Interfaces.Unsigned_16; -- Number of Logical Blocks
        Command         :    out SubmissionQ.IO_Command);
 
    -------------------------------------------------------------------------
@@ -88,7 +88,7 @@ is
    -------------------------------------------------------------------------
 
    procedure CreateFlush_Command
-      (CMD_Identifier  : in out Unsigned_16;              -- Command Identifier
+      (CMD_Identifier  : in out Interfaces.Unsigned_16; -- Command Identifier
        Command         :    out SubmissionQ.IO_Command);
 
 private
@@ -96,8 +96,8 @@ private
    -- Read & Write CMD
 
    type CDW10and11_RW is record
-      CDW10 : Unsigned_32;
-      CDW11 : Unsigned_32;
+      CDW10 : Interfaces.Unsigned_32;
+      CDW11 : Interfaces.Unsigned_32;
    end record with
       Size => 64;
    for CDW10and11_RW use record
@@ -108,14 +108,14 @@ private
    -- Write
 
    type CDW12_Write is record
-      NLB     : Unsigned_16; -- Number of Logical Blocks
-      Filler1 : Unsigned_4 := 0;
-      DTYPE   : Unsigned_4;  -- Directive Type
-      STC     : Boolean;     -- Storage Tag Check
+      NLB     : Interfaces.Unsigned_16;        -- Number of Logical Blocks
+      Filler1 : Storage_Interface.Unsigned_4 := 0;
+      DTYPE   : Storage_Interface.Unsigned_4;  -- Directive Type
+      STC     : Boolean;                       -- Storage Tag Check
       Filler2 : Boolean := False;
-      PRINFO  : Unsigned_4;  -- Protection Information
-      FUA     : Boolean;     -- Force Unit Access
-      LR      : Boolean;     -- Limited Retry
+      PRINFO  : Storage_Interface.Unsigned_4;  -- Protection Information
+      FUA     : Boolean;                       -- Force Unit Access
+      LR      : Boolean;                       -- Limited Retry
    end record with
       Size => 32;
    for CDW12_Write use record
@@ -131,8 +131,8 @@ private
 
    type CDW13_Write is record
       DSM    : DSM_Type;
-      Filler : Unsigned_8 := 0;
-      DSPEC  : Unsigned_16; -- Directive Specific
+      Filler : Interfaces.Unsigned_8 := 0;
+      DSPEC  : Interfaces.Unsigned_16; -- Directive Specific
    end record with
       Size => 32;
    for CDW13_Write use record
@@ -144,13 +144,13 @@ private
    -- Read
 
    type CDW12_Read is record
-      NLB     : Unsigned_16; -- Number of Logical Blocks
-      Filler1 : Unsigned_8 := 0;
-      STC     : Boolean;     -- Storage Tag Check
+      NLB     : Interfaces.Unsigned_16;       -- Number of Logical Blocks
+      Filler1 : Interfaces.Unsigned_8 := 0;
+      STC     : Boolean;                      -- Storage Tag Check
       Filler2 : Boolean := False;
-      PRINFO  : Unsigned_4;  -- Protection Information
-      FUA     : Boolean;     -- Force Unit Access
-      LR      : Boolean;     -- Limited Retry
+      PRINFO  : Storage_Interface.Unsigned_4; -- Protection Information
+      FUA     : Boolean;                      -- Force Unit Access
+      LR      : Boolean;                      -- Limited Retry
    end record with
       Size => 32;
    for CDW12_Read use record
@@ -165,8 +165,8 @@ private
 
    type CDW13_Read is record
       DSM     : DSM_Type;
-      Filler1 : Unsigned_8 := 0;
-      Filler2 : Unsigned_16 := 0;
+      Filler1 : Interfaces.Unsigned_8 := 0;
+      Filler2 : Interfaces.Unsigned_16 := 0;
    end record with
       Size => 32;
    for CDW13_Read use record
@@ -178,13 +178,13 @@ private
    -- Write Zeroes CMD
 
    type CDW12_Write_Zeroes is record
-      NLB    : Unsigned_16; -- Number of Logical Blocks
-      Filler : Unsigned_8 := 0;
-      STC    : Boolean;     -- Storage Tag Check
-      DEAC   : Boolean;     -- Deallocate
-      PRINFO : Unsigned_4;  -- Protection Information
-      FUA    : Boolean;     -- Force Unit Access
-      LR     : Boolean;     -- Limited Retry
+      NLB    : Interfaces.Unsigned_16;       -- Number of Logical Blocks
+      Filler : Interfaces.Unsigned_8 := 0;
+      STC    : Boolean;                      -- Storage Tag Check
+      DEAC   : Boolean;                      -- Deallocate
+      PRINFO : Storage_Interface.Unsigned_4; -- Protection Information
+      FUA    : Boolean;                      -- Force Unit Access
+      LR     : Boolean;                      -- Limited Retry
    end record with
       Size => 32;
    for CDW12_Write_Zeroes use record

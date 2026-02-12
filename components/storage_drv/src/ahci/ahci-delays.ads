@@ -15,15 +15,15 @@
 --  You should have received a copy of the GNU General Public License
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
+with Interfaces;
 
 with Musinfo.Instance;
-with Storage_Interface; use Storage_Interface;
 
 package Ahci.Delays
 is
 
    --  Used to model time passing.
-   Time_Passes : Unsigned_64 := 0
+   Time_Passes : Interfaces.Unsigned_64 := 0
    with
       Ghost;
 

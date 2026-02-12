@@ -19,14 +19,16 @@
 with Interfaces;
 with System;
 
-with Storage_Interface; use Storage_Interface;
-
-use type Interfaces.Unsigned_32;
+with Ports_Config;
+with Storage_Interface;
 
 package Ahci.Commands
 is
+   use type Interfaces.Unsigned_32;
+   use type Interfaces.Unsigned_64;
+
    procedure Cmd_Slot_Prepare
-      (Port_ID :        PConf.Port_Range;
+      (Port_ID :        Ports_Config.Port_Range;
        Len     : in out Interfaces.Unsigned_32;
        Address :        Interfaces.Unsigned_64;
        RW      :        RW_Type);
@@ -34,7 +36,7 @@ is
    --  Serial ATA AHCI 1.3.1 Specification, section 4.2.2.
 
    type Command_Header_Type is record
-      CFL        : Unsigned_5;
+      CFL        : Storage_Interface.Unsigned_5;
       A          : Boolean;
       W          : Boolean;
       P          : Boolean;
@@ -42,13 +44,13 @@ is
       B          : Boolean;
       C          : Boolean;
       Reserved_1 : Boolean;
-      PMP        : Unsigned_4;
+      PMP        : Storage_Interface.Unsigned_4;
       PRDTL      : Interfaces.Unsigned_16;
       PRDBC      : Interfaces.Unsigned_32;
-      Reserved_2 : Bit_Array (0 .. 6);
-      CTBA       : Unsigned_25;
+      Reserved_2 : Storage_Interface.Bit_Array (1 .. 7);
+      CTBA       : Storage_Interface.Unsigned_25;
       CTBAU      : Interfaces.Unsigned_32;
-      Reserved_3 : Bit_Array (1 .. 128);
+      Reserved_3 : Storage_Interface.Bit_Array (1 .. 128);
    end record
    with
       Size => 32 * 8;
@@ -77,18 +79,18 @@ is
       Pack;
 
    --  Serial ATA AHCI 1.3.1 Specification, section 4.2.3.2.
-   type ATAPI_Command_Type is new Byte_Array (1 .. 16)
+   type ATAPI_Command_Type is new Storage_Interface.Byte_Array (1 .. 16)
    with
       Size => 16 * 8;
 
    --  Serial ATA AHCI 1.3.1 Specification, section 4.2.3.3.
    type Physical_Region_Descriptor_Table_Entry_Type is record
       Reserved_1 : Boolean;
-      DBA        : Unsigned_31;
+      DBA        : Storage_Interface.Unsigned_31;
       DBAU       : Interfaces.Unsigned_32;
       Reserved_2 : Interfaces.Unsigned_32;
-      DBC        : Unsigned_22;
-      Reserved_3 : Bit_Array (22 .. 30);
+      DBC        : Storage_Interface.Unsigned_22;
+      Reserved_3 : Storage_Interface.Bit_Array (22 .. 30);
       I          : Boolean;
    end record
    with
@@ -109,9 +111,9 @@ is
       of Physical_Region_Descriptor_Table_Entry_Type;
 
    type Command_Table_Type is record
-      Cfis : Byte_Array (0 .. 63);
-      Acmd : Byte_Array (0 .. 15);
-      Res1 : Byte_Array (0 .. 47);
+      Cfis : Storage_Interface.Byte_Array (0 .. 63);
+      Acmd : Storage_Interface.Byte_Array (0 .. 15);
+      Res1 : Storage_Interface.Byte_Array (0 .. 47);
       Prdt : Prdt_Arr_Type;
    end record
    with
@@ -125,8 +127,8 @@ is
    end record;
 
    type Command_Lists_Array_Type is
-     array (PConf.Port_Range) of Ahci.Commands.Command_List_Type
-     with Object_Size => Command_Lists_Size * 8;
+     array (Ports_Config.Port_Range) of Ahci.Commands.Command_List_Type
+     with Object_Size => Storage_Interface.Command_Lists_Size * 8;
 
    pragma Warnings
      (GNATprove, Off,
@@ -138,20 +140,20 @@ is
       Volatile,
       Async_Readers,
       Async_Writers,
-      Size    => Command_Lists_Size * 8,
-      Address => System'To_Address (Command_Lists_Address);
+      Size    => Storage_Interface.Command_Lists_Size * 8,
+      Address => System'To_Address (Storage_Interface.Command_Lists_Address);
 
    type Command_Table_Array_Type is
-     array (PConf.Port_Range) of Ahci.Commands.Command_Table_Type
-     with Object_Size => Command_Table_Size * 8;
+     array (Ports_Config.Port_Range) of Ahci.Commands.Command_Table_Type
+     with Object_Size => Storage_Interface.Command_Table_Size * 8;
 
    Command_Table : Command_Table_Array_Type
    with
       Volatile,
       Async_Readers,
       Async_Writers,
-      Size    => Command_Table_Size * 8,
-      Address => System'To_Address (Command_Table_Address);
+      Size    => Storage_Interface.Command_Table_Size * 8,
+      Address => System'To_Address (Storage_Interface.Command_Table_Address);
    pragma Warnings
      (GNATprove, On,
       "writing * is assumed to have no effects on other non-volatile objects");

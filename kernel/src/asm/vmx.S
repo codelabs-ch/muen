@@ -44,7 +44,7 @@ vmx_exit_handler:
 	jmp 2b
 3:
 	call 5f
-4:	/* speculation trap */			\
+4:	/* speculation trap */
 	pause
 	lfence
 	jmp 4b

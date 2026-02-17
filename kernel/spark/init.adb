@@ -20,6 +20,7 @@ with SK.Timed_Events;
 with SK.VMX;
 with SK.Crash_Audit;
 with SK.MCU;
+with SK.Arch_Types;
 
 procedure Init
 with
@@ -35,7 +36,7 @@ with
                   SK.Subjects_MSR_Store.State, SK.Timed_Events.State,
                   SK.VMX.VMCS_State, Skp.IOMMU.State, X86_64.State))
 is
-   Subject_Registers : SK.CPU_Registers_Type;
+   Subject_Registers : SK.Arch_Types.CPU_Registers_Type;
 begin
    SK.Kernel.Initialize (Subject_Registers);
    loop

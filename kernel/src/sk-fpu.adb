@@ -36,7 +36,7 @@ is
    Null_FPU_State : constant FPU_State_Type
      := (XCR0       => 0,
          Padding    => (others => 0),
-         XSAVE_Area => Null_XSAVE_Area);
+         XSAVE_Area => Arch_Types.Null_XSAVE_Area);
 
    -------------------------------------------------------------------------
 
@@ -79,9 +79,11 @@ is
 
    -------------------------------------------------------------------------
 
+   use type SK.Arch_Types.XSAVE_Legacy_Header_Type;
+
    procedure Get_Registers
      (ID   :     Skp.Global_Subject_ID_Type;
-      Regs : out XSAVE_Legacy_Header_Type)
+      Regs : out Arch_Types.XSAVE_Legacy_Header_Type)
    with
       Refined_Global  => (Input => Subject_FPU_States),
       Refined_Depends => (Regs  => (ID, Subject_FPU_States)),
@@ -196,7 +198,7 @@ is
       Features_Present := Bitops.Bit_Test
         (Value => SK.Word64 (EAX),
          Pos   => Constants.XCR0_FPU_STATE_FLAG);
-      Save_Area_Size := ECX <= SK.XSAVE_Area_Size;
+      Save_Area_Size := ECX <= Arch_Types.XSAVE_Area_Size;
    end Query_XSAVE;
 
    -------------------------------------------------------------------------

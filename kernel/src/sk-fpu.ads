@@ -24,6 +24,7 @@ with X86_64;
 
 with Skp;
 
+with SK.Arch_Types;
 with SK.Crash_Audit_Types;
 
 --D @Interface
@@ -75,7 +76,7 @@ is
    --  ID.
    procedure Get_Registers
      (ID   :     Skp.Global_Subject_ID_Type;
-      Regs : out XSAVE_Legacy_Header_Type)
+      Regs : out Arch_Types.XSAVE_Legacy_Header_Type)
    with
       Global  => (Input => State),
       Depends => (Regs  => (ID, State));
@@ -118,8 +119,8 @@ private
    function Get_Active_XCR0_Features return Word64
    is (Active_XCR0_Features);
 
-   type Padding_Type is array (1 .. FPU_Info_Size - 8) of Byte
-     with Size => (FPU_Info_Size - 8) * 8;
+   type Padding_Type is array (1 .. Arch_Types.FPU_Info_Size - 8) of Byte
+     with Size => (Arch_Types.FPU_Info_Size - 8) * 8;
 
    --D @Interface
    --D The FPU state consist of the subject XCR0 value and the hardware-managed
@@ -133,14 +134,14 @@ private
       Padding    : Padding_Type;
       --D @Interface
       --D XSAVE area used to save the FPU state.
-      XSAVE_Area : XSAVE_Area_Type;
+      XSAVE_Area : Arch_Types.XSAVE_Area_Type;
    end record
    with Object_Size => Page_Size * 8;
 
    for FPU_State_Type use record
       XCR0       at  0 range  0 .. 63;
       Padding    at  8 range  0 .. 56 * 8 - 1;
-      XSAVE_Area at 64 range  0 .. XSAVE_Area_Size * 8 - 1;
+      XSAVE_Area at 64 range  0 .. Arch_Types.XSAVE_Area_Size * 8 - 1;
    end record;
 
    type Subject_FPU_State_Array is array

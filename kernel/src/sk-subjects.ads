@@ -24,6 +24,7 @@ with Skp;
 
 with X86_64;
 
+with SK.Arch_Types;
 with SK.CPU_Info;
 with SK.Crash_Audit;
 with SK.Crash_Audit_Types;
@@ -93,7 +94,7 @@ is
    --  The Regs field of the subject state is returned to the caller.
    procedure Restore_State
      (ID   :     Skp.Global_Subject_ID_Type;
-      Regs : out CPU_Registers_Type)
+      Regs : out Arch_Types.CPU_Registers_Type)
    with
       Global  => (Input  => (State, CPU_Info.APIC_ID),
                   In_Out => (Crash_Audit.State, X86_64.State)),
@@ -115,7 +116,7 @@ is
    procedure Save_State
      (ID          : Skp.Global_Subject_ID_Type;
       Exit_Reason : Word64;
-      Regs        : CPU_Registers_Type)
+      Regs        : Arch_Types.CPU_Registers_Type)
    with
       Global  => (Input  => CPU_Info.APIC_ID,
                   In_Out => (State, Crash_Audit.State, X86_64.State)),
@@ -129,14 +130,14 @@ is
    --  Reset state of subject with given ID to the specified initial values.
    procedure Reset_State
      (ID         : Skp.Global_Subject_ID_Type;
-      GPRs       : CPU_Registers_Type;
+      GPRs       : Arch_Types.CPU_Registers_Type;
       RIP        : Word64;
       RSP        : Word64;
       CR0        : Word64;
       CR0_Shadow : Word64;
       CR4        : Word64;
       CR4_Shadow : Word64;
-      Segments   : Segment_Registers_Type)
+      Segments   : Arch_Types.Segment_Registers_Type)
    with
       Global  => (In_Out => State),
       Depends => (State =>+ (ID, GPRs, RIP, RSP, CR0, CR0_Shadow, CR4,
@@ -152,9 +153,10 @@ is
 
 private
 
-   type Padding_Type is array (Subj_State_Size + 1 .. Page_Size) of Byte
+   type Padding_Type is array (Arch_Types.Subj_State_Size + 1 .. Page_Size)
+     of Byte
    with
-      Size => (Page_Size - Subj_State_Size) * 8;
+      Size => (Page_Size - Arch_Types.Subj_State_Size) * 8;
 
    --D @Interface
    --D A subject state page consist of the subject state data and is padded to
@@ -163,7 +165,7 @@ private
    type Subjects_State_Page is record
       --D @Interface
       --D State information (e.g. register values) of the associated subject.
-      Data    : Subject_State_Type;
+      Data    : Arch_Types.Subject_State_Type;
       --D @Interface
       --D Padding to fill the memory page.
       Padding : Padding_Type;

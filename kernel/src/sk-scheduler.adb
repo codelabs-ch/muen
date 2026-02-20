@@ -353,7 +353,7 @@ is
          --D Atomically examine the group activity indicator of the next group.
          Indicated_As_Active := Atomics.Bit_Test
            (Atomic => Global_Group_Activity_Indicator (Partition_ID),
-            Bit    => Byte (Next_Group_Index));
+            Bit    => Natural (Next_Group_Index));
          if Indicated_As_Active then
             --D @Item List => impl_scheduling_find_next_active_sg_steps
             --D If the group is indicated as active, evaluate whether the
@@ -449,7 +449,7 @@ is
          if Subject_ID = Scheduling_Groups (Group_ID).Active_Subject then
             Atomics.Set
               (Atomic => Global_Group_Activity_Indicator (Partition_ID),
-               Bit    => Byte (Group_Index));
+               Bit    => Natural (Group_Index));
          end if;
       else
 
@@ -458,7 +458,7 @@ is
          --D different CPU cores.
          Atomics.Set
            (Atomic => Global_Group_Activity_Indicator (Partition_ID),
-            Bit    => Byte (Group_Index));
+            Bit    => Natural (Group_Index));
       end if;
    end Indicate_Activity;
 

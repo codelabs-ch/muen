@@ -69,8 +69,6 @@ is
       FRI   : Skp.IOMMU.Fault_Recording_Index;
       Fault : Skp.IOMMU.Reg_Fault_Recording_Type)
    is
-      use type Skp.IOMMU.Bit_52_Type;
-
       --  Interrupt translation fault reason range, see Intel VT-d
       --  Specification, "5.1.4.1 Interrupt Remapping Fault Conditions".
       subtype IR_Fault_Range is SK.Byte range 16#20# .. 16#26#;

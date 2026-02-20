@@ -61,8 +61,7 @@ is
       Found  : out Boolean;
       Bit    : out Bit_Pos)
    is
-      subtype Bit_Search_Range is Bitops.Word64_Pos
-      range 0 .. Word64 (Bit_Pos'Last);
+      subtype Bit_Search_Range is Bitops.Word64_Pos range 0 .. Bit_Pos'Last;
       procedure Find_Highest_Bit_Set is new Bitops.Find_Highest_Bit_Set
         (Search_Range => Bit_Search_Range);
 

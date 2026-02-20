@@ -785,7 +785,8 @@ is
    --D \texttt{vmx\_exit\_handler} assembly code (which is set as kernel entry
    --D point/\verb!HOST_RIP! in the VMCS of the trapping subject, see
    --D \ref{impl_vmcs_setup_host}).
-   procedure Handle_Vmx_Exit (Subject_Registers : in out CPU_Registers_Type)
+   procedure Handle_Vmx_Exit
+     (Subject_Registers : in out Arch_Types.CPU_Registers_Type)
    is
       --  See Intel SDM Vol. 3C, "27.2.2 Information for VM Exits Due to
       --  Vectored Events".
@@ -1027,7 +1028,7 @@ is
    --D after low-level system initialization has been performed.
    --D Kernel initialization consists of the following steps:
    --D @OL Id => impl_kernel_init_steps, Section => impl_kernel_init, Priority => 10
-   procedure Initialize (Subject_Registers : out CPU_Registers_Type)
+   procedure Initialize (Subject_Registers : out Arch_Types.CPU_Registers_Type)
    is
    begin
       --D @Item List => impl_kernel_init_steps
@@ -1084,7 +1085,7 @@ is
                --D If a required feature is not present, allocate a crash audit
                --D entry designating a system initialization failure and
                --D provide initialization context information.
-               Subject_Registers := Null_CPU_Regs;
+               Subject_Registers := Arch_Types.Null_CPU_Regs;
                Crash_Audit.Allocate (Audit => Audit_Entry);
                Crash_Audit.Set_Reason
                  (Audit  => Audit_Entry,

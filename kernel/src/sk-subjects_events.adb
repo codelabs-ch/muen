@@ -48,7 +48,7 @@ is
    is
    begin
       Atomics.Set (Atomic => Global_Pending_Events (Subject),
-                   Bit    => Byte (Event_ID));
+                   Bit    => Natural (Event_ID));
    end Set_Event_Pending;
 
    -------------------------------------------------------------------------
@@ -86,7 +86,7 @@ is
       if Found then
          Event := Skp.Events.Event_Range (Bit_Pos);
          Atomics.Clear (Atomic => Global_Pending_Events (Subject),
-                        Bit    => Byte (Event));
+                        Bit    => Natural (Event));
       end if;
    end Consume_Event;
 

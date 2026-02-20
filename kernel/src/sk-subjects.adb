@@ -88,7 +88,7 @@ is
    --  specified by ID in the returned segment type.
    procedure Save_Segment
      (Segment_ID :     Segment_ID_Type;
-      Segment    : out Segment_Type)
+      Segment    : out Arch_Types.Segment_Type)
    with
       Global  => (Input  => CPU_Info.APIC_ID,
                   In_Out => (Crash_Audit.State, X86_64.State)),
@@ -116,7 +116,7 @@ is
    --  specified by ID with the values of the given segment type.
    procedure Restore_Segment
      (Segment_ID : Segment_ID_Type;
-      Segment    : Segment_Type)
+      Segment    : Arch_Types.Segment_Type)
    with
       Global  => (Input  => CPU_Info.APIC_ID,
                   In_Out => (Crash_Audit.State, X86_64.State)),
@@ -287,14 +287,14 @@ is
    --D to \verb!Constants.RFLAGS_Default_Value!.
    procedure Reset_State
      (ID         : Skp.Global_Subject_ID_Type;
-      GPRs       : CPU_Registers_Type;
+      GPRs       : Arch_Types.CPU_Registers_Type;
       RIP        : Word64;
       RSP        : Word64;
       CR0        : Word64;
       CR0_Shadow : Word64;
       CR4        : Word64;
       CR4_Shadow : Word64;
-      Segments   : Segment_Registers_Type)
+      Segments   : Arch_Types.Segment_Registers_Type)
    with
       Refined_Global  => (In_Out => Descriptors),
       Refined_Depends => (Descriptors =>+ (ID, GPRs, RIP, RSP, CR0, CR0_Shadow,
@@ -316,14 +316,16 @@ is
          SHADOW_CR4      => CR4_Shadow,
          RFLAGS          => Constants.RFLAGS_Default_Value,
          Segment_Regs    => Segments,
-         GDTR            => Null_Segment,
-         IDTR            => Null_Segment,
+         GDTR            => Arch_Types.Null_Segment,
+         IDTR            => Arch_Types.Null_Segment,
          Running         => True,
          Padding         => 0,
          others          => 0);
    end Reset_State;
 
    -------------------------------------------------------------------------
+
+   use type SK.Arch_Types.CPU_Registers_Type;
 
    --D @Section Id => impl_subjects_state_restore, Label => State Restoring, Parent => impl_subjects_state, Priority => 10
    --D @Text Section => impl_subjects_state_restore
@@ -332,7 +334,7 @@ is
    --D @OL Id => impl_subjects_state_restore_steps, Section => impl_subjects_state_restore, Priority => 10
    procedure Restore_State
      (ID   :     Skp.Global_Subject_ID_Type;
-      Regs : out CPU_Registers_Type)
+      Regs : out Arch_Types.CPU_Registers_Type)
      with
       Refined_Global  => (Input  => (Descriptors, CPU_Info.APIC_ID),
                           In_Out => (Crash_Audit.State, X86_64.State)),
@@ -463,7 +465,7 @@ is
    procedure Save_State
      (ID          : Skp.Global_Subject_ID_Type;
       Exit_Reason : Word64;
-      Regs        : CPU_Registers_Type)
+      Regs        : Arch_Types.CPU_Registers_Type)
    with
       Refined_Global  => (Input  => CPU_Info.APIC_ID,
                           In_Out => (Descriptors, Crash_Audit.State,

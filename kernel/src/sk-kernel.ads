@@ -37,6 +37,7 @@ with SK.Timed_Events;
 with SK.VMX;
 with SK.Crash_Audit;
 with SK.MCU;
+with SK.Arch_Types;
 
 --D @Interface
 --D This package implements kernel initialization which is the initial entry
@@ -47,7 +48,7 @@ package SK.Kernel
 is
 
    --  Kernel initialization.
-   procedure Initialize (Subject_Registers : out CPU_Registers_Type)
+   procedure Initialize (Subject_Registers : out Arch_Types.CPU_Registers_Type)
    with
       Global =>
         (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, CPU_Info.Is_BSP,
@@ -64,7 +65,8 @@ is
       Link_Name  => "sk_initialize";
 
    --  VMX exit handler.
-   procedure Handle_Vmx_Exit (Subject_Registers : in out CPU_Registers_Type)
+   procedure Handle_Vmx_Exit
+     (Subject_Registers : in out Arch_Types.CPU_Registers_Type)
    with
       Global     =>
          (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, CPU_Info.Is_BSP,

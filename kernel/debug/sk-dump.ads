@@ -19,6 +19,7 @@
 with Skp.Interrupts;
 
 with SK.MCU;
+with SK.Arch_Types;
 with SK.Crash_Audit_Types;
 
 --D @Interface
@@ -62,13 +63,13 @@ is
 
    --  Print CPU registers.
    procedure Print_Registers
-     (Regs : CPU_Registers_Type;
+     (Regs : Arch_Types.CPU_Registers_Type;
       RIP, CS, RFL, RSP, SS, CR0, CR3, CR4 : Word64);
 
    --  Print CPU segment with given name.
    procedure Print_Segment
      (Name : String;
-      Seg  : Segment_Type);
+      Seg  : Arch_Types.Segment_Type);
 
    --  Print VMX error information.
    procedure Print_VMX_Error

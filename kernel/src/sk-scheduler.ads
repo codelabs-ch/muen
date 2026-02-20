@@ -154,10 +154,10 @@ private
       Part_Of => State;
 
    pragma Compile_Time_Error
-     (Atomics.Bit_Pos'First /= Byte (Policy.Scheduling_Group_Index_Range'First),
+     (Atomics.Bit_Pos'First /= Natural (Policy.Scheduling_Group_Index_Range'First),
       "Atomic bitmap index and scheduling group index start differ");
    pragma Compile_Time_Error
-     (Atomics.Bit_Pos'Last /= Byte (Policy.Scheduling_Group_Index_Range'Last),
+     (Atomics.Bit_Pos'Last /= Natural (Policy.Scheduling_Group_Index_Range'Last),
       "Atomic bitmap index and scheduling group index end differ");
 
    type Scheduling_Group_Activity_Indicator_Array is

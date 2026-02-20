@@ -38,7 +38,7 @@ is
 
    procedure Print_Segment
      (Name : String;
-      Seg  : Segment_Type)
+      Seg  : Arch_Types.Segment_Type)
       renames D.Output_Segment;
 
    -------------------------------------------------------------------------
@@ -69,7 +69,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Print_Registers
-     (Regs : CPU_Registers_Type;
+     (Regs : Arch_Types.CPU_Registers_Type;
       RIP, CS, RFL, RSP, SS, CR0, CR3, CR4 : Word64)
       renames D.Output_Registers;
 

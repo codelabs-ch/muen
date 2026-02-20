@@ -23,7 +23,7 @@
 package SK.Atomics
 is
 
-   subtype Bit_Pos is Byte range 0 .. 63;
+   subtype Bit_Pos is Natural range 0 .. 63;
 
    --D @Interface
    --D 64-bit atomic type, which represents a bitmap with 64 elements.

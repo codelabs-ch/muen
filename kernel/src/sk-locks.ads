@@ -24,6 +24,10 @@ package SK.Locks
 is
 
    type Lock_State_Type is (Free, Locked);
+   for Lock_State_Type use
+     (Free   => 0,
+      Locked => 1);
+   for Lock_State_Type'Size use 32;
 
    type Spin_Lock_Type is limited private;
 
@@ -46,11 +50,6 @@ is
    function State (Lock : Spin_Lock_Type) return Lock_State_Type with Ghost;
 
 private
-
-   for Lock_State_Type use
-     (Free   => 0,
-      Locked => 1);
-   for Lock_State_Type'Size use 32;
 
    --D @Interface
    --D Spin lock is implemented as limited record with a field holding the lock

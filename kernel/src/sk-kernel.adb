@@ -1051,18 +1051,21 @@ is
       declare
          Init_Ctx : Crash_Audit_Types.Init_Context_Type;
 
-         Valid_Sys_State, Valid_FPU_State, Valid_MCE_State,
+         Valid_Sys_State, Valid_APIC_State, Valid_FPU_State, Valid_MCE_State,
          Valid_VTd_State : Boolean;
       begin
          --D @Item List => impl_kernel_init_steps
          --D Validate required CPU (\ref{impl_kernel_init_check_state}),
-         --D FPU, MCE and VT-d features.
+         --D APIC, FPU, MCE and VT-d features.
          System_State.Check_State
            (Is_Valid => Valid_Sys_State,
             Ctx      => Init_Ctx.Sys_Ctx);
          FPU.Check_State
            (Is_Valid => Valid_FPU_State,
             Ctx      => Init_Ctx.FPU_Ctx);
+         Apic.Check_State
+           (Is_Valid => Valid_APIC_State,
+            Ctx      => Init_Ctx.APIC_Ctx);
          MCE.Check_State
            (Is_Valid => Valid_MCE_State,
             Ctx      => Init_Ctx.MCE_Ctx);
@@ -1072,6 +1075,7 @@ is
 
          if not (Valid_Sys_State
                  and Valid_FPU_State
+                 and Valid_APIC_State
                  and Valid_MCE_State
                  and Valid_VTd_State)
          then

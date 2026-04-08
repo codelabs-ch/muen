@@ -16,7 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK.KC;
 with SK.CPU;
 with SK.Bitops;
 with SK.Constants;
@@ -215,10 +214,10 @@ is
 
       pragma Debug
         (not Ctx.XSAVE_Support,
-         KC.Put_Line (Item => "Init: FPU XSAVE feature missing"));
+         Dump.Print_Message (Msg => "Init: FPU XSAVE feature missing"));
       pragma Debug
         (not Ctx.Area_Size,
-         KC.Put_Line (Item => "Init: FPU state save area too small"));
+         Dump.Print_Message (Msg => "Init: FPU state save area too small"));
 
       Is_Valid := Ctx.XSAVE_Support and Ctx.Area_Size;
    end Check_State;

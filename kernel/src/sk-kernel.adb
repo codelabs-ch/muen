@@ -1078,8 +1078,8 @@ is
             declare
                Audit_Entry : Crash_Audit.Entry_Type;
             begin
-               pragma Debug (KC.Put_Line
-                             (Item => "System initialisation error"));
+               pragma Debug (Dump.Print_Message
+                             (Msg => "System initialisation error"));
 
                --D @Item List => impl_kernel_init_steps
                --D If a required feature is not present, allocate a crash audit

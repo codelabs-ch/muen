@@ -19,7 +19,13 @@
 with SK.CPU;
 with SK.Bitops;
 with SK.Delays;
+with SK.Dump;
 with SK.Constants;
+
+pragma $Release_Warnings
+  (Off, "unit * is not referenced", Reason => "Only used for debug output");
+with SK.Strings;
+pragma $Release_Warnings (On, "unit * is not referenced");
 
 package body SK.Apic
 is
@@ -37,6 +43,44 @@ is
    --  See Intel SDM Vol. 3A, "10.6.1 Interrupt Command Register (ICR)"
    Ipi_Init  : constant := 16#0500#;
    Ipi_Start : constant := 16#4601#;
+
+   -------------------------------------------------------------------------
+
+   procedure Check_State
+     (Is_Valid : out Boolean;
+      Ctx      : out Crash_Audit_Types.APIC_Init_Context_Type)
+   is
+      Expected_Is_BSP, Expected_APIC_ID : Boolean;
+   begin
+      Ctx := Crash_Audit_Types.Null_APIC_Init_Context;
+      Ctx.IA32_APIC_BASE := CPU.Get_MSR64
+         (Register => Constants.IA32_APIC_BASE);
+      Expected_Is_BSP := Bitops.Bit_Test
+        (Value => Ctx.IA32_APIC_BASE,
+         Pos   => APIC_BSP_FLAG) = CPU_Info.Is_BSP;
+
+      pragma Debug (Dump.Print_Message
+         (Msg => "APIC: IA32_APIC_BASE "
+          & SK.Strings.Img (Ctx.IA32_APIC_BASE)));
+
+      declare
+         Unused_EAX, Unused_EBX, Unused_ECX : Word32;
+      begin
+         Unused_EAX := 16#b#;
+         Unused_ECX := 0;
+         CPU.CPUID
+           (EAX => Unused_EAX,
+            EBX => Unused_EBX,
+            ECX => Unused_ECX,
+            EDX => Ctx.X2APIC_ID);
+         Expected_APIC_ID := Ctx.X2APIC_ID = Word32 (CPU_Info.APIC_ID);
+
+         pragma Debug (Dump.Print_Message
+            (Msg => "APIC: x2APIC ID " & SK.Strings.Img (Ctx.X2APIC_ID)));
+      end;
+
+      Is_Valid := Expected_Is_BSP and Expected_APIC_ID;
+   end Check_State;
 
    -------------------------------------------------------------------------
 

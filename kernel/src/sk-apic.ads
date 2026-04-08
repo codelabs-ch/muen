@@ -21,6 +21,7 @@ with X86_64;
 with Skp;
 
 with SK.CPU_Info;
+with SK.Crash_Audit_Types;
 
 --D @Interface
 --D This package contains subprograms to interact with the local APIC, see Intel
@@ -34,6 +35,17 @@ with SK.CPU_Info;
 --D APIC in x2APIC mode.
 package SK.Apic
 is
+
+   --  Check validity of APIC state and return results. Is_Valid is set to True
+   --  if the CPU has the expected APIC ID and BSP flag.
+   procedure Check_State
+     (Is_Valid : out Boolean;
+      Ctx      : out Crash_Audit_Types.APIC_Init_Context_Type)
+   with
+      Global  => (Input => (X86_64.State, CPU_Info.APIC_ID, CPU_Info.Is_BSP)),
+      Depends => (Ctx      => X86_64.State,
+                  Is_Valid => (CPU_Info.APIC_ID, CPU_Info.Is_BSP,
+                               X86_64.State));
 
    --  Place local APIC in x2APIC mode and set bit 8 of the APIC spurious
    --  vector register (SVR).

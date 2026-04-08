@@ -100,24 +100,39 @@ ap_entry_point:
 	btsl $CR4_PAE_BIT, %eax
 	movl %eax, %cr4
 
-	// derive CPU ID from initial APIC ID
-	// divide APIC ID by two to get idx into CPU ID mapping table
+	// CPUID.0BH:EDX contains the x2APIC ID
 
-	movl $1, %eax
+	movl $0xb, %eax
 	cpuid
-	shrl $25, %ebx
 
-	movl $kernel_cpu_ids, %edx
-	addl %ebx, %edx
-	xorl %eax, %eax
-	movb (%edx), %al
+	leal kernel_cpu_ids, %ebx
+	xorl %ecx, %ecx
+
+	// determine CPU ID via linear search of APIC ID in mapping table
+	// eax: current APIC ID         ebx: mapping table base address
+	// ecx: current index (CPU ID)  edx: reference APIC ID
+
+lookup_start:
+	movl (%ebx, %ecx, 4), %eax
+	cmpl %edx, %eax
+	je apicid_found
+	incl %ecx
+	cmpl %ecx, CPU_COUNT
+	jge apicid_not_found
+	jmp lookup_start
+
+	// APIC ID not found in mapping table: safe halt
+apicid_not_found:
+	hlt
+	jmp apicid_not_found
 
 	// store local CPU ID in esi register until it can be saved to per-cpu area
+apicid_found:
+	mov %ecx, %esi
 
-	mov %eax, %esi
-
-	// set up per-CPU paging
-
+	// set up per-CPU paging by multiplying the local CPU ID by 4 and indexing
+	// into the kernel_pml4_start array to get the PML4 pagetable address.
+	mov %esi, %eax
 	mov $0x4, %edx
 	mul %edx
 	add $kernel_pml4_start, %eax

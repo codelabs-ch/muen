@@ -19,7 +19,6 @@
 with SK.CPU;
 with SK.Bitops;
 with SK.Constants;
-with SK.KC;
 with SK.Dump;
 
 pragma $Release_Warnings
@@ -62,9 +61,9 @@ is
         (Value => Word64 (EDX),
          Pos   => Constants.CPUID_FEATURE_MCA);
       pragma Debug (not Ctx.MCE_Support,
-                    KC.Put_Line (Item => "Init: No MCE support"));
+                    Dump.Print_Message (Msg => "Init: No MCE support"));
       pragma Debug (not Ctx.MCA_Support,
-                    KC.Put_Line (Item => "Init: No MCA support"));
+                    Dump.Print_Message (Msg => "Init: No MCA support"));
       pragma Debug
         (Dump.Print_Message
            (Msg => "MCE: IA32_MCG_CAP "
@@ -73,10 +72,10 @@ is
                    (CPU.Get_MSR64 (Register => Constants.IA32_MCG_CAP)))));
 
       Ctx.Bank_Count_OK := Bank_Count <= Crash_Audit_Types.MCE_Max_Banks;
-      pragma Debug (not Ctx.Bank_Count_OK,
-                    KC.Put_Line
-                      (Item => "Init: Unsupported number of MCE banks "
-                       & Strings.Img (Bank_Count)));
+      pragma Debug
+        (not Ctx.Bank_Count_OK,
+         Dump.Print_Message (Msg => "Init: Unsupported number of MCE banks "
+                             & Strings.Img (Bank_Count)));
 
       Is_Valid := Ctx.Bank_Count_OK and Ctx.MCE_Support and Ctx.MCA_Support;
    end Check_State;
@@ -137,8 +136,7 @@ is
       then
          pragma Debug
            (Dump.Print_Message
-              (Msg => "MCE: IA32_MCG_CTL present, "
-               & "enabling all MCA features"));
+              (Msg => "MCE: IA32_MCG_CTL present, enabling all MCA features"));
          CPU.Write_MSR64
            (Register => Constants.IA32_MCG_CTL,
             Value    => Word64'Last);

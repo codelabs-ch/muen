@@ -105,7 +105,7 @@ is
    is
    begin
       for APIC_ID of Skp.CPU_To_APIC_ID loop
-         if APIC_ID /= 0 then
+         if APIC_ID /= CPU_Info.APIC_ID then
             declare
                Dest : constant Word32 := Word32'Mod (APIC_ID);
             begin

@@ -20,6 +20,8 @@ with X86_64;
 
 with Skp;
 
+with SK.CPU_Info;
+
 --D @Interface
 --D This package contains subprograms to interact with the local APIC, see Intel
 --D SDM Vol. 3A, "Chapter 10 Advanced Programmable Interrupt Controller (APIC)"
@@ -44,8 +46,9 @@ is
    --  SDM Vol. 3A, "8.4.4 MP Initialization Example".
    procedure Start_AP_Processors
    with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ null);
+      Global  => (Input  => CPU_Info.APIC_ID,
+                  In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ CPU_Info.APIC_ID);
 
    --  Signal interrupt servicing completion.
    procedure EOI

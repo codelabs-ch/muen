@@ -847,7 +847,7 @@ is
       then
          pragma Debug (Dump.Print_Message
                        (Msg => "*** CPU APIC ID " & Strings.Img
-                        (Byte (CPU_Info.APIC_ID))
+                        (CPU_Info.APIC_ID)
                         & " VM exit due to NMI; interruption information "
                         & Strings.Img (Exit_Interruption_Info)));
          Error (Reason => Crash_Audit_Types.Hardware_VMexit_NMI);
@@ -856,7 +856,7 @@ is
       then
          pragma Debug (Dump.Print_Message
                        (Msg => "*** CPU APIC ID " & Strings.Img
-                        (Byte (CPU_Info.APIC_ID))
+                        (CPU_Info.APIC_ID)
                         & " VM exit due to MCE; interruption information "
                         & Strings.Img (Exit_Interruption_Info)));
          declare
@@ -869,8 +869,7 @@ is
       elsif Basic_Exit_Reason = Constants.EXIT_REASON_ENTRY_FAIL_MCE then
          pragma Debug (Dump.Print_Message
                        (Msg => "*** CPU APIC ID " & Strings.Img
-                        (Byte (CPU_Info.APIC_ID))
-                        & " VM entry failed due to MCE"));
+                        (CPU_Info.APIC_ID) & " VM entry failed due to MCE"));
          declare
             Ctx : Crash_Audit_Types.MCE_Context_Type;
          begin

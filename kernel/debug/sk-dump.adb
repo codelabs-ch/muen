@@ -47,7 +47,7 @@ is
      (RTE_Idx     : Skp.Interrupts.RTE_Index_Type;
       IRQ         : Byte;
       Vector      : Byte;
-      APIC_ID     : Byte;
+      APIC_ID     : Word32;
       VTd_IRT_Idx : IRT_Idx_Type := Invalid_IRT_Idx)
    is
    begin
@@ -82,7 +82,7 @@ is
       Debug_Lock.Acquire;
       D.Output_ISR_State
         (Context => Context,
-         APIC_ID => Byte (CPU_Info.APIC_ID));
+         APIC_ID => CPU_Info.APIC_ID);
       Debug_Lock.Release;
    end Print_ISR_State;
 

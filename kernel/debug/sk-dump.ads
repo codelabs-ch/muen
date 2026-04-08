@@ -40,7 +40,7 @@ is
      (RTE_Idx     : Skp.Interrupts.RTE_Index_Type;
       IRQ         : Byte;
       Vector      : Byte;
-      APIC_ID     : Byte;
+      APIC_ID     : Word32;
       VTd_IRT_Idx : IRT_Idx_Type := Invalid_IRT_Idx);
 
    --  Print ISR execution environment state.

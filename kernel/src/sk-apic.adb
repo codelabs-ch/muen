@@ -73,7 +73,7 @@ is
             EBX => Unused_EBX,
             ECX => Unused_ECX,
             EDX => Ctx.X2APIC_ID);
-         Expected_APIC_ID := Ctx.X2APIC_ID = Word32 (CPU_Info.APIC_ID);
+         Expected_APIC_ID := Ctx.X2APIC_ID = CPU_Info.APIC_ID;
 
          pragma Debug (Dump.Print_Message
             (Msg => "APIC: x2APIC ID " & SK.Strings.Img (Ctx.X2APIC_ID)));
@@ -148,22 +148,18 @@ is
    procedure Start_AP_Processors
    is
    begin
-      for APIC_ID of Skp.CPU_To_APIC_ID loop
-         if APIC_ID /= CPU_Info.APIC_ID then
-            declare
-               Dest : constant Word32 := Word32'Mod (APIC_ID);
-            begin
-               Write_ICR (Low  => Ipi_Init,
-                          High => Dest);
-               Delays.U_Delay (US => 10 * 1000);
+      for Dest_APIC_ID of Skp.CPU_To_APIC_ID loop
+         if Dest_APIC_ID /= CPU_Info.APIC_ID then
+            Write_ICR (Low  => Ipi_Init,
+                       High => Dest_APIC_ID);
+            Delays.U_Delay (US => 10 * 1000);
 
-               Write_ICR (Low  => Ipi_Start,
-                          High => Dest);
-               Delays.U_Delay (US => 200);
+            Write_ICR (Low  => Ipi_Start,
+                       High => Dest_APIC_ID);
+            Delays.U_Delay (US => 200);
 
-               Write_ICR (Low  => Ipi_Start,
-                          High => Dest);
-            end;
+            Write_ICR (Low  => Ipi_Start,
+                       High => Dest_APIC_ID);
          end if;
       end loop;
    end Start_AP_Processors;
@@ -176,7 +172,7 @@ is
    is
    begin
       Write_ICR (Low  => Word32 (Vector),
-                 High => Word32 (Skp.CPU_To_APIC_ID (CPU_ID)));
+                 High => Skp.CPU_To_APIC_ID (CPU_ID));
    end Send_IPI;
 
 end SK.Apic;

@@ -18,7 +18,7 @@
 
 with Skp.Scheduling;
 
-with SK.CPU_Info;
+with SK.Apic;
 
 --D @Interface
 --D This package provides access to the Tau0 runtime interface.
@@ -31,8 +31,8 @@ is
    procedure Get_Major_Frame (ID : out Skp.Scheduling.Major_Frame_Range)
    with
       Global  => (Input    => State,
-                  Proof_In => CPU_Info.Is_BSP),
+                  Proof_In => Apic.Is_BSP),
       Depends => (ID => State),
-      Pre     => CPU_Info.Is_BSP;
+      Pre     => Apic.Is_BSP;
 
 end SK.Tau0_Interface;

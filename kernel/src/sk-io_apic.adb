@@ -193,7 +193,7 @@ is
    -------------------------------------------------------------------------
 
 begin
-   if CPU_Info.Is_BSP then
+   if Apic.Is_BSP then
 
       --  The lock is a single instance shared by all CPUs. So it must only be
       --  initialized by a single CPU, i.e. BSP.

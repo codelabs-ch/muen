@@ -18,6 +18,7 @@
 
 with X86_64;
 
+with SK.Apic;
 with SK.CPU_Info;
 with SK.Crash_Audit_Types;
 
@@ -39,7 +40,7 @@ is
    --  Initialize crash audit facility.
    procedure Init
    with
-      Pre => CPU_Info.Is_BSP;
+      Pre => Apic.Is_BSP;
 
    --  Crash audit entry.
    type Entry_Type is private;

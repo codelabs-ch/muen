@@ -18,7 +18,9 @@
 
 with Skp.Interrupts;
 
-with SK.CPU_Info;
+with SK.Apic;
+
+pragma Elaborate (SK.Apic);
 
 --D @Interface
 --D This package contains subprograms to interact with the I/O APIC, see Intel
@@ -31,7 +33,7 @@ package SK.IO_Apic
 with
    Abstract_State =>
     (State with External => (Async_Writers, Async_Readers, Effective_Writes)),
-   Initializes    => (State => CPU_Info.Is_BSP)
+   Initializes    => (State => Apic.Is_BSP)
 is
 
    --  Setup RTE with specified vector to given destination. The destination ID

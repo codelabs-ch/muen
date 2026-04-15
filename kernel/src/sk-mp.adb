@@ -59,7 +59,7 @@ is
    procedure Initialize_All_Barrier
    with
       Refined_Global  => (Output   => Global_All_Barrier,
-                          Proof_In => CPU_Info.Is_BSP),
+                          Proof_In => Apic.Is_BSP),
       Refined_Depends => (Global_All_Barrier => null)
    is
    begin
@@ -73,7 +73,7 @@ is
      (Config : Skp.Scheduling.Barrier_Config_Array)
    with
       Refined_Global  => (Output   => Global_Minor_Frame_Barriers,
-                          Proof_In => CPU_Info.Is_BSP),
+                          Proof_In => Apic.Is_BSP),
       Refined_Depends => (Global_Minor_Frame_Barriers => Config)
    is
    begin

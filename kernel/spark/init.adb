@@ -2,6 +2,7 @@ with Skp.IOMMU;
 
 with X86_64;
 
+with SK.Apic;
 with SK.CPU_Info;
 with SK.FPU;
 with SK.Interrupt_Tables;
@@ -25,9 +26,9 @@ with SK.Arch_Types;
 procedure Init
 with
    Global =>
-      (Input  => (SK.CPU_Info.APIC_ID, SK.CPU_Info.CPU_ID, SK.CPU_Info.Is_BSP,
+      (Input  => (SK.CPU_Info.APIC_ID, SK.CPU_Info.CPU_ID,
                   SK.MCE.State, SK.Tau0_Interface.State, SK.VMX.Exit_Address,
-                  SK.MCU.State),
+                  SK.Apic.Is_BSP, SK.Apic.State, SK.MCU.State),
        In_Out => (SK.Crash_Audit.State, SK.FPU.State, SK.IO_Apic.State,
                   SK.Interrupt_Tables.State, SK.MP.Barrier, SK.Scheduler.State,
                   SK.Scheduler.Group_Activity_Indicator,

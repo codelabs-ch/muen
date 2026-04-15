@@ -23,8 +23,9 @@ with SK.Dump;
 
 pragma $Release_Warnings
   (Off, "unit * is not referenced", Reason => "Only used for debug output");
-with SK.Strings;
+with SK.Apic;
 with SK.CPU_Info;
+with SK.Strings;
 pragma $Release_Warnings (On, "unit * is not referenced");
 
 with Skp.MCU;
@@ -116,7 +117,7 @@ is
       --  Common info is only logged on BSP.
 
       pragma Debug
-        (CPU_Info.Is_BSP,
+        (Apic.Is_BSP,
          Dump.Print_Message
            (Msg    => "MCU: Updating CPU with signature "
             & Strings.Img (My_Sig) & " and revision "
@@ -124,7 +125,7 @@ is
 
       if UCH.Header_Version /= 1 then
          pragma Debug
-           (CPU_Info.Is_BSP,
+           (Apic.Is_BSP,
             Dump.Print_Message
               (Msg    =>
                  "MCU: ERROR - Unknown header version " &
@@ -133,11 +134,11 @@ is
       end if;
 
       pragma Debug
-        (CPU_Info.Is_BSP,
+        (Apic.Is_BSP,
          Dump.Print_Message (Msg => "MCU: Ucode update @ "
          & Strings.Img (Word64'(Skp.MCU.Ucode_Address))));
       pragma Debug
-        (CPU_Info.Is_BSP,
+        (Apic.Is_BSP,
          Dump.Print_MCU_Header (Hdr => UCH));
 
       if My_Sig /= UCH.Processor_Signature then

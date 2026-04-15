@@ -18,7 +18,7 @@
 
 with Skp.Events;
 
-with SK.CPU_Info;
+with SK.Apic;
 
 private with SK.Atomics;
 private with SK.Constants;
@@ -38,9 +38,9 @@ is
    procedure Initialize
    with
       Global  => (Output   => State,
-                  Proof_In => CPU_Info.Is_BSP),
+                  Proof_In => Apic.Is_BSP),
       Depends => (State => null),
-      Pre     => CPU_Info.Is_BSP;
+      Pre     => Apic.Is_BSP;
 
    --  Set event with given ID of specified subject pending.
    procedure Set_Event_Pending

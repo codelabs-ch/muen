@@ -36,8 +36,4 @@ is
    APIC_ID : constant Skp.APIC_ID_Type
      := Skp.CPU_To_APIC_ID (CPU_ID);
 
-   --  Is only set to True for the bootstrap processor which performs the
-   --  initial system bring up.
-   Is_BSP : constant Boolean := APIC_ID = Skp.BSP_APIC_ID;
-
 end SK.CPU_Info;

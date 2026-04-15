@@ -17,9 +17,9 @@
 --
 
 with SK.CPU;
-with SK.KC;
 with SK.Bitops;
 with SK.Constants;
+with SK.Dump;
 
 package body SK.System_State
 is
@@ -188,7 +188,8 @@ is
       --D "23.6 Discovering Support for VMX".
       Ctx.VMX_Support := Has_VMX_Support;
       pragma Debug
-        (not Ctx.VMX_Support, KC.Put_Line (Item => "Init: VMX not supported"));
+        (not Ctx.VMX_Support,
+         Dump.Print_Message (Msg => "Init: VMX not supported"));
 
       --D @Item List => impl_kernel_init_check_state_steps
       --D Check that VMX was not disabled and locked by the BIOS, see Intel SDM
@@ -204,7 +205,7 @@ is
             Pos   => Constants.IA32_FCTRL_VMX_FLAG));
       pragma Debug
         (not Ctx.Not_VMX_Disabled_Locked,
-         KC.Put_Line (Item => "Init: VMX disabled by BIOS"));
+         Dump.Print_Message (Msg => "Init: VMX disabled by BIOS"));
 
       --D @Item List => impl_kernel_init_check_state_steps
       --D Check that processor is in protected mode, i.e. \texttt{CR0.PE} is
@@ -214,7 +215,7 @@ is
          Pos   => Constants.CR0_PE_FLAG);
       pragma Debug
         (not Ctx.Protected_Mode,
-         KC.Put_Line (Item => "Init: Protected mode not enabled"));
+         Dump.Print_Message (Msg => "Init: Protected mode not enabled"));
 
       --D @Item List => impl_kernel_init_check_state_steps
       --D Check that processor has Paging enabled, i.e. \texttt{CR0.PG} is set.
@@ -222,7 +223,8 @@ is
         (Value => CR0,
          Pos   => Constants.CR0_PG_FLAG);
       pragma Debug
-        (not Ctx.Paging, KC.Put_Line (Item => "Init: Paging not enabled"));
+        (not Ctx.Paging,
+         Dump.Print_Message (Msg => "Init: Paging not enabled"));
 
       --D @Item List => impl_kernel_init_check_state_steps
       --D Check that processor is in IA-32e mode, i.e. \texttt{IA32\_EFER.LMA}
@@ -231,8 +233,8 @@ is
         (Value => IA32_EFER,
          Pos   => Constants.IA32_EFER_LMA_FLAG);
       pragma Debug
-        (not Ctx.IA_32e_Mode, KC.Put_Line
-           (Item => "Init: IA-32e mode not enabled"));
+        (not Ctx.IA_32e_Mode,
+         Dump.Print_Message (Msg => "Init: IA-32e mode not enabled"));
 
       --D @Item List => impl_kernel_init_check_state_steps
       --D Check that virtual 8086 mode is not enabled, i.e. \texttt{RFLAGS.VM}
@@ -242,7 +244,7 @@ is
          Pos   => Constants.RFLAGS_VM_FLAG);
       pragma Debug
         (not Ctx.Not_Virtual_8086,
-         KC.Put_Line (Item => "Init: Virtual-8086 mode enabled"));
+         Dump.Print_Message (Msg => "Init: Virtual-8086 mode enabled"));
 
       --D @Item List => impl_kernel_init_check_state_steps
       --D Check that the current processor operating mode meets the required CR0
@@ -254,7 +256,7 @@ is
          Fixed0   => Fixed0,
          Fixed1   => Fixed1);
       pragma Debug
-        (not Ctx.CR0_Valid, KC.Put_Line (Item => "Init: CR0 is invalid"));
+        (not Ctx.CR0_Valid, Dump.Print_Message (Msg => "Init: CR0 is invalid"));
 
       --D @Item List => impl_kernel_init_check_state_steps
       --D Check that the current processor operating mode meets the required CR4
@@ -267,15 +269,15 @@ is
             Pos   => Constants.CR4_VMXE_FLAG),
          Fixed0   => Fixed0,
          Fixed1   => Fixed1);
-      pragma Debug (not Ctx.CR4_Valid, KC.Put_Line
-                    (Item => "Init: CR4 is invalid"));
+      pragma Debug (not Ctx.CR4_Valid,
+                    Dump.Print_Message (Msg => "Init: CR4 is invalid"));
 
       --D @Item List => impl_kernel_init_check_state_steps
       --D Check that the current processor supports x2APIC.
       Ctx.Apic_Support := Has_X2_Apic;
       pragma Debug
         (not Ctx.Apic_Support,
-         KC.Put_Line (Item => "Init: Local x2APIC not present"));
+         Dump.Print_Message (Msg => "Init: Local x2APIC not present"));
 
       --D @Item List => impl_kernel_init_check_state_steps
       --D Check that the current processor has Invariant TSC, see Intel SDM Vol.
@@ -283,7 +285,7 @@ is
       Ctx.Invariant_TSC := Has_Invariant_TSC;
       pragma Debug
         (not Ctx.Invariant_TSC,
-         KC.Put_Line (Item => "Init: Invariant TSC not present"));
+         Dump.Print_Message (Msg => "Init: Invariant TSC not present"));
 
       Is_Valid := Ctx.VMX_Support   and
         Ctx.Not_VMX_Disabled_Locked and

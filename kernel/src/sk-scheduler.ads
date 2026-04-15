@@ -20,6 +20,7 @@ with Skp.Scheduling;
 
 with X86_64;
 
+with SK.Apic;
 with SK.Constants;
 with SK.CPU_Info;
 with SK.MP;
@@ -33,6 +34,8 @@ with SK.Crash_Audit;
 
 private with SK.Atomics;
 
+pragma Elaborate (SK.Apic);
+
 --D @Interface
 --D This package implements the fixed-cyclic scheduler and additional, required
 --D functionality.
@@ -43,7 +46,7 @@ with
                        with External => (Async_Writers,
                                          Async_Readers))),
    Initializes    => (State,
-                      Group_Activity_Indicator => CPU_Info.Is_BSP)
+                      Group_Activity_Indicator => Apic.Is_BSP)
 is
 
    --  Returns the subject ID of the currently active scheduling group.
@@ -62,7 +65,7 @@ is
    procedure Init
    with
       Global =>
-        (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, CPU_Info.Is_BSP),
+        (Input  => (Apic.Is_BSP, CPU_Info.APIC_ID, CPU_Info.CPU_ID),
          In_Out => (State, Crash_Audit.State, MP.Barrier,
                     Scheduling_Info.State, X86_64.State));
 
@@ -87,7 +90,7 @@ is
      (Next_Subject : out Skp.Global_Subject_ID_Type)
    with
       Global =>
-        (Input  => (CPU_Info.CPU_ID, CPU_Info.Is_BSP, Tau0_Interface.State,
+        (Input  => (Apic.Is_BSP, CPU_Info.CPU_ID, Tau0_Interface.State,
                     Subjects_Events.State, Subjects_Interrupts.State,
                     Timed_Events.State, X86_64.State),
          In_Out => (State, Group_Activity_Indicator, MP.Barrier,

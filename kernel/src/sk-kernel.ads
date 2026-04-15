@@ -20,6 +20,7 @@ with Skp.IOMMU;
 
 with X86_64;
 
+with SK.Apic;
 with SK.CPU_Info;
 with SK.FPU;
 with SK.Interrupt_Tables;
@@ -51,7 +52,7 @@ is
    procedure Initialize (Subject_Registers : out Arch_Types.CPU_Registers_Type)
    with
       Global =>
-        (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, CPU_Info.Is_BSP,
+        (Input  => (Apic.Is_BSP, Apic.State, CPU_Info.APIC_ID, CPU_Info.CPU_ID,
                     MCE.State, VMX.Exit_Address, MCU.State),
          In_Out => (Crash_Audit.State, FPU.State, Interrupt_Tables.State,
                     IO_Apic.State, MP.Barrier, Scheduler.State,
@@ -69,7 +70,7 @@ is
      (Subject_Registers : in out Arch_Types.CPU_Registers_Type)
    with
       Global     =>
-         (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, CPU_Info.Is_BSP,
+         (Input  => (Apic.Is_BSP, CPU_Info.APIC_ID, CPU_Info.CPU_ID,
                      Interrupt_Tables.State, MCE.State, Tau0_Interface.State,
                      VMX.Exit_Address),
           In_Out => (Crash_Audit.State, FPU.State, IO_Apic.State, MP.Barrier,

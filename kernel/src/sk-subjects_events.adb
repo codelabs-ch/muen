@@ -26,7 +26,7 @@ is
    procedure Initialize
    with
       Refined_Global  => (Output   => Global_Pending_Events,
-                          Proof_In => CPU_Info.Is_BSP),
+                          Proof_In => Apic.Is_BSP),
       Refined_Depends => (Global_Pending_Events => null)
    is
    begin

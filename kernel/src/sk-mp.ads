@@ -18,7 +18,7 @@
 
 with Skp.Scheduling;
 
-with SK.CPU_Info;
+with SK.Apic;
 
 --D @Interface
 --D This package provides cross-core CPU synchronization facilities.
@@ -32,9 +32,9 @@ is
    procedure Initialize_All_Barrier
    with
       Global  => (In_Out   => Barrier,
-                  Proof_In => CPU_Info.Is_BSP),
+                  Proof_In => Apic.Is_BSP),
       Depends => (Barrier =>+ null),
-      Pre     => CPU_Info.Is_BSP;
+      Pre     => Apic.Is_BSP;
 
    --  Blocks until all logical processors are waiting on barrier.
    procedure Wait_For_All
@@ -53,8 +53,8 @@ is
      (Config : Skp.Scheduling.Barrier_Config_Array)
    with
       Global  => (In_Out   => Barrier,
-                  Proof_In => CPU_Info.Is_BSP),
+                  Proof_In => Apic.Is_BSP),
       Depends => (Barrier =>+ Config),
-      Pre     => CPU_Info.Is_BSP;
+      Pre     => Apic.Is_BSP;
 
 end SK.MP;

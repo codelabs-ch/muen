@@ -206,7 +206,7 @@ is
       Audit.Slot := Dumpdata_Index (S);
       pragma Debug (Dump.Print_Message
                     (Msg => "Crash audit: CPU APIC ID "
-                     & Strings.Img (Byte (CPU_Info.APIC_ID))
+                     & Strings.Img (CPU_Info.APIC_ID)
                      & " - Allocated record "
                      & Strings.Img (Byte (Audit.Slot))));
 
@@ -216,7 +216,7 @@ is
 
       --D @Item List => impl_crash_audit_alloc_steps
       --D Set crash data APIC ID to this CPU.
-      Instance.Crash_Info.Data (Audit.Slot).APIC_ID := Byte (CPU_Info.APIC_ID);
+      Instance.Crash_Info.Data (Audit.Slot).APIC_ID := CPU_Info.APIC_ID;
       --D @Item List => impl_crash_audit_alloc_steps
       --D Set crash data timestamp to the current TSC value.
       Instance.Crash_Info.Data (Audit.Slot).TSC_Value := CPU.RDTSC;
@@ -269,7 +269,7 @@ is
       Delays.U_Delay (US => Reset_Delay);
       pragma Debug (Dump.Print_Message
                     (Msg => "Crash audit: CPU APIC ID "
-                     & Strings.Img (Byte (CPU_Info.APIC_ID))
+                     & Strings.Img (CPU_Info.APIC_ID)
                      & " - Initiating reboot in 10 seconds ..."));
       pragma Debug (Delays.U_Delay (US => 10 * 10 ** 6));
       Power.Reboot (Power_Cycle => False);

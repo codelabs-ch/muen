@@ -45,7 +45,7 @@ is
                        (RTE_Idx     => Route.RTE_Idx,
                         IRQ         => Dest_ID,
                         Vector      => SK.Byte (Route.Vector),
-                        APIC_ID     => SK.Byte (Route.APIC_ID),
+                        APIC_ID     => Route.APIC_ID,
                         VTd_IRT_Idx => Dump.IRT_Idx_Type (Dest_ID)));
 
          if Route.Vector /= Skp.Invalid_Vector then

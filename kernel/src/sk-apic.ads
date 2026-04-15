@@ -20,6 +20,9 @@ with X86_64;
 
 with Skp;
 
+with SK.CPU_Info;
+with SK.Crash_Audit_Types;
+
 --D @Interface
 --D This package contains subprograms to interact with the local APIC, see Intel
 --D SDM Vol. 3A, "Chapter 10 Advanced Programmable Interrupt Controller (APIC)"
@@ -31,21 +34,37 @@ with Skp;
 --D processor (BSP), which initially brings up the system. Muen programs the
 --D APIC in x2APIC mode.
 package SK.Apic
+with
+   Abstract_State => State,
+   Initializes    => (State  => X86_64.State,
+                      Is_BSP => X86_64.State)
 is
+
+   --  Check validity of APIC state and return results. Is_Valid is set to True
+   --  if the CPU has the expected APIC ID and BSP flag.
+   procedure Check_State
+     (Is_Valid : out Boolean;
+      Ctx      : out Crash_Audit_Types.APIC_Init_Context_Type)
+   with
+      Global  => (Input => (Is_BSP, State, CPU_Info.APIC_ID, X86_64.State)),
+      Depends => (Ctx      => (State, X86_64.State),
+                  Is_Valid => (Is_BSP, CPU_Info.APIC_ID, X86_64.State));
 
    --  Place local APIC in x2APIC mode and set bit 8 of the APIC spurious
    --  vector register (SVR).
    procedure Enable
    with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ null);
+      Global  => (Input  => State,
+                  In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ State);
 
    --  Startup AP processors by sending INIT-SIPI-SIPI IPI sequence, see Intel
    --  SDM Vol. 3A, "8.4.4 MP Initialization Example".
    procedure Start_AP_Processors
    with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ null);
+      Global  => (Input  => CPU_Info.APIC_ID,
+                  In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ CPU_Info.APIC_ID);
 
    --  Signal interrupt servicing completion.
    procedure EOI
@@ -62,10 +81,8 @@ is
       Global  => (In_Out => X86_64.State),
       Depends => (X86_64.State =>+ (CPU_ID, Vector));
 
-   --  Returns True if the executing CPU is the bootstrap processor (BSP).
-   function Is_BSP return Boolean
-   with
-      Global => (Input => X86_64.State),
-      Volatile_Function;
+   --  True if the executing CPU is the bootstrap processor (BSP).
+   Is_BSP : Boolean
+   with Constant_After_Elaboration;
 
 end SK.Apic;

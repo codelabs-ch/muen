@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013-2017  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013-2017  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2026  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2026  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,14 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with X86_64;
-
 with Skp;
-
-with SK.Apic;
-
-pragma Elaborate_All (SK.Apic, X86_64);
-pragma Unreferenced (X86_64);
 
 --D @Interface
 --D This package provides CPU identification information which allows the
@@ -42,9 +35,5 @@ is
 
    APIC_ID : constant Skp.APIC_ID_Type
      := Skp.CPU_To_APIC_ID (CPU_ID);
-
-   --  Is only set to True for the bootstrap processor which performs the
-   --  initial system bring up.
-   Is_BSP : constant Boolean := Apic.Is_BSP;
 
 end SK.CPU_Info;

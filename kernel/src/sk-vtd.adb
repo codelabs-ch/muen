@@ -16,7 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK.KC;
 with SK.VTd.Debug;
 with SK.VTd.Dump;
 
@@ -52,60 +51,73 @@ is
    begin
       Version := Read_Version (Index => Idx);
       Ctx.Version_Support := Version.MAX >= 1;
-      pragma Debug (not Ctx.Version_Support,
-                    KC.Put_Line
-                      (Item => "Init: Unsupported IOMMU version "
-                       & Strings.Img (Word16 (Version.MAX) * 2 ** 8
-                         + Word16 (Version.MIN))));
+      pragma Debug
+        (not Ctx.Version_Support,
+         Dump.Print_Message
+           (IOMMU   => Idx,
+            Message => "Init: Unsupported IOMMU version "
+            & Strings.Img (Word16 (Version.MAX) * 2 ** 8
+              + Word16 (Version.MIN))));
 
       Caps := Read_Capability (Index => Idx);
 
       Ctx.Nr_Domains_OK := Caps.ND >= 2;
       pragma Debug
         (not Ctx.Nr_Domains_OK,
-         KC.Put_Line (Item => "Init: IOMMU supports less than 256 domains"));
+         Dump.Print_Message
+           (IOMMU   => Idx,
+            Message => "Init: IOMMU supports less than 256 domains"));
 
       Ctx.AGAW_Support := Caps.SAGAW (Cap_AGAW_Bit) = 1;
-      pragma Debug (not Ctx.AGAW_Support,
-                    KC.Put_Line
-                      (Item => "Init: IOMMU SAGAW bit clear at position "
-                       & Strings.Img (Byte (Cap_AGAW_Bit))));
+      pragma Debug
+        (not Ctx.AGAW_Support,
+         Dump.Print_Message
+           (IOMMU   => Idx,
+            Message => "Init: IOMMU SAGAW bit clear at position "
+            & Strings.Img (Byte (Cap_AGAW_Bit))));
 
       Ctx.FR_Offset_Match := SK.Word16 (Caps.FRO) * 16
         = Skp.IOMMU.Config_Get_FR_Offset (Index => Idx);
-      pragma Debug (not Ctx.FR_Offset_Match,
-                    KC.Put_Line
-                      (Item => "Init: IOMMU FR offset mismatch "
-                       & Strings.Img (Word16 (Caps.FRO) * 16)));
+      pragma Debug
+        (not Ctx.FR_Offset_Match,
+         Dump.Print_Message
+           (IOMMU   => Idx,
+            Message => "Init: IOMMU FR offset mismatch "
+            & Strings.Img (Word16 (Caps.FRO) * 16)));
 
       Ctx.NFR_Match := Caps.NFR = Byte (Skp.IOMMU.Fault_Recording_Index'Last);
-      pragma Debug (not Ctx.NFR_Match,
-                    KC.Put_Line
-                      (Item => "Init: Unsupported IOMMU NFR "
-                       & Strings.Img (Caps.NFR) & ", expected "
-                       & Strings.Img
-                          (Byte (Skp.IOMMU.Fault_Recording_Index'Last))));
+      pragma Debug
+        (not Ctx.NFR_Match,
+         Dump.Print_Message
+           (IOMMU   => Idx,
+            Message => "Init: Unsupported IOMMU NFR " & Strings.Img (Caps.NFR)
+            & ", expected " & Strings.Img
+              (Byte (Skp.IOMMU.Fault_Recording_Index'Last))));
 
       Extcaps := Read_Extended_Capability (Index => Idx);
 
       Ctx.IOTLB_Inv_Offset_Match := SK.Word16 (Extcaps.IRO) * 16 + 8
         = Skp.IOMMU.Config_Get_IOTLB_Inv_Offset (Index => Idx);
-      pragma Debug (not Ctx.IOTLB_Inv_Offset_Match,
-                    KC.Put_Line
-                      (Item => "Init: IOMMU IOTLB invalidate offset mismatch "
-                       & Strings.Img (Word16 (Extcaps.IRO) * 16 + 8)));
+      pragma Debug
+        (not Ctx.IOTLB_Inv_Offset_Match,
+         Dump.Print_Message
+           (IOMMU   => Idx,
+            Message => "Init: IOMMU IOTLB invalidate offset mismatch "
+            & Strings.Img (Word16 (Extcaps.IRO) * 16 + 8)));
 
       Ctx.IR_Support := Extcaps.IR = 1;
       pragma Debug
         (not Ctx.IR_Support,
-         KC.Put_Line
-           (Item => "Init: No support for IOMMU Interrupt Remapping"));
+         Dump.Print_Message
+           (IOMMU   => Idx,
+            Message => "Init: No support for IOMMU Interrupt Remapping"));
 
       Ctx.EIM_Support := Extcaps.EIM = 1;
       pragma Debug
         (not Ctx.EIM_Support,
-         KC.Put_Line
-           (Item => "Init: No support for IOMMU Extended Interrupt Mode"));
+         Dump.Print_Message
+           (IOMMU   => Idx,
+            Message => "Init: No support for IOMMU Extended Interrupt Mode"));
 
       Result := Ctx.Version_Support and
         Ctx.Nr_Domains_OK           and
@@ -133,7 +145,7 @@ is
          Check_Capabilities (Idx    => I,
                              Ctx    => Ctx.Status (Positive (I)),
                              Result => Needed_Caps_Present);
-         pragma Debug (not Needed_Caps_Present, VTd.Dump.Print_Message
+         pragma Debug (not Needed_Caps_Present, Dump.Print_Message
                        (IOMMU   => I,
                         Message => "Capability check failed"));
          Is_Valid := Is_Valid and Needed_Caps_Present;

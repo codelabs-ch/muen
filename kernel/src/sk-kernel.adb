@@ -21,7 +21,6 @@ with Skp.Interrupts;
 with Skp.Kernel;
 with Skp.Subjects;
 
-with SK.Apic;
 with SK.Bitops;
 with SK.CPU;
 with SK.Constants;
@@ -644,7 +643,7 @@ is
    procedure Handle_Timer_Expiry (Current_Subject : Skp.Global_Subject_ID_Type)
      with
        Global =>
-         (Input  => (CPU_Info.APIC_ID, CPU_Info.CPU_ID, CPU_Info.Is_BSP,
+         (Input  => (Apic.Is_BSP, CPU_Info.APIC_ID, CPU_Info.CPU_ID,
                      FPU.State, Subjects_Interrupts.State,
                      Tau0_Interface.State),
           In_Out => (Crash_Audit.State, IO_Apic.State, MP.Barrier,
@@ -847,7 +846,7 @@ is
       then
          pragma Debug (Dump.Print_Message
                        (Msg => "*** CPU APIC ID " & Strings.Img
-                        (Byte (CPU_Info.APIC_ID))
+                        (CPU_Info.APIC_ID)
                         & " VM exit due to NMI; interruption information "
                         & Strings.Img (Exit_Interruption_Info)));
          Error (Reason => Crash_Audit_Types.Hardware_VMexit_NMI);
@@ -856,7 +855,7 @@ is
       then
          pragma Debug (Dump.Print_Message
                        (Msg => "*** CPU APIC ID " & Strings.Img
-                        (Byte (CPU_Info.APIC_ID))
+                        (CPU_Info.APIC_ID)
                         & " VM exit due to MCE; interruption information "
                         & Strings.Img (Exit_Interruption_Info)));
          declare
@@ -869,8 +868,7 @@ is
       elsif Basic_Exit_Reason = Constants.EXIT_REASON_ENTRY_FAIL_MCE then
          pragma Debug (Dump.Print_Message
                        (Msg => "*** CPU APIC ID " & Strings.Img
-                        (Byte (CPU_Info.APIC_ID))
-                        & " VM entry failed due to MCE"));
+                        (CPU_Info.APIC_ID) & " VM entry failed due to MCE"));
          declare
             Ctx : Crash_Audit_Types.MCE_Context_Type;
          begin
@@ -1036,13 +1034,13 @@ is
       Interrupt_Tables.Initialize
         (Stack_Addr => Skp.Kernel.Intr_Stack_Address);
 
-      pragma Debug (CPU_Info.Is_BSP, KC.Init);
-      pragma Debug (CPU_Info.Is_BSP, KC.Put_Line
+      pragma Debug (Apic.Is_BSP, KC.Init);
+      pragma Debug (Apic.Is_BSP, KC.Put_Line
                     (Item => "Booting Muen kernel "
                      & Version.Version_String & " ("
                      & Standard'Compiler_Version & ")"));
 
-      if CPU_Info.Is_BSP then
+      if Apic.Is_BSP then
          --D @Item List => impl_kernel_init_steps
          --D Setup crash audit (BSP-only).
          Crash_Audit.Init;
@@ -1051,18 +1049,21 @@ is
       declare
          Init_Ctx : Crash_Audit_Types.Init_Context_Type;
 
-         Valid_Sys_State, Valid_FPU_State, Valid_MCE_State,
+         Valid_Sys_State, Valid_APIC_State, Valid_FPU_State, Valid_MCE_State,
          Valid_VTd_State : Boolean;
       begin
          --D @Item List => impl_kernel_init_steps
          --D Validate required CPU (\ref{impl_kernel_init_check_state}),
-         --D FPU, MCE and VT-d features.
+         --D APIC, FPU, MCE and VT-d features.
          System_State.Check_State
            (Is_Valid => Valid_Sys_State,
             Ctx      => Init_Ctx.Sys_Ctx);
          FPU.Check_State
            (Is_Valid => Valid_FPU_State,
             Ctx      => Init_Ctx.FPU_Ctx);
+         Apic.Check_State
+           (Is_Valid => Valid_APIC_State,
+            Ctx      => Init_Ctx.APIC_Ctx);
          MCE.Check_State
            (Is_Valid => Valid_MCE_State,
             Ctx      => Init_Ctx.MCE_Ctx);
@@ -1072,14 +1073,15 @@ is
 
          if not (Valid_Sys_State
                  and Valid_FPU_State
+                 and Valid_APIC_State
                  and Valid_MCE_State
                  and Valid_VTd_State)
          then
             declare
                Audit_Entry : Crash_Audit.Entry_Type;
             begin
-               pragma Debug (KC.Put_Line
-                             (Item => "System initialisation error"));
+               pragma Debug (Dump.Print_Message
+                             (Msg => "System initialisation error"));
 
                --D @Item List => impl_kernel_init_steps
                --D If a required feature is not present, allocate a crash audit
@@ -1103,7 +1105,7 @@ is
          Apic.Enable;
          MCE.Enable;
 
-         if CPU_Info.Is_BSP then
+         if Apic.Is_BSP then
             --D @Item List => impl_kernel_init_steps
             --D Setup of Multicore memory barries (BSP-only).
             MP.Initialize_All_Barrier;

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2026  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2026  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -19,9 +19,17 @@
 with SK.CPU;
 with SK.Bitops;
 with SK.Delays;
+with SK.Dump;
 with SK.Constants;
 
+pragma $Release_Warnings
+  (Off, "unit * is not referenced", Reason => "Only used for debug output");
+with SK.Strings;
+pragma $Release_Warnings (On, "unit * is not referenced");
+
 package body SK.Apic
+with
+   Refined_State => (State => IA32_APIC_BASE_Value)
 is
 
    ENABLE_APIC         : constant := 8;
@@ -38,17 +46,41 @@ is
    Ipi_Init  : constant := 16#0500#;
    Ipi_Start : constant := 16#4601#;
 
+   IA32_APIC_BASE_Value : constant Word64 := CPU.Get_MSR64
+      (Register => Constants.IA32_APIC_BASE);
+
    -------------------------------------------------------------------------
 
-   function Is_BSP return Boolean
+   procedure Check_State
+     (Is_Valid : out Boolean;
+      Ctx      : out Crash_Audit_Types.APIC_Init_Context_Type)
    is
-      Apic_Base_Value : constant Word64
-        := CPU.Get_MSR64 (Register => Constants.IA32_APIC_BASE);
+      Expected_Is_BSP, Expected_APIC_ID : Boolean;
    begin
-      return Bitops.Bit_Test
-        (Value => Apic_Base_Value,
-         Pos   => APIC_BSP_FLAG);
-   end Is_BSP;
+      Ctx := Crash_Audit_Types.Null_APIC_Init_Context;
+      Ctx.IA32_APIC_BASE := IA32_APIC_BASE_Value;
+      pragma Debug (Dump.Print_Message
+         (Msg => "APIC: IA32_APIC_BASE "
+          & SK.Strings.Img (Ctx.IA32_APIC_BASE)));
+
+      declare
+         Unused_EAX, Unused_EBX, Unused_ECX : Word32;
+      begin
+         Unused_EAX := 16#b#;
+         Unused_ECX := 0;
+         CPU.CPUID
+           (EAX => Unused_EAX,
+            EBX => Unused_EBX,
+            ECX => Unused_ECX,
+            EDX => Ctx.X2APIC_ID);
+         pragma Debug (Dump.Print_Message
+            (Msg => "APIC: x2APIC ID " & SK.Strings.Img (Ctx.X2APIC_ID)));
+      end;
+      Expected_APIC_ID := Ctx.X2APIC_ID = CPU_Info.APIC_ID;
+      Expected_Is_BSP  := Is_BSP = (CPU_Info.APIC_ID = Skp.BSP_APIC_ID);
+
+      Is_Valid := Expected_Is_BSP and Expected_APIC_ID;
+   end Check_State;
 
    -------------------------------------------------------------------------
 
@@ -75,8 +107,7 @@ is
 
       --  Enable x2APIC mode.
 
-      Base := CPU.Get_MSR64 (Register => Constants.IA32_APIC_BASE);
-      Base := Bitops.Bit_Set (Value => Base,
+      Base := Bitops.Bit_Set (Value => IA32_APIC_BASE_Value,
                               Pos   => ENABLE_X2_MODE_FLAG);
       CPU.Write_MSR64 (Register => Constants.IA32_APIC_BASE,
                        Value    => Base);
@@ -104,22 +135,18 @@ is
    procedure Start_AP_Processors
    is
    begin
-      for APIC_ID of Skp.CPU_To_APIC_ID loop
-         if APIC_ID /= 0 then
-            declare
-               Dest : constant Word32 := Word32'Mod (APIC_ID);
-            begin
-               Write_ICR (Low  => Ipi_Init,
-                          High => Dest);
-               Delays.U_Delay (US => 10 * 1000);
+      for Dest_APIC_ID of Skp.CPU_To_APIC_ID loop
+         if Dest_APIC_ID /= CPU_Info.APIC_ID then
+            Write_ICR (Low  => Ipi_Init,
+                       High => Dest_APIC_ID);
+            Delays.U_Delay (US => 10 * 1000);
 
-               Write_ICR (Low  => Ipi_Start,
-                          High => Dest);
-               Delays.U_Delay (US => 200);
+            Write_ICR (Low  => Ipi_Start,
+                       High => Dest_APIC_ID);
+            Delays.U_Delay (US => 200);
 
-               Write_ICR (Low  => Ipi_Start,
-                          High => Dest);
-            end;
+            Write_ICR (Low  => Ipi_Start,
+                       High => Dest_APIC_ID);
          end if;
       end loop;
    end Start_AP_Processors;
@@ -132,7 +159,12 @@ is
    is
    begin
       Write_ICR (Low  => Word32 (Vector),
-                 High => Word32 (Skp.CPU_To_APIC_ID (CPU_ID)));
+                 High => Skp.CPU_To_APIC_ID (CPU_ID));
    end Send_IPI;
 
+   -------------------------------------------------------------------------
+
+begin
+   Is_BSP := Bitops.Bit_Test (Value => IA32_APIC_BASE_Value,
+                              Pos   => APIC_BSP_FLAG);
 end SK.Apic;

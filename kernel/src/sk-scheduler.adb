@@ -700,7 +700,7 @@ is
      (Next_Subject : out Skp.Global_Subject_ID_Type)
    with
       Refined_Global =>
-        (Input  => (CPU_Info.CPU_ID, CPU_Info.Is_BSP, Subjects_Events.State,
+        (Input  => (Apic.Is_BSP, CPU_Info.CPU_ID, Subjects_Events.State,
                     Subjects_Interrupts.State, Tau0_Interface.State,
                     Timed_Events.State, X86_64.State),
          In_Out => (Current_Minor_Frame_ID, Global_Current_Major_Frame_ID,
@@ -757,7 +757,7 @@ is
          Next_Minor_ID := Policy.Minor_Frame_Range'First;
 
          MP.Wait_For_All;
-         if CPU_Info.Is_BSP then
+         if Apic.Is_BSP then
             declare
 
                --  Next major frame ID used to access the volatile New_Major
@@ -930,7 +930,7 @@ is
                 (Policy.Major_Frame_Range'First).Minor_Frames
                 (Policy.Minor_Frame_Range'First).Deadline);
 
-         if CPU_Info.Is_BSP then
+         if Apic.Is_BSP then
 
             --D @Item List => impl_kernel_init_sched_steps
             --D Set global minor frame barriers config (BSP-only).
@@ -948,7 +948,7 @@ is
    -------------------------------------------------------------------------
 
 begin
-   if CPU_Info.Is_BSP then
+   if Apic.Is_BSP then
 
       --  The group indicator array is a single instance shared by all CPUs. So
       --  it must only be initialized by a single CPU, i.e. BSP. This is done

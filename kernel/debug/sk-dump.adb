@@ -39,7 +39,13 @@ is
    procedure Print_Segment
      (Name : String;
       Seg  : Arch_Types.Segment_Type)
-      renames D.Output_Segment;
+   is
+   begin
+      Debug_Lock.Acquire;
+      D.Output_Segment (Name => Name,
+                        Seg  => Seg);
+      Debug_Lock.Release;
+   end Print_Segment;
 
    -------------------------------------------------------------------------
 
@@ -71,7 +77,21 @@ is
    procedure Print_Registers
      (Regs : Arch_Types.CPU_Registers_Type;
       RIP, CS, RFL, RSP, SS, CR0, CR3, CR4 : Word64)
-      renames D.Output_Registers;
+   is
+   begin
+      Debug_Lock.Acquire;
+      D.Output_Registers
+        (Regs => Regs,
+         RIP  => RIP,
+         CS   => CS,
+         RFL  => RFL,
+         RSP  => RSP,
+         SS   => SS,
+         CR0  => CR0,
+         CR3  => CR3,
+         CR4  => CR4);
+      Debug_Lock.Release;
+   end Print_Registers;
 
    -------------------------------------------------------------------------
 

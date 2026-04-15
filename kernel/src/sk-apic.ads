@@ -34,6 +34,10 @@ with SK.Crash_Audit_Types;
 --D processor (BSP), which initially brings up the system. Muen programs the
 --D APIC in x2APIC mode.
 package SK.Apic
+with
+   Abstract_State => State,
+   Initializes    => (State  => X86_64.State,
+                      Is_BSP => X86_64.State)
 is
 
    --  Check validity of APIC state and return results. Is_Valid is set to True
@@ -42,17 +46,17 @@ is
      (Is_Valid : out Boolean;
       Ctx      : out Crash_Audit_Types.APIC_Init_Context_Type)
    with
-      Global  => (Input => (X86_64.State, CPU_Info.APIC_ID, CPU_Info.Is_BSP)),
-      Depends => (Ctx      => X86_64.State,
-                  Is_Valid => (CPU_Info.APIC_ID, CPU_Info.Is_BSP,
-                               X86_64.State));
+      Global  => (Input => (Is_BSP, State, CPU_Info.APIC_ID, X86_64.State)),
+      Depends => (Ctx      => (State, X86_64.State),
+                  Is_Valid => (Is_BSP, CPU_Info.APIC_ID, X86_64.State));
 
    --  Place local APIC in x2APIC mode and set bit 8 of the APIC spurious
    --  vector register (SVR).
    procedure Enable
    with
-      Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ null);
+      Global  => (Input  => State,
+                  In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ State);
 
    --  Startup AP processors by sending INIT-SIPI-SIPI IPI sequence, see Intel
    --  SDM Vol. 3A, "8.4.4 MP Initialization Example".
@@ -77,10 +81,8 @@ is
       Global  => (In_Out => X86_64.State),
       Depends => (X86_64.State =>+ (CPU_ID, Vector));
 
-   --  Returns True if the executing CPU is the bootstrap processor (BSP).
-   function Is_BSP return Boolean
-   with
-      Global => (Input => X86_64.State),
-      Volatile_Function;
+   --  True if the executing CPU is the bootstrap processor (BSP).
+   Is_BSP : Boolean
+   with Constant_After_Elaboration;
 
 end SK.Apic;

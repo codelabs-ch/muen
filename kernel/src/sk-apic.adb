@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2015  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2015  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013-2026  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013-2026  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -28,6 +28,8 @@ with SK.Strings;
 pragma $Release_Warnings (On, "unit * is not referenced");
 
 package body SK.Apic
+with
+   Refined_State => (State => IA32_APIC_BASE_Value)
 is
 
    ENABLE_APIC         : constant := 8;
@@ -44,6 +46,9 @@ is
    Ipi_Init  : constant := 16#0500#;
    Ipi_Start : constant := 16#4601#;
 
+   IA32_APIC_BASE_Value : constant Word64 := CPU.Get_MSR64
+      (Register => Constants.IA32_APIC_BASE);
+
    -------------------------------------------------------------------------
 
    procedure Check_State
@@ -53,12 +58,7 @@ is
       Expected_Is_BSP, Expected_APIC_ID : Boolean;
    begin
       Ctx := Crash_Audit_Types.Null_APIC_Init_Context;
-      Ctx.IA32_APIC_BASE := CPU.Get_MSR64
-         (Register => Constants.IA32_APIC_BASE);
-      Expected_Is_BSP := Bitops.Bit_Test
-        (Value => Ctx.IA32_APIC_BASE,
-         Pos   => APIC_BSP_FLAG) = CPU_Info.Is_BSP;
-
+      Ctx.IA32_APIC_BASE := IA32_APIC_BASE_Value;
       pragma Debug (Dump.Print_Message
          (Msg => "APIC: IA32_APIC_BASE "
           & SK.Strings.Img (Ctx.IA32_APIC_BASE)));
@@ -73,26 +73,14 @@ is
             EBX => Unused_EBX,
             ECX => Unused_ECX,
             EDX => Ctx.X2APIC_ID);
-         Expected_APIC_ID := Ctx.X2APIC_ID = CPU_Info.APIC_ID;
-
          pragma Debug (Dump.Print_Message
             (Msg => "APIC: x2APIC ID " & SK.Strings.Img (Ctx.X2APIC_ID)));
       end;
+      Expected_APIC_ID := Ctx.X2APIC_ID = CPU_Info.APIC_ID;
+      Expected_Is_BSP  := Is_BSP = (CPU_Info.APIC_ID = Skp.BSP_APIC_ID);
 
       Is_Valid := Expected_Is_BSP and Expected_APIC_ID;
    end Check_State;
-
-   -------------------------------------------------------------------------
-
-   function Is_BSP return Boolean
-   is
-      Apic_Base_Value : constant Word64
-        := CPU.Get_MSR64 (Register => Constants.IA32_APIC_BASE);
-   begin
-      return Bitops.Bit_Test
-        (Value => Apic_Base_Value,
-         Pos   => APIC_BSP_FLAG);
-   end Is_BSP;
 
    -------------------------------------------------------------------------
 
@@ -119,8 +107,7 @@ is
 
       --  Enable x2APIC mode.
 
-      Base := CPU.Get_MSR64 (Register => Constants.IA32_APIC_BASE);
-      Base := Bitops.Bit_Set (Value => Base,
+      Base := Bitops.Bit_Set (Value => IA32_APIC_BASE_Value,
                               Pos   => ENABLE_X2_MODE_FLAG);
       CPU.Write_MSR64 (Register => Constants.IA32_APIC_BASE,
                        Value    => Base);
@@ -175,4 +162,9 @@ is
                  High => Skp.CPU_To_APIC_ID (CPU_ID));
    end Send_IPI;
 
+   -------------------------------------------------------------------------
+
+begin
+   Is_BSP := Bitops.Bit_Test (Value => IA32_APIC_BASE_Value,
+                              Pos   => APIC_BSP_FLAG);
 end SK.Apic;

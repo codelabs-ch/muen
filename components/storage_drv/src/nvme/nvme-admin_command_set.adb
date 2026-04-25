@@ -1,10 +1,10 @@
 with Ada.Unchecked_Conversion;
 
-package body NVMe.AdminCommandSet
+package body NVMe.Admin_Command_Set
 is
 
    -- CDW11_Cvt shall already be converted from specific Field Type to Unsigned32
-   procedure CreateSetFeatures_Command
+   procedure Create_Set_Features_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16;       -- Command Identifier
        DPTR           :        SubmissionQ.PRP_Data_Ptr;     -- PRP Data Pointer
        FID            :        Interfaces.Unsigned_8;        -- Feature Identifier
@@ -39,11 +39,11 @@ is
           DPRP     => DPTR);
 
       CMD_Identifier := CMD_Identifier + 1;
-   end CreateSetFeatures_Command;
+   end Create_Set_Features_Command;
 
    -------------------------------------------------------------------------
 
-   procedure CreateGetFeatures_Command
+   procedure Create_Get_Features_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16;       -- Command Identifier
        DPTR           :        SubmissionQ.PRP_Data_Ptr;     -- PRP Data Pointer
        FID            :        Interfaces.Unsigned_8;        -- Feature Identifier
@@ -77,11 +77,11 @@ is
           DPRP     => DPTR);
 
       CMD_Identifier := CMD_Identifier + 1;
-   end CreateGetFeatures_Command;
+   end Create_Get_Features_Command;
 
    -------------------------------------------------------------------------
 
-   procedure CreateIndentify_Command
+   procedure Create_Indentify_Command
       (CMD_Identifier   : in out Interfaces.Unsigned_16;       -- Command Identifier
        DPTR             :        SubmissionQ.PRP_Data_Ptr;     -- PRP Data Pointer
        NSID             :        Interfaces.Unsigned_32;       -- Namespace Identifier
@@ -120,11 +120,11 @@ is
           DPRP     => DPTR);
       -- Increment unique ID
       CMD_Identifier := CMD_Identifier + 1;
-   end CreateIndentify_Command;
+   end Create_Indentify_Command;
 
    -------------------------------------------------------------------------
 
-   procedure CreateCreateIOCQ_Command
+   procedure Create_Create_IOCQ_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16;   -- Command Identifier
        DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
        QID            :        Interfaces.Unsigned_16;   -- Queue Identifier
@@ -159,11 +159,11 @@ is
           DPRP     => DPTR);
       -- Increment unique ID
       CMD_Identifier := CMD_Identifier + 1;
-   end CreateCreateIOCQ_Command;
+   end Create_Create_IOCQ_Command;
 
    -------------------------------------------------------------------------
 
-   procedure CreateCreateIOSQ_Command
+   procedure Create_Create_IOSQ_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16;       -- Command Identifier
        DPTR           :        SubmissionQ.PRP_Data_Ptr;     -- PRP Data Pointer
        QID            :        Interfaces.Unsigned_16;       -- Queue Identifier
@@ -199,11 +199,11 @@ is
           DPRP     => DPTR);
       -- Increment unique ID
       CMD_Identifier := CMD_Identifier + 1;
-   end CreateCreateIOSQ_Command;
+   end Create_Create_IOSQ_Command;
 
    -------------------------------------------------------------------------
 
-   procedure CreateDeleteIOCQ_Command
+   procedure Create_Delete_IOCQ_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16;     -- Command Identifier
        QID            :        Interfaces.Unsigned_16;     -- Queue Identifier
        Command        :    out SubmissionQ.Admin_Command)
@@ -232,11 +232,11 @@ is
           DPRP     => (0, 0));
       -- Increment unique ID
       CMD_Identifier := CMD_Identifier + 1;
-   end CreateDeleteIOCQ_Command;
+   end Create_Delete_IOCQ_Command;
 
    -------------------------------------------------------------------------
 
-   procedure CreateDeleteIOSQ_Command
+   procedure Create_Delete_IOSQ_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16;     -- Command Identifier
        QID            :        Interfaces.Unsigned_16;     -- Queue Identifier
        Command        :    out SubmissionQ.Admin_Command)
@@ -265,11 +265,11 @@ is
           DPRP     => (0, 0));
       -- Increment unique ID
       CMD_Identifier := CMD_Identifier + 1;
-   end CreateDeleteIOSQ_Command;
+   end Create_Delete_IOSQ_Command;
 
    -------------------------------------------------------------------------
 
-   procedure CreateGetLogPage_Command
+   procedure Create_Get_Log_Page_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16;       -- Command Identifier
        DPTR           :        SubmissionQ.PRP_Data_Ptr;     -- PRP Data Pointer
        LID            :        Interfaces.Unsigned_8;        -- Log Page Identifier
@@ -306,18 +306,18 @@ is
           DPRP     => DPTR);
       -- Increment unique ID
       CMD_Identifier := CMD_Identifier + 1;
-   end CreateGetLogPage_Command;
+   end Create_Get_Log_Page_Command;
 
    -------------------------------------------------------------------------
 
-   procedure CreateSMART_Health_LogPage_Command
+   procedure Create_SMART_Health_Log_Page_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16;   -- Command Identifier
        DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
        Command        :    out SubmissionQ.Admin_Command)
    is
    begin
 
-      CreateGetLogPage_Command
+      Create_Get_Log_Page_Command
          (CMD_Identifier => CMD_Identifier,
           DPTR           => DPTR,
           LID            => 2,
@@ -327,12 +327,12 @@ is
           NUMDU          => 0,
           LogSpecificID  => 0,
           Command        => Command);
-      -- no CMD ID increment due to existing increment in CreateGetLogPage_Command
-   end CreateSMART_Health_LogPage_Command;
+      -- no CMD ID increment due to existing increment in Create_Get_Log_Page_Command
+   end Create_SMART_Health_Log_Page_Command;
 
    -------------------------------------------------------------------------
 
-   procedure CreateAbort_Command
+   procedure Create_Abort_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16;     -- Command Identifier
        CMD_ID2Abort   :        Interfaces.Unsigned_16;     -- Command Identifier of the Command to be aborted
        SQID           :        Interfaces.Unsigned_16;     -- Submission Queue Identifier
@@ -362,11 +362,11 @@ is
           DPRP     => (0, 0));
       -- Increment unique ID
       CMD_Identifier := CMD_Identifier + 1;
-   end CreateAbort_Command;
+   end Create_Abort_Command;
 
    -------------------------------------------------------------------------
 
-   procedure CreateAsyncEventReq_Command
+   procedure Create_Async_Event_Req_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16; -- Command Identifier
        Command        :    out SubmissionQ.Admin_Command)
    is
@@ -390,6 +390,6 @@ is
           DPRP     => (0, 0));
       -- Increment unique ID
       CMD_Identifier := CMD_Identifier + 1;
-   end CreateAsyncEventReq_Command;
+   end Create_Async_Event_Req_Command;
 
-end NVMe.AdminCommandSet;
+end NVMe.Admin_Command_Set;

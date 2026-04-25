@@ -7,7 +7,7 @@ with SK.Strings;
 with Log;
 with NVMe_Log;
 
-with NVMe.AdminCommandSet;
+with NVMe.Admin_Command_Set;
 with NVMe.CompletionQ;
 
 package body NVMe.Host
@@ -223,7 +223,7 @@ is
       Async_Writers,
       Address => System'To_Address (Test_IO_Read_Address);
 
-   SMART_Health_LogPage : AdminCommandSet.SMART_LogPage
+   SMART_Health_LogPage : Admin_Command_Set.SMART_LogPage
    with
       Volatile,
       Async_Writers,
@@ -343,20 +343,20 @@ is
    is
       Admin_CMD  : SubmissionQ.Admin_Command;
       PRP_D_Ptr  : SubmissionQ.PRP_Data_Ptr := (0, 0);
-      No_Warning : constant AdminCommandSet.CriticalWarning_Type :=
-        (AvailableSpaceBelowThresh   => False,
-         TemperatureWarning          => False,
-         ReliabilityDegraded         => False,
-         ReadOnlyModeActive          => False,
-         BackupDeviceFailure         => False,
-         PersistMemoryRegionReadOnly => False,
-         Reserved                    => (False, False));
+      No_Warning : constant Admin_Command_Set.Critical_Warning_Type :=
+        (Available_Space_Below_Thresh    => False,
+         Temperature_Warning             => False,
+         Reliability_Degraded            => False,
+         Read_Only_Mode_Active           => False,
+         Backup_Device_Failure           => False,
+         Persist_Memory_Region_Read_Only => False,
+         Reserved                        => (False, False));
 
    begin
 
       PRP_D_Ptr.E1 := Address;
 
-      AdminCommandSet.CreateSMART_Health_LogPage_Command
+      Admin_Command_Set.Create_SMART_Health_Log_Page_Command
          (CMD_Identifier => CMD_Identifier_Admin,
           DPTR           => PRP_D_Ptr,
           Command        => Admin_CMD);
@@ -370,7 +370,7 @@ is
       -- execute again so we get the logpage also on our specified location to check flags
       PRP_D_Ptr.E1 := SMART_Health_LogPage_Address;
 
-      AdminCommandSet.CreateSMART_Health_LogPage_Command
+      Admin_Command_Set.Create_SMART_Health_Log_Page_Command
          (CMD_Identifier => CMD_Identifier_Admin,
           DPTR           => PRP_D_Ptr,
           Command        => Admin_CMD);
@@ -379,12 +379,12 @@ is
       if NVMe_Status = OK
       then
          declare
-            use type AdminCommandSet.CriticalWarning_Type;
-            CriticalWarning : constant AdminCommandSet.CriticalWarning_Type := SMART_Health_LogPage.CriticalWarning;
+            use type Admin_Command_Set.Critical_Warning_Type;
+            Critical_Warning : constant Admin_Command_Set.Critical_Warning_Type := SMART_Health_LogPage.Critical_Warning;
          begin
-            if CriticalWarning = No_Warning then
+            if Critical_Warning = No_Warning then
                SMART_Status := OK;
-            elsif CriticalWarning.AvailableSpaceBelowThresh then
+            elsif Critical_Warning.Available_Space_Below_Thresh then
                SMART_Status := Threshold_Exceeded;
             else
                SMART_Status := Undefined;
@@ -676,7 +676,7 @@ is
 
       PRP_D_Ptr.E1 := Ident_Controller_Address;
 
-      AdminCommandSet.CreateIndentify_Command
+      Admin_Command_Set.Create_Indentify_Command
         (CMD_Identifier   => CMD_Identifier_Admin,
          DPTR             => PRP_D_Ptr,
          NSID             => 0,
@@ -717,7 +717,7 @@ is
          ------------------------------------------------------------
          PRP_D_Ptr.E1 := Namespace_List_Address;
 
-         AdminCommandSet.CreateIndentify_Command
+         Admin_Command_Set.Create_Indentify_Command
            (CMD_Identifier   => CMD_Identifier_Admin,
             DPTR             => PRP_D_Ptr,
             NSID             => 0,
@@ -754,7 +754,7 @@ is
 
             PRP_D_Ptr.E1 := Ident_Namespace_Address;
 
-            AdminCommandSet.CreateIndentify_Command
+            Admin_Command_Set.Create_Indentify_Command
               (CMD_Identifier   => CMD_Identifier_Admin,
                DPTR             => PRP_D_Ptr,
                NSID             => Temp_NSID,
@@ -799,7 +799,7 @@ is
          -- 8.a.i Identify IO CMD Set CNS 1Ch
          ------------------------------------
          PRP_D_Ptr.E1 := IO_CMD_Sets_Address;
-         AdminCommandSet.CreateIndentify_Command
+         Admin_Command_Set.Create_Indentify_Command
            (CMD_Identifier   => CMD_Identifier_Admin,
             DPTR             => PRP_D_Ptr,
             NSID             => 0,
@@ -841,7 +841,7 @@ is
          -----------------------------------------------
          CDW11_Temp := IOCMDIndexToCDW11 ((IOCSCI => IO_CMD_Set_Index, others => <>));
          PRP_D_Ptr.E1 := 0;
-         AdminCommandSet.CreateSetFeatures_Command
+         Admin_Command_Set.Create_Set_Features_Command
            (CMD_Identifier => CMD_Identifier_Admin,
             DPTR           => PRP_D_Ptr,
             FID            => 16#19#,
@@ -869,7 +869,7 @@ is
             Test_Bool := IO_CMD_Sets (IO_CMD_Set_Iterator).NVM_CMD_Set;
             if Test_Bool then
                -- CSI 0 for NVM-CMD-Set
-               AdminCommandSet.CreateIndentify_Command
+               Admin_Command_Set.Create_Indentify_Command
                  (CMD_Identifier   => CMD_Identifier_Admin,
                   DPTR             => PRP_D_Ptr,
                   NSID             => 0,
@@ -885,7 +885,7 @@ is
                Test_Bool := IO_CMD_Sets (IO_CMD_Set_Iterator).Key_Value_CMD_Set;
                if Test_Bool then
                   -- CSI 1 for Key-Value-CMD-Set
-                  AdminCommandSet.CreateIndentify_Command
+                  Admin_Command_Set.Create_Indentify_Command
                     (CMD_Identifier   => CMD_Identifier_Admin,
                      DPTR             => PRP_D_Ptr,
                      NSID             => 0,
@@ -900,7 +900,7 @@ is
                   Test_Bool := IO_CMD_Sets (IO_CMD_Set_Iterator).Zoned_Namespace_CMD_Set;
                   if Test_Bool then
                      -- CSI 2 for Zoned-Namespace-CMD-Set
-                     AdminCommandSet.CreateIndentify_Command
+                     Admin_Command_Set.Create_Indentify_Command
                        (CMD_Identifier   => CMD_Identifier_Admin,
                         DPTR             => PRP_D_Ptr,
                         NSID             => 0,
@@ -949,7 +949,7 @@ is
                ---------------------------------------------
                if Is_NVM_CMD_Set then
                   PRP_D_Ptr.E1 := Ident_Namespace_Address;
-                  AdminCommandSet.CreateIndentify_Command
+                  Admin_Command_Set.Create_Indentify_Command
                     (CMD_Identifier   => CMD_Identifier_Admin,
                      DPTR             => PRP_D_Ptr,
                      NSID             => Temp_NSID,
@@ -998,7 +998,7 @@ is
 
       PRP_D_Ptr.E1 := 0;
       CDW11_Temp := NumOfQsToCDW11 ((NSQR => 1, NCQR => 1));
-      AdminCommandSet.CreateSetFeatures_Command
+      Admin_Command_Set.Create_Set_Features_Command
         (CMD_Identifier => CMD_Identifier_Admin,
          DPTR           => PRP_D_Ptr,
          FID            => 16#07#,
@@ -1026,7 +1026,7 @@ is
       end;
 
       PRP_D_Ptr.E1 := IOCQ_Address;
-      AdminCommandSet.CreateCreateIOCQ_Command
+      Admin_Command_Set.Create_Create_IOCQ_Command
         (CMD_Identifier   => CMD_Identifier_Admin,
          DPTR             => PRP_D_Ptr,
          QID              => 1,
@@ -1045,7 +1045,7 @@ is
       ---------------------------------------------------
 
       PRP_D_Ptr.E1 := IOSQ_Address;
-      AdminCommandSet.CreateCreateIOSQ_Command
+      Admin_Command_Set.Create_Create_IOSQ_Command
         (CMD_Identifier   => CMD_Identifier_Admin,
          DPTR             => PRP_D_Ptr,
          QID              => 1,
@@ -1083,7 +1083,7 @@ is
 
       begin
          if Enabled then
-            AdminCommandSet.CreateDeleteIOSQ_Command
+            Admin_Command_Set.Create_Delete_IOSQ_Command
                (CMD_Identifier => CMD_Identifier_Admin,
                 QID            => 1,
                 Command        => Admin_CMD);
@@ -1092,7 +1092,7 @@ is
                Log.Put_Line ("NVME: Error During NVMe Controller Shutdown Step 1-1");
             end if;
 
-            AdminCommandSet.CreateDeleteIOCQ_Command
+            Admin_Command_Set.Create_Delete_IOCQ_Command
                (CMD_Identifier => CMD_Identifier_Admin,
                 QID            => 1,
                 Command        => Admin_CMD);

@@ -3,7 +3,7 @@ with Interfaces;
 with NVMe.SubmissionQ;
 with Storage_Interface;
 
-package NVMe.AdminCommandSet
+package NVMe.Admin_Command_Set
 is
 
    use type Interfaces.Unsigned_16;
@@ -56,7 +56,7 @@ is
    --- 5.27 Set Features command
    -------------------------------------------------------------------------
 
-   procedure CreateSetFeatures_Command
+   procedure Create_Set_Features_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16;       -- Command Identifier
        DPTR           :        SubmissionQ.PRP_Data_Ptr;     -- PRP Data Pointer
        FID            :        Interfaces.Unsigned_8;        -- Feature Identifier
@@ -69,7 +69,7 @@ is
     --- 5.15 Get Features command
     -------------------------------------------------------------------------
 
-   procedure CreateGetFeatures_Command
+   procedure Create_Get_Features_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16;       -- Command Identifier
        DPTR           :        SubmissionQ.PRP_Data_Ptr;     -- PRP Data Pointer
        FID            :        Interfaces.Unsigned_8;        -- Feature Identifier
@@ -81,7 +81,7 @@ is
     --- 5.17 Identify command
     -------------------------------------------------------------------------
 
-   procedure CreateIndentify_Command
+   procedure Create_Indentify_Command
       (CMD_Identifier   : in out Interfaces.Unsigned_16;       -- Command Identifier
        DPTR             :        SubmissionQ.PRP_Data_Ptr;     -- PRP Data Pointer
        NSID             :        Interfaces.Unsigned_32;       -- Namespace Identifier
@@ -96,7 +96,7 @@ is
    --- 5.4 Create I/O Completion Queue command
    -------------------------------------------------------------------------
 
-   procedure CreateCreateIOCQ_Command
+   procedure Create_Create_IOCQ_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16;   -- Command Identifier
        DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
        QID            :        Interfaces.Unsigned_16;   -- Queue Identifier
@@ -109,7 +109,7 @@ is
    --- 5.5 Create I/O Submission Queue command
    -------------------------------------------------------------------------
 
-   procedure CreateCreateIOSQ_Command
+   procedure Create_Create_IOSQ_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16;       -- Command Identifier
        DPTR           :        SubmissionQ.PRP_Data_Ptr;     -- PRP Data Pointer
        QID            :        Interfaces.Unsigned_16;       -- Queue Identifier
@@ -123,7 +123,7 @@ is
    --- 5.6 Delete I/O Completion Queue command
    -------------------------------------------------------------------------
 
-   procedure CreateDeleteIOCQ_Command
+   procedure Create_Delete_IOCQ_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16; -- Command Identifier
        QID            :        Interfaces.Unsigned_16; -- Queue Identifier
        Command        :    out SubmissionQ.Admin_Command);
@@ -132,7 +132,7 @@ is
     --- 5.7 Delete I/O Submission Queue command
     -------------------------------------------------------------------------
 
-   procedure CreateDeleteIOSQ_Command
+   procedure Create_Delete_IOSQ_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16; -- Command Identifier
        QID            :        Interfaces.Unsigned_16; -- Queue Identifier
        Command        :    out SubmissionQ.Admin_Command);
@@ -141,7 +141,7 @@ is
    --- 5.16 Get Log Page command
    -------------------------------------------------------------------------
 
-   procedure CreateGetLogPage_Command
+   procedure Create_Get_Log_Page_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16;       -- Command Identifier
        DPTR           :        SubmissionQ.PRP_Data_Ptr;     -- PRP Data Pointer
        LID            :        Interfaces.Unsigned_8;        -- Log Page Identifier
@@ -152,7 +152,7 @@ is
        LogSpecificID  :        Interfaces.Unsigned_16;       -- Log Specific Identifier
        Command        :    out SubmissionQ.Admin_Command);
 
-   procedure CreateSMART_Health_LogPage_Command
+   procedure Create_SMART_Health_Log_Page_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16;   -- Command Identifier
        DPTR           :        SubmissionQ.PRP_Data_Ptr; -- PRP Data Pointer
        Command        :    out SubmissionQ.Admin_Command);
@@ -161,96 +161,96 @@ is
    -- Figure 207: SMART / Health Info Log Page
    -------------------------------------------------------------------------
 
-   type CriticalWarning_Type is record
-      AvailableSpaceBelowThresh   : Boolean;
-      TemperatureWarning          : Boolean; -- see Section 5.27.1.3
-      ReliabilityDegraded         : Boolean;
-      ReadOnlyModeActive          : Boolean; -- see Section 8.12.1
-      BackupDeviceFailure         : Boolean;
-      PersistMemoryRegionReadOnly : Boolean; -- see Section 8.14
-      Reserved                    : Storage_Interface.Bit_Array (6 .. 7);
+   type Critical_Warning_Type is record
+      Available_Space_Below_Thresh    : Boolean;
+      Temperature_Warning             : Boolean; -- see Section 5.27.1.3
+      Reliability_Degraded            : Boolean;
+      Read_Only_Mode_Active           : Boolean; -- see Section 8.12.1
+      Backup_Device_Failure           : Boolean;
+      Persist_Memory_Region_Read_Only : Boolean; -- see Section 8.14
+      Reserved                        : Storage_Interface.Bit_Array (6 .. 7);
    end record
    with
       Size => 8;
 
-   for CriticalWarning_Type use record
-      AvailableSpaceBelowThresh   at 0 range 0 .. 0;
-      TemperatureWarning          at 0 range 1 .. 1;
-      ReliabilityDegraded         at 0 range 2 .. 2;
-      ReadOnlyModeActive          at 0 range 3 .. 3;
-      BackupDeviceFailure         at 0 range 4 .. 4;
-      PersistMemoryRegionReadOnly at 0 range 5 .. 5;
-      Reserved                    at 0 range 6 .. 7;
+   for Critical_Warning_Type use record
+      Available_Space_Below_Thresh    at 0 range 0 .. 0;
+      Temperature_Warning             at 0 range 1 .. 1;
+      Reliability_Degraded            at 0 range 2 .. 2;
+      Read_Only_Mode_Active           at 0 range 3 .. 3;
+      Backup_Device_Failure           at 0 range 4 .. 4;
+      Persist_Memory_Region_Read_Only at 0 range 5 .. 5;
+      Reserved                        at 0 range 6 .. 7;
    end record;
 
    -- Consists of Temperature Readings [K]
-   type TempSensorArray is array (1 .. 8) of Interfaces.Unsigned_16
+   type Temp_Sensor_Array is array (1 .. 8) of Interfaces.Unsigned_16
    with
       Pack,
       Object_Size => 16 * 8;
 
    type SMART_LogPage is record
-      CriticalWarning                  : CriticalWarning_Type;    -- Indicated Type of Critical Warning
-      CompositeTemperature             : Interfaces.Unsigned_16;  -- Current Composite Temp [Kelvin]
-      AvailableSpare                   : Interfaces.Unsigned_8;   -- Current Available Space [%]
-      AvailableSpareThreshold          : Interfaces.Unsigned_8;   -- Threshold for 'full' [%]
-      PercentageUsed                   : Interfaces.Unsigned_8;   -- Estimate of NVM life used [%]
+      Critical_Warning                      : Critical_Warning_Type;    -- Indicated Type of Critical Warning
+      Composite_Temperature                 : Interfaces.Unsigned_16;  -- Current Composite Temp [Kelvin]
+      Available_Spare                       : Interfaces.Unsigned_8;   -- Current Available Space [%]
+      Available_Spare_Threshold             : Interfaces.Unsigned_8;   -- Threshold for 'full' [%]
+      Percentage_Used                       : Interfaces.Unsigned_8;   -- Estimate of NVM life used [%]
       -- Unused: EnduranceGroupCriticalWarning
-      Reserved_1                       : Storage_Interface.Byte_Array (6 .. 31);
-      DataUnitsRead                    : Interfaces.Unsigned_128; -- Number of 512 Byte Units the Host has read
-      DataUnitsWritten                 : Interfaces.Unsigned_128; -- Number of 512 Byte Units the Host has written
-      HostReadCommands                 : Interfaces.Unsigned_128; -- Number of Host Read CMDs completed by the controller
-      HostWriteommands                 : Interfaces.Unsigned_128; -- Number of Host Write CMDs completed by the controller
-      ControllerBusyTime               : Interfaces.Unsigned_128; -- Amount of time the controller was busy with I/O CMDs [min]
-      PowerCycles                      : Interfaces.Unsigned_128; -- Number of Power Cycles
-      PowerOnHours                     : Interfaces.Unsigned_128; -- Number of (operational) Power-on hours [h]
-      UnsafeShutdowns                  : Interfaces.Unsigned_128; -- Number of unsafe shutdowns
-      MediaAndIntegrityErrors          : Interfaces.Unsigned_128; -- Number of detected unrecoverdd data integrity errors
-      NumberOfErrorLogInfoEntries      : Interfaces.Unsigned_128; -- Number of Error information log Entries
-      WarningCompositeTempTime         : Interfaces.Unsigned_32;  -- Amount of time the Composite Temperarature was greater then allowed [min]
-      CriticalCompositeTempTime        : Interfaces.Unsigned_32;  -- Amount of time the Composite Temperarature was critical [min]
-      TempSensors                      : TempSensorArray;         -- Array for current temperarature reports by sensors 1 .. 8
-      ThermalMngmtTemp1TransitionCount : Interfaces.Unsigned_32;  -- Number of times the controller thermal throttled lightly
-      ThermalMngmtTemp2TransitionCount : Interfaces.Unsigned_32;  -- Number of times the controller thermal throttled heavily
-      TotalThermalMngmtTempTime1       : Interfaces.Unsigned_32;  -- Amount of time the controller thermal throttled lightly [s]
-      TotalThermalMngmtTempTime2       : Interfaces.Unsigned_32;  -- Amount of time the controller thermal throttled heavily [s]
+      Reserved_1                            : Storage_Interface.Byte_Array (6 .. 31);
+      Data_Units_Read                       : Interfaces.Unsigned_128; -- Number of 512 Byte Units the Host has read
+      Data_Units_Written                    : Interfaces.Unsigned_128; -- Number of 512 Byte Units the Host has written
+      Host_Read_Commands                    : Interfaces.Unsigned_128; -- Number of Host Read CMDs completed by the controller
+      Host_Write_Commands                   : Interfaces.Unsigned_128; -- Number of Host Write CMDs completed by the controller
+      Controller_Busy_Time                  : Interfaces.Unsigned_128; -- Amount of time the controller was busy with I/O CMDs [min]
+      Power_Cycles                          : Interfaces.Unsigned_128; -- Number of Power Cycles
+      Power_On_Hours                        : Interfaces.Unsigned_128; -- Number of (operational) Power-on hours [h]
+      Unsafe_Shutdowns                      : Interfaces.Unsigned_128; -- Number of unsafe shutdowns
+      Media_And_Integrity_Errors            : Interfaces.Unsigned_128; -- Number of detected unrecoverdd data integrity errors
+      Number_Of_Error_Log_Info_Entries      : Interfaces.Unsigned_128; -- Number of Error information log Entries
+      Warning_Composite_Temp_Time           : Interfaces.Unsigned_32;  -- Amount of time the Composite Temperarature was greater then allowed [min]
+      Critical_Composite_Temp_Time          : Interfaces.Unsigned_32;  -- Amount of time the Composite Temperarature was critical [min]
+      Temp_Sensors                          : Temp_Sensor_Array;       -- Array for current temperarature reports by sensors 1 .. 8
+      Thermal_Mngmt_Temp_1_Transition_Count : Interfaces.Unsigned_32;  -- Number of times the controller thermal throttled lightly
+      Thermal_Mngmt_Temp_2_Transition_Count : Interfaces.Unsigned_32;  -- Number of times the controller thermal throttled heavily
+      Total_Thermal_Mngmt_Temp_Time_1       : Interfaces.Unsigned_32;  -- Amount of time the controller thermal throttled lightly [s]
+      Total_Thermal_Mngmt_Temp_Time_2       : Interfaces.Unsigned_32;  -- Amount of time the controller thermal throttled heavily [s]
       Reserved_2                       : Storage_Interface.Byte_Array (232 .. 511);
    end record
    with
       Size        => 512 * 8,
       Object_Size => 512 * 8;
    for SMART_LogPage use record
-      CriticalWarning                  at   0 range 0 ..    7;
-      CompositeTemperature             at   1 range 0 ..   15;
-      AvailableSpare                   at   3 range 0 ..    7;
-      AvailableSpareThreshold          at   4 range 0 ..    7;
-      PercentageUsed                   at   5 range 0 ..    7;
-      Reserved_1                       at   6 range 0 ..  207;
-      DataUnitsRead                    at  32 range 0 ..  127;
-      DataUnitsWritten                 at  48 range 0 ..  127;
-      HostReadCommands                 at  64 range 0 ..  127;
-      HostWriteommands                 at  80 range 0 ..  127;
-      ControllerBusyTime               at  96 range 0 ..  127;
-      PowerCycles                      at 112 range 0 ..  127;
-      PowerOnHours                     at 128 range 0 ..  127;
-      UnsafeShutdowns                  at 144 range 0 ..  127;
-      MediaAndIntegrityErrors          at 160 range 0 ..  127;
-      NumberOfErrorLogInfoEntries      at 176 range 0 ..  127;
-      WarningCompositeTempTime         at 192 range 0 ..   31;
-      CriticalCompositeTempTime        at 196 range 0 ..   31;
-      TempSensors                      at 200 range 0 ..  127;
-      ThermalMngmtTemp1TransitionCount at 216 range 0 ..   31;
-      ThermalMngmtTemp2TransitionCount at 220 range 0 ..   31;
-      TotalThermalMngmtTempTime1       at 224 range 0 ..   31;
-      TotalThermalMngmtTempTime2       at 228 range 0 ..   31;
-      Reserved_2                       at 232 range 0 .. 2239;
+      Critical_Warning                      at   0 range 0 ..    7;
+      Composite_Temperature                 at   1 range 0 ..   15;
+      Available_Spare                       at   3 range 0 ..    7;
+      Available_Spare_Threshold             at   4 range 0 ..    7;
+      Percentage_Used                       at   5 range 0 ..    7;
+      Reserved_1                            at   6 range 0 ..  207;
+      Data_Units_Read                       at  32 range 0 ..  127;
+      Data_Units_Written                    at  48 range 0 ..  127;
+      Host_Read_Commands                    at  64 range 0 ..  127;
+      Host_Write_Commands                   at  80 range 0 ..  127;
+      Controller_Busy_Time                  at  96 range 0 ..  127;
+      Power_Cycles                          at 112 range 0 ..  127;
+      Power_On_Hours                        at 128 range 0 ..  127;
+      Unsafe_Shutdowns                      at 144 range 0 ..  127;
+      Media_And_Integrity_Errors            at 160 range 0 ..  127;
+      Number_Of_Error_Log_Info_Entries      at 176 range 0 ..  127;
+      Warning_Composite_Temp_Time           at 192 range 0 ..   31;
+      Critical_Composite_Temp_Time          at 196 range 0 ..   31;
+      Temp_Sensors                          at 200 range 0 ..  127;
+      Thermal_Mngmt_Temp_1_Transition_Count at 216 range 0 ..   31;
+      Thermal_Mngmt_Temp_2_Transition_Count at 220 range 0 ..   31;
+      Total_Thermal_Mngmt_Temp_Time_1       at 224 range 0 ..   31;
+      Total_Thermal_Mngmt_Temp_Time_2       at 228 range 0 ..   31;
+      Reserved_2                            at 232 range 0 .. 2239;
    end record;
 
    -------------------------------------------------------------------------
    --- 5.1 Abort Command
    -------------------------------------------------------------------------
 
-   procedure CreateAbort_Command
+   procedure Create_Abort_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16; -- Command Identifier
        CMD_ID2Abort   :        Interfaces.Unsigned_16; -- Command Identifier of the Command to be aborted
        SQID           :        Interfaces.Unsigned_16; -- Submission Queue Identifier
@@ -260,7 +260,7 @@ is
    --- 5.2 Async Event Request Command
    -------------------------------------------------------------------------
 
-   procedure CreateAsyncEventReq_Command
+   procedure Create_Async_Event_Req_Command
       (CMD_Identifier : in out Interfaces.Unsigned_16; -- Command Identifier
        Command        :    out SubmissionQ.Admin_Command);
 
@@ -454,4 +454,4 @@ private
       CID2A at 2 range 0 .. 15;
    end record;
 
-end NVMe.AdminCommandSet;
+end NVMe.Admin_Command_Set;
